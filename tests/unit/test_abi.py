@@ -23,6 +23,8 @@ def test_load_matches_yaml(abi):
     assert abi.dtype is torch.bfloat16
     assert abi.stats_dtype is torch.float32
     assert abi.register_options == tuple(spec["registers"]["count_options"])
+    assert abi.token_order == tuple(spec["state"]["token_order"]) and abi.token_order[0] == "global"
+    assert abi.per_token_affine is spec["state"]["normalization"]["per_token_affine"] is False
     assert abi.max_chunk == spec["delta_t"]["max_chunk"]
 
 

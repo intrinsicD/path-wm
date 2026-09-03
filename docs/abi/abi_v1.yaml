@@ -4,11 +4,13 @@ abi_version: 1
 state:
   grid_tokens: 64          # 8 x 8 over 64 px observations
   global_tokens: 1
+  token_order: [global, grid]   # W[:, 0] is the global token, W[:, 1:] the grid in row-major order; positions index the grid
   dim: 192
   dtype_activations: bf16
   dtype_regularizer_stats: fp32
   normalization:
     per_token: layernorm
+    per_token_affine: false  # at the ABI boundary (adapter output, predictor readout): no per-producer scale or shift (DDR §13)
     batch: sigreg            # isotropic Gaussian over the token batch (LeJEPA)
   positions:
     kind: rope2d             # or sinusoidal; fixed, identical for all adapters
