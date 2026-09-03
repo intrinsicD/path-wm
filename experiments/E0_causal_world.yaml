@@ -33,6 +33,7 @@ engine:
   framework: torch_batched              # decided in the first slice, step 1 (DDR §15); Warp/JAX/CUDA are a later swap behind the Environment Protocol
   save_restore: exact                   # including the RNG stream, so interventions and planner forks are exact
   rng: deterministic_seeded
+  physics_params: envs/causal_world/physics.py   # the fixed layout and physical constants of the thin engine (first slice, step 3); frozen with this spec
 external_envs:                          # stable-worldmodel harness (2605.21800), envs/external/
   pusht: true
   pointmaze: true

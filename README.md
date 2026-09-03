@@ -4,7 +4,11 @@
 
 A research program on whether perception, predictive dynamics and planning can be made independently replaceable by communicating through a transition-compatible learned world-state interface (the *World Latent ABI*), and whether planning over learned world models should treat trajectories as persistent, diverse objects in path space.
 
-Status: pre-registration draft v0.3 (2026-09-03). No code yet.
+Status: pre-registration draft v0.3 (2026-09-03). First slice in progress (`CLAUDE.md` Now block).
+
+Run an experiment or dev spec with `python run.py <spec.yaml>`; plain `pytest` is the fast test run (CLAUDE.md §4).
+
+**Reused code.** E1 starts from LeWorldModel (arXiv 2603.19312): https://github.com/lucas-maes/le-wm at commit `8edfeb336732b5f3ce7b8b210d0ba370a09e2cac` (MIT). Adapted parts carry the header line `# adapted from lucas-maes/le-wm@8edfeb3:<path>`; the ViT is written here because LeWM's comes from the `stable_pretraining` dependency.
 
 ## Documents
 

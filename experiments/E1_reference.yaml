@@ -10,6 +10,7 @@ env:
   episode_len: null
   dataset: data/e0_v1     # ~1M transitions, exploration mixture, paired interventions
   n_transitions: 1000000
+  exploration: null        # the E0 data policy's mixture (E0_causal_world.yaml data_policy); run.py collects with it when the dataset is absent
 encoder:
   arch: vit_s8
   dim: null                # token width; ViT-S proper (384, 12 layers, 6 heads) is 21M, the 5M target is a reduced ViT: set before E1 is frozen
@@ -35,7 +36,7 @@ predictor:
 inverse_dynamics:
   kind: mlp_pooled_pair
 losses:
-  reg: {kind: sigreg, weight: null}
+  reg: {kind: sigreg, weight: null, projections: 1024, knots: 17, per_token: true}   # SIGReg as in LeWM (1024 directions, 17 knots on [0, 3]); per_token: one test per token position over the frame batch (LeWM: per time step), false pools all tokens
   action: {weight: 1.0}
   rollout: {gamma: 0.9, h_train: 8, free_running: true, delta_t_max: 8}   # delta_t_max <= abi max_chunk; from stage 1, delta_t ~ U{1..min(delta_t_max, H_train)} per batch with a k = delta_t action chunk (§6.2)
   inverse: {weight: null}
@@ -48,6 +49,8 @@ train:                     # from the LeWM recipe; set before E1 is frozen
   steps: null
   batch_size: null
   lr: null
+  weight_decay: null
+  grad_clip: null
   optimizer: adamw
   precision: bf16
 probe_set:

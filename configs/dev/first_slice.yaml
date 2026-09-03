@@ -38,6 +38,7 @@ env:
   episode_len: 32            # dev
   dataset: data/e0_dev       # dev; ~2e4 transitions
   n_transitions: 20480        # dev = 10 episodes x n_worlds (64) x episode_len (32); the collector asserts this equality
+  exploration: uniform_random # dev: the E0 data-policy mixture (uniform, Brownian, scripted) arrives with the data-policy slice
 encoder:
   arch: vit_s8
   dim: 96                    # dev
@@ -63,7 +64,7 @@ predictor:
 inverse_dynamics:
   kind: mlp_pooled_pair
 losses:
-  reg: {kind: sigreg, weight: 1.0}          # dev
+  reg: {kind: sigreg, weight: 0.1, projections: 1024, knots: 17, per_token: true}   # dev: weight = LeWM's lambda
   action: {weight: 1.0}
   rollout: {gamma: 0.9, h_train: 4, free_running: true, delta_t_max: 4}   # dev: h_train 8 -> 4, delta_t_max 8 -> 4
   inverse: {weight: 1.0}                    # dev
@@ -76,6 +77,8 @@ train:
   steps: 2000                # dev
   batch_size: 64             # dev
   lr: 3.0e-4                 # dev
+  weight_decay: 0.001        # dev: LeWM
+  grad_clip: 1.0             # dev: LeWM
   optimizer: adamw
   precision: bf16
 probe_set:

@@ -1,1 +1,1 @@
-# World state: the ABI layout (abi.py). Updater, registers and inverse head arrive in later slices (§16.2).
+# World state: the ABI layout (abi.py) and the inverse-dynamics head (inverse.py). Updater and registers arrive in later slices (§16.2).

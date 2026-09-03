@@ -15,10 +15,11 @@ LayerNorm, rows of a batch independent), action range, the stateless predictor c
 planner exists, calls within budget and counted separately. Random weights, CPU, seconds; no marker, so
 plain `pytest` runs it.
 
-**Threshold** — s(w), transition error, the §6.5 adapter losses on the fixed probe set. Takes a
-checkpoint, carries the `threshold` marker (`pytest -m threshold`), and while its threshold in
-`abi_v1.yaml` is null it records the number and skips with reason `threshold_unset`. Arrives with
-`evaluation/` in the first slice's step 3.
+**Threshold** — `test_threshold.py`: s(w), transition error, later the §6.5 adapter losses, on the fixed
+probe set. Takes the checkpoint under `--run-dir` (default `runs/dev/first_slice/0`, written by
+`python run.py configs/dev/first_slice.yaml`), carries the `threshold` marker (`pytest -m threshold`),
+records the number in `<run_dir>/threshold_record.json`, and while its threshold in `abi_v1.yaml` is
+null skips with reason `threshold_unset`.
 
 ## How a test gets an implementation
 
