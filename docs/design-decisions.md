@@ -234,6 +234,14 @@ Built before E1 finishes; logged on every run; rendered in the viewer (§17).
 
 **Conformance tests** (any implementation must pass before it enters an experiment): shape and dtype; action-sensitivity $s(w) \ge s_{\min}$ on a fixed probe set; transition error $\le \epsilon_{\max}$ on the same set; for adapters, the §6.5 losses on held-out data; for planners, valid actions within budget.
 
+**Signature resolutions (first slice, step 1, 2026-09-03; CLAUDE.md §2).** Recorded here because §16.1 is authoritative and these are corrections made before E1 is frozen. The code is `contracts.py`.
+
+1. *Planner takes V.* §16.1's row $(W, G, P, C, \mathcal R)$ omits §7's optional value $V$. The Protocol is $(W, G, P, V, C, \mathcal R) \rightarrow (a_{0:H-1}, \mathcal R')$ with $V$ the critic, injected so that `evaluation/budget.py` can wrap it, and $C$ the hard constraints of §5.11.
+2. *Registers are not a predictor argument.* §16.1 writes $P_\phi(W, a_{t:t+k}, \Delta t, R)$; the ABI says registers are never stored and reset per call, so the only valid $R$ input is "fresh". The Protocol is `predict(W, actions, delta_t)`; $K_R$ fresh registers are created inside every call (Invariant 4) and `n_registers` is a module attribute.
+3. *Environment row added.* Not in §16.1: `reset(seed)`, `step(action)`, `save()`, `restore(snapshot)`, `render()`, `ground_truth()`, batched over $N$ worlds.
+4. *Goal is a dataclass.* $G = (W_G, M)$ per §5.11 (a); a `None` mask means all tokens.
+5. *Unit of a predictor call.* One unit per row of $W$ per call, whatever $\Delta t$: a batched call with $B$ rows costs $B$, a $\Delta t = k$ chunk call costs 1 per row (§7.6 crossover counts per trajectory per step; E9 compares flat versus chunked at matched calls). Critic calls are counted the same way, separately (Invariant 8). `planner.rollout_budget` is frozen in this unit.
+
 **Exchange procedure.** Implement → conformance → E2-style comparison against the frozen reference at equal budget → entry in the results ledger. **stable-worldmodel mapping:** `encode` = $A \circ E$ (+ $U_\psi$), `predict` = $P$, `rollout` = the loop, `criterion` = the cost, `get_cost` = the accounted call count.
 
 ---
@@ -252,6 +260,8 @@ Predesign the **contracts, the ABI spec, the instrument panel, the environment, 
 - **Data:** sharded, memory-mapped; paired interventions stored as trees with parent ids.
 - **Scientific scalability:** every core result at two model sizes (S, M) and two data sizes; report trend direction, not a point.
 - **Path to real video:** swap $E_A$ for a LeVJEPA-pretrained block-causal encoder (a single consumer GPU suffices for a ViT-Tiny); token dropping; the ABI stays.
+
+**Decision (first slice, step 1, 2026-09-03).** The E0 engine is batched PyTorch on one device, the same framework as the models: one framework is the simplest thing that can reach the $10^4$ transitions/s gate on one GPU, and Warp, JAX or custom CUDA remain a later, measured swap behind the `Environment` Protocol. Recorded in `experiments/E0_causal_world.yaml` (`engine.framework`).
 
 ---
 
@@ -279,6 +289,8 @@ What talking is not: a training signal for $W$.
 ## 18. Data and environment engine
 
 E0 as specified in v0.2, plus a data policy: exploration mixture (uniform random, Brownian, scripted goal-directed, and — from E6 on — replayed planner actions), a coverage metric on ground-truth state, validation splits by object configuration (held-out combinations for compositional OOD), paired interventions stored as trees, seeded stochastic variants, an initial dataset of ~1M transitions. The engine must expose save/restore and a deterministic RNG so that interventions and planner forks are exact.
+
+**Decisions that cannot be widened later (first slice, step 1, 2026-09-03).** *Batched-worlds layout:* every environment tensor has leading dimension $N$ (worlds), observations are $(N, 3, 64, 64)$ uint8 and actions $(N, 2)$ float32, all on one device. *Save/restore representation:* a snapshot is a clone of every state tensor plus the `torch.Generator` state; `restore(save())` followed by `step` reproduces the same observations bit-exactly, which is what paired interventions and planner forks require.
 
 ---
 

@@ -15,7 +15,7 @@ Every plan, PR, experiment log and session summary opens with both. Work that se
      Slice line format: <slice> — step <1–4> — done: <last part> — next: <next part>. -->
 - Target: the first gate (§18) — can a predictor trained with one encoder plan using another? Reached through E0 → E1 (P and I_ω frozen, σ_pilot fixed) → E2.
 - Phase: roadmap phase 1 (§20). Gate: E0 frozen (preregistration E0 row: ≥ 1e4 transitions/s, save/restore exact, ≥ 2 homotopy classes). The phase's other deliverables (contracts and conformance tests, data policy, instrument panel, viewer v0) are built slice by slice and are not the gate.
-- Slice: first slice (§2) — step 1 — done: nothing — next: `contracts.py`, `world_state/abi.py`, `configs/dev/first_slice.yaml`.
+- Slice: first slice (§2) — step 1 done — done: plan (`configs/dev/first_slice.yaml`), `contracts.py`, `world_state/abi.py`, DDR §13/§15/§18 entries — next: step 2, the structural conformance tests for environment, encoder, adapter, predictor and inverse head in `tests/conformance/`, committed red.
 
 A task outside the current phase is allowed, but its plan names the frozen artifact it depends on and what stands in for it, and its numbers are not experiment results.
 
@@ -52,7 +52,7 @@ Testing is a gate, not a brake.
 
 - **Conformance tests have two layers.** Structural — ABI shape, dtype, layout, action range, calls within the declared budget and counted separately — runs with random weights in the default fast run and carries no marker. Threshold — s(w), transition error, the §6.5 adapter losses — takes a checkpoint, is marked `threshold`, and while its threshold in `abi_v1.yaml` is null or absent (the adapter losses have no field yet) it records the number and skips with reason `threshold_unset`. Never satisfy a null threshold with a placeholder.
 - **Unit tests for the essentials only:** where a silent error would invalidate a result. Environment: save/restore bit-exact including the RNG stream, ≥ 2 homotopy classes on the fixed layout. World model: register reset, loss masking, stopgrad. Planner: no executed action without a verified rollout (Invariant 10). Not for glue, plotting or notebooks.
-- **Fast by default.** `pytest -m 'not slow and not gpu and not threshold'` is CPU, tiny tensors, seconds. Markers are declared in `pyproject.toml`.
+- **Fast by default.** Plain `pytest` is the fast run: CPU, tiny tensors, seconds. `pyproject.toml` filters the `slow`, `gpu` and `threshold` markers by default; `pytest -m threshold` opts one in.
 - **Never delete, skip or xfail a test to make the run green.**
 - **Experiments are not tests.** An experiment is a YAML spec in `experiments/`, frozen by committing its hash into `docs/preregistration.md`; a frozen spec is never edited, changes are numbered amendments there. The runner is ordinary code covered by the fast tests; specs do not run in the test suite.
 

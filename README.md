@@ -15,7 +15,9 @@ Status: pre-registration draft v0.3 (2026-09-03). No code yet.
 | `docs/design-decisions.md` | Decision register: for every open architecture question, the options, the v0.3 default, the reason, and the test that would overturn it. |
 | `docs/literature-2026.md` | Annotated bibliography by problem area, with `[read]` / `[sweep]` verification flags. |
 | `docs/preregistration.md` | Frozen experiment specs (by hash) and the numeric thresholds committed before each experiment runs. |
+| `contracts.py` | The §16.1 module signatures as `typing.Protocol`s, plus the environment. Every module and every test imports from it; `world_state/abi.py` is the typed view of the ABI spec. |
 | `docs/abi/abi_v1.yaml` | The ABI specification: token layout, dimension, normalization, positional convention, action and Δt tokens. |
+| `configs/dev/*.yaml` | Dev copies of a spec for one slice, with the plan in the header comment. Never experiment results. |
 | `experiments/*.yaml` | One spec per experiment. A spec is frozen by committing its hash into `docs/preregistration.md`. |
 
 ## The first gate

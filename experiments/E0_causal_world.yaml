@@ -26,11 +26,11 @@ data_policy:
   exploration_mixture: [uniform_random, brownian, scripted_goal_directed]   # replayed planner actions join from E6 on
   coverage_metric: ground_truth_state
   validation_split: by_object_configuration   # held-out combinations for compositional OOD
-  initial_transitions: 1e6
+  initial_transitions: 1000000
   dataset: data/e0_v1                   # what E1_reference.yaml reads
 engine:
   vectorized: true                      # thousands of parallel worlds
-  framework: null                       # DDR §15 open choice; CLAUDE.md §3 default is batched PyTorch; set in the first slice, recorded in the DDR
+  framework: torch_batched              # decided in the first slice, step 1 (DDR §15); Warp/JAX/CUDA are a later swap behind the Environment Protocol
   save_restore: exact                   # including the RNG stream, so interventions and planner forks are exact
   rng: deterministic_seeded
 external_envs:                          # stable-worldmodel harness (2605.21800), envs/external/
@@ -40,6 +40,6 @@ external_envs:                          # stable-worldmodel harness (2605.21800)
   rope: true                            # Platonic-WM comparison
   granular: true                        # Platonic-WM comparison
 gate:                                   # docs/preregistration.md E0 row; §20 phase 1
-  throughput_transitions_per_s_min: 1e4
+  throughput_transitions_per_s_min: 10000
   homotopy_classes_min: 2
   save_restore: exact
