@@ -1,0 +1,16 @@
+# Generated artifacts live outside the code tree (CLAUDE.md §2): never committed.
+data/
+runs/
+checkpoints/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+*.egg-info/
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store

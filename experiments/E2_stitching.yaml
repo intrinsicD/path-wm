@@ -1,0 +1,35 @@
+experiment: E2_stitching
+status: draft
+depends_on: E1_reference      # P and I_omega frozen from this run
+frozen: [predictor, inverse_dynamics]   # + updater for E1-b
+foreign_encoders:
+  - {arch: cnn_resnet_s8, pretrained: false}
+  - {arch: hybrid_conv_attn, pretrained: false}
+  - {arch: dinov2_s, pretrained: true, frozen: true, envs: [pusht, pointmaze, wall]}
+conditions:
+  - c1_static_matching
+  - c2_relative_anchor_matching
+  - c3_transition_only            # expected to degenerate; negative control
+  - c4_transition_inverse_counterfactual   # proposed
+  - c5_c4_plus_static
+adapter_sweep:
+  kinds: [linear, mlp1, mlp2, token_transformer2]
+  param_cap_fraction_of_encoder: 0.10
+  encoder_mode: [frozen, finetuned]
+controls:
+  ceiling: retrain_predictor_with_foreign_encoder_matched_compute
+  floor: random_adapter
+variants:
+  h1a_two_encoder_predictor: true
+  h1b_abi0_rel: true
+platonic_wm_replication:
+  envs: [pointmaze, wall]
+  planner: {kind: cem, horizon: 5}
+  metric: retention_score
+metrics:
+  decisive: planning_success_vs_adapter_params_at_equal_budget
+  supporting: [transition_error, action_sensitivity_ratio, counterfactual_accuracy, mknn_to_native]
+thresholds:
+  success_fraction_of_native: 0.90
+  fail_fraction_of_native: 0.70
+seeds: [0, 1, 2, 3, 4]

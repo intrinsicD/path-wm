@@ -1,0 +1,300 @@
+# PATH-WM Design Decision Register (DDR) v0.1
+
+Companion to PATH-WM v0.3 (2026-09-03). The defaults recorded here are the ones fixed in §5–§6 of the main document; this file keeps the options and the tests that would overturn each default. Every entry has the same shape: the question, the options, the default for v0.3, why, how we would find out it is wrong, and what depends on it.
+
+Status codes: **NOW** — must be fixed before E1 is frozen. **E_n** — fixed at the named experiment. **DEFER** — implementation left open; the interface must not preclude it.
+
+---
+
+## 0. Summary
+
+| # | Decision | v0.3 default | Status |
+|---|---|---|---|
+| 1 | Encoders: pretrained or from scratch | From scratch on E0 (LeWM recipe); frozen DINOv2-S added as an extra *foreign* encoder on external environments | NOW |
+| 2 | Encoder zoo | CNN, ViT-S/8, conv–attention hybrid at matched ~5M params; SSM and equivariant later | NOW |
+| 3 | Latent token space | 8×8 grid + 1 global token, d = 192, continuous, SIGReg-regularized, shared positional convention | NOW |
+| 4 | Supervising the latent with labels | No. Labels are probe targets, viewer overlays, and goal masks only | NOW |
+| 5 | Predictor | Markov in W, single-frame token Transformer, delta/residual output, action + Δt tokens, registers reset per call | NOW |
+| 6 | Belief updater | Predict-then-correct: predictor is the prior, one gated cross-attention block is the correction | E4 |
+| 7 | Actions, goals, cost | Action tokens via MLP; goal latent from goal observation with masked token cost; learned value later | NOW / E6 |
+| 8 | Combining encoders / modalities | Union of adapted tokens into the updater, modality embedding + timestamp, modality dropout | DEFER (E10); interface NOW |
+| 9 | Curriculum | Horizon curriculum and loss staging, fixed and pre-registered; data mixed from step 0 | NOW |
+| 10 | Uncertainty | Deterministic → 5-ensemble → MoP-JEPA hard-assigned mixture, gated | E5 / U |
+| 11 | Instrument panel | Probe suite, stopgrad debug decoders, rollout and planner diagnostics; built before E1 finishes | NOW |
+| 12 | Failure taxonomy | Symptom → metric → cause → fix table | NOW |
+| 13 | Contracts and part exchange | Versioned ABI spec + conformance tests; stable-worldmodel-compatible | NOW |
+| 14 | Predesign vs evolve | Predesign contracts and instruments; evolve one implementation per experiment against a frozen reference | NOW |
+| 15 | Scalability | Batch over (population × horizon); GPU-vectorized environment; two-scale replication of every core result | NOW |
+| 16 | Language | Stopgrad text decoder from templated ground-truth captions; LLM prefix adapter later; text goals via a goal encoder | DEFER; interface NOW |
+| 17 | Interaction | Real-time viewer with fork/rewind/edit (build early), Python API, text console later | NOW (viewer) |
+| 18 | Data and environment engine | GPU-vectorized 2D physics with save/restore; exploration mixture; paired-intervention trees | NOW |
+| 19 | Compute and reproducibility | ≥5 seeds, σ_pilot from E1, per-experiment GPU-hour budgets, hashed configs | NOW |
+| 20 | Decision order | ABI spec → environment → instruments → E1 → viewer → E2 | — |
+
+---
+
+## 1. Encoders: pretrained or from scratch?
+
+**Question.** Should $E_A$ and the encoder zoo be internet-pretrained frozen models, pretrained-then-fine-tuned, or trained inside E1?
+
+**Options.**
+- (a) Frozen pretrained (DINOv2, V-JEPA 2, LeVJEPA) with a learned predictor on top — the DINO-WM / Platonic-WM setup.
+- (b) Pretrained, then fine-tuned with inverse dynamics. Frozen internet features are appearance-coupled until inverse-dynamics fine-tuning makes them action-relevant (2606.07687).
+- (c) From scratch, end-to-end with the predictor — the LeWM recipe (~15M params, hours on one GPU).
+- (d) Self-pretrained on E0 video with the LeVJEPA recipe (block-causal attention, SIGReg, token dropping), then a predictor.
+
+**Default.** (c) for $E_A$ and the whole zoo on E0. E2 needs several *architectures* trained under identical conditions, and pretrained checkpoints exist almost only for ViTs. 64-px synthetic frames are far outside internet pretraining distributions. The coordinate-ownership question of H1 is cleanest when $E_A$ is not a foundation model carrying its own geometry. Add (a) as one more foreign encoder on the external environments (PushT, PointMaze, Wall): a frozen DINOv2-S stitched into a predictor trained with a from-scratch ViT is the most striking version of the gate and lines up with Platonic-WM's protocol for a direct comparison. (d) becomes $E_A$ for the first real-video stage after E7; the ABI does not change.
+
+**How we find out it is wrong.** If grounding probes (object position, identity, container contents) from scratch-trained latents are worse than from a frozen DINOv2-S adapter on E0, the scratch encoders are undertrained. The fix is more data or (d), not switching to (a) for the zoo.
+
+**Depends on.** §3 token format; §13 contracts (encoder output shape is free; the adapter normalizes it).
+
+---
+
+## 2. Encoder zoo and size matching
+
+- CNN: small ResNet-style, stride-8 output, 8×8×d feature map → tokens.
+- ViT-S/8: 8×8 patches on 64 px → 64 tokens.
+- Hybrid: conv stem (stride 4) + 4 attention blocks.
+- Later: SSM (Mamba-style raster scan over patches); equivariant network.
+
+All at ≈5M parameters, same output layout, same training steps and data. $E_A$ = ViT (matches the predictor's token interface). Foreign order: CNN first (the hardest case; Platonic-WM excluded CNNs because their topology did not fit a patch-token predictor), hybrid second, frozen DINOv2-S on external environments third.
+
+---
+
+## 3. Latent token space — what $W$ is
+
+**Question.** What are the units of $W$, how many, what dimension, continuous or discrete, how normalized, and where do positions live?
+
+**Default.**
+- $W = [\,64 \text{ grid tokens (8×8)} \;\|\; 1 \text{ global token}\,]$, $d = 192$.
+- Continuous; SIGReg-regularized (isotropic Gaussian over the token batch); LayerNorm on every token.
+- Fixed 2D positional embeddings on grid tokens (RoPE-2D or sinusoidal), **shared by all encoders' adapters**. Positions are part of the ABI, not learned per encoder.
+- Registers $K_R \in \{0,4,8\}$ are appended by the predictor for the duration of a call and never stored in $W$.
+- No discreteness in v0.3. A VQ head on top of $W$ exists only for E9-v2 tree search.
+
+**Why.** Grid + global gives spatial grounding by construction (probes can be per-token), a place for identity to persist, a token mask for goal costs, and the same layout as DINO-WM, Platonic-WM and LeWM, so comparisons are direct. $d=192$ is LeWM scale. Continuous latents are what SMC, GRASP and the critic need; MoP-JEPA gives multimodality without discretization.
+
+**Geometry requirement.** Planning costs are latent distances, so latent Euclidean distance must track task distance. Platonic-WM's Appendix F decomposes planning error into rollout error plus latent-geometry distortion, which is why a good one-step loss can coexist with bad planning. Track the correlation between $\|W_i - W_j\|$ and ground-truth state distance on E0 from day one. If it is poor, add Temporal Straightening's curvature regularizer as an ABI term — the one kind of geometry supervision that is allowed, because it constrains shape, not content.
+
+**How we find out it is wrong.** Per-token spatial probes fail while a global probe succeeds (grid is not being used spatially); or distance correlation is low while one-step error is fine.
+
+---
+
+## 4. Should we supervise the latent with segmentation or other labels?
+
+**Answer: no**, for the same reason the debug decoder is under stopgrad (Invariant 1). A segmentation target turns $W$ into a segmentation representation — legible, but not the representation the dynamics need. A label target also destroys the H1 question, because every encoder would then be trained toward the same human-chosen coordinates and stitching would be trivial.
+
+Labels are used in exactly three ways: as **probe targets** (does $W$ contain positions, identities, hidden container contents?), as **viewer overlays**, and as **goal masks** (which tokens count in the cost).
+
+What shapes the *content* of $W$ instead:
+1. Architecture: grid, global, registers, the updater's gating (§6).
+2. Action-anchored losses: inverse dynamics and counterfactual InfoNCE decide *what must be retained* — controllable, action-relevant state — without dictating *how* it is encoded. This is the Sensorimotor-World-Model argument (2606.20104: one inverse-dynamics regularizer both prevents collapse and aligns latents to action) and the Delta-JEPA argument (decode actions from latent differences so the transition itself is constrained).
+3. SIGReg decides the *distribution*.
+
+**Escape hatch.** If grounding probes stay poor after E1, add a self-supervised dense term (V-JEPA 2.1-style patch-level prediction), never a label term. Structure by *architecture* (ABI-1 entity slots) remains a deferred experiment.
+
+---
+
+## 5. Predictor architecture and exact operation
+
+**Contract.** $P_\phi(W_t, a_{t:t+k}, \Delta t, R) \rightarrow \hat W_{t+\Delta t}$.
+
+**The decision with the largest downstream effect: the predictor is Markov in $W$.** No context window; history lives in the updater. Reservoir snapshots, stitching, revalidation and the critic all rely on "the state is $W$". The context-window predictor (DINO-WM's $H$ frames) is E4's baseline only.
+
+**Step by step.**
+1. Inputs: 64 grid + 1 global tokens from $W_t$; $k$ action tokens (each $a_{t+i}$ → MLP → $d$-dim token with time embedding $i$); one $\Delta t$ token; $K_R$ fresh register tokens with learned initialization.
+2. $L = 6$ pre-LN Transformer blocks, full attention among all tokens (a single frame per call, so no causal mask inside the call), 8 heads, MLP ratio 4.
+3. Readout: the 65 state positions → linear → $\Delta W$; $\hat W_{t+\Delta t} = \mathrm{LN}(W_t + \Delta W)$. Delta form: identity by default, which helps permanence and one-step accuracy.
+4. Registers discarded (Invariant 4).
+5. Multi-step: feed $\hat W$ back. Chunked prediction: supply all $k$ action tokens with $\Delta t = k$, trained with variable-length supervision and a horizon curriculum (VLWM).
+6. Stability: LayerNorm on the output; spectral-norm constraint on the readout (LoopWM) is enabled only if the compounding ratio (§11) exceeds threshold.
+7. ~10M parameters.
+
+**Alternatives.** Looped shared-weight (LoopWM), SSM, hybrid — E5, deferred; nothing in E1–E7 depends on them and the Transformer has the most direct comparisons. Diffusion/flow *predictors* are not used: Valdi reports no control gain per extra step; flow priors belong in the planner as proposals (LeFlow).
+
+**How we find out it is wrong.** Compounding ratio > 1.5 before $H_{\rm plan}$ with curriculum and LN in place → move E5 forward. Delta form hurting stochastic variants → switch to full prediction for the mixture heads only.
+
+---
+
+## 6. Belief updater — exact operation
+
+**Default: predict-then-correct.**
+
+$$
+\tilde W_t = P(W_{t-1}, a_{t-1}, \Delta t = 1) \qquad \text{(prior)}
+$$
+
+$$
+W_t = \mathrm{LN}\Big(\tilde W_t + g_t \odot \mathrm{CA}\big(\tilde W_t \leftarrow \{A_m E_m(o_t^m)\}\big)\Big) \qquad \text{(posterior)}
+$$
+
+CA is one cross-attention block from prior tokens to adapted observation tokens (all modalities as one set, modality embedding per token); $g_t$ is a per-token sigmoid gate. No observation ⇒ $W_t = \tilde W_t$. Train with observation dropout (~30% of steps) so the prior path is exercised. This is RSSM's posterior/prior split with the predictor as the prior; $U_\psi$ is one block plus a gate, small enough to freeze for stitching. 
+
+E4 compares this against (i) per-frame encoding, (ii) $K$-frame context window, and (iii) a block-causal encoder (LeVJEPA) that is its own updater.
+
+**How we find out it is wrong.** Hidden-state probes (container contents) decay to chance within a few unobserved steps even though the prior path is trained → the gate is closing on the prior; inspect $g_t$ statistics.
+
+---
+
+## 7. Actions, goals and the cost function
+
+**Actions.** Continuous 2D forces normalized to $[-1,1]$ → MLP → token; action-noise augmentation during training; VLWM's token-based action representation so chunk length is free. Discrete environments: embedding table. Later (E9-v2): VQ over action chunks for macro-actions.
+
+**Goals.** (a) Goal observation → $W_G$ through the same encoder/adapter (DINO-WM). Cost $J = \sum_{i \in M} \|\hat W_H[i] - W_G[i]\|^2$ over a **token mask** $M$ (tokens where the goal differs from the start, or a task-specified mask). Masking is the cheapest mitigation of latent-MSE ≠ task-distance. (b) Learned goal-conditioned value / the E7 trajectory critic. (c) Text goals through a goal encoder — DEFER (§16).
+
+**Constraints $C$.** For E0, a stopgrad probe from $W$ to collision / workspace violation, used as a penalty; verified against ground truth at evaluation.
+
+**Rule.** Report every planning result under (a) and (b) separately. The cost function interacts with every other decision; it is a variable, not a constant.
+
+---
+
+## 8. Combining encoders and modalities
+
+Interface fixed now, implementation deferred to E10. Every adapter emits tokens in the ABI layout with the shared positional convention, plus a modality embedding and a timestamp; the updater's cross-attention consumes the union; training uses modality dropout so any subset works; asynchronous rates are handled by the timestamp. No fusion at the predictor — the predictor sees only $W$. Test that the contract survives: with a single modality, the E10 code path must reproduce E1 numbers exactly.
+
+---
+
+## 9. Curriculum — what is taught, in what order
+
+**What has evidence.** Horizon curriculum (VLWM), loss staging with warmups (LeWM, PLDM), passive-then-interactive (V-JEPA 2). **What does not.** Environment-complexity curricula for *training* — mixing all E0 variants from step 0 avoids forgetting and keeps one dataset per experiment.
+
+**Default schedule (pre-registered).**
+- Stage 0 (first 10% of steps): $L_{\rm reg}$ + one-step $L_{\rm action}$ + $L_{\rm inverse}$.
+- Stage 1: add free-running rollout; $H_{\rm train}$ grows $1 \rightarrow H$ linearly over the next 40%.
+- Stage 2: add counterfactual InfoNCE.
+- Stage 3 (stochastic variant only): mixture heads with hard assignment.
+- Adapter training (E2): the same schedule compressed 4×.
+
+Complexity is staged in the *evaluation ladder* instead: deterministic → stochastic → occlusion → compositional OOD. Every model is evaluated on every rung.
+
+---
+
+## 10. Uncertainty (pointer)
+
+Order: deterministic → 5-ensemble (epistemic; planner penalty $\beta\cdot$disagreement) → MoP-JEPA hard-assigned mixture (aleatoric; a searchable transition set the SMC planner branches over) → flow matching in feature space only if mixtures are insufficient. Gate as in v0.2. Valdi's finding stands as a rule: multimodality is for planning diversity, never for per-step accuracy.
+
+---
+
+## 11. Instrument panel — how we look inside
+
+Built before E1 finishes; logged on every run; rendered in the viewer (§17).
+
+**Probes** (linear and one-layer attentive, trained with stopgrad on $W$):
+- from $W$: object positions, velocities, identities, container contents (hidden state), agent pose — $R^2$ / accuracy;
+- per grid token: local occupancy (is the grid spatial?);
+- from registers $R$: the same targets — the leakage ratio.
+
+**Debug decoders** (stopgrad): image decoder for humans; text decoder for hidden-state questions (§16).
+
+**Geometry.** m-kNN between $W$ and ground-truth state neighborhoods; distance correlation; token-norm histograms (outliers → register pressure); PCA of grid tokens; predictor attention maps (does a token attend locally, physically?).
+
+**Dynamics.** One-step and $H$-step error; compounding ratio (open-loop error / teacher-forced error at the same horizon); kinematic-vs-dynamic error decomposition; per-object error; action-sensitivity ratio $s(w)$; counterfactual discrimination accuracy; calibration Spearman.
+
+**Planner.** Homotopy-class coverage; reservoir age and drift histograms; critic-vs-verified cost scatter; predictor-call accounting; success-versus-budget curves.
+
+---
+
+## 12. Failure taxonomy — how we identify problems
+
+| Symptom | Metric | Likely cause | First fix |
+|---|---|---|---|
+| Full collapse | $W$ variance → 0; probes at chance | regularizer weight, LR | SIGReg weight, warmup |
+| Dimensional collapse | effective rank of $W$ low with SIGReg "fine" | projector / normalization | check projector, per-token vs global reg |
+| Appearance coupling | appearance probes high, dynamics probes low, counterfactual acc ≈ 1/K | no action anchoring | raise $\lambda_i, \lambda_c$ |
+| Action insensitivity | $s(w)$ small; predictor ≈ identity | identity shortcut | counterfactual term; action-dropout ablation |
+| Compounding | CR > 1.5 before $H_{\rm plan}$ | no horizon curriculum / unnormalized output | curriculum, LN, spectral constraint, ensemble truncation |
+| Register leakage | $R$-probe ≈ $W$-probe | $W$ too small | larger $W$; noise on $R$ |
+| Geometry distortion | one-step loss good, planning bad, distance correlation low | latent metric ≠ task metric | masked cost, curvature reg, learned value |
+| Mode averaging | deterministic prediction lands between modes | stochastic branching | mixture heads |
+| Adapter escape (E2) | $s(w)$ drops in adapted region; inverse loss high | transition-only loss | $\lambda_i, \lambda_c$; check $P$'s manifold |
+| Critic exploitation | $\hat J_C \ll$ verified $J$ on mutants | critic optimism | ensemble critic, verify more, penalize disagreement |
+| Planner mode collapse | homotopy coverage = 1 | no diversity pressure | diversity term, slower λ anneal |
+| Stale reservoir | high ages, large drift | δ_max too loose | tighten δ_max, revalidate deeper |
+| Physics exploit | success with constraint violations | simulator artifact | fix engine; count violations as failures |
+
+---
+
+## 13. Module contracts and how parts are exchanged
+
+**ABI spec v1** (a versioned YAML): token layout (64 grid + 1 global), $d$, normalization, positional convention, register count, action-token spec, $\Delta t$ convention, dtype. A breaking change is a major version and invalidates cross-version stitching results by design.
+
+**Contracts.**
+
+| Module | Signature | Frozen for stitching? |
+|---|---|---|
+| Encoder $E_m$ | $o \rightarrow z$ (any shape) | no |
+| Adapter $A_m$ | $z \rightarrow W$ (ABI layout) | no (the thing being trained) |
+| Updater $U_\psi$ | $(W, \{W^{(m)}_{\rm obs}\}, a) \rightarrow W$ | yes |
+| Predictor $P_\phi$ | $(W, a_{t:t+k}, \Delta t, R) \rightarrow W$ | yes |
+| Inverse $I_\omega$ | $(W, W') \rightarrow a$ | yes |
+| Critic $C_\chi$ | $(W, a_{0:H-1}) \rightarrow \hat J$ | planner-side |
+| Planner | $(W, G, P, C, \mathcal R) \rightarrow (a_{0:H-1}, \mathcal R')$ | — |
+| Debug decoders | $W \rightarrow$ text / image | never trained into $W$ |
+
+**Conformance tests** (any implementation must pass before it enters an experiment): shape and dtype; action-sensitivity $s(w) \ge s_{\min}$ on a fixed probe set; transition error $\le \epsilon_{\max}$ on the same set; for adapters, the §6.5 losses on held-out data; for planners, valid actions within budget.
+
+**Exchange procedure.** Implement → conformance → E2-style comparison against the frozen reference at equal budget → entry in the results ledger. **stable-worldmodel mapping:** `encode` = $A \circ E$ (+ $U_\psi$), `predict` = $P$, `rollout` = the loop, `criterion` = the cost, `get_cost` = the accounted call count.
+
+---
+
+## 14. Predesign or evolve?
+
+Predesign the **contracts, the ABI spec, the instrument panel, the environment, the evaluation protocol and the thresholds**. Evolve **every implementation**, one module per experiment, against a frozen reference. Keep the simplest working implementation of each module forever as the baseline and the fallback. Change an interface only when two independent implementations both need the change. This is the same discipline as an ABI: the interface is stable so that implementations can move.
+
+---
+
+## 15. Scalability
+
+- **Environment:** GPU-vectorized 2D physics (custom CUDA, Warp, or JAX), thousands of parallel worlds, deterministic save/restore for interventions and planner forks; ≥ $10^4$ transitions/s.
+- **Model:** batch over (population × horizon); `torch.compile` or JAX; bf16; ≤ 20M parameters through E7 (LeWM shows 15M is enough at PushT scale).
+- **Planner:** SMC is embarrassingly parallel — one predictor call per iteration over the whole population; critic batched; TSMCTS is the reference for GPU-parallel search.
+- **Data:** sharded, memory-mapped; paired interventions stored as trees with parent ids.
+- **Scientific scalability:** every core result at two model sizes (S, M) and two data sizes; report trend direction, not a point.
+- **Path to real video:** swap $E_A$ for a LeVJEPA-pretrained block-causal encoder (a single consumer GPU suffices for a ViT-Tiny); token dropping; the ABI stays.
+
+---
+
+## 16. Language — how it learns to talk
+
+**Principle.** Language is an I/O modality; $W$ never receives language gradients (the H3 caution: a world state that is trained to be a caption becomes a caption).
+
+- **L0 (with E0):** templated captions from ground-truth state ("red box inside the container; agent at (3,5) moving left; goal not visible") → train $D_{\rm text}(\operatorname{stopgrad}(W))$ as a small Transformer decoder. Evaluate on hidden-state questions ("what is in the container?") — this is the belief-state probe in natural language.
+- **L1:** replace templates with a small LLM behind a prefix adapter ($W$ tokens → prefix embeddings), still stopgrad. Free-form questions; plan explanations by decoding the reservoir's predicted $\hat W_{1:H}$ ("route left around the wall, then push the box").
+- **L2 (E10):** text as input — a goal encoder $E_{\rm text}$ + adapter to a goal latent or a goal mask; language-specified constraints.
+
+What talking is not: a training signal for $W$.
+
+---
+
+## 17. Interaction — how we work with it
+
+- **Python API** over the contracts (notebook-first); every experiment is a script that uses the same API.
+- **Real-time viewer** — build it early, it is the microscope. Panels: environment; debug-image decode of $W$; probe overlays (predicted vs true positions, container contents); reservoir trajectories drawn on the world, colored by homotopy class, with age and cost; critic-vs-verified scatter; attention maps; the instrument panel (§11). Controls: set a goal by clicking; drag-edit a trajectory and re-verify; inject a perturbation; fork/rewind (the snapshot runtime); step the planner one SMC iteration at a time. The viewer is a client of the Python process over shared memory or a socket — a lightweight web client first; a Vulkan client in your own engine once the panels have stabilized.
+- **Text console** (L1) for state queries and plan explanations.
+- **Agent loop:** closed-loop MPC in the environment with full logging; every executed action has a verified rollout (Invariant 10).
+
+---
+
+## 18. Data and environment engine
+
+E0 as specified in v0.2, plus a data policy: exploration mixture (uniform random, Brownian, scripted goal-directed, and — from E6 on — replayed planner actions), a coverage metric on ground-truth state, validation splits by object configuration (held-out combinations for compositional OOD), paired interventions stored as trees, seeded stochastic variants, an initial dataset of ~1M transitions. The engine must expose save/restore and a deterministic RNG so that interventions and planner forks are exact.
+
+---
+
+## 19. Compute, seeds and reproducibility
+
+≥ 5 seeds per condition; $\sigma_{\rm pilot}$ from the 5-seed E1 baseline before any threshold is frozen; per-experiment GPU-hour budgets recorded in the spec; configs hashed into `docs/preregistration.md`; a results ledger that records every conformance test and comparison.
+
+---
+
+## 20. Decision order — what to fix this month
+
+1. ABI spec v1 and the module contracts (§3, §13).
+2. Environment engine and data policy (§18).
+3. Instrument panel and failure taxonomy (§11, §12).
+4. E1 reference: encoders, predictor, schedule (§1, §2, §5, §9).
+5. Viewer v0 (§17).
+6. Then E2.
+
+Everything else is deliberately left open, with the interface written so that it can be closed later without touching the first four.

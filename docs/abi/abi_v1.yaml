@@ -1,0 +1,42 @@
+# World Latent ABI — specification v1
+# A breaking change to any field below is a new major version and invalidates cross-version stitching results.
+abi_version: 1
+state:
+  grid_tokens: 64          # 8 x 8 over 64 px observations
+  global_tokens: 1
+  dim: 192
+  dtype_activations: bf16
+  dtype_regularizer_stats: fp32
+  normalization:
+    per_token: layernorm
+    batch: sigreg            # isotropic Gaussian over the token batch (LeJEPA)
+  positions:
+    kind: rope2d             # or sinusoidal; fixed, identical for all adapters
+    learned: false
+registers:
+  count_options: [0, 4, 8]
+  stored_in_state: false
+  reset: per_predictor_call
+actions:
+  space: continuous
+  range: [-1.0, 1.0]
+  dims: 2
+  tokenizer: mlp            # a -> d; time embedding i within a chunk
+  discrete_fallback: embedding_table
+delta_t:
+  tokenizer: learned_embedding
+  max_chunk: 16
+variants:
+  abi0_rel:
+    anchors: [256, 1024]
+    similarity: cosine
+  abi1:
+    status: deferred
+consumers:                   # what defines "on the interface"
+  - predictor
+  - inverse_dynamics
+  - updater
+conformance:
+  action_sensitivity_min: null   # set from E1 pilot
+  transition_error_max: null     # set from E1 pilot
+  probe_set: evaluation/probe_set_v1

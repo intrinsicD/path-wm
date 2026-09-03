@@ -1,0 +1,46 @@
+experiment: E1_reference
+status: draft            # draft | frozen
+abi: docs/abi/abi_v1.yaml
+env:
+  name: causal_world
+  variant: deterministic
+  modalities: [rgb]
+  resolution: 64
+  dataset: data/e0_v1     # ~1M transitions, exploration mixture, paired interventions
+encoder:
+  arch: vit_s8
+  params_target: 5e6
+  pretrained: false
+adapter:
+  kind: linear
+updater:
+  kind: none               # E1-a; E1-b uses predict_then_correct
+predictor:
+  arch: transformer
+  layers: 6
+  heads: 8
+  mlp_ratio: 4
+  output: delta_layernorm
+  registers: 0
+  markov: true
+  delta_t_conditioned: true
+  params_target: 1e7
+inverse_dynamics:
+  kind: mlp_pooled_pair
+losses:
+  reg: {kind: sigreg, weight: null}
+  action: {weight: 1.0}
+  rollout: {gamma: 0.9, h_train: 8, free_running: true}
+  inverse: {weight: null}
+  counterfactual: {weight: null, k: 4, kappa: null}
+curriculum:
+  stage0_fraction: 0.10
+  horizon_growth_fraction: 0.40
+  counterfactual_from_stage: 2
+planner:
+  kind: cem
+  rollout_budget: null
+seeds: [0, 1, 2, 3, 4]
+outputs:
+  sigma_pilot: docs/preregistration.md
+  instrument_panel: true
