@@ -37,6 +37,9 @@ class Environment(Protocol):
 
     Not a §16.1 row; added by the first slice (DDR §13). Ground truth is for
     probes, viewer overlays and goal masks only (Invariant 11).
+    Every tensor the environment hands out (obs, ground truth) belongs to the
+    caller: a later step never changes it (DDR §18; a live render buffer would
+    give a dataset with o_t == o_{t+1}).
     """
 
     n_worlds: int
@@ -65,7 +68,12 @@ class Environment(Protocol):
         ...
 
     def ground_truth(self) -> Mapping[str, Tensor]:
-        """full_state, segmentation, homotopy_signature (E0 spec), each with leading dim N."""
+        """full_state, segmentation, homotopy_signature (E0 spec), each with leading dim N.
+
+        full_state is floating; segmentation is (N, res, res) with an integer dtype (pixel ids, the
+        §14 per-token occupancy probe target); homotopy_signature's dtype is the engine's (winding
+        numbers accumulate as floats along a path). DDR §13 step-2 additions.
+        """
         ...
 
 
@@ -85,7 +93,8 @@ class Adapter(Protocol):
     """A_m: z -> W in the ABI v1 layout (§5.4). The object under training in E2."""
 
     def adapt(self, z: Tensor) -> Tensor:
-        """Returns W (B, 65, 192) in the ABI dtype."""
+        """Returns W (B, 65, 192) in the ABI dtype, every token LayerNormed without affine parameters
+        (abi_v1.yaml state.normalization; DDR §13 step-2 additions)."""
         ...
 
 
@@ -123,7 +132,8 @@ class Predictor(Protocol):
     n_registers: int
 
     def predict(self, W: Tensor, actions: Tensor, delta_t: int) -> Tensor:
-        """actions (B, k, 2) with 1 <= delta_t <= k <= max_chunk; returns W_hat (B, 65, 192)."""
+        """actions (B, k, 2) with 1 <= delta_t <= k <= max_chunk, else ValueError; returns W_hat (B, 65, 192),
+        every token LayerNormed without affine parameters (§5.6 readout LN(W + dW)); W itself is never modified."""
         ...
 
 
@@ -132,7 +142,8 @@ class InverseDynamics(Protocol):
     """I_omega: (W_t, W_{t+1}) -> a_hat_t (§5.7). Anti-collapse in E1, interface anchor in E2."""
 
     def infer_action(self, W: Tensor, W_next: Tensor) -> Tensor:
-        """Returns (B, 2)."""
+        """Returns (B, 2) float32 within the ABI action range: a bounded head, since the output feeds
+        Environment.step and planner proposals (§7.3); the E1 loss is taken before the squash (DDR §13)."""
         ...
 
 

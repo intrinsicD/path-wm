@@ -14,6 +14,15 @@
 #   - Snapshot = clone of every state tensor + the torch.Generator state; restore is bit-exact.
 #   - Registers are created inside each predictor call, never passed in (DDR §13).
 #
+# Step 2 (2026-09-03): structural conformance tests (tests/conformance/) and the environment behaviour test
+# (tests/unit/test_environment.py) committed red. What they fix for step 3 (DDR §13 items 6-11):
+#   - builders build_env / build_encoder / build_adapter(cfg, z_shape) / build_predictor / build_inverse at the
+#     locations in tests/conftest.py, cfg = this whole spec, CPU by default (no device key here; the runner moves modules).
+#   - the tests run without autocast: consumers upcast the bf16 W explicitly and cast outputs back to the ABI dtype,
+#     producers emit bf16 explicitly; the boundary LayerNorm is non-affine (abi_v1.yaml per_token_affine).
+#   - the predictor readout is not zero-initialized; the inverse head is bounded with the loss before the squash.
+#   - evaluation/ and the threshold tests call the predictor with k = delta_t, as training does.
+#
 # This is a copy of experiments/E1_reference.yaml with sizes, steps and seeds shrunk, the parts the
 # slice leaves out switched off, and every null given a dev value marked "# dev". No inheritance.
 # Numbers from this file are never experiment results.

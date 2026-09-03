@@ -33,10 +33,12 @@ class ABI:
     version: int
     grid_tokens: int
     global_tokens: int
+    token_order: tuple[str, ...]    # ("global", "grid"): W[:, 0] is the global token, the grid follows row-major
     dim: int
     dtype: torch.dtype              # activations
     stats_dtype: torch.dtype        # regularizer (SIGReg) statistics
     positions: str                  # rope2d | sinusoidal; fixed and identical for every adapter
+    per_token_affine: bool          # False: the boundary LayerNorm has no per-producer scale or shift
     register_options: tuple[int, ...]
     action_dims: int
     action_range: tuple[float, float]
@@ -78,10 +80,12 @@ def load_abi(path: Path | str = DEFAULT_SPEC) -> ABI:
         version=int(spec["abi_version"]),
         grid_tokens=int(s["grid_tokens"]),
         global_tokens=int(s["global_tokens"]),
+        token_order=tuple(str(t) for t in s["token_order"]),
         dim=int(s["dim"]),
         dtype=_DTYPES[s["dtype_activations"]],
         stats_dtype=_DTYPES[s["dtype_regularizer_stats"]],
         positions=str(s["positions"]["kind"]),
+        per_token_affine=bool(s["normalization"]["per_token_affine"]),
         register_options=tuple(int(n) for n in r["count_options"]),
         action_dims=int(a["dims"]),
         action_range=(float(a["range"][0]), float(a["range"][1])),
