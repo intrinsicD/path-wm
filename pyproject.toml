@@ -1,0 +1,22 @@
+[project]
+name = "path-wm"
+version = "0.0.1"
+description = "Modular JEPA world models with transition-compatible latents and path-space planning"
+requires-python = ">=3.11"
+dependencies = ["torch>=2.7", "pyyaml>=6", "numpy>=1.26"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+# importlib mode: tests/unit and tests/conformance both hold test_<module>.py with no __init__.py, and the
+# default prepend mode errors on duplicate basenames. Plain `pytest` is the fast run (CLAUDE.md §4); a
+# command-line -m such as `pytest -m threshold` overrides the default filter, so opt-in markers still work.
+addopts = "--import-mode=importlib -m 'not slow and not gpu and not threshold'"
+markers = [
+  "slow: more than a few seconds; opt-in",
+  "gpu: needs a CUDA device; opt-in",
+  "threshold: conformance threshold layer, needs a checkpoint; opt-in (CLAUDE.md §4)",
+]

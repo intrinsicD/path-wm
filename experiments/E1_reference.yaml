@@ -6,10 +6,16 @@ env:
   variant: deterministic
   modalities: [rgb]
   resolution: 64
+  n_worlds: null            # set from E0 engine throughput
+  episode_len: null
   dataset: data/e0_v1     # ~1M transitions, exploration mixture, paired interventions
+  n_transitions: 1000000
 encoder:
   arch: vit_s8
-  params_target: 5e6
+  dim: null                # token width; ViT-S proper (384, 12 layers, 6 heads) is 21M, the 5M target is a reduced ViT: set before E1 is frozen
+  layers: null
+  heads: null
+  params_target: 5000000   # a check on the built model, not a knob
   pretrained: false
 adapter:
   kind: linear
@@ -17,6 +23,7 @@ updater:
   kind: none               # E1-a; E1-b uses predict_then_correct
 predictor:
   arch: transformer
+  dim: null                # internal width: 192 (ABI width, ~2.7M at 6 layers) or 384 with in/out projections (~10.6M, the §5.6 target); set before E1 is frozen
   layers: 6
   heads: 8
   mlp_ratio: 4
@@ -24,19 +31,30 @@ predictor:
   registers: 0
   markov: true
   delta_t_conditioned: true
-  params_target: 1e7
+  params_target: 10000000
 inverse_dynamics:
   kind: mlp_pooled_pair
 losses:
   reg: {kind: sigreg, weight: null}
   action: {weight: 1.0}
-  rollout: {gamma: 0.9, h_train: 8, free_running: true}
+  rollout: {gamma: 0.9, h_train: 8, free_running: true, delta_t_max: 8}   # delta_t_max <= abi max_chunk; from stage 1, delta_t ~ U{1..min(delta_t_max, H_train)} per batch with a k = delta_t action chunk (§6.2)
   inverse: {weight: null}
   counterfactual: {weight: null, k: 4, kappa: null}
 curriculum:
   stage0_fraction: 0.10
   horizon_growth_fraction: 0.40
   counterfactual_from_stage: 2
+train:                     # from the LeWM recipe; set before E1 is frozen
+  steps: null
+  batch_size: null
+  lr: null
+  optimizer: adamw
+  precision: bf16
+probe_set:
+  path: evaluation/probe_set_v1   # as abi_v1.yaml names it; regenerated from seed, count and horizon
+  seed: 0
+  count: null
+  horizon: 8                      # H of the H-step transition error: free-running delta_t=1 rollout (§6.2); one-step is the k=1 term
 planner:
   kind: cem
   rollout_budget: null
@@ -44,3 +62,4 @@ seeds: [0, 1, 2, 3, 4]
 outputs:
   sigma_pilot: docs/preregistration.md
   instrument_panel: true
+  metrics: [action_sensitivity_ratio, transition_error, counterfactual_accuracy, compounding_ratio]
