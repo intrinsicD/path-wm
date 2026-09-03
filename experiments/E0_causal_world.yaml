@@ -1,0 +1,45 @@
+# E0 — the controlled causal world. Source: PATH-WM_v0.3.md §9 E0, DDR §18, §20 phase-1 gate.
+# Frozen once built: the freeze is the commit of this file's hash into docs/preregistration.md.
+experiment: E0_causal_world
+status: draft            # draft | frozen
+abi: docs/abi/abi_v1.yaml
+env:
+  name: causal_world
+  physics: rigid_body_2d_topdown   # friction and collisions
+  resolution: 64                   # 64 x 64 RGB
+  agent: 1
+  movable_objects: [2, 4]          # per-episode range
+  walls: fixed_layout              # arranged so that >= 2 homotopy classes of paths exist between spawn and goal regions
+  container: 1                     # an object inside it becomes invisible
+  actions: {space: continuous, dims: 2, range: [-1.0, 1.0]}   # 2D force; must match abi_v1.yaml
+variants:
+  deterministic: true              # the first-slice and E1 variant
+  stochastic: {perturbation_forces: random, object_drift: random}
+modalities: [rgb, silhouette_edge, occupancy_grid, proprioception]   # depth deferred to the 3D variant (E10)
+ground_truth: [full_state, segmentation, homotopy_signature]         # homotopy signature = winding numbers around obstacle centroids
+interventions:
+  paired_by_save_restore: {k_actions: [4, 8], multi_step: true}
+  hidden_parameters: [mass, friction]   # visually identical objects; POKEWORLD-style identifiability tests
+  stored_as: trees_with_parent_ids
+permanence_protocol: memobench          # object disappears (container / occluder) and reappears; reappearance score from probes on W
+data_policy:
+  exploration_mixture: [uniform_random, brownian, scripted_goal_directed]   # replayed planner actions join from E6 on
+  coverage_metric: ground_truth_state
+  validation_split: by_object_configuration   # held-out combinations for compositional OOD
+  initial_transitions: 1e6
+  dataset: data/e0_v1                   # what E1_reference.yaml reads
+engine:
+  vectorized: true                      # thousands of parallel worlds
+  framework: null                       # DDR §15 open choice; CLAUDE.md §3 default is batched PyTorch; set in the first slice, recorded in the DDR
+  save_restore: exact                   # including the RNG stream, so interventions and planner forks are exact
+  rng: deterministic_seeded
+external_envs:                          # stable-worldmodel harness (2605.21800), envs/external/
+  pusht: true
+  pointmaze: true
+  wall: true
+  rope: true                            # Platonic-WM comparison
+  granular: true                        # Platonic-WM comparison
+gate:                                   # docs/preregistration.md E0 row; §20 phase 1
+  throughput_transitions_per_s_min: 1e4
+  homotopy_classes_min: 2
+  save_restore: exact
