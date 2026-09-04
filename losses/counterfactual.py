@@ -1,10 +1,11 @@
 """Paired-intervention InfoNCE action anchor for E1 and E2 (§6.4).
 
-What: each prediction P(W0, a_i) classifies its matching next state among K branches sharing X0.
+What: each prediction P(W0, a_i) classifies its matching next state among K branches sharing X0 and
+reports its absolute diagonal MSE so the staged objective can explicitly balance ranking and fidelity.
 How: the K x K logits are negative fp32 token MSE divided by kappa; diagonal indices are positives,
 and every encoded next-state target is detached at the distance boundary.
-Why: unlike opposite-action separation, this loss requires the predictor's action response to have the
-correct semantics; equal/collapsed branches yield log(K) loss and 1/K discrimination accuracy.
+Why: unlike opposite-action separation, InfoNCE requires the predictor's action response to have the
+correct semantics, while the optional positive term prevents relative ranking by absolute overshoot.
 """
 from __future__ import annotations
 
@@ -48,5 +49,6 @@ def counterfactual_loss(
     logits = -distances / kappa
     labels = torch.arange(branches, device=actions.device)[None].expand(batch, -1)
     loss = F.cross_entropy(logits.reshape(batch * branches, branches), labels.reshape(-1))
+    positive_mse = distances.diagonal(dim1=1, dim2=2).mean()
     accuracy = (distances.argmin(dim=-1) == labels).float().mean()
-    return {"loss": loss, "accuracy": accuracy}
+    return {"loss": loss, "positive_mse": positive_mse, "accuracy": accuracy}

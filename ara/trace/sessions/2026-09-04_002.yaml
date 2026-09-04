@@ -2,11 +2,13 @@ session:
   id: "2026-09-04_002"
   date: "2026-09-04"
   started: "2026-09-04T09:59+02:00"
-  last_turn: "2026-09-04T10:45+02:00"
-  turn_count: 2
+  last_turn: "2026-09-04T12:06+02:00"
+  turn_count: 4
   summary: >
-    Added action-correctness controls, then implemented and tested the paired counterfactual
-    anchor; κ=0.1 was a scale-mismatch dead end and its checkpoint was not promoted.
+    Added action-correctness controls and the paired counterfactual anchor, then isolated
+    temperature, weight, objective geometry, gradient routing, and observability. Paired
+    absolute loss substantially improves E1-a but cannot beat identity; exact hidden-velocity
+    aliasing and a two-frame diagnostic justify moving to the planned E1-b updater.
 
 events_logged:
   - turn: 1
@@ -45,6 +47,90 @@ events_logged:
     routing: staged
     provenance: ai-suggested
     summary: "Contrastive temperature should be tested in the distance metric's units."
+  - turn: 3
+    type: experiment
+    id: N14
+    routing: direct
+    provenance: ai-executed
+    summary: "Ran the isolated κ=0.001 calibration and rejected its checkpoint."
+  - turn: 3
+    type: decision
+    id: N15
+    routing: direct
+    provenance: ai-suggested
+    summary: "Kept κ=0.001 and selected weight 0.01 as the isolated next balance test."
+  - turn: 3
+    type: claim
+    id: C04
+    routing: crystallized
+    provenance: ai-suggested
+    summary: "Calibrated branch ranking did not imply accurate dynamics when overweighted."
+  - turn: 3
+    type: observation
+    id: O11
+    routing: staged
+    provenance: ai-suggested
+    summary: "At calibrated temperature, loss weight must balance ranking against absolute error."
+  - turn: 4
+    type: decision
+    id: N16
+    routing: direct
+    provenance: user
+    summary: "Required informed grid search plus structural diagnosis and tested remedies."
+  - turn: 4
+    type: experiment
+    id: N17
+    routing: direct
+    provenance: ai-executed
+    summary: "Completed the counterfactual temperature/weight grid."
+  - turn: 4
+    type: dead_end
+    id: N18
+    routing: direct
+    provenance: ai-executed
+    summary: "Rejected scalar InfoNCE tuning as sufficient for all E1-a controls."
+  - turn: 4
+    type: experiment
+    id: N19
+    routing: direct
+    provenance: ai-executed
+    summary: "Tested predictor-only routing and a paired-absolute objective grid."
+  - turn: 4
+    type: dead_end
+    id: N20
+    routing: direct
+    provenance: ai-executed
+    summary: "Rejected encoder-gradient absorption as the sole failure cause."
+  - turn: 4
+    type: decision
+    id: N21
+    routing: direct
+    provenance: ai-suggested
+    summary: "Retained but did not promote the paired-MSE weight-6 Pareto checkpoint."
+  - turn: 4
+    type: experiment
+    id: N22
+    routing: direct
+    provenance: ai-executed
+    summary: "Proved hidden-velocity aliasing and measured two-frame sufficiency."
+  - turn: 4
+    type: decision
+    id: N23
+    routing: direct
+    provenance: ai-suggested
+    summary: "Selected the planned E1-b updater as the next architecture test."
+  - turn: 4
+    type: claim
+    id: C05
+    routing: crystallized
+    provenance: ai-suggested
+    summary: "Paired absolute anchoring improves but does not solve E1-a."
+  - turn: 4
+    type: claim
+    id: C06
+    routing: crystallized
+    provenance: ai-suggested
+    summary: "Single RGB is not a sufficient Markov state for E0."
 
 ai_actions:
   - turn: 1
@@ -76,26 +162,73 @@ ai_actions:
       - "docs/design-decisions.md"
       - "CLAUDE.md"
       - "ara/evidence/tables/e1_dev_counterfactual_2026-09-04.md"
+  - turn: 3
+    action: >
+      Added a sole-change κ=0.001 dev spec and invariant test, ran it on the same RTX 4090
+      and fixed data, verified pre-stage log identity, ran threshold evaluation, documented
+      the mixed/negative result, and declined checkpoint promotion.
+    provenance: ai-executed
+    files_changed:
+      - "configs/dev/first_slice_counterfactual_scaled.yaml"
+      - "tests/unit/test_specs.py"
+      - "docs/design-decisions.md"
+      - "CLAUDE.md"
+      - "ara/evidence/tables/e1_dev_counterfactual_2026-09-04.md"
+  - turn: 4
+    action: >
+      Ran ten new informed parameter-grid jobs, implemented and tested explicit
+      counterfactual gradient routing plus paired diagonal MSE, ran six objective-remedy
+      jobs, audited per-module gradients, proved the hidden-velocity RGB alias, measured
+      two-frame sufficiency, and declined promotion because identity still wins.
+    provenance: ai-executed
+    files_changed:
+      - "losses/counterfactual.py"
+      - "losses/e1.py"
+      - "training/e1.py"
+      - "run.py"
+      - "experiments/E1_reference.yaml"
+      - "configs/dev/first_slice_counterfactual_grid_*.yaml"
+      - "configs/dev/first_slice_counterfactual_solution_*.yaml"
+      - "tests/unit/test_counterfactual.py"
+      - "tests/unit/test_losses.py"
+      - "tests/unit/test_training.py"
+      - "tests/unit/test_specs.py"
+      - "tests/unit/test_observability.py"
+      - "docs/design-decisions.md"
+      - "CLAUDE.md"
+      - "ara/evidence/tables/e1_dev_counterfactual_2026-09-04.md"
 
 claims_touched:
   - id: C03
     action: crystallized
     turn: 2
+  - id: C04
+    action: crystallized
+    turn: 3
+  - id: C05
+    action: crystallized
+    turn: 4
+  - id: C06
+    action: crystallized
+    turn: 4
 
 key_context:
   - turn: 1
     excerpt: "User asked to continue with the recorded action-correctness instrumentation step."
   - turn: 2
     excerpt: "User asked to continue with the paired counterfactual action-anchor step."
+  - turn: 3
+    excerpt: "User asked to continue with the calibrated κ=0.001 counterfactual run."
+  - turn: 4
+    excerpt: "User required informed grid search and tested structural remedies instead of one-parameter guessing."
 
 open_threads:
-  - "Test κ=0.001 as the sole change against the fresh token-pair control."
-  - "Determine whether observation history or the updater is required by E0's hidden velocity."
+  - "Implement and compare the planned E1-b predict-then-correct updater against the E1-a Pareto checkpoint."
   - "Set ABI thresholds only after seed variability and a correctly action-conditioned reference."
   - "Revisit Sophontic only after its model, report, and eval kit ship."
   - "Decide whether E2 pair scoring needs the remaining joint-correctness and invariance controls."
 
 ai_suggestions_pending:
   - >
-      Preserve the κ=0.1 run as a scale-mismatch negative and test κ=0.001 before changing
-      predictor architecture or rejecting the counterfactual objective.
+      Stop E1-a scalar loss search; preserve the paired-MSE weight-6 Pareto checkpoint and
+      test the predesigned history-bearing updater at the same data, seed, steps, and panel budget.

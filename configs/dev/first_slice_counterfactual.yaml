@@ -80,7 +80,7 @@ losses:
   action: {weight: 1.0}
   rollout: {gamma: 0.9, h_train: 4, free_running: true, delta_t_max: 4}
   inverse: {weight: 1.0}
-  counterfactual: {weight: 1.0, k: 4, kappa: 0.1, batch_size: 16}   # dev
+  counterfactual: {weight: 1.0, positive_weight: 0.0, context_gradient: true, k: 4, kappa: 0.1, batch_size: 16}   # dev
 curriculum:
   stage0_fraction: 0.10
   horizon_growth_fraction: 0.40

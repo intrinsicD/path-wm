@@ -47,7 +47,8 @@ def main() -> None:
     device = select_device(args.device)
     store = ensure_episode_store(cfg, ROOT, seed=int(cfg["probe_set"]["seed"]))
     counterfactual_store = None
-    if float(cfg["losses"]["counterfactual"]["weight"]) != 0.0:
+    counterfactual_cfg = cfg["losses"]["counterfactual"]
+    if float(counterfactual_cfg["weight"]) != 0.0 or float(counterfactual_cfg.get("positive_weight", 0.0)) != 0.0:
         counterfactual_store = ensure_paired_intervention_store(cfg, ROOT)
 
     for seed in cfg["seeds"]:

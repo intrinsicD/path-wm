@@ -80,7 +80,7 @@ losses:
   action: {weight: 1.0}
   rollout: {gamma: 0.9, h_train: 4, free_running: true, delta_t_max: 4}   # dev: h_train 8 -> 4, delta_t_max 8 -> 4
   inverse: {weight: 1.0}                    # dev
-  counterfactual: {weight: 0.0, k: 4, kappa: 0.1, batch_size: 16}   # off by weight 0; no training pairs are loaded. kappa stays positive because the fixed probe reports discrimination.
+  counterfactual: {weight: 0.0, positive_weight: 0.0, context_gradient: true, k: 4, kappa: 0.1, batch_size: 16}   # off by both weights; kappa stays positive because the fixed probe reports discrimination.
 curriculum:
   stage0_fraction: 0.10
   horizon_growth_fraction: 0.40

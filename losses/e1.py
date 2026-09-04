@@ -2,7 +2,7 @@
 
 What: SIGReg plus inverse dynamics are always active; the action term starts at k=1, then free-running
 and one uniformly sampled variable-length chunk join after stage 0 as the trained horizon grows; paired
-counterfactual InfoNCE joins at stage 2.
+counterfactual InfoNCE and its optional paired positive MSE join at stage 2.
 Why: this is the smallest objective that prevents collapse, anchors actions, and trains both iterative
 and chunked prediction without allowing labels or environment ground truth into W (Invariant 11).
 """
@@ -56,6 +56,8 @@ class E1Objective(nn.Module):
         self.growth_fraction = float(cfg["curriculum"]["horizon_growth_fraction"])
         counterfactual = losses["counterfactual"]
         self.counterfactual_weight = float(counterfactual["weight"])
+        self.counterfactual_positive_weight = float(counterfactual.get("positive_weight", 0.0))
+        self.counterfactual_context_gradient = bool(counterfactual.get("context_gradient", True))
         self.counterfactual_k = int(counterfactual["k"])
         self.counterfactual_kappa = float(counterfactual["kappa"])
         if int(cfg["curriculum"]["counterfactual_from_stage"]) != 2:
@@ -63,7 +65,8 @@ class E1Objective(nn.Module):
 
     def counterfactual_active(self, step: int, total_steps: int) -> bool:
         stage2_step = max(1, int(total_steps * (self.stage0_fraction + self.growth_fraction)))
-        return self.counterfactual_weight != 0.0 and step >= stage2_step
+        enabled = self.counterfactual_weight != 0.0 or self.counterfactual_positive_weight != 0.0
+        return enabled and step >= stage2_step
 
     def forward(
         self,
@@ -104,6 +107,7 @@ class E1Objective(nn.Module):
         regularizer = self.sigreg(states[:, : horizon + 1].flatten(0, 1)) if self.reg_weight else zero
         inverse_value = inverse_loss(inverse, states, actions, horizon) if self.inverse_weight else zero
         counterfactual_value = zero
+        counterfactual_positive = zero
         counterfactual_accuracy = None
         if self.counterfactual_active(step, total_steps):
             if counterfactual_states is None or counterfactual_actions is None:
@@ -121,12 +125,14 @@ class E1Objective(nn.Module):
                 kappa=self.counterfactual_kappa,
             )
             counterfactual_value = counterfactual["loss"]
+            counterfactual_positive = counterfactual["positive_mse"]
             counterfactual_accuracy = counterfactual["accuracy"]
         total = (
             dynamics["total"]
             + self.reg_weight * regularizer
             + self.inverse_weight * inverse_value
             + self.counterfactual_weight * counterfactual_value
+            + self.counterfactual_positive_weight * counterfactual_positive
         )
         return {
             "total": total,
@@ -136,6 +142,7 @@ class E1Objective(nn.Module):
             "rollout": dynamics["rollout"],
             "chunk": dynamics["chunk"],
             "counterfactual": counterfactual_value,
+            "counterfactual_positive": counterfactual_positive,
             "counterfactual_accuracy": counterfactual_accuracy,
             "horizon": horizon,
             "delta_t": chunk_delta_t,

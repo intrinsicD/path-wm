@@ -1,8 +1,8 @@
 """Single-seed E1-a training loop for the first vertical slice.
 
 Raw observations are encoded per sampled window; stage 2 also samples exact paired interventions and
-encodes their targets behind stop-gradient. Only W and actions reach the objective. Independent sampling
-streams keep the ordinary episode/chunk sequence matched when counterfactual batches join training.
+encodes their targets behind stop-gradient. The context encoding can remain trainable or be detached to
+route the auxiliary gradient only through P. Independent streams keep ordinary sampling matched.
 """
 from __future__ import annotations
 
@@ -30,8 +30,14 @@ def _encode_counterfactuals(
     models: ModelBundle,
     initial: torch.Tensor,
     following: torch.Tensor,
+    *,
+    context_gradient: bool = True,
 ) -> torch.Tensor:
-    initial_states = models.adapter.adapt(models.encoder.encode(initial))
+    if context_gradient:
+        initial_states = models.adapter.adapt(models.encoder.encode(initial))
+    else:
+        with torch.no_grad():
+            initial_states = models.adapter.adapt(models.encoder.encode(initial))
     batch, branches = following.shape[:2]
     # Prediction targets are constants (§6.1). Avoid retaining an encoder graph that detach would discard.
     with torch.no_grad():
@@ -57,8 +63,11 @@ def train_e1(
     counts = parameter_counts(models)
     check_parameter_targets(cfg, counts)
     objective = build_objective(cfg, abi).to(device)
-    if objective.counterfactual_weight != 0.0 and counterfactual_store is None:
-        raise ValueError("nonzero counterfactual weight requires a paired-intervention store")
+    counterfactual_enabled = (
+        objective.counterfactual_weight != 0.0 or objective.counterfactual_positive_weight != 0.0
+    )
+    if counterfactual_enabled and counterfactual_store is None:
+        raise ValueError("an enabled counterfactual objective requires a paired-intervention store")
     optimizer = torch.optim.AdamW(
         models.parameters(),
         lr=float(cfg["train"]["lr"]),
@@ -106,6 +115,7 @@ def train_e1(
                         models,
                         paired_initial,
                         paired_following,
+                        context_gradient=objective.counterfactual_context_gradient,
                     )
                 values = objective(
                     models.predictor,

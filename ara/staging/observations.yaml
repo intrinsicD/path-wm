@@ -175,3 +175,54 @@ observations:
     promoted_to: null
     crystallized_via: null
     stale: false
+
+  - id: O11
+    timestamp: "2026-09-04T11:08+02:00"
+    provenance: ai-suggested
+    content: >
+      At κ=0.001 and weight 1, counterfactual ranking became learnable but overwhelmed
+      absolute dynamics: held-out accuracy reached 0.649414 while one-step and four-step
+      error rose 25.83 and 8.81 times above the hardware-matched control.
+    context: >
+      Sole-temperature-change run with identical logs through step 950 and fixed paired probes.
+    potential_type: claim
+    bound_to: [N14, N15]
+    promoted: true
+    promoted_to: "logic/claims.md:C04"
+    crystallized_via: artifact-commitment
+    stale: false
+
+  - id: O12
+    timestamp: "2026-09-04T12:06+02:00"
+    provenance: ai-suggested
+    content: >
+      Pure counterfactual InfoNCE has a relative-ranking/absolute-accuracy tradeoff and
+      routes more than 99% of its squared gradient norm outside the predictor. Adding
+      paired diagonal MSE produces a better Pareto point but no E1-a configuration in the
+      informed search beats the identity control.
+    context: >
+      Ten new parameter-grid runs, a predictor-only intervention, five paired-absolute
+      runs, per-module gradient diagnostics, and a fixed held-out action-correctness panel.
+    potential_type: claim
+    bound_to: [N17, N18, N19, N20, N21]
+    promoted: true
+    promoted_to: "logic/claims.md:C05"
+    crystallized_via: artifact-commitment
+    stale: false
+
+  - id: O13
+    timestamp: "2026-09-04T12:06+02:00"
+    provenance: ai-suggested
+    content: >
+      E1-a is structurally non-Markov: equal current RGB and action can correspond to
+      different next RGB when hidden velocity differs. On fresh E0 trajectories, two-frame
+      velocity estimation reduces physical next-position MSE 98.63% relative to identity.
+    context: >
+      Exact save/restore velocity-alias witness and 3,840-transition history diagnostic,
+      now fixed by two unit regressions.
+    potential_type: claim
+    bound_to: [N22]
+    promoted: true
+    promoted_to: "logic/claims.md:C06"
+    crystallized_via: artifact-commitment
+    stale: false

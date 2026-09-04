@@ -45,7 +45,7 @@ losses:
   action: {weight: 1.0}
   rollout: {gamma: 0.9, h_train: 8, free_running: true, delta_t_max: 8}   # delta_t_max <= abi max_chunk; from stage 1, delta_t ~ U{1..min(delta_t_max, H_train)} per batch with a k = delta_t action chunk (§6.2)
   inverse: {weight: null}
-  counterfactual: {weight: null, k: 4, kappa: null, batch_size: null}
+  counterfactual: {weight: null, positive_weight: null, context_gradient: true, k: 4, kappa: null, batch_size: null}
 curriculum:
   stage0_fraction: 0.10
   horizon_growth_fraction: 0.40

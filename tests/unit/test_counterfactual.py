@@ -40,6 +40,7 @@ def test_counterfactual_loss_matches_actions_and_stops_target_gradients():
 
     assert values["accuracy"] == pytest.approx(1.0)
     assert values["loss"] < 0.02
+    assert float(values["positive_mse"].detach()) == pytest.approx(0.0)
     assert predictor.scale.grad is not None and torch.isfinite(predictor.scale.grad)
     assert targets.grad is None or torch.count_nonzero(targets.grad) == 0
 
@@ -53,4 +54,17 @@ def test_collapsed_counterfactuals_have_log_k_loss_and_chance_accuracy():
     values = counterfactual_loss(predictor, initial, targets, actions, kappa=0.1)
 
     assert float(values["loss"].detach()) == pytest.approx(math.log(4.0))
+    assert float(values["positive_mse"]) == pytest.approx(0.0)
     assert float(values["accuracy"]) == pytest.approx(0.25)
+
+
+def test_positive_mse_measures_only_matching_branches():
+    predictor = ScaledAdditivePredictor(scale=0.5)
+    initial = torch.zeros(1, 1, 1)
+    action_x = torch.tensor([[-1.0, 0.0, 1.0]])
+    actions = torch.stack((action_x, torch.zeros_like(action_x)), dim=-1)
+    targets = action_x[:, :, None, None]
+
+    values = counterfactual_loss(predictor, initial, targets, actions, kappa=0.1)
+
+    assert float(values["positive_mse"].detach()) == pytest.approx((0.5**2 + 0.0 + 0.5**2) / 3)

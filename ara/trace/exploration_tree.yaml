@@ -230,3 +230,189 @@ tree:
       - "docs/design-decisions.md"
     status: resolved
     children: []
+
+  - id: N14
+    type: experiment
+    title: "Calibrated-temperature counterfactual development run"
+    provenance: ai-executed
+    timestamp: "2026-09-04T11:08+02:00"
+    also_depends_on: [N11, N13]
+    result: >
+      With κ=0.001 as the only parsed-spec change, all runs remained identical through
+      step 950. Held-out K=4 accuracy rose to 0.649414 and correct actions beat shuffled
+      actions, but correct-action error remained 2.36 times zero action and 10.19 times
+      identity; four-step error was 8.81 times the matched control. The first active raw
+      gradient norm was 178.74 before clipping, so the checkpoint was not promoted.
+    evidence:
+      - "runs/dev/first_slice_counterfactual_scaled/0/metrics.json"
+      - "runs/dev/first_slice_counterfactual_scaled/0/training.jsonl"
+      - "ara/evidence/tables/e1_dev_counterfactual_2026-09-04.md"
+    status: resolved
+    children: []
+
+  - id: N15
+    type: decision
+    title: "Keep calibrated temperature and reduce counterfactual weight"
+    provenance: ai-suggested
+    timestamp: "2026-09-04T11:08+02:00"
+    also_depends_on: [N14]
+    choice: >
+      Preserve the κ=0.001, weight-1 run as a negative result and next change only the
+      counterfactual weight from 1 to 0.01. This keeps informative logits while scaling
+      the onset gradient contribution from order 179 to order 1.8, comparable to the
+      ordinary post-stage gradient norm.
+    alternatives:
+      - "Promote based on discrimination accuracy while ignoring absolute transition controls."
+      - "Change predictor architecture before balancing the newly active auxiliary loss."
+      - "Return to κ=0.1, where the objective has effectively no gradient."
+    evidence:
+      - "N14"
+      - "docs/design-decisions.md"
+    status: resolved
+    children: []
+
+  - id: N16
+    type: decision
+    title: "Replace a single follow-up weight with informed search and structural audit"
+    provenance: user
+    timestamp: "2026-09-04T12:06+02:00"
+    also_depends_on: [N14, N15]
+    choice: >
+      If the failure is parametric, run an informed grid; if it is deeper, identify
+      architectural or implementation causes, propose multiple remedies, and test them.
+    alternatives:
+      - "Run only the provisionally selected counterfactual weight 0.01."
+    evidence:
+      - "ara/evidence/tables/e1_dev_counterfactual_2026-09-04.md"
+    status: resolved
+    children: []
+
+  - id: N17
+    type: experiment
+    title: "Informed counterfactual temperature and weight grid"
+    provenance: ai-executed
+    timestamp: "2026-09-04T12:06+02:00"
+    also_depends_on: [N14, N16]
+    result: >
+      Seven log-spaced/refined weights at κ=0.001 plus three equal-gradient temperature
+      points bracketed inactive, balanced, and over-ranked regimes. κ=0.002 and weight
+      0.04 was the best pure point: accuracy 0.297852, correct actions beat zero/shuffled,
+      and one-/four-step errors improved 8.37%/8.82%, but identity was 51.06% better.
+    evidence:
+      - "configs/dev/first_slice_counterfactual_grid_k2e3_w4e2.yaml"
+      - "runs/dev/first_slice_counterfactual_grid_k2e3_w4e2/0/metrics.json"
+      - "ara/evidence/tables/e1_dev_counterfactual_2026-09-04.md"
+    status: resolved
+    children:
+      - id: N18
+        type: dead_end
+        title: "A scalar InfoNCE setting alone passes all E1-a action controls"
+        provenance: ai-executed
+        timestamp: "2026-09-04T12:06+02:00"
+        hypothesis: >
+          A temperature/weight region exists where branch discrimination is meaningful
+          and correct-action prediction beats identity, zero, and shuffled controls.
+        failure_mode: >
+          Low weights remained at chance, intermediate weights beat zero/shuffle but not
+          identity, and higher weights increased discrimination by sacrificing absolute
+          one-step and rollout accuracy.
+        lesson: >
+          Stop scalar search; test relative-loss geometry, gradient routing, and state
+          observability before spending more runs on finer weights.
+        status: resolved
+        children: []
+
+  - id: N19
+    type: experiment
+    title: "Counterfactual objective geometry and gradient-routing remedies"
+    provenance: ai-executed
+    timestamp: "2026-09-04T12:06+02:00"
+    also_depends_on: [N17, N18]
+    result: >
+      The control-checkpoint InfoNCE component norms were 52.71 encoder, 5.55 adapter,
+      and 2.45 predictor. Predictor-only routing learned 0.46875 discrimination but made
+      absolute error unusable. Adding paired diagonal MSE and sweeping measured weights
+      2/6/12/24/48 produced a weight-6 Pareto point with 0.315430 discrimination,
+      6.22%/14.04% gains over zero/shuffled, and 25.04%/21.28% one-/four-step gains.
+    evidence:
+      - "losses/counterfactual.py"
+      - "runs/dev/first_slice_counterfactual_solution_predictor_only/0/metrics.json"
+      - "runs/dev/first_slice_counterfactual_solution_absolute_w6/0/metrics.json"
+      - "ara/evidence/tables/e1_dev_counterfactual_2026-09-04.md"
+    status: resolved
+    children:
+      - id: N20
+        type: dead_end
+        title: "Preventing encoder absorption makes relative InfoNCE sufficient"
+        provenance: ai-executed
+        timestamp: "2026-09-04T12:06+02:00"
+        hypothesis: >
+          Routing the calibrated auxiliary gradient only into the predictor will preserve
+          latent geometry while learning correct action semantics.
+        failure_mode: >
+          Held-out discrimination reached 0.46875, but one-step error rose to 0.0180226,
+          still lost to zero action, and was 88.41 times identity error.
+        lesson: >
+          Encoder absorption is real but not causal by itself: relative-only branch ranking
+          lacks an absolute positive constraint and can drive predictor overshoot directly.
+        status: resolved
+        children: []
+
+  - id: N21
+    type: decision
+    title: "Retain paired-MSE weight 6 as E1-a Pareto checkpoint; do not promote"
+    provenance: ai-suggested
+    timestamp: "2026-09-04T12:06+02:00"
+    also_depends_on: [N19, N20]
+    choice: >
+      Preserve κ=0.002, contrastive weight 0.04, and positive weight 6 as the strongest
+      semantic/accuracy E1-a comparison, but do not freeze or set ABI thresholds because
+      correct-action error remains 25.16% above identity.
+    alternatives:
+      - "Choose weight 24 solely for its lower one-step error despite weaker discrimination."
+      - "Promote weight 6 while ignoring the preregistered identity control."
+      - "Continue scalar objective search after the high-side bracket returned to chance."
+    evidence:
+      - "N19"
+      - "runs/dev/first_slice_counterfactual_solution_absolute_w6/0/metrics.json"
+      - "docs/design-decisions.md"
+    status: resolved
+    children: []
+
+  - id: N22
+    type: experiment
+    title: "Hidden-velocity observability and two-frame sufficiency audit"
+    provenance: ai-executed
+    timestamp: "2026-09-04T12:06+02:00"
+    also_depends_on: [N18, N21]
+    result: >
+      Opposite hidden velocities produced identical current RGB but different next RGB
+      in all 64 worlds under one action. Across 3,840 fresh transitions, two-frame
+      finite-difference prediction reduced next-position MSE 98.63% versus identity and
+      approached the full-velocity oracle. Two committed unit regressions fix both facts.
+    evidence:
+      - "tests/unit/test_observability.py"
+      - "ara/evidence/tables/e1_dev_counterfactual_2026-09-04.md"
+    status: resolved
+    children: []
+
+  - id: N23
+    type: decision
+    title: "Move from E1-a loss search to the planned history-bearing E1-b updater"
+    provenance: ai-suggested
+    timestamp: "2026-09-04T12:06+02:00"
+    also_depends_on: [N21, N22]
+    choice: >
+      Implement the predesigned predict-then-correct updater so history is carried in W,
+      then compare it with the E1-a paired-MSE Pareto checkpoint at equal data, steps,
+      seed, and panel budget before any further counterfactual parameter search.
+    alternatives:
+      - "Render velocity and remove E0's intended partial-observation problem."
+      - "Give the Markov predictor an undeclared context window and break the ABI contract."
+      - "Continue tuning E1-a despite an exact observation alias."
+    evidence:
+      - "N21"
+      - "N22"
+      - "docs/design-decisions.md"
+    status: resolved
+    children: []

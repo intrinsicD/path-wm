@@ -96,6 +96,7 @@ def test_counterfactual_term_starts_only_at_stage_two(cfg, abi):
 
     before = objective(AdditivePredictor(), object(), states, actions, step=999, total_steps=2000)
     assert before["counterfactual"].item() == 0.0
+    assert before["counterfactual_positive"].item() == 0.0
     assert before["counterfactual_accuracy"] is None
 
     paired_states = torch.randn(2, 4, abi.n_tokens, abi.dim).to(abi.dtype)
@@ -111,4 +112,34 @@ def test_counterfactual_term_starts_only_at_stage_two(cfg, abi):
         counterfactual_actions=paired_actions,
     )
     assert torch.isfinite(after["counterfactual"])
+    assert torch.isfinite(after["counterfactual_positive"])
     assert after["counterfactual_accuracy"] is not None
+
+
+def test_paired_positive_weight_adds_matching_branch_error(cfg, abi):
+    spec = copy.deepcopy(cfg)
+    spec["losses"]["reg"]["weight"] = 0.0
+    spec["losses"]["inverse"]["weight"] = 0.0
+    spec["losses"]["rollout"].update(h_train=1, delta_t_max=1)
+    spec["losses"]["counterfactual"].update(
+        weight=0.0, positive_weight=2.0, k=3, kappa=0.1, batch_size=2
+    )
+    objective = build_objective(spec, abi)
+    states = torch.randn(2, 2, abi.n_tokens, abi.dim).to(abi.dtype)
+    actions = torch.zeros(2, 1, abi.action_dims)
+    paired_states = torch.randn(2, 4, abi.n_tokens, abi.dim).to(abi.dtype)
+    paired_actions = torch.zeros(2, 3, abi.action_dims)
+
+    values = objective(
+        AdditivePredictor(),
+        object(),
+        states,
+        actions,
+        step=1000,
+        total_steps=2000,
+        counterfactual_states=paired_states,
+        counterfactual_actions=paired_actions,
+    )
+
+    ordinary = values["action"] + values["rollout"] + values["chunk"]
+    torch.testing.assert_close(values["total"], ordinary + 2.0 * values["counterfactual_positive"])

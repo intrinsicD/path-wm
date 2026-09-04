@@ -7,7 +7,8 @@ import torch
 
 from evaluation import evaluate_checkpoint
 from training.data import EpisodeStore, PairedInterventionStore
-from training.e1 import train_e1
+from training.e1 import _encode_counterfactuals, train_e1
+from training.model import build_models
 
 
 def test_one_step_training_writes_reloadable_metrics(cfg, tmp_path):
@@ -75,4 +76,20 @@ def test_stage_two_training_consumes_paired_interventions(cfg, tmp_path):
 
     assert final["step"] == 2
     assert final["counterfactual"] > 0.0
+    assert final["counterfactual_positive"] >= 0.0
     assert 0.0 <= final["counterfactual_accuracy"] <= 1.0
+
+
+def test_counterfactual_context_gradient_can_be_routed_to_predictor_only(cfg):
+    spec = copy.deepcopy(cfg)
+    spec["encoder"].update(dim=32, layers=1, heads=4, params_target=None)
+    spec["predictor"].update(dim=32, layers=1, heads=4, params_target=None)
+    models = build_models(spec, torch.device("cpu"))
+    initial = torch.randint(0, 256, (2, 3, 64, 64), dtype=torch.uint8)
+    following = torch.randint(0, 256, (2, 3, 3, 64, 64), dtype=torch.uint8)
+
+    joint = _encode_counterfactuals(models, initial, following, context_gradient=True)
+    predictor_only = _encode_counterfactuals(models, initial, following, context_gradient=False)
+
+    assert joint[:, 0].requires_grad
+    assert not predictor_only.requires_grad

@@ -1,0 +1,77 @@
+# First-slice step-4 informed grid: κ=0.001, counterfactual weight=0.01.
+# Full no-inheritance copy; the parsed mapping changes only weight from the calibrated run.
+experiment: E1_reference
+status: dev
+abi: docs/abi/abi_v1.yaml
+env:
+  name: causal_world
+  variant: deterministic
+  modalities: [rgb]
+  resolution: 64
+  n_worlds: 64
+  episode_len: 32
+  dataset: data/e0_dev
+  n_transitions: 20480
+  exploration: uniform_random
+counterfactual_data:
+  groups: 2048
+  seed: 4000003
+  probe_groups: 256
+  probe_seed: 8000003
+encoder:
+  arch: vit_s8
+  dim: 96
+  layers: 4
+  heads: 4
+  params_target: 500000
+  pretrained: false
+adapter:
+  kind: linear
+updater:
+  kind: none
+predictor:
+  arch: transformer
+  dim: 192
+  layers: 2
+  heads: 4
+  mlp_ratio: 4
+  output: delta_layernorm
+  registers: 0
+  markov: true
+  delta_t_conditioned: true
+  params_target: 1000000
+inverse_dynamics:
+  kind: mlp_token_pair
+losses:
+  reg: {kind: sigreg, weight: 0.1, projections: 1024, knots: 17, per_token: true}
+  action: {weight: 1.0}
+  rollout: {gamma: 0.9, h_train: 4, free_running: true, delta_t_max: 4}
+  inverse: {weight: 1.0}
+  counterfactual: {weight: 0.01, positive_weight: 0.0, context_gradient: true, k: 4, kappa: 0.001, batch_size: 16}
+curriculum:
+  stage0_fraction: 0.10
+  horizon_growth_fraction: 0.40
+  counterfactual_from_stage: 2
+train:
+  steps: 2000
+  batch_size: 64
+  lr: 0.0003
+  weight_decay: 0.001
+  grad_clip: 1.0
+  optimizer: adamw
+  precision: bf16
+probe_set:
+  path: evaluation/probe_set_v1
+  seed: 0
+  count: 256
+  horizon: 4
+planner:
+  kind: none
+  rollout_budget: 0
+seeds: [0]
+outputs:
+  sigma_pilot: none
+  instrument_panel: true
+  metrics: [action_sensitivity_ratio, transition_error, transition_error_one_step,
+            transition_error_identity, transition_error_zero_action, transition_error_shuffled_action,
+            counterfactual_accuracy]

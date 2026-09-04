@@ -5,11 +5,9 @@
 # Experiment: E1_reference (the first experiment that runs these modules). Roadmap phase 1 (§20).
 # Modules:    Environment (E0 step + save/restore) -> Encoder (ViT-S/8) -> Adapter (linear)
 #             -> Predictor (§5.6) + InverseDynamics (§5.7), trained with SIGReg + L_action + L_inverse
-#             (§6.1, §6.9 stage 0). Left out: updater, counterfactual term, planner, viewer.
-# Metric:     action-sensitivity ratio s(w) (§4 H1) and transition error (§6.2 d; one-step and H-step),
-#             with identity/zero/shuffled-action one-step controls, on the fixed probe set, written by
-#             evaluation/ to runs/<spec>/<seed>/.
-#             Done when the fast tests are green and both numbers are on the panel.
+#             + paired-intervention L_cf (§6.1-§6.4, §6.9 stage 2). Left out: updater, planner, viewer.
+# Metric:     action-sensitivity ratio s(w), one-/H-step transition error, identity/zero/shuffled-action
+#             controls, and counterfactual discrimination accuracy on fixed probes under runs/<spec>/<seed>/.
 # Choices that cannot be widened later (recorded in DDR §15 and §18):
 #   - E0 engine in batched PyTorch on one device; every environment tensor has leading dim N (worlds).
 #   - Snapshot = clone of every state tensor + the torch.Generator state; restore is bit-exact.
@@ -24,10 +22,22 @@
 #   - the predictor readout is not zero-initialized; the inverse head is bounded with the loss before the squash.
 #   - evaluation/ and the threshold tests call the predictor with k = delta_t, as training does.
 #
-# This is a copy of experiments/E1_reference.yaml with sizes, steps and seeds shrunk, the parts the
-# slice leaves out switched off, and every null given a dev value marked "# dev". No inheritance.
-# Numbers from this file are never experiment results.
-experiment: E1_reference      # lineage only; run.py derives the run directory from this file's path: runs/dev/first_slice/<seed>/
+# Step 4 iteration 1 (2026-09-04): token-correspondence inverse pooling improved held-out inverse MSE
+# and s(w), but correct actions did not beat identity/zero/shuffled controls; retain this config as the
+# matched before-panel without promoting its checkpoint.
+#
+# Step 4 iteration 2 (2026-09-04): change the objective/data only. From 50% of training, add the
+# predesigned K=4 counterfactual InfoNCE term on branches collected by restore(snapshot) before every
+# action. Independent sampling preserves the ordinary token-pair run's episode windows and chunk draws.
+# Success requires correct-action error to beat the three controls and paired discrimination to exceed
+# 1/K; s(w) alone cannot promote the checkpoint (DDR §13.18).
+#
+# Step 4 iteration 3 (2026-09-04): calibrate only the counterfactual temperature from 0.1 to 0.001.
+# The held-out distance-matrix row span was about 0.0006, so the former temperature produced only a
+# 0.006 logit span and a negligible gradient. All parsed fields other than kappa remain identical.
+#
+# This is a full no-inheritance dev copy. Numbers from this file are never experiment results.
+experiment: E1_reference      # lineage only; writes runs/dev/first_slice_counterfactual_scaled/<seed>/
 status: dev
 abi: docs/abi/abi_v1.yaml
 env:
@@ -37,13 +47,13 @@ env:
   resolution: 64
   n_worlds: 64               # dev
   episode_len: 32            # dev
-  dataset: data/e0_dev       # dev; ~2e4 transitions
-  n_transitions: 20480        # dev = 10 episodes x n_worlds (64) x episode_len (32); the collector asserts this equality
-  exploration: uniform_random # dev: the E0 data-policy mixture (uniform, Brownian, scripted) arrives with the data-policy slice
+  dataset: data/e0_dev       # dev; shared episode store, plus paired interventions below
+  n_transitions: 20480        # dev = 10 episodes x n_worlds (64) x episode_len (32)
+  exploration: uniform_random # dev: the full E0 data-policy mixture arrives with its own slice
 counterfactual_data:
-  groups: 0                   # dev: training pairs absent while counterfactual.weight is 0
+  groups: 2048               # dev: 32 batches x 64 worlds, cycling warm-up depths 0..31
   seed: 4000003               # dev: separate from episode collection
-  probe_groups: 256           # dev: fixed held-out paired interventions for panel accuracy
+  probe_groups: 256           # dev: held-out and fixed for the panel
   probe_seed: 8000003         # dev: disjoint from training/reset seeds
 encoder:
   arch: vit_s8
@@ -68,19 +78,19 @@ predictor:
   delta_t_conditioned: true
   params_target: 1000000      # dev
 inverse_dynamics:
-  kind: mlp_pooled_pair
+  kind: mlp_token_pair       # matched to step 4 iteration 1
 losses:
-  reg: {kind: sigreg, weight: 0.1, projections: 1024, knots: 17, per_token: true}   # dev: weight = LeWM's lambda
+  reg: {kind: sigreg, weight: 0.1, projections: 1024, knots: 17, per_token: true}
   action: {weight: 1.0}
-  rollout: {gamma: 0.9, h_train: 4, free_running: true, delta_t_max: 4}   # dev: h_train 8 -> 4, delta_t_max 8 -> 4
-  inverse: {weight: 1.0}                    # dev
-  counterfactual: {weight: 0.0, positive_weight: 0.0, context_gradient: true, k: 4, kappa: 0.1, batch_size: 16}   # off by both weights; kappa stays positive because the fixed probe reports discrimination.
+  rollout: {gamma: 0.9, h_train: 4, free_running: true, delta_t_max: 4}
+  inverse: {weight: 1.0}
+  counterfactual: {weight: 1.0, positive_weight: 0.0, context_gradient: true, k: 4, kappa: 0.001, batch_size: 16}   # dev: sole iteration-3 change
 curriculum:
   stage0_fraction: 0.10
   horizon_growth_fraction: 0.40
-  counterfactual_from_stage: 2              # inactive while counterfactual.weight is 0
+  counterfactual_from_stage: 2
 train:
-  steps: 2000                # dev
+  steps: 2000                # dev: matched to iteration 1
   batch_size: 64             # dev
   lr: 3.0e-4                 # dev
   weight_decay: 0.001        # dev: LeWM
@@ -88,16 +98,16 @@ train:
   optimizer: adamw
   precision: bf16
 probe_set:
-  path: evaluation/probe_set_v1   # as abi_v1.yaml names it; regenerated from seed and count
+  path: evaluation/probe_set_v1
   seed: 0
   count: 256                 # dev
-  horizon: 4                 # dev: 8 -> 4
+  horizon: 4                 # dev
 planner:
-  kind: none                 # switched off: the slice has no planner
+  kind: none
   rollout_budget: 0
 seeds: [0]                   # dev
 outputs:
-  sigma_pilot: none          # dev runs never write to docs/preregistration.md
+  sigma_pilot: none
   instrument_panel: true
   metrics: [action_sensitivity_ratio, transition_error, transition_error_one_step,
             transition_error_identity, transition_error_zero_action, transition_error_shuffled_action,
