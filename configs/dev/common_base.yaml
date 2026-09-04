@@ -1,16 +1,48 @@
-# PLAN — common multimodal base, ABI-v2 implementation slice, written 2026-09-04.
+# PLAN — common multimodal base, ABI-v2 implementation slice, iteration 2, written 2026-09-04.
 #
 # Hypothesis: a modality-neutral recurrent belief with stable EMA-trained sensory evidence removes the
 #             v1 topology mismatch and moving-target/non-Markov bootstrap failures without coupling the
 #             planner to either video or audio.
-# Experiment: E1_common_base (development implementation slice; no scientific result until R0/R1 data).
+# Experiment: E1_common_base R0 on the TAU Urban Audio-Visual Scenes 2021 development split; this dev
+#             run validates real-data plumbing and held-out gates, not a scientific result.
 # Modules:    Video/Audio EvidenceEncoder -> EvidenceAdapter -> predict-then-correct BeliefUpdater;
-#             ActionAdapter -> slot WorldPredictor. EMA teachers and a gated curriculum are training-side.
-# Metric:     structural ABI conformance, finite gradients through both modalities, exact prior-only
-#             update, and curriculum gates. Later promotion uses docs/common-base-architecture.md §5.
+#             ActionAdapter -> slot WorldPredictor. A source-split manifest -> normalized clip shards ->
+#             independent R0 / synchronized+shifted R1 batches is the training-only data boundary.
+# Metric:     held-out per-modality feature std, effective rank, masked/future prediction advantage and
+#             temporal retrieval; R1 additionally measures cross-modal retrieval and shifted synchrony.
 experiment: E1_common_base
 status: dev
 abi: docs/abi/abi_v2.yaml
+seeds: [0]
+data:
+  kind: synchronized_av_manifest
+  dataset: tau_urban_audio_visual_scenes_2021
+  source:
+    doi: 10.5281/zenodo.4477542
+    subset: examples  # dev; replace with the complete development archives for a gated run
+    examples_archive: TAU-urban-audio-visual-scenes-2021-development.examples.zip
+    examples_md5: 27aca1ec51f856f59604cf22e93ebf80
+    metadata_archive: TAU-urban-audio-visual-scenes-2021-development.meta.zip
+    metadata_md5: 76e3d7ed5291b118372e06379cb2b490
+  raw_root: data/tau_urban_av_2021/raw
+  metadata_root: data/tau_urban_av_2021/metadata
+  shard_root: data/tau_urban_av_2021/shards_8fps_64px_16khz
+  manifest: data/tau_urban_av_2021/manifest.jsonl
+  manifest_version: 1
+  split:
+    train_file: evaluation_setup/fold1_train.csv
+    eval_file: evaluation_setup/fold1_evaluate.csv
+    group_column: identifier
+  video:
+    frames_per_second: 8
+    resolution: 64
+  audio:
+    sample_rate: 16000
+    channels: 1
+  window:
+    duration_seconds: 0.5
+    future_offset_seconds: 0.5
+    shifted_offset_seconds: 2.0
 modalities:
   video:
     enabled: true
@@ -78,9 +110,16 @@ curriculum:
   observation_dropout: 0.3
   gates:
     unimodal_representation_ready:
-      feature_std: {op: greater_equal, value: 0.1}
-      effective_rank_fraction: {op: greater_equal, value: 0.25}
-      temporal_retrieval_margin: {op: greater, value: 0.0}
+      video_feature_std: {op: greater_equal, value: 0.1}
+      audio_feature_std: {op: greater_equal, value: 0.1}
+      video_effective_rank_fraction: {op: greater_equal, value: 0.25}
+      audio_effective_rank_fraction: {op: greater_equal, value: 0.25}
+      video_masked_prediction_advantage: {op: greater, value: 0.0}
+      audio_masked_prediction_advantage: {op: greater, value: 0.0}
+      video_future_prediction_advantage: {op: greater, value: 0.0}
+      audio_future_prediction_advantage: {op: greater, value: 0.0}
+      video_temporal_retrieval_margin: {op: greater, value: 0.0}
+      audio_temporal_retrieval_margin: {op: greater, value: 0.0}
     audiovisual_representation_ready:
       video_to_audio_retrieval_margin: {op: greater, value: 0.0}
       audio_to_video_retrieval_margin: {op: greater, value: 0.0}
@@ -96,6 +135,11 @@ curriculum:
       compounding_ratio: {op: less_equal, value: 1.5}
       action_correct_through_horizon: {op: equal, value: 1.0}
 train:
+  stage: representation_unimodal
+  max_steps: 20  # dev
+  batch_size: 2  # dev
+  held_out_batches: 2  # dev
+  log_every: 1
   precision: bf16
   optimizer: adamw
   lr: 0.0003

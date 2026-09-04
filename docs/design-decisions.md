@@ -379,3 +379,36 @@ world model must pass open-loop gates before any planner is trained.
 
 **Depends on.** A real synchronized A/V dataset selection for R0/R1; E0 remains the action-labelled
 causal testbed. ABI-v1 checkpoints are not stitch-compatible with ABI v2.
+
+---
+
+## 22. R0/R1 data boundary and first real audiovisual corpus
+
+**Question.** Which data dependency can exercise real synchronized audio/video without coupling the
+representation learner to a dataset SDK, unstable hosted-video identifiers, or label supervision?
+
+**Options.** (a) VGGSound/AudioSet identifiers that require re-fetching third-party videos; (b) Ego4D,
+whose scale and access agreement are appropriate later but too heavy for the first gate; (c) the openly
+archived TAU Urban Audio-Visual Scenes 2021 corpus; (d) a repository-specific media loader used directly
+inside the training loop.
+
+**Decision.** Use (c) for the first R0/R1 run and reject (d). Offline ingestion reads TAU's audio/video
+pairs and official fold metadata, decodes each 10-second recording once into a normalized per-clip tensor
+shard, and writes a versioned JSONL manifest. The training path depends only on the manifest/shard
+contract. R0 samples video and audio independently; R1 samples synchronized current/future windows and
+same-recording wrong-time negatives. Dataset labels are retained only as unused provenance and never
+appear in a `RepresentationBatch`.
+
+**Why.** TAU supplies directly archived media, stable checksums, synchronized 10-second audio/video,
+and an official split whose recording-location identifiers allow leakage checks. Per-clip shards keep
+random window reads bounded and make interrupted ingestion resumable without creating a monolithic
+tensor store. The boundary remains reusable for larger or egocentric corpora.
+
+**Promotion test.** Every manifest entry resolves to one valid shard; source audio/video paths pair by
+metadata rather than filename guessing; train/eval clip ids and recording identifiers are disjoint; a
+fixed seed reproduces sampled windows; R1 shifted views come from the same recording at the configured
+nonzero time offset; and held-out panel metrics alone drive the curriculum gate.
+
+**Depends on.** TAU Urban Audio-Visual Scenes 2021 development corpus, DOI
+`10.5281/zenodo.4477542`. The 128 MB examples archive is development plumbing only; a promotion run uses
+the complete development corpus and its official fold.

@@ -51,6 +51,35 @@ class TemporalObservation:
 
 
 @dataclass(frozen=True)
+class RepresentationBatch:
+    """Training-only R0/R1 views; not part of the runtime world-state ABI.
+
+    ``current`` and ``future`` contain every enabled modality. In R0 their rows may come from
+    different source clips because no cross-modal correspondence is assumed. In R1 the rows are
+    synchronized, and ``shifted`` contains same-recording, wrong-time views used to rule out scene
+    identity as a shortcut for audiovisual correspondence.
+    """
+
+    current: Mapping[str, TemporalObservation]
+    future: Mapping[str, TemporalObservation]
+    shifted: Mapping[str, TemporalObservation]
+
+
+@runtime_checkable
+class RepresentationData(Protocol):
+    """Held-out-split-aware source of fixed-shape R0/R1 temporal batches."""
+
+    def sample(
+        self,
+        split: str,
+        stage: str,
+        batch_size: int,
+        generator: torch.Generator,
+    ) -> RepresentationBatch:
+        ...
+
+
+@dataclass(frozen=True)
 class EvidenceTokens:
     """Variable-length observation evidence before or after the ABI-v2 projection.
 

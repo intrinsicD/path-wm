@@ -5,10 +5,11 @@ this document defines the replacement reference that must pass the gates below b
 
 Implementation status (development evidence only): ABI-v2 contracts, video/audio evidence paths, action
 adapter, slot predictor, predict-correct updater, explicit freeze/gate controller, EMA teachers, and R0/R1
-representation losses are executable. The fast suite has 143 passing tests (two opt-in tests deselected).
+representation losses are executable. TAU Urban Audio-Visual Scenes 2021 is selected as the first real
+corpus; its source-split manifest and normalized-shard boundary are the current implementation slice.
 A 20-step fixed synthetic-batch optimizer smoke reduced the R0 objective from 4.0533 to 0.3975; this
-checks optimization plumbing only and is not a representation or world-model result. Dataset ingestion,
-held-out R0/R1 metrics, B0/D0 objectives, and every planning module remain next-stage work.
+checks optimization plumbing only and is not a representation or world-model result. A held-out real-data
+R0/R1 panel, B0/D0 objectives, and every planning module remain next-stage work.
 
 ## 1. Decision
 
@@ -122,6 +123,15 @@ Stages advance by held-out gates, not just elapsed steps. A maximum step budget 
 | D1 rollout dynamics | D0 modules; optionally top encoder blocks at 0.1x LR after stability | longer trajectories, action chunks, paired interventions | free-running horizon curriculum, variable `delta_t`, calibrated residual | bounded compounding ratio and correct-action advantage through planning horizon |
 | U uncertainty, conditional | ensemble/mixture heads only | genuinely stochastic branches | calibration or best-of-K objective | enabled only after deterministic mean-between-modes failure is measured |
 | P0 planning | world model frozen; planner/critic only | task goals and closed-loop rollouts | CEM/MPC baseline first, then learned proposals/critic | success-versus-predictor-call curve; every executed action verified by rollout |
+
+R0/R1 data crosses one training-only boundary: raw corpus files are decoded once into normalized
+per-clip shards indexed by a versioned manifest. The manifest carries source paths, checksums, official
+split, and recording-group identity; none of those fields enter the representation objective. R0 draws
+the two modalities independently. R1 draws aligned windows plus same-recording, wrong-time views, so an
+audiovisual objective cannot pass by learning only scene or recording identity. Held-out windows are
+drawn exclusively from the official evaluation side, with both clip and recording group disjointness
+checked at manifest load.
+
 
 Important corrections to “train encoders first”:
 
