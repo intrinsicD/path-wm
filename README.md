@@ -29,10 +29,21 @@ Run an experiment or dev spec with `python run.py <spec.yaml>`; plain `pytest` i
 
 The first ABI-v2 representation slice uses the official TAU Urban Audio-Visual Scenes 2021 corpus. The
 small `examples` archive is only an end-to-end development fixture; promotion requires the complete
-development archive. Download the metadata and selected media archive from the Zenodo record, verify
-their MD5 sums against `configs/dev/common_base.yaml`, then extract them to:
+development archive. The resumable full-corpus downloader verifies every official byte size and MD5,
+extracts one archive at a time, and removes each verified staging ZIP by default:
+
+```bash
+scripts/download_tau_urban_av_2021.sh
+```
+
+Partial downloads and completion markers live under the ignored
+`data/tau_urban_av_2021/.archives/` directory. Rerun the command after an interruption to resume. Set
+`PATH_WM_TAU_KEEP_ARCHIVES=1` if the 100.2 GiB of verified ZIPs should be retained after extraction.
+The resulting source layout is:
 
 ```text
+data/tau_urban_av_2021/raw/audio/*.wav
+data/tau_urban_av_2021/raw/video/*.mp4
 data/tau_urban_av_2021/raw/examples/*.mp4
 data/tau_urban_av_2021/metadata/meta.csv
 data/tau_urban_av_2021/metadata/evaluation_setup/*.csv
