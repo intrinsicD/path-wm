@@ -1,11 +1,13 @@
 """First instrument-panel metrics: action sensitivity and latent transition error (§10, §14).
 
 What: s(w) compares opposite valid actions at the same W; transition error reports one-step and the
-configured-H free-running endpoint MSE on a fixed regenerated probe set.
+configured-H free-running endpoint MSE on a fixed regenerated probe set. Identity, zero-action and
+deterministically shuffled-action one-step errors test whether the learned action is actually correct.
 How: checkpoint modules run in eval/no-grad mode; observations are encoded in bounded batches, and all
-latent distances are computed in fp32 on normalized ABI tokens.
-Why: these two numbers distinguish an unwired/identity predictor from inaccurate learned dynamics and
-are the first slice's diagnostic output, not a frozen experiment result when run from configs/dev/.
+latent distances are computed in fp32 on normalized ABI tokens. One-step errors share all count x H
+transitions; shuffling rotates trajectories across probe examples while preserving each time index.
+Why: opposite-action separation alone can grow even when action semantics are wrong. The controls make
+that failure visible and are diagnostics, not frozen thresholds or experiment results under configs/dev/.
 """
 from __future__ import annotations
 
@@ -29,6 +31,30 @@ def _encode(models: ModelBundle, observations: torch.Tensor, device: torch.devic
     return W.reshape(shape[0], shape[1], *W.shape[1:])
 
 
+def _predict(
+    models: ModelBundle,
+    states: torch.Tensor,
+    actions: torch.Tensor,
+    delta_t: int,
+    batch_size: int = 128,
+) -> torch.Tensor:
+    """Run predictor probes in bounded batches without changing their sample-wise mean."""
+    predicted = []
+    for start in range(0, states.shape[0], batch_size):
+        predicted.append(
+            models.predictor.predict(
+                states[start : start + batch_size],
+                actions[start : start + batch_size],
+                delta_t,
+            )
+        )
+    return torch.cat(predicted)
+
+
+def _mse(predicted: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
+    return (predicted.float() - target.float()).square().mean()
+
+
 def evaluate_models(
     models: ModelBundle,
     probe: ProbeSet,
@@ -40,21 +66,38 @@ def evaluate_models(
         actions = probe.actions.to(device)
         W0 = states[:, 0].to(device)
         first_action = actions[:, :1]
-        positive = models.predictor.predict(W0, first_action, 1)
-        negative = models.predictor.predict(W0, -first_action, 1)
+        positive = _predict(models, W0, first_action, 1)
+        negative = _predict(models, W0, -first_action, 1)
         numerator = (positive.float() - negative.float()).flatten(1).norm(dim=-1)
         denominator = W0.float().flatten(1).norm(dim=-1).clamp_min(1e-12)
         sensitivity = (numerator / denominator).mean()
 
-        one_step_error = (positive.float() - states[:, 1].to(device).float()).square().mean()
+        # Every control uses exactly the same count x H current/target pairs. Rolling the probe-example
+        # axis is a fixed-point-free permutation when count > 1 and preserves the action's time index.
+        current = states[:, :-1].flatten(0, 1).to(device)
+        target = states[:, 1:].flatten(0, 1).to(device)
+        correct_actions = actions.flatten(0, 1).unsqueeze(1)
+        zero_actions = torch.zeros_like(correct_actions)
+        shuffled_actions = torch.roll(actions, shifts=1, dims=0).flatten(0, 1).unsqueeze(1)
+        correct = _predict(models, current, correct_actions, 1)
+        zero = _predict(models, current, zero_actions, 1)
+        shuffled = _predict(models, current, shuffled_actions, 1)
+
+        one_step_error = _mse(correct, target)
+        identity_error = _mse(current, target)
+        zero_action_error = _mse(zero, target)
+        shuffled_action_error = _mse(shuffled, target)
         predicted = W0
         for step in range(actions.shape[1]):
-            predicted = models.predictor.predict(predicted, actions[:, step : step + 1], 1)
-        horizon_error = (predicted.float() - states[:, -1].to(device).float()).square().mean()
+            predicted = _predict(models, predicted, actions[:, step : step + 1], 1)
+        horizon_error = _mse(predicted, states[:, -1].to(device))
     return {
         "action_sensitivity_ratio": float(sensitivity),
         "transition_error": float(horizon_error),
         "transition_error_one_step": float(one_step_error),
+        "transition_error_identity": float(identity_error),
+        "transition_error_zero_action": float(zero_action_error),
+        "transition_error_shuffled_action": float(shuffled_action_error),
         "probe_count": probe.observations.shape[0],
         "probe_horizon": probe.actions.shape[1],
     }

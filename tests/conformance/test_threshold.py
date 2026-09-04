@@ -1,7 +1,8 @@
 """Checkpoint-backed ABI thresholds for the fixed first-slice probe set.
 
-The fixture always regenerates and records s(w) plus H-step/one-step transition error. Null ABI
-thresholds produce an explicit `threshold_unset` skip only after the measured values are persisted.
+The fixture always regenerates and records s(w), H-step/one-step transition error, and the identity,
+zero-action and shuffled-action diagnostics. Null ABI thresholds produce an explicit `threshold_unset`
+skip only after the measured values are persisted; the three controls are diagnostics, not thresholds.
 """
 from __future__ import annotations
 

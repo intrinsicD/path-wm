@@ -6,8 +6,9 @@
 # Modules:    Environment (E0 step + save/restore) -> Encoder (ViT-S/8) -> Adapter (linear)
 #             -> Predictor (§5.6) + InverseDynamics (§5.7), trained with SIGReg + L_action + L_inverse
 #             (§6.1, §6.9 stage 0). Left out: updater, counterfactual term, planner, viewer.
-# Metric:     action-sensitivity ratio s(w) (§4 H1) and transition error (§6.2 d; one-step and H-step)
-#             on the fixed probe set, written by evaluation/ to runs/<spec>/<seed>/.
+# Metric:     action-sensitivity ratio s(w) (§4 H1) and transition error (§6.2 d; one-step and H-step),
+#             with identity/zero/shuffled-action one-step controls, on the fixed probe set, written by
+#             evaluation/ to runs/<spec>/<seed>/.
 #             Done when the fast tests are green and both numbers are on the panel.
 # Choices that cannot be widened later (recorded in DDR §15 and §18):
 #   - E0 engine in batched PyTorch on one device; every environment tensor has leading dim N (worlds).
@@ -99,4 +100,5 @@ seeds: [0]                   # dev
 outputs:
   sigma_pilot: none          # dev runs never write to docs/preregistration.md
   instrument_panel: true
-  metrics: [action_sensitivity_ratio, transition_error]
+  metrics: [action_sensitivity_ratio, transition_error, transition_error_one_step,
+            transition_error_identity, transition_error_zero_action, transition_error_shuffled_action]

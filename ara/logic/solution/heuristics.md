@@ -5,6 +5,5 @@
 - **Provenance**: ai-suggested
 - **Crystallized via**: artifact-commitment
 - **Sensitivity**: high
-- **Code ref**: [pending — TODO: implement in evaluation/metrics.py; committed design in docs/design-decisions.md §13.18]
+- **Code ref**: `evaluation/metrics.py`; design in `docs/design-decisions.md` §13.18
 - **From staging**: O07
-

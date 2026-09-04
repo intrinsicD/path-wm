@@ -31,4 +31,9 @@ def test_one_step_training_writes_reloadable_metrics(cfg, tmp_path):
     assert checkpoint.exists() and (tmp_path / "training.jsonl").exists()
     assert (tmp_path / "metrics.json").exists()
     assert final_training["step"] == 1
+    assert {
+        "transition_error_identity",
+        "transition_error_zero_action",
+        "transition_error_shuffled_action",
+    } <= metrics.keys()
     assert all(torch.isfinite(torch.tensor(value)) for key, value in metrics.items() if "error" in key or "ratio" in key)
