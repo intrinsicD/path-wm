@@ -68,18 +68,22 @@ curriculum:
   encoder_lr_scale_after_freeze: 0.0
   observation_dropout: 0.3
   gates:
-    representation_ready:
+    unimodal_representation_ready:
       feature_std: {op: greater_equal, value: 0.1}
       effective_rank_fraction: {op: greater_equal, value: 0.25}
       temporal_retrieval_margin: {op: greater, value: 0.0}
+    audiovisual_representation_ready:
+      video_to_audio_retrieval_margin: {op: greater, value: 0.0}
+      audio_to_video_retrieval_margin: {op: greater, value: 0.0}
+      synchrony_accuracy_above_chance: {op: greater, value: 0.0}
     belief_ready:
       hidden_velocity_probe_r2: {op: greater, value: 0.0}
       prior_only_finite: {op: equal, value: 1.0}
-    dynamics_ready:
+    one_step_dynamics_ready:
       correct_vs_identity_ratio: {op: less, value: 1.0}
       correct_vs_zero_ratio: {op: less, value: 1.0}
       correct_vs_shuffled_ratio: {op: less, value: 1.0}
-    planning_ready:
+    rollout_dynamics_ready:
       compounding_ratio: {op: less_equal, value: 1.5}
       action_correct_through_horizon: {op: equal, value: 1.0}
 train:
