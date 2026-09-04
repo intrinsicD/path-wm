@@ -61,6 +61,15 @@ representation:
   target: ema
   ema_decay: 0.996
   objectives: [masked_latent, future_latent, audiovisual_sync]
+  mask_ratio: 0.5
+  predictor_layers: 1
+  predictor_heads: 4
+  audiovisual_temperature: 0.1
+  weights:
+    masked_latent: 1.0
+    future_latent: 1.0
+    variance: 0.1
+    audiovisual_sync: 0.1
   planner_gradients: false
 curriculum:
   stages: [representation_unimodal, representation_av, belief_bootstrap,
