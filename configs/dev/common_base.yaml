@@ -1,0 +1,97 @@
+# PLAN — common multimodal base, ABI-v2 implementation slice, written 2026-09-04.
+#
+# Hypothesis: a modality-neutral recurrent belief with stable EMA-trained sensory evidence removes the
+#             v1 topology mismatch and moving-target/non-Markov bootstrap failures without coupling the
+#             planner to either video or audio.
+# Experiment: E1_common_base (development implementation slice; no scientific result until R0/R1 data).
+# Modules:    Video/Audio EvidenceEncoder -> EvidenceAdapter -> predict-then-correct BeliefUpdater;
+#             ActionAdapter -> slot WorldPredictor. EMA teachers and a gated curriculum are training-side.
+# Metric:     structural ABI conformance, finite gradients through both modalities, exact prior-only
+#             update, and curriculum gates. Later promotion uses docs/common-base-architecture.md §5.
+experiment: E1_common_base
+status: dev
+abi: docs/abi/abi_v2.yaml
+modalities:
+  video:
+    enabled: true
+    encoder:
+      arch: tubelet_transformer
+      input_channels: 3
+      dim: 96
+      layers: 1
+      heads: 4
+      mlp_ratio: 4
+      tubelet: 2
+      patch: 16
+    adapter:
+      kind: evidence_projection
+  audio:
+    enabled: true
+    encoder:
+      arch: spectrogram_transformer
+      input_channels: 1
+      dim: 96
+      layers: 1
+      heads: 4
+      mlp_ratio: 4
+      sample_rate: 16000
+      n_fft: 256
+      hop_length: 128
+      frequency_patch: 16
+      time_patch: 4
+    adapter:
+      kind: evidence_projection
+action_adapter:
+  kind: continuous_mlp
+  input_dim: 2
+predictor:
+  arch: slot_transformer
+  dim: 192
+  layers: 2
+  heads: 4
+  mlp_ratio: 4
+  registers: 0
+  readout_init_scale: 0.03
+updater:
+  kind: predict_then_correct_v2
+  heads: 4
+  mlp_ratio: 2
+  correction_gate_bias: -1.0
+representation:
+  target: ema
+  ema_decay: 0.996
+  objectives: [masked_latent, future_latent, audiovisual_sync]
+  planner_gradients: false
+curriculum:
+  stages: [representation_unimodal, representation_av, belief_bootstrap,
+           dynamics_one_step, dynamics_rollout, planning]
+  encoder_lr_scale_after_freeze: 0.0
+  observation_dropout: 0.3
+  gates:
+    representation_ready:
+      feature_std: {op: greater_equal, value: 0.1}
+      effective_rank_fraction: {op: greater_equal, value: 0.25}
+      temporal_retrieval_margin: {op: greater, value: 0.0}
+    belief_ready:
+      hidden_velocity_probe_r2: {op: greater, value: 0.0}
+      prior_only_finite: {op: equal, value: 1.0}
+    dynamics_ready:
+      correct_vs_identity_ratio: {op: less, value: 1.0}
+      correct_vs_zero_ratio: {op: less, value: 1.0}
+      correct_vs_shuffled_ratio: {op: less, value: 1.0}
+    planning_ready:
+      compounding_ratio: {op: less_equal, value: 1.5}
+      action_correct_through_horizon: {op: equal, value: 1.0}
+train:
+  precision: bf16
+  optimizer: adamw
+  lr: 0.0003
+  weight_decay: 0.001
+  grad_clip: 1.0
+extensions:
+  uncertainty: gated_after_deterministic_failure
+  proprioception: evidence_interface
+  language: io_adapter_interface
+  goal_encoder: evidence_interface
+  debug_decoders: stopgrad_only
+  planner: frozen_world_model_only

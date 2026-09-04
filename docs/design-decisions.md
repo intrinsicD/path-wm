@@ -30,6 +30,7 @@ Status codes: **NOW** — must be fixed before E1 is frozen. **E_n** — fixed a
 | 18 | Data and environment engine | GPU-vectorized 2D physics with save/restore; exploration mixture; paired-intervention trees | NOW |
 | 19 | Compute and reproducibility | ≥5 seeds, σ_pilot from E1, per-experiment GPU-hour budgets, hashed configs | NOW |
 | 20 | Decision order | ABI spec → environment → instruments → E1 → viewer → E2 | — |
+| 21 | Common multimodal base after E1-a audit | ABI v2 evidence streams → recurrent belief slots → action dynamics → frozen-model planning | NOW |
 
 ---
 
@@ -344,3 +345,37 @@ E0 as specified in v0.2, plus a data policy: exploration mixture (uniform random
 6. Then E2.
 
 Everything else is deliberately left open, with the interface written so that it can be closed later without touching the first four.
+
+---
+
+## 21. Common multimodal base after the E1-a audit
+
+**Question.** Should the reference continue to make every encoder emit ABI-v1 visual-grid state and
+jointly learn perception/dynamics from step zero, or should it separate sensory evidence, persistent
+belief, action dynamics and planning?
+
+**Options.** (a) keep ABI v1 and tune its losses; (b) add history while retaining one visual grid for
+every modality; (c) introduce variable modality-native evidence and a fixed modality-neutral belief,
+then train representation, belief, dynamics and planning in gated stages.
+
+**Decision.** Adopt (c) as the v0.4 candidate; retain (a) as the measured E1-a control. ABI v2 has 64
+latent belief slots plus a global token, variable timestamped evidence tokens, embodiment-specific
+action adapters, a predict-then-correct updater and a Markov slot predictor. Video and audio are the
+first implemented evidence producers. Future sensors reuse the evidence contracts; future uncertainty
+and planning modules reuse the belief contract. See `docs/common-base-architecture.md`.
+
+**Why.** The audit ruled out empty tensors and missing gradients. It instead found three structural
+problems: an exact single-frame hidden-velocity alias; a random predictor 179 times above identity
+transition scale; and stop-gradient targets without an EMA teacher. It also found that encoder-only
+SIGReg+inverse warm-up raised scene variance while making adjacent frames discontinuous. Therefore a
+curriculum is warranted, but its first stage must be temporally predictive EMA representation learning,
+not generic encoder warm-up. Audio also makes the v1 assumption that all evidence has 8x8 visual
+coordinates untenable.
+
+**Promotion test.** ABI-v2 conformance and differentiable video+audio smoke tests first. Then each
+curriculum stage advances only through the held-out gates in `docs/common-base-architecture.md` §4–5.
+The world predictor must beat identity, zero and shuffled actions before rollout training; the frozen
+world model must pass open-loop gates before any planner is trained.
+
+**Depends on.** A real synchronized A/V dataset selection for R0/R1; E0 remains the action-labelled
+causal testbed. ABI-v1 checkpoints are not stitch-compatible with ABI v2.

@@ -31,6 +31,139 @@ Snapshot = Any    # opaque: what Environment.save() returns and restore() consum
 Reservoir = Any   # the persistent trajectory reservoir (§7.1, §7.4); its type is fixed in the planner slice
 
 
+# ABI v2 data contracts.  ABI v1 remains below as the measured E1-a control; v2 separates
+# modality-native evidence from the persistent, planner-facing world state.  These are containers,
+# not model implementations.  Producers own preprocessing and positional encoding, while the
+# evidence boundary owns only width, dtype, validity, modality identity, and time.
+@dataclass(frozen=True)
+class TemporalObservation:
+    """One padded temporal batch for a single modality.
+
+    ``values`` keeps the modality-native layout: video is (B,T,C,H,W), audio is (B,C,S), and a
+    future sensor may use another layout. ``timestamps`` and ``valid_mask`` share that modality's
+    temporal axis: (B,T) for video and (B,S) for waveform audio. Times are seconds relative to the
+    belief-update time, so asynchronous sensors do not have to pretend they were sampled together.
+    """
+
+    values: Tensor
+    timestamps: Tensor
+    valid_mask: Tensor
+
+
+@dataclass(frozen=True)
+class EvidenceTokens:
+    """Variable-length observation evidence before or after the ABI-v2 projection.
+
+    Shape is tokens (B,N,D), timestamps/valid_mask (B,N). ``D`` is encoder-native before an
+    EvidenceAdapter and ``abi.evidence_dim`` afterwards. Native spatial/frequency coordinates have
+    already been encoded into the tokens; they never become canonical world-state coordinates.
+    """
+
+    tokens: Tensor
+    timestamps: Tensor
+    valid_mask: Tensor
+    modality: str
+
+
+@dataclass(frozen=True)
+class ActionSequence:
+    """Raw, padded action sequence owned by an embodiment-specific ActionAdapter.
+
+    ``values`` is (B,K,A); timestamps, valid_mask, and observed_mask are (B,K). An unobserved action
+    is not represented as zero: observed_mask=False selects the learned passive/unknown-action token.
+    """
+
+    values: Tensor
+    timestamps: Tensor
+    valid_mask: Tensor
+    observed_mask: Tensor
+
+
+@dataclass(frozen=True)
+class ActionTokens:
+    """ABI-v2 action condition: tokens (B,K,D_a) plus time, padding, and known/unknown masks."""
+
+    tokens: Tensor
+    timestamps: Tensor
+    valid_mask: Tensor
+    observed_mask: Tensor
+
+
+@runtime_checkable
+class EvidenceEncoder(Protocol):
+    """A modality frontend: native samples -> variable-length, modality-native tokens (ABI v2)."""
+
+    modality: str
+
+    def encode_observation(self, observation: TemporalObservation) -> EvidenceTokens:
+        ...
+
+
+@runtime_checkable
+class EvidenceAdapter(Protocol):
+    """Project native evidence tokens to the shared evidence width without changing token identity."""
+
+    modality: str
+
+    def adapt_evidence(self, evidence: EvidenceTokens) -> EvidenceTokens:
+        ...
+
+
+@runtime_checkable
+class ActionAdapter(Protocol):
+    """Map an environment/embodiment action space to ABI-v2 action tokens."""
+
+    def adapt_actions(self, actions: ActionSequence) -> ActionTokens:
+        ...
+
+
+@runtime_checkable
+class WorldPredictorV2(Protocol):
+    """Markov prior over canonical belief slots, conditioned on timestamped action tokens."""
+
+    n_registers: int
+
+    def predict_state(self, W: Tensor, actions: ActionTokens, delta_t: Tensor) -> Tensor:
+        ...
+
+
+@runtime_checkable
+class BeliefUpdaterV2(Protocol):
+    """Initialize and predict-then-correct a persistent belief from any available evidence subset."""
+
+    def initialize(self, evidence: Mapping[str, EvidenceTokens]) -> Tensor:
+        ...
+
+    def update(
+        self,
+        W_prev: Tensor,
+        evidence: Mapping[str, EvidenceTokens],
+        actions: ActionTokens,
+        delta_t: Tensor,
+    ) -> Tensor:
+        ...
+
+
+@runtime_checkable
+class WorldModelCore(Protocol):
+    """Planner-facing multimodal core. Raw observations stop at this boundary."""
+
+    def initialize(self, observations: Mapping[str, TemporalObservation]) -> Tensor:
+        ...
+
+    def observe(
+        self,
+        W_prev: Tensor,
+        observations: Mapping[str, TemporalObservation],
+        actions: ActionSequence,
+        delta_t: Tensor,
+    ) -> Tensor:
+        ...
+
+    def imagine(self, W: Tensor, actions: ActionSequence, delta_t: Tensor) -> Tensor:
+        ...
+
+
 @runtime_checkable
 class Environment(Protocol):
     """E0 engine (§9 E0, DDR §18): N parallel worlds with deterministic save/restore.

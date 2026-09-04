@@ -2,6 +2,12 @@
 
 ## Modular JEPA World Models with Transition-Compatible Latents and Path-Space Planning
 
+> **Architecture update (2026-09-04).** The ABI-v1/E1-a design below is retained as a measured control.
+> Its single-frame visual-grid state and joint moving-target training were not promoted. The replacement
+> reference candidate is [the common base architecture](common-base-architecture.md) with
+> [ABI v2](abi/abi_v2.yaml): EMA-trained video/audio evidence, modality-neutral recurrent belief slots,
+> separate action-conditioned dynamics, and gate-based planning curriculum.
+
 **Status:** pre-registration draft, 2026-09-03. This is the consolidated research document: it integrates the v0.1 proposal, the v0.2 amendments, the 2026 literature sweep (`docs/literature-2026.md`), and the design decision register (`docs/design-decisions.md`). Sections marked *frozen* in §9 must not change after the corresponding experiment's first outcome-producing run; later changes are appended as numbered amendments, never edited in place.
 
 ---

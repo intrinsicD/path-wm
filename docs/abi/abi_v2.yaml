@@ -1,0 +1,57 @@
+# World Latent ABI — specification v2 (candidate common base)
+# ABI v1 is retained as the E1-a visual-grid control. Cross-version stitching is invalid by design.
+abi_version: 2
+state:
+  layout: latent_belief_slots
+  slot_tokens: 64
+  global_tokens: 1
+  token_order: [global, slots]
+  dim: 192
+  dtype_activations: bf16
+  dtype_regularizer_stats: fp32
+  normalization:
+    per_token: layernorm
+    per_token_affine: false
+  positions:
+    kind: learned_slot_id
+    learned: true
+    sensor_geometry: false
+evidence:
+  token_count: variable
+  dim: 192
+  dtype_activations: bf16
+  normalization:
+    per_token: layernorm
+    per_token_affine: false
+  positions:
+    kind: producer_native
+    part_of_world_state_abi: false
+  modality_id: required
+  valid_mask: required
+  timestamps:
+    required: true
+    unit: seconds
+    reference: belief_update_time
+action_condition:
+  representation: adapter_tokens
+  token_dim: 192
+  max_tokens: 32
+  valid_mask: required
+  observed_mask: required
+  unknown_action: learned_token
+  timestamps:
+    unit: seconds
+    reference: prediction_start
+time_delta:
+  representation: continuous_fourier
+  unit: seconds
+registers:
+  count_options: [0, 4, 8]
+  stored_in_state: false
+  reset: per_predictor_call
+consumers:
+  - belief_updater
+  - world_predictor
+  - inverse_dynamics
+  - planner
+status: draft
