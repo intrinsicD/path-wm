@@ -158,3 +158,75 @@ tree:
           - "docs/design-decisions.md"
         status: resolved
         children: []
+
+  - id: N10
+    type: experiment
+    title: "Action-correctness panel implementation"
+    provenance: ai-executed
+    timestamp: "2026-09-04T10:00+02:00"
+    result: >
+      Every checkpoint panel now reports correct-, identity-, zero-action, and deterministic
+      shuffled-action error over the same count-by-horizon one-step cohort. An analytic oracle
+      fixes the cross-trajectory shuffle semantics; 58 fast tests passed.
+    evidence:
+      - "commit:651db86"
+      - "evaluation/metrics.py"
+      - "tests/unit/test_metrics.py"
+    status: resolved
+    children: []
+
+  - id: N11
+    type: experiment
+    title: "Paired counterfactual action-anchor development run"
+    provenance: ai-executed
+    timestamp: "2026-09-04T10:45+02:00"
+    also_depends_on: [N09, N10]
+    result: >
+      Exact save/restore collection supplied 2,048 K=4 training groups and a disjoint
+      256-group probe. A fresh same-GPU control matched the candidate through step 950.
+      With weight 1 and κ=0.1 from stage 2, held-out accuracy remained at chance
+      (0.250977), correct-action error did not beat zero action, and four-step error was
+      5.27% worse than the control.
+    evidence:
+      - "runs/dev/first_slice_counterfactual/0/metrics.json"
+      - "runs/dev/first_slice_token_pair/0/metrics.json"
+      - "ara/evidence/tables/e1_dev_counterfactual_2026-09-04.md"
+    status: resolved
+    children:
+      - id: N12
+        type: dead_end
+        title: "The inherited κ=0.1 placeholder tests the counterfactual anchor"
+        provenance: ai-executed
+        timestamp: "2026-09-04T10:45+02:00"
+        hypothesis: >
+          Enabling the predesigned K=4 loss at weight 1 with the inactive dev placeholder
+          temperature would supply enough action-correctness gradient.
+        failure_mode: >
+          The observed distance-row span was about 0.0006, so κ=0.1 produced a 0.006
+          logit span and a counterfactual-only gradient norm of 0.000273. Loss and accuracy
+          stayed at log(4) and 1/4 despite non-vacuous rendered branches.
+        lesson: >
+          Calibrate κ to the MSE units before judging the objective; κ=0.001 gives a raw
+          gradient norm near 1 on the same checkpoint and batch.
+        status: resolved
+        children: []
+
+  - id: N13
+    type: decision
+    title: "Do not promote the κ=0.1 checkpoint; test scaled temperature"
+    provenance: ai-suggested
+    timestamp: "2026-09-04T10:45+02:00"
+    also_depends_on: [N11, N12]
+    choice: >
+      Preserve the paired-data implementation and κ=0.1 negative run, keep ABI thresholds
+      unset, and rerun with κ=0.001 as the sole change against the fresh hardware-matched
+      token-pair control.
+    alternatives:
+      - "Reject counterfactual InfoNCE based on a configuration with effectively zero gradient."
+      - "Change the predictor architecture before testing the predesigned loss at its measured scale."
+    evidence:
+      - "N11"
+      - "N12"
+      - "docs/design-decisions.md"
+    status: resolved
+    children: []

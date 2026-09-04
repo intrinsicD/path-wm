@@ -1,7 +1,8 @@
-"""The staged E1 objective and horizon curriculum (§6.1-§6.3, §6.9).
+"""The staged E1 objective and horizon curriculum (§6.1-§6.4, §6.9).
 
 What: SIGReg plus inverse dynamics are always active; the action term starts at k=1, then free-running
-and one uniformly sampled variable-length chunk join after stage 0 as the trained horizon grows.
+and one uniformly sampled variable-length chunk join after stage 0 as the trained horizon grows; paired
+counterfactual InfoNCE joins at stage 2.
 Why: this is the smallest objective that prevents collapse, anchors actions, and trains both iterative
 and chunked prediction without allowing labels or environment ground truth into W (Invariant 11).
 """
@@ -12,6 +13,7 @@ import math
 import torch
 import torch.nn as nn
 
+from losses.counterfactual import counterfactual_loss
 from losses.inverse import inverse_loss
 from losses.rollout import rollout_losses
 from losses.sigreg import SIGReg
@@ -36,8 +38,6 @@ class E1Objective(nn.Module):
         reg = losses["reg"]
         if reg["kind"] != "sigreg":
             raise ValueError("the first E1 objective implements only losses.reg.kind='sigreg'")
-        if float(losses["counterfactual"]["weight"]) != 0.0:
-            raise ValueError("counterfactual data is outside the first slice; its weight must be zero")
         self.sigreg = SIGReg(
             dim=abi.dim,
             projections=int(reg["projections"]),
@@ -54,6 +54,16 @@ class E1Objective(nn.Module):
         self.free_running = bool(rollout["free_running"])
         self.stage0_fraction = float(cfg["curriculum"]["stage0_fraction"])
         self.growth_fraction = float(cfg["curriculum"]["horizon_growth_fraction"])
+        counterfactual = losses["counterfactual"]
+        self.counterfactual_weight = float(counterfactual["weight"])
+        self.counterfactual_k = int(counterfactual["k"])
+        self.counterfactual_kappa = float(counterfactual["kappa"])
+        if int(cfg["curriculum"]["counterfactual_from_stage"]) != 2:
+            raise ValueError("the predesigned E1 curriculum adds counterfactual loss only at stage 2")
+
+    def counterfactual_active(self, step: int, total_steps: int) -> bool:
+        stage2_step = max(1, int(total_steps * (self.stage0_fraction + self.growth_fraction)))
+        return self.counterfactual_weight != 0.0 and step >= stage2_step
 
     def forward(
         self,
@@ -65,6 +75,8 @@ class E1Objective(nn.Module):
         step: int,
         total_steps: int,
         generator: torch.Generator | None = None,
+        counterfactual_states: torch.Tensor | None = None,
+        counterfactual_actions: torch.Tensor | None = None,
     ) -> dict[str, torch.Tensor | int | None]:
         horizon = curriculum_horizon(
             step, total_steps, self.max_horizon, self.stage0_fraction, self.growth_fraction
@@ -91,7 +103,31 @@ class E1Objective(nn.Module):
         zero = torch.zeros((), device=states.device, dtype=torch.float32)
         regularizer = self.sigreg(states[:, : horizon + 1].flatten(0, 1)) if self.reg_weight else zero
         inverse_value = inverse_loss(inverse, states, actions, horizon) if self.inverse_weight else zero
-        total = dynamics["total"] + self.reg_weight * regularizer + self.inverse_weight * inverse_value
+        counterfactual_value = zero
+        counterfactual_accuracy = None
+        if self.counterfactual_active(step, total_steps):
+            if counterfactual_states is None or counterfactual_actions is None:
+                raise ValueError("stage-2 counterfactual loss requires paired states and actions")
+            if counterfactual_states.shape[1] != self.counterfactual_k + 1:
+                raise ValueError(
+                    f"counterfactual states have {counterfactual_states.shape[1] - 1} branches, "
+                    f"expected {self.counterfactual_k}"
+                )
+            counterfactual = counterfactual_loss(
+                predictor,
+                counterfactual_states[:, 0],
+                counterfactual_states[:, 1:],
+                counterfactual_actions,
+                kappa=self.counterfactual_kappa,
+            )
+            counterfactual_value = counterfactual["loss"]
+            counterfactual_accuracy = counterfactual["accuracy"]
+        total = (
+            dynamics["total"]
+            + self.reg_weight * regularizer
+            + self.inverse_weight * inverse_value
+            + self.counterfactual_weight * counterfactual_value
+        )
         return {
             "total": total,
             "reg": regularizer,
@@ -99,6 +135,8 @@ class E1Objective(nn.Module):
             "action": dynamics["action"],
             "rollout": dynamics["rollout"],
             "chunk": dynamics["chunk"],
+            "counterfactual": counterfactual_value,
+            "counterfactual_accuracy": counterfactual_accuracy,
             "horizon": horizon,
             "delta_t": chunk_delta_t,
         }

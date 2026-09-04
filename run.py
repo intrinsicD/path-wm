@@ -13,7 +13,7 @@ import torch
 import yaml
 
 from evaluation import evaluate_checkpoint
-from training import ensure_episode_store, train_e1
+from training import ensure_episode_store, ensure_paired_intervention_store, train_e1
 
 ROOT = Path(__file__).resolve().parent
 
@@ -46,12 +46,22 @@ def main() -> None:
     cfg = yaml.safe_load(spec_path.read_text())
     device = select_device(args.device)
     store = ensure_episode_store(cfg, ROOT, seed=int(cfg["probe_set"]["seed"]))
+    counterfactual_store = None
+    if float(cfg["losses"]["counterfactual"]["weight"]) != 0.0:
+        counterfactual_store = ensure_paired_intervention_store(cfg, ROOT)
 
     for seed in cfg["seeds"]:
         run_dir = ROOT / "runs" / run_key(spec_path) / str(seed)
         run_dir.mkdir(parents=True, exist_ok=True)
         (run_dir / "spec.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False), encoding="utf-8")
-        checkpoint, final_training = train_e1(cfg, store, run_dir, int(seed), device)
+        checkpoint, final_training = train_e1(
+            cfg,
+            store,
+            run_dir,
+            int(seed),
+            device,
+            counterfactual_store=counterfactual_store,
+        )
         metrics = evaluate_checkpoint(checkpoint, run_dir, device)
         summary = {
             "run_dir": str(run_dir),

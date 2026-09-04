@@ -2,7 +2,7 @@
 
 What: s(w) compares opposite valid actions at the same W; transition error reports one-step and the
 configured-H free-running endpoint MSE on a fixed regenerated probe set. Identity, zero-action and
-deterministically shuffled-action one-step errors test whether the learned action is actually correct.
+deterministically shuffled-action errors test correctness; paired-branch accuracy tests §6.4 directly.
 How: checkpoint modules run in eval/no-grad mode; observations are encoded in bounded batches, and all
 latent distances are computed in fp32 on normalized ABI tokens. One-step errors share all count x H
 transitions; shuffling rotates trajectories across probe examples while preserving each time index.
@@ -17,6 +17,8 @@ from pathlib import Path
 import torch
 
 from evaluation.probe_set import ProbeSet, generate_probe_set
+from losses.counterfactual import counterfactual_loss
+from training.data import PairedInterventionStore, generate_paired_interventions
 from training.model import ModelBundle, load_checkpoint
 
 
@@ -55,10 +57,37 @@ def _mse(predicted: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
     return (predicted.float() - target.float()).square().mean()
 
 
+def _counterfactual_accuracy(
+    models: ModelBundle,
+    probe: PairedInterventionStore,
+    device: torch.device,
+    kappa: float,
+    batch_size: int = 16,
+) -> float:
+    observations = torch.cat((probe.initial_observations[:, None], probe.next_observations), dim=1)
+    states = _encode(models, observations, device)
+    correct, total = 0.0, 0
+    for start in range(0, probe.groups, batch_size):
+        stop = min(start + batch_size, probe.groups)
+        values = counterfactual_loss(
+            models.predictor,
+            states[start:stop, 0].to(device),
+            states[start:stop, 1:].to(device),
+            probe.actions[start:stop].to(device),
+            kappa=kappa,
+        )
+        decisions = (stop - start) * probe.branches
+        correct += float(values["accuracy"]) * decisions
+        total += decisions
+    return correct / total
+
+
 def evaluate_models(
     models: ModelBundle,
     probe: ProbeSet,
     device: torch.device,
+    counterfactual_probe: PairedInterventionStore | None = None,
+    counterfactual_kappa: float | None = None,
 ) -> dict[str, float | int]:
     models.eval()
     with torch.no_grad():
@@ -91,7 +120,17 @@ def evaluate_models(
         for step in range(actions.shape[1]):
             predicted = _predict(models, predicted, actions[:, step : step + 1], 1)
         horizon_error = _mse(predicted, states[:, -1].to(device))
-    return {
+        counterfactual_accuracy = None
+        if counterfactual_probe is not None:
+            if counterfactual_kappa is None:
+                raise ValueError("counterfactual probe requires its configured kappa")
+            counterfactual_accuracy = _counterfactual_accuracy(
+                models,
+                counterfactual_probe,
+                device,
+                counterfactual_kappa,
+            )
+    metrics: dict[str, float | int] = {
         "action_sensitivity_ratio": float(sensitivity),
         "transition_error": float(horizon_error),
         "transition_error_one_step": float(one_step_error),
@@ -101,6 +140,11 @@ def evaluate_models(
         "probe_count": probe.observations.shape[0],
         "probe_horizon": probe.actions.shape[1],
     }
+    if counterfactual_accuracy is not None:
+        metrics["counterfactual_accuracy"] = counterfactual_accuracy
+        metrics["counterfactual_probe_count"] = counterfactual_probe.groups
+        metrics["counterfactual_branches"] = counterfactual_probe.branches
+    return metrics
 
 
 def evaluate_checkpoint(
@@ -109,7 +153,20 @@ def evaluate_checkpoint(
     device: torch.device,
 ) -> dict[str, float | int]:
     cfg, models, checkpoint = load_checkpoint(checkpoint_path, device)
-    metrics = evaluate_models(models, generate_probe_set(cfg), device)
+    data_cfg = cfg.get("counterfactual_data", {})
+    transition_probe = cfg["probe_set"]
+    counterfactual_probe = generate_paired_interventions(
+        cfg,
+        groups=int(data_cfg.get("probe_groups", transition_probe["count"])),
+        seed=int(data_cfg.get("probe_seed", int(transition_probe["seed"]) + 8_000_003)),
+    )
+    metrics = evaluate_models(
+        models,
+        generate_probe_set(cfg),
+        device,
+        counterfactual_probe,
+        float(cfg["losses"]["counterfactual"]["kappa"]),
+    )
     record = {
         "status": "development" if cfg.get("status") == "dev" else cfg.get("status", "unknown"),
         "seed": int(checkpoint["seed"]),

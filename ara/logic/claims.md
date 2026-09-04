@@ -22,3 +22,13 @@
 - **Tags**: E1, predictor, action-conditioning, diagnostic-control
 - **From staging**: O06
 
+## C03: The κ=0.1 counterfactual anchor was effectively inactive at E1's latent scale
+- **Statement**: With non-vacuous K=4 save/restore branches, the hardware-matched counterfactual run ended at 0.250977 discrimination accuracy (chance 0.25), correct-action error 0.000749412 versus zero-action 0.000748925, and counterfactual loss 1.386298 (approximately log 4). Its mean distance-row span was only 0.000597, which κ=0.1 compressed to a 0.00597 logit span; counterfactual-only gradient norm was 0.000273 at κ=0.1 versus 1.048 at κ=0.001.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Falsification criteria**: A same-seed rerun at κ=0.1 on the committed paired data produces a material correct-action advantage and held-out discrimination above chance, with a non-negligible counterfactual-only gradient.
+- **Proof**: [ara/evidence/tables/e1_dev_counterfactual_2026-09-04.md, runs/dev/first_slice_counterfactual/0/checkpoint.pt]
+- **Dependencies**: [C02]
+- **Tags**: E1, counterfactual, temperature, action-conditioning
+- **From staging**: O09

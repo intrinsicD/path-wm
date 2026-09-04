@@ -18,3 +18,13 @@ entries:
       - "Staged O06 and O07, then crystallized them immediately to C02 and H01 via artifact commitment in CLAUDE.md and DDR §13.18."
       - "Left O08 staged: the history/partial-observability interpretation has quantitative evidence but no user affirmation or downstream artifact dependency."
       - "Did not promote or stale O01-O04; their literature topic remains open and only one session-day has elapsed."
+  - turn: "2026-09-04_002#1"
+    notes:
+      - "Routed N10 as a direct implementation experiment because the panel controls and analytic regression were committed and green."
+      - "Did not create a new claim for N10; it operationalized the already-crystallized H01."
+  - turn: "2026-09-04_002#2"
+    notes:
+      - "Routed the paired-data run as N11, the ineffective κ=0.1 hypothesis as dead end N12, and non-promotion/temperature rescaling as decision N13."
+      - "Crystallized O09 to C03 via artifact commitment in CLAUDE.md and DDR §13.19."
+      - "Left O10 staged until the κ=0.001 run tests whether distance-scale calibration changes the result."
+      - "Kept O08 open: the counterfactual result does not resolve the independent observation-history question."

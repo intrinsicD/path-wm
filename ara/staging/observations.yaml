@@ -141,3 +141,37 @@ observations:
     promoted_to: null
     crystallized_via: null
     stale: false
+
+  - id: O09
+    timestamp: "2026-09-04T10:45+02:00"
+    provenance: ai-suggested
+    content: >
+      The κ=0.1 counterfactual run used valid shared-snapshot branches but remained at
+      chance accuracy and log(K) loss. Its mean candidate-distance span became only
+      0.00597 after temperature scaling, and the counterfactual-only gradient norm was
+      0.000273 versus 1.048 at κ=0.001; this configuration supplied effectively no anchor.
+    context: >
+      Hardware-matched token-pair/control run, completed counterfactual run, fixed paired
+      probe, and temperature/gradient diagnostic.
+    potential_type: claim
+    bound_to: [N11, N12, N13]
+    promoted: true
+    promoted_to: "logic/claims.md:C03"
+    crystallized_via: artifact-commitment
+    stale: false
+
+  - id: O10
+    timestamp: "2026-09-04T10:45+02:00"
+    provenance: ai-suggested
+    content: >
+      A distance-based contrastive temperature must be calibrated in the units of its
+      distance metric. For the current E1 latent MSE scale, test κ=0.001 as the sole next
+      change before interpreting the counterfactual objective itself as ineffective.
+    context: >
+      κ=0.1 compressed the observed 0.000597 distance-row span to nearly uniform logits.
+    potential_type: heuristic
+    bound_to: [N12, N13]
+    promoted: false
+    promoted_to: null
+    crystallized_via: null
+    stale: false

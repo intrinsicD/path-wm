@@ -15,3 +15,12 @@ sessions:
     events_count: 11
     claims_touched: [C01, C02]
     open_threads: 6
+  - id: "2026-09-04_002"
+    date: "2026-09-04"
+    summary: >
+      Added action-correctness controls and completed a paired counterfactual run whose
+      κ=0.1 temperature was ineffective at the measured latent scale.
+    turn_count: 2
+    events_count: 6
+    claims_touched: [C03]
+    open_threads: 5

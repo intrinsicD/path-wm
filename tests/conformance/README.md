@@ -19,7 +19,8 @@ plain `pytest` runs it.
 probe set. Takes the checkpoint under `--run-dir` (default `runs/dev/first_slice/0`, written by
 `python run.py configs/dev/first_slice.yaml`), carries the `threshold` marker (`pytest -m threshold`),
 records the number in `<run_dir>/threshold_record.json`, and while its threshold in `abi_v1.yaml` is
-null skips with reason `threshold_unset`.
+null skips with reason `threshold_unset`. The same record includes identity/zero/shuffled-action errors
+and counterfactual discrimination accuracy as diagnostics without post-hoc thresholds.
 
 ## How a test gets an implementation
 

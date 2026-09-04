@@ -40,6 +40,11 @@ env:
   dataset: data/e0_dev       # dev; ~2e4 transitions
   n_transitions: 20480        # dev = 10 episodes x n_worlds (64) x episode_len (32); the collector asserts this equality
   exploration: uniform_random # dev: the E0 data-policy mixture (uniform, Brownian, scripted) arrives with the data-policy slice
+counterfactual_data:
+  groups: 0                   # dev: training pairs absent while counterfactual.weight is 0
+  seed: 4000003               # dev: separate from episode collection
+  probe_groups: 256           # dev: fixed held-out paired interventions for panel accuracy
+  probe_seed: 8000003         # dev: disjoint from training/reset seeds
 encoder:
   arch: vit_s8
   dim: 96                    # dev
@@ -69,7 +74,7 @@ losses:
   action: {weight: 1.0}
   rollout: {gamma: 0.9, h_train: 4, free_running: true, delta_t_max: 4}   # dev: h_train 8 -> 4, delta_t_max 8 -> 4
   inverse: {weight: 1.0}                    # dev
-  counterfactual: {weight: 0.0, k: 4, kappa: 0.1}   # off by weight 0; the loss builder skips weight-0 terms (L_cf needs paired interventions data/e0_dev lacks). kappa stays a valid temperature: kappa 0 gives NaN and 0 x NaN = NaN
+  counterfactual: {weight: 0.0, k: 4, kappa: 0.1, batch_size: 16}   # off by weight 0; no training pairs are loaded. kappa stays positive because the fixed probe reports discrimination.
 curriculum:
   stage0_fraction: 0.10
   horizon_growth_fraction: 0.40
@@ -95,4 +100,5 @@ outputs:
   sigma_pilot: none          # dev runs never write to docs/preregistration.md
   instrument_panel: true
   metrics: [action_sensitivity_ratio, transition_error, transition_error_one_step,
-            transition_error_identity, transition_error_zero_action, transition_error_shuffled_action]
+            transition_error_identity, transition_error_zero_action, transition_error_shuffled_action,
+            counterfactual_accuracy]

@@ -1,0 +1,101 @@
+session:
+  id: "2026-09-04_002"
+  date: "2026-09-04"
+  started: "2026-09-04T09:59+02:00"
+  last_turn: "2026-09-04T10:45+02:00"
+  turn_count: 2
+  summary: >
+    Added action-correctness controls, then implemented and tested the paired counterfactual
+    anchor; κ=0.1 was a scale-mismatch dead end and its checkpoint was not promoted.
+
+events_logged:
+  - turn: 1
+    type: experiment
+    id: N10
+    routing: direct
+    provenance: ai-executed
+    summary: "Implemented deterministic action-correctness controls over a shared cohort."
+  - turn: 2
+    type: experiment
+    id: N11
+    routing: direct
+    provenance: ai-executed
+    summary: "Completed paired collection plus same-GPU control and counterfactual runs."
+  - turn: 2
+    type: dead_end
+    id: N12
+    routing: direct
+    provenance: ai-executed
+    summary: "Established that κ=0.1 made the counterfactual anchor effectively inactive."
+  - turn: 2
+    type: decision
+    id: N13
+    routing: direct
+    provenance: ai-suggested
+    summary: "Declined promotion and selected κ=0.001 as the isolated next test."
+  - turn: 2
+    type: claim
+    id: C03
+    routing: crystallized
+    provenance: ai-suggested
+    summary: "The κ=0.1 counterfactual anchor was ineffective at E1's latent scale."
+  - turn: 2
+    type: observation
+    id: O10
+    routing: staged
+    provenance: ai-suggested
+    summary: "Contrastive temperature should be tested in the distance metric's units."
+
+ai_actions:
+  - turn: 1
+    action: >
+      Added and committed identity, zero-action, and deterministic shuffled-action panel
+      controls with an analytic same-cohort regression.
+    provenance: ai-executed
+    files_changed:
+      - "evaluation/metrics.py"
+      - "tests/unit/test_metrics.py"
+      - "commit:651db86"
+  - turn: 2
+    action: >
+      Added exact paired-intervention collection, stage-2 InfoNCE, fixed-probe accuracy,
+      tests and a no-inheritance dev spec; ran fresh same-GPU control/candidate checkpoints,
+      diagnosed temperature scale, documented the negative result, and declined promotion.
+    provenance: ai-executed
+    files_changed:
+      - "training/data.py"
+      - "training/e1.py"
+      - "losses/counterfactual.py"
+      - "losses/e1.py"
+      - "evaluation/metrics.py"
+      - "configs/dev/first_slice_counterfactual.yaml"
+      - "tests/unit/test_counterfactual.py"
+      - "tests/unit/test_data.py"
+      - "tests/unit/test_losses.py"
+      - "tests/unit/test_training.py"
+      - "docs/design-decisions.md"
+      - "CLAUDE.md"
+      - "ara/evidence/tables/e1_dev_counterfactual_2026-09-04.md"
+
+claims_touched:
+  - id: C03
+    action: crystallized
+    turn: 2
+
+key_context:
+  - turn: 1
+    excerpt: "User asked to continue with the recorded action-correctness instrumentation step."
+  - turn: 2
+    excerpt: "User asked to continue with the paired counterfactual action-anchor step."
+
+open_threads:
+  - "Test κ=0.001 as the sole change against the fresh token-pair control."
+  - "Determine whether observation history or the updater is required by E0's hidden velocity."
+  - "Set ABI thresholds only after seed variability and a correctly action-conditioned reference."
+  - "Revisit Sophontic only after its model, report, and eval kit ship."
+  - "Decide whether E2 pair scoring needs the remaining joint-correctness and invariance controls."
+
+ai_suggestions_pending:
+  - >
+      Preserve the κ=0.1 run as a scale-mismatch negative and test κ=0.001 before changing
+      predictor architecture or rejecting the counterfactual objective.
