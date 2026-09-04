@@ -1,0 +1,209 @@
+# PLAN — common multimodal base, full-corpus R0, iteration 5, 2026-09-05.
+# Product: modality-neutral evidence frontend for the modular world-model stack.
+# Hypothesis: H1 needs temporally useful, non-collapsed evidence before encoder replacement.
+# Experiment: E1_common_base R0, all 8,646 train / 3,645 eval TAU development clips.
+# Modules: widen ingestion and resumable R0 training; the architecture and gate stay fixed.
+# Decision: compare covariance 0.002 with 0 at matched seeds [0,1], batch 64, 10,000 steps.
+# Metric: the existing rank >=0.25, std >=0.1, positive prediction/retrieval panel on
+#         32 seeded held-out batches before/after. Development evidence; no E1 freeze.
+# Retain covariance only when rank improves without losing temporal/variance guardrails.
+# R1 remains blocked unless the selected R0 checkpoint passes every configured R0 gate.
+# Reliability: source-bound atomic shard caching; bounded parallel ingestion; atomic
+#              optimizer/EMA/random-stream snapshots every 500 steps; explicit --resume.
+# Resume must reproduce an uninterrupted CPU run and reject changed config or manifest.
+# Source: https://zenodo.org/records/4477542 (official metadata and archive checksums).
+experiment: E1_common_base
+status: dev
+abi: docs/abi/abi_v2.yaml
+seeds:
+- 0
+- 1
+data:
+  kind: synchronized_av_manifest
+  dataset: tau_urban_audio_visual_scenes_2021
+  source:
+    doi: 10.5281/zenodo.4477542
+    subset: development
+    examples_archive: TAU-urban-audio-visual-scenes-2021-development.examples.zip
+    examples_md5: 27aca1ec51f856f59604cf22e93ebf80
+    metadata_archive: TAU-urban-audio-visual-scenes-2021-development.meta.zip
+    metadata_md5: 76e3d7ed5291b118372e06379cb2b490
+  raw_root: data/tau_urban_av_2021/raw
+  metadata_root: data/tau_urban_av_2021/metadata
+  shard_root: data/tau_urban_av_2021/shards_development_8fps_64px_16khz
+  manifest: data/tau_urban_av_2021/manifest_development.jsonl
+  manifest_version: 1
+  split:
+    train_file: evaluation_setup/fold1_train.csv
+    eval_file: evaluation_setup/fold1_evaluate.csv
+    group_column: identifier
+  video:
+    frames_per_second: 8
+    resolution: 64
+  audio:
+    sample_rate: 16000
+    channels: 1
+  window:
+    duration_seconds: 0.5
+    future_offset_seconds: 0.5
+    shifted_offset_seconds: 2.0
+modalities:
+  video:
+    enabled: true
+    encoder:
+      arch: tubelet_transformer
+      input_channels: 3
+      dim: 96
+      layers: 1
+      heads: 4
+      mlp_ratio: 4
+      tubelet: 2
+      patch: 16
+    adapter:
+      kind: evidence_projection
+  audio:
+    enabled: true
+    encoder:
+      arch: spectrogram_transformer
+      input_channels: 1
+      dim: 96
+      layers: 1
+      heads: 4
+      mlp_ratio: 4
+      sample_rate: 16000
+      n_fft: 256
+      hop_length: 128
+      frequency_patch: 16
+      time_patch: 4
+    adapter:
+      kind: evidence_projection
+action_adapter:
+  kind: continuous_mlp
+  input_dim: 2
+predictor:
+  arch: slot_transformer
+  dim: 192
+  layers: 2
+  heads: 4
+  mlp_ratio: 4
+  registers: 0
+  readout_init_scale: 0.03
+updater:
+  kind: predict_then_correct_v2
+  heads: 4
+  mlp_ratio: 2
+  correction_gate_bias: -1.0
+representation:
+  target: ema
+  ema_decay: 0.996
+  objectives:
+  - masked_latent
+  - future_latent
+  - covariance
+  - audiovisual_sync
+  mask_ratio: 0.5
+  predictor_layers: 1
+  predictor_heads: 4
+  audiovisual_temperature: 0.1
+  weights:
+    masked_latent: 1.0
+    future_latent: 1.0
+    variance: 0.1
+    covariance: 0.0
+    audiovisual_sync: 0.1
+  planner_gradients: false
+curriculum:
+  stages:
+  - representation_unimodal
+  - representation_av
+  - belief_bootstrap
+  - dynamics_one_step
+  - dynamics_rollout
+  - planning
+  encoder_lr_scale_after_freeze: 0.0
+  observation_dropout: 0.3
+  gates:
+    unimodal_representation_ready:
+      video_feature_std:
+        op: greater_equal
+        value: 0.1
+      audio_feature_std:
+        op: greater_equal
+        value: 0.1
+      video_effective_rank_fraction:
+        op: greater_equal
+        value: 0.25
+      audio_effective_rank_fraction:
+        op: greater_equal
+        value: 0.25
+      video_masked_prediction_advantage:
+        op: greater
+        value: 0.0
+      audio_masked_prediction_advantage:
+        op: greater
+        value: 0.0
+      video_future_prediction_advantage:
+        op: greater
+        value: 0.0
+      audio_future_prediction_advantage:
+        op: greater
+        value: 0.0
+      video_temporal_retrieval_margin:
+        op: greater
+        value: 0.0
+      audio_temporal_retrieval_margin:
+        op: greater
+        value: 0.0
+    audiovisual_representation_ready:
+      video_to_audio_retrieval_margin:
+        op: greater
+        value: 0.0
+      audio_to_video_retrieval_margin:
+        op: greater
+        value: 0.0
+      synchrony_accuracy_above_chance:
+        op: greater
+        value: 0.0
+    belief_ready:
+      hidden_velocity_probe_r2:
+        op: greater
+        value: 0.0
+      prior_only_finite:
+        op: equal
+        value: 1.0
+    one_step_dynamics_ready:
+      correct_vs_identity_ratio:
+        op: less
+        value: 1.0
+      correct_vs_zero_ratio:
+        op: less
+        value: 1.0
+      correct_vs_shuffled_ratio:
+        op: less
+        value: 1.0
+    rollout_dynamics_ready:
+      compounding_ratio:
+        op: less_equal
+        value: 1.5
+      action_correct_through_horizon:
+        op: equal
+        value: 1.0
+train:
+  stage: representation_unimodal
+  max_steps: 10000
+  batch_size: 64
+  held_out_batches: 32
+  log_every: 50
+  precision: bf16
+  optimizer: adamw
+  lr: 0.0003
+  weight_decay: 0.001
+  grad_clip: 1.0
+  checkpoint_every: 500
+extensions:
+  uncertainty: gated_after_deterministic_failure
+  proprioception: evidence_interface
+  language: io_adapter_interface
+  goal_encoder: evidence_interface
+  debug_decoders: stopgrad_only
+  planner: frozen_world_model_only

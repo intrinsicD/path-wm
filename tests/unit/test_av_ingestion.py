@@ -114,3 +114,41 @@ def test_ingestion_fails_before_decoding_when_official_splits_leak_a_location(tm
 
     with pytest.raises(ValueError, match="recording group"):
         _module().ingest_tau_av(cfg, tmp_path, decoder=forbidden_decoder)
+
+
+def _cache_decoder(video, audio, *, video_fps, resolution, audio_sample_rate, audio_channels):
+    return {
+        "video": torch.zeros(3 * video_fps, 3, resolution, resolution, dtype=torch.uint8),
+        "audio": torch.zeros(audio_channels, 3 * audio_sample_rate),
+        "video_fps": video_fps, "audio_sample_rate": audio_sample_rate, "duration_seconds": 3.0,
+    }
+
+
+def test_ingestion_cache_is_bound_to_source_bytes_and_normalization(tmp_path):
+    cfg = _fixture(tmp_path)
+    calls = []
+    def decode(*args, **kwargs):
+        calls.append(args[0])
+        return _cache_decoder(*args, **kwargs)
+    ingest = _module().ingest_tau_av
+    records = ingest(cfg, tmp_path, decoder=decode)
+    ingest(cfg, tmp_path, decoder=decode)
+    assert len(calls) == 4
+    Path(records[0].source["audio"]).write_bytes(b"changed source")
+    ingest(cfg, tmp_path, decoder=decode)
+    assert len(calls) == 5, "changed source must not be relabeled as an old shard"
+    cfg["data"]["video"]["resolution"] = 16
+    ingest(cfg, tmp_path, decoder=decode)
+    assert len(calls) == 9
+
+
+def test_parallel_ingestion_recovers_truncated_cache_in_manifest_order(tmp_path):
+    cfg = _fixture(tmp_path)
+    ingest = _module().ingest_tau_av
+    serial = ingest(cfg, tmp_path, decoder=_cache_decoder)
+    (tmp_path / "shards" / serial[0].shard).write_bytes(b"truncated")
+    parallel = ingest(cfg, tmp_path, decoder=_cache_decoder, workers=2)
+    assert [r.clip_id for r in parallel] == [r.clip_id for r in serial]
+    payload = torch.load(tmp_path / "shards" / parallel[0].shard, weights_only=True)
+    assert payload["video"].shape == (12, 3, 8, 8)
+    assert not list((tmp_path / "shards").glob("*.tmp"))
