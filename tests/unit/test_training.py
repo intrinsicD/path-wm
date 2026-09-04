@@ -19,6 +19,7 @@ def test_one_step_training_writes_reloadable_metrics(cfg, tmp_path):
     spec["losses"]["reg"].update(weight=0.1, projections=8, knots=5, per_token=False)
     spec["losses"]["rollout"].update(h_train=1, delta_t_max=1)
     spec["train"].update(steps=1, batch_size=2)
+    spec["train"]["diagnostic_checkpoint_steps"] = [0, 1]
     spec["probe_set"].update(count=2, horizon=1)
     spec["counterfactual_data"]["probe_groups"] = 2
 
@@ -31,6 +32,8 @@ def test_one_step_training_writes_reloadable_metrics(cfg, tmp_path):
     metrics = evaluate_checkpoint(checkpoint, tmp_path, torch.device("cpu"))
 
     assert checkpoint.exists() and (tmp_path / "training.jsonl").exists()
+    assert (tmp_path / "checkpoints" / "step_000000.pt").exists()
+    assert (tmp_path / "checkpoints" / "step_000001.pt").exists()
     assert (tmp_path / "metrics.json").exists()
     assert final_training["step"] == 1
     assert {

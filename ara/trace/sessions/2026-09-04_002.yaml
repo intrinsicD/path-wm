@@ -2,13 +2,13 @@ session:
   id: "2026-09-04_002"
   date: "2026-09-04"
   started: "2026-09-04T09:59+02:00"
-  last_turn: "2026-09-04T12:06+02:00"
-  turn_count: 4
+  last_turn: "2026-09-04T12:59+02:00"
+  turn_count: 5
   summary: >
     Added action-correctness controls and the paired counterfactual anchor, then isolated
     temperature, weight, objective geometry, gradient routing, and observability. Paired
-    absolute loss substantially improves E1-a but cannot beat identity; exact hidden-velocity
-    aliasing and a two-frame diagnostic justify moving to the planned E1-b updater.
+    absolute loss improves E1-a but cannot beat identity; observability and learning-onset
+    audits select a history-bearing updater with transition-scale short-joint bootstrap next.
 
 events_logged:
   - turn: 1
@@ -131,6 +131,54 @@ events_logged:
     routing: crystallized
     provenance: ai-suggested
     summary: "Single RGB is not a sufficient Markov state for E0."
+  - turn: 5
+    type: question
+    id: N24
+    routing: direct
+    provenance: user
+    summary: "Reframed late learning around causes rather than assuming encoder pretraining."
+  - turn: 5
+    type: experiment
+    id: N25
+    routing: direct
+    provenance: ai-executed
+    summary: "Measured initialization scale, representation variance, and nonzero gradients."
+  - turn: 5
+    type: dead_end
+    id: N26
+    routing: direct
+    provenance: ai-executed
+    summary: "Rejected full direct training under the default residual initialization."
+  - turn: 5
+    type: experiment
+    id: N27
+    routing: direct
+    provenance: ai-executed
+    summary: "Compared six matched onset and curriculum conditions with fixed checkpoint probes."
+  - turn: 5
+    type: dead_end
+    id: N28
+    routing: direct
+    provenance: ai-executed
+    summary: "Rejected SIGReg plus inverse as sufficient encoder-only pretraining."
+  - turn: 5
+    type: decision
+    id: N29
+    routing: direct
+    provenance: ai-suggested
+    summary: "Retained the short-joint schedule for E1-b without promoting E1-a."
+  - turn: 5
+    type: claim
+    id: C07
+    routing: crystallized
+    provenance: ai-suggested
+    summary: "Late semantic onset is caused by scheduling and bootstrap scale, not missing gradients."
+  - turn: 5
+    type: heuristic
+    id: H02
+    routing: crystallized
+    provenance: ai-suggested
+    summary: "Bootstrap residual dynamics jointly at measured transition scale."
 
 ai_actions:
   - turn: 1
@@ -197,6 +245,26 @@ ai_actions:
       - "docs/design-decisions.md"
       - "CLAUDE.md"
       - "ara/evidence/tables/e1_dev_counterfactual_2026-09-04.md"
+  - turn: 5
+    action: >
+      Added fixed-checkpoint learning-curve instrumentation, measured initial representation
+      and residual scales plus per-module gradients, ran six matched schedule/initialization
+      conditions, rejected direct-default and encoder-only curricula, and retained a
+      transition-scale short joint warm-up for E1-b without promotion.
+    provenance: ai-executed
+    files_changed:
+      - "losses/e1.py"
+      - "predictors/transformer.py"
+      - "predictors/__init__.py"
+      - "training/e1.py"
+      - "evaluation/learning_curve.py"
+      - "configs/dev/first_slice_onset_*.yaml"
+      - "tests/unit/test_losses.py"
+      - "tests/unit/test_training.py"
+      - "tests/unit/test_metrics.py"
+      - "tests/unit/test_specs.py"
+      - "tests/conformance/test_predictor.py"
+      - "ara/evidence/tables/e1_dev_learning_onset_2026-09-04.md"
 
 claims_touched:
   - id: C03
@@ -211,6 +279,9 @@ claims_touched:
   - id: C06
     action: crystallized
     turn: 4
+  - id: C07
+    action: crystallized
+    turn: 5
 
 key_context:
   - turn: 1
@@ -221,6 +292,8 @@ key_context:
     excerpt: "User asked to continue with the calibrated κ=0.001 counterfactual run."
   - turn: 4
     excerpt: "User required informed grid search and tested structural remedies instead of one-parameter guessing."
+  - turn: 5
+    excerpt: "User questioned the framing and asked what truly causes late learning and whether encoder-first curriculum is warranted."
 
 open_threads:
   - "Implement and compare the planned E1-b predict-then-correct updater against the E1-a Pareto checkpoint."
@@ -230,5 +303,5 @@ open_threads:
 
 ai_suggestions_pending:
   - >
-      Stop E1-a scalar loss search; preserve the paired-MSE weight-6 Pareto checkpoint and
-      test the predesigned history-bearing updater at the same data, seed, steps, and panel budget.
+      Implement E1-b with transition-scale initialization and compare both the default
+      stage-2 and short-joint onset schedules against the E1-a replay at equal budget.

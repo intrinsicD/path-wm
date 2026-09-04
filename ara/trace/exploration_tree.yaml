@@ -416,3 +416,107 @@ tree:
       - "docs/design-decisions.md"
     status: resolved
     children: []
+
+  - id: N24
+    type: question
+    title: "What actually prevents early action-semantic learning?"
+    provenance: user
+    timestamp: "2026-09-04T12:59+02:00"
+    also_depends_on: [N21, N22, N23]
+    description: >
+      Reconsider whether encoder readiness and curriculum are even the correct questions;
+      identify why useful learning appears late, whether it can occur early, and whether
+      encoders should train before predictors and planning.
+    status: resolved
+    children: []
+
+  - id: N25
+    type: experiment
+    title: "Initialization and learning-onset audit"
+    provenance: ai-executed
+    timestamp: "2026-09-04T12:59+02:00"
+    also_depends_on: [N24]
+    result: >
+      Fixed-probe snapshots showed that the default loss is off until step 1,000, initial
+      W has only 0.007058 across-example variance, and the default predictor begins at
+      0.310718 paired MSE versus 0.001732 for identity. All auxiliary module gradients
+      were nonzero, rejecting gradient starvation. A readout scale of 0.03 matched the
+      initial residual to transition scale without disconnecting actions.
+    evidence:
+      - "ara/evidence/tables/e1_dev_learning_onset_2026-09-04.md"
+      - "evaluation/learning_curve.py"
+    status: resolved
+    children:
+      - id: N26
+        type: dead_end
+        title: "Enable the full paired objective from initialization"
+        provenance: ai-executed
+        timestamp: "2026-09-04T12:59+02:00"
+        hypothesis: >
+          If the stage-2 gate is the only cause, activating the unchanged objective at
+          step 0 should simply move discrimination earlier.
+        failure_mode: >
+          With the default residual, across-example variance fell to 0.000133 at step 200,
+          held-out discrimination ended at 0.250977, and transition errors worsened.
+        lesson: >
+          Signal availability is not enough: the initially off-scale residual and collapse
+          pressure must be controlled during representation bootstrap.
+        status: resolved
+        children: []
+
+  - id: N27
+    type: experiment
+    title: "Joint, encoder-first, and scaled-residual curriculum comparison"
+    provenance: ai-executed
+    timestamp: "2026-09-04T12:59+02:00"
+    also_depends_on: [N25, N26]
+    result: >
+      Six matched conditions showed that residual scale 0.03 enables direct early learning
+      (0.525391 final discrimination), while a 200-step joint dynamics warm-up moves the
+      fixed-probe 3-SE onset from step 2,000 to step 1,000 and reaches 0.535156. The latter
+      narrows correct-vs-identity to 5.01%, but zero action remains 2.81% better.
+    evidence:
+      - "configs/dev/first_slice_onset_short_joint_warmup.yaml"
+      - "runs/dev/first_slice_onset_short_joint_warmup/0/learning_curve.jsonl"
+      - "ara/evidence/tables/e1_dev_learning_onset_2026-09-04.md"
+    status: resolved
+    children:
+      - id: N28
+        type: dead_end
+        title: "SIGReg plus inverse is sufficient encoder pretraining"
+        provenance: ai-executed
+        timestamp: "2026-09-04T12:59+02:00"
+        hypothesis: >
+          Training encoder, adapter, and inverse before the predictor should create a
+          mature action-relevant state that the predictor learns faster.
+        failure_mode: >
+          Scene variance reached 0.9518 at step 200, but paired identity MSE rose to 0.1611;
+          the default and scaled predictor variants both learned later and underperformed
+          the short joint warm-up.
+        lesson: >
+          Inverse decodability rewards temporal difference, not predictive smoothness.
+          Encoder pretraining needs a temporal predictive target, not only SIGReg+inverse.
+        status: resolved
+        children: []
+
+  - id: N29
+    type: decision
+    title: "Carry the short-joint onset recipe into E1-b without promoting E1-a"
+    provenance: ai-suggested
+    timestamp: "2026-09-04T12:59+02:00"
+    also_depends_on: [N27, N28, N22]
+    choice: >
+      Retain transition-scale initialization plus a 200-step joint dynamics warm-up as an
+      E1-b schedule candidate. Keep planning off and do not promote E1-a because no onset
+      condition beats identity, zero, and shuffled controls together; test the updater
+      next because curriculum cannot resolve hidden velocity.
+    alternatives:
+      - "Pretrain with SIGReg+inverse alone despite its measured temporal discontinuity."
+      - "Continue E1-a schedule tuning despite the exact observation alias."
+      - "Begin planner evaluation before a correct reference transition model exists."
+    evidence:
+      - "N27"
+      - "N28"
+      - "C06"
+    status: resolved
+    children: []

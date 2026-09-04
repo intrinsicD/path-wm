@@ -149,6 +149,25 @@ def test_actions_and_delta_t_are_wired(build, abi, cfg, gen, W):
         assert not torch.equal(y, P.predict(W, a4, 1)), "delta_t does not reach the output"
 
 
+def test_readout_init_scale_reduces_the_initial_residual_without_disconnecting_actions(
+    build, abi, cfg, gen, W
+):
+    default_cfg = copy.deepcopy(cfg)
+    scaled_cfg = copy.deepcopy(cfg)
+    default_cfg["predictor"]["readout_init_scale"] = 1.0
+    scaled_cfg["predictor"]["readout_init_scale"] = 0.03
+    default = build("predictor", cfg=default_cfg)
+    scaled = build("predictor", cfg=scaled_cfg)
+    actions = _actions(gen, 1, W.shape[0], abi)
+
+    default_delta = (default.predict(W, actions, 1).float() - W.float()).square().mean()
+    scaled_output = scaled.predict(W, actions, 1)
+    scaled_delta = (scaled_output.float() - W.float()).square().mean()
+
+    assert scaled_delta < default_delta * 0.1
+    assert not torch.equal(scaled_output, scaled.predict(W, -actions, 1))
+
+
 def test_output_tokens_are_layernormed(build, abi, gen, W, layernormed_at_all_scales):
     """Every output token has mean ~0 and variance ~1 whatever the input scale.
 

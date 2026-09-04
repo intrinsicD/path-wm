@@ -226,3 +226,40 @@ observations:
     promoted_to: "logic/claims.md:C06"
     crystallized_via: artifact-commitment
     stale: false
+
+  - id: O14
+    timestamp: "2026-09-04T12:59+02:00"
+    provenance: ai-suggested
+    content: >
+      E1-a's late branch discrimination combines a literal 50% loss delay with two
+      bootstrap mismatches: initial W is normalized but mostly scene-insensitive, and the
+      default predictor residual is about 179 times identity transition error. Gradients
+      are present. Transition-scale initialization plus a short joint warm-up moves robust
+      held-out onset from step 2,000 to step 1,000.
+    context: >
+      Six-condition same-seed onset audit with ten fixed held-out checkpoint evaluations
+      per condition and per-module initialization gradients.
+    potential_type: claim
+    bound_to: [N24, N25, N26, N27]
+    promoted: true
+    promoted_to: "logic/claims.md:C07"
+    crystallized_via: artifact-commitment
+    stale: false
+
+  - id: O15
+    timestamp: "2026-09-04T12:59+02:00"
+    provenance: ai-suggested
+    content: >
+      Bootstrap a residual world model near measured transition scale while one-step
+      prediction jointly constrains representation geometry; delay only the strong
+      branch-ranking loss. Do not treat SIGReg+inverse alone as encoder pretraining,
+      because it can make action differences visible by making temporal neighbors far apart.
+    context: >
+      Encoder-only pretraining reached high scene variance but inflated paired identity
+      MSE to 0.1611 by step 200 and delayed predictor learning.
+    potential_type: heuristic
+    bound_to: [N27, N28, N29]
+    promoted: true
+    promoted_to: "logic/solution/heuristics.md:H02"
+    crystallized_via: artifact-commitment
+    stale: false

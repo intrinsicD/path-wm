@@ -3,10 +3,11 @@ from __future__ import annotations
 
 import copy
 
+import pytest
 import torch
 
 from losses import build_objective
-from losses.e1 import curriculum_horizon
+from losses.e1 import curriculum_horizon, curriculum_stage_start
 from losses.rollout import rollout_losses
 from losses.sigreg import SIGReg
 
@@ -52,6 +53,14 @@ def test_curriculum_reaches_full_horizon_at_end_of_growth():
     assert curriculum_horizon(99, 1000, 4, 0.1, 0.4) == 1
     assert curriculum_horizon(299, 1000, 4, 0.1, 0.4) == 2
     assert curriculum_horizon(499, 1000, 4, 0.1, 0.4) == 4
+
+
+def test_curriculum_stage_boundaries_are_explicit():
+    assert curriculum_stage_start(0, 2000, 0.1, 0.4) == 0
+    assert curriculum_stage_start(1, 2000, 0.1, 0.4) == 200
+    assert curriculum_stage_start(2, 2000, 0.1, 0.4) == 1000
+    with pytest.raises(ValueError, match="stage must be 0, 1, or 2"):
+        curriculum_stage_start(3, 2000, 0.1, 0.4)
 
 
 def test_weight_zero_inverse_is_not_computed(cfg, abi):
@@ -114,6 +123,53 @@ def test_counterfactual_term_starts_only_at_stage_two(cfg, abi):
     assert torch.isfinite(after["counterfactual"])
     assert torch.isfinite(after["counterfactual_positive"])
     assert after["counterfactual_accuracy"] is not None
+
+
+def test_counterfactual_term_can_start_with_joint_training(cfg, abi):
+    spec = copy.deepcopy(cfg)
+    spec["losses"]["reg"]["weight"] = 0.0
+    spec["losses"]["inverse"]["weight"] = 0.0
+    spec["losses"]["rollout"].update(h_train=1, delta_t_max=1)
+    spec["losses"]["counterfactual"].update(weight=1.0, k=3, kappa=0.1, batch_size=2)
+    spec["curriculum"]["counterfactual_from_stage"] = 0
+    objective = build_objective(spec, abi)
+    states = torch.randn(2, 2, abi.n_tokens, abi.dim).to(abi.dtype)
+    actions = torch.zeros(2, 1, abi.action_dims)
+    paired_states = torch.randn(2, 4, abi.n_tokens, abi.dim).to(abi.dtype)
+    paired_actions = torch.zeros(2, 3, abi.action_dims)
+
+    values = objective(
+        AdditivePredictor(),
+        object(),
+        states,
+        actions,
+        step=0,
+        total_steps=2000,
+        counterfactual_states=paired_states,
+        counterfactual_actions=paired_actions,
+    )
+
+    assert torch.isfinite(values["counterfactual"])
+    assert values["counterfactual_accuracy"] is not None
+
+
+def test_representation_first_stage_does_not_call_predictor(cfg, abi):
+    spec = copy.deepcopy(cfg)
+    spec["losses"]["reg"]["weight"] = 0.0
+    spec["losses"]["inverse"]["weight"] = 0.0
+    spec["curriculum"]["dynamics_from_stage"] = 1
+    objective = build_objective(spec, abi)
+    states = torch.randn(2, 2, abi.n_tokens, abi.dim).to(abi.dtype)
+    actions = torch.zeros(2, 1, abi.action_dims)
+
+    class MustNotRun:
+        def predict(self, *args):
+            raise AssertionError("predictor ran during representation-only stage")
+
+    values = objective(MustNotRun(), object(), states, actions, step=0, total_steps=2000)
+    assert values["action"].item() == 0.0
+    assert values["rollout"].item() == 0.0
+    assert values["chunk"].item() == 0.0
 
 
 def test_paired_positive_weight_adds_matching_branch_error(cfg, abi):

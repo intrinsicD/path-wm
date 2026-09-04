@@ -14,8 +14,10 @@ from dataclasses import dataclass
 import pytest
 import torch
 
+from evaluation.learning_curve import representation_diagnostics
 from evaluation.metrics import evaluate_models
 from evaluation.probe_set import ProbeSet
+from training.data import PairedInterventionStore
 
 
 class ScalarEncoder:
@@ -60,3 +62,20 @@ def test_action_correctness_controls_share_all_pairs_and_use_fixed_trajectory_sh
     assert metrics["transition_error_zero_action"] == pytest.approx(91.0 / 600.0)
     # torch.roll(..., dims=0) maps action trajectories 2->0, 0->1, 1->2: deltas .4, -.2, -.2.
     assert metrics["transition_error_shuffled_action"] == pytest.approx(0.08)
+
+
+def test_representation_diagnostics_separate_scene_variation_and_transition_scale():
+    initial = torch.tensor([10, 30], dtype=torch.uint8).reshape(2, 1, 1, 1)
+    following = torch.tensor([11, 9, 33, 27], dtype=torch.uint8).reshape(2, 2, 1, 1, 1)
+    action_x = torch.tensor([[0.1, -0.1], [0.3, -0.3]])
+    actions = torch.stack((action_x, torch.zeros_like(action_x)), dim=-1)
+    paired = PairedInterventionStore(initial, following, actions)
+
+    diagnostics = representation_diagnostics(OracleModels(), paired, torch.device("cpu"), kappa=0.1)
+
+    assert diagnostics["state_rms"] == pytest.approx((5.0**0.5))
+    assert diagnostics["state_across_example_variance"] == pytest.approx(1.0)
+    assert diagnostics["paired_positive_mse"] == pytest.approx(0.0, abs=1e-12)
+    assert diagnostics["predicted_branch_separation"] == pytest.approx(
+        diagnostics["target_branch_separation"]
+    )

@@ -99,3 +99,67 @@ def test_counterfactual_solution_configs_change_only_declared_fields(filename, c
 
     base["losses"]["counterfactual"].update(changes)
     assert candidate == base
+
+
+def _onset_control() -> dict:
+    base = yaml.safe_load(
+        (ROOT / "configs/dev/first_slice_counterfactual_solution_absolute_w6.yaml").read_text()
+    )
+    base["predictor"]["readout_init_scale"] = 1.0
+    base["curriculum"]["dynamics_from_stage"] = 0
+    base["train"]["diagnostic_checkpoint_steps"] = [
+        0,
+        50,
+        200,
+        500,
+        750,
+        1000,
+        1250,
+        1500,
+        1750,
+        2000,
+    ]
+    return base
+
+
+def test_learning_onset_control_changes_only_diagnostics():
+    candidate = yaml.safe_load((ROOT / "configs/dev/first_slice_onset_late_replay.yaml").read_text())
+    assert candidate == _onset_control()
+
+
+@pytest.mark.parametrize(
+    ("filename", "changes"),
+    [
+        ("first_slice_onset_early_joint.yaml", {"counterfactual_from_stage": 0}),
+        (
+            "first_slice_onset_early_scaled_residual.yaml",
+            {"counterfactual_from_stage": 0, "readout_init_scale": 0.03},
+        ),
+        (
+            "first_slice_onset_short_joint_warmup.yaml",
+            {"counterfactual_from_stage": 1, "readout_init_scale": 0.03},
+        ),
+        (
+            "first_slice_onset_short_encoder_first.yaml",
+            {"dynamics_from_stage": 1, "counterfactual_from_stage": 1, "readout_init_scale": 0.03},
+        ),
+        (
+            "first_slice_onset_representation_first.yaml",
+            {
+                "stage0_fraction": 0.25,
+                "horizon_growth_fraction": 0.25,
+                "dynamics_from_stage": 1,
+                "counterfactual_from_stage": 1,
+            },
+        ),
+    ],
+)
+def test_learning_onset_ablation_changes_only_declared_fields(filename, changes):
+    expected = _onset_control()
+    candidate = yaml.safe_load((ROOT / "configs/dev" / filename).read_text())
+    for key, value in changes.items():
+        if key == "readout_init_scale":
+            expected["predictor"][key] = value
+        else:
+            expected["curriculum"][key] = value
+    assert candidate == expected

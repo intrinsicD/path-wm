@@ -28,3 +28,9 @@ entries:
       - "Crystallized O09 to C03 via artifact commitment in CLAUDE.md and DDR §13.19."
       - "Left O10 staged until the κ=0.001 run tests whether distance-scale calibration changes the result."
       - "Kept O08 open: the counterfactual result does not resolve the independent observation-history question."
+  - turn: "2026-09-04_002#5"
+    notes:
+      - "Routed the user's reframing as N24 rather than assuming encoder pretraining was the premise."
+      - "Routed initialization measurements and matched schedules as N25/N27 experiments, with failed direct-default and encoder-only hypotheses as dead ends N26/N28."
+      - "Crystallized the onset mechanism to C07 and the measured bootstrap rule to H02 via configs, tests, fixed curves, and the evidence artifact."
+      - "Routed non-promotion and E1-b handoff as N29; no scalar E1-a search was opened because hidden-velocity aliasing remains exact."

@@ -37,6 +37,7 @@ predictor:
   registers: 0
   markov: true
   delta_t_conditioned: true
+  readout_init_scale: 1.0  # PyTorch default; development onset ablation tests a transition-scale residual
   params_target: 10000000
 inverse_dynamics:
   kind: mlp_pooled_pair
@@ -49,7 +50,8 @@ losses:
 curriculum:
   stage0_fraction: 0.10
   horizon_growth_fraction: 0.40
-  counterfactual_from_stage: 2
+  dynamics_from_stage: 0       # stages 0/1/2 start at 0, stage0_fraction, and stage0+growth
+  counterfactual_from_stage: 2 # onset ablations may select an earlier stage without changing loss scale
 train:                     # from the LeWM recipe; set before E1 is frozen
   steps: null
   batch_size: null
@@ -58,6 +60,7 @@ train:                     # from the LeWM recipe; set before E1 is frozen
   grad_clip: null
   optimizer: adamw
   precision: bf16
+  diagnostic_checkpoint_steps: []  # dev onset audits only; no effect when empty
 probe_set:
   path: evaluation/probe_set_v1   # as abi_v1.yaml names it; regenerated from seed, count and horizon
   seed: 0

@@ -99,6 +99,7 @@ class TransformerPredictor(nn.Module):
         mlp_ratio: int,
         n_registers: int,
         delta_t_conditioned: bool,
+        readout_init_scale: float = 1.0,
     ) -> None:
         super().__init__()
         abi.check_registers(n_registers)
@@ -106,6 +107,10 @@ class TransformerPredictor(nn.Module):
             raise ValueError(f"predictor.layers must be positive, got {layers}")
         if mlp_ratio < 1:
             raise ValueError(f"predictor.mlp_ratio must be positive, got {mlp_ratio}")
+        if not math.isfinite(readout_init_scale) or readout_init_scale < 0.0:
+            raise ValueError(
+                f"predictor.readout_init_scale must be finite and non-negative, got {readout_init_scale}"
+            )
 
         self.abi = abi
         self.dim = dim
@@ -132,6 +137,12 @@ class TransformerPredictor(nn.Module):
         coordinates[abi.global_tokens : abi.n_tokens, 1] = grid % side
         self.blocks = nn.ModuleList(Block(dim, heads, mlp_ratio, coordinates) for _ in range(layers))
         self.readout = nn.Linear(dim, abi.dim)
+
+        # A residual predictor should begin near the physical transition scale, not with an O(1)
+        # random delta. Scale both affine terms while preserving PyTorch's seeded initialization.
+        with torch.no_grad():
+            self.readout.weight.mul_(readout_init_scale)
+            self.readout.bias.mul_(readout_init_scale)
 
         nn.init.trunc_normal_(self.action_time, std=0.02)
         nn.init.trunc_normal_(self.register_tokens, std=0.02)

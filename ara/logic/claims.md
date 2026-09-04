@@ -65,3 +65,14 @@
 - **Dependencies**: [C05]
 - **Tags**: E0, E1, observability, hidden-velocity, belief-state, updater
 - **From staging**: O13
+
+## C07: E1-a's late semantic onset is a scheduling and bootstrap problem, not gradient starvation
+- **Statement**: The default counterfactual term is disabled until step 1,000. At initialization W has unit RMS but only 0.007058 across-example variance, while the default predictor's paired MSE is 0.310718 versus 0.001732 for identity; auxiliary encoder/adapter/predictor gradients are all nonzero. Scaling the residual readout to 0.03 and using a 200-step joint dynamics warm-up moves fixed-probe discrimination above the three-standard-error threshold at step 1,000 rather than 2,000 and reaches 0.535156. By contrast, direct full-strength training at default initialization remains at chance, and encoder-only SIGReg+inverse pretraining inflates paired identity MSE to 0.1611 by step 200. Early learning is possible, but the current encoder-only curriculum is not suitable.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Falsification criteria**: A matched rerun shows absent initial auxiliary gradients, no residual-scale mismatch, no earlier onset under the scaled short-joint schedule, or predictive/smooth geometry from the tested encoder-only phase.
+- **Proof**: [ara/evidence/tables/e1_dev_learning_onset_2026-09-04.md, runs/dev/first_slice_onset_short_joint_warmup/0/learning_curve.jsonl]
+- **Dependencies**: [C05, C06]
+- **Tags**: E1, curriculum, initialization, learning-onset, representation-bootstrap
+- **From staging**: O14

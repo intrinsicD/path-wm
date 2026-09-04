@@ -24,6 +24,7 @@ def _transformer(cfg: dict) -> nn.Module:
         mlp_ratio=int(section.get("mlp_ratio", 4)),
         n_registers=int(section["registers"]),
         delta_t_conditioned=bool(section.get("delta_t_conditioned", True)),
+        readout_init_scale=float(section.get("readout_init_scale", 1.0)),
     )
 
 

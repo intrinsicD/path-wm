@@ -18,9 +18,9 @@ sessions:
   - id: "2026-09-04_002"
     date: "2026-09-04"
     summary: >
-      Added action-correctness controls and completed a paired counterfactual run whose
-      κ=0.1 temperature was ineffective at the measured latent scale.
-    turn_count: 2
-    events_count: 6
-    claims_touched: [C03]
-    open_threads: 5
+      Diagnosed counterfactual scale, objective geometry, observability, and learning onset;
+      selected a history-bearing updater plus transition-scale short-joint bootstrap next.
+    turn_count: 5
+    events_count: 20
+    claims_touched: [C03, C04, C05, C06, C07]
+    open_threads: 4

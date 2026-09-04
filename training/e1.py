@@ -18,6 +18,31 @@ from training.model import ModelBundle, build_models, check_parameter_targets, p
 from world_state.abi import ROOT, load_abi
 
 
+def _diagnostic_checkpoint_steps(cfg: dict, total_steps: int) -> set[int]:
+    requested = cfg["train"].get("diagnostic_checkpoint_steps", [])
+    if not isinstance(requested, list) or any(
+        isinstance(step, bool) or not isinstance(step, int) for step in requested
+    ):
+        raise ValueError("train.diagnostic_checkpoint_steps must be a list of integer step counts")
+    steps = set(requested)
+    if any(step < 0 or step > total_steps for step in steps):
+        raise ValueError(f"diagnostic checkpoint steps must lie within [0, {total_steps}], got {sorted(steps)}")
+    return steps
+
+
+def _save_diagnostic_checkpoint(
+    run_dir: Path,
+    step: int,
+    cfg: dict,
+    models: ModelBundle,
+    optimizer: torch.optim.Optimizer,
+    seed: int,
+    counts: dict[str, int],
+) -> None:
+    path = run_dir / "checkpoints" / f"step_{step:06d}.pt"
+    save_checkpoint(path, cfg, models, optimizer, step, seed, counts)
+
+
 def _encode_window(models: ModelBundle, observations: torch.Tensor) -> torch.Tensor:
     batch, frames = observations.shape[:2]
     flat = observations.flatten(0, 1)
@@ -74,6 +99,7 @@ def train_e1(
         weight_decay=float(cfg["train"]["weight_decay"]),
     )
     total_steps = int(cfg["train"]["steps"])
+    diagnostic_steps = _diagnostic_checkpoint_steps(cfg, total_steps)
     batch_size = int(cfg["train"]["batch_size"])
     max_horizon = int(cfg["losses"]["rollout"]["h_train"])
     sample_generator = torch.Generator().manual_seed(seed + 2_000_003)
@@ -82,6 +108,9 @@ def train_e1(
     run_dir.mkdir(parents=True, exist_ok=True)
     log_path = run_dir / "training.jsonl"
     last_record: dict[str, float | int] = {}
+
+    if 0 in diagnostic_steps:
+        _save_diagnostic_checkpoint(run_dir, 0, cfg, models, optimizer, seed, counts)
 
     with log_path.open("w", encoding="utf-8") as log:
         for step in range(total_steps):
@@ -136,6 +165,9 @@ def train_e1(
                 list(models.parameters()), float(cfg["train"]["grad_clip"])
             )
             optimizer.step()
+
+            if step + 1 in diagnostic_steps:
+                _save_diagnostic_checkpoint(run_dir, step + 1, cfg, models, optimizer, seed, counts)
 
             last_record = {
                 key: float(value.detach()) if isinstance(value, torch.Tensor) else (-1 if value is None else int(value))

@@ -1,8 +1,9 @@
 """The staged E1 objective and horizon curriculum (§6.1-§6.4, §6.9).
 
-What: SIGReg plus inverse dynamics are always active; the action term starts at k=1, then free-running
-and one uniformly sampled variable-length chunk join after stage 0 as the trained horizon grows; paired
-counterfactual InfoNCE and its optional paired positive MSE join at stage 2.
+What: SIGReg plus inverse dynamics are always active; by default the action term starts at k=1, then
+free-running and one uniformly sampled variable-length chunk join after stage 0 as the trained horizon
+grows; paired counterfactual InfoNCE and its optional paired positive MSE join at stage 2. Development
+ablations can move dynamics or counterfactual onset among the same three explicit stage boundaries.
 Why: this is the smallest objective that prevents collapse, anchors actions, and trains both iterative
 and chunked prediction without allowing labels or environment ground truth into W (Invariant 11).
 """
@@ -31,6 +32,19 @@ def curriculum_horizon(step: int, total_steps: int, max_horizon: int, stage0: fl
     return min(max_horizon, 1 + math.floor(progress * (max_horizon - 1)))
 
 
+def curriculum_stage_start(stage: int, total_steps: int, stage0: float, growth: float) -> int:
+    """Return the first optimizer-step index for curriculum stages 0, 1, or 2."""
+    if total_steps < 1:
+        raise ValueError("total_steps must be positive")
+    if stage == 0:
+        return 0
+    if stage == 1:
+        return max(1, int(total_steps * stage0))
+    if stage == 2:
+        return max(1, int(total_steps * (stage0 + growth)))
+    raise ValueError(f"curriculum stage must be 0, 1, or 2, got {stage}")
+
+
 class E1Objective(nn.Module):
     def __init__(self, cfg: dict, abi: ABI) -> None:
         super().__init__()
@@ -54,19 +68,46 @@ class E1Objective(nn.Module):
         self.free_running = bool(rollout["free_running"])
         self.stage0_fraction = float(cfg["curriculum"]["stage0_fraction"])
         self.growth_fraction = float(cfg["curriculum"]["horizon_growth_fraction"])
+        self.dynamics_from_stage = int(cfg["curriculum"].get("dynamics_from_stage", 0))
         counterfactual = losses["counterfactual"]
         self.counterfactual_weight = float(counterfactual["weight"])
         self.counterfactual_positive_weight = float(counterfactual.get("positive_weight", 0.0))
         self.counterfactual_context_gradient = bool(counterfactual.get("context_gradient", True))
         self.counterfactual_k = int(counterfactual["k"])
         self.counterfactual_kappa = float(counterfactual["kappa"])
-        if int(cfg["curriculum"]["counterfactual_from_stage"]) != 2:
-            raise ValueError("the predesigned E1 curriculum adds counterfactual loss only at stage 2")
+        self.counterfactual_from_stage = int(cfg["curriculum"]["counterfactual_from_stage"])
+        # Validate configurable development ablations while retaining stage 0 / stage 2 as defaults.
+        curriculum_stage_start(
+            self.dynamics_from_stage,
+            1_000,
+            self.stage0_fraction,
+            self.growth_fraction,
+        )
+        curriculum_stage_start(
+            self.counterfactual_from_stage,
+            1_000,
+            self.stage0_fraction,
+            self.growth_fraction,
+        )
+
+    def dynamics_active(self, step: int, total_steps: int) -> bool:
+        start = curriculum_stage_start(
+            self.dynamics_from_stage,
+            total_steps,
+            self.stage0_fraction,
+            self.growth_fraction,
+        )
+        return step >= start
 
     def counterfactual_active(self, step: int, total_steps: int) -> bool:
-        stage2_step = max(1, int(total_steps * (self.stage0_fraction + self.growth_fraction)))
+        start = curriculum_stage_start(
+            self.counterfactual_from_stage,
+            total_steps,
+            self.stage0_fraction,
+            self.growth_fraction,
+        )
         enabled = self.counterfactual_weight != 0.0 or self.counterfactual_positive_weight != 0.0
-        return enabled and step >= stage2_step
+        return enabled and step >= start
 
     def forward(
         self,
@@ -90,20 +131,24 @@ class E1Objective(nn.Module):
         if not self.free_running:
             horizon = 1
         chunk_delta_t = None
-        if step >= stage0_steps:
+        dynamics_active = self.dynamics_active(step, total_steps)
+        if dynamics_active and step >= stage0_steps:
             largest_chunk = min(self.delta_t_max, horizon)
             chunk_delta_t = int(torch.randint(1, largest_chunk + 1, (), generator=generator).item())
 
-        dynamics = rollout_losses(
-            predictor,
-            states,
-            actions,
-            gamma=self.gamma,
-            horizon=horizon,
-            action_weight=self.action_weight,
-            chunk_delta_t=chunk_delta_t,
-        )
         zero = torch.zeros((), device=states.device, dtype=torch.float32)
+        if dynamics_active:
+            dynamics = rollout_losses(
+                predictor,
+                states,
+                actions,
+                gamma=self.gamma,
+                horizon=horizon,
+                action_weight=self.action_weight,
+                chunk_delta_t=chunk_delta_t,
+            )
+        else:
+            dynamics = {"total": zero, "action": zero, "rollout": zero, "chunk": zero}
         regularizer = self.sigreg(states[:, : horizon + 1].flatten(0, 1)) if self.reg_weight else zero
         inverse_value = inverse_loss(inverse, states, actions, horizon) if self.inverse_weight else zero
         counterfactual_value = zero
