@@ -646,4 +646,25 @@ tree:
                       - "ara/evidence/tables/e1_common_base_r0_2026-09-04.md"
                       - "docs/design-decisions.md#23-r0-dimensional-collapse-guardrail"
                     status: resolved
-                    children: []
+                    children:
+                      - id: N36
+                        type: decision
+                        title: "Approve overnight acquisition of the complete TAU corpus"
+                        provenance: user
+                        timestamp: "2026-09-05T01:12+02:00"
+                        also_depends_on: [N30, N35]
+                        choice: >
+                          Acquire all 24 full-development media archives overnight so the
+                          balanced covariance guardrail can be evaluated on the complete
+                          34-hour TAU corpus rather than the 20-clip fixture.
+                        alternatives:
+                          - "Remain on the examples fixture, which cannot support promotion."
+                          - "Defer acquisition because of its bandwidth and storage cost."
+                        evidence:
+                          - "N30"
+                          - "N35"
+                          - "https://zenodo.org/records/4477542"
+                          - "commit:8b7725b"
+                          - "data/tau_urban_av_2021/download-full.log"
+                        status: resolved
+                        children: []

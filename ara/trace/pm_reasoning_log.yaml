@@ -41,3 +41,9 @@ entries:
       - "Staged O16/O17, then crystallized them to C08/H03 via artifact commitment in the covariance code, controlled configs, DDR §23, and evidence table."
       - "Did not promote O08 or O10: stronger existing entries cover history and temperature, and no new closure signal specifically bound to those observations occurred."
       - "Found no contradictions and no 3-session-day stale observations; full-corpus acquisition remains open because it consumes roughly 108 GB before extraction."
+  - turn: "2026-09-05_001#1"
+    notes:
+      - "Routed the user's explicit full-corpus approval as direct decision N36 under the already-selected N35 full-TAU comparison."
+      - "Recorded the active transfer, reproducible downloader, validation, commit, and sleep guard as an AI action rather than an experiment; corpus verification is incomplete until all 24 archives finish."
+      - "Staged no interpretive observation and crystallized none; the user affirmed acquisition, not a pending knowledge claim."
+      - "Found no contradiction and did not stale O01-O04 because only two calendar session-days have elapsed."

@@ -1,0 +1,50 @@
+session:
+  id: "2026-09-05_001"
+  date: "2026-09-05"
+  started: "2026-09-05T01:12+02:00"
+  last_turn: "2026-09-05T01:12+02:00"
+  turn_count: 1
+  summary: >
+    Approved and launched resumable full-TAU acquisition after mechanically matching
+    all 24 media archives to the official Zenodo record.
+
+events_logged:
+  - turn: 1
+    type: decision
+    id: N36
+    routing: direct
+    provenance: user
+    summary: "Approved overnight acquisition of the complete 34-hour TAU corpus."
+
+ai_actions:
+  - turn: 1
+    action: >
+      Added a resumable per-archive downloader with official size and MD5 verification,
+      extraction markers, a 20 GiB free-space floor, and post-extraction ZIP cleanup;
+      matched its 107,607,337,075-byte manifest to the live Zenodo API, passed 154 fast
+      tests, committed the workflow, and launched it under a process-scoped sleep guard.
+    provenance: ai-executed
+    files_changed:
+      - "scripts/download_tau_urban_av_2021.sh"
+      - "README.md"
+      - "commit:8b7725b"
+
+claims_touched: []
+
+key_context:
+  - turn: 1
+    excerpt: "User confirmed: yes, please download it over night."
+
+open_threads:
+  - "Let the active download finish; verify all 24 extraction markers and all metadata-referenced source pairs."
+  - "Create the full-corpus config, ingest resumable normalized shards, and choose the training budget from a throughput pilot."
+  - "Run matched no-covariance and gradient-balanced R0 controls; do not start R1 while R0 fails."
+  - "Set ABI thresholds only after seed variability and a correctly action-conditioned reference."
+  - "Revisit Sophontic only after its model, report, and eval kit ship."
+  - "Decide whether E2 pair scoring needs the remaining joint-correctness and invariance controls."
+
+ai_suggestions_pending:
+  - >
+      After the active acquisition completes, audit marker count, corpus paths, and disk
+      headroom before starting shard ingestion; size the matched R0 runs from a measured
+      ingestion/training throughput pilot rather than the held-out gate values.
