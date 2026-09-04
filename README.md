@@ -25,11 +25,35 @@ Run an experiment or dev spec with `python run.py <spec.yaml>`; plain `pytest` i
 | `experiments/*.yaml` | One spec per experiment. A spec is frozen by committing its hash into `docs/preregistration.md`. |
 | `viewer/` | Read-only views: the experiment dashboard over run ledgers and a raw-data microscope over the RGB/action inputs selected by a spec. |
 
+## Common-base real A/V development
+
+The first ABI-v2 representation slice uses the official TAU Urban Audio-Visual Scenes 2021 corpus. The
+small `examples` archive is only an end-to-end development fixture; promotion requires the complete
+development archive. Download the metadata and selected media archive from the Zenodo record, verify
+their MD5 sums against `configs/dev/common_base.yaml`, then extract them to:
+
+```text
+data/tau_urban_av_2021/raw/examples/*.mp4
+data/tau_urban_av_2021/metadata/meta.csv
+data/tau_urban_av_2021/metadata/evaluation_setup/*.csv
+```
+
+Build the checksummed manifest and normalized per-clip shards once, then run the gated R0 training:
+
+```bash
+python -m training.av_data configs/dev/common_base.yaml
+python run.py configs/dev/common_base.yaml --device auto
+```
+
+Raw media, normalized shards, manifests, checkpoints, and run ledgers are local ignored artifacts. Scene
+labels are retained only as manifest provenance; representation batches never expose them.
+
 ## Experiment dashboard
 
 Open `runs/experiment_dashboard.html` directly in a browser after any successful run. It compares every completed seed, keeps development evidence visibly labeled, and provides:
 
 - selected-run outcome cards and action-correctness controls;
+- held-out representation collapse, temporal prediction/retrieval, and A/V synchrony controls;
 - cross-run action sensitivity, counterfactual accuracy, transition error, and parameter comparisons;
 - training-objective, counterfactual-accuracy, gradient, and curriculum trajectories;
 - visible direction indicators on every chart (`↑` higher is better, `↓` lower is better, `↔` context only);

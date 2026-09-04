@@ -43,6 +43,21 @@ METRIC_LABELS = {
     "transition_error_one_step": "Correct-action error",
     "transition_error_shuffled_action": "Shuffled-action error",
     "transition_error_zero_action": "Zero-action error",
+    "video_feature_std": "Video feature standard deviation",
+    "audio_feature_std": "Audio feature standard deviation",
+    "video_effective_rank_fraction": "Video effective-rank fraction",
+    "audio_effective_rank_fraction": "Audio effective-rank fraction",
+    "video_masked_prediction_advantage": "Video masked-prediction advantage",
+    "audio_masked_prediction_advantage": "Audio masked-prediction advantage",
+    "video_future_prediction_advantage": "Video future-prediction advantage",
+    "audio_future_prediction_advantage": "Audio future-prediction advantage",
+    "video_temporal_retrieval_margin": "Video temporal-retrieval margin",
+    "audio_temporal_retrieval_margin": "Audio temporal-retrieval margin",
+    "video_to_audio_retrieval_margin": "Video-to-audio retrieval margin",
+    "audio_to_video_retrieval_margin": "Audio-to-video retrieval margin",
+    "synchrony_accuracy_above_chance": "A/V synchrony accuracy above chance",
+    "gate_passed": "Curriculum gate passed",
+    "gate_failure_count": "Curriculum gate failures",
 }
 
 METRIC_DEFINITIONS = {
@@ -74,6 +89,9 @@ CONTEXT_METRICS = {
     "counterfactual_probe_count",
     "probe_count",
     "probe_horizon",
+    "gate_failure_count",
+    "held_out_batches",
+    "held_out_examples",
 }
 CONTROL_METRICS = [
     ("transition_error_identity", "Identity control ↑"),
@@ -86,7 +104,8 @@ TRANSITION_METRICS = [
     ("transition_error", "H-step endpoint"),
 ]
 TRAINING_PRIMARY_OBJECTIVES = ["total", "action", "rollout", "inverse"]
-TRAINING_AUXILIARY_OBJECTIVES = ["counterfactual", "reg", "chunk"]
+TRAINING_AUXILIARY_OBJECTIVES = ["counterfactual", "reg", "chunk", "masked_latent", "future_latent",
+                                 "variance", "audiovisual_sync"]
 TRAINING_OBJECTIVES = TRAINING_PRIMARY_OBJECTIVES + TRAINING_AUXILIARY_OBJECTIVES
 RUN_CARD_PRIORITY = [
     "action_sensitivity_ratio",
@@ -113,6 +132,18 @@ METRIC_DIRECTIONS = {
     "transition_error_one_step": "lower",
     "transition_error_shuffled_action": "lower",
     "transition_error_zero_action": "lower",
+    "video_effective_rank_fraction": "higher",
+    "audio_effective_rank_fraction": "higher",
+    "video_masked_prediction_advantage": "higher",
+    "audio_masked_prediction_advantage": "higher",
+    "video_future_prediction_advantage": "higher",
+    "audio_future_prediction_advantage": "higher",
+    "video_temporal_retrieval_margin": "higher",
+    "audio_temporal_retrieval_margin": "higher",
+    "video_to_audio_retrieval_margin": "higher",
+    "audio_to_video_retrieval_margin": "higher",
+    "synchrony_accuracy_above_chance": "higher",
+    "gate_passed": "higher",
 }
 
 

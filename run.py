@@ -16,6 +16,8 @@ import yaml
 
 from evaluation import evaluate_checkpoint
 from training import ensure_episode_store, ensure_paired_intervention_store, train_e1
+from training.av_data import build_representation_data
+from training.common_base import train_common_base
 from viewer.dashboard import write_experiment_dashboard
 
 ROOT = Path(__file__).resolve().parent
@@ -48,6 +50,49 @@ def main() -> None:
     spec_path = args.spec if args.spec.is_absolute() else ROOT / args.spec
     cfg = yaml.safe_load(spec_path.read_text())
     device = select_device(args.device)
+
+    if cfg.get("experiment") == "E1_common_base":
+        data = build_representation_data(cfg, ROOT)
+        for seed in cfg["seeds"]:
+            run_dir = ROOT / "runs" / run_key(spec_path) / str(seed)
+            run_dir.mkdir(parents=True, exist_ok=True)
+            (run_dir / "spec.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False), encoding="utf-8")
+            result = train_common_base(cfg, data, run_dir, int(seed), device)
+            record = {
+                "status": "development" if cfg.get("status") == "dev" else cfg.get("status", "unknown"),
+                "seed": int(seed),
+                "step": int(cfg["train"]["max_steps"]),
+                "checkpoint": str(result.checkpoint),
+                "parameter_counts": result.parameter_counts,
+                "metrics": result.metrics,
+            }
+            (run_dir / "metrics.json").write_text(
+                json.dumps(record, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            summary = {
+                "run_dir": str(run_dir),
+                "device": str(device),
+                "stage": str(cfg["train"]["stage"]),
+                "gate": {
+                    "name": result.gate.gate,
+                    "passed": result.gate.passed,
+                    "failures": list(result.gate.failures),
+                },
+                "final_training": result.final_training,
+                "metrics": result.metrics,
+            }
+            (run_dir / "run_summary.json").write_text(
+                json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+            )
+            print(json.dumps(summary, indent=2, sort_keys=True))
+            _, dashboard_path, receipt = write_experiment_dashboard(ROOT / "runs")
+            print(
+                f"Experiment dashboard: {dashboard_path} "
+                f"({receipt.get('stages', {}).get('verification', 'unknown')} verification)"
+            )
+        return
+
     store = ensure_episode_store(cfg, ROOT, seed=int(cfg["probe_set"]["seed"]))
     counterfactual_store = None
     counterfactual_cfg = cfg["losses"]["counterfactual"]

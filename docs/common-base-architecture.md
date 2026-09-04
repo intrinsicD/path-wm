@@ -4,12 +4,16 @@ Status: implementation candidate, 2026-09-04. ABI v1 and E1-a remain an immutabl
 this document defines the replacement reference that must pass the gates below before it is promoted.
 
 Implementation status (development evidence only): ABI-v2 contracts, video/audio evidence paths, action
-adapter, slot predictor, predict-correct updater, explicit freeze/gate controller, EMA teachers, and R0/R1
-representation losses are executable. TAU Urban Audio-Visual Scenes 2021 is selected as the first real
-corpus; its source-split manifest and normalized-shard boundary are the current implementation slice.
-A 20-step fixed synthetic-batch optimizer smoke reduced the R0 objective from 4.0533 to 0.3975; this
-checks optimization plumbing only and is not a representation or world-model result. A held-out real-data
-R0/R1 panel, B0/D0 objectives, and every planning module remain next-stage work.
+adapter, slot predictor, predict-correct updater, explicit freeze/gate controller, EMA teachers, R0/R1
+representation losses, and the held-out representation panel are executable. TAU Urban Audio-Visual
+Scenes 2021 enters through an official-split, recording-group-safe manifest and normalized per-clip
+shards. A 20-step CUDA R0 run on the 20-clip official example bundle made video masked/future prediction
+beat its copy controls (+0.160/+0.217), but correctly failed promotion: audio remained just below its
+controls (-0.005/-0.014), and effective-rank fractions were only 0.108 video and 0.043 audio against the
+0.25 gate. Feature standard deviation remained high in both modalities, exposing that the implemented
+variance floor is not the declared dimensional-rank guardrail. These are plumbing diagnostics on a tiny
+development subset, not representation or world-model evidence. The next isolated intervention adds that
+guardrail and reruns the matched panel before full-corpus R0/R1; B0/D0 and planning remain later work.
 
 ## 1. Decision
 
@@ -183,5 +187,6 @@ The following are promotion gates, not optional dashboard decoration:
 5. equal-budget E1-b comparison against the best v1 checkpoint;
 6. planning only after D1 passes its promotion gate.
 
-The immediate implementation slice covers items 1–2. It does not claim a scientific result; the first
-result is the held-out R0/R1 representation panel on real A/V data.
+Items 1–3 now run end to end on the official example bundle. The first held-out R0 panel is a negative
+development result and identified a missing rank objective; no promotion claim is made until the fixed
+architecture passes on the complete development corpus.

@@ -203,3 +203,56 @@ def test_runner_refreshes_dashboard_after_writing_summary(tmp_path, monkeypatch)
     runner.main()
 
     assert dashboard_calls == [tmp_path / "runs"]
+
+
+def test_runner_dispatches_common_base_without_touching_the_e1_collector(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+
+    import run as runner
+
+    spec_path = tmp_path / "configs" / "dev" / "common_base.yaml"
+    spec_path.parent.mkdir(parents=True)
+    spec = {
+        "experiment": "E1_common_base",
+        "status": "dev",
+        "seeds": [3],
+        "train": {"stage": "representation_unimodal", "max_steps": 2},
+    }
+    spec_path.write_text(yaml.safe_dump(spec), encoding="utf-8")
+    data = object()
+    training_calls = []
+
+    monkeypatch.setattr(runner, "ROOT", tmp_path)
+    monkeypatch.setattr(runner, "build_representation_data", lambda cfg, root: data)
+
+    def fake_train(cfg, received_data, run_dir, seed, device):
+        training_calls.append((cfg, received_data, run_dir, seed, device))
+        return SimpleNamespace(
+            checkpoint=run_dir / "checkpoint.pt",
+            final_training={"step": 2, "total": 0.25},
+            metrics={"video_feature_std": 0.5, "gate_passed": 0},
+            parameter_counts={"common_base_total": 10},
+            gate=SimpleNamespace(gate="unimodal_representation_ready", passed=False, failures=("not ready",)),
+        )
+
+    monkeypatch.setattr(runner, "train_common_base", fake_train)
+    monkeypatch.setattr(
+        runner,
+        "ensure_episode_store",
+        lambda *_args, **_kwargs: pytest.fail("common-base dispatch must not collect E0 episodes"),
+    )
+    monkeypatch.setattr(
+        runner,
+        "write_experiment_dashboard",
+        lambda root: (root / "artifact.json", root / "dashboard.html", {"stages": {"verification": "passed"}}),
+    )
+    monkeypatch.setattr(sys, "argv", ["run.py", str(spec_path), "--device", "cpu"])
+
+    runner.main()
+
+    run_dir = tmp_path / "runs" / "dev" / "common_base" / "3"
+    record = json.loads((run_dir / "metrics.json").read_text())
+    summary = json.loads((run_dir / "run_summary.json").read_text())
+    assert len(training_calls) == 1 and training_calls[0][1] is data
+    assert record["metrics"] == summary["metrics"]
+    assert summary["gate"]["passed"] is False

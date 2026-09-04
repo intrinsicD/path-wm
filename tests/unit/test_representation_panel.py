@@ -54,6 +54,8 @@ class ExactLearner:
         shifted = {modality: torch.roll(basis[:, 0], 1, 0) for modality in ("video", "audio")}
         return {
             "online": online,
+            "masked_source": online,
+            "future_source": online,
             "teacher_current": targets,
             "teacher_future": targets,
             "masked_prediction": predictions,

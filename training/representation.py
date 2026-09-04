@@ -19,7 +19,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from contracts import EvidenceTokens, TemporalObservation
+from contracts import EvidenceTokens, RepresentationBatch, TemporalObservation
 from encoders.temporal import TokenTransformer
 from training.curriculum import EMATeacher, configure_core_trainability
 
@@ -53,7 +53,7 @@ class TokenPredictionHead(nn.Module):
 def _corruption_mask(valid: torch.Tensor, ratio: float, generator: torch.Generator) -> torch.Tensor:
     if not 0.0 < ratio < 1.0:
         raise ValueError("representation.mask_ratio must lie strictly between 0 and 1")
-    mask = (torch.rand(valid.shape, generator=generator, device=valid.device) < ratio) & valid
+    mask = (torch.rand(valid.shape, generator=generator).to(valid.device) < ratio) & valid
     # Every row has both a learning target and some visible context whenever it has >=2 valid samples.
     for row in range(valid.shape[0]):
         indices = valid[row].nonzero(as_tuple=False).flatten()
@@ -169,35 +169,80 @@ class RepresentationLearner(nn.Module):
     ) -> dict[str, EvidenceTokens]:
         return {modality: self.teachers[modality](observation) for modality, observation in observations.items()}
 
+    def evaluation_views(
+        self,
+        batch: RepresentationBatch,
+        *,
+        stage: str,
+        generator: torch.Generator,
+    ) -> dict[str, object]:
+        if stage not in {"representation_unimodal", "representation_av"}:
+            raise ValueError("representation views are defined only for R0/R1")
+        if set(batch.current) != set(batch.future) or set(batch.current) != set(self.core.encoders):
+            raise ValueError("current/future batches must contain every enabled representation modality")
+        if stage == "representation_unimodal" and batch.shifted:
+            raise ValueError("R0 batches must not imply cross-modal correspondence through shifted views")
+        if stage == "representation_av" and set(batch.shifted) != set(batch.current):
+            raise ValueError("R1 batches require same-recording shifted views for every modality")
+
+        corrupted = {
+            modality: corrupt_observation(observation, modality, self.mask_ratio, generator)
+            for modality, observation in batch.current.items()
+        }
+        online = self.core.encode_observations(batch.current)
+        masked_source = self.core.encode_observations(corrupted)
+        with torch.no_grad():
+            teacher_current = self._teacher_evidence(batch.current)
+            teacher_future = self._teacher_evidence(batch.future)
+        views: dict[str, object] = {
+            "online": online,
+            "masked_source": masked_source,
+            "future_source": online,
+            "teacher_current": teacher_current,
+            "teacher_future": teacher_future,
+            "masked_prediction": {
+                modality: self.masked_heads[modality](evidence)
+                for modality, evidence in masked_source.items()
+            },
+            "future_prediction": {
+                modality: self.future_heads[modality](evidence)
+                for modality, evidence in online.items()
+            },
+        }
+        if stage == "representation_av":
+            shifted = self.core.encode_observations(batch.shifted)
+            views["av_current"] = {
+                modality: F.normalize(self.av_projectors[modality](_pool(evidence)), dim=-1)
+                for modality, evidence in online.items()
+            }
+            views["av_shifted"] = {
+                modality: F.normalize(self.av_projectors[modality](_pool(evidence)), dim=-1)
+                for modality, evidence in shifted.items()
+            }
+        return views
+
     def loss(
         self,
-        current: Mapping[str, TemporalObservation],
-        future: Mapping[str, TemporalObservation],
+        batch: RepresentationBatch,
         *,
         stage: str,
         generator: torch.Generator,
     ) -> dict[str, torch.Tensor]:
-        if stage not in {"representation_unimodal", "representation_av"}:
-            raise ValueError("representation loss is defined only for R0/R1")
-        if set(current) != set(future) or set(current) != set(self.core.encoders):
-            raise ValueError("current/future batches must contain every enabled representation modality")
-
-        corrupted = {
-            modality: corrupt_observation(observation, modality, self.mask_ratio, generator)
-            for modality, observation in current.items()
-        }
-        online = self.core.encode_observations(corrupted)
-        with torch.no_grad():
-            teacher_current = self._teacher_evidence(current)
-            teacher_future = self._teacher_evidence(future)
+        views = self.evaluation_views(batch, stage=stage, generator=generator)
+        online = views["online"]
+        masked_source = views["masked_source"]
+        teacher_current = views["teacher_current"]
+        teacher_future = views["teacher_future"]
+        masked_prediction = views["masked_prediction"]
+        future_prediction = views["future_prediction"]
 
         masked_terms, future_terms, variance_terms = [], [], []
         for modality, evidence in online.items():
             masked_terms.append(
-                _masked_mse(self.masked_heads[modality](evidence), teacher_current[modality], evidence)
+                _masked_mse(masked_prediction[modality], teacher_current[modality], masked_source[modality])
             )
             future_terms.append(
-                _masked_mse(self.future_heads[modality](evidence), teacher_future[modality], evidence)
+                _masked_mse(future_prediction[modality], teacher_future[modality], evidence)
             )
             variance_terms.append(_variance_loss(evidence))
         masked = torch.stack(masked_terms).mean()
@@ -206,16 +251,24 @@ class RepresentationLearner(nn.Module):
 
         audiovisual = torch.zeros((), device=masked.device)
         if stage == "representation_av":
-            batch = online["video"].tokens.shape[0]
-            if batch < 2 or online["audio"].tokens.shape[0] != batch:
+            batch_size = online["video"].tokens.shape[0]
+            if batch_size < 2 or online["audio"].tokens.shape[0] != batch_size:
                 raise ValueError("audiovisual synchrony needs a matched batch of at least two")
-            video = F.normalize(self.av_projectors["video"](_pool(online["video"])), dim=-1)
-            audio = F.normalize(self.av_projectors["audio"](_pool(online["audio"])), dim=-1)
+            current, shifted = views["av_current"], views["av_shifted"]
+            video, audio = current["video"], current["audio"]
             logits = video @ audio.transpose(0, 1) / self.audiovisual_temperature
-            labels = torch.arange(batch, device=logits.device)
-            audiovisual = 0.5 * (
+            labels = torch.arange(batch_size, device=logits.device)
+            retrieval = 0.5 * (
                 F.cross_entropy(logits, labels) + F.cross_entropy(logits.transpose(0, 1), labels)
             )
+            positive = (video * audio).sum(dim=-1)
+            video_wrong_time = (video * shifted["audio"]).sum(dim=-1)
+            audio_wrong_time = (audio * shifted["video"]).sum(dim=-1)
+            shifted_ranking = 0.5 * (
+                F.softplus((video_wrong_time - positive) / self.audiovisual_temperature).mean()
+                + F.softplus((audio_wrong_time - positive) / self.audiovisual_temperature).mean()
+            )
+            audiovisual = retrieval + shifted_ranking
 
         total = (
             self.weights["masked_latent"] * masked

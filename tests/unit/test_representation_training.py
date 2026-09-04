@@ -57,8 +57,7 @@ def test_r0_loss_trains_both_encoders_but_not_belief_or_dynamics():
     originals = {key: value.values.clone() for key, value in current.items()}
 
     values = learner.loss(
-        current,
-        future,
+        contracts.RepresentationBatch(current, future, {}),
         stage="representation_unimodal",
         generator=torch.Generator().manual_seed(23),
     )
@@ -77,9 +76,9 @@ def test_r0_loss_trains_both_encoders_but_not_belief_or_dynamics():
 def test_r1_adds_synchronized_av_objective_and_keeps_teacher_frozen():
     _, core, learner = _build()
     learner.set_stage("representation_av")
+    current, future, shifted = _observations(31), _observations(32), _observations(34)
     values = learner.loss(
-        _observations(31),
-        _observations(32),
+        contracts.RepresentationBatch(current, future, shifted),
         stage="representation_av",
         generator=torch.Generator().manual_seed(33),
     )
@@ -100,8 +99,7 @@ def test_optimizer_step_then_ema_update_moves_teacher_toward_online_branch():
     )
     teacher_before = learner.teachers["video"].module.encoder.patch_embed.weight.detach().clone()
     values = learner.loss(
-        _observations(41),
-        _observations(42),
+        contracts.RepresentationBatch(_observations(41), _observations(42), {}),
         stage="representation_unimodal",
         generator=torch.Generator().manual_seed(43),
     )
