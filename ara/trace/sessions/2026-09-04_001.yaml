@@ -1,0 +1,132 @@
+session:
+  id: "2026-09-04_001"
+  date: "2026-09-04"
+  started: "2026-09-04T06:47+02:00"
+  last_turn: "2026-09-04T07:16+02:00"
+  turn_count: 1
+  summary: >
+    Diagnosed the Step 3 inverse/action-sensitivity plateau, isolated a token-pair inverse
+    intervention, and retained its run as a mixed negative result rather than a reference.
+
+events_logged:
+  - turn: 1
+    type: experiment
+    id: N05
+    routing: direct
+    provenance: ai-executed
+    summary: "Separated raw-observation signal, baseline inverse failure, and frozen-W failure."
+  - turn: 1
+    type: decision
+    id: N06
+    routing: direct
+    provenance: ai-suggested
+    summary: "Selected token-correspondence inverse pooling as the sole model intervention."
+  - turn: 1
+    type: experiment
+    id: N07
+    routing: direct
+    provenance: ai-executed
+    summary: "Completed the matched 2,000-step token-pair inverse run."
+  - turn: 1
+    type: dead_end
+    id: N08
+    routing: direct
+    provenance: ai-executed
+    summary: "Refuted that improved inverse decodability alone fixes predictor action conditioning."
+  - turn: 1
+    type: decision
+    id: N09
+    routing: direct
+    provenance: ai-suggested
+    summary: "Kept the alternative but declined to promote its mixed checkpoint."
+  - turn: 1
+    type: claim
+    id: C01
+    routing: crystallized
+    provenance: ai-suggested
+    summary: "Baseline inverse anchoring was empirically at the zero-action solution."
+  - turn: 1
+    type: observation
+    id: O06
+    routing: staged
+    provenance: ai-suggested
+    summary: "Inverse decodability improved without correct predictor conditioning."
+  - turn: 1
+    type: claim
+    id: C02
+    routing: crystallized
+    provenance: ai-suggested
+    summary: "Inverse decodability did not imply predictor action correctness."
+  - turn: 1
+    type: observation
+    id: O07
+    routing: staged
+    provenance: ai-suggested
+    summary: "Action sensitivity needs identity, zero, and shuffled-action controls."
+  - turn: 1
+    type: heuristic
+    id: H01
+    routing: crystallized
+    provenance: ai-suggested
+    summary: "Paired action-correctness controls became a committed development rule."
+  - turn: 1
+    type: observation
+    id: O08
+    routing: staged
+    provenance: ai-suggested
+    summary: "Three-frame action recovery exposed a remaining observation-history question."
+
+ai_actions:
+  - turn: 1
+    action: >
+      Ran baseline, raw-observation, frozen-latent, pilot, full-run, and held-out control
+      diagnostics; added and tested mlp_token_pair behind the existing builder; preserved
+      the pooled baseline; documented the mixed result; and committed Step 4 as 1148cc6.
+    provenance: ai-executed
+    files_changed:
+      - "world_state/inverse.py"
+      - "configs/dev/first_slice_token_pair.yaml"
+      - "tests/unit/test_inverse_anchor.py"
+      - "CLAUDE.md"
+      - "docs/design-decisions.md"
+      - "runs/dev/first_slice_token_pair/0/"
+      - "ara/logic/claims.md"
+      - "ara/logic/solution/heuristics.md"
+      - "ara/trace/exploration_tree.yaml"
+      - "ara/staging/observations.yaml"
+      - "ara/evidence/tables/e1_dev_token_pair_2026-09-04.md"
+      - "ara/trace/sessions/2026-09-04_001.yaml"
+      - "ara/trace/sessions/session_index.yaml"
+      - "ara/trace/pm_reasoning_log.yaml"
+
+claims_touched:
+  - id: C01
+    action: crystallized
+    turn: 1
+  - id: C02
+    action: crystallized
+    turn: 1
+
+key_context:
+  - turn: 1
+    excerpt: >
+      User asked to continue with the next step; Step 4 was carried through diagnosis,
+      one isolated module intervention, a matched panel run, and a non-promotion decision.
+
+open_threads:
+  - "Add identity, zero-action, and shuffled-action errors to the instrument panel."
+  - "Test the predesigned counterfactual action anchor on paired save/restore data."
+  - "Determine whether observation history or the updater is required by E0's hidden velocity."
+  - "Set ABI thresholds only after seed variability and a correctly action-conditioned reference."
+  - "Revisit Sophontic only after its model, report, and eval kit ship."
+  - "Decide whether E2 pair scoring needs the remaining joint-correctness and invariance controls."
+
+ai_suggestions_pending:
+  - >
+      Do not promote the token-pair checkpoint; retain it as a measured alternative and
+      keep the Step 3 checkpoint as the fallback.
+  - >
+      Implement action-correctness controls before the next model or objective iteration.
+  - >
+      Test the predesigned counterfactual action anchor next rather than changing the
+      predictor architecture without evidence.

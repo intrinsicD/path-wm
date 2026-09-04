@@ -1,0 +1,160 @@
+tree:
+  - id: N01
+    type: question
+    title: "Relevance of Michels and Sophontic to PATH-WM reasoning"
+    provenance: user
+    timestamp: "2026-09-03T22:05+02:00"
+    description: >
+      Determine whether Julian Michels's publications and Sophontic.ai provide relevant
+      prior art, evidence, or methods for transition-compatible latent world models and
+      path-space reasoning.
+    status: resolved
+    children: []
+
+  - id: N02
+    type: experiment
+    title: "Step 3 vertical-slice contract validation"
+    provenance: ai-executed
+    timestamp: "2026-09-03T23:17+02:00"
+    result: >
+      The deterministic E0 environment, encoder/adapter ABI, transformer predictor,
+      inverse head, training objective, data pipeline, checkpoint runner, evaluation
+      metrics, and threshold layer passed the completed fast suite: 55 tests passed and
+      2 threshold tests were deselected. Ruff and git diff whitespace checks were clean.
+    evidence:
+      - "commit:4556ea8"
+      - "ara/evidence/tables/e1_dev_baseline_2026-09-03.md"
+    status: resolved
+    children:
+      - id: N03
+        type: dead_end
+        title: "First full run exposed double-applied horizon curriculum"
+        provenance: ai-executed
+        timestamp: "2026-09-03T23:17+02:00"
+        hypothesis: >
+          A rollout window sized by the outer training loop could be passed to the E1
+          objective, which would independently infer the same scheduled horizon.
+        failure_mode: >
+          The objective recomputed the curriculum from the already-truncated action
+          window, reducing an intended horizon of three to two. The first 2,000-step run
+          was stopped near step 1,100 when its logs revealed the mismatch.
+        lesson: >
+          Resolve the curriculum once against the configured maximum horizon, then require
+          the sampled window to contain that many actions. A regression test now fixes this
+          contract in tests/unit/test_losses.py.
+        status: resolved
+        children: []
+
+      - id: N04
+        type: experiment
+        title: "Corrected E1 development baseline"
+        provenance: ai-executed
+        timestamp: "2026-09-03T23:17+02:00"
+        result: >
+          The corrected 2,000-step CUDA run completed on 20,480 E0 transitions. Its fixed
+          256-probe evaluation measured action sensitivity 0.0022763058, one-step
+          transition error 0.0003451231, and four-step transition error 0.0027015761.
+          The final inverse loss was 0.3485717475. ABI thresholds remain unset, so the two
+          threshold tests skipped explicitly with threshold_unset.
+        evidence:
+          - "runs/dev/first_slice/0/metrics.json"
+          - "runs/dev/first_slice/0/run_summary.json"
+          - "runs/dev/first_slice/0/training.jsonl"
+          - "runs/dev/first_slice/0/threshold_record.json"
+          - "ara/evidence/tables/e1_dev_baseline_2026-09-03.md"
+        status: resolved
+        children: []
+
+  - id: N05
+    type: experiment
+    title: "Step 4 action-anchor diagnosis"
+    provenance: ai-executed
+    timestamp: "2026-09-04T07:16+02:00"
+    result: >
+      On the fixed probe, the Step 3 inverse head measured MSE 0.338520 versus the
+      zero-action baseline 0.336418 with near-zero correlations. Mean pooling retained
+      4.01% of full latent-delta norm, and token-aware probes on frozen W stayed at chance.
+      Raw raster positions did retain signal: two-frame MSE 0.235068 and three-frame MSE
+      0.112431.
+    evidence:
+      - "ara/evidence/tables/e1_dev_token_pair_2026-09-04.md"
+      - "runs/dev/first_slice/0/checkpoint.pt"
+    status: resolved
+    children:
+      - id: N06
+        type: decision
+        title: "Test token-correspondence inverse pooling as the sole model change"
+        provenance: ai-suggested
+        timestamp: "2026-09-04T07:16+02:00"
+        choice: >
+          Keep mlp_pooled_pair and checkpoint 4556ea8 as the fallback; add and select
+          mlp_token_pair in a separate no-inheritance dev spec so aligned token changes
+          reach the inverse loss before aggregation.
+        alternatives:
+          - "Raise the inverse-loss weight without changing its lossy pooling."
+          - "Change E0 physics, which would invalidate an equal-data comparison."
+          - "Add history/updater or counterfactual data before isolating the head."
+        evidence:
+          - "N05"
+          - "O05"
+        status: resolved
+        children: []
+
+      - id: N07
+        type: experiment
+        title: "Matched token-pair inverse development run"
+        provenance: ai-executed
+        timestamp: "2026-09-04T07:16+02:00"
+        also_depends_on: [N06]
+        result: >
+          The 2,000-step seed-0 CUDA run completed on the same dataset and probe. Held-out
+          inverse MSE improved 0.338520 to 0.210544 and s(w) improved 0.002276306 to
+          0.002877012, but one-step/four-step transition errors worsened to 0.000636088 and
+          0.004243674. Correct-action error did not beat zero or shuffled controls.
+        evidence:
+          - "commit:1148cc6"
+          - "runs/dev/first_slice_token_pair/0/metrics.json"
+          - "runs/dev/first_slice_token_pair/0/run_summary.json"
+          - "runs/dev/first_slice_token_pair/0/threshold_record.json"
+          - "ara/evidence/tables/e1_dev_token_pair_2026-09-04.md"
+        status: resolved
+        children:
+          - id: N08
+            type: dead_end
+            title: "Tokenwise inverse anchoring alone fixes predictor action conditioning"
+            provenance: ai-executed
+            timestamp: "2026-09-04T07:16+02:00"
+            hypothesis: >
+              Preventing pre-pooling cancellation in the inverse head would both make W
+              action-decodable and make the predictor's learned transition correctly
+              depend on the supplied action.
+            failure_mode: >
+              Inverse decoding improved strongly, but correct-action predictor MSE was
+              0.000791805 versus 0.000791497 for zero action and 0.000792345 for shuffled
+              action; identity at 0.000546195 was also better than the predictor.
+            lesson: >
+              Inverse decodability and opposite-action separation do not establish correct
+              predictor conditioning. Require action-correctness controls and a direct
+              counterfactual action anchor before promotion.
+            status: resolved
+            children: []
+
+      - id: N09
+        type: decision
+        title: "Retain the alternative but do not promote its checkpoint"
+        provenance: ai-suggested
+        timestamp: "2026-09-04T07:16+02:00"
+        also_depends_on: [N07, N08]
+        choice: >
+          Preserve both inverse implementations and both run artifacts, mark the iteration
+          mixed/negative, keep ABI thresholds unset, add identity/zero/shuffled controls to
+          the panel, and test the predesigned counterfactual anchor next.
+        alternatives:
+          - "Promote the token-pair checkpoint based only on improved s(w) and inverse MSE."
+          - "Delete the alternative and lose the negative-result trail."
+        evidence:
+          - "N07"
+          - "N08"
+          - "docs/design-decisions.md"
+        status: resolved
+        children: []

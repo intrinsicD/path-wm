@@ -1,0 +1,133 @@
+session:
+  id: "2026-09-03_001"
+  date: "2026-09-03"
+  started: "2026-09-03T22:05+02:00"
+  last_turn: "2026-09-03T23:17+02:00"
+  turn_count: 2
+  summary: >
+    Screened external reasoning leads, then implemented, validated, and committed the
+    complete Step 3 E1 reference slice with a reproducible development baseline.
+
+events_logged:
+  - turn: 1
+    type: question
+    id: N01
+    routing: direct
+    provenance: user
+    summary: "Assess Michels and Sophontic as reasoning prior art for PATH-WM."
+  - turn: 1
+    type: observation
+    id: O01
+    routing: staged
+    provenance: ai-suggested
+    summary: "Michels's closest technical manuscript lacks direct PATH-WM evidence."
+  - turn: 1
+    type: observation
+    id: O02
+    routing: staged
+    provenance: ai-suggested
+    summary: "Sophontic's claims are not yet backed by released artifacts."
+  - turn: 1
+    type: observation
+    id: O03
+    routing: staged
+    provenance: ai-suggested
+    summary: "Controlled pair-level evaluation may transfer to PATH-WM."
+  - turn: 1
+    type: observation
+    id: O04
+    routing: staged
+    provenance: ai-suggested
+    summary: "The two projects use latent geometry in materially different senses."
+  - turn: 2
+    type: experiment
+    id: N02
+    routing: direct
+    provenance: ai-executed
+    summary: "Completed contract validation for the Step 3 vertical slice."
+  - turn: 2
+    type: dead_end
+    id: N03
+    routing: direct
+    provenance: ai-executed
+    summary: "Stopped the first full run after detecting double-applied horizon scheduling."
+  - turn: 2
+    type: experiment
+    id: N04
+    routing: direct
+    provenance: ai-executed
+    summary: "Completed the corrected 2,000-step E1 development baseline."
+  - turn: 2
+    type: observation
+    id: O05
+    routing: staged
+    provenance: ai-suggested
+    summary: "Inverse loss may be near a zero-predictor plateau with weak action information."
+
+ai_actions:
+  - turn: 1
+    action: >
+      Searched PhilPapers/PhilPeople and accessible manuscripts, checked primary subliminal
+      learning work, inspected Sophontic's official pages and interview transcript, and
+      compared the findings with PATH-WM v0.3, E0, and E2.
+    provenance: ai-executed
+    files_changed:
+      - "ara/PAPER.md"
+      - "ara/trace/exploration_tree.yaml"
+      - "ara/staging/observations.yaml"
+      - "ara/trace/sessions/2026-09-03_001.yaml"
+      - "ara/trace/sessions/session_index.yaml"
+      - "ara/trace/pm_reasoning_log.yaml"
+  - turn: 2
+    action: >
+      Implemented the full E0-to-E1 training and evaluation path, added conformance and
+      unit coverage, caught and repaired a curriculum bug during the first long run,
+      completed the corrected CUDA baseline, recorded its metrics, and committed the
+      implementation as 4556ea8.
+    provenance: ai-executed
+    files_changed:
+      - "envs/causal_world/"
+      - "encoders/"
+      - "predictors/"
+      - "world_state/inverse.py"
+      - "losses/"
+      - "training/"
+      - "evaluation/"
+      - "run.py"
+      - "tests/"
+      - "CLAUDE.md"
+      - "ara/trace/exploration_tree.yaml"
+      - "ara/staging/observations.yaml"
+      - "ara/evidence/tables/e1_dev_baseline_2026-09-03.md"
+      - "ara/trace/sessions/2026-09-03_001.yaml"
+      - "ara/trace/sessions/session_index.yaml"
+      - "ara/trace/pm_reasoning_log.yaml"
+
+claims_touched: []
+
+key_context:
+  - turn: 1
+    excerpt: >
+      User asked whether Julian Michels's PhilPapers results and Sophontic.ai contain
+      reasoning work relevant to this project.
+  - turn: 2
+    excerpt: >
+      User asked to continue with the next implementation step; Step 3 was completed
+      through a real development run rather than stopping at module-level tests.
+
+open_threads:
+  - "Revisit Sophontic only after its promised model, evaluation report, and eval kit ship."
+  - "Decide whether PATH-WM's paired metrics need stricter joint-correctness and invariance controls."
+  - "Diagnose the inverse-loss plateau and low action sensitivity before changing one module for Step 4."
+  - "Set ABI thresholds only after the baseline panel and seed variability justify them."
+
+ai_suggestions_pending:
+  - >
+      Keep Michels and Sophontic out of core related work for now; optionally track
+      Sophontic as an unreleased evaluation lead.
+  - >
+      Strengthen paired counterfactual evaluation with joint correctness and
+      label-preserving controls.
+  - >
+      Preserve checkpoint 4556ea8 as the Step 3 baseline, isolate whether the encoder or
+      inverse head loses action information, then change one module and rerun the same panel.

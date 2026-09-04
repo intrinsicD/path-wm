@@ -1,0 +1,20 @@
+entries:
+  - turn: "2026-09-03_001#1"
+    notes:
+      - "Initialized the ARA because this was the first research-significant recorded turn."
+      - "Routed the user's literature-relevance question directly as resolved N01."
+      - "Staged O01-O04 because the relevance judgments and evaluation recommendation are AI interpretations."
+      - "Did not crystallize any observation: no affirmation, empirical resolution, topic abandonment, or artifact commitment occurred."
+  - turn: "2026-09-03_001#2"
+    notes:
+      - "Routed N02 and N04 as direct experiments because tests and the corrected baseline produced concrete results."
+      - "Routed N03 as a dead end because the first long run's double-scheduling behavior was abandoned and repaired, with a regression-test lesson."
+      - "Staged O05 as a claim candidate: the inverse-loss interpretation is falsifiable, but lacks user commentary and a discriminating probe."
+      - "Did not crystallize O01-O04; this turn supplied no closure signal for their unrelated literature topic."
+  - turn: "2026-09-04_001#1"
+    notes:
+      - "Routed the diagnostic and matched run as N05/N07 experiments, the isolated intervention and non-promotion as N06/N09 decisions, and the failed predictor-conditioning hypothesis as dead end N08."
+      - "Crystallized O05 to C01 via artifact commitment: the committed config and inverse implementation were selected from its now-resolved baseline diagnosis."
+      - "Staged O06 and O07, then crystallized them immediately to C02 and H01 via artifact commitment in CLAUDE.md and DDR §13.18."
+      - "Left O08 staged: the history/partial-observability interpretation has quantitative evidence but no user affirmation or downstream artifact dependency."
+      - "Did not promote or stale O01-O04; their literature topic remains open and only one session-day has elapsed."

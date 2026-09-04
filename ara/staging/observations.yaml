@@ -1,0 +1,143 @@
+observations:
+  - id: O01
+    timestamp: "2026-09-03T22:05+02:00"
+    provenance: ai-suggested
+    content: >
+      Michels's Subliminal Learning and Radiant Transmission is the closest technical
+      candidate found: it proposes covariance-eigenspace overlap and output-feature-kernel
+      metrics for LLM teacher-student transmission, but the accessible appendix describes
+      target bands and expected outcomes rather than a completed reproducible study. It
+      supplies no direct evidence for transition-compatible visual world-state latents or
+      planning.
+    context: >
+      Literature screen of the Julian Michels PhilPapers results for relevance to PATH-WM.
+    potential_type: claim
+    bound_to: [N01]
+    promoted: false
+    promoted_to: null
+    crystallized_via: null
+    stale: false
+
+  - id: O02
+    timestamp: "2026-09-03T22:05+02:00"
+    provenance: ai-suggested
+    content: >
+      Sophontic.ai currently publishes high-level method and performance claims plus an
+      unreleased paired-perturbation evaluation description, but no paper, model card,
+      checkpoint, code, scored evaluation report, or downloadable evaluation kit was found.
+      Its model-size advantage therefore cannot yet be independently assessed.
+    context: >
+      Source screen of Sophontic's official site and official founder interview.
+    potential_type: claim
+    bound_to: [N01]
+    promoted: false
+    promoted_to: null
+    crystallized_via: null
+    stale: false
+
+  - id: O03
+    timestamp: "2026-09-03T22:05+02:00"
+    provenance: ai-suggested
+    content: >
+      The useful transferable element from Sophontic is to make a controlled perturbation
+      pair the unit of evaluation. For PATH-WM, pair-level scoring should require both the
+      canonical and intervened successor to be correct and should include label-preserving
+      negative controls, counterbalanced cues, held-out perturbation generators, and
+      confidence intervals across seeds.
+    context: >
+      Mapping Sophontic's advertised flip-pair evaluation onto PATH-WM E0 and E2 paired
+      save/restore interventions and counterfactual discrimination.
+    potential_type: heuristic
+    bound_to: [N01]
+    promoted: false
+    promoted_to: null
+    crystallized_via: null
+    stale: false
+
+  - id: O04
+    timestamp: "2026-09-03T22:05+02:00"
+    provenance: ai-suggested
+    content: >
+      Sophontic's geometric reasoning denotes shaping LLM activation geometry for
+      deductive tasks, whereas PATH-WM's latent geometry denotes a world-state metric that
+      preserves dynamics and task distance for planning and encoder interoperability; the
+      shared word geometry does not establish technical equivalence.
+    context: >
+      Conceptual comparison of Sophontic's public description with the PATH-WM v0.3 design.
+    potential_type: concept
+    bound_to: [N01]
+    promoted: false
+    promoted_to: null
+    crystallized_via: null
+    stale: false
+
+  - id: O05
+    timestamp: "2026-09-03T23:17+02:00"
+    provenance: ai-suggested
+    content: >
+      The corrected E1 baseline's final inverse loss of 0.34857 is close to the 1/3
+      per-component MSE expected from predicting zero for uniform actions on [-1, 1],
+      while its action-sensitivity ratio is 0.002276. This pattern suggests a testable
+      failure mode in which the inverse head is near the zero-predictor solution or the
+      learned latents carry weak action information; the present run does not distinguish
+      those explanations.
+    context: >
+      Diagnostic interpretation of the first completed 2,000-step E1 development run;
+      transition-error metrics are available, but ABI pass/fail thresholds are still null.
+    potential_type: claim
+    bound_to: [N04]
+    promoted: true
+    promoted_to: "logic/claims.md:C01"
+    crystallized_via: artifact-commitment
+    stale: false
+
+  - id: O06
+    timestamp: "2026-09-04T07:16+02:00"
+    provenance: ai-suggested
+    content: >
+      The token-pair inverse head made actions decodable from learned W (held-out MSE
+      0.210544; correlations 0.63874/0.63642) but did not make the predictor use the
+      correct action: correct-action transition MSE did not beat zero or shuffled controls.
+    context: >
+      Matched 2,000-step Step 4 development run and held-out action-correctness comparison.
+    potential_type: claim
+    bound_to: [N07, N08, N09]
+    promoted: true
+    promoted_to: "logic/claims.md:C02"
+    crystallized_via: artifact-commitment
+    stale: false
+
+  - id: O07
+    timestamp: "2026-09-04T07:16+02:00"
+    provenance: ai-suggested
+    content: >
+      Treat action-sensitivity ratio as necessary but insufficient: pair it with identity,
+      zero-action, and deterministic shuffled-action transition errors, and require the
+      correct action to improve over those controls before accepting action conditioning.
+    context: >
+      Step 4 increased opposite-action separation while correct-action prediction remained
+      indistinguishable from control actions.
+    potential_type: heuristic
+    bound_to: [N07, N08, N09]
+    promoted: true
+    promoted_to: "logic/solution/heuristics.md:H01"
+    crystallized_via: artifact-commitment
+    stale: false
+
+  - id: O08
+    timestamp: "2026-09-04T07:16+02:00"
+    provenance: ai-suggested
+    content: >
+      E0's single RGB frame omits velocity in a force-controlled world: a two-frame
+      position probe reached action MSE 0.235068, while a three-frame probe reached
+      0.112431. Observation history or the planned updater may therefore be needed for a
+      truly Markov world state, independently of the inverse-head pooling problem.
+    context: >
+      Raw-observation observability probe used to separate environment signal from learned
+      representation failure before the Step 4 intervention.
+    potential_type: claim
+    bound_to: [N05]
+    promoted: false
+    promoted_to: null
+    crystallized_via: null
+    stale: false
