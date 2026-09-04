@@ -49,6 +49,25 @@ def trainable_groups(stage: str) -> frozenset[str]:
     return _TRAINABLE_GROUPS[stage]
 
 
+def configure_core_trainability(core: nn.Module, stage: str) -> None:
+    """Apply a stage's freeze policy to an executable CommonWorldModel.
+
+    Representation heads and planner-side modules live outside the runtime core and are controlled by
+    their owners. This function makes the important negative guarantee: an encoder-first step cannot
+    update belief/dynamics, and a planning step cannot update any world-model parameter.
+    """
+    active = trainable_groups(stage)
+    groups = {
+        "encoders": core.encoders,
+        "evidence_adapters": core.adapters,
+        "action_adapter": core.action_adapter,
+        "updater": core.updater,
+        "predictor": core.predictor,
+    }
+    for name, module in groups.items():
+        module.requires_grad_(name in active)
+
+
 def _compare(actual: float, operator: str, target: float) -> bool:
     if operator == "greater_equal":
         return actual >= target
