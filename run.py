@@ -46,18 +46,34 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("spec", type=Path)
     parser.add_argument("--device", default="auto", help="auto, cpu, cuda, or a concrete device such as cuda:0")
+    parser.add_argument("--resume", action="store_true", help="resume existing R0/R1 optimizer and random streams")
+    parser.add_argument("--seed", type=int, help="run one seed already declared in the spec")
     args = parser.parse_args()
     spec_path = args.spec if args.spec.is_absolute() else ROOT / args.spec
     cfg = yaml.safe_load(spec_path.read_text())
     device = select_device(args.device)
+    if args.seed is not None and args.seed not in cfg["seeds"]:
+        raise ValueError("--seed must be declared in the spec")
+    seeds = cfg["seeds"] if args.seed is None else [args.seed]
+
+    if args.resume and cfg.get("experiment") != "E1_common_base":
+        raise ValueError("--resume currently supports E1_common_base only")
 
     if cfg.get("experiment") == "E1_common_base":
         data = build_representation_data(cfg, ROOT)
-        for seed in cfg["seeds"]:
+        for seed in seeds:
             run_dir = ROOT / "runs" / run_key(spec_path) / str(seed)
             run_dir.mkdir(parents=True, exist_ok=True)
-            (run_dir / "spec.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False), encoding="utf-8")
-            result = train_common_base(cfg, data, run_dir, int(seed), device)
+            if not args.resume and (run_dir / "training.jsonl").exists():
+                raise FileExistsError(f"run already exists: {run_dir}; use --resume or a new spec")
+            existing_spec = run_dir / "spec.yaml"
+            if args.resume and existing_spec.exists() and yaml.safe_load(existing_spec.read_text()) != cfg:
+                raise ValueError("resume config differs from the recorded run spec")
+            existing_spec.write_text(yaml.safe_dump(cfg, sort_keys=False), encoding="utf-8")
+            result = train_common_base(
+                cfg, data, run_dir, int(seed), device,
+                resume=args.resume and (run_dir / "checkpoint.pt").exists(),
+            )
             record = {
                 "status": "development" if cfg.get("status") == "dev" else cfg.get("status", "unknown"),
                 "seed": int(seed),
@@ -99,7 +115,7 @@ def main() -> None:
     if float(counterfactual_cfg["weight"]) != 0.0 or float(counterfactual_cfg.get("positive_weight", 0.0)) != 0.0:
         counterfactual_store = ensure_paired_intervention_store(cfg, ROOT)
 
-    for seed in cfg["seeds"]:
+    for seed in seeds:
         run_dir = ROOT / "runs" / run_key(spec_path) / str(seed)
         run_dir.mkdir(parents=True, exist_ok=True)
         (run_dir / "spec.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False), encoding="utf-8")

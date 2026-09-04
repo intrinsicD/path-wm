@@ -107,3 +107,28 @@ Freeze the predictor and the inverse-dynamics head trained with encoder A; train
 4. Labels never enter the world state's objective; decoders are diagnostics only.
 5. Thresholds are fixed from pilot variance before an experiment is frozen; negative results are results.
 6. We build in vertical slices: tests for the essential parts against the interfaces of rule 1, the simplest thing that works end-to-end, then widen. Every task names the experiment it serves. Details in `CLAUDE.md`.
+
+
+### Full-corpus R0 and recovery
+
+The common evidence frontend serves H1 through E1_common_base. Its next comparison keeps the existing
+R0 panel fixed and varies only the covariance weight at matched seeds and training budget (DDR §24).
+
+```bash
+scripts/download_tau_urban_av_2021.sh --jobs 3
+python -m training.av_data configs/dev/common_base_full_balanced.yaml --workers 4
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 python run.py configs/dev/common_base_full_balanced.yaml --device cuda --resume
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 python run.py configs/dev/common_base_full_control.yaml --device cuda --resume
+```
+
+`--resume` restores completed optimizer/EMA/random-stream snapshots and rejects changed specs or
+manifest fingerprints. `--seed 0` selects one seed already declared in the spec. Fresh runs refuse to
+overwrite a training ledger. Full-corpus shards use a separate directory from the example data.
+
+For a bounded overnight queue, run `python scripts/run_common_base_overnight.py --deadline
+2026-09-05T09:25:00+02:00` with the desired absolute deadline. It runs the predeclared example-duration
+controls during acquisition, waits for all verified archives, ingests the complete official fold,
+then executes full-corpus paired seeds. Supply `--download-session <tmux-name>` only for a downloader
+owned by that run; the queue interrupts it if the deadline expires. Logs, status and comparison JSON
+are written to `runs/overnight/common_base_20260905/`. Each completed seed refreshes the experiment
+dashboard. A failed R0 leaves R1 gated; no automatic architecture promotion occurs.

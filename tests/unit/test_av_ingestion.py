@@ -152,3 +152,15 @@ def test_parallel_ingestion_recovers_truncated_cache_in_manifest_order(tmp_path)
     payload = torch.load(tmp_path / "shards" / parallel[0].shard, weights_only=True)
     assert payload["video"].shape == (12, 3, 8, 8)
     assert not list((tmp_path / "shards").glob("*.tmp"))
+
+
+def test_examples_subset_does_not_expand_when_development_media_arrives(tmp_path):
+    cfg = _fixture(tmp_path)
+    cfg["data"]["source"]["subset"] = "examples"
+    examples = tmp_path / "raw" / "examples"
+    examples.mkdir()
+    for source in (tmp_path / "raw" / "video").glob("*.mp4"):
+        (examples / source.name).write_bytes(b"muxed example")
+    records = _module().ingest_tau_av(cfg, tmp_path, decoder=_cache_decoder)
+    assert len(records) == 4
+    assert all(Path(record.source["video"]).parent == examples for record in records)

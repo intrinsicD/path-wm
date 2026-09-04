@@ -225,7 +225,8 @@ def test_runner_dispatches_common_base_without_touching_the_e1_collector(tmp_pat
     monkeypatch.setattr(runner, "ROOT", tmp_path)
     monkeypatch.setattr(runner, "build_representation_data", lambda cfg, root: data)
 
-    def fake_train(cfg, received_data, run_dir, seed, device):
+    def fake_train(cfg, received_data, run_dir, seed, device, *, resume=False):
+        assert not resume
         training_calls.append((cfg, received_data, run_dir, seed, device))
         return SimpleNamespace(
             checkpoint=run_dir / "checkpoint.pt",

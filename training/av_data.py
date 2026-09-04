@@ -15,6 +15,8 @@ import csv
 import hashlib
 import json
 import math
+import pickle
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Mapping
@@ -113,7 +115,8 @@ def _tau_sources(data_cfg: Mapping[str, Any], root: Path) -> list[dict[str, Any]
     subset = str(data_cfg["source"]["subset"])
     sources: list[dict[str, Any]] = []
     if subset == "examples":
-        for muxed in sorted(raw_root.rglob("*.mp4")):
+        example_root = raw_root if raw_root.name == "examples" else raw_root / "examples"
+        for muxed in sorted(example_root.rglob("*.mp4")):
             row = by_stem.get(muxed.stem)
             if row is None:
                 raise ValueError(f"example clip {muxed.name!r} is absent from TAU meta.csv")
@@ -186,11 +189,14 @@ def ingest_tau_av(
     root: Path,
     *,
     decoder: Decoder | None = None,
+    workers: int = 1,
 ) -> tuple[AVClipRecord, ...]:
     """Decode the selected TAU subset once and atomically publish its manifest."""
     data_cfg = cfg["data"]
     if data_cfg.get("kind") != "synchronized_av_manifest" or data_cfg.get("dataset") != "tau_urban_audio_visual_scenes_2021":
         raise ValueError("ingest_tau_av requires the TAU synchronized manifest config")
+    if workers < 1:
+        raise ValueError("ingestion workers must be positive")
     decoder = decode_av_media if decoder is None else decoder
     sources = _tau_sources(data_cfg, root)  # Validates all split/group invariants before expensive decode.
     for source in sources:
@@ -202,50 +208,61 @@ def ingest_tau_av(
     manifest_path = _resolve(root, data_cfg["manifest"])
     shard_root.mkdir(parents=True, exist_ok=True)
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
-    checksum_cache: dict[Path, str] = {}
-    records: list[AVClipRecord] = []
-    for source in sources:
+    # One worker owns each unique clip. Cache identity includes source bytes and normalization,
+    # so separate development audio cannot inherit a muxed-example shard (DDR §24).
+    def ingest_one(source: dict[str, Any]) -> AVClipRecord:
         shard_name = f"{source['clip_id']}.pt"
         shard_path = shard_root / shard_name
-        if shard_path.exists():
-            payload = torch.load(shard_path, map_location="cpu", weights_only=True)
-        else:
-            payload = decoder(
-                source["video"],
-                source["audio"],
-                video_fps=int(data_cfg["video"]["frames_per_second"]),
-                resolution=int(data_cfg["video"]["resolution"]),
-                audio_sample_rate=int(data_cfg["audio"]["sample_rate"]),
-                audio_channels=int(data_cfg["audio"]["channels"]),
-            )
-            _validate_shard(payload, data_cfg, str(source["clip_id"]))
-            torch.save(dict(payload), shard_path)
-        _validate_shard(payload, data_cfg, str(source["clip_id"]))
-        source_checksums = {}
-        for modality in ("video", "audio"):
-            path = source[modality]
-            if path not in checksum_cache:
-                checksum_cache[path] = _sha256(path)
-            source_checksums[modality] = checksum_cache[path]
-        record_source = {
-            "video": str(source["video"]),
-            "audio": str(source["audio"]),
-            "video_sha256": source_checksums["video"],
-            "audio_sha256": source_checksums["audio"],
-            "scene_label": str(source["row"].get("scene_label", "")),  # Provenance only; never loaded into batches.
+        checksums = {path: _sha256(path) for path in {source["video"], source["audio"]}}
+        identity = {
+            "decoder_version": 1,
+            "video_sha256": checksums[source["video"]],
+            "audio_sha256": checksums[source["audio"]],
+            "video_fps": int(data_cfg["video"]["frames_per_second"]),
+            "resolution": int(data_cfg["video"]["resolution"]),
+            "audio_sample_rate": int(data_cfg["audio"]["sample_rate"]),
+            "audio_channels": int(data_cfg["audio"]["channels"]),
         }
-        records.append(
-            AVClipRecord(
-                manifest_version=int(data_cfg["manifest_version"]),
-                clip_id=source["clip_id"],
-                split=source["split"],
-                group_id=source["group_id"],
-                shard=shard_name,
-                duration_seconds=float(payload["duration_seconds"]),
-                source=record_source,
-                shard_sha256=_sha256(shard_path),
+        payload = None
+        if shard_path.exists():
+            try:
+                cached = torch.load(shard_path, map_location="cpu", weights_only=True)
+                if isinstance(cached, Mapping) and cached.get("ingestion_identity") == identity:
+                    _validate_shard(cached, data_cfg, source["clip_id"])
+                    payload = cached
+            except (EOFError, OSError, RuntimeError, ValueError, IndexError, pickle.UnpicklingError):
+                pass  # An interrupted/legacy cache is rebuilt from the verified source pair.
+        if payload is None:
+            payload = decoder(
+                source["video"], source["audio"],
+                video_fps=identity["video_fps"], resolution=identity["resolution"],
+                audio_sample_rate=identity["audio_sample_rate"],
+                audio_channels=identity["audio_channels"],
             )
+            _validate_shard(payload, data_cfg, source["clip_id"])
+            payload = {**payload, "ingestion_identity": identity}
+            temporary_shard = shard_path.with_suffix(".pt.tmp")
+            torch.save(payload, temporary_shard)
+            temporary_shard.replace(shard_path)
+        return AVClipRecord(
+            manifest_version=int(data_cfg["manifest_version"]),
+            clip_id=source["clip_id"], split=source["split"], group_id=source["group_id"],
+            shard=shard_name, duration_seconds=float(payload["duration_seconds"]),
+            source={
+                "video": str(source["video"]), "audio": str(source["audio"]),
+                "video_sha256": identity["video_sha256"], "audio_sha256": identity["audio_sha256"],
+                "scene_label": str(source["row"].get("scene_label", "")),
+            },
+            shard_sha256=_sha256(shard_path),
         )
+
+    records: list[AVClipRecord] = []
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        # map preserves official fold order regardless of decode completion order.
+        for record in pool.map(ingest_one, sources):
+            records.append(record)
+            if len(records) % 100 == 0 or len(records) == len(sources):
+                print(f"Ingestion: {len(records)}/{len(sources)} clips", flush=True)
 
     temporary = manifest_path.with_suffix(manifest_path.suffix + ".tmp")
     temporary.write_text(
@@ -263,6 +280,7 @@ class ManifestAVData:
         manifest_path = _resolve(root, self.data_cfg["manifest"])
         if not manifest_path.is_file():
             raise FileNotFoundError(f"missing A/V manifest {manifest_path}; run python -m training.av_data first")
+        self.fingerprint = _sha256(manifest_path)
         self.video_fps = int(self.data_cfg["video"]["frames_per_second"])
         self.audio_rate = int(self.data_cfg["audio"]["sample_rate"])
         self.window_frames = _integer_count(
@@ -474,11 +492,13 @@ def decode_av_media(
 def main() -> None:
     parser = argparse.ArgumentParser(description="Ingest the configured TAU A/V subset into normalized shards")
     parser.add_argument("spec", type=Path)
+    parser.add_argument("--workers", type=int, default=1, help="concurrent clip decoders")
     args = parser.parse_args()
+    torch.set_num_threads(1)  # Parallelize clips, not every resize inside each worker.
     repository = Path(__file__).resolve().parents[1]
     spec_path = args.spec if args.spec.is_absolute() else repository / args.spec
     cfg = yaml.safe_load(spec_path.read_text())
-    records = ingest_tau_av(cfg, repository)
+    records = ingest_tau_av(cfg, repository, workers=args.workers)
     counts = {split: sum(record.split == split for record in records) for split in ("train", "eval")}
     print(f"Ingested {len(records)} synchronized clips: {counts['train']} train, {counts['eval']} eval")
 

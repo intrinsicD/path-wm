@@ -458,3 +458,46 @@ iteration. Do not start R1 or B0 on a failed R0 representation.
 **Depends on.** `configs/dev/common_base.yaml` is the no-covariance control;
 `configs/dev/common_base_rank.yaml` preserves the overweight negative trial; and
 `configs/dev/common_base_rank_balanced.yaml` is the next full-corpus candidate.
+
+
+---
+
+## 24. Full-corpus R0 execution and recovery
+
+**Question.** Can the existing R0 objective learn non-redundant evidence at a realistic data/step
+budget, and can that comparison survive an interrupted overnight acquisition or training job?
+
+**Decision.** Keep the model, EMA decay, learning rate and all R0 thresholds fixed. Compare covariance
+0.002 against 0 at batch 64, 10,000 steps, seeds 0 and 1, with 32 deterministic held-out batches.
+The complete official TAU fold has 8,646 train and 3,645 evaluation clips. Matched long runs on the
+20 example clips execute during acquisition to isolate optimization duration from corpus diversity;
+they cannot promote R0 or select a new coefficient. Full-corpus rank must improve in both modalities
+at both seeds, with all temporal/variance guardrails intact, to retain covariance. Every selected
+full-corpus seed must pass R0 before R1. These are development runs, not a frozen E1 reference.
+
+**Recovery.** A cached shard is bound to the actual source audio/video SHA-256 values and normalization
+settings. Source or normalization changes force decoding; interrupted shards are rebuilt. Shards and
+manifests publish through same-directory atomic replacement. Example discovery stays in `raw/examples`
+even after development videos arrive. Decoder concurrency is a runtime CLI choice (`--workers`), not a
+new dataset or loss. The full-corpus manifest and shard directory are separate from the example lineage.
+
+Training writes a step-zero snapshot and an atomic snapshot every 500 steps. Snapshots include learner,
+EMA teachers, optimizer, independent data/corruption RNGs, CPU/CUDA RNGs, original panel, config, seed,
+and manifest fingerprint. Explicit `--resume` rejects mismatched config/data/device type and truncates
+only log rows beyond the durable step before replay. Fresh invocation refuses to overwrite a run.
+A CPU interruption regression reproduces uninterrupted weights and metrics exactly. Non-finite loss
+or gradients fail before updating the model. CUDA resumption uses the same states; bitwise equivalence
+across hardware/software versions is not asserted.
+
+**Acquisition.** Three archive workers reuse partial downloads, verify the original published sizes and
+MD5 values, and serialize writers with per-archive locks. Only the parent publishes whole-corpus
+completion after all partitions succeed. The existing 20 GiB free-space floor remains active.
+Source: https://zenodo.org/records/4477542. An overnight queue gives every subprocess the same absolute
+deadline, serializes GPU runs, verifies the complete official split before full training, and preserves
+logs and comparison JSON under `runs/overnight/`. A failed gate is an experimental result, never a reason
+to weaken its threshold.
+
+**Development validation.** The batch-64 250-step recovery smoke on the 20 examples took 43 seconds on
+an RTX 3050. Audio masked/future advantages became +0.141/+0.143; video stayed positive. Video/audio
+rank fractions 0.080/0.061 still failed 0.25. The dashboard refreshed with structural-only verification.
+This validates execution and exposes the remaining rank failure; it is not the full-corpus decision.

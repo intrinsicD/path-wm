@@ -59,9 +59,10 @@ die() {
 
 usage() {
   cat <<'EOF'
-Usage: scripts/download_tau_urban_av_2021.sh [--list]
+Usage: scripts/download_tau_urban_av_2021.sh [--list | --jobs N]
 
-With no arguments, downloads all 24 media archives sequentially, resumes partial
+With no arguments, downloads all 24 media archives sequentially; --jobs N runs N
+archive workers. Each archive is locked against concurrent writers. Resumes partial
 downloads, verifies the official byte size and MD5, and extracts into
 data/tau_urban_av_2021/raw/{audio,video}. Verified ZIPs are deleted after
 successful extraction unless PATH_WM_TAU_KEEP_ARCHIVES=1.
@@ -94,14 +95,16 @@ check_free_space() {
     "only ${available_kib} KiB free; safety floor is ${MIN_FREE_KIB} KiB"
 }
 
-download_archive() {
+download_archive() (
   local filename="$1"
   local expected_size="$2"
   local expected_md5="$3"
   local archive_path="${ARCHIVE_ROOT}/${filename}"
   local partial_path="${archive_path}.part"
   local complete_path="${COMPLETE_ROOT}/${filename}.md5"
-  local actual_size actual_md5 verification_path
+  local actual_size actual_md5 verification_path lock_fd
+  exec {lock_fd}>"${ARCHIVE_ROOT}/${filename}.lock"
+  flock -x "${lock_fd}"
 
   if [[ -f "${complete_path}" ]] && [[ "$(<"${complete_path}")" == "${expected_md5}" ]]; then
     log "SKIP ${filename}: verified extraction marker exists"
@@ -147,11 +150,24 @@ download_archive() {
     rm -- "${archive_path}"
     log "REMOVED verified staging ZIP ${filename}"
   fi
-}
+)
 
 main() {
+  local worker_index=0 worker_count=1 jobs=1 worker_mode=0
+
   case "${1:-}" in
     "") ;;
+    --jobs)
+      jobs="${2:-}"
+      [[ "${jobs}" =~ ^[1-9][0-9]*$ ]] && (( jobs <= 24 )) || die "--jobs must be between 1 and 24"
+      ;;
+    --worker)
+      worker_index="${2:-}"
+      worker_count="${3:-}"
+      [[ "${worker_index}" =~ ^[0-9]+$ && "${worker_count}" =~ ^[1-9][0-9]*$ ]] || die "invalid worker partition"
+      (( worker_index < worker_count && worker_count <= 24 )) || die "invalid worker partition"
+      worker_mode=1
+      ;;
     --list)
       list_archives
       return
@@ -168,6 +184,7 @@ main() {
 
   require_command awk
   require_command df
+  require_command flock
   require_command md5sum
   require_command stat
   require_command unzip
@@ -181,12 +198,31 @@ main() {
   log "Raw media: ${RAW_ROOT}"
   log "Staging: ${ARCHIVE_ROOT}; keep archives: ${KEEP_ARCHIVES}"
 
-  local entry filename size checksum
-  for entry in "${ARCHIVES[@]}"; do
-    IFS='|' read -r filename size checksum <<<"${entry}"
-    download_archive "${filename}" "${size}" "${checksum}"
-  done
-
+  local entry filename size checksum index=0 failed=0 pid
+  if (( jobs > 1 )); then
+    local -a worker_pids=()
+    for (( index=0; index<jobs; index++ )); do
+      bash "${BASH_SOURCE[0]}" --worker "${index}" "${jobs}" &
+      worker_pids+=("$!")
+    done
+    for pid in "${worker_pids[@]}"; do
+      wait "${pid}" || failed=1
+    done
+    (( failed == 0 )) || die "an archive worker failed; rerun to resume"
+  else
+    for entry in "${ARCHIVES[@]}"; do
+      if (( index % worker_count == worker_index )); then
+        IFS='|' read -r filename size checksum <<<"${entry}"
+        download_archive "${filename}" "${size}" "${checksum}"
+      fi
+      index=$((index + 1))
+    done
+  fi
+  if (( worker_mode == 1 )); then
+    log "WORKER COMPLETE: ${worker_index}/${worker_count}"
+    return
+  fi
+  # Only the parent publishes whole-corpus completion after every partition succeeds.
   touch "${DATASET_ROOT}/.full_media_download_complete"
   log "COMPLETE: all 24 media archives verified and extracted"
 }
