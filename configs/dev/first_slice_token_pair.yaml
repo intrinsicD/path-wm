@@ -1,0 +1,102 @@
+# PLAN — first slice (CLAUDE.md §2), step 1 written 2026-09-03.
+#
+# Hypothesis: H1 (transition-compatible latent interface). This slice builds the native side that
+#             the E2 gate will later stitch against; it decides nothing by itself.
+# Experiment: E1_reference (the first experiment that runs these modules). Roadmap phase 1 (§20).
+# Modules:    Environment (E0 step + save/restore) -> Encoder (ViT-S/8) -> Adapter (linear)
+#             -> Predictor (§5.6) + InverseDynamics (§5.7), trained with SIGReg + L_action + L_inverse
+#             (§6.1, §6.9 stage 0). Left out: updater, counterfactual term, planner, viewer.
+# Metric:     action-sensitivity ratio s(w) (§4 H1) and transition error (§6.2 d; one-step and H-step)
+#             on the fixed probe set, written by evaluation/ to runs/<spec>/<seed>/.
+#             Done when the fast tests are green and both numbers are on the panel.
+# Choices that cannot be widened later (recorded in DDR §15 and §18):
+#   - E0 engine in batched PyTorch on one device; every environment tensor has leading dim N (worlds).
+#   - Snapshot = clone of every state tensor + the torch.Generator state; restore is bit-exact.
+#   - Registers are created inside each predictor call, never passed in (DDR §13).
+#
+# Step 2 (2026-09-03): structural conformance tests (tests/conformance/) and the environment behaviour test
+# (tests/unit/test_environment.py) committed red. What they fix for step 3 (DDR §13 items 6-11):
+#   - builders build_env / build_encoder / build_adapter(cfg, z_shape) / build_predictor / build_inverse at the
+#     locations in tests/conftest.py, cfg = this whole spec, CPU by default (no device key here; the runner moves modules).
+#   - the tests run without autocast: consumers upcast the bf16 W explicitly and cast outputs back to the ABI dtype,
+#     producers emit bf16 explicitly; the boundary LayerNorm is non-affine (abi_v1.yaml per_token_affine).
+#   - the predictor readout is not zero-initialized; the inverse head is bounded with the loss before the squash.
+#   - evaluation/ and the threshold tests call the predictor with k = delta_t, as training does.
+#
+# Step 4 iteration 1 (2026-09-04): the Step 3 checkpoint is the fixed before-panel. Read-only probes
+# found that two RGB frames recover action at MSE 0.235 versus the zero baseline 0.336, while the saved
+# pooled inverse head and token-aware probes on its frozen W remain at the zero baseline. Change one
+# implementation only: retain mlp_pooled_pair as the fallback, select mlp_token_pair so inverse-loss
+# gradients reach corresponding changing tokens before pooling, then rerun the identical panel.
+#
+# This is a copy of experiments/E1_reference.yaml with sizes, steps and seeds shrunk, the parts the
+# slice leaves out switched off, and every null given a dev value marked "# dev". No inheritance.
+# Numbers from this file are never experiment results.
+experiment: E1_reference      # lineage only; run.py derives the run directory from this file's path: runs/dev/first_slice_token_pair/<seed>/
+status: dev
+abi: docs/abi/abi_v1.yaml
+env:
+  name: causal_world
+  variant: deterministic
+  modalities: [rgb]
+  resolution: 64
+  n_worlds: 64               # dev
+  episode_len: 32            # dev
+  dataset: data/e0_dev       # dev; ~2e4 transitions
+  n_transitions: 20480        # dev = 10 episodes x n_worlds (64) x episode_len (32); the collector asserts this equality
+  exploration: uniform_random # dev: the E0 data-policy mixture (uniform, Brownian, scripted) arrives with the data-policy slice
+encoder:
+  arch: vit_s8
+  dim: 96                    # dev
+  layers: 4                  # dev
+  heads: 4                   # dev
+  params_target: 500000       # dev; a check, not a knob
+  pretrained: false
+adapter:
+  kind: linear
+updater:
+  kind: none                 # E1-a; the slice has no updater
+predictor:
+  arch: transformer
+  dim: 192                   # dev: the ABI width, no projections
+  layers: 2                  # dev
+  heads: 4                   # dev
+  mlp_ratio: 4
+  output: delta_layernorm
+  registers: 0
+  markov: true
+  delta_t_conditioned: true
+  params_target: 1000000      # dev
+inverse_dynamics:
+  kind: mlp_token_pair       # dev step 4 iteration 1; Step 3 baseline used mlp_pooled_pair
+losses:
+  reg: {kind: sigreg, weight: 0.1, projections: 1024, knots: 17, per_token: true}   # dev: weight = LeWM's lambda
+  action: {weight: 1.0}
+  rollout: {gamma: 0.9, h_train: 4, free_running: true, delta_t_max: 4}   # dev: h_train 8 -> 4, delta_t_max 8 -> 4
+  inverse: {weight: 1.0}                    # dev
+  counterfactual: {weight: 0.0, k: 4, kappa: 0.1}   # off by weight 0; the loss builder skips weight-0 terms (L_cf needs paired interventions data/e0_dev lacks). kappa stays a valid temperature: kappa 0 gives NaN and 0 x NaN = NaN
+curriculum:
+  stage0_fraction: 0.10
+  horizon_growth_fraction: 0.40
+  counterfactual_from_stage: 2              # inactive while counterfactual.weight is 0
+train:
+  steps: 2000                # dev
+  batch_size: 64             # dev
+  lr: 3.0e-4                 # dev
+  weight_decay: 0.001        # dev: LeWM
+  grad_clip: 1.0             # dev: LeWM
+  optimizer: adamw
+  precision: bf16
+probe_set:
+  path: evaluation/probe_set_v1   # as abi_v1.yaml names it; regenerated from seed and count
+  seed: 0
+  count: 256                 # dev
+  horizon: 4                 # dev: 8 -> 4
+planner:
+  kind: none                 # switched off: the slice has no planner
+  rollout_budget: 0
+seeds: [0]                   # dev
+outputs:
+  sigma_pilot: none          # dev runs never write to docs/preregistration.md
+  instrument_panel: true
+  metrics: [action_sensitivity_ratio, transition_error]
