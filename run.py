@@ -1,7 +1,9 @@
-"""Run one PATH-WM experiment or development spec: collect, train, evaluate, record.
+"""Run one PATH-WM experiment or development spec: collect, train, evaluate, record, visualize.
 
 Usage: `python run.py configs/dev/first_slice.yaml`. A config under configs/dev/X.yaml writes to
 runs/dev/X/<seed>/; generated datasets and run artifacts are gitignored and dev numbers are labeled.
+Every completed seed also refreshes the self-contained visual instrument panel at
+``runs/experiment_dashboard.html`` from every completed run ledger.
 """
 from __future__ import annotations
 
@@ -14,6 +16,7 @@ import yaml
 
 from evaluation import evaluate_checkpoint
 from training import ensure_episode_store, ensure_paired_intervention_store, train_e1
+from viewer.dashboard import write_experiment_dashboard
 
 ROOT = Path(__file__).resolve().parent
 
@@ -74,6 +77,11 @@ def main() -> None:
             json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
         print(json.dumps(summary, indent=2, sort_keys=True))
+        _, dashboard_path, receipt = write_experiment_dashboard(ROOT / "runs")
+        print(
+            f"Experiment dashboard: {dashboard_path} "
+            f"({receipt.get('stages', {}).get('verification', 'unknown')} verification)"
+        )
 
 
 if __name__ == "__main__":
