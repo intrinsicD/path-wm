@@ -2,10 +2,11 @@
 
 What: masked-input denoising and next-span latent prediction for each modality against EMA encoder+
 adapter teachers, plus a synchronized audiovisual InfoNCE term in R1 and an across-token variance
-guardrail.
+and covariance guardrail.
 How: caller-owned observations are cloned before temporal masking. Small disposable token predictors
 map online evidence to frozen teacher targets; only encoders, evidence adapters, and pretext heads are
-trainable in R0/R1. EMA targets update explicitly after an optimizer step.
+trainable in R0/R1. The VICReg-style covariance term penalizes off-diagonal covariance without forcing
+different time steps to match. EMA targets update explicitly after an optimizer step.
 Why: the failed E1-a warm-up showed that SIGReg+inverse can create varied but temporally discontinuous
 features. The first phase must directly teach temporal predictability while giving stop-gradient a
 stable target. These pretext predictors are never used for action dynamics or planning.
@@ -106,6 +107,17 @@ def _variance_loss(evidence: EvidenceTokens, target_std: float = 1.0) -> torch.T
     return F.relu(target_std - std).mean()
 
 
+def _covariance_loss(evidence: EvidenceTokens) -> torch.Tensor:
+    values = evidence.tokens.float()[evidence.valid_mask]
+    if values.shape[0] < 2:
+        raise ValueError("covariance guardrail needs at least two valid tokens")
+    centered = values - values.mean(dim=0, keepdim=True)
+    covariance = centered.transpose(0, 1) @ centered / (values.shape[0] - 1)
+    diagonal = torch.eye(values.shape[1], dtype=torch.bool, device=values.device)
+    off_diagonal = covariance.masked_select(~diagonal)
+    return off_diagonal.square().sum() / values.shape[1]
+
+
 def _pool(evidence: EvidenceTokens) -> torch.Tensor:
     weights = evidence.valid_mask[..., None].to(evidence.tokens.dtype)
     pooled = (evidence.tokens * weights).sum(dim=1) / weights.sum(dim=1).clamp_min(1)
@@ -132,8 +144,13 @@ class RepresentationLearner(nn.Module):
         self.audiovisual_temperature = float(audiovisual_temperature)
         self.weights = {name: float(value) for name, value in weights.items()}
         required = {"masked_latent", "future_latent", "variance", "audiovisual_sync"}
-        if set(self.weights) != required or any(not math.isfinite(value) or value < 0 for value in self.weights.values()):
-            raise ValueError(f"representation weights must be finite non-negative values for {sorted(required)}")
+        allowed = required | {"covariance"}
+        if not required <= set(self.weights) <= allowed or any(
+            not math.isfinite(value) or value < 0 for value in self.weights.values()
+        ):
+            raise ValueError(f"representation weights must be finite non-negative values for {sorted(allowed)}")
+        self.covariance_enabled = "covariance" in self.weights
+        self.weights.setdefault("covariance", 0.0)
 
         self.teachers = nn.ModuleDict()
         self.masked_heads = nn.ModuleDict()
@@ -236,7 +253,7 @@ class RepresentationLearner(nn.Module):
         masked_prediction = views["masked_prediction"]
         future_prediction = views["future_prediction"]
 
-        masked_terms, future_terms, variance_terms = [], [], []
+        masked_terms, future_terms, variance_terms, covariance_terms = [], [], [], []
         for modality, evidence in online.items():
             masked_terms.append(
                 _masked_mse(masked_prediction[modality], teacher_current[modality], masked_source[modality])
@@ -245,9 +262,14 @@ class RepresentationLearner(nn.Module):
                 _masked_mse(future_prediction[modality], teacher_future[modality], evidence)
             )
             variance_terms.append(_variance_loss(evidence))
+            if self.covariance_enabled:
+                covariance_terms.append(_covariance_loss(evidence))
         masked = torch.stack(masked_terms).mean()
         future_value = torch.stack(future_terms).mean()
         variance = torch.stack(variance_terms).mean()
+        covariance = (
+            torch.stack(covariance_terms).mean() if covariance_terms else torch.zeros((), device=masked.device)
+        )
 
         audiovisual = torch.zeros((), device=masked.device)
         if stage == "representation_av":
@@ -274,6 +296,7 @@ class RepresentationLearner(nn.Module):
             self.weights["masked_latent"] * masked
             + self.weights["future_latent"] * future_value
             + self.weights["variance"] * variance
+            + self.weights["covariance"] * covariance
             + self.weights["audiovisual_sync"] * audiovisual
         )
         return {
@@ -281,6 +304,7 @@ class RepresentationLearner(nn.Module):
             "masked_latent": masked,
             "future_latent": future_value,
             "variance": variance,
+            "covariance": covariance,
             "audiovisual_sync": audiovisual,
         }
 
@@ -290,8 +314,11 @@ def build_representation_learner(cfg: dict, core: nn.Module) -> RepresentationLe
     if section["target"] != "ema":
         raise ValueError("the common-base representation target must be EMA")
     objectives = set(section["objectives"])
-    if objectives != {"masked_latent", "future_latent", "audiovisual_sync"}:
+    base_objectives = {"masked_latent", "future_latent", "audiovisual_sync"}
+    if objectives not in (base_objectives, base_objectives | {"covariance"}):
         raise ValueError("the initial R0/R1 objective set is fixed by the common-base plan")
+    if ("covariance" in objectives) != ("covariance" in section["weights"]):
+        raise ValueError("the covariance objective and weight must be declared together")
     return RepresentationLearner(
         core,
         decay=float(section["ema_decay"]),

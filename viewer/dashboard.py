@@ -105,7 +105,7 @@ TRANSITION_METRICS = [
 ]
 TRAINING_PRIMARY_OBJECTIVES = ["total", "action", "rollout", "inverse"]
 TRAINING_AUXILIARY_OBJECTIVES = ["counterfactual", "reg", "chunk", "masked_latent", "future_latent",
-                                 "variance", "audiovisual_sync"]
+                                 "variance", "covariance", "audiovisual_sync"]
 TRAINING_OBJECTIVES = TRAINING_PRIMARY_OBJECTIVES + TRAINING_AUXILIARY_OBJECTIVES
 RUN_CARD_PRIORITY = [
     "action_sensitivity_ratio",

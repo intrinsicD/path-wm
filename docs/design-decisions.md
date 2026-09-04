@@ -412,3 +412,49 @@ nonzero time offset; and held-out panel metrics alone drive the curriculum gate.
 **Depends on.** TAU Urban Audio-Visual Scenes 2021 development corpus, DOI
 `10.5281/zenodo.4477542`. The 128 MB examples archive is development plumbing only; a promotion run uses
 the complete development corpus and its official fold.
+
+---
+
+## 23. R0 dimensional-collapse guardrail
+
+**Question.** The first real-data R0 panel showed healthy per-dimension standard deviation but very low
+effective rank. Which intervention addresses redundant dimensions without undoing the temporal continuity
+learned by the masked/future objectives?
+
+**Options.** (a) weaken the effective-rank gate; (b) replace the temporal EMA objective with the earlier
+SIGReg-only encoder warm-up; (c) add separate variance and off-diagonal covariance penalties to online
+evidence; (d) whiten evidence or add a disposable high-dimensional regularizer projector.
+
+**Decision.** Reject (a) and (b), and implement (c) as the smallest falsifiable intervention. For each
+modality, valid evidence tokens are centered in fp32; the squared off-diagonal sample covariance is summed
+and divided by evidence dimension. The existing standard-deviation hinge prevents the zero-covariance
+solution obtained by shrinking all variation. Temporal prediction and EMA targets remain unchanged. This
+is the variance/covariance separation introduced by VICReg (Bardes, Ponce & LeCun, arXiv:2105.04906),
+applied directly where the effective-rank gate is measured. SIGReg and a disposable projector remain
+recorded alternatives, not simultaneous changes.
+
+**Why.** Per-dimension variance rules out constant features but not dimensions that move together. The
+covariance term specifically penalizes that redundancy and does not force adjacent observations together
+or apart. Replacing the temporal objective would repeat the E1-a failure in which variance rose while
+adjacent-frame distance became 93 times worse. Weakening the gate would hide the measured failure.
+
+**Development evidence.** On the exact initial seed/data batch, unweighted encoder-gradient norms were
+0.578 for variance and 27.904 for covariance. The first declared covariance weight 0.01 therefore made
+its weighted gradient 4.8 times the variance-floor gradient: after 20 steps, video/audio effective-rank
+fractions moved from the no-covariance baseline 0.108/0.043 to 0.115/0.047, but feature standard deviations
+shrank from 0.755/0.727 to 0.642/0.619. A follow-up coefficient of 0.002 was selected from that initialization
+gradient audit, before reading its held-out panel. It retained more spread (0.732/0.702) but ranks moved only
+to 0.110/0.045; audio masked/future advantages remained negative and the R0 gate still failed. The tiny
+20-clip, 20-step fixture establishes plumbing and failure direction only; it does not select a winning
+representation architecture.
+
+**Promotion test.** Carry the gradient-balanced variant to the complete TAU development corpus with a
+realistic batch and optimization budget, while retaining the official group-disjoint split and the frozen
+0.25 rank, positive prediction-advantage, positive temporal-retrieval, and feature-variance gates. Compare
+against the no-covariance control at matched seeds and budget. Retain covariance only if rank improves
+without losing the temporal/variance guardrails; otherwise test one recorded alternative in a new isolated
+iteration. Do not start R1 or B0 on a failed R0 representation.
+
+**Depends on.** `configs/dev/common_base.yaml` is the no-covariance control;
+`configs/dev/common_base_rank.yaml` preserves the overweight negative trial; and
+`configs/dev/common_base_rank_balanced.yaml` is the next full-corpus candidate.

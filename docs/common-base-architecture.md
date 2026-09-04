@@ -5,15 +5,18 @@ this document defines the replacement reference that must pass the gates below b
 
 Implementation status (development evidence only): ABI-v2 contracts, video/audio evidence paths, action
 adapter, slot predictor, predict-correct updater, explicit freeze/gate controller, EMA teachers, R0/R1
-representation losses, and the held-out representation panel are executable. TAU Urban Audio-Visual
-Scenes 2021 enters through an official-split, recording-group-safe manifest and normalized per-clip
-shards. A 20-step CUDA R0 run on the 20-clip official example bundle made video masked/future prediction
-beat its copy controls (+0.160/+0.217), but correctly failed promotion: audio remained just below its
-controls (-0.005/-0.014), and effective-rank fractions were only 0.108 video and 0.043 audio against the
-0.25 gate. Feature standard deviation remained high in both modalities, exposing that the implemented
-variance floor is not the declared dimensional-rank guardrail. These are plumbing diagnostics on a tiny
-development subset, not representation or world-model evidence. The next isolated intervention adds that
-guardrail and reruns the matched panel before full-corpus R0/R1; B0/D0 and planning remain later work.
+representation losses, a variance–covariance guardrail, and the held-out panel are executable. TAU Urban
+Audio-Visual Scenes 2021 enters through an official-split, recording-group-safe manifest and per-clip
+shards. The 20-step CUDA baseline on the 20-clip example bundle made video masked/future prediction beat
+copy controls (+0.160/+0.217), while audio remained just below them (-0.005/-0.014) and effective-rank
+fractions were 0.108 video/0.043 audio against the 0.25 gate. A VICReg-style off-diagonal covariance
+penalty directly implements the missing dimensional-collapse guardrail without replacing temporal
+objectives. Weight 0.01 raised ranks to 0.115/0.047 but shrank feature standard deviation to 0.642/0.619.
+Balancing covariance's initialization encoder gradient against the variance floor at weight 0.002
+preserved more spread (0.732/0.702) while ranks moved only to 0.110/0.045 and the same four gates failed.
+These diagnostics are indeterminate plumbing evidence on a tiny development subset, not representation
+or world-model evidence. The complete-corpus R0 panel decides whether the balanced guardrail is retained;
+R1, B0/D0, and planning remain later work.
 
 ## 1. Decision
 
@@ -120,7 +123,7 @@ Stages advance by held-out gates, not just elapsed steps. A maximum step budget 
 
 | Stage | Trainable modules | Data | Objective | Exit gate |
 |---|---|---|---|---|
-| R0 unimodal representation | video/audio encoders, adapters, disposable pretext heads; EMA teachers track | diverse unlabelled clips/spans, sampled separately | masked and future latent prediction; variance/rank guardrail | non-collapse, temporal retrieval beats static/identity controls in each modality |
+| R0 unimodal representation | video/audio encoders, adapters, disposable pretext heads; EMA teachers track | diverse unlabelled clips/spans, sampled separately | masked and future latent prediction; variance plus off-diagonal covariance guardrail | non-collapse, temporal retrieval beats static/identity controls in each modality |
 | R1 audiovisual representation | same | synchronized A/V plus deliberately shifted negatives; modality dropout | R0 losses plus cross-modal future/synchrony prediction | A/V synchrony and cross-modal retrieval beat chance without either modality collapsing |
 | B0 belief bootstrap | adapters + updater; encoders frozen | short synchronized sequences, missing/asynchronous modalities, observation dropout | filtered belief predicts EMA evidence; consistency across missing-modality views | velocity/history and occlusion probes beat per-frame baseline; prior-only path finite |
 | D0 one-step dynamics | action adapter + updater + world predictor; encoders frozen | exploratory action-labelled trajectories with broad action/state coverage | absolute one-step latent prediction + inverse/delta anchor | correct action beats identity, zero and shuffled controls; counterfactual ranking above chance |
@@ -164,7 +167,7 @@ The following are promotion gates, not optional dashboard decoration:
 
 | Pitfall | Architectural or training guardrail |
 |---|---|
-| moving/collapsing targets | EMA teacher plus variance/effective-rank gates |
+| moving/collapsing targets | EMA teacher plus variance/covariance objectives and effective-rank gates |
 | identity shortcut | future masking, calibrated residual, absolute error and identity control |
 | hidden velocity / occlusion | persistent predict–correct belief, not a single-frame state |
 | ignored or mislabelled actions | unknown-action token, inverse/delta anchor, zero/shuffle/counterfactual gates |
@@ -187,6 +190,7 @@ The following are promotion gates, not optional dashboard decoration:
 5. equal-budget E1-b comparison against the best v1 checkpoint;
 6. planning only after D1 passes its promotion gate.
 
-Items 1–3 now run end to end on the official example bundle. The first held-out R0 panel is a negative
-development result and identified a missing rank objective; no promotion claim is made until the fixed
-architecture passes on the complete development corpus.
+Items 1–3 now run end to end on the official example bundle. The held-out R0 panel remains a negative
+development result after the rank intervention: its small directional gain does not validate the
+architecture. The next decision uses the same predeclared gate on the complete development corpus; no
+promotion claim is made before that result.

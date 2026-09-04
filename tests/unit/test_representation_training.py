@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import importlib
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -10,16 +11,17 @@ import yaml
 
 import contracts
 from training.base_model import build_common_world_model
+from training.representation import _covariance_loss, _variance_loss
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def _build():
+def _build(spec: str = "common_base.yaml"):
     try:
         module = importlib.import_module("training.representation")
     except ModuleNotFoundError:
         pytest.fail("no implementation: training.representation.build_representation_learner(cfg, core)")
-    cfg = yaml.safe_load((ROOT / "configs/dev/common_base.yaml").read_text())
+    cfg = yaml.safe_load((ROOT / "configs/dev" / spec).read_text())
     core = build_common_world_model(cfg)
     return cfg, core, module.build_representation_learner(cfg, core)
 
@@ -50,6 +52,76 @@ def _has_gradient(module: torch.nn.Module) -> bool:
     )
 
 
+def _evidence(values: torch.Tensor) -> contracts.EvidenceTokens:
+    batch, tokens, _ = values.shape
+    return contracts.EvidenceTokens(
+        values,
+        torch.zeros(batch, tokens),
+        torch.ones(batch, tokens, dtype=torch.bool),
+        "video",
+    )
+
+
+def test_covariance_guardrail_detects_dimensional_collapse_at_matched_variance():
+    root_two = 2.0**0.5
+    decorrelated = torch.tensor(
+        [[[-root_two, 0.0], [root_two, 0.0], [0.0, -root_two], [0.0, root_two]]],
+        requires_grad=True,
+    )
+    correlated = torch.tensor(
+        [[[-1.0, -1.0], [1.0, 1.0], [-1.0, -1.0], [1.0, 1.0]]],
+        requires_grad=True,
+    )
+
+    decorrelated_loss = _covariance_loss(_evidence(decorrelated))
+    torch.testing.assert_close(
+        _variance_loss(_evidence(decorrelated)),
+        _variance_loss(_evidence(correlated)),
+    )
+    correlated_loss = _covariance_loss(_evidence(correlated))
+    correlated_loss.backward()
+
+    torch.testing.assert_close(decorrelated_loss, torch.zeros_like(decorrelated_loss))
+    assert correlated_loss > 0
+    assert correlated.grad is not None and correlated.grad.abs().sum() > 0
+
+
+def test_rank_specs_change_only_the_declared_covariance_intervention():
+    base = yaml.safe_load((ROOT / "configs/dev/common_base.yaml").read_text())
+    rank = yaml.safe_load((ROOT / "configs/dev/common_base_rank.yaml").read_text())
+    balanced = yaml.safe_load((ROOT / "configs/dev/common_base_rank_balanced.yaml").read_text())
+
+    assert rank["representation"]["weights"]["covariance"] == pytest.approx(0.01)
+    assert balanced["representation"]["weights"]["covariance"] == pytest.approx(0.002)
+    without_covariance = deepcopy(rank)
+    without_covariance["representation"]["objectives"].remove("covariance")
+    without_covariance["representation"]["weights"].pop("covariance")
+    assert without_covariance == base
+    balanced_at_pilot_weight = deepcopy(balanced)
+    balanced_at_pilot_weight["representation"]["weights"]["covariance"] = 0.01
+    assert balanced_at_pilot_weight == rank
+
+
+def test_declared_covariance_objective_is_included_in_r0_total():
+    cfg, _, learner = _build("common_base_rank.yaml")
+    learner.set_stage("representation_unimodal")
+    values = learner.loss(
+        contracts.RepresentationBatch(_observations(11), _observations(12), {}),
+        stage="representation_unimodal",
+        generator=torch.Generator().manual_seed(13),
+    )
+    weights = cfg["representation"]["weights"]
+    expected = (
+        weights["masked_latent"] * values["masked_latent"]
+        + weights["future_latent"] * values["future_latent"]
+        + weights["variance"] * values["variance"]
+        + weights["covariance"] * values["covariance"]
+    )
+
+    assert values["covariance"] > 0
+    torch.testing.assert_close(values["total"], expected)
+
+
 def test_r0_loss_trains_both_encoders_but_not_belief_or_dynamics():
     _, core, learner = _build()
     learner.set_stage("representation_unimodal")
@@ -65,6 +137,7 @@ def test_r0_loss_trains_both_encoders_but_not_belief_or_dynamics():
 
     assert torch.isfinite(values["total"]) and values["total"] > 0
     assert values["masked_latent"] > 0 and values["future_latent"] > 0
+    assert values["covariance"] == 0
     assert values["audiovisual_sync"] == 0
     assert _has_gradient(core.encoders["video"])
     assert _has_gradient(core.encoders["audio"])
