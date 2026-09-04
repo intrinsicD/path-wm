@@ -8,7 +8,9 @@ from __future__ import annotations
 
 import torch.nn as nn
 
+from encoders.audio import SpectrogramAudioEncoder
 from encoders.vit import ViT
+from encoders.video import TubeletVideoEncoder
 
 
 def _vit_s8(cfg: dict) -> nn.Module:
@@ -30,3 +32,51 @@ def build_encoder(cfg: dict) -> nn.Module:
     if arch not in ENCODERS:
         raise ValueError(f"unknown encoder.arch {arch!r}; known: {sorted(ENCODERS)}")
     return ENCODERS[arch](cfg)
+
+
+def _tubelet_transformer(section: dict) -> nn.Module:
+    return TubeletVideoEncoder(
+        input_channels=int(section["input_channels"]),
+        dim=int(section["dim"]),
+        layers=int(section["layers"]),
+        heads=int(section["heads"]),
+        mlp_ratio=int(section.get("mlp_ratio", 4)),
+        tubelet=int(section["tubelet"]),
+        patch=int(section["patch"]),
+    )
+
+
+def _spectrogram_transformer(section: dict) -> nn.Module:
+    return SpectrogramAudioEncoder(
+        input_channels=int(section["input_channels"]),
+        dim=int(section["dim"]),
+        layers=int(section["layers"]),
+        heads=int(section["heads"]),
+        mlp_ratio=int(section.get("mlp_ratio", 4)),
+        sample_rate=int(section["sample_rate"]),
+        n_fft=int(section["n_fft"]),
+        hop_length=int(section["hop_length"]),
+        frequency_patch=int(section["frequency_patch"]),
+        time_patch=int(section["time_patch"]),
+    )
+
+
+EVIDENCE_ENCODERS = {
+    "tubelet_transformer": _tubelet_transformer,
+    "spectrogram_transformer": _spectrogram_transformer,
+}
+
+
+def build_evidence_encoder(cfg: dict, modality: str) -> nn.Module:
+    """Build one enabled ABI-v2 modality frontend; adding a sensor is one registry entry."""
+    modalities = cfg.get("modalities", {})
+    if modality not in modalities or not modalities[modality].get("enabled", False):
+        raise ValueError(f"modality {modality!r} is absent or disabled")
+    section = modalities[modality]["encoder"]
+    arch = section["arch"]
+    if arch not in EVIDENCE_ENCODERS:
+        raise ValueError(f"unknown evidence encoder {arch!r}; known: {sorted(EVIDENCE_ENCODERS)}")
+    encoder = EVIDENCE_ENCODERS[arch](section)
+    if encoder.modality != modality:
+        raise ValueError(f"encoder {arch!r} emits modality {encoder.modality!r}, configured as {modality!r}")
+    return encoder

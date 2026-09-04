@@ -10,7 +10,9 @@ from __future__ import annotations
 import torch.nn as nn
 
 from predictors.transformer import TransformerPredictor
+from predictors.slot_transformer import SlotTransformerPredictor
 from world_state.abi import ROOT, load_abi
+from world_state.abi_v2 import load_abi_v2
 
 
 def _transformer(cfg: dict) -> nn.Module:
@@ -41,3 +43,20 @@ def build_predictor(cfg: dict) -> nn.Module:
     if section.get("output", "delta_layernorm") != "delta_layernorm":
         raise ValueError("the first predictor implements only predictor.output='delta_layernorm'")
     return PREDICTORS[arch](cfg)
+
+
+def build_world_predictor(cfg: dict) -> nn.Module:
+    """Build the ABI-v2 slot predictor used by the multimodal common base."""
+    section = cfg["predictor"]
+    if section["arch"] != "slot_transformer":
+        raise ValueError("the common-base slice implements predictor.arch='slot_transformer'")
+    abi = load_abi_v2(ROOT / cfg["abi"])
+    return SlotTransformerPredictor(
+        abi=abi,
+        dim=int(section["dim"]),
+        layers=int(section["layers"]),
+        heads=int(section["heads"]),
+        mlp_ratio=int(section.get("mlp_ratio", 4)),
+        n_registers=int(section["registers"]),
+        readout_init_scale=float(section.get("readout_init_scale", 0.03)),
+    )

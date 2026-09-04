@@ -93,6 +93,9 @@ def test_core_accepts_video_audio_or_both_and_keeps_a_fixed_belief_abi():
     observations = _observations()
 
     assert isinstance(model, contracts.WorldModelCore)
+    assert isinstance(model.action_adapter, contracts.ActionAdapter)
+    assert isinstance(model.predictor, contracts.WorldPredictorV2)
+    assert isinstance(model.updater, contracts.BeliefUpdaterV2)
     states = {
         "video": model.initialize({"video": observations["video"]}),
         "audio": model.initialize({"audio": observations["audio"]}),

@@ -10,8 +10,13 @@ import contracts
 
 
 def test_every_contract_is_exported():
-    for name in ["Environment", "Encoder", "Adapter", "Updater", "Predictor",
-                 "InverseDynamics", "Critic", "Constraints", "Planner", "DebugDecoder", "Goal"]:
+    for name in [
+        "Environment", "Encoder", "Adapter", "Updater", "Predictor",
+        "TemporalObservation", "EvidenceTokens", "ActionSequence", "ActionTokens",
+        "EvidenceEncoder", "EvidenceAdapter", "ActionAdapter", "WorldPredictorV2",
+        "BeliefUpdaterV2", "WorldModelCore",
+        "InverseDynamics", "Critic", "Constraints", "Planner", "DebugDecoder", "Goal",
+    ]:
         assert hasattr(contracts, name), name
 
 
