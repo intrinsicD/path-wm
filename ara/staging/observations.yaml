@@ -263,3 +263,39 @@ observations:
     promoted_to: "logic/solution/heuristics.md:H02"
     crystallized_via: artifact-commitment
     stale: false
+
+  - id: O16
+    timestamp: "2026-09-04T21:41+02:00"
+    provenance: ai-suggested
+    content: >
+      In the current evidence space, healthy average feature standard deviation does not
+      imply healthy dimensional rank. The baseline ended at standard deviations 0.755
+      video and 0.727 audio while effective-rank fractions were only 0.108 and 0.043;
+      variance and rank therefore require separate objectives and diagnostics.
+    context: >
+      First held-out real-A/V R0 panel and two matched covariance interventions on the
+      official 20-clip TAU example bundle.
+    potential_type: claim
+    bound_to: [N31, N32, N33]
+    promoted: true
+    promoted_to: "logic/claims.md:C08"
+    crystallized_via: artifact-commitment
+    stale: false
+
+  - id: O17
+    timestamp: "2026-09-04T21:41+02:00"
+    provenance: ai-suggested
+    content: >
+      Calibrate coupled anti-collapse loss weights using module-specific initialization
+      gradient norms, then judge them on a separate held-out panel. Raw loss magnitude is
+      insufficient: covariance weight 0.01 looked small in the scalar total but produced
+      4.8 times the variance-floor encoder gradient and induced feature shrinkage.
+    context: >
+      Covariance-weight audit after the first matched rank intervention weakened feature
+      spread despite a small numerical coefficient.
+    potential_type: heuristic
+    bound_to: [N33, N34, N35]
+    promoted: true
+    promoted_to: "logic/solution/heuristics.md:H03"
+    crystallized_via: artifact-commitment
+    stale: false

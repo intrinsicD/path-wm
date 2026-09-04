@@ -18,9 +18,9 @@ sessions:
   - id: "2026-09-04_002"
     date: "2026-09-04"
     summary: >
-      Diagnosed counterfactual scale, objective geometry, observability, and learning onset;
-      selected a history-bearing updater plus transition-scale short-joint bootstrap next.
-    turn_count: 5
-    events_count: 20
-    claims_touched: [C03, C04, C05, C06, C07]
-    open_threads: 4
+      Diagnosed E1-a, then implemented the real-A/V ABI-v2 common base and a
+      gradient-balanced rank guardrail; R0 remains failed pending full-TAU validation.
+    turn_count: 6
+    events_count: 36
+    claims_touched: [C03, C04, C05, C06, C07, C08]
+    open_threads: 5

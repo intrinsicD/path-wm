@@ -34,3 +34,10 @@ entries:
       - "Routed initialization measurements and matched schedules as N25/N27 experiments, with failed direct-default and encoder-only hypotheses as dead ends N26/N28."
       - "Crystallized the onset mechanism to C07 and the measured bootstrap rule to H02 via configs, tests, fixed curves, and the evidence artifact."
       - "Routed non-promotion and E1-b handoff as N29; no scalar E1-a search was opened because hidden-velocity aliasing remains exact."
+  - turn: "2026-09-04_002#6"
+    notes:
+      - "Routed TAU selection and the two architecture choices as N30/N32/N35; routed the real baseline and matched covariance trials as N31/N33."
+      - "Routed overweight covariance as dead end N34 because the approach's rank gain used the explicit feature-shrinkage failure mode."
+      - "Staged O16/O17, then crystallized them to C08/H03 via artifact commitment in the covariance code, controlled configs, DDR §23, and evidence table."
+      - "Did not promote O08 or O10: stronger existing entries cover history and temperature, and no new closure signal specifically bound to those observations occurred."
+      - "Found no contradictions and no 3-session-day stale observations; full-corpus acquisition remains open because it consumes roughly 108 GB before extraction."

@@ -2,13 +2,13 @@ session:
   id: "2026-09-04_002"
   date: "2026-09-04"
   started: "2026-09-04T09:59+02:00"
-  last_turn: "2026-09-04T12:59+02:00"
-  turn_count: 5
+  last_turn: "2026-09-04T21:41+02:00"
+  turn_count: 6
   summary: >
-    Added action-correctness controls and the paired counterfactual anchor, then isolated
-    temperature, weight, objective geometry, gradient routing, and observability. Paired
-    absolute loss improves E1-a but cannot beat identity; observability and learning-onset
-    audits select a history-bearing updater with transition-scale short-joint bootstrap next.
+    Diagnosed E1-a action semantics, observability, and onset, then implemented the ABI-v2
+    history-bearing multimodal base on real synchronized A/V. Its held-out R0 panel rejected
+    the tiny example-bundle runs; an explicit gradient-balanced rank guardrail now awaits a
+    matched full-TAU decision before audiovisual or belief training.
 
 events_logged:
   - turn: 1
@@ -179,6 +179,54 @@ events_logged:
     routing: crystallized
     provenance: ai-suggested
     summary: "Bootstrap residual dynamics jointly at measured transition scale."
+  - turn: 6
+    type: decision
+    id: N30
+    routing: direct
+    provenance: ai-suggested
+    summary: "Selected directly archived TAU media and an official-split manifest/shard boundary for R0/R1."
+  - turn: 6
+    type: experiment
+    id: N31
+    routing: direct
+    provenance: ai-executed
+    summary: "Ingested 20 real A/V clips and rejected the first held-out R0 checkpoint on audio and rank gates."
+  - turn: 6
+    type: decision
+    id: N32
+    routing: direct
+    provenance: ai-suggested
+    summary: "Added covariance beside variance while preserving temporal EMA objectives and the frozen gate."
+  - turn: 6
+    type: experiment
+    id: N33
+    routing: direct
+    provenance: ai-executed
+    summary: "Ran matched 0.01 and gradient-balanced 0.002 covariance trials; both failed R0."
+  - turn: 6
+    type: dead_end
+    id: N34
+    routing: direct
+    provenance: ai-executed
+    summary: "Rejected covariance weight 0.01 because its rank gain relied on weakened feature spread."
+  - turn: 6
+    type: decision
+    id: N35
+    routing: direct
+    provenance: ai-suggested
+    summary: "Declined promotion and selected a matched full-corpus test of the balanced guardrail."
+  - turn: 6
+    type: claim
+    id: C08
+    routing: crystallized
+    provenance: ai-suggested
+    summary: "Healthy per-dimension variance did not exclude low-rank common-base evidence."
+  - turn: 6
+    type: heuristic
+    id: H03
+    routing: crystallized
+    provenance: ai-suggested
+    summary: "Balance coupled guardrail weights by affected-module gradient scale."
 
 ai_actions:
   - turn: 1
@@ -265,6 +313,37 @@ ai_actions:
       - "tests/unit/test_specs.py"
       - "tests/conformance/test_predictor.py"
       - "ara/evidence/tables/e1_dev_learning_onset_2026-09-04.md"
+  - turn: 6
+    action: >
+      Selected and checksummed TAU, implemented the reusable real-A/V manifest/shard
+      boundary, explicit R0/R1 sampling, held-out representation panel, thin trainer,
+      runner/dashboard integration, and a VICReg-style covariance guardrail. Ran the
+      baseline plus two controlled CUDA covariance trials, preserved their negative
+      results, documented the full-corpus decision, and finished with 154 fast tests green.
+    provenance: ai-executed
+    files_changed:
+      - "contracts.py"
+      - "configs/dev/common_base.yaml"
+      - "configs/dev/common_base_rank.yaml"
+      - "configs/dev/common_base_rank_balanced.yaml"
+      - "training/av_data.py"
+      - "training/common_base.py"
+      - "training/representation.py"
+      - "evaluation/representation.py"
+      - "run.py"
+      - "viewer/dashboard.py"
+      - "tests/conformance/test_representation_data.py"
+      - "tests/unit/test_av_ingestion.py"
+      - "tests/unit/test_representation_panel.py"
+      - "tests/unit/test_representation_training.py"
+      - "docs/common-base-architecture.md"
+      - "docs/design-decisions.md"
+      - "README.md"
+      - "CLAUDE.md"
+      - "commit:0486841"
+      - "commit:93eefaa"
+      - "commit:def60b2"
+      - "commit:e5d7018"
 
 claims_touched:
   - id: C03
@@ -282,6 +361,9 @@ claims_touched:
   - id: C07
     action: crystallized
     turn: 5
+  - id: C08
+    action: crystallized
+    turn: 6
 
 key_context:
   - turn: 1
@@ -294,14 +376,18 @@ key_context:
     excerpt: "User required informed grid search and tested structural remedies instead of one-parameter guessing."
   - turn: 5
     excerpt: "User questioned the framing and asked what truly causes late learning and whether encoder-first curriculum is warranted."
+  - turn: 6
+    excerpt: "User asked to continue finding and implementing the right architecture from the recorded common-base next step."
 
 open_threads:
-  - "Implement and compare the planned E1-b predict-then-correct updater against the E1-a Pareto checkpoint."
+  - "Acquire and ingest the 107.7 GB complete TAU development corpus without exceeding local storage headroom."
+  - "Run matched no-covariance and gradient-balanced R0 controls at realistic full-corpus seeds and budget; do not start R1 while R0 fails."
   - "Set ABI thresholds only after seed variability and a correctly action-conditioned reference."
   - "Revisit Sophontic only after its model, report, and eval kit ship."
   - "Decide whether E2 pair scoring needs the remaining joint-correctness and invariance controls."
 
 ai_suggestions_pending:
   - >
-      Implement E1-b with transition-scale initialization and compare both the default
-      stage-2 and short-joint onset schedules against the E1-a replay at equal budget.
+      With user approval for the roughly 108 GB download, stream and verify the complete
+      TAU archives, ingest resumable normalized shards, then set full-corpus steps/batch
+      from a throughput pilot rather than tuning on held-out gate values.

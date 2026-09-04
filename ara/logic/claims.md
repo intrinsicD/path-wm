@@ -76,3 +76,14 @@
 - **Dependencies**: [C05, C06]
 - **Tags**: E1, curriculum, initialization, learning-onset, representation-bootstrap
 - **From staging**: O14
+
+## C08: Feature variance does not exclude dimensional collapse in the common-base evidence
+- **Statement**: On the fixed real-A/V R0 development panel, the no-covariance model ended with feature standard deviations 0.755 video and 0.727 audio but effective-rank fractions only 0.108 and 0.043 against a 0.25 gate. A variance floor can therefore remain healthy while evidence dimensions move redundantly; variance and effective rank are distinct promotion conditions in this implementation.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Falsification criteria**: A deterministic replay of the committed baseline and held-out cohort does not reproduce the high-standard-deviation/low-rank combination, or the rank statistic is shown to be invalid for the declared evidence geometry.
+- **Proof**: [ara/evidence/tables/e1_common_base_r0_2026-09-04.md, runs/dev/common_base/0/representation_panel.jsonl, commit:def60b2]
+- **Dependencies**: [C07]
+- **Tags**: E1-common-base, representation, dimensional-collapse, effective-rank, variance
+- **From staging**: O16

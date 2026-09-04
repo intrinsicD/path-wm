@@ -520,3 +520,130 @@ tree:
       - "C06"
     status: resolved
     children: []
+
+  - id: N30
+    type: decision
+    title: "Use TAU as the first real synchronized A/V corpus"
+    provenance: ai-suggested
+    timestamp: "2026-09-04T21:41+02:00"
+    choice: >
+      Use the directly archived TAU Urban Audio-Visual Scenes 2021 corpus for R0/R1.
+      Decode raw media once into checksummed per-clip shards behind a versioned manifest;
+      use official recording-group-disjoint folds, independent modalities in R0, and
+      synchronized plus same-recording shifted views in R1.
+    alternatives:
+      - "VGGSound or AudioSet identifiers whose third-party video downloads are no longer stable."
+      - "Ego4D, whose access and scale are too heavy for the first representation gate."
+      - "A dataset-specific decoder inside the training loop."
+    evidence:
+      - "https://zenodo.org/records/4477542"
+      - "https://dcase.community/challenge2021/task-acoustic-scene-classification"
+      - "commit:0486841"
+      - "commit:93eefaa"
+    status: resolved
+    children:
+      - id: N31
+        type: experiment
+        title: "First real-A/V held-out R0 panel"
+        provenance: ai-executed
+        timestamp: "2026-09-04T21:41+02:00"
+        result: >
+          Ingested 20 official example clips into 9 train and 11 evaluation shards and
+          completed a 20-step CUDA run. Video masked/future advantage improved from
+          -2.021/-2.069 to +0.160/+0.217, but audio ended at -0.005/-0.014 and video/audio
+          effective-rank fractions were 0.108/0.043 versus the frozen 0.25 gate. The
+          fail-closed R0 gate rejected the checkpoint with four failures.
+        evidence:
+          - "commit:def60b2"
+          - "runs/dev/common_base/0/representation_panel.jsonl"
+          - "runs/dev/common_base/0/threshold_record.json"
+          - "ara/evidence/tables/e1_common_base_r0_2026-09-04.md"
+        status: resolved
+        children:
+          - id: N32
+            type: decision
+            title: "Add covariance without replacing temporal EMA learning"
+            provenance: ai-suggested
+            timestamp: "2026-09-04T21:41+02:00"
+            choice: >
+              Add a VICReg-style squared off-diagonal covariance term on valid online
+              evidence tokens beside the existing variance floor. Keep masked/future EMA
+              objectives unchanged, retain the effective-rank gate, and isolate weight
+              scaling before testing SIGReg or projector alternatives.
+            alternatives:
+              - "Lower the effective-rank threshold after observing the failure."
+              - "Return to SIGReg plus inverse as standalone encoder pretraining."
+              - "Add whitening or a disposable regularizer projector in the same iteration."
+            evidence:
+              - "N31"
+              - "https://arxiv.org/abs/2105.04906"
+              - "docs/design-decisions.md#23-r0-dimensional-collapse-guardrail"
+              - "O16"
+            status: resolved
+            children:
+              - id: N33
+                type: experiment
+                title: "Matched covariance-weight and gradient-balance trials"
+                provenance: ai-executed
+                timestamp: "2026-09-04T21:41+02:00"
+                result: >
+                  Initial unweighted encoder gradients were 0.578 variance and 27.904
+                  covariance. Weight 0.01 moved rank fractions to 0.115/0.047 but reduced
+                  feature standard deviations from 0.755/0.727 to 0.642/0.619. A coefficient
+                  of 0.002, selected from the initialization gradient audit, retained
+                  0.732/0.702 spread and produced ranks 0.110/0.045. Both matched runs failed
+                  the same four R0 conditions; 154 fast tests passed after implementation.
+                evidence:
+                  - "commit:e5d7018"
+                  - "configs/dev/common_base_rank.yaml"
+                  - "configs/dev/common_base_rank_balanced.yaml"
+                  - "runs/dev/common_base_rank/0/representation_panel.jsonl"
+                  - "runs/dev/common_base_rank_balanced/0/representation_panel.jsonl"
+                  - "ara/evidence/tables/e1_common_base_r0_2026-09-04.md"
+                status: resolved
+                children:
+                  - id: N34
+                    type: dead_end
+                    title: "Covariance weight 0.01 improves rank without a shrinkage shortcut"
+                    provenance: ai-executed
+                    timestamp: "2026-09-04T21:41+02:00"
+                    hypothesis: >
+                      A covariance coefficient of 0.01 can supply a modest secondary
+                      gradient and raise effective rank while the existing variance floor
+                      preserves feature spread and temporal prediction.
+                    failure_mode: >
+                      Its weighted initialization gradient was 4.8 times the variance
+                      gradient. Rank rose only 6.6% video and 8.1% audio while feature
+                      standard deviation fell about 15% and prediction controls weakened.
+                    lesson: >
+                      Variance and covariance are a coupled anti-collapse pair. Calibrate
+                      their gradient balance explicitly; raw covariance can be reduced by
+                      shrinking across-token variation when its opposing variance gradient
+                      is too weak.
+                    status: resolved
+                    children: []
+
+                  - id: N35
+                    type: decision
+                    title: "Carry only the balanced guardrail to full-corpus R0"
+                    provenance: ai-suggested
+                    timestamp: "2026-09-04T21:41+02:00"
+                    also_depends_on: [N31, N32, N34]
+                    choice: >
+                      Do not promote any example-bundle checkpoint. Preserve the 0.01 trial
+                      as negative evidence and carry covariance weight 0.002 to a matched
+                      no-covariance comparison on the complete 34-hour TAU development
+                      corpus. Let the unchanged rank, variance, prediction, and temporal
+                      gates decide whether covariance remains before starting R1.
+                    alternatives:
+                      - "Select the 0.01 run because its rank is numerically highest."
+                      - "Remove covariance because a 20-clip, 20-step fixture did not pass."
+                      - "Start audiovisual R1 or belief B0 while unimodal R0 remains failed."
+                    evidence:
+                      - "N31"
+                      - "N33"
+                      - "N34"
+                      - "ara/evidence/tables/e1_common_base_r0_2026-09-04.md"
+                      - "docs/design-decisions.md#23-r0-dimensional-collapse-guardrail"
+                    status: resolved
+                    children: []
