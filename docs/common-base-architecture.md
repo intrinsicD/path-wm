@@ -3,6 +3,13 @@
 Status: implementation candidate, 2026-09-04. ABI v1 and E1-a remain an immutable measured control;
 this document defines the replacement reference that must pass the gates below before it is promoted.
 
+Implementation status (development evidence only): ABI-v2 contracts, video/audio evidence paths, action
+adapter, slot predictor, predict-correct updater, explicit freeze/gate controller, EMA teachers, and R0/R1
+representation losses are executable. The fast suite has 143 passing tests (two opt-in tests deselected).
+A 20-step fixed synthetic-batch optimizer smoke reduced the R0 objective from 4.0533 to 0.3975; this
+checks optimization plumbing only and is not a representation or world-model result. Dataset ingestion,
+held-out R0/R1 metrics, B0/D0 objectives, and every planning module remain next-stage work.
+
 ## 1. Decision
 
 There is no literal architecture shared by LeWM, V-JEPA 2, VLWM, DINO-WM, Delta-JEPA and Dreamer.
