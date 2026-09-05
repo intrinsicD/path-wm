@@ -132,3 +132,8 @@ then executes full-corpus paired seeds. Supply `--download-session <tmux-name>` 
 owned by that run; the queue interrupts it if the deadline expires. Logs, status and comparison JSON
 are written to `runs/overnight/common_base_20260905/`. Each completed seed refreshes the experiment
 dashboard. A failed R0 leaves R1 gated; no automatic architecture promotion occurs.
+
+To overlap decoding with acquisition, run `python scripts/prefill_tau_cache.py
+configs/dev/common_base_full_balanced.yaml --deadline 2026-09-05T09:25:00+02:00`
+in another local process with the same desired deadline. It caches up to 128 available pairs per batch
+and never publishes a partial manifest; final ingestion verifies the entire source corpus again.

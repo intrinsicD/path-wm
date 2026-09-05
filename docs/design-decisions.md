@@ -591,3 +591,27 @@ source arrives; changing a prefilled source forces a rebuild. On the real 20 exa
 clips followed by full ingestion reuses those five shards and reproduces the original manifest byte for
 byte. All 170 fast tests pass (two opt-in tests deselected). Proof is in
 `runs/overnight/common_base_20260905/prefill_compatibility.json`.
+
+
+---
+
+## 28. Make representation outcomes visible in the experiment dashboard
+
+**Problem.** Once a representation run became the latest completed seed, headline cards still selected
+metrics from the union of historical action-model runs and displayed only missing values. R0 metrics
+were available only in the exact result table, and `max_steps` was absent from the inventory.
+
+**Decision.** Headline cards explicitly describe the latest completed run and select its own metric
+family. R0 exposes the recorded gate result, both rank fractions and both future advantages; small
+future values use a labeled ×10³ display scale. Native comparison charts retain unscaled raw rank and
+future scores by run/modality. The inventory records corpus, batch size, covariance weight and the
+correct training-step field. Prior action-model charts, raw ledgers, gate outcomes and thresholds stay
+intact. The selected-run control is described as an enhanced-reader control; the semantic fallback
+labels all included runs.
+
+**Validation.** A mixed-ledger test verifies that a latest R0 run has no missing action-model headline,
+that every chart value matches its source, and that tiny negative future values keep their sign after
+display scaling. All 171 fast tests pass (two opt-in tests deselected). Canonical artifact packaging
+succeeds with structural-only verification. An isolated installed-Chrome rendering exposed the original
+missing-card problem, but Chrome fails the canonical extractor's requested-environment check, so full
+browser QA is still unavailable; no full visual-verification claim is made.

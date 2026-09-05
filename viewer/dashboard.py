@@ -56,7 +56,9 @@ METRIC_LABELS = {
     "video_to_audio_retrieval_margin": "Video-to-audio retrieval margin",
     "audio_to_video_retrieval_margin": "Audio-to-video retrieval margin",
     "synchrony_accuracy_above_chance": "A/V synchrony accuracy above chance",
-    "gate_passed": "Curriculum gate passed",
+    "gate_passed": "Curriculum gate passed (0/1)",
+    "video_future_teacher_copy_advantage": "Video future advantage over teacher copy",
+    "audio_future_teacher_copy_advantage": "Audio future advantage over teacher copy",
     "gate_failure_count": "Curriculum gate failures",
 }
 
@@ -84,6 +86,27 @@ METRIC_DEFINITIONS = {
     ),
 }
 
+for modality in ("Video", "Audio"):
+    METRIC_DEFINITIONS[f"{modality} effective-rank fraction"] = (
+        "Entropy effective rank of squared singular values from centered valid tokens, divided by "
+        "min(valid-token count minus one, feature width), then averaged over held-out batches. "
+        "Token-position diversity contributes; rank alone does not establish sensory diversity."
+    )
+    METRIC_DEFINITIONS[f"{modality} future-prediction advantage"] = (
+        "MSE(online-current, teacher-future) minus MSE(predicted-future, teacher-future), averaged over "
+        "held-out batches. Positive beats the online copy. Headline cards scale this by 1,000; "
+        "charts and exact result tables retain the original value."
+    )
+    METRIC_DEFINITIONS[f"{modality} future advantage over teacher copy"] = (
+        "MSE(teacher-current, teacher-future) minus MSE(predicted-future, teacher-future), averaged over "
+        "held-out batches. Supplementary same-basis control; it does not change the recorded gate."
+    )
+METRIC_DEFINITIONS["Curriculum gate passed (0/1)"] = (
+    "Recorded curriculum-gate outcome for the completed seed: 1 passed every configured check, "
+    "0 failed at least one. The dashboard does not recompute or relax the gate."
+)
+
+
 CONTEXT_METRICS = {
     "counterfactual_branches",
     "counterfactual_probe_count",
@@ -108,12 +131,19 @@ TRAINING_AUXILIARY_OBJECTIVES = ["counterfactual", "reg", "chunk", "masked_laten
                                  "variance", "covariance", "audiovisual_sync"]
 TRAINING_OBJECTIVES = TRAINING_PRIMARY_OBJECTIVES + TRAINING_AUXILIARY_OBJECTIVES
 RUN_CARD_PRIORITY = [
+    "gate_passed",
+    "video_effective_rank_fraction",
+    "audio_effective_rank_fraction",
+    "video_future_prediction_advantage",
+    "audio_future_prediction_advantage",
     "action_sensitivity_ratio",
     "counterfactual_accuracy",
     "transition_error_one_step",
     "transition_error",
 ]
 CARD_FIELD_OVERRIDES = {
+    "video_future_prediction_advantage": ("video_future_prediction_advantage_milli", "Video future advantage (×10⁻³)"),
+    "audio_future_prediction_advantage": ("audio_future_prediction_advantage_milli", "Audio future advantage (×10⁻³)"),
     "action_sensitivity_ratio": ("action_sensitivity_milli", "Action sensitivity (×10⁻³)"),
     "transition_error_one_step": ("transition_error_one_step_milli", "Correct-action MSE (×10⁻³)"),
     "transition_error": ("transition_error_milli", "Endpoint MSE (×10⁻³)"),
@@ -138,6 +168,8 @@ METRIC_DIRECTIONS = {
     "audio_masked_prediction_advantage": "higher",
     "video_future_prediction_advantage": "higher",
     "audio_future_prediction_advantage": "higher",
+    "video_future_teacher_copy_advantage": "higher",
+    "audio_future_teacher_copy_advantage": "higher",
     "video_temporal_retrieval_margin": "higher",
     "audio_temporal_retrieval_margin": "higher",
     "video_to_audio_retrieval_margin": "higher",
@@ -506,6 +538,8 @@ def build_dashboard_artifact(
     sensitivity: list[dict[str, Any]] = []
     counterfactual_evaluation: list[dict[str, Any]] = []
     parameter_counts: list[dict[str, Any]] = []
+    representation_rank: list[dict[str, Any]] = []
+    representation_future: list[dict[str, Any]] = []
 
     for run in run_results:
         counterfactual_weight = _nested(run.spec, "losses", "counterfactual", "weight")
@@ -538,12 +572,23 @@ def build_dashboard_artifact(
                 "counterfactual_weight_display": _exact_value(counterfactual_weight),
                 "kappa": kappa,
                 "kappa_display": _exact_value(kappa),
-                "train_steps": _nested(run.spec, "train", "steps"),
+                "train_steps": _nested(run.spec, "train", "max_steps", default=_nested(run.spec, "train", "steps")),
+                "source_subset": _nested(run.spec, "data", "source", "subset", default="—"),
+                "batch_size": _nested(run.spec, "train", "batch_size"),
+                "covariance_weight": _nested(run.spec, "representation", "weights", "covariance"),
                 "probe_count": run.metrics.get("probe_count"),
                 "probe_horizon": run.metrics.get("probe_horizon"),
                 "source": run.source_paths[0],
             }
         )
+        for modality in ("video", "audio"):
+            for suffix, rows in (("effective_rank_fraction", representation_rank),
+                                 ("future_prediction_advantage", representation_future)):
+                value = run.metrics.get(f"{modality}_{suffix}")
+                if value is not None:
+                    rows.append({"run": run.label, "modality": modality.title(), "value": value,
+                                 "corpus": _nested(run.spec, "data", "source", "subset", default="unknown"),
+                                 "steps": run.step, "seed": run.seed})
         for name, value in run.metrics.items():
             result_detail.append(
                 {
@@ -720,6 +765,9 @@ def build_dashboard_artifact(
         # Put the latest completed run first so the semantic/no-script card fallback agrees with the
         # enhanced reader's default selection even though partial dashboard filters are interactive-only.
         "run_overview": list(reversed(overview_rows)),
+        "latest_run": [overview_rows[-1]],
+        "representation_rank": representation_rank,
+        "representation_future": representation_future,
         "run_inventory": run_inventory,
         "result_detail": result_detail[:MAX_DATASET_ROWS],
         "action_controls": action_controls,
@@ -770,9 +818,11 @@ def build_dashboard_artifact(
         },
     ]
     selected_card_ids: list[str] = []
-    card_metrics = [name for name in RUN_CARD_PRIORITY if name in metric_names]
+    # Headline cards describe the explicitly named latest run; old metric families remain
+    # in cross-run charts and exact tables, never as empty cards for a different model.
+    card_metrics = [name for name in RUN_CARD_PRIORITY if name in latest.metrics]
     if not card_metrics:
-        card_metrics = [name for name in metric_names if name not in CONTEXT_METRICS][:4]
+        card_metrics = [name for name in latest.metrics if name not in CONTEXT_METRICS]
     for name in card_metrics:
         card_id = f"selected_{name}"
         field, label = CARD_FIELD_OVERRIDES.get(name, (name, _metric_label(name)))
@@ -784,7 +834,7 @@ def build_dashboard_artifact(
             {
                 "id": card_id,
                 "description": METRIC_DEFINITIONS.get(_metric_label(name), f"Evaluation field: {name}."),
-                "dataset": "run_overview",
+                "dataset": "latest_run",
                 "sourceId": SOURCE_ID,
                 "metrics": [{"label": label, "field": field, "format": _metric_format(name)}],
             }
@@ -796,8 +846,9 @@ def build_dashboard_artifact(
             "id": "intro",
             "type": "markdown",
             "body": (
-                "## How to read this\n\nUse the run selector for one seed's cards, controls, and training "
-                "trajectory. Cross-run charts remain fixed so interventions stay comparable. Raw run files "
+                "## How to read this\n\nHeadline cards describe the latest completed run. The enhanced reader's "
+                "run selector filters controls and training; the offline fallback labels all runs explicitly. "
+                "Cross-run charts remain fixed. Raw run files "
                 "remain the authoritative ledger; this page is a read-only view.\n\n"
                 "**Direction key:** ↑ higher is better · ↓ lower is better · ↔ context only. In the "
                 "action-control chart, correct-action error should be lower while deliberately wrong controls "
@@ -812,7 +863,9 @@ def build_dashboard_artifact(
                 {
                     "id": "selected_heading",
                     "type": "markdown",
-                    "body": "## Selected run outcomes\n\nHeadline metrics for the run chosen above.",
+                    "sourceId": SOURCE_ID,
+                    "body": f"## Latest completed run\n\n**{latest.label}** · {latest.step:,} optimizer steps. "
+                            "Development runs are diagnostics, not frozen experiment results.",
                 },
                 {"id": "selected_metrics", "type": "metric-strip", "cardIds": selected_card_ids},
             ]
@@ -823,6 +876,25 @@ def build_dashboard_artifact(
         blocks.append(
             {"id": f"block_{chart['id']}", "type": "chart", "chartId": chart["id"], "layout": chart["layout"]}
         )
+
+    for chart_id, title, subtitle, dataset, label in (
+        ("representation_rank_comparison", "Representation rank across runs",
+         "Video and audio token rank fractions. Corpus and training budgets differ; see the run inventory.",
+         "representation_rank", "Effective-rank fraction"),
+        ("representation_future_comparison", "Future prediction advantage across runs",
+         "Positive means the learned future head beats copying online-current evidence; negative means it loses.",
+         "representation_future", "Copy MSE minus prediction MSE"),
+    ):
+        if datasets[dataset]:
+            add_chart(_chart(
+                chart_id, title, subtitle, dataset, "bar",
+                {"field": "run", "type": "nominal", "label": "Completed run"},
+                {"field": "value", "type": "quantitative", "label": label, "format": "number"},
+                color={"field": "modality", "type": "nominal", "label": "Modality"},
+                tooltip=[{"field": "corpus", "type": "nominal", "label": "Corpus"},
+                         {"field": "steps", "type": "quantitative", "label": "Steps"}],
+                layout="full", group_mode="grouped", direction="higher",
+            ))
 
     if sensitivity:
         add_chart(
@@ -1086,6 +1158,9 @@ def build_dashboard_artifact(
                 },
                 {"field": "kappa_display", "label": "Kappa", "type": "text"},
                 {"field": "train_steps", "label": "Train steps", "format": "number"},
+                {"field": "source_subset", "label": "Corpus", "type": "text"},
+                {"field": "batch_size", "label": "Batch", "format": "number"},
+                {"field": "covariance_weight", "label": "Covariance weight", "format": "number"},
                 {"field": "probe_count", "label": "Probe count", "format": "number"},
                 {"field": "probe_horizon", "label": "Probe horizon", "format": "number"},
                 {"field": "source", "label": "Evaluation source", "type": "text"},
@@ -1182,8 +1257,11 @@ def build_dashboard_artifact(
         (
             f"- **{thresholds_set} numeric threshold values are configured.**"
             if thresholds_set
-            else "- **No numeric pass/fail thresholds are configured in the discovered records.** The dashboard "
-            "does not infer a verdict."
+            else ("- **Curriculum gate outcomes are copied from completed-run ledgers.** Each saved spec "
+                  "defines its thresholds; the dashboard does not infer or relax a verdict."
+                  if "gate_passed" in metric_names else
+                  "- **No numeric pass/fail thresholds are configured in the discovered records.** The dashboard "
+                  "does not infer a verdict.")
         ),
     ]
     status_lines.extend(f"- {notice}" for notice in notices)
