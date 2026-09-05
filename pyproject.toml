@@ -14,7 +14,10 @@ data = ["zarr<3", "numcodecs"]
 dev = ["pytest"]
 
 [tool.setuptools.packages.find]
-include = ["world_model*", "third_party*"]
+include = ["world_model*", "third_party*", "viewer*"]
+
+[tool.setuptools.package-data]
+viewer = ["*.sql", "DESIGN.md"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

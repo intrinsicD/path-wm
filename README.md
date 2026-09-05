@@ -26,14 +26,21 @@ with released weights on a separate case set. Both full archives are verified
 and extracted. [First diagnostic round](docs/diagnostic-results.md) and
 [earlier checks](docs/baseline-checks.md) retain the previous subset results.
 
+The standing [experiment workflow](docs/experiment-workflow.md) is independent of
+[current goals and status](docs/project-state.md). Every experiment refreshes the
+local [HTML instrument panel](runs/experiment_dashboard.html); regenerate it from
+existing logs with `python -m viewer.dashboard`. The wrapper requires Node.js and
+the installed Data Analytics portable-artifact builder; set
+`PATH_WM_ARTIFACT_BUILDER` to its `deliver_portable_artifact.mjs` if needed.
+
 Use the local environment `.runtime/lewm/bin/python`, or install this project
 with its `dev`, `eval` and `data` extras in an isolated environment.
 
 ```bash
 python -m pytest
-python -m world_model.train configs/pusht_cchi_dev.yaml
+python run.py -m world_model.train configs/pusht_cchi_dev.yaml
 python scripts/prepare_data.py configs/datasets/pusht.yaml
-python -m world_model.eval_pusht configs/datasets/pusht.yaml data/reference/lewm-pusht/weights.pt runs/reference_check --released --episodes 2
+python run.py -m world_model.eval_pusht configs/datasets/pusht.yaml data/reference/lewm-pusht/weights.pt runs/reference_check --released --episodes 2
 ```
 
 Training refuses to overwrite an existing checkpoint. Use a new `run_dir` for

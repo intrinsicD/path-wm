@@ -20,11 +20,20 @@ training and benchmark evaluation. Baseline-specific tests cover episode
 alignment, causal action timing, reference computations and gradients,
 normalization, rollout and checkpoint integrity.
 
-## Now: restore the harness
+## Harness restored; diagnostics remain next
 
-Recover the standing workflow and offline experiment dashboard from Git, adapt
-its reader to current ledgers, and keep goals and results in this file and the
-linked experiment reports. No training or evaluation is needed for this repair.
+The standing workflow and offline dashboard were recovered from `eca742a` and
+adapted to current ledgers. `CLAUDE.md` now links the workflow and this state file.
+The harness adds nine integrity checks; all 22 CPU tests pass. No new training or
+evaluation was run during this repair.
+
+The current HTML includes 30 result records (6 training, 20 control and 4
+standalone prediction records). Artifact validation and exact embedded-payload
+checks pass. Browser verification remains blocked by the installed canonical
+packager: headless-shell stalls in fallback; installed full Chrome renders charts
+with a viewport correction but its final desktop/mobile probe times out. The
+published snapshot has an honest `structural_only` receipt. Details are in
+[harness-recovery.md](harness-recovery.md); visual verification is still pending.
 
 ## Approved work pending after this repair
 
@@ -44,7 +53,7 @@ again. Preserve the completed pilot and checkpoint hashes. The learned-control
 baseline gate is still unmet, and research extensions remain deferred.
 
 ## Earlier validation
-The modular LeWM implementation and 13 CPU tests pass after the broader pilot.
+At broader-pilot completion, the modular LeWM implementation passed 13 CPU tests.
 Local and upstream control evaluators agree on ten paired subset cases with
 released weights. Cached random-initialized PushT training completed all 400
 updates in 665.98 seconds on the same 8-episode prefix (7 train, 1 held out).
@@ -76,6 +85,6 @@ released weights reach 17/20, replay 19/20, stationary 0/20, with no initial suc
 Final precision and discarded BatchNorm-clone differences are small (about 3–4%);
 no baseline change was adopted. All checkpoint hashes remain unchanged.
 See docs/pusht-broader-pilot.md and the run's pilot_summary.json. All pilot
-training/evaluation processes completed. Do not repeat the completed run. Targeted rollout/control diagnosis is approved below;
+training/evaluation processes completed. Do not repeat the completed run. Targeted rollout/control diagnosis is approved above;
 research extensions remain deferred. The bounded pilot is complete, while the
 learned-control baseline gate remains unmet.
