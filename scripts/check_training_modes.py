@@ -21,10 +21,10 @@ def check(run):
     output={'step':saved['step'],'seed':meta['seed']}
     calibrated=None
     for split,key in [('train','train_episodes'),('heldout','val_episodes')]:
-        ds=TrajectoryDataset(meta['dataset']['path'],meta[key],frameskip=meta['dataset']['frameskip'],num_steps=4)
+        ds=TrajectoryDataset(meta['dataset']['path'],meta[key],frameskip=meta['dataset']['frameskip'],num_steps=4,cache_bytes=meta['config'].get('cache_bytes',0))
         n=min(len(ds),512)
         indices=torch.randperm(len(ds),generator=torch.Generator().manual_seed(103072)).tolist()[:n]
-        loader=DataLoader(ds,batch_size=128,sampler=indices,num_workers=2)
+        loader=DataLoader(ds,batch_size=128,sampler=indices,num_workers=0 if meta['config'].get('cache_bytes',0) else 2)
         output[split]=evaluate_prediction(model,loader,saved['action_stats'],torch.device('cuda'),batches=4)
         batch=next(iter(loader));x=preprocess_pixels(batch['pixels'].cuda());a=normalize_actions(batch['action'].cuda(),saved['action_stats'])
         model.eval();z=model.encode(x);prediction=model.predict(z[:,:-1],a[:,:-1])
