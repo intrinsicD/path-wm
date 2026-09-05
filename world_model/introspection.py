@@ -268,3 +268,37 @@ def encoder_maps(model, pixels):
     entropy = torch.stack([attention_entropy(layer).mean() for layer in output.attentions])
     return dict(cls_attention=cls.reshape(len(pixels), cls.shape[1], grid, grid), patch_pca=rgb,
                 attention_entropy=entropy, grid=grid)
+
+
+def scalar_summary(model, pixels, actions, directions=4, seed=0):
+    """Cheap scalar internals for a validation batch during training (opt-in `introspect`).
+
+    Uses the same definitions as checkpoint inspection but a single batch, so
+    values are noisier; the dashboard keeps them in their own training-time panels.
+    """
+    was_training = model.training
+    model.eval()
+    try:
+        with torch.no_grad():
+            z = model.encode(pixels)
+        flat = z.flatten(0, 1)
+        spectrum = covariance_spectrum(flat)
+        gauss = gaussianity(flat, seed=seed)
+        predictor = predictor_internals(model, z[:, :-1], actions[:, :-1])
+        sens = sensitivity(model, z[:, :-1], actions[:, :-1], directions=directions, seed=seed)
+        encoder = encoder_maps(model, pixels[:, 0])
+        params = parameter_norms(model)
+    finally:
+        model.train(was_training)
+    return {
+        **{k: spectrum[k] for k in ('effective_rank', 'rankme', 'participation_ratio', 'top_eigenvalue_fraction')},
+        **{k: gauss[k] for k in ('shapiro_w_mean', 'shapiro_fraction_below_0_95', 'excess_kurtosis_mean')},
+        'gate_msa_mean': float(predictor['gate_msa'].mean()), 'gate_mlp_mean': float(predictor['gate_mlp'].mean()),
+        'action_embedding_norm': predictor['action_embedding_norm'],
+        'predictor_attention_entropy_mean': float(predictor['attention_entropy'].mean()),
+        'encoder_attention_entropy_last': float(encoder['attention_entropy'][-1]),
+        'sensitivity_action': sens['action'], 'sensitivity_state': sens['state'],
+        'sensitivity_action_over_state': sens['action_over_state'],
+        **{f'param_norm_{k}': v for k, v in params.items()},
+        'examples': int(len(z)),
+    }

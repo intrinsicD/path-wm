@@ -175,3 +175,10 @@ SELECT json_extract(r.value, '$.label') AS run, json_extract(r.value, '$.interna
        json_extract(r.value, '$.step') AS step, p.key AS target, p.value AS r2
 FROM json_each(:reconciled_runs) AS r, json_each(json_extract(r.value, '$.internals.series.probe_r2')) AS p
 WHERE json_extract(r.value, '$.kind') = 'internals';
+-- dataset: training_internals
+-- Opt-in training-time internals rows (kind: internals) of training runs; sampled like curves.
+SELECT json_extract(r.value, '$.label') AS run, json_extract(t.value, '$.step') AS step,
+       m.key AS metric, m.value AS value
+FROM json_each(:reconciled_runs) AS r,
+     json_each(json_extract(r.value, '$.sampled_internals')) AS t, json_each(t.value) AS m
+WHERE m.key NOT IN ('step', 'elapsed_seconds', 'examples');

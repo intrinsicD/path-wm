@@ -5,7 +5,7 @@ import torch
 
 from world_model.introspection import (attention_entropy, covariance_spectrum, encoder_maps, gaussianity,
                                        gradient_norms, linear_probe, parameter_norms, predictor_internals,
-                                       rollout_horizon, sensitivity, state_digest)
+                                       rollout_horizon, scalar_summary, sensitivity, state_digest)
 from world_model.model import build_model
 from world_model.objective import SIGReg
 
@@ -121,3 +121,12 @@ def test_state_digest_tracks_batchnorm_buffers():
     with torch.no_grad():
         model.projector.net[1].running_mean += 1.0
     assert state_digest(model) != before
+
+
+def test_scalar_summary_is_finite_and_side_effect_free():
+    model = small_model()
+    before = state_digest(model)
+    summary = scalar_summary(model, torch.randn(6, 4, 3, 28, 28), torch.randn(6, 4, 10), directions=2)
+    assert {'effective_rank', 'gate_msa_mean', 'sensitivity_action_over_state', 'param_norm_encoder', 'examples'} <= set(summary)
+    assert all(np.isfinite(v) for v in summary.values()) and summary['examples'] == 6
+    assert state_digest(model) == before and not model.training

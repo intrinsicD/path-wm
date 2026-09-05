@@ -46,7 +46,7 @@ def test_training_retains_checkpoints_and_resume_respects_spent_budget(tmp_path,
         max_steps=2,max_seconds=60,epochs=1,batch_size=2,workers=0,encoder_chunk=0,
         precision='float32',eval_precision='float32',lr=1e-4,weight_decay=.001,
         warmup_fraction=.01,grad_clip=1.,sigreg_weight=.09,sigreg_projections=8,sigreg_knots=5,
-        log_every=1,eval_every=1,eval_batches=1,checkpoint_steps=[0,1,2],
+        log_every=1,eval_every=1,eval_batches=1,checkpoint_steps=[0,1,2],introspect=protocol=='episodes',
         model=dict(width=12,image_size=28,encoder_depth=1,encoder_heads=3,
             predictor_depth=1,predictor_heads=2,head_dim=4,mlp_dim=24,projector_dim=24,dropout=0.))
     if protocol=='random_windows':
@@ -58,6 +58,12 @@ def test_training_retains_checkpoints_and_resume_respects_spent_budget(tmp_path,
     snapshots=[torch.load(run/f'checkpoint_{i:06d}.pt',weights_only=True) for i in range(3)]
     assert [s['step'] for s in snapshots]==[0,1,2]
     assert any(not torch.equal(snapshots[0]['model'][k],snapshots[2]['model'][k]) for k in snapshots[0]['model'])
+    rows=[json.loads(line) for line in (run/'metrics.jsonl').read_text().splitlines()]
+    captured=[r for r in rows if r['kind']=='internals']
+    if protocol=='episodes':
+        assert [r['step'] for r in captured]==[0,1,2] and all('effective_rank' in r and 'gate_msa_mean' in r for r in captured)
+    else:
+        assert not captured
     # Simulate recovering step 1 after the whole time budget has been spent.
     recovery=snapshots[1];recovery['elapsed_seconds']=61.
     torch.save(recovery,run/'recovery.tmp');(run/'recovery.tmp').replace(run/'checkpoint.pt')

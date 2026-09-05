@@ -160,7 +160,9 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
         step = status.get("step", status.get("last_logged_step"))
         training = tuple(numeric(r) for r in rows if r.get("kind") == "train")
         validation = tuple(numeric(r) for r in rows if r.get("kind") == "validation")
-        add(directory, "training", kind, numeric(status), sources, context, step, training, validation)
+        captured = tuple(numeric(r) for r in rows if r.get("kind") == "internals")
+        add(directory, "training", kind, numeric(status), sources, context, step, training, validation,
+            internals={"training_rows": captured} if captured else None)
         if kind != "complete":
             notices.append(f"{directory.relative_to(runs_root)}: {kind}; validation retains its recorded step")
 

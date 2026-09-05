@@ -18,6 +18,7 @@ from world_model.protocol import prepare_training_data
 from world_model.objective import SIGReg
 from world_model.training import backward_batch
 from world_model.evaluation import evaluate_prediction
+from world_model.introspection import scalar_summary
 
 
 def write_json(path,value):
@@ -95,9 +96,16 @@ def train(config_path, resume=False):
         if step in cfg.get('checkpoint_steps',[]):
             snapshot=run/f'checkpoint_{step:06d}.pt'
             if not snapshot.exists(): os.link(run/'checkpoint.pt',snapshot)
+    def introspect():
+        # Opt-in read-only internals on the first validation batch; eval mode keeps buffers unchanged.
+        if not cfg.get('introspect'): return
+        batch=next(iter(val_loader))
+        pixels=preprocess_pixels(batch['pixels'].to(device),model_cfg.get('image_size',224))
+        record('internals',scalar_summary(model,pixels,normalize_actions(batch['action'].to(device),stats)))
     if not resume:
         record('validation',evaluate_prediction(model,val_loader,stats,device,
             model_cfg.get('image_size',224),cfg['eval_batches'],cfg.get('eval_precision',cfg['precision'])))
+        introspect()
         save()
     while step<total_steps:
         epoch=step//batches_per_epoch
@@ -132,6 +140,7 @@ def train(config_path, resume=False):
             if step%cfg['eval_every']==0 or step==total_steps or step in cfg.get('checkpoint_steps',[]):
                 record('validation',evaluate_prediction(model,val_loader,stats,device,
                     model_cfg.get('image_size',224),cfg['eval_batches'],cfg.get('eval_precision',cfg['precision'])))
+                introspect()
                 save()
     record('complete',dict(total_steps=total_steps,baseline_gate='pending_closed_loop_evaluation'))
 

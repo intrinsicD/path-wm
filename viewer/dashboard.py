@@ -157,12 +157,13 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
     datasets = {name: [] for name in ("inventory", "metrics", "context", "training_runs", "training_loss",
                                     "validation", "embedding", "control", "prediction_runs", "prediction",
                                     "training_scalar", "validation_ratio", "internals_scalar", "internals_summary",
-                                    "internals_spectrum", "internals_horizon", "internals_probe")}
+                                    "internals_spectrum", "internals_horizon", "internals_probe", "training_internals")}
     training_runs = [r for r in run_results if r.kind == "training"]
     controls = [r for r in run_results if r.kind == "control"]
     predictions = [r for r in run_results if r.kind == "prediction"]
     records = [{**asdict(run), "sampled_training": _downsample(run.training, 50),
-                "sampled_validation": _downsample(run.validation, 50)} for run in run_results]
+                "sampled_validation": _downsample(run.validation, 50),
+                "sampled_internals": _downsample(tuple(run.internals.get("training_rows", ())), 50)} for run in run_results]
     source_sql = (ROOT / "viewer/experiment_results.sql").read_text()
     with sqlite3.connect(":memory:") as connection:
         connection.row_factory = sqlite3.Row
@@ -184,6 +185,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
         row["log10_eigenvalue"] = math.log10(row["eigenvalue"]) if row["eigenvalue"] > 0 else None
     for name, metrics in INTERNALS_PANELS.items():
         datasets[name] = [row for row in datasets["internals_scalar"] if row["metric"] in metrics]
+        datasets[f"training_{name}"] = [row for row in datasets["training_internals"] if row["metric"] in metrics]
     for name, rows in datasets.items():
         if len(rows) > MAX_DATASET_ROWS:
             raise DashboardDataError(f"{name} exceeds {MAX_DATASET_ROWS} rows; select a smaller --runs-root")
@@ -265,6 +267,14 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
         if datasets["embedding"]:
             charts.append(_chart("embedding", f"Validation embedding scale · {focus}", "Changing latent scale helps interpret the prediction curves; it does not establish useful control.",
                                  "embedding", "line", number("step"), number("value"), color=category("run")))
+    if training_runs:
+        for name, (title, subtitle) in INTERNALS_TITLES.items():
+            captured = f"training_{name}"
+            keep(captured, lambda row: row["run"] == focus)
+            if datasets[captured]:
+                charts.append(_chart(captured, f"{title}, captured during training · {focus}",
+                                     subtitle + " Measured on the first validation batch at each validation step (opt-in introspect).",
+                                     captured, "line", number("step"), number("value"), color=category("metric")))
     if predictions:
         selections["prediction_run"] = predictions[-1].label
         keep("prediction", lambda row: row["run"] == predictions[-1].label)

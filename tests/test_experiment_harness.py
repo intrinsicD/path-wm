@@ -251,3 +251,26 @@ def test_internals_ledger_rejects_missing_panels_and_marks_changed_checkpoints(t
     write_internals(root, "broken", 6, panel="panels/missing.png")
     with pytest.raises(DashboardDataError, match="panel"):
         collect_run_results(tmp_path / "runs")
+
+
+def test_training_time_internals_rows_get_their_own_panels(tmp_path):
+    from viewer.dashboard import build_dashboard_artifact
+    run = tmp_path / "runs" / "captured"
+    write_json(run / "manifest.json", {"config": {"seed": 1, "introspect": True}})
+    write_rows(run / "metrics.jsonl", [
+        {"kind": "validation", "step": 0, "pred_mse": 0.5, "identity_mse": 1.0},
+        {"kind": "internals", "step": 0, "elapsed_seconds": 1.0, "effective_rank": 3.0, "gate_msa_mean": 0.0, "examples": 8},
+        {"kind": "train", "step": 5, "loss": 1.0},
+        {"kind": "internals", "step": 5, "elapsed_seconds": 2.0, "effective_rank": 5.0, "gate_msa_mean": 0.1, "examples": 8},
+        {"kind": "complete", "step": 5, "total_steps": 5},
+    ])
+    write_json(run / "status.json", {"kind": "complete", "step": 5, "total_steps": 5})
+    results, notices = collect_run_results(tmp_path / "runs")
+    assert len(results[0].internals["training_rows"]) == 2
+    artifact = build_dashboard_artifact(results, notices)
+    datasets = artifact["snapshot"]["datasets"]
+    assert [(row["step"], row["value"]) for row in datasets["training_internals_rank"]] == [(0, 3.0), (5, 5.0)]
+    assert [(row["step"], row["value"]) for row in datasets["training_internals_action_use"]] == [(0, 0.0), (5, 0.1)]
+    assert any(chart["dataset"] == "training_internals_rank" and "captured during training" in chart["title"]
+               for chart in artifact["manifest"]["charts"])
+    assert "examples" not in {row["metric"] for row in datasets["training_internals"]}
