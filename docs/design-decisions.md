@@ -848,3 +848,71 @@ from step 2 of 8. That tiny mechanics probe is not a curriculum result. Proof:
 The final handoff implementation also exactly replays the original 250-step CUDA R0 trajectory.
 All 196 fast tests pass (two opt-in tests deselected). Keep the absolute 09:25 Berlin stop time,
 report incomplete work explicitly, and do not launch B0 from the overnight queue.
+
+---
+
+## 37. Preserve the R1 baseline and resolve timing before belief bootstrap
+
+**Product and question.** The ABI-v2 evidence frontend prepares the modality-neutral recurrent
+belief and the replaceable H1 interface through E1_common_base development. This comparison asks
+whether the R1 continuation learns temporal audiovisual correspondence while preserving R0 evidence.
+It does not test interface replaceability or freeze a formal reference.
+
+**Completed result.** Both seeds complete 10,000 additional updates under clean runtime `e49c451`;
+1/2 pass the unchanged seven audiovisual/collapse conditions. Source checkpoints are SHA-bound
+and retain their own learned time functions through the analytic R0-to-R1 conversion. Final
+checkpoints, raw panels, copied specs, summary/metric/threshold ledgers and recomputed gates reconcile.
+
+| Seed | Video→audio margin | Audio→video margin | Official synchrony above chance (pp) | Video rank | Audio rank | R1 gate |
+|---|---:|---:|---:|---:|---:|---|
+| 0 | 0.144661 | 0.146318 | +1.758 | 0.335264 | 0.318711 | pass |
+| 1 | 0.153440 | 0.157171 | -0.977 | 0.333221 | 0.298217 | fail: synchrony_accuracy_above_chance=-0.00976562 does not satisfy greater 0 |
+
+**Independent timing.** The predeclared audit uses one fixed current/+2-second pair for every
+one of the 3,645 held-out clips from 126 disjoint recording groups. Balanced two-time accuracy compares
+both aligned pairs against their crossed assignment, with half-credit for ties. Ten thousand paired
+recording-group resamples quantify uncertainty conditional on each fitted model.
+
+| Seed | R0 above chance (pp) | R1 above chance (pp) | Paired change (pp) | Paired 95% group interval (pp) |
+|---|---:|---:|---:|---|
+| 0 | +0.453 | +1.413 | +0.960 | [-1.399, +3.341] |
+| 1 | +0.261 | +0.892 | +0.631 | [-1.587, +2.848] |
+
+Both paired intervals include zero; seed 1 also fails the original synchrony condition (-0.977 pp).
+The evidence does not establish a reliable timing improvement in either seed. Independent future-head
+advantages over copying the same-basis teacher remain positive in video and audio at both R1 seeds; this concern
+is temporal audiovisual correspondence, not an observed loss of all future prediction.
+
+**Exploratory diagnosis, added after seed 0.** On the same frozen windows, average retrieval margins
+are compared against all eligible negatives from other clips, the same scene in another recording,
+the same recording in another clip, and the same clip two seconds later. No label enters training.
+Intervals resample query recording groups with negative candidate pools fixed. The margins shrink
+as controls share context in both seeds. This is consistent with substantial scene/recording signal,
+not a causal decomposition or proof of a unique limitation. These controls are explicitly post-outcome exploration.
+
+**Metric counterexample.** Let current video/audio both be an orthogonal clip axis e; let shifted
+video be 0.5e + sqrt(3)/2 f and shifted audio 0.5e - sqrt(3)/2 f. The three audiovisual statistics
+pass (retrieval margin 1, synchrony +0.5), while balanced assignment is always wrong and change
+alignment is -0.25. This constructed example isolates the audiovisual metric semantics; it is not
+a trained checkpoint or a test of its separate rank/std guards. The current anchor need not enforce
+agreement of the shifted aligned pair.
+
+**Decision.** Preserve the measured checkpoints and unchanged gate results; defer B0 while the
+independent timing question is unresolved. The next thin experiment uses a controlled audiovisual
+source with a known common physical signal, then compares the present ranking with supervision
+of both aligned times at matched data, initialization and budget. Keep source model/data binding
+exact and scope any loss choice explicitly to R1. Validate shifted and constant-signal controls
+before returning to the real-data comparison. The concrete plan is
+`docs/common-base-next-experiment.md`; it is not implemented or launched in this overnight run.
+
+**Validation and artifacts.** All 196 fast tests pass (two opt-in tests deselected); the measured
+R0 CUDA replay and actual R1 interruption/recovery are exact. Each completed seed refreshes the
+offline dashboard. The source-backed report uses the canonical portable renderer and receives
+structural verification; browser layout/chart rendering are not verified. The E0 freeze gaps,
+ABI-v1 measured control, Phase and Target remain unchanged. Main receipts and report:
+
+- `runs/overnight/common_base_20260905/r1_comparison_validation.json`
+- `runs/overnight/common_base_20260905/av_temporal_paired_seed{0,1}.json`
+- `runs/overnight/common_base_20260905/av_context_exploratory_paired_seed{0,1}.json`
+- `runs/overnight/common_base_20260905/audit_current_anchor_counterexample.json`
+- `runs/overnight/common_base_20260905/report.html` and `report_evidence.json`

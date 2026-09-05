@@ -16,8 +16,13 @@ a coefficient. See DDR §36 and its source-bound comparison proof.
 
 Fresh R1 now requires those passing source checkpoints, preserves learned time functions under the
 shared normalized-grid clock, records initialization provenance and retains collapse guards. Actual
-CUDA recovery and the unchanged R0 trajectory are verified. The paired R1 continuation is next;
-B0/D0 and planning remain later work. These development gates do not freeze E0 or E1 and do not test H1.
+CUDA recovery and the unchanged R0 trajectory are verified. Both R1 seeds completed 10,000 further
+updates under the same clean runtime; 1/2 pass their unchanged audiovisual and collapse gates.
+Independent future teacher-copy controls remain positive, but paired within-recording timing
+improvement is not established in either seed. Exploratory retrieval controls indicate substantial
+scene/recording context, and current-anchor synchrony alone does not enforce balanced matching
+at both times. B0 is deferred pending the controlled timing experiment (DDR §37 and
+`docs/common-base-next-experiment.md`). These development gates do not freeze E0 or E1 or test H1.
 
 ## 1. Decision
 
@@ -135,9 +140,10 @@ Stages advance by held-out gates, not just elapsed steps. A maximum step budget 
 R0/R1 data crosses one training-only boundary: raw corpus files are decoded once into normalized
 per-clip shards indexed by a versioned manifest. The manifest carries source paths, checksums, official
 split, and recording-group identity; none of those fields enter the representation objective. R0 draws
-the two modalities independently. R1 draws aligned windows plus same-recording, wrong-time views, so an
-audiovisual objective cannot pass by learning only scene or recording identity. Held-out windows are
-drawn exclusively from the official evaluation side, with both clip and recording group disjointness
+the two modalities independently. R1 draws aligned windows plus same-recording, wrong-time views
+to discourage scene/recording shortcuts. These controls do not by themselves establish temporal correspondence:
+DDR §37 records inconclusive independent timing and a current-anchor metric counterexample.
+Held-out windows are drawn exclusively from the official evaluation side, with both clip and recording group disjointness
 checked at manifest load.
 
 
@@ -191,7 +197,9 @@ The following are promotion gates, not optional dashboard decoration:
 5. equal-budget E1-b comparison against the best v1 checkpoint;
 6. planning only after D1 passes its promotion gate.
 
-Items 1–3 now run end to end on the official example bundle. The held-out R0 panel remains a negative
-development result after the rank intervention: its small directional gain does not validate the
-architecture. The next decision uses the same predeclared gate on the complete development corpus; no
-promotion claim is made before that result.
+Items 1–3 now run end to end on the complete official TAU development split. The matched full-data
+R0 comparison selects covariance under its predeclared rule, and 1/2 R1 seeds pass the configured
+gates. Independent future prediction survives, while within-recording audiovisual timing remains
+unresolved. The next controlled experiment tests known shared physical signals and two-time
+objective supervision before B0; the present checkpoints are a development baseline, not a frozen
+reference or an architecture-validation claim.
