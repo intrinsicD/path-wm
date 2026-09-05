@@ -92,3 +92,13 @@ are the model's complete five-block horizon, not a sparsely sampled longer curve
 The canonical palette and labeled metric/candidate legends supply distinctions.
 Reconcile declared record counts, complete per-model candidate sets, matched
 simulator outcomes, and selected-candidate summary values before rendering.
+
+## Bounded checkpoint image panels (2026-09-06)
+
+Embedding every historical PNG exceeded the canonical 3 MB artifact limit after
+the first source-run inspection. The panel section now shows the focus run's
+earliest/latest inspected checkpoints and at most one released inspection whose
+`source_run_manifest` matches. This makes the image comparison population-aware
+and bounded to at most three inspections. The dashboard states this selection;
+all scalar records, covariance spectra, horizon curves and raw panel source paths
+remain indexed. No exact numeric evidence is discarded or size limit bypassed.

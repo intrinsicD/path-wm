@@ -304,7 +304,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                                      color=category("metric"), tooltip=[category("run"), category("family")]))
         if datasets["internals_probe"]:
             charts.append(_chart("internals_probe", f"Linear readout of physical state from the latent · {focus}",
-                                 "Held-out R² of a ridge probe from the encoder's latent to each physical target; 1 = perfectly linearly readable, 0 = no better than the mean.",
+                                 "Validation R² of a ridge probe from the encoder's latent to each physical target; 1 = perfectly linearly readable, 0 = no better than the mean.",
                                  "internals_probe", "line", number("step"), number("r2"), color=category("target"),
                                  tooltip=[category("run"), category("family")], direction="higher"))
         if datasets["internals_spectrum"]:
@@ -328,7 +328,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                 name = "internals_horizon_autoregressive" if label.startswith("auto") else "internals_horizon_one_step"
                 datasets[name] = rows
                 charts.append(_chart(name, f"Latent error versus horizon (log10): {label}",
-                                     "log10 of the model's error over the matching copy baseline at each horizon on held-out windows; 0 equals copying, −1 is ten times better. Scale-free within each checkpoint.",
+                                     "log10 of the model's error over the matching copy baseline at each horizon on its recorded evaluation population; 0 equals copying, −1 is ten times better. Scale-free within each checkpoint.",
                                      name, "line", number("horizon"), number("log10_ratio"), color=category("run"),
                                      reference_lines=[{"axis": "y", "value": 0, "label": "equal to copying", "lineStyle": "dashed"}],
                                      direction="lower"))
@@ -381,11 +381,30 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
     blocks = [{"id": "intro", "type": "markdown", "body": "\n".join(guide)},
               {"id": "coverage", "type": "metric-strip", "cardIds": [card["id"] for card in cards]}]
     blocks += [{"id": f"chart_{chart['id']}", "type": "chart", "chartId": chart["id"], "layout": chart["layout"]} for chart in charts]
-    blocks += _panel_blocks(internals)
+    # PNG evidence dominates the portable payload. Bound only the image panels;
+    # every inspection remains in the exact tables and quantitative series.
+    focused_panels = sorted([r for r in internals if focus is not None and r.internals.get("training_run") == focus],
+                            key=lambda r: (r.step if r.step is not None else -1, r.modified_at))
+    panel_runs = []
+    if focused_panels:
+        panel_runs = [focused_panels[0]]
+        if focused_panels[-1].label != focused_panels[0].label:
+            panel_runs.append(focused_panels[-1])
+        source_manifest = focused_panels[-1].context.get("source_run_manifest")
+        matched = [r for r in internals if r.internals.get("family") == "released" and source_manifest
+                   and r.context.get("source_run_manifest") == source_manifest]
+        if matched:
+            panel_runs.append(max(matched, key=lambda r: r.modified_at))
+    blocks += _panel_blocks(panel_runs)
     blocks += [{"id": f"table_{item['id']}", "type": "table", "tableId": item["id"], "layout": "full"} for item in tables]
     notes = ["No experimental pass threshold is inferred by the viewer. Recorded gate annotations remain visible.",
              "Control groups reflect ordered case identities only; inspect protocol context before comparing results.",
              "The reader ignores per-section selectors, so each chart's selection is fixed at build time and named in its title."] + notices
+    if internals:
+        notes.append("Image panels show the focus run's earliest and latest inspected checkpoints plus a released inspection "
+                     "only when it uses the same source-run manifest. All inspection scalars, spectra, horizon curves and raw panel "
+                     "paths remain in the exact tables, charts and source inventory. Selected panels: "
+                     + (", ".join(r.label for r in panel_runs) or "none for this focus run"))
     if not run_results:
         notes.append("No supported run ledgers found yet. This is an empty instrument panel.")
     blocks.append({"id": "notices", "type": "markdown", "sourceId": SOURCE_ID,

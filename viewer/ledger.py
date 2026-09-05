@@ -80,7 +80,7 @@ def _context(manifest: dict) -> dict:
     for key in ("protocol", "population", "normalization", "precision", "batchnorm",
                 "seed", "sampling_seed", "checkpoint", "checkpoint_sha256", "released",
                 "budget", "horizon", "samples", "iterations", "goal_offset", "code_commit",
-                "environment_commit", "train_windows", "val_windows", "total_steps"):
+                "environment_commit", "train_windows", "val_windows", "total_steps", "source_run_manifest"):
         if key in manifest:
             context[key] = manifest[key]
     dataset = manifest.get("dataset", {})
