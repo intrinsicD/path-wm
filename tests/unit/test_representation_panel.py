@@ -93,3 +93,14 @@ def test_panel_is_held_out_per_modality_and_closes_both_gate_schemas():
     for stage in ("representation_unimodal", "representation_av"):
         result = curriculum.evaluate(stage, metrics)
         assert not any("missing metric" in failure for failure in result.failures)
+
+
+def test_teacher_copy_control_does_not_credit_a_pure_basis_alignment():
+    metrics = _module().evaluate_representation(
+        ExactLearner(), HeldOutData(), stage="representation_unimodal", batches=1,
+        batch_size=4, generator=torch.Generator().manual_seed(0),
+    )
+    # Teacher-current and teacher-future are identical; the head only maps online scale to teacher scale.
+    for modality in ("video", "audio"):
+        assert metrics[f"{modality}_future_prediction_advantage"] > 0
+        assert metrics[f"{modality}_future_teacher_copy_advantage"] == pytest.approx(0.0)
