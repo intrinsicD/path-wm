@@ -205,7 +205,8 @@ def test_runner_refreshes_dashboard_after_writing_summary(tmp_path, monkeypatch)
     assert dashboard_calls == [tmp_path / "runs"]
 
 
-def test_runner_dispatches_common_base_without_touching_the_e1_collector(tmp_path, monkeypatch):
+@pytest.mark.parametrize("r0_initialization", [None, {"checkpoint": "source.pt", "sha256": "a" * 64, "seed": 3}])
+def test_runner_dispatches_common_base_without_touching_the_e1_collector(tmp_path, monkeypatch, r0_initialization):
     from types import SimpleNamespace
 
     import run as runner
@@ -216,7 +217,7 @@ def test_runner_dispatches_common_base_without_touching_the_e1_collector(tmp_pat
         "experiment": "E1_common_base",
         "status": "dev",
         "seeds": [3],
-        "train": {"stage": "representation_unimodal", "max_steps": 2},
+        "train": {"stage": "representation_av" if r0_initialization else "representation_unimodal", "max_steps": 2},
     }
     spec_path.write_text(yaml.safe_dump(spec), encoding="utf-8")
     data = object()
@@ -233,6 +234,7 @@ def test_runner_dispatches_common_base_without_touching_the_e1_collector(tmp_pat
             final_training={"step": 2, "total": 0.25},
             metrics={"video_feature_std": 0.5, "gate_passed": 0},
             parameter_counts={"common_base_total": 10},
+            r0_initialization=r0_initialization,
             gate=SimpleNamespace(gate="unimodal_representation_ready", passed=False, failures=("not ready",)),
         )
 
@@ -257,6 +259,10 @@ def test_runner_dispatches_common_base_without_touching_the_e1_collector(tmp_pat
     assert len(training_calls) == 1 and training_calls[0][1] is data
     assert record["metrics"] == summary["metrics"]
     assert summary["gate"]["passed"] is False
+
+    assert record.get("r0_initialization") == summary.get("r0_initialization") == r0_initialization
+    if r0_initialization is None:
+        assert "r0_initialization" not in record and "r0_initialization" not in summary
 
 
 def test_mixed_dashboard_shows_latest_representation_metrics_without_inventing_action_values(tmp_path):

@@ -100,6 +100,18 @@ class CommonBaseCurriculum:
         if missing:
             raise ValueError(f"curriculum is missing transition gates {sorted(missing)}")
         self.gates = {name: dict(conditions) for name, conditions in gates.items()}
+        if "representation_av" in self.transition_gates:
+            # R1 must not lose either modality's non-collapse condition (architecture §5; DDR §32).
+            for modality in ("video", "audio"):
+                for suffix in ("feature_std", "effective_rank_fraction"):
+                    metric = f"{modality}_{suffix}"
+                    condition = self.gates.get("unimodal_representation_ready", {}).get(metric)
+                    if condition is None:
+                        raise ValueError(f"R1 requires the R0 non-collapse threshold {metric}")
+                    av_gate = self.gates["audiovisual_representation_ready"]
+                    if metric in av_gate and av_gate[metric] != condition:
+                        raise ValueError(f"R1 cannot override the R0 non-collapse threshold {metric}")
+                    av_gate[metric] = dict(condition)
 
     @classmethod
     def from_config(cls, cfg: Mapping) -> "CommonBaseCurriculum":

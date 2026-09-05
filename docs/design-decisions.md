@@ -701,3 +701,38 @@ splits and both seeds reproduce R0 values/timestamps/masks/random streams exactl
 random streams also match exactly, while its clock discrepancy becomes zero. The previously validated
 training module remains byte-identical. Proof:
 `runs/overnight/common_base_20260905/shared_clock_compatibility.json`.
+
+
+---
+
+## 32. Bind R1 entry to a completed R0 checkpoint and retain collapse guards
+
+**Problem.** Selecting `representation_av` previously built a fresh model, with no R0 handoff or
+prerequisite check. Its configured exit gate checked only A/V scores even though the architecture
+requires that neither modality collapse. These gaps must close before a real R1 run.
+
+**Decision.** A fresh R1 seed requires `train.r0_initialization[seed]` containing a checkpoint path
+and full SHA-256. Read and deserialize those exact bytes; verify completed R0 stage/budget and panel
+cohort, matching seed and manifest, compatible model/data configuration, and unchanged prerequisite
+thresholds. Recompute the R0 gate from the metrics bound inside the checkpoint. Reject a failed source
+before training. Transfer the entire learner/EMA state, then start a fresh optimizer and R1 random
+streams. Store source identity, metrics and gate provenance in target snapshots and final ledgers.
+Resume uses its own initialized snapshot and does not reopen the original source file.
+
+R1 inherits the video/audio feature-standard-deviation and rank conditions from the configured R0
+gate, in addition to its A/V conditions. Conflicting R1 overrides are rejected. No R0 condition or
+threshold changes. The optional initialization field defaults to null in the small R0 templates and
+is rejected if supplied to an R0 run. This work was prepared in an isolated worktree while the paired
+full R0 comparison used its committed runtime; it does not authorize a real R1 run before that decision.
+
+**Validation.** All 192 fast tests pass (two opt-in tests deselected). Invalid checksums, incomplete or
+failed sources, wrong stage/seed/manifest, incompatible models, and changed R0 thresholds are rejected.
+The initial R1 snapshot exactly matches all source weights including EMA, with an empty optimizer;
+interrupted R1 with prefetch reproduces uninterrupted weights, optimizer, random streams and metrics
+even after the source fixture is removed. These transfer tests stub panel measurements solely to test
+mechanics; they are not experimental evidence of a passing representation.
+
+A real 250-step CUDA R0 replay matches the original learner/EMA, optimizer, CPU/CUDA/data/corruption RNG,
+all prior initial/final metrics and every final training value exactly. The real 10,000-step example
+balanced checkpoint is rejected for its two failed future gates, and no R1 checkpoint is created.
+Proof: `runs/overnight/common_base_20260905/handoff_r0_compatibility.json`.

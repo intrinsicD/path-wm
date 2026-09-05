@@ -112,6 +112,8 @@ def main() -> None:
                 "parameter_counts": result.parameter_counts,
                 "metrics": result.metrics,
             }
+            if result.r0_initialization is not None:
+                record["r0_initialization"] = result.r0_initialization
             (run_dir / "metrics.json").write_text(
                 json.dumps(record, indent=2, sort_keys=True) + "\n",
                 encoding="utf-8",
@@ -128,6 +130,8 @@ def main() -> None:
                 "final_training": result.final_training,
                 "metrics": result.metrics,
             }
+            if result.r0_initialization is not None:
+                summary["r0_initialization"] = result.r0_initialization
             (run_dir / "run_summary.json").write_text(
                 json.dumps(summary, indent=2, sort_keys=True) + "\n", encoding="utf-8"
             )

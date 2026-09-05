@@ -10,6 +10,8 @@ on TAU examples checks plumbing only; the complete corpus is required for promot
 from __future__ import annotations
 
 import json
+import hashlib
+import io
 import time
 from collections.abc import Generator
 from concurrent.futures import ThreadPoolExecutor
@@ -110,6 +112,65 @@ def _training_batches(
             yield batch
 
 
+
+def _r0_initialization_entry(train_cfg: Mapping[str, Any], seed: int) -> dict[str, str] | None:
+    sources = train_cfg.get("r0_initialization")
+    if train_cfg["stage"] != "representation_av":
+        if sources is not None:
+            raise ValueError("r0_initialization is only valid for R1 / representation_av")
+        return None
+    if not isinstance(sources, Mapping) or seed not in sources:
+        raise ValueError("fresh R1 requires train.r0_initialization for its seed")
+    entry = sources[seed]
+    if not isinstance(entry, Mapping) or set(entry) != {"checkpoint", "sha256"}:
+        raise ValueError("R0 initialization needs checkpoint and sha256")
+    digest = str(entry["sha256"]).lower()
+    if len(digest) != 64 or any(char not in "0123456789abcdef" for char in digest):
+        raise ValueError("R0 initialization sha256 must be a full hexadecimal digest")
+    path = Path(str(entry["checkpoint"]))
+    if not path.is_absolute():
+        path = Path(__file__).resolve().parents[1] / path
+    return {"checkpoint": str(path.resolve()), "sha256": digest}
+
+
+def _load_r0_initialization(
+    cfg: Mapping[str, Any], seed: int, fingerprint: str | None, entry: Mapping[str, str],
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Bind the completed R0 measurement and weights to the exact configured bytes (DDR §32)."""
+    raw = Path(entry["checkpoint"]).read_bytes()
+    digest = hashlib.sha256(raw).hexdigest()
+    if digest != entry["sha256"]:
+        raise ValueError("R0 source checkpoint SHA-256 differs from initialization")
+    source = torch.load(io.BytesIO(raw), map_location="cpu", weights_only=True)
+    source_cfg = source["config"]
+    if source.get("stage") != "representation_unimodal" or source_cfg["train"]["stage"] != "representation_unimodal":
+        raise ValueError("R0 source must be representation_unimodal")
+    if source.get("step") != source_cfg["train"]["max_steps"] or not source.get("metrics"):
+        raise ValueError("R0 source must complete its configured budget and final held-out panel")
+    if source.get("seed") != seed:
+        raise ValueError("R0 source seed differs from the R1 seed")
+    if not fingerprint or source.get("data_fingerprint") != fingerprint:
+        raise ValueError("R0 source manifest fingerprint differs from R1 data")
+    for name in ("abi", "modalities", "action_adapter", "predictor", "updater", "representation", "data"):
+        if source_cfg[name] != cfg[name]:
+            raise ValueError(f"R0 source model/data config differs at {name}")
+    gate_name = "unimodal_representation_ready"
+    if source_cfg["curriculum"]["gates"][gate_name] != cfg["curriculum"]["gates"][gate_name]:
+        raise ValueError("R0 source thresholds differ from the R1 prerequisite thresholds")
+    gate = CommonBaseCurriculum.from_config(source_cfg["curriculum"]).evaluate(
+        "representation_unimodal", source["metrics"])
+    if not gate.passed or source["metrics"].get("gate_passed") != 1:
+        raise ValueError(f"R0 source gate failed: {gate.failures}")
+    expected_batches = int(source_cfg["train"]["held_out_batches"])
+    if (source["metrics"].get("held_out_batches") != expected_batches or
+            source["metrics"].get("held_out_examples") != expected_batches * int(source_cfg["train"]["batch_size"])):
+        raise ValueError("R0 source panel cohort differs from its configured evaluation budget")
+    provenance = {**entry, "stage": source["stage"], "step": source["step"], "seed": seed,
+                  "data_fingerprint": fingerprint, "metrics": dict(source["metrics"]),
+                  "gate": {"name": gate.gate, "passed": gate.passed, "failures": list(gate.failures)}}
+    return source, provenance
+
+
 def train_common_base(
     cfg: Mapping[str, Any],
     data: Any,
@@ -119,7 +180,7 @@ def train_common_base(
     *,
     resume: bool = False,
 ) -> CommonBaseTrainingResult:
-    """Run one R0/R1 seed, or explicitly resume its atomic optimizer/EMA/RNG snapshot."""
+    """Run R0 or a gated R0-initialized R1; resume owns its optimizer/EMA/RNG snapshot."""
     train_cfg = cfg["train"]
     stage = str(train_cfg["stage"])
     if stage not in {"representation_unimodal", "representation_av"}:
@@ -138,6 +199,9 @@ def train_common_base(
     checkpoint = run_dir / "checkpoint.pt"
     training_path = run_dir / "training.jsonl"
     fingerprint = getattr(data, "fingerprint", None)
+    entry = _r0_initialization_entry(train_cfg, seed)
+    source = None
+    initialization = None
     saved = None
     if resume:
         saved = torch.load(checkpoint, map_location="cpu", weights_only=True)
@@ -147,14 +211,29 @@ def train_common_base(
             raise ValueError("resume manifest fingerprint differs from the checkpoint")
         if saved.get("device_type") != device.type:
             raise ValueError("resume device type must match for random-stream reproducibility")
+        if entry is not None:
+            initialization = saved.get("r0_initialization")
+            if (not isinstance(initialization, Mapping) or
+                    any(initialization.get(key) != value for key, value in entry.items()) or
+                    initialization.get("seed") != seed or initialization.get("data_fingerprint") != fingerprint or
+                    initialization.get("stage") != "representation_unimodal" or
+                    initialization.get("gate", {}).get("passed") is not True):
+                raise ValueError("R1 resume snapshot lacks matching R0 initialization provenance")
     elif checkpoint.exists() or training_path.exists():
         raise FileExistsError(f"run already exists: {run_dir}; use --resume or a new dev spec")
+    elif entry is not None:
+        source, initialization = _load_r0_initialization(cfg, seed, fingerprint, entry)
+        # Validate inherited non-collapse guards before doing any R1 optimization.
+        CommonBaseCurriculum.from_config(cfg["curriculum"])
 
     torch.manual_seed(seed)
     if device.type == "cuda":
         torch.cuda.manual_seed_all(seed)
     core = build_common_world_model(dict(cfg))
     learner = build_representation_learner(dict(cfg), core).to(device)
+    if source is not None:
+        learner.load_state_dict(source["learner"])  # Transfer online/EMA weights, never R0 optimizer/RNG.
+        del source
     learner.set_stage(stage)
     parameter_counts = _counts(learner)
     parameters = [parameter for parameter in learner.parameters() if parameter.requires_grad]
@@ -215,6 +294,8 @@ def train_common_base(
             "cuda_rng": torch.cuda.get_rng_state_all() if device.type == "cuda" else [],
             "training_seconds": previous_seconds + time.monotonic() - started,
         }
+        if initialization is not None:
+            snapshot["r0_initialization"] = dict(initialization)
         temporary_checkpoint = checkpoint.with_suffix(".pt.tmp")
         torch.save(snapshot, temporary_checkpoint)
         temporary_checkpoint.replace(checkpoint)
@@ -271,4 +352,4 @@ def train_common_base(
         }}, indent=2, sort_keys=True) + "\n", encoding="utf-8",
     )
     save_snapshot(max_steps, metrics)
-    return CommonBaseTrainingResult(checkpoint, final_training, metrics, parameter_counts, gate)
+    return CommonBaseTrainingResult(checkpoint, final_training, metrics, parameter_counts, gate, initialization)
