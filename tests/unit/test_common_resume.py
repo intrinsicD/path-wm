@@ -189,6 +189,11 @@ def test_r1_initial_snapshot_preserves_functions_and_resets_optimizer(tmp_path, 
     before, after = [build_representation_learner(cfg, build_common_world_model(cfg)).eval() for _ in range(2)]
     before.load_state_dict(source["learner"])
     after.load_state_dict(initial["learner"])
+    # Inspect the analytic function before ABI bf16 rounding, which can cross quantization bins.
+    for model in (before, after):
+        for modality in ("video", "audio"):
+            for adapter in (model.core.adapters[modality], model.teachers[modality].module.adapter):
+                adapter.abi = replace(adapter.abi, evidence_dtype=torch.float32)
     old_batch = TinyData().sample("eval", "representation_unimodal", 2, torch.Generator().manual_seed(83))
     offsets = {"video": 1 / cfg["data"]["video"]["frames_per_second"],
                "audio": 1 / cfg["data"]["audio"]["sample_rate"]}

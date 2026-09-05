@@ -761,3 +761,34 @@ selection occurs. Proof: `runs/overnight/common_base_20260905/av_change_panel_co
 R1 window-end timestamps reach time embeddings trained under R0's last-sample reference: video rank
 falls to 0.1825 and future advantage becomes -0.5017. This is a checkpoint-transfer problem to resolve
 before R1 training, not a failure of the running R0 comparison or of this supplemental metric.
+
+
+---
+
+## 34. Preserve learned time functions when transferring R0 into R1
+
+**Problem.** DDR §31 fixes physical timestamps, but loading R0's time coefficients unchanged shifts
+its learned Fourier features. On a read-only R1-format preview of full balanced seed 0, video rank
+falls from roughly 0.34 to 0.1825 and future advantage becomes -0.5017 before any R1 optimization.
+
+**Decision.** At fresh, validated R0-to-R1 entry only, translate each first-coordinate Fourier linear
+projection so f_new(t - delta) = f_old(t), where delta is one sample interval for that modality.
+Rotate sine/cosine coefficient pairs and add the linear-coordinate contribution to the bias. Match
+the runtime's fp32 frequencies, calculate the rotation in fp64, then store the original parameter
+dtype. Apply this to both encoder and evidence-adapter time embeddings, online and EMA. Keep all
+other parameters exact. Timestamps retain the shared physical window-end reference. The transfer
+uses no random draws, inherits no optimizer state, and is never reapplied on target resume.
+Record the source/target references, offsets and affected module paths in handoff provenance.
+This supersedes DDR §32's literal time-weight copy with function-preserving coordinate conversion;
+the source checkpoint and running R0 implementation remain unchanged.
+
+**Validation.** All 195 fast tests pass (two opt-in tests deselected). Tests check translated Fourier
+functions with other axes and RNG exact, all non-time source parameters exact, online/EMA evidence
+and prediction functions before ABI rounding, an empty target optimizer, and exact interrupted R1
+recovery without reopening the source. The ABI still rounds evidence to bf16; crossing a rounding
+bin prevents bit-exact evidence after a mathematically equivalent coefficient transformation.
+A real 32×64 held-out R1-format replay compares the original model on legacy timestamps with the
+converted model on the same physical shared-clock windows. Every panel difference is below 2.2e-7;
+video rank is 0.34235 and future advantage +0.04813. Random streams and non-time parameters are exact,
+and the same audiovisual gate conditions fail. This is a read-only transfer proof, not R1 training
+or covariance selection. Proof: `runs/overnight/common_base_20260905/time_transport_compatibility.json`.

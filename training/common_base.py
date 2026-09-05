@@ -12,6 +12,7 @@ from __future__ import annotations
 import json
 import hashlib
 import io
+import math
 import time
 from collections.abc import Generator
 from concurrent.futures import ThreadPoolExecutor
@@ -24,6 +25,7 @@ import torch
 
 from contracts import RepresentationBatch, TemporalObservation
 from evaluation.representation import evaluate_representation
+from encoders.temporal import CoordinateEmbedding
 from training.base_model import build_common_world_model
 from training.curriculum import CommonBaseCurriculum, GateResult
 from training.representation import build_representation_learner
@@ -171,6 +173,39 @@ def _load_r0_initialization(
     return source, provenance
 
 
+@torch.no_grad()
+def _shift_time_embedding(embedding: CoordinateEmbedding, offset: float) -> None:
+    """Re-express f(t) as f_new(t-offset), keeping other coordinates intact (DDR §34)."""
+    if not isinstance(embedding, CoordinateEmbedding):
+        raise TypeError("R0 time transport requires a CoordinateEmbedding")
+    projection = embedding.projection
+    if projection.bias is None or not math.isfinite(offset):
+        raise ValueError("R0 time transport requires a bias and finite offset")
+    bands = embedding.bands
+    old = projection.weight.detach().double().clone()
+    # Match the runtime's fp32 frequencies before doing the coefficient rotation in fp64.
+    frequencies = ((2.0 ** torch.arange(bands, device=old.device, dtype=torch.float32)) * math.pi).double()
+    phase = frequencies * offset
+    sine, cosine = old[:, 1:1 + bands], old[:, 1 + bands:1 + 2 * bands]
+    projection.weight[:, 1:1 + bands].copy_(sine * phase.cos() - cosine * phase.sin())
+    projection.weight[:, 1 + bands:1 + 2 * bands].copy_(sine * phase.sin() + cosine * phase.cos())
+    projection.bias.copy_(projection.bias.double() + old[:, 0] * offset)
+
+
+def _transport_r0_time_reference(learner: torch.nn.Module, cfg: Mapping[str, Any]) -> dict[str, Any]:
+    """Convert online and EMA time features once, only on fresh R0-to-R1 entry."""
+    offsets = {"video": 1.0 / float(cfg["data"]["video"]["frames_per_second"]),
+               "audio": 1.0 / float(cfg["data"]["audio"]["sample_rate"])}
+    modules = []
+    for modality, offset in offsets.items():
+        for name in (f"core.encoders.{modality}.position", f"core.adapters.{modality}.time_embedding",
+                     f"teachers.{modality}.module.encoder.position", f"teachers.{modality}.module.adapter.time_embedding"):
+            _shift_time_embedding(learner.get_submodule(name), offset)
+            modules.append(name)
+    return {"source_reference": "last_sample", "target_reference": "window_end",
+            "offset_seconds": offsets, "modules": modules}
+
+
 def train_common_base(
     cfg: Mapping[str, Any],
     data: Any,
@@ -233,6 +268,7 @@ def train_common_base(
     learner = build_representation_learner(dict(cfg), core).to(device)
     if source is not None:
         learner.load_state_dict(source["learner"])  # Transfer online/EMA weights, never R0 optimizer/RNG.
+        initialization["time_reference_transport"] = _transport_r0_time_reference(learner, cfg)
         del source
     learner.set_stage(stage)
     parameter_counts = _counts(learner)
