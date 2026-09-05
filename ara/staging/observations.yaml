@@ -528,3 +528,23 @@ observations:
     promoted_to: logic/claims.md:C17
     crystallized_via: artifact-commitment
     stale: false
+  - id: O32
+    timestamp: 2026-09-05T11:37+02:00
+    provenance: ai-suggested
+    content: 'Prioritize a bounded test of training-added predictive value over further optimization of
+      proxy scores: fix the readout and budget, compare trained and untrained/simple baselines on an untouched
+      trajectory cohort, and declare success/stop criteria before results. Video future-coordinate readouts
+      improve, but untrained audio already decodes current coordinates well and audio future gains are inconclusive.
+      This motivates sharper tests, not a claim of an excellent method or proof that the overall direction
+      is wrong.'
+    context: Strategic interpretation requested by the user; existing receipts rechecked. No new experiment,
+      accepted pivot, gate change, or implementation in this turn. Encoder replacement and planning remain
+      untested.
+    potential_type: heuristic
+    bound_to:
+    - N64
+    - N63
+    promoted: false
+    promoted_to: null
+    crystallized_via: null
+    stale: false

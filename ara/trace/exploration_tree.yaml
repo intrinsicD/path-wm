@@ -1157,3 +1157,22 @@ tree:
     - O30
     status: open
     children: []
+  - id: N64
+    type: question
+    title: Is the method strong, or is the research direction misallocated?
+    provenance: user
+    timestamp: 2026-09-05T11:37+02:00
+    also_depends_on:
+    - N55
+    - N59
+    - N60
+    - N63
+    description: User asks whether recent results establish an excellent method or indicate that the search
+      is aimed in the wrong direction. Existing evidence supports a bounded reassessment, not a user decision
+      to abandon the approach.
+    evidence:
+    - runs/controlled_av_20260905/r0_validation.json
+    - runs/controlled_av_20260905/equal_dimension_readout.json
+    - ara/evidence/tables/e1_common_base_controlled_2026-09-05.md
+    status: open
+    children: []

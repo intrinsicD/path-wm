@@ -26,10 +26,11 @@ sessions:
     open_threads: 5
   - id: 2026-09-05_001
     date: '2026-09-05'
-    summary: Completed full TAU R0/R1 work plus controlled physical source; controlled R0 passes 0/2, equal-width
-      readouts expose a pooling gap, R1 loss isolated; original gates and B0 deferral preserved.
-    turn_count: 3
-    events_count: 53
+    summary: Completed TAU and controlled-source audits; controlled R0 passes 0/2. User opened
+      method-versus-direction reassessment; predictive-value test proposal staged, with no new
+      experiment or accepted pivot.
+    turn_count: 4
+    events_count: 55
     claims_touched:
     - C09
     - C10
@@ -40,4 +41,4 @@ sessions:
     - C15
     - C16
     - C17
-    open_threads: 6
+    open_threads: 7

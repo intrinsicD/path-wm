@@ -2,10 +2,11 @@ session:
   id: 2026-09-05_001
   date: '2026-09-05'
   started: 2026-09-05T01:12+02:00
-  last_turn: 2026-09-05T10:21+02:00
-  turn_count: 3
-  summary: Completed full TAU R0/R1 work plus controlled physical source; controlled R0 passes 0/2, equal-width
-    readouts expose a pooling gap, R1 loss isolated; original gates and B0 deferral preserved.
+  last_turn: 2026-09-05T11:37+02:00
+  turn_count: 4
+  summary: Completed TAU and controlled-source audits; controlled R0 passes 0/2. User opened
+    method-versus-direction reassessment; predictive-value test proposal staged, with no new
+    experiment or accepted pivot.
 events_logged:
   - turn: 1
     type: decision
@@ -356,6 +357,18 @@ events_logged:
     routing: crystallized
     provenance: ai-suggested
     summary: logic/claims.md:C17 via artifact-commitment
+  - turn: 4
+    type: question
+    id: N64
+    routing: direct
+    provenance: user
+    summary: Opened excellent-method versus wrong-direction strategic question.
+  - turn: 4
+    type: observation
+    id: O32
+    routing: staged
+    provenance: ai-suggested
+    summary: Proposed a bounded training-added predictive-value test; no pivot or new claim accepted.
 
 ai_actions:
   - turn: 1
@@ -432,6 +445,11 @@ ai_actions:
     - docs/design-decisions.md
     - docs/common-base-next-experiment.md
     - commit:27b4251
+  - turn: 4
+    action: Rechecked existing R0 failures, equal-width pooled/projection readouts, and same-readout trained-versus-untrained
+      coordinate/future controls to calibrate the strategic assessment. No experiments or model changes.
+    provenance: ai-executed
+    files_changed: []
 
 claims_touched:
   - id: C09
@@ -485,6 +503,13 @@ key_context:
   - turn: 3
     excerpt: One turn across internal continuations. Timestamps are epilogue capture; exact executions are
       retained in run ledgers. The prior overnight cap did not govern this new continuation.
+  - turn: 4
+    excerpt: 'User: does this mean that we already have an excellent method or are we just looking and searching
+      in the wrong place and directions?'
+  - turn: 4
+    excerpt: 'Assessment: method remains unproven; some proxy-focused effort needs correction. Frozen label-fitted
+      readout gains do not establish learned dynamics, encoder replacement, or planning. This is an interpretation
+      and proposal, not a user-approved pivot.'
 
 open_threads:
 - 'N51/N63: controlled source validated but R0 prerequisite fails; calibrate physical/temporal diagnostics
@@ -498,6 +523,9 @@ open_threads:
 - Decide whether E2 pair scoring needs the remaining joint-correctness and invariance controls.
 - Historical E1-a replay requires restoration of seven pre-existing missing raw files listed in ara/evidence/README.md;
   current overnight sources are present.
+- 'N64: distinguish added predictive/transfer value from readout accessibility; decide whether and how
+  to tighten the next experiment without retroactively changing original gates.'
+
 ai_suggestions_pending:
 - 'O23: context controls suggest substantial shared context but do not identify the unique cause of weak
   timing.'
@@ -505,3 +533,5 @@ ai_suggestions_pending:
   untested.'
 - 'O30: compact variable-layout pooling may improve temporal evidence; frozen matched-width controls do
   not establish a production/R1 gain.'
+- 'O32: use fixed-readout trained/untrained/simple controls and untouched trajectories with predeclared
+  criteria to resolve strategic uncertainty.'
