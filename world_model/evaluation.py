@@ -33,3 +33,28 @@ def evaluate_prediction(model, loader, stats, device, image_size=224, batches=8,
     model.train(was_training)
     if not count: raise ValueError('Empty evaluation loader')
     return {**{k:v/count for k,v in sums.items()},'examples':count}
+
+
+def sample_source_cases(lengths, offsets, count, seed=42, goal_offset=25, population=None):
+    """Pinned LeWM eval.py window sampling, including its final-row exclusion.
+
+    A restricted population is for held-out diagnostics only. Full reference
+    evaluation supplies every episode. Source IDs are contiguous episode indices.
+    """
+    import numpy as np
+    lengths,offsets=np.asarray(lengths),np.asarray(offsets)
+    population=list(range(len(lengths))) if population is None else list(population)
+    if count<1 or goal_offset<1 or not population:
+        raise ValueError('Positive case count, offset and nonempty population required')
+    if len(set(population))!=len(population) or min(population)<0 or max(population)>=len(lengths):
+        raise ValueError('Invalid episode population')
+    ranges=[np.arange(int(offsets[e]),int(offsets[e]+lengths[e]-goal_offset))
+            for e in sorted(population) if lengths[e]>goal_offset]
+    valid=np.concatenate(ranges) if ranges else np.empty(0,dtype=np.int64)
+    if count>len(valid)-1:raise ValueError('Too few eligible reference windows')
+    rows=np.sort(valid[np.random.default_rng(seed).choice(len(valid)-1,size=count,replace=False)])
+    cases=[]
+    for row in rows:
+        ep=int(np.searchsorted(offsets,row,side='right')-1)
+        cases.append(dict(row=int(row),episode=ep,start=int(row-offsets[ep])))
+    return cases
