@@ -137,3 +137,7 @@ To overlap decoding with acquisition, run `python scripts/prefill_tau_cache.py
 configs/dev/common_base_full_balanced.yaml --deadline 2026-09-05T09:25:00+02:00`
 in another local process with the same desired deadline. It caches up to 128 available pairs per batch
 and never publishes a partial manifest; final ingestion verifies the entire source corpus again.
+
+The full-corpus specs use `train.prefetch_batches: 1` to overlap one CPU batch with GPU training.
+Checkpoint random states include only consumed batches. Exact CPU/CUDA recovery and a 250-step replay
+against the earlier saved smoke validate this runtime change (DDR §29); scientific settings are fixed.

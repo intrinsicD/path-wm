@@ -615,3 +615,38 @@ display scaling. All 171 fast tests pass (two opt-in tests deselected). Canonica
 succeeds with structural-only verification. An isolated installed-Chrome rendering exposed the original
 missing-card problem, but Chrome fails the canonical extractor's requested-environment check, so full
 browser QA is still unavailable; no full visual-verification claim is made.
+
+
+---
+
+## 29. One-batch prefetch with consumed-only random-state checkpoints
+
+**Question.** Can the common evidence frontend overlap full-population CPU window reads with CUDA
+training without changing H1 / E1_common_base's seeded comparison or recovery semantics?
+
+**Decision.** `train.prefetch_batches` is 0 (serial) or 1 (one queued CPU batch). The worker samples with
+a private generator. Only taking that batch advances the caller's data stream, so optimizer snapshots
+exclude queued but unused draws. Explicit generator closure joins pending work on exit. The full-corpus
+pair enables 1 after validation; the tiny base/rank templates share the explicit disabled default. No
+source, model, optimizer, seed, panel or threshold changes. Recovery still requires identical configs.
+
+**Validation.** All 175 fast tests pass, including a test that waits for the second draw to finish while
+the checkpoint stream still points immediately after the first, exact serial/prefetched CPU training,
+and interrupted recovery with and without prefetch. Four 100-step CUDA trajectories in ABBA order match
+every loss, learner/EMA tensor, optimizer state and random stream exactly. An interrupted actual CUDA
+runner also matches its uninterrupted model, optimizer, random states and final panel exactly.
+The loading-heavy warm-cache probe averages 256.7 ms/step serial and 183.2 ms/step prefetched, a 28.6%
+reduction. Virtual clip identifiers force unique loads of the same example source tensors solely for
+this timing probe; they are not additional research data. Actual full-corpus throughput is still pending.
+
+The real 250-step batch-64 prefetch smoke also matches the earlier saved recovery smoke's complete
+model/EMA, optimizer, random streams and every original initial/final panel metric exactly. Its unchanged
+rank failure is preserved, and the dashboard refresh reports structural-only verification. Proof files:
+`runs/overnight/common_base_20260905/prefetch_gpu_benchmark.json` and
+`runs/overnight/common_base_20260905/prefetch_smoke_compatibility.json`.
+
+**Completed duration control.** All four 10,000-step example runs are now complete. Covariance improves
+rank in both modalities at both seeds: video 0.2614/0.2599 versus 0.1189/0.1155, audio 0.2700/0.2771 versus
+0.0613/0.0587. Every run still fails both future-prediction gates. The example bundle has only nine train
+and eleven eval clips, with three eval scene categories absent from training. These are duration and
+generalization diagnostics; the predeclared full-corpus pair still decides coefficient retention.

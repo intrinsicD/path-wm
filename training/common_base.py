@@ -11,7 +11,9 @@ from __future__ import annotations
 
 import json
 import time
-from contextlib import nullcontext
+from collections.abc import Generator
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import closing, nullcontext
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
@@ -80,6 +82,33 @@ def _panel(
     )
 
 
+def _training_batches(
+    data: Any, stage: str, batch_size: int, generator: torch.Generator,
+    *, count: int, prefetch: bool,
+) -> Generator[RepresentationBatch, None, None]:
+    """Yield ordered CPU batches; checkpoints see only randomness already consumed."""
+    if not prefetch:
+        for _ in range(count):
+            yield data.sample("train", stage, batch_size, generator)
+        return
+    if count <= 0:
+        return
+
+    def draw(state: torch.Tensor) -> tuple[RepresentationBatch, torch.Tensor]:
+        worker_generator = torch.Generator().set_state(state)
+        batch = data.sample("train", stage, batch_size, worker_generator)
+        return batch, worker_generator.get_state()
+
+    with ThreadPoolExecutor(max_workers=1, thread_name_prefix="av-batch") as pool:
+        pending = pool.submit(draw, generator.get_state())
+        for index in range(count):
+            batch, state = pending.result()
+            generator.set_state(state)  # The saved stream belongs to this consumed batch only.
+            if index + 1 < count:
+                pending = pool.submit(draw, state)
+            yield batch
+
+
 def train_common_base(
     cfg: Mapping[str, Any],
     data: Any,
@@ -100,6 +129,9 @@ def train_common_base(
     batch_size = int(train_cfg["batch_size"])
     log_every = int(train_cfg["log_every"])
     checkpoint_every = int(train_cfg.get("checkpoint_every", max_steps))
+    prefetch_batches = train_cfg.get("prefetch_batches", 0)
+    if prefetch_batches not in (0, 1):
+        raise ValueError("prefetch_batches must be 0 or 1")
     if min(max_steps, batch_size, log_every, checkpoint_every) < 1:
         raise ValueError("max_steps, batch_size, log_every and checkpoint_every must be positive")
     checkpoint = run_dir / "checkpoint.pt"
@@ -188,9 +220,12 @@ def train_common_base(
 
     if saved is None:
         save_snapshot(0)
-    with training_path.open("a", encoding="utf-8") as ledger:
-        for step in range(start_step + 1, max_steps + 1):
-            batch = _move_batch(data.sample("train", stage, batch_size, data_generator), device)
+    batches = _training_batches(data, stage, batch_size, data_generator,
+                                count=max_steps - start_step, prefetch=bool(prefetch_batches))
+    # Explicit close joins any pending read even when optimization or checkpoint writing fails.
+    with training_path.open("a", encoding="utf-8") as ledger, closing(batches):
+        for step, cpu_batch in enumerate(batches, start=start_step + 1):
+            batch = _move_batch(cpu_batch, device)
             optimizer.zero_grad(set_to_none=True)
             autocast = (
                 torch.autocast(device_type="cuda", dtype=torch.bfloat16)

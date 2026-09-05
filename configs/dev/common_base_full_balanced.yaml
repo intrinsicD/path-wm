@@ -215,7 +215,7 @@ train:
   weight_decay: 0.001
   grad_clip: 1.0
   checkpoint_every: 500
-  prefetch_batches: 0  # enable only after a measured, bit-exact runtime comparison
+  prefetch_batches: 1  # exact CUDA trajectory/recovery checks passed; DDR §29
 extensions:
   uncertainty: gated_after_deterministic_failure
   proprioception: evidence_interface

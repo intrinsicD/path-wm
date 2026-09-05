@@ -1,52 +1,29 @@
-# PLAN — common multimodal base, full-corpus R0, iteration 5, 2026-09-05.
-# Product: modality-neutral evidence frontend for the modular world-model stack.
-# Hypothesis: H1 needs temporally useful, non-collapsed evidence before encoder replacement.
-# Experiment: E1_common_base R0, all 8,646 train / 3,645 eval TAU development clips.
-# Modules: widen ingestion and resumable R0 training; the architecture and gate stay fixed.
-# Decision: compare covariance 0.002 with 0 at matched seeds [0,1], batch 64, 10,000 steps.
-# Metric: the existing rank >=0.25, std >=0.1, positive prediction/retrieval panel on
-#         32 seeded held-out batches before/after. Development evidence; no E1 freeze.
-# Retain covariance only when rank improves without losing temporal/variance guardrails.
-# R1 remains blocked unless the selected R0 checkpoint passes every configured R0 gate.
-# Reliability: source-bound atomic shard caching; bounded parallel ingestion; atomic
-#              optimizer/EMA/random-stream snapshots every 500 steps; explicit --resume.
-# Resume must reproduce an uninterrupted CPU run and reject changed config or manifest.
-# Source: https://zenodo.org/records/4477542 (official metadata and archive checksums).
-# Runtime iteration 6 (DDR §25): vectorize masking with identical seeded outputs and
-# RNG consumption; memory-map shards; record per-invocation code/config/data identity.
-# GPU compatibility: exact 50-step losses/model states; scientific settings unchanged.
-# Panel iteration 7: also record future prediction versus copying teacher-current
-# evidence in the same latent basis. This is a supplementary diagnostic; existing
-# gate inputs, thresholds, sampled views and training remain unchanged (DDR §26).
-# Runtime iteration 8: bounded cache-only ingestion may overlap acquisition.
-# It writes no manifest, never trains on a partial corpus, and serializes shard
-# writers. Full ingestion rechecks every source identity before publication.
-# Viewer iteration 9: latest-run cards must follow that run's metric family;
-# plot reconciled R0 rank/forecast scores with corpus and training context.
-# Source ledgers, gate outcomes and thresholds remain unchanged.
-# Runtime iteration 10: optionally overlap one CPU batch with GPU computation.
-# Each worker draws with a private generator; checkpoint state advances only for
-# consumed batches. Enable only after exact serial/resume and CUDA trajectory checks.
+# PLAN — common evidence frontend, H1 / E1_common_base, runtime iteration 10.
+# Compare this real 250-step, batch-64 TAU-example run with common_base_recovery_smoke.
+# Only one-batch prefetch is enabled; source bytes, model, seed, optimizer and gates stay fixed.
+# Essential tests: queued draws cannot advance saved RNG; serial/resumed CPU runs match exactly.
+# CUDA benchmark: four exact 100-step trajectories and exact interrupted GPU recovery.
+# Metric: reproduce the saved learner/EMA/optimizer and every original panel value exactly;
+# the timing improvement is a runtime measurement, never architecture or promotion evidence.
 experiment: E1_common_base
 status: dev
 abi: docs/abi/abi_v2.yaml
 seeds:
 - 0
-- 1
 data:
   kind: synchronized_av_manifest
   dataset: tau_urban_audio_visual_scenes_2021
   source:
     doi: 10.5281/zenodo.4477542
-    subset: development
+    subset: examples
     examples_archive: TAU-urban-audio-visual-scenes-2021-development.examples.zip
     examples_md5: 27aca1ec51f856f59604cf22e93ebf80
     metadata_archive: TAU-urban-audio-visual-scenes-2021-development.meta.zip
     metadata_md5: 76e3d7ed5291b118372e06379cb2b490
   raw_root: data/tau_urban_av_2021/raw
   metadata_root: data/tau_urban_av_2021/metadata
-  shard_root: data/tau_urban_av_2021/shards_development_8fps_64px_16khz
-  manifest: data/tau_urban_av_2021/manifest_development.jsonl
+  shard_root: data/tau_urban_av_2021/shards_recovery_smoke_8fps_64px_16khz
+  manifest: data/tau_urban_av_2021/manifest_recovery_smoke.jsonl
   manifest_version: 1
   split:
     train_file: evaluation_setup/fold1_train.csv
@@ -124,7 +101,7 @@ representation:
     masked_latent: 1.0
     future_latent: 1.0
     variance: 0.1
-    covariance: 0.0
+    covariance: 0.002
     audiovisual_sync: 0.1
   planner_gradients: false
 curriculum:
@@ -205,17 +182,17 @@ curriculum:
         value: 1.0
 train:
   stage: representation_unimodal
-  max_steps: 10000
+  max_steps: 250
   batch_size: 64
-  held_out_batches: 32
-  log_every: 50
+  held_out_batches: 4
+  log_every: 25
   precision: bf16
   optimizer: adamw
   lr: 0.0003
   weight_decay: 0.001
   grad_clip: 1.0
-  checkpoint_every: 500
-  prefetch_batches: 1  # exact CUDA trajectory/recovery checks passed; DDR §29
+  checkpoint_every: 50
+  prefetch_batches: 1
 extensions:
   uncertainty: gated_after_deterministic_failure
   proprioception: evidence_interface
