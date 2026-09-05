@@ -56,7 +56,10 @@ with zero workers. This changes I/O only; cached/uncached windows are tested for
 identity. Final diagnostics report prediction, persistence, shuffled actions,
 open-loop error and representation spread on training/held-out windows. A
 separate discarded clone uses batch statistics with dropout disabled to inspect
-BatchNorm mismatch; the saved checkpoint is not recalibrated or changed.
+BatchNorm mismatch. A second clone resets and re-estimates BatchNorm buffers
+from at most 512 fixed training windows at frozen weights, then evaluates with
+those buffers. Neither clone changes the saved checkpoint; neither diagnostic
+is adopted as a baseline method change.
 
 Commands (repository root, isolated environment):
 

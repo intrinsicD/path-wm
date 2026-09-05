@@ -32,9 +32,14 @@ Keep ordinary tests fast and CPU-based; substantive GPU runs are validation, not
 unit tests. Do not remove a failing test to conceal an implementation error.
 
 ## Status
-Fresh reset and modular LeWM implementation are complete. Nine essential tests
-pass; a 500-step PushT development training check finished. Useful control and
-full baseline reproduction have not been established. The user requested short
-tests and a report before any long run. Longer training was stopped; do not
-start or resume long training until the user asks. Research extensions remain
-closed. See docs/baseline-checks.md for current evidence and limitations.
+Fresh reset and modular LeWM implementation are complete. Ten essential tests
+pass. The local and upstream control evaluators agree on ten paired cases with
+released weights. Capped random-initialized learning checks use verified small
+prefix subsets of official PushT and TwoRoom; full archives are still incomplete.
+The 120-update PushT checkpoint has a severe BatchNorm evaluation mismatch;
+training-only buffer recalculation on a discarded clone diagnoses it without
+changing saved weights or adopting a new method. TwoRoom completed 400 updates.
+Useful control by a model trained here and full baseline reproduction remain
+unestablished. Do not start or resume long training until the user asks.
+Research extensions remain closed. See docs/diagnostic-results.md for current
+evidence and limitations, and docs/baseline-checks.md for the earlier checks.

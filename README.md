@@ -11,9 +11,12 @@ The previous implementation and results were reset at the user's request.
 [Retained ideas](docs/ideas.md) are hypotheses for later work, not evidence.
 No baseline success claim is made until training and evaluation establish it.
 
-[Current baseline checks](docs/baseline-checks.md): nine essential tests pass;
-a short from-scratch PushT run shows a small predictive learning signal but
-fails both tested control goals. Long training is stopped pending user review.
+[Current diagnostic results](docs/diagnostic-results.md): ten essential tests
+pass, and local control matches upstream on ten paired cases using released
+weights. Capped learning checks use small official PushT and TwoRoom subsets;
+PushT exposed a BatchNorm evaluation mismatch. Useful control by our trained
+models and full benchmark reproduction remain unestablished. Long training is
+stopped pending user review. [Earlier checks](docs/baseline-checks.md) are retained.
 
 Use the local environment `.runtime/lewm/bin/python`, or install this project
 with its `dev`, `eval` and `data` extras in an isolated environment.
