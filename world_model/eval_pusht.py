@@ -20,7 +20,8 @@ from world_model.train import write_json
 
 def initial_observations(source_frame, goal_frame):
     """Source observations are injected by the authors' dataset evaluator."""
-    raise NotImplementedError
+    return tuple(torch.from_numpy(np.asarray(frame).copy()).permute(2,0,1)[None,None]
+                 for frame in (source_frame,goal_frame))
 
 
 @torch.no_grad()
@@ -71,13 +72,16 @@ def evaluate(config_path, checkpoint, output, episodes=50, seed=42, samples=300,
             # Original CCHI stores five state coordinates, omitting velocity.
             # SWM reset sets missing velocity to zero; this is a stated mismatch.
             env=PushT(resolution=224 if relative else 96,relative=relative)
-            observation,info=env.reset(seed=seed+i,options={'state':state,'goal_state':target})
-            goal_pixels=torch.from_numpy(info['goal'].copy()).permute(2,0,1)[None,None].to(device)
+            env.reset(seed=seed+i)
+            env._set_state(state);env._set_goal_state(target)
+            observation={'state':env._get_obs()}
+            initial_pixels,goal_pixels=initial_observations(f['pixels'][row],f['pixels'][row+goal_offset])
+            goal_pixels=goal_pixels.to(device)
             goal=model.encode(preprocess_pixels(goal_pixels,224))
             success,_=env.eval_state(target,observation['state'])
             initial_success=bool(success);used=0;calls=0;plans=[];tick=time.monotonic()
             while used<budget and not success:
-                pixels=torch.from_numpy(env.render().copy()).permute(2,0,1)[None,None].to(device)
+                pixels=initial_pixels.to(device) if used==0 else torch.from_numpy(env.render().copy()).permute(2,0,1)[None,None].to(device)
                 context=model.encode(preprocess_pixels(pixels,224))
                 actions,details=cem(latent_cost(model,context,goal),5,2*cfg['frameskip'],device,
                     samples=samples,iterations=iterations,elites=elites,seed=seed+i*1000+used)

@@ -1,6 +1,6 @@
-name: tworoom
+name: tworoom_prefix
 kind: action_trajectory
-path: data/tworoom/tworoom.h5
+path: data/tworoom_prefix/episodes.h5
 repo: quentinll/lewm-tworooms
 revision: 6903a2de048b13819d812da0b4dd661290bc01e4
 archive: tworoom.tar.zst
@@ -10,3 +10,5 @@ action_semantics: 2D direction clipped to [-1,1]; speed 5 simulator pixels/step 
   wall collisions
 frameskip: 5
 history: 3
+receipt: data/tworoom_prefix/receipt.json
+scope: 32 early complete source episodes for bounded diagnostics

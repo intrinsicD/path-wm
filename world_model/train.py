@@ -100,6 +100,10 @@ def train(config_path, resume=False):
         model.train()
         for batch in loader:
             if step>=total_steps: break
+            if cfg.get('max_seconds') and time.monotonic()-start>=cfg['max_seconds']:
+                record('time_limit',dict(total_steps=total_steps))
+                save()
+                return
             tick=time.monotonic()
             lr_scale=(step+1)/warmup if step<warmup else .5*(1+math.cos(math.pi*(step-warmup)/max(1,total_steps-warmup)))
             for group in optimizer.param_groups:group['lr']=cfg['lr']*lr_scale

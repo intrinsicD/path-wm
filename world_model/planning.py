@@ -9,9 +9,10 @@ import torch
 
 @torch.no_grad()
 def cem(cost, horizon, action_dim, device, *, samples=300, iterations=30, elites=30,
-        seed=42, initial_std=1.0):
+        seed=42, initial_std=1.0, generator=None):
     if not 1 < elites <= samples: raise ValueError('Need 1 < elites <= samples')
-    generator=torch.Generator(device=device).manual_seed(seed)
+    if generator is None:
+        generator=torch.Generator(device=device).manual_seed(seed)
     mean=torch.zeros(horizon,action_dim,device=device)
     std=torch.full_like(mean,initial_std)
     evaluations=0
