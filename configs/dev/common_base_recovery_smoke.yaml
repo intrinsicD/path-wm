@@ -4,6 +4,9 @@
 # and verified dashboard output on the 20 examples while the full corpus downloads.
 # 250 steps and four held-out batches; development plumbing only. No promotion decision.
 # Full-corpus paired configs, thresholds and architecture remain the reference for R0.
+# Runtime iteration 6 (DDR §25): vectorize masking with identical seeded outputs and
+# RNG consumption; memory-map shards; record per-invocation code/config/data identity.
+# GPU compatibility: exact 50-step losses/model states; scientific settings unchanged.
 experiment: E1_common_base
 status: dev
 abi: docs/abi/abi_v2.yaml

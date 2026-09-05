@@ -8,7 +8,10 @@ Every completed seed also refreshes the self-contained visual instrument panel a
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import subprocess
+from datetime import datetime, timezone
 from pathlib import Path
 
 import torch
@@ -42,6 +45,32 @@ def select_device(requested: str) -> torch.device:
     return device
 
 
+def record_common_invocation(run_dir: Path, cfg: dict, data: object, device: torch.device, resume: bool) -> None:
+    """Keep code/config/data identity for every invocation, including recovery attempts (DDR §25)."""
+    def git(*args: str) -> subprocess.CompletedProcess:
+        return subprocess.run(["git", *args], cwd=ROOT, capture_output=True, text=True, check=False)
+
+    head = git("rev-parse", "HEAD")
+    status = git("status", "--porcelain")
+    tracked = git("ls-files", "-z", "*.py")
+    digest = hashlib.sha256()
+    for relative in sorted(filter(None, tracked.stdout.split("\0"))):
+        path = ROOT / relative
+        if path.is_file():
+            digest.update(relative.encode() + b"\0" + path.read_bytes() + b"\0")
+    record = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "git_commit": head.stdout.strip() if head.returncode == 0 else None,
+        "git_dirty": bool(status.stdout.strip()) if status.returncode == 0 else None,
+        "python_source_sha256": digest.hexdigest() if tracked.returncode == 0 else None,
+        "config_sha256": hashlib.sha256(yaml.safe_dump(cfg, sort_keys=True).encode()).hexdigest(),
+        "manifest_sha256": getattr(data, "fingerprint", None),
+        "device": str(device), "torch_version": str(torch.__version__), "resume": resume,
+    }
+    with (run_dir / "invocations.jsonl").open("a", encoding="utf-8") as ledger:
+        ledger.write(json.dumps(record, sort_keys=True) + "\n")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("spec", type=Path)
@@ -70,6 +99,7 @@ def main() -> None:
             if args.resume and existing_spec.exists() and yaml.safe_load(existing_spec.read_text()) != cfg:
                 raise ValueError("resume config differs from the recorded run spec")
             existing_spec.write_text(yaml.safe_dump(cfg, sort_keys=False), encoding="utf-8")
+            record_common_invocation(run_dir, cfg, data, device, args.resume)
             result = train_common_base(
                 cfg, data, run_dir, int(seed), device,
                 resume=args.resume and (run_dir / "checkpoint.pt").exists(),

@@ -501,3 +501,42 @@ to weaken its threshold.
 an RTX 3050. Audio masked/future advantages became +0.141/+0.143; video stayed positive. Video/audio
 rank fractions 0.080/0.061 still failed 0.25. The dashboard refreshed with structural-only verification.
 This validates execution and exposes the remaining rank failure; it is not the full-corpus decision.
+
+
+---
+
+## 25. R0 throughput without changing the experiment
+
+**Question.** How can full-population window reads and temporal masking fit the overnight local budget
+without changing the seeded training comparison?
+
+**Decision.** Vectorize the existing corruption policy: one random tensor per modality, force the first
+valid position when a row has no masked sample, and preserve the last valid position when every sample
+is masked and at least two are valid. Batched indexing replaces per-row CUDA synchronization; outputs
+and generator consumption stay exact. Map per-clip tensor files before selecting short windows so reads
+do not copy unused frames. All data, model, objective, optimizer and panel settings remain unchanged.
+Each new R0/R1 invocation records Git revision/dirty state, a digest of tracked Python source, normalized
+config and manifest digests, device and Torch version in its run ledger. Recovery attempts append their
+own identity rather than silently replacing the original invocation.
+
+**Validation.** Forty padded CPU and forty padded CUDA comparisons match masks and random-stream states
+exactly. A real batch-64 CUDA comparison matches every loss and final learner/EMA tensor across 50 AdamW
+steps. Video masking drops from 4.33 to 0.218 ms, audio from 6.35 to 1.87 ms; steady step time drops from
+164.7 to 155.9 ms (about 5.3%). A separate warm-cache sampler probe that forces full-population-like unique
+clip loads drops from 90.0 to 72.2 ms/batch with identical sampled tensors. That probe uses virtual clip
+identifiers solely to measure deserialization; it creates no new training data or experiment result.
+All 168 fast tests pass, with two opt-in tests deselected. Proof and benchmark scripts are under
+`runs/overnight/common_base_20260905/` (`masking_*_benchmark.json`, `loader_mmap_benchmark.json`).
+
+**Rejected runtime changes.** Forcing one codec thread did not improve decoding. Eight clip workers
+versus four reduced the 20-example probe only from 6.39 to 5.96 seconds, with identical decoded tensors;
+the queue retains four workers. Linear extrapolation suggests roughly one hour for the full corpus,
+but this is a throughput estimate rather than a completed ingestion time.
+
+**Current experiment evidence.** The first balanced 10,000-step example seed passes both rank thresholds
+(video 0.2614, audio 0.2700), but fails both future-advantage gates (-0.7377/-0.0480). Masked advantages
+remain positive. The dashboard refreshed with structural-only verification. This is a duration diagnostic
+on nine train and eleven eval clips; the full-corpus pair still decides the covariance intervention.
+Frozen-checkpoint blank-input and teacher-copy controls are preserved as supplementary diagnostics,
+including the possibility that position variation or student/teacher basis alignment inflates simple
+metrics. They do not change the predeclared panel or establish a new architecture decision.

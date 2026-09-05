@@ -55,15 +55,17 @@ def _corruption_mask(valid: torch.Tensor, ratio: float, generator: torch.Generat
     if not 0.0 < ratio < 1.0:
         raise ValueError("representation.mask_ratio must lie strictly between 0 and 1")
     mask = (torch.rand(valid.shape, generator=generator).to(valid.device) < ratio) & valid
-    # Every row has both a learning target and some visible context whenever it has >=2 valid samples.
-    for row in range(valid.shape[0]):
-        indices = valid[row].nonzero(as_tuple=False).flatten()
-        if indices.numel() == 0:
-            raise ValueError("each temporal observation row needs a valid sample")
-        if not mask[row].any():
-            mask[row, indices[0]] = True
-        if mask[row, indices].all() and indices.numel() > 1:
-            mask[row, indices[-1]] = False
+    # Preserve the original one-draw masking policy exactly, including singleton rows.
+    # Batched indexing avoids three device synchronizations per example on CUDA (DDR §25).
+    counts = valid.sum(dim=1)
+    if (counts == 0).any():
+        raise ValueError("each temporal observation row needs a valid sample")
+    rows = torch.arange(valid.shape[0], device=valid.device)
+    first = valid.to(torch.int64).argmax(dim=1)
+    last = valid.shape[1] - 1 - valid.flip(1).to(torch.int64).argmax(dim=1)
+    mask[rows, first] |= ~mask.any(dim=1)
+    all_masked = (mask | ~valid).all(dim=1) & (counts > 1)
+    mask[rows, last] &= ~all_masked
     return mask
 
 

@@ -5,6 +5,9 @@
 # as the full-corpus trial. Only the corpus is reduced to the 20 official examples.
 # Runs during acquisition. These results cannot promote R0 or select a new coefficient;
 # the predeclared full-corpus comparison remains the decision point (DDR §24).
+# Runtime iteration 6 (DDR §25): vectorize masking with identical seeded outputs and
+# RNG consumption; memory-map shards; record per-invocation code/config/data identity.
+# GPU compatibility: exact 50-step losses/model states; scientific settings unchanged.
 experiment: E1_common_base
 status: dev
 abi: docs/abi/abi_v2.yaml

@@ -198,3 +198,19 @@ def test_switching_to_dynamics_freezes_encoders_and_representation_heads():
     assert any(parameter.requires_grad for parameter in core.predictor.parameters())
     assert any(parameter.requires_grad for parameter in core.updater.parameters())
     assert any(parameter.requires_grad for parameter in core.action_adapter.parameters())
+
+
+@pytest.mark.parametrize("ratio", [0.001, 0.999])
+def test_corruption_preserves_edge_case_policy_and_one_draw_rng_budget(ratio):
+    from training.representation import _corruption_mask
+    valid = torch.tensor([[False, True, True, False], [True, False, False, False],
+                          [True, True, True, True], [False, False, True, True]])
+    generator = torch.Generator().manual_seed(0)
+    replay = torch.Generator().manual_seed(0)
+    torch.rand(valid.shape, generator=replay)
+    mask = _corruption_mask(valid, ratio, generator)
+    expected = torch.tensor([[False, True, False, False], [True, False, False, False],
+                             [True, ratio > 0.5, ratio > 0.5, False], [False, False, True, False]])
+    assert torch.equal(mask, expected)
+    assert torch.equal(generator.get_state(), replay.get_state())
+    assert not (mask & ~valid).any()

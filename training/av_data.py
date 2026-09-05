@@ -321,7 +321,8 @@ class ManifestAVData:
 
     def _payload(self, record: AVClipRecord, cache: dict[str, Mapping[str, Any]]) -> Mapping[str, Any]:
         if record.clip_id not in cache:
-            payload = torch.load(self.shard_root / record.shard, map_location="cpu", weights_only=True)
+            # Map the shard so a short window does not copy every unused video frame (DDR §25).
+            payload = torch.load(self.shard_root / record.shard, map_location="cpu", weights_only=True, mmap=True)
             _validate_shard(payload, self.data_cfg, record.clip_id)
             cache[record.clip_id] = payload
         return cache[record.clip_id]
