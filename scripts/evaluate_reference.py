@@ -1,8 +1,8 @@
 """Released LeWM through the unmodified SWM evaluator on the full source data.
 
 Thin wiring for the pinned APIs; sampling, scalers and solver settings follow
-LeWM eval.py/config. Environment reset randomness is observed and recorded,
-not overridden. Require a verified extraction receipt before full evaluation.
+LeWM eval.py/config. Environment reset seed arguments are recorded without overriding them;
+null means the upstream environment chooses its own entropy. Require a verified extraction receipt before full evaluation.
 """
 import argparse,copy,hashlib,json,os,sys,time,subprocess
 from pathlib import Path
@@ -57,7 +57,7 @@ def evaluate(config,output,count=50):
         protocol='Full source, authors sampling/scalers/config, pinned current SWM evaluator; thin API wiring; no video export',
         num_envs=count,solver_batch_size=1,samples=300,iterations=30,elites=30,
         horizon=5,action_block=5,receding_horizon=5,budget=50,goal_offset=25,
-        sampling_seed=42,solver_seed=42,reset_seed_policy='upstream default; actual generated reset seeds recorded')
+        sampling_seed=42,solver_seed=42,reset_seed_policy='upstream default; per-environment reset seed arguments recorded; null means unseeded')
     write_json(out/'manifest.json',manifest)
     transform=v2.Compose([v2.ToImage(),v2.ToDtype(torch.float32,scale=True),
         v2.Normalize(mean=[.485,.456,.406],std=[.229,.224,.225]),v2.Resize(224)])
@@ -70,7 +70,11 @@ def evaluate(config,output,count=50):
     original_reset=world.reset
     def recorded_reset(*args,**kwargs):
         result=original_reset(*args,**kwargs)
-        write_json(out/'reset_seeds.json',[int(e.unwrapped.np_random_seed) for e in world.envs.envs])
+        seed=kwargs.get('seed',args[0] if args else None)
+        if seed is None:seeds=[None]*count
+        elif np.isscalar(seed):seeds=[int(seed)+i for i in range(count)]
+        else:seeds=[None if value is None else int(value) for value in seed]
+        write_json(out/'reset_seeds.json',seeds)
         return result
     world.reset=recorded_reset
     tick=time.monotonic()
