@@ -2,9 +2,10 @@ session:
   id: 2026-09-05_001
   date: '2026-09-05'
   started: 2026-09-05T12:55+02:00
-  last_turn: 2026-09-05T19:00+02:00
-  turn_count: 7
-  summary: Pilot remains 0/20; recipe audit finds roughly 139-fold update-budget gap and stricter configuration holdout. Causal explanation and diagnostic-to-reproduction sequence remain proposed.
+  last_turn: 2026-09-05T22:43+02:00
+  turn_count: 8
+  summary: Harness recovered from Git and separated from live goals; 22 CPU tests and HTML structure pass; browser
+    QA pending. Approved diagnostics preserved, no new experiment run.
 events_logged:
 - turn: 1
   type: pivot
@@ -267,6 +268,30 @@ events_logged:
   provenance: ai-suggested
   summary: O10 scoped pilot outcome closed via researcher discussion of completed experiments; causal
     explanation remains open.
+- turn: 8
+  type: decision
+  id: N23
+  routing: direct
+  provenance: user
+  summary: Preserve approved diagnostics through the harness interruption
+- turn: 8
+  type: decision
+  id: N24
+  routing: direct
+  provenance: user
+  summary: Recover the independent experiment harness from Git
+- turn: 8
+  type: experiment
+  id: N25
+  routing: direct
+  provenance: ai-executed
+  summary: Validate recovered reporting contracts and backfill current ledgers
+- turn: 8
+  type: heuristic
+  id: H05
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O13 approved sequence is preserved in committed current state; diagnostics remain pending.
 ai_actions:
 - turn: 1
   action: Reset workspace, implement modular baseline and dataset adapters, run short
@@ -335,6 +360,21 @@ ai_actions:
   provenance: ai-executed
   files_changed:
   - ara/
+- turn: 8
+  action: Recover workflow from eca742a; separate goals/status; adapt runner, current ledgers and SQL-backed portable
+    dashboard; test integrity and backfill existing evidence; retain browser verification failure honestly.
+  provenance: ai-executed
+  files_changed:
+  - CLAUDE.md
+  - docs/experiment-workflow.md
+  - docs/project-state.md
+  - docs/harness-recovery.md
+  - run.py
+  - viewer/
+  - tests/test_experiment_harness.py
+  - README.md
+  - pyproject.toml
+  - ara/
 claims_touched:
 - id: C01
   action: crystallized
@@ -364,10 +404,16 @@ key_context:
 - turn: 7
   excerpt: User asks why, whether others trained only on PushT, remaining differences, expectations, and
     next steps; interpreted as analysis/advice, not a new training authorization.
+- turn: 8
+  excerpt: User requests the Git harness restored and separated from actual implementation goals/target experiments;
+    pending earlier yes please do all of your recommendations remains authorization.
 open_threads:
-- Reliable control from our own training on diverse held-out episodes remains unestablished.
-- Final precision/BN differences are small; targeted rollout/action-plan and training-versus-held-out control diagnosis remains proposed, not executed.
-- The approved broader pilot is complete; user review precedes another training run or method change; research extensions remain deferred.
+- Reliable learned control on diverse held-out configurations remains unestablished.
+- O13 training-goal control and rollout/action-ranking diagnostics plus reproduction preparation are approved and
+  pending; no new runs executed.
+- Resolve shared portable-packager browser QA; current HTML is structurally verified with visual verification pending.
+- Long reproduction launch is not scheduled; research extensions remain deferred.
 ai_suggestions_pending:
-- O03, O04, O06 and O07 capability interpretations await researcher review; scopes remain distinct.
-- O10 scoped outcome crystallized as C01; O11/O13 next-step recommendations and O12 causal explanation remain unadopted; no further training launched.
+- O03, O04, O06, O07 and O12 interpretations remain staged with distinct evidence scopes; no mechanism was established
+  by restoring the harness.
+- O11 remains staged as the earlier diagnostic formulation; refined O13 is committed as H05.

@@ -212,7 +212,7 @@ observations:
   - N21
   - N22
   - N19
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H05
+  crystallized_via: artifact-commitment
   stale: false

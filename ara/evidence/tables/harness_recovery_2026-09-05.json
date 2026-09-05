@@ -1,0 +1,62 @@
+{
+  "date": "2026-09-05T22:43+02:00",
+  "provenance": "ai-executed",
+  "recovery_source_commit": "eca742a",
+  "implementation_commits": [
+    "4f83cd7",
+    "7d480b1"
+  ],
+  "cpu_tests": {
+    "passed": 22,
+    "harness_checks": 9,
+    "warnings": 2
+  },
+  "run_record_counts": {
+    "training": 6,
+    "control": 20,
+    "prediction": 4
+  },
+  "html_receipt": {
+    "browserWarning": {
+      "code": "browser_unavailable",
+      "message": "No installed Chromium headless-shell executable was found. Set CHROMIUM_EXECUTABLE_PATH (or the legacy PLAYWRIGHT_EXECUTABLE_PATH) or preinstall Chromium headless-shell under PLAYWRIGHT_BROWSERS_PATH; portable tooling never downloads browsers."
+    },
+    "counts": {
+      "blocks": 14,
+      "charts": 5,
+      "html": 0,
+      "metrics": 3,
+      "tables": 4
+    },
+    "html": "/home/alex/Documents/path-wm/runs/experiment_dashboard.html",
+    "ok": true,
+    "sourceDialog": "not_verified",
+    "sourceInteraction": "not_verified",
+    "stages": {
+      "package": "passed",
+      "validation": "passed",
+      "verification": "structural_only"
+    },
+    "timings": {
+      "staticChartExtractionMs": 1.8,
+      "structuralVerificationMs": 8.6,
+      "totalMs": 116.4,
+      "validateAndPackageMs": 106.5
+    },
+    "viewports": []
+  },
+  "browser_attempts": [
+    {
+      "browser": "installed Puppeteer headless-shell",
+      "result": "reader_timeout; fallback state; larger budget also failed"
+    },
+    {
+      "browser": "installed full Chrome",
+      "result": "viewport mismatch; temporary measured correction permits chart extraction but final desktop/mobile probe times out"
+    }
+  ],
+  "new_training_or_evaluation_runs": 0,
+  "raw_ledgers_modified": false,
+  "report": "docs/harness-recovery.md",
+  "html": "runs/experiment_dashboard.html"
+}

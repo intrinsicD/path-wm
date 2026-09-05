@@ -1,8 +1,10 @@
 sessions:
 - id: 2026-09-05_001
   date: '2026-09-05'
-  summary: Pilot remains 0/20; recipe audit finds roughly 139-fold update-budget gap and stricter configuration holdout. Causal explanation and diagnostic-to-reproduction sequence remain proposed.
-  turn_count: 7
-  events_count: 39
-  claims_touched: [C01]
-  open_threads: 3
+  summary: Harness recovered from Git and separated from live goals; 22 CPU tests and HTML structure pass; browser
+    QA pending. Approved diagnostics preserved, no new experiment run.
+  turn_count: 8
+  events_count: 43
+  claims_touched:
+  - C01
+  open_threads: 4

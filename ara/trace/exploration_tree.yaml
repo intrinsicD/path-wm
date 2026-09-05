@@ -340,3 +340,55 @@ tree:
   - N21
   - N17
   status: resolved
+- id: N23
+  type: decision
+  title: Preserve approved diagnostics through the harness interruption
+  provenance: user
+  timestamp: 2026-09-05T22:43+02:00
+  choice: The prior user yes please do all of your recommendations authorized the O13 diagnostic/reproduction-preparation
+    sequence. Its interrupted turn did reads only. Preserve that approval as pending; no long reproduction launch
+    is inferred.
+  alternatives:
+  - Repeat an already granted approval
+  - Treat preparation as an unbounded training launch
+  evidence:
+  - O13
+  - ../docs/project-state.md
+  also_depends_on:
+  - N21
+  - N22
+  status: resolved
+- id: N24
+  type: decision
+  title: Recover the independent experiment harness from Git
+  provenance: user
+  timestamp: 2026-09-05T22:43+02:00
+  choice: Restore CLAUDE.md development/experiment workflow and mandatory visually inspectable HTML from pre-reset
+    Git; separate standing process from current model goals, target experiments and status.
+  alternatives:
+  - Keep objectives and workflow mixed
+  - Restore obsolete architecture/experiment targets with the harness
+  evidence:
+  - ../CLAUDE.md
+  - ../docs/experiment-workflow.md
+  - ../docs/project-state.md
+  - ../docs/harness-recovery.md
+  status: resolved
+- id: N25
+  type: experiment
+  title: Validate recovered reporting contracts and backfill current ledgers
+  provenance: ai-executed
+  timestamp: 2026-09-05T22:43+02:00
+  result: All 22 CPU tests pass, including 9 harness checks. Thirty raw-ledger records yield five dashboard charts
+    and four tables. Canonical artifact validation and embedded payload/structure pass; browser QA remains blocked
+    by shared packager startup/viewport/probe failures. Published receipt is structural_only. No training/evaluation
+    run or raw-ledger mutation.
+  evidence:
+  - evidence/tables/harness_recovery_2026-09-05.json
+  - ../tests/test_experiment_harness.py
+  - ../viewer/ledger.py
+  - ../viewer/dashboard.py
+  - ../runs/experiment_dashboard.receipt.json
+  also_depends_on:
+  - N24
+  status: unresolved
