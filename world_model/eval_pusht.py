@@ -25,6 +25,42 @@ def initial_observations(source_frame, goal_frame):
 
 
 @torch.no_grad()
+def evaluate_case(model, source_frame, goal_frame, state, target, stats, *, seed=42,
+                  relative=True, samples=300, iterations=30, elites=30,
+                  budget=50, frameskip=5):
+    """One local control case; shared by normal and upstream-paired evaluation."""
+    device=next(model.parameters()).device
+    state,target=np.asarray(state,dtype=float),np.asarray(target,dtype=float)
+    if len(state)==5: state=np.r_[state,[0.,0.]]
+    if len(target)==5: target=np.r_[target,[0.,0.]]
+    env=PushT(resolution=source_frame.shape[0],relative=relative)
+    env.reset(seed=seed);env._set_state(state);env._set_goal_state(target)
+    initial,goal_pixels=initial_observations(source_frame,goal_frame)
+    goal=model.encode(preprocess_pixels(goal_pixels.to(device)))
+    initial_success=bool(env.eval_state(target,env._get_obs())[0])
+    # Upstream evaluates success after stepping, even if the initial goal is close.
+    success=False;used=0;calls=0;plans=[];executed=[];tick=time.monotonic()
+    generator=torch.Generator(device=device).manual_seed(seed)
+    while used<budget and not success:
+        pixels=initial.to(device) if used==0 else torch.from_numpy(env.render().copy()).permute(2,0,1)[None,None].to(device)
+        context=model.encode(preprocess_pixels(pixels))
+        actions,details=cem(latent_cost(model,context,goal),5,2*frameskip,device,
+            samples=samples,iterations=iterations,elites=elites,generator=generator)
+        calls+=details['predictor_steps'];plans.append(details)
+        # Match StandardScaler.inverse_transform's in-place float32 arithmetic.
+        raw=actions.reshape(-1,2).cpu().numpy().copy()
+        raw*=np.asarray(stats['std']);raw+=np.asarray(stats['mean'])
+        for action in raw[:budget-used]:
+            observation,_,success,_,_=env.step(action)
+            used+=1;executed.append(action.copy())
+            if success:break
+    distance=float(env.eval_state(target,observation['state'])[1]);env.close()
+    return dict(success=bool(success),initial_success=initial_success,steps=used,
+        state_distance=distance,predictor_steps=calls,seconds=time.monotonic()-tick,
+        plans=plans,actions=np.asarray(executed))
+
+
+@torch.no_grad()
 def evaluate(config_path, checkpoint, output, episodes=50, seed=42, samples=300,
              iterations=30, elites=30, budget=50, goal_offset=25, released=False):
     cfg=yaml.safe_load(Path(config_path).read_text())
@@ -64,36 +100,12 @@ def evaluate(config_path, checkpoint, output, episodes=50, seed=42, samples=300,
         for i,ep in enumerate(selected):
             local=int(rng.integers(0,int(lengths[ep])-goal_offset))
             row=int(offsets[ep])+local
-            state=np.array(f['state'][row],dtype=np.float64)
-            target=np.array(f['state'][row+goal_offset],dtype=np.float64)
-            relative=cfg['name']=='pusht'
-            if len(state)==5: state=np.r_[state,[0.,0.]]
-            if len(target)==5: target=np.r_[target,[0.,0.]]
-            # Original CCHI stores five state coordinates, omitting velocity.
-            # SWM reset sets missing velocity to zero; this is a stated mismatch.
-            env=PushT(resolution=224 if relative else 96,relative=relative)
-            env.reset(seed=seed+i)
-            env._set_state(state);env._set_goal_state(target)
-            observation={'state':env._get_obs()}
-            initial_pixels,goal_pixels=initial_observations(f['pixels'][row],f['pixels'][row+goal_offset])
-            goal_pixels=goal_pixels.to(device)
-            goal=model.encode(preprocess_pixels(goal_pixels,224))
-            success,_=env.eval_state(target,observation['state'])
-            initial_success=bool(success);used=0;calls=0;plans=[];tick=time.monotonic()
-            while used<budget and not success:
-                pixels=initial_pixels.to(device) if used==0 else torch.from_numpy(env.render().copy()).permute(2,0,1)[None,None].to(device)
-                context=model.encode(preprocess_pixels(pixels,224))
-                actions,details=cem(latent_cost(model,context,goal),5,2*cfg['frameskip'],device,
-                    samples=samples,iterations=iterations,elites=elites,seed=seed+i*1000+used)
-                calls+=details['predictor_steps'];plans.append(details)
-                raw=actions.reshape(-1,2).cpu().numpy()*np.asarray(stats['std'])+np.asarray(stats['mean'])
-                for action in raw[:budget-used]:
-                    observation,_,terminated,_,info=env.step(action)
-                    used+=1
-                    if terminated:success=True;break
-            distance=float(env.eval_state(target,observation['state'])[1]);env.close()
-            result=dict(episode=int(ep),start=local,success=bool(success),initial_success=initial_success,
-                steps=used,state_distance=distance,predictor_steps=calls,seconds=time.monotonic()-tick,plans=plans)
+            result=evaluate_case(model,f['pixels'][row],f['pixels'][row+goal_offset],
+                f['state'][row],f['state'][row+goal_offset],stats,seed=seed+i,
+                relative=cfg['name']=='pusht',samples=samples,iterations=iterations,
+                elites=elites,budget=budget,frameskip=cfg['frameskip'])
+            result.pop('actions')
+            result.update(episode=int(ep),start=local)
             results.append(result)
             with (directory/'episodes.jsonl').open('a') as log:log.write(json.dumps(result)+'\n')
             print(json.dumps({k:v for k,v in result.items() if k!='plans'}),flush=True)

@@ -39,7 +39,7 @@ def train(config_path, resume=False):
     tr,va=split_episodes(count,seed,cfg['train_fraction'])
     if cfg.get('train_episodes'): tr=tr[:cfg['train_episodes']]
     stats=action_statistics(ds_cfg['path'],tr)
-    args=dict(path=ds_cfg['path'],frameskip=ds_cfg['frameskip'],num_steps=ds_cfg['history']+1)
+    args=dict(path=ds_cfg['path'],frameskip=ds_cfg['frameskip'],num_steps=ds_cfg['history']+1,cache_bytes=cfg.get('cache_bytes',0))
     train_ds=TrajectoryDataset(episodes=tr,**args); val_ds=TrajectoryDataset(episodes=va,**args)
     if train_ds.action_dim!=ds_cfg['action_dim']: raise ValueError('Dataset action dimension mismatch')
     model_cfg={**cfg.get('model',{}),'action_dim':ds_cfg['action_dim'],

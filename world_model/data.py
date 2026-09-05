@@ -31,7 +31,7 @@ def split_episodes(count, seed=3072, train_fraction=0.9):
 
 
 class TrajectoryDataset(Dataset):
-    def __init__(self, path, episodes, frameskip=5, num_steps=4):
+    def __init__(self, path, episodes, frameskip=5, num_steps=4, cache_bytes=0):
         self.path = str(path)
         self.episodes = np.asarray(episodes, dtype=np.int64)
         self.frameskip, self.num_steps = frameskip, num_steps
@@ -40,6 +40,12 @@ class TrajectoryDataset(Dataset):
         with h5py.File(path, 'r') as f:
             self.lengths, self.offsets = f['ep_len'][:], f['ep_offset'][:]
             self.action_dim = f['action'].shape[-1]
+            self._cache = None
+            if cache_bytes:
+                required = sum(f[k].size*f[k].dtype.itemsize for k in ('pixels','action'))
+                if required > cache_bytes:
+                    raise ValueError(f'Dataset cache needs {required} bytes, exceeds configured cap')
+                self._cache = {k:f[k][:] for k in ('pixels','action')}
         if len(set(self.episodes.tolist())) != len(self.episodes):
             raise ValueError('Duplicate episodes')
         if np.any(self.episodes < 0) or np.any(self.episodes >= len(self.lengths)):
@@ -71,7 +77,7 @@ class TrajectoryDataset(Dataset):
         ep, local = self.locate(idx)
         start = int(self.offsets[ep]) + local
         stop = start + self.frameskip*self.num_steps
-        f = self._open()
+        f = self._cache if self._cache is not None else self._open()
         pixels = torch.from_numpy(f['pixels'][start:stop:self.frameskip])
         if pixels.shape[-1] in (1,3): pixels = pixels.permute(0,3,1,2)
         actions = torch.from_numpy(f['action'][start:stop]).float().reshape(self.num_steps,-1)

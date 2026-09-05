@@ -21,7 +21,7 @@ from world_model.model import build_model
 from world_model.data import preprocess_pixels
 from world_model.planning import cem,latent_cost
 from world_model.train import write_json
-from world_model.eval_pusht import initial_observations
+from world_model.eval_pusht import evaluate_case
 from third_party.swm.pusht import PushT
 
 
@@ -38,16 +38,17 @@ def compare(path,output,count):
         scaler=StandardScaler().fit(actions)
         lengths,offsets=f['ep_len'][:],f['ep_offset'][:]
         rng=np.random.default_rng(42)
+        # Match eval.py's valid-window sampling, including its exclusion of the
+        # final valid index. Do not filter by goal displacement or difficulty.
+        valid=np.concatenate([np.arange(int(o),int(o+l-25)) for o,l in zip(offsets,lengths) if l>25])
+        selected=np.sort(valid[rng.choice(len(valid)-1,size=count,replace=False)])
         cases=[]
-        while len(cases)<count:
-            ep=int(rng.integers(len(lengths)));start=int(rng.integers(int(lengths[ep])-25))
-            row=int(offsets[ep])+start
-            if np.linalg.norm(f['state'][row,:4]-f['state'][row+25,:4])<=30:continue
-            if any(c['episode']==ep and c['start']==start for c in cases):continue
-            cases.append(dict(episode=ep,start=start,seed=1234+len(cases)))
+        for row in selected:
+            ep=int(np.searchsorted(offsets,row,side='right')-1)
+            cases.append(dict(episode=ep,start=int(row-offsets[ep]),seed=1234+len(cases)))
         write_json(out/'manifest.json',dict(path=str(path),cases=cases,action_mean=scaler.mean_.tolist(),action_std=scaler.scale_.tolist(),
             upstream_commit='6f1e499e9cc0c898d326112f485c1062c3d20f24',model_commit='8edfeb336732b5f3ce7b8b210d0ba370a09e2cac',
-            subset='prefix' in str(path),normalization_population='all finite actions in supplied dataset',
+            sampling='authors valid-window rule on supplied dataset',subset='prefix' in str(path),reset_seed_control='both evaluators use case seed',normalization_population='all finite actions in supplied dataset',
             horizon=5,frameskip=5,budget=50,samples=300,iterations=30,elites=30))
         transform=v2.Compose([v2.ToImage(),v2.ToDtype(torch.float32,scale=True),
             v2.Normalize(mean=[.485,.456,.406],std=[.229,.224,.225]),v2.Resize(224)])
@@ -67,26 +68,20 @@ def compare(path,output,count):
                 action=original(info,**kwargs);native_actions.append(action.copy());return action
             policy.get_action=traced
             world.set_policy(policy)
+            # Equal reset seeds isolate control-code differences from random
+            # contact impulses introduced by upstream's random reset pose.
+            original_reset=world.reset
+            def seeded_reset(seed=None,options=None):
+                return original_reset(seed=[case['seed']],options=options)
+            world.reset=seeded_reset
             result=world.evaluate(dataset=ds,episodes_idx=[case['episode']],start_steps=[case['start']],
                 goal_offset=25,eval_budget=50,callables=callables)
             native_success=bool(result['episode_successes'][0]);world.close()
             row=int(offsets[case['episode']])+case['start']
-            state,target=f['state'][row].astype(float),f['state'][row+25].astype(float)
-            env=PushT();env.reset(seed=case['seed']);env._set_state(state);env._set_goal_state(target)
-            initial,goal_pixels=initial_observations(f['pixels'][row],f['pixels'][row+25])
-            goal=model.encode(preprocess_pixels(goal_pixels.cuda()))
-            generator=torch.Generator(device='cuda').manual_seed(case['seed'])
-            used=0;success=False;local_actions=[];plans=[]
-            while used<50 and not success:
-                pixels=initial.cuda() if used==0 else torch.from_numpy(env.render().copy()).permute(2,0,1)[None,None].cuda()
-                z=model.encode(preprocess_pixels(pixels))
-                plan,detail=cem(latent_cost(model,z,goal),5,10,torch.device('cuda'),generator=generator)
-                raw=scaler.inverse_transform(plan.reshape(-1,2).cpu().numpy())
-                plans.append(detail)
-                for action in raw[:50-used]:
-                    obs,_,success,_,_=env.step(action);used+=1;local_actions.append(action.copy())
-                    if success:break
-            env.close()
+            local=evaluate_case(model,f['pixels'][row],f['pixels'][row+25],
+                f['state'][row],f['state'][row+25],
+                dict(mean=scaler.mean_.tolist(),std=scaler.scale_.tolist()),seed=case['seed'])
+            success=local['success'];local_actions=local['actions']
             np.savez(out/f'actions_{i}.npz',native=np.asarray(native_actions),local=np.asarray(local_actions))
             na=np.asarray(native_actions)[:,0];la=np.asarray(local_actions)
             common=min(len(na),len(la))

@@ -7,7 +7,7 @@ train_episodes: null
 max_steps: 400
 epochs: 1000
 batch_size: 128
-workers: 2
+workers: 0
 encoder_chunk: 16
 precision: bf16
 lr: 5.0e-05
@@ -22,3 +22,4 @@ eval_every: 100
 eval_batches: 4
 model: {}
 max_seconds: 840
+cache_bytes: 600000000

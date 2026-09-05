@@ -21,6 +21,9 @@ def test_episode_windows_and_action_timing(tmp_path):
     assert clip['pixels'][:, 0, 0, 0].tolist() == [12, 14, 16, 18]
     assert clip['action'].tolist() == [[12,13],[14,15],[16,17],[18,19]]
     assert ds[-1]['action'][-1, -1] == 23
+    cached = TrajectoryDataset(path, [1], frameskip=2, num_steps=4, cache_bytes=10000)
+    torch.testing.assert_close(cached[-1]['pixels'], ds[-1]['pixels'])
+    torch.testing.assert_close(cached[-1]['action'], ds[-1]['action'])
     train, val = split_episodes(20)
     assert not set(train) & set(val)
     assert sorted(train + val) == list(range(20))
