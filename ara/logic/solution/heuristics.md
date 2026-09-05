@@ -1,0 +1,3 @@
+# Heuristics
+
+No crystallized heuristics.

@@ -1,0 +1,40 @@
+{
+  "provenance": "ai-executed",
+  "reset_commit": "6a1b377",
+  "implementation_commit": "c805a01",
+  "report_commit": "b94694b",
+  "cpu_tests_passed": 9,
+  "reference": {
+    "strict_load": "all keys matched",
+    "parameters": 18034478,
+    "checkpoint_sha256": "48938400ae3464c9680731287f583a9cb516f55a8ec64ea13a91be47fb15b607",
+    "encode_max_difference": 0.0,
+    "predict_max_difference": 0.0,
+    "scope": "numerical implementation parity; not task performance"
+  },
+  "development_training_steps": 500,
+  "development_batch_size": 32,
+  "heldout": {
+    "pred_mse": 0.11113893054425716,
+    "identity_mse": 0.11929087480530143,
+    "zero_action_mse": 0.11401181481778622,
+    "shuffled_action_mse": 0.11515111289918423,
+    "rollout_mse": 0.22658767085522413,
+    "embedding_std": 0.7767704427242279,
+    "action_effect": 0.003976481733843684,
+    "examples": 512,
+    "checkpoint_step": 500,
+    "sample": "512 fixed random held-out episode windows"
+  },
+  "control": {
+    "success_rate": 0.0,
+    "episodes": 2,
+    "initial_successes": 0,
+    "mean_steps": 50.0,
+    "protocol": "local compatibility/development evaluation; not an exact paper benchmark"
+  },
+  "training_status": "stopped_by_user",
+  "long_run_last_logged_step": 140,
+  "long_run_saved_checkpoint_step": 0,
+  "source_report": "docs/baseline-checks.md"
+}

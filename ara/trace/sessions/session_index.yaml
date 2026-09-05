@@ -1,0 +1,8 @@
+sessions:
+- id: 2026-09-05_001
+  date: '2026-09-05'
+  summary: Fresh baseline; short tests reported; long training stopped.
+  turn_count: 1
+  events_count: 3
+  claims_touched: []
+  open_threads: 3

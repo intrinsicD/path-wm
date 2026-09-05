@@ -1,0 +1,15 @@
+observations:
+- id: O01
+  timestamp: 2026-09-05T12:55+02:00
+  provenance: ai-suggested
+  content: Short training shows a small predictive/action-conditioning signal; tested
+    control fails. Baseline usefulness remains unestablished.
+  context: One 500-step run on original CCHI PushT, reduced training budget and local
+    control protocol.
+  potential_type: claim
+  bound_to:
+  - N02
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

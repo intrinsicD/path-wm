@@ -1,0 +1,9 @@
+entries:
+- turn: 2026-09-05_001#1
+  notes:
+  - Initialized a fresh record after the explicit user-authorized reset; no old empirical
+    evidence copied.
+  - Recorded user decisions and executed checks directly; staged the interpretation
+    without claiming baseline success.
+  - 'Latest user instruction supersedes the pending GPU-budget question: report before
+    any long run.'

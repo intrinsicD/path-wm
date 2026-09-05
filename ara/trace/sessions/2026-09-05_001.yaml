@@ -1,0 +1,51 @@
+session:
+  id: 2026-09-05_001
+  date: '2026-09-05'
+  started: 2026-09-05T12:55+02:00
+  last_turn: 2026-09-05T12:55+02:00
+  turn_count: 1
+  summary: Fresh reset and modular LeWM implemented; short checks reported; long training
+    stopped by user.
+events_logged:
+- turn: 1
+  type: pivot
+  id: N01
+  routing: direct
+  provenance: user
+  summary: Preserve ideas and source datasets; reset old code/results.
+- turn: 1
+  type: experiment
+  id: N02
+  routing: direct
+  provenance: ai-executed
+  summary: Implementation parity passes; early prediction signal; 0/2 control.
+- turn: 1
+  type: decision
+  id: N03
+  routing: direct
+  provenance: user
+  summary: Short tests and report before long runs.
+ai_actions:
+- turn: 1
+  action: Reset workspace, implement modular baseline and dataset adapters, run short
+    checks, interrupt long training, write report.
+  provenance: ai-executed
+  files_changed:
+  - docs/ideas.md
+  - docs/baseline-checks.md
+  - world_model/
+  - tests/
+  - configs/
+  - CLAUDE.md
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: 'User: preserve our ideas but not the code or results; use multiple datasets.'
+- turn: 1
+  excerpt: 'User: make a couple of tests first and report before we will start a long
+    run later.'
+open_threads:
+- Complete official PushT/TwoRoom downloads and verify extracted schemas.
+- Run bounded released-checkpoint control and second-dataset checks.
+- User review before any long training; no research extensions yet.
+ai_suggestions_pending: []
