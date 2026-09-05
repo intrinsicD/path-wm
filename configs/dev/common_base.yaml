@@ -136,6 +136,7 @@ curriculum:
       action_correct_through_horizon: {op: equal, value: 1.0}
 train:
   stage: representation_unimodal
+  prefetch_batches: 0  # operational: 0 serial, 1 one CPU batch ahead
   max_steps: 20  # dev
   batch_size: 2  # dev
   held_out_batches: 2  # dev

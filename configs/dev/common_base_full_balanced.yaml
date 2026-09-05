@@ -24,6 +24,9 @@
 # Viewer iteration 9: latest-run cards must follow that run's metric family;
 # plot reconciled R0 rank/forecast scores with corpus and training context.
 # Source ledgers, gate outcomes and thresholds remain unchanged.
+# Runtime iteration 10: optionally overlap one CPU batch with GPU computation.
+# Each worker draws with a private generator; checkpoint state advances only for
+# consumed batches. Enable only after exact serial/resume and CUDA trajectory checks.
 experiment: E1_common_base
 status: dev
 abi: docs/abi/abi_v2.yaml
@@ -212,6 +215,7 @@ train:
   weight_decay: 0.001
   grad_clip: 1.0
   checkpoint_every: 500
+  prefetch_batches: 0  # enable only after a measured, bit-exact runtime comparison
 extensions:
   uncertainty: gated_after_deterministic_failure
   proprioception: evidence_interface

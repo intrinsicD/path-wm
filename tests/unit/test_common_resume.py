@@ -40,9 +40,11 @@ def _config():
     return cfg
 
 
-def test_resume_matches_uninterrupted_optimizer_ema_and_ledger(tmp_path):
+@pytest.mark.parametrize("prefetch_batches", [0, 1])
+def test_resume_matches_uninterrupted_optimizer_ema_and_ledger(tmp_path, prefetch_batches):
     torch.set_num_threads(1)
     cfg = _config()
+    cfg["train"]["prefetch_batches"] = prefetch_batches
     complete_dir, resumed_dir = tmp_path / "complete", tmp_path / "resumed"
     complete = train_common_base(cfg, TinyData(), complete_dir, 0, torch.device("cpu"))
     with pytest.raises(RuntimeError, match="simulated interruption"):
@@ -73,3 +75,40 @@ def test_resume_rejects_changed_config_or_data_and_fresh_run_refuses_overwrite(t
         train_common_base(cfg, changed_data, tmp_path, 0, torch.device("cpu"), resume=True)
     with pytest.raises(FileExistsError):
         train_common_base(cfg, TinyData(), tmp_path, 0, torch.device("cpu"))
+
+
+def test_prefetched_batch_does_not_advance_the_checkpoint_random_stream():
+    import threading
+    import training.common_base as training
+    batches = getattr(training, "_training_batches", None)
+    assert callable(batches), "no implementation: one-batch prefetch with consumed-only RNG state"
+    ready = threading.Event()
+    class ObservedData(TinyData):
+        def sample(self, *args, **kwargs):
+            result = super().sample(*args, **kwargs)
+            if self.calls == 2:
+                ready.set()
+            return result
+    expected = torch.Generator().manual_seed(17)
+    TinyData().sample("train", "representation_unimodal", 2, expected)
+    generator = torch.Generator().manual_seed(17)
+    iterator = batches(ObservedData(), "representation_unimodal", 2, generator, count=2, prefetch=True)
+    try:
+        next(iterator)
+        assert ready.wait(5), "the next batch must load while the caller handles the current one"
+        assert torch.equal(generator.get_state(), expected.get_state()), "snapshot must exclude the queued batch"
+    finally:
+        iterator.close()
+
+
+def test_prefetch_preserves_serial_training_optimizer_and_random_states(tmp_path):
+    cfg = _config()
+    serial = train_common_base(cfg, TinyData(), tmp_path / "serial", 0, torch.device("cpu"))
+    cfg["train"]["prefetch_batches"] = 1
+    prefetched = train_common_base(cfg, TinyData(), tmp_path / "prefetch", 0, torch.device("cpu"))
+    left = torch.load(serial.checkpoint, weights_only=True)
+    right = torch.load(prefetched.checkpoint, weights_only=True)
+    for key in ("learner", "optimizer", "data_rng", "corruption_rng", "torch_rng"):
+        torch.testing.assert_close(left[key], right[key], rtol=0, atol=0)
+    assert serial.metrics == prefetched.metrics
+    assert serial.final_training == prefetched.final_training
