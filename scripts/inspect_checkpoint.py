@@ -1,7 +1,7 @@
-"""Read-only inspection of a saved checkpoint's internals on fixed held-out windows.
+"""Read-only inspection of a saved checkpoint's internals on fixed validation windows.
 
 Writes internals.json, manifest.json and PNG panels for the dashboard. Uses the
-pilot's recorded validation windows, float32, eval mode and saved BatchNorm
+training run's recorded validation windows, float32, eval mode and saved BatchNorm
 buffers; the checkpoint hash is verified before and after. Run it through
 run.py so the offline dashboard refreshes: see docs/internals-visualization-plan.md.
 """
@@ -17,13 +17,15 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset
 
 from world_model.data import TrajectoryDataset, preprocess_pixels, normalize_actions
 from world_model.introspection import (covariance_spectrum, encoder_maps, gaussianity, gradient_norms,
                                        linear_probe, parameter_norms, predictor_internals, rollout_horizon,
                                        sensitivity, state_digest)
 from world_model.model import build_model
+from world_model.protocol import prepare_training_data
+from world_model.evaluation import evaluate_prediction
 from world_model.objective import SIGReg
 from world_model.train import write_json
 
@@ -59,6 +61,28 @@ def load(checkpoint, run_manifest, released):
     return model.eval(), stats, step, config
 
 
+def inspection_datasets(manifest):
+    """Restore the saved split before interpreting validation-local indices.
+
+    A random-window validation index addresses a Subset, not its full-source
+    base. Reconstruct and verify that mapping with the same protocol as training.
+    Long-horizon windows are sampled separately from the validation episode
+    population; with a random-window split this is the full source population.
+    """
+    train, val, tr, va, stats, receipt = prepare_training_data(manifest['config'], manifest['dataset'])
+    expected = manifest.get('data_protocol', manifest.get('episode_split'))
+    if (tr != manifest['train_episodes'] or va != manifest['val_episodes'] or
+            stats != manifest['action_stats'] or receipt != expected or
+            len(train) != manifest['train_windows'] or len(val) != manifest['val_windows']):
+        raise ValueError('Reconstructed inspection split/statistics differ from saved training manifest')
+    indices = manifest['validation_window_indices']
+    if not indices or len(set(indices)) != len(indices) or any(not 0 <= i < len(val) for i in indices):
+        raise ValueError('Invalid saved validation window indices')
+    ds = manifest['dataset']
+    long = TrajectoryDataset(ds['path'], va, frameskip=ds['frameskip'], num_steps=HORIZON + 1)
+    return train, val, long
+
+
 def encode_windows(model, dataset, indices, stats, device, batch=32):
     loader = DataLoader(dataset, batch_size=batch, sampler=list(indices), num_workers=0)
     pixels, embeddings, actions, meta = [], [], [], []
@@ -73,6 +97,8 @@ def encode_windows(model, dataset, indices, stats, device, batch=32):
 
 
 def frame_rows(dataset, meta, t=0):
+    while isinstance(dataset, Subset):
+        dataset = dataset.dataset
     return [int(dataset.offsets[ep]) + start + t * dataset.frameskip for ep, start in meta]
 
 
@@ -98,7 +124,7 @@ def encoder_panel(model, pixels, device, path, label):
         axes[i, heads + 2].imshow(maps['patch_pca'][i].cpu().numpy())
     for j, title in enumerate(['input frame', 'CLS attention (mean)'] + [f'head {h}' for h in range(heads)] + ['patch PCA (RGB)']):
         axes[0, j].set_title(title, fontsize=9)
-    fig.suptitle(f'{label}: last-layer CLS-to-patch attention on held-out PushT frames ({maps["grid"]}×{maps["grid"]} patches)', fontsize=10)
+    fig.suptitle(f'{label}: last-layer CLS-to-patch attention on validation PushT frames ({maps["grid"]}×{maps["grid"]} patches)', fontsize=10)
     fig.tight_layout(); fig.savefig(path, facecolor='white'); plt.close(fig)
     return maps
 
@@ -131,7 +157,7 @@ def predictor_panel(internals, path, label):
 
 
 def neighbour_panel(model, pixels, z, actions, dataset, meta, device, source, path, label, queries=4):
-    """Nearest held-out frames to the predicted next latent, excluding the query window."""
+    """Nearest validation frames to the predicted next latent, excluding the query window."""
     bank = z.flatten(0, 1)
     window_of = torch.arange(len(z)).repeat_interleave(z.shape[1])
     with torch.no_grad():
@@ -151,7 +177,7 @@ def neighbour_panel(model, pixels, z, actions, dataset, meta, device, source, pa
         axes[i, 0].set_ylabel(f'window {i}', fontsize=8)
     for j, title in enumerate(['current frame (t=2)', 'true next frame (t=3)', 'nearest frame to predicted latent', 'nearest frame to true latent']):
         axes[0, j].set_title(title, fontsize=8)
-    fig.suptitle(f'{label}: nearest held-out frames (other windows) in latent space; no decoder is used', fontsize=9)
+    fig.suptitle(f'{label}: nearest validation frames (other windows) in latent space; no decoder is used', fontsize=9)
     fig.tight_layout(); fig.savefig(path, facecolor='white'); plt.close(fig)
 
 
@@ -174,15 +200,16 @@ def main():
     label = args.label or ('released weights' if args.released else f'{run.name} step {step}')
     output = Path(args.output); (output / 'panels').mkdir(parents=True, exist_ok=False)
     data_path = manifest['dataset']['path']
-    val = TrajectoryDataset(data_path, manifest['val_episodes'], frameskip=5, num_steps=4)
-    train = TrajectoryDataset(data_path, manifest['train_episodes'], frameskip=5, num_steps=4)
-    long = TrajectoryDataset(data_path, manifest['val_episodes'], frameskip=5, num_steps=HORIZON + 1)
+    train, val, long = inspection_datasets(manifest)
     generator = torch.Generator().manual_seed(0)
     probe_windows = torch.randperm(len(train), generator=generator)[:PROBE_WINDOWS].tolist()
     rollout_windows = torch.randperm(len(long), generator=generator)[:ROLLOUT_WINDOWS].tolist()
     val_windows = manifest['validation_window_indices']
 
     pixels, z, actions, meta = encode_windows(model, val, val_windows, stats, device)
+    prediction_loader = DataLoader(val, batch_size=32, sampler=val_windows, num_workers=0)
+    prediction = evaluate_prediction(model, prediction_loader, stats, device,
+        batches=(len(val_windows) + 31) // 32, precision='float32')
     flat = z.flatten(0, 1)
     spectrum = covariance_spectrum(flat)
     gauss = gaussianity(flat, seed=0)
@@ -230,23 +257,31 @@ def main():
         'horizon_ratio_at_8': horizon['prediction_mse'][-1] / horizon['copy_mse'][-1] if horizon['copy_mse'][-1] > 0 else None,
     }
     panels = [
-        dict(id='encoder_attention', title='Encoder attention and patch PCA on held-out frames', caption='Last-layer CLS-to-patch attention per head and RGB PCA of patch tokens over the same frames.', path='panels/encoder_attention.png'),
+        dict(id='encoder_attention', title='Encoder attention and patch PCA on validation frames', caption='Last-layer CLS-to-patch attention per head and RGB PCA of patch tokens over the same frames.', path='panels/encoder_attention.png'),
         dict(id='spectrum_qq', title='Embedding covariance spectrum and Gaussianity', caption='Log eigenvalues of the validation embedding covariance and a pooled Q–Q plot against the SIGReg Gaussian target.', path='panels/spectrum_qq.png'),
-        dict(id='predictor_attention', title='Predictor attention over the history', caption='Causal attention per layer and head, averaged over 128 held-out windows.', path='panels/predictor_attention.png'),
-        dict(id='nearest_neighbours', title='Nearest held-out frames to predicted latents', caption='Which real frames the one-step prediction lands next to, versus the true next latent; the query window is excluded.', path='panels/nearest_neighbours.png'),
+        dict(id='predictor_attention', title='Predictor attention over the history', caption='Causal attention per layer and head, averaged over 128 validation windows.', path='panels/predictor_attention.png'),
+        dict(id='nearest_neighbours', title='Nearest validation frames to predicted latents', caption='Which real frames the one-step prediction lands next to, versus the true next latent; the query window is excluded.', path='panels/nearest_neighbours.png'),
     ]
     training_run = None if args.released else run.resolve().relative_to(Path('runs').resolve()).as_posix()
+    population = manifest.get('population', 'Validation episodes disjoint from training episodes')
+    index_digest = lambda indices: hashlib.sha256(np.asarray(indices, dtype='<i8').tobytes()).hexdigest()
     write_json(output / 'manifest.json', dict(
         checkpoint=str(args.checkpoint), checkpoint_sha256=digest, step=step, released=args.released, training_run=training_run,
         source_run_manifest=str(run / 'manifest.json'), dataset=manifest['dataset'], precision='float32', mode='eval; saved BatchNorm buffers',
-        validation_windows=len(val_windows), embedding_samples=int(len(flat)), predictor_batch=128, gradient_batch=GRADIENT_WINDOWS,
+        validation_windows=len(val_windows), validation_window_indices=val_windows,
+        data_protocol=manifest.get('data_protocol', manifest.get('episode_split')), population=population,
+        probe_window_indices_sha256=index_digest(probe_windows),
+        rollout_window_indices_sha256=index_digest(rollout_windows),
+        rollout_population='Source episodes shared with training' if isinstance(val, Subset) else 'Validation episodes disjoint from training',
+        embedding_samples=int(len(flat)), predictor_batch=128, gradient_batch=GRADIENT_WINDOWS,
         probe_windows=PROBE_WINDOWS, rollout_windows=ROLLOUT_WINDOWS, rollout_horizon=HORIZON, panel_frames=PANEL_FRAMES,
         seeds=dict(torch=0, sensitivity=0, gaussianity_subsample=0, window_sampling=0), sigreg=dict(knots=config['sigreg_knots'], projections=config['sigreg_projections'], weight=config['sigreg_weight']),
         action_normalization='checkpoint statistics' if not args.released else 'reference full-source scaler',
         protocol='docs/internals-visualization-plan.md', code_commit=subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
         limitation='Descriptive internals on fixed windows; gradients measured in eval mode without an update. Latent-scale quantities are not comparable across separately trained encoders.'))
+    write_json(output / 'prediction.json', prediction)
     write_json(output / 'internals.json', dict(
-        step=step, family='released' if args.released else 'pilot', training_run=training_run, label=label,
+        step=step, family='released' if args.released else 'local', training_run=training_run, label=label,
         checkpoint_sha256=digest, checkpoint_unchanged=True, scalars=scalars,
         series=dict(spectrum=spectrum['eigenvalues'], horizon=horizon, probe_r2=probe['r2'],
                     gate_msa=predictor['gate_msa'].tolist(), gate_mlp=predictor['gate_mlp'].tolist(),
