@@ -257,3 +257,36 @@ def test_runner_dispatches_common_base_without_touching_the_e1_collector(tmp_pat
     assert len(training_calls) == 1 and training_calls[0][1] is data
     assert record["metrics"] == summary["metrics"]
     assert summary["gate"]["passed"] is False
+
+
+def test_mixed_dashboard_shows_latest_representation_metrics_without_inventing_action_values(tmp_path):
+    runs_root = tmp_path / "runs"
+    _write_run(runs_root, "action", accuracy=0.5, total=0.5)
+    latest = _write_run(runs_root, "representation", accuracy=0.5, total=0.5)
+    metrics = {"video_effective_rank_fraction": 0.12, "audio_effective_rank_fraction": 0.06,
+               "video_future_prediction_advantage": -0.3, "audio_future_prediction_advantage": -0.00015,
+               "gate_passed": 0, "gate_failure_count": 4}
+    for filename in ("metrics.json", "run_summary.json", "threshold_record.json"):
+        path = latest / filename
+        value = json.loads(path.read_text())
+        value["metrics"] = metrics
+        path.write_text(json.dumps(value))
+    spec = {"experiment": "E1_common_base", "status": "dev",
+            "train": {"stage": "representation_unimodal", "max_steps": 10000, "batch_size": 64},
+            "data": {"source": {"subset": "development"}},
+            "representation": {"weights": {"covariance": 0.002}}}
+    (latest / "spec.yaml").write_text(yaml.safe_dump(spec))
+    runs, notices = collect_run_results(runs_root)
+    artifact = build_dashboard_artifact(runs, notices)
+    datasets = artifact["snapshot"]["datasets"]
+    cards = [c for c in artifact["manifest"]["cards"] if c["id"].startswith("selected_")]
+    assert cards and all(c["dataset"] == "latest_run" for c in cards)
+    assert all(datasets["latest_run"][0].get(c["metrics"][0]["field"]) is not None for c in cards)
+    assert not any("action_sensitivity" in c["id"] for c in cards)
+    assert {row["value"] for row in datasets["representation_rank"]} == {0.12, 0.06}
+    assert {row["value"] for row in datasets["representation_future"]} == {-0.3, -0.00015}
+    row = next(row for row in datasets["run_inventory"] if "representation" in row["run"])
+    assert row["train_steps"] == 10000
+    assert row["source_subset"] == "development" and row["covariance_weight"] == 0.002
+    assert datasets["latest_run"][0]["audio_future_prediction_advantage_milli"] == -0.15
+    assert "action_sensitivity_comparison" in {c["id"] for c in artifact["manifest"]["charts"]}

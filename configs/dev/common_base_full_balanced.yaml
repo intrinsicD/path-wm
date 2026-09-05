@@ -21,6 +21,9 @@
 # Runtime iteration 8: bounded cache-only ingestion may overlap acquisition.
 # It writes no manifest, never trains on a partial corpus, and serializes shard
 # writers. Full ingestion rechecks every source identity before publication.
+# Viewer iteration 9: latest-run cards must follow that run's metric family;
+# plot reconciled R0 rank/forecast scores with corpus and training context.
+# Source ledgers, gate outcomes and thresholds remain unchanged.
 experiment: E1_common_base
 status: dev
 abi: docs/abi/abi_v2.yaml
