@@ -18,6 +18,9 @@
 # Panel iteration 7: also record future prediction versus copying teacher-current
 # evidence in the same latent basis. This is a supplementary diagnostic; existing
 # gate inputs, thresholds, sampled views and training remain unchanged (DDR §26).
+# Runtime iteration 8: bounded cache-only ingestion may overlap acquisition.
+# It writes no manifest, never trains on a partial corpus, and serializes shard
+# writers. Full ingestion rechecks every source identity before publication.
 experiment: E1_common_base
 status: dev
 abi: docs/abi/abi_v2.yaml

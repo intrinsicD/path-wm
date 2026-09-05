@@ -164,3 +164,28 @@ def test_examples_subset_does_not_expand_when_development_media_arrives(tmp_path
     records = _module().ingest_tau_av(cfg, tmp_path, decoder=_cache_decoder)
     assert len(records) == 4
     assert all(Path(record.source["video"]).parent == examples for record in records)
+
+
+def test_cache_prefill_cannot_publish_partial_corpus_and_full_ingestion_revalidates(tmp_path):
+    cfg = _fixture(tmp_path)
+    ingest = _module().ingest_tau_av
+    missing = tmp_path / "raw/video/tram-city-4-400.mp4"
+    missing.unlink()
+    calls = []
+    def decode(*args, **kwargs):
+        calls.append(args[0])
+        return _cache_decoder(*args, **kwargs)
+    records = ingest(cfg, tmp_path, decoder=decode, workers=2, cache_only=True, max_clips=2)
+    assert len(records) == len(calls) == 2
+    assert not (tmp_path / "manifest.jsonl").exists()
+    with pytest.raises(FileNotFoundError, match="missing TAU"):
+        ingest(cfg, tmp_path, decoder=decode)
+    assert not (tmp_path / "manifest.jsonl").exists()
+    Path(records[0].source["audio"]).write_bytes(b"source changed after prefill")
+    missing.write_bytes(b"source")
+    final = ingest(cfg, tmp_path, decoder=decode, workers=2)
+    assert len(final) == 4
+    assert len(calls) == 5, "full ingestion must reuse one shard and revalidate the changed source"
+    before = (tmp_path / "manifest.jsonl").read_bytes()
+    assert ingest(cfg, tmp_path, decoder=decode, cache_only=True, max_clips=2) == ()
+    assert (tmp_path / "manifest.jsonl").read_bytes() == before
