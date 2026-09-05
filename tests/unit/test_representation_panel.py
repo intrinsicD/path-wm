@@ -130,3 +130,20 @@ def test_within_position_fraction_ignores_padding_and_handles_constant_evidence(
         torch.tensor([[True, True], [True, False], [True, False]]), "audio")
     assert function(evidence) == pytest.approx(8 / 35)
     assert function(_evidence(torch.ones(3, 2, 2), "audio")) == 0.0
+
+
+
+def test_r1_change_alignment_cancels_scene_identity_and_tracks_paired_changes():
+    function = getattr(_module(), "_temporal_change_alignment", None)
+    assert callable(function), "no implementation: paired within-recording A/V change diagnostic"
+    current = {m:torch.eye(4) for m in ("video", "audio")}
+    shifted = {m:torch.roll(torch.eye(4), 1, 0) for m in ("video", "audio")}
+    assert function(current, current) == 0.0
+    assert function(current, shifted) == pytest.approx(1.0)
+    reversed_current = {"video":current["video"], "audio":shifted["audio"]}
+    reversed_shifted = {"video":shifted["video"], "audio":current["audio"]}
+    assert function(reversed_current, reversed_shifted) == pytest.approx(-1.0)
+    metrics = _module().evaluate_representation(
+        ExactLearner(), HeldOutData(), stage="representation_av", batches=1,
+        batch_size=4, generator=torch.Generator().manual_seed(0))
+    assert metrics["audiovisual_temporal_change_alignment"] == pytest.approx(1.0)
