@@ -24,6 +24,15 @@ scene/recording context, and current-anchor synchrony alone does not enforce bal
 at both times. B0 is deferred pending the controlled timing experiment (DDR §37 and
 `docs/common-base-next-experiment.md`). These development gates do not freeze E0 or E1 or test H1.
 
+The controlled physical-source follow-up validates raw matching, shifted and constant controls,
+but both fixed 5,000-update R0 seeds fail both rank floors and video temporal retrieval. Frozen
+physical-coordinate readouts retain substantially more signal through the token layout; the gap
+persists with two untuned 192-feature projections and the same fitted-head capacity as mean
+pooling. An exact-coordinate code also fails the rank floor, so the gate does not directly test
+that physical target. No gate is relaxed. The R1-only balanced timing loss is tested on an isolated
+branch but its controlled training comparison is deferred. Physical-diagnostic calibration and a
+compact readout that retains token information are next (DDR §§38–40).
+
 ## 1. Decision
 
 There is no literal architecture shared by LeWM, V-JEPA 2, VLWM, DINO-WM, Delta-JEPA and Dreamer.
@@ -200,6 +209,7 @@ The following are promotion gates, not optional dashboard decoration:
 Items 1–3 now run end to end on the complete official TAU development split. The matched full-data
 R0 comparison selects covariance under its predeclared rule, and 1/2 R1 seeds pass the configured
 gates. Independent future prediction survives, while within-recording audiovisual timing remains
-unresolved. The next controlled experiment tests known shared physical signals and two-time
-objective supervision before B0; the present checkpoints are a development baseline, not a frozen
-reference or an architecture-validation claim.
+unresolved. The controlled source is now validated, but its R0 pair fails the prerequisite;
+equal-width frozen readouts expose a mean-pooling gap. The next step calibrates the physical
+diagnostic and readout before resuming two-time supervision or B0. The present checkpoints are
+a development baseline, not a frozen reference or an architecture-validation claim.

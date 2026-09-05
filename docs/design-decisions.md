@@ -959,3 +959,113 @@ run writes `runs/dev/common_base_controlled_smoke/0/` and refreshes the dashboar
 structural verification only. Its rank fractions are video 0.032723 / audio 0.056412 and its
 video temporal margin is negative; these three model conditions fail. This short run verifies
 the training path and does not replace the predeclared 5,000-update source budget.
+
+---
+
+## 39. Scope balanced two-time ranking to an explicit R1 training choice
+
+**Product and question.** ABI-v2 evidence for E1_common_base needs shared temporal content before
+belief bootstrap and H1 testing. Conditional on passing controlled-source R0 checkpoints, compare
+only the time-ranking component at the 2,000-update budget in DDR §38.
+
+**Interface.** Existing RepresentationLearner.loss and RepresentationBatch remain unchanged.
+`train.audiovisual_time_objective` accepts `current_anchor` (the omitted-key default) or
+`balanced_assignment`; an explicit key is valid only in stage `representation_av`. Unknown names
+fail closed. Model parameters, initialization order/RNG, representation config and data binding
+remain exact. No source validation is relaxed. The default uses the literal existing arithmetic.
+
+**Single intervention.** Keep current-time symmetric retrieval and every other loss/weight fixed.
+The candidate replaces the two current-anchor softplus terms with
+`softplus(-dot(v_t-v_s, a_t-a_s)/temperature)`, averaged over examples with unit embeddings.
+This supervises both aligned times. Swapping both times preserves ranking; swapping one modality
+reverses its margin; constant signals have log(2) ranking loss. The previous constructed current-
+anchor counterexample must receive a stronger penalty and a gradient toward correct assignment.
+
+**Essential tests and evaluation.** Before implementation, test scope/initialization and literal
+default compatibility, unchanged auxiliary losses/frozen teachers, and the counterexample plus
+assignment symmetries. Existing conformance tests cover the unchanged model contract. Full R1
+configs are bound to the final SHA-256 values only after both predeclared controlled R0 runs pass.
+No R1 continuation is authorized by a failed or partial R0 source, and no development result is H1.
+
+**Implementation status (not a GREEN experiment milestone).** The isolated implementation passes
+205 fast tests (two opt-in tests deselected). Cross-runtime replay on measured R0/R1 checkpoints
+confirms exact default losses, all parameter gradients and global/corruption RNG states on CPU.
+Both controlled 5,000-update R0 sources subsequently fail the same three original conditions:
+video/audio rank and video temporal retrieval. No R1 continuation or candidate panel is run.
+The loss stays in `dev/controlled-balanced-time`, pending a valid source and a full controlled
+number on the panel. Main retains the original runtime and the failed-source evidence. This
+is a prepared implementation, not evidence of an objective improvement or a promotion gate.
+
+---
+
+## 40. Controlled R0 fails its inherited gates while physical readouts expose a pooling gap
+
+**Product and scope.** ABI-v2 evidence for the modality-neutral belief and replaceable H1 interface,
+through E1_common_base development. The controlled source in DDR §38 is validated, but its fixed
+R0 prerequisite fails. No R1 comparison, belief bootstrap, formal freeze or H1 result follows.
+
+**Matched run outcome.** Both seeds complete exactly 5,000 updates at batch 64 from clean commit
+`367c5a37dfc16a9f80bfdd8c6a285b1902c9cdec`, Python source SHA-256
+`9c4797c6be2b88a0e79109b97ce4b706f452ac3b20d080ed2d593ea2c1e637a6`, and dynamic manifest
+`932f6eb649a3a6f243bf22b2aa6a5827defa3a1810b67dde7ace571d2fc357c5`. Both fail exactly
+video rank, audio rank and video temporal retrieval. All original conditions remain unchanged.
+
+| Seed | Video rank | Audio rank | Video temporal margin | Gate |
+| --- | ---: | ---: | ---: | --- |
+| 0 | 0.155671 | 0.214671 | -0.055109 | Fail: three conditions |
+| 1 | 0.108127 | 0.231884 | -0.013760 | Fail: three conditions |
+
+Checkpoint hashes are `ed35414ab8269fcd78f5dee5daa291d047397f32556b4360b2c91351dcfb93ae`
+(seed 0) and `cf9c62e39e015a1d0c777e4db0e160d5cb4d54bfca311e7236945eb3bfde235f` (seed 1).
+Independent all-64-clip, 32-recording-group teacher-copy future advantages have positive 95%
+intervals in both modalities/seeds: video seed 0 [0.922801, 1.012959], seed 1 [0.694957, 0.761671];
+audio seed 0 [0.058474, 0.077407], seed 1 [0.034270, 0.043492]. These are latent error gains,
+not a direct measure of physical dynamics or a sufficient condition for audiovisual readiness.
+
+**Exploratory physical readouts.** Added after seed 0's failure, then run unchanged at both seeds.
+One fixed SHA-selected window per clip supplies 128 train / 64 eval examples from disjoint 64/32
+recording groups. Fixed ridge alpha 0.01, train-only normalization, and frozen encoders predict
+eight current and eight +0.5-second mean coordinates. Labels remain in disposable probes only.
+Retaining the full token layout gives current-coordinate R² video 0.8651/0.8150 and audio
+0.9403/0.9579, versus mean-pool video 0.2568/0.3208 and audio 0.6389/0.7436. Video readouts
+improve relative to same-seed untrained encoders; audio current-coordinate readouts decline,
+with paired evaluation-group error intervals excluding zero. The first layout contrast has
+more features and therefore cannot by itself isolate pooling.
+
+**Equal-width follow-up.** Two fixed, untuned Gaussian projections (seeds 950201/950202) map
+flattened tokens to 192 features. Both projected and mean-pooled ridge heads fit exactly 3,072
+weights plus target means. Projection current-coordinate R² is video 0.7972/0.8212 (model seed 0)
+and 0.7597/0.7818 (seed 1); audio is 0.9421/0.9447 and 0.9406/0.9515. All tested paired current
+and future MSE-gain intervals favor the projections. Constant features predict the exact train
+target mean; every shuffled-target current R² is negative. The pooled predictions reproduce
+the first audit bit for bit. This reduces the feature-count confound. It remains a fixed-layout,
+label-fitted diagnostic, not a deployed readout or proof of a unique cause of training failure.
+Intervals condition on the fitted training split/model/readout; two projection seeds and two
+model seeds do not establish generalization across architectures or natural-data populations.
+
+**Metric counterexample.** Repeating an exact eight-coordinate code across 32 or 120 tokens of
+width 192 gives standard deviation 1.0, maximum coordinate recovery error 1.15e-8, and rank
+fraction 0.039775, below the inherited 0.25 floor. This code is not a complete dynamical state
+or a passing frontend. It shows that the rank threshold is not necessary for recovering this
+physical target, so low rank alone does not establish loss of that information. Do not add
+nuisance diversity merely to satisfy it, or retroactively relax the failed gate.
+
+**Decision.** Preserve the two failed sources and keep the tested R1 implementation isolated at
+branch `dev/controlled-balanced-time`, commit `57876df` (DDR §39). Calibrate physical-content
+and temporal-readout diagnostics, then compare a compact readout that retains token information
+across variable layouts with fixed encoders and a declared budget. Diagnose audio-objective
+changes separately. Any different readiness criterion needs a new declared experiment and fresh
+evidence; this inspected source remains a development cohort.
+
+**Validation and artifacts.** Main passes 202 fast tests; the isolated objective branch passes
+205 (two opt-in tests deselected in both). Each completed seed refreshes the dashboard. Both
+checkpoint/metric/threshold ledgers reconcile, the matched-width R²/MSE values are independently
+recomputed, and all 18 report source hashes verify. The full report has two native charts and five
+tables and passes canonical packaging/structural QA; browser layout and chart rendering are not
+verified. Report provenance uses executed local SQLite reads of original audit receipts because
+the portable validator requires SQL; original Python/PyTorch calculations, code and hashes remain
+explicitly preserved. No renderer code was changed and no SQL calculation was fabricated.
+
+Evidence: `runs/controlled_av_20260905/report.html`, `r0_validation.json`, `report_qa.json`,
+`physical_probe_seed{0,1}_*.json`, `equal_dimension_readout.json`,
+`exact_coordinate_rank_control.json`, and the corresponding saved per-clip tensors/scripts.

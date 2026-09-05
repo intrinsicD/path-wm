@@ -38,4 +38,33 @@ it does not prove which one limits the trained model on TAU.
    for development comparison, disclose previous inspection, and obtain a fresh untouched cohort
    or source before making a confirmatory claim. Preserve unsuccessful outcomes.
 
-This plan is prepared for the next session; its implementation and training remain future work.
+Progress on 5 September: steps 1–2 completed. The two predeclared 5,000-update controlled R0
+sources fail both rank floors and video temporal retrieval, so the conditional R1 comparison
+did not run. The R1-only loss is implemented/tested in isolated branch
+`dev/controlled-balanced-time` at `57876df`; no candidate training panel or improvement claim
+is available. DDR §§38–40 preserve the outcomes. The original plan above remains the
+conditional timing comparison, with the following prerequisite now taking priority.
+
+## Next bounded step: physical diagnostics and a compact readout
+
+The shared coordinates remain available in frozen tokens. Two fixed 192-feature projections
+outperform 192-feature mean pooling for current and future coordinate readouts in both
+modalities and both seeds, with matched fitted-head capacity. An exact-coordinate code also
+fails the global rank floor. These findings require a diagnostic/readout experiment before
+interpreting the failed R0 gate as missing sensory signal.
+
+1. Define the physical-content and temporal-readout result/config contract and essential tests
+   before production evaluation code. Include exact-coordinate, constant, shuffled-target and
+   position-only controls. Distinguish current pose, change and future targets; current pose
+   alone is not a complete state. Keep labels behind stop-gradient.
+2. Compare one compact readout that retains token information across variable layouts against
+   mean pooling, with the same frozen encoders, target set, declared parameter/update budgets,
+   train-only normalization, two source seeds and recording-disjoint evaluation. The fixed
+   projections are a diagnostic baseline, not a production ABI implementation.
+3. Preserve original R0/TAU gates and both failed controlled checkpoints. Do not retroactively
+   waive rank or temporal retrieval. Any different readiness criterion needs a new explicit
+   design and fresh evidence; the current inspected cohort remains development-only.
+4. Keep audio-objective diagnosis separate from the readout intervention. Audio current-state
+   readout quality declined from initialization; positive teacher-copy gains do not resolve it.
+5. Resume the R1 objective comparison only through a valid, explicitly declared prerequisite.
+   Do not widen to TAU, bootstrap belief, or claim H1 from these source/readout controls.
