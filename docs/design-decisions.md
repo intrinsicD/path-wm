@@ -792,3 +792,18 @@ converted model on the same physical shared-clock windows. Every panel differenc
 video rank is 0.34235 and future advantage +0.04813. Random streams and non-time parameters are exact,
 and the same audiovisual gate conditions fail. This is a read-only transfer proof, not R1 training
 or covariance selection. Proof: `runs/overnight/common_base_20260905/time_transport_compatibility.json`.
+
+
+---
+
+## 35. Display R1's audiovisual gate measurements beside its collapse guards
+
+**Decision.** The latest-run dashboard cards include video-to-audio retrieval margin,
+audio-to-video retrieval margin and synchrony accuracy above chance whenever those measurements
+exist. R0's available cards remain unchanged. This is a view of existing reconciled result fields;
+no measurement, source ledger, objective or gate is altered.
+
+**Validation.** A mixed-history R0/R1 fixture requires every available audiovisual card to contain
+its source value and forbids invented action metrics. All 196 fast tests pass (two opt-in tests
+deselected). Canonical rendering of the current real run history succeeds with structural-only
+verification; browser verification remains unavailable. The first real R1 ledger is still pending.

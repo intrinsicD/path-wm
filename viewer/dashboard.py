@@ -147,6 +147,9 @@ TRAINING_AUXILIARY_OBJECTIVES = ["counterfactual", "reg", "chunk", "masked_laten
 TRAINING_OBJECTIVES = TRAINING_PRIMARY_OBJECTIVES + TRAINING_AUXILIARY_OBJECTIVES
 RUN_CARD_PRIORITY = [
     "gate_passed",
+    "video_to_audio_retrieval_margin",
+    "audio_to_video_retrieval_margin",
+    "synchrony_accuracy_above_chance",
     "video_effective_rank_fraction",
     "audio_effective_rank_fraction",
     "video_future_prediction_advantage",
