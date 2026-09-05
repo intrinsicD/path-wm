@@ -299,3 +299,134 @@ observations:
     promoted_to: "logic/solution/heuristics.md:H03"
     crystallized_via: artifact-commitment
     stale: false
+
+  - id: O18
+    timestamp: 2026-09-05T08:57+02:00
+    provenance: ai-suggested
+    content: Full-data covariance .002 improves both modality ranks at each matched seed and preserves every
+      R0 gate; the zero-covariance controls fail rank. This supports retaining the coefficient for these
+      development sources, not a downstream semantic or H1 claim.
+    context: Completed overnight R0/R1 development comparison, implementation commits and independent audits;
+      no user endorsement of interpretations.
+    potential_type: claim
+    bound_to:
+    - N41
+    - N43
+    promoted: true
+    promoted_to: logic/claims.md:C09
+    crystallized_via: artifact-commitment
+    stale: false
+  - id: O19
+    timestamp: 2026-09-05T08:57+02:00
+    provenance: ai-suggested
+    content: When a trained time-coordinate reference changes, analytically reparameterize its learned Fourier
+      map online and in the EMA teacher; compare the same physical windows and distinguish pre-rounding
+      functional equivalence from ABI output rounding.
+    context: Completed overnight R0/R1 development comparison, implementation commits and independent audits;
+      no user endorsement of interpretations.
+    potential_type: heuristic
+    bound_to:
+    - N44
+    - N45
+    promoted: true
+    promoted_to: logic/solution/heuristics.md:H04
+    crystallized_via: artifact-commitment
+    stale: false
+  - id: O20
+    timestamp: 2026-09-05T08:57+02:00
+    provenance: ai-suggested
+    content: The selected R0 and completed R1 models beat a same-basis teacher-current copy in both modalities/seeds
+      on the independent all-clip future audit with positive recording-group intervals. Each model owns
+      its EMA target; magnitudes are not a common downstream accuracy scale.
+    context: Completed overnight R0/R1 development comparison, implementation commits and independent audits;
+      no user endorsement of interpretations.
+    potential_type: claim
+    bound_to:
+    - N42
+    - N47
+    - N49
+    - N50
+    promoted: true
+    promoted_to: logic/claims.md:C10
+    crystallized_via: artifact-commitment
+    stale: false
+  - id: O21
+    timestamp: 2026-09-05T08:57+02:00
+    provenance: ai-suggested
+    content: The specified R1 continuation passes only one of two original gates and establishes neither
+      absolute nor paired balanced-time accuracy above zero in either held-out group interval; this bounded
+      experiment does not yet establish reliable timing.
+    context: Completed overnight R0/R1 development comparison, implementation commits and independent audits;
+      no user endorsement of interpretations.
+    potential_type: claim
+    bound_to:
+    - N47
+    - N48
+    - N49
+    - N50
+    promoted: true
+    promoted_to: logic/claims.md:C11
+    crystallized_via: artifact-commitment
+    stale: false
+  - id: O22
+    timestamp: 2026-09-05T08:57+02:00
+    provenance: ai-suggested
+    content: 'The three current-anchor audiovisual statistics can pass while balanced two-time assignment
+      always fails: matching current unit vectors with opposite later rotations are a counterexample. This
+      is a metric property, not a trained-checkpoint or collapse-guard result.'
+    context: Completed overnight R0/R1 development comparison, implementation commits and independent audits;
+      no user endorsement of interpretations.
+    potential_type: claim
+    bound_to:
+    - N49
+    - N50
+    promoted: true
+    promoted_to: logic/claims.md:C12
+    crystallized_via: artifact-commitment
+    stale: false
+  - id: O23
+    timestamp: 2026-09-05T08:57+02:00
+    provenance: ai-suggested
+    content: The trained cross-modal retrieval signal appears to rely substantially on scene/recording context.
+      Margins shrink under shared-context controls, but their exploratory fixed-negative-pool intervals
+      do not identify a unique causal explanation for weak timing.
+    context: Completed overnight R0/R1 development comparison, implementation commits and independent audits;
+      no user endorsement of interpretations.
+    potential_type: claim
+    bound_to:
+    - N49
+    promoted: false
+    promoted_to: null
+    crystallized_via: null
+    stale: false
+  - id: O24
+    timestamp: 2026-09-05T08:57+02:00
+    provenance: ai-suggested
+    content: Supervising both aligned times may improve reliable temporal correspondence over the present
+      current-anchor loss; success on a known common physical signal could help separate objective/model
+      and real-data limitations.
+    context: Completed overnight R0/R1 development comparison, implementation commits and independent audits;
+      no user endorsement of interpretations.
+    potential_type: claim
+    bound_to:
+    - N51
+    promoted: false
+    promoted_to: null
+    crystallized_via: null
+    stale: false
+  - id: O25
+    timestamp: 2026-09-05T08:57+02:00
+    provenance: ai-suggested
+    content: A prefetched batch may advance a private future RNG, but checkpoints must capture only the
+      last consumed batch state. This keeps interrupted recovery identical while CPU loading overlaps model
+      updates.
+    context: Completed overnight R0/R1 development comparison, implementation commits and independent audits;
+      no user endorsement of interpretations.
+    potential_type: heuristic
+    bound_to:
+    - N40
+    - N45
+    promoted: true
+    promoted_to: logic/solution/heuristics.md:H05
+    crystallized_via: artifact-commitment
+    stale: false

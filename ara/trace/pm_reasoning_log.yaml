@@ -47,3 +47,20 @@ entries:
       - "Recorded the active transfer, reproducible downloader, validation, commit, and sleep guard as an AI action rather than an experiment; corpus verification is incomplete until all 24 archives finish."
       - "Staged no interpretive observation and crystallized none; the user affirmed acquisition, not a pending knowledge claim."
       - "Found no contradiction and did not stale O01-O04 because only two calendar session-days have elapsed."
+
+  - turn: 2026-09-05_001#2
+    notes:
+    - Captured this entire overnight task once, at its end; internal continuations are not separate research
+      turns.
+    - Appended N37-N51 as journey facts with original checkpoint/receipt bindings. Failed duration-only
+      and two-seed R1 hypotheses are dead ends; no unsuccessful run was promoted.
+    - Staged O18-O25 before crystallizing O18/O20/O21/O22 to C09-C12 and O19/O25 to H04-H05 via committed
+      configs/code/DDR37. All interpretation provenance remains ai-suggested.
+    - 'Kept O23/O24 staged: context dependence is exploratory and the balanced-time objective has not been
+      tested. No unique data-versus-objective explanation was crystallized.'
+    - Old bounded 20-step claims do not conflict with new full-data/10000-step results. Found no direct
+      contradiction. O01-O04/O08/O10 remain staged; related literature/history threads stay open and no
+      entry is 3 session-days stale.
+    - Preserved model-conditional recording-group uncertainty, post-seed0 diagnostic status, runtime-probe
+      virtual-ID scope, and structural-only report QA.
+    - "Reference validation found seven pre-existing unavailable E1-a raw files (eight graph references); documented restoration TODOs in evidence/README.md. Every new reference resolves. This is source availability, not a contradiction in the historical claims."

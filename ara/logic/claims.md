@@ -87,3 +87,47 @@
 - **Dependencies**: [C07]
 - **Tags**: E1-common-base, representation, dimensional-collapse, effective-rank, variance
 - **From staging**: O16
+
+## C09: The matched full-corpus R0 comparison supports covariance .002
+- **Statement**: Both 10000-update covariance sources pass all ten R0 gates with ranks video .341511/.333895 and audio .300382/.271944. The matched zero-covariance ranks are .104915/.113408 and .062662/.059612 and fail both rank checks. All four share a clean runtime and exact per-seed initial panels; this supports the predeclared coefficient decision for these sources.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Falsification criteria**: A same-byte replay or reconciled identical-cohort comparison fails to reproduce the stated ranks/gates, or reveals another varied experimental setting.
+- **Proof**: [ara/evidence/tables/e1_common_base_overnight_2026-09-05.md, ara/evidence/tables/e1_common_base_overnight_2026-09-05.json, commit:ca65ce0]
+- **Dependencies**: [C08]
+- **Tags**: E1-common-base, development, controlled-comparison, temporal-evidence
+- **From staging**: O18
+
+## C10: Future prediction survives the R1 continuation on the independent teacher-copy control
+- **Statement**: On all 3645 held-out clips/126 groups, teacher-copy future-advantage 95% intervals are positive in both modalities at both selected R0 and R1 seeds. R1 means are video .037311/.036159 and audio .004693/.002631. This is conditional latent-space evidence with each model owning its EMA target, not a common downstream accuracy ranking.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Falsification criteria**: A source-bound rerun of the declared all-clip windows and group bootstrap produces a nonpositive teacher-copy interval for one of the stated model/modality pairs.
+- **Proof**: [ara/evidence/tables/e1_common_base_overnight_2026-09-05.md, ara/evidence/tables/e1_common_base_overnight_2026-09-05.json, commit:ca65ce0]
+- **Dependencies**: [C09]
+- **Tags**: E1-common-base, development, controlled-comparison, temporal-evidence
+- **From staging**: O20
+
+## C11: The tested R1 continuation does not establish reliable within-recording timing
+- **Statement**: At 10000 further updates per seed, seed0 passes the original R1 gate and seed1 fails synchrony (-.009765625 above chance). Independent paired balanced-time gains +.960/+.631 pp have intervals [-1.399,+3.341]/[-1.587,+2.848] pp; absolute intervals also include zero. The tested continuation is not ready to support a two-seed timing conclusion.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Falsification criteria**: The same source-bound ledgers and frozen audit reproduce both original gate passes and absolute/paired timing intervals above zero, or a verified metric/cohort error invalidates the recorded failure.
+- **Proof**: [ara/evidence/tables/e1_common_base_overnight_2026-09-05.md, ara/evidence/tables/e1_common_base_overnight_2026-09-05.json, commit:ca65ce0]
+- **Dependencies**: [C09, C10]
+- **Tags**: E1-common-base, development, controlled-comparison, temporal-evidence
+- **From staging**: O21
+
+## C12: Current-anchor audiovisual metrics do not enforce balanced two-time matching
+- **Statement**: For orthogonal clip axes e and auxiliary axes f, set current video/audio=e, shifted video=.5e+sqrt(3)/2 f, shifted audio=.5e-sqrt(3)/2 f. Cross-clip retrieval margins are 1 and current-anchor synchrony is +.5 above chance, while balanced assignment is always wrong and change alignment is -.25. This counterexample concerns the three AV statistics only.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Falsification criteria**: The declared unit-vector construction does not yield those outputs under the current metric definitions or its algebra fails; separate rank/std guards are outside this claim.
+- **Proof**: [ara/evidence/tables/e1_common_base_overnight_2026-09-05.md, ara/evidence/tables/e1_common_base_overnight_2026-09-05.json, commit:ca65ce0]
+- **Dependencies**: []
+- **Tags**: E1-common-base, development, controlled-comparison, temporal-evidence
+- **From staging**: O22

@@ -23,3 +23,21 @@
 - **Sensitivity**: high
 - **Code ref**: `training/representation.py`; `configs/dev/common_base_rank.yaml`; `configs/dev/common_base_rank_balanced.yaml`; `docs/design-decisions.md` §23
 - **From staging**: O17
+
+## H04: Preserve learned functions across a time-reference handoff
+- **Rationale**: Changing timestamps alone changes a trained Fourier coordinate map. Rotate its time-axis sine/cosine coefficients and translate the linear bias, online and in EMA, at fresh handoff only; preserve all other weights/RNG and test the same physical windows. Keep mathematical equivalence separate from bf16 output rounding.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high
+- **Code ref**: training/common_base.py; tests/unit/test_common_resume.py; commit:5d58418
+- **Proof**: [ara/evidence/tables/e1_common_base_overnight_2026-09-05.md]
+- **From staging**: O19
+
+## H05: Checkpoint the consumed batch stream while prefetching
+- **Rationale**: A background worker draws from a private generator state; publish that state to the checkpointed stream only when its batch is consumed. Bound prefetch to one batch and compare actual model/optimizer/EMA/random-state trajectories and interruption recovery, not just batch equality.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high
+- **Code ref**: training/common_base.py; tests/unit/test_common_resume.py; commit:74f87f7
+- **Proof**: [ara/evidence/tables/e1_common_base_overnight_2026-09-05.md]
+- **From staging**: O25

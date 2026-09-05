@@ -24,12 +24,15 @@ sessions:
     events_count: 36
     claims_touched: [C03, C04, C05, C06, C07, C08]
     open_threads: 5
-  - id: "2026-09-05_001"
-    date: "2026-09-05"
-    summary: >
-      Approved and launched resumable full-TAU acquisition after matching all 24
-      media archives to the official Zenodo record.
-    turn_count: 1
-    events_count: 1
-    claims_touched: []
+  - id: 2026-09-05_001
+    date: '2026-09-05'
+    summary: Completed full TAU ingestion, matched R0 covariance selection and two R1 continuations; R1
+      passes 1/2 gates and independent timing remains unresolved; exact recovery and report preserved.
+    turn_count: 2
+    events_count: 30
+    claims_touched:
+    - C09
+    - C10
+    - C11
+    - C12
     open_threads: 6

@@ -2,11 +2,9 @@ session:
   id: "2026-09-05_001"
   date: "2026-09-05"
   started: "2026-09-05T01:12+02:00"
-  last_turn: "2026-09-05T01:12+02:00"
-  turn_count: 1
-  summary: >
-    Approved and launched resumable full-TAU acquisition after mechanically matching
-    all 24 media archives to the official Zenodo record.
+  last_turn: "2026-09-05T08:57+02:00"
+  turn_count: 2
+  summary: "Completed full TAU ingestion, matched R0 covariance selection and two R1 continuations; R1 passes 1/2 gates and independent timing remains unresolved; exact recovery and report preserved."
 
 events_logged:
   - turn: 1
@@ -15,6 +13,197 @@ events_logged:
     routing: direct
     provenance: user
     summary: "Approved overnight acquisition of the complete 34-hour TAU corpus."
+
+  - turn: 2
+    type: experiment
+    id: N37
+    routing: direct
+    provenance: ai-executed
+    summary: Complete and verify the full synchronized TAU boundary
+  - turn: 2
+    type: experiment
+    id: N38
+    routing: direct
+    provenance: ai-executed
+    summary: Four matched long example-bundle R0 runs
+  - turn: 2
+    type: dead_end
+    id: N39
+    routing: direct
+    provenance: ai-executed
+    summary: Longer training alone makes the example cohort eligible for R1
+  - turn: 2
+    type: experiment
+    id: N40
+    routing: direct
+    provenance: ai-executed
+    summary: Speed up the data path while preserving consumed random state
+  - turn: 2
+    type: experiment
+    id: N41
+    routing: direct
+    provenance: ai-executed
+    summary: Resolve the complete two-seed covariance comparison
+  - turn: 2
+    type: experiment
+    id: N42
+    routing: direct
+    provenance: ai-executed
+    summary: Audit future copying, position structure and frozen scene readouts
+  - turn: 2
+    type: decision
+    id: N43
+    routing: direct
+    provenance: ai-suggested
+    summary: Retain covariance .002 under the predeclared full-data rule
+  - turn: 2
+    type: dead_end
+    id: N44
+    routing: direct
+    provenance: ai-executed
+    summary: Correct the R1 clock while literally copying learned R0 time coefficients
+  - turn: 2
+    type: experiment
+    id: N45
+    routing: direct
+    provenance: ai-executed
+    summary: Validate the gated function-preserving R0 to R1 handoff
+  - turn: 2
+    type: decision
+    id: N46
+    routing: direct
+    provenance: ai-suggested
+    summary: Run the two source-bound R1 continuations at equal budget
+  - turn: 2
+    type: experiment
+    id: N47
+    routing: direct
+    provenance: ai-executed
+    summary: Complete both R1 runs on the same clean runtime
+  - turn: 2
+    type: dead_end
+    id: N48
+    routing: direct
+    provenance: ai-executed
+    summary: The existing R1 objective and 10000-update budget pass both seeds
+  - turn: 2
+    type: experiment
+    id: N49
+    routing: direct
+    provenance: ai-executed
+    summary: Separate timing evidence from context and current-anchor metric behavior
+  - turn: 2
+    type: decision
+    id: N50
+    routing: direct
+    provenance: ai-suggested
+    summary: Defer B0 and preserve the measured R1 timing failure
+  - turn: 2
+    type: question
+    id: N51
+    routing: direct
+    provenance: ai-suggested
+    summary: Can known shared physical signals separate data and objective limitations?
+  - turn: 2
+    type: observation
+    id: O18
+    routing: staged
+    provenance: ai-suggested
+    summary: Full-data covariance .002 improves both modality ranks at each matched seed and preserves every
+      R0 gate; the zero-covariance controls fail rank. This supports retaining the coefficient for these
+      development sources, not a downstream semantic or H1 claim.
+  - turn: 2
+    type: observation
+    id: O19
+    routing: staged
+    provenance: ai-suggested
+    summary: When a trained time-coordinate reference changes, analytically reparameterize its learned Fourier
+      map online and in the EMA teacher; compare the same physical windows and distinguish pre-rounding
+      functional equivalence from ABI output rounding.
+  - turn: 2
+    type: observation
+    id: O20
+    routing: staged
+    provenance: ai-suggested
+    summary: The selected R0 and completed R1 models beat a same-basis teacher-current copy in both modalities/seeds
+      on the independent all-clip future audit with positive recording-group intervals. Each model owns
+      its EMA target; magnitudes are not a common downstream accuracy scale.
+  - turn: 2
+    type: observation
+    id: O21
+    routing: staged
+    provenance: ai-suggested
+    summary: The specified R1 continuation passes only one of two original gates and establishes neither
+      absolute nor paired balanced-time accuracy above zero in either held-out group interval; this bounded
+      experiment does not yet establish reliable timing.
+  - turn: 2
+    type: observation
+    id: O22
+    routing: staged
+    provenance: ai-suggested
+    summary: 'The three current-anchor audiovisual statistics can pass while balanced two-time assignment
+      always fails: matching current unit vectors with opposite later rotations are a counterexample. This
+      is a metric property, not a trained-checkpoint or collapse-guard result.'
+  - turn: 2
+    type: observation
+    id: O23
+    routing: staged
+    provenance: ai-suggested
+    summary: The trained cross-modal retrieval signal appears to rely substantially on scene/recording context.
+      Margins shrink under shared-context controls, but their exploratory fixed-negative-pool intervals
+      do not identify a unique causal explanation for weak timing.
+  - turn: 2
+    type: observation
+    id: O24
+    routing: staged
+    provenance: ai-suggested
+    summary: Supervising both aligned times may improve reliable temporal correspondence over the present
+      current-anchor loss; success on a known common physical signal could help separate objective/model
+      and real-data limitations.
+  - turn: 2
+    type: observation
+    id: O25
+    routing: staged
+    provenance: ai-suggested
+    summary: A prefetched batch may advance a private future RNG, but checkpoints must capture only the
+      last consumed batch state. This keeps interrupted recovery identical while CPU loading overlaps model
+      updates.
+  - turn: 2
+    type: claim
+    id: O18
+    routing: crystallized
+    provenance: ai-suggested
+    summary: logic/claims.md:C09 via artifact-commitment
+  - turn: 2
+    type: heuristic
+    id: O19
+    routing: crystallized
+    provenance: ai-suggested
+    summary: logic/solution/heuristics.md:H04 via artifact-commitment
+  - turn: 2
+    type: claim
+    id: O20
+    routing: crystallized
+    provenance: ai-suggested
+    summary: logic/claims.md:C10 via artifact-commitment
+  - turn: 2
+    type: claim
+    id: O21
+    routing: crystallized
+    provenance: ai-suggested
+    summary: logic/claims.md:C11 via artifact-commitment
+  - turn: 2
+    type: claim
+    id: O22
+    routing: crystallized
+    provenance: ai-suggested
+    summary: logic/claims.md:C12 via artifact-commitment
+  - turn: 2
+    type: heuristic
+    id: O25
+    routing: crystallized
+    provenance: ai-suggested
+    summary: logic/solution/heuristics.md:H05 via artifact-commitment
 
 ai_actions:
   - turn: 1
@@ -29,22 +218,78 @@ ai_actions:
       - "README.md"
       - "commit:8b7725b"
 
-claims_touched: []
+  - turn: 2
+    action: Completed authorized acquisition and resumable normalized ingestion; implemented source-bound
+      atomic recovery, mapped/vectorized loading, exact one-batch prefetch, teacher-copy/position/change
+      diagnostics, gated R1 handoff and analytic time transport with RED-to-GREEN commits. Ran four long
+      example controls, four matched full R0 runs and two full R1 continuations; preserved every failed
+      gate.
+    provenance: ai-executed
+    files_changed:
+    - training/av_data.py
+    - training/common_base.py
+    - training/representation.py
+    - training/curriculum.py
+    - evaluation/representation.py
+    - viewer/dashboard.py
+    - configs/dev/common_base_full_av.yaml
+    - ara/evidence/tables/e1_common_base_overnight_2026-09-05.md
+  - turn: 2
+    action: Ran independent frozen temporal/future, content and scene-readout controls; added clearly post-seed0
+      context and metric counterexample diagnostics. Generated and structurally validated canonical report,
+      verified original input hashes and plotted values, updated DDR37/Now/architecture and committed next-experiment
+      plan. No browser QA or formal freeze claim.
+    provenance: ai-executed
+    files_changed:
+    - runs/overnight/common_base_20260905/report.html
+    - runs/overnight/common_base_20260905/report_qa.json
+    - docs/design-decisions.md
+    - docs/common-base-next-experiment.md
+    - commit:ca65ce0
+
+claims_touched:
+  - id: C09
+    action: crystallized
+    turn: 2
+  - id: C10
+    action: crystallized
+    turn: 2
+  - id: C11
+    action: crystallized
+    turn: 2
+  - id: C12
+    action: crystallized
+    turn: 2
+
 
 key_context:
   - turn: 1
     excerpt: "User confirmed: yes, please download it over night."
 
+  - turn: 2
+    excerpt: 'User: continue with the next steps. ask the right questions and find the correct answers.
+      experiment, implement, improve overnight'
+  - turn: 2
+    excerpt: All work used local resources and a 09:25 Berlin cap. The completed full R1 pair stayed on
+      the same clean revision; seed1 failed synchrony and neither paired timing interval excluded zero.
+      No new user affirmation of a scientific interpretation occurred.
+  - turn: 2
+    excerpt: This is one long turn across internal continuations; event timestamps below denote epilogue
+      capture, with exact execution timing retained in run ledgers.
+
 open_threads:
-  - "Let the active download finish; verify all 24 extraction markers and all metadata-referenced source pairs."
-  - "Create the full-corpus config, ingest resumable normalized shards, and choose the training budget from a throughput pilot."
-  - "Run matched no-covariance and gradient-balanced R0 controls; do not start R1 while R0 fails."
-  - "Set ABI thresholds only after seed variability and a correctly action-conditioned reference."
-  - "Revisit Sophontic only after its model, report, and eval kit ship."
-  - "Decide whether E2 pair scoring needs the remaining joint-correctness and invariance controls."
+  - Implement the controlled physical-signal/source validation, then compare current-anchor versus balanced-time
+    supervision at matched budget; N51 and docs/common-base-next-experiment.md.
+  - Defer B0 until timing is resolved; later test hidden velocity, occlusion, missing modalities and prior-only
+    behavior against a per-frame baseline.
+  - Keep E0/E1 formal freeze separate; two E0 gate tests and a correctly action-conditioned reference remain
+    outstanding.
+  - Revisit Sophontic only after its model, report and eval kit ship.
+  - Decide whether E2 pair scoring needs the remaining joint-correctness and invariance controls.
+
+  - "Historical E1-a replay requires restoration of seven pre-existing missing raw files listed in ara/evidence/README.md; current overnight sources are present."
 
 ai_suggestions_pending:
-  - >
-      After the active acquisition completes, audit marker count, corpus paths, and disk
-      headroom before starting shard ingestion; size the matched R0 runs from a measured
-      ingestion/training throughput pilot rather than the held-out gate values.
+  - 'O23: context controls suggest substantial shared context but do not identify the unique cause of weak
+    timing.'
+  - 'O24: balanced-time supervision is a proposed experiment, not a demonstrated improvement.'

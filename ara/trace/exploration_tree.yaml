@@ -668,3 +668,277 @@ tree:
                           - "data/tau_urban_av_2021/download-full.log"
                         status: resolved
                         children: []
+
+  - id: N37
+    type: experiment
+    title: Complete and verify the full synchronized TAU boundary
+    provenance: ai-executed
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N36
+    result: 24 archives verified; 8646 train/3645 eval clips, 305/126 disjoint groups; all referenced pairs
+      ingested with source/shard checksums. Native-clock 80-clip sample agrees at first timestamps; 8 Hz
+      quantization delay reaches 32.9 ms.
+    evidence:
+    - runs/overnight/common_base_20260905/full_acquisition_verified.json
+    - runs/overnight/common_base_20260905/full_manifest_quality.json
+    - runs/overnight/common_base_20260905/source_clock_audit.json
+    - ara/evidence/tables/e1_common_base_overnight_2026-09-05.md
+    status: resolved
+    children: []
+  - id: N38
+    type: experiment
+    title: Four matched long example-bundle R0 runs
+    provenance: ai-executed
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N35
+    result: 'Covariance 0/.002, seeds 0/1, 10000 updates each. All four fail both future gates; covariance
+      passes rank but the tiny cohort cannot select its coefficient. Scope: duration diagnostic only.'
+    evidence:
+    - runs/overnight/common_base_20260905/examples_long_comparison.json
+    - ara/evidence/tables/e1_common_base_overnight_2026-09-05.md
+    status: resolved
+    children: []
+  - id: N39
+    type: dead_end
+    title: Longer training alone makes the example cohort eligible for R1
+    provenance: ai-executed
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N38
+    hypothesis: Increasing the same 20-clip fixture to 10000 updates suffices for held-out R0 readiness.
+    failure_mode: Both modalities still fail future advantage at both seeds/settings; only 9 train clips
+      and 11 eval clips with incomplete scene coverage.
+    lesson: Keep the duration result negative and decide covariance only on the planned full-corpus matched
+      controls.
+    evidence:
+    - runs/overnight/common_base_20260905/examples_long_comparison.json
+    status: resolved
+    children: []
+  - id: N40
+    type: experiment
+    title: Speed up the data path while preserving consumed random state
+    provenance: ai-executed
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N37
+    result: 'Vectorized corruption/mapped windows and one-batch prefetch retain reference trajectories.
+      Warm-cache 4×100 CUDA-update probe: mean .256668 s without prefetch versus .183243 with it, 28.6%
+      lower update time; all trajectories and actual recovery exact. Virtual IDs reuse example bytes, not
+      new scientific data.'
+    evidence:
+    - runs/overnight/common_base_20260905/prefetch_gpu_benchmark.json
+    - runs/overnight/common_base_20260905/prefetch_smoke_compatibility.json
+    - commit:5cbe0a6
+    - commit:74f87f7
+    - O25
+    status: resolved
+    children: []
+  - id: N41
+    type: experiment
+    title: Resolve the complete two-seed covariance comparison
+    provenance: ai-executed
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N37
+    - N40
+    result: Four 10000-update R0 runs share clean runtime 0bb78d5 and exact per-seed initial panels. Covariance
+      .002 video/audio ranks .341511/.300382 and .333895/.271944; controls .104915/.062662 and .113408/.059612.
+      Covariance passes all ten checks at both seeds; controls fail both rank checks.
+    evidence:
+    - runs/overnight/common_base_20260905/full_comparison_validation.json
+    - ara/evidence/tables/e1_common_base_overnight_2026-09-05.md
+    - O18
+    status: resolved
+    children: []
+  - id: N42
+    type: experiment
+    title: Audit future copying, position structure and frozen scene readouts
+    provenance: ai-executed
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N41
+    result: Both selected R0 sources beat teacher copying in both modalities on all 3645 eval clips with
+      positive group intervals. Blank/fixed-position probes show substantial audio position structure. Frozen
+      ridge .01 scene readouts include exact untrained baselines; all covariance-minus-control group intervals
+      include zero.
+    evidence:
+    - ara/evidence/tables/e1_common_base_overnight_2026-09-05.md
+    - runs/overnight/common_base_20260905/scene_probe_uncertainty_seed0.json
+    - runs/overnight/common_base_20260905/scene_probe_uncertainty_seed1.json
+    - runs/overnight/common_base_20260905/scene_probe_initialization_identity.json
+    status: resolved
+    children: []
+  - id: N43
+    type: decision
+    title: Retain covariance .002 under the predeclared full-data rule
+    provenance: ai-suggested
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N41
+    - N42
+    choice: Use the two passing full-corpus covariance checkpoints for R1 while keeping original thresholds,
+      independent future controls and dev-only status.
+    alternatives:
+    - Select from the tiny duration study
+    - Choose by rank alone without prediction controls
+    evidence:
+    - O18
+    - runs/overnight/common_base_20260905/full_comparison_validation.json
+    - commit:e49c451
+    status: resolved
+    children: []
+  - id: N44
+    type: dead_end
+    title: Correct the R1 clock while literally copying learned R0 time coefficients
+    provenance: ai-executed
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N41
+    hypothesis: A shared physical reference can replace the R0 last-sample reference without converting
+      time weights.
+    failure_mode: Frozen R1-format preview falls to video rank .1825 and future advantage -.5017 before
+      training.
+    lesson: Coordinate-reference changes must preserve the learned time function, online and in EMA, before
+      interpreting transfer quality.
+    evidence:
+    - runs/overnight/common_base_20260905/av_change_panel_compatibility.json
+    - runs/overnight/common_base_20260905/time_transport_compatibility.json
+    status: resolved
+    children: []
+  - id: N45
+    type: experiment
+    title: Validate the gated function-preserving R0 to R1 handoff
+    provenance: ai-executed
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N44
+    - N40
+    result: SHA-bound completed/passing source validation, inherited collapse guards, fresh optimizer/RNG,
+      analytic Fourier time conversion and self-contained resume implemented. Equivalent-window panel max
+      difference 2.15245e-7; non-time weights/RNG exact. Final runtime replays 250 R0 CUDA updates and actual
+      R1 interrupted recovery exactly. 196 fast tests pass, 2 opt-in deselected.
+    evidence:
+    - runs/overnight/common_base_20260905/time_transport_compatibility.json
+    - runs/overnight/common_base_20260905/time_transport_r0_compatibility.json
+    - runs/overnight/common_base_20260905/r1_cuda_recovery_compatibility.json
+    - commit:f54976c
+    - commit:5d58418
+    - O19
+    status: resolved
+    children: []
+  - id: N46
+    type: decision
+    title: Run the two source-bound R1 continuations at equal budget
+    provenance: ai-suggested
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N43
+    - N45
+    choice: Run seeds 0/1 for 10000 additional updates each, batch 64, unchanged model/data/weights/LR/EMA,
+      within the local overnight deadline. Freeze the all-clip temporal/future audit before outcomes; no
+      B0 auto-launch.
+    alternatives:
+    - Start without source binding
+    - Change several representation components during the paired run
+    evidence:
+    - configs/dev/common_base_full_av.yaml
+    - commit:1d5711a
+    status: resolved
+    children: []
+  - id: N47
+    type: experiment
+    title: Complete both R1 runs on the same clean runtime
+    provenance: ai-executed
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N46
+    result: Seed 0 passes seven conditions; seed 1 fails only synchrony (-.009765625 above chance). Both
+      retain rank and positive future controls. Both use clean e49c451 and identical Python/manifest identities;
+      all source bindings and final checkpoint/panel/ledger/gate receipts reconcile.
+    evidence:
+    - runs/overnight/common_base_20260905/r1_comparison_validation.json
+    - ara/evidence/tables/e1_common_base_overnight_2026-09-05.md
+    - O20
+    - O21
+    status: resolved
+    children: []
+  - id: N48
+    type: dead_end
+    title: The existing R1 objective and 10000-update budget pass both seeds
+    provenance: ai-executed
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N47
+    hypothesis: The configured equal-budget R1 continuation establishes reliable audiovisual timing at both
+      seeds.
+    failure_mode: Only 1/2 configured gates pass; paired balanced-time changes +.960/+.631 pp have 95%
+      intervals [-1.399,+3.341]/[-1.587,+2.848] pp.
+    lesson: Preserve the negative timing result and its source checkpoints; do not promote from cross-clip
+      retrieval alone.
+    evidence:
+    - runs/overnight/common_base_20260905/av_temporal_paired_seed0.json
+    - runs/overnight/common_base_20260905/av_temporal_paired_seed1.json
+    - ara/evidence/tables/e1_common_base_overnight_2026-09-05.md
+    status: resolved
+    children: []
+  - id: N49
+    type: experiment
+    title: Separate timing evidence from context and current-anchor metric behavior
+    provenance: ai-executed
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N47
+    result: Predeclared future teacher-copy intervals stay positive in all R1 modality/seed pairs, but absolute/paired
+      balanced-time intervals include zero. Post-seed0 context margins shrink from .152/.155 arbitrary clips
+      to .0038/.0025 within recording. Constructed unit vectors pass all three AV statistics while balanced
+      assignment fails; not a trained model or collapse-guard test.
+    evidence:
+    - runs/overnight/common_base_20260905/av_context_exploratory_paired_seed0.json
+    - runs/overnight/common_base_20260905/av_context_exploratory_paired_seed1.json
+    - runs/overnight/common_base_20260905/audit_current_anchor_counterexample.json
+    - ara/evidence/tables/e1_common_base_overnight_2026-09-05.md
+    - O22
+    - O23
+    status: resolved
+    children: []
+  - id: N50
+    type: decision
+    title: Defer B0 and preserve the measured R1 timing failure
+    provenance: ai-suggested
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N48
+    - N49
+    choice: Keep covariance sources and both completed R1 checkpoints as development baselines. Defer B0;
+      next isolate known physical A/V signal and current-anchor versus balanced-time supervision. Formal
+      E0/E1 freeze and H1 remain unestablished.
+    alternatives:
+    - Promote from seed0 or retrieval alone
+    - Treat weak timing as proof that TAU or the whole architecture is unusable
+    evidence:
+    - O20
+    - O21
+    - O22
+    - docs/common-base-next-experiment.md
+    - commit:ca65ce0
+    - ara/evidence/tables/e1_common_base_overnight_2026-09-05.md
+    status: resolved
+    children: []
+  - id: N51
+    type: question
+    title: Can known shared physical signals separate data and objective limitations?
+    provenance: ai-suggested
+    timestamp: 2026-09-05T08:57+02:00
+    also_depends_on:
+    - N50
+    description: On a controlled deterministic A/V source, can the existing frontend recover shared change,
+      and does supervising both aligned times improve held-out balanced assignment at fixed model, initialization
+      and budget? Validate raw/shifted/constant-signal controls, then return to a single-change TAU comparison.
+      The plan is prepared; implementation/training are not run.
+    evidence:
+    - docs/common-base-next-experiment.md
+    - O24
+    status: open
+    children: []
