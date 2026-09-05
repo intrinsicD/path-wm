@@ -39,9 +39,10 @@ are not linearly readable from a single frame in either model, as expected.
   marginals are unit-scale and Gaussian (median std 0.8, W 0.985), so SIGReg is
   shaping each projection while the covariance stays concentrated in a dozen
   directions. The spectrum panel shows a cliff after roughly 12 components.
-- **Physical state is not linearly readable from the pilot latent.** Held-out
-  probe R² is at or below zero for every target, versus 0.78 to 0.97 for object
-  positions and angle with the released weights, on the same windows and probe.
+- **Physical state is weakly linearly readable from the pilot latent.** Mean
+  held-out probe R² is −0.06; some position targets are weakly positive (0.19–0.25),
+  while angle and velocity targets are negative. Released object-position/angle
+  R² is 0.78–0.97 on the same windows and probe.
   This is the sharpest difference measured, and it is scale-free.
 - **The pilot predictor uses actions less than state.** Action-to-state
   sensitivity rises from 0 to 0.91 over training but stays below 1; released
@@ -60,8 +61,9 @@ are not linearly readable from a single frame in either model, as expected.
   on the T-block and agent; the released patch PCA shows smooth spatial structure
   where the pilot's is flat outside the objects.
 
-These observations are consistent with the earlier control failure: a low-rank
-latent that does not encode object pose cannot support a useful planning cost.
+These observations are consistent with the earlier control failure: the low-rank
+latent, weak pose readout and poor rollout prediction are plausible contributors
+to an ineffective planning cost.
 They do not establish a cause (data scale, schedule, bf16 slicing, or recipe);
 the source-scale reproduction remains the prepared next experiment.
 
