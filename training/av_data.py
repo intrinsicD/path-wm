@@ -377,6 +377,8 @@ class ManifestAVData:
         starts: list[int],
         offset_frames: int,
         cache: dict[str, Mapping[str, Any]],
+        *,
+        shared_window_end: bool = False,
     ) -> TemporalObservation:
         values = []
         if modality == "video":
@@ -394,7 +396,10 @@ class ManifestAVData:
         else:
             raise ValueError(f"unsupported normalized modality {modality!r}")
         stacked = torch.stack(values)
-        timestamps = timestamps - timestamps[-1]
+        # R1 sensors share a physical update time despite differing sample rates (DDR §31).
+        # Each view uses its own window end, so timestamps cannot reveal a shifted negative.
+        reference = self.window_frames / self.video_fps if shared_window_end else timestamps[-1]
+        timestamps = timestamps - reference
         timestamps = timestamps.expand(len(records), -1).clone()
         return TemporalObservation(stacked, timestamps, torch.ones_like(timestamps, dtype=torch.bool))
 
@@ -422,13 +427,13 @@ class ManifestAVData:
             return RepresentationBatch(current, future, {})
 
         records, starts = self._draw(split, batch_size, generator)
-        current = {modality: self._observation(modality, records, starts, 0, cache) for modality in ("video", "audio")}
+        current = {modality: self._observation(modality, records, starts, 0, cache, shared_window_end=True) for modality in ("video", "audio")}
         future = {
-            modality: self._observation(modality, records, starts, self.future_frames, cache)
+            modality: self._observation(modality, records, starts, self.future_frames, cache, shared_window_end=True)
             for modality in ("video", "audio")
         }
         shifted = {
-            modality: self._observation(modality, records, starts, self.shifted_frames, cache)
+            modality: self._observation(modality, records, starts, self.shifted_frames, cache, shared_window_end=True)
             for modality in ("video", "audio")
         }
         return RepresentationBatch(current, future, shifted)

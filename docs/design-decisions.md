@@ -676,3 +676,28 @@ A CUDA replay of the frozen example balanced seed 0 on the official 32×64 evalu
 every prior metric, original ledger field, gate outcome, and random stream exactly. The new fractions
 are video 0.78657 and audio 0.32339; both future-prediction gates still fail. Proof:
 `runs/overnight/common_base_20260905/position_panel_compatibility.json`.
+
+
+---
+
+## 31. Give synchronized R1 modalities one physical time origin
+
+**Problem.** The sampler independently subtracted each modality's final sample time. With video at
+8 fps and audio at 16 kHz, samples captured at the same physical instant differed by 0.1249375 seconds
+in their reported timestamps. That contradicts the shared belief-update reference in ABI-v2 and the
+synchronized R1 data contract. Independent R0 streams do not claim this cross-modal correspondence.
+
+**Decision.** R1 timestamps use the exclusive window end as a shared reference, so every observed
+sample precedes the update time and aligned video/audio instants have the same timestamp. Each
+current/future/shifted view uses its own window end: timestamp features alone cannot disclose which
+view is the shifted negative. R0 retains its existing last-sample reference and all its source draws.
+This is a sampler correction before any real R1 run, not an R0 model intervention or an R1 promotion.
+No ABI shape, gate, source population, normalization or training-setting changes.
+
+**Validation.** The new conformance test failed on the old physical-clock mismatch and now checks
+aligned instants, causal timestamps, and identical relative grids across the shifted controls. All
+178 fast tests pass (two opt-in tests deselected). On real data, 16 batches of 64 per stage across both
+splits and both seeds reproduce R0 values/timestamps/masks/random streams exactly; R1 values/masks/
+random streams also match exactly, while its clock discrepancy becomes zero. The previously validated
+training module remains byte-identical. Proof:
+`runs/overnight/common_base_20260905/shared_clock_compatibility.json`.
