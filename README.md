@@ -4,19 +4,23 @@ A fresh, modular world-model baseline, followed by component research.
 
 The first reference is [LeWM](https://github.com/lucas-maes/le-wm), pinned to
 `8edfeb336732b5f3ce7b8b210d0ba370a09e2cac`. PushT is the first learning/control
-benchmark; TwoRoom supplies a second trajectory dataset. TAU Urban AV source
-media are retained for later passive multimodal work.
+benchmark; TwoRoom supplies a second trajectory dataset. TAU Urban AV and
+Charades source media are retained for later passive multimodal work. The
+[source data inventory](docs/source-data.md) records every dataset's origin,
+acceptance check and current state.
 
 The previous implementation and results were reset at the user's request.
 [Retained ideas](docs/ideas.md) are hypotheses for later work, not evidence.
 No baseline success claim is made until training and evaluation establish it.
 
-[Current diagnostic results](docs/diagnostic-results.md): ten essential tests
-pass, and local control matches upstream on ten paired cases using released
-weights. Capped learning checks use small official PushT and TwoRoom subsets;
-PushT exposed a BatchNorm evaluation mismatch. Useful control by our trained
-models and full benchmark reproduction remain unestablished. Long training is
-stopped pending user review. [Earlier checks](docs/baseline-checks.md) are retained.
+[Current validation results](docs/reference-validation.md): all 11 CPU tests
+pass after crash recovery. Cached PushT training completed 400 updates in 11.1
+minutes; its untouched checkpoint beats predictive controls on the small related
+subset and reaches 1/5 held-out control goals (replay 5/5, stationary 0/5).
+TwoRoom's full archive is verified and extracted. PushT source recovery and its
+50-goal released-checkpoint evaluation remain pending. Long training awaits user
+review; component research remains deferred. [First diagnostic round](docs/diagnostic-results.md)
+and [earlier checks](docs/baseline-checks.md) retain the previous results.
 
 Use the local environment `.runtime/lewm/bin/python`, or install this project
 with its `dev`, `eval` and `data` extras in an isolated environment.
