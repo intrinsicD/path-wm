@@ -24,7 +24,7 @@
 # Tests: invalid sources fail before training; weights transfer exactly; interrupted R1 is exact.
 # Existing R0 runtime and ledgers must replay exactly. No real R1 starts before the full R0 decision.
 # R1 panel iteration 14: measure 0.5 * dot(v_current-v_shifted, a_current-a_shifted)
-# after normalizing the existing projected A/V vectors. Constant scene identity cancels.
+# after normalizing the existing projected A/V vectors. Time-constant embeddings cancel.
 # This supplemental temporal-change context adds no forwards, random draws, objective or gate.
 # Test cancellation and aligned/reversed changes; replay every old R1 metric and gate exactly.
 experiment: E1_common_base

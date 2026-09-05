@@ -56,6 +56,7 @@ METRIC_LABELS = {
     "video_to_audio_retrieval_margin": "Video-to-audio retrieval margin",
     "audio_to_video_retrieval_margin": "Audio-to-video retrieval margin",
     "synchrony_accuracy_above_chance": "A/V synchrony accuracy above chance",
+    "audiovisual_temporal_change_alignment": "A/V temporal-change alignment",
     "gate_passed": "Curriculum gate passed (0/1)",
     "video_future_teacher_copy_advantage": "Video future advantage over teacher copy",
     "audio_future_teacher_copy_advantage": "Audio future advantage over teacher copy",
@@ -65,6 +66,12 @@ METRIC_LABELS = {
 }
 
 METRIC_DEFINITIONS = {
+    "A/V temporal-change alignment": (
+        "Half the dot product of current-minus-shifted changes in unit-normalized projected video "
+        "and audio embeddings, averaged over held-out windows. Zero if either embedding stays "
+        "constant across time; positive values indicate aligned changes. Supplemental context, "
+        "without a promotion threshold."
+    ),
     "Action sensitivity": (
         "Mean norm of the predictor-output difference under opposite valid actions, divided by the "
         "norm of the current ABI state, over the fixed probe set."

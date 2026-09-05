@@ -736,3 +736,28 @@ A real 250-step CUDA R0 replay matches the original learner/EMA, optimizer, CPU/
 all prior initial/final metrics and every final training value exactly. The real 10,000-step example
 balanced checkpoint is rejected for its two failed future gates, and no R1 checkpoint is created.
 Proof: `runs/overnight/common_base_20260905/handoff_r0_compatibility.json`.
+
+
+---
+
+## 33. Measure aligned audiovisual changes within a recording
+
+**Question.** How much of R1's projected correspondence concerns change over time, alongside the
+existing retrieval and wrong-time accuracy gates?
+
+**Decision.** Add `audiovisual_temporal_change_alignment` as supplemental R1 context: half the dot
+product of current-minus-shifted video/audio vectors after unit normalization, averaged over held-out
+windows. It is zero if either modality's embedding stays constant over time. Positive and negative
+values distinguish aligned and opposed projected changes. Use the already computed embeddings, with
+no additional forwards, random draws, objectives, thresholds, or gate changes.
+
+**Validation.** Constant embeddings produce zero, matching changes produce +1 in the constructed
+unit-vector case, and reversed changes produce -1. All 193 fast tests pass (two opt-in tests deselected).
+A read-only CPU evaluation of the completed full R0 balanced seed 0 in R1 format (32×64 windows) matches
+every prior metric, gate outcome and random stream before/after the addition. No R1 training or source
+selection occurs. Proof: `runs/overnight/common_base_20260905/av_change_panel_compatibility.json`.
+
+**New transfer finding.** That preview also exposes a large video feature shift when the corrected
+R1 window-end timestamps reach time embeddings trained under R0's last-sample reference: video rank
+falls to 0.1825 and future advantage becomes -0.5017. This is a checkpoint-transfer problem to resolve
+before R1 training, not a failure of the running R0 comparison or of this supplemental metric.

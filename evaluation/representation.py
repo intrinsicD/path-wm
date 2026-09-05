@@ -105,6 +105,22 @@ def _synchrony_above_chance(current: Mapping[str, torch.Tensor], shifted: Mappin
     return float(torch.cat((forward, reverse)).mean() - 0.5)
 
 
+
+def _temporal_change_alignment(
+    current: Mapping[str, torch.Tensor], shifted: Mapping[str, torch.Tensor],
+) -> float:
+    """Half the dot product of normalized A/V changes; time-constant embeddings cancel (DDR §33)."""
+    if set(current) != {"video", "audio"} or set(shifted) != {"video", "audio"}:
+        raise ValueError("temporal-change diagnostics require current and shifted video/audio embeddings")
+    video, audio, shifted_video, shifted_audio = [
+        F.normalize(group[modality].float(), dim=-1)
+        for group in (current, shifted) for modality in ("video", "audio")
+    ]
+    if video.ndim != 2 or any(value.shape != video.shape for value in (audio, shifted_video, shifted_audio)):
+        raise ValueError("temporal-change diagnostics require four matched (B,D) embeddings")
+    return float(0.5 * ((video - shifted_video) * (audio - shifted_audio)).sum(dim=-1).mean())
+
+
 def _batch_metrics(views: Mapping[str, object], stage: str) -> dict[str, float]:
     required = {"online", "masked_source", "future_source", "teacher_current", "teacher_future", "masked_prediction", "future_prediction"}
     missing = required - set(views)
@@ -152,6 +168,7 @@ def _batch_metrics(views: Mapping[str, object], stage: str) -> dict[str, float]:
             current["audio"], current["video"]
         )
         metrics["synchrony_accuracy_above_chance"] = _synchrony_above_chance(current, shifted)
+        metrics["audiovisual_temporal_change_alignment"] = _temporal_change_alignment(current, shifted)
     return metrics
 
 
