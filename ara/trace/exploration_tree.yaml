@@ -120,3 +120,89 @@ tree:
   also_depends_on:
   - N05
   status: resolved
+- id: N10
+  type: decision
+  title: Resume the authorized bounded validation after a computer crash
+  provenance: user
+  timestamp: 2026-09-05T15:31+02:00
+  choice: Continue cached PushT validation and full-source reference evaluation; preserve
+    completed runs; no long training or component research.
+  alternatives:
+  - Repeat completed training
+  - Start long training
+  evidence:
+  - 'User: continue with the last task, my computer just crashed...'
+  - 'Recovered prior user acceptance: ok yes please'
+  - O05
+  - ../configs/diagnostics/README.md
+  status: resolved
+- id: N11
+  type: experiment
+  title: Recover and verify completed cached PushT learning and control checks
+  provenance: ai-executed
+  timestamp: 2026-09-05T15:31+02:00
+  execution_phase: Training and diagnostics completed before crash; checkpoint checksum verified
+    in this turn.
+  result: 400 updates/665.98 seconds; 7 train/1 held-out related prefix episodes. Held-out
+    float32 MSE 0.191542 versus copy 1.538254 and shuffled actions 0.606741; calibrated clone
+    0.056977; same-batch bf16 0.076481. Untouched control 1/5, recorded replay 5/5, stationary
+    0/5, no initial successes. Checkpoint SHA256 matches pre-crash manifest.
+  evidence:
+  - evidence/tables/reference_validation_2026-09-05.json
+  - ../docs/reference-validation.md
+  - ../runs/diagnostics/pusht_cached_control/manifest.json
+  also_depends_on:
+  - N10
+  - N08
+  status: resolved
+- id: N12
+  type: experiment
+  title: Recover and verify complete PushT and TwoRoom source archives
+  provenance: ai-executed
+  timestamp: 2026-09-05T15:31+02:00
+  result: 'Both complete archives pass pinned SHA256 and extraction. PushT: 18,685 episodes/2,336,736
+    frames; TwoRoom: 10,000/920,809. Episode offsets and endpoint reads checked. Network retries
+    and a timed-out HF transfer preserved; final missing ranges recovered and accepted only
+    by full archive hash.'
+  evidence:
+  - evidence/tables/reference_validation_2026-09-05.json
+  - ../data/pusht/extraction.json
+  - ../data/tworoom/extraction.json
+  - ../runs/diagnostics/recovery_status.json
+  also_depends_on:
+  - N10
+  status: resolved
+- id: N13
+  type: dead_end
+  title: Query a nonexistent Gymnasium reset-seed property
+  provenance: ai-executed
+  timestamp: 2026-09-05T15:31+02:00
+  hypothesis: The installed PushT environment exposes np_random_seed for reset provenance.
+  failure_mode: Gymnasium 0.29.1 raises AttributeError before any control score is produced.
+  lesson: Record actual per-environment reset seed arguments without altering the upstream
+    reset; null explicitly denotes an unseeded reset. Preserve failed startup artifacts.
+  evidence:
+  - ../runs/diagnostics/reference_full_source_startup_failure.log
+  - ../scripts/evaluate_reference.py
+  also_depends_on:
+  - N12
+  status: resolved
+- id: N14
+  type: experiment
+  title: Released checkpoint control on the verified full PushT source
+  provenance: ai-executed
+  timestamp: 2026-09-05T15:31+02:00
+  result: '45/50 successes (90%) on 50 distinct source episodes; full-source StandardScaler;
+    sampling/CEM seed 42; 300 candidates, 30 iterations, 30 elites, horizon/action block/receding
+    horizon 5, goal offset 25, budget 50. World.evaluate: 171.4 seconds. Code 513c83c; 50
+    null reset seed arguments. Same cases and statistics as preserved failed startup. All
+    11 post-crash CPU tests pass.'
+  evidence:
+  - evidence/tables/reference_validation_2026-09-05.json
+  - ../runs/diagnostics/reference_full_source/manifest.json
+  - ../runs/diagnostics/reference_full_source/summary.json
+  also_depends_on:
+  - N12
+  - N13
+  - N07
+  status: resolved

@@ -1,5 +1,9 @@
 # Bounded baseline diagnostics — 2026-09-05
 
+This is the first diagnostic round. See the [follow-up validation report](reference-validation.md)
+for the completed cached PushT schedule, held-out control cases, and source
+recovery after the crash.
+
 The local control implementation now matches the upstream evaluator on all ten
 paired cases. The short PushT learning check exposed a large BatchNorm
 training/evaluation mismatch: estimating its statistics again from training

@@ -7,12 +7,13 @@ research extensions.
 
 ## Sources and scope
 
-The full pinned LeWM PushT and TwoRoom archives are still downloading. Diagnostic
+During the original four checks, the full pinned LeWM archives were downloading. Diagnostic
 subsets contain complete episodes extracted from received archive prefixes.
 Every consumed HDF5 data chunk is checked to lie inside the downloaded decoded
 byte range. Sparse views of truncated originals are never training inputs.
 Receipts record source revision, prefix range, prefix hash and verified extent.
-Full archive checksums remain pending.
+Full archive checksums were pending then; both archives are now verified and
+extracted, as recorded in the follow-up report.
 
 - PushT: first 8 episodes, 872 frames. These are closely related trajectory
   variants. Suitable for integration/overfit diagnosis; not a representative
@@ -75,3 +76,43 @@ PYTHONPATH=. .runtime/lewm/bin/python scripts/check_training_modes.py runs/diagn
 
 Use new run directories for repetition. Source acquisition and dependency setup
 are prerequisites; these commands do not launch any long training automatically.
+
+## Authorized follow-up
+
+The user subsequently accepted the cached PushT check and full-source reference
+evaluation, then requested continuation after a computer crash. The completed
+training and control artifacts are preserved. The cached run keeps the same
+seed, split, batch size, architecture, objective and 400-update schedule, with
+zero workers and a 200 MB cache limit. Its 840-second cap is unchanged.
+
+The trained checkpoint's five control starts use only its held-out episode,
+without outcome filtering; stationary actions and recorded actions use those
+same starts. Float32 evaluation and bf16 evaluation on identical windows are
+reported separately. Saved BatchNorm buffers remain unchanged.
+
+Full-source evaluation requires the pinned archive SHA256 and an extraction
+receipt matching repository, revision and hash. The released model uses the
+authors' full-source StandardScaler statistics and 50 valid-window starts
+sampled with seed 42. It runs through the pinned upstream World, policy and CEM
+solver with 50 environments, solver batch size 1, 300 candidates, 30 iterations,
+30 elites, horizon 5, action block 5, receding horizon 5, goal offset 25 and
+50-step budget. The wrapper records the per-environment reset seed arguments
+without overriding them. This source has no seed column, so upstream passes
+`None`; the record contains 50 nulls and does not claim deterministic simulator
+entropy. It omits video export. This uses the pinned newer SWM APIs
+through a thin adapter, so it is not an execution of the historical CLI's exact
+dependency environment.
+
+```bash
+.runtime/lewm/bin/python -m world_model.train configs/diagnostics/pusht_cached_learning.yaml
+PYTHONPATH=. .runtime/lewm/bin/python scripts/check_training_modes.py runs/diagnostics/pusht_cached_learning --output runs/diagnostics/pusht_cached_learning/diagnostics_precision.json
+PYTHONPATH=. .runtime/lewm/bin/python scripts/check_checkpoint_control.py runs/diagnostics/pusht_cached_learning runs/diagnostics/pusht_cached_control --cases 5
+PYTHONPATH=. .runtime/lewm/bin/python scripts/check_control_baselines.py runs/diagnostics/pusht_cached_control
+.runtime/lewm/bin/python scripts/prepare_data.py configs/datasets/tworoom.yaml
+.runtime/lewm/bin/python scripts/prepare_data.py configs/datasets/pusht.yaml
+.runtime/lewm/bin/python scripts/evaluate_reference.py configs/datasets/pusht.yaml runs/diagnostics/reference_full_source --cases 50
+```
+
+These are reproduction commands for the recorded checks; existing outputs must
+be preserved. Recovery does not repeat the completed training run. See the
+[follow-up report](reference-validation.md) for results and source receipts.

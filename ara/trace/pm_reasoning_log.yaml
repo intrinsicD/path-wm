@@ -24,3 +24,13 @@ entries:
     and evaluation samples are not contradictions.
   - No long training or research extension authorized by this turn; both capped training
     processes completed.
+- turn: 2026-09-05_001#4
+  notes:
+  - Recovered pre-crash experiment records are explicitly distinguished from experiments executed
+    in this turn; no completed training was repeated.
+  - 'Promoted O05 only: user continuation reaffirms the recovered original approval. New capability
+    interpretations and broader-learning recommendation remain staged.'
+  - O03 describes the 120-update checkpoint; new results describe 400 updates, so neither
+    overwrites nor contradicts the earlier scoped observation.
+  - Recorded seed-property startup failure separately from valid 45/50 control; same case
+    set and full normalization; null reset seeds are not fabricated deterministic seeds.

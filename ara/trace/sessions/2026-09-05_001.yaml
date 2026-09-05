@@ -2,9 +2,9 @@ session:
   id: 2026-09-05_001
   date: '2026-09-05'
   started: 2026-09-05T12:55+02:00
-  last_turn: 2026-09-05T13:56+02:00
-  turn_count: 3
-  summary: Four bounded diagnostics complete; evaluator parity on10cases; PushT BN mismatch; TwoRoom modest predictive learning; long training remains stopped.
+  last_turn: 2026-09-05T15:31+02:00
+  turn_count: 4
+  summary: Crash recovery complete; cached PushT 400 updates and 1/5 control recovered; both archives verified; released full-source control 45/50; long training stopped.
 events_logged:
 - turn: 1
   type: pivot
@@ -99,6 +99,66 @@ events_logged:
   routing: crystallized
   provenance: user-revised
   summary: O02 diagnostic sequence explicitly adopted by user; verbal affirmation.
+- turn: 4
+  type: decision
+  id: N10
+  routing: direct
+  provenance: user
+  summary: Resume the authorized bounded validation after a computer crash
+- turn: 4
+  type: experiment
+  id: N11
+  routing: direct
+  provenance: ai-executed
+  summary: Recover and verify completed cached PushT learning and control checks
+- turn: 4
+  type: experiment
+  id: N12
+  routing: direct
+  provenance: ai-executed
+  summary: Recover and verify complete PushT and TwoRoom source archives
+- turn: 4
+  type: dead_end
+  id: N13
+  routing: direct
+  provenance: ai-executed
+  summary: Query a nonexistent Gymnasium reset-seed property
+- turn: 4
+  type: experiment
+  id: N14
+  routing: direct
+  provenance: ai-executed
+  summary: Released checkpoint control on the verified full PushT source
+- turn: 4
+  type: observation
+  id: O06
+  routing: staged
+  provenance: ai-suggested
+  summary: The completed cached schedule shows strong prediction on the related PushT subset
+    but weak learned control. Residual BN and precision sensitivity remain; no broad trained-model
+    capability is established.
+- turn: 4
+  type: observation
+  id: O07
+  routing: staged
+  provenance: ai-suggested
+  summary: Released weights provide a successful positive control on the verified full-source
+    protocol (45/50). This does not establish our training reproduction or exact historical
+    paper-environment reproduction.
+- turn: 4
+  type: observation
+  id: O08
+  routing: staged
+  provenance: ai-suggested
+  summary: Next run a capped learning check on a broader, explicitly separated train/held-out
+    PushT episode split and assess float32 prediction with held-out planning; keep architecture/objective
+    fixed before considering long training.
+- turn: 4
+  type: heuristic
+  id: H02
+  routing: crystallized
+  provenance: user-revised
+  summary: O05 sequence reaffirmed by user continuation and recovered original approval.
 ai_actions:
 - turn: 1
   action: Reset workspace, implement modular baseline and dataset adapters, run short
@@ -125,6 +185,18 @@ ai_actions:
   - world_model/train.py
   - configs/diagnostics/
   - docs/diagnostic-results.md
+- turn: 4
+  action: Recovered prior approved scope and completed results; verified saved checkpoint;
+    reran 11 CPU tests; completed both source archives and full-source reference evaluation;
+    fixed reset provenance; wrote report. No new training.
+  provenance: ai-executed
+  files_changed:
+  - scripts/evaluate_reference.py
+  - docs/reference-validation.md
+  - docs/diagnostic-protocol.md
+  - CLAUDE.md
+  - README.md
+  - ara/
 claims_touched: []
 key_context:
 - turn: 1
@@ -138,10 +210,15 @@ key_context:
 - turn: 3
   excerpt: 'User: yes please do exactly that — adopts only the previously proposed
     four bounded diagnostic checks.'
+- turn: 4
+  excerpt: 'User: continue with the last task, my computer just crashed...'
+- turn: 4
+  excerpt: Recovered prior user 'ok yes please' approved the cached short PushT check and
+    full-data reference evaluation. Long training remains outside this approval.
 open_threads:
-- Finish and checksum-verify full official archives; establish full reference normalization and benchmark evaluation.
-- Test whether PushT saved-checkpoint BN mismatch settles after a completed cached short schedule; trained control remains unestablished.
-- User review before long training; no research extensions yet.
+- Reliable control from our own training on diverse held-out episodes remains unestablished.
+- Review residual BatchNorm and precision sensitivity before adopting any method change.
+- User review before any additional broader learning check or long training; research extensions remain deferred.
 ai_suggestions_pending:
-- O03 and O04 interpretations await researcher review; no broad baseline capability claim.
-- O05 next bounded sequence recommended, not yet adopted or launched.
+- O03, O04, O06 and O07 capability interpretations await researcher review; scopes remain distinct.
+- O08 broader capped learning recommendation awaits adoption; no additional run launched.

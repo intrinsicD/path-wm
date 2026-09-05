@@ -17,8 +17,8 @@ No baseline success claim is made until training and evaluation establish it.
 pass after crash recovery. Cached PushT training completed 400 updates in 11.1
 minutes; its untouched checkpoint beats predictive controls on the small related
 subset and reaches 1/5 held-out control goals (replay 5/5, stationary 0/5).
-TwoRoom's full archive is verified and extracted. PushT source recovery and its
-50-goal released-checkpoint evaluation remain pending. Long training awaits user
+Both full archives are verified and extracted. The released checkpoint reaches
+45/50 goals (90%) with full PushT source normalization. Long training awaits user
 review; component research remains deferred. [First diagnostic round](docs/diagnostic-results.md)
 and [earlier checks](docs/baseline-checks.md) retain the previous results.
 

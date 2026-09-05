@@ -5,7 +5,7 @@ through upstream and local evaluators with released weights; a small fixed-data
 batch-128 learning check capped at 15 minutes; a second-dataset check.
 Architecture and objective stay fixed. No long training or research extensions.
 
-Official archives are downloading. Verified complete early episodes extracted
+At the first check, official archives were downloading. Complete early episodes extracted
 from downloaded source byte ranges may support interim checks. Their source
 receipts must identify the subset and incomplete full-archive verification.
 Subset-fitted action statistics and early correlated episodes cannot establish
@@ -25,3 +25,10 @@ zero workers, retaining the 840-second limit. Evaluate the saved checkpoint
 and diagnostic clones separately, plus a few held-out control starts. Complete
 source verification and released-checkpoint reference evaluation as downloads
 finish. This does not authorize long training or component research.
+
+
+Recovery follow-up complete: both full source archives pass their pinned hashes
+and are extracted. The released checkpoint reaches 45/50 full-source goals;
+the untouched cached 400-update checkpoint reaches 1/5 related held-out prefix
+goals. See [the current report](../../docs/reference-validation.md). No long
+training or component research has been launched.

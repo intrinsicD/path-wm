@@ -74,6 +74,51 @@ observations:
   - N07
   - N08
   - N09
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H02
+  crystallized_via: verbal-affirmation
+  stale: false
+- id: O06
+  timestamp: 2026-09-05T15:31+02:00
+  provenance: ai-suggested
+  content: The completed cached schedule shows strong prediction on the related PushT subset
+    but weak learned control. Residual BN and precision sensitivity remain; no broad trained-model
+    capability is established.
+  context: Recovered 400-update checkpoint and controls; no researcher review of these findings
+    yet.
+  potential_type: claim
+  bound_to:
+  - N11
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O07
+  timestamp: 2026-09-05T15:31+02:00
+  provenance: ai-suggested
+  content: Released weights provide a successful positive control on the verified full-source
+    protocol (45/50). This does not establish our training reproduction or exact historical
+    paper-environment reproduction.
+  context: One 50-goal sample; newer pinned SWM API adapter; unseeded simulator reset arguments.
+  potential_type: claim
+  bound_to:
+  - N14
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O08
+  timestamp: 2026-09-05T15:31+02:00
+  provenance: ai-suggested
+  content: Next run a capped learning check on a broader, explicitly separated train/held-out
+    PushT episode split and assess float32 prediction with held-out planning; keep architecture/objective
+    fixed before considering long training.
+  context: Recommendation after completed recovery and reference validation; not yet approved
+    or launched.
+  potential_type: heuristic
+  bound_to:
+  - N11
+  - N14
   promoted: false
   promoted_to: null
   crystallized_via: null

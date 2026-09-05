@@ -32,14 +32,23 @@ Keep ordinary tests fast and CPU-based; substantive GPU runs are validation, not
 unit tests. Do not remove a failing test to conceal an implementation error.
 
 ## Status
-Fresh reset and modular LeWM implementation are complete. Ten essential tests
-pass. The local and upstream control evaluators agree on ten paired cases with
-released weights. Capped random-initialized learning checks use verified small
-prefix subsets of official PushT and TwoRoom; full archives are still incomplete.
-The 120-update PushT checkpoint has a severe BatchNorm evaluation mismatch;
-training-only buffer recalculation on a discarded clone diagnoses it without
-changing saved weights or adopting a new method. TwoRoom completed 400 updates.
-Useful control by a model trained here and full baseline reproduction remain
-unestablished. Do not start or resume long training until the user asks.
-Research extensions remain closed. See docs/diagnostic-results.md for current
-evidence and limitations, and docs/baseline-checks.md for the earlier checks.
+The modular LeWM implementation and 11 CPU tests pass after crash recovery.
+Local and upstream control evaluators agree on ten paired subset cases with
+released weights. Cached random-initialized PushT training completed all 400
+updates in 665.98 seconds on the same 8-episode prefix (7 train, 1 held out).
+Its untouched checkpoint beats copy/shuffled-action prediction controls in
+float32 and reaches 1/5 held-out control goals; replay reaches 5/5 and stationary
+actions 0/5. The checkpoint SHA256 still matches its pre-crash control manifest.
+BatchNorm recalibration still improves predictions on discarded diagnostic
+clones; it is not adopted as a baseline change. TwoRoom completed 400 updates on
+its earlier 32-episode prefix; its full source is now verified and extracted
+(10,000 episodes, 920,809 frames). Full PushT source is verified and extracted
+(18,685 episodes, 2,336,736 frames). The released checkpoint reaches 45/50 goals
+(90%) with full-source normalization through the pinned upstream evaluator.
+The wrapper records unseeded reset arguments explicitly; it does not alter
+upstream randomness. All recovery/evaluation processes have completed.
+Do not repeat the completed training run.
+See docs/reference-validation.md and runs/diagnostics/reference_full_source_status.json
+for current evidence and recovery status. Broader learned control and full
+training reproduction remain unestablished. Do not start or resume long
+training until the user asks. Research extensions remain closed.

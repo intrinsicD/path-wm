@@ -1,0 +1,1009 @@
+{
+  "recorded_at": "2026-09-05T15:31+02:00",
+  "provenance": "ai-executed",
+  "scope": "Recovered pre-crash bounded checks plus post-crash source and reference validation",
+  "pre_crash": {
+    "training_manifest": {
+      "config": {
+        "dataset": "configs/datasets/pusht_prefix.yaml",
+        "run_dir": "runs/diagnostics/pusht_cached_learning",
+        "seed": 3072,
+        "train_fraction": 0.9,
+        "train_episodes": null,
+        "max_steps": 400,
+        "epochs": 1000,
+        "batch_size": 128,
+        "workers": 0,
+        "encoder_chunk": 16,
+        "precision": "bf16",
+        "lr": 5e-05,
+        "weight_decay": 0.001,
+        "warmup_fraction": 0.01,
+        "grad_clip": 1.0,
+        "sigreg_weight": 0.09,
+        "sigreg_projections": 1024,
+        "sigreg_knots": 17,
+        "log_every": 10,
+        "eval_every": 100,
+        "eval_batches": 4,
+        "model": {},
+        "max_seconds": 840,
+        "cache_bytes": 200000000
+      },
+      "dataset": {
+        "name": "pusht_prefix",
+        "kind": "action_trajectory",
+        "path": "data/pusht_prefix/episodes.h5",
+        "repo": "quentinll/lewm-pusht",
+        "revision": "655cd446b9929369d7d406001da85c15d1457850",
+        "archive": "pusht_expert_train.h5.zst",
+        "sha256": "7cfbd6d90fa2f27876379a5ff169715a36ed82edbda64f9e5b5bfa34d212f318",
+        "action_dim": 2,
+        "action_semantics": "relative end-effector displacement; simulator scale 100",
+        "frameskip": 5,
+        "history": 3,
+        "receipt": "data/pusht_prefix/episodes.json",
+        "scope": "8 early source episodes for bounded diagnostics"
+      },
+      "model": {
+        "action_dim": 2,
+        "frameskip": 5,
+        "history": 3
+      },
+      "train_episodes": [
+        7,
+        5,
+        6,
+        4,
+        1,
+        3,
+        2
+      ],
+      "val_episodes": [
+        0
+      ],
+      "action_stats": {
+        "mean": [
+          -0.05929749086499214,
+          0.038818564265966415
+        ],
+        "std": [
+          0.21797694265842438,
+          0.1899658888578415
+        ],
+        "count": 763
+      },
+      "total_steps": 400,
+      "train_windows": 630,
+      "val_windows": 90,
+      "validation_window_indices": [
+        18,
+        31,
+        72,
+        36,
+        30,
+        55,
+        76,
+        56,
+        58,
+        77,
+        43,
+        17,
+        81,
+        89,
+        41,
+        3,
+        65,
+        4,
+        7,
+        79,
+        42,
+        9,
+        68,
+        88,
+        26,
+        62,
+        12,
+        61,
+        6,
+        70,
+        80,
+        27,
+        37,
+        20,
+        32,
+        8,
+        87,
+        16,
+        45,
+        82,
+        83,
+        84,
+        19,
+        24,
+        14,
+        52,
+        75,
+        78,
+        39,
+        66,
+        60,
+        57,
+        5,
+        73,
+        46,
+        33,
+        59,
+        2,
+        63,
+        38,
+        34,
+        23,
+        11,
+        71,
+        74,
+        35,
+        28,
+        0,
+        48,
+        29,
+        40,
+        10,
+        22,
+        53,
+        54,
+        21,
+        1,
+        67,
+        64,
+        15,
+        49,
+        69,
+        44,
+        85,
+        25,
+        51,
+        47,
+        86,
+        50,
+        13
+      ],
+      "initialization": "random",
+      "seed": 3072,
+      "code_commit": "79ddc55b64906a85e1a6ed09ff1e1ffcd1ab8640",
+      "code_dirty": false,
+      "torch_version": "2.9.0+cu128",
+      "device": "cuda",
+      "fingerprint": "477c86c00551ff9b0d098970a609f39056b895aee5d73a9f8d0264cadc15e64e"
+    },
+    "training_status": {
+      "kind": "complete",
+      "step": 400,
+      "elapsed_seconds": 665.9766429070005,
+      "total_steps": 400,
+      "baseline_gate": "pending_closed_loop_evaluation"
+    },
+    "prediction": {
+      "step": 400,
+      "seed": 3072,
+      "train": {
+        "pred_mse": 0.19284958392381668,
+        "identity_mse": 1.5373972356319427,
+        "zero_action_mse": 0.4259882718324661,
+        "shuffled_action_mse": 0.6066441088914871,
+        "rollout_mse": 0.3006416857242584,
+        "embedding_std": 0.9715840369462967,
+        "action_effect": 0.4031658247113228,
+        "examples": 512,
+        "eval_mode_batch_mse": 0.18691660463809967,
+        "bf16_same_batch_mse": 0.07232800126075745,
+        "batch_statistics_mse": 0.05805230885744095,
+        "train_calibrated_bn": {
+          "pred_mse": 0.058918497525155544,
+          "identity_mse": 1.5831290781497955,
+          "zero_action_mse": 0.3170906528830528,
+          "shuffled_action_mse": 0.5012462213635445,
+          "rollout_mse": 0.10754744336009026,
+          "embedding_std": 0.983852431178093,
+          "action_effect": 0.42324648797512054,
+          "examples": 512
+        }
+      },
+      "heldout": {
+        "pred_mse": 0.1915423423051834,
+        "identity_mse": 1.5382541418075562,
+        "zero_action_mse": 0.42287561297416687,
+        "shuffled_action_mse": 0.6067410707473755,
+        "rollout_mse": 0.29782623052597046,
+        "embedding_std": 0.9804425239562988,
+        "action_effect": 0.41846954822540283,
+        "examples": 90,
+        "eval_mode_batch_mse": 0.1915423423051834,
+        "bf16_same_batch_mse": 0.0764806792140007,
+        "batch_statistics_mse": 0.056393105536699295,
+        "train_calibrated_bn": {
+          "pred_mse": 0.05697713419795036,
+          "identity_mse": 1.5839207172393799,
+          "zero_action_mse": 0.31527677178382874,
+          "shuffled_action_mse": 0.5145883560180664,
+          "rollout_mse": 0.10348296165466309,
+          "embedding_std": 0.9929847717285156,
+          "action_effect": 0.44533592462539673,
+          "examples": 90
+        }
+      },
+      "bn_calibration_scope": "Discarded diagnostic clone; at most 512 training windows; no weight update or checkpoint change"
+    },
+    "control_manifest": {
+      "checkpoint": "runs/diagnostics/pusht_cached_learning/checkpoint.pt",
+      "checkpoint_sha256": "b11151d1a30f971fff7d86cddf381970094069e443e1c0ae5ca2868bc55db4a6",
+      "step": 400,
+      "dataset": {
+        "name": "pusht_prefix",
+        "kind": "action_trajectory",
+        "path": "data/pusht_prefix/episodes.h5",
+        "repo": "quentinll/lewm-pusht",
+        "revision": "655cd446b9929369d7d406001da85c15d1457850",
+        "archive": "pusht_expert_train.h5.zst",
+        "sha256": "7cfbd6d90fa2f27876379a5ff169715a36ed82edbda64f9e5b5bfa34d212f318",
+        "action_dim": 2,
+        "action_semantics": "relative end-effector displacement; simulator scale 100",
+        "frameskip": 5,
+        "history": 3,
+        "receipt": "data/pusht_prefix/episodes.json",
+        "scope": "8 early source episodes for bounded diagnostics"
+      },
+      "cases": [
+        {
+          "row": 7,
+          "episode": 0,
+          "start": 7
+        },
+        {
+          "row": 35,
+          "episode": 0,
+          "start": 35
+        },
+        {
+          "row": 53,
+          "episode": 0,
+          "start": 53
+        },
+        {
+          "row": 61,
+          "episode": 0,
+          "start": 61
+        },
+        {
+          "row": 82,
+          "episode": 0,
+          "start": 82
+        }
+      ],
+      "action_stats": {
+        "mean": [
+          -0.05929749086499214,
+          0.038818564265966415
+        ],
+        "std": [
+          0.21797694265842438,
+          0.1899658888578415
+        ],
+        "count": 763
+      },
+      "sampling_seed": 42,
+      "solver_and_reset_seeds": [
+        1234,
+        1235,
+        1236,
+        1237,
+        1238
+      ],
+      "population": "held-out episodes only; closely related prefix variants",
+      "batchnorm": "saved buffers, unchanged",
+      "goal_offset": 25,
+      "budget": 50,
+      "samples": 300,
+      "iterations": 30,
+      "elites": 30
+    },
+    "control_summary": {
+      "successes": 1,
+      "cases": 5,
+      "initial_successes": 0,
+      "mean_steps": 41.2,
+      "checkpoint_unchanged": true
+    },
+    "action_baselines": {
+      "records": [
+        {
+          "row": 7,
+          "episode": 0,
+          "start": 7,
+          "kind": "stationary",
+          "success": false,
+          "initial_success": false,
+          "steps": 50
+        },
+        {
+          "row": 7,
+          "episode": 0,
+          "start": 7,
+          "kind": "recorded_replay",
+          "success": true,
+          "initial_success": false,
+          "steps": 23
+        },
+        {
+          "row": 35,
+          "episode": 0,
+          "start": 35,
+          "kind": "stationary",
+          "success": false,
+          "initial_success": false,
+          "steps": 50
+        },
+        {
+          "row": 35,
+          "episode": 0,
+          "start": 35,
+          "kind": "recorded_replay",
+          "success": true,
+          "initial_success": false,
+          "steps": 23
+        },
+        {
+          "row": 53,
+          "episode": 0,
+          "start": 53,
+          "kind": "stationary",
+          "success": false,
+          "initial_success": false,
+          "steps": 50
+        },
+        {
+          "row": 53,
+          "episode": 0,
+          "start": 53,
+          "kind": "recorded_replay",
+          "success": true,
+          "initial_success": false,
+          "steps": 22
+        },
+        {
+          "row": 61,
+          "episode": 0,
+          "start": 61,
+          "kind": "stationary",
+          "success": false,
+          "initial_success": false,
+          "steps": 50
+        },
+        {
+          "row": 61,
+          "episode": 0,
+          "start": 61,
+          "kind": "recorded_replay",
+          "success": true,
+          "initial_success": false,
+          "steps": 24
+        },
+        {
+          "row": 82,
+          "episode": 0,
+          "start": 82,
+          "kind": "stationary",
+          "success": false,
+          "initial_success": false,
+          "steps": 50
+        },
+        {
+          "row": 82,
+          "episode": 0,
+          "start": 82,
+          "kind": "recorded_replay",
+          "success": true,
+          "initial_success": false,
+          "steps": 23
+        }
+      ],
+      "summary": {
+        "stationary": {
+          "successes": 0,
+          "cases": 5
+        },
+        "recorded_replay": {
+          "successes": 5,
+          "cases": 5
+        }
+      }
+    }
+  },
+  "post_crash": {
+    "cpu_tests": {
+      "command": "OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 .runtime/lewm/bin/python -m pytest",
+      "passed": 11,
+      "warnings": 2,
+      "exit_code": 0,
+      "reported_seconds": 20.05,
+      "scope": "CPU tests run after crash recovery; no computation code changed afterwards",
+      "warning_types": [
+        "pygame pkg_resources deprecation",
+        "gymnasium Box input casting"
+      ]
+    },
+    "pusht_source": {
+      "episodes": 18685,
+      "frames": 2336736,
+      "hdf5_bytes": 46300921856,
+      "source_has_seed_column": false,
+      "receipt": {
+        "repo": "quentinll/lewm-pusht",
+        "revision": "655cd446b9929369d7d406001da85c15d1457850",
+        "sha256": "7cfbd6d90fa2f27876379a5ff169715a36ed82edbda64f9e5b5bfa34d212f318"
+      },
+      "checks": [
+        "contiguous episode offsets",
+        "pixel/action row counts match episode lengths",
+        "first and last pixels readable"
+      ]
+    },
+    "tworoom_source": {
+      "episodes": 10000,
+      "frames": 920809,
+      "hdf5_bytes": 12775849984,
+      "receipt": {
+        "repo": "quentinll/lewm-tworooms",
+        "revision": "6903a2de048b13819d812da0b4dd661290bc01e4",
+        "sha256": "494b1a02f0765cd9a0d9daf1786c419ced1009977fc45d01e3158932f8d080ca"
+      },
+      "checks": [
+        "contiguous episode offsets",
+        "first and last pixel/action readable"
+      ]
+    },
+    "reference_manifest": {
+      "dataset": {
+        "name": "pusht",
+        "kind": "action_trajectory",
+        "path": "data/pusht/pusht_expert_train.h5",
+        "repo": "quentinll/lewm-pusht",
+        "revision": "655cd446b9929369d7d406001da85c15d1457850",
+        "archive": "pusht_expert_train.h5.zst",
+        "sha256": "7cfbd6d90fa2f27876379a5ff169715a36ed82edbda64f9e5b5bfa34d212f318",
+        "action_dim": 2,
+        "action_semantics": "relative end-effector displacement; simulator scale 100",
+        "frameskip": 5,
+        "history": 3
+      },
+      "source_verification": {
+        "repo": "quentinll/lewm-pusht",
+        "revision": "655cd446b9929369d7d406001da85c15d1457850",
+        "sha256": "7cfbd6d90fa2f27876379a5ff169715a36ed82edbda64f9e5b5bfa34d212f318"
+      },
+      "cases": [
+        {
+          "row": 150187,
+          "episode": 1235,
+          "start": 36
+        },
+        {
+          "row": 159883,
+          "episode": 1316,
+          "start": 129
+        },
+        {
+          "row": 201656,
+          "episode": 1639,
+          "start": 40
+        },
+        {
+          "row": 209210,
+          "episode": 1694,
+          "start": 59
+        },
+        {
+          "row": 216281,
+          "episode": 1761,
+          "start": 19
+        },
+        {
+          "row": 221571,
+          "episode": 1820,
+          "start": 13
+        },
+        {
+          "row": 305393,
+          "episode": 2635,
+          "start": 114
+        },
+        {
+          "row": 388512,
+          "episode": 3184,
+          "start": 115
+        },
+        {
+          "row": 429216,
+          "episode": 3517,
+          "start": 2
+        },
+        {
+          "row": 472611,
+          "episode": 3838,
+          "start": 133
+        },
+        {
+          "row": 532318,
+          "episode": 4299,
+          "start": 20
+        },
+        {
+          "row": 645504,
+          "episode": 5123,
+          "start": 126
+        },
+        {
+          "row": 829098,
+          "episode": 6651,
+          "start": 49
+        },
+        {
+          "row": 867812,
+          "episode": 6983,
+          "start": 65
+        },
+        {
+          "row": 941648,
+          "episode": 7572,
+          "start": 116
+        },
+        {
+          "row": 1015425,
+          "episode": 8235,
+          "start": 10
+        },
+        {
+          "row": 1028336,
+          "episode": 8313,
+          "start": 130
+        },
+        {
+          "row": 1038327,
+          "episode": 8373,
+          "start": 101
+        },
+        {
+          "row": 1043460,
+          "episode": 8408,
+          "start": 89
+        },
+        {
+          "row": 1054182,
+          "episode": 8486,
+          "start": 37
+        },
+        {
+          "row": 1054375,
+          "episode": 8488,
+          "start": 20
+        },
+        {
+          "row": 1175223,
+          "episode": 9591,
+          "start": 26
+        },
+        {
+          "row": 1206116,
+          "episode": 9864,
+          "start": 50
+        },
+        {
+          "row": 1237214,
+          "episode": 10117,
+          "start": 135
+        },
+        {
+          "row": 1279178,
+          "episode": 10378,
+          "start": 28
+        },
+        {
+          "row": 1299073,
+          "episode": 10489,
+          "start": 33
+        },
+        {
+          "row": 1475334,
+          "episode": 11775,
+          "start": 25
+        },
+        {
+          "row": 1504936,
+          "episode": 12047,
+          "start": 95
+        },
+        {
+          "row": 1529287,
+          "episode": 12221,
+          "start": 46
+        },
+        {
+          "row": 1582218,
+          "episode": 12591,
+          "start": 155
+        },
+        {
+          "row": 1627801,
+          "episode": 12961,
+          "start": 25
+        },
+        {
+          "row": 1635424,
+          "episode": 13029,
+          "start": 32
+        },
+        {
+          "row": 1673952,
+          "episode": 13303,
+          "start": 72
+        },
+        {
+          "row": 1715192,
+          "episode": 13586,
+          "start": 35
+        },
+        {
+          "row": 1768147,
+          "episode": 14033,
+          "start": 87
+        },
+        {
+          "row": 1775706,
+          "episode": 14108,
+          "start": 35
+        },
+        {
+          "row": 1805133,
+          "episode": 14327,
+          "start": 27
+        },
+        {
+          "row": 1816073,
+          "episode": 14432,
+          "start": 47
+        },
+        {
+          "row": 1823056,
+          "episode": 14474,
+          "start": 98
+        },
+        {
+          "row": 1832756,
+          "episode": 14526,
+          "start": 126
+        },
+        {
+          "row": 1920150,
+          "episode": 15277,
+          "start": 42
+        },
+        {
+          "row": 1933212,
+          "episode": 15435,
+          "start": 19
+        },
+        {
+          "row": 1962500,
+          "episode": 15701,
+          "start": 33
+        },
+        {
+          "row": 2005033,
+          "episode": 16015,
+          "start": 137
+        },
+        {
+          "row": 2005680,
+          "episode": 16019,
+          "start": 72
+        },
+        {
+          "row": 2069969,
+          "episode": 16399,
+          "start": 75
+        },
+        {
+          "row": 2083086,
+          "episode": 16532,
+          "start": 35
+        },
+        {
+          "row": 2164264,
+          "episode": 17264,
+          "start": 9
+        },
+        {
+          "row": 2263297,
+          "episode": 17939,
+          "start": 40
+        },
+        {
+          "row": 2275346,
+          "episode": 18054,
+          "start": 21
+        }
+      ],
+      "normalization": {
+        "action": {
+          "mean": [
+            -0.007812564379916172,
+            0.006860687229453032
+          ],
+          "std": [
+            0.20846744284501714,
+            0.20674862637362224
+          ],
+          "count": 2336736
+        },
+        "proprio": {
+          "mean": [
+            228.81245369927169,
+            292.23052136298617,
+            -2.9210027281011395,
+            2.548780001444025
+          ],
+          "std": [
+            103.37358807129279,
+            98.92548714281784,
+            77.50031831485578,
+            76.86427067235248
+          ],
+          "count": 2336736
+        },
+        "state": {
+          "mean": [
+            228.81245369927169,
+            292.23052136298617,
+            243.6124968389013,
+            275.25068937003124,
+            2.124715466746899,
+            -2.9210027281011395,
+            2.548780001444025
+          ],
+          "std": [
+            103.37358807129279,
+            98.92548714281784,
+            71.61788439508972,
+            73.3817644038044,
+            1.9151641088726212,
+            77.50031831485578,
+            76.86427067235248
+          ],
+          "count": 2336736
+        }
+      },
+      "checkpoint_sha256": "48938400ae3464c9680731287f583a9cb516f55a8ec64ea13a91be47fb15b607",
+      "code_commit": "513c83c527e52789fdcdcb53619fc14faabef68b",
+      "model_commit": "8edfeb336732b5f3ce7b8b210d0ba370a09e2cac",
+      "swm_commit": "6f1e499e9cc0c898d326112f485c1062c3d20f24",
+      "source_episodes": 18685,
+      "source_frames": 2336736,
+      "protocol": "Full source, authors sampling/scalers/config, pinned current SWM evaluator; thin API wiring; no video export",
+      "num_envs": 50,
+      "solver_batch_size": 1,
+      "samples": 300,
+      "iterations": 30,
+      "elites": 30,
+      "horizon": 5,
+      "action_block": 5,
+      "receding_horizon": 5,
+      "budget": 50,
+      "goal_offset": 25,
+      "sampling_seed": 42,
+      "solver_seed": 42,
+      "reset_seed_policy": "upstream default; per-environment reset seed arguments recorded; null means unseeded"
+    },
+    "reference_summary": {
+      "successes": 45,
+      "cases": 50,
+      "success_rate": 0.9,
+      "episode_successes": [
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "seconds": 171.40306090300146,
+      "protocol": "Full source, authors sampling/scalers/config, pinned current SWM evaluator; thin API wiring; no video export"
+    },
+    "reset_seed_arguments": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "recovery": {
+      "timestamp": "2026-09-05T15:04:39.321718+02:00",
+      "stage": "complete",
+      "checkpoint_sha256_verified": "b11151d1a30f971fff7d86cddf381970094069e443e1c0ae5ca2868bc55db4a6",
+      "cpu_tests_passed": 11,
+      "tworoom_full_source": "verified_and_extracted",
+      "pusht_recovery_file": "data/pusht/pusht_expert_train.h5.zst.recovery",
+      "pusht_expected_archive_bytes": 13136247974,
+      "pusht_missing_extent_bytes": 0,
+      "pusht_missing_extents": [],
+      "original_cache_preserved": true,
+      "training_repeated": false,
+      "full_reference_evaluation_started": true,
+      "background_task_processes_stopped": true,
+      "previous_transfer_failure": "HTTP range transfers stopped after 604110848 additional bytes; urllib and curl probes returned connection resets; a 300-second Hugging Face CLI retry timed out without cache growth.",
+      "recovery_log": "runs/diagnostics/pusht_remaining_recovery.log",
+      "note": "Both archives verified/extracted; reference evaluation completed after recorder compatibility fix.",
+      "pusht_archive": "data/pusht/pusht_expert_train.h5.zst",
+      "pusht_source_verification": {
+        "method": "Resume existing recovery file by fetching remaining sparse holes with boundary overlap; accept only whole archive SHA256",
+        "source_revision": "655cd446b9929369d7d406001da85c15d1457850",
+        "sha256": "7cfbd6d90fa2f27876379a5ff169715a36ed82edbda64f9e5b5bfa34d212f318",
+        "expected_sha256": "7cfbd6d90fa2f27876379a5ff169715a36ed82edbda64f9e5b5bfa34d212f318",
+        "seconds": 107.38693837499886
+      },
+      "reference_result": {
+        "successes": 45,
+        "cases": 50,
+        "success_rate": 0.9,
+        "episode_successes": [
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "seconds": 171.40306090300146,
+        "protocol": "Full source, authors sampling/scalers/config, pinned current SWM evaluator; thin API wiring; no video export"
+      }
+    }
+  },
+  "limitations": [
+    "Eight related PushT prefix episodes for local training; five control starts share one held-out episode",
+    "No new training performed during recovery",
+    "Released checkpoint uses one full-source 50-goal sample through pinned current SWM APIs; not historical-environment or training reproduction",
+    "Upstream reset seed arguments are null; simulator entropy is not made deterministic"
+  ]
+}

@@ -1,8 +1,8 @@
 sessions:
 - id: 2026-09-05_001
   date: '2026-09-05'
-  summary: Four bounded diagnostics; evaluator parity, BN diagnosis, modest TwoRoom learning; long training stopped.
-  turn_count: 3
-  events_count: 14
+  summary: Crash recovery complete; cached PushT 400 updates and 1/5 control recovered; both archives verified; released full-source control 45/50; long training stopped.
+  turn_count: 4
+  events_count: 23
   claims_touched: []
   open_threads: 3
