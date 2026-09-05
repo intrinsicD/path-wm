@@ -34,3 +34,9 @@ entries:
     overwrites nor contradicts the earlier scoped observation.
   - Recorded seed-property startup failure separately from valid 45/50 control; same case
     set and full normalization; null reset seeds are not fabricated deterministic seeds.
+- turn: 2026-09-05_001#5
+  notes:
+  - N15 is a request for advice, not adoption of a new experiment or endorsement of staged
+    capability claims.
+  - O09 refines O08 into proposed data, budget and evaluation limits; both remain staged.
+    No new empirical evidence or closure signal; no promotions.

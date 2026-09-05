@@ -2,9 +2,9 @@ session:
   id: 2026-09-05_001
   date: '2026-09-05'
   started: 2026-09-05T12:55+02:00
-  last_turn: 2026-09-05T15:31+02:00
-  turn_count: 4
-  summary: Crash recovery complete; cached PushT 400 updates and 1/5 control recovered; both archives verified; released full-source control 45/50; long training stopped.
+  last_turn: 2026-09-05T16:06+02:00
+  turn_count: 5
+  summary: Released control 45/50; proposed a broader 128/32-episode PushT pilot with a 1,000-update/30-minute training cap; no new run launched.
 events_logged:
 - turn: 1
   type: pivot
@@ -159,6 +159,19 @@ events_logged:
   routing: crystallized
   provenance: user-revised
   summary: O05 sequence reaffirmed by user continuation and recovered original approval.
+- turn: 5
+  type: question
+  id: N15
+  routing: direct
+  provenance: user
+  summary: Which validation should follow successful released-checkpoint control?
+- turn: 5
+  type: observation
+  id: O09
+  routing: staged
+  provenance: ai-suggested
+  summary: Proposed broader capped training pilot with fixed held-out prediction and paired
+    control checks; no execution approval.
 ai_actions:
 - turn: 1
   action: Reset workspace, implement modular baseline and dataset adapters, run short
@@ -197,6 +210,12 @@ ai_actions:
   - CLAUDE.md
   - README.md
   - ara/
+- turn: 5
+  action: Reviewed saved results and existing training configuration; proposed a bounded next
+    experiment and recorded it without changing training configs or launching compute.
+  provenance: ai-executed
+  files_changed:
+  - ara/
 claims_touched: []
 key_context:
 - turn: 1
@@ -215,10 +234,12 @@ key_context:
 - turn: 4
   excerpt: Recovered prior user 'ok yes please' approved the cached short PushT check and
     full-data reference evaluation. Long training remains outside this approval.
+- turn: 5
+  excerpt: 'User: ok what now? Advice requested; no new training authorization inferred.'
 open_threads:
 - Reliable control from our own training on diverse held-out episodes remains unestablished.
 - Review residual BatchNorm and precision sensitivity before adopting any method change.
 - User review before any additional broader learning check or long training; research extensions remain deferred.
 ai_suggestions_pending:
 - O03, O04, O06 and O07 capability interpretations await researcher review; scopes remain distinct.
-- O08 broader capped learning recommendation awaits adoption; no additional run launched.
+- O08 broader capped learning recommendation and its concrete O09 pilot refinement await adoption; no additional run launched.

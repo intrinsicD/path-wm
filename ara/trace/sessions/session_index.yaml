@@ -1,8 +1,8 @@
 sessions:
 - id: 2026-09-05_001
   date: '2026-09-05'
-  summary: Crash recovery complete; cached PushT 400 updates and 1/5 control recovered; both archives verified; released full-source control 45/50; long training stopped.
-  turn_count: 4
-  events_count: 23
+  summary: Released control 45/50; proposed a broader 128/32-episode PushT pilot with a 1,000-update/30-minute training cap; no new run launched.
+  turn_count: 5
+  events_count: 25
   claims_touched: []
   open_threads: 3

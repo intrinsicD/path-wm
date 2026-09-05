@@ -123,3 +123,25 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O09
+  timestamp: 2026-09-05T16:06+02:00
+  provenance: ai-suggested
+  content: 'Propose a broader unchanged-LeWM PushT pilot: 128 training and 32 held-out episodes
+    spread across the verified archive, audit related variants before splitting; random initialization,
+    batch 128, at most 1,000 updates or 30 minutes of training, with preparation/evaluation
+    extra; save checkpoints at 250/500/1,000. Evaluate untouched float32 checkpoints on fixed
+    held-out prediction windows and 20 fixed control goals from distinct held-out episodes,
+    with copy/shuffled prediction and stationary/replay/released control baselines. Use learning/control
+    trends to choose longer training or a targeted diagnosis; research remains deferred.'
+  context: Concrete refinement of O08 in response to N15; proposed limits are not authorized
+    or launched. Current development config has batch 32 and no wall-clock cap, so it is not
+    the proposed pilot unchanged.
+  potential_type: heuristic
+  bound_to:
+  - N15
+  - N11
+  - N14
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

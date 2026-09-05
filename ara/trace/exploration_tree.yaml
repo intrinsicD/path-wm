@@ -206,3 +206,14 @@ tree:
   - N13
   - N07
   status: resolved
+- id: N15
+  type: question
+  title: Which validation should follow successful released-checkpoint control?
+  provenance: user
+  timestamp: 2026-09-05T16:06+02:00
+  description: User asks what to do next after recovery and the 45/50 released-control result;
+    this asks for a recommendation, not a new run.
+  also_depends_on:
+  - N11
+  - N14
+  status: resolved
