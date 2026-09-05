@@ -10,6 +10,11 @@
 #             independent R0 / synchronized+shifted R1 batches is the training-only data boundary.
 # Metric:     held-out per-modality feature std, effective rank, masked/future prediction advantage and
 #             temporal retrieval; R1 additionally measures cross-modal retrieval and shifted synchrony.
+# Data iteration 12: R1 video/audio must use one physical window-end reference; independently
+# anchoring each sensor's last sample introduces a 125 ms clock offset at the full-corpus rates.
+# Test aligned instants and causal, identical relative clocks across current/future/shifted views.
+# Only R1 timestamp construction changes. R0 values, timestamps and random draws must replay exactly.
+# This prepares correct synchronized data; real R1 training still requires the completed R0 gate/handoff.
 experiment: E1_common_base
 status: dev
 abi: docs/abi/abi_v2.yaml

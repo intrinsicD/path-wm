@@ -130,3 +130,21 @@ def test_manifest_rejects_recording_group_leakage(tmp_path):
 
     with pytest.raises(ValueError, match="recording group"):
         _module().build_representation_data(cfg, tmp_path)
+
+
+def test_r1_modalities_share_physical_time_without_revealing_the_shift(tmp_path):
+    _, store = _store(tmp_path)
+    batch = store.sample("train", "representation_av", 4, torch.Generator().manual_seed(17))
+    for view_name in ("current", "future", "shifted"):
+        view = getattr(batch, view_name)
+        video, audio = view["video"], view["audio"]
+        # Every fourth audio sample is captured at the same instant as a video frame in this fixture.
+        assert torch.equal(video.timestamps, audio.timestamps[:, ::4]), "R1 sensors use different time origins"
+        assert torch.equal(video.timestamps[0], torch.tensor([-0.5, -0.25]))
+        assert torch.equal(audio.timestamps[0], torch.arange(8) / 16 - 0.5)
+        for modality, observation in view.items():
+            assert (observation.timestamps < 0).all(), "every sample precedes the shared update time"
+            assert torch.equal(observation.timestamps, batch.current[modality].timestamps), "shifted time leaks the negative label"
+    r0 = store.sample("train", "representation_unimodal", 4, torch.Generator().manual_seed(17))
+    assert torch.equal(r0.current["video"].timestamps[0], torch.tensor([-0.25, 0.0]))
+    assert torch.equal(r0.current["audio"].timestamps[0], torch.arange(8) / 16 - 7 / 16)

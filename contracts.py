@@ -58,6 +58,8 @@ class RepresentationBatch:
     different source clips because no cross-modal correspondence is assumed. In R1 the rows are
     synchronized, and ``shifted`` contains same-recording, wrong-time views used to rule out scene
     identity as a shortcut for audiovisual correspondence.
+    R1 modalities share the exclusive window end as time zero within each view; re-referencing
+    future/shifted views at their own end keeps the negative offset out of the timestamp features.
     """
 
     current: Mapping[str, TemporalObservation]
