@@ -3,6 +3,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import random
 import subprocess
 import time
@@ -12,7 +13,7 @@ import numpy as np
 import torch
 import yaml
 from torch.utils.data import DataLoader
-from world_model.data import TrajectoryDataset, split_episodes, action_statistics, preprocess_pixels, normalize_actions
+from world_model.data import TrajectoryDataset, split_episodes, explicit_episode_split, action_statistics, preprocess_pixels, normalize_actions
 from world_model.model import build_model
 from world_model.objective import SIGReg
 from world_model.training import backward_batch
@@ -36,8 +37,13 @@ def train(config_path, resume=False):
     device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     if device.type=='cpu' and cfg['precision']=='bf16': raise ValueError('bf16 recipe expects CUDA')
     with h5py.File(ds_cfg['path'],'r') as f: count=len(f['ep_len'])
-    tr,va=split_episodes(count,seed,cfg['train_fraction'])
-    if cfg.get('train_episodes'): tr=tr[:cfg['train_episodes']]
+    split_receipt=None
+    if cfg.get('episode_split'):
+        tr,va,split_receipt=explicit_episode_split(cfg['episode_split'],count)
+        if cfg.get('train_episodes'): raise ValueError('Cannot truncate an explicit split')
+    else:
+        tr,va=split_episodes(count,seed,cfg['train_fraction'])
+        if cfg.get('train_episodes'): tr=tr[:cfg['train_episodes']]
     stats=action_statistics(ds_cfg['path'],tr)
     args=dict(path=ds_cfg['path'],frameskip=ds_cfg['frameskip'],num_steps=ds_cfg['history']+1,cache_bytes=cfg.get('cache_bytes',0))
     train_ds=TrajectoryDataset(episodes=tr,**args); val_ds=TrajectoryDataset(episodes=va,**args)
@@ -59,6 +65,7 @@ def train(config_path, resume=False):
     signature=dict(config=cfg,dataset=ds_cfg,model=model_cfg,train_episodes=tr,val_episodes=va,
                    action_stats=stats,total_steps=total_steps,train_windows=len(train_ds),
                    val_windows=len(val_ds),validation_window_indices=val_order,initialization='random',seed=seed)
+    if split_receipt is not None: signature['episode_split']=split_receipt
     fingerprint=hashlib.sha256(json.dumps(signature,sort_keys=True).encode()).hexdigest()
     step=0;elapsed=0
     if resume:
@@ -84,9 +91,12 @@ def train(config_path, resume=False):
             model_config=model_cfg,action_stats=stats,rng=torch.get_rng_state(),
             cuda_rng=torch.cuda.get_rng_state_all() if device.type=='cuda' else [])
         torch.save(checkpoint,run/'checkpoint.pt.tmp');(run/'checkpoint.pt.tmp').replace(run/'checkpoint.pt')
+        if step in cfg.get('checkpoint_steps',[]):
+            snapshot=run/f'checkpoint_{step:06d}.pt'
+            if not snapshot.exists(): os.link(run/'checkpoint.pt',snapshot)
     if not resume:
         record('validation',evaluate_prediction(model,val_loader,stats,device,
-            model_cfg.get('image_size',224),cfg['eval_batches'],cfg['precision']))
+            model_cfg.get('image_size',224),cfg['eval_batches'],cfg.get('eval_precision',cfg['precision'])))
         save()
     while step<total_steps:
         epoch=step//batches_per_epoch
@@ -100,7 +110,7 @@ def train(config_path, resume=False):
         model.train()
         for batch in loader:
             if step>=total_steps: break
-            if cfg.get('max_seconds') and time.monotonic()-start>=cfg['max_seconds']:
+            if cfg.get('max_seconds') and elapsed+time.monotonic()-start>=cfg['max_seconds']:
                 record('time_limit',dict(total_steps=total_steps))
                 save()
                 return
@@ -118,9 +128,9 @@ def train(config_path, resume=False):
                 record('train',{**{k:float(v) for k,v in terms.items()},'grad_norm':float(norm),
                     'lr':optimizer.param_groups[0]['lr'],'step_seconds':time.monotonic()-tick,
                     'peak_gpu_bytes':torch.cuda.max_memory_allocated() if device.type=='cuda' else 0})
-            if step%cfg['eval_every']==0 or step==total_steps:
+            if step%cfg['eval_every']==0 or step==total_steps or step in cfg.get('checkpoint_steps',[]):
                 record('validation',evaluate_prediction(model,val_loader,stats,device,
-                    model_cfg.get('image_size',224),cfg['eval_batches'],cfg['precision']))
+                    model_cfg.get('image_size',224),cfg['eval_batches'],cfg.get('eval_precision',cfg['precision'])))
                 save()
     record('complete',dict(total_steps=total_steps,baseline_gate='pending_closed_loop_evaluation'))
 

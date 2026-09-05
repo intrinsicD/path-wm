@@ -52,3 +52,10 @@ See docs/reference-validation.md and runs/diagnostics/reference_full_source_stat
 for current evidence and recovery status. Broader learned control and full
 training reproduction remain unestablished. Do not start or resume long
 training until the user asks. Research extensions remain closed.
+
+## Active approved pilot
+The user approved the broader PushT pilot on 2026-09-05: 128 train / 32 held-out
+initial-configuration groups, batch 128, at most 1,000 updates or 30 minutes of
+training, then fixed float32 prediction and 20 paired held-out control goals.
+See docs/pusht-broader-pilot.md. This authorizes this bounded run and its
+evaluation, not additional long training or research extensions.

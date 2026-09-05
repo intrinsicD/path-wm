@@ -4,6 +4,8 @@ The schema is the authors' pixels/action/ep_len/ep_offset layout. Raw pixels sta
 uint8 until batched preprocessing; state/proprio labels are never training inputs.
 """
 import os
+import json
+from pathlib import Path
 import h5py
 import hdf5plugin  # registers filters used by the source datasets
 import numpy as np
@@ -28,6 +30,18 @@ def split_episodes(count, seed=3072, train_fraction=0.9):
     order = torch.randperm(count, generator=torch.Generator().manual_seed(seed)).tolist()
     cut = max(1, min(count-1, int(count*train_fraction)))
     return order[:cut], order[cut:]
+
+
+def explicit_episode_split(path, count):
+    """Load a frozen split and reject overlapping episodes or source families."""
+    receipt = json.loads(Path(path).read_text())
+    tr, va = receipt['train_episodes'], receipt['val_episodes']
+    if not tr or not va or sorted(tr + va) != list(range(count)):
+        raise ValueError('Explicit split must partition every episode exactly once')
+    groups = receipt['group_ids']
+    if len(groups) != count or {groups[e] for e in tr} & {groups[e] for e in va}:
+        raise ValueError('Related source configurations cross the split')
+    return tr, va, receipt
 
 
 class TrajectoryDataset(Dataset):

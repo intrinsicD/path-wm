@@ -1,0 +1,14 @@
+name: pusht
+kind: action_trajectory
+path: data/pusht/pilot_128_32/trajectories.h5
+repo: quentinll/lewm-pusht
+revision: 655cd446b9929369d7d406001da85c15d1457850
+archive: pusht_expert_train.h5.zst
+sha256: 7cfbd6d90fa2f27876379a5ff169715a36ed82edbda64f9e5b5bfa34d212f318
+action_dim: 2
+action_semantics: relative end-effector displacement; simulator scale 100
+frameskip: 5
+history: 3
+subset_sha256: af224b18f0bf54039983618bddf62ec4f8ca446ee549570ab824caa7a31d0ae5
+subset_receipt: data/pusht/pilot_128_32/split.json
+subset_protocol: 128 train / 32 held-out initial-configuration groups

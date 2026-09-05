@@ -1,0 +1,27 @@
+# Authorized pilot: unchanged LeWM, random initialization, diverse source groups.
+dataset: configs/datasets/pusht_pilot.yaml
+episode_split: data/pusht/pilot_128_32/split.json
+run_dir: runs/diagnostics/pusht_broader_pilot
+seed: 3072
+train_episodes: null
+max_steps: 1000
+max_seconds: 1800
+epochs: 1000
+batch_size: 128
+workers: 0
+cache_bytes: 4000000000
+encoder_chunk: 16
+precision: bf16
+eval_precision: float32
+lr: 5.0e-05
+weight_decay: 0.001
+warmup_fraction: 0.01
+grad_clip: 1.0
+sigreg_weight: 0.09
+sigreg_projections: 1024
+sigreg_knots: 17
+log_every: 10
+eval_every: 250
+eval_batches: 16
+checkpoint_steps: [0, 250, 500, 1000]
+model: {}
