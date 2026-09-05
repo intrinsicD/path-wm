@@ -44,6 +44,23 @@ def _effective_rank_fraction(evidence: EvidenceTokens) -> float:
     return float(effective_rank / max(maximum_rank, 1))
 
 
+
+def _within_position_variation_fraction(evidence: EvidenceTokens) -> float:
+    """Fraction of token variation across windows at matching positions (DDR §30).
+
+    Position-only evidence has zero within-position variation despite potentially high rank.
+    This contextual diagnostic is not a semantic-content score or a promotion gate.
+    """
+    valid = evidence.valid_mask[..., None]
+    # masked_fill excludes padding even when padded values are NaN.
+    values = evidence.tokens.float().masked_fill(~valid, 0)
+    position_mean = values.sum(dim=0) / valid.sum(dim=0).clamp_min(1)
+    global_mean = values.sum(dim=(0, 1)) / valid.sum().clamp_min(1)
+    within = (values - position_mean).masked_fill(~valid, 0).square().sum()
+    total = (values - global_mean).masked_fill(~valid, 0).square().sum()
+    return float((within / total.clamp_min(torch.finfo(values.dtype).tiny)).clamp(0, 1))
+
+
 def _pool(evidence: EvidenceTokens) -> torch.Tensor:
     weights = evidence.valid_mask[..., None].to(evidence.tokens.dtype)
     return ((evidence.tokens * weights).sum(dim=1) / weights.sum(dim=1).clamp_min(1)).float()
@@ -109,6 +126,7 @@ def _batch_metrics(views: Mapping[str, object], stage: str) -> dict[str, float]:
     for modality in ("video", "audio"):
         metrics[f"{modality}_feature_std"] = _feature_std(online[modality])
         metrics[f"{modality}_effective_rank_fraction"] = _effective_rank_fraction(online[modality])
+        metrics[f"{modality}_within_position_variation_fraction"] = _within_position_variation_fraction(online[modality])
         metrics[f"{modality}_masked_prediction_advantage"] = _prediction_advantage(
             masked_source[modality], teacher_current[modality], masked_prediction[modality]
         )

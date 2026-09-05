@@ -59,6 +59,8 @@ METRIC_LABELS = {
     "gate_passed": "Curriculum gate passed (0/1)",
     "video_future_teacher_copy_advantage": "Video future advantage over teacher copy",
     "audio_future_teacher_copy_advantage": "Audio future advantage over teacher copy",
+    "video_within_position_variation_fraction": "Video variation across windows at fixed positions",
+    "audio_within_position_variation_fraction": "Audio variation across windows at fixed positions",
     "gate_failure_count": "Curriculum gate failures",
 }
 
@@ -96,6 +98,12 @@ for modality in ("Video", "Audio"):
         "MSE(online-current, teacher-future) minus MSE(predicted-future, teacher-future), averaged over "
         "held-out batches. Positive beats the online copy. Headline cards scale this by 1,000; "
         "charts and exact result tables retain the original value."
+    )
+    METRIC_DEFINITIONS[f"{modality} variation across windows at fixed positions"] = (
+        "Fraction of total valid-token squared variation remaining after subtracting each position's "
+        "mean across windows, averaged over held-out batches. Padding is excluded. Zero includes "
+        "constant or position-only evidence; a larger fraction does not establish semantic content. "
+        "Supplemental context, without a promotion threshold."
     )
     METRIC_DEFINITIONS[f"{modality} future advantage over teacher copy"] = (
         "MSE(teacher-current, teacher-future) minus MSE(predicted-future, teacher-future), averaged over "

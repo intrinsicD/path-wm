@@ -650,3 +650,29 @@ rank in both modalities at both seeds: video 0.2614/0.2599 versus 0.1189/0.1155,
 0.0613/0.0587. Every run still fails both future-prediction gates. The example bundle has only nine train
 and eleven eval clips, with three eval scene categories absent from training. These are duration and
 generalization diagnostics; the predeclared full-corpus pair still decides coefficient retention.
+
+
+---
+
+## 30. Separate position diversity from variation across windows in the R0 panel
+
+**Question.** Can a high token-rank score be explained by fixed position structure rather than
+variation in sensory inputs? For the current layouts, 120 audio positions can supply a rank fraction
+up to 119/192 even when every window is identical; the corresponding 32 video positions supply at
+most 31/192. This is a diagnostic limitation, not a reason to change the fixed rank threshold.
+
+**Decision.** Add `{video,audio}_within_position_variation_fraction` as supplemental panel context.
+For each batch, divide squared variation around each position's mean across windows by squared
+variation around the global valid-token mean. Exclude padding, including NaN padding, from both;
+constant evidence returns zero. Average the per-batch fractions using the existing held-out cohort.
+Position-only evidence returns zero, but a larger fraction does not establish semantic content.
+The metric uses already computed online evidence, with no additional forwards, random draws,
+training changes, gate changes, or rewriting of historical ledgers.
+
+**Validation.** Tests reproduce position-only evidence that passes the rank threshold yet has zero
+within-position variation, content-only evidence with fraction one, uneven padding with an exact
+8/35 fraction, and constant evidence. All 177 fast tests pass (two opt-in tests deselected).
+A CUDA replay of the frozen example balanced seed 0 on the official 32×64 evaluation cohort matches
+every prior metric, original ledger field, gate outcome, and random stream exactly. The new fractions
+are video 0.78657 and audio 0.32339; both future-prediction gates still fail. Proof:
+`runs/overnight/common_base_20260905/position_panel_compatibility.json`.
