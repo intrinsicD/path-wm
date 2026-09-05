@@ -945,3 +945,17 @@ unrelaxed R0 gates. Only passing sources can initialize a later matched 2,000-up
 at both seeds. That next iteration changes only the R1 time-ranking objective; all model, source,
 other loss, optimizer, temperature and audit settings remain matched. Known-source success is a
 prerequisite for widening the objective comparison to TAU. This is not a formal freeze task.
+
+**Source implementation outcome.** Both dynamic and constant versions contain 192 clips, with
+64 train and 32 held-out recording groups (two clips each). The all-64-eval raw dynamic audit
+scores 1.0 balanced assignment and 0.0 swapped assignment, coordinate MAE 0.00207896; the
+constant control scores 0.5 in both assignments with tie fraction 1.0. Dynamic manifest SHA-256
+`932f6eb649a3a6f243bf22b2aa6a5827defa3a1810b67dde7ace571d2fc357c5`; renderer SHA-256
+`3bd43e064be5cd6fcb932b726b937ff9cd782fa6d76f32be361f3ba976a6900b`. Raw receipts live beside
+each manifest as `manifest.raw_audit.json`; generated truth stays outside observations.
+
+All 200 fast tests pass (two opt-in tests deselected). A separate 100-update CUDA mechanics
+run writes `runs/dev/common_base_controlled_smoke/0/` and refreshes the dashboard with
+structural verification only. Its rank fractions are video 0.032723 / audio 0.056412 and its
+video temporal margin is negative; these three model conditions fail. This short run verifies
+the training path and does not replace the predeclared 5,000-update source budget.
