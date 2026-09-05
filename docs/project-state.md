@@ -20,7 +20,32 @@ training and benchmark evaluation. Baseline-specific tests cover episode
 alignment, causal action timing, reference computations and gradients,
 normalization, rollout and checkpoint integrity.
 
-## Approved diagnosis complete; source-scale candidate prepared
+## Latest: requested ten-minute training and recheck complete (2026-09-06)
+
+After inspecting the user's updated dashboard, a fresh source-data run completed
+375 updates in 578.48 seconds (9 min 38 sec), using seed 3072, batch 128,
+full-batch activation checkpointing, bf16, float32 validation and internals logging.
+This was a separate short cosine schedule with three warmup updates, not the
+139,330-update reproduction. It processed 48,000 windows (2.7% of one epoch).
+
+Matched control: new checkpoint **0/50**, released **45/50**, replay **50/50**,
+stationary **0/50**, with no initial successes. Prediction beats copying by 12.18%
+and shuffled actions by only 1.38%. On the same 512 validation windows, effective
+rank is 11.51/192 versus 88.72 for released weights; mean probe R² is 0.0437 versus
+0.720; eight-step rollout/copy ratio is 0.684 versus 0.114. The first frozen
+simulator rollout moves away from the block. Learned control remains unestablished.
+See [the full short-run report](pusht-source-10min.md).
+
+The inspector now restores and verifies random-window Subset indices, and records
+standalone prediction alongside internals. Dashboard PNG accumulation exceeded
+the canonical payload limit; a tested repair selects the focus run's earliest/latest
+inspections and a released inspection on the same population. All numeric records
+remain indexed. Final canonical desktop/mobile/source QA passes (29 charts,
+6 tables), and 49 essential tests pass, including two browser checks. The user's
+per-scalar curves and internals instrumentation are preserved. All checkpoints
+remain unchanged by evaluation, including old pilot/reference artifacts.
+
+## Earlier diagnosis and source-scale preparation
 
 The dashboard browser path is repaired. Real-time CDP transport preserves the
 canonical probes; two reader CSS fixes handle scrollbar width and narrow-screen
@@ -69,8 +94,8 @@ weights on the pilot's 512 held-out windows is recorded under
 `runs/diagnostics/pusht_internals/` and summarized in
 [the internals report](internals-report.md). The pilot latent is dimensionally
 collapsed (effective rank 14 of 192 versus 66 for released weights), physical
-state is not linearly readable from it (held-out probe R² at or below 0 versus
-0.78–0.97 for object pose with released weights), the predictor is less
+state is weakly linearly readable from it (mean held-out probe R² −0.06, some
+position targets weakly positive, versus 0.78–0.97 for released object pose), the predictor is less
 sensitive to actions than to state (ratio 0.91 versus 2.6), and multi-step
 prediction only modestly beats copying (0.65 of copy error at horizon 8 versus
 0.10). Gradient norm is dominated by the encoder at every trained checkpoint.
@@ -80,17 +105,18 @@ records the scalar subset at every validation step; existing configs are unchang
 
 ## Next work
 
-Schedule the prepared source-scale run separately before launching it. The
-pilot-rate extrapolation is about 58.3 hours and excludes full-source I/O and
-changed recomputation cost. No long training has been scheduled or launched.
-The protocol documents scheduler/release-history ambiguity and distinguishes
-source interpolation from unseen-configuration generalization. Preserve the
-completed pilot and diagnostic artifacts. Learned control is still unestablished;
-research extensions remain deferred. The three previously approved diagnostics
-and preparation items are complete; do not repeat them. The internals
-inspection of the five checkpoints is complete; rerun `scripts.inspect_checkpoint`
-only for new checkpoints, and enable `introspect` in new training configurations
-so the same signals are captured during training.
+The requested ten-minute run and all matched rechecks are complete. Preserve its
+375-update checkpoint and all earlier artifacts; do not repeat or silently resume
+completed development runs. The full ten-epoch reproduction remains unscheduled.
+Its earlier 58.3-hour estimate is a rough pilot-rate extrapolation, not a measured
+full-source runtime guarantee.
+
+The next experimental decision is a longer reference-scale schedule versus a
+matched-budget test of early representation collapse/action use. The short result
+cannot isolate data, schedule or recomputation as the cause. Random-window source
+validation measures interpolation; unseen-configuration generalization needs a
+separate group-held-out protocol. Keep internals enabled in any new training
+configuration. Research extensions remain deferred until learned control works.
 
 ## Earlier validation
 At broader-pilot completion, the modular LeWM implementation passed 13 CPU tests.

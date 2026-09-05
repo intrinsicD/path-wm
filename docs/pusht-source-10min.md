@@ -1,5 +1,92 @@
 # Ten-minute source-data development run
 
+## Completed result
+
+The fresh run completed **375 optimizer updates in 578.48 seconds (9 min 38 sec)**
+within the user-authorized ten-minute budget. The planning estimate was 300–350
+updates; it reached the 375-update ceiling first. It processed 48,000 windows
+(about 2.7% of one source-data epoch), with all logged values finite and peak
+allocated GPU memory 3,283,672,576 bytes (3.06 GiB). The training process started
+from clean commit `595faed`; the full 139,330-update reproduction was not launched.
+
+**Useful control remains unestablished:** the new checkpoint reaches 0/50 frozen
+goals, released weights 45/50, recorded replay 50/50 and stationary actions 0/50.
+No goals are initially satisfied. The new model uses all 50 steps on every case;
+released weights average 28.26. Both models use identical cases, reset/CEM seeds
+and solver budgets, with their documented saved/reference normalization.
+
+| Measurement on matched diagnostic windows | New, step 375 | Released weights |
+|---|---:|---:|
+| One-step prediction MSE / copy error | 0.8782 | 0.04186 |
+| Prediction MSE / shuffled-action error | 0.9862 | 0.02641 |
+| Effective covariance rank (of 192; 2,048 frames) | 11.51 | 88.72 |
+| Mean Shapiro–Wilk W | 0.9901 | 0.9947 |
+| Action sensitivity / state sensitivity | 0.3740 | 2.6449 |
+| Mean probe R² (8 targets, including velocity) | 0.04368 | 0.7200 |
+| Block x / y probe R² | 0.2298 / 0.2600 | 0.9820 / 0.9668 |
+| Block angle sin / cos probe R² | 0.01964 / −0.02755 | 0.9015 / 0.9150 |
+| Eight-step autoregressive error / copy-first-state error | 0.6844 | 0.1138 |
+
+The new checkpoint's saved float32 prediction MSE is 0.317239, versus copying
+0.361240 and shuffled actions 0.321685: 12.18% better than copying but just 1.38%
+better than shuffled actions. Absolute latent MSE is not compared across encoders.
+Saved-checkpoint re-evaluation differs from the final in-training validation by
+at most 1.14e-6 absolute / 2.63e-6 relative across recorded prediction metrics.
+
+The first-batch training internals capture effective rank 16.71 → 7.16 → 8.19 →
+9.12 → 9.66 at steps 0/100/200/300/375. Those 32-window estimates are distinct from
+the full 512-window inspection in the table. Validation prediction/copy ratios
+improve sharply late in training, while weak action use and low rank remain.
+Gaussian-looking individual dimensions do not imply a high-rank representation.
+These observations describe the failure; they do not isolate its cause.
+
+The [first frozen control case](../runs/diagnostics/pusht_source_10min_control/qualitative/case_0_rollouts.png)
+shows the new model moving the agent away from the block and failing after 50
+steps. Released weights succeed after 16 steps and recorded replay after 14.
+Both saved model action sequences reproduce their original outcomes and terminal
+state distances. The panel repeats the final frame after termination; it shows
+actual simulator observations, with no decoded latent images. Case 0 was chosen
+by its fixed index, without filtering by outcome.
+
+## Verification and artifacts
+
+- **49 essential tests passed**, including two real browser checks. The new split
+  restoration test catches validation indices applied to the wrong source window
+  and mismatched split hashes. The dashboard test keeps image comparisons bounded
+  and prevents unrelated diagnostic populations from entering the paired panels.
+- The checkpoint inspector now reconstructs and verifies the saved random-window
+  split, including normalization and index hashes. Local and released inspections
+  use the same 512 validation windows, 1,024 training probe windows and 256
+  long-horizon source windows. Their window hashes match. Probe/validation windows
+  share source episodes and may overlap in frames; this measures interpolation,
+  not unseen-configuration generalization.
+- The final checkpoint and retained step-375 snapshot both hash to
+  `9e4c1462f001f41ea6a2f2e34f2006c4512e00dd71ef6113f15f2f4b3b19b612`.
+  Local/released inspections and control evaluations verify unchanged checkpoints.
+  The three old pilot snapshots and released reference retain their previous hashes.
+- The first inspection's raw results succeeded while dashboard packaging failed
+  at the 3 MB payload limit. The bounded-panel repair below resolved it. All later
+  refreshes pass, including the final 29-chart / 6-table dashboard, desktop/mobile
+  rendering and source interaction. The user's separate curves and internals
+  instrumentation remain in place.
+- The prior internals report's assertion that every target had R² ≤ 0 was
+  corrected: its mean was negative, but some position targets were weakly positive.
+  No old numeric evidence was changed.
+
+The [dashboard](../runs/experiment_dashboard.html) is focused on the new training
+run. The [source-hashed result summary](../runs/diagnostics/pusht_source_10min/short_run_summary.json)
+links the raw manifests, logs and evidence. Training artifacts are under
+`runs/diagnostics/pusht_source_10min/`; prediction/internals/panels under
+`runs/diagnostics/pusht_source_10min_internals/{final,released}/`; matched control
+and qualitative evidence under `runs/diagnostics/pusht_source_10min_control/`.
+
+This run changes data population, schedule and recomputation relative to the old
+pilot, so it cannot attribute any difference to activation checkpointing alone.
+It covers only a small part of one epoch. The remaining experimental decision is
+whether to fund a longer reference-scale schedule or isolate early representation
+collapse with a matched-budget comparison. No second training run is scheduled;
+the long reproduction and research extensions remain deferred.
+
 ## Predeclared plan (2026-09-06)
 
 The user requested inspection of the updated dashboard, then ten minutes of
