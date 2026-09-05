@@ -10,4 +10,4 @@ Broader group-disjoint PushT pilot: [snapshot](tables/pusht_broader_pilot_2026-0
 
 Post-pilot recipe audit: [source-backed comparison and arithmetic](tables/pusht_recipe_audit_2026-09-05.json). Update counts are derived scenarios, not the released checkpoint’s recovered training history.
 
-Harness restoration: [checks and reporting receipt](tables/harness_recovery_2026-09-05.json); [recovery report](../../docs/harness-recovery.md). Includes 22 passing CPU tests, 30 existing result records and the unresolved canonical browser-QA limitation. No new scientific experiment.
+Harness restoration: [checks and reporting receipt](tables/harness_recovery_2026-09-05.json); [current reporting status](../../docs/project-state.md). Includes 22 passing CPU tests, 30 existing result records and the unresolved canonical browser-QA limitation. No new scientific experiment.

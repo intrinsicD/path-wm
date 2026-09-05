@@ -32,8 +32,11 @@ standalone prediction records). Artifact validation and exact embedded-payload
 checks pass. Browser verification remains blocked by the installed canonical
 packager: headless-shell stalls in fallback; installed full Chrome renders charts
 with a viewport correction but its final desktop/mobile probe times out. The
-published snapshot has an honest `structural_only` receipt. Details are in
-[harness-recovery.md](harness-recovery.md); visual verification is still pending.
+published snapshot has a `structural_only` receipt at
+`runs/experiment_dashboard.receipt.json`; visual verification is still pending.
+The wrapper returns nonzero until browser QA passes. The installed Data Analytics
+packager is `0.2.10-13ceeea1f599`; `CHROMIUM_EXECUTABLE_PATH` selects an explicit
+browser for troubleshooting.
 
 ## Approved work pending after this repair
 

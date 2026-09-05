@@ -19,4 +19,4 @@ can succeed while reporting fails; report that failure visibly and repair the
 HTML before calling the experiment workflow complete.
 
 The standing harness was recovered from Git commit `eca742a` and adapted to the
-current ledger format. See [recovery notes](docs/harness-recovery.md).
+current ledger format.
