@@ -28,13 +28,24 @@ No missing threshold is converted into a pass. Stopped runs remain visible.
 | Validation controls | Did predictions beat matched controls? | Step/MSE lines, condition color | Compare within a checkpoint; latent scale changes |
 | Embedding scale | Did representation scale change? | Step/standard deviation line | Context, no inferred gate |
 | Prediction checks | How does one saved evaluation compare to its controls? | Condition/MSE bars | Relative error within the selection |
+| Per-scalar training panels | How did each logged scalar move? | One step/value line per scalar (prediction loss, SIGReg, total, gradient norm, learning rate ×10⁻⁶) | Components have different scales; read each on its own axis |
+| Validation ratios (log10) | Does prediction beat matched controls, scale-free? | Step/log10(prediction ÷ control) lines, dashed 0 line | 0 equals the control; negative is better; copy error is near zero at initialization |
+| Checkpoint internals | Is the representation collapsed, Gaussian, linearly readable; does the predictor use actions? | Step/value lines per family over inspected checkpoints of the focus run | Descriptive; reference weights appear in tables, spectrum, horizon curves and panels |
+| Covariance spectrum | Isotropic or collapsed? | Component/log10 eigenvalue lines, one per inspected checkpoint | Flat is isotropic; a cliff is dimensional collapse; levels follow latent scale |
+| Error versus horizon | How fast does rollout error grow? | Horizon/(error ÷ copy baseline) lines per checkpoint, dashed 1 line | Below 1 beats copying; scale-free within each checkpoint |
+| Internals panels | What does the encoder attend to; where do predicted latents land? | Embedded PNG small multiples per checkpoint (attention, patch PCA, Q–Q, predictor attention, nearest neighbours) | Real inputs and measured internals; LeWM has no decoder |
 
 ## Interaction and accessibility
 
-Independent selectors control case identities, training run, prediction check and
-exact record details. Case identities group navigation only; they do not prove
-identical normalization, weights, sampling or evaluation budgets. The inventory
-and all-control exact table stay visible across selections. Color identifies
+The canonical reader applies a manifest filter only when it targets every dataset
+used by cards, charts and tables; per-section selectors are silently ignored and
+every chart then mixes all runs on a categorical axis (found 2026-09-06). The
+dashboard therefore emits no filters. Each chart shows one named selection fixed
+at build time (`--focus <training run>`, default: most recently modified training
+run; latest control case set; latest prediction check; first ranking model/case
+with its own plan) and states it in the title. Tables hold every record with a
+record column for sorting. Case identities group navigation only; they do not
+prove identical normalization, weights, sampling or evaluation budgets. Color identifies
 actual metric series, with visible legends; labels and exact tables carry meaning
 without color. The canonical reader owns responsive desktop/narrow layouts.
 

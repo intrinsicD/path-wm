@@ -70,6 +70,7 @@ class RunResult:
     training: tuple[dict, ...] = field(default_factory=tuple)
     validation: tuple[dict, ...] = field(default_factory=tuple)
     ranking: tuple[dict, ...] = field(default_factory=tuple)
+    internals: dict = field(default_factory=dict)
 
 
 def _context(manifest: dict) -> dict:
@@ -127,11 +128,12 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
     results, notices = [], []
 
     def add(directory, kind, status, metrics, sources, context=None, step=None,
-            training=(), validation=(), ranking=(), suffix=""):
+            training=(), validation=(), ranking=(), suffix="", internals=None):
         label = directory.relative_to(runs_root).as_posix() + suffix
         results.append(RunResult(label, kind, status, step, metrics, context or {},
                                  tuple(p.relative_to(runs_root.parent).as_posix() for p in sources),
-                                 max(p.stat().st_mtime for p in sources), training, validation, ranking))
+                                 max(p.stat().st_mtime for p in sources), training, validation, ranking,
+                                 internals or {}))
 
     for path in sorted(runs_root.rglob("metrics.jsonl")):
         directory = path.parent
@@ -274,6 +276,26 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
         add(path.parent, "diagnostic", value.get("status", "unknown"), numeric(value), [path],
             {k: value[k] for k in ("checkpoint_sha256", "limitation", "precision", "all_gradients_finite") if k in value},
             suffix=" / full-batch memory probe")
+
+    for path in sorted(runs_root.rglob("internals.json")):
+        # Saved-checkpoint internals: scalars over step, series and rendered panels.
+        value = read_json(path)
+        manifest_path = path.parent / "manifest.json"
+        manifest = read_json(manifest_path)
+        sources, panels = [path, manifest_path], []
+        for panel in value.get("panels", []):
+            panel_path = path.parent / panel.get("path", "")
+            if not panel_path.is_file():
+                raise DashboardDataError(f"{path}: panel {panel.get('path')} is missing")
+            sources.append(panel_path)
+            panels.append({**panel, "path": str(panel_path)})
+        context = {**_context(manifest), "family": value.get("family", "unknown"),
+                   "checkpoint_sha256": value.get("checkpoint_sha256"),
+                   "protocol": "Read-only checkpoint inspection in eval mode; see manifest for windows and seeds"}
+        status = "inspected" if value.get("checkpoint_unchanged") else "checkpoint_changed"
+        add(path.parent, "internals", status, numeric(value.get("scalars", {})), sources, context, value.get("step"),
+            internals={"series": value.get("series", {}), "panels": panels, "family": context["family"],
+                       "training_run": value.get("training_run")})
 
     for name in ("cases.jsonl", "episodes.jsonl"):
         for path in sorted(runs_root.rglob(name)):
