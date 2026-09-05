@@ -3,20 +3,21 @@
 Status: implementation candidate, 2026-09-04. ABI v1 and E1-a remain an immutable measured control;
 this document defines the replacement reference that must pass the gates below before it is promoted.
 
-Implementation status (development evidence only): ABI-v2 contracts, video/audio evidence paths, action
-adapter, slot predictor, predict-correct updater, explicit freeze/gate controller, EMA teachers, R0/R1
-representation losses, a variance–covariance guardrail, and the held-out panel are executable. TAU Urban
-Audio-Visual Scenes 2021 enters through an official-split, recording-group-safe manifest and per-clip
-shards. The 20-step CUDA baseline on the 20-clip example bundle made video masked/future prediction beat
-copy controls (+0.160/+0.217), while audio remained just below them (-0.005/-0.014) and effective-rank
-fractions were 0.108 video/0.043 audio against the 0.25 gate. A VICReg-style off-diagonal covariance
-penalty directly implements the missing dimensional-collapse guardrail without replacing temporal
-objectives. Weight 0.01 raised ranks to 0.115/0.047 but shrank feature standard deviation to 0.642/0.619.
-Balancing covariance's initialization encoder gradient against the variance floor at weight 0.002
-preserved more spread (0.732/0.702) while ranks moved only to 0.110/0.045 and the same four gates failed.
-These diagnostics are indeterminate plumbing evidence on a tiny development subset, not representation
-or world-model evidence. The complete-corpus R0 panel decides whether the balanced guardrail is retained;
-R1, B0/D0, and planning remain later work.
+Implementation status (development evidence only, 5 September): ABI-v2 contracts, video/audio evidence
+paths, the common core, EMA representation learner and held-out panel are executable. The complete
+TAU official split contains 8,646 train and 3,645 eval clips with disjoint recording groups. In the
+matched two-seed, 10,000-step R0 comparison, covariance weight 0.002 yields video ranks 0.3415/0.3339
+and audio ranks 0.3004/0.2719; the zero-covariance controls yield 0.1049/0.1134 and 0.0627/0.0596.
+Both regularized seeds pass every original R0 gate, while both controls fail the rank checks, so the
+predeclared rule retains covariance. Independent teacher-copy future controls are positive in both
+modalities and seeds. Rank still includes position structure and does not establish a scene-recognition
+advantage. The earlier tiny-example duration controls failed future prediction and did not select
+a coefficient. See DDR §36 and its source-bound comparison proof.
+
+Fresh R1 now requires those passing source checkpoints, preserves learned time functions under the
+shared normalized-grid clock, records initialization provenance and retains collapse guards. Actual
+CUDA recovery and the unchanged R0 trajectory are verified. The paired R1 continuation is next;
+B0/D0 and planning remain later work. These development gates do not freeze E0 or E1 and do not test H1.
 
 ## 1. Decision
 

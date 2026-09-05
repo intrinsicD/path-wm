@@ -807,3 +807,44 @@ no measurement, source ledger, objective or gate is altered.
 its source value and forbids invented action metrics. All 196 fast tests pass (two opt-in tests
 deselected). Canonical rendering of the current real run history succeeds with structural-only
 verification; browser verification remains unavailable. The first real R1 ledger is still pending.
+
+
+---
+
+## 36. Retain covariance after the complete matched R0 comparison and enter R1
+
+**Decision.** Apply DDR §24's predeclared rule to the complete TAU population: retain covariance
+weight 0.002. At 10,000 updates, batch 64, seeds 0/1, it improves both modalities' effective rank
+at each seed and preserves every other R0 condition. Both selected sources pass all ten R0 checks;
+both zero-covariance controls fail the two rank checks. No threshold was changed.
+
+| Seed | Covariance | Video rank | Audio rank | R0 gate |
+|---|---:|---:|---:|---|
+| 0 | 0 | 0.104915 | 0.062662 | fail: both ranks |
+| 0 | 0.002 | 0.341511 | 0.300382 | pass |
+| 1 | 0 | 0.113408 | 0.059612 | fail: both ranks |
+| 1 | 0.002 | 0.333895 | 0.271944 | pass |
+
+All four runs use the same clean runtime revision `0bb78d5`, identical model/data/budget settings
+except covariance, and exactly matching initial panels within each seed. Checkpoint metrics,
+summary/metric/threshold ledgers, copied specs and recomputed gate outcomes reconcile. Proof:
+`runs/overnight/common_base_20260905/full_comparison_validation.json`.
+
+**Independent checks.** Both selected models also beat the teacher-current copy on the separate
+all-eval-clip future audit: the recording-group bootstrap intervals are above zero for video and
+audio at both seeds. Blank-input and fixed-position controls show content dependence alongside
+substantial position structure, especially in audio. Frozen scene readouts include untrained
+baselines; higher rank does not establish a scene-recognition advantage over the control.
+Native track starts agree on the fixed 80-clip QA sample, but 8 Hz frame selection can lag native
+exposure by up to 32.9 ms. These are supplementary controls, not modified gates or formal E1 results.
+
+**R1 continuation.** `configs/dev/common_base_full_av.yaml` binds the two passing full source
+checkpoints by SHA-256. Run 10,000 further updates per seed with the existing model, preprocessing,
+loss weights, learning rate, EMA and thresholds; use the fresh optimizer/RNG and analytic clock
+transport from DDR §34. The actual CUDA R1 interruption proof matches uninterrupted weights/EMA,
+optimizer, all random streams, initial/final panels and training values exactly after recovery
+from step 2 of 8. That tiny mechanics probe is not a curriculum result. Proof:
+`runs/overnight/common_base_20260905/r1_cuda_recovery_compatibility.json`.
+The final handoff implementation also exactly replays the original 250-step CUDA R0 trajectory.
+All 196 fast tests pass (two opt-in tests deselected). Keep the absolute 09:25 Berlin stop time,
+report incomplete work explicitly, and do not launch B0 from the overnight queue.
