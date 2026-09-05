@@ -13,3 +13,19 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O02
+  timestamp: 2026-09-05T13:00+02:00
+  provenance: ai-suggested
+  content: Prioritize recorded-action replay and a released-checkpoint positive control
+    on the exact PushT protocol; then a capped small-data learning check with batch
+    128 and a second-dataset check before long training.
+  context: Network parity passes, but 0/2 control outcomes used a different data/simulator
+    protocol. Undertraining and evaluator mismatch are not yet distinguished.
+  potential_type: heuristic
+  bound_to:
+  - N02
+  - N04
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

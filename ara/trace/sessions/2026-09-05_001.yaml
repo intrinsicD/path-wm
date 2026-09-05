@@ -2,8 +2,8 @@ session:
   id: 2026-09-05_001
   date: '2026-09-05'
   started: 2026-09-05T12:55+02:00
-  last_turn: 2026-09-05T12:55+02:00
-  turn_count: 1
+  last_turn: 2026-09-05T13:00+02:00
+  turn_count: 2
   summary: Fresh reset and modular LeWM implemented; short checks reported; long training
     stopped by user.
 events_logged:
@@ -25,6 +25,19 @@ events_logged:
   routing: direct
   provenance: user
   summary: Short tests and report before long runs.
+- turn: 2
+  type: question
+  id: N04
+  routing: direct
+  provenance: user
+  summary: Requested next-step recommendation before long training.
+- turn: 2
+  type: observation
+  id: O02
+  routing: staged
+  provenance: ai-suggested
+  summary: Recommend evaluator positive controls before capped learning and second-dataset
+    checks.
 ai_actions:
 - turn: 1
   action: Reset workspace, implement modular baseline and dataset adapters, run short
@@ -44,8 +57,12 @@ key_context:
 - turn: 1
   excerpt: 'User: make a couple of tests first and report before we will start a long
     run later.'
+- turn: 2
+  excerpt: User asked what to do next based on the results; this does not authorize
+    restarting long training.
 open_threads:
 - Complete official PushT/TwoRoom downloads and verify extracted schemas.
 - Run bounded released-checkpoint control and second-dataset checks.
 - User review before any long training; no research extensions yet.
-ai_suggestions_pending: []
+ai_suggestions_pending:
+- O02: bounded diagnostic sequence recommended; not yet adopted by the user.

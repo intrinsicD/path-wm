@@ -7,3 +7,9 @@ entries:
     without claiming baseline success.
   - 'Latest user instruction supersedes the pending GPU-budget question: report before
     any long run.'
+- turn: 2026-09-05_001#2
+  notes:
+  - Staged the recommended diagnostic sequence; advice is not a user decision or an
+    executed experiment.
+  - No new empirical result or closure signal; O01 remains staged, long training remains
+    stopped.

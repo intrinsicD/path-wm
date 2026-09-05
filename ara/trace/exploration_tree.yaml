@@ -32,3 +32,11 @@ tree:
   - 'User: make a couple of tests first and report before we will start a long run
     later.'
   status: resolved
+- id: N04
+  type: question
+  title: Which short checks should precede long training?
+  provenance: user
+  timestamp: 2026-09-05T13:00+02:00
+  description: User requested a recommendation based on the fresh baseline results.
+    Long training remains stopped.
+  status: open
