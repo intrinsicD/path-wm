@@ -115,6 +115,10 @@ def _batch_metrics(views: Mapping[str, object], stage: str) -> dict[str, float]:
         metrics[f"{modality}_future_prediction_advantage"] = _prediction_advantage(
             future_source[modality], teacher_future[modality], future_prediction[modality]
         )
+        # Same-basis copy removes student/EMA alignment gain from the temporal comparison (DDR §26).
+        metrics[f"{modality}_future_teacher_copy_advantage"] = _prediction_advantage(
+            teacher_current[modality], teacher_future[modality], future_prediction[modality]
+        )
         metrics[f"{modality}_temporal_retrieval_margin"] = _paired_retrieval_margin(
             _pool(online[modality]), _pool(teacher_future[modality])
         )

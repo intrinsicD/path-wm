@@ -540,3 +540,32 @@ on nine train and eleven eval clips; the full-corpus pair still decides the cova
 Frozen-checkpoint blank-input and teacher-copy controls are preserved as supplementary diagnostics,
 including the possibility that position variation or student/teacher basis alignment inflates simple
 metrics. They do not change the predeclared panel or establish a new architecture decision.
+
+
+---
+
+## 26. Same-basis future-copy diagnostic
+
+**Question.** Does positive future prediction advantage reflect forecasting, or can it include alignment
+between online and EMA latent coordinates?
+
+**Decision.** Preserve every existing R0 metric and gate. Add supplementary
+`{video,audio}_future_teacher_copy_advantage`: MSE(teacher-current, teacher-future) minus
+MSE(learned prediction, teacher-future), using already-computed frozen evaluation views. The original
+future-advantage metric uses online-current for its copy baseline and remains unchanged. Neither
+training nor the sampler draws extra randomness for this diagnostic. A pure student/teacher scale
+alignment with identical teacher-current/future targets must score zero on the new control.
+
+**Evidence.** On a frozen step-2,500 example checkpoint, audio scores +0.01097 against the online copy
+but -0.001985 against the teacher copy. At step 10,000, both modalities trail both controls, consistent
+with the actual small-data future-prediction gate failure. A four-batch CPU replay of the final checkpoint
+reproduces every original panel number and the entire gate result exactly after adding the diagnostic;
+the additional teacher-copy advantages are -0.7252 video and -0.0558 audio for that supplementary cohort.
+Those four batches are distinct from the official 32-batch CUDA panel and do not replace it. All 169 fast
+tests pass (two opt-in tests deselected). Proof: `runs/overnight/common_base_20260905/teacher_copy_panel_compatibility.json`.
+
+**Interpretation.** The original VICReg diversity statistics are computed across example embeddings
+([§4.1](https://arxiv.org/pdf/2105.04906)); flattening our tokens also counts position differences. This
+motivates the supplementary blank-input/within-position probes, without establishing a replacement
+objective. Full-corpus measurements must distinguish representation diversity, temporal generalization,
+and latent-coordinate alignment before a representation is treated as useful for the next stage.
