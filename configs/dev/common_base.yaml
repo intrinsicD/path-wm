@@ -32,6 +32,8 @@
 # Rotate sine/cosine weights and shift the bias for online/EMA encoder and adapter time features.
 # All other parameters stay exact; no random draws, optimizer state transfer, or resume reapplication.
 # Test functional equivalence, unchanged non-time weights and RNG; replay real shared-clock windows.
+# Viewer iteration 16: include the three measured A/V gate values in latest-run cards when
+# present. Preserve R0 cards and exact source values; no new evidence, scaling or gate changes.
 experiment: E1_common_base
 status: dev
 abi: docs/abi/abi_v2.yaml

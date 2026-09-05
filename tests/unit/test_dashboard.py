@@ -265,20 +265,25 @@ def test_runner_dispatches_common_base_without_touching_the_e1_collector(tmp_pat
         assert "r0_initialization" not in record and "r0_initialization" not in summary
 
 
-def test_mixed_dashboard_shows_latest_representation_metrics_without_inventing_action_values(tmp_path):
+@pytest.mark.parametrize("audiovisual", [False, True])
+def test_mixed_dashboard_shows_latest_representation_metrics_without_inventing_action_values(tmp_path, audiovisual):
     runs_root = tmp_path / "runs"
     _write_run(runs_root, "action", accuracy=0.5, total=0.5)
     latest = _write_run(runs_root, "representation", accuracy=0.5, total=0.5)
     metrics = {"video_effective_rank_fraction": 0.12, "audio_effective_rank_fraction": 0.06,
                "video_future_prediction_advantage": -0.3, "audio_future_prediction_advantage": -0.00015,
                "gate_passed": 0, "gate_failure_count": 4}
+    av_metrics = {"video_to_audio_retrieval_margin": 0.02, "audio_to_video_retrieval_margin": 0.03,
+                  "synchrony_accuracy_above_chance": 0.04}
+    if audiovisual:
+        metrics.update(av_metrics)
     for filename in ("metrics.json", "run_summary.json", "threshold_record.json"):
         path = latest / filename
         value = json.loads(path.read_text())
         value["metrics"] = metrics
         path.write_text(json.dumps(value))
     spec = {"experiment": "E1_common_base", "status": "dev",
-            "train": {"stage": "representation_unimodal", "max_steps": 10000, "batch_size": 64},
+            "train": {"stage": "representation_av" if audiovisual else "representation_unimodal", "max_steps": 10000, "batch_size": 64},
             "data": {"source": {"subset": "development"}},
             "representation": {"weights": {"covariance": 0.002}}}
     (latest / "spec.yaml").write_text(yaml.safe_dump(spec))
@@ -288,6 +293,8 @@ def test_mixed_dashboard_shows_latest_representation_metrics_without_inventing_a
     cards = [c for c in artifact["manifest"]["cards"] if c["id"].startswith("selected_")]
     assert cards and all(c["dataset"] == "latest_run" for c in cards)
     assert all(datasets["latest_run"][0].get(c["metrics"][0]["field"]) is not None for c in cards)
+    card_ids = {c["id"] for c in cards}
+    assert all((f"selected_{name}" in card_ids) == audiovisual for name in av_metrics)
     assert not any("action_sensitivity" in c["id"] for c in cards)
     assert {row["value"] for row in datasets["representation_rank"]} == {0.12, 0.06}
     assert {row["value"] for row in datasets["representation_future"]} == {-0.3, -0.00015}
