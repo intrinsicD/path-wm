@@ -27,6 +27,11 @@
 # after normalizing the existing projected A/V vectors. Time-constant embeddings cancel.
 # This supplemental temporal-change context adds no forwards, random draws, objective or gate.
 # Test cancellation and aligned/reversed changes; replay every old R1 metric and gate exactly.
+# Handoff iteration 15: analytically translate the first Fourier coordinate projection at R1
+# entry so shared-window-end timestamps preserve R0 functions under its last-sample reference.
+# Rotate sine/cosine weights and shift the bias for online/EMA encoder and adapter time features.
+# All other parameters stay exact; no random draws, optimizer state transfer, or resume reapplication.
+# Test functional equivalence, unchanged non-time weights and RNG; replay real shared-clock windows.
 experiment: E1_common_base
 status: dev
 abi: docs/abi/abi_v2.yaml

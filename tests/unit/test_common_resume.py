@@ -170,13 +170,41 @@ def test_r1_rejects_unbound_incomplete_failed_or_incompatible_r0(tmp_path, monke
     assert not (tmp_path / "r1/checkpoint.pt").exists()
 
 
-def test_r1_initial_snapshot_transfers_all_weights_and_resets_optimizer(tmp_path, monkeypatch):
+def test_r1_initial_snapshot_preserves_functions_and_resets_optimizer(tmp_path, monkeypatch):
     cfg, path = _r0_source(tmp_path, monkeypatch)
     source = torch.load(path, weights_only=True)
     with pytest.raises(RuntimeError, match="simulated interruption"):
         train_common_base(cfg, TinyData(fail_after=0), tmp_path / "r1", 0, torch.device("cpu"))
     initial = torch.load(tmp_path / "r1/checkpoint.pt", weights_only=True)
-    torch.testing.assert_close(initial["learner"], source["learner"], rtol=0, atol=0)
+    transport = initial.get("r0_initialization", {}).get("time_reference_transport")
+    assert transport, "missing function-preserving R0 time-reference conversion"
+    allowed = {f"{name}.projection.{suffix}" for name in transport["modules"] for suffix in ("weight", "bias")}
+    assert len(allowed) == 16
+    for name, value in source["learner"].items():
+        if name not in allowed:
+            torch.testing.assert_close(value, initial["learner"][name], rtol=0, atol=0)
+    from training.base_model import build_common_world_model
+    from training.representation import build_representation_learner
+    from dataclasses import replace
+    before, after = [build_representation_learner(cfg, build_common_world_model(cfg)).eval() for _ in range(2)]
+    before.load_state_dict(source["learner"])
+    after.load_state_dict(initial["learner"])
+    old_batch = TinyData().sample("eval", "representation_unimodal", 2, torch.Generator().manual_seed(83))
+    offsets = {"video": 1 / cfg["data"]["video"]["frames_per_second"],
+               "audio": 1 / cfg["data"]["audio"]["sample_rate"]}
+    assert transport["offset_seconds"] == offsets
+    def translate(observations):
+        return {m: replace(o, timestamps=o.timestamps - offsets[m]) for m, o in observations.items()}
+    new_batch = replace(old_batch, current=translate(old_batch.current), future=translate(old_batch.future))
+    with torch.no_grad():
+        views = [model.evaluation_views(batch, stage="representation_unimodal", generator=torch.Generator().manual_seed(93))
+                 for model, batch in ((before, old_batch), (after, new_batch))]
+    for name in ("online", "masked_source", "teacher_current", "teacher_future", "masked_prediction", "future_prediction"):
+        for modality in offsets:
+            values = [v[name][modality] for v in views]
+            if hasattr(values[0], "tokens"):
+                values = [v.tokens for v in values]
+            torch.testing.assert_close(*values, rtol=1e-4, atol=2e-5)
     assert initial["step"] == 0 and not initial["optimizer"]["state"]
     assert source["optimizer"]["state"], "source fixture must have trained optimizer state"
     provenance = initial.get("r0_initialization")
@@ -205,3 +233,22 @@ def test_r0_refuses_an_r1_initialization_request(tmp_path):
     cfg["train"]["r0_initialization"] = {0: {"checkpoint":"unused", "sha256":"0" * 64}}
     with pytest.raises(ValueError, match="R1|representation_av"):
         train_common_base(cfg, TinyData(), tmp_path / "r0", 0, torch.device("cpu"))
+
+
+@pytest.mark.parametrize("offset", [0.125, 1 / 16000])
+def test_fourier_time_translation_preserves_function_and_other_axes(offset):
+    from encoders.temporal import CoordinateEmbedding
+    import training.common_base as training
+    shift = getattr(training, "_shift_time_embedding", None)
+    assert callable(shift), "no implementation: analytic time-reference translation"
+    torch.manual_seed(71)
+    embedding = CoordinateEmbedding(3, 32)
+    coordinates = torch.rand(2, 19, 3) - 0.5
+    expected = embedding(coordinates).detach()
+    other_axes = embedding.projection.weight[:, 9:].detach().clone()
+    state = torch.get_rng_state().clone()
+    shift(embedding, offset)
+    assert torch.equal(state, torch.get_rng_state())
+    torch.testing.assert_close(other_axes, embedding.projection.weight[:, 9:], rtol=0, atol=0)
+    coordinates[..., 0] -= offset
+    torch.testing.assert_close(expected, embedding(coordinates), rtol=1e-5, atol=1e-6)
