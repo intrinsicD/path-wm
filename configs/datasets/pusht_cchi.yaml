@@ -1,0 +1,9 @@
+name: pusht_cchi
+kind: action_trajectory
+path: data/pusht_cchi/pusht_cchi.h5
+source: https://diffusion-policy.cs.columbia.edu/data/training/pusht.zip
+receipt: data/pusht_cchi/conversion.json
+action_dim: 2
+action_semantics: absolute end-effector target XY in pixels
+frameskip: 5
+history: 3
