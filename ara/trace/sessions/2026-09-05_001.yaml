@@ -2,9 +2,9 @@ session:
   id: 2026-09-05_001
   date: '2026-09-05'
   started: 2026-09-05T12:55+02:00
-  last_turn: 2026-09-05T17:23+02:00
-  turn_count: 6
-  summary: Approved broader PushT pilot completed 1,000 updates in 25.1 minutes; trained control 0/20 at all checkpoints, released 17/20; focused diagnosis recommended before more training.
+  last_turn: 2026-09-05T19:00+02:00
+  turn_count: 7
+  summary: Pilot remains 0/20; recipe audit finds roughly 139-fold update-budget gap and stricter configuration holdout. Causal explanation and diagnostic-to-reproduction sequence remain proposed.
 events_logged:
 - turn: 1
   type: pivot
@@ -230,6 +230,43 @@ events_logged:
   routing: crystallized
   provenance: user-revised
   summary: O09 concrete pilot explicitly adopted by user yes please.
+- turn: 7
+  type: question
+  id: N21
+  routing: direct
+  provenance: user
+  summary: Explain failed pilot control and remaining differences from the authors
+- turn: 7
+  type: experiment
+  id: N22
+  routing: direct
+  provenance: ai-executed
+  summary: Read-only source and training-budget audit
+- turn: 7
+  type: observation
+  id: O12
+  routing: staged
+  provenance: ai-suggested
+  summary: Far less training/data, early schedule completion and unseen initial configurations are leading
+    explanations for failed pilot control, not established causal findings. Weak action-sensitive one-step
+    prediction may still mis-rank multi-step plans. Shared released-weight success narrows evaluator concerns
+    but does not prove training parity.
+- turn: 7
+  type: observation
+  id: O13
+  routing: staged
+  provenance: ai-suggested
+  summary: First inspect existing-checkpoint control on 20 training goals and predicted-versus-real rankings
+    for replay, stationary, random and planned action sequences. Check numerical training parity if the
+    model also fails seen goals. Then prepare a source-scale reproduction with explicit update/scheduler
+    assumptions and authors-style evaluation; assess stricter unseen-configuration transfer separately.
+- turn: 7
+  type: claim
+  id: C01
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O10 scoped pilot outcome closed via researcher discussion of completed experiments; causal
+    explanation remains open.
 ai_actions:
 - turn: 1
   action: Reset workspace, implement modular baseline and dataset adapters, run short
@@ -291,7 +328,17 @@ ai_actions:
   - README.md
   - CLAUDE.md
   - ara/
-claims_touched: []
+- turn: 7
+  action: Read paper and pinned author code, inspect local architecture/objective/planner and existing
+    evidence, calculate full-source window/update budget, explain remaining differences and recommend
+    next checks. No training/control run or implementation change.
+  provenance: ai-executed
+  files_changed:
+  - ara/
+claims_touched:
+- id: C01
+  action: crystallized
+  turn: 7
 key_context:
 - turn: 1
   excerpt: 'User: preserve our ideas but not the code or results; use multiple datasets.'
@@ -314,10 +361,13 @@ key_context:
 - turn: 6
   excerpt: "User: yes please \u2014 adopts the proposed bounded 128/32 PushT pilot, not additional long\
     \ training or new capability interpretations."
+- turn: 7
+  excerpt: User asks why, whether others trained only on PushT, remaining differences, expectations, and
+    next steps; interpreted as analysis/advice, not a new training authorization.
 open_threads:
 - Reliable control from our own training on diverse held-out episodes remains unestablished.
 - Final precision/BN differences are small; targeted rollout/action-plan and training-versus-held-out control diagnosis remains proposed, not executed.
 - The approved broader pilot is complete; user review precedes another training run or method change; research extensions remain deferred.
 ai_suggestions_pending:
 - O03, O04, O06 and O07 capability interpretations await researcher review; scopes remain distinct.
-- O10 broader-pilot interpretation and O11 focused diagnostic recommendation await researcher review; no further training launched.
+- O10 scoped outcome crystallized as C01; O11/O13 next-step recommendations and O12 causal explanation remain unadopted; no further training launched.

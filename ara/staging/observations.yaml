@@ -158,9 +158,9 @@ observations:
   - N18
   - N19
   - N20
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/claims.md:C01
+  crystallized_via: empirical-resolution
   stale: false
 - id: O11
   timestamp: 2026-09-05T17:23+02:00
@@ -175,6 +175,43 @@ observations:
   - N18
   - N19
   - N20
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O12
+  timestamp: 2026-09-05T19:00+02:00
+  provenance: ai-suggested
+  content: Far less training/data, early schedule completion and unseen initial configurations are leading
+    explanations for failed pilot control, not established causal findings. Weak action-sensitive one-step
+    prediction may still mis-rank multi-step plans. Shared released-weight success narrows evaluator concerns
+    but does not prove training parity.
+  context: Recipe audit after user asks why. No train-set control, action-ranking or matched full-scale
+    training experiment has isolated the causes.
+  potential_type: claim
+  bound_to:
+  - N18
+  - N19
+  - N20
+  - N22
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O13
+  timestamp: 2026-09-05T19:00+02:00
+  provenance: ai-suggested
+  content: First inspect existing-checkpoint control on 20 training goals and predicted-versus-real rankings
+    for replay, stationary, random and planned action sequences. Check numerical training parity if the
+    model also fails seen goals. Then prepare a source-scale reproduction with explicit update/scheduler
+    assumptions and authors-style evaluation; assess stricter unseen-configuration transfer separately.
+  context: Refines O11 into a diagnostic-to-reproduction sequence. User requested advice; no adoption
+    or new compute budget inferred.
+  potential_type: heuristic
+  bound_to:
+  - N21
+  - N22
+  - N19
   promoted: false
   promoted_to: null
   crystallized_via: null

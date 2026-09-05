@@ -1,8 +1,8 @@
 sessions:
 - id: 2026-09-05_001
   date: '2026-09-05'
-  summary: Approved broader PushT pilot completed 1,000 updates in 25.1 minutes; trained control 0/20 at all checkpoints, released 17/20; focused diagnosis recommended before more training.
-  turn_count: 6
-  events_count: 34
-  claims_touched: []
+  summary: Pilot remains 0/20; recipe audit finds roughly 139-fold update-budget gap and stricter configuration holdout. Causal explanation and diagnostic-to-reproduction sequence remain proposed.
+  turn_count: 7
+  events_count: 39
+  claims_touched: [C01]
   open_threads: 3

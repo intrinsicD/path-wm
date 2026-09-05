@@ -51,3 +51,11 @@ entries:
     and no downstream method change depends on them.'
   - Earlier prefix and BN claims have different checkpoint/data scopes; this turn does not contradict
     or overwrite them. No stale entries within the same session-day.
+- turn: 2026-09-05_001#7
+  notes:
+  - 'Promote only O10 to scoped supported C01 via empirical resolution: researcher now discusses N18–N20
+    results. Preserve ai-suggested provenance; questions do not affirm a mechanism.'
+  - Stage O12 causal explanation and O13 refined next sequence. The 139,330-update estimate is derived
+    from verified source and explicit assumptions, not asserted released-checkpoint history.
+  - No contradiction with earlier different-data checks; no topic abandonment because baseline control,
+    source protocols and normalization remain actively discussed. No new training authorization.

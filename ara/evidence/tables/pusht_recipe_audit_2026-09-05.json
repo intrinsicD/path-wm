@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-09-05T19:00+02:00",
+  "kind": "Read-only recipe audit and arithmetic; no new model training or control evaluation",
+  "sources": {
+    "paper": "https://arxiv.org/html/2603.19312v1",
+    "training": "https://raw.githubusercontent.com/lucas-maes/le-wm/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/train.py",
+    "config": "https://raw.githubusercontent.com/lucas-maes/le-wm/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/config/train/lewm.yaml",
+    "data": "https://raw.githubusercontent.com/lucas-maes/le-wm/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/config/train/data/pusht.yaml",
+    "model": "https://raw.githubusercontent.com/lucas-maes/le-wm/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/config/train/model/lewm.yaml",
+    "normalization": "https://raw.githubusercontent.com/lucas-maes/le-wm/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/utils.py",
+    "model_card": "https://huggingface.co/quentinll/lewm-pusht/raw/main/README.md"
+  },
+  "paper": {
+    "pusht_episodes_reported": 20000,
+    "mean_length_reported": 196,
+    "epochs_reported": 10,
+    "hardware": "NVIDIA L40S",
+    "pretraining": "LeWM random initialization; DINO-WM uses a frozen pretrained DINOv2 encoder"
+  },
+  "release_recipe": {
+    "max_epochs": 100,
+    "train_split": 0.9,
+    "split_unit": "trajectory windows",
+    "normalization": "all source rows before splitting",
+    "scheduler_interval": "epoch",
+    "storage_in_pinned_yaml": "Lance",
+    "model_training_history": "Exact released-checkpoint epoch count/schedule not recovered"
+  },
+  "verified_source": {
+    "episodes": 18685,
+    "frames": 2336736,
+    "valid_windows": 1981721,
+    "normalization": "Measured source inventory; not assumed identical to paper-reported trajectory count"
+  },
+  "pilot": {
+    "training_episodes": 128,
+    "training_frames": 16047,
+    "training_windows": 13615,
+    "updates": 1000,
+    "batch_size": 128,
+    "epochs_equivalent": 9.433962264150944,
+    "source_frame_fraction": 0.006867271270695534,
+    "heldout_unit": "entire initial-configuration groups",
+    "scheduler": "1 percent step warmup then cosine ending at update 1000"
+  },
+  "derived_comparison": {
+    "assumptions": "Verified HDF5 window counts, 90 percent random-window training split, batch 128/drop_last, ten epochs; not actual checkpoint history",
+    "training_windows": 1783548,
+    "batches_per_epoch": 13933,
+    "ten_epoch_updates": 139330,
+    "ratio_to_pilot_updates": 139.33
+  },
+  "uncertainty": "Training scale, data coverage and stricter held-out test plausibly explain weak control; their contributions and any residual implementation mismatch have not been isolated."
+}

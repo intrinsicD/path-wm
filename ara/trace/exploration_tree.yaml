@@ -307,3 +307,36 @@ tree:
   - N18
   - N19
   status: resolved
+- id: N21
+  type: question
+  title: Explain failed pilot control and remaining differences from the authors
+  provenance: user
+  timestamp: 2026-09-05T19:00+02:00
+  description: User asks why control failed, whether other models trained only on PushT, exactly what
+    differs, whether failure was expected, and what should happen next. No new training run requested.
+  also_depends_on:
+  - N18
+  - N19
+  - N20
+  status: resolved
+- id: N22
+  type: experiment
+  title: Read-only source and training-budget audit
+  provenance: ai-executed
+  timestamp: 2026-09-05T19:00+02:00
+  result: Paper and pinned release inspected. LeWM model is environment-specific and random-initialized;
+    DINO-WM uses pretrained DINOv2. Verified source has 1,981,721 valid windows. Applying release 90 percent
+    window split and batch 128 yields 13,933 updates per epoch, or 139,330 for ten epochs, 139.33 times
+    pilot budget. Pilot training frames are 0.6867 percent of source. Paper says ten epochs while pinned
+    YAML says 100; exact released-checkpoint history unresolved. Pilot additionally changes split unit,
+    normalization population, schedule, storage/runtime; core model/loss and planning settings match pinned
+    components.
+  evidence:
+  - evidence/tables/pusht_recipe_audit_2026-09-05.json
+  - ../docs/baseline.md
+  - ../world_model/train.py
+  - ../world_model/objective.py
+  also_depends_on:
+  - N21
+  - N17
+  status: resolved
