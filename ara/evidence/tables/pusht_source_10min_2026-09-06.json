@@ -1,0 +1,276 @@
+{
+  "provenance": "ai-executed",
+  "recorded_at": "2026-09-06T01:32+02:00",
+  "report_commit": "7ba499b",
+  "training_status": {
+    "kind": "complete",
+    "step": 375,
+    "elapsed_seconds": 578.4825777530059,
+    "total_steps": 375,
+    "baseline_gate": "learned_control_unestablished; no passing threshold set",
+    "control_evaluation": "complete",
+    "control_successes": 0,
+    "control_cases": 50,
+    "paired_released_successes": 45,
+    "report": "docs/pusht-source-10min.md"
+  },
+  "training_manifest": "08ee53672a9c33714bd6412516646f592c55369533315c9c07b4762fccc10b24",
+  "config_sha256": "644901168a98bd33518b063cbff9123d2116294d8420a0cfce016618a1b93459",
+  "training_code": "595faed26ab66646777fe5f2f09862cc12bb2c65",
+  "seed": 3072,
+  "optimizer_updates": 375,
+  "windows_processed": 48000,
+  "peak_gpu_bytes": 3283672576,
+  "training_all_logged_values_finite": true,
+  "final_training_validation": {
+    "kind": "validation",
+    "step": 375,
+    "elapsed_seconds": 569.1766355280124,
+    "pred_mse": 0.3172384202480316,
+    "identity_mse": 0.36123945005238056,
+    "zero_action_mse": 0.3205251879990101,
+    "shuffled_action_mse": 0.3216838426887989,
+    "rollout_mse": 0.4364272505044937,
+    "embedding_std": 0.9122494496405125,
+    "action_effect": 0.0028854902484454215,
+    "examples": 512
+  },
+  "prediction": {
+    "final": {
+      "pred_mse": 0.31723916344344616,
+      "identity_mse": 0.36123983561992645,
+      "zero_action_mse": 0.32052595913410187,
+      "shuffled_action_mse": 0.3216845765709877,
+      "rollout_mse": 0.43642839416861534,
+      "embedding_std": 0.9122499153017998,
+      "action_effect": 0.0028854922275058925,
+      "examples": 512
+    },
+    "released": {
+      "pred_mse": 0.007748040312435478,
+      "identity_mse": 0.1850931216031313,
+      "zero_action_mse": 0.16038125101476908,
+      "shuffled_action_mse": 0.2933625839650631,
+      "rollout_mse": 0.016757675621192902,
+      "embedding_std": 0.993813619017601,
+      "action_effect": 0.29212384950369596,
+      "examples": 512
+    }
+  },
+  "prediction_ratios": {
+    "final": {
+      "identity_mse": 0.8781954041669563,
+      "shuffled_action_mse": 0.9861808322458987,
+      "zero_action_mse": 0.9897456177979002
+    },
+    "released": {
+      "identity_mse": 0.041860228220951895,
+      "shuffled_action_mse": 0.026411140124666346,
+      "zero_action_mse": 0.04831013764646331
+    }
+  },
+  "internals": {
+    "final": {
+      "effective_rank": 11.506723665301887,
+      "rankme": 57.35820366991341,
+      "participation_ratio": 8.82932031330221,
+      "top_eigenvalue_fraction": 0.1754625763328907,
+      "per_dim_std_min": 0.4757170621846914,
+      "per_dim_std_median": 0.918811416231362,
+      "per_dim_std_max": 1.4198228480317676,
+      "shapiro_w_mean": 0.9900853698069013,
+      "shapiro_w_min": 0.9382050867271927,
+      "shapiro_fraction_below_0_95": 0.010416666666666666,
+      "skewness_mean_abs": 0.23765873308319976,
+      "excess_kurtosis_mean": 0.022238072024738115,
+      "embedding_std": 0.9183161854743958,
+      "gate_msa_mean": 0.09507983922958374,
+      "gate_mlp_mean": 0.09642249345779419,
+      "action_embedding_norm": 6.369439125061035,
+      "state_norm": 12.895354270935059,
+      "predictor_attention_entropy_mean": 0.46146079897880554,
+      "encoder_attention_entropy_last": 0.999837338924408,
+      "encoder_attention_entropy_mean": 0.9996878504753113,
+      "sensitivity_action": 0.1283264048397541,
+      "sensitivity_state": 0.3431454747915268,
+      "sensitivity_action_over_state": 0.3739708498785158,
+      "param_norm_encoder": 83.64553833007812,
+      "param_norm_projector": 53.037803649902344,
+      "param_norm_predictor": 119.2064437866211,
+      "param_norm_action_encoder": 18.86363983154297,
+      "param_norm_pred_proj": 52.87983322143555,
+      "grad_norm_encoder": 404.51611328125,
+      "grad_norm_projector": 9.225131034851074,
+      "grad_norm_predictor": 0.12248922884464264,
+      "grad_norm_action_encoder": 0.025075772777199745,
+      "grad_norm_pred_proj": 0.6502825021743774,
+      "grad_norm_total": 404.6217956542969,
+      "grad_batch_loss": 0.5163241624832153,
+      "grad_batch_pred_loss": 0.39273783564567566,
+      "grad_batch_sigreg_loss": 1.3731811046600342,
+      "probe_r2_mean": 0.04367548414267272,
+      "horizon_ratio_at_8": 0.6843937485704596
+    },
+    "released": {
+      "effective_rank": 88.71904593232759,
+      "rankme": 114.18641999024558,
+      "participation_ratio": 79.8292627895706,
+      "top_eigenvalue_fraction": 0.0222203282904558,
+      "per_dim_std_min": 0.7284393443091263,
+      "per_dim_std_median": 0.9988990881419979,
+      "per_dim_std_max": 1.1581730269509831,
+      "shapiro_w_mean": 0.9946897552330638,
+      "shapiro_w_min": 0.9832058120649342,
+      "shapiro_fraction_below_0_95": 0.0,
+      "skewness_mean_abs": 0.13308195656361335,
+      "excess_kurtosis_mean": -0.05306406577263495,
+      "embedding_std": 1.0008381605148315,
+      "gate_msa_mean": 0.09658855199813843,
+      "gate_mlp_mean": 0.4575299918651581,
+      "action_embedding_norm": 23.552114486694336,
+      "state_norm": 13.870207786560059,
+      "predictor_attention_entropy_mean": 0.18966202437877655,
+      "encoder_attention_entropy_last": 0.9744609594345093,
+      "encoder_attention_entropy_mean": 0.9304158091545105,
+      "sensitivity_action": 1.5114949196577072,
+      "sensitivity_state": 0.5714657977223396,
+      "sensitivity_action_over_state": 2.6449438018547933,
+      "param_norm_encoder": 90.60295867919922,
+      "param_norm_projector": 53.74368667602539,
+      "param_norm_predictor": 135.69544982910156,
+      "param_norm_action_encoder": 21.607946395874023,
+      "param_norm_pred_proj": 52.10872268676758,
+      "grad_norm_encoder": 1.7753440141677856,
+      "grad_norm_projector": 0.6867753863334656,
+      "grad_norm_predictor": 0.22473271191120148,
+      "grad_norm_action_encoder": 0.08872540295124054,
+      "grad_norm_pred_proj": 0.1214773878455162,
+      "grad_norm_total": 1.9226652383804321,
+      "grad_batch_loss": 0.11071590334177017,
+      "grad_batch_pred_loss": 0.012212415225803852,
+      "grad_batch_sigreg_loss": 1.0944831371307373,
+      "probe_r2_mean": 0.7200282259138066,
+      "horizon_ratio_at_8": 0.1138033662904742
+    }
+  },
+  "probe_r2": {
+    "final": {
+      "agent x": 0.20950941594477146,
+      "agent y": 0.12351623751948793,
+      "block x": 0.22979316068145328,
+      "block y": 0.25998684175601794,
+      "block angle sin": 0.01963750773719075,
+      "block angle cos": -0.02754899397065813,
+      "agent vx": -0.12405606408962933,
+      "agent vy": -0.3414342324372521
+    },
+    "released": {
+      "agent x": 0.9447047403686909,
+      "agent y": 0.9536861879670445,
+      "block x": 0.9820066742988397,
+      "block y": 0.9667859207641162,
+      "block angle sin": 0.9015113007728921,
+      "block angle cos": 0.9150220016013629,
+      "agent vx": 0.043161822398284144,
+      "agent vy": 0.053347159139221834
+    }
+  },
+  "control": {
+    "final": {
+      "successes": 0,
+      "cases": 50,
+      "initial_successes": 0,
+      "mean_steps": 50.0,
+      "checkpoint_unchanged": true
+    },
+    "released": {
+      "successes": 45,
+      "cases": 50,
+      "initial_successes": 0,
+      "mean_steps": 28.26,
+      "checkpoint_unchanged": true
+    }
+  },
+  "action_baselines": {
+    "stationary": {
+      "successes": 0,
+      "cases": 50
+    },
+    "recorded_replay": {
+      "successes": 50,
+      "cases": 50
+    }
+  },
+  "matched_control_protocol": true,
+  "matched_inspection_windows": true,
+  "checkpoint_sha256": {
+    "final": "9e4c1462f001f41ea6a2f2e34f2006c4512e00dd71ef6113f15f2f4b3b19b612",
+    "released": "48938400ae3464c9680731287f583a9cb516f55a8ec64ea13a91be47fb15b607"
+  },
+  "saved_validation_max_relative_difference": 2.620514920426656e-06,
+  "tests": {
+    "passed": 49,
+    "browser_checks_included": true,
+    "log": "/tmp/path-wm-source-10min-final-tests.log"
+  },
+  "dashboard_receipt": {
+    "counts": {
+      "blocks": 44,
+      "charts": 29,
+      "html": 4,
+      "metrics": 3,
+      "tables": 6
+    },
+    "html": "/home/alex/Documents/path-wm/runs/experiment_dashboard.html",
+    "ok": true,
+    "sourceDialog": "passed",
+    "sourceInteraction": "semantic_click",
+    "stages": {
+      "package": "passed",
+      "validation": "passed",
+      "verification": "passed"
+    },
+    "timings": {
+      "browserRunMs": 5617.7,
+      "contentChecksMs": 1143.4,
+      "readerReadyMs": 3183.7,
+      "responsiveChecksMs": 1143.4,
+      "sourceDialogMs": 2210.1,
+      "staticChartExtractionMs": 5170,
+      "totalMs": 11180.2,
+      "validateAndPackageMs": 5395.5,
+      "verificationMs": 5772.2
+    },
+    "viewports": [
+      1440,
+      390
+    ]
+  },
+  "limitations": [
+    "Single short development seed; three-update warmup and 375-update cosine schedule.",
+    "Random-window validation shares source episodes/configurations with training.",
+    "Different data, schedule and recomputation from the old pilot; no causal attribution.",
+    "No experimental passing threshold is set; the long reproduction remains unscheduled."
+  ],
+  "source_sha256": {
+    "runs/diagnostics/pusht_source_10min/manifest.json": "3226e9940f4180e74c56aa138505bf9991adb92a1e6e9d8d85d6d3018e43be34",
+    "runs/diagnostics/pusht_source_10min/metrics.jsonl": "2a34fd5ffd2f6aa249747d1c9f366910bd1a0b56bdfdabe9dbde358a4cfea7d3",
+    "runs/diagnostics/pusht_source_10min/status.json": "7a41743bb87808b96009956bed6ae3bef3ef05449eb8c1d736d528e97ca7e523",
+    "runs/reproduction/pusht_source_scale_preparation/control_cases.json": "3fa2a20eb393e21c609f5f118dd3f7f43fd2683e88a628842510f5db4abbb4a8",
+    "runs/diagnostics/pusht_source_10min_control/final/manifest.json": "94e45260b5fed6ae1400eb8976502921af9508bd9c8789434c15fe43bef86144",
+    "runs/diagnostics/pusht_source_10min_control/final/cases.jsonl": "b9d37ad6e96f5e86a9e9566174d97795ff00fc35924df627ddca6fa8d3941266",
+    "runs/diagnostics/pusht_source_10min_control/final/summary.json": "b105ea5d5cff6f097c9db34aef0859a10824a4aa05b7a76b23770ebfa25853b6",
+    "runs/diagnostics/pusht_source_10min_internals/final/manifest.json": "06ce8235239909a87ff48ca7ecb0330f8e361eb920b39b6ef75fa6c45f099708",
+    "runs/diagnostics/pusht_source_10min_internals/final/internals.json": "b700ae89ce669d3d10552ceeb4ac8cf7d0946bceee30fbbd7797b48ed2bd4a03",
+    "runs/diagnostics/pusht_source_10min_internals/final/prediction.json": "08976d4fe94d5dd1ea1ad1511db7e32e06df813d16e686a126070b7c2a7a17ab",
+    "runs/diagnostics/pusht_source_10min_control/released/manifest.json": "3e846ed443d59c6eb938473c6ad0712e0a9f4399d17962f321f2aeac01b3bcb5",
+    "runs/diagnostics/pusht_source_10min_control/released/cases.jsonl": "052e493d9ef6b284e7a19b2f0fd7bd594d5cb79e7a6bde02fc7a8d76538c0330",
+    "runs/diagnostics/pusht_source_10min_control/released/summary.json": "0b2545a457f6deadadeef70707af0e1d0c957c76c51b6782ab49840421f2563e",
+    "runs/diagnostics/pusht_source_10min_internals/released/manifest.json": "5247896051b4657529d4d91fdc2a86f4478385f3b8b76e89957e207f342a389a",
+    "runs/diagnostics/pusht_source_10min_internals/released/internals.json": "dde5b92e871197fab50c6fe64637189187bed26bbea0d3365c55b57b2f5c5aa0",
+    "runs/diagnostics/pusht_source_10min_internals/released/prediction.json": "cef55b81a8dea3d4a100d1bb0a2352dd2774cfaa8a7ad8130fa5f341268047fd",
+    "runs/diagnostics/pusht_source_10min_control/final/action_baselines.json": "ec7873ed404b5ce8c5aaec33f112f90d6111bc387278352d3ef4a9fef9061ac2",
+    "runs/diagnostics/pusht_source_10min_control/qualitative/manifest.json": "2d2800af32fd570cf70cce5b3ef40b6efa12b64ba38833f479b7cb56efd07d9d",
+    "runs/diagnostics/pusht_source_10min_control/qualitative/frames.npz": "577f3f67f4d195b7d88fa68dce3a83ac2c3f21fa607212ae6989c814a9c6774b"
+  }
+}

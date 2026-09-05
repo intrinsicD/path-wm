@@ -14,3 +14,5 @@ are excluded. Research ideas remain in [docs/ideas.md](../docs/ideas.md).
 Long training is stopped pending user review. Research extensions are deferred.
 
 Latest completed follow-up: [saved-checkpoint control diagnosis](../docs/pusht-control-diagnosis.md) and [prepared source-scale reproduction](../docs/pusht-reproduction.md). Browser verification is resolved; learned control and a long-run schedule remain open.
+
+Latest user-requested short run: [375 updates in9min38, control0/50 versus released45/50](../docs/pusht-source-10min.md). Matched internals, repaired population mapping and bounded dashboard panels verified; no long reproduction launched.

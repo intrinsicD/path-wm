@@ -2,10 +2,10 @@ session:
   id: 2026-09-06_001
   date: '2026-09-06'
   started: 2026-09-06T00:05+02:00
-  last_turn: 2026-09-06T00:05+02:00
-  turn_count: 1
-  summary: Browser QA resolved; pilot fails 20 training goals and eight plan selections; bf16 slicing drift
-    isolated; full-batch checkpointing verified; source-scale preparation complete, no long launch.
+  last_turn: 2026-09-06T01:32+02:00
+  turn_count: 2
+  summary: Source10min:375 updates in578.48s, control0/50 vs released45/50 and replay50/50; matched internals gap;
+    split inspection and dashboard size repaired;49 tests and browser QA pass. Long run unscheduled.
 events_logged:
 - turn: 1
   type: decision
@@ -79,6 +79,58 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O16 committed into source-scale activation-checkpointing configuration.
+- turn: 2
+  type: decision
+  id: N33
+  routing: direct
+  provenance: user
+  summary: Inspect updated dashboard and run ten minutes of training
+- turn: 2
+  type: experiment
+  id: N34
+  routing: direct
+  provenance: ai-executed
+  summary: Complete 375 fresh source-data updates within ten minutes
+- turn: 2
+  type: experiment
+  id: N35
+  routing: direct
+  provenance: ai-executed
+  summary: Measure new and released internals on matched source windows
+- turn: 2
+  type: experiment
+  id: N36
+  routing: direct
+  provenance: ai-executed
+  summary: New short run fails all fifty matched control goals
+- turn: 2
+  type: experiment
+  id: N37
+  routing: direct
+  provenance: ai-executed
+  summary: Repair growing dashboard image payload and verify final reporting
+- turn: 2
+  type: observation
+  id: O17
+  routing: staged
+  provenance: ai-suggested
+  summary: Short source-population training with full-batch activation checkpointing improves prediction over copying
+    but yields0/50 control; low rank, weak pose readout and weak action sensitivity accompany the failure. This
+    does not isolate the cause or predict the outcome of a much longer schedule.
+- turn: 2
+  type: observation
+  id: O18
+  routing: staged
+  provenance: ai-suggested
+  summary: Saved validation indices must be resolved through the training split, including random-window Subsets,
+    before checkpoint diagnostics. Reconstruct and verify index hashes and normalization to avoid silently testing
+    different source windows.
+- turn: 2
+  type: heuristic
+  id: H07
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O18 implemented in57edf65 and used for both checkpoint inspections.
 ai_actions:
 - turn: 1
   action: Repaired and verified canonical dashboard; ran 20 training goals and paired actions, eight simulator-ranking
@@ -95,6 +147,19 @@ ai_actions:
   - configs/reproduction/
   - docs/
   - ara/
+- turn: 2
+  action: Inspected user dashboard; froze and ran375-update short schedule; repaired random-window inspection; measured
+    paired50-case control and released internals; verified qualitative replay; repaired dashboard payload and wrote
+    source-hashed report. Preserved all reference checkpoints.
+  provenance: ai-executed
+  files_changed:
+  - configs/diagnostics/pusht_source_10min.yaml
+  - scripts/inspect_checkpoint.py
+  - scripts/render_prepared_control.py
+  - tests/
+  - viewer/
+  - docs/
+  - ara/
 claims_touched: []
 key_context:
 - turn: 1
@@ -102,6 +167,12 @@ key_context:
 - turn: 1
   excerpt: Original pilot and all checkpoint hashes preserved. Tests include tiny CPU training slices; substantive
     diagnostics take zero optimizer updates. Long training is not launched.
+- turn: 2
+  excerpt: first checkout the new dashboard (i updated it in the meantime). then make a training run for 10 minutes
+    (estimate the number of steps) and check the results again.
+- turn: 2
+  excerpt: User authorization covers the bounded training and checks. It does not endorse a causal explanation or
+    launch the prepared139330-update reproduction.
 open_threads:
 - Schedule source-scale 139330-update run separately; rough pilot-rate estimate 58.3h excludes source I/O/method
   changes.
@@ -114,3 +185,5 @@ ai_suggestions_pending:
   unisolated.
 - H06 is an implemented numerical preparation choice, not user endorsement of a mechanism or a successful training
   result.
+- 'O17 remains staged: low rank/weak pose/action use accompany failure; causes and longer-schedule outcomes remain
+  unisolated.'

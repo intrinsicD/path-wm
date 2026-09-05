@@ -515,3 +515,93 @@ tree:
   - N31
   timestamp: 2026-09-06T00:05+02:00
   status: resolved
+
+- id: N33
+  type: decision
+  title: Inspect updated dashboard and run ten minutes of training
+  provenance: user
+  choice: Inspect the user-updated dashboard first, estimate update count, train for a ten-minute budget and recheck
+    results.
+  alternatives:
+  - Continue with preparation only
+  - Launch the unscheduled full reproduction
+  evidence:
+  - first checkout the new dashboard (i updated it in the meantime). then make a training run for 10 minutes (estimate
+    the number of steps) and check the results again.
+  - ../docs/pusht-source-10min.md
+  also_depends_on:
+  - N32
+  timestamp: 2026-09-06T01:32+02:00
+  status: resolved
+- id: N34
+  type: experiment
+  title: Complete 375 fresh source-data updates within ten minutes
+  provenance: ai-executed
+  result: Clean 595faed, seed3072, batch128, full-source random-window split, activation checkpointing, bf16 and
+    introspection. Estimate300–350, ceiling375 plus600sec; completed375 in578.48sec. Short three-update warmup/cosine
+    schedule, 48000 windows, finite logs, peak3283672576bytes. Saved float32 prediction/copy0.8782 and prediction/shuffle0.9862.
+    Full139330-update schedule not launched.
+  evidence:
+  - evidence/tables/pusht_source_10min_2026-09-06.json
+  - ../configs/diagnostics/pusht_source_10min.yaml
+  - ../docs/pusht-source-10min.md
+  also_depends_on:
+  - N33
+  - N31
+  - N32
+  timestamp: 2026-09-06T01:32+02:00
+  status: resolved
+- id: N35
+  type: experiment
+  title: Measure new and released internals on matched source windows
+  provenance: ai-executed
+  result: Inspector restores and verifies actual random-window Subsets; local/released window hashes agree. Effective
+    rank11.5067/88.7190, action/state sensitivity0.37397/2.64494, mean8-target probeR2 0.04368/0.72003, horizon8
+    rollout/copy0.68439/0.11380. Shared source episodes; not unseen-configuration transfer. Checkpoints unchanged;
+    in-run versus saved prediction max relative difference2.62e-6.
+  evidence:
+  - evidence/tables/pusht_source_10min_2026-09-06.json
+  - ../scripts/inspect_checkpoint.py
+  - ../tests/test_checkpoint_inspection.py
+  also_depends_on:
+  - N34
+  - N32
+  timestamp: 2026-09-06T01:32+02:00
+  status: resolved
+- id: N36
+  type: experiment
+  title: New short run fails all fifty matched control goals
+  provenance: ai-executed
+  result: 'Frozen50 source goals: local0/50, released45/50, replay50/50, stationary0/50; initial0 for all. Shared
+    goal/reset/CEM cases and budgets, separate recorded model normalization. First frozen case: local moves away
+    and fails50steps, released succeeds16, replay14; saved-action replay reproduces model outcomes. Checkpoints
+    unchanged.'
+  evidence:
+  - evidence/tables/pusht_source_10min_2026-09-06.json
+  - ../runs/diagnostics/pusht_source_10min_control/qualitative/case_0_rollouts.png
+  - ../scripts/render_prepared_control.py
+  also_depends_on:
+  - N34
+  - N32
+  timestamp: 2026-09-06T01:32+02:00
+  status: resolved
+- id: N37
+  type: experiment
+  title: Repair growing dashboard image payload and verify final reporting
+  provenance: ai-executed
+  result: User dashboard c920402 inspected first. First new internals result exceeded canonical3MB payload due to
+    historical PNG accumulation; raw result preserved. Bound images to focus earliest/latest plus released inspection
+    sharing source-run manifest; all numeric records retained. Final49 tests including2 browser checks;29 charts/6
+    tables and desktop/mobile/source QA passed. Corrected prior report all-target R2 wording without changing old
+    data.
+  evidence:
+  - evidence/tables/pusht_source_10min_2026-09-06.json
+  - ../viewer/DESIGN.md
+  - ../tests/test_experiment_harness.py
+  - ../docs/internals-report.md
+  also_depends_on:
+  - N27
+  - N35
+  - N36
+  timestamp: 2026-09-06T01:32+02:00
+  status: resolved

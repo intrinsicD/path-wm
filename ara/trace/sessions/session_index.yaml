@@ -10,9 +10,9 @@ sessions:
   open_threads: 4
 - id: 2026-09-06_001
   date: '2026-09-06'
-  summary: Browser QA resolved; pilot fails 20 training goals and eight plan selections; bf16 slicing drift
-    isolated; full-batch checkpointing verified; source-scale preparation complete, no long launch.
-  turn_count: 1
-  events_count: 11
+  summary: Source10min:375 updates in578.48s, control0/50 vs released45/50 and replay50/50; matched internals gap;
+    split inspection and dashboard size repaired;49 tests and browser QA pass. Long run unscheduled.
+  turn_count: 2
+  events_count: 19
   claims_touched: []
   open_threads: 3

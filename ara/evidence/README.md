@@ -13,3 +13,5 @@ Post-pilot recipe audit: [source-backed comparison and arithmetic](tables/pusht_
 Harness restoration: [checks and reporting receipt](tables/harness_recovery_2026-09-05.json); [current reporting status](../../docs/project-state.md). Includes 22 passing CPU tests, 30 existing result records and the unresolved canonical browser-QA limitation. No new scientific experiment.
 
 Completed control diagnosis and source-scale preparation: [snapshot](tables/pusht_control_diagnosis_2026-09-06.json); [report](../../docs/pusht-control-diagnosis.md). Includes repaired browser QA, seen-goal failures, matched simulator rankings, bf16 numerical isolation, activation-checkpointing preflight and frozen reproduction budget. No long training launched.
+
+Ten-minute source-data development run: [source-hashed snapshot](tables/pusht_source_10min_2026-09-06.json); [report](../../docs/pusht-source-10min.md). Includes375 updates, matched50-goal outcomes, final/released internals, qualitative saved-action replay,49 tests and canonical browser receipt.

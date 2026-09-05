@@ -83,3 +83,17 @@ entries:
     while baseline control remains active, and no observation is idle for three session-days.
   - N25 historical structural-only failure retained; its status now resolves through N27 canonical browser
     verification.
+
+- turn: 2026-09-06_001#2
+  notes:
+  - Record only this requested short run and rechecks; user dashboard/internals commits before the request are provided
+    context, not this agent performing those earlier inspections.
+  - User authorized ten-minute training explicitly.375-update short schedule is separate from full reproduction;
+    no long-run launch inferred.
+  - Keep O17 staged without researcher response. Promote only implementation rule O18/H07 via committed split restoration57edf65;
+    preserve ai-suggested provenance.
+  - Existing C01 and O03/O04/O06 concern other checkpoints/populations. New results neither overwrite nor contradict
+    their scoped evidence. O12/O14/O15 causal alternatives remain active and unisolated; no topic abandonment or
+    three-day staleness.
+  - Record reporting size failure and subsequent verified repair together. Test49 includes2 browser checks; source-hashed
+    raw evidence preserves negative control and matched released results.
