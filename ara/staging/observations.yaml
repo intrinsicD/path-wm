@@ -25,6 +25,55 @@ observations:
   bound_to:
   - N02
   - N04
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H01
+  crystallized_via: verbal-affirmation
+  stale: false
+- id: O03
+  timestamp: 2026-09-05T13:56+02:00
+  provenance: ai-suggested
+  content: 'BatchNorm running-statistics mismatch explains most evaluation failure
+    of the 120-update PushT checkpoint: training-only recalibration reduces held-out
+    MSE about174-fold at unchanged weights. This does not establish broad generalization
+    or justify adopting recalibration as the baseline.'
+  context: Closely related 8-episode official prefix; frozen-weight diagnostic clones;
+    no researcher response to results yet.
+  potential_type: claim
+  bound_to:
+  - N08
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O04
+  timestamp: 2026-09-05T13:56+02:00
+  provenance: ai-suggested
+  content: 'The unchanged baseline shows modest predictive/action-sensitive learning
+    on the TwoRoom prefix: saved checkpoint beats copying3.2% and shuffling4.9% on285held-out
+    windows. Useful control remains unestablished.'
+  context: One seed,400updates; earlier128-window runner sample overstates the final
+    copying advantage; no control test.
+  potential_type: claim
+  bound_to:
+  - N09
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O05
+  timestamp: 2026-09-05T13:56+02:00
+  provenance: ai-suggested
+  content: Next finish a cached capped PushT check with the full400-update schedule,
+    evaluate untouched weights and small control cases, then use completed verified
+    archives for exact reference normalization and evaluation. Trace upstream BN conventions
+    if mismatch persists; keep research deferred.
+  context: Recommendation after the four approved diagnostics; no extra training launched
+    and no user adoption of this next sequence yet.
+  potential_type: heuristic
+  bound_to:
+  - N07
+  - N08
+  - N09
   promoted: false
   promoted_to: null
   crystallized_via: null

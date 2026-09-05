@@ -1,8 +1,8 @@
 sessions:
 - id: 2026-09-05_001
   date: '2026-09-05'
-  summary: Fresh baseline; short tests reported; long training stopped.
-  turn_count: 2
-  events_count: 5
+  summary: Four bounded diagnostics; evaluator parity, BN diagnosis, modest TwoRoom learning; long training stopped.
+  turn_count: 3
+  events_count: 14
   claims_touched: []
   open_threads: 3

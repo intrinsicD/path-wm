@@ -13,3 +13,14 @@ entries:
     executed experiment.
   - No new empirical result or closure signal; O01 remains staged, long training remains
     stopped.
+- turn: 2026-09-05_001#3
+  notes:
+  - Recorded approval and four diagnostic experiments directly; preserved exploratory
+    filtered-case outcomes and raw saved-checkpoint failure.
+  - Crystallized only O02 via explicit user adoption into H01; O01 remains scoped
+    to earlier CCHI run.
+  - Staged BN mechanism interpretation, TwoRoom capability interpretation and next-step
+    recommendation; researcher has not reviewed these results. Different datasets
+    and evaluation samples are not contradictions.
+  - No long training or research extension authorized by this turn; both capped training
+    processes completed.

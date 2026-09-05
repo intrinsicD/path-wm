@@ -1,0 +1,304 @@
+{
+  "timestamp": "2026-09-05T13:56+02:00",
+  "provenance": "ai-executed",
+  "report_commit": "e7bc89d",
+  "scope": "Capped diagnostics on verified source-prefix subsets; full archive checksums and benchmark reproduction pending",
+  "artifacts": {
+    "runs/diagnostics/evaluator_final/summary.json": {
+      "sha256": "a54c2451be5cef22583bbd86becc1903ed7ef72595f9371eb15a2fedd844789b",
+      "data": {
+        "native_successes": 5,
+        "local_successes": 5,
+        "cases": 10,
+        "outcome_agreement": 10,
+        "max_action_difference": 5.960464477539063e-08
+      }
+    },
+    "runs/diagnostics/evaluator_final/manifest.json": {
+      "sha256": "e52d154f0ae06d1db1553a87446637705e7a35bfebd216905b5c8520f3b54431",
+      "data": {
+        "path": "data/pusht_prefix/episodes.h5",
+        "cases": [
+          {
+            "episode": 0,
+            "start": 57,
+            "seed": 1234
+          },
+          {
+            "episode": 0,
+            "start": 59,
+            "seed": 1235
+          },
+          {
+            "episode": 0,
+            "start": 63,
+            "seed": 1236
+          },
+          {
+            "episode": 1,
+            "start": 50,
+            "seed": 1237
+          },
+          {
+            "episode": 3,
+            "start": 36,
+            "seed": 1238
+          },
+          {
+            "episode": 3,
+            "start": 39,
+            "seed": 1239
+          },
+          {
+            "episode": 5,
+            "start": 14,
+            "seed": 1240
+          },
+          {
+            "episode": 5,
+            "start": 46,
+            "seed": 1241
+          },
+          {
+            "episode": 6,
+            "start": 9,
+            "seed": 1242
+          },
+          {
+            "episode": 6,
+            "start": 68,
+            "seed": 1243
+          }
+        ],
+        "action_mean": [
+          -0.05929881793130702,
+          0.03881813640548173
+        ],
+        "action_std": [
+          0.21783287364043874,
+          0.1898408285127708
+        ],
+        "upstream_commit": "6f1e499e9cc0c898d326112f485c1062c3d20f24",
+        "model_commit": "8edfeb336732b5f3ce7b8b210d0ba370a09e2cac",
+        "sampling": "authors valid-window rule on supplied dataset",
+        "subset": true,
+        "reset_seed_control": "both evaluators use case seed",
+        "normalization_population": "all finite actions in supplied dataset",
+        "horizon": 5,
+        "frameskip": 5,
+        "budget": 50,
+        "samples": 300,
+        "iterations": 30,
+        "elites": 30
+      }
+    },
+    "runs/diagnostics/pusht_prefix_learning/diagnostics.json": {
+      "sha256": "612a8b714dcba28c6f006d19872fe41c3c01bfd65836b80288ee1d63c0231f8d",
+      "data": {
+        "step": 120,
+        "seed": 3072,
+        "train": {
+          "pred_mse": 38.008965492248535,
+          "identity_mse": 1.0747282207012177,
+          "zero_action_mse": 38.044036865234375,
+          "shuffled_action_mse": 38.03618240356445,
+          "rollout_mse": 40.780282974243164,
+          "embedding_std": 0.8789756000041962,
+          "action_effect": 0.020808872766792774,
+          "examples": 512,
+          "eval_mode_batch_mse": 38.09235382080078,
+          "batch_statistics_mse": 0.22862550616264343,
+          "train_calibrated_bn": {
+            "pred_mse": 0.22788738831877708,
+            "identity_mse": 1.0568524599075317,
+            "zero_action_mse": 0.3406817615032196,
+            "shuffled_action_mse": 0.4151478484272957,
+            "rollout_mse": 0.3102892339229584,
+            "embedding_std": 0.8951164782047272,
+            "action_effect": 0.16907211393117905,
+            "examples": 512
+          }
+        },
+        "heldout": {
+          "pred_mse": 38.23772048950195,
+          "identity_mse": 1.0697977542877197,
+          "zero_action_mse": 38.27256774902344,
+          "shuffled_action_mse": 38.270713806152344,
+          "rollout_mse": 41.03041458129883,
+          "embedding_std": 0.8847498893737793,
+          "action_effect": 0.02276037260890007,
+          "examples": 90,
+          "eval_mode_batch_mse": 38.23772048950195,
+          "batch_statistics_mse": 0.22171413898468018,
+          "train_calibrated_bn": {
+            "pred_mse": 0.21995922923088074,
+            "identity_mse": 1.0560388565063477,
+            "zero_action_mse": 0.3351626992225647,
+            "shuffled_action_mse": 0.427559494972229,
+            "rollout_mse": 0.30255407094955444,
+            "embedding_std": 0.9040500521659851,
+            "action_effect": 0.19037747383117676,
+            "examples": 90
+          }
+        },
+        "bn_calibration_scope": "Discarded diagnostic clone; at most 512 training windows; no weight update or checkpoint change"
+      }
+    },
+    "runs/diagnostics/pusht_prefix_learning/status.json": {
+      "sha256": "40aba67e190db1d1ff160960b9e19af51e15389fb6cfe8529030ac6da354b584",
+      "data": {
+        "kind": "time_limit",
+        "step": 120,
+        "elapsed_seconds": 848.5907572620054,
+        "total_steps": 400
+      }
+    },
+    "runs/diagnostics/tworoom_prefix_learning/diagnostics.json": {
+      "sha256": "ec050160135380f171c06ff8335bea94f78d13bea45c88268ac0f4a64c549e0e",
+      "data": {
+        "step": 400,
+        "seed": 3072,
+        "train": {
+          "pred_mse": 0.7316578179597855,
+          "identity_mse": 0.7936892360448837,
+          "zero_action_mse": 0.7726434618234634,
+          "shuffled_action_mse": 0.8105136156082153,
+          "rollout_mse": 0.8170214146375656,
+          "embedding_std": 0.7969135791063309,
+          "action_effect": 0.07630634680390358,
+          "examples": 512,
+          "eval_mode_batch_mse": 0.7301120162010193,
+          "batch_statistics_mse": 0.5418617129325867,
+          "train_calibrated_bn": {
+            "pred_mse": 0.5565717071294785,
+            "identity_mse": 1.0548564791679382,
+            "zero_action_mse": 0.6179815232753754,
+            "shuffled_action_mse": 0.6572825312614441,
+            "rollout_mse": 0.630125492811203,
+            "embedding_std": 0.913526251912117,
+            "action_effect": 0.07428083568811417,
+            "examples": 512
+          }
+        },
+        "heldout": {
+          "pred_mse": 0.7673253366821691,
+          "identity_mse": 0.7930570665158724,
+          "zero_action_mse": 0.7785702201358059,
+          "shuffled_action_mse": 0.8066951147296972,
+          "rollout_mse": 0.8589633287044993,
+          "embedding_std": 0.7286090898932072,
+          "action_effect": 0.06332884672702405,
+          "examples": 285,
+          "eval_mode_batch_mse": 0.768775224685669,
+          "batch_statistics_mse": 0.6317977905273438,
+          "train_calibrated_bn": {
+            "pred_mse": 0.603847258760218,
+            "identity_mse": 1.0842165043479517,
+            "zero_action_mse": 0.6391500728172168,
+            "shuffled_action_mse": 0.656038685012282,
+            "rollout_mse": 0.6719700510041755,
+            "embedding_std": 0.8505426540709379,
+            "action_effect": 0.044958653065719105,
+            "examples": 285
+          }
+        },
+        "bn_calibration_scope": "Discarded diagnostic clone; at most 512 training windows; no weight update or checkpoint change"
+      }
+    },
+    "runs/diagnostics/tworoom_prefix_learning/status.json": {
+      "sha256": "bcfd59ec09cf5d4c7af897f84f6ac8f7332e39f8365cb4e0ae87391aa8365adc",
+      "data": {
+        "kind": "complete",
+        "step": 400,
+        "elapsed_seconds": 638.1654226590035,
+        "total_steps": 400,
+        "baseline_gate": "pending_closed_loop_evaluation"
+      }
+    },
+    "runs/diagnostics/data_loading.json": {
+      "sha256": "940fc6290dd089e5ffc9da4a5dda66dbf62b338a57f03e17004c863f01975baf",
+      "data": [
+        {
+          "cached": false,
+          "workers": 2,
+          "batches": 8,
+          "seconds": 46.543724619004934
+        },
+        {
+          "cached": true,
+          "workers": 0,
+          "batches": 8,
+          "seconds": 0.1114051019976614
+        }
+      ]
+    },
+    "data/pusht_prefix/episodes.json": {
+      "sha256": "1a05f6aaefb57615a19dea78b7f65943093b8477cb91df968ecd35dabcea71fa",
+      "data": {
+        "source": "https://huggingface.co/datasets/quentinll/lewm-pusht/resolve/655cd446b9929369d7d406001da85c15d1457850/pusht_expert_train.h5.zst",
+        "archive_byte_range": [
+          0,
+          8388607
+        ],
+        "archive_prefix_sha256": "9f7121395610aaadbe30ed7f7db757700644251ed59d640b9b07008ced077014",
+        "valid_decoded_bytes": 30670848,
+        "episodes": 8,
+        "frames": 872,
+        "checks": "Every extracted HDF5 data chunk wholly inside downloaded byte prefix",
+        "scope": "Early complete episodes for alignment; not full archive or representative training population"
+      }
+    },
+    "data/tworoom_prefix/receipt.json": {
+      "sha256": "6a40e1a8ba2979a5d8fc89a37832ca9f7ed7948d9cfdcffe153562a26cbc0c6a",
+      "data": {
+        "repo": "quentinll/lewm-tworooms",
+        "revision": "6903a2de048b13819d812da0b4dd661290bc01e4",
+        "archive_byte_range": [
+          0,
+          33554431
+        ],
+        "archive_prefix_sha256": "772abe98aa01852c31526663a8621b4383a09e06c720ace121e8d625db295530",
+        "valid_hdf5_prefix_bytes": 126090752,
+        "episodes": 32,
+        "frames": 2875,
+        "action_semantics": "outgoing 2D direction, clipped to [-1,1], speed 5 simulator pixels per step, with wall collisions",
+        "fraction_matching_unobstructed_motion": 0.9138234259584945,
+        "scope": "First 32 complete source episodes; chunk extents verified; full archive checksum pending"
+      }
+    }
+  },
+  "alignment": [
+    {
+      "episode": 0,
+      "start": 25,
+      "reset_position_rmse": 0.5562844779062042,
+      "image_mae": 0.5187074829931972,
+      "step10_position_rmse": 0.5576159853905752,
+      "max_replay_position_rmse": 0.5808470855471943
+    },
+    {
+      "episode": 1,
+      "start": 25,
+      "reset_position_rmse": 0.5556924123417639,
+      "image_mae": 0.4870190263605442,
+      "step10_position_rmse": 0.5574032086754536,
+      "max_replay_position_rmse": 0.5803312734585379
+    },
+    {
+      "episode": 2,
+      "start": 25,
+      "reset_position_rmse": 0.5551627850742707,
+      "image_mae": 0.48625504889455784,
+      "step10_position_rmse": 0.5552337432555016,
+      "max_replay_position_rmse": 0.5607098311125267
+    },
+    {
+      "episode": 3,
+      "start": 25,
+      "reset_position_rmse": 0.557811681789873,
+      "image_mae": 0.5524487138605442,
+      "step10_position_rmse": 0.5594216444132846,
+      "max_replay_position_rmse": 0.5830201894370426
+    }
+  ]
+}

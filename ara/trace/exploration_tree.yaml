@@ -39,4 +39,84 @@ tree:
   timestamp: 2026-09-05T13:00+02:00
   description: User requested a recommendation based on the fresh baseline results.
     Long training remains stopped.
-  status: open
+  status: resolved
+- id: N05
+  type: decision
+  title: Execute four bounded diagnostic checks
+  provenance: user
+  timestamp: 2026-09-05T13:56+02:00
+  choice: Adopt replay, paired released-checkpoint control, capped batch-128 PushT
+    learning and second-dataset checks; retain stop on long training.
+  alternatives:
+  - Start long training immediately
+  - Begin component research
+  evidence:
+  - 'User: yes please do exactly that'
+  - O02
+  - ../docs/diagnostic-protocol.md
+  status: resolved
+- id: N06
+  type: experiment
+  title: Recorded-action replay alignment
+  provenance: ai-executed
+  timestamp: 2026-09-05T13:56+02:00
+  result: 'Four official PushT prefix episodes: reset position RMSE 0.555–0.558 pixels,
+    step-ten 0.555–0.559; image MAE 0.486–0.552/255. Separate CCHI replay has short
+    initial-velocity transients. No universal simulator-parity claim.'
+  evidence:
+  - evidence/tables/bounded_diagnostics_2026-09-05.json
+  - ../runs/diagnostics/alignment_official/alignment.json
+  - ../runs/diagnostics/alignment_cchi/alignment.json
+  also_depends_on:
+  - N05
+  status: resolved
+- id: N07
+  type: experiment
+  title: Released-checkpoint upstream/local evaluator parity
+  provenance: ai-executed
+  timestamp: 2026-09-05T13:56+02:00
+  result: 'Final authors-valid-window sampling on prefix subset: upstream 5/10, local
+    5/10; all outcomes and step counts agree; max action difference 5.96e-8. Corrected
+    source images, reset order/seeds, CEM RNG and float32 denormalization. Earlier
+    filtered cases: 2/10 both. Subset normalization; no paper-performance claim.'
+  evidence:
+  - evidence/tables/bounded_diagnostics_2026-09-05.json
+  - ../scripts/compare_evaluators.py
+  - ../world_model/eval_pusht.py
+  also_depends_on:
+  - N05
+  - N06
+  status: resolved
+- id: N08
+  type: experiment
+  title: Capped PushT training and frozen-weight BatchNorm probes
+  provenance: ai-executed
+  timestamp: 2026-09-05T13:56+02:00
+  result: 'Batch128, 7 train/1 related held-out prefix episodes, 120 updates in 848.6s
+    before time stop. Saved held-out MSE38.2377 versus copy1.0698. Discarded clone:
+    re-estimate BN on512 training windows, no optimizer; held-out MSE0.2200 versus
+    copy1.0560, shuffle0.4276. Saved checkpoint unchanged.'
+  evidence:
+  - evidence/tables/bounded_diagnostics_2026-09-05.json
+  - ../scripts/check_training_modes.py
+  - ../configs/diagnostics/pusht_prefix_learning.yaml
+  also_depends_on:
+  - N05
+  - N07
+  status: resolved
+- id: N09
+  type: experiment
+  title: Capped TwoRoom learning and cached loading check
+  provenance: ai-executed
+  timestamp: 2026-09-05T13:56+02:00
+  result: '28 train/4 held-out prefix episodes; batch128;400updates/638.2s. All285held-out
+    windows: saved MSE0.7673 versus copy0.7931 and shuffle0.8067; calibrated clone0.6038/copy1.0842/shuffle0.6560.
+    No control test. Eight PushT loader batches: disk workers46.54s, already-cached0.111s;
+    cache-construction excluded. Ten CPU tests pass.'
+  evidence:
+  - evidence/tables/bounded_diagnostics_2026-09-05.json
+  - ../configs/diagnostics/tworoom_prefix_learning.yaml
+  - ../docs/diagnostic-results.md
+  also_depends_on:
+  - N05
+  status: resolved

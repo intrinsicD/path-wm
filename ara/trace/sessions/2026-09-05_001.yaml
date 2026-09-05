@@ -2,10 +2,9 @@ session:
   id: 2026-09-05_001
   date: '2026-09-05'
   started: 2026-09-05T12:55+02:00
-  last_turn: 2026-09-05T13:00+02:00
-  turn_count: 2
-  summary: Fresh reset and modular LeWM implemented; short checks reported; long training
-    stopped by user.
+  last_turn: 2026-09-05T13:56+02:00
+  turn_count: 3
+  summary: Four bounded diagnostics complete; evaluator parity on10cases; PushT BN mismatch; TwoRoom modest predictive learning; long training remains stopped.
 events_logged:
 - turn: 1
   type: pivot
@@ -38,6 +37,68 @@ events_logged:
   provenance: ai-suggested
   summary: Recommend evaluator positive controls before capped learning and second-dataset
     checks.
+- turn: 3
+  type: decision
+  id: N05
+  routing: direct
+  provenance: user
+  summary: Execute four bounded diagnostic checks
+- turn: 3
+  type: experiment
+  id: N06
+  routing: direct
+  provenance: ai-executed
+  summary: Recorded-action replay alignment
+- turn: 3
+  type: experiment
+  id: N07
+  routing: direct
+  provenance: ai-executed
+  summary: Released-checkpoint upstream/local evaluator parity
+- turn: 3
+  type: experiment
+  id: N08
+  routing: direct
+  provenance: ai-executed
+  summary: Capped PushT training and frozen-weight BatchNorm probes
+- turn: 3
+  type: experiment
+  id: N09
+  routing: direct
+  provenance: ai-executed
+  summary: Capped TwoRoom learning and cached loading check
+- turn: 3
+  type: observation
+  id: O03
+  routing: staged
+  provenance: ai-suggested
+  summary: 'BatchNorm running-statistics mismatch explains most evaluation failure
+    of the 120-update PushT checkpoint: training-only recalibration reduces held-out
+    MSE about174-fold at unchanged weights. This does not establish broad generalization
+    or justify adopting recalibration as the baseline.'
+- turn: 3
+  type: observation
+  id: O04
+  routing: staged
+  provenance: ai-suggested
+  summary: 'The unchanged baseline shows modest predictive/action-sensitive learning
+    on the TwoRoom prefix: saved checkpoint beats copying3.2% and shuffling4.9% on285held-out
+    windows. Useful control remains unestablished.'
+- turn: 3
+  type: observation
+  id: O05
+  routing: staged
+  provenance: ai-suggested
+  summary: Next finish a cached capped PushT check with the full400-update schedule,
+    evaluate untouched weights and small control cases, then use completed verified
+    archives for exact reference normalization and evaluation. Trace upstream BN conventions
+    if mismatch persists; keep research deferred.
+- turn: 3
+  type: heuristic
+  id: H01
+  routing: crystallized
+  provenance: user-revised
+  summary: O02 diagnostic sequence explicitly adopted by user; verbal affirmation.
 ai_actions:
 - turn: 1
   action: Reset workspace, implement modular baseline and dataset adapters, run short
@@ -50,6 +111,20 @@ ai_actions:
   - tests/
   - configs/
   - CLAUDE.md
+- turn: 3
+  action: Extract complete source-prefix chunks with receipts; fix evaluator integrations;
+    run paired10cases, two capped learning checks, BN probes and loader benchmark;
+    report all limitations.
+  provenance: ai-executed
+  files_changed:
+  - scripts/compare_evaluators.py
+  - scripts/check_alignment.py
+  - scripts/check_training_modes.py
+  - world_model/eval_pusht.py
+  - world_model/data.py
+  - world_model/train.py
+  - configs/diagnostics/
+  - docs/diagnostic-results.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -60,9 +135,13 @@ key_context:
 - turn: 2
   excerpt: User asked what to do next based on the results; this does not authorize
     restarting long training.
+- turn: 3
+  excerpt: 'User: yes please do exactly that — adopts only the previously proposed
+    four bounded diagnostic checks.'
 open_threads:
-- Complete official PushT/TwoRoom downloads and verify extracted schemas.
-- Run bounded released-checkpoint control and second-dataset checks.
-- User review before any long training; no research extensions yet.
+- Finish and checksum-verify full official archives; establish full reference normalization and benchmark evaluation.
+- Test whether PushT saved-checkpoint BN mismatch settles after a completed cached short schedule; trained control remains unestablished.
+- User review before long training; no research extensions yet.
 ai_suggestions_pending:
-- O02: bounded diagnostic sequence recommended; not yet adopted by the user.
+- O03 and O04 interpretations await researcher review; no broad baseline capability claim.
+- O05 next bounded sequence recommended, not yet adopted or launched.
