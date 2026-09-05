@@ -13,7 +13,7 @@ from world_model.model import build_model
 from world_model.train import write_json
 
 @torch.no_grad()
-def check(run):
+def check(run, output_path=None):
     torch.set_num_threads(4)
     run=Path(run);meta=json.loads((run/'manifest.json').read_text())
     saved=torch.load(run/'checkpoint.pt',weights_only=True,map_location='cuda')
@@ -29,6 +29,9 @@ def check(run):
         batch=next(iter(loader));x=preprocess_pixels(batch['pixels'].cuda());a=normalize_actions(batch['action'].cuda(),saved['action_stats'])
         model.eval();z=model.encode(x);prediction=model.predict(z[:,:-1],a[:,:-1])
         output[split]['eval_mode_batch_mse']=float((prediction-z[:,1:]).square().mean())
+        with torch.autocast('cuda',dtype=torch.bfloat16):
+            bz=model.encode(x);bp=model.predict(bz[:,:-1],a[:,:-1])
+        output[split]['bf16_same_batch_mse']=float((bp.float()-bz[:,1:].float()).square().mean())
         # Same images; only BatchNorm uses current-batch statistics. Disable
         # dropout to avoid attributing its noise to normalization mismatch.
         probe=copy.deepcopy(model)
@@ -51,7 +54,7 @@ def check(run):
             calibrated.eval()
         output[split]['train_calibrated_bn']=evaluate_prediction(calibrated,loader,saved['action_stats'],torch.device('cuda'),batches=4)
     output['bn_calibration_scope']='Discarded diagnostic clone; at most 512 training windows; no weight update or checkpoint change'
-    write_json(run/'diagnostics.json',output);print(json.dumps(output),flush=True)
+    write_json(Path(output_path) if output_path else run/'diagnostics.json',output);print(json.dumps(output),flush=True)
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('run');check(p.parse_args().run)
+    p=argparse.ArgumentParser();p.add_argument('run');p.add_argument('--output');a=p.parse_args();check(a.run,a.output)
