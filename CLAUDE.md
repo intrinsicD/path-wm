@@ -32,7 +32,7 @@ Keep ordinary tests fast and CPU-based; substantive GPU runs are validation, not
 unit tests. Do not remove a failing test to conceal an implementation error.
 
 ## Status
-The modular LeWM implementation and 11 CPU tests pass after crash recovery.
+The modular LeWM implementation and 13 CPU tests pass after the broader pilot.
 Local and upstream control evaluators agree on ten paired subset cases with
 released weights. Cached random-initialized PushT training completed all 400
 updates in 665.98 seconds on the same 8-episode prefix (7 train, 1 held out).
@@ -53,9 +53,19 @@ for current evidence and recovery status. Broader learned control and full
 training reproduction remain unestablished. Do not start or resume long
 training until the user asks. Research extensions remain closed.
 
-## Active approved pilot
-The user approved the broader PushT pilot on 2026-09-05: 128 train / 32 held-out
-initial-configuration groups, batch 128, at most 1,000 updates or 30 minutes of
-training, then fixed float32 prediction and 20 paired held-out control goals.
-See docs/pusht-broader-pilot.md. This authorizes this bounded run and its
-evaluation, not additional long training or research extensions.
+## Completed approved pilot
+The user-approved broader PushT pilot completed 1,000 updates in 1,506.89 seconds
+on 128 train / 32 held-out initial-configuration groups, batch 128, seed 3072.
+The full source has 185 distinct initial configurations; one trajectory per
+selected group prevents initial-configuration variants from crossing the split.
+The final untouched float32 checkpoint has prediction MSE 0.187671 versus copy
+0.213567 and shuffled actions 0.203553, on 512 fixed held-out windows. All three
+trained checkpoints (250/500/1000) reach 0/20 on identical held-out control goals;
+released weights reach 17/20, replay 19/20, stationary 0/20, with no initial successes.
+Final precision and discarded BatchNorm-clone differences are small (about 3–4%);
+no baseline change was adopted. All checkpoint hashes remain unchanged.
+See docs/pusht-broader-pilot.md and the run's pilot_summary.json. All pilot
+training/evaluation processes completed. Do not repeat the run or launch more
+training without a new request. Recommend targeted rollout/control diagnosis;
+research extensions remain deferred. The bounded pilot is complete, while the
+learned-control baseline gate remains unmet.

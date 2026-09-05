@@ -13,14 +13,18 @@ The previous implementation and results were reset at the user's request.
 [Retained ideas](docs/ideas.md) are hypotheses for later work, not evidence.
 No baseline success claim is made until training and evaluation establish it.
 
-[Current validation results](docs/reference-validation.md): all 11 CPU tests
-pass after crash recovery. Cached PushT training completed 400 updates in 11.1
-minutes; its untouched checkpoint beats predictive controls on the small related
-subset and reaches 1/5 held-out control goals (replay 5/5, stationary 0/5).
-Both full archives are verified and extracted. The released checkpoint reaches
-45/50 goals (90%) with full PushT source normalization. Long training awaits user
-review; component research remains deferred. [First diagnostic round](docs/diagnostic-results.md)
-and [earlier checks](docs/baseline-checks.md) retain the previous results.
+[Broader PushT pilot](docs/pusht-broader-pilot.md): 13 CPU tests pass. The approved
+128-train/32-held-out configuration split completed 1,000 updates in 25.1 minutes.
+The final checkpoint modestly beats copy/shuffled prediction controls but reaches
+0/20 held-out control goals; released weights reach 17/20 on the same goals,
+recorded replay 19/20, and stationary actions 0/20. Intermediate checkpoints also
+reach 0/20. Learned control remains unestablished; focused rollout/control
+diagnosis is recommended before more training. Component research stays deferred.
+
+[Full-source reference validation](docs/reference-validation.md) reached 45/50
+with released weights on a separate case set. Both full archives are verified
+and extracted. [First diagnostic round](docs/diagnostic-results.md) and
+[earlier checks](docs/baseline-checks.md) retain the previous subset results.
 
 Use the local environment `.runtime/lewm/bin/python`, or install this project
 with its `dev`, `eval` and `data` extras in an isolated environment.

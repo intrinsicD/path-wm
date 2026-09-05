@@ -200,3 +200,11 @@ episode IDs, action statistics and window counts. The replay, paired evaluator,
 learning configurations and diagnostic scripts are versioned in the repository.
 Raw measurements and checkpoints are local under `runs/diagnostics/` and are
 excluded from Git; the research artifact retains a compact evidence snapshot.
+
+## Broader follow-up
+
+The approved 128/32-configuration PushT pilot completed 1,000 updates and paired
+control evaluation. See [the full report](pusht-broader-pilot.md): prediction
+modestly improves over controls, but all trained checkpoints reach 0/20 goals
+versus 17/20 for released weights. The earlier prefix results above remain
+separate and do not establish broader learned control.
