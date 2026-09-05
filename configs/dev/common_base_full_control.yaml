@@ -27,6 +27,9 @@
 # Runtime iteration 10: optionally overlap one CPU batch with GPU computation.
 # Each worker draws with a private generator; checkpoint state advances only for
 # consumed batches. Enable only after exact serial/resume and CUDA trajectory checks.
+# Panel iteration 11: record variation across windows at fixed token positions.
+# Padding is excluded; positional-only or constant evidence scores zero. This adds
+# no training term, gate threshold, forward pass or sampler draw.
 experiment: E1_common_base
 status: dev
 abi: docs/abi/abi_v2.yaml
