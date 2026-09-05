@@ -28,15 +28,13 @@ The harness adds nine integrity checks; all 22 CPU tests pass. No new training o
 evaluation was run during this repair.
 
 The current HTML includes 30 result records (6 training, 20 control and 4
-standalone prediction records). Artifact validation and exact embedded-payload
-checks pass. Browser verification remains blocked by the installed canonical
-packager: headless-shell stalls in fallback; installed full Chrome renders charts
-with a viewport correction but its final desktop/mobile probe times out. The
-published snapshot has a `structural_only` receipt at
-`runs/experiment_dashboard.receipt.json`; visual verification is still pending.
-The wrapper returns nonzero until browser QA passes. The installed Data Analytics
-packager is `0.2.10-13ceeea1f599`; `CHROMIUM_EXECUTABLE_PATH` selects an explicit
-browser for troubleshooting.
+standalone prediction records). Canonical artifact, desktop/mobile browser,
+source interaction and exact embedded-payload checks now pass. The local browser
+transport uses an installed Chromium with real time and an explicit viewport;
+it preserves the canonical probes and their failure results. Two narrow runtime
+CSS corrections fix scrollbar-gutter header overflow and long mobile legends.
+All 22 CPU checks and two explicit browser integration checks passed during the
+repair. See `runs/experiment_dashboard.receipt.json` and `viewer/DESIGN.md`.
 
 ## Approved work pending after this repair
 

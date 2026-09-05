@@ -252,10 +252,14 @@ def _deliver_portable_artifact(artifact_path: Path, html_path: Path, builder_pat
     if node is None:
         raise DashboardBuildError("Node.js is required to package the self-contained experiment dashboard")
     completed = subprocess.run(
-        [node, str(builder_path), "--input", str(artifact_path), "--output", str(html_path)],
+        [node, str(Path(__file__).with_name("deliver_dashboard.mjs")),
+         "--builder", str(builder_path), "--input", str(artifact_path), "--output", str(html_path)],
         check=False,
         capture_output=True,
         text=True,
+        env={**os.environ, "CHROMIUM_EXECUTABLE_PATH": os.environ.get(
+            "CHROMIUM_EXECUTABLE_PATH", str(Path(__file__).with_name("chromium_transport.mjs")))},
+        timeout=120,
     )
     if completed.returncode != 0:
         detail = completed.stderr.strip() or completed.stdout.strip() or "portable builder failed"

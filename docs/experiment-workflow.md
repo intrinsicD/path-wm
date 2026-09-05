@@ -99,7 +99,8 @@ steps rather than attaching old metrics to a newer checkpoint. Keep exact source
 paths and metric definitions. Do not average incompatible protocols or imply
 that different learned latent spaces have comparable absolute errors.
 
-The canonical portable-artifact builder produces self-contained local HTML and
+The canonical portable-artifact builder, called through the local browser/layout
+adapter documented in `viewer/DESIGN.md`, produces self-contained local HTML and
 validates its data and rendering. Node.js and the Data Analytics builder are
 required; `PATH_WM_ARTIFACT_BUILDER` can select its installed delivery script.
 A `passed` verification receipt includes browser checks. `structural_only` means

@@ -17,7 +17,7 @@ dev = ["pytest"]
 include = ["world_model*", "third_party*", "viewer*"]
 
 [tool.setuptools.package-data]
-viewer = ["*.sql", "DESIGN.md"]
+viewer = ["*.sql", "*.mjs", "*.css", "DESIGN.md"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
