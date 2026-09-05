@@ -9,7 +9,7 @@ requires-python = ">=3.11"
 dependencies = ["torch>=2.5", "torchvision", "transformers==4.57.1", "einops", "numpy", "PyYAML", "h5py", "hdf5plugin", "zstandard", "huggingface-hub"]
 
 [project.optional-dependencies]
-eval = ["gymnasium", "pygame", "pymunk==7.3.0", "opencv-python-headless", "shapely"]
+eval = ["gymnasium", "pygame", "pymunk==7.3.0", "opencv-python-headless", "shapely", "scipy", "matplotlib"]
 data = ["zarr<3", "numcodecs"]
 dev = ["pytest"]
 

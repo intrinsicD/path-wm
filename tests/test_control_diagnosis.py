@@ -33,3 +33,13 @@ def test_ranking_uses_lower_cost_and_handles_uninformative_ties():
     assert result['regret']==0.
     assert ranking_metrics([0.,0.,0.],[1.,2.,3.])['spearman'] is None
     with pytest.raises(ValueError): ranking_metrics([1.,2.],[3.])
+
+
+def test_simulator_retains_full_horizon_after_initial_success():
+    from scripts.diagnose_pusht_control import simulate
+    state=np.array([100.,100.,256.,256.,.3,0.,0.])
+    frames, states, outcome=simulate(state,state,np.zeros((25,2),np.float32),42)
+    assert frames.shape==(6,224,224,3)
+    assert states.shape==(26,7)
+    assert outcome['initial_success'] and outcome['success_terminal']
+    assert outcome['position_error'] < 1e-6
