@@ -3,6 +3,11 @@
 Status: implementation candidate, 2026-09-04. ABI v1 and E1-a remain an immutable measured control;
 this document defines the replacement reference that must pass the gates below before it is promoted.
 
+Priority update, 5 September (DDR §41): the user requests a published baseline that demonstrably
+learns before further method changes. This candidate is a custom architecture, not a reproduced
+literature baseline. The independent [reference plan](common-base-reference-plan.md) now comes
+first; its development control does not inherit the candidate frontend gates or relax them.
+
 Implementation status (development evidence only, 5 September): ABI-v2 contracts, video/audio evidence
 paths, the common core, EMA representation learner and held-out panel are executable. The complete
 TAU official split contains 8,646 train and 3,645 eval clips with disjoint recording groups. In the
@@ -35,19 +40,22 @@ compact readout that retains token information are next (DDR §§38–40).
 
 ## 1. Decision
 
-There is no literal architecture shared by LeWM, V-JEPA 2, VLWM, DINO-WM, Delta-JEPA and Dreamer.
-Their useful intersection is narrower:
+There is no literal architecture or single training recipe shared by LeWM, V-JEPA 2, VLWM,
+DINO-WM, Delta-JEPA and Dreamer. The previous version overstated their common ground:
+LeWM jointly learns encoder and action-conditioned dynamics without EMA or target stop-gradient;
+V-JEPA 2 uses EMA sensory pretraining followed by frozen-encoder action post-training; DINO-WM
+starts from a frozen pretrained encoder; Dreamer jointly trains a recurrent generative state model.
+See the primary-source comparison in [the reference plan](common-base-reference-plan.md).
 
-1. learn temporally useful sensory features before relying on an action-conditioned dynamics model;
-2. predict in latent space, with a stable target rather than a target that moves freely with the student;
-3. give the dynamics model history, either explicitly or in a sufficient recurrent state;
-4. keep the planner outside the representation objective and train/use it only after dynamics works;
-5. treat action correctness, open-loop stability and partial observability as separate failure modes.
+Their relevant functional pattern is sensory encoding, temporal state/history, predictive dynamics,
+and downstream evaluation. This does not imply that sensory pretraining must precede dynamics,
+that EMA is universally necessary, or that a fixed slot belief is already validated.
 
-PATH-WM adopts that intersection and adds the modularity needed by H1. The default is an EMA-target,
-multimodal JEPA frontend feeding a deterministic recurrent belief and a separate action-conditioned
-predictor. Planning, stochastic heads, language and additional sensors attach later through interfaces;
-they are not empty trainable modules in the initial graph.
+The architecture below is PATH-WM's candidate: an EMA-target multimodal frontend, deterministic
+recurrent belief and separate action-conditioned predictor. Its additional interfaces serve H1.
+It remains available for controlled changes after an independent published reference learns;
+its R0/R1 results establish only bounded representation behavior. Planning, stochastic heads,
+language and additional sensors remain later extensions.
 
 ## 2. Runtime graph
 
@@ -120,9 +128,11 @@ the numerical zero-action token.
 
 ### 3.6 EMA targets and pretext heads
 
-Every representation-stage encoder has a no-gradient exponential-moving-average target. Stop-gradient
-is applied only to that teacher. This replaces the incoherent v1 hybrid of stop-gradient targets without
-an EMA teacher. Pretext predictors belong to representation training and are not the world predictor.
+Every representation-stage encoder in this candidate has a no-gradient exponential-moving-average
+target. Stop-gradient is applied only to that teacher. The earlier v1 target treatment differed from
+the source LeWM recipe; its failure does not establish that stop-gradient without EMA is generally
+invalid. This EMA choice is also a method change relative to LeWM, which jointly differentiates
+through targets. Pretext predictors belong to representation training and are not the world predictor.
 
 ### 3.7 Later modules
 

@@ -1,7 +1,13 @@
-# Next controlled experiment: temporal correspondence beyond recording context
+# Conditional frontend experiment: temporal correspondence beyond recording context
 
 Product: ABI-v2 evidence for the modality-neutral belief and a replaceable H1 interface.
 Research: E1_common_base development only; no H1 or formal freeze claim.
+
+Priority update, 5 September (DDR §41): first establish a published world-model reference that
+learns and meets a declared evaluation target. Follow [the reference plan](common-base-reference-plan.md).
+The user requested baseline learning before modification. The frontend study below remains a
+conditional extension and its previous failed outcomes are preserved; it is not a prerequisite
+for the independent author-model reproduction. B0 still cannot launch from these failed sources.
 
 The measured baseline is the two 10,000-update R1 continuations from checksum-bound R0 sources.
 Keep their original gates and all-clip timing/future audits unchanged. The current run is not a

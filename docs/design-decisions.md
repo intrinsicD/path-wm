@@ -1069,3 +1069,41 @@ explicitly preserved. No renderer code was changed and no SQL calculation was fa
 Evidence: `runs/controlled_av_20260905/report.html`, `r0_validation.json`, `report_qa.json`,
 `physical_probe_seed{0,1}_*.json`, `equal_dimension_readout.json`,
 `exact_coordinate_rank_control.json`, and the corresponding saved per-clip tensors/scripts.
+
+
+## 41. Establish a published world-model reference before modifying the common base (2026-09-05)
+
+Product: a learned reference for the modular world-model stack. Research: the E1 prerequisite for
+H1 encoder replacement; neither H1 nor H6 is tested by this assessment.
+
+**User direction.** Compare with the literature, establish a common baseline that learns at least
+as expected, then modify it. This supersedes further frontend optimization as the immediate priority.
+The choice of LeWM and video/action-first ordering is the AI recommendation; the optional modality
+preference has not been answered. No specific numerical acceptance margin is user-endorsed.
+
+**Evidence and correction.** The original LeWM pin is still the author's current repository head,
+`8edfeb336732b5f3ce7b8b210d0ba370a09e2cac`. Its actual training function jointly differentiates
+through predicted and target embeddings with prediction MSE plus SIGReg. The common-base candidate
+instead trains EMA sensory encoders and disposable heads under multiple losses; its updater and
+world predictor are frozen and unused in R0/R1. Thus neither the old adapted E1-a nor the current
+candidate is a faithful reproduction. EMA and pretrain-first are not universal literature requirements.
+These statements correct the architecture document's synthesis without changing historical results.
+
+**Next work.** Follow `docs/common-base-reference-plan.md`: pin the author's runtime and data, resolve
+paper/code protocol differences, validate the released checkpoint/evaluator, then reproduce the
+training recipe and compare paired action prediction, open-loop rollouts and planning. LeWM on PushT
+is the proposed scored reference; the paper's 10 epochs differ from the checked-in 100-epoch default,
+and TwoRoom has additional history/evaluation mismatches. Do not infer paper parity from a repository
+default or from metadata that contains only model architecture. The local 8-GiB GPU needs a real
+memory/throughput preflight. Smaller batches can change BatchNorm/SIGReg and must be disclosed.
+
+**Boundary.** The author model is an independent development control with its native history and
+state. Its wrapper must preserve behavior before any ABI change, audio path, new loss or planner is
+introduced. It does not inherit candidate R0/R1 rank/synchrony gates, does not waive the failed gates,
+and does not authorize B0 from failed sources or advance Phase/Target. TAU remains a later audiovisual
+reference/transfer dataset; controller-action data is needed for the initial control reproduction.
+
+**Validation.** Source/config snapshot hashes verified; local module instantiation confirms zero
+trainable updater/action-adapter/world-predictor parameters in R0. Documentation and source receipt
+only; no new training, checkpoint evaluation, dependency installation or learned-model result.
+Source receipt: `docs/evidence/common-base-reference-audit-2026-09-05.json`.
