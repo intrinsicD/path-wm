@@ -52,11 +52,13 @@ def train(config_path, resume=False):
     total_steps=batches_per_epoch*cfg['epochs']
     if cfg.get('max_steps'): total_steps=min(total_steps,cfg['max_steps'])
     warmup=max(1,int(total_steps*cfg['warmup_fraction']))
-    val_loader=DataLoader(val_ds,batch_size=min(cfg['batch_size'],32),shuffle=False,
+    val_order=torch.randperm(len(val_ds),generator=torch.Generator().manual_seed(seed+100000)).tolist()
+    val_order=val_order[:cfg['eval_batches']*min(cfg['batch_size'],32)]
+    val_loader=DataLoader(val_ds,batch_size=min(cfg['batch_size'],32),sampler=val_order,
         num_workers=cfg['workers'],pin_memory=device.type=='cuda')
     signature=dict(config=cfg,dataset=ds_cfg,model=model_cfg,train_episodes=tr,val_episodes=va,
                    action_stats=stats,total_steps=total_steps,train_windows=len(train_ds),
-                   val_windows=len(val_ds),initialization='random',seed=seed)
+                   val_windows=len(val_ds),validation_window_indices=val_order,initialization='random',seed=seed)
     fingerprint=hashlib.sha256(json.dumps(signature,sort_keys=True).encode()).hexdigest()
     step=0;elapsed=0
     if resume:

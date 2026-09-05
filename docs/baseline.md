@@ -41,3 +41,18 @@ input scale and are not evidence of held-out generalization. Small budgets or
 smaller batches are labelled development validation, never paper reproduction.
 Encoder recomputation/chunking is acceptable only after gradient parity checks;
 microbatch SIGReg or BatchNorm is not interchangeable with a full batch.
+
+## Additional PushT dataset for early validation
+
+The [original Diffusion Policy data](https://diffusion-policy.cs.columbia.edu/data/training/pusht.zip)
+contains 206 demonstrations and 25,650 frames. `pusht_cchi` uses these 96px images
+(resized to 224) and preserves absolute target XY actions. It is a separately
+named data protocol and is never evaluated as the released LeWM training set.
+The conversion receipt records its content hash. CCHI state omits velocity;
+the local SWM simulator initializes that missing velocity to zero for control
+checks. CCHI control is a development check, not the paper's exact benchmark.
+
+Validation windows for the full training runs are a fixed, uniformly sampled
+subset of held-out episode windows. The first 500-step development run predates
+this improvement and used the first 256 validation windows; its metrics only
+cover that contiguous evaluation sample.
