@@ -24,7 +24,8 @@ def test_related_configurations_cannot_leak_across_frozen_split(tmp_path):
     with pytest.raises(ValueError, match='exactly once'): explicit_episode_split(path,5)
 
 
-def test_training_retains_checkpoints_and_resume_respects_spent_budget(tmp_path, monkeypatch):
+@pytest.mark.parametrize("protocol", ["episodes", "random_windows"])
+def test_training_retains_checkpoints_and_resume_respects_spent_budget(tmp_path, monkeypatch, protocol):
     import h5py
     import torch
     import yaml
@@ -48,6 +49,10 @@ def test_training_retains_checkpoints_and_resume_respects_spent_budget(tmp_path,
         log_every=1,eval_every=1,eval_batches=1,checkpoint_steps=[0,1,2],
         model=dict(width=12,image_size=28,encoder_depth=1,encoder_heads=3,
             predictor_depth=1,predictor_heads=2,head_dim=4,mlp_dim=24,projector_dim=24,dropout=0.))
+    if protocol=='random_windows':
+        cfg.pop('episode_split')
+        cfg.update(split_protocol='random_windows',normalization_population='full_source',
+                   train_fraction=.9,encoder_gradient_checkpointing=True)
     config=tmp_path/'run.yaml';config.write_text(yaml.safe_dump(cfg))
     train(config)
     snapshots=[torch.load(run/f'checkpoint_{i:06d}.pt',weights_only=True) for i in range(3)]

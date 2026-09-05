@@ -50,3 +50,20 @@ def test_encoder_recomputation_preserves_all_gradients_and_batchnorm():
         torch.testing.assert_close(p.grad,q.grad,rtol=2e-3,atol=1e-5,msg=name)
     for p,q in zip(a.buffers(),b.buffers()):
         torch.testing.assert_close(p,q,rtol=1e-5,atol=1e-6)
+
+
+def test_full_batch_activation_checkpointing_preserves_gradients():
+    torch.manual_seed(6)
+    native=tiny().train()
+    checkpointed=copy.deepcopy(native)
+    checkpointed.encoder.gradient_checkpointing_enable(gradient_checkpointing_kwargs={'use_reentrant':False})
+    pixels=torch.randn(3,4,3,28,28)
+    actions=torch.randn(3,4,10)
+    reg=SIGReg(num_proj=16)
+    torch.manual_seed(99)
+    a=backward_batch(native,pixels,actions,reg)
+    torch.manual_seed(99)
+    b=backward_batch(checkpointed,pixels,actions,reg)
+    for k in a:torch.testing.assert_close(a[k],b[k],atol=0,rtol=0)
+    for p,q in zip(native.parameters(),checkpointed.parameters()):
+        torch.testing.assert_close(p.grad,q.grad,atol=1e-7,rtol=1e-6)

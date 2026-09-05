@@ -79,3 +79,35 @@ these remaining recipe differences.
 - [Training normalizer](https://github.com/lucas-maes/le-wm/blob/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/utils.py)
 - [Release optimizer/training YAML](https://github.com/lucas-maes/le-wm/blob/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/config/train/lewm.yaml)
 - [Release data YAML](https://github.com/lucas-maes/le-wm/blob/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/config/train/data/pusht.yaml)
+
+## Prepared commands
+
+The configuration is `configs/reproduction/pusht_source_scale.yaml`. Preparation
+uses `python -m scripts.prepare_pusht_reproduction` and writes the frozen window
+indices, normalization, exact budget and 50-goal manifest under
+`runs/reproduction/pusht_source_scale_preparation/`. It constructs no model.
+
+After a separate long-run schedule is approved, the training command is:
+
+```bash
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 .runtime/lewm/bin/python run.py -m world_model.train configs/reproduction/pusht_source_scale.yaml
+```
+
+For each retained epoch, evaluate its checkpoint using a fresh output directory:
+
+```bash
+.runtime/lewm/bin/python run.py -m scripts.evaluate_prepared_control runs/reproduction/pusht_source_scale_preparation/control_cases.json runs/reproduction/pusht_source_scale/checkpoint_139330.pt runs/reproduction/pusht_source_scale_control_final
+```
+
+Use the same case manifest with `data/reference/lewm-pusht/weights.pt` and
+`--released` for the paired released control. Run
+`python run.py -m scripts.check_control_baselines <evaluation-directory>` for
+stationary/replay controls. These commands are prepared, not launched here.
+
+The candidate enables nonreentrant encoder activation checkpointing and disables
+encoder batch slicing. This preserves full-batch kernels, BatchNorm and SIGReg
+semantics. A real-data batch-4 native comparison matches bf16 gradients to a
+relative L2 difference of 1.36e-7; slicing that batch in half gave 0.06124. This
+isolates a numerical difference, not the causal origin of the pilot's failure.
+The separate batch-128 memory preflight and its limits are recorded in
+`runs/diagnostics/pusht_control_diagnosis/reproduction_memory.json`.

@@ -90,7 +90,8 @@ def evaluate(config_path, checkpoint, output, episodes=50, seed=42, samples=300,
         if episodes>len(eligible): raise ValueError(f'Only {len(eligible)} eligible episodes; reduce count')
         selected=rng.choice(eligible,episodes,replace=False)
         settings=dict(dataset=cfg,checkpoint=str(Path(checkpoint).resolve()),released=released,
-            population='source training population' if released else 'held-out episodes',
+            population=('source training population' if released else
+                        manifest.get('population', 'held-out episodes')),
             seed=seed,episodes=episodes,samples=samples,iterations=iterations,elites=elites,
             horizon=5,action_block=cfg['frameskip'],receding_horizon=5,budget=budget,
             goal_offset=goal_offset,environment_commit='6f1e499e9cc0c898d326112f485c1062c3d20f24',
