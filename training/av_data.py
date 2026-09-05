@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import fcntl
 import hashlib
 import json
 import math
@@ -190,21 +191,44 @@ def ingest_tau_av(
     *,
     decoder: Decoder | None = None,
     workers: int = 1,
+    cache_only: bool = False,
+    max_clips: int | None = None,
 ) -> tuple[AVClipRecord, ...]:
-    """Decode the selected TAU subset once and atomically publish its manifest."""
+    """Serialize shard writers; only complete ingestion may publish a manifest."""
+    shard_root = _resolve(root, cfg["data"]["shard_root"])
+    shard_root.mkdir(parents=True, exist_ok=True)
+    with (shard_root / ".ingestion.lock").open("a") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        return _ingest_tau_av_locked(cfg, root, decoder=decoder, workers=workers,
+                                     cache_only=cache_only, max_clips=max_clips)
+
+
+def _ingest_tau_av_locked(
+    cfg: Mapping[str, Any], root: Path, *, decoder: Decoder | None,
+    workers: int, cache_only: bool, max_clips: int | None,
+) -> tuple[AVClipRecord, ...]:
     data_cfg = cfg["data"]
     if data_cfg.get("kind") != "synchronized_av_manifest" or data_cfg.get("dataset") != "tau_urban_audio_visual_scenes_2021":
         raise ValueError("ingest_tau_av requires the TAU synchronized manifest config")
     if workers < 1:
         raise ValueError("ingestion workers must be positive")
+    if max_clips is not None and (not cache_only or max_clips < 1):
+        raise ValueError("max_clips must be positive and is only allowed for cache-only ingestion")
     decoder = decode_av_media if decoder is None else decoder
     sources = _tau_sources(data_cfg, root)  # Validates all split/group invariants before expensive decode.
-    for source in sources:
-        for modality in ("video", "audio"):
-            if not source[modality].is_file():
-                raise FileNotFoundError(f"missing TAU {modality} source: {source[modality]}")
-
     shard_root = _resolve(root, data_cfg["shard_root"])
+    if cache_only:
+        # Opportunistic prefill cannot publish data. Complete ingestion later rehashes every
+        # source, including any file whose extraction changed after this cache was written.
+        sources = [source for source in sources
+                   if all(source[modality].is_file() for modality in ("video", "audio"))
+                   and not (shard_root / f"{source['clip_id']}.pt").exists()]
+        sources = sources[:max_clips]
+    else:
+        for source in sources:
+            for modality in ("video", "audio"):
+                if not source[modality].is_file():
+                    raise FileNotFoundError(f"missing TAU {modality} source: {source[modality]}")
     manifest_path = _resolve(root, data_cfg["manifest"])
     shard_root.mkdir(parents=True, exist_ok=True)
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
@@ -262,7 +286,10 @@ def ingest_tau_av(
         for record in pool.map(ingest_one, sources):
             records.append(record)
             if len(records) % 100 == 0 or len(records) == len(sources):
-                print(f"Ingestion: {len(records)}/{len(sources)} clips", flush=True)
+                label = "Cache prefill" if cache_only else "Ingestion"
+                print(f"{label}: {len(records)}/{len(sources)} clips", flush=True)
+    if cache_only:
+        return tuple(records)
 
     temporary = manifest_path.with_suffix(manifest_path.suffix + ".tmp")
     temporary.write_text(
@@ -494,14 +521,18 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Ingest the configured TAU A/V subset into normalized shards")
     parser.add_argument("spec", type=Path)
     parser.add_argument("--workers", type=int, default=1, help="concurrent clip decoders")
+    parser.add_argument("--cache-only", action="store_true", help="prefill available sources without publishing a manifest")
+    parser.add_argument("--max-clips", type=int, help="bound one cache-only prefill batch")
     args = parser.parse_args()
     torch.set_num_threads(1)  # Parallelize clips, not every resize inside each worker.
     repository = Path(__file__).resolve().parents[1]
     spec_path = args.spec if args.spec.is_absolute() else repository / args.spec
     cfg = yaml.safe_load(spec_path.read_text())
-    records = ingest_tau_av(cfg, repository, workers=args.workers)
+    records = ingest_tau_av(cfg, repository, workers=args.workers,
+                            cache_only=args.cache_only, max_clips=args.max_clips)
     counts = {split: sum(record.split == split for record in records) for split in ("train", "eval")}
-    print(f"Ingested {len(records)} synchronized clips: {counts['train']} train, {counts['eval']} eval")
+    label = "Cached (no manifest published)" if args.cache_only else "Ingested"
+    print(f"{label} {len(records)} synchronized clips: {counts['train']} train, {counts['eval']} eval")
 
 
 if __name__ == "__main__":

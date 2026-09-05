@@ -569,3 +569,25 @@ tests pass (two opt-in tests deselected). Proof: `runs/overnight/common_base_202
 motivates the supplementary blank-input/within-position probes, without establishing a replacement
 objective. Full-corpus measurements must distinguish representation diversity, temporal generalization,
 and latent-coordinate alignment before a representation is treated as useful for the next stage.
+
+
+---
+
+## 27. Overlap acquisition with bounded cache ingestion
+
+**Question.** Can unused CPU capacity remove the post-download decoding delay while the full-corpus
+R0 comparison still sees exactly the official split and source bytes?
+
+**Decision.** Add an operational cache-only mode that decodes at most a bounded number of available,
+uncached source pairs and never writes a manifest. Ingestion processes serialize on the shard root's
+file lock. The final normal ingestion still requires every source, rehashes all source bytes, rebuilds
+any changed or truncated cache, and atomically publishes the complete manifest. The prefill loop stops
+at acquisition completion or the shared overnight deadline. A partially extracted source can at most
+produce a reusable-or-rejected cache candidate; it cannot enter training without full revalidation.
+No scientific setting, source selection or training trajectory changes.
+
+**Validation.** The missing-source test permits bounded prefill but rejects final ingestion until the
+source arrives; changing a prefilled source forces a rebuild. On the real 20 examples, prefill of five
+clips followed by full ingestion reuses those five shards and reproduces the original manifest byte for
+byte. All 170 fast tests pass (two opt-in tests deselected). Proof is in
+`runs/overnight/common_base_20260905/prefill_compatibility.json`.
