@@ -34,6 +34,7 @@ class CommonBaseTrainingResult:
     metrics: dict[str, float | int]
     parameter_counts: dict[str, int]
     gate: GateResult
+    r0_initialization: dict[str, Any] | None = None
 
 
 def _move_batch(batch: RepresentationBatch, device: torch.device) -> RepresentationBatch:

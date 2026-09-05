@@ -15,6 +15,14 @@
 # Test aligned instants and causal, identical relative clocks across current/future/shifted views.
 # Only R1 timestamp construction changes. R0 values, timestamps and random draws must replay exactly.
 # This prepares correct synchronized data; real R1 training still requires the completed R0 gate/handoff.
+# Curriculum iteration 13 (prepared in isolation): fresh R1 requires a completed, passing R0
+# checkpoint for its seed, named by path and SHA-256 in train.r0_initialization. Verify source
+# stage/budget, seed, data fingerprint, architecture and unchanged R0 thresholds before loading.
+# Transfer learner/EMA weights; start a fresh optimizer and R1 random streams. Preserve provenance
+# in durable snapshots so R1 resume does not depend on the original source file remaining present.
+# R1 exit retains the four configured R0 feature-std/rank guards in addition to its A/V gates.
+# Tests: invalid sources fail before training; weights transfer exactly; interrupted R1 is exact.
+# Existing R0 runtime and ledgers must replay exactly. No real R1 starts before the full R0 decision.
 experiment: E1_common_base
 status: dev
 abi: docs/abi/abi_v2.yaml
@@ -141,6 +149,7 @@ curriculum:
       action_correct_through_horizon: {op: equal, value: 1.0}
 train:
   stage: representation_unimodal
+  r0_initialization: null  # R1: map seed to {checkpoint: repo-relative-or-absolute path, sha256: digest}
   prefetch_batches: 0  # operational: 0 serial, 1 one CPU batch ahead
   max_steps: 20  # dev
   batch_size: 2  # dev

@@ -91,3 +91,17 @@ def test_ema_teacher_is_frozen_and_updates_toward_online_parameters():
 
     assert all(not parameter.requires_grad for parameter in teacher.module.parameters())
     assert torch.allclose(teacher.module.weight, before * 0.5 + online.weight * 0.5)
+
+
+
+def test_r1_cannot_pass_with_a_collapsed_modality_or_missing_collapse_evidence():
+    cfg = yaml.safe_load((ROOT / "configs/dev/common_base.yaml").read_text())
+    curriculum = _curriculum_module().CommonBaseCurriculum.from_config(cfg["curriculum"])
+    av = {name: 0.1 for name in cfg["curriculum"]["gates"]["audiovisual_representation_ready"]}
+    assert not curriculum.evaluate("representation_av", av).passed
+    metrics = {**av, "video_feature_std":0.8, "audio_feature_std":0.8,
+               "video_effective_rank_fraction":0.5, "audio_effective_rank_fraction":0.5}
+    assert curriculum.evaluate("representation_av", metrics).passed
+    for name in ("video_feature_std", "audio_feature_std", "video_effective_rank_fraction", "audio_effective_rank_fraction"):
+        failed = curriculum.evaluate("representation_av", {**metrics, name:0.0})
+        assert not failed.passed and name in " ".join(failed.failures)

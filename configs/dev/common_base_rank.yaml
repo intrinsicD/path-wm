@@ -137,6 +137,7 @@ curriculum:
       action_correct_through_horizon: {op: equal, value: 1.0}
 train:
   stage: representation_unimodal
+  r0_initialization: null  # R1: map seed to {checkpoint: repo-relative-or-absolute path, sha256: digest}
   prefetch_batches: 0  # operational: same disabled default as the paired base
   max_steps: 20  # dev
   batch_size: 2  # dev

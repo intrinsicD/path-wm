@@ -1,6 +1,7 @@
 """Interrupted R0 must preserve optimizer, EMA and random streams (DDR §24)."""
 from copy import deepcopy
 import json
+import hashlib
 from pathlib import Path
 import pytest
 import torch
@@ -31,7 +32,7 @@ class TinyData:
                     torch.linspace(-0.128, 0, 2048).expand(batch_size, -1),
                     torch.ones(batch_size, 2048, dtype=torch.bool)),
             }
-        return RepresentationBatch(observations(), observations(), {})
+        return RepresentationBatch(observations(), observations(), observations() if stage == "representation_av" else {})
 
 
 def _config():
@@ -112,3 +113,95 @@ def test_prefetch_preserves_serial_training_optimizer_and_random_states(tmp_path
         torch.testing.assert_close(left[key], right[key], rtol=0, atol=0)
     assert serial.metrics == prefetched.metrics
     assert serial.final_training == prefetched.final_training
+
+
+
+def _r0_source(tmp_path, monkeypatch):
+    import training.common_base as training
+    cfg = _config()
+    # Stub the measured panel only for transfer/recovery mechanics; these are not experimental results.
+    metrics = {name: 0.5 if "rank" in name else 0.2
+               for name in cfg["curriculum"]["gates"]["unimodal_representation_ready"]}
+    metrics.update({name: 0.1 for name in cfg["curriculum"]["gates"]["audiovisual_representation_ready"]})
+    monkeypatch.setattr(training, "_panel", lambda *args, **kwargs: dict(metrics))
+    result = training.train_common_base(cfg, TinyData(), tmp_path / "source", 0, torch.device("cpu"))
+    target = deepcopy(cfg)
+    target["train"]["stage"] = "representation_av"
+    target["train"]["r0_initialization"] = {0: {
+        "checkpoint": str(result.checkpoint),
+        "sha256": hashlib.sha256(result.checkpoint.read_bytes()).hexdigest(),
+    }}
+    return target, result.checkpoint
+
+
+def test_fresh_r1_refuses_to_bypass_the_r0_source_gate(tmp_path):
+    cfg = _config()
+    cfg["train"]["stage"] = "representation_av"
+    with pytest.raises(ValueError, match="R0|r0_initialization"):
+        train_common_base(cfg, TinyData(), tmp_path / "r1", 0, torch.device("cpu"))
+    assert not (tmp_path / "r1/checkpoint.pt").exists()
+
+
+@pytest.mark.parametrize("problem", ["checksum", "incomplete", "failed_gate", "stage", "seed", "fingerprint", "model", "threshold"])
+def test_r1_rejects_unbound_incomplete_failed_or_incompatible_r0(tmp_path, monkeypatch, problem):
+    cfg, path = _r0_source(tmp_path, monkeypatch)
+    source = torch.load(path, weights_only=True)
+    if problem == "checksum":
+        cfg["train"]["r0_initialization"][0]["sha256"] = "0" * 64
+    elif problem == "incomplete":
+        source["step"] -= 1
+    elif problem == "failed_gate":
+        source["metrics"]["audio_effective_rank_fraction"] = 0.0
+    elif problem == "stage":
+        source["stage"] = "representation_av"
+    elif problem == "seed":
+        source["seed"] = 1
+    elif problem == "fingerprint":
+        source["data_fingerprint"] = "different-manifest"
+    elif problem == "model":
+        cfg["modalities"]["audio"]["encoder"]["layers"] += 1
+    elif problem == "threshold":
+        cfg["curriculum"]["gates"]["unimodal_representation_ready"]["audio_effective_rank_fraction"]["value"] = 0.0
+    if problem != "checksum":
+        torch.save(source, path)
+        cfg["train"]["r0_initialization"][0]["sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+    with pytest.raises(ValueError, match="R0|initialization|source"):
+        train_common_base(cfg, TinyData(), tmp_path / "r1", 0, torch.device("cpu"))
+    assert not (tmp_path / "r1/checkpoint.pt").exists()
+
+
+def test_r1_initial_snapshot_transfers_all_weights_and_resets_optimizer(tmp_path, monkeypatch):
+    cfg, path = _r0_source(tmp_path, monkeypatch)
+    source = torch.load(path, weights_only=True)
+    with pytest.raises(RuntimeError, match="simulated interruption"):
+        train_common_base(cfg, TinyData(fail_after=0), tmp_path / "r1", 0, torch.device("cpu"))
+    initial = torch.load(tmp_path / "r1/checkpoint.pt", weights_only=True)
+    torch.testing.assert_close(initial["learner"], source["learner"], rtol=0, atol=0)
+    assert initial["step"] == 0 and not initial["optimizer"]["state"]
+    assert source["optimizer"]["state"], "source fixture must have trained optimizer state"
+    provenance = initial.get("r0_initialization")
+    assert provenance and provenance["sha256"] == cfg["train"]["r0_initialization"][0]["sha256"]
+    assert provenance["gate"]["passed"] and provenance["step"] == source["step"]
+
+
+def test_r1_resume_preserves_handoff_without_reopening_source(tmp_path, monkeypatch):
+    cfg, path = _r0_source(tmp_path, monkeypatch)
+    cfg["train"]["prefetch_batches"] = 1
+    complete = train_common_base(cfg, TinyData(), tmp_path / "complete_r1", 0, torch.device("cpu"))
+    with pytest.raises(RuntimeError, match="simulated interruption"):
+        train_common_base(cfg, TinyData(fail_after=3), tmp_path / "resumed_r1", 0, torch.device("cpu"))
+    path.unlink()  # Recovery owns the already initialized target snapshot, not the original file.
+    resumed = train_common_base(cfg, TinyData(), tmp_path / "resumed_r1", 0, torch.device("cpu"), resume=True)
+    left, right = [torch.load(r.checkpoint, weights_only=True) for r in (complete, resumed)]
+    for key in ("learner", "optimizer", "data_rng", "corruption_rng", "torch_rng"):
+        torch.testing.assert_close(left[key], right[key], rtol=0, atol=0)
+    assert left["r0_initialization"] == right["r0_initialization"]
+    assert complete.metrics == resumed.metrics and complete.final_training == resumed.final_training
+
+
+
+def test_r0_refuses_an_r1_initialization_request(tmp_path):
+    cfg = _config()
+    cfg["train"]["r0_initialization"] = {0: {"checkpoint":"unused", "sha256":"0" * 64}}
+    with pytest.raises(ValueError, match="R1|representation_av"):
+        train_common_base(cfg, TinyData(), tmp_path / "r0", 0, torch.device("cpu"))
