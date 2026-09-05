@@ -142,3 +142,88 @@ def test_ranking_ledger_requires_complete_matched_candidates(tmp_path):
     write_rows(run/'ranking_records.jsonl',rows[:-1])
     with pytest.raises(DashboardDataError,match='ranking'):
         collect_run_results(tmp_path/'runs')
+
+
+def test_training_scalars_get_own_panels_and_validation_ratios(tmp_path):
+    from viewer.dashboard import build_dashboard_artifact
+    run = tmp_path / "runs" / "learn"
+    write_json(run / "manifest.json", {"config": {"seed": 1, "sigreg_weight": 0.09}})
+    write_rows(run / "metrics.jsonl", [
+        {"kind": "validation", "step": 0, "pred_mse": 0.5, "identity_mse": 1.0, "shuffled_action_mse": 0.25,
+         "zero_action_mse": 0.5, "rollout_mse": 2.0, "action_effect": 0.1, "embedding_std": 0.3},
+        {"kind": "train", "step": 1, "loss": 1.0, "pred_loss": 0.2, "sigreg_loss": 9.0, "grad_norm": 3.0, "lr": 1e-5},
+        {"kind": "train", "step": 2, "loss": 0.9, "pred_loss": 0.19, "sigreg_loss": 8.0, "grad_norm": 2.0, "lr": 2e-5},
+        {"kind": "complete", "step": 2, "total_steps": 2},
+    ])
+    write_json(run / "status.json", {"kind": "complete", "step": 2, "total_steps": 2})
+    results, notices = collect_run_results(tmp_path / "runs")
+    artifact = build_dashboard_artifact(results, notices)
+    datasets = artifact["snapshot"]["datasets"]
+    for name in ("train_pred_loss", "train_sigreg_loss", "train_loss", "train_grad_norm", "train_lr"):
+        assert [row["step"] for row in datasets[name]] == [1, 2], name
+        assert any(chart["dataset"] == name for chart in artifact["manifest"]["charts"]), name
+    ratios = {row["metric"]: row["value"] for row in datasets["validation_ratio"]}
+    assert ratios == pytest.approx({"prediction / copy": 0.5, "prediction / shuffled actions": 2.0,
+                                    "prediction / zero actions": 1.0, "rollout / copy": 2.0,
+                                    "action effect / prediction": 0.2})
+    ratio_chart = next(chart for chart in artifact["manifest"]["charts"] if chart["dataset"] == "validation_ratio")
+    assert any(line["value"] == 1 for line in ratio_chart["referenceLines"])
+    assert {row["metric"] for row in datasets["validation"]} >= {"pred_mse", "rollout_mse"}
+    training_filter = next(f for f in artifact["manifest"]["filters"] if f["id"] == "training_run")
+    assert {target["dataset"] for target in training_filter["targets"]} >= {"train_pred_loss", "validation_ratio"}
+
+
+PNG = bytes.fromhex("89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d4944415478da"
+                    "63f8cfc0f00f0003010100c9fe92ef0000000049454e44ae426082")
+
+
+def write_internals(root, name, step, panel="panels/attention.png", unchanged=True, family="pilot"):
+    run = root / name
+    write_json(run / "manifest.json", {"checkpoint": "x.pt", "checkpoint_sha256": "abc", "step": step,
+                                       "windows": 4, "precision": "float32", "mode": "eval"})
+    write_json(run / "internals.json", {
+        "step": step, "family": family, "checkpoint_sha256": "abc", "checkpoint_unchanged": unchanged,
+        "scalars": {"effective_rank": 10.5 + step, "rankme": 9.0, "gate_msa_mean": 0.0},
+        "series": {"spectrum": [3.0, 1.0, 0.5],
+                   "horizon": {"horizon": [1, 2], "prediction_mse": [0.1, 0.2], "copy_mse": [0.2, 0.4]},
+                   "probe_r2": {"agent position": 0.9, "block position": 0.1}},
+        "panels": [{"id": "encoder_attention", "title": "Encoder attention", "caption": "CLS to patches",
+                    "path": panel}]})
+    (run / "panels").mkdir(exist_ok=True)
+    (run / "panels" / "attention.png").write_bytes(PNG)
+    return run
+
+
+def test_internals_ledger_indexes_scalars_series_and_embedded_panels(tmp_path):
+    from viewer.dashboard import build_dashboard_artifact
+    root = tmp_path / "runs" / "internals"
+    write_internals(root, "pilot_0", 0)
+    write_internals(root, "pilot_1000", 1000)
+    write_internals(root, "released", None, family="released")
+    results, notices = collect_run_results(tmp_path / "runs")
+    assert [r.kind for r in results] == ["internals"] * 3
+    pilot = next(r for r in results if r.step == 1000)
+    assert pilot.metrics["effective_rank"] == 1010.5 and pilot.status == "inspected"
+    assert pilot.internals["series"]["spectrum"] == [3.0, 1.0, 0.5]
+    artifact = build_dashboard_artifact(results, notices)
+    datasets = artifact["snapshot"]["datasets"]
+    assert {(row["step"], row["metric"]) for row in datasets["internals_scalar"]} >= {(0, "effective_rank"), (1000, "effective_rank")}
+    assert all(row["step"] is not None for row in datasets["internals_scalar"])
+    assert len(datasets["internals_spectrum"]) == 9 and {row["run"] for row in datasets["internals_spectrum"]} == {r.label for r in results}
+    assert {row["metric"] for row in datasets["internals_horizon"]} == {"prediction_mse", "copy_mse"}
+    assert {(row["run"], row["target"]) for row in datasets["internals_probe"]} >= {(pilot.label, "agent position")}
+    summary = {(row["run"], row["metric"]): row["value"] for row in datasets["internals_summary"]}
+    assert summary[(pilot.label, "effective_rank")] == "1010.5"
+    panels = [block for block in artifact["manifest"]["blocks"] if block["type"] == "html"]
+    assert len(panels) == 1 and panels[0]["body"].count("data:image/png;base64,") == 3
+    assert "CLS to patches" in panels[0]["body"] and "released" in panels[0]["body"]
+
+
+def test_internals_ledger_rejects_missing_panels_and_marks_changed_checkpoints(tmp_path):
+    root = tmp_path / "runs" / "internals"
+    write_internals(root, "changed", 5, unchanged=False)
+    results, _ = collect_run_results(tmp_path / "runs")
+    assert results[0].status == "checkpoint_changed"
+    write_internals(root, "broken", 6, panel="panels/missing.png")
+    with pytest.raises(DashboardDataError, match="panel"):
+        collect_run_results(tmp_path / "runs")
