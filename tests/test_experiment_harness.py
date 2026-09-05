@@ -135,6 +135,10 @@ def test_ranking_ledger_requires_complete_matched_candidates(tmp_path):
     results,_=collect_run_results(tmp_path/'runs')
     assert len(results)==2 and all(r.kind=='ranking' for r in results)
     assert all(len(r.ranking)==2 for r in results)
+    from viewer.dashboard import build_dashboard_artifact
+    artifact=build_dashboard_artifact(results,[])
+    assert len(artifact['snapshot']['datasets']['ranking'])==4
+    assert any(c['id']=='ranking' for c in artifact['manifest']['charts'])
     write_rows(run/'ranking_records.jsonl',rows[:-1])
     with pytest.raises(DashboardDataError,match='ranking'):
         collect_run_results(tmp_path/'runs')

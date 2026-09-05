@@ -69,6 +69,7 @@ class RunResult:
     modified_at: float
     training: tuple[dict, ...] = field(default_factory=tuple)
     validation: tuple[dict, ...] = field(default_factory=tuple)
+    ranking: tuple[dict, ...] = field(default_factory=tuple)
 
 
 def _context(manifest: dict) -> dict:
@@ -126,11 +127,11 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
     results, notices = [], []
 
     def add(directory, kind, status, metrics, sources, context=None, step=None,
-            training=(), validation=(), suffix=""):
+            training=(), validation=(), ranking=(), suffix=""):
         label = directory.relative_to(runs_root).as_posix() + suffix
         results.append(RunResult(label, kind, status, step, metrics, context or {},
                                  tuple(p.relative_to(runs_root.parent).as_posix() for p in sources),
-                                 max(p.stat().st_mtime for p in sources), training, validation))
+                                 max(p.stat().st_mtime for p in sources), training, validation, ranking))
 
     for path in sorted(runs_root.rglob("metrics.jsonl")):
         directory = path.parent
@@ -215,6 +216,47 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
         sources = [path] + ([manifest_path] if manifest_path.exists() else [])
         add(path.parent, "prediction", "evaluated", numeric(read_json(path)), sources,
             _context(manifest), manifest.get("step"), suffix=" / prediction")
+
+    for path in sorted(runs_root.rglob("ranking.json")):
+        value = read_json(path)
+        manifest_path = path.parent / "manifest.json"
+        record_path = path.parent / "ranking_records.jsonl"
+        manifest, records = read_json(manifest_path), read_jsonl(record_path)
+        summaries = value.get("case_summaries", [])
+        expected = manifest.get("candidates_per_case")
+        if value.get("records") != len(records) or not expected:
+            raise DashboardDataError(f"{path}: ranking record count disagrees")
+        keys = {(r["case_index"], r["model"]) for r in records}
+        if keys != {(r["case_index"], r["model"]) for r in summaries} or len(keys) != len(summaries):
+            raise DashboardDataError(f"{path}: ranking model/case summaries disagree")
+        if keys != {(i, model) for i in range(len(manifest["cases"])) for model in ("pilot", "released")}:
+            raise DashboardDataError(f"{path}: ranking case/model population incomplete")
+        matched = {}
+        for record in records:
+            key = (record["case_index"], record["candidate_index"])
+            outcome = {k: record.get(k) for k in ("candidate", "position_error", "angle_error",
+                       "state_distance", "success_terminal", "success_any", "initial_success")}
+            if key in matched and matched[key] != outcome:
+                raise DashboardDataError(f"{path}: ranking simulator outcomes are not matched")
+            matched[key] = outcome
+        for summary in summaries:
+            selected_rows = sorted((r for r in records if (r["case_index"], r["model"]) ==
+                                    (summary["case_index"], summary["model"])), key=lambda r: r["candidate_index"])
+            if len(selected_rows) != expected or [r["candidate_index"] for r in selected_rows] != list(range(expected)):
+                raise DashboardDataError(f"{path}: ranking candidates incomplete or duplicated")
+            best = min(selected_rows, key=lambda r: r["predicted_cost"])
+            distance = best["position_error"]
+            minimum = min(r["position_error"] for r in selected_rows)
+            checks = {"candidates": expected, "selected_index": best["candidate_index"],
+                      "selected_distance": distance, "best_distance": minimum, "regret": distance-minimum}
+            if any(summary.get(k) != v for k, v in checks.items()):
+                raise DashboardDataError(f"{path}: ranking selection summary disagrees with candidates")
+            context = {**_context(manifest), "population": summary["population"], "model": summary["model"],
+                       "case_index": summary["case_index"], "selected_candidate": best["candidate"],
+                       "checkpoint_sha256": manifest.get("checkpoint_sha256s", {}).get(summary["model"])}
+            add(path.parent, "ranking", "evaluated" if value.get("checkpoint_unchanged") else "checkpoint_changed",
+                numeric(summary), [path, manifest_path, record_path], context, ranking=tuple(selected_rows),
+                suffix=f" / {summary['population']} case {summary['case_index']} {summary['model']}")
 
     for name in ("cases.jsonl", "episodes.jsonl"):
         for path in sorted(runs_root.rglob(name)):

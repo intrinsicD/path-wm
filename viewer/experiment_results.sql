@@ -73,3 +73,34 @@ SELECT json_extract(r.value, '$.label') AS run,
        'validation at step ' || json_extract(t.value, '$.step') AS section, m.key AS metric, m.value AS value
 FROM json_each(:reconciled_runs) AS r, json_each(json_extract(r.value, '$.validation')) AS t,
      json_each(t.value) AS m;
+-- dataset: ranking_runs
+SELECT json_extract(value, '$.label') AS run FROM json_each(:reconciled_runs)
+WHERE json_extract(value, '$.kind') = 'ranking';
+-- dataset: ranking
+SELECT json_extract(r.value, '$.label') AS run,
+       json_extract(c.value, '$.candidate') AS candidate,
+       CASE WHEN json_extract(c.value, '$.candidate') LIKE 'random_%' THEN 'random'
+            ELSE json_extract(c.value, '$.candidate') END AS family,
+       json_extract(c.value, '$.predicted_cost') AS predicted_cost,
+       json_extract(c.value, '$.position_error') AS position_error,
+       json_extract(c.value, '$.angle_error') AS angle_error,
+       json_extract(c.value, '$.success_terminal') AS success_terminal,
+       json_extract(c.value, '$.actual_latent_cost') AS actual_latent_cost,
+       json_extract(c.value, '$.initial_source_sim_mse') AS initial_source_sim_mse
+FROM json_each(:reconciled_runs) r, json_each(json_extract(r.value, '$.ranking')) c;
+-- dataset: rollout_error
+SELECT json_extract(r.value, '$.label') AS run, json_extract(c.value, '$.candidate') AS candidate,
+       (CAST(t.key AS INTEGER)+1)*5 AS environment_step,
+       replace(m.key, '_by_step', '') AS metric, t.value AS value
+FROM json_each(:reconciled_runs) r, json_each(json_extract(r.value, '$.ranking')) c,
+     json_each(c.value) m, json_each(m.value) t
+WHERE m.key IN ('rollout_mse_by_step', 'copy_mse_by_step')
+  AND json_extract(c.value, '$.candidate') NOT LIKE 'random_%';
+-- dataset: rollout_goal
+SELECT json_extract(r.value, '$.label') AS run, json_extract(c.value, '$.candidate') AS candidate,
+       (CAST(t.key AS INTEGER)+1)*5 AS environment_step,
+       replace(m.key, '_by_step', '') AS metric, t.value AS value
+FROM json_each(:reconciled_runs) r, json_each(json_extract(r.value, '$.ranking')) c,
+     json_each(c.value) m, json_each(m.value) t
+WHERE m.key IN ('predicted_cost_by_step', 'actual_cost_by_step')
+  AND json_extract(c.value, '$.candidate') NOT LIKE 'random_%';

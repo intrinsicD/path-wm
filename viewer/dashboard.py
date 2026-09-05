@@ -128,8 +128,12 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str]) -
                         "transformation": "viewer/ledger.py validates and reconciles the bound RunResult records; viewer/dashboard.py samples chart trajectories and formats exact numeric text.",
                         "filters": ["Training metrics.jsonl; supported control summary.json with case evidence; action_baselines.json; prediction.json",
                                     "Up to 50 deterministic evenly spaced points per training/validation trajectory; exact ledger values remain in sources",
-                                    "Control grouping uses ordered case identities only, not a claim of equivalent protocols. No cross-run pooling."],
-                        "metric_definitions": {"success_rate": "Count of boolean successful cases divided by the recorded case count; summary counts/rates must agree. Includes initially successful cases when recorded.",
+                                    "Control grouping uses ordered case identities only, not a claim of equivalent protocols. No cross-run pooling.",
+                                    "Ranking uses complete matched candidate sets; five-block curves select one model, case and action sequence."],
+                        "metric_definitions": {"position_error": "Euclidean distance in combined agent/block XY positions after all 25 candidate actions; pixels. Success also requires circular angle error below pi/9.",
+                                               "predicted_cost": "Sum of squared terminal latent differences to the source goal, within a selected checkpoint and case.",
+                                               "rollout_mse": "Mean squared latent error of an autoregressive prediction against simulator-rendered observations at each five-action block.",
+                                               "success_rate": "Count of boolean successful cases divided by the recorded case count; summary counts/rates must agree. Includes initially successful cases when recorded.",
                                                "pred_mse": "Recorded one-step latent prediction mean squared error for the run's validation sample and precision.",
                                                "identity_mse": "Recorded latent MSE for copying the current embedding, on matched validation windows.",
                                                "shuffled_action_mse": "Recorded latent prediction MSE after the evaluator's action permutation.",
@@ -173,6 +177,26 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str]) -
         filters.append({"id": "prediction_run", "label": "Prediction check", "dataset": "prediction_runs", "field": "run",
                         "defaultValue": predictions[-1].label, "includeAll": False,
                         "targets": [{"dataset": "prediction", "field": "run"}]})
+    if datasets.get("ranking"):
+        charts.append(_chart("ranking", "Predicted goal cost versus simulator position error",
+                             "20 identical raw action sequences per model/case. Lower values are better; angle and terminal success remain separate.",
+                             "ranking", "scatter", number("predicted_cost"), number("position_error"),
+                             color=category("family"), layout="full",
+                             tooltip=[category("candidate"), number("angle_error"), category("success_terminal")]))
+        for dataset, title, subtitle in (
+            ("rollout_error", "Multi-step prediction and copy error",
+             "MSE against simulator-rendered observations, within the selected model's latent space."),
+            ("rollout_goal", "Predicted and measured latent goal distance",
+             "Squared latent distance to the source goal at all five planning blocks. This is not physical distance.")):
+            charts.append(_chart(dataset, title, subtitle, dataset, "line", number("environment_step"),
+                                 number("value"), color=category("metric")))
+        filters.append({"id": "ranking_run", "label": "Ranking model and case", "dataset": "ranking_runs", "field": "run",
+                        "defaultValue": datasets["ranking_runs"][0]["run"], "includeAll": False,
+                        "targets": [{"dataset": name, "field": "run"} for name in
+                                    ("ranking", "rollout_error", "rollout_goal")]})
+        filters.append({"id": "rollout_candidate", "label": "Rollout action sequence", "dataset": "rollout_error", "field": "candidate",
+                        "defaultValue": "pilot_plan", "includeAll": False,
+                        "targets": [{"dataset": name, "field": "candidate"} for name in ("rollout_error", "rollout_goal")]})
     def table(name, title, columns, sort, subtitle):
         return {"id": name, "title": title, "subtitle": subtitle, "dataset": name, "sourceId": SOURCE_ID,
                 "defaultSort": {"field": sort, "direction": "asc"}, "density": "dense", "layout": "full",
@@ -190,6 +214,12 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str]) -
                          [("section", "Measurement"), ("metric", "Metric"), ("value", "Exact value")], "section", "Validation values retain their actual recorded step. No thresholds or passing gates are inferred."),
                    table("context", "Selected record: protocol and configuration",
                          [("field", "Field"), ("value", "Recorded value")], "field", "Consult the source manifest for complete case lists, normalization arrays and checkpoint identity.")])
+    if datasets.get("ranking"):
+        tables.append(table("ranking", "Selected model/case: exact candidate outcomes",
+                            [("candidate", "Candidate"), ("predicted_cost", "Predicted cost"),
+                             ("position_error", "Position error (px)"), ("angle_error", "Angle error (rad)"),
+                             ("success_terminal", "Terminal success"), ("actual_latent_cost", "Measured latent cost")],
+                            "candidate", "The scatter and this table use the same 20 raw candidate sequences."))
     if run_results:
         filters.append({"id": "detail_run", "label": "Exact record details", "dataset": "inventory", "field": "run",
                         "defaultValue": run_results[-1].label, "includeAll": False,
