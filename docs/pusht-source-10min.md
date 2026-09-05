@@ -53,3 +53,14 @@ Refresh and verify the user's revised offline dashboard after each completed run
 or standalone evaluation, with the new training run in focus. Record actual
 updates/time, source/code/config/checkpoint identities, finite-loss status,
 prediction/control results and limitations here and in project-state.md.
+
+## Reporting repair declared after the first inspection
+
+The first new inspection succeeded, but its dashboard refresh exceeded the
+canonical 3,000,000-byte payload limit because every historical PNG panel was
+embedded. Bound image panels to the focus run's earliest/latest inspected
+checkpoints and one released inspection with the same source-run manifest. Keep
+all scalar, spectrum, horizon and inventory evidence, and explicitly disclose the
+image selection. Test that unrelated populations cannot enter the paired panels
+and that intermediate checkpoint scalars remain indexed. This affects display
+only; the completed training and diagnostic raw outputs remain unchanged.

@@ -196,7 +196,8 @@ PNG = bytes.fromhex("89504e470d0a1a0a0000000d49484452000000010000000108060000001
 def write_internals(root, name, step, panel="panels/attention.png", unchanged=True, family="pilot"):
     run = root / name
     write_json(run / "manifest.json", {"checkpoint": "x.pt", "checkpoint_sha256": "abc", "step": step,
-                                       "windows": 4, "precision": "float32", "mode": "eval"})
+                                       "windows": 4, "precision": "float32", "mode": "eval",
+                                       "source_run_manifest": "runs/learn/manifest.json"})
     write_json(run / "internals.json", {
         "step": step, "family": family, "training_run": "learn" if family == "pilot" else None,
         "checkpoint_sha256": "abc", "checkpoint_unchanged": unchanged,
@@ -274,3 +275,28 @@ def test_training_time_internals_rows_get_their_own_panels(tmp_path):
     assert any(chart["dataset"] == "training_internals_rank" and "captured during training" in chart["title"]
                for chart in artifact["manifest"]["charts"])
     assert "examples" not in {row["metric"] for row in datasets["training_internals"]}
+
+
+def test_embedded_panels_are_bounded_to_focus_endpoints_and_matching_reference(tmp_path):
+    from viewer.dashboard import build_dashboard_artifact
+    root = tmp_path / "runs" / "internals"
+    for step in [0, 100, 200, 300]:
+        write_internals(root, f"pilot_{step}", step)
+    write_internals(root, "released", None, family="released")
+    unrelated = write_internals(root, "other_reference", None, family="released")
+    meta = json.loads((unrelated / "manifest.json").read_text())
+    meta["source_run_manifest"] = "runs/other/manifest.json"
+    write_json(unrelated / "manifest.json", meta)
+    learn = tmp_path / "runs" / "learn"
+    write_json(learn / "manifest.json", {"config": {"seed": 1}})
+    write_rows(learn / "metrics.jsonl", [{"kind": "train", "step": 1, "loss": 1.0}, {"kind": "complete", "step": 1}])
+    write_json(learn / "status.json", {"kind": "complete", "step": 1})
+    results, notices = collect_run_results(tmp_path / "runs")
+    artifact = build_dashboard_artifact(results, notices, focus="learn")
+    bodies = "".join(b["body"] for b in artifact["manifest"]["blocks"] if b["type"] == "html")
+    assert bodies.count("data:image/png;base64,") == 3
+    assert "pilot_0" in bodies and "pilot_300" in bodies and "internals/released" in bodies
+    assert "pilot_100" not in bodies and "pilot_200" not in bodies and "other_reference" not in bodies
+    assert len({r["run"] for r in artifact["snapshot"]["datasets"]["internals_summary"]}) == 6
+    notes = next(b["body"] for b in artifact["manifest"]["blocks"] if b["id"] == "notices")
+    assert "earliest and latest" in notes and "All" in notes
