@@ -391,4 +391,127 @@ tree:
   - ../runs/experiment_dashboard.receipt.json
   also_depends_on:
   - N24
-  status: unresolved
+  status: resolved
+  resolved_by: N27
+
+- id: N26
+  type: decision
+  title: Resume approved diagnostics after repairing browser QA
+  provenance: user
+  choice: Resolve remaining harness verification first, execute saved-checkpoint training-goal and rollout
+    diagnostics, prepare the larger reproduction; retain separate long-run scheduling.
+  alternatives:
+  - Repeat the completed pilot
+  - Launch unscheduled long training
+  evidence:
+  - yes please continue with that. resolve the mentioned points as well first
+  - N23
+  - ../docs/control-diagnosis-plan.md
+  also_depends_on:
+  - N23
+  - N25
+  timestamp: 2026-09-06T00:05+02:00
+  status: resolved
+- id: N27
+  type: experiment
+  title: Canonical dashboard browser verification passes
+  provenance: ai-executed
+  result: Reproduced virtual-clock startup starvation, full-Chrome viewport mismatch, scrollbar-width header
+    overflow and long mobile legend overflow. Repository CDP transport preserves canonical probes; two reader
+    CSS corrections fix actual output. Desktop/mobile/source/payload checks pass; final suite 32 passes; final
+    dashboard indexes 60 records with eight charts/five tables.
+  evidence:
+  - evidence/tables/pusht_control_diagnosis_2026-09-06.json
+  - ../viewer/DESIGN.md
+  - ../runs/experiment_dashboard.receipt.json
+  also_depends_on:
+  - N25
+  - N26
+  timestamp: 2026-09-06T00:05+02:00
+  status: resolved
+- id: N28
+  type: experiment
+  title: Saved pilot also fails frozen training control goals
+  provenance: ai-executed
+  result: Untouched step-1000 pilot 0/20 training goals; replay 20/20, stationary 0/20, initial successes 0.
+    Matched original planning/reset budgets; 104.35 seconds learned control. All original checkpoint hashes
+    unchanged.
+  evidence:
+  - evidence/tables/pusht_control_diagnosis_2026-09-06.json
+  - ../docs/pusht-control-diagnosis.md
+  - ../scripts/diagnose_pusht_control.py
+  also_depends_on:
+  - N19
+  - N26
+  - N27
+  timestamp: 2026-09-06T00:05+02:00
+  status: resolved
+- id: N29
+  type: experiment
+  title: Matched simulator outcomes expose poor pilot plan rankings
+  provenance: ai-executed
+  result: 'Four training/four held-out cases, 20 raw sequences per case, 160 simulator trials/320 model records.
+    Pilot selects own plans: 0/8 success, mean position error 216.24 px. Replay 8/8. Released candidate selection
+    7/8, own plans 6/8. Mean cost/position Spearman pilot 0.180 training/-0.114 held-out; released 0.654/0.653.
+    Five-step latent curves and actual simulator image panels retained.'
+  evidence:
+  - evidence/tables/pusht_control_diagnosis_2026-09-06.json
+  - ../runs/diagnostics/pusht_control_diagnosis/ranking/ranking_records.jsonl
+  - ../docs/pusht-control-diagnosis.md
+  also_depends_on:
+  - N28
+  timestamp: 2026-09-06T00:05+02:00
+  status: resolved
+- id: N30
+  type: experiment
+  title: Isolate bf16 slicing drift and verify activation checkpointing
+  provenance: ai-executed
+  result: 'Discarded real batch-four clones: bf16 local full backward relative gradient L2 1.36e-7 versus native,
+    half-batch encoder slicing 0.06124, full-batch activation checkpointing 1.36e-7; matched losses and BN
+    buffers. Separate full batch-128 checkpointed backward finite, 3,137,145,344 peak allocated bytes, 1.60
+    seconds, zero optimizer steps. Not a causal explanation or exact measurement of original batch128/chunk16
+    drift.'
+  evidence:
+  - evidence/tables/pusht_control_diagnosis_2026-09-06.json
+  - ../scripts/check_real_batch_parity.py
+  - ../scripts/check_reproduction_memory.py
+  also_depends_on:
+  - N28
+  timestamp: 2026-09-06T00:05+02:00
+  status: resolved
+- id: N31
+  type: decision
+  title: Use full-batch activation checkpointing for the reproduction candidate
+  provenance: ai-executed
+  choice: Preserve full-batch encoder computation with nonreentrant activation checkpointing; disable encoder
+    slicing in source-scale candidate. Preserve all completed pilot configs, weights and evidence.
+  alternatives:
+  - Retain bf16 encoder batch slicing
+  - Require ordinary full-batch activation storage
+  evidence:
+  - N30
+  - O16
+  - ../configs/reproduction/pusht_source_scale.yaml
+  also_depends_on:
+  - N30
+  timestamp: 2026-09-06T00:05+02:00
+  status: resolved
+- id: N32
+  type: experiment
+  title: Freeze executable source-scale data and evaluation preparation
+  provenance: ai-executed
+  result: 'Verified source: 1,981,721 windows. Seed3072 floor90% split: 1,783,548 train/198,173 val, full-source
+    unbiased action stats. Ten epochs: 139,330 updates, 1,393 warmup. Frozen window hashes and 50 paired source
+    goals. Candidate data path/tiny CPU training/resume tested; no model constructed by preparation and no
+    long training launched. Pilot-rate extrapolation 58.3h excludes source I/O/method changes.'
+  evidence:
+  - evidence/tables/pusht_control_diagnosis_2026-09-06.json
+  - ../docs/pusht-reproduction.md
+  - ../configs/reproduction/pusht_source_scale.yaml
+  - ../runs/reproduction/pusht_source_scale_preparation/manifest.json
+  also_depends_on:
+  - N22
+  - N29
+  - N31
+  timestamp: 2026-09-06T00:05+02:00
+  status: resolved

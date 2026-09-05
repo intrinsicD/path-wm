@@ -1,0 +1,1094 @@
+{
+  "recorded_at": "2026-09-06T00:05+02:00",
+  "activity_dates": [
+    "2026-09-05",
+    "2026-09-06"
+  ],
+  "authorization": "yes please continue with that. resolve the mentioned points as well first",
+  "final_code_commit": "e7e669e",
+  "checks": {
+    "passed": 32,
+    "includes_browser_integration": 2
+  },
+  "dashboard_receipt": {
+    "counts": {
+      "blocks": 18,
+      "charts": 8,
+      "html": 0,
+      "metrics": 3,
+      "tables": 5
+    },
+    "html": "/home/alex/Documents/path-wm/runs/experiment_dashboard.html",
+    "ok": true,
+    "sourceDialog": "passed",
+    "sourceInteraction": "semantic_click",
+    "stages": {
+      "package": "passed",
+      "validation": "passed",
+      "verification": "passed"
+    },
+    "timings": {
+      "browserRunMs": 4977.9,
+      "contentChecksMs": 1192.8,
+      "readerReadyMs": 2776.3,
+      "responsiveChecksMs": 1192.8,
+      "sourceDialogMs": 1526.8,
+      "staticChartExtractionMs": 3912.1,
+      "totalMs": 9151.1,
+      "validateAndPackageMs": 4098.7,
+      "verificationMs": 5038.9
+    },
+    "viewports": [
+      1440,
+      390
+    ]
+  },
+  "dashboard_inventory": {
+    "training": 6,
+    "control": 23,
+    "prediction": 4,
+    "ranking": 16,
+    "diagnostic": 11
+  },
+  "diagnostics": {
+    "control": {
+      "successes": 0,
+      "cases": 20,
+      "initial_successes": 0,
+      "mean_steps": 50.0,
+      "control_seconds": 104.35486309700354,
+      "checkpoint_unchanged": true
+    },
+    "action_baselines": {
+      "stationary": {
+        "successes": 0,
+        "cases": 20
+      },
+      "recorded_replay": {
+        "successes": 20,
+        "cases": 20
+      }
+    },
+    "ranking_by_population": [
+      {
+        "population": "training",
+        "model": "pilot",
+        "cases": 4,
+        "selected_successes": 0,
+        "mean_spearman": 0.18007518796992478,
+        "mean_selected_position_error": 175.36839708788426,
+        "mean_regret": 173.95529744671353,
+        "mean_actual_latent_vs_position_spearman": 0.38609022556390976,
+        "mean_predicted_vs_actual_latent_spearman": 0.2639097744360902
+      },
+      {
+        "population": "training",
+        "model": "released",
+        "cases": 4,
+        "selected_successes": 4,
+        "mean_spearman": 0.6537593984962405,
+        "mean_selected_position_error": 8.292753783659222,
+        "mean_regret": 6.87965414248849,
+        "mean_actual_latent_vs_position_spearman": 0.7060150375939849,
+        "mean_predicted_vs_actual_latent_spearman": 0.8928571428571428
+      },
+      {
+        "population": "heldout",
+        "model": "pilot",
+        "cases": 4,
+        "selected_successes": 0,
+        "mean_spearman": -0.11353383458646615,
+        "mean_selected_position_error": 257.11943456135344,
+        "mean_regret": 255.91951046563736,
+        "mean_actual_latent_vs_position_spearman": 0.26092661950150464,
+        "mean_predicted_vs_actual_latent_spearman": 0.02604920370416556
+      },
+      {
+        "population": "heldout",
+        "model": "released",
+        "cases": 4,
+        "selected_successes": 3,
+        "mean_spearman": 0.6526315789473683,
+        "mean_selected_position_error": 8.386551162861666,
+        "mean_regret": 7.186627067145582,
+        "mean_actual_latent_vs_position_spearman": 0.6133822689115662,
+        "mean_predicted_vs_actual_latent_spearman": 0.9387107559963063
+      }
+    ],
+    "ranking_cases": [
+      {
+        "case_index": 0,
+        "population": "training",
+        "model": "pilot",
+        "candidates": 20,
+        "spearman": 0.20902255639097742,
+        "selected_index": 18,
+        "selected_distance": 242.28810760634497,
+        "best_distance": 1.872208005593028,
+        "regret": 240.41589960075194,
+        "selected_candidate": "pilot_plan",
+        "selected_success": false,
+        "plan": {
+          "terminal_cost": 36.956329345703125,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.5819548872180451,
+        "predicted_vs_actual_latent_spearman": 0.44360902255639095
+      },
+      {
+        "case_index": 0,
+        "population": "training",
+        "model": "released",
+        "candidates": 20,
+        "spearman": 0.9338345864661652,
+        "selected_index": 19,
+        "selected_distance": 6.2094400468560025,
+        "best_distance": 1.872208005593028,
+        "regret": 4.337232041262975,
+        "selected_candidate": "released_plan",
+        "selected_success": true,
+        "plan": {
+          "terminal_cost": 1.0951406955718994,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.9789473684210527,
+        "predicted_vs_actual_latent_spearman": 0.9338345864661652
+      },
+      {
+        "case_index": 1,
+        "population": "training",
+        "model": "pilot",
+        "candidates": 20,
+        "spearman": 0.3789473684210526,
+        "selected_index": 18,
+        "selected_distance": 209.2652054834623,
+        "best_distance": 2.131430565994869,
+        "regret": 207.13377491746743,
+        "selected_candidate": "pilot_plan",
+        "selected_success": false,
+        "plan": {
+          "terminal_cost": 19.40500831604004,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.3443609022556391,
+        "predicted_vs_actual_latent_spearman": 0.23157894736842105
+      },
+      {
+        "case_index": 1,
+        "population": "training",
+        "model": "released",
+        "candidates": 20,
+        "spearman": 0.8300751879699247,
+        "selected_index": 19,
+        "selected_distance": 13.758452542708678,
+        "best_distance": 2.131430565994869,
+        "regret": 11.62702197671381,
+        "selected_candidate": "released_plan",
+        "selected_success": true,
+        "plan": {
+          "terminal_cost": 2.915060520172119,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.8105263157894737,
+        "predicted_vs_actual_latent_spearman": 0.9578947368421054
+      },
+      {
+        "case_index": 2,
+        "population": "training",
+        "model": "pilot",
+        "candidates": 20,
+        "spearman": 0.2601503759398496,
+        "selected_index": 18,
+        "selected_distance": 73.28752535974165,
+        "best_distance": 1.6033432059103625,
+        "regret": 71.68418215383129,
+        "selected_candidate": "pilot_plan",
+        "selected_success": false,
+        "plan": {
+          "terminal_cost": 70.26121520996094,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.4857142857142857,
+        "predicted_vs_actual_latent_spearman": 0.06766917293233082
+      },
+      {
+        "case_index": 2,
+        "population": "training",
+        "model": "released",
+        "candidates": 20,
+        "spearman": 0.8360902255639097,
+        "selected_index": 19,
+        "selected_distance": 6.889711501730243,
+        "best_distance": 1.6033432059103625,
+        "regret": 5.286368295819881,
+        "selected_candidate": "released_plan",
+        "selected_success": true,
+        "plan": {
+          "terminal_cost": 1.6768393516540527,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.8571428571428572,
+        "predicted_vs_actual_latent_spearman": 0.9233082706766916
+      },
+      {
+        "case_index": 3,
+        "population": "training",
+        "model": "pilot",
+        "candidates": 20,
+        "spearman": -0.12781954887218044,
+        "selected_index": 18,
+        "selected_distance": 176.63274990198815,
+        "best_distance": 0.045416787184673894,
+        "regret": 176.58733311480347,
+        "selected_candidate": "pilot_plan",
+        "selected_success": false,
+        "plan": {
+          "terminal_cost": 20.468399047851562,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.13233082706766916,
+        "predicted_vs_actual_latent_spearman": 0.312781954887218
+      },
+      {
+        "case_index": 3,
+        "population": "training",
+        "model": "released",
+        "candidates": 20,
+        "spearman": 0.015037593984962403,
+        "selected_index": 19,
+        "selected_distance": 6.313411043341968,
+        "best_distance": 0.045416787184673894,
+        "regret": 6.267994256157293,
+        "selected_candidate": "released_plan",
+        "selected_success": true,
+        "plan": {
+          "terminal_cost": 2.0377414226531982,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.17744360902255638,
+        "predicted_vs_actual_latent_spearman": 0.7563909774436091
+      },
+      {
+        "case_index": 4,
+        "population": "heldout",
+        "model": "pilot",
+        "candidates": 20,
+        "spearman": 0.3533834586466165,
+        "selected_index": 18,
+        "selected_distance": 113.08511818268545,
+        "best_distance": 1.088169423624886,
+        "regret": 111.99694875906056,
+        "selected_candidate": "pilot_plan",
+        "selected_success": false,
+        "plan": {
+          "terminal_cost": 63.44208526611328,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.35639097744360904,
+        "predicted_vs_actual_latent_spearman": 0.22857142857142856
+      },
+      {
+        "case_index": 4,
+        "population": "heldout",
+        "model": "released",
+        "candidates": 20,
+        "spearman": 0.9473684210526315,
+        "selected_index": 19,
+        "selected_distance": 4.6911313105288865,
+        "best_distance": 1.088169423624886,
+        "regret": 3.6029618869040005,
+        "selected_candidate": "released_plan",
+        "selected_success": true,
+        "plan": {
+          "terminal_cost": 2.121943235397339,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.9338345864661652,
+        "predicted_vs_actual_latent_spearman": 0.9398496240601503
+      },
+      {
+        "case_index": 5,
+        "population": "heldout",
+        "model": "pilot",
+        "candidates": 20,
+        "spearman": -0.41804511278195483,
+        "selected_index": 18,
+        "selected_distance": 260.6266323140915,
+        "best_distance": 1.4938260723230015,
+        "regret": 259.13280624176855,
+        "selected_candidate": "pilot_plan",
+        "selected_success": false,
+        "plan": {
+          "terminal_cost": 19.458560943603516,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.44060150375939844,
+        "predicted_vs_actual_latent_spearman": -0.13684210526315788
+      },
+      {
+        "case_index": 5,
+        "population": "heldout",
+        "model": "released",
+        "candidates": 20,
+        "spearman": 0.6090225563909774,
+        "selected_index": 0,
+        "selected_distance": 1.4938260723230015,
+        "best_distance": 1.4938260723230015,
+        "regret": 0.0,
+        "selected_candidate": "replay",
+        "selected_success": true,
+        "plan": {
+          "terminal_cost": 13.261651992797852,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.5037593984962406,
+        "predicted_vs_actual_latent_spearman": 0.9218045112781955
+      },
+      {
+        "case_index": 6,
+        "population": "heldout",
+        "model": "pilot",
+        "candidates": 20,
+        "spearman": -0.14887218045112782,
+        "selected_index": 18,
+        "selected_distance": 276.72883669938926,
+        "best_distance": 0.7722436526457709,
+        "regret": 275.9565930467435,
+        "selected_candidate": "pilot_plan",
+        "selected_success": false,
+        "plan": {
+          "terminal_cost": 12.850671768188477,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.1819548872180451,
+        "predicted_vs_actual_latent_spearman": -0.2781954887218045
+      },
+      {
+        "case_index": 6,
+        "population": "heldout",
+        "model": "released",
+        "candidates": 20,
+        "spearman": 0.47518796992481205,
+        "selected_index": 19,
+        "selected_distance": 23.261133507833133,
+        "best_distance": 0.7722436526457709,
+        "regret": 22.488889855187363,
+        "selected_candidate": "released_plan",
+        "selected_success": false,
+        "plan": {
+          "terminal_cost": 1.697587490081787,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.4195488721804511,
+        "predicted_vs_actual_latent_spearman": 0.9233082706766916
+      },
+      {
+        "case_index": 7,
+        "population": "heldout",
+        "model": "pilot",
+        "candidates": 20,
+        "spearman": -0.24060150375939846,
+        "selected_index": 18,
+        "selected_distance": 378.0371510492476,
+        "best_distance": 1.445457234270683,
+        "regret": 376.5916938149769,
+        "selected_candidate": "pilot_plan",
+        "selected_success": false,
+        "plan": {
+          "terminal_cost": 49.403926849365234,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.06475910958496596,
+        "predicted_vs_actual_latent_spearman": 0.29066298023019604
+      },
+      {
+        "case_index": 7,
+        "population": "heldout",
+        "model": "released",
+        "candidates": 20,
+        "spearman": 0.5789473684210527,
+        "selected_index": 19,
+        "selected_distance": 4.100113760761647,
+        "best_distance": 1.445457234270683,
+        "regret": 2.654656526490964,
+        "selected_candidate": "released_plan",
+        "selected_success": true,
+        "plan": {
+          "terminal_cost": 1.0815916061401367,
+          "candidate_evaluations": 9001,
+          "predictor_steps": 45005
+        },
+        "actual_latent_vs_position_spearman": 0.5963862185034075,
+        "predicted_vs_actual_latent_spearman": 0.9698806179701879
+      }
+    ],
+    "sequence_metrics": [
+      {
+        "model": "pilot",
+        "candidate": "replay",
+        "cases": 8,
+        "terminal_successes": 8,
+        "mean_position_error": 1.3065118684434094,
+        "mean_rollout_mse_by_step": [
+          0.33805477898567915,
+          0.30965172313153744,
+          0.31661590933799744,
+          0.4025804400444031,
+          0.44743235409259796
+        ],
+        "mean_copy_mse_by_step": [
+          0.4194579031318426,
+          0.4560059383511543,
+          0.5697094751521945,
+          0.7605063021183014,
+          0.9727415330708027
+        ]
+      },
+      {
+        "model": "pilot",
+        "candidate": "stationary",
+        "cases": 8,
+        "terminal_successes": 0,
+        "mean_position_error": 101.76969921839071,
+        "mean_rollout_mse_by_step": [
+          0.16223522555083036,
+          0.23150813020765781,
+          0.3188411137089133,
+          0.3977756518870592,
+          0.4653220269829035
+        ],
+        "mean_copy_mse_by_step": [
+          0.1369776427745819,
+          0.1369776427745819,
+          0.1369776427745819,
+          0.1369776427745819,
+          0.1369776427745819
+        ]
+      },
+      {
+        "model": "pilot",
+        "candidate": "pilot_plan",
+        "cases": 8,
+        "terminal_successes": 0,
+        "mean_position_error": 216.24391582461888,
+        "mean_rollout_mse_by_step": [
+          0.5272965133190155,
+          0.5210337042808533,
+          0.6888191737234592,
+          0.7263415120542049,
+          0.8937329277396202
+        ],
+        "mean_copy_mse_by_step": [
+          0.5505626536905766,
+          0.6048095803707838,
+          0.734647954814136,
+          0.7888555806130171,
+          0.9048607936128974
+        ]
+      },
+      {
+        "model": "pilot",
+        "candidate": "released_plan",
+        "cases": 8,
+        "terminal_successes": 6,
+        "mean_position_error": 10.962233590027205,
+        "mean_rollout_mse_by_step": [
+          0.3314346829429269,
+          0.44783022068440914,
+          0.48362405970692635,
+          0.4661426730453968,
+          0.4749736040830612
+        ],
+        "mean_copy_mse_by_step": [
+          0.40402275137603283,
+          0.6623235139995813,
+          0.7410019729286432,
+          0.8446076083928347,
+          0.9345644637942314
+        ]
+      },
+      {
+        "model": "released",
+        "candidate": "replay",
+        "cases": 8,
+        "terminal_successes": 8,
+        "mean_position_error": 1.3065118684434094,
+        "mean_rollout_mse_by_step": [
+          0.01105380110675469,
+          0.017504308139905334,
+          0.02148939424660057,
+          0.03099532995838672,
+          0.05263321253005415
+        ],
+        "mean_copy_mse_by_step": [
+          0.24255420174449682,
+          0.6424817927181721,
+          1.0129865482449532,
+          1.3508788272738457,
+          1.6307982504367828
+        ]
+      },
+      {
+        "model": "released",
+        "candidate": "stationary",
+        "cases": 8,
+        "terminal_successes": 0,
+        "mean_position_error": 101.76969921839071,
+        "mean_rollout_mse_by_step": [
+          0.008311857236549258,
+          0.01731877715792507,
+          0.029310987680219114,
+          0.044193220208399,
+          0.06194054801017046
+        ],
+        "mean_copy_mse_by_step": [
+          0.006484879835625179,
+          0.006484879835625179,
+          0.006484879835625179,
+          0.006484879835625179,
+          0.006484879835625179
+        ]
+      },
+      {
+        "model": "released",
+        "candidate": "pilot_plan",
+        "cases": 8,
+        "terminal_successes": 0,
+        "mean_position_error": 216.24391582461888,
+        "mean_rollout_mse_by_step": [
+          0.11092647380428389,
+          0.12679416220635176,
+          0.13112558738794178,
+          0.13687801035121083,
+          0.16837582970038056
+        ],
+        "mean_copy_mse_by_step": [
+          0.6780269756854977,
+          1.032332014059648,
+          1.0685332319699228,
+          1.1066576498560607,
+          1.1320595368742943
+        ]
+      },
+      {
+        "model": "released",
+        "candidate": "released_plan",
+        "cases": 8,
+        "terminal_successes": 6,
+        "mean_position_error": 10.962233590027205,
+        "mean_rollout_mse_by_step": [
+          0.015672822948545218,
+          0.028261324856430292,
+          0.036186302080750465,
+          0.06346273515373468,
+          0.10825201240368187
+        ],
+        "mean_copy_mse_by_step": [
+          0.35091010690666735,
+          0.7105467980727553,
+          1.0657936185598373,
+          1.2716694623231888,
+          1.5424850583076477
+        ]
+      }
+    ],
+    "checkpoint_unchanged": true,
+    "sources": [
+      {
+        "path": "runs/diagnostics/pusht_control_diagnosis/training_control/summary.json",
+        "sha256": "8ad2c958aa1acf8c91fd06450b3ab4f3be70a2d71af71e2a5f7caf7fb86c94ab"
+      },
+      {
+        "path": "runs/diagnostics/pusht_control_diagnosis/training_control/action_baselines.json",
+        "sha256": "4ad10eafde850d19e45451dd949aa32bc1cf33d7400957532e14371a22fcca38"
+      },
+      {
+        "path": "runs/diagnostics/pusht_control_diagnosis/ranking/ranking.json",
+        "sha256": "1aab35883f6b8173579726f81a972266882728e8d0328637f67df36d63b72f30"
+      },
+      {
+        "path": "runs/diagnostics/pusht_control_diagnosis/ranking/ranking_records.jsonl",
+        "sha256": "4683f99fbcaa4b8850fe9ea734647475a2756061f49aac419d504ad217b4651a"
+      },
+      {
+        "path": "runs/diagnostics/pusht_control_diagnosis/real_batch_parity_expanded.json",
+        "sha256": "c24d45ccce0c914cc0e5df0ab90361ee516be18c791d698a3742bd17a2f717d4"
+      },
+      {
+        "path": "runs/diagnostics/pusht_control_diagnosis/real_batch_parity_checkpointed.json",
+        "sha256": "4d78d3707e08b1f0bc9f4b195424dbd1f466b052ba00f17b7fe2dd973307dcd4"
+      },
+      {
+        "path": "runs/diagnostics/pusht_control_diagnosis/reproduction_memory.json",
+        "sha256": "136fd6db593fe3d66f3e2959cfb20fc8280a1c312db939496387f3b375d1e665"
+      }
+    ],
+    "interpretation_limits": "Eight fixed diagnostic cases, one seed. No population estimate or causal attribution to training scale/precision."
+  },
+  "parity_expanded": {
+    "checkpoint_sha256": "1988e4646c81376d065c513a8c3ac33bae6dd77cce8a342b4b35f38f78348d96",
+    "checkpoint_unchanged": true,
+    "batch_size": 4,
+    "window_indices": [
+      3451,
+      12712,
+      13364,
+      44
+    ],
+    "encoder_chunk": 8,
+    "random_seed": 9202,
+    "source": "Pinned native JEPA + train.py:lejepa_forward versus local backward_batch",
+    "limitation": "One real batch on a discarded clone; not batch-128 long-run optimizer trajectory parity.",
+    "results": [
+      {
+        "precision": "float32",
+        "variant": "local_full",
+        "native": {
+          "loss": 0.6460801362991333,
+          "pred_loss": 0.5831945538520813,
+          "sigreg_loss": 0.6987283229827881
+        },
+        "local": {
+          "loss": 0.6460801362991333,
+          "pred_loss": 0.5831945538520813,
+          "sigreg_loss": 0.6987283229827881
+        },
+        "gradient_relative_l2": 2.4496648910048014e-05,
+        "gradient_max_abs": 1.1056661605834961e-05,
+        "buffer_max_abs": 5.960464477539063e-08,
+        "gradient_parameters": 297
+      },
+      {
+        "precision": "float32",
+        "variant": "local_recomputed",
+        "native": {
+          "loss": 0.6460801362991333,
+          "pred_loss": 0.5831945538520813,
+          "sigreg_loss": 0.6987283229827881
+        },
+        "local": {
+          "loss": 0.6460797190666199,
+          "pred_loss": 0.5831941962242126,
+          "sigreg_loss": 0.6987282037734985
+        },
+        "gradient_relative_l2": 0.0001328345461281172,
+        "gradient_max_abs": 4.947558045387268e-05,
+        "buffer_max_abs": 2.384185791015625e-07,
+        "gradient_parameters": 297
+      },
+      {
+        "precision": "float32",
+        "variant": "local_full_recomputed",
+        "native": {
+          "loss": 0.6460801362991333,
+          "pred_loss": 0.5831945538520813,
+          "sigreg_loss": 0.6987283229827881
+        },
+        "local": {
+          "loss": 0.6460801362991333,
+          "pred_loss": 0.5831945538520813,
+          "sigreg_loss": 0.6987283229827881
+        },
+        "gradient_relative_l2": 2.4496648910048014e-05,
+        "gradient_max_abs": 1.1056661605834961e-05,
+        "buffer_max_abs": 5.960464477539063e-08,
+        "gradient_parameters": 297
+      },
+      {
+        "precision": "bf16",
+        "variant": "local_full",
+        "native": {
+          "loss": 0.6453083753585815,
+          "pred_loss": 0.5828083753585815,
+          "sigreg_loss": 0.6953125
+        },
+        "local": {
+          "loss": 0.6453083753585815,
+          "pred_loss": 0.5828083753585815,
+          "sigreg_loss": 0.6953125
+        },
+        "gradient_relative_l2": 1.3608771868504026e-07,
+        "gradient_max_abs": 1.9073486328125e-06,
+        "buffer_max_abs": 0.0,
+        "gradient_parameters": 297
+      },
+      {
+        "precision": "bf16",
+        "variant": "local_recomputed",
+        "native": {
+          "loss": 0.6453083753585815,
+          "pred_loss": 0.5828083753585815,
+          "sigreg_loss": 0.6953125
+        },
+        "local": {
+          "loss": 0.6453083753585815,
+          "pred_loss": 0.5828083753585815,
+          "sigreg_loss": 0.6953125
+        },
+        "gradient_relative_l2": 0.061239638024005956,
+        "gradient_max_abs": 0.0185546875,
+        "buffer_max_abs": 0.0,
+        "gradient_parameters": 297
+      },
+      {
+        "precision": "bf16",
+        "variant": "local_full_recomputed",
+        "native": {
+          "loss": 0.6453083753585815,
+          "pred_loss": 0.5828083753585815,
+          "sigreg_loss": 0.6953125
+        },
+        "local": {
+          "loss": 0.6453083753585815,
+          "pred_loss": 0.5828083753585815,
+          "sigreg_loss": 0.6953125
+        },
+        "gradient_relative_l2": 1.82284781579352e-11,
+        "gradient_max_abs": 1.1641532182693481e-10,
+        "buffer_max_abs": 0.0,
+        "gradient_parameters": 297
+      }
+    ],
+    "seconds": 3.1945664009981556
+  },
+  "parity_activation_checkpointing": {
+    "checkpoint_sha256": "1988e4646c81376d065c513a8c3ac33bae6dd77cce8a342b4b35f38f78348d96",
+    "checkpoint_unchanged": true,
+    "batch_size": 4,
+    "window_indices": [
+      3451,
+      12712,
+      13364,
+      44
+    ],
+    "encoder_chunk": 8,
+    "random_seed": 9202,
+    "source": "Pinned native JEPA + train.py:lejepa_forward versus local backward_batch",
+    "limitation": "One real batch on a discarded clone; not batch-128 long-run optimizer trajectory parity.",
+    "results": [
+      {
+        "precision": "float32",
+        "variant": "local_checkpointed",
+        "native": {
+          "loss": 0.6460801362991333,
+          "pred_loss": 0.5831945538520813,
+          "sigreg_loss": 0.6987283229827881
+        },
+        "local": {
+          "loss": 0.6460801362991333,
+          "pred_loss": 0.5831945538520813,
+          "sigreg_loss": 0.6987283229827881
+        },
+        "gradient_relative_l2": 2.4496648910048014e-05,
+        "gradient_max_abs": 1.1056661605834961e-05,
+        "buffer_max_abs": 5.960464477539063e-08,
+        "gradient_parameters": 297
+      },
+      {
+        "precision": "bf16",
+        "variant": "local_checkpointed",
+        "native": {
+          "loss": 0.6453083753585815,
+          "pred_loss": 0.5828083753585815,
+          "sigreg_loss": 0.6953125
+        },
+        "local": {
+          "loss": 0.6453083753585815,
+          "pred_loss": 0.5828083753585815,
+          "sigreg_loss": 0.6953125
+        },
+        "gradient_relative_l2": 1.360877267657544e-07,
+        "gradient_max_abs": 1.9073486328125e-06,
+        "buffer_max_abs": 0.0,
+        "gradient_parameters": 297
+      }
+    ],
+    "seconds": 1.7405065310013015
+  },
+  "memory": {
+    "checkpoint_sha256": "1988e4646c81376d065c513a8c3ac33bae6dd77cce8a342b4b35f38f78348d96",
+    "batch_size": 128,
+    "precision": "bf16",
+    "encoder_chunk": 0,
+    "encoder_gradient_checkpointing": true,
+    "window_indices": [
+      3451,
+      12712,
+      13364,
+      44,
+      12013,
+      12590,
+      13213,
+      12845,
+      9427,
+      6705,
+      3407,
+      1226,
+      5638,
+      4054,
+      12140,
+      13389,
+      2087,
+      4384,
+      7188,
+      11686,
+      7961,
+      4158,
+      11127,
+      4843,
+      13037,
+      10343,
+      7533,
+      5589,
+      6222,
+      11391,
+      12733,
+      560,
+      277,
+      13215,
+      260,
+      3807,
+      2280,
+      643,
+      449,
+      5112,
+      7124,
+      12344,
+      3769,
+      965,
+      2662,
+      4650,
+      8579,
+      8540,
+      7230,
+      5553,
+      10618,
+      8490,
+      3830,
+      7887,
+      11113,
+      6718,
+      12287,
+      3643,
+      11930,
+      5254,
+      9293,
+      12747,
+      7511,
+      89,
+      442,
+      9718,
+      9698,
+      751,
+      9510,
+      11866,
+      1748,
+      1422,
+      5463,
+      11497,
+      365,
+      5730,
+      4956,
+      3224,
+      5025,
+      3946,
+      8899,
+      12760,
+      1837,
+      11816,
+      7258,
+      4987,
+      6093,
+      3798,
+      8715,
+      3253,
+      12206,
+      9314,
+      12831,
+      12519,
+      4744,
+      4976,
+      411,
+      9323,
+      61,
+      7969,
+      3502,
+      6076,
+      1985,
+      9592,
+      1551,
+      12060,
+      8395,
+      9440,
+      676,
+      13606,
+      11628,
+      2912,
+      13569,
+      7244,
+      8985,
+      11926,
+      10556,
+      11072,
+      8234,
+      2718,
+      7840,
+      594,
+      11669,
+      3771,
+      3420,
+      6038,
+      11070,
+      9112
+    ],
+    "optimizer_steps": 0,
+    "limitation": "One full-size backward on a clone; excludes optimizer state and long-run source I/O.",
+    "status": "completed",
+    "terms": {
+      "loss": 0.44329673051834106,
+      "pred_loss": 0.16009362041950226,
+      "sigreg_loss": 3.140625
+    },
+    "all_gradients_finite": true,
+    "peak_allocated_bytes": 3137145344,
+    "peak_reserved_bytes": 3858759680,
+    "seconds": 1.5969688070035772,
+    "checkpoint_unchanged": true
+  },
+  "reproduction_preparation": {
+    "config": {
+      "dataset": "configs/datasets/pusht.yaml",
+      "run_dir": "runs/reproduction/pusht_source_scale",
+      "seed": 3072,
+      "split_protocol": "random_windows",
+      "normalization_population": "full_source",
+      "train_fraction": 0.9,
+      "train_episodes": null,
+      "expected_train_windows": 1783548,
+      "expected_total_steps": 139330,
+      "max_steps": null,
+      "max_seconds": null,
+      "epochs": 10,
+      "batch_size": 128,
+      "workers": 4,
+      "cache_bytes": 0,
+      "encoder_chunk": 0,
+      "encoder_gradient_checkpointing": true,
+      "precision": "bf16",
+      "eval_precision": "float32",
+      "lr": 5e-05,
+      "weight_decay": 0.001,
+      "warmup_fraction": 0.01,
+      "grad_clip": 1.0,
+      "sigreg_weight": 0.09,
+      "sigreg_projections": 1024,
+      "sigreg_knots": 17,
+      "log_every": 100,
+      "eval_every": 5000,
+      "eval_batches": 16,
+      "checkpoint_steps": [
+        0,
+        13933,
+        27866,
+        41799,
+        55732,
+        69665,
+        83598,
+        97531,
+        111464,
+        125397,
+        139330
+      ],
+      "model": {}
+    },
+    "config_sha256": "f12cc32068767fef5c4ced9a599d7bb88148974b2ebfac62b513e25ee25b6034",
+    "dataset": {
+      "name": "pusht",
+      "kind": "action_trajectory",
+      "path": "data/pusht/pusht_expert_train.h5",
+      "repo": "quentinll/lewm-pusht",
+      "revision": "655cd446b9929369d7d406001da85c15d1457850",
+      "archive": "pusht_expert_train.h5.zst",
+      "sha256": "7cfbd6d90fa2f27876379a5ff169715a36ed82edbda64f9e5b5bfa34d212f318",
+      "action_dim": 2,
+      "action_semantics": "relative end-effector displacement; simulator scale 100",
+      "frameskip": 5,
+      "history": 3
+    },
+    "source_verification": {
+      "repo": "quentinll/lewm-pusht",
+      "revision": "655cd446b9929369d7d406001da85c15d1457850",
+      "sha256": "7cfbd6d90fa2f27876379a5ff169715a36ed82edbda64f9e5b5bfa34d212f318"
+    },
+    "source_episodes": 18685,
+    "source_frames": 2336736,
+    "data_protocol": {
+      "split_protocol": "random_windows",
+      "normalization_population": "full_source",
+      "population": "Random windows; training and validation share source episodes/configurations",
+      "window_count": 1981721,
+      "train_windows": 1783548,
+      "val_windows": 198173,
+      "split_seed": 3072,
+      "rounding": "floor(train_fraction * window_count)",
+      "train_indices_sha256": "a097226e2a4735e346e84c28a3b7a2d44e1075e4a6961386c05dff8016490efa",
+      "val_indices_sha256": "7ecf942ebbfca39328bbd577ff3e6879df40d6585759972ae4af31fa4b65bb56"
+    },
+    "action_stats": {
+      "mean": [
+        -0.007812565192580223,
+        0.006860686466097832
+      ],
+      "std": [
+        0.2084674835205078,
+        0.20674866437911987
+      ],
+      "count": 2336736
+    },
+    "batches_per_epoch": 13933,
+    "total_steps": 139330,
+    "warmup_steps": 1393,
+    "checkpoint_steps": [
+      0,
+      13933,
+      27866,
+      41799,
+      55732,
+      69665,
+      83598,
+      97531,
+      111464,
+      125397,
+      139330
+    ],
+    "window_indices_sha256": "0a84389da865b4a4bead6a549ce3dcf1491bccf16884f8bdf6ad1350830bdef8",
+    "control_cases_sha256": "3fa2a20eb393e21c609f5f118dd3f7f43fd2683e88a628842510f5db4abbb4a8",
+    "code_commit": "80b03986bbeff13b75760e9c8edf8ac5392ce4fa",
+    "training_launched": false,
+    "model_constructed": false,
+    "pilot_rate_extrapolated_hours": 58.32082880555556,
+    "limitation": "Runtime extrapolation excludes full-source I/O and changes in activation-checkpointing cost."
+  },
+  "checkpoint_integrity": "250/500/1000 and released SHA256 values rechecked against completed-pilot report; all unchanged",
+  "reports": [
+    "docs/pusht-control-diagnosis.md",
+    "docs/pusht-reproduction.md",
+    "docs/project-state.md"
+  ],
+  "limits": "One seed, 20 training control goals, eight fixed ranking cases. Native parity batch four; capacity probe batch 128. No causal attribution to precision/scale. No long training launch."
+}

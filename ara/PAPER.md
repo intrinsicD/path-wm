@@ -12,3 +12,5 @@ are excluded. Research ideas remain in [docs/ideas.md](../docs/ideas.md).
 - [Claims](logic/claims.md)
 
 Long training is stopped pending user review. Research extensions are deferred.
+
+Latest completed follow-up: [saved-checkpoint control diagnosis](../docs/pusht-control-diagnosis.md) and [prepared source-scale reproduction](../docs/pusht-reproduction.md). Browser verification is resolved; learned control and a long-run schedule remain open.

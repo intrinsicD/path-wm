@@ -216,3 +216,53 @@ observations:
   promoted_to: logic/solution/heuristics.md:H05
   crystallized_via: artifact-commitment
   stale: false
+
+- id: O14
+  content: Failure on familiar goals and weak optimized-action rankings show that unseen configurations alone
+    cannot explain the pilot failure. Prediction gains on recorded windows do not establish a useful planning
+    cost; representation geometry and rollout error both remain concerns.
+  potential_type: claim
+  bound_to:
+  - N28
+  - N29
+  timestamp: 2026-09-06T00:05+02:00
+  provenance: ai-suggested
+  context: Approved diagnostics and data-only reproduction preparation completed across midnight; user has
+    not reviewed new empirical findings.
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O15
+  content: Bf16 encoder slicing changes real-batch gradients despite equal forward losses; activation checkpointing
+    preserves the measured native comparison. This numerical finding does not establish that slicing caused
+    the pilot control failure or that a larger run will succeed.
+  potential_type: claim
+  bound_to:
+  - N30
+  - N31
+  timestamp: 2026-09-06T00:05+02:00
+  provenance: ai-suggested
+  context: Approved diagnostics and data-only reproduction preparation completed across midnight; user has
+    not reviewed new empirical findings.
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O16
+  content: For the source-scale candidate, preserve full-batch encoder kernels with nonreentrant activation
+    checkpointing instead of slicing the encoder batch; verify native backward numerics and published-batch
+    memory before scheduling training.
+  potential_type: heuristic
+  bound_to:
+  - N30
+  - N31
+  - N32
+  timestamp: 2026-09-06T00:05+02:00
+  provenance: ai-suggested
+  context: Approved diagnostics and data-only reproduction preparation completed across midnight; user has
+    not reviewed new empirical findings.
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H06
+  crystallized_via: artifact-commitment
+  stale: false

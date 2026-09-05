@@ -1,0 +1,116 @@
+session:
+  id: 2026-09-06_001
+  date: '2026-09-06'
+  started: 2026-09-06T00:05+02:00
+  last_turn: 2026-09-06T00:05+02:00
+  turn_count: 1
+  summary: Browser QA resolved; pilot fails 20 training goals and eight plan selections; bf16 slicing drift
+    isolated; full-batch checkpointing verified; source-scale preparation complete, no long launch.
+events_logged:
+- turn: 1
+  type: decision
+  id: N26
+  routing: direct
+  provenance: user
+  summary: Resume approved diagnostics after repairing browser QA
+- turn: 1
+  type: experiment
+  id: N27
+  routing: direct
+  provenance: ai-executed
+  summary: Canonical dashboard browser verification passes
+- turn: 1
+  type: experiment
+  id: N28
+  routing: direct
+  provenance: ai-executed
+  summary: Saved pilot also fails frozen training control goals
+- turn: 1
+  type: experiment
+  id: N29
+  routing: direct
+  provenance: ai-executed
+  summary: Matched simulator outcomes expose poor pilot plan rankings
+- turn: 1
+  type: experiment
+  id: N30
+  routing: direct
+  provenance: ai-executed
+  summary: Isolate bf16 slicing drift and verify activation checkpointing
+- turn: 1
+  type: decision
+  id: N31
+  routing: direct
+  provenance: ai-executed
+  summary: Use full-batch activation checkpointing for the reproduction candidate
+- turn: 1
+  type: experiment
+  id: N32
+  routing: direct
+  provenance: ai-executed
+  summary: Freeze executable source-scale data and evaluation preparation
+- turn: 1
+  type: observation
+  id: O14
+  routing: staged
+  provenance: ai-suggested
+  summary: Failure on familiar goals and weak optimized-action rankings show that unseen configurations alone
+    cannot explain the pilot failure. Prediction gains on recorded windows do not establish a useful planning
+    cost; representation geometry and rollout error both remain concerns.
+- turn: 1
+  type: observation
+  id: O15
+  routing: staged
+  provenance: ai-suggested
+  summary: Bf16 encoder slicing changes real-batch gradients despite equal forward losses; activation checkpointing
+    preserves the measured native comparison. This numerical finding does not establish that slicing caused
+    the pilot control failure or that a larger run will succeed.
+- turn: 1
+  type: observation
+  id: O16
+  routing: staged
+  provenance: ai-suggested
+  summary: For the source-scale candidate, preserve full-batch encoder kernels with nonreentrant activation
+    checkpointing instead of slicing the encoder batch; verify native backward numerics and published-batch
+    memory before scheduling training.
+- turn: 1
+  type: heuristic
+  id: H06
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O16 committed into source-scale activation-checkpointing configuration.
+ai_actions:
+- turn: 1
+  action: Repaired and verified canonical dashboard; ran 20 training goals and paired actions, eight simulator-ranking
+    cases, native parity and memory probes; prepared source-scale config/cases; wrote report; committed completed
+    slices. Work began September 5 and ended September 6.
+  provenance: ai-executed
+  files_changed:
+  - viewer/
+  - scripts/
+  - world_model/protocol.py
+  - world_model/train.py
+  - world_model/eval_pusht.py
+  - tests/
+  - configs/reproduction/
+  - docs/
+  - ara/
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: yes please continue with that. resolve the mentioned points as well first
+- turn: 1
+  excerpt: Original pilot and all checkpoint hashes preserved. Tests include tiny CPU training slices; substantive
+    diagnostics take zero optimizer updates. Long training is not launched.
+open_threads:
+- Schedule source-scale 139330-update run separately; rough pilot-rate estimate 58.3h excludes source I/O/method
+  changes.
+- Learned-control gate remains unmet; causal contributions of scale, representation/rollout error and slicing
+  numerics remain unresolved.
+- Retain explicit scheduler/released-history uncertainty and separate source interpolation from unseen-configuration
+  transfer.
+ai_suggestions_pending:
+- O14/O15 causal/capability interpretations await researcher review; O12 scale/generalization hypotheses remain
+  unisolated.
+- H06 is an implemented numerical preparation choice, not user endorsement of a mechanism or a successful training
+  result.
