@@ -1,11 +1,11 @@
 session:
-  id: "2026-09-05_001"
-  date: "2026-09-05"
-  started: "2026-09-05T01:12+02:00"
-  last_turn: "2026-09-05T08:57+02:00"
-  turn_count: 2
-  summary: "Completed full TAU ingestion, matched R0 covariance selection and two R1 continuations; R1 passes 1/2 gates and independent timing remains unresolved; exact recovery and report preserved."
-
+  id: 2026-09-05_001
+  date: '2026-09-05'
+  started: 2026-09-05T01:12+02:00
+  last_turn: 2026-09-05T10:21+02:00
+  turn_count: 3
+  summary: Completed full TAU R0/R1 work plus controlled physical source; controlled R0 passes 0/2, equal-width
+    readouts expose a pooling gap, R1 loss isolated; original gates and B0 deferral preserved.
 events_logged:
   - turn: 1
     type: decision
@@ -204,6 +204,158 @@ events_logged:
     routing: crystallized
     provenance: ai-suggested
     summary: logic/solution/heuristics.md:H05 via artifact-commitment
+  - turn: 3
+    type: decision
+    id: N52
+    routing: direct
+    provenance: ai-suggested
+    summary: Define a controlled physical source through the existing data boundary
+  - turn: 3
+    type: experiment
+    id: N53
+    routing: direct
+    provenance: ai-executed
+    summary: Validate raw shared motion, swapped assignments and constant signals
+  - turn: 3
+    type: experiment
+    id: N54
+    routing: direct
+    provenance: ai-executed
+    summary: Complete both unchanged controlled R0 sources
+  - turn: 3
+    type: dead_end
+    id: N55
+    routing: direct
+    provenance: ai-executed
+    summary: Use the declared controlled R0 budget as passing R1 initialization
+  - turn: 3
+    type: experiment
+    id: N56
+    routing: direct
+    provenance: ai-executed
+    summary: Test the isolated balanced assignment loss and exact default replay
+  - turn: 3
+    type: experiment
+    id: N57
+    routing: direct
+    provenance: ai-executed
+    summary: Verify independent teacher-copy future gains on the controlled source
+  - turn: 3
+    type: experiment
+    id: N58
+    routing: direct
+    provenance: ai-executed
+    summary: Read physical coordinates from frozen trained and untrained evidence
+  - turn: 3
+    type: experiment
+    id: N59
+    routing: direct
+    provenance: ai-executed
+    summary: Match output width and fitted-head capacity in the readout control
+  - turn: 3
+    type: experiment
+    id: N60
+    routing: direct
+    provenance: ai-executed
+    summary: Check rank semantics with an exact physical-coordinate code
+  - turn: 3
+    type: decision
+    id: N61
+    routing: direct
+    provenance: ai-suggested
+    summary: Preserve failed gates and keep the R1 implementation isolated
+  - turn: 3
+    type: pivot
+    id: N62
+    routing: direct
+    provenance: ai-suggested
+    summary: Prioritize physical diagnostics and the representation readout
+  - turn: 3
+    type: question
+    id: N63
+    routing: direct
+    provenance: ai-suggested
+    summary: Can a compact variable-layout readout retain physical state and change?
+  - turn: 3
+    type: observation
+    id: O26
+    routing: staged
+    provenance: ai-suggested
+    summary: 'The controlled source exposes the declared common physical coordinates: raw matched accuracy
+      1, swapped 0, constant .5 with all ties and coordinate MAE .002079 on all 64 eval clips. This is source
+      validation, not learned-model readiness.'
+  - turn: 3
+    type: observation
+    id: O27
+    routing: staged
+    provenance: ai-suggested
+    summary: Both unchanged 5000-update controlled R0 seeds fail video/audio rank and video temporal retrieval,
+      while independent teacher-copy future intervals are positive. These bounded results do not provide
+      passing R1 sources.
+  - turn: 3
+    type: observation
+    id: O28
+    routing: staged
+    provenance: ai-suggested
+    summary: For these frozen controlled R0 models and fixed physical targets, two untuned 192-feature projections
+      outperform 192-feature mean pooling at equal fitted-head capacity for current/future MSE in both modalities/seeds.
+      Individual paired evaluation-group intervals are positive; this is conditional linear-readout evidence,
+      not a causal training explanation.
+  - turn: 3
+    type: observation
+    id: O29
+    routing: staged
+    provenance: ai-suggested
+    summary: 'The inherited .25 effective-rank fraction threshold is not necessary to preserve the eight
+      current source coordinates: an exact code has std1, <=1.15e-8 recovery error and .039775 rank at native-width
+      layouts. This code is not a complete dynamical state or a passing frontend.'
+  - turn: 3
+    type: observation
+    id: O30
+    routing: staged
+    provenance: ai-suggested
+    summary: A compact readout that retains token information across variable layouts may improve temporal
+      evidence relative to mean pooling. Equal-width frozen label-fitted controls motivate this intervention
+      but do not establish a production or R1 training gain.
+  - turn: 3
+    type: observation
+    id: O31
+    routing: staged
+    provenance: ai-suggested
+    summary: On the fixed physical-coordinate ridge probes at both model seeds, audio current-coordinate
+      MSE worsens from untrained initialization to completed controlled R0, for pooled and flattened readouts,
+      with paired group intervals excluding zero. Video readouts improve; this is a probe-specific comparison,
+      not an intrinsic information-loss bound.
+  - turn: 3
+    type: claim
+    id: O26
+    routing: crystallized
+    provenance: ai-suggested
+    summary: logic/claims.md:C13 via artifact-commitment
+  - turn: 3
+    type: claim
+    id: O27
+    routing: crystallized
+    provenance: ai-suggested
+    summary: logic/claims.md:C14 via artifact-commitment
+  - turn: 3
+    type: claim
+    id: O28
+    routing: crystallized
+    provenance: ai-suggested
+    summary: logic/claims.md:C15 via artifact-commitment
+  - turn: 3
+    type: claim
+    id: O29
+    routing: crystallized
+    provenance: ai-suggested
+    summary: logic/claims.md:C16 via artifact-commitment
+  - turn: 3
+    type: claim
+    id: O31
+    routing: crystallized
+    provenance: ai-suggested
+    summary: logic/claims.md:C17 via artifact-commitment
 
 ai_actions:
   - turn: 1
@@ -246,6 +398,40 @@ ai_actions:
     - docs/design-decisions.md
     - docs/common-base-next-experiment.md
     - commit:ca65ce0
+  - turn: 3
+    action: Implemented deterministic source and source controls with RED/GREEN commits; generated 192 dynamic
+      and 192 constant clips; ran a real 100-update CUDA smoke and both predeclared 5000-update R0 seeds.
+      Main passes 202 fast tests and both run dashboards refresh.
+    provenance: ai-executed
+    files_changed:
+    - training/controlled_av.py
+    - tests/conformance/test_controlled_av.py
+    - configs/dev/common_base_controlled_r0.yaml
+    - commit:b98142a
+    - commit:367c5a3
+  - turn: 3
+    action: Prepared the R1-only balanced assignment loss in an isolated worktree with RED tests, 205 passing
+      fast tests and exact default measured-checkpoint loss/gradient/RNG replay. Preserved it at 57876df
+      without a GREEN experiment milestone or candidate R1 run.
+    provenance: ai-executed
+    files_changed:
+    - commit:6967b3a
+    - commit:57876df
+    - ara/evidence/tables/e1_common_base_controlled_r1_prepared_2026-09-05.patch
+  - turn: 3
+    action: Ran independent future controls and clearly exploratory frozen coordinate probes, equal-width
+      projection/constant/shuffle controls and a rank counterexample. Reconciled all final ledgers, recomputed
+      R2/MSE, verified report inputs, generated the canonical report and committed the revised next-step
+      plan.
+    provenance: ai-executed
+    files_changed:
+    - runs/controlled_av_20260905/report.html
+    - runs/controlled_av_20260905/report_qa.json
+    - ara/evidence/tables/e1_common_base_controlled_2026-09-05.json
+    - ara/evidence/tables/e1_common_base_controlled_2026-09-05.md
+    - docs/design-decisions.md
+    - docs/common-base-next-experiment.md
+    - commit:27b4251
 
 claims_touched:
   - id: C09
@@ -260,7 +446,21 @@ claims_touched:
   - id: C12
     action: crystallized
     turn: 2
-
+  - id: C13
+    action: crystallized
+    turn: 3
+  - id: C14
+    action: crystallized
+    turn: 3
+  - id: C15
+    action: crystallized
+    turn: 3
+  - id: C16
+    action: crystallized
+    turn: 3
+  - id: C17
+    action: crystallized
+    turn: 3
 
 key_context:
   - turn: 1
@@ -276,20 +476,32 @@ key_context:
   - turn: 2
     excerpt: This is one long turn across internal continuations; event timestamps below denote epilogue
       capture, with exact execution timing retained in run ledgers.
+  - turn: 3
+    excerpt: 'User: please continue. No new endorsement of a scientific interpretation was given.'
+  - turn: 3
+    excerpt: Source R0 failures prevent the conditional R1 comparison. The equal-width result is a frozen
+      physical-readout improvement, not an encoder-training, R1 or H1 result. All work finished; no training
+      remains running.
+  - turn: 3
+    excerpt: One turn across internal continuations. Timestamps are epilogue capture; exact executions are
+      retained in run ledgers. The prior overnight cap did not govern this new continuation.
 
 open_threads:
-  - Implement the controlled physical-signal/source validation, then compare current-anchor versus balanced-time
-    supervision at matched budget; N51 and docs/common-base-next-experiment.md.
-  - Defer B0 until timing is resolved; later test hidden velocity, occlusion, missing modalities and prior-only
-    behavior against a per-frame baseline.
-  - Keep E0/E1 formal freeze separate; two E0 gate tests and a correctly action-conditioned reference remain
-    outstanding.
-  - Revisit Sophontic only after its model, report and eval kit ship.
-  - Decide whether E2 pair scoring needs the remaining joint-correctness and invariance controls.
-
-  - "Historical E1-a replay requires restoration of seven pre-existing missing raw files listed in ara/evidence/README.md; current overnight sources are present."
-
+- 'N51/N63: controlled source validated but R0 prerequisite fails; calibrate physical/temporal diagnostics
+  and a compact variable-layout readout, then revisit the isolated R1 objective under a valid declared
+  prerequisite.'
+- Defer B0 until timing is resolved; later test hidden velocity, occlusion, missing modalities and prior-only
+  behavior against a per-frame baseline.
+- Keep E0/E1 formal freeze separate; two E0 gate tests and a correctly action-conditioned reference remain
+  outstanding.
+- Revisit Sophontic only after its model, report and eval kit ship.
+- Decide whether E2 pair scoring needs the remaining joint-correctness and invariance controls.
+- Historical E1-a replay requires restoration of seven pre-existing missing raw files listed in ara/evidence/README.md;
+  current overnight sources are present.
 ai_suggestions_pending:
-  - 'O23: context controls suggest substantial shared context but do not identify the unique cause of weak
-    timing.'
-  - 'O24: balanced-time supervision is a proposed experiment, not a demonstrated improvement.'
+- 'O23: context controls suggest substantial shared context but do not identify the unique cause of weak
+  timing.'
+- 'O24: balanced-time implementation is tested on an isolated branch; trained timing improvement remains
+  untested.'
+- 'O30: compact variable-layout pooling may improve temporal evidence; frozen matched-width controls do
+  not establish a production/R1 gain.'

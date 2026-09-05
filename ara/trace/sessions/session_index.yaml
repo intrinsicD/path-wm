@@ -26,13 +26,18 @@ sessions:
     open_threads: 5
   - id: 2026-09-05_001
     date: '2026-09-05'
-    summary: Completed full TAU ingestion, matched R0 covariance selection and two R1 continuations; R1
-      passes 1/2 gates and independent timing remains unresolved; exact recovery and report preserved.
-    turn_count: 2
-    events_count: 30
+    summary: Completed full TAU R0/R1 work plus controlled physical source; controlled R0 passes 0/2, equal-width
+      readouts expose a pooling gap, R1 loss isolated; original gates and B0 deferral preserved.
+    turn_count: 3
+    events_count: 53
     claims_touched:
     - C09
     - C10
     - C11
     - C12
+    - C13
+    - C14
+    - C15
+    - C16
+    - C17
     open_threads: 6

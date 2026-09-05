@@ -430,3 +430,101 @@ observations:
     promoted_to: logic/solution/heuristics.md:H05
     crystallized_via: artifact-commitment
     stale: false
+
+  - id: O26
+    timestamp: 2026-09-05T10:21+02:00
+    provenance: ai-suggested
+    content: 'The controlled source exposes the declared common physical coordinates: raw matched accuracy
+      1, swapped 0, constant .5 with all ties and coordinate MAE .002079 on all 64 eval clips. This is source
+      validation, not learned-model readiness.'
+    context: Completed controlled-source R0 turn; exploratory readouts after seed0 and committed DDR40/report.
+      User requested continuation, not affirmation of interpretations.
+    potential_type: claim
+    bound_to:
+    - N52
+    - N53
+    promoted: true
+    promoted_to: logic/claims.md:C13
+    crystallized_via: artifact-commitment
+    stale: false
+  - id: O27
+    timestamp: 2026-09-05T10:21+02:00
+    provenance: ai-suggested
+    content: Both unchanged 5000-update controlled R0 seeds fail video/audio rank and video temporal retrieval,
+      while independent teacher-copy future intervals are positive. These bounded results do not provide
+      passing R1 sources.
+    context: Completed controlled-source R0 turn; exploratory readouts after seed0 and committed DDR40/report.
+      User requested continuation, not affirmation of interpretations.
+    potential_type: claim
+    bound_to:
+    - N54
+    - N57
+    promoted: true
+    promoted_to: logic/claims.md:C14
+    crystallized_via: artifact-commitment
+    stale: false
+  - id: O28
+    timestamp: 2026-09-05T10:21+02:00
+    provenance: ai-suggested
+    content: For these frozen controlled R0 models and fixed physical targets, two untuned 192-feature projections
+      outperform 192-feature mean pooling at equal fitted-head capacity for current/future MSE in both modalities/seeds.
+      Individual paired evaluation-group intervals are positive; this is conditional linear-readout evidence,
+      not a causal training explanation.
+    context: Completed controlled-source R0 turn; exploratory readouts after seed0 and committed DDR40/report.
+      User requested continuation, not affirmation of interpretations.
+    potential_type: claim
+    bound_to:
+    - N58
+    - N59
+    promoted: true
+    promoted_to: logic/claims.md:C15
+    crystallized_via: artifact-commitment
+    stale: false
+  - id: O29
+    timestamp: 2026-09-05T10:21+02:00
+    provenance: ai-suggested
+    content: 'The inherited .25 effective-rank fraction threshold is not necessary to preserve the eight
+      current source coordinates: an exact code has std1, <=1.15e-8 recovery error and .039775 rank at native-width
+      layouts. This code is not a complete dynamical state or a passing frontend.'
+    context: Completed controlled-source R0 turn; exploratory readouts after seed0 and committed DDR40/report.
+      User requested continuation, not affirmation of interpretations.
+    potential_type: claim
+    bound_to:
+    - N60
+    promoted: true
+    promoted_to: logic/claims.md:C16
+    crystallized_via: artifact-commitment
+    stale: false
+  - id: O30
+    timestamp: 2026-09-05T10:21+02:00
+    provenance: ai-suggested
+    content: A compact readout that retains token information across variable layouts may improve temporal
+      evidence relative to mean pooling. Equal-width frozen label-fitted controls motivate this intervention
+      but do not establish a production or R1 training gain.
+    context: Completed controlled-source R0 turn; exploratory readouts after seed0 and committed DDR40/report.
+      User requested continuation, not affirmation of interpretations.
+    potential_type: architecture
+    bound_to:
+    - N59
+    - N62
+    - N63
+    promoted: false
+    promoted_to: null
+    crystallized_via: null
+    stale: false
+  - id: O31
+    timestamp: 2026-09-05T10:21+02:00
+    provenance: ai-suggested
+    content: On the fixed physical-coordinate ridge probes at both model seeds, audio current-coordinate
+      MSE worsens from untrained initialization to completed controlled R0, for pooled and flattened readouts,
+      with paired group intervals excluding zero. Video readouts improve; this is a probe-specific comparison,
+      not an intrinsic information-loss bound.
+    context: Completed controlled-source R0 turn; exploratory readouts after seed0 and committed DDR40/report.
+      User requested continuation, not affirmation of interpretations.
+    potential_type: claim
+    bound_to:
+    - N58
+    promoted: true
+    promoted_to: logic/claims.md:C17
+    crystallized_via: artifact-commitment
+    stale: false

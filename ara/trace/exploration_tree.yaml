@@ -942,3 +942,218 @@ tree:
     - O24
     status: open
     children: []
+
+  - id: N52
+    type: decision
+    title: Define a controlled physical source through the existing data boundary
+    provenance: ai-suggested
+    timestamp: 2026-09-05T10:21+02:00
+    also_depends_on:
+    - N51
+    choice: Four visible emitter coordinates modulate eight carrier amplitudes; fixed source controls, two
+      5000-update R0 seeds, unchanged prerequisites before R1.
+    alternatives:
+    - Assume natural-data timing failure proves a unique cause
+    - Start R1 without checking physical availability
+    evidence:
+    - configs/dev/common_base_controlled_r0.yaml
+    - commit:b98142a
+    - commit:367c5a3
+    - O26
+    status: resolved
+    children: []
+  - id: N53
+    type: experiment
+    title: Validate raw shared motion, swapped assignments and constant signals
+    provenance: ai-executed
+    timestamp: 2026-09-05T10:21+02:00
+    also_depends_on:
+    - N52
+    result: 192 clips per dynamic/constant source; 64 eval clips /32 groups. Raw dynamic accuracy 1, swapped
+      0, MAE .002079; constant accuracy .5 and ties 1. Reproducibility, truth exclusion and real CUDA smoke
+      tested.
+    evidence:
+    - data/controlled_oscillators_v1/manifest.raw_audit.json
+    - data/controlled_oscillators_constant_v1/manifest.raw_audit.json
+    - tests/conformance/test_controlled_av.py
+    - ara/evidence/tables/e1_common_base_controlled_2026-09-05.json
+    - O26
+    status: resolved
+    children: []
+  - id: N54
+    type: experiment
+    title: Complete both unchanged controlled R0 sources
+    provenance: ai-executed
+    timestamp: 2026-09-05T10:21+02:00
+    also_depends_on:
+    - N53
+    result: Both 5000-update seeds run on clean 367c5a3 and identical source/config identities. Both fail
+      video/audio rank and video temporal retrieval; video rank .155671/.108127, audio .214671/.231884.
+    evidence:
+    - runs/controlled_av_20260905/r0_validation.json
+    - runs/dev/common_base_controlled_r0/0/checkpoint.pt
+    - runs/dev/common_base_controlled_r0/1/checkpoint.pt
+    - O27
+    status: resolved
+    children: []
+  - id: N55
+    type: dead_end
+    title: Use the declared controlled R0 budget as passing R1 initialization
+    provenance: ai-executed
+    timestamp: 2026-09-05T10:21+02:00
+    also_depends_on:
+    - N54
+    hypothesis: The predeclared unchanged 5000-update controlled sources will satisfy the existing R0 prerequisite
+      at both seeds.
+    failure_mode: 0/2 sources pass; the same three conditions fail. No R1 candidate is launched.
+    lesson: Preserve failures and inspect physical content/readouts; raw source availability does not waive
+      model conditions.
+    evidence:
+    - runs/controlled_av_20260905/r0_validation.json
+    - docs/design-decisions.md
+    status: resolved
+    children: []
+  - id: N56
+    type: experiment
+    title: Test the isolated balanced assignment loss and exact default replay
+    provenance: ai-executed
+    timestamp: 2026-09-05T10:21+02:00
+    also_depends_on:
+    - N52
+    - N49
+    result: Three essential RED tests precede implementation. Isolated branch 57876df passes 205 fast tests;
+      measured R0/R1 default losses, all parameter gradients and global/corruption RNG states match exactly
+      on CPU. Controlled candidate panel pending.
+    evidence:
+    - commit:6967b3a
+    - commit:57876df
+    - ara/evidence/tables/e1_common_base_controlled_r1_prepared_2026-09-05.patch
+    - runs/controlled_av_20260905/default_compatibility.json
+    - O24
+    status: resolved
+    children: []
+  - id: N57
+    type: experiment
+    title: Verify independent teacher-copy future gains on the controlled source
+    provenance: ai-executed
+    timestamp: 2026-09-05T10:21+02:00
+    also_depends_on:
+    - N54
+    result: All-64-clip /32-group future-copy intervals are positive for video and audio at both seeds;
+      this is model-conditional latent evidence, not a physical-world or R1 gate.
+    evidence:
+    - runs/controlled_av_20260905/future_uncertainty_common_base_controlled_r0_seed0_ed35414ab826.json
+    - runs/controlled_av_20260905/future_uncertainty_common_base_controlled_r0_seed1_cf9c62e39e01.json
+    - O27
+    status: resolved
+    children: []
+  - id: N58
+    type: experiment
+    title: Read physical coordinates from frozen trained and untrained evidence
+    provenance: ai-executed
+    timestamp: 2026-09-05T10:21+02:00
+    also_depends_on:
+    - N54
+    result: 'Post-seed0 fixed-alpha probes: retained token layout outperforms mean pooling for current coordinates.
+      Video readouts improve from initialization; audio current-coordinate readouts decline at both seeds.
+      Width confound remains in this first contrast.'
+    evidence:
+    - runs/controlled_av_20260905/physical_probe_seed0_ed35414ab826.json
+    - runs/controlled_av_20260905/physical_probe_seed1_cf9c62e39e01.json
+    - O28
+    - O31
+    status: resolved
+    children: []
+  - id: N59
+    type: experiment
+    title: Match output width and fitted-head capacity in the readout control
+    provenance: ai-executed
+    timestamp: 2026-09-05T10:21+02:00
+    also_depends_on:
+    - N58
+    result: Both pooled and projected inputs have 192 features /3072 fitted weights. Two fixed projections
+      improve current and future MSE in both modalities/seeds; all individual paired group intervals positive.
+      Constant outputs exact train mean; all shuffled current R2 negative.
+    evidence:
+    - runs/controlled_av_20260905/equal_dimension_readout.json
+    - runs/controlled_av_20260905/equal_dimension_plan.json
+    - runs/controlled_av_20260905/report_qa.json
+    - O28
+    status: resolved
+    children: []
+  - id: N60
+    type: experiment
+    title: Check rank semantics with an exact physical-coordinate code
+    provenance: ai-executed
+    timestamp: 2026-09-05T10:21+02:00
+    also_depends_on:
+    - N58
+    result: Eight-coordinate code at 32/120 tokens x192 has std1, <=1.15e-8 recovery error and .039775 rank
+      fraction, below .25. This is not a complete state or a passing model.
+    evidence:
+    - runs/controlled_av_20260905/exact_coordinate_rank_control.json
+    - O29
+    status: resolved
+    children: []
+  - id: N61
+    type: decision
+    title: Preserve failed gates and keep the R1 implementation isolated
+    provenance: ai-suggested
+    timestamp: 2026-09-05T10:21+02:00
+    also_depends_on:
+    - N55
+    - N56
+    - N57
+    - N59
+    - N60
+    choice: Do not launch R1 or B0 from failed sources. Retain the tested loss branch and committed physical/readout
+      evidence; calibrate the diagnostic and compare a compact readout before changing readiness criteria.
+    alternatives:
+    - Relax rank after observing failure
+    - Select an incomplete source
+    - Treat probe accuracy as a passing R1 result
+    evidence:
+    - O26
+    - O27
+    - O28
+    - O29
+    - O31
+    - commit:27b4251
+    - docs/common-base-next-experiment.md
+    - runs/controlled_av_20260905/report.html
+    status: resolved
+    children: []
+  - id: N62
+    type: pivot
+    title: Prioritize physical diagnostics and the representation readout
+    provenance: ai-suggested
+    timestamp: 2026-09-05T10:21+02:00
+    also_depends_on:
+    - N61
+    from: Conditional current-anchor vs balanced-time R1 training comparison
+    to: Physical-content/temporal diagnostic calibration and a compact readout with frozen encoders
+    trigger: Controlled R0 prerequisite fails despite accessible token content; equal-width readouts reduce
+      the feature-count confound. No causal training bottleneck is yet established.
+    evidence:
+    - O28
+    - O29
+    - O30
+    - docs/design-decisions.md
+    status: resolved
+    children: []
+  - id: N63
+    type: question
+    title: Can a compact variable-layout readout retain physical state and change?
+    provenance: ai-suggested
+    timestamp: 2026-09-05T10:21+02:00
+    also_depends_on:
+    - N62
+    description: Define contracts/controls and a fixed-budget comparison with frozen encoders, then test
+      compact token-aware readouts. Diagnose audio-objective degradation separately. R1 timing improvement
+      remains untested and original gates remain visible.
+    evidence:
+    - docs/common-base-next-experiment.md
+    - O24
+    - O30
+    status: open
+    children: []

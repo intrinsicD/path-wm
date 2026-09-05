@@ -131,3 +131,58 @@
 - **Dependencies**: []
 - **Tags**: E1-common-base, development, controlled-comparison, temporal-evidence
 - **From staging**: O22
+
+## C13: The controlled source exposes its declared shared physical coordinates
+- **Statement**: The controlled source exposes the declared common physical coordinates: raw matched accuracy 1, swapped 0, constant .5 with all ties and coordinate MAE .002079 on all 64 eval clips. This is source validation, not learned-model readiness.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Falsification criteria**: The declared source cannot be reproduced from its code/config, or a same-byte raw control fails its recorded matching, swap, constant or coordinate-error result.
+- **Proof**: [ara/evidence/tables/e1_common_base_controlled_2026-09-05.md, ara/evidence/tables/e1_common_base_controlled_2026-09-05.json, commit:27b4251]
+- **Dependencies**: []
+- **Tags**: E1-common-base, development, physical-source, frozen-readout, diagnostic-controls
+- **From staging**: O26
+
+## C14: The controlled 5000-update R0 prerequisite fails at both seeds
+- **Statement**: Both unchanged 5000-update controlled R0 seeds fail video/audio rank and video temporal retrieval, while independent teacher-copy future intervals are positive. These bounded results do not provide passing R1 sources.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Falsification criteria**: A reconciled same-byte replay at the declared budget passes all ten original conditions at either reported failed source, or reveals a metric/cohort error.
+- **Proof**: [ara/evidence/tables/e1_common_base_controlled_2026-09-05.md, ara/evidence/tables/e1_common_base_controlled_2026-09-05.json, commit:27b4251]
+- **Dependencies**: [C13]
+- **Tags**: E1-common-base, development, physical-source, frozen-readout, diagnostic-controls
+- **From staging**: O27
+
+## C15: The physical readout gap persists at equal feature width and fitted-head capacity
+- **Statement**: For these frozen controlled R0 models and fixed physical targets, two untuned 192-feature projections outperform 192-feature mean pooling at equal fitted-head capacity for current/future MSE in both modalities/seeds. Individual paired evaluation-group intervals are positive; this is conditional linear-readout evidence, not a causal training explanation.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Falsification criteria**: An exact-cohort, fixed-alpha/projection replay fails to reproduce a positive reported paired current/future MSE-gain interval, or shows label leakage or unequal fitted-head capacity.
+- **Proof**: [ara/evidence/tables/e1_common_base_controlled_2026-09-05.md, ara/evidence/tables/e1_common_base_controlled_2026-09-05.json, commit:27b4251]
+- **Dependencies**: [C13, C14]
+- **Tags**: E1-common-base, development, physical-source, frozen-readout, diagnostic-controls
+- **From staging**: O28
+
+## C16: High normalized rank is not necessary for this eight-coordinate target
+- **Statement**: The inherited .25 effective-rank fraction threshold is not necessary to preserve the eight current source coordinates: an exact code has std1, <=1.15e-8 recovery error and .039775 rank at native-width layouts. This code is not a complete dynamical state or a passing frontend.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Falsification criteria**: The exact-code construction fails its stated coordinate recovery, standard deviation or effective-rank calculation under the same metric definition.
+- **Proof**: [ara/evidence/tables/e1_common_base_controlled_2026-09-05.md, ara/evidence/tables/e1_common_base_controlled_2026-09-05.json, commit:27b4251]
+- **Dependencies**: [C13]
+- **Tags**: E1-common-base, development, physical-source, frozen-readout, diagnostic-controls
+- **From staging**: O29
+
+## C17: Controlled R0 audio current-coordinate readouts worsen from initialization
+- **Statement**: On the fixed physical-coordinate ridge probes at both model seeds, audio current-coordinate MSE worsens from untrained initialization to completed controlled R0, for pooled and flattened readouts, with paired group intervals excluding zero. Video readouts improve; this is a probe-specific comparison, not an intrinsic information-loss bound.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Falsification criteria**: A replay with the same initialization, cohorts, fixed alpha and frozen probe protocol does not reproduce the reported audio current-coordinate error increases and their paired intervals.
+- **Proof**: [ara/evidence/tables/e1_common_base_controlled_2026-09-05.md, ara/evidence/tables/e1_common_base_controlled_2026-09-05.json, commit:27b4251]
+- **Dependencies**: [C13, C14]
+- **Tags**: E1-common-base, development, physical-source, frozen-readout, diagnostic-controls
+- **From staging**: O31

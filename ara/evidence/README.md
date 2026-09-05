@@ -19,3 +19,9 @@ were absent. Their existing tracked evidence summaries are preserved; raw replay
 - [pending] `runs/dev/first_slice_counterfactual_solution_absolute_w6/0/metrics.json` — TODO restore from the original run archive if replay is required.
 - [pending] `runs/dev/first_slice_counterfactual_solution_predictor_only/0/metrics.json` — TODO restore from the original run archive if replay is required.
 - [pending] `runs/dev/first_slice_onset_short_joint_warmup/0/learning_curve.jsonl` — TODO restore from the original run archive if replay is required.
+
+## Controlled physical-source follow-up
+
+- [Controlled R0 and equal-width physical readouts, 2026-09-05](tables/e1_common_base_controlled_2026-09-05.md)
+- [Original receipts, hashes and executable audit code](tables/e1_common_base_controlled_2026-09-05.json)
+- [Prepared R1 objective branch patch; controlled panel pending](tables/e1_common_base_controlled_r1_prepared_2026-09-05.patch)

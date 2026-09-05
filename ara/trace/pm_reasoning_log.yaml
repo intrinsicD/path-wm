@@ -64,3 +64,23 @@ entries:
     - Preserved model-conditional recording-group uncertainty, post-seed0 diagnostic status, runtime-probe
       virtual-ID scope, and structural-only report QA.
     - "Reference validation found seven pre-existing unavailable E1-a raw files (eight graph references); documented restoration TODOs in evidence/README.md. Every new reference resolves. This is source availability, not a contradiction in the historical claims."
+
+  - turn: 2026-09-05_001#3
+    notes:
+    - Captured the completed continuation once at its end; no mid-turn ARA reads/writes occurred.
+    - Appended N52-N63. The fixed controlled R0 prerequisite is a bounded dead end; N51 stays open because
+      balanced-time model training has not been tested.
+    - Staged O26-O31, then crystallized only bounded O26/O27/O28/O29/O31 to C13-C17 through committed DDR40
+      and N61. All interpretation provenance remains ai-suggested; the user requested continuation, not
+      affirmation.
+    - Kept O24 and O30 staged. A correct loss implementation and frozen equal-width readout gains do not
+      establish a trained audiovisual improvement or a unique causal bottleneck.
+    - Preserved post-seed0 exploration, train/eval recording disjointness, fixed ridge/projection settings,
+      conditional individual group intervals, full-width confounding and the equal-width control. The coordinate
+      rank counterexample omits full dynamical state.
+    - 'Found no direct contradiction: old TAU/source/budget claims remain bounded, and C08 distinguishes
+      variance/rank rather than claiming high rank is necessary for physical pose recovery. No prior observation
+      is newly 3 session-days stale.'
+    - Main keeps the measured runtime; isolated loss 57876df has 205 tests but no controlled panel. Main
+      has 202 tests. Report QA is structural only, and its actual SQLite intake preserves all upstream Python
+      receipts/code. Historical missing E1-a raw files remain documented.
