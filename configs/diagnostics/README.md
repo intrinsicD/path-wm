@@ -17,3 +17,11 @@ upstream/local disagreement indicates integration. Agreement and positive
 control success permit a capped training diagnosis. Training-set loss alone is
 insufficient: report persistence/shuffled-action controls, representation spread,
 open-loop error, and train/eval BatchNorm behavior. Report all failed checks.
+
+Follow-up authorization: user accepted the next bounded sequence after the first
+report. `pusht_cached_learning.yaml` repeats the same random initialization,
+split, batch, architecture, loss and 400-update schedule with cached data and
+zero workers, retaining the 840-second limit. Evaluate the saved checkpoint
+and diagnostic clones separately, plus a few held-out control starts. Complete
+source verification and released-checkpoint reference evaluation as downloads
+finish. This does not authorize long training or component research.
