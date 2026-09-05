@@ -32,7 +32,7 @@ No missing threshold is converted into a pass. Stopped runs remain visible.
 | Validation ratios (log10) | Does prediction beat matched controls, scale-free? | Step/log10(prediction ÷ control) lines, dashed 0 line | 0 equals the control; negative is better; copy error is near zero at initialization |
 | Checkpoint internals | Is the representation collapsed, Gaussian, linearly readable; does the predictor use actions? | Step/value lines per family over inspected checkpoints of the focus run | Descriptive; reference weights appear in tables, spectrum, horizon curves and panels |
 | Covariance spectrum | Isotropic or collapsed? | Component/log10 eigenvalue lines, one per inspected checkpoint | Flat is isotropic; a cliff is dimensional collapse; levels follow latent scale |
-| Error versus horizon | How fast does rollout error grow? | Horizon/(error ÷ copy baseline) lines per checkpoint, dashed 1 line | Below 1 beats copying; scale-free within each checkpoint |
+| Error versus horizon | How fast does rollout error grow? | Horizon/log10(error ÷ copy baseline) lines per checkpoint, dashed 0 line | Below 0 beats copying; scale-free within each checkpoint |
 | Internals panels | What does the encoder attend to; where do predicted latents land? | Embedded PNG small multiples per checkpoint (attention, patch PCA, Q–Q, predictor attention, nearest neighbours) | Real inputs and measured internals; LeWM has no decoder |
 
 ## Interaction and accessibility

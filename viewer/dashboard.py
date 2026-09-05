@@ -50,7 +50,7 @@ INTERNALS_TITLES = {
     "internals_action_use": ("Predictor action use", "Mean |AdaLN gate| for attention and MLP branches (zero at initialization) and the ratio of action to state sensitivity of the next-state prediction."),
     "internals_attention": ("Attention entropy", "Normalized entropy of attention rows (1 = uniform, 0 = one-hot) for the encoder's last and mean layer and the predictor over its history."),
     "internals_param_norm": ("Parameter norm by module", "L2 norm of all parameters in each module group of the saved checkpoint."),
-    "internals_grad_norm": ("Gradient norm by module", "L2 norm of the full-objective gradient on one validation batch, eval mode, no update; shows where the objective pushes."),
+    "internals_grad_norm": ("Gradient norm by module (log10)", "log10 of the L2 norm of the full-objective gradient on one validation batch, eval mode, no update; shows where the objective pushes. Modules differ by orders of magnitude."),
 }
 
 class DashboardBuildError(RuntimeError):
@@ -136,13 +136,13 @@ def _panel_blocks(internals: list[RunResult]) -> list[dict[str, Any]]:
             encoded = base64.b64encode(Path(panel["path"]).read_bytes()).decode("ascii")
             step = f"step {run.step}" if run.step is not None else "no training step"
             figures.append(
-                f'<figure style="margin:0;flex:1 1 320px;max-width:100%">'
+                f'<figure style="margin:0;flex:0 1 calc(50% - 8px);min-width:320px;max-width:100%">'
                 f'<img alt="{_escape(panel["title"])} for {_escape(run.label)}" src="data:image/png;base64,{encoded}" style="width:100%;height:auto">'
                 f'<figcaption style="font-size:12px;color:GrayText"><strong>{_escape(run.label)}</strong> · {step} · {_escape(panel.get("caption", ""))}</figcaption></figure>')
         title = items[0][1]["title"]
         body = (f'<h3 style="margin:0 0 8px;font-size:16px">{_escape(title)}</h3>'
                 f'<div style="display:flex;flex-wrap:wrap;gap:16px">{"".join(figures)}</div>'
-                f'<p style="font-size:12px;color:GrayText;margin:8px 0 0">Rendered from raw inspection outputs; sources: '
+                f'<p style="font-size:12px;color:GrayText;margin:8px 0 16px">Rendered from raw inspection outputs; sources: '
                 f'{_escape(", ".join(sorted({Path(panel["path"]).name for _, panel in items})))}. LeWM has no image decoder; images show real inputs and measured internals.</p>')
         blocks.append({"id": f"panel_{panel_id}", "type": "html", "body": body, "layout": "full"})
     return blocks
@@ -183,9 +183,18 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
         row["log10_ratio"] = math.log10(row["value"]) if row["value"] > 0 else None
     for row in datasets["internals_spectrum"]:
         row["log10_eigenvalue"] = math.log10(row["eigenvalue"]) if row["eigenvalue"] > 0 else None
+    # The reader draws x categories in row order, so every step/component axis is sorted here.
+    for name in ("internals_scalar", "internals_probe", "training_internals"):
+        datasets[name].sort(key=lambda row: (row["metric"] if "metric" in row else row["target"],
+                                             row["step"] is None, row["step"] or 0))
+    datasets["internals_spectrum"].sort(key=lambda row: (row["run"], row["component"]))
+    datasets["internals_horizon"].sort(key=lambda row: (row["run"], row["metric"], row["horizon"]))
     for name, metrics in INTERNALS_PANELS.items():
         datasets[name] = [row for row in datasets["internals_scalar"] if row["metric"] in metrics]
         datasets[f"training_{name}"] = [row for row in datasets["training_internals"] if row["metric"] in metrics]
+    for name in ("internals_grad_norm", "training_internals_grad_norm"):
+        for row in datasets[name]:
+            row["log10_value"] = math.log10(row["value"]) if row["value"] > 0 else None
     for name, rows in datasets.items():
         if len(rows) > MAX_DATASET_ROWS:
             raise DashboardDataError(f"{name} exceeds {MAX_DATASET_ROWS} rows; select a smaller --runs-root")
@@ -290,7 +299,8 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
         keep("internals_probe", lambda row: row["training_run"] == focus)
         for name, (title, subtitle) in INTERNALS_TITLES.items():
             if datasets[name]:
-                charts.append(_chart(name, f"{title} · {focus}", subtitle, name, "line", number("step"), number("value"),
+                y = "log10_value" if name == "internals_grad_norm" else "value"
+                charts.append(_chart(name, f"{title} · {focus}", subtitle, name, "line", number("step"), number(y),
                                      color=category("metric"), tooltip=[category("run"), category("family")]))
         if datasets["internals_probe"]:
             charts.append(_chart("internals_probe", f"Linear readout of physical state from the latent · {focus}",
@@ -306,7 +316,8 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
         for row in datasets["internals_horizon"]:
             by_run.setdefault((row["run"], row["horizon"]), {})[row["metric"]] = row["value"]
         datasets["internals_horizon_ratio"] = [
-            {"run": run, "horizon": horizon, "metric": label, "value": values[a] / values[b]}
+            {"run": run, "horizon": horizon, "metric": label, "value": values[a] / values[b],
+             "log10_ratio": math.log10(values[a] / values[b]) if values[a] > 0 else None}
             for (run, horizon), values in sorted(by_run.items())
             for label, a, b in (("autoregressive / copy first state", "prediction_mse", "copy_mse"),
                                 ("one step / copy previous state", "one_step_mse", "previous_mse"))
@@ -316,10 +327,10 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
             if rows:
                 name = "internals_horizon_autoregressive" if label.startswith("auto") else "internals_horizon_one_step"
                 datasets[name] = rows
-                charts.append(_chart(name, f"Latent error versus horizon: {label}",
-                                     "Ratio of the model's error to the matching copy baseline at each horizon on held-out windows; below 1 beats copying, and the ratio is scale-free within each checkpoint.",
-                                     name, "line", number("horizon"), number("value"), color=category("run"),
-                                     reference_lines=[{"axis": "y", "value": 1, "label": "equal to copying", "lineStyle": "dashed"}],
+                charts.append(_chart(name, f"Latent error versus horizon (log10): {label}",
+                                     "log10 of the model's error over the matching copy baseline at each horizon on held-out windows; 0 equals copying, −1 is ten times better. Scale-free within each checkpoint.",
+                                     name, "line", number("horizon"), number("log10_ratio"), color=category("run"),
+                                     reference_lines=[{"axis": "y", "value": 0, "label": "equal to copying", "lineStyle": "dashed"}],
                                      direction="lower"))
     if datasets.get("ranking"):
         ranking_run = datasets["ranking_runs"][0]["run"]

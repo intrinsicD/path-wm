@@ -52,6 +52,32 @@ not the original pilot's encoder slicing. Ordinary episode-split configurations
 remain supported. The raw preparation manifest and frozen indices are under
 `runs/reproduction/pusht_source_scale_preparation/`.
 
+## Dashboard repaired and model internals measured (2026-09-06)
+
+The canonical reader applied only filters that target every dataset, so all
+per-section selectors were silently inert and every chart mixed all runs on a
+categorical axis. Charts now show one named selection fixed at build time
+(`python -m viewer.dashboard --focus <training run>`), with one panel per
+training scalar, a log10 validation-ratio chart, rollout error in the absolute
+view, checkpoint-internals charts, an all-checkpoint spectrum, error-versus-
+horizon ratios, embedded PNG panels and exact tables. Browser QA passes; the
+no-JavaScript fallback shows charts beyond the first eleven as tables (builder
+SVG budget). See `viewer/DESIGN.md`.
+
+Read-only inspection of the four saved pilot checkpoints and the released
+weights on the pilot's 512 held-out windows is recorded under
+`runs/diagnostics/pusht_internals/` and summarized in
+[the internals report](internals-report.md). The pilot latent is dimensionally
+collapsed (effective rank 14 of 192 versus 66 for released weights), physical
+state is not linearly readable from it (held-out probe R² at or below 0 versus
+0.78–0.97 for object pose with released weights), the predictor is less
+sensitive to actions than to state (ratio 0.91 versus 2.6), and multi-step
+prediction only modestly beats copying (0.65 of copy error at horizon 8 versus
+0.10). Gradient norm is dominated by the encoder at every trained checkpoint.
+These are descriptive measurements, not gates, and do not identify a cause.
+Checkpoint hashes are unchanged. An opt-in `introspect: true` training key
+records the scalar subset at every validation step; existing configs are unchanged.
+
 ## Next work
 
 Schedule the prepared source-scale run separately before launching it. The
@@ -61,7 +87,10 @@ The protocol documents scheduler/release-history ambiguity and distinguishes
 source interpolation from unseen-configuration generalization. Preserve the
 completed pilot and diagnostic artifacts. Learned control is still unestablished;
 research extensions remain deferred. The three previously approved diagnostics
-and preparation items are complete; do not repeat them.
+and preparation items are complete; do not repeat them. The internals
+inspection of the five checkpoints is complete; rerun `scripts.inspect_checkpoint`
+only for new checkpoints, and enable `introspect` in new training configurations
+so the same signals are captured during training.
 
 ## Earlier validation
 At broader-pilot completion, the modular LeWM implementation passed 13 CPU tests.
