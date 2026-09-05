@@ -53,3 +53,29 @@ Audit pinned author code against the local trainer and prepare explicit source,
 split, normalization, optimizer-update/scheduler and evaluation contracts. State
 paper/release ambiguities. Keep authors-style evaluation separate from stricter
 unseen-configuration transfer. Estimate the local budget; do not launch it.
+
+## Frozen rollout diagnostic details
+
+Use the first four frozen training-control cases and first four existing held-out
+pilot cases, retaining their original order and reset seeds. Every case has
+20 raw 25-action sequences: recorded replay, stationary, 16 independent Gaussian
+sequences (seed 9000 + case index, in the pilot's normalized action units), and
+the pilot/released model's initial CEM plan. Both models score all 20 identical raw
+sequences using their own saved normalizers. Plans use 300 samples, 30 iterations,
+30 elites and five five-action blocks; no tuning after seeing outcomes.
+
+Execute each candidate from the same simulator reset, continuing all 25 actions
+for terminal comparisons even if success occurs earlier. Record initial, any-step
+and terminal success, the upstream state-distance diagnostic, combined agent/block
+position error and circular block-angle error. The primary ranking comparison is
+within each case: Spearman correlation of predicted goal cost with terminal
+position error, selected-candidate position error and regret versus the best of
+these 20 candidates. Position error alone is not the success predicate; report
+angle and exact success separately. Tied/constant ranks have null correlation.
+
+At steps 5/10/15/20/25 record autoregressive latent MSE against simulator-rendered
+frames, copy error and actual-versus-predicted latent distance to the source goal.
+Save candidate actions and simulator states; retain image strips for replay,
+stationary and both planned sequences. Compare errors within each model's latent
+space. No success threshold or causal attribution is introduced after the fact.
+Eight cases are a bounded development diagnostic, not population estimation.
