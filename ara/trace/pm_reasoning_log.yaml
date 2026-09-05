@@ -40,3 +40,14 @@ entries:
     capability claims.
   - O09 refines O08 into proposed data, budget and evaluation limits; both remain staged.
     No new empirical evidence or closure signal; no promotions.
+- turn: 2026-09-05_001#6
+  notes:
+  - User yes please explicitly adopts O09; promote to H04 with user-revised provenance. O08 general protocol
+    now has artifact commitment in frozen source-group code/config, so promote to H03 without provenance
+    upgrade.
+  - Record source audit, training, failed control and non-mutating mode probes as direct experiment facts.
+    Preserve 0/20 failures and replay mismatch; no case filtering or new long training.
+  - 'Keep O10 capability interpretation and O11 next diagnosis staged: results have no researcher response,
+    and no downstream method change depends on them.'
+  - Earlier prefix and BN claims have different checkpoint/data scopes; this turn does not contradict
+    or overwrite them. No stale entries within the same session-day.

@@ -2,9 +2,9 @@ session:
   id: 2026-09-05_001
   date: '2026-09-05'
   started: 2026-09-05T12:55+02:00
-  last_turn: 2026-09-05T16:06+02:00
-  turn_count: 5
-  summary: Released control 45/50; proposed a broader 128/32-episode PushT pilot with a 1,000-update/30-minute training cap; no new run launched.
+  last_turn: 2026-09-05T17:23+02:00
+  turn_count: 6
+  summary: Approved broader PushT pilot completed 1,000 updates in 25.1 minutes; trained control 0/20 at all checkpoints, released 17/20; focused diagnosis recommended before more training.
 events_logged:
 - turn: 1
   type: pivot
@@ -172,6 +172,64 @@ events_logged:
   provenance: ai-suggested
   summary: Proposed broader capped training pilot with fixed held-out prediction and paired
     control checks; no execution approval.
+- turn: 6
+  type: decision
+  id: N16
+  routing: direct
+  provenance: user
+  summary: Execute the broader bounded PushT pilot
+- turn: 6
+  type: experiment
+  id: N17
+  routing: direct
+  provenance: ai-executed
+  summary: Audit source configurations and freeze a disjoint 128/32 pilot
+- turn: 6
+  type: experiment
+  id: N18
+  routing: direct
+  provenance: ai-executed
+  summary: Complete unchanged LeWM pilot under both approved caps
+- turn: 6
+  type: experiment
+  id: N19
+  routing: direct
+  provenance: ai-executed
+  summary: All trained pilot checkpoints fail shared held-out control goals
+- turn: 6
+  type: experiment
+  id: N20
+  routing: direct
+  provenance: ai-executed
+  summary: Probe final checkpoint precision and BatchNorm without modifying it
+- turn: 6
+  type: observation
+  id: O10
+  routing: staged
+  provenance: ai-suggested
+  summary: The broader pilot has modest final held-out predictive/action signal but no successful learned
+    control on 20 fixed goals. Final precision and training-only BN calibration differences are small;
+    they do not identify the cause of the control failure.
+- turn: 6
+  type: observation
+  id: O11
+  routing: staged
+  provenance: ai-suggested
+  summary: Before further training, diagnose rollout predictions and action-plan ranking on fixed cases,
+    and compare training-versus-held-out control to distinguish generalization from dynamics/planning
+    failure. Keep the model/objective fixed and research deferred.
+- turn: 6
+  type: heuristic
+  id: H03
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O08 broader-data protocol committed into group-aware split/configuration.
+- turn: 6
+  type: heuristic
+  id: H04
+  routing: crystallized
+  provenance: user-revised
+  summary: O09 concrete pilot explicitly adopted by user yes please.
 ai_actions:
 - turn: 1
   action: Reset workspace, implement modular baseline and dataset adapters, run short
@@ -216,6 +274,23 @@ ai_actions:
   provenance: ai-executed
   files_changed:
   - ara/
+- turn: 6
+  action: Audit source families, extract/verify 160 episodes, implement frozen splits and retained checkpoints,
+    run 13 CPU tests, execute capped training and all paired controls, run discarded-copy mode diagnostic,
+    reconcile evidence, commit report.
+  provenance: ai-executed
+  files_changed:
+  - scripts/prepare_pusht_pilot.py
+  - scripts/evaluate_pusht_pilot.py
+  - world_model/data.py
+  - world_model/train.py
+  - tests/test_pilot.py
+  - configs/datasets/pusht_pilot.yaml
+  - configs/diagnostics/pusht_broader_pilot.yaml
+  - docs/pusht-broader-pilot.md
+  - README.md
+  - CLAUDE.md
+  - ara/
 claims_touched: []
 key_context:
 - turn: 1
@@ -236,10 +311,13 @@ key_context:
     full-data reference evaluation. Long training remains outside this approval.
 - turn: 5
   excerpt: 'User: ok what now? Advice requested; no new training authorization inferred.'
+- turn: 6
+  excerpt: "User: yes please \u2014 adopts the proposed bounded 128/32 PushT pilot, not additional long\
+    \ training or new capability interpretations."
 open_threads:
 - Reliable control from our own training on diverse held-out episodes remains unestablished.
-- Review residual BatchNorm and precision sensitivity before adopting any method change.
-- User review before any additional broader learning check or long training; research extensions remain deferred.
+- Final precision/BN differences are small; targeted rollout/action-plan and training-versus-held-out control diagnosis remains proposed, not executed.
+- The approved broader pilot is complete; user review precedes another training run or method change; research extensions remain deferred.
 ai_suggestions_pending:
 - O03, O04, O06 and O07 capability interpretations await researcher review; scopes remain distinct.
-- O08 broader capped learning recommendation and its concrete O09 pilot refinement await adoption; no additional run launched.
+- O10 broader-pilot interpretation and O11 focused diagnostic recommendation await researcher review; no further training launched.

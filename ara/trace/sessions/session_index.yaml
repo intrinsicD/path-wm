@@ -1,8 +1,8 @@
 sessions:
 - id: 2026-09-05_001
   date: '2026-09-05'
-  summary: Released control 45/50; proposed a broader 128/32-episode PushT pilot with a 1,000-update/30-minute training cap; no new run launched.
-  turn_count: 5
-  events_count: 25
+  summary: Approved broader PushT pilot completed 1,000 updates in 25.1 minutes; trained control 0/20 at all checkpoints, released 17/20; focused diagnosis recommended before more training.
+  turn_count: 6
+  events_count: 34
   claims_touched: []
   open_threads: 3

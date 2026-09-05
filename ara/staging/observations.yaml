@@ -119,9 +119,9 @@ observations:
   bound_to:
   - N11
   - N14
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H03
+  crystallized_via: artifact-commitment
   stale: false
 - id: O09
   timestamp: 2026-09-05T16:06+02:00
@@ -141,6 +141,40 @@ observations:
   - N15
   - N11
   - N14
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H04
+  crystallized_via: verbal-affirmation
+  stale: false
+- id: O10
+  timestamp: 2026-09-05T17:23+02:00
+  provenance: ai-suggested
+  content: The broader pilot has modest final held-out predictive/action signal but no successful learned
+    control on 20 fixed goals. Final precision and training-only BN calibration differences are small;
+    they do not identify the cause of the control failure.
+  context: One seed, 128 train/32 held-out initial configurations, 1,000 updates; released weights 17/20
+    on the same goals. No researcher response to these results yet.
+  potential_type: claim
+  bound_to:
+  - N18
+  - N19
+  - N20
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O11
+  timestamp: 2026-09-05T17:23+02:00
+  provenance: ai-suggested
+  content: Before further training, diagnose rollout predictions and action-plan ranking on fixed cases,
+    and compare training-versus-held-out control to distinguish generalization from dynamics/planning
+    failure. Keep the model/objective fixed and research deferred.
+  context: Recommendation after the completed approved pilot; no follow-up control experiment, training
+    or architecture change launched.
+  potential_type: heuristic
+  bound_to:
+  - N18
+  - N19
+  - N20
   promoted: false
   promoted_to: null
   crystallized_via: null

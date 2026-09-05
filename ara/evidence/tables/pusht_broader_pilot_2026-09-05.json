@@ -1,0 +1,1490 @@
+{
+  "training": {
+    "kind": "complete",
+    "step": 1000,
+    "elapsed_seconds": 1506.8872847099992,
+    "total_steps": 1000,
+    "baseline_gate": "pending_closed_loop_evaluation"
+  },
+  "training_code_commit": "0a81029f1ae6dd118d473eaef3901063e4d78b07",
+  "training_code_dirty": false,
+  "source_revision": "655cd446b9929369d7d406001da85c15d1457850",
+  "subset_sha256": "af224b18f0bf54039983618bddf62ec4f8ca446ee549570ab824caa7a31d0ae5",
+  "train_episodes": 128,
+  "heldout_episodes": 32,
+  "train_windows": 13615,
+  "heldout_windows": 3360,
+  "optimizer_examples": 128000,
+  "prediction_windows": 512,
+  "validation": [
+    {
+      "kind": "validation",
+      "step": 0,
+      "elapsed_seconds": 3.0608298949955497,
+      "pred_mse": 0.07751918025314808,
+      "identity_mse": 1.1823208190264722e-06,
+      "zero_action_mse": 0.07751918025314808,
+      "shuffled_action_mse": 0.07751918025314808,
+      "rollout_mse": 0.07661516545340419,
+      "embedding_std": 0.0011932506968150847,
+      "action_effect": 0.0,
+      "examples": 512
+    },
+    {
+      "kind": "validation",
+      "step": 250,
+      "elapsed_seconds": 378.4734181219974,
+      "pred_mse": 9.570509612560272,
+      "identity_mse": 0.3814010191708803,
+      "zero_action_mse": 9.618017196655273,
+      "shuffled_action_mse": 9.571371614933014,
+      "rollout_mse": 10.651162207126617,
+      "embedding_std": 0.9306742288172245,
+      "action_effect": 0.0006865726627438562,
+      "examples": 512
+    },
+    {
+      "kind": "validation",
+      "step": 500,
+      "elapsed_seconds": 755.1266957329935,
+      "pred_mse": 0.9702641777694225,
+      "identity_mse": 0.31235402077436447,
+      "zero_action_mse": 0.9765721261501312,
+      "shuffled_action_mse": 0.9719322510063648,
+      "rollout_mse": 1.2239230573177338,
+      "embedding_std": 0.8535718955099583,
+      "action_effect": 0.005037907481892034,
+      "examples": 512
+    },
+    {
+      "kind": "validation",
+      "step": 750,
+      "elapsed_seconds": 1130.7950141119945,
+      "pred_mse": 0.23589436151087284,
+      "identity_mse": 0.20368010457605124,
+      "zero_action_mse": 0.24262602906674147,
+      "shuffled_action_mse": 0.2472538435831666,
+      "rollout_mse": 0.36979865469038486,
+      "embedding_std": 0.7629216313362122,
+      "action_effect": 0.022332883439958096,
+      "examples": 512
+    },
+    {
+      "kind": "validation",
+      "step": 1000,
+      "elapsed_seconds": 1506.4931357199966,
+      "pred_mse": 0.1876708548516035,
+      "identity_mse": 0.21356654725968838,
+      "zero_action_mse": 0.195897969417274,
+      "shuffled_action_mse": 0.20355314761400223,
+      "rollout_mse": 0.2914355983957648,
+      "embedding_std": 0.7950399145483971,
+      "action_effect": 0.023112475872039795,
+      "examples": 512
+    }
+  ],
+  "predictions": {
+    "250": {
+      "pred_mse": 9.570509612560272,
+      "identity_mse": 0.3814010191708803,
+      "zero_action_mse": 9.618017196655273,
+      "shuffled_action_mse": 9.571371614933014,
+      "rollout_mse": 10.651162207126617,
+      "embedding_std": 0.9306742288172245,
+      "action_effect": 0.0006865726627438562,
+      "examples": 512
+    },
+    "500": {
+      "pred_mse": 0.9702641777694225,
+      "identity_mse": 0.31235402077436447,
+      "zero_action_mse": 0.9765721261501312,
+      "shuffled_action_mse": 0.9719322510063648,
+      "rollout_mse": 1.2239230573177338,
+      "embedding_std": 0.8535718955099583,
+      "action_effect": 0.005037907481892034,
+      "examples": 512
+    },
+    "1000": {
+      "pred_mse": 0.1876708548516035,
+      "identity_mse": 0.21356654725968838,
+      "zero_action_mse": 0.195897969417274,
+      "shuffled_action_mse": 0.20355314761400223,
+      "rollout_mse": 0.2914355983957648,
+      "embedding_std": 0.7950399145483971,
+      "action_effect": 0.023112475872039795,
+      "examples": 512
+    },
+    "released": {
+      "pred_mse": 0.00746466318378225,
+      "identity_mse": 0.2015256443992257,
+      "zero_action_mse": 0.1744500808417797,
+      "shuffled_action_mse": 0.3106125593185425,
+      "rollout_mse": 0.019481739087495953,
+      "embedding_std": 0.9929261542856693,
+      "action_effect": 0.3104542437940836,
+      "examples": 512
+    }
+  },
+  "controls": {
+    "250": {
+      "successes": 0,
+      "cases": 20,
+      "initial_successes": 0,
+      "mean_steps": 50.0,
+      "control_seconds": 95.38765899302962,
+      "checkpoint_unchanged": true
+    },
+    "500": {
+      "successes": 0,
+      "cases": 20,
+      "initial_successes": 0,
+      "mean_steps": 50.0,
+      "control_seconds": 95.34576611498778,
+      "checkpoint_unchanged": true
+    },
+    "1000": {
+      "successes": 0,
+      "cases": 20,
+      "initial_successes": 0,
+      "mean_steps": 50.0,
+      "control_seconds": 94.52219078401686,
+      "checkpoint_unchanged": true
+    },
+    "released": {
+      "successes": 17,
+      "cases": 20,
+      "initial_successes": 0,
+      "mean_steps": 29.45,
+      "control_seconds": 61.989987932000076,
+      "checkpoint_unchanged": true
+    },
+    "stationary": {
+      "successes": 0,
+      "cases": 20
+    },
+    "recorded_replay": {
+      "successes": 19,
+      "cases": 20
+    }
+  },
+  "checkpoint_sha256": {
+    "250": "5d0a3e931d91befc4adadc49aec6a3b1db80fa7135f33c871050d0378012f637",
+    "500": "91dd5e47628cbae38e0ff91071ad57cced739ecb8a3656741ec53ace1c4221dd",
+    "1000": "1988e4646c81376d065c513a8c3ac33bae6dd77cce8a342b4b35f38f78348d96",
+    "released": "48938400ae3464c9680731287f583a9cb516f55a8ec64ea13a91be47fb15b607"
+  },
+  "paired_cases": [
+    {
+      "case": {
+        "episode": 47,
+        "source_episode": 5609,
+        "start": 24,
+        "row": 6028,
+        "source_row": 704521
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 135,
+        "source_episode": 15771,
+        "start": 8,
+        "row": 16977,
+        "source_row": 1974920
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": false,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 15,
+        "source_episode": 1968,
+        "start": 75,
+        "row": 1932,
+        "source_row": 235975
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 118,
+        "source_episode": 13927,
+        "start": 61,
+        "row": 14963,
+        "source_row": 1750158
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 150,
+        "source_episode": 17498,
+        "start": 28,
+        "row": 18945,
+        "source_row": 2198671
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 92,
+        "source_episode": 11096,
+        "start": 8,
+        "row": 11412,
+        "source_row": 1375677
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": false,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 12,
+        "source_episode": 1458,
+        "start": 65,
+        "row": 1610,
+        "source_row": 179449
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": false,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 7,
+        "source_episode": 897,
+        "start": 71,
+        "row": 938,
+        "source_row": 111072
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 46,
+        "source_episode": 5518,
+        "start": 66,
+        "row": 5971,
+        "source_row": 697444
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 67,
+        "source_episode": 8051,
+        "start": 76,
+        "row": 8297,
+        "source_row": 990722
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": false
+      }
+    },
+    {
+      "case": {
+        "episode": 84,
+        "source_episode": 10272,
+        "start": 101,
+        "row": 10415,
+        "source_row": 1263809
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 89,
+        "source_episode": 10759,
+        "start": 55,
+        "row": 11074,
+        "source_row": 1329157
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 151,
+        "source_episode": 17616,
+        "start": 23,
+        "row": 19044,
+        "source_row": 2212702
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 79,
+        "source_episode": 9618,
+        "start": 30,
+        "row": 9689,
+        "source_row": 1178278
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 9,
+        "source_episode": 1120,
+        "start": 35,
+        "row": 1204,
+        "source_row": 138295
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 122,
+        "source_episode": 14293,
+        "start": 33,
+        "row": 15502,
+        "source_row": 1802011
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 109,
+        "source_episode": 12726,
+        "start": 5,
+        "row": 13705,
+        "source_row": 1594694
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 28,
+        "source_episode": 3392,
+        "start": 61,
+        "row": 3529,
+        "source_row": 414972
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 59,
+        "source_episode": 6981,
+        "start": 12,
+        "row": 7370,
+        "source_row": 867549
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    },
+    {
+      "case": {
+        "episode": 55,
+        "source_episode": 6408,
+        "start": 37,
+        "row": 6983,
+        "source_row": 799595
+      },
+      "successes": {
+        "250": false,
+        "500": false,
+        "1000": false,
+        "released": true,
+        "stationary": false,
+        "recorded_replay": true
+      }
+    }
+  ],
+  "audit": "Matched frozen cases, seeds, checkpoint hashes, and repeated float32 predictions; all passed",
+  "conclusion": "Modest final prediction improvement; all trained checkpoints fail all 20 control goals. Learned-control gate remains unmet.",
+  "mode_diagnostic": {
+    "step": 1000,
+    "seed": 3072,
+    "train": {
+      "pred_mse": 0.15523013472557068,
+      "identity_mse": 0.19228456169366837,
+      "zero_action_mse": 0.17535237967967987,
+      "shuffled_action_mse": 0.1788022182881832,
+      "rollout_mse": 0.2674351818859577,
+      "embedding_std": 1.0200535655021667,
+      "action_effect": 0.021261158864945173,
+      "examples": 512,
+      "eval_mode_batch_mse": 0.1446349322795868,
+      "bf16_same_batch_mse": 0.14050139486789703,
+      "batch_statistics_mse": 0.13700270652770996,
+      "train_calibrated_bn": {
+        "pred_mse": 0.1488378681242466,
+        "identity_mse": 0.18491966649889946,
+        "zero_action_mse": 0.16877343505620956,
+        "shuffled_action_mse": 0.17208683490753174,
+        "rollout_mse": 0.2567923963069916,
+        "embedding_std": 1.0022849589586258,
+        "action_effect": 0.02163863740861416,
+        "examples": 512
+      }
+    },
+    "heldout": {
+      "pred_mse": 0.18767084553837776,
+      "identity_mse": 0.21356654912233353,
+      "zero_action_mse": 0.19589797034859657,
+      "shuffled_action_mse": 0.2034572958946228,
+      "rollout_mse": 0.2914355918765068,
+      "embedding_std": 0.7997200042009354,
+      "action_effect": 0.02310810796916485,
+      "examples": 512,
+      "eval_mode_batch_mse": 0.18046845495700836,
+      "bf16_same_batch_mse": 0.17522002756595612,
+      "batch_statistics_mse": 0.2539544701576233,
+      "train_calibrated_bn": {
+        "pred_mse": 0.1805594377219677,
+        "identity_mse": 0.2050684168934822,
+        "zero_action_mse": 0.18844763189554214,
+        "shuffled_action_mse": 0.1958680860698223,
+        "rollout_mse": 0.28117363154888153,
+        "embedding_std": 0.7851437926292419,
+        "action_effect": 0.022788217291235924,
+        "examples": 512
+      }
+    },
+    "bn_calibration_scope": "Discarded diagnostic clone; at most 512 training windows; no weight update or checkpoint change"
+  },
+  "mode_diagnostic_integrity": {
+    "checkpoint_sha256": "1988e4646c81376d065c513a8c3ac33bae6dd77cce8a342b4b35f38f78348d96",
+    "checkpoint_unchanged": true,
+    "scope": "Existing prediction-only mode probe; discarded clones; no optimizer updates or control rescoring"
+  },
+  "next_recommendation": "Focused rollout and action-plan ranking diagnosis, plus training-vs-held-out control, before additional training; not launched.",
+  "status": "complete",
+  "baseline_gate": "failed_closed_loop_evaluation",
+  "prediction_gate": "Final checkpoint beats copy and shuffled controls on the fixed held-out sample",
+  "split_receipt": {
+    "seed": 3072,
+    "source": {
+      "name": "pusht",
+      "kind": "action_trajectory",
+      "path": "data/pusht/pusht_expert_train.h5",
+      "repo": "quentinll/lewm-pusht",
+      "revision": "655cd446b9929369d7d406001da85c15d1457850",
+      "archive": "pusht_expert_train.h5.zst",
+      "sha256": "7cfbd6d90fa2f27876379a5ff169715a36ed82edbda64f9e5b5bfa34d212f318",
+      "action_dim": 2,
+      "action_semantics": "relative end-effector displacement; simulator scale 100",
+      "frameskip": 5,
+      "history": 3
+    },
+    "source_episode_ids": [
+      66,
+      152,
+      271,
+      401,
+      585,
+      661,
+      762,
+      897,
+      1028,
+      1120,
+      1246,
+      1392,
+      1458,
+      1611,
+      1904,
+      1968,
+      2069,
+      2135,
+      2300,
+      2348,
+      2438,
+      2551,
+      2642,
+      2800,
+      2894,
+      2947,
+      3056,
+      3282,
+      3392,
+      3450,
+      3540,
+      3697,
+      3758,
+      3923,
+      4030,
+      4156,
+      4357,
+      4515,
+      4631,
+      4649,
+      4912,
+      4965,
+      5107,
+      5153,
+      5269,
+      5388,
+      5518,
+      5609,
+      5671,
+      5848,
+      5937,
+      6049,
+      6152,
+      6169,
+      6323,
+      6408,
+      6579,
+      6749,
+      6936,
+      6981,
+      7101,
+      7179,
+      7343,
+      7413,
+      7640,
+      7768,
+      7860,
+      8051,
+      8298,
+      8560,
+      8621,
+      8825,
+      8986,
+      8999,
+      9115,
+      9280,
+      9345,
+      9492,
+      9502,
+      9618,
+      9885,
+      9993,
+      10024,
+      10132,
+      10272,
+      10350,
+      10432,
+      10532,
+      10698,
+      10759,
+      10906,
+      10999,
+      11096,
+      11185,
+      11227,
+      11398,
+      11417,
+      11518,
+      11682,
+      11755,
+      11917,
+      11956,
+      12025,
+      12217,
+      12279,
+      12365,
+      12505,
+      12545,
+      12692,
+      12726,
+      12887,
+      13011,
+      13088,
+      13161,
+      13252,
+      13341,
+      13674,
+      13830,
+      13927,
+      13999,
+      14113,
+      14217,
+      14293,
+      14465,
+      14554,
+      14685,
+      14797,
+      14918,
+      15008,
+      15185,
+      15337,
+      15414,
+      15545,
+      15590,
+      15727,
+      15771,
+      15905,
+      16002,
+      16136,
+      16229,
+      16265,
+      16396,
+      16546,
+      16663,
+      16666,
+      16892,
+      17039,
+      17140,
+      17216,
+      17390,
+      17498,
+      17616,
+      17723,
+      17930,
+      18074,
+      18094,
+      18307,
+      18386,
+      18528,
+      18684
+    ],
+    "group_ids": [
+      177,
+      105,
+      134,
+      131,
+      173,
+      140,
+      112,
+      37,
+      77,
+      132,
+      5,
+      68,
+      164,
+      139,
+      75,
+      106,
+      18,
+      53,
+      145,
+      31,
+      111,
+      9,
+      87,
+      179,
+      88,
+      136,
+      60,
+      155,
+      25,
+      69,
+      20,
+      124,
+      28,
+      78,
+      153,
+      143,
+      151,
+      2,
+      40,
+      23,
+      116,
+      137,
+      118,
+      49,
+      32,
+      128,
+      180,
+      114,
+      138,
+      51,
+      123,
+      44,
+      107,
+      74,
+      58,
+      85,
+      4,
+      83,
+      84,
+      90,
+      135,
+      157,
+      24,
+      91,
+      62,
+      3,
+      163,
+      1,
+      64,
+      13,
+      176,
+      120,
+      45,
+      89,
+      8,
+      14,
+      129,
+      144,
+      41,
+      162,
+      125,
+      117,
+      76,
+      110,
+      174,
+      55,
+      33,
+      17,
+      38,
+      158,
+      168,
+      48,
+      66,
+      42,
+      11,
+      50,
+      72,
+      166,
+      6,
+      102,
+      7,
+      71,
+      109,
+      56,
+      54,
+      43,
+      95,
+      47,
+      142,
+      99,
+      150,
+      63,
+      10,
+      59,
+      178,
+      152,
+      15,
+      73,
+      148,
+      86,
+      103,
+      175,
+      0,
+      156,
+      126,
+      36,
+      108,
+      79,
+      94,
+      100,
+      35,
+      160,
+      21,
+      171,
+      172,
+      127,
+      16,
+      141,
+      22,
+      119,
+      165,
+      80,
+      122,
+      12,
+      81,
+      39,
+      82,
+      170,
+      52,
+      113,
+      149,
+      27,
+      133,
+      67,
+      70,
+      93,
+      34,
+      92,
+      159,
+      104
+    ],
+    "train_episodes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      10,
+      11,
+      13,
+      14,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      27,
+      29,
+      30,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      48,
+      50,
+      51,
+      52,
+      53,
+      54,
+      56,
+      57,
+      58,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65,
+      66,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      80,
+      81,
+      82,
+      83,
+      86,
+      87,
+      88,
+      90,
+      91,
+      93,
+      94,
+      95,
+      96,
+      97,
+      98,
+      99,
+      101,
+      102,
+      103,
+      104,
+      106,
+      107,
+      108,
+      110,
+      111,
+      112,
+      113,
+      114,
+      115,
+      116,
+      117,
+      119,
+      120,
+      121,
+      123,
+      125,
+      126,
+      127,
+      128,
+      129,
+      130,
+      131,
+      132,
+      133,
+      134,
+      136,
+      138,
+      139,
+      141,
+      142,
+      143,
+      144,
+      145,
+      146,
+      148,
+      149,
+      152,
+      153,
+      154,
+      155,
+      156,
+      157,
+      158,
+      159
+    ],
+    "val_episodes": [
+      0,
+      7,
+      9,
+      12,
+      15,
+      25,
+      26,
+      28,
+      31,
+      46,
+      47,
+      49,
+      55,
+      59,
+      67,
+      79,
+      84,
+      85,
+      89,
+      92,
+      100,
+      105,
+      109,
+      118,
+      122,
+      124,
+      135,
+      137,
+      140,
+      147,
+      150,
+      151
+    ],
+    "audit": {
+      "exact_initial_configurations": 185,
+      "near_configuration_groups": 185,
+      "position_tolerance_pixels": 5.0,
+      "angle_tolerance_radians": 0.05,
+      "minimum_distinct_configuration_scaled_distance": 7.613369941711426
+    },
+    "selection": "160 random initial-state groups, one random episode per group; first 128 groups train",
+    "source_episode_count": 18685,
+    "source_frames": 2336736,
+    "frames": 20015,
+    "cases": [
+      {
+        "episode": 47,
+        "source_episode": 5609,
+        "start": 24,
+        "row": 6028,
+        "source_row": 704521
+      },
+      {
+        "episode": 135,
+        "source_episode": 15771,
+        "start": 8,
+        "row": 16977,
+        "source_row": 1974920
+      },
+      {
+        "episode": 15,
+        "source_episode": 1968,
+        "start": 75,
+        "row": 1932,
+        "source_row": 235975
+      },
+      {
+        "episode": 118,
+        "source_episode": 13927,
+        "start": 61,
+        "row": 14963,
+        "source_row": 1750158
+      },
+      {
+        "episode": 150,
+        "source_episode": 17498,
+        "start": 28,
+        "row": 18945,
+        "source_row": 2198671
+      },
+      {
+        "episode": 92,
+        "source_episode": 11096,
+        "start": 8,
+        "row": 11412,
+        "source_row": 1375677
+      },
+      {
+        "episode": 12,
+        "source_episode": 1458,
+        "start": 65,
+        "row": 1610,
+        "source_row": 179449
+      },
+      {
+        "episode": 7,
+        "source_episode": 897,
+        "start": 71,
+        "row": 938,
+        "source_row": 111072
+      },
+      {
+        "episode": 46,
+        "source_episode": 5518,
+        "start": 66,
+        "row": 5971,
+        "source_row": 697444
+      },
+      {
+        "episode": 67,
+        "source_episode": 8051,
+        "start": 76,
+        "row": 8297,
+        "source_row": 990722
+      },
+      {
+        "episode": 84,
+        "source_episode": 10272,
+        "start": 101,
+        "row": 10415,
+        "source_row": 1263809
+      },
+      {
+        "episode": 89,
+        "source_episode": 10759,
+        "start": 55,
+        "row": 11074,
+        "source_row": 1329157
+      },
+      {
+        "episode": 151,
+        "source_episode": 17616,
+        "start": 23,
+        "row": 19044,
+        "source_row": 2212702
+      },
+      {
+        "episode": 79,
+        "source_episode": 9618,
+        "start": 30,
+        "row": 9689,
+        "source_row": 1178278
+      },
+      {
+        "episode": 9,
+        "source_episode": 1120,
+        "start": 35,
+        "row": 1204,
+        "source_row": 138295
+      },
+      {
+        "episode": 122,
+        "source_episode": 14293,
+        "start": 33,
+        "row": 15502,
+        "source_row": 1802011
+      },
+      {
+        "episode": 109,
+        "source_episode": 12726,
+        "start": 5,
+        "row": 13705,
+        "source_row": 1594694
+      },
+      {
+        "episode": 28,
+        "source_episode": 3392,
+        "start": 61,
+        "row": 3529,
+        "source_row": 414972
+      },
+      {
+        "episode": 59,
+        "source_episode": 6981,
+        "start": 12,
+        "row": 7370,
+        "source_row": 867549
+      },
+      {
+        "episode": 55,
+        "source_episode": 6408,
+        "start": 37,
+        "row": 6983,
+        "source_row": 799595
+      }
+    ],
+    "sampling_seed": 42,
+    "goal_offset": 25,
+    "solver_and_reset_seeds": [
+      1234,
+      1235,
+      1236,
+      1237,
+      1238,
+      1239,
+      1240,
+      1241,
+      1242,
+      1243,
+      1244,
+      1245,
+      1246,
+      1247,
+      1248,
+      1249,
+      1250,
+      1251,
+      1252,
+      1253
+    ],
+    "limitation": "Initial-configuration grouping does not prove independence of later shared trajectory segments."
+  },
+  "source_verification": {
+    "sha256": "af224b18f0bf54039983618bddf62ec4f8ca446ee549570ab824caa7a31d0ae5",
+    "bytes": 3014189180,
+    "verified_all_selected_pixels_actions_states": true,
+    "episodes": 160,
+    "frames": 20015
+  },
+  "replay_failure": {
+    "results": [
+      {
+        "case": {
+          "episode": 67,
+          "source_episode": 8051,
+          "start": 76,
+          "row": 8297,
+          "source_row": 990722,
+          "kind": "recorded_replay",
+          "success": false,
+          "initial_success": false,
+          "steps": 25
+        },
+        "trajectory": [
+          {
+            "step": 1,
+            "success": false,
+            "goal_position_distance": 139.2039085765572,
+            "goal_angle_distance": 0.39162278175354004,
+            "source_position_distance": 1.9679962162618136,
+            "source_angle_distance": 0.0
+          },
+          {
+            "step": 2,
+            "success": false,
+            "goal_position_distance": 130.74761015129258,
+            "goal_angle_distance": 0.39162278175354004,
+            "source_position_distance": 1.9679858505253915,
+            "source_angle_distance": 0.0
+          },
+          {
+            "step": 3,
+            "success": false,
+            "goal_position_distance": 122.69802059715144,
+            "goal_angle_distance": 0.39162278175354004,
+            "source_position_distance": 1.9679929681116273,
+            "source_angle_distance": 0.0
+          },
+          {
+            "step": 4,
+            "success": false,
+            "goal_position_distance": 116.3300636152775,
+            "goal_angle_distance": 0.39162278175354004,
+            "source_position_distance": 1.9679929298848218,
+            "source_angle_distance": 0.0
+          },
+          {
+            "step": 5,
+            "success": false,
+            "goal_position_distance": 110.7819070475189,
+            "goal_angle_distance": 0.39162278175354004,
+            "source_position_distance": 1.9679968521702764,
+            "source_angle_distance": 0.0
+          },
+          {
+            "step": 6,
+            "success": false,
+            "goal_position_distance": 104.34548459758989,
+            "goal_angle_distance": 0.39162278175354004,
+            "source_position_distance": 1.9679939923284266,
+            "source_angle_distance": 0.0
+          },
+          {
+            "step": 7,
+            "success": false,
+            "goal_position_distance": 97.0360043255936,
+            "goal_angle_distance": 0.3780122119701099,
+            "source_position_distance": 1.9750334780627696,
+            "source_angle_distance": 0.0020819586002636115
+          },
+          {
+            "step": 8,
+            "success": false,
+            "goal_position_distance": 85.52000531562885,
+            "goal_angle_distance": 0.3173796387965848,
+            "source_position_distance": 2.481577115873341,
+            "source_angle_distance": 0.026199534291488913
+          },
+          {
+            "step": 9,
+            "success": false,
+            "goal_position_distance": 77.46664592192157,
+            "goal_angle_distance": 0.26826062791614724,
+            "source_position_distance": 3.4801508511257784,
+            "source_angle_distance": 0.051612228223989476
+          },
+          {
+            "step": 10,
+            "success": false,
+            "goal_position_distance": 72.36947776826386,
+            "goal_angle_distance": 0.23359105269553115,
+            "source_position_distance": 4.494134307061498,
+            "source_angle_distance": 0.07194462139962265
+          },
+          {
+            "step": 11,
+            "success": false,
+            "goal_position_distance": 67.13093170378961,
+            "goal_angle_distance": 0.20414099683818687,
+            "source_position_distance": 5.1484219516500875,
+            "source_angle_distance": 0.0823300124162687
+          },
+          {
+            "step": 12,
+            "success": false,
+            "goal_position_distance": 61.90634499658413,
+            "goal_angle_distance": 0.17352899141051203,
+            "source_position_distance": 5.6942116977514345,
+            "source_angle_distance": 0.0911012070681867
+          },
+          {
+            "step": 13,
+            "success": false,
+            "goal_position_distance": 57.321346712197915,
+            "goal_angle_distance": 0.1455994678499657,
+            "source_position_distance": 6.235413731679562,
+            "source_angle_distance": 0.09970916976905286
+          },
+          {
+            "step": 14,
+            "success": false,
+            "goal_position_distance": 52.330145919584915,
+            "goal_angle_distance": 0.11447917091515514,
+            "source_position_distance": 6.813475603316588,
+            "source_angle_distance": 0.10887123477789906
+          },
+          {
+            "step": 15,
+            "success": false,
+            "goal_position_distance": 46.47918087497788,
+            "goal_angle_distance": 0.07943465661120452,
+            "source_position_distance": 7.151988373756554,
+            "source_angle_distance": 0.11193082381176911
+          },
+          {
+            "step": 16,
+            "success": false,
+            "goal_position_distance": 42.03076440034796,
+            "goal_angle_distance": 0.052384462559357026,
+            "source_position_distance": 8.364688444232367,
+            "source_angle_distance": 0.11013499239669766
+          },
+          {
+            "step": 17,
+            "success": false,
+            "goal_position_distance": 39.90041652278116,
+            "goal_angle_distance": 0.045207563877681434,
+            "source_position_distance": 10.003743308891309,
+            "source_angle_distance": 0.10023337221088058
+          },
+          {
+            "step": 18,
+            "success": false,
+            "goal_position_distance": 38.20470349771636,
+            "goal_angle_distance": 0.0417389056944959,
+            "source_position_distance": 12.390903274244874,
+            "source_angle_distance": 0.08819504759072139
+          },
+          {
+            "step": 19,
+            "success": false,
+            "goal_position_distance": 35.75569564211314,
+            "goal_angle_distance": 0.032670644743677535,
+            "source_position_distance": 16.34154946385262,
+            "source_angle_distance": 0.07615789987302168
+          },
+          {
+            "step": 20,
+            "success": false,
+            "goal_position_distance": 34.29482565898417,
+            "goal_angle_distance": 0.02445249015330475,
+            "source_position_distance": 19.111548206527306,
+            "source_angle_distance": 0.06809981411457855
+          },
+          {
+            "step": 21,
+            "success": false,
+            "goal_position_distance": 33.505357582423954,
+            "goal_angle_distance": 0.0204460071346948,
+            "source_position_distance": 21.04217067757014,
+            "source_angle_distance": 0.05971008074067141
+          },
+          {
+            "step": 22,
+            "success": false,
+            "goal_position_distance": 32.70367362754072,
+            "goal_angle_distance": 0.01662498125766998,
+            "source_position_distance": 23.407387119387554,
+            "source_angle_distance": 0.04637879719997162
+          },
+          {
+            "step": 23,
+            "success": false,
+            "goal_position_distance": 32.31486600492027,
+            "goal_angle_distance": 0.014096653874115184,
+            "source_position_distance": 24.786499901462278,
+            "source_angle_distance": 0.03756447989205913
+          },
+          {
+            "step": 24,
+            "success": false,
+            "goal_position_distance": 31.184730691929715,
+            "goal_angle_distance": 0.00455067536739584,
+            "source_position_distance": 25.9535977809429,
+            "source_angle_distance": 0.04276154420284506
+          },
+          {
+            "step": 25,
+            "success": false,
+            "goal_position_distance": 30.211678149461303,
+            "goal_angle_distance": 0.02246925320059745,
+            "source_position_distance": 30.211678149461303,
+            "source_angle_distance": 0.02246925320059745
+          }
+        ]
+      }
+    ],
+    "protocol": "Repeat the unchanged 25-action replay only; no case filtering or altered controller"
+  },
+  "report_commit": "e98320b"
+}

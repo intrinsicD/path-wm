@@ -217,3 +217,93 @@ tree:
   - N11
   - N14
   status: resolved
+- id: N16
+  type: decision
+  title: Execute the broader bounded PushT pilot
+  provenance: user
+  timestamp: 2026-09-05T17:23+02:00
+  choice: Approve the proposed 128/32-episode pilot, batch 128, at most 1,000 updates or 30 minutes training,
+    fixed float32 prediction and 20 paired control goals; no additional long training or research.
+  alternatives:
+  - Start long training
+  - Change model/objective
+  evidence:
+  - 'User: yes please'
+  - O09
+  - O08
+  - ../docs/pusht-broader-pilot.md
+  status: resolved
+- id: N17
+  type: experiment
+  title: Audit source configurations and freeze a disjoint 128/32 pilot
+  provenance: ai-executed
+  timestamp: 2026-09-05T17:23+02:00
+  result: "18,685 source episodes have 185 exact initial configurations; near grouping at 5 pixels per\
+    \ agent/block and 0.05 circular radians also gives 185. Randomly select 160 groups and one trajectory\
+    \ each: 128 train/32 held out, 20,015 frames, source IDs 66\u201318,684. Every extracted pixel/action/state/proprio/step-index\
+    \ block matches source. Thirteen CPU tests pass, including family leakage and checkpoint/resume budget\
+    \ tests."
+  evidence:
+  - evidence/tables/pusht_broader_pilot_2026-09-05.json
+  - ../data/pusht/pilot_128_32/split.json
+  - ../data/pusht/pilot_128_32/verification.json
+  - ../scripts/prepare_pusht_pilot.py
+  - ../tests/test_pilot.py
+  also_depends_on:
+  - N16
+  - N12
+  status: resolved
+- id: N18
+  type: experiment
+  title: Complete unchanged LeWM pilot under both approved caps
+  provenance: ai-executed
+  timestamp: 2026-09-05T17:23+02:00
+  result: 'Random seed 3072, batch 128, 1,000 updates in 1,506.89 seconds including validation. Clean
+    code 0a81029. On 512 fixed held-out windows, final float32 MSE 0.187671 versus copy 0.213567 and shuffle
+    0.203553; rollout 0.291436, embedding std 0.795040. Prediction/copy at 250: 9.570510/0.381401; 500:
+    0.970264/0.312354; 750: 0.235894/0.203680. Snapshots 0/250/500/1000 preserved.'
+  evidence:
+  - evidence/tables/pusht_broader_pilot_2026-09-05.json
+  - ../configs/diagnostics/pusht_broader_pilot.yaml
+  - ../runs/diagnostics/pusht_broader_pilot/manifest.json
+  - ../runs/diagnostics/pusht_broader_pilot/metrics.jsonl
+  also_depends_on:
+  - N17
+  status: resolved
+- id: N19
+  type: experiment
+  title: All trained pilot checkpoints fail shared held-out control goals
+  provenance: ai-executed
+  timestamp: 2026-09-05T17:23+02:00
+  result: 'Same 20 distinct held-out source episodes and reset/CEM seeds: 250/500/1000 updates each 0/20;
+    released weights 17/20; replay 19/20; stationary 0/20; no initial successes. Budget 50, replay 25
+    source actions, CEM 300/30/30, goal offset 25. Replay failure source episode 8051/start 76 repeats
+    with position distance 30.21 pixels and angle 0.02247 rad; retained. All checkpoint hashes unchanged;
+    repeated float32 prediction metrics match in-run values within 1e-6.'
+  evidence:
+  - evidence/tables/pusht_broader_pilot_2026-09-05.json
+  - ../runs/diagnostics/pusht_broader_pilot/pilot_summary.json
+  - ../scripts/evaluate_pusht_pilot.py
+  - ../docs/pusht-broader-pilot.md
+  also_depends_on:
+  - N18
+  - N07
+  status: resolved
+- id: N20
+  type: experiment
+  title: Probe final checkpoint precision and BatchNorm without modifying it
+  provenance: ai-executed
+  timestamp: 2026-09-05T17:23+02:00
+  result: 'Final untouched float32 MSE train 0.155230/held out 0.187671 on 512 windows each. First 128
+    held-out windows: float32 0.180468, bf16 0.175220, current-batch BN probe 0.253954. Separate discarded
+    clone calibrated on 512 training windows gives held-out MSE 0.180559, 3.8% lower. No optimizer update,
+    buffer adoption or control rescoring; original checkpoint hash unchanged.'
+  evidence:
+  - evidence/tables/pusht_broader_pilot_2026-09-05.json
+  - ../runs/diagnostics/pusht_broader_pilot/diagnostics.json
+  - ../runs/diagnostics/pusht_broader_pilot/diagnostic_integrity.json
+  - ../scripts/check_training_modes.py
+  also_depends_on:
+  - N18
+  - N19
+  status: resolved
