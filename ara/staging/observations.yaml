@@ -548,3 +548,38 @@ observations:
     promoted_to: null
     crystallized_via: null
     stale: false
+  - id: O33
+    timestamp: 2026-09-05T12:07+02:00
+    provenance: ai-suggested
+    content: 'At committed runtime c286d6a, common-base R0/R1 optimize sensory encoders/adapters and temporary
+      heads, not belief/action/world-predictor modules. The candidate is not a faithful LeWM reproduction:
+      upstream 8edfeb3 uses joint target gradients and prediction plus SIGReg, whereas the candidate uses
+      EMA and multiple objectives. EMA and representation-first are not universal requirements across LeWM,
+      V-JEPA 2, DINO-WM and Dreamer.'
+    context: Primary-paper and pinned author-source audit; native local module instantiation; findings committed
+      as DDR41 and used by N66. No new model training.
+    potential_type: claim
+    bound_to:
+    - N66
+    promoted: true
+    promoted_to: logic/claims.md:C18
+    crystallized_via: artifact-commitment
+    stale: false
+  - id: O34
+    timestamp: 2026-09-05T12:07+02:00
+    provenance: ai-suggested
+    content: A faithful LeWM/PushT reproduction followed by behavior-preserving integration may resolve
+      baseline uncertainty more directly than continued custom audiovisual frontend optimization. It is
+      a proposed research allocation, not an established learning improvement; runtime compatibility, original-batch
+      feasibility and reference parity remain untested.
+    context: User requested baseline-before-modification; exact model/modality choice and proposed -5 percentage-point
+      paired parity tolerance were not endorsed.
+    potential_type: heuristic
+    bound_to:
+    - N65
+    - N66
+    - N67
+    promoted: false
+    promoted_to: null
+    crystallized_via: null
+    stale: false

@@ -1176,3 +1176,57 @@ tree:
     - ara/evidence/tables/e1_common_base_controlled_2026-09-05.md
     status: open
     children: []
+  - id: N65
+    type: decision
+    title: Establish expected baseline learning before method modification
+    provenance: user
+    timestamp: 2026-09-05T12:07+02:00
+    also_depends_on:
+    - N64
+    choice: Compare the current implementation to literature and start from a common world-model base; establish
+      that it learns at least as expected before modifying it.
+    alternatives:
+    - Continue custom frontend optimization without a reproduced reference
+    evidence:
+    - User request in session turn 5
+    status: resolved
+    children: []
+  - id: N66
+    type: decision
+    title: Prepare an independent LeWM reproduction and correct the common-recipe synthesis
+    provenance: ai-suggested
+    timestamp: 2026-09-05T12:07+02:00
+    also_depends_on:
+    - N65
+    - N63
+    choice: Make a pinned LeWM/PushT reference the proposed next development control, with native state/history
+      and author objectives. Resolve paper/default differences and validate the released checkpoint before
+      retraining. Preserve all prior gates and defer failed-source B0.
+    alternatives:
+    - Treat the custom EMA audiovisual candidate as a published baseline
+    - Add more objectives before reproducing a reference
+    - Treat rank or synchrony as planning competence
+    evidence:
+    - O33
+    - docs/common-base-reference-plan.md
+    - docs/evidence/common-base-reference-audit-2026-09-05.json
+    - commit:c286d6a
+    status: resolved
+    children: []
+  - id: N67
+    type: question
+    title: Can the author baseline be reproduced and then preserved through our wrapper?
+    provenance: ai-suggested
+    timestamp: 2026-09-05T12:07+02:00
+    also_depends_on:
+    - N66
+    description: Pin compatible runtime/data/evaluation, profile original batch semantics on the 8-GiB GPU,
+      validate the released checkpoint, and then test training, action controls, open-loop rollouts and
+      control parity. Modality ordering and the proposed noninferiority margin remain AI choices, not user
+      endorsements.
+    evidence:
+    - docs/common-base-reference-plan.md
+    - docs/evidence/common-base-reference-audit-2026-09-05.json
+    - commit:c286d6a
+    status: open
+    children: []

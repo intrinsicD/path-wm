@@ -186,3 +186,14 @@
 - **Dependencies**: [C13, C14]
 - **Tags**: E1-common-base, development, physical-source, frozen-readout, diagnostic-controls
 - **From staging**: O31
+
+## C18: The common-base representation runs are not a published dynamics reproduction
+- **Statement**: In the audited c286d6a runtime, R0/R1 train only encoders, evidence adapters and disposable heads; the common action adapter, updater and world predictor are frozen and unused by their loss. The pinned LeWM source 8edfeb3 instead jointly trains encoded targets and action-conditioned dynamics with prediction MSE plus SIGReg. The common candidate's EMA/multiple-loss recipe therefore is not a faithful LeWM reproduction, and its representation outcomes do not establish a learned common dynamics core.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Falsification criteria**: The same committed training path demonstrably updates the common action-conditioned predictor or belief state, or the pinned author training function uses the same target-gradient/objective recipe as our candidate.
+- **Proof**: [docs/evidence/common-base-reference-audit-2026-09-05.json, docs/common-base-reference-plan.md, training/representation.py, training/curriculum.py, training/common_base.py, commit:c286d6a, https://github.com/lucas-maes/le-wm/blob/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/train.py]
+- **Dependencies**: []
+- **Tags**: E1-common-base, literature-audit, reproduction, scope, target-gradients
+- **From staging**: O33

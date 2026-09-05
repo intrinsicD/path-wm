@@ -26,11 +26,10 @@ sessions:
     open_threads: 5
   - id: 2026-09-05_001
     date: '2026-09-05'
-    summary: Completed TAU and controlled-source audits; controlled R0 passes 0/2. User opened
-      method-versus-direction reassessment; predictive-value test proposal staged, with no new
-      experiment or accepted pivot.
-    turn_count: 4
-    events_count: 55
+    summary: Completed literature/source audit; user prioritizes baseline learning before modification. Independent
+      LeWM reproduction proposed; custom common dynamics remains untrained, historical gates preserved.
+    turn_count: 5
+    events_count: 61
     claims_touched:
     - C09
     - C10
@@ -41,4 +40,5 @@ sessions:
     - C15
     - C16
     - C17
-    open_threads: 7
+    - C18
+    open_threads: 8

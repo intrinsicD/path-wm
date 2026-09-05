@@ -93,3 +93,19 @@ entries:
       stale threshold.
     - No new experiment, model/config change, gate relaxation, or accepted pivot. The question does not
       establish excellence or refute the overall approach.
+  - turn: 2026-09-05_001#5
+    notes:
+    - This is the next research-significant turn; the intervening dataset-status verification was skipped
+      as a restatement/read-only check.
+    - Recorded user baseline-before-modification direction as N65. N66 is an AI implementation-priority
+      decision and N67 remains empirically open; did not assign user provenance to LeWM choice or parity
+      margin.
+    - Staged O33/O34, then crystallized only the source-bound implementation distinction O33 to C18 via
+      committed DDR41/N66. O34 predicts allocation value and is untested. O32 is revisited but not verbatim
+      endorsed; retain its staged status.
+    - Corrected the documentation universal-recipe synthesis. Existing typed claims describe bounded earlier
+      experiments and are not contradicted; no earlier outcome, gate or observation overwritten. O24/O30
+      remain deferred open topics, not refuted; no observation newly meets stale/abandonment criteria.
+    - No new trained reference, successful benchmark result, dependency install or hardware feasibility
+      claim. Preserved paper-versus-code mismatches, protocol-bound 96.0 +/- 2.83 reporting, and conditional
+      future integration.

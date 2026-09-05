@@ -2,11 +2,10 @@ session:
   id: 2026-09-05_001
   date: '2026-09-05'
   started: 2026-09-05T01:12+02:00
-  last_turn: 2026-09-05T11:37+02:00
-  turn_count: 4
-  summary: Completed TAU and controlled-source audits; controlled R0 passes 0/2. User opened
-    method-versus-direction reassessment; predictive-value test proposal staged, with no new
-    experiment or accepted pivot.
+  last_turn: 2026-09-05T12:07+02:00
+  turn_count: 5
+  summary: Completed literature/source audit; user prioritizes baseline learning before modification. Independent
+    LeWM reproduction proposed; custom common dynamics remains untrained, historical gates preserved.
 events_logged:
   - turn: 1
     type: decision
@@ -369,6 +368,49 @@ events_logged:
     routing: staged
     provenance: ai-suggested
     summary: Proposed a bounded training-added predictive-value test; no pivot or new claim accepted.
+  - turn: 5
+    type: decision
+    id: N65
+    routing: direct
+    provenance: user
+    summary: Establish expected baseline learning before method modification
+  - turn: 5
+    type: decision
+    id: N66
+    routing: direct
+    provenance: ai-suggested
+    summary: Prepare an independent LeWM reproduction and correct the common-recipe synthesis
+  - turn: 5
+    type: question
+    id: N67
+    routing: direct
+    provenance: ai-suggested
+    summary: Can the author baseline be reproduced and then preserved through our wrapper?
+  - turn: 5
+    type: observation
+    id: O33
+    routing: staged
+    provenance: ai-suggested
+    summary: 'At committed runtime c286d6a, common-base R0/R1 optimize sensory encoders/adapters and temporary
+      heads, not belief/action/world-predictor modules. The candidate is not a faithful LeWM reproduction:
+      upstream 8edfeb3 uses joint target gradients and prediction plus SIGReg, whereas the candidate uses
+      EMA and multiple objectives. EMA and representation-first are not universal requirements across LeWM,
+      V-JEPA 2, DINO-WM and Dreamer.'
+  - turn: 5
+    type: observation
+    id: O34
+    routing: staged
+    provenance: ai-suggested
+    summary: A faithful LeWM/PushT reproduction followed by behavior-preserving integration may resolve
+      baseline uncertainty more directly than continued custom audiovisual frontend optimization. It is
+      a proposed research allocation, not an established learning improvement; runtime compatibility, original-batch
+      feasibility and reference parity remain untested.
+  - turn: 5
+    type: claim
+    id: O33
+    routing: crystallized
+    provenance: ai-suggested
+    summary: C18 via committed DDR41/N66; no learned-model result inferred.
 
 ai_actions:
   - turn: 1
@@ -450,6 +492,20 @@ ai_actions:
       coordinate/future controls to calibrate the strategic assessment. No experiments or model changes.
     provenance: ai-executed
     files_changed: []
+  - turn: 5
+    action: Read primary world-model/audiovisual papers and pinned LeWM sources; verified 21 source hashes,
+      checkpoint architecture metadata, code/default discrepancies and local parameter trainability. Committed
+      reference plan and corrected the common-base synthesis. No training, evaluator run, dependency installation
+      or checkpoint-weight download.
+    provenance: ai-executed
+    files_changed:
+    - docs/common-base-reference-plan.md
+    - docs/evidence/common-base-reference-audit-2026-09-05.json
+    - docs/common-base-architecture.md
+    - docs/common-base-next-experiment.md
+    - docs/design-decisions.md
+    - CLAUDE.md
+    - commit:c286d6a
 
 claims_touched:
   - id: C09
@@ -479,6 +535,9 @@ claims_touched:
   - id: C17
     action: crystallized
     turn: 3
+  - id: C18
+    action: crystallized
+    turn: 5
 
 key_context:
   - turn: 1
@@ -510,6 +569,13 @@ key_context:
     excerpt: 'Assessment: method remains unproven; some proxy-focused effort needs correction. Frozen label-fitted
       readout gains do not establish learned dynamics, encoder replacement, or planning. This is an interpretation
       and proposal, not a user-approved pivot.'
+  - turn: 5
+    excerpt: 'User: start from the common worldmodel base architecture, make sure it learns at least as
+      good as expected, then modify it.'
+  - turn: 5
+    excerpt: Optional audio-first versus video/action-first question unanswered; LeWM/PushT and parity tolerance
+      remain AI proposals. First milestone is author checkpoint/evaluator calibration, then faithful training.
+      Paper numbers are protocol-bound and not directly comparable with TAU or synthetic R2.
 
 open_threads:
 - 'N51/N63: controlled source validated but R0 prerequisite fails; calibrate physical/temporal diagnostics
@@ -525,6 +591,8 @@ open_threads:
   current overnight sources are present.
 - 'N64: distinguish added predictive/transfer value from readout accessibility; decide whether and how
   to tighten the next experiment without retroactively changing original gates.'
+- 'N67 is the immediate priority: pin author runtime/data/protocol and validate released checkpoint before
+  faithful training and wrapper changes. N51/N63 remain conditional frontend extensions.'
 
 ai_suggestions_pending:
 - 'O23: context controls suggest substantial shared context but do not identify the unique cause of weak
@@ -535,3 +603,5 @@ ai_suggestions_pending:
   not establish a production/R1 gain.'
 - 'O32: use fixed-readout trained/untrained/simple controls and untouched trajectories with predeclared
   criteria to resolve strategic uncertainty.'
+- 'O34: LeWM/PushT and video/action-first sequencing may be the most decisive starting point; no empirical
+  reproduction or user endorsement of exact recipe/tolerance yet.'
