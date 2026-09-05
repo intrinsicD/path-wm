@@ -119,3 +119,22 @@ def test_packaging_failure_keeps_last_html(tmp_path, monkeypatch):
     with pytest.raises(dashboard.DashboardBuildError):
         dashboard.write_experiment_dashboard(html.parent, builder_path=tmp_path / "builder.mjs")
     assert html.read_text() == "previous verified dashboard"
+
+
+def test_ranking_ledger_requires_complete_matched_candidates(tmp_path):
+    run=tmp_path/'runs'/'ranking'
+    write_json(run/'manifest.json', {'candidates_per_case':2,'cases':[{'population':'training'}]})
+    write_json(run/'ranking.json', {'records':4,'checkpoint_unchanged':True,
+        'case_summaries':[{'case_index':0,'model':m,'population':'training','candidates':2,
+                           'selected_index':0,'selected_distance':4.,'best_distance':4.,'regret':0.}
+                          for m in ('pilot','released')]})
+    rows=[{'case_index':0,'model':m,'candidate_index':i,'candidate':kind,
+           'population':'training','predicted_cost':float(i+1),'position_error':float(4+i)}
+          for m in ('pilot','released') for i,kind in enumerate(('replay','stationary'))]
+    write_rows(run/'ranking_records.jsonl',rows)
+    results,_=collect_run_results(tmp_path/'runs')
+    assert len(results)==2 and all(r.kind=='ranking' for r in results)
+    assert all(len(r.ranking)==2 for r in results)
+    write_rows(run/'ranking_records.jsonl',rows[:-1])
+    with pytest.raises(DashboardDataError,match='ranking'):
+        collect_run_results(tmp_path/'runs')

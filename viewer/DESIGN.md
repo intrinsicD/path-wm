@@ -68,3 +68,16 @@ narrow screens. It does not hide document overflow or alter verification checks.
 The HTML contains these fixes; they are not browser-only test overrides.
 Canonical verification now passes at 1440x1000 and 390x844, including source
 interaction. Run explicit transport checks with `PATH_WM_BROWSER_TESTS=1`.
+
+## Simulator-grounded ranking view
+
+A selected model/case scatter compares 20 predicted terminal costs with measured
+terminal position errors; candidate family identifies replay, stationary, random
+and each model's plan. Costs are compared within a single latent space and case.
+Exact rows retain candidate identity, successes and angle/state diagnostics.
+Separate five-step curves compare prediction with copy MSE, and predicted with
+measured latent goal costs, for a selected nonrandom candidate. Five time points
+are the model's complete five-block horizon, not a sparsely sampled longer curve.
+The canonical palette and labeled metric/candidate legends supply distinctions.
+Reconcile declared record counts, complete per-model candidate sets, matched
+simulator outcomes, and selected-candidate summary values before rendering.
