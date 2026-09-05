@@ -258,6 +258,23 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
                 numeric(summary), [path, manifest_path, record_path], context, ranking=tuple(selected_rows),
                 suffix=f" / {summary['population']} case {summary['case_index']} {summary['model']}")
 
+    for path in sorted(runs_root.rglob("real_batch_parity*.json")):
+        value = read_json(path)
+        for index, record in enumerate(value.get("results", [])):
+            metrics = numeric(record)
+            for side in ("native", "local"):
+                metrics.update({f"{side}.{k}": v for k, v in numeric(record.get(side, {})).items()})
+            context = {k: value[k] for k in ("checkpoint_sha256", "batch_size", "limitation", "source") if k in value}
+            context.update(precision=record["precision"], variant=record.get("variant", "local_recomputed"),
+                           protocol="Discarded real-data clones; numerical comparison, not training completion")
+            add(path.parent, "diagnostic", "measured" if value.get("checkpoint_unchanged") else "checkpoint_changed",
+                metrics, [path], context, suffix=f" / {path.stem} {index} {record['precision']}")
+    for path in sorted(runs_root.rglob("reproduction_memory.json")):
+        value = read_json(path)
+        add(path.parent, "diagnostic", value.get("status", "unknown"), numeric(value), [path],
+            {k: value[k] for k in ("checkpoint_sha256", "limitation", "precision", "all_gradients_finite") if k in value},
+            suffix=" / full-batch memory probe")
+
     for name in ("cases.jsonl", "episodes.jsonl"):
         for path in sorted(runs_root.rglob(name)):
             if not (path.parent / "summary.json").exists():

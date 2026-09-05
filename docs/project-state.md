@@ -20,38 +20,48 @@ training and benchmark evaluation. Baseline-specific tests cover episode
 alignment, causal action timing, reference computations and gradients,
 normalization, rollout and checkpoint integrity.
 
-## Harness restored; diagnostics remain next
+## Approved diagnosis complete; source-scale candidate prepared
 
-The standing workflow and offline dashboard were recovered from `eca742a` and
-adapted to current ledgers. `CLAUDE.md` now links the workflow and this state file.
-The harness adds nine integrity checks; all 22 CPU tests pass. No new training or
-evaluation was run during this repair.
+The dashboard browser path is repaired. Real-time CDP transport preserves the
+canonical probes; two reader CSS fixes handle scrollbar width and narrow-screen
+legends. Canonical desktop/mobile rendering, source interaction and exact payload
+verification pass. The full essential suite passes 32 tests, including two
+explicit browser checks. See `viewer/DESIGN.md` and the dashboard receipt.
 
-The current HTML includes 30 result records (6 training, 20 control and 4
-standalone prediction records). Canonical artifact, desktop/mobile browser,
-source interaction and exact embedded-payload checks now pass. The local browser
-transport uses an installed Chromium with real time and an explicit viewport;
-it preserves the canonical probes and their failure results. Two narrow runtime
-CSS corrections fix scrollbar-gutter header overflow and long mobile legends.
-All 22 CPU checks and two explicit browser integration checks passed during the
-repair. See `runs/experiment_dashboard.receipt.json` and `viewer/DESIGN.md`.
+The saved broader-pilot checkpoint reaches 0/20 frozen training-set goals;
+recorded replay reaches 20/20 and stationary actions 0/20, with no initial
+successes. The earlier held-out result remains 0/20. On eight matched rollout
+cases the pilot selects unsuccessful plans in 8/8, while released weights select
+successful candidates in 7/8. Raw 320 model/candidate records, exact values and
+five-step rollout curves are indexed in the dashboard. All checkpoints remain
+unchanged. See [the diagnosis report](pusht-control-diagnosis.md).
 
-## Approved work pending after this repair
+A discarded real-batch native comparison isolates bf16 gradient drift from
+encoder batch slicing (6.124% relative L2 on the four-sequence probe). Full-batch
+activation checkpointing reduces that measured difference to 1.36e-7 without
+changing the objective or full-batch statistics. A single batch-128 backward
+fits the local GPU (3.14 GB peak allocated), with finite gradients and zero
+optimizer steps. This does not establish the cause of the pilot control failure.
 
-The user accepted all three recommendations before interrupting that turn for
-this harness repair. That turn performed reads only; it launched no runs.
+The [source-scale reproduction configuration](../configs/reproduction/pusht_source_scale.yaml)
+and [protocol](pusht-reproduction.md) are prepared and data-only validation has
+completed: 1,783,548 train / 198,173 validation windows, full-source unbiased
+normalization, ten epochs / 139,330 updates, 1,393 warmup updates, and 50 frozen
+source control goals. The candidate uses full-batch activation checkpointing,
+not the original pilot's encoder slicing. Ordinary episode-split configurations
+remain supported. The raw preparation manifest and frozen indices are under
+`runs/reproduction/pusht_source_scale_preparation/`.
 
-1. Evaluate the saved broader-pilot checkpoint on 20 training-set goals to
-   distinguish fitting failure from held-out generalization failure.
-2. Inspect multi-step predictions and action ranking against simulator outcomes,
-   using saved checkpoints and explicit matched cases and planning budgets.
-3. Prepare a larger faithful reproduction configuration and protocol, including
-   an explicit schedule and matching evaluation. Preparation is authorized;
-   a long reproduction training run has not been scheduled or launched.
+## Next work
 
-These diagnostics are already authorized; do not ask for the same permission
-again. Preserve the completed pilot and checkpoint hashes. The learned-control
-baseline gate is still unmet, and research extensions remain deferred.
+Schedule the prepared source-scale run separately before launching it. The
+pilot-rate extrapolation is about 58.3 hours and excludes full-source I/O and
+changed recomputation cost. No long training has been scheduled or launched.
+The protocol documents scheduler/release-history ambiguity and distinguishes
+source interpolation from unseen-configuration generalization. Preserve the
+completed pilot and diagnostic artifacts. Learned control is still unestablished;
+research extensions remain deferred. The three previously approved diagnostics
+and preparation items are complete; do not repeat them.
 
 ## Earlier validation
 At broader-pilot completion, the modular LeWM implementation passed 13 CPU tests.
@@ -86,6 +96,6 @@ released weights reach 17/20, replay 19/20, stationary 0/20, with no initial suc
 Final precision and discarded BatchNorm-clone differences are small (about 3–4%);
 no baseline change was adopted. All checkpoint hashes remain unchanged.
 See docs/pusht-broader-pilot.md and the run's pilot_summary.json. All pilot
-training/evaluation processes completed. Do not repeat the completed run. Targeted rollout/control diagnosis is approved above;
+training/evaluation processes completed. Do not repeat the completed run. Targeted rollout/control diagnosis is completed above;
 research extensions remain deferred. The bounded pilot is complete, while the
 learned-control baseline gate remains unmet.

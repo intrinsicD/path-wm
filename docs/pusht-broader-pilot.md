@@ -168,3 +168,12 @@ Checkpoint SHA256 values (all unchanged through evaluation):
 | 500 | `91dd5e47628cbae38e0ff91071ad57cced739ecb8a3656741ec53ace1c4221dd` |
 | 1,000 | `1988e4646c81376d065c513a8c3ac33bae6dd77cce8a342b4b35f38f78348d96` |
 | Released | `48938400ae3464c9680731287f583a9cb516f55a8ec64ea13a91be47fb15b607` |
+
+
+## Completed follow-up
+
+The approved training-goal, simulator-ranking and numerical diagnostics are now
+complete; see [the follow-up report](pusht-control-diagnosis.md). The pilot also
+fails 20 training goals, replay reaches 20/20, and full-batch activation
+checkpointing resolves the measured bf16 slicing discrepancy for the prepared
+source-scale candidate. Original pilot weights, buffers and results are preserved.
