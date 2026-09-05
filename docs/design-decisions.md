@@ -916,3 +916,32 @@ ABI-v1 measured control, Phase and Target remain unchanged. Main receipts and re
 - `runs/overnight/common_base_20260905/av_context_exploratory_paired_seed{0,1}.json`
 - `runs/overnight/common_base_20260905/audit_current_anchor_counterexample.json`
 - `runs/overnight/common_base_20260905/report.html` and `report_evidence.json`
+
+---
+
+## 38. Validate known physical audiovisual correspondence before changing its objective
+
+**Product and question.** E1_common_base's ABI-v2 frontend needs reliable temporal evidence before
+belief bootstrap and H1 interface testing. The TAU R1 pair fails to establish that correspondence.
+The next source control asks whether a shared physical signal is observable and learnable under
+the existing frontend before testing current-anchor versus balanced-time supervision.
+
+**Source decision.** Four visible emitters occupy separate image quadrants. Their eight continuous
+x/y oscillator coordinates modulate eight audio carrier amplitudes. Both sensors observe the same
+8 Hz state; amplitudes are held between those physical updates. Each carrier completes integer
+cycles per frame. Independent group seeds fix phases, frequencies and background nuisance; group
+IDs, split, absolute clip time and truth never enter the training batch. A separate audit sidecar
+preserves physical coordinates. This is an intentionally controlled source, not natural audio/video.
+
+**Interface and checks.** A data utility writes the existing normalized shard/manifest contract;
+`RepresentationData` and model/ABI signatures remain unchanged. Repeated generation must reproduce
+source bytes without touching global RNG, reject a changed definition at a published path, and keep
+groups disjoint. Pixel centroids and waveform Fourier amplitudes must recover the common state.
+The fixed raw audit requires at least 95% two-time matching, at most 5% after swapping audio times,
+mean coordinate error below 0.03, and exactly chance on constant signals. No model success is inferred.
+
+**Planned budget.** The new development config declares two 5,000-update R0 sources and the existing
+unrelaxed R0 gates. Only passing sources can initialize a later matched 2,000-update R1 comparison
+at both seeds. That next iteration changes only the R1 time-ranking objective; all model, source,
+other loss, optimizer, temperature and audit settings remain matched. Known-source success is a
+prerequisite for widening the objective comparison to TAU. This is not a formal freeze task.
