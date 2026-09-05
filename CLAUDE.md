@@ -32,5 +32,9 @@ Keep ordinary tests fast and CPU-based; substantive GPU runs are validation, not
 unit tests. Do not remove a failing test to conceal an implementation error.
 
 ## Status
-Clean reset in progress. Published LeWM source and dataset revisions are pinned;
-new baseline learning and control have not yet been established.
+Fresh reset and modular LeWM implementation are complete. Nine essential tests
+pass; a 500-step PushT development training check finished. Useful control and
+full baseline reproduction have not been established. The user requested short
+tests and a report before any long run. Longer training was stopped; do not
+start or resume long training until the user asks. Research extensions remain
+closed. See docs/baseline-checks.md for current evidence and limitations.

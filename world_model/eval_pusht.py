@@ -61,6 +61,8 @@ def evaluate(config_path, checkpoint, output, episodes=50, seed=42, samples=300,
             state=np.array(f['state'][row],dtype=np.float64)
             target=np.array(f['state'][row+goal_offset],dtype=np.float64)
             relative=cfg['name']=='pusht'
+            if len(state)==5: state=np.r_[state,[0.,0.]]
+            if len(target)==5: target=np.r_[target,[0.,0.]]
             # Original CCHI stores five state coordinates, omitting velocity.
             # SWM reset sets missing velocity to zero; this is a stated mismatch.
             env=PushT(resolution=224 if relative else 96,relative=relative)
