@@ -18,6 +18,11 @@ from world_model.planning import cem,latent_cost
 from world_model.train import write_json
 
 
+def initial_observations(source_frame, goal_frame):
+    """Source observations are injected by the authors' dataset evaluator."""
+    raise NotImplementedError
+
+
 @torch.no_grad()
 def evaluate(config_path, checkpoint, output, episodes=50, seed=42, samples=300,
              iterations=30, elites=30, budget=50, goal_offset=25, released=False):
