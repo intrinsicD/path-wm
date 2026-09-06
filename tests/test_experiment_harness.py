@@ -438,3 +438,29 @@ def test_portable_snapshot_contains_only_datasets_referenced_by_views(tmp_path):
     referenced = {view['dataset'] for view in views}
     assert set(artifact['snapshot']['datasets']) == referenced
     assert any(row.get('value') == .2 for name in referenced for row in artifact['snapshot']['datasets'][name])
+
+
+def test_projection_comparison_retains_paired_populations_and_missing_arms(tmp_path):
+    from scripts.paired_summary import summarize_pairs
+    from viewer.dashboard import build_dashboard_artifact
+    row = dict(dataset='toy', seed=3072, projections=1024, step=750, variant='saved',
+               case_sha256='a'*64, calibration_rows_sha256=None, successes=2, cases=5,
+               initial_successes=1, newly_solved=1, initial_model_sha256='b'*64)
+    rows = [row, {**row, 'projections':4096, 'successes':3, 'newly_solved':2},
+            {**row, 'seed':3073}]
+    groups = summarize_pairs(rows)
+    path = tmp_path/'runs'/'paired'/'projection_comparison.json'
+    write_json(path, dict(version=1, rows=rows, groups=groups, expected_outcomes=12,
+                          missing_outcomes=[{'seed':3073,'projections':4096}], sources=[]))
+    results, notices = collect_run_results(tmp_path/'runs')
+    comparison = next(r for r in results if r.kind=='projection_comparison')
+    assert comparison.status=='incomplete'
+    artifact = build_dashboard_artifact(results,notices)
+    datasets = artifact['snapshot']['datasets']
+    assert len(datasets['projection_control_detail'])==3
+    assert any(c['id'].startswith('projection_control_') for c in artifact['manifest']['charts'])
+    assert any(t['dataset']=='projection_control_detail' for t in artifact['manifest']['tables'])
+    value = json.loads(path.read_text()); value['groups'][0]['stats']['delta_successes']['mean']=100
+    write_json(path,value)
+    with pytest.raises(DashboardDataError,match='paired'):
+        collect_run_results(tmp_path/'runs')

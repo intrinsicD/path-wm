@@ -27,3 +27,7 @@ Every completed run/evaluation goes through run.py and must produce verified run
 ## Evaluation implementation detail (before affected runs)
 
 Reuse check_training_modes with an optional calibration_only flag requiring save_calibrated: preserve the identical layerwise512-training-window calibration and clone provenance, skip its auxiliary four precision/split probes. Saved-buffer prediction is already logged during training; the frozen control comparison still evaluates both variants at750/1500. A tiny-data integrity test must establish that only BN buffers change, source hashes remain unchanged, and exported clones retain the exact training-step and calibration population. Historical50-case control commands cost about3–4min each, so48 evaluations add about3h plus calibration/reporting. Total expected duration is9–10h.
+
+## Comparison reporting contract
+
+A projection_comparison.json derivative binds per-arm control rows to the native reconciled cases, exact case-manifest hash, trained initialization hash and calibration row hash. It records all48 expected outcomes and missing arms explicitly; paired statistics come from Claude's summarize_pairs. The dashboard shows separate dataset/BN-policy learning curves and an exact per-seed table, with source file hashes in the derivative. It must reject a tampered derivative whose group statistics disagree with its arm rows. No seed pooling across datasets or calibration policies.
