@@ -270,6 +270,14 @@ or dashboard. The first queue launch stopped before starting work because this
 Python build lacks `os.pidfd_open`; the corrected wait checks Linux process start
 ticks as well as its PID. Both attempts remain in the raw execution ledger.
 
+Measured prior PushT control took 265.72 seconds for 50 failed cases and 167.52
+seconds for released weights. Before the first run finished, reorder its new
+control check ahead of TwoRoom training so those outcomes can be assessed during
+TwoRoom compute. Cases and all compute/solver budgets stay fixed. The idle
+controller is restarted; active training is untouched. Its handoff also checks
+that the dashboard inventory contains the final run status and step and that its
+passing receipt postdates that terminal status.
+
 ## Outcomes
 
 Training/evaluation pending. This section records measured results, failures and deviations at closeout.
