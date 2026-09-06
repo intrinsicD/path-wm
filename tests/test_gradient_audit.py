@@ -2,7 +2,7 @@
 import pytest
 import torch
 
-from scripts.gradient_audit_math import gradient_geometry, module_geometry, adam_delta, preserved_state
+from scripts.gradient_audit_math import gradient_geometry, module_geometry, adam_delta, preserved_state, gradient_comparison
 
 
 def test_gradient_noise_signed_signal_and_zero_vectors():
@@ -72,3 +72,14 @@ def test_projection_seed_control_does_not_change_prediction_or_model_state():
     assert a['weighted_sigreg_loss'] != b['weighted_sigreg_loss']
     assert not torch.equal(ga, gb)
     assert state_digest(model) == before
+
+
+def test_gradient_comparison_matches_double_precision_reference():
+    torch.manual_seed(11)
+    a = torch.randn(10000) * torch.logspace(-6, 6, 10000)
+    b = a + .01 * torch.randn(10000)
+    value = gradient_comparison(a, b)
+    expected = torch.nn.functional.cosine_similarity(a.double(), b.double(), dim=0)
+    assert -1 <= value['cosine'] <= 1
+    assert value['cosine'] == pytest.approx(float(expected), abs=1e-12)
+    assert gradient_comparison(a, a)['relative_difference'] == 0
