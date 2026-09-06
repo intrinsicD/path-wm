@@ -431,6 +431,29 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
             keep(dataset, lambda row: row["run"] == ranking_run and row["candidate"] == candidate)
             charts.append(_chart(dataset, f"{title} · {ranking_run} · {candidate}", subtitle, dataset, "line", number("environment_step"),
                                  number("value"), color=category("metric")))
+    comparisons=[r for r in run_results if r.kind=='projection_comparison']
+    if comparisons:
+        comparison=comparisons[-1]
+        rows=comparison.internals['comparison_rows']
+        datasets['projection_control_detail']=[{**r,'status':'measured','success_rate':r['successes']/r['cases'],
+            'series':f"M{r['projections']} seed{r['seed']}"} for r in rows]
+        for index,(dataset,variant) in enumerate(sorted({(r['dataset'],r['variant']) for r in rows})):
+            name=f'projection_control_{index}'
+            datasets[name]=sorted([r for r in datasets['projection_control_detail']
+                                  if r['dataset']==dataset and r['variant']==variant],key=lambda r:(r['series'],r['step']))
+            charts.append(_chart(name,f'Projection-count learning screen · {dataset} · {variant} BN',
+                'One line per training seed and projection count. Same fixed source cases; each update uses128 windows. Missing arms remain missing, no success gate.',
+                name,'line',number('step'),number('success_rate'),color=category('series'),
+                tooltip=[number('successes'),number('cases'),number('seed'),number('projections')]))
+        datasets['projection_control_detail'] += [{**r,'status':'missing','successes':None,'cases':None,
+            'newly_solved':None,'source':None} for r in comparison.internals['comparison_missing']]
+        datasets['projection_paired_detail']=[]
+        for group in comparison.internals['comparison_groups']:
+            for pair in group['per_seed']:
+                datasets['projection_paired_detail'].append(dict(dataset=group['dataset'],variant=group['variant'],step=group['step'],seed=pair['seed'],
+                    status='complete' if pair['complete'] else 'missing arm',
+                    delta_successes=pair.get('delta_successes'),delta_success_rate_pp=pair.get('delta_success_rate_pp'),
+                    delta_unsolved_conditional_pp=pair.get('delta_unsolved_conditional_pp')))
     def table(name, title, columns, sort, subtitle):
         return {"id": name, "title": title, "subtitle": subtitle, "dataset": name, "sourceId": SOURCE_ID,
                 "defaultSort": {"field": sort, "direction": "asc"}, "density": "dense", "layout": "full",
@@ -456,6 +479,15 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                              ("position_error", "Position error (px)"), ("angle_error", "Angle error (rad)"),
                              ("success_terminal", "Terminal success"), ("actual_latent_cost", "Measured latent cost")],
                             "run", "The scatter above shows one model/case; this table holds the same 20 raw candidate sequences for every model/case."))
+    if comparisons:
+        tables.append(table('projection_control_detail','Projection-count screen: every measured arm',
+            [('dataset','Dataset'),('variant','BN policy'),('seed','Seed'),('projections','Directions'),('step','Updates'),('status','Outcome'),
+             ('successes','Successes'),('cases','Cases'),('newly_solved','Newly solved'),('source','Case ledger')],
+            'dataset','Same data volume per update; compare projection counts within seed, dataset, checkpoint and BN policy.'))
+        tables.append(table('projection_paired_detail','Paired4096 minus1024 outcomes',
+            [('dataset','Dataset'),('variant','BN policy'),('step','Updates'),('seed','Seed'),('status','Pair status'),
+             ('delta_successes','Success difference'),('delta_success_rate_pp','Difference (pp)'),('delta_unsolved_conditional_pp','Initially-unsolved difference (pp)')],
+            'dataset','Each training seed is one replicate. Three pairs give descriptive uncertainty; missing outcomes are not zeros.'))
     # SQL intermediates duplicate plotted/table data and inflate the portable file.
     # Exact record tables remain referenced; discard only unreferenced datasets.
     used_datasets = {view['dataset'] for view in charts + tables + cards}

@@ -314,6 +314,26 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
             {k: value[k] for k in ("checkpoint_sha256", "limitation", "precision", "all_gradients_finite") if k in value},
             suffix=" / full-batch memory probe")
 
+    for path in sorted(runs_root.rglob("projection_comparison.json")):
+        from scripts.paired_summary import summarize_pairs
+        value=read_json(path)
+        try:
+            groups=summarize_pairs(value['rows'])
+            if value.get('version')!=1 or groups!=value['groups']:
+                raise ValueError('paired statistics disagree with arm rows')
+        except (KeyError,ValueError) as error:
+            raise DashboardDataError(f'{path}: invalid paired comparison: {error}') from error
+        missing=value['missing_outcomes']
+        if len(value['rows'])+len(missing)!=value['expected_outcomes']:
+            raise DashboardDataError(f'{path}: paired observed/missing outcome count disagrees with plan')
+        context={'protocol':'Paired resampled SIGReg projections; identical within-seed initialization and source cases. Calibrated and saved BN policies stay separate.',
+                 'population':'Fixed source cases; descriptive seed uncertainty, no generalization or pass threshold'}
+        add(path.parent,'projection_comparison','incomplete' if missing else 'measured',
+            dict(control_outcomes=len(value['rows']),expected_outcomes=value['expected_outcomes'],
+                 missing_outcomes=len(missing),complete_pairs=sum(g['seeds_complete'] for g in groups)),
+            [path],context,internals={'comparison_rows':value['rows'],'comparison_groups':groups,'comparison_missing':missing})
+        if missing:notices.append(f'{path.parent.relative_to(runs_root)}: paired comparison incomplete; {len(missing)} planned control outcomes missing')
+
     for path in sorted(runs_root.rglob("gradient_audit.json")):
         value = read_json(path)
         manifest_path = path.parent / 'manifest.json'

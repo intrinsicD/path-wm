@@ -450,14 +450,19 @@ def test_projection_comparison_retains_paired_populations_and_missing_arms(tmp_p
             {**row, 'seed':3073}]
     groups = summarize_pairs(rows)
     path = tmp_path/'runs'/'paired'/'projection_comparison.json'
+    present={(r['seed'],r['projections'],r['variant']) for r in rows}
+    missing=[dict(dataset='toy',step=750,seed=seed,projections=count,variant=variant)
+             for seed in (3072,3073,3074) for count in (1024,4096) for variant in ('saved','calibrated')
+             if (seed,count,variant) not in present]
     write_json(path, dict(version=1, rows=rows, groups=groups, expected_outcomes=12,
-                          missing_outcomes=[{'seed':3073,'projections':4096}], sources=[]))
+                          missing_outcomes=missing, sources=[]))
     results, notices = collect_run_results(tmp_path/'runs')
     comparison = next(r for r in results if r.kind=='projection_comparison')
     assert comparison.status=='incomplete'
     artifact = build_dashboard_artifact(results,notices)
     datasets = artifact['snapshot']['datasets']
-    assert len(datasets['projection_control_detail'])==3
+    assert len(datasets['projection_control_detail'])==12
+    assert sum(r['status']=='measured' for r in datasets['projection_control_detail'])==3
     assert any(c['id'].startswith('projection_control_') for c in artifact['manifest']['charts'])
     assert any(t['dataset']=='projection_control_detail' for t in artifact['manifest']['tables'])
     value = json.loads(path.read_text()); value['groups'][0]['stats']['delta_successes']['mean']=100
