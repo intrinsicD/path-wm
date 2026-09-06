@@ -37,6 +37,16 @@ The source-bound [interim gradient figure](../runs/projection_training_2026-09-0
 
 An inherited reporting label was corrected: training validation rollout_mse / identity_mse compares autoregressive error with an adjacent one-step copying error. It is now labelled “rollout / one-step copy,” with the different horizons disclosed. It is not matched multi-step prediction skill. Raw metrics and training/evaluation numerics were preserved.
 
+## Early TwoRoom result and targeted normalization literature
+
+The first TwoRoom arm (seed3072,4096 directions) has completed1500 updates. At750, saved buffers solve11/50 cases versus37/50 after the fixed calibration procedure. The corresponding initially-unsolved counts are8/46 and33/46; one initially solved case is not retained by the saved-buffer controller, so subtracting four from total successes would be incorrect. These are one-arm observations; the paired1024 result is pending. Final saved-buffer one-step prediction/copy is0.213 at1500, with control still pending at this snapshot.
+
+Wu and Johnson (2021) show that EMA normalization statistics can lag an evolving model and destabilize early inference. Their PreciseBN discussion separates SGD and normalization batch sizes, and Appendix A.3 describes sequential layerwise statistics with earlier layers in inference mode. This supports investigating inference-state mismatch before interpreting poor control as insufficient learned weights. Our implementation averages per-batch unbiased variances; it is not their exact aggregate population-moment estimator. Their image-recognition results do not prove an improvement in this world model. [Rethinking “Batch” in BatchNorm, §3 and Appendix A.2–A.4](https://arxiv.org/html/2105.07576v1)
+
+Ioffe (2017) proposes Batch Renormalization to reduce training/inference discrepancies while retaining derivatives through batch moments. Its correction schedule is material; simply using moving statistics throughout training is not the proposed method. This is a possible later training-time ablation, not an intervention adopted into the current screen. [Batch Renormalization, §3–4](https://proceedings.neurips.cc/paper/2017/file/c54e7837e0cd0ced286cb5995327d1ab-Paper.pdf)
+
+Our provisional inference is that part of TwoRoom's apparent iteration requirement can be an inference-buffer problem: at750, the same learned parameters already support much stronger control after a512-window buffer update. This does not identify the responsible layer, remove the source-population limitation, or show that4096 directions improve learning. The remaining paired results and the earlier PushT calibration failures must constrain any general recommendation.
+
 ## Preselected qualitative evidence
 
 The first frozen case was selected before scores:seed3072, calibrated1500, each arm versus the existing released model on exactly the same protocol. PushT row150187, episode1235, start36 and reset seed1234 is reproduced from saved model actions. Both local arms fail after50 steps; the released model succeeds in16 and the recorded-action replay in14. In both local panels, the block eventually moves away from the goal. This is one fixed case, not an outcome-selected illustration or a representative rate estimate.
