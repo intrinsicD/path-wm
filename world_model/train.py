@@ -104,6 +104,7 @@ def train(config_path, resume=False):
         receipt=dict(step=step,elapsed_seconds=elapsed,fingerprint=fingerprint,
             fingerprint_version=fingerprint_version,operational_overrides=overrides,
             resumed_at=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),
+            code_dirty=bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip()),
             code_commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip())
         with (run/'resumes.jsonl').open('a') as stream:stream.write(json.dumps(receipt)+'\n')
         torch.set_rng_state(saved['rng'].cpu())
@@ -116,6 +117,13 @@ def train(config_path, resume=False):
             time_budget='Cumulative training-loop seconds, including validation/checkpointing; setup excluded. Final validation may extend the ceiling.')
         write_json(run/'manifest.json',signature)
     start=time.monotonic()
+    interval=dict(updates=0,compute=0.,wait=0.)
+    def take_timing():
+        n=interval['updates']
+        result=dict(timing_updates=n,mean_step_seconds=interval['compute']/n if n else None,
+                    mean_data_wait_seconds=interval['wait']/n if n else None)
+        interval.update(updates=0,compute=0.,wait=0.)
+        return result
     def record(kind,metrics):
         row=dict(kind=kind,step=step,elapsed_seconds=elapsed+time.monotonic()-start,**metrics)
         with (run/'metrics.jsonl').open('a') as f:f.write(json.dumps(row)+'\n')
@@ -160,11 +168,14 @@ def train(config_path, resume=False):
         for batch in loader:
             data_wait_seconds=time.monotonic()-wait_start
             if step>=total_steps: break
-            if cfg.get('max_seconds') and elapsed+time.monotonic()-start>=cfg['max_seconds']:
+            requested=(run/'STOP').exists()
+            expired=cfg.get('max_seconds') and elapsed+time.monotonic()-start>=cfg['max_seconds']
+            if requested or expired:
                 if validation_step!=step:validate()
                 save(final=True)
-                record('time_limit',dict(total_steps=total_steps,validation_step=validation_step,
-                    baseline_gate='pending_closed_loop_evaluation'))
+                record('stop_requested' if requested else 'time_limit',
+                    dict(total_steps=total_steps,validation_step=validation_step,**take_timing(),
+                         baseline_gate='pending_closed_loop_evaluation'))
                 return
             tick=time.monotonic()
             lr_scale=(step+1)/warmup if step<warmup else .5*(1+math.cos(math.pi*(step-warmup)/max(1,total_steps-warmup)))
@@ -176,16 +187,18 @@ def train(config_path, resume=False):
             norm=torch.nn.utils.clip_grad_norm_(model.parameters(),cfg['grad_clip'],error_if_nonfinite=True)
             if not all(torch.isfinite(x) for x in terms.values()): raise FloatingPointError('Non-finite loss')
             optimizer.step();step+=1
-            if step==1 or step%cfg['log_every']==0:
+            step_seconds=time.monotonic()-tick
+            interval['updates']+=1;interval['compute']+=step_seconds;interval['wait']+=data_wait_seconds
+            if step==1 or step%cfg['log_every']==0 or step==total_steps:
                 record('train',{**{k:float(v) for k,v in terms.items()},'grad_norm':float(norm),
-                    'lr':optimizer.param_groups[0]['lr'],'step_seconds':time.monotonic()-tick,
+                    'lr':optimizer.param_groups[0]['lr'],'step_seconds':step_seconds,**take_timing(),
                     'data_wait_seconds':data_wait_seconds,
                     'peak_gpu_bytes':torch.cuda.max_memory_allocated() if device.type=='cuda' else 0})
             if step%cfg['eval_every']==0 or step==total_steps or step in cfg.get('checkpoint_steps',[]):
                 validate()
                 save(final=step==total_steps)
             wait_start=time.monotonic()
-    record('complete',dict(total_steps=total_steps,validation_step=validation_step,baseline_gate='pending_closed_loop_evaluation'))
+    record('complete',dict(total_steps=total_steps,validation_step=validation_step,**take_timing(),baseline_gate='pending_closed_loop_evaluation'))
 
 
 if __name__=='__main__':
