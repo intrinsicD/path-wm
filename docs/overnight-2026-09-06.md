@@ -91,6 +91,22 @@ repaired two-update GPU slice and its canonical desktop/mobile HTML QA passed.
 All 50 CPU checks passed; two explicitly opt-in browser tests were not enabled
 in that command, while the actual dashboard browser verification did run.
 
+## TwoRoom thin slice
+
+Claude independently wrote three essential simulator/controller tests (12 tool
+calls; reported cost $1.67608375). They fail at the missing import before
+implementation. Its assumptions about default geometry and action scale were
+then checked against eight fixed source episodes: reset renders and all first
+25 recorded transitions match exactly. A first ad hoc read lacked HDF5 plugin
+registration; the corrected check imports the same compression plugin as the
+normal dataset loader. No source file was changed.
+
+History-one diagnostics expose a separate divide-by-zero: normalized attention
+entropy divides by log(1). The single-key case will report zero entropy, with a
+finite, read-only scalar-summary regression before training. TwoRoom control uses
+the same one-current-observation CEM planning interface as PushT, restoring only
+agent and goal positions in the verified default-geometry simulator.
+
 ## Outcomes
 
 Training/evaluation pending. This section records measured results, failures and deviations at closeout.

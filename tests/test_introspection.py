@@ -130,3 +130,12 @@ def test_scalar_summary_is_finite_and_side_effect_free():
     assert {'effective_rank', 'gate_msa_mean', 'sensitivity_action_over_state', 'param_norm_encoder', 'examples'} <= set(summary)
     assert all(np.isfinite(v) for v in summary.values()) and summary['examples'] == 6
     assert state_digest(model) == before and not model.training
+
+
+def test_history_one_summary_has_finite_zero_attention_entropy():
+    model = build_model({**SMALL, 'history': 1}).eval()
+    before = state_digest(model)
+    summary = scalar_summary(model, torch.randn(6, 2, 3, 28, 28), torch.randn(6, 2, 10), directions=2)
+    assert all(np.isfinite(v) for v in summary.values())
+    assert summary['predictor_attention_entropy_mean'] == 0.
+    assert state_digest(model) == before and not model.training
