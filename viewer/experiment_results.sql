@@ -134,7 +134,7 @@ SELECT run, step, metric, value FROM (
   FROM json_each(:reconciled_runs) AS r, json_each(json_extract(r.value, '$.sampled_validation')) AS t
   WHERE json_extract(t.value, '$.zero_action_mse') > 0
   UNION ALL
-  SELECT json_extract(r.value, '$.label'), json_extract(t.value, '$.step'), 'rollout / copy',
+  SELECT json_extract(r.value, '$.label'), json_extract(t.value, '$.step'), 'rollout / one-step copy',
          1.0 * json_extract(t.value, '$.rollout_mse') / json_extract(t.value, '$.identity_mse')
   FROM json_each(:reconciled_runs) AS r, json_each(json_extract(r.value, '$.sampled_validation')) AS t
   WHERE json_extract(t.value, '$.identity_mse') > 0 AND json_type(t.value, '$.rollout_mse') IS NOT NULL

@@ -269,7 +269,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                                                "embedding_std": "Recorded embedding standard deviation; context for changing latent scale, not a success gate.",
                                                "loss": "Recorded total training objective. pred_loss and sigreg_loss are raw components; weights are in run context.",
                                                "completed_training": "Training records with status.kind equal to complete. Does not imply prediction or control success.",
-                                               "validation_ratio": "pred_mse divided by identity_mse, shuffled_action_mse or zero_action_mse at the same validation step; rollout_mse over identity_mse; action_effect over pred_mse. 1.0 equals the control.",
+                                               "validation_ratio": "pred_mse divided by identity_mse, shuffled_action_mse or zero_action_mse at the same validation step; rollout_mse over one-step identity_mse (different horizons, not matched multi-step skill); action_effect over pred_mse. 1.0 equals the matched control only for one-step prediction ratios.",
                                                "effective_rank": "exp(entropy) of normalized covariance eigenvalues of validation embeddings; rankme uses singular values; participation_ratio is (sum e)^2 / sum e^2.",
                                                "shapiro_fraction_below_0_95": "Fraction of embedding dimensions whose Shapiro–Wilk statistic on up to 500 validation samples is below 0.95.",
                                                "gate_msa_mean": "Mean absolute AdaLN gate of the predictor's attention branches over validation inputs; gate_mlp_mean likewise for MLP branches. Both are zero at initialization.",
@@ -337,8 +337,8 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                 charts.append(_chart(name, f"{title} · {focus}", subtitle, name, "line", number("step"), number("value"),
                                      color=category("run"), direction="context" if metric == "lr" else "lower"))
         if datasets["validation_ratio"]:
-            charts.append(_chart("validation_ratio", f"Validation error relative to matched controls (log10) · {focus}",
-                                 "log10 of prediction MSE over the copy, shuffled-action and zero-action control MSE at the same step; rollout over copy; action effect over prediction. 0 = equal to the control, −1 = ten times smaller. Exact plain ratios are in the record table.",
+            charts.append(_chart("validation_ratio", f"Prediction ratios and rollout context (log10) · {focus}",
+                                 "log10 of prediction MSE over the copy, shuffled-action and zero-action control MSE at the same step; rollout over one-step copy uses different horizons and is context, not matched multi-step skill; action effect over prediction. For matched one-step ratios, 0 = equal to the control, −1 = ten times smaller. Exact plain ratios are in the record table.",
                                  "validation_ratio", "line", number("step"), number("log10_ratio"), color=category("metric"),
                                  reference_lines=[{"axis": "y", "value": 0, "label": "equal to control", "lineStyle": "dashed"}],
                                  direction="lower"))
