@@ -322,3 +322,26 @@ TwoRoom started at 05:32:53 Europe/Berlin with clean code revision
 windows, and its fixed 51,380-update schedule under a 4,800-second execution
 ceiling. Its training/control and both datasets’ full matched inspections and
 qualitative panels remain in progress.
+
+
+## Late protocol clarification and bounded solver check
+
+A final source check confirmed that Appendix D specifies **10 CEM iterations for
+TwoRoom**, whereas the [pinned released CEM configuration](https://github.com/lucas-maes/le-wm/blob/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/config/eval/solver/cem.yaml)
+uses 30. The frozen overnight comparisons use 30. Therefore the 100/150 result
+is a **longer-goal test with the released settings**, not a full paper-protocol
+reproduction; history also remains three rather than the paper’s one. Existing
+`tworoom_paper_*` paths and all frozen data are retained. This clarification is
+recorded in `protocol_clarification.json`. The planning horizon, action block and
+replanning block of five do agree with [Appendix D](https://arxiv.org/html/2603.19312v1).
+
+Before further measurements, prepare a paired exploratory check changing only
+CEM iterations from 30 to 10 on the same 50 longer-goal cases and both unchanged
+checkpoints. Keep samples 300, elites 30, seeds, normalization, horizon/action
+blocks, goal offset 100 and budget 150. The new case file records its parent
+SHA256 and asserts all other experimental fields match. Compare successful cases,
+actions used and measured runtime; no new passing threshold or automatic recipe
+adoption. This tests solver sensitivity, not the history discrepancy or a full
+training reproduction. Launch only if the originally queued inspections finish
+by 07:32, reserving approximately ten minutes for this pair and the remaining
+morning time for final QA/reporting. An unrun check remains explicitly unrun.
