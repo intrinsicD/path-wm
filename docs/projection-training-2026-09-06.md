@@ -10,6 +10,10 @@ Both arms receive identical full-source random-window populations, initializatio
 
 Training uses latent192, batch128, lambda0.09, AdamW5e-5, bf16 and a1500-update cosine schedule with15 warmup updates. This short schedule is not a prefix of the full reproduction schedule. The750/1500 checkpoints represent96,000/192,000 optimizer-window presentations. Each calibrated clone also accesses512 windows drawn from the full training split; full-source action normalization accesses the existing source population. This experiment cannot establish training from a smaller independent dataset.
 
+Exact metadata accounting of the planned prefixes is saved in [window_exposure.json](../runs/projection_training_2026-09-06/window_exposure.json), with its executable companion beside it. Every prefix contains distinct window starts. At 1500 updates, PushT covers 18,660–18,664 of 18,685 episodes and 671,146–671,678 unique encoded source-frame rows; TwoRoom covers 9,999–10,000 of 10,000 episodes and 540,753–541,370 frame rows. Frame presentations per unique row are about 1.14× and 1.42× respectively. These are source identities, not independent configurations or visually distinct observations. They describe the planned prefix for pending runs.
+
+The 512 calibration windows add 452–459 PushT / 344–370 TwoRoom window starts outside the 1500-update optimization prefix, depending on seed. The existing first-pair calibration row lists match this exact reconstruction. Window reuse within this short schedule is therefore not a plausible explanation for the observed slow learning by itself; broad episode exposure occurs well before useful control is established.
+
 ## Recorded control outcomes
 
 Snapshot after8 of48 expected outcomes. Scores are successes out of50; all PushT initial-success counts are zero. Differences below are4096 minus1024. Saved and calibrated policies remain separate; calibrated control was predeclared primary.
@@ -48,4 +52,4 @@ Native FP32/CPU-bf16 loss and input gradients match, and the tiny CUDA-bf16 chec
 
 The implementation suite passed99 tests including3 browser checks before two subsequent guards were added. Targeted checks also pass for actual frozen case ordering and duplicate-coordinator refusal without overwriting active progress. A final full suite is pending. Browser fixtures verify one-checkpoint grouped bars and two-checkpoint markers at390/1440 pixels; synthetic values are excluded from the scientific ledger. Dashboard curves disclose adaptive axes; final standalone figures will use fixed0–100% scales.
 
-All original references remain preserved. Final all-pair integrity verification, completed-results plots, dashboard inspection and interpretation await the remaining runs.
+The [first-pair integrity audit](../runs/projection_training_2026-09-06/integrity_audit_first_pair.json) confirms all 13 protected scientific-code/reference/case inputs are unchanged, both paired global RNG states match at both checkpoints, and every exported calibrated clone changes only BN buffers. Full source HDF5 bytes were not rehashed in this screen; declared dataset revisions and hashes remain recorded. Final all-pair integrity verification, completed-results plots, dashboard inspection and interpretation await the remaining runs.
