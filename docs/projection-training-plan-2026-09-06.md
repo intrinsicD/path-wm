@@ -31,3 +31,9 @@ Reuse check_training_modes with an optional calibration_only flag requiring save
 ## Comparison reporting contract
 
 A projection_comparison.json derivative binds per-arm control rows to the native reconciled cases, exact case-manifest hash, trained initialization hash and calibration row hash. It records all48 expected outcomes and missing arms explicitly; paired statistics come from Claude's summarize_pairs. The dashboard shows separate dataset/BN-policy learning curves and an exact per-seed table, with source file hashes in the derivative. It must reject a tampered derivative whose group statistics disagree with its arm rows. No seed pooling across datasets or calibration policies.
+
+## Preflight and reporting verification
+
+All four 20-update preflights passed, with equal paired initialization and global CPU/CUDA RNG states. Update times for 1024/4096 were 1.3265/1.3368 seconds on PushT and 1.3198/1.3354 seconds on TwoRoom; peaks were 3.2822/3.2830 GB. The 2100-second cumulative training-loop cap remains in force. A separate tiny CUDA check confirms bitwise native bf16 loss/gradient parity and exact private-stream resume. Its first launch failed before computation because the script import path was missing; the preserved rerun passed with the repository import path set.
+
+The full implementation suite passed 99 tests including three browser checks. A synthetic paired-chart browser probe then exposed that the canonical renderer refuses one-x line charts even with visible-point settings. The repaired view uses grouped seed bars until two distinct checkpoints exist, then marked learning curves. All six synthetic bars render within both 390- and 1440-pixel viewports; captures were visually inspected. Synthetic fixture values are not included in the experiment ledger. The relevant semantic reporting suite passes after the repair.

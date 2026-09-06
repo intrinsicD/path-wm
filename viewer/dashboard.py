@@ -441,11 +441,19 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
             name=f'projection_control_{index}'
             datasets[name]=sorted([r for r in datasets['projection_control_detail']
                                   if r['dataset']==dataset and r['variant']==variant],key=lambda r:(r['series'],r['step']))
-            charts.append(_chart(name,f'Projection-count learning screen · {dataset} · {variant} BN',
-                'One line per training seed and projection count. Same fixed source cases; each update uses128 windows. Missing arms remain missing, no success gate.',
-                name,'line',number('step'),number('success_rate'),color=category('series'),
-                tooltip=[number('successes'),number('cases'),number('seed'),number('projections')]))
-            charts[-1]['settings']['showPoints']='always'
+            steps=sorted({r['step'] for r in datasets[name]})
+            if len(steps)==1:
+                # Canonical reader rejects trend charts with a single distinct x.
+                charts.append(_chart(name,f'Projection-count control at {steps[0]} updates · {dataset} · {variant} BN',
+                    'Paired training seeds on the same source cases. Missing arms remain missing; no pass threshold.',
+                    name,'bar',category('seed'),number('success_rate'),color=category('projections'),group_mode='grouped',
+                    tooltip=[number('successes'),number('cases'),number('seed'),number('projections')]))
+            else:
+                charts.append(_chart(name,f'Projection-count learning screen · {dataset} · {variant} BN',
+                    'One line per training seed and projection count. Same fixed source cases; each update uses 128 windows. Missing arms remain missing, no success gate.',
+                    name,'line',number('step'),number('success_rate'),color=category('series'),
+                    tooltip=[number('successes'),number('cases'),number('seed'),number('projections')]))
+                charts[-1]['settings']['showPoints']='always'
         datasets['projection_control_detail'] += [{**r,'status':'missing','successes':None,'cases':None,
             'newly_solved':None,'source':None} for r in comparison.internals['comparison_missing']]
         datasets['projection_paired_detail']=[]
@@ -485,7 +493,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
             [('dataset','Dataset'),('variant','BN policy'),('seed','Seed'),('projections','Directions'),('step','Updates'),('status','Outcome'),
              ('successes','Successes'),('cases','Cases'),('newly_solved','Newly solved'),('source','Case ledger')],
             'dataset','Same data volume per update; compare projection counts within seed, dataset, checkpoint and BN policy.'))
-        tables.append(table('projection_paired_detail','Paired4096 minus1024 outcomes',
+        tables.append(table('projection_paired_detail','Paired 4096 minus 1024 outcomes',
             [('dataset','Dataset'),('variant','BN policy'),('step','Updates'),('seed','Seed'),('status','Pair status'),
              ('delta_successes','Success difference'),('delta_success_rate_pp','Difference (pp)'),('delta_unsolved_conditional_pp','Initially-unsolved difference (pp)')],
             'dataset','Each training seed is one replicate. Three pairs give descriptive uncertainty; missing outcomes are not zeros.'))
