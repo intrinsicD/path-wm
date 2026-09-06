@@ -483,6 +483,11 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
         if matched:
             panel_runs.append(max(matched, key=lambda r: r.modified_at))
     blocks += _panel_blocks(panel_runs)
+    # Training-mode probes stay separate from eval-mode checkpoint internals.
+    latest_gradients = {}
+    for run in run_results:
+        if run.kind == 'gradient_audit': latest_gradients[run.context.get('dataset.name', run.label)] = run
+    blocks += _panel_blocks(list(latest_gradients.values()))
     blocks += [{"id": f"table_{item['id']}", "type": "table", "tableId": item["id"], "layout": "full"} for item in tables]
     notes = ["No experimental pass threshold is inferred by the viewer. Recorded gate annotations remain visible.",
              "Control groups reflect ordered case identities only; inspect protocol context before comparing results.",

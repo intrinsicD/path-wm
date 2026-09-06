@@ -314,6 +314,27 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
             {k: value[k] for k in ("checkpoint_sha256", "limitation", "precision", "all_gradients_finite") if k in value},
             suffix=" / full-batch memory probe")
 
+    for path in sorted(runs_root.rglob("gradient_audit.json")):
+        value = read_json(path)
+        manifest_path = path.parent / 'manifest.json'
+        manifest = read_json(manifest_path)
+        panel_path = path.parent / 'gradient_geometry.png'
+        if not panel_path.is_file():
+            raise DashboardDataError(f'{path}: gradient panel is missing')
+        metrics = {}
+        def flatten(item, prefix=''):
+            if isinstance(item, dict):
+                for key, child in item.items(): flatten(child, f'{prefix}.{key}' if prefix else key)
+            elif isinstance(item, list):
+                for index, child in enumerate(item): flatten(child, f'{prefix}.{index}')
+            elif isinstance(item, (int, float)) and not isinstance(item, bool): metrics[prefix] = item
+        flatten(value)
+        context = {**_context(manifest), 'protocol': 'Training mode, restored buffers, no updates; batch-coupled objective. Four descriptive replicates, no critical batch estimate.'}
+        add(path.parent, 'gradient_audit', 'measured' if value.get('checkpoint_unchanged') and value.get('model_state_unchanged') else 'checkpoint_changed',
+            metrics, [path, manifest_path, panel_path], context, value.get('step'),
+            internals={'panels': [dict(id='training_gradient_geometry', title='Sample-efficiency investigation: training gradients',
+                caption='Fixed training windows, bf16, original weights and buffers preserved. Exact values are in the record table.', path=str(panel_path))]})
+
     for path in sorted(runs_root.rglob("internals.json")):
         # Saved-checkpoint internals: scalars over step, series and rendered panels.
         value = read_json(path)
