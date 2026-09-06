@@ -180,6 +180,16 @@ case manifest. Include source identity and goal offset in case navigation keys
 so identical episode/row numbers from different tasks cannot merge. Essential
 fixtures will first expose the lost context and missing denominator.
 
+Before the loader recovery, add a graceful operational stop marker (`run/STOP`)
+for future interruptions: finish the current update, validate and save a numbered
+checkpoint, record `stop_requested`, and require removing the marker to resume.
+Also aggregate compute and loader-wait timings over every logged interval; a
+single sampled update every 100 steps hid occasional loader stalls. Retain the
+old single-step field and label new interval means and their update denominator.
+CPU tests will verify the checkpoint boundary and timing-count conservation.
+The first recovery still uses the old process's already-saved checkpoint because
+that process cannot acquire new control code without a restart.
+
 ## Outcomes
 
 Training/evaluation pending. This section records measured results, failures and deviations at closeout.

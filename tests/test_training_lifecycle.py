@@ -112,3 +112,25 @@ def test_legacy_fingerprints_keep_the_original_resume_contract():
     assert configuration_fingerprint(signature) == modern
     signature['dataset']['path'] = 'other.h5'
     assert configuration_fingerprint(signature) != modern
+
+
+def test_graceful_stop_retains_the_last_update_and_all_interval_timing_counts(setup_run, monkeypatch):
+    import world_model.train as training
+    path, run, _ = setup_run('requested', eval_every=3, checkpoint_steps=[0,3], log_every=3)
+    real_backward = training.backward_batch
+    calls = [0]
+    def request_stop(*args, **kwargs):
+        result = real_backward(*args, **kwargs)
+        calls[0] += 1
+        if calls[0] == 2:
+            (run/'STOP').write_text('Finish the current update and checkpoint.')
+        return result
+    monkeypatch.setattr(training,'backward_batch',request_stop)
+    training.train(path)
+    saved=torch.load(run/'checkpoint.pt',weights_only=True)
+    rows=[json.loads(line) for line in (run/'metrics.jsonl').read_text().splitlines()]
+    assert saved['step']==2 and rows[-1]['kind']=='stop_requested'
+    assert rows[-1]['validation_step']==2 and (run/'checkpoint_000002.pt').exists()
+    assert sum(r['timing_updates'] for r in rows if r['kind'] in ('train','stop_requested'))==2
+    assert all(r['mean_data_wait_seconds']>=0 and r['mean_step_seconds']>=0
+               for r in rows if r['kind'] in ('train','stop_requested'))
