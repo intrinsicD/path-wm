@@ -10,10 +10,12 @@ sessions:
   open_threads: 4
 - id: 2026-09-06_001
   date: '2026-09-06'
-  summary: 'Follow-up complete: Claude calibration implementation; TwoRoom48/50 calibrated, PushT13933 updates30/50
-    saved and29/50 calibrated; matched internals,76 tests and canonical HTML pass. Parents immutable; no jobs queued;
-    mechanism and wider transfer approval remain open.'
-  turn_count: 5
-  events_count: 51
-  claims_touched: []
+  summary: 'Working baseline supported on tested source cases: TwoRoom calibrated48/50; PushT one-epoch30/50 versus45/50
+    released. Researcher engages with results; C02/C03 crystallized with narrow scope. Generalization, mechanisms
+    and further work remain open; no new run.'
+  turn_count: 6
+  events_count: 54
+  claims_touched:
+  - C02
+  - C03
   open_threads: 3

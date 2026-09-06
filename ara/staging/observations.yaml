@@ -407,9 +407,9 @@ observations:
   bound_to:
   - N52
   - N53
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/claims.md:C02
+  crystallized_via: empirical-resolution
   stale: false
 - id: O26
   timestamp: 2026-09-06T14:20+02:00
@@ -423,9 +423,9 @@ observations:
   bound_to:
   - N54
   - N55
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/claims.md:C03
+  crystallized_via: empirical-resolution
   stale: false
 - id: O27
   timestamp: 2026-09-06T14:20+02:00

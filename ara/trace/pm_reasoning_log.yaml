@@ -138,3 +138,14 @@ entries:
     older staging, so no three-day stale flags.
   - Evidence snapshot binds original hashes, exact samples, controls, calibration, full internals, Claude receipt,
     queue recovery and final canonical QA. All current jobs finished before this epilogue.
+
+- turn: 2026-09-06_001#6
+  notes:
+  - User question is researcher engagement with completed N53/N55 results, so O25/O26 crystallize via empirical-resolution
+    as C02/C03, consistently with C01 precedent. Probably/right is not explicit verbal affirmation; preserve ai-suggested
+    provenance.
+  - Keep claims restricted to exact checkpoints/source cases and paired control evidence. No assertion that more
+    training guarantees reference performance, no universal BN-calibration recommendation, and no unseen-configuration
+    claim.
+  - O27 next experiment and existing mechanism/transfer threads remain open. No new work authorization inferred.
+    No contradiction with older checkpoint/population claims, no topic abandonment, and no three-session-day staleness.

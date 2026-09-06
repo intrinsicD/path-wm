@@ -914,3 +914,19 @@ tree:
   - N53
   - N55
   status: open
+
+- id: N58
+  type: question
+  title: Assess whether completed results establish a working baseline in principle
+  provenance: user
+  timestamp: 2026-09-06T17:28+02:00
+  description: 'User asks whether the completed results mean the system probably works well in principle. Assessment:
+    useful learned control is demonstrated on tested source cases; broader reliability, long-goal strength and unseen-configuration
+    transfer remain unestablished. No further training or source transfer authorized.'
+  also_depends_on:
+  - N53
+  - N55
+  evidence:
+  - evidence/tables/tworoom_followup_2026-09-06.json
+  - ../docs/tworoom-followup-2026-09-06.md
+  status: resolved
