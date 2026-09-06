@@ -178,6 +178,7 @@ def test_training_scalars_get_own_panels_and_validation_ratios(tmp_path):
     assert logs["prediction / copy"] == pytest.approx(math.log10(0.5))
     ratio_chart = next(chart for chart in artifact["manifest"]["charts"] if chart["dataset"] == "validation_ratio")
     assert ratio_chart["encodings"]["y"]["field"] == "log10_ratio"
+    assert "different horizons" in ratio_chart["subtitle"]
     assert any(line["value"] == 0 for line in ratio_chart["referenceLines"])
     assert [row["value"] for row in datasets["train_lr"]] == pytest.approx([10.0, 20.0])  # micro-units
     assert {row["metric"] for row in datasets["validation"]} >= {"pred_mse", "rollout_mse"}
