@@ -94,7 +94,7 @@ def group_slices(model):
     return {k:slice(a,b) for k,(a,b) in result.items()}
 
 
-def probe(model, pixels, actions, cfg, seed, branches=False):
+def probe(model, pixels, actions, cfg, seed, branches=False, reg_seed=None, fp32_sigreg=False):
     params=list(model.parameters()); slices=group_slices(model)
     with preserved_state(model):
         model.train(); torch.manual_seed(seed);torch.cuda.manual_seed_all(seed)
@@ -102,7 +102,11 @@ def probe(model, pixels, actions, cfg, seed, branches=False):
         with autocast_context(pixels.device,cfg['precision']):
             z=model.encode(pixels);prediction=model.predict(z[:,:-1],actions[:,:-1])
             pred=(prediction-z[:,1:]).square().mean()
-            sig=cfg['sigreg_weight']*reg(z.transpose(0,1))
+            with torch.random.fork_rng(devices=[pixels.device.index] if pixels.is_cuda else []):
+                if reg_seed is not None: torch.manual_seed(reg_seed)
+                with autocast_context(pixels.device, 'float32') if not fp32_sigreg else torch.autocast(device_type=pixels.device.type, enabled=False):
+                    reg_z=z.float() if fp32_sigreg else z
+                    sig=cfg['sigreg_weight']*reg(reg_z.transpose(0,1))
             loss=pred+sig
             input_loss=(prediction-z[:,1:].detach()).square().mean()
             target_loss=(prediction.detach()-z[:,1:]).square().mean()
