@@ -218,6 +218,19 @@ normalization. Render labels, next-frame retrieval and preprocessing follow the
 actual history and image size. Essential tests cover label identity/order and
 history-one next-frame retrieval without querying future frames for prediction.
 
+The bounded CPU inspection completed with unchanged checkpoint bytes and all
+panels, but its wrapper initially failed canonical publication with a desktop
+`reader_timeout` at the default five-second readiness budget. Raw output and the
+last verified HTML survived. The installed canonical builder explicitly supports
+`readyTimeoutMs`, `actionTimeoutMs` and `timeoutMs`; use bounded 10/5/25-second
+budgets under this shared CPU load while keeping every verification check.
+
+Inspection also revealed that a failed dashboard build replaced the data
+companion before HTML verification. Extend the existing failure regression to
+require preservation of the old HTML, artifact and receipt together, then stage
+the new artifact until canonical publication succeeds. This repairs consistency
+on a measured failure path; no verification result is relaxed or fabricated.
+
 ## Outcomes
 
 Training/evaluation pending. This section records measured results, failures and deviations at closeout.

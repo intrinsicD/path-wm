@@ -114,12 +114,19 @@ def test_packaging_failure_keeps_last_html(tmp_path, monkeypatch):
     html = tmp_path / "runs" / "experiment_dashboard.html"
     html.parent.mkdir()
     html.write_text("previous verified dashboard")
+    artifact = html.with_suffix('.artifact.json')
+    # The actual default companion name is experiment_dashboard.artifact.json.
+    artifact.write_text('{"previous": true}')
+    receipt = html.with_suffix('.receipt.json')
+    receipt.write_text('{"ok": true, "generation": "previous"}')
     def fail_builder(artifact, target, builder):
         raise dashboard.DashboardBuildError("browser QA failed before publication")
     monkeypatch.setattr(dashboard, "_deliver_portable_artifact", fail_builder)
     with pytest.raises(dashboard.DashboardBuildError):
         dashboard.write_experiment_dashboard(html.parent, builder_path=tmp_path / "builder.mjs")
     assert html.read_text() == "previous verified dashboard"
+    assert artifact.read_text() == '{"previous": true}'
+    assert receipt.read_text() == '{"ok": true, "generation": "previous"}'
 
 
 def test_ranking_ledger_requires_complete_matched_candidates(tmp_path):
