@@ -97,3 +97,18 @@ entries:
     three-day staleness.
   - Record reporting size failure and subsequent verified repair together. Test49 includes2 browser checks; source-hashed
     raw evidence preserves negative control and matched released results.
+
+- turn: 2026-09-06_001#3
+  notes:
+  - Grouped completed overnight experiments and implementation evidence, not minute-by-minute heartbeats. User
+    scope and corrected HTML target recorded once.
+  - Promoted only implementation heuristics O22/H08 and O23/H09 through committed code dependencies; no user
+    provenance upgrade.
+  - 'Kept O19/O20/O21 and earlier scoped interpretations staged: no researcher review of new numerical results
+    or established causal resolution. C01 describes the earlier pilot, so new prefix results do not contradict
+    it.'
+  - 'No three-day staleness or five-turn abandonment: representation, control and protocol topics remain active.'
+  - Paper/released TwoRoom history and solver discrepancies are explicit; long-goal check is not full paper
+    reproduction. Preserve initial-goal denominators and all negative outcomes.
+  - Additional Claude review rejected before launch; existing two completed calls remain valid evidence. No
+    transfer bypass or claimed remaining quota.

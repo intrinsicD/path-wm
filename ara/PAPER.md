@@ -16,3 +16,5 @@ Long training is stopped pending user review. Research extensions are deferred.
 Latest completed follow-up: [saved-checkpoint control diagnosis](../docs/pusht-control-diagnosis.md) and [prepared source-scale reproduction](../docs/pusht-reproduction.md). Browser verification is resolved; learned control and a long-run schedule remain open.
 
 Latest user-requested short run: [375 updates in9min38, control0/50 versus released45/50](../docs/pusht-source-10min.md). Matched internals, repaired population mapping and bounded dashboard panels verified; no long reproduction launched.
+
+Latest overnight work completed: [PushT8,404 updates17/50 and TwoRoom4,074 updates14/50 primary,0/50 longer goals](../docs/overnight-2026-09-06.md). Prefixes use full schedules but remain below one epoch. All local evaluation and canonical HTML verification completed; no further training running. Full reproduction and causal dynamics diagnosis remain open.

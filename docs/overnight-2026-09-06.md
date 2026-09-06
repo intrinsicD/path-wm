@@ -165,8 +165,9 @@ canonical HTML verification. All 2,304 spectrum values are retained in bounded
 parts; no dataset exceeds 2,000 rows. The final post-ablation receipt passes packaging, validation, desktop/mobile
 verification and source interaction: 31 charts, six tables and four image-panel
 blocks. Final desktop and 390-pixel screenshots were inspected locally. On narrow
-screens the long-label control chart requires horizontal navigation; desktop is
-the clearest view for comparing those bars. Exact tables retain all values.
+screens long control labels crowd the chart and its bars are not visible in the
+initial viewport; use desktop or the exact tables for that comparison. This
+remains a mobile usability limitation despite passing canonical QA.
 [Desktop capture](../runs/overnight_2026-09-06/dashboard_final_desktop.png),
 [mobile capture](../runs/overnight_2026-09-06/dashboard_final_mobile.png).
 

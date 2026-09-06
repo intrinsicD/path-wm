@@ -300,3 +300,73 @@ observations:
   context: User-requested ten-minute run and matched rechecks completed; no researcher comment on these new results
     yet.
   stale: false
+
+- id: O19
+  timestamp: 2026-09-06T07:56+02:00
+  provenance: ai-suggested
+  content: Longer PushT prefix improves source control and representation readouts, but update count is confounded
+    with the different schedule and implementation recovery. Full reproduction and generalization remain unestablished.
+  context: Completed bounded overnight source-data study; no researcher response to new outcomes yet.
+  potential_type: claim
+  bound_to:
+  - N42
+  - N44
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O20
+  timestamp: 2026-09-06T07:56+02:00
+  provenance: ai-suggested
+  content: TwoRoom position remains highly linearly recoverable despite weak dynamics and long-goal failure.
+    BN/evaluation calibration, action dynamics and planner behavior are candidate causes; Gaussian-prior or
+    representation-causality attribution remains untested.
+  context: Completed bounded overnight source-data study; no researcher response to new outcomes yet.
+  potential_type: claim
+  bound_to:
+  - N43
+  - N44
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O21
+  timestamp: 2026-09-06T07:56+02:00
+  provenance: ai-suggested
+  content: Ten CEM iterations may save compute for future matched TwoRoom diagnostics; identical success cases
+    on this50-case single-seed comparison do not establish equivalence across tasks or seeds.
+  context: Completed bounded overnight source-data study; no researcher response to new outcomes yet.
+  potential_type: claim
+  bound_to:
+  - N45
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O22
+  timestamp: 2026-09-06T07:56+02:00
+  provenance: ai-suggested
+  content: Diagnostics need independent random generators and explicit resume-state contracts so enabling inspection
+    or changing operational controls does not silently alter optimization. Verify full stopped/resumed weights
+    and preserved source identities.
+  context: Completed bounded overnight source-data study; no researcher response to new outcomes yet.
+  potential_type: heuristic
+  bound_to:
+  - N39
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H08
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O23
+  timestamp: 2026-09-06T07:56+02:00
+  provenance: ai-suggested
+  content: Growing offline dashboards must partition exact native data without losing rows or splitting chart
+    series, and publish the HTML and evidence companions only after canonical verification succeeds.
+  context: Completed bounded overnight source-data study; no researcher response to new outcomes yet.
+  potential_type: heuristic
+  bound_to:
+  - N46
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H09
+  crystallized_via: artifact-commitment
+  stale: false

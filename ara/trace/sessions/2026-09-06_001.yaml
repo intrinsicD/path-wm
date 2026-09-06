@@ -2,10 +2,11 @@ session:
   id: 2026-09-06_001
   date: '2026-09-06'
   started: 2026-09-06T00:05+02:00
-  last_turn: 2026-09-06T01:32+02:00
-  turn_count: 2
-  summary: Source10min:375 updates in578.48s, control0/50 vs released45/50 and replay50/50; matched internals gap;
-    split inspection and dashboard size repaired;49 tests and browser QA pass. Long run unscheduled.
+  last_turn: 2026-09-06T07:56+02:00
+  turn_count: 3
+  summary: 'Overnight completed: PushT8404 updates17/50; TwoRoom4074 updates14/50 primary and0/50 long; released45/42/5.
+    Matched internals,3x cheaper solver check,64 tests and canonical HTML pass; extra Claude review pending transfer
+    approval.'
 events_logged:
 - turn: 1
   type: decision
@@ -131,6 +132,121 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O18 implemented in57edf65 and used for both checkpoint inspections.
+- turn: 3
+  type: decision
+  id: N38
+  routing: direct
+  provenance: user
+  summary: Authorize bounded overnight co-work and correct dashboard target
+- turn: 3
+  type: experiment
+  id: N39
+  routing: direct
+  provenance: ai-executed
+  summary: Claude review and essential tests support lifecycle and TwoRoom repairs
+- turn: 3
+  type: experiment
+  id: N40
+  routing: direct
+  provenance: ai-executed
+  summary: Optimize byte-identical source loading and recover PushT once
+- turn: 3
+  type: experiment
+  id: N41
+  routing: direct
+  provenance: ai-executed
+  summary: Validate TwoRoom source and distinguish paper from released protocol
+- turn: 3
+  type: experiment
+  id: N42
+  routing: direct
+  provenance: ai-executed
+  summary: PushT full-schedule prefix improves frozen source control
+- turn: 3
+  type: experiment
+  id: N43
+  routing: direct
+  provenance: ai-executed
+  summary: TwoRoom prefix learns some short-goal control but fails longer goals
+- turn: 3
+  type: experiment
+  id: N44
+  routing: direct
+  provenance: ai-executed
+  summary: Inspect matched internals and replay fixed first-case visualizations
+- turn: 3
+  type: experiment
+  id: N45
+  routing: direct
+  provenance: ai-executed
+  summary: Ten CEM iterations reduce compute without changing long-goal successes
+- turn: 3
+  type: experiment
+  id: N46
+  routing: direct
+  provenance: ai-executed
+  summary: Publish and inspect complete canonical HTML after all experiments
+- turn: 3
+  type: decision
+  id: N47
+  routing: direct
+  provenance: ai-executed
+  summary: Preserve completed prefixes and defer causal architecture changes
+- turn: 3
+  type: question
+  id: N48
+  routing: direct
+  provenance: ai-executed
+  summary: Additional Claude result review awaits specific transfer approval
+- turn: 3
+  type: observation
+  id: O19
+  routing: staged
+  provenance: ai-suggested
+  summary: Longer PushT prefix improves source control and representation readouts, but update count is confounded
+    with the different schedule and implementation recovery. Full reproduction and generalization remain unestablished.
+- turn: 3
+  type: observation
+  id: O20
+  routing: staged
+  provenance: ai-suggested
+  summary: TwoRoom position remains highly linearly recoverable despite weak dynamics and long-goal failure.
+    BN/evaluation calibration, action dynamics and planner behavior are candidate causes; Gaussian-prior or
+    representation-causality attribution remains untested.
+- turn: 3
+  type: observation
+  id: O21
+  routing: staged
+  provenance: ai-suggested
+  summary: Ten CEM iterations may save compute for future matched TwoRoom diagnostics; identical success cases
+    on this50-case single-seed comparison do not establish equivalence across tasks or seeds.
+- turn: 3
+  type: observation
+  id: O22
+  routing: staged
+  provenance: ai-suggested
+  summary: Diagnostics need independent random generators and explicit resume-state contracts so enabling inspection
+    or changing operational controls does not silently alter optimization. Verify full stopped/resumed weights
+    and preserved source identities.
+- turn: 3
+  type: observation
+  id: O23
+  routing: staged
+  provenance: ai-suggested
+  summary: Growing offline dashboards must partition exact native data without losing rows or splitting chart
+    series, and publish the HTML and evidence companions only after canonical verification succeeds.
+- turn: 3
+  type: heuristic
+  id: H08
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O22 committed in tested implementation; provenance retained.
+- turn: 3
+  type: heuristic
+  id: H09
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O23 committed in tested implementation; provenance retained.
 ai_actions:
 - turn: 1
   action: Repaired and verified canonical dashboard; ran 20 training goals and paired actions, eight simulator-ranking
@@ -160,6 +276,19 @@ ai_actions:
   - viewer/
   - docs/
   - ara/
+- turn: 3
+  action: Reviewed with Claude via MCP, wrote red-before-green repairs, benchmarked full sources, ran bounded
+    training/control/inspection/solver comparison, inspected HTML and fixed-case rollouts, committed report;
+    preserved checkpoints.
+  provenance: ai-executed
+  files_changed:
+  - world_model/
+  - scripts/
+  - tests/
+  - viewer/
+  - configs/reproduction/
+  - docs/
+  - ara/
 claims_touched: []
 key_context:
 - turn: 1
@@ -173,17 +302,15 @@ key_context:
 - turn: 2
   excerpt: User authorization covers the bounded training and checks. It does not endorse a causal explanation or
     launch the prepared139330-update reproduction.
+- turn: 3
+  excerpt: User requests overnight co-work with Claude and corrects target to runs/experiment_dashboard.html.
+    Deadline08:00 assumed; all planned local work completes before morning.
 open_threads:
-- Schedule source-scale 139330-update run separately; rough pilot-rate estimate 58.3h excludes source I/O/method
-  changes.
-- Learned-control gate remains unmet; causal contributions of scale, representation/rollout error and slicing
-  numerics remain unresolved.
-- Retain explicit scheduler/released-history uncertainty and separate source interpolation from unseen-configuration
-  transfer.
+- Full ten-epoch reproduction and unseen-configuration transfer remain unscheduled/unestablished.
+- Separate TwoRoom evaluation/dynamics calibration from planner behavior; preserve completed checkpoints.
+- Specific approval for additional Claude code/result transfer remains pending; no third call launched.
+- Long control labels crowd mobile charts; desktop and exact values remain available.
 ai_suggestions_pending:
-- O14/O15 causal/capability interpretations await researcher review; O12 scale/generalization hypotheses remain
-  unisolated.
-- H06 is an implemented numerical preparation choice, not user endorsement of a mechanism or a successful training
-  result.
-- 'O17 remains staged: low rank/weak pose/action use accompany failure; causes and longer-schedule outcomes remain
-  unisolated.'
+- O19/O20/O21 remain staged; capability and mechanism interpretations await researcher review.
+- Earlier O12/O14/O15/O17 retain their original checkpoint/population scopes; no causal adjudication.
+- No new scientific threshold, solver default or architecture modification adopted.

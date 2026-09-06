@@ -15,3 +15,5 @@ Harness restoration: [checks and reporting receipt](tables/harness_recovery_2026
 Completed control diagnosis and source-scale preparation: [snapshot](tables/pusht_control_diagnosis_2026-09-06.json); [report](../../docs/pusht-control-diagnosis.md). Includes repaired browser QA, seen-goal failures, matched simulator rankings, bf16 numerical isolation, activation-checkpointing preflight and frozen reproduction budget. No long training launched.
 
 Ten-minute source-data development run: [source-hashed snapshot](tables/pusht_source_10min_2026-09-06.json); [report](../../docs/pusht-source-10min.md). Includes375 updates, matched50-goal outcomes, final/released internals, qualitative saved-action replay,49 tests and canonical browser receipt.
+
+Bounded overnight co-work and both full-source prefixes: [source-hashed snapshot](tables/overnight_2026-09-06.json); [completed report](../../docs/overnight-2026-09-06.md). Includes matched control/internals, solver iteration comparison,64 tests and final browser receipt; additional Claude review blocked pending specific approval.

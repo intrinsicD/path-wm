@@ -10,9 +10,10 @@ sessions:
   open_threads: 4
 - id: 2026-09-06_001
   date: '2026-09-06'
-  summary: Source10min:375 updates in578.48s, control0/50 vs released45/50 and replay50/50; matched internals gap;
-    split inspection and dashboard size repaired;49 tests and browser QA pass. Long run unscheduled.
-  turn_count: 2
-  events_count: 19
+  summary: 'Overnight completed: PushT8404 updates17/50; TwoRoom4074 updates14/50 primary and0/50 long; released45/42/5.
+    Matched internals,3x cheaper solver check,64 tests and canonical HTML pass; extra Claude review pending
+    transfer approval.'
+  turn_count: 3
+  events_count: 37
   claims_touched: []
-  open_threads: 3
+  open_threads: 4

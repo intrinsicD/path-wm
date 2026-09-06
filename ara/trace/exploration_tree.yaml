@@ -605,3 +605,181 @@ tree:
   - N36
   timestamp: 2026-09-06T01:32+02:00
   status: resolved
+
+- id: N38
+  type: decision
+  title: Authorize bounded overnight co-work and correct dashboard target
+  provenance: user
+  timestamp: 2026-09-06T07:56+02:00
+  choice: User requests Claude via MCP, clean robust performant implementation, dataset testing, literature
+    as needed and overnight work; target corrected to runs/experiment_dashboard.html. Working morning deadline
+    assumed 08:00 Europe/Berlin; no numeric scientific pass threshold inferred.
+  alternatives:
+  - Advice only
+  - Full ten-epoch training beyond overnight budget
+  evidence:
+  - evidence/tables/overnight_2026-09-06.json
+  - ../docs/overnight-2026-09-06.md
+  also_depends_on:
+  - N37
+  status: resolved
+- id: N39
+  type: experiment
+  title: Claude review and essential tests support lifecycle and TwoRoom repairs
+  provenance: ai-executed
+  timestamp: 2026-09-06T07:56+02:00
+  result: Claude completed one independent review and three red-before-green TwoRoom tests via MCP; two calls
+    report $4.164104 API-equivalent usage. Dedicated validation RNG, versioned resume fingerprints, final validation/STOP
+    and timing accounting verified. Full suite 64 passes including two browser checks; actual remaining account
+    quotas unavailable.
+  evidence:
+  - evidence/tables/overnight_2026-09-06.json
+  - ../docs/overnight-2026-09-06.md
+  also_depends_on:
+  - N38
+  status: resolved
+- id: N40
+  type: experiment
+  title: Optimize byte-identical source loading and recover PushT once
+  provenance: ai-executed
+  timestamp: 2026-09-06T07:56+02:00
+  result: '48 paired complete source items per dataset: PushT median 55.94 to 3.58 ms; TwoRoom 58.02 to 4.83
+    ms, warm-cache reads only. Native batch128 bf16 OOM before optimizer update; full-batch checkpointing fits
+    about3.28GB. PushT stopped/resumed immutable step1000 with 180s discarded-work charge, original manifest
+    retained; measured post-resume7404 updates average1.1628s processing plus0.00327s wait.'
+  evidence:
+  - evidence/tables/overnight_2026-09-06.json
+  - ../docs/overnight-2026-09-06.md
+  also_depends_on:
+  - N39
+  status: resolved
+- id: N41
+  type: experiment
+  title: Validate TwoRoom source and distinguish paper from released protocol
+  provenance: ai-executed
+  timestamp: 2026-09-06T07:56+02:00
+  result: Pinned licensed simulator exactly reproduces6250 source transitions and reset pixels. Released history3
+    and CEM30 differ from paper history1 and CEM10. Frozen primary25/50 and separate100/150 goal/budget sets
+    retain released settings,50cases each; later clarification does not rewrite frozen manifests. Released
+    checkpoint/source revisions and hashes verified.
+  evidence:
+  - evidence/tables/overnight_2026-09-06.json
+  - ../docs/overnight-2026-09-06.md
+  also_depends_on:
+  - N38
+  - N39
+  status: resolved
+- id: N42
+  type: experiment
+  title: PushT full-schedule prefix improves frozen source control
+  provenance: ai-executed
+  timestamp: 2026-09-06T07:56+02:00
+  result: Seed3072 batch128 bf16 checkpointing:8404 updates,1075712 windows,60.313%epoch,10625.41s recorded
+    plus180s discarded-work charge; full139330 schedule not compressed. Control17/50 versus prior375-step0/50,
+    released45/50,replay50/50,stationary0; initial0. Final pred/copy0.2274, pred/shuffle0.1825. Saved validation
+    step matches immutable checkpoint.
+  evidence:
+  - evidence/tables/overnight_2026-09-06.json
+  - ../docs/overnight-2026-09-06.md
+  also_depends_on:
+  - N40
+  status: resolved
+- id: N43
+  type: experiment
+  title: TwoRoom prefix learns some short-goal control but fails longer goals
+  provenance: ai-executed
+  timestamp: 2026-09-06T07:56+02:00
+  result: 4074 updates,521472 windows,79.284%epoch,4804.89s; full51380-update schedule retained. Primary14/50
+    versus42/50 released; both include4 initial successes, so10/46 versus38/46 newly reached. Long goals0/50
+    versus5/50; replay50/50 on both. Final pred/copy3.948, pred/shuffle0.9355; zero actions MSE2.3173 beats
+    recorded2.6305. Mean update1.1687s, wait0.00151s.
+  evidence:
+  - evidence/tables/overnight_2026-09-06.json
+  - ../docs/overnight-2026-09-06.md
+  also_depends_on:
+  - N41
+  - N42
+  status: resolved
+- id: N44
+  type: experiment
+  title: Inspect matched internals and replay fixed first-case visualizations
+  provenance: ai-executed
+  timestamp: 2026-09-06T07:56+02:00
+  result: Matched512 validation,1024 probe,256 horizon8 windows and immutable checkpoints. PushT rank38.715
+    versus88.719, mean8-target R2 0.5462 versus0.7200, horizon8 pred/copy0.2906 versus0.1138. TwoRoom rank14.682
+    versus91.478, meanagentxy R2 0.9939 versus0.9900, horizon8ratio3.2835 versus0.1084. Validation reinspection
+    differs at most8.23e-6 absolute. Saved actions reproduce all three fixed first-case panels, inspected locally.
+  evidence:
+  - evidence/tables/overnight_2026-09-06.json
+  - ../docs/overnight-2026-09-06.md
+  also_depends_on:
+  - N42
+  - N43
+  status: resolved
+- id: N45
+  type: experiment
+  title: Ten CEM iterations reduce compute without changing long-goal successes
+  provenance: ai-executed
+  timestamp: 2026-09-06T07:56+02:00
+  result: Predeclared conditional pair completed07:42:35; identical50cases,seeds,settings except30 to10 iterations,
+    same checkpoint bytes. Local0/50 both, released same5/50 both. Case seconds local729.37 to245.60 (2.97x),
+    released680.57 to230.08 (2.96x). Scheduling guard corrected from launch-clock to documented main-queue
+    completion07:29:51 before07:32; first skip retained. No default adoption or full paper claim.
+  evidence:
+  - evidence/tables/overnight_2026-09-06.json
+  - ../docs/overnight-2026-09-06.md
+  also_depends_on:
+  - N41
+  - N43
+  status: resolved
+- id: N46
+  type: experiment
+  title: Publish and inspect complete canonical HTML after all experiments
+  provenance: ai-executed
+  timestamp: 2026-09-06T07:56+02:00
+  result: Dataset/source/goal case identities and initial-goal denominators reconciled. Lossless dataset partitions
+    preserve2304 spectrum rows; maximum1920 rows per dataset. Failed publication keeps old HTML/artifact/receipt
+    together. Every completed experiment wrapper succeeds. Final31charts,6tables,4imageblocks; canonical desktop1440/mobile390/source
+    interaction pass. Local captures inspected; long control labels crowd initial mobile chart viewport.
+  evidence:
+  - evidence/tables/overnight_2026-09-06.json
+  - ../docs/overnight-2026-09-06.md
+  also_depends_on:
+  - N39
+  - N44
+  - N45
+  status: resolved
+- id: N47
+  type: decision
+  title: Preserve completed prefixes and defer causal architecture changes
+  provenance: ai-executed
+  timestamp: 2026-09-06T07:56+02:00
+  choice: Close bounded overnight work with immutable checkpoints and report423c4d3. No further training queued,
+    no new gate, no causal BN/Gaussian-prior claim. Next proposed diagnostics separate evaluation/dynamics
+    calibration from planner behavior; passive extensions and full ten-epoch reproduction remain deferred.
+  alternatives:
+  - Adopt unverified numerical/objective changes
+  - Infer full reproduction from source-prefix results
+  evidence:
+  - evidence/tables/overnight_2026-09-06.json
+  - ../docs/overnight-2026-09-06.md
+  also_depends_on:
+  - N44
+  - N45
+  - N46
+  status: resolved
+- id: N48
+  type: question
+  title: Additional Claude result review awaits specific transfer approval
+  provenance: ai-executed
+  timestamp: 2026-09-06T07:56+02:00
+  description: 'Automatic approval review rejected the additional MCP invocation before launch: local code
+    and aggregate artifacts would be sent to an unverified Claude destination, and general co-work approval
+    was deemed insufficient. Specific permission asked; no reply, no bypass and no third review output. Local
+    work completed independently.'
+  evidence:
+  - evidence/tables/overnight_2026-09-06.json
+  - ../docs/overnight-2026-09-06.md
+  also_depends_on:
+  - N39
+  status: open
