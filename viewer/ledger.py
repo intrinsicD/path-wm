@@ -253,7 +253,10 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
         keys = {(r["case_index"], r["model"]) for r in records}
         if keys != {(r["case_index"], r["model"]) for r in summaries} or len(keys) != len(summaries):
             raise DashboardDataError(f"{path}: ranking model/case summaries disagree")
-        if keys != {(i, model) for i in range(len(manifest["cases"])) for model in ("pilot", "released")}:
+        models = manifest.get("models", ["pilot", "released"])
+        if (not isinstance(models, list) or not models or len(set(models)) != len(models)
+                or not all(isinstance(model, str) and model for model in models)
+                or keys != {(i, model) for i in range(len(manifest["cases"])) for model in models}):
             raise DashboardDataError(f"{path}: ranking case/model population incomplete")
         matched = {}
         for record in records:

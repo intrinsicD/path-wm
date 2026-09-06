@@ -390,8 +390,16 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                                      reference_lines=[{"axis": "y", "value": 0, "label": "equal to copying", "lineStyle": "dashed"}],
                                      direction="lower"))
     if datasets.get("ranking"):
-        ranking_run = datasets["ranking_runs"][0]["run"]
-        selections["ranking_run"], selections["rollout_candidate"] = ranking_run, "pilot_plan"
+        rankings = [r for r in run_results if r.kind == "ranking"]
+        latest = max(rankings, key=lambda r: (r.modified_at, r.label))
+        paired = [r for r in rankings if r.source_paths == latest.source_paths]
+        selected = min(paired, key=lambda r: (r.context.get("model") == "released", r.context.get("case_index", 0)))
+        ranking_run = selected.label
+        candidate = f"{selected.context.get('model', 'pilot')}_plan"
+        available = [row["candidate"] for row in datasets["ranking"] if row["run"] == ranking_run]
+        if candidate not in available:
+            candidate = available[0]
+        selections["ranking_run"], selections["rollout_candidate"] = ranking_run, candidate
         datasets["ranking_selected"] = [row for row in datasets["ranking"] if row["run"] == ranking_run]
         charts.append(_chart("ranking", f"Predicted goal cost versus simulator position error · {ranking_run}",
                              "20 identical raw action sequences for this model/case. Lower values are better; angle and terminal success remain separate. All model/case records are in the table.",
@@ -403,8 +411,8 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
              "MSE against simulator-rendered observations, within the selected model's latent space."),
             ("rollout_goal", "Predicted and measured latent goal distance",
              "Squared latent distance to the source goal at all five planning blocks. This is not physical distance.")):
-            keep(dataset, lambda row: row["run"] == ranking_run and row["candidate"] == "pilot_plan")
-            charts.append(_chart(dataset, f"{title} · {ranking_run} · pilot_plan", subtitle, dataset, "line", number("environment_step"),
+            keep(dataset, lambda row: row["run"] == ranking_run and row["candidate"] == candidate)
+            charts.append(_chart(dataset, f"{title} · {ranking_run} · {candidate}", subtitle, dataset, "line", number("environment_step"),
                                  number("value"), color=category("metric")))
     def table(name, title, columns, sort, subtitle):
         return {"id": name, "title": title, "subtitle": subtitle, "dataset": name, "sourceId": SOURCE_ID,
