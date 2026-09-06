@@ -9,7 +9,7 @@ research direction does not replace that workflow.
 
 Build a fresh modular implementation of the published LeWM baseline. Demonstrate
 learning and control on PushT and support multiple explicit dataset protocols.
-Research extensions remain deferred until the reference baseline works.
+The working baseline is preserved while user-authorized sample-efficiency research proceeds separately; the full reproduction schedule remains incomplete.
 The earlier reset removed the previous implementation and results; the retained
 ideas and downloaded source datasets carried forward. The reusable development
 harness is now recovered separately from that discarded implementation.
@@ -20,7 +20,19 @@ training and benchmark evaluation. Baseline-specific tests cover episode
 alignment, causal action timing, reference computations and gradients,
 normalization, rollout and checkpoint integrity.
 
-## Latest: diagnostic follow-up and one-epoch PushT continuation complete (2026-09-06)
+## Latest: sample-efficiency investigation complete (2026-09-06)
+
+The user requested literature research with Claude, batch/gradient inspection and a plausible route to fewer examples. See [the evidence and proposed experiment](sample-efficiency-2026-09-06.md), [predeclared plan](sample-efficiency-plan-2026-09-06.md), and [verified dashboard](../runs/experiment_dashboard.html). No training or diagnostic work remains active. All original checkpoint hashes and model parameters/buffers are preserved.
+
+Across the first 100 batches, PushT/TwoRoom average 127.50/127.23 distinct episodes and 511.93/511.89 frame rows per 128-window batch: within-batch duplication is negligible. Across the processed prefix, encoded source frames repeat 3.18×/2.49×. PushT has 185 exact first-frame state[:5] configuration groups; this is not full-trajectory deduplication.
+
+Four frozen training batches per dataset show more consistent total gradients at batch128 than32. SIGReg's mean gradient norm exceeds prediction's on the projector by 2.84×/1.94×; encoder terms are mostly near-orthogonal, without severe input/target branch cancellation. Float32 controls support that conclusion. Classical critical-batch estimates are invalid for this coupled BatchNorm/SIGReg objective.
+
+On fixed data, random SIGReg directions produce about11× the gradient variance of dropout alone. A predeclared4096-vs1024 projection probe reduces conditional variance **3.96× on PushT /4.13× on TwoRoom**, with zero new examples or optimizer updates. This is a measured mechanism, **not evidence of faster training or higher control success**. The first proposed experiment keeps latent192/batch128/λ0.09 and tests lower-variance sketches on paired learning curves; a separate configuration-disjoint, coverage-preserving subset experiment tests independent-data efficiency. Literature argues against assuming a32/64-dimensional latent is a free improvement.
+
+Claude contributed mathematical analysis, generic gradient-code implementation and experiment design through two neutral-directory MCP calls ($0.649057 reported API-equivalent total); no repository transfer was needed. Eight primary papers informed the final report. One stochastic diagnostic was rejected and preserved after replicate-count and numerical-reduction defects; corrected results are used. Dashboard payload failures were repaired without changing raw experiment outputs. Final verification:84 tests passed including3 browser checks; canonical HTML verified at1440/390 with31 charts,8 tables and5 image blocks.
+
+## Completed: diagnostic follow-up and one-epoch PushT continuation (2026-09-06)
 
 The accepted work with Claude implementation co-work has completed. See the
 [results report](tworoom-followup-2026-09-06.md), its preserved plan/execution log,
