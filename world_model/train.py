@@ -29,7 +29,7 @@ def write_json(path,value):
 # These affect execution/reporting, not data, model, objective or LR schedule.
 # Unknown keys remain frozen. Legacy fingerprints retain their original contract.
 OPERATIONAL_KEYS = ('max_seconds', 'workers', 'cache_bytes', 'log_every',
-                    'eval_every', 'checkpoint_steps', 'introspect')
+                    'eval_every', 'checkpoint_steps', 'introspect', 'stop_at_step')
 
 
 def configuration_fingerprint(signature, version=2):
@@ -43,15 +43,29 @@ def configuration_fingerprint(signature, version=2):
     return hashlib.sha256(json.dumps(frozen, sort_keys=True).encode()).hexdigest()
 
 
-def train(config_path, resume=False):
+def train(config_path, resume=False, fork_from=None):
     cfg=yaml.safe_load(Path(config_path).read_text())
     ds_cfg=yaml.safe_load(Path(cfg['dataset']).read_text())
     if ds_cfg['kind']!='action_trajectory': raise ValueError('Dataset has no action-conditioned protocol')
-    run=Path(cfg['run_dir']);run.mkdir(parents=True,exist_ok=True)
+    if resume and fork_from is not None: raise ValueError('Choose resume or fork_from, not both')
+    run=Path(cfg['run_dir'])
+    if fork_from is not None and run.exists(): raise FileExistsError('A checkpoint fork needs a new run directory')
     if (run/'checkpoint.pt').exists() and not resume:
         raise FileExistsError(f'{run} already has a checkpoint; use --resume or a new run_dir')
-    saved = torch.load(run/'checkpoint.pt', map_location='cpu', weights_only=True) if resume else None
-    fingerprint_version = saved.get('fingerprint_version', 1) if resume else 2
+    source=Path(fork_from).resolve() if fork_from is not None else run/'checkpoint.pt'
+    recovering=resume or fork_from is not None
+    saved = torch.load(source, map_location='cpu', weights_only=True) if recovering else None
+    original=json.loads((source.parent/'manifest.json').read_text()) if recovering else None
+    fingerprint_version = saved.get('fingerprint_version', 1) if recovering else 2
+    if fork_from is not None and (fingerprint_version!=2 or saved.get('diagnostic_only')):
+        raise ValueError('Fork requires a version-two training checkpoint, not a diagnostic clone')
+    parent=None
+    if fork_from is not None:
+        with source.open('rb') as stream: digest=hashlib.file_digest(stream,'sha256').hexdigest()
+        parent=dict(checkpoint=str(source),checkpoint_sha256=digest,step=saved['step'],
+                    elapsed_seconds=saved['elapsed_seconds'],fingerprint=saved['fingerprint'],
+                    manifest=str(source.parent/'manifest.json'))
+    run.mkdir(parents=True,exist_ok=True)
     seed=cfg['seed'];torch.manual_seed(seed);np.random.seed(seed);random.seed(seed)
     torch.set_num_threads(4)
     device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -85,19 +99,32 @@ def train(config_path, resume=False):
         generator=torch.Generator().manual_seed(seed+200000) if fingerprint_version==2 else None)
     signature=dict(config=cfg,dataset=ds_cfg,model=model_cfg,train_episodes=tr,val_episodes=va,
                    action_stats=stats,total_steps=total_steps,train_windows=len(train_ds),
-                   val_windows=len(val_ds),validation_window_indices=val_order,initialization='random',seed=seed)
+                   val_windows=len(val_ds),validation_window_indices=val_order,
+                   initialization=('checkpoint_continuation' if fork_from is not None else
+                                   original.get('initialization','random') if resume else 'random'),seed=seed)
     if split_receipt is not None:
         if cfg.get('split_protocol')=='random_windows':
             signature.update(data_protocol=split_receipt,population=split_receipt['population'])
         else: signature['episode_split']=split_receipt
     fingerprint=configuration_fingerprint(signature,fingerprint_version)
+    stop_at=cfg.get('stop_at_step')
+    if stop_at is not None and (isinstance(stop_at,bool) or not isinstance(stop_at,int) or not 0<stop_at<=total_steps):
+        raise ValueError('stop_at_step must be a positive integer within the full schedule')
     step=0;elapsed=0;validation_step=None
-    if resume:
-        if saved['fingerprint']!=fingerprint: raise ValueError('Resume configuration or dataset changed')
+    if recovering:
+        expected=fingerprint
+        if fork_from is not None:
+            # A fork may change its output path and declared operational limits only.
+            parent_signature={**signature,'initialization':original.get('initialization','random'),
+                              'config':{**cfg,'run_dir':original['config']['run_dir']}}
+            expected=configuration_fingerprint(parent_signature,fingerprint_version)
+        if saved['fingerprint']!=expected or original['fingerprint']!=saved['fingerprint']:
+            raise ValueError('Resume/fork configuration or dataset changed')
+        if stop_at is not None and stop_at<saved['step']:
+            raise ValueError('stop_at_step precedes the saved checkpoint')
         model.load_state_dict(saved['model'],strict=True);optimizer.load_state_dict(saved['optimizer'])
         step=saved['step'];elapsed=saved['elapsed_seconds']
         validation_step=saved.get('validation_step')
-        original=json.loads((run/'manifest.json').read_text())
         previous=saved.get('operational_config', original['config'])
         overrides={k:dict(previous=previous.get(k),current=cfg.get(k))
                    for k in OPERATIONAL_KEYS if previous.get(k)!=cfg.get(k)}
@@ -106,10 +133,12 @@ def train(config_path, resume=False):
             resumed_at=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),
             code_dirty=bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip()),
             code_commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip())
+        if parent is not None: receipt['parent']=parent
         with (run/'resumes.jsonl').open('a') as stream:stream.write(json.dumps(receipt)+'\n')
         torch.set_rng_state(saved['rng'].cpu())
         if device.type=='cuda':torch.cuda.set_rng_state_all([s.cpu() for s in saved['cuda_rng']])
-    else:
+    if not resume:
+        if parent is not None: signature['parent']=parent
         signature.update(code_commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
             code_dirty=bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip()),
             torch_version=torch.__version__,device=str(device),fingerprint=fingerprint,
@@ -151,11 +180,12 @@ def train(config_path, resume=False):
             model_cfg.get('image_size',224),cfg['eval_batches'],cfg.get('eval_precision',cfg['precision'])))
         introspect()
         validation_step=step
-    if not resume:
+    if not recovering:
         validate()
         save()
     else:
-        record('resumed',dict(resumed_from_step=step))
+        record('forked' if parent is not None else 'resumed',dict(resumed_from_step=step))
+        if parent is not None: save()
     while step<total_steps:
         epoch=step//batches_per_epoch
         skip=step%batches_per_epoch
@@ -172,10 +202,11 @@ def train(config_path, resume=False):
             if step>=total_steps: break
             requested=(run/'STOP').exists()
             expired=cfg.get('max_seconds') and elapsed+time.monotonic()-start>=cfg['max_seconds']
-            if requested or expired:
+            bounded=stop_at is not None and step>=stop_at
+            if requested or expired or bounded:
                 if validation_step!=step:validate()
                 save(final=True)
-                record('stop_requested' if requested else 'time_limit',
+                record('stop_requested' if requested else 'step_limit' if bounded else 'time_limit',
                     dict(total_steps=total_steps,validation_step=validation_step,**take_timing(),
                          baseline_gate='pending_closed_loop_evaluation'))
                 return
@@ -204,5 +235,5 @@ def train(config_path, resume=False):
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('config');p.add_argument('--resume',action='store_true')
-    a=p.parse_args();train(a.config,a.resume)
+    p=argparse.ArgumentParser();p.add_argument('config');p.add_argument('--resume',action='store_true');p.add_argument('--fork-from',type=Path)
+    a=p.parse_args();train(a.config,a.resume,a.fork_from)

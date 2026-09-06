@@ -1,60 +1,138 @@
-"""Checkpoint diagnostics on fixed training and held-out windows.
+"""Matched normalization diagnostics on restored training/validation windows.
 
-Evaluation uses unmodified running BatchNorm buffers. A separate train-mode
-probe shows batch-statistic behavior and is discarded after measurement.
+Original checkpoints stay immutable. Calibrated buffers belong to disposable
+clones; batch-statistic probes are not single-state deployment evaluators.
 """
-import argparse,copy,json
+import argparse
+import copy
+from dataclasses import asdict
+import json
 from pathlib import Path
+import subprocess
+import numpy as np
 import torch
-from torch.utils.data import DataLoader
-from world_model.data import TrajectoryDataset,preprocess_pixels,normalize_actions
+from torch.utils.data import DataLoader,Subset
+from scripts.bn_calibration import recalibrate_bn_statistics
+from scripts.inspect_checkpoint import inspection_datasets,load,sha256
+from world_model.data import preprocess_pixels,normalize_actions
 from world_model.evaluation import evaluate_prediction
-from world_model.model import build_model
+from world_model.introspection import state_digest
+from world_model.training import autocast_context
 from world_model.train import write_json
 
+
+def source_rows(dataset,indices):
+    rows=[]
+    for index in indices:
+        base=dataset
+        while isinstance(base,Subset):index=base.indices[index];base=base.dataset
+        episode,start=base.locate(int(index));rows.append(int(base.offsets[episode])+start)
+    return rows
+
+
+def batch_statistics(model,loader,stats,device,image_size):
+    """BN uses current batches; dropout stays off, and the clone is discarded."""
+    probe=copy.deepcopy(model).eval()
+    for layer in probe.modules():
+        if isinstance(layer,torch.nn.modules.batchnorm._BatchNorm):layer.train()
+    totals={};count=0
+    with torch.no_grad():
+        for batch in loader:
+            x=preprocess_pixels(batch['pixels'].to(device),image_size)
+            actions=normalize_actions(batch['action'].to(device),stats)
+            z=probe.encode(x);target=z[:,1:]
+            pred=probe.predict(z[:,:-1],actions[:,:-1])
+            zero=probe.predict(z[:,:-1],torch.zeros_like(actions[:,:-1]))
+            shuffled=probe.predict(z[:,:-1],actions.roll(1,0)[:,:-1])
+            rollout=probe.rollout(z[:,:1],actions[:,:-1])
+            values=dict(pred_mse=(pred-target).square().mean(),identity_mse=(z[:,:-1]-target).square().mean(),
+                zero_action_mse=(zero-target).square().mean(),shuffled_action_mse=(shuffled-target).square().mean(),
+                rollout_mse=(rollout-target).square().mean(),embedding_std=z.std(dim=0).mean(),
+                action_effect=(pred-shuffled).square().mean())
+            count+=len(z)
+            for key,value in values.items():totals[key]=totals.get(key,0.)+float(value)*len(z)
+    if not count:raise ValueError('Empty diagnostic sample')
+    return {**{k:v/count for k,v in totals.items()},'examples':count}
+
+
 @torch.no_grad()
-def check(run, output_path=None):
-    torch.set_num_threads(4)
-    run=Path(run);meta=json.loads((run/'manifest.json').read_text())
-    saved=torch.load(run/'checkpoint.pt',weights_only=True,map_location='cuda')
-    model=build_model(saved['model_config']).cuda();model.load_state_dict(saved['model'],strict=True)
-    output={'step':saved['step'],'seed':meta['seed']}
-    calibrated=None
-    for split,key in [('train','train_episodes'),('heldout','val_episodes')]:
-        ds=TrajectoryDataset(meta['dataset']['path'],meta[key],frameskip=meta['dataset']['frameskip'],num_steps=4,cache_bytes=meta['config'].get('cache_bytes',0))
-        n=min(len(ds),512)
-        indices=torch.randperm(len(ds),generator=torch.Generator().manual_seed(103072)).tolist()[:n]
-        loader=DataLoader(ds,batch_size=128,sampler=indices,num_workers=0 if meta['config'].get('cache_bytes',0) else 2)
-        output[split]=evaluate_prediction(model,loader,saved['action_stats'],torch.device('cuda'),batches=4)
-        batch=next(iter(loader));x=preprocess_pixels(batch['pixels'].cuda());a=normalize_actions(batch['action'].cuda(),saved['action_stats'])
-        model.eval();z=model.encode(x);prediction=model.predict(z[:,:-1],a[:,:-1])
-        output[split]['eval_mode_batch_mse']=float((prediction-z[:,1:]).square().mean())
-        with torch.autocast('cuda',dtype=torch.bfloat16):
-            bz=model.encode(x);bp=model.predict(bz[:,:-1],a[:,:-1])
-        output[split]['bf16_same_batch_mse']=float((bp.float()-bz[:,1:].float()).square().mean())
-        # Same images; only BatchNorm uses current-batch statistics. Disable
-        # dropout to avoid attributing its noise to normalization mismatch.
-        probe=copy.deepcopy(model)
-        for m in probe.modules():
-            if isinstance(m,torch.nn.modules.batchnorm._BatchNorm):m.train()
-        z=probe.encode(x);prediction=probe.predict(z[:,:-1],a[:,:-1])
-        output[split]['batch_statistics_mse']=float((prediction-z[:,1:]).square().mean())
-        del probe
-        if split=='train':
-            calibrated=copy.deepcopy(model).eval()
-            for module in calibrated.modules():
-                if isinstance(module,torch.nn.modules.batchnorm._BatchNorm):
-                    module.reset_running_stats();module.momentum=None;module.train()
-            # Diagnostic clone only: estimate BN buffers at fixed encoder weights
-            # using training windows. No optimizer and no held-out data involved.
-            for calibration_batch in loader:
-                cx=preprocess_pixels(calibration_batch['pixels'].cuda())
-                ca=normalize_actions(calibration_batch['action'].cuda(),saved['action_stats'])
-                cz=calibrated.encode(cx);calibrated.predict(cz[:,:-1],ca[:,:-1])
-            calibrated.eval()
-        output[split]['train_calibrated_bn']=evaluate_prediction(calibrated,loader,saved['action_stats'],torch.device('cuda'),batches=4)
-    output['bn_calibration_scope']='Discarded diagnostic clone; at most 512 training windows; no weight update or checkpoint change'
-    write_json(Path(output_path) if output_path else run/'diagnostics.json',output);print(json.dumps(output),flush=True)
+def check(run,output_path=None,*,device='cuda',windows=512,calibration_windows=512,batch_size=128,
+          checkpoint=None,reference=None,save_calibrated=None):
+    if min(windows,calibration_windows,batch_size)<2:raise ValueError('Diagnostic sample and batch sizes must be at least two')
+    torch.set_num_threads(4);device=torch.device(device);run=Path(run)
+    output=Path(output_path) if output_path else run/'diagnostics.json'
+    if output.exists() or (output.parent/'variants').exists():raise FileExistsError('Diagnostic output already exists')
+    if save_calibrated is not None and Path(save_calibrated).exists():raise FileExistsError('Calibrated clone output already exists')
+    meta=json.loads((run/'manifest.json').read_text());checkpoint=Path(checkpoint) if checkpoint else run/'checkpoint.pt'
+    digest=sha256(checkpoint)
+    model,stats,step,_=load(checkpoint,meta,reference is not None,reference)
+    model=model.to(device).eval();initial_state=state_digest(model)
+    train,val,_=inspection_datasets(meta)
+    train_indices=torch.randperm(len(train),generator=torch.Generator().manual_seed(103072)).tolist()[:calibration_windows]
+    val_indices=list(meta['validation_window_indices'][:windows])
+    if len(train_indices)<2 or len(val_indices)<2:raise ValueError('Too few recorded diagnostic windows')
+    # Unequal final batches remain counted and explicit; BN averages batch statistics.
+    def batches(dataset,indices):
+        return DataLoader(dataset,batch_size=batch_size,sampler=indices,num_workers=0,
+                          generator=torch.Generator().manual_seed(103072))
+    def forward(m,batch):
+        pixels=preprocess_pixels(batch['pixels'].to(device),m.encoder.config.image_size)
+        actions=normalize_actions(batch['action'].to(device),stats)
+        z=m.encode(pixels);return m.predict(z[:,:-1],actions[:,:-1])
+    calibrated,calibration=recalibrate_bn_statistics(model,lambda:batches(train,train_indices),forward)
+    calibrated.eval()
+    train_rows,val_rows=source_rows(train,train_indices),source_rows(val,val_indices)
+    if set(train_rows)&set(val_rows):raise ValueError('Calibration and validation source windows overlap')
+    output.parent.mkdir(parents=True,exist_ok=True)
+    variants=[('saved_float32',model,'float32'),('calibrated_float32',calibrated,'float32')]
+    if device.type=='cuda':variants += [('saved_bf16',model,'bf16'),('calibrated_bf16',calibrated,'bf16')]
+    result=dict(step=step,seed=meta['seed'],checkpoint=str(checkpoint),checkpoint_sha256=digest,
+        calibration_window_indices=train_indices,validation_window_indices=val_indices,
+        calibration_source_rows=train_rows,validation_source_rows=val_rows,
+        calibration=asdict(calibration),calibration_method='Layerwise cumulative mean of per-batch statistics; upstream BN and dropout eval',
+        population=meta.get('population','Recorded episode-disjoint training/validation split'),
+        batch_size=batch_size,variants={},batch_statistics={},
+        batch_statistics_scope='Disposable BN-only current-batch probe; dropout disabled; batch-coupled outputs, not deployable control')
+    for name,variant,precision in variants:
+        result['variants'][name]={}
+        for split,ds,indices,rows in [('training',train,train_indices,train_rows),('validation',val,val_indices,val_rows)]:
+            metrics=evaluate_prediction(variant,batches(ds,indices),stats,device,
+                model.encoder.config.image_size,batches=len(indices),precision=precision)
+            result['variants'][name][split]=metrics
+            directory=output.parent/'variants'/name/split;directory.mkdir(parents=True,exist_ok=False)
+            write_json(directory/'manifest.json',dict(dataset=meta['dataset'],step=step,checkpoint=str(checkpoint),
+                checkpoint_sha256=digest,source_run_manifest=str(run/'manifest.json'),precision=precision,
+                model_state_sha256=state_digest(variant),window_indices=indices,source_rows=rows,
+                batchnorm='saved unchanged' if name.startswith('saved') else 'training-only calibrated diagnostic clone',
+                normalization='Saved model-specific action statistics',action_stats=stats,
+                population=result['population']+'; '+split,protocol='Matched diagnostic modes; '+name,
+                code_commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()))
+            write_json(directory/'prediction.json',metrics)
+            print(json.dumps(dict(mode=name,split=split,**metrics)),flush=True)
+    for split,ds,indices in [('training',train,train_indices),('validation',val,val_indices)]:
+        result['batch_statistics'][split]=batch_statistics(model,batches(ds,indices),stats,device,model.encoder.config.image_size)
+    if sha256(checkpoint)!=digest or state_digest(model)!=initial_state:raise RuntimeError('Source checkpoint/model changed')
+    result['checkpoint_unchanged']=True
+    if save_calibrated is not None:
+        if reference is not None:raise ValueError('Released clone export requires its own training-compatible manifest')
+        saved=torch.load(checkpoint,map_location='cpu',weights_only=True)
+        directory=Path(save_calibrated);directory.mkdir(parents=True,exist_ok=False)
+        clone={k:saved[k] for k in ('fingerprint','fingerprint_version','model_config','action_stats','step','validation_step') if k in saved}
+        clone.update(model={k:v.cpu() for k,v in calibrated.state_dict().items()},diagnostic_only=True,
+                     parent_checkpoint_sha256=digest,calibration=result['calibration'])
+        torch.save(clone,directory/'checkpoint.pt')
+        write_json(directory/'manifest.json',{**meta,'diagnostic_only':True,
+            'calibration_parent_checkpoint':str(checkpoint),'calibration_parent_sha256':digest,
+            'calibration_receipt':str(output),'calibration_source_rows':train_rows})
+        result['calibrated_checkpoint']=str(directory/'checkpoint.pt');result['calibrated_checkpoint_sha256']=sha256(directory/'checkpoint.pt')
+    write_json(output,result);return result
+
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('run');p.add_argument('--output');a=p.parse_args();check(a.run,a.output)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('run');p.add_argument('--output')
+    p.add_argument('--device',choices=['cpu','cuda'],default='cuda');p.add_argument('--windows',type=int,default=512)
+    p.add_argument('--calibration-windows',type=int,default=512);p.add_argument('--batch-size',type=int,default=128)
+    p.add_argument('--checkpoint');p.add_argument('--reference');p.add_argument('--save-calibrated')
+    args=p.parse_args();check(args.run,args.output,device=args.device,windows=args.windows,
+        calibration_windows=args.calibration_windows,batch_size=args.batch_size,checkpoint=args.checkpoint,
+        reference=args.reference,save_calibrated=args.save_calibrated)
