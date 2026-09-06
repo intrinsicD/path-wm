@@ -32,7 +32,7 @@ def render(local, released, output, index=0):
         state_key = 'state' if dataset_name == 'pusht' else 'proprio'
         state, target = source[state_key][row].astype(float), source[state_key][row + goal_offset].astype(float)
         sequences = [('Recorded replay', source['action'][row:row + goal_offset], None)]
-        labels = ['Released model' if m.get('released') else f"Local model · step {m.get('step', 'unrecorded')}" for m in manifests]
+        labels = ['Released model' if m.get('released') else f"{'Calibrated local' if m.get('diagnostic_only') else 'Local model'} · step {m.get('step', 'unrecorded')}" for m in manifests]
         for label, directory in zip(labels, directories):
             recorded = [json.loads(line) for line in (directory / 'cases.jsonl').read_text().splitlines()][index]
             sequences.append((label, np.load(directory / f'actions_{index}.npy'), recorded))

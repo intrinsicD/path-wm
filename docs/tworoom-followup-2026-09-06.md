@@ -93,3 +93,15 @@ PushT cases. Also evaluate the TwoRoom calibrated clone on the existing frozen
 released CEM10 references. No solver parameters or thresholds are tuned. These
 short checks fit within the planned diagnostic compute allowance; implementation
 and HTML work are separate.
+
+All74 integrated tests passed; the new mobile regression plus affected dashboard
+checks also pass (20 tests). Compact labels preserve full run names in hover and
+exact rows, and the browser now verifies a visible nonzero bar at390px. PushT8404
+calibration changes float32 prediction/copy0.22739 to0.18511, much smaller than
+TwoRoom. No weight-update, split, or continuation-integrity failure was found.
+After the queued matched calibration controls, execute the accepted PushT fork
+from8404 to13933 with its full schedule unchanged. Freeze final evaluations now:
+original-buffer50-case control, matched full internals, the same512-training-window
+calibration/mode comparison, calibrated50-case control and fixed-first-case
+rollout panels. The calibrated and original-buffer scores will remain separate;
+calibration is not silently adopted into training or parent checkpoints.
