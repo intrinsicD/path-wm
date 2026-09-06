@@ -15,6 +15,7 @@ import re
 import shutil
 import subprocess
 import sqlite3
+import tempfile
 from dataclasses import asdict
 from datetime import UTC, datetime
 from pathlib import Path
@@ -502,13 +503,20 @@ def write_experiment_dashboard(
     html_path = (html_path or runs_root / DEFAULT_HTML.name).resolve()
     run_results, notices = collect_run_results(runs_root)
     artifact = build_dashboard_artifact(run_results, notices, focus)
-    _write_json_atomic(artifact_path, artifact)
-    receipt = _deliver_portable_artifact(
-        artifact_path,
-        html_path,
-        (builder_path or find_portable_artifact_builder()).resolve(),
-    )
-    _write_json_atomic(html_path.with_suffix(".receipt.json"), receipt)
+    # Keep the last verified companion intact when canonical publication fails.
+    # A unique staging directory also avoids sharing temporary inputs with a
+    # concurrent builder. The canonical builder publishes HTML only after QA.
+    artifact_path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=".dashboard-", dir=artifact_path.parent) as temporary:
+        staged_artifact = Path(temporary) / artifact_path.name
+        _write_json_atomic(staged_artifact, artifact)
+        receipt = _deliver_portable_artifact(
+            staged_artifact,
+            html_path,
+            (builder_path or find_portable_artifact_builder()).resolve(),
+        )
+        staged_artifact.replace(artifact_path)
+        _write_json_atomic(html_path.with_suffix(".receipt.json"), receipt)
     return artifact_path, html_path, receipt
 
 

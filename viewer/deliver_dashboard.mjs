@@ -23,6 +23,8 @@ try {
     `<style data-path-wm-layout-repair>${css}</style>` + runtime.slice(headEnd);
   const receipt = await deliverPortableArtifact({
     inputPath: option('--input'), outputPath: option('--output'),
+    // Public canonical options: allow bounded startup under shared CPU load.
+    readyTimeoutMs: 10000, actionTimeoutMs: 5000, timeoutMs: 25000,
   }, {
     build: (input, options = {}) => buildPortableArtifact(input, { ...options, runtimeHtml }),
   });

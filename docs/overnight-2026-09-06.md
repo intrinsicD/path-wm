@@ -231,6 +231,19 @@ require preservation of the old HTML, artifact and receipt together, then stage
 the new artifact until canonical publication succeeds. This repairs consistency
 on a measured failure path; no verification result is relaxed or fabricated.
 
+The publication repair passed canonical desktop/mobile verification with all checks retained.
+The old HTML, artifact and receipt now survive a failed build together. The
+inspector regression suite passed 15 checks and the harness suite passed 16.
+
+## Dashboard growth
+
+The current ledger already has 1,536 spectrum rows; the four planned matched
+inspections would exceed the reader’s 2,000-row dataset limit. Partition oversized
+native datasets without losing rows, keep complete chart series together, and
+show explicitly numbered chart/table parts. Preserve the canonical payload limit
+and browser checks. A growth regression must prove row conservation, bounded
+parts and unsplit spectrum series before this implementation.
+
 ## Outcomes
 
 Training/evaluation pending. This section records measured results, failures and deviations at closeout.
