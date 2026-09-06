@@ -20,25 +20,39 @@ training and benchmark evaluation. Baseline-specific tests cover episode
 alignment, causal action timing, reference computations and gradients,
 normalization, rollout and checkpoint integrity.
 
-## Active: bounded overnight implementation and evaluation (2026-09-06)
+## Latest: overnight implementation and evaluation complete (2026-09-06)
 
-The user has now authorized co-work with Claude via MCP, correctness/performance
-repairs, new local dataset training and control evaluation, and review of
-`runs/experiment_dashboard.html`. The working deadline is 08:00 Europe/Berlin.
-See [the overnight plan](overnight-2026-09-06.md) for interfaces, tests and budgets.
-This supersedes the earlier unscheduled status only for the bounded new overnight
-runs. Preserve all completed checkpoints and reference evidence. A full ten-epoch
-reproduction remains beyond tonight's budget.
+The authorized work with Claude via MCP, correctness/performance repairs, bounded
+training on both full source datasets, control, internals and dashboard review
+has completed. See [the results report](overnight-2026-09-06.md) and its preserved
+plan/execution log. All completed checkpoints and references remain immutable.
 
-PushT has now completed its bounded prefix at 8,404 updates (60.31% of one epoch)
-and reaches **17/50** frozen source goals versus 0/50 for the preserved 375-update
-run and 45/50 for released weights. Final prediction/copy is 0.2274 and
-prediction/shuffled is 0.1825; checkpoint and validation steps match, checkpoint
-bytes are unchanged by control, and both mandatory HTML refreshes pass. TwoRoom’s
-80-minute full-source run started at 05:32:53; remaining evaluations are queued.
-No formal success threshold has been introduced or inferred.
+PushT completed **8,404 updates** (60.31% of one epoch), reaching **17/50** frozen
+goals versus 0/50 at step 375 and 45/50 for released weights. Its prediction/copy
+ratio is 0.2274, full-window rank 38.71/192 and mean state-probe R² 0.5462.
+TwoRoom completed **4,074 updates** (79.28% of one epoch): **14/50** primary goals
+versus 42/50 released; conditional on initially unsolved goals this is **10/46
+versus 38/46**. Longer goals yield **0/50 versus 5/50**. TwoRoom position probes
+are strong (R² 0.9939), but prediction/copy is 3.9480 and eight-step rollout/copy
+is 3.2835. Representation readability does not establish useful dynamics.
 
-## Latest: requested ten-minute training and recheck complete (2026-09-06)
+The paper specifies TwoRoom history one and 10 CEM iterations, whereas released
+weights/configuration use history three and 30 iterations. Our 100/150 goal/budget
+check retains released history and is not full paper reproduction. A matched
+10-iteration check kept exactly the same successes (local 0/50, released 5/50)
+with 2.96–2.97× less case execution time. Existing frozen evidence is unchanged;
+no solver default or scientific pass threshold was adopted.
+
+Validation RNG/resume identity, final-step evidence, TwoRoom simulator/evaluation,
+source-loader reads, dataset-aware inspection and dashboard row/publication
+integrity are repaired. **64 tests pass**, including two browser checks. Every
+completed experiment refreshed the canonical HTML. Final canonical QA passes;
+desktop and mobile captures and all three frozen rollout panels were inspected.
+Claude completed one review and contributed three essential tests; an additional
+review was blocked before launch by automatic approval review pending specific
+data-transfer authorization.
+
+## Earlier: requested ten-minute training and recheck complete (2026-09-06)
 
 After inspecting the user's updated dashboard, a fresh source-data run completed
 375 updates in 578.48 seconds (9 min 38 sec), using seed 3072, batch 128,
@@ -123,18 +137,19 @@ records the scalar subset at every validation step; existing configs are unchang
 
 ## Next work
 
-The requested ten-minute run and all matched rechecks are complete. Preserve its
-375-update checkpoint and all earlier artifacts; do not repeat or silently resume
-completed development runs. The full ten-epoch reproduction remains unscheduled.
-Its earlier 58.3-hour estimate is a rough pilot-rate extrapolation, not a measured
-full-source runtime guarantee.
+The bounded overnight work is complete; no further training is running or queued.
+Preserve the 8,404-update PushT, 4,074-update TwoRoom and earlier checkpoints.
+The full ten-epoch reproduction remains unscheduled. The overnight prefixes use
+the full learning-rate schedules, but neither reaches one complete epoch.
 
-The next experimental decision is a longer reference-scale schedule versus a
-matched-budget test of early representation collapse/action use. The short result
-cannot isolate data, schedule or recomputation as the cause. Random-window source
-validation measures interpolation; unseen-configuration generalization needs a
-separate group-held-out protocol. Keep internals enabled in any new training
-configuration. Research extensions remain deferred until learned control works.
+The next experiment should distinguish TwoRoom dynamics/evaluation calibration
+from planner behavior using matched, discarded diagnostic clones and preserved
+checkpoints. Position is already strongly recoverable; do not attribute failure
+to missing position information or the Gaussian prior without causal evidence.
+Any new comparison needs a declared case population, history, goal/budget and
+CEM iteration count. Random-window validation measures source interpolation;
+unseen-configuration generalization requires a separate group-held-out protocol.
+Keep internals enabled. Passive TAU/Charades extensions remain deferred.
 
 ## Earlier validation
 At broader-pilot completion, the modular LeWM implementation passed 13 CPU tests.

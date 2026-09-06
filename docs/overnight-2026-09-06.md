@@ -1,347 +1,188 @@
-# Overnight implementation and evaluation, 6 September 2026
+# Overnight results, 6 September 2026
 
-The user authorized collaboration with Claude via MCP, implementation repairs,
-training on the local datasets and review of `runs/experiment_dashboard.html`.
-The working deadline is 08:00 Europe/Berlin today. This authorizes the bounded
-work below; it does not launch or promise completion of a full reproduction.
+The longer PushT prefix reaches **17/50 frozen goals**, compared with **0/50** for
+the preserved ten-minute run and **45/50** for released weights. TwoRoom reaches
+**14/50 primary goals**, including four already satisfied at reset, but **0/50**
+on the separate longer-goal test. Both implementations learn some short-goal
+control; the released-model gap and longer-goal failures remain substantial.
+This is a bounded, single-seed study, not a completed ten-epoch reproduction.
 
-## Plan and interfaces
+[Verified offline dashboard](../runs/experiment_dashboard.html) ·
+[Reconciled numeric evidence](../runs/overnight_2026-09-06/overnight_summary.json) ·
+[Predeclared plan and execution history](overnight-2026-09-06-log.md)
 
-First repair operational correctness without changing the baseline objective:
-give validation its own random generator, allow documented operational resume
-overrides while freezing scientific configuration, and validate the final saved
-checkpoint when a time limit stops training. Record loader wait separately from
-compute. Preserve the existing fingerprint contract for legacy checkpoints.
-Tests must demonstrate identical CPU optimization with diagnostics enabled or
-disabled, exact stopped/resumed weights with dropout, and rejected scientific
-changes. Correct the misleading held-out-episode label for random-window runs.
+## Training and matched control
 
-Then implement TwoRoom closed-loop evaluation using the pinned SWM simulator,
-shared CEM/model interfaces, frozen source goals and replay/stationary controls.
-Verify source state/action/render alignment before interpreting learned control.
-Use explicit, versioned dataset/evaluation settings; old configurations and runs
-remain immutable. The paper uses history one for TwoRoom (Appendix D), while the
-generic existing dataset configuration uses three. A new configuration will make
-that choice visible. The paper and released evaluation config also use different
-goal budgets; report the chosen protocol rather than mixing their scores.
+| Dataset | Updates | Training windows processed | Fraction of one epoch | Recorded seconds | Full schedule |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| PushT | 8,404 | 1,075,712 | 60.31% | 10,625.41 | 139,330 updates |
+| TwoRoom | 4,074 | 521,472 | 79.28% | 4,804.89 | 51,380 updates |
 
-## Compute and scientific budget
+Both runs stop with `time_limit`; their saved checkpoint, numbered final snapshot
+and final validation identify the same step. The full learning-rate schedules
+were not compressed to fit the execution ceilings. PushT conservatively charged
+an additional 180 seconds for unsaved work discarded during its documented loader
+recovery. Final validation accounts for the small ceiling overrun; restart idle
+time is separate from recorded training time. Estimates were approximately 8,400
+and 4,100 updates after measuring throughput.
 
-One RTX 3050 with 8 GiB; serialized GPU work. Reserve approximately three hours
-for a fresh PushT prefix of the prepared 139,330-update schedule, approximately
-one hour for a fresh full-source TwoRoom run, and the remaining time for essential
-tests, environment checks, matched control, internals and browser QA. Refine step
-estimates using measured throughput before launch. Stop training by 07:00 and
-complete evaluation/reporting by 08:00. No external tracking or publishing.
+All control rows below have 50 independently recorded case outcomes. Local and
+released models use identical cases, reset/CEM seeds and solver settings within
+each row. Released PushT evidence was reused only after its checkpoint and frozen
+case-manifest hashes were rechecked.
 
-The hypothesis is that substantially longer faithful training improves action
-use and control compared with the preserved 375-update development run. The
-different learning-rate schedules prevent attributing improvement to update count
-alone. Compare prediction to copy/shuffled-action controls within each encoder,
-and use fixed simulator cases as the control outcome. Effective rank and probes
-are diagnostics, not success gates. No new numerical success threshold is set;
-the baseline gate remains unestablished until measured useful control is present.
+| Dataset and goal offset / action budget | Local | Released | Recorded replay | Stationary | Initially satisfied |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| PushT 25 / 50 | **17/50** | 45/50 | 50/50 | 0/50 | 0 |
+| TwoRoom primary 25 / 50 | **14/50** | 42/50 | 50/50 | 4/50 | 4 |
+| TwoRoom longer goals 100 / 150, 30 CEM iterations | **0/50** | 5/50 | 50/50 | 0/50 | 0 |
 
-PushT uses seed 3072, the existing random-window source split, batch 128,
-learning rate 5e-5, SIGReg weight .09, bf16 and full-batch encoder computation.
-The schedule stays 139,330 updates with 1,393 warmup updates; the wall-time ceiling
-only stops its execution. Preserve initial/intermediate/final checkpoint identity.
-Use the existing 50 frozen goals and released/replay/stationary results after
-verifying their protocol hashes. Inspect the final checkpoint on matched windows.
-TwoRoom settings and case receipts will be recorded before its training launch.
+For primary TwoRoom, success among initially unsolved goals is **10/46 local**
+versus **38/46 released**, compared with 0/46 for stationary actions. All four
+initially satisfied cases also succeed under both models. PushT has 16 cases
+both models solve, one solved only locally, 29 solved only by released weights,
+and four solved by neither. The earlier step-375 result remains 0/50.
 
-## Claude collaboration and sources
+These are source-population compatibility evaluations. Training and validation
+use random windows sharing source episodes/configurations. There is one training
+seed (3072); no unseen-configuration generalization or multi-seed confidence is
+established. The different short and full-length learning-rate schedules prevent
+attributing PushT's gain to update count alone. No numerical success threshold
+was introduced, and no passing scientific gate is inferred.
 
-The registered native MCP server exposes tools but no configured Agent types.
-Claude's first actual review ran through its MCP Bash tool as a bounded `claude
--p` process. It completed successfully, using 20 tool calls and reporting
-$2.48802025 in API-equivalent cost. Raw prompt, result, usage and session identity
-are under `runs/overnight_2026-09-06/claude/`. Follow-up reviews will be bounded;
-usage is recorded rather than assuming access to either account's remaining quota.
+## Prediction, internals and visual evidence
 
-Claude found no model/objective mismatch. Its resume and CPU random-stream
-findings will receive behavioral tests. Its suggestion to change SIGReg precision
-is treated as an unproven numerical hypothesis: the pinned mixed-precision recipe
-is authoritative, and a discrepancy alone does not justify changing it.
+Final in-training prediction/copy and prediction/shuffled-action ratios are
+**0.2274 / 0.1825 for PushT**, and **3.9480 / 0.9355 for TwoRoom**. TwoRoom also
+predicts worse with recorded actions than with zero actions in this check
+(MSE 2.6305 versus 2.3173). Falling training loss alone therefore does not establish
+useful dynamics. Absolute latent MSE is not comparable across separate encoders.
 
-Primary sources: [LeWorldModel paper, Appendices D and F](https://arxiv.org/html/2603.19312v1),
-[pinned LeWM implementation](https://github.com/lucas-maes/le-wm/tree/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac),
-and the [authors' LeJEPA implementation](https://github.com/galilai-group/lejepa).
-The TwoRoom simulator will use the already pinned SWM revision
-`6f1e499e9cc0c898d326112f485c1062c3d20f24` with its license and source receipt.
+Full inspections use the same 512 validation windows per local/reference pair,
+1,024 training windows for ridge probes and 256 source windows for eight-step
+rollouts, all in float32 with saved BatchNorm buffers. Matched window hashes and
+checkpoint identities reconcile. Reinspection differs from in-training
+validation by at most 8.23e-6 absolute; it does not change model/checkpoint state.
 
-## Implementation evidence
+| Diagnostic | PushT local | PushT released | TwoRoom local | TwoRoom released |
+| --- | ---: | ---: | ---: | ---: |
+| Effective rank / 192 dimensions | 38.715 | 88.719 | 14.682 | 91.478 |
+| Mean probe R² | 0.5462 | 0.7200 | 0.9939 | 0.9900 |
+| Eight-step prediction / copy error | 0.2906 | 0.1138 | 3.2835 | 0.1084 |
 
-Three new behavioral checks first failed as intended: instrumentation changed
-CPU weights, extending the time budget rejected resume, and a timed stop saved
-step one with only step-zero validation. They now pass. The new fingerprint
-version freezes all configuration except a short declared operational allowlist;
-legacy checkpoints keep their original fingerprint and random-stream behavior.
-Resume receipts record overrides without rewriting the original manifest.
+Probe means have different targets across tasks: PushT averages eight pose and
+velocity targets; TwoRoom averages agent x/y. Compare within each dataset.
+PushT position readouts reach R² 0.84–0.91, while angle sine/cosine are only
+0.42–0.43 versus 0.90–0.92 for released weights. Velocity probes from a single
+frame remain near zero for both. TwoRoom position is strongly recoverable, yet
+this does not translate into reliable dynamics or longer-goal control. The
+32-window live rank measurements are not the full 512-window inspection values.
 
-Native batch-128 bf16 exhausted GPU memory before its first update (6.49 GB peak
-allocated, desktop GPU usage also present). Full-batch activation checkpointing
-therefore remains selected. This is a capacity measurement on a discarded clone,
-not a failed learning run. Both raw measurement and failure text are preserved.
-The checkpointed probe completed seven discarded updates with finite gradients:
-five timed updates had median 1.284 s and peak allocation 3.282 GB, including
-optimizer state but excluding HDF5 loading. Allowing for I/O and validation, the
-three-hour PushT prefix should reach approximately 7,500–8,300 updates. The
-repaired two-update GPU slice and its canonical desktop/mobile HTML QA passed.
-All 50 CPU checks passed; two explicitly opt-in browser tests were not enabled
-in that command, while the actual dashboard browser verification did run.
+Saved actions reproduce the recorded outcome, action count and final distance;
+TwoRoom also checks final coordinates. Case zero was fixed before outcomes:
 
-## TwoRoom thin slice
+- [PushT rollout](../runs/overnight_2026-09-06/pusht_control/qualitative/case_0_rollouts.png): the new model contacts and rotates the block but still misses this goal; released weights and replay succeed.
+- [TwoRoom primary rollout](../runs/overnight_2026-09-06/tworoom_primary_control/qualitative/case_0_rollouts.png): the local model remains on the wrong side of the wall; released weights succeed in 21 actions and replay in 20.
+- [TwoRoom longer-goal rollout](../runs/overnight_2026-09-06/tworoom_paper_control/qualitative/case_0_rollouts.png): both models fail this fixed case; replay succeeds.
 
-Claude independently wrote three essential simulator/controller tests (12 tool
-calls; reported cost $1.67608375). They fail at the missing import before
-implementation. Its assumptions about default geometry and action scale were
-then checked against eight fixed source episodes: reset renders and all first
-25 recorded transitions match exactly. A first ad hoc read lacked HDF5 plugin
-registration; the corrected check imports the same compression plugin as the
-normal dataset loader. No source file was changed.
+All panels contain actual source/simulator frames, with the last frame repeated
+after termination. No image decoder or selected successful showcase is used.
+Full quantitative panels and their raw paths are retained in the dashboard.
 
-History-one diagnostics expose a separate divide-by-zero: normalized attention
-entropy divides by log(1). The single-key case will report zero entropy, with a
-finite, read-only scalar-summary regression before training. TwoRoom control uses
-the same one-current-observation CEM planning interface as PushT, restoring only
-agent and goal positions in the verified default-geometry simulator.
+## Protocol fidelity and literature check
 
-The downloaded released TwoRoom checkpoint is pinned to model revision
-`77adaae0bc31deab21c93740d1f8bb947cd0bdec`, with weights SHA256
-`566f223624ea4bfb39dbfe6ae731198dd6ea73b7b8919fed6b1ecafca810f7dd`.
-Its actual positional embedding has three frames, matching its mirror config
-and differing from the paper's history-one statement. Before any TwoRoom training,
-the plan is amended to retain the existing history-three dataset configuration
-for the released-baseline comparison. The entropy repair remains a supported
-history-one correctness fix, not an overnight architecture change.
+TwoRoom's pinned simulator matches source reset pixels and all 6,250 recorded
+transitions across the two prepared 50-case sets exactly. The released checkpoint
+has a history-three positional embedding. The pinned released evaluation uses
+25/50 goals/budget and 30 CEM iterations. By contrast, the paper specifies history
+one, 10 CEM iterations for TwoRoom, and 100/150 goals/budget. Horizon, action block
+and replanning block are five in both. Therefore our 100/150 results retain
+released history/solver settings and do not reproduce the full paper protocol.
+[Paper, Appendices D–F](https://arxiv.org/html/2603.19312v1),
+[pinned CEM configuration](https://github.com/lucas-maes/le-wm/blob/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/config/eval/solver/cem.yaml).
 
-TwoRoom will use full-source random windows, seed 3072, batch 128 and the same
-optimizer/objective/precision as PushT, with a 4,800-second ceiling on its own
-full ten-epoch schedule. Primary control uses the released config's 25-step goal
-and 50-action budget; a separate secondary protocol uses the paper's 100/150
-settings. Each freezes 50 source cases with sampling seed 42 and reset/CEM seeds
-1234–1283 before evaluating either checkpoint. Both retain initially successful
-cases and report their count. Replay and stationary controls are measured on
-both sets. These are source-population compatibility checks, not unseen-episode
-generalization or a claim of reproducing the paper's multi-seed benchmark.
+Existing `tworoom_paper_*` path names remain as provenance labels; no frozen case
+file or result was rewritten. [Protocol clarification](../runs/overnight_2026-09-06/protocol_clarification.json)
+records the discrepancy. The model/objective, .09 SIGReg weight and mixed-precision
+recipe remain pinned; numerical suspicions were not treated as proven bugs.
 
-The primary 25/50 preparation passed exact source-frame and transition checks on
-all 50 cases (1,250 transitions): replay 50/50, stationary 4/50, initial successes
-4/50. The separate 100/150 preparation also passed exact checks (5,000
-transitions): replay 50/50, stationary 0/50, no initial successes. Both canonical
-HTML refreshes passed. A one-case CPU integration smoke with the actual released
-weights, only six candidates and two CEM iterations, completed with unchanged
-checkpoint bytes and passing HTML QA; its score is not a control-quality result.
-The full CPU suite now passes 55 checks, with two opt-in browser tests skipped in
-that command. Actual per-artifact browser QA did run and pass.
+The case sets also differ geometrically: median displacement is **36.35 vs
+110.37 pixels**, with **12 vs 41** goals across the divider. All longer-goal cases
+come from 101-frame source episodes. This post hoc description prevents treating
+the score difference as an isolated action-budget effect; it does not identify
+a failure mechanism. [Case geometry](../runs/overnight_2026-09-06/control_geometry.json).
 
-## Measured loader optimization
+## Exploratory solver check
 
-A fixed small probe on both real sources found HDF5 chunks of
-`100 × 224 × 224 × 3`. Four strided frames took median 57.48 ms on PushT and
-55.47 ms on TwoRoom; four individual frame reads from one open dataset handle
-returned identical bytes in 9.06 and 8.93 ms. Three passes alternated read order.
-This is a small warm-cache microbenchmark under shared-machine CPU load, not a
-claim of sixfold training speedup. The active PushT run's first 400 updates
-averaged about 1.94 s/update, slower than its compute-only preflight.
+The matched check completed at 07:42:35. Reducing CEM iterations from 30 to
+10 leaves success unchanged: **0/50 local and 5/50 released**, with exactly the
+same successful cases. Local case execution fell from 729.37 to
+245.60 seconds (2.97×); released execution fell from
+680.57 to 230.08 seconds (2.96×).
+These timings exclude loading and dashboard publication. All case identities,
+seeds, other solver settings and checkpoint bytes match. Ten iterations is a
+promising compute-saving setting on this case set; it does not resolve the
+control failure or establish equivalence across seeds/tasks. No default changed.
+History remains three, so this is not full paper reproduction.
+[Reconciled solver evidence](../runs/overnight_2026-09-06/solver_iteration_comparison.json).
 
-Add a focused pixel-window reader that uses scalar frame selections for chunked
-HDF5 striding and preserves native slicing for contiguous/cached arrays. Essential
-checks cover chunk boundaries, episode edges, channels-first input and exact
-cached/streamed equality. Then benchmark complete dataset items on fixed real
-windows against the original reader. Accept only exact outputs and a measured
-read improvement; do not change training inputs, batch size or objective.
+The first scheduling attempt checked launch time instead of the committed
+condition that the main queue finish by 07:32. The main queue finished at
+07:29:51; the corrected check started at 07:33:42 with an estimated ten-minute
+pair budget and a fifteen-minute final-report reserve. Both attempts remain in
+`solver_iteration_driver.jsonl`.
 
-The complete-item paired benchmark passed exact pixels, action blocks (including
-unused terminal NaNs), episode IDs and local starts on 48 fixed random windows
-per source. Median original/optimized time was 55.94/3.58 ms for PushT and
-58.02/4.83 ms for TwoRoom; total paired read times improved about tenfold. The
-chunk-boundary/cache checks and CPU optimization/resume regressions passed, and
-the benchmark's canonical dashboard refresh passed. These are loader timings,
-not end-to-end training speedups.
+## Correctness, performance and dashboard repairs
 
-After verification, recover the active PushT run from its next immutable saved
-checkpoint to adopt the loader change. Record the stopped process, retained
-checkpoint hash, any discarded unsaved work, new code revision and resume receipt.
-The original manifest and numbered snapshots stay unchanged. This is an explicit
-operational amendment to an in-progress time-bounded run, not a new learning
-comparison or a silent resume of a completed reference. Keep the cumulative
-training ceiling and the morning evaluation reserve.
+- Validation gets its own CPU random generator; diagnostics no longer perturb optimization. Versioned resume fingerprints allow only declared operational overrides, preserve legacy contracts and reject scientific changes. Resume receipts preserve the original manifest and record overrides/code identity.
+- Timed and requested stops validate the actual saved step and keep numbered snapshots. `run/STOP` provides a graceful boundary; interval timing now includes every update rather than one sampled step.
+- Chunked HDF5 frame reads avoid expensive strided selections while returning identical pixels, action blocks, episode IDs and starts. Both real sources passed paired complete-item checks on 48 fixed windows, including unused terminal NaNs.
+- TwoRoom reuses the pinned licensed simulator, shared CEM interface, source-goal injection and frozen replay/stationary controls. Dataset-aware inspection preserves physical-label row order, actual history/image size and reference normalization.
+- Dashboard case identities include dataset/source and goal offset; initial-goal denominators remain separate. Oversized native datasets are partitioned without dropping rows or splitting chart series. Failed publication preserves the previous HTML, artifact and receipt together. Supported 10/5/25-second browser budgets retain every canonical QA check.
 
-## Dashboard control integrity
-
-The primary TwoRoom set contains four already-satisfied goals, so raw success
-alone can overstate learned progress. Add exact counts and a separate rate for
-cases not initially successful; retain raw success alongside it and leave the
-conditional rate unavailable when initial-state evidence is missing. Action
-baselines must inherit the same dataset, goal offset and budget context as their
-case manifest. Include source identity and goal offset in case navigation keys
-so identical episode/row numbers from different tasks cannot merge. Essential
-fixtures will first expose the lost context and missing denominator.
-
-Before the loader recovery, add a graceful operational stop marker (`run/STOP`)
-for future interruptions: finish the current update, validate and save a numbered
-checkpoint, record `stop_requested`, and require removing the marker to resume.
-Also aggregate compute and loader-wait timings over every logged interval; a
-single sampled update every 100 steps hid occasional loader stalls. Retain the
-old single-step field and label new interval means and their update denominator.
-CPU tests will verify the checkpoint boundary and timing-count conservation.
-The first recovery still uses the old process's already-saved checkpoint because
-that process cannot acquire new control code without a restart.
-
-PushT recovery retained checkpoint 1000 at 1,936.336 seconds, SHA256
-`f441e5a2cf71eb4f9474a695966423adc3bc0b77a7e4a9ab5773875e86ddc105`.
-Only the verified original training PID was terminated. The checkpoint was about
-170.52 wall seconds old and the last logged update was still 1000, so an unknown
-number of fewer than 100 unsaved updates was discarded. The cumulative resumed
-ceiling is reduced from 10,800 to 10,620 seconds, conservatively charging 180
-seconds for that work. The 139,330-update LR schedule and optimizer/data state
-are unchanged. The raw interruption event and `loader_restart.json` preserve
-this deviation. Resume records expose both the new code revision and overrides.
-
-The resumed process restored the same fingerprint with a clean code revision
-and only the declared time-ceiling override. Updates 1001–1100 averaged 1.344 s
-of measured update processing plus 0.0155 s of loader wait, including worker
-startup, compared with about 1.9 s/update before recovery. This is an observed
-end-to-end improvement under shared-machine load, not the microbenchmark's
-12–16× loader speedup.
-
-## Dataset-aware checkpoint inspection
-
-Extend the existing inspector rather than create a separate analysis pipeline.
-TwoRoom probes use source agent x/y (`proprio`); PushT retains its eight existing
-pose/velocity targets. Read only requested label rows while preserving duplicate
-and out-of-order indices. Released TwoRoom inspection accepts an explicit frozen
-reference case manifest for its checkpoint identity, model configuration and
-normalization. Render labels, next-frame retrieval and preprocessing follow the
-actual history and image size. Essential tests cover label identity/order and
-history-one next-frame retrieval without querying future frames for prediction.
-
-The bounded CPU inspection completed with unchanged checkpoint bytes and all
-panels, but its wrapper initially failed canonical publication with a desktop
-`reader_timeout` at the default five-second readiness budget. Raw output and the
-last verified HTML survived. The installed canonical builder explicitly supports
-`readyTimeoutMs`, `actionTimeoutMs` and `timeoutMs`; use bounded 10/5/25-second
-budgets under this shared CPU load while keeping every verification check.
-
-Inspection also revealed that a failed dashboard build replaced the data
-companion before HTML verification. Extend the existing failure regression to
-require preservation of the old HTML, artifact and receipt together, then stage
-the new artifact until canonical publication succeeds. This repairs consistency
-on a measured failure path; no verification result is relaxed or fabricated.
-
-The publication repair passed canonical desktop/mobile verification with all checks retained.
-The old HTML, artifact and receipt now survive a failed build together. The
-inspector regression suite passed 15 checks and the harness suite passed 16.
-
-## Dashboard growth
-
-The current ledger already has 1,536 spectrum rows; the four planned matched
-inspections would exceed the reader’s 2,000-row dataset limit. Partition oversized
-native datasets without losing rows, keep complete chart series together, and
-show explicitly numbered chart/table parts. Preserve the canonical payload limit
-and browser checks. A growth regression must prove row conservation, bounded
-parts and unsplit spectrum series before this implementation.
-
-## Qualitative replay
-
-Generalize the existing saved-action renderer to both supported simulators and
-manifest goal offsets/budgets. Use actual checkpoint labels, freeze case zero
-before outcomes, and require matching source/cases/seeds/planning protocols.
-A small CPU fixture must reproduce the TwoRoom result and reject changed final
-state evidence and mismatched goal protocols. Preserve all older panels.
-
-The TwoRoom replay fixture now passes and rejects both altered final-state
-evidence and changed goal protocols. Re-rendering the preserved first PushT case
-reproduced all saved outcomes exactly, with its actual step-375 label and passing
-canonical HTML. Released checkpoint hashes and the frozen PushT case-manifest
-hash were rechecked before scheduling the matched overnight evaluation.
-
-## Execution queue and verification
-
-All 64 tests pass with `PATH_WM_BROWSER_TESTS=1`, including the two browser
-checks (`runs/overnight_2026-09-06/full_tests.log`). A one-shot serial driver
-records exact commands and code revisions, waits for the identified PushT
-wrapper, checks matching final checkpoint/validation steps and numbered snapshot
-hashes, then runs TwoRoom, matched control, saved-action panels and inspections.
-Every experiment command uses `run.py` and the queue stops on a failed command
-or dashboard. The first queue launch stopped before starting work because this
-Python build lacks `os.pidfd_open`; the corrected wait checks Linux process start
-ticks as well as its PID. Both attempts remain in the raw execution ledger.
-
-Measured prior PushT control took 265.72 seconds for 50 failed cases and 167.52
-seconds for released weights. Before the first run finished, reorder its new
-control check ahead of TwoRoom training so those outcomes can be assessed during
-TwoRoom compute. Cases and all compute/solver budgets stay fixed. The idle
-controller is restarted; active training is untouched. Its handoff also checks
-that the dashboard inventory contains the final run status and step and that its
-passing receipt postdates that terminal status.
-
-## Outcomes
-
-### PushT training and control complete
-
-The fresh prefix stopped at **8,404 updates**, close to the 8,400 estimate after
-the loader improvement. It processed 1,075,712 windows, **60.31% of one epoch**;
-the learning-rate schedule remains 139,330 updates. Recorded terminal elapsed
-time is 10,625.407 seconds, including final validation, plus the 180 seconds
-explicitly charged for discarded work during recovery. Final checkpoint and
-validation both identify step 8404. The immutable final checkpoint SHA256 is
-`bb611899c74047552d2f93bb974004ed5fa49f401809e0e1590a832a1a186af9`.
-
-On the fixed 512 validation windows, prediction MSE is 0.0400887, copy MSE
-0.176300, shuffled-action MSE 0.219683 and short-rollout MSE 0.0819370.
-Prediction/copy is **0.227389**, prediction/shuffled **0.182484**, and short
-rollout/copy **0.464759**. These are within-encoder comparisons. Validation
-fluctuated at intermediate steps; final control uses the predeclared terminal
-checkpoint rather than selecting the best intermediate prediction metric.
-
-All 50 frozen source goals were evaluated with unchanged solver settings:
-
-| Checkpoint or action baseline | Successes | Initially satisfied |
+| Loader measurement, paired source items | Original median | Optimized median |
 | --- | ---: | ---: |
-| Overnight, step 8404 | **17/50** | 0 |
-| Preserved ten-minute run, step 375 | 0/50 | 0 |
-| Released weights | 45/50 | 0 |
-| Recorded replay | 50/50 | 0 |
-| Stationary actions | 0/50 | 0 |
+| PushT | 55.94 ms | 3.58 ms |
+| TwoRoom | 58.02 ms | 4.83 ms |
 
-There are 16 cases both models solve, one only the local model solves, 29 only
-released weights solve, and four neither solves. Local control took 215.20
-seconds of measured case execution (mean 41.86 actions). Checkpoint bytes are
-unchanged. Canonical HTML passed after both training and control. These results
-show a substantial improvement over the short run and a large remaining gap to
-the released model. The different schedules and operational changes prevent
-attributing the gain to update count alone; no formal pass threshold was set.
+These are warm-cache loader measurements under shared-machine load, not 12–16×
+training gains. Across all measured updates after recovery, PushT averages
+**1.1628 seconds update processing + 0.00327 seconds loader wait** (7,404 updates),
+versus roughly 1.9 seconds/update before recovery. TwoRoom averages **1.1687 +
+0.00151 seconds** across 4,074 updates. Native batch-128 bf16 failed before its
+first update with GPU OOM; full-batch activation checkpointing fits at roughly
+3.28 GB peak allocated and keeps the objective/batch semantics. All benchmark
+updates were discarded. [Raw loader benchmark](../runs/overnight_2026-09-06/data_loading_benchmark.json).
 
-### Remaining evaluation
+## Verification, collaboration and remaining work
 
-TwoRoom started at 05:32:53 Europe/Berlin with clean code revision
-`7d7a49e94e8c2d6055bce751dfffa5aacea4d1b2`, 657,728 training / 73,081 validation
-windows, and its fixed 51,380-update schedule under a 4,800-second execution
-ceiling. Its training/control and both datasets’ full matched inspections and
-qualitative panels remain in progress.
+**64 tests pass**, including both opt-in browser checks. CPU tests cover exact
+optimization with diagnostics, stopped/resumed dropout weights, legacy and
+operational fingerprints, final validation, data integrity, simulator causality,
+control denominators, inspection targets/history and failed dashboard publication.
+The main queue completed every training/evaluation/visualization/inspection with
+canonical HTML verification. All 2,304 spectrum values are retained in bounded
+parts; no dataset exceeds 2,000 rows. The final post-ablation receipt passes packaging, validation, desktop/mobile
+verification and source interaction: 31 charts, six tables and four image-panel
+blocks. Final desktop and 390-pixel screenshots were inspected locally. On narrow
+screens the long-label control chart requires horizontal navigation; desktop is
+the clearest view for comparing those bars. Exact tables retain all values.
+[Desktop capture](../runs/overnight_2026-09-06/dashboard_final_desktop.png),
+[mobile capture](../runs/overnight_2026-09-06/dashboard_final_mobile.png).
 
+Claude completed an independent implementation review and contributed three
+essential TwoRoom tests through MCP; those were verified failing before the
+implementation and passing afterward. The two completed calls report **$4.164104
+in API-equivalent usage**; actual remaining account quotas are not exposed. A
+later additional review of code and aggregate results was rejected before launch
+by automatic approval review, which treated the transfer to Claude as sensitive
+egress to an unverified destination. Specific user approval is pending. No
+additional Claude review is claimed; local evaluation and review continued.
+[Collaboration status](../runs/overnight_2026-09-06/claude/primary_review_status.json).
 
-## Late protocol clarification and bounded solver check
-
-A final source check confirmed that Appendix D specifies **10 CEM iterations for
-TwoRoom**, whereas the [pinned released CEM configuration](https://github.com/lucas-maes/le-wm/blob/8edfeb336732b5f3ce7b8b210d0ba370a09e2cac/config/eval/solver/cem.yaml)
-uses 30. The frozen overnight comparisons use 30. Therefore the 100/150 result
-is a **longer-goal test with the released settings**, not a full paper-protocol
-reproduction; history also remains three rather than the paper’s one. Existing
-`tworoom_paper_*` paths and all frozen data are retained. This clarification is
-recorded in `protocol_clarification.json`. The planning horizon, action block and
-replanning block of five do agree with [Appendix D](https://arxiv.org/html/2603.19312v1).
-
-Before further measurements, prepare a paired exploratory check changing only
-CEM iterations from 30 to 10 on the same 50 longer-goal cases and both unchanged
-checkpoints. Keep samples 300, elites 30, seeds, normalization, horizon/action
-blocks, goal offset 100 and budget 150. The new case file records its parent
-SHA256 and asserts all other experimental fields match. Compare successful cases,
-actions used and measured runtime; no new passing threshold or automatic recipe
-adoption. This tests solver sensitivity, not the history discrepancy or a full
-training reproduction. Launch only if the originally queued inspections finish
-by 07:32, reserving approximately ten minutes for this pair and the remaining
-morning time for final QA/reporting. An unrun check remains explicitly unrun.
+The full ten-epoch baseline and unseen-configuration generalization remain
+unestablished. Preserve these checkpoints and the earlier references. The next
+research step should distinguish dynamics/evaluation calibration and planner
+behavior using matched controls before attributing TwoRoom's failure to the
+representation regularizer or changing the architecture. No further training is
+scheduled beyond this bounded work. Passive TAU/Charades extensions remain deferred.
