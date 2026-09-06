@@ -390,6 +390,54 @@ observations:
   - N43
   - N44
   - N45
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H10
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O25
+  timestamp: 2026-09-06T14:20+02:00
+  provenance: ai-suggested
+  content: At fixed trained parameters, replacing the six BN buffers produces a large TwoRoom control improvement
+    on the frozen source cases. This identifies a proximal buffer intervention effect; it does not isolate the layer
+    or training-time mechanism, and does not establish unseen-configuration generalization.
+  context: Completed accepted follow-up; researcher has not yet commented on these new outcomes or adopted the next
+    proposal.
+  potential_type: claim
+  bound_to:
+  - N52
+  - N53
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O26
+  timestamp: 2026-09-06T14:20+02:00
+  provenance: ai-suggested
+  content: The schedule-preserving PushT continuation improves matched control and full-window internals, but remains
+    behind released weights. Both tested PushT calibration clones have lower prediction ratios without higher control
+    success; prediction improvement alone does not establish a useful inference change.
+  context: Completed accepted follow-up; researcher has not yet commented on these new outcomes or adopted the next
+    proposal.
+  potential_type: claim
+  bound_to:
+  - N54
+  - N55
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O27
+  timestamp: 2026-09-06T14:20+02:00
+  provenance: ai-suggested
+  content: Next isolate projector versus prediction-projector BN effects before causal attribution, retain the saved-buffer
+    PushT13933 checkpoint as continuation reference, and predeclare any further training or group-held-out evaluation
+    separately.
+  context: Completed accepted follow-up; researcher has not yet commented on these new outcomes or adopted the next
+    proposal.
+  potential_type: heuristic
+  bound_to:
+  - N57
   promoted: false
   promoted_to: null
   crystallized_via: null

@@ -2,11 +2,11 @@ session:
   id: 2026-09-06_001
   date: '2026-09-06'
   started: 2026-09-06T00:05+02:00
-  last_turn: 2026-09-06T11:21+02:00
-  turn_count: 4
-  summary: 'Overnight completed: PushT8404 updates17/50; TwoRoom4074 updates14/50 primary and0/50 long; released45/42/5.
-    Matched internals,3x cheaper solver check,64 tests and canonical HTML pass; extra Claude review pending transfer
-    approval.'
+  last_turn: 2026-09-06T14:20+02:00
+  turn_count: 5
+  summary: 'Follow-up complete: Claude calibration implementation; TwoRoom48/50 calibrated, PushT13933 updates30/50
+    saved and29/50 calibrated; matched internals,76 tests and canonical HTML pass. Parents immutable; no jobs queued;
+    mechanism and wider transfer approval remain open.'
 events_logged:
 - turn: 1
   type: decision
@@ -260,6 +260,84 @@ events_logged:
   provenance: ai-suggested
   summary: Proposed bounded TwoRoom normalization/dynamics/planning diagnosis, mobile layout repair, then conditional
     PushT continuation; not launched.
+- turn: 5
+  type: decision
+  id: N50
+  routing: direct
+  provenance: user
+  summary: Accept bounded diagnosis, Claude implementation co-work and conditional PushT continuation
+- turn: 5
+  type: experiment
+  id: N51
+  routing: direct
+  provenance: ai-executed
+  summary: Integrate actual Claude calibration implementation under restricted MCP scope
+- turn: 5
+  type: experiment
+  id: N52
+  routing: direct
+  provenance: ai-executed
+  summary: Measure unchanged TwoRoom action rankings against the simulator
+- turn: 5
+  type: experiment
+  id: N53
+  routing: direct
+  provenance: ai-executed
+  summary: Calibrated TwoRoom clone recovers primary control on unchanged cases
+- turn: 5
+  type: experiment
+  id: N54
+  routing: direct
+  provenance: ai-executed
+  summary: PushT8404 calibration improves prediction but loses control cases
+- turn: 5
+  type: experiment
+  id: N55
+  routing: direct
+  provenance: ai-executed
+  summary: Complete one-epoch PushT continuation and matched final rechecks
+- turn: 5
+  type: experiment
+  id: N56
+  routing: direct
+  provenance: ai-executed
+  summary: Verify mobile bars, forked reference panels and final evidence publication
+- turn: 5
+  type: question
+  id: N57
+  routing: direct
+  provenance: ai-suggested
+  summary: Isolate TwoRoom normalization layer and training-time mismatch mechanism
+- turn: 5
+  type: observation
+  id: O25
+  routing: staged
+  provenance: ai-suggested
+  summary: At fixed trained parameters, replacing the six BN buffers produces a large TwoRoom control improvement
+    on the frozen source cases. This identifies a proximal buffer intervention effect; it does not isolate the layer
+    or training-time mechanism, and does not establish unseen-configuration generalization.
+- turn: 5
+  type: observation
+  id: O26
+  routing: staged
+  provenance: ai-suggested
+  summary: The schedule-preserving PushT continuation improves matched control and full-window internals, but remains
+    behind released weights. Both tested PushT calibration clones have lower prediction ratios without higher control
+    success; prediction improvement alone does not establish a useful inference change.
+- turn: 5
+  type: observation
+  id: O27
+  routing: staged
+  provenance: ai-suggested
+  summary: Next isolate projector versus prediction-projector BN effects before causal attribution, retain the saved-buffer
+    PushT13933 checkpoint as continuation reference, and predeclare any further training or group-held-out evaluation
+    separately.
+- turn: 5
+  type: heuristic
+  id: H10
+  routing: crystallized
+  provenance: user-revised
+  summary: O24 adopted by explicit user yes; sequence completed. New causal and capability findings not endorsed.
 ai_actions:
 - turn: 1
   action: Repaired and verified canonical dashboard; ran 20 training goals and paired actions, eight simulator-ranking
@@ -308,6 +386,20 @@ ai_actions:
   provenance: ai-executed
   files_changed:
   - ara/
+- turn: 5
+  action: Co-worked with Claude via restricted MCP implementation, integrated essential red-before-green checks,
+    ran ranking/calibration/frozen controls and one-epoch continuation serially, recovered supervisor without restart,
+    repaired dashboard mobile and fork population matching, inspected final figures, reconciled source hashes and
+    committed report5b4fcf7.
+  provenance: ai-executed
+  files_changed:
+  - scripts/
+  - world_model/train.py
+  - tests/
+  - viewer/
+  - configs/reproduction/pusht_epoch1_continuation.yaml
+  - docs/
+  - ara/
 claims_touched: []
 key_context:
 - turn: 1
@@ -327,13 +419,20 @@ key_context:
 - turn: 4
   excerpt: ok now what should we do now? Generic acknowledgment and request for advice do not affirm a particular
     causal hypothesis or the pending Claude transfer.
+- turn: 5
+  excerpt: yes. cowork with claude. use claude not only for review to keep your limits in mind
+- turn: 5
+  excerpt: Specific repository-transfer question remains unanswered after automatic review blocks; restricted no-repository
+    Claude implementation succeeds. No remaining account quota was claimed.
 open_threads:
-- Full ten-epoch reproduction and unseen-configuration transfer remain unscheduled/unestablished.
-- Separate TwoRoom evaluation/dynamics calibration from planner behavior; preserve completed checkpoints.
-- Specific approval for additional Claude code/result transfer remains pending; no third call launched.
-- Long control labels crowd mobile charts; desktop and exact values remain available.
+- Isolate TwoRoom projector versus prediction-projector BN effects and training-time mismatch mechanism; preserve
+  current checkpoints.
+- Full ten-epoch reproduction and unseen-configuration generalization remain unestablished; further training/evaluation
+  requires a separate bounded decision.
+- Specific approval for broader repository/code/result transfer to Claude remains pending; completed restricted
+  implementation did not use repository access.
 ai_suggestions_pending:
-- O19/O20/O21 remain staged; capability and mechanism interpretations await researcher review.
-- Earlier O12/O14/O15/O17 retain their original checkpoint/population scopes; no causal adjudication.
-- No new scientific threshold, solver default or architecture modification adopted.
-- O24 proposes a bounded diagnostic sequence and conditional continuation; user adoption remains pending.
+- O25/O26 record new scoped interpretations awaiting researcher engagement; O27 next comparison remains proposed.
+- O19/O20/O21 and earlier O12/O14/O15/O17 retain their original scopes; no causal adjudication or general equivalence
+  claim.
+- No numerical scientific gate, universal calibration default or architecture/objective change adopted.

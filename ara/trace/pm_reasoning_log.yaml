@@ -123,3 +123,18 @@ entries:
     supports a candidate comparison, not a claim that BN caused TwoRoom failure.
   - Baseline/control topics remain active and no three-session-day staleness; pending Claude-specific approval
     remains separate.
+
+- turn: 2026-09-06_001#5
+  notes:
+  - Promoted only O24/H10 through explicit user adoption of the bounded sequence; user-revised applies to adoption,
+    not result interpretation or repository-transfer consent.
+  - Grouped completed work in N50–N57 instead of heartbeat records. Claude actually authored code/tests under no-repository
+    MCP scope; broader blocked tasks and unavailable supervisor exit code remain explicit.
+  - Staged O25/O26 and O27; no researcher comment on new results or adoption of next layer-isolation comparison.
+    Report commitment documents evidence, not a downstream causal premise.
+  - Earlier O03 is a120-update PushT scope, O19 compares another schedule, and C01 is the earlier group-held-out
+    pilot. Current findings refine research questions without contradicting those scoped records; no silent overwrite.
+  - BN/control/representation topics remain active, so no five-turn abandonment. Only one session-day elapsed for
+    older staging, so no three-day stale flags.
+  - Evidence snapshot binds original hashes, exact samples, controls, calibration, full internals, Claude receipt,
+    queue recovery and final canonical QA. All current jobs finished before this epilogue.

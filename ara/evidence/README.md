@@ -17,3 +17,5 @@ Completed control diagnosis and source-scale preparation: [snapshot](tables/push
 Ten-minute source-data development run: [source-hashed snapshot](tables/pusht_source_10min_2026-09-06.json); [report](../../docs/pusht-source-10min.md). Includes375 updates, matched50-goal outcomes, final/released internals, qualitative saved-action replay,49 tests and canonical browser receipt.
 
 Bounded overnight co-work and both full-source prefixes: [source-hashed snapshot](tables/overnight_2026-09-06.json); [completed report](../../docs/overnight-2026-09-06.md). Includes matched control/internals, solver iteration comparison,64 tests and final browser receipt; additional Claude review blocked pending specific approval.
+
+Completed diagnostic follow-up and one-epoch PushT continuation: [source-hashed snapshot](tables/tworoom_followup_2026-09-06.json); [report](../../docs/tworoom-followup-2026-09-06.md). Includes Claude implementation, TwoRoom48/50 calibrated control, PushT30/50 saved-buffer and29/50 calibrated final control, matched internals,76 tests and final canonical/mobile/desktop QA. Original checkpoints remain immutable; layer/mechanism claims stay staged.

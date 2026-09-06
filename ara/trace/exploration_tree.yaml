@@ -797,4 +797,120 @@ tree:
   - N44
   - N45
   - N47
+  status: resolved
+  resolution: User accepted the proposed sequence in N50; completed in N51–N56.
+
+- id: N50
+  type: decision
+  title: Accept bounded diagnosis, Claude implementation co-work and conditional PushT continuation
+  provenance: user
+  timestamp: 2026-09-06T14:20+02:00
+  choice: User says yes to the proposed sequence and asks Claude to implement, not only review. Local authorized
+    scope includes preserved-checkpoint diagnostics, mobile repair and schedule-preserving PushT8404→13933 fork;
+    no general source-transfer approval inferred.
+  alternatives:
+  - Stop after advice
+  - Use Claude only for review
+  evidence: &id001
+  - evidence/tables/tworoom_followup_2026-09-06.json
+  - ../docs/tworoom-followup-2026-09-06.md
+  also_depends_on:
+  - N49
+  status: resolved
+- id: N51
+  type: experiment
+  title: Integrate actual Claude calibration implementation under restricted MCP scope
+  provenance: ai-executed
+  timestamp: 2026-09-06T14:20+02:00
+  result: Broad source-access tasks rejected before launch. Safer MCP task uses no repo context/file tools; Claude
+    writes layerwise calibration utility and three tests for $0.478356 reported usage. Bare-mode authentication
+    attempt costs $0. Codex integrates code and split-safe mode diagnostics. Specific broader transfer permission
+    remains pending.
+  evidence: *id001
+  also_depends_on:
+  - N50
+  - N48
+  status: resolved
+- id: N52
+  type: experiment
+  title: Measure unchanged TwoRoom action rankings against the simulator
+  provenance: ai-executed
+  timestamp: 2026-09-06T14:20+02:00
+  result: First8 frozen primary cases ×20 identical physical candidates ×2 models=320 records. Predicted-cost selected
+    success local2/8, released8/8; mean physical regret48.88/1.71px. Measured-latent selection8/8 both includes
+    exact replay candidate. Full25-action open-loop horizon; not the50-action closed-loop metric. Parameters/checkpoint
+    hashes unchanged.
+  evidence: *id001
+  also_depends_on:
+  - N50
+  - N43
+  status: resolved
+- id: N53
+  type: experiment
+  title: Calibrated TwoRoom clone recovers primary control on unchanged cases
+  provenance: ai-executed
+  timestamp: 2026-09-06T14:20+02:00
+  result: 512 fixed training calibration windows,512 saved validation windows, batch128, seed103072, FP32/BF16 and
+    batch-statistic probes. Only six BN buffer tensors change. FP32 prediction/copy3.94798→0.02965. Primary control14/50→48/50
+    (44/46 initially unsolved), released42/50. Long100/150 CEM10 control0/50→13/50, released5/50. No optimizer update
+    or source-checkpoint mutation; same source populations/cases/seeds/solver.
+  evidence: *id001
+  also_depends_on:
+  - N51
+  - N52
+  status: resolved
+- id: N54
+  type: experiment
+  title: PushT8404 calibration improves prediction but loses control cases
+  provenance: ai-executed
+  timestamp: 2026-09-06T14:20+02:00
+  result: Same512-training-window calibration. FP32 prediction/copy0.22739→0.18511; control17/50→11/50, two gains/eight
+    losses. Original checkpoint unchanged. Calibration not adopted into the continuation recipe.
+  evidence: *id001
+  also_depends_on:
+  - N51
+  - N50
+  status: resolved
+- id: N55
+  type: experiment
+  title: Complete one-epoch PushT continuation and matched final rechecks
+  provenance: ai-executed
+  timestamp: 2026-09-06T14:20+02:00
+  result: 8404→13933,5529 added updates in6507.798486s, cap7800; full139330 schedule unchanged. Exact optimizer/RNG
+    fork behavior tested. Final checkpoint/validation/status13933; parent unchanged. Saved-buffer control30/50 versus17/50
+    parent and45/50 released,17 gains/four losses. Final calibration29/50 despite prediction/copy0.14300→0.11349.
+    Full rank38.71→48.42, probe R²0.5462→0.6005,h8ratio0.2906→0.2106. Supervisor exit recovered around same trainer;
+    original exit code unavailable, final status/checkpoint/HTML verified. All queue stages finished.
+  evidence: *id001
+  also_depends_on:
+  - N50
+  - N54
+  status: resolved
+- id: N56
+  type: experiment
+  title: Verify mobile bars, forked reference panels and final evidence publication
+  provenance: ai-executed
+  timestamp: 2026-09-06T14:20+02:00
+  result: 76 tests including three browser checks pass. Mobile bar regression red before compact labels; full identities
+    retained. Screenshot startup race fixed. Forked panels match recorded sampling/preprocessing hash instead of
+    directory; mismatched/incomplete references excluded against complete identities. Canonical package/data/browser
+    verification passes:31 charts,8 tables,4 image blocks/8 images. Actual390px/1440px captures, four new rollouts
+    and four final internals panels inspected. Source-hashed reconciliation passes; all parents preserved.
+  evidence: *id001
+  also_depends_on:
+  - N55
+  - N53
+  status: resolved
+- id: N57
+  type: question
+  title: Isolate TwoRoom normalization layer and training-time mismatch mechanism
+  provenance: ai-suggested
+  timestamp: 2026-09-06T14:20+02:00
+  description: Next proposed experiment separates projector and prediction-projector buffer interventions with preserved
+    clones and predeclared matched cases. The responsible layer/mechanism remains unresolved; full reproduction,
+    further PushT budget and group-held-out generalization are separate decisions, not queued.
+  evidence: *id001
+  also_depends_on:
+  - N53
+  - N55
   status: open
