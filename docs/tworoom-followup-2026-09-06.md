@@ -159,3 +159,13 @@ The forked-panel regression failed on the previous matcher and now passes; the
 full suite passes76 tests including all browser checks. The real PushT parent,
 released and fork manifests share inspection-population hash
 89bedf009f7153819214f37928a116cac8381f3cd62b9c9fb072a3a0e7a6fb5a.
+
+PushT completed13933 updates, adding5529 in6507.798486 seconds (108m27.8s),
+within the7800-second continuation cap. Recorded mean update time1.16764s.
+Total processed windows1783424; one epoch drops124 of1783548 training windows.
+The full139330-step schedule remains unchanged. Final validation/checkpoint/status
+all reference13933; final checkpoint SHA256
+151b356addea1a9bc7c939fcd102986ed1e7dfca693212463308b8456b3ca4f0.
+Original parent SHA unchanged. Final512-window prediction MSE0.0281233 versus
+copy0.196671. Wrapper canonical HTML passed. Frozen final controls, full internals,
+mode/calibration diagnostics and fixed-first-case panels are now running.
