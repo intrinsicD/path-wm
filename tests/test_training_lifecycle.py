@@ -173,3 +173,28 @@ def test_fork_rejects_scientific_changes_before_any_update(setup_run):
     with pytest.raises(ValueError,match='configuration or dataset'):
         train(child_path,fork_from=parent/'checkpoint_000001.pt')
     assert not (child/'checkpoint.pt').exists()
+
+
+def test_calibration_only_exports_provenance_without_changing_source(setup_run):
+    from world_model.train import train
+    from scripts.check_training_modes import check
+    from scripts.inspect_checkpoint import sha256
+    path, run, _ = setup_run('calibration_source')
+    train(path)
+    source = run / 'checkpoint.pt'
+    digest = sha256(source)
+    output = run.parent / 'calibration_output'
+    clone = run.parent / 'calibration_clone'
+    result = check(run, output / 'diagnostics.json', device='cpu', windows=2,
+                   calibration_windows=4, batch_size=2, save_calibrated=clone,
+                   calibration_only=True)
+    assert sha256(source) == digest and result['checkpoint_unchanged']
+    assert not (output / 'variants').exists()
+    saved = torch.load(source, weights_only=True)
+    calibrated = torch.load(clone / 'checkpoint.pt', weights_only=True)
+    assert calibrated['diagnostic_only'] and calibrated['step'] == saved['step']
+    assert calibrated['parent_checkpoint_sha256'] == digest
+    changed = [k for k in saved['model'] if not torch.equal(saved['model'][k], calibrated['model'][k])]
+    assert changed and all(k.endswith(('running_mean', 'running_var', 'num_batches_tracked')) for k in changed)
+    assert len(result['calibration_source_rows']) == 4
+    assert not set(result['calibration_source_rows']) & set(result['validation_source_rows'])

@@ -23,3 +23,7 @@ Scientific config extension: optional sigreg_seed selects an independent RNG imp
 Essential tests precede implementation: fixed-direction loss and input-gradient parity, sketch RNG isolation, exact next-sample serialization, incompatible-state rejection, and exact training recovery with sketch state. Then preflight a bounded actual update benchmark for both projection counts before launching the full serial screen.
 
 Every completed run/evaluation goes through run.py and must produce verified runs/experiment_dashboard.html. Keep the raw ledger authoritative and report publication failures separately. Freeze any necessary protocol amendment before affected experiments; record budget stops or incomplete control evaluations explicitly.
+
+## Evaluation implementation detail (before affected runs)
+
+Reuse check_training_modes with an optional calibration_only flag requiring save_calibrated: preserve the identical layerwise512-training-window calibration and clone provenance, skip its auxiliary four precision/split probes. Saved-buffer prediction is already logged during training; the frozen control comparison still evaluates both variants at750/1500. A tiny-data integrity test must establish that only BN buffers change, source hashes remain unchanged, and exported clones retain the exact training-step and calibration population. Historical50-case control commands cost about3–4min each, so48 evaluations add about3h plus calibration/reporting. Total expected duration is9–10h.
