@@ -16,7 +16,7 @@ The 512 calibration windows add 452–459 PushT / 344–370 TwoRoom window start
 
 ## Recorded control outcomes
 
-Snapshot after8 of48 expected outcomes. Scores are successes out of50; all PushT initial-success counts are zero. Differences below are4096 minus1024. Saved and calibrated policies remain separate; calibrated control was predeclared primary.
+Snapshot after12 of48 expected outcomes. Scores are successes out of50; all PushT initial-success counts are zero. Differences below are4096 minus1024. Saved and calibrated policies remain separate; calibrated control was predeclared primary.
 
 | Dataset | Seed | Updates | BN policy |1024|4096| Difference |
 |---|---:|---:|---|---:|---:|---:|
@@ -24,8 +24,12 @@ Snapshot after8 of48 expected outcomes. Scores are successes out of50; all PushT
 |PushT|3072|1500|Calibrated|2|4|+2|
 |PushT|3072|750|Saved|3|1|−2|
 |PushT|3072|1500|Saved|4|2|−2|
+|TwoRoom|3072|750|Calibrated|pending|37|pending|
+|TwoRoom|3072|1500|Calibrated|pending|46|pending|
+|TwoRoom|3072|750|Saved|pending|11|pending|
+|TwoRoom|3072|1500|Saved|pending|47|pending|
 
-Seeds3073/3074 and TwoRoom are pending. No statistical threshold was frozen; no passing gate or significance claim follows from these values. The [live derivative](../runs/projection_training_2026-09-06/projection_comparison.json) explicitly lists every missing outcome and recomputes paired summaries from native reconciled case records. The [verified dashboard](../runs/experiment_dashboard.html) refreshes after every completed stage.
+Seeds3073/3074 and the first TwoRoom1024 arm are pending. No statistical threshold was frozen; no passing gate or significance claim follows from these values. The [live derivative](../runs/projection_training_2026-09-06/projection_comparison.json) explicitly lists every missing outcome and recomputes paired summaries from native reconciled case records. The [verified dashboard](../runs/experiment_dashboard.html) refreshes after every completed stage.
 
 ## Optimization and prediction context
 
@@ -39,7 +43,7 @@ An inherited reporting label was corrected: training validation rollout_mse / id
 
 ## Early TwoRoom result and targeted normalization literature
 
-The first TwoRoom arm (seed3072,4096 directions) has completed1500 updates. At750, saved buffers solve11/50 cases versus37/50 after the fixed calibration procedure. The corresponding initially-unsolved counts are8/46 and33/46; one initially solved case is not retained by the saved-buffer controller, so subtracting four from total successes would be incorrect. These are one-arm observations; the paired1024 result is pending. Final saved-buffer one-step prediction/copy is0.213 at1500, with control still pending at this snapshot.
+The first TwoRoom arm (seed3072,4096 directions) has completed1500 updates. At750, saved buffers solve11/50 cases versus37/50 after the fixed calibration procedure. The corresponding initially-unsolved counts are8/46 and33/46; one initially solved case is not retained by the saved-buffer controller, so subtracting four from total successes would be incorrect. These are one-arm observations; the paired1024 result is pending. Final saved-buffer one-step prediction/copy is0.213 at1500. At1500, saved/calibrated control reaches47/46 out of50 (43/42 of46 initially unsolved), so calibration decreases the final score by one case. Recorded elapsed time is2106.36 seconds: the last update began before the2100-second cap, then final validation and checkpointing completed. The paired1024 arm is now training.
 
 Wu and Johnson (2021) show that EMA normalization statistics can lag an evolving model and destabilize early inference. Their PreciseBN discussion separates SGD and normalization batch sizes, and Appendix A.3 describes sequential layerwise statistics with earlier layers in inference mode. This supports investigating inference-state mismatch before interpreting poor control as insufficient learned weights. Our implementation averages per-batch unbiased variances; it is not their exact aggregate population-moment estimator. Their image-recognition results do not prove an improvement in this world model. [Rethinking “Batch” in BatchNorm, §3 and Appendix A.2–A.4](https://arxiv.org/html/2105.07576v1)
 
@@ -54,7 +58,7 @@ The first frozen case was selected before scores:seed3072, calibrated1500, each 
 - [PushT1024 rollout](../runs/projection_training_2026-09-06/qualitative/pusht_s3072_m1024/case_0_rollouts.png)
 - [PushT4096 rollout](../runs/projection_training_2026-09-06/qualitative/pusht_s3072_m4096/case_0_rollouts.png)
 
-Both model action replays exactly reproduce recorded control outcomes. TwoRoom qualitative panels are pending its first pair.
+Both PushT model action replays exactly reproduce recorded control outcomes. The [TwoRoom4096 panel](../runs/projection_training_2026-09-06/qualitative/tworoom_s3072_m4096/case_0_rollouts.png) also passes replay verification: row58908, episode644, start42, reset seed1234. Calibrated local and released controllers both succeed in21 steps; recorded-action replay succeeds in20. The first-case local trajectory crosses the doorway and reaches the goal neighborhood. The TwoRoom1024 panel remains pending.
 
 ## Implementation, co-work and verification
 
