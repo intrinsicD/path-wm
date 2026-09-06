@@ -410,12 +410,15 @@ def test_training_gradient_audit_is_distinct_from_validation_and_indexes_evidenc
     write_json(run / 'manifest.json', {'precision': 'bf16', 'population': 'Fixed TRAIN windows'})
     write_json(run / 'gradient_audit.json', {'step': 12, 'checkpoint_unchanged': True,
         'model_state_unchanged': True, 'sampling': {'processed_windows': 1536},
-        'geometry': {'different_data': {'128': {'pairwise_cosine_mean': .4}}}})
+        'geometry': {'different_data': {'128': {'pairwise_cosine_mean': .4}}},
+        'probes': [{'regime':'different_data', 'batch_size':32, 'replicate':i,
+                    'modules':{'encoder':{'prediction_norm':v}}} for i,v in enumerate([2.,4.])]})
     (run / 'gradient_geometry.png').write_bytes(b'fixture image')
     results, notices = collect_run_results(tmp_path / 'runs')
     assert len(results) == 1
     assert results[0].kind == 'gradient_audit'
     assert results[0].metrics['geometry.different_data.128.pairwise_cosine_mean'] == .4
+    assert results[0].metrics['probe_means.different_data.b32.encoder.prediction_norm'] == 3
     assert 'Training mode' in results[0].context['protocol']
     artifact = build_dashboard_artifact(results, notices)
     assert any(b['id'] == 'panel_training_gradient_geometry' for b in artifact['manifest']['blocks'])
