@@ -33,6 +33,8 @@ Both first PushT arms completed1500 updates within the2100-second cumulative loo
 
 At1500 updates, saved-buffer one-step prediction/copy ratios are approximately0.747 for1024 and0.727 for4096 on matched512-window validation populations. Raw latent MSEs have different learned coordinate scales and must not be interpreted as directly comparable task quality. Quick32-window effective ranks are13.58/14.31; these are not the earlier full-window inspection ranks. The first PushT baseline exceeds the clip threshold in all61 logged gradient samples, not a recorded claim about every1500 update.
 
+The source-bound [interim gradient figure](../runs/projection_training_2026-09-06/figures/diagnostics_interim_v2/gradient_norms.png) and [prediction/copy figure](../runs/projection_training_2026-09-06/figures/diagnostics_interim_v2/prediction_copy.png) preserve all metric rows in an immutable snapshot. Both completed PushT arms exceed the clipping threshold in all 61 logged samples. The discrete prediction comparisons show nonmonotonic intermediate behavior; no smoothing or seed pooling is applied. Pending facets remain explicit.
+
 An inherited reporting label was corrected: training validation rollout_mse / identity_mse compares autoregressive error with an adjacent one-step copying error. It is now labelled “rollout / one-step copy,” with the different horizons disclosed. It is not matched multi-step prediction skill. Raw metrics and training/evaluation numerics were preserved.
 
 ## Preselected qualitative evidence

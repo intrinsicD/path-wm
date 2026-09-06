@@ -41,14 +41,14 @@ def plot(base=DEFAULT_BASE, output=None):
                         points=sorted([r for r in sample if r['seed']==seed and r['projections']==count],key=lambda r:r['step'])
                         if points:
                             ax.plot([r['step'] for r in points],[100*r['successes']/r['cases'] for r in points],
-                                    color=color,linestyle=style,marker='o',markersize=5,linewidth=1.7,alpha=.85)
+                                    color=color,linestyle=style,marker='o',markerfacecolor='white' if count==1024 else color,markersize=5,linewidth=1.7,alpha=.85)
                 ax.set(title=f"{'PushT' if dataset=='pusht' else 'TwoRoom'} · {variant} BN",ylim=(0,100),xlim=(650,1600),xticks=[750,1500],yticks=[0,20,40,60,80,100])
                 ax.grid(axis='y',alpha=.2)
                 if not sample:ax.text(.5,.5,'No completed evaluations',ha='center',transform=ax.transAxes,color='#666666')
                 ax.text(.02,.95,f'{len(sample)}/12 planned outcomes',ha='left',va='top',transform=ax.transAxes,fontsize=9)
                 if i==1:ax.set_xlabel('Training updates (750 = 96k windows; 1500 = 192k)')
                 if j==0:ax.set_ylabel('Successful fixed source goals (%)')
-        handles=[Line2D([0],[0],color=color,lw=2,label=f'{count} projections') for count,color in colors.items()]
+        handles=[Line2D([0],[0],color=color,lw=2,marker='o',markerfacecolor='white' if count==1024 else color,label=f'{count} projections') for count,color in colors.items()]
         handles += [Line2D([0],[0],color='#444444',linestyle=style,lw=2,label=f'Seed {seed}') for seed,style in styles.items()]
         fig.legend(handles=handles,loc='lower center',bbox_to_anchor=(.5,.065),ncol=5,frameon=False)
         status='Complete control collection' if len(rows)==expected else 'Incomplete control collection'
