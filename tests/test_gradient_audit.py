@@ -53,3 +53,22 @@ def test_probe_restores_batchnorm_rng_modes_and_parameters_on_error():
     assert all(torch.equal(v, model.state_dict()[k]) for k,v in before.items())
     assert torch.equal(rng, torch.get_rng_state())
     assert all(p.grad is None for p in model.parameters())
+
+
+def test_projection_seed_control_does_not_change_prediction_or_model_state():
+    from scripts.audit_sample_efficiency import probe
+    from world_model.model import build_model
+    from world_model.introspection import state_digest
+    torch.manual_seed(7)
+    model = build_model(dict(image_size=28, patch_size=14, width=12, encoder_depth=1,
+        encoder_heads=3, predictor_depth=1, predictor_heads=2, head_dim=6,
+        mlp_dim=24, projector_dim=24, history=3))
+    pixels, actions = torch.randn(4, 4, 3, 28, 28), torch.randn(4, 4, 10)
+    cfg = dict(sigreg_knots=5, sigreg_projections=8, sigreg_weight=.09, precision='float32')
+    before = state_digest(model)
+    a, ga = probe(model, pixels, actions, cfg, seed=8, reg_seed=9)
+    b, gb = probe(model, pixels, actions, cfg, seed=8, reg_seed=10)
+    assert a['prediction_loss'] == b['prediction_loss']
+    assert a['weighted_sigreg_loss'] != b['weighted_sigreg_loss']
+    assert not torch.equal(ga, gb)
+    assert state_digest(model) == before
