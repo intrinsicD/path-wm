@@ -458,7 +458,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                             "run", "The scatter above shows one model/case; this table holds the same 20 raw candidate sequences for every model/case."))
     # SQL intermediates duplicate plotted/table data and inflate the portable file.
     # Exact record tables remain referenced; discard only unreferenced datasets.
-    used_datasets = {view['dataset'] for view in charts + tables}
+    used_datasets = {view['dataset'] for view in charts + tables + cards}
     datasets = {name: rows for name, rows in datasets.items() if name in used_datasets}
     charts, tables = _partition_datasets(datasets, charts, tables)
     guide = ["# PATH-WM Experiment Dashboard", "",

@@ -431,7 +431,7 @@ def test_portable_snapshot_contains_only_datasets_referenced_by_views(tmp_path):
     write_rows(run / 'metrics.jsonl', [{'kind': 'train', 'step': 1, 'loss': .2}])
     results, notices = collect_run_results(tmp_path / 'runs')
     artifact = build_dashboard_artifact(results, notices)
-    views = artifact['manifest']['charts'] + artifact['manifest']['tables']
+    views = artifact['manifest']['charts'] + artifact['manifest']['tables'] + artifact['manifest']['cards']
     referenced = {view['dataset'] for view in views}
     assert set(artifact['snapshot']['datasets']) == referenced
     assert any(row.get('value') == .2 for name in referenced for row in artifact['snapshot']['datasets'][name])
