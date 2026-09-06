@@ -252,6 +252,12 @@ before outcomes, and require matching source/cases/seeds/planning protocols.
 A small CPU fixture must reproduce the TwoRoom result and reject changed final
 state evidence and mismatched goal protocols. Preserve all older panels.
 
+The TwoRoom replay fixture now passes and rejects both altered final-state
+evidence and changed goal protocols. Re-rendering the preserved first PushT case
+reproduced all saved outcomes exactly, with its actual step-375 label and passing
+canonical HTML. Released checkpoint hashes and the frozen PushT case-manifest
+hash were rechecked before scheduling the matched overnight evaluation.
+
 ## Outcomes
 
 Training/evaluation pending. This section records measured results, failures and deviations at closeout.
