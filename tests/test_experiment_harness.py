@@ -463,7 +463,8 @@ def test_projection_comparison_retains_paired_populations_and_missing_arms(tmp_p
     datasets = artifact['snapshot']['datasets']
     assert len(datasets['projection_control_detail'])==12
     assert sum(r['status']=='measured' for r in datasets['projection_control_detail'])==3
-    assert any(c['id'].startswith('projection_control_') for c in artifact['manifest']['charts'])
+    curves=[c for c in artifact['manifest']['charts'] if c['id'].startswith('projection_control_')]
+    assert curves and all(c['settings']['showPoints']=='always' for c in curves)
     assert any(t['dataset']=='projection_control_detail' for t in artifact['manifest']['tables'])
     value = json.loads(path.read_text()); value['groups'][0]['stats']['delta_successes']['mean']=100
     write_json(path,value)
