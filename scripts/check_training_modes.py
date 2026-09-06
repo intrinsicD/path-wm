@@ -57,7 +57,8 @@ def batch_statistics(model,loader,stats,device,image_size):
 
 @torch.no_grad()
 def check(run,output_path=None,*,device='cuda',windows=512,calibration_windows=512,batch_size=128,
-          checkpoint=None,reference=None,save_calibrated=None):
+          checkpoint=None,reference=None,save_calibrated=None,calibration_only=False):
+    if calibration_only and save_calibrated is None:raise ValueError('calibration_only requires save_calibrated')
     if min(windows,calibration_windows,batch_size)<2:raise ValueError('Diagnostic sample and batch sizes must be at least two')
     torch.set_num_threads(4);device=torch.device(device);run=Path(run)
     output=Path(output_path) if output_path else run/'diagnostics.json'
@@ -93,6 +94,7 @@ def check(run,output_path=None,*,device='cuda',windows=512,calibration_windows=5
         population=meta.get('population','Recorded episode-disjoint training/validation split'),
         batch_size=batch_size,variants={},batch_statistics={},
         batch_statistics_scope='Disposable BN-only current-batch probe; dropout disabled; batch-coupled outputs, not deployable control')
+    if calibration_only: variants=[]
     for name,variant,precision in variants:
         result['variants'][name]={}
         for split,ds,indices,rows in [('training',train,train_indices,train_rows),('validation',val,val_indices,val_rows)]:
@@ -109,8 +111,9 @@ def check(run,output_path=None,*,device='cuda',windows=512,calibration_windows=5
                 code_commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()))
             write_json(directory/'prediction.json',metrics)
             print(json.dumps(dict(mode=name,split=split,**metrics)),flush=True)
-    for split,ds,indices in [('training',train,train_indices),('validation',val,val_indices)]:
-        result['batch_statistics'][split]=batch_statistics(model,batches(ds,indices),stats,device,model.encoder.config.image_size)
+    if not calibration_only:
+        for split,ds,indices in [('training',train,train_indices),('validation',val,val_indices)]:
+            result['batch_statistics'][split]=batch_statistics(model,batches(ds,indices),stats,device,model.encoder.config.image_size)
     if sha256(checkpoint)!=digest or state_digest(model)!=initial_state:raise RuntimeError('Source checkpoint/model changed')
     result['checkpoint_unchanged']=True
     if save_calibrated is not None:
@@ -132,7 +135,8 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('run');p.add_argument('--output')
     p.add_argument('--device',choices=['cpu','cuda'],default='cuda');p.add_argument('--windows',type=int,default=512)
     p.add_argument('--calibration-windows',type=int,default=512);p.add_argument('--batch-size',type=int,default=128)
+    p.add_argument('--calibration-only',action='store_true',help='Export the same calibrated clone without auxiliary mode probes')
     p.add_argument('--checkpoint');p.add_argument('--reference');p.add_argument('--save-calibrated')
     args=p.parse_args();check(args.run,args.output,device=args.device,windows=args.windows,
         calibration_windows=args.calibration_windows,batch_size=args.batch_size,checkpoint=args.checkpoint,
-        reference=args.reference,save_calibrated=args.save_calibrated)
+        reference=args.reference,save_calibrated=args.save_calibrated,calibration_only=args.calibration_only)
