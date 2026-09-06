@@ -280,4 +280,45 @@ passing receipt postdates that terminal status.
 
 ## Outcomes
 
-Training/evaluation pending. This section records measured results, failures and deviations at closeout.
+### PushT training and control complete
+
+The fresh prefix stopped at **8,404 updates**, close to the 8,400 estimate after
+the loader improvement. It processed 1,075,712 windows, **60.31% of one epoch**;
+the learning-rate schedule remains 139,330 updates. Recorded terminal elapsed
+time is 10,625.407 seconds, including final validation, plus the 180 seconds
+explicitly charged for discarded work during recovery. Final checkpoint and
+validation both identify step 8404. The immutable final checkpoint SHA256 is
+`bb611899c74047552d2f93bb974004ed5fa49f401809e0e1590a832a1a186af9`.
+
+On the fixed 512 validation windows, prediction MSE is 0.0400887, copy MSE
+0.176300, shuffled-action MSE 0.219683 and short-rollout MSE 0.0819370.
+Prediction/copy is **0.227389**, prediction/shuffled **0.182484**, and short
+rollout/copy **0.464759**. These are within-encoder comparisons. Validation
+fluctuated at intermediate steps; final control uses the predeclared terminal
+checkpoint rather than selecting the best intermediate prediction metric.
+
+All 50 frozen source goals were evaluated with unchanged solver settings:
+
+| Checkpoint or action baseline | Successes | Initially satisfied |
+| --- | ---: | ---: |
+| Overnight, step 8404 | **17/50** | 0 |
+| Preserved ten-minute run, step 375 | 0/50 | 0 |
+| Released weights | 45/50 | 0 |
+| Recorded replay | 50/50 | 0 |
+| Stationary actions | 0/50 | 0 |
+
+There are 16 cases both models solve, one only the local model solves, 29 only
+released weights solve, and four neither solves. Local control took 215.20
+seconds of measured case execution (mean 41.86 actions). Checkpoint bytes are
+unchanged. Canonical HTML passed after both training and control. These results
+show a substantial improvement over the short run and a large remaining gap to
+the released model. The different schedules and operational changes prevent
+attributing the gain to update count alone; no formal pass threshold was set.
+
+### Remaining evaluation
+
+TwoRoom started at 05:32:53 Europe/Berlin with clean code revision
+`7d7a49e94e8c2d6055bce751dfffa5aacea4d1b2`, 657,728 training / 73,081 validation
+windows, and its fixed 51,380-update schedule under a 4,800-second execution
+ceiling. Its training/control and both datasets’ full matched inspections and
+qualitative panels remain in progress.

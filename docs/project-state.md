@@ -30,6 +30,14 @@ This supersedes the earlier unscheduled status only for the bounded new overnigh
 runs. Preserve all completed checkpoints and reference evidence. A full ten-epoch
 reproduction remains beyond tonight's budget.
 
+PushT has now completed its bounded prefix at 8,404 updates (60.31% of one epoch)
+and reaches **17/50** frozen source goals versus 0/50 for the preserved 375-update
+run and 45/50 for released weights. Final prediction/copy is 0.2274 and
+prediction/shuffled is 0.1825; checkpoint and validation steps match, checkpoint
+bytes are unchanged by control, and both mandatory HTML refreshes pass. TwoRoom’s
+80-minute full-source run started at 05:32:53; remaining evaluations are queued.
+No formal success threshold has been introduced or inferred.
+
 ## Latest: requested ten-minute training and recheck complete (2026-09-06)
 
 After inspecting the user's updated dashboard, a fresh source-data run completed
