@@ -20,6 +20,16 @@ training and benchmark evaluation. Baseline-specific tests cover episode
 alignment, causal action timing, reference computations and gradients,
 normalization, rollout and checkpoint integrity.
 
+## Active: bounded overnight implementation and evaluation (2026-09-06)
+
+The user has now authorized co-work with Claude via MCP, correctness/performance
+repairs, new local dataset training and control evaluation, and review of
+`runs/experiment_dashboard.html`. The working deadline is 08:00 Europe/Berlin.
+See [the overnight plan](overnight-2026-09-06.md) for interfaces, tests and budgets.
+This supersedes the earlier unscheduled status only for the bounded new overnight
+runs. Preserve all completed checkpoints and reference evidence. A full ten-epoch
+reproduction remains beyond tonight's budget.
+
 ## Latest: requested ten-minute training and recheck complete (2026-09-06)
 
 After inspecting the user's updated dashboard, a fresh source-data run completed
