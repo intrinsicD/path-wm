@@ -48,3 +48,20 @@ def test_ranking_ledger_accepts_declared_models_and_rejects_missing_pair(tmp_pat
     manifest['models'].append('missing');(run/'manifest.json').write_text(json.dumps(manifest))
     with pytest.raises(DashboardDataError,match='population'):
         collect_run_results(tmp_path/'runs')
+
+
+def test_dashboard_defaults_to_latest_ranking_and_its_actual_plan():
+    from viewer.ledger import RunResult
+    from viewer.dashboard import build_dashboard_artifact
+    results=[]
+    for label,model,time in [('old','pilot',1.),('new','local',2.)]:
+        record=dict(candidate=model+'_plan',candidate_index=0,model=model,predicted_cost=1.,position_error=2.,
+                    rollout_mse_by_step=[1.]*5,copy_mse_by_step=[2.]*5,
+                    predicted_cost_by_step=[3.]*5,actual_cost_by_step=[4.]*5)
+        results.append(RunResult(label,'ranking','evaluated',None,{},
+            {'model':model,'case_index':0,'population':'source primary'},(label+'/ranking.json',),time,
+            ranking=(record,)))
+    artifact=build_dashboard_artifact(results,[])
+    assert {r['run'] for r in artifact['snapshot']['datasets']['ranking_selected']}=={'new'}
+    assert len(artifact['snapshot']['datasets']['rollout_error'])==10
+    assert {r['candidate'] for r in artifact['snapshot']['datasets']['rollout_error']}=={'local_plan'}
