@@ -16,9 +16,10 @@ from world_model.data import preprocess_pixels, normalize_actions
 from world_model.model import build_model
 from world_model.protocol import prepare_training_data
 from world_model.objective import SIGReg
+from world_model.seeded_sigreg import SeededSIGReg
 from world_model.training import backward_batch
 from world_model.evaluation import evaluate_prediction
-from world_model.introspection import scalar_summary
+from world_model.introspection import scalar_summary, state_digest
 
 
 def write_json(path,value):
@@ -81,7 +82,10 @@ def train(config_path, resume=False, fork_from=None):
         if cfg.get('encoder_chunk'):
             raise ValueError('Full-batch activation checkpointing cannot use encoder slicing')
         model.encoder.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant":False})
-    reg=SIGReg(knots=cfg['sigreg_knots'],num_proj=cfg['sigreg_projections']).to(device)
+    private_sketch = cfg.get('sigreg_seed') is not None
+    reg = (SeededSIGReg(cfg['sigreg_knots'], cfg['sigreg_projections'], cfg['sigreg_seed'])
+           if private_sketch else SIGReg(cfg['sigreg_knots'], cfg['sigreg_projections'])).to(device)
+    initial_model_sha256 = state_digest(model) if private_sketch and not recovering else None
     optimizer=torch.optim.AdamW(model.parameters(),lr=cfg['lr'],weight_decay=cfg['weight_decay'])
     batches_per_epoch=len(train_ds)//cfg['batch_size']
     if batches_per_epoch<1: raise ValueError('Training dataset smaller than batch size')
@@ -122,6 +126,10 @@ def train(config_path, resume=False, fork_from=None):
             raise ValueError('Resume/fork configuration or dataset changed')
         if stop_at is not None and stop_at<saved['step']:
             raise ValueError('stop_at_step precedes the saved checkpoint')
+        if private_sketch:
+            if 'regularizer' not in saved:
+                raise ValueError('Private sketch resume requires saved regularizer state')
+            reg.load_state_dict(saved['regularizer'], strict=True)
         model.load_state_dict(saved['model'],strict=True);optimizer.load_state_dict(saved['optimizer'])
         step=saved['step'];elapsed=saved['elapsed_seconds']
         validation_step=saved.get('validation_step')
@@ -138,6 +146,7 @@ def train(config_path, resume=False, fork_from=None):
         torch.set_rng_state(saved['rng'].cpu())
         if device.type=='cuda':torch.cuda.set_rng_state_all([s.cpu() for s in saved['cuda_rng']])
     if not resume:
+        if initial_model_sha256 is not None: signature['initial_model_sha256'] = initial_model_sha256
         if parent is not None: signature['parent']=parent
         signature.update(code_commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
             code_dirty=bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip()),
@@ -164,6 +173,7 @@ def train(config_path, resume=False, fork_from=None):
             fingerprint_version=fingerprint_version,validation_step=validation_step,
             operational_config={k:cfg.get(k) for k in OPERATIONAL_KEYS},
             cuda_rng=torch.cuda.get_rng_state_all() if device.type=='cuda' else [])
+        if private_sketch: checkpoint['regularizer'] = reg.state_dict()
         torch.save(checkpoint,run/'checkpoint.pt.tmp');(run/'checkpoint.pt.tmp').replace(run/'checkpoint.pt')
         if final or step in cfg.get('checkpoint_steps',[]):
             snapshot=run/f'checkpoint_{step:06d}.pt'
