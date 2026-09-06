@@ -15,6 +15,12 @@ from viewer.ledger import collect_run_results
 from world_model.train import write_json
 
 
+def verify_case_order(records,cases):
+    if len(records)!=len(cases) or any(any(record.get(key)!=value for key,value in case.items())
+                                     for record,case in zip(records,cases)):
+        raise ValueError('Recorded case identities differ from the frozen case/seed order')
+
+
 def collect(base=DEFAULT_BASE):
     base=Path(base).resolve(); rows=[]; missing=[]; sources=set(); training=[]; pair_populations={}
     controls,_=collect_run_results(base/'evaluations')
@@ -42,6 +48,7 @@ def collect(base=DEFAULT_BASE):
                 if meta is None:raise ValueError('Control exists without training provenance')
                 out=base/'evaluations'/key;manifest=read(out/'manifest.json')
                 expected=read(ROOT/CASE_FILES[dataset])
+                verify_case_order([json.loads(line) for line in (out/'cases.jsonl').read_text().splitlines()],expected['cases'])
                 if (manifest['case_manifest_sha256'] != CASE_HASHES[dataset]
                     or sha(ROOT/CASE_FILES[dataset]) != CASE_HASHES[dataset]
                     or manifest['step'] != step or control.status != 'evaluated'
