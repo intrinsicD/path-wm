@@ -783,3 +783,18 @@ tree:
   also_depends_on:
   - N39
   status: open
+
+- id: N49
+  type: question
+  title: Choose the next experiment after the overnight results
+  provenance: user
+  timestamp: 2026-09-06T11:21+02:00
+  description: User asks what to do now. Advice requested; no new training launch or specific Claude data-transfer
+    approval inferred.
+  also_depends_on:
+  - N42
+  - N43
+  - N44
+  - N45
+  - N47
+  status: open

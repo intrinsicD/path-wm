@@ -370,3 +370,27 @@ observations:
   promoted_to: logic/solution/heuristics.md:H09
   crystallized_via: artifact-commitment
   stale: false
+
+- id: O24
+  timestamp: 2026-09-06T11:21+02:00
+  provenance: ai-suggested
+  content: 'Propose about one hour of saved-checkpoint TwoRoom diagnostics: adapt old episode-based training-mode
+    script to restored random-window splits; compare saved BN, current-batch BN with dropout disabled, and
+    training-only recalibrated clones on matched windows, with float32/bf16 and copy/zero/shuffle controls.
+    Compare predicted action-plan costs against actual simulator outcomes on fixed cases and rerun matched
+    control if calibration helps. Repair mobile dashboard layout. If implementation checks pass, extend PushT
+    in a separate continuation directory toward one full epoch with unchanged optimizer/schedule, preserving
+    parent checkpoint; roughly5529 extra updates or1h50 training at overnight throughput, evaluation extra.'
+  context: Read existing code and completed report; official PyTorch BatchNorm documentation confirms training/evaluation
+    statistic distinction. Existing check_training_modes assumes episode splits and fixed history; not directly
+    valid for overnight random-window runs. No experiments or model changes this turn.
+  potential_type: heuristic
+  bound_to:
+  - N49
+  - N43
+  - N44
+  - N45
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

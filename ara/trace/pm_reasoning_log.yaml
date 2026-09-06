@@ -112,3 +112,14 @@ entries:
     reproduction. Preserve initial-goal denominators and all negative outcomes.
   - Additional Claude review rejected before launch; existing two completed calls remain valid evidence. No
     transfer bypass or claimed remaining quota.
+
+- turn: 2026-09-06_001#4
+  notes:
+  - Routed user next-step question directly and staged O24 as proposed implementation/experiment sequence.
+    No approval or launch inferred from advice request.
+  - Generic ok does not clearly endorse O19/O20/O21 or resolve causal alternatives; conservatively leave them
+    staged. No claim or heuristic promotion.
+  - Existing diagnostic split assumptions found by code inspection, not a new measured experiment. BN documentation
+    supports a candidate comparison, not a claim that BN caused TwoRoom failure.
+  - Baseline/control topics remain active and no three-session-day staleness; pending Claude-specific approval
+    remains separate.
