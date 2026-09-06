@@ -99,7 +99,7 @@ simulator outcomes, and selected-candidate summary values before rendering.
 Embedding every historical PNG exceeded the canonical 3 MB artifact limit after
 the first source-run inspection. The panel section now shows the focus run's
 earliest/latest inspected checkpoints and at most one released inspection whose
-`source_run_manifest` matches. This makes the image comparison population-aware
+recorded sampling and preprocessing identity matches (legacy records: same source manifest). This makes the image comparison population-aware
 and bounded to at most three inspections. The dashboard states this selection;
 all scalar records, covariance spectra, horizon curves and raw panel source paths
 remain indexed. No exact numeric evidence is discarded or size limit bypassed.
@@ -132,3 +132,15 @@ An actual-browser regression requires a nonzero bar at least80px wide wholly
 within390px. Numeric rows and canonical rendering/verification remain intact.
 Screenshot readiness tolerates a temporarily absent documentElement immediately
 after navigation, while preserving the readiness deadline and failure checks.
+
+
+## Reference panels across training forks (2026-09-06)
+
+Complete inspection manifests carry a derived population hash over dataset/split,
+exact validation windows, probe/rollout identities and counts, history, image
+size, seeds, precision and recorded panel/measurement settings. A fork with the
+same evidence can reuse the matching released panels even though its training
+manifest path changed. Different or partially missing identities cannot match a
+fully recorded inspection. Legacy pairs without complete identity retain the
+original same-manifest rule. The image bound and exact numeric inventory remain
+unchanged; one new regression covers matching and exclusion together.

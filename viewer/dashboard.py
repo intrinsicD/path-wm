@@ -473,9 +473,13 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
         panel_runs = [focused_panels[0]]
         if focused_panels[-1].label != focused_panels[0].label:
             panel_runs.append(focused_panels[-1])
-        source_manifest = focused_panels[-1].context.get("source_run_manifest")
-        matched = [r for r in internals if r.internals.get("family") == "released" and source_manifest
-                   and r.context.get("source_run_manifest") == source_manifest]
+        context = focused_panels[-1].context
+        source_manifest = context.get("source_run_manifest")
+        population = context.get("inspection_population_sha256")
+        matched = [r for r in internals if r.internals.get("family") == "released" and
+                   ((population and r.context.get("inspection_population_sha256") == population) or
+                    (not population and not r.context.get("inspection_population_sha256") and
+                     source_manifest and r.context.get("source_run_manifest") == source_manifest))]
         if matched:
             panel_runs.append(max(matched, key=lambda r: r.modified_at))
     blocks += _panel_blocks(panel_runs)
@@ -485,7 +489,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
              "The reader ignores per-section selectors, so each chart's selection is fixed at build time and named in its title."] + notices
     if internals:
         notes.append("Image panels show the focus run's earliest and latest inspected checkpoints plus a released inspection "
-                     "only when it uses the same source-run manifest. All inspection scalars, spectra, horizon curves and raw panel "
+                     "only when recorded sampling and preprocessing identities match (legacy inspections: same source-run manifest). All inspection scalars, spectra, horizon curves and raw panel "
                      "paths remain in the exact tables, charts and source inventory. Selected panels: "
                      + (", ".join(r.label for r in panel_runs) or "none for this focus run"))
     if not run_results:

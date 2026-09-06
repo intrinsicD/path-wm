@@ -91,6 +91,18 @@ def _context(manifest: dict) -> dict:
     for key in ("train_episodes", "val_episodes", "validation_window_indices"):
         if isinstance(manifest.get(key), list):
             context[f"{key}_count"] = len(manifest[key])
+    # A fork changes its directory but can retain every inspection sample.
+    # Partial identities cannot establish a match with a fully recorded population.
+    sampling = ("dataset", "data_protocol", "validation_window_indices",
+                "probe_window_indices_sha256", "rollout_window_indices_sha256",
+                "validation_windows", "probe_windows", "rollout_windows", "rollout_horizon",
+                "history", "image_size", "seeds", "precision")
+    if all(manifest.get(key) is not None for key in sampling):
+        identity = {key: manifest[key] for key in sampling}
+        identity.update({key: manifest.get(key) for key in
+                         ("panel_frames", "predictor_batch", "gradient_batch", "sigreg", "probe_targets")})
+        context["inspection_population_sha256"] = hashlib.sha256(
+            json.dumps(identity, sort_keys=True).encode()).hexdigest()
     return context
 
 

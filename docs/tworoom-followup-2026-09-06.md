@@ -155,3 +155,7 @@ that identity when available. Retain legacy same-manifest matching only when
 neither inspection carries complete sampling identity. Never equate missing or
 different sample identities. Preserve the three-inspection image bound and every
 numeric record. This changes reporting only, not the active training recipe.
+The forked-panel regression failed on the previous matcher and now passes; the
+full suite passes76 tests including all browser checks. The real PushT parent,
+released and fork manifests share inspection-population hash
+89bedf009f7153819214f37928a116cac8381f3cd62b9c9fb072a3a0e7a6fb5a.
