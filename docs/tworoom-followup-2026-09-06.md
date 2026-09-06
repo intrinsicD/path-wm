@@ -60,4 +60,25 @@ separate measured calibration/dynamics effects from unproven causal explanations
 
 ## Results
 
-Pending execution.
+The first eight-case ranking completed: local predicted-cost selection succeeds
+2/8, released8/8; selection by measured simulator-image latent costs succeeds8/8
+for both. Local mean physical regret48.88px versus1.71px released. This diagnoses
+this candidate population; it is not a new closed-loop control score.
+
+Claude source-access tasks were blocked before launch by automatic review;
+specific permission is pending. A safer task succeeded through the same MCP
+using --safe-mode --restricted, no file tools or project context: Claude generated
+the layerwise calibration utility and three essential tests for$0.478356 reported
+usage. Codex inspected, integrated and verified that implementation. The --bare
+attempt could not use existing authentication and spent$0.
+
+The integrated suite passes74 tests including browser checks. TwoRoom validation
+prediction/copy changes from3.948 to0.02965 on a training-only calibrated clone;
+absolute prediction MSE2.63049 to0.0279162, with copy error0.666288 to0.941393.
+The encoder/target scale changes, so the matched control ratios and subsequent
+closed-loop test matter. Saved float32/bf16 and calibrated float32/bf16 are
+recorded separately. Original checkpoint/model bytes and training/validation
+window separation pass. Calibrated control is the next committed conditional
+step. This new evidence also warrants the same non-training check on PushT before
+launching the accepted continuation; no architecture or objective change.
+

@@ -63,6 +63,12 @@ def evaluate(case_file,checkpoint,output,released=False,device=None):
               'action_stats':stats,'normalization':normalization,'released':released,
               'case_manifest_sha256':sha256(case_file),'batchnorm':'saved buffers, unchanged','device':str(device),
               'code_commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()}
+    if not released and saved.get('diagnostic_only'):
+        if not training.get('diagnostic_only') or not saved.get('parent_checkpoint_sha256'):
+            raise ValueError('Diagnostic clone lacks calibration provenance')
+        settings.update(diagnostic_only=True,parent_checkpoint_sha256=saved['parent_checkpoint_sha256'],
+                        batchnorm='Training-only calibrated diagnostic clone; original checkpoint unchanged',
+                        calibration_receipt=training.get('calibration_receipt'))
     write_json(out/'manifest.json',settings);records=[]
     with h5py.File(protocol['dataset']['path'],'r') as data:
         for i,case in enumerate(cases):
