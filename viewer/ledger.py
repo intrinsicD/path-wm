@@ -328,8 +328,24 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
             elif isinstance(item, list):
                 for index, child in enumerate(item): flatten(child, f'{prefix}.{index}')
             elif isinstance(item, (int, float)) and not isinstance(item, bool): metrics[prefix] = item
-        flatten(value)
-        context = {**_context(manifest), 'protocol': 'Training mode, restored buffers, no updates; batch-coupled objective. Four descriptive replicates, no critical batch estimate.'}
+        flatten({k:v for k,v in value.items() if k != 'probes'})
+        # Exact per-regime/batch means bound the portable snapshot. Every raw
+        # replicate remains in the unchanged gradient_audit.json source.
+        samples = list(value.get('probes', []))
+        if any(r.get('regime') == 'same_data' for r in samples):
+            samples += [{**r, 'regime':'same_data'} for r in samples
+                        if r.get('regime') == 'different_data' and r.get('replicate') == 0 and r.get('batch_size') == 128]
+        summaries = {}
+        for row in samples:
+            prefix = f"probe_means.{row['regime']}.b{row['batch_size']}"
+            for group, values in row.get('modules', {}).items():
+                for key, val in values.items():
+                    if val is not None: summaries.setdefault(f'{prefix}.{group}.{key}', []).append(val)
+            for key in ('preclip_norm', 'prediction_loss', 'weighted_sigreg_loss', 'decomposition_relative_error'):
+                if key in row: summaries.setdefault(f'{prefix}.{key}', []).append(row[key])
+            if 'branches' in row: flatten(row['branches'], 'branches_b128')
+        metrics.update({k:sum(v)/len(v) for k,v in summaries.items()})
+        context = {**_context(manifest), 'protocol': 'Training mode, restored buffers, no updates; batch-coupled objective. Exact probe_means average the named regime and batch size; all replicates remain in the raw source. Four descriptive replicates, no critical batch estimate.'}
         add(path.parent, 'gradient_audit', 'measured' if value.get('checkpoint_unchanged') and value.get('model_state_unchanged') else 'checkpoint_changed',
             metrics, [path, manifest_path, panel_path], context, value.get('step'),
             internals={'panels': [dict(id='training_gradient_geometry', title='Sample-efficiency investigation: training gradients',
