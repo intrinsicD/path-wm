@@ -53,7 +53,7 @@ def plot(base=DEFAULT_BASE, output=None):
         fig.legend(handles=handles,loc='lower center',bbox_to_anchor=(.5,.065),ncol=5,frameon=False)
         status='Complete control collection' if len(rows)==expected else 'Incomplete control collection'
         fig.suptitle(f'SIGReg projection count: paired learning screen\n{status} · {len(rows)}/{expected} planned outcomes',fontsize=14)
-        fig.text(.5,.025,'Calibrated BN is the prespecified primary policy (512 training windows). Fixed source cases; three paired seeds.\nMissing evaluations are not zero successes. No significance threshold or independent-data generalization claim.',ha='center',fontsize=9)
+        fig.text(.5,.025,'Calibrated BN is the prespecified primary policy (512 calibration windows from the full training pool). Fixed source cases; three paired seeds.\nMissing evaluations are not zero successes. No significance threshold or independent-data generalization claim.',ha='center',fontsize=9)
         fig.tight_layout(rect=(0,.13,1,.91))
         for extension in ('png','svg'):
             fig.savefig(output/f'projection_learning_curves.{extension}',dpi=180,facecolor='white')
