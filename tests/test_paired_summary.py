@@ -163,3 +163,14 @@ def test_success_components_and_integral_arm_identity_are_validated():
     with pytest.raises(PairedDataError): summarize_pairs(rows)
     rows = build_rows(); rows[0]['projections'] = 1024.0
     with pytest.raises(PairedDataError): summarize_pairs(rows)
+
+
+def test_recorded_control_case_order_must_match_the_frozen_seed_order():
+    from scripts.collect_projection_experiment import verify_case_order
+    cases=[dict(row=10,episode=0,start=10),dict(row=20,episode=1,start=0)]
+    records=[{**c,'success':False} for c in cases]
+    verify_case_order(records,cases)
+    with pytest.raises(ValueError,match='case identities'):
+        verify_case_order(records[::-1],cases)
+    with pytest.raises(ValueError,match='case identities'):
+        verify_case_order([{**records[0],'row':11},records[1]],cases)
