@@ -442,3 +442,53 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O28
+  timestamp: 2026-09-06T20:06+02:00
+  provenance: ai-suggested
+  content: At the inspected fixed batches, using4096 rather than1024 resampled SIGReg directions reduces conditional
+    gradient variance about4-fold on both datasets. Generalization across training stages/seeds and any effect on
+    learning curves remain untested.
+  context: Completed requested investigation; user has not yet commented on the new results or adopted the proposed
+    training comparison.
+  potential_type: claim
+  bound_to:
+  - N62
+  - N64
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O29
+  timestamp: 2026-09-06T20:06+02:00
+  provenance: ai-suggested
+  content: First test a lower-variance estimate of the unchanged SIGReg objective per encoder pass; preserve batch128/latent192/lambda.09,
+    independently controlled model/sketch RNG, paired learning curves and one fixed training-only calibration policy.
+    A gradient-noise reduction is not a speedup claim.
+  context: Completed requested investigation; user has not yet commented on the new results or adopted the proposed
+    training comparison.
+  potential_type: heuristic
+  bound_to:
+  - N63
+  - N64
+  - N65
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O30
+  timestamp: 2026-09-06T20:06+02:00
+  provenance: ai-suggested
+  content: Many processed windows may reflect repeated frame/transition coverage plus representation/objective optimization,
+    not a need for as many independent experiences. Test a coverage-preserving subset against a size-matched random
+    subset with held-out configurations before asserting independent-data efficiency.
+  context: Completed requested investigation; user has not yet commented on the new results or adopted the proposed
+    training comparison.
+  potential_type: claim
+  bound_to:
+  - N60
+  - N65
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

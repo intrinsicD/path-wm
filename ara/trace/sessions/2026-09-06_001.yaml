@@ -2,11 +2,11 @@ session:
   id: 2026-09-06_001
   date: '2026-09-06'
   started: 2026-09-06T00:05+02:00
-  last_turn: 2026-09-06T17:28+02:00
-  turn_count: 6
-  summary: 'Working baseline supported on tested source cases: TwoRoom calibrated48/50; PushT one-epoch30/50 versus45/50
-    released. Researcher engages with results; C02/C03 crystallized with narrow scope. Generalization, mechanisms
-    and further work remain open; no new run.'
+  last_turn: 2026-09-06T20:06+02:00
+  turn_count: 7
+  summary: 'Sample-efficiency research with Claude: batches already diverse; same-frame processing repeats;4096
+    SIGReg directions reduce fixed-data gradient variance about4-fold. No training updates; learning-curve gains
+    untested.84 tests and canonical browser QA pass.'
 events_logged:
 - turn: 1
   type: decision
@@ -356,6 +356,72 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O26 closed by researcher engagement with the completed results; keep exact protocol scope.
+- turn: 7
+  type: decision
+  id: N59
+  routing: direct
+  provenance: user
+  summary: Investigate learning from fewer examples with Claude
+- turn: 7
+  type: experiment
+  id: N60
+  routing: direct
+  provenance: ai-executed
+  summary: Audit exact batch formation and training gradients on both datasets
+- turn: 7
+  type: dead_end
+  id: N61
+  routing: direct
+  provenance: ai-executed
+  summary: Reject incomplete stochastic controls and inaccurate cosine reduction
+- turn: 7
+  type: experiment
+  id: N62
+  routing: direct
+  provenance: ai-executed
+  summary: Separate sketch noise from dropout and precision effects
+- turn: 7
+  type: pivot
+  id: N63
+  routing: direct
+  provenance: ai-suggested
+  summary: Prioritize lower-variance sketch estimation over a much smaller latent
+- turn: 7
+  type: experiment
+  id: N64
+  routing: direct
+  provenance: ai-executed
+  summary: 4096 directions reduce conditional gradient variance on unchanged examples
+- turn: 7
+  type: question
+  id: N65
+  routing: direct
+  provenance: ai-suggested
+  summary: Does reduced sketch noise improve control per example and per minute?
+- turn: 7
+  type: observation
+  id: O28
+  routing: staged
+  provenance: ai-suggested
+  summary: At the inspected fixed batches, using4096 rather than1024 resampled SIGReg directions reduces conditional
+    gradient variance about4-fold on both datasets. Generalization across training stages/seeds and any effect on
+    learning curves remain untested.
+- turn: 7
+  type: observation
+  id: O29
+  routing: staged
+  provenance: ai-suggested
+  summary: First test a lower-variance estimate of the unchanged SIGReg objective per encoder pass; preserve batch128/latent192/lambda.09,
+    independently controlled model/sketch RNG, paired learning curves and one fixed training-only calibration policy.
+    A gradient-noise reduction is not a speedup claim.
+- turn: 7
+  type: observation
+  id: O30
+  routing: staged
+  provenance: ai-suggested
+  summary: Many processed windows may reflect repeated frame/transition coverage plus representation/objective optimization,
+    not a need for as many independent experiences. Test a coverage-preserving subset against a size-matched random
+    subset with held-out configurations before asserting independent-data efficiency.
 ai_actions:
 - turn: 1
   action: Repaired and verified canonical dashboard; ran 20 training goals and paired actions, eight simulator-ranking
@@ -424,6 +490,20 @@ ai_actions:
   provenance: ai-executed
   files_changed:
   - ara/
+- turn: 7
+  action: Co-worked with Claude on generic mathematics/code, researched eight primary papers, committed essential
+    red/green checks, ran batch/gradient/noise/precision/candidate diagnostics through wrapper, preserved rejected
+    controls, repaired bounded dashboard payload, inspected figures, verified84 tests and wrote report9f10830. Original
+    checkpoints preserved.
+  provenance: ai-executed
+  files_changed:
+  - scripts/audit_sample_efficiency.py
+  - scripts/audit_gradient_noise.py
+  - scripts/gradient_audit_math.py
+  - tests/
+  - viewer/
+  - docs/
+  - ara/
 claims_touched:
 - id: C02
   action: crystallized
@@ -456,6 +536,10 @@ key_context:
     Claude implementation succeeds. No remaining account quota was claimed.
 - turn: 6
   excerpt: but this means in principle it probably works well right?
+- turn: 7
+  excerpt: that is ok. now research together with claude if it is possible to learn much better with fewer examples.
+    do literature research. observe the gradients. check the batch formation and sizes and condense together a theory
+    of why we need so many iterations and formulate a possible plausible solution
 open_threads:
 - Isolate TwoRoom projector versus prediction-projector BN effects and training-time mismatch mechanism; preserve
   current checkpoints.
@@ -463,8 +547,12 @@ open_threads:
   requires a separate bounded decision.
 - Specific approval for broader repository/code/result transfer to Claude remains pending; completed restricted
   implementation did not use repository access.
+- Test whether4096 vs1024 directions improves control learning curves under matched processed-window/time budgets;
+  do not infer4-fold speedup.
+- Test coverage-preserving vs random25% unique-data subsets under a frozen configuration-disjoint split.
 ai_suggestions_pending:
 - O25/O26 crystallized as scoped C02/C03 after researcher engagement; O27 next comparison remains proposed.
 - O19/O20/O21 and earlier O12/O14/O15/O17 retain their original scopes; no causal adjudication or general equivalence
   claim.
 - No numerical scientific gate, universal calibration default or architecture/objective change adopted.
+- O28/O29/O30 remain staged; no researcher response to new results, no adopted training intervention.

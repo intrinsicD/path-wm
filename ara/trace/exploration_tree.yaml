@@ -930,3 +930,115 @@ tree:
   - evidence/tables/tworoom_followup_2026-09-06.json
   - ../docs/tworoom-followup-2026-09-06.md
   status: resolved
+
+- id: N59
+  type: decision
+  title: Investigate learning from fewer examples with Claude
+  provenance: user
+  choice: User requests literature, gradient observation, batch audit and a plausible causal theory/solution. Execute
+    bounded discarded-model diagnostics without training; preserve source recipe and checkpoints.
+  alternatives:
+  - Continue the full reproduction schedule without investigating sample efficiency
+  evidence:
+  - evidence/tables/sample_efficiency_2026-09-06.json
+  - ../docs/sample-efficiency-2026-09-06.md
+  also_depends_on:
+  - N58
+  status: resolved
+  timestamp: 2026-09-06T20:06+02:00
+- id: N60
+  type: experiment
+  title: Audit exact batch formation and training gradients on both datasets
+  provenance: ai-executed
+  result: 'PushT13933 and TwoRoom4074: first100 batches average127.50/127.23 distinct episodes and511.93/511.89
+    frame rows per128 windows. Processed frame reuse3.183/2.490. PushT185 exact initial-state groups. Four fixed
+    train batches at32/64/128: total-gradient cosine .174/.354/.488 and .530/.670/.795. Projector weighted-SIGReg/prediction
+    norm ratio2.84/1.94 at128. Both model states/checkpoints unchanged; no updates.'
+  evidence:
+  - evidence/tables/sample_efficiency_2026-09-06.json
+  - ../docs/sample-efficiency-2026-09-06.md
+  also_depends_on:
+  - N59
+  status: resolved
+  timestamp: 2026-09-06T20:06+02:00
+- id: N61
+  type: dead_end
+  title: Reject incomplete stochastic controls and inaccurate cosine reduction
+  provenance: ai-executed
+  hypothesis: The first stochastic-control implementation supplied complete projection replicates and valid gradient
+    cosines.
+  failure_mode: Projection condition accidentally ran one replicate; float32 long-vector reduction yielded cosine
+    above1. Preserved rejected raw directory, excluded from valid measurements and marked dashboard notice. Corrected
+    replicate guards and float64 comparisons pass.
+  lesson: Enforce intended replicate counts and metric bounds before interpreting a stochastic probe. Preserve invalid
+    output and report repaired result separately.
+  evidence:
+  - evidence/tables/sample_efficiency_2026-09-06.json
+  - ../docs/sample-efficiency-2026-09-06.md
+  also_depends_on:
+  - N60
+  status: resolved
+  timestamp: 2026-09-06T20:06+02:00
+- id: N62
+  type: experiment
+  title: Separate sketch noise from dropout and precision effects
+  provenance: ai-executed
+  result: At fixed128-window train batches, projection-seed gradient covariance .11388/.47020 versus dropout-seed
+    .01064/.04179, about11-fold both. Full-FP32 input/target branch cosine -.114/-.029, without severe cancellation.
+    Full-FP32 gradient decomposition residual1.7e-6/1.0e-5; FP32-only SIGReg direction almost unchanged. Four replicates
+    per stochastic condition. No updates.
+  evidence:
+  - evidence/tables/sample_efficiency_2026-09-06.json
+  - ../docs/sample-efficiency-2026-09-06.md
+  also_depends_on:
+  - N61
+  status: resolved
+  timestamp: 2026-09-06T20:06+02:00
+- id: N63
+  type: pivot
+  title: Prioritize lower-variance sketch estimation over a much smaller latent
+  provenance: ai-suggested
+  from: Consider a32/64-dimensional predictive bottleneck based on low intrinsic dimension.
+  to: Preserve latent192 and batch128; test more independent SIGReg directions first.
+  trigger: Measured sketch noise plus LeWM AppendixG reports smaller latent/control degradation and little final-score
+    sensitivity to projection count; distinguish early efficiency from final score.
+  evidence:
+  - evidence/tables/sample_efficiency_2026-09-06.json
+  - ../docs/sample-efficiency-2026-09-06.md
+  also_depends_on:
+  - N62
+  status: resolved
+  timestamp: 2026-09-06T20:06+02:00
+- id: N64
+  type: experiment
+  title: 4096 directions reduce conditional gradient variance on unchanged examples
+  provenance: ai-executed
+  result: Predeclared1024→4096 projection candidate, four seeds on same128 windows and weights/lambda. PushT covariance
+    .113882→.028775 (3.96-fold); TwoRoom .470195→.113781 (4.13-fold). Pairwise cosine .746→.923/.860→.965. No new
+    examples/optimizer updates. Two Claude theory/code calls cost$0.649057 reported with no repo transfer.84 tests
+    incl3 browser pass; HTML31charts/8tables/5imageblocks verified1440/390. Initial payload and card-dependency
+    failures repaired with raw provenance preserved.
+  evidence:
+  - evidence/tables/sample_efficiency_2026-09-06.json
+  - ../docs/sample-efficiency-2026-09-06.md
+  also_depends_on:
+  - N62
+  - N63
+  status: resolved
+  timestamp: 2026-09-06T20:06+02:00
+- id: N65
+  type: question
+  title: Does reduced sketch noise improve control per example and per minute?
+  provenance: ai-suggested
+  description: Propose paired1024/4096 training learning curves with fixed batch128/latent192/lambda.09, explicit
+    short-budget schedule and independent RNG streams. Separately compare coverage-preserving25% unique-data subset
+    with size-matched random and full source under configuration-disjoint evaluation. Control gains, wall time and
+    independent-data efficiency remain untested; no training queued.
+  evidence:
+  - evidence/tables/sample_efficiency_2026-09-06.json
+  - ../docs/sample-efficiency-2026-09-06.md
+  also_depends_on:
+  - N64
+  - N57
+  status: open
+  timestamp: 2026-09-06T20:06+02:00

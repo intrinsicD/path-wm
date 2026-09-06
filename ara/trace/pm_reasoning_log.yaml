@@ -149,3 +149,16 @@ entries:
     claim.
   - O27 next experiment and existing mechanism/transfer threads remain open. No new work authorization inferred.
     No contradiction with older checkpoint/population claims, no topic abandonment, and no three-session-day staleness.
+
+- turn: 2026-09-06_001#7
+  notes:
+  - Ran epilogue only after research, experiments, report and verification completed. Recorded request and scoped
+    measurements directly, not every implementation commit.
+  - Kept O28/O29/O30 staged. User has not commented on new measurements; reporting them does not establish a downstream
+    performance premise or adopted recipe.
+  - 'No contradiction with scoped C02/C03: checkpoints unchanged and no new control learning curve. Lower-latent
+    idea was discussed and deprioritized within this turn, not a previously crystallized claim.'
+  - Preserved rejected diagnostic, source hashes, corrected independent seeds and precision reductions. Gradient
+    variance reduction is not inferred learning acceleration.
+  - O27/N57 normalization mechanism remains open; no five-turn abandonment or three-session-day staleness. Broader
+    Claude transfer stays separately pending; actual co-work needed only public generic inputs.

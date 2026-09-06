@@ -10,12 +10,12 @@ sessions:
   open_threads: 4
 - id: 2026-09-06_001
   date: '2026-09-06'
-  summary: 'Working baseline supported on tested source cases: TwoRoom calibrated48/50; PushT one-epoch30/50 versus45/50
-    released. Researcher engages with results; C02/C03 crystallized with narrow scope. Generalization, mechanisms
-    and further work remain open; no new run.'
-  turn_count: 6
-  events_count: 54
+  summary: 'Sample-efficiency research with Claude: batches already diverse; same-frame processing repeats;4096
+    SIGReg directions reduce fixed-data gradient variance about4-fold. No training updates; learning-curve gains
+    untested.84 tests and canonical browser QA pass.'
+  turn_count: 7
+  events_count: 64
   claims_touched:
   - C02
   - C03
-  open_threads: 3
+  open_threads: 5
