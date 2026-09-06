@@ -64,3 +64,10 @@ def preserved_state(model):
                 for k,v in model.named_buffers(): v.copy_(buffers[k])
             for module, mode in modes: module.training = mode
             model.zero_grad(set_to_none=True)
+
+
+def gradient_comparison(a, b):
+    a, b = a.double(), b.double()
+    norm_a, norm_b = a.norm(), b.norm()
+    return dict(cosine=max(-1., min(1., float(torch.dot(a, b)/(norm_a*norm_b)))) if norm_a*norm_b else None,
+                relative_difference=float((a-b).norm()/norm_b) if norm_b else None)

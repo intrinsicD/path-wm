@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import torch
 from torch.utils.data import DataLoader
 from scripts.audit_sample_efficiency import probe
-from scripts.gradient_audit_math import gradient_geometry
+from scripts.gradient_audit_math import gradient_geometry, gradient_comparison
 from scripts.inspect_checkpoint import load, inspection_datasets, sha256
 from world_model.data import preprocess_pixels, normalize_actions
 from world_model.introspection import state_digest
@@ -36,18 +36,21 @@ def main():
         rows=[];vectors={};baseline=None
         for condition in ('dropout_varies','projections_vary','full_float32','sigreg_float32'):
             grads=[]
-            for i in range(4 if condition.endswith('varies') else 1):
+            for i in range(4 if condition in ('dropout_varies','projections_vary') else 1):
                 c={**cfg,'precision':'float32'} if condition=='full_float32' else cfg
                 seed=630001+(i if condition=='dropout_varies' else 0)
                 reg_seed=640001+(i if condition=='projections_vary' else 0)
                 row,g=probe(model,pixels,actions,c,seed,branches=condition=='full_float32',reg_seed=reg_seed,fp32_sigreg=condition=='sigreg_float32')
                 row.update(condition=condition,replicate=i,projection_seed=reg_seed)
                 if baseline is None: baseline=g
-                row['gradient_cosine_vs_bf16']=float(torch.dot(g,baseline)/(g.norm()*baseline.norm()))
-                row['gradient_relative_difference_vs_bf16']=float((g-baseline).norm()/baseline.norm())
+                comparison=gradient_comparison(g,baseline)
+                row['gradient_cosine_vs_bf16']=comparison['cosine']
+                row['gradient_relative_difference_vs_bf16']=comparison['relative_difference']
                 rows.append(row);grads.append(g)
                 with (out/'probes.jsonl').open('a') as f:f.write(json.dumps(dict(dataset=name,**row))+'\n')
             if len(grads)>1: vectors[condition]=gradient_geometry(grads)
+        assert set(vectors)=={'dropout_varies','projections_vary'}
+        assert all(v['replicates']==4 for v in vectors.values())
         result['datasets'][name]=dict(step=step,geometry=vectors,
             precision={r['condition']:r for r in rows if r['condition'] in ('full_float32','sigreg_float32')},
             baseline={k:v for k,v in rows[0].items() if k not in ('modules',)},

@@ -375,6 +375,8 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
         for path in sorted(runs_root.rglob(name)):
             if not (path.parent / "summary.json").exists():
                 notices.append(f"{path.parent.relative_to(runs_root)}: incomplete evaluation; summary missing")
+    for path in runs_root.rglob('rejected_gradient_probe.json'):
+        notices.append(f'{path.relative_to(runs_root)}: rejected diagnostic; preserved raw output, excluded from valid measurements. See the sample-efficiency report for corrected probes.')
     omitted = list(runs_root.rglob("diagnostics.json"))
     if omitted:
         notices.append(f"{len(omitted)} diagnostics.json files contain auxiliary mode/clone checks; "
