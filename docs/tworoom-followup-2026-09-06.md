@@ -1,171 +1,194 @@
-# TwoRoom diagnostic follow-up and conditional PushT continuation
+# TwoRoom calibration diagnosis and one-epoch PushT continuation
 
-User accepted the proposed bounded diagnostic sequence and explicitly requested
-Claude implementation co-work via MCP on 2026-09-06. Work begins at 11:24 local.
-The previous overnight study remains frozen. No numerical scientific gate is
-introduced. Target reporting artifact remains runs/experiment_dashboard.html.
+Completed 2026-09-06. The accepted bounded follow-up and all queued evaluations
+are complete. **TwoRoom's calibrated diagnostic clone reaches 48/50 primary goals
+versus 14/50 originally. PushT continuation improves 17/50 to 30/50.** Calibration
+does not improve PushT control. The original trained checkpoints remain immutable.
 
-## Plan and interfaces
+[Open the verified experiment dashboard](../runs/experiment_dashboard.html).
+The [preserved plan/execution log](tworoom-followup-2026-09-06-log.md) records
+predeclared protocols, conditional decisions, failures and repairs. All exact
+comparisons, sample checks and source hashes are in the
+[reconciled result ledger](../runs/diagnostics/tworoom_followup_2026-09-06/followup_summary.json); its
+[collector](../runs/diagnostics/tworoom_followup_2026-09-06/collect_results.py) rejects missing final stages.
 
-1. Claude implements split-safe training-mode diagnostics in
-   scripts/check_training_modes.py plus tests/test_training_modes.py. Restore the
-   saved random-window/episode split using inspection_datasets; preserve exact
-   validation indices, history, image size, statistics and checkpoint identity.
-   Compare saved float32/bf16, current-batch BatchNorm with dropout disabled, and
-   training-only calibrated disposable clones. Use 512 saved validation windows,
-   512 fixed training calibration windows, batch128 and seed103072. Calibration
-   uses no validation windows or optimizer updates. Record per-mode copy, zero,
-   shuffle, prediction and rollout controls with actual sample identities; model
-   and original checkpoint hashes must remain unchanged. Layerwise calibration
-   freezes previously calibrated BatchNorm layers, avoiding inconsistent inputs
-   to downstream prediction normalization. Write ledger-native prediction.json
-   and manifest.json per usable eval-mode variant; batch-statistic diagnostics
-   remain separately labeled and are not deployable single-state evaluators.
-2. Codex implements simulator-grounded TwoRoom ranking, using the first eight
-   primary25/50 frozen cases, both unchanged checkpoints, source resets/seeds and
-   a five-block (25-action) open-loop comparison. Candidates: replay, zero raw
-   action, sixteen seeded random sequences, local CEM plan, released CEM plan.
-   Score exactly the same physical actions with each model's own normalization.
-   Use released-compatible CEM30 iterations,300 samples,30 elites; distinguish
-   terminal and any-step success, predicted/actual latent goal costs, physical
-   distance and rollout/copy errors. This is action-ranking diagnosis, not a new
-   50-action closed-loop score. Freeze a manifest before computing outcomes.
-3. Claude repairs mobile control-chart layout, preserving canonical delivery and
-   all exact source labels/data. Require visible nonzero bars within390px rather
-   than merely passing document-overflow checks. Keep desktop behavior and all
-   canonical verification. Read the existing installed reader before CSS changes.
-4. If calibration yields a substantial prediction improvement, run its disposable
-   clone on the same50 primary control cases alongside the unchanged14/50 result;
-   treat improved MSE alone as insufficient to adopt a baseline change.
-5. If implementation checks reveal no unresolved training-integrity error,
-   continue PushT from8404 to13933 updates in a distinct directory, preserving
-   parent bytes, optimizer/RNG state and the139330-update learning-rate schedule.
-   Add an explicit operational stop_at_step, separate from max_steps/schedule,
-   and an auditable fork interface rather than mutating the completed parent.
-   Estimated5529 updates at1.166s/update is107.4min plus preparation/evaluation;
-   bound continuation training to2h10 with final validation extra. Recheck frozen
-   50-case control and matched internals, then compare against8404/released.
+## Matched closed-loop results
 
-Each substantive slice gets essential failing tests committed before its fix.
-Claude owns only named diagnostic or mobile files; Codex integrates and runs GPU
-work serially. Initial Claude caps are$6 diagnostic implementation and$3 mobile
-implementation in reported API-equivalent usage; account quota balances are not
-exposed. Review follow-ups are conditional and bounded. No unrelated files,
-credentials or dataset images need transfer to Claude.
+| Checkpoint and protocol | Saved buffers | Training-only calibrated clone | Released reference |
+|---|---:|---:|---:|
+| TwoRoom 4,074 · goal 25/budget 50 · CEM 30 | 14/50 | 48/50 | 42/50 |
+| TwoRoom 4,074 · goal 100/budget 150 · CEM 10 | 0/50 | 13/50 | 5/50 |
+| PushT 8,404 · goal 25/budget 50 · CEM 30 | 17/50 | 11/50 | 45/50 |
+| PushT 13,933 · goal 25/budget 50 · CEM 30 | 30/50 | 29/50 | 45/50 |
 
-The initial diagnostic compute budget is about one hour, excluding implementation
-and reporting repairs. Every experiment uses run.py and must publish verified
-HTML. Preserve failed results and protocol deviations. The decision record will
-separate measured calibration/dynamics effects from unproven causal explanations.
+All rows use 50 frozen cases, reset/CEM seeds 1234–1283, history 3, 300 CEM samples,
+30 elites, five-block planning horizon, action block 5 and receding horizon 5.
+Solver iterations and goal/budget differ only as labeled. Replay reaches 50/50 on
+each population. Primary TwoRoom includes four initially satisfied goals:
+saved 10/46, calibrated 44/46, released 38/46 among initially unsolved cases.
+There are no initial successes in the other rows. These are descriptive outcomes;
+no scientific pass threshold was introduced.
 
-## Results
+TwoRoom calibration gains 34 primary cases and loses none. PushT continuation gains
+17 and loses 4 versus 8,404. PushT 8,404 calibration gains 2 and loses 8; final 13,933
+calibration gains 5 and loses 6 relative to the saved-buffer checkpoint. Exact case
+identities remain in the raw records. The one-case final calibration difference
+is not evidence of a general disadvantage; neither tested PushT checkpoint shows
+a control benefit from the calibration procedure.
 
-The first eight-case ranking completed: local predicted-cost selection succeeds
-2/8, released8/8; selection by measured simulator-image latent costs succeeds8/8
-for both. Local mean physical regret48.88px versus1.71px released. This diagnoses
-this candidate population; it is not a new closed-loop control score.
+## Calibration diagnosis
 
-Claude source-access tasks were blocked before launch by automatic review;
-specific permission is pending. A safer task succeeded through the same MCP
-using --safe-mode --restricted, no file tools or project context: Claude generated
-the layerwise calibration utility and three essential tests for$0.478356 reported
-usage. Codex inspected, integrated and verified that implementation. The --bare
-attempt could not use existing authentication and spent$0.
+Claude implemented [the layerwise calibration utility](../scripts/bn_calibration.py)
+and three essential tests through the registered MCP tool. Codex integrated it
+into [the mode diagnostic](../scripts/check_training_modes.py), preserving source
+checkpoints, parameters, split identities and Torch RNG. Only six buffer tensors
+change in each diagnostic clone: mean, variance and batch count in the projector
+and prediction projector. Their original BN counts equal their optimizer steps.
 
-The integrated suite passes74 tests including browser checks. TwoRoom validation
-prediction/copy changes from3.948 to0.02965 on a training-only calibrated clone;
-absolute prediction MSE2.63049 to0.0279162, with copy error0.666288 to0.941393.
-The encoder/target scale changes, so the matched control ratios and subsequent
-closed-loop test matter. Saved float32/bf16 and calibrated float32/bf16 are
-recorded separately. Original checkpoint/model bytes and training/validation
-window separation pass. Calibrated control is the next committed conditional
-step. This new evidence also warrants the same non-training check on PushT before
-launching the accepted continuation; no architecture or objective change.
+Each clone uses 512 fixed **training-window** indices, seed 103072, batch 128 and no
+optimizer updates. Each BN layer gets its own pass, with upstream BN and dropout
+in evaluation mode. Previously calibrated upstream layers therefore supply the
+inputs that the downstream layer will see at inference. These are cumulative
+averages of equal-sized per-batch means and unbiased variances, not a pooled
+variance over all activations. Static layer execution order and one use per BN
+are checked. Calibration indices are disjoint from the 512 saved validation-window
+indices; random-window splits can still share episodes and individual frames.
 
+The table reports validation prediction/copy MSE ratios (lower is better):
 
-TwoRoom calibrated primary control completed48/50 (44/46 initially unsolved),
-versus original14/50 (10/46) and released42/50 (38/46), on identical cases,
-reset/CEM seeds and30-iteration solver. Parent and clone hashes unchanged.
-Predeclare the next bounded follow-ups before launching: apply the same512-window
-mode/calibration protocol to PushT8404; test its calibrated copy on the existing50
-PushT cases. Also evaluate the TwoRoom calibrated clone on the existing frozen
-100/150 CEM10 case file, directly paired with the completed0/50 local and5/50
-released CEM10 references. No solver parameters or thresholds are tuned. These
-short checks fit within the planned diagnostic compute allowance; implementation
-and HTML work are separate.
+| Checkpoint | Saved FP32 | Calibrated FP32 | Saved BF16 | Calibrated BF16 |
+|---|---:|---:|---:|---:|
+| TwoRoom 4,074 | 3.94798 | 0.02965 | 5.01199 | 0.11336 |
+| PushT 8,404 | 0.22739 | 0.18511 | 0.22930 | 0.18540 |
+| PushT 13,933 | 0.14300 | 0.11349 | 0.14250 | 0.11348 |
 
-All74 integrated tests passed; the new mobile regression plus affected dashboard
-checks also pass (20 tests). Compact labels preserve full run names in hover and
-exact rows, and the browser now verifies a visible nonzero bar at390px. PushT8404
-calibration changes float32 prediction/copy0.22739 to0.18511, much smaller than
-TwoRoom. No weight-update, split, or continuation-integrity failure was found.
-After the queued matched calibration controls, execute the accepted PushT fork
-from8404 to13933 with its full schedule unchanged. Freeze final evaluations now:
-original-buffer50-case control, matched full internals, the same512-training-window
-calibration/mode comparison, calibrated50-case control and fixed-first-case
-rollout panels. The calibrated and original-buffer scores will remain separate;
-calibration is not silently adopted into training or parent checkpoints.
+TwoRoom FP32 prediction MSE changes 2.63049→0.0279162 while copy MSE changes
+0.666288→0.941393. Changing normalization also changes the encoder/target scale;
+the absolute MSE reduction alone cannot justify adoption. Its paired 48/50 control
+result establishes a substantial buffer intervention effect on these cases.
+It does not isolate which of the two BN layers matters or why training produced
+the mismatch. Precision drift, changing upstream features and train/eval
+activation distributions remain possible explanations.
 
-Calibrated TwoRoom100/150 CEM10 control completed13/50, versus original0/50
-and released5/50, with no initial successes. Actual mobile screenshot capture
-exposed a navigation-start race: documentElement can briefly be null. Preserve
-the observed failing capture log and guard that readiness access while retaining
-the existing timeout/failure behavior; rerun browser checks and actual capture.
+The separate current-batch BN probe disables dropout but couples examples through
+batch statistics. It is diagnostic evidence, not a deployable single-state
+controller. Full per-mode prediction, copy, zero, shuffle and short-rollout values
+are indexed as native ledger records; current-batch results are labeled separately.
 
-PushT8404 calibrated control completed11/50, below original17/50 (released45/50),
-despite the modest prediction-ratio improvement. Preserve this negative result;
-continue the original checkpoint and recipe as planned. All75 tests pass with
-browser checks. The fixed actual390px screenshot shows visible bars and labels;
-raw long source identities remain in exact rows and hover. The first screenshot
-attempt failed during navigation, and its repaired retry passed.
+The motivation follows the training/inference distinction in
+[PyTorch BatchNorm1d](https://docs.pytorch.org/docs/2.14/generated/torch.nn.BatchNorm1d.html)
+and the fixed-weight statistic recomputation rationale in
+[fvcore precise BN](https://github.com/facebookresearch/fvcore/blob/main/fvcore/nn/precise_bn.py).
+Our layerwise method is not fvcore's pooled-population estimator. These sources
+motivate the diagnostic; they do not establish this checkpoint's failure mechanism.
 
-Exact reconciliation confirms the calibrated TwoRoom clone gains34 primary
-cases and losesnone; PushT8404 gains2 and loses8. Only the six BN buffer tensors
-change in each clone; both trained parents count exactly one BN update per
-optimizer update (4074 or8404). The first fixed TwoRoom case now succeeds in18
-steps, versus21 released. PushT calibration's first case fails at50 versus16
-released. These panels are simulator frames from saved actions, with no decoder.
+## Simulator-grounded TwoRoom action ranking
 
-The continuation starts from clean code45bc19c. Its initial supervisor exited
-while the wrapper/trainer remained active; a detached replacement supervisor
-waits for those existing processes, verifies final status/checkpoint/HTML, and
-then executes only the remaining stages. No training restart, skipped update or
-changed recipe. The original supervisor exit code is unavailable and is recorded
-as such; raw training and wrapper logs remain preserved. First100-update interval
-averages1.16762s with finite loss/gradients.
+On the first eight frozen primary cases, each unchanged model scores the same20
+physical action candidates: replay, stationary,16 fixed random sequences and both
+models' CEM plans. This yields320 records. The25-action open-loop simulation runs
+to its full horizon even after a success; it is distinct from 50-action closed-loop
+control. The local model's predicted-cost selection succeeds2/8 versus 8/8 for the
+released model, with mean physical regret48.88px versus 1.71px.
 
-Recalibration is motivated by the training/inference distinction documented in
-[PyTorch BatchNorm1d](https://docs.pytorch.org/docs/2.14/generated/torch.nn.BatchNorm1d.html).
-The fixed-weight statistic recomputation rationale also appears in
-[fvcore's precise-BN implementation](https://github.com/facebookresearch/fvcore/blob/main/fvcore/nn/precise_bn.py).
-Our layerwise diagnostic uses a cumulative average of equal-sized per-batch
-means/unbiased variances, with upstream BN and dropout in evaluation mode. It is
-not fvcore's pooled-population estimator. Neither reference establishes why this
-TwoRoom checkpoint's buffers are mismatched. Training-time feature drift,
-precision and downstream distribution changes remain possible explanations;
-no mechanism is claimed as established.
+Selection by measured simulator-image latent cost succeeds8/8 for both, but the
+candidate set includes replay of the exact source goal, which can have zero latent
+cost. This supports a ranking problem on these candidates without establishing
+reliable latent geometry generally. No calibrated ranking rerun was performed.
+See the [frozen ranking manifest](../runs/diagnostics/tworoom_followup_2026-09-06/action_ranking/manifest.json) and
+[raw ranking result](../runs/diagnostics/tworoom_followup_2026-09-06/action_ranking/ranking/ranking.json).
 
-While continuation runs, inspection of final dashboard selection reveals that a
-fork would lose its matched released image panels: the viewer requires identical
-source-run manifest paths even when sample populations are identical. Add an
-essential regression before repair. Hash the complete recorded inspection
-population/settings (dataset revision, split, exact validation indices, probe and
-rollout identities, counts, history, image size, seeds and precision); match on
-that identity when available. Retain legacy same-manifest matching only when
-neither inspection carries complete sampling identity. Never equate missing or
-different sample identities. Preserve the three-inspection image bound and every
-numeric record. This changes reporting only, not the active training recipe.
-The forked-panel regression failed on the previous matcher and now passes; the
-full suite passes76 tests including all browser checks. The real PushT parent,
-released and fork manifests share inspection-population hash
-89bedf009f7153819214f37928a116cac8381f3cd62b9c9fb072a3a0e7a6fb5a.
+## PushT continuation and internals
 
-PushT completed13933 updates, adding5529 in6507.798486 seconds (108m27.8s),
-within the7800-second continuation cap. Recorded mean update time1.16764s.
-Total processed windows1783424; one epoch drops124 of1783548 training windows.
-The full139330-step schedule remains unchanged. Final validation/checkpoint/status
-all reference13933; final checkpoint SHA256
-151b356addea1a9bc7c939fcd102986ed1e7dfca693212463308b8456b3ca4f0.
-Original parent SHA unchanged. Final512-window prediction MSE0.0281233 versus
-copy0.196671. Wrapper canonical HTML passed. Frozen final controls, full internals,
-mode/calibration diagnostics and fixed-first-case panels are now running.
+The [continuation config](../configs/reproduction/pusht_epoch1_continuation.yaml)
+forks the immutable8,404 checkpoint into
+`runs/diagnostics/pusht_epoch1_2026-09-06`. It restores model, optimizer, sampler
+position and RNG, keeps the full139,330-update learning-rate schedule, and uses an
+operational stop at 13,933. A CPU continuation test verifies exact dropout/RNG
+continuation and rejects scientific configuration changes.
+
+The additional5,529 updates took**6,507.798486 training-loop seconds (108m27.8s)**,
+including validation/checkpoint overhead, within the 7,800-second additional cap.
+Logged update time averaged 1.16764s; setup and final HTML add wall time. It processes
+707,712 additional windows, for1,783,424 total: one full-batch epoch, with 124 of
+1,783,548 training windows dropped by the last incomplete batch. Training and
+validation use the original full source and random-window split. BF16 training,
+FP32 validation, batch 128 and full-batch activation checkpointing are preserved.
+
+Final checkpoint, validation and status all reference13,933. Final SHA256:
+`151b356addea1a9bc7c939fcd102986ed1e7dfca693212463308b8456b3ca4f0`.
+The original 139,330-update ten-epoch reproduction is still incomplete and is not
+queued. The bounded prefix ends with explicit `step_limit` status.
+
+Full internals use the same 512 validation windows,1, 024 probe windows and 256
+rollout windows as the saved 8,404 and released references. Data/split/window hashes,
+history, image size and seeds match exactly. The representation width is 192.
+
+| Checkpoint | Effective rank | Mean state-probe R² | Eight-step rollout/copy |
+|---|---:|---:|---:|
+| PushT 8,404 | 38.71492 | 0.54617 | 0.29060 |
+| PushT 13,933 | 48.42076 | 0.60055 | 0.21061 |
+| Released PushT | 88.71905 | 0.72003 | 0.11380 |
+
+These measurements improve with continuation but remain behind the reference.
+The short validation ratio at 13,933 is 0.1430, versus 0.2274 at 8,404. Full-window
+internals are separate from the noisier32-window scalar snapshots during training.
+
+## Qualitative and dashboard verification
+
+All four fixed-first-case rollout panels were inspected. Calibrated TwoRoom crosses
+the doorway and succeeds in 18 actions, versus 21 for released weights. Both final
+PushT variants still fail the first case at 50 actions; released weights succeed
+in 16. Keeping this preselected failure makes the 30/50 aggregate's limits visible.
+Frames come from the simulator executing saved actions; there is no image decoder.
+
+- [TwoRoom calibrated rollout](../runs/diagnostics/tworoom_followup_2026-09-06/calibrated_qualitative/case_0_rollouts.png)
+- [PushT 8,404 calibrated rollout](../runs/diagnostics/tworoom_followup_2026-09-06/calibrated_pusht_qualitative/case_0_rollouts.png)
+- [PushT 13,933 saved-buffer rollout](../runs/diagnostics/tworoom_followup_2026-09-06/pusht_final_qualitative/case_0_rollouts.png)
+- [PushT 13,933 calibrated rollout](../runs/diagnostics/tworoom_followup_2026-09-06/pusht_final_calibrated_qualitative/case_0_rollouts.png)
+
+The final four internals panels were also inspected: attention maps emphasize
+object/target regions, the spectrum retains concentrated variance, and nearest
+frame retrieval can mismatch agent position despite a similar block pose. These
+are qualitative observations on the displayed frames, not generalization claims.
+
+**76 tests pass, including three browser checks.** Mobile chart labels now use
+compact chart keys with full identities retained in hover/exact rows. A regression
+requires a visible nonzero bar within 390px; actual mobile and desktop captures
+were inspected. A navigation-start screenshot race was repaired. Forked image
+comparisons now match recorded sampling/preprocessing identities rather than run
+directories, excluding mismatched/incomplete references against complete records.
+Legacy records without complete identity retain the original same-manifest rule.
+
+The final canonical receipt passes package, data and browser verification:
+31 charts, 8 tables and 4 image blocks with 8 images (local/released). Every numeric
+record remains indexed. Each completed experiment refreshed the HTML. The final
+[QA receipt](../runs/diagnostics/tworoom_followup_2026-09-06/final_qa.json) records exact artifact/screenshot hashes.
+
+## Co-work, deviations and next decision
+
+Claude's completed implementation task used restricted mode with no repository,
+file tools or project context. Reported API-equivalent usage was **$0.478356** for
+this follow-up; the earlier bare-mode attempt could not authenticate and spent $0.
+Broader source-access implementation tasks were blocked before launch by automatic
+approval review because repository content would be sent to an unverified Claude
+destination. The specific transfer-permission request remains pending. Codex
+completed the repository integration, ranking, continuation and dashboard work.
+Actual remaining account quotas are not exposed.
+
+The initial queue supervisor exited while its trainer/wrapper stayed active. A
+replacement supervisor adopted monitoring of those same processes and ran only
+the remaining evaluations. No update was restarted. The original wrapper exit
+code was unavailable; final status/checkpoint identity and successful wrapper HTML
+verification establish completion, with the unavailable exit code recorded as null.
+Both the failed browser capture and the supervisor recovery remain in the log.
+
+Next, isolate the TwoRoom projector and prediction-projector normalization effects
+using preserved clones and a predeclared paired comparison; do not infer a cause
+from a marginal Gaussianity or position-probe result. Keep PushT's saved-buffer
+13,933 checkpoint as the continuation reference. A further training budget and a
+group-held-out generalization protocol are separate future decisions. All current
+jobs are finished; further training and architecture/objective extensions are not
+queued. The history 3 TwoRoom 100/150 check is not full reproduction of the paper's
+history 1 protocol. These results measure source interpolation and control on the
+frozen source cases, not unseen-configuration generalization.

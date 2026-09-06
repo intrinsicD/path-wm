@@ -20,34 +20,57 @@ training and benchmark evaluation. Baseline-specific tests cover episode
 alignment, causal action timing, reference computations and gradients,
 normalization, rollout and checkpoint integrity.
 
-## Active: accepted diagnostic follow-up and PushT continuation (2026-09-06)
+## Latest: diagnostic follow-up and one-epoch PushT continuation complete (2026-09-06)
 
-The user accepted the bounded diagnostic/continuation sequence and requested
-Claude implementation co-work. See [the active plan and evidence](tworoom-followup-2026-09-06.md).
-Claude authored the layerwise BatchNorm calibration utility and three essential
-tests through a restricted MCP task with no repository access; Codex integrated
-and validated it. Broader source-access tasks remain blocked by automatic
-approval review pending the specific transfer permission already requested.
+The accepted work with Claude implementation co-work has completed. See the
+[results report](tworoom-followup-2026-09-06.md), its preserved plan/execution log,
+and [verified dashboard](../runs/experiment_dashboard.html). No training or
+experiments remain active or queued. Completed parents and references are immutable.
 
-A training-only calibrated diagnostic copy of TwoRoom4074 reaches **48/50**
-primary goals (original14/50, released42/50), and **13/50** longer-goal CEM10 cases
-(original0/50, released5/50). Only normalization buffers changed; original weights
-and checkpoints remain preserved. PushT8404 calibration instead reaches **11/50**
-(original17/50, released45/50), despite a modest prediction improvement. This
-negative result prevents blanket adoption of calibration into the baseline.
+TwoRoom 4074's training-only calibrated diagnostic clone reaches **48/50** primary
+goals (original 14/50, released 42/50), or **44/46** initially unsolved goals
+(original 10/46, released 38/46). It reaches **13/50** longer-goal CEM 10 cases
+(original 0/50, released 5/50). Only six BN buffer tensors change, with no parameter
+updates. This establishes a large buffer intervention effect on these cases; the
+responsible layer and training-time mechanism remain unresolved.
 
-PushT continuation is running in `runs/diagnostics/pusht_epoch1_2026-09-06`, forked
-from the original8404 checkpoint, targeting13933 updates while preserving the
-full139330-step schedule. Additional training is capped at7800 seconds, final
-validation extra; first intervals take1.17 seconds/update. Frozen original-buffer
-control, full internals, matched mode/calibration checks, calibrated control and
-fixed-first-case panels are queued. A replacement supervisor adopted the still
-running wrapper after the initial supervisor exited; training was not restarted.
+PushT continues from 8404 to **13933 updates** in a separate directory, adding 5529
+updates in 6507.80s within the 7800s cap. It preserves optimizer/RNG state and the
+full139330-update schedule. Frozen control improves **17/50→30/50**, versus 45/50
+released. Effective rank improves 38.71→48.42, mean probe R²0.5462→0.6005, and
+h8 rollout/copy0.2906→0.2106. The final saved checkpoint SHA256 is
+151b356addea1a9bc7c939fcd102986ed1e7dfca693212463308b8456b3ca4f0.
+Validation/status match13933. One full-batch epoch processes1783424 windows;
+the ten-epoch reproduction remains incomplete and unscheduled.
 
-All75 tests pass including actual mobile bar visibility. Canonical HTML and the
-fixed390px screenshot pass. Finish the queue, reconcile evidence, inspect final
-panels/dashboard and record the research-manager epilogue before ending this task.
-The ten-epoch reproduction is still not scheduled; no numerical gate is inferred.
+PushT calibration gives11/50 at 8404 (original 17/50) and 29/50 at 13933 (original 30/50),
+despite better prediction error. Preserve both negative control comparisons;
+calibration is not adopted into the training baseline. The first frozen final
+PushT case still fails for both local variants, while released weights succeed.
+
+Claude authored the layerwise calibration utility and three essential tests via
+a restricted MCP task with no repository access ($0.478356 reported usage).
+Broader repository-sharing tasks remain blocked by automatic approval review
+pending the specific transfer approval already requested. Codex integrated and
+validated the implementation, ranking, continuation and reporting. A supervisor
+exit was recovered without restarting the active trainer; missing original exit
+status is recorded explicitly, with final checkpoint/status/HTML verified.
+
+**76 tests pass**, including three browser checks. Final canonical QA passes with
+31 charts, 8 tables and 4 image blocks. Actual390px/1440px captures, all four new
+rollout panels and four final internals panels were inspected. Mobile control bars
+are visible, and forked runs retain released panels only on matched recorded
+inspection populations. Every numeric record remains indexed.
+
+## Next work
+
+Isolate the TwoRoom projector versus prediction-projector BN effects with preserved
+clones and a predeclared paired protocol; do not attribute the mismatch to a
+Gaussian-prior or position-information failure without causal evidence. Keep the
+PushT 13933 saved-buffer checkpoint as the continuation reference. Further training
+requires a separate bounded experiment decision. Random-window validation/control
+uses source episodes; unseen-configuration generalization needs a separate group
+holdout. Full paper reproduction and passive TAU/Charades extensions remain deferred.
 
 ## Earlier: overnight implementation and evaluation complete (2026-09-06)
 
