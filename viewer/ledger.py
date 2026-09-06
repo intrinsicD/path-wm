@@ -111,14 +111,30 @@ def _counts(summary: dict, records: list | tuple, source: Path,
         initial = [row.get("initial_success") for row in records]
         if any(not isinstance(item, bool) for item in initial) or sum(initial) != summary["initial_successes"]:
             raise DashboardDataError(f"{source}: initial success count disagrees with recorded cases")
-    return {"successes": successes, "cases": count, "success_rate": rate}
+    result = {"successes": successes, "cases": count, "success_rate": rate}
+    if all(isinstance(row.get("initial_success"), bool) for row in records):
+        eligible = [row for row in records if not row["initial_success"]]
+        reached = sum(row[success_key] for row in eligible)
+        result.update(initial_successes=count-len(eligible), noninitial_cases=len(eligible),
+                      noninitial_successes=reached)
+        if eligible:
+            result["noninitial_success_rate"] = reached / len(eligible)
+        for key in ("noninitial_cases", "noninitial_successes", "noninitial_success_rate"):
+            if key in summary and summary[key] != result.get(key):
+                raise DashboardDataError(f"{source}: {key} disagrees with case evidence")
+    return result
 
 
-def _case_set(records, source):
+def _case_set(records, source, manifest=None):
     """Same identities permit navigation together, not protocol equivalence."""
     keys = ("episode", "source_episode", "start", "row", "source_row")
     identities = [{k: row[k] for k in keys if k in row} for row in records]
-    value = identities if all(identities) else str(source)
+    manifest = manifest or {}
+    dataset = manifest.get("dataset", {})
+    # Episode/row numbers only identify goals within a specific source and offset.
+    source_identity = {k: dataset[k] for k in ("name", "path", "revision") if k in dataset}
+    value = dict(cases=identities if all(identities) else str(source),
+                 source=source_identity, goal_offset=manifest.get("goal_offset"))
     digest = hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()[:10]
     return f"{len(records)} cases · {digest}"
 
@@ -193,7 +209,7 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
         declared_cases = manifest.get("cases")
         if isinstance(declared_cases, list) and len(declared_cases) != len(records):
             raise DashboardDataError(f"{directory}: manifest case count disagrees with results")
-        context["case_set"] = _case_set(records, path)
+        context["case_set"] = _case_set(records, path, manifest)
         variants = (("native_success", "native_"), ("local_success", "local_")) if "native_successes" in summary else (("success", ""),)
         for success_key, prefix in variants:
             metrics = {**numeric(summary), **_counts(summary, records, path, success_key, prefix)}
@@ -207,12 +223,16 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
 
     for path in sorted(runs_root.rglob("action_baselines.json")):
         value = read_json(path)
+        manifest_path = path.parent / "manifest.json"
+        manifest = read_json(manifest_path) if manifest_path.exists() else {}
+        sources = [path] + ([manifest_path] if manifest_path.exists() else [])
         for name, summary in value.get("summary", {}).items():
             records = [row for row in value.get("records", []) if row.get("kind") == name]
-            add(path.parent, "control", "evaluated", _counts(summary, records, path), [path],
-                {"protocol": "Recorded action baseline; inspect case identities in source", "policy": name,
-                 "case_set": _case_set(records, path)},
-                suffix=f" / {name}")
+            context = {**_context(manifest), "policy": name,
+                       "protocol": manifest.get("protocol", "Recorded action baseline; inspect case identities in source"),
+                       "case_set": _case_set(records, path, manifest)}
+            add(path.parent, "control", "evaluated", {**numeric(summary), **_counts(summary, records, path)},
+                sources, context, suffix=f" / {name}")
 
     for path in sorted(runs_root.rglob("prediction.json")):
         manifest_path = path.parent / "manifest.json"

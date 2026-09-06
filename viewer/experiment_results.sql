@@ -49,6 +49,10 @@ SELECT json_extract(value, '$.label') AS run,
        json_extract(value, '$.metrics.successes') AS successes,
        json_extract(value, '$.metrics.cases') AS cases,
        json_extract(value, '$.metrics.success_rate') AS success_rate,
+       json_extract(value, '$.metrics.initial_successes') AS initial_successes,
+       json_extract(value, '$.metrics.noninitial_cases') AS noninitial_cases,
+       json_extract(value, '$.metrics.noninitial_successes') AS noninitial_successes,
+       json_extract(value, '$.metrics.noninitial_success_rate') AS noninitial_success_rate,
        COALESCE(json_extract(value, '$.context.protocol'), 'Not recorded; consult sources') AS protocol,
        json_extract(value, '$.status') AS status
 FROM json_each(:reconciled_runs) WHERE json_extract(value, '$.kind') = 'control';

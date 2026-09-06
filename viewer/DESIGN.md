@@ -102,3 +102,15 @@ earliest/latest inspected checkpoints and at most one released inspection whose
 and bounded to at most three inspections. The dashboard states this selection;
 all scalar records, covariance spectra, horizon curves and raw panel source paths
 remain indexed. No exact numeric evidence is discarded or size limit bypassed.
+
+
+## Goal identity and initial-state controls (2026-09-06)
+
+Case navigation includes dataset name/path/revision and goal offset as well as
+source row/episode identities. Equal integer rows in different datasets or with
+different target offsets cannot merge. Action baselines inherit the case
+manifest's source and budget context. Raw success remains visible; a separate
+chart and exact columns report success only among cases whose initial state was
+outside the goal threshold. Missing initial-state evidence remains missing, and
+zero eligible cases have no conditional rate. Counts are derived from the case
+records and reconciled with any declared summaries.

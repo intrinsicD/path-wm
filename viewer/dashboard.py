@@ -217,6 +217,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                                                "identity_mse": "Recorded latent MSE for copying the current embedding, on matched validation windows.",
                                                "shuffled_action_mse": "Recorded latent prediction MSE after the evaluator's action permutation.",
                                                "zero_action_mse": "Recorded latent prediction MSE with zero actions.",
+                                               "noninitial_success_rate": "Boolean successful cases with initial_success false divided by all cases with initial_success false; unavailable without complete initial-state evidence or with zero eligible cases.",
                                                "embedding_std": "Recorded embedding standard deviation; context for changing latent scale, not a success gate.",
                                                "loss": "Recorded total training objective. pred_loss and sigreg_loss are raw components; weights are in run context.",
                                                "completed_training": "Training records with status.kind equal to complete. Does not imply prediction or control success.",
@@ -252,10 +253,18 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
         datasets["control_detail"] = [{k: _text(v) for k, v in row.items()} for row in datasets["control"]]
         keep("control", lambda row: row["case_set"] == case_set)
         charts.append(_chart("control", f"Control success on case identities {case_set}",
-                             "Same case identities within this chart; weights, normalization and protocols can differ. Every population is in the table below.",
+                             "Same source and goal identities; weights, normalization and budgets can differ. Raw success includes initially satisfied goals; their counts and conditional rates are below.",
                              "control", "bar", category("label"), number("success_rate"), layout="full",
                              tooltip=[category("run"), number("successes"), number("cases"), category("protocol")],
                              orientation="horizontal", direction="higher"))
+        datasets["control_noninitial"] = [row for row in datasets["control"]
+                                           if row.get("noninitial_cases") and row.get("noninitial_success_rate") is not None]
+        if datasets["control_noninitial"]:
+            charts.append(_chart("control_noninitial", f"Reaching initially unsolved goals · {case_set}",
+                                 "Successful cases that were not initially within the goal threshold, divided by all initially unsolved cases. Results without initial-state evidence are omitted from this chart.",
+                                 "control_noninitial", "bar", category("label"), number("noninitial_success_rate"), layout="full",
+                                 tooltip=[category("run"), number("noninitial_successes"), number("noninitial_cases"), number("initial_successes")],
+                                 orientation="horizontal", direction="higher"))
     if training_runs:
         for metric, (title, subtitle) in TRAINING_PANELS.items():
             name = f"train_{metric}"
@@ -358,7 +367,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                     "run", "Training completion is independent of the scientific gate. Missing gates remain unassessed.")]
     if controls:
         tables.append(table("control_detail", "All control outcomes",
-                            [("run", "Run"), ("successes", "Successes"), ("cases", "Cases"), ("success_rate", "Exact success fraction"), ("case_set", "Case identities"), ("protocol", "Protocol")],
+                            [("run", "Run"), ("successes", "Successes"), ("cases", "Cases"), ("success_rate", "Raw success fraction"), ("initial_successes", "Initially satisfied"), ("noninitial_cases", "Initially unsolved"), ("noninitial_successes", "Newly reached"), ("noninitial_success_rate", "Success among initially unsolved"), ("case_set", "Goal identities"), ("protocol", "Protocol")],
                             "case_set", "All recorded populations, without pooling; sort by case identities to compare like with like."))
     tables.extend([table("metrics", "Exact measured values for every record",
                          [("run", "Record"), ("section", "Measurement"), ("metric", "Metric"), ("value", "Exact value")], "run", "Validation values retain their actual recorded step. No thresholds or passing gates are inferred. Sort or page by record."),
