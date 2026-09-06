@@ -402,3 +402,23 @@ def test_forked_inspection_panels_match_recorded_population_not_run_directory(tm
     assert 'wrong_windows' not in bodies and 'missing_identity' not in bodies
     assert bodies.count('data:image/png;base64,')==2
     assert len({row['run'] for row in artifact['snapshot']['datasets']['internals_summary']})==4
+
+
+def test_training_gradient_audit_is_distinct_from_validation_and_indexes_evidence(tmp_path):
+    from viewer.dashboard import build_dashboard_artifact
+    run = tmp_path / 'runs' / 'gradient_probe'
+    write_json(run / 'manifest.json', {'precision': 'bf16', 'population': 'Fixed TRAIN windows'})
+    write_json(run / 'gradient_audit.json', {'step': 12, 'checkpoint_unchanged': True,
+        'model_state_unchanged': True, 'sampling': {'processed_windows': 1536},
+        'geometry': {'different_data': {'128': {'pairwise_cosine_mean': .4}}}})
+    (run / 'gradient_geometry.png').write_bytes(b'fixture image')
+    results, notices = collect_run_results(tmp_path / 'runs')
+    assert len(results) == 1
+    assert results[0].kind == 'gradient_audit'
+    assert results[0].metrics['geometry.different_data.128.pairwise_cosine_mean'] == .4
+    assert 'Training mode' in results[0].context['protocol']
+    artifact = build_dashboard_artifact(results, notices)
+    assert any(b['id'] == 'panel_training_gradient_geometry' for b in artifact['manifest']['blocks'])
+    (run / 'gradient_geometry.png').unlink()
+    with pytest.raises(DashboardDataError, match='panel'):
+        collect_run_results(tmp_path / 'runs')
