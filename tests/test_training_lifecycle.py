@@ -52,11 +52,14 @@ def test_instrumentation_does_not_change_cpu_optimization(setup_run):
     assert_same_weights(*results)
 
 
-def test_resume_extends_time_budget_but_preserves_exact_optimization(setup_run):
+@pytest.mark.parametrize('sketch_seed', [None, 700003])
+def test_resume_extends_time_budget_but_preserves_exact_optimization(setup_run, sketch_seed):
     from world_model.train import train
-    path, run, cfg = setup_run('recovery', introspect=True)
+    options = {} if sketch_seed is None else {'sigreg_seed': sketch_seed}
+    path, run, cfg = setup_run('recovery', introspect=True, **options)
     train(path)
     expected = torch.load(run / 'checkpoint.pt', weights_only=True)
+    assert ('regularizer' in expected) == (sketch_seed is not None)
     saved = torch.load(run / 'checkpoint_000001.pt', weights_only=True)
     saved['elapsed_seconds'] = 61.
     torch.save(saved, run / 'checkpoint.pt.tmp')
@@ -70,6 +73,9 @@ def test_resume_extends_time_budget_but_preserves_exact_optimization(setup_run):
     assert actual['step'] == expected['step'] == 3
     assert_same_weights(expected['model'], actual['model'])
     assert torch.equal(expected['rng'], actual['rng'])
+    if sketch_seed is not None:
+        assert torch.equal(expected['regularizer']['_extra_state']['generator_state'],
+                           actual['regularizer']['_extra_state']['generator_state'])
     assert (run / 'manifest.json').read_bytes() == original_manifest
     receipts = [json.loads(line) for line in (run / 'resumes.jsonl').read_text().splitlines()]
     assert receipts[-1]['operational_overrides']['max_seconds'] == {'previous': 60, 'current': 120}
