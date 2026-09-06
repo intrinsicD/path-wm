@@ -466,6 +466,9 @@ def test_projection_comparison_retains_paired_populations_and_missing_arms(tmp_p
     curves=[c for c in artifact['manifest']['charts'] if c['id'].startswith('projection_control_')]
     assert curves and all(c['type']=='bar' for c in curves)  # Native reader rejects one-x line charts.
     assert any(t['dataset']=='projection_control_detail' for t in artifact['manifest']['tables'])
+    uncertainty=datasets['projection_uncertainty'][0]
+    assert uncertainty['complete_pairs']==1 and uncertainty['mean_pp']==pytest.approx(20.)
+    assert uncertainty['sample_sd_pp'] is None and uncertainty['standard_error_pp'] is None
     value = json.loads(path.read_text()); value['groups'][0]['stats']['delta_successes']['mean']=100
     write_json(path,value)
     with pytest.raises(DashboardDataError,match='paired'):

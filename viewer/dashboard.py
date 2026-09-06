@@ -252,7 +252,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                         "sql": source_sql,
                         "description": "viewer.ledger reconciles raw JSON/JSONL. SQLite executes this query bundle over those records (:reconciled_runs) to produce the chart datasets and coverage counts. Exact context/value tables use the same queries and Python text formatting. No source files are modified.",
                         "tables_used": source_paths,
-                        "transformation": "viewer/ledger.py validates and reconciles the bound RunResult records; viewer/dashboard.py samples chart trajectories and formats exact numeric text.",
+                        "transformation": "viewer/ledger.py validates and reconciles the bound RunResult records; viewer/dashboard.py samples chart trajectories and formats exact numeric text. Paired projection tables/curves use the validated Python derivative from scripts/collect_projection_experiment.py and scripts/paired_summary.py, with source hashes in projection_comparison.json.",
                         "filters": ["Training metrics.jsonl; supported control summary.json with case evidence; action_baselines.json; prediction.json",
                                     "Up to 50 deterministic evenly spaced points per training/validation trajectory; exact ledger values remain in sources",
                                     "Control grouping uses ordered case identities only, not a claim of equivalent protocols. No cross-run pooling.",
@@ -457,7 +457,12 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
         datasets['projection_control_detail'] += [{**r,'status':'missing','successes':None,'cases':None,
             'newly_solved':None,'source':None} for r in comparison.internals['comparison_missing']]
         datasets['projection_paired_detail']=[]
+        datasets['projection_uncertainty']=[]
         for group in comparison.internals['comparison_groups']:
+            stats=group['stats']['delta_success_rate_pp']
+            datasets['projection_uncertainty'].append(dict(dataset=group['dataset'],variant=group['variant'],step=group['step'],
+                complete_pairs=group['seeds_complete'],mean_pp=stats['mean'],min_pp=stats['min'],max_pp=stats['max'],
+                sample_sd_pp=stats['sd'],standard_error_pp=stats['se']))
             for pair in group['per_seed']:
                 datasets['projection_paired_detail'].append(dict(dataset=group['dataset'],variant=group['variant'],step=group['step'],seed=pair['seed'],
                     status='complete' if pair['complete'] else 'missing arm',
@@ -497,6 +502,11 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
             [('dataset','Dataset'),('variant','BN policy'),('step','Updates'),('seed','Seed'),('status','Pair status'),
              ('delta_successes','Success difference'),('delta_success_rate_pp','Difference (pp)'),('delta_unsolved_conditional_pp','Initially-unsolved difference (pp)')],
             'dataset','Each training seed is one replicate. Three pairs give descriptive uncertainty; missing outcomes are not zeros.'))
+        tables.append(table('projection_uncertainty','Descriptive uncertainty across paired training seeds',
+            [('dataset','Dataset'),('variant','BN policy'),('step','Updates'),('complete_pairs','Complete pairs'),
+             ('mean_pp','Mean difference (pp)'),('min_pp','Minimum (pp)'),('max_pp','Maximum (pp)'),
+             ('sample_sd_pp','Sample SD (pp)'),('standard_error_pp','Standard error (pp)')],
+            'dataset','4096 minus1024 success percentage points. Three planned seed pairs; SD and standard error are descriptive, not confidence intervals or a significance test.'))
     # SQL intermediates duplicate plotted/table data and inflate the portable file.
     # Exact record tables remain referenced; discard only unreferenced datasets.
     used_datasets = {view['dataset'] for view in charts + tables + cards}
