@@ -20,7 +20,36 @@ training and benchmark evaluation. Baseline-specific tests cover episode
 alignment, causal action timing, reference computations and gradients,
 normalization, rollout and checkpoint integrity.
 
-## Latest: overnight implementation and evaluation complete (2026-09-06)
+## Active: accepted diagnostic follow-up and PushT continuation (2026-09-06)
+
+The user accepted the bounded diagnostic/continuation sequence and requested
+Claude implementation co-work. See [the active plan and evidence](tworoom-followup-2026-09-06.md).
+Claude authored the layerwise BatchNorm calibration utility and three essential
+tests through a restricted MCP task with no repository access; Codex integrated
+and validated it. Broader source-access tasks remain blocked by automatic
+approval review pending the specific transfer permission already requested.
+
+A training-only calibrated diagnostic copy of TwoRoom4074 reaches **48/50**
+primary goals (original14/50, released42/50), and **13/50** longer-goal CEM10 cases
+(original0/50, released5/50). Only normalization buffers changed; original weights
+and checkpoints remain preserved. PushT8404 calibration instead reaches **11/50**
+(original17/50, released45/50), despite a modest prediction improvement. This
+negative result prevents blanket adoption of calibration into the baseline.
+
+PushT continuation is running in `runs/diagnostics/pusht_epoch1_2026-09-06`, forked
+from the original8404 checkpoint, targeting13933 updates while preserving the
+full139330-step schedule. Additional training is capped at7800 seconds, final
+validation extra; first intervals take1.17 seconds/update. Frozen original-buffer
+control, full internals, matched mode/calibration checks, calibrated control and
+fixed-first-case panels are queued. A replacement supervisor adopted the still
+running wrapper after the initial supervisor exited; training was not restarted.
+
+All75 tests pass including actual mobile bar visibility. Canonical HTML and the
+fixed390px screenshot pass. Finish the queue, reconcile evidence, inspect final
+panels/dashboard and record the research-manager epilogue before ending this task.
+The ten-epoch reproduction is still not scheduled; no numerical gate is inferred.
+
+## Earlier: overnight implementation and evaluation complete (2026-09-06)
 
 The authorized work with Claude via MCP, correctness/performance repairs, bounded
 training on both full source datasets, control, internals and dashboard review
@@ -135,9 +164,9 @@ These are descriptive measurements, not gates, and do not identify a cause.
 Checkpoint hashes are unchanged. An opt-in `introspect: true` training key
 records the scalar subset at every validation step; existing configs are unchanged.
 
-## Next work
+## Earlier next-work assessment (superseded by the active follow-up above)
 
-The bounded overnight work is complete; no further training is running or queued.
+At the overnight handoff, no further training was running or queued.
 Preserve the 8,404-update PushT, 4,074-update TwoRoom and earlier checkpoints.
 The full ten-epoch reproduction remains unscheduled. The overnight prefixes use
 the full learning-rate schedules, but neither reaches one complete epoch.

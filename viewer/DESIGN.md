@@ -54,8 +54,9 @@ without color. The canonical reader owns responsive desktop/narrow layouts.
 Reconcile summary counts against case evidence. Preserve actual validation and
 saved-checkpoint steps. Keep full raw ledgers; chart trajectories use at most 50
 deterministically spaced points per run. Reject oversized exact datasets visibly
-instead of silently dropping evidence. Auxiliary mode/clone diagnostics remain
-in experiment reports/raw files and are explicitly listed as outside this view.
+instead of silently dropping evidence. Usable eval-mode diagnostics provide native prediction records and explicit
+calibration manifests. Batch-coupled current-statistic probes remain separately
+labeled in experiment reports/raw files; they are not single-state controllers.
 
 The recovered portable builder validates the canonical artifact, source metadata,
 chart bindings, exact embedded payload, rendering and source interactions. Publish
@@ -119,3 +120,15 @@ Oversized native datasets are partitioned into explicitly numbered chart/table
 parts of at most 2,000 rows. Exact rows are conserved, and complete color series
 are kept together. A single oversized series still fails with an actionable
 error; no silent truncation or relaxed portable payload/browser limit is used.
+
+
+## Mobile control labels and browser readiness (2026-09-06)
+
+Horizontal chart labels use stable chart keys plus compact model/step/solver text.
+The canonical reader sizes its categorical axis automatically; full source paths
+previously consumed the entire390px plot area. Hover and exact rows retain the
+complete run/protocol identity, with the same chart key for cross-reference.
+An actual-browser regression requires a nonzero bar at least80px wide wholly
+within390px. Numeric rows and canonical rendering/verification remain intact.
+Screenshot readiness tolerates a temporarily absent documentElement immediately
+after navigation, while preserving the readiness deadline and failure checks.
