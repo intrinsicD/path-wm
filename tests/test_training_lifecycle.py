@@ -98,3 +98,17 @@ def test_time_limit_validates_the_actual_final_checkpoint(setup_run, monkeypatch
     assert rows[-1]['kind'] == 'time_limit'
     assert rows[-1]['validation_step'] == saved['step']
     assert (run / 'checkpoint_000001.pt').exists()
+
+
+def test_legacy_fingerprints_keep_the_original_resume_contract():
+    import hashlib
+    from world_model.train import configuration_fingerprint
+    signature = dict(config=dict(seed=3, lr=.001, max_seconds=60), dataset=dict(path='data.h5'))
+    legacy = hashlib.sha256(json.dumps(signature, sort_keys=True).encode()).hexdigest()
+    assert configuration_fingerprint(signature, version=1) == legacy
+    modern = configuration_fingerprint(signature)
+    signature['config']['max_seconds'] = 120
+    assert configuration_fingerprint(signature, version=1) != legacy
+    assert configuration_fingerprint(signature) == modern
+    signature['dataset']['path'] = 'other.h5'
+    assert configuration_fingerprint(signature) != modern

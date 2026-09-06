@@ -26,6 +26,23 @@ def write_json(path,value):
     tmp.write_text(json.dumps(value,indent=2)+'\n');tmp.replace(path)
 
 
+# These affect execution/reporting, not data, model, objective or LR schedule.
+# Unknown keys remain frozen. Legacy fingerprints retain their original contract.
+OPERATIONAL_KEYS = ('max_seconds', 'workers', 'cache_bytes', 'log_every',
+                    'eval_every', 'checkpoint_steps', 'introspect')
+
+
+def configuration_fingerprint(signature, version=2):
+    frozen = dict(signature)
+    if version == 2:
+        frozen['config'] = {k: v for k, v in signature['config'].items()
+                            if k not in OPERATIONAL_KEYS}
+        frozen['fingerprint_version'] = version
+    elif version != 1:
+        raise ValueError(f'Unsupported fingerprint version: {version}')
+    return hashlib.sha256(json.dumps(frozen, sort_keys=True).encode()).hexdigest()
+
+
 def train(config_path, resume=False):
     cfg=yaml.safe_load(Path(config_path).read_text())
     ds_cfg=yaml.safe_load(Path(cfg['dataset']).read_text())
@@ -33,6 +50,8 @@ def train(config_path, resume=False):
     run=Path(cfg['run_dir']);run.mkdir(parents=True,exist_ok=True)
     if (run/'checkpoint.pt').exists() and not resume:
         raise FileExistsError(f'{run} already has a checkpoint; use --resume or a new run_dir')
+    saved = torch.load(run/'checkpoint.pt', map_location='cpu', weights_only=True) if resume else None
+    fingerprint_version = saved.get('fingerprint_version', 1) if resume else 2
     seed=cfg['seed'];torch.manual_seed(seed);np.random.seed(seed);random.seed(seed)
     torch.set_num_threads(4)
     device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -60,7 +79,10 @@ def train(config_path, resume=False):
     val_order=torch.randperm(len(val_ds),generator=torch.Generator().manual_seed(seed+100000)).tolist()
     val_order=val_order[:cfg['eval_batches']*min(cfg['batch_size'],32)]
     val_loader=DataLoader(val_ds,batch_size=min(cfg['batch_size'],32),sampler=val_order,
-        num_workers=cfg['workers'],pin_memory=device.type=='cuda')
+        num_workers=cfg['workers'],pin_memory=device.type=='cuda',
+        # Isolate DataLoader's base-seed draws from optimization randomness.
+        # Preserve the legacy stream when recovering a version-one checkpoint.
+        generator=torch.Generator().manual_seed(seed+200000) if fingerprint_version==2 else None)
     signature=dict(config=cfg,dataset=ds_cfg,model=model_cfg,train_episodes=tr,val_episodes=va,
                    action_stats=stats,total_steps=total_steps,train_windows=len(train_ds),
                    val_windows=len(val_ds),validation_window_indices=val_order,initialization='random',seed=seed)
@@ -68,32 +90,45 @@ def train(config_path, resume=False):
         if cfg.get('split_protocol')=='random_windows':
             signature.update(data_protocol=split_receipt,population=split_receipt['population'])
         else: signature['episode_split']=split_receipt
-    fingerprint=hashlib.sha256(json.dumps(signature,sort_keys=True).encode()).hexdigest()
-    step=0;elapsed=0
+    fingerprint=configuration_fingerprint(signature,fingerprint_version)
+    step=0;elapsed=0;validation_step=None
     if resume:
-        saved=torch.load(run/'checkpoint.pt',map_location=device,weights_only=True)
         if saved['fingerprint']!=fingerprint: raise ValueError('Resume configuration or dataset changed')
         model.load_state_dict(saved['model'],strict=True);optimizer.load_state_dict(saved['optimizer'])
         step=saved['step'];elapsed=saved['elapsed_seconds']
+        validation_step=saved.get('validation_step')
+        original=json.loads((run/'manifest.json').read_text())
+        previous=saved.get('operational_config', original['config'])
+        overrides={k:dict(previous=previous.get(k),current=cfg.get(k))
+                   for k in OPERATIONAL_KEYS if previous.get(k)!=cfg.get(k)}
+        receipt=dict(step=step,elapsed_seconds=elapsed,fingerprint=fingerprint,
+            fingerprint_version=fingerprint_version,operational_overrides=overrides,
+            resumed_at=time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),
+            code_commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip())
+        with (run/'resumes.jsonl').open('a') as stream:stream.write(json.dumps(receipt)+'\n')
         torch.set_rng_state(saved['rng'].cpu())
         if device.type=='cuda':torch.cuda.set_rng_state_all([s.cpu() for s in saved['cuda_rng']])
     else:
         signature.update(code_commit=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
             code_dirty=bool(subprocess.check_output(['git','status','--porcelain'],text=True).strip()),
-            torch_version=torch.__version__,device=str(device),fingerprint=fingerprint)
+            torch_version=torch.__version__,device=str(device),fingerprint=fingerprint,
+            fingerprint_version=fingerprint_version,operational_keys=list(OPERATIONAL_KEYS),
+            time_budget='Cumulative training-loop seconds, including validation/checkpointing; setup excluded. Final validation may extend the ceiling.')
         write_json(run/'manifest.json',signature)
     start=time.monotonic()
     def record(kind,metrics):
         row=dict(kind=kind,step=step,elapsed_seconds=elapsed+time.monotonic()-start,**metrics)
         with (run/'metrics.jsonl').open('a') as f:f.write(json.dumps(row)+'\n')
         write_json(run/'status.json',row);print(json.dumps(row),flush=True)
-    def save():
+    def save(final=False):
         checkpoint=dict(model=model.state_dict(),optimizer=optimizer.state_dict(),step=step,
             elapsed_seconds=elapsed+time.monotonic()-start,fingerprint=fingerprint,
             model_config=model_cfg,action_stats=stats,rng=torch.get_rng_state(),
+            fingerprint_version=fingerprint_version,validation_step=validation_step,
+            operational_config={k:cfg.get(k) for k in OPERATIONAL_KEYS},
             cuda_rng=torch.cuda.get_rng_state_all() if device.type=='cuda' else [])
         torch.save(checkpoint,run/'checkpoint.pt.tmp');(run/'checkpoint.pt.tmp').replace(run/'checkpoint.pt')
-        if step in cfg.get('checkpoint_steps',[]):
+        if final or step in cfg.get('checkpoint_steps',[]):
             snapshot=run/f'checkpoint_{step:06d}.pt'
             if not snapshot.exists(): os.link(run/'checkpoint.pt',snapshot)
     def introspect():
@@ -102,10 +137,14 @@ def train(config_path, resume=False):
         batch=next(iter(val_loader))
         pixels=preprocess_pixels(batch['pixels'].to(device),model_cfg.get('image_size',224))
         record('internals',scalar_summary(model,pixels,normalize_actions(batch['action'].to(device),stats)))
-    if not resume:
+    def validate():
+        nonlocal validation_step
         record('validation',evaluate_prediction(model,val_loader,stats,device,
             model_cfg.get('image_size',224),cfg['eval_batches'],cfg.get('eval_precision',cfg['precision'])))
         introspect()
+        validation_step=step
+    if not resume:
+        validate()
         save()
     while step<total_steps:
         epoch=step//batches_per_epoch
@@ -117,11 +156,15 @@ def train(config_path, resume=False):
             num_workers=cfg['workers'],pin_memory=device.type=='cuda',drop_last=True,
             generator=torch.Generator().manual_seed(seed+epoch))
         model.train()
+        wait_start=time.monotonic()
         for batch in loader:
+            data_wait_seconds=time.monotonic()-wait_start
             if step>=total_steps: break
             if cfg.get('max_seconds') and elapsed+time.monotonic()-start>=cfg['max_seconds']:
-                record('time_limit',dict(total_steps=total_steps))
-                save()
+                if validation_step!=step:validate()
+                save(final=True)
+                record('time_limit',dict(total_steps=total_steps,validation_step=validation_step,
+                    baseline_gate='pending_closed_loop_evaluation'))
                 return
             tick=time.monotonic()
             lr_scale=(step+1)/warmup if step<warmup else .5*(1+math.cos(math.pi*(step-warmup)/max(1,total_steps-warmup)))
@@ -136,13 +179,13 @@ def train(config_path, resume=False):
             if step==1 or step%cfg['log_every']==0:
                 record('train',{**{k:float(v) for k,v in terms.items()},'grad_norm':float(norm),
                     'lr':optimizer.param_groups[0]['lr'],'step_seconds':time.monotonic()-tick,
+                    'data_wait_seconds':data_wait_seconds,
                     'peak_gpu_bytes':torch.cuda.max_memory_allocated() if device.type=='cuda' else 0})
             if step%cfg['eval_every']==0 or step==total_steps or step in cfg.get('checkpoint_steps',[]):
-                record('validation',evaluate_prediction(model,val_loader,stats,device,
-                    model_cfg.get('image_size',224),cfg['eval_batches'],cfg.get('eval_precision',cfg['precision'])))
-                introspect()
-                save()
-    record('complete',dict(total_steps=total_steps,baseline_gate='pending_closed_loop_evaluation'))
+                validate()
+                save(final=step==total_steps)
+            wait_start=time.monotonic()
+    record('complete',dict(total_steps=total_steps,validation_step=validation_step,baseline_gate='pending_closed_loop_evaluation'))
 
 
 if __name__=='__main__':

@@ -1,4 +1,4 @@
-"""A few untouched-checkpoint control cases drawn only from held-out episodes."""
+"""Untouched-checkpoint control cases drawn from the recorded validation population."""
 import argparse,json,hashlib
 from pathlib import Path
 import h5py,numpy as np,torch
@@ -21,7 +21,7 @@ def check(run,output,count=5):
         write_json(out/'manifest.json',dict(checkpoint=str(checkpoint),checkpoint_sha256=digest,step=saved['step'],
             dataset=meta['dataset'],cases=cases,action_stats=saved['action_stats'],sampling_seed=42,
             solver_and_reset_seeds=[1234+i for i in range(count)],
-            population='held-out episodes only; closely related prefix variants',
+            population=meta.get('population', 'held-out episodes; see training split for related configurations'),
             batchnorm='saved buffers, unchanged',goal_offset=25,budget=50,samples=300,iterations=30,elites=30))
         for i,case in enumerate(cases):
             row=case['row']

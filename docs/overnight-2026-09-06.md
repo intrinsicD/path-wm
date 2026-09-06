@@ -70,6 +70,27 @@ and the [authors' LeJEPA implementation](https://github.com/galilai-group/lejepa
 The TwoRoom simulator will use the already pinned SWM revision
 `6f1e499e9cc0c898d326112f485c1062c3d20f24` with its license and source receipt.
 
+## Implementation evidence
+
+Three new behavioral checks first failed as intended: instrumentation changed
+CPU weights, extending the time budget rejected resume, and a timed stop saved
+step one with only step-zero validation. They now pass. The new fingerprint
+version freezes all configuration except a short declared operational allowlist;
+legacy checkpoints keep their original fingerprint and random-stream behavior.
+Resume receipts record overrides without rewriting the original manifest.
+
+Native batch-128 bf16 exhausted GPU memory before its first update (6.49 GB peak
+allocated, desktop GPU usage also present). Full-batch activation checkpointing
+therefore remains selected. This is a capacity measurement on a discarded clone,
+not a failed learning run. Both raw measurement and failure text are preserved.
+The checkpointed probe completed seven discarded updates with finite gradients:
+five timed updates had median 1.284 s and peak allocation 3.282 GB, including
+optimizer state but excluding HDF5 loading. Allowing for I/O and validation, the
+three-hour PushT prefix should reach approximately 7,500–8,300 updates. The
+repaired two-update GPU slice and its canonical desktop/mobile HTML QA passed.
+All 50 CPU checks passed; two explicitly opt-in browser tests were not enabled
+in that command, while the actual dashboard browser verification did run.
+
 ## Outcomes
 
-Pending. This section records measured results, failures and deviations at closeout.
+Training/evaluation pending. This section records measured results, failures and deviations at closeout.
