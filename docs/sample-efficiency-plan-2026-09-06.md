@@ -21,3 +21,8 @@ Read a focused set of primary papers: LeWM/LeJEPA, gradient-noise and batch-scal
 ## Decision and output
 
 Write `docs/sample-efficiency-2026-09-06.md` with observed facts, literature support, causal uncertainty and a ranked, falsifiable solution. Distinguish unique-data efficiency, processed-example efficiency, update efficiency and wall time. Propose a minimal ablation with frozen disjoint evaluation configurations, matched unique-data and compute budgets, and unchanged control cases. Improvements remain hypotheses until a training learning-curve experiment tests them.
+
+
+## Evidence-triggered follow-up
+
+The first probes found same-data stochastic gradient variation and bf16 gradient-decomposition residuals up to roughly 4% in TwoRoom. Add a bounded fixed-batch control: independent dropout and SIGReg seeds (four replicates each), one full-float32 calculation, and one bf16-forward calculation with float32 SIGReg. Use the first declared 128-window training batch, no new samples or optimizer updates. This separates stochastic sources descriptively and checks whether branch conclusions survive numerical precision. Do not subtract variances from unmatched randomness regimes or infer performance gains from gradient alignment.
