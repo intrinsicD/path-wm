@@ -136,6 +136,31 @@ checkpoint bytes and passing HTML QA; its score is not a control-quality result.
 The full CPU suite now passes 55 checks, with two opt-in browser tests skipped in
 that command. Actual per-artifact browser QA did run and pass.
 
+## Measured loader optimization
+
+A fixed small probe on both real sources found HDF5 chunks of
+`100 × 224 × 224 × 3`. Four strided frames took median 57.48 ms on PushT and
+55.47 ms on TwoRoom; four individual frame reads from one open dataset handle
+returned identical bytes in 9.06 and 8.93 ms. Three passes alternated read order.
+This is a small warm-cache microbenchmark under shared-machine CPU load, not a
+claim of sixfold training speedup. The active PushT run's first 400 updates
+averaged about 1.94 s/update, slower than its compute-only preflight.
+
+Add a focused pixel-window reader that uses scalar frame selections for chunked
+HDF5 striding and preserves native slicing for contiguous/cached arrays. Essential
+checks cover chunk boundaries, episode edges, channels-first input and exact
+cached/streamed equality. Then benchmark complete dataset items on fixed real
+windows against the original reader. Accept only exact outputs and a measured
+read improvement; do not change training inputs, batch size or objective.
+
+After verification, recover the active PushT run from its next immutable saved
+checkpoint to adopt the loader change. Record the stopped process, retained
+checkpoint hash, any discarded unsaved work, new code revision and resume receipt.
+The original manifest and numbered snapshots stay unchanged. This is an explicit
+operational amendment to an in-progress time-bounded run, not a new learning
+comparison or a silent resume of a completed reference. Keep the cumulative
+training ceiling and the morning evaluation reserve.
+
 ## Outcomes
 
 Training/evaluation pending. This section records measured results, failures and deviations at closeout.
