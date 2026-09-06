@@ -16,7 +16,7 @@ from world_model.train import write_json
 
 
 def collect(base=DEFAULT_BASE):
-    base=Path(base).resolve(); rows=[]; missing=[]; sources=set(); training=[]
+    base=Path(base).resolve(); rows=[]; missing=[]; sources=set(); training=[]; pair_populations={}
     controls,_=collect_run_results(base/'evaluations')
     controls={r.label:r for r in controls if r.kind=='control'}
     for config in read(base/'planned_configs.json')['training']:
@@ -24,6 +24,13 @@ def collect(base=DEFAULT_BASE):
         sources.add(path)
         meta=read(run/'manifest.json') if (run/'manifest.json').exists() else None
         dataset=yaml.safe_load((ROOT/cfg['dataset']).read_text())['name']
+        if meta is not None:
+            identity=hashlib.sha256(json.dumps({k:meta[k] for k in
+                ('data_protocol','validation_window_indices','action_stats','train_episodes','val_episodes','model','initial_model_sha256')},sort_keys=True).encode()).hexdigest()
+            pair=(dataset,cfg['seed'])
+            if pair in pair_populations and pair_populations[pair]!=identity:
+                raise ValueError('Paired training populations, initialization or model configuration differ')
+            pair_populations[pair]=identity
         status=read(run/'status.json') if (run/'status.json').exists() else {'kind':'not_started','step':0}
         training.append(dict(run=name,dataset=dataset,seed=cfg['seed'],projections=cfg['sigreg_projections'],status=status['kind'],step=status.get('step'),planned_steps=1500))
         for step in (750,1500):

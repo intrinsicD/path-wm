@@ -20,6 +20,16 @@ training and benchmark evaluation. Baseline-specific tests cover episode
 alignment, causal action timing, reference computations and gradients,
 normalization, rollout and checkpoint integrity.
 
+## Active: paired projection-count training screen with Claude (2026-09-06)
+
+The user asked to proceed with Claude implementation co-work. The [frozen plan](projection-training-plan-2026-09-06.md) compares1024 and4096 resampled SIGReg directions from scratch, three paired seeds on each full-source dataset,1500 updates and matched saved/calibrated control at750/1500. Original checkpoints stay immutable. This short-schedule source-population screen is not full reproduction or independent-data generalization.
+
+Claude supplied private-RNG code/test design and the paired-statistics implementation through two neutral MCP tasks ($1.132410 reported API-equivalent). Integration retained the exact pinned loss quadrature/precision and corrected two draft differences; no EMA target change applies to this model. SeededSIGReg is opt-in and checkpointed. Numerical parity, global-RNG isolation, exact resume, calibrated-clone integrity and paired-population tests pass.
+
+Four20-update GPU preflights complete with verified HTML:1024/4096 update times1.3265/1.3368s (PushT),1.3198/1.3354s (TwoRoom); peaks3.2822/3.2830GB. Paired initializations and final global CPU/CUDA RNG states match. These are timing checks, not learning results.
+
+The serial coordinator is active under runs/projection_training_2026-09-06. Read progress.json, stages.jsonl and logs/ for status; projection_comparison.json records all48 expected control outcomes including missing ones. The canonical dashboard refreshes and reconciles this derivative after each completed run/evaluation. The first arm began2026-09-06T19:39:40Z; expected total roughly10h including evaluations. The cumulative training-loop cap remains2100s per arm and stopped results remain explicit. No completed paired control result is available yet.
+
 ## Latest: sample-efficiency investigation complete (2026-09-06)
 
 The user requested literature research with Claude, batch/gradient inspection and a plausible route to fewer examples. See [the evidence and proposed experiment](sample-efficiency-2026-09-06.md), [predeclared plan](sample-efficiency-plan-2026-09-06.md), and [verified dashboard](../runs/experiment_dashboard.html). No training or diagnostic work remains active. All original checkpoint hashes and model parameters/buffers are preserved.

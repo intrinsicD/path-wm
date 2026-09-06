@@ -445,6 +445,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                 'One line per training seed and projection count. Same fixed source cases; each update uses128 windows. Missing arms remain missing, no success gate.',
                 name,'line',number('step'),number('success_rate'),color=category('series'),
                 tooltip=[number('successes'),number('cases'),number('seed'),number('projections')]))
+            charts[-1]['settings']['showPoints']='always'
         datasets['projection_control_detail'] += [{**r,'status':'missing','successes':None,'cases':None,
             'newly_solved':None,'source':None} for r in comparison.internals['comparison_missing']]
         datasets['projection_paired_detail']=[]
@@ -619,6 +620,12 @@ def write_experiment_dashboard(
     runs_root = runs_root.resolve()
     artifact_path = (artifact_path or runs_root / DEFAULT_ARTIFACT.name).resolve()
     html_path = (html_path or runs_root / DEFAULT_HTML.name).resolve()
+    # Declared derived comparisons must reflect this just-completed evaluation.
+    # Raw ledgers remain unchanged; unknown experiment plans are not interpreted.
+    for plan in sorted(runs_root.glob('*/planned_configs.json')):
+        if json.loads(plan.read_text()).get('collector') == 'projection_count_v1':
+            from scripts.collect_projection_experiment import collect
+            collect(plan.parent)
     run_results, notices = collect_run_results(runs_root)
     artifact = build_dashboard_artifact(run_results, notices, focus)
     # Keep the last verified companion intact when canonical publication fails.
