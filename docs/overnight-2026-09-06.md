@@ -190,6 +190,16 @@ CPU tests will verify the checkpoint boundary and timing-count conservation.
 The first recovery still uses the old process's already-saved checkpoint because
 that process cannot acquire new control code without a restart.
 
+PushT recovery retained checkpoint 1000 at 1,936.336 seconds, SHA256
+`f441e5a2cf71eb4f9474a695966423adc3bc0b77a7e4a9ab5773875e86ddc105`.
+Only the verified original training PID was terminated. The checkpoint was about
+170.52 wall seconds old and the last logged update was still 1000, so an unknown
+number of fewer than 100 unsaved updates was discarded. The cumulative resumed
+ceiling is reduced from 10,800 to 10,620 seconds, conservatively charging 180
+seconds for that work. The 139,330-update LR schedule and optimizer/data state
+are unchanged. The raw interruption event and `loader_restart.json` preserve
+this deviation. Resume records expose both the new code revision and overrides.
+
 ## Outcomes
 
 Training/evaluation pending. This section records measured results, failures and deviations at closeout.

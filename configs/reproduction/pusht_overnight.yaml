@@ -1,4 +1,5 @@
-# Bounded fresh prefix of the prepared long schedule; docs/overnight-2026-09-06.md.
+# Bounded fresh prefix; 180 seconds charged for discarded work at loader recovery.
+# Original run manifest retains the initial 10800-second budget; see resume receipt.
 dataset: configs/datasets/pusht.yaml
 run_dir: runs/overnight_2026-09-06/pusht
 seed: 3072
@@ -9,7 +10,7 @@ train_episodes: null
 expected_train_windows: 1783548
 expected_total_steps: 139330
 max_steps: null
-max_seconds: 10800
+max_seconds: 10620
 epochs: 10
 batch_size: 128
 workers: 4

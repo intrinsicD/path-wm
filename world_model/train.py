@@ -154,6 +154,8 @@ def train(config_path, resume=False):
     if not resume:
         validate()
         save()
+    else:
+        record('resumed',dict(resumed_from_step=step))
     while step<total_steps:
         epoch=step//batches_per_epoch
         skip=step%batches_per_epoch
