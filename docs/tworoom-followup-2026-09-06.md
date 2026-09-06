@@ -105,3 +105,16 @@ original-buffer50-case control, matched full internals, the same512-training-win
 calibration/mode comparison, calibrated50-case control and fixed-first-case
 rollout panels. The calibrated and original-buffer scores will remain separate;
 calibration is not silently adopted into training or parent checkpoints.
+
+Calibrated TwoRoom100/150 CEM10 control completed13/50, versus original0/50
+and released5/50, with no initial successes. Actual mobile screenshot capture
+exposed a navigation-start race: documentElement can briefly be null. Preserve
+the observed failing capture log and guard that readiness access while retaining
+the existing timeout/failure behavior; rerun browser checks and actual capture.
+
+PushT8404 calibrated control completed11/50, below original17/50 (released45/50),
+despite the modest prediction-ratio improvement. Preserve this negative result;
+continue the original checkpoint and recipe as planned. All75 tests pass with
+browser checks. The fixed actual390px screenshot shows visible bars and labels;
+raw long source identities remain in exact rows and hover. The first screenshot
+attempt failed during navigation, and its repaired retry passed.

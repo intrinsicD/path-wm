@@ -92,7 +92,7 @@ async function main() {
     while (Date.now() < deadline) {
       const result = await command('Runtime.evaluate', {
         expression: screenshot
-          ? `document.documentElement.dataset.dataAnalyticsPortableReader === 'ready'`
+          ? `document.documentElement?.dataset.dataAnalyticsPortableReader === 'ready'`
           : `Boolean(document.querySelector('meta#data-analytics-portable-verifier-result,meta[data-portable-chart-extraction]'))`,
         returnByValue: true,
       });
