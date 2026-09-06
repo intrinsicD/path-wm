@@ -422,3 +422,16 @@ def test_training_gradient_audit_is_distinct_from_validation_and_indexes_evidenc
     (run / 'gradient_geometry.png').unlink()
     with pytest.raises(DashboardDataError, match='panel'):
         collect_run_results(tmp_path / 'runs')
+
+
+def test_portable_snapshot_contains_only_datasets_referenced_by_views(tmp_path):
+    from viewer.dashboard import build_dashboard_artifact
+    run = tmp_path / 'runs' / 'tiny'
+    write_json(run / 'manifest.json', {'config': {'seed': 4}})
+    write_rows(run / 'metrics.jsonl', [{'kind': 'train', 'step': 1, 'loss': .2}])
+    results, notices = collect_run_results(tmp_path / 'runs')
+    artifact = build_dashboard_artifact(results, notices)
+    views = artifact['manifest']['charts'] + artifact['manifest']['tables']
+    referenced = {view['dataset'] for view in views}
+    assert set(artifact['snapshot']['datasets']) == referenced
+    assert any(row.get('value') == .2 for name in referenced for row in artifact['snapshot']['datasets'][name])
