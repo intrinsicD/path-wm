@@ -200,6 +200,24 @@ seconds for that work. The 139,330-update LR schedule and optimizer/data state
 are unchanged. The raw interruption event and `loader_restart.json` preserve
 this deviation. Resume records expose both the new code revision and overrides.
 
+The resumed process restored the same fingerprint with a clean code revision
+and only the declared time-ceiling override. Updates 1001–1100 averaged 1.344 s
+of measured update processing plus 0.0155 s of loader wait, including worker
+startup, compared with about 1.9 s/update before recovery. This is an observed
+end-to-end improvement under shared-machine load, not the microbenchmark's
+12–16× loader speedup.
+
+## Dataset-aware checkpoint inspection
+
+Extend the existing inspector rather than create a separate analysis pipeline.
+TwoRoom probes use source agent x/y (`proprio`); PushT retains its eight existing
+pose/velocity targets. Read only requested label rows while preserving duplicate
+and out-of-order indices. Released TwoRoom inspection accepts an explicit frozen
+reference case manifest for its checkpoint identity, model configuration and
+normalization. Render labels, next-frame retrieval and preprocessing follow the
+actual history and image size. Essential tests cover label identity/order and
+history-one next-frame retrieval without querying future frames for prediction.
+
 ## Outcomes
 
 Training/evaluation pending. This section records measured results, failures and deviations at closeout.
