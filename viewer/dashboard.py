@@ -298,10 +298,27 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
     if controls:
         case_set = controls[-1].context["case_set"]
         selections["control_case_set"] = case_set
+        # Canonical horizontal axes size themselves to the full label. Keep short,
+        # unique chart keys while preserving full run names in tooltips/exact rows.
+        by_run = {r.label: r for r in controls}
+        for index, row in enumerate(datasets["control"], 1):
+            result = by_run[row["run"]]
+            leaf = result.label.rsplit("/", 1)[-1].strip().replace("_", " ")
+            if leaf == "final" or result.step is not None:
+                name = f"Local {result.step}" if result.step is not None else "Local"
+            else:
+                name = {"released": "Released", "recorded replay": "Replay", "stationary": "Stationary"}.get(leaf, leaf[:14])
+            if result.context.get("diagnostic_only") or "calibrated" in result.label:
+                name = f"Cal. {result.step}" if result.step is not None else "Calibrated"
+            iterations = result.context.get("iterations")
+            row["chart_key"] = f"C{index}"
+            row["chart_label"] = f"C{index} · {name}" + (f" · {iterations}it" if iterations else "")
         datasets["control_detail"] = [{k: _text(v) for k, v in row.items()} for row in datasets["control"]]
+        for row in datasets["control"]:
+            row["label"] = row.pop("chart_label")
         keep("control", lambda row: row["case_set"] == case_set)
         charts.append(_chart("control", f"Control success on case identities {case_set}",
-                             "Same source and goal identities; weights, normalization and budgets can differ. Raw success includes initially satisfied goals; their counts and conditional rates are below.",
+                             "Same source and goal identities; weights, normalization and budgets can differ. Chart keys identify exact table rows; hover for full run names. Raw success includes initially satisfied goals.",
                              "control", "bar", category("label"), number("success_rate"), layout="full",
                              tooltip=[category("run"), number("successes"), number("cases"), category("protocol")],
                              orientation="horizontal", direction="higher"))
@@ -423,7 +440,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                     "run", "Training completion is independent of the scientific gate. Missing gates remain unassessed.")]
     if controls:
         tables.append(table("control_detail", "All control outcomes",
-                            [("run", "Run"), ("successes", "Successes"), ("cases", "Cases"), ("success_rate", "Raw success fraction"), ("initial_successes", "Initially satisfied"), ("noninitial_cases", "Initially unsolved"), ("noninitial_successes", "Newly reached"), ("noninitial_success_rate", "Success among initially unsolved"), ("case_set", "Goal identities"), ("protocol", "Protocol")],
+                            [("chart_key", "Chart key"), ("run", "Run"), ("successes", "Successes"), ("cases", "Cases"), ("success_rate", "Raw success fraction"), ("initial_successes", "Initially satisfied"), ("noninitial_cases", "Initially unsolved"), ("noninitial_successes", "Newly reached"), ("noninitial_success_rate", "Success among initially unsolved"), ("case_set", "Goal identities"), ("protocol", "Protocol")],
                             "case_set", "All recorded populations, without pooling; sort by case identities to compare like with like."))
     tables.extend([table("metrics", "Exact measured values for every record",
                          [("run", "Record"), ("section", "Measurement"), ("metric", "Metric"), ("value", "Exact value")], "run", "Validation values retain their actual recorded step. No thresholds or passing gates are inferred. Sort or page by record."),
