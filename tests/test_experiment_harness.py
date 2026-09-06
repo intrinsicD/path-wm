@@ -172,7 +172,7 @@ def test_training_scalars_get_own_panels_and_validation_ratios(tmp_path):
         assert any(chart["dataset"] == name for chart in artifact["manifest"]["charts"]), name
     ratios = {row["metric"]: row["value"] for row in datasets["validation_ratio"]}
     assert ratios == pytest.approx({"prediction / copy": 0.5, "prediction / shuffled actions": 2.0,
-                                    "prediction / zero actions": 1.0, "rollout / copy": 2.0,
+                                    "prediction / zero actions": 1.0, "rollout / one-step copy": 2.0,
                                     "action effect / prediction": 0.2})
     logs = {row["metric"]: row["log10_ratio"] for row in datasets["validation_ratio"]}
     assert logs["prediction / copy"] == pytest.approx(math.log10(0.5))
