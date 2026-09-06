@@ -236,10 +236,10 @@ def test_internals_ledger_indexes_scalars_series_and_embedded_panels(tmp_path):
     assert pilot.internals["series"]["spectrum"] == [3.0, 1.0, 0.5]
     artifact = build_dashboard_artifact(results, notices)
     datasets = artifact["snapshot"]["datasets"]
-    assert {(row["step"], row["metric"]) for row in datasets["internals_scalar"]} >= {(0, "effective_rank"), (1000, "effective_rank")}
-    assert all(row["step"] is not None for row in datasets["internals_scalar"])
+    assert {(row["step"], row["metric"]) for row in datasets["internals_rank"]} >= {(0, "effective_rank"), (1000, "effective_rank")}
+    assert all(row["step"] is not None for row in datasets["internals_rank"])
     assert len(datasets["internals_spectrum"]) == 9 and {row["run"] for row in datasets["internals_spectrum"]} == {r.label for r in results if r.kind == "internals"}
-    assert {row["metric"] for row in datasets["internals_horizon"]} == {"prediction_mse", "copy_mse"}
+    assert pilot.internals["series"]["horizon"] == {"horizon": [1, 2], "prediction_mse": [.1, .2], "copy_mse": [.2, .4]}
     ratios = {(row["run"], row["horizon"]): row["value"] for row in datasets["internals_horizon_autoregressive"]}
     assert ratios[(pilot.label, 2)] == pytest.approx(0.5) and len(ratios) == 6
     assert {row["run"] for row in datasets["internals_rank"]} == {r.label for r in results if r.kind == "internals" and r.step is not None}
@@ -281,7 +281,7 @@ def test_training_time_internals_rows_get_their_own_panels(tmp_path):
     assert [(row["step"], row["value"]) for row in datasets["training_internals_action_use"]] == [(0, 0.0), (5, 0.1)]
     assert any(chart["dataset"] == "training_internals_rank" and "captured during training" in chart["title"]
                for chart in artifact["manifest"]["charts"])
-    assert "examples" not in {row["metric"] for row in datasets["training_internals"]}
+    assert "examples" not in {row["metric"] for key, rows in datasets.items() if key.startswith("training_internals_") for row in rows}
 
 
 def test_embedded_panels_are_bounded_to_focus_endpoints_and_matching_reference(tmp_path):
