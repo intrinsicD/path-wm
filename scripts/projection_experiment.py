@@ -135,5 +135,7 @@ if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--base',type=Path,default=DEFAULT_BASE)
     args=p.parse_args()
     try: execute(args.base)
+    except BlockingIOError:
+        raise SystemExit('Experiment coordinator already running; active progress was not changed')
     except Exception as error:
         record(args.base,'failed',error=f'{type(error).__name__}: {error}');raise
