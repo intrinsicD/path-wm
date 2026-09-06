@@ -26,3 +26,6 @@ Write `docs/sample-efficiency-2026-09-06.md` with observed facts, literature sup
 ## Evidence-triggered follow-up
 
 The first probes found same-data stochastic gradient variation and bf16 gradient-decomposition residuals up to roughly 4% in TwoRoom. Add a bounded fixed-batch control: independent dropout and SIGReg seeds (four replicates each), one full-float32 calculation, and one bf16-forward calculation with float32 SIGReg. Use the first declared 128-window training batch, no new samples or optimizer updates. This separates stochastic sources descriptively and checks whether branch conclusions survive numerical precision. Do not subtract variances from unmatched randomness regimes or infer performance gains from gradient alignment.
+
+
+The corrected stochastic control found projection-seed variance about 11 times dropout-seed variance on both frozen batches. Test a single mechanistic candidate: 4096 rather than 1024 independent SIGReg directions, four projection seeds on the same existing batch and unchanged weights/lambda. Measure conditional gradient covariance and time; this does not establish fewer training steps or better control. Preserve the baseline control and display the comparison. No training or new data.
