@@ -40,7 +40,7 @@ def plot(base=DEFAULT_BASE, output=None):
     completed=sum(any(r['kind']=='complete' and r['step']==1500 for r in s['rows']) for s in snapshot)
     plotted=[]
     for metric,title,filename in [('grad_norm','Logged gradient norms before clipping','gradient_norms'),
-                                  ('prediction_copy','One-step prediction relative to copying','prediction_copy')]:
+                                  ('prediction_copy','Saved-buffer one-step prediction relative to copying','prediction_copy')]:
         values=[]
         with plt.rc_context({'font.size':10,'axes.spines.top':False,'axes.spines.right':False}):
             fig,axes=plt.subplots(2,3,figsize=(13,7),sharex=True,sharey=True)
@@ -72,7 +72,7 @@ def plot(base=DEFAULT_BASE, output=None):
             handles.append(Line2D([0],[0],color='#555555',linestyle=':',label='Clipping threshold = 1' if metric=='grad_norm' else 'Copying ratio = 1'))
             fig.legend(handles=handles,loc='lower center',bbox_to_anchor=(.5,.055),ncol=3,frameon=False)
             fig.suptitle(f'{title}\n{completed}/12 runs recorded complete at 1500 updates',fontsize=14)
-            note=('Sampled steps only (normally every 25 updates); clipping frequency between samples and gradient variance are not measured.' if metric=='grad_norm' else 'Discrete trained-checkpoint comparisons, every 250 updates; initialization excluded here but preserved in the source snapshot. Lower ratios beat copying.')
+            note=('Full-objective norms at sampled steps (normally every 25); clipping between samples and gradient variance are not measured.' if metric=='grad_norm' else 'Saved BN buffers; discrete in-training validation every 250 updates. Initialization stays in the source snapshot. Ratios below 1 beat copying.')
             fig.text(.5,.015,note+'\nMatched within seed and dataset; each model uses its own learned latent space. Missing points remain missing.',ha='center',fontsize=9)
             fig.tight_layout(rect=(0,.14,1,.91))
             for extension in ('png','svg'):fig.savefig(output/f'{filename}.{extension}',dpi=180,facecolor='white')
