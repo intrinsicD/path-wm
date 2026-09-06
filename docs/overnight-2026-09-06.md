@@ -244,6 +244,14 @@ show explicitly numbered chart/table parts. Preserve the canonical payload limit
 and browser checks. A growth regression must prove row conservation, bounded
 parts and unsplit spectrum series before this implementation.
 
+## Qualitative replay
+
+Generalize the existing saved-action renderer to both supported simulators and
+manifest goal offsets/budgets. Use actual checkpoint labels, freeze case zero
+before outcomes, and require matching source/cases/seeds/planning protocols.
+A small CPU fixture must reproduce the TwoRoom result and reject changed final
+state evidence and mismatched goal protocols. Preserve all older panels.
+
 ## Outcomes
 
 Training/evaluation pending. This section records measured results, failures and deviations at closeout.

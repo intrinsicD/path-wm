@@ -114,3 +114,8 @@ chart and exact columns report success only among cases whose initial state was
 outside the goal threshold. Missing initial-state evidence remains missing, and
 zero eligible cases have no conditional rate. Counts are derived from the case
 records and reconciled with any declared summaries.
+
+Oversized native datasets are partitioned into explicitly numbered chart/table
+parts of at most 2,000 rows. Exact rows are conserved, and complete color series
+are kept together. A single oversized series still fails with an actionable
+error; no silent truncation or relaxed portable payload/browser limit is used.

@@ -153,6 +153,56 @@ def _escape(text: Any) -> str:
     return str(text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
+def _partition_datasets(datasets, charts, tables):
+    """Bound native datasets while retaining exact rows and complete chart series."""
+    parts = {}
+    for name, rows in list(datasets.items()):
+        if len(rows) <= MAX_DATASET_ROWS:
+            continue
+        linked = [chart for chart in charts if chart['dataset'] == name]
+        # All color encodings participate so a series cannot straddle two parts.
+        fields = sorted({chart['encodings']['color']['field'] for chart in linked
+                         if chart.get('encodings', {}).get('color')})
+        if linked and not fields:
+            raise DashboardDataError(f'{name}: a single chart series exceeds {MAX_DATASET_ROWS} rows')
+        groups = {}
+        for index, row in enumerate(rows):
+            key = tuple(row.get(field) for field in fields) if fields else index
+            groups.setdefault(key, []).append(row)
+        pages, page = [], []
+        for group in groups.values():
+            if len(group) > MAX_DATASET_ROWS:
+                raise DashboardDataError(f'{name}: a single chart series exceeds {MAX_DATASET_ROWS} rows')
+            if len(page) + len(group) > MAX_DATASET_ROWS:
+                pages.append(page)
+                page = []
+            page.extend(group)
+        if page:
+            pages.append(page)
+        del datasets[name]
+        parts[name] = []
+        for index, page in enumerate(pages, 1):
+            part = f'{name}_part_{index}'
+            if part in datasets:
+                raise DashboardDataError(f'dataset partition name collision: {part}')
+            datasets[part] = page
+            parts[name].append(part)
+
+    def expand(items):
+        result = []
+        for item in items:
+            names = parts.get(item['dataset'])
+            if names is None:
+                result.append(item)
+                continue
+            for index, name in enumerate(names, 1):
+                result.append({**item, 'id': f"{item['id']}_part_{index}", 'dataset': name,
+                               'title': f"{item['title']} · part {index}/{len(names)}",
+                               'subtitle': item['subtitle'] + ' All rows are retained across the numbered parts; chart series stay together.'})
+        return result
+    return expand(charts), expand(tables)
+
+
 def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], focus: str | None = None) -> dict:
     generated = datetime.now(UTC).isoformat()
     datasets = {name: [] for name in ("inventory", "metrics", "context", "training_runs", "training_loss",
@@ -196,9 +246,6 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
     for name in ("internals_grad_norm", "training_internals_grad_norm"):
         for row in datasets[name]:
             row["log10_value"] = math.log10(row["value"]) if row["value"] > 0 else None
-    for name, rows in datasets.items():
-        if len(rows) > MAX_DATASET_ROWS:
-            raise DashboardDataError(f"{name} exceeds {MAX_DATASET_ROWS} rows; select a smaller --runs-root")
     source_paths = sorted({p for run in run_results for p in run.source_paths})
     source = {"id": SOURCE_ID, "label": "PATH-WM local experiment ledgers", "path": "viewer/experiment_results.sql",
               "query": {"engine": "sqlite", "language": "sql", "executed_at": generated,
@@ -384,6 +431,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                              ("position_error", "Position error (px)"), ("angle_error", "Angle error (rad)"),
                              ("success_terminal", "Terminal success"), ("actual_latent_cost", "Measured latent cost")],
                             "run", "The scatter above shows one model/case; this table holds the same 20 raw candidate sequences for every model/case."))
+    charts, tables = _partition_datasets(datasets, charts, tables)
     guide = ["# PATH-WM Experiment Dashboard", "",
              "Offline snapshot of raw experiment evidence. Charts show one named selection each; tables hold every record.",
              "Completion and scientific success are separate. Rebuild with `python -m viewer.dashboard --focus <training run>` to chart another run.", "",
