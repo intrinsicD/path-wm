@@ -118,3 +118,29 @@ continue the original checkpoint and recipe as planned. All75 tests pass with
 browser checks. The fixed actual390px screenshot shows visible bars and labels;
 raw long source identities remain in exact rows and hover. The first screenshot
 attempt failed during navigation, and its repaired retry passed.
+
+Exact reconciliation confirms the calibrated TwoRoom clone gains34 primary
+cases and losesnone; PushT8404 gains2 and loses8. Only the six BN buffer tensors
+change in each clone; both trained parents count exactly one BN update per
+optimizer update (4074 or8404). The first fixed TwoRoom case now succeeds in18
+steps, versus21 released. PushT calibration's first case fails at50 versus16
+released. These panels are simulator frames from saved actions, with no decoder.
+
+The continuation starts from clean code45bc19c. Its initial supervisor exited
+while the wrapper/trainer remained active; a detached replacement supervisor
+waits for those existing processes, verifies final status/checkpoint/HTML, and
+then executes only the remaining stages. No training restart, skipped update or
+changed recipe. The original supervisor exit code is unavailable and is recorded
+as such; raw training and wrapper logs remain preserved. First100-update interval
+averages1.16762s with finite loss/gradients.
+
+Recalibration is motivated by the training/inference distinction documented in
+[PyTorch BatchNorm1d](https://docs.pytorch.org/docs/2.14/generated/torch.nn.BatchNorm1d.html).
+The fixed-weight statistic recomputation rationale also appears in
+[fvcore's precise-BN implementation](https://github.com/facebookresearch/fvcore/blob/main/fvcore/nn/precise_bn.py).
+Our layerwise diagnostic uses a cumulative average of equal-sized per-batch
+means/unbiased variances, with upstream BN and dropout in evaluation mode. It is
+not fvcore's pooled-population estimator. Neither reference establishes why this
+TwoRoom checkpoint's buffers are mismatched. Training-time feature drift,
+precision and downstream distribution changes remain possible explanations;
+no mechanism is claimed as established.
