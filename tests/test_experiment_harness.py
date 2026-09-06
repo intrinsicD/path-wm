@@ -342,3 +342,33 @@ def test_control_navigation_distinguishes_sources_and_keeps_initial_goal_denomin
     manifest['goal_offset']=100;write_json(run/'manifest.json',manifest)
     changed,_=collect_run_results(tmp_path/'runs')
     assert next(r for r in changed if r.label=='pusht').context['case_set']!=by_name['pusht'].context['case_set']
+
+
+def test_large_ledger_retains_every_exact_row_and_complete_chart_series(tmp_path):
+    from dataclasses import replace
+    from viewer.dashboard import MAX_DATASET_ROWS, build_dashboard_artifact
+    root = tmp_path / 'runs'
+    for i in range(12):
+        path = write_internals(root, f'checkpoint_{i:02}', i)
+        data = json.loads((path / 'internals.json').read_text())
+        data['series']['spectrum'] = [1.0 / (j + 1) for j in range(192)]
+        write_json(path / 'internals.json', data)
+    results, notices = collect_run_results(root)
+    results = [replace(r, context={f'field_{j}': f'{r.label}:{j}' for j in range(201)}) for r in results]
+    artifact = build_dashboard_artifact(results, notices)
+    datasets = artifact['snapshot']['datasets']
+    assert all(len(rows) <= MAX_DATASET_ROWS for rows in datasets.values())
+    spectra = [c for c in artifact['manifest']['charts'] if c['id'].startswith('internals_spectrum')]
+    assert len(spectra) >= 2
+    observed = {}
+    for chart in spectra:
+        assert 'part' in chart['title'].lower()
+        rows = datasets[chart['dataset']]
+        for run in {row['run'] for row in rows}:
+            assert run not in observed  # A line must not be severed across charts.
+            observed[run] = [row['component'] for row in rows if row['run'] == run]
+    assert set(observed) == {r.label for r in results}
+    assert all(components == list(range(1, 193)) for components in observed.values())
+    context_tables = [t for t in artifact['manifest']['tables'] if t['id'].startswith('context')]
+    values = [row['value'] for t in context_tables for row in datasets[t['dataset']]]
+    assert sorted(values) == sorted(str(v) for r in results for v in r.context.values())
