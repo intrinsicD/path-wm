@@ -4,6 +4,13 @@ from world_model.data import preprocess_pixels, normalize_actions
 from world_model.training import autocast_context
 
 
+def initial_observations(source_frame, goal_frame):
+    """Preserve dataset-injected source and goal images across simulator resets."""
+    import numpy as np
+    return tuple(torch.from_numpy(np.asarray(frame).copy()).permute(2,0,1)[None,None]
+                 for frame in (source_frame,goal_frame))
+
+
 @torch.no_grad()
 def evaluate_prediction(model, loader, stats, device, image_size=224, batches=8, precision='float32'):
     was_training=model.training

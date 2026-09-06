@@ -107,6 +107,35 @@ finite, read-only scalar-summary regression before training. TwoRoom control use
 the same one-current-observation CEM planning interface as PushT, restoring only
 agent and goal positions in the verified default-geometry simulator.
 
+The downloaded released TwoRoom checkpoint is pinned to model revision
+`77adaae0bc31deab21c93740d1f8bb947cd0bdec`, with weights SHA256
+`566f223624ea4bfb39dbfe6ae731198dd6ea73b7b8919fed6b1ecafca810f7dd`.
+Its actual positional embedding has three frames, matching its mirror config
+and differing from the paper's history-one statement. Before any TwoRoom training,
+the plan is amended to retain the existing history-three dataset configuration
+for the released-baseline comparison. The entropy repair remains a supported
+history-one correctness fix, not an overnight architecture change.
+
+TwoRoom will use full-source random windows, seed 3072, batch 128 and the same
+optimizer/objective/precision as PushT, with a 4,800-second ceiling on its own
+full ten-epoch schedule. Primary control uses the released config's 25-step goal
+and 50-action budget; a separate secondary protocol uses the paper's 100/150
+settings. Each freezes 50 source cases with sampling seed 42 and reset/CEM seeds
+1234–1283 before evaluating either checkpoint. Both retain initially successful
+cases and report their count. Replay and stationary controls are measured on
+both sets. These are source-population compatibility checks, not unseen-episode
+generalization or a claim of reproducing the paper's multi-seed benchmark.
+
+The primary 25/50 preparation passed exact source-frame and transition checks on
+all 50 cases (1,250 transitions): replay 50/50, stationary 4/50, initial successes
+4/50. The separate 100/150 preparation also passed exact checks (5,000
+transitions): replay 50/50, stationary 0/50, no initial successes. Both canonical
+HTML refreshes passed. A one-case CPU integration smoke with the actual released
+weights, only six candidates and two CEM iterations, completed with unchanged
+checkpoint bytes and passing HTML QA; its score is not a control-quality result.
+The full CPU suite now passes 55 checks, with two opt-in browser tests skipped in
+that command. Actual per-artifact browser QA did run and pass.
+
 ## Outcomes
 
 Training/evaluation pending. This section records measured results, failures and deviations at closeout.

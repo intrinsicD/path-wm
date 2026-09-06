@@ -7,25 +7,39 @@ import h5py
 import numpy as np
 import torch
 from world_model.model import build_model
-from world_model.eval_pusht import evaluate_case
+from world_model.eval_pusht import evaluate_case as evaluate_pusht_case
+from world_model.eval_tworoom import evaluate_case as evaluate_tworoom_case
 from world_model.train import write_json
 from scripts.diagnose_pusht_control import sha256
 
 
 @torch.inference_mode()
-def evaluate(case_file,checkpoint,output,released=False):
+def evaluate(case_file,checkpoint,output,released=False,device=None):
     protocol=json.loads(Path(case_file).read_text())
-    if any(protocol.get(k)!=v for k,v in {'goal_offset':25,'horizon':5,'action_block':5,'receding_horizon':5}.items()):
-        raise ValueError('Prepared evaluator requires the frozen five-block/25-action protocol')
+    dataset_name=protocol['dataset']['name']
+    if dataset_name not in ('pusht','tworoom'):raise ValueError('Unsupported prepared control dataset')
+    goal_offset,budget=protocol['goal_offset'],protocol['budget']
+    allowed=((25,50),) if dataset_name=='pusht' else ((25,50),(100,150))
+    if ((goal_offset,budget) not in allowed or
+            any(protocol.get(k)!=v for k,v in {'horizon':5,'action_block':5,'receding_horizon':5}.items())):
+        raise ValueError('Prepared evaluator requires a declared five-block dataset goal/budget protocol')
+    evaluate_case=evaluate_pusht_case if dataset_name=='pusht' else evaluate_tworoom_case
+    state_key='state' if dataset_name=='pusht' else 'proprio'
     digest=sha256(checkpoint)
     saved=torch.load(checkpoint,map_location='cpu',weights_only=True)
     if released:
-        reference=json.loads(Path('runs/diagnostics/reference_full_source/manifest.json').read_text())
-        if digest!=reference['checkpoint_sha256'] or protocol['dataset']['revision']!=reference['dataset']['revision']:
+        if dataset_name=='pusht':
+            reference=json.loads(Path('runs/diagnostics/reference_full_source/manifest.json').read_text())
+            if protocol['dataset']['revision']!=reference['dataset']['revision']:
+                raise ValueError('Released checkpoint/source does not match reference evidence')
+            stats=reference['normalization']['action'];model_config={}
+        else:
+            reference=protocol['released_reference']
+            stats=reference['action_stats'];model_config=reference['model_config']
+        if digest!=reference['checkpoint_sha256']:
             raise ValueError('Released checkpoint/source does not match reference evidence')
-        model=build_model();model.load_state_dict(saved,strict=True)
-        stats=reference['normalization']['action'];step=None
-        normalization='Released full-source sklearn population statistics'
+        model=build_model(model_config);model.load_state_dict(saved,strict=True)
+        step=None;normalization='Released full-source sklearn population statistics'
     else:
         training=json.loads((Path(checkpoint).parent/'manifest.json').read_text())
         if training['dataset']!=protocol['dataset'] or training['fingerprint']!=saved['fingerprint']:
@@ -38,20 +52,22 @@ def evaluate(case_file,checkpoint,output,released=False):
     with h5py.File(protocol['dataset']['path'],'r') as data:
         for case in cases:
             episode,start=case['episode'],case['start']
-            if not 0<=episode<len(data['ep_len']) or not 0<=start<int(data['ep_len'][episode])-25:
+            if not 0<=episode<len(data['ep_len']) or not 0<=start<int(data['ep_len'][episode])-goal_offset:
                 raise ValueError('Control goal crosses episode boundary')
             if case['row']!=int(data['ep_offset'][episode])+start:raise ValueError('Case row mapping mismatch')
-    torch.set_num_threads(4);torch.manual_seed(42);model=model.cuda().eval()
+    torch.set_num_threads(4);torch.manual_seed(42)
+    device=torch.device(device or ('cuda' if torch.cuda.is_available() else 'cpu'))
+    model=model.to(device).eval()
     out=Path(output);out.mkdir(parents=True,exist_ok=False)
     settings={**protocol,'checkpoint':str(checkpoint),'checkpoint_sha256':digest,'step':step,
               'action_stats':stats,'normalization':normalization,'released':released,
-              'case_manifest_sha256':sha256(case_file),'batchnorm':'saved buffers, unchanged',
+              'case_manifest_sha256':sha256(case_file),'batchnorm':'saved buffers, unchanged','device':str(device),
               'code_commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()}
     write_json(out/'manifest.json',settings);records=[]
     with h5py.File(protocol['dataset']['path'],'r') as data:
         for i,case in enumerate(cases):
             row=case['row']
-            result=evaluate_case(model,data['pixels'][row],data['pixels'][row+25],data['state'][row],data['state'][row+25],stats,
+            result=evaluate_case(model,data['pixels'][row],data['pixels'][row+goal_offset],data[state_key][row],data[state_key][row+goal_offset],stats,
                 seed=seeds[i],samples=protocol['samples'],iterations=protocol['iterations'],elites=protocol['elites'],
                 budget=protocol['budget'],frameskip=protocol['action_block'])
             np.save(out/f'actions_{i}.npy',result.pop('actions'));result.update(case);records.append(result)
@@ -67,4 +83,5 @@ def evaluate(case_file,checkpoint,output,released=False):
 if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('cases');parser.add_argument('checkpoint');parser.add_argument('output')
     parser.add_argument('--released',action='store_true')
-    a=parser.parse_args();evaluate(a.cases,a.checkpoint,a.output,a.released)
+    parser.add_argument('--device',choices=['cpu','cuda'],help='Default: CUDA when available, otherwise CPU')
+    a=parser.parse_args();evaluate(a.cases,a.checkpoint,a.output,a.released,a.device)

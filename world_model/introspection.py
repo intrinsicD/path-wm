@@ -66,7 +66,10 @@ def covariance_spectrum(z):
 
 def attention_entropy(probs):
     """Normalized Shannon entropy in [0, 1] per head; probs are [..., heads, queries, keys]."""
-    entropy = -(torch.special.xlogy(probs, probs)).sum(-1) / math.log(probs.shape[-1])
+    # A single available key has no uncertainty; normalized entropy is zero
+    # by convention rather than the undefined 0/log(1).
+    denominator = math.log(probs.shape[-1]) if probs.shape[-1] > 1 else 1.
+    entropy = -(torch.special.xlogy(probs, probs)).sum(-1) / denominator
     return entropy.mean(dim=tuple(i for i in range(entropy.ndim) if i != entropy.ndim - 2))
 
 

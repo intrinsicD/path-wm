@@ -18,10 +18,7 @@ from world_model.planning import cem,latent_cost
 from world_model.train import write_json
 
 
-def initial_observations(source_frame, goal_frame):
-    """Source observations are injected by the authors' dataset evaluator."""
-    return tuple(torch.from_numpy(np.asarray(frame).copy()).permute(2,0,1)[None,None]
-                 for frame in (source_frame,goal_frame))
+from world_model.evaluation import initial_observations
 
 
 @torch.no_grad()
