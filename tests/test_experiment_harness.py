@@ -372,3 +372,33 @@ def test_large_ledger_retains_every_exact_row_and_complete_chart_series(tmp_path
     context_tables = [t for t in artifact['manifest']['tables'] if t['id'].startswith('context')]
     values = [row['value'] for t in context_tables for row in datasets[t['dataset']]]
     assert sorted(values) == sorted(str(v) for r in results for v in r.context.values())
+
+
+def test_forked_inspection_panels_match_recorded_population_not_run_directory(tmp_path):
+    from viewer.dashboard import build_dashboard_artifact
+    root=tmp_path/'runs'/'internals'
+    population=dict(dataset={'name':'pusht','path':'data/pusht.h5','revision':'fixed','sha256':'data'},
+        data_protocol={'split_protocol':'random_windows','val_indices_sha256':'split'},
+        validation_window_indices=[1,5,9],probe_window_indices_sha256='probe',
+        rollout_window_indices_sha256='rollout',history=3,image_size=224,
+        validation_windows=3,probe_windows=4,rollout_windows=2,rollout_horizon=8,
+        seeds={'torch':0,'window_sampling':0},precision='float32')
+    for name,family in [('fork_final','pilot'),('matched_reference','released'),('wrong_windows','released'),('missing_identity','released')]:
+        path=write_internals(root,name,2 if family=='pilot' else None,family=family)
+        meta=json.loads((path/'manifest.json').read_text())
+        meta.update(population)
+        meta['source_run_manifest']='runs/parent/manifest.json' if name=='matched_reference' else 'runs/fork/manifest.json'
+        if name=='wrong_windows':meta['validation_window_indices']=[1,5,10]
+        if name=='missing_identity':del meta['probe_window_indices_sha256']
+        write_json(path/'manifest.json',meta)
+    learn=tmp_path/'runs'/'learn'
+    write_json(learn/'manifest.json',{'config':{'seed':1}})
+    write_rows(learn/'metrics.jsonl',[{'kind':'train','step':2,'loss':1.},{'kind':'complete','step':2}])
+    write_json(learn/'status.json',{'kind':'complete','step':2})
+    results,notices=collect_run_results(tmp_path/'runs')
+    artifact=build_dashboard_artifact(results,notices,focus='learn')
+    bodies=''.join(b['body'] for b in artifact['manifest']['blocks'] if b['type']=='html')
+    assert 'matched_reference' in bodies
+    assert 'wrong_windows' not in bodies and 'missing_identity' not in bodies
+    assert bodies.count('data:image/png;base64,')==2
+    assert len({row['run'] for row in artifact['snapshot']['datasets']['internals_summary']})==4

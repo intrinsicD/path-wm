@@ -144,3 +144,14 @@ not fvcore's pooled-population estimator. Neither reference establishes why this
 TwoRoom checkpoint's buffers are mismatched. Training-time feature drift,
 precision and downstream distribution changes remain possible explanations;
 no mechanism is claimed as established.
+
+While continuation runs, inspection of final dashboard selection reveals that a
+fork would lose its matched released image panels: the viewer requires identical
+source-run manifest paths even when sample populations are identical. Add an
+essential regression before repair. Hash the complete recorded inspection
+population/settings (dataset revision, split, exact validation indices, probe and
+rollout identities, counts, history, image size, seeds and precision); match on
+that identity when available. Retain legacy same-manifest matching only when
+neither inspection carries complete sampling identity. Never equate missing or
+different sample identities. Preserve the three-inspection image bound and every
+numeric record. This changes reporting only, not the active training recipe.
