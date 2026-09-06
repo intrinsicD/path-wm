@@ -15,12 +15,12 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
 from scripts.paired_summary import summarize_pairs
-from scripts.projection_experiment import DEFAULT_BASE, read, sha
+from scripts.projection_experiment import DEFAULT_BASE, sha
 from world_model.train import write_json
 
 
 def plot(base=DEFAULT_BASE, output=None):
-    base=Path(base);source=base/'projection_comparison.json';value=read(source)
+    base=Path(base);source=base/'projection_comparison.json';source_bytes=source.read_bytes();value=json.loads(source_bytes)
     if summarize_pairs(value['rows'])!=value['groups']:
         raise ValueError('Paired statistics disagree with source rows')
     rows=value['rows'];expected=value['expected_outcomes']
@@ -28,7 +28,7 @@ def plot(base=DEFAULT_BASE, output=None):
         raise ValueError('Measured/missing outcome count differs from plan')
     output=Path(output) if output else base/'figures'/f'outcomes{len(rows):02d}'
     output.mkdir(parents=True,exist_ok=False)
-    snapshot=output/'plot_source.json';snapshot.write_bytes(source.read_bytes())
+    snapshot=output/'plot_source.json';snapshot.write_bytes(source_bytes)
     colors={1024:'#0072B2',4096:'#D55E00'}
     styles={3072:'-',3073:'--',3074:':'}
     with plt.rc_context({'font.size':10,'axes.spines.top':False,'axes.spines.right':False}):
