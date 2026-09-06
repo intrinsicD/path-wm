@@ -300,3 +300,38 @@ def test_embedded_panels_are_bounded_to_focus_endpoints_and_matching_reference(t
     assert len({r["run"] for r in artifact["snapshot"]["datasets"]["internals_summary"]}) == 6
     notes = next(b["body"] for b in artifact["manifest"]["blocks"] if b["id"] == "notices")
     assert "earliest and latest" in notes and "All" in notes
+
+
+def test_control_navigation_distinguishes_sources_and_keeps_initial_goal_denominators(tmp_path):
+    from viewer.dashboard import build_dashboard_artifact
+    cases = [dict(episode=0,start=5,success=True,initial_success=True),
+             dict(episode=1,start=5,success=False,initial_success=False)]
+    for name in ['pusht','tworoom']:
+        run=tmp_path/'runs'/name
+        write_json(run/'manifest.json',dict(dataset=dict(name=name,path=f'data/{name}.h5',revision='abc'),
+            goal_offset=25,budget=50,cases=[dict(episode=i,start=5) for i in range(2)]))
+        write_json(run/'summary.json',dict(successes=1,cases=2,initial_successes=1))
+        write_rows(run/'cases.jsonl',cases)
+    run=tmp_path/'runs'/'pusht'
+    write_json(run/'action_baselines.json',dict(
+        records=[dict(**case,kind='stationary') for case in cases],
+        summary=dict(stationary=dict(successes=1,cases=2,initial_successes=1))))
+    results,notices=collect_run_results(tmp_path/'runs')
+    by_name={r.label:r for r in results}
+    assert by_name['pusht'].context['case_set']!=by_name['tworoom'].context['case_set']
+    baseline=by_name['pusht / stationary']
+    assert baseline.context['case_set']==by_name['pusht'].context['case_set']
+    assert baseline.context['dataset.name']=='pusht' and baseline.context['goal_offset']==25
+    assert baseline.metrics['initial_successes']==1
+    assert baseline.metrics['noninitial_cases']==1
+    assert baseline.metrics['noninitial_successes']==0 and baseline.metrics['noninitial_success_rate']==0.
+    artifact=build_dashboard_artifact(results,notices)
+    rows={r['run']:r for r in artifact['snapshot']['datasets']['control_detail']}
+    assert rows['pusht']['initial_successes']=='1' and rows['pusht']['noninitial_cases']=='1'
+    assert rows['pusht']['success_rate']=='0.5' and rows['pusht']['noninitial_success_rate']=='0'
+    assert any(c['id']=='control_noninitial' for c in artifact['manifest']['charts'])
+    # An equal source window with a different target is a different case identity.
+    manifest=__import__('json').loads((run/'manifest.json').read_text())
+    manifest['goal_offset']=100;write_json(run/'manifest.json',manifest)
+    changed,_=collect_run_results(tmp_path/'runs')
+    assert next(r for r in changed if r.label=='pusht').context['case_set']!=by_name['pusht'].context['case_set']

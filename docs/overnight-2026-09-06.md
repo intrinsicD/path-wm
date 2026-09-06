@@ -169,6 +169,17 @@ operational amendment to an in-progress time-bounded run, not a new learning
 comparison or a silent resume of a completed reference. Keep the cumulative
 training ceiling and the morning evaluation reserve.
 
+## Dashboard control integrity
+
+The primary TwoRoom set contains four already-satisfied goals, so raw success
+alone can overstate learned progress. Add exact counts and a separate rate for
+cases not initially successful; retain raw success alongside it and leave the
+conditional rate unavailable when initial-state evidence is missing. Action
+baselines must inherit the same dataset, goal offset and budget context as their
+case manifest. Include source identity and goal offset in case navigation keys
+so identical episode/row numbers from different tasks cannot merge. Essential
+fixtures will first expose the lost context and missing denominator.
+
 ## Outcomes
 
 Training/evaluation pending. This section records measured results, failures and deviations at closeout.
