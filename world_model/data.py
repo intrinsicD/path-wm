@@ -44,6 +44,18 @@ def explicit_episode_split(path, count):
     return tr, va, receipt
 
 
+def read_pixel_window(pixels, start, stop, frameskip):
+    """Avoid slow multidimensional strided selection on compressed HDF5 chunks.
+
+    Keep one dataset handle alive across frame reads so its raw chunk cache is
+    reused. NumPy caches and contiguous HDF5 data retain their fast native slice.
+    Both paths return the exact source bytes in the original channel layout.
+    """
+    if isinstance(pixels, h5py.Dataset) and pixels.chunks is not None and frameskip > 1:
+        return np.stack([pixels[row] for row in range(start, stop, frameskip)])
+    return pixels[start:stop:frameskip]
+
+
 class TrajectoryDataset(Dataset):
     def __init__(self, path, episodes, frameskip=5, num_steps=4, cache_bytes=0):
         self.path = str(path)
@@ -92,7 +104,7 @@ class TrajectoryDataset(Dataset):
         start = int(self.offsets[ep]) + local
         stop = start + self.frameskip*self.num_steps
         f = self._cache if self._cache is not None else self._open()
-        pixels = torch.from_numpy(f['pixels'][start:stop:self.frameskip])
+        pixels = torch.from_numpy(read_pixel_window(f['pixels'], start, stop, self.frameskip))
         if pixels.shape[-1] in (1,3): pixels = pixels.permute(0,3,1,2)
         actions = torch.from_numpy(f['action'][start:stop]).float().reshape(self.num_steps,-1)
         # The last action block is unused by the training target. Earlier NaNs

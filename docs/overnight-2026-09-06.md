@@ -153,6 +153,14 @@ cached/streamed equality. Then benchmark complete dataset items on fixed real
 windows against the original reader. Accept only exact outputs and a measured
 read improvement; do not change training inputs, batch size or objective.
 
+The complete-item paired benchmark passed exact pixels, action blocks (including
+unused terminal NaNs), episode IDs and local starts on 48 fixed random windows
+per source. Median original/optimized time was 55.94/3.58 ms for PushT and
+58.02/4.83 ms for TwoRoom; total paired read times improved about tenfold. The
+chunk-boundary/cache checks and CPU optimization/resume regressions passed, and
+the benchmark's canonical dashboard refresh passed. These are loader timings,
+not end-to-end training speedups.
+
 After verification, recover the active PushT run from its next immutable saved
 checkpoint to adopt the loader change. Record the stopped process, retained
 checkpoint hash, any discarded unsaved work, new code revision and resume receipt.
