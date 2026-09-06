@@ -82,3 +82,14 @@ window separation pass. Calibrated control is the next committed conditional
 step. This new evidence also warrants the same non-training check on PushT before
 launching the accepted continuation; no architecture or objective change.
 
+
+TwoRoom calibrated primary control completed48/50 (44/46 initially unsolved),
+versus original14/50 (10/46) and released42/50 (38/46), on identical cases,
+reset/CEM seeds and30-iteration solver. Parent and clone hashes unchanged.
+Predeclare the next bounded follow-ups before launching: apply the same512-window
+mode/calibration protocol to PushT8404; test its calibrated copy on the existing50
+PushT cases. Also evaluate the TwoRoom calibrated clone on the existing frozen
+100/150 CEM10 case file, directly paired with the completed0/50 local and5/50
+released CEM10 references. No solver parameters or thresholds are tuned. These
+short checks fit within the planned diagnostic compute allowance; implementation
+and HTML work are separate.
