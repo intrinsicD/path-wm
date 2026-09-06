@@ -258,6 +258,18 @@ reproduced all saved outcomes exactly, with its actual step-375 label and passin
 canonical HTML. Released checkpoint hashes and the frozen PushT case-manifest
 hash were rechecked before scheduling the matched overnight evaluation.
 
+## Execution queue and verification
+
+All 64 tests pass with `PATH_WM_BROWSER_TESTS=1`, including the two browser
+checks (`runs/overnight_2026-09-06/full_tests.log`). A one-shot serial driver
+records exact commands and code revisions, waits for the identified PushT
+wrapper, checks matching final checkpoint/validation steps and numbered snapshot
+hashes, then runs TwoRoom, matched control, saved-action panels and inspections.
+Every experiment command uses `run.py` and the queue stops on a failed command
+or dashboard. The first queue launch stopped before starting work because this
+Python build lacks `os.pidfd_open`; the corrected wait checks Linux process start
+ticks as well as its PID. Both attempts remain in the raw execution ledger.
+
 ## Outcomes
 
 Training/evaluation pending. This section records measured results, failures and deviations at closeout.
