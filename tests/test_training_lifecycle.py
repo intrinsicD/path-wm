@@ -134,3 +134,36 @@ def test_graceful_stop_retains_the_last_update_and_all_interval_timing_counts(se
     assert sum(r['timing_updates'] for r in rows if r['kind'] in ('train','stop_requested'))==2
     assert all(r['mean_data_wait_seconds']>=0 and r['mean_step_seconds']>=0
                for r in rows if r['kind'] in ('train','stop_requested'))
+
+
+def test_fork_preserves_parent_and_exact_optimizer_trajectory(setup_run):
+    from world_model.train import train
+    path,parent,cfg=setup_run('parent',checkpoint_steps=[0,1,2,3])
+    train(path)
+    frozen={p.name:p.read_bytes() for p in parent.iterdir() if p.is_file()}
+    child_path,child,child_cfg=setup_run('child',checkpoint_steps=[0,1,2,3],stop_at_step=2)
+    train(child_path,fork_from=parent/'checkpoint_000001.pt')
+    child_saved=torch.load(child/'checkpoint.pt',weights_only=True)
+    expected=torch.load(parent/'checkpoint_000002.pt',weights_only=True)
+    assert child_saved['step']==child_saved['validation_step']==2
+    assert_same_weights(expected['model'],child_saved['model'])
+    assert torch.equal(expected['rng'],child_saved['rng'])
+    manifest=json.loads((child/'manifest.json').read_text())
+    assert manifest['total_steps']==3 and manifest['initialization']=='checkpoint_continuation'
+    assert manifest['parent']['checkpoint']==str((parent/'checkpoint_000001.pt').resolve())
+    assert json.loads((child/'status.json').read_text())['kind']=='step_limit'
+    child_cfg['stop_at_step']=3;child_path.write_text(yaml.safe_dump(child_cfg))
+    train(child_path,resume=True)
+    result=torch.load(child/'checkpoint.pt',weights_only=True)
+    assert_same_weights(torch.load(parent/'checkpoint.pt',weights_only=True)['model'],result['model'])
+    assert {p.name:p.read_bytes() for p in parent.iterdir() if p.is_file()}==frozen
+    with pytest.raises(FileExistsError):train(child_path,fork_from=parent/'checkpoint_000001.pt')
+
+
+def test_fork_rejects_scientific_changes_before_any_update(setup_run):
+    from world_model.train import train
+    path,parent,_=setup_run('parent_bad');train(path)
+    child_path,child,_=setup_run('child_bad',lr=.002)
+    with pytest.raises(ValueError,match='configuration or dataset'):
+        train(child_path,fork_from=parent/'checkpoint_000001.pt')
+    assert not (child/'checkpoint.pt').exists()
