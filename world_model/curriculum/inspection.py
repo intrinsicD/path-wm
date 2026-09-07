@@ -173,6 +173,24 @@ def panels(models,data,ids,encoded,bases,output,label,device):
     np.savez_compressed(output/'panel_states.npz',indices=ids,inputs=raw,reconstructions=recon,**captured)
     return dict(file=path.name,title=label+' — perception states',caption=population+'; six predeclared frames; inputs, decoded RGB, errors, train-fit fine/coarse PCA, activation norms and pusher-query cross-scale attention.')
 
+
+def pose_error_panel(raw,output,label):
+    pred=np.asarray(raw['predictions']);target=np.asarray(raw['targets'])
+    angle=np.asarray(raw['angle_abs_error_deg']);norm=np.asarray(raw['angle_norm'])
+    fig,axes=plt.subplots(2,3,figsize=(11,6),layout='constrained')
+    for c,name in enumerate(('pusher x','pusher y','block x','block y')):
+        ax=axes.flat[c];ax.scatter(target[:,c]*512,pred[:,c]*512,s=3,alpha=.2,color='#2463a6',rasterized=True)
+        ax.plot([0,512],[0,512],color='#db7923',lw=1)
+        ax.set(title=name,xlabel='True · world units',ylabel='Estimated · world units',xlim=(0,512),ylim=(0,512))
+    axes[1,1].hist(angle,bins=np.arange(0,181,10),color='#2463a6')
+    axes[1,1].axvline(10,color='#db7923',label='10° mean target (not per-frame gate)')
+    axes[1,1].set(xlabel='Wrapped absolute angle error °',ylabel='Frames',title='Orientation error distribution')
+    axes[1,2].scatter(norm,angle,s=3,alpha=.2,color='#2463a6',rasterized=True)
+    axes[1,2].set(xlabel='Predicted sin/cos vector norm',ylabel='Angle absolute error °',title='Readout norm versus angle error')
+    fig.suptitle(label+' · all evaluated frames; repeated frames within a group are correlated',fontsize=11)
+    fig.savefig(output/'pose_readout.png',dpi=120);fig.savefig(output/'pose_readout.svg');plt.close(fig)
+    return dict(file='pose_readout.png',title=label+' — pose readout',caption='Identity line for XY, wrapped angle errors and sin/cos output norm. These are descriptive frame distributions, not independent training replicates.')
+
 def inspect_checkpoint(checkpoint,output,*,split='test',diagnostic=False):
     output=Path(output)
     if (output/'inspection_summary.json').exists():raise ValueError('preserve completed inspection')
@@ -221,6 +239,7 @@ def inspect_checkpoint(checkpoint,output,*,split='test',diagnostic=False):
     json_atomic(output/'region_errors.json',dict(indices=held_ids.tolist(),records=region_raw,summary=regions))
     label=output.name+f" · update{saved['global_update']} · {split}"
     summary['panels'].append(panels(models,held,held_ids,held_z,bases,output,label,device))
+    if labelled:summary['panels'].append(pose_error_panel(raw,output,label))
     fig,axes=plt.subplots(1,2,figsize=(9,3),layout='constrained')
     for name in ('fine','coarse'):
         e=bases[name]['eigenvalues'];axes[0].semilogy(np.arange(1,65),np.maximum(e,1e-14),label=name)

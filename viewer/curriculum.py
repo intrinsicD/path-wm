@@ -131,6 +131,8 @@ def inspection_blocks(runs,source_id):
     # Keep the portable reader bounded. Every inspection stays in the exact inventory;
     # primary selected checkpoints plus the diagnostic get embedded panels.
     primary=[r for r in selected if r.label.endswith('_selected')]
+    if any(r.context.get('split')=='test' for r in primary):
+        primary=[r for r in primary if r.context.get('split') in ('test','fixed64_training')]
     for r in primary:
         summary=r.internals['inspection'];root=Path(r.internals['inspection_root'])
         figures=[]

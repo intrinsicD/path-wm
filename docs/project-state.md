@@ -112,30 +112,28 @@ paddle/PushT/supplement verification and four CPU inference bundles. The package
 is 212,389,903 compressed bytes in five parts. Its receipt establishes continuity,
 not model quality. All experiment and packaging writers are closed.
 
-## Home curriculum planning (2026-09-07)
+## Home curriculum execution (2026-09-07, active)
 
-The user requested a training curriculum using the existing local datasets,
-developed with Claude. The [proposed curriculum](training-curriculum-2026-09-07.md)
-reuses Paddle's accurate perception and prioritizes a bounded PushT perception
-comparison: supervised scratch versus COCO reconstruction warmup versus CCHI
-reconstruction warmup, followed by matched task adaptation. Task-first ordering
-is a working assumption; a general-vision-first alternative is documented.
-The new physical selector, budgets and readiness targets are prospective, not
-changes to historical gates or claims that the user adopted the proposal.
+The user accepted the [curriculum](training-curriculum-2026-09-07.md) and asked
+for execution, thorough final evaluation and perception/internal-state figures.
+The [execution record](training-curriculum-execution-2026-09-07.md) tracks the
+bounded work. Full archive/source restoration passed; the home .venv is ready.
+COCO has82783 decoded RGB64 images, grouped splits74501/4136/4146.
+The100-update GPU profile fit batch128 in1.4GB and took6seconds. The fixed64
+training diagnostic selected q.328 but regressed at its final checkpoint.
 
-Local metadata checks reconcile all 82,783 COCO training images, all 9,848
-Charades videos, and all 12,291 TAU audio/video pairs; Charades subjects and TAU
-recording locations are disjoint across their official splits. Large HDF5 counts
-come from the existing source audit, not a new full verification. Home has an
-RTX 3050 with 8 GiB and Torch 2.9.0+cu128; the project environment and archived
-task checkpoints still need restoration/verification before training.
+The seed4107 matched4000-update screen is running: A supervised CCHI;
+B2000COCO reconstruction +2000CCHI adaptation; C2000CCHI reconstruction
++2000CCHI adaptation. A completed4000updates in233seconds; selected3800
+has q3.009 and fails readiness. B/C are pending. Selection, repeats and U/P
+expansion use the accepted validation-only gates, then frozen test evaluation.
+The separate mixed-history Paddle U follow-up retains its original P1(<=20k)
+to P5(<=10k) gate and controller protocol. Accurate Paddle E/D/H stay frozen.
 
-Two generic-methodology Claude consultations completed with no repository access.
-The detailed project brief and its local save were rejected by automatic approval
-review; specific approval remains pending. Generic reviews and their limitations
-are documented in the plan. No training, restoration, or environment installation
-ran during this planning turn. The next implementation slice is restoration and
-readiness checks, then the small perception diagnostic and matched screen.
+The canonical dashboard is explicitly scoped to this curriculum and refreshed
+with browser QA after each phase/evaluation. All earlier raw ledgers and offline
+reports remain preserved outside this view. PCA/probes fit training data only.
+No further Claude transfer or external publishing was requested or attempted.
 
 ## Preserved LeWM objective and evidence
 

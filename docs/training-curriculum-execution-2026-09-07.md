@@ -122,3 +122,23 @@ For the already-authorized Paddle mixed-U follow-up, retain exact predictor
 update10000and20000 snapshots when reached, without changing loss, selector,
 early stopping or budgets. This permits the planned equal-update comparison.
 A scalar transaction regression verifies snapshots retain their own update.
+
+
+## Seed4107 frozen screen outcome
+
+All arms completed4000updates with identical E/D initial tensors, fresh identical
+H tensors, and byte-identical first2000supervised batch-index hashes. Actual
+training+validation time A232.93s, B219.51s, C215.42s. Selected q values:
+A3.009(update3800), B3.546(adaptation1900), C5.159(adaptation1900).
+Both warmup policies worsen every constituent selected physical error relative
+to the matched total-update A reference. No promising candidate and no arm meets
+numeric readiness. As predeclared: no confirmation seeds, no adopted pretraining
+policy, and no PushT U/P expansion. Freeze receipt precedes all new test inference:
+runs/curriculum_2026-09-07/seed_4107/screen_decision.json.
+
+The final assessment includes original fixed-validation selection metrics,
+all-group validation inspections, all-test-frame selected/final metrics,
+A at2000supervised updates, B/C image-only warmup snapshots, and both historical
+reference snapshots. Displayed six-frame panels use fixed private sampling;
+pose distributions use all evaluated frames. Neither test results nor probes
+can reopen the frozen budget or choose a checkpoint.
