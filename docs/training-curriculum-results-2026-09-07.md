@@ -147,7 +147,23 @@ The immutable generic warmup checkpoint remains available for future work.
 
 ## Paddle follow-up
 
-Pending the original bounded P1/P5 sequence and its final diagnostic report.
+P1 completed its20,000-update budget in893.9seconds. Its selected update19,750
+has normalized latent loss0.19725 versus copy1.07739 and position MAEs
+[2.38197,2.38395,1.59502]pixels versus copy[3.83335,2.38499,2.52450].
+All four original comparisons strictly improve, so P5 was launched. Ball-y's
+margin is only0.00105pixels; the gate's pass should not be mistaken for a robust
+quality margin. The final P1 update20,000 has ball-y2.60224 and would fail the
+gate; selection remains the original fixed-validation objective.
+
+At exact update10,000, new P1 MAE is[3.81218,3.74440,1.82866]. The historical
+10,000-update reference is[3.70127,3.59783,1.79505]. At their selected20,000-budget
+checkpoints, the historical/new values are[2.42536,2.22583,1.65811] versus
+[2.38197,2.38395,1.59502]. The new memory does not uniformly improve prediction.
+Validation window indices, E/D/H dependency, dataset and E-only variance bytes
+match; the U dependency differs as intended. Runtime differences remain a
+limitation of the cross-session comparison.
+
+P5 and the subsequent full controller evaluation are still active.
 
 ## Evidence, limitations and verification
 

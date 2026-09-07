@@ -122,13 +122,21 @@ COCO has82783 decoded RGB64 images, grouped splits74501/4136/4146.
 The100-update GPU profile fit batch128 in1.4GB and took6seconds. The fixed64
 training diagnostic selected q.328 but regressed at its final checkpoint.
 
-The seed4107 matched4000-update screen is running: A supervised CCHI;
-B2000COCO reconstruction +2000CCHI adaptation; C2000CCHI reconstruction
-+2000CCHI adaptation. A completed4000updates in233seconds; selected3800
-has q3.009 and fails readiness. B/C are pending. Selection, repeats and U/P
-expansion use the accepted validation-only gates, then frozen test evaluation.
-The separate mixed-history Paddle U follow-up retains its original P1(<=20k)
-to P5(<=10k) gate and controller protocol. Accurate Paddle E/D/H stay frozen.
+The seed4107 matched4000-update screen and frozen held-out evaluation are
+complete. A/B/C selected validation q is3.009/3.546/5.159; all fail readiness,
+so no PushT U/P expansion or confirmation seeds were launched. Task-only A is
+best at equal total updates. COCO warmup reconstructs internal test images well
+(MSE.00607), but task adaptation raises that error to.27220. The generic warmup
+checkpoint is preserved. See the [results](training-curriculum-results-2026-09-07.md)
+for full test errors, object-region controls, feature maps and provenance.
+
+Paddle P1 completed20,000updates in893.9s and selected19,750. Its original gate
+passes, but ball-y improvement over copy is only.00105pixels. P5 is now running
+with its original10,000-update ceiling and eight-check early stopping, followed
+by the full500-start/100-pair controller protocol. E/D/H and mixed-history U/R
+remain frozen. The new-U source,1024validation windows and byte-identical E-only
+variance statistics were verified against the reference. All353software tests,
+including the installed-browser checks, pass.
 
 The canonical dashboard is explicitly scoped to this curriculum and refreshed
 with browser QA after each phase/evaluation. All earlier raw ledgers and offline
