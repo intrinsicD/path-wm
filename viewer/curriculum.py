@@ -121,12 +121,12 @@ def inspection_blocks(runs,source_id):
     rows=[]
     for r in selected:
         s=r.internals['inspection'];m=s['metrics']
-        vals=[r.label,s['split'],str(s['frames']),str(s['step']),format(m['image_mse'],'.7g'),
+        vals=[r.label,s['split'],str(s['frames']),str(s['step']),format(m['image_mse'],'.7g'),format(m['mean_image_mse'],'.7g') if 'mean_image_mse' in m else 'earlier diagnostic',
               ', '.join(format(v,'.4g') for v in m.get('position_mae',[])),
               format(m.get('angle_mae_deg',0),'.4g') if s['labelled'] else 'no H',
               format(m.get('q',0),'.4g') if s['labelled'] else 'no H']
         rows.append('<tr>'+''.join('<td style="padding:6px;border-bottom:1px solid #ddd">'+html.escape(v)+'</td>' for v in vals)+'</tr>')
-    body='<h3>Held-out perception evaluations</h3><p>All-frame metrics below; group-balanced errors, 256-frame region diagnostics, train-only ridge probes and raw per-frame errors accompany each source summary. Diagnostic fixed64 is training-set evidence. No test metric selects checkpoints.</p><div style="overflow-x:auto"><table><thead><tr>'+''.join('<th>'+s+'</th>' for s in ['Checkpoint','Population','Frames','Update','RGB MSE','XY MAE (world units)','Angle MAE °','q'])+'</tr></thead><tbody>'+''.join(rows)+'</tbody></table></div>'
+    body='<h3>Held-out perception evaluations</h3><p>All-frame metrics below; group-balanced errors, 256-frame region diagnostics, train-only ridge probes and raw per-frame errors accompany each source summary. Diagnostic fixed64 is training-set evidence. No test metric selects checkpoints.</p><div style="overflow-x:auto"><table><thead><tr>'+''.join('<th>'+s+'</th>' for s in ['Checkpoint','Population','Frames','Update','RGB MSE','Train-mean RGB MSE','XY MAE (world units)','Angle MAE °','q'])+'</tr></thead><tbody>'+''.join(rows)+'</tbody></table></div>'
     blocks=[{'id':'curriculum_inspection_results','type':'html','body':body,'layout':'full'}]
     # Keep the portable reader bounded. Every inspection stays in the exact inventory;
     # primary selected checkpoints plus the diagnostic get embedded panels.

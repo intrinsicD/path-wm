@@ -266,10 +266,6 @@ def test_resuming_completed_early_stop_or_gate_failure_never_advances_optimizer(
 
 
 def test_prespecified_snapshot_retains_exact_update(scalar_stage,tmp_path,monkeypatch):
-    def loss(modules,x,target):
-        value=modules['E'](x).square().mean()
-        return value,{'loss':float(value.detach()),'image_mse':float(value.detach())}
-    monkeypatch.setattr(training,'perception_loss',loss)
     config=tiny_config(updates=3);config['training']['retain_updates']=[2]
     training.train_perception(config,'unused',tmp_path/'run')
     middle=checkpoints.read_checkpoint(tmp_path/'run/checkpoints/update_00000002.pt')

@@ -489,6 +489,8 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
         # between replacing last and best aliases, resume restores best from
         # the snapshot referenced by last, never from an uncommitted update.
         if improved: atomic_checkpoint(run/best_checkpoint,value)
+        if update in common.get('retain_updates',[]):
+            atomic_checkpoint(run/f'checkpoints/update_{update:08d}.pt',value)
         atomic_checkpoint(run/'last.pt',value)
         if improved: atomic_checkpoint(run/'best.pt',value)
         json_atomic(run/'status.json', {'stage':stage,'global_update':update,'best_validation':best,

@@ -17,6 +17,20 @@ from world_model.pusht.checkpoints import read_checkpoint,json_atomic,fingerprin
 ROOT=Path('runs/curriculum_2026-09-07')
 DATA='data/pusht_world_model/cchi_v1'
 
+
+def mean_image(training):
+    total=np.zeros((64,64,3),np.float64)
+    for start in range(0,len(training),256):
+        total+=np.asarray(training.frames[training.rows[start:start+256]],dtype=np.float64).sum(0)/255
+    return total/len(training)
+
+def mean_image_errors(frame,data):
+    errors=[]
+    for start in range(0,len(data),256):
+        x=np.asarray(data.frames[data.rows[start:start+256]],dtype=np.float64)/255
+        errors.extend(np.square(x-frame).mean((1,2,3)).tolist())
+    return errors
+
 def pca_fit(training):
     x=np.asarray(training,dtype=np.float64);mean=x.mean(0);x=x-mean
     values,vectors=np.linalg.eigh(x.T@x/max(1,len(x)-1));order=np.argsort(values)[::-1]
@@ -89,22 +103,23 @@ def foreground_masks(target):
     return dict(pusher=pusher,block=block,background=1-np.maximum(pusher,block))
 
 @torch.no_grad()
-def region_errors(models,data,ids,device):
-    total={name:dict(squared_error=0.,white_squared_error=0.,scalars=0.) for name in ('pusher','block','background')}
+def region_errors(models,data,ids,device,mean):
+    total={name:dict(squared_error=0.,white_squared_error=0.,mean_squared_error=0.,scalars=0.) for name in ('pusher','block','background')}
     records=[]
     for start in range(0,len(ids),128):
         part=ids[start:start+128];x,_=data.batch(part,device);d=models['D'](models['E'](x))
         error=(d-x).square().permute(0,2,3,1).cpu().numpy()
         white=(1-x).square().permute(0,2,3,1).cpu().numpy()
+        mean_error=np.square(x.permute(0,2,3,1).cpu().numpy()-mean)
         for j,i in enumerate(part):
             row=dict(index=int(i),regions={})
             for name,mask in foreground_masks(data.targets[i]).items():
                 values=dict(squared_error=float((error[j]*mask[...,None]).sum()),
-                            white_squared_error=float((white[j]*mask[...,None]).sum()),scalars=float(mask.sum()*3))
+                            white_squared_error=float((white[j]*mask[...,None]).sum()),mean_squared_error=float((mean_error[j]*mask[...,None]).sum()),scalars=float(mask.sum()*3))
                 row['regions'][name]=values
                 for k,v in values.items():total[name][k]+=v
             records.append(row)
-    return {name:{**v,'mse':v['squared_error']/v['scalars'],'white_mse':v['white_squared_error']/v['scalars']} for name,v in total.items()},records
+    return {name:{**v,'mse':v['squared_error']/v['scalars'],'white_mse':v['white_squared_error']/v['scalars'],'mean_image_mse':v['mean_squared_error']/v['scalars']} for name,v in total.items()},records
 
 def linear_probe(train_z,train_y,held_z,held_y):
     # Full E feature vector, centered on train only. Fixed ridge, no tuning/test fitting.
@@ -179,6 +194,9 @@ def inspect_checkpoint(checkpoint,output,*,split='test',diagnostic=False):
         held=train;split='fixed64_training'
     fit_ids=sample_training(train);held_ids=np.random.default_rng(92502).choice(len(held),min(256,len(held)),replace=False)
     metrics,raw=evaluate(models,held,np.arange(len(held)),device=device,labelled=labelled,return_records=True)
+    mean=mean_image(train);np.save(output/'train_mean_image.npy',mean)
+    raw['mean_image_mse']=mean_image_errors(mean,held);metrics['mean_image_mse']=float(np.mean(raw['mean_image_mse']))
+    metrics['reconstruction_to_mean_ratio']=metrics['image_mse']/max(metrics['mean_image_mse'],1e-30)
     raw['metadata']=held.metadata;json_atomic(output/'frame_errors.json',raw)
     summary=dict(schema='curriculum-inspection-v1',status='completed',checkpoint=str(checkpoint),
                  checkpoint_sha256=file_hash(checkpoint),model_fingerprint=saved['model_fingerprint'],step=saved['global_update'],
@@ -199,7 +217,7 @@ def inspect_checkpoint(checkpoint,output,*,split='test',diagnostic=False):
             heldout_mean_std_across_frames=float(held_z[name].std(axis=0).mean()),eigenvalues=spectrum.tolist())
     probe,pred=linear_probe(train_z,train.targets[fit_ids],held_z,held.targets[held_ids]);summary['linear_probe']=probe
     np.savez_compressed(output/'heldout_probe.npz',predictions=pred,targets=held.targets[held_ids],indices=held_ids)
-    regions,region_raw=region_errors(models,held,held_ids,device);summary['regions']=regions
+    regions,region_raw=region_errors(models,held,held_ids,device,mean);summary['regions']=regions
     json_atomic(output/'region_errors.json',dict(indices=held_ids.tolist(),records=region_raw,summary=regions))
     label=output.name+f" · update{saved['global_update']} · {split}"
     summary['panels'].append(panels(models,held,held_ids,held_z,bases,output,label,device))
