@@ -53,6 +53,30 @@ def test_reflection_simultaneous_events_and_immediate_wall():
     np.testing.assert_allclose(env.state, [56, 32, -6, 2, 58], atol=1e-12)
 
 
+@pytest.mark.parametrize("initial,action,expected,hits,terminal", [
+    # Claude's independent review: exact-end contact and loss label the event now.
+    ([30, 51, 2, 3, 30], 1, [32, 54, 2, -3, 30], 1, False),
+    ([20, 58, 2, 3, 40], 1, [22, 61, 0, 0, 40], 0, True),
+    # Wall/contact simultaneous, then wall before contact within one interval.
+    ([5, 52.5, -6, 3, 8], 1, [5, 52.5, 6, -3, 8], 1, False),
+    ([3, 52, -6, 3, 12], 1, [7, 53, 6, -3, 12], 1, False),
+    # The paddle reaches its bound before contact; use its stopped position.
+    ([53.8, 51.75, -2, 3, 57.5], 2, [51.8, 53.25, -2, -3, 58], 1, False),
+])
+def test_reviewed_adversarial_boundary_events(initial, action, expected, hits, terminal):
+    env = PaddleEnv(state=initial)
+    _, terminated, truncated, _ = env.step(action)
+    np.testing.assert_allclose(env.state, expected, atol=1e-12, rtol=0)
+    assert env.hit_count == hits and terminated == terminal and not truncated
+
+
+@pytest.mark.parametrize("extra_offset,caught", [(0, True), (1e-8, False)])
+def test_contact_numerical_tolerance_keeps_physical_threshold(extra_offset, caught):
+    env = PaddleEnv(state=[40 + extra_offset, 51, 2, 3, 34])
+    env.step(1)
+    assert bool(env.hit_count) == caught
+
+
 def test_contact_uses_paddle_position_at_event_not_endpoint():
     caught = PaddleEnv(state=[31.5, 51.75, 6, 3, 32])
     _, _, _, info = caught.step(0)
@@ -102,6 +126,15 @@ def test_exact_subpixel_coverage_and_ball_precedence():
     assert np.count_nonzero(frame[:50]) == 0
 
 
+def test_partial_overlap_is_exact_area_union_and_half_pixels_round_even():
+    env = PaddleEnv(state=[38.25, 57.5, 2, 3, 30.5])
+    # Both rectangles have partial coverage here. Alpha-over incorrectly gives
+    # green/blue 223; exact geometric union covers the entire pixel.
+    np.testing.assert_array_equal(env.render()[56, 36], [191, 255, 255])
+    env = PaddleEnv(state=[10.5, 10.5, 2, 3, 30])
+    np.testing.assert_array_equal(env.render()[8, 9], [128, 128, 128])
+
+
 def test_dataset_alignment_split_replay_and_resume(tmp_path):
     config = {"dataset": {"train": 2, "validation": 1, "test": 1}}
     manifest = generate_dataset(config, tmp_path)
@@ -147,18 +180,25 @@ def test_resume_rejects_corrupted_episode_metadata(tmp_path):
         generate_dataset(config, tmp_path)
 
 
-def test_paired_histories_identical_image_and_essential_first_action():
-    for pair in history_pairs(count=3, seed=7000):
+@pytest.mark.parametrize("count,seed", [(50, 7000), (100, 8000)])
+def test_paired_histories_identical_image_and_essential_first_action(count, seed):
+    for pair in history_pairs(count=count, seed=seed):
         negative, positive = pair["members"]
         np.testing.assert_array_equal(negative["frames"][-1], positive["frames"][-1])
         assert not np.array_equal(negative["frames"][0], positive["frames"][0])
         for member in pair["members"]:
             possible_first_actions = set()
+            caught_sequences = set()
             for sequence in itertools.product(range(3), repeat=3):
                 env = PaddleEnv(state=member["control_state"])
                 for action in sequence:
                     env.step(action)
                 if env.hit_count:
                     possible_first_actions.add(sequence[0])
+                    caught_sequences.add(sequence)
             assert possible_first_actions == {member["correct_action"]}
             assert member["correct_action"] == (0 if member["direction"] < 0 else 2)
+            toward = member["correct_action"]
+            assert caught_sequences == {(toward, toward, toward), (toward, toward, 1)}, (
+                pair["pair_seed"], member["direction"], caught_sequences
+            )
