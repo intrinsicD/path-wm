@@ -13,6 +13,16 @@ from world_model.paddle import checkpoints, models, training
 from world_model.paddle.types import ObservationLatent
 
 
+def test_validation_window_count_sums_ragged_batches_without_changing_weighted_metrics():
+    result = training._mean_metrics([
+        (3, {'windows': 3, 'copy_loss': 2.0, 'h_mae': [[1.0, 2.0, 3.0]]}),
+        (1, {'windows': 1, 'copy_loss': 6.0, 'h_mae': [[5.0, 6.0, 7.0]]}),
+    ])
+    assert result['windows'] == 4
+    assert result['copy_loss'] == 3.0
+    assert result['h_mae'] == [[2.0, 3.0, 4.0]]
+
+
 class PixelEncoder(nn.Module):
     def forward(self, image):
         marker = (image[:, 0, 0, 0] * 255).round()[:, None, None]

@@ -54,6 +54,32 @@ def test_paddle_curves_do_not_inherit_lewm_loss_or_stale_validation_labels(tmp_p
     assert any('paddle_result.json' in source for source in paddle.source_paths)
 
 
+@pytest.mark.parametrize('stage_name,horizon,key', [('perception', 1, 'perception'),
+                                                  ('memory', 1, 'memory'),
+                                                  ('predictor', 1, 'predictor_1')])
+def test_paddle_objective_union_keeps_initial_validation_at_left_edge(tmp_path, stage_name, horizon, key):
+    root = tmp_path / 'runs'
+    path = stage(root)
+    manifest = json.loads((path / 'paddle_manifest.json').read_text())
+    manifest.update(stage=stage_name, horizon=horizon)
+    write(path / 'paddle_manifest.json', manifest)
+    validation = [{'step': 0, 'loss': 1., 'copy_loss': 1.},
+                  {'step': 50, 'loss': .1, 'copy_loss': 1., 'h_mae': [1, 2, 3]},
+                  {'step': 100, 'loss': .2, 'copy_loss': 1.}]
+    rows(path / 'validation.jsonl', validation)
+    results, notices = collect_run_results(root)
+    artifact = build_dashboard_artifact(results, notices)
+    curve = artifact['snapshot']['datasets'][f'paddle_training_{key}']
+    # The portable reader unions x-values in encounter order across series.
+    # All curves must therefore share chronological row order before rendering.
+    steps = [row['step'] for row in curve]
+    assert steps == sorted(steps)
+    assert steps[0] == 0 and steps[-1] == 100
+    for field, series in [('loss', 'validation objective'), ('copy_loss', 'matched copy objective')]:
+        assert [(row['step'], row['value']) for row in curve if row['series'] == series] == [
+            (row['step'], row[field]) for row in validation]
+
+
 def evaluation(root, declared_successes=1):
     path = root / 'paddle' / 'evaluation'
     cases = [{'case_id': 'a', 'population': 'ordinary', 'controller': 'learned',
