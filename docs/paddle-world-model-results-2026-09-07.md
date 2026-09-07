@@ -1,8 +1,9 @@
 # Paddle world model — implementation and measured evidence
 
-Status: full reference training is active. Software execution is verified;
-complete learned-control success has not yet been established. This report will
-be updated from the immutable stage/evaluation records as they finish.
+Status: the fixed reference stopped at its failed one-step quality gate. Software
+execution is verified; learned-control success has not yet been established.
+A separately declared predictor continuation is being prepared. This report is
+updated from immutable stage/evaluation records as they finish.
 
 The supplied [implementation brief](../world_model_codex_implementation_brief.md)
 is the contract. [Design notes](../world_model_design_notes.md) retain its history.
@@ -111,8 +112,15 @@ Memory completed10000 updates, selected10000, after80000 sampled episodes and
 740.08s training/validation. Ordinary validation R x/y/vx/vy/paddle MAE is
 2.78267/3.04628/0.80920/0.54549/5.02473. Both velocity errors miss the0.5 target.
 Paired-validation R vx MAE is4.31146 versus6.0 after reset; y MAE is26.8911.
-These failures remain visible in the reference. One-step prediction is active;
-five-step prediction and500-start/100-pair control evaluation remain pending.
+These failures remain visible in the reference.
+
+P1 completed10000 updates and selected10000. Its validation latent loss0.273366
+beats copy1.077386, and H ball-x/paddle-x3.70127/1.79505 beats copy3.83335/2.52450.
+Ball-y error3.59783 is worse than copy2.38499. The one-step gate therefore fails;
+five-step training and500-start/100-pair control were correctly not launched.
+The failed stage and canonical dashboard are preserved. The new
+[continuation protocol](paddle-predictor-continuation-plan.md) tests at most10000
+additional updates with the same optimizer state, data, modules and losses.
 
 The paired diagnostic starts zero memory at ball y40; ordinary training starts
 at y8–16. An independent CPU check on the immutable4750-update snapshot compared

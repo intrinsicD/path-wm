@@ -10,7 +10,7 @@ import numpy as np
 import pytest
 import torch
 
-from world_model.paddle import checkpoints, training
+from world_model.paddle import checkpoints, continuation, training
 from world_model.paddle.continuation import fork_predictor
 
 from test_checkpoint_transactions import predictor_stage, scalar_stage, tiny_config
@@ -149,6 +149,22 @@ def test_rejects_parent_descendants_existing_output_and_checkpoint_path(tmp_path
     assert hash_tree(parent) == before_parent and hash_tree(occupied) == before_occupied
 
 
+def test_interrupted_preparation_exposes_no_partial_child(tmp_path, monkeypatch, selected_parent):
+    parent, config, _ = selected_parent
+    before = hash_tree(parent)
+    child = tmp_path / "atomic-child"
+
+    def interrupt_alias(*args, **kwargs):
+        raise OSError("intentional interruption while preparing child aliases")
+
+    monkeypatch.setattr(continuation, "atomic_checkpoint_copy", interrupt_alias)
+    with pytest.raises(OSError, match="intentional interruption"):
+        fork_predictor(parent / "best.pt", extended(config), child)
+    assert not child.exists()
+    assert not list(tmp_path.glob(".atomic-child.fork-*"))
+    assert hash_tree(parent) == before
+
+
 def test_fork_then_resume_matches_same_uninterrupted_scalar_trajectory(tmp_path, selected_parent):
     parent, config, fixture = selected_parent
     new_config = extended(config)
@@ -168,8 +184,9 @@ def test_fork_then_resume_matches_same_uninterrupted_scalar_trajectory(tmp_path,
     assert [row["step"] for row in training_rows] == [3, 4]
     validation_rows = [json.loads(line) for line in (child / "validation.jsonl").read_text().splitlines()]
     assert [row["step"] for row in validation_rows] == [2, 3, 4]
+    manifest = json.loads((child / "paddle_manifest.json").read_text())
+    assert manifest["continuation"] == provenance
     artifacts = [resumed, checkpoints.read_checkpoint(child / "best.pt"),
-                 json.loads((child / "paddle_manifest.json").read_text()),
                  json.loads((child / "paddle_result.json").read_text())]
     for artifact in artifacts:
         assert artifact["continuation"] == provenance

@@ -258,7 +258,7 @@ def _mean_metrics(rows):
     result = {}
     for key in rows[0][1]:
         values = [np.asarray(row[1][key], dtype=float) for row in rows]
-        if key in ('observations','supervised_scalar_count','post_warmup_observations'):
+        if key in ('observations','supervised_scalar_count','post_warmup_observations','windows'):
             result[key] = sum(values).tolist()
         else:
             weights = [r[1]['post_warmup_observations'] for r in rows] if key == 'r_mae' else [r[0] for r in rows]
@@ -339,7 +339,7 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
     trainable = {k: models[k] for k in train_keys}
     opt = optimizer_for(trainable, common)
     start = 0; best = float('inf'); no_improvement = 0; examples = 0; elapsed_previous = 0.
-    best_checkpoint = None; training_complete = False
+    best_checkpoint = None; training_complete = False; continuation = None
     if initialize_from and not resume:
         initial = read_checkpoint(initialize_from, dependencies=deps, dataset_fingerprint=train.dataset.fingerprint, stage='predictor')
         if initial.get('horizon') != 1 or horizon != 5:
@@ -359,6 +359,9 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
         examples = saved['examples_processed']; elapsed_previous = saved['elapsed_seconds']
         no_improvement = saved.get('no_improvement',0)
         training_complete = saved.get('training_complete',False)
+        continuation = saved.get('continuation')
+        if stage == 'predictor':
+            statistics = saved['statistics']
         best_checkpoint = saved.get('best_checkpoint')
         if best_checkpoint:
             selected_snapshot = read_checkpoint(run/best_checkpoint,dependencies=deps,
@@ -413,6 +416,7 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
     json_atomic(run/'paddle_manifest.json', {'stage': stage,'horizon': horizon,'config':config,
          'dependencies':deps,'dataset_fingerprint':train.dataset.fingerprint,'versions':versions(),
          'validation_indices':val_indices.tolist(),'tensor_schema':TENSOR_SCHEMA,
+         **({'continuation':continuation} if continuation else {}),
          'input_storage': {split: {'kind':'read-only raw RGB/state/action memory map',
              'fingerprint':samples.raw_cache.fingerprint, 'path':str(samples.raw_cache.directory)}
              for split,samples in (('train',train),('validation',validation))
@@ -420,6 +424,14 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
     if resume:
         restore_rng(saved['rng'],rng)
     begin = time.monotonic(); last_metrics = {}; gate = {}; source_hash = code_fingerprint()
+
+    def continuation_work(update, processed, elapsed):
+        if not continuation:
+            return {}
+        return {'continuation':continuation,
+                'additional_updates':update-continuation['parent_global_update'],
+                'additional_examples_processed':processed-continuation['parent_examples_processed'],
+                'additional_elapsed_seconds':elapsed-continuation['parent_elapsed_seconds']}
 
     def batch_loss(samples, indices, validation_mode=False):
         if stage == 'perception':
@@ -472,6 +484,7 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
                  'elapsed_seconds':elapsed_previous+time.monotonic()-begin,'quality_gate':gate,
                  'best_checkpoint':best_checkpoint,'training_complete':stop_reason is not None,
                  'stop_reason':stop_reason}
+        value.update(continuation_work(update,examples,value['elapsed_seconds']))
         # Immutable snapshot precedes the committed last state. If interrupted
         # between replacing last and best aliases, resume restores best from
         # the snapshot referenced by last, never from an uncommitted update.
@@ -525,6 +538,7 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
                   'quality_gate':selected.get('quality_gate',{}),'checkpoint':str(run/'best.pt'),
                   'elapsed_seconds':elapsed_previous+time.monotonic()-begin,
                   'examples_processed':examples,'dataset_fingerprint':train.dataset.fingerprint}
+        result.update(continuation_work(completed_update,examples,result['elapsed_seconds']))
         json_atomic(run/'paddle_result.json',result); json_atomic(run/'status.json',result)
         if stage == 'predictor' and horizon == 1 and not config.get('smoke',False) and not result['quality_gate']['passed']:
             result['status'] = 'failed_quality_gate'; json_atomic(run/'paddle_result.json',result)

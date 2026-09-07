@@ -113,16 +113,18 @@ def main(argv=None):
     commands = parser.add_subparsers(dest='command',required=True)
     commands.add_parser('doctor')
     for name in ('generate','verify-data','test-history-cases','train-perception','train-memory',
-                 'train-predictor','evaluate','demo','run-all','export-bundle'):
+                 'train-predictor','evaluate','demo','run-all','export-bundle','fork-predictor'):
         p = commands.add_parser(name)
-        if name in ('generate','train-perception','train-memory','train-predictor','evaluate','run-all'):
+        if name in ('generate','train-perception','train-memory','train-predictor','evaluate','run-all','fork-predictor'):
             p.add_argument('--config',required=True,type=Path)
         if name in ('verify-data','train-perception','train-memory','train-predictor','evaluate','run-all'):
             p.add_argument('--data',required=True,type=Path)
-        if name in ('train-perception','train-memory','train-predictor','run-all'):
+        if name in ('train-perception','train-memory','train-predictor','run-all','fork-predictor'):
             p.add_argument('--run',required=True,type=Path)
         if name.startswith('train-'):
             p.add_argument('--resume',action='store_true')
+        if name == 'fork-predictor':
+            p.add_argument('--checkpoint',required=True,type=Path)
         if name in ('train-memory','train-predictor','evaluate','demo','export-bundle'):
             p.add_argument('--perception',required=True,type=Path)
         if name in ('train-predictor','evaluate','demo','export-bundle'):
@@ -137,6 +139,9 @@ def main(argv=None):
     args = vars(parser.parse_args(argv)); command = args.pop('command')
     if 'config' in args: args['config'] = load_config(args['config'])
     if command == 'doctor': function = doctor
+    elif command == 'fork-predictor':
+        from .continuation import fork_predictor
+        function = fork_predictor
     elif command == 'run-all': function = run_all
     elif command in ('generate','verify-data','test-history-cases'):
         from .data import generate_dataset, verify_dataset, test_history_cases

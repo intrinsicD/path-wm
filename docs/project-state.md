@@ -19,8 +19,11 @@ baseline is active at `runs/paddle/baseline`: perception completed10000 updates,
 selected9750, with validation H x/y/paddle MAE0.0719/0.0770/0.0945 pixels.
 Memory completed10000 updates: validation vx/vy MAE0.8092/0.5455 exceeds the0.5
 target, and paired-validation vx MAE4.3115 remains weak. One-step prediction is
-active; full held-out control remains pending. Empirical target achievement is
-not yet established. Current evidence is in
+complete and failed its gate only on ball-y error (3.5978 versus copy2.3850).
+Five-step training and full control were correctly stopped; the reference has
+been preserved and its dashboard verified. Empirical target achievement is
+not yet established. A separate [bounded predictor continuation](paddle-predictor-continuation-plan.md)
+will test10000 additional updates with the same architecture/loss/data. Current evidence is in
 [the results report](paddle-world-model-results-2026-09-07.md).
 RTX4090 runs FP32 outside the sandbox. Independent Codex and Claude reviews
 corrected contact roundoff and checkpoint/resume/cache/aggregation defects.
