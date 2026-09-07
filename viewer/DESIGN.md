@@ -162,3 +162,36 @@ payload is about 2.54 MB against the unchanged 3 MB cap. Recovery skips complete
 raw evaluation and rebuilds reporting. A coordinator stage is marked verified
 only if its current reporting subprocess succeeds and its receipt passes; a stale
 receipt cannot validate a failed build.
+
+## Paddle baseline and earlier development evidence (2026-09-07)
+
+`viewer/paddle.py` reads `paddle_manifest.json`, `paddle_result.json`, stage
+training/validation JSONL, and `paddle-evaluation-v1` metrics. It validates selected
+checkpoint metrics against their actual validation update, and reconciles control
+counts and prediction/readout means with raw case/window records. Paddle objectives
+have their own chart families: perception RGB/position loss, masked observer state
+loss, and equal-scale variance-normalized latent prediction. They never inherit
+LeWM's prediction-plus-SIGReg description.
+
+The latest run of each paddle stage has at most 50 exact recorded points per
+training/validation curve. Native charts show each physical coordinate, matched
+prediction/copy/reset horizons, ordinary versus paired-history control, and the
+training-only current-frame velocity probe. Exact aggregate tables preserve
+collision groups, coordinate p95/max errors, target failures, counts and decision
+latencies. The latest evaluation embeds its first observed success/failure PNGs;
+missing categories remain explicit in its raw report. R after actual observations
+and imagined updates is labeled separately. Smoke is execution evidence only.
+
+This workspace also retains 25 earlier development runs using `run_summary.json`
+and `metrics.json` metric copies. The reader reconciles these and preserves their
+metrics, last training values, copied specifications, thresholds and source files
+under `legacy_development`, separate from either newer experiment. Their latest
+objective and matched action controls have native charts. The earlier canonical
+dashboard is preserved under `runs/paddle/prior_dashboard_2026-09-07/`.
+
+The actual machine lacked Chromium despite older project-state browser receipts.
+Chrome for Testing headless shell 152.0.7977.82 was installed from Google's
+official distribution into `.runtime/browser/`; `install.json` records the URL and
+archive hash. The existing CDP transport now discovers that local executable.
+`PATH_WM_CHROMIUM` still overrides it. Canonical renderer and browser assertions
+remain unchanged; the actual animation-frame/viewport/negative-result probe passes.

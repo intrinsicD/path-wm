@@ -9,10 +9,13 @@ import { spawn } from 'node:child_process';
 import { existsSync, readdirSync, writeFileSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { setTimeout as delay } from 'node:timers/promises';
 
 function browserPath() {
   if (process.env.PATH_WM_CHROMIUM) return process.env.PATH_WM_CHROMIUM;
+  const local = fileURLToPath(new URL('../.runtime/browser/chrome-headless-shell-linux64/chrome-headless-shell', import.meta.url));
+  if (existsSync(local)) return local;
   if (existsSync('/opt/google/chrome/chrome')) return '/opt/google/chrome/chrome';
   const root = join(homedir(), '.cache/puppeteer/chrome-headless-shell');
   if (existsSync(root)) {

@@ -61,11 +61,70 @@ implementation slices; collaborators do not commit other owners' files.
 
 Sandbox cannot see NVIDIA devices. Outside-sandbox read-only `nvidia-smi` reports
 RTX 4090, 24564 MiB, driver 580.159.04. Existing `.venv` is Python 3.14.7,
-PyTorch 2.14.0+cu130, NumPy 2.5.2, PyYAML 6.0.3, pytest 9.1.1; Pillow is missing.
-Preserve working PyTorch and verify CUDA with an actual forward/backward.
+PyTorch 2.14.0+cu130, NumPy 2.5.2, PyYAML 6.0.3, pytest 9.1.1.
+Added Pillow 12.3.0 and matplotlib 3.11.1; preserved PyTorch. Actual synchronized
+CUDA forward/backward passes: E/D/H batch128 used428.74MiB and0.17151s; P5 batch16
+used216.35MiB and0.01825s. Single-pass engineering profiles, not sustained rates.
+Local Chrome for Testing152.0.7977.82 supplies mandatory browser verification.
+The old optional pygame2.6.1 has no Python3.14 wheel and its source build lacks
+SDL development libraries; pygame-ce2.5.8 supplies the compatible import for
+legacy regression checks. No previous LeWM training recipe was changed.
+
+## Numerical contact correction from independent review
+
+Claude's adversarial review identified an inclusive-contact roundoff case:
+the prescribed `(toward, toward, stay)` history sequence reaches physical offset
+8, but accumulated float64 arithmetic produced 8.000000000000004 for 19 of the
+300 validation/test pair members. Regression tests first failed on seeds 7007
+and 8004. The comparator now uses `offset <= 8 + 1e-10`, retaining the physical
+threshold and recording both contact and event-time comparison epsilons in the
+environment fingerprint. An offset 8 + 1e-8 still misses. All 150 continuously
+sampled centers remain unchanged; the test enumerates every three-action prefix
+and requires exactly two catching sequences for each member. Completed datasets
+with the old fingerprint remain immutable and require distinct output paths.
+This is a numerical correctness repair, with no training-distribution change.
 
 ## Completion evidence
 
-Pending. Software completion and empirical target achievement will be reported
-separately, including dataset counts, fixed validation, held-out controls,
-collision diagnostics, exact checkpoint identities, and measured latency.
+The complete20-update smoke pipeline passed at `runs/paddle/smoke_v2`, using
+`data/paddle/smoke_v2` (28episodes,1212frames). All five controller definitions,
+prediction/copy/reset comparisons, paired probes, PNG/GIF panels, checkpoint
+loading and a self-contained inference bundle executed. CPU bundle weights,
+planning score and action match the dependent checkpoints exactly. Canonical
+desktop/mobile/source HTML checks pass and preserve25 earlier development runs.
+Learned smoke control1/2 ordinary and0/4 paired is not learning evidence; all
+engineering targets fail. Inspected reconstructions mostly omit both objects.
+Earlier preliminary `smoke` data/run and failed reporting logs remain preserved.
+
+Full data are collected and exactly replay-verified: train5000/184808frames,
+validation500/18115frames, test500/17831frames. Overall214754transitions,
+25949103compressed NPZ bytes;2039catches,20.254%ascending frames,
+5979terminated/21truncated episodes. Generation71.05s and replay19.66s.
+`runs/paddle/data_baseline/coverage.json` contains complete counts and identities.
+Dataset fingerprint: c6d255dc9919b1bb9ce38182f9d180047f964754a32c616db072bc965a3be54f.
+
+Independent reviews repaired contact roundoff, validation denominators, cache
+split identity, duplicate resumed logs, checkpoint best/last transaction recovery,
+completed-stage resume, exact K1 statistics reuse and initialization provenance.
+Eight transaction tests used explicit negative controls because corrections
+landed concurrently before their first execution. Three independent Claude calls
+produced physics, learning and actual-code reviews; receipts are under
+`runs/paddle/collaboration/` (reported API-equivalent total$9.16633925).
+Cold-start distribution shift in paired histories remains a labelled diagnostic
+limitation; no training-start distribution, architecture or loss was changed.
+
+## Frozen baseline execution
+
+The baseline uses configs/paddle/baseline.yaml unchanged scientific settings:
+seed1701, FP32/TF32 off, AdamW3e-4, full episode batches and four10000-update caps,
+validation every250. Optional early stopping uses eight successive validations
+without0.1% improvement over the prior best after at least1000updates.
+The K1 gate is strictly lower fixed-validation latent loss AND lower MAE for
+each ball-x, ball-y and paddle-x coordinate than matched copy-S. No10% margin or
+bootstrap requirement was added. K5 uses fresh AdamW with selectedK1 weights,
+records its fingerprint and retains identical K1 scale statistics. GPU resume
+restores RNG/optimizer/sampler; bitwise GPU determinism is not promised.
+
+Full baseline training/evaluation is next; empirical target achievement remains
+unassessed until actual held-out measurements. Results and limitations will be
+recorded separately from software completion.

@@ -524,6 +524,40 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
              ('mean_pp','Mean difference (pp)'),('min_pp','Minimum (pp)'),('max_pp','Maximum (pp)'),
              ('sample_sd_pp','Sample SD (pp)'),('standard_error_pp','Standard error (pp)')],
             'dataset','4096 minus1024 success percentage points. Three planned seed pairs; SD and standard error are descriptive, not confidence intervals or a significance test.'))
+    legacy = [run for run in run_results if run.kind == 'legacy_development']
+    if legacy:
+        latest = legacy[-1]
+        datasets['legacy_coverage'] = [{'runs': len(legacy)}]
+        cards.append({'id': 'legacy_development_runs', 'dataset': 'legacy_coverage', 'sourceId': SOURCE_ID,
+                      'description': 'Preserved earlier development schema, distinct from the paddle baseline and LeWM experiments.',
+                      'metrics': [{'label': 'Earlier development runs', 'field': 'runs', 'format': 'number'}]})
+        datasets['legacy_training'] = [{'step': row['step'], 'value': row['total']}
+                                      for row in _downsample(tuple(latest.internals['legacy_training']), 50)
+                                      if 'total' in row]
+        charts.append(_chart('legacy_training', f'Earlier development objective · {latest.label}',
+                             'Original recorded total objective; its loss terms and architecture are in the specification context. Up to 50 logged steps; no inferred pass threshold.',
+                             'legacy_training', 'line', number('step'), number('value')))
+        datasets['legacy_controls'] = [{'condition': condition, 'value': latest.metrics[metric]}
+                                      for metric, condition in [('transition_error_one_step', 'Recorded action'),
+                                          ('transition_error_identity', 'Copy'), ('transition_error_shuffled_action', 'Shuffled action'),
+                                          ('transition_error_zero_action', 'Zero action')] if metric in latest.metrics]
+        if datasets['legacy_controls']:
+            charts.append(_chart('legacy_controls', f'Earlier development prediction controls · {latest.label}',
+                                 'Original one-step latent errors on the same recorded probe population. Compare within this saved representation only; all earlier exact metrics remain in the inventory.',
+                                 'legacy_controls', 'bar', category('condition'), number('value')))
+    from viewer.paddle import add_paddle_views
+    paddle_blocks = add_paddle_views(run_results, datasets, charts, tables, cards,
+                                    _chart, table, SOURCE_ID)
+    if paddle_blocks:
+        source['query']['transformation'] += (' Paddle ledgers are separately reconciled and aggregated by viewer/paddle.py; '
+            'its native chart tables preserve physical units, matched horizons, controller populations, and explicit smoke status. '
+            'Paddle training is excluded from LeWM objective curves. Exact selected/latest metrics retain their own update identities.')
+        source['query']['metric_definitions'].update({
+            'paddle_success_rate': 'First paddle hit before miss divided by paired initial-state cases, separately for ordinary starts and near-interception opposite histories.',
+            'paddle_h_mae': 'Coordinate mean absolute error of frozen H in world units, against simulator labels on matched source/target observations.',
+            'paddle_r_mae': 'R errors after real or imagined U updates; x,y,paddle world units and vx,vy world units per decision interval.',
+            'paddle_latent_error': 'Equal-weight mean fine/coarse latent MSE divided by fixed training-only variances, floored at 1e-6.',
+        })
     # SQL intermediates duplicate plotted/table data and inflate the portable file.
     # Exact record tables remain referenced; discard only unreferenced datasets.
     used_datasets = {view['dataset'] for view in charts + tables + cards}
@@ -535,6 +569,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
              "Selections in this snapshot:"] + [f"- {k.replace('_', ' ')}: `{v}`" for k, v in selections.items() if v]
     blocks = [{"id": "intro", "type": "markdown", "body": "\n".join(guide)},
               {"id": "coverage", "type": "metric-strip", "cardIds": [card["id"] for card in cards]}]
+    blocks += [block for block in paddle_blocks if block['type'] == 'markdown']
     blocks += [{"id": f"chart_{chart['id']}", "type": "chart", "chartId": chart["id"], "layout": chart["layout"]} for chart in charts]
     # PNG evidence dominates the portable payload. Bound only the image panels;
     # every inspection remains in the exact tables and quantitative series.
@@ -560,6 +595,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
     for run in run_results:
         if run.kind == 'gradient_audit': latest_gradients[run.context.get('dataset.name', run.label)] = run
     blocks += _panel_blocks(list(latest_gradients.values()))
+    blocks += [block for block in paddle_blocks if block['type'] != 'markdown']
     blocks += [{"id": f"table_{item['id']}", "type": "table", "tableId": item["id"], "layout": "full"} for item in tables]
     notes = ["No experimental pass threshold is inferred by the viewer. Recorded gate annotations remain visible.",
              "Control groups reflect ordered case identities only; inspect protocol context before comparing results.",

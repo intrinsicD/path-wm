@@ -12,6 +12,7 @@ dependencies = ["torch>=2.5", "torchvision", "transformers==4.57.1", "einops", "
 eval = ["gymnasium", "pygame", "pymunk==7.3.0", "opencv-python-headless", "shapely", "scipy", "matplotlib"]
 data = ["zarr<3", "numcodecs"]
 dev = ["pytest"]
+paddle = ["numpy", "PyYAML", "pillow", "matplotlib", "pytest"]
 
 [tool.setuptools.packages.find]
 include = ["world_model*", "third_party*", "viewer*"]

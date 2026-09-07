@@ -94,3 +94,25 @@ def test_paddle_partial_run_is_visible_without_claiming_completion(tmp_path):
     assert results[0].kind == 'paddle_training'
     assert results[0].status == 'failed'
     assert any('failed' in notice for notice in notices)
+
+
+def test_existing_development_schema_stays_indexed_and_reconciled(tmp_path):
+    path = tmp_path / 'runs' / 'dev' / 'earlier' / '0'
+    metrics = {'transition_error_one_step': .2, 'transition_error_identity': .1}
+    write(path / 'metrics.json', {'metrics': metrics, 'seed': 0, 'status': 'development', 'step': 10})
+    write(path / 'run_summary.json', {'metrics': metrics, 'final_training': {'step': 10, 'total': .7}})
+    rows(path / 'training.jsonl', [{'step': 1, 'total': 1.}, {'step': 10, 'total': .7}])
+    results, _ = collect_run_results(tmp_path / 'runs')
+    assert len(results) == 1 and results[0].kind == 'legacy_development'
+    assert results[0].metrics['transition_error_one_step'] == .2
+    write(path / 'run_summary.json', {'metrics': {**metrics, 'transition_error_one_step': .3}})
+    with pytest.raises(DashboardDataError, match='metric copies'):
+        collect_run_results(tmp_path / 'runs')
+
+
+def test_paddle_prediction_cache_is_not_a_lewm_prediction_result(tmp_path):
+    path = tmp_path / 'runs' / 'paddle' / 'evaluation' / 'diagnostics' / 'prediction.json'
+    write(path, {'evaluation_fingerprint': 'identity', 'descriptor_fingerprint': 'window',
+                 'payload_fingerprint': 'payload', 'payload': {'summary': {}}})
+    results, _ = collect_run_results(tmp_path / 'runs')
+    assert not any(r.kind == 'prediction' for r in results)

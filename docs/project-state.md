@@ -7,6 +7,19 @@ research direction does not replace that workflow.
 
 ## Objective
 
+Active user objective (2026-09-07): implement the fixed paddle E/U/P world-model
+baseline in `world_model_codex_implementation_brief.md`, with
+`world_model_design_notes.md` as design history. Work with independent Codex and
+Claude agents; iterate through simulator, staged training, planning, and held-out
+control. Preserve all previous LeWM implementations and experiments below.
+The active plan is [paddle-world-model-plan.md](paddle-world-model-plan.md).
+Software verification is in progress; empirical target achievement is unassessed.
+RTX 4090 is available outside the filesystem/network sandbox. Both independent
+Claude contract reviews completed; a boundary-roundoff catch bug and training
+resume/cache/aggregation defects are being corrected before the full baseline.
+
+## Preserved LeWM objective and evidence
+
 Build a fresh modular implementation of the published LeWM baseline. Demonstrate
 learning and control on PushT and support multiple explicit dataset protocols.
 The working baseline is preserved after the user-authorized sample-efficiency research and paired training screen; the full reproduction schedule remains incomplete.

@@ -155,3 +155,27 @@ def test_reconstruction_regions_use_geometric_area_and_coordinate_denominators()
     assert result["ball_region_scalars"] == pytest.approx(16*3)
     assert result["paddle_region_squared_error"] == 0
     assert result["paddle_region_scalars"] == pytest.approx(36*3)
+
+
+def test_h_target_uses_all_real_frames_while_r_keeps_warmup_mask():
+    report = {"smoke":True,"ordinary":{"starts":1,"summary":{}},"paired":{"pairs":1,"summary":{}},
+              "actual_frame_readout":{"count":3,"h_mae":[.2,.3,.4]},
+              "prediction":{"summary":{"actual":{"0":{"all":{"h_mae":[5,5,5],"r_mae":[0,0,.1,.2,0]}}},
+                                       "prediction":{"5":{"all":{"h_mae":[1,1,1]}}}}}}
+    assert evaluation._targets(report)["h_actual_each_coordinate_lt_1"]
+
+
+def test_all_frame_h_summary_includes_the_two_initial_observations():
+    from world_model.paddle.types import ObservationLatent
+    def encode(images):
+        return ObservationLatent(torch.zeros(len(images),256,64),torch.zeros(len(images),64,64))
+    system = {"E":encode,"D":lambda s:torch.zeros(len(s.fine),3,64,64),
+              "H":lambda s:torch.zeros(len(s.fine),3)}
+    episode = {"frames":np.zeros((3,64,64,3),dtype=np.uint8),
+               "states":np.array([[6,12,2,3,18],[12,18,2,3,24],[18,24,2,3,30]],dtype=np.float64)}
+    result = evaluation.reconstruction_diagnostics(system, [episode], "cpu", frame_batch=2)
+    assert result["count"] == result["actual_frame_readout"]["count"] == 3
+    assert result["actual_frame_readout"]["h_mae"] == [12.,18.,24.]
+    assert result["global_mse"] == result["ball_region_mse"] == result["paddle_region_mse"] == 0
+    assert [row["frame_index"] for row in result["readout_records"]] == [0,1,2]
+    np.testing.assert_array_equal(np.mean([row["h_abs_error"] for row in result["readout_records"]],axis=0), [12,18,24])

@@ -1,0 +1,404 @@
+"""Read-only paddle ledger adapter and bounded canonical dashboard views.
+
+Keep paddle objectives and physical units separate from the retained LeWM
+experiment. Aggregate evaluations reconcile with raw windows/case outcomes before
+they enter the instrument panel; source files remain authoritative and unchanged.
+"""
+
+from __future__ import annotations
+
+import base64
+import html
+import json
+import math
+from pathlib import Path
+
+from .ledger import DashboardDataError, RunResult, _check_finite, numeric, read_json, read_jsonl
+
+
+POSITIONS = ('ball_x', 'ball_y', 'paddle_x')
+STATES = ('ball_x', 'ball_y', 'ball_vx', 'ball_vy', 'paddle_x')
+
+
+def _list(path):
+    try:
+        value = json.loads(path.read_text())
+    except (OSError, ValueError) as error:
+        raise DashboardDataError(f'{path}: cannot read paddle evidence: {error}') from error
+    if not isinstance(value, list) or not all(isinstance(row, dict) for row in value):
+        raise DashboardDataError(f'{path}: expected a list of paddle records')
+    _check_finite(value, str(path))
+    return value
+
+
+def _flat(value, prefix=''):
+    result = {}
+    for key, item in value.items():
+        name = f'{prefix}.{key}' if prefix else key
+        if isinstance(item, dict):
+            result.update(_flat(item, name))
+        elif isinstance(item, list):
+            result.update(_flat(dict(enumerate(item)), name))
+        elif isinstance(item, (int, float)) and not isinstance(item, bool):
+            result[name] = item
+    return result
+
+
+def _equal(actual, recorded, name, path):
+    if isinstance(actual, (list, tuple)):
+        if not isinstance(recorded, (list, tuple)) or len(actual) != len(recorded):
+            raise DashboardDataError(f'{path}: {name} shape disagrees with raw evidence')
+        for a, b in zip(actual, recorded):
+            _equal(a, b, name, path)
+    elif recorded is None or not math.isclose(actual, recorded, rel_tol=1e-8, abs_tol=1e-10):
+        raise DashboardDataError(f'{path}: {name} disagrees with raw evidence ({actual} versus {recorded})')
+
+
+def _reconcile_evaluation(report, directory):
+    controls_path, predictions_path = directory / 'control_records.json', directory / 'prediction_records.json'
+    controls, predictions = _list(controls_path), _list(predictions_path)
+    if len({r['case_id'] for r in controls}) != len(controls):
+        raise DashboardDataError(f'{controls_path}: duplicate case identities')
+    for population in ('ordinary', 'paired'):
+        for policy, summary in report[population]['summary'].items():
+            rows = [r for r in controls if r['population'] == population and r['controller'] == policy]
+            count = len(rows)
+            successes = sum(r['first_hit_before_miss'] for r in rows)
+            _equal(count, summary['count'], f'{population}.{policy}.count', controls_path)
+            _equal(successes, summary['successes'], f'{population}.{policy}.successes', controls_path)
+            if count:
+                _equal(successes / count, summary['success_rate'], f'{population}.{policy}.success_rate', controls_path)
+            if 'first_action_correct' in summary and summary['first_action_correct'] is not None:
+                _equal(sum(r['first_action'] == r['correct_action'] for r in rows), summary['first_action_correct'],
+                       'first_action_correct', controls_path)
+    for method, horizons in report['prediction']['summary'].items():
+        for horizon, groups in horizons.items():
+            matched = [r for r in predictions if r['method'] == method and r['horizon'] == int(horizon)]
+            for group, summary in groups.items():
+                selected = [r for r in matched if group == 'all'
+                            or group == 'collision' and r['collision']
+                            or group == 'no_collision' and not r['collision']
+                            or group not in ('all', 'collision', 'no_collision') and group in r.get('collision_types', [])]
+                _equal(len(selected), summary['count'], f'{method}.h{horizon}.{group}.count', predictions_path)
+                if not selected:
+                    continue
+                for field, raw in (('h_mae', 'h_abs_error'), ('r_mae', 'r_abs_error')):
+                    averages = [sum(r[raw][i] for r in selected) / len(selected) for i in range(len(selected[0][raw]))]
+                    _equal(averages, summary[field], f'{method}.h{horizon}.{group}.{field}', predictions_path)
+                _equal(sum(r['latent_error'] for r in selected) / len(selected), summary['latent_error'],
+                       f'{method}.h{horizon}.{group}.latent_error', predictions_path)
+    sources = [controls_path, predictions_path]
+    if report.get('reconstruction'):
+        path = directory / 'reconstruction_records.json'
+        rows = _list(path)
+        sources.append(path)
+        summary = report['reconstruction']
+        _equal(sum(row['count'] for row in rows), summary['count'], 'reconstruction.count', path)
+        for region in ('global', 'ball_region', 'paddle_region'):
+            scalars = sum(row[f'{region}_scalars'] for row in rows)
+            squared = sum(row[f'{region}_squared_error'] for row in rows)
+            if scalars:
+                _equal(squared / scalars, summary[f'{region}_mse'], f'{region}_mse', path)
+    if report.get('actual_frame_readout') and (report['actual_frame_readout'].get('source_records')
+                                              or (directory / 'actual_frame_readout_records.json').exists()):
+        path = directory / 'actual_frame_readout_records.json'
+        rows = _list(path)
+        sources.append(path)
+        summary = report['actual_frame_readout']
+        _equal(len(rows), summary['count'], 'all-frame H count', path)
+        if rows:
+            mean = [sum(row['h_abs_error'][i] for row in rows) / len(rows) for i in range(3)]
+            _equal(mean, summary['h_mae'], 'all-frame H MAE', path)
+    return sources
+
+
+def collect_paddle_results(runs_root):
+    results, notices = [], []
+
+    def add(directory, kind, status, metrics, context, sources, step=None, internals=None):
+        results.append(RunResult(directory.relative_to(runs_root).as_posix(), kind, status, step,
+                       metrics, context, tuple(p.relative_to(runs_root.parent).as_posix() for p in sources),
+                       max(p.stat().st_mtime for p in sources), internals=internals or {}))
+
+    for path in sorted(runs_root.rglob('paddle_manifest.json')):
+        directory = path.parent
+        manifest = read_json(path)
+        result_path = directory / 'paddle_result.json'
+        sources = [path]
+        training, validation = (), ()
+        for name in ('training', 'validation'):
+            ledger = directory / f'{name}.jsonl'
+            if ledger.exists():
+                sources.append(ledger)
+                values = read_jsonl(ledger)
+                if name == 'training': training = values
+                else: validation = values
+        if result_path.exists():
+            result = read_json(result_path)
+            sources.append(result_path)
+            status = result['status']
+        else:
+            status_path = directory / 'status.json'
+            result = read_json(status_path) if status_path.exists() else {}
+            if status_path.exists(): sources.append(status_path)
+            status = 'incomplete'
+            failure_path = directory / 'failure.json'
+            if failure_path.exists():
+                sources.append(failure_path)
+                result['failure'] = read_json(failure_path)
+                status = 'failed'
+        selected = result.get('selected_update')
+        step = result.get('global_update', training[-1]['step'] if training else None)
+        if selected is not None:
+            selected_rows = [r for r in validation if r['step'] == selected]
+            if not selected_rows:
+                raise DashboardDataError(f'{result_path}: selected validation step missing from raw ledger')
+            for key, value in _flat(result.get('metrics', {})).items():
+                _equal(value, _flat(selected_rows[-1]).get(key), f'selected validation {key}', result_path)
+        if status == 'completed' and training and step != training[-1]['step']:
+            raise DashboardDataError(f'{result_path}: completed update disagrees with training ledger')
+        smoke = bool(result.get('smoke', manifest.get('config', {}).get('smoke', False)))
+        context = {'architecture': 'Paddle E/U/P; separate observation features and persistent memory',
+                   'stage': manifest['stage'], 'horizon': manifest.get('horizon'), 'smoke': smoke,
+                   'selected_update': selected, 'dataset_fingerprint': manifest.get('dataset_fingerprint'),
+                   'config': manifest.get('config'), 'dependencies': manifest.get('dependencies'),
+                   'versions': manifest.get('versions'), 'quality_gate': result.get('quality_gate'),
+                   'baseline_gate': json.dumps(result.get('quality_gate', {})),
+                   'checkpoint': result.get('checkpoint'), 'failure': result.get('failure')}
+        metrics = {**numeric(result), **_flat(result.get('metrics', {}), 'selected_validation')}
+        if training: metrics.update(_flat(training[-1], 'latest_training'))
+        if validation: metrics.update(_flat(validation[-1], 'latest_validation'))
+        add(directory, 'paddle_training', status, metrics, context, sources, step,
+            {'paddle_training': training, 'paddle_validation': validation})
+        if smoke:
+            notices.append(f'{directory.relative_to(runs_root)}: SMOKE execution evidence only; engineering targets are not established')
+        if status != 'completed':
+            notices.append(f'{directory.relative_to(runs_root)}: {status}; preserve selected/latest validation steps separately')
+
+    for path in sorted(runs_root.rglob('metrics.json')):
+        report = read_json(path)
+        schema = report.get('schema_version')
+        if schema not in ('paddle-evaluation-v1', 'paddle-demo-v1'):
+            continue
+        sources = [path]
+        if schema == 'paddle-demo-v1':
+            add(path.parent, 'paddle_demo', report['status'], numeric(report.get('case', {})),
+                {'protocol': report.get('note'), 'seed': report.get('seed')}, sources)
+            continue
+        if report['status'] != 'completed' and not all((path.parent / name).exists()
+                for name in ('control_records.json', 'prediction_records.json')):
+            add(path.parent, 'paddle_reporting_failure', report['status'], {},
+                {'raw_status': report.get('raw_status'), 'error': report.get('report_error'),
+                 'protocol': 'Raw report retained; derived case/window records are missing. Control charts remain unavailable until reporting resumes.'}, sources)
+            notices.append(f'{path.parent.relative_to(runs_root)}: {report["status"]}; missing derived record exports prevent independent aggregate reconciliation')
+            continue
+        sources += _reconcile_evaluation(report, path.parent)
+        probe_path = path.parent / 'probe_records.json'
+        if probe_path.exists(): sources.append(probe_path)
+        panels = []
+        for visual in report.get('visuals', []):
+            if 'png' not in visual:
+                continue
+            panel = Path(visual['png'])
+            if not panel.is_absolute(): panel = runs_root.parent / panel
+            if not panel.is_file():
+                raise DashboardDataError(f'{path}: qualitative panel missing: {panel}')
+            sources.append(panel)
+            panels.append({**visual, 'png': str(panel)})
+        context = {'smoke': report.get('smoke', False), 'targets': report.get('targets'),
+                   'baseline_gate': json.dumps(report.get('targets', {})), 'definitions': report.get('definitions'),
+                   'hardware': report.get('hardware'), 'checkpoints': report.get('checkpoints'),
+                   'dataset_fingerprint': report.get('dataset_fingerprint'),
+                   'protocol': 'Paired ordinary initial states across controllers; distinct identical-frame paired-history population; test-only evaluation',
+                   'probe_training_frames': report.get('velocity_probe', {}).get('fit', {}).get('count'),
+                   'probe_fit_split': report.get('velocity_probe', {}).get('fit', {}).get('split')}
+        add(path.parent, 'paddle_evaluation', report['status'],
+            {'ordinary_starts': report['ordinary']['starts'], 'paired_pairs': report['paired']['pairs'],
+             **_flat(report.get('reconstruction', {}), 'reconstruction'),
+             **_flat(report.get('actual_frame_readout', {}), 'h_allframes'),
+             **_flat({k: v for k, v in report.get('velocity_probe', {}).items() if k != 'fit'}, 'velocity_probe')},
+            context, sources, internals={'paddle_report': report, 'paddle_panels': panels})
+        if report['status'] != 'completed':
+            notices.append(f'{path.parent.relative_to(runs_root)}: {report["status"]}; raw metrics may be complete while reporting remains incomplete')
+        if report.get('smoke'):
+            notices.append(f'{path.parent.relative_to(runs_root)}: SMOKE counts and failures are execution diagnostics, not full-population success evidence')
+        failed = [k for k, value in report.get('targets', {}).items() if value is False]
+        if failed:
+            notices.append(f'{path.parent.relative_to(runs_root)}: unmet targets / evidence requirements: {", ".join(failed)}')
+    for path in sorted(runs_root.rglob('ordinary.partial.json')):
+        if not (path.parent / 'metrics.json').exists():
+            notices.append(f'{path.parent.relative_to(runs_root)}: incomplete paddle evaluation; partial case evidence retained')
+    for path in sorted(runs_root.rglob('history_checks.json')):
+        report = read_json(path)
+        if not str(report.get('schema_version', '')).startswith('paddle-history-verification'):
+            continue
+        cases = report['cases']
+        if bool(report['passed']) != all(case['passed'] for case in cases):
+            raise DashboardDataError(f'{path}: paired-history pass summary disagrees with cases')
+        if len(cases) != 2 * (report['validation_pairs'] + report['test_pairs']):
+            raise DashboardDataError(f'{path}: paired-history member count disagrees with declared pairs')
+        add(path.parent, 'paddle_history', 'verified' if report['passed'] else 'failed',
+            {**numeric(report), 'passed_members': sum(case['passed'] for case in cases), 'members': len(cases)},
+            {'environment_fingerprint': report.get('environment_fingerprint'), 'schema_version': report['schema_version'],
+             'protocol': 'Exact simulator enumeration of paired identical-current-frame histories; distinct validation/test seeds'}, [path])
+    return results, notices
+
+
+def _sample(rows, limit=50):
+    if len(rows) <= limit:
+        return list(rows)
+    return [rows[i] for i in sorted({round(j * (len(rows) - 1) / (limit - 1)) for j in range(limit)})]
+
+
+def add_paddle_views(runs, datasets, charts, tables, cards, chart, table, source_id):
+    """Append native charts/exact aggregate tables; return introductory/image blocks."""
+    training = [r for r in runs if r.kind == 'paddle_training']
+    evaluations = [r for r in runs if r.kind == 'paddle_evaluation']
+    if not training and not evaluations:
+        return []
+    number = lambda key: {'field': key, 'type': 'quantitative'}
+    category = lambda key: {'field': key, 'type': 'nominal'}
+    blocks = [{'id': 'paddle_intro', 'type': 'markdown', 'sourceId': source_id,
+               'body': '## Paddle world model\n\nE/U/P learning, physical readouts and paired control results. '
+                       'SMOKE runs establish execution only. Actual versus imagined R updates are distinct; '
+                       'training completion and engineering target achievement are reported separately. '
+                       'The retained LeWM experiment appears in its own charts and complete inventory.'}]
+    datasets['paddle_coverage'] = [{'completed_stages': sum(r.status == 'completed' for r in training),
+                                   'evaluations': len(evaluations)}]
+    cards.append({'id': 'paddle_completed_stages', 'dataset': 'paddle_coverage', 'sourceId': source_id,
+                  'description': 'Completed paddle optimizer stages including smoke; failed quality gates remain separate.',
+                  'metrics': [{'label': 'Completed paddle stages', 'field': 'completed_stages', 'format': 'number'}]})
+    latest_stages = {}
+    for run in training:
+        key = run.context['stage']
+        if key == 'predictor': key += f"_{run.context['horizon']}"
+        latest_stages[key] = run
+    for key, run in latest_stages.items():
+        name = f'paddle_training_{key}'
+        values = []
+        for source, series in (('paddle_training', 'training objective'), ('paddle_validation', 'validation objective')):
+            for row in _sample(run.internals[source]):
+                if 'loss' in row:
+                    values.append({'step': row['step'], 'value': row['loss'], 'series': series})
+                if source == 'paddle_validation' and 'copy_loss' in row:
+                    values.append({'step': row['step'], 'value': row['copy_loss'], 'series': 'matched copy objective'})
+        datasets[name] = values
+        objective = {'perception': 'RGB MSE plus normalized position MSE',
+                     'memory': 'Masked normalized state MSE; initial velocity entries excluded'}.get(run.context['stage'],
+                     'Frozen-latent variance-normalized MSE; fine/coarse equal weight')
+        charts.append(chart(name, f'Paddle {key}: objective · {run.label}',
+                            objective + '. At most 50 recorded updates per curve; raw ledgers retain every update.',
+                            name, 'line', number('step'), number('value'), color=category('series')))
+        for readout, coordinates, indices, units in (
+            ('h_mae', POSITIONS, range(3), 'world units/pixels'),
+            ('r_mae', STATES, (2, 3), 'world units per decision interval'),
+            ('r_position_mae', STATES, (0, 1, 4), 'world units/pixels'),
+        ):
+            source_key = 'r_mae' if readout == 'r_position_mae' else readout
+            values = []
+            for row in _sample(run.internals['paddle_validation']):
+                errors = row.get(source_key)
+                if not errors:
+                    continue
+                # Predictor validation has [horizon,coordinate] errors. Display
+                # the final trained horizon and retain all coordinates/horizons
+                # in the selected/latest exact-value records.
+                if isinstance(errors[0], list): errors = errors[-1]
+                values.extend({'step': row['step'], 'coordinate': coordinates[i], 'value': errors[i]} for i in indices)
+            if values:
+                name = f'paddle_validation_{readout}_{key}'
+                datasets[name] = values
+                charts.append(chart(name, f'Paddle {key}: validation {readout}',
+                    f'Each displayed coordinate is MAE in {units}. Predictor charts show the last trained horizon; other charts use real observations.',
+                    name, 'line', number('step'), number('value'), color=category('coordinate')))
+    datasets['paddle_prediction_detail'], datasets['paddle_control_detail'] = [], []
+    for run in evaluations:
+        report = run.internals['paddle_report']
+        for population in ('ordinary', 'paired'):
+            for controller, summary in report[population]['summary'].items():
+                datasets['paddle_control_detail'].append({'run': run.label, 'population': population,
+                     'controller': controller, **{k: json.dumps(v) if isinstance(v, (list, dict)) else v for k, v in summary.items()},
+                     'smoke': report.get('smoke', False)})
+        for method, horizons in report['prediction']['summary'].items():
+            for horizon, groups in horizons.items():
+                for group, summary in groups.items():
+                    datasets['paddle_prediction_detail'].append({'run': run.label, 'method': method,
+                        'horizon': int(horizon), 'population': group,
+                        **{k: json.dumps(v) if isinstance(v, list) else v for k, v in summary.items()}})
+    if evaluations:
+        run = evaluations[-1]
+        report = run.internals['paddle_report']
+        for population in ('ordinary', 'paired'):
+            name = f'paddle_control_{population}'
+            datasets[name] = [r for r in datasets['paddle_control_detail'] if r['run'] == run.label and r['population'] == population]
+            if datasets[name]:
+                charts.append(chart(name, f'Paddle {population}: first interception · {run.label}',
+                    'Successes / recorded starts after the same two stay actions. Privileged uses exact simulation. Smoke sample sizes do not establish the 90% target.',
+                    name, 'bar', category('controller'), number('success_rate'),
+                    tooltip=[number('successes'), number('count')],
+                    reference_lines=[{'axis': 'y', 'value': .9, 'label': 'Engineering target'}]))
+        for field, names, title, target in (('h_mae', POSITIONS, 'Actual H position MAE', 1.),
+                                           ('r_mae', STATES, 'Actual R velocity MAE', .5)):
+            actual = report['prediction']['summary'].get('actual', {}).get('0', {}).get('all')
+            if field == 'h_mae' and report.get('actual_frame_readout'):
+                actual = report['actual_frame_readout']
+            if not actual or not actual['count']:
+                continue
+            ix = range(3) if field == 'h_mae' else (2, 3)
+            name = f'paddle_actual_{field}'
+            datasets[name] = [{'coordinate': names[i], 'value': actual[field][i], 'count': actual['count']} for i in ix]
+            charts.append(chart(name, f'Paddle: {title}',
+                ('H uses all test frames when the all-frame readout is recorded; R excludes the first two frames. '
+                 'H units are world units/pixels; R velocity units are world units per decision interval.'),
+                name, 'bar', category('coordinate'), number('value'), tooltip=[number('count')],
+                reference_lines=[{'axis': 'y', 'value': target, 'label': 'Engineering target'}]))
+        for coordinate, index in [('latent', None), *[(name, i) for i, name in enumerate(POSITIONS)]]:
+            name = f'paddle_horizon_{coordinate}'
+            values = []
+            for method, horizons in report['prediction']['summary'].items():
+                if method == 'actual': continue
+                for horizon, groups in horizons.items():
+                    row = groups['all']
+                    if row['count']:
+                        values.append({'horizon': int(horizon), 'value': row['latent_error'] if index is None else row['h_mae'][index],
+                                       'method': method, 'count': row['count']})
+            if not values: continue
+            datasets[name] = sorted(values, key=lambda r: (r['method'], r['horizon']))
+            charts.append(chart(name, f'Paddle matched rollout: {coordinate} error',
+                ('Variance-normalized latent MSE.' if index is None else 'Coordinate MAE in world units/pixels.')
+                + ' Prediction, copy and fresh-memory reset share exact windows and actions; collision subsets stay in the exact table.',
+                name, 'line', number('horizon'), number('value'), color=category('method'), tooltip=[number('count')]))
+        probe = report.get('velocity_probe', {})
+        if probe.get('frame_probe_mae') and probe.get('memory_mae'):
+            name = 'paddle_paired_velocity_probe'
+            datasets[name] = [{'coordinate': coordinate, 'value': probe[field][i], 'readout': label}
+                              for field, label in (('frame_probe_mae', 'current frame linear probe'), ('memory_mae', 'history memory R'))
+                              for i, coordinate in enumerate(('vx', 'vy'))]
+            charts.append(chart(name, 'Paddle identical-current-frame pairs: velocity MAE',
+                'Physical interval units; current-frame diagnostic fitted on training only. Opposite histories share the same last raw image.',
+                name, 'bar', category('coordinate'), number('value'), color=category('readout'), group_mode='grouped'))
+        images = []
+        for panel in run.internals['paddle_panels'][:2]:
+            encoded = base64.b64encode(Path(panel['png']).read_bytes()).decode('ascii')
+            images.append(f'<figure><img style="max-width:100%;height:auto" alt="Paddle actual, reconstructed and imagined frames" src="data:image/png;base64,{encoded}">'
+                          f'<figcaption>{html.escape(panel["case_id"])}; first interception: {panel["first_hit_before_miss"]}. '
+                          'R after real and imagined observations is labeled separately.</figcaption></figure>')
+        if images:
+            blocks.append({'id': 'paddle_qualitative', 'type': 'html', 'layout': 'full',
+                           'body': '<h3>Paddle actual / reconstruction / imagination</h3>' + ''.join(images)})
+    for name, title, columns, sort, subtitle in (
+        ('paddle_control_detail', 'Paddle control: exact paired-population results',
+         [('run','Run'),('population','Population'),('controller','Controller'),('successes','First interceptions'),('count','Cases'),
+          ('success_rate','Success fraction'),('first_action_correct','Correct first actions'),('first_action_count','First-action cases'),
+          ('total_hits','Total hits'),('mean_episode_length','Mean intervals'),('latency_median_ms','Decision median ms'),
+          ('latency_p95_ms','Decision p95 ms'),('planning_failures','Planning failures'),('evaluation_capped','Capped cases'),('smoke','Smoke')],
+         'run', 'Counts reconcile with raw case records. Latency is synchronized decision time excluding rendering and real observation encoding; full scope/device are in protocol context.'),
+        ('paddle_prediction_detail', 'Paddle readouts: exact horizons, coordinates and collision populations',
+         [('run','Run'),('method','Method'),('horizon','Horizon'),('population','Reflection population'),('count','Rows'),
+          ('latent_error','Normalized latent MSE'),('h_mae','H MAE [x,y,paddle]'),('r_mae','R MAE [x,y,vx,vy,paddle]'),
+          ('h_p95','H coordinate p95'),('h_max','H coordinate max'),('r_p95','R coordinate p95'),('r_max','R coordinate max'),
+          ('terminal_count','Terminal targets'),('terminal_false_negative_count','Underestimated miss boundary')],
+         'run', 'Actual rows are observed states after warm-up. Other methods use matched windows; collision means any reflection in the predicted prefix. Positions and velocities have different physical units.'),
+    ):
+        if datasets[name]: tables.append(table(name, title, columns, sort, subtitle))
+    return blocks

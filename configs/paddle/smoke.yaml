@@ -1,0 +1,28 @@
+schema_version: 1
+seed: 1701
+smoke: true
+device: auto
+cpu_threads: 4
+dataset:
+  train: 20
+  validation: 4
+  test: 4
+training:
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  grad_clip: 1.0
+  encoder_batch_size: 128
+  validate_every: 20
+  early_stopping: false
+  perception: {batch_size: 8, updates: 20, validation_examples: 4096}
+  memory: {batch_size: 2, updates: 20, validation_examples: 64}
+  predictor_1: {batch_size: 4, updates: 20, validation_examples: 1024}
+  predictor_5: {batch_size: 2, updates: 20, validation_examples: 1024}
+evaluation:
+  ordinary_starts: 2
+  paired_pairs: 2
+  prediction_windows: 8
+  probe_frames: 32
+  candidate_batch_size: 243
+  control_max_steps: 200
+  controllers: [learned, reset, random, tracker, privileged]

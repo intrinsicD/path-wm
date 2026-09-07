@@ -1,6 +1,5 @@
 """Independent review checks for stage timing, aggregation, and reproducible resume."""
 
-import copy
 import json
 import random
 from types import SimpleNamespace
@@ -172,6 +171,9 @@ def test_resume_matches_optimizer_rng_and_keeps_one_ledger_row_per_update(tmp_pa
     monkeypatch.setattr(models, "Encoder", lambda: nn.Linear(1, 1))
     monkeypatch.setattr(models, "Decoder", lambda: nn.Linear(1, 1))
     monkeypatch.setattr(models, "PositionReadout", lambda: nn.Linear(1, 3))
+    # This lifecycle fixture uses scalar observations, so its visualization is
+    # independent of the RGB renderer verified by the end-to-end smoke run.
+    monkeypatch.setattr(training, "perception_debug", lambda *args, **kwargs: None)
     config = {"seed": 4, "device": "cpu", "cpu_threads": 2, "smoke": True,
               "training": {"learning_rate": .01, "weight_decay": 1e-4, "grad_clip": 1.,
                            "validate_every": 2, "early_stopping": False,

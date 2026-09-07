@@ -10,6 +10,8 @@ from world_model.paddle.evaluation import (
     matched_rollout,
     summarize_prediction_records,
     fit_linear_velocity_probe,
+    privileged_plan,
+    train_velocity_probe,
 )
 from world_model.paddle.types import PlanningState
 
@@ -88,3 +90,30 @@ def test_current_frame_linear_probe_cannot_separate_identical_images():
     assert torch.equal(estimates[0], estimates[1])
     assert torch.equal(estimates[2], estimates[3])
     assert torch.allclose(estimates[:, 0], torch.zeros(4), atol=1e-5)
+
+
+def test_probe_fit_rejects_heldout_population_before_encoding():
+    import pytest
+
+    class HeldOut:
+        split = "test"
+
+    with pytest.raises(ValueError, match="training split"):
+        train_velocity_probe({}, HeldOut(), "cpu")
+
+
+def test_privileged_reference_solves_both_identical_frame_first_actions():
+    from world_model.paddle.data import history_pairs
+    from world_model.paddle.env import PaddleEnv
+
+    pair = history_pairs(1, seed=8100)[0]
+    for member in pair["members"]:
+        env = PaddleEnv(state=member["initial_state"])
+        env.step(1)
+        env.step(1)
+        before = env.state.copy()
+        action, sequence, score = privileged_plan(env)
+        assert action == member["correct_action"]
+        assert score[0] == 0
+        np.testing.assert_array_equal(env.state, before)
+        assert env.step_index == 2

@@ -247,10 +247,15 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
                 sources, context, suffix=f" / {name}")
 
     for path in sorted(runs_root.rglob("prediction.json")):
+        value = read_json(path)
+        if 'evaluation_fingerprint' in value and 'payload_fingerprint' in value:
+            # Paddle's resumable diagnostic cache shares this filename but has
+            # no LeWM scalar schema; its authoritative report is indexed below.
+            continue
         manifest_path = path.parent / "manifest.json"
         manifest = read_json(manifest_path) if manifest_path.exists() else {}
         sources = [path] + ([manifest_path] if manifest_path.exists() else [])
-        add(path.parent, "prediction", "evaluated", numeric(read_json(path)), sources,
+        add(path.parent, "prediction", "evaluated", numeric(value), sources,
             _context(manifest), manifest.get("step"), suffix=" / prediction")
 
     for path in sorted(runs_root.rglob("ranking.json")):
@@ -401,4 +406,45 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
     if omitted:
         notices.append(f"{len(omitted)} diagnostics.json files contain auxiliary mode/clone checks; "
                        "consult the experiment reports and raw files for these separate diagnostics.")
+    # This machine also retains an older development schema. Its paired metric
+    # copies remain authoritative; never drop it while adding a new experiment.
+    for path in sorted(runs_root.rglob('run_summary.json')):
+        metrics_path = path.parent / 'metrics.json'
+        training_path = path.parent / 'training.jsonl'
+        if not metrics_path.exists() or not training_path.exists():
+            notices.append(f'{path.parent.relative_to(runs_root)}: incomplete legacy development evidence')
+            continue
+        summary, evaluation = read_json(path), read_json(metrics_path)
+        if 'metrics' not in summary or 'metrics' not in evaluation:
+            continue
+        if summary['metrics'] != evaluation['metrics']:
+            raise DashboardDataError(f'{path.parent}: legacy metric copies disagree')
+        rows = read_jsonl(training_path)
+        final = summary.get('final_training', {})
+        if final and (not rows or final != rows[-1]):
+            raise DashboardDataError(f'{path.parent}: legacy final training disagrees with raw ledger')
+        sources = [path, metrics_path, training_path]
+        thresholds_path, specification_path = path.parent / 'threshold_record.json', path.parent / 'spec.yaml'
+        context = {'seed': evaluation.get('seed'), 'device': summary.get('device'),
+                   'checkpoint': evaluation.get('checkpoint'),
+                   'protocol': 'Preserved earlier development experiment; its objective, architecture and population differ from the new paddle baseline.'}
+        if thresholds_path.exists():
+            thresholds = read_json(thresholds_path)
+            if thresholds.get('metrics') != evaluation['metrics']:
+                raise DashboardDataError(f'{path.parent}: legacy threshold metric copies disagree')
+            context['thresholds'] = thresholds.get('thresholds')
+            sources.append(thresholds_path)
+        if specification_path.exists():
+            import yaml
+            context['specification'] = yaml.safe_load(specification_path.read_text())
+            sources.append(specification_path)
+        metrics = {**numeric(evaluation['metrics']),
+                   **{f'parameters.{k}': v for k, v in numeric(evaluation.get('parameter_counts', {})).items()},
+                   **{f'last_training.{k}': v for k, v in numeric(final).items()}}
+        add(path.parent, 'legacy_development', evaluation.get('status', 'development'),
+            metrics, sources, context, evaluation.get('step'), internals={'legacy_training': rows})
+    from viewer.paddle import collect_paddle_results
+    paddle_results, paddle_notices = collect_paddle_results(runs_root)
+    results.extend(paddle_results)
+    notices.extend(paddle_notices)
     return sorted(results, key=lambda r: (r.modified_at, r.label)), notices

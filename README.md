@@ -1,5 +1,11 @@
 # PATH-WM
 
+The active experiment is the fixed RGB paddle E/U/P world model. Its
+[commands and architecture](docs/paddle-world-model-usage.md) and
+[implementation plan](docs/paddle-world-model-plan.md) describe the separate
+`world_model.paddle` package. Run `.venv/bin/python -m world_model --help`.
+The LeWM implementation and earlier evidence below remain preserved.
+
 A fresh, modular world-model baseline, followed by component research.
 
 The first reference is [LeWM](https://github.com/lucas-maes/le-wm), pinned to

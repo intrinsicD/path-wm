@@ -4,7 +4,7 @@ import pytest
 import torch
 
 from world_model.paddle.training import CoordinateVariance, supervised_memory_loss
-from world_model.paddle.checkpoints import fingerprint_modules, atomic_checkpoint, read_checkpoint
+from world_model.paddle.checkpoints import fingerprint_modules, atomic_checkpoint, read_checkpoint, TENSOR_SCHEMA
 
 
 def test_variance_excludes_static_spatial_offsets_and_is_streaming():
@@ -31,7 +31,7 @@ def test_memory_loss_masks_unknown_velocity_and_padding():
 def test_checkpoint_rejects_dependency_change(tmp_path):
     model = torch.nn.Linear(3, 2)
     identity = fingerprint_modules({'E': model})
-    checkpoint = {'stage': 'memory', 'schema_version': 1,
+    checkpoint = {'stage': 'memory', 'schema_version': 1, 'tensor_schema': TENSOR_SCHEMA,
                   'dependencies': {'perception': identity},
                   'dataset_fingerprint': 'dataset-a'}
     path = tmp_path / 'last.pt'
