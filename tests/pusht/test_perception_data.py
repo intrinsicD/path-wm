@@ -139,7 +139,7 @@ def test_mixture_routes_exact_indices_duplicates_and_source_normalization(tmp_pa
         subject.MixedPerceptionSamples(original,supplement)
 
 
-@pytest.mark.parametrize('name',['frames.npy','poses.npy','pose_targets.npy'])
+@pytest.mark.parametrize('name',['frames.npy','poses.npy','pose_targets.npy','manifest.json'])
 def test_completed_data_identity_and_byte_corruption_are_enforced(tmp_path,fake,monkeypatch,name):
     source=tmp_path/'source_manifest.json';source_metadata(source,4)
     output=tmp_path/'supplement';manifest=subject.prepare_supplement(output,count=4,seed=73107,source_manifest=source)
@@ -153,10 +153,14 @@ def test_completed_data_identity_and_byte_corruption_are_enforced(tmp_path,fake,
     assert subject.prepare_supplement(output,count=4,seed=73107,source_manifest=source)['fingerprint']==manifest['fingerprint']
     with pytest.raises(ValueError,match='seed|identity|protocol|incompatible'):
         subject.prepare_supplement(output,count=4,seed=73108,source_manifest=source)
-    values=np.load(output/name,mmap_mode='r+');values.reshape(-1)[0]+=1;values.flush();del values
-    with pytest.raises(ValueError,match='hash|checksum|corrupt'):
+    if name=='manifest.json':
+        changed=json.loads((output/name).read_text());changed['schema_version']='unsupported-schema'
+        (output/name).write_text(json.dumps(changed))
+    else:
+        values=np.load(output/name,mmap_mode='r+');values.reshape(-1)[0]+=1;values.flush();del values
+    with pytest.raises(ValueError,match='hash|checksum|corrupt|schema'):
         subject.verify_supplement(output)
-    with pytest.raises(ValueError,match='hash|checksum|corrupt'):
+    with pytest.raises(ValueError,match='hash|checksum|corrupt|schema'):
         subject.prepare_supplement(output,count=4,seed=73107,source_manifest=source)
 
 

@@ -58,3 +58,9 @@ Use tiny temporary arrays and a fake wrapper for most tests; no GPU workload.
 3. Completed preparation verifies hashes/schema/target semantics and is idempotent. Changed expected identity, modified bytes, incompatible seed/count, or corrupted committed prefix are rejected. Interrupted preparation resumes to the same arrays as an uninterrupted run.
 
 After the plan and informative red tests are committed, implement the bounded data path, run its focused checks, prepare the full supplement, and only then let the coordinator run the new perception arm in a separate directory. Refresh the canonical source-backed dashboard after each completed experiment stage. The original source data, reference checkpoints and all earlier experiment results remain immutable.
+
+## Preparation receipt
+
+The bounded data path is implemented and the supplement was prepared on CPU in 55.89 seconds. All 20,493 rows and target formulas verify; the three arrays total 253,129,920 bytes. Fingerprint: `34e6e5a352a1355fd6ac7a1a6471bb77f5e5a466e18bf9882a8d9215afb9b7f3`. The supplement lives at `data/pusht_world_model/pose_supplement_v1`; provenance and verification are in its manifest and `runs/pusht_world_model/collaboration/perception_supplement_prepare.json`.
+
+The first 16 deterministic examples were visually inspected. All actual poses are unique. Native reset corrections moved eight samples outside the requested XY bounds; these observations and their actual labels were retained exactly as declared. Maximum absolute block corrections were 5.22 and 4.30 world units and 0.0917 radians. This receipt establishes prepared input integrity, not a model improvement. Training and result interpretation remain separate stages.

@@ -230,6 +230,21 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
         raise ValueError('Development subsets require an explicit smoke config')
     train=Samples(data,'train',episode_limit=limits.get('train_episodes'),prefix=limits.get('prefix'))
     validation=Samples(data,'validation',episode_limit=limits.get('validation_episodes'),prefix=limits.get('prefix'))
+    source_frame_count = len(train.frames)
+    population = {'source_dataset_fingerprint':train.dataset.fingerprint,
+                  'source_frames':source_frame_count,'supplement_frames':0,
+                  'presentation_unit': {'perception':'frame','memory':'episode','predictor':'window'}[stage]}
+    mixed_perception = stage == 'perception' and bool(config.get('perception_supplement'))
+    if mixed_perception:
+        from .perception_data import SupplementFrames, MixedPerceptionSamples
+        supplement_config = config['perception_supplement']
+        supplement = SupplementFrames(supplement_config['directory'],supplement_config['fingerprint'])
+        train = MixedPerceptionSamples(train,supplement)
+        population.update(supplement_frames=supplement.manifest['count'],
+                          supplement_fingerprint=supplement.manifest['fingerprint'],
+                          supplement_directory=supplement_config['directory'],
+                          sampling='uniform concatenated equal-sized populations; expected 50/50, one sampler')
+    presentations = {'source':0,'supplement':0}
     setting_key = stage if stage != 'predictor' else f'predictor_{horizon}'
     settings = config['training'][setting_key]; common = config['training']
     deps = {}; statistics = None; models = {}; cache_train = cache_val = None
@@ -264,6 +279,9 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
         saved = read_checkpoint(run/'last.pt', dependencies=deps, dataset_fingerprint=train.dataset.fingerprint, stage=stage)
         if saved['config'] != config or saved.get('horizon',1) != horizon:
             raise ValueError('Resume requires the identical resolved config and horizon')
+        if (mixed_perception or 'training_population' in saved) and saved.get('training_population') != population:
+            raise ValueError('Resume requires the identical training population and supplement fingerprint')
+        presentations = saved.get('population_presentations',{'source':saved['examples_processed'],'supplement':0})
         for key in train_keys:
             models[key].load_state_dict(saved['models'][key])
         opt.load_state_dict(saved['optimizer']); start = saved['global_update']; best = saved['best_validation']
@@ -332,6 +350,7 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
          'validation_indices':val_indices.tolist(),'tensor_schema':TENSOR_SCHEMA,
          **({'continuation':continuation} if continuation else {}),
          'normalization':train.dataset.manifest['normalization'],
+         'training_population':population,
          'input_storage':{'kind':'read-only RGB64 uint8 memory map'},
          'training_lengths':train.lengths,'validation_lengths':validation.lengths})
     if resume:
@@ -382,6 +401,7 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
                  'rng':rng_state(rng),'config':config,'versions':versions(), 'code_fingerprint':source_hash,
                  'dataset_fingerprint':train.dataset.fingerprint,'dependencies':deps,
                  'statistics':statistics,'metrics':metrics,'best_validation':best,
+                 'training_population':population,'population_presentations':dict(presentations),
                  'best_validation_criterion':'minimum fixed-validation objective',
                  'no_improvement':no_improvement,'examples_processed':examples,
                  'elapsed_seconds':elapsed_previous+time.monotonic()-begin,'quality_gate':gate,
@@ -414,8 +434,12 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
             loss.backward(); norm = nn.utils.clip_grad_norm_(
                 [p for m in trainable.values() for p in m.parameters()],common['grad_clip'])
             opt.step(); examples += int(settings['batch_size']); completed_update = update
+            supplemental = int(np.count_nonzero(indices >= source_frame_count)) if mixed_perception else 0
+            presentations['supplement'] += supplemental
+            presentations['source'] += len(indices)-supplemental
             row = {'step':update,'loss':float(loss.detach()),'grad_norm':float(norm),
-                   'examples_processed':examples,'seconds':time.monotonic()-tick,**metrics}
+                   'examples_processed':examples,'seconds':time.monotonic()-tick,
+                   'population_presentations':dict(presentations),**metrics}
             with (run/'training.jsonl').open('a') as f: f.write(json.dumps(row)+'\n')
             if update % int(common['validate_every']) == 0 or update == int(settings['updates']):
                 last_metrics = validate(); old_best = best
@@ -446,6 +470,7 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
                   'elapsed_seconds':elapsed_previous+time.monotonic()-begin,
                   'examples_processed':examples,'dataset_fingerprint':train.dataset.fingerprint,
                   'normalization':train.dataset.manifest['normalization'],
+                  'training_population':population,'population_presentations':dict(presentations),
                   'peak_cuda_bytes':torch.cuda.max_memory_allocated(device) if device.type=='cuda' else 0}
         result.update(continuation_work(completed_update,examples,result['elapsed_seconds']))
         json_atomic(run/'pusht_result.json',result); json_atomic(run/'status.json',result)
