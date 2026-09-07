@@ -219,6 +219,12 @@ completed stage/evaluation, including failures.
 Estimate caches before allocation. The historical entire CCHI population needs
 about 315 MB for canonical RGB64 uint8, 2.10 GB for full float32 S, and 13 MB
 for memory128; original source storage is accounted for separately.
+Prepare canonical frames once in a flat `frames.npy` read-only uint8 memory map
+`[N,64,64,3]`, streamed in source episode/frame order. Per-episode NPZ files hold
+labels/actions/identities without duplicate compressed frames. Manifest entries
+include `frame_offset`; record the flat-file hash and source ordering. The
+episode dictionary still returns its frame view, while `EpisodeDataset.frames`
+exposes the shared read-only map for efficient random frame sampling.
 A bounded disk cache is feasible if the current free-space audit confirms it;
 avoid loading all S onto GPU. Every cache includes source/split, resize,
 action/label/tensor schema, and exact frozen E/U fingerprints. Preserve the
@@ -395,8 +401,9 @@ the new package, not claims that code is present:
 | --- | --- |
 | `data.py` | `prepare(source, output, seed=3107)`; `verify_dataset(output, source=None)`; `EpisodeDataset(output, split)` exposes `.entries`, `.lengths`, `.manifest`, `.fingerprint` and the canonical episode dictionaries; `.window_indices(horizon, min_history=2)` returns valid causal windows; `make_targets(poses_world[L,5]) -> (targets[L,11], mask[L,11])`; `canonical_frame(rgb96) -> RGB64 uint8` follows the single frozen contract above |
 | `models.py` | `build_models() -> dict(E,D,H,U,R,P)` with shapes above; PushT schema constants distinct from paddle; shared E/D/attention/block code imported without weight reuse |
-| `rollout.py` | `observe(memory_before, rgb, previous_action, models) -> PlanningState`; `rollout_step(state, action, models) -> PlanningState`; no simulator or privileged-label arguments |
-| `planner.py` | `encode_goal(goal_rgb, models) -> learned_pose[B,6]`; `plan(state, learned_goal_pose, models, config, generator) -> PlanResult(action[2], sequence[5,2], cost, selected_states, invalid_candidates)` |
+| `models.py` recurrence | `initial_previous_action(batch, device, dtype)` returns the two-value marker; `rollout(state, actions[B,K,2], P, U) -> list[PlanningState]`; no simulator or privileged-label arguments |
+| `planner.py` | `CEMPlanner(P,U,H,candidates=64,iterations=4,elites=8,horizon=5,seed=3107)`; `.prepare_goal(ObservationLatent) -> GoalPose` from learned H only; `.plan(state, GoalPose) -> PlanResult` with `.action[2]`, `.sequence[5,2]`, `.cost`, `.states`, `.stats` |
+| `env.py` | `PushTEnv.reset(pose5_world,goal_pose5_world,seed) -> (RGB64,info)`; `.step(normalizedXY) -> (RGB64,reward,block_terminated,truncated,info)`; `.set_goal(pose5)`, `.pose`, `.hold_action`, `.render()`; privileged fields used by harness/evaluator only |
 | `evaluation.py` | `prepare_cases(dataset, split, count, seed, output)`: public history/goal records plus separate oracle records; `evaluate(system, public_cases, oracle_cases, config, output)`: same-case controllers, physical outcomes, matched prediction diagnostics |
 | `training.py` / `checkpoints.py` | `train_stage(stage, config, data, run, dependencies, horizon=1, initialize_from=None, resume=False)`: explicit staged optimizer/freeze/dependency contracts; `load_system(...) -> dict(E,D,H,U,R,P,statistics)` |
 | `__main__.py` / `cli.py` | Separate `prepare-data`, `train-perception`, `train-memory`, `train-predictor --horizon 1|5`, `evaluate`, `demo`, `run-all`; every completed stage/evaluation invokes canonical reporting |
