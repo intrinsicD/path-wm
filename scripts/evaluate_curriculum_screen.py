@@ -20,6 +20,9 @@ if __name__=='__main__':
         jobs.append(('historical_'+label,Path('runs/pusht_world_model/baseline/perception')/file,'test'))
     for name,path,split in jobs:
         out=ROOT/'inspection'/name
+        if (out/'inspection_summary.json').exists():
+            from scripts.run_curriculum import refresh
+            refresh();continue
         code=subprocess.run([sys.executable,'-u','-m','scripts.run_curriculum','python','-m','world_model.curriculum.inspection',
                              str(path),str(out),'--split',split]).returncode
         if code:raise SystemExit(code)

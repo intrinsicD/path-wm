@@ -180,8 +180,11 @@ def pose_error_panel(raw,output,label):
     fig,axes=plt.subplots(2,3,figsize=(11,6),layout='constrained')
     for c,name in enumerate(('pusher x','pusher y','block x','block y')):
         ax=axes.flat[c];ax.scatter(target[:,c]*512,pred[:,c]*512,s=3,alpha=.2,color='#2463a6',rasterized=True)
-        ax.plot([0,512],[0,512],color='#db7923',lw=1)
-        ax.set(title=name,xlabel='True · world units',ylabel='Estimated · world units',xlim=(0,512),ylim=(0,512))
+        lo=min(0.,float(pred[:,c].min()*512),float(target[:,c].min()*512))-8
+        hi=max(512.,float(pred[:,c].max()*512),float(target[:,c].max()*512))+8
+        outside=int(((pred[:,c]<0)|(pred[:,c]>1)).sum())
+        ax.plot([lo,hi],[lo,hi],color='#db7923',lw=1)
+        ax.set(title=f'{name} · {outside} estimates outside world',xlabel='True · world units',ylabel='Estimated · world units',xlim=(lo,hi),ylim=(lo,hi))
     axes[1,1].hist(angle,bins=np.arange(0,181,10),color='#2463a6')
     axes[1,1].axvline(10,color='#db7923',label='10° mean target (not per-frame gate)')
     axes[1,1].set(xlabel='Wrapped absolute angle error °',ylabel='Frames',title='Orientation error distribution')

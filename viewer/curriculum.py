@@ -60,6 +60,7 @@ def collect_curriculum_results(runs_root):
             'model_fingerprint':summary['model_fingerprint'],'labelled':summary['labelled']},
             tuple(p.relative_to(runs_root.parent).as_posix() for p in sources),max(p.stat().st_mtime for p in sources),
             internals={'inspection':summary,'inspection_root':str(root)}))
+    results.extend(collect_curriculum_analyses(runs_root))
     return results,[]
 
 def add_curriculum_views(runs,datasets,charts,tables,cards,chart,table,source_id):
@@ -112,6 +113,28 @@ def add_curriculum_views(runs,datasets,charts,tables,cards,chart,table,source_id
             view['legend']={'position':'bottom','sort':'spec'}
             view['palette']={'kind':'categorical','name':'PATH-WM blue-orange'}
         charts.append(view)
+
+    train_wide={};train_fields=set()
+    for run in focus:
+        token=f"{run.context.get('arm','run')}_{run.context['phase']}"
+        logs=run.internals['training']
+        for row in logs:
+            if row['step'] not in (1,logs[-1]['step']) and row['step']%100:continue
+            output=train_wide.setdefault(row['step'],{'step':row['step']})
+            for metric in ('image_mse','pose_mse','grad_norm'):
+                if metric in row:
+                    key=f'{token}_{metric}';output[key]=row[metric];train_fields.add(key)
+    datasets['curriculum_training_samples']=[{'step':step,**{k:row.get(k) for k in sorted(train_fields)}}
+        for step,row in sorted(train_wide.items())]
+    for metric,title in [('image_mse','Training-batch reconstruction'),('pose_mse','Training-batch pose objective'),('grad_norm','Training gradient norm before clipping')]:
+        names=sorted(k for k in train_fields if k.endswith('_'+metric) and ('supervised' in k))
+        if not names:continue
+        y={'fields':names,'type':'quantitative'} if len(names)>1 else number(names[0])
+        view=chart('curriculum_train_'+metric,title+f' · seed {seed}',
+            'Exact sampled training-batch values at update1/every100/final; no smoothing. Same supervised batch draws across arms. Phase updates on x; all raw steps remain in JSONL.',
+            'curriculum_training_samples','line',number('step'),y)
+        if len(names)>1:view['legend']={'position':'bottom','sort':'spec'}
+        charts.append(view)
     return blocks
 
 def inspection_blocks(runs,source_id):
@@ -130,16 +153,55 @@ def inspection_blocks(runs,source_id):
     blocks=[{'id':'curriculum_inspection_results','type':'html','body':body,'layout':'full'}]
     # Keep the portable reader bounded. Every inspection stays in the exact inventory;
     # primary selected checkpoints plus the diagnostic get embedded panels.
-    primary=[r for r in selected if r.label.endswith('_selected')]
-    if any(r.context.get('split')=='test' for r in primary):
-        primary=[r for r in primary if r.context.get('split') in ('test','fixed64_training')]
+    primary=[r for r in selected if r.label.split('/')[-1] in ('A_selected','B_selected','C_selected')]
+    if not primary:
+        primary=[r for r in selected if r.label.split('/')[-1] in ('validation_A_selected','validation_B_selected','validation_C_selected')]
+    if not primary:primary=[r for r in selected if r.label.endswith('diagnostic_selected')]
+    blocks.append({'id':'curriculum_figure_scope','type':'markdown','sourceId':source_id,'body':
+        'The compact offline reader embeds the primary selected perception panels. Full-resolution PNG/SVG perception, pose-readout and spectrum figures for every inspected checkpoint remain beside each raw inspection summary and in the source inventory.'})
     for r in primary:
         summary=r.internals['inspection'];root=Path(r.internals['inspection_root'])
         figures=[]
         for panel in summary['panels']:
+            if panel['file']!='perception_states.png':continue
             encoded=base64.b64encode((root/panel['file']).read_bytes()).decode()
             figures.append('<figure style="margin:12px 0"><img style="width:100%;height:auto" alt="'+html.escape(panel['title'])+
                            '" src="data:image/png;base64,'+encoded+'"><figcaption>'+html.escape(panel['caption'])+'</figcaption></figure>')
         token=hashlib.sha256(r.label.encode()).hexdigest()[:12]
         blocks.append({'id':'curriculum_inspection_'+token,'type':'html','layout':'full','body':'<h3>'+html.escape(r.label)+'</h3>'+''.join(figures)})
+    return blocks
+
+def collect_curriculum_analyses(runs_root):
+    results=[]
+    runs_root=Path(runs_root).resolve()
+    for path in sorted(runs_root.rglob('curriculum_analysis.json')):
+        summary=read_json(path);sources=[path]
+        for name,expected in summary['sources'].items():
+            raw=(runs_root/name).resolve()
+            if not raw.is_relative_to(runs_root) or not raw.is_file():
+                raise DashboardDataError(f'{path}: missing or out-of-scope raw source')
+            if hashlib.sha256(raw.read_bytes()).hexdigest()!=expected:
+                raise DashboardDataError(f'{path}: raw source hash mismatch')
+            sources.append(raw)
+        results.append(RunResult(path.parent.relative_to(runs_root).as_posix(),'curriculum_analysis',summary['status'],
+            None,numeric(summary['metrics']),{'purpose':summary['purpose']},
+            tuple(p.relative_to(runs_root.parent).as_posix() for p in sources),max(p.stat().st_mtime for p in sources),
+            internals={'analysis':summary}))
+    return results
+
+def analysis_blocks(runs,source_id):
+    import html
+    blocks=[]
+    for r in runs:
+        if r.kind!='curriculum_analysis':continue
+        s=r.internals['analysis']
+        blocks.append({'id':'analysis_text_'+hashlib.sha256(r.label.encode()).hexdigest()[:10],
+                       'type':'markdown','sourceId':source_id,'body':s.get('narrative',s['purpose'])})
+        for panel in s['panels']:
+            # At most one compact overview per analysis. Full figures remain on disk.
+            if not panel.get('embed',False):continue
+            p=Path(panel['file']);encoded=base64.b64encode(p.read_bytes()).decode()
+            blocks.append({'id':'analysis_image_'+hashlib.sha256(str(p).encode()).hexdigest()[:10],
+                'type':'html','layout':'full','body':'<figure><img style="width:100%;height:auto" alt="'+html.escape(panel['title'])+
+                '" src="data:image/png;base64,'+encoded+'"><figcaption>'+html.escape(panel['caption'])+'</figcaption></figure>'})
     return blocks
