@@ -13,6 +13,7 @@ eval = ["gymnasium", "pygame", "pymunk==7.3.0", "opencv-python-headless", "shape
 data = ["zarr<3", "numcodecs"]
 dev = ["pytest"]
 paddle = ["numpy", "PyYAML", "pillow", "matplotlib", "pytest"]
+pusht = ["gymnasium", "pygame-ce", "pymunk==7.3.0", "opencv-python-headless", "shapely", "scipy", "matplotlib", "pillow", "zarr<3", "numcodecs"]
 
 [tool.setuptools.packages.find]
 include = ["world_model*", "third_party*", "viewer*"]

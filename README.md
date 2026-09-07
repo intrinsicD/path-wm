@@ -6,6 +6,12 @@ The active experiment is the fixed RGB paddle E/U/P world model. Its
 `world_model.paddle` package. Run `.venv/bin/python -m world_model --help`.
 The LeWM implementation and earlier evidence below remain preserved.
 
+The new E/U/P model also has a separate CCHI PushT track. See
+[PushT usage](docs/pusht-world-model-usage.md),
+[design and budgets](docs/pusht-world-model-design.md), and
+[source audit](docs/pusht-world-model-data-audit.md). Its CLI is
+`python -m world_model.pusht --help`; it does not use the earlier LeWM weights.
+
 The remaining sections describe the retained LeWM baseline and its historical
 evidence.
 

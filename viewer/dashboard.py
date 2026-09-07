@@ -548,6 +548,13 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
     from viewer.paddle import add_paddle_views
     paddle_blocks = add_paddle_views(run_results, datasets, charts, tables, cards,
                                     _chart, table, SOURCE_ID)
+    from viewer.pusht import add_pusht_views
+    pusht_blocks = add_pusht_views(run_results, datasets, charts, tables, cards,
+                                  _chart, table, SOURCE_ID)
+    if pusht_blocks:
+        source['query']['transformation'] += (' PushT E/U/P ledgers are independently reconciled by viewer/pusht.py; '
+            'final fixed-budget controller outcomes and five-action oracle reachability are separate. '
+            'Actual motion diagnostics are backward displacements with train-only saved normalization, not instantaneous velocity.')
     if paddle_blocks:
         source['query']['transformation'] += (' Paddle ledgers are separately reconciled and aggregated by viewer/paddle.py; '
             'its native chart tables preserve physical units, matched horizons, controller populations, and explicit smoke status. '
@@ -570,6 +577,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
     blocks = [{"id": "intro", "type": "markdown", "body": "\n".join(guide)},
               {"id": "coverage", "type": "metric-strip", "cardIds": [card["id"] for card in cards]}]
     blocks += [block for block in paddle_blocks if block['type'] == 'markdown']
+    blocks += [block for block in pusht_blocks if block['type'] == 'markdown']
     blocks += [{"id": f"chart_{chart['id']}", "type": "chart", "chartId": chart["id"], "layout": chart["layout"]} for chart in charts]
     # PNG evidence dominates the portable payload. Bound only the image panels;
     # every inspection remains in the exact tables and quantitative series.
@@ -596,6 +604,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
         if run.kind == 'gradient_audit': latest_gradients[run.context.get('dataset.name', run.label)] = run
     blocks += _panel_blocks(list(latest_gradients.values()))
     blocks += [block for block in paddle_blocks if block['type'] != 'markdown']
+    blocks += [block for block in pusht_blocks if block['type'] != 'markdown']
     blocks += [{"id": f"table_{item['id']}", "type": "table", "tableId": item["id"], "layout": "full"} for item in tables]
     notes = ["No experimental pass threshold is inferred by the viewer. Recorded gate annotations remain visible.",
              "Control groups reflect ordered case identities only; inspect protocol context before comparing results.",

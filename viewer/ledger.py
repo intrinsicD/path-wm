@@ -447,4 +447,8 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
     paddle_results, paddle_notices = collect_paddle_results(runs_root)
     results.extend(paddle_results)
     notices.extend(paddle_notices)
+    from viewer.pusht import collect_pusht_results
+    pusht_results, pusht_notices = collect_pusht_results(runs_root)
+    results.extend(pusht_results)
+    notices.extend(pusht_notices)
     return sorted(results, key=lambda r: (r.modified_at, r.label)), notices

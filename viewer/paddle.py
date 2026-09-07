@@ -422,22 +422,23 @@ def add_paddle_views(runs, datasets, charts, tables, cards, chart, table, source
                  'H units are world units/pixels; R velocity units are world units per decision interval.'),
                 name, 'bar', category('coordinate'), number('value'), tooltip=[number('count')],
                 reference_lines=[{'axis': 'y', 'value': target, 'label': 'Engineering target'}]))
-        for coordinate, index in [('latent', None), *[(name, i) for i, name in enumerate(POSITIONS)]]:
-            name = f'paddle_horizon_{coordinate}'
-            values = []
-            for method, horizons in report['prediction']['summary'].items():
-                if method == 'actual': continue
-                for horizon, groups in horizons.items():
-                    row = groups['all']
-                    if row['count']:
-                        values.append({'horizon': int(horizon), 'value': row['latent_error'] if index is None else row['h_mae'][index],
-                                       'method': method, 'count': row['count']})
-            if not values: continue
-            datasets[name] = sorted(values, key=lambda r: (r['method'], r['horizon']))
-            charts.append(chart(name, f'Paddle matched rollout: {coordinate} error',
-                ('Variance-normalized latent MSE.' if index is None else 'Coordinate MAE in world units/pixels.')
-                + ' Prediction, copy and fresh-memory reset share exact windows and actions; collision subsets stay in the exact table.',
-                name, 'line', number('horizon'), number('value'), color=category('method'), tooltip=[number('count')]))
+        name = 'paddle_matched_horizons'
+        values = []
+        for method, horizons in report['prediction']['summary'].items():
+            if method == 'actual': continue
+            for horizon, groups in horizons.items():
+                row = groups['all']
+                if row['count']:
+                    values.append({'horizon': int(horizon), 'latent': row['latent_error'],
+                                   **dict(zip(POSITIONS, row['h_mae'])),
+                                   'method': method, 'count': row['count']})
+        if values:
+            datasets[name] = sorted(values, key=lambda r: (r['horizon'], r['method']))
+            for coordinate in ('latent', *POSITIONS):
+                charts.append(chart(f'paddle_horizon_{coordinate}', f'Paddle matched rollout: {coordinate} error',
+                    ('Variance-normalized latent MSE.' if coordinate == 'latent' else 'Coordinate MAE in world units/pixels.')
+                    + ' Prediction, copy and fresh-memory reset share exact windows and actions; collision subsets stay in the exact table.',
+                    name, 'line', number('horizon'), number(coordinate), color=category('method'), tooltip=[number('count')]))
         probe = report.get('velocity_probe', {})
         if probe.get('frame_probe_mae') and probe.get('memory_mae'):
             name = 'paddle_paired_velocity_probe'
