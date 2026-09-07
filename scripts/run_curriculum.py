@@ -18,4 +18,6 @@ def refresh():
         html_path=Path('runs/experiment_dashboard.html'))
 
 if __name__=='__main__':
-    raise SystemExit(run_experiment(['-m','world_model.curriculum',*sys.argv[1:]],refresh=refresh))
+    arguments=sys.argv[1:]
+    command=arguments[1:] if arguments and arguments[0]=='python' else ['-m','world_model.curriculum',*arguments]
+    raise SystemExit(run_experiment(command,refresh=refresh))

@@ -90,3 +90,25 @@ inspected. Genuine duplicate/color-edited pairs occur alongside conservative
 false positives on mostly sky images. All candidates remain grouped; no manual
 split changes. This criterion cannot guarantee all semantic duplicates were found.
 Contact sheets and transform/split evidence are under the curriculum data_review.
+
+
+## Slice 2: measured diagnostic and inspection
+
+Fixed64 training diagnostic completed500updates in26.12s. Physical selection
+picked update300: XY MAE[2.622,2.569,2.399,1.985]world units, angle2.428degrees,
+q0.328. Final update500 regressed to q6.076 despite lower reconstruction loss.
+This is a capacity/optimization diagnostic on training examples, not held-out
+readiness. Selected-checkpoint images show blurred moving objects; fine maps
+respond to the block while coarse maps are dominated by spatial structure.
+E image-gradient norm.0140 versus pose-gradient norm.1624, cosine.0495 on64frames.
+This one gradient sample does not prove systematic loss conflict.
+
+Inspection uses256 fixed group-balanced training frames for token-channel PCA
+and a full-feature linear ridge probe. Center and normalize by training RMS,
+divide features by sqrt(width), fixed ridge.01; no test fitting or tuning.
+A development rendering/probe draft was preserved under.runtime before correcting
+its training-frame caption and adding the predeclared training-only RMS scale.
+Held-out region metrics use256fixed frames and diagnostic geometry from the
+archived perception diagnosis (nativeT polygons and radius15pusher). They are
+not new loss terms. The selected64-frame diagnostic and its figures passed the
+canonical browser verifier; three essential inspection checks pass.

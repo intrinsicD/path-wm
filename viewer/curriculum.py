@@ -37,6 +37,29 @@ def collect_curriculum_results(runs_root):
                        {**config,'dataset_fingerprint':manifest['dataset'],'protocol':'accepted curriculum; supervised and warmup populations distinct'},
                        tuple(p.relative_to(runs_root.parent).as_posix() for p in sources),max(p.stat().st_mtime for p in sources),
                        internals={'training':train,'validation':validation,'result':result}))
+
+    for path in sorted(runs_root.rglob('inspection_summary.json')):
+        summary=read_json(path)
+        if summary.get('schema')!='curriculum-inspection-v1':continue
+        root=path.parent;raw_path=root/'frame_errors.json';raw=read_json(raw_path)
+        if len(raw['indices'])!=summary['frames']:raise DashboardDataError(f'{path}: inspection denominator mismatch')
+        import numpy as np
+        actual=float(np.mean(raw['image_mse']))
+        if not np.isclose(actual,summary['metrics']['image_mse'],rtol=1e-12,atol=1e-14):
+            raise DashboardDataError(f'{path}: inspection image metric mismatch')
+        if summary['labelled']:
+            for key,rawkey in [('position_mae','position_abs_error'),('angle_mae_deg','angle_abs_error_deg')]:
+                if not np.allclose(np.mean(raw[rawkey],axis=0),summary['metrics'][key],rtol=1e-12,atol=1e-12):
+                    raise DashboardDataError(f'{path}: inspection {key} mismatch')
+        sources=[path,raw_path,root/'region_errors.json',root/'heldout_probe.npz']
+        sources += [root/p['file'] for p in summary['panels']]
+        metrics=numeric(summary['metrics'])
+        for i,v in enumerate(summary['metrics'].get('position_mae',[])):metrics[f'position_mae_{i}']=v
+        results.append(RunResult(root.relative_to(runs_root).as_posix(),'curriculum_inspection',summary['status'],
+            summary['step'],metrics,{'split':summary['split'],'frames':summary['frames'],'checkpoint':summary['checkpoint'],
+            'model_fingerprint':summary['model_fingerprint'],'labelled':summary['labelled']},
+            tuple(p.relative_to(runs_root.parent).as_posix() for p in sources),max(p.stat().st_mtime for p in sources),
+            internals={'inspection':summary,'inspection_root':str(root)}))
     return results,[]
 
 def add_curriculum_views(runs,datasets,charts,tables,cards,chart,table,source_id):
@@ -89,4 +112,32 @@ def add_curriculum_views(runs,datasets,charts,tables,cards,chart,table,source_id
             view['legend']={'position':'bottom','sort':'spec'}
             view['palette']={'kind':'categorical','name':'PATH-WM blue-orange'}
         charts.append(view)
+    return blocks
+
+def inspection_blocks(runs,source_id):
+    import html
+    selected=[r for r in runs if r.kind=='curriculum_inspection']
+    if not selected:return []
+    rows=[]
+    for r in selected:
+        s=r.internals['inspection'];m=s['metrics']
+        vals=[r.label,s['split'],str(s['frames']),str(s['step']),format(m['image_mse'],'.7g'),
+              ', '.join(format(v,'.4g') for v in m.get('position_mae',[])),
+              format(m.get('angle_mae_deg',0),'.4g') if s['labelled'] else 'no H',
+              format(m.get('q',0),'.4g') if s['labelled'] else 'no H']
+        rows.append('<tr>'+''.join('<td style="padding:6px;border-bottom:1px solid #ddd">'+html.escape(v)+'</td>' for v in vals)+'</tr>')
+    body='<h3>Held-out perception evaluations</h3><p>All-frame metrics below; group-balanced errors, 256-frame region diagnostics, train-only ridge probes and raw per-frame errors accompany each source summary. Diagnostic fixed64 is training-set evidence. No test metric selects checkpoints.</p><div style="overflow-x:auto"><table><thead><tr>'+''.join('<th>'+s+'</th>' for s in ['Checkpoint','Population','Frames','Update','RGB MSE','XY MAE (world units)','Angle MAE °','q'])+'</tr></thead><tbody>'+''.join(rows)+'</tbody></table></div>'
+    blocks=[{'id':'curriculum_inspection_results','type':'html','body':body,'layout':'full'}]
+    # Keep the portable reader bounded. Every inspection stays in the exact inventory;
+    # primary selected checkpoints plus the diagnostic get embedded panels.
+    primary=[r for r in selected if r.label.endswith('_selected')]
+    for r in primary:
+        summary=r.internals['inspection'];root=Path(r.internals['inspection_root'])
+        figures=[]
+        for panel in summary['panels']:
+            encoded=base64.b64encode((root/panel['file']).read_bytes()).decode()
+            figures.append('<figure style="margin:12px 0"><img style="width:100%;height:auto" alt="'+html.escape(panel['title'])+
+                           '" src="data:image/png;base64,'+encoded+'"><figcaption>'+html.escape(panel['caption'])+'</figcaption></figure>')
+        token=hashlib.sha256(r.label.encode()).hexdigest()[:12]
+        blocks.append({'id':'curriculum_inspection_'+token,'type':'html','layout':'full','body':'<h3>'+html.escape(r.label)+'</h3>'+''.join(figures)})
     return blocks
