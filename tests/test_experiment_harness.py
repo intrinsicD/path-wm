@@ -474,3 +474,36 @@ def test_projection_comparison_retains_paired_populations_and_missing_arms(tmp_p
     write_json(path,value)
     with pytest.raises(DashboardDataError,match='paired'):
         collect_run_results(tmp_path/'runs')
+
+
+def test_compact_exact_records_resolve_to_full_identity_without_losing_values():
+    from viewer.dashboard import build_dashboard_artifact
+    from viewer.ledger import RunResult
+    names = ['nested/' + 'long_protocol_name_' * 8 + suffix for suffix in ('baseline', 'candidate')]
+    results = [RunResult(name, 'prediction', 'evaluated', 1500,
+        {'pred_mse': .1234567890123456 + i, 'identity_mse': 2.0 + i},
+        {'checkpoint': name + '/checkpoint.pt', 'seed': 3072 + i},
+        (name + '/prediction.json',), float(i)) for i, name in enumerate(names)]
+    artifact = build_dashboard_artifact(results, [])
+    datasets = artifact['snapshot']['datasets']
+    inventory = datasets['inventory']
+    identities = {row['record_key']: row['run'] for row in inventory}
+    assert set(identities.values()) == set(names)
+    assert len(identities) == len(names)
+    assert all(len(key) <= 16 for key in identities)
+    expected_metrics = sorted((r.label, key, format(value, '.17g') if isinstance(value, float) else str(value))
+                              for r in results for key, value in r.metrics.items())
+    observed_metrics = sorted((identities[row['record_key']], row['metric'], row['value'])
+                              for row in datasets['metrics'])
+    assert observed_metrics == expected_metrics
+    observed_context = sorted((identities[row['record_key']], row['field'], row['value'])
+                              for row in datasets['context'])
+    assert observed_context == sorted((r.label, key, str(value)) for r in results for key, value in r.context.items())
+    assert all('run' not in row for name in ('metrics', 'context') for row in datasets[name])
+    assert all(r.sources[0] in next(row['sources'] for row in inventory if row['run'] == r.label) for r in results)
+    reversed_inventory = build_dashboard_artifact(list(reversed(results)), [])['snapshot']['datasets']['inventory']
+    assert {r['record_key']: r['run'] for r in reversed_inventory} == identities
+    for table in artifact['manifest']['tables']:
+        if table['id'] in ('metrics', 'context'):
+            assert table['columns'][0]['field'] == table['defaultSort']['field'] == 'record_key'
+            assert 'inventory' in table['subtitle'].lower()
