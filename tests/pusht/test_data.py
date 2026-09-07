@@ -295,3 +295,23 @@ def test_cross_split_duplicate_frames_are_visible_without_fake_independence(sour
     assert report["cross_split_groups"] == 0
     assert report["cross_split_duplicate_frame_hashes"] >= 1
     assert "initial" in report["independence_limitation"]
+
+
+def test_verification_accepts_only_numpy_provenance_change(source, tmp_path, monkeypatch):
+    output = tmp_path / "prepared"
+    data.prepare(source, output)
+    before = (output / "manifest.json").read_bytes()
+    actual_version = np.__version__
+    monkeypatch.setattr(np, "__version__", "different-runtime-version")
+    report = data.verify_dataset(output, source=source)
+    assert report["passed"]
+    assert report["numpy_versions"] == {"prepared": actual_version, "verified": "different-runtime-version"}
+    assert (output / "manifest.json").read_bytes() == before
+    original = data._identity
+    def altered(*args, **kwargs):
+        identity = original(*args, **kwargs)
+        identity["split_protocol"]["seed"] += 1
+        return identity
+    monkeypatch.setattr(data, "_identity", altered)
+    with pytest.raises(ValueError, match="identity"):
+        data.verify_dataset(output, source=source)
