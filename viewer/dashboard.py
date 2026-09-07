@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import base64
+import hashlib
 import json
 import math
 import os
@@ -250,8 +251,9 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
     source = {"id": SOURCE_ID, "label": "PATH-WM local experiment ledgers", "path": "viewer/experiment_results.sql",
               "query": {"engine": "sqlite", "language": "sql", "executed_at": generated,
                         "sql": source_sql,
-                        "description": "viewer.ledger reconciles raw JSON/JSONL. SQLite executes this query bundle over those records (:reconciled_runs) to produce the chart datasets and coverage counts. Exact context/value tables use the same queries and Python text formatting. No source files are modified.",
-                        "tables_used": source_paths,
+                        "description": "viewer.ledger reconciles raw JSON/JSONL. SQLite executes this query bundle over those records (:reconciled_runs) to produce the chart datasets and coverage counts. Exact context/value tables use the same queries and Python text formatting. No source files are modified. The run inventory maps each record key to its full identity and raw file paths; input_files retains the complete raw-file union.",
+                        "tables_used": ["json_each(:reconciled_runs)"],
+                        "input_files": source_paths,
                         "transformation": "viewer/ledger.py validates and reconciles the bound RunResult records; viewer/dashboard.py samples chart trajectories and formats exact numeric text. Paired projection tables/curves use the validated Python derivative from scripts/collect_projection_experiment.py and scripts/paired_summary.py, with source hashes in projection_comparison.json.",
                         "filters": ["Training metrics.jsonl; supported control summary.json with case evidence; action_baselines.json; prediction.json",
                                     "Up to 50 deterministic evenly spaced points per training/validation trajectory; exact ledger values remain in sources",
@@ -471,21 +473,33 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                     status='complete' if pair['complete'] else 'missing arm',
                     delta_successes=pair.get('delta_successes'),delta_success_rate_pp=pair.get('delta_success_rate_pp'),
                     delta_unsolved_conditional_pp=pair.get('delta_unsolved_conditional_pp')))
+    # Exact tables repeat long run paths thousands of times. A stable key joins
+    # every unchanged value to the inventory's full identity and source paths.
+    record_keys = {row['run']: 'R' + hashlib.sha256(row['run'].encode()).hexdigest()[:10]
+                   for row in datasets['inventory']}
+    if len(set(record_keys.values())) != len(record_keys):
+        raise DashboardDataError('Compact record-key collision; full identities cannot be joined safely')
+    for row in datasets['inventory']:
+        row['record_key'] = record_keys[row['run']]
+    for name in ('metrics', 'context'):
+        datasets[name] = [{'record_key': record_keys[row['run']],
+                           **{field: value for field, value in row.items() if field != 'run'}}
+                          for row in datasets[name]]
     def table(name, title, columns, sort, subtitle):
         return {"id": name, "title": title, "subtitle": subtitle, "dataset": name, "sourceId": SOURCE_ID,
                 "defaultSort": {"field": sort, "direction": "asc"}, "density": "dense", "layout": "full",
                 "columns": [{"field": field, "label": label, "type": "text"} for field, label in columns]}
     tables = [table("inventory", "Run inventory and recorded gate status",
-                    [("run", "Run"), ("kind", "Kind"), ("status", "Status"), ("step", "Logged step"), ("gate", "Recorded gate"), ("sources", "Source files")],
+                    [("record_key", "Record key"), ("run", "Full run identity"), ("kind", "Kind"), ("status", "Status"), ("step", "Logged step"), ("gate", "Recorded gate"), ("sources", "Source files")],
                     "run", "Training completion is independent of the scientific gate. Missing gates remain unassessed.")]
     if controls:
         tables.append(table("control_detail", "All control outcomes",
                             [("chart_key", "Chart key"), ("run", "Run"), ("successes", "Successes"), ("cases", "Cases"), ("success_rate", "Raw success fraction"), ("initial_successes", "Initially satisfied"), ("noninitial_cases", "Initially unsolved"), ("noninitial_successes", "Newly reached"), ("noninitial_success_rate", "Success among initially unsolved"), ("case_set", "Goal identities"), ("protocol", "Protocol")],
                             "case_set", "All recorded populations, without pooling; sort by case identities to compare like with like."))
     tables.extend([table("metrics", "Exact measured values for every record",
-                         [("run", "Record"), ("section", "Measurement"), ("metric", "Metric"), ("value", "Exact value")], "run", "Validation values retain their actual recorded step. No thresholds or passing gates are inferred. Sort or page by record."),
+                         [("record_key", "Record key"), ("section", "Measurement"), ("metric", "Metric"), ("value", "Exact value")], "record_key", "Record keys resolve to full run identities and sources in the inventory. Validation values retain their actual recorded step. No thresholds or passing gates are inferred."),
                    table("context", "Protocol and configuration for every record",
-                         [("run", "Record"), ("field", "Field"), ("value", "Recorded value")], "run", "Consult the source manifest for complete case lists, normalization arrays and checkpoint identity.")])
+                         [("record_key", "Record key"), ("field", "Field"), ("value", "Recorded value")], "record_key", "Record keys resolve to full run identities and sources in the inventory. Consult the source manifest for complete case lists, normalization arrays and checkpoint identity.")])
     if internals:
         tables.append(table("internals_summary", "All inspected checkpoints: exact internals",
                             [("run", "Inspected checkpoint"), ("family", "Family"), ("step", "Step"), ("metric", "Metric"), ("value", "Exact value")],

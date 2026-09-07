@@ -144,3 +144,21 @@ manifest path changed. Different or partially missing identities cannot match a
 fully recorded inspection. Legacy pairs without complete identity retain the
 original same-manifest rule. The image bound and exact numeric inventory remain
 unchanged; one new regression covers matching and exclusion together.
+
+## Bounded provenance and exact-record identities (2026-09-07)
+
+The static fallback copied the entire global file list into each numeric-cell
+source tooltip, eventually exceeding the extractor's 16 MB ceiling. Source
+`tables_used` now names the actual `json_each(:reconciled_runs)` SQL input. The
+complete raw-file union remains in `query.input_files`, while the inventory
+retains each full run identity and source paths. Metric/configuration rows use a
+stable short record key joined to that inventory; collisions fail explicitly.
+Every exact value remains present. Renderer probes and output limits are unchanged.
+
+The actual 22-outcome dashboard and an isolated, explicitly synthetic full-size
+fixture pass canonical browser/source checks at 1440/390 pixels. The fixture is
+under the experiment's `qa/final_capacity`, outside the scientific ledger. Its
+payload is about 2.54 MB against the unchanged 3 MB cap. Recovery skips completed
+raw evaluation and rebuilds reporting. A coordinator stage is marked verified
+only if its current reporting subprocess succeeds and its receipt passes; a stale
+receipt cannot validate a failed build.

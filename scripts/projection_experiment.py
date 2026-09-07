@@ -59,7 +59,7 @@ def run_stage(base, name, arguments, complete, timeout):
                                 timeout=timeout)
     valid = complete()
     receipt = read(ROOT/'runs/experiment_dashboard.receipt.json')
-    verified = receipt.get('stages', {}).get('verification') == 'passed'
+    verified = result.returncode == 0 and receipt.get('stages', {}).get('verification') == 'passed'
     code = result.returncode or (0 if valid and verified else 1)
     record(base, 'end', name=name, returncode=code, elapsed_seconds=time.monotonic()-tick,
            raw_complete=valid, dashboard_verified=verified, log=str(log.relative_to(ROOT)))
