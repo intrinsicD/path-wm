@@ -11,6 +11,7 @@ import csv
 import hashlib
 import html
 import json
+import math
 import os
 import platform
 import time
@@ -29,6 +30,7 @@ POSITION_NAMES = ["ball_x", "ball_y", "paddle_x"]
 STATE_NAMES = ["ball_x", "ball_y", "ball_vx", "ball_vy", "paddle_x"]
 COLLISIONS = {"side_wall", "ceiling", "paddle_hit"}
 CONTROLLERS = ("learned", "reset", "random", "tracker", "privileged")
+PRIVILEGED_PLANNER_IMPLEMENTATION = "exhaustive-5-state-advance-scalar-prefix-v2"
 
 
 def _pin_numeric_mode():
@@ -338,31 +340,43 @@ def train_velocity_probe(system, train_dataset, device, frame_limit=1024, seed=7
                    "ridge": .01, "deployed": False}
 
 
-def privileged_plan(env):
-    """Exhaustive simulator reference, isolated from learned planner inputs."""
-    from .planner import sequence_score
-    best = None
-    tie = 0
+def _privileged_candidate_scores(env):
+    """Return all exact simulator scores in fixed stay-left-right order."""
+    from .planner import PlanningFailure
+    candidates = []
 
-    def visit(branch, sequence, positions):
-        nonlocal best, tie
+    def visit(branch, sequence, squared_sum, movement_count, first_miss):
         if len(sequence) == 5:
-            score = tuple(sequence_score(torch.tensor(positions, dtype=torch.float64), sequence))
-            # The last tuple item is the externally fixed enumeration order.
-            score = (*score[:4], tie)
-            tie += 1
-            if best is None or score < best[0]:
-                best = score, sequence
+            score = (int(first_miss > 0), 5-first_miss if first_miss else 0,
+                     squared_sum/(first_miss or 5), movement_count, len(candidates))
+            candidates.append((score, sequence))
             return
         for action in (1, 0, 2):
             child = branch.clone()
             if not child.terminated and not child.truncated:
-                child.step(action)
-            position = np.asarray(child.state)[[0, 1, 4]].tolist()
-            visit(child, (*sequence, action), [*positions, position])
+                child.advance(action)
+            next_sum, next_count, next_miss = squared_sum, movement_count, first_miss
+            if not first_miss:
+                x, y, _, _, paddle = map(float, child.state)
+                if not all(math.isfinite(value) for value in (x, y, paddle)):
+                    raise PlanningFailure("non-finite candidate position prediction")
+                # Keep sequence_score's Python float arithmetic/order exactly:
+                # vectorized squares/reductions can perturb tied scores by ULPs.
+                next_sum += ((x-paddle)/64)**2
+                next_count += action != 1
+                if y >= 61:
+                    next_miss = len(sequence) + 1
+            # Truncation freezes physics, but only a miss stops score accumulation.
+            visit(child, (*sequence, action), next_sum, next_count, next_miss)
 
-    visit(env, (), [])
-    return best[1][0], best[1], best[0]
+    visit(env, (), 0., 0, 0)
+    return candidates
+
+
+def privileged_plan(env):
+    """Exhaustive simulator reference, isolated from learned planner inputs."""
+    score, sequence = min(_privileged_candidate_scores(env))
+    return sequence[0], sequence, score
 
 
 def _wilson(successes, count):
@@ -741,7 +755,8 @@ def evaluate(config, data, perception, memory, predictor, output):
     hardware = {"device": str(device), "gpu": torch.cuda.get_device_name(device) if device.type == "cuda" else None,
                 "precision": "float32", "python": platform.python_version(), "torch": str(torch.__version__),
                 "tf32": False, "cpu_threads": 4, "candidate_batch_size": batch_size, "candidates": 243,
-                "latency_scope": "Synchronized decision only after real observer assimilation; includes H/scoring and reset assimilation for reset policy; excludes rendering, real E/U, diagnostics, decoding and progress writes; first decision retained"}
+                "privileged_planner_implementation": PRIVILEGED_PLANNER_IMPLEMENTATION,
+                "latency_scope": "Synchronized decision only after real observer assimilation; includes H/scoring and reset assimilation for reset policy; excludes real-frame rendering, real E/U, diagnostics, decoding and progress writes; privileged candidates use state-only advance; first decision retained"}
     identity = {"protocol": "paddle-evaluation-resume-v1", "config": config,
                 "dataset_fingerprint": test.fingerprint, "hardware": hardware,
                 "checkpoint_sha256": {name: value["sha256"] for name, value in checkpoint_sources.items()}}

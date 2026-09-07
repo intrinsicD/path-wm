@@ -95,6 +95,16 @@ class PaddleEnv:
         return np.rint(np.clip(frame, 0, 1) * 255).astype(np.uint8)
 
     def step(self, action: int) -> tuple[np.ndarray, bool, bool, dict]:
+        """Advance the shared physics and return the ordinary visual observation."""
+        terminated, truncated, info = self.advance(action)
+        return self.render(), terminated, truncated, info
+
+    def advance(self, action: int) -> tuple[bool, bool, dict]:
+        """Execute the same transition without rendering, for privileged search.
+
+        This is the single event integrator used by both real visual steps and
+        simulator-reference branches. Labels remain outside learned model inputs.
+        """
         if self.terminated or self.truncated:
             raise RuntimeError("episode is finished; reset before taking another action")
         if isinstance(action, (bool, np.bool_)) or not isinstance(action, (int, np.integer)) or action not in (0, 1, 2):
@@ -186,4 +196,4 @@ class PaddleEnv:
             "hit_count": self.hit_count,
             "events": copy.deepcopy(events),
         }
-        return self.render(), self.terminated, self.truncated, info
+        return self.terminated, self.truncated, info
