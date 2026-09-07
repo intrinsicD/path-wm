@@ -146,33 +146,55 @@ The immutable generic warmup checkpoint remains available for future work.
 
 ## Paddle follow-up
 
-P1 completed its20,000-update budget in893.9seconds. Its selected update19,750
-has normalized latent loss0.19725 versus copy1.07739 and position MAEs
-[2.38197,2.38395,1.59502]pixels versus copy[3.83335,2.38499,2.52450].
+P1 completed its 20,000-update budget in 893.9 seconds. Its selected update 19,750
+has normalized latent loss 0.19725 versus copy 1.07739 and position MAEs
+[2.38197, 2.38395, 1.59502] pixels versus copy [3.83335, 2.38499, 2.52450].
 All four original comparisons strictly improve, so P5 was launched. Ball-y's
-margin is only0.00105pixels; the gate's pass should not be mistaken for a robust
-quality margin. The final P1 update20,000 has ball-y2.60224 and would fail the
+margin is only 0.00105 pixels; the gate's pass should not be mistaken for a robust
+quality margin. The final P1 update 20,000 has ball-y 2.60224 and would fail the
 gate; selection remains the original fixed-validation objective.
 
-At exact update10,000, new P1 MAE is[3.81218,3.74440,1.82866]. The historical
-10,000-update reference is[3.70127,3.59783,1.79505]. At their selected20,000-budget
-checkpoints, the historical/new values are[2.42536,2.22583,1.65811] versus
-[2.38197,2.38395,1.59502]. The new memory does not uniformly improve prediction.
-Validation window indices, E/D/H dependency, dataset and E-only variance bytes
-match; the U dependency differs as intended. Runtime differences remain a
-limitation of the cross-session comparison.
+At exact update 10,000, new P1 MAE is [3.81218, 3.74440, 1.82866]. The historical
+10,000-update reference is [3.70127, 3.59783, 1.79505]. At their selected
+20,000-budget checkpoints, the historical/new values are
+[2.42536, 2.22583, 1.65811] versus [2.38197, 2.38395, 1.59502].
+The new memory does not uniformly improve prediction. Validation window indices,
+E/D/H dependency, dataset and E-only variance bytes match; the U dependency
+differs as intended. Runtime differences remain a limitation of the
+cross-session comparison.
 
-P5 completed10,000updates in609.4seconds and selected9,250 by its unchanged
-validation objective. Its five-step validation MAE is[5.82656,4.30762,4.93063]
-pixels. On1024matched test windows, five-step MAE is[5.84882,4.04752,4.80097],
-versus copy[16.16791,11.07811,5.54455]. All fail the two-pixel engineering target.
-One-step test MAE is[3.37767,2.29149,1.53336].
+P5 completed 10,000 updates in 609.4 seconds and selected 9,250 by its unchanged
+validation objective. Its five-step validation MAE is [5.82656, 4.30762, 4.93063]
+pixels. On 1,024 matched test windows, five-step MAE is [5.84882, 4.04752, 4.80097],
+versus copy [16.16791, 11.07811, 5.54455]. All three coordinates fail the two-pixel
+engineering target. One-step test MAE is [3.37767, 2.29149, 1.53336].
 
-Across16,831actual test observations after warmup, H position MAE remains
-[0.07125,0.07575,0.09343]pixels. U/R velocity MAE is[0.86914,0.62626]pixels per
-interval, above the0.5target. Memory reset degrades five-step ball-x MAE from
-5.85to14.79pixels, evidence that the predictor uses its history, without
+Across 16,831 actual test observations after warmup, H position MAE remains
+[0.07125, 0.07575, 0.09343] pixels. U/R velocity MAE is [0.86914, 0.62626] pixels
+per interval, above the 0.5 target. Memory reset degrades five-step ball-x MAE
+from 5.85 to 14.79 pixels, evidence that the predictor uses its history, without
 establishing that the learned history is sufficiently accurate.
+
+Collision stratification shows that the error is not confined to bounces:
+
+| Five-step test population | Windows | Predicted ball x/y, paddle x MAE | Copy MAE |
+|---|---:|---:|---:|
+| Any collision in source-to-target prefix | 435 | 6.21 / 4.26 / 4.77 | 12.55 / 10.31 / 5.56 |
+| No collision | 589 | 5.58 / 3.89 / 4.82 | 18.84 / 11.64 / 5.53 |
+| Ceiling reflection | 52 | 5.63 / 5.98 / 4.65 | 17.03 / 5.91 / 4.97 |
+| Paddle reflection | 47 | 5.18 / 3.99 / 5.36 | 15.37 / 6.03 / 4.70 |
+
+Individual collision types overlap and must not be added together. The predictor
+loses to copy for ball-y in ceiling windows and paddle-x in paddle-reflection
+windows. Real-memory velocity errors also rise around reflections: vx/vy MAE is
+1.44 / 1.04 with a collision versus 0.82 / 0.59 without one.
+
+The exact terminal boundary needs separate attention. Of 35 five-step windows
+whose target ball-y reaches 61, 34 predicted readouts remain below 61. Even actual
+H readouts fall below that threshold in 342 of 496 terminal observations after
+warmup, despite their low mean coordinate error. These are recorded threshold
+false negatives, not a newly trained terminal classifier or a causal attribution
+of the control failures. The boundary rule and model remain unchanged.
 
 [Memory heatmaps, PCA, velocities and attention](../runs/curriculum_2026-09-07/paddle_history/inspection/memory_states.png) ·
 [Actual versus decoded imagined rollouts](../runs/curriculum_2026-09-07/paddle_history/inspection/paddle_rollouts.png) ·
@@ -185,10 +207,10 @@ the imagined ball fades or disappears even though actual-frame E/D reconstructio
 is accurate. This is qualitative evidence from fixed examples, not a prevalence
 estimate. Figures were rendered on CPU with two threads; quantitative prediction
 metrics reuse the hash-verified completed GPU cache. Checkpoint tensors remain
-unchanged. A short CPU figure-rendering pass overlapped controller evaluation;
+unchanged. Brief CPU figure rendering, software checks and dashboard verification overlapped controller evaluation;
 recorded decision timings include whatever host scheduling occurred.
 
-The full500-start/100-pair, five-controller comparison is still running. No
+The full 500-start/100-pair, five-controller comparison is still running. No
 aggregate control conclusion is drawn from its partial cases.
 
 ## Evidence, limitations and verification
