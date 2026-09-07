@@ -1,6 +1,5 @@
 """Diagnostic charts must reconcile recorded means and weighted image regions."""
 import base64
-import copy
 import json
 
 import pytest

@@ -163,6 +163,18 @@ def collect_paddle_results(runs_root):
         if status == 'completed' and training and step != training[-1]['step']:
             raise DashboardDataError(f'{result_path}: completed update disagrees with training ledger')
         smoke = bool(result.get('smoke', manifest.get('config', {}).get('smoke', False)))
+        history_start = manifest['stage'] == 'memory' and 'history_starts' in (manifest.get('config') or {})
+        if history_start:
+            for row in validation:
+                for population in ('ordinary', 'suffix'):
+                    values = row[population]
+                    count = values['supervised_scalar_count']
+                    if count <= 0:
+                        raise DashboardDataError(f'{directory}: {population} validation has no supervised scalars')
+                    _equal(values['squared_error_sum'] / count, values['loss'],
+                           f'{population} normalized state MSE', directory / 'validation.jsonl')
+                _equal(.5 * (row['ordinary']['loss'] + row['suffix']['loss']), row['loss'],
+                       'joint ordinary/suffix validation MSE', directory / 'validation.jsonl')
         context = {'architecture': 'Paddle E/U/P; separate observation features and persistent memory',
                    'stage': manifest['stage'], 'horizon': manifest.get('horizon'), 'smoke': smoke,
                    'selected_update': selected, 'dataset_fingerprint': manifest.get('dataset_fingerprint'),
@@ -170,6 +182,9 @@ def collect_paddle_results(runs_root):
                    'versions': manifest.get('versions'), 'quality_gate': result.get('quality_gate'),
                    'baseline_gate': json.dumps(result.get('quality_gate', {})),
                    'checkpoint': result.get('checkpoint'), 'failure': result.get('failure')}
+        if history_start:
+            context.update(history_start_training=True,
+                           validation_objective='Equal-weight ordinary/suffix normalized state MSE; paired results diagnostic only')
         if manifest.get('continuation'):
             # Keep lineage reviewable within a bounded context cell. The full
             # parent config and ancestry remain in the raw manifest source.
@@ -300,6 +315,14 @@ def add_paddle_views(runs, datasets, charts, tables, cards, chart, table, source
                      'Frozen-latent variance-normalized MSE; fine/coarse equal weight')
         if run.context.get('continuation'):
             objective += '; update numbers are cumulative from the parent checkpoint, while additional_updates counts this continuation only'
+        history_start = run.context.get('history_start_training', False)
+        if history_start:
+            objective = 'Mixed full/suffix batch masked normalized state MSE; first two relative velocity entries excluded'
+            validation_values = [{'step': row['step'], 'loss': row['loss'],
+                                  'ordinary_loss': row['ordinary']['loss'], 'suffix_loss': row['suffix']['loss'],
+                                  'ordinary_scalars': row['ordinary']['supervised_scalar_count'],
+                                  'suffix_scalars': row['suffix']['supervised_scalar_count']}
+                                 for row in _sample(run.internals['paddle_validation'])]
         # The portable reader uses encounter-order categories and breaks lines
         # at missing series values. Training and validation use different step
         # grids, so plot them separately without inventing intermediate values.
@@ -309,6 +332,19 @@ def add_paddle_views(runs, datasets, charts, tables, cards, chart, table, source
                 continue
             datasets[name] = sorted(values, key=lambda row: row['step'])
             kind = 'line' if len({row['step'] for row in values}) > 1 else 'bar'
+            if history_start and values is validation_values:
+                charts.append(chart(name, f'Paddle memory: joint and population validation objectives · {run.label}',
+                    'Equal-weight ordinary/suffix normalized state MSE: 0.5 × ordinary + 0.5 × suffix. '
+                    'Paired results are diagnostic only and never select the checkpoint. '
+                    'Each population uses its own supervised-scalar denominator; first two relative velocity entries are masked. '
+                    'At most 50 recorded updates; connecting curves are visual guides.',
+                    name, kind, number('step'),
+                    {'fields': ['loss', 'ordinary_loss', 'suffix_loss'], 'type': 'quantitative', 'label': 'Normalized state MSE'}))
+                charts[-1]['palette'] = {'kind': 'categorical', 'name': 'PATH-WM blue-orange'}
+                charts[-1]['legend'] = {'position': 'bottom', 'sort': 'spec'}
+                charts[-1]['surface']['interactiveLegend'] = True
+                if kind == 'line': charts[-1]['settings']['showPoints'] = 'always'
+                continue
             charts.append(chart(name, f'Paddle {key}: {label} · {run.label}',
                 objective + '. At most 50 recorded updates per curve; raw ledgers retain every update. '
                 'Line x positions are ordered sampled updates with equal spacing; labels retain the exact update numbers.',
@@ -370,8 +406,9 @@ def add_paddle_views(runs, datasets, charts, tables, cards, chart, table, source
                     'ordinary_r_mae': json.dumps(row.get('r_mae')),
                     'paired_r_mae': json.dumps(row['paired_validation_r_mae']),
                     'paired_reset_r_mae': json.dumps(row.get('paired_validation_reset_r_mae')),
-                    'ordinary_observations': row.get('observations'),
-                    'ordinary_velocity_observations': row.get('post_warmup_observations'),
+                    'ordinary_observations': row.get('ordinary', {}).get('observations', row.get('observations')),
+                    'ordinary_velocity_observations': (row['ordinary']['post_warmup']['coordinate_count'][2]
+                        if 'ordinary' in row else row.get('post_warmup_observations')),
                     'configured_pairs': pair_count,
                 })
     datasets['paddle_prediction_detail'], datasets['paddle_control_detail'] = [], []
