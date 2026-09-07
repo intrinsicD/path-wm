@@ -133,6 +133,50 @@ def test_previous_action_marker_does_not_shift_or_alias_origin():
             data.previous_action_vectors(invalid)
 
 
+def test_prepared_motion_and_action_scales_use_only_training_groups(source, tmp_path):
+    output = tmp_path / "prepared"
+    manifest = data.prepare(source, output)
+    norm = manifest["normalization"]
+    train_ids = manifest["splits"]["train"]["source_episode_ids"]
+    assert norm["fit_split"] == "train" and norm["source_episode_ids"] == train_ids
+    motion, offsets = [], []
+    with h5py.File(source, "r") as h5:
+        for ep in train_ids:
+            row, length = int(h5["ep_offset"][ep]), int(h5["ep_len"][ep])
+            poses = h5["state"][row:row+length].astype(np.float64)
+            angle = np.diff(poses[:, 4])
+            physical = np.column_stack([np.diff(poses[:, :4], axis=0), np.arctan2(np.sin(angle), np.cos(angle))])
+            motion.extend(physical[1:])  # frame indices >=2, not the first displacement.
+            offsets.extend((h5["action"][row:row+length-1].astype(np.float64) - poses[:-1, :2]) / 512)
+    expected_scales = np.maximum(np.sqrt(np.mean(np.square(motion), axis=0)), [1, 1, 1, 1, .01])
+    np.testing.assert_allclose(norm["motion_scales"], expected_scales, rtol=1e-14)
+    np.testing.assert_allclose(norm["action_offset_rms"], np.sqrt(np.mean(np.square(offsets), axis=0)), rtol=1e-14)
+    assert norm["motion_count"] == len(motion) and norm["action_count"] == len(offsets)
+    for split in ("train", "validation", "test"):
+        for episode in data.EpisodeDataset(output, split):
+            poses = episode["poses_world"].astype(np.float64)
+            angle = np.diff(poses[:, 4])
+            physical = np.column_stack([np.diff(poses[:, :4], axis=0), np.arctan2(np.sin(angle), np.cos(angle))])
+            np.testing.assert_allclose(episode["motion_targets"][1:] * expected_scales, physical, atol=1e-6)
+            targets, mask = data.make_targets(poses, motion_scales=expected_scales)
+            np.testing.assert_array_equal(targets[:, 6:], episode["motion_targets"])
+            np.testing.assert_array_equal(mask[:, 6:], episode["motion_mask"])
+    # Perturb only held-out motion and commands while retaining initial poses/groups.
+    heldout_ids = manifest["splits"]["validation"]["source_episode_ids"] + manifest["splits"]["test"]["source_episode_ids"]
+    with h5py.File(source, "r+") as h5:
+        for ep in heldout_ids:
+            row, length = int(h5["ep_offset"][ep]), int(h5["ep_len"][ep])
+            changed = h5["state"][row+1:row+length]
+            changed[:, :4] += np.arange(1, length)[:, None] * 100
+            changed[:, 4] += np.arange(1, length) * .4
+            h5["state"][row+1:row+length] = changed
+            h5["action"][row:row+length-1] = 0
+    second = data.prepare(source, tmp_path / "heldout_changed")
+    assert second["splits"] == manifest["splits"]
+    assert second["normalization"]["motion_scales"] == norm["motion_scales"]
+    assert second["normalization"]["action_offset_rms"] == norm["action_offset_rms"]
+
+
 def test_initial_grouping_is_transitive_circular_and_requires_both_positions():
     starts = np.array([[0, 0, 100, 100, 2*np.pi-.01],
                        [4, 0, 100, 100, .01],

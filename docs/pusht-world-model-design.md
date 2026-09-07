@@ -91,8 +91,8 @@ The simulator's declared Box still has relative-action bounds even in absolute
 mode. The new wrapper validates absolute XY itself and calls
 `env.step(512 * normalized_action)` with `relative=False`; do not use that Box
 to normalize CCHI commands. A zero vector means “target the origin,” not “stay.”
-A hold-position baseline repeatedly targets the pusher's initial position; its
-privileged initialization is labeled and never supplied to the learned planner.
+A hold-position baseline repeatedly targets H's estimated initial pusher position.
+A repeat-last baseline repeats the last actually observed absolute action.
 
 ## Observer, predictor and readouts
 
@@ -139,7 +139,7 @@ Pymunk velocity:
 delta_xy_i = pose_xy_i - pose_xy_(i-1)             # four positions
 delta_angle_i = atan2(sin(theta_i-theta_(i-1)),
                      cos(theta_i-theta_(i-1)))
-motion_target_i = [delta_xy_i / 512, delta_angle_i / pi]
+motion_target_i = [delta_xy_i, delta_angle_i] / train_motion_rms
 ```
 
 Supervise pose at every real frame and motion only for `i >= 2`, preserving the
@@ -243,7 +243,9 @@ Default CEM: 64 candidates, 4 iterations, 8 elites, horizon **5 primitive action
 = 0.5 seconds**. Optimize absolute normalized XY in `[0,1]^2`, including the
 current mean as a candidate and clipping only sampled planner candidates before
 scoring/execution. Initialize mean at H's estimated current pusher XY, clipped
-to domain, and std 0.2. Use a recorded RNG per case/controller. Score terminal
+to domain. The two-axis initial std is train-only RMS of
+`(action_world - current_pusher_xy) / 512`, clamped to [0.01,0.2];
+record both raw and resolved values. Use a recorded RNG per case/controller. Score terminal
 H-predicted pose against H-goal pose with
 
 ```
@@ -277,7 +279,7 @@ Prepare cases before any controller outcomes are measured:
    linear/angular velocities before branching. A seven-value observation passed
    to `_set_state` is **not** an exact clone. Do not share mutable Pymunk bodies.
 3. Keep windows whose current-versus-goal **block** position distance is at least
-   20 world units or whose wrapped orientation difference is at least π/9. These
+   40 world units or whose wrapped orientation difference is at least 2π/9. These
    are initially unsolved under the declared strict success predicate and
    generally require contact-driven block motion. Actual contact counts are a
    diagnostic, not a hidden additional selection rule. Publish all eligible and
@@ -443,3 +445,25 @@ The existing LeWM loader packs five primitive actions per prediction, and its
 current evaluator executes all 25 flattened actions per plan despite a
 `receding_horizon: 5` metadata field. Reuse the CEM idea with the new explicit
 one-action execution loop, not that legacy control loop or its timing labels.
+
+## Prospective normalization and training amendment (before first training)
+
+Claude identified a weak motion-gradient scale under division by the full512-unit
+world. Fit each physical backward-displacement RMS on training groups only,
+using indices >=2, float64 streaming, and floors [1,1,1,1,0.01] in world/radian
+units. Record scales, counts and source episode IDs in the data fingerprint and
+checkpoints; inverse-transform all reported R motion errors. No held-out label
+may affect these scales. Fit action-offset RMS on used training transitions only.
+
+Root-owned training/checkpoint/CLI modules reuse the established atomic
+optimizer/RNG transaction and exact dependency checks with a separate PushT
+model/action schema. Fixed validation objectives select checkpoints; smoke
+overrides cannot set quality gates true. Essential tests cover masked scalar
+counts, ragged validation weighting, circular errors, strict copy gate, rejection
+of cross-domain/corrupted checkpoints, exact interrupted training recovery, and
+idempotent completed resume. Initial training tests intentionally fail because
+these modules do not yet exist. Training remains FP32 and bounded above.
+
+The control selection margin is prospectively two times either block tolerance,
+chosen before model outcomes. Report final success as primary and any-time
+success as secondary. Keep raw initial/final error and initially solved counts.

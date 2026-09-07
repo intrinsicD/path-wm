@@ -47,6 +47,10 @@ state block with its original Zarr array using exact equality; all match, and
 episode ends/offsets match. See the new
 [conversion receipt](../data/pusht_cchi/conversion.json).
 
+The full source scan measured block angles from **0.000215591251617 to
+6.2830877304 radians**. Causal angle differences must therefore wrap across
+0/2π. No source-wide terminal-success rate was measured in this audit.
+
 The measured filesystem had **24,150,200,320 bytes available** at the audit.
 The full legacy HDF5 alone exceeds that space; retaining its archive and HDF5
 together needs about 59.44 GB before derived caches. Recovering the source on a
@@ -109,6 +113,9 @@ The checked local simulator is adapted from stable-worldmodel commit
 `6f1e499e9cc0c898d326112f485c1062c3d20f24`. Its world is 512 units square.
 One action interval is **0.1 seconds / 10 Hz**, comprising ten 0.01-second physics
 steps. The PD controller uses `k_p=100`, `k_v=20`.
+`_setup` explicitly sets `space.damping = 0`; `reset` changes that value only
+when a non-None damping override is supplied. The checked default wrapper uses
+that local simulator behavior, rather than assuming Pymunk's library default.
 
 - LeWM relative mode computes one fixed target at interval start:
   `target_xy = current_agent_xy + 100 * action_xy`. This is a target displacement,
@@ -216,12 +223,18 @@ and all old LeWM interfaces.
   ordering and never reset memory mid-episode.
 - Use H targets `[agent_x/512, agent_y/512, block_x/512, block_y/512,
   sin(angle), cos(angle)]`. CCHI's R has these six pose outputs plus four causal
-  backward XY displacements divided by 512 and wrapped angular change divided
-  by pi, totaling 11 outputs; motion terms at t<2 are masked. Those five motion
+  backward XY displacements and one wrapped angular change, totaling 11 outputs;
+  motion terms at t<2 are masked. Before first training, the coordinator adopted
+  per-coordinate physical-motion RMS scales fitted only on training groups at
+  t>=2, with floors of 1 world unit for XY and 0.01 radians for angle. Divide
+  motion labels by these recorded scales; the earlier `/512` and `/pi` proposal
+  is superseded for prepared training labels. Also fit normalized action-offset
+  RMS `(action_world - pusher_xy)/512` on training transitions for the declared
+  CEM initialization. Record fit counts and exact source episode IDs. These motion
   targets are **estimated displacements per raw interval**, not stored velocity
   labels. This requires task-specific readout sizes, not replacing the recurrence.
 - An episode adapter should expose raw frames, `L-1` causal executable actions,
-  pose/velocity targets with validity masks, episode/group/source identities,
+  pose/motion targets with validity masks, episode/group/source identities,
   timing, and separate evaluation metadata. Model inputs remain RGB and actions.
 - Continuous PushT actions require a new declared planner and goal evaluator;
   the paddle's three-action exhaustive interception score cannot be reused.
@@ -232,12 +245,16 @@ Storage arithmetic, excluding file/index overhead:
 | Population | Raw uint8 RGB64 | Full float32 S cache | Float32 128-memory cache |
 | --- | ---: | ---: | ---: |
 | Full historical LeWM source | 28,713,811,968 B | 191,425,413,120 B | 1,196,408,832 B |
-| Historical CCHI source | 315,187,200 B | 2,101,248,000 B | 13,132,800 B |
+| Verified CCHI source | 315,187,200 B | 2,101,248,000 B | 13,132,800 B |
 | Historical 20,015-frame pilot | 245,944,320 B | 1,639,628,800 B | 10,247,680 B |
 
-The full uncompressed RGB64 cache alone also exceeds the measured free space.
-Stream source frames, estimate any bounded or compressed derived representation,
-and cache memory rather than silently allocating the full S population.
+The historical LeWM uncompressed RGB64 cache alone exceeds the measured free
+space. The compact CCHI cache fits: the selected adapter streams canonical
+uint8 RGB64 into one `frames.npy` file, exposing read-only memory-mapped views.
+Small per-episode NPZ files contain labels/actions and source/global offsets,
+without duplicating compressed pixels. The manifest records the flat image
+file hash and its source-episode/frame ordering. This also avoids the measured
+random-frame decompression bottleneck from the earlier paddle implementation.
 
 ## Essential checks before training/control
 
