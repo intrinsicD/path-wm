@@ -454,6 +454,11 @@ def verify_dataset(output, source=None):
     # Recompute grouping and RNG split from the source, without trusting labels.
     current_identity = _identity(source, manifest["split_protocol"]["seed"])
     current_identity["source"] = identity["source"]  # Relocation is allowed after content-hash verification.
+    # Version labels are provenance; reproducibility is verified from actual
+    # groups, split membership, normalization, pixels and labels below.
+    numpy_versions = {"prepared": identity["split_protocol"]["numpy_version"],
+                      "verified": current_identity["split_protocol"]["numpy_version"]}
+    current_identity["split_protocol"]["numpy_version"] = numpy_versions["prepared"]
     if current_identity != identity:
         raise ValueError("source split/group/schema identity mismatch")
     entries = manifest["episodes"]
@@ -463,7 +468,7 @@ def verify_dataset(output, source=None):
     if frames.shape != tuple(manifest["frame_store"]["shape"]) or frames.dtype != np.uint8:
         raise ValueError("flat frame store schema mismatch")
     seen_groups, frame_splits, trajectory_splits = {}, {}, {}
-    report = {"passed": True, "episodes": 0, "frames": 0, "transitions": 0,
+    report = {"passed": True, "numpy_versions": numpy_versions, "episodes": 0, "frames": 0, "transitions": 0,
               "splits": {name: 0 for name in _SPLITS}, "fingerprint": manifest["fingerprint"]}
     with h5py.File(source, "r") as h5:
         for ep, entry in enumerate(entries):

@@ -56,3 +56,37 @@ attention, spatial activation/variation, spectrum and task-readout errors.
 Attention is descriptive, not causal attribution. All learned visualization
 bases/probes fit training data only. Held-out test results cannot change
 checkpoint selection, gates, objectives or the continuation choice.
+
+## Reporting scope amendment before the first GPU run
+
+Combining every historical home LeWM study with the restored work session
+produced84 native datasets against the canonical fixed limit50. Preserve both
+prior reports and every raw ledger. The curriculum runner uses the existing
+run_experiment wrapper and write_experiment_dashboard with its explicit
+runs-root set to runs/curriculum_2026-09-07, publishing to the required canonical
+runs/experiment_dashboard.html and companion. This shows all phases/evaluations
+of this curriculum; previous tracks remain separate viewing evidence. The scope
+is visible in the HTML. No format limit or browser assertion is relaxed.
+
+
+## Thin slice verified and budget frozen
+
+Full restoration/source/inference verification passed. The 100-update GPU
+profile took6.0106seconds including validation, with peak allocated CUDA
+memory1,389,499,904bytes. Full batch128 fits; retain4000 total updates per arm
+and the original100-update validation cadence. B/C adaptation receives only
+the remaining part of its arm's3600-second budget after warmup.
+Profile reporting initially failed on absolute paths in the new source adapter;
+raw results were preserved, paths made portable, and the rebuilt canonical HTML
+passed browser verification at1440px and390px. CPU suite343passed/3skipped;
+additional curriculum ledger-tamper regression passes.
+
+COCO preparation decoded82783images, grouped82636components, and split
+74501/4136/4146 train/validation/test frames. Fingerprint:
+7fd00bc0232ddf4fdc76b70410203de7a7a199b375498996ec0f9242854ea46d.
+There are242unique candidate pairs (253edges including overlapping exact/hash
+matches). Representative inputs and the first40candidate pairs were visually
+inspected. Genuine duplicate/color-edited pairs occur alongside conservative
+false positives on mostly sky images. All candidates remain grouped; no manual
+split changes. This criterion cannot guarantee all semantic duplicates were found.
+Contact sheets and transform/split evidence are under the curriculum data_review.

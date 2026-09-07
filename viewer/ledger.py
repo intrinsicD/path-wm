@@ -451,4 +451,25 @@ def collect_run_results(runs_root: Path) -> tuple[list[RunResult], list[str]]:
     pusht_results, pusht_notices = collect_pusht_results(runs_root)
     results.extend(pusht_results)
     notices.extend(pusht_notices)
+    from viewer.curriculum import collect_curriculum_results
+    curriculum_results, curriculum_notices = collect_curriculum_results(runs_root)
+    results.extend(curriculum_results); notices.extend(curriculum_notices)
     return sorted(results, key=lambda r: (r.modified_at, r.label)), notices
+
+
+def resolve_evidence_path(value, runs_root):
+    """Rebase archived run-relative evidence while preserving its raw path string."""
+    path=Path(value);runs_root=Path(runs_root).resolve()
+    if '..' in path.parts:
+        raise ValueError('evidence path traversal')
+    if path.is_absolute():
+        if path.is_relative_to(runs_root) and path.is_file():return path
+        if 'runs' in path.parts:
+            index=len(path.parts)-1-list(reversed(path.parts)).index('runs')
+            local=runs_root.joinpath(*path.parts[index+1:])
+            if local.is_file():return local
+        if path.is_file():return path
+    else:
+        local=runs_root.parent/path
+        if local.is_file():return local
+    raise FileNotFoundError(f'archived evidence is unavailable: {value}')

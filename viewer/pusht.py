@@ -275,8 +275,8 @@ def collect_pusht_results(runs_root):
             if (directory/name).exists(): sources.append(directory/name)
         panels=[]
         for visual in report.get('visuals',[]):
-            panel=Path(visual['png'])
-            if not panel.is_absolute(): panel=runs_root.parent/panel
+            from .ledger import resolve_evidence_path
+            panel = resolve_evidence_path(visual['png'], runs_root)
             if not panel.exists(): raise DashboardDataError(f'{path}: PushT image missing {panel}')
             sources.append(panel); panels.append({**visual,'png':str(panel)})
         # Protocol sections retain their exact values without one oversized cell.

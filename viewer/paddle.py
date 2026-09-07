@@ -329,8 +329,8 @@ def collect_paddle_results(runs_root):
         for visual in report.get('visuals', []):
             if 'png' not in visual:
                 continue
-            panel = Path(visual['png'])
-            if not panel.is_absolute(): panel = runs_root.parent / panel
+            from .ledger import resolve_evidence_path
+            panel = resolve_evidence_path(visual['png'], runs_root)
             if not panel.is_file():
                 raise DashboardDataError(f'{path}: qualitative panel missing: {panel}')
             sources.append(panel)

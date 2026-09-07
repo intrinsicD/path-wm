@@ -2,7 +2,7 @@
 import json
 import torch
 import yaml
-from test_training_lifecycle import setup_run
+from tests.test_training_lifecycle import setup_run
 
 
 def test_modes_restore_random_window_population_and_preserve_checkpoint(setup_run,tmp_path):

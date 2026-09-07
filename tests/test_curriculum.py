@@ -70,3 +70,52 @@ def test_duplicate_components_are_transitive_and_split_as_units():
     assert len(membership)==len(groups)
     assert membership[0]==membership[1]==membership[2]
     assert all(split.values())
+
+def test_archived_panel_resolves_in_current_runs_without_rewriting_source(tmp_path):
+    from viewer.ledger import resolve_evidence_path
+    current=tmp_path/'runs';p=current/'trial/visuals/frame.png'
+    p.parent.mkdir(parents=True);p.write_bytes(b'image evidence')
+    original='/old/computer/project/runs/trial/visuals/frame.png'
+    assert resolve_evidence_path(original,current)==p
+    with pytest.raises(FileNotFoundError):
+        resolve_evidence_path('/old/computer/project/runs/missing.png',current)
+
+def test_atomic_resume_matches_uninterrupted_actual_training(tmp_path):
+    from world_model.curriculum.data import FrameSet
+    from world_model.curriculum.training import train_phase
+    from world_model.pusht.checkpoints import read_checkpoint
+    rng=np.random.default_rng(7)
+    data=FrameSet(rng.integers(0,256,(5,64,64,3),dtype=np.uint8),range(5),rng.random((5,6)).astype('float32'),
+                  fingerprint='fixed-test-source')
+    config=dict(phase='supervised',seed=7,arm='test',device='cpu',cpu_threads=1,
+                updates=4,batch_size=3,microbatch=2,validate_every=2,validation_batch=3,
+                max_seconds=120,learning_rate=3e-4,weight_decay=1e-4,grad_clip=1.)
+    train_phase(config,data,data,[0,1,2],tmp_path/'full')
+    train_phase(config,data,data,[0,1,2],tmp_path/'resumed',stop_after=2)
+    train_phase(config,data,data,[0,1,2],tmp_path/'resumed',resume=True)
+    full=read_checkpoint(tmp_path/'full/last.pt');resumed=read_checkpoint(tmp_path/'resumed/last.pt')
+    assert full['model_fingerprint']==resumed['model_fingerprint']
+    assert full['rng']['sampler']==resumed['rng']['sampler']
+    assert full['best_key']==resumed['best_key']
+    changed=FrameSet(data.frames,list(reversed(data.rows)),data.targets,fingerprint='fixed-test-source')
+    with pytest.raises(ValueError,match='population'):
+        train_phase(config,changed,data,[0,1,2],tmp_path/'resumed',resume=True)
+
+
+def test_curriculum_dashboard_rejects_rewritten_selected_metrics(tmp_path):
+    import json
+    from viewer.curriculum import collect_curriculum_results
+    from viewer.ledger import DashboardDataError
+    root=tmp_path/'runs'; run=root/'phase';run.mkdir(parents=True)
+    config={'batch_size':2,'phase':'supervised','seed':7,'arm':'A'}
+    manifest={'config':config,'dataset':'data'}
+    (run/'curriculum_manifest.json').write_text(json.dumps(manifest))
+    (run/'training.jsonl').write_text(json.dumps({'step':1})+'\n')
+    (run/'validation.jsonl').write_text(json.dumps({'step':1,'q':2.})+'\n')
+    result={'status':'completed','step':1,'examples':2,'selected_step':1,'selected':{'q':2.},'final':{'q':2.}}
+    path=run/'curriculum_result.json';path.write_text(json.dumps(result))
+    records,_=collect_curriculum_results(root)
+    assert all(not s.startswith('/') for s in records[0].source_paths)
+    result['selected']['q']=.5;path.write_text(json.dumps(result))
+    with pytest.raises(DashboardDataError,match='differs'):
+        collect_curriculum_results(root)

@@ -551,6 +551,8 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
     from viewer.pusht import add_pusht_views
     pusht_blocks = add_pusht_views(run_results, datasets, charts, tables, cards,
                                   _chart, table, SOURCE_ID)
+    from viewer.curriculum import add_curriculum_views
+    curriculum_blocks = add_curriculum_views(run_results, datasets, charts, tables, cards, _chart, table, SOURCE_ID)
     if pusht_blocks:
         source['query']['transformation'] += (' PushT E/U/P ledgers are independently reconciled by viewer/pusht.py; '
             'final fixed-budget controller outcomes and five-action oracle reachability are separate. '
@@ -578,6 +580,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
               {"id": "coverage", "type": "metric-strip", "cardIds": [card["id"] for card in cards]}]
     blocks += [block for block in paddle_blocks if block['type'] == 'markdown']
     blocks += [block for block in pusht_blocks if block['type'] == 'markdown']
+    blocks += [block for block in curriculum_blocks if block['type'] == 'markdown']
     blocks += [{"id": f"chart_{chart['id']}", "type": "chart", "chartId": chart["id"], "layout": chart["layout"]} for chart in charts]
     # PNG evidence dominates the portable payload. Bound only the image panels;
     # every inspection remains in the exact tables and quantitative series.
@@ -605,6 +608,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
     blocks += _panel_blocks(list(latest_gradients.values()))
     blocks += [block for block in paddle_blocks if block['type'] != 'markdown']
     blocks += [block for block in pusht_blocks if block['type'] != 'markdown']
+    blocks += [block for block in curriculum_blocks if block['type'] != 'markdown']
     blocks += [{"id": f"table_{item['id']}", "type": "table", "tableId": item["id"], "layout": "full"} for item in tables]
     notes = ["No experimental pass threshold is inferred by the viewer. Recorded gate annotations remain visible.",
              "Control groups reflect ordered case identities only; inspect protocol context before comparing results.",
@@ -707,6 +711,8 @@ def write_experiment_dashboard(
             from scripts.collect_projection_experiment import collect
             collect(plan.parent)
     run_results, notices = collect_run_results(runs_root)
+    if runs_root != DEFAULT_RUNS_ROOT.resolve():
+        notices.append(f"This report includes all supported ledgers under {runs_root}. Other research tracks retain their own raw runs and archived reports; they are outside this explicitly scoped view.")
     artifact = build_dashboard_artifact(run_results, notices, focus)
     # Keep the last verified companion intact when canonical publication fails.
     # A unique staging directory also avoids sharing temporary inputs with a
