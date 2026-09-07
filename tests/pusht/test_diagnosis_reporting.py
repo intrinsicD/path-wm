@@ -1,5 +1,7 @@
 """Diagnostic charts must reconcile recorded means and weighted image regions."""
 import base64
+import copy
+import hashlib
 import json
 
 import pytest
@@ -250,4 +252,78 @@ def test_independent_history_assessment_rejects_wrong_denominators_or_unmatched_
     elif tamper == 'paired_ratio': report['comparisons']['mixed_selected_9750']['paired']['mae']['ratio'][2] = .1
     write(directory / 'raw.json', report)
     with pytest.raises(DashboardDataError, match='history|assessment|raw evidence'):
+        collect_run_results(root)
+
+
+def coverage_comparison(root):
+    import numpy as np
+    original_directory, original = diagnosis(root)
+    directory = original_directory.parent / 'perception_coverage_comparison'
+    grid = original_directory.parent / 'pose_grid' / 'probe_inputs.npz'
+    grid.parent.mkdir(parents=True, exist_ok=True)
+    np.savez(grid, frames=np.zeros((2, 64, 64, 3), np.uint8), poses=np.zeros((2, 5)))
+    parent = original_directory / 'raw.json'
+    source = [r for r in original['records'] if r['checkpoint_update'] == 200]
+    identities = [{k: r[k] for k in ('split', 'source_episode', 'group_id', 'frame_index', 'source_row')} for r in source]
+    records, models, summaries = [], {}, {}
+    for arm, update in [('source_selected200', 200), ('source_final1000', 1000),
+                        ('coverage_selected500', 500), ('coverage_final1000', 1000)]:
+        rows = copy.deepcopy(source)
+        for i, r in enumerate(copy.deepcopy(source[:2])):
+            r.update(split='synthetic_grid', source_episode=-1, frame_index=i, source_row=-1-i,
+                     group_id=i, truth_pose_world=[0.] * 5)
+            rows.append(r)
+        for r in rows: r.update(arm=arm, checkpoint_update=update)
+        records.extend(rows)
+        models[arm] = {'checkpoint': f'runs/{arm}.pt', 'sha256': 'c' * 64,
+                       'update': update, 'model_fingerprint': 'd' * 64, 'training_population': None}
+        summaries[arm] = {**copy.deepcopy(original['summary']['200']),
+                          'synthetic_grid': copy.deepcopy(original['summary']['200']['train'])}
+    protected = {m['checkpoint']: m['sha256'] for m in models.values()}
+    protected[parent.relative_to(root.parent).as_posix()] = hashlib.sha256(parent.read_bytes()).hexdigest()
+    protected[grid.relative_to(root.parent).as_posix()] = hashlib.sha256(grid.read_bytes()).hexdigest()
+    report = {'schema_version': 'pusht-perception-coverage-comparison-v1', 'status': 'completed',
+        'device': 'cpu', 'dataset_fingerprint': original['dataset_fingerprint'], 'models': models,
+        'records': records, 'summary': summaries,
+        'source_population': {'parent_raw': parent.relative_to(root.parent).as_posix(),
+            'parent_sha256': hashlib.sha256(parent.read_bytes()).hexdigest(), 'frames': 4,
+            'train_frames': 2, 'validation_frames': 2, 'identities': identities},
+        'grid_population': {'source': grid.relative_to(root.parent).as_posix(),
+            'sha256': hashlib.sha256(grid.read_bytes()).hexdigest(), 'frames': 2,
+            'independent_position_settings': 2, 'angles_per_position': 1,
+            'scope': 'Out-of-source diagnostic grid, not CCHI validation or benchmark control'},
+        'protected_hashes_before': protected, 'protected_hashes_after': protected.copy(),
+        'source_hashes_unchanged': True, 'model_tensors_unchanged': True, 'test_population_used': False,
+        'comparisons': {}, 'preserved_source_replay_parity': {}}
+    write(directory / 'raw.json', report)
+    (directory / 'examples.png').write_bytes(PNG)
+    return directory, report
+
+
+def test_coverage_comparison_keeps_source_and_stress_populations_separate_and_original_images(tmp_path):
+    root = tmp_path / 'runs'
+    coverage_comparison(root)
+    results, notices = collect_run_results(root)
+    coverage = [r for r in results if r.kind == 'pusht_perception_coverage']
+    assert len(coverage) == 1, 'The completed paired coverage comparison must be recognized'
+    assert coverage[0].context['source_frames'] == 4 and coverage[0].context['synthetic_grid_frames'] == 2
+    assert coverage[0].context['diagnostic_only'] is True
+    assert coverage[0].metrics['summary.coverage_selected500.validation.frames'] == 2
+    assert coverage[0].metrics['summary.coverage_selected500.synthetic_grid.frames'] == 2
+    artifact = build_dashboard_artifact(results, notices)
+    assert len([k for k in artifact['snapshot']['datasets'] if k.startswith('pusht_diagnosis')]) == 1
+    assert len(artifact['snapshot']['datasets']['pusht_diagnosis_summary']) == 4
+    assert sum(b.get('body', '').count('data:image/png;base64,') for b in artifact['manifest']['blocks']) == 3
+
+
+@pytest.mark.parametrize('tamper', ['grid_as_validation', 'fixed_source_identity', 'weighted_region'])
+def test_coverage_comparison_rejects_population_drift_and_wrong_region_denominator(tmp_path, tamper):
+    root = tmp_path / 'runs'
+    directory, report = coverage_comparison(root)
+    if tamper == 'grid_as_validation':
+        next(r for r in report['records'] if r['split'] == 'synthetic_grid')['split'] = 'validation'
+    elif tamper == 'fixed_source_identity': report['records'][0]['frame_index'] += 1
+    elif tamper == 'weighted_region': report['summary']['coverage_selected500']['validation']['regions']['block']['scalars'] += 1
+    write(directory / 'raw.json', report)
+    with pytest.raises(DashboardDataError, match='coverage|diagnosis|raw evidence'):
         collect_run_results(root)
