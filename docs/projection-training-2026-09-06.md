@@ -1,6 +1,6 @@
 # Paired projection-count training results — interim
 
-The screen is still running. The first seed favors1024 projections for early calibrated control in both datasets. At1500, calibrated TwoRoom is a46/50 tie and PushT is2/50 versus4/50 for1024/4096. Saved-buffer results are mixed. One seed does not establish a learning-speed benefit. All remaining pairs stay scheduled under the unchanged [frozen plan](projection-training-plan-2026-09-06.md).
+Two of the three paired seeds are complete on both datasets (32/48 control outcomes). Increasing projections has not shown a consistent learning advantage: early calibrated TwoRoom differences reverse sign across seeds, and final calibrated control ties at 46/50 and 45/50. PushT remains weak in both arms. The final seed continues under the unchanged [frozen plan](projection-training-plan-2026-09-06.md).
 
 ## Question and evidence boundaries
 
@@ -16,20 +16,28 @@ The 512 calibration windows add 452–459 PushT / 344–370 TwoRoom window start
 
 ## Recorded control outcomes
 
-Snapshot after16 of48 expected outcomes. Scores are successes out of50; all PushT initial-success counts are zero. Differences below are4096 minus1024. Saved and calibrated policies remain separate; calibrated control was predeclared primary.
+Snapshot after 32 of 48 expected outcomes. Scores are successes out of50; all PushT initial-success counts are zero. Differences below are4096 minus1024. Saved and calibrated policies remain separate; calibrated control was predeclared primary.
 
-| Dataset | Seed | Updates | BN policy |1024|4096| Difference |
+| Dataset | Seed | Updates | BN policy | 1024 | 4096 | Difference |
 |---|---:|---:|---|---:|---:|---:|
-|PushT|3072|750|Calibrated|3|2|−1|
-|PushT|3072|1500|Calibrated|2|4|+2|
-|PushT|3072|750|Saved|3|1|−2|
-|PushT|3072|1500|Saved|4|2|−2|
-|TwoRoom|3072|750|Calibrated|41|37|−4|
-|TwoRoom|3072|1500|Calibrated|46|46|0|
-|TwoRoom|3072|750|Saved|18|11|−7|
-|TwoRoom|3072|1500|Saved|43|47|+4|
+|pusht|3072|750|calibrated|3|2|-1|
+|pusht|3073|750|calibrated|1|1|+0|
+|pusht|3072|750|saved|3|1|-2|
+|pusht|3073|750|saved|1|2|+1|
+|pusht|3072|1500|calibrated|2|4|+2|
+|pusht|3073|1500|calibrated|1|1|+0|
+|pusht|3072|1500|saved|4|2|-2|
+|pusht|3073|1500|saved|2|1|-1|
+|tworoom|3072|750|calibrated|41|37|-4|
+|tworoom|3073|750|calibrated|35|41|+6|
+|tworoom|3072|750|saved|18|11|-7|
+|tworoom|3073|750|saved|22|11|-11|
+|tworoom|3072|1500|calibrated|46|46|+0|
+|tworoom|3073|1500|calibrated|45|45|+0|
+|tworoom|3072|1500|saved|43|47|+4|
+|tworoom|3073|1500|saved|44|44|+0|
 
-Seeds3073/3074 are pending. The [first-seed control figure](../runs/projection_training_2026-09-06/figures/outcomes16/projection_learning_curves.png) preserves a snapshot of these16 outcomes on fixed0–100% axes. No statistical threshold was frozen; no passing gate or significance claim follows from these values. The [live derivative](../runs/projection_training_2026-09-06/projection_comparison.json) explicitly lists every missing outcome and recomputes paired summaries from native reconciled case records. The [verified dashboard](../runs/experiment_dashboard.html) refreshes after every completed stage.
+Seed 3074 is pending. The [first-seed control figure](../runs/projection_training_2026-09-06/figures/outcomes16/projection_learning_curves.png) preserves a snapshot of the first seed’s 16 outcomes on fixed0–100% axes. No statistical threshold was frozen; no passing gate or significance claim follows from these values. The [live derivative](../runs/projection_training_2026-09-06/projection_comparison.json) explicitly lists every missing outcome and recomputes paired summaries from native reconciled case records. The [verified dashboard](../runs/experiment_dashboard.html) refreshes after every completed stage.
 
 ## Optimization and prediction context
 
@@ -69,3 +77,11 @@ Native FP32/CPU-bf16 loss and input gradients match, and the tiny CUDA-bf16 chec
 The implementation suite passed99 tests including3 browser checks before two subsequent guards were added. Targeted checks also pass for actual frozen case ordering and duplicate-coordinator refusal without overwriting active progress. A final full suite is pending. Browser fixtures verify one-checkpoint grouped bars and two-checkpoint markers at390/1440 pixels; synthetic values are excluded from the scientific ledger. Dashboard curves disclose adaptive axes; final standalone figures will use fixed0–100% scales.
 
 The [first-pair integrity audit](../runs/projection_training_2026-09-06/integrity_audit_first_pair.json) confirms all 13 protected scientific-code/reference/case inputs are unchanged, both paired global RNG states match at both checkpoints, and every exported calibrated clone changes only BN buffers. Full source HDF5 bytes were not rehashed in this screen; declared dataset revisions and hashes remain recorded. Final all-pair integrity verification, completed-results plots, dashboard inspection and interpretation await the remaining runs.
+
+## Second-seed results and reporting recovery
+
+Seed 3073 PushT calibrated scores tie at 1/50 at both checkpoints. Saved-buffer scores are 1/2 at 750 and 2/1 at 1500 (1024/4096). TwoRoom calibrated scores are 35/41 at 750 and 45/45 at 1500; saved scores are 22/11 and 44/44. At 750, calibration therefore adds 13 and 30 successes to the TwoRoom arms without changing learned parameters. Candidate saved-buffer control retains only three of the four initially successful cases at 750: its 11 total successes include eight newly solved cases, so subtracting four would be incorrect. The final seed remains necessary for the predeclared comparison.
+
+After outcome 22, canonical static-chart extraction exceeded its 16 MB output ceiling because fallback numeric-cell tooltips repeated the entire global source-file list. A reporting-only repair uses stable record keys for repeated exact metric/context rows, preserves full identities and paths in the inventory, and stores the complete input-file union once in source metadata. Source tooltips name the actual reconciled SQL input. Every exact value remains indexed, and all size limits and browser probes are unchanged. The actual dashboard and a separately labelled full-size synthetic capacity fixture pass desktop/mobile/source checks. Twenty-four targeted reporting/coordinator tests pass; final full-suite verification remains queued. Desktop inventory and mobile horizontal value scrolling were visually inspected.
+
+The coordinator reused the completed scientific evaluation and repaired only reporting. Its first restart failed during imports because resolving the interpreter symlink selected system Python; retrying the workspace virtual-environment path succeeded before further scientific work. The preserved failure records and recovery logs remain under the experiment root. A stale dashboard receipt can no longer mark a failed current stage verified. No training or control result was repeated to obtain a different score.
