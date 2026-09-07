@@ -112,20 +112,20 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest='command',required=True)
     commands.add_parser('doctor')
-    for name in ('generate','verify-data','test-history-cases','train-perception','train-memory',
+    for name in ('generate','verify-data','test-history-cases','train-perception','train-memory','train-history-memory',
                  'train-predictor','evaluate','demo','run-all','export-bundle','fork-predictor'):
         p = commands.add_parser(name)
-        if name in ('generate','train-perception','train-memory','train-predictor','evaluate','run-all','fork-predictor'):
+        if name in ('generate','train-perception','train-memory','train-history-memory','train-predictor','evaluate','run-all','fork-predictor'):
             p.add_argument('--config',required=True,type=Path)
-        if name in ('verify-data','train-perception','train-memory','train-predictor','evaluate','run-all'):
+        if name in ('verify-data','train-perception','train-memory','train-history-memory','train-predictor','evaluate','run-all'):
             p.add_argument('--data',required=True,type=Path)
-        if name in ('train-perception','train-memory','train-predictor','run-all','fork-predictor'):
+        if name in ('train-perception','train-memory','train-history-memory','train-predictor','run-all','fork-predictor'):
             p.add_argument('--run',required=True,type=Path)
         if name.startswith('train-'):
             p.add_argument('--resume',action='store_true')
         if name == 'fork-predictor':
             p.add_argument('--checkpoint',required=True,type=Path)
-        if name in ('train-memory','train-predictor','evaluate','demo','export-bundle'):
+        if name in ('train-memory','train-history-memory','train-predictor','evaluate','demo','export-bundle'):
             p.add_argument('--perception',required=True,type=Path)
         if name in ('train-predictor','evaluate','demo','export-bundle'):
             p.add_argument('--memory',required=True,type=Path)
@@ -147,6 +147,9 @@ def main(argv=None):
         from .data import generate_dataset, verify_dataset, test_history_cases
         function = {'generate':generate_dataset,'verify-data':verify_dataset,'test-history-cases':test_history_cases}[command]
         if command == 'verify-data': args = {'path':args['data']}
+    elif command == 'train-history-memory':
+        from .history_training import train_history_memory
+        function = train_history_memory
     elif command.startswith('train-'):
         from .training import train_perception,train_memory,train_predictor
         function = {'train-perception':train_perception,'train-memory':train_memory,'train-predictor':train_predictor}[command]
@@ -157,6 +160,9 @@ def main(argv=None):
         from .evaluation import evaluate,demo
         function = {'evaluate':evaluate,'demo':demo}[command]
     try:
+        if command in ('run-all','train-memory') and 'history_starts' in args.get('config',{}):
+            raise ValueError('A history_starts configuration requires the explicit train-history-memory command; '
+                             'use train-predictor and evaluate for its downstream stages')
         result = function(**args)
         print(json.dumps(result,indent=2,default=str,allow_nan=False))
         return 0

@@ -1,0 +1,61 @@
+schema_version: 1
+seed: 1701
+smoke: true
+device: cpu
+cpu_threads: 2
+dataset:
+  train: 5000
+  validation: 500
+  test: 500
+history_starts:
+  schema_version: 1
+  dataset_fingerprint: c6d255dc9919b1bb9ce38182f9d180047f964754a32c616db072bc965a3be54f
+  suffix_seed: 38802
+  validation_suffix_seed: 38920
+  normalization:
+  - 64
+  - 64
+  - 6
+  - 6
+  - 64
+  ordinary_validation_manifest: runs/paddle/baseline/memory/paddle_manifest.json
+  ordinary_validation_indices:
+  - 237
+  - 212
+training:
+  learning_rate: 0.0003
+  weight_decay: 0.0001
+  grad_clip: 1.0
+  encoder_batch_size: 128
+  validate_every: 1
+  early_stopping: true
+  perception:
+    batch_size: 128
+    updates: 10000
+    validation_examples: 4096
+  memory:
+    batch_size: 2
+    updates: 2
+    validation_examples: 2
+    validation_pairs: 2
+  predictor_1:
+    batch_size: 64
+    updates: 20000
+    validation_examples: 1024
+  predictor_5:
+    batch_size: 16
+    updates: 10000
+    validation_examples: 1024
+evaluation:
+  ordinary_starts: 500
+  paired_pairs: 100
+  prediction_windows: 1024
+  probe_frames: 4096
+  candidate_batch_size: 243
+  control_max_steps: 200
+  controllers:
+  - learned
+  - reset
+  - random
+  - tracker
+  - privileged
