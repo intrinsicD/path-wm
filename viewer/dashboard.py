@@ -458,7 +458,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                 charts[-1]['settings']['showPoints']='always'
             charts[-1]['encodings']['y'].update(label='Success rate',format='percent')
             charts[-1]['encodings']['x']['label']='Training seed' if len(steps)==1 else 'Training updates'
-            charts[-1]['subtitle'] += ' Axes adapt to recorded values; compare the labelled percentages.'
+            charts[-1]['subtitle'] += ' Axes adapt to recorded values; success-rate data are fractions, so 0.1 means 10%.'
         datasets['projection_control_detail'] += [{**r,'status':'missing','successes':None,'cases':None,
             'newly_solved':None,'source':None} for r in comparison.internals['comparison_missing']]
         datasets['projection_paired_detail']=[]

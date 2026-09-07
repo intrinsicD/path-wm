@@ -9,7 +9,7 @@ research direction does not replace that workflow.
 
 Build a fresh modular implementation of the published LeWM baseline. Demonstrate
 learning and control on PushT and support multiple explicit dataset protocols.
-The working baseline is preserved while user-authorized sample-efficiency research proceeds separately; the full reproduction schedule remains incomplete.
+The working baseline is preserved after the user-authorized sample-efficiency research and paired training screen; the full reproduction schedule remains incomplete.
 The earlier reset removed the previous implementation and results; the retained
 ideas and downloaded source datasets carried forward. The reusable development
 harness is now recovered separately from that discarded implementation.
@@ -20,17 +20,21 @@ training and benchmark evaluation. Baseline-specific tests cover episode
 alignment, causal action timing, reference computations and gradients,
 normalization, rollout and checkpoint integrity.
 
-## Active: paired projection-count training screen with Claude (2026-09-06)
+## Completed: paired projection-count training screen with Claude (2026-09-07)
 
-The user asked to proceed with Claude implementation co-work. The [frozen plan](projection-training-plan-2026-09-06.md) compares1024 and4096 resampled SIGReg directions from scratch, three paired seeds on each full-source dataset,1500 updates and matched saved/calibrated control at750/1500. Original checkpoints stay immutable. This short-schedule source-population screen is not full reproduction or independent-data generalization.
+All 12 full-source runs completed 1500 updates, and all 48 planned control outcomes are recorded under `runs/projection_training_2026-09-06`. No training, evaluations or finalization jobs remain queued. See the [final report](projection-training-2026-09-06.md), [frozen plan](projection-training-plan-2026-09-06.md), and [verified dashboard](../runs/experiment_dashboard.html). The short cosine schedule is not full reproduction or an independent-data generalization test.
 
-Claude supplied private-RNG code/test design and the paired-statistics implementation through two neutral MCP tasks ($1.132410 reported API-equivalent). Integration retained the exact pinned loss quadrature/precision and corrected two draft differences; no EMA target change applies to this model. SeededSIGReg is opt-in and checkpointed. Numerical parity, global-RNG isolation, exact resume, calibrated-clone integrity and paired-population tests pass.
+Increasing resampled SIGReg directions from 1024 to 4096 produced modest final calibrated gains: +2 percentage points on each dataset, equivalent to one additional success out of 50 on average. PushT final mean success is 2.67%/4.67%; TwoRoom is 89.33%/91.33% (1024/4096). Early calibrated effects are −0.67 pp on PushT and +2.67 pp on TwoRoom, with TwoRoom paired differences ranging from −8 to +12 pp. Early saved-buffer TwoRoom control is worse with 4096 in every seed (mean −19.33 pp); final saved-buffer effects are 0 pp on PushT and +3.33 pp on TwoRoom. No large learning-speed or independent-data reduction is demonstrated; 4096 remains optional rather than an adopted sample-efficiency fix.
 
-Four20-update GPU preflights complete with verified HTML:1024/4096 update times1.3265/1.3368s (PushT),1.3198/1.3354s (TwoRoom); peaks3.2822/3.2830GB. Paired initializations and final global CPU/CUDA RNG states match. These are timing checks, not learning results.
+At 750 updates, the same fixed training-only BN calibration adds 13–33 successful TwoRoom cases out of 50 across all six checkpoints without changing parameters. PushT calibration effects remain mixed. Layer attribution and a prospective normalization correction remain open. All 732 logged pre-clip training gradient samples exceed the threshold, but neither every-update clipping frequency nor early-training conditional gradient variance was measured. Final saved-buffer prediction/copy improves in all three TwoRoom and two PushT pairs. These diagnostics do not substitute for control.
 
-The serial coordinator is active under runs/projection_training_2026-09-06. Read progress.json, stages.jsonl and logs/ for status; projection_comparison.json records all48 expected control outcomes including missing ones. The canonical dashboard refreshes and reconciles this derivative after each completed run/evaluation. The first arm began2026-09-06T19:39:40Z; expected total roughly10h including evaluations. The cumulative training-loop cap remains2100s per arm and stopped results remain explicit. Two seeds are complete on both datasets (32/48 control outcomes). Calibrated PushT scores remain 1–4/50 across the completed arms. Early calibrated TwoRoom projection differences reverse sign across seeds (4096 minus1024: −4, +6 cases); final scores tie at46/50 and45/50. A consistent projection-count learning benefit is not established. Seed3074 is active. All four preselected qualitative panels are verified and inspected. A browser-output failure after outcome22 was repaired by bounding repeated provenance text while preserving every exact value and full source identity; completed science was reused. Current and synthetic final-size dashboard checks pass, as do24 targeted reporting/coordinator tests. Final audits, full tests and exports remain queued. See the [interim report](projection-training-2026-09-06.md).
+Each arm processes 96,000/192,000 distinct optimizer windows at 750/1500 updates, already covering nearly every source episode by the final checkpoint. Exact frame-row reuse at 1500 is about 1.14× on PushT and 1.42× on TwoRoom. Calibration and full-source action normalization add population access; the random-window protocol can share source episodes/frames across splits. The source cases do not establish unseen-configuration or long-goal generalization.
 
-## Latest: sample-efficiency investigation complete (2026-09-06)
+Claude supplied private-RNG implementation/test design and the paired-statistics implementation through two neutral MCP calls ($1.132410 reported API-equivalent). Integration retained the exact pinned loss expression and legacy behavior. All six pairs match initial weights, populations and global CPU/CUDA RNG at both checkpoints; all 24 calibrated clones change only BN buffers. The 13 protected scientific-code/reference/case inputs remain unchanged. All four preselected qualitative panels are verified and inspected.
+
+Final verification: 103 tests pass, including three browser checks. The canonical dashboard passes source interaction and desktop/mobile verification, with all 12 points in each paired chart at both widths. A browser-output failure was repaired by bounding repeated provenance text while preserving every exact value and full source identity; completed science was reused. The final payload is 2,516,589 bytes. Fixed-scale control and discrete gradient/prediction PNG/SVG figures and actual native charts were visually inspected. Original checkpoints and reproduction configurations remain preserved.
+
+## Earlier: sample-efficiency investigation complete (2026-09-06)
 
 The user requested literature research with Claude, batch/gradient inspection and a plausible route to fewer examples. See [the evidence and proposed experiment](sample-efficiency-2026-09-06.md), [predeclared plan](sample-efficiency-plan-2026-09-06.md), and [verified dashboard](../runs/experiment_dashboard.html). No training or diagnostic work remains active. All original checkpoint hashes and model parameters/buffers are preserved.
 
@@ -86,13 +90,9 @@ inspection populations. Every numeric record remains indexed.
 
 ## Next work
 
-Isolate the TwoRoom projector versus prediction-projector BN effects with preserved
-clones and a predeclared paired protocol; do not attribute the mismatch to a
-Gaussian-prior or position-information failure without causal evidence. Keep the
-PushT 13933 saved-buffer checkpoint as the continuation reference. Further training
-requires a separate bounded experiment decision. Random-window validation/control
-uses source episodes; unseen-configuration generalization needs a separate group
-holdout. Full paper reproduction and passive TAU/Charades extensions remain deferred.
+Proposed follow-up: isolate projector versus prediction-projector BN effects on preserved TwoRoom clones using a predeclared paired protocol, then test the identified normalization correction prospectively. Keep saved-buffer results and PushT failures visible. A smaller coverage-preserving dataset must be compared with a size-matched random subset under a new configuration-disjoint holdout, with normalization fitted only on training groups. Do not interpret source-window counts as independent-data efficiency. No follow-up is launched or queued.
+
+Preserve the PushT 13933 saved-buffer checkpoint as the continuation reference. Further training requires a separate bounded experiment decision. Full paper reproduction and passive TAU/Charades extensions remain deferred.
 
 ## Earlier: overnight implementation and evaluation complete (2026-09-06)
 

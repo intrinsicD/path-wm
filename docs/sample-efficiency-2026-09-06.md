@@ -2,6 +2,8 @@
 
 2026-09-06. Research with Claude through MCP; local training-gradient measurements on PushT and TwoRoom. **No optimizer updates or new training data. Original checkpoints are unchanged.**
 
+Follow-up completed 2026-09-07: the [three-seed paired training screen](projection-training-2026-09-06.md) measured small final calibrated gains (+2 percentage points per dataset) from 4096 projections, with no demonstrated large learning-speed or independent-data reduction. The conditional noise result below remains valid in its measured setting; its proposed intervention has now been tested. Early TwoRoom buffer calibration produced a much larger repeated control effect.
+
 ## Answer
 
 There is a plausible route to learning more from the same experience. We have not yet demonstrated a better learning curve with fewer independent trajectories. The strongest measured lead is **noise in SIGReg's random projection estimate**, alongside repeated processing of existing trajectory frames. The batches themselves are already diverse. Smaller batches, a much smaller latent space, removing target gradients, or raising the clipping threshold are not justified as the first intervention.
