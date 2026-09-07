@@ -2,7 +2,8 @@
 
 Status: the fixed reference stopped at its failed one-step quality gate. Software
 execution is verified; learned-control success has not yet been established.
-A separately declared predictor continuation is being prepared. This report is
+A separately declared predictor continuation passed the gate and five-step
+training is active. This report is
 updated from immutable stage/evaluation records as they finish.
 
 The supplied [implementation brief](../world_model_codex_implementation_brief.md)
@@ -122,6 +123,26 @@ The failed stage and canonical dashboard are preserved. The new
 [continuation protocol](paddle-predictor-continuation-plan.md) tests at most10000
 additional updates with the same optimizer state, data, modules and losses.
 
+The continuation completed20000 cumulative updates, selecting20000; exactly10000
+updates/640000 sampled windows were added. Selected latent loss0.190358 and H
+x/y/paddle MAE2.42536/2.22583/1.65811 beat all matched copy values above. The
+original gate passes without a smoke bypass or changed threshold. Additional
+training/validation took90.08s, excluding observer-cache preparation. The fixed
+10000-update reference remains failed; this result used twice its P1 update
+budget. Five-step P training is now active in
+`runs/paddle/continuation_v1/predictor_5`, initialized from that selected P1 with
+a fresh optimizer, identical latent statistics and the original10000-update cap.
+
+Independent128-window validation diagnostics from the failed P1 reference showed
+that shuffling memories increases loss0.2720→0.8366: history is materially used.
+Error projected into H's three readout directions increased while overall latent
+error decreased. Predicted balls were often faded or absent; conditional decoded
+centroids were more accurate than H in many visible cases, but22/128 lacked a
+detectable ball at the diagnostic threshold. See
+`runs/paddle/collaboration/predictor_diagnosis/analysis.md` and its inspected PNG.
+This explains why image appearance and latent improvement did not replace the
+readout gate, and does not establish unique failure causation.
+
 The paired diagnostic starts zero memory at ball y40; ordinary training starts
 at y8–16. An independent CPU check on the immutable4750-update snapshot compared
 the same23 ordinary validation frames at y42–48: full-history R y/vx MAE is
@@ -157,3 +178,55 @@ The canonical HTML passes desktop1440px/mobile390px and source interaction
 verification. Isolated synthetic capacity checks preserve all3500 potential
 controller outcomes and all failed-case IDs, with maximum artifact1.27MB below
 the3MB limit. Synthetic fixtures were not added to the experiment ledger.
+
+Visual review subsequently found that the portable reader's categorical line
+axis placed appended validation step0 midway through training. Sorting alone
+introduced missing-series gaps. Training and validation/copy now use separate,
+chronological charts; all338 previously sampled objective values are preserved
+without interpolation. Both validation/copy SVG paths show all41 checkpoints in
+one continuous segment on desktop/mobile. The prior artifact was replaced and
+browser/source verification repeated successfully. The reader's ordered-sample
+spacing is explicitly described in the chart captions.
+
+Historical P1 validation rows recorded `windows:64` as mean batch size; the
+manifest actually contains1024 validation windows and all objective/readout
+means used that full population. Those raw rows remain unchanged. Count
+aggregation is corrected to sum batches in future rows, protected by a ragged
+batch regression. This metadata defect did not cause the failed gate.
+
+## Full selected-continuation evaluation (3500 cases)
+
+Raw evaluation finished2026-09-07 after500ordinary starts and100paired histories
+(two members each), allfive controllers:3500case outcomes, no prior errors.
+The selected P5 checkpoint completed10000 updates. This is full held-out
+evidence for the declared continuation, not a passing engineering result.
+
+| Controller | Ordinary first catch /500 | Paired first catch /200 | Paired correct first action /200 |
+| --- | ---: | ---: | ---: |
+| Learned |181 (36.2%)|41 (20.5%)|79|
+| Memory reset |136 (27.2%)|40 (20.0%)|84|
+| Random |115 (23.0%)|14 (7.0%)|62|
+| Image tracker |369 (73.8%)|0|0|
+| Privileged five-step planner |444 (88.8%)|200 (100%)|200|
+
+All17831testframes have H x/y/paddle MAE0.070746/0.076114/0.092347pixels,
+meeting the1pixel target. On16831post-warm-up actual observations, R vx/vy
+MAE0.819868/0.552002 misses0.5. At horizon5 on1024matched windows, H errors
+are4.581881/4.042754/4.671391 versus copy16.167912/11.078113/5.544553.
+Latent error0.708690 versus copy1.852585 improves prediction but does not meet
+the2pixel target or establish useful control.32/35terminal predictions fall
+below the exact y61 threshold; even actual H does so342/496times. Preserve
+this declared threshold in the reference; a margin would be a separate change.
+
+Learned ordinary decision latency median35.585ms,p9540.202ms over18929decisions,
+including allcandidate evaluations, excluding real E/U assimilation and rendering.
+Privileged median2.870ms,p953.815ms. No learned planning failures or invalid
+candidates were recorded. This timing is not an end-to-end20Hz claim.
+
+Inspected success `ordinary_1_learned` and failure `ordinary_0_learned` panels
+show accurate reconstructions but fading imagined balls, underestimated paddle
+motion in the success case, and incorrect imagined vertical motion in the
+failure. Actual and imagined futures use identical executed actions. The
+canonical dashboard capacity repair is complete and browser-verified with both
+full paddle and new PushT evidence. All raw JSON/CSV and PNG/GIF evidence remains under
+`runs/paddle/continuation_v1/evaluation`.
