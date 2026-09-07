@@ -137,6 +137,8 @@ def test_cem_keeps_actual_memory_private_rng_bounded_actions_and_scores_final_me
     assert result.stats['predictor_transitions'] == (16*2+1)*5
     assert result.stats['final_mean_evaluated'] is True
     assert len(predictor.calls) == 15
+    for index in range(5):
+        assert torch.equal(predictor.calls[index][2][0], before.observation.fine[0, 0, :2].clamp(0, 1))
     assert predictor.calls[-1][2].shape == (1, 2)
     assert torch.equal(predictor.calls[-1][2][0], result.sequence[-1])
     # Each iteration and final-mean evaluation restart every candidate's memory.
@@ -232,3 +234,34 @@ def test_wrapper_block_success_ignores_pusher_and_pose_property_is_copy():
     assert info['block_distance'] < 1e-6
     assert info['angle_error'] > math.pi/9
     env.close()
+
+
+def test_cem_uses_recorded_per_axis_proposal_scale_with_private_draws():
+    predictor = TargetPredictor()
+    actual = PlanningState(latent(), torch.zeros(1, 128))
+    planner = CEMPlanner(predictor, RecordingUpdater(), PoseHead(), candidates=4, iterations=1,
+                         elites=2, seed=9160, initial_std=(.02, .04))
+    result = planner.plan(actual, latent())
+    noise = torch.randn((4, 5, 2), generator=torch.Generator().manual_seed(9160))
+    expected = (torch.tensor([.2, .3]) + noise*torch.tensor([.02, .04])).clamp(0, 1)
+    expected[0] = torch.tensor([.2, .3])
+    for index in range(5):
+        assert torch.equal(predictor.calls[index][2], expected[:, index])
+    assert result.stats['initial_std'] == [.02, .04]
+
+
+def test_desired_goal_does_not_change_reset_physics_or_observation():
+    initial = np.array([100., 100., 256., 256., .3])
+    goals = (initial, np.array([256., 256., 256., 256., .3]))
+    snapshots = []
+    for goal in goals:
+        env = PushTEnv()
+        try:
+            frame, _ = env.reset(initial, goal, seed=123)
+            snapshots.append((frame, env.pose,
+                np.array([*env.simulator.agent.velocity, env.simulator.agent.angular_velocity,
+                          *env.simulator.block.velocity, env.simulator.block.angular_velocity])))
+        finally:
+            env.close()
+    for first, second in zip(*snapshots):
+        np.testing.assert_array_equal(first, second)

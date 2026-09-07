@@ -402,13 +402,79 @@ the new package, not claims that code is present:
 | Owner/module | Interface to implement |
 | --- | --- |
 | `data.py` | `prepare(source, output, seed=3107)`; `verify_dataset(output, source=None)`; `EpisodeDataset(output, split)` exposes `.entries`, `.lengths`, `.manifest`, `.fingerprint` and the canonical episode dictionaries; `.window_indices(horizon, min_history=2)` returns valid causal windows; `make_targets(poses_world[L,5]) -> (targets[L,11], mask[L,11])`; `canonical_frame(rgb96) -> RGB64 uint8` follows the single frozen contract above |
-| `models.py` | `build_models() -> dict(E,D,H,U,R,P)` with shapes above; PushT schema constants distinct from paddle; shared E/D/attention/block code imported without weight reuse |
+| `models.py` | Construct `Encoder`, `Decoder`, `PoseReadout`, `MemoryUpdater`, `StateReadout`, and `Predictor` for E/D/H/U/R/P; PushT schema constants are distinct from paddle; shared E/D/attention/block code is imported without weight reuse |
 | `models.py` recurrence | `initial_previous_action(batch, device, dtype)` returns the two-value marker; `rollout(state, actions[B,K,2], P, U) -> list[PlanningState]`; no simulator or privileged-label arguments |
 | `planner.py` | `CEMPlanner(P,U,H,candidates=64,iterations=4,elites=8,horizon=5,seed=3107)`; `.prepare_goal(ObservationLatent) -> GoalPose` from learned H only; `.plan(state, GoalPose) -> PlanResult` with `.action[2]`, `.sequence[5,2]`, `.cost`, `.states`, `.stats` |
 | `env.py` | `PushTEnv.reset(pose5_world,goal_pose5_world,seed) -> (RGB64,info)`; `.step(normalizedXY) -> (RGB64,reward,block_terminated,truncated,info)`; `.set_goal(pose5)`, `.pose`, `.hold_action`, `.render()`; privileged fields used by harness/evaluator only |
 | `evaluation.py` | `prepare_cases(dataset, split, count, seed, output)`: public history/goal records plus separate oracle records; `evaluate(system, public_cases, oracle_cases, config, output)`: same-case controllers, physical outcomes, matched prediction diagnostics |
 | `training.py` / `checkpoints.py` | `train_stage(stage, config, data, run, dependencies, horizon=1, initialize_from=None, resume=False)`: explicit staged optimizer/freeze/dependency contracts; `load_system(...) -> dict(E,D,H,U,R,P,statistics)` |
 | `__main__.py` / `cli.py` | Separate `prepare-data`, `train-perception`, `train-memory`, `train-predictor --horizon 1|5`, `evaluate`, `demo`, `run-all`; every completed stage/evaluation invokes canonical reporting |
+
+### Model/controller usage
+
+The model, environment, and class-based planner interfaces below are implemented.
+The harness first replays an episode prefix in `PushTEnv`, collecting
+`history_frames` from its actual canonical RGB64 renders and `history_actions`
+from the executed normalized targets. At the decision point, `env` is still at
+the corresponding physical state. `goal_rgb64` is the separately supplied
+desired image, and `system` contains the selected frozen model modules.
+
+```python
+import numpy as np
+import torch
+from world_model.paddle.types import PlanningState
+from world_model.pusht.models import initial_previous_action, rollout
+from world_model.pusht.planner import CEMPlanner
+
+device = next(system["E"].parameters()).device
+
+def rgb(frame):
+    pixels = torch.as_tensor(np.asarray(frame).copy(), device=device)
+    return pixels.permute(2, 0, 1).unsqueeze(0).float() / 255
+
+proposal_std = np.clip(
+    dataset.manifest["normalization"]["action_offset_rms"], .01, .2
+).tolist()
+planner = CEMPlanner(
+    system["P"], system["U"], system["H"],
+    candidates=64, iterations=4, elites=8, horizon=5,
+    seed=case_seed, initial_std=proposal_std,
+)
+
+with torch.inference_mode():
+    goal = planner.prepare_goal(system["E"](rgb(goal_rgb64)))  # Once per case.
+    memory = torch.zeros(1, 128, device=device)
+    for index, frame in enumerate(history_frames):
+        observation = system["E"](rgb(frame))
+        previous = (initial_previous_action(1, device=device) if index == 0
+                    else torch.as_tensor(history_actions[index-1],
+                                         dtype=torch.float32, device=device)[None])
+        memory = system["U"](memory, observation, previous)
+    actual = PlanningState(observation, memory)
+
+    result = planner.plan(actual, goal)
+    frame, reward, success, truncated, info = env.step(result.action.cpu().numpy())
+    next_observation = system["E"](rgb(frame))
+    next_memory = system["U"](actual.memory, next_observation, result.action[None])
+    actual = PlanningState(next_observation, next_memory)
+```
+
+`result.action` is exactly one primitive target; `result.sequence` has five
+targets. `result.states` contains the separately evaluated final mean's imagined
+states for inspection. The next real observer update uses the retained actual
+memory, as shown. `result.stats` records the supplied proposal scales, invalid
+candidate count, and all predictor transitions, including final-mean evaluation.
+An invalid goal, all-invalid CEM population, or invalid final mean raises
+`PlanningFailure`; its `.stats` retains any work already performed.
+
+For predictor training, `rollout(actual, actions[B,K,2], P, U)` returns all K
+imagined states and preserves derivatives through frozen U. Training controls
+the parameter freezes and target losses outside this helper. `PushTEnv.pose`
+and the pose/error fields in `info` are privileged evaluation labels. The planner
+receives the image-derived `GoalPose`, never these fields. `reset(..., goal_pose5_world=...)`
+sets the numeric goal after physical reset, so changing a desired goal cannot
+change the initial body state or its pixels. `set_goal` also preserves the fixed
+green drawing; the desired image remains a separate input.
 
 Use independent `pusht-eup-observer-v1`, `pusht-absolute-xy512-start-negative-v1`
 and label/preprocessing schema tags in checkpoints and caches. Run manifests
