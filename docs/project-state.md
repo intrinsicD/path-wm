@@ -13,10 +13,21 @@ baseline in `world_model_codex_implementation_brief.md`, with
 Claude agents; iterate through simulator, staged training, planning, and held-out
 control. Preserve all previous LeWM implementations and experiments below.
 The active plan is [paddle-world-model-plan.md](paddle-world-model-plan.md).
-Software verification is in progress; empirical target achievement is unassessed.
-RTX 4090 is available outside the filesystem/network sandbox. Both independent
-Claude contract reviews completed; a boundary-roundoff catch bug and training
-resume/cache/aggregation defects are being corrected before the full baseline.
+The complete smoke pipeline and regression/browser checks pass. Full data
+(5000/500/500 episodes) are collected and exactly replay-verified. The fixed
+baseline is active at `runs/paddle/baseline`: perception completed10000 updates,
+selected9750, with validation H x/y/paddle MAE0.0719/0.0770/0.0945 pixels.
+Memory completed10000 updates: validation vx/vy MAE0.8092/0.5455 exceeds the0.5
+target, and paired-validation vx MAE4.3115 remains weak. One-step prediction is
+active; full held-out control remains pending. Empirical target achievement is
+not yet established. Current evidence is in
+[the results report](paddle-world-model-results-2026-09-07.md).
+RTX4090 runs FP32 outside the sandbox. Independent Codex and Claude reviews
+corrected contact roundoff and checkpoint/resume/cache/aggregation defects.
+A measured raw-frame disk cache removed the input bottleneck while preserving
+the exact samples and optimizer/RNG checkpoint. The original slow-run log is
+preserved; active output is `runs/paddle/baseline_resume.log`. Independent memory
+diagnoses are checking the current validation weakness before any follow-up.
 
 ## Preserved LeWM objective and evidence
 

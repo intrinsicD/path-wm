@@ -17,13 +17,19 @@ at `.runtime/browser/chrome-headless-shell-linux64/chrome-headless-shell`, versi
 `.runtime/browser/install.json`. The dashboard transport discovers it automatically;
 `PATH_WM_CHROMIUM` can select another installed browser.
 
+The examples below use the recorded `smoke_v2` data and checkpoints, whose
+environment fingerprint includes the contact-roundoff correction. The earlier
+`data/paddle/smoke` and `runs/paddle/smoke` directories preserve preliminary work.
+Use new data/run directories for an independent experiment; omit `--resume` from
+the training commands when creating a new run.
+
 ```bash
 source .venv/bin/activate
 python -m world_model doctor
 python -m pytest tests/paddle -q
-python -m world_model generate --config configs/paddle/smoke.yaml --output data/paddle/smoke
-python -m world_model verify-data --data data/paddle/smoke
-python run.py -m world_model test-history-cases --output runs/paddle/history_checks
+python -m world_model generate --config configs/paddle/smoke.yaml --output data/paddle/smoke_v2
+python -m world_model verify-data --data data/paddle/smoke_v2
+python run.py -m world_model test-history-cases --output runs/paddle/smoke_v2/history_checks
 ```
 
 Every standalone training/evaluation command uses the shared `run.py` wrapper so
@@ -32,12 +38,12 @@ is refreshed after its result. A dashboard failure does not erase raw evidence;
 repair reporting before calling the experiment complete.
 
 ```bash
-python run.py -m world_model train-perception --config configs/paddle/smoke.yaml --data data/paddle/smoke --run runs/paddle/smoke/perception
-python run.py -m world_model train-memory --config configs/paddle/smoke.yaml --data data/paddle/smoke --perception runs/paddle/smoke/perception/best.pt --run runs/paddle/smoke/memory
-python run.py -m world_model train-predictor --config configs/paddle/smoke.yaml --data data/paddle/smoke --perception runs/paddle/smoke/perception/best.pt --memory runs/paddle/smoke/memory/best.pt --horizon 1 --run runs/paddle/smoke/predictor_1
-python run.py -m world_model train-predictor --config configs/paddle/smoke.yaml --data data/paddle/smoke --perception runs/paddle/smoke/perception/best.pt --memory runs/paddle/smoke/memory/best.pt --initialize-from runs/paddle/smoke/predictor_1/best.pt --horizon 5 --run runs/paddle/smoke/predictor_5
-python run.py -m world_model evaluate --config configs/paddle/smoke.yaml --data data/paddle/smoke --perception runs/paddle/smoke/perception/best.pt --memory runs/paddle/smoke/memory/best.pt --predictor runs/paddle/smoke/predictor_5/best.pt --output runs/paddle/smoke/evaluation
-python run.py -m world_model demo --perception runs/paddle/smoke/perception/best.pt --memory runs/paddle/smoke/memory/best.pt --predictor runs/paddle/smoke/predictor_5/best.pt --output runs/paddle/smoke/demo
+python run.py -m world_model train-perception --config configs/paddle/smoke.yaml --data data/paddle/smoke_v2 --run runs/paddle/smoke_v2/perception --resume
+python run.py -m world_model train-memory --config configs/paddle/smoke.yaml --data data/paddle/smoke_v2 --perception runs/paddle/smoke_v2/perception/best.pt --run runs/paddle/smoke_v2/memory --resume
+python run.py -m world_model train-predictor --config configs/paddle/smoke.yaml --data data/paddle/smoke_v2 --perception runs/paddle/smoke_v2/perception/best.pt --memory runs/paddle/smoke_v2/memory/best.pt --horizon 1 --run runs/paddle/smoke_v2/predictor_1 --resume
+python run.py -m world_model train-predictor --config configs/paddle/smoke.yaml --data data/paddle/smoke_v2 --perception runs/paddle/smoke_v2/perception/best.pt --memory runs/paddle/smoke_v2/memory/best.pt --initialize-from runs/paddle/smoke_v2/predictor_1/best.pt --horizon 5 --run runs/paddle/smoke_v2/predictor_5 --resume
+python run.py -m world_model evaluate --config configs/paddle/smoke.yaml --data data/paddle/smoke_v2 --perception runs/paddle/smoke_v2/perception/best.pt --memory runs/paddle/smoke_v2/memory/best.pt --predictor runs/paddle/smoke_v2/predictor_5/best.pt --output runs/paddle/smoke_v2/evaluation
+python run.py -m world_model demo --perception runs/paddle/smoke_v2/perception/best.pt --memory runs/paddle/smoke_v2/memory/best.pt --predictor runs/paddle/smoke_v2/predictor_5/best.pt --output runs/paddle/smoke_v2/demo
 ```
 
 The smoke configuration uses 20/4/4 episodes and 20 optimizer updates per stage.
@@ -51,26 +57,56 @@ The full configuration specifies 5000/500/500 train/validation/test episodes and
 four bounded 10000-update stages. Use a new run directory for another experiment:
 
 ```bash
-python run.py -m world_model run-all --config configs/paddle/baseline.yaml --data data/paddle/baseline --run runs/paddle/baseline
+python -m world_model run-all --config configs/paddle/baseline.yaml --data data/paddle/baseline --run runs/paddle/baseline
 ```
 
-Collection resumes by verifying saved episodes. Training retains `best.pt` and
-`last.pt`, including optimizer/sampler/RNG state and dependency fingerprints; use
-the stage command's documented resume option (`--help`). The five-step stage
-starts from the selected one-step P. Full runs require improvement over copying
-on both latent and moving-position validation errors before continuing. A failed
-gate preserves diagnostics and checkpoints. It does not count as converged
-pretraining. Inference bundles contain all E/D/H/U/R/P weights and fixed scale
-statistics, without dependencies on another machine's absolute paths.
+`run-all` refreshes and verifies the dashboard internally after each completed
+stage and evaluation, so it does not need the outer wrapper. Rerunning the same
+command verifies existing data, reuses compatible completed stages, and resumes
+an interrupted stage from `last.pt`. Do not start another writer in the same run
+directory while a run is active.
+
+Training retains `best.pt` and `last.pt`, including optimizer/sampler/RNG state
+and dependency fingerprints. Stage commands use the `--resume` flag shown above;
+the saved configuration must match. The five-step stage initializes from selected
+one-step P weights with a fresh optimizer; resuming that five-step stage restores
+its own optimizer state. Full runs require lower fixed-validation latent loss
+and lower MAE for each moving-position coordinate than matched copying before
+continuing. A failed gate preserves diagnostics and checkpoints. It does not
+count as converged pretraining.
+
+`run-all` exports `inference.pt` in its run directory. To create a separate bundle
+from compatible stage checkpoints, use:
+
+```bash
+python -m world_model export-bundle --perception runs/paddle/smoke_v2/perception/best.pt --memory runs/paddle/smoke_v2/memory/best.pt --predictor runs/paddle/smoke_v2/predictor_5/best.pt --output runs/paddle/smoke_v2/inference_export.pt
+```
+
+The bundle contains all E/D/H/U/R/P weights and fixed scale statistics, without
+dependencies on another machine's absolute paths.
 
 Evaluation writes `metrics.json`, raw `prediction_records.json` and
-`control_records.json`, diagnostic probe rows, corresponding CSV files,
-`metrics.png`, aligned PNG/GIF panels under `visuals/`, and a local `index.html`.
+`control_records.json`, diagnostic probe rows, `reconstruction_records.json`,
+`actual_frame_readout_records.json`, corresponding CSV files, `metrics.png`,
+aligned PNG/GIF panels under `visuals/`, and a local `index.html`.
 Prediction/copy/reset comparisons share the exact source windows and executed
 actions at horizons 1 through 5. Errors include each coordinate, p95 and maximum,
-and separate reflection populations. Actual H/R metrics cover every held-out
-observation after the three-frame warm-up. Readout position units are world
-units/pixels; velocities are world units per decision interval.
+and separate reflection populations. The `actual_frame_readout` H summary covers
+every held-out frame, including initial, warm-up and terminal observations. R
+errors and the `prediction.summary.actual` comparison group use observation index
+2 onward, after U has assimilated three frames; that group's H subset remains
+separately recorded. Readout position units are world units/pixels; velocities
+are world units per decision interval. Reconstruction diagnostics also cover all
+test frames and report global, ball-region and paddle-region RGB MSE with their
+scalar denominators. Those diagnostic masks do not alter training losses.
+The preserved `smoke_v2` evaluation predates the per-frame H export; its all-frame
+H summary is recorded in `metrics.json`.
+
+Evaluation saves completed controller cases and diagnostic stages independently.
+Repeating an interrupted evaluation command reuses them only when the recorded
+configuration, data, checkpoints and inference identity match. Raw measurements
+survive a plotting/reporting failure. Use a new output directory when those
+identities change.
 
 Controls include the learned exhaustive planner, the same planner with a fresh
 current-frame observer state, uniform random actions, a frozen-H current-frame

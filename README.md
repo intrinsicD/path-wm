@@ -6,7 +6,8 @@ The active experiment is the fixed RGB paddle E/U/P world model. Its
 `world_model.paddle` package. Run `.venv/bin/python -m world_model --help`.
 The LeWM implementation and earlier evidence below remain preserved.
 
-A fresh, modular world-model baseline, followed by component research.
+The remaining sections describe the retained LeWM baseline and its historical
+evidence.
 
 The first reference is [LeWM](https://github.com/lucas-maes/le-wm), pinned to
 `8edfeb336732b5f3ce7b8b210d0ba370a09e2cac`. PushT is the first learning/control
@@ -39,8 +40,10 @@ existing logs with `python -m viewer.dashboard`. The wrapper requires Node.js an
 the installed Data Analytics portable-artifact builder; set
 `PATH_WM_ARTIFACT_BUILDER` to its `deliver_portable_artifact.mjs` if needed.
 
-Use the local environment `.runtime/lewm/bin/python`, or install this project
-with its `dev`, `eval` and `data` extras in an isolated environment.
+Use the repository environment `.venv/bin/python`; activate it before running
+the `python` commands below. A new environment needs the project's `paddle` extra
+for paddle reporting and its `dev`, `eval` and `data` extras for the retained LeWM
+commands as applicable.
 
 ```bash
 python -m pytest
@@ -51,7 +54,8 @@ python run.py -m world_model.eval_pusht configs/datasets/pusht.yaml data/referen
 
 Training refuses to overwrite an existing checkpoint. Use a new `run_dir` for
 an independent run; `--resume` requires an identical recorded configuration.
-Long-run configurations are available under `configs/`, but are not scheduled.
+The retained LeWM long-run configurations under `configs/` are separate from the
+active paddle workflow; that workflow does not schedule additional LeWM training.
 [Recipe and protocol differences](docs/baseline.md) distinguish development
 checks from paper reproduction. [Dataset configs](configs/datasets/) keep source,
 action semantics, frame stride and history explicit for each dataset.

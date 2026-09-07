@@ -125,9 +125,15 @@ bootstrap requirement was added. K5 uses fresh AdamW with selectedK1 weights,
 records its fingerprint and retains identical K1 scale statistics. GPU resume
 restores RNG/optimizer/sampler; bitwise GPU determinism is not promised.
 
-Full baseline training/evaluation is next; empirical target achievement remains
-unassessed until actual held-out measurements. Results and limitations will be
-recorded separately from software completion.
+Full baseline training is active. Perception completed10000 updates and selected
+9750: validation H x/y/paddle MAE0.071877/0.076952/0.094528 pixels;
+reconstruction MSE1.694906e-5. The selected-checkpoint validation image panel was
+visually inspected: both objects reconstruct accurately. These are perception
+validation results; memory, prediction and held-out control are separate tests.
+Memory is still training within its original budget. Its paired-history cold
+start remains difficult and is under independent diagnosis, with no scientific
+change made to the active reference. Full empirical target achievement remains
+unassessed until actual held-out measurements.
 
 ### Measured input-loading amendment before continuation
 
