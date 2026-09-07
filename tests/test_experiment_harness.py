@@ -99,7 +99,8 @@ def test_case_navigation_and_sql_snapshot_preserve_counts(tmp_path):
     assert {row["run"]: (row["successes"], row["cases"], row["success_rate"])
             for row in rows} == {"learned": (0, 2, 0.0), "released": (1, 2, 0.5)}
     details = artifact["snapshot"]["datasets"]["metrics"]
-    assert next(row["value"] for row in details if row["run"] == "released" and row["metric"] == "success_rate") == "0.5"
+    released_key = next(row["record_key"] for row in artifact["snapshot"]["datasets"]["inventory"] if row["run"] == "released")
+    assert next(row["value"] for row in details if row["record_key"] == released_key and row["metric"] == "success_rate") == "0.5"
 
 
 def test_structural_only_does_not_claim_visual_verification(capsys):
@@ -489,6 +490,10 @@ def test_compact_exact_records_resolve_to_full_identity_without_losing_values():
     inventory = datasets['inventory']
     identities = {row['record_key']: row['run'] for row in inventory}
     assert set(identities.values()) == set(names)
+    source = artifact['sources'][0]['query']
+    assert source['input_files'] == sorted({path for r in results for path in r.source_paths})
+    assert all(path not in source['tables_used'] for path in source['input_files'])
+    assert 'inventory' in source['description'].lower()
     assert len(identities) == len(names)
     assert all(len(key) <= 16 for key in identities)
     expected_metrics = sorted((r.label, key, format(value, '.17g') if isinstance(value, float) else str(value))
@@ -500,7 +505,7 @@ def test_compact_exact_records_resolve_to_full_identity_without_losing_values():
                               for row in datasets['context'])
     assert observed_context == sorted((r.label, key, str(value)) for r in results for key, value in r.context.items())
     assert all('run' not in row for name in ('metrics', 'context') for row in datasets[name])
-    assert all(r.sources[0] in next(row['sources'] for row in inventory if row['run'] == r.label) for r in results)
+    assert all(r.source_paths[0] in next(row['sources'] for row in inventory if row['run'] == r.label) for r in results)
     reversed_inventory = build_dashboard_artifact(list(reversed(results)), [])['snapshot']['datasets']['inventory']
     assert {r['record_key']: r['run'] for r in reversed_inventory} == identities
     for table in artifact['manifest']['tables']:
