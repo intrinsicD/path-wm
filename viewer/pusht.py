@@ -82,7 +82,7 @@ def collect_pusht_results(runs_root):
         for name in ('training','validation'):
             if rows[name]: metrics.update(_flat(rows[name][-1],f'latest_{name}'))
         context = {k:manifest.get(k) for k in ('stage','horizon','config','dependencies','dataset_fingerprint','versions','normalization')}
-        context.update(task='CCHI PushT E/U/P; primitive10Hz absolute actions',selected_update=selected,
+        context.update(task='CCHI PushT E/U/P; primitive 10 Hz absolute actions',selected_update=selected,
             checkpoint=result.get('checkpoint'),quality_gate=result.get('quality_gate'),smoke=result.get('smoke',manifest.get('config',{}).get('smoke',False)))
         add(directory,'pusht_training',status,metrics,context,sources,step,rows)
         if context['smoke']: notices.append(f'{directory.relative_to(runs_root)}: PushT SMOKE is execution evidence only')
@@ -106,8 +106,8 @@ def collect_pusht_results(runs_root):
         context={f'protocol.{key}':value for key,value in report.get('protocol',{}).items()}
         context.update(case_selection=report.get('case_selection'),
             smoke=report.get('smoke'),raw_status=report.get('raw_status'),error=report.get('error'),
-            goal_task='Block XY <20 world units AND circular angle <pi/9; not95%coverage',
-            oracle_budget='Replay is5-interval reachability only, separate from fixed-budget controllers')
+            goal_task='Block XY <20 world units AND circular angle <pi/9; not 95% coverage',
+            oracle_budget='Replay is 5-interval reachability only, separate from fixed-budget controllers')
         add(directory,'pusht_evaluation' if raw_ready else 'pusht_reporting_failure',report['status'],
             _flat({k:report.get(k,{}) for k in ('prediction','control')}),context,sources,
             internals={'report':report,'panels':panels})
@@ -121,9 +121,9 @@ def add_pusht_views(runs,datasets,charts,tables,cards,chart,table,source_id):
     number=lambda field:{'field':field,'type':'quantitative'}
     category=lambda field:{'field':field,'type':'nominal'}
     blocks=[{'id':'pusht_intro','type':'markdown','sourceId':source_id,
-        'body':'## CCHI PushT E/U/P\n\nSeparate new-model experiment: absoluteXY actions at10Hz. '
+        'body':'## CCHI PushT E/U/P\n\nSeparate new-model experiment: absolute XY actions at 10 Hz. '
         'Training, prediction, and block-goal control are distinct evidence. Motion labels are backward displacements, not instantaneous velocities. '
-        'Final controller success uses the complete fixed budget; any-time success is secondary. The5-action replay oracle only checks reachability. '
+        'Final controller success uses the complete fixed budget; any-time success is secondary. The 5-action replay oracle only checks reachability. '
         'SMOKE results and the retained LeWM PushT experiments do not establish this model’s control quality.'}]
     latest={}
     for run in training:
@@ -137,7 +137,7 @@ def add_pusht_views(runs,datasets,charts,tables,cards,chart,table,source_id):
         if values:
             datasets[name]=values
             charts.append(chart(name,f'PushT {key}: training objective · {run.label}',
-                'Task-specific recorded objective; no LeWM SIGReg meaning. At most50 raw updates; ordered categorical step spacing. Training and validation grids are separate.',
+                'Task-specific recorded objective; no LeWM SIGReg meaning. At most 50 raw updates; ordered categorical step spacing. Training and validation grids are separate.',
                 name,'line' if len(values)>1 else 'bar',number('step'),number('value')))
         # Each validation checkpoint is one wide row, reused by all metric charts.
         # This preserves its exact step grid and keeps the portable dataset budget bounded.
@@ -151,6 +151,7 @@ def add_pusht_views(runs,datasets,charts,tables,cards,chart,table,source_id):
                 if vector is None:continue
                 if isinstance(vector[0],list):vector=vector[-1]
                 value.update({f'{prefix}_{coordinate}':vector[i] for i,coordinate in enumerate(coordinates)})
+            if 'motion_block_angle' in value:value['motion_block_angle_mrad']=value['motion_block_angle']*1000
             angle=row.get('angle_mae_deg')
             if angle is not None:value['angle_mae_deg']=angle[-1] if isinstance(angle,list) else angle
             values.append(value)
@@ -161,15 +162,15 @@ def add_pusht_views(runs,datasets,charts,tables,cards,chart,table,source_id):
         groups=[('objective','validation objective',['loss','copy_loss'],'recorded objective'),
                 ('position_mae','validation position MAE',[f'position_{c}' for c in POSITIONS],'world units'),
                 ('angle_mae_deg','validation block-angle MAE',['angle_mae_deg'],'degrees'),
-                ('motion_mae','validation displacement MAE',[f'motion_{c}' for c in POSITIONS],'world units per0.1second'),
-                ('angular_motion_mae','validation angular-displacement MAE',['motion_block_angle'],'radians per0.1second')]
+                ('motion_mae','validation displacement MAE',[f'motion_{c}' for c in POSITIONS],'world units per 0.1 second'),
+                ('angular_motion_mae','validation angular-displacement MAE',['motion_block_angle_mrad'],'milliradians per 0.1 second (raw radians ×1000)')]
         for suffix,label,fields,units in groups:
             fields=[f for f in fields if f in available]
             if not fields:continue
             identifier=name if suffix=='objective' else f'pusht_validation_{suffix}_{key}'
             y={'fields':fields,'type':'quantitative','label':units} if len(fields)>1 else number(fields[0])
             charts.append(chart(identifier,f'PushT {key}: {label} · {run.label}',
-                f'Exact validation checkpoints in {units}; predictor physical metrics show the final trained horizon. Ordered categorical step spacing; no interpolation.',
+                f'Exact validation checkpoints in {units}; predictor physical metrics show the final trained horizon. Ordered categorical step spacing; dots are recorded values and connecting curves are visual guides.',
                 name,kind,number('step'),y))
             if len(fields)>1:
                 charts[-1]['palette']={'kind':'categorical','name':'PATH-WM blue-orange'}
@@ -193,7 +194,7 @@ def add_pusht_views(runs,datasets,charts,tables,cards,chart,table,source_id):
         if control:
             name='pusht_final_control';datasets[name]=control
             charts.append(chart(name,f'PushT final block-goal success · {run.label}',
-                'Final success after the same fixed primitive-action budget. Excludes the separately reported5-action replay oracle; no95%coverage claim.',
+                'Final success after the same fixed primitive-action budget. Excludes the separately reported 5-action replay oracle; no 95% coverage claim.',
                 name,'bar',category('controller'),number('success_rate'),tooltip=[number('successes'),number('count')]))
         name='pusht_matched_horizons'
         values=[]
@@ -215,7 +216,7 @@ def add_pusht_views(runs,datasets,charts,tables,cards,chart,table,source_id):
             for field,label in fields:
                 if not any(field in row for row in values):continue
                 charts.append(chart(f'pusht_horizon_{field}',f'PushT matched rollout: {label}',
-                    'Prediction, copy and reset share exact windows/actions. One horizon step is0.1seconds.',name,'line',
+                    'Prediction, copy and reset share exact windows/actions. One horizon step is 0.1 seconds.',name,'line',
                     number('horizon'),number(field),color=category('method'),tooltip=[number('count')]))
         for visual in run.internals['panels'][:1]:
             encoded=base64.b64encode(Path(visual['png']).read_bytes()).decode()
@@ -234,6 +235,6 @@ def add_pusht_views(runs,datasets,charts,tables,cards,chart,table,source_id):
           ('h_position_mae','H position MAE [pusherXY,blockXY]'),('h_angle_mae_deg','H angle MAE degrees'),
           ('r_position_mae','R position MAE'),('r_angle_mae_deg','R angle MAE degrees'),
           ('r_motion_mae','R displacement MAE [dx4,dangle]'),('latent_error','Normalized latent MSE'),('image_mse','RGB MSE')],
-         'Actual H/R pose uses all recorded held-out frames; motion excludes the first two. dx has world units and dangle radians per0.1second, not simulator velocity.')]:
+         'Actual H/R pose uses all recorded held-out frames; motion excludes the first two. dx has world units and dangle radians per 0.1 second, not simulator velocity.')]:
         if datasets[name]:tables.append(table(name,title,columns,'run',subtitle))
     return blocks

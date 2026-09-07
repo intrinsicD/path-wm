@@ -431,7 +431,9 @@ def render_prediction_visuals(system, dataset, windows, output, device='cpu'):
             sd.text((5,253), 'dx pusher/block: world units; dangle: rad, per 0.1s interval',fill='black')
             gif.append(slide)
         draw.text((5,418), 'Matched source/actions. R after actual and imagined observations is separate in the GIF.', fill='black')
-        draw.text((5,438), f'source episode {int(episode["source_episode"])}; start {start}; actions {np.round(episode["actions"][start:start+5],2).tolist()}', fill='black')
+        action_caption = ', '.join(f'({float(x):.2f}, {float(y):.2f})'
+                                   for x,y in episode['actions'][start:start+5])
+        draw.text((5,438), f'source episode {int(episode["source_episode"])}; start {start}; actions {action_caption}', fill='black')
         name=f'episode_{int(episode["source_episode"]):04d}_frame_{start:04d}'
         png, animation = output/f'{name}.png', output/f'{name}.gif'
         canvas.save(png); gif[0].save(animation,save_all=True,append_images=gif[1:],duration=600,loop=0)
