@@ -263,3 +263,16 @@ def test_resuming_completed_early_stop_or_gate_failure_never_advances_optimizer(
     assert after["global_update"] == before["global_update"] == 1
     assert after["model_fingerprint"] == before["model_fingerprint"]
     assert (run / "training.jsonl").read_bytes() == before_rows
+
+
+def test_prespecified_snapshot_retains_exact_update(scalar_stage,tmp_path,monkeypatch):
+    def loss(modules,x,target):
+        value=modules['E'](x).square().mean()
+        return value,{'loss':float(value.detach()),'image_mse':float(value.detach())}
+    monkeypatch.setattr(training,'perception_loss',loss)
+    config=tiny_config(updates=3);config['training']['retain_updates']=[2]
+    training.train_perception(config,'unused',tmp_path/'run')
+    middle=checkpoints.read_checkpoint(tmp_path/'run/checkpoints/update_00000002.pt')
+    final=checkpoints.read_checkpoint(tmp_path/'run/last.pt')
+    assert middle['global_update']==2 and final['global_update']==3
+    assert middle['model_fingerprint']!=final['model_fingerprint']

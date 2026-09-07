@@ -112,3 +112,13 @@ Held-out region metrics use256fixed frames and diagnostic geometry from the
 archived perception diagnosis (nativeT polygons and radius15pusher). They are
 not new loss terms. The selected64-frame diagnostic and its figures passed the
 canonical browser verifier; three essential inspection checks pass.
+
+
+## Slice 3: complete comparison controls and downstream snapshots
+
+Add the accepted train-only mean-image reconstruction baseline, including object
+regions; fit it over all training-frame members, with an exclusion regression.
+For the already-authorized Paddle mixed-U follow-up, retain exact predictor
+update10000and20000 snapshots when reached, without changing loss, selector,
+early stopping or budgets. This permits the planned equal-update comparison.
+A scalar transaction regression verifies snapshots retain their own update.
