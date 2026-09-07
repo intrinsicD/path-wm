@@ -1,0 +1,118 @@
+{
+  "canonical_html_sha256": "7c2d6946296b97fc4325f520593a4ae10b477fa4c689d8d3972b68f5fa30c213",
+  "screenshots": [
+    {
+      "title": "Paddle memory: joint and population validation objectives \u00b7 paddle/history_start_v1/memory",
+      "width": 1440,
+      "heading": {
+        "x": 32,
+        "y": 72,
+        "right": 696.5
+      },
+      "pageWidth": 1425,
+      "loadedImages": 0,
+      "screenshot": "runs/pusht_world_model/collaboration/perception_diagnosis/history_desktop.png",
+      "sha256": "27a3ec0d9a90584b856004b9a77c0fe9ea32b900f06fa6b8713a910631f66454"
+    },
+    {
+      "title": "Paddle memory: joint and population validation objectives \u00b7 paddle/history_start_v1/memory",
+      "width": 390,
+      "heading": {
+        "x": 24,
+        "y": 72,
+        "right": 351
+      },
+      "pageWidth": 375,
+      "loadedImages": 0,
+      "screenshot": "runs/pusht_world_model/collaboration/perception_diagnosis/history_mobile.png",
+      "sha256": "f85a622985b7a2dd452b737ddfa0f3e0d4e10b878b5f2ab6287fcdca13682abe"
+    },
+    {
+      "title": "PushT perception diagnosis",
+      "width": 1440,
+      "heading": {
+        "x": 0,
+        "y": 0,
+        "right": 0
+      },
+      "pageWidth": 1425,
+      "loadedImages": 0,
+      "screenshot": "runs/pusht_world_model/collaboration/perception_diagnosis/diagnosis_desktop.png",
+      "sha256": "fb369070661cc174ba007f4ddfb96e92f8757fa909ab1a2ebf507c71bbf46cec"
+    },
+    {
+      "title": "PushT diagnosis: Circular block-angle MAE (degrees)",
+      "width": 390,
+      "heading": {
+        "x": 24,
+        "y": 72,
+        "right": 351
+      },
+      "pageWidth": 375,
+      "loadedImages": 0,
+      "screenshot": "runs/pusht_world_model/collaboration/perception_diagnosis/diagnosis_mobile.png",
+      "sha256": "164b3af97e5eabcdd6db0bdcb979d405249dc15ab8bdfa1618cb63d44d1a2711"
+    },
+    {
+      "title": "Independent history-start assessment",
+      "width": 1440,
+      "heading": {
+        "x": 0,
+        "y": 0,
+        "right": 0
+      },
+      "pageWidth": 1425,
+      "loadedImages": 0,
+      "screenshot": "runs/pusht_world_model/collaboration/perception_diagnosis/assessment_desktop.png",
+      "sha256": "fb369070661cc174ba007f4ddfb96e92f8757fa909ab1a2ebf507c71bbf46cec"
+    },
+    {
+      "title": "Independent history-start assessment",
+      "width": 390,
+      "heading": {
+        "x": 0,
+        "y": 0,
+        "right": 0
+      },
+      "pageWidth": 375,
+      "loadedImages": 0,
+      "screenshot": "runs/pusht_world_model/collaboration/perception_diagnosis/assessment_mobile.png",
+      "sha256": "62c390b61181d519828b9549deaef9b8463b294230d7f3ba69ad9287eedd7628"
+    },
+    {
+      "title": "PushT perception coverage comparison",
+      "width": 1440,
+      "heading": {
+        "x": 0,
+        "y": 0,
+        "right": 0
+      },
+      "pageWidth": 1425,
+      "loadedImages": 0,
+      "screenshot": "runs/pusht_world_model/collaboration/perception_diagnosis/coverage_desktop.png",
+      "sha256": "fb369070661cc174ba007f4ddfb96e92f8757fa909ab1a2ebf507c71bbf46cec"
+    },
+    {
+      "title": "PushT perception coverage comparison",
+      "width": 390,
+      "heading": {
+        "x": 0,
+        "y": 0,
+        "right": 0
+      },
+      "pageWidth": 375,
+      "loadedImages": 0,
+      "screenshot": "runs/pusht_world_model/collaboration/perception_diagnosis/coverage_mobile.png",
+      "sha256": "62c390b61181d519828b9549deaef9b8463b294230d7f3ba69ad9287eedd7628"
+    }
+  ],
+  "scope": "Actual packaged reader; original HTML remains unchanged; image inspection recorded separately",
+  "visual_inspection": {
+    "native_history_curves": "passed at desktop and mobile; all three objective series visible",
+    "native_diagnosis_angle_chart": "passed on mobile; exact 4 category values visible",
+    "original_and_comparison_source_pngs": "all four originals visually inspected; layouts legible",
+    "html_panel_screenshot_navigation": "inconclusive: capture helper selected hidden iframe containers, so those screenshots show report top; canonical browser QA separately passed all five image blocks",
+    "renderer_precision_note": "Native whole-image MSE chart uses coarse default labels for small values; exact MSE remains in dataset/context and source figure",
+    "canonical_source_unchanged": true
+  }
+}

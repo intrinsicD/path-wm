@@ -107,8 +107,10 @@ Final software verification: **336 tests pass**, including all three installed-b
 checks. The canonical dashboard passes package/data/source-interaction and
 1440 / 390-pixel browser verification, with 49 datasets, 55 charts and five
 embedded image blocks. See the final raw test log and receipt under
-`runs/paddle/collaboration`. Archive restoration verification is recorded beside
-the portable package after its build; it establishes continuity, not model quality.
+`runs/paddle/collaboration`. The actual separate-directory restoration passed all 13,870 file hashes, full
+paddle/PushT/supplement verification and four CPU inference bundles. The package
+is 212,389,903 compressed bytes in five parts. Its receipt establishes continuity,
+not model quality. All experiment and packaging writers are closed.
 
 ## Preserved LeWM objective and evidence
 

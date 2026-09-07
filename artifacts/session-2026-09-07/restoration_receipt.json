@@ -1,0 +1,201 @@
+{
+  "manifest_sha256": "d995d2e7f68fb40bccd8f948a8d0ddf600983b71f59cbb565fbab0c36ab17b32",
+  "offline": {
+    "bundles": [
+      {
+        "finite": true,
+        "output_shapes": {
+          "H": [
+            1,
+            3
+          ],
+          "R": [
+            1,
+            5
+          ],
+          "coarse": [
+            1,
+            64,
+            64
+          ],
+          "decoded": [
+            1,
+            3,
+            64,
+            64
+          ],
+          "fine": [
+            1,
+            256,
+            64
+          ],
+          "memory": [
+            1,
+            128
+          ]
+        },
+        "path": "runs/paddle/continuation_v1/inference.pt",
+        "purpose": "trained paddle continuation; control limitations retained",
+        "sha256": "bd583728fa3cbf078a20b48743ce0313af873ba1b03207c19c45bc51ae0fa0df"
+      },
+      {
+        "finite": true,
+        "output_shapes": {
+          "H": [
+            1,
+            3
+          ],
+          "R": [
+            1,
+            5
+          ],
+          "coarse": [
+            1,
+            64,
+            64
+          ],
+          "decoded": [
+            1,
+            3,
+            64,
+            64
+          ],
+          "fine": [
+            1,
+            256,
+            64
+          ],
+          "memory": [
+            1,
+            128
+          ]
+        },
+        "path": "runs/paddle/smoke_v2/inference.pt",
+        "purpose": "software smoke only",
+        "sha256": "add8ccebb759ea147369f0901a8fc2aa2aaefe3c003c70057765e40744a3c742"
+      },
+      {
+        "finite": true,
+        "output_shapes": {
+          "H": [
+            1,
+            6
+          ],
+          "R": [
+            1,
+            11
+          ],
+          "coarse": [
+            1,
+            64,
+            64
+          ],
+          "decoded": [
+            1,
+            3,
+            64,
+            64
+          ],
+          "fine": [
+            1,
+            256,
+            64
+          ],
+          "memory": [
+            1,
+            128
+          ]
+        },
+        "path": "runs/pusht_world_model/smoke/inference.pt",
+        "purpose": "original software smoke; failed evaluation receipt retained",
+        "sha256": "acc8c2d916d0538a5218aa3d962d65cf507263ab03173c3c2040efa659ca4adc"
+      },
+      {
+        "finite": true,
+        "output_shapes": {
+          "H": [
+            1,
+            6
+          ],
+          "R": [
+            1,
+            11
+          ],
+          "coarse": [
+            1,
+            64,
+            64
+          ],
+          "decoded": [
+            1,
+            3,
+            64,
+            64
+          ],
+          "fine": [
+            1,
+            256,
+            64
+          ],
+          "memory": [
+            1,
+            128
+          ]
+        },
+        "path": "runs/pusht_world_model/smoke_v2/inference.pt",
+        "purpose": "corrected software smoke only; no passing trained PushT bundle",
+        "sha256": "c8157396ec9219124bf198e880ba96a382329af3d7c9bd03aca66feb9f4b537a"
+      }
+    ],
+    "limitations": "Software/data continuity only; does not establish world-model control success or cross-hardware bitwise training.",
+    "paddle": {
+      "episodes": 6000,
+      "fingerprint": "c6d255dc9919b1bb9ce38182f9d180047f964754a32c616db072bc965a3be54f",
+      "frames": 220754,
+      "passed": true,
+      "splits": {
+        "test": 500,
+        "train": 5000,
+        "validation": 500
+      },
+      "transitions": 214754
+    },
+    "passed": true,
+    "pusht": {
+      "cross_split_duplicate_frame_hashes": 0,
+      "cross_split_duplicate_trajectory_hashes": 0,
+      "cross_split_groups": 0,
+      "episodes": 206,
+      "fingerprint": "e6ff0cad101c15ba3e2b839df28bc0bd75dca4063a7d6293141976ab44b4fa9c",
+      "frames": 25650,
+      "independence_limitation": "Disjoint initial-configuration groups do not prove independence of later frames or trajectory segments.",
+      "passed": true,
+      "splits": {
+        "test": 22,
+        "train": 164,
+        "validation": 20
+      },
+      "transitions": 25444
+    },
+    "root": "/tmp/path-wm-session-restore-803xmz8m",
+    "schema": "path-wm-session-handoff-v1",
+    "seconds": 25.156688995892182,
+    "supplement": {
+      "bytes": 253129920,
+      "count": 20493,
+      "fingerprint": "34e6e5a352a1355fd6ac7a1a6471bb77f5e5a466e18bf9882a8d9215afb9b7f3",
+      "passed": true
+    },
+    "verification": "offline exact source checks and CPU inference smoke"
+  },
+  "passed": true,
+  "restore": {
+    "logical_bytes": 1427058893,
+    "restored": 13870,
+    "verified_files": 13870,
+    "verified_objects": 13777
+  },
+  "restore_seconds": 78.1584498360753,
+  "root": "/tmp/path-wm-session-restore-803xmz8m",
+  "schema": "path-wm-restoration-proof-v1"
+}
