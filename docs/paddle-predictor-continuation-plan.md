@@ -48,3 +48,28 @@ corresponding uninterrupted update. Commit the plan/tests after their informativ
 red result. Then implement the fork and provenance plumbing, run the focused
 checks, and commit before the GPU continuation. Each completed stage refreshes
 and verifies canonical HTML; raw ledgers and diagnostics remain authoritative.
+
+## Measured completion and evaluation implementation amendment
+
+P1 continuation passed the original gate at20000 cumulative updates after10000
+additional updates: H2.42536/2.22583/1.65811 versus copy3.83335/2.38499/2.52450,
+latent0.190358 versus1.077386. K5 then completed10000 updates, selected10000,
+in143.67s. Final-horizon H errors4.35023/4.03583/4.74094 improve over copy
+16.0558/11.3849/5.59907 but exceed the two-pixel engineering target. Full control
+evaluation is still required and has not begun.
+
+Before launching full control, a measured implementation optimization removes
+unused RGB rendering from privileged candidate simulations. Twenty validation
+states over three repeats measure baseline21.43ms/decision; an isolated prototype
+using identical physics and exact scalar prefix accumulation measures2.87ms.
+Rendering accounts for about71% of baseline time. NumPy batch score reduction
+changed8/4860 candidate scores by1–2 ULP and was rejected. The accepted path keeps
+the original per-step Python arithmetic and fixed sequence ordering.
+
+Essential tests must establish exact state/events/counters and all candidate
+scores/actions, caller/RNG preservation, terminal/truncated behavior and absence
+of unused rendering. Extract the existing integrator into `advance(action)` and
+keep `step(action)` as its RGB-returning wrapper. This does not alter data,
+physics, action/horizon protocol, learned planning, models or target thresholds.
+Record the privileged implementation in evaluation hardware/latency metadata.
+The full evaluation starts only after parity tests pass and this slice is committed.
