@@ -39,3 +39,18 @@ def test_mean_image_uses_only_supplied_training_membership():
     np.testing.assert_allclose(mean,50/255)
     frames[2]=0
     np.testing.assert_array_equal(mean_image(train),mean)
+
+
+def test_analysis_inventory_rejects_changed_raw_evidence(tmp_path):
+    import hashlib,json,pytest
+    from viewer.curriculum import collect_curriculum_analyses
+    from viewer.ledger import DashboardDataError
+    root=tmp_path/'runs';out=root/'analysis';out.mkdir(parents=True)
+    raw=out/'raw.json';raw.write_text('{}')
+    summary={'status':'completed','purpose':'test','metrics':{'frames':1},'panels':[],
+             'sources':{'analysis/raw.json':hashlib.sha256(raw.read_bytes()).hexdigest()}}
+    (out/'curriculum_analysis.json').write_text(json.dumps(summary))
+    assert len(collect_curriculum_analyses(root))==1
+    raw.write_text('{"changed":true}')
+    with pytest.raises(DashboardDataError,match='hash'):
+        collect_curriculum_analyses(root)

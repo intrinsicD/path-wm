@@ -142,3 +142,16 @@ A at2000supervised updates, B/C image-only warmup snapshots, and both historical
 reference snapshots. Displayed six-frame panels use fixed private sampling;
 pose distributions use all evaluated frames. Neither test results nor probes
 can reopen the frozen budget or choose a checkpoint.
+
+
+## Slice 4: complete diagnosis and bounded presentation
+
+Embedding every full-resolution validation figure exceeded the canonical3MB
+payload limit. Preserve raw results and all PNG/SVGs; the compact reader now
+embeds only the primary selected perception panels. Rebuild/browser-check before
+resuming evaluation; completed inference is not repeated merely to fix packaging.
+Add source-hash-verified aggregate diagnostics: full training metrics for the
+selected A/B/C checkpoints versus the frozen held-out results, and existing
+Paddle prediction/readout diagnostics with memory trajectory/attention figures.
+No new loss, gate or continuation is introduced. Raw-source tampering must fail
+the dashboard collector. Reuse the existing Paddle diagnostic calculations.
