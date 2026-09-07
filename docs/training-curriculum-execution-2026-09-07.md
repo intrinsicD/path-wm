@@ -155,3 +155,15 @@ selected A/B/C checkpoints versus the frozen held-out results, and existing
 Paddle prediction/readout diagnostics with memory trajectory/attention figures.
 No new loss, gate or continuation is introduced. Raw-source tampering must fail
 the dashboard collector. Reuse the existing Paddle diagnostic calculations.
+
+
+## Post-training control comparison
+
+The frozen full evaluation is running. Prepare a descriptive historical-versus-new
+control comparison after all cases finish. Match identical case identities and
+initial states. Resample the100complete opposite-direction pairs together for
+paired success differences (2000draws, seed93501); test that swapping opposite
+member outcomes cannot invent between-pair uncertainty. These are post-training
+case intervals, not new gates or variation across trained models. Preserve the
+original reference raw cases and their hashes. Do not conclude from partial
+controller cases or change the fixed model/selector/protocol.
