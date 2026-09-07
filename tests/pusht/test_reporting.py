@@ -35,5 +35,25 @@ def test_pusht_training_keeps_selected_values_and_separate_chronological_grids(t
     assert len(datasets['pusht_training_predictor_1'])==50
     curve=datasets['pusht_validation_objective_predictor_1']
     assert [r['step'] for r in curve]==sorted(r['step'] for r in curve)
-    assert {r['series'] for r in curve}=={'validation objective','matched copy objective'}
+    assert [r['loss'] for r in curve]==[1.,.2,.3]
+    assert [r['copy_loss'] for r in curve]==[1.,1.,1.]
     assert not any(r.get('run','').startswith('pusht_world_model') for r in datasets.get('train_loss',[]))
+
+
+def test_four_stage_validation_charts_share_rows_with_room_for_full_evaluation(tmp_path):
+    root=tmp_path/'runs'
+    for stage,horizon in [('perception',None),('memory',None),('predictor',1),('predictor',5)]:
+        path=root/'pusht_world_model'/f'{stage}_{horizon}'
+        write(path/'pusht_manifest.json',{'stage':stage,'horizon':horizon,'config':{'smoke':True}})
+        (path/'training.jsonl').write_text(json.dumps({'step':1,'loss':2.})+'\n')
+        row={'step':1,'loss':1.,'copy_loss':2.,'position_mae':[1.,2.,3.,4.],
+             'angle_mae_deg':5.,'motion_mae':[6.,7.,8.,9.,.1]}
+        (path/'validation.jsonl').write_text(json.dumps(row)+'\n')
+        write(path/'pusht_result.json',{'status':'completed','global_update':1,'selected_update':1,'metrics':{'loss':1.}})
+    runs,notices=collect_run_results(root)
+    artifact=build_dashboard_artifact(runs,notices)
+    nonempty={k:v for k,v in artifact['snapshot']['datasets'].items() if k.startswith('pusht_') and v}
+    assert len(nonempty)<=8  # Two step grids per stage; metrics share wide validation rows.
+    memory=nonempty['pusht_validation_objective_memory'][0]
+    assert memory['motion_block_angle']==.1
+    assert [memory[f'position_{c}'] for c in ('pusher_x','pusher_y','block_x','block_y')]==[1.,2.,3.,4.]
