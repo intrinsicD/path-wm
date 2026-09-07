@@ -112,6 +112,31 @@ paddle/PushT/supplement verification and four CPU inference bundles. The package
 is 212,389,903 compressed bytes in five parts. Its receipt establishes continuity,
 not model quality. All experiment and packaging writers are closed.
 
+## Home curriculum planning (2026-09-07)
+
+The user requested a training curriculum using the existing local datasets,
+developed with Claude. The [proposed curriculum](training-curriculum-2026-09-07.md)
+reuses Paddle's accurate perception and prioritizes a bounded PushT perception
+comparison: supervised scratch versus COCO reconstruction warmup versus CCHI
+reconstruction warmup, followed by matched task adaptation. Task-first ordering
+is a working assumption; a general-vision-first alternative is documented.
+The new physical selector, budgets and readiness targets are prospective, not
+changes to historical gates or claims that the user adopted the proposal.
+
+Local metadata checks reconcile all 82,783 COCO training images, all 9,848
+Charades videos, and all 12,291 TAU audio/video pairs; Charades subjects and TAU
+recording locations are disjoint across their official splits. Large HDF5 counts
+come from the existing source audit, not a new full verification. Home has an
+RTX 3050 with 8 GiB and Torch 2.9.0+cu128; the project environment and archived
+task checkpoints still need restoration/verification before training.
+
+Two generic-methodology Claude consultations completed with no repository access.
+The detailed project brief and its local save were rejected by automatic approval
+review; specific approval remains pending. Generic reviews and their limitations
+are documented in the plan. No training, restoration, or environment installation
+ran during this planning turn. The next implementation slice is restoration and
+readiness checks, then the small perception diagnostic and matched screen.
+
 ## Preserved LeWM objective and evidence
 
 Build a fresh modular implementation of the published LeWM baseline. Demonstrate

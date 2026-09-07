@@ -1188,3 +1188,46 @@ tree:
   - N70
   - N71
   status: open
+
+- id: N74
+  type: question
+  title: How should the E/U/P training curriculum use the available local datasets?
+  provenance: user
+  timestamp: 2026-09-07T20:22+02:00
+  description: User asks whether encoder/decoder train first and requests a curriculum developed with Claude. Task-first
+    versus general-visual-first priority remains a working assumption; no training launch requested.
+  evidence:
+  - ../docs/training-curriculum-2026-09-07.md
+  status: open
+- id: N75
+  type: experiment
+  title: Reconcile local media metadata for curriculum planning
+  provenance: ai-executed
+  timestamp: 2026-09-07T20:22+02:00
+  result: COCO has 82783 matching annotated image filenames. Charades has all 7985 train and1863 test videos with
+    disjoint subjects. TAU has all12291 metadata audio/video pairs;8646/3645 official split clips have disjoint305/126
+    locations;20 other videos are examples. Sample ffprobes pass. Home RTX3050 has8GiB and Torch2.9.0+cu128; no
+    project venv or importable h5py. No full media/HDF5 revalidation or optimizer updates.
+  evidence:
+  - ../docs/training-curriculum-2026-09-07.md
+  - ../docs/source-data.md
+  also_depends_on:
+  - N74
+  status: resolved
+- id: N76
+  type: decision
+  title: Complete generic Claude methodology discussion while detailed review remains pending
+  provenance: ai-executed
+  timestamp: 2026-09-07T20:22+02:00
+  choice: Automatic review rejected the detailed private Claude brief and saving that brief. Do not retry either
+    without specific approval. Connected Agent has no available types. Two generic public-methodology consultations
+    completed via isolated tool-disabled local Claude CLI, without project content.
+  alternatives:
+  - Detailed private review after specific approval
+  evidence:
+  - ../docs/curriculum-review-2026-09-07/generic-response.json
+  - ../docs/curriculum-review-2026-09-07/generic-followup-response.json
+  - ../docs/training-curriculum-2026-09-07.md
+  also_depends_on:
+  - N74
+  status: resolved

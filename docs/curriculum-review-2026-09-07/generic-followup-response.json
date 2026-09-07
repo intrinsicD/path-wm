@@ -1,0 +1,110 @@
+{
+  "duration_api_ms": 39105,
+  "stop_reason": "end_turn",
+  "session_id": "36301bfd-5cf1-4572-817c-1533d44bded0",
+  "total_cost_usd": 0.15489399999999998,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 743,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 2775,
+    "output_tokens_details": {
+      "thinking_tokens": 1304
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 743,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2775,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 743,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 743
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-haiku-4-5-20251001": {
+      "inputTokens": 1174,
+      "outputTokens": 18,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.001264,
+      "contextWindow": 200000,
+      "maxOutputTokens": 32000,
+      "thinkingTokens": 0,
+      "canonicalModel": "claude-haiku-4-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-fable-5-1": {
+      "inputTokens": 2,
+      "outputTokens": 2775,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 743,
+      "webSearchRequests": 0,
+      "costUSD": 0.15363,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "thinkingTokens": 1304,
+      "canonicalModel": "claude-fable-5-1",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "is_error": false,
+  "num_turns": 1,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "**Corrections to my earlier claims**\n\n1. *One-batch overfit failure is triage, not proof.* Failing to memorize a single batch is a necessary sanity check for a healthy training loop, but it is not sufficient to declare a bug. Insufficient capacity at the chosen resolution, active dropout/weight decay/augmentation, a too-small learning rate, gradient clipping, or loss scaling can all block memorization. The correct procedure: disable regularization and augmentation, sweep the learning rate, monitor gradient norms, and only then treat persistent failure as a bug.\n\n2. *A small train/validation gap does not prove leakage.* It is equally consistent with underfitting, a low-signal task, or an easy validation set. Leakage is diagnosed by grouped splits (episode, subject, scene), near-duplicate detection, and a shuffled-label control; not by gap size.\n\n3. *Pixel error and pose readout measure state, not dynamics.* Low reconstruction error is often dominated by static background; a good pose probe shows the latent encodes the current state. Neither shows that the *transition* depends on the action. Action-conditioned quality needs multi-step rollout error, counterfactual divergence under different actions, an inverse-dynamics probe, and comparison to copy-last-frame.\n\n4. *A public pretrained encoder is an architectural confound.* If the hypothesis is about pretraining data, the architecture must be identical across arms. Import a public checkpoint only if it matches the fixed architecture exactly; otherwise pretrain that same architecture yourself on generic data.\n\n**Refined three-arm curriculum**\n\nFix one architecture, one task-adaptation recipe, one hyperparameter search budget, and \u22653 seeds per arm.\n\n- **A \u2013 Scratch:** random init, task-supervised training only.\n- **B \u2013 Generic warmup:** reconstruction pretraining on generic images (COCO-like), then the identical task adaptation.\n- **C \u2013 In-domain warmup:** reconstruction pretraining on the target domain, then the identical task adaptation.\n\nB versus C isolates the pretraining-data question; A anchors both.\n\n**Two matching regimes, reported separately**\n\n- *Total-update/compute matched:* A receives warmup-plus-adaptation updates worth of supervised training. Answers: \"Is pretraining worth its compute?\"\n- *Matched supervised exposure:* A receives only the adaptation-phase updates. Answers: \"Does pretraining improve supervised sample efficiency?\"\n\nThese are different questions; a method can win one and lose the other.\n\n**Task-head initialization**\n\nKeep head initialization identical across arms: a freshly initialized head everywhere, so the only difference is encoder/decoder init. A random head can send large early gradients into a pretrained encoder; if you mitigate this (encoder LR multiplier, brief head-only warmup), apply the same mitigation to all arms, including A.\n\n**Immutable snapshots**\n\nFreeze and hash the generic-warmup checkpoint, the in-domain-warmup checkpoint, and every adapted checkpoint. Never retrain in place. All downstream experiments branch from the same stored snapshot so results remain comparable across weeks.\n\n**Action-shuffle baseline and its limitation**\n\nShuffling actions across time tests whether the model uses them: a model that truly conditions on actions should degrade. But in low-motion expert data, consecutive actions are nearly redundant and their effect on the next frame is small, so shuffling costs little even for a correct model, making the baseline weak. Complement it with: counterfactual divergence at longer horizons, evaluation restricted to high-motion segments, cross-episode action swaps (not just within-episode), and an inverse-dynamics probe from consecutive latents.\n\n**Selection versus reporting**\n\nSelect checkpoints and hyperparameters on a grouped validation split (held-out episodes/subjects/scenes, never frames). Evaluate the untouched test set once per final arm, after all selection decisions are frozen.\n\n**Stopping rule**\n\nPre-register the three arms and a minimum effect size on grouped validation across seeds. Add a temporal stage (Charades-style) or audio-visual stage (TAU-style) only if C beats B by that margin and the action-conditioned metrics, not just reconstruction, improve. Otherwise stop: unbounded pretraining stages mostly consume budget and multiply confounds without changing the conclusion.",
+  "ttft_ms": 20047,
+  "type": "result",
+  "duration_ms": 37504,
+  "uuid": "242d2093-ba69-40b3-8085-730376da7f83",
+  "ttft_stream_ms": 1037,
+  "time_to_request_ms": 13,
+  "first_content_frame_ms": 1931,
+  "queued_turn_count": 0
+}

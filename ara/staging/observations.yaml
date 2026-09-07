@@ -558,3 +558,22 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O35
+  timestamp: 2026-09-07T20:22+02:00
+  provenance: ai-suggested
+  content: Propose task-first E/D/H readiness, reusing accurate Paddle perception. Test matched supervised scratch,
+    COCO E/D reconstruction warmup, and in-domain E/D warmup before task adaptation; gate U/P/control separately.
+    Optional general-vision-first ordering and later passive video/audio need separate objectives. Prospective selector/budgets/readiness
+    targets are in the draft, not adopted historical gates.
+  context: User requested curriculum planning. Codex audited local metadata and synthesized two generic Claude consultations;
+    no researcher adoption or new training result.
+  potential_type: heuristic
+  bound_to:
+  - N74
+  - N75
+  - N76
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

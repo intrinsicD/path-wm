@@ -2,11 +2,9 @@ session:
   id: 2026-09-07_001
   date: '2026-09-07'
   started: 2026-09-07T08:01+02:00
-  last_turn: 2026-09-07T08:01+02:00
-  turn_count: 1
-  summary: Completed Claude co-work:12 paired1500-update runs,48 controls; final calibrated4096 gains+2pp on both
-    datasets. EarlyTwoRoom buffer intervention adds13–33/50. Exact exposure/integrity audit,103 tests and canonical/visual
-    QA pass; no next experiment queued.
+  last_turn: "2026-09-07T20:22+02:00"
+  turn_count: 2
+  summary: "Completed Claude co-work:12 paired1500-update runs,48 controls; final calibrated4096 gains+2pp on both datasets. EarlyTwoRoom buffer intervention adds13\u201333/50. Exact exposure/integrity audit,103 tests and canonical/visual QA pass; no next experiment queued. Home curriculum proposed after local metadata audit and generic Claude discussion; no new training; detailed review approval pending."
 events_logged:
 - turn: 1
   type: decision
@@ -98,6 +96,32 @@ events_logged:
   provenance: ai-suggested
   summary: O29 adopted in frozen paired design and implemented private-RNG generator; artifact commitment without
     a performance claim.
+
+- turn: 2
+  type: question
+  id: N74
+  routing: direct
+  provenance: user
+  summary: Request local-data training curriculum with Claude
+- turn: 2
+  type: experiment
+  id: N75
+  routing: direct
+  provenance: ai-executed
+  summary: Reconcile COCO/Charades/TAU metadata and identify home runtime limits; no model training
+- turn: 2
+  type: decision
+  id: N76
+  routing: direct
+  provenance: ai-executed
+  summary: Retain detailed-review rejection; complete only generic Claude methodology consultations
+- turn: 2
+  type: observation
+  id: O35
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose matched perception curriculum and separate later memory/video/audio stages
+
 ai_actions:
 - turn: 1
   action: 'Completed authorized work spanning September6–7: co-worked with Claude on generic implementation/statistics,
@@ -113,6 +137,19 @@ ai_actions:
   - configs/
   - docs/
   - ara/
+
+- turn: 2
+  action: Read current architecture and result reports, inventory named dataset roots, reconcile metadata/splits
+    and sample video probes, inspect runtime and model normalization, consult official dataset descriptions, complete
+    and critically reconcile two generic Claude responses, write curriculum and update project state; validate links/JSON.
+    No restoration, dependency install, full test suite, training, or refreshed dashboard.
+  provenance: ai-executed
+  files_changed:
+  - docs/training-curriculum-2026-09-07.md
+  - docs/project-state.md
+  - docs/curriculum-review-2026-09-07/
+  - ara/
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -121,6 +158,15 @@ key_context:
 - turn: 1
   excerpt: Training and reporting are complete before this epilogue. O29 design is concretely implemented; new results
     and next BN/data proposals have no researcher response yet. No claim of remaining Claude/account quota is made.
+
+- turn: 2
+  excerpt: User asks how to continue, whether encoder and decoder train first, whether to use ~/Documents/datasets
+    and repo data, and to work out the curriculum together with Claude.
+- turn: 2
+  excerpt: Task-first priority and specific private-review approval questions remain unanswered. Generic discussion
+    is complete; do not present it as an independent Claude code/result audit. No new experiment is launched by
+    this plan.
+
 open_threads:
 - Isolate TwoRoom projector versus prediction-projector normalization effects and the training-time mechanism; calibrated
   control is not uniformly better on PushT.
@@ -130,6 +176,12 @@ open_threads:
   training/evaluation queued.
 - Broader private repository/result transfer to Claude remains separately pending; completed restricted co-work
   needed only public/generic inputs.
+
+- Choose curriculum priority and implement restoration/readiness then bounded perception diagnostic; O35 is proposed
+  only.
+- Specific permission for detailed Claude project brief and its local retention remains pending; generic consultations
+  completed.
+
 ai_suggestions_pending:
 - O31/O32/O33 and O34 remain staged; modest projection gains and larger buffer effects are scoped to the completed
   screen, not general mechanisms or independent-data efficiency.
@@ -137,3 +189,6 @@ ai_suggestions_pending:
   artifact commitment. O30 and O27 remain open.
 - Earlier staged mechanisms remain unadjudicated; no contradiction with C02/C03, which concern different checkpoints
   and schedules.
+
+- O35 curriculum budgets, physical selector and readiness targets remain unadopted; no new training result or closure
+  signal.

@@ -1,0 +1,110 @@
+{
+  "duration_api_ms": 39355,
+  "stop_reason": "end_turn",
+  "session_id": "de832f96-1ce8-4e98-be64-9abea6044904",
+  "total_cost_usd": 0.144064,
+  "usage": {
+    "input_tokens": 2,
+    "cache_creation_input_tokens": 704,
+    "cache_read_input_tokens": 0,
+    "output_tokens": 2575,
+    "output_tokens_details": {
+      "thinking_tokens": 265
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 704,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "not_available",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2575,
+        "cache_read_input_tokens": 0,
+        "cache_creation_input_tokens": 704,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 704
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard"
+  },
+  "modelUsage": {
+    "claude-haiku-4-5-20251001": {
+      "inputTokens": 1139,
+      "outputTokens": 15,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.001214,
+      "contextWindow": 200000,
+      "maxOutputTokens": 32000,
+      "thinkingTokens": 0,
+      "canonicalModel": "claude-haiku-4-5",
+      "provider": "firstParty",
+      "costBasis": "list"
+    },
+    "claude-fable-5-1": {
+      "inputTokens": 2,
+      "outputTokens": 2575,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 704,
+      "webSearchRequests": 0,
+      "costUSD": 0.14285,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "thinkingTokens": 265,
+      "canonicalModel": "claude-fable-5-1",
+      "provider": "firstParty",
+      "costBasis": "list"
+    }
+  },
+  "permission_denials": [],
+  "terminal_reason": "completed",
+  "fast_mode_state": "off",
+  "fast_mode_disabled_reason": "sdk_opt_in_required",
+  "subagent_stats": {
+    "spawned": 0,
+    "requested": {
+      "background": 0,
+      "foreground": 0,
+      "unset": 0
+    },
+    "started_in_background": 0,
+    "max_depth": 0,
+    "spawned_by_subagents": 0,
+    "completed": 0,
+    "failed": 0,
+    "killed": {
+      "parent": 0,
+      "user": 0,
+      "system": 0
+    },
+    "refused": {
+      "depth_limit": 0,
+      "concurrency_limit": 0,
+      "budget": 0
+    },
+    "by_type": {}
+  },
+  "is_error": false,
+  "num_turns": 1,
+  "subtype": "success",
+  "api_error_status": null,
+  "result": "**Framing**\n\nA \"world model\" here means: encoder \u2192 latent \u2192 (a) reconstruction decoder, (b) temporal/action-conditioned transition model, (c) readouts (pose, task). The central question is whether generic COCO pretraining of the encoder+decoder buys anything for downstream robot perception, or just delays the real work. Treat it as a hypothesis to falsify, not a default.\n\n**Datasets and what they can and cannot provide**\n\n- *COCO*: static images, object-centric, cluttered indoor/outdoor scenes. Useful for generic low/mid-level features and for testing whether reconstruction pretraining transfers. No temporal signal, no actions.\n- *Charades*: ~10k short indoor videos, activity class labels (e.g., \"opening a door\") and temporal segments. Suitable for passive next-frame/next-latent prediction. Crucially, its labels are *semantic descriptions of what a person did*, not control inputs. Nothing in Charades tells you the joint torques or end-effector velocities that produced a motion.\n- *TAU Urban Audio-Visual Scenes*: 10-second audio+video clips of urban scene categories (street, park, metro). Useful for cross-modal alignment and scene-level context; the \"dynamics\" are mostly ego-motion and traffic, not manipulable objects.\n- *Recorded robot-action datasets* (e.g., BridgeData, RT-X-style, RoboNet): observations paired with executed commands. Only these support learning $p(z_{t+1} \\mid z_t, a_t)$ with a real action variable. Activity labels are a *description* of trajectories; commands are a *cause*. Conflating them yields a model that predicts \"what typically happens\" rather than \"what happens if I do X.\"\n\n**Staged curriculum (with controls at every stage)**\n\nStage 0 \u2014 *Task-first baseline*: train encoder from scratch directly on the robot dataset with the target readouts (pose, next-latent, task success). This is the yardstick everything else must beat.\n\nStage 1 \u2014 *COCO encoder+decoder pretraining*, then fine-tune on the robot data. Controls: (i) scratch init, (ii) COCO-pretrained frozen encoder, (iii) COCO-pretrained encoder fully fine-tuned, (iv) publicly available generic encoder (e.g., an ImageNet/self-supervised checkpoint) as an external reference. Match total gradient steps or wall-clock across arms; otherwise \"pretraining helps\" is confounded with \"more compute.\"\n\nStage 2 \u2014 *Charades passive temporal prediction* on top of the best Stage-1 encoder. Same four-arm control. Here the decoder's job shifts from pixels to next-latent; decide up front whether the pixel decoder is kept (for visualisation/diagnostics) or dropped.\n\nStage 3 \u2014 *TAU multimodal alignment* (optional; only if audio is plausibly useful for the target task). Otherwise skip\u2014each stage costs a control sweep.\n\nStage 4 \u2014 *Action-conditioned dynamics* on the robot dataset. Compare: encoder frozen from Stage 2, encoder fine-tuned, encoder from scratch. This is the only stage that matters for control.\n\n**Freeze/retrain boundaries**: freeze anything not being compared in a given stage. Define one explicit \"unfreeze\" experiment per stage rather than ad hoc thawing.\n\n**Splits and grouping**\n\nSplit by *episode/scene/session*, never by frame. Frames from one trajectory are near-duplicates; random frame splits inflate validation scores and hide overfitting. For Charades, split by video ID; for robot data, by episode and ideally by environment/object instance so the test set contains unseen scenes. Fix splits before the first run and hash them.\n\n**Checkpoint criteria**\n\nSelect checkpoints on a *downstream* validation metric (pose error, next-latent prediction error, task success proxy), not on reconstruction loss. Reconstruction loss is a proxy that can improve while the useful signal degrades. Log both; report the gap.\n\n**Overfit sanity checks**\n\n- Overfit a single batch to near-zero loss before any full run; failure indicates a bug.\n- Train on 10% of data and confirm validation loss diverges from training loss\u2014if it doesn't, the split leaks.\n- Shuffle-label control for readouts: a pose head trained on permuted targets should not beat chance.\n- Ablate the action input in Stage 4: if prediction error barely rises, the model isn't using actions.\n\n**Compute budget**\n\nFix a total step/GPU-hour budget per stage and per arm. State the budget in the plan and stop when reached. Small projects fail by open-ended tuning of the favoured arm.\n\n**Why pixel reconstruction can miss what matters**\n\nMSE/L1 on pixels is dominated by large, static, textured regions. A 10\u00d710-pixel gripper tip or a small cube contributes negligibly to the loss; a decoder can blur or drop it and still score well. Latents optimised for this objective may discard exactly the state variables control needs. Mitigations: weighted losses on foreground/moving regions, perceptual or feature-space losses, latent-space prediction objectives, or simply not relying on reconstruction as the primary signal. Check explicitly: crop-level error on small objects, and whether a linear probe recovers object position from the latent.\n\n**Validate pose readout before model-based control**\n\nBefore any planning or MPC, train a linear (or shallow) probe from latent to ground-truth pose/object position on held-out episodes. If the probe's error is larger than the action step size, planning in that latent is meaningless\u2014the model cannot distinguish states that actions must distinguish. Also verify temporal consistency: consecutive latents should map to consecutive poses without jumps. Only after this passes should the dynamics model be used for control.\n\n**Critical recommendation**\n\nPrefer *task-first* as the default, with generic-vision pretraining as a tested addition rather than a foundation.\n\nReasons for task-first: the robot dataset is the only source with real actions; domain gap between COCO/Charades and a robot workspace is large; reconstruction pretraining biases latents toward large-scale appearance; a small project cannot afford stages that don't pay off; and the scratch baseline is the cleanest control anyway.\n\nReasons generic-vision-first might still win: the robot dataset is small and diverse, so low-level features from COCO could regularise; strong public encoders already exist, so the cheap version is using one off the shelf rather than pretraining your own; if a frozen public encoder plus a small dynamics model beats scratch, that settles the question at near-zero cost.\n\nSo: run Stage 0 and a frozen-public-encoder variant first. Only if the frozen encoder beats scratch is COCO/Charades pretraining of your own worth the compute. Drop TAU unless audio is task-relevant. Always gate control experiments behind the pose-probe check.",
+  "ttft_ms": 3962,
+  "type": "result",
+  "duration_ms": 38305,
+  "uuid": "1e216a9d-00a5-4fcd-aad9-becae6aaf848",
+  "ttft_stream_ms": 898,
+  "time_to_request_ms": 29,
+  "first_content_frame_ms": 1604,
+  "queued_turn_count": 0
+}
