@@ -102,3 +102,26 @@ def test_control_executes_one_primitive_action_and_never_passes_oracle_to_planne
     assert result['success'] is False and result['any_time_success'] is True
     np.testing.assert_allclose(instances[0].actions[-2:],[[.1,.2],[.1,.2]])
     assert len(instances[0].actions)==4  # Two observed prefix actions, then two decisions.
+
+
+def test_hold_uses_visual_pusher_and_float32_action_with_real_memory_updater():
+    from world_model.pusht.models import MemoryUpdater, StateReadout
+    executed=[]
+    class Env:
+        pose=np.array([400.,400.,0.,0.,0.])
+        def reset(self,**kwargs):return np.zeros((64,64,3),np.uint8),{}
+        def set_goal(self,pose):pass
+        def step(self,action):
+            executed.append(np.asarray(action).copy())
+            return np.zeros((64,64,3),np.uint8),0.,False,False,{}
+        def close(self):pass
+    system={'E':lambda x:latent(0.),'U':MemoryUpdater().eval(),'P':Predictor(),
+            'H':lambda s:torch.tensor([[.2,.3,0.,0.,0.,1.]]), 'R':StateReadout().eval()}
+    public={'case_id':'hold-case','seed':1,'reset_pose':[400.,400.,0.,0.,0.],
+            'prefix_actions':[[.4,.5],[.5,.6]],'goal_frame':np.zeros((64,64,3),np.uint8),
+            'source_episode':9,'group_id':9,'start_index':2}
+    oracle={'goal_pose':[0.,0.,100.,100.,0.],'future_actions':[[.9,.9]]*5}
+    result=run_control_case(system,public,oracle,'hold',{'control_max_steps':1},env_factory=Env)
+    assert result['episode_length']==1
+    assert executed[-1].dtype==np.float32
+    np.testing.assert_allclose(executed[-1],[.2,.3])
