@@ -195,3 +195,26 @@ official distribution into `.runtime/browser/`; `install.json` records the URL a
 archive hash. The existing CDP transport now discovers that local executable.
 `PATH_WM_CHROMIUM` still overrides it. Canonical renderer and browser assertions
 remain unchanged; the actual animation-frame/viewport/negative-result probe passes.
+
+## Full paddle reporting capacity (2026-09-07)
+
+An explicitly synthetic fixture under `/tmp/pathwm_paddle_capacity_2026-09-07/`
+exercised four stages with 10,000 raw optimizer rows and 40 validation checkpoints
+each; 500 ordinary starts and 200 paired-history members across five controllers;
+1,024 matched five-step windows; and 100,500 all-frame H readouts. Synthetic
+decoder-noise panels also exercise the image payload. No real experiment inputs,
+checkpoints, configuration or metrics were changed by the capacity check.
+
+The fixture exposed a canonical 4,000-character cell limit when failed-case IDs
+were serialized together. The adapter now retains each failed first-interception
+case as its own table row, reconciles those identities against raw outcomes, and
+joins compact evaluation keys to the inventory. Exact rows partition at the
+existing 2,000-row bound. A worst-case fixture with all 3,500 controller outcomes
+failing preserves 2,000 + 1,500 rows in two table parts. Regression tests cover
+both 500 and 3,500 failures and reject fabricated failure IDs.
+
+Canonical validation, packaging, desktop/mobile rendering and source interaction
+pass for both mixed-outcome and all-failure fixtures at 1440/390 pixels. Payloads
+are approximately 0.98 MB and 1.27 MB against the unchanged 3 MB cap. Fixture
+receipts, raw synthetic sources and requested inspection screenshots remain under
+that `/tmp` directory and are explicitly marked as nonexperimental evidence.

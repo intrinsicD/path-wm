@@ -8,6 +8,7 @@ import os
 from pathlib import Path
 import platform
 import random
+import shutil
 import tempfile
 
 import numpy as np
@@ -63,6 +64,15 @@ def atomic_checkpoint(path, value):
         temporary = Path(f.name)
         torch.save(value, f); f.flush(); os.fsync(f.fileno())
     temporary.replace(path)
+
+
+def atomic_checkpoint_copy(source, target):
+    """Recover an alias without changing CUDA storage tags or checkpoint bytes."""
+    target = Path(target); target.parent.mkdir(parents=True,exist_ok=True)
+    with Path(source).open('rb') as original, tempfile.NamedTemporaryFile(dir=target.parent,delete=False) as f:
+        temporary = Path(f.name)
+        shutil.copyfileobj(original,f); f.flush(); os.fsync(f.fileno())
+    temporary.replace(target)
 
 
 def read_checkpoint(path, *, dependencies=None, dataset_fingerprint=None, stage=None):

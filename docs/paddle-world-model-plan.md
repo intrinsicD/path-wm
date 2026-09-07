@@ -128,3 +128,30 @@ restores RNG/optimizer/sampler; bitwise GPU determinism is not promised.
 Full baseline training/evaluation is next; empirical target achievement remains
 unassessed until actual held-out measurements. Results and limitations will be
 recorded separately from software completion.
+
+### Measured input-loading amendment before continuation
+
+The first250 full perception updates produced validation H MAE
+(0.997806,0.965587,1.057109) pixels. Median original loader cost was0.36037s per
+128-frame batch versus0.00753s for warm GPU E/D/H forward/backward. Separate frame
+and label loops evicted the32-episode LRU, decoding most episodes twice.
+The trainer was deliberately interrupted and retains the250-update checkpoint,
+optimizer and RNG. Uncheckpointed logs are archived on resume.
+
+An implementation-only raw RGB/state/action cache now streams source episodes
+into read-only disk mappings with dataset/split/order/schema and file checksums.
+All three splits require2725122695bytes and built in10.67s. The matched loader
+median is0.0009967s. Twelve128-frame batches and100 additional selected frames
+match source inputs/labels and normalized tensors bitwise. Peak profiling RSS
+was810MiB including PyTorch; no full-population RAM tensor or18GB feature cache
+is created. Records: runs/paddle/frame_cache_profile.json. All eight cache tests
+pass, including partial-build rejection, ordering, immutability and corruption.
+NPZ source, scientific config, model parameters, sample indices, objectives,
+validation and budgets are unchanged. Continue from the same250-update state;
+subsequent checkpoints record the revised source-code fingerprint.
+
+Full dashboard capacity passed in isolated synthetic fixtures, never added to
+the scientific ledger: four10000-update stages, all3500 controller outcomes,
+matched prediction and all-frame readouts. Maximum artifact1.27MB against3MB;
+desktop/mobile/source checks pass. Failure-case identifiers are conserved across
+bounded detail tables instead of overflowing one renderer cell.

@@ -8,6 +8,7 @@ they enter the instrument panel; source files remain authoritative and unchanged
 from __future__ import annotations
 
 import base64
+import hashlib
 import html
 import json
 import math
@@ -68,6 +69,10 @@ def _reconcile_evaluation(report, directory):
             _equal(successes, summary['successes'], f'{population}.{policy}.successes', controls_path)
             if count:
                 _equal(successes / count, summary['success_rate'], f'{population}.{policy}.success_rate', controls_path)
+            if 'failure_case_ids' in summary:
+                failures = [r['case_id'] for r in rows if not r['first_hit_before_miss']]
+                if sorted(failures) != sorted(summary['failure_case_ids']):
+                    raise DashboardDataError(f'{controls_path}: {population}.{policy} failure identities disagree with raw evidence')
             if 'first_action_correct' in summary and summary['first_action_correct'] is not None:
                 _equal(sum(r['first_action'] == r['correct_action'] for r in rows), summary['first_action_correct'],
                        'first_action_correct', controls_path)
@@ -312,13 +317,20 @@ def add_paddle_views(runs, datasets, charts, tables, cards, chart, table, source
                     f'Each displayed coordinate is MAE in {units}. Predictor charts show the last trained horizon; other charts use real observations.',
                     name, 'line', number('step'), number('value'), color=category('coordinate')))
     datasets['paddle_prediction_detail'], datasets['paddle_control_detail'] = [], []
+    datasets['paddle_failure_cases'] = []
     for run in evaluations:
         report = run.internals['paddle_report']
         for population in ('ordinary', 'paired'):
             for controller, summary in report[population]['summary'].items():
+                failures = summary.get('failure_case_ids', [])
                 datasets['paddle_control_detail'].append({'run': run.label, 'population': population,
-                     'controller': controller, **{k: json.dumps(v) if isinstance(v, (list, dict)) else v for k, v in summary.items()},
+                     'controller': controller, **{k: json.dumps(v) if isinstance(v, (list, dict)) else v
+                                                   for k, v in summary.items() if k != 'failure_case_ids'},
+                     'failure_case_count': len(failures),
                      'smoke': report.get('smoke', False)})
+                record_key = 'R' + hashlib.sha256(run.label.encode()).hexdigest()[:10]
+                datasets['paddle_failure_cases'].extend({'record_key': record_key, 'case_id': case_id,
+                      'population': population, 'controller': controller} for case_id in failures)
         for method, horizons in report['prediction']['summary'].items():
             for horizon, groups in horizons.items():
                 for group, summary in groups.items():
@@ -399,6 +411,9 @@ def add_paddle_views(runs, datasets, charts, tables, cards, chart, table, source
           ('h_p95','H coordinate p95'),('h_max','H coordinate max'),('r_p95','R coordinate p95'),('r_max','R coordinate max'),
           ('terminal_count','Terminal targets'),('terminal_false_negative_count','Underestimated miss boundary')],
          'run', 'Actual rows are observed states after warm-up. Other methods use matched windows; collision means any reflection in the predicted prefix. Positions and velocities have different physical units.'),
+        ('paddle_failure_cases', 'Paddle first-interception failures: every case identity',
+         [('record_key','Evaluation record'),('case_id','Case identity'),('population','Population'),('controller','Controller')],
+         'record_key', 'One row per failed first interception. Record keys resolve to full evaluation identities and raw control trajectories in the inventory; all cases are retained across numbered table parts.'),
     ):
         if datasets[name]: tables.append(table(name, title, columns, sort, subtitle))
     return blocks

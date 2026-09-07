@@ -116,3 +116,28 @@ def test_paddle_prediction_cache_is_not_a_lewm_prediction_result(tmp_path):
                  'payload_fingerprint': 'payload', 'payload': {'summary': {}}})
     results, _ = collect_run_results(tmp_path / 'runs')
     assert not any(r.kind == 'prediction' for r in results)
+
+
+@pytest.mark.parametrize('count', [500, 3500])
+def test_full_failure_population_keeps_every_case_without_oversized_cells(tmp_path, count):
+    path = evaluation(tmp_path / 'runs', declared_successes=0)
+    cases = [{'case_id': f'ordinary_{i}_learned_planner_failure', 'population': 'ordinary',
+              'controller': 'learned', 'first_hit_before_miss': False} for i in range(count)]
+    write(path / 'control_records.json', cases)
+    report = json.loads((path / 'metrics.json').read_text())
+    report['ordinary'] = {'starts': count, 'summary': {'learned': {'successes': 0, 'count': count,
+                          'success_rate': 0., 'failure_case_ids': [r['case_id'] for r in cases]}}}
+    write(path / 'metrics.json', report)
+    results, notices = collect_run_results(tmp_path / 'runs')
+    artifact = build_dashboard_artifact(results, notices)
+    datasets = artifact['snapshot']['datasets']
+    assert 'failure_case_ids' not in datasets['paddle_control_detail'][0]
+    assert datasets['paddle_control_detail'][0]['failure_case_count'] == count
+    parts = {key: values for key, values in datasets.items() if key.startswith('paddle_failure_cases')}
+    assert {row['case_id'] for values in parts.values() for row in values} == {r['case_id'] for r in cases}
+    assert all(len(values) <= 2000 for values in parts.values())
+    assert {t['dataset'] for t in artifact['manifest']['tables']} >= set(parts)
+    report['ordinary']['summary']['learned']['failure_case_ids'][0] = 'fabricated_case'
+    write(path / 'metrics.json', report)
+    with pytest.raises(DashboardDataError, match='failure identities'):
+        collect_run_results(tmp_path / 'runs')

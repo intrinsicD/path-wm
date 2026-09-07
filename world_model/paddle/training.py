@@ -13,7 +13,7 @@ import numpy as np
 import torch
 from torch import nn
 
-from .checkpoints import (SCHEMA_VERSION, TENSOR_SCHEMA, atomic_checkpoint, json_atomic, code_fingerprint,
+from .checkpoints import (SCHEMA_VERSION, TENSOR_SCHEMA, atomic_checkpoint, atomic_checkpoint_copy, json_atomic, code_fingerprint,
                           fingerprint_modules, load_observer, read_checkpoint,
                           resolve_device, restore_rng, rng_state, versions)
 
@@ -58,16 +58,24 @@ def normalized_states(states, device):
 
 
 class Samples:
-    """Small episode LRU; indices retain whole-episode split membership."""
-    def __init__(self, data, split):
+    """Exact ordered samples with bounded disk-backed raw-frame access."""
+    def __init__(self, data, split, use_frame_cache=True):
         from .data import EpisodeDataset
         self.dataset = EpisodeDataset(data, split)
         self.cache = OrderedDict()
-        self.lengths = [len(self.dataset[i]['frames']) for i in range(len(self.dataset))]
+        self.raw_cache = None
+        self.lengths = [int(entry['frames']) for entry in self.dataset.entries]
+        if use_frame_cache:
+            from .frame_cache import FrameCache, build_frame_cache
+            directory = Path(data).parent/'frame_cache'/self.dataset.fingerprint/split
+            build_frame_cache(self.dataset,directory)
+            self.raw_cache = FrameCache(self.dataset,directory)
         self.frames = [(e, t) for e, n in enumerate(self.lengths) for t in range(n)]
 
     def episode(self, index):
         index = int(index)
+        if self.raw_cache is not None:
+            return self.raw_cache.episode(index)
         if index not in self.cache:
             self.cache[index] = self.dataset[index]
             if len(self.cache) > 32:
@@ -76,9 +84,13 @@ class Samples:
         return self.cache[index]
 
     def frame_batch(self, indices, device):
-        pairs = [self.frames[int(i)] for i in indices]
-        frames = np.stack([self.episode(e)['frames'][t] for e, t in pairs])
-        states = np.stack([self.episode(e)['states'][t] for e, t in pairs])
+        if self.raw_cache is not None:
+            frames,states = self.raw_cache.frame_batch(indices)
+        else:
+            pairs = [self.frames[int(i)] for i in indices]
+            selected = [(self.episode(e),t) for e,t in pairs]
+            frames = np.stack([episode['frames'][t] for episode,t in selected])
+            states = np.stack([episode['states'][t] for episode,t in selected])
         return images(frames, device), normalized_states(states, device)
 
     def windows(self, horizon):
@@ -351,7 +363,9 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
         if best_checkpoint:
             selected_snapshot = read_checkpoint(run/best_checkpoint,dependencies=deps,
                 dataset_fingerprint=train.dataset.fingerprint,stage=stage)
-            atomic_checkpoint(run/'best.pt',selected_snapshot)
+            alias = run/'best.pt'; source = run/best_checkpoint
+            if not alias.exists() or hashlib.sha256(alias.read_bytes()).digest() != hashlib.sha256(source.read_bytes()).digest():
+                atomic_checkpoint_copy(source,alias)
         if stage == 'predictor' and horizon == 5:
             deps['initial_predictor'] = saved['dependencies']['initial_predictor']
             statistics = saved['statistics']
@@ -398,7 +412,11 @@ def _stage_impl(config, data, run, stage, perception=None, memory=None, horizon=
     json_atomic(run/'resolved_config.json',config)
     json_atomic(run/'paddle_manifest.json', {'stage': stage,'horizon': horizon,'config':config,
          'dependencies':deps,'dataset_fingerprint':train.dataset.fingerprint,'versions':versions(),
-         'validation_indices':val_indices.tolist(),'tensor_schema':TENSOR_SCHEMA})
+         'validation_indices':val_indices.tolist(),'tensor_schema':TENSOR_SCHEMA,
+         'input_storage': {split: {'kind':'read-only raw RGB/state/action memory map',
+             'fingerprint':samples.raw_cache.fingerprint, 'path':str(samples.raw_cache.directory)}
+             for split,samples in (('train',train),('validation',validation))
+             if getattr(samples,'raw_cache',None) is not None}})
     if resume:
         restore_rng(saved['rng'],rng)
     begin = time.monotonic(); last_metrics = {}; gate = {}; source_hash = code_fingerprint()
