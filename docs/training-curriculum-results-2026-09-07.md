@@ -74,7 +74,7 @@ The equal-supervised-exposure comparison is more nuanced. At exactly 2,000
 supervised updates, test angle MAE is 41.05° for A, 36.08° for B and 35.13° for C.
 B has lower test q than A at that point, but its block-y error is worse and it
 has already spent another 2,000 updates on warmup. This does not establish a
-benefit at equal total compute or satisfy the nonworsening adoption rule.
+benefit at equal total updates or satisfy the nonworsening adoption rule.
 
 The historical selected reference has test q 6.682 and angle MAE 45.37°.
 The new A model improves on that historical snapshot, but seed, runtime,
@@ -175,6 +175,18 @@ per interval, above the 0.5 target. Memory reset degrades five-step ball-x MAE
 from 5.85 to 14.79 pixels, evidence that the predictor uses its history, without
 establishing that the learned history is sufficiently accurate.
 
+The separate identical-current-frame probe contains 100 opposite-direction pairs.
+A linear probe fitted on 4,096 training frames gets horizontal direction right
+for 100 / 200 members and both members right in 0 / 100 pairs. Frozen U/R gets
+171 / 200 directions right and both members right in 72 / 100 pairs. Its vx/vy
+MAE is nevertheless 4.640 / 0.880, versus the frame probe's 6.000 / 1.448.
+History retains useful direction information, but horizontal speed is
+underestimated in these near-interception cases. This is a readout diagnostic,
+not a controller-success measurement.
+
+[All paired memory readouts](../runs/curriculum_2026-09-07/paired_memory_inspection/paired_memory_readout.png) ·
+[Exact paired readout metrics](../runs/curriculum_2026-09-07/paired_memory_inspection/metrics.json)
+
 Collision stratification shows that the error is not confined to bounces:
 
 | Five-step test population | Windows | Predicted ball x/y, paddle x MAE | Copy MAE |
@@ -192,9 +204,13 @@ windows. Real-memory velocity errors also rise around reflections: vx/vy MAE is
 The exact terminal boundary needs separate attention. Of 35 five-step windows
 whose target ball-y reaches 61, 34 predicted readouts remain below 61. Even actual
 H readouts fall below that threshold in 342 of 496 terminal observations after
-warmup, despite their low mean coordinate error. These are recorded threshold
-false negatives, not a newly trained terminal classifier or a causal attribution
-of the control failures. The boundary rule and model remain unchanged.
+warmup, despite their low mean coordinate error. On those terminal targets,
+median ball-y absolute error is only 0.115 pixels for actual-frame H, versus
+9.36 pixels for the five-step prediction. Thus the actual-frame count is
+particularly sensitive to the exact cutoff, while the forecast error is much
+larger. These are recorded threshold false negatives, not a newly trained
+terminal classifier or a causal attribution of the control failures. The
+boundary rule and model remain unchanged.
 
 [Memory heatmaps, PCA, velocities and attention](../runs/curriculum_2026-09-07/paddle_history/inspection/memory_states.png) ·
 [Actual versus decoded imagined rollouts](../runs/curriculum_2026-09-07/paddle_history/inspection/paddle_rollouts.png) ·
@@ -211,7 +227,18 @@ unchanged. Brief CPU figure rendering, software checks and dashboard verificatio
 recorded decision timings include whatever host scheduling occurred.
 
 The full 500-start/100-pair, five-controller comparison is still running. No
-aggregate control conclusion is drawn from its partial cases.
+aggregate control conclusion is drawn from its partial cases. The controllers are:
+
+- **Learned:** five-step exhaustive planning with P5 and the accumulated real-observation memory.
+- **Reset:** the same planner, with memory zeroed and rebuilt from only the current frame before each decision.
+- **Random:** seeded uniform choices among the three actions.
+- **Tracker:** follows the current H ball-x estimate with a two-pixel deadband.
+- **Privileged:** exhaustive planning through exact simulator dynamics with the same horizon and scoring rule.
+
+Every learned/reset decision evaluates all 243 action sequences. Episodes retain
+the two neutral warmup steps and the 200-step cap. Opposite-direction pairs have
+identical final raw frames but different observed histories; their two members
+must remain together when estimating uncertainty.
 
 ## Evidence, limitations and verification
 

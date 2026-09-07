@@ -167,3 +167,13 @@ member outcomes cannot invent between-pair uncertainty. These are post-training
 case intervals, not new gates or variation across trained models. Preserve the
 original reference raw cases and their hashes. Do not conclude from partial
 controller cases or change the fixed model/selector/protocol.
+
+## Completed-cache memory readout figure
+
+Add a CPU-only figure from the evaluator's already completed, hash-verified
+identical-current-frame velocity-probe cache. Show all 100 opposite-direction
+pairs, comparing the training-fitted single-frame linear probe with the frozen
+U/R readout. Preserve raw records and compute sign counts from those records;
+this is descriptive inspection, with no new fitting, training, gate or control
+selection. Existing source-hash integrity checks cover this presentation path;
+no test is added for plotting glue.
