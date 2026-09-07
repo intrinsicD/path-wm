@@ -69,12 +69,19 @@ def test_paddle_objective_union_keeps_initial_validation_at_left_edge(tmp_path, 
     rows(path / 'validation.jsonl', validation)
     results, notices = collect_run_results(root)
     artifact = build_dashboard_artifact(results, notices)
-    curve = artifact['snapshot']['datasets'][f'paddle_training_{key}']
-    # The portable reader unions x-values in encounter order across series.
-    # All curves must therefore share chronological row order before rendering.
-    steps = [row['step'] for row in curve]
-    assert steps == sorted(steps)
-    assert steps[0] == 0 and steps[-1] == 100
+    datasets = artifact['snapshot']['datasets']
+    training_curve = datasets[f'paddle_training_{key}']
+    curve = datasets[f'paddle_objective_validation_{key}']
+    # The reader uses encounter-order x categories and breaks lines at nulls.
+    # Keep the independent training step grid separate, and validation/copy
+    # together on their shared chronological grid, including the initial value.
+    for data in (training_curve, curve):
+        assert [row['step'] for row in data] == sorted(row['step'] for row in data)
+    assert {row['series'] for row in training_curve} == {'training objective'}
+    assert training_curve[0]['step'] == 1 and training_curve[-1]['step'] == 100
+    assert curve[0]['step'] == 0 and curve[-1]['step'] == 100
+    assert {row['step'] for row in curve if row['series'] == 'validation objective'} == {
+        row['step'] for row in curve if row['series'] == 'matched copy objective'}
     for field, series in [('loss', 'validation objective'), ('copy_loss', 'matched copy objective')]:
         assert [(row['step'], row['value']) for row in curve if row['series'] == series] == [
             (row['step'], row[field]) for row in validation]

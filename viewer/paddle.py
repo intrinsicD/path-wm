@@ -170,6 +170,14 @@ def collect_paddle_results(runs_root):
                    'versions': manifest.get('versions'), 'quality_gate': result.get('quality_gate'),
                    'baseline_gate': json.dumps(result.get('quality_gate', {})),
                    'checkpoint': result.get('checkpoint'), 'failure': result.get('failure')}
+        if manifest.get('continuation'):
+            # Keep lineage reviewable within a bounded context cell. The full
+            # parent config and ancestry remain in the raw manifest source.
+            context['continuation'] = {key: manifest['continuation'][key] for key in (
+                'parent_checkpoint', 'parent_sha256', 'parent_global_update',
+                'parent_budget_updates', 'child_budget_updates', 'added_budget_updates',
+                'remaining_updates_from_parent_checkpoint', 'counter_semantics',
+            ) if key in manifest['continuation']}
         metrics = {**numeric(result), **_flat(result.get('metrics', {}), 'selected_validation')}
         if training: metrics.update(_flat(training[-1], 'latest_training'))
         if validation: metrics.update(_flat(validation[-1], 'latest_validation'))
@@ -279,21 +287,34 @@ def add_paddle_views(runs, datasets, charts, tables, cards, chart, table, source
         if key == 'predictor': key += f"_{run.context['horizon']}"
         latest_stages[key] = run
     for key, run in latest_stages.items():
-        name = f'paddle_training_{key}'
-        values = []
+        training_values, validation_values = [], []
         for source, series in (('paddle_training', 'training objective'), ('paddle_validation', 'validation objective')):
+            values = training_values if source == 'paddle_training' else validation_values
             for row in _sample(run.internals[source]):
                 if 'loss' in row:
                     values.append({'step': row['step'], 'value': row['loss'], 'series': series})
                 if source == 'paddle_validation' and 'copy_loss' in row:
                     values.append({'step': row['step'], 'value': row['copy_loss'], 'series': 'matched copy objective'})
-        datasets[name] = values
         objective = {'perception': 'RGB MSE plus normalized position MSE',
                      'memory': 'Masked normalized state MSE; initial velocity entries excluded'}.get(run.context['stage'],
                      'Frozen-latent variance-normalized MSE; fine/coarse equal weight')
-        charts.append(chart(name, f'Paddle {key}: objective · {run.label}',
-                            objective + '. At most 50 recorded updates per curve; raw ledgers retain every update.',
-                            name, 'line', number('step'), number('value'), color=category('series')))
+        if run.context.get('continuation'):
+            objective += '; update numbers are cumulative from the parent checkpoint, while additional_updates counts this continuation only'
+        # The portable reader uses encounter-order categories and breaks lines
+        # at missing series values. Training and validation use different step
+        # grids, so plot them separately without inventing intermediate values.
+        for name, label, values in ((f'paddle_training_{key}', 'training objective', training_values),
+                                    (f'paddle_objective_validation_{key}', 'validation objective', validation_values)):
+            if not values:
+                continue
+            datasets[name] = sorted(values, key=lambda row: row['step'])
+            kind = 'line' if len({row['step'] for row in values}) > 1 else 'bar'
+            charts.append(chart(name, f'Paddle {key}: {label} · {run.label}',
+                objective + '. At most 50 recorded updates per curve; raw ledgers retain every update. '
+                'Line x positions are ordered sampled updates with equal spacing; labels retain the exact update numbers.',
+                name, kind, number('step') if kind == 'line' else category('step'), number('value'), color=category('series')))
+            if kind == 'line' and values is validation_values:
+                charts[-1]['settings']['showPoints'] = 'always'
         for readout, coordinates, indices, units in (
             ('h_mae', POSITIONS, range(3), 'world units/pixels'),
             ('r_mae', STATES, (2, 3), 'world units per decision interval'),
@@ -316,6 +337,43 @@ def add_paddle_views(runs, datasets, charts, tables, cards, chart, table, source
                 charts.append(chart(name, f'Paddle {key}: validation {readout}',
                     f'Each displayed coordinate is MAE in {units}. Predictor charts show the last trained horizon; other charts use real observations.',
                     name, 'line', number('step'), number('value'), color=category('coordinate')))
+        if run.context['stage'] == 'memory':
+            for coordinate, index, units in (('ball_vx', 2, 'world units per decision interval'),
+                                              ('ball_vy', 3, 'world units per decision interval'),
+                                              ('ball_y', 1, 'world units/pixels')):
+                values = []
+                for row in _sample(run.internals['paddle_validation']):
+                    if 'paired_validation_r_mae' not in row:
+                        continue
+                    for field, label in (('r_mae', 'ordinary history R'),
+                                         ('paired_validation_r_mae', 'paired history R'),
+                                         ('paired_validation_reset_r_mae', 'paired reset R')):
+                        if row.get(field):
+                            values.append({'step': row['step'], 'value': row[field][index], 'readout': label})
+                if values:
+                    name = f'paddle_memory_paired_{coordinate}'
+                    datasets[name] = values
+                    charts.append(chart(name, f'Paddle memory: {coordinate} validation MAE · {run.label}',
+                        f'MAE in {units}. Ordinary episodes and paired three-frame histories are distinct validation populations. '
+                        'Paired reset uses only the final image. At most 50 recorded steps; the exact table retains every step and coordinate.',
+                        name, 'line', number('step'), number('value'), color=category('readout')))
+    datasets['paddle_paired_validation_detail'] = []
+    for run in training:
+        if run.context['stage'] != 'memory':
+            continue
+        config = run.context.get('config') or {}
+        pair_count = config.get('training', {}).get('memory', {}).get('validation_pairs')
+        for row in run.internals['paddle_validation']:
+            if 'paired_validation_r_mae' in row:
+                datasets['paddle_paired_validation_detail'].append({
+                    'run': run.label, 'step': row['step'],
+                    'ordinary_r_mae': json.dumps(row.get('r_mae')),
+                    'paired_r_mae': json.dumps(row['paired_validation_r_mae']),
+                    'paired_reset_r_mae': json.dumps(row.get('paired_validation_reset_r_mae')),
+                    'ordinary_observations': row.get('observations'),
+                    'ordinary_velocity_observations': row.get('post_warmup_observations'),
+                    'configured_pairs': pair_count,
+                })
     datasets['paddle_prediction_detail'], datasets['paddle_control_detail'] = [], []
     datasets['paddle_failure_cases'] = []
     for run in evaluations:
@@ -399,6 +457,14 @@ def add_paddle_views(runs, datasets, charts, tables, cards, chart, table, source
             blocks.append({'id': 'paddle_qualitative', 'type': 'html', 'layout': 'full',
                            'body': '<h3>Paddle actual / reconstruction / imagination</h3>' + ''.join(images)})
     for name, title, columns, sort, subtitle in (
+        ('paddle_paired_validation_detail', 'Paddle memory: every paired-history validation checkpoint',
+         [('run','Run'),('step','Update'),('ordinary_r_mae','Ordinary R MAE [x,y,vx,vy,paddle]'),
+          ('paired_r_mae','Paired R MAE [x,y,vx,vy,paddle]'),('paired_reset_r_mae','Paired reset R MAE [x,y,vx,vy,paddle]'),
+          ('ordinary_observations','Ordinary frames'),('ordinary_velocity_observations','Ordinary velocity frames'),
+          ('configured_pairs','Configured pairs')],
+         'run', 'Every recorded validation step and all five physical-coordinate errors are retained. '
+         'Ordinary velocity excludes warm-up frames; paired history and reset each measure the final frame of both pair members. '
+         'These populations are separate diagnostics, not pooled estimates. Exact rows come from each memory validation.jsonl.'),
         ('paddle_control_detail', 'Paddle control: exact paired-population results',
          [('run','Run'),('population','Population'),('controller','Controller'),('successes','First interceptions'),('count','Cases'),
           ('success_rate','Success fraction'),('first_action_correct','Correct first actions'),('first_action_count','First-action cases'),
