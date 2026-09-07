@@ -1,8 +1,7 @@
 # Training curriculum results — 7 September 2026
 
-Perception training and its frozen evaluation are complete. The Paddle predictor
-follow-up is still running; its final gate and diagnostic results will be added
-before this execution is closed.
+Perception training and its frozen evaluation are complete. All scheduled training is complete. The full Paddle controller evaluation is
+still running and will be added before this execution is closed.
 
 The task-only PushT arm is the best of the three at equal total updates, but none
 meets the declared pose targets. COCO E/D warmup does learn useful image
@@ -163,7 +162,34 @@ Validation window indices, E/D/H dependency, dataset and E-only variance bytes
 match; the U dependency differs as intended. Runtime differences remain a
 limitation of the cross-session comparison.
 
-P5 and the subsequent full controller evaluation are still active.
+P5 completed10,000updates in609.4seconds and selected9,250 by its unchanged
+validation objective. Its five-step validation MAE is[5.82656,4.30762,4.93063]
+pixels. On1024matched test windows, five-step MAE is[5.84882,4.04752,4.80097],
+versus copy[16.16791,11.07811,5.54455]. All fail the two-pixel engineering target.
+One-step test MAE is[3.37767,2.29149,1.53336].
+
+Across16,831actual test observations after warmup, H position MAE remains
+[0.07125,0.07575,0.09343]pixels. U/R velocity MAE is[0.86914,0.62626]pixels per
+interval, above the0.5target. Memory reset degrades five-step ball-x MAE from
+5.85to14.79pixels, evidence that the predictor uses its history, without
+establishing that the learned history is sufficiently accurate.
+
+[Memory heatmaps, PCA, velocities and attention](../runs/curriculum_2026-09-07/paddle_history/inspection/memory_states.png) ·
+[Actual versus decoded imagined rollouts](../runs/curriculum_2026-09-07/paddle_history/inspection/paddle_rollouts.png) ·
+[Matched prediction curves](../runs/curriculum_2026-09-07/paddle_history/inspection/paddle_prediction.png)
+
+The first four test episodes are shown for memory; its PCA/standardization fits
+only the first eight training episodes. The two earliest eligible test episodes
+show actual and imagined RGB under the same recorded actions. In those examples,
+the imagined ball fades or disappears even though actual-frame E/D reconstruction
+is accurate. This is qualitative evidence from fixed examples, not a prevalence
+estimate. Figures were rendered on CPU with two threads; quantitative prediction
+metrics reuse the hash-verified completed GPU cache. Checkpoint tensors remain
+unchanged. A short CPU figure-rendering pass overlapped controller evaluation;
+recorded decision timings include whatever host scheduling occurred.
+
+The full500-start/100-pair, five-controller comparison is still running. No
+aggregate control conclusion is drawn from its partial cases.
 
 ## Evidence, limitations and verification
 

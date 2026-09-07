@@ -131,9 +131,10 @@ checkpoint is preserved. See the [results](training-curriculum-results-2026-09-0
 for full test errors, object-region controls, feature maps and provenance.
 
 Paddle P1 completed20,000updates in893.9s and selected19,750. Its original gate
-passes, but ball-y improvement over copy is only.00105pixels. P5 is now running
-with its original10,000-update ceiling and eight-check early stopping, followed
-by the full500-start/100-pair controller protocol. E/D/H and mixed-history U/R
+passes, but ball-y improvement over copy is only.00105pixels. P5 completed10,000updates in609.4s, selecting9,250. Five-step test position MAE
+[5.849,4.048,4.801]fails the two-pixel target. The full500-start/100-pair
+five-controller evaluation is running, with atomic case recovery and no partial
+control conclusion. Memory/attention/decoded-rollout inspection is complete. E/D/H and mixed-history U/R
 remain frozen. The new-U source,1024validation windows and byte-identical E-only
 variance statistics were verified against the reference. All353software tests,
 including the installed-browser checks, pass.
