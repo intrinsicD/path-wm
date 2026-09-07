@@ -312,12 +312,69 @@ def inventory(root):
             'files': rows, 'logical_bytes': sum(r['bytes'] for r in rows), 'environment': environment_manifest(root)}
 
 
+def verify_restored(root):
+    """Offline source/data verification and CPU forward smoke from restored bytes."""
+    import time
+    import numpy as np
+    import torch
+    from world_model.paddle import checkpoints as paddle_checkpoints, data as paddle_data
+    from world_model.pusht import checkpoints as pusht_checkpoints, data as pusht_data
+    from world_model.pusht.perception_data import verify_supplement
+
+    root = Path(root).absolute(); started = time.monotonic(); torch.set_num_threads(4)
+    torch.backends.cuda.matmul.allow_tf32 = False; torch.backends.cudnn.allow_tf32 = False
+    print('Verifying all paddle source episodes by exact simulator replay...', flush=True)
+    paddle = paddle_data.verify_dataset(root / 'data/paddle/baseline')
+    print('Verifying all PushT pixels/actions/labels against the relocated exact HDF5...', flush=True)
+    pusht = pusht_data.verify_dataset(root / 'data/pusht_world_model/cchi_v1',
+                                     source=root / 'data/pusht_cchi/pusht_cchi.h5')
+    supplement = verify_supplement(root / 'data/pusht_world_model/pose_supplement_v1')
+    expected = ('c6d255dc9919b1bb9ce38182f9d180047f964754a32c616db072bc965a3be54f',
+                'e6ff0cad101c15ba3e2b839df28bc0bd75dca4063a7d6293141976ab44b4fa9c',
+                '34e6e5a352a1355fd6ac7a1a6471bb77f5e5a466e18bf9882a8d9215afb9b7f3')
+    if tuple(x['fingerprint'] for x in (paddle, pusht, supplement)) != expected:
+        raise ValueError('restored data fingerprints differ from this session handoff')
+    source_frames = {
+        'paddle': paddle_data.EpisodeDataset(root / 'data/paddle/baseline', 'train')[0]['frames'][0],
+        'pusht': pusht_data.EpisodeDataset(root / 'data/pusht_world_model/cchi_v1', 'train')[0]['frames'][0]}
+    bundles = []
+    for task, relative, purpose in (
+        ('paddle', 'runs/paddle/continuation_v1/inference.pt', 'trained paddle continuation; control limitations retained'),
+        ('paddle', 'runs/paddle/smoke_v2/inference.pt', 'software smoke only'),
+        ('pusht', 'runs/pusht_world_model/smoke/inference.pt', 'original software smoke; failed evaluation receipt retained'),
+        ('pusht', 'runs/pusht_world_model/smoke_v2/inference.pt', 'corrected software smoke only; no passing trained PushT bundle')):
+        print(f'Loading and exercising {relative} on CPU...', flush=True)
+        loader = paddle_checkpoints if task == 'paddle' else pusht_checkpoints
+        system = loader.load_bundle(root / relative, device='cpu')
+        frame = torch.from_numpy(np.array(source_frames[task], copy=True)).permute(2, 0, 1)[None].float() / 255
+        previous = torch.zeros(1, 3) if task == 'paddle' else torch.full((1, 2), -1.)
+        action = torch.tensor([[0., 1., 0.]]) if task == 'paddle' else torch.tensor([[.5, .5]])
+        with torch.no_grad():
+            observation = system['E'](frame)
+            memory = system['U'](torch.zeros(1, 128), observation, previous)
+            predicted = system['P'](observation, memory, action)
+            imagined_memory = system['U'](memory.clone(), predicted, action)
+            outputs = {'fine': predicted.fine, 'coarse': predicted.coarse,
+                       'memory': imagined_memory, 'decoded': system['D'](predicted),
+                       'H': system['H'](predicted), 'R': system['R'](imagined_memory)}
+        if any(not torch.isfinite(value).all() for value in outputs.values()):
+            raise ValueError(f'nonfinite restored inference output: {relative}')
+        bundles.append({'path': relative, 'sha256': _sha(root / relative), 'purpose': purpose,
+                        'finite': True, 'output_shapes': {k: list(v.shape) for k, v in outputs.items()}})
+    return {'schema': SCHEMA, 'passed': True, 'verification': 'offline exact source checks and CPU inference smoke',
+            'root': str(root), 'paddle': paddle, 'pusht': pusht, 'supplement': supplement,
+            'bundles': bundles, 'seconds': time.monotonic() - started,
+            'limitations': 'Software/data continuity only; does not establish world-model control success or cross-hardware bitwise training.'}
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest='command', required=True)
     inv = commands.add_parser('inventory'); inv.add_argument('--root', type=Path, default=Path('.')); inv.add_argument('--output', type=Path, required=True)
     build = commands.add_parser('build'); build.add_argument('--root', type=Path, default=Path('.'))
     build.add_argument('--selection', type=Path, required=True); build.add_argument('--output', type=Path, required=True)
+    offline = commands.add_parser('verify-restored'); offline.add_argument('--root', type=Path, default=Path('.'))
+    offline.add_argument('--output', type=Path, required=True)
     for command in ('restore', 'verify', 'requirements'):
         action = commands.add_parser(command); action.add_argument('--package', type=Path, required=True)
         if command == 'restore': action.add_argument('--destination', type=Path, default=Path('.'))
@@ -330,6 +387,9 @@ def main(argv=None):
         result = build_package(args.root, [r['path'] if isinstance(r, dict) else r for r in rows], args.output,
             metadata={'environment': environment_manifest(args.root), 'selection_sha256': _sha(args.selection)})
         print(json.dumps({k: result[k] for k in ('logical_bytes', 'unique_object_bytes', 'compressed_bytes', 'parts')}, indent=2))
+    elif args.command == 'verify-restored':
+        result = verify_restored(args.root); args.output.parent.mkdir(parents=True, exist_ok=True); _write_json(args.output, result)
+        print(json.dumps({'receipt': str(args.output), 'passed': result['passed'], 'seconds': result['seconds']}))
     elif args.command == 'requirements':
         manifest = json.loads((args.package / 'manifest.json').read_text())
         for distribution in manifest['metadata']['environment']['distributions']:

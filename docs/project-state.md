@@ -5,70 +5,110 @@ steps. Standing development and experiment rules live in
 [experiment-workflow.md](experiment-workflow.md). Changing a model, dataset or
 research direction does not replace that workflow.
 
-## Objective
+## Objective and current outcome
 
-Active user objective (2026-09-07): implement the fixed paddle E/U/P world-model
-baseline in `world_model_codex_implementation_brief.md`, with
-`world_model_design_notes.md` as design history. Work with independent Codex and
-Claude agents; iterate through simulator, staged training, planning, and held-out
-control. Preserve all previous LeWM implementations and experiments below.
-The user additionally requests PushT training with this world model. Active plans:
-[paddle](paddle-world-model-plan.md), [PushT E/U/P](pusht-world-model-design.md).
-The design notes are historical context; the implementation brief is the fixed
-paddle reference. Software runs end to end, but useful learned control and the
-engineering targets remain unestablished.
+The user requested the fixed paddle E/U/P architecture from
+`world_model_codex_implementation_brief.md`, using
+`world_model_design_notes.md` as historical context, plus training on PushT.
+Independent Codex and Claude agents contributed implementation and review. The
+user explicitly authorized committing, integrating into `main`, and pushing the
+complete work so it can continue on another computer.
 
-Paddle data (5000/500/500 episodes) are exactly replay-verified. Perception
-completed10000 updates, selected9750, validation H x/y/paddle MAE
-0.0719/0.0770/0.0945 pixels. Memory completed10000: validation vx/vy
-0.8092/0.5455 exceeds0.5, paired validation vx4.3115 remains weak. Fixed P1
-completed10000 and failed its ball-y gate. The separately declared continuation
-completed10000 more updates and passed the unchanged gate. P5 completed10000,
-selected10000, validation h5 H MAE4.3502/4.0358/4.7409 versus copy
-16.0558/11.3849/5.5991. The2px target is unmet. Its full3500case GPU comparison is complete: learned181/500ordinary
-first catches and41/200paired first catches, versus random115/500and14/200;
-reset136/500and40/200. Allcontrol/memory/predictiontargets remain unmet.
-Raw results are in `runs/paddle/continuation_v1/evaluation`. Exported inference bundle is verified.
-See [paddle results](paddle-world-model-results-2026-09-07.md).
+Both implementations execute through data, perception, recurrent memory,
+prediction, planning, evaluation and export. **The requested learned-control
+quality targets have not been achieved.** Keep this distinction when continuing:
+passing software tests, falling losses and a smoke export do not establish useful
+learned control. The original LeWM implementations and results remain preserved.
 
-PushT uses the newly acquired official compact CCHI source, not historical
-missing LeWM archives/checkpoints. Prepared `data/pusht_world_model/cchi_v1`
-contains206episodes/25650frames, disjoint164/20/22configuration-group splits,
-317.1MB storage and no exact cross-split frame/trajectory duplicates. Every
-prepared label/action/pixel passed source comparison. Train-only motion and
-action-offset RMS scales are part of the data fingerprint. Separate E/U/P,
-H6/R11, absolute actions, simulator adapter, CLI, atomic checkpoints, training,
-evaluation and reporting are implemented under `world_model/pusht`.
+Read the [paddle results](paddle-world-model-results-2026-09-07.md),
+[PushT results](pusht-world-model-results-2026-09-07.md),
+[canonical dashboard](../runs/experiment_dashboard.html), and
+[portable continuation handoff](session-handoff-2026-09-07.md).
 
-Corrected CPU smoke `runs/pusht_world_model/smoke_v2` runs2updates in each stage
-with explicit32-frame prefixes,12controller/oracle case outcomes and exported
-inference bundle. Its2replaygoals both succeed; learned finalcontrol0/2 is
-execution evidence only. The earlier failed smoke is preserved. Independent
-audits fixed reset-goal physics, float64 actions, train-only statistics,
-initial-checkpoint selection, atomic selected-gate recovery and evaluation
-provenance. Canonical HTML and prospectivecapacity fixtures pass browser QA.
+## Paddle reference and follow-up
 
-Bounded PushT GPU run `runs/pusht_world_model/baseline` completed E1000(selected200),
-U1000(selected1000),P1 2000(selected2000). P1 latent.050436vs copy.052826 improves,
-but pusher-positionMSE4164.09vs4090.43 fails its strict gate. P5 andfulltestcontrol
-were correctly blocked. Perception has selectedvalidation angleMAE45.19degrees;
-CPU-only independentdiagnosis is active before another experiment. See
-[PushT results](pusht-world-model-results-2026-09-07.md). GPU is free.
+Exactly replay-verified data contain 5,000 / 500 / 500 train / validation / test
+episodes. Perception completed 10,000 updates and selected update 9,750; test
+H position MAE is about 0.071 / 0.076 / 0.092 pixels. Memory completed 10,000
+updates, but validation velocity MAE 0.809 / 0.545 exceeds the 0.5 target.
+The original 10,000-update P1 failed its ball-y gate. A separate budget-only
+continuation reached 20,000 total updates and passed the unchanged gate. P5
+completed 10,000 updates. Its test five-step position MAE is
+4.582 / 4.043 / 4.671 pixels, above the 2-pixel target.
 
-The reviewed [paddle history-start follow-up](paddle-history-start-plan.md) is
-being implemented: unchangedarchitecture/loss, exactly4full/4suffix sequences
-perUbatch, relativewarm-up masks, independentRNGs,10000updates, ordinary/suffix
-jointvalidationselection and50pairdiagnosticonly. Reference stays immutable.
+The full 3,500-case comparison is complete under
+`runs/paddle/continuation_v1/evaluation`. Learned control caught the first return
+in 181 / 500 ordinary cases and 41 / 200 paired cases, versus random
+115 / 500 and 14 / 200; reset memory achieved 136 / 500 and 40 / 200.
+The learned ordinary decision median was 35.6 ms and p95 was 40.2 ms, excluding
+real-frame encoding, observer update and rendering. The exported inference bundle
+was verified. All original control-quality targets remain unmet.
 
-Independent Codex agents own data, model/planner, and evaluation/reporting;
-Claude independently reviewed physics, learning, code, memory diagnostics and
-PushT design. Claude review receipts report14.63338225 API-equivalent dollars
-across this implementation task; this is not a subscription billing claim.
-Raw reviews live under `runs/paddle/collaboration` and
-`runs/pusht_claude_design_review.json`. RTX4090 FP32 requires execution outside
-the sandbox. Additional Claude perception review awaits explicit payload approval after
-automatic approval review rejected the external call; it did not execute.
-Local Codex diagnosis continues, and the history-startfollow-up has not yettrained.
+The separate [history-start experiment](paddle-history-start-plan.md) completed
+its fixed 10,000 memory updates, selected update 9,750, and preserved the original
+architecture and loss. Exactly 40,000 full and 40,000 suffix sequences presented
+2,809,923 observations and 13,729,615 supervised scalars. Selection equally
+weights ordinary and suffix validation objectives; paired cases are diagnostic
+only. Selected ordinary velocity MAE is 0.859 / 0.634, and paired velocity MAE is
+4.732 / 0.810. Independent replay confirms improved cold-start position estimates, but at
+matched final updates paired vx/vy error and ordinary validation loss worsen.
+All 80,000 sampler draws and cumulative counters match the declared schedule.
+The intended memory fix is not established; fresh P1/P5 with this U are not
+trained before home continuation. Existing P checkpoints depend on the original U and cannot be
+silently reused with the new observer.
+
+## PushT reference and coverage experiment
+
+The official compact CCHI source is prepared at
+`data/pusht_world_model/cchi_v1`: 206 episodes, 25,650 frames, and disjoint
+164 / 20 / 22 initial-configuration groups. All prepared pixels, actions and
+labels match the source; no exact cross-split image or trajectory duplicates were
+found. Train-only motion and action-offset RMS scales are fingerprinted. The
+separate model uses H6 / R11 and absolute target-XY actions. Corrected two-update
+CPU smoke exercises every stage, all six controllers/oracles and export. Its
+learned final success is 0 / 2; replay reachability is 2 / 2.
+
+The bounded GPU reference completed perception 1,000 updates (selected 200),
+U 1,000, and P1 2,000. It failed the strict P1 pusher-position gate: MSE 4,164.09
+versus copy 4,090.43. P5 and full test control were correctly not run. Selected
+perception validation angle MAE is 45.19 degrees, and its reconstruction is
+largely background. Read-only diagnosis found a pose-generalization gap and no
+demonstrated source alignment or circular-angle arithmetic bug.
+
+The separate [coverage experiment](pusht-perception-coverage-plan.md) completed
+1,000 perception updates with unchanged initialization, model, objective,
+optimizer and fixed 2,048 validation indices. It mixed the same 20,493 source
+training frames with 20,493 independent simulator poses. Actual presentations
+were 63,954 source and 64,046 supplement frames. It selected update 500: image
+MSE improved from 0.006884 to 0.002817, but all four position MAEs worsened and
+angle MAE rose to 46.21 degrees. The coverage intervention is not adopted; no U/P
+expansion is justified by this selected observer comparison. Matched final and
+fixed-frame diagnostics remain separate from the primary validation population.
+
+## Collaboration, provenance and continuation
+
+Claude completed independent physics, learning, code, memory-diagnostic and
+PushT-design reviews. Their receipts report $14.63338225 in API-equivalent
+usage, not a subscription billing claim. Exact reviews are under
+`runs/paddle/collaboration` and `runs/pusht_claude_design_review.json`.
+A further read-only Claude perception review did not execute: automatic approval
+review rejected the additional external transfer pending specific payload
+approval. The scoped prompt and rejected-call record are preserved; do not retry
+that transfer without the requested approval. Local Codex diagnosis continued.
+
+The handoff includes exact datasets, source HDF5, supplement, selected/resume
+checkpoints, raw evidence and offline HTML in verified split archives. Rebuild
+only omitted caches. Preserve prepared manifests verbatim after relocation and
+pass the new source HDF5 path explicitly for source verification. The final
+handoff document and archive manifest record completed stages, environment,
+verification and remaining choices; do not infer success from checkpoint names.
+
+Final software verification: **336 tests pass**, including all three installed-browser
+checks. The canonical dashboard passes package/data/source-interaction and
+1440 / 390-pixel browser verification, with 49 datasets, 55 charts and five
+embedded image blocks. See the final raw test log and receipt under
+`runs/paddle/collaboration`. Archive restoration verification is recorded beside
+the portable package after its build; it establishes continuity, not model quality.
 
 ## Preserved LeWM objective and evidence
 

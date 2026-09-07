@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import base64
 from collections import Counter
+import hashlib
 import html
 import json
 from pathlib import Path
@@ -15,7 +16,7 @@ POSITIONS = ('pusher_x', 'pusher_y', 'block_x', 'block_y')
 MOTION = (*POSITIONS, 'block_angle')
 
 
-def _reconcile_diagnosis(report, path):
+def _reconcile_diagnosis(report, path, independent_splits=None):
     """Audit only recorded populations; weighted ROI scalars need not be integers."""
     before = report['protected_hashes_before']
     if not before or before != report['protected_hashes_after']:
@@ -90,7 +91,7 @@ def _reconcile_diagnosis(report, path):
                 ('frames', 'groups', 'position_mae', 'pose_mse', 'image_mse', 'regions')}
             compact[update][split].update({k: {'mean': summary[k]['mean']} for k in
                 ('angle_error_deg', 'sin_cos_norm', 'pusher_distance', 'block_distance')})
-    splits = list(group_sets)
+    splits = list(group_sets) if independent_splits is None else independent_splits
     if any(group_sets[a] & group_sets[b] for i, a in enumerate(splits) for b in splits[i + 1:]):
         raise DashboardDataError(f'{path}: diagnosis sampled groups cross splits')
     coverage = {split: {k: value[k] for k in ('episodes', 'independent_groups', 'frames', 'sampled_frames', 'sampled_groups')}
@@ -102,6 +103,88 @@ def _reconcile_diagnosis(report, path):
                'target_max_abs_difference': max(r['target_max_abs_difference'] for r in alignment),
                **_flat(coverage, 'coverage'), **_flat(compact, 'summary')}
     return compact, coverage, metrics
+
+
+def _reconcile_coverage(report, path, root):
+    """Share error arithmetic while keeping the saved synthetic grid a separate domain."""
+    import numpy as np
+
+    source, grid = report['source_population'], report['grid_population']
+    parent_path, grid_path = root / source['parent_raw'], root / grid['source']
+    for artifact, expected in ((parent_path, source['parent_sha256']), (grid_path, grid['sha256'])):
+        if not artifact.is_file() or hashlib.sha256(artifact.read_bytes()).hexdigest() != expected:
+            raise DashboardDataError(f'{path}: coverage input fingerprint differs from declared source')
+    if report['test_population_used'] or not report['source_hashes_unchanged'] or not report['model_tensors_unchanged']:
+        raise DashboardDataError(f'{path}: coverage scope/integrity receipt failed')
+    parent = read_json(parent_path)
+    if report['dataset_fingerprint'] != parent['dataset_fingerprint']:
+        raise DashboardDataError(f'{path}: coverage dataset differs from original diagnosis')
+    fields = ('split', 'source_episode', 'group_id', 'frame_index', 'source_row')
+    identity = lambda row: tuple(row[k] for k in fields)
+    parent_rows = [r for r in parent['records'] if r['checkpoint_update'] == parent['checkpoint_updates'][0]]
+    expected_source = {identity(r) for r in parent_rows}
+    if {identity(r) for r in source['identities']} != expected_source or len(source['identities']) != len(expected_source):
+        raise DashboardDataError(f'{path}: coverage fixed source identities differ from parent diagnosis')
+    _equal(len(expected_source), source['frames'], 'coverage source frame count', path)
+    for split in ('train', 'validation'):
+        _equal(sum(r['split'] == split for r in parent_rows), source[f'{split}_frames'], f'coverage {split} count', path)
+    with np.load(grid_path, allow_pickle=False) as inputs:
+        poses = inputs['poses']
+        if inputs['frames'].shape != (grid['frames'], 64, 64, 3) or poses.shape != (grid['frames'], 5):
+            raise DashboardDataError(f'{path}: coverage saved grid shape differs')
+    _equal(grid['independent_position_settings'] * grid['angles_per_position'], grid['frames'], 'coverage grid shape', path)
+    coverage = {k: dict(v) for k, v in parent['coverage'].items()}
+    coverage['synthetic_grid'] = {'episodes': 0, 'independent_groups': grid['independent_position_settings'],
+        'frames': grid['frames'], 'sampled_frames': grid['frames'], 'sampled_groups': grid['independent_position_settings'],
+        'sampled_per_group_counts': {str(i): grid['angles_per_position'] for i in range(grid['independent_position_settings'])}}
+    normalized, alignment = [], []
+    for arm, model in report['models'].items():
+        if report['protected_hashes_before'].get(model['checkpoint']) != model['sha256']:
+            raise DashboardDataError(f'{path}: coverage model hash differs from protected checkpoint')
+        rows = [r for r in report['records'] if r['arm'] == arm]
+        source_rows = [r for r in rows if r['split'] != 'synthetic_grid']
+        if {identity(r) for r in source_rows} != expected_source or len(source_rows) != len(expected_source):
+            raise DashboardDataError(f'{path}: coverage arm does not use exactly the fixed source identities')
+        synthetic = [r for r in rows if r['split'] == 'synthetic_grid']
+        if sorted(r['frame_index'] for r in synthetic) != list(range(grid['frames'])):
+            raise DashboardDataError(f'{path}: coverage arm does not use exactly the saved grid')
+        for row in synthetic:
+            i = row['frame_index']
+            if (row['source_episode'] != -1 - i // grid['angles_per_position'] or row['source_row'] != -1 - i
+                    or row['group_id'] != i // grid['angles_per_position']
+                    or not np.array_equal(row['truth_pose_world'], poses[i])):
+                raise DashboardDataError(f'{path}: coverage grid identity/pose differs from saved input')
+        if any(r['checkpoint_update'] != model['update'] for r in rows):
+            raise DashboardDataError(f'{path}: coverage checkpoint update differs from model provenance')
+        normalized.extend({**r, 'checkpoint_update': arm} for r in rows)
+        if not alignment:
+            alignment = [{**r, 'exact_source_pixels': False, 'exact_source_pose': False,
+                          'target_max_abs_difference': 0.} for r in rows]
+        if arm.startswith('source_'):
+            previous = {identity(r): r for r in parent['records'] if r['checkpoint_update'] == model['update']}
+            for row in source_rows:
+                for field in ('h_pose6', 'truth_pose_world', 'image_mse', 'position_abs_error', 'angle_error_deg'):
+                    if field in previous[identity(row)]:
+                        _equal(row[field], previous[identity(row)][field], f'coverage preserved source {field}', path)
+    if len(normalized) != len(report['records']):
+        raise DashboardDataError(f'{path}: coverage contains an undeclared model arm')
+    # Arm names distinguish checkpoints with equal update numbers. Grid group ids
+    # describe synthetic positions and are not CCHI configuration-group ids.
+    compact, _, _ = _reconcile_diagnosis({**report, 'checkpoint_updates': list(report['models']),
+        'coverage': coverage, 'records': normalized, 'alignment': alignment}, path,
+        independent_splits=['train', 'validation'])
+    for comparison, populations in report['comparisons'].items():
+        current, base = ('coverage_final1000', 'source_final1000') if comparison == 'matched_final1000' else (
+                         'coverage_selected500', 'source_selected200')
+        for split, values in populations.items():
+            a, b = compact[current][split], compact[base][split]
+            for field in ('position_mae', 'pose_mse', 'image_mse'):
+                _equal((np.asarray(a[field]) - b[field]).tolist(), values[field + '_delta'], 'coverage comparison ' + field, path)
+            _equal(a['angle_error_deg']['mean'] - b['angle_error_deg']['mean'], values['angle_mae_deg_delta'],
+                   'coverage angle comparison', path)
+            _equal(a['regions']['dynamic_foreground']['mse'] - b['regions']['dynamic_foreground']['mse'],
+                   values['foreground_mse_delta'], 'coverage foreground comparison', path)
+    return compact, [parent_path, grid_path]
 
 
 def _reconcile(report, directory):
@@ -208,6 +291,29 @@ def collect_pusht_results(runs_root):
         if report['status'] != 'completed': notices.append(f'{directory.relative_to(runs_root)}: PushT evaluation/report {report["status"]}: {report.get("error","")}')
     for path in sorted(runs_root.rglob('raw.json')):
         report = read_json(path)
+        if report.get('schema_version') == 'pusht-perception-coverage-comparison-v1':
+            summary, extra_sources = _reconcile_coverage(report, path, runs_root.parent)
+            panel = path.parent / 'examples.png'
+            if not panel.is_file():
+                raise DashboardDataError(f'{path}: coverage comparison image missing')
+            context = {'diagnostic_only': True, 'test_population_used': False,
+                'source_frames': report['source_population']['frames'],
+                'source_train_frames': report['source_population']['train_frames'],
+                'source_validation_frames': report['source_population']['validation_frames'],
+                'synthetic_grid_frames': report['grid_population']['frames'],
+                'grid_scope': report['grid_population']['scope'], 'dataset_fingerprint': report['dataset_fingerprint']}
+            metrics = {'checked_records': len(report['records'])}
+            for arm, populations in summary.items():
+                context[f'model.{arm}'] = report['models'][arm]
+                for split, values in populations.items():
+                    context[f'{arm}.{split}'] = values
+                    metrics.update(_flat({k: v for k, v in values.items() if k in
+                        ('frames', 'groups', 'position_mae', 'angle_error_deg', 'pose_mse', 'image_mse')}, f'summary.{arm}.{split}'))
+            for comparison, populations in report['comparisons'].items():
+                for split, values in populations.items(): context[f'comparison.{comparison}.{split}'] = values
+            add(path.parent, 'pusht_perception_coverage', report['status'], metrics, context, [path, panel, *extra_sources],
+                internals={'summary': summary, 'panel': str(panel)})
+            continue
         if report.get('schema_version') != 'pusht-perception-diagnosis-v1':
             continue
         summary, coverage, metrics = _reconcile_diagnosis(report, path)
@@ -226,7 +332,8 @@ def collect_pusht_results(runs_root):
 def add_pusht_views(runs,datasets,charts,tables,cards,chart,table,source_id):
     training=[r for r in runs if r.kind=='pusht_training']; evaluations=[r for r in runs if r.kind=='pusht_evaluation']
     diagnoses=[r for r in runs if r.kind=='pusht_perception_diagnosis']
-    if not training and not evaluations and not diagnoses: return []
+    coverage_reports=[r for r in runs if r.kind=='pusht_perception_coverage']
+    if not training and not evaluations and not diagnoses and not coverage_reports: return []
     number=lambda field:{'field':field,'type':'quantitative'}
     category=lambda field:{'field':field,'type':'nominal'}
     blocks=[{'id':'pusht_intro','type':'markdown','sourceId':source_id,
@@ -416,4 +523,28 @@ def add_pusht_views(runs,datasets,charts,tables,cards,chart,table,source_id):
             charts[-1]['palette'] = {'kind': 'categorical', 'name': 'PATH-WM blue-orange'}
             charts[-1]['legend'] = {'position': 'bottom', 'sort': 'spec'}
             charts[-1]['surface']['interactiveLegend'] = True
+    if coverage_reports:
+        run = coverage_reports[-1]
+        body = ('<h3>PushT perception coverage comparison</h3>'
+            f'<p>Four saved model arms share {run.context["source_train_frames"]} fixed train frames and '
+            f'{run.context["source_validation_frames"]} fixed validation frames. '
+            f'The {run.context["synthetic_grid_frames"]} saved synthetic stress frames are a separate out-of-source '
+            'diagnostic population. Improvement on that grid does not establish CCHI generalization or useful control.</p>'
+            '<div style="overflow-x:auto"><table><thead><tr><th>Model</th><th>Population</th>'
+            '<th>Frames</th><th>Angle MAE (degrees)</th><th>Pose-vector MSE</th><th>RGB MSE</th></tr></thead><tbody>')
+        for arm, populations in run.internals['summary'].items():
+            for split, values in populations.items():
+                body += (f'<tr><td>{html.escape(arm.replace("_", " "))}</td><td>{html.escape(split.replace("_", " "))}</td>'
+                    f'<td>{values["frames"]}</td><td>{values["angle_error_deg"]["mean"]:.5g}</td>'
+                    f'<td>{values["pose_mse"]:.6g}</td><td>{values["image_mse"]:.6g}</td></tr>')
+        body += ('</tbody></table></div><p>Selected checkpoints and equal-budget final checkpoints answer different '
+                 'comparisons. Pose-vector MSE includes the predicted sine/cosine magnitude; circular angle error '
+                 'and the four world-position MAEs remain separate in the exact context. Regional errors use '
+                 'summed fractional RGB scalar weights. The original diagnosis and its two images remain intact.</p>')
+        encoded = base64.b64encode(Path(run.internals['panel']).read_bytes()).decode()
+        body += (f'<img style="max-width:100%;height:auto" alt="Fixed source and separate synthetic stress examples" '
+                 f'src="data:image/png;base64,{encoded}"><p>This source-reconciled comparison is diagnostic only. '
+                 'All original source identities, grid inputs, model hashes and protected before/after hashes are checked.</p>')
+        blocks.append({'id': 'pusht_coverage_comparison_panel', 'type': 'html', 'layout': 'full',
+                       'sourceId': source_id, 'body': body})
     return blocks

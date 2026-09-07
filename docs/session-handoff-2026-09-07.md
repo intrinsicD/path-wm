@@ -24,6 +24,7 @@ python3 scripts/session_handoff.py requirements --package artifacts/session-2026
 python3.14 -m venv .venv
 .venv/bin/python -m pip install -c /tmp/path-wm-observed-constraints.txt -e '.[paddle,pusht,dev]'
 .venv/bin/python -m world_model doctor
+.venv/bin/python scripts/session_handoff.py verify-restored --root . --output runs/restored-session-verification.json
 ```
 
 Use Python 3.14.7 for the recorded environment. The constraints pin observed
@@ -32,7 +33,11 @@ since wheel source and platform affect the runtime. The original runtime is
 Torch `2.14.0+cu130`, CUDA `13.0`. Do not describe a different environment as an
 exact numerical continuation. Open `runs/experiment_dashboard.html` to inspect
 the carried report. Its package contains the original browser verification
-receipt. Run the dataset verification commands below before substantive training.
+receipt. `verify-restored` performs full offline paddle replay, PushT source
+verification with the relocated HDF5, supplement hash/label verification, and
+CPU E/U/P/D/H/R forward checks for the four carried inference bundles. PushT's
+bundles are software smoke evidence; no passing trained PushT bundle is implied.
+Run this check before substantive training.
 
 All training stages scheduled for this session have finished. Inspect
 `runs/paddle/history_start_v1/memory/paddle_result.json` for the selected and final

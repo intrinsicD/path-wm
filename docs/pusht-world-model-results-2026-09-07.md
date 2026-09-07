@@ -106,3 +106,74 @@ cross-module audits. Claude's completed design review is retained in
 $2.65936075. An additional perception review was rejected by automatic approval
 review because its specific local payload would go to an external service.
 That call did not execute; user approval is pending and local diagnosis continues.
+
+
+## Matched perception coverage experiment
+
+The prospective [coverage plan](pusht-perception-coverage-plan.md) completed in
+`runs/pusht_world_model/perception_coverage_v1/perception`. It keeps the source-only
+reference immutable and changes the training population: the same 20,493 source
+training frames plus 20,493 independently sampled simulator observations, with
+actual post-reset labels and no held-out pose selection. The supplement identity
+is `34e6e5a352a1355fd6ac7a1a6471bb77f5e5a466e18bf9882a8d9215afb9b7f3`.
+
+Both arms use seed 3107, 1,000 updates, batch 128, the original architecture and
+RGB-plus-pose objective, and exactly the same 2,048 validation indices. The
+initial E/D/H tensors and initial validation metrics are bitwise identical;
+`runs/pusht_world_model/collaboration/coverage_matched_initialization_receipt.json`
+records the check. The new arm presented 63,954 source and 64,046 supplement
+frames, rather than the reference's 128,000 source presentations. This change in
+source exposure is part of the intervention. Stage optimization/validation took
+30.260 seconds; data verification, preparation and HTML are excluded.
+
+| Selected fixed-validation metric | Source only, update 200 | Mixed coverage, update 500 |
+| --- | ---: | ---: |
+| Pusher x MAE, world units | 48.6178 | 53.0009 |
+| Pusher y MAE, world units | 57.7777 | 61.8601 |
+| Block x MAE, world units | 19.1579 | 23.7561 |
+| Block y MAE, world units | 22.0184 | 24.8967 |
+| Wrapped angle MAE, degrees | 45.1940 | 46.2130 |
+| RGB MSE | 0.00688356 | 0.00281697 |
+| Pose MSE | 0.10716243 | 0.11744663 |
+| Combined validation objective | 0.11404598 | 0.12026360 |
+
+The coverage arm reconstructs images better at its selected checkpoint but
+worsens every selected pose metric above. It is not adopted, and no new U/P
+training follows from this comparison. This is one seed at a fixed budget;
+it does not show that synthetic coverage can never help with another budget or
+objective. Selected-checkpoint comparison, matched final-update comparison,
+group-balanced frame diagnostics, and the synthetic stress grid remain distinct
+populations and claims.
+
+
+At the matched final update 1,000 on the original 2,048 validation draws, source
+versus coverage RGB MSE is 0.00161414 versus 0.00142271 and pose MSE is
+0.14816116 versus 0.12182466. However, all four position MAEs worsen
+(`[47.3805, 53.4498, 19.9759, 21.7634]` versus
+`[53.8278, 57.7354, 21.4296, 29.5209]`) and angle MAE worsens from 45.2549 to
+47.3376 degrees. Mean orientation-vector norm changes from 0.8895 to 0.6115.
+A lower six-coordinate pose objective therefore does not establish better
+physical localization or orientation.
+
+Independent CPU diagnostics reuse the exact earlier 256 train and 256 validation
+frames, plus the unchanged 64-frame synthetic stress grid. Source-checkpoint
+predictions reproduce the earlier diagnosis bit for bit. There are 2,304
+checkpoint/frame records across four saved models; the 512 source frames and 64
+stress frames remain separate populations. No test frames are used, and every
+protected file hash and loaded model tensor stays unchanged.
+
+On the group-balanced 256 validation frames at update 1,000, coverage changes
+angle MAE from 46.6131 to 46.1951 degrees, but all four position MAEs worsen.
+Dynamic-foreground reconstruction MSE improves from 0.0218476 to 0.0139326
+(36.2%). On the separate synthetic stress grid, angle MAE improves from 89.4462
+to 59.2611 degrees at matched final updates; selected snapshots improve from
+92.9315 to 49.7811 degrees. These support foreground/stress-coverage benefits,
+not a source pose or control-quality claim. Differing angle conclusions across
+the original frame-sampled and group-balanced validation populations are shown
+explicitly rather than pooled.
+
+The exact inputs, per-frame predictions, weighted image-region numerators and
+denominators, norms, source comparisons and checkpoint identities are in
+`runs/pusht_world_model/collaboration/perception_coverage_comparison/raw.json`.
+Adjacent `analysis.md`, `script.py`, `report.py`, execution log and the inspected
+`examples.png` are included in the portable archive and canonical dashboard.

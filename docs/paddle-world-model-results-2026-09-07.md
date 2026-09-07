@@ -230,3 +230,49 @@ failure. Actual and imagined futures use identical executed actions. The
 canonical dashboard capacity repair is complete and browser-verified with both
 full paddle and new PushT evidence. All raw JSON/CSV and PNG/GIF evidence remains under
 `runs/paddle/continuation_v1/evaluation`.
+
+
+## Completed history-start observer comparison
+
+The separately declared [history-start follow-up](paddle-history-start-plan.md)
+completed 10,000 U/R updates in 673.566 seconds and selected update 9,750 by the
+unchanged equal-weight ordinary/suffix validation selector. It processed exactly
+40,000 full histories and 40,000 suffixes, presenting 2,809,923 observations and
+13,729,615 supervised scalars. Independent CPU replay matched every logged draw,
+cumulative counter, final sampler state and prospective exposure receipt. All
+5,000 source training episodes were visited across the two populations.
+
+The independent assessment compares the preserved reference at update 10,000
+with selected and final mixed-history checkpoints using the same frozen E and
+validation identities. No test population enters this comparison.
+
+| Matched final update 10,000 | Original U/R | Mixed history U/R |
+| --- | ---: | ---: |
+| Ordinary normalized state MSE | 0.01733959 | 0.02065610 |
+| Suffix normalized state MSE | 0.05762066 | 0.03151881 |
+| Paired ball-y MAE, pixels | 26.891 | 13.998 |
+| Paired vx MAE, pixels per interval | 4.311 | 4.658 |
+| Paired vy MAE, pixels per interval | 0.455 | 0.731 |
+| Same 23 observations, three-frame ball-y MAE | 24.506 | 7.846 |
+| Same 23 observations, three-frame vx MAE | 3.615 | 3.128 |
+
+Cold-start position estimates improve, while ordinary state loss and paired
+velocity accuracy worsen. This is a partial result with explicit tradeoffs; the
+motion targets remain unmet. Paired cases did not select the checkpoint. The
+selected mixed checkpoint has paired y/vx/vy MAE 13.522 / 4.732 / 0.810 and
+ordinary post-warm-up vx/vy MAE 0.859 / 0.634. Neither R alone nor this diagnostic
+establishes the usefulness of the changed U to P. The planned fresh P1 experiment
+with selected U remains a bounded next step for home continuation; fresh P5 stays
+conditional on the unchanged P1 copy gate. Neither was run in this follow-up.
+
+The first CPU replay attempt failed a 0.0002 physical-unit numerical-parity
+assertion against saved GPU predictions. Actual maximum drift is 0.000538;
+the explicit retry used 0.002 and passed. Data identities and counters were
+unchanged, and no scientific target was relaxed. All protected source hashes
+and loaded model tensors stayed unchanged.
+
+Full per-observation evidence, matched selected/final comparisons and descriptive
+pair-level bootstrap intervals are in
+`runs/paddle/collaboration/history_start_assessment/raw.json`; the adjacent
+`analysis.md`, reproducible `script.py`, preserved attempt logs and inspected
+`comparison.png` accompany the portable handoff and canonical dashboard.

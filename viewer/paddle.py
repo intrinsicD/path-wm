@@ -55,6 +55,108 @@ def _equal(actual, recorded, name, path):
         raise DashboardDataError(f'{path}: {name} disagrees with raw evidence ({actual} versus {recorded})')
 
 
+def _reconcile_history_assessment(report, path):
+    """Recompute masked state errors and matched comparisons from CPU replay rows."""
+    import numpy as np
+
+    if (report['test_population_used'] or not report['source_hashes_unchanged']
+            or not report['model_tensors_unchanged']):
+        raise DashboardDataError(f'{path}: history assessment scope/integrity receipt failed')
+    scale = np.asarray(report['normalization'])
+    _equal(scale.tolist(), [64., 64., 6., 6., 64.], 'history assessment state normalization', path)
+    reference = report['arms']['reference_10000']
+    populations = report['populations']
+
+    def physical(errors, mask, summary, label):
+        for coordinate in range(5):
+            values = errors[mask[:, coordinate], coordinate]
+            _equal(len(values), summary['count'][coordinate], f'history {label} coordinate count', path)
+            for field, function in [('mae', np.mean), ('p95', lambda x: np.quantile(x, .95)), ('max', np.max)]:
+                _equal(float(function(values)), summary[field][coordinate], f'history {label} {field}', path)
+
+    for name, arm in report['arms'].items():
+        if report['protected_hashes'].get(arm['checkpoint']) != arm['checkpoint_sha256']:
+            raise DashboardDataError(f'{path}: history checkpoint hash differs from protected source')
+        for population in ('ordinary', 'suffix'):
+            rows, summary = arm['records'][population], arm['summaries'][population]
+            if [[r['episode'], r['start']] for r in rows] != populations[population]:
+                raise DashboardDataError(f'{path}: history {population} source identities disagree')
+            if [r['target_state'] for r in rows] != [r['target_state'] for r in reference['records'][population]]:
+                raise DashboardDataError(f'{path}: history {population} reference targets differ')
+            errors, masks, ages = [], [], []
+            for row in rows:
+                error = np.abs(np.asarray(row['predicted_state']) - row['target_state'])
+                mask = np.ones(error.shape, dtype=bool); mask[:2, 2:4] = False
+                errors.append(error); masks.append(mask); ages.extend(range(len(error)))
+            errors, mask, age = np.concatenate(errors), np.concatenate(masks), np.asarray(ages)
+            _equal(len(rows), summary['sequences'], 'history sequence count', path)
+            _equal(len(errors), summary['observations'], 'history observation count', path)
+            _equal(int(mask.sum()), summary['supervised_scalar_count'], 'history relative-mask denominator', path)
+            squared = float(((errors / scale) ** 2)[mask].sum())
+            _equal(squared, summary['normalized_squared_error_sum'], 'history normalized squared error', path)
+            _equal(squared / mask.sum(), summary['state_mse'], 'history normalized state MSE', path)
+            for cut, keep in [('all_valid', np.ones(len(age), bool)), ('age2', age == 2),
+                              ('later', age > 2), ('postwarm', age >= 2)]:
+                physical(errors, mask & keep[:, None], summary[cut], f'{population}/{cut}')
+        pairs = arm['records']['paired']
+        pair_ids = [(r['pair_seed'], r['direction']) for r in pairs]
+        if pair_ids != [(r['pair_seed'], r['direction']) for r in reference['records']['paired']]:
+            raise DashboardDataError(f'{path}: history paired reference identities differ')
+        seeds = {r['pair_seed'] for r in pairs}
+        if len(pair_ids) != len(set(pair_ids)) or len(pairs) != 2 * len(seeds):
+            raise DashboardDataError(f'{path}: history assessment must preserve two directions per pair')
+        _equal(len(seeds), populations['paired_count'], 'history diagnostic pair count', path)
+        matched = arm['records']['matched']
+        if [[r['episode'], r['frame']] for r in matched] != populations['matched_observations']:
+            raise DashboardDataError(f'{path}: history matched source identities disagree')
+        full = {r['episode']: r for r in arm['records']['ordinary']}
+        for row in matched:
+            _equal(row['full_predicted_state'], full[row['episode']]['predicted_state'][row['frame']],
+                   'history matched full-history prediction', path)
+        for population, rows, field, sequence in [('paired', pairs, 'predicted_state', True),
+                ('paired_reset', pairs, 'reset_predicted_state', False),
+                ('matched_full', matched, 'full_predicted_state', False),
+                ('matched_three', matched, 'predicted_state', True)]:
+            truth = np.asarray([r['target_state'][-1] for r in rows])
+            base_rows = reference['records']['paired' if population.startswith('paired') else 'matched']
+            if not np.array_equal(truth, [r['target_state'][-1] for r in base_rows]):
+                raise DashboardDataError(f'{path}: history {population} reference targets differ')
+            predicted = np.asarray([r[field][-1] if sequence else r[field] for r in rows])
+            physical(np.abs(predicted - truth), np.ones(truth.shape, bool), arm['summaries'][population], population)
+            if population.startswith('paired'):
+                _equal(len(seeds), arm['summaries'][population]['pairs'], 'history pair count', path)
+                _equal(float(np.mean(np.sign(predicted[:, 2]) == np.sign(truth[:, 2]))),
+                       arm['summaries'][population]['vx_sign_accuracy'], 'history vx sign accuracy', path)
+    for name, populations_comparison in report['comparisons'].items():
+        for population, comparisons in populations_comparison.items():
+            current, base = report['arms'][name]['summaries'][population], reference['summaries'][population]
+            for field, comparison in comparisons.items():
+                if field == 'mae_delta_pair_bootstrap_95':
+                    def pair_errors(arm):
+                        rows = arm['records']['paired']
+                        return np.asarray([np.abs(np.asarray(r['predicted_state'][-1]) - r['target_state'][-1])
+                                           for r in rows]).reshape(-1, 2, 5).mean(1)
+                    delta = pair_errors(report['arms'][name]) - pair_errors(reference)
+                    draws = np.random.default_rng(report['bootstrap']['seed']).integers(
+                        0, len(delta), size=(report['bootstrap']['draws'], len(delta)))
+                    _equal(np.quantile(delta[draws].mean(1), [.025, .975], axis=0).tolist(), comparison,
+                           'history paired bootstrap interval', path)
+                    continue
+                a = current[field[:-4]]['mae'] if field.endswith('_mae') else current[field]
+                b = base[field[:-4]]['mae'] if field.endswith('_mae') else base[field]
+                _equal((np.asarray(a) - b).tolist(), comparison['delta'], 'history comparison delta', path)
+                _equal((np.asarray(a) / b).tolist(), comparison['ratio'], 'history comparison ratio', path)
+    audit = report['counter_audit']; counters = audit['counters']
+    if audit['status'] != 'passed' or not all(audit[k] for k in ('all_cumulative_counters_match',
+            'prospective_receipt_match', 'final_rng_states_match', 'paired_never_selects')):
+        raise DashboardDataError(f'{path}: history counter audit failed')
+    for field in ('sequences', 'observations', 'supervised_scalar_count'):
+        _equal(counters['full_' + field] + counters['suffix_' + field], counters[field], 'history mixed counters', path)
+    _equal(counters['sequences'], audit['logged_draws_checked'], 'history logged draw count', path)
+    _equal(5 * counters['observations'] - 4 * counters['sequences'], counters['supervised_scalar_count'],
+           'history training mask denominator', path)
+
+
 def _reconcile_evaluation(report, directory):
     controls_path, predictions_path = directory / 'control_records.json', directory / 'prediction_records.json'
     controls, predictions = _list(controls_path), _list(predictions_path)
@@ -269,6 +371,30 @@ def collect_paddle_results(runs_root):
             {**numeric(report), 'passed_members': sum(case['passed'] for case in cases), 'members': len(cases)},
             {'environment_fingerprint': report.get('environment_fingerprint'), 'schema_version': report['schema_version'],
              'protocol': 'Exact simulator enumeration of paired identical-current-frame histories; distinct validation/test seeds'}, [path])
+    for path in sorted(runs_root.rglob('raw.json')):
+        report = read_json(path)
+        if report.get('schema') != 'paddle-history-start-assessment-v1':
+            continue
+        _reconcile_history_assessment(report, path)
+        panel = path.parent / 'comparison.png'
+        if not panel.is_file():
+            raise DashboardDataError(f'{path}: history assessment comparison image missing')
+        metrics, context = {}, {'diagnostic_only': True, 'test_population_used': False,
+            'protocol': 'Independent CPU replay on fixed validation populations; one training seed; paired results never select',
+            'counter_audit': report['counter_audit'], 'bootstrap': report['bootstrap']}
+        for name, arm in report['arms'].items():
+            context[f'checkpoint.{name}'] = {k: v for k, v in arm.items() if k not in ('records', 'summaries')}
+            for population, summary in arm['summaries'].items():
+                context[f'{name}.{population}'] = summary
+                metrics.update(_flat({k: v for k, v in summary.items() if k in
+                    ('state_mse', 'supervised_scalar_count', 'observations', 'sequences', 'mae', 'vx_sign_accuracy')},
+                    f'arms.{name}.{population}'))
+            if name in report['comparisons']:
+                for population, comparison in report['comparisons'][name].items():
+                    context[f'comparison.{name}.{population}'] = comparison
+        add(path.parent, 'paddle_history_assessment', report['status'], metrics, context, [path, panel],
+            internals={'arms': {name: {'update': arm['update'], 'summaries': arm['summaries']}
+                               for name, arm in report['arms'].items()}, 'panel': str(panel)})
     return results, notices
 
 
@@ -282,7 +408,8 @@ def add_paddle_views(runs, datasets, charts, tables, cards, chart, table, source
     """Append native charts/exact aggregate tables; return introductory/image blocks."""
     training = [r for r in runs if r.kind == 'paddle_training']
     evaluations = [r for r in runs if r.kind == 'paddle_evaluation']
-    if not training and not evaluations:
+    assessments = [r for r in runs if r.kind == 'paddle_history_assessment']
+    if not training and not evaluations and not assessments:
         return []
     number = lambda key: {'field': key, 'type': 'quantitative'}
     category = lambda key: {'field': key, 'type': 'nominal'}
@@ -520,4 +647,27 @@ def add_paddle_views(runs, datasets, charts, tables, cards, chart, table, source
          'record_key', 'One row per failed first interception. Record keys resolve to full evaluation identities and raw control trajectories in the inventory; all cases are retained across numbered table parts.'),
     ):
         if datasets[name]: tables.append(table(name, title, columns, sort, subtitle))
+    if assessments:
+        run = assessments[-1]
+        body = ('<h3>Independent history-start assessment</h3><p>The original observer, selected mixed-history '
+                'checkpoint and final checkpoint are replayed on the same ordinary, suffix and paired validation '
+                'populations. This one-seed assessment is diagnostic only; no test population is used.</p>'
+                '<div style="overflow-x:auto"><table><thead><tr><th>Observer</th><th>Update</th>'
+                '<th>Ordinary state MSE</th><th>Suffix state MSE</th><th>Paired vx MAE</th></tr></thead><tbody>')
+        for name, arm in run.internals['arms'].items():
+            summary = arm['summaries']
+            body += (f'<tr><td>{html.escape(name.replace("_", " "))}</td><td>{arm["update"]}</td>'
+                     f'<td>{summary["ordinary"]["state_mse"]:.6g}</td><td>{summary["suffix"]["state_mse"]:.6g}</td>'
+                     f'<td>{summary["paired"]["mae"][2]:.6g}</td></tr>')
+        body += ('</tbody></table></div><p>Each state MSE uses its own masked scalar denominator. '
+                 'The first two relative velocity labels are excluded. Physical velocity errors use pixels per '
+                 'decision interval. Paired bootstrap intervals preserve both directions of each pair and describe '
+                 'this fixed diagnostic population, not uncertainty across training seeds.</p>')
+        encoded = base64.b64encode(Path(run.internals['panel']).read_bytes()).decode()
+        body += (f'<img style="max-width:100%;height:auto" alt="Matched history-start observer comparison" '
+                 f'src="data:image/png;base64,{encoded}"><p>Source identities, physical means, quantiles, maxima, '
+                 'normalized errors, comparison ratios and pair-bootstrap intervals reconcile with replay records. '
+                 'The exact context retains both selected and final results; paired outcomes never select a checkpoint.</p>')
+        blocks.append({'id': 'paddle_history_assessment_panel', 'type': 'html', 'layout': 'full',
+                       'sourceId': source_id, 'body': body})
     return blocks

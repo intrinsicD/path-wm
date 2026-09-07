@@ -270,7 +270,7 @@ def coverage_comparison(root):
                         ('coverage_selected500', 500), ('coverage_final1000', 1000)]:
         rows = copy.deepcopy(source)
         for i, r in enumerate(copy.deepcopy(source[:2])):
-            r.update(split='synthetic_grid', source_episode=-1, frame_index=i, source_row=-1-i,
+            r.update(split='synthetic_grid', source_episode=-1-i, frame_index=i, source_row=-1-i,
                      group_id=i, truth_pose_world=[0.] * 5)
             rows.append(r)
         for r in rows: r.update(arm=arm, checkpoint_update=update)

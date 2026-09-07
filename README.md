@@ -1,5 +1,11 @@
 # PATH-WM
 
+For continuation on another computer, use the
+[verified session handoff](docs/session-handoff-2026-09-07.md) to restore the exact
+datasets, checkpoints, raw results and offline dashboard. The implementations
+run end to end, but the requested learned-control targets remain unmet; see
+[current project state](docs/project-state.md) for measured results and next steps.
+
 The active experiment is the fixed RGB paddle E/U/P world model. Its
 [commands and architecture](docs/paddle-world-model-usage.md) and
 [implementation plan](docs/paddle-world-model-plan.md) describe the separate
