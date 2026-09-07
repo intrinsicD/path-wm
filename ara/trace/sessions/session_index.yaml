@@ -19,3 +19,12 @@ sessions:
   - C02
   - C03
   open_threads: 5
+- id: 2026-09-07_001
+  date: '2026-09-07'
+  summary: Completed Claude co-work:12 paired1500-update runs,48 controls; final calibrated4096 gains+2pp on both
+    datasets. EarlyTwoRoom buffer intervention adds13–33/50. Exact exposure/integrity audit,103 tests and canonical/visual
+    QA pass; no next experiment queued.
+  turn_count: 1
+  events_count: 13
+  claims_touched: []
+  open_threads: 4

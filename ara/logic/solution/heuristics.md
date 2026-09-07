@@ -97,3 +97,13 @@
 - **Code ref**: [mode diagnostic](../../../scripts/check_training_modes.py), [ranking](../../../scripts/diagnose_tworoom_control.py), [fork trainer](../../../world_model/train.py), [bounded config](../../../configs/reproduction/pusht_epoch1_continuation.yaml), [report](../../../docs/tworoom-followup-2026-09-06.md).
 - **From staging**: O24
 - **Evidence of adoption**: N50; user said “yes. cowork with claude. use claude not only for review to keep your limits in mind”. This adopts the proposed work and co-work scope, not new numerical/causal claims or broad repository transfer. Completed evidence: N51–N56 and [snapshot](../../evidence/tables/tworoom_followup_2026-09-06.json).
+
+
+## H11: Isolate sketch randomness in a paired lower-variance training screen
+- **Rationale**: Test additional independent SIGReg directions with the same objective, batch128, latent192 and lambda.09. Keep initialization, data order and model/dropout randomness paired using a separate checkpointed sketch generator, and freeze calibration policy before observing control. Lower conditional gradient noise is an experimental motivation, not a learning-speed guarantee.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; equal seeds with different sketch dimensions do not imply nested projection draws. BN couples examples, shared source cases do not measure unseen configurations, and calibration accesses additional training windows.
+- **Code ref**: [private sketch RNG](../../../world_model/seeded_sigreg.py), [trainer](../../../world_model/train.py), [serial coordinator](../../../scripts/projection_experiment.py), [frozen protocol](../../../docs/projection-training-plan-2026-09-06.md), [paired statistics](../../../scripts/paired_summary.py).
+- **From staging**: O29
+- **Evidence of commitment**: N66–N71; frozen plan, implemented generator and all12 completed paired runs depend on this design. The user authorized continuation and Claude co-work, without endorsing a numerical improvement or general causal explanation. [Source-bound evidence](../../evidence/tables/projection_training_2026-09-07.json); final implementation/report commit4a7f5d2. Provenance remains ai-suggested.

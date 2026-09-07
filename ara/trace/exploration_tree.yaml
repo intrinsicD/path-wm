@@ -1042,3 +1042,149 @@ tree:
   - N57
   status: open
   timestamp: 2026-09-06T20:06+02:00
+
+- id: N66
+  type: decision
+  title: Freeze the paired projection-count training screen
+  provenance: ai-executed
+  timestamp: 2026-09-07T08:01+02:00
+  choice: 'Continue the user-authorized co-work with a bounded paired 1024/4096 comparison: two datasets, seeds3072–3074,
+    1500 updates, matched batch128/latent192/lambda.09 and private sketch RNG. Fixed512-training-window calibration
+    is primary; saved buffers remain separate. The plan implements O29 without treating lower noise as established
+    learning acceleration.'
+  alternatives:
+  - Immediately change the objective, latent size, or batch size
+  - Infer a fourfold learning gain from the fixed-checkpoint noise probe
+  evidence:
+  - evidence/tables/projection_training_2026-09-07.json
+  - ../docs/projection-training-2026-09-06.md
+  - ../docs/projection-training-plan-2026-09-06.md
+  - staging/observations.yaml:O29
+  also_depends_on:
+  - N64
+  - N65
+  status: resolved
+- id: N67
+  type: experiment
+  title: Verify private sketch RNG and complete Claude implementation co-work
+  provenance: ai-executed
+  timestamp: 2026-09-07T08:01+02:00
+  result: Two restricted Claude MCP calls supplied generic design, code and paired descriptive statistics; reported
+    API-equivalent cost$1.132410. Corrected draft precision/quadrature to match pinned LeWM. Real bf16 scalar/gradient
+    parity, independent global/sketch streams and exact private resume verified. Four20-update GPU preflights support
+    the frozen budget; no original checkpoint altered.
+  evidence:
+  - evidence/tables/projection_training_2026-09-07.json
+  - ../docs/projection-training-2026-09-06.md
+  - ../docs/projection-training-plan-2026-09-06.md
+  also_depends_on:
+  - N66
+  status: resolved
+- id: N68
+  type: dead_end
+  title: Reject dashboard key compaction alone as the rendered-size repair
+  provenance: ai-executed
+  timestamp: 2026-09-07T08:01+02:00
+  hypothesis: Compact record keys alone would keep the growing dashboard below the unchanged browser-output limit.
+  failure_mode: 'At outcome22, raw control completed but canonical extraction stopped: rendered DOM16,255,681 bytes
+    exceeded16M because global file lists were repeated in numeric-cell tooltips. Key compaction alone passed unit
+    checks but did not remove this expansion. Last verified publication and all raw outcomes preserved.'
+  lesson: Measure actual rendered output and trace repeated provenance expansion; passing data tests alone does
+    not establish browser deliverability. Keep reporting failure distinct from valid scientific outcomes.
+  evidence:
+  - evidence/tables/projection_training_2026-09-07.json
+  - ../docs/projection-training-2026-09-06.md
+  - ../docs/projection-training-plan-2026-09-06.md
+  also_depends_on:
+  - N67
+  status: resolved
+- id: N69
+  type: experiment
+  title: Repair source provenance expansion and resume verified reporting
+  provenance: ai-executed
+  timestamp: 2026-09-07T08:01+02:00
+  result: Moved complete file union to the query input index, kept per-record inventory/source identities and stable
+    collision-checked run keys, and guarded against stale successful receipts. Red-before-green regression checks,
+    actual canonical repair and explicit full-size synthetic capacity fixture passed without changing numerical
+    rows or runtime limits. Recovered completed raw stage without repeated scientific training/control. Synthetic
+    capacity data excluded from the science ledger.
+  evidence:
+  - evidence/tables/projection_training_2026-09-07.json
+  - ../docs/projection-training-2026-09-06.md
+  - ../docs/projection-training-plan-2026-09-06.md
+  also_depends_on:
+  - N68
+  status: resolved
+- id: N70
+  type: experiment
+  title: Complete all12 paired runs and48 matched controls
+  provenance: ai-executed
+  timestamp: 2026-09-07T08:01+02:00
+  result: Every run reaches1500 updates; no cap stops or missing outcomes. Final calibrated PushT1024/4096 scores
+    by seed are2/4,1/1,1/2 out of50; TwoRoom46/46,45/45,43/46. Both mean paired differences are+2 percentage points.
+    At750, TwoRoom calibration adds13–33 successes/50 across all6 checkpoints using unchanged parameters. PushT
+    calibration effects are mixed. All732 logged preclip norms exceed1; these are sampled norms, not measured all-update
+    clipping frequency. Summed training-loop elapsed22446.515610224s; timings are observational.
+  evidence:
+  - evidence/tables/projection_training_2026-09-07.json
+  - ../docs/projection-training-2026-09-06.md
+  - ../docs/projection-training-plan-2026-09-06.md
+  also_depends_on:
+  - N66
+  - N69
+  status: resolved
+- id: N71
+  type: experiment
+  title: Audit exact source exposure and all paired checkpoint identities
+  provenance: ai-executed
+  timestamp: 2026-09-07T08:01+02:00
+  result: Each1500-update optimizer prefix has192000 distinct window starts and768000 encoded-frame presentations.
+    PushT covers18660–18664/18685 source episodes and671146–671678 frame rows; TwoRoom9999–10000/10000 and540753–541370.
+    Calibration adds344–459 window starts outside these prefixes. All6 pairs preserve initialization/populations
+    and global CPU/CUDA RNG at750/1500; private sketch states differ as expected. Each of24 calibrated clones changes
+    only six BN buffers. Thirteen immutable inputs pass; full HDF5 sources not rehashed.
+  evidence:
+  - evidence/tables/projection_training_2026-09-07.json
+  - ../docs/projection-training-2026-09-06.md
+  - ../docs/projection-training-plan-2026-09-06.md
+  also_depends_on:
+  - N70
+  status: resolved
+- id: N72
+  type: experiment
+  title: Finish source-bound report, final figures and dashboard QA
+  provenance: ai-executed
+  timestamp: 2026-09-07T08:01+02:00
+  result: Final report committed4a7f5d2 with all48 outcomes, paired descriptive uncertainty and10 primary literature
+    sources, including BatchNorm population-statistic mismatch and Batch Renormalization. All103 tests including3
+    browser checks pass. Canonical1440/390 QA, actual native charts, three scientific figures and four preselected
+    saved-action rollouts inspected. Final payload2,516,589 bytes stays below3M. Completion receipt records all
+    work complete; no further experiments queued.
+  evidence:
+  - evidence/tables/projection_training_2026-09-07.json
+  - ../docs/projection-training-2026-09-06.md
+  - ../docs/projection-training-plan-2026-09-06.md
+  also_depends_on:
+  - N70
+  - N71
+  status: resolved
+- id: N73
+  type: question
+  title: Can isolated normalization repair reduce required training before testing less data?
+  provenance: ai-suggested
+  timestamp: 2026-09-07T08:01+02:00
+  description: Propose separating projector from prediction-projector BN interventions with preserved weights and
+    frozen cases, then test coverage-preserving versus size-matched random data under configuration-disjoint evaluation.
+    The completed projection screen does not establish a large acceleration factor, a universal calibration default,
+    or independent-data efficiency. Responsible normalization layer and training-time mechanism remain open; follow-up
+    is not queued.
+  evidence:
+  - evidence/tables/projection_training_2026-09-07.json
+  - ../docs/projection-training-2026-09-06.md
+  - ../docs/projection-training-plan-2026-09-06.md
+  also_depends_on:
+  - N57
+  - N65
+  - N70
+  - N71
+  status: open

@@ -472,9 +472,9 @@ observations:
   - N63
   - N64
   - N65
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H11
+  crystallized_via: artifact-commitment
   stale: false
 - id: O30
   timestamp: 2026-09-06T20:06+02:00
@@ -488,6 +488,72 @@ observations:
   bound_to:
   - N60
   - N65
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+
+- id: O31
+  timestamp: 2026-09-07T08:01+02:00
+  provenance: ai-suggested
+  content: 'The paired1500-update screen supports only a modest final calibrated control gain from4096 projections:
+    mean+2 percentage points on each dataset. A roughly fourfold fixed-checkpoint conditional-noise reduction did
+    not establish a corresponding learning acceleration; three seeds and two control checkpoints do not identify
+    a time-to-target factor.'
+  context: Completed user-authorized co-work and committed final report; researcher has not yet commented on these
+    new results or adopted the next comparison.
+  potential_type: claim
+  bound_to:
+  - N64
+  - N70
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O32
+  timestamp: 2026-09-07T08:01+02:00
+  provenance: ai-suggested
+  content: At750 updates, changing only BN buffers improves all six TwoRoom checkpoints by13–33 successes/50, making
+    inference-state mismatch a stronger immediate lead than projection count for apparent undertraining. The responsible
+    layer and training mechanism are unisolated; PushT effects are mixed and calibration is not a universal improvement.
+  context: Completed user-authorized co-work and committed final report; researcher has not yet commented on these
+    new results or adopted the next comparison.
+  potential_type: claim
+  bound_to:
+  - N70
+  - N71
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O33
+  timestamp: 2026-09-07T08:01+02:00
+  provenance: ai-suggested
+  content: The192000-window optimizer prefixes already encounter nearly every source episode, with encoded-frame
+    reuse about1.14 on PushT and1.42 on TwoRoom. Exact repeated window starts alone cannot explain the weak early
+    PushT control. Source identities are not independent configurations, and full-source normalization plus additional
+    calibration access preclude a fewer-independent-examples claim.
+  context: Completed user-authorized co-work and committed final report; researcher has not yet commented on these
+    new results or adopted the next comparison.
+  potential_type: claim
+  bound_to:
+  - N71
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O34
+  timestamp: 2026-09-07T08:01+02:00
+  provenance: ai-suggested
+  content: Next isolate projector versus prediction-projector BN and freeze the normalization policy before comparing
+    coverage-preserving and random reduced-data subsets on configuration-disjoint holdout. Use matched optimizer-window
+    and elapsed-time learning curves; do not substitute logged gradient norms or conditional sketch variance for
+    evidence of fewer examples needed.
+  context: Completed user-authorized co-work and committed final report; researcher has not yet commented on these
+    new results or adopted the next comparison.
+  potential_type: heuristic
+  bound_to:
+  - N73
   promoted: false
   promoted_to: null
   crystallized_via: null

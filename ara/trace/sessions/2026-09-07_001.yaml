@@ -1,0 +1,139 @@
+session:
+  id: 2026-09-07_001
+  date: '2026-09-07'
+  started: 2026-09-07T08:01+02:00
+  last_turn: 2026-09-07T08:01+02:00
+  turn_count: 1
+  summary: Completed Claude co-work:12 paired1500-update runs,48 controls; final calibrated4096 gains+2pp on both
+    datasets. EarlyTwoRoom buffer intervention adds13–33/50. Exact exposure/integrity audit,103 tests and canonical/visual
+    QA pass; no next experiment queued.
+events_logged:
+- turn: 1
+  type: decision
+  id: N66
+  routing: direct
+  provenance: ai-executed
+  summary: Freeze the paired projection-count training screen
+- turn: 1
+  type: experiment
+  id: N67
+  routing: direct
+  provenance: ai-executed
+  summary: Verify private sketch RNG and complete Claude implementation co-work
+- turn: 1
+  type: dead_end
+  id: N68
+  routing: direct
+  provenance: ai-executed
+  summary: Reject dashboard key compaction alone as the rendered-size repair
+- turn: 1
+  type: experiment
+  id: N69
+  routing: direct
+  provenance: ai-executed
+  summary: Repair source provenance expansion and resume verified reporting
+- turn: 1
+  type: experiment
+  id: N70
+  routing: direct
+  provenance: ai-executed
+  summary: Complete all12 paired runs and48 matched controls
+- turn: 1
+  type: experiment
+  id: N71
+  routing: direct
+  provenance: ai-executed
+  summary: Audit exact source exposure and all paired checkpoint identities
+- turn: 1
+  type: experiment
+  id: N72
+  routing: direct
+  provenance: ai-executed
+  summary: Finish source-bound report, final figures and dashboard QA
+- turn: 1
+  type: question
+  id: N73
+  routing: direct
+  provenance: ai-suggested
+  summary: Can isolated normalization repair reduce required training before testing less data?
+- turn: 1
+  type: observation
+  id: O31
+  routing: staged
+  provenance: ai-suggested
+  summary: 'The paired1500-update screen supports only a modest final calibrated control gain from4096 projections:
+    mean+2 percentage points on each dataset. A roughly fourfold fixed-checkpoint conditional-noise reduction did
+    not establish a corresponding learning acceleration; three seeds and two control checkpoints do not identify
+    a time-to-target factor.'
+- turn: 1
+  type: observation
+  id: O32
+  routing: staged
+  provenance: ai-suggested
+  summary: At750 updates, changing only BN buffers improves all six TwoRoom checkpoints by13–33 successes/50, making
+    inference-state mismatch a stronger immediate lead than projection count for apparent undertraining. The responsible
+    layer and training mechanism are unisolated; PushT effects are mixed and calibration is not a universal improvement.
+- turn: 1
+  type: observation
+  id: O33
+  routing: staged
+  provenance: ai-suggested
+  summary: The192000-window optimizer prefixes already encounter nearly every source episode, with encoded-frame
+    reuse about1.14 on PushT and1.42 on TwoRoom. Exact repeated window starts alone cannot explain the weak early
+    PushT control. Source identities are not independent configurations, and full-source normalization plus additional
+    calibration access preclude a fewer-independent-examples claim.
+- turn: 1
+  type: observation
+  id: O34
+  routing: staged
+  provenance: ai-suggested
+  summary: Next isolate projector versus prediction-projector BN and freeze the normalization policy before comparing
+    coverage-preserving and random reduced-data subsets on configuration-disjoint holdout. Use matched optimizer-window
+    and elapsed-time learning curves; do not substitute logged gradient norms or conditional sketch variance for
+    evidence of fewer examples needed.
+- turn: 1
+  type: heuristic
+  id: H11
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O29 adopted in frozen paired design and implemented private-RNG generator; artifact commitment without
+    a performance claim.
+ai_actions:
+- turn: 1
+  action: 'Completed authorized work spanning September6–7: co-worked with Claude on generic implementation/statistics,
+    froze paired protocol, ran serial preflights/training/controls, repaired reporting failure without repeating
+    science, audited window/RNG/checkpoint identity, researched normalization literature, inspected final figures/rollouts/dashboard,
+    committed report4a7f5d2 and recorded completion.'
+  provenance: ai-executed
+  files_changed:
+  - world_model/
+  - scripts/
+  - tests/
+  - viewer/
+  - configs/
+  - docs/
+  - ara/
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: User asks to co-work with Claude on learning with fewer examples, then says continue after a transient
+    usage interruption; record the continuous authorized task once at completion.
+- turn: 1
+  excerpt: Training and reporting are complete before this epilogue. O29 design is concretely implemented; new results
+    and next BN/data proposals have no researcher response yet. No claim of remaining Claude/account quota is made.
+open_threads:
+- Isolate TwoRoom projector versus prediction-projector normalization effects and the training-time mechanism; calibrated
+  control is not uniformly better on PushT.
+- Test coverage-preserving versus size-matched random reduced-data subsets with a frozen configuration-disjoint
+  split; large learning acceleration and independent-data efficiency remain unestablished.
+- Full reproduction, longer-goal strength and broader reliability require separate bounded experiments; no further
+  training/evaluation queued.
+- Broader private repository/result transfer to Claude remains separately pending; completed restricted co-work
+  needed only public/generic inputs.
+ai_suggestions_pending:
+- O31/O32/O33 and O34 remain staged; modest projection gains and larger buffer effects are scoped to the completed
+  screen, not general mechanisms or independent-data efficiency.
+- O28 conditional-variance observation retains its original scope; O29 promotes only to design heuristicH11 via
+  artifact commitment. O30 and O27 remain open.
+- Earlier staged mechanisms remain unadjudicated; no contradiction with C02/C03, which concern different checkpoints
+  and schedules.
