@@ -58,13 +58,14 @@ def test_wrapped_pose_error_and_motion_mask_have_distinct_denominators():
 
 
 def test_case_selection_uses_earliest_unsolved_index_and_only_requested_split():
-    candidates=[{'episode':0,'group_id':0,'index':8,'split':'test','block_distance':22.,'angle_error':0.},
-                {'episode':0,'group_id':0,'index':3,'split':'test','block_distance':21.,'angle_error':0.},
+    candidates=[{'episode':0,'group_id':0,'index':8,'split':'test','block_distance':42.,'angle_error':0.},
+                {'episode':0,'group_id':0,'index':3,'split':'test','block_distance':41.,'angle_error':0.},
+                {'episode':0,'group_id':0,'index':2,'split':'test','block_distance':21.,'angle_error':0.},
                 {'episode':1,'group_id':1,'index':2,'split':'train','block_distance':90.,'angle_error':0.},
                 {'episode':2,'group_id':2,'index':2,'split':'test','block_distance':0.,'angle_error':0.}]
     selected,audit=select_case_indices(candidates,split='test',count=20,seed=3107)
     assert [(r['episode'],r['index']) for r in selected]==[(0,3)]
-    assert audit['candidate_windows']==3 and audit['eligible_windows']==2
+    assert audit['candidate_windows']==4 and audit['eligible_windows']==2
     assert audit['eligible_groups']==1 and audit['selected_cases']==1
 
 
@@ -76,6 +77,7 @@ def test_control_executes_one_primitive_action_and_never_passes_oracle_to_planne
         def set_goal(self,pose):self.goal=pose
         def step(self,action):
             self.actions.append(np.asarray(action).copy())
+            self.pose[2:4]=100. if len(self.actions)==3 else 0.
             return np.zeros((64,64,3),np.uint8),0.,False,False,{}
         def close(self):pass
         @property
@@ -97,5 +99,6 @@ def test_control_executes_one_primitive_action_and_never_passes_oracle_to_planne
     oracle={'goal_pose':[0.,0.,100.,100.,0.],'future_actions':[[.99,.99]]*5}
     result=run_control_case(system,public,oracle,'learned',{'control_max_steps':2},env_factory=Env,planner_factory=Planner)
     assert len(calls)==2 and result['episode_length']==2
+    assert result['success'] is False and result['any_time_success'] is True
     np.testing.assert_allclose(instances[0].actions[-2:],[[.1,.2],[.1,.2]])
     assert len(instances[0].actions)==4  # Two observed prefix actions, then two decisions.
