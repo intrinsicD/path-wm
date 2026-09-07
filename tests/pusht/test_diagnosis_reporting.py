@@ -145,3 +145,109 @@ def test_history_reader_rejects_joint_score_that_pools_unequal_denominators(tmp_
     (path / 'validation.jsonl').write_text(''.join(json.dumps(row) + '\n' for row in rows))
     with pytest.raises(DashboardDataError, match='joint|ordinary|suffix'):
         collect_run_results(root)
+
+
+def history_assessment(root):
+    """Small exact analogue of the saved independent CPU assessment schema."""
+    scale = [64., 64., 6., 6., 64.]
+    directory = root / 'paddle' / 'collaboration' / 'history_start_assessment'
+    populations = {'ordinary': [[0, 0], [1, 0]], 'suffix': [[2, 1], [3, 1]],
+                   'matched_observations': [[0, 2], [1, 2]], 'paired_count': 2}
+    arms = {}
+    def physical(factor, count):
+        values = [x * factor for x in scale]
+        return {'count': count, 'mae': values, 'p95': values.copy(), 'max': values.copy()}
+    for name, factor, step in [('reference_10000', 1, 10000), ('mixed_selected_9750', 2, 9750),
+                               ('mixed_final_10000', 3, 10000)]:
+        records, summaries = {}, {}
+        error = [x * factor for x in scale]
+        for population in ('ordinary', 'suffix'):
+            records[population] = [{'episode': ep, 'start': start, 'population': population,
+                'target_state': [[0.] * 5 for _ in range(4)], 'predicted_state': [error.copy() for _ in range(4)]}
+                for ep, start in populations[population]]
+            summaries[population] = {'sequences': 2, 'observations': 8, 'supervised_scalar_count': 32,
+                'normalized_squared_error_sum': 32. * factor ** 2, 'state_mse': float(factor ** 2),
+                'all_valid': physical(factor, [8, 8, 4, 4, 8]), 'age2': physical(factor, [2] * 5),
+                'later': physical(factor, [2] * 5), 'postwarm': physical(factor, [4] * 5)}
+        records['paired'] = []
+        for pair_seed in (7000, 7001):
+            for direction in (-1, 1):
+                target = [0., 0., float(direction), 0., 0.]
+                predicted = [x + e for x, e in zip(target, error)]
+                records['paired'].append({'pair_seed': pair_seed, 'direction': direction,
+                    'target_state': [target.copy() for _ in range(3)],
+                    'predicted_state': [predicted.copy() for _ in range(3)],
+                    'reset_predicted_state': [x + 2 * e for x, e in zip(target, error)]})
+        for population, multiplier in [('paired', 1), ('paired_reset', 2)]:
+            summaries[population] = {**physical(factor * multiplier, [4] * 5),
+                                     'pairs': 2, 'vx_sign_accuracy': .5}
+        records['matched'] = [{'episode': ep, 'frame': frame, 'start': frame - 2,
+            'target_state': [[0.] * 5 for _ in range(3)],
+            'predicted_state': [[3 * e for e in error] for _ in range(3)],
+            'full_predicted_state': error.copy()} for ep, frame in populations['matched_observations']]
+        for population, multiplier in [('matched_full', 1), ('matched_three', 3)]:
+            summaries[population] = physical(factor * multiplier, [2] * 5)
+        arms[name] = {'checkpoint': f'runs/{name}.pt', 'checkpoint_sha256': str(factor) * 64,
+                      'update': step, 'model_fingerprint': str(factor) * 64,
+                      'records': records, 'summaries': summaries}
+    comparisons = {}
+    reference = arms['reference_10000']['summaries']
+    for name in ('mixed_selected_9750', 'mixed_final_10000'):
+        comparisons[name] = {}
+        for population, current in arms[name]['summaries'].items():
+            base = reference[population]
+            metrics = [('state_mse', current['state_mse'], base['state_mse'])] if 'state_mse' in base else []
+            if 'all_valid' in base:
+                metrics += [(f'{age}_mae', current[age]['mae'], base[age]['mae'])
+                            for age in ('all_valid', 'age2', 'later', 'postwarm')]
+            else: metrics += [('mae', current['mae'], base['mae'])]
+            comparisons[name][population] = {field: {
+                'delta': [a - b for a, b in zip(value, old)] if isinstance(value, list) else value - old,
+                'ratio': [a / b for a, b in zip(value, old)] if isinstance(value, list) else value / old}
+                for field, value, old in metrics}
+        delta = comparisons[name]['paired']['mae']['delta']
+        comparisons[name]['paired']['mae_delta_pair_bootstrap_95'] = [delta.copy(), delta.copy()]
+    report = {'schema': 'paddle-history-start-assessment-v1', 'status': 'completed', 'device': 'cpu',
+        'coordinate_order': ['ball_x', 'ball_y', 'ball_vx', 'ball_vy', 'paddle_x'],
+        'normalization': scale, 'populations': populations, 'arms': arms, 'comparisons': comparisons,
+        'counter_audit': {'status': 'passed', 'logged_draws_checked': 8, 'logged_updates_checked': 1,
+            'all_cumulative_counters_match': True, 'prospective_receipt_match': True, 'final_rng_states_match': True,
+            'paired_never_selects': True, 'selection_uses': ['ordinary_state_mse', 'suffix_state_mse'],
+            'counters': {'sequences': 8, 'full_sequences': 4, 'suffix_sequences': 4,
+                'observations': 32, 'full_observations': 16, 'suffix_observations': 16,
+                'supervised_scalar_count': 128, 'full_supervised_scalar_count': 64, 'suffix_supervised_scalar_count': 64}},
+        'protected_hashes': {a['checkpoint']: a['checkpoint_sha256'] for a in arms.values()},
+        'source_hashes_unchanged': True, 'model_tensors_unchanged': True, 'test_population_used': False,
+        'bootstrap': {'seed': 38921, 'draws': 2000, 'unit': 'pair, both directions retained'}}
+    write(directory / 'raw.json', report)
+    (directory / 'comparison.png').write_bytes(PNG)
+    return directory, report
+
+
+def test_independent_history_assessment_preserves_original_followup_and_diagnostic_scope(tmp_path):
+    root = tmp_path / 'runs'
+    history_assessment(root)
+    results, notices = collect_run_results(root)
+    reports = [r for r in results if r.kind == 'paddle_history_assessment']
+    assert len(reports) == 1, 'Independent history evaluation must enter the canonical report'
+    run = reports[0]
+    assert run.context['diagnostic_only'] is True and run.context['test_population_used'] is False
+    assert run.metrics['arms.reference_10000.ordinary.state_mse'] == 1.
+    assert run.metrics['arms.mixed_selected_9750.ordinary.state_mse'] == 4.
+    assert run.metrics['arms.mixed_final_10000.ordinary.state_mse'] == 9.
+    artifact = build_dashboard_artifact(results, notices)
+    assert any('data:image/png;base64,' in b.get('body', '') for b in artifact['manifest']['blocks'])
+    assert not any(k.startswith('paddle_history_assessment') for k in artifact['snapshot']['datasets'])
+
+
+@pytest.mark.parametrize('tamper', ['masked_denominator', 'population', 'paired_ratio'])
+def test_independent_history_assessment_rejects_wrong_denominators_or_unmatched_comparison(tmp_path, tamper):
+    root = tmp_path / 'runs'
+    directory, report = history_assessment(root)
+    arm = report['arms']['mixed_selected_9750']
+    if tamper == 'masked_denominator': arm['summaries']['ordinary']['supervised_scalar_count'] = 40
+    elif tamper == 'population': arm['records']['suffix'][0]['episode'] = 99
+    elif tamper == 'paired_ratio': report['comparisons']['mixed_selected_9750']['paired']['mae']['ratio'][2] = .1
+    write(directory / 'raw.json', report)
+    with pytest.raises(DashboardDataError, match='history|assessment|raw evidence'):
+        collect_run_results(root)
