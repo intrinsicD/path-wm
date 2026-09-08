@@ -36,13 +36,16 @@ from the adapter+RGB comparison.
 
 ## Completed common RGB/foreground audit
 
+The task-only A encoder and COCO-warmup encoder have different training lineages;
+this audit compares output recoverability and does not measure pre/post forgetting.
+The earlier decoder-recovery experiment remains the matched forgetting evidence.
 All representations are frozen; fresh identical RGB and mask decoders receive the
 same initialization,2,000updates and frame draws. Prepared COCO subsets contain
 4,096/512/512 train/validation/test images; crowd pixels are ignored.
 
 | Frozen source | Test RGB MSE ↓ | Foreground IoU ↑ | Dice ↑ |
 |---|---:|---:|---:|
-| Task-adapted custom A | 0.007349 | 0.3183 | 0.4399 |
+| Task-only custom A | 0.007349 | 0.3183 | 0.4399 |
 | COCO-warmup custom E | 0.005035 | 0.3090 | 0.4320 |
 | Task-fitted DINO adapter | 0.037109 | 0.5832 | 0.6959 |
 
@@ -104,3 +107,33 @@ four such coordinate errors). This follows from the current normalized-coordinat
 and sin/cos MSE, and makes loss calibration a plausible follow-up. It does not prove
 that loss scaling caused the measured pusher-position errors. The current factorial
 keeps that objective unchanged.
+
+## Second completed paired seed (7108; final seed pending)
+
+| Arm | Selected validation q | Test q | Test angle MAE |
+|---|---:|---:|---:|
+| Shallow, exchange on | 2.5410 | 3.0759 | 30.76° |
+| Deeper, exchange on | 1.4123 | 1.4099 | 2.90° |
+| Shallow, exchange off | 2.2266 | 2.7429 | 27.43° |
+| Deeper, exchange off | 1.8636 | 1.5985 | 12.50° |
+
+The second paired seed also favors depth with exchange. Deeper/on pusher x/y
+test MAE is 11.28/9.87 world units, object x/y 5.44/6.65. All four validation
+gates fail, so these models also stop before downstream training. Final inference
+waits for the third paired seed and completed output audits.
+
+## Observed perception inspection
+
+The first declared seed's four selected encoders are inspected on the same six
+fixed test frames. Panels show ground-truth/predicted pusher and body-origin pose,
+reconstructions, fine/coarse PCA features and normalized attention entropy.
+PCA is fitted on 256 training frames separately for each encoder; colors are not
+aligned across models and the top three components omit other feature dimensions.
+The panels are observed states, not imagined rollouts or evidence of planning.
+
+For these six frames, deeper/on mean fine attention entropy is 0.9992 and coarse
+entropy is 0.7981 on a 0–1 scale. Nearly uniform fine attention is consistent with
+aggregate context, but does not establish its function or redundancy. A trained
+fusion comparison would be needed to test that explanation. Raw states, PCA bases,
+checkpoint hashes and all four visually inspected panels are preserved under
+`runs/encoder_study_2026-09-08/evaluation/internals/` and in the verified dashboard.
