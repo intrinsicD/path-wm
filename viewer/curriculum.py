@@ -73,11 +73,11 @@ def add_curriculum_views(runs,datasets,charts,tables,cards,chart,table,source_id
     if all(r.context.get('decoder_only') for r in selected):
         blocks[0]['body']='## Frozen-encoder decoder recovery\n\nOnly the image decoder is optimized on COCO. Encoder and task readout remain frozen. '
         blocks[0]['body']+='Selection uses COCO validation reconstruction MSE; no pose, dynamics or control gate is assessed. Matched fresh decoders compare recoverability from the original and task-adapted encoders.'
-    overnight = all(str(r.context.get('protocol', '')).startswith('overnight P1:') for r in selected)
+    overnight = all(str(r.context.get('protocol', '')).startswith('overnight ') for r in selected)
     if overnight:
-        blocks[0]['body'] = ('## Frozen encoder packages and independent readouts\n\n'
+        blocks[0]['body'] = ('## Perception packages and encoder continuation\n\n'
             'CNN and native ViT features feed independent RGB, foreground-mask and spatial-pose heads. '
-            'The encoder weights and buffers remain frozen. All heads are selected at the minimum '
+            'P1 freezes encoder weights and buffers; the separately declared extension study updates the encoder under mixed supervision. All heads are selected at the minimum '
             'PushT validation q, with earliest exact ties; endpoint metrics are recorded separately. '
             'q is the worst coordinate MAE/8 world units or angle MAE/10 degrees. '
             'The numeric readiness target is q≤1. Development prefixes are not formal evidence; '
@@ -88,6 +88,16 @@ def add_curriculum_views(runs,datasets,charts,tables,cards,chart,table,source_id
     focus=screen if screen else selected
     seed=max(r.context['seed'] for r in focus)
     focus=[r for r in focus if r.context['seed']==seed]
+    if overnight:
+        newest = max(selected, key=lambda r: r.modified_at)
+        seed = newest.context['seed']
+        family = newest.context['protocol'].split(':')[0]
+        focus = [r for r in selected if r.context['seed'] == seed
+                 and r.context['protocol'].split(':')[0] == family
+                 and r.context.get('development') == newest.context.get('development')]
+        blocks[0]['body'] += (f' Curves focus on the latest family ({family}), seed{seed}, '
+                              f'{"development prefixes" if newest.context.get("development") else "formal populations"}; '
+                              'every other completed seed remains in the exact inventory and raw sources.')
     wide={};fields={}
     for run in focus:
         token=f"{run.context.get('arm','run')}_{run.context['phase']}"
@@ -129,7 +139,7 @@ def add_curriculum_views(runs,datasets,charts,tables,cards,chart,table,source_id
         if not names:continue
         y={'fields':names,'type':'quantitative','label':unit} if len(names)>1 else number(names[0])
         scope = ('Formal: all2651 PushT and512 COCO validation frames, up to4000 updates per fit; '
-                 'development: explicit16-frame prefixes and50 updates. Three independent heads, frozen source encoders.'
+                 'development: explicit16-frame prefixes and50 updates. Three typed heads; P1 freezes E, extension runs update E.'
                  if overnight else 'A has up to4000 supervised updates; B/C up to2000 after separate2000 warmup updates.')
         view=chart(f'curriculum_{key}',f'{title} · seed {seed}',
                    f'{unit}. Fixed validation frames; x counts updates within this phase. {scope} Exact values; no pooled latent spaces.',

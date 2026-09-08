@@ -553,6 +553,11 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                                   _chart, table, SOURCE_ID)
     from viewer.curriculum import add_curriculum_views, inspection_blocks, analysis_blocks
     curriculum_blocks = add_curriculum_views(run_results, datasets, charts, tables, cards, _chart, table, SOURCE_ID) + inspection_blocks(run_results, SOURCE_ID) + analysis_blocks(run_results, SOURCE_ID)
+    from viewer.perception import add_perception_views
+    if add_perception_views(run_results, datasets, charts, tables, _chart, table, SOURCE_ID):
+        source['query']['transformation'] += (' Overnight perception tables retain per-seed package/continuation identities; '
+            'viewer/perception.py independently recomputes physical errors and category AP from raw predictions/scores, '
+            'and checks foreground aggregation. Fresh simulator results and renderer calibration are separate populations.')
     if pusht_blocks:
         source['query']['transformation'] += (' PushT E/U/P ledgers are independently reconciled by viewer/pusht.py; '
             'final fixed-budget controller outcomes and five-action oracle reachability are separate. '

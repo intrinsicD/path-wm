@@ -52,9 +52,34 @@ in separate modules/protocol amendments while the six fits execute.
 The [category-accessibility probe](perception-semantic-protocol-2026-09-08.md) now
 has prepared crop-visible labels (78training-supported classes), green semantic
 checks and two verified development fits. Its six paired, independent CPU fits
-run through `scripts/execute_perception_semantics.py` alongside GPU P1; no encoder
+completed through `scripts/execute_perception_semantics.py` alongside GPU P1; no encoder
 or P1 head changes. Read `runs/perception_overnight_2026-09-08/semantics/execution.jsonl`
 and its coordinator log for progress. Reused held-outs remain exploratory.
+
+P1-T test macro AP is0.0742–0.0829 for the CNN and0.6441–0.6555 for nativeViT
+(constant-score baseline0.0331). These are pooled-head accessibility results, not
+proof that another head cannot recover semantic information. The first P1 pair
+passes the numeric geometry gate; remaining P1 seeds continue.
+
+The [fresh simulator protocol](perception-fresh-protocol-2026-09-08.md) has generated
+and verified512cases plus40source/render calibration pairs. One fresh case is near
+a CCHI training pose under the declared tolerance; none is near validation/test.
+One is near the older static supplement. All cases remain included. Calibration
+RGB MSE is1.58e-5 and actual/source pose drift is small. This supports testing fresh
+geometry while keeping renderer differences explicit; no model results on these
+cases existed at preparation.
+
+`scripts/prepare_perception_followups.py` is queued behind P1 completion. It will
+run the six frozen fresh evaluations, then50-update development profiles for the
+[matched encoder extensions](perception-extension-protocol-2026-09-08.md). Queue
+log: `runs/perception_overnight_2026-09-08/followup_coordinator.log`; completion:
+`followups_ready.json`. Inspect those profiles, commit the development slice and
+seal the nine formal extension fits before launching them. The exact-initial-
+function, gate-gradient and optimizer-group tests already pass. Pending extension
+implementation files are intentional development work, not frozen formal results.
+
+The canonical dashboard now has per-seed capability tables and category/fresh
+comparison charts, independently checked against raw pose predictions/AP scores.
 
 ## Complete: earlier encoder investigation (8 September)
 
