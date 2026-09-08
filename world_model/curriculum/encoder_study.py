@@ -30,7 +30,7 @@ def main():
         prepare(a.development,a.device)
     elif a.command=='reference':
         from .encoder_reference import train
-        if a.arm not in ('custom','dino','native'):p.error('reference arm must be custom, dino, or native')
+        if a.arm not in ('custom','dino','native','native_scaled'):p.error('unknown reference arm')
         train(a.arm,a.development,a.device)
 
 if __name__=='__main__':main()

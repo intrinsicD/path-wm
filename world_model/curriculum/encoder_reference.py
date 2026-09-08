@@ -80,14 +80,18 @@ def models_for(arm,seed,device):
     with torch.random.fork_rng(devices=[]):
         torch.random.default_generator.manual_seed(seed+30011)
         if arm=='dino':models['A']=DinoAdapter()
-        elif arm=='native':models={'H':nn.Linear(256*384,6)}
+        elif arm in ('native','native_scaled'):models={'H':nn.Linear(256*384,6)}
         elif arm!='custom':raise ValueError('reference arm')
     return {k:m.to(device) for k,m in models.items()}
 
 
 def forward(models,arm,array,ids,device):
     x=torch.from_numpy(np.asarray(array[ids]).copy()).float().to(device)
-    if arm=='native':return models['H'](x.flatten(1)),None
+    if arm in ('native','native_scaled'):
+        # Fixed invertible feature scaling preserves linear readout capacity.
+        # It controls the update magnitude when Adam sees 98,304 coordinates.
+        scale=(256*384)**-.5 if arm=='native_scaled' else 1.
+        return models['H'](x.flatten(1)*scale),None
     z=ObservationLatent.from_tokens(x) if arm=='custom' else models['A'](x)
     return models['H'](z),models['D'](z)
 
@@ -111,16 +115,17 @@ def evaluate(models,arm,cache,labels,ds,ids,device):
 def train(arm,development=False,device='cuda'):
     setup();out=ROOT/('development/reference' if development else 'reference')/arm;out.mkdir(parents=True,exist_ok=True)
     if (out/'last.pt').exists():raise FileExistsError('preserve reference run')
-    if arm=='native' and not development:
+    if arm in ('native','native_scaled') and not development:
         prior=json.loads((ROOT/'reference/dino/curriculum_result.json').read_text())
         if prior['selected']['q']<=1:raise ValueError('native-width conditional control not triggered')
     train_x,tl=data(arm,'train',development);val_x,vl=data(arm,'validation',development)
     datasets={s:task_frames('data/pusht_world_model/cchi_v1',s) for s in ('train','validation','test')}
     if not np.array_equal(tl['targets'],datasets['train'].targets[tl['indices']]):raise ValueError('feature/pose targets misaligned')
     ids=np.random.default_rng(6107).choice(len(val_x),min(16 if development else 2048,len(val_x)),replace=False)
-    config=dict(seed=6107,arm=arm,phase='supervised',updates=3 if development else (6000 if arm=='native' else 4000),
+    config=dict(seed=6107,arm=arm,phase='supervised',updates=3 if development else (6000 if arm in ('native','native_scaled') else 4000),
                 batch_size=128,learning_rate=.0003,weight_decay=.0001,grad_clip=1.,validate_every=1 if development else 100,
-                max_seconds=1800 if arm=='native' else 1200,development=development,
+                max_seconds=1800 if arm in ('native','native_scaled') else 1200,development=development,
+                input_feature_scale=(256*384)**-.5 if arm=='native_scaled' else 1.,
                 protocol='A2: frozen representation with fresh D/H; DINO has trainable adapter; native control pose-only')
     models=models_for(arm,6107,device);opt=optimizer_for(models,config);rng=np.random.default_rng(26110)
     fm=OLD_CACHE/'features/manifest.json' if arm=='custom' else ROOT/('development/dino_features/manifest.json' if development else 'dino_features/manifest.json')

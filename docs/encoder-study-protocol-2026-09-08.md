@@ -195,3 +195,16 @@ payload as beyond general collaboration authorization. No payload was sent and
 no alternate route was used. Implementation review proceeded locally; the two
 successful protocol exchanges remain the peer-review evidence. Receipt:
 `runs/encoder_study_2026-09-08/collaboration/implementation_review_rejected.json`.
+
+## A2 amendment: native readout optimization audit (before scaled fitting)
+
+The raw native-width control shows severe optimization instability: validation q
+oscillates into hundreds during training. A98,304-coordinate linear layer at the
+inherited Adam step size is not an interpretable negative representation test.
+Preserve that entire run. Add exactly one numerical-scale control, `native_scaled`:
+same native features, head initialization, optimizer, draws and6,000updates, but
+multiply inputs by1/sqrt(98,304)=0.00318944 before the linear head. This fixed
+nonzero scalar preserves the set of linear functions; it changes optimization
+conditioning, not available information. Report both controls, make no encoder
+information-loss conclusion from the unstable run, and add no further head ladder.
+The amendment was prompted by validation/training instability, not test selection.

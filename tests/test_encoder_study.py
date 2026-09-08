@@ -111,3 +111,14 @@ def test_variant_resume_preserves_trajectory_and_rejects_changed_architecture(tm
     a,b=read_checkpoint(full/'last.pt'),read_checkpoint(resumed/'last.pt')
     assert a['model_fingerprint']==b['model_fingerprint']
     assert a['metrics']==b['metrics']
+
+
+def test_native_scaling_preserves_linear_function_class():
+    import numpy as np
+    from world_model.curriculum.encoder_reference import forward,models_for
+    a=models_for('native',6107,'cpu');b=models_for('native_scaled',6107,'cpu')
+    b['H'].load_state_dict(a['H'].state_dict())
+    with torch.no_grad():b['H'].weight.div_((256*384)**-.5)
+    x=np.random.default_rng(8).normal(size=(2,256,384)).astype('float32')
+    old,_=forward(a,'native',x,np.arange(2),'cpu');scaled,_=forward(b,'native_scaled',x,np.arange(2),'cpu')
+    torch.testing.assert_close(old,scaled,rtol=1e-5,atol=2e-6)

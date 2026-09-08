@@ -14,6 +14,8 @@ def main():
     dino=json.loads(required[-1].read_text())
     if dino['selected']['q']>1 and not (ROOT/'reference/native/curriculum_result.json').exists():
         raise RuntimeError('declared native-width control still pending')
+    if not (ROOT/'reference/native_scaled/curriculum_result.json').exists():
+        raise RuntimeError('declared native scaling amendment still pending')
     if not (ROOT/'coco_masks/manifest.json').exists():raise RuntimeError('COCO audit data missing')
     plan=[]
     for arm in ('custom','warmup','dino'):
