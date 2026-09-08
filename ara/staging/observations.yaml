@@ -747,3 +747,23 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O46
+  timestamp: 2026-09-08T10:35+02:00
+  provenance: ai-suggested
+  content: Pose labels use simulator block.position and block.angle; object center was imprecise shorthand, not
+    a measured visual centroid. Spatial H predicts pusher p, body-reference c and virtual k=c+40(cos theta,sin theta);
+    expected coordinates of softmax maps decode position c and angle atan2(k_y-c_y,k_x-c_x). Equal shifts of c and
+    k preserve direction. Absolute coordinate losses oppose such shifts, but correct orientation alone does not
+    enforce correct position. This structural possibility is not a demonstrated cause of the measured localization
+    error.
+  context: Read-only code provenance and mathematical explanation in response to N93; no new empirical evaluation
+    or architecture change.
+  potential_type: concept
+  bound_to:
+  - N93
+  - N92
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

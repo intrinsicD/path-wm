@@ -2,8 +2,8 @@ session:
   id: 2026-09-08_001
   date: '2026-09-08'
   started: 2026-09-08T03:03+02:00
-  last_turn: 2026-09-08T10:22+02:00
-  turn_count: 6
+  last_turn: 2026-09-08T10:35+02:00
+  turn_count: 7
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
     and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning. Turn5 completes three decoder recovery arms, full evaluation and Claude literature review; 359 tests and browser QA pass. Turn6 executes only the narrowed PushT pose-head comparison; spatial orientation improves with object-position tradeoff, all readiness gates fail; 362 tests and final browser QA pass.'
 events_logged:
@@ -201,6 +201,19 @@ events_logged:
     to test spatial-head localization tradeoff. Large training object-position errors and improving endpoint curve
     leave objective coupling and under-optimization as alternatives. No next run adopted.
 
+- turn: 7
+  type: question
+  id: N93
+  routing: direct
+  provenance: user
+  summary: Where exactly do predicted object position and orientation come from?
+- turn: 7
+  type: observation
+  id: O46
+  routing: staged
+  provenance: ai-suggested
+  summary: Exact label/head provenance and common-translation ambiguity; empirical cause unproven.
+
 ai_actions:
 - turn: 1
   action: 'Completed the continuous September7–8 task: source verification/grouped image preparation; matched training
@@ -265,6 +278,13 @@ ai_actions:
   - docs/
   - ara/
 
+- turn: 7
+  action: Traced source state labels through make_targets, frozen E features and direct/spatial heads; checked body-position/angle
+    source and actual spatial objective. Explanation only; no training, inference, tests or new experiment.
+  provenance: ai-executed
+  files_changed:
+  - ara/
+
 claims_touched:
 - id: C04
   action: crystallized
@@ -286,6 +306,9 @@ key_context:
 - turn: 6
   excerpt: 'User: Yes, then do the first one first, and then let us re-evaluate. This steers the active task and
     defers the other studies.'
+
+- turn: 7
+  excerpt: 'User: let us re-evaluate this; where exactly is object position and orientation coming from?'
 
 open_threads:
 - PushT pose generalization/optimization and generic retention remain unresolved; no further training queued.

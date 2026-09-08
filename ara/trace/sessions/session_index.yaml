@@ -31,7 +31,7 @@ sessions:
   date: '2026-09-08'
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
     and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning. Turn5 completes three decoder recovery arms, full evaluation and Claude literature review; 359 tests and browser QA pass. Turn6 executes only the narrowed PushT pose-head comparison; spatial orientation improves with object-position tradeoff, all readiness gates fail; 362 tests and final browser QA pass.'
-  turn_count: 6
-  events_count: 29
+  turn_count: 7
+  events_count: 31
   claims_touched: [C04]
   open_threads: 7

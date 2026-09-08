@@ -1470,3 +1470,20 @@ tree:
   also_depends_on:
   - N91
   status: resolved
+
+- id: N93
+  type: question
+  title: Where exactly do predicted object position and orientation come from?
+  provenance: user
+  timestamp: 2026-09-08T10:35+02:00
+  description: User requests reassessment and exact label/readout provenance after the frozen-head comparison. Code
+    trace explains simulator pose labels, RGB encoder features, direct six-output heads, and spatial expected-point
+    direction. No experiment launched.
+  also_depends_on:
+  - N92
+  evidence:
+  - world_model/pusht/data.py:95
+  - third_party/swm/pusht.py:378
+  - world_model/curriculum/bottleneck_models.py:16
+  - world_model/curriculum/pose_accessibility.py:141
+  status: resolved
