@@ -251,7 +251,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
     source = {"id": SOURCE_ID, "label": "PATH-WM local experiment ledgers", "path": "viewer/experiment_results.sql",
               "query": {"engine": "sqlite", "language": "sql", "executed_at": generated,
                         "sql": source_sql,
-                        "description": "viewer.ledger reconciles raw JSON/JSONL. SQLite executes this query bundle over those records (:reconciled_runs) to produce the chart datasets and coverage counts. Exact context/value tables use the same queries and Python text formatting. No source files are modified. The run inventory maps each record key to its full identity and raw file paths; input_files retains the complete raw-file union.",
+                        "description": "viewer.ledger reconciles raw JSON/JSONL. SQLite executes this query bundle over those records (:reconciled_runs) to produce the chart datasets and coverage counts. Exact context/value tables use the same queries and Python text formatting. No source files are modified. The inventory maps each record key to its full identity; the exact source table maps that key to every raw path. input_files retains the complete raw-file union.",
                         "tables_used": ["json_each(:reconciled_runs)"],
                         "input_files": source_paths,
                         "transformation": "viewer/ledger.py validates and reconciles the bound RunResult records; viewer/dashboard.py samples chart trajectories and formats exact numeric text. Paired projection tables/curves use the validated Python derivative from scripts/collect_projection_experiment.py and scripts/paired_summary.py, with source hashes in projection_comparison.json.",
@@ -481,7 +481,7 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
         raise DashboardDataError('Compact record-key collision; full identities cannot be joined safely')
     for row in datasets['inventory']:
         row['record_key'] = record_keys[row['run']]
-    for name in ('metrics', 'context'):
+    for name in ('metrics', 'context', 'source_files'):
         datasets[name] = [{'record_key': record_keys[row['run']],
                            **{field: value for field, value in row.items() if field != 'run'}}
                           for row in datasets[name]]
@@ -490,8 +490,11 @@ def build_dashboard_artifact(run_results: list[RunResult], notices: list[str], f
                 "defaultSort": {"field": sort, "direction": "asc"}, "density": "dense", "layout": "full",
                 "columns": [{"field": field, "label": label, "type": "text"} for field, label in columns]}
     tables = [table("inventory", "Run inventory and recorded gate status",
-                    [("record_key", "Record key"), ("run", "Full run identity"), ("kind", "Kind"), ("status", "Status"), ("step", "Logged step"), ("gate", "Recorded gate"), ("sources", "Source files")],
-                    "run", "Training completion is independent of the scientific gate. Missing gates remain unassessed.")]
+                    [("record_key", "Record key"), ("run", "Full run identity"), ("kind", "Kind"), ("status", "Status"), ("step", "Logged step"), ("gate", "Recorded gate"), ("source_count", "Source count")],
+                    "run", "Training completion is independent of the scientific gate. Missing gates remain unassessed. Exact source paths are listed separately by record key."),
+              table('source_files','Exact raw source files for every record',
+                    [('record_key','Record key'),('path','Exact source path')],'record_key',
+                    'One path per row preserves arbitrarily long source lists and filenames containing commas. Record keys join to the full run identity in the inventory.')]
     if controls:
         tables.append(table("control_detail", "All control outcomes",
                             [("chart_key", "Chart key"), ("run", "Run"), ("successes", "Successes"), ("cases", "Cases"), ("success_rate", "Raw success fraction"), ("initial_successes", "Initially satisfied"), ("noninitial_cases", "Initially unsolved"), ("noninitial_successes", "Newly reached"), ("noninitial_success_rate", "Success among initially unsolved"), ("case_set", "Goal identities"), ("protocol", "Protocol")],

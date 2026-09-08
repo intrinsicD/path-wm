@@ -8,8 +8,11 @@ SELECT json_extract(value, '$.label') AS run,
        json_extract(value, '$.status') AS status,
        COALESCE(CAST(json_extract(value, '$.step') AS TEXT), 'Not recorded') AS step,
        COALESCE(json_extract(value, '$.context.baseline_gate'), 'Not recorded') AS gate,
-       (SELECT group_concat(value, ', ') FROM json_each(json_extract(r.value, '$.source_paths'))) AS sources
+       json_array_length(json_extract(r.value, '$.source_paths')) AS source_count
 FROM json_each(:reconciled_runs) AS r;
+-- dataset: source_files
+SELECT json_extract(r.value, '$.label') AS run, p.value AS path
+FROM json_each(:reconciled_runs) AS r, json_each(json_extract(r.value, '$.source_paths')) AS p;
 -- dataset: training_runs
 SELECT json_extract(value, '$.label') AS run FROM json_each(:reconciled_runs)
 WHERE json_extract(value, '$.kind') = 'training';
