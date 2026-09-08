@@ -106,7 +106,7 @@ def paired_bootstrap(a,b,seed=8207):
 
 
 def factorial_figures():
-    rows=[];contrasts=[];wall=[]
+    rows=[];contrasts=[];wall=[];interactions=[]
     for seed in (7107,7108,7109):
         roots={a:ROOT/'factorial'/f'seed_{seed}'/a for a in ARMS}
         if not all((p/'evaluation.json').exists() for p in roots.values()):continue
@@ -125,6 +125,11 @@ def factorial_figures():
             q=lambda x:max(*list(x['position_abs_error'].mean(0)/8),x['angle_abs_error_deg'].mean()/10)
             contrasts.append(dict(seed=seed,contrast=name,candidate=a,comparator=b,validation_delta_q=av-bv,
                                   validation_relative_change=av/bv-1,test_delta_q=q(raw_a)-q(raw_b),conditional_group_95=interval))
+        seed_contrasts={r['contrast']:r for r in contrasts if r['seed']==seed}
+        interactions.append(dict(seed=seed,
+            validation_q_interaction=seed_contrasts['depth_on']['validation_delta_q']-seed_contrasts['depth_off']['validation_delta_q'],
+            test_q_interaction=seed_contrasts['depth_on']['test_delta_q']-seed_contrasts['depth_off']['test_delta_q'],
+            definition='(deeper-on minus shallow-on) minus (deeper-off minus shallow-off); negative means depth helps more with exchange'))
         for deep,shallow in [('deeper','reference'),('deeper_no_exchange','no_exchange')]:
             bound=selected[shallow]['elapsed_seconds'];eligible=[r for r in lines(roots[deep]/'validation.jsonl') if r['elapsed_seconds']<=bound]
             if eligible:
@@ -152,7 +157,7 @@ def factorial_figures():
     ax.axvline(0,color='#555555',lw=1);ax.axvline(-10,color='#777777',ls=':',lw=1);ax.legend(fontsize=8)
     fig.savefig(OUT/'factorial_effects.png',dpi=160);plt.close(fig)
     signals={name:all(r['validation_relative_change']<=-.1 for r in contrasts if r['contrast']==name) and len(seeds)==3 for name in names}
-    json_atomic(OUT/'factorial_summary.json',dict(rows=rows,contrasts=contrasts,wall_matched=wall,candidate_signals=signals,
+    json_atomic(OUT/'factorial_summary.json',dict(rows=rows,contrasts=contrasts,interactions=interactions,wall_matched=wall,candidate_signals=signals,
         inference_limit='Three paired seeds; reused holdouts. Group intervals condition on trained models. No equivalence claim; no planning inference from perception-only results.'))
 
 
@@ -166,7 +171,11 @@ def probe_figures():
     fig,axes=plt.subplots(1,2,figsize=(11,max(4,len(rows)*.3)),layout='constrained')
     for ax,key,title in zip(axes,['image_mse','iou'],['RGB reconstruction MSE ↓','Annotated foreground IoU ↑']):
         values=[r[key] for r in order];ax.barh(y,values,color='#245a90',edgecolor='#163851');ax.set(yticks=y,yticklabels=[r['source'] for r in order],xlabel=title);ax.invert_yaxis()
-        if key=='iou':ax.set_xlim(0,1);ax.axvline(order[0]['baselines']['training_mean']['iou'],color='#777777',ls='--',lw=1)
+        if key=='iou':
+            ax.set_xlim(0,1)
+            ax.axvline(order[0]['baselines']['full']['iou'],color='#555555',ls='--',lw=1,label='always foreground')
+            ax.axvline(order[0]['baselines']['training_mean']['iou'],color='#777777',ls=':',lw=1,label='training mean mask')
+            ax.legend(fontsize=8,loc='lower right')
     fig.suptitle('Fresh readouts on frozen representations\nSame COCO views, initialization and draws · 512 test images · crowd ignored',fontsize=12)
     fig.savefig(OUT/'rgb_mask_audit.png',dpi=160);plt.close(fig)
     json_atomic(OUT/'probe_summary.json',dict(rows=rows))
