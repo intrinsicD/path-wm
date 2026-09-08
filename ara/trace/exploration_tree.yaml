@@ -1693,3 +1693,13 @@ tree:
   - docs/encoder-visual-audit-2026-09-08.md
   also_depends_on: [N105]
   status: resolved
+- id: N107
+  type: question
+  title: Choose asymmetric perception architectures from downstream requirements
+  provenance: user
+  timestamp: 2026-09-08T15:31+02:00
+  description: User asks about a completely different ViT or hybrid architecture, independent encoder/decoder
+    families, and designing backward from downstream application requirements. This is a design question,
+    not authorization of another architecture sweep.
+  also_depends_on: [N94, N95, N104]
+  status: open

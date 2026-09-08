@@ -946,3 +946,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O58
+  timestamp: 2026-09-08T15:31+02:00
+  provenance: ai-suggested
+  content: Propose a bounded downstream requirements/evaluation contract with essential capability gates and
+    measured system cost; allow asymmetric encoder/decoder families and native spatial feature widths. Keep
+    deeper convolutional reference, reuse completed DINO diagnostics, and investigate one feasible pretrained
+    ViT with fresh adequate decoders/readouts before a conditional hybrid. Separate observed evidence,
+    temporal state, action consequences and output generation. No universal latent or family superiority claim;
+    practical pretrained-package selection differs from a matched from-scratch architecture experiment.
+  context: Requirements-first design review with verified primary papers and two public-only Claude exchanges;
+    corrections and remaining disagreements recorded in docs/requirements-first-perception-design-2026-09-08.md.
+    No new training, model evaluation, implemented architecture or frozen budget.
+  potential_type: architecture
+  bound_to: [N107, N94, N99, N100, N101, N105]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

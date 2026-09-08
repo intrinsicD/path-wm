@@ -27,6 +27,15 @@ Read the [paddle results](paddle-world-model-results-2026-09-07.md),
 
 ## Complete: encoder investigation (8 September)
 
+Latest design follow-up: the [requirements-first encoder/decoder review](requirements-first-perception-design-2026-09-08.md)
+recommends selecting a small downstream capability contract before an architecture
+family. Different encoder and decoder families are supported by direct literature
+precedents. Keep the deeper convolutional reference, reuse completed DINO evidence,
+and consider a native-feature pretrained ViT with independently fitted readouts;
+a small hybrid remains conditional. A second public-only two-round Claude review
+corrected overclaims about architectural asymmetry, RAE width and invariance.
+This is a proposal: no new model, training, evaluation or frozen budget was added.
+
 Follow-up: the [PCA/attention audit and hybrid-architecture review](encoder-visual-audit-2026-09-08.md)
 is complete on the four original first-seed encoders,256 training PCA frames and
 six fixed test frames, with zero optimizer updates. Saved entropy maps reproduce

@@ -2,8 +2,8 @@ session:
   id: 2026-09-08_001
   date: '2026-09-08'
   started: 2026-09-08T03:03+02:00
-  last_turn: 2026-09-08T15:10+02:00
-  turn_count: 12
+  last_turn: 2026-09-08T15:31+02:00
+  turn_count: 13
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
     and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed
     controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning.
@@ -16,7 +16,9 @@ session:
     depth-by-exchange proposal, no new model runs. Turn11 adopts the Claude workflow and executes A/B:33formalruns,
     depth+exchange geometry gains across3seeds but all12readinessgates fail; RGB/foreground divergence,379tests and
     final browser QA verified. Turn12 audits PCA and per-head attention with zero updates; maps verified,
-    coarse broadcast interpretation and hybrid proposal staged,17 targeted tests and compact browser QA pass.'
+    coarse broadcast interpretation and hybrid proposal staged,17 targeted tests and compact browser QA pass.
+    Turn13 reviews asymmetric architectures from downstream requirements with two public-only Claude exchanges;
+    bounded native-feature comparison proposed, no new model runs.'
 events_logged:
 - turn: 1
   type: decision
@@ -403,6 +405,18 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Bounded reference/convolution/hybrid comparison proposed; sequential topology is a separate test.
+- turn: 13
+  type: question
+  id: N107
+  routing: direct
+  provenance: user
+  summary: Different ViT/hybrid encoder and decoder families and backward design from application requirements.
+- turn: 13
+  type: observation
+  id: O58
+  routing: staged
+  provenance: ai-suggested
+  summary: Bounded requirements-first native-feature comparison proposed; architecture choice and budgets remain unfrozen.
 ai_actions:
 - turn: 1
   action: 'Completed the continuous September7–8 task: source verification/grouped image preparation; matched training
@@ -536,6 +550,17 @@ ai_actions:
   - docs/encoder-visual-audit-2026-09-08.md
   - docs/project-state.md
   - ara/
+- turn: 13
+  action: Verified primary asymmetric-architecture precedents and existing design/evidence; completed public-only
+    Claude review and challenge with explicit withdrawals. Wrote requirements matrix, functional diagram,
+    native-feature shortlist and bounded next proposal. Rejected residual linear-accessibility and majority-row
+    claims. No model change, training, inference evaluation or dashboard refresh.
+  provenance: ai-executed
+  files_changed:
+  - docs/requirements-first-perception-design-2026-09-08.md
+  - docs/project-state.md
+  - runs/requirements_first_perception_2026-09-08/collaboration/
+  - ara/
 claims_touched:
 - id: C04
   action: crystallized
@@ -579,6 +604,9 @@ key_context:
 - turn: 12
   excerpt: User asks why coarse PCA looks strange, whether attention entropies are meaningful/correct, and what
     about a2–3stage convolution hierarchy with2–6transformer layers before each scale exports features.
+- turn: 13
+  excerpt: Why not use a completely different ViT or hybrid encoder/decoder, or different architectures for
+    each; or design backward from requirements expected downstream applications might have?
 open_threads:
 - PushT pusher-position readiness and generic retention remain unresolved after N99–N102; no training remains active.
 - Paddle control improved but memory/prediction/90%targets fail; a runtime-matched multi-seed study would be needed
@@ -598,7 +626,10 @@ open_threads:
   next budget/loss comparison is proposed.
 - N104/N105 expose coarse global/spatial structure and selective heads; trained coarse-only readouts, simpler
   fusion and hybrid/topology choices remain untested. O55/O57 are proposals, not architecture adoption.
+- N107/O58 requirements-first and asymmetric-family design remains a proposal; define bounded consumers and
+  essential gates before selecting a new experiment. Native-feature decoding and software cases are untested.
 ai_suggestions_pending:
+- O58 broadens the decision method beyond O57 local hybrid ablation; no architecture adoption or new run budget.
 - O56 audit interpretation and O57 bounded hybrid comparison await researcher response; O53 budget/loss control
   remains proposed. No new training was launched by the visualization question.
 - O49 adopted as A01 and A/B completed; O51/O52 result interpretations remain staged pending researcher discussion.

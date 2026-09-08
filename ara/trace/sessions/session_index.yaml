@@ -41,8 +41,10 @@ sessions:
     depth-by-exchange proposal, no new model runs. Turn11 adopts the Claude workflow and executes A/B:33formalruns,
     depth+exchange geometry gains across3seeds but all12readinessgates fail; RGB/foreground divergence,379tests and
     final browser QA verified. Turn12 audits PCA and per-head attention with zero updates; maps verified,
-    coarse broadcast interpretation and hybrid proposal staged,17 targeted tests and compact browser QA pass.'
-  turn_count: 12
-  events_count: 58
+    coarse broadcast interpretation and hybrid proposal staged,17 targeted tests and compact browser QA pass.
+    Turn13 reviews asymmetric architectures from downstream requirements with two public-only Claude exchanges;
+    bounded native-feature comparison proposed, no new model runs.'
+  turn_count: 13
+  events_count: 60
   claims_touched: [C04]
-  open_threads: 11
+  open_threads: 12
