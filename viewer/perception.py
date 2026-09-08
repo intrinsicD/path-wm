@@ -33,7 +33,7 @@ def verify_pose_record(path, expected):
 
 def add_perception_views(runs, datasets, charts, tables, chart, table, source_id):
     candidates = [r for r in runs if r.kind == 'curriculum_analysis' and 'development' not in Path(r.label).parts]
-    rows = []; semantics = []; fresh = []; decoders = []; independent = []; reliance = []; localization = []; interventions = []; directional = []; attention = []
+    rows = []; semantics = []; fresh = []; decoders = []; independent = []; reliance = []; localization = []; runtime = []; interventions = []; directional = []; attention = []
     for run in candidates:
         purpose = run.context.get('purpose')
         if purpose in ('Frozen representation and independent typed readouts', 'Mixed-supervision encoder continuation'):
@@ -72,6 +72,18 @@ def add_perception_views(runs, datasets, charts, tables, chart, table, source_id
                     attention.append(dict(direction=direction,head=head+1,entropy=h,
                         mean_maximum_probability=m['per_head_mean_maximum_probability'][head],
                         keys=m['keys'],relative_uniform_difference=m['relative_uniform_difference'],source=str(path.relative_to(PROJECT))))
+        elif purpose == 'Observation-to-output runtime':
+            path=source_file(run,'evaluation.json'); e=json.loads(path.read_text())
+            if e['development']: continue
+            for row in e['rows']:
+                samples=np.array(row['milliseconds'])
+                if not np.isclose(np.median(samples),row['median_batch_ms'],atol=1e-12) or not np.isclose(np.percentile(samples,95),row['p95_batch_ms'],atol=1e-12):
+                    raise DashboardDataError(f'{path}: raw timing summaries disagree')
+                runtime.append(dict(package=row['package'],batch=row['batch'],output=row['output'],
+                    median_batch_ms=row['median_batch_ms'],p95_batch_ms=row['p95_batch_ms'],median_ms_per_image=row['median_ms_per_image'],
+                    parameters=row['parameters'],resident_mib=row['resident_cuda_bytes']/2**20 if row['resident_cuda_bytes'] is not None else None,
+                    peak_mib=row['peak_cuda_bytes']/2**20 if row['peak_cuda_bytes'] is not None else None,
+                    source=str(path.relative_to(PROJECT))))
         elif purpose == 'Frozen decoder input reliance':
             path=source_file(run,'evaluation.json'); e=json.loads(path.read_text())
             if e['development']: continue
@@ -199,6 +211,13 @@ def add_perception_views(runs, datasets, charts, tables, chart, table, source_id
              ('mask_dice','Mask Dice'),('coco_mse','COCO MSE'),('pusht_mse','PushT MSE'),('parameters','Parameters'),
              ('fitting_seconds','Fit seconds'),('both_ms_per_image','Both outputs ms/image'),('source','Raw evaluation')],
             'seed','Decoder timing uses prepared inputs, batch32. Unconditioned trunks are reused for both outputs; conditioned outputs use two passes.'))
+    if runtime:
+        name='perception_runtime'; datasets[name]=runtime
+        tables.append(table(name,'Observation-to-output compute on the local GPU',
+            [('package','Package'),('batch','Batch'),('output','Requested output'),('median_batch_ms','Median ms/batch'),
+             ('p95_batch_ms','Sample p95 ms/batch'),('median_ms_per_image','Median ms/image'),('parameters','All package parameters'),
+             ('resident_mib','Resident MiB'),('peak_mib','Peak MiB'),('source','Raw timing samples')],
+            'package','RGB64 already on device; includes full encoder/preprocessing/decoding, excludes capture, IO, host transfer and planning. Five warmups, twenty synchronized repeats; seed9107, descriptive timing sample.'))
     if independent:
         name='perception_independent'; datasets[name]=independent
         tables.append(table(name,'Split decoder trunks with joint gradient clipping',

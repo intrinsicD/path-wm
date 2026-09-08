@@ -137,6 +137,16 @@ After development and commit, seal it through `scripts/execute_perception_indepe
 GPU ordering: D2 → localization_v2 development → split trunks → formal localization.
 Total declared program:36vision/geometry and15category fits. Never overlap GPU fits.
 
+The split-decoder development run completed50updates in33.6CPU fitting seconds,
+with exact initial real-input agreement and verified HTML. Implementation commit
+`5331642`; coordinator PID3294896 is sealed and waiting for localization_v2
+development before its three formal fits. A separate read-only
+[runtime audit](perception-runtime-protocol-2026-09-09.md) includes the backbone
+cost omitted by cached-feature training. Its four-condition CPU development
+passed output-equivalence/frozen-state checks and HTML verification. Queue the
+formal40-condition GPU audit only after all geometry training completes. This
+adds no fits; report batch1 latency separately from batch32 throughput.
+
 The source-reconciled [technical report plan](perception-report-plan-2026-09-08.md)
 is implemented in `world_model/curriculum/perception_summary.py` and
 `perception_report.py`. Partial snapshots explicitly list missing fits. The final
