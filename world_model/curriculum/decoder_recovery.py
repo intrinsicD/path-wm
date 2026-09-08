@@ -91,6 +91,10 @@ def run_evaluation(device='cuda'):
     out=ROOT/'evaluation';out.mkdir(parents=True,exist_ok=True)
     if (out/'metrics.json').exists():raise ValueError('preserve completed decoder evaluation')
     torch.set_num_threads(4)
+    # Match the declared training precision rather than cuDNN's default TF32.
+    torch.backends.cuda.matmul.allow_tf32=False
+    torch.backends.cudnn.allow_tf32=False
+    torch.backends.cudnn.benchmark=False
     matching=audit();json_atomic(out/'matching_audit.json',matching)
     checkpoints={f'reference_{name}':pair[0] for name,pair in PARENTS.items()}
     checkpoints.update({f'{arm}_{which}':ROOT/arm/filename for arm in ARMS
@@ -133,7 +137,10 @@ def run_evaluation(device='cuda'):
             comparisons[domain][key]=result;draws[f'{domain}_{key}']=samples
     np.savez_compressed(out/'bootstrap_draws.npz',**draws);sources.append(out/'bootstrap_draws.npz')
     report=dict(status='completed',scope='exploratory reused internal test populations; one training seed',
-                metrics=rows,comparisons=comparisons,matching_audit=matching,panel_indices={k:v.tolist() for k,v in ids.items()})
+                metrics=rows,comparisons=comparisons,matching_audit=matching,panel_indices={k:v.tolist() for k,v in ids.items()},
+                evaluation_runtime=dict(device=device,torch=torch.__version__,
+                    cuda_matmul_tf32=torch.backends.cuda.matmul.allow_tf32,
+                    cudnn_tf32=torch.backends.cudnn.allow_tf32,cudnn_benchmark=torch.backends.cudnn.benchmark))
     json_atomic(out/'metrics.json',report);sources.append(out/'metrics.json')
     shown=['reference_warmup','reference_adapted','adapted_parent_selected','adapted_fresh_selected','warmup_fresh_selected']
     labels=['Original COCO E/D','Task-adapted E/D','Frozen adapted E\nrefitted existing D',

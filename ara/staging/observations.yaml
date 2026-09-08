@@ -677,6 +677,41 @@ observations:
   bound_to:
   - N86
   - N81
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H13
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O42
+  timestamp: 2026-09-08T09:33+02:00
+  provenance: ai-suggested
+  content: For the user task-conditioning idea, propose first comparing an unconditioned decoder with D(z,task_id)
+    on the same mixed COCO/PushT data with the adapted encoder frozen. Explicit task context could support
+    different output requirements, but conditioning alone does not protect generic behavior when its training
+    signal disappears. Decoder conditioning, replay and encoder adaptation are distinct interventions. Task-specific
+    encoder/world-model adapters are a later untested extension; do not infer that imagery gains repair dynamics.
+  context: 'Conversational proposal responding to user: what about if we condition that on the task. No new
+    experiments, empirical findings or adopted architecture.'
+  potential_type: architecture
+  bound_to:
+  - N87
+  - N81
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+
+- id: O43
+  timestamp: 2026-09-08T10:00+02:00
+  provenance: ai-executed
+  content: Frozen adapted encoder permits near-original generic RGB64 reconstruction after decoder refitting; matched
+    fresh-decoder COCO gap is 26.33%, and existing-decoder refit worsens PushT reconstruction 8.72 times. Recoverability
+    does not prove unchanged representation, pure decoder-only original forgetting, or improved control.
+  context: One seed and reused internal test populations; final measured report and source-bound evidence attached
+    to N89.
+  potential_type: claim
+  bound_to:
+  - N89
   promoted: false
   promoted_to: null
   crystallized_via: null

@@ -140,10 +140,16 @@ The [8 September interpretation](curriculum-interpretation-2026-09-08.md) explai
 the combined E/D forgetting and proposes domain/pose controls, frozen-feature
 readouts, replay and application adapters. During the following voice discussion,
 the user authorized the [frozen-encoder decoder recovery](decoder-recovery-plan-2026-09-08.md)
-diagnostic. Three decoder-only arms are being prepared under
-`runs/decoder_recovery_2026-09-08`; task conditioning, skips and register tokens
-remain separate proposals. Claude was asked for public literature research on
-all these points, with no private project payload.
+diagnostic. All three arms and full paired evaluation are complete; see the
+[recovery results](decoder-recovery-results-2026-09-08.md). Frozen-encoder decoder
+refitting restores COCO MSE to 0.006104667 (0.53% above original warmup), while
+PushT reconstruction worsens 8.72 times. E/H remain exactly unchanged. Matched
+fresh decoders leave a 26.33% COCO gap between adapted and original encoders;
+this is one-seed, fixed-budget evidence, not proof of information loss.
+All 359 tests and the canonical dashboard browser checks pass. Claude's
+[public literature review](world-model-literature-2026-09-08.md) is complete.
+Task conditioning, skips, geometry changes and registers remain proposals.
+No further training is running or queued.
 
 Paddle uses frozen E/D/H and the preserved mixed-history U/R. New P1 completed
 20,000 updates, selected 19,750 and passed the original copy gate, with only a

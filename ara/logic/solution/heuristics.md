@@ -117,3 +117,12 @@
 - **Code ref**: [accepted plan](../../../docs/training-curriculum-2026-09-07.md), [curriculum training](../../../world_model/curriculum/training.py), [frozen decision](../../../scripts/freeze_curriculum_screen.py), [Paddle driver](../../../scripts/execute_paddle_followup.py).
 - **From staging**: O35
 - **Evidence of adoption**: N77; user explicitly said “ok please execute this plan” and requested full evaluation/internal-state figures. N78–N84 and [source-bound evidence](../../evidence/tables/curriculum_execution_2026-09-08.json) record execution. Adoption does not endorse later results or authorize private external transfer.
+
+## H13: Test recoverability with frozen-encoder decoder refitting
+- **Rationale**: Fit the decoder while retaining exact encoder/head state; compare matched fresh decoders on adapted and original encoders to separate accessible information from decoder initialization effects. Recovery supports recoverability at achieved error; failure still confounds information, capacity and optimization.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **Sensitivity**: high; adopted diagnostic, not a universal efficacy claim.
+- **Code ref**: [trainer](../../../world_model/curriculum/training.py), [matched experiment](../../../world_model/curriculum/decoder_recovery.py), [results](../../../docs/decoder-recovery-results-2026-09-08.md).
+- **From staging**: O41
+- **Evidence of adoption**: N88; user said yes, do that; N89 records execution. This does not adopt O42 or additional architecture changes.

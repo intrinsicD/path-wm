@@ -1384,3 +1384,60 @@ tree:
   - world_model/paddle/planner.py
   - runs/curriculum_2026-09-07/generic_reconstruction/metrics.json
   status: open
+
+- id: N87
+  type: question
+  title: Could task conditioning reconcile generic reconstruction and task applications?
+  provenance: user
+  timestamp: 2026-09-08T09:33+02:00
+  description: 'Voice discussion: user asks to connect all findings and prior ideas, proposing conditioning
+    on the task. Exact conditioning location remains open; discussion considers decoder-first conditioning
+    and possible task adapters. No implementation requested.'
+  also_depends_on:
+  - N85
+  - N86
+  evidence:
+  - docs/curriculum-interpretation-2026-09-08.md
+  - world_model/curriculum/training.py
+  status: open
+
+- id: N88
+  type: decision
+  title: Execute frozen-encoder decoder recovery and public Claude literature research
+  provenance: user
+  timestamp: 2026-09-08T10:00+02:00
+  choice: User approved decoder refitting and explicitly requested Claude literature research; conditioning, skips
+    and registers remain separate investigations.
+  evidence: &decoder_recovery_evidence_20260908
+  - docs/decoder-recovery-results-2026-09-08.md
+  - ara/evidence/tables/decoder_recovery_2026-09-08.json
+  also_depends_on:
+  - N86
+  - N87
+  status: resolved
+- id: N89
+  type: experiment
+  title: Three matched decoder-only recovery arms completed
+  provenance: ai-executed
+  timestamp: 2026-09-08T10:00+02:00
+  result: 'Three 2000-update arms; E/H exactly frozen, identical sample streams and fresh decoder initialization.
+    Full final FP32 evaluation: COCO refit 0.006104667 vs original 0.006072331; PushT refit 0.001635113 vs task
+    reference 0.000187608. 359 tests and browser QA pass.'
+  evidence: *decoder_recovery_evidence_20260908
+  also_depends_on:
+  - N88
+  status: resolved
+- id: N90
+  type: question
+  title: Geometry, physical prediction, retention and memory mechanisms
+  provenance: user
+  timestamp: 2026-09-08T10:00+02:00
+  description: User asks about task conditioning, encoder/decoder memory registers and concrete geometry/position/velocity/prediction
+    solutions. Claude public literature review completed and primary shortlist independently checked; proposed architectural
+    interventions remain untested.
+  evidence:
+  - docs/world-model-literature-2026-09-08.md
+  also_depends_on:
+  - N87
+  - N89
+  status: open

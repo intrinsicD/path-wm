@@ -2,10 +2,10 @@ session:
   id: 2026-09-08_001
   date: '2026-09-08'
   started: 2026-09-08T03:03+02:00
-  last_turn: 2026-09-08T09:22+02:00
-  turn_count: 3
+  last_turn: 2026-09-08T10:00+02:00
+  turn_count: 5
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
-    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head refitting.'
+    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning. Turn5 completes three decoder recovery arms, full evaluation and Claude literature review; 359 tests and browser QA pass.'
 events_logged:
 - turn: 1
   type: decision
@@ -128,6 +128,50 @@ events_logged:
   provenance: ai-suggested
   summary: Propose frozen-E decoder recovery with matched decoder fitting; conditional H-refit explanation.
     Efficacy remains untested.
+- turn: 4
+  type: question
+  id: N87
+  routing: direct
+  provenance: user
+  summary: Could task conditioning reconcile generic reconstruction and task applications?
+- turn: 4
+  type: observation
+  id: O42
+  routing: staged
+  provenance: ai-suggested
+  summary: Conditional decoder plus mixed-domain training is a testable proposal; keep conditioning distinct
+    from retention.
+- turn: 5
+  type: decision
+  id: N88
+  routing: direct
+  provenance: user
+  summary: Execute frozen-encoder decoder recovery and public Claude literature research
+- turn: 5
+  type: experiment
+  id: N89
+  routing: direct
+  provenance: ai-executed
+  summary: Three matched decoder-only recovery arms completed
+- turn: 5
+  type: question
+  id: N90
+  routing: direct
+  provenance: user
+  summary: Geometry, physical prediction, retention and memory mechanisms
+- turn: 5
+  type: observation
+  id: O43
+  routing: staged
+  provenance: ai-executed
+  summary: Recovery with retention tradeoff; causal interpretation remains scoped.
+- turn: 5
+  type: heuristic
+  id: H13
+  routing: crystallized
+  provenance: user-revised
+  summary: O41 diagnostic explicitly adopted; O42 remains untested.
+
 ai_actions:
 - turn: 1
   action: 'Completed the continuous September7–8 task: source verification/grouped image preparation; matched training
@@ -161,6 +205,23 @@ ai_actions:
   provenance: ai-executed
   files_changed:
   - ara/
+- turn: 4
+  action: Explained task-conditioned decoder and task adapter options, retention limits, and a matched unconditioned
+    decoder control. Discussion only; no code changes or training.
+  provenance: ai-executed
+  files_changed:
+  - ara/
+- turn: 5
+  action: Implemented and ran all three recovery arms and full paired evaluation;
+    archived default-math pass and reran explicit FP32 evaluation; public Claude literature
+    CLI completed and primary sources reviewed; final software/browser verification
+    passed.
+  provenance: ai-executed
+  files_changed:
+  - world_model/curriculum/
+  - docs/
+  - ara/
+
 claims_touched:
 - id: C04
   action: crystallized
@@ -177,6 +238,8 @@ key_context:
     or skip/pass-through paths for applications? Interpretation proposal is not execution authorization.'
 - turn: 3
   excerpt: Maybe we need to retrain the decider after task training?
+- turn: 4
+  excerpt: 'Voice: everything that you found and my ideas ... what about if we condition that on the task'
 open_threads:
 - PushT pose generalization/optimization and generic retention remain unresolved; no further training queued.
 - Paddle control improved but memory/prediction/90%targets fail; a runtime-matched multi-seed study would be needed
@@ -184,9 +247,11 @@ open_threads:
 - Earlier LeWM normalization and independent-data-efficiency questions remain separate, unadjudicated tracks.
 - Specific private Claude transfer permission remains separate; no transfer attempted this turn.
 - N85 domain-versus-pose and E-versus-D attribution, frozen-feature readout and retention/adapters proposals need a prospective experiment.
-- N86 decoder-versus-task-head meaning and any refitting protocol remain prospective.
+- N86 decoder refit completed through N89; broader representation and task-head questions remain open.
+- N87 task-conditioning location and its advantage over an equally trained unconditioned decoder remain open.
 ai_suggestions_pending:
-- O41 frozen-encoder decoder/readout recovery is a proposal; no adoption or experiment.
+- O42 conditional decoder proposal is untested; user question is not architecture adoption.
+- O41 adopted as H13; O43 measured recoverability interpretation remains staged.
 - O37 crystallized to C04 on turn2; O36/O38 remain staged. O39/O40 causal/design proposals remain unadopted.
 - O01 flagged stale after three session-days without revisiting that earliest small-run scope; retain for next briefing
   triage.

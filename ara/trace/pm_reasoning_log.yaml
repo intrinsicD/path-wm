@@ -230,3 +230,22 @@ entries:
     active proposals; C04 scoped metric unchanged.
   - No new elapsed session-day staleness or abandonment of active older tracks. ARA edits record discussion
     only; no checkpoint/model/report ledger mutation.
+
+- turn: 2026-09-08_001#4
+  notes:
+  - End-of-turn conversational epilogue. User task-conditioning question routes to N87; assistant implementation
+    interpretation stages as O42. No experimental or verbal-affirmation closure; no promotion.
+  - Task location remains ambiguous; decoder-first is an AI proposal, not a user instruction. No training,
+    architecture edits, new metric or reporting refresh.
+  - Earlier open questions remain active; no new session-day staleness or abandonment signal.
+
+- turn: 2026-09-08_001#5
+  notes:
+  - End-of-task epilogue after completed training, evaluation, figures and tests. Voice steering preserved within
+    active execution.
+  - N88 records explicit adoption of decoder recovery; promote O41 to H13 only. O42 and register/geometry proposals
+    remain unadopted.
+  - N89 records measured recovery and retention tradeoff; stage O43 without claiming encoder information loss or
+    pure decoder causal attribution. C04 original combined-pair degradation remains valid.
+  - No new abandonment or session-day staleness; earlier research tracks remain open. Public Claude brief is separate
+    from previously rejected private transfer.
