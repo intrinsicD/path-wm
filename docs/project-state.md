@@ -41,8 +41,8 @@ were exported. App heartbeat `overnight-perception-architecture-experiments`
 continues this task every half hour and must be paused after the morning report.
 GPU is RTX3050/8GB; starting free disk28GB. The development slice now passes16
 targeted scientific checks, four tiny head fits and full-cache identity audits.
-Every completed unit's dashboard passed browser verification. P1 is sealed and
-running:6fits,4,000updates,40minute cap per fit (prospectively increased after
+Every completed unit's dashboard passed browser verification. P1 completed all
+6fits,4,000updates,40minute cap per fit (prospectively increased after
 development timing; original20minute proposal was not a measured fit duration).
 Coordinator: `scripts/execute_perception_overnight.py`; live handoff/receipts:
 `runs/perception_overnight_2026-09-08/active.json` and `execution.jsonl`.
@@ -58,8 +58,9 @@ and its coordinator log for progress. Reused held-outs remain exploratory.
 
 P1-T test macro AP is0.0742–0.0829 for the CNN and0.6441–0.6555 for nativeViT
 (constant-score baseline0.0331). These are pooled-head accessibility results, not
-proof that another head cannot recover semantic information. The first P1 pair
-passes the numeric geometry gate; remaining P1 seeds continue.
+proof that another head cannot recover semantic information. All six P1 fits
+pass the mean geometry gate. On the fresh cohort, individual-case tolerance pass
+is73.0–80.5% for CNN and77.9–83.2% for ViT; mean readiness is not reliable control.
 
 The [fresh simulator protocol](perception-fresh-protocol-2026-09-08.md) has generated
 and verified512cases plus40source/render calibration pairs. One fresh case is near
@@ -81,6 +82,33 @@ files while it runs; use separate modules for subsequent readouts and report fig
 
 The canonical dashboard now has per-seed capability tables and category/fresh
 comparison charts, independently checked against raw pose predictions/AP scores.
+
+The nine encoder-extension fits are active (`extensions/coordinator.log`), with
+the first three completed. Their separately sealed category/fresh audit queue
+(`scripts/execute_perception_extension_audits.py`) waits for all nine, then tests
+selected encoders with live FP32 features. Its development pooling, category and
+fresh checks completed and dashboards passed. Its sealed audit files must also
+remain unchanged while that queue runs.
+
+The [decoder local-access and task-conditioning protocol](perception-decoder-protocol-2026-09-08.md)
+defines four arms: duplicated final tokens, early patch tokens, raw source patches,
+and early tokens with task FiLM. Three paired seeds, fixed4,000-update endpoints;
+same shared typed decoder, with raw input width/preprocessing differences explicit.
+Structural checks pass;50-update development runs are queued after extension
+audits through `scripts/prepare_perception_decoders.py`. Formal decoder training
+is NOT launched yet: inspect its development costs/HTML, commit, and seal first.
+
+The [read-only attention/feature inspection](perception-inspection-protocol-2026-09-08.md)
+completed on512fresh cases and three frozen CNN heads. Uniformizing both attention
+directions or zeroing their outputs gives0%per-case tolerance passes; baseline
+retains73–80%. Explicit per-head probabilities match SDPA. Fine-from-coarse is
+nearly uniform, while one coarse-from-fine head is selective. A separately
+[declared directional diagnostic](perception-attention-directional-protocol-2026-09-08.md)
+will distinguish these branches. New PCA, RGB/mask and pose-distribution figures
+are in the run's `figures/`; layout revision2 fixes two label-spacing issues and
+preserves original PNGs. Images have been visually inspected and the dashboard
+passed browser verification. PCA colors and decoder location maps are not
+semantic labels or encoder attention.
 
 ## Complete: earlier encoder investigation (8 September)
 

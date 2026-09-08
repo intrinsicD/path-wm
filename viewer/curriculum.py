@@ -75,14 +75,15 @@ def add_curriculum_views(runs,datasets,charts,tables,cards,chart,table,source_id
         blocks[0]['body']+='Selection uses COCO validation reconstruction MSE; no pose, dynamics or control gate is assessed. Matched fresh decoders compare recoverability from the original and task-adapted encoders.'
     overnight = all(str(r.context.get('protocol', '')).startswith('overnight ') for r in selected)
     if overnight:
-        blocks[0]['body'] = ('## Perception packages and encoder continuation\n\n'
+        blocks[0]['body'] = ('## Perception architecture comparisons\n\n'
             'CNN and native ViT features feed independent RGB, foreground-mask and spatial-pose heads. '
-            'P1 freezes encoder weights and buffers; the separately declared extension study updates the encoder under mixed supervision. All heads are selected at the minimum '
+            'P1 freezes encoder weights and buffers; the separately declared extension study updates the encoder under mixed supervision. In these two studies, all heads are selected at the minimum '
             'PushT validation q, with earliest exact ties; endpoint metrics are recorded separately. '
             'q is the worst coordinate MAE/8 world units or angle MAE/10 degrees. '
             'The numeric readiness target is q≤1. Development prefixes are not formal evidence; '
             'formal runs use three paired head seeds and reused grouped holdouts. '
-            'This compares two pretrained/trained packages, and does not isolate architecture or establish control.')
+            'The separate D2 study tests local feature access and task FiLM in a shared dense decoder at a fixed update endpoint, with no pose selector. '
+            'These comparisons do not isolate pretraining from architecture or establish control.')
     # One seed per native curve family keeps legends legible; all seeds remain indexed.
     screen=[r for r in selected if r.context.get('arm') in ('A','B','C')]
     focus=screen if screen else selected
@@ -139,7 +140,7 @@ def add_curriculum_views(runs,datasets,charts,tables,cards,chart,table,source_id
         if not names:continue
         y={'fields':names,'type':'quantitative','label':unit} if len(names)>1 else number(names[0])
         scope = ('Formal: all2651 PushT and512 COCO validation frames, up to4000 updates per fit; '
-                 'development: explicit16-frame prefixes and50 updates. Three typed heads; P1 freezes E, extension runs update E.'
+                 'development: explicit16-frame prefixes and50 updates. P1 freezes E; extensions update E; D2 freezes E and trains a shared RGB/mask decoder.'
                  if overnight else 'A has up to4000 supervised updates; B/C up to2000 after separate2000 warmup updates.')
         view=chart(f'curriculum_{key}',f'{title} · seed {seed}',
                    f'{unit}. Fixed validation frames; x counts updates within this phase. {scope} Exact values; no pooled latent spaces.',
