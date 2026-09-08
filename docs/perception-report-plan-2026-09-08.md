@@ -80,3 +80,9 @@ scene, old/new poses and old/new pusher/body distributions on common log-probabi
 scales. Assert identical case identities/targets and normalized maps before
 plotting. This is a read-only visualization from saved arrays; it changes no model,
 metric or selection rule. Inspect the figures and verify HTML after all six fits.
+
+For D3, compare the first six COCO test crops from seed9107 at the fixed endpoint:
+RGB target/shared-early/split and foreground target/shared-early/split in one panel.
+These are the same fixed rows as D2, with common RGB/probability ranges and ignored
+pixels marked. This illustrative first-seed panel may be generated when available;
+the architecture conclusion still uses all three paired numerical evaluations.
