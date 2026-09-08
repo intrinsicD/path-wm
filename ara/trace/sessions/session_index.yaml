@@ -40,8 +40,9 @@ sessions:
     no new runs. Turn10 completes depth/scale research and three Claude exchanges; agreed diagnostic/reference then
     depth-by-exchange proposal, no new model runs. Turn11 adopts the Claude workflow and executes A/B:33formalruns,
     depth+exchange geometry gains across3seeds but all12readinessgates fail; RGB/foreground divergence,379tests and
-    final browser QA verified.'
-  turn_count: 11
-  events_count: 52
+    final browser QA verified. Turn12 audits PCA and per-head attention with zero updates; maps verified,
+    coarse broadcast interpretation and hybrid proposal staged,17 targeted tests and compact browser QA pass.'
+  turn_count: 12
+  events_count: 58
   claims_touched: [C04]
-  open_threads: 10
+  open_threads: 11

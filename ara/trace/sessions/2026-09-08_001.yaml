@@ -2,8 +2,8 @@ session:
   id: 2026-09-08_001
   date: '2026-09-08'
   started: 2026-09-08T03:03+02:00
-  last_turn: 2026-09-08T14:27+02:00
-  turn_count: 11
+  last_turn: 2026-09-08T15:10+02:00
+  turn_count: 12
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
     and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed
     controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning.
@@ -15,7 +15,8 @@ session:
     no new runs. Turn10 completes depth/scale research and three Claude exchanges; agreed diagnostic/reference then
     depth-by-exchange proposal, no new model runs. Turn11 adopts the Claude workflow and executes A/B:33formalruns,
     depth+exchange geometry gains across3seeds but all12readinessgates fail; RGB/foreground divergence,379tests and
-    final browser QA verified.'
+    final browser QA verified. Turn12 audits PCA and per-head attention with zero updates; maps verified,
+    coarse broadcast interpretation and hybrid proposal staged,17 targeted tests and compact browser QA pass.'
 events_logged:
 - turn: 1
   type: decision
@@ -366,6 +367,42 @@ events_logged:
   provenance: ai-suggested
   summary: O54 checkpoint behavior invariant committed and verified.
 
+- turn: 12
+  type: question
+  id: N104
+  routing: direct
+  provenance: user
+  summary: Coarse PCA/entropy concern and two-to-three-stage hybrid proposal.
+- turn: 12
+  type: experiment
+  id: N105
+  routing: direct
+  provenance: ai-executed
+  summary: Four frozen encoder visual audits; exact saved entropy and latent replay, per-head specialization exposed.
+- turn: 12
+  type: experiment
+  id: N106
+  routing: direct
+  provenance: ai-executed
+  summary: Seventeen targeted tests and final compact browser QA pass; diagnostic/report failures retained.
+- turn: 12
+  type: observation
+  id: O55
+  routing: staged
+  provenance: user
+  summary: User hybrid architecture option remains a question, not adoption.
+- turn: 12
+  type: observation
+  id: O56
+  routing: staged
+  provenance: ai-suggested
+  summary: Broadcast/spatial interpretation remains provisional; entropy is not feature utility.
+- turn: 12
+  type: observation
+  id: O57
+  routing: staged
+  provenance: ai-suggested
+  summary: Bounded reference/convolution/hybrid comparison proposed; sequential topology is a separate test.
 ai_actions:
 - turn: 1
   action: 'Completed the continuous September7–8 task: source verification/grouped image preparation; matched training
@@ -485,6 +522,20 @@ ai_actions:
   - tests/test_encoder_checkpoint_contract.py
   - ara/
 
+- turn: 12
+  action: Audited model/plot code and frozen arrays; implemented independent attention and PCA diagnostics,
+    corrected tensor-layout replay and compact publication, verified17 tests and browser QA. Two public-only Claude
+    exchanges with explicit retractions; verified primary citations including correction of Codex's alternate
+    EfficientViT identifier. No model training, architecture changes or external source/result transfer.
+  provenance: ai-executed
+  files_changed:
+  - scripts/audit_encoder_visuals.py
+  - scripts/report_encoder_visual_audit.py
+  - world_model/curriculum/encoder_visual_audit.py
+  - tests/test_encoder_visual_audit.py
+  - docs/encoder-visual-audit-2026-09-08.md
+  - docs/project-state.md
+  - ara/
 claims_touched:
 - id: C04
   action: crystallized
@@ -525,6 +576,9 @@ key_context:
   excerpt: This is excellent collaboration between you and Claude. Remember that and integrate it with the workflow
     or a skill, you can do that again. Yes to your proposal. Let us do this!
 
+- turn: 12
+  excerpt: User asks why coarse PCA looks strange, whether attention entropies are meaningful/correct, and what
+    about a2–3stage convolution hierarchy with2–6transformer layers before each scale exports features.
 open_threads:
 - PushT pusher-position readiness and generic retention remain unresolved after N99–N102; no training remains active.
 - Paddle control improved but memory/prediction/90%targets fail; a runtime-matched multi-seed study would be needed
@@ -542,7 +596,11 @@ open_threads:
   general control remain untested.
 - N96 depth package tested through N100; more spatial levels/registers remain conditional. O49 adopted as A01; O53
   next budget/loss comparison is proposed.
+- N104/N105 expose coarse global/spatial structure and selective heads; trained coarse-only readouts, simpler
+  fusion and hybrid/topology choices remain untested. O55/O57 are proposals, not architecture adoption.
 ai_suggestions_pending:
+- O56 audit interpretation and O57 bounded hybrid comparison await researcher response; O53 budget/loss control
+  remains proposed. No new training was launched by the visualization question.
 - O49 adopted as A01 and A/B completed; O51/O52 result interpretations remain staged pending researcher discussion.
 - O48 trained attention comparison partly executed through N100; simple fusion and software persistence remain staged.
 - O47 frozen E/RGB/foreground comparison executed through N99/N101; broad query/object architecture remains unadopted.

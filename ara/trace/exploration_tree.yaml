@@ -1655,3 +1655,41 @@ tree:
   - N100
   - N101
   status: resolved
+- id: N104
+  type: question
+  title: Audit coarse PCA and entropy before choosing deeper hybrid stages
+  provenance: user
+  timestamp: 2026-09-08T15:10+02:00
+  description: User asks whether coarse PCA/attention entropy are meaningful and whether two or three convolutional
+    stages with two to six transformer layers should replace or augment residual convolution branches.
+  also_depends_on: [N100, N103]
+  status: open
+- id: N105
+  type: experiment
+  title: Frozen first-seed PCA and per-head attention audit completed
+  provenance: ai-executed
+  timestamp: 2026-09-08T15:10+02:00
+  result: Four encoders, original256 training frames and six test frames, zero updates. Saved entropy maps reproduced
+    exactly; SDPA/manual output max absolute7.15e-7 and relative L2 max5.77e-7. Deeper coarse head entropies
+    0.953/0.970/0.322/0.948; joint PCA explains31.31percent. Image means explain56.66percent coarse training
+    variance versus0.48percent fine;99.69percent coarse attention-output variation is between image means.
+    Separate and image-centered PCA still show spatial/boundary structure; no local-information or control conclusion.
+  evidence:
+  - ara/evidence/tables/encoder_visual_audit_2026-09-08.json
+  - docs/encoder-visual-audit-2026-09-08.md
+  also_depends_on: [N104, N100]
+  status: resolved
+- id: N106
+  type: experiment
+  title: Diagnostic integrity and compact dashboard verified
+  provenance: ai-executed
+  timestamp: 2026-09-08T15:10+02:00
+  result: Seventeen targeted tests pass. Initial float32 tolerance failure preserved; original FrameSet strides
+    restore bit-exact latent replay after NPZ layout differences. Mis-scoped reporting, sandboxed browser and
+    oversized embed failures retained. Final compact first-fixed-frame embed passes canonical browser QA;
+    full panels/arrays retained. Exact numerical source preserved at7f23d46; no model/training changes.
+  evidence:
+  - ara/evidence/tables/encoder_visual_audit_2026-09-08.json
+  - docs/encoder-visual-audit-2026-09-08.md
+  also_depends_on: [N105]
+  status: resolved

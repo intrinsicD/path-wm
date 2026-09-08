@@ -206,6 +206,10 @@ if __name__ == '__main__':
     from scripts.run_encoder_study import refresh
     try:
         main()
+        # The completed study already nearly fills the portable payload. Publish
+        # its compact comparison before the mandatory dashboard rebuild.
+        from scripts.report_encoder_visual_audit import publish
+        publish()
     finally:
         artifact, html, receipt = refresh()
         verification = receipt.get('stages', {}).get('verification', 'unknown')

@@ -906,3 +906,43 @@ observations:
   promoted_to: logic/solution/heuristics.md:H15
   crystallized_via: artifact-commitment
   stale: false
+- id: O55
+  timestamp: 2026-09-08T15:10+02:00
+  provenance: user
+  content: Consider two or three convolutional scale stages with two to six transformer layers before feature export;
+    question whether strange coarse PCA or attention entropy indicates a need to change the encoder.
+  context: User inspected completed encoder dashboard; asks for explanation/options, not a new training launch.
+  potential_type: architecture
+  bound_to: [N104]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O56
+  timestamp: 2026-09-08T15:10+02:00
+  provenance: ai-suggested
+  content: Coarse features in the inspected deeper seed are compatible with an image-summary broadcast plus spatial
+    structure; pooled PCA and head averaging obscure this. Entropy measures concentration, not utility. Spatial
+    information quality requires trained readouts or downstream interventions; PCA shape does not prove collapse
+    or a need for registers. Existing trained exchange benefit is conditional on the deeper package.
+  context: Four frozen first-seed encoders audited; exact metrics and limits in N105 and source-bound evidence.
+  potential_type: claim
+  bound_to: [N105, N100]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O57
+  timestamp: 2026-09-08T15:10+02:00
+  provenance: ai-suggested
+  content: Propose reference versus extra-convolution control versus two within-scale transformer blocks per branch,
+    keeping320x64 outputs/exchange/data/objective fixed and reporting paired updates and measured costs. Test sequential
+    coupling separately, then more layers/scales conditionally. Retain the proposed budget/loss control and later
+    multi-output/dynamics gates. Literature and Claude agreement justify testing, not adopting a hybrid.
+  context: Public-only Claude review and correction round; Codex verified primary papers and current topology.
+  potential_type: architecture
+  bound_to: [N104, N105, N100]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

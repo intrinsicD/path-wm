@@ -27,6 +27,19 @@ Read the [paddle results](paddle-world-model-results-2026-09-07.md),
 
 ## Complete: encoder investigation (8 September)
 
+Follow-up: the [PCA/attention audit and hybrid-architecture review](encoder-visual-audit-2026-09-08.md)
+is complete on the four original first-seed encoders,256 training PCA frames and
+six fixed test frames, with zero optimizer updates. Saved entropy maps reproduce
+exactly and attention outputs agree within float32 roundoff. Deeper/on coarse
+heads have mean entropies0.953/0.970/0.322/0.948; averaging hid one selective head.
+Coarse output structure is consistent with a broadcast image summary, not evidence
+that a strange PCA proves failure. The dashboard adds a compact audit panel and
+passes browser verification;17 targeted tests pass. A public-only two-round
+Claude review supports a proposed two-block within-scale transformer comparison
+against the current reference and an extra-convolution control, followed by a
+separate sequential-pyramid test. These architectures and the earlier budget/loss
+control remain proposed; no additional training is running.
+
 The user accepted the [co-designed encoder sequence](encoder-depth-scale-cowork-2026-09-08.md)
 and requested reusable critical Claude collaboration. That method is now part of
 [the standing workflow](claude-collaboration-workflow.md). The
