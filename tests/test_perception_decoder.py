@@ -27,6 +27,10 @@ def test_task_film_starts_identical_and_can_change_shared_computation():
         assert torch.equal(value, conditioned.state_dict()[name])
     for task in ('rgb', 'mask'):
         assert torch.equal(plain(features, task), conditioned(features, task))
+    for model in (plain, conditioned):
+        image, logits = model.both(features)
+        assert torch.equal(image, model(features, 'rgb'))
+        assert torch.equal(logits, model(features, 'mask'))
     with torch.no_grad():
         conditioned.films[0].weight.fill_(.2)
     a = conditioned.represent(features, 'rgb')

@@ -51,7 +51,7 @@ FP32 with TF32 disabled. No schedule, dropout, augmentation or encoder updates.
 Loss is0.5COCO RGB MSE+0.5PushT RGB MSE+1COCO mask BCE over valid pixels.
 Run separate RGB/mask trunk forwards in every arm's training step to keep the
 training execution pattern matched. Shared parameters remain shared even when
-conditioned outputs need different inference passes. Log RGB-versus-mask shared
+conditioned outputs need different inference passes. Log COCO RGB-versus-mask shared
 gradient norms/cosine on early updates and every100; this diagnoses gradient
 alignment, not causal performance loss.
 
@@ -98,3 +98,14 @@ compared as a completed4,000-update result.
 Claude's public-only decoder review and reconciliation are retained under the
 overnight collaboration directory. The implementing agent independently checks
 claims against code, source papers and experimental evidence.
+
+## Development completion
+
+All four seed9107 development prefixes completed50updates and their canonical
+dashboards passed browser verification. Measured fitting including tiny validation
+was5.30s late,5.74s early,5.10s raw and5.72s conditioned; per-unit execution including
+source setup, evaluation and reporting was about33–35seconds. CUDA peak tensor
+allocation after preparation was0.309–0.333GB. These tiny prefixes do not measure
+full-population validation cost, so retain the predeclared20minute formal cap.
+Normalization/raw-alignment/paired-FiLM checks pass. Freeze the unchanged training
+source, data manifest, seeds and4,000-update endpoint before the12formal fits.
