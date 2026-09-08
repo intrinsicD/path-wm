@@ -40,3 +40,14 @@ visible rather than silently changing masks. Cap the complete diagnostic at
 Render fixed first-six COCO RGB and mask comparisons from the saved D2 panels,
 without selecting examples based on how an architecture looks. Those panels
 show output differences, while the intervention table addresses input reliance.
+
+## Development completion
+
+The conditioned seed9107 endpoint's five16-image CPU development conditions
+completed in0.671seconds of diagnostic execution (42.2seconds with setup and
+canonical reporting). Baseline foreground IoU was identical to saved GPU results;
+RGB MSE differed by9.31e-10. Maximum saved-panel differences were1.79e-6 RGB and
+5.01e-6 mask probability, below the declared check scale. Routing/context-hook
+tests pass and HTML verification passed. These small intervention outcomes are
+development evidence only. Commit this slice, freeze source/data/checkpoint
+identities, and retain the20minute full-evaluation cap before the42conditions.
