@@ -170,3 +170,28 @@ The cached source had a changed hub helper, so a pinned upstream snapshot is use
 Cached weights exactly match the88,283,115 official download bytes, SHA256
 `b938bf1bc15cd2ec0feacfe3a1bb553fe8ea9ca46a7e1d8d00217f29aef60cd9`.
 Neither the user cache nor the original checkpoints were modified.
+
+A3 details fixed before fitting: probe seed8157, drawseed8158; independent RGB and
+mask decoder modules, joint gradient clip1, AdamW as declared,2,000updates,
+wallcap900seconds (head fitting/evaluation, feature preparation separately timed).
+Freeze each source E and the task-selected DINO projection. Cache identical
+320×64 features inFP16 with relative-MSE≤1e-6 audit. Binary labels use nearest
+interpolation. Per-image IoU/Dice use threshold0.5, value1 when prediction and target
+are both empty on valid pixels, and exclude images without valid pixels. Report
+empty/(0,0.1]/(0.1,0.5]/(0.5,1] foreground strata. Baselines: always empty, always
+full, per-pixel training-set mean thresholded0.5; no validation threshold fitting.
+Probe selection is RGB MSE + valid-pixel BCE, with metrics retained separately.
+
+The mask slice passed geometric crop/resize, crowd-ignore and empty-metric tests;
+its tiny fresh RGB/mask fit and HTML browser checks pass. Six fixed COCO image,
+annotation and valid-pixel panels were inspected for alignment. The factorial
+path passed a3-update CPU development fit through checkpoint selection and full
+reporting. CPU resume exactly matches an uninterrupted variant trajectory and
+rejects an architecture change on resume.
+
+A proposed additional implementation-source review by Claude was rejected before
+execution by automatic approval review, which classified that code/local-result
+payload as beyond general collaboration authorization. No payload was sent and
+no alternate route was used. Implementation review proceeded locally; the two
+successful protocol exchanges remain the peer-review evidence. Receipt:
+`runs/encoder_study_2026-09-08/collaboration/implementation_review_rejected.json`.

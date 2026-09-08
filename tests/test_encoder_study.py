@@ -90,3 +90,24 @@ def test_frozen_dino_never_enters_training_and_preserves_state(tmp_path,monkeypa
     assert all(p.grad is None and not p.requires_grad for p in model.parameters())
     assert x.grad is None
     assert all(torch.equal(v,model.state_dict()[k]) for k,v in before.items())
+
+
+def test_variant_resume_preserves_trajectory_and_rejects_changed_architecture(tmp_path):
+    import numpy as np
+    from world_model.curriculum.data import FrameSet
+    from world_model.curriculum.training import train_phase
+    from world_model.pusht.checkpoints import read_checkpoint
+    torch.set_num_threads(1)
+    rng=np.random.default_rng(27)
+    ds=FrameSet(rng.integers(0,256,(4,64,64,3),dtype=np.uint8),np.arange(4),rng.random((4,6),dtype=np.float32),fingerprint='tiny-test')
+    cfg=dict(seed=7107,phase='supervised',encoder_variant=dict(depth=2,exchange=False),updates=2,batch_size=2,microbatch=2,
+             learning_rate=.0003,weight_decay=.0001,grad_clip=1.,validate_every=1,max_seconds=30,device='cpu',cpu_threads=1)
+    full=tmp_path/'full';resumed=tmp_path/'resumed'
+    train_phase(cfg,ds,ds,[0,1],full)
+    train_phase(cfg,ds,ds,[0,1],resumed,stop_after=1)
+    changed=copy.deepcopy(cfg);changed['encoder_variant']['exchange']=True
+    with pytest.raises(ValueError,match='mismatch'):train_phase(changed,ds,ds,[0,1],resumed,resume=True)
+    train_phase(cfg,ds,ds,[0,1],resumed,resume=True)
+    a,b=read_checkpoint(full/'last.pt'),read_checkpoint(resumed/'last.pt')
+    assert a['model_fingerprint']==b['model_fingerprint']
+    assert a['metrics']==b['metrics']
