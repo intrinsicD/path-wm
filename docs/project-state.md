@@ -25,15 +25,31 @@ Read the [paddle results](paddle-world-model-results-2026-09-07.md),
 [canonical dashboard](../runs/experiment_dashboard.html), and
 [portable continuation handoff](session-handoff-2026-09-07.md).
 
-## Complete: encoder investigation (8 September)
+## Active: overnight perception experiments (8–9 September)
+
+The user now authorizes execution with Claude through **9 September07:00 Berlin**,
+and explicitly removes albedo from scope. Follow the
+[overnight execution protocol](perception-overnight-protocol-2026-09-08.md), which
+supersedes the earlier proposal's non-execution status. First implement and profile
+matched independent spatial readouts on the fixed deeper/exchange CNN and native
+DINOv2 features, then run three paired head seeds and choose bounded follow-ups
+from validation evidence. Reserve the final hour for evaluation and reporting.
+
+Run root: `runs/perception_overnight_2026-09-08/`. Claude's initial protocol review
+completed successfully using the public-only CLI brief; no private code/data/results
+were exported. App heartbeat `overnight-perception-architecture-experiments`
+continues this task every half hour and must be paused after the morning report.
+GPU is RTX3050/8GB; starting free disk28GB. No new training started at this plan/test
+step. Essential tests are intentionally red until the new modules are implemented.
+
+## Complete: earlier encoder investigation (8 September)
 
 The latest [multiscale routing clarification](multiscale-routing-and-tasks-2026-09-08.md)
 traces existing two-scale processing/exchange and D/U/P access. It proposes retaining
 declared processed levels for spatial fusion and output queries, with richer fusion,
 earlier conditioning and sequential backbone coupling tested separately. The first
-package comparison remains unchanged. Albedo is a newly named consumer whose
-reflectance/lighting targets are not established by the prepared RGB/mask data;
-it needs a separate data protocol if pursued. This is a design clarification,
+package comparison remains unchanged. The earlier albedo discussion is historical;
+the user has now explicitly excluded it from the active work. This was a design clarification,
 with no model or training change. Two public-only Claude exchanges reconciled
 query-placement, future-input, cost and albedo-metric overclaims after an initial
 request timeout; the original failure and successful receipts are preserved.
