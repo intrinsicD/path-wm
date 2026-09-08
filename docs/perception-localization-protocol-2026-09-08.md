@@ -63,7 +63,7 @@ freeze. Six formal fits, initially15minutes each (90minutes maximum fitting),
 one GPU workload at a time after D2. Actual development timing may tighten this
 cap prospectively; no extra architecture or regularization sweep. Stop new
 training by06:00Berlin and report by07:00Berlin. All failures/stopped runs stay
-visible. The complete program now contains33vision/geometry fits and15independent
+visible. At this stage's declaration the program contained33vision/geometry fits and15independent
 category probes; new geometry fits have half the per-update frame consumption.
 
 ## Development control refinement before formal fitting
@@ -91,3 +91,12 @@ the now-started D2 formal queue. Only then commit, seal and run the six geometry
 fits. The failed check is retained as development evidence, not silently relabeled
 as passed. This refinement addresses a proven parameter redundancy, not a relaxed
 accuracy gate or a coefficient change.
+
+## Scheduling addendum before revision2 development
+
+The subsequently declared three-fit D3 split-trunk comparison increases the full
+program to36vision/geometry fits and15category probes. GPU order is now D2,
+the four localization_v2 development units, D3's three fits, then these six formal
+geometry fits. The read-only runtime audit follows geometry. This changes only
+scheduling and total program accounting; geometry data, objectives, controls,
+seeds, limits and selection remain as declared above.
