@@ -25,6 +25,18 @@ Read the [paddle results](paddle-world-model-results-2026-09-07.md),
 [canonical dashboard](../runs/experiment_dashboard.html), and
 [portable continuation handoff](session-handoff-2026-09-07.md).
 
+## Active: encoder investigation (8 September; authorized)
+
+The user accepted the [co-designed encoder sequence](encoder-depth-scale-cowork-2026-09-08.md)
+and requested reusable critical Claude collaboration. That method is now part of
+[the standing workflow](claude-collaboration-workflow.md). Execute the
+[bounded diagnostic/reference and depth-by-exchange study](encoder-study-protocol-2026-09-08.md),
+with essential tests, a tiny profile, frozen budgets and three paired seeds.
+This authorization supersedes historical restrictions below on further encoder
+experiments. Additional scales/registers remain conditional; existing readiness
+gates, reference checkpoints and grouped holdouts stay in force. Implementation
+is active; no new empirical outcome is claimed yet.
+
 ## Architecture reassessment (8 September; proposal)
 
 After the completed first diagnostic, the user requested a literature-based
