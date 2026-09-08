@@ -83,9 +83,9 @@ files while it runs; use separate modules for subsequent readouts and report fig
 The canonical dashboard now has per-seed capability tables and category/fresh
 comparison charts, independently checked against raw pose predictions/AP scores.
 
-The nine encoder-extension fits are active (`extensions/coordinator.log`), with
-the first three completed. Their separately sealed category/fresh audit queue
-(`scripts/execute_perception_extension_audits.py`) waits for all nine, then tests
+The nine encoder-extension fits completed (`extensions/coordinator.log`). Their
+separately sealed category/fresh audit queue
+(`scripts/execute_perception_extension_audits.py`) is now testing
 selected encoders with live FP32 features. Its development pooling, category and
 fresh checks completed and dashboards passed. Its sealed audit files must also
 remain unchanged while that queue runs.
@@ -94,9 +94,10 @@ The [decoder local-access and task-conditioning protocol](perception-decoder-pro
 defines four arms: duplicated final tokens, early patch tokens, raw source patches,
 and early tokens with task FiLM. Three paired seeds, fixed4,000-update endpoints;
 same shared typed decoder, with raw input width/preprocessing differences explicit.
-Structural checks pass;50-update development runs are queued after extension
-audits through `scripts/prepare_perception_decoders.py`. Formal decoder training
-is NOT launched yet: inspect its development costs/HTML, commit, and seal first.
+Structural checks and all four50-update development runs pass, including canonical
+HTML verification. The implementation is committed at `200e750`; the12formal fits
+are now sealed and active through `scripts/execute_perception_decoders.py`
+(`decoders/coordinator.log`, PID3268933 at launch). Do not change its sealed files.
 
 The [read-only attention/feature inspection](perception-inspection-protocol-2026-09-08.md)
 completed on512fresh cases and three frozen CNN heads. Uniformizing both attention
@@ -104,11 +105,57 @@ directions or zeroing their outputs gives0%per-case tolerance passes; baseline
 retains73–80%. Explicit per-head probabilities match SDPA. Fine-from-coarse is
 nearly uniform, while one coarse-from-fine head is selective. A separately
 [declared directional diagnostic](perception-attention-directional-protocol-2026-09-08.md)
-will distinguish these branches. New PCA, RGB/mask and pose-distribution figures
+completed: uniform fine-from-coarse is close to baseline, while removing that
+branch or uniformizing coarse-from-fine sharply harms pose. This measures reliance
+after training, not a retrained architecture comparison. New PCA, RGB/mask and pose-distribution figures
 are in the run's `figures/`; layout revision2 fixes two label-spacing issues and
 preserves original PNGs. Images have been visually inspected and the dashboard
 passed browser verification. PCA colors and decoder location maps are not
 semantic labels or encoder attention.
+
+The [geometry objective follow-up](perception-localization-protocol-2026-09-08.md)
+keeps the frozen P1 encoders and head topology, adding0.001times target-to-map KL
+with boundary-exact bilinear point targets. Claude reviewed the public mathematics
+and requested map entropy, target-support mass and loss-magnitude checks. Essential
+target/gradient tests pass. The first control failed a blanket parameter tolerance:
+only the two mathematically redundant spatial-softmax biases exceeded it; other
+weights matched within1.2e-7. Preserve the failed control/source. The protocol now
+requires informative weights AND actual normalized outputs/maps within2e-5, with
+the redundant bias differences retained separately. The invariance test passes.
+Four revision2 development units wait for the D2 formal queue in
+`development/localization_v2/` through `scripts/prepare_perception_localization.py`
+(PID3270408 at launch). After those pass, commit and seal the six geometry fits.
+Total declared program:33vision/geometry and15category fits. Never overlap GPU fits.
+
+The source-reconciled [technical report plan](perception-report-plan-2026-09-08.md)
+is implemented in `world_model/curriculum/perception_summary.py` and
+`perception_report.py`. Partial snapshots explicitly list missing fits. The final
+report must include all decoder and geometry outcomes, inspected figures and
+verified HTML before the deadline. Report preview development errors (path
+resolution and nested table-cell schema) are preserved under `report/` and repaired
+without changing any experimental record.
+
+The report preview now passes canonical desktop/narrow/source browser checks via
+`scripts/deliver_perception_report.py` and the existing dashboard adapter. It uses
+actual ordered SQL projections of Python-verified rows and marks pending evidence.
+The [decoder input-reliance diagnostic](perception-decoder-reliance-protocol-2026-09-08.md)
+has passed routing/context-hook tests and its five16-image CPU development
+conditions, including CPU/GPU agreement and verified HTML. Implementation commit
+`c2228b6`; formal CPU coordinator PID3282627 waits for all12D2 endpoints, then seals
+and evaluates42conditions. It adds no fits: fixed donor local/context inputs and
+neutral/flipped task conditions test fitted reliance. Keep it separate from any
+retrained architecture claim.
+
+The first paired D2 seed completed all four arms. COCO RGB MSE/IoU: late
+0.02485/0.6570, early0.007721/0.6683, raw0.009391/0.6678, conditioned
+0.006912/0.6608. These are first-seed outcomes, not the final architecture decision.
+Fixed first-six RGB and mask panels under `figures/decoders/` have been visually
+inspected; the dashboard with all five scientific figures passes canonical QA.
+Its artifact is about2.97MB, so watch the unchanged payload cap as evidence grows.
+The current full working-tree suite passes403tests with3opt-in browser-transport
+tests skipped. Actual per-artifact browser verification passes; JUnit evidence is
+`report/pytest.xml`. The failed-control CPU reanalysis also has verified HTML:
+all normalized outputs/maps differ by at most4.18e-7 from original P1.
 
 ## Complete: earlier encoder investigation (8 September)
 
