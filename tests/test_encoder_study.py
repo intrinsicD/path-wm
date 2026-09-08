@@ -62,3 +62,31 @@ def test_dino_adapter_keeps_grid_order_and_pooling_gradients():
     p=preprocess(rgb);assert p.shape==(1,3,224,224)
     torch.testing.assert_close(p[0,:,0,0],expected)
     torch.testing.assert_close(p[0,:,-1,-1],expected)
+
+
+def test_exchange_off_equals_zero_attention_outputs_with_same_token_mlps():
+    torch.set_num_threads(1)
+    on=matched_models(7107,2,True)['E'];off=matched_models(7107,2,False)['E']
+    with torch.no_grad():
+        for attention in (on.fine_from_coarse,on.coarse_from_fine):
+            attention.output_projection.weight.zero_();attention.output_projection.bias.zero_()
+    x=torch.rand(2,3,64,64)
+    torch.testing.assert_close(on(x).tokens(),off(x).tokens(),rtol=0,atol=0)
+
+
+def test_frozen_dino_never_enters_training_and_preserves_state(tmp_path,monkeypatch):
+    from world_model.curriculum.dino_reference import FrozenDino
+    class Stub(torch.nn.Module):
+        def __init__(self):
+            super().__init__();self.proj=torch.nn.Conv2d(3,384,14,stride=14)
+        def forward_features(self,x):
+            return {'x_norm_patchtokens':self.proj(x).flatten(2).transpose(1,2)}
+    stub=Stub();torch.save(stub.state_dict(),tmp_path/'weights.pt')
+    monkeypatch.setattr(torch.hub,'load',lambda *args,**kwargs:Stub())
+    model=FrozenDino(tmp_path,tmp_path/'weights.pt');model.train()
+    before=copy.deepcopy(model.state_dict());x=torch.rand(2,3,64,64,requires_grad=True)
+    adapter=DinoAdapter();adapter(model(x)).tokens().square().mean().backward()
+    assert all(not m.training for m in model.modules())
+    assert all(p.grad is None and not p.requires_grad for p in model.parameters())
+    assert x.grad is None
+    assert all(torch.equal(v,model.state_dict()[k]) for k,v in before.items())

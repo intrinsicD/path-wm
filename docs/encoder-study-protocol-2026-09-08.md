@@ -146,3 +146,27 @@ Native HTML charts and exact tables remain backed by the canonical raw ledger.
 Development three-update traces are labeled development, not evidence of learning
 shape; formal trajectories have41 or61 evaluation points. Inspect exported figures
 and verify the actual dashboard at laptop/mobile widths before handoff.
+
+A1 completed both6,000-update runs. Its coupled2,000-update trajectory differs
+from the historical run despite identical initialization, validation rows and all
+training draws: step1 loss/gradient match, step2 gradients differ at about1e-6
+and subsequently diverge. GPU deterministic algorithms were not enabled in either
+run. Treat the new2,000→6,000 window as the within-run budget comparison; do not
+combine it with the historical run as an exact continuation. This is numerical
+trajectory sensitivity, not evidence of a changed sample stream or seed variance.
+
+DINO tiny extraction initially rejected17 near-zero values out of294,912 checked
+values when comparing inference batches of different sizes. Investigation found
+relative MSE4.28e-8 and maximum difference0.00762, consistent with FP16 storage;
+near-zero absolute difference reached0.000138. Before full extraction, the
+near-zero absolute tolerance was set to0.0003 (relative coordinate tolerance0.0006),
+while the predeclared relative-MSE≤1e-6 gate remained unchanged. Failed development
+artifacts and the diagnostic are retained. Revised tiny extraction, all three
+reference readout paths and canonical browser verification pass.
+
+DINO uses the official source snapshot at commit
+`7764ea0f912e53c92e82eb78a2a1631e92725fc8` (Apache-2.0), with every file hashed.
+The cached source had a changed hub helper, so a pinned upstream snapshot is used.
+Cached weights exactly match the88,283,115 official download bytes, SHA256
+`b938bf1bc15cd2ec0feacfe3a1bb553fe8ea9ca46a7e1d8d00217f29aef60cd9`.
+Neither the user cache nor the original checkpoints were modified.
