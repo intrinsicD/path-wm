@@ -166,6 +166,26 @@ D3 may now start. Commit the geometry implementation and seal its six-fit queue,
 which waits for D3 completion. The full pre-repair suite passed405tests/3opt-in
 skips; the added source-inventory regression also passes.
 
+Geometry implementation commit`cf445f9`; its sealed coordinator PID3310660 waits
+for D3. Runtime coordinator PID3299213 waits for geometry. D3 is on seed9109:
+the first two split runs have COCO MSE0.001041/0.001018 and IoU0.659125/0.658482,
+versus early shared0.007721/0.007848 and0.668288/0.667035. Wait for all three
+before the final architecture conclusion. Split-versus-shared fixed-case images
+were inspected and verified, committed at`0c6556e`.
+
+The portable preview now uses smaller lossless WebP encoding when beneficial,
+verifying exact decoded RGBA pixels and preserving source PNGs. Commit`cefafc8`;
+dashboard/report browser checks pass and compact payloads are about1.95/1.87MB.
+Source cell and payload limits remain unchanged. The report implementation is
+committed at`a5cb5af` with later content additions pending. After all six geometry
+fits, run `scripts.run_perception_localization_figures`, inspect both new figures,
+then commit that working slice. The module/wrapper are currently untracked and
+syntax-checked; their source/case plan is recorded. Final reconciliation now also
+requires split/geometry figures and all40runtime conditions. Finish report
+interpretations, source/UI QA, the final tests and tracked results/state. Pause the
+heartbeat only after delivering the complete report. Do not touch `ara/` until the
+research-manager epilogue after substantive work is finished.
+
 The source-reconciled [technical report plan](perception-report-plan-2026-09-08.md)
 is implemented in `world_model/curriculum/perception_summary.py` and
 `perception_report.py`. Partial snapshots explicitly list missing fits. The final
