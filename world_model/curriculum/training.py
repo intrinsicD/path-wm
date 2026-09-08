@@ -14,7 +14,7 @@ from world_model.pusht.models import PoseReadout
 from world_model.paddle.training import optimizer_for
 from world_model.pusht.checkpoints import (
     SCHEMA_VERSION,TENSOR_SCHEMA,ACTION_SCHEMA_VERSION,atomic_checkpoint,atomic_checkpoint_copy,
-    fingerprint_modules,json_atomic,rng_state,restore_rng,versions,read_checkpoint)
+    fingerprint_modules,json_atomic,rng_state,restore_rng,versions,read_checkpoint,encoder_variant)
 from .data import digest
 
 def initial_models(seed,warmup=None):
@@ -121,6 +121,8 @@ def _train(config,train,validation,validation_indices,run,warmup,resume,stop_aft
     torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False
     torch.backends.cudnn.benchmark=False
     parent=read_checkpoint(warmup) if warmup else None
+    if parent is not None and encoder_variant(parent) is not None:
+        raise ValueError('encoder_variant parent is unsupported by legacy warmup/refit; use the explicit variant probe path')
     if 'encoder_variant' in config:
         if parent is not None:raise ValueError('custom encoder factorial starts from matched fresh tensors')
         from .encoder_variants import matched_models

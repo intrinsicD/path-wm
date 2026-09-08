@@ -123,10 +123,24 @@ def _construct():
             'U': MemoryUpdater, 'R': StateReadout, 'P': Predictor}
 
 
+def encoder_variant(checkpoint):
+    """Read behavior metadata that cannot be inferred from tensor keys alone."""
+    bundled = checkpoint.get('encoder_variant')
+    configured = checkpoint.get('config', {}).get('encoder_variant')
+    if bundled is not None and configured is not None and bundled != configured:
+        raise ValueError('Conflicting encoder_variant metadata')
+    return bundled if bundled is not None else configured
+
+
 def _load_models(checkpoint, device):
     classes = _construct(); result = {}
+    variant = encoder_variant(checkpoint)
     for key, weights in checkpoint['models'].items():
-        model = classes[key]().to(device)
+        if key == 'E' and variant is not None:
+            from world_model.curriculum.encoder_variants import ExperimentalEncoder
+            model = ExperimentalEncoder(**variant).to(device)
+        else:
+            model = classes[key]().to(device)
         model.load_state_dict(weights)
         model.eval().requires_grad_(False); result[key] = model
     return result
@@ -168,6 +182,10 @@ def export_bundle(perception, memory, predictor, output):
               'stage': 'inference', 'models': models, 'model_fingerprint': fingerprint_modules(models),
               'statistics': system['statistics'], 'config': c['config'], 'versions': versions(),
               'dataset_fingerprint': c['dataset_fingerprint'], 'dependencies': c['dependencies']}
+    variant = encoder_variant(read_checkpoint(perception))
+    if variant is not None:
+        # Predictor configuration does not own the observation encoder's identity.
+        bundle['encoder_variant'] = variant
     atomic_checkpoint(output, bundle)
     return str(output)
 

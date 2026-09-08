@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from torch.nn import functional as F
 from .data import FrameSet,task_frames,digest,file_hash
 from .training import initial_models,evaluate
-from world_model.pusht.checkpoints import read_checkpoint,json_atomic,fingerprint_modules
+from world_model.pusht.checkpoints import read_checkpoint,json_atomic,fingerprint_modules,encoder_variant
 
 ROOT=Path('runs/curriculum_2026-09-07')
 DATA='data/pusht_world_model/cchi_v1'
@@ -200,7 +200,10 @@ def inspect_checkpoint(checkpoint,output,*,split='test',diagnostic=False):
     output.mkdir(parents=True,exist_ok=True)
     torch.set_num_threads(4);device='cuda' if torch.cuda.is_available() else 'cpu'
     torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False
-    saved=read_checkpoint(checkpoint);models=initial_models(4107,saved['models'])
+    saved=read_checkpoint(checkpoint)
+    if encoder_variant(saved) is not None:
+        raise ValueError('encoder_variant is unsupported by legacy inspection; use scripts.inspect_encoder_study')
+    models=initial_models(4107,saved['models'])
     labelled='H' in saved['models']
     if labelled:models['H'].load_state_dict(saved['models']['H'])
     for model in models.values():model.to(device).eval()
