@@ -2,6 +2,10 @@
 
 User approved the revised order: PushT perception, Paddle memory/prediction, then reconstruction retention. These are bounded exploratory comparisons, not an overnight curriculum rerun. Original checkpoints and raw datasets remain immutable. Estimated total implementation/training/evaluation time: 2–4 hours, to be refined from measured progress.
 
+## Scope amendment before implementation and training
+
+The user narrowed execution to the first experiment only: run the PushT frozen-encoder head comparison, then re-evaluate together. Sections 2 and 3 below are deferred; no Paddle or decoder-conditioning work will be launched. The initial tests for those deferred interfaces are removed before implementation; their failing import was the recorded pre-implementation red check. Estimated first-slice delivery: 20–40 minutes.
+
 ## 1. PushT frozen-feature pose accessibility
 
 Use the selected task-only A encoder, the strongest previous pose baseline. Compare its original head with newly fitted linear, nonlinear flattened (hidden width 64), and spatial heads. Spatial head uses the fine map plus upsampled coarse map, shared convolutions, and three probability heatmaps: pusher, object center, and an orientation landmark 40 world units from the center. Decode expected coordinates and normalized landmark displacement to six pose outputs. Supervise pose and landmark coordinates; no transformed examples in this first attribution test, since that would introduce a second intervention. No keypoint detection labels from held-out images.
