@@ -981,3 +981,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O60
+  timestamp: 2026-09-08T16:45+02:00
+  provenance: ai-suggested
+  content: Conditional encoding is feasible; propose task/prior-state processing with a retained spatial
+    reference and distinguish previous executed actions from candidate-action feature views. Current E is
+    RGB-only while U already performs a memory-conditioned visual read. Compare equally informed late readout
+    against earlier conditioning before relevant compression; preserve causal timing, context-aware targets
+    and caches, old-output retention and actual cost. A stable base is a reference, not a universal-state
+    theorem; freezing is distinct from identity initialization. Meaningful varied contexts and shortcut
+    controls are necessary to evaluate the proposal.
+  context: Local interface trace, verified RT-1/FiLM/VPT/adaptive-attention sources and two public-only Claude
+    exchanges; corrections recorded in docs/encoder-conditioning-2026-09-08.md. No new model or run.
+  potential_type: architecture
+  bound_to: [N109, N108, N107, N87]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

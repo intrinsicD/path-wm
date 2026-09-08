@@ -45,8 +45,10 @@ sessions:
     Turn13 reviews asymmetric architectures from downstream requirements with two public-only Claude exchanges;
     bounded native-feature comparison proposed, no new model runs. Turn14 confirms existing fine/coarse decoding
     and indirect memory path; proposes typed or conditioned readouts with belief supervision and causal timing,
-    two Claude exchanges reconciled; no model runs.'
-  turn_count: 14
-  events_count: 62
+    two Claude exchanges reconciled; no model runs. Turn15 assesses encoder conditioning with verified RT-1/FiLM/VPT
+    precedents and two Claude exchanges; context timing, retention and late-versus-earlier comparison proposed,
+    no new implementation or runs.'
+  turn_count: 15
+  events_count: 64
   claims_touched: [C04]
-  open_threads: 13
+  open_threads: 14

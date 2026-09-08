@@ -2,8 +2,8 @@ session:
   id: 2026-09-08_001
   date: '2026-09-08'
   started: 2026-09-08T03:03+02:00
-  last_turn: 2026-09-08T16:13+02:00
-  turn_count: 14
+  last_turn: 2026-09-08T16:45+02:00
+  turn_count: 15
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
     and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed
     controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning.
@@ -20,7 +20,9 @@ session:
     Turn13 reviews asymmetric architectures from downstream requirements with two public-only Claude exchanges;
     bounded native-feature comparison proposed, no new model runs. Turn14 confirms existing fine/coarse decoding
     and indirect memory path; proposes typed or conditioned readouts with belief supervision and causal timing,
-    two Claude exchanges reconciled; no model runs.'
+    two Claude exchanges reconciled; no model runs. Turn15 assesses encoder conditioning with verified RT-1/FiLM/VPT
+    precedents and two Claude exchanges; context timing, retention and late-versus-earlier comparison proposed,
+    no new implementation or runs.'
 events_logged:
 - turn: 1
   type: decision
@@ -431,6 +433,18 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Typed or conditioned history-aware readouts proposed; existing connections are not new implementations.
+- turn: 15
+  type: question
+  id: N109
+  routing: direct
+  provenance: user
+  summary: Feasibility of conditioning E on actions, tasks, internal state and other context.
+- turn: 15
+  type: observation
+  id: O60
+  routing: staged
+  provenance: ai-suggested
+  summary: Task/prior-state conditional processing proposed with a retained reference and explicit causal/context contracts.
 ai_actions:
 - turn: 1
   action: 'Completed the continuous September7–8 task: source verification/grouped image preparation; matched training
@@ -586,6 +600,17 @@ ai_actions:
   - docs/project-state.md
   - runs/requirements_first_perception_2026-09-08/collaboration/
   - ara/
+- turn: 15
+  action: Traced RGB-only base/experimental E and existing U/P context paths; verified RT-1 instruction-conditioned
+    image tokenization, FiLM, VPT and adaptive visual attention. Two public-only Claude exchanges corrected
+    identity-versus-freezing, universal cost and cropping-only overclaims. Wrote a bounded design note with
+    context table, diagram and comparison proposal; no model/training/inference/dashboard changes.
+  provenance: ai-executed
+  files_changed:
+  - docs/encoder-conditioning-2026-09-08.md
+  - docs/project-state.md
+  - runs/requirements_first_perception_2026-09-08/collaboration/
+  - ara/
 claims_touched:
 - id: C04
   action: crystallized
@@ -635,6 +660,8 @@ key_context:
 - turn: 14
   excerpt: What about giving the decoder fine and coarse features, internal state and task/output conditioning;
     are convolutions spatial and transformers semantic, and how do we mix these ideas for what we need?
+- turn: 15
+  excerpt: Can we condition the encoder too, on action, task, internal state or something else; is it feasible?
 open_threads:
 - PushT pusher-position readiness and generic retention remain unresolved after N99–N102; no training remains active.
 - Paddle control improved but memory/prediction/90%targets fail; a runtime-matched multi-seed study would be needed
@@ -658,7 +685,10 @@ open_threads:
   essential gates before selecting a new experiment. Native-feature decoding and software cases are untested.
 - N108/O59 direct decoder memory, typed versus conditional sharing and belief-target supervision remain design
   choices to test. Existing fine/coarse D and memory-conditioned P do not settle these additional paths.
+- N109/O60 conditional encoding remains a design option; early-versus-late context, target consistency, task
+  switching and computation need a prospectively declared comparison.
 ai_suggestions_pending:
+- O60 proposes encoder conditioning without adopting a new E, adapter, crop policy, training budget or priority over O58.
 - O59 clarifies possible decoder interfaces without adopting new memory, conditioning, fusion or encoder training.
 - O58 broadens the decision method beyond O57 local hybrid ablation; no architecture adoption or new run budget.
 - O56 audit interpretation and O57 bounded hybrid comparison await researcher response; O53 budget/loss control

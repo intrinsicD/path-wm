@@ -1712,3 +1712,12 @@ tree:
     asks whether convolutions are spatial and transformers semantic and how to mix mechanisms by need.
   also_depends_on: [N107, N87, N94]
   status: open
+- id: N109
+  type: question
+  title: Assess encoder conditioning on task, action and internal state
+  provenance: user
+  timestamp: 2026-09-08T16:45+02:00
+  description: User asks whether conditioning the encoder itself on action, task, internal state or other
+    context is feasible, following the decoder discussion. No implementation or experiment is requested.
+  also_depends_on: [N108, N107, N87]
+  status: open

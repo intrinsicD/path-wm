@@ -27,6 +27,13 @@ Read the [paddle results](paddle-world-model-results-2026-09-07.md),
 
 ## Complete: encoder investigation (8 September)
 
+The [encoder-conditioning review](encoder-conditioning-2026-09-08.md) establishes
+feasibility precedents and proposes a retained spatial reference plus contextual
+processing for a named consumer. E is currently RGB-only; U already queries E
+features with memory. Task/prior-state conditioning and candidate-action feature
+branches have different timing and target contracts. A late-versus-earlier
+conditioning comparison is proposed only; no new implementation or run started.
+
 The [decoder input and conditioning clarification](decoder-inputs-and-conditioning-2026-09-08.md)
 confirms that D already consumes fine and coarse features; P already conditions
 predicted features on memory. Direct D-memory access and task/query conditioning
