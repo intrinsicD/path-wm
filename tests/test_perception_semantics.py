@@ -1,7 +1,8 @@
 """Semantic labels and metrics must agree on crop visibility and unknown labels."""
 import numpy as np
 import pytest
-from world_model.curriculum.perception_semantics import category_labels, average_precision
+import torch
+from world_model.curriculum.perception_semantics import category_labels, average_precision, known_bce, CategoryHead
 
 
 def test_category_crop_visibility_and_crowd_unknown_are_distinct():
@@ -27,3 +28,21 @@ def test_average_precision_groups_ties_and_excludes_unknowns():
     assert average_precision(target[::-1], scores[::-1], known[::-1]) == pytest.approx(.25 + 1/3)
     assert average_precision(target, np.ones(4), known) == pytest.approx(2/3)
     assert average_precision(np.zeros(4), scores, np.ones(4)) is None
+
+
+def test_unknown_labels_have_no_gradient_and_classifier_initialization_is_paired():
+    logits = torch.tensor([[0., 3.]], requires_grad=True)
+    loss = known_bce(logits, torch.tensor([[1., 0.]]), torch.tensor([[1., 0.]]))
+    loss.backward()
+    assert logits.grad[0, 0] != 0 and logits.grad[0, 1] == 0
+    c, v = CategoryHead(128, 78, 9107), CategoryHead(768, 78, 9107)
+    assert torch.equal(c.classifier.weight, v.classifier.weight)
+
+
+def test_cached_normalization_preserves_learned_affine_after_spatial_pool():
+    torch.manual_seed(82)
+    tokens = torch.randn(3, 8, 12)
+    gamma, beta = torch.randn(12), torch.randn(12)
+    direct = torch.nn.functional.layer_norm(tokens, (12,), gamma, beta).mean(1)
+    pooled = torch.nn.functional.layer_norm(tokens, (12,)).mean(1) * gamma + beta
+    assert torch.allclose(direct, pooled, atol=3e-7)

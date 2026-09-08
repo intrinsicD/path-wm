@@ -7,9 +7,12 @@ from world_model.curriculum.perception_cache import ROOT
 
 
 def refresh():
-    return write_experiment_dashboard(ROOT,
-        artifact_path=Path('runs/experiment_dashboard.artifact.json'),
-        html_path=Path('runs/experiment_dashboard.html'))
+    import fcntl
+    with (ROOT / 'dashboard.lock').open('w') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        return write_experiment_dashboard(ROOT,
+            artifact_path=Path('runs/experiment_dashboard.artifact.json'),
+            html_path=Path('runs/experiment_dashboard.html'))
 
 
 if __name__ == '__main__':

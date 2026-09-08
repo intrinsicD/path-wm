@@ -41,13 +41,20 @@ were exported. App heartbeat `overnight-perception-architecture-experiments`
 continues this task every half hour and must be paused after the morning report.
 GPU is RTX3050/8GB; starting free disk28GB. The development slice now passes16
 targeted scientific checks, four tiny head fits and full-cache identity audits.
-Every completed unit's dashboard passed browser verification. P1 is ready to seal
-and launch:6fits,4,000updates,40minute cap per fit (prospectively increased after
+Every completed unit's dashboard passed browser verification. P1 is sealed and
+running:6fits,4,000updates,40minute cap per fit (prospectively increased after
 development timing; original20minute proposal was not a measured fit duration).
 Coordinator: `scripts/execute_perception_overnight.py`; live handoff/receipts:
 `runs/perception_overnight_2026-09-08/active.json` and `execution.jsonl`.
 Do not modify its sealed training files during P1. Implement conditional stages
 in separate modules/protocol amendments while the six fits execute.
+
+The [category-accessibility probe](perception-semantic-protocol-2026-09-08.md) now
+has prepared crop-visible labels (78training-supported classes), green semantic
+checks and two verified development fits. Its six paired, independent CPU fits
+run through `scripts/execute_perception_semantics.py` alongside GPU P1; no encoder
+or P1 head changes. Read `runs/perception_overnight_2026-09-08/semantics/execution.jsonl`
+and its coordinator log for progress. Reused held-outs remain exploratory.
 
 ## Complete: earlier encoder investigation (8 September)
 
