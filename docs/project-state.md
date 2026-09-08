@@ -46,6 +46,15 @@ in the inspected implementation/results. A bounded fusion comparison and a small
 software action/outcome benchmark are proposed, not launched; historical fixed
 multimodal token counts remain unadopted.
 
+The user then requested more-depth/more-level analysis and explicit coworking
+with Claude. The [completed three-exchange review](encoder-depth-scale-cowork-2026-09-08.md)
+proposes a bounded readout/pretrained-reference slice, then depth {0,2} by
+cross-scale exchange {off,on}, retaining the 320×64 latent layout. Extra scales,
+registers and other fusion are conditional follow-ups. Claude accepted verified
+corrections about existing frozen targets/P5 training, interfaces and unsupported
+quantization/causal claims. Only design and literature work ran; no new model
+training, protocol adoption or checkpoint change.
+
 ## Complete: frozen PushT pose-head comparison (8 September)
 
 User authorized the [bottleneck protocol](world-model-next-experiments-2026-09-08.md),

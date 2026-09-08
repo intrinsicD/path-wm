@@ -1521,3 +1521,33 @@ tree:
   - N94
   - N92
   status: open
+
+- id: N96
+  type: question
+  title: More encoder hierarchy levels or more residual processing depth?
+  provenance: user
+  timestamp: 2026-09-08T11:51+02:00
+  description: User asks whether two spatial levels are insufficient, whether four or another count is preferable,
+    and whether residual or other layers before latent export are needed. Literature and code review distinguish
+    depth, internal scales, exported state size and input detail; performance remains untested.
+  evidence:
+  - docs/encoder-depth-scale-cowork-2026-09-08.md
+  also_depends_on:
+  - N95
+  status: open
+- id: N97
+  type: decision
+  title: Cowork with Claude on depth, scales and the earlier world-model design points
+  provenance: user
+  timestamp: 2026-09-08T11:51+02:00
+  choice: User explicitly requests discussion and a proposal with Claude. Three focused CLI exchanges completed;
+    code/source checks corrected unsupported diagnoses before recording the joint proposal. No model run authorized
+    or started by this design request.
+  evidence:
+  - docs/encoder-depth-scale-cowork-2026-09-08.md
+  - runs/architecture_cowork_2026-09-08/claude_brief.md
+  - runs/architecture_cowork_2026-09-08/claude_round3.md
+  - runs/architecture_cowork_2026-09-08/claude_round3.receipt.json
+  also_depends_on:
+  - N96
+  status: resolved

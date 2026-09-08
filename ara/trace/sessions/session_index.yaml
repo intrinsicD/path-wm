@@ -30,8 +30,8 @@ sessions:
 - id: 2026-09-08_001
   date: '2026-09-08'
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
-    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning. Turn5 completes three decoder recovery arms, full evaluation and Claude literature review; 359 tests and browser QA pass. Turn6 executes only the narrowed PushT pose-head comparison; spatial orientation improves with object-position tradeoff, all readiness gates fail; 362 tests and final browser QA pass. Turn7 traces pose provenance; turn8 researches general representations and records a modular perception proposal without new training. Turn9 traces cross-scale evidence and documents a general-agent loop for software, generated actions, internal computation and driving; no new runs.'
-  turn_count: 9
-  events_count: 35
+    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning. Turn5 completes three decoder recovery arms, full evaluation and Claude literature review; 359 tests and browser QA pass. Turn6 executes only the narrowed PushT pose-head comparison; spatial orientation improves with object-position tradeoff, all readiness gates fail; 362 tests and final browser QA pass. Turn7 traces pose provenance; turn8 researches general representations and records a modular perception proposal without new training. Turn9 traces cross-scale evidence and documents a general-agent loop for software, generated actions, internal computation and driving; no new runs. Turn10 completes depth/scale research and three Claude exchanges; agreed diagnostic/reference then depth-by-exchange proposal, no new model runs.'
+  turn_count: 10
+  events_count: 38
   claims_touched: [C04]
-  open_threads: 9
+  open_threads: 10

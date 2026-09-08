@@ -808,3 +808,23 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O49
+  timestamp: 2026-09-08T11:51+02:00
+  provenance: ai-suggested
+  content: Codex and Claude propose a bounded readout/pretrained-reference slice, then a depth0/2 by cross-scale
+    exchangeoff/on four-arm comparison with320x64outputs retained. Candidate adds two64-channel residual spatial
+    blocks per emitted branch after fine projection/coarse convolution. More internal context, exported scales,
+    registers and other fusion remain conditional. This tests a residual-depth package including parameters and
+    normalization, not pure depth or an established capacity bottleneck.
+  context: Three completed Claude exchanges; verified existing frozen targets and P5 free-running training,
+    hardcoded interfaces, architecture arithmetic and source literature. Claude withdrew quantization-floor,
+    seed-noise and causal diagnostic claims. User requested coworking, not adoption of the agreed proposal.
+  potential_type: architecture
+  bound_to:
+  - N96
+  - N97
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
