@@ -69,14 +69,15 @@ RGB MSE is1.58e-5 and actual/source pose drift is small. This supports testing f
 geometry while keeping renderer differences explicit; no model results on these
 cases existed at preparation.
 
-`scripts/prepare_perception_followups.py` is queued behind P1 completion. It will
-run the six frozen fresh evaluations, then50-update development profiles for the
+`scripts/prepare_perception_followups.py` completed after P1: the six frozen fresh
+evaluations and50-update development profiles for the
 [matched encoder extensions](perception-extension-protocol-2026-09-08.md). Queue
 log: `runs/perception_overnight_2026-09-08/followup_coordinator.log`; completion:
-`followups_ready.json`. Inspect those profiles, commit the development slice and
-seal the nine formal extension fits before launching them. The exact-initial-
-function, gate-gradient and optimizer-group tests already pass. Pending extension
-implementation files are intentional development work, not frozen formal results.
+`followups_ready.json`. The exact-initial-function, gate-gradient and optimizer-group
+tests pass. All three development profiles completed and passed dashboard verification;
+the formal nine-fit comparison now seals and launches through
+`scripts/execute_perception_extensions.py`. Do not change its sealed encoder-training
+files while it runs; use separate modules for subsequent readouts and report figures.
 
 The canonical dashboard now has per-seed capability tables and category/fresh
 comparison charts, independently checked against raw pose predictions/AP scores.

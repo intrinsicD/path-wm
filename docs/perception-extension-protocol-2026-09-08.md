@@ -81,3 +81,20 @@ directory. We corrected claims that both-grid access proves useful utilization o
 that scale-access tests cannot fail readiness. The zero-gate, explicit positional
 placement and mixed-supervision controls were reconciled. The implementing agent
 remains responsible for code/data verification and measured conclusions.
+
+## Development completion and formal freeze
+
+All three50-update development runs completed and their dashboards passed browser
+verification. Measured fitting times were9.47s (`joint`),35.56s (`conv`) and19.24s
+(`transformer`), with startup/runtime outliers; median update intervals after20
+updates were about0.15–0.17s. Peak allocated CUDA memory was493/523/597MB.
+The encoder parameter counts are390,240/685,668/590,184 respectively; the three
+typed heads are identical in size and initialization across arms. The gates open
+from exactly zero and their recorded gradients behave as intended.
+
+Keep the prospective20-minute formal cap and4,000-update target. The nine-fit
+coordinator seals the exact source/data/protocol identities and Git revision after
+P1 completes. Source snapshots are retained under `extensions/frozen_source`.
+The full13 new scientific-invariant tests pass, including the earlier frozen-head,
+category, fresh-cohort and extension checks. Development data are only prefixes
+and do not justify a model-quality claim.
