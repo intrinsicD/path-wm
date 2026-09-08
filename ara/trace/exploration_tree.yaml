@@ -1487,3 +1487,19 @@ tree:
   - world_model/curriculum/bottleneck_models.py:16
   - world_model/curriculum/pose_accessibility.py:141
   status: resolved
+
+- id: N94
+  type: question
+  title: Should pose define the representation, and how can perception support additional properties?
+  provenance: user
+  timestamp: 2026-09-08T11:08+02:00
+  description: User requests literature-backed reassessment of position/orientation learning and a versatile
+    encoder/decoder supporting extent and other outputs. Primary-source review and a staged implementation
+    design completed; architecture selection and performance remain unresolved, with no new model run.
+  evidence:
+  - docs/versatile-perception-architecture-2026-09-08.md
+  also_depends_on:
+  - N90
+  - N92
+  - N93
+  status: open

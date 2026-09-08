@@ -767,3 +767,24 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O47
+  timestamp: 2026-09-08T11:08+02:00
+  provenance: ai-suggested
+  content: Propose shared spatial features with independent RGB/geometric readouts and explicit causal temporal
+    state. Pose is an optional readout/auxiliary target; masks can expose visible shape and derived extent.
+    First compare current frozen E and a small pretrained E on multiple outputs, then test shared output queries
+    or object grouping only if warranted. Query flexibility does not guarantee arbitrary unseen properties,
+    metric geometry or successful control. Architecture combination is not validated by its component papers.
+  context: N94 primary-source review includes DINO-WM, V-JEPA 2, RAE, DINOSAUR, Perceiver IO and the JEPA-WM design
+    study. Local COCO instance metadata match all prepared images, but transformed masks are not yet prepared.
+    Design is documented, with no implementation, adopted protocol, training or new empirical resolution.
+  potential_type: architecture
+  bound_to:
+  - N94
+  - N89
+  - N92
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

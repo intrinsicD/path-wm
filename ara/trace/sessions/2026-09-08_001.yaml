@@ -2,10 +2,10 @@ session:
   id: 2026-09-08_001
   date: '2026-09-08'
   started: 2026-09-08T03:03+02:00
-  last_turn: 2026-09-08T10:35+02:00
-  turn_count: 7
+  last_turn: 2026-09-08T11:08+02:00
+  turn_count: 8
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
-    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning. Turn5 completes three decoder recovery arms, full evaluation and Claude literature review; 359 tests and browser QA pass. Turn6 executes only the narrowed PushT pose-head comparison; spatial orientation improves with object-position tradeoff, all readiness gates fail; 362 tests and final browser QA pass.'
+    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning. Turn5 completes three decoder recovery arms, full evaluation and Claude literature review; 359 tests and browser QA pass. Turn6 executes only the narrowed PushT pose-head comparison; spatial orientation improves with object-position tradeoff, all readiness gates fail; 362 tests and final browser QA pass. Turn7 traces pose provenance; turn8 researches general representations and records a modular perception proposal without new training.'
 events_logged:
 - turn: 1
   type: decision
@@ -214,6 +214,19 @@ events_logged:
   provenance: ai-suggested
   summary: Exact label/head provenance and common-translation ambiguity; empirical cause unproven.
 
+- turn: 8
+  type: question
+  id: N94
+  routing: direct
+  provenance: user
+  summary: Reassess explicit pose versus general representations and extensible decoding using literature.
+- turn: 8
+  type: observation
+  id: O47
+  routing: staged
+  provenance: ai-suggested
+  summary: Shared spatial representation, multiple readouts and separate temporal prediction; proposed transfer benchmark unadopted.
+
 ai_actions:
 - turn: 1
   action: 'Completed the continuous September7–8 task: source verification/grouped image preparation; matched training
@@ -285,6 +298,16 @@ ai_actions:
   files_changed:
   - ara/
 
+- turn: 8
+  action: Reviewed primary literature and current feature interfaces; checked local COCO instance metadata and
+    image-manifest matches; wrote a concrete architecture and implementation proposal with diagram and limits.
+    No model changes, training, inference, dashboard refresh or new model tests.
+  provenance: ai-executed
+  files_changed:
+  - docs/versatile-perception-architecture-2026-09-08.md
+  - docs/project-state.md
+  - ara/
+
 claims_touched:
 - id: C04
   action: crystallized
@@ -310,6 +333,10 @@ key_context:
 - turn: 7
   excerpt: 'User: let us re-evaluate this; where exactly is object position and orientation coming from?'
 
+- turn: 8
+  excerpt: 'Should we really learn positions and orientations? What if we need additional things like extent?
+    What does the literature say about a powerful versatile and flexible encoder decoder architecture?'
+
 open_threads:
 - PushT pose generalization/optimization and generic retention remain unresolved; no further training queued.
 - Paddle control improved but memory/prediction/90%targets fail; a runtime-matched multi-seed study would be needed
@@ -319,7 +346,9 @@ open_threads:
 - N92 frozen-feature pose readout comparison complete; object-position tradeoff unresolved. Reassess before O45 or other follow-ups.
 - N86 decoder refit completed through N89; broader representation and task-head questions remain open.
 - N87 task-conditioning location and its advantage over an equally trained unconditioned decoder remain open.
+- N94 broader representation and multiple-output design remains a proposal; compare useful outputs before adopting a replacement.
 ai_suggestions_pending:
+- O47 frozen pretrained/current encoder comparison with RGB and mask/extent readouts is proposed, not launched.
 - O45 decoupled geometry/loss comparison is unadopted; Paddle and conditioning studies deferred by user.
 - O42 conditional decoder proposal is untested; user question is not architecture adoption.
 - O41 adopted as H13; O43 measured recoverability interpretation remains staged.

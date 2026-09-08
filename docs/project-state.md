@@ -25,6 +25,19 @@ Read the [paddle results](paddle-world-model-results-2026-09-07.md),
 [canonical dashboard](../runs/experiment_dashboard.html), and
 [portable continuation handoff](session-handoff-2026-09-07.md).
 
+## Architecture reassessment (8 September; proposal)
+
+After the completed first diagnostic, the user requested a literature-based
+reassessment of explicit pose versus a more general, extensible encoder/decoder.
+The [design and implementation proposal](versatile-perception-architecture-2026-09-08.md)
+recommends a shared spatial representation, independent output readouts and
+explicit temporal state. Pose remains one diagnostic/output; a proposed first
+comparison tests current frozen E against a small pretrained E with RGB and
+mask/extent readouts. Local COCO instance annotations match the prepared images;
+their transformed masks still need preparation and verification. Shared query
+decoding and object grouping are later candidates, not adopted components.
+This review launched no training and changed no model or existing readiness gate.
+
 ## Complete: frozen PushT pose-head comparison (8 September)
 
 User authorized the [bottleneck protocol](world-model-next-experiments-2026-09-08.md),
