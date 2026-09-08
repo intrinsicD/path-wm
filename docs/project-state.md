@@ -125,7 +125,17 @@ the redundant bias differences retained separately. The invariance test passes.
 Four revision2 development units wait for the D2 formal queue in
 `development/localization_v2/` through `scripts/prepare_perception_localization.py`
 (PID3270408 at launch). After those pass, commit and seal the six geometry fits.
-Total declared program:33vision/geometry and15category fits. Never overlap GPU fits.
+The adaptive [split decoder follow-up](perception-independent-decoder-protocol-2026-09-09.md)
+adds three paired fits with identical early/context inputs and fixed endpoints.
+Each typed output owns its trunk, while the common optimizer/clipping rule remains.
+This changes sharing/capacity and cross-domain transfer, not fully independent
+optimization. Claude's public review accepted this scope and withdrew a doubled
+training-compute estimate: both paths already use three task passes per update.
+Actual parameters, timing and clipped fractions are reported. Its two essential
+initial-function/ownership tests pass; the50-update CPU development unit is active.
+After development and commit, seal it through `scripts/execute_perception_independent.py`.
+GPU ordering: D2 → localization_v2 development → split trunks → formal localization.
+Total declared program:36vision/geometry and15category fits. Never overlap GPU fits.
 
 The source-reconciled [technical report plan](perception-report-plan-2026-09-08.md)
 is implemented in `world_model/curriculum/perception_summary.py` and

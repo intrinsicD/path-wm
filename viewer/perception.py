@@ -33,7 +33,7 @@ def verify_pose_record(path, expected):
 
 def add_perception_views(runs, datasets, charts, tables, chart, table, source_id):
     candidates = [r for r in runs if r.kind == 'curriculum_analysis' and 'development' not in Path(r.label).parts]
-    rows = []; semantics = []; fresh = []; decoders = []; reliance = []; localization = []; interventions = []; directional = []; attention = []
+    rows = []; semantics = []; fresh = []; decoders = []; independent = []; reliance = []; localization = []; interventions = []; directional = []; attention = []
     for run in candidates:
         purpose = run.context.get('purpose')
         if purpose in ('Frozen representation and independent typed readouts', 'Mixed-supervision encoder continuation'):
@@ -100,7 +100,7 @@ def add_perception_views(runs, datasets, charts, tables, chart, table, source_id
                 interior_pass=f['boundary_slices']['interior']['per_case_pass'],
                 location_entropy=f['location_entropy_mean'],target_support_mass=f['target_support_mass_mean'],
                 fitting_seconds=result['elapsed_seconds'],source=str(path.relative_to(PROJECT))))
-        elif purpose == 'Task-conditioned dense decoding':
+        elif purpose in ('Task-conditioned dense decoding','Split dense decoder trunks'):
             path=source_file(run,'evaluation.json'); e=json.loads(path.read_text())
             manifest=json.loads(source_file(run,'curriculum_manifest.json').read_text())
             result=json.loads(source_file(run,'curriculum_result.json').read_text()); config=manifest['config']
@@ -111,9 +111,12 @@ def add_perception_views(runs, datasets, charts, tables, chart, table, source_id
                 if domain=='coco' and not np.isclose(raw['iou'][raw['has_valid'].astype(bool)].mean(),e['test']['coco']['iou'],atol=1e-12):
                     raise DashboardDataError(f'{path}: decoder IoU mismatch')
             c,p=e['test']['coco'],e['test']['pusht']
-            decoders.append(dict(arm=config['kind'],seed=config['seed'],status=result['status'],updates=result['step'],
+            destination=independent if purpose=='Split dense decoder trunks' else decoders
+            training=[json.loads(line) for line in (path.parent/'training.jsonl').read_text().splitlines()]
+            destination.append(dict(arm=config['kind'],seed=config['seed'],status=result['status'],updates=result['step'],
                 mask_iou=c['iou'],mask_dice=c['dice'],coco_mse=c['image_mse'],pusht_mse=p['image_mse'],
                 parameters=manifest['parameters']['decoder'],fitting_seconds=result['elapsed_seconds'],
+                global_clip_fraction=float(np.mean([r['grad_norm']>1 for r in training])),
                 rgb_ms_per_image=e['timing']['rgb_milliseconds_per_image'],mask_ms_per_image=e['timing']['mask_milliseconds_per_image'],
                 both_ms_per_image=e['timing']['both_milliseconds_per_image'],source=str(path.relative_to(PROJECT))))
         elif purpose == 'Generic category-accessibility readout':
@@ -196,6 +199,14 @@ def add_perception_views(runs, datasets, charts, tables, chart, table, source_id
              ('mask_dice','Mask Dice'),('coco_mse','COCO MSE'),('pusht_mse','PushT MSE'),('parameters','Parameters'),
              ('fitting_seconds','Fit seconds'),('both_ms_per_image','Both outputs ms/image'),('source','Raw evaluation')],
             'seed','Decoder timing uses prepared inputs, batch32. Unconditioned trunks are reused for both outputs; conditioned outputs use two passes.'))
+    if independent:
+        name='perception_independent'; datasets[name]=independent
+        tables.append(table(name,'Split decoder trunks with joint gradient clipping',
+            [('arm','Arm'),('seed','Seed'),('status','Status'),('updates','Updates'),('mask_iou','Mask IoU'),
+             ('coco_mse','COCO MSE'),('pusht_mse','PushT MSE'),('parameters','Parameters'),
+             ('global_clip_fraction','Clipped updates fraction'),('fitting_seconds','Fit seconds'),
+             ('rgb_ms_per_image','RGB ms/image'),('mask_ms_per_image','Mask ms/image'),('both_ms_per_image','Both ms/image'),('source','Raw evaluation')],
+            'seed','Same early/final/pooled inputs as D2 early. Separate parameters change sharing and cross-domain transfer; the common clipping coefficient still couples branch scales.'))
     if reliance:
         name='perception_decoder_reliance';datasets[name]=reliance
         tables.append(table(name,'Frozen decoder reliance on supplied inputs',

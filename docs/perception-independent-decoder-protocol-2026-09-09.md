@@ -23,6 +23,13 @@ all decoder parameters preserve the D2 clipping convention. Parameter sharing
 is removed; global clipping can still couple gradient scales. Do not label the
 disjoint trunks' gradient cosine as shared-feature interference. Log individual
 losses and global gradient norm, with no new loss weights or normalization sweep.
+Report the fraction of updates clipped. The intervention changes parameter
+ownership and cross-domain gradient transfer (PushT RGB can update the shared mask
+trunk); the clipping coefficient still depends on both branches. It therefore
+does not isolate fully independent optimization. Claude accepted this narrow
+interpretation after public conceptual review. Both trainers already perform
+three separate trunk passes per update, so doubling training compute is not
+assumed; doubled storage and two-output inference costs are measured.
 
 All fits use the fixed4,000-update endpoint; full validation every100 is monitoring.
 Evaluate the same512COCO/2506PushT test frames, full validation and512training-prefix
@@ -40,6 +47,9 @@ helpers are reused unchanged; its archived source and active training files rema
 untouched. The measured D2GPU fits finish within roughly8minutes, but retain a
 conservative20minute cap per new fit (three fits<=60minutes), without extrapolating
 CPU development timing into a GPU guarantee.
+Before every formal fit's first optimizer step, verify actual GPU FP32 outputs
+against the initial shared decoder on four real COCO and four real PushT inputs,
+with maximum RGB and mask-logit absolute difference at most2e-5.
 
 One GPU workload at a time. Wait for D2 completion and the queued localization_v2
 development units, then run this three-fit comparison before the six formal
