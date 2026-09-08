@@ -5,6 +5,11 @@ They restore the reusable process from `eca742a:CLAUDE.md` (before reset `6a1b37
 Current architecture, datasets, hypotheses, target runs and results belong in
 [project-state.md](project-state.md), experiment configs and protocol reports.
 
+For substantial scientific decisions and reviews, follow the user-adopted
+[critical collaboration with Claude](claude-collaboration-workflow.md). Check its
+recommendations against code and evidence and preserve disagreements/corrections;
+peer agreement does not replace a controlled experiment.
+
 ## Work in four-step vertical slices
 
 Build the thinnest end-to-end path from data/environment to a measured result on
