@@ -35,7 +35,11 @@ with essential tests, a tiny profile, frozen budgets and three paired seeds.
 This authorization supersedes historical restrictions below on further encoder
 experiments. Additional scales/registers remain conditional; existing readiness
 gates, reference checkpoints and grouped holdouts stay in force. Implementation
-is active; no new empirical outcome is claimed yet.
+is complete through tiny development slices and verified HTML. A1 completed both
+6,000-update frozen-head diagnostics: neither passes readiness. A2 frozen
+DINO/custom reference comparisons are running. The four-arm study has frozen
+4,000-update budgets and seeds7107/7108/7109; existing stage gates still apply.
+The full default suite passed369 tests (3 browser opt-ins handled separately).
 
 ## Architecture reassessment (8 September; proposal)
 
