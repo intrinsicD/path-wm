@@ -25,23 +25,47 @@ Read the [paddle results](paddle-world-model-results-2026-09-07.md),
 [canonical dashboard](../runs/experiment_dashboard.html), and
 [portable continuation handoff](session-handoff-2026-09-07.md).
 
-## Active: encoder investigation (8 September; authorized)
+## Complete: encoder investigation (8 September)
 
 The user accepted the [co-designed encoder sequence](encoder-depth-scale-cowork-2026-09-08.md)
 and requested reusable critical Claude collaboration. That method is now part of
-[the standing workflow](claude-collaboration-workflow.md). Execute the
-[bounded diagnostic/reference and depth-by-exchange study](encoder-study-protocol-2026-09-08.md),
-with essential tests, a tiny profile, frozen budgets and three paired seeds.
-This authorization supersedes historical restrictions below on further encoder
-experiments. Additional scales/registers remain conditional; existing readiness
-gates, reference checkpoints and grouped holdouts stay in force. Implementation
-is complete through tiny development slices and verified HTML. A1 completed both
-6,000-update frozen-head diagnostics: neither passes readiness. A2 frozen
-DINO/custom reference comparisons are running. The four-arm study has frozen
-4,000-update budgets and seeds7107/7108/7109; existing stage gates still apply.
-The full default suite passed369 tests (3 browser opt-ins handled separately).
+[the standing workflow](claude-collaboration-workflow.md). The
+[bounded diagnostic/reference and depth-by-exchange study](encoder-study-protocol-2026-09-08.md)
+is complete: 33 formal runs, 110,000 updates and 12,160,000 frame presentations.
+Read the [final results and interpretation](encoder-study-results-2026-09-08.md)
+and [verified dashboard](../runs/experiment_dashboard.html). No jobs remain active.
 
-## Architecture reassessment (8 September; proposal)
+Adding two residual blocks per branch with exchange enabled improves selected
+validation q by 44–52% in all three paired seeds. Test orientation improves from
+24.75–30.76° to 2.18–2.90°, but pusher position leaves test q at 1.07–1.41.
+All 12 validation gates fail, so no compatible U/P training or control comparison
+was triggered. Exchange helps the deeper stack; it worsens selected validation q
+in the shallow stack. The intervention includes extra parameters/normalization
+and does not establish a general advantage for attention or depth alone.
+
+The frozen-head/DINO diagnostics also fail readiness. DINO's common foreground
+readout reaches IoU 0.583 versus the always-foreground 0.324 baseline despite worse
+RGB reconstruction. Deeper custom encoders remain weak on this audit; pose and
+pixel reconstruction alone do not establish general representation quality.
+The raw native DINO head's instability and prospective fixed-scaling correction
+are both preserved. Internal-state figures show observed states, not predictions.
+
+The full suite passes 379 tests including browser checks. The final HTML passes
+browser verification at laptop/mobile widths. A post-training
+[checkpoint integration repair](encoder-checkpoint-loading-note.md) preserves
+depth/exchange on load/export and rejects unsupported legacy paths; all 12 trained
+E/H/D outputs match the experiment factory exactly. Frozen training source is
+preserved at b95906cabdad0c3df7d2ff0aa70196729b5e4c33.
+
+Recommended next decision: use deeper/on as the reference and compare a longer
+unchanged budget against a prospectively calibrated position/angle objective.
+These follow-ups are proposed, not already launched. Additional scales, registers,
+higher resolution, conditioning/fusion and software-persistence tasks remain
+staged. Preserve the existing references, readiness gates and grouped holdouts;
+no arbitrary architecture sweep is scheduled. This completed authorization
+superseded historical restrictions below during A/B execution.
+
+## Architecture reassessment (8 September; historical proposals)
 
 After the completed first diagnostic, the user requested a literature-based
 reassessment of explicit pose versus a more general, extensible encoder/decoder.
@@ -57,10 +81,10 @@ This review launched no training and changed no model or existing readiness gate
 The user then broadened the discussion to software use, generated outputs as
 actions, internal computation and driving. The [general-agent clarification](general-agent-world-model-2026-09-08.md)
 separates visual cross-scale fusion from temporal/task hierarchy and distinguishes
-action generation from observation decoding. No trained cross-scale ablation exists
-in the inspected implementation/results. A bounded fusion comparison and a small
-software action/outcome benchmark are proposed, not launched; historical fixed
-multimodal token counts remain unadopted.
+action generation from observation decoding. At that point no trained cross-scale
+ablation existed. The study above now supplies a perception-only trained comparison;
+a software action/outcome benchmark remains proposed. Historical fixed multimodal
+token counts remain unadopted.
 
 The user then requested more-depth/more-level analysis and explicit coworking
 with Claude. The [completed three-exchange review](encoder-depth-scale-cowork-2026-09-08.md)
@@ -68,8 +92,8 @@ proposes a bounded readout/pretrained-reference slice, then depth {0,2} by
 cross-scale exchange {off,on}, retaining the 320×64 latent layout. Extra scales,
 registers and other fusion are conditional follow-ups. Claude accepted verified
 corrections about existing frozen targets/P5 training, interfaces and unsupported
-quantization/causal claims. Only design and literature work ran; no new model
-training, protocol adoption or checkpoint change.
+quantization/causal claims. That review itself ran only design/literature work;
+the subsequently authorized A/B execution is recorded above.
 
 ## Complete: frozen PushT pose-head comparison (8 September)
 

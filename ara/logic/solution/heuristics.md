@@ -126,3 +126,22 @@
 - **Code ref**: [trainer](../../../world_model/curriculum/training.py), [matched experiment](../../../world_model/curriculum/decoder_recovery.py), [results](../../../docs/decoder-recovery-results-2026-09-08.md).
 - **From staging**: O41
 - **Evidence of adoption**: N88; user said yes, do that; N89 records execution. This does not adopt O42 or additional architecture changes.
+
+
+## H14: Use critical, scoped Claude collaboration for consequential research decisions
+- **Rationale**: The user adopts independent review followed by source checks and concrete reconciliation, retaining retractions and disagreements. Actual Claude is required when named; routine edits do not require delegation. Agreement is not empirical validation and does not authorize new scope or denied payloads.
+- **Provenance**: user
+- **Crystallized via**: verbal-affirmation
+- **Sensitivity**: high; value depends on evidence quality, independent verification and appropriately scoped access, not the number of agreeing agents.
+- **Code ref**: [standing workflow](../../../docs/claude-collaboration-workflow.md), [experiment workflow](../../../docs/experiment-workflow.md).
+- **From staging**: O50
+- **Evidence of adoption**: N98; explicit request to remember and integrate the method. N103 and the [report](../../../docs/encoder-study-results-2026-09-08.md) retain successful protocol exchanges and rejected extra transfer.
+
+## H15: Load model behavior from explicit checkpoint metadata
+- **Rationale**: A disabled computation path may retain identical tensor names. Standard observer loading and export must preserve the declared encoder variant, and unsupported legacy entry points must fail before constructing a different behavior.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; weight-only fingerprints do not describe every behavioral configuration. Preserve metadata and compatible downstream identities.
+- **Code ref**: [load/export](../../../world_model/pusht/checkpoints.py), [contract tests](../../../tests/test_encoder_checkpoint_contract.py), [repair note](../../../docs/encoder-checkpoint-loading-note.md).
+- **From staging**: O54
+- **Evidence of commitment**: N103; implemented in507775a after exact frozen training completion. Six contract tests and exact E/H/D equality for all12 trained checkpoints pass; [evidence](../../evidence/tables/encoder_study_2026-09-08.json).

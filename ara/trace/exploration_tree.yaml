@@ -1551,3 +1551,107 @@ tree:
   also_depends_on:
   - N96
   status: resolved
+
+- id: N98
+  type: decision
+  title: Adopt the encoder study and recurring critical Claude workflow
+  provenance: user
+  timestamp: 2026-09-08T14:27+02:00
+  choice: User explicitly accepts the co-designed A/B proposal and requests that the Claude collaboration method
+    be remembered and integrated. Freeze the bounded protocol; additional scales/registers/software work remains
+    staged.
+  evidence:
+  - docs/claude-collaboration-workflow.md
+  - docs/encoder-study-protocol-2026-09-08.md
+  also_depends_on:
+  - N96
+  - N97
+  status: resolved
+- id: N99
+  type: experiment
+  title: Bounded frozen-head and DINO reference diagnostics completed
+  provenance: ai-executed
+  timestamp: 2026-09-08T14:27+02:00
+  result: Two 6000-update spatial-head packages and four reference fits completed. Coupled test angle 7.98 degrees/q2.32;
+    independent 20.98/q2.10; custom fresh D/H q2.33; DINO adapter q2.29. Raw native head unstable; one prospectively
+    declared fixed-scaling control preserves linear function class and reaches q1.65. All readiness gates fail;
+    no information-loss attribution.
+  evidence:
+  - ara/evidence/tables/encoder_study_2026-09-08.json
+  - docs/encoder-study-results-2026-09-08.md
+  also_depends_on:
+  - N98
+  - N92
+  status: resolved
+- id: N100
+  type: experiment
+  title: Three paired seeds complete the depth-by-exchange comparison
+  provenance: ai-executed
+  timestamp: 2026-09-08T14:27+02:00
+  result: All12 arms complete4000 updates/batch128 with matched shared tensors, draws and validation. Deeper/on
+    validation q improves51.43/44.42/52.10 percent; test angle2.207/2.902/2.177 degrees versus24.747/30.759/29.897.
+    Exchange improves deeper validation q32.63/24.22/48.33 percent but worsens shallow validation. Every validation
+    gate fails. Residual package includes capacity/normalization; reused holdouts and conditional group intervals
+    do not establish general control.
+  evidence:
+  - ara/evidence/tables/encoder_study_2026-09-08.json
+  - docs/encoder-study-results-2026-09-08.md
+  also_depends_on:
+  - N98
+  - N95
+  - N96
+  status: resolved
+- id: N101
+  type: experiment
+  title: Fifteen common frozen-encoder RGB and foreground probes completed
+  provenance: ai-executed
+  timestamp: 2026-09-08T14:27+02:00
+  result: Identical fresh decoders,2000updates and4096/512/512COCOviews for3references+12variants. DINO adapter
+    IoU0.5832 versus full-foreground0.3235, despite RGBMSE0.037109. Task-only customA IoU0.3183/RGB0.007349; warmupE0.3090/0.005035.
+    Deeper/on IoU0.3156/0.3354/0.3077; onlyone exceeds full baseline. These measure union coverage, not instances/extent;
+    customA/warmup are different lineages, not matched forgetting.
+  evidence:
+  - ara/evidence/tables/encoder_study_2026-09-08.json
+  - docs/encoder-study-results-2026-09-08.md
+  also_depends_on:
+  - N98
+  - N99
+  - N100
+  - N94
+  status: resolved
+- id: N102
+  type: decision
+  title: Apply unchanged failed perception gates before downstream training
+  provenance: ai-executed
+  timestamp: 2026-09-08T14:27+02:00
+  choice: Zero of12 factorial models passes q<=1, so no compatible U/P/control training is triggered. Preserve all
+    references and completed budgets. Stronger static geometry does not establish planning quality; next budget/loss
+    and architecture extensions remain proposals.
+  evidence:
+  - runs/encoder_study_2026-09-08/gate_audit.json
+  - ara/evidence/tables/encoder_study_2026-09-08.json
+  also_depends_on:
+  - N100
+  - N101
+  - N98
+  status: resolved
+- id: N103
+  type: experiment
+  title: Checkpoint identity and final evidence verification completed
+  provenance: ai-executed
+  timestamp: 2026-09-08T14:27+02:00
+  result: Six informative loader-contract failures repaired only after frozen training completion. All12 trained
+    E/H/D outputs match standard loading exactly. Full379tests pass with browser opt-ins;33formalruns/110000updates/12160000presentations
+    reconcile. Internals and scientific figures inspected. Oversized dashboard embedding failure preserved and repaired
+    with matched compact panels; final browser QA passes. Two Claude protocol exchanges succeeded; extra source/results
+    export rejected before sending, local code review used.
+  evidence:
+  - ara/evidence/tables/encoder_study_2026-09-08.json
+  - docs/encoder-checkpoint-loading-note.md
+  - runs/encoder_study_2026-09-08/reporting_correction.json
+  also_depends_on:
+  - N98
+  - N99
+  - N100
+  - N101
+  status: resolved

@@ -44,7 +44,12 @@ def integrity():
                     np.testing.assert_allclose(pos,metric['position_mae'],rtol=0,atol=1e-10)
                     np.testing.assert_allclose([angle,q],[metric['angle_mae_deg'],metric['q']],rtol=0,atol=1e-10)
                 if 'image_mse' in raw:np.testing.assert_allclose(raw['image_mse'].mean(),metric['image_mse'],rtol=0,atol=1e-12)
-                if 'iou' in raw:np.testing.assert_allclose(raw['iou'][raw['has_valid'].astype(bool)].mean(),metric['iou'],rtol=0,atol=1e-12)
+                if 'iou' in raw:
+                    valid=raw['has_valid'].astype(bool)
+                    for name in ('iou','dice','mask_bce'):
+                        np.testing.assert_allclose(raw[name][valid].mean(),metric[name],rtol=0,atol=1e-12)
+                    if len(valid)!=metric['frames'] or int(valid.sum())!=metric['mask_frames']:
+                        raise AssertionError(f'mask population mismatch {p}:{split}')
             checks[str(p.parent.relative_to(ROOT))]={'selection_and_raw_metrics':'passed','updates':len(train),'result_sha256':file_hash(p)}
             counts['completed_runs']+=1;counts['updates']+=len(train);counts['presentations']+=r['examples'];paths.append(p)
     paired={}
@@ -62,6 +67,14 @@ def integrity():
         base=[r['sample_indices_sha256'] for r in lines(probes[0]/'training.jsonl')]
         if any([r['sample_indices_sha256'] for r in lines(p/'training.jsonl')]!=base for p in probes[1:]):raise AssertionError('probe draws unpaired')
         if len({read(p/'curriculum_manifest.json')['initial'] for p in probes})!=1:raise AssertionError('probe D/M initialization changed')
+        for split in ('train','validation','test'):
+            with np.load(probes[0]/f'{split}_errors.npz') as base:
+                for p in probes[1:]:
+                    with np.load(p/f'{split}_errors.npz') as raw:
+                        for key in ('rows','groups','has_valid','foreground_fraction'):
+                            np.testing.assert_array_equal(raw[key],base[key])
+        if any(read(p/'evaluation.json')['baselines']!=read(probes[0]/'evaluation.json')['baselines'] for p in probes[1:]):
+            raise AssertionError('probe baselines differ')
     receipt=dict(status='passed',checks=checks,counts=counts,paired_factorial=paired,paired_probes=len(probes))
     json_atomic(OUT/'integrity.json',receipt);return receipt
 
@@ -111,6 +124,8 @@ def factorial_figures():
         roots={a:ROOT/'factorial'/f'seed_{seed}'/a for a in ARMS}
         if not all((p/'evaluation.json').exists() for p in roots.values()):continue
         selected={}
+        test_groups=[np.load(p/'test_errors.npz')['groups'] for p in roots.values()]
+        if any(not np.array_equal(g,test_groups[0]) for g in test_groups[1:]):raise AssertionError('factorial test groups unpaired')
         for arm,p in roots.items():
             r=read(p/'curriculum_result.json');e=read(p/'evaluation.json')['metrics'];selected[arm]=r
             rows.append(dict(seed=seed,arm=arm,selected_step=r['selected_step'],validation_q=r['selected']['q'],test_q=e['test']['q'],
@@ -126,9 +141,13 @@ def factorial_figures():
             contrasts.append(dict(seed=seed,contrast=name,candidate=a,comparator=b,validation_delta_q=av-bv,
                                   validation_relative_change=av/bv-1,test_delta_q=q(raw_a)-q(raw_b),conditional_group_95=interval))
         seed_contrasts={r['contrast']:r for r in contrasts if r['seed']==seed}
+        # Identical group populations and bootstrap seeds reuse the same group draws.
+        interaction_draws=np.load(OUT/f'{seed}_depth_on_group_bootstrap.npy')-np.load(OUT/f'{seed}_depth_off_group_bootstrap.npy')
+        np.save(OUT/f'{seed}_interaction_group_bootstrap.npy',interaction_draws)
         interactions.append(dict(seed=seed,
             validation_q_interaction=seed_contrasts['depth_on']['validation_delta_q']-seed_contrasts['depth_off']['validation_delta_q'],
             test_q_interaction=seed_contrasts['depth_on']['test_delta_q']-seed_contrasts['depth_off']['test_delta_q'],
+            conditional_group_95=np.percentile(interaction_draws,[2.5,50,97.5]).tolist(),
             definition='(deeper-on minus shallow-on) minus (deeper-off minus shallow-off); negative means depth helps more with exchange'))
         for deep,shallow in [('deeper','reference'),('deeper_no_exchange','no_exchange')]:
             bound=selected[shallow]['elapsed_seconds'];eligible=[r for r in lines(roots[deep]/'validation.jsonl') if r['elapsed_seconds']<=bound]
@@ -156,6 +175,19 @@ def factorial_figures():
            xlabel='Validation q change (%) · negative favors the change',title='Paired intervention effects')
     ax.axvline(0,color='#555555',lw=1);ax.axvline(-10,color='#777777',ls=':',lw=1);ax.legend(fontsize=8)
     fig.savefig(OUT/'factorial_effects.png',dpi=160);plt.close(fig)
+    for axis_key,filename,xlabel in [('step','factorial_learning.png','Optimizer updates'),
+                                      ('elapsed_seconds','factorial_walltime.png','Training elapsed seconds')]:
+        fig,axes=plt.subplots(1,len(seeds),figsize=(5*len(seeds),4),layout='constrained',squeeze=False,sharey=True)
+        for ax,seed in zip(axes[0],seeds):
+            for i,arm in enumerate(labels):
+                history=lines(ROOT/'factorial'/f'seed_{seed}'/arm/'validation.jsonl')
+                ax.plot([r[axis_key] for r in history],[r['q'] for r in history],color=COLORS[i],
+                        ls=['-','--',':','-.'][i],label=arm.replace('_',' '))
+            ax.set(xlabel=xlabel,ylabel='Validation q (log scale)',title=f'Seed {seed}',yscale='log')
+            ax.axhline(1,color='#555555',ls='--',lw=1);ax.grid(axis='y',alpha=.15)
+        axes[0,0].legend(fontsize=8)
+        fig.suptitle('All recorded validation checkpoints\nOriginal objective and fixed budgets; spikes retained',fontsize=12)
+        fig.savefig(OUT/filename,dpi=160);plt.close(fig)
     signals={name:all(r['validation_relative_change']<=-.1 for r in contrasts if r['contrast']==name) and len(seeds)==3 for name in names}
     json_atomic(OUT/'factorial_summary.json',dict(rows=rows,contrasts=contrasts,interactions=interactions,wall_matched=wall,candidate_signals=signals,
         inference_limit='Three paired seeds; reused holdouts. Group intervals condition on trained models. No equivalence claim; no planning inference from perception-only results.'))
@@ -191,18 +223,62 @@ def probe_figures():
         for row,title in enumerate(['RGB64','Reconstruction','Annotated union','Mask probability']):axes[row,0].set_ylabel(title,fontsize=9)
         fig.suptitle(f'{name} · frozen representation, fresh output decoders\nSix fixed test views · shared mask probability scale [0,1]',fontsize=12)
         fig.savefig(OUT/f'{name}_output_panels.png',dpi=140);plt.close(fig)
+    names=('custom','warmup','dino')
+    if all((ROOT/'probes'/name/'panels.npz').exists() for name in names):
+        data={name:dict(np.load(ROOT/'probes'/name/'panels.npz')) for name in names}
+        for name in names[1:]:np.testing.assert_array_equal(data[name]['rows'],data[names[0]]['rows'])
+        fig,axes=plt.subplots(4,4,figsize=(7,7),layout='constrained')
+        for row,name in enumerate(('target',*names)):
+            source=data['custom'] if name=='target' else data[name]
+            keys=('rgb','mask') if name=='target' else ('reconstruction','probability')
+            for sample in range(2):
+                for j,key in enumerate(keys):
+                    ax=axes[row,sample*2+j];im=source[key][sample]
+                    ax.imshow(im.transpose(1,2,0) if im.shape[0]==3 else im[0],cmap='gray',vmin=0,vmax=1)
+                    ax.set_xticks([]);ax.set_yticks([])
+                    if row==0:ax.set_title(f'Row {source["rows"][sample]} · '+('RGB' if j==0 else 'foreground'),fontsize=8)
+            axes[row,0].set_ylabel(name,fontsize=9)
+        fig.suptitle('Same two COCO views · RGB and foreground outputs\nFirst two of six fixed views; full six-view panels remain linked',fontsize=10)
+        fig.savefig(OUT/'coco_output_comparison.png',dpi=100);plt.close(fig)
+
+
+def compute_and_optimization():
+    profile=read(ROOT/'development/profile/profile.json')
+    fields=('depth','exchange','active_encoder_parameters','total_encoder_parameters','frame_latency_median_ms')
+    development=[{k:r[k] for k in fields} for r in profile['custom']]
+    formal=[]
+    for p in sorted((ROOT/'factorial').glob('seed_*/*/curriculum_result.json')):
+        result=read(p);history=lines(p.parent/'training.jsonl');g=np.array([r['grad_norm'] for r in history])
+        formal.append(dict(run=str(p.parent.relative_to(ROOT)),elapsed_seconds=result['elapsed_seconds'],
+            peak_cuda_bytes=result['peak_cuda_bytes'],median_update_seconds=float(np.median([r['update_seconds'] for r in history])),
+            clip_threshold=1.,fraction_updates_clipped=float((g>1).mean()),after1000_fraction_clipped=float((g[1000:]>1).mean()),
+            grad_norm_percentiles=dict(zip(('p50','p95','p99','max'),np.percentile(g,[50,95,99,100]).tolist()))))
+    json_atomic(OUT/'compute_and_optimization.json',dict(formal=formal,development=development,
+        hardware=profile['versions']['gpu'],precision=profile['precision'],
+        latency_scope='Development encoder-only batch1 latency: 30 synchronized forwards, discard first5, median. Not end-to-end planning latency.',
+        interpretation='Equal updates/presentations are not equal compute. Gradient norms depend on the model; clipping differences do not identify the cause of performance differences.'))
 
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--publish',action='store_true');args=p.parse_args();OUT.mkdir(parents=True,exist_ok=True)
-    audit=integrity();reference_figures();factorial_figures();probe_figures()
+    audit=integrity();reference_figures();factorial_figures();probe_figures();compute_and_optimization()
     if args.publish:
+        expected={str(Path(u['result']).parent.relative_to(ROOT)) for u in read(ROOT/'execution_plan.json')['plan']}
+        expected.update(f'diagnostic/{a}' for a in ('coupled','independent'))
+        expected.update(f'reference/{a}' for a in ('custom','dino','native','native_scaled'))
+        if set(audit['checks'])!=expected:
+            raise RuntimeError(f'Final publication requires the exact completed schedule; missing {sorted(expected-set(audit["checks"]))}')
         sources=[p for p in OUT.iterdir() if p.suffix in ('.json','.png','.npy') and p.name!='curriculum_analysis.json']
         figures=[('reference_errors.png','Frozen representation errors'),('head_budget.png','Frozen head budget'),('factorial_q.png','Factorial pose comparison'),
-                 ('factorial_effects.png','Paired intervention effects'),('rgb_mask_audit.png','RGB and mask audit')]
+                 ('factorial_effects.png','Paired intervention effects'),('factorial_learning.png','All validation checkpoints'),
+                 ('factorial_walltime.png','Validation against measured elapsed time'),('rgb_mask_audit.png','RGB and mask audit')]
         panels=[dict(file=str(OUT/f),title=t,caption='Measured raw results; full protocol and exact values retained.',embed=True) for f,t in figures if (OUT/f).exists()]
-        analyze(ROOT,OUT,'Reconciled encoder study',audit['counts'],
-            '## Encoder study results\n\nRaw per-frame metrics, selected validation checkpoints and paired draws reconcile. All results use declared budgets and previously inspected grouped holdouts. Training completion is distinct from readiness and planning quality. The independent-head change is a package; DINO differs in pretraining and adapter capacity. The raw native head was unstable and its fixed-scaling correction is reported separately.',sources,panels)
+        panels.append(dict(file=str(OUT/'coco_output_comparison.png'),title='Common RGB and foreground outputs',
+            caption='First two of six fixed COCO test views, all three reference sources. Probability scale 0–1; crowd ignored in metrics. Full six-view panels remain in the source inventory and report.',embed=True))
+        factorial=read(OUT/'factorial_summary.json');gates=sum(r['gate'] for r in factorial['rows'])
+        metrics={**audit['counts'],'factorial_perception_gates_passed':gates,'factorial_models':len(factorial['rows'])}
+        analyze(ROOT,OUT,'Completed encoder study: better geometry, readiness still unmet',metrics,
+            '## Encoder study results\n\nAll 33 formal runs completed and raw metrics/selection/draws reconcile. Adding residual blocks with exchange reduces validation q by 44–52% in all three paired seeds; test orientation improves from 24.75–30.76° to 2.18–2.90°. All 12 perception gates still fail because position accuracy remains insufficient under the unchanged gate. No compatible U/P or control comparison was triggered.\n\nExchange helps the deeper stack but worsens selected validation q in the shallow stack. Added depth includes capacity and normalization changes. The deeper custom output probes beat the always-foreground IoU baseline in only one seed; the DINO adapter reaches IoU0.583 despite worse RGB reconstruction. This does not establish a generally superior representation. DINO differs in pretraining/adapter capacity; its unstable raw native head and fixed-scaling correction are preserved.\n\nAll grouped holdouts were previously inspected. Group bootstrap intervals condition on the trained models; they do not estimate training-seed uncertainty. Internal-state figures show observed perception only. Next proposed comparison: longer unchanged training versus prospective position/angle loss calibration on the deeper/on reference. Additional scales/registers/software tasks remain staged.',sources,panels)
     print(json.dumps(audit['counts']),flush=True)
 
 if __name__=='__main__':main()

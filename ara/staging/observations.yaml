@@ -824,7 +824,85 @@ observations:
   bound_to:
   - N96
   - N97
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A01
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O50
+  timestamp: 2026-09-08T14:27+02:00
+  provenance: user
+  content: 'User adopts recurring critical collaboration with actual Claude for consequential scientific decisions:
+    scoped brief, independent checks, explicit reconciliation/retractions, source-bound receipts and ordinary verification.
+    Routine edits need no second model; peer agreement is not empirical proof and denied transfers cannot be rerouted.'
+  context: Completed user-authorized encoder study; scope and evidence in docs/encoder-study-results-2026-09-08.md
+  potential_type: heuristic
+  bound_to:
+  - N98
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H14
+  crystallized_via: verbal-affirmation
+  stale: false
+- id: O51
+  timestamp: 2026-09-08T14:27+02:00
+  provenance: ai-executed
+  content: Residual blocks plus exchange improve geometry and meet the three-seed relative candidate rule under
+    the fixed perception recipe. Attention benefit depends on depth; capacity/normalization and optimization are
+    part of the package. Pusher error keeps all numeric readiness gates failed. General agent, extra-level necessity
+    and control benefit remain unestablished.
+  context: Completed user-authorized encoder study; scope and evidence in docs/encoder-study-results-2026-09-08.md
+  potential_type: claim
+  bound_to:
+  - N100
+  - N102
   promoted: false
   promoted_to: null
   crystallized_via: null
+  stale: false
+- id: O52
+  timestamp: 2026-09-08T14:27+02:00
+  provenance: ai-executed
+  content: 'Frozen-source RGB and foreground readouts expose distinct accessible output quality: DINO adapter has
+    much better mask IoU and worse RGB than custom references. Deeper custom pose improvements do not establish
+    versatile foreground features. This is not proof of incompatible features, irreversible loss or a pre/post forgetting
+    result.'
+  context: Completed user-authorized encoder study; scope and evidence in docs/encoder-study-results-2026-09-08.md
+  potential_type: claim
+  bound_to:
+  - N99
+  - N101
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O53
+  timestamp: 2026-09-08T14:27+02:00
+  provenance: ai-suggested
+  content: Propose deeper/on as next reference and compare longer unchanged training against prospective position/angle
+    loss calibration. All deeper/on runs select their final update; current readiness-scale angular/one-coordinate
+    MSE ratio is124.45 for unit orientation vectors. Scaling is an analytic fact, not the proven cause or remedy.
+    Retain RGB/mask/angle checks and gates; do not add scales/registers blindly.
+  context: Completed user-authorized encoder study; scope and evidence in docs/encoder-study-results-2026-09-08.md
+  potential_type: heuristic
+  bound_to:
+  - N100
+  - N101
+  - N102
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O54
+  timestamp: 2026-09-08T14:27+02:00
+  provenance: ai-suggested
+  content: 'Persist encoder behavior metadata beyond tensor keys: attention-off can share all legacy keys and silently
+    reload with attention enabled. Carry variant identity through observer/bundle loading and refuse unsupported
+    legacy parent paths. Verify exact outputs from trained checkpoints and preserve frozen training sources.'
+  context: Completed user-authorized encoder study; scope and evidence in docs/encoder-study-results-2026-09-08.md
+  potential_type: heuristic
+  bound_to:
+  - N103
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H15
+  crystallized_via: artifact-commitment
   stale: false
