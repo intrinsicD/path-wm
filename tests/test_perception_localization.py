@@ -1,7 +1,7 @@
 import pytest
 import torch
 from world_model.curriculum.perception_heads import make_heads,spatial_expectation
-from world_model.curriculum.perception_localization import barycentric_targets,location_kl,pose_and_logits
+from world_model.curriculum.perception_localization import barycentric_targets,location_kl,pose_and_logits,state_equivalence
 
 
 def test_location_targets_recover_endpoints_and_continuous_coordinates():
@@ -37,3 +37,20 @@ def test_logit_access_and_zero_regularization_preserve_pose_forward_and_gradient
     b=torch.autograd.grad(loss,tuple(head.parameters()))
     assert torch.equal(pose,plain)
     for x,y in zip(a,b): torch.testing.assert_close(x,y,rtol=0,atol=0)
+
+
+def test_spatial_softmax_constant_bias_is_a_redundancy_but_weights_are_not_exempt():
+    torch.manual_seed(59); head=make_heads(64,9107)['pose'].double()
+    fine,coarse=torch.randn(2,256,64,dtype=torch.float64),torch.randn(2,64,64,dtype=torch.float64)
+    before={n:v.detach().clone() for n,v in head.state_dict().items()}
+    output=head(fine,coarse,return_maps=True)
+    with torch.no_grad():
+        head.locations.bias.add_(torch.tensor([4.,-5.],dtype=torch.float64))
+        head.orientation_attention.bias.add_(3.)
+    for a,b in zip(output,head(fine,coarse,return_maps=True)):
+        torch.testing.assert_close(a,b,rtol=0,atol=1e-13)
+    result=state_equivalence(head.state_dict(),before)
+    assert result['maximum_all_parameters']==5.
+    assert result['maximum_identifiable_parameters']==0.
+    with torch.no_grad(): head.locations.weight[0,0,0,0].add_(.01)
+    assert state_equivalence(head.state_dict(),before)['maximum_identifiable_parameters']>.009

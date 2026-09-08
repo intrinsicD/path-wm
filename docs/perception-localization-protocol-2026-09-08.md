@@ -42,6 +42,19 @@ seed differences. The test can reveal a useful decoder objective; a null result
 does not prove boundary information absent. It does not repair missing training
 coverage, prove calibrated uncertainty, or establish prediction/control quality.
 
+Claude's public conceptual review connected this design to DSNT and integral
+regression, and requested explicit manipulation checks. Preserve mean/per-object
+map entropy, probability on the target's nonzero support, and target-to-predicted
+KL at initialization, validation and held-out evaluation; log both training loss
+terms from the first through final update. Compare the same map statistics against
+the saved P1 fresh outputs. A null coordinate result without changed map statistics
+is inconclusive about useful distribution supervision. The coefficient is fixed
+before development and is not claimed comparable to DSNT's different loss scale.
+KL(target||prediction) is finite for the sparse target and finite model logits;
+the reverse direction would be infinite outside target support. Bilinear targets
+vary in sharpness continuously with the coordinate. This convention is not claimed
+novel, and no universal boundary benefit follows from it.
+
 Essential checks: normalized nonnegative targets, exact target expectations at
 random/end/grid-boundary coordinates, finite KL and gradients, and a zero-weight
 objective that reproduces ordinary pose gradients. Then50-update development
@@ -52,3 +65,29 @@ cap prospectively; no extra architecture or regularization sweep. Stop new
 training by06:00Berlin and report by07:00Berlin. All failures/stopped runs stay
 visible. The complete program now contains33vision/geometry fits and15independent
 category probes; new geometry fits have half the per-update frame consumption.
+
+## Development control refinement before formal fitting
+
+The first zero-weight CNN development check failed its blanket2e-5 parameter
+tolerance: location biases differed by4.2915e-5 and orientation-pool bias by
+2.7228e-5. All other parameters differed by at most1.1921e-7; first-step losses,
+gradients and every sample draw matched. These particular per-channel spatial
+softmax biases cancel analytically. Tiny reduction roundoff can nevertheless
+give their theoretically zero gradients an Adam update. This is not evidence
+of a different informative head function.
+
+Preserve the failed control and exact source under `development/localization/`.
+Before changing the criterion, add a test that independently shifts both named
+softmax bias tensors and verifies unchanged pose, location and pooling outputs.
+Development revision2 uses a gauge-aware parameter comparison: preserve/report
+the maximum difference over all parameters, but require maximum difference
+over all parameters except exactly those two redundant biases≤2e-5. Additionally
+require maximum absolute difference≤2e-5 in normalized pose outputs and both
+probability maps on every development PushT frame in all three splits. No other
+parameter is excluded, and no model/training behavior changes.
+
+Run the four revision2 controls/prefixes in `development/localization_v2/`, after
+the now-started D2 formal queue. Only then commit, seal and run the six geometry
+fits. The failed check is retained as development evidence, not silently relabeled
+as passed. This refinement addresses a proven parameter redundancy, not a relaxed
+accuracy gate or a coefficient change.
