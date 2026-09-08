@@ -71,3 +71,12 @@ Require canonical artifact validation, exact embedded snapshot, desktop/narrow
 browser/source interaction checks and actual inspection of scientific figures.
 The existing reader supplies system light/dark appearance. Do not replace the
 shared renderer, relax its size limit, or silently drop exact evidence.
+
+The geometry follow-up also needs before/after location-map panels. Reuse the
+already declared first-seed case indices in `figures/fresh/summary.json`: four fixed
+cases and the two original package-specific worst cases. Do not select cases from
+the new objective's outcomes. For CNN and ViT separately, show the same observed
+scene, old/new poses and old/new pusher/body distributions on common log-probability
+scales. Assert identical case identities/targets and normalized maps before
+plotting. This is a read-only visualization from saved arrays; it changes no model,
+metric or selection rule. Inspect the figures and verify HTML after all six fits.
