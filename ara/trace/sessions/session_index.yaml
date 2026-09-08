@@ -49,8 +49,10 @@ sessions:
     precedents and two Claude exchanges; context timing, retention and late-versus-earlier comparison proposed,
     no new implementation or runs. Turn16 consolidates the full encoder/decoder and conditional experiment proposal,
     reconciles two public-only Claude reviews and delivers verified printable HTML plus a non-runnable manifest;
-    no new model work or training authorization.'
-  turn_count: 16
-  events_count: 66
+    no new model work or training authorization. Turn17 audits local dataset readiness and completes two further
+    Claude exchanges; no immediate download needed for the first slice, semantic transfer and targeted future
+    data proposed. Six notebook cells reproduce metadata checks; updated printable HTML passes browser QA.'
+  turn_count: 17
+  events_count: 69
   claims_touched: [C04]
   open_threads: 14

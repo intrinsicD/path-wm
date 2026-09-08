@@ -37,9 +37,13 @@ INPUTS = [
         "decoder-inputs-and-conditioning-2026-09-08.md",
         "encoder-conditioning-2026-09-08.md",
         "claude-collaboration-workflow.md",
+        "perception-data-readiness-2026-09-08.md",
     ]],
     ROOT / "world_model/paddle/models.py",
     ROOT / "world_model/curriculum/encoder_variants.py",
+    ROOT / "runs/perception_data_cowork_2026-09-08/data_readiness.json",
+    ROOT / "scripts/audit_perception_data.py",
+    ROOT / "notebooks/perception-data-readiness-2026-09-08.ipynb",
 ]
 
 
@@ -150,7 +154,7 @@ def main() -> None:
         "id": "proposal", "label": "Design proposal, completed evidence and declared draft budgets",
         "path": str(DOCUMENT.relative_to(ROOT)),
         "query": {
-            "description": "Manually synthesized design proposal, not new experimental measurements. Historical values are quoted from the listed completed reports; draft settings are labelled proposals. Python packages Markdown sections/tables without numerical aggregation and validates manifest budget arithmetic.",
+            "description": "Manually synthesized design proposal, not new model measurements. Historical model values are quoted from the listed completed reports; current dataset counts/checks come from the read-only audit snapshot. Draft settings are labelled proposals. Python packages Markdown sections/tables without numerical aggregation and validates manifest budget arithmetic.",
             "language": "python", "executed_at": now,
             "input_files": [str(path.relative_to(ROOT)) for path in INPUTS],
             "input_sha256": {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in INPUTS},

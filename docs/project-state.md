@@ -27,6 +27,24 @@ Read the [paddle results](paddle-world-model-results-2026-09-07.md),
 
 ## Complete: encoder investigation (8 September)
 
+The latest [dataset readiness audit and Claude review](perception-data-readiness-2026-09-08.md)
+finds no immediate download necessary for the first frozen-package comparison or
+existing-memory diagnostic. All 6,206 prepared Paddle/CCHI episode files are
+present and the checked numerical labels/timestamps pass; COCO has 82,783 source
+images and matching split identities for its prepared mask subsets. Large PushT
+and TwoRoom are now present, superseding older availability notes; large PushT's
+18,685 episodes have only 185 exact initial-pose groups, requiring careful grouping.
+Charades/TAU support separately declared passive tasks, not assumed control labels.
+A crop-aware COCO category-presence readout is proposed as conditional P1-T before
+broader perception claims. Its six fits add at most 60 fitting minutes if activated,
+outside P0/P1's allowance, with preparation/evaluation still needing explicit caps.
+Fresh controlled histories/action branches and an instrumented software cohort
+are later targeted additions. The [audit notebook](../notebooks/perception-data-readiness-2026-09-08.ipynb)
+reproduces metadata checks using sequential project Python; no Jupyter kernel is
+installed. Two further public-only Claude exchanges corrected label, split and
+benchmark overclaims. This was a read-only audit and design update, with no model
+training, inference, dataset collection or download.
+
 The [complete encoder/decoder proposal sheet](perception-proposal-2026-09-08.md)
 now consolidates the architecture, conditioning, curriculum, decision gates and
 experiment budgets. Its [draft manifest](proposals/perception-program-2026-09-08.yaml)

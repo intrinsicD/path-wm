@@ -1,0 +1,425 @@
+{
+  "provenance": "ai-executed",
+  "scope": "Metadata and numerical-label audit; no model result.",
+  "source_snapshot": "runs/perception_data_cowork_2026-09-08/data_readiness.json",
+  "source_sha256": {
+    "runs/perception_data_cowork_2026-09-08/data_readiness.json": "0c5ef90a51847c0bdadeec5452ac5c9b84caa0c550ac271c72ace04dd86cc5f6",
+    "scripts/audit_perception_data.py": "ae6315f8860ee5dfae9d4635c85306f743996c447837c4626b761493ab0ae0ff",
+    "notebooks/perception-data-readiness-2026-09-08.ipynb": "3a3877312817cc371f51551ad58fbf38caa8bf3c72c29312547553b5d5973a8e",
+    "docs/perception-data-readiness-2026-09-08.md": "6430517ba0aca414c88b42ccf6e5e5d455363720ef4bb592883ce780ef2d5c4f",
+    "docs/proposals/perception-program-2026-09-08.yaml": "d6e7cd45f7302ba93debe87ad893e6aeaf4c186cea11cb766ce1ecc7a3b8b8bb"
+  },
+  "snapshot": {
+    "generated_at": "2026-09-08T17:22:55.464603+00:00",
+    "scope": "Read-only metadata and prepared numerical-label audit, not a model experiment.",
+    "coco": {
+      "source_images": 82783,
+      "prepared_frames": 82783,
+      "prepared_shape": [
+        82783,
+        64,
+        64,
+        3
+      ],
+      "missing_source_filenames": 0,
+      "split_frames": {
+        "test": 4146,
+        "train": 74501,
+        "validation": 4136
+      },
+      "split_row_overlap": {
+        "test/train": 0,
+        "test/validation": 0,
+        "train/validation": 0
+      },
+      "split_duplicate_group_overlap": {
+        "test/train": 0,
+        "test/validation": 0,
+        "train/validation": 0
+      },
+      "distinct_duplicate_groups": 82636,
+      "duplicate_rule": "canonical RGB64 equality or exhaustive dHash64 radius<=4 connected components",
+      "official_validation_image_directory_present": false,
+      "source_manifest_sha256": "bf19e1ff8f44e6279f1bfb852b4be306d9dfddcb4823370c40d139fc1da6bbc8",
+      "annotation_files": {
+        "instances_train2014.json": {
+          "images": 82783,
+          "annotations": 604907,
+          "categories": 80,
+          "duplicate_annotation_ids": 0,
+          "orphan_annotation_image_ids": 0,
+          "missing_image_filenames": 0
+        },
+        "person_keypoints_train2014.json": {
+          "images": 82783,
+          "annotations": 185316,
+          "categories": 1,
+          "duplicate_annotation_ids": 0,
+          "orphan_annotation_image_ids": 0,
+          "missing_image_filenames": 0
+        },
+        "captions_train2014.json": {
+          "images": 82783,
+          "annotations": 414113,
+          "categories": 0,
+          "duplicate_annotation_ids": 0,
+          "orphan_annotation_image_ids": 0,
+          "missing_image_filenames": 0
+        }
+      },
+      "prepared_union_masks": {
+        "train": {
+          "images": 4096,
+          "shape": [
+            4096,
+            64,
+            64
+          ],
+          "outside_declared_split": 0,
+          "image_id_mismatches": 0,
+          "group_mismatches": 0,
+          "nonbinary_mask_pixels": 0,
+          "nonbinary_valid_pixels": 0,
+          "images_without_valid_pixels": 0
+        },
+        "validation": {
+          "images": 512,
+          "shape": [
+            512,
+            64,
+            64
+          ],
+          "outside_declared_split": 0,
+          "image_id_mismatches": 0,
+          "group_mismatches": 0,
+          "nonbinary_mask_pixels": 0,
+          "nonbinary_valid_pixels": 0,
+          "images_without_valid_pixels": 0
+        },
+        "test": {
+          "images": 512,
+          "shape": [
+            512,
+            64,
+            64
+          ],
+          "outside_declared_split": 0,
+          "image_id_mismatches": 0,
+          "group_mismatches": 0,
+          "nonbinary_mask_pixels": 0,
+          "nonbinary_valid_pixels": 0,
+          "images_without_valid_pixels": 0
+        }
+      },
+      "scope": "Manifest identities, array headers and prepared mask values checked; image decoding/hashes and geometric mask alignment are not repeated. Earlier alignment audit remains the source."
+    },
+    "paddle": {
+      "episodes": {
+        "train": 5000,
+        "validation": 500,
+        "test": 500
+      },
+      "frames": {
+        "train": 184808,
+        "validation": 18115,
+        "test": 17831
+      },
+      "transitions": {
+        "train": 179808,
+        "validation": 17615,
+        "test": 17331
+      },
+      "files_present": 6000,
+      "group_overlap": {
+        "train/validation": 0,
+        "train/test": 0,
+        "validation/test": 0
+      },
+      "group_type": "generation seed",
+      "failed_episode_checks": {
+        "row_count": 0,
+        "transition_count": 0,
+        "nonfinite_state_or_action": 0,
+        "nonfinite_timestamps": 0,
+        "time_order": 0
+      },
+      "event_counts": {
+        "side_wall": 14287,
+        "paddle_bound": 5295,
+        "paddle_miss": 5979,
+        "loss": 5979,
+        "paddle_hit": 2039,
+        "ceiling": 2018
+      },
+      "label_semantics": "Stored simulator XY/velocity state; executable discrete actions and event records.",
+      "scope": "All prepared episode scalar/state/action/time arrays checked; RGB arrays not decoded, no rehash/replay or inferred coverage guarantee."
+    },
+    "pusht_cchi": {
+      "episodes": {
+        "train": 164,
+        "test": 22,
+        "validation": 20
+      },
+      "frames": {
+        "train": 20493,
+        "test": 2506,
+        "validation": 2651
+      },
+      "transitions": {
+        "train": 20329,
+        "test": 2484,
+        "validation": 2631
+      },
+      "files_present": 206,
+      "group_overlap": {
+        "train/validation": 0,
+        "train/test": 0,
+        "validation/test": 0
+      },
+      "group_type": "initial configuration group",
+      "failed_episode_checks": {
+        "row_count": 0,
+        "transition_count": 0,
+        "nonfinite_state_or_action": 0,
+        "nonfinite_timestamps": 0,
+        "time_order": 0,
+        "motion_shape": 0,
+        "nonfinite_motion": 0,
+        "initial_motion_unmasked": 0
+      },
+      "event_counts": {},
+      "label_semantics": "pusht-pose6-backward-displacement5-train-rms-mask-before2-v2",
+      "scope": "All prepared episode scalar/state/action/time arrays checked; RGB arrays not decoded, no rehash/replay or inferred coverage guarantee."
+    },
+    "large_pusht": {
+      "file_bytes": 46300921856,
+      "episodes": 18685,
+      "frames": 2336736,
+      "valid_transitions": 2318051,
+      "contiguous_offsets": true,
+      "fields": {
+        "action": {
+          "shape": [
+            2336736,
+            2
+          ],
+          "dtype": "float32"
+        },
+        "ep_len": {
+          "shape": [
+            18685
+          ],
+          "dtype": "int32"
+        },
+        "ep_offset": {
+          "shape": [
+            18685
+          ],
+          "dtype": "int64"
+        },
+        "episode_idx": {
+          "shape": [
+            2336736
+          ],
+          "dtype": "int64"
+        },
+        "pixels": {
+          "shape": [
+            2336736,
+            224,
+            224,
+            3
+          ],
+          "dtype": "uint8"
+        },
+        "proprio": {
+          "shape": [
+            2336736,
+            4
+          ],
+          "dtype": "float32"
+        },
+        "state": {
+          "shape": [
+            2336736,
+            7
+          ],
+          "dtype": "float32"
+        },
+        "step_idx": {
+          "shape": [
+            2336736
+          ],
+          "dtype": "int64"
+        }
+      },
+      "scope": "Headers, lengths and offsets; initial state labels for PushT. No full media decode, source-file rehash or simulator replay.",
+      "exact_initial_pose_groups": 185,
+      "grouping_limit": "Exact first five state values; not a near-configuration or trajectory overlap audit."
+    },
+    "tworoom": {
+      "file_bytes": 12775849984,
+      "episodes": 10000,
+      "frames": 920809,
+      "valid_transitions": 910809,
+      "contiguous_offsets": true,
+      "fields": {
+        "action": {
+          "shape": [
+            920809,
+            2
+          ],
+          "dtype": "float32"
+        },
+        "distance_to_target": {
+          "shape": [
+            920809
+          ],
+          "dtype": "float64"
+        },
+        "ep_idx": {
+          "shape": [
+            920809
+          ],
+          "dtype": "int32"
+        },
+        "ep_len": {
+          "shape": [
+            10000
+          ],
+          "dtype": "int32"
+        },
+        "ep_offset": {
+          "shape": [
+            10000
+          ],
+          "dtype": "int64"
+        },
+        "id": {
+          "shape": [
+            920809
+          ],
+          "dtype": "int64"
+        },
+        "observation": {
+          "shape": [
+            920809,
+            10
+          ],
+          "dtype": "float64"
+        },
+        "pixels": {
+          "shape": [
+            920809,
+            224,
+            224,
+            3
+          ],
+          "dtype": "uint8"
+        },
+        "pos_agent": {
+          "shape": [
+            920809,
+            2
+          ],
+          "dtype": "float32"
+        },
+        "pos_target": {
+          "shape": [
+            920809,
+            2
+          ],
+          "dtype": "float32"
+        },
+        "proprio": {
+          "shape": [
+            920809,
+            2
+          ],
+          "dtype": "float32"
+        },
+        "render_time": {
+          "shape": [
+            920809
+          ],
+          "dtype": "float64"
+        },
+        "reward": {
+          "shape": [
+            920809
+          ],
+          "dtype": "float64"
+        },
+        "step_idx": {
+          "shape": [
+            920809
+          ],
+          "dtype": "int64"
+        },
+        "terminated": {
+          "shape": [
+            920809
+          ],
+          "dtype": "bool"
+        },
+        "truncated": {
+          "shape": [
+            920809
+          ],
+          "dtype": "bool"
+        }
+      },
+      "scope": "Headers, lengths and offsets; initial state labels for PushT. No full media decode, source-file rehash or simulator replay."
+    },
+    "natural_videos": {
+      "charades": {
+        "video_files": 9848,
+        "split_rows": {
+          "train": 7985,
+          "test": 1863
+        },
+        "missing_by_split": {
+          "train": 0,
+          "test": 0
+        },
+        "id_overlap": {
+          "train/test": 0
+        },
+        "subject_overlap": {
+          "train/test": 0
+        }
+      },
+      "tau": {
+        "metadata_pairs": 12291,
+        "audio_files": 12291,
+        "video_files": 12291,
+        "missing_audio": 0,
+        "missing_video": 0,
+        "duplicate_pair_rows": 0,
+        "split_rows": {
+          "train": 8646,
+          "test": 3645
+        },
+        "split_location_counts": {
+          "train": 305,
+          "test": 126
+        },
+        "location_overlap": {
+          "train/test": 0
+        }
+      },
+      "scope": "CSV identifiers and media-file existence; no full decoding, temporal annotation/synchronization audit or executable-action inference."
+    },
+    "kodak_images": 24,
+    "fabric_time_directories": 2,
+    "limitations": [
+      "Existing evaluation populations already inspected",
+      "No architecture or data-sufficiency guarantee from counts",
+      "No new dataset generated or downloaded",
+      "No GPU/model inference or training"
+    ]
+  },
+  "collaboration_scope": "Two public-only Claude exchanges; no private code/results/media transmitted.",
+  "proposal_html_verification": "passed at 1440 and 390 widths with source-interaction checks",
+  "notebook_validation": "Six code cells executed sequentially in project Python and reconciled to the snapshot; no Jupyter kernel available."
+}

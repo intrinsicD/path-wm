@@ -1017,3 +1017,24 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O62
+  timestamp: 2026-09-08T19:28+02:00
+  provenance: ai-suggested
+  content: Existing prepared data support the bounded frozen-package comparison and existing-memory
+    diagnostic without a new download. Propose crop-aware COCO category-presence transfer from native
+    frozen spatial features before broader perception claims; retain original P1 RGB/pose selection
+    and select the new head separately. Six proposed fits add at most 60 fitting minutes outside the
+    initial 240 minute allowance; preparation/evaluation caps remain to be fixed. Fresh controlled
+    histories/action branches and a small instrumented software cohort answer later missing questions.
+    Passive videos support quantitative observational tasks but do not supply our executable controls.
+    Dataset volume and peer agreement do not establish a universal architecture winner.
+  context: Two public-only Claude exchanges and local metadata audit; label, amodal, split, passive-data
+    and public-UI overclaims withdrawn. Updated proposal, draft manifest, notebook and verified HTML;
+    no model or dataset-generation run. Current large-archive presence supersedes older time-scoped
+    availability notes. Detailed recommendation in docs/perception-data-readiness-2026-09-08.md.
+  potential_type: architecture
+  bound_to: [N111, N112, N110, N107, N95]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

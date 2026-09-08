@@ -1734,3 +1734,33 @@ tree:
   - docs/proposals/perception-program-2026-09-08.yaml
   also_depends_on: [N107, N108, N109, N104, N100]
   status: resolved
+- id: N111
+  type: question
+  title: Review architecture and dataset sufficiency with Claude
+  provenance: user
+  timestamp: 2026-09-08T19:28+02:00
+  description: User requests further Claude coworking to find an appropriate architecture and asks whether
+    existing local datasets suffice. Readiness and a refined staged comparison are delivered; selecting
+    a broadly capable architecture and preparing additional controlled cases remain open.
+  also_depends_on: [N110, N107, N95]
+  evidence: [docs/perception-data-readiness-2026-09-08.md]
+  status: open
+- id: N112
+  type: experiment
+  title: Read-only perception dataset metadata and label audit
+  provenance: ai-executed
+  timestamp: 2026-09-08T19:28+02:00
+  result: COCO has 82783 source images; recorded split rows/groups and prepared mask identities pass.
+    All 6000 Paddle and 206 CCHI episode files are present with zero failures in checked numerical
+    state/action/time arrays. Large PushT has 18685 episodes and 185 exact initial-pose groups;
+    TwoRoom has 10000 episodes. Referenced Charades 9848 and TAU 12291 video/audiovisual files are
+    present with inspected official subject/location separation. Six notebook code cells reproduce
+    the snapshot through sequential Python, without a Jupyter kernel. No full media decode, new
+    simulator collection, GPU inference, training or architecture performance measurement.
+  evidence:
+  - ara/evidence/tables/perception_data_readiness_2026-09-08.json
+  - scripts/audit_perception_data.py
+  - notebooks/perception-data-readiness-2026-09-08.ipynb
+  - docs/perception-data-readiness-2026-09-08.md
+  also_depends_on: [N111]
+  status: resolved

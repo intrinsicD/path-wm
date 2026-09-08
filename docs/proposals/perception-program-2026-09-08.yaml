@@ -37,6 +37,9 @@ feature_contract:
   downstream_compatibility: New E requires explicitly compatible U/P and readouts.
   future_decoder_input: Predicted features plus optional aligned predicted memory; no actual future observations.
 data:
+  readiness_report: docs/perception-data-readiness-2026-09-08.md
+  readiness_snapshot: runs/perception_data_cowork_2026-09-08/data_readiness.json
+  first_stage_download_required: false
   pusht_cchi:
     frames: {train: 20493, validation: 2651, test: 2506}
     configuration_groups: {train: 164, validation: 20, test: 22}
@@ -115,6 +118,23 @@ initial_execution_allowance_minutes:
   excludes: Implementation and review effort.
   meaning: Proposed category ceilings; not measured duration or automatic reallocation.
 conditional_stages:
+  P1-T:
+    purpose: Add one global semantic-accessibility test before broader perception claims.
+    arms: [deeper_on_native_features, dinov2_native_patch_features]
+    seeds: 3
+    maximum_fits: 6
+    updates_per_fit: 2000
+    effective_batch: 64
+    per_fit_minutes: 10
+    total_fit_minutes: 60
+    primary: category_average_validation_ap
+    head: Mean-pooled declared spatial levels, concatenation, nonlinear head with hidden width128.
+    target: COCO categories with surviving valid non-crowd instance support after the actual image transform.
+    checkpoint_rule: Keep the P1 encoder/RGB/pose checkpoint fixed; select only this new head by validation AP, earliest tie; report its step separately.
+    condition: A decision about broader perception requires semantic evidence beyond geometry/RGB/foreground.
+    next_decision: Retain geometry/semantic tradeoffs; do not infer software skill or a universal architecture winner.
+    before_activation: Freeze crop visibility, crowd/unknown targets, support floors, loss/optimizer, class list, head seeds and total label-preparation/evaluation budget.
+    included_in_initial_p0_p1_allowance: false
   P2:
     purpose: Diagnose accessibility of motion information in existing frozen Paddle E/U.
     arms: [current_image, updated_memory, combined, prior_memory]

@@ -2,8 +2,8 @@ session:
   id: 2026-09-08_001
   date: '2026-09-08'
   started: 2026-09-08T03:03+02:00
-  last_turn: 2026-09-08T17:49+02:00
-  turn_count: 16
+  last_turn: 2026-09-08T19:28+02:00
+  turn_count: 17
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
     and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed
     controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning.
@@ -24,7 +24,9 @@ session:
     precedents and two Claude exchanges; context timing, retention and late-versus-earlier comparison proposed,
     no new implementation or runs. Turn16 consolidates the full encoder/decoder and conditional experiment proposal,
     reconciles two public-only Claude reviews and delivers verified printable HTML plus a non-runnable manifest;
-    no new model work or training authorization.'
+    no new model work or training authorization. Turn17 audits local dataset readiness and completes two further
+    Claude exchanges; no immediate download needed for the first slice, semantic transfer and targeted future
+    data proposed. Six notebook cells reproduce metadata checks; updated printable HTML passes browser QA.'
 events_logged:
 - turn: 1
   type: decision
@@ -459,6 +461,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Six-fit native-feature package comparison, early memory diagnosis and gated branches remain proposed.
+- turn: 17
+  type: question
+  id: N111
+  routing: direct
+  provenance: user
+  summary: Continue architecture coworking with Claude and assess existing dataset sufficiency.
+- turn: 17
+  type: experiment
+  id: N112
+  routing: direct
+  provenance: ai-executed
+  summary: Read-only metadata/label audit verifies prepared cohorts and bounds larger-source readiness.
+- turn: 17
+  type: observation
+  id: O62
+  routing: staged
+  provenance: ai-suggested
+  summary: Existing data for first slice; crop-aware semantic probe and later targeted histories/software proposed.
 ai_actions:
 - turn: 1
   action: 'Completed the continuous September7–8 task: source verification/grouped image preparation; matched training
@@ -641,6 +661,24 @@ ai_actions:
   - scripts/deliver_perception_proposal.mjs
   - runs/perception_proposal_2026-09-08/
   - ara/
+- turn: 17
+  action: Completed public-only Claude review and correction round; inspected local manifests, labels, large
+    archive schemas and video metadata; wrote a reusable read-only collector and a six-cell sequential-Python
+    audit notebook. Added conditional P1-T and dataset stage requirements to the proposal and non-runnable
+    manifest. Canonical printable HTML passes 1440/390 browser and source-interaction checks. No source/private
+    results sent to Claude, model work, dataset downloads/generation or experiment-dashboard refresh.
+  provenance: ai-executed
+  files_changed:
+  - docs/perception-data-readiness-2026-09-08.md
+  - docs/perception-proposal-2026-09-08.md
+  - docs/proposals/perception-program-2026-09-08.yaml
+  - docs/project-state.md
+  - scripts/audit_perception_data.py
+  - scripts/build_perception_proposal.py
+  - notebooks/perception-data-readiness-2026-09-08.ipynb
+  - runs/perception_data_cowork_2026-09-08/
+  - runs/perception_proposal_2026-09-08/
+  - ara/
 claims_touched:
 - id: C04
   action: crystallized
@@ -694,6 +732,9 @@ key_context:
   excerpt: Can we condition the encoder too, on action, task, internal state or something else; is it feasible?
 - turn: 16
   excerpt: Ok now make a complete proposal sheet for how the encoder and decoder and the experiments should look.
+- turn: 17
+  excerpt: Ok good. Cowork on this with Claude, so we can find the right architecture. Do we need additional
+    datasets for these experiments or are the ones we have sufficient?
 open_threads:
 - PushT pusher-position readiness and generic retention remain unresolved after N99–N102; no training remains active.
 - Paddle control improved but memory/prediction/90%targets fail; a runtime-matched multi-seed study would be needed
@@ -713,13 +754,15 @@ open_threads:
   next budget/loss comparison is proposed.
 - N104/N105 expose coarse global/spatial structure and selective heads; trained coarse-only readouts, simpler
   fusion and hybrid/topology choices remain untested. O55/O57 are proposals, not architecture adoption.
-- N107/N110 and O58/O61 now have a complete draft package comparison and gated program; native-feature decoding,
-  software cases and proposed budgets remain unadopted and untested. No new execution is active.
+- N107/N110/N111 and O58/O61/O62 have a draft package comparison, dataset audit and conditional semantic probe;
+  native-feature decoding, fresh histories/software cases and proposed budgets remain untested. No model execution is active.
 - N108/O59 direct decoder memory, typed versus conditional sharing and belief-target supervision remain design
   choices to test. Existing fine/coarse D and memory-conditioned P do not settle these additional paths.
 - N109/O60 conditional encoding remains a design option; early-versus-late context, target consistency, task
   switching and computation need a prospectively declared comparison.
 ai_suggestions_pending:
+- O62 proposes P1-T and targeted future data; full preparation/evaluation caps, fresh confirmation and architecture
+  selection remain open. Counts and Claude review do not establish sufficiency for broad world-model claims.
 - O61 consolidates the complete program without adopting an architecture, frozen experiment budget or new training.
 - O60 proposes encoder conditioning without adopting a new E, adapter, crop policy, training budget or priority over O58.
 - O59 clarifies possible decoder interfaces without adopting new memory, conditioning, fusion or encoder training.
