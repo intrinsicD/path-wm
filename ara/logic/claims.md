@@ -40,3 +40,16 @@ Scoped experimental findings are recorded below; reliable learned control remain
 - **Tags**: learned-control, source-population, bounded-training, calibration, protocol-specific
 - **From staging**: O26
 - **Closure context**: N58; researcher asks whether the completed results support working in principle. This is engagement with the empirical result, not unequivocal endorsement of broad reliability, a causal mechanism or further work. Provenance remains ai-suggested.
+
+
+## C04: Generic reconstruction is learned then severely degraded by the recorded task adaptation
+- **Statement**: For seed4107 arm B on the same4,146 internal COCO test images, E/D RGB MSE changes from0.0060723247 after2,000 COCO warmup updates to0.2721955125 at the selected task-adapted checkpoint (44.8256-fold); final task adaptation gives0.2650259918. The train-only mean-image baseline is0.0695168962. This establishes severe forgetting in the combined E/D function. Encoder information loss, decoder specialization, coordinate co-adaptation and a retention-preserving intervention are not isolated.
+- **Status**: supported
+- **Provenance**: ai-suggested
+- **Crystallized via**: empirical-resolution
+- **Falsification criteria**: Replaying the preserved checkpoints on the exact recorded population and preprocessing fails to reproduce the scoped metrics, or a data/checkpoint/protocol integrity error invalidates them. Different objectives, seeds or populations are outside this claim.
+- **Proof**: [raw metrics](../../runs/curriculum_2026-09-07/generic_reconstruction/metrics.json), [fixed image grid](../../runs/curriculum_2026-09-07/generic_reconstruction/coco_retention.png), [source-hashed execution evidence](../evidence/tables/curriculum_execution_2026-09-08.json), [interpretation and limits](../../docs/curriculum-interpretation-2026-09-08.md); N81, N85.
+- **Dependencies**: []
+- **Tags**: COCO, reconstruction, sequential-adaptation, combined-encoder-decoder, protocol-specific
+- **From staging**: O37
+- **Closure context**: Researcher explicitly comments on the45-fold result and asks its cause. This settles the scoped measurement for discussion, not a causal mechanism, architecture adoption or further training; provenance remains ai-suggested.

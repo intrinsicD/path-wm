@@ -2,10 +2,10 @@ session:
   id: 2026-09-08_001
   date: '2026-09-08'
   started: 2026-09-08T03:03+02:00
-  last_turn: 2026-09-08T03:03+02:00
-  turn_count: 1
+  last_turn: 2026-09-08T09:18+02:00
+  turn_count: 2
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
-    and115/200paired, improved but below90%; all355tests and browser QA pass.'
+    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested.'
 events_logged:
 - turn: 1
   type: decision
@@ -83,6 +83,38 @@ events_logged:
   routing: crystallized
   provenance: user-revised
   summary: O35 adopted through explicit execution request; design only.
+- turn: 2
+  type: question
+  id: N85
+  routing: direct
+  provenance: user
+  summary: Explain COCO forgetting and assess shared features, skips and application routes
+- turn: 2
+  type: observation
+  id: O39
+  routing: staged
+  provenance: ai-suggested
+  summary: Both E and D adapt on CCHI images with no COCO replay; D gets image gradients while pose gradients
+    reach E. Domain specialization is the leading explanation for combined forgetting, but domain shift versus
+    added pose loss and E versus D are not isolated. Test COCO-to-CCHI reconstruction-only and paired E/D compatibility
+    before attributing loss to task-feature incompatibility.
+- turn: 2
+  type: observation
+  id: O40
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose retaining frozen generic E/D and separate task residual adapters/readouts/decoder for application
+    routing. Existing residual and fine/coarse routes do not protect mutable weights. New image skips may help
+    detail but future rendering must use predicted state or causal appearance memory; true-future skips leak
+    targets and unchanged current dynamic maps can preserve stale positions. This design and frozen-feature
+    readout/replay comparisons are untested proposals, not adopted work.
+- turn: 2
+  type: claim
+  id: C04
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O37 scoped combined E/D forgetting crystallizes through researcher engagement with the empirical
+    result; no causal endorsement.
 ai_actions:
 - turn: 1
   action: 'Completed the continuous September7–8 task: source verification/grouped image preparation; matched training
@@ -99,7 +131,19 @@ ai_actions:
   - configs/
   - docs/
   - ara/
-claims_touched: []
+- turn: 2
+  action: Reviewed exact same-population COCO metrics, fixed image grid, shared preprocessing, objective gradients,
+    E/D residual and multiscale routes and linear H. Consulted primary replay, U-Net, control representation,
+    MAE and adapter papers. Wrote interpretation/proposed controls; no training, fresh model inference, architecture
+    mutation or test rerun.
+  provenance: ai-executed
+  files_changed:
+  - docs/curriculum-interpretation-2026-09-08.md
+  - ara/
+claims_touched:
+- id: C04
+  action: crystallized
+  turn: 2
 key_context:
 - turn: 1
   excerpt: ok please execute this plan. when training is completely done evaluate this thoroughly and show me the
@@ -107,14 +151,18 @@ key_context:
 - turn: 1
   excerpt: One uninterrupted authorized task spans two calendar dates; no heartbeat events. Full results, figures
     and software/browser verification completed before this epilogue.
+- turn: 2
+  excerpt: 'User: What is the reason for the45-fold COCO error increase; more training, different features/architecture,
+    or skip/pass-through paths for applications? Interpretation proposal is not execution authorization.'
 open_threads:
 - PushT pose generalization/optimization and generic retention remain unresolved; no further training queued.
 - Paddle control improved but memory/prediction/90%targets fail; a runtime-matched multi-seed study would be needed
   for isolated causal attribution.
 - Earlier LeWM normalization and independent-data-efficiency questions remain separate, unadjudicated tracks.
 - Specific private Claude transfer permission remains separate; no transfer attempted this turn.
+- N85 domain-versus-pose and E-versus-D attribution, frozen-feature readout and retention/adapters proposals need a prospective experiment.
 ai_suggestions_pending:
-- O36/O37/O38 remain staged pending researcher engagement or a concrete subsequent decision.
+- O37 crystallized to C04 on turn2; O36/O38 remain staged. O39/O40 causal/design proposals remain unadopted.
 - O01 flagged stale after three session-days without revisiting that earliest small-run scope; retain for next briefing
   triage.
 - Older active normalization/coverage interpretations remain staged; O35 alone crystallizes through explicit adoption.

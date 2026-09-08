@@ -136,6 +136,10 @@ on training frames. Sixteen selected/final/validation/diagnostic inspections,
 train-only PCA/probes, attention, region controls and all raw errors are preserved.
 COCO warmup reconstruction MSE is 0.00607 on its 4,146 internal test images;
 selected task adaptation raises it to 0.27220. The generic checkpoint is retained.
+The [8 September interpretation](curriculum-interpretation-2026-09-08.md) explains
+the combined E/D forgetting and proposes domain/pose controls, frozen-feature
+readouts, replay and application adapters. These are untested proposals; no
+follow-up training or architecture change has been adopted.
 
 Paddle uses frozen E/D/H and the preserved mixed-history U/R. New P1 completed
 20,000 updates, selected 19,750 and passed the original copy gate, with only a

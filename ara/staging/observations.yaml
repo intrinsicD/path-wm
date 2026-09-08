@@ -604,9 +604,9 @@ observations:
   potential_type: claim
   bound_to:
   - N81
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/claims.md:C04
+  crystallized_via: empirical-resolution
   stale: false
 - id: O38
   timestamp: 2026-09-08T03:03+02:00
@@ -621,6 +621,42 @@ observations:
   - N82
   - N83
   - N84
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+
+- id: O39
+  timestamp: 2026-09-08T09:18+02:00
+  provenance: ai-suggested
+  content: Both E and D adapt on CCHI images with no COCO replay; D gets image gradients while pose gradients
+    reach E. Domain specialization is the leading explanation for combined forgetting, but domain shift versus
+    added pose loss and E versus D are not isolated. Test COCO-to-CCHI reconstruction-only and paired E/D compatibility
+    before attributing loss to task-feature incompatibility.
+  context: Read-only code/result review and primary literature synthesis; see docs/curriculum-interpretation-2026-09-08.md.
+    No new model evaluation or training.
+  potential_type: claim
+  bound_to:
+  - N85
+  - N81
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O40
+  timestamp: 2026-09-08T09:18+02:00
+  provenance: ai-suggested
+  content: Propose retaining frozen generic E/D and separate task residual adapters/readouts/decoder for application
+    routing. Existing residual and fine/coarse routes do not protect mutable weights. New image skips may help
+    detail but future rendering must use predicted state or causal appearance memory; true-future skips leak
+    targets and unchanged current dynamic maps can preserve stale positions. This design and frozen-feature
+    readout/replay comparisons are untested proposals, not adopted work.
+  context: Read-only code/result review and primary literature synthesis; see docs/curriculum-interpretation-2026-09-08.md.
+    No new model evaluation or training.
+  potential_type: architecture
+  bound_to:
+  - N85
+  - N81
   promoted: false
   promoted_to: null
   crystallized_via: null

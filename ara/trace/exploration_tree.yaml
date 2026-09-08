@@ -1347,3 +1347,22 @@ tree:
   - N81
   - N83
   status: resolved
+
+- id: N85
+  type: question
+  title: Explain COCO forgetting and assess shared features, skips and application routes
+  provenance: user
+  timestamp: 2026-09-08T09:18+02:00
+  description: Researcher asks why COCO reconstruction MSE rose about45-fold after task adaptation, whether
+    more training or architecture changes are needed, whether task/reconstruction features differ, and whether
+    pass-through routes can support multiple applications. Explanation and proposed controls documented; causal
+    mechanism and intervention efficacy remain open.
+  evidence:
+  - docs/curriculum-interpretation-2026-09-08.md
+  - runs/curriculum_2026-09-07/generic_reconstruction/metrics.json
+  - world_model/curriculum/training.py
+  - world_model/paddle/models.py
+  - world_model/pusht/models.py
+  also_depends_on:
+  - N81
+  status: open
