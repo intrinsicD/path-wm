@@ -5,6 +5,7 @@ import torch
 
 from world_model.curriculum.perception_heads import make_heads, spatial_expectation
 from world_model.curriculum.perception_cache import validate_alignment
+from world_model.curriculum.perception_training import checkpoint_state, restore_checkpoint, selected_better
 
 
 def test_heads_are_independent_and_common_initialization_is_paired():
@@ -40,3 +41,32 @@ def test_cache_alignment_rejects_reordered_rows_and_corrupted_targets():
     bad = target.copy(); bad[1, 4] += 1
     with pytest.raises(ValueError, match='target'):
         validate_alignment(rows, target, rows, bad)
+
+
+def test_selection_does_not_use_rgb_to_break_exact_pose_ties():
+    first = {'q': 1.2, 'image_mse': .1, 'step': 100}
+    assert not selected_better({'q': 1.2, 'image_mse': .01, 'step': 200}, first)
+    assert selected_better({'q': 1.1, 'image_mse': .2, 'step': 200}, first)
+
+
+def test_checkpoint_resumes_sampler_and_optimizer_exactly(tmp_path):
+    def construct():
+        torch.manual_seed(83)
+        heads = {'pose': torch.nn.Linear(3, 2)}
+        opt = {'pose': torch.optim.AdamW(heads['pose'].parameters(), lr=.01)}
+        return heads, opt, np.random.default_rng(12)
+    def step(heads, opt, rng):
+        x = torch.tensor(rng.normal(size=(4, 3)), dtype=torch.float32)
+        opt['pose'].zero_grad()
+        (heads['pose'](x) - torch.randn(4, 2)).square().mean().backward()
+        opt['pose'].step()
+    heads, opt, rng = construct()
+    for _ in range(2): step(heads, opt, rng)
+    path = tmp_path / 'checkpoint.pt'
+    torch.save(checkpoint_state(heads, opt, rng), path)
+    for _ in range(3): step(heads, opt, rng)
+    resumed, resumed_opt, resumed_rng = construct()
+    restore_checkpoint(torch.load(path, weights_only=False), resumed, resumed_opt, resumed_rng)
+    for _ in range(3): step(resumed, resumed_opt, resumed_rng)
+    for key, value in heads['pose'].state_dict().items():
+        assert torch.equal(value, resumed['pose'].state_dict()[key])

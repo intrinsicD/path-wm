@@ -58,8 +58,8 @@ readiness q≤1. Test data never selects checkpoints. These reused held-outs are
 exploratory, not a fresh confirmation set. Report per-seed deltas; three head seeds
 do not measure variation in encoder training or pretraining.
 
-Each fit cap is initially20minutes including validation; profile before freezing,
-amending this number prospectively if necessary. A timeout produces a stopped run
+The initial20-minute fit cap is superseded prospectively by the development
+profile below: **40minutes per formal fit**, including validation. A timeout produces a stopped run
 with its exact last checkpoint/update, not a completed 4,000-update result.
 Report all RGB MSEs, mask BCE/IoU/Dice and empty/full/train-mean baselines, position
 and angle errors, group-balanced errors, clipping rates, runtime/VRAM and parameters.
@@ -115,6 +115,39 @@ package comparison and conditional readout/fusion tests before new encoder depth
 We accept the prioritization; feasibility of later encoder training must be
 measured, not dismissed from an unsupported timing claim. Model agreement is not
 empirical evidence. Cost fields are API-equivalent estimates, not subscription bills.
+
+### Development completion and P1 freeze
+
+Four tiny fits completed (two seeds per package,50updates each); every extraction
+and fit refreshed the canonical dashboard and passed browser QA. They use only32
+training and16validation/test prefix frames per domain, so no capacity/generalization
+conclusion is drawn. CNN fits took about28s and20s; native ViT fits about5s and13s
+(startup/runtime variability; exact durations remain in raw ledgers). The revised path includes
+training-only spatial-mean RGB/mask baselines, an atomic retained selected state,
+and evaluation repair without repeating optimizer work. Exact CPU optimizer and
+sampler resume checks pass; source-width-independent common initialization,
+coordinate order/boundaries, independent gradients, mask semantics and existing
+encoder invariants pass (16 targeted tests).
+
+Before any formal updates, increase the maximum fit allowance to40minutes to
+accommodate startup variability and full-population validation rather than the tiny
+development prefixes. The target remains4,000updates for both packages; six fits
+have at most4hours of fitting. This is a ceiling, not a prediction of runtime.
+Cache preparation completed: CNN6.4s and nativeViT31.6s, reusing verified sources
+where possible. All live/cache relative-MSE checks and frozen-buffer checks pass.
+
+Seal the exact seven training/data module hashes, two cache manifests, protocol
+snapshot, Git revision and ordered six-fit plan in `p1_execution_plan.json` before
+launch. Keep the source snapshot alongside it. The full experiment runs through
+`scripts/execute_perception_overnight.py`, preserving evaluated runs and stopping
+for visible repair on a process/reporting failure.
+
+Claude's second reply explicitly withdrew its unmeasured timing assertion and
+causal diagnosis of a joint geometry failure. It accepted the explicit learned
+coordinate basis and two-object query control. Inspect diffuse/multimodal location
+maps among bad cases. PushT's T shape is not180-degree rotationally symmetric;
+retain the existing2π-wrapped orientation metric, rather than inventing a symmetry
+equivalence. Unknown crowd categories must be excluded in loss and AP.
 
 Implementation modules: `world_model/curriculum/perception_heads.py` (spatial
 interfaces/readouts), `perception_cache.py` (audited frozen sources), and

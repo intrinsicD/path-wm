@@ -73,6 +73,16 @@ def add_curriculum_views(runs,datasets,charts,tables,cards,chart,table,source_id
     if all(r.context.get('decoder_only') for r in selected):
         blocks[0]['body']='## Frozen-encoder decoder recovery\n\nOnly the image decoder is optimized on COCO. Encoder and task readout remain frozen. '
         blocks[0]['body']+='Selection uses COCO validation reconstruction MSE; no pose, dynamics or control gate is assessed. Matched fresh decoders compare recoverability from the original and task-adapted encoders.'
+    overnight = all(str(r.context.get('protocol', '')).startswith('overnight P1:') for r in selected)
+    if overnight:
+        blocks[0]['body'] = ('## Frozen encoder packages and independent readouts\n\n'
+            'CNN and native ViT features feed independent RGB, foreground-mask and spatial-pose heads. '
+            'The encoder weights and buffers remain frozen. All heads are selected at the minimum '
+            'PushT validation q, with earliest exact ties; endpoint metrics are recorded separately. '
+            'q is the worst coordinate MAE/8 world units or angle MAE/10 degrees. '
+            'The numeric readiness target is q≤1. Development prefixes are not formal evidence; '
+            'formal runs use three paired head seeds and reused grouped holdouts. '
+            'This compares two pretrained/trained packages, and does not isolate architecture or establish control.')
     # One seed per native curve family keeps legends legible; all seeds remain indexed.
     screen=[r for r in selected if r.context.get('arm') in ('A','B','C')]
     focus=screen if screen else selected
@@ -87,6 +97,10 @@ def add_curriculum_views(runs,datasets,charts,tables,cards,chart,table,source_id
             for metric in ('loss','image_mse','pose_mse','q','angle_mae_deg','angle_norm_mean'):
                 if metric in row:
                     name=f'{token}_{metric}';output[name]=row[metric];names.append(name)
+            if overnight:
+                for metric in ('mask_iou', 'mask_bce', 'coco_image_mse', 'pusht_image_mse'):
+                    if metric in row:
+                        name=f'{token}_{metric}';output[name]=row[metric];names.append(name)
             for i,n in enumerate(row.get('position_mae',[])):
                 name=f'{token}_position_{i}';output[name]=n;names.append(name)
         fields[token]=set(names)
@@ -102,6 +116,11 @@ def add_curriculum_views(runs,datasets,charts,tables,cards,chart,table,source_id
             ('image','Task reconstruction',[f'{t}_image_mse' for t in supervised],'mean squared RGB error in [0,1]')])
         for coord,title in enumerate(('pusher x','pusher y','block x','block y')):
             specs.append((f'position{coord}',f'Validation {title}',[f'{t}_position_{coord}' for t in supervised],'mean absolute world units'))
+        if overnight:
+            for key, title, unit in [('mask_iou', 'COCO foreground masks', 'mean per-image IoU'),
+                                     ('coco_image_mse', 'COCO reconstruction', 'RGB MSE in [0,1]'),
+                                     ('pusht_image_mse', 'PushT reconstruction', 'RGB MSE in [0,1]')]:
+                specs.append((key, title, [f'{t}_{key}' for t in supervised], unit))
     for token in fields:
         if token.endswith('warmup'):
             specs.append((token,f'Reconstruction warmup: {token}',[f'{token}_image_mse'],'RGB MSE; this phase has its own image population'))
@@ -109,8 +128,11 @@ def add_curriculum_views(runs,datasets,charts,tables,cards,chart,table,source_id
         names=[f for f in names if f in all_fields]
         if not names:continue
         y={'fields':names,'type':'quantitative','label':unit} if len(names)>1 else number(names[0])
+        scope = ('Formal: all2651 PushT and512 COCO validation frames, up to4000 updates per fit; '
+                 'development: explicit16-frame prefixes and50 updates. Three independent heads, frozen source encoders.'
+                 if overnight else 'A has up to4000 supervised updates; B/C up to2000 after separate2000 warmup updates.')
         view=chart(f'curriculum_{key}',f'{title} · seed {seed}',
-                   f'{unit}. Fixed validation frames; x counts updates within this phase. A has up to4000 supervised updates; B/C up to2000 after separate2000 warmup updates. Exact values; no pooled latent spaces.',
+                   f'{unit}. Fixed validation frames; x counts updates within this phase. {scope} Exact values; no pooled latent spaces.',
                    name,'line' if len(wide)>1 else 'bar',number('step'),y)
         if len(names)>1:
             view['legend']={'position':'bottom','sort':'spec'}
