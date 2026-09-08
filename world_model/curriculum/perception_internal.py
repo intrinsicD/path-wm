@@ -16,7 +16,7 @@ from world_model.pusht.checkpoints import fingerprint_modules,json_atomic
 
 
 @contextmanager
-def attention_override(model,mode,collector=None):
+def attention_override(model,mode,collector=None,*,directions=('fine_from_coarse','coarse_from_fine')):
     if mode not in ('normal','uniform','zero'): raise ValueError('attention intervention')
     handles=[]; base=getattr(model,'base',model)
     def hook(name):
@@ -37,7 +37,8 @@ def attention_override(model,mode,collector=None):
             return None
         return apply
     try:
-        for name in ('fine_from_coarse','coarse_from_fine'):
+        for name in directions:
+            if name not in ('fine_from_coarse','coarse_from_fine'): raise ValueError('attention direction')
             handles.append(getattr(base,name).register_forward_hook(hook(name)))
         yield
     finally:
@@ -45,22 +46,30 @@ def attention_override(model,mode,collector=None):
 
 
 @torch.no_grad()
-def evaluate(development=False,device='cpu'):
-    setup(); out=ROOT/('development/internal_attention' if development else 'internal_attention'); out.mkdir(parents=True,exist_ok=True)
-    if (out/'evaluation.json').exists(): raise FileExistsError('preserve attention intervention')
+def evaluate(development=False,device='cpu',directional=False):
+    setup(); family='internal_attention_directional' if directional else 'internal_attention'
+    out=ROOT/('development/'+family if development else family); out.mkdir(parents=True,exist_ok=True)
+    if (out/'evaluation.json').exists():
+        if not (out/'curriculum_analysis.json').exists():
+            return publish(out,json.loads((out/'evaluation.json').read_text()),[out/'evaluation.json',*sorted(out.glob('*.npz'))])
+        raise FileExistsError('preserve attention intervention')
     models,source=source_models('deeper',7107,False,device)
     if file_hash(source)!=CNN_SHA: raise ValueError('source encoder changed')
     encoder=models['E'].eval().requires_grad_(False); del models
     before=fingerprint_modules({'encoder':encoder}); start=time.monotonic()
     frames,targets=cohorts()['fresh']; size=16 if development else len(frames); frames,targets=frames[:size],targets[:size]
     tokens={}; collector={}; sources=[]
-    for mode in ('normal','uniform','zero'):
+    conditions={mode:(mode,('fine_from_coarse','coarse_from_fine')) for mode in ('normal','uniform','zero')}
+    if directional:
+        conditions={'normal':conditions['normal'],**{side+'_'+mode:(mode,(side+'_from_'+other,))
+            for side,other in [('fine','coarse'),('coarse','fine')] for mode in ('uniform','zero')}}
+    for label,(mode,directions) in conditions.items():
         chunks=[]
-        with attention_override(encoder,mode,collector if mode=='normal' else None):
+        with attention_override(encoder,mode,collector if label=='normal' else None,directions=directions):
             for offset in range(0,len(frames),32):
                 rgb=torch.from_numpy(frames[offset:offset+32].copy()).permute(0,3,1,2).to(device).float()/255
                 chunks.append(encoder(rgb).tokens().half().cpu().numpy())
-        tokens[mode]=np.concatenate(chunks)
+        tokens[label]=np.concatenate(chunks)
     attention={}
     for direction,rows in collector.items():
         raw={k:np.concatenate([r[k] for r in rows]) for k in ('entropy','maximum_probability','output_norm','uniform_difference_norm')}
@@ -99,19 +108,28 @@ def evaluate(development=False,device='cpu'):
             evaluations[str(seed)][mode]=metric
             print('attention',seed,mode,'q',round(metric['q'],4),'case pass',round(metric['per_case_tolerance_pass'],4),flush=True)
     if before!=fingerprint_modules({'encoder':encoder}): raise RuntimeError('attention audit mutated encoder')
-    result=dict(status='completed',development=development,frames=size,device=device,attention=attention,
+    protocol='docs/perception-attention-directional-protocol-2026-09-08.md' if directional else 'docs/perception-inspection-protocol-2026-09-08.md'
+    result=dict(status='completed',development=development,directional=directional,frames=size,device=device,attention=attention,
         evaluations=evaluations,baseline_difference=baseline_difference,encoder_sha256=CNN_SHA,
-        source_sha256=file_hash(__file__),protocol_sha256=file_hash('docs/perception-inspection-protocol-2026-09-08.md'),
+        source_sha256=file_hash(__file__),protocol_sha256=file_hash(protocol),
         seconds=time.monotonic()-start,frozen_fingerprint=before)
     json_atomic(out/'evaluation.json',result); sources.append(out/'evaluation.json')
-    analyze(ROOT,out,'Read-only cross-scale attention intervention',dict(frames=size,seconds=result['seconds']),
+    return publish(out,result,sources)
+
+
+def publish(out,result,sources):
+    directional=result.get('directional',False); development=result['development']; size=result['frames']
+    purpose='Read-only directional attention intervention' if directional else 'Read-only cross-scale attention intervention'
+    analyze(ROOT,out,purpose,dict(frames=size,seconds=result['seconds']),
         '## Cross-scale attention reliance\n\n'+('Development16cases only. ' if development else 'All512 fresh cases, three frozen CNN readout seeds. ')+
         'Explicit Q/K/V probabilities match the actual attention operation. Entropy is normalized over keys separately per head. '
-        'Uniform weights retain projected values; zero removes the entire attention-branch output. '
+        'Uniform weights retain projected values; zero removes the entire attention-branch output. '+
+        ('Each named fine/coarse condition changes only that receiving branch. ' if directional else 'Both directions change simultaneously. ')+
         'These are evaluation-time interventions, not trained no-attention architecture controls. Baseline CPU/GPU agreement and raw errors are recorded.',sources)
     return result
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(); p.add_argument('--development',action='store_true'); p.add_argument('--device',default='cpu'); a=p.parse_args()
-    evaluate(a.development,a.device)
+    p=argparse.ArgumentParser(); p.add_argument('--development',action='store_true'); p.add_argument('--device',default='cpu')
+    p.add_argument('--directional',action='store_true'); a=p.parse_args()
+    evaluate(a.development,a.device,a.directional)
