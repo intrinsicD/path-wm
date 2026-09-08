@@ -76,3 +76,31 @@ observed latent states, calculate depth/exchange interactions and conditional
 group uncertainty, apply existing downstream gates, and replace this partial
 record with a final interpretation. Additional scales/registers/software tasks
 remain conditional follow-ups, not silently scheduled expansions.
+
+## First completed paired seed (7107; confirmation pending)
+
+| Arm | Selected validation q | Test q | Test angle MAE |
+|---|---:|---:|---:|
+| Shallow, exchange on | 2.8742 | 2.4747 | 24.75° |
+| Deeper, exchange on | 1.3961 | 1.0678 | 2.21° |
+| Shallow, exchange off | 2.2508 | 2.6718 | 26.72° |
+| Deeper, exchange off | 2.0722 | 1.7347 | 9.92° |
+
+Depth with exchange produces a large geometry gain in this seed. Deeper/on test
+pusher x/y MAE is8.50/8.54 world units, object x/y5.80/5.42 and angle2.21°; pusher
+position keeps q above1. Validation pusher x/y9.07/11.17 likewise fails the gate.
+No downstream training is triggered for these four arms. This is one of three
+paired seeds; do not promote it to a final cross-scale or depth conclusion.
+
+A read-only data-support audit found no pusher centers outside the observed image
+in train/validation/test; only4of2,506 test frames have centers within15world units
+of a border. This does not rule out occlusion, visual ambiguity or other limits.
+The audit also checks all207 prepared PushT files and the82,783-image COCO cache
+against their original manifests; all hashes match.
+
+A separate analytic objective audit shows a10° angular error between unit vectors
+contributes124.45times the pose loss of one8-world-unit coordinate error (31.11times
+four such coordinate errors). This follows from the current normalized-coordinate
+and sin/cos MSE, and makes loss calibration a plausible follow-up. It does not prove
+that loss scaling caused the measured pusher-position errors. The current factorial
+keeps that objective unchanged.
