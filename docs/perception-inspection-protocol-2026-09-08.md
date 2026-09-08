@@ -43,3 +43,9 @@ before the formal read-only512-case unit. No optimizer or target fitting. Budget
 15minutes CPU total,4threads; can overlap the single GPU training queue. Preserve
 development/formal outputs separately. Add useful panels to the canonical HTML,
 with source checks and actual browser verification.
+
+Development completed on16cases: explicit attention agrees with SDPA, scoped
+hooks are removed even on exceptions, the untouched baseline agrees with the
+earlier evaluation, and the canonical dashboard passed browser verification.
+All four attention/variance/hook checks pass. Proceed with the declared512-case
+read-only evaluation; development scores are not full-population findings.
