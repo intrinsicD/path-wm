@@ -227,6 +227,7 @@ def collect_curriculum_analyses(runs_root):
 
 def analysis_blocks(runs,source_id):
     import html
+    from .scientific_preview import image_data_uri
     blocks=[]
     for r in runs:
         if r.kind!='curriculum_analysis':continue
@@ -236,8 +237,8 @@ def analysis_blocks(runs,source_id):
         for panel in s['panels']:
             # At most one compact overview per analysis. Full figures remain on disk.
             if not panel.get('embed',False):continue
-            p=Path(panel['file']);encoded=base64.b64encode(p.read_bytes()).decode()
+            p=Path(panel['file']);encoded=image_data_uri(p)
             blocks.append({'id':'analysis_image_'+hashlib.sha256(str(p).encode()).hexdigest()[:10],
                 'type':'html','layout':'full','body':'<figure><img style="width:100%;height:auto" alt="'+html.escape(panel['title'])+
-                '" src="data:image/png;base64,'+encoded+'"><figcaption>'+html.escape(panel['caption'])+'</figcaption></figure>'})
+                '" src="'+encoded+'"><figcaption>'+html.escape(panel['caption'])+'</figcaption></figure>'})
     return blocks
