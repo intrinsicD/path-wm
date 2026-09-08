@@ -119,3 +119,15 @@ def test_curriculum_dashboard_rejects_rewritten_selected_metrics(tmp_path):
     result['selected']['q']=.5;path.write_text(json.dumps(result))
     with pytest.raises(DashboardDataError,match='differs'):
         collect_curriculum_results(root)
+
+def test_evidence_paths_resolve_with_nested_dashboard_scope(tmp_path):
+    from viewer.ledger import resolve_evidence_path
+    current = tmp_path / 'runs' / 'curriculum'
+    panel = current / 'paddle/evaluation/visuals/frame.png'
+    panel.parent.mkdir(parents=True)
+    panel.write_bytes(b'unchanged evidence')
+    assert resolve_evidence_path('runs/curriculum/paddle/evaluation/visuals/frame.png', current) == panel
+    assert resolve_evidence_path('/old/computer/runs/curriculum/paddle/evaluation/visuals/frame.png', current) == panel
+    assert panel.read_bytes() == b'unchanged evidence'
+    with pytest.raises(ValueError, match='traversal'):
+        resolve_evidence_path('../frame.png', current)

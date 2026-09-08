@@ -177,3 +177,13 @@ U/R readout. Preserve raw records and compute sign counts from those records;
 this is descriptive inspection, with no new fitting, training, gate or control
 selection. Existing source-hash integrity checks cover this presentation path;
 no test is added for plotting glue.
+
+## Final reporting repair
+
+All 3,500 controller cases and evaluator figures completed successfully, with no
+evaluation errors. The canonical dashboard then rejected a valid rollout PNG
+because the archived-path resolver assumed the supplied runs root was the top-level
+`runs/` directory. This curriculum deliberately supplies a nested scope. Add an
+essential regression for current relative and archived absolute image paths under
+a nested runs root, then resolve against the enclosing physical `runs/` directory.
+Preserve raw ledgers and figures; rebuild the report without rerunning evaluation.
