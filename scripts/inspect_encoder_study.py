@@ -23,7 +23,7 @@ def main():
     # CPU inspection avoids competing with the measured GPU training schedule.
     for arm,(depth,exchange) in ARMS.items():
         checkpoint=ROOT/'factorial/seed_7107'/arm/'best.pt'
-        if not checkpoint.exists():continue
+        if not checkpoint.exists() or not (checkpoint.parent/'curriculum_result.json').exists():continue
         state=read_checkpoint(checkpoint);models=matched_models(7107,depth,exchange)
         for k,m in models.items():m.load_state_dict(state['models'][k]);m.eval().requires_grad_(False)
         ztrain=[]
