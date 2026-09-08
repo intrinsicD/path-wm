@@ -788,3 +788,23 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O48
+  timestamp: 2026-09-08T11:18+02:00
+  provenance: ai-suggested
+  content: Propose extending the perception design around a belief/action/consequence/evaluation loop with
+    modality-specific observations, typed executable actions, temporal state and distinct observation readouts.
+    Spatial cross-scale fusion is replaceable and does not supply task hierarchy or internal reasoning by itself.
+    Train a matched attention/no-exchange/simple-fusion comparison; test a small software persistence workflow
+    alongside physical tasks to expose non-geometric state and action requirements. No such runs adopted.
+  context: N95 code trace and primary CrossViT/FPN, MuZero, DreamerV3, Gato, WebDreamer, UniAD and Coconut review.
+    Shared algorithm, shared interfaces and shared trained weights are distinct. Archived multimodal token
+    configuration remains historical; current architecture/checkpoints unchanged.
+  potential_type: architecture
+  bound_to:
+  - N95
+  - N94
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

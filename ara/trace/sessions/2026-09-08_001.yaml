@@ -2,10 +2,10 @@ session:
   id: 2026-09-08_001
   date: '2026-09-08'
   started: 2026-09-08T03:03+02:00
-  last_turn: 2026-09-08T11:08+02:00
-  turn_count: 8
+  last_turn: 2026-09-08T11:18+02:00
+  turn_count: 9
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
-    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning. Turn5 completes three decoder recovery arms, full evaluation and Claude literature review; 359 tests and browser QA pass. Turn6 executes only the narrowed PushT pose-head comparison; spatial orientation improves with object-position tradeoff, all readiness gates fail; 362 tests and final browser QA pass. Turn7 traces pose provenance; turn8 researches general representations and records a modular perception proposal without new training.'
+    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning. Turn5 completes three decoder recovery arms, full evaluation and Claude literature review; 359 tests and browser QA pass. Turn6 executes only the narrowed PushT pose-head comparison; spatial orientation improves with object-position tradeoff, all readiness gates fail; 362 tests and final browser QA pass. Turn7 traces pose provenance; turn8 researches general representations and records a modular perception proposal without new training. Turn9 traces cross-scale evidence and documents a general-agent loop for software, generated actions, internal computation and driving; no new runs.'
 events_logged:
 - turn: 1
   type: decision
@@ -227,6 +227,19 @@ events_logged:
   provenance: ai-suggested
   summary: Shared spatial representation, multiple readouts and separate temporal prediction; proposed transfer benchmark unadopted.
 
+- turn: 9
+  type: question
+  id: N95
+  routing: direct
+  provenance: user
+  summary: Cross-scale benefit and general agent extension to software, output actions, computation and driving.
+- turn: 9
+  type: observation
+  id: O48
+  routing: staged
+  provenance: ai-suggested
+  summary: Replaceable visual fusion inside a general belief/action/prediction loop; matched ablation and software benchmark proposed.
+
 ai_actions:
 - turn: 1
   action: 'Completed the continuous September7–8 task: source verification/grouped image preparation; matched training
@@ -308,6 +321,16 @@ ai_actions:
   - docs/project-state.md
   - ara/
 
+- turn: 9
+  action: Traced current cross-scale attention, wiring tests and attention visualization; searched configs/results
+    for fusion comparisons. Reviewed primary general-agent/world-model literature and saved a scoped architecture
+    clarification. No training, model inference, checkpoint changes or dashboard refresh.
+  provenance: ai-executed
+  files_changed:
+  - docs/general-agent-world-model-2026-09-08.md
+  - docs/project-state.md
+  - ara/
+
 claims_touched:
 - id: C04
   action: crystallized
@@ -337,6 +360,10 @@ key_context:
   excerpt: 'Should we really learn positions and orientations? What if we need additional things like extent?
     What does the literature say about a powerful versatile and flexible encoder decoder architecture?'
 
+- turn: 9
+  excerpt: Is cross scale attention actually helping, and how should trained world models solve software use,
+    internal thinking, generated outputs as actions and driving?
+
 open_threads:
 - PushT pose generalization/optimization and generic retention remain unresolved; no further training queued.
 - Paddle control improved but memory/prediction/90%targets fail; a runtime-matched multi-seed study would be needed
@@ -347,7 +374,9 @@ open_threads:
 - N86 decoder refit completed through N89; broader representation and task-head questions remain open.
 - N87 task-conditioning location and its advantage over an equally trained unconditioned decoder remain open.
 - N94 broader representation and multiple-output design remains a proposal; compare useful outputs before adopting a replacement.
+- N95 cross-scale causal benefit and general action/outcome architecture remain untested beyond the recorded visual prototype.
 ai_suggestions_pending:
+- O48 matched fusion ablation and a software persistence benchmark are proposed, not launched.
 - O47 frozen pretrained/current encoder comparison with RGB and mask/extent readouts is proposed, not launched.
 - O45 decoupled geometry/loss comparison is unadopted; Paddle and conditioning studies deferred by user.
 - O42 conditional decoder proposal is untested; user question is not architecture adoption.

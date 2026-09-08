@@ -1503,3 +1503,21 @@ tree:
   - N92
   - N93
   status: open
+
+- id: N95
+  type: question
+  title: Does cross-scale attention help, and how does the model extend to general agent tasks?
+  provenance: user
+  timestamp: 2026-09-08T11:18+02:00
+  description: User asks about actual cross-scale benefit and extension to software use, generated actions,
+    internal computation and driving. Code/results trace finds wiring tests and descriptive attention plots,
+    but no trained fusion comparison. Primary literature and a general-agent design clarification are recorded.
+  evidence:
+  - world_model/paddle/models.py:40
+  - tests/paddle/test_models_planner.py:59
+  - docs/training-curriculum-results-2026-09-07.md:114
+  - docs/general-agent-world-model-2026-09-08.md
+  also_depends_on:
+  - N94
+  - N92
+  status: open

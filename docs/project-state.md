@@ -38,6 +38,14 @@ their transformed masks still need preparation and verification. Shared query
 decoding and object grouping are later candidates, not adopted components.
 This review launched no training and changed no model or existing readiness gate.
 
+The user then broadened the discussion to software use, generated outputs as
+actions, internal computation and driving. The [general-agent clarification](general-agent-world-model-2026-09-08.md)
+separates visual cross-scale fusion from temporal/task hierarchy and distinguishes
+action generation from observation decoding. No trained cross-scale ablation exists
+in the inspected implementation/results. A bounded fusion comparison and a small
+software action/outcome benchmark are proposed, not launched; historical fixed
+multimodal token counts remain unadopted.
+
 ## Complete: frozen PushT pose-head comparison (8 September)
 
 User authorized the [bottleneck protocol](world-model-next-experiments-2026-09-08.md),
