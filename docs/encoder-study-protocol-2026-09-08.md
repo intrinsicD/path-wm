@@ -93,3 +93,56 @@ Additional levels, registers, higher input resolution, fusion alternatives and
 software persistence remain staged follow-ups selected from the evidence. Do not
 blindly execute an architecture sweep. Preserve causal future decoding and the
 separation between observation outputs, actions and temporal state.
+
+## Development profile and frozen execution details
+
+Development artifacts: `runs/encoder_study_2026-09-08/development/`. Tiny independent
+head completed 3 updates; each custom E completed 25 profiling updates. Batch128
+median update times were 0.05356 / 0.06930 / 0.04212 / 0.05787 seconds for
+reference / deeper / no-exchange / deeper-no-exchange. Peak allocated memory was
+1.39 / 1.52 / 1.33 / 1.45 GB. DINO batch32 took 0.11757 seconds; FP16 storage
+round-trip relative MSE was 4.31e-8 (<pre-use 1e-6 gate). These are development
+measurements on RTX3050 8GB, not formal training or final latency claims.
+
+**Freeze B before formal training:** all 12 runs use seeds7107/7108/7109,
+4,000 updates, batch/microbatch128, the proposed optimizer and validation settings,
+wall cap1,200 seconds each including validation/checkpoint time. No early quality
+stopping. Same seed uses the same phase sampler and fixed2048validation indices.
+Keep selected and final checkpoints; wall-matched comparisons use nearest
+validation step whose elapsed time does not exceed its paired shallow run's
+final elapsed time. If unavailable, report unavailable. Normal convolution
+initialization (not zero-init residuals) is part of the package.
+
+A2 fits fresh D/H on both frozen custom A and frozen DINO+trainable adapter,
+4,000 updates with wallcap1,200seconds. The adapter gives DINO additional trainable
+capacity; this is a comparator, not an isolated backbone experiment. Keep the
+frozen COCO-warmup encoder as a third RGB/mask retention reference. Per-image mask
+metrics include foreground-fraction strata and mean-mask/empty/full baselines.
+
+Claude's execution review and reconciliation are preserved under
+`runs/encoder_study_2026-09-08/collaboration/`. Accepted corrections: an averaged
+linear token probe cannot establish information at each token; flip correspondence
+is not a guaranteed backbone unit invariant; identical mask/RGB geometry does
+not imply identical interpolation; three seeds cannot retrospectively establish
+an MDE; a from-pixels model is not a guaranteed resolution ceiling. No extra
+probe/CNN/register arms are added. Results must state that B's exchange comparison
+under this perception recipe does not establish its effect on imagination or
+planning if compatible downstream training is blocked. Peer preferences about a
+custom identity adapter and RGB selection remain documented, not silently adopted.
+
+The development dashboard initially failed on an oversized metadata field (a
+group list instead of its digest). The original manifest and explicit reporting
+correction are retained; raw metrics were unchanged. Canonical HTML now passes
+package, validation and browser verification.
+
+## Figure contract
+
+Scientific figures use Matplotlib with neutral backgrounds and blue/orange plus
+neutral reference colors, explicit line styles and units. Validation trajectories
+show every recorded evaluation; q=1 is a neutral dashed reference. Final comparisons
+show per-seed values and paired changes, not pooled incompatible latent losses.
+Fixed image panels display target/predicted geometry and masks with shared scales.
+Native HTML charts and exact tables remain backed by the canonical raw ledger.
+Development three-update traces are labeled development, not evidence of learning
+shape; formal trajectories have41 or61 evaluation points. Inspect exported figures
+and verify the actual dashboard at laptop/mobile widths before handoff.

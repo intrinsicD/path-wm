@@ -121,7 +121,12 @@ def _train(config,train,validation,validation_indices,run,warmup,resume,stop_aft
     torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False
     torch.backends.cudnn.benchmark=False
     parent=read_checkpoint(warmup) if warmup else None
-    models=initial_models(config['seed'],None if parent is None else parent['models'])
+    if 'encoder_variant' in config:
+        if parent is not None:raise ValueError('custom encoder factorial starts from matched fresh tensors')
+        from .encoder_variants import matched_models
+        models=matched_models(config['seed'],**config['encoder_variant'])
+    else:
+        models=initial_models(config['seed'],None if parent is None else parent['models'])
     if decoder_only:
         initialization=config.get('decoder_initialization','parent')
         if initialization not in ('fresh','parent'):raise ValueError('unknown decoder initialization')
@@ -131,6 +136,9 @@ def _train(config,train,validation,validation_indices,run,warmup,resume,stop_aft
     for name,model in models.items():
         trainable=name=='D' if decoder_only else name in keys
         model.to(device).train(trainable).requires_grad_(trainable)
+    if 'encoder_variant' in config and not config['encoder_variant']['exchange']:
+        for layer in ('fine_from_coarse','coarse_from_fine','fine_attention_norm','coarse_attention_norm'):
+            getattr(models['E'],layer).requires_grad_(False)
     active={k:models[k] for k in (('D',) if decoder_only else keys)}
     checkpoint_models={k:models[k] for k in keys}
     frozen={k:models[k] for k in ('E','H')} if decoder_only else {}
@@ -198,7 +206,7 @@ def _train(config,train,validation,validation_indices,run,warmup,resume,stop_aft
         return value
     def validate(step):
         metrics=evaluate(models,validation,ids,config.get('validation_batch',128),device,labelled)
-        with (run/'validation.jsonl').open('a') as f:f.write(json.dumps({'step':step,**metrics})+'\n')
+        with (run/'validation.jsonl').open('a') as f:f.write(json.dumps({'step':step,'elapsed_seconds':elapsed+time.monotonic()-begin,**metrics})+'\n')
         print(f"{config.get('arm','diagnostic')} {config['phase']} {step}: image={metrics['image_mse']:.6g} q={metrics.get('q')} angle={metrics.get('angle_mae_deg')}",flush=True)
         return metrics
     if start==0 and not resume:
@@ -216,6 +224,7 @@ def _train(config,train,validation,validation_indices,run,warmup,resume,stop_aft
         optimizer.step();examples+=len(indices)
         row={'step':step,**metrics,'grad_norm':float(norm),'examples':examples,
              'sample_indices_sha256':hashlib.sha256(indices.tobytes()).hexdigest(),
+             'elapsed_seconds':elapsed+time.monotonic()-begin,
              'update_seconds':time.monotonic()-batch_begin}
         with (run/'training.jsonl').open('a') as f:f.write(json.dumps(row)+'\n')
         if step%config['validate_every']==0 or step==config['updates'] or step==stop_after:
