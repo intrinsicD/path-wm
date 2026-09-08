@@ -19,3 +19,14 @@ def test_head_training_leaves_feature_source_frozen():
     assert any(p.grad is not None and p.grad.abs().sum()>0 for p in head.parameters())
     assert all(p.grad is None for p in encoder.parameters())
     assert all(torch.equal(v,encoder.state_dict()[k]) for k,v in before.items())
+
+def test_landmark_targets_roundtrip_and_spatial_probabilities():
+    torch.set_num_threads(1)
+    angles=torch.tensor([-.7,1.2])
+    truth=torch.cat((torch.full((2,4),.5),angles.sin()[:,None],angles.cos()[:,None]),1)
+    torch.testing.assert_close(SpatialPoseHead.pose_from_points(SpatialPoseHead.target_points(truth)),truth)
+    head=SpatialPoseHead()
+    latent=ObservationLatent(torch.randn(2,256,64),torch.randn(2,64,64))
+    _,points,heatmaps=head.details(latent)
+    torch.testing.assert_close(heatmaps.sum((-1,-2)),torch.ones(2,3))
+    assert ((points>=0)&(points<=1)).all()
