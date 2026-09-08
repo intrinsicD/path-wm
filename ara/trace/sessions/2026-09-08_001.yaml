@@ -2,8 +2,8 @@ session:
   id: 2026-09-08_001
   date: '2026-09-08'
   started: 2026-09-08T03:03+02:00
-  last_turn: 2026-09-08T16:45+02:00
-  turn_count: 15
+  last_turn: 2026-09-08T17:49+02:00
+  turn_count: 16
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
     and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed
     controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning.
@@ -22,7 +22,9 @@ session:
     and indirect memory path; proposes typed or conditioned readouts with belief supervision and causal timing,
     two Claude exchanges reconciled; no model runs. Turn15 assesses encoder conditioning with verified RT-1/FiLM/VPT
     precedents and two Claude exchanges; context timing, retention and late-versus-earlier comparison proposed,
-    no new implementation or runs.'
+    no new implementation or runs. Turn16 consolidates the full encoder/decoder and conditional experiment proposal,
+    reconciles two public-only Claude reviews and delivers verified printable HTML plus a non-runnable manifest;
+    no new model work or training authorization.'
 events_logged:
 - turn: 1
   type: decision
@@ -445,6 +447,18 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Task/prior-state conditional processing proposed with a retained reference and explicit causal/context contracts.
+- turn: 16
+  type: question
+  id: N110
+  routing: direct
+  provenance: user
+  summary: Complete consolidated encoder/decoder and experiment proposal sheet requested and delivered.
+- turn: 16
+  type: observation
+  id: O61
+  routing: staged
+  provenance: ai-suggested
+  summary: Six-fit native-feature package comparison, early memory diagnosis and gated branches remain proposed.
 ai_actions:
 - turn: 1
   action: 'Completed the continuous September7–8 task: source verification/grouped image preparation; matched training
@@ -611,6 +625,22 @@ ai_actions:
   - docs/project-state.md
   - runs/requirements_first_perception_2026-09-08/collaboration/
   - ara/
+- turn: 16
+  action: Consolidated local evidence and primary literature into a complete design sheet and draft budget manifest;
+    two public-only Claude exchanges reconciled causal timing, registers, package attribution and selection rules.
+    Validated document links and budget arithmetic. Canonical portable HTML initially exposed shared toolbar
+    scrollbar overflow; a supported runtime-option sizing repair preserves renderer logic and verifier assertions.
+    Final40blocks/11tables/1chart/1diagram pass1440/390browser and source interaction checks. No model inference,
+    training or canonical experiment-dashboard changes.
+  provenance: ai-executed
+  files_changed:
+  - docs/perception-proposal-2026-09-08.md
+  - docs/proposals/perception-program-2026-09-08.yaml
+  - docs/project-state.md
+  - scripts/build_perception_proposal.py
+  - scripts/deliver_perception_proposal.mjs
+  - runs/perception_proposal_2026-09-08/
+  - ara/
 claims_touched:
 - id: C04
   action: crystallized
@@ -662,6 +692,8 @@ key_context:
     are convolutions spatial and transformers semantic, and how do we mix these ideas for what we need?
 - turn: 15
   excerpt: Can we condition the encoder too, on action, task, internal state or something else; is it feasible?
+- turn: 16
+  excerpt: Ok now make a complete proposal sheet for how the encoder and decoder and the experiments should look.
 open_threads:
 - PushT pusher-position readiness and generic retention remain unresolved after N99–N102; no training remains active.
 - Paddle control improved but memory/prediction/90%targets fail; a runtime-matched multi-seed study would be needed
@@ -681,13 +713,14 @@ open_threads:
   next budget/loss comparison is proposed.
 - N104/N105 expose coarse global/spatial structure and selective heads; trained coarse-only readouts, simpler
   fusion and hybrid/topology choices remain untested. O55/O57 are proposals, not architecture adoption.
-- N107/O58 requirements-first and asymmetric-family design remains a proposal; define bounded consumers and
-  essential gates before selecting a new experiment. Native-feature decoding and software cases are untested.
+- N107/N110 and O58/O61 now have a complete draft package comparison and gated program; native-feature decoding,
+  software cases and proposed budgets remain unadopted and untested. No new execution is active.
 - N108/O59 direct decoder memory, typed versus conditional sharing and belief-target supervision remain design
   choices to test. Existing fine/coarse D and memory-conditioned P do not settle these additional paths.
 - N109/O60 conditional encoding remains a design option; early-versus-late context, target consistency, task
   switching and computation need a prospectively declared comparison.
 ai_suggestions_pending:
+- O61 consolidates the complete program without adopting an architecture, frozen experiment budget or new training.
 - O60 proposes encoder conditioning without adopting a new E, adapter, crop policy, training budget or priority over O58.
 - O59 clarifies possible decoder interfaces without adopting new memory, conditioning, fusion or encoder training.
 - O58 broadens the decision method beyond O57 local hybrid ablation; no architecture adoption or new run budget.

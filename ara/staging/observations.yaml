@@ -999,3 +999,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O61
+  timestamp: 2026-09-08T17:49+02:00
+  provenance: ai-suggested
+  content: Consolidated proposal recommends native spatial feature contracts, asymmetric typed decoders and explicit
+    causal memory/prediction. Start with six frozen CNN/native-ViT readout fits; then diagnose existing memory and
+    activate one conditional objective, processing, sharing, encoder-context or compatible-dynamics branch. Preserve
+    existing readiness gates, one primary checkpoint rule, exploratory holdout status and consumer-specific RGB
+    requirements. Initial240minute execution allowance and later ceilings are proposals, not measured timing or
+    adopted budgets. Stop architecture search once a named consumer's essential outputs and cost are adequate.
+  context: Complete proposal document and draft YAML requested; two public-only Claude exchanges corrected memory
+    leakage, automatic registers, mandatory random-ViT and seed-significance overclaims. Browser-verified artifact
+    produced with a scoped toolbar sizing repair. No model change, training, inference or experiment-dashboard refresh.
+  potential_type: architecture
+  bound_to: [N110, N107, N108, N109, N100, N105]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

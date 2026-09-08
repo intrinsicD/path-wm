@@ -47,8 +47,10 @@ sessions:
     and indirect memory path; proposes typed or conditioned readouts with belief supervision and causal timing,
     two Claude exchanges reconciled; no model runs. Turn15 assesses encoder conditioning with verified RT-1/FiLM/VPT
     precedents and two Claude exchanges; context timing, retention and late-versus-earlier comparison proposed,
-    no new implementation or runs.'
-  turn_count: 15
-  events_count: 64
+    no new implementation or runs. Turn16 consolidates the full encoder/decoder and conditional experiment proposal,
+    reconciles two public-only Claude reviews and delivers verified printable HTML plus a non-runnable manifest;
+    no new model work or training authorization.'
+  turn_count: 16
+  events_count: 66
   claims_touched: [C04]
   open_threads: 14

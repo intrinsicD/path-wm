@@ -1721,3 +1721,16 @@ tree:
     context is feasible, following the decoder discussion. No implementation or experiment is requested.
   also_depends_on: [N108, N107, N87]
   status: open
+- id: N110
+  type: question
+  title: Consolidate the complete encoder, decoder and experiment proposal
+  provenance: user
+  timestamp: 2026-09-08T17:49+02:00
+  description: User requests a complete proposal sheet integrating the architecture and experiment discussions.
+    Delivered a source-backed printable report and non-runnable draft manifest; this resolves the document request,
+    not the open architecture-selection questions or authorization of new training.
+  evidence:
+  - docs/perception-proposal-2026-09-08.md
+  - docs/proposals/perception-program-2026-09-08.yaml
+  also_depends_on: [N107, N108, N109, N104, N100]
+  status: resolved

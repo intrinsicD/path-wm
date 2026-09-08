@@ -1,0 +1,214 @@
+schema: path-wm.research-proposal.v1
+status: draft
+execution_authorized: false
+runnable_trainer_config: false
+date: '2026-09-08'
+narrative: docs/perception-proposal-2026-09-08.md
+purpose: Select a useful perception package, diagnose the remaining limit, then activate one bounded branch.
+interpretation:
+  initial_comparison: Practical packages; architecture and pretraining are not causally isolated.
+  holdouts: Existing populations have been inspected; first comparison is exploratory.
+  seed_scope: Three fresh readout seeds conditional on two fixed encoders.
+  later_stages: Conditional drafts, not an execution queue.
+  peer_review: Public conceptual brief only; Claude did not inspect local code, data or results.
+initial_scope: [P0, P1]
+recommended_next_diagnostic: P2
+reference:
+  encoder: deeper_on
+  checkpoint_source_seed: 7107
+  reason: Lowest previously recorded validation q in the deeper/on family.
+  checkpoint_sha256: null
+  checkpoint_pin_required_before_execution: true
+  legacy_grid_channels: [[16, 16, 64], [8, 8, 64]]
+  legacy_memory_width: 128
+alternative:
+  encoder: dinov2_vits14
+  frozen: true
+  source_commit: 7764ea0f912e53c92e82eb78a2a1631e92725fc8
+  weight_sha256: b938bf1bc15cd2ec0feacfe3a1bb553fe8ea9ca46a7e1d8d00217f29aef60cd9
+  input: Same RGB64 source, bicubic resize 224 with antialiasing; no crop; ImageNet normalization.
+  native_grid_channels: [16, 16, 384]
+  pooled_level: 2x2 average pool; derived, not an independently learned stage.
+  class_token_used: false
+  silent_register_checkpoint_substitution: false
+feature_contract:
+  required_metadata: [backbone_hash, preprocessing_hash, grid, channels, coordinates, valid_region, normalization, time]
+  decoder_projections: Explicit and trainable per output; do not replace native stored features.
+  downstream_compatibility: New E requires explicitly compatible U/P and readouts.
+  future_decoder_input: Predicted features plus optional aligned predicted memory; no actual future observations.
+data:
+  pusht_cchi:
+    frames: {train: 20493, validation: 2651, test: 2506}
+    configuration_groups: {train: 164, validation: 20, test: 22}
+    reference_point: Simulator body origin; not silhouette centroid.
+  coco_audit:
+    images: {train: 4096, validation: 512, test: 512}
+    mask: Foreground union, with crowd and invalid pixels ignored; not instance extent.
+  fresh_confirmation: Separate future cohort, frozen prospectively with rendering/duplicate audits.
+p1:
+  seeds: [9107, 9108, 9109]
+  encoders: [deeper_on_7107, dinov2_vits14]
+  fits: 6
+  updates_per_fit: 4000
+  total_updates: 24000
+  effective_batch: 64
+  domain_batch: {coco: 32, pusht: 32}
+  microbatch: 32
+  accumulation_steps: 2
+  total_frame_presentations: 1536000
+  sampling: Replacement from train only, identical paired image draws.
+  checkpoint_selection:
+    primary: pusht_validation_q
+    direction: minimize
+    tie_break: earliest_update
+    every_updates: 100
+    populations: Fixed full validation populations.
+    all_outputs_at_same_checkpoint: true
+    final_checkpoint_also_reported: true
+  optimizer:
+    name: AdamW
+    learning_rate: 0.0003
+    weight_decay: 0.0001
+    clipping_norm: 1.0
+    clipping_scope: Per independent output module, avoiding cross-head clipping effects.
+    precision: fp32
+  objective:
+    rgb: Equal-domain mean pixel MSE.
+    mask: Valid-pixel BCE on COCO only.
+    pose: Existing normalized PushT pose MSE.
+    weights: {rgb: 1.0, mask: 1.0, pose: 1.0}
+    shared_trainable_trunk: false
+  feature_cache:
+    precision: fp16_if_verified_otherwise_fp32
+    max_relative_round_trip_mse: 0.000001
+    frozen_weights_and_buffers: true
+  pairing:
+    shared_shape_initial_tensors: identical
+    input_projection_shapes: Different across native widths; distinct recorded RNG streams.
+  profile_changes: Apply prospectively to both arms before formal protocol freeze.
+  fit_wall_cap_minutes: 20
+  cap_outcome: Truncated/inconclusive; do not substitute an unequal-step winner.
+proposal_gates:
+  legacy_pusht_q:
+    expression: max(four_coordinate_MAEs / 8_world_units, wrapped_angle_MAE / 10_degrees)
+    maximum: 1.0
+    status: existing_required_gate
+  q_improvement:
+    relative_minimum_each_paired_seed: 0.10
+    status: proposed_descriptive_screen_not_significance
+  rgb_retention:
+    max_domain_mse_ratio_to_corresponding_reference: 1.05
+    applies_if: RGB is a required consumer output.
+    status: proposed_margin_to_freeze_before_execution
+  mask_retention:
+    max_absolute_iou_loss_to_corresponding_reference: 0.02
+    must_beat_constant_baselines: true
+    status: proposed_margin_to_freeze_before_execution
+  world_model_progression: Preserve existing environment-specific perception, memory, prediction and control gates.
+  no_qualified_package: Keep reference and diagnose; a ranked failure is not a ready system.
+initial_execution_allowance_minutes:
+  P0_development: 30
+  feature_extraction_and_cache_validation: 45
+  P1_formal_fits: 120
+  final_evaluation_and_report: 45
+  total: 240
+  excludes: Implementation and review effort.
+  meaning: Proposed category ceilings; not measured duration or automatic reallocation.
+conditional_stages:
+  P2:
+    purpose: Diagnose accessibility of motion information in existing frozen Paddle E/U.
+    arms: [current_image, updated_memory, combined, prior_memory]
+    seeds: 3
+    maximum_fits: 12
+    updates_per_fit: 2000
+    per_fit_minutes: 5
+    total_fit_minutes: 60
+    primary: validation_velocity_mse
+    checkpoint_rule: Minimum primary metric; earliest tie; all outputs at that checkpoint.
+    next_decision: Accessible in state vs lost during update vs lost during rollout.
+    before_activation: Freeze probe capacities, histories/timestamps, optimizer, batch, checkpoint hashes and total extraction/evaluation budget.
+  P3:
+    purpose: Separate longer unchanged training from a position/angle scaling intervention.
+    arms: [unchanged_objective_continuation, tolerance_scaled_pose_continuation]
+    source_seeds: [7107, 7108, 7109]
+    seeds: 3
+    maximum_fits: 6
+    updates_per_fit: 4000
+    per_fit_minutes: 20
+    total_fit_minutes: 120
+    primary: pusht_validation_q
+    checkpoint_rule: Minimum primary metric; earliest tie; all outputs at that checkpoint.
+    condition: Geometry remains inadequate and budget/objective remains a plausible limit.
+    next_decision: Stop architecture expansion if required geometry resolves; otherwise locate remaining error.
+    before_activation: Verify resumable optimizer/RNG state or declare matched restarts; freeze loss conversions and evaluation budget.
+  P4:
+    purpose: Test extra local convolution versus within-scale attention under a common encoder-training recipe.
+    arms: [reference, two_extra_residual_blocks_per_branch, two_transformer_blocks_per_branch]
+    seeds: 3
+    maximum_fits: 9
+    updates_per_fit: 4000
+    per_fit_minutes: 20
+    total_fit_minutes: 180
+    transformer: {width: 64, heads: 4, mlp_ratio: 4, pre_norm: true}
+    primary: pusht_validation_q
+    checkpoint_rule: Minimum primary metric; earliest tie; all outputs at that checkpoint.
+    condition: A spatial-representation question remains after cheaper diagnostics.
+    next_decision: Keep the smallest adequate package or reject extra processing at the measured budget.
+    before_activation: Freeze encoder initialization, data/loss recipe, parameter counts, preprocessing and total evaluation budget.
+  P5:
+    purpose: Test decoder sharing before conditioning the shared decoder.
+    arms: [separate_trunks, shared_trunk_typed_heads, conditional_shared_film]
+    seeds: 3
+    maximum_fits: 9
+    base_fits: 6
+    conditional_fits: 3
+    updates_per_fit: 4000
+    per_fit_minutes: 20
+    total_fit_minutes: 180
+    primary: equal_domain_rgb_validation_mse
+    checkpoint_rule: Minimum primary metric; earliest tie; mask retention scored at same checkpoint.
+    condition: Shared decoding has a consumer; FiLM only if plain sharing loses or a declared output needs context.
+    next_decision: Keep separate decoders if sharing fails without sufficient cost benefit.
+    before_activation: Freeze shared capacity, losses/weights, retention thresholds and complete evaluation budget.
+  P6:
+    purpose: Compare context placement with equally informed visual alternatives.
+    arms: [late_context_readout, earlier_film_adapter, context_only]
+    seeds: 3
+    maximum_fits: 9
+    updates_per_fit: 4000
+    per_fit_minutes: 20
+    total_fit_minutes: 180
+    primary: mean_requested_object_xy_validation_mae
+    checkpoint_rule: Minimum primary metric; earliest tie; retention scored at same checkpoint.
+    condition: Object queries are a named consumer; sample pusher/body queries equally.
+    next_decision: Retain late conditioning unless earlier processing improves required outcomes with retention.
+    before_activation: Freeze adapter location, identity initialization, capacity accounting, query splits and evaluation budget.
+  P7:
+    purpose: Test compatible multi-step dynamics and its actual control value.
+    arms: [latent_only, latent_plus_verified_physical_multistep]
+    seeds: 3
+    maximum_fits: 6
+    updates_per_fit: 4000
+    per_fit_minutes: 20
+    total_fit_minutes: 120
+    rollout_horizon: 5
+    primary: validation_five_step_physical_error_normalized_by_declared_tolerances
+    checkpoint_rule: Minimum primary metric; earliest tie; all rollout/control outputs at that checkpoint.
+    condition: Applicable legacy perception/memory gates pass; compatible state model and verified readouts exist.
+    next_decision: Control readiness requires actual existing controller gates, not reconstruction improvement.
+    before_activation: Freeze compatible U preparation, E/P contracts, physical tolerances, batch/action-repeat, training loss weights, datasets, control cases, simulator alternatives and full budget.
+deferred:
+  - Higher true observation resolution versus upsampling.
+  - Sequential refined-fine-to-coarse topology.
+  - Additional third or fourth spatial levels.
+  - Register-pretrained package for a measured dense-feature issue.
+  - Variable instance/query decoder after labels and a consumer exist.
+  - Random frozen ViT control for a separately scoped pretraining question.
+  - Instrumented software interaction benchmark with actual high-resolution/structured inputs.
+  - Stochastic belief outputs with proper scoring for genuinely ambiguous targets.
+reporting:
+  new_training_started_by_proposal: false
+  dashboard_refresh: After actual experiments, from raw ledgers; this design report is separate.
+  intervals: Paired configuration-group/episode bootstrap where appropriate; report conditional scope and all seeds.
+  visualizations: [loss_and_cost_curves, geometry_overlays, rgb_error, masks, fixed_train_pca, token_norms, per_head_attention, memory_history_pairs, future_drift, paired_control]
+  required_statuses: [completed, failed_correctness, truncated_budget, inconclusive, gate_failed, gate_passed]

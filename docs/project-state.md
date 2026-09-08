@@ -27,6 +27,19 @@ Read the [paddle results](paddle-world-model-results-2026-09-07.md),
 
 ## Complete: encoder investigation (8 September)
 
+The [complete encoder/decoder proposal sheet](perception-proposal-2026-09-08.md)
+now consolidates the architecture, conditioning, curriculum, decision gates and
+experiment budgets. Its [draft manifest](proposals/perception-program-2026-09-08.yaml)
+is explicitly non-runnable. The recommended first decision is six frozen-package
+readout fits (deeper/on versus native DINOv2), followed by an existing-memory
+diagnostic and one evidence-selected branch. This request produced a proposal,
+not new execution authorization; no model change, training or inference ran.
+The [printable offline sheet](../runs/perception_proposal_2026-09-08/proposal.html)
+uses the canonical report renderer and passes desktop/narrow browser and source
+interaction checks. Two public-only Claude exchanges corrected timing/register
+and package-attribution overclaims. Existing experiment results and the canonical
+experiment dashboard remain unchanged.
+
 The [encoder-conditioning review](encoder-conditioning-2026-09-08.md) establishes
 feasibility precedents and proposes a retained spatial reference plus contextual
 processing for a named consumer. E is currently RGB-only; U already queries E
@@ -93,9 +106,11 @@ depth/exchange on load/export and rejects unsupported legacy paths; all 12 train
 E/H/D outputs match the experiment factory exactly. Frozen training source is
 preserved at b95906cabdad0c3df7d2ff0aa70196729b5e4c33.
 
-Recommended next decision: use deeper/on as the reference and compare a longer
-unchanged budget against a prospectively calibrated position/angle objective.
-These follow-ups are proposed, not already launched. Additional scales, registers,
+Earlier recommended next decision: use deeper/on as the reference and compare a
+longer unchanged budget against a prospectively calibrated position/angle objective.
+The consolidated proposal above now places that comparison after the frozen-package
+and memory diagnostics, conditional on a remaining geometry problem. These
+follow-ups are proposed, not already launched. Additional scales, registers,
 higher resolution, conditioning/fusion and software-persistence tasks remain
 staged. Preserve the existing references, readiness gates and grouped holdouts;
 no arbitrary architecture sweep is scheduled. This completed authorization
