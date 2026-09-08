@@ -661,3 +661,23 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O41
+  timestamp: 2026-09-08T09:22+02:00
+  provenance: ai-suggested
+  content: A decoder-only recovery experiment on COCO with task-adapted E frozen can test whether generic visual
+    information remains decodable. Compare with an identically initialized/budgeted decoder fitted on frozen
+    warmup E; retain original models and select on validation. Recovery supports recoverability at the achieved
+    error, while non-recovery still confounds encoder information, decoder capacity and optimization. A separate
+    D leaves current latent/pose-based planning unchanged, but cannot repair inaccurate imagined latent states.
+    If decider means H, a frozen-E task-head refit addresses pose accessibility rather than the COCO RGB metric.
+  context: Conditional interpretation of user suggestion; term clarification remains unanswered. Primary representation-forgetting
+    literature consulted. No model inference, training or architecture changes.
+  potential_type: heuristic
+  bound_to:
+  - N86
+  - N81
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -2,10 +2,10 @@ session:
   id: 2026-09-08_001
   date: '2026-09-08'
   started: 2026-09-08T03:03+02:00
-  last_turn: 2026-09-08T09:18+02:00
-  turn_count: 2
+  last_turn: 2026-09-08T09:22+02:00
+  turn_count: 3
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
-    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested.'
+    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head refitting.'
 events_logged:
 - turn: 1
   type: decision
@@ -115,6 +115,19 @@ events_logged:
   provenance: ai-suggested
   summary: O37 scoped combined E/D forgetting crystallizes through researcher engagement with the empirical
     result; no causal endorsement.
+- turn: 3
+  type: question
+  id: N86
+  routing: direct
+  provenance: user
+  summary: Can refitting a downstream component after task adaptation recover performance?
+- turn: 3
+  type: observation
+  id: O41
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose frozen-E decoder recovery with matched decoder fitting; conditional H-refit explanation.
+    Efficacy remains untested.
 ai_actions:
 - turn: 1
   action: 'Completed the continuous September7–8 task: source verification/grouped image preparation; matched training
@@ -140,6 +153,14 @@ ai_actions:
   files_changed:
   - docs/curriculum-interpretation-2026-09-08.md
   - ara/
+- turn: 3
+  action: Checked objective and planner dependency paths, searched primary representation-forgetting papers,
+    and explained conditional D/H refitting. Failed initial planning.py lookup corrected to planner.py; CVPR
+    full-page fetch denied403, so relied on retrieved abstract for general probing precedent. No model run,
+    dashboard refresh or new software tests.
+  provenance: ai-executed
+  files_changed:
+  - ara/
 claims_touched:
 - id: C04
   action: crystallized
@@ -154,6 +175,8 @@ key_context:
 - turn: 2
   excerpt: 'User: What is the reason for the45-fold COCO error increase; more training, different features/architecture,
     or skip/pass-through paths for applications? Interpretation proposal is not execution authorization.'
+- turn: 3
+  excerpt: Maybe we need to retrain the decider after task training?
 open_threads:
 - PushT pose generalization/optimization and generic retention remain unresolved; no further training queued.
 - Paddle control improved but memory/prediction/90%targets fail; a runtime-matched multi-seed study would be needed
@@ -161,7 +184,9 @@ open_threads:
 - Earlier LeWM normalization and independent-data-efficiency questions remain separate, unadjudicated tracks.
 - Specific private Claude transfer permission remains separate; no transfer attempted this turn.
 - N85 domain-versus-pose and E-versus-D attribution, frozen-feature readout and retention/adapters proposals need a prospective experiment.
+- N86 decoder-versus-task-head meaning and any refitting protocol remain prospective.
 ai_suggestions_pending:
+- O41 frozen-encoder decoder/readout recovery is a proposal; no adoption or experiment.
 - O37 crystallized to C04 on turn2; O36/O38 remain staged. O39/O40 causal/design proposals remain unadopted.
 - O01 flagged stale after three session-days without revisiting that earliest small-run scope; retain for next briefing
   triage.

@@ -1366,3 +1366,21 @@ tree:
   also_depends_on:
   - N81
   status: open
+
+- id: N86
+  type: question
+  title: Can refitting a downstream component after task adaptation recover performance?
+  provenance: user
+  timestamp: 2026-09-08T09:22+02:00
+  description: 'User asks: Maybe we need to retrain the decider after task training? Decoder versus task head/controller
+    clarification requested. Conditional decoder interpretation: freeze adapted E and refit D on COCO; task-head
+    interpretation: freeze E and refit H on task labels. No follow-up training adopted or launched.'
+  also_depends_on:
+  - N85
+  - N81
+  evidence:
+  - world_model/curriculum/training.py
+  - world_model/pusht/planner.py
+  - world_model/paddle/planner.py
+  - runs/curriculum_2026-09-07/generic_reconstruction/metrics.json
+  status: open

@@ -30,8 +30,8 @@ sessions:
 - id: 2026-09-08_001
   date: '2026-09-08'
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
-    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested.'
-  turn_count: 2
-  events_count: 16
+    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head refitting.'
+  turn_count: 3
+  events_count: 18
   claims_touched: [C04]
-  open_threads: 5
+  open_threads: 6
