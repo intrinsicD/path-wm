@@ -1441,3 +1441,32 @@ tree:
   - N87
   - N89
   status: open
+
+- id: N91
+  type: decision
+  title: Run only the first PushT pose-head experiment, then reassess
+  provenance: user
+  timestamp: 2026-09-08T10:22+02:00
+  choice: User initially approved the proposed sequence, then explicitly narrowed execution to frozen-encoder PushT
+    readout comparison first and reassessment. Paddle and decoder conditioning deferred before any such training.
+  alternatives:
+  - Execute all three proposed studies consecutively
+  evidence:
+  - docs/world-model-next-experiments-2026-09-08.md
+  also_depends_on:
+  - N90
+  status: resolved
+- id: N92
+  type: experiment
+  title: Matched frozen PushT encoder pose-head comparison completed
+  provenance: ai-executed
+  timestamp: 2026-09-08T10:22+02:00
+  result: Three heads each completed 2000 updates with identical draws; encoder unchanged. Test angle MAE original/linear/nonlinear/spatial
+    27.31/24.73/23.88/12.98 degrees. Spatial object x/y MAE 25.67/28.08 worsens, all q readiness gates fail. Linear/nonlinear
+    pass relative validation improvement. 362 tests and browser QA pass; no further training running.
+  evidence:
+  - ara/evidence/tables/pose_accessibility_2026-09-08.json
+  - docs/pusht-pose-accessibility-results-2026-09-08.md
+  also_depends_on:
+  - N91
+  status: resolved

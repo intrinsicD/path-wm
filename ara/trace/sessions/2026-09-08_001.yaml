@@ -2,10 +2,10 @@ session:
   id: 2026-09-08_001
   date: '2026-09-08'
   started: 2026-09-08T03:03+02:00
-  last_turn: 2026-09-08T10:00+02:00
-  turn_count: 5
+  last_turn: 2026-09-08T10:22+02:00
+  turn_count: 6
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
-    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning. Turn5 completes three decoder recovery arms, full evaluation and Claude literature review; 359 tests and browser QA pass.'
+    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning. Turn5 completes three decoder recovery arms, full evaluation and Claude literature review; 359 tests and browser QA pass. Turn6 executes only the narrowed PushT pose-head comparison; spatial orientation improves with object-position tradeoff, all readiness gates fail; 362 tests and final browser QA pass.'
 events_logged:
 - turn: 1
   type: decision
@@ -172,6 +172,35 @@ events_logged:
   provenance: user-revised
   summary: O41 diagnostic explicitly adopted; O42 remains untested.
 
+- turn: 6
+  type: decision
+  id: N91
+  routing: direct
+  provenance: user
+  summary: Run only the first PushT pose-head experiment, then reassess
+- turn: 6
+  type: experiment
+  id: N92
+  routing: direct
+  provenance: ai-executed
+  summary: Matched frozen PushT encoder pose-head comparison completed
+- turn: 6
+  type: observation
+  id: O44
+  routing: staged
+  provenance: ai-executed
+  summary: Spatial H exposes substantially better orientation from frozen A encoder (test 27.31 to 12.98 degrees)
+    and pusher positions, but object-position errors worsen and absolute readiness remains unmet. Accessibility
+    improves; complete geometry, pure architectural attribution and controller benefit are not established.
+- turn: 6
+  type: observation
+  id: O45
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose decoupled object-position/orientation estimation with losses scaled by existing physical tolerances
+    to test spatial-head localization tradeoff. Large training object-position errors and improving endpoint curve
+    leave objective coupling and under-optimization as alternatives. No next run adopted.
+
 ai_actions:
 - turn: 1
   action: 'Completed the continuous September7–8 task: source verification/grouped image preparation; matched training
@@ -222,6 +251,20 @@ ai_actions:
   - docs/
   - ara/
 
+- turn: 6
+  action: Committed protocol/red tests, narrowed scope, implemented three pose heads, verified CPU development slice,
+    ran full frozen-feature fits/evaluation, audited raw metrics and rendered spatial figures. Repaired sandbox
+    browser failure using completed outputs. All 362 tests pass.
+  provenance: ai-executed
+  files_changed:
+  - world_model/curriculum/bottleneck_models.py
+  - world_model/curriculum/pose_accessibility.py
+  - scripts/run_pose_accessibility.py
+  - scripts/report_pose_accessibility.py
+  - tests/test_bottleneck_experiments.py
+  - docs/
+  - ara/
+
 claims_touched:
 - id: C04
   action: crystallized
@@ -240,16 +283,21 @@ key_context:
   excerpt: Maybe we need to retrain the decider after task training?
 - turn: 4
   excerpt: 'Voice: everything that you found and my ideas ... what about if we condition that on the task'
+- turn: 6
+  excerpt: 'User: Yes, then do the first one first, and then let us re-evaluate. This steers the active task and
+    defers the other studies.'
+
 open_threads:
 - PushT pose generalization/optimization and generic retention remain unresolved; no further training queued.
 - Paddle control improved but memory/prediction/90%targets fail; a runtime-matched multi-seed study would be needed
   for isolated causal attribution.
 - Earlier LeWM normalization and independent-data-efficiency questions remain separate, unadjudicated tracks.
 - Specific private Claude transfer permission remains separate; no transfer attempted this turn.
-- N85 domain-versus-pose and E-versus-D attribution, frozen-feature readout and retention/adapters proposals need a prospective experiment.
+- N92 frozen-feature pose readout comparison complete; object-position tradeoff unresolved. Reassess before O45 or other follow-ups.
 - N86 decoder refit completed through N89; broader representation and task-head questions remain open.
 - N87 task-conditioning location and its advantage over an equally trained unconditioned decoder remain open.
 ai_suggestions_pending:
+- O45 decoupled geometry/loss comparison is unadopted; Paddle and conditioning studies deferred by user.
 - O42 conditional decoder proposal is untested; user question is not architecture adoption.
 - O41 adopted as H13; O43 measured recoverability interpretation remains staged.
 - O37 crystallized to C04 on turn2; O36/O38 remain staged. O39/O40 causal/design proposals remain unadopted.

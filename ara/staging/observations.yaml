@@ -716,3 +716,34 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O44
+  timestamp: 2026-09-08T10:22+02:00
+  provenance: ai-executed
+  content: Spatial H exposes substantially better orientation from frozen A encoder (test 27.31 to 12.98 degrees)
+    and pusher positions, but object-position errors worsen and absolute readiness remains unmet. Accessibility
+    improves; complete geometry, pure architectural attribution and controller benefit are not established.
+  context: N92 one-seed exploratory evaluation on previously inspected internal test groups; no user comment on
+    final results yet.
+  potential_type: claim
+  bound_to:
+  - N92
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O45
+  timestamp: 2026-09-08T10:22+02:00
+  provenance: ai-suggested
+  content: Propose decoupled object-position/orientation estimation with losses scaled by existing physical tolerances
+    to test spatial-head localization tradeoff. Large training object-position errors and improving endpoint curve
+    leave objective coupling and under-optimization as alternatives. No next run adopted.
+  context: Post-evaluation reassessment proposal; user requested stopping after first experiment.
+  potential_type: heuristic
+  bound_to:
+  - N92
+  - N91
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

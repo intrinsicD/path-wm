@@ -25,6 +25,22 @@ Read the [paddle results](paddle-world-model-results-2026-09-07.md),
 [canonical dashboard](../runs/experiment_dashboard.html), and
 [portable continuation handoff](session-handoff-2026-09-07.md).
 
+## Complete: frozen PushT pose-head comparison (8 September)
+
+User authorized the [bottleneck protocol](world-model-next-experiments-2026-09-08.md),
+then narrowed execution to its first experiment followed by reassessment. Frozen
+selected task-only A encoder, fresh linear/nonlinear/spatial pose heads, matched
+2,000-update budgets and validation selection; original head is the reference.
+All three fits and held-out evaluation are complete under
+`runs/bottlenecks_2026-09-08/pose/experiment`; see the
+[results and figures](pusht-pose-accessibility-results-2026-09-08.md). Spatial H
+reduces test angle MAE 27.31°→12.98° and pusher errors, but worsens object-position
+MAE to 25.67/28.08 world units. Fresh linear/nonlinear heads improve validation q
+by at least 10%; all heads fail q≤1 readiness. Encoder unchanged, matched draws,
+362 tests and dashboard verification pass. No jobs remain active.
+Paddle and decoder-conditioning experiments are deferred. No encoder adaptation,
+PushT dynamics, capacity expansion or register implementation is authorized here.
+
 ## Paddle reference and follow-up
 
 Exactly replay-verified data contain 5,000 / 500 / 500 train / validation / test
