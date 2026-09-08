@@ -1,5 +1,4 @@
 """Decoder repair must never silently retrain its frozen encoder/task head."""
-import copy
 import numpy as np
 import pytest
 import torch
@@ -53,3 +52,16 @@ def test_decoder_recovery_rejects_labelled_or_missing_parent(tmp_path):
     config=dict(phase='supervised',decoder_only=True,seed=7,device='cpu')
     with pytest.raises(ValueError,match='image-only.*parent'):
         train_phase(config,data,data,[0],tmp_path/'invalid')
+
+
+def test_paired_recovery_bootstrap_preserves_groups_and_difference():
+    from world_model.curriculum.decoder_recovery import paired_group_bootstrap
+    a=np.array([1.,2.,3.,4.]);b=a-.25
+    result,draws=paired_group_bootstrap(a,b,[0,0,0,1],seed=12,draws=50)
+    assert result['groups']==2
+    np.testing.assert_allclose(draws,.25)
+    assert result['delta_mse']==.25
+    result,draws=paired_group_bootstrap(a,a,[0,0,0,1],seed=12,draws=50)
+    np.testing.assert_array_equal(draws,np.zeros(50))
+    with pytest.raises(ValueError,match='aligned'):
+        paired_group_bootstrap(a,b,[0],seed=12)

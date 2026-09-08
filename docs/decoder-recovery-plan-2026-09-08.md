@@ -40,8 +40,9 @@ internal COCO test images and 2,506 PushT test frames; retain per-image errors.
 These test populations were already examined, so results are exploratory. Use
 the original warmup and adapted pairs as references on identical populations.
 Compare aggregate MSE/RMSE, paired per-image error changes, and ratios to each
-domain's train-only mean-image baseline. Bootstrap paired image differences as
-descriptive uncertainty only, not training-seed uncertainty. Exact frozen E/H
+domain's train-only mean-image baseline. Bootstrap paired image differences by
+resampling whole COCO duplicate groups or PushT source groups, retaining frame
+weighting (2,000 draws). This is descriptive uncertainty only, not training-seed uncertainty. Exact frozen E/H
 tensors establish unchanged task readout mapping; do not rerun control or infer
 that a new decoder improves predicted latent states.
 

@@ -114,14 +114,28 @@ def train_phase(config,train,validation,validation_indices,run,warmup=None,resum
 
 def _train(config,train,validation,validation_indices,run,warmup,resume,stop_after):
     config=copy.deepcopy(config);labelled=config['phase']=='supervised'
+    decoder_only=config.get('decoder_only',False)
+    if decoder_only and (config['phase']!='warmup' or warmup is None):
+        raise ValueError('decoder refit requires an image-only phase and a parent checkpoint')
     device=config.get('device','cpu');torch.set_num_threads(config.get('cpu_threads',4))
     torch.backends.cuda.matmul.allow_tf32=False;torch.backends.cudnn.allow_tf32=False
     torch.backends.cudnn.benchmark=False
     parent=read_checkpoint(warmup) if warmup else None
     models=initial_models(config['seed'],None if parent is None else parent['models'])
-    for name,model in models.items():model.to(device).train().requires_grad_(name!='H' or labelled)
-    keys=('E','D','H') if labelled else ('E','D');active={k:models[k] for k in keys}
-    init=fingerprint_modules(active);ed_init=fingerprint_modules({k:models[k] for k in ('E','D')})
+    if decoder_only:
+        initialization=config.get('decoder_initialization','parent')
+        if initialization not in ('fresh','parent'):raise ValueError('unknown decoder initialization')
+        if initialization=='fresh':models['D'].load_state_dict(initial_models(config['seed'])['D'].state_dict())
+        if 'H' in parent['models']:models['H'].load_state_dict(parent['models']['H'])
+    keys=('E','D','H') if labelled or decoder_only else ('E','D')
+    for name,model in models.items():
+        trainable=name=='D' if decoder_only else name in keys
+        model.to(device).train(trainable).requires_grad_(trainable)
+    active={k:models[k] for k in (('D',) if decoder_only else keys)}
+    checkpoint_models={k:models[k] for k in keys}
+    frozen={k:models[k] for k in ('E','H')} if decoder_only else {}
+    frozen_fingerprint=fingerprint_modules(frozen) if decoder_only else None
+    init=fingerprint_modules(checkpoint_models);ed_init=fingerprint_modules({k:models[k] for k in ('E','D')})
     head_init=fingerprint_modules({'H':models['H']})
     optimizer=optimizer_for(active,config);rng=phase_sampler(config['seed'],config['phase'])
     ids=np.asarray(validation_indices,dtype=np.int64)
@@ -157,13 +171,16 @@ def _train(config,train,validation,validation_indices,run,warmup,resume,stop_aft
     if device=='cuda':torch.cuda.reset_peak_memory_stats()
     def save(step,metrics,complete=False,reason=None):
         nonlocal best_key,best_checkpoint
+        if decoder_only and fingerprint_modules(frozen)!=frozen_fingerprint:
+            raise RuntimeError('decoder refit changed frozen encoder/readout state')
         key=selection_key(metrics,step) if labelled else (metrics['image_mse'],step)
         improved=best_key is None or key<best_key
         if improved:best_key=key;best_checkpoint=f'checkpoints/best_{step:08d}.pt'
-        states={k:m.state_dict() for k,m in active.items()}
+        states={k:m.state_dict() for k,m in checkpoint_models.items()}
         value=dict(schema_version=SCHEMA_VERSION,tensor_schema=TENSOR_SCHEMA,action_schema=ACTION_SCHEMA_VERSION,
-                   normalization=train.normalization,stage='perception' if labelled else 'image_pretraining',
-                   horizon=1,global_update=step,models=states,model_fingerprint=fingerprint_modules(active),
+                   normalization=parent.get('normalization') if decoder_only else train.normalization,
+                   stage='decoder_refit' if decoder_only else ('perception' if labelled else 'image_pretraining'),
+                   horizon=1,global_update=step,models=states,model_fingerprint=fingerprint_modules(checkpoint_models),
                    dataset_fingerprint=train.fingerprint,dependencies=dependencies,config=config,
                    versions=versions(),code_fingerprint=code_id,optimizer=optimizer.state_dict(),
                    rng=rng_state(rng),curriculum_identity=identity,metrics=metrics,best_key=list(best_key),
@@ -171,6 +188,7 @@ def _train(config,train,validation,validation_indices,run,warmup,resume,stop_aft
                    elapsed_seconds=elapsed+time.monotonic()-begin,initial_fingerprint=init,
                    initial_ed_fingerprint=ed_init,initial_h_fingerprint=head_init,
                    training_complete=complete,stop_reason=reason)
+        if decoder_only:value['frozen_fingerprint']=frozen_fingerprint
         if improved:atomic_checkpoint(run/best_checkpoint,value)
         atomic_checkpoint(run/'last.pt',value)
         if improved:atomic_checkpoint_copy(run/best_checkpoint,run/'best.pt')

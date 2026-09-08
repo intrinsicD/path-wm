@@ -34,7 +34,7 @@ def collect_curriculum_results(runs_root):
                     metrics.update({f'{which}_{k}_{i}':n for i,n in enumerate(v) if isinstance(n,(int,float))})
         sources=[path,*[root/n for n in ('training.jsonl','validation.jsonl','curriculum_result.json') if (root/n).exists()]]
         results.append(RunResult(root.relative_to(runs_root).as_posix(),'curriculum_training',status,step,metrics,
-                       {**config,'dataset_fingerprint':manifest['dataset'],'protocol':'accepted curriculum; supervised and warmup populations distinct'},
+                       {**config,'dataset_fingerprint':manifest['dataset'],'protocol':config.get('protocol','accepted curriculum; supervised and warmup populations distinct')},
                        tuple(p.relative_to(runs_root.parent).as_posix() for p in sources),max(p.stat().st_mtime for p in sources),
                        internals={'training':train,'validation':validation,'result':result}))
 
@@ -70,6 +70,9 @@ def add_curriculum_views(runs,datasets,charts,tables,cards,chart,table,source_id
         '## Perception curriculum\n\nEncoder/decoder reconstruction warmup and labelled PushT adaptation are separate stages. '
         'The physical selector q is the worst position MAE/8 world units or angle MAE/10 degrees; q≤1 is the numeric readiness target. '
         'Training completion does not establish perception readiness, dynamics, or control. Exact selected/final metrics and phase budgets are in the record inventory.'}]
+    if all(r.context.get('decoder_only') for r in selected):
+        blocks[0]['body']='## Frozen-encoder decoder recovery\n\nOnly the image decoder is optimized on COCO. Encoder and task readout remain frozen. '
+        blocks[0]['body']+='Selection uses COCO validation reconstruction MSE; no pose, dynamics or control gate is assessed. Matched fresh decoders compare recoverability from the original and task-adapted encoders.'
     # One seed per native curve family keeps legends legible; all seeds remain indexed.
     screen=[r for r in selected if r.context.get('arm') in ('A','B','C')]
     focus=screen if screen else selected
