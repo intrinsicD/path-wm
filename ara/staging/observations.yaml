@@ -1038,3 +1038,23 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O63
+  timestamp: 2026-09-08T19:46+02:00
+  provenance: ai-suggested
+  content: Retain named processed spatial levels for downstream spatial fusion/readouts; all-scale access
+    does not require every earlier activation at every layer. Separate depth, stage topology, fusion and
+    task placement. Current two-scale outputs already exchange information, so trained single-map probes
+    measure exported access rather than isolated resolution sources. Query dependence may occur in a selector
+    after image-only instance decoding. Future inputs require causal predicted/retained provenance and deployment
+    evaluation, not necessarily direct prediction of every level or universal decoder retraining. Albedo adds a
+    target/lighting/data requirement; RGB/masks do not establish reflectance truth. No new experiment adopted.
+  context: Verified current code, FPN/HRNet/Mask2Former and intrinsic-image sources; two public-only Claude replies
+    followed a preserved initial timeout. Corrections cover conditioning location, future-input bans, cost/depth
+    generalizations, sharing confounds and colour-metric invariance. Updated note/proposal/draft manifest and
+    browser-verified HTML; no model, dataset collection or inference run.
+  potential_type: architecture
+  bound_to: [N113, N108, N109, N111, N112]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

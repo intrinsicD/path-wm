@@ -38,6 +38,7 @@ INPUTS = [
         "encoder-conditioning-2026-09-08.md",
         "claude-collaboration-workflow.md",
         "perception-data-readiness-2026-09-08.md",
+        "multiscale-routing-and-tasks-2026-09-08.md",
     ]],
     ROOT / "world_model/paddle/models.py",
     ROOT / "world_model/curriculum/encoder_variants.py",

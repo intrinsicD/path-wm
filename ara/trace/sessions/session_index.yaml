@@ -51,8 +51,10 @@ sessions:
     reconciles two public-only Claude reviews and delivers verified printable HTML plus a non-runnable manifest;
     no new model work or training authorization. Turn17 audits local dataset readiness and completes two further
     Claude exchanges; no immediate download needed for the first slice, semantic transfer and targeted future
-    data proposed. Six notebook cells reproduce metadata checks; updated printable HTML passes browser QA.'
-  turn_count: 17
-  events_count: 69
+    data proposed. Six notebook cells reproduce metadata checks; updated printable HTML passes browser QA.
+    Turn18 clarifies multiscale routing, depth and task queries with code/primary sources and two corrected Claude
+    replies; albedo requires a separate target/data contract. Proposal HTML passes browser QA; no new model work.'
+  turn_count: 18
+  events_count: 71
   claims_touched: [C04]
   open_threads: 14

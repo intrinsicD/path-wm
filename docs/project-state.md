@@ -27,6 +27,17 @@ Read the [paddle results](paddle-world-model-results-2026-09-07.md),
 
 ## Complete: encoder investigation (8 September)
 
+The latest [multiscale routing clarification](multiscale-routing-and-tasks-2026-09-08.md)
+traces existing two-scale processing/exchange and D/U/P access. It proposes retaining
+declared processed levels for spatial fusion and output queries, with richer fusion,
+earlier conditioning and sequential backbone coupling tested separately. The first
+package comparison remains unchanged. Albedo is a newly named consumer whose
+reflectance/lighting targets are not established by the prepared RGB/mask data;
+it needs a separate data protocol if pursued. This is a design clarification,
+with no model or training change. Two public-only Claude exchanges reconciled
+query-placement, future-input, cost and albedo-metric overclaims after an initial
+request timeout; the original failure and successful receipts are preserved.
+
 The latest [dataset readiness audit and Claude review](perception-data-readiness-2026-09-08.md)
 finds no immediate download necessary for the first frozen-package comparison or
 existing-memory diagnostic. All 6,206 prepared Paddle/CCHI episode files are

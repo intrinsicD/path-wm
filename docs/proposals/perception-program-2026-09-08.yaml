@@ -36,6 +36,10 @@ feature_contract:
   decoder_projections: Explicit and trainable per output; do not replace native stored features.
   downstream_compatibility: New E requires explicitly compatible U/P and readouts.
   future_decoder_input: Predicted features plus optional aligned predicted memory; no actual future observations.
+  level_access_note: docs/multiscale-routing-and-tasks-2026-09-08.md
+  retained_levels: Named processed spatial maps; not every historical activation.
+  readout_access: All declared levels available directly or through a validated spatial fusion module; not mandatory all-scale attention at every layer.
+  level_identity: Include resolution, width, coordinates, valid region, preprocessing, pre/post-fusion identity and time.
 data:
   readiness_report: docs/perception-data-readiness-2026-09-08.md
   readiness_snapshot: runs/perception_data_cowork_2026-09-08/data_readiness.json
@@ -218,6 +222,8 @@ conditional_stages:
     next_decision: Control readiness requires actual existing controller gates, not reconstruction improvement.
     before_activation: Freeze compatible U preparation, E/P contracts, physical tolerances, batch/action-repeat, training loss weights, datasets, control cases, simulator alternatives and full budget.
 deferred:
+  - Richer spatial fusion after trained exported-level access checks; do not conflate with encoder depth or task conditioning.
+  - Albedo output after explicit reflectance/lighting labels or constraints and a separate data/evaluation protocol.
   - Higher true observation resolution versus upsampling.
   - Sequential refined-fine-to-coarse topology.
   - Additional third or fourth spatial levels.

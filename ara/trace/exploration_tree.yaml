@@ -1764,3 +1764,14 @@ tree:
   - docs/perception-data-readiness-2026-09-08.md
   also_depends_on: [N111]
   status: resolved
+- id: N113
+  type: question
+  title: Place multiscale access and task conditioning for downstream outputs
+  provenance: user
+  timestamp: 2026-09-08T19:46+02:00
+  description: User asks whether current scales have processing depth and attention, whether all earlier
+    scales should feed later stages, and where geometry, selected-object masks and albedo queries should
+    receive retained features. Code-grounded design clarification delivered; architectural usefulness remains untested.
+  also_depends_on: [N108, N109, N110, N111]
+  evidence: [docs/multiscale-routing-and-tasks-2026-09-08.md]
+  status: open
