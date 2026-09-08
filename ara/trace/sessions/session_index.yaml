@@ -26,3 +26,12 @@ sessions:
   events_count: 17
   claims_touched: []
   open_threads: 6
+
+- id: 2026-09-08_001
+  date: '2026-09-08'
+  summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
+    and115/200paired, improved but below90%; all355tests and browser QA pass.'
+  turn_count: 1
+  events_count: 12
+  claims_touched: []
+  open_threads: 4

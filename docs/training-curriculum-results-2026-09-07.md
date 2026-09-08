@@ -1,7 +1,10 @@
-# Training curriculum results — 7 September 2026
+# Training curriculum results — 7–8 September 2026
 
-Perception training and its frozen evaluation are complete. All scheduled training is complete. The full Paddle controller evaluation is
-still running and will be added before this execution is closed.
+The bounded curriculum and all scheduled evaluations are complete, including
+all 3,500 Paddle controller episodes. The Paddle follow-up improves learned
+first-interception success from 36.2% to 69.0% on ordinary starts and from 20.5%
+to 57.5% on opposite-history cases. It still misses the 90% control targets and
+the declared memory/prediction accuracy targets.
 
 The task-only PushT arm is the best of the three at equal total updates, but none
 meets the declared pose targets. COCO E/D warmup does learn useful image
@@ -226,8 +229,53 @@ metrics reuse the hash-verified completed GPU cache. Checkpoint tensors remain
 unchanged. Brief CPU figure rendering, software checks and dashboard verification overlapped controller evaluation;
 recorded decision timings include whatever host scheduling occurred.
 
-The full 500-start/100-pair, five-controller comparison is still running. No
-aggregate control conclusion is drawn from its partial cases. The controllers are:
+## Full controller comparison
+
+All **500 ordinary starts and 100 opposite-direction pairs**, under all five
+controllers, completed with no evaluation errors, planning failures or invalid
+candidates. The primary outcome is catching the first return before a miss;
+it does not imply indefinite survival.
+
+[Complete comparison figure](../runs/curriculum_2026-09-07/control_comparison/control_comparison.png) ·
+[Exact matched-case statistics](../runs/curriculum_2026-09-07/control_comparison/comparison.json) ·
+[Full evaluation ledger](../runs/curriculum_2026-09-07/paddle_history/evaluation/metrics.json)
+
+| Controller | Ordinary reference → new | Paired reference → new | New paired first action correct |
+|---|---:|---:|---:|
+| Learned | 181/500 → **345/500 (69.0%)** | 41/200 → **115/200 (57.5%)** | 155/200 (77.5%) |
+| Reset memory | 136/500 → 183/500 (36.6%) | 40/200 → 28/200 (14.0%) | 67/200 (33.5%) |
+| Random | 115/500 → 115/500 (23.0%) | 14/200 → 14/200 (7.0%) | 62/200 (31.0%) |
+| Current-frame tracker | 369/500 → 369/500 (73.8%) | 0/200 → 0/200 (0.0%) | 0/200 |
+| Privileged simulator planner | 444/500 → 444/500 (88.8%) | 200/200 → 200/200 (100%) | 200/200 |
+
+Learned improvement over the historical reference is **+32.8 percentage points**
+on ordinary starts, with a 95% matched-start bootstrap interval of **[27.4, 38.2]**.
+On paired histories it is **+37.0 points**, with a whole-pair interval of
+**[28.5, 44.5]**. Paired first-action accuracy rises from 79/200 to 155/200:
++38.0 points, interval [30.5, 46.5].
+
+Each interval uses 2,000 bootstrap draws, seed 93500 for ordinary starts and
+93501 for pairs. Both members of a pair are resampled together. These are
+post-training descriptive intervals over the recorded cases, not uncertainty
+across training seeds or a new adoption gate. Their coverage is approximate;
+degenerate intervals for unchanged/all-success controls are not guarantees
+about future cases.
+
+The memory ablation is substantial in the new pipeline: learned versus reset
+success is 69.0% versus 36.6% ordinary and 57.5% versus 14.0% paired. Direction
+information measured in U/R therefore accompanies a useful closed-loop benefit
+on these cases. The learned controller remains behind the tracker on ordinary
+starts, while it succeeds on many identical-frame pairs where the tracker fails.
+Even the exact-simulator planner reaches only 88.8% ordinary success under this
+fixed horizon/scoring rule; this is not a proof that the environment itself has
+an 88.8% success ceiling.
+
+The new learned policy makes 778 total hits over ordinary cases and 272 over
+paired cases, with mean episode lengths of 85.98 and 54.35 intervals. All
+controllers retain the two neutral warmup steps and the 200-step episode limit.
+Every learned/reset decision evaluates all 243 five-action sequences.
+
+The controllers are:
 
 - **Learned:** five-step exhaustive planning with P5 and the accumulated real-observation memory.
 - **Reset:** the same planner, with memory zeroed and rebuilt from only the current frame before each decision.
@@ -235,10 +283,50 @@ aggregate control conclusion is drawn from its partial cases. The controllers ar
 - **Tracker:** follows the current H ball-x estimate with a two-pixel deadband.
 - **Privileged:** exhaustive planning through exact simulator dynamics with the same horizon and scoring rule.
 
-Every learned/reset decision evaluates all 243 action sequences. Episodes retain
-the two neutral warmup steps and the 200-step cap. Opposite-direction pairs have
-identical final raw frames but different observed histories; their two members
-must remain together when estimating uncertainty.
+Historical/current case IDs, initial states, seeds and action labels match
+exactly. The data, perception checkpoint and evaluation settings also match;
+U/P checkpoints differ as intended. Random and privileged ordinary action
+trajectories match exactly. The tracker differs on one ordinary trajectory
+(`ordinary_488_tracker`) despite identical aggregate outcomes. The RTX 4090 /
+Torch 2.14 historical runtime and RTX 3050 / Torch 2.9 home runtime differ, so
+these gains cannot be attributed solely to U through a controlled runtime-matched
+intervention. Only one trained pipeline per condition was evaluated.
+
+Current learned decision latency is **195.8 ms median / 201.3 ms p95** ordinary,
+and **205.1 / 219.1 ms** paired. The historical ordinary median was 35.6 ms on the
+RTX 4090. These synchronized timings include planning/scoring and exclude real
+frame rendering, real E/U assimilation, decoding and progress writes. Brief CPU
+analysis/browser tasks overlapped the benchmark; timing comparisons across these
+machines are descriptive, not a model-speed experiment.
+
+[First successful case: actual/reconstructed/imagined futures](../runs/curriculum_2026-09-07/paddle_history/evaluation/visuals/ordinary_1_learned.png) ·
+[First failed case](../runs/curriculum_2026-09-07/paddle_history/evaluation/visuals/ordinary_0_learned.png) ·
+[Animated evaluation page](../runs/curriculum_2026-09-07/paddle_history/evaluation/index.html)
+
+These are the first eligible success and failure in the fixed case order,
+selected by outcome for illustration. Their near-contact predictions use the
+same actually executed actions as the real futures. The imagined ball fades in
+both, including the successful case; predicted paddle position can also differ
+substantially. Repeated replanning can yield useful control despite poor decoded
+imagery. These two illustrations do not estimate how frequently each visual
+failure occurs.
+
+## Declared engineering targets
+
+| Target | Completed measurement | Outcome |
+|---|---|---|
+| PushT pose: each XY MAE ≤8 world units and angle ≤10° on selection validation | A/B/C q = 3.009 / 3.546 / 5.159 | All fail; no PushT U/P expansion |
+| Paddle actual H: each coordinate MAE <1 pixel | 0.07075 / 0.07611 / 0.09235 over all 17,831 test frames | Pass |
+| Paddle real-memory velocity: each MAE <0.5 | 0.86914 / 0.62626 after warmup | Fail |
+| Paddle five-step H: each coordinate MAE <2 pixels | 5.84882 / 4.04752 / 4.80097 | Fail |
+| Learned ordinary first interception ≥90% | 69.0% | Fail |
+| Learned paired first interception ≥90% | 57.5% | Fail |
+
+P1's original copy-comparison gate passed and correctly enabled P5. That
+conditional training gate is separate from these final engineering targets.
+The new Paddle pipeline is a useful control improvement on the frozen cases,
+but the requested overall quality targets remain unmet. No additional training
+or evaluation jobs remain queued.
 
 ## Evidence, limitations and verification
 
@@ -255,7 +343,16 @@ select a checkpoint or reopen the training budget. Existing historical test
 evidence is development context.
 
 Canonical HTML publication passed data/package/browser verification after the
-evaluations. Two reporting failures were repaired without repeating completed
-training: absolute source paths and the 3 MB portable payload limit. The compact
+evaluations. Reporting failures were repaired without repeating completed training or control:
+initial scope exceeded the dataset limit, absolute source paths and full embedded
+figures exceeded packaging constraints, and the final nested-scope resolver could
+not locate existing rollout PNGs. Each repair preserved raw evidence and restored
+browser verification. The compact
 reader embeds the primary panels; all full-resolution figures remain alongside
 their raw evidence. Earlier historical dashboards and raw ledgers are preserved.
+
+Final software verification: **355 tests pass**, including all three opt-in
+installed-browser integration checks. The final canonical artifact is 2,585,987
+bytes and passes package/data/source interaction plus 1440/390-pixel browser QA.
+See the [test log](../runs/curriculum_2026-09-07/final-software-tests.log) and
+[browser receipt](../runs/experiment_dashboard.receipt.json).

@@ -12,7 +12,7 @@ observations:
   promoted: false
   promoted_to: null
   crystallized_via: null
-  stale: false
+  stale: true
 - id: O02
   timestamp: 2026-09-05T13:00+02:00
   provenance: ai-suggested
@@ -573,6 +573,54 @@ observations:
   - N74
   - N75
   - N76
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H12
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O36
+  timestamp: 2026-09-08T03:03+02:00
+  provenance: ai-suggested
+  content: The seed4107 equal-update screen favors task-only supervision; neither COCO nor in-domain image warmup
+    justifies downstream expansion. This is a bounded one-seed outcome, not a claim that pretraining never helps.
+  context: Completed user-authorized curriculum; researcher has not yet commented on these new results or adopted
+    a subsequent intervention.
+  potential_type: claim
+  bound_to:
+  - N79
+  - N80
+  - N81
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O37
+  timestamp: 2026-09-08T03:03+02:00
+  provenance: ai-suggested
+  content: 'Generic reconstruction can be learned and then lost under task adaptation: approximately45-fold COCO
+    test MSE increase in combined E/D. The responsible component and a retention-preserving objective remain unidentified.'
+  context: Completed user-authorized curriculum; researcher has not yet commented on these new results or adopted
+    a subsequent intervention.
+  potential_type: claim
+  bound_to:
+  - N81
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O38
+  timestamp: 2026-09-08T03:03+02:00
+  provenance: ai-suggested
+  content: The new Paddle pipeline carries useful history direction and improves frozen control despite poor decoded
+    futures and failed engineering targets. The runtime change and single trained condition preclude isolating U
+    as the sole cause or claiming broad readiness.
+  context: Completed user-authorized curriculum; researcher has not yet commented on these new results or adopted
+    a subsequent intervention.
+  potential_type: claim
+  bound_to:
+  - N82
+  - N83
+  - N84
   promoted: false
   promoted_to: null
   crystallized_via: null

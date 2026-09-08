@@ -112,37 +112,62 @@ paddle/PushT/supplement verification and four CPU inference bundles. The package
 is 212,389,903 compressed bytes in five parts. Its receipt establishes continuity,
 not model quality. All experiment and packaging writers are closed.
 
-## Home curriculum execution (2026-09-07, active)
+## Home curriculum execution (7–8 September 2026, complete)
 
-The user accepted the [curriculum](training-curriculum-2026-09-07.md) and asked
-for execution, thorough final evaluation and perception/internal-state figures.
-The [execution record](training-curriculum-execution-2026-09-07.md) tracks the
-bounded work. Full archive/source restoration passed; the home .venv is ready.
-COCO has82783 decoded RGB64 images, grouped splits74501/4136/4146.
-The100-update GPU profile fit batch128 in1.4GB and took6seconds. The fixed64
-training diagnostic selected q.328 but regressed at its final checkpoint.
+The user accepted the [curriculum](training-curriculum-2026-09-07.md) and requested
+execution, thorough evaluation and internal-state figures. All scheduled training
+and evaluation are complete, including all 3,500 Paddle controller episodes.
+Read the [results](training-curriculum-results-2026-09-07.md),
+[execution record](training-curriculum-execution-2026-09-07.md),
+[artifact navigation](../runs/curriculum_2026-09-07/README.md) and
+[verified dashboard](../runs/experiment_dashboard.html).
 
-The seed4107 matched4000-update screen and frozen held-out evaluation are
-complete. A/B/C selected validation q is3.009/3.546/5.159; all fail readiness,
-so no PushT U/P expansion or confirmation seeds were launched. Task-only A is
-best at equal total updates. COCO warmup reconstructs internal test images well
-(MSE.00607), but task adaptation raises that error to.27220. The generic warmup
-checkpoint is preserved. See the [results](training-curriculum-results-2026-09-07.md)
-for full test errors, object-region controls, feature maps and provenance.
+Full archive/source restoration passed. COCO preparation decoded 82,783 RGB64
+images and grouped splits of 74,501 / 4,136 / 4,146. CCHI retains all verified
+20,493 / 2,651 / 2,506 frames in the original episode groups. The 100-update
+profile fit batch 128 in 1.39 GB; no common budget reduction was necessary.
 
-Paddle P1 completed20,000updates in893.9s and selected19,750. Its original gate
-passes, but ball-y improvement over copy is only.00105pixels. P5 completed10,000updates in609.4s, selecting9,250. Five-step test position MAE
-[5.849,4.048,4.801]fails the two-pixel target. The full500-start/100-pair
-five-controller evaluation is running, with atomic case recovery and no partial
-control conclusion. Memory/attention/decoded-rollout inspection is complete. E/D/H and mixed-history U/R
-remain frozen. The new-U source,1024validation windows and byte-identical E-only
-variance statistics were verified against the reference. All353software tests,
-including the installed-browser checks, pass.
+Seed 4107 completed the matched 4,000-update A/B/C screen. Selected validation
+q is 3.009 / 3.546 / 5.159; all fail the q ≤1 readiness threshold. Task-only A
+wins at equal total updates. Both warmups worsen every selected physical
+validation error relative to A. As predeclared, no confirmation seeds or PushT
+U/P expansion were triggered. A's full-test angle MAE is 27.31° versus 5.51°
+on training frames. Sixteen selected/final/validation/diagnostic inspections,
+train-only PCA/probes, attention, region controls and all raw errors are preserved.
+COCO warmup reconstruction MSE is 0.00607 on its 4,146 internal test images;
+selected task adaptation raises it to 0.27220. The generic checkpoint is retained.
 
-The canonical dashboard is explicitly scoped to this curriculum and refreshed
-with browser QA after each phase/evaluation. All earlier raw ledgers and offline
-reports remain preserved outside this view. PCA/probes fit training data only.
-No further Claude transfer or external publishing was requested or attempted.
+Paddle uses frozen E/D/H and the preserved mixed-history U/R. New P1 completed
+20,000 updates, selected 19,750 and passed the original copy gate, with only a
+0.00105-pixel ball-y margin. New P5 completed 10,000 updates and selected 9,250.
+Five-step test position MAE [5.849, 4.048, 4.801] misses the two-pixel target;
+real-memory velocity MAE [0.869, 0.626] misses the 0.5 target. All-frame H passes
+its one-pixel mean-error target over 17,831 test observations.
+
+Full learned control improves from 181/500 to **345/500 ordinary** and from
+41/200 to **115/200 paired** first interceptions. Matched-case improvements
+are +32.8 pp [27.4, 38.2] and +37.0 pp [28.5, 44.5] in descriptive bootstrap
+intervals. New reset-memory control achieves 183/500 and 28/200; tracker achieves
+369/500 and 0/200; privileged control achieves 444/500 and 200/200. Both learned
+90% targets remain unmet. Case identities match exactly, while the historical
+RTX 4090/Torch 2.14 and home RTX 3050/Torch 2.9 runtimes differ. One tracker
+trajectory changes despite identical aggregate outcomes. These are not
+training-seed intervals or a pure runtime-matched estimate of U's causal effect.
+
+On 100 identical-current-frame history pairs, U/R gets direction right in
+171/200 members and both directions right in 72/100 pairs, versus 100/200 and
+0/100 for a training-fitted frame probe. Velocity magnitude remains inaccurate.
+Memory heatmaps/PCA, attention, actual/imagined rollouts and all paired readouts
+are visually inspected. Imagined balls can fade even in a successful control case.
+
+All **355 tests pass**, including the three installed-browser integration checks.
+The canonical dashboard passes package/source-interaction and 1440/390-pixel
+verification. A final nested-scope path failure was repaired with a regression;
+all 3,500 completed cases were reused. The dashboard is explicitly scoped to
+this curriculum; earlier ledgers and reports remain preserved. All writers are
+closed. No further training, external publishing or private Claude transfer was
+launched. Further experiments need a new bounded protocol; no current result
+reopens the completed training budgets.
 
 ## Preserved LeWM objective and evidence
 
@@ -227,7 +252,7 @@ rollout panels and four final internals panels were inspected. Mobile control ba
 are visible, and forked runs retain released panels only on matched recorded
 inspection populations. Every numeric record remains indexed.
 
-## Next work
+## Deferred LeWM follow-up
 
 Proposed follow-up: isolate projector versus prediction-projector BN effects on preserved TwoRoom clones using a predeclared paired protocol, then test the identified normalization correction prospectively. Keep saved-buffer results and PushT failures visible. A smaller coverage-preserving dataset must be compared with a size-matched random subset under a new configuration-disjoint holdout, with normalization fitted only on training groups. Do not interpret source-window counts as independent-data efficiency. No follow-up is launched or queued.
 

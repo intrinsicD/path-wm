@@ -107,3 +107,13 @@
 - **Code ref**: [private sketch RNG](../../../world_model/seeded_sigreg.py), [trainer](../../../world_model/train.py), [serial coordinator](../../../scripts/projection_experiment.py), [frozen protocol](../../../docs/projection-training-plan-2026-09-06.md), [paired statistics](../../../scripts/paired_summary.py).
 - **From staging**: O29
 - **Evidence of commitment**: N66–N71; frozen plan, implemented generator and all12 completed paired runs depend on this design. The user authorized continuation and Claude co-work, without endorsing a numerical improvement or general causal explanation. [Source-bound evidence](../../evidence/tables/projection_training_2026-09-07.json); final implementation/report commit4a7f5d2. Provenance remains ai-suggested.
+
+
+## H12: Gate downstream training with task readiness and matched warmup controls
+- **Rationale**: Train/read out task perception before expanding U/P. Compare supervised scratch, COCO image-only E/D warmup, and in-domain image-only E/D warmup at a predeclared total-update budget with matched initialization, fresh task heads and supervised draws. Select on fixed physical validation errors; retain immutable generic checkpoints and separate reconstruction, prediction and control gates.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **Sensitivity**: high; this is an adopted experiment design, not an assertion that task-first or generic warmup always improves learning. Failed readiness stops downstream expansion; test results cannot reopen selection or budgets.
+- **Code ref**: [accepted plan](../../../docs/training-curriculum-2026-09-07.md), [curriculum training](../../../world_model/curriculum/training.py), [frozen decision](../../../scripts/freeze_curriculum_screen.py), [Paddle driver](../../../scripts/execute_paddle_followup.py).
+- **From staging**: O35
+- **Evidence of adoption**: N77; user explicitly said “ok please execute this plan” and requested full evaluation/internal-state figures. N78–N84 and [source-bound evidence](../../evidence/tables/curriculum_execution_2026-09-08.json) record execution. Adoption does not endorse later results or authorize private external transfer.

@@ -1198,7 +1198,7 @@ tree:
     versus general-visual-first priority remains a working assumption; no training launch requested.
   evidence:
   - ../docs/training-curriculum-2026-09-07.md
-  status: open
+  status: resolved
 - id: N75
   type: experiment
   title: Reconcile local media metadata for curriculum planning
@@ -1230,4 +1230,120 @@ tree:
   - ../docs/training-curriculum-2026-09-07.md
   also_depends_on:
   - N74
+  status: resolved
+
+- id: N77
+  type: decision
+  title: Execute the proposed bounded curriculum and final internal-state evaluation
+  provenance: user
+  timestamp: 2026-09-08T03:03+02:00
+  choice: 'User says: ok please execute this plan. when training is completely done evaluate this thoroughly and
+    show me the results, visualize the internal states of perception etc. Adopt O35 protocol, conditional gates
+    and budgets; no new private Claude transfer.'
+  alternatives:
+  - Planning only
+  - Different curriculum priority
+  evidence: &curriculum_evidence_20260908
+  - evidence/tables/curriculum_execution_2026-09-08.json
+  - ../docs/training-curriculum-results-2026-09-07.md
+  - ../docs/training-curriculum-execution-2026-09-07.md
+  also_depends_on:
+  - N74
+  - N75
+  - N76
+  status: resolved
+- id: N78
+  type: experiment
+  title: Verify restored task evidence and prepare grouped COCO frames
+  provenance: ai-executed
+  timestamp: 2026-09-08T03:03+02:00
+  result: All 13,870 restored file hashes, full Paddle/PushT/supplement source checks and four inference bundles
+    pass. Decode all 82,783 COCO RGB64 images; exact/radius-four dHash components split 74,501/4,136/4,146. Preserve
+    CCHI 20,493/2,651/2,506 frames and original grouped normalization. Conservative grouping is not a universal
+    semantic-duplicate guarantee.
+  evidence: *curriculum_evidence_20260908
+  also_depends_on:
+  - N77
+  status: resolved
+- id: N79
+  type: experiment
+  title: Complete fixed-frame diagnostic and matched seed4107 perception screen
+  provenance: ai-executed
+  timestamp: 2026-09-08T03:03+02:00
+  result: 100-update profile fits batch128 in 1.39GB/6.01s. Fixed64 diagnostic reaches q0.328 at update300 but regresses
+    by500. A/B/C each complete4000updates with identical initial E/D and fresh H plus first2000 supervised batch
+    hashes. Selected validation q3.009/3.546/5.159; both warmups worsen every physical constituent versus A. O35
+    specifies comparison design, not an efficacy assertion.
+  evidence: *curriculum_evidence_20260908
+  also_depends_on:
+  - N78
+  status: resolved
+- id: N80
+  type: decision
+  title: Freeze the negative warmup decision before test inference
+  provenance: ai-executed
+  timestamp: 2026-09-08T03:03+02:00
+  choice: No promising warmup and all q>1; apply the accepted stop rule. No confirmation seeds4108/4109, no adopted
+    warmup policy and no PushT U/P expansion. Test diagnostics cannot select checkpoints or reopen budget.
+  alternatives:
+  - Expand only after a predeclared promising candidate and readiness gate
+  evidence: *curriculum_evidence_20260908
+  also_depends_on:
+  - N79
+  status: resolved
+- id: N81
+  type: experiment
+  title: Evaluate all perception snapshots and generic reconstruction retention
+  provenance: ai-executed
+  timestamp: 2026-09-08T03:03+02:00
+  result: Sixteen selected/final/validation/diagnostic inspections complete. Selected A/B/C test angle27.31/33.81/37.28deg;
+    A train5.51deg and test p95angle143.68deg. Object regions beat train-only mean image despite physical errors.
+    COCO test MSE0.006072 after warmup becomes0.272196 after selected task adaptation on4146images. Preserve generic
+    snapshot, per-frame/group errors, train-only PCA/probes and measured attention.
+  evidence: *curriculum_evidence_20260908
+  also_depends_on:
+  - N79
+  - N80
+  status: resolved
+- id: N82
+  type: experiment
+  title: Train fresh P1/P5 on frozen mixed-history Paddle memory
+  provenance: ai-executed
+  timestamp: 2026-09-08T03:03+02:00
+  result: Frozen E/D/H,U/R; same data/validation windows and byte-identical E variance. P1 finishes20000updates,
+    selects19750 and passes original copy gate with only0.00105pixel ball-y margin. P5 finishes10000updates, selects9250.
+    Test five-step H MAE5.849/4.048/4.801 exceeds2pixel target; real-memory velocity0.869/0.626 exceeds0.5. Accurate
+    all-frame H remains below1pixel.
+  evidence: *curriculum_evidence_20260908
+  also_depends_on:
+  - N77
+  - N78
+  status: resolved
+- id: N83
+  type: experiment
+  title: Finish all3500 control cases and matched historical comparison
+  provenance: ai-executed
+  timestamp: 2026-09-08T03:03+02:00
+  result: All500ordinary starts and100opposite-direction pairs evaluated under5controllers with no evaluation errors.
+    Learned old→new181→345/500 ordinary and41→115/200 paired; matched bootstrap changes+32.8pp[27.4,38.2] and+37.0pp[28.5,44.5].
+    New reset183/500,28/200; tracker369/500,0/200; privileged444/500,200/200. Learned90%targets fail. Different
+    RTX4090/Torch2.14 versus RTX3050/Torch2.9 runtime and one trained pipeline per condition limit attribution.
+  evidence: *curriculum_evidence_20260908
+  also_depends_on:
+  - N82
+  status: resolved
+- id: N84
+  type: experiment
+  title: Complete internal-state figures and repair final reporting with verified raw reuse
+  provenance: ai-executed
+  timestamp: 2026-09-08T03:03+02:00
+  result: 'All100paired readouts: U/R horizontal sign171/200 and bothmembers72/100 versus frameprobe100/200 and0/100;
+    speed underestimated. Memory/PCA/attention, fixed imagined rollouts and first successful/failed control images
+    inspected; ball can fade in successful cases. Reporting scope/payload/path failures repaired with raw preservation;
+    final nested-root regression catches rollout lookup.355tests including3browser checks and canonical1440/390/source
+    QA pass; artifact2,585,987bytes. No further experiments queued.'
+  evidence: *curriculum_evidence_20260908
+  also_depends_on:
+  - N81
+  - N83
   status: resolved

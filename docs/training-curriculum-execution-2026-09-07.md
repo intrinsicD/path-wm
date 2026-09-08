@@ -187,3 +187,15 @@ because the archived-path resolver assumed the supplied runs root was the top-le
 essential regression for current relative and archived absolute image paths under
 a nested runs root, then resolve against the enclosing physical `runs/` directory.
 Preserve raw ledgers and figures; rebuild the report without rerunning evaluation.
+
+## Execution closed — 8 September 2026
+
+All conditional stages authorized by the accepted protocol are complete. The
+negative PushT screen stops expansion and confirmation seeds. Paddle P1/P5 and
+all 3,500 controller cases finish; learned first interception is 345/500 ordinary
+and 115/200 paired, with the declared quality failures preserved. The final
+historical comparison verifies every case identity and resamples whole pairs.
+The dashboard reporting repair reuses completed evaluation, with browser QA
+passing. All 355 software tests pass. The full result report, raw comparisons,
+checkpoints, image/PCA/attention arrays and PNG/SVG/GIF figures are retained.
+No training or evaluation remains running or queued.

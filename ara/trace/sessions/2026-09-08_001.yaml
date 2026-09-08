@@ -1,0 +1,120 @@
+session:
+  id: 2026-09-08_001
+  date: '2026-09-08'
+  started: 2026-09-08T03:03+02:00
+  last_turn: 2026-09-08T03:03+02:00
+  turn_count: 1
+  summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
+    and115/200paired, improved but below90%; all355tests and browser QA pass.'
+events_logged:
+- turn: 1
+  type: decision
+  id: N77
+  routing: direct
+  provenance: user
+  summary: Execute the proposed bounded curriculum and final internal-state evaluation
+- turn: 1
+  type: experiment
+  id: N78
+  routing: direct
+  provenance: ai-executed
+  summary: Verify restored task evidence and prepare grouped COCO frames
+- turn: 1
+  type: experiment
+  id: N79
+  routing: direct
+  provenance: ai-executed
+  summary: Complete fixed-frame diagnostic and matched seed4107 perception screen
+- turn: 1
+  type: decision
+  id: N80
+  routing: direct
+  provenance: ai-executed
+  summary: Freeze the negative warmup decision before test inference
+- turn: 1
+  type: experiment
+  id: N81
+  routing: direct
+  provenance: ai-executed
+  summary: Evaluate all perception snapshots and generic reconstruction retention
+- turn: 1
+  type: experiment
+  id: N82
+  routing: direct
+  provenance: ai-executed
+  summary: Train fresh P1/P5 on frozen mixed-history Paddle memory
+- turn: 1
+  type: experiment
+  id: N83
+  routing: direct
+  provenance: ai-executed
+  summary: Finish all3500 control cases and matched historical comparison
+- turn: 1
+  type: experiment
+  id: N84
+  routing: direct
+  provenance: ai-executed
+  summary: Complete internal-state figures and repair final reporting with verified raw reuse
+- turn: 1
+  type: observation
+  id: O36
+  routing: staged
+  provenance: ai-suggested
+  summary: The seed4107 equal-update screen favors task-only supervision; neither COCO nor in-domain image warmup
+    justifies downstream expansion. This is a bounded one-seed outcome, not a claim that pretraining never helps.
+- turn: 1
+  type: observation
+  id: O37
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Generic reconstruction can be learned and then lost under task adaptation: approximately45-fold COCO
+    test MSE increase in combined E/D. The responsible component and a retention-preserving objective remain unidentified.'
+- turn: 1
+  type: observation
+  id: O38
+  routing: staged
+  provenance: ai-suggested
+  summary: The new Paddle pipeline carries useful history direction and improves frozen control despite poor decoded
+    futures and failed engineering targets. The runtime change and single trained condition preclude isolating U
+    as the sole cause or claiming broad readiness.
+- turn: 1
+  type: heuristic
+  id: H12
+  routing: crystallized
+  provenance: user-revised
+  summary: O35 adopted through explicit execution request; design only.
+ai_actions:
+- turn: 1
+  action: 'Completed the continuous September7–8 task: source verification/grouped image preparation; matched training
+    and frozen stopping; all checkpoint/internal-state evaluations; new-U predictors and3500controls; reporting
+    repairs, final355tests/browser QA and durable reports. No new Claude transfer or further training.'
+  provenance: ai-executed
+  files_changed:
+  - world_model/curriculum/
+  - world_model/paddle/training.py
+  - world_model/pusht/data.py
+  - scripts/
+  - viewer/
+  - tests/
+  - configs/
+  - docs/
+  - ara/
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: ok please execute this plan. when training is completely done evaluate this thoroughly and show me the
+    results, visualize the internal states of perception etc.
+- turn: 1
+  excerpt: One uninterrupted authorized task spans two calendar dates; no heartbeat events. Full results, figures
+    and software/browser verification completed before this epilogue.
+open_threads:
+- PushT pose generalization/optimization and generic retention remain unresolved; no further training queued.
+- Paddle control improved but memory/prediction/90%targets fail; a runtime-matched multi-seed study would be needed
+  for isolated causal attribution.
+- Earlier LeWM normalization and independent-data-efficiency questions remain separate, unadjudicated tracks.
+- Specific private Claude transfer permission remains separate; no transfer attempted this turn.
+ai_suggestions_pending:
+- O36/O37/O38 remain staged pending researcher engagement or a concrete subsequent decision.
+- O01 flagged stale after three session-days without revisiting that earliest small-run scope; retain for next briefing
+  triage.
+- Older active normalization/coverage interpretations remain staged; O35 alone crystallizes through explicit adoption.

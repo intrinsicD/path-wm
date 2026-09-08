@@ -1,0 +1,705 @@
+{
+  "schema_version": "path-wm-curriculum-closeout-v1",
+  "timestamp": "2026-09-08T03:03+02:00",
+  "provenance": "ai-executed",
+  "scope": "Accepted bounded E/D/H curriculum, frozen perception evaluation and complete new-U Paddle predictor/control follow-up; September 7\u20138 continuous task.",
+  "source_sha256": {
+    "docs/training-curriculum-2026-09-07.md": "f3774d1d5689c7434940ee009c6752e7b25e4bd932a762494e4ad2324eba2cbf",
+    "docs/training-curriculum-execution-2026-09-07.md": "cc33dbae9bad18f5d4f4d0b95605dbb5feb0d49874f5e7837e7444fd64714bb3",
+    "docs/training-curriculum-results-2026-09-07.md": "493cfef7f058c1bd3613046552e10fdf52dc940c170952b0ca099ef7ea99ecf2",
+    "runs/curriculum_2026-09-07/restoration-verification.json": "7f265e2ab4de78aa724a39ddbac89cd3c35114928242e4872595ed525d90cb77",
+    "runs/curriculum_2026-09-07/seed_4107/screen_decision.json": "fae5e8250c4a9fbd33bc8b3c15b2fccdfda8e4edd717b02131b31f46a6e1a11a",
+    "runs/curriculum_2026-09-07/perception_analysis/comparison.json": "e6a9e9c8072b0ceecbed823a9bd01239f0b9cedc032110694896c3b0e9dd3cd4",
+    "runs/curriculum_2026-09-07/generic_reconstruction/metrics.json": "bd4ca2f491dbe1bf2faf67ad013f8999bafbad25ced1d550d5ab9e7b3fd68527",
+    "runs/curriculum_2026-09-07/paddle_history/reference_matching.json": "06c16eadeb083e66eee30eca9a21f2be3c2640cee6804f1f71b1effd335af081",
+    "runs/curriculum_2026-09-07/paddle_history/predictor_1/paddle_result.json": "85061c84ce256893be3b33077978590e4867d5df69b9fa5fe665a8d5913b4eac",
+    "runs/curriculum_2026-09-07/paddle_history/predictor_5/paddle_result.json": "530215ccee3c360a39f87c2ab166736a1a49cecfa58317a9520c8417e4d73b9f",
+    "runs/curriculum_2026-09-07/paddle_history/evaluation/metrics.json": "fb1cb6f063927b16221ee8195c068f4c1f28e28aa23225daf6207ca798567268",
+    "runs/curriculum_2026-09-07/paddle_history/evaluation/evaluation_manifest.json": "32d881be404eb79056dc1a3b92d1ef60fe039732d1670d915e15124b019ea1ff",
+    "runs/curriculum_2026-09-07/paddle_history/downstream_decision.json": "c652a70b4ad5fbd9d9ca97e72789059d4eea9c2c30f3b40e99ba057c8e310553",
+    "runs/curriculum_2026-09-07/control_comparison/comparison.json": "060efa3e6020770f8e133320a6a39fd3acd3ff7f1d7cf2f63a3338c07e54e0d3",
+    "runs/curriculum_2026-09-07/control_comparison/bootstrap_draws.npz": "c7a71feb94559760da754c52d80858ab3ee39f366cedb80e8845d9be030ae24a",
+    "runs/curriculum_2026-09-07/paired_memory_inspection/metrics.json": "464699c680609827dc4c8c1efc6b849283a33dad9d354f089ecf43b23b2b47ae",
+    "runs/curriculum_2026-09-07/paired_memory_inspection/paired_memory_readout.png": "84fd31bed20188290354808262dc9ac9b0e89c12909e4eed9dd16d7df5d6201d",
+    "runs/curriculum_2026-09-07/inspection/A_selected/perception_states.png": "5ec8758f560f9a726004b654495f48861a4b76f34bdb6b6ac00da02224235e64",
+    "runs/curriculum_2026-09-07/paddle_history/inspection/memory_states.png": "580caa522fbc6e35e94c56e5983c64426ab40dd74ca101383db88b542a0845ed",
+    "runs/curriculum_2026-09-07/paddle_history/evaluation/visuals/ordinary_0_learned.png": "e7712ebd442b60798f614fca433608cadbb131eeb09c18db7bd856a320f967ca",
+    "runs/curriculum_2026-09-07/paddle_history/evaluation/visuals/ordinary_1_learned.png": "0e05f5474edf87618bb9f34c54dece56c418d4a39ec650ebc0000ff8b206013f",
+    "runs/curriculum_2026-09-07/final-software-tests.log": "761c589988d357877b26f6f7699811ca3c190304d2f27e5cbb8c27739122cb30",
+    "runs/curriculum_2026-09-07/final-dashboard-receipt.json": "f2687018807ec5a344c72e433c53d07c40944d1f9cd25508c917f86d2241309b",
+    "runs/experiment_dashboard.artifact.json": "947599919f2d2d537bf55d61a534a17509d9b518df025ad28d4d64210e94cc21",
+    "runs/curriculum_2026-09-07/control_comparison/current_ordinary.json": "f4fdf8c40393b38598cb9faf6f87aa8dc20397d6c21b139b0ab736a534adcef8",
+    "runs/curriculum_2026-09-07/control_comparison/current_paired.json": "b87adf6f4620e0197487c54789ff01c08f5c2a6cacd59fd5be44b6c50b15c67e",
+    "runs/curriculum_2026-09-07/control_comparison/reference_ordinary.json": "a40d95b92ff4ea1998be0cdd31368b3dfe3f351113a8bfe8db578659567595c9",
+    "runs/curriculum_2026-09-07/control_comparison/reference_paired.json": "777186c9a02f94cf0f2ec0b5fd58ed99606e56e6767bb1ba5d9c5162a215172e"
+  },
+  "screen": {
+    "all_arms_failed_numeric_readiness": true,
+    "comparisons": {
+      "B": {
+        "constituents_nonworsening": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "passes_numeric_readiness": false,
+        "promising": false,
+        "q_ratio": 1.1785220129278375
+      },
+      "C": {
+        "constituents_nonworsening": [
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "passes_numeric_readiness": false,
+        "promising": false,
+        "q_ratio": 1.7144518769638284
+      }
+    },
+    "confirmation_candidates": [],
+    "decision": "stop PushT U/P expansion; no pretraining policy adopted",
+    "fingerprint": "7caecaa31298bf870d9f4483957b069f1c8945c00d7bc76b428bb796c286f106",
+    "git_revision": "2c1e6bc8f12dbc3b5fe98688094c245649f3dc2b",
+    "matched_audit": {
+      "actual_seconds": {
+        "A": 232.93118510197382,
+        "B": 219.51192110401462,
+        "C": 215.42168305799714
+      },
+      "equal_total_updates": 4000,
+      "fresh_heads": "7bf410794cd2f92ce021518678ebac6d791fe8d859d350ceaa9f3ebb00df06db",
+      "initial_ed": "afcf3f5d7b705b495b7d666629b2f7a4a741ce6046659ada5137a8bdb6bfb919",
+      "supervised_first2000_draws": "0e88dc396fe4ef3ad7650d5936526285099dd6d2491696bc605d431861e7f27c",
+      "task_supervised_updates": {
+        "A": 4000,
+        "B": 2000,
+        "C": 2000
+      }
+    },
+    "result_hashes": {
+      "A_supervised": "7d205ef7db3c2a5328de18106bf7bf593084c321e0482a74ceaeede18f557851",
+      "B_supervised": "b86403049946b30fea652db6056983e9fbccb82ee207febdfc94c6a2f1c41c9b",
+      "B_warmup": "5a7e4bc2f0e4e0aed08791d6067901797f153925d6f2d11233b7915f37b102b9",
+      "C_supervised": "94b8b87176cba39e2aa62599971fbc415fb5a06e3fdafb5ee5c99ca667e3aa17",
+      "C_warmup": "286123fada0f6226a006bd0b28cb2d17556da2668bfef36a80cf01d8af4bd56f"
+    },
+    "schema": "curriculum-screen-decision-v1",
+    "seed": 4107,
+    "selected": {
+      "A": {
+        "angle_mae_deg": 30.09195419629061,
+        "angle_norm_mean": 0.8647097513802791,
+        "angle_p95_deg": 136.14581969079592,
+        "frames": 2048,
+        "image_mse": 0.00026002964114368865,
+        "loss": 0.08987311768359962,
+        "near_zero_angle_norm_count": 0,
+        "perception_numeric_gate": false,
+        "pose_mse": 0.08961308804245594,
+        "position_mae": [
+          17.703685846878216,
+          19.77008370310068,
+          14.708209197968245,
+          16.314147539436817
+        ],
+        "position_max": [
+          201.95721435546875,
+          188.08624267578125,
+          100.2974624633789,
+          165.68783569335938
+        ],
+        "position_p95": [
+          56.00563507080078,
+          74.09633941650387,
+          57.45252456665037,
+          46.909880065917946
+        ],
+        "q": 3.0091954196290613
+      },
+      "B": {
+        "angle_mae_deg": 35.4640304323447,
+        "angle_norm_mean": 0.8206318975752559,
+        "angle_p95_deg": 144.54554749875268,
+        "frames": 2048,
+        "image_mse": 0.00019188447133799968,
+        "loss": 0.1143018653769909,
+        "near_zero_angle_norm_count": 0,
+        "perception_numeric_gate": false,
+        "pose_mse": 0.1141099809056529,
+        "position_mae": [
+          18.919620112515986,
+          26.407696404494345,
+          22.664539018645883,
+          20.36582078039646
+        ],
+        "position_max": [
+          184.03323364257812,
+          217.50205993652344,
+          117.00912475585938,
+          166.81207275390625
+        ],
+        "position_p95": [
+          60.47841224670397,
+          108.29524259567255,
+          49.73216400146484,
+          76.31957092285154
+        ],
+        "q": 3.54640304323447
+      },
+      "C": {
+        "angle_mae_deg": 39.82492460456193,
+        "angle_norm_mean": 0.7948503780541006,
+        "angle_p95_deg": 145.6879209668055,
+        "frames": 2048,
+        "image_mse": 0.0003113335415179108,
+        "loss": 0.11670571090624794,
+        "near_zero_angle_norm_count": 0,
+        "perception_numeric_gate": false,
+        "pose_mse": 0.11639437736473003,
+        "position_mae": [
+          34.97818115766859,
+          41.272965882672,
+          18.471102077513933,
+          25.323479041457176
+        ],
+        "position_max": [
+          307.0292663574219,
+          342.7700500488281,
+          165.2228240966797,
+          155.40896606445312
+        ],
+        "position_p95": [
+          104.46490483283995,
+          172.82032852172844,
+          65.8288963317871,
+          51.95218734741209
+        ],
+        "q": 5.159120735334
+      }
+    },
+    "selection_population": "original fixed2048 validation indices",
+    "status": "frozen_before_test",
+    "test_evaluations": [
+      "A_selected",
+      "A_final",
+      "A_update2000",
+      "B_selected",
+      "B_final",
+      "B_warmup",
+      "C_selected",
+      "C_final",
+      "C_warmup",
+      "historical_selected",
+      "historical_final"
+    ]
+  },
+  "control_comparison": {
+    "learned": {
+      "ordinary": {
+        "ci95": [
+          0.274,
+          0.382
+        ],
+        "difference": 0.328,
+        "draws": 2000,
+        "identical_action_trajectories": false,
+        "new_rate": 0.69,
+        "new_successes": 345,
+        "reference_rate": 0.362,
+        "reference_successes": 181,
+        "seed": 93500,
+        "starts": 500
+      },
+      "paired": {
+        "ci95": [
+          0.285,
+          0.445
+        ],
+        "difference": 0.37,
+        "draws": 2000,
+        "members": 200,
+        "new_rate": 0.575,
+        "new_rate_ci95": [
+          0.525,
+          0.63
+        ],
+        "new_successes": 115,
+        "pairs": 100,
+        "reference_rate": 0.205,
+        "reference_successes": 41,
+        "seed": 93501
+      },
+      "paired_first_action": {
+        "ci95": [
+          0.305,
+          0.465
+        ],
+        "difference": 0.38,
+        "draws": 2000,
+        "members": 200,
+        "new_rate": 0.775,
+        "pairs": 100,
+        "reference_rate": 0.395,
+        "seed": 93501
+      }
+    },
+    "privileged": {
+      "ordinary": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "difference": 0.0,
+        "draws": 2000,
+        "identical_action_trajectories": true,
+        "new_rate": 0.888,
+        "new_successes": 444,
+        "reference_rate": 0.888,
+        "reference_successes": 444,
+        "seed": 93500,
+        "starts": 500
+      },
+      "paired": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "difference": 0.0,
+        "draws": 2000,
+        "members": 200,
+        "new_rate": 1.0,
+        "new_rate_ci95": [
+          1.0,
+          1.0
+        ],
+        "new_successes": 200,
+        "pairs": 100,
+        "reference_rate": 1.0,
+        "reference_successes": 200,
+        "seed": 93501
+      },
+      "paired_first_action": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "difference": 0.0,
+        "draws": 2000,
+        "members": 200,
+        "new_rate": 1.0,
+        "pairs": 100,
+        "reference_rate": 1.0,
+        "seed": 93501
+      }
+    },
+    "random": {
+      "ordinary": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "difference": 0.0,
+        "draws": 2000,
+        "identical_action_trajectories": true,
+        "new_rate": 0.23,
+        "new_successes": 115,
+        "reference_rate": 0.23,
+        "reference_successes": 115,
+        "seed": 93500,
+        "starts": 500
+      },
+      "paired": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "difference": 0.0,
+        "draws": 2000,
+        "members": 200,
+        "new_rate": 0.07,
+        "new_rate_ci95": [
+          0.035,
+          0.105
+        ],
+        "new_successes": 14,
+        "pairs": 100,
+        "reference_rate": 0.07,
+        "reference_successes": 14,
+        "seed": 93501
+      },
+      "paired_first_action": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "difference": 0.0,
+        "draws": 2000,
+        "members": 200,
+        "new_rate": 0.31,
+        "pairs": 100,
+        "reference_rate": 0.31,
+        "seed": 93501
+      }
+    },
+    "reset": {
+      "ordinary": {
+        "ci95": [
+          0.044,
+          0.144
+        ],
+        "difference": 0.094,
+        "draws": 2000,
+        "identical_action_trajectories": false,
+        "new_rate": 0.366,
+        "new_successes": 183,
+        "reference_rate": 0.272,
+        "reference_successes": 136,
+        "seed": 93500,
+        "starts": 500
+      },
+      "paired": {
+        "ci95": [
+          -0.12,
+          0.0
+        ],
+        "difference": -0.06,
+        "draws": 2000,
+        "members": 200,
+        "new_rate": 0.14,
+        "new_rate_ci95": [
+          0.095,
+          0.185
+        ],
+        "new_successes": 28,
+        "pairs": 100,
+        "reference_rate": 0.2,
+        "reference_successes": 40,
+        "seed": 93501
+      },
+      "paired_first_action": {
+        "ci95": [
+          -0.14,
+          -0.03
+        ],
+        "difference": -0.085,
+        "draws": 2000,
+        "members": 200,
+        "new_rate": 0.335,
+        "pairs": 100,
+        "reference_rate": 0.42,
+        "seed": 93501
+      }
+    },
+    "tracker": {
+      "ordinary": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "difference": 0.0,
+        "draws": 2000,
+        "identical_action_trajectories": false,
+        "new_rate": 0.738,
+        "new_successes": 369,
+        "reference_rate": 0.738,
+        "reference_successes": 369,
+        "seed": 93500,
+        "starts": 500
+      },
+      "paired": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "difference": 0.0,
+        "draws": 2000,
+        "members": 200,
+        "new_rate": 0.0,
+        "new_rate_ci95": [
+          0.0,
+          0.0
+        ],
+        "new_successes": 0,
+        "pairs": 100,
+        "reference_rate": 0.0,
+        "reference_successes": 0,
+        "seed": 93501
+      },
+      "paired_first_action": {
+        "ci95": [
+          0.0,
+          0.0
+        ],
+        "difference": 0.0,
+        "draws": 2000,
+        "members": 200,
+        "new_rate": 0.0,
+        "pairs": 100,
+        "reference_rate": 0.0,
+        "seed": 93501
+      }
+    }
+  },
+  "paddle_targets": {
+    "h_actual_each_coordinate_lt_1": true,
+    "r_real_each_velocity_lt_0_5": false,
+    "h_horizon5_each_coordinate_lt_2": false,
+    "ordinary_first_interception_gte_0_9": false,
+    "paired_first_interception_gte_0_9": false,
+    "eligible_as_full_evidence": true
+  },
+  "paddle_controls": {
+    "ordinary": {
+      "learned": {
+        "successes": 345,
+        "count": 500,
+        "success_rate": 0.69,
+        "success_wilson95": [
+          0.6481416618981787,
+          0.7289610887264314
+        ],
+        "first_action_correct": null,
+        "first_action_count": 0,
+        "total_hits": 778,
+        "mean_episode_length": 85.978,
+        "planning_failures": 0,
+        "invalid_candidates": 0,
+        "evaluation_capped": 0,
+        "decision_count": 41989,
+        "latency_median_ms": 195.76242699986324,
+        "latency_p95_ms": 201.28488260088488
+      },
+      "privileged": {
+        "successes": 444,
+        "count": 500,
+        "success_rate": 0.888,
+        "success_wilson95": [
+          0.8573463119959378,
+          0.9127371998058978
+        ],
+        "first_action_correct": null,
+        "first_action_count": 0,
+        "total_hits": 1902,
+        "mean_episode_length": 161.048,
+        "planning_failures": 0,
+        "invalid_candidates": 0,
+        "evaluation_capped": 0,
+        "decision_count": 79524,
+        "latency_median_ms": 5.453614023281261,
+        "latency_p95_ms": 7.722180202836167
+      },
+      "random": {
+        "successes": 115,
+        "count": 500,
+        "success_rate": 0.23,
+        "success_wilson95": [
+          0.1952549251744704,
+          0.26886221867476784
+        ],
+        "first_action_correct": null,
+        "first_action_count": 0,
+        "total_hits": 162,
+        "mean_episode_length": 35.256,
+        "planning_failures": 0,
+        "invalid_candidates": 0,
+        "evaluation_capped": 0,
+        "decision_count": 16628,
+        "latency_median_ms": 0.013849989045411348,
+        "latency_p95_ms": 0.01960726513061672
+      },
+      "reset": {
+        "successes": 183,
+        "count": 500,
+        "success_rate": 0.366,
+        "success_wilson95": [
+          0.32494760488221347,
+          0.40909571836148256
+        ],
+        "first_action_correct": null,
+        "first_action_count": 0,
+        "total_hits": 310,
+        "mean_episode_length": 47.14,
+        "planning_failures": 0,
+        "invalid_candidates": 0,
+        "evaluation_capped": 0,
+        "decision_count": 22570,
+        "latency_median_ms": 196.2333930132445,
+        "latency_p95_ms": 199.0109464066336
+      },
+      "tracker": {
+        "successes": 369,
+        "count": 500,
+        "success_rate": 0.738,
+        "success_wilson95": [
+          0.6977470833575388,
+          0.7746237305827623
+        ],
+        "first_action_correct": null,
+        "first_action_count": 0,
+        "total_hits": 1705,
+        "mean_episode_length": 145.046,
+        "planning_failures": 0,
+        "invalid_candidates": 0,
+        "evaluation_capped": 0,
+        "decision_count": 71523,
+        "latency_median_ms": 0.1663689617998898,
+        "latency_p95_ms": 0.1795268792193383
+      }
+    },
+    "paired": {
+      "learned": {
+        "successes": 115,
+        "count": 200,
+        "success_rate": 0.575,
+        "success_wilson95": [
+          0.5057093264785485,
+          0.6414638745648614
+        ],
+        "first_action_correct": 155,
+        "first_action_count": 200,
+        "total_hits": 272,
+        "mean_episode_length": 54.345,
+        "planning_failures": 0,
+        "invalid_candidates": 0,
+        "evaluation_capped": 0,
+        "decision_count": 10469,
+        "latency_median_ms": 205.1475810003467,
+        "latency_p95_ms": 219.11153401015326
+      },
+      "privileged": {
+        "successes": 200,
+        "count": 200,
+        "success_rate": 1.0,
+        "success_wilson95": [
+          0.9811546736227335,
+          1.0
+        ],
+        "first_action_correct": 200,
+        "first_action_count": 200,
+        "total_hits": 864,
+        "mean_episode_length": 150.69,
+        "planning_failures": 0,
+        "invalid_candidates": 0,
+        "evaluation_capped": 0,
+        "decision_count": 29738,
+        "latency_median_ms": 5.635320005239919,
+        "latency_p95_ms": 7.924938053474761
+      },
+      "random": {
+        "successes": 14,
+        "count": 200,
+        "success_rate": 0.07,
+        "success_wilson95": [
+          0.042152171828342806,
+          0.11405480885610647
+        ],
+        "first_action_correct": 62,
+        "first_action_count": 200,
+        "total_hits": 19,
+        "mean_episode_length": 10.32,
+        "planning_failures": 0,
+        "invalid_candidates": 0,
+        "evaluation_capped": 0,
+        "decision_count": 1664,
+        "latency_median_ms": 0.014105986338108778,
+        "latency_p95_ms": 0.020065571879968047
+      },
+      "reset": {
+        "successes": 28,
+        "count": 200,
+        "success_rate": 0.14,
+        "success_wilson95": [
+          0.09866982633455634,
+          0.1948988086570756
+        ],
+        "first_action_correct": 67,
+        "first_action_count": 200,
+        "total_hits": 50,
+        "mean_episode_length": 15.74,
+        "planning_failures": 0,
+        "invalid_candidates": 0,
+        "evaluation_capped": 0,
+        "decision_count": 2748,
+        "latency_median_ms": 205.5406590225175,
+        "latency_p95_ms": 218.87143435014877
+      },
+      "tracker": {
+        "successes": 0,
+        "count": 200,
+        "success_rate": 0.0,
+        "success_wilson95": [
+          1.734723475976807e-18,
+          0.018845326377266575
+        ],
+        "first_action_correct": 0,
+        "first_action_count": 200,
+        "total_hits": 0,
+        "mean_episode_length": 7.0,
+        "planning_failures": 0,
+        "invalid_candidates": 0,
+        "evaluation_capped": 0,
+        "decision_count": 1000,
+        "latency_median_ms": 0.16663200221955776,
+        "latency_p95_ms": 0.2323792898096144
+      }
+    }
+  },
+  "paired_memory": {
+    "frame_probe_both_members_correct": 0,
+    "frame_probe_direction_correct": 100,
+    "frame_probe_vx_mae": 6.0,
+    "frame_probe_vy_mae": 1.448456223011017,
+    "members": 200,
+    "memory_both_members_correct": 72,
+    "memory_direction_correct": 171,
+    "memory_vx_mae": 4.640295609608293,
+    "memory_vy_mae": 0.8800476771593094,
+    "pairs": 100,
+    "training_probe_frames": 4096
+  },
+  "software_tests_passed": 355,
+  "dashboard": {
+    "counts": {
+      "blocks": 57,
+      "charts": 27,
+      "html": 9,
+      "metrics": 4,
+      "tables": 6
+    },
+    "html": "/home/alex/Documents/path-wm/runs/experiment_dashboard.html",
+    "ok": true,
+    "sourceDialog": "passed",
+    "sourceInteraction": "semantic_click",
+    "stages": {
+      "package": "passed",
+      "validation": "passed",
+      "verification": "passed"
+    },
+    "timings": {
+      "browserRunMs": 6168.9,
+      "contentChecksMs": 1314.1,
+      "readerReadyMs": 3356.5,
+      "responsiveChecksMs": 1314.1,
+      "sourceDialogMs": 1624.5,
+      "staticChartExtractionMs": 5960.9,
+      "totalMs": 12545.2,
+      "validateAndPackageMs": 6202.2,
+      "verificationMs": 6330.6
+    },
+    "viewports": [
+      1440,
+      390
+    ]
+  },
+  "limitations": [
+    "One matched perception seed; no promising warmup triggered confirmation seeds or PushT U/P expansion.",
+    "Historical/current Paddle runtime differs; case bootstrap intervals do not measure training-seed variation or isolate U causally.",
+    "Attention/PCA are descriptive; warmup forgetting is measured in combined E/D, not isolated components.",
+    "All raw cases completed; canonical reporting path failure was repaired without rerunning them."
+  ]
+}
