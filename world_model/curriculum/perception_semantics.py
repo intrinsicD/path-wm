@@ -165,12 +165,21 @@ def metrics(scores, targets, known, prevalence):
         negative=((1 - targets) * known).sum(0).tolist(), unknown=(1 - known).sum(0).tolist(), frames=len(targets))
 
 
-def train(encoder, seed, development=False, device='cpu'):
-    setup(); out = ROOT / ('development/semantics' if development else 'semantics/fits') / f'seed_{seed}' / encoder
+def train(encoder, seed, development=False, device='cpu', *, pool_override=None,
+          output_override=None, protocol_path='docs/perception-semantic-protocol-2026-09-08.md'):
+    setup(); out = Path(output_override) if output_override else ROOT / ('development/semantics' if development else 'semantics/fits') / f'seed_{seed}' / encoder
     out.mkdir(parents=True, exist_ok=True)
     if (out / 'semantic_manifest.json').exists():
         raise FileExistsError('preserve semantic run')
-    pool, pool_manifest = pooled_features(encoder)
+    if pool_override is None:
+        pool, pool_manifest = pooled_features(encoder)
+    else:
+        pool = Path(pool_override); pool_manifest = json.loads((pool / 'manifest.json').read_text())
+        if pool_manifest['labels_sha256'] != file_hash(LABEL_ROOT / 'manifest.json'):
+            raise ValueError('pooled category labels changed')
+        for split, entry in pool_manifest['splits'].items():
+            if file_hash(pool / f'{split}.npy') != entry['sha256']:
+                raise ValueError('pooled category features changed')
     lm = json.loads((LABEL_ROOT / 'manifest.json').read_text()); classes = lm['retained_indices']
     data = {}
     for split in ('train', 'validation', 'test'):
@@ -190,7 +199,7 @@ def train(encoder, seed, development=False, device='cpu'):
     rng = np.random.default_rng(seed + 530029)
     prevalence = (labels['targets'] * labels['known']).sum(0) / labels['known'].sum(0).clip(1)
     manifest = dict(config=config, pooled_manifest_sha256=file_hash(pool / 'manifest.json'),
-        source_sha256=file_hash(__file__), protocol_sha256=file_hash('docs/perception-semantic-protocol-2026-09-08.md'),
+        source_sha256=file_hash(__file__), protocol_sha256=file_hash(protocol_path),
         parameters=sum(p.numel() for p in head.parameters()), versions=versions(), prevalence=prevalence.tolist())
     json_atomic(out / 'semantic_manifest.json', manifest)
     begin = time.monotonic(); best = None; selected = None; step = 0; status = 'completed'

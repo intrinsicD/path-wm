@@ -129,14 +129,27 @@ def evaluate(encoder, seed, device='cuda'):
         model = models['E']
     else:
         model = pinned_backbone(device)
+    return evaluate_frozen(model, heads, encoder, seed, out, checkpoint, state['step'], device,
+                           feature_family=encoder, cache_precision=True)
+
+
+@torch.no_grad()
+def evaluate_frozen(model, heads, encoder, seed, out, checkpoint, selected_step, device,
+                    *, feature_family, cache_precision):
+    """Apply the same cohort without changing the source's feature precision."""
+    out = Path(out); out.mkdir(parents=True, exist_ok=True)
+    if (out / 'evaluation.json').exists(): raise FileExistsError('preserve fresh evaluation')
+    model.eval().requires_grad_(False)
+    for head in heads.values(): head.eval().requires_grad_(False)
     before = fingerprint_modules({'E': model, **heads}); begin = time.monotonic(); results = {}; sources = []
     for name, (frames, targets) in cohorts().items():
         prediction = []; pixels = []; maps = []; pools = []; reconstruction = []
         for start in range(0, len(frames), 32):
             rgb = torch.from_numpy(frames[start:start + 32].copy()).permute(0, 3, 1, 2).to(device).float() / 255
-            tokens = model(rgb); tokens = tokens.tokens() if encoder == 'cnn' else tokens
-            # Match the audited cache precision used to fit these heads.
-            fine, coarse = feature_grids(tokens.half().float(), encoder)
+            tokens = model(rgb); tokens = tokens.tokens() if feature_family == 'cnn' else tokens
+            # Cached P1 used FP16 features; the live extension fits used FP32.
+            if cache_precision: tokens = tokens.half().float()
+            fine, coarse = feature_grids(tokens, feature_family)
             pose, location, orientation = heads['pose'](fine, coarse, return_maps=True)
             image = heads['rgb'](fine, coarse)
             prediction.append(pose.cpu().double().numpy()); maps.append(location.cpu().numpy())
@@ -154,8 +167,9 @@ def evaluate(encoder, seed, device='cuda'):
         path = out / f'{name}_images.npz'
         np.savez_compressed(path, rgb=frames, reconstruction=np.concatenate(reconstruction)); sources.append(path)
     if before != fingerprint_modules({'E': model, **heads}): raise RuntimeError('evaluation changed frozen state')
-    report = dict(encoder=encoder, seed=seed, selected_step=state['step'], checkpoint=str(checkpoint),
+    report = dict(encoder=encoder, seed=seed, selected_step=selected_step, checkpoint=str(checkpoint),
         checkpoint_sha256=file_hash(checkpoint), frozen_fingerprint=before, metrics=results,
+        feature_precision='FP16 round trip' if cache_precision else 'FP32 live features',
         seconds=time.monotonic() - begin, population_sha256=file_hash(FRESH / 'population/manifest.json'),
         source_sha256=file_hash(__file__), scope='Fresh simulator stress and paired renderer calibration; no adaptation or control')
     json_atomic(out / 'evaluation.json', report); sources.append(out / 'evaluation.json')
