@@ -147,6 +147,25 @@ passed output-equivalence/frozen-state checks and HTML verification. Queue the
 formal40-condition GPU audit only after all geometry training completes. This
 adds no fits; report batch1 latency separately from batch32 throughput.
 
+All12D2 fits completed. Mean COCO RGB MSE/IoU: late0.024891/0.658625,
+early0.007794/0.668009, raw0.009680/0.663890, task-FiLM0.007276/0.660159.
+Early improves both outputs in all three seeds; FiLM has lower IoU in all three
+and improves COCO RGB in two. It is not a general improvement across outputs.
+All42CPU decoder-reliance conditions completed; local donor inputs mainly harm
+RGB, contextual donors mainly harm masks. These are fitted reliance diagnostics.
+
+All four localization_v2 development units now completed and controls pass:
+informative weights differ by<=1.2e-7 and normalized outputs/maps by<=4.5e-7.
+The ViT control and completed reliance diagnostic initially failed HTML
+publication because a source-inventory cell exceeded4000characters. The source
+table now has one exact path per record key; the preservation test and canonical
+browser verification pass. Failed receipts remain, with publication-only repair
+receipts beside both results. No optimizer or inference work was repeated.
+Repair commit`2457e90`. The resumed development coordinator PID3309429 finished;
+D3 may now start. Commit the geometry implementation and seal its six-fit queue,
+which waits for D3 completion. The full pre-repair suite passed405tests/3opt-in
+skips; the added source-inventory regression also passes.
+
 The source-reconciled [technical report plan](perception-report-plan-2026-09-08.md)
 is implemented in `world_model/curriculum/perception_summary.py` and
 `perception_report.py`. Partial snapshots explicitly list missing fits. The final
