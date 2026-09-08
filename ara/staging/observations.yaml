@@ -964,3 +964,20 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O59
+  timestamp: 2026-09-08T16:13+02:00
+  provenance: ai-suggested
+  content: D already reads fine/coarse features and P already reads memory; propose optional direct D-memory
+    for outputs requiring otherwise inaccessible history, with typed heads or conditional sharing for named
+    output semantics. Spatial scale, convolution/attention, temporal evidence and output type are separate
+    axes. Specify belief supervision and every decoder input's observed/predicted time. Compare readout paths
+    on a fixed encoder, using history-dependent targets and compatible imagined states rather than assuming
+    reconstruction or entropy proves memory use. Neither family owns semantics or geometry.
+  context: Code-grounded clarification and verified primary sources; two public-only Claude exchanges recorded
+    in docs/decoder-inputs-and-conditioning-2026-09-08.md. No new model, training or inference experiment.
+  potential_type: architecture
+  bound_to: [N108, N107, N87, N94]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

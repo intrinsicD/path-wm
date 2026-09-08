@@ -2,8 +2,8 @@ session:
   id: 2026-09-08_001
   date: '2026-09-08'
   started: 2026-09-08T03:03+02:00
-  last_turn: 2026-09-08T15:31+02:00
-  turn_count: 13
+  last_turn: 2026-09-08T16:13+02:00
+  turn_count: 14
   summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
     and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed
     controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning.
@@ -18,7 +18,9 @@ session:
     final browser QA verified. Turn12 audits PCA and per-head attention with zero updates; maps verified,
     coarse broadcast interpretation and hybrid proposal staged,17 targeted tests and compact browser QA pass.
     Turn13 reviews asymmetric architectures from downstream requirements with two public-only Claude exchanges;
-    bounded native-feature comparison proposed, no new model runs.'
+    bounded native-feature comparison proposed, no new model runs. Turn14 confirms existing fine/coarse decoding
+    and indirect memory path; proposes typed or conditioned readouts with belief supervision and causal timing,
+    two Claude exchanges reconciled; no model runs.'
 events_logged:
 - turn: 1
   type: decision
@@ -417,6 +419,18 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Bounded requirements-first native-feature comparison proposed; architecture choice and budgets remain unfrozen.
+- turn: 14
+  type: question
+  id: N108
+  routing: direct
+  provenance: user
+  summary: Multiscale plus memory/task decoder inputs and convolution-versus-transformer roles.
+- turn: 14
+  type: observation
+  id: O59
+  routing: staged
+  provenance: ai-suggested
+  summary: Typed or conditioned history-aware readouts proposed; existing connections are not new implementations.
 ai_actions:
 - turn: 1
   action: 'Completed the continuous September7–8 task: source verification/grouped image preparation; matched training
@@ -561,6 +575,17 @@ ai_actions:
   - docs/project-state.md
   - runs/requirements_first_perception_2026-09-08/collaboration/
   - ara/
+- turn: 14
+  action: Traced shared Decoder, Predictor and P-then-U rollout; reviewed ConvNeXt, Swin, FPN, CoAtNet, FiLM and
+    Perceiver IO primary sources. Two public-only Claude exchanges accepted belief-target provenance and withdrew
+    mandatory-memory/conditioning and family-role overclaims. Wrote input/conditioning design note and diagram;
+    no model change, training, inference evaluation or dashboard refresh.
+  provenance: ai-executed
+  files_changed:
+  - docs/decoder-inputs-and-conditioning-2026-09-08.md
+  - docs/project-state.md
+  - runs/requirements_first_perception_2026-09-08/collaboration/
+  - ara/
 claims_touched:
 - id: C04
   action: crystallized
@@ -607,6 +632,9 @@ key_context:
 - turn: 13
   excerpt: Why not use a completely different ViT or hybrid encoder/decoder, or different architectures for
     each; or design backward from requirements expected downstream applications might have?
+- turn: 14
+  excerpt: What about giving the decoder fine and coarse features, internal state and task/output conditioning;
+    are convolutions spatial and transformers semantic, and how do we mix these ideas for what we need?
 open_threads:
 - PushT pusher-position readiness and generic retention remain unresolved after N99–N102; no training remains active.
 - Paddle control improved but memory/prediction/90%targets fail; a runtime-matched multi-seed study would be needed
@@ -628,7 +656,10 @@ open_threads:
   fusion and hybrid/topology choices remain untested. O55/O57 are proposals, not architecture adoption.
 - N107/O58 requirements-first and asymmetric-family design remains a proposal; define bounded consumers and
   essential gates before selecting a new experiment. Native-feature decoding and software cases are untested.
+- N108/O59 direct decoder memory, typed versus conditional sharing and belief-target supervision remain design
+  choices to test. Existing fine/coarse D and memory-conditioned P do not settle these additional paths.
 ai_suggestions_pending:
+- O59 clarifies possible decoder interfaces without adopting new memory, conditioning, fusion or encoder training.
 - O58 broadens the decision method beyond O57 local hybrid ablation; no architecture adoption or new run budget.
 - O56 audit interpretation and O57 bounded hybrid comparison await researcher response; O53 budget/loss control
   remains proposed. No new training was launched by the visualization question.

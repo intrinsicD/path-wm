@@ -1703,3 +1703,12 @@ tree:
     not authorization of another architecture sweep.
   also_depends_on: [N94, N95, N104]
   status: open
+- id: N108
+  type: question
+  title: Combine multiscale decoding with temporal state and output conditioning
+  provenance: user
+  timestamp: 2026-09-08T16:13+02:00
+  description: User asks whether D should read fine/coarse features, internal state and task/output type;
+    asks whether convolutions are spatial and transformers semantic and how to mix mechanisms by need.
+  also_depends_on: [N107, N87, N94]
+  status: open

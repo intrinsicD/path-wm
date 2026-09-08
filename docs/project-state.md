@@ -27,6 +27,13 @@ Read the [paddle results](paddle-world-model-results-2026-09-07.md),
 
 ## Complete: encoder investigation (8 September)
 
+The [decoder input and conditioning clarification](decoder-inputs-and-conditioning-2026-09-08.md)
+confirms that D already consumes fine and coarse features; P already conditions
+predicted features on memory. Direct D-memory access and task/query conditioning
+are additional proposed routes. The design distinguishes spatial resolution,
+convolution/attention, temporal evidence and output type, with explicit belief
+supervision and rollout timing. No model change or new run was made.
+
 Latest design follow-up: the [requirements-first encoder/decoder review](requirements-first-perception-design-2026-09-08.md)
 recommends selecting a small downstream capability contract before an architecture
 family. Different encoder and decoder families are supported by direct literature

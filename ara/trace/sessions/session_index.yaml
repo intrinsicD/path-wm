@@ -43,8 +43,10 @@ sessions:
     final browser QA verified. Turn12 audits PCA and per-head attention with zero updates; maps verified,
     coarse broadcast interpretation and hybrid proposal staged,17 targeted tests and compact browser QA pass.
     Turn13 reviews asymmetric architectures from downstream requirements with two public-only Claude exchanges;
-    bounded native-feature comparison proposed, no new model runs.'
-  turn_count: 13
-  events_count: 60
+    bounded native-feature comparison proposed, no new model runs. Turn14 confirms existing fine/coarse decoding
+    and indirect memory path; proposes typed or conditioned readouts with belief supervision and causal timing,
+    two Claude exchanges reconciled; no model runs.'
+  turn_count: 14
+  events_count: 62
   claims_touched: [C04]
-  open_threads: 12
+  open_threads: 13
