@@ -19,14 +19,17 @@ from torch.nn import functional as F
 
 from pathwm.models.modalities import (
     Observation,
-    ImageEncoder,
-    VectorEncoder,
-    TextEncoder,
     ImageDecoder,
     AudioDecoder,
     TextDecoder,
     bytes_batch,
     bytes_text,
+)
+from pathwm.models.multiscale import (
+    MultiScaleImageEncoder,
+    MultiScaleAudioEncoder,
+    MultiScaleTextEncoder,
+    FeatureController,
 )
 from pathwm.models.agent_state import EpisodicMemory
 from pathwm.models.agent import (
@@ -53,15 +56,39 @@ from pathwm.io import (
 from pathwm.training.improvement import replay_probabilities, try_improvement
 
 
-def build_model(width=32, image_size=16, audio_samples=32):
+def build_model(
+    width=32,
+    image_size=16,
+    audio_samples=32,
+    *,
+    code_width=16,
+    levels=3,
+    cross_scale=True,
+):
     # Replace a constructor here to compare components; no registration is needed.
     return MultimodalAgent(
         width=width,
         encoders={
-            "image": ImageEncoder(width),
-            "video": ImageEncoder(width),
-            "audio": VectorEncoder(audio_samples, width),
-            "text": TextEncoder(width),
+            "image": MultiScaleImageEncoder(
+                width, code_width=code_width, levels=levels, cross_scale=cross_scale
+            ),
+            "video": MultiScaleImageEncoder(
+                width,
+                video=True,
+                code_width=code_width,
+                levels=levels,
+                cross_scale=cross_scale,
+            ),
+            "audio": MultiScaleAudioEncoder(
+                audio_samples,
+                width,
+                code_width=code_width,
+                levels=levels,
+                cross_scale=cross_scale,
+            ),
+            "text": MultiScaleTextEncoder(
+                width, code_width=code_width, levels=levels, cross_scale=cross_scale
+            ),
         },
         decoders={
             "image": ImageDecoder(width, image_size),
@@ -74,6 +101,7 @@ def build_model(width=32, image_size=16, audio_samples=32):
         memory=EpisodicMemory(capacity=16, retrieve_count=2),
         action_head=ActionHead(width),
         monitor=ErrorMonitor(width),
+        feature_controller=FeatureController(width, code_width),
     )
 
 
@@ -607,6 +635,10 @@ def save_examples(run, learner, data, settings):
                 },
                 "zero_group_image_change_mse": ablations,
                 "attention_inputs": trace["observe.input_modalities"],
+                "attention_input_scales": trace["observe.input_scales"],
+                "feature_code": trace["encode.feature_code"].tolist(),
+                "feature_code_source": trace["encode.condition_source"],
+                "feature_code_time": trace["encode.condition_time"].tolist(),
                 "audio_sample_rate": 8000,
                 "audio_samples_per_state": settings["audio_samples"],
                 "trace_keys": sorted(trace),
@@ -624,6 +656,20 @@ def save_examples(run, learner, data, settings):
             name: state.tokens[:, sl].transpose(1, 2).unsqueeze(2)
             for name, sl in model.layout.items()
         }
+        # Reuse captured processed inputs for the existing per-feature PCA renderer.
+        for key, value in trace.items():
+            if (
+                key.startswith("encode.")
+                and ".scale." in key
+                and key.endswith(".values")
+            ):
+                prefix = key.removesuffix(".values")
+                grid = trace[prefix + ".grid"]
+                features[prefix.removeprefix("encode.")] = value.transpose(
+                    1, 2
+                ).reshape(
+                    len(value), value.shape[-1], int(np.prod(grid[:-1])), grid[-1]
+                )
         write_report(
             run.path, {"rgb": batch["images"][:, -1]}, {"rgb": video[:, -1]}, features
         )
@@ -812,13 +858,61 @@ def export_diagrams(
         goal = flow.input("Goal image", batch["images"][:, -1])
         decision = flow.call(plan_to_image, model, thought, candidates, goal)
         flow.output("Selected action sequence", decision.actions)
+        graphs = {"architecture": architecture(model, depth), "data_flow": flow.graph()}
+        # Capture actual processor/merge calls without duplicating the encoder loop.
+        for name, encoder in model.encoders.items():
+            if not hasattr(encoder, "pyramid"):
+                continue
+            scales_flow = CallFlow()
+            code = scales_flow.input(
+                "Pre-observation feature code", model.propose_feature_code(initial)
+            )
+
+            def stem_input(module, args):
+                scales_flow.input("Positioned stem features", args[0])
+
+            handle = encoder.pyramid.stages[0].register_forward_pre_hook(stem_input)
+            modules = {
+                f"scale.{i}": module for i, module in enumerate(encoder.pyramid.stages)
+            }
+            modules.update(
+                {
+                    f"merge.{i}": module
+                    for i, module in enumerate(encoder.pyramid.merges)
+                }
+            )
+            try:
+                with scales_flow.watch(modules):
+                    pyramid = encoder(
+                        inputs[name], condition=code, condition_time=initial.time
+                    )
+            finally:
+                handle.remove()
+            for i, scale in enumerate(pyramid.scales):
+                scales_flow.output(f"Processed scale {i} for consumers", scale)
+            graph = scales_flow.graph()
+            graph.update(
+                title=name.title() + " input scales",
+                relationship="Each scale finishes processing before the next scale or consumers read it.",
+            )
+            graphs[name + "_scales"] = graph
     root = Path(__file__).resolve().parents[1]
     provenance = dict(
         seed=seed,
         torch_version=torch.__version__,
         device="cpu",
         depth=depth,
-        model=dict(width=width, image_size=image_size, audio_samples=audio_samples),
+        model=dict(
+            width=width,
+            image_size=image_size,
+            audio_samples=audio_samples,
+            code_width=model.feature_controller.code_width,
+            input_scales={
+                name: len(encoder.pyramid.stages)
+                for name, encoder in model.encoders.items()
+                if hasattr(encoder, "pyramid")
+            },
+        ),
         data=data.identity,
         initialization="fresh model; no trained-capability claim",
         calls="one observation, memory write, one thought, two imagined steps and one bounded planning call",
@@ -829,7 +923,7 @@ def export_diagrams(
     )
     return write_diagrams(
         output,
-        {"architecture": architecture(model, depth), "data_flow": flow.graph()},
+        graphs,
         provenance,
     )
 

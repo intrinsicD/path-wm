@@ -7,7 +7,8 @@ from torch import nn
 from torch.nn import functional as F
 
 from .agent_state import LatentState
-from .modalities import Attend, position
+from .modalities import Attend, position, observation_values
+from .multiscale import FeaturePyramid
 
 
 def batch_time(value, reference):
@@ -151,6 +152,7 @@ class MultimodalAgent(nn.Module):
         memory,
         action_head,
         monitor,
+        feature_controller=None,
         width=32,
         groups=None,
     ):
@@ -170,6 +172,7 @@ class MultimodalAgent(nn.Module):
         self.encoders, self.decoders = nn.ModuleDict(encoders), nn.ModuleDict(decoders)
         self.updater, self.dynamics, self.thinker = updater, dynamics, thinker
         self.memory, self.action_head, self.monitor = memory, action_head, monitor
+        self.feature_controller = feature_controller
         self.action_width = action_head.action_width
         if (
             updater.action_width != self.action_width
@@ -195,11 +198,17 @@ class MultimodalAgent(nn.Module):
         time,
         previous_action=None,
         thinking_steps=1,
+        feature_code=None,
         trace=None,
     ):
         """One observation/thinking cycle; memory writes and actions remain explicit."""
         state = self.observe(
-            state, observations, time=time, previous_action=previous_action, trace=trace
+            state,
+            observations,
+            time=time,
+            previous_action=previous_action,
+            feature_code=feature_code,
+            trace=trace,
         )
         return self.think(state, steps=thinking_steps, trace=trace)
 
@@ -224,7 +233,22 @@ class MultimodalAgent(nn.Module):
         ):
             raise ValueError("Latent state must be finite")
 
-    def observe(self, state, observations, *, time, previous_action=None, trace=None):
+    def propose_feature_code(self, state):
+        self.validate_state(state)
+        if self.feature_controller is None:
+            raise ValueError("No feature controller supplied")
+        context = torch.cat(
+            [state.tokens[:, self.layout[name]] for name in ("working", "reasoning")], 1
+        )
+        return self.feature_controller(context)
+
+    def encode(self, state, observations, *, time, feature_code=None, trace=None):
+        """Return independently inspectable input features under one frozen code.
+
+        Code availability is state time for the controller, or the caller's cutoff
+        for a user override. Ordinals within a pyramid refer to that input window's
+        content only; cross-call state/code provenance is separately time-stamped.
+        """
         self.validate_state(state)
         now = batch_time(time, state.tokens)
         if (now < state.time).any():
@@ -236,11 +260,76 @@ class MultimodalAgent(nn.Module):
         unknown = set(observations) - set(self.encoders)
         if unknown:
             raise ValueError(f"No encoder supplied for modalities: {sorted(unknown)}")
-        batches, labels = [], []
+        # Scan ALL raw inputs before ANY encoder is permitted to mix their values.
+        for observation in observations.values():
+            _, times, valid = observation_values(observation)
+            if len(times) != len(state.tokens):
+                raise ValueError("Observation batch differs from latent interface")
+            if ((times > now[:, None]) & valid).any():
+                raise ValueError(
+                    "Observation includes future information after the cutoff"
+                )
+        user_control = feature_code is not None
+        if not user_control and self.feature_controller is not None:
+            feature_code = self.propose_feature_code(state)
+        condition_time = now if user_control else state.time
+        if feature_code is not None and trace is not None:
+            trace["encode.feature_code"] = feature_code.detach().cpu().clone()
+            trace["encode.condition_time"] = condition_time.detach().cpu().clone()
+            trace["encode.condition_source"] = (
+                "user" if user_control else "pre_observation_state"
+            )
+        encoded = {}
         for name, encoder in self.encoders.items():
             if name not in observations:
                 continue
-            item = encoder(observations[name])
+            if hasattr(encoder, "code_width"):
+                local_trace = {} if trace is not None else None
+                encoded[name] = encoder(
+                    observations[name],
+                    condition=feature_code,
+                    condition_time=condition_time,
+                    trace=local_trace,
+                )
+                if trace is not None:
+                    trace.update(
+                        {
+                            f"encode.{name}.{key}": value
+                            for key, value in local_trace.items()
+                        }
+                    )
+            else:
+                # Existing one-scale custom adapters keep their simple contract.
+                encoded[name] = encoder(observations[name])
+        return encoded
+
+    def observe(
+        self,
+        state,
+        observations,
+        *,
+        time,
+        previous_action=None,
+        feature_code=None,
+        trace=None,
+    ):
+        encoded = self.encode(
+            state, observations, time=time, feature_code=feature_code, trace=trace
+        )
+        now = batch_time(time, state.tokens)
+        batches, labels = [], []
+        scale_labels = []
+        for name, features in encoded.items():
+            if isinstance(features, FeaturePyramid):
+                item = features.as_tokens()
+                scale_labels.extend(
+                    f"{name}.scale.{i}"
+                    for i, scale in enumerate(features.scales)
+                    for _ in range(scale.values.shape[1])
+                )
+            else:
+                item = features
+                scale_labels.extend([name] * item.values.shape[1])
             if (
                 item.values.shape[0] != len(state.tokens)
                 or item.values.shape[-1] != self.width
@@ -271,6 +360,9 @@ class MultimodalAgent(nn.Module):
             observation_count=state.observation_count + 1,
         )
         if trace is not None:
+            trace["observe.input_scales"] = scale_labels + [
+                "previous_action_and_elapsed_time"
+            ]
             trace["observe.input_modalities"] = labels + [
                 "previous_action_and_elapsed_time"
             ]

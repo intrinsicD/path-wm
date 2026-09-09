@@ -6,6 +6,7 @@ closures, implicit module parameters and unrecorded tensor transformations are n
 claimed as data-flow edges. It is not an autograd or all-possible-paths graph.
 """
 
+from contextlib import contextmanager
 from dataclasses import fields, is_dataclass
 from html import escape
 import inspect
@@ -165,6 +166,36 @@ class CallFlow:
     def output(self, label, value):
         self._node(label, shape(value), "output", self._dependencies(value))
         return value
+
+    @contextmanager
+    def watch(self, modules):
+        """Record selected module boundaries during ordinary execution; clean up hooks."""
+        handles = []
+        try:
+            for label, module in modules.items():
+                pending = []
+
+                def before(module, args, kwargs, pending=pending):
+                    pending.append(self._dependencies((args, kwargs)))
+
+                def after(module, args, kwargs, output, pending=pending, label=label):
+                    identifier = self._node(
+                        label + ": " + type(module).__name__,
+                        shape(output),
+                        "call",
+                        pending.pop(),
+                        source_location(type(module)),
+                    )
+                    self._register(output, identifier)
+
+                handles.append(
+                    module.register_forward_pre_hook(before, with_kwargs=True)
+                )
+                handles.append(module.register_forward_hook(after, with_kwargs=True))
+            yield
+        finally:
+            for handle in handles:
+                handle.remove()
 
     def graph(self):
         return dict(

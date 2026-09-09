@@ -1,0 +1,29 @@
+digraph model {
+graph [rankdir=TB, bgcolor="white", pad=0.35, nodesep=0.25, ranksep=0.65, fontname="DejaVu Sans", fontsize=17, labelloc=t];
+node [shape=box, style="rounded,filled", fillcolor="#edf3fa", color="#7290ae", fontname="DejaVu Sans", fontsize=12, margin="0.15,0.10"];
+edge [color="#6b7d8e", arrowsize=0.65];
+label="Video input scales\nEach scale finishes processing before the next scale or consumers read it.";
+n0 [label="Pre-observation feature code\n[1, 16]", fillcolor="#e6f3ec"];
+n1 [label="Positioned stem features\nFeatureScale [1, 32, 32]", fillcolor="#e6f3ec"];
+n2 [label="scale.0: ScaleProcessor\nFeatureScale [1, 32, 32]", fillcolor="#edf3fa"];
+n3 [label="merge.0: ScaleMerge\nFeatureScale [1, 4, 32]", fillcolor="#edf3fa"];
+n4 [label="scale.1: ScaleProcessor\nFeatureScale [1, 4, 32]", fillcolor="#edf3fa"];
+n5 [label="merge.1: ScaleMerge\nFeatureScale [1, 1, 32]", fillcolor="#edf3fa"];
+n6 [label="scale.2: ScaleProcessor\nFeatureScale [1, 1, 32]", fillcolor="#edf3fa"];
+n7 [label="Processed scale 0 for consumers\nFeatureScale [1, 32, 32]", fillcolor="#fff0d9"];
+n8 [label="Processed scale 1 for consumers\nFeatureScale [1, 4, 32]", fillcolor="#fff0d9"];
+n9 [label="Processed scale 2 for consumers\nFeatureScale [1, 1, 32]", fillcolor="#fff0d9"];
+n0 -> n2 [style=solid];
+n1 -> n2 [style=solid];
+n0 -> n3 [style=solid];
+n2 -> n3 [style=solid];
+n0 -> n4 [style=solid];
+n3 -> n4 [style=solid];
+n0 -> n5 [style=solid];
+n4 -> n5 [style=solid];
+n0 -> n6 [style=solid];
+n5 -> n6 [style=solid];
+n2 -> n7 [style=solid];
+n4 -> n8 [style=solid];
+n6 -> n9 [style=solid];
+}

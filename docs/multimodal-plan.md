@@ -1,12 +1,12 @@
 # One multimodal world model
 
-## Multiscale conditioned inputs — active slice
+## Multiscale conditioned inputs — completed slice
 
 Request: all four input modalities expose fine-to-coarse processed feature scales,
 with cross-scale attention and residual processing controlled by an agent/user code.
-Review actual Claude first; public-concepts-only receipts are preserved under
-`runs/reviews/multiscale_inputs/`. The first review is complete; reconciliation
-addresses availability bounds, equal-time sequence causality and code provenance.
+Actual Claude reviewed the design first; public-concepts-only briefs, three
+responses and CLI receipts are preserved under `runs/reviews/multiscale_inputs/`.
+The review and reconciliation are complete.
 
 Implement three scales with shared width: image spatial grids, video space/time
 grids, small audio waveform patches merged along sample order, text contiguous
@@ -37,6 +37,47 @@ run plus pause/resume replay), two real PushT updates, small populations and no
 learning proposals for these retained smoke runs. Preserve their checkpoints/raw
 metrics/reports. Regenerate diagrams and inspect them locally. No GPU job or quality
 comparison; no improvement claim until a separately declared matched experiment.
+
+Adopted review decisions: bias-free bounded FiLM with live initial gradients;
+finite invalid outputs and safe attention rows; local-footprint cross-scale
+attention that can be disabled; conjunctive time/ordinal masks; no reverse pass.
+Claude withdrew claims that masked cross-attention raises a query's availability,
+that a hardcoded three-stage implementation is required, and that the code needs
+an ordinal floor under the explicit fixed-context contract. It accepted window-local
+content ordinals with separate conditioning time/source. Its final suggestion of a
+shared cross-modal ordinal does not apply: local code inspection confirms that each
+pyramid operates on one modality, and the latent consumer makes no cross-modal
+ordinal comparisons or causal-prefix claim. No global streaming protocol was added.
+
+Sensor timestamps are retained separately from context-floored availability and are
+encoded before fine-scale processing. This avoids losing observation timing when
+a newer context code raises availability. Direct tests establish completed-prefix
+consistency at fixed code/time, not cache equivalence across changing codes.
+
+Implementation checks: the initial missing-module failure was committed as
+`8afca0d` (red). All 42 CPU tests now pass, including ten multiscale checks and four
+diagram checks. Ordering hooks cover BOTH pooling and cross-attention consumers;
+zero-code neutrality after optimization is compared with a FiLM-disabled reference.
+The new default has 325,704 parameters, three input scales and a 16-value code.
+
+Retained execution evidence: `runs/multiscale_v1/synthetic_full/` and
+`synthetic_resumed/` both finish two main updates, with identical model/EMA/controller,
+replay, optimizer, scheduler, Python/NumPy/Torch/CUDA/sampler RNG state and training
+rows. Pause-boundary validation rows intentionally differ. `pusht/` completes two
+real-data updates. No learning proposals ran. All reports pass structural validation;
+62 embedded media items in each synthetic report and 44 in the PushT report decode.
+Inspection contains all 12 synthetic or six available real input scales, masks,
+content/availability times, attention, codes and their provenance. All 26 recorded
+source identities match this implementation. Receipt and reproducible checks:
+`runs/multiscale_v1/verification.json` and `verify.py`.
+
+Final development image MSE: synthetic 0.242622 versus copying 0.006235;
+PushT 0.231832 versus copying 0.000122. These tiny runs establish execution only,
+not an advantage over the older architecture. No matched quality experiment ran.
+The six diagrams (architecture, high-level flow, four input pyramids) regenerate
+to identical bytes across all 25 files and their PNGs were visually inspected.
+No report renderer source changed; report browser QA remains blocked by the
+previous local URL policy, and the retained reports claim structural checks only.
 
 ## Diagram follow-up
 

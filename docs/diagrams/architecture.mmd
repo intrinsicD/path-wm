@@ -1,10 +1,10 @@
 flowchart LR
-    n0["MultimodalAgent<br/>113,560 parameters<br/>initial [30, 32]"]
-    n1["encoders: ModuleDict<br/>13,664 parameters"]
-    n2["image: ImageEncoder<br/>1,600 parameters"]
-    n3["video: ImageEncoder<br/>1,600 parameters"]
-    n4["audio: VectorEncoder<br/>2,144 parameters"]
-    n5["text: TextEncoder<br/>8,320 parameters"]
+    n0["MultimodalAgent<br/>325,704 parameters<br/>initial [30, 32]"]
+    n1["encoders: ModuleDict<br/>225,216 parameters"]
+    n2["image: MultiScaleImageEncoder<br/>54,976 parameters"]
+    n3["video: MultiScaleImageEncoder<br/>54,976 parameters"]
+    n4["audio: MultiScaleAudioEncoder<br/>53,568 parameters"]
+    n5["text: MultiScaleTextEncoder<br/>61,696 parameters"]
     n6["decoders: ModuleDict<br/>57,619 parameters"]
     n7["image: ImageDecoder<br/>10,704 parameters"]
     n8["audio: AudioDecoder<br/>12,864 parameters"]
@@ -27,6 +27,8 @@ flowchart LR
     n25["output: Linear<br/>132 parameters"]
     n26["monitor: ErrorMonitor<br/>1,089 parameters"]
     n27["output: Sequential<br/>1,089 parameters"]
+    n28["feature_controller: FeatureController<br/>592 parameters"]
+    n29["output: Sequential<br/>592 parameters"]
     n0 -.-> n1
     n1 -.-> n2
     n1 -.-> n3
@@ -54,3 +56,5 @@ flowchart LR
     n24 -.-> n25
     n0 -.-> n26
     n26 -.-> n27
+    n0 -.-> n28
+    n28 -.-> n29

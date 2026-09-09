@@ -5,7 +5,7 @@ structured latent state, episodic memory, internal computation, imagined futures
 action planning and a bounded learning-update gate. All parts are ordinary PyTorch
 modules constructed in [one recipe](experiments/multimodal.py).
 
-The default is a 113,560-parameter development model with freshly initialized
+The default is a 325,704-parameter development model with freshly initialized
 weights. Running it verifies the architecture and training path; it does not produce
 a generally capable language, audio or physics model.
 
@@ -57,6 +57,12 @@ shapes. Increase `--diagram-depth 3` to expand the module hierarchy. SVG/PNG ren
 uses Graphviz (`dot`); Mermaid, DOT and JSON sources are always written.
 This CPU command needs no training or downloads. [Details](docs/multimodal.md#diagrams).
 
+The input pyramids have their own executed diagrams:
+[image](docs/diagrams/image_scales.svg), [video](docs/diagrams/video_scales.svg),
+[audio](docs/diagrams/audio_scales.svg), [text](docs/diagrams/text_scales.svg).
+Every scale finishes conditioned residual/attention processing before the next scale
+or the latent state reads it. [Control and inspect the features](docs/multimodal.md#multiscale-inputs-and-feature-control).
+
 Read [the concrete architecture](docs/multimodal.md), then edit `build_model` and
 `objective` in the recipe. It exposes every encoder, decoder, latent group,
 observation updater, thinker, dynamics module, memory store and action head.
@@ -69,6 +75,7 @@ There is no registry or configuration framework to learn.
 | `pathwm/models/agent.py` | Observe, think, imagine, decode and intervene |
 | `pathwm/models/agent_state.py` | Explicit state and episodic memory |
 | `pathwm/models/modalities.py` | Modality adapters and attention |
+| `pathwm/models/multiscale.py` | Input pyramids, conditioned residual blocks and feature controller |
 | `pathwm/evaluation/agent.py` | Bounded candidate-action planning |
 | `pathwm/training/improvement.py` | Measured update acceptance and rollback |
 | `pathwm/io.py` | Existing checkpoints, provenance and resume |

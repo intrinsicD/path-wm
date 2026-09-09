@@ -1,4 +1,5 @@
 import torch
+import pytest
 from torch import nn
 
 from pathwm.evaluation.diagrams import CallFlow, architecture, mermaid, dot
@@ -49,3 +50,21 @@ def test_diagram_bytes_do_not_depend_on_python_object_ids():
     assert mermaid(first) == mermaid(second)
     assert dot(first) == dot(second)
     assert "&quot;" in mermaid(first)
+
+
+def test_watched_modules_keep_actual_forks_and_remove_hooks_on_error():
+    flow = CallFlow()
+    first, second = nn.Linear(3, 3), nn.Linear(3, 3)
+    x = flow.input("input", torch.ones(1, 3))
+    with flow.watch({"first": first, "second": second}):
+        a = first(x)
+        second(a)
+        second(a)
+    edges = {(e["source"], e["target"]) for e in flow.graph()["edges"]}
+    assert edges == {("n0", "n1"), ("n1", "n2"), ("n1", "n3")}
+    with pytest.raises(RuntimeError, match="stopped"):
+        with flow.watch({"first": first}):
+            raise RuntimeError("stopped")
+    count = len(flow.graph()["nodes"])
+    first(x)
+    assert len(flow.graph()["nodes"]) == count

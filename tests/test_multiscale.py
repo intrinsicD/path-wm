@@ -1,4 +1,5 @@
 from dataclasses import replace
+import copy
 
 import pytest
 import torch
@@ -7,6 +8,7 @@ from experiments.multimodal import build_model, SyntheticEpisodes, observations
 from pathwm.models.modalities import Observation
 from pathwm.models.multiscale import (
     FeatureScale,
+    ConditionedBlock,
     MultiScaleImageEncoder,
     MultiScaleAudioEncoder,
     MultiScaleTextEncoder,
@@ -62,6 +64,15 @@ def test_scale_processing_precedes_every_consumer_and_gradients_only_go_up():
             events.append(f"merge{i}")
 
         handles.append(merge.register_forward_pre_hook(check))
+
+        def check_cross(module, args, kwargs, i=i):
+            assert kwargs["context"] is finished[i]
+
+        handles.append(
+            merge.cross_attention.register_forward_pre_hook(
+                check_cross, with_kwargs=True
+            )
+        )
     pyramid = encoder(observation)
     assert events == ["stage0", "merge0", "stage1", "merge1", "stage2"]
     assert all(s is finished[i] for i, s in enumerate(pyramid.scales))
@@ -151,7 +162,9 @@ def test_masks_singletons_cross_attention_footprints_and_neutral_code_after_upda
     valid = tokens != 0
     times = torch.zeros(2, 5)
     trace = {}
-    output = encoder(Observation(tokens, times, valid), trace=trace)
+    output = encoder(
+        Observation(tokens, times, valid), condition=torch.randn(2, 8), trace=trace
+    )
     for scale in output.scales:
         assert torch.isfinite(scale.values).all()
         assert not scale.valid[1].any()
@@ -170,6 +183,19 @@ def test_masks_singletons_cross_attention_footprints_and_neutral_code_after_upda
     b = encoder(Observation(tokens, times, valid), condition=torch.zeros(2, 8))
     torch.testing.assert_close(
         a.as_tokens().values, b.as_tokens().values, rtol=0, atol=0
+    )
+    reference = copy.deepcopy(encoder)
+    with torch.no_grad():
+        for module in reference.modules():
+            if isinstance(module, ConditionedBlock):
+                module.modulation.weight.zero_()
+                if module.modulation.bias is not None:
+                    module.modulation.bias.zero_()
+    unmodulated = reference(
+        Observation(tokens, times, valid), condition=torch.randn(2, 8)
+    )
+    torch.testing.assert_close(
+        a.as_tokens().values, unmodulated.as_tokens().values, rtol=0, atol=0
     )
     singleton = encoder(
         Observation(torch.ones(1, 1, dtype=torch.long), torch.zeros(1, 1))
@@ -232,3 +258,31 @@ def test_masked_video_nans_do_not_reach_any_scale_or_gradient():
     assert values.grad[~valid].count_nonzero() == 0
     assert values.grad[valid].abs().sum() > 0
     assert all(torch.isfinite(s.values).all() for s in output.scales)
+
+
+def test_fixed_context_preserves_completed_prefix_and_sensor_time():
+    encoder = MultiScaleAudioEncoder(8, 16, code_width=8)
+    values = torch.rand(1, 3, 8)
+    times = torch.tensor([[0.0, 1.0, 2.0]], dtype=torch.float64)
+    code = torch.ones(1, 8)
+    full = encoder(Observation(values, times), condition=code, condition_time=5.0)
+    prefix = encoder(
+        Observation(values[:, :2], times[:, :2]), condition=code, condition_time=5.0
+    )
+    for a, b in zip(full.scales, prefix.scales):
+        completed = a.ends < 4  # two complete chunks, each with two fine patches
+        torch.testing.assert_close(
+            a.values[completed], b.values[b.valid], rtol=1e-6, atol=1e-6
+        )
+        assert (b.times[b.valid] == 5).all()
+        assert (b.content_times[b.valid] <= 1).all()
+    shifted = encoder(
+        Observation(values, times - 1), condition=code, condition_time=5.0
+    )
+    assert not torch.allclose(full.scales[0].values, shifted.scales[0].values)
+    with pytest.raises(ValueError, match="nondecreasing"):
+        encoder(Observation(values, times.flip(1)))
+    without_cross = MultiScaleAudioEncoder(8, 16, code_width=8, cross_scale=False)
+    trace = {}
+    assert len(without_cross(Observation(values, times), trace=trace).scales) == 3
+    assert not any(k.startswith("merge.") for k in trace)
