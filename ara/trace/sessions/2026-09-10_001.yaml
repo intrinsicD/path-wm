@@ -1,0 +1,51 @@
+session:
+  id: 2026-09-10_001
+  date: '2026-09-10'
+  started: 2026-09-10T00:05+02:00
+  last_turn: 2026-09-10T00:05+02:00
+  turn_count: 1
+  summary: Two isolated Claude reviews produced a proposed goal/action/outcome-verification interface,
+    historical recall with factual not-observed versus abstention, and bounded observation-conditioned
+    sensing. Local/source and arithmetic checks only; no model changes or training. Defaults remain proposals.
+events_logged:
+- turn: 1
+  type: decision
+  id: N150
+  routing: direct
+  provenance: user
+  summary: User requests Claude co-design of the next decision interfaces; review completed.
+- turn: 1
+  type: observation
+  id: O102
+  routing: staged
+  provenance: ai-suggested
+  summary: Stage exact objective, learned outcome scoring, external verification and selective historical recall.
+- turn: 1
+  type: observation
+  id: O103
+  routing: staged
+  provenance: ai-suggested
+  summary: Stage bounded contingent sensing, time/provenance constraints and diagnostic sequence.
+ai_actions:
+- turn: 1
+  action: Inspected local planner/task/categorical interfaces; wrote independent notes, completed two actual
+    isolated Claude CLI reviews and reconciled overclaims; checked POMDP/PETS primary sources and exact
+    illustrative sensing arithmetic; saved design and corrected documentation of output fulfillment.
+    No private repository information exported and no new model experiment or test-suite run.
+  provenance: ai-executed
+  files_changed: [docs/decision-design.md, docs/project-state.md, docs/tasks.md]
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: 'User: Ok work this out with Claude. The request follows the agenda to define goal, available
+    actions, observable success and when to gather information. It authorizes design collaboration,
+    not unseen numerical preferences or a new training run.'
+open_threads:
+- Settle O102 error/abstention preferences and historical task contract before an implementation budget.
+- General external tasks need declared handling of verification failures caused by the agent itself.
+- O103 requires a future isolated hypothetical-correction interface and validated sensing probabilities.
+- O101 long-horizon retention, calibrated outcomes and useful closed-loop behavior remain unproven.
+- Prior research questions remain open as recorded in 2026-09-09_001.yaml; no unrelated topic abandoned.
+ai_suggestions_pending:
+- 'O102: historical recall first; wrong loss 1, abstention 0.25 and two retrieval rounds are proposed defaults.'
+- 'O103: finite sensing diagnostic then static-current-location inspect/answer, separately from historical recall.'

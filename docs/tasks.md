@@ -1,5 +1,12 @@
 # Tasks, output controls and generated feedback
 
+`finished` in this implemented API means required output artifacts were delivered;
+it does not verify their correctness or an external world condition. The proposed
+[decision and verification extension](decision-design.md) makes those statuses
+separate. Categorical state/memory details are in [the belief guide](belief-model.md);
+the Gaussian-specific sizes and provenance restrictions below describe the original
+task implementation.
+
 The model now has an explicit path from instructions to operation and output
 proposals. Construction and supervision remain in
 [`experiments/multimodal.py`](../experiments/multimodal.py). Exact records and neural
@@ -40,7 +47,7 @@ controls, output ledger, pending requirements and completion/failure status.
 | act | Return a normalized action proposal; no environment actuation |
 | emit | Validate requests, condition working/reasoning on task tokens, run selected decoders |
 | ask | Return a clarification operation to the caller; no implicit text artifact |
-| finish | Mark successful completion only when required outputs are fulfilled |
+| finish | Close the task once required output artifacts are delivered; no correctness check |
 
 The existing candidate-action planner remains explicit: callers provide candidates,
 bounds and a cost. Operation selection does not invent that cost. There is no

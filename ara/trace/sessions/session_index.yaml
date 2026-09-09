@@ -97,3 +97,12 @@ sessions:
   events_count: 77
   claims_touched: []
   open_threads: 20
+- id: 2026-09-10_001
+  date: '2026-09-10'
+  summary: Two public-only Claude reviews reconciled a proposed objective/outcome-verification interface,
+    historical recall with abstention and bounded contingent sensing. No model changes or training;
+    numerical preferences and implementation remain open.
+  turn_count: 1
+  events_count: 3
+  claims_touched: []
+  open_threads: 5

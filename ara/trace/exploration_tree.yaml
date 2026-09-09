@@ -2415,3 +2415,22 @@ tree:
   also_depends_on:
   - N148
   status: resolved
+- id: N150
+  type: decision
+  title: Work out goal, action, success and information-gathering interfaces with Claude
+  provenance: user
+  timestamp: 2026-09-10T00:05+02:00
+  choice: User requests the next decision-layer design with Claude. Complete conceptual review and a
+    concrete proposal grounded in the implemented planner; no new model implementation or training
+    requested. Two isolated abstract reviews completed and reconciled.
+  alternatives:
+  - Implement or train a new objective model before resolving the design
+  evidence:
+  - 'Current user: Ok work this out with Claude'
+  - docs/decision-design.md
+  - runs/reviews/state_memory_design_2026-09-09/decision-interface-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/decision-interface-reconcile-receipt.json
+  also_depends_on:
+  - N148
+  - N149
+  status: resolved

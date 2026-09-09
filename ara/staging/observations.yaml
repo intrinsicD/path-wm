@@ -1805,3 +1805,42 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O102
+  timestamp: 2026-09-10T00:05+02:00
+  provenance: ai-suggested
+  content: Propose an exact objective/cost/capability contract beside existing task records, learned task
+    tokens and observable-outcome predictions for candidate scoring, and separate evidence-based result
+    verification. Delivery is distinct from predicted and verified success. Start with delayed last-observed
+    recall, two bounded retrieval rounds, location/not-observed factual labels and separate operational
+    abstention; illustrative wrong=1 and abstain=0.25 preferences remain unconfirmed. External evaluator
+    owns delivered-history labels inaccessible to policy; unknown verification stays explicit with costs
+    and coverage. No mandatory proposer/predictor parameter separation, runtime LLM or larger memory.
+  context: Two actual public-concepts-only Claude reviews plus local planner/task-contract inspection.
+    Reconciled independent verifier versus learned predictor, missing-label masking and unseen-versus-abstain
+    conflations. Documented in docs/decision-design.md; proposal only, no user adoption of defaults or code.
+  potential_type: architecture
+  bound_to: [N150, N148, N149]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O103
+  timestamp: 2026-09-10T00:05+02:00
+  provenance: ai-suggested
+  content: For sensing, propose bounded acquisition/outcome branches whose continuations see only their
+    updated private belief, minimizing expected task loss plus cost. Prior-only open-loop sequences do not
+    by themselves value pure information through a changed next choice. Keep branch-local ordering and
+    hypothetical provenance; no live writes, marks or verification. First verify finite sensing algebra,
+    then a separate static-current-location inspection task; new inspection cannot redefine historical
+    labels. Gross exact free information value and net costly value differ; learned usefulness and model
+    error remain empirical. Fix common draws for invariance checks and control opaque-ID/time side channels.
+  context: Primary POMDP and PETS mechanisms checked; exact rational illustrative sensing losses verified,
+    not a learned-agent experiment. Claude withdrew unsupported guarantees about a hidden-state leakage
+    ablation and reconciled cost/unknown semantics. General endogenous verification-failure policy remains
+    task-specific and must precede evaluation.
+  potential_type: architecture
+  bound_to: [N150]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

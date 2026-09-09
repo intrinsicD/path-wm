@@ -652,3 +652,14 @@ entries:
   - Stage usefulness/calibration interpretation as O101. Poor smoke predictions are measured, but no broad
     hypothesis was tested or user empirical interpretation supplied. Source/QA receipts retain actual
     metrics; no invented reproduction of unavailable historical runs.
+- turn: 2026-09-10_001#1
+  notes:
+  - Record the requested Claude collaboration directly as N150 and stage the resulting proposal as O102/O103.
+    The turn crossed midnight, so create the next calendar-day session; preceding agenda restatement remains
+    skipped. No numerical preference adopted by the user and no implementation authorization inferred.
+  - A proposal document and peer agreement do not themselves settle the design. No downstream code/config
+    commitment, user interpretation of the old development results, or new empirical resolution occurred;
+    do not crystallize O101/O102/O103. Old research topics remain explicitly open, not newly abandoned.
+  - Exact finite-model arithmetic is a worked example, not a model experiment. Claude withdrawals and primary
+    sources support scoped reasoning only. Preserve the distinction between historical target, current truth,
+    unknown verification and operational abstention; no contradiction with the adopted memory/reset lifecycle.

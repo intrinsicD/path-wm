@@ -72,7 +72,17 @@ the Gaussian reference; the new guide has the categorical flow. Checkpoint schem
 are distinct, with no implicit Gaussian conversion. Completed runs retain their
 own source snapshots and must be resumed with compatible source/settings.
 
-**Next research discussion:** choose an observable task and action/objective adapter
-that requires preserving uncertain information after compression, then declare a
-matched-budget comparison. Deployment-length replay, general mark selection,
+**Active design proposal:** [decisions from belief and memory](decision-design.md)
+connects the task workspace and planner through an exact objective/cost contract,
+a learned observable-outcome head, and verification of actual results. This is the
+Claude-reviewed discussion requested on 9 September, completed on 10 September;
+it is not implemented or a new capability claim. Historical last-observed recall
+with a separate factual not-observed answer and operational abstention is the
+recommended first slice. Active current-location inspection is a subsequent task
+requiring observation-conditioned continuations and isolated hypothetical updates.
+Existing memory bounds, reset decisions and negative results are unchanged.
+
+**Next decision:** settle the proposed error/abstention preferences and concrete
+historical task interface, then write an implementation budget and separately declare
+a matched-budget comparison. Deployment-length replay, general mark selection,
 calibrated observable probabilities and useful closed-loop behavior remain open.
