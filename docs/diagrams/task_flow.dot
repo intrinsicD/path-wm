@@ -1,0 +1,33 @@
+digraph model {
+graph [rankdir=TB, bgcolor="white", pad=0.35, nodesep=0.25, ranksep=0.65, fontname="DejaVu Sans", fontsize=17, labelloc=t];
+node [shape=box, style="rounded,filled", fillcolor="#edf3fa", color="#7290ae", fontname="DejaVu Sans", fontsize=12, margin="0.15,0.10"];
+edge [color="#6b7d8e", arrowsize=0.65];
+label="Example data flow\nArrows mean values passed between recorded calls; call internals are omitted.";
+n0 [label="Observed state\nLatentState [1, 30, 32]", fillcolor="#e6f3ec"];
+n1 [label="Instruction and explicit output controls\nTaskSession", fillcolor="#e6f3ec"];
+n2 [label="task_tokens\n[1, 4, 32]", fillcolor="#edf3fa"];
+n3 [label="TaskPolicy\nTaskPrediction", fillcolor="#edf3fa"];
+n4 [label="select_outputs\nSelection", fillcolor="#edf3fa"];
+n5 [label="Raw and gated proposal\nSelection", fillcolor="#fff0d9"];
+n6 [label="Explicit user image request (independent of proposal)\nOutputRequest", fillcolor="#e6f3ec"];
+n7 [label="emit\nEmission", fillcolor="#edf3fa"];
+n8 [label="loopback_output\nObservation [1, 1, 3, 16, 16]", fillcolor="#edf3fa"];
+n9 [label="reflect\nLatentState [1, 30, 32]", fillcolor="#edf3fa"];
+n10 [label="Attributed output and fulfillment\nEmission", fillcolor="#fff0d9"];
+n11 [label="Reflection; world clock unchanged\nLatentState [1, 30, 32]", fillcolor="#fff0d9"];
+n0 -> n2 [style=solid];
+n1 -> n2 [style=solid];
+n2 -> n3 [style=solid];
+n1 -> n4 [style=solid];
+n3 -> n4 [style=solid];
+n4 -> n5 [style=solid];
+n0 -> n7 [style=solid];
+n1 -> n7 [style=solid];
+n6 -> n7 [style=solid];
+n0 -> n8 [style=solid];
+n7 -> n8 [style=solid];
+n0 -> n9 [style=solid];
+n8 -> n9 [style=solid];
+n7 -> n10 [style=solid];
+n9 -> n11 [style=solid];
+}

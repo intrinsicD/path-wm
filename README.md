@@ -5,9 +5,14 @@ structured latent state, episodic memory, internal computation, imagined futures
 action planning and a bounded learning-update gate. All parts are ordinary PyTorch
 modules constructed in [one recipe](experiments/multimodal.py).
 
-The default is a 325,704-parameter development model with freshly initialized
+The default is a 359,188-parameter development model with freshly initialized
 weights. Running it verifies the architecture and training path; it does not produce
 a generally capable language, audio or physics model.
+
+It also has task-conditioned operation/output proposals, explicit output controls,
+requester/producer attribution and generated-content reflection.
+[Read the concrete task path](docs/tasks.md), or train its synthetic language-label
+exercise with `python experiments/multimodal.py --dataset instructions --check`.
 
 ## Start
 
@@ -60,6 +65,8 @@ This CPU command needs no training or downloads. [Details](docs/multimodal.md#di
 The input pyramids have their own executed diagrams:
 [image](docs/diagrams/image_scales.svg), [video](docs/diagrams/video_scales.svg),
 [audio](docs/diagrams/audio_scales.svg), [text](docs/diagrams/text_scales.svg).
+The [task flow](docs/diagrams/task_flow.svg) shows instruction interpretation,
+output controls, attributed generation and reflection.
 Every scale finishes conditioned residual/attention processing before the next scale
 or the latent state reads it. [Control and inspect the features](docs/multimodal.md#multiscale-inputs-and-feature-control).
 
@@ -76,6 +83,7 @@ There is no registry or configuration framework to learn.
 | `pathwm/models/agent_state.py` | Explicit state and episodic memory |
 | `pathwm/models/modalities.py` | Modality adapters and attention |
 | `pathwm/models/multiscale.py` | Input pyramids, conditioned residual blocks and feature controller |
+| `pathwm/models/tasks.py` | Task/output records, provenance encoding and learned decision heads |
 | `pathwm/evaluation/agent.py` | Bounded candidate-action planning |
 | `pathwm/training/improvement.py` | Measured update acceptance and rollback |
 | `pathwm/io.py` | Existing checkpoints, provenance and resume |

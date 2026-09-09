@@ -5,6 +5,8 @@ The current starting point is `experiments/multimodal.py`; see the
 `python experiments/multimodal.py --check`, then use a fresh `--output` directory.
 `--dataset pusht` uses the retained real data at `data/pusht_world_model/cchi_v1`.
 The older `data/pusht64` shortcut is not present in this checkout.
+`--dataset instructions` adds synthetic operation/modality/completion supervision
+to the same training loop. [Task contracts and evaluation](tasks.md).
 
 The following perception/dynamics recipes remain focused references.
 

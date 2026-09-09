@@ -1,60 +1,65 @@
 # Current work
 
-**In progress:** task-conditioned learned decisions, required/disabled/automatic
-output controls, exact request/producer attribution and generated-content reflection.
-The accepted scope and CPU budget are in [the active slice](multimodal-plan.md).
-Actual Claude design review is underway; development begins with contract tests.
+**Implemented:** task-conditioned operation/output proposals, required/disabled/
+automatic output controls, separate control author/requester/producer attribution,
+and tagged generated-content reflection. Read [the task interfaces](tasks.md),
+[the model guide](multimodal.md), and [the implementation record](multimodal-plan.md).
 
-**Implemented:** conditioned multiscale input features for image, video, audio and
-text, following an actual Claude design review and reconciliation. See the slice in
-[the implementation record](multimodal-plan.md).
+One editable [recipe](../experiments/multimodal.py) constructs the model and its
+losses. The default has 359,188 parameters, 30 world-state tokens and four computed
+task tokens. All modules remain directly replaceable PyTorch components. No external
+language model, registry or second trainer was added.
 
-**Available:** reproducible [architecture](diagrams/architecture.svg) and
-[data-flow](diagrams/data_flow.svg) diagrams. Regenerate with
-`python experiments/multimodal.py --diagram`; use `--diagram-depth 3` for more layers.
-The hierarchy comes from instantiated modules; the flow records real values passed
-between example calls. The four modalities also have individual scale-flow diagrams.
-All 25 exports reproduce byte for byte on this runtime.
+The task interpreter reads shared multiscale text features plus exact metadata
+encodings. Its learned policy proposes think/recall/imagine/act/emit/ask/finish.
+A bounded step consumes that proposal; actions and clarification requests return to
+the caller. Discrete controls are enforced separately from raw scores. Emission
+prevalidates all requests, preserves partial successes on decoder failure, and only
+successful answers fulfill requirements. Tasks can abort with requirements pending.
 
-**Implemented:** one small multimodal world model, built in
-[the editable recipe](../experiments/multimodal.py). Read
-[the concrete architecture](multimodal.md) and [the implementation record](multimodal-plan.md).
+Generated loopback updates working/reasoning without advancing world/observational
+clocks or counts. Persistent ancestry prevents those states entering observational
+memory, including after later real observations. Keep a separate clean observational
+branch. This is a trusted-caller metadata contract, not cryptographic authentication.
 
-The model has three processed feature scales for each input modality, five latent token groups, explicit
-observation and thinking operations, bounded episodic memory, probabilistic imagined
-futures, action proposals, candidate planning, self-error diagnostics, interventions
-and a measured update gate with rollback. It has 325,704 parameters by default.
-Every component is directly constructed as an ordinary PyTorch module.
+**Verification:** 51 CPU tests pass. The instruction recipe completes 80 updates at
+width 16, seed 42, batch 8, on 112 train/112 held-out synthetic episodes. An exact
+pause-at-31/resume comparison matches weights, optimizer, RNG, training rows and all
+final task decisions. A two-update real PushT path also completes. No extra proposals
+or GPU job ran. Reports pass structural, media, provenance and source checks;
+**browser visual QA remains blocked** by the earlier local-URL policy.
 
-Every scale finishes conditioned residual transformer processing before a coarser
-stage or consumer reads it. Masked pooling and optional local cross-scale attention
-carry fine features upward. A shared 16-value code comes from pre-observation
-working/reasoning state or an explicit user override. Code zero stays neutral after
-training. Availability includes code time, while sensor timing is retained separately.
+**Learning is not yet reliable:** held-out operation accuracy is 28.57%, versus
+92.86% for a lexical baseline and 21.43% with mismatched instructions. Output-format
+errors on emit examples are 50–56.25%. Completion labels are synthetic declarations,
+not measured task success. Raw/enforced decisions and this negative result are
+preserved, with no claim of general instruction following or learned compliance.
 
-Forty-two CPU tests pass, including ten multiscale and four diagram checks.
-Two-update synthetic and real PushT development runs complete. Synthetic
-full/resumed model (including controller/teacher/replay), optimizer, all saved RNG
-and training rows match exactly. Reports show PCA for all available input scales;
-raw features, masks, attention and code provenance are saved for inspection.
+Results: [instruction report](../runs/task_outputs_v1/instructions_full/report.html),
+[all held-out decisions](../runs/task_outputs_v1/instructions_full/task_decisions.json),
+[real PushT report](../runs/task_outputs_v1/pusht/report.html), and
+[verification receipt](../runs/task_outputs_v1/verification.json).
 
-Local results: [synthetic](../runs/multiscale_v1/synthetic_full/report.html),
-[real PushT](../runs/multiscale_v1/pusht/report.html), and
-[verification receipt](../runs/multiscale_v1/verification.json).
-Reports pass structural/media/provenance checks. **Browser visual QA is blocked**:
-the browser URL policy rejected local HTML navigation. No alternate route was used.
+**Diagrams:** [architecture](diagrams/architecture.svg),
+[world flow](diagrams/data_flow.svg), [task flow](diagrams/task_flow.svg), and four
+individual input-scale diagrams regenerate with
+`python experiments/multimodal.py --diagram`. All 29 files reproduce exactly on this
+runtime. Task flow shows learned proposals and explicit user emission as separate
+actual call paths.
 
-These are development weights. Image predictions remain worse than copying the
-last observation; synthetic audio remains worse than silence. Token roles, physical
-understanding, useful planning, calibrated uncertainty, scalable memory and broad
-self-improvement remain scientific questions. No large run is queued.
+**Claude review:** two actual reviews completed. A final correction brief was
+prepared but its transmission was rejected by automatic approval review as potentially
+non-public and insufficiently explicitly authorized. No workaround was attempted.
+Local verification is complete; sending that optional final brief requires approval.
+Exact briefs/responses/receipts are retained in `runs/reviews/task_outputs/`.
 
-Earlier single-scale results remain intact under `runs/multimodal_v1/`. Their
-checkpoints require their source snapshots; no silent migration to the new layout.
+The earlier conditioned multiscale inputs, episodic memory, stochastic dynamics,
+candidate planning and bounded update gate remain available. Their development
+results are preserved under `runs/multiscale_v1/` and `runs/multimodal_v1/`; old
+checkpoints require their source snapshots. The new latent schema is v2 and fails
+closed when ancestry is absent. No data or completed runs were removed.
 
-The next discussion should review the actual state and component interfaces before
-declaring a scientific experiment. Earlier perception/dynamics recipes remain
-focused references. Historical source is preserved in
-`archive/pre-modular-2026-09-09`; data and completed results remain intact.
-The real-data recipe uses `data/pusht_world_model/cchi_v1` directly because the older
-`data/pusht64` shortcut is absent. [Migration record](migration.md).
+The next discussion can review each concrete component and define the next learning
+experiment. Physical understanding, useful language generation, calibrated progress,
+semantic feature controls, scalable memory and broad self-improvement remain research
+questions. Real data still use `data/pusht_world_model/cchi_v1` directly.

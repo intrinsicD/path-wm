@@ -6,6 +6,8 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
+from .tasks import Provenance
+
 
 @dataclass(frozen=True)
 class MemoryBank:
@@ -31,16 +33,18 @@ class LatentState:
     thinking_steps: int = 0
     memory: MemoryBank | None = None
     observation_count: int = 0
+    generated_ancestry: tuple[Provenance, ...] = ()
 
     def to_dict(self):
         return {
-            "schema": "pathwm-latent-v1",
+            "schema": "pathwm-latent-v2",
             **{
                 k: v.detach().clone() if isinstance(v, torch.Tensor) else v
                 for k, v in vars(self).items()
-                if k != "memory"
+                if k not in ("memory", "generated_ancestry")
             },
             "memory": None if self.memory is None else self.memory.to_dict(),
+            "generated_ancestry": [p.to_dict() for p in self.generated_ancestry],
         }
 
     def to(self, device, dtype=None):
@@ -69,9 +73,14 @@ class LatentState:
     @classmethod
     def from_dict(cls, record):
         record = dict(record)
-        if record.pop("schema") != "pathwm-latent-v1":
+        if record.pop("schema") != "pathwm-latent-v2":
             raise ValueError("Unknown latent state schema")
+        if "generated_ancestry" not in record:
+            raise ValueError("Latent snapshot is missing generated ancestry")
         bank = record.pop("memory")
+        record["generated_ancestry"] = tuple(
+            Provenance.from_dict(p) for p in record["generated_ancestry"]
+        )
         return cls(**record, memory=None if bank is None else MemoryBank(**bank))
 
 
@@ -92,6 +101,10 @@ class EpisodicMemory(nn.Module):
         return f"capacity={self.capacity}, retrieve_count={self.retrieve_count}"
 
     def write(self, state, source):
+        if state.generated_ancestry:
+            raise ValueError(
+                "Cannot store generated-dependent states as observed memories"
+            )
         if state.imagined:
             raise ValueError("Cannot store imagined states as observed memories")
         if state.observation_count < 1:

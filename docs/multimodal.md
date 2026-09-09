@@ -2,8 +2,12 @@
 
 Start in [`experiments/multimodal.py`](../experiments/multimodal.py). `build_model`
 constructs one `MultimodalAgent`; `objective` says exactly what it learns. The
-325,704-parameter default is freshly initialized. The implementation is functional;
+359,188-parameter default is freshly initialized. The implementation is functional;
 these development weights do not have general language, audio or physics abilities.
+
+Instructions now have a task-token interpreter and learned operation/output heads.
+[Output controls, requester/producer attribution and generated feedback](tasks.md)
+describe the concrete interfaces, enforcement rules and synthetic training path.
 
 ## State and components
 
@@ -24,7 +28,8 @@ working/reasoning. All attention uses four heads, residual connections and an ML
 the default dynamics has two blocks, the observation updater one.
 
 State fields are `tokens [B,30,32]`, matching `log_scale`, `time [B]`,
-`observed_time [B]`, `imagined`, `thinking_steps`, `observation_count`, and memory.
+`observed_time [B]`, `imagined`, `thinking_steps`, `observation_count`, memory and
+`generated_ancestry`. Reflected states cannot be written to observational memory.
 Clocks remain float64 independently of activation dtype. `to_dict` / `from_dict`
 round-trip using `torch.save` / `torch.load(weights_only=True)`; `state.to(device)`
 moves a live state separately from model parameters.

@@ -1,0 +1,28 @@
+flowchart TB
+    n0["Observed state<br/>LatentState [1, 30, 32]"]
+    n1["Instruction and explicit output controls<br/>TaskSession"]
+    n2["task_tokens<br/>[1, 4, 32]"]
+    n3["TaskPolicy<br/>TaskPrediction"]
+    n4["select_outputs<br/>Selection"]
+    n5["Raw and gated proposal<br/>Selection"]
+    n6["Explicit user image request (independent of proposal)<br/>OutputRequest"]
+    n7["emit<br/>Emission"]
+    n8["loopback_output<br/>Observation [1, 1, 3, 16, 16]"]
+    n9["reflect<br/>LatentState [1, 30, 32]"]
+    n10["Attributed output and fulfillment<br/>Emission"]
+    n11["Reflection; world clock unchanged<br/>LatentState [1, 30, 32]"]
+    n0 --> n2
+    n1 --> n2
+    n2 --> n3
+    n1 --> n4
+    n3 --> n4
+    n4 --> n5
+    n0 --> n7
+    n1 --> n7
+    n6 --> n7
+    n0 --> n8
+    n7 --> n8
+    n0 --> n9
+    n8 --> n9
+    n7 --> n10
+    n9 --> n11

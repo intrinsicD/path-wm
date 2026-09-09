@@ -1,6 +1,6 @@
 # One multimodal world model
 
-## Task decisions, output controls and loopback — active slice
+## Task decisions, output controls and loopback — implemented slice
 
 Accepted user path: instruction → shared text features → task tokens → learned
 operation/output/completion proposals → explicit output controls → attributed
@@ -44,6 +44,69 @@ Commit these before implementing. CPU development budget: full tests, both exist
 data checks, at most 80 main instruction updates plus exact pause/resume replay,
 two real PushT updates, no extra proposals. No scientific quality threshold or GPU
 job. Preserve raw decisions, checkpoint, metrics, reports and reproducible diagrams.
+
+Implementation evidence: red tests/plan committed as `e3f68dd`; all 51 CPU tests
+pass. Nine new checks cover attribution, prevalidation/partial failure, video's
+internal image dependency, arbitrary-logit gates, generated derivation/memory
+isolation, safe partial-task continuation, task gradients, all seven bounded
+consumers, abort and missing-ancestry rejection. Default model: 359,188 parameters;
+four computed task tokens, seven operation logits, four output logits and completion.
+`ask` is an explicit caller operation; no additional clarification head was added.
+The new latent schema is v2; old schemas require their historical source snapshot.
+
+Retained execution: `runs/task_outputs_v1/instructions_full/` finishes 80 updates;
+`instructions_resumed/` pauses at 31 and finishes at 80. Both use CPU width 16
+(115,012 parameters), seed 42, batch 8, 112 train/112 validation episodes, learning
+rate .001, evaluation every 20 and no extra proposals. Model/EMA/replay, optimizer,
+scheduler, all saved RNG, training rows and all final task decisions match exactly.
+Pause-boundary validation rows intentionally differ. `pusht/` finishes two updates
+on eight training/four validation windows with no fabricated task/audio/text labels.
+Synthetic, instruction and real-data forward/backward checks pass; the new task
+modules receive gradients only with task supervision, and the EMA target remains
+detached. No source was edited during these retained runs.
+
+Instruction evaluation contains 112 held-out episodes with 28 distinct instruction
+strings from disjoint template families. Raw operation accuracy is 28.57%, versus
+92.86% for the lexical nearest-example baseline and 21.43% under mismatched text.
+Completion error is 14.29%; modality error on emit examples is 56.25% for image and
+50% each for audio/text/video. The low 7.37% overall modality error is dominated by
+non-emit examples; it is not good format selection. Raw and enforced gate violation
+counts are both zero here because the weak raw policy does not choose emit/finish;
+the randomized-logit tests exercise actual enforcement. The report demo accurately
+labels its emission as an explicit user request because its learned proposal is act.
+This establishes an executable training path, not reliable instruction following or
+outcome-calibrated completion. No further training or quality claim was made.
+
+Instruction image MSE ends at .008640 versus copy .005509; real PushT .231872 versus
+copy .000126. These are unmatched development results. All three runs own metrics,
+checkpoints, task decisions/outputs, exact provenance and standalone reports. Their
+65/65/44 embedded media resources decode, all 27 recorded source identities match,
+and task reflection preserves clocks/counts/uncertainty and generated ancestry.
+Receipts and reproducible checks: `runs/task_outputs_v1/verify.py` and
+`verification.json`. The seven diagrams reproduce all 29 files exactly; updated
+architecture/task PNGs were visually inspected. Report browser QA remains blocked
+by the prior local-URL policy; the renderer was unchanged and reports claim only
+structural verification.
+
+Review disposition: two actual Claude responses are retained. Adopted separate
+control author/requester/producer, whole-batch validation and ordered prefix
+successes, persistent generated ancestry, conservative schema loading, explicit
+abort, and raw/enforced metrics. The second response acknowledged the modality and
+operation simplifications were preferences and withdrew them as review items.
+Its remaining overbroad claims are checked locally: one resolved enum per modality
+precludes contradictory modes; fulfillment uses local authors; disabled names an
+artifact type (video may contain image frames); memory refusal is immediate and
+explicit on a reflected branch; post-mask metrics audit enforcement rather than
+learning. The clean observation branch is retained before reflection, never made
+by dropping ancestry. No authority comes from parent IDs or learned embeddings.
+
+A final clarification brief was prepared at
+`runs/reviews/task_outputs/final-clarifications.txt`, but automatic approval review
+rejected its external transmission as potentially non-public and insufficiently
+authorized for that payload/destination. No third response or workaround exists;
+`final-receipt.json` records the block. That optional follow-up needs explicit user
+approval. Local implementation/verification is complete; peer acknowledgment of
+those final corrections has not been obtained.
 
 ## Multiscale conditioned inputs — completed slice
 

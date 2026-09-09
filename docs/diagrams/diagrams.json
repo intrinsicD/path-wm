@@ -147,11 +147,66 @@
           "kind": "contains",
           "source": "n28",
           "target": "n29"
+        },
+        {
+          "kind": "contains",
+          "source": "n0",
+          "target": "n30"
+        },
+        {
+          "kind": "contains",
+          "source": "n30",
+          "target": "n31"
+        },
+        {
+          "kind": "contains",
+          "source": "n30",
+          "target": "n32"
+        },
+        {
+          "kind": "contains",
+          "source": "n0",
+          "target": "n33"
+        },
+        {
+          "kind": "contains",
+          "source": "n33",
+          "target": "n34"
+        },
+        {
+          "kind": "contains",
+          "source": "n33",
+          "target": "n35"
+        },
+        {
+          "kind": "contains",
+          "source": "n33",
+          "target": "n36"
+        },
+        {
+          "kind": "contains",
+          "source": "n33",
+          "target": "n37"
+        },
+        {
+          "kind": "contains",
+          "source": "n0",
+          "target": "n38"
+        },
+        {
+          "kind": "contains",
+          "source": "n38",
+          "target": "n39"
+        },
+        {
+          "kind": "contains",
+          "source": "n38",
+          "target": "n40"
         }
       ],
       "nodes": [
         {
-          "detail": "325,704 parameters\ninitial [30, 32]",
+          "detail": "359,188 parameters\ninitial [30, 32]",
           "direct_parameters": {
             "initial": [
               30,
@@ -161,10 +216,10 @@
           "id": "n0",
           "kind": "module",
           "label": "MultimodalAgent",
-          "parameters": 325704,
+          "parameters": 359188,
           "path": "",
           "source": {
-            "line": 143,
+            "line": 144,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -264,7 +319,7 @@
           "parameters": 10704,
           "path": "decoders.image",
           "source": {
-            "line": 213,
+            "line": 224,
             "path": "pathwm/models/modalities.py"
           }
         },
@@ -282,7 +337,7 @@
           "parameters": 12864,
           "path": "decoders.audio",
           "source": {
-            "line": 238,
+            "line": 249,
             "path": "pathwm/models/modalities.py"
           }
         },
@@ -295,7 +350,7 @@
           "parameters": 34051,
           "path": "decoders.text",
           "source": {
-            "line": 256,
+            "line": 267,
             "path": "pathwm/models/modalities.py"
           }
         },
@@ -308,7 +363,7 @@
           "parameters": 9792,
           "path": "updater",
           "source": {
-            "line": 32,
+            "line": 33,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -376,7 +431,7 @@
           "parameters": 20512,
           "path": "dynamics",
           "source": {
-            "line": 70,
+            "line": 71,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -486,7 +541,7 @@
           "parameters": 9792,
           "path": "thinker",
           "source": {
-            "line": 104,
+            "line": 105,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -499,7 +554,7 @@
           "parameters": 8608,
           "path": "thinker.read",
           "source": {
-            "line": 64,
+            "line": 75,
             "path": "pathwm/models/modalities.py"
           }
         },
@@ -525,7 +580,7 @@
           "parameters": 0,
           "path": "memory",
           "source": {
-            "line": 78,
+            "line": 87,
             "path": "pathwm/models/agent_state.py"
           }
         },
@@ -538,7 +593,7 @@
           "parameters": 132,
           "path": "action_head",
           "source": {
-            "line": 119,
+            "line": 120,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -572,7 +627,7 @@
           "parameters": 1089,
           "path": "monitor",
           "source": {
-            "line": 131,
+            "line": 132,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -613,6 +668,198 @@
           "source": {
             "line": 59,
             "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/container.py"
+          }
+        },
+        {
+          "detail": "17,344 parameters",
+          "direct_parameters": {
+            "queries": [
+              4,
+              32
+            ]
+          },
+          "id": "n30",
+          "kind": "module",
+          "label": "task_interpreter: TaskInterpreter",
+          "parameters": 17344,
+          "path": "task_interpreter",
+          "source": {
+            "line": 419,
+            "path": "pathwm/models/tasks.py"
+          }
+        },
+        {
+          "detail": "8,608 parameters",
+          "direct_parameters": {},
+          "id": "n31",
+          "kind": "module",
+          "label": "read_instruction: Attend",
+          "parameters": 8608,
+          "path": "task_interpreter.read_instruction",
+          "source": {
+            "line": 75,
+            "path": "pathwm/models/modalities.py"
+          }
+        },
+        {
+          "detail": "8,608 parameters",
+          "direct_parameters": {},
+          "id": "n32",
+          "kind": "module",
+          "label": "read_state: Attend",
+          "parameters": 8608,
+          "path": "task_interpreter.read_state",
+          "source": {
+            "line": 75,
+            "path": "pathwm/models/modalities.py"
+          }
+        },
+        {
+          "detail": "1,516 parameters",
+          "direct_parameters": {},
+          "id": "n33",
+          "kind": "module",
+          "label": "task_policy: TaskPolicy",
+          "parameters": 1516,
+          "path": "task_policy",
+          "source": {
+            "line": 442,
+            "path": "pathwm/models/tasks.py"
+          }
+        },
+        {
+          "detail": "1,120 parameters",
+          "direct_parameters": {},
+          "id": "n34",
+          "kind": "module",
+          "label": "process: Sequential",
+          "parameters": 1120,
+          "path": "task_policy.process",
+          "source": {
+            "line": 59,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/container.py"
+          }
+        },
+        {
+          "detail": "231 parameters",
+          "direct_parameters": {
+            "bias": [
+              7
+            ],
+            "weight": [
+              7,
+              32
+            ]
+          },
+          "id": "n35",
+          "kind": "module",
+          "label": "operation: Linear",
+          "parameters": 231,
+          "path": "task_policy.operation",
+          "source": {
+            "line": 53,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/linear.py"
+          }
+        },
+        {
+          "detail": "132 parameters",
+          "direct_parameters": {
+            "bias": [
+              4
+            ],
+            "weight": [
+              4,
+              32
+            ]
+          },
+          "id": "n36",
+          "kind": "module",
+          "label": "modality: Linear",
+          "parameters": 132,
+          "path": "task_policy.modality",
+          "source": {
+            "line": 53,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/linear.py"
+          }
+        },
+        {
+          "detail": "33 parameters",
+          "direct_parameters": {
+            "bias": [
+              1
+            ],
+            "weight": [
+              1,
+              32
+            ]
+          },
+          "id": "n37",
+          "kind": "module",
+          "label": "completion: Linear",
+          "parameters": 33,
+          "path": "task_policy.completion",
+          "source": {
+            "line": 53,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/linear.py"
+          }
+        },
+        {
+          "detail": "14,624 parameters",
+          "direct_parameters": {},
+          "id": "n38",
+          "kind": "module",
+          "label": "metadata_encoder: MetadataEncoder",
+          "parameters": 14624,
+          "path": "metadata_encoder",
+          "source": {
+            "line": 397,
+            "path": "pathwm/models/tasks.py"
+          }
+        },
+        {
+          "detail": "8,288 parameters",
+          "direct_parameters": {
+            "weight": [
+              259,
+              32
+            ]
+          },
+          "id": "n39",
+          "kind": "module",
+          "label": "embedding: Embedding",
+          "parameters": 8288,
+          "path": "metadata_encoder.embedding",
+          "source": {
+            "line": 14,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/sparse.py"
+          }
+        },
+        {
+          "detail": "6,336 parameters",
+          "direct_parameters": {
+            "bias_hh_l0": [
+              96
+            ],
+            "bias_ih_l0": [
+              96
+            ],
+            "weight_hh_l0": [
+              96,
+              32
+            ],
+            "weight_ih_l0": [
+              96,
+              32
+            ]
+          },
+          "id": "n40",
+          "kind": "module",
+          "label": "sequence: GRU",
+          "parameters": 6336,
+          "path": "metadata_encoder.sequence",
+          "source": {
+            "line": 1206,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/rnn.py"
           }
         }
       ],
@@ -937,7 +1184,7 @@
           "kind": "call",
           "label": "initial_state",
           "source": {
-            "line": 186,
+            "line": 192,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -947,7 +1194,7 @@
           "kind": "call",
           "label": "observe",
           "source": {
-            "line": 306,
+            "line": 331,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -957,7 +1204,7 @@
           "kind": "call",
           "label": "remember",
           "source": {
-            "line": 373,
+            "line": 398,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -967,7 +1214,7 @@
           "kind": "call",
           "label": "think",
           "source": {
-            "line": 377,
+            "line": 707,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -977,7 +1224,7 @@
           "kind": "call",
           "label": "propose_action",
           "source": {
-            "line": 477,
+            "line": 807,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -987,7 +1234,7 @@
           "kind": "call",
           "label": "imagine",
           "source": {
-            "line": 424,
+            "line": 754,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -997,7 +1244,7 @@
           "kind": "call",
           "label": "imagine",
           "source": {
-            "line": 424,
+            "line": 754,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -1007,7 +1254,7 @@
           "kind": "call",
           "label": "decode",
           "source": {
-            "line": 447,
+            "line": 777,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -1031,7 +1278,7 @@
           "kind": "call",
           "label": "generate_text",
           "source": {
-            "line": 473,
+            "line": 803,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -1048,7 +1295,7 @@
           "kind": "call",
           "label": "decode_video",
           "source": {
-            "line": 463,
+            "line": 793,
             "path": "pathwm/models/agent.py"
           }
         },
@@ -1079,7 +1326,7 @@
           "kind": "call",
           "label": "plan_to_image",
           "source": {
-            "line": 815,
+            "line": 1226,
             "path": "experiments/multimodal.py"
           }
         },
@@ -1252,6 +1499,192 @@
       ],
       "relationship": "Each scale finishes processing before the next scale or consumers read it.",
       "title": "Image input scales"
+    },
+    "task_flow": {
+      "direction": "TB",
+      "edges": [
+        {
+          "kind": "value",
+          "source": "n0",
+          "target": "n2"
+        },
+        {
+          "kind": "value",
+          "source": "n1",
+          "target": "n2"
+        },
+        {
+          "kind": "value",
+          "source": "n2",
+          "target": "n3"
+        },
+        {
+          "kind": "value",
+          "source": "n1",
+          "target": "n4"
+        },
+        {
+          "kind": "value",
+          "source": "n3",
+          "target": "n4"
+        },
+        {
+          "kind": "value",
+          "source": "n4",
+          "target": "n5"
+        },
+        {
+          "kind": "value",
+          "source": "n0",
+          "target": "n7"
+        },
+        {
+          "kind": "value",
+          "source": "n1",
+          "target": "n7"
+        },
+        {
+          "kind": "value",
+          "source": "n6",
+          "target": "n7"
+        },
+        {
+          "kind": "value",
+          "source": "n0",
+          "target": "n8"
+        },
+        {
+          "kind": "value",
+          "source": "n7",
+          "target": "n8"
+        },
+        {
+          "kind": "value",
+          "source": "n0",
+          "target": "n9"
+        },
+        {
+          "kind": "value",
+          "source": "n8",
+          "target": "n9"
+        },
+        {
+          "kind": "value",
+          "source": "n7",
+          "target": "n10"
+        },
+        {
+          "kind": "value",
+          "source": "n9",
+          "target": "n11"
+        }
+      ],
+      "nodes": [
+        {
+          "detail": "LatentState [1, 30, 32]",
+          "id": "n0",
+          "kind": "input",
+          "label": "Observed state",
+          "source": null
+        },
+        {
+          "detail": "TaskSession",
+          "id": "n1",
+          "kind": "input",
+          "label": "Instruction and explicit output controls",
+          "source": null
+        },
+        {
+          "detail": "[1, 4, 32]",
+          "id": "n2",
+          "kind": "call",
+          "label": "task_tokens",
+          "source": {
+            "line": 456,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "TaskPrediction",
+          "id": "n3",
+          "kind": "call",
+          "label": "TaskPolicy",
+          "source": {
+            "line": 442,
+            "path": "pathwm/models/tasks.py"
+          }
+        },
+        {
+          "detail": "Selection",
+          "id": "n4",
+          "kind": "call",
+          "label": "select_outputs",
+          "source": {
+            "line": 1238,
+            "path": "experiments/multimodal.py"
+          }
+        },
+        {
+          "detail": "Selection",
+          "id": "n5",
+          "kind": "output",
+          "label": "Raw and gated proposal",
+          "source": null
+        },
+        {
+          "detail": "OutputRequest",
+          "id": "n6",
+          "kind": "input",
+          "label": "Explicit user image request (independent of proposal)",
+          "source": null
+        },
+        {
+          "detail": "Emission",
+          "id": "n7",
+          "kind": "call",
+          "label": "emit",
+          "source": {
+            "line": 506,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "Observation [1, 1, 3, 16, 16]",
+          "id": "n8",
+          "kind": "call",
+          "label": "loopback_output",
+          "source": {
+            "line": 1241,
+            "path": "experiments/multimodal.py"
+          }
+        },
+        {
+          "detail": "LatentState [1, 30, 32]",
+          "id": "n9",
+          "kind": "call",
+          "label": "reflect",
+          "source": {
+            "line": 402,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "Emission",
+          "id": "n10",
+          "kind": "output",
+          "label": "Attributed output and fulfillment",
+          "source": null
+        },
+        {
+          "detail": "LatentState [1, 30, 32]",
+          "id": "n11",
+          "kind": "output",
+          "label": "Reflection; world clock unchanged",
+          "source": null
+        }
+      ],
+      "relationship": "Arrows mean values passed between recorded calls; call internals are omitted.",
+      "title": "Example data flow"
     },
     "text_scales": {
       "direction": "TB",
@@ -1605,7 +2038,7 @@
     },
     "seed": 42,
     "sources": {
-      "experiments/multimodal.py": "49e7c200c657ec7023b39e2c1120cb89f352c82267fe80f6195ca7002331a463",
+      "experiments/multimodal.py": "b81387ccf47bda4c13819ce6044cd4938885b62ccb8ac9892b9e4bc84d5d7ace",
       "pathwm/__init__.py": "dbe18dfe9dc29621a41aa22f9814ce4fb4a36bf5cfd0c3ed0b2659377ae45d41",
       "pathwm/data/__init__.py": "6b1432570ee3dbd1b949c59cfcef843ba86c99bb915d95e677b55dff469a93ff",
       "pathwm/data/images.py": "672f1531205326efd474a7e162f07ade26025e41ec5227adbee324ac21341b10",
@@ -1617,15 +2050,16 @@
       "pathwm/evaluation/report.py": "881675c88c411d91af8ef0ac489ae15031705e067bbb12fd2e165438139f8fe3",
       "pathwm/io.py": "57f6a6679e0d7b4d772a1c5609e2a69a50c4f6f04c4da1c965e53e2913061441",
       "pathwm/models/__init__.py": "cc85654c53502b8015698e9c3f8bce8efb72d4a926358a01f3e23c0147e2eba3",
-      "pathwm/models/agent.py": "04819921e53edeb9c65d81954fdb870973bedd868632a81db18a856f8afeebb6",
-      "pathwm/models/agent_state.py": "68b0b81424381f8bfdcef724b5653bb3e1c08961502465e7c9c548911ea61c34",
+      "pathwm/models/agent.py": "313d3b5831ca9335bd39f007bfb15bd42907ffa54aa5a9e51729c30c2bad30f8",
+      "pathwm/models/agent_state.py": "8867a4cd74f4a1f452d5a207cc268811b2bc5768d0f04e040dd7831889a43991",
       "pathwm/models/blocks.py": "e450522830834233f06566f5d445aeb122275c6695d24fb81642f15b9e6b3ff4",
       "pathwm/models/decoders.py": "f9a53c22baa538de344c044eb2c8eff9866f584601aaafcf441023ba4f2d2f15",
       "pathwm/models/encoders.py": "c9e16fd16c1605e021e3781cfe439cf9b4f891a721eb5f6114ad42bc4f0530fc",
       "pathwm/models/features.py": "a5058921937ac677df21e014bd6b481fd3b0c4b2f49bbe6ba65754e53706a656",
-      "pathwm/models/modalities.py": "7cb8b0107317b556635f8c047e8227884f43fd45991389f803803573092479d8",
+      "pathwm/models/modalities.py": "294c5533f1ae13cc070362af51f5fdf90f91124cf162c31fdebc2de644f147bf",
       "pathwm/models/multiscale.py": "d525a4c56f83e24e16bda9dffa05ea869698682de2a25e8ca5da5b0a7ed45ff2",
       "pathwm/models/perception.py": "215bd392ab74b495b1fc33dc8204094f40498e3ab4d4cba24c1fadeaea00b29e",
+      "pathwm/models/tasks.py": "69bc3f5a2847e6779c01c1c77a99f9a84514b0855ddea6b41d684b24168724e9",
       "pathwm/models/temporal.py": "df2e39ae0c4e93b7c3a81964e1ec3f3fc1aa9e071f4a93b02d7b47a9c07d40b5",
       "pathwm/training/__init__.py": "561545f34720f7edd1c48f93b2dcd4530940744ba86b40bdd1fdef5ed1e31235",
       "pathwm/training/dynamics.py": "4182fce86ab6b25cd47493ed4742e8dc6ac5a5572f4d775dafa34bb5b8596d04",

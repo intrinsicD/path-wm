@@ -5,7 +5,7 @@ can never admit a feature computed from a later frame/chunk. Raw bytes are a tin
 language interface, not a pretrained language model or speech codec.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import math
 
 import torch
@@ -17,6 +17,17 @@ class Observation:
     values: torch.Tensor
     times: torch.Tensor  # [B,T], availability time, in seconds
     valid: torch.Tensor | None = None  # [B,T]; False means entirely unavailable
+    provenance: object | None = None  # generated/derived content must retain its tag
+
+    def derive(self, values, *, times=None, valid=None):
+        """Retain generated ancestry when a caller transforms an input."""
+        return replace(
+            self,
+            values=values,
+            times=self.times if times is None else times,
+            valid=self.valid if valid is None else valid,
+            provenance=None if self.provenance is None else self.provenance.derived(),
+        )
 
 
 @dataclass(frozen=True)

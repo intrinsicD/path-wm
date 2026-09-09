@@ -7,8 +7,10 @@ audio/text. Defaults are software-development budgets, not capability benchmarks
 
 import argparse
 import copy
+from dataclasses import asdict, replace
 import json
 from pathlib import Path
+import re
 import wave
 
 import numpy as np
@@ -32,6 +34,17 @@ from pathwm.models.multiscale import (
     FeatureController,
 )
 from pathwm.models.agent_state import EpisodicMemory
+from pathwm.models.tasks import (
+    Actor,
+    OutputControl,
+    OutputRequest,
+    TaskRequest,
+    TaskSession,
+    OPERATIONS,
+    MetadataEncoder,
+    TaskInterpreter,
+    TaskPolicy,
+)
 from pathwm.models.agent import (
     MultimodalAgent,
     ObservationUpdate,
@@ -102,6 +115,9 @@ def build_model(
         action_head=ActionHead(width),
         monitor=ErrorMonitor(width),
         feature_controller=FeatureController(width, code_width),
+        metadata_encoder=MetadataEncoder(width),
+        task_interpreter=TaskInterpreter(width),
+        task_policy=TaskPolicy(width),
     )
 
 
@@ -202,6 +218,309 @@ class SyntheticEpisodes:
                 f"synthetic/{self.identity['split']}/episode-{int(i)}" for i in ids
             ],
         }
+
+
+def instruction_curriculum(split, count):
+    """Small, disclosed language-label exercise, not general instruction data.
+
+    Templates are disjoint across splits. Label order is independent of scene
+    generation; task IDs are constant, so IDs cannot reveal sample/operation labels.
+    Explicit controls vary independently of the seven-operation cycle. Inference
+    never sees labels, template IDs or a keyword parser.
+    """
+    templates = {
+        "train": (
+            (
+                "Think through the scene first.",
+                "Reason about this scene before responding.",
+            ),
+            (
+                "Recall an earlier observation.",
+                "Retrieve a previous scene from memory.",
+            ),
+            ("Imagine a possible future.", "Predict what happens next."),
+            ("Propose a movement.", "Choose an action for the next step."),
+            ("Respond with {outputs}.", "Create {outputs} for the answer."),
+            ("Do that thing.", "I want something, but I cannot say what."),
+            ("The task is complete; stop.", "Everything is done; finish."),
+        ),
+        "validation": (
+            ("Think about the scene carefully.", "First reason about what is visible."),
+            (
+                "Recall what you observed before.",
+                "Retrieve something from your memory.",
+            ),
+            ("Imagine what could happen later.", "Predict the following scene."),
+            ("Propose the next action.", "Choose a movement now."),
+            (
+                "Give me {outputs} as your response.",
+                "Your answer should contain {outputs}.",
+            ),
+            ("Make it how I want it.", "You know, the thing I meant."),
+            ("This task is already complete.", "We are done; stop working."),
+        ),
+        "test": (
+            ("Reason first about the scene.",),
+            ("Recall the prior scene.",),
+            ("Predict a later scene.",),
+            ("Propose an action now.",),
+            ("Please return {outputs}.",),
+            ("Do whatever I was thinking.",),
+            ("Stop: this is finished.",),
+        ),
+    }
+    modalities = ("image", "audio", "text", "video")
+    user = Actor("user", "synthetic-user")
+    sessions, operation_targets, modality_targets = [], [], []
+    for i in range(count):
+        operation, cycle = i % len(OPERATIONS), i // len(OPERATIONS)
+        mask = 1 + cycle % 15
+        chosen = tuple(m for j, m in enumerate(modalities) if mask & (1 << j))
+        variants = templates[split][operation]
+        instruction = variants[cycle % len(variants)].format(
+            outputs=" and ".join(chosen)
+        )
+        control_cycle = (cycle // 3) % 3
+        controls = (
+            ()
+            if control_cycle == 0
+            else (
+                OutputControl(
+                    modalities[cycle % 4],
+                    "disabled" if control_cycle == 1 else "required",
+                    user,
+                ),
+            )
+        )
+        sessions.append(
+            TaskSession(TaskRequest("example-task", instruction, user, controls))
+        )
+        operation_targets.append(operation)
+        modality_targets.append(
+            [
+                float(operation == OPERATIONS.index("emit") and m in chosen)
+                for m in modalities
+            ]
+        )
+    return (
+        tuple(sessions),
+        torch.tensor(operation_targets),
+        torch.tensor(modality_targets),
+    )
+
+
+class InstructionEpisodes(SyntheticEpisodes):
+    """The existing world-model recipe with additional synthetic task supervision."""
+
+    def __init__(self, split="train", count=112, **kwargs):
+        super().__init__(split=split, count=count, **kwargs)
+        self.tasks, self.operation_targets, self.modality_targets = (
+            instruction_curriculum(split, count)
+        )
+        self.identity = dict(
+            self.identity,
+            kind="synthetic-ball-and-instructions-v1",
+            tasks_sha256=digest(
+                {
+                    "requests": [s.request.to_dict() for s in self.tasks],
+                    "operations": self.operation_targets.tolist(),
+                    "modalities": self.modality_targets.tolist(),
+                }
+            ),
+            curriculum="disjoint template families; labels are loss-only; artificial operation descriptions",
+        )
+
+    def batch(self, indices, device="cpu"):
+        result = super().batch(indices, device)
+        ids = torch.as_tensor(indices, dtype=torch.long)
+        return dict(
+            result,
+            tasks=[self.tasks[int(i)] for i in ids],
+            task_operation=self.operation_targets[ids].to(device),
+            task_modalities=self.modality_targets[ids].to(device),
+        )
+
+
+def task_losses(model, state, batch):
+    prediction = model.task_predictions(state, batch["tasks"])
+    targets, modalities = batch["task_operation"], batch["task_modalities"]
+    complete = (targets == OPERATIONS.index("finish")).float()
+    losses = {
+        "task_operation_ce": F.cross_entropy(prediction.operation_logits, targets),
+        "task_modality_bce": F.binary_cross_entropy_with_logits(
+            prediction.modality_logits, modalities
+        ),
+        "task_completion_bce": F.binary_cross_entropy_with_logits(
+            prediction.completion_logits, complete
+        ),
+    }
+    diagnostics = {
+        "task_operation_error": (prediction.operation_logits.argmax(-1) != targets)
+        .float()
+        .mean(),
+        "task_modality_error": ((prediction.modality_logits >= 0) != modalities.bool())
+        .float()
+        .mean(),
+        "task_completion_error": (
+            (prediction.completion_logits >= 0) != complete.bool()
+        )
+        .float()
+        .mean(),
+    }
+    return losses, diagnostics
+
+
+@torch.no_grad()
+def task_evaluation(model, data, settings):
+    """Raw predictions, hard-gate audit, text mismatch control and lexical baseline."""
+    references, ref_operations, ref_modalities = instruction_curriculum(
+        "train", settings["train_windows"]
+    )
+
+    def words(s):
+        return set(re.findall(r"\w+", s.lower()))
+
+    ref_words = [words(s.request.instruction) for s in references]
+    rows = []
+    for start in range(0, len(data), settings["batch_size"]):
+        ids = list(range(start, min(start + settings["batch_size"], len(data))))
+        batch = data.batch(ids, settings["device"])
+        state = observe_history(model, batch, settings["history"])
+        prediction = model.task_predictions(state, batch["tasks"])
+        mismatched = [
+            TaskSession(
+                replace(
+                    s.request,
+                    instruction=data.tasks[(i + 1) % len(data)].request.instruction,
+                )
+            )
+            for i, s in zip(ids, batch["tasks"])
+        ]
+        shuffled = model.task_predictions(state, mismatched)
+        for j, i in enumerate(ids):
+            session = batch["tasks"][j]
+            selected = prediction.select(session, Actor("agent", "model"), j)
+            target_op = int(data.operation_targets[i])
+            target_mask = data.modality_targets[i].bool().tolist()
+            text_words = words(session.request.instruction)
+            neighbor = max(
+                range(len(references)),
+                key=lambda k: len(text_words & ref_words[k])
+                / max(1, len(text_words | ref_words[k])),
+            )
+            raw_mask = (prediction.modality_logits[j] >= 0).tolist()
+            active = [r.modality for r in selected.requests]
+            violations = sum(
+                c.modality in active
+                for c in session.request.controls
+                if c.mode == "disabled"
+            )
+            violations += sum(
+                c.modality not in active
+                for c in session.request.controls
+                if c.mode == "required" and selected.operation == "emit"
+            )
+            violations += int(
+                selected.operation == "finish" and bool(session.remaining)
+            )
+            raw_violations = int(
+                selected.raw_operation == "finish" and bool(session.remaining)
+            )
+            if selected.raw_operation == "emit":
+                raw_violations += sum(
+                    (c.mode == "disabled" and c.modality in selected.raw_modalities)
+                    or (
+                        c.mode == "required"
+                        and c.modality not in selected.raw_modalities
+                    )
+                    for c in session.request.controls
+                )
+            rows.append(
+                dict(
+                    index=i,
+                    request=session.request.to_dict(),
+                    target_operation=OPERATIONS[target_op],
+                    target_modalities=[
+                        m
+                        for m, active in zip(prediction.modalities, target_mask)
+                        if active
+                    ],
+                    raw_operation=selected.raw_operation,
+                    raw_modalities=list(selected.raw_modalities),
+                    enforced_operation=selected.operation,
+                    enforced_requests=[asdict(r) for r in selected.requests],
+                    operation_logits=prediction.operation_logits[j].cpu().tolist(),
+                    modality_logits=prediction.modality_logits[j].cpu().tolist(),
+                    completion_probability=selected.completion_probability,
+                    clarification_probability=selected.clarification_probability,
+                    operation_error=int(
+                        selected.raw_operation != OPERATIONS[target_op]
+                    ),
+                    modality_errors=[
+                        int(a != b) for a, b in zip(raw_mask, target_mask)
+                    ],
+                    completion_error=int(
+                        (selected.completion_probability >= 0.5)
+                        != (OPERATIONS[target_op] == "finish")
+                    ),
+                    shuffled_operation_error=int(
+                        int(shuffled.operation_logits[j].argmax()) != target_op
+                    ),
+                    shuffled_completion_error=int(
+                        (float(shuffled.completion_logits[j]) >= 0)
+                        != (target_op == OPERATIONS.index("finish"))
+                    ),
+                    shuffled_modality_errors=(
+                        (shuffled.modality_logits[j] >= 0)
+                        != data.modality_targets[i].to(state.tokens.device).bool()
+                    )
+                    .int()
+                    .cpu()
+                    .tolist(),
+                    lexical_operation_error=int(
+                        int(ref_operations[neighbor]) != target_op
+                    ),
+                    lexical_modality_errors=(
+                        ref_modalities[neighbor].bool()
+                        != data.modality_targets[i].bool()
+                    )
+                    .int()
+                    .tolist(),
+                    lexical_completion_error=int(
+                        (int(ref_operations[neighbor]) == OPERATIONS.index("finish"))
+                        != (target_op == OPERATIONS.index("finish"))
+                    ),
+                    gate_violations=violations,
+                    raw_gate_violations=raw_violations,
+                )
+            )
+    metrics = {
+        "task_" + k: float(np.mean([r[k] for r in rows]))
+        for k in (
+            "operation_error",
+            "completion_error",
+            "shuffled_operation_error",
+            "shuffled_completion_error",
+            "lexical_operation_error",
+            "lexical_completion_error",
+        )
+    }
+    for prefix in ("", "shuffled_", "lexical_"):
+        metrics["task_" + prefix + "modality_error"] = float(
+            np.mean([r[prefix + "modality_errors"] for r in rows])
+        )
+    for j, name in enumerate(model.task_policy.modalities):
+        emit_rows = [r for r in rows if r["target_operation"] == "emit"]
+        metrics[f"task_{name}_error"] = float(
+            np.mean([r["modality_errors"][j] for r in rows])
+        )
+        if emit_rows:
+            metrics[f"task_emit_{name}_error"] = float(
+                np.mean([r["modality_errors"][j] for r in emit_rows])
+            )
+    metrics["task_gate_violations"] = sum(r["gate_violations"] for r in rows)
+    metrics["task_raw_gate_violations"] = sum(r["raw_gate_violations"] for r in rows)
+    return metrics, rows
 
 
 class RealEpisodes:
@@ -398,6 +717,10 @@ def objective(learner, batch, history=2, horizon=2, dropout=0.0):
         .square()
         .mean(),
     )
+    if "tasks" in batch:
+        losses, task_raw = task_losses(model, state, batch)
+        weighted.update(losses)
+        diagnostics.update({k: v.detach() for k, v in task_raw.items()})
     return weighted, image_error.detach(), diagnostics
 
 
@@ -463,12 +786,17 @@ def evaluate(learner, data, settings):
         if singular.square().sum() > 1e-12
         else 0.0
     )
-    return {
+    result = {
         **{k: v / seen for k, v in sums.items()},
         "evaluated_windows": seen,
         "latent_between_example_std": float(values.std(0, unbiased=False).mean()),
         "latent_effective_rank": float(rank),
     }
+    if isinstance(data, InstructionEpisodes):
+        with evaluation_mode(learner):
+            task_metrics, _ = task_evaluation(learner.agent, data, settings)
+        result.update(task_metrics)
+    return result
 
 
 def make_data(settings, split):
@@ -477,14 +805,19 @@ def make_data(settings, split):
         if split == "train"
         else settings["validation_windows"]
     )
-    if settings["dataset"] == "synthetic":
-        return SyntheticEpisodes(
-            split,
-            count,
-            settings["image_size"],
-            settings["audio_samples"],
-            settings["history"],
-            settings["horizon"],
+    if settings["dataset"] in ("synthetic", "instructions"):
+        factory = (
+            InstructionEpisodes
+            if settings["dataset"] == "instructions"
+            else SyntheticEpisodes
+        )
+        return factory(
+            split=split,
+            count=count,
+            image_size=settings["image_size"],
+            audio_samples=settings["audio_samples"],
+            history=settings["history"],
+            horizon=settings["horizon"],
         )
     return RealEpisodes(
         settings["data_root"],
@@ -528,12 +861,87 @@ def check(settings):
 
 
 @torch.no_grad()
+def save_task_example(run, model, data, settings):
+    """Expose actual proposals alongside a caller-requested emission/loopback."""
+    batch = data.batch([0], settings["device"])
+    state = observe_history(model, batch, settings["history"])
+    user, agent = Actor("user", "demo-user"), Actor("agent", "model")
+    session = TaskSession(
+        TaskRequest(
+            "demo",
+            "Respond with image.",
+            user,
+            (
+                OutputControl("image", "required", user),
+                OutputControl("audio", "disabled", user),
+                OutputControl("text", "disabled", user),
+                OutputControl("video", "disabled", user),
+            ),
+        )
+    )
+    trace = {}
+    selection = model.decide(state, session, agent=agent, trace=trace)
+    # Show the learned decision honestly even when it does not choose to emit.
+    # A separate explicit user request exercises generation regardless of weights.
+    requests = (
+        selection.requests
+        if selection.operation == "emit"
+        else (OutputRequest("demo/user-image", "image", user, "demo"),)
+    )
+    emission = model.emit(state, session, requests, produced_by=agent, trace=trace)
+    if emission.errors:
+        raise RuntimeError(f"Task example generation failed: {emission.errors}")
+    output = emission.outputs[0]
+    reflected = model.reflect(
+        state, {"image": output.loopback(state.time)}, trace=trace
+    )
+    record = {
+        "selection": asdict(selection),
+        "emission_trigger": "learned selection"
+        if selection.operation == "emit"
+        else "explicit user request; learned decision shown separately",
+        "outputs": [o.provenance.to_dict() for o in emission.outputs],
+        "remaining": list(emission.session.remaining),
+        "world_time_before": state.time.tolist(),
+        "world_time_after": reflected.time.tolist(),
+        "observed_count_before": state.observation_count,
+        "observed_count_after": reflected.observation_count,
+        "reflection_ancestry": [p.to_dict() for p in reflected.generated_ancestry],
+        "caveat": "Control/provenance demonstration; generated content is not validated instruction following.",
+    }
+    torch.save(
+        {
+            "before": state.to_dict(),
+            "after": reflected.to_dict(),
+            "task": emission.session.to_dict(),
+            "trace": trace,
+        },
+        run.path / "task_inspection.pt",
+    )
+    Image.fromarray(
+        (output.values[0].permute(1, 2, 0).cpu().clamp(0, 1).numpy() * 255).astype(
+            "uint8"
+        )
+    ).save(run.path / "task_output.png")
+    if isinstance(data, InstructionEpisodes):
+        metrics, rows = task_evaluation(model, data, settings)
+        atomic_json(
+            run.path / "task_decisions.json", {"metrics": metrics, "examples": rows}
+        )
+        record["evaluation"] = metrics
+    atomic_json(run.path / "task_demo.json", record)
+    return record
+
+
+@torch.no_grad()
 def save_examples(run, learner, data, settings):
     with evaluation_mode(learner):
         model = learner.agent
         batch = data.batch(np.arange(min(3, len(data))), settings["device"])
         trace = {}
         state = observe_history(model, batch, settings["history"], trace=trace)
+        if "tasks" in batch:
+            model.task_predictions(state, batch["tasks"], trace=trace)
         imagined, future = [], state
         for h in range(settings["horizon"]):
             step_trace = {}
@@ -642,6 +1050,7 @@ def save_examples(run, learner, data, settings):
                 "audio_sample_rate": 8000,
                 "audio_samples_per_state": settings["audio_samples"],
                 "trace_keys": sorted(trace),
+                "task_demo": save_task_example(run, model, data, settings),
                 "caveats": [
                     "Development outputs, not trained semantic or physical capabilities.",
                     "The demonstration planner is given the true final image as its explicit goal.",
@@ -656,6 +1065,8 @@ def save_examples(run, learner, data, settings):
             name: state.tokens[:, sl].transpose(1, 2).unsqueeze(2)
             for name, sl in model.layout.items()
         }
+        if "task.tokens" in trace:
+            features["task_tokens"] = trace["task.tokens"].transpose(1, 2).unsqueeze(2)
         # Reuse captured processed inputs for the existing per-feature PCA renderer.
         for key, value in trace.items():
             if (
@@ -741,7 +1152,7 @@ def train(settings, output, *, resume=False, stop_after=None):
                     "image_mse",
                     *(
                         ["audio_mse", "text_ce"]
-                        if settings["dataset"] == "synthetic"
+                        if settings["dataset"] in ("synthetic", "instructions")
                         else []
                     ),
                 ]
@@ -824,6 +1235,12 @@ def export_diagrams(
             upper=1.0,
         )
 
+    def select_outputs(prediction, session, agent):
+        return prediction.select(session, agent)
+
+    def loopback_output(output, time):
+        return output.loopback(time)
+
     seed_everything(seed)
     model = build_model(width, image_size, audio_samples).eval()
     data = SyntheticEpisodes(
@@ -859,6 +1276,36 @@ def export_diagrams(
         decision = flow.call(plan_to_image, model, thought, candidates, goal)
         flow.output("Selected action sequence", decision.actions)
         graphs = {"architecture": architecture(model, depth), "data_flow": flow.graph()}
+        task_flow = CallFlow()
+        task_state = task_flow.input("Observed state", thought)
+        user, agent = Actor("user", "diagram-user"), Actor("agent", "model")
+        session = task_flow.input(
+            "Instruction and explicit output controls",
+            TaskSession(
+                TaskRequest(
+                    "diagram",
+                    "Respond with image.",
+                    user,
+                    (OutputControl("image", "required", user),),
+                )
+            ),
+        )
+        task_tokens = task_flow.call(model.task_tokens, task_state, [session])
+        prediction = task_flow.call(model.task_policy, task_tokens)
+        selection = task_flow.call(select_outputs, prediction, session, agent)
+        task_flow.output("Raw and gated proposal", selection)
+        explicit = task_flow.input(
+            "Explicit user image request (independent of proposal)",
+            (OutputRequest("diagram/image", "image", user, "diagram"),),
+        )
+        emission = task_flow.call(
+            model.emit, task_state, session, explicit, produced_by=agent
+        )
+        loopback = task_flow.call(loopback_output, emission.outputs[0], task_state.time)
+        reflected = task_flow.call(model.reflect, task_state, {"image": loopback})
+        task_flow.output("Attributed output and fulfillment", emission)
+        task_flow.output("Reflection; world clock unchanged", reflected)
+        graphs["task_flow"] = task_flow.graph()
         # Capture actual processor/merge calls without duplicating the encoder loop.
         for name, encoder in model.encoders.items():
             if not hasattr(encoder, "pyramid"):
@@ -943,7 +1390,7 @@ def main():
     parser.add_argument("--resume", type=Path)
     parser.add_argument("--stop-after", type=int)
     parser.add_argument(
-        "--dataset", choices=["synthetic", "pusht"], default="synthetic"
+        "--dataset", choices=["synthetic", "instructions", "pusht"], default="synthetic"
     )
     parser.add_argument("--data-root", default="data/pusht_world_model/cchi_v1")
     for name, default in [
@@ -1029,7 +1476,7 @@ def main():
         purpose="development",
         precision="fp32",
         time_unit="one dataset transition",
-        objective="data reconstruction + future outputs + EMA latent Gaussian NLL + action NLL + error supervision",
+        objective="data reconstruction + future outputs + EMA latent Gaussian NLL + action NLL + error supervision; instructions adds operation CE + modality BCE + completion BCE",
         proposal_budget="one extra update per improve-every interval, rolled back on rejection",
     )
     if args.check:
