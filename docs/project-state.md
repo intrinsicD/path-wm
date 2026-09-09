@@ -1,5 +1,9 @@
 # Current work
 
+**In progress:** conditioned multiscale input features for image, video, audio and
+text, following an actual Claude design review. See the active slice in
+[the implementation record](multimodal-plan.md).
+
 **Available:** reproducible [architecture](diagrams/architecture.svg) and
 [data-flow](diagrams/data_flow.svg) diagrams. Regenerate with
 `python experiments/multimodal.py --diagram`; use `--diagram-depth 3` for more layers.

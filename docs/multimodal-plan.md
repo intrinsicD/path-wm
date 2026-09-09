@@ -1,5 +1,43 @@
 # One multimodal world model
 
+## Multiscale conditioned inputs — active slice
+
+Request: all four input modalities expose fine-to-coarse processed feature scales,
+with cross-scale attention and residual processing controlled by an agent/user code.
+Review actual Claude first; public-concepts-only receipts are preserved under
+`runs/reviews/multiscale_inputs/`. The first review is complete; reconciliation
+addresses availability bounds, equal-time sequence causality and code provenance.
+
+Implement three scales with shared width: image spatial grids, video space/time
+grids, small audio waveform patches merged along sample order, text contiguous
+token spans. A scale's conditioned residual transformer finishes before either
+pooling or consumers can read it. Masked local pooling initializes the next scale;
+optional cross-attention reads only its finished finer pooling footprint, followed
+by the next scale's processor. Export all scales and their masks, availability,
+support-end ordinals and grid sizes. Dense causal self-attention is acceptable for
+these tiny inputs; spatially local support and semantic scale roles are not claimed.
+
+One explicit shared code is produced from pre-observation working/reasoning state
+by a replaceable controller, or replaced by user `feature_code [B,C]`. Bias-free
+FiLM projections preserve zero-code neutrality after training, with bounded 0.1
+scale/shift and live gradients at initialization. Conditioning availability is
+state time for the controller, observation cutoff for the user override. No same-call
+feedback or persistent hidden code. Existing simple custom encoders remain supported;
+new multiscale adapters implement the same explicit pyramid/conditioning interface.
+
+Essential checks: processed-before-consumed order, fine-to-coarse gradients and no
+reverse edge; all four pyramids and code gradients; code neutrality/control after
+an update; future perturbations, equal-time order, pooled support bounds, masked
+NaNs/all-invalid rows, odd sizes and singleton inputs; future rejection before any
+encoder; controller ordering; existing teacher detachment and exact resume.
+Demonstrate red tests, commit plan/checks, implement, run the full CPU suite.
+
+Development budget: existing CPU checks, two main synthetic updates (one uninterrupted
+run plus pause/resume replay), two real PushT updates, small populations and no
+learning proposals for these retained smoke runs. Preserve their checkpoints/raw
+metrics/reports. Regenerate diagrams and inspect them locally. No GPU job or quality
+comparison; no improvement claim until a separately declared matched experiment.
+
 ## Diagram follow-up
 
 Completed slice: generate a compact architecture diagram from instantiated modules
