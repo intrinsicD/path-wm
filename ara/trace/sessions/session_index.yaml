@@ -105,7 +105,8 @@ sessions:
     reference preferences remain recommendations and implementation is next. Turn3 implements recall,
     passes76 tests and a256-event check, completes8 negative development updates and verifies reports.
     Three Claude exchanges produce the first remaining proposal; other reviews are scheduled through09:00Berlin.
-  turn_count: 3
-  events_count: 12
+    Turn4 adds four reconciled Claude reviews and marking/objective-interface proposals; no model work.
+  turn_count: 4
+  events_count: 16
   claims_touched: []
-  open_threads: 6
+  open_threads: 7

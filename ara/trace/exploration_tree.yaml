@@ -2513,3 +2513,39 @@ tree:
   - N152
   - N153
   status: open
+- id: N155
+  type: question
+  title: How should agent marks compete for fixed protected capacity?
+  provenance: ai-suggested
+  timestamp: 2026-09-10T01:59+02:00
+  description: Two actual isolated Claude reviews refine a direct insert/replace-action score against
+    the same no-op bank, with user priority, per-session causal inputs and controlled one-admission replay.
+    Corrected redundancy-gap, latent-cause, live-exploration, detail-certification and subquota overclaims.
+    Proposal ready, unimplemented; complementary-set and off-support risks remain.
+  evidence:
+  - docs/remaining-decisions-2026-09-10.md
+  - runs/reviews/state_memory_design_2026-09-09/overnight-marking-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-marking-reconcile-receipt.json
+  also_depends_on:
+  - N152
+  - N153
+  - N154
+  status: open
+- id: N156
+  type: question
+  title: How should natural instructions resolve into exact task and verification contracts?
+  provenance: ai-suggested
+  timestamp: 2026-09-10T01:59+02:00
+  description: Two actual isolated Claude reviews refine a narrow supervised interpreter plus caller-resolved
+    contract, autonomous defaults, focused clarification, preserved executed effects across revisions
+    and scoped unknown verification reasons. Corrected universal cost-free unknown, delegated-source authority,
+    shared-head and weak-label claims. Proposal ready, unimplemented.
+  evidence:
+  - docs/remaining-decisions-2026-09-10.md
+  - runs/reviews/state_memory_design_2026-09-09/overnight-objectives-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-objectives-reconcile-receipt.json
+  also_depends_on:
+  - N152
+  - N153
+  - N154
+  status: open

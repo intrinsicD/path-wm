@@ -1920,3 +1920,46 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O108
+  timestamp: 2026-09-10T01:59+02:00
+  provenance: ai-suggested
+  content: Propose one shared bounded protected pool with exact user priority; agent marks score specific
+    insertion/replacement actions against the current no-op bank. Recompute causal action context at admission,
+    separate sessions, exact source-ID duplicates only. Train score predictor over detached features from
+    capacity-respecting paired passive replays with later marks suppressed. Targets are factual NLL differences;
+    actual task cost stays separate. User marks are requests, not truth/utility labels; lossy latent protection
+    cannot certify named-detail fidelity.
+  context: Refined with Claude after independently identifying replacement interactions. No new quotas,
+    release/reset feature, memory growth or raw archive. One-admission effect is not full adaptive-policy
+    value; zero extra-protection benefit can be correct redundancy. First prototype needs underlying reader
+    utility. No model changes or experiments.
+  potential_type: architecture
+  bound_to:
+  - N155
+  - N152
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O109
+  timestamp: 2026-09-10T01:59+02:00
+  provenance: ai-suggested
+  content: Propose a narrow supervised instruction interpreter that supplies objective/entity/temporal/scope
+    candidates beside an exact caller-resolved task record. Runtime owns capabilities/cost/budget/checker
+    definitions. Use declared defaults autonomously and focused clarification for material ambiguity.
+    Preserve executed effects/cost through revision, invalidate pending decisions and treat compensation
+    as a new action. Keep delivery, prediction and verified/contradicted/unknown-with-reason separate;
+    unknown scoring is task-specific, source references do not prove intent fidelity, and explicit user
+    delegation can reference procedure content without promoting its source to authority.
+  context: Two Claude rounds and primary semantic-parsing/compositional-split checks. Weak model labels
+    remain fallible and cannot substitute for independent evaluation; filtering labels does not undo training.
+    Typed outcome consumers are an initial preference, not a prohibition on sharing. No interpreter implementation
+    or additional runtime LLM.
+  potential_type: architecture
+  bound_to:
+  - N156
+  - N152
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -2,8 +2,8 @@ session:
   id: 2026-09-10_001
   date: '2026-09-10'
   started: 2026-09-10T00:05+02:00
-  last_turn: 2026-09-10T01:46+02:00
-  turn_count: 3
+  last_turn: 2026-09-10T01:59+02:00
+  turn_count: 4
   summary: Two isolated Claude reviews produced a proposed goal/action/outcome-verification interface,
     historical recall with factual not-observed versus abstention, and bounded observation-conditioned
     sensing. Turn2 works out reference costs, complete text-recall episodes, separate calibration and
@@ -11,7 +11,9 @@ session:
     changes or training. Defaults remain research recommendations. Turn3 implements the authorized recall
     task:76 tests, default256-record check,8-update negative development run and verified reports. Three
     Claude exchanges refine the first overnight memory-learning proposal; remaining reviews scheduled
-    through09:00Berlin, with no new broader implementation or experiment authorization.
+    through09:00Berlin, with no new broader implementation or experiment authorization. Turn4 completes
+    four further public-only Claude reviews for marking and objective interpretation; proposals ready,
+    no new model work. Sensing, uncertainty, compute and transfer remain for the overnight continuation.
 events_logged:
 - turn: 1
   type: decision
@@ -93,6 +95,41 @@ events_logged:
     locally and encoders through existing observable losses; longer differentiable chains are a later
     explicit variant. Recompute current-weight prefixes, keep teacher distillation optional, compare auxiliary
     on/off and trained controls, and hold runtime capacity fixed.
+- turn: 4
+  type: question
+  id: N155
+  routing: direct
+  provenance: ai-suggested
+  summary: How should agent marks compete for fixed protected capacity?
+- turn: 4
+  type: question
+  id: N156
+  routing: direct
+  provenance: ai-suggested
+  summary: How should natural instructions resolve into exact task and verification contracts?
+- turn: 4
+  type: observation
+  id: O108
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose one shared bounded protected pool with exact user priority; agent marks score specific
+    insertion/replacement actions against the current no-op bank. Recompute causal action context at admission,
+    separate sessions, exact source-ID duplicates only. Train score predictor over detached features from
+    capacity-respecting paired passive replays with later marks suppressed. Targets are factual NLL differences;
+    actual task cost stays separate. User marks are requests, not truth/utility labels; lossy latent protection
+    cannot certify named-detail fidelity.
+- turn: 4
+  type: observation
+  id: O109
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose a narrow supervised instruction interpreter that supplies objective/entity/temporal/scope
+    candidates beside an exact caller-resolved task record. Runtime owns capabilities/cost/budget/checker
+    definitions. Use declared defaults autonomously and focused clarification for material ambiguity.
+    Preserve executed effects/cost through revision, invalidate pending decisions and treat compensation
+    as a new action. Keep delivery, prediction and verified/contradicted/unknown-with-reason separate;
+    unknown scoring is task-specific, source references do not prove intent fidelity, and explicit user
+    delegation can reference procedure content without promoting its source to authority.
 ai_actions:
 - turn: 1
   action: Inspected local planner/task/categorical interfaces; wrote independent notes, completed two actual
@@ -124,6 +161,14 @@ ai_actions:
   - docs/recall-task.md
   - docs/recall-implementation-plan.md
   - docs/remaining-decisions-2026-09-10.md
+- turn: 4
+  action: Completed four actual isolated Claude CLI reviews after independent notes, reconciled technical
+    overclaims, inspected local mark/task contracts, checked primary semantic-parsing/compositional-split
+    sources and illustrative NLL/task-cost arithmetic. Added two proposal sections and committedbb7428a.
+    No private material exported and no model edits/training/tests executed.
+  provenance: ai-executed
+  files_changed:
+  - docs/remaining-decisions-2026-09-10.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -137,6 +182,9 @@ key_context:
   excerpt: 'User: Yes please do that. When you are done work out with Claude proposals for the remaining
     decisions over the night until9:00am, so we can complete them today. Implementation completed; later
     reviews remain scheduled, not falsely reported complete.'
+- turn: 4
+  excerpt: Heartbeat continues prior explicit overnight authorization through09:00Berlin. Implementation
+    remains complete; new marking/instruction recommendations await Alex rather than being silently adopted.
 open_threads:
 - O104/A04 implemented. O106 negative development interpretation and O107 local memory-learning proposal
   remain staged. A scientific effect-size/seed/split/paired-control protocol is still required.
@@ -145,8 +193,11 @@ open_threads:
 - O101 long-horizon retention, calibrated outcomes and useful closed-loop behavior remain unproven.
 - Prior research questions remain open as recorded in 2026-09-09_001.yaml; no unrelated topic abandoned.
 - Complete remaining Claude decision groups by08:30; synthesize by09:00Berlin and pause the active heartbeat.
+- O108/O109 proposals await Alex; next review sensing, model uncertainty, compute budgets and transfer.
 ai_suggestions_pending:
 - 'O102: broader objective/capability/action interfaces remain proposed; narrow recall contract is implemented.'
 - 'O103: finite sensing diagnostic then static-current-location inspect/answer, separately from historical recall.'
 - 'O105/O106: old-seen utility and hierarchy attribution still require controlled evidence; negative smoke result is not a broad refutation.'
 - 'O107: grounded one-boundary memory probes, with fixed-compression and auxiliary-on/off controls, await user design choice.'
+- 'O108: causal capacity-respecting insertion/replacement scoring with fixed user priority.'
+- 'O109: narrow learned objective interpretation with exact runtime contracts and scoped verification.'
