@@ -49,6 +49,15 @@ Two additional public-only Claude exchanges checked the comparison and
 reconciled scope and literature overclaims; receipts are in
 `runs/reconstruction_constraint_2026-09-09/`.
 
+The subsequent [model-quality and project-scale discussion](model-quality-and-project-scale-2026-09-09.md)
+puts these diagnostics in context: strong systems combine suitable architecture,
+data coverage, objectives, optimization, compute and often inherited pretraining.
+The current custom pipeline is small and the new perception package has no new
+compatible downstream control result. Preserve existing released-weight control
+references and tie further component work to one end-to-end capability. This is
+a proposed direction, not a new architecture choice, training queue or resource
+purchase; the auxiliary RGB-gradient question remains unresolved.
+
 The user authorized experiments with Claude until **9 September 07:00 Berlin**
 and removed albedo from scope. All **36 vision/geometry fits and 15 category
 probes** completed (174,000 total updates), plus 42 decoder-reliance conditions,
