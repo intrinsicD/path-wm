@@ -37,6 +37,18 @@ features are themselves part of the state under inspection. Main representation
 selection should follow task/prediction/retention quality. Two public-only Claude
 exchanges checked the distinction; no model, loss or training change was made.
 
+The user's subsequent clarification makes **the causal benefit of auxiliary
+reconstruction gradients into a trainable E** the main open question. Optional
+diagnostic RGB does not imply removing RGB supervision from E. The same note now
+explains the mechanism, public evidence and a proposed blocked/weak/reference
+RGB-gradient comparison with active task learning in every arm. Existing frozen-E
+decoder fits and RGB-preserving encoder continuations do not answer that question.
+Temporal benefit requires compatible downstream refits and physical/control
+evaluation. This remains a proposal, without new training or implementation.
+Two additional public-only Claude exchanges checked the comparison and
+reconciled scope and literature overclaims; receipts are in
+`runs/reconstruction_constraint_2026-09-09/`.
+
 The user authorized experiments with Claude until **9 September 07:00 Berlin**
 and removed albedo from scope. All **36 vision/geometry fits and 15 category
 probes** completed (174,000 total updates), plus 42 decoder-reliance conditions,
