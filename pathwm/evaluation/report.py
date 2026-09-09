@@ -186,6 +186,143 @@ def model_inspection(directory):
     return parts
 
 
+def recall_inspection(directory):
+    path = directory / "recall_results.json"
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text())
+    fit = data["calibration_fit"]
+    headline = data["views"]["calibrated"]["overall"]
+    parts = [
+        "<section><h2>Selective historical recall</h2>",
+        f"<p><strong>{headline['answered']} answers from {headline['examples']} test episodes; "
+        f"task loss {headline['task_loss']:.6g}; factual accuracy {headline['factual_accuracy']:.1%}.</strong> "
+        "Factual accuracy scores the top class even when the decision abstains.</p>",
+        f"<p>Selected update {data['selected_step']} by development factual NLL. "
+        f"Calibration: {escape(fit['status'])}; temperature {fit['temperature']:.6g}. "
+        "Raw and calibrated views reuse the same frozen test logits. Correct answers cost 0, "
+        "wrong answers cost 1; abstention cost is specified in this run’s settings.</p>",
+        "<p>Validation curves show factual NLL; training also includes weighted grounding and KL terms. "
+        "A null answered error means no answers were emitted.</p>",
+        '<div class="table"><table><tr><th>View / population</th><th>N</th><th>Coverage</th>'
+        "<th>Answered error</th><th>Task loss</th><th>Factual accuracy</th><th>NLL</th></tr>",
+    ]
+    for view, values in data["views"].items():
+        for group, row in [("overall", values["overall"]), *values["groups"].items()]:
+            cells = [
+                f"{view} / {group}",
+                row["examples"],
+                row["coverage"],
+                row["answered_error"],
+                row["task_loss"],
+                row["factual_accuracy"],
+                row["nll"],
+            ]
+            parts.append(
+                "<tr>"
+                + "".join(
+                    f"<td>{escape(f'{x:.6g}' if isinstance(x, float) else str(x))}</td>"
+                    for x in cells
+                )
+                + "</tr>"
+            )
+    parts.append(
+        "</table></div><p>Populations overlap: seen_old combines compressed and consolidated source positions. "
+        "These are reference retention groups, not claims that the model retrieved from a particular store.</p></section>"
+    )
+    from matplotlib.figure import Figure
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+
+    fig = Figure(figsize=(9, 7), layout="constrained")
+    FigureCanvasAgg(fig)
+    axes = fig.subplots(2, 1)
+    axes[0].plot(
+        [0, 1], [0, 1], color="#999999", linestyle=":", label="perfect agreement"
+    )
+    for view, color, style in (
+        ("raw", "#2763a4", "-"),
+        ("calibrated", "#b08418", "--"),
+    ):
+        diagnostics = data["views"][view]["diagnostics"]
+        bins = [x for x in diagnostics["reliability"] if x["count"]]
+        axes[0].plot(
+            [x["confidence"] for x in bins],
+            [x["accuracy"] for x in bins],
+            color=color,
+            linestyle=style,
+            marker="o",
+            label=view,
+        )
+        curve = diagnostics["risk_coverage"]
+        axes[1].plot(
+            [x["coverage"] for x in curve],
+            [x["risk"] for x in curve],
+            color=color,
+            linestyle=style,
+            marker=".",
+            label=view,
+        )
+    axes[0].set(
+        xlabel="Mean confidence in nonempty bin",
+        ylabel="Factual accuracy",
+        title="Reliability · ten fixed bins",
+    )
+    axes[1].set(
+        xlabel="Fraction of test episodes answered",
+        ylabel="Error among answers",
+        title="Risk and coverage · attainable confidence thresholds",
+    )
+    for ax in axes:
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.grid(alpha=0.2)
+        ax.legend(frameon=False)
+    chart = directory / "recall_confidence.png"
+    fig.savefig(chart, dpi=140)
+    url = "data:image/png;base64," + base64.b64encode(chart.read_bytes()).decode()
+    parts.append(
+        f'<section><h2>Confidence diagnostics</h2><img class="chart" alt="Reliability and risk versus coverage for raw and calibrated test probabilities" src="{url}"><p>Small held-out sample. Lines join measured points; they provide no risk guarantee. Calibration can change confidence ranking across examples.</p></section>'
+    )
+    parts.append(
+        "<section><h2>Confidence sample counts</h2><p>Fixed confidence intervals, followed by episode count; empty bins are omitted.</p>"
+    )
+    for view, values in data["views"].items():
+        counts = "; ".join(
+            f"{b['low']:.1f}–{b['high']:.1f}: {b['count']}"
+            for b in values["diagnostics"]["reliability"]
+            if b["count"]
+        )
+        parts.append(f"<p>{escape(view)}: {counts}</p>")
+    parts.append("</section>")
+    parts.append(
+        "<section><h2>Reference losses and cost sensitivity</h2><p>The absence-only oracle recognizes unseen entities perfectly and abstains on every seen entity. It can improve overall loss without any location recall.</p>"
+    )
+    for title, record in (
+        ("Baselines at the declared cost", data["baselines"]),
+        (
+            "Costs from cached test logits",
+            {k: v["costs"] for k, v in data["views"].items()},
+        ),
+    ):
+        parts.append(
+            f"<details><summary>{title}</summary><pre>{escape(json.dumps(record, indent=2))}</pre></details>"
+        )
+    parts.append(
+        "</section><section><h2>Auditable examples</h2><p>These logs are evaluator evidence. They are not a model-accessible lookup table.</p>"
+    )
+    # First example of each reference group, fixed independently of correctness.
+    shown = set()
+    for example in data["examples"]:
+        if example["group"] in shown:
+            continue
+        shown.add(example["group"])
+        parts.append(
+            f"<details><summary>{escape(example['group'])}: {escape(example['query']['session_id'])}</summary><pre>{escape(json.dumps(example, indent=2))}</pre></details>"
+        )
+    parts.append("<p>" + " ".join(escape(x) for x in data["limits"]) + "</p></section>")
+    return parts
+
+
 def render_report(directory):
     directory = Path(directory)
     record = json.loads((directory / "run.json").read_text())
@@ -283,6 +420,7 @@ def render_report(directory):
             parts.append("</div></section>")
         if axes:
             np.savez_compressed(directory / "pca_axes.npz", **axes)
+    parts.extend(recall_inspection(directory))
     parts.extend(model_inspection(directory))
     for title, data in [
         ("Resolved settings and source identities", record),

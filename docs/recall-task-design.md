@@ -1,5 +1,10 @@
 # Selective historical recall: first task contract
 
+Implementation follow-up: Alex authorized this slice on 10 September; see the
+[implemented interface and commands](recall-task.md) and
+[development evidence](recall-implementation-plan.md). The remainder preserves the
+reviewed design as written before that implementation.
+
 Status: concrete design recommendation, 10 September 2026. This works out the
 cost/abstention choice in [the decision design](decision-design.md). It is not an
 implemented task or an executed experiment. The numerical choices below are explicit

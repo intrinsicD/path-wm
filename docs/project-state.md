@@ -1,9 +1,19 @@
 # Current work
 
-**In progress:** Alex authorized the selective-recall implementation and subsequent
-overnight Claude proposals through 09:00 Berlin on 10 September. Follow
-[the active implementation plan](recall-implementation-plan.md). The thread heartbeat
-`overnight-agent-design-proposals` is active every half hour, ending at that deadline.
+**Current slice:** historical recall is implemented in the same recipe. Read the
+[usable guide](recall-task.md) and [implementation record](recall-implementation-plan.md).
+All 76 CPU tests pass, including exact pause/resume, held-out split isolation and
+report-failure recovery. A 256-event default-memory forward/backward check completed.
+The eight-update CPU development run selected update 7. On its 15 test episodes,
+factual accuracy is 20%, every decision abstains, and task loss is 0.25. The model
+does not yet demonstrate useful recall. Calibration selected its upper bound T=20;
+this small sample establishes no calibration guarantee.
+
+**In progress:** subsequent Claude proposals through 09:00 Berlin on 10 September.
+The [morning decision agenda](remaining-decisions-2026-09-10.md) tracks remaining
+choices. The heartbeat `overnight-agent-design-proposals` is active every half hour,
+ending at that deadline. Broader proposals are not permission to adopt changes or
+start additional experiments.
 
 **Implemented:** the categorical belief and bounded session-memory design authorized
 by Alex on 9 September 2026. Read [the model guide](belief-model.md) and the
@@ -87,14 +97,15 @@ recommended first slice. Active current-location inspection is a subsequent task
 requiring observation-conditioned continuations and isolated hypothetical updates.
 Existing memory bounds, reset decisions and negative results are unchanged.
 
-**Worked first-task recommendation:** [selective historical recall](recall-task-design.md)
+**Implemented first-task contract:** [selective historical recall](recall-task-design.md)
 specifies four locations plus factual not-observed, separate abstention, loss 0/1/0.25,
 two retrieval rounds, complete text-observation episodes and independent calibration.
 Two further abstract Claude reviews reconcile cost/calibration and data-split claims.
 Report seen/old-history performance separately: recognizing only unseen entities can
-beat all-abstain without remembering any locations. No new model code or runs.
+beat all-abstain without remembering any locations. The subsequent implementation
+and development evidence are recorded in the guide linked above.
 
-**Next step:** budget and implement that complete episode-to-query path in the existing
-recipe, then separately declare a matched comparison. Numerical costs are explicit
+**Next step:** resolve the long-horizon learning proposal and remaining model decisions
+with Claude, then separately declare a matched comparison. Numerical costs are explicit
 research defaults, not inferred application preferences. Deployment-length replay,
 general mark selection, calibrated probabilities and closed-loop behavior remain open.

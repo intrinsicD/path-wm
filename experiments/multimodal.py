@@ -11,6 +11,7 @@ from dataclasses import asdict, replace
 import json
 from pathlib import Path
 import re
+from time import perf_counter
 import wave
 
 import numpy as np
@@ -67,8 +68,24 @@ from pathwm.io import (
     training_mode,
     trainable_parameters,
     resume_arguments,
+    state_hash,
 )
 from pathwm.training.improvement import replay_probabilities, try_improvement
+from pathwm.models.recall import (
+    RecallHead,
+    RecallQuery,
+    SeenRecord,
+    historical_target,
+    recall_logits,
+    select_recall,
+    verify_recall,
+    LABELS,
+)
+from pathwm.evaluation.recall import (
+    fit_temperature,
+    recall_metrics,
+    confidence_diagnostics,
+)
 
 
 def build_model(
@@ -83,6 +100,7 @@ def build_model(
     memory_recent=32,
     memory_block=8,
     memory_blocks=16,
+    recall=False,
 ):
     if state_model not in ("gaussian", "belief"):
         raise ValueError("Unknown state model")
@@ -99,7 +117,7 @@ def build_model(
         else {}
     )
     # Replace a constructor here to compare components; no registration is needed.
-    return factory(
+    model = factory(
         **options,
         width=width,
         encoders={
@@ -148,6 +166,368 @@ def build_model(
         task_interpreter=TaskInterpreter(width),
         task_policy=TaskPolicy(width),
     )
+    if recall:
+        if state_model != "belief":
+            raise ValueError("Recall requires the categorical belief model")
+        model.recall_head = RecallHead(width)
+    return model
+
+
+def retention_tiers(length, recent, block, blocks):
+    """Deterministic reference membership before looking at model predictions."""
+    queue, staging, compressed, consolidated = [], [], [], []
+    for ordinal in range(1, length + 1):
+        queue.append(ordinal)
+        if len(queue) > recent:
+            staging.append(queue.pop(0))
+        if len(staging) == block:
+            compressed.append(staging)
+            staging = []
+            if len(compressed) > blocks:
+                consolidated.extend(compressed.pop(0))
+    return dict(
+        recent=queue,
+        staging=staging,
+        compressed=[x for b in compressed for x in b],
+        consolidated=consolidated,
+    )
+
+
+class RecallEpisodes:
+    """Complete independent text sessions; evaluator fields are separate from inputs."""
+
+    def __init__(
+        self,
+        *,
+        split,
+        count,
+        history,
+        recent=32,
+        block=8,
+        blocks=16,
+        truncate=32,
+        abstain_cost=0.25,
+    ):
+        split_seed = {
+            "train": 12001,
+            "validation": 22001,
+            "calibration": 32001,
+            "test": 42001,
+        }
+        if split not in split_seed or count < 1 or count % 15 or truncate < 0:
+            raise ValueError(
+                "Recall splits require a positive multiple of 15 episodes and nonnegative truncation"
+            )
+        tiers = retention_tiers(history, recent, block, blocks)
+        if any(not tiers[k] for k in ("recent", "compressed", "consolidated")):
+            raise ValueError(
+                "Recall history must exercise recent, compressed and consolidated records"
+            )
+        self.items, self.records, self.groups, self.hidden_locations = [], [], [], []
+        self.truncate, self.split = truncate, split
+        rng = np.random.default_rng(split_seed[split])
+        design = rng.permutation(count)
+        for index, code in enumerate(design):
+            label, cohort = (
+                int(code % 5),
+                ("recent", "compressed", "consolidated")[int(code // 5) % 3],
+            )
+            entity = int(rng.integers(32))
+            last = int(rng.choice(tiers[cohort])) if label < 4 else None
+            others = [e for e in range(32) if e != entity]
+            records = [
+                SeenRecord(t + 1, int(rng.choice(others)), int(rng.integers(4)))
+                for t in range(history)
+            ]
+            if last is not None:
+                records[last - 1] = SeenRecord(last, entity, label)
+                if last > 1:
+                    earlier = int(rng.integers(1, last))
+                    records[earlier - 1] = SeenRecord(
+                        earlier, entity, int(rng.integers(4))
+                    )
+            session = f"recall/{split}/{index}"
+            task = TaskRequest(
+                f"{session}/query",
+                f"Where was entity=e{entity:02d} last observed?",
+                Actor("user", "fixture"),
+            )
+            query = RecallQuery(
+                task, session, entity, history, abstain_cost=abstain_cost
+            )
+            self.items.append(
+                dict(
+                    records=tuple(records),
+                    query=query,
+                    time_offset=int(rng.integers(1000)),
+                )
+            )
+            self.records.append(tuple(records))
+            self.groups.append(cohort if label < 4 else "not_observed")
+            # Independent hidden trajectory is evaluator-only and cannot change visible records.
+            self.hidden_locations.append(
+                np.random.default_rng(split_seed[split] + 100000 + index)
+                .integers(4, size=history)
+                .tolist()
+            )
+            assert historical_target(records, query) == label
+        manifest = [
+            dict(
+                session=x["query"].session_id,
+                entity=x["query"].entity,
+                records=[asdict(r) for r in x["records"]],
+                offset=x["time_offset"],
+            )
+            for x in self.items
+        ]
+        self.identity = dict(
+            dataset="historical_recall_v1",
+            split=split,
+            count=count,
+            history=history,
+            reference_memory=dict(recent=recent, block=block, blocks=blocks),
+            sha256=digest(manifest),
+            labels=list(LABELS),
+            class_counts=[count // 5] * 5,
+            groups={g: self.groups.count(g) for g in set(self.groups)},
+            input="canonical text; complete session; unmarked",
+            seed=split_seed[split],
+        )
+
+    def __len__(self):
+        return len(self.items)
+
+    def batch(self, indices, device="cpu"):
+        if any(not 0 <= int(i) < len(self) for i in indices):
+            raise ValueError("Recall episode index out of bounds")
+        inputs = [self.items[int(i)] for i in indices]
+        return dict(
+            recall_inputs=inputs,
+            truncate=self.truncate,
+            labels=torch.tensor(
+                [historical_target(x["records"], x["query"]) for x in inputs],
+                device=device,
+            ),
+            groups=[self.groups[int(i)] for i in indices],
+        )
+
+
+def recall_forward(model, inputs, *, truncate=32, auxiliary=False):
+    """No label arguments. Whole prefix executes; gradients cover the last segment."""
+    from pathwm.models.belief_state import Packet
+    from pathwm.training.belief import split_kl
+
+    records, query = inputs["records"], inputs["query"]
+    if not records or records[-1].ordinal != query.cutoff:
+        raise ValueError("Complete recall input must end at its query cutoff")
+    if [r.ordinal for r in records] != list(range(1, len(records) + 1)):
+        raise ValueError("Recall input must be a complete ordered session")
+    device = next(model.parameters()).device
+    state = model.initial_state(
+        1, time=inputs["time_offset"], session_id=query.session_id
+    )
+    start = max(0, len(records) - truncate) if truncate else 0
+    losses = []
+    for t, record in enumerate(records):
+        track = torch.is_grad_enabled() and t >= start
+        with torch.set_grad_enabled(track):
+            ids, valid = bytes_batch([record.text], device)
+            timestamp = inputs["time_offset"] + record.ordinal
+            observation = Observation(
+                ids,
+                torch.full(
+                    ids.shape, float(timestamp), device=device, dtype=torch.float64
+                ),
+                valid,
+            )
+            pending = model.begin_event(
+                state,
+                event_id=f"record-{record.ordinal}",
+                ordinal=record.ordinal,
+                time=timestamp,
+                replay=track,
+            )
+            pending = model.add_packet(
+                pending, Packet(f"text-{record.ordinal}", "text", observation)
+            )
+            state = model.commit_event(pending)
+            if auxiliary and t >= start:
+                posterior = model.decoders["text"](state.tokens, ids[:, :-1])
+                source = model.decoders["text"](state.evidence, ids[:, :-1])
+                grounding = F.cross_entropy(
+                    posterior.transpose(1, 2), ids[:, 1:], ignore_index=0
+                )
+                evidence = F.cross_entropy(
+                    source.transpose(1, 2), ids[:, 1:], ignore_index=0
+                )
+                dyn, rep = split_kl(state.logits, state.prior_logits)
+                losses.append(torch.stack((grounding, evidence, dyn, rep)))
+    logits, working = recall_logits(model, state, query)
+    return logits, working, torch.stack(losses).mean(0) if losses else None
+
+
+def recall_objective(learner, batch):
+    outputs, aux = [], []
+    for inputs in batch["recall_inputs"]:
+        logits, _, loss = recall_forward(
+            learner.agent, inputs, truncate=batch["truncate"], auxiliary=True
+        )
+        outputs.append(logits)
+        aux.append(loss)
+    logits = torch.cat(outputs)
+    errors = F.cross_entropy(logits, batch["labels"], reduction="none")
+    text, source, dyn, rep = torch.stack(aux).mean(0)
+    losses = dict(
+        recall_nll=errors.mean(),
+        text_grounding=0.05 * text,
+        source_grounding=0.05 * source,
+        dynamics_kl=0.01 * dyn,
+        representation_kl=0.001 * rep,
+    )
+    return losses, errors.detach(), dict(recall_nll=errors.mean().detach())
+
+
+@torch.no_grad()
+def recall_predictions(model, data, settings):
+    outputs, labels, examples = [], [], []
+    with evaluation_mode(model):
+        for index, inputs in enumerate(data.items):
+            # Repeatable per-episode latent samples; independent of batching and pauses.
+            torch.manual_seed(settings["seed"] + data.identity["seed"] + index)
+            logits, state, _ = recall_forward(model, inputs, truncate=data.truncate)
+            outputs.append(logits.cpu())
+            labels.append(historical_target(data.records[index], inputs["query"]))
+            examples.append(
+                dict(
+                    query=inputs["query"].to_dict(),
+                    group=data.groups[index],
+                    records=[asdict(r) for r in data.records[index]],
+                    memory_tensor_bytes=model.memory.storage_bytes(state.memory),
+                )
+            )
+    return torch.cat(outputs), torch.tensor(labels), examples
+
+
+@torch.no_grad()
+def finish_recall(run, learner, calibration, test, settings):
+    """Fit on calibration only; cache test outputs once for all report views."""
+    identity = dict(
+        selected_model_sha256=state_hash(learner.target),
+        selected_step=int(learner.best_step),
+        calibration=calibration.identity,
+        test=test.identity,
+    )
+    cache_path = run.path / "recall_predictions.pt"
+    if cache_path.exists():
+        cache = torch.load(cache_path, map_location="cpu", weights_only=True)
+        if (
+            cache.get("schema") != "pathwm-recall-predictions-v1"
+            or cache["identity"] != identity
+        ):
+            raise ValueError("Recall result cache does not match selected model/splits")
+    else:
+        started = perf_counter()
+        cal_logits, cal_labels, _ = recall_predictions(
+            learner.target, calibration, settings
+        )
+        calibration_seconds = perf_counter() - started
+        fit = fit_temperature(cal_logits, cal_labels)
+        started = perf_counter()
+        test_logits, test_labels, examples = recall_predictions(
+            learner.target, test, settings
+        )
+        test_seconds = perf_counter() - started
+        cache = dict(
+            schema="pathwm-recall-predictions-v1",
+            identity=identity,
+            calibration_logits=cal_logits,
+            calibration_labels=cal_labels,
+            fit=fit,
+            logits=test_logits,
+            labels=test_labels,
+            examples=examples,
+            timing=dict(
+                calibration_inference_seconds=calibration_seconds,
+                test_inference_seconds=test_seconds,
+                test_seconds_per_episode=test_seconds / len(test),
+                events_per_episode=test.identity["history"],
+                thinking_rounds_per_episode=2,
+                factual_head_calls_per_episode=1,
+                device=settings["device"],
+                note="Wall-clock serial inference including Python and transfers; descriptive, not a benchmark",
+            ),
+        )
+        temporary = cache_path.with_suffix(".partial")
+        torch.save(cache, temporary)
+        temporary.replace(cache_path)
+    fit, logits, labels = cache["fit"], cache["logits"], cache["labels"]
+    learner.temperature.fill_(fit["temperature"])
+    cost = settings.get("abstain_cost", 0.25)
+    masks = {
+        g: torch.tensor([x["group"] == g for x in cache["examples"]])
+        for g in ("recent", "compressed", "consolidated", "not_observed")
+    }
+    masks["seen"] = labels < 4
+    masks["seen_old"] = masks["compressed"] | masks["consolidated"]
+    views = {}
+    for name, temperature in (("raw", 1.0), ("calibrated", fit["temperature"])):
+        views[name] = dict(
+            overall=recall_metrics(
+                logits, labels, temperature=temperature, abstain_cost=cost
+            ),
+            groups={
+                g: recall_metrics(
+                    logits[m], labels[m], temperature=temperature, abstain_cost=cost
+                )
+                for g, m in masks.items()
+                if m.any()
+            },
+            costs={
+                str(c): recall_metrics(
+                    logits, labels, temperature=temperature, abstain_cost=c
+                )
+                for c in (0.1, 0.25, 0.5)
+            },
+            diagnostics=confidence_diagnostics(logits, labels, temperature),
+        )
+    examples = []
+    for index, source in enumerate(cache["examples"]):
+        query = RecallQuery.from_dict(source["query"])
+        decision = select_recall(
+            (logits[index].double() / fit["temperature"]).softmax(-1), query
+        )
+        verification = verify_recall(
+            query,
+            decision,
+            tuple(SeenRecord(**r) for r in source["records"]),
+            query.session_id,
+        )
+        examples.append(
+            dict(**source, decision=decision.to_dict(), verification=verification)
+        )
+    result = dict(
+        schema="pathwm-recall-results-v1",
+        **identity,
+        development_nll=float(learner.best_nll),
+        calibration_fit=fit,
+        labels=list(LABELS),
+        views=views,
+        examples=examples,
+        baselines=dict(
+            all_abstain=cost,
+            uniform_always_answer_expected=0.8,
+            always_not_observed=float((labels != 4).double().mean()),
+            oracle_absence_only=cost * float((labels < 4).double().mean()),
+            oracle_history=0.0,
+        ),
+        limits=[
+            "Small development population; no capability or calibration guarantee.",
+            "Current recurrent state can retain history; this does not isolate hierarchy benefit.",
+            "Only the final replay segment receives gradients; prefix memories stay in the forward pass.",
+        ],
+    )
+    atomic_json(run.path / "recall_results.json", result)
+    atomic_json(run.path / "recall_performance.json", cache["timing"])
 
 
 class SyntheticEpisodes:
@@ -673,6 +1053,11 @@ class LearningState(nn.Module):
         self.register_buffer("replay_errors", torch.ones(population))
         self.register_buffer("proposals", torch.tensor(0))
         self.register_buffer("accepted", torch.tensor(0))
+        if hasattr(model, "recall_head"):
+            # Recall uses the second copy for development-selected weights, not EMA.
+            self.register_buffer("best_nll", torch.tensor(1e30, dtype=torch.float64))
+            self.register_buffer("best_step", torch.tensor(0))
+            self.register_buffer("temperature", torch.tensor(1.0, dtype=torch.float64))
 
     @torch.no_grad()
     def update_target(self, decay):
@@ -929,6 +1314,8 @@ def belief_objective(learner, batch, history, horizon, dropout):
 
 
 def objective(learner, batch, history=2, horizon=2, dropout=0.0):
+    if "recall_inputs" in batch:
+        return recall_objective(learner, batch)
     if isinstance(learner.agent, BeliefAgent):
         return belief_objective(learner, batch, history, horizon, dropout)
     model = learner.agent
@@ -1018,7 +1405,8 @@ def update(learner, optimizer, data, indices, settings):
         trainable_parameters(learner), 1.0, error_if_nonfinite=True
     )
     optimizer.step()
-    learner.update_target(settings["ema_decay"])
+    if not isinstance(data, RecallEpisodes):
+        learner.update_target(settings["ema_decay"])
     with torch.no_grad():
         # Duplicate sampled indices are deliberately averaged, independently of order.
         ids = torch.as_tensor(indices, device=errors.device)
@@ -1033,6 +1421,12 @@ def update(learner, optimizer, data, indices, settings):
 
 @torch.no_grad()
 def evaluate(learner, data, settings):
+    if isinstance(data, RecallEpisodes):
+        logits, labels, _ = recall_predictions(learner.agent, data, settings)
+        metrics = recall_metrics(
+            logits, labels, abstain_cost=settings.get("abstain_cost", 0.25)
+        )
+        return dict(loss=metrics["nll"], **metrics)
     sums, seen, pooled = {}, 0, []
     with evaluation_mode(learner):
         for start in range(0, len(data), settings["batch_size"]):
@@ -1079,6 +1473,17 @@ def evaluate(learner, data, settings):
 
 
 def make_data(settings, split):
+    if settings["dataset"] == "recall":
+        return RecallEpisodes(
+            split=split,
+            count=settings.get(f"{split}_windows", 15),
+            history=settings["history"],
+            recent=settings.get("memory_recent", 32),
+            block=settings.get("memory_block", 8),
+            blocks=settings.get("memory_blocks", 16),
+            truncate=settings.get("recall_truncate", 32),
+            abstain_cost=settings.get("abstain_cost", 0.25),
+        )
     count = (
         settings["train_windows"]
         if split == "train"
@@ -1120,6 +1525,7 @@ def check(settings):
             memory_recent=settings.get("memory_recent", 32),
             memory_block=settings.get("memory_block", 8),
             memory_blocks=settings.get("memory_blocks", 16),
+            recall=settings["dataset"] == "recall",
         ),
         len(data),
     ).to(settings["device"])
@@ -1220,6 +1626,8 @@ def save_task_example(run, model, data, settings):
 
 @torch.no_grad()
 def save_examples(run, learner, data, settings):
+    if isinstance(data, RecallEpisodes):
+        return write_report(run.path)
     with evaluation_mode(learner):
         model = learner.agent
         batch = data.batch(np.arange(min(3, len(data))), settings["device"])
@@ -1386,6 +1794,13 @@ def save_examples(run, learner, data, settings):
 
 
 def train(settings, output, *, resume=False, stop_after=None):
+    is_recall = settings["dataset"] == "recall"
+    if is_recall and (
+        settings.get("state_model") != "belief" or settings["improve_every"]
+    ):
+        raise ValueError(
+            "Recall requires belief state and no extra-update admission gate"
+        )
     seed_everything(settings["seed"])
     training, validation = (
         make_data(settings, "train"),
@@ -1400,16 +1815,24 @@ def train(settings, output, *, resume=False, stop_after=None):
             memory_recent=settings.get("memory_recent", 32),
             memory_block=settings.get("memory_block", 8),
             memory_blocks=settings.get("memory_blocks", 16),
+            recall=is_recall,
         ),
         len(training),
     ).to(settings["device"])
     optimizer = torch.optim.AdamW(
         trainable_parameters(learner), lr=settings["learning_rate"]
     )
+    identities = {"train": training.identity, "validation": validation.identity}
+    if is_recall:
+        calibration, test = (
+            make_data(settings, "calibration"),
+            make_data(settings, "test"),
+        )
+        identities.update(calibration=calibration.identity, test=test.identity)
     run = Run(
         output,
         settings=settings,
-        data={"train": training.identity, "validation": validation.identity},
+        data=identities,
         recipe=__file__,
         model=learner,
         optimizer=optimizer,
@@ -1418,6 +1841,8 @@ def train(settings, output, *, resume=False, stop_after=None):
     )
 
     def sample():
+        if is_recall:
+            return run.sample(len(training), settings["batch_size"])
         probabilities = replay_probabilities(learner.replay_errors.cpu())
         return torch.multinomial(
             probabilities,
@@ -1426,13 +1851,21 @@ def train(settings, output, *, resume=False, stop_after=None):
             generator=run.sampler,
         ).numpy()
 
+    def development():
+        val = evaluate(learner, validation, settings)
+        if is_recall and val["nll"] < float(learner.best_nll):
+            learner.target.load_state_dict(learner.agent.state_dict())
+            learner.best_nll.fill_(val["nll"])
+            learner.best_step.fill_(run.step)
+        return val
+
     try:
         if not run.rows:
             run.log(
                 dict(
                     step=0,
                     split="validation",
-                    **evaluate(learner, validation, settings),
+                    **development(),
                 )
             )
             run.save()
@@ -1488,8 +1921,8 @@ def train(settings, output, *, resume=False, stop_after=None):
                 learner.proposals.add_(1)
                 learner.accepted.add_(int(admission["accepted"]))
                 run.log(dict(step=step, split="proposal", **admission))
-            if step % settings["evaluate_every"] == 0 or step == end:
-                val = evaluate(learner, validation, settings)
+            if is_recall or step % settings["evaluate_every"] == 0 or step == end:
+                val = development()
                 run.log(
                     dict(
                         step=step,
@@ -1499,12 +1932,17 @@ def train(settings, output, *, resume=False, stop_after=None):
                         **val,
                     )
                 )
-                print(
-                    f"step {step}/{settings['steps']} validation image MSE {val['image_mse']:.6f}; copy {val['copy_image_mse']:.6f}",
-                    flush=True,
+                message = (
+                    f"development factual NLL {val['nll']:.6f}"
+                    if is_recall
+                    else f"validation image MSE {val['image_mse']:.6f}; copy {val['copy_image_mse']:.6f}"
                 )
+                print(f"step {step}/{settings['steps']} {message}", flush=True)
             run.save()
         result = "completed" if run.step == settings["steps"] else "paused"
+        if is_recall and result == "completed":
+            finish_recall(run, learner, calibration, test, settings)
+            run.save()
         run.status(result, "pending")
     except BaseException as exc:
         run.status("failed", "pending", f"{type(exc).__name__}: {exc}")
@@ -1697,7 +2135,9 @@ def main():
     parser.add_argument("--resume", type=Path)
     parser.add_argument("--stop-after", type=int)
     parser.add_argument(
-        "--dataset", choices=["synthetic", "instructions", "pusht"], default="synthetic"
+        "--dataset",
+        choices=["synthetic", "instructions", "pusht", "recall"],
+        default="synthetic",
     )
     parser.add_argument(
         "--state-model", choices=["belief", "gaussian"], default="belief"
@@ -1705,6 +2145,15 @@ def main():
     parser.add_argument("--memory-recent", type=int, default=32)
     parser.add_argument("--memory-block", type=int, default=8)
     parser.add_argument("--memory-blocks", type=int, default=16)
+    parser.add_argument(
+        "--recall-truncate",
+        type=int,
+        default=32,
+        help="Recall gradient segment length; zero retains the complete graph",
+    )
+    parser.add_argument("--calibration-windows", type=int, default=15)
+    parser.add_argument("--test-windows", type=int, default=15)
+    parser.add_argument("--abstain-cost", type=float, default=0.25)
     parser.add_argument("--data-root", default="data/pusht_world_model/cchi_v1")
     for name, default in [
         ("steps", 8),
@@ -1738,6 +2187,40 @@ def main():
     if args.diagram_depth < 0:
         parser.error("Diagram depth must be nonnegative")
     args = resume_arguments(parser, args)
+    if args.dataset == "recall":
+        import sys
+
+        supplied = {
+            arg.split("=", 1)[0] for arg in sys.argv[1:] if arg.startswith("--")
+        }
+        if args.resume is None:
+            for name, value in (
+                ("history", 256),
+                ("train_windows", 15),
+                ("validation_windows", 15),
+                ("improve_every", 0),
+            ):
+                if "--" + name.replace("_", "-") not in supplied:
+                    setattr(args, name, value)
+        if (
+            args.state_model != "belief"
+            or args.improve_every
+            or args.recall_truncate < 0
+            or any(
+                n < 1 or n % 15
+                for n in (
+                    args.train_windows,
+                    args.validation_windows,
+                    args.calibration_windows,
+                    args.test_windows,
+                )
+            )
+            or not np.isfinite(args.abstain_cost)
+            or args.abstain_cost < 0
+        ):
+            parser.error(
+                "Recall requires belief, improve-every 0, nonnegative truncation/cost and split counts divisible by 15"
+            )
     counts = [
         args.steps,
         args.batch_size,
@@ -1799,6 +2282,12 @@ def main():
         ),
         proposal_budget="one extra update per improve-every interval, rolled back on rejection",
     )
+    if args.dataset == "recall":
+        settings.update(
+            objective="all-query factual CE + final-segment text/source grounding and split categorical KL; uniform episode sampling; development NLL checkpoint selection; independent scalar calibration",
+            proposal_budget="none",
+            time_unit="one ordered delivered text record",
+        )
     if args.check:
         print(json.dumps(check(settings), indent=2))
     else:

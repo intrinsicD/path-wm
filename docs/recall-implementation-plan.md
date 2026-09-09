@@ -43,4 +43,49 @@ deliver the decision agenda by 09:00 and pause the thread heartbeat
 `overnight-agent-design-proposals`. It runs every half hour with a deadline in its
 prompt. Do not start new model experiments or adopt those proposals overnight.
 
-Status: implementation in progress; red checks next.
+## Implementation and evidence
+
+Implemented in `pathwm/models/recall.py`, `pathwm/evaluation/recall.py`, the existing
+recipe and report renderer. See [the user guide](recall-task.md). The plan and red
+contract checks were committed as `95e849e` before implementation; initial failure
+was the missing recall module. Seven focused tests now cover labels/cutoffs,
+independent verification, safe query/decision loading, forward truncation invariance,
+hidden/evaluator-field isolation, gradient routes and exact replay/finalization.
+The complete suite passes 76 tests.
+
+The first attempt to retain pytest artifacts failed because the parent output
+directory did not exist (two fixture setup errors, no failed learning run). After
+creating it, all seven focused checks passed. Their exact resume checks retain two
+completed two-update runs. The final suite repeated the resume comparison after
+adding separate latency logging and restricting the cost views to the three declared
+values. Completed earlier runs and source snapshots are preserved.
+
+Eight CPU development updates completed under `runs/recall_v1/development`, on
+15 training and 15 development/calibration/test episodes each, 16 records per
+episode, recent=2, block=2, compressed blocks=2, final gradient segment=8, batch=1.
+Initialization plus every update was eligible for development-NLL selection;
+update 7 won with NLL 1.547959. Calibration fitted T=20 at its upper bound.
+Test factual accuracy is 20% (all top-class predictions are not-observed), raw
+NLL 1.611440, adjusted NLL 1.608746. Both views abstain on all 15 cases, with loss
+0.25; the eight seen-old cases also all abstain and have 0% factual accuracy.
+This is negative capability evidence from a tiny development check, not a trained
+memory demonstration. No thresholds were retuned or extra training launched.
+
+The independent one-episode check at 256 records used default capacities and the
+default final 32-record gradient segment. It completed forward/backward with finite
+losses and gradients through the outcome head, state update, text adapter, readers,
+compression/consolidation; the selected-model copy has no gradients. The full suite
+preserves the Gaussian and ordinary multimodal paths. No further real-data run was
+needed because those numerical paths are unchanged and their regression tests pass.
+
+Raw receipts: `runs/recall_v1/final_checks.xml`, `default_memory_check.json`,
+`development/{last.pt,metrics.jsonl,recall_results.json,recall_predictions.pt,
+recall_performance.json,report.html}`, and retained exact-resume runs under
+`contract_checks/` and `final_checks/`. All five retained recall reports passed
+browser checks at 1280×720, with no broken images or horizontal overflow. Summary
+and confidence-bin counts were improved after training; raw results and captured
+training source remain unchanged, while QA records the renderer actually used.
+Use `python -m pathwm.evaluation.report RUN` to rebuild reports without a training
+resume/source-compatibility check. The verification receipt is
+`runs/recall_v1/verification.json`. The implementation phase is complete; the
+remaining overnight design discussions continue in the morning agenda.
