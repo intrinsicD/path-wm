@@ -2,19 +2,22 @@ session:
   id: 2026-09-09_001
   date: '2026-09-09'
   started: 2026-09-08T20:28+02:00
-  last_turn: 2026-09-09T10:38+02:00
-  turn_count: 6
-  summary: 'Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges. Local
-    ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry pass improves
-    with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests and standalone browser
-    QA pass; automation paused. Turn2 clarifies diagnostic RGB versus reconstruction training; two public-only Claude
-    exchanges, no model or loss changes. Turn3 focuses on auxiliary RGB gradients into trainable E; local effect
-    unisolated, three-arm comparison proposed and two Claude reviews reconciled. No new training. Turn4 explains
-    quality factors and inherited pretraining; small diagnostic scope acknowledged, end-to-end reference strategy
-    proposed with two reconciled Claude reviews. No new experiments. Turn5 clarifies applied world-model systems
-    research and pretrained-weight versus architecture reuse; no new model work. Turn6 prioritizes human usability:
-    audited experiment coupling and proposed a small PyTorch library, Python recipes and a verified first perception
-    migration; three public-only Claude reviews, no code migration or training.'
+  last_turn: 2026-09-09T12:00+02:00
+  turn_count: 7
+  summary: 'Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges.
+    Local ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry
+    pass improves with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests
+    and standalone browser QA pass; automation paused. Turn2 clarifies diagnostic RGB versus reconstruction
+    training; two public-only Claude exchanges, no model or loss changes. Turn3 focuses on auxiliary RGB gradients
+    into trainable E; local effect unisolated, three-arm comparison proposed and two Claude reviews reconciled.
+    No new training. Turn4 explains quality factors and inherited pretraining; small diagnostic scope acknowledged,
+    end-to-end reference strategy proposed with two reconciled Claude reviews. No new experiments. Turn5 clarifies
+    applied world-model systems research and pretrained-weight versus architecture reuse; no new model work.
+    Turn6 prioritizes human usability: audited experiment coupling and proposed a small PyTorch library, Python
+    recipes and a verified first perception migration; three public-only Claude reviews, no code migration
+    or training. Turn7 adopts and completes the modular restart: 18 library files/two editable recipes, retired
+    legacy stack preserved by tag, 505 zero-difference reference checks, 16 tests and clean-Git recipe checks,
+    CPU/GPU pause-resume and three verified local reports; standing workflow migrated.'
 events_logged:
 - turn: 1
   type: decision
@@ -250,6 +253,34 @@ events_logged:
     under declared tolerances. Preserve reference data, checkpoints and cache semantics for comparison; default
     new recipes to live features. Require the user to be able to copy, modify, check, run, resume and inspect the
     recipe before migrating temporal/planning paths or archiving history.
+- turn: 7
+  type: decision
+  id: N128
+  routing: direct
+  provenance: user
+  summary: Adopt the modular restart, retain useful components/data, retire the old active stack and adapt
+    standing workflow.
+- turn: 7
+  type: experiment
+  id: N129
+  routing: direct
+  provenance: ai-executed
+  summary: Complete scoped numerical/lifecycle/package verification and three CPU/GPU development runs with
+    source-matched, browser-verified local reports.
+- turn: 7
+  type: architecture
+  id: A02
+  routing: crystallized
+  provenance: user-revised
+  summary: 'O79 adopted via explicit user affirmation: plain PyTorch library, editable recipes, explicit component
+    boundaries and portable per-run results.'
+- turn: 7
+  type: heuristic
+  id: H16
+  routing: crystallized
+  provenance: user-revised
+  summary: 'O80 adopted via explicit user affirmation: first usable perception path, behavior checks, compatible
+    temporal migration and retirement with preserved history.'
 ai_actions:
 - turn: 1
   action: Implemented, developed and sealed matched encoder/decoder/objective comparisons; ran all declared units
@@ -318,6 +349,31 @@ ai_actions:
   files_changed:
   - docs/reorganization.md
   - docs/project-state.md
+- turn: 7
+  action: Implemented and committed the fresh library, two recipes and 16 focused tests; retired legacy package/scripts/configs/docs/vendoring
+    after a complete source tag and verification. Preserved datasets/completed runs, exported reference assets
+    with provenance, installed/imported/built the independent package. Completed three public-only Claude
+    reviews with corrections reconciled. Standing rules keep ordinary recipes and local reporting as the active
+    workflow.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/
+  - experiments/
+  - tests/
+  - README.md
+  - CLAUDE.md
+  - pyproject.toml
+  - docs/
+- turn: 7
+  action: Ran 500 reference computation checks plus five native-DINO checks; clean-Git tests and both real-data
+    checks passed. Final perception12/dynamics6 CPU and COCO-ViT2 GPU updates each paused/resumed; exact report/source
+    receipts and desktop/mobile screenshots verified. GPU/Chrome required approved host execution because
+    of sandbox runtime restrictions. No private code/data exported, new scientific curriculum, controller
+    claim or historical result deletion.
+  provenance: ai-executed
+  files_changed:
+  - runs/modular_migration_2026-09-09/
+  - runs/start_here/
 claims_touched: []
 key_context:
 - turn: 1
@@ -338,64 +394,69 @@ key_context:
 - turn: 6
   excerpt: 'User: I want a modular architecture to experiment. The repository is complex and impossible for me to
     operate. We need to reorganize; what do you propose?'
+- turn: 7
+  excerpt: 'User: Yes. Let us keep and migrate only what is worth keeping, do the migration, scratch the rest
+    and start fresh; migrate and adapt the workflow so we do not drift away.'
 open_threads:
-- Review O64-O71 and the measured architecture tradeoffs; no universal architecture or new control success has been
-  adopted.
-- Prospectively separate broader geometry training/test configurations and trajectories; diagnose multimodal pusher
-  maps, boundaries and rare extreme errors.
-- Define named feature/state interfaces and train compatible U/P before multi-step/action/control claims; prevent
-  unseen-future feature leakage.
-- Output sharing, equal-capacity controls, selective multiscale fusion, genuine extra scales, intermediate pretrained
-  taps and encoder conditioning remain separate comparisons.
+- Review O64-O71 and the measured architecture tradeoffs; no universal architecture or new control success
+  has been adopted.
+- Prospectively separate broader geometry training/test configurations and trajectories; diagnose multimodal
+  pusher maps, boundaries and rare extreme errors.
+- Named feature/state interfaces, explicit width adapter and a short causal U/P recipe are implemented. Trained
+  multi-step/action/control capability and full-episode memory evaluation remain open; future-target leakage
+  checks cover declared invariants.
+- Output sharing, equal-capacity controls, selective multiscale fusion, genuine extra scales, intermediate
+  pretrained taps and encoder conditioning remain separate comparisons.
 - Task-dependent memory/registers, queried-instance/extent outputs and software/driving data require new protocols;
   albedo is excluded.
-- Earlier Paddle and LeWM dynamics, normalization and data-efficiency questions remain open distinct tracks. No
-  experiment queue remains active.
-- 'N123/O72/O73: define the specific state to visualize and distinguish diagnostic gradient isolation from any future
-  removal of auxiliary reconstruction losses.'
-- 'N124/O74/O75: isolate the incremental effect of RGB gradients into trainable E; a matched continuation comparison
-  and compatible temporal/control evaluation remain proposed only.'
+- Earlier Paddle and LeWM dynamics, normalization and data-efficiency questions remain open distinct tracks.
+  No experiment queue remains active.
+- 'N123/O72/O73: define the specific state to visualize and distinguish diagnostic gradient isolation from
+  any future removal of auxiliary reconstruction losses.'
+- 'N124/O74/O75: isolate the incremental effect of RGB gradients into trainable E; a matched continuation
+  comparison and compatible temporal/control evaluation remain proposed only.'
 - 'N125/O76/O77: connect small diagnostic studies to a concrete end-to-end capability with a successful reference
   recipe and suitable pretrained components; relative bottlenecks and justified scale remain unisolated.'
-- 'N126/O78: decide the concrete reusable and trainable modules for a selected capability; the systems framing does
-  not fix that implementation.'
-- 'N127/O79/O80: make one directly editable perception recipe usable before broader consolidation; architecture
-  boundaries and migration remain proposed, with historical evidence preserved.'
+- 'N126/O78: decide the concrete reusable and trainable modules for a selected capability; the systems framing
+  does not fix that implementation.'
+- 'N127/N128/N129: migration completed; collect the user''s experience on the next chosen recipe. Engineering
+  checks do not establish human usability or model quality; no further training queued.'
 ai_suggestions_pending:
-- 'O64: Pretrained ViT supports substantially better foreground/category readouts than the local CNN, while P1 pixel
-  reconstruction favors CNN. This is package selection evidence, not isolated architecture causality or a convolution/spatial
-  versus transformer/semantic law.'
+- 'O64: Pretrained ViT supports substantially better foreground/category readouts than the local CNN, while
+  P1 pixel reconstruction favors CNN. This is package selection evidence, not isolated architecture causality
+  or a convolution/spatial versus transformer/semantic law.'
 - 'O65: Two added convolutional or transformer blocks per CNN grid do not improve the tested capability tradeoff
-  consistently. Continued encoders show fresh-geometry regression; loss balance, learning rate, gating and budget
-  remain alternatives. This does not refute deeper encoders generally.'
+  consistently. Continued encoders show fresh-geometry regression; loss balance, learning rate, gating and
+  budget remain alternatives. This does not refute deeper encoders generally.'
 - 'O66: Local access reduces the pretrained representation-to-image tradeoff, while output-specific computation
   changes RGB/foreground quality differently. Separate trunks strongly help RGB but lose the primary foreground
-  endpoint; FiLM is not a general win. Capacity and cross-domain transfer prevent attributing all differences to
-  gradient conflict.'
-- 'O67: Map-distribution supervision improves per-case tolerance pass, but CNN rare errors worsen markedly. ViT
-  has more consistent typical-tail gains, with mixed orientation and residual severe outliers. Neither mean readiness
-  nor sharper maps establishes reliable control or calibrated confidence.'
-- 'O68: Coarse PCA emphasizes global image/domain means and positional structure; corrected attention entropy is
-  compatible with broad fine-directed broadcast and selective coarse-directed aggregation. Fitted interventions
+  endpoint; FiLM is not a general win. Capacity and cross-domain transfer prevent attributing all differences
+  to gradient conflict.'
+- 'O67: Map-distribution supervision improves per-case tolerance pass, but CNN rare errors worsen markedly.
+  ViT has more consistent typical-tail gains, with mixed orientation and residual severe outliers. Neither
+  mean readiness nor sharper maps establishes reliable control or calibrated confidence.'
+- 'O68: Coarse PCA emphasizes global image/domain means and positional structure; corrected attention entropy
+  is compatible with broad fine-directed broadcast and selective coarse-directed aggregation. Fitted interventions
   show reliance, not superiority over retrained simpler fusion.'
-- 'O69: Recommend asymmetric pretrained contextual plus local features and typed decoders, retaining the fast CNN
-  reference. Consumers should select named maps with native width and source time; task/encoder conditioning, more
-  genuine scales and memory registers remain conditional. Future decoding needs causally predicted/aligned evidence
-  and deployment training; new U/P width adapters and dynamics/control tests remain unimplemented.'
-- 'O70: Existing COCO/PushT suffice for the completed reconstruction, foreground/category and static geometry comparisons.
-  Next data should target broader geometry configurations and causal trajectories; computer use needs resolution
-  and screenshot/action/transition evidence. Static results do not support universal application capability.'
+- 'O69: Recommend asymmetric pretrained contextual plus local features and typed decoders, retaining the fast
+  CNN reference. Consumers should select named maps with native width and source time; task/encoder conditioning,
+  more genuine scales and memory registers remain conditional. Future decoding needs causally predicted/aligned
+  evidence and deployment training; new U/P width adapters and dynamics/control tests remain unimplemented.'
+- 'O70: Existing COCO/PushT suffice for the completed reconstruction, foreground/category and static geometry
+  comparisons. Next data should target broader geometry configurations and causal trajectories; computer use
+  needs resolution and screenshot/action/transition evidence. Static results do not support universal application
+  capability.'
 - 'O71: The fixed bad pusher case has multimodal location probability and an expected coordinate between pusher
-  and body regions. Boundary undercoverage and scene/object correlation are plausible upstream causes, not isolated
-  mechanisms. Test prospectively separated coverage before scaling layers; argmax alone would discard subpixel precision.'
-- O73 diagnostic-renderer implementation and the auxiliary-loss choice are not yet enacted; the user has not reviewed
-  the clarified conditions.
+  and body regions. Boundary undercoverage and scene/object correlation are plausible upstream causes, not
+  isolated mechanisms. Test prospectively separated coverage before scaling layers; argmax alone would discard
+  subpixel precision.'
+- 'O73: diagnostic RGB detachment and imagined-state rendering are available in the migrated recipes; the
+  auxiliary-loss benefit and broader readout/retention recommendations remain untested.'
 - 'O74: Optional runtime rendering and auxiliary representation training are independent; local causal task/dynamics
   benefit remains unresolved.'
-- 'O75: Blocked/weak/reference encoder-gradient comparison with paired data, active task training, declared routes
-  and compatible downstream fitting is unexecuted.'
+- 'O75: Blocked/weak/reference encoder-gradient comparison with paired data, active task training, declared
+  routes and compatible downstream fitting is unexecuted.'
 - 'O76/O77: model-quality framing and one-capability reference strategy are recommendations, not adopted architecture,
   budget or new training.'
-- 'O78: scope clarification only; no fixed count of new modules, training budget or novel-layer requirement adopted.'
-- 'O79/O80: small plain-PyTorch core and Python recipes, explicit component boundaries, portable results and a behavior-preserving
-  first migration await the user response; no implementation has started.'
+- 'O78: scope clarification only; no fixed count of new modules, training budget or novel-layer requirement
+  adopted.'

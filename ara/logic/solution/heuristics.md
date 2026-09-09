@@ -145,3 +145,13 @@
 - **Code ref**: [load/export](../../../world_model/pusht/checkpoints.py), [contract tests](../../../tests/test_encoder_checkpoint_contract.py), [repair note](../../../docs/encoder-checkpoint-loading-note.md).
 - **From staging**: O54
 - **Evidence of commitment**: N103; implemented in507775a after exact frozen training completion. Six contract tests and exact E/H/D equality for all12 trained checkpoints pass; [evidence](../../evidence/tables/encoder_study_2026-09-08.json).
+
+## H16: Migrate one editable experiment path with scoped behavior checks
+
+- **Rationale**: Preserve an immutable source/data/checkpoint reference, first deliver a perception recipe that can be copied, edited, checked, trained, resumed and inspected, then migrate compatible temporal components and remove the obsolete active stack. Validate retained computations and critical lifecycle invariants before retirement; keep new recipes independent of historical orchestration.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **Sensitivity**: high; parity covers declared inputs, states and tolerances. Short development runs do not establish scientific quality. The operation sequence was exercised by the agent; the user's independent experience has not been measured.
+- **Code ref**: [migration](../../../docs/migration.md), [perception](../../../experiments/perception.py), [dynamics](../../../experiments/dynamics.py), [run lifecycle](../../../pathwm/io.py), [focused tests](../../../tests/).
+- **From staging**: O80
+- **Evidence of adoption/execution**: N128/N129 and [source-bound receipts](../../evidence/tables/modular_migration_2026-09-09.json). Original caches, datasets and results remain preserved; active recipes compute live features. Strict same-runtime/device replay and source snapshots have explicit limits. The archived implementation is not an active dependency.

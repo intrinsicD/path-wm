@@ -9,3 +9,13 @@
 - **Adoption**: N98; user explicitly said yes to the proposal and let us do this.
 - **Code/config**: [variant](../../../world_model/curriculum/encoder_variants.py), [frozen protocol](../../../docs/encoder-study-protocol-2026-09-08.md), [driver](../../../scripts/execute_encoder_study.py).
 - **Execution**: N99–N103; [source-bound evidence](../../evidence/tables/encoder_study_2026-09-08.json). Result interpretations remain staged as O51/O52.
+
+## A02: Editable recipes over a small modular PyTorch library
+
+- **Design**: Adopt a `pathwm/` library plus directly editable perception and dynamics recipes. Encoders expose named native BCHW maps and feature metadata; independent output heads select explicit levels. Temporal state, executed/candidate actions, future targets and gradient routes are separate inputs. Recipes show modules, data, loss, freeze rules and budgets; common run records provide checkpoints, exact metrics, source snapshots and standalone reports.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O79
+- **Adoption**: N128; user requested execution of the fresh start and adaptation of the workflow. Implemented in 74270c8/e083ae7, documented in 7225cb4.
+- **Code**: [perception recipe](../../../experiments/perception.py), [dynamics recipe](../../../experiments/dynamics.py), [feature contracts](../../../pathwm/models/features.py), [models](../../../docs/models.md), [standing workflow](../../../docs/experiment-workflow.md).
+- **Scope**: The retained two-scale CNN is one reference, not a universal scale-count contract. DINO local/final/pooled maps are explicit. U/P width adaptation is explicit. Architecture efficacy, human usability and full-episode/control reliability are not established by the migration checks in N129.

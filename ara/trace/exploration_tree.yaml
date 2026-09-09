@@ -2022,4 +2022,46 @@ tree:
   also_depends_on:
   - N126
   - N125
-  status: open
+  status: resolved
+- id: N128
+  type: decision
+  title: Adopt and execute a fresh modular repository with a migrated workflow
+  provenance: user
+  timestamp: 2026-09-09T12:00+02:00
+  choice: Keep useful components and data, implement editable Python experiments and a small PyTorch library,
+    retire the old active stack, and adapt standing rules to prevent renewed framework drift. User explicitly
+    approved the preceding proposal.
+  alternatives:
+  - Continue adding experiments to the old stack
+  - Delete useful reference computations and data
+  evidence:
+  - O79
+  - O80
+  - docs/migration.md
+  - docs/experiment-workflow.md
+  - archive/pre-modular-2026-09-09
+  also_depends_on:
+  - N127
+  status: resolved
+- id: N129
+  type: experiment
+  title: Verify the migrated perception, temporal and run workflow independently of retired source
+  provenance: ai-executed
+  timestamp: 2026-09-09T12:00+02:00
+  result: 505 scoped CPU FP32 reference checks have maximum difference zero at predeclared atol2e-6/rtol2e-5.
+    Sixteen tests pass, including from a clean Git snapshot; both real-data recipe checks and independent
+    package import pass. Final CPU perception12/dynamics6 and GPU COCO-ViT2-update runs pause/resume and complete.
+    Their exact source snapshots match active code; three local reports pass desktop/mobile browser QA. This
+    verifies the declared development paths, not model quality, universal causality, human usability or old
+    controller-score reproduction.
+  evidence:
+  - ara/evidence/tables/modular_migration_2026-09-09.json
+  - docs/migration.md
+  - runs/modular_migration_2026-09-09/compare_reference.py
+  - runs/modular_migration_2026-09-09/compare_dino.py
+  - runs/start_here/perception
+  - runs/start_here/dynamics
+  - runs/start_here/coco_vit
+  also_depends_on:
+  - N128
+  status: resolved

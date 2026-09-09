@@ -1338,9 +1338,9 @@ observations:
   potential_type: architecture
   bound_to:
   - N127
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A02
+  crystallized_via: verbal-affirmation
   stale: false
 - id: O80
   timestamp: 2026-09-09T10:38+02:00
@@ -1355,7 +1355,7 @@ observations:
   potential_type: heuristic
   bound_to:
   - N127
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H16
+  crystallized_via: verbal-affirmation
   stale: false

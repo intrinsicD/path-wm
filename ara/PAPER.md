@@ -24,3 +24,17 @@ Latest completed study (2026-09-07): [paired1024/4096 projection training](../do
 Latest completed study (2026-09-08): [encoder depth/exchange and output audits](../docs/encoder-study-results-2026-09-08.md), [adopted bounded investigation](logic/solution/architecture.md), [critical Claude workflow](../docs/claude-collaboration-workflow.md). All33runs complete; geometry improves with residual blocks plus exchange, all12readinessgates fail,379tests and browser QA pass. No training remains active.
 
 Latest completed study (2026-09-09): [overnight encoder/decoder comparisons](../docs/perception-overnight-results-2026-09-09.md). All51fits and bounded diagnostics completed before07:00Berlin. Local ViT features and output-specific computation improve reconstruction with foreground tradeoffs; depth/FiLM do not consistently help, geometry tails remain. No active queue; heartbeat paused. [Evidence](evidence/tables/perception_overnight_2026-09-09.json).
+
+## Active implementation after the 9 September modular restart
+
+The user adopted and completed the fresh modular migration in N128/N129. Start at
+[README](../README.md), [current work](../docs/project-state.md) and
+[migration record](../docs/migration.md). A02/H16 describe the adopted structure and
+method. No further training is queued.
+
+All earlier entries above and historical source/documentation links in this ARA
+refer to Git tag `archive/pre-modular-2026-09-09` (commit
+`e95b6a6252cae72402de0dd93f419e8e93d25d12`) unless they identify another revision.
+Their absence from the new active tree does not invalidate or rebind those records.
+Recover the tagged source separately when auditing them. Historical protocols and
+open research questions are not instructions to restore the retired stack.

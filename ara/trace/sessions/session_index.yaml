@@ -61,18 +61,21 @@ sessions:
 
 - id: 2026-09-09_001
   date: '2026-09-09'
-  summary: 'Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges. Local
-    ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry pass improves
-    with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests and standalone browser
-    QA pass; automation paused. Turn2 clarifies diagnostic RGB versus reconstruction training; two public-only Claude
-    exchanges, no model or loss changes. Turn3 focuses on auxiliary RGB gradients into trainable E; local effect
-    unisolated, three-arm comparison proposed and two Claude reviews reconciled. No new training. Turn4 explains
-    quality factors and inherited pretraining; small diagnostic scope acknowledged, end-to-end reference strategy
-    proposed with two reconciled Claude reviews. No new experiments. Turn5 clarifies applied world-model systems
-    research and pretrained-weight versus architecture reuse; no new model work. Turn6 prioritizes human usability:
-    audited experiment coupling and proposed a small PyTorch library, Python recipes and a verified first perception
-    migration; three public-only Claude reviews, no code migration or training.'
-  turn_count: 6
-  events_count: 31
+  summary: 'Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges.
+    Local ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry
+    pass improves with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests
+    and standalone browser QA pass; automation paused. Turn2 clarifies diagnostic RGB versus reconstruction
+    training; two public-only Claude exchanges, no model or loss changes. Turn3 focuses on auxiliary RGB gradients
+    into trainable E; local effect unisolated, three-arm comparison proposed and two Claude reviews reconciled.
+    No new training. Turn4 explains quality factors and inherited pretraining; small diagnostic scope acknowledged,
+    end-to-end reference strategy proposed with two reconciled Claude reviews. No new experiments. Turn5 clarifies
+    applied world-model systems research and pretrained-weight versus architecture reuse; no new model work.
+    Turn6 prioritizes human usability: audited experiment coupling and proposed a small PyTorch library, Python
+    recipes and a verified first perception migration; three public-only Claude reviews, no code migration
+    or training. Turn7 adopts and completes the modular restart: 18 library files/two editable recipes, retired
+    legacy stack preserved by tag, 505 zero-difference reference checks, 16 tests and clean-Git recipe checks,
+    CPU/GPU pause-resume and three verified local reports; standing workflow migrated.'
+  turn_count: 7
+  events_count: 35
   claims_touched: []
   open_threads: 11
