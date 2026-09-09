@@ -1,5 +1,11 @@
 # Current work
 
+**Active implementation:** Alex authorized implementing the reviewed categorical
+belief update with Claude. See [the implementation plan](belief-implementation-plan.md).
+The existing Gaussian recipe remains the reference. Baseline: 51 CPU tests pass;
+new essential contract tests fail because the belief module is not implemented yet.
+The earlier architecture-only boundary below is historical and superseded for this slice.
+
 **Implemented:** task-conditioned operation/output proposals, required/disabled/
 automatic output controls, separate control author/requester/producer attribution,
 and tagged generated-content reflection. Read [the task interfaces](tasks.md),
