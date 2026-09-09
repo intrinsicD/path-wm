@@ -2252,3 +2252,24 @@ tree:
   - N140
   - N139
   status: open
+- id: N142
+  type: decision
+  title: Review the complete state-memory proposal with actual Claude before implementation
+  provenance: user
+  timestamp: 2026-09-09T16:23+02:00
+  choice: User explicitly requests discussion of the complete design with Claude and identification of
+    open points to discuss next. Preserve architecture-first scope and the public-concepts-only export
+    boundary.
+  alternatives:
+  - Implement before resolving model contracts
+  evidence:
+  - Current user request
+  - docs/state-memory-review.md
+  - runs/reviews/state_memory_design_2026-09-09/round1-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/round2-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/round3-receipt.json
+  also_depends_on:
+  - N141
+  - N139
+  - N140
+  status: resolved

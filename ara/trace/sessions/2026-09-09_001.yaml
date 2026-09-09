@@ -2,8 +2,8 @@ session:
   id: 2026-09-09_001
   date: '2026-09-09'
   started: 2026-09-08T20:28+02:00
-  last_turn: 2026-09-09T16:05+02:00
-  turn_count: 24
+  last_turn: 2026-09-09T16:23+02:00
+  turn_count: 25
   summary: 'Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges.
     Local ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry
     pass improves with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests
@@ -17,7 +17,7 @@ session:
     recipes and a verified first perception migration; three public-only Claude reviews, no code migration
     or training. Turn7 adopts and completes the modular restart: 18 library files/two editable recipes, retired
     legacy stack preserved by tag, 505 zero-difference reference checks, 16 tests and clean-Git recipe checks,
-    CPU/GPU pause-resume and three verified local reports; standing workflow migrated. Turn8 resumes temporal-state and hierarchical-memory design discussion; user and assistant proposals remain open, with no new implementation or training. Subsequent voice discussion establishes hybrid memory and separate consumer routes, then returns to architecture before experiments. Final interface proposal records domain-neutral tokens, explicit budgets/staging/consolidation and training boundaries; no model work.'
+    CPU/GPU pause-resume and three verified local reports; standing workflow migrated. Turn8 resumes temporal-state and hierarchical-memory design discussion; user and assistant proposals remain open, with no new implementation or training. Subsequent voice discussion establishes hybrid memory and separate consumer routes, then returns to architecture before experiments. Final interface proposal records domain-neutral tokens, explicit budgets/staging/consolidation and training boundaries; no model work. Turn25 completes three actual public-only Claude reviews, reconciles overclaims and proposes separately retrievable observation/belief views as the next discussion; no new model work.'
 events_logged:
 - turn: 1
   type: decision
@@ -559,6 +559,28 @@ events_logged:
     cannot rewrite observational K. Train through delayed consumer losses and detached-reference read
     preservation, recomputing updates during replay. Bounded capacity remains lossy; gates do not guarantee
     conflict resolution.'
+- turn: 25
+  type: decision
+  id: N142
+  routing: direct
+  provenance: user
+  summary: User explicitly requests discussion of the complete design with Claude and identification of
+    open points to discuss next. Preserve architecture-first scope and the public-concepts-only export
+    boundary.
+- turn: 25
+  type: observation
+  id: O96
+  routing: staged
+  provenance: ai-suggested
+  summary: 'After three conceptual Claude exchanges and independent source checks, prioritize the memory
+    content contract: belief-only snapshots versus separately addressable observation-evidence and belief
+    views under the same budget. Both reviewers provisionally prefer the second interface while acknowledging
+    learned evidence remains lossy and needs distinct write conditioning, retention pressure and read
+    access. Next settle executed-action prediction/observation correction and state/spread semantics,
+    persistent derived knowledge and provenance, conflicting/overlapping reads, target/compression/marking
+    learning, and action/objective adapters. Claude withdrew unsupported impossibility, mandatory frozen
+    encoder, exact-retention, fixed-field and domain-ban claims. No superiority, calibrated uncertainty,
+    model implementation or user adoption of the new two-view interface is established.'
 ai_actions:
 - turn: 1
   action: Implemented, developed and sealed matched encoder/decoder/objective comparisons; ran all declared units
@@ -686,6 +708,20 @@ ai_actions:
   - docs/state-memory-design.md
   - ara/staging/observations.yaml
   - ara/trace/
+- turn: 25
+  action: Prepared public-concept-only briefs; ran three successful isolated Claude CLI reviews with no
+    tools/MCP/project settings/custom instructions; saved exact responses and receipts. Independently
+    verified local memory/filtering signatures and primary DreamerV3, Compressive Transformer, Slot Attention
+    and Memorizing Transformer sources. Reconciled overclaims and wrote review agenda, updated design/current
+    state, validated links, Markdown diff and YAML. No model experiments or private source/results export.
+  provenance: ai-executed
+  files_changed:
+  - docs/state-memory-review.md
+  - docs/state-memory-design.md
+  - docs/project-state.md
+  - runs/reviews/state_memory_design_2026-09-09/
+  - ara/staging/observations.yaml
+  - ara/trace/
 claims_touched: []
 key_context:
 - turn: 1
@@ -751,6 +787,8 @@ key_context:
   excerpt: 'User: let us completely pin it down, following the learned-token interface discussion.'
 - turn: 24
   excerpt: User says let us do that after offer to decide how consolidated session state gets updated.
+- turn: 25
+  excerpt: 'User: Please discuss the complete design with Claude and identify open point to discuss next.'
 open_threads:
 - Review O64-O71 and the measured architecture tradeoffs; no universal architecture or new control success
   has been adopted.
@@ -784,6 +822,9 @@ open_threads:
   physical semantics.'
 - 'N141: review proposed dimensions, consolidated session update, protected-memory capacity outcomes and
   limited uncertainty baseline before implementation.'
+- 'N142/O96: discuss belief-only versus independently retrievable observation-evidence and belief memory
+  views; no second stream adopted. Follow with state/filtering, persistent derived knowledge, read conflict
+  and learning/action contracts.'
 ai_suggestions_pending:
 - 'O64: Pretrained ViT supports substantially better foreground/category readouts than the local CNN, while
   P1 pixel reconstruction favors CNN. This is package selection evidence, not isolated architecture causality
@@ -845,3 +886,5 @@ ai_suggestions_pending:
   controls.'
 - 'O92: spatially consistent consolidation and place/object retrieval for mapping; temporal hierarchy
   alone unvalidated.'
+- 'O96: fixed-budget observation/belief views with independent evidence retrieval and explicit conditioning/retention
+  objectives; supported as an engineering preference by Claude, not proven or adopted.'

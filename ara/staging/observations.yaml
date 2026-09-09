@@ -1663,3 +1663,27 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O96
+  timestamp: 2026-09-09T16:23+02:00
+  provenance: ai-suggested
+  content: 'After three conceptual Claude exchanges and independent source checks, prioritize the memory
+    content contract: belief-only snapshots versus separately addressable observation-evidence and belief
+    views under the same budget. Both reviewers provisionally prefer the second interface while acknowledging
+    learned evidence remains lossy and needs distinct write conditioning, retention pressure and read
+    access. Next settle executed-action prediction/observation correction and state/spread semantics,
+    persistent derived knowledge and provenance, conflicting/overlapping reads, target/compression/marking
+    learning, and action/objective adapters. Claude withdrew unsupported impossibility, mandatory frozen
+    encoder, exact-retention, fixed-field and domain-ban claims. No superiority, calibrated uncertainty,
+    model implementation or user adoption of the new two-view interface is established.'
+  context: Complete conceptual review at docs/state-memory-review.md; exact public-only briefs/responses/receipts
+    under runs/reviews/state_memory_design_2026-09-09/. Primary DreamerV3 and Compressive Transformer
+    checks support scoped mechanisms. Peer agreement is not empirical validation.
+  potential_type: architecture
+  bound_to:
+  - N142
+  - N141
+  - N140
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

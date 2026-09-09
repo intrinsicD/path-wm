@@ -5,6 +5,12 @@ contract, not implemented behavior or an approved experiment. The existing negat
 learning result remains unchanged. Finish the model design before task design or
 training. Ordinary PyTorch components and one editable recipe remain the boundary.
 
+The [Claude review and discussion agenda](state-memory-review.md) identifies remaining
+state/evidence, filtering, derived-knowledge, fusion, learning and action contracts.
+The concrete shapes below do not settle those choices. In particular, a separately
+addressable observation-evidence view is a new recommendation to discuss, not an
+already accepted change to the belief-snapshot memory described here.
+
 ## Direction established in discussion
 
 - Learn the semantic content of the world representation. Do not reserve state
@@ -82,7 +88,9 @@ unbounded storage. Exact raw media retention is not included in this latent budg
 
 Each consumer owns its query projections, attention and gates. Share the stores
 and interface, not necessarily the weights. Read from an immutable snapshot for
-the duration of an operation.
+the duration of an operation. An imagined branch pins the storage-version handle
+for its complete rollout as well as its real-evidence cutoff; concurrent commits
+or consolidation must not change that branch's memory contents.
 
 Three read groups preserve the discussed structure:
 

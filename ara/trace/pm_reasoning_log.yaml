@@ -584,3 +584,15 @@ entries:
     or training execution. Stage the gate/candidate mechanism.
   - Preserve content versus availability time and correction latency. No guarantee of semantic slot stability,
     perfect retention or confidence calibration; no new experiment.
+- turn: 2026-09-09_001#25
+  notes:
+  - End-of-turn epilogue after substantive review, reconciliation, documentation and checks. N142 records
+    authorization/review completion; O96 stages new architecture preference and agenda.
+  - Do not promote O94/O95 or two-view design from user assent to requesting review. External peer agreement
+    and a proposal document are not model validation or user adoption.
+  - Claude overclaims were checked and explicitly withdrawn before typed acceptance. Remaining evidence-encoder
+    lossiness and independent-read qualifications are preserved; no experiment, incompatible existing
+    claim, topic abandonment or new staleness inferred.
+  - No research result is fabricated from local source inspection. The primary sources establish particular
+    mechanisms, not the efficacy of the proposed combination. All external inputs were abstract conceptual
+    briefs without private code/data/results.

@@ -78,6 +78,16 @@ ordering, protected-detail admission and gradient boundaries. Consolidation deta
 numerical capacities, uncertainty family and exact training choices remain proposals.
 No model implementation, checkpoint migration or new training has occurred.
 
+**Design review completed:** three actual public-concepts-only Claude exchanges
+reviewed the complete proposal and reconciled overstatements. Read the
+[review and next-discussion agenda](state-memory-review.md). Both reviewers favor
+discussing whether memory should retain separately addressable observation features
+alongside inferred belief snapshots, under the same total budget. This is a new
+proposal, not an adopted model change; evidence encodings remain learned and lossy.
+Then settle executed-action propagation/observation correction, persistent derived
+knowledge, conflicting memory reads, learning targets and action/objective adapters.
+Exact briefs, responses and receipts are in `runs/reviews/state_memory_design_2026-09-09/`.
+
 Physical understanding, useful language generation, calibrated progress, semantic
 feature controls, scalable memory and broad self-improvement remain research
 questions. Real data still use `data/pusht_world_model/cchi_v1` directly.
