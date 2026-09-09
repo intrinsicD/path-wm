@@ -1,0 +1,204 @@
+session:
+  id: 2026-09-09_001
+  date: '2026-09-09'
+  started: 2026-09-08T20:28+02:00
+  last_turn: 2026-09-09T02:32+02:00
+  turn_count: 1
+  summary: Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges. Local
+    ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry pass improves
+    with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests and standalone browser
+    QA pass; automation paused.
+events_logged:
+- turn: 1
+  type: decision
+  id: N114
+  routing: direct
+  provenance: user
+  summary: Execute the bounded architecture program with Claude and exclude albedo
+- turn: 1
+  type: experiment
+  id: N115
+  routing: direct
+  provenance: ai-executed
+  summary: Six frozen CNN/native-ViT multi-output fits
+- turn: 1
+  type: experiment
+  id: N116
+  routing: direct
+  provenance: ai-executed
+  summary: Fifteen category accessibility probes
+- turn: 1
+  type: experiment
+  id: N117
+  routing: direct
+  provenance: ai-executed
+  summary: Nine matched per-grid encoder continuation fits
+- turn: 1
+  type: experiment
+  id: N118
+  routing: direct
+  provenance: ai-executed
+  summary: Twelve local-input and decoder-conditioning fits
+- turn: 1
+  type: experiment
+  id: N119
+  routing: direct
+  provenance: ai-executed
+  summary: Three matched separate-trunk decoder fits
+- turn: 1
+  type: experiment
+  id: N120
+  routing: direct
+  provenance: ai-executed
+  summary: Six frozen-encoder location-distribution objective fits
+- turn: 1
+  type: experiment
+  id: N121
+  routing: direct
+  provenance: ai-executed
+  summary: Fresh geometry, feature/attention and decoder reliance diagnostics
+- turn: 1
+  type: experiment
+  id: N122
+  routing: direct
+  provenance: ai-executed
+  summary: Forty full-package runtime conditions
+- turn: 1
+  type: observation
+  id: O64
+  routing: staged
+  provenance: ai-suggested
+  summary: Pretrained ViT supports substantially better foreground/category readouts than the local CNN, while P1
+    pixel reconstruction favors CNN. This is package selection evidence, not isolated architecture causality or
+    a convolution/spatial versus transformer/semantic law.
+- turn: 1
+  type: observation
+  id: O65
+  routing: staged
+  provenance: ai-suggested
+  summary: Two added convolutional or transformer blocks per CNN grid do not improve the tested capability tradeoff
+    consistently. Continued encoders show fresh-geometry regression; loss balance, learning rate, gating and budget
+    remain alternatives. This does not refute deeper encoders generally.
+- turn: 1
+  type: observation
+  id: O66
+  routing: staged
+  provenance: ai-suggested
+  summary: Local access reduces the pretrained representation-to-image tradeoff, while output-specific computation
+    changes RGB/foreground quality differently. Separate trunks strongly help RGB but lose the primary foreground
+    endpoint; FiLM is not a general win. Capacity and cross-domain transfer prevent attributing all differences
+    to gradient conflict.
+- turn: 1
+  type: observation
+  id: O67
+  routing: staged
+  provenance: ai-suggested
+  summary: Map-distribution supervision improves per-case tolerance pass, but CNN rare errors worsen markedly. ViT
+    has more consistent typical-tail gains, with mixed orientation and residual severe outliers. Neither mean readiness
+    nor sharper maps establishes reliable control or calibrated confidence.
+- turn: 1
+  type: observation
+  id: O68
+  routing: staged
+  provenance: ai-suggested
+  summary: Coarse PCA emphasizes global image/domain means and positional structure; corrected attention entropy
+    is compatible with broad fine-directed broadcast and selective coarse-directed aggregation. Fitted interventions
+    show reliance, not superiority over retrained simpler fusion.
+- turn: 1
+  type: observation
+  id: O69
+  routing: staged
+  provenance: ai-suggested
+  summary: Recommend asymmetric pretrained contextual plus local features and typed decoders, retaining the fast
+    CNN reference. Consumers should select named maps with native width and source time; task/encoder conditioning,
+    more genuine scales and memory registers remain conditional. Future decoding needs causally predicted/aligned
+    evidence and deployment training; new U/P width adapters and dynamics/control tests remain unimplemented.
+- turn: 1
+  type: observation
+  id: O70
+  routing: staged
+  provenance: ai-suggested
+  summary: Existing COCO/PushT suffice for the completed reconstruction, foreground/category and static geometry
+    comparisons. Next data should target broader geometry configurations and causal trajectories; computer use needs
+    resolution and screenshot/action/transition evidence. Static results do not support universal application capability.
+- turn: 1
+  type: observation
+  id: O71
+  routing: staged
+  provenance: ai-suggested
+  summary: The fixed bad pusher case has multimodal location probability and an expected coordinate between pusher
+    and body regions. Boundary undercoverage and scene/object correlation are plausible upstream causes, not isolated
+    mechanisms. Test prospectively separated coverage before scaling layers; argmax alone would discard subpixel
+    precision.
+ai_actions:
+- turn: 1
+  action: Implemented, developed and sealed matched encoder/decoder/objective comparisons; ran all declared units
+    with source/data/config identities and per-unit verified HTML.
+  provenance: ai-executed
+  files_changed:
+  - world_model/curriculum/perception_training.py
+  - world_model/curriculum/perception_decoder.py
+  - world_model/curriculum/perception_independent.py
+  - world_model/curriculum/perception_localization.py
+- turn: 1
+  action: Ten actual Claude public-only exchanges; corrected overclaims, preserved initial failures and safe export
+    boundary. Built eight inspected scientific panels and reconciled 1428 report source identities. Repaired source-table
+    and lossless-preview publication without repeating numerical work; final suite407 passes/3opt-in skips.
+  provenance: ai-executed
+  files_changed:
+  - docs/perception-overnight-results-2026-09-09.md
+  - world_model/curriculum/perception_report.py
+  - world_model/curriculum/perception_summary.py
+  - viewer/scientific_preview.py
+  - tests/test_experiment_harness.py
+- turn: 1
+  action: Committed findings at596af6d; paused overnight heartbeat. Additional in-app local-file navigation rejected
+    by browser URL policy; no workaround. Standalone desktop/narrow/source-dialog QA had already passed.
+  provenance: ai-executed
+  files_changed:
+  - docs/project-state.md
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: 'User: Drop the albedo stuff. Cowork on the encoder decoder experiments using proposed ideas until tomorrow
+    morning07:00 Berlin and report findings.'
+open_threads:
+- Review O64-O71 and the measured architecture tradeoffs; no universal architecture or new control success has been
+  adopted.
+- Prospectively separate broader geometry training/test configurations and trajectories; diagnose multimodal pusher
+  maps, boundaries and rare extreme errors.
+- Define named feature/state interfaces and train compatible U/P before multi-step/action/control claims; prevent
+  unseen-future feature leakage.
+- Output sharing, equal-capacity controls, selective multiscale fusion, genuine extra scales, intermediate pretrained
+  taps and encoder conditioning remain separate comparisons.
+- Task-dependent memory/registers, queried-instance/extent outputs and software/driving data require new protocols;
+  albedo is excluded.
+- Earlier Paddle and LeWM dynamics, normalization and data-efficiency questions remain open distinct tracks. No
+  experiment queue remains active.
+ai_suggestions_pending:
+- 'O64: Pretrained ViT supports substantially better foreground/category readouts than the local CNN, while P1 pixel
+  reconstruction favors CNN. This is package selection evidence, not isolated architecture causality or a convolution/spatial
+  versus transformer/semantic law.'
+- 'O65: Two added convolutional or transformer blocks per CNN grid do not improve the tested capability tradeoff
+  consistently. Continued encoders show fresh-geometry regression; loss balance, learning rate, gating and budget
+  remain alternatives. This does not refute deeper encoders generally.'
+- 'O66: Local access reduces the pretrained representation-to-image tradeoff, while output-specific computation
+  changes RGB/foreground quality differently. Separate trunks strongly help RGB but lose the primary foreground
+  endpoint; FiLM is not a general win. Capacity and cross-domain transfer prevent attributing all differences to
+  gradient conflict.'
+- 'O67: Map-distribution supervision improves per-case tolerance pass, but CNN rare errors worsen markedly. ViT
+  has more consistent typical-tail gains, with mixed orientation and residual severe outliers. Neither mean readiness
+  nor sharper maps establishes reliable control or calibrated confidence.'
+- 'O68: Coarse PCA emphasizes global image/domain means and positional structure; corrected attention entropy is
+  compatible with broad fine-directed broadcast and selective coarse-directed aggregation. Fitted interventions
+  show reliance, not superiority over retrained simpler fusion.'
+- 'O69: Recommend asymmetric pretrained contextual plus local features and typed decoders, retaining the fast CNN
+  reference. Consumers should select named maps with native width and source time; task/encoder conditioning, more
+  genuine scales and memory registers remain conditional. Future decoding needs causally predicted/aligned evidence
+  and deployment training; new U/P width adapters and dynamics/control tests remain unimplemented.'
+- 'O70: Existing COCO/PushT suffice for the completed reconstruction, foreground/category and static geometry comparisons.
+  Next data should target broader geometry configurations and causal trajectories; computer use needs resolution
+  and screenshot/action/transition evidence. Static results do not support universal application capability.'
+- 'O71: The fixed bad pusher case has multimodal location probability and an expected coordinate between pusher
+  and body regions. Boundary undercoverage and scene/object correlation are plausible upstream causes, not isolated
+  mechanisms. Test prospectively separated coverage before scaling layers; argmax alone would discard subpixel precision.'

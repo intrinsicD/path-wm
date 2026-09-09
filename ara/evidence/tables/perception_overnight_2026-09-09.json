@@ -1,0 +1,845 @@
+{
+  "recorded": "2026-09-09T02:32+02:00",
+  "provenance": "ai-executed",
+  "scope": "Completed overnight perception program; formal comparisons exclude development; no new dynamics/control",
+  "counts": {
+    "completed_semantic_fits": 15,
+    "completed_vision_fits": 36,
+    "expected_semantic_fits": 15,
+    "expected_vision_fits": 36,
+    "semantic_fit_seconds_sum": 44.17991125310073,
+    "semantic_presentations": 1920000,
+    "semantic_updates": 30000,
+    "vision_fit_seconds_sum": 15521.515718010021,
+    "vision_presentations": 8448000,
+    "vision_updates": 144000
+  },
+  "descriptive_groups": {
+    "perception_continuation": {
+      "conv": {
+        "metrics": {
+          "angle_mae_deg": {
+            "maximum": 2.2019539792227807,
+            "mean": 2.0263012493901345,
+            "minimum": 1.8937811823627768
+          },
+          "coco_mse": {
+            "maximum": 0.006929531693458557,
+            "mean": 0.0068570696748793125,
+            "minimum": 0.006801992654800415
+          },
+          "fitting_seconds": {
+            "maximum": 771.4474420810002,
+            "mean": 616.55873641168,
+            "minimum": 527.0157406480284
+          },
+          "mask_iou": {
+            "maximum": 0.3755756616592407,
+            "mean": 0.36713841557502747,
+            "minimum": 0.3549667298793793
+          },
+          "pusht_mse": {
+            "maximum": 0.00021762007963843644,
+            "mean": 0.00021446248380622515,
+            "minimum": 0.00020871087326668203
+          },
+          "test_q": {
+            "maximum": 0.3531632105636292,
+            "mean": 0.3008725154142996,
+            "minimum": 0.25471520652222995
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "joint": {
+        "metrics": {
+          "angle_mae_deg": {
+            "maximum": 2.039290044570811,
+            "mean": 1.9951910085384963,
+            "minimum": 1.9125131013131604
+          },
+          "coco_mse": {
+            "maximum": 0.006631762254983187,
+            "mean": 0.006592366223533948,
+            "minimum": 0.006543773226439953
+          },
+          "fitting_seconds": {
+            "maximum": 615.1403667500126,
+            "mean": 542.9698675109734,
+            "minimum": 478.1129715189454
+          },
+          "mask_iou": {
+            "maximum": 0.3837083578109741,
+            "mean": 0.363342821598053,
+            "minimum": 0.3305431604385376
+          },
+          "pusht_mse": {
+            "maximum": 0.00021925292094238102,
+            "mean": 0.00021253455391464135,
+            "minimum": 0.0002059957041637972
+          },
+          "test_q": {
+            "maximum": 0.3392083467908221,
+            "mean": 0.3002838854397761,
+            "minimum": 0.2799873576579052
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "transformer": {
+        "metrics": {
+          "angle_mae_deg": {
+            "maximum": 2.076192961768956,
+            "mean": 1.942065194523255,
+            "minimum": 1.6905197223541653
+          },
+          "coco_mse": {
+            "maximum": 0.006987074855715036,
+            "mean": 0.006890580989420414,
+            "minimum": 0.006783111020922661
+          },
+          "fitting_seconds": {
+            "maximum": 884.0729763329728,
+            "mean": 725.638352523325,
+            "minimum": 635.587834520964
+          },
+          "mask_iou": {
+            "maximum": 0.38519221544265747,
+            "mean": 0.3712599078814189,
+            "minimum": 0.3590053915977478
+          },
+          "pusht_mse": {
+            "maximum": 0.00023791255080141127,
+            "mean": 0.00021907660023619732,
+            "minimum": 0.0002006329013966024
+          },
+          "test_q": {
+            "maximum": 0.368184209726186,
+            "mean": 0.3206287499722346,
+            "minimum": 0.2942315913730874
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      }
+    },
+    "perception_decoders": {
+      "conditioned": {
+        "metrics": {
+          "both_ms_per_image": {
+            "maximum": 0.5473761047142034,
+            "mean": 0.5462442026024897,
+            "minimum": 0.5452542671264382
+          },
+          "coco_mse": {
+            "maximum": 0.007878881879150867,
+            "mean": 0.007275968945274751,
+            "minimum": 0.006912225857377052
+          },
+          "fitting_seconds": {
+            "maximum": 462.4281795460265,
+            "mean": 461.56811358833994,
+            "minimum": 460.00197978300275
+          },
+          "mask_iou": {
+            "maximum": 0.6653488874435425,
+            "mean": 0.6601592501004537,
+            "minimum": 0.6543230414390564
+          },
+          "pusht_mse": {
+            "maximum": 0.000491028418764472,
+            "mean": 0.0004084082805396368,
+            "minimum": 0.0003527557128109038
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "early": {
+        "metrics": {
+          "both_ms_per_image": {
+            "maximum": 0.2774031499939156,
+            "mean": 0.27725016249557183,
+            "minimum": 0.2769589703348174
+          },
+          "coco_mse": {
+            "maximum": 0.007848123088479042,
+            "mean": 0.007793711808820565,
+            "minimum": 0.00772069301456213
+          },
+          "fitting_seconds": {
+            "maximum": 458.5498994530062,
+            "mean": 456.98956991466304,
+            "minimum": 454.92523972899653
+          },
+          "mask_iou": {
+            "maximum": 0.6687047481536865,
+            "mean": 0.6680092811584473,
+            "minimum": 0.6670348644256592
+          },
+          "pusht_mse": {
+            "maximum": 0.00037023916956968606,
+            "mean": 0.00036511185074535507,
+            "minimum": 0.0003578614559955895
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "late": {
+        "metrics": {
+          "both_ms_per_image": {
+            "maximum": 0.27948650476901093,
+            "mean": 0.277460573973561,
+            "minimum": 0.2744998421803757
+          },
+          "coco_mse": {
+            "maximum": 0.025197673588991165,
+            "mean": 0.02489088848233223,
+            "minimum": 0.024626098573207855
+          },
+          "fitting_seconds": {
+            "maximum": 410.28644977597287,
+            "mean": 405.75271884165704,
+            "minimum": 403.36066247697454
+          },
+          "mask_iou": {
+            "maximum": 0.6602014303207397,
+            "mean": 0.658624549706777,
+            "minimum": 0.6569661498069763
+          },
+          "pusht_mse": {
+            "maximum": 0.0010847997618839145,
+            "mean": 0.0010033303794140618,
+            "minimum": 0.0009399210102856159
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "raw": {
+        "metrics": {
+          "both_ms_per_image": {
+            "maximum": 0.2586258608971548,
+            "mean": 0.25809069999619777,
+            "minimum": 0.25776732036320027
+          },
+          "coco_mse": {
+            "maximum": 0.009860417805612087,
+            "mean": 0.009679510568579039,
+            "minimum": 0.009391000494360924
+          },
+          "fitting_seconds": {
+            "maximum": 391.4136142189964,
+            "mean": 389.62914204300614,
+            "minimum": 388.5181047299993
+          },
+          "mask_iou": {
+            "maximum": 0.6678036451339722,
+            "mean": 0.6638902425765991,
+            "minimum": 0.656246542930603
+          },
+          "pusht_mse": {
+            "maximum": 0.00044392055133357644,
+            "mean": 0.0004335574146049718,
+            "minimum": 0.00042629303061403334
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      }
+    },
+    "perception_fresh": {
+      "cnn": {
+        "metrics": {
+          "angle_mae_deg": {
+            "maximum": 3.3373907574850636,
+            "mean": 3.270283751563406,
+            "minimum": 3.1856808410402024
+          },
+          "case_q_p95": {
+            "maximum": 4.076463246345519,
+            "mean": 3.393105109532673,
+            "minimum": 2.8858352899551374
+          },
+          "per_case_pass": {
+            "maximum": 0.8046875,
+            "mean": 0.765625,
+            "minimum": 0.73046875
+          },
+          "q": {
+            "maximum": 0.6471458245068789,
+            "mean": 0.5402962107521793,
+            "minimum": 0.4438254297710955
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "conv": {
+        "metrics": {
+          "angle_mae_deg": {
+            "maximum": 5.174588700979357,
+            "mean": 4.204259267626094,
+            "minimum": 3.573732557776239
+          },
+          "case_q_p95": {
+            "maximum": 6.885574424266812,
+            "mean": 4.609968217213948,
+            "minimum": 3.3858734250068663
+          },
+          "per_case_pass": {
+            "maximum": 0.7421875,
+            "mean": 0.689453125,
+            "minimum": 0.587890625
+          },
+          "q": {
+            "maximum": 1.0282066008076072,
+            "mean": 0.7274547529717287,
+            "minimum": 0.5427039926871657
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "joint": {
+        "metrics": {
+          "angle_mae_deg": {
+            "maximum": 4.179892259258197,
+            "mean": 3.859670334449573,
+            "minimum": 3.361121882037257
+          },
+          "case_q_p95": {
+            "maximum": 4.757725358009338,
+            "mean": 3.5213989973068234,
+            "minimum": 2.825510466098785
+          },
+          "per_case_pass": {
+            "maximum": 0.7421875,
+            "mean": 0.6901041666666666,
+            "minimum": 0.603515625
+          },
+          "q": {
+            "maximum": 0.915208644233644,
+            "mean": 0.6494194331268469,
+            "minimum": 0.48912543524056673
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "transformer": {
+        "metrics": {
+          "angle_mae_deg": {
+            "maximum": 3.420747671119737,
+            "mean": 3.372635195606669,
+            "minimum": 3.3272063415214728
+          },
+          "case_q_p95": {
+            "maximum": 7.294161069393157,
+            "mean": 4.434554545084635,
+            "minimum": 2.809269261360168
+          },
+          "per_case_pass": {
+            "maximum": 0.76953125,
+            "mean": 0.7063802083333334,
+            "minimum": 0.591796875
+          },
+          "q": {
+            "maximum": 1.2922630701214075,
+            "mean": 0.8197642890736461,
+            "minimum": 0.5579079044982791
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "vit": {
+        "metrics": {
+          "angle_mae_deg": {
+            "maximum": 1.946437800091872,
+            "mean": 1.8962484248612055,
+            "minimum": 1.8087406565944826
+          },
+          "case_q_p95": {
+            "maximum": 1.9991058588027952,
+            "mean": 1.733609652519226,
+            "minimum": 1.517629623413086
+          },
+          "per_case_pass": {
+            "maximum": 0.83203125,
+            "mean": 0.8046875,
+            "minimum": 0.779296875
+          },
+          "q": {
+            "maximum": 0.4974171109497547,
+            "mean": 0.4368237378075719,
+            "minimum": 0.396148809697479
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      }
+    },
+    "perception_independent": {
+      "split": {
+        "metrics": {
+          "both_ms_per_image": {
+            "maximum": 0.5460617593598727,
+            "mean": 0.5452720062445829,
+            "minimum": 0.5445878765385714
+          },
+          "coco_mse": {
+            "maximum": 0.0010929489508271217,
+            "mean": 0.0010507629097749789,
+            "minimum": 0.0010181500110775232
+          },
+          "fitting_seconds": {
+            "maximum": 491.03182487300364,
+            "mean": 475.7461919366615,
+            "minimum": 464.936213198991
+          },
+          "mask_iou": {
+            "maximum": 0.6591251492500305,
+            "mean": 0.6578377882639567,
+            "minimum": 0.6559058427810669
+          },
+          "pusht_mse": {
+            "maximum": 7.864676445024088e-05,
+            "mean": 7.503039038662489e-05,
+            "minimum": 7.186449511209503e-05
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      }
+    },
+    "perception_localization": {
+      "cnn": {
+        "metrics": {
+          "angle_mae_deg": {
+            "maximum": 3.254036590986076,
+            "mean": 3.1529116239916566,
+            "minimum": 3.101788012332424
+          },
+          "boundary_pass": {
+            "maximum": 0.6544117647058824,
+            "mean": 0.6225490196078431,
+            "minimum": 0.5882352941176471
+          },
+          "case_q_p95": {
+            "maximum": 3.605675590038298,
+            "mean": 3.0121623436609894,
+            "minimum": 2.199375772476196
+          },
+          "fitting_seconds": {
+            "maximum": 86.73003241501283,
+            "mean": 86.58756826001142,
+            "minimum": 86.4929138069856
+          },
+          "fresh_pass": {
+            "maximum": 0.861328125,
+            "mean": 0.8489583333333334,
+            "minimum": 0.837890625
+          },
+          "fresh_q": {
+            "maximum": 0.794800047762692,
+            "mean": 0.6905325247595707,
+            "minimum": 0.513061897829175
+          },
+          "interior_pass": {
+            "maximum": 0.9468085106382979,
+            "mean": 0.9308510638297872,
+            "minimum": 0.9175531914893617
+          },
+          "location_entropy": {
+            "maximum": 0.19682914018630981,
+            "mean": 0.1959552764892578,
+            "minimum": 0.19546476006507874
+          },
+          "target_support_mass": {
+            "maximum": 0.9693129658699036,
+            "mean": 0.9672186772028605,
+            "minimum": 0.9638682007789612
+          },
+          "test_q": {
+            "maximum": 0.21006553865677818,
+            "mean": 0.19633971011584728,
+            "minimum": 0.18345432907509404
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "vit": {
+        "metrics": {
+          "angle_mae_deg": {
+            "maximum": 2.4613940416035325,
+            "mean": 2.0070543766543714,
+            "minimum": 1.6236058592109304
+          },
+          "boundary_pass": {
+            "maximum": 0.8676470588235294,
+            "mean": 0.8137254901960785,
+            "minimum": 0.7720588235294118
+          },
+          "case_q_p95": {
+            "maximum": 1.4386670112609858,
+            "mean": 1.3495280144836965,
+            "minimum": 1.2199680919130051
+          },
+          "fitting_seconds": {
+            "maximum": 110.80824673204916,
+            "mean": 110.72318958201988,
+            "minimum": 110.66469493001932
+          },
+          "fresh_pass": {
+            "maximum": 0.892578125,
+            "mean": 0.8528645833333334,
+            "minimum": 0.8203125
+          },
+          "fresh_q": {
+            "maximum": 0.4065484870225191,
+            "mean": 0.3955759921421607,
+            "minimum": 0.37459686398506165
+          },
+          "interior_pass": {
+            "maximum": 0.901595744680851,
+            "mean": 0.8670212765957447,
+            "minimum": 0.8377659574468085
+          },
+          "location_entropy": {
+            "maximum": 0.20265978574752808,
+            "mean": 0.19887633124987283,
+            "minimum": 0.19665998220443726
+          },
+          "target_support_mass": {
+            "maximum": 0.9648709893226624,
+            "mean": 0.960482676823934,
+            "minimum": 0.9553532004356384
+          },
+          "test_q": {
+            "maximum": 0.29156846916399665,
+            "mean": 0.28361278647087645,
+            "minimum": 0.2719482134935481
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      }
+    },
+    "perception_package": {
+      "cnn": {
+        "metrics": {
+          "angle_mae_deg": {
+            "maximum": 1.7030436147256343,
+            "mean": 1.6059497122016297,
+            "minimum": 1.5244110607658092
+          },
+          "coco_mse": {
+            "maximum": 0.006241075694561005,
+            "mean": 0.006201213380942742,
+            "minimum": 0.006150005850940943
+          },
+          "fitting_seconds": {
+            "maximum": 485.13630622799974,
+            "mean": 442.6680391093444,
+            "minimum": 415.36569277901435
+          },
+          "mask_iou": {
+            "maximum": 0.3732050657272339,
+            "mean": 0.35790495077768963,
+            "minimum": 0.3439621925354004
+          },
+          "pusht_mse": {
+            "maximum": 0.00022528358385898173,
+            "mean": 0.00021088479358392456,
+            "minimum": 0.0001903170777950436
+          },
+          "test_q": {
+            "maximum": 0.2766343445560976,
+            "mean": 0.2524715409249694,
+            "minimum": 0.23153430294819288
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "vit": {
+        "metrics": {
+          "angle_mae_deg": {
+            "maximum": 1.3874554224714137,
+            "mean": 1.333994775129628,
+            "minimum": 1.2550614856828728
+          },
+          "coco_mse": {
+            "maximum": 0.01877286657691002,
+            "mean": 0.01851589046418667,
+            "minimum": 0.018350539728999138
+          },
+          "fitting_seconds": {
+            "maximum": 493.51276512496406,
+            "mean": 459.0070829483254,
+            "minimum": 419.6256443010061
+          },
+          "mask_iou": {
+            "maximum": 0.6637337803840637,
+            "mean": 0.6574289600054423,
+            "minimum": 0.6526708602905273
+          },
+          "pusht_mse": {
+            "maximum": 0.0003786170855164528,
+            "mean": 0.0003609881193066637,
+            "minimum": 0.00033876567613333464
+          },
+          "test_q": {
+            "maximum": 0.3304168964897454,
+            "mean": 0.32517714083717997,
+            "minimum": 0.31832079466875324
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      }
+    },
+    "perception_semantics": {
+      "cnn": {
+        "metrics": {
+          "test_ap": {
+            "maximum": 0.08290375199903519,
+            "mean": 0.0772798487802304,
+            "minimum": 0.07415564610674273
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "conv": {
+        "metrics": {
+          "test_ap": {
+            "maximum": 0.11258043742525327,
+            "mean": 0.10872004460509437,
+            "minimum": 0.1066670112860129
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "joint": {
+        "metrics": {
+          "test_ap": {
+            "maximum": 0.12159389559764805,
+            "mean": 0.11493866785388802,
+            "minimum": 0.1113749723213828
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "transformer": {
+        "metrics": {
+          "test_ap": {
+            "maximum": 0.1157486499341497,
+            "mean": 0.10911344965405777,
+            "minimum": 0.10381632627141525
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      },
+      "vit": {
+        "metrics": {
+          "test_ap": {
+            "maximum": 0.6554846513048435,
+            "mean": 0.6501480899039845,
+            "minimum": 0.6440673500035669
+          }
+        },
+        "runs": 3,
+        "seeds": [
+          9107,
+          9108,
+          9109
+        ]
+      }
+    }
+  },
+  "qa": {
+    "dashboard": {
+      "counts": {
+        "perception_package": 6,
+        "perception_continuation": 9,
+        "perception_decoders": 12,
+        "perception_independent": 3,
+        "perception_localization": 6,
+        "perception_semantics": 15,
+        "perception_decoder_reliance": 42,
+        "perception_runtime": 40
+      },
+      "artifact_sha256": "4ad96c5629dc57230e867ee638725a165ac3562c7ce3202e3a6f43186ad3dee1",
+      "html_sha256": "2dbfb6056162c7d27a892e6304f376eedfb687e376f31cac672bd06209e67271",
+      "receipt_sha256": "5c735c5d55b4c6834bb02666ced97bd3d5a48840b6afde4b8924dadff3ff1813",
+      "browser_viewports": [
+        1440,
+        390
+      ]
+    },
+    "report": {
+      "counts": {
+        "perception_package": 6,
+        "perception_continuation": 9,
+        "perception_decoders": 12,
+        "perception_independent": 3,
+        "perception_localization": 6,
+        "perception_semantics": 15,
+        "perception_decoder_reliance": 42,
+        "perception_runtime": 40
+      },
+      "artifact_sha256": "4bb93d43fc3c1d463f4c3be4148762ca5d9f0a30ca67e4155c0111e742dc8a4d",
+      "html_sha256": "024bf63241b1c7d6d3b9904f4ead5ca7e0782eebc19e56ae376db4fa9dea54df",
+      "receipt_sha256": "e6350b18482969665aad058fb2fcfc15ab7b35e0356995f5e149782d1358a35a",
+      "browser_viewports": [
+        1440,
+        390
+      ]
+    },
+    "report_source_files_verified": 1428,
+    "reconciled_counts": {
+      "completed_semantic_fits": 15,
+      "completed_vision_fits": 36,
+      "expected_semantic_fits": 15,
+      "expected_vision_fits": 36,
+      "semantic_fit_seconds_sum": 44.17991125310073,
+      "semantic_presentations": 1920000,
+      "semantic_updates": 30000,
+      "vision_fit_seconds_sum": 15521.515718010021,
+      "vision_presentations": 8448000,
+      "vision_updates": 144000
+    },
+    "pytest": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "3",
+      "tests": "410",
+      "time": "25.263",
+      "timestamp": "2026-09-09T02:19:34.594168+02:00",
+      "hostname": "alex-home"
+    },
+    "scientific_figures": {
+      "count": 8,
+      "inspection": "Direct visual inspection of original saved PNG panels; geometry case selection inherited from predeclared P1 inspection.",
+      "preview_encoding": "Lossless WebP only when smaller; exact decoded RGBA equality verified by reader helper."
+    },
+    "extra_in_app_preview": {
+      "status": "blocked",
+      "reason": "Browser tool URL policy rejected local-file navigation; no alternate navigation or browser workaround attempted. Standalone build-time browser verification had already passed."
+    },
+    "generated": "2026-09-09T00:28:27.034428+00:00"
+  },
+  "source_sha256": {
+    "runs/perception_overnight_2026-09-08/report/reconciled.json": "ef181fd4edcf5b4b964644a2a6c62a598de0bfe6aaedd568425b7af9969a3714",
+    "runs/perception_overnight_2026-09-08/report/final_qa.json": "fa88085acd57ddf7275897ae0a175d9131a4e331126272acfab84c35cb0518cf",
+    "docs/perception-overnight-results-2026-09-09.md": "7f5a720a714ff0bc174b50b50882b33e2df7b7b41c34567686e6e9c7f4e574c6",
+    "runs/perception_overnight_2026-09-08/report/report.receipt.json": "e6350b18482969665aad058fb2fcfc15ab7b35e0356995f5e149782d1358a35a",
+    "runs/experiment_dashboard.receipt.json": "5c735c5d55b4c6834bb02666ced97bd3d5a48840b6afde4b8924dadff3ff1813"
+  },
+  "raw_snapshot": "runs/perception_overnight_2026-09-08/report/reconciled.json",
+  "report": "docs/perception-overnight-results-2026-09-09.md",
+  "claims_tested": [
+    "O64",
+    "O65",
+    "O66",
+    "O67",
+    "O68",
+    "O69",
+    "O70",
+    "O71"
+  ]
+}

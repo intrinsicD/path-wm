@@ -1775,3 +1775,172 @@ tree:
   also_depends_on: [N108, N109, N110, N111]
   evidence: [docs/multiscale-routing-and-tasks-2026-09-08.md]
   status: open
+
+- id: N114
+  type: decision
+  title: Execute the bounded architecture program with Claude and exclude albedo
+  provenance: user
+  timestamp: 2026-09-09T02:32+02:00
+  choice: User authorizes local encoder/decoder experiments using prior ideas until 9 September 07:00 Berlin, with
+    findings reported and albedo removed. The declared adaptive program completed before the deadline.
+  alternatives:
+  - Design discussion only
+  - Include albedo targets
+  evidence:
+  - docs/perception-overnight-protocol-2026-09-08.md
+  - docs/perception-overnight-results-2026-09-09.md
+  also_depends_on:
+  - N110
+  - N111
+  - N113
+  status: resolved
+- id: N115
+  type: experiment
+  title: Six frozen CNN/native-ViT multi-output fits
+  provenance: ai-executed
+  timestamp: 2026-09-09T02:32+02:00
+  result: Three paired seeds, 4000 updates each. Mean CNN/ViT foreground IoU 0.357905/0.657429; COCO RGB MSE 0.006201/0.018516.
+    All mean pose gates pass on the grouped heldout. Package pretraining, width, size and preprocessing differ.
+  evidence:
+  - ara/evidence/tables/perception_overnight_2026-09-09.json
+  - docs/perception-overnight-protocol-2026-09-08.md
+  - docs/perception-overnight-results-2026-09-09.md
+  also_depends_on:
+  - N114
+  tests_observations:
+  - O64
+  status: resolved
+- id: N116
+  type: experiment
+  title: Fifteen category accessibility probes
+  provenance: ai-executed
+  timestamp: 2026-09-09T02:32+02:00
+  result: Paired 2000-update probes on 78 training-supported classes; mean AP CNN 0.077280, ViT 0.650148, joint
+    0.114939, added convolution 0.108720, added transformer 0.109113; constant baseline 0.033103. Crop visibility
+    and unknown crowd labels retained.
+  evidence:
+  - ara/evidence/tables/perception_overnight_2026-09-09.json
+  - docs/perception-semantic-protocol-2026-09-08.md
+  - docs/perception-overnight-results-2026-09-09.md
+  also_depends_on:
+  - N114
+  - N115
+  tests_observations:
+  - O64
+  - O70
+  status: resolved
+- id: N117
+  type: experiment
+  title: Nine matched per-grid encoder continuation fits
+  provenance: ai-executed
+  timestamp: 2026-09-09T02:32+02:00
+  result: Existing topology versus two added residual-convolution or transformer blocks per CNN grid, same initial
+    function and 4000 updates. Mean fresh pass 69.01/68.95/70.64 percent versus frozen CNN 76.56 percent. No consistent
+    useful depth gain under the declared recipe.
+  evidence:
+  - ara/evidence/tables/perception_overnight_2026-09-09.json
+  - docs/perception-extension-protocol-2026-09-08.md
+  - docs/perception-overnight-results-2026-09-09.md
+  also_depends_on:
+  - N114
+  - N115
+  tests_observations:
+  - O65
+  status: resolved
+- id: N118
+  type: experiment
+  title: Twelve local-input and decoder-conditioning fits
+  provenance: ai-executed
+  timestamp: 2026-09-09T02:32+02:00
+  result: Three seeds per final-only, early, raw and early-plus-FiLM arm. Early access improves COCO RGB and foreground
+    in all three paired seeds. Mean early RGB MSE/IoU 0.007794/0.668009; conditioned 0.007276/0.660159. FiLM lowers
+    IoU in all three. Fixed 4000-update endpoints.
+  evidence:
+  - ara/evidence/tables/perception_overnight_2026-09-09.json
+  - docs/perception-decoder-protocol-2026-09-08.md
+  - docs/perception-overnight-results-2026-09-09.md
+  also_depends_on:
+  - N114
+  - N115
+  tests_observations:
+  - O66
+  status: resolved
+- id: N119
+  type: experiment
+  title: Three matched separate-trunk decoder fits
+  provenance: ai-executed
+  timestamp: 2026-09-09T02:32+02:00
+  result: Same early/context evidence and initial per-output function; separate RGB/mask trunks with joint global
+    clipping. Mean COCO RGB MSE 0.001051 (7.42-fold lower versus shared early), PushT RGB 4.87-fold lower, foreground
+    IoU 1.02 percentage points lower. Sharing/capacity/domain transfer confounded; no primary foreground win.
+  evidence:
+  - ara/evidence/tables/perception_overnight_2026-09-09.json
+  - docs/perception-independent-decoder-protocol-2026-09-09.md
+  - docs/perception-overnight-results-2026-09-09.md
+  also_depends_on:
+  - N118
+  tests_observations:
+  - O66
+  - O69
+  status: resolved
+- id: N120
+  type: experiment
+  title: Six frozen-encoder location-distribution objective fits
+  provenance: ai-executed
+  timestamp: 2026-09-09T02:32+02:00
+  result: MSE plus 0.001 target-to-map KL on boundary-exact bilinear targets. Fresh pass CNN 76.56 to 84.90 percent
+    and ViT 80.47 to 85.29 percent. CNN mean q and p99/max worsen every seed; ViT mean q and p95/p99 improve every
+    seed but angle is mixed and maxima worsen two seeds. Original failed redundant-bias control retained; informative-weight
+    and output controls pass.
+  evidence:
+  - ara/evidence/tables/perception_overnight_2026-09-09.json
+  - docs/perception-localization-protocol-2026-09-08.md
+  - docs/perception-overnight-results-2026-09-09.md
+  also_depends_on:
+  - N114
+  - N115
+  tests_observations:
+  - O67
+  - O71
+  status: resolved
+- id: N121
+  type: experiment
+  title: Fresh geometry, feature/attention and decoder reliance diagnostics
+  provenance: ai-executed
+  timestamp: 2026-09-09T02:32+02:00
+  result: Generated 512 simulator resets and 40 render calibration pairs; all declared cases retained. PCA fit on
+    training images; explicit attention agrees with SDPA. Uniform fine-from-coarse is near baseline; removing it
+    or uniformizing coarse-from-fine harms pose. Forty-two CPU donor/task conditions completed; local donor evidence
+    mainly harms RGB and context donor evidence mainly harms foreground. These are fitted reliance diagnostics.
+  evidence:
+  - ara/evidence/tables/perception_overnight_2026-09-09.json
+  - docs/perception-fresh-protocol-2026-09-08.md
+  - docs/perception-inspection-protocol-2026-09-08.md
+  - docs/perception-decoder-reliance-protocol-2026-09-08.md
+  - docs/perception-overnight-results-2026-09-09.md
+  also_depends_on:
+  - N115
+  - N118
+  tests_observations:
+  - O68
+  - O71
+  status: resolved
+- id: N122
+  type: experiment
+  title: Forty full-package runtime conditions
+  provenance: ai-executed
+  timestamp: 2026-09-09T02:32+02:00
+  result: Five frozen packages, batch1/32, RGB/mask/pose/all, five warmups and twenty synchronized repeats. All-output
+    single-frame medians CNN 2.83ms, ViT early 9.85ms, ViT split 10.76ms. Input already GPU resident; excludes capture,
+    IO, host transfer and planning. Module fingerprints and independent-versus-combined outputs pass.
+  evidence:
+  - ara/evidence/tables/perception_overnight_2026-09-09.json
+  - docs/perception-runtime-protocol-2026-09-09.md
+  - docs/perception-overnight-results-2026-09-09.md
+  also_depends_on:
+  - N115
+  - N118
+  - N119
+  tests_observations:
+  - O69
+  status: resolved

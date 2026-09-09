@@ -1058,3 +1058,138 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O64
+  timestamp: 2026-09-09T02:32+02:00
+  provenance: ai-suggested
+  content: Pretrained ViT supports substantially better foreground/category readouts than the local CNN, while P1
+    pixel reconstruction favors CNN. This is package selection evidence, not isolated architecture causality or
+    a convolution/spatial versus transformer/semantic law.
+  context: Completed authorized overnight program and source-backed report; user has not yet reviewed the new results.
+    Protocol-specific measurements are direct experiment facts; interpretation remains staged.
+  potential_type: claim
+  bound_to:
+  - N115
+  - N116
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O65
+  timestamp: 2026-09-09T02:32+02:00
+  provenance: ai-suggested
+  content: Two added convolutional or transformer blocks per CNN grid do not improve the tested capability tradeoff
+    consistently. Continued encoders show fresh-geometry regression; loss balance, learning rate, gating and budget
+    remain alternatives. This does not refute deeper encoders generally.
+  context: Completed authorized overnight program and source-backed report; user has not yet reviewed the new results.
+    Protocol-specific measurements are direct experiment facts; interpretation remains staged.
+  potential_type: claim
+  bound_to:
+  - N117
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O66
+  timestamp: 2026-09-09T02:32+02:00
+  provenance: ai-suggested
+  content: Local access reduces the pretrained representation-to-image tradeoff, while output-specific computation
+    changes RGB/foreground quality differently. Separate trunks strongly help RGB but lose the primary foreground
+    endpoint; FiLM is not a general win. Capacity and cross-domain transfer prevent attributing all differences
+    to gradient conflict.
+  context: Completed authorized overnight program and source-backed report; user has not yet reviewed the new results.
+    Protocol-specific measurements are direct experiment facts; interpretation remains staged.
+  potential_type: claim
+  bound_to:
+  - N118
+  - N119
+  - N121
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O67
+  timestamp: 2026-09-09T02:32+02:00
+  provenance: ai-suggested
+  content: Map-distribution supervision improves per-case tolerance pass, but CNN rare errors worsen markedly. ViT
+    has more consistent typical-tail gains, with mixed orientation and residual severe outliers. Neither mean readiness
+    nor sharper maps establishes reliable control or calibrated confidence.
+  context: Completed authorized overnight program and source-backed report; user has not yet reviewed the new results.
+    Protocol-specific measurements are direct experiment facts; interpretation remains staged.
+  potential_type: claim
+  bound_to:
+  - N120
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O68
+  timestamp: 2026-09-09T02:32+02:00
+  provenance: ai-suggested
+  content: Coarse PCA emphasizes global image/domain means and positional structure; corrected attention entropy
+    is compatible with broad fine-directed broadcast and selective coarse-directed aggregation. Fitted interventions
+    show reliance, not superiority over retrained simpler fusion.
+  context: Completed authorized overnight program and source-backed report; user has not yet reviewed the new results.
+    Protocol-specific measurements are direct experiment facts; interpretation remains staged.
+  potential_type: claim
+  bound_to:
+  - N121
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O69
+  timestamp: 2026-09-09T02:32+02:00
+  provenance: ai-suggested
+  content: Recommend asymmetric pretrained contextual plus local features and typed decoders, retaining the fast
+    CNN reference. Consumers should select named maps with native width and source time; task/encoder conditioning,
+    more genuine scales and memory registers remain conditional. Future decoding needs causally predicted/aligned
+    evidence and deployment training; new U/P width adapters and dynamics/control tests remain unimplemented.
+  context: Completed authorized overnight program and source-backed report; user has not yet reviewed the new results.
+    Protocol-specific measurements are direct experiment facts; interpretation remains staged.
+  potential_type: architecture
+  bound_to:
+  - N115
+  - N118
+  - N119
+  - N120
+  - N122
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O70
+  timestamp: 2026-09-09T02:32+02:00
+  provenance: ai-suggested
+  content: Existing COCO/PushT suffice for the completed reconstruction, foreground/category and static geometry
+    comparisons. Next data should target broader geometry configurations and causal trajectories; computer use needs
+    resolution and screenshot/action/transition evidence. Static results do not support universal application capability.
+  context: Completed authorized overnight program and source-backed report; user has not yet reviewed the new results.
+    Protocol-specific measurements are direct experiment facts; interpretation remains staged.
+  potential_type: constraint
+  bound_to:
+  - N114
+  - N116
+  - N120
+  - N121
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O71
+  timestamp: 2026-09-09T02:32+02:00
+  provenance: ai-suggested
+  content: The fixed bad pusher case has multimodal location probability and an expected coordinate between pusher
+    and body regions. Boundary undercoverage and scene/object correlation are plausible upstream causes, not isolated
+    mechanisms. Test prospectively separated coverage before scaling layers; argmax alone would discard subpixel
+    precision.
+  context: Completed authorized overnight program and source-backed report; user has not yet reviewed the new results.
+    Protocol-specific measurements are direct experiment facts; interpretation remains staged.
+  potential_type: claim
+  bound_to:
+  - N120
+  - N121
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
