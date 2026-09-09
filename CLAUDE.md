@@ -1,22 +1,20 @@
-# CLAUDE.md — how we work on PATH-WM
+# Working on PATH-WM
 
-Read in this order at the start of a session:
+Read [workflow](docs/experiment-workflow.md), then
+[current work](docs/project-state.md). Read the active plan linked there.
 
-1. [Experiment and development workflow](docs/experiment-workflow.md): standing
-   process, essential tests, commits, scientific integrity and mandatory HTML.
-2. [Current project state](docs/project-state.md): implementation objective,
-   active experiment, evidence, constraints and already-authorized next steps.
-3. The active experiment's configuration, protocol and result report linked there.
+The product is a small Python library plus readable experiment recipes that Alex
+can operate himself. Preserve this boundary throughout implementation. A new
+experiment normally edits a recipe; it does not create another trainer, CLI,
+config hierarchy or reporting pipeline. Reusable code never imports recipes or
+historical runs. See [models](docs/models.md) and [experiments](docs/experiments.md).
 
-Keep this entry point and the workflow independent of any particular model,
-dataset, architecture or experiment target. Update project state when the goal
-changes; do not replace the harness. Explicit user instructions take precedence.
+Every completed training/evaluation run owns raw metrics, a checkpoint where
+applicable, and a verified standalone `report.html` inside its output directory.
+Record result completion separately from report status. A broken report must stay
+visible and be repaired before calling the workflow complete.
 
-Every completed experiment run must refresh and verify
-[`runs/experiment_dashboard.html`](runs/experiment_dashboard.html) from its raw
-ledger, with charts and exact values available for visual inspection. A raw run
-can succeed while reporting fails; report that failure visibly and repair the
-HTML before calling the experiment workflow complete.
-
-The standing harness was recovered from Git commit `eca742a` and adapted to the
-current ledger format.
+The user authorized a fresh start. Historical source is preserved by Git tag
+`archive/pre-modular-2026-09-09`; do not restore retired machinery into the active
+path. Preserve source data and completed runs. Update the current plan/state as
+work progresses; keep these standing rules independent of the experiment target.
