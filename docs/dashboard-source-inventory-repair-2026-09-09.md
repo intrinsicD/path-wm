@@ -24,3 +24,12 @@ before embedding; keep PNG when it is smaller. Add an essential round-trip check
 including colored fully transparent pixels, before implementation. Verify both
 the dashboard and report in the actual browser; preserve the original figures for
 scientific export. Do not relax payload or validation limits.
+
+The final full suite exposed one older harness assertion still reading the removed
+comma-joined `inventory.sources` field (`report/pytest_final.xml`, one failure).
+Migrate that assertion to the declared `source_files` relation: require exact
+equality of every run/path pair and verify the inventory count. Keep the existing
+metric/context identity checks and the larger comma-containing-path regression.
+This updates the test to the already reviewed interface without dropping its
+source-preservation requirement. Preserve the failed full-suite receipt and run
+the complete suite again as `pytest_final_v2` after this correction.

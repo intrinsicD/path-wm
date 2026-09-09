@@ -505,7 +505,11 @@ def test_compact_exact_records_resolve_to_full_identity_without_losing_values():
                               for row in datasets['context'])
     assert observed_context == sorted((r.label, key, str(value)) for r in results for key, value in r.context.items())
     assert all('run' not in row for name in ('metrics', 'context') for row in datasets[name])
-    assert all(r.source_paths[0] in next(row['sources'] for row in inventory if row['run'] == r.label) for r in results)
+    observed_sources = sorted((identities[row['record_key']], row['path'])
+                              for row in datasets['source_files'])
+    assert observed_sources == sorted((r.label, path) for r in results for path in r.source_paths)
+    assert all(row['source_count'] == len(next(r.source_paths for r in results if r.label == row['run']))
+               for row in inventory)
     reversed_inventory = build_dashboard_artifact(list(reversed(results)), [])['snapshot']['datasets']['inventory']
     assert {r['record_key']: r['run'] for r in reversed_inventory} == identities
     for table in artifact['manifest']['tables']:
