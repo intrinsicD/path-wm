@@ -30,3 +30,14 @@
 - **Code**: [filter](../../../pathwm/models/belief.py), [state schema](../../../pathwm/models/belief_state.py), [memory](../../../pathwm/models/hybrid_memory.py), [likelihood/KL helpers](../../../pathwm/training/belief.py), [recipe](../../../experiments/multimodal.py), [implemented contract](../../../docs/belief-model.md).
 - **Verification**: N149; [source-bound development receipt](../../evidence/tables/belief_implementation_2026-09-09.json).
 - **Scope**: Adopted operational mechanism, not a performance claim. Learned source encodings and old summaries are lossy; partial teachers are isolated. Fixed-reader feature distributions are auxiliary targets, not calibrated world probabilities. Default short histories do not establish deployment-length memory learning. Fresh sessions supersede the historical scoped-reset proposal. Gaussian reference remains selectable.
+
+## A04: Complete-session selective historical recall with independent calibration
+
+- **Design**: Canonical complete delivered-observation sessions feed the categorical agent; a late exact entity query triggers two task-conditioned memory reads and a five-class factual head. Explicit 0/1/0.25 costs select answer versus operational abstention. All-query NLL trains facts. Distinct development/calibration/test episodes select a checkpoint, fit one positive temperature and support cached final reporting. The authoritative delivered-history verifier is outside inference.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O104
+- **Adoption/implementation**: User authorization N152; red tests95e849e, implementation32e9f99. Defaults are research settings, not universal application preferences.
+- **Code**: [query/decision/verifier](../../../pathwm/models/recall.py), [calibration/metrics](../../../pathwm/evaluation/recall.py), [recipe](../../../experiments/multimodal.py), [guide](../../../docs/recall-task.md).
+- **Verification**: N153; [source-bound receipt](../../evidence/tables/recall_implementation_2026-09-10.json).
+- **Scope**: Full forward history with bounded gradient suffix; local memory boundaries also detach old inputs. No source-log lookup for policy, visual mapping, arbitrary instruction parsing, sensing or capability guarantee. Memory-learning extensions remain proposed as O107.

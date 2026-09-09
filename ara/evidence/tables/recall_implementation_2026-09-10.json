@@ -1,0 +1,270 @@
+{
+  "purpose": "implementation development verification; no capability threshold",
+  "recorded_at": "2026-09-10T01:46+02:00",
+  "implementation_commit": "32e9f99",
+  "proposal_commit": "5498528",
+  "cpu_tests_passed": 76,
+  "development_updates": 8,
+  "selected_step": 7,
+  "development_nll": 1.5479592296103015,
+  "calibration_fit": {
+    "boundary": true,
+    "examples": 15,
+    "iterations": 80,
+    "nll_after": 1.6098660707210053,
+    "nll_before": 1.6329826476086535,
+    "status": "fitted",
+    "temperature": 20.0,
+    "temperature_bounds": [
+      0.05,
+      20.0
+    ]
+  },
+  "test": {
+    "calibrated": {
+      "abstained": 15,
+      "answered": 0,
+      "answered_error": null,
+      "brier": 0.7997243040486087,
+      "coverage": 0.0,
+      "examples": 15,
+      "factual_accuracy": 0.2,
+      "false_not_observed": 0,
+      "invalid": 0,
+      "invented_location": 0,
+      "mean_answer_confidence": null,
+      "nll": 1.6087462752518833,
+      "seen_examples": 12,
+      "task_loss": 0.25,
+      "unseen_examples": 3,
+      "wrong_location": 0
+    },
+    "raw": {
+      "abstained": 15,
+      "answered": 0,
+      "answered_error": null,
+      "brier": 0.8011974113128042,
+      "coverage": 0.0,
+      "examples": 15,
+      "factual_accuracy": 0.2,
+      "false_not_observed": 0,
+      "invalid": 0,
+      "invented_location": 0,
+      "mean_answer_confidence": null,
+      "nll": 1.6114396204235135,
+      "seen_examples": 12,
+      "task_loss": 0.25,
+      "unseen_examples": 3,
+      "wrong_location": 0
+    }
+  },
+  "seen_old": {
+    "abstained": 8,
+    "answered": 0,
+    "answered_error": null,
+    "brier": 0.8012352554312385,
+    "coverage": 0.0,
+    "examples": 8,
+    "factual_accuracy": 0.0,
+    "false_not_observed": 0,
+    "invalid": 0,
+    "invented_location": 0,
+    "mean_answer_confidence": null,
+    "nll": 1.6125090300598854,
+    "seen_examples": 8,
+    "task_loss": 0.25,
+    "unseen_examples": 0,
+    "wrong_location": 0
+  },
+  "data": {
+    "calibration": {
+      "class_counts": [
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "count": 15,
+      "dataset": "historical_recall_v1",
+      "groups": {
+        "compressed": 4,
+        "consolidated": 4,
+        "not_observed": 3,
+        "recent": 4
+      },
+      "history": 16,
+      "input": "canonical text; complete session; unmarked",
+      "labels": [
+        "l0",
+        "l1",
+        "l2",
+        "l3",
+        "not_observed_in_session"
+      ],
+      "reference_memory": {
+        "block": 2,
+        "blocks": 2,
+        "recent": 2
+      },
+      "seed": 32001,
+      "sha256": "0d78199f694c486a2aa63151a33c047ce1f6de81e4d838c2c8eeb11b58cbfefd",
+      "split": "calibration"
+    },
+    "test": {
+      "class_counts": [
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "count": 15,
+      "dataset": "historical_recall_v1",
+      "groups": {
+        "compressed": 4,
+        "consolidated": 4,
+        "not_observed": 3,
+        "recent": 4
+      },
+      "history": 16,
+      "input": "canonical text; complete session; unmarked",
+      "labels": [
+        "l0",
+        "l1",
+        "l2",
+        "l3",
+        "not_observed_in_session"
+      ],
+      "reference_memory": {
+        "block": 2,
+        "blocks": 2,
+        "recent": 2
+      },
+      "seed": 42001,
+      "sha256": "791affc7870c73d3bc9417b03928c6135b077445461946f30601e6f629a10cb5",
+      "split": "test"
+    },
+    "train": {
+      "class_counts": [
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "count": 15,
+      "dataset": "historical_recall_v1",
+      "groups": {
+        "compressed": 4,
+        "consolidated": 4,
+        "not_observed": 3,
+        "recent": 4
+      },
+      "history": 16,
+      "input": "canonical text; complete session; unmarked",
+      "labels": [
+        "l0",
+        "l1",
+        "l2",
+        "l3",
+        "not_observed_in_session"
+      ],
+      "reference_memory": {
+        "block": 2,
+        "blocks": 2,
+        "recent": 2
+      },
+      "seed": 12001,
+      "sha256": "f75a33728bc0199ec13514a566395ff536238635ebacea266e4cded11b24f8a3",
+      "split": "train"
+    },
+    "validation": {
+      "class_counts": [
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "count": 15,
+      "dataset": "historical_recall_v1",
+      "groups": {
+        "compressed": 4,
+        "consolidated": 4,
+        "not_observed": 3,
+        "recent": 4
+      },
+      "history": 16,
+      "input": "canonical text; complete session; unmarked",
+      "labels": [
+        "l0",
+        "l1",
+        "l2",
+        "l3",
+        "not_observed_in_session"
+      ],
+      "reference_memory": {
+        "block": 2,
+        "blocks": 2,
+        "recent": 2
+      },
+      "seed": 22001,
+      "sha256": "5a0c7ffc089b2440b3be0cf3583fadb7eba384b24221bbbb6afd6acebf64f237",
+      "split": "validation"
+    }
+  },
+  "hashes": {
+    "runs/recall_v1/development/last.pt": "9196983685e59213952139ebd79d525769f39809cb48b7eb5491e12c0df37889",
+    "runs/recall_v1/development/metrics.jsonl": "0fea4347c9ef15cc1490cd218333b6a1df964bcd36e89d1eb9ad6832d53181f7",
+    "runs/recall_v1/development/recall_results.json": "769148bd296b91f0384875f7f11a2ee8242cff281dcf498956d64fcca7488723",
+    "runs/recall_v1/development/recall_predictions.pt": "a08bed3624673d975c302a00e3a2a14d62ba94e169933b2c222d661fa875c055",
+    "runs/recall_v1/development/report.html": "b86b139e55e3eb63d92f7041833a07a8f487cbe636935574ca966289eefff9c7",
+    "runs/recall_v1/verification.json": "3465ae087f3a912b910dd51159da7c21e13525e103641cb1a82fe1ed17b44e1b",
+    "runs/recall_v1/default_memory_check.json": "52e548f4d8ba1ac4644e5aa7dbe05b0fd3d52fecd35fa30499fed1673dc3542d",
+    "runs/recall_v1/final_checks.xml": "10751615fdc171635dd38629bab14b351eda18bcb58f229d4194adc79e8759bf"
+  },
+  "performance": {
+    "calibration_inference_seconds": 2.7953570840181783,
+    "device": "cpu",
+    "events_per_episode": 16,
+    "factual_head_calls_per_episode": 1,
+    "note": "Wall-clock serial inference including Python and transfers; descriptive, not a benchmark",
+    "test_inference_seconds": 2.824675294046756,
+    "test_seconds_per_episode": 0.18831168626978373,
+    "thinking_rounds_per_episode": 2
+  },
+  "verification": {
+    "browser_reports": [
+      "runs/recall_v1/development/report.html",
+      "runs/recall_v1/contract_checks/test_recall_resume_selects_sam0/full/report.html",
+      "runs/recall_v1/contract_checks/test_recall_resume_selects_sam0/resume/report.html",
+      "runs/recall_v1/final_checks/test_recall_resume_selects_sam0/full/report.html",
+      "runs/recall_v1/final_checks/test_recall_resume_selects_sam0/resume/report.html"
+    ],
+    "default_memory_check": "default_memory_check.json",
+    "development_updates": 8,
+    "negative_result": "20% factual accuracy; no answers; task loss .25",
+    "notes": [
+      "Two initial pytest setup errors from missing parent directory; corrected before training tests.",
+      "Exact two-update resume comparison passed in focused and final suites.",
+      "Renderer summary and confidence counts improved after training; raw run/source snapshots preserved.",
+      "Other unchanged renderer branches have structural regression coverage; no new visual-capability claim."
+    ],
+    "pytest": "final_checks.xml",
+    "renderer_sha256": "a47c910603be20a47e306eb7900c49021d5f2be54a722f01873d319d83b9a27c",
+    "schema": "pathwm-recall-verification-receipt-v1",
+    "tests": 76
+  },
+  "claude_receipts": [
+    "runs/reviews/state_memory_design_2026-09-09/overnight-credit-receipt.json",
+    "runs/reviews/state_memory_design_2026-09-09/overnight-credit-reconcile-receipt.json",
+    "runs/reviews/state_memory_design_2026-09-09/overnight-credit-clarify-receipt.json"
+  ],
+  "limits": [
+    "No trained-memory capability demonstrated",
+    "Truncated gradients and unconditional memory detach boundaries limit direct credit",
+    "Other overnight proposals pending under active heartbeat through09:00Berlin",
+    "Renderer summary/count polish followed training; source snapshots preserved"
+  ]
+}

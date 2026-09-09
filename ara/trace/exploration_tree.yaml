@@ -2451,3 +2451,65 @@ tree:
   - runs/reviews/state_memory_design_2026-09-09/recall-policy-reconcile-receipt.json
   also_depends_on: [N150]
   status: resolved
+- id: N152
+  type: decision
+  title: Implement selective recall and continue Claude proposals overnight
+  provenance: user
+  timestamp: 2026-09-10T01:46+02:00
+  choice: User authorizes the reviewed recall implementation, then asks for remaining design proposals
+    with Claude until 09:00 Europe/Berlin on 10 September. Broader proposals remain for discussion, not
+    silent adoption or new scientific experiments.
+  alternatives:
+  - Continue discussion without implementing the recall task
+  evidence:
+  - Current user request
+  - O104
+  - docs/recall-implementation-plan.md
+  - docs/remaining-decisions-2026-09-10.md
+  - automation:overnight-agent-design-proposals
+  also_depends_on:
+  - N151
+  - N150
+  status: resolved
+- id: N153
+  type: experiment
+  title: Verify selective recall, independent calibration and exact resume
+  provenance: ai-executed
+  timestamp: 2026-09-10T01:46+02:00
+  result: Red contract commit95e849e preceded implementation32e9f99. All76 CPU tests pass; one256-record
+    default-memory forward/backward check completes. Eight CPU development updates on15 episodes per split
+    and16-event small-memory histories select update7 by development NLL1.547959. Calibration T20 reaches
+    upper bound. Test factual accuracy0.20; raw NLL1.6114396204, adjusted1.6087462753; all15 abstain,
+    task loss0.25; seen-old8 cases have0 factual accuracy and all abstain. Two-update pause/resume comparisons
+    match model/optimizer/RNG/sampler/rows/selection/results; paused runs never evaluate calibration/test;
+    final report repair reuses cached predictions. Five recall reports browser-verified. Negative development
+    evidence only; no capability threshold or further training.
+  evidence:
+  - ara/evidence/tables/recall_implementation_2026-09-10.json
+  - runs/recall_v1/verification.json
+  - runs/recall_v1/final_checks.xml
+  - runs/recall_v1/default_memory_check.json
+  - tests/test_recall.py
+  - docs/recall-task.md
+  also_depends_on:
+  - N152
+  status: resolved
+- id: N154
+  type: question
+  title: How should bounded local learning support useful long-delay memory?
+  provenance: ai-suggested
+  timestamp: 2026-09-10T01:46+02:00
+  description: Three actual isolated Claude exchanges reconciled a proposal for grounded scoped questions
+    at individual compression/consolidation boundaries, with one-boundary gradients and restricted reads.
+    Query allowed to readers when asked, absent from earlier writes; labels/raw evaluator log excluded
+    from student inputs. Old-fact and incoming-correction probes, optional teacher, current-weight prefix
+    and trained controls specified. Proposal ready for Alex; other overnight decisions remain pending.
+  evidence:
+  - docs/remaining-decisions-2026-09-10.md
+  - runs/reviews/state_memory_design_2026-09-09/overnight-credit-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-credit-reconcile-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-credit-clarify-receipt.json
+  also_depends_on:
+  - N152
+  - N153
+  status: open

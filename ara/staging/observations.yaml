@@ -1860,9 +1860,9 @@ observations:
     research recommendations, not inferred application-wide user preferences.
   potential_type: architecture
   bound_to: [N151, N150]
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: ara/logic/solution/architecture.md:A04
+  crystallized_via: artifact-commitment
   stale: false
 - id: O105
   timestamp: 2026-09-10T01:01+02:00
@@ -1879,6 +1879,43 @@ observations:
     No empirical result or formally budgeted comparison occurred.
   potential_type: constraint
   bound_to: [N151]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O106
+  timestamp: 2026-09-10T01:46+02:00
+  provenance: ai-suggested
+  content: 'The first recall run executes the intended task but does not establish useful retention: all
+    top-class predictions are not-observed and all actual decisions abstain. Finite loss and memory gradients
+    establish software routes, not effective long-horizon credit assignment, hierarchy benefit or calibrated
+    answers.'
+  context: Small development run after implementation; no researcher interpretation of the new measurements
+    or scientific pass threshold.
+  potential_type: claim
+  bound_to:
+  - N153
+  - N152
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O107
+  timestamp: 2026-09-10T01:46+02:00
+  provenance: ai-suggested
+  content: Recommend directly grounded scoped probes after one local compression/consolidation boundary,
+    with detached prefix/input records and query-only restricted reads of the new memory. Include old
+    facts and incoming corrections; query appears only at read time, never in earlier writes. Train storage/reader
+    locally and encoders through existing observable losses; longer differentiable chains are a later
+    explicit variant. Recompute current-weight prefixes, keep teacher distillation optional, compare auxiliary
+    on/off and trained controls, and hold runtime capacity fixed.
+  context: Three public-only Claude reviews corrected checkpoint bias, invented provenance heads, information
+    versus gradient barriers, future-query relevance and attribution overclaims. Primary Compressive Transformer/PyTorch
+    mechanisms checked. Proposal committed5498528, no downstream implementation/experiment or user adoption.
+  potential_type: architecture
+  bound_to:
+  - N154
+  - N153
   promoted: false
   promoted_to: null
   crystallized_via: null

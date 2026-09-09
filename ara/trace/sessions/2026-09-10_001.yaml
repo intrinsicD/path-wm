@@ -2,13 +2,16 @@ session:
   id: 2026-09-10_001
   date: '2026-09-10'
   started: 2026-09-10T00:05+02:00
-  last_turn: 2026-09-10T01:01+02:00
-  turn_count: 2
+  last_turn: 2026-09-10T01:46+02:00
+  turn_count: 3
   summary: Two isolated Claude reviews produced a proposed goal/action/outcome-verification interface,
     historical recall with factual not-observed versus abstention, and bounded observation-conditioned
     sensing. Turn2 works out reference costs, complete text-recall episodes, separate calibration and
     subgroup metrics with two further Claude reviews. Local/source and arithmetic checks only; no model
-    changes or training. Defaults remain research recommendations.
+    changes or training. Defaults remain research recommendations. Turn3 implements the authorized recall
+    task:76 tests, default256-record check,8-update negative development run and verified reports. Three
+    Claude exchanges refine the first overnight memory-learning proposal; remaining reviews scheduled
+    through09:00Berlin, with no new broader implementation or experiment authorization.
 events_logged:
 - turn: 1
   type: decision
@@ -46,6 +49,50 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Stage subgroup utility/calibration constraints and corrected selective-prediction reasoning.
+- turn: 3
+  type: decision
+  id: N152
+  routing: direct
+  provenance: user
+  summary: Authorize recall implementation and remaining Claude proposals overnight.
+- turn: 3
+  type: experiment
+  id: N153
+  routing: direct
+  provenance: ai-executed
+  summary: Verify full task/resume/reports; negative8-update recall check.
+- turn: 3
+  type: question
+  id: N154
+  routing: direct
+  provenance: ai-suggested
+  summary: Complete first grounded long-memory proposal review; user choice still open.
+- turn: 3
+  type: architecture
+  id: O104
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Promote implemented recall contract toA04 through artifact commitment.
+- turn: 3
+  type: observation
+  id: O106
+  routing: staged
+  provenance: ai-suggested
+  summary: 'The first recall run executes the intended task but does not establish useful retention: all
+    top-class predictions are not-observed and all actual decisions abstain. Finite loss and memory gradients
+    establish software routes, not effective long-horizon credit assignment, hierarchy benefit or calibrated
+    answers.'
+- turn: 3
+  type: observation
+  id: O107
+  routing: staged
+  provenance: ai-suggested
+  summary: Recommend directly grounded scoped probes after one local compression/consolidation boundary,
+    with detached prefix/input records and query-only restricted reads of the new memory. Include old
+    facts and incoming corrections; query appears only at read time, never in earlier writes. Train storage/reader
+    locally and encoders through existing observable losses; longer differentiable chains are a later
+    explicit variant. Recompute current-weight prefixes, keep teacher distillation optional, compare auxiliary
+    on/off and trained controls, and hold runtime capacity fixed.
 ai_actions:
 - turn: 1
   action: Inspected local planner/task/categorical interfaces; wrote independent notes, completed two actual
@@ -61,6 +108,22 @@ ai_actions:
     No private information exported, model changes, training or runtime test-suite execution.
   provenance: ai-executed
   files_changed: [docs/recall-task-design.md, docs/decision-design.md, docs/project-state.md]
+- turn: 3
+  action: Implemented and committed32e9f99 following95e849e red tests; ran76 tests,256-event check and8
+    CPU updates; verified five recall reports and preserved setup/report failures. Completed three actual
+    isolated Claude reviews, checked primary compression/checkpoint sources and committed5498528 proposal.
+    Created/verified bounded heartbeat through09:00Berlin; no private content exported and no broader
+    experiments launched.
+  provenance: ai-executed
+  files_changed:
+  - experiments/multimodal.py
+  - pathwm/models/recall.py
+  - pathwm/evaluation/recall.py
+  - pathwm/evaluation/report.py
+  - tests/test_recall.py
+  - docs/recall-task.md
+  - docs/recall-implementation-plan.md
+  - docs/remaining-decisions-2026-09-10.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -70,15 +133,20 @@ key_context:
 - turn: 2
   excerpt: 'User: ok, please work that out with claude. Continue the proposed wrong-answer/abstention
     discussion into a concrete research task. No instruction to implement or start experiments.'
+- turn: 3
+  excerpt: 'User: Yes please do that. When you are done work out with Claude proposals for the remaining
+    decisions over the night until9:00am, so we can complete them today. Implementation completed; later
+    reviews remain scheduled, not falsely reported complete.'
 open_threads:
-- O104 supplies concrete reference preferences/task; next declare the implementation budget and later a
-  scientific effect-size/seed/split/paired-control protocol. Application-specific loss remains caller-owned.
+- O104/A04 implemented. O106 negative development interpretation and O107 local memory-learning proposal
+  remain staged. A scientific effect-size/seed/split/paired-control protocol is still required.
 - General external tasks need declared handling of verification failures caused by the agent itself.
 - O103 requires a future isolated hypothetical-correction interface and validated sensing probabilities.
 - O101 long-horizon retention, calibrated outcomes and useful closed-loop behavior remain unproven.
 - Prior research questions remain open as recorded in 2026-09-09_001.yaml; no unrelated topic abandoned.
+- Complete remaining Claude decision groups by08:30; synthesize by09:00Berlin and pause the active heartbeat.
 ai_suggestions_pending:
-- 'O102: historical recall first; wrong loss 1, abstention 0.25 and two retrieval rounds are proposed defaults.'
+- 'O102: broader objective/capability/action interfaces remain proposed; narrow recall contract is implemented.'
 - 'O103: finite sensing diagnostic then static-current-location inspect/answer, separately from historical recall.'
-- 'O104/O105: five factual classes,0/1/0.25loss, two reads, complete-session text replay and independent calibration;
-  old-seen utility and hierarchy attribution require their own controlled evidence.'
+- 'O105/O106: old-seen utility and hierarchy attribution still require controlled evidence; negative smoke result is not a broad refutation.'
+- 'O107: grounded one-boundary memory probes, with fixed-compression and auxiliary-on/off controls, await user design choice.'
