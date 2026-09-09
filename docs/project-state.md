@@ -1,5 +1,8 @@
 # Current work
 
+**In progress:** reproducible architecture and data-flow diagrams from the model
+and a small recorded execution. See the diagram follow-up in the implementation record.
+
 **Implemented:** one small multimodal world model, built in
 [the editable recipe](../experiments/multimodal.py). Read
 [the concrete architecture](multimodal.md) and [the implementation record](multimodal-plan.md).

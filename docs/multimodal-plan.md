@@ -1,5 +1,18 @@
 # One multimodal world model
 
+## Diagram follow-up
+
+Current slice: generate a compact architecture diagram from instantiated modules
+and a data-flow diagram from actual values passed between recorded calls. No
+profiling dashboard, training changes or hand-maintained graph connections.
+Add a small reusable diagram writer and one example script. Emit Mermaid and DOT
+sources, plus SVG/PNG when the existing Graphviz executable is available. Save
+source/config/input identities so unchanged inputs/code reproduce the diagrams.
+The flow view describes recorded call boundaries, not all possible tensor paths.
+CPU budget: one tiny synthetic inference example, repeated to verify determinism;
+no training/evaluation job or report renderer change. Tests must catch missing fork
+edges, repeated-call handling, module replacements and nondeterministic output.
+
 Status: implementation and numerical checks complete; HTML visual QA is blocked
 by the browser URL policy. Authorized 9 September 2026.
 
