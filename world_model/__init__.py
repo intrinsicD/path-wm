@@ -1,1 +1,0 @@
-"""Modular LeWM baseline."""

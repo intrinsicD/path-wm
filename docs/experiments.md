@@ -29,6 +29,9 @@ Other datasets can implement the small interface used by `Frames`: `len(dataset)
 history separate from future targets. Preserve episode/group boundaries when
 constructing training and evaluation splits.
 
+Install the optional ViT dependency with `python -m pip install -e '.[vision]'`
+when using DINO on a new environment.
+
 Useful examples:
 
 ```bash
@@ -87,7 +90,8 @@ versions in `environment.txt`, `last.pt`, `metrics.jsonl`,
 `status.json`, and a self-contained `report.html`. Saved examples and PCA axes allow
 inspection without repeating training. Loss terms and exact validation values are
 visible; PCA colors are projections, not semantic labels or information-content
-measurements. For sequence runs, the report compares the final true future frame
+measurements. Independently fitted PCA colors are not comparable across runs.
+For sequence runs, the report compares the final true future frame
 to a rendering of predicted features; no true future features enter that rendering.
 
 Rebuild a report without model inference:

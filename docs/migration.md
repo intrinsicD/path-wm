@@ -49,3 +49,51 @@ records remain outside the user entry path.
 One current plan, one short project-state page, one model guide and one experiment
 guide. No experiment registries, universal trainer, recursive config trees, dated
 constants in reusable code, or new abstraction without a concrete consumer.
+
+## Verification record
+
+The working library/recipes were committed at `74270c8`. The retired active tree
+is now removed; root data-ignore patterns are anchored so the new `pathwm/data`
+package is included in Git. The active interface has 18 library Python files,
+two recipes and four focused test modules (16 tests), rather than the prior
+experiment-specific source/script stack.
+
+- Reference comparison: 500 CPU FP32 checks of CNN depths 0/2, RGB, loss,
+  gradients, three AdamW updates, dense/pose outputs, memory and three-step rollout;
+  maximum observed difference 0. DINO local/final/pooled features and separate
+  local/context RGB/mask decoding: five more checks, maximum difference 0.
+- Tests cover explicit feature selection, diagnostic gradient isolation, causal
+  action timing and future-target independence, frozen weights/buffers, finite
+  candidate scoring, same-runtime full/resumed equality for both loops, masked
+  metric denominators, safe component loading, source snapshots, overwrite/resume
+  refusal, interrupted checkpoint writes and separate reporting failures.
+- Perception checkpoints can initialize the next dynamics experiment directly.
+  Actual short CPU perception/dynamics runs and GPU ViT/COCO runs have trained,
+  paused and resumed. GPU access required host execution; the sandbox could not
+  expose CUDA. This was an execution-environment issue, not a training result.
+- Installed-package import works from outside the repository; the old world_model
+  package is unavailable. A wheel contains only pathwm and distribution metadata.
+  A final clean-Git snapshot check follows the retirement commit.
+
+Raw migration receipts, reference comparison programs, three actual public-only
+Claude reviews and browser QA program are preserved under
+`runs/modular_migration_2026-09-09/`. Claude acknowledged the optimizer grad=None
+correction and withdrew claims that area-weighted metrics or cross-device resume
+were mandatory. Per-image metrics and strict same-runtime resume are explicit
+contracts; source/package inventories are not a complete environment recreation.
+
+These are scoped engineering checks. No new architecture superiority, recovered
+controller quality or completed long training curriculum is claimed. Existing
+scientific results belong to the preserved historical source and run records.
+
+## Recover historical source
+
+Use a new empty directory:
+
+```bash
+mkdir /tmp/pathwm-history
+git archive archive/pre-modular-2026-09-09 | tar -x -C /tmp/pathwm-history
+```
+
+Historical documentation paths referenced by agent research records resolve against
+that Git reference. Do not reintroduce the retired package as a new-library dependency.

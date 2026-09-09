@@ -1,18 +1,20 @@
 # Current work
 
-**Active:** finish the user-authorized modular restart.
-[Migration plan and evidence](migration.md) define the keep/remove choices.
+**Active:** final verification of the completed modular restart.
+[Migration record](migration.md) describes retained components and evidence.
 
-The new package has independent CNN/DINO encoders, output heads, causal memory and
-prediction, data adapters, two editable recipes and per-run offline reporting.
-Sixteen CPU tests pass, including exact full/resumed training equality in both
-loops. The retained CNN/head/memory computations pass 500 reference comparisons;
-DINO/local decoding passes another five, all with zero observed difference.
+The active tree now has `pathwm/`, two editable Python recipes, focused tests and
+short user/workflow guides. Retired model packages, dated scripts/configs, old
+notebooks/docs, third-party vendoring and the plugin dashboard builder are removed.
+They remain recoverable from `archive/pre-modular-2026-09-09`. Data and old runs
+remain on disk; the new package has no dependency on that historical source.
 
-The perception recipe has completed a short real-data pause/resume run and desktop/
-mobile report QA. Final sequence and GPU COCO examples are being checked. Next:
-remove retired active source and verify packaging, standalone imports and final
-reports. These are development checks, not new model-quality/control claims.
+Sixteen CPU tests pass. Reference computation checks found zero difference in 505
+scoped comparisons. Real CPU perception-to-dynamics and GPU COCO/ViT development
+runs train, pause and resume; final example reports are being verified. Packaging
+and imports work independently. A final clean-Git snapshot check is next.
 
-Reference source: `archive/pre-modular-2026-09-09` at
-`e95b6a6252cae72402de0dd93f419e8e93d25d12`. Data and completed runs remain on disk.
+Daily starting points: [perception recipe](../experiments/perception.py),
+[experiment guide](experiments.md), [model guide](models.md). New experiments should
+edit recipes and modules directly, following [the standing workflow](experiment-workflow.md).
+These checks do not establish model quality or closed-loop control.

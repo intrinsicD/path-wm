@@ -1,4 +1,0 @@
-name: tau_urban_av_2021
-kind: passive_audio_video
-path: data/tau_urban_av_2021/raw
-status: source data retained; action-conditioned baseline training not applicable
