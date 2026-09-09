@@ -1396,3 +1396,270 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O83
+  timestamp: 2026-09-09T15:33+02:00
+  provenance: ai-suggested
+  content: 'Propose hybrid retention: regular chronological compression of evicted states, plus bounded
+    extra detail for explicitly marked or surprising events. Event marks allocate additional summary tokens
+    or a small protected latent snapshot; a pointer alone cannot recover discarded detail. Keep k recent
+    latent states unchanged by memory compression, without claiming their original encodings are lossless.
+    Begin with fixed chunks and explicit user marks; add learned event selection after evaluation.'
+  context: Answer to voice question about fixed versus event-triggered compression; recommendation only,
+    no implementation authorization.
+  potential_type: architecture
+  bound_to:
+  - N130
+  - N131
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O84
+  timestamp: 2026-09-09T15:36+02:00
+  provenance: ai-suggested
+  content: 'Next settle joint learning objectives for the world model and hybrid memory: future prediction,
+    masked completion and delayed retrieval after recent states have expired, including marked-event detail.
+    Require actual training paths through compression and test dependence on the older memory. Distinguish
+    accurate retention of latent states from lossless raw observation encoding.'
+  context: Recommendation for next discussion topic following hybrid direction adoption; no training or
+    implementation performed.
+  potential_type: heuristic
+  bound_to:
+  - N132
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O85
+  timestamp: 2026-09-09T15:42+02:00
+  provenance: ai-suggested
+  content: 'Concrete perception proposal: previous state tokens attend current observed features to form
+    observation-conditioned queries; independently query recent, compressed and protected marked memories
+    from a pre-write snapshot. Per-token gates, with a no-memory option, combine read vectors as a residual
+    update. An observation-aware refinement produces the updated belief. Include time/support, scale and
+    evidence provenance; future records are masked. Train through completion and prediction with stale/conflicting
+    history examples. Append the observation-grounded record only after the update, preserving evidence
+    versus inferred belief. Gate weights are not calibrated confidence; exact stored latent fidelity does
+    not mean lossless observation encoding.'
+  context: User requests concrete fusion design during voice discussion. Proposal only, no source implementation
+    or training.
+  potential_type: architecture
+  bound_to:
+  - N130
+  - N134
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O86
+  timestamp: 2026-09-09T15:44+02:00
+  provenance: ai-suggested
+  content: Prediction reuses the multiscale attention pattern but forms queries from current belief, action
+    and elapsed time; no new or future observation enters prediction. Use prediction-specific read/gating
+    parameters initially, followed by a transition head producing a distribution over next latent states.
+    Multiple imagined steps can re-query the fixed real-memory snapshot while hypothetical state evolves
+    separately. Actual observations later enter the perception update. Training targets are isolated from
+    predictor inputs.
+  context: Voice clarification of perception versus prediction; architecture proposal, no implementation
+    or empirical validation.
+  potential_type: architecture
+  bound_to:
+  - N135
+  - N130
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O87
+  timestamp: 2026-09-09T15:46+02:00
+  provenance: ai-suggested
+  content: Propose a learned action projection plus continuous elapsed-time encoding combined into a conditioning
+    token at the shared latent width. State tokens attend to it before prediction-specific memory queries.
+    Preserve missing-action versus explicit no-op distinction. Initially predict one recorded transition
+    using its actual duration where available, otherwise declared step units; longer horizons chain transitions
+    with their corresponding action sequence. Train multistep rollouts without future-observation inputs.
+    Do not claim arbitrary-duration generalization; direct coarse-horizon prediction remains optional
+    future work.
+  context: User asks for recommendation on action/time query representation and single-step horizon during
+    architecture discussion. Reuses existing action-presence/time-encoding concepts; no implementation
+    or training.
+  potential_type: architecture
+  bound_to:
+  - N130
+  - N135
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O88
+  timestamp: 2026-09-09T15:48+02:00
+  provenance: ai-suggested
+  content: 'Thinking proposal: form queries from current task tokens, current belief and working/reasoning
+    tokens; read recent, compressed and protected marked memories with thinking-specific attention and
+    per-token gated residual fusion. Update only working/reasoning state; preserve world clocks and observational
+    memory. A bounded number of iterations may refine queries using earlier reads, with no automatic thought-to-evidence
+    write. Output/action proposals read the task working state; imagined transitions call dynamics on
+    a separate branch. Train retrieval and working updates through grounded delayed answers or decisions,
+    with no-memory/mismatched-memory controls; internal thoughts need not be rendered as text.'
+  context: User asks what to propose for the third memory consumer, thinking. Design proposal only; not
+    a claim of reliable current task learning.
+  potential_type: architecture
+  bound_to:
+  - N130
+  - N134
+  - N136
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O89
+  timestamp: 2026-09-09T15:50+02:00
+  provenance: ai-suggested
+  content: 'Marking training proposal: a scoring head sees only currently available state, task and event
+    features and proposes extra-detail retention. In replay, compare later grounded answer/completion/prediction
+    losses when a candidate receives protected detail versus ordinary compression, using matched histories
+    and budget controls. Use detached benefit estimates minus storage cost as training targets for the
+    score; future outcomes supply labels only, never scoring inputs. Admit agent marks under a fixed detailed-memory
+    budget; explicit user marks get priority with visible capacity limits. Delayed-benefit training examples
+    must outlast short-term retention. Importance is learned utility, not attention frequency or surprise
+    alone.'
+  context: User asks to discuss marking training after approving thinking path. New proposal, not implemented
+    or validated; loss weights and comparison compute remain to be specified.
+  potential_type: architecture
+  bound_to:
+  - N137
+  - N133
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O90
+  timestamp: 2026-09-09T15:51+02:00
+  provenance: ai-suggested
+  content: 'Propose choosing a small delayed-memory episode task before capacities: object motion/occlusion
+    and an early fact queried after short-term eviction. Provisional prototype capacities: k=32 recent
+    states, b=8 chronological states compressed into one summary with one-state token budget, m=16 summaries,
+    and 8 state-equivalent protected slots; about 160 steps of ordinary explicit coverage after fill,
+    plus marked retention. Use episodes long enough to cross eviction/compression boundaries, e.g. 256
+    steps if supported. Train prediction/completion first with replayable memory paths, then marking via
+    bounded candidate comparisons. Evaluate held-out episodes/configurations at multiple delays, compare
+    short-only, compressed hybrid and matched-budget retention baselines, track source confusion and actual
+    memory use. Values, compute and numerical success thresholds remain proposed, not approved.'
+  context: Voice discussion of remaining training setup, capacity and evaluation choices. No implementation,
+    new dataset or experiment run.
+  potential_type: architecture
+  bound_to:
+  - N138
+  - N130
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O91
+  timestamp: 2026-09-09T15:52+02:00
+  provenance: ai-suggested
+  content: Define the first memory task as delayed last-observed object location. Show several identifiable
+    objects at known locations, then intervening distractor observations; later query an object ID and
+    predict its last observed location. Vary delay across short-term eviction and compressed-history retention,
+    include later observed relocations and explicit user marks, and learn agent retention proposals from
+    delayed usefulness. Use structured object/location outputs initially to avoid confounding weak language
+    learning. Split episodes/configurations, measure recall by delay and marking source, compare equal-storage
+    recency/uniform retention and learned marking, and inspect memory ablations. Ground truth is last
+    observed location rather than unknowable current hidden location. Capacities, dataset size, training
+    compute and numerical success thresholds remain unset.
+  context: User agrees to choose a training task before fixing sizes. This selects a concrete proposal
+    for discussion; unseen earlier capacity suggestions were not accepted and no training is launched.
+  potential_type: architecture
+  bound_to:
+  - N130
+  - N138
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O92
+  timestamp: 2026-09-09T15:55+02:00
+  provenance: ai-suggested
+  content: Hierarchical temporal memory can support spatial world mapping in principle, but compression
+    alone does not establish a map. Propose retaining place/object relations and observer-location estimates,
+    associating revisits, and maintaining consolidated spatial belief as temporal episodes age out. A
+    shared memory system may expose temporal and place/object queries without requiring an independent
+    world model. Last-seen object recall is an initial retention test; mapping additionally needs moving-viewpoint,
+    revisit, consistency and unseen-layout evaluation. Pose/location information must be inferred or explicitly
+    supplied, not assumed available. Neural Map and EgoMap provide structured-memory precedents, not validation
+    of this proposed hierarchy.
+  context: 'User asks whether world mapping can be done with this memory. Primary sources checked: https://arxiv.org/abs/1702.08360
+    and https://arxiv.org/abs/2002.02286. No implementation or experiment.'
+  potential_type: architecture
+  bound_to:
+  - N130
+  - N138
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O93
+  timestamp: 2026-09-09T15:59+02:00
+  provenance: ai-suggested
+  content: Propose domain-neutral learned state tokens instead of mandatory object/place/motion slots.
+    Define their function as retaining information needed to interpret observations, predict consequences
+    of available actions, complete missing inputs and support tasks. Factory representations may encode
+    machines and physical relations; document representations may encode claims, references, versions,
+    permissions or workflow state. Keep operational distinctions between current belief, episodic history,
+    consolidated knowledge and task workspace, without prescribing semantic coordinates. Training data/objectives
+    learn contents; interfaces, capacity, causal availability, provenance and action validity remain explicit
+    engineering constraints. Spatial maps are an optional domain-specific readout or inductive bias, not
+    a universal ontology. Representation learning does not imply arbitrary online architecture self-modification.
+  context: Response to user correction of physical-place-centric examples. Proposed clarification of architecture,
+    no module changes, test or new empirical claim.
+  potential_type: architecture
+  bound_to:
+  - N140
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O94
+  timestamp: 2026-09-09T16:04+02:00
+  provenance: ai-suggested
+  content: 'Proposed complete contract in docs/state-memory-design.md: neutral belief/task/working/session-consolidation
+    tokens, modality feature adapters, action/time tokens and exact external metadata; consumer-specific
+    attention/gates; causal observation and prediction branches; bounded thinking/output route; k recent
+    snapshots plus explicitly counted b-1 staging states; b-state learned compression; m compressed blocks;
+    bounded protected detail; consolidation of departing older blocks into G recurrent session tokens.
+    Concrete optional recipe D64/N32/T4/W8/G16, k32/b8/C32/m16/p8 and three thinking iterations. Explicit
+    capacity formula, data/availability times, ancestry, mark admission, target isolation and replay gradient
+    boundaries. Diagonal Gaussian is a replaceable limited baseline. No model changes or approved experiment;
+    dimensions/consolidation/distribution details remain proposals.'
+  context: Durable interface document and project-state update after user asks to fully pin down the model.
+    Document commitment preserves a proposal, not evidence of implementation or scientific efficacy.
+  potential_type: architecture
+  bound_to:
+  - N141
+  - N140
+  - N130
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O95
+  timestamp: 2026-09-09T16:05+02:00
+  provenance: ai-suggested
+  content: 'Specify session consolidation on compressed-block eviction: G existing tokens cross-attend
+    to departing C tokens, refine a candidate H with residual self-attention/MLP, then use per-token/channel
+    sigmoid gates K_new=(1-g)K_old+gH. Source content time is distinct from new availability; no later
+    evidence enters. Current belief receives observation corrections immediately, while K receives them
+    later through chronological consolidation and remains historical context. Thinking/imagined/mark proposals
+    cannot rewrite observational K. Train through delayed consumer losses and detached-reference read
+    preservation, recomputing updates during replay. Bounded capacity remains lossy; gates do not guarantee
+    conflict resolution.'
+  context: User agrees to discuss how proposed consolidated state updates after hearing about its purpose;
+    exact gate/candidate proposal newly specified in docs/state-memory-design.md. No model implementation.
+  potential_type: architecture
+  bound_to:
+  - N141
+  - N140
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

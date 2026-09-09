@@ -60,24 +60,24 @@ results are preserved under `runs/multiscale_v1/` and `runs/multimodal_v1/`; old
 checkpoints require their source snapshots. The new latent schema is v2 and fails
 closed when ancestry is absent. No data or completed runs were removed.
 
-**Next discussion, saved at the user's request:** the current negative learning
-result is acceptable for now. Discuss the architecture before further implementation:
+**Current discussion:** the negative learning result is acceptable for now. Finish
+the model architecture before designing or running new experiments. The concrete
+[state and hybrid-memory specification](state-memory-design.md) separates directions
+accepted in conversation from newly proposed interface details and illustrative sizes.
 
-- One state model, or multiple if needed, should learn latent transitions from
-  temporal data and complete deliberately withheld partial observations.
-- Keep `k` past latent states in short-term session memory; compress groups into
-  smaller representations and keep `m` past compressed states at a longer scale.
-- Include cross-scale attention. Decide how compression is trained and how memory
-  reads influence state estimation, dynamics, thinking, planning and output.
-- Decide the routing and timing of those reads/writes, and retain the distinction
-  between observed history and imagined/generated content.
+Accepted directions include recent detail plus compressed history and protected
+marks, both user and agent mark proposals, separate perception/prediction/thinking
+reads, action/time-conditioned short-step prediction, and bounded thinking that
+preserves world time and evidence boundaries. Marking should learn from delayed
+benefit. The representation should learn domain-relevant content rather than reserve
+fixed semantics for physical objects or places; document work is equally in scope.
 
-Current discussion proposal: share the world-state representation across prediction
-and observation update; let each consumer query recent and compressed memory. Train
-compression for delayed prediction/completion and useful retrieval. Chunk timing,
-gradient flow, evidence versus inferred belief, and direct output access remain open.
+The specification proposes explicit token shapes, residual attention/gating,
+chronological compression staging, a bounded consolidated session state, write
+ordering, protected-detail admission and gradient boundaries. Consolidation details,
+numerical capacities, uncertainty family and exact training choices remain proposals.
+No model implementation, checkpoint migration or new training has occurred.
 
-These are discussion points, not an implemented or finalized design. Physical
-understanding, useful language generation, calibrated progress, semantic feature
-controls, scalable memory and broad self-improvement remain research questions.
-Real data still use `data/pusht_world_model/cchi_v1` directly.
+Physical understanding, useful language generation, calibrated progress, semantic
+feature controls, scalable memory and broad self-improvement remain research
+questions. Real data still use `data/pusht_world_model/cchi_v1` directly.

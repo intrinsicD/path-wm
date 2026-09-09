@@ -2081,3 +2081,174 @@ tree:
   - pathwm/models/agent_state.py
   - experiments/multimodal.py
   status: open
+- id: N131
+  type: decision
+  title: Preserve recent memory fidelity and allow lossy older memory
+  provenance: user
+  timestamp: 2026-09-09T15:33+02:00
+  choice: User endorses high-fidelity short-term memory, lossy long-term memory, retention of potentially
+    later-relevant information, and separation of observation, belief and generated content. Compression
+    timing remains a question.
+  alternatives:
+  - Apply the same lossy compression to recent and older memory
+  evidence:
+  - Current voice transcript
+  also_depends_on:
+  - N130
+  status: resolved
+- id: N132
+  type: decision
+  title: Adopt hybrid session-memory direction for continued design
+  provenance: user
+  timestamp: 2026-09-09T15:36+02:00
+  choice: 'User says to make the full hybrid first: preserve recent latent states, regularly compress
+    older history and retain extra detail for marked events. In the ongoing architecture discussion this
+    adopts the direction, without fixing implementation, learned marking, capacities or training budget.'
+  alternatives:
+  - Only fixed compression
+  - Only event-triggered retention
+  evidence:
+  - Current voice transcript
+  - O83
+  also_depends_on:
+  - N130
+  - N131
+  status: resolved
+- id: N133
+  type: decision
+  title: Allow both user and agent retention proposals
+  provenance: user
+  timestamp: 2026-09-09T15:38+02:00
+  choice: User explicitly requests that both the user and the agent can propose memory events for extra-detail
+    retention. Preceding voice acknowledgments support continuing the prediction/completion/delayed-retrieval
+    discussion; exact objectives, priorities, budgets and admission rules remain unspecified.
+  alternatives:
+  - User-only retention marks
+  - Agent-only retention marks
+  evidence:
+  - Current voice transcript
+  also_depends_on:
+  - N132
+  status: resolved
+- id: N134
+  type: decision
+  title: Adopt separate memory reads for perception prediction and thinking
+  provenance: user
+  timestamp: 2026-09-09T15:40+02:00
+  choice: User affirms separate attention queries over shared memory for perception, prediction and thinking,
+    and leaves the order of further discussion to the assistant. Continue with perception routing; no
+    implementation budget authorized.
+  alternatives:
+  - One identical memory read shared by all consumers
+  evidence:
+  - Current voice transcript
+  - O82
+  also_depends_on:
+  - N130
+  status: resolved
+- id: N135
+  type: decision
+  title: Accept the proposed perception-memory fusion path
+  provenance: user
+  timestamp: 2026-09-09T15:44+02:00
+  choice: User says the observation read, separate memory reads, gated residual fusion and observation-aware
+    refinement sound good, then asks whether prediction uses exactly the same path. Accept conceptual
+    perception direction; no implementation requested.
+  evidence:
+  - Current voice transcript
+  - O85
+  alternatives: []
+  also_depends_on:
+  - N134
+  status: resolved
+- id: N136
+  type: decision
+  title: Accept action/time conditioning and short-transition rollouts
+  provenance: user
+  timestamp: 2026-09-09T15:48+02:00
+  choice: User affirms conditioning prediction on action and elapsed time, starting with recorded transitions
+    and chaining action-conditioned predictions for longer horizons. Then requests a concrete thinking-memory
+    route. No implementation or training budget requested.
+  alternatives:
+  - Initially predict arbitrary large time jumps
+  evidence:
+  - Current voice transcript
+  - O87
+  also_depends_on:
+  - N135
+  status: resolved
+- id: N137
+  type: decision
+  title: Accept bounded iterative thinking-memory retrieval
+  provenance: user
+  timestamp: 2026-09-09T15:50+02:00
+  choice: User affirms task/working-state memory queries, bounded iterative gated working-state updates,
+    grounded answer/action use and unchanged world time/evidence boundaries. Agrees to discuss training
+    marking next; no training run requested.
+  alternatives: []
+  evidence:
+  - Current voice transcript
+  - O88
+  also_depends_on:
+  - N136
+  status: resolved
+- id: N138
+  type: decision
+  title: Accept delayed-benefit marking direction and discuss experimental scope
+  provenance: user
+  timestamp: 2026-09-09T15:51+02:00
+  choice: User affirms causal marking scores trained from later utility of retained detail with storage
+    cost and user priority, then requests discussion of remaining memory budgets, training and evaluation.
+    No execution request or compute budget set.
+  alternatives: []
+  evidence:
+  - Current voice transcript
+  - O89
+  also_depends_on:
+  - N137
+  status: resolved
+- id: N139
+  type: decision
+  title: Finish model architecture before specifying or running experiments
+  provenance: user
+  timestamp: 2026-09-09T15:57+02:00
+  choice: User endorses preserving place/object relationships through memory compression, then explicitly
+    redirects from moving-viewpoint tests to finishing the rest of the model first. Next discuss persistent
+    world-state structure and its relation to episodic memory; test details and execution remain deferred.
+  alternatives:
+  - Proceed immediately into task details and mapping tests
+  evidence:
+  - Current voice transcript
+  also_depends_on:
+  - N130
+  - N138
+  status: resolved
+- id: N140
+  type: question
+  title: Define world state without hard-coded physical-world semantics
+  provenance: user
+  timestamp: 2026-09-09T15:59+02:00
+  description: User emphasizes letting the agent learn how to represent its world and contrasts an agent
+    working in a factory with one working on digital documents. Questions physical/place-specific state
+    assumptions while continuing architecture-first discussion.
+  evidence:
+  - Current voice transcript
+  also_depends_on:
+  - N139
+  - N130
+  status: open
+- id: N141
+  type: question
+  title: Specify the complete learned-token and hybrid-memory interfaces
+  provenance: user
+  timestamp: 2026-09-09T16:04+02:00
+  description: User requests complete specification after discussing domain-neutral learned state tokens
+    and modality/action adapters. Preserve architecture-first scope and explicitly distinguish new implementation
+    defaults from accepted directions.
+  evidence:
+  - Current voice transcript
+  - docs/state-memory-design.md
+  also_depends_on:
+  - N140
+  - N139
+  status: open
