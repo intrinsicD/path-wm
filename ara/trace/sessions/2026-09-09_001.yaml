@@ -2,8 +2,8 @@ session:
   id: 2026-09-09_001
   date: '2026-09-09'
   started: 2026-09-08T20:28+02:00
-  last_turn: 2026-09-09T16:23+02:00
-  turn_count: 25
+  last_turn: 2026-09-09T17:53+02:00
+  turn_count: 26
   summary: 'Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges.
     Local ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry
     pass improves with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests
@@ -17,7 +17,7 @@ session:
     recipes and a verified first perception migration; three public-only Claude reviews, no code migration
     or training. Turn7 adopts and completes the modular restart: 18 library files/two editable recipes, retired
     legacy stack preserved by tag, 505 zero-difference reference checks, 16 tests and clean-Git recipe checks,
-    CPU/GPU pause-resume and three verified local reports; standing workflow migrated. Turn8 resumes temporal-state and hierarchical-memory design discussion; user and assistant proposals remain open, with no new implementation or training. Subsequent voice discussion establishes hybrid memory and separate consumer routes, then returns to architecture before experiments. Final interface proposal records domain-neutral tokens, explicit budgets/staging/consolidation and training boundaries; no model work. Turn25 completes three actual public-only Claude reviews, reconciles overclaims and proposes separately retrievable observation/belief views as the next discussion; no new model work.'
+    CPU/GPU pause-resume and three verified local reports; standing workflow migrated. Turn8 resumes temporal-state and hierarchical-memory design discussion; user and assistant proposals remain open, with no new implementation or training. Subsequent voice discussion establishes hybrid memory and separate consumer routes, then returns to architecture before experiments. Final interface proposal records domain-neutral tokens, explicit budgets/staging/consolidation and training boundaries; no model work. Turn25 completes three actual public-only Claude reviews, reconciles overclaims and proposes separately retrievable observation/belief views as the next discussion; no new model work. Turn26 separates memory capacity, read cost and recall quality; bounded indexed reads proposed, evidence-view choice still open and no benchmark run.'
 events_logged:
 - turn: 1
   type: decision
@@ -581,6 +581,27 @@ events_logged:
     learning, and action/objective adapters. Claude withdrew unsupported impossibility, mandatory frozen
     encoder, exact-retention, fixed-field and domain-ban claims. No superiority, calibrated uncertainty,
     model implementation or user adoption of the new two-view interface is established.'
+- turn: 26
+  type: question
+  id: N143
+  routing: direct
+  provenance: user
+  summary: User asks whether memory capacity can scale easily or impacts performance, before continuing
+    the observation-evidence versus belief discussion. Address storage, computation and usable recall
+    separately; no evidence-view adoption or implementation request inferred.
+- turn: 26
+  type: observation
+  id: O97
+  routing: staged
+  provenance: ai-suggested
+  summary: Increasing retained record counts can preserve model parameter shapes, but payload storage
+    and proposed dense cross-attention reads grow with retained tokens at fixed width and query count.
+    Illustrative memory payload is 2032 tokens / 130048 scalars / 0.496 MiB float32 per session, excluding
+    metadata, caches, raw evidence and training. Propose independently configurable storage capacity and
+    bounded read budgets, with indexed selection for large older/protected stores. Lookup, maintenance
+    and transfers remain costs; approximate selection can miss evidence. More memory does not guarantee
+    improved recall beyond trained delays/distractors. Fixed consolidation remains lossy. A possible evidence/belief
+    split should share an explicit total budget rather than implicitly duplicate it.
 ai_actions:
 - turn: 1
   action: Implemented, developed and sealed matched encoder/decoder/objective comparisons; ran all declared units
@@ -722,6 +743,16 @@ ai_actions:
   - runs/reviews/state_memory_design_2026-09-09/
   - ara/staging/observations.yaml
   - ara/trace/
+- turn: 26
+  action: Inspected memory reads/writes and attention code; checked primary compression/retrieval sources;
+    calculated illustrative latent payload; documented theoretical scaling and optional bounded reads.
+    No runtime measurement, model implementation or training.
+  provenance: ai-executed
+  files_changed:
+  - docs/state-memory-design.md
+  - docs/project-state.md
+  - ara/staging/observations.yaml
+  - ara/trace/
 claims_touched: []
 key_context:
 - turn: 1
@@ -789,6 +820,9 @@ key_context:
   excerpt: User says let us do that after offer to decide how consolidated session state gets updated.
 - turn: 25
   excerpt: 'User: Please discuss the complete design with Claude and identify open point to discuss next.'
+- turn: 26
+  excerpt: 'User: Yes let us settle that. One question first, can we scale memory easily or is it impacting
+    performance?'
 open_threads:
 - Review O64-O71 and the measured architecture tradeoffs; no universal architecture or new control success
   has been adopted.
@@ -825,6 +859,8 @@ open_threads:
 - 'N142/O96: discuss belief-only versus independently retrievable observation-evidence and belief memory
   views; no second stream adopted. Follow with state/filtering, persistent derived knowledge, read conflict
   and learning/action contracts.'
+- 'N143/O97: distinguish storage and read budgets; indexed retrieval remains a proposal, capacity/generalization
+  and evidence-view allocation remain open.'
 ai_suggestions_pending:
 - 'O64: Pretrained ViT supports substantially better foreground/category readouts than the local CNN, while
   P1 pixel reconstruction favors CNN. This is package selection evidence, not isolated architecture causality
@@ -888,3 +924,5 @@ ai_suggestions_pending:
   alone unvalidated.'
 - 'O96: fixed-budget observation/belief views with independent evidence retrieval and explicit conditioning/retention
   objectives; supported as an engineering preference by Claude, not proven or adopted.'
+- 'O97: decouple capacity from bounded attention using indexed older/protected retrieval if needed; unimplemented
+  and unbenchmarked.'

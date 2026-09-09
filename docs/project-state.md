@@ -88,6 +88,11 @@ Then settle executed-action propagation/observation correction, persistent deriv
 knowledge, conflicting memory reads, learning targets and action/objective adapters.
 Exact briefs, responses and receipts are in `runs/reviews/state_memory_design_2026-09-09/`.
 
+The user's follow-up asks about memory scaling before settling the evidence view.
+The specification now distinguishes storage capacity, attention/read cost and learned
+recall quality. Bounded indexed reads are a scaling proposal; no such implementation
+or scaling benchmark exists, and the two-view choice remains open.
+
 Physical understanding, useful language generation, calibrated progress, semantic
 feature controls, scalable memory and broad self-improvement remain research
 questions. Real data still use `data/pusht_world_model/cchi_v1` directly.

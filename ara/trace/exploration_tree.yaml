@@ -2273,3 +2273,18 @@ tree:
   - N139
   - N140
   status: resolved
+- id: N143
+  type: question
+  title: Clarify memory scaling before settling the evidence view
+  provenance: user
+  timestamp: 2026-09-09T17:53+02:00
+  description: User asks whether memory capacity can scale easily or impacts performance, before continuing
+    the observation-evidence versus belief discussion. Address storage, computation and usable recall
+    separately; no evidence-view adoption or implementation request inferred.
+  evidence:
+  - Current user question
+  - docs/state-memory-design.md#scaling-considerations
+  also_depends_on:
+  - N142
+  - N141
+  status: open

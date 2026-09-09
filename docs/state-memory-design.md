@@ -84,6 +84,44 @@ training activations, raw evidence storage and source-index metadata. A protecte
 multi-state event consumes multiple state-equivalent slots; marking never creates
 unbounded storage. Exact raw media retention is not included in this latent budget.
 
+## Scaling considerations
+
+This is a cost analysis, not a runtime or learning benchmark. Increasing the number
+of retained records (`k`, `m`, `p`) can leave the learned parameter shapes unchanged;
+changing token width or learned slot counts is a different model change. With the
+illustrative sizes above, memory alone holds 2,032 tokens / 130,048 scalars: about
+0.496 MiB per session in float32, excluding metadata, raw evidence, projections,
+temporary copies and training activations.
+
+Let `M` be the number of stored tokens and `Q` the consumer's query-token count.
+Payload storage is `O(M*D)`. Dense cross-attention has `O(Q*M*D)` score/value work,
+plus projections (including `O(M*D^2)` when memory projections are recomputed).
+At fixed query count and width, the memory-read work grows linearly with memory.
+This does not mean whole-agent latency grows by the same factor. Thinking rounds
+and imagined action branches repeat reads; training also needs activation/gradient
+accounting. The proposed readers do not require all stored tokens to self-attend.
+
+Compression extends represented history per stored token at the expense of detail.
+A fixed consolidated state cannot preserve arbitrarily many independent facts.
+Larger banks also change retrieval distractors, delays and compression exposure;
+usable recall beyond the training distribution is an empirical question.
+
+A possible scaling extension is to separate storage capacity from a per-consumer
+read budget: read bounded recent/consolidated tokens directly, and select a bounded
+set of older/protected records through an index before attention. Index lookup,
+maintenance and transfers still cost resources; approximate retrieval can miss the
+needed record. This is a new proposal, not an adopted replacement for the dense
+read contract below. [Memorizing Transformers](https://arxiv.org/abs/2203.08913)
+demonstrates approximate retrieval from larger neural memory in language modelling;
+its gains do not establish this design's scaling quality.
+
+The existing `EpisodicMemory` implementation selects a fixed number of records but
+scores every key and concatenates the bank on writes. Its current lookup and copying
+therefore still grow with capacity; it is not an implemented scalable index. If a
+separate observation-evidence view is adopted, divide an explicit total budget
+between evidence and belief, or explicitly fund the extra storage/read cost. The
+two views need not each duplicate the full existing budget.
+
 ## Memory reads
 
 Each consumer owns its query projections, attention and gates. Share the stores

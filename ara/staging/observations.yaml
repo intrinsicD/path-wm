@@ -1687,3 +1687,26 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O97
+  timestamp: 2026-09-09T17:53+02:00
+  provenance: ai-suggested
+  content: Increasing retained record counts can preserve model parameter shapes, but payload storage
+    and proposed dense cross-attention reads grow with retained tokens at fixed width and query count.
+    Illustrative memory payload is 2032 tokens / 130048 scalars / 0.496 MiB float32 per session, excluding
+    metadata, caches, raw evidence and training. Propose independently configurable storage capacity and
+    bounded read budgets, with indexed selection for large older/protected stores. Lookup, maintenance
+    and transfers remain costs; approximate selection can miss evidence. More memory does not guarantee
+    improved recall beyond trained delays/distractors. Fixed consolidation remains lossy. A possible evidence/belief
+    split should share an explicit total budget rather than implicitly duplicate it.
+  context: Analytic accounting and local source inspection, with Compressive Transformers and Memorizing
+    Transformers primary sources checked. Current EpisodicMemory top-k still scans all keys and copies
+    bank on writes. No scaling benchmark, new Claude review, code change or adopted indexed architecture.
+  potential_type: architecture
+  bound_to:
+  - N143
+  - N141
+  - N142
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
