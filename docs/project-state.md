@@ -1,5 +1,10 @@
 # Current work
 
+**In progress:** task-conditioned learned decisions, required/disabled/automatic
+output controls, exact request/producer attribution and generated-content reflection.
+The accepted scope and CPU budget are in [the active slice](multimodal-plan.md).
+Actual Claude design review is underway; development begins with contract tests.
+
 **Implemented:** conditioned multiscale input features for image, video, audio and
 text, following an actual Claude design review and reconciliation. See the slice in
 [the implementation record](multimodal-plan.md).

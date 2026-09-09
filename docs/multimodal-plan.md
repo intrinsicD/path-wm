@@ -1,5 +1,50 @@
 # One multimodal world model
 
+## Task decisions, output controls and loopback — active slice
+
+Accepted user path: instruction → shared text features → task tokens → learned
+operation/output/completion proposals → explicit output controls → attributed
+generation → tagged reflection. Keep all four existing output modalities and
+ordinary replaceable modules. Low-level reconstruction decoders remain available;
+user-facing emission goes through the new contract. No external language model.
+
+Immutable actor, control, request, output and caller-owned task records preserve
+who specified controls, who requested each output, who produced it, parent IDs and
+purpose. Modes are required/disabled/automatic. Validate the complete emission
+batch before decoding; report partial successes on decoder failure, and fulfill
+only successful answers. Video may internally decode images while image emission
+is disabled. Only caller-supplied controls are authoritative; inferred choices are
+agent requests. Raw and gated decisions stay separately inspectable.
+
+Generated loopback updates working/reasoning through shared encoders and learned
+metadata features, retaining exact records. It never updates observational clocks
+or counts. Generated ancestry persists through derivation and state operations;
+observational memory rejects such states, including after later real observations.
+This is a trusted-caller provenance contract, not authentication against stripping
+metadata. Task/state round-trips preserve attribution and partial fulfillment.
+
+Task interpreter and policy are trained jointly through the existing recipe using
+an explicitly synthetic instruction curriculum, disjoint paraphrase families,
+operation/modality/completion targets, ambiguous examples and restrictions. Policy
+operations are think/recall/imagine/act/emit/ask/finish; a bounded one-step executor
+returns action proposals to the caller and never actuates an environment. Report
+held-out errors separately, raw versus gated outputs, shuffled instructions and a
+lexical nearest-example baseline. This cannot establish broad instruction following.
+
+Claude's public-only initial review is retained at runs/reviews/task_outputs/.
+Adopt attribution, partial failure, laundering, round-trip, gate and evaluation
+corrections. Keep all modalities/seven operations because they already have real
+consumers; use ask probability for clarification instead of another duplicate head.
+Reconcile the refined contracts with Claude before closing the slice.
+
+Essential red tests: attribution, atomic prevalidation/partial fulfillment, video
+dependency, arbitrary-logit gates, loopback isolation and laundering rejection,
+safe serialization/continuation, task gradients and held-out curriculum separation.
+Commit these before implementing. CPU development budget: full tests, both existing
+data checks, at most 80 main instruction updates plus exact pause/resume replay,
+two real PushT updates, no extra proposals. No scientific quality threshold or GPU
+job. Preserve raw decisions, checkpoint, metrics, reports and reproducible diagrams.
+
 ## Multiscale conditioned inputs — completed slice
 
 Request: all four input modalities expose fine-to-coarse processed feature scales,
