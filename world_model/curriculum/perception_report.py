@@ -49,7 +49,9 @@ def geometry_failures():
                 errors=raw['position_abs_error']; failures=(errors>8).sum(0)
                 rows.append(dict(arm=arm,seed=seed,objective=objective,frames=len(errors),
                     pusher_x=int(failures[0]),pusher_y=int(failures[1]),block_x=int(failures[2]),block_y=int(failures[3]),
-                    orientation=int((raw['angle_abs_error_deg']>10).sum()),any_component=int((raw['case_q']>1).sum())))
+                    orientation=int((raw['angle_abs_error_deg']>10).sum()),any_component=int((raw['case_q']>1).sum()),
+                    case_q_p95=float(np.percentile(raw['case_q'],95)),case_q_p99=float(np.percentile(raw['case_q'],99)),
+                    case_q_max=float(raw['case_q'].max()),worst_case=int(raw['indices'][raw['case_q'].argmax()])))
     return rows
 
 
@@ -96,14 +98,21 @@ def build():
         f'{c["completed_semantic_fits"]}/{c["expected_semantic_fits"]} category probes have completed and reconciled. '
         'Albedo is excluded. This report evaluates perception and decoder prototypes; new dynamics and control have not been trained.')
     md('summary','## Technical summary\n\n'
-        'A versatile perception package should expose spatial evidence and contextual features to typed consumers. '
-        'The frozen pretrained ViT package is much stronger on the available generic foreground and category readouts; '
-        'the small locally trained CNN reconstructs pixels more accurately. Neither result licenses a rule that convolutions are spatial and transformers semantic. '
-        'Pretraining, size, preprocessing and decoder input width differ.\n\n'
-        'The controlled CNN continuation study does not establish a useful gain from adding two convolutional or transformer blocks per scale under this budget. '
-        'The local-input and task-conditioning comparisons below determine how much of the reconstruction tradeoff can be addressed in the decoder. '
-        'The geometry objective follow-up tests a training change while preserving the encoder and pose-head architecture. '
-        'Recommendations remain conditional wherever results are pending.')
+        '**Use a pretrained contextual encoder with an available local image path and output-specific decoders as the next integration candidate.** '
+        'Keep the compact CNN as a speed reference. The experiments favor an asymmetric encoder/decoder package; they do not establish a universal world-model architecture.\n\n'
+        'The pretrained ViT is much stronger on the tested foreground and category readouts. Its pixel-reconstruction weakness can be substantially reduced '
+        'without changing that encoder: early patch features improve RGB and segmentation in all three paired seeds versus final-token inputs alone. '
+        'Separate RGB/mask trunks then reduce mean COCO RGB error by7.42× versus the shared early-input trunk, while lowering foreground IoU by1.02 percentage points. '
+        'Output sharing therefore remains a measured tradeoff. RGB/mask FiLM does not improve both outputs consistently, so it is not recommended by default.\n\n'
+        'Adding two convolutional or transformer blocks per CNN scale produces no consistent useful gain under the matched continuation budget. '
+        'Location-distribution supervision improves fresh-case tolerance pass from76.6% to84.9% for CNN and80.5% to85.3% for ViT. '
+        'The CNN acquires worse rare errors; the ViT improves both95th- and99th-percentile errors in all three seeds but still has large outliers. '
+        'The next priority is geometry coverage and reliable temporal prediction, not additional scale count alone. '
+        'Pretraining, size and preprocessing confound CNN-versus-ViT comparisons; these results do not justify the rule that convolutions are spatial and transformers semantic.'
+        if complete else
+        '## Technical summary\n\nA versatile perception package should expose local spatial evidence and contextual features to typed consumers. '
+        'The comparisons below test encoder depth, decoder input access, task conditioning, output sharing and geometry objectives. '
+        'This partial report does not select a final architecture until every declared unit is reconciled.')
     md('definitions','## Populations, units and what the metrics establish\n\n'
         'Three paired seeds (9107–9109) vary new head/module initialization and sampling. They do not resample encoder pretraining. '
         'The CNN is one preserved deeper/exchange checkpoint; DINOv2-S/14 uses pinned official weights/source and RGB64→224 preprocessing. '
@@ -120,6 +129,11 @@ def build():
         'It is stricter and is not control success. Positions refer to pusher coordinates and the T-body origin, not necessarily its shape centroid. '
         '**RGB MSE** uses images in [0,1]; lower is better. **Mask IoU** is the mean per-image foreground intersection/union over valid pixels; higher is better. '
         '**Category AP** measures accessibility through the declared pooled classifier. No composite architecture score or significance threshold is invented.')
+    md('earlier_recovery','The earlier frozen-encoder recovery test reduced COCO RGB error from0.272195 to0.006105, '
+        'close to the original warmup value0.006072, while worsening PushT reconstruction by8.72×. '
+        'That showed substantial information was still decodable after adaptation, alongside a decoder/domain tradeoff. '
+        f'These are [historical recovery results]({PROJECT / "docs/decoder-recovery-results-2026-09-08.md"}); '
+        'they motivated mixed-domain decoding here and are not pooled with the new architecture comparisons.')
     md('p1','## Frozen encoders with independent typed readouts\n\n'
         'The CNN reference has16×16 and8×8 grids of64 channels, two residual convolutional blocks per branch, '
         'learned position/scale signals and bidirectional four-head cross-scale exchange followed by token MLPs. '
@@ -136,7 +150,7 @@ def build():
     md('semantics','## Category evidence and transfer\n\n'
         f'The frozen CNN/ViT category AP means are {metric("perception_semantics","cnn","test_ap")}/'
         f'{metric("perception_semantics","vit","test_ap")}, against a constant-score baseline of 0.03310. '
-        'Continued CNN variants are included as their selected-encoder probes finish. The same training-supported class list, '
+        'Continued CNN variants use separately fitted probes on their selected encoders. The same training-supported class list, '
         'pooled 128-wide classifier, paired sample streams, 2,000-update budget and maximum-validation-AP selector apply. '
         'Native feature widths and pretraining differ. A poor result from this pooled head does not prove that all semantic information is absent.')
     chart('perception_semantics'); table('perception_semantics')
@@ -183,7 +197,11 @@ def build():
         if not matches: raise FileNotFoundError('report input identity is unresolved: '+name)
         all_paths.append(matches[0])
     all_paths += [Path(__file__),Path('world_model/curriculum/perception_summary.py'),Path('viewer/perception.py')]
-    all_paths += sorted(Path('docs').glob('perception-*-protocol-2026-09-08.md'))
+    all_paths += sorted(Path('docs').glob('perception-*-protocol-2026-09-*.md'))
+    all_paths += [Path('docs/decoder-recovery-results-2026-09-08.md'),Path('viewer/scientific_preview.py')]
+    all_paths += [Path('docs/dashboard-source-inventory-repair-2026-09-09.md'),
+        ROOT/'report/pytest_final.xml',ROOT/'report/pytest_final_v2.xml']
+    all_paths += sorted((ROOT/'collaboration').glob('*.md'))+sorted((ROOT/'collaboration').glob('*.receipt.json'))
     all_paths += [ROOT/'figures/pca/feature_pca_v2.png',ROOT/'figures/readouts/coco_readouts.png',ROOT/'figures/fresh/fresh_pose_distributions_v2.png']
     identities={str(p.resolve().relative_to(PROJECT)):file_hash(p) for p in all_paths if p.is_file()}
     sources=[dict(id=SOURCE,label='Reconciled local experiments, protocols and raw predictions',path=str(out.resolve().relative_to(PROJECT)/('reconciled.json' if complete else 'reconciled_partial.json')),
@@ -293,6 +311,7 @@ def finish_sections(report,md,chart,table,custom_table,figure,metric,mean):
         'Both training paths perform three task passes per update. Separate trunks use nearly twice the parameters and optimizer storage, '
         'and two passes when both outputs are requested. GPU initial-function agreement is checked on actual inputs before each formal fit.')
     table('perception_independent')
+    figure('split_output_panel','figures/split/decoder_comparison.png','Shared and separate trunks, same seed9107 endpoints and first six COCO test crops. The numerical three-seed comparison determines the tradeoff.')
     split_rows=report['datasets'].get('perception_independent',[])
     if split_rows and len(rows)==12:
         lookup={(r['arm'],r['seed']):r for r in rows}; pairs=[]
@@ -309,6 +328,16 @@ def finish_sections(report,md,chart,table,custom_table,figure,metric,mean):
              ('pusht_mse_ratio','PushT MSE ratio'),('parameter_ratio','Parameter ratio'),('both_time_ratio','Both-output time ratio'),
              ('shared_clip_fraction','Reference clipped fraction'),('split_clip_fraction','Split clipped fraction')],
             'All ratios and differences use the same seed and endpoint budget. No composite winner score.')
+        if len(split_rows)==3:
+            rgb_ratio=mean('perception_decoders','early','coco_mse')/mean('perception_independent','split','coco_mse')
+            pusht_ratio=mean('perception_decoders','early','pusht_mse')/mean('perception_independent','split','pusht_mse')
+            iou_change=100*(mean('perception_independent','split','mask_iou')-mean('perception_decoders','early','mask_iou'))
+            md('split_findings',f'The separate-trunk mean COCO RGB error is {metric("perception_independent","split","coco_mse")}, '
+                f'{rgb_ratio:.2f}× lower than the shared early-input decoder. PushT RGB error is {pusht_ratio:.2f}× lower. '
+                f'Mean mask IoU changes by {iou_change:+.2f} percentage points. The separate trunks therefore do not win the primary foreground endpoint; '
+                'they offer a substantial appearance benefit at a modest foreground cost and higher decoder storage. '
+                'The result supports output-specific computation, without establishing that sharing is always harmful or that the gain comes exclusively from gradient interference. '
+                'The encoder can still supply common evidence to both outputs. A shared trunk with matched total capacity or partially shared task adapters remains an untested alternative.')
     md('decoder_reliance','## Which supplied inputs does the decoder use?\n\n'
         'A fixed derangement substitutes another image’s local slot or its paired final/coarse context while retaining the original RGB and mask targets. '
         'Conditioned endpoints also receive neutral or flipped FiLM context while retaining the requested output layer. '
@@ -317,6 +346,17 @@ def finish_sections(report,md,chart,table,custom_table,figure,metric,mean):
         'The CPU normal conditions are checked against saved GPU endpoint metrics on the identical rows. '
         'These are distribution-shift interventions, not separately trained branch-removal controls.')
     table('perception_decoder_reliance')
+    reliance=report['datasets'].get('perception_decoder_reliance',[])
+    if len(reliance)==42:
+        averages={condition:{field:float(np.mean([r[field] for r in reliance if r['arm']=='early' and r['condition']==condition]))
+            for field in ('image_mse_ratio','mask_iou')} for condition in ('normal','donor_local','donor_context')}
+        md('reliance_findings',f'For the early-input decoder, supplying another image’s local features increases RGB error by '
+            f'{averages["donor_local"]["image_mse_ratio"]:.2f}× on average; replacing its final/coarse context increases it by '
+            f'{averages["donor_context"]["image_mse_ratio"]:.2f}×. Mask IoU changes from '
+            f'{averages["normal"]["mask_iou"]:.4f} normally to {averages["donor_local"]["mask_iou"]:.4f} with donor local inputs and '
+            f'{averages["donor_context"]["mask_iou"]:.4f} with donor context. '
+            'This fitted decoder depends much more on local evidence for appearance and contextual evidence for foreground output. '
+            'Neutral/flipped task inputs also change conditioned outputs: the FiLM signal is used, even though it does not improve every output versus the unconditioned control.')
     md('geometry','## Geometry decoder: supervise the distribution as well as its mean\n\n'
         'The pose head takes a softmax over a16×16 location map and returns its expected coordinate. Coordinate MSE alone leaves the map shape underdetermined. '
         'The adaptive follow-up adds0.001×KL(target‖prediction) using bilinear weights on the four surrounding output-grid vertices. '
@@ -354,14 +394,31 @@ def finish_sections(report,md,chart,table,custom_table,figure,metric,mean):
         custom_table('geometry_losses','Objective magnitudes at the first and last updates',loss_rows,
             [('arm','Encoder'),('seed','Seed'),('step','Update'),('pose_mse','Coordinate/orientation MSE'),('weighted_kl','0.001×KL'),('ratio','Weighted KL / MSE')],
             'These are sampled training-batch objective magnitudes, not gradient-norm ratios or held-out accuracy.')
-    md('geometry_interpretation','Compare coordinate and orientation accuracy jointly with entropy and target-support mass. '
-        'Sharper maps alone are not success. A coordinate null result with unchanged maps is inconclusive about distribution supervision; '
-        'a changed map with worse accuracy is a negative result for this specific objective. All error tails and seed differences remain visible.')
+    if len(local)==6:
+        md('geometry_interpretation',f'All six paired runs improve the fresh per-case tolerance pass rate. CNN mean pass changes from '
+            f'{metric("perception_fresh","cnn","per_case_pass",True)} to {metric("perception_localization","cnn","fresh_pass",True)}, '
+            f'and ViT from {metric("perception_fresh","vit","per_case_pass",True)} to {metric("perception_localization","vit","fresh_pass",True)}. '
+            'This does not make the objective a universal geometry fix: CNN fresh mean q,99th-percentile error and maximum error all worsen in every seed. '
+            'ViT fresh mean q and95th/99th-percentile errors improve in every seed; orientation error is mixed and two seeds have a worse maximum. '
+            'I would retain the ViT objective variant for the next coverage test, while keeping every failure visible.\n\n'
+            'The fixed case86 panels show why an expected coordinate can fail: the pusher map has probability near the pusher and another region near the body, '
+            'so its mean falls between them. That visible multimodality explains the readout displacement in this case; its upstream cause remains a hypothesis. '
+            'Sparse edge coverage and object/scene correlations deserve a controlled test. Simply choosing the largest16×16 cell would sacrifice subpixel precision '
+            'and is not a tested replacement. Map entropy is not a calibrated confidence score.')
+    else:
+        md('geometry_interpretation','Compare coordinate and orientation accuracy jointly with entropy and target-support mass. '
+            'Sharper maps alone are not success. All error tails and seed differences remain visible while the comparison completes.')
     custom_table('geometry_component_failures','Which quantities exceed the per-case tolerance?',geometry_failures(),
         [('arm','Encoder'),('seed','Seed'),('objective','Objective'),('frames','Fresh cases'),
          ('pusher_x','Pusher x'),('pusher_y','Pusher y'),('block_x','Body x'),('block_y','Body y'),
          ('orientation','Orientation'),('any_component','Any failure')],
         'Counts above8 world units per coordinate or10 degrees orientation on the same512 cases. Component failures overlap and must not be summed as distinct failed cases.')
+    custom_table('geometry_extremes','Typical tail and rare extreme errors',geometry_failures(),
+        [('arm','Encoder'),('seed','Seed'),('objective','Objective'),('case_q_p95','95th percentile q'),
+         ('case_q_p99','99th percentile q'),('case_q_max','Maximum case q'),('worst_case','Worst case index')],
+        'Post-hoc descriptive tail audit from every saved case. More cases within tolerance can coexist with a worse extreme error. No new gate or model selector is introduced.')
+    figure('cnn_location_maps','figures/localization/cnn_location_comparison.png','CNN: original and distribution-supervised pose heads on the same predefined first-seed cases. Common probability scale, target map positions in white.')
+    figure('vit_location_maps','figures/localization/vit_location_comparison.png','ViT: original and distribution-supervised pose heads on the same predefined first-seed cases. Case q measures coordinate and orientation tolerance jointly.')
     md('internals','## Internal features and attention: what the pictures actually show\n\n'
         'PCA fits use128 fixed training images, balanced across COCO and PushT, independently for each representation and scale. '
         'Colors use training2nd/98th percentiles and deterministic component signs. Different bases have no common semantic color meaning. '
@@ -388,12 +445,30 @@ def finish_sections(report,md,chart,table,custom_table,figure,metric,mean):
         'Twenty synchronized repeats after five warmups give descriptive median/p95 batch latency, with batch1 and32 reported separately. '
         'Per-image throughput at batch32 is not single-frame interaction latency. Resident/peak memory covers all loaded package outputs even when one is requested.')
     table('perception_runtime')
+    timings=report['datasets'].get('perception_runtime',[])
+    if len(timings)==40:
+        lookup={(r['package'],r['batch'],r['output']):r for r in timings}
+        names=('cnn_p1','vit_p1','vit_early','vit_conditioned','vit_split')
+        compact=[dict(package=name,batch1_ms=lookup[name,1,'all']['median_batch_ms'],
+            batch1_p95_ms=lookup[name,1,'all']['p95_batch_ms'],
+            batch32_ms_per_image=lookup[name,32,'all']['median_ms_per_image'],
+            parameters=lookup[name,1,'all']['parameters']) for name in names]
+        custom_table('runtime_all_outputs','Full encoder plus RGB, foreground and pose',compact,
+            [('package','Package'),('batch1_ms','Single-frame median ms'),('batch1_p95_ms','Sample p95 ms'),
+             ('batch32_ms_per_image','Batch32 ms/image'),('parameters','Loaded parameters')],
+            'Same requested outputs and seed9107; descriptive local GPU timing. The original P1 pose head is held common across ViT decoder packages.')
+        md('runtime_findings',f'The compact CNN takes {compact[0]["batch1_ms"]:.2f} ms for all three outputs on one frame; '
+            f'the ViT early-input and split-trunk packages take {compact[2]["batch1_ms"]:.2f} and {compact[4]["batch1_ms"]:.2f} ms. '
+            'The frozen transformer dominates these package costs, so doubling the small decoder trunk does not double full-package runtime. '
+            'Batch32 throughput and single-frame latency answer different deployment questions. Desktop GPU activity and the short repeated sample limit precision; '
+            'these measurements are not complete application latency or a service guarantee.')
     md('budget','## Does this establish convergence or the need for more training?\n\n'
         'The fit budget compares practical short runs; it is not a convergence proof or a scaling-law experiment. '
         'For a transparent local diagnostic, the following table compares the mean of the five recorded validation points at3100–3500 '
         'with the five at3600–4000. Ratios below1 indicate decreasing error; positive IoU changes indicate improvement. '
         'No significance threshold or asymptotic extrapolation is applied. A model can improve within its current data distribution '
-        'without improving fresh geometry or downstream control.')
+        'without improving fresh geometry or downstream control. These results favor testing the missing information paths and coverage first. '
+        'They do not rule out gains from longer training, a different learning rate or a larger pretrained encoder.')
     custom_table('validation_tail','Validation movement near the training budget',report['validation_tail_trends'],
         [('family','Study'),('arm','Arm'),('seed','Seed'),('q_ratio','Mean-q ratio'),
          ('coco_image_mse_ratio','COCO MSE ratio'),('mask_iou_delta','Mask IoU change')],
@@ -466,7 +541,10 @@ def finish_sections(report,md,chart,table,custom_table,figure,metric,mean):
         'Main limits: one source checkpoint per encoder package; architecture/pretraining/size/preprocessing confounds; three head/module seeds; reused grouped '
         'holdouts; pretrained-data overlap with COCO not independently audited; an adaptive fresh-cohort follow-up; '
         'unequal pose-selected versus fixed-endpoint rules across separate studies; decoder capacity and loss-scale choices; '
-        'no new temporal or control evaluation. A publication-only directional-panel error was repaired from preserved raw evaluation without repeating inference. '
+        'no new temporal or control evaluation. Publication-only directional-panel and source-inventory errors were repaired from preserved raw evaluation without repeating inference. '
+        'Large source lists now retain one exact path per record key, and smaller image previews use verified lossless pixel-preserving encoding. '
+        'The final full suite initially exposed one older assertion expecting the removed joined-source cell; it was migrated to verify exact run/path pairs and source counts. '
+        'Both the failed receipt and corrected full-suite receipt are preserved; the corrected suite has407 passed and3 opt-in browser-transport skips, with no failures. '
         'No incomplete endpoint is silently promoted to a complete4,000-update comparison.')
     if report['pending']:
         custom_table('pending','Declared work still pending',[dict(item=p) for p in report['pending']],[('item','Pending unit')],

@@ -25,196 +25,88 @@ Read the [paddle results](paddle-world-model-results-2026-09-07.md),
 [canonical dashboard](../runs/experiment_dashboard.html), and
 [portable continuation handoff](session-handoff-2026-09-07.md).
 
-## Active: overnight perception experiments (8–9 September)
+## Complete: overnight perception experiments (8–9 September)
 
-The user now authorizes execution with Claude through **9 September07:00 Berlin**,
-and explicitly removes albedo from scope. Follow the
-[overnight execution protocol](perception-overnight-protocol-2026-09-08.md), which
-supersedes the earlier proposal's non-execution status. First implement and profile
-matched independent spatial readouts on the fixed deeper/exchange CNN and native
-DINOv2 features, then run three paired head seeds and choose bounded follow-ups
-from validation evidence. Reserve the final hour for evaluation and reporting.
+The user authorized experiments with Claude until **9 September 07:00 Berlin**
+and removed albedo from scope. All **36 vision/geometry fits and 15 category
+probes** completed (174,000 total updates), plus 42 decoder-reliance conditions,
+40 full-package runtime conditions, fresh geometry audits and internal-feature
+inspection. Training ended at 02:16 Berlin; the runtime audit completed at 02:18.
+There are no remaining queued fits. Read the
+[results and recommendation](perception-overnight-results-2026-09-09.md),
+[illustrated technical report](../runs/perception_overnight_2026-09-08/report/report.html),
+[reconciled snapshot](../runs/perception_overnight_2026-09-08/report/reconciled.json)
+and [canonical dashboard](../runs/experiment_dashboard.html).
 
-Run root: `runs/perception_overnight_2026-09-08/`. Claude's initial protocol review
-completed successfully using the public-only CLI brief; no private code/data/results
-were exported. App heartbeat `overnight-perception-architecture-experiments`
-continues this task every half hour and must be paused after the morning report.
-GPU is RTX3050/8GB; starting free disk28GB. The development slice now passes16
-targeted scientific checks, four tiny head fits and full-cache identity audits.
-Every completed unit's dashboard passed browser verification. P1 completed all
-6fits,4,000updates,40minute cap per fit (prospectively increased after
-development timing; original20minute proposal was not a measured fit duration).
-Coordinator: `scripts/execute_perception_overnight.py`; live handoff/receipts:
-`runs/perception_overnight_2026-09-08/active.json` and `execution.jsonl`.
-Do not modify its sealed training files during P1. Implement conditional stages
-in separate modules/protocol amendments while the six fits execute.
+**Next integration candidate:** pretrained contextual ViT features plus available
+local image evidence and output-specific decoders. Preserve the small CNN speed
+reference. This is a perception recommendation; new compatible state-update,
+prediction and control modules have not been trained.
 
-The [category-accessibility probe](perception-semantic-protocol-2026-09-08.md) now
-has prepared crop-visible labels (78training-supported classes), green semantic
-checks and two verified development fits. Its six paired, independent CPU fits
-completed through `scripts/execute_perception_semantics.py` alongside GPU P1; no encoder
-or P1 head changes. Read `runs/perception_overnight_2026-09-08/semantics/execution.jsonl`
-and its coordinator log for progress. Reused held-outs remain exploratory.
+Measured three-seed outcomes:
 
-P1-T test macro AP is0.0742–0.0829 for the CNN and0.6441–0.6555 for nativeViT
-(constant-score baseline0.0331). These are pooled-head accessibility results, not
-proof that another head cannot recover semantic information. All six P1 fits
-pass the mean geometry gate. On the fresh cohort, individual-case tolerance pass
-is73.0–80.5% for CNN and77.9–83.2% for ViT; mean readiness is not reliable control.
+- Frozen CNN/ViT P1 foreground IoU: 0.3579/0.6574; category AP: 0.0773/0.6501.
+  Pretraining, size, preprocessing and native feature width confound this package
+  comparison. DINOv2's pooled 8×8 view is not another processed encoder stage.
+- Early local inputs improve both RGB and foreground in all three paired seeds
+  versus final-token-only decoding. COCO RGB MSE: 0.024891 → 0.007794; IoU:
+  0.658625 → 0.668009. Task FiLM lowers IoU in all three seeds and helps COCO RGB
+  in two; do not enable it by default.
+- Separate RGB/mask trunks reduce COCO RGB MSE to 0.001051 (7.42× lower than
+  shared early), and PushT MSE by 4.87×, with IoU lower by 1.02 percentage points.
+  This changes sharing/capacity and cross-domain transfer, with joint clipping;
+  it does not isolate gradient interference or win the primary foreground endpoint.
+- Adding two convolutional or transformer blocks per CNN grid has no consistent
+  useful gain under matched continuation. All continuations have lower fresh pose
+  pass than the frozen reference. More depth is not the evidence-based next fix.
+- Location-map KL improves fresh pose tolerance pass from 76.56% to 84.90% for
+  CNN and 80.47% to 85.29% for ViT. CNN mean q and extreme tails worsen in every
+  seed. ViT mean q and 95th/99th percentiles improve in every seed, but orientation
+  is mixed and two seeds have worse maxima. Large outliers remain; prioritize
+  prospectively separated geometry coverage and temporal validation.
+- Cross-scale entropy agrees with explicit per-head SDPA probabilities. Uniform
+  fine-from-coarse weights behave close to baseline; removing that branch or
+  uniformizing coarse-from-fine harms pose. This measures fitted reliance, not
+  superiority over retrained simpler alternatives. PCA colors are not semantic
+  labels; global coarse maps emphasize image/domain means and positions.
+- Full encoder plus RGB/mask/pose single-frame medians: CNN 2.83 ms, ViT early
+  9.85 ms, ViT split 10.76 ms on RTX 3050. Capture, host transfer and planning are
+  excluded. Batch32 throughput is a separate quantity.
 
-The [fresh simulator protocol](perception-fresh-protocol-2026-09-08.md) has generated
-and verified512cases plus40source/render calibration pairs. One fresh case is near
-a CCHI training pose under the declared tolerance; none is near validation/test.
-One is near the older static supplement. All cases remain included. Calibration
-RGB MSE is1.58e-5 and actual/source pose drift is small. This supports testing fresh
-geometry while keeping renderer differences explicit; no model results on these
-cases existed at preparation.
+The next experimental direction is targeted geometry coverage and causal
+multi-step/action/control tests after defining compatible feature/state interfaces.
+Consumers should choose relevant named local/contextual grids, with native width,
+source depth/time and validity explicit. Current raw/early observation skips cannot
+supply unseen future pixels. Four genuine processed scales, encoder conditioning,
+new memory registers and queried-instance outputs remain untested. Existing COCO
+and PushT sufficed for these comparisons; software use needs appropriate resolution
+and screenshot/action/transition evidence. Do not resume an overnight queue or
+silently promote these perception prototypes to a successful world model.
 
-`scripts/prepare_perception_followups.py` completed after P1: the six frozen fresh
-evaluations and50-update development profiles for the
-[matched encoder extensions](perception-extension-protocol-2026-09-08.md). Queue
-log: `runs/perception_overnight_2026-09-08/followup_coordinator.log`; completion:
-`followups_ready.json`. The exact-initial-function, gate-gradient and optimizer-group
-tests pass. All three development profiles completed and passed dashboard verification;
-the formal nine-fit comparison now seals and launches through
-`scripts/execute_perception_extensions.py`. Do not change its sealed encoder-training
-files while it runs; use separate modules for subsequent readouts and report figures.
+Implementation, frozen protocols and source snapshots remain under
+`runs/perception_overnight_2026-09-08/` and the linked protocol files. The original
+[execution protocol](perception-overnight-protocol-2026-09-08.md) and subsequent
+[decoder](perception-decoder-protocol-2026-09-08.md),
+[split-trunk](perception-independent-decoder-protocol-2026-09-09.md),
+[geometry](perception-localization-protocol-2026-09-08.md) and
+[runtime](perception-runtime-protocol-2026-09-09.md) declarations describe the
+matched recipes and adaptive ordering. Claude completed ten public-only review
+exchanges through the actual CLI; private code/data/results were not exported.
+All actual evidence was checked locally, and corrections are preserved.
 
-The canonical dashboard now has per-seed capability tables and category/fresh
-comparison charts, independently checked against raw pose predictions/AP scores.
+Final suite: **407 passed, 3 opt-in browser-transport skips, no failures**
+(`report/pytest_final_v2.xml`). The earlier final-suite failure was an old assertion
+against a replaced joined-source field; exact run/path preservation now passes.
+The original failed geometry control, publication errors and their repairs remain
+recorded. Geometry source `cf445f9`, split source `5331642`, geometry figures
+`ea8087d`, source-test migration `4c44e57`. Both final HTML artifacts passed
+canonical desktop/narrow/source-dialog browser verification. An extra in-app
+navigation attempt was blocked by that browser's local-URL policy; no workaround
+was attempted. Scientific panels were inspected directly.
 
-The nine encoder-extension fits completed (`extensions/coordinator.log`). Their
-separately sealed category/fresh audit queue
-(`scripts/execute_perception_extension_audits.py`) is now testing
-selected encoders with live FP32 features. Its development pooling, category and
-fresh checks completed and dashboards passed. Its sealed audit files must also
-remain unchanged while that queue runs.
-
-The [decoder local-access and task-conditioning protocol](perception-decoder-protocol-2026-09-08.md)
-defines four arms: duplicated final tokens, early patch tokens, raw source patches,
-and early tokens with task FiLM. Three paired seeds, fixed4,000-update endpoints;
-same shared typed decoder, with raw input width/preprocessing differences explicit.
-Structural checks and all four50-update development runs pass, including canonical
-HTML verification. The implementation is committed at `200e750`; the12formal fits
-are now sealed and active through `scripts/execute_perception_decoders.py`
-(`decoders/coordinator.log`, PID3268933 at launch). Do not change its sealed files.
-
-The [read-only attention/feature inspection](perception-inspection-protocol-2026-09-08.md)
-completed on512fresh cases and three frozen CNN heads. Uniformizing both attention
-directions or zeroing their outputs gives0%per-case tolerance passes; baseline
-retains73–80%. Explicit per-head probabilities match SDPA. Fine-from-coarse is
-nearly uniform, while one coarse-from-fine head is selective. A separately
-[declared directional diagnostic](perception-attention-directional-protocol-2026-09-08.md)
-completed: uniform fine-from-coarse is close to baseline, while removing that
-branch or uniformizing coarse-from-fine sharply harms pose. This measures reliance
-after training, not a retrained architecture comparison. New PCA, RGB/mask and pose-distribution figures
-are in the run's `figures/`; layout revision2 fixes two label-spacing issues and
-preserves original PNGs. Images have been visually inspected and the dashboard
-passed browser verification. PCA colors and decoder location maps are not
-semantic labels or encoder attention.
-
-The [geometry objective follow-up](perception-localization-protocol-2026-09-08.md)
-keeps the frozen P1 encoders and head topology, adding0.001times target-to-map KL
-with boundary-exact bilinear point targets. Claude reviewed the public mathematics
-and requested map entropy, target-support mass and loss-magnitude checks. Essential
-target/gradient tests pass. The first control failed a blanket parameter tolerance:
-only the two mathematically redundant spatial-softmax biases exceeded it; other
-weights matched within1.2e-7. Preserve the failed control/source. The protocol now
-requires informative weights AND actual normalized outputs/maps within2e-5, with
-the redundant bias differences retained separately. The invariance test passes.
-Four revision2 development units wait for the D2 formal queue in
-`development/localization_v2/` through `scripts/prepare_perception_localization.py`
-(PID3270408 at launch). After those pass, commit and seal the six geometry fits.
-The adaptive [split decoder follow-up](perception-independent-decoder-protocol-2026-09-09.md)
-adds three paired fits with identical early/context inputs and fixed endpoints.
-Each typed output owns its trunk, while the common optimizer/clipping rule remains.
-This changes sharing/capacity and cross-domain transfer, not fully independent
-optimization. Claude's public review accepted this scope and withdrew a doubled
-training-compute estimate: both paths already use three task passes per update.
-Actual parameters, timing and clipped fractions are reported. Its two essential
-initial-function/ownership tests pass; the50-update CPU development unit is active.
-After development and commit, seal it through `scripts/execute_perception_independent.py`.
-GPU ordering: D2 → localization_v2 development → split trunks → formal localization.
-Total declared program:36vision/geometry and15category fits. Never overlap GPU fits.
-
-The split-decoder development run completed50updates in33.6CPU fitting seconds,
-with exact initial real-input agreement and verified HTML. Implementation commit
-`5331642`; coordinator PID3294896 is sealed and waiting for localization_v2
-development before its three formal fits. A separate read-only
-[runtime audit](perception-runtime-protocol-2026-09-09.md) includes the backbone
-cost omitted by cached-feature training. Its four-condition CPU development
-passed output-equivalence/frozen-state checks and HTML verification. Queue the
-formal40-condition GPU audit only after all geometry training completes. This
-adds no fits; report batch1 latency separately from batch32 throughput.
-
-All12D2 fits completed. Mean COCO RGB MSE/IoU: late0.024891/0.658625,
-early0.007794/0.668009, raw0.009680/0.663890, task-FiLM0.007276/0.660159.
-Early improves both outputs in all three seeds; FiLM has lower IoU in all three
-and improves COCO RGB in two. It is not a general improvement across outputs.
-All42CPU decoder-reliance conditions completed; local donor inputs mainly harm
-RGB, contextual donors mainly harm masks. These are fitted reliance diagnostics.
-
-All four localization_v2 development units now completed and controls pass:
-informative weights differ by<=1.2e-7 and normalized outputs/maps by<=4.5e-7.
-The ViT control and completed reliance diagnostic initially failed HTML
-publication because a source-inventory cell exceeded4000characters. The source
-table now has one exact path per record key; the preservation test and canonical
-browser verification pass. Failed receipts remain, with publication-only repair
-receipts beside both results. No optimizer or inference work was repeated.
-Repair commit`2457e90`. The resumed development coordinator PID3309429 finished;
-D3 may now start. Commit the geometry implementation and seal its six-fit queue,
-which waits for D3 completion. The full pre-repair suite passed405tests/3opt-in
-skips; the added source-inventory regression also passes.
-
-Geometry implementation commit`cf445f9`; its sealed coordinator PID3310660 waits
-for D3. Runtime coordinator PID3299213 waits for geometry. D3 is on seed9109:
-the first two split runs have COCO MSE0.001041/0.001018 and IoU0.659125/0.658482,
-versus early shared0.007721/0.007848 and0.668288/0.667035. Wait for all three
-before the final architecture conclusion. Split-versus-shared fixed-case images
-were inspected and verified, committed at`0c6556e`.
-
-The portable preview now uses smaller lossless WebP encoding when beneficial,
-verifying exact decoded RGBA pixels and preserving source PNGs. Commit`cefafc8`;
-dashboard/report browser checks pass and compact payloads are about1.95/1.87MB.
-Source cell and payload limits remain unchanged. The report implementation is
-committed at`a5cb5af` with later content additions pending. After all six geometry
-fits, run `scripts.run_perception_localization_figures`, inspect both new figures,
-then commit that working slice. The module/wrapper are currently untracked and
-syntax-checked; their source/case plan is recorded. Final reconciliation now also
-requires split/geometry figures and all40runtime conditions. Finish report
-interpretations, source/UI QA, the final tests and tracked results/state. Pause the
-heartbeat only after delivering the complete report. Do not touch `ara/` until the
-research-manager epilogue after substantive work is finished.
-
-The source-reconciled [technical report plan](perception-report-plan-2026-09-08.md)
-is implemented in `world_model/curriculum/perception_summary.py` and
-`perception_report.py`. Partial snapshots explicitly list missing fits. The final
-report must include all decoder and geometry outcomes, inspected figures and
-verified HTML before the deadline. Report preview development errors (path
-resolution and nested table-cell schema) are preserved under `report/` and repaired
-without changing any experimental record.
-
-The report preview now passes canonical desktop/narrow/source browser checks via
-`scripts/deliver_perception_report.py` and the existing dashboard adapter. It uses
-actual ordered SQL projections of Python-verified rows and marks pending evidence.
-The [decoder input-reliance diagnostic](perception-decoder-reliance-protocol-2026-09-08.md)
-has passed routing/context-hook tests and its five16-image CPU development
-conditions, including CPU/GPU agreement and verified HTML. Implementation commit
-`c2228b6`; formal CPU coordinator PID3282627 waits for all12D2 endpoints, then seals
-and evaluates42conditions. It adds no fits: fixed donor local/context inputs and
-neutral/flipped task conditions test fitted reliance. Keep it separate from any
-retrained architecture claim.
-
-The first paired D2 seed completed all four arms. COCO RGB MSE/IoU: late
-0.02485/0.6570, early0.007721/0.6683, raw0.009391/0.6678, conditioned
-0.006912/0.6608. These are first-seed outcomes, not the final architecture decision.
-Fixed first-six RGB and mask panels under `figures/decoders/` have been visually
-inspected; the dashboard with all five scientific figures passes canonical QA.
-Its artifact is about2.97MB, so watch the unchanged payload cap as evidence grows.
-The current full working-tree suite passes403tests with3opt-in browser-transport
-tests skipped. Actual per-artifact browser verification passes; JUnit evidence is
-`report/pytest.xml`. The failed-control CPU reanalysis also has verified HTML:
-all normalized outputs/maps differ by at most4.18e-7 from original P1.
+The heartbeat `overnight-perception-architecture-experiments` is **paused** after
+completion. Do not touch `ara/` during further substantive work; the
+research-manager epilogue records this completed turn after reporting work ends.
 
 ## Complete: earlier encoder investigation (8 September)
 

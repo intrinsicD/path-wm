@@ -92,6 +92,8 @@ def reconcile():
         record=read(reliance/'evaluation.json')
         if record['status']!='completed' or len(record['evaluations'])!=42: pending.append('decoder_reliance: incomplete conditions')
     if not (ROOT/'figures/decoders/curriculum_analysis.json').exists(): pending.append('figures/decoders')
+    if not (ROOT/'figures/split/curriculum_analysis.json').exists(): pending.append('figures/split')
+    if not (ROOT/'figures/localization/curriculum_analysis.json').exists(): pending.append('figures/localization')
     if not (ROOT/'runtime/curriculum_analysis.json').exists(): pending.append('runtime')
     else:
         runtime=read(ROOT/'runtime/evaluation.json')
