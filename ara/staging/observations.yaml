@@ -1359,3 +1359,40 @@ observations:
   promoted_to: logic/solution/heuristics.md:H16
   crystallized_via: verbal-affirmation
   stale: false
+
+- id: O81
+  provenance: user
+  content: Propose one or multiple state models learning latent transitions from temporal data and deliberately
+    withheld partial observations, with k recent latent states and m compressed history representations
+    connected by cross-scale attention. Routing and compression training remain open.
+  context: User proposal for discussion; negative result accepted for now, no implementation or training
+    requested.
+  timestamp: 2026-09-09T15:19+02:00
+  potential_type: architecture
+  bound_to:
+  - N130
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O82
+  provenance: ai-suggested
+  content: Start with a shared world-state representation and separate transition-prior and observation-update
+    paths. Train causal multistep prediction and masked completion with target isolation and representation
+    anchoring. Compress chronological evicted chunks into a few tokens with time/support/action/provenance
+    metadata. Use consumer-specific queries over recent and compressed memories, initially through separate
+    per-scale reads and learned fusion; route reads into state estimation, dynamics and task working state,
+    with outputs reading that working state. Train compression through delayed-use prediction/completion
+    and auxiliary attention-read preservation; ensure gradients reach the compressor and samples cross
+    eviction boundaries. Keep observation evidence, inferred beliefs and imagined/generated records distinguishable;
+    all architecture and budgets remain proposals.
+  context: Synthesis from current code and primary DreamerV3, V-JEPA2 and Compressive Transformer papers.
+    No local learning result, implemented memory change or user adoption is claimed.
+  timestamp: 2026-09-09T15:19+02:00
+  potential_type: architecture
+  bound_to:
+  - N130
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

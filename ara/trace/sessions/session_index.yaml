@@ -74,8 +74,8 @@ sessions:
     recipes and a verified first perception migration; three public-only Claude reviews, no code migration
     or training. Turn7 adopts and completes the modular restart: 18 library files/two editable recipes, retired
     legacy stack preserved by tag, 505 zero-difference reference checks, 16 tests and clean-Git recipe checks,
-    CPU/GPU pause-resume and three verified local reports; standing workflow migrated.'
-  turn_count: 7
-  events_count: 35
+    CPU/GPU pause-resume and three verified local reports; standing workflow migrated. Turn8 resumes temporal-state and hierarchical-memory design discussion; user and assistant proposals remain open, with no new implementation or training.'
+  turn_count: 8
+  events_count: 38
   claims_touched: []
-  open_threads: 11
+  open_threads: 12

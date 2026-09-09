@@ -72,6 +72,11 @@ result is acceptable for now. Discuss the architecture before further implementa
 - Decide the routing and timing of those reads/writes, and retain the distinction
   between observed history and imagined/generated content.
 
+Current discussion proposal: share the world-state representation across prediction
+and observation update; let each consumer query recent and compressed memory. Train
+compression for delayed prediction/completion and useful retrieval. Chunk timing,
+gradient flow, evidence versus inferred belief, and direct output access remain open.
+
 These are discussion points, not an implemented or finalized design. Physical
 understanding, useful language generation, calibrated progress, semantic feature
 controls, scalable memory and broad self-improvement remain research questions.

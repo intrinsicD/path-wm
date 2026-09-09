@@ -2065,3 +2065,19 @@ tree:
   also_depends_on:
   - N128
   status: resolved
+
+- id: N130
+  type: question
+  title: Discuss temporal world-state learning and hierarchical session memory
+  provenance: user
+  timestamp: 2026-09-09T15:19+02:00
+  description: User accepts the current negative learning result for now and requests architecture discussion
+    before further implementation. Proposes temporal transitions and masked completion, k recent latent
+    states, m compressed history blocks and cross-scale attention; asks how memory should influence the
+    agent.
+  evidence:
+  - docs/project-state.md
+  - pathwm/models/agent.py
+  - pathwm/models/agent_state.py
+  - experiments/multimodal.py
+  status: open

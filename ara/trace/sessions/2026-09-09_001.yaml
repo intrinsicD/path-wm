@@ -2,8 +2,8 @@ session:
   id: 2026-09-09_001
   date: '2026-09-09'
   started: 2026-09-08T20:28+02:00
-  last_turn: 2026-09-09T12:00+02:00
-  turn_count: 7
+  last_turn: 2026-09-09T15:19+02:00
+  turn_count: 8
   summary: 'Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges.
     Local ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry
     pass improves with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests
@@ -17,7 +17,7 @@ session:
     recipes and a verified first perception migration; three public-only Claude reviews, no code migration
     or training. Turn7 adopts and completes the modular restart: 18 library files/two editable recipes, retired
     legacy stack preserved by tag, 505 zero-difference reference checks, 16 tests and clean-Git recipe checks,
-    CPU/GPU pause-resume and three verified local reports; standing workflow migrated.'
+    CPU/GPU pause-resume and three verified local reports; standing workflow migrated. Turn8 resumes temporal-state and hierarchical-memory design discussion; user and assistant proposals remain open, with no new implementation or training.'
 events_logged:
 - turn: 1
   type: decision
@@ -281,6 +281,34 @@ events_logged:
   provenance: user-revised
   summary: 'O80 adopted via explicit user affirmation: first usable perception path, behavior checks, compatible
     temporal migration and retirement with preserved history.'
+- turn: 8
+  type: question
+  id: N130
+  routing: direct
+  provenance: user
+  summary: Discuss temporal world-state learning and hierarchical session memory
+- turn: 8
+  type: observation
+  id: O81
+  routing: staged
+  provenance: user
+  summary: Propose one or multiple state models learning latent transitions from temporal data and deliberately
+    withheld partial observations, with k recent latent states and m compressed history representations
+    connected by cross-scale attention. Routing and compression training remain open.
+- turn: 8
+  type: observation
+  id: O82
+  routing: staged
+  provenance: ai-suggested
+  summary: Start with a shared world-state representation and separate transition-prior and observation-update
+    paths. Train causal multistep prediction and masked completion with target isolation and representation
+    anchoring. Compress chronological evicted chunks into a few tokens with time/support/action/provenance
+    metadata. Use consumer-specific queries over recent and compressed memories, initially through separate
+    per-scale reads and learned fusion; route reads into state estimation, dynamics and task working state,
+    with outputs reading that working state. Train compression through delayed-use prediction/completion
+    and auxiliary attention-read preservation; ensure gradients reach the compressor and samples cross
+    eviction boundaries. Keep observation evidence, inferred beliefs and imagined/generated records distinguishable;
+    all architecture and budgets remain proposals.
 ai_actions:
 - turn: 1
   action: Implemented, developed and sealed matched encoder/decoder/objective comparisons; ran all declared units
@@ -374,6 +402,15 @@ ai_actions:
   files_changed:
   - runs/modular_migration_2026-09-09/
   - runs/start_here/
+- turn: 8
+  action: Inspected current observe/think/imagine and detached FIFO memory routes and objectives; checked
+    primary Compressive Transformer, DreamerV3 and V-JEPA2 papers. Prepared conceptual routing discussion
+    and preserved proposals. No model changes, experiments or external peer messages.
+  provenance: ai-executed
+  files_changed:
+  - ara/staging/observations.yaml
+  - ara/trace/
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -397,6 +434,9 @@ key_context:
 - turn: 7
   excerpt: 'User: Yes. Let us keep and migrate only what is worth keeping, do the migration, scratch the rest
     and start fresh; migrate and adapt the workflow so we do not drift away.'
+- turn: 8
+  excerpt: 'User: the negative result is ok for now; first discuss temporal learning, partial-data completion,
+    k recent states, m compressed states, cross-scale attention and routing.'
 open_threads:
 - Review O64-O71 and the measured architecture tradeoffs; no universal architecture or new control success
   has been adopted.
@@ -421,6 +461,9 @@ open_threads:
   does not fix that implementation.'
 - 'N127/N128/N129: migration completed; collect the user''s experience on the next chosen recipe. Engineering
   checks do not establish human usability or model quality; no further training queued.'
+- 'N130/O81/O82: settle world-model sharing, causal versus retrospective completion, chunk timing and
+  capacity, compression supervision, memory read routes, evidence/belief provenance and delayed-memory
+  evaluation before implementation.'
 ai_suggestions_pending:
 - 'O64: Pretrained ViT supports substantially better foreground/category readouts than the local CNN, while
   P1 pixel reconstruction favors CNN. This is package selection evidence, not isolated architecture causality
@@ -460,3 +503,5 @@ ai_suggestions_pending:
   budget or new training.'
 - 'O78: scope clarification only; no fixed count of new modules, training budget or novel-layer requirement
   adopted.'
+- 'O82: shared world-state with separate prediction/update paths, learned chronological compression and
+  consumer-specific multiscale reads; unadopted and untested.'
