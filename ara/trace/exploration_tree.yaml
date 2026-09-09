@@ -1961,3 +1961,19 @@ tree:
   - N120
   - N108
   status: open
+- id: N124
+  type: question
+  title: Does auxiliary reconstruction improve a trainable encoder for tasks and dynamics?
+  provenance: user
+  timestamp: 2026-09-09T09:33+02:00
+  description: User clarifies that reconstructed images are unnecessary in the current runtime loop; the main question
+    is whether RGB gradients constrain a trainable encoder helpfully for downstream tasks and internal temporal
+    modeling. No new experiment requested.
+  evidence:
+  - docs/reconstruction-role-2026-09-09.md
+  also_depends_on:
+  - N123
+  - N117
+  - N118
+  - N119
+  status: open

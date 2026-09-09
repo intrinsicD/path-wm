@@ -65,8 +65,9 @@ sessions:
     ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry pass improves
     with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests and standalone browser
     QA pass; automation paused. Turn2 clarifies diagnostic RGB versus reconstruction training; two public-only Claude
-    exchanges, no model or loss changes.
-  turn_count: 2
-  events_count: 20
+    exchanges, no model or loss changes. Turn3 focuses on auxiliary RGB gradients into trainable E; local effect
+    unisolated, three-arm comparison proposed and two Claude reviews reconciled. No new training.
+  turn_count: 3
+  events_count: 23
   claims_touched: []
-  open_threads: 7
+  open_threads: 8

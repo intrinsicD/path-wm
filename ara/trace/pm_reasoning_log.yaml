@@ -407,3 +407,17 @@ entries:
   - Claude corrections distinguish decoder input provenance from a blanket skip ban, and deterministic states from
     RSSM-specific terms. They were reconciled before documentation; no unresolved scientific contradiction is introduced.
     Active geometry, architecture and memory threads remain referenced, with no new staleness or abandonment.
+- turn: 2026-09-09_001#3
+  notes:
+  - Epilogue after substantive code/literature inspection, two Claude exchanges and documentation commit. N124 records
+    the clarified user question; O74/O75 stage mechanism and proposed comparison. No model experiment or result
+    is invented.
+  - The opening Yes clarifies runtime use and asks about auxiliary gradients; it does not affirm removing RGB supervision,
+    detach every RGB path or endorse previous bundled architecture findings. O72/O73 remain staged; no contradiction
+    or blanket adoption is inferred.
+  - Public peer overclaims were explicitly withdrawn before documentation. The staged comparison measures recipe-specific
+    downstream usability; universal predictability, joint training and nuisance-mechanism claims remain separate.
+    No substantive disagreement survives.
+  - Architecture, reconstruction/retention, geometry, memory and prior normalization/data-efficiency topics remain
+    referenced by open threads. No clear closure, new abandoned topic or newly unreferenced three-session-day observation;
+    no promotion or additional stale flag.

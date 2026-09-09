@@ -1230,3 +1230,41 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O74
+  timestamp: 2026-09-09T09:33+02:00
+  provenance: ai-suggested
+  content: Auxiliary RGB loss can provide dense visible-information retention pressure but does not ensure accessible
+    geometry, hidden velocity, action dynamics or useful predictability. Pixel nuisance weighting and bypass routes
+    can weaken task utility. Current RGB gradients train E during perception; later U/P stages use frozen E. Frozen-E
+    decoder fits and RGB-preserving encoder continuations do not isolate the causal benefit of reconstruction gradients.
+  context: Local trainers/rollout and primary SAC+AE, MAE, Masked World Models and MuDreamer checked. Mechanistic
+    interpretation and local evidence gap; no new model result.
+  potential_type: concept
+  bound_to:
+  - N124
+  - N123
+  - N117
+  - N118
+  - N119
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O75
+  timestamp: 2026-09-09T09:33+02:00
+  provenance: ai-suggested
+  content: Propose paired blocked/weak/reference RGB-gradient arms with E trainable through identical other objectives,
+    fixed feature routes and matched decoder training. Use paired seeds, clean/distractor holdout, normalized features
+    and compatible matched downstream fits, then physical multistep and control metrics. Tests incremental benefit
+    during continuation under that recipe; pretraining necessity, joint E/dynamics optimization and non-pixel replacement
+    are separate questions.
+  context: Two public-only actual Claude exchanges; withdrew invalidation of the scoped comparison, static-only
+    characterization of dynamics fitting, mandatory alternative-target arm and stochastic-decoder SAC+AE wording.
+    Documentation committed at baf7da6; no implementation, training or new authorization.
+  potential_type: heuristic
+  bound_to:
+  - N124
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
