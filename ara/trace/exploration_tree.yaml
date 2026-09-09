@@ -1944,3 +1944,20 @@ tree:
   tests_observations:
   - O69
   status: resolved
+
+- id: N123
+  type: question
+  title: Separate diagnostic RGB rendering from representation learning
+  provenance: user
+  timestamp: 2026-09-09T09:04+02:00
+  description: User proposes a separate reconstruction decoder because RGB is primarily for visualizing latent state.
+    Clarified optional diagnostic rendering, explicit state/input boundary and gradient isolation versus auxiliary
+    reconstruction training; no model or loss change authorized or executed.
+  evidence:
+  - docs/reconstruction-role-2026-09-09.md
+  also_depends_on:
+  - N118
+  - N119
+  - N120
+  - N108
+  status: open

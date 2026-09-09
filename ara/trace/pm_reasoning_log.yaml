@@ -396,3 +396,14 @@ entries:
   - Earlier normalization/control/data-efficiency topics remain referenced by open threads; active architecture
     and geometry ideas are revisited. No clear abandonment or additional unreferenced three-session-day observation
     is established. No new promotion or staleness flag.
+
+- turn: 2026-09-09_001#2
+  notes:
+  - End-of-turn only. N123 records the user question; O72 retains user provenance and O73 stages the clarified design.
+    No new experiment, computation result or model change is claimed.
+  - The user favors a separate reconstruction decoder but asks about its purpose; this does not endorse all O66/O69
+    findings or authorize deleting RGB gradients. No wholesale promotion of previous bundled observations; new architecture
+    details await adoption.
+  - Claude corrections distinguish decoder input provenance from a blanket skip ban, and deterministic states from
+    RSSM-specific terms. They were reconciled before documentation; no unresolved scientific contradiction is introduced.
+    Active geometry, architecture and memory threads remain referenced, with no new staleness or abandonment.

@@ -1193,3 +1193,40 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O72
+  timestamp: 2026-09-09T09:04+02:00
+  provenance: user
+  content: User proposes a separate RGB reconstruction decoder primarily for inspecting latent state and asks whether
+    that role is correct.
+  context: Follow-up to overnight architecture results; design preference/question, not an instruction to remove
+    the reconstruction learning signal.
+  potential_type: architecture
+  bound_to:
+  - N123
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O73
+  timestamp: 2026-09-09T09:04+02:00
+  provenance: ai-suggested
+  content: 'Use a detached/frozen-state diagnostic renderer with independent optimization if RGB serves inspection.
+    Separate parameters alone do not prevent encoder gradients. Admit exactly the state under inspection: early
+    tokens are valid when that is the declared state, while extra image skips cannot prove memory retention. Observed-feature
+    reconstruction and imagined-state rendering differ; causal retained/predicted inputs remain possible. Keep/remove
+    auxiliary pixel loss separately, evaluate task/prediction/retention quality, and do not treat plausible images
+    as literal state contents.'
+  context: Local planner/trainer inspection; TD-MPC2 and MuDreamer primary abstracts; two public-only Claude exchanges.
+    Claude withdrew RSSM-only terminology and the absolute ban on imagined decoding from skip-dependent architectures.
+    No training or new evaluation.
+  potential_type: architecture
+  bound_to:
+  - N123
+  - N118
+  - N119
+  - N121
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
