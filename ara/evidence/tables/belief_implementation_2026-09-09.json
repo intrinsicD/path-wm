@@ -1,0 +1,131 @@
+{
+  "purpose": "implementation development verification, no capability threshold",
+  "cpu_tests_passed": 69,
+  "lint": "ruff passed",
+  "exact_resume": "model, optimizer, sampler, RNG and train rows; optional proposal gate exercised by tests",
+  "updates": {
+    "synthetic": 8,
+    "instructions": 8,
+    "pusht": 2
+  },
+  "extra_development_proposals": 0,
+  "gpu_runs": 0,
+  "default_model_parameters": 515553,
+  "default_memory_tensor_cap_bytes": 318040,
+  "reports": {
+    "synthetic": {
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 8
+      },
+      "report_sha256": "2bf10adab76e9f7153944ab646b05cfcbe25f5c57a1e31c763a74ef49c0b286b",
+      "checkpoint_sha256": "e486848c3b193e3766348db76e05a6171efc5e70631b38f7b6daf69d60e6a464",
+      "metrics_sha256": "dc718870e72e3c9f941298be8a26bd160792b04f4c8362299244ccbaa059fe5f",
+      "browser_verified": true
+    },
+    "instructions": {
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 8
+      },
+      "report_sha256": "99de55f9c3ea9add16578c57aecab4bc813363a59a98d326fafdcb04b4754537",
+      "checkpoint_sha256": "aed8aa5e0e0861349109c95b32935aae3f9edb9d6ba19fc99aee5538393e8c45",
+      "metrics_sha256": "d26264c89aaf1368f5679e3a88a11056f5f242c3d59ac1bd7dc2e363d4dc880e",
+      "browser_verified": true
+    },
+    "pusht": {
+      "status": {
+        "error": null,
+        "report": "structural_verified",
+        "result": "completed",
+        "step": 2
+      },
+      "report_sha256": "f1759093d55f1e581c615240acda8ad8841f9afdbc83ee166873ee6c88bd64fa",
+      "checkpoint_sha256": "8688cb1171f135e7886acc0f2470edc211c4b2f904a0b045bb3d1b96b95fe5d1",
+      "metrics_sha256": "fe181b36dd6499bd0f22fadfa80a8f14eec72c89a4af67d3abaa6f0bad9bfddf",
+      "browser_verified": true
+    }
+  },
+  "claude_receipts": [
+    "runs/reviews/state_memory_design_2026-09-09/implementation-receipt.json",
+    "runs/reviews/state_memory_design_2026-09-09/implementation-reconcile-receipt.json"
+  ],
+  "limits": [
+    "Development prediction worse than copy baseline",
+    "No general memory/uncertainty/control capability claim",
+    "Run-owned source snapshots precede final defensive memory-eligibility checks; final CPU suite and real batch cover current code",
+    "First two reports re-rendered from unchanged metrics for caption correction"
+  ],
+  "implementation_commit": "7c84fd3",
+  "recorded_at": "2026-09-09T23:26+02:00",
+  "claims_tested": "Implementation contracts and workflow only; interpretation remains O101",
+  "final_real_check_sha256": "3f9652742ce4b184816f407b6ece354ac81b02ac4add9ae096c3efdbc49192be",
+  "final_validation": {
+    "synthetic": {
+      "accepted_extra_updates": 0,
+      "attempted_extra_updates": 0,
+      "categorical_entropy": 1.4169633388519287,
+      "copy_image_mse": 0.007451116805896163,
+      "dynamics_kl": 5.144500494003296,
+      "evaluated_windows": 4,
+      "image_mse": 0.23767029494047165,
+      "latent_between_example_std": 0.8046184182167053,
+      "latent_effective_rank": 1.953295111656189,
+      "loss": 22.060997009277344,
+      "memory_tensor_bytes": 16120.0,
+      "silence_audio_mse": 0.00966982264071703,
+      "split": "validation",
+      "step": 8
+    },
+    "instructions": {
+      "accepted_extra_updates": 0,
+      "attempted_extra_updates": 0,
+      "categorical_entropy": 1.422710120677948,
+      "copy_image_mse": 0.007451116805896163,
+      "dynamics_kl": 5.099114418029785,
+      "evaluated_windows": 4,
+      "image_mse": 0.23766938596963882,
+      "latent_between_example_std": 0.8226578235626221,
+      "latent_effective_rank": 1.978654384613037,
+      "loss": 25.434449195861816,
+      "memory_tensor_bytes": 16120.0,
+      "silence_audio_mse": 0.00966982264071703,
+      "split": "validation",
+      "step": 8,
+      "task_audio_error": 0.0,
+      "task_completion_error": 0.75,
+      "task_gate_violations": 0,
+      "task_image_error": 1.0,
+      "task_lexical_completion_error": 0.0,
+      "task_lexical_modality_error": 0.0,
+      "task_lexical_operation_error": 0.0,
+      "task_modality_error": 0.5,
+      "task_operation_error": 0.75,
+      "task_raw_gate_violations": 0,
+      "task_shuffled_completion_error": 1.0,
+      "task_shuffled_modality_error": 0.5,
+      "task_shuffled_operation_error": 0.75,
+      "task_text_error": 0.0,
+      "task_video_error": 1.0
+    },
+    "pusht": {
+      "accepted_extra_updates": 0,
+      "attempted_extra_updates": 0,
+      "categorical_entropy": 1.3029776811599731,
+      "copy_image_mse": 5.089501428301446e-05,
+      "dynamics_kl": 7.307551383972168,
+      "evaluated_windows": 2,
+      "image_mse": 0.23649854958057404,
+      "latent_between_example_std": 0.3151617646217346,
+      "latent_effective_rank": 1.0,
+      "loss": 23.18206024169922,
+      "memory_tensor_bytes": 15984.0,
+      "split": "validation",
+      "step": 2
+    }
+  }
+}

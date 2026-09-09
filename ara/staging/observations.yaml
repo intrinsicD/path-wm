@@ -1782,6 +1782,25 @@ observations:
   - N141
   - N142
   - N144
+  promoted: true
+  promoted_to: ara/logic/solution/architecture.md:A03
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O101
+  timestamp: 2026-09-09T23:26+02:00
+  provenance: ai-suggested
+  content: The development checks support executable filtering and memory contracts, not effective world
+    understanding. Short-run prediction remains worse than copying and the tiny instruction set has high
+    operation error. Whether the hierarchy preserves useful uncertainty at deployment-length horizons
+    requires a declared delayed-information task and matched capacity/compute comparisons; latent entropy
+    and protected marks are not calibrated confidence.
+  context: Implemented the categorical two-view hierarchy and initial likelihood/partial-teacher/recall/marking
+    losses. Three bounded development runs and current-source tests; no researcher interpretation of these
+    new results yet.
+  potential_type: claim
+  bound_to:
+  - N148
+  - N149
   promoted: false
   promoted_to: null
   crystallized_via: null

@@ -2369,3 +2369,49 @@ tree:
   - N141
   - N146
   status: resolved
+- id: N148
+  type: decision
+  title: Implement the reviewed categorical belief and bounded memory model with Claude
+  provenance: user
+  timestamp: 2026-09-09T23:26+02:00
+  choice: User explicitly requests implementation together with Claude, superseding the architecture-only
+    boundary. Retain the Gaussian reference, fresh-session lifecycle and one editable recipe; implement
+    the reviewed filter and necessary memory/learning integration.
+  alternatives:
+  - Continue architecture-only discussion without implementation
+  evidence:
+  - 'Current user: Good. Please work on this together with Claude. Implement it'
+  - O100
+  - docs/belief-implementation-plan.md
+  - docs/belief-model.md
+  also_depends_on:
+  - N147
+  - N146
+  - N144
+  - N142
+  status: resolved
+- id: N149
+  type: experiment
+  title: Verify categorical filtering, bounded memory replay and short development runs
+  provenance: ai-executed
+  timestamp: 2026-09-09T23:26+02:00
+  result: Committed implementation 7c84fd3 after red contract tests in 0fb6ad6. All 69 CPU tests pass,
+    including categorical gradients, packet union/seal, source separation, equal-time future memory rejection,
+    bounded compression, planning RNG and exact pause/resume with the proposal gate. Two abstract Claude
+    implementation reviews reconciled. Completed 8 synthetic, 8 instruction and 2 real PushT CPU updates,
+    no extra proposals/GPU. Synthetic image MSE 0.23767029494047165 versus copy 0.007451116805896163;
+    real MSE 0.23649854958057404 versus copy 0.00005089501428301446. Four-example instruction operation
+    error 0.75. All three standalone reports structurally/browser verified. Final source additionally
+    passes a real eight-history forward/backward check. Development execution only; no calibrated uncertainty
+    or useful world-memory claim.
+  evidence:
+  - ara/evidence/tables/belief_implementation_2026-09-09.json
+  - runs/belief_v1/verification.json
+  - runs/belief_v1/pusht-final-check.json
+  - tests/test_belief.py
+  - tests/test_belief_training.py
+  - runs/reviews/state_memory_design_2026-09-09/implementation-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/implementation-reconcile-receipt.json
+  also_depends_on:
+  - N148
+  status: resolved

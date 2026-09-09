@@ -2,22 +2,39 @@ session:
   id: 2026-09-09_001
   date: '2026-09-09'
   started: 2026-09-08T20:28+02:00
-  last_turn: 2026-09-09T21:16+02:00
-  turn_count: 30
+  last_turn: 2026-09-09T23:26+02:00
+  turn_count: 31
   summary: 'Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges.
     Local ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry
     pass improves with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests
     and standalone browser QA pass; automation paused. Turn2 clarifies diagnostic RGB versus reconstruction
-    training; two public-only Claude exchanges, no model or loss changes. Turn3 focuses on auxiliary RGB gradients
-    into trainable E; local effect unisolated, three-arm comparison proposed and two Claude reviews reconciled.
-    No new training. Turn4 explains quality factors and inherited pretraining; small diagnostic scope acknowledged,
-    end-to-end reference strategy proposed with two reconciled Claude reviews. No new experiments. Turn5 clarifies
-    applied world-model systems research and pretrained-weight versus architecture reuse; no new model work.
-    Turn6 prioritizes human usability: audited experiment coupling and proposed a small PyTorch library, Python
-    recipes and a verified first perception migration; three public-only Claude reviews, no code migration
-    or training. Turn7 adopts and completes the modular restart: 18 library files/two editable recipes, retired
-    legacy stack preserved by tag, 505 zero-difference reference checks, 16 tests and clean-Git recipe checks,
-    CPU/GPU pause-resume and three verified local reports; standing workflow migrated. Turn8 resumes temporal-state and hierarchical-memory design discussion; user and assistant proposals remain open, with no new implementation or training. Subsequent voice discussion establishes hybrid memory and separate consumer routes, then returns to architecture before experiments. Final interface proposal records domain-neutral tokens, explicit budgets/staging/consolidation and training boundaries; no model work. Turn25 completes three actual public-only Claude reviews, reconciles overclaims and proposes separately retrievable observation/belief views as the next discussion; no new model work. Turn26 separates memory capacity, read cost and recall quality; bounded indexed reads proposed, evidence-view choice still open and no benchmark run. Turn27 adopts bounded but useful memory as a sizing objective; illustrative counts remain provisional pending task cadence and recall needs. Turn28 records independent memory resets, recommends evidence/belief views and reconciles three abstract Claude reviews; scoped invalidation proposed without model implementation. Turn29 withdraws individual memory resets in favor of a fresh agent session; historical review preserved and evidence-view choice remains open. Turn30 completes four focused Claude exchanges and proposes a compact categorical belief filter with explicit event/learning contracts; no implementation or calibration claim.'
+    training; two public-only Claude exchanges, no model or loss changes. Turn3 focuses on auxiliary RGB
+    gradients into trainable E; local effect unisolated, three-arm comparison proposed and two Claude reviews
+    reconciled. No new training. Turn4 explains quality factors and inherited pretraining; small diagnostic
+    scope acknowledged, end-to-end reference strategy proposed with two reconciled Claude reviews. No new
+    experiments. Turn5 clarifies applied world-model systems research and pretrained-weight versus architecture
+    reuse; no new model work. Turn6 prioritizes human usability: audited experiment coupling and proposed
+    a small PyTorch library, Python recipes and a verified first perception migration; three public-only
+    Claude reviews, no code migration or training. Turn7 adopts and completes the modular restart: 18 library
+    files/two editable recipes, retired legacy stack preserved by tag, 505 zero-difference reference checks,
+    16 tests and clean-Git recipe checks, CPU/GPU pause-resume and three verified local reports; standing
+    workflow migrated. Turn8 resumes temporal-state and hierarchical-memory design discussion; user and
+    assistant proposals remain open, with no new implementation or training. Subsequent voice discussion
+    establishes hybrid memory and separate consumer routes, then returns to architecture before experiments.
+    Final interface proposal records domain-neutral tokens, explicit budgets/staging/consolidation and training
+    boundaries; no model work. Turn25 completes three actual public-only Claude reviews, reconciles overclaims
+    and proposes separately retrievable observation/belief views as the next discussion; no new model work.
+    Turn26 separates memory capacity, read cost and recall quality; bounded indexed reads proposed, evidence-view
+    choice still open and no benchmark run. Turn27 adopts bounded but useful memory as a sizing objective;
+    illustrative counts remain provisional pending task cadence and recall needs. Turn28 records independent
+    memory resets, recommends evidence/belief views and reconciles three abstract Claude reviews; scoped
+    invalidation proposed without model implementation. Turn29 withdraws individual memory resets in favor
+    of a fresh agent session; historical review preserved and evidence-view choice remains open. Turn30
+    completes four focused Claude exchanges and proposes a compact categorical belief filter with explicit
+    event/learning contracts; no implementation or calibration claim. Turn31 implements the categorical
+    belief/two-view memory path with two abstract Claude reviews; 69 CPU tests, exact resume, 8+8+2 development
+    updates and three browser-verified reports. Current predictions remain worse than copying; O100 crystallized
+    through implementation, usefulness staged separately.'
 events_logged:
 - turn: 1
   type: decision
@@ -673,6 +690,31 @@ events_logged:
     stopped-gradient KL, isolate full-view teachers in masked completion, and distil fixed consumer distributions
     for compressed memory. Neither family, losses nor sample disagreement guarantee coherent alternatives,
     calibration or epistemic uncertainty. Next specify observable target distributions and validity semantics.
+- turn: 31
+  type: decision
+  id: N148
+  routing: direct
+  provenance: user
+  summary: Authorize implementation of the reviewed model with Claude
+- turn: 31
+  type: experiment
+  id: N149
+  routing: direct
+  provenance: ai-executed
+  summary: 69 tests and exact resume; 8+8+2 development updates; three browser-verified reports; weak
+    predictions
+- turn: 31
+  type: architecture
+  id: O100
+  routing: crystallized
+  provenance: ai-suggested
+  summary: A03 implemented mechanism via artifact commitment; no efficacy promotion
+- turn: 31
+  type: observation
+  id: O101
+  routing: staged
+  provenance: ai-suggested
+  summary: Useful long-horizon memory and calibrated probabilities remain unresolved
 ai_actions:
 - turn: 1
   action: Implemented, developed and sealed matched encoder/decoder/objective comparisons; ran all declared units
@@ -873,6 +915,21 @@ ai_actions:
   - runs/reviews/state_memory_design_2026-09-09/belief*
   - ara/staging/observations.yaml
   - ara/trace/
+- turn: 31
+  action: Implemented and committed filter/event/schema/memory/losses in the existing recipe; reconciled
+    actual abstract Claude review; preserved Gaussian path; validated tests, current-source real batch
+    and short runs; corrected report labels and verified browser rendering.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/belief.py
+  - pathwm/models/belief_state.py
+  - pathwm/models/hybrid_memory.py
+  - pathwm/training/belief.py
+  - experiments/multimodal.py
+  - tests/test_belief.py
+  - tests/test_belief_training.py
+  - docs/belief-model.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -954,6 +1011,8 @@ key_context:
     agent completely.'
 - turn: 30
   excerpt: 'User: Ok yes, please discuss this with Claude and propose how this would work well.'
+- turn: 31
+  excerpt: Good. Please work on this together with Claude. Implement it
 open_threads:
 - Review O64-O71 and the measured architecture tradeoffs; no universal architecture or new control success
   has been adopted.
@@ -978,26 +1037,24 @@ open_threads:
   does not fix that implementation.'
 - 'N127/N128/N129: migration completed; collect the user''s experience on the next chosen recipe. Engineering
   checks do not establish human usability or model quality; no further training queued.'
-- 'N130/O81/O82: settle world-model sharing, causal versus retrospective completion, chunk timing and
-  capacity, compression supervision, memory read routes, evidence/belief provenance and delayed-memory
-  evaluation before implementation.'
-- 'N139: finish persistent state, compression/consolidation, prediction uncertainty and task/action/output
-  interfaces before returning to experiment design.'
-- 'N140: define domain-neutral latent state and domain-specific observation/action adapters; avoid hard-coded
-  physical semantics.'
-- 'N141: review proposed dimensions, consolidated session update, protected-memory capacity outcomes and
-  limited uncertainty baseline before implementation.'
-- 'N142/O96: discuss belief-only versus independently retrievable observation-evidence and belief memory
-  views; no second stream adopted. Follow with state/filtering, persistent derived knowledge, read conflict
-  and learning/action contracts.'
+- 'N130/N148: temporal filtering and hierarchical memory implemented as A03; retain broader objective
+  and long-horizon evaluation questions.'
+- 'N139/N148: first model implementation complete; choose the observable task/action contract before broader
+  experiments.'
+- 'N140/N148: neutral tokens implemented; demonstrate relevant content in new domains rather than assume
+  transfer.'
+- 'N141/N148: initial staging/consolidation/budgets implemented; capacity adequacy and retention quality
+  remain unverified.'
+- 'N142/N148: two independent evidence/belief views implemented in A03; retrieval usefulness and calibration
+  remain open.'
 - 'N143/O97: distinguish storage and read budgets; indexed retrieval remains a proposal, capacity/generalization
   and evidence-view allocation remain open.'
 - 'N144/O98: size the bounded memory against task cadence and needed recall horizon; illustrative counts
   do not establish adequacy.'
-- 'N146: use fresh agent sessions instead of scoped resets; observation/belief allocation remains open
-  under N142/O96. No restart implementation requested.'
-- 'N147/O100: discuss compact categorical belief proposal and observable target/missingness contracts;
-  latent sizes, likelihoods, marginal estimator and exact training/read budgets remain open.'
+- 'N146/N148: fresh state/session lifecycle implemented; callers discard old task progress and pending
+  plans. No individual reset.'
+- 'N148/A03/O101: categorical filter and initial observable targets implemented; choose deployment-horizon
+  memory task and matched comparisons.'
 ai_suggestions_pending:
 - 'O64: Pretrained ViT supports substantially better foreground/category readouts than the local CNN, while
   P1 pixel reconstruction favors CNN. This is package selection evidence, not isolated architecture causality
@@ -1037,35 +1094,28 @@ ai_suggestions_pending:
   budget or new training.'
 - 'O78: scope clarification only; no fixed count of new modules, training budget or novel-layer requirement
   adopted.'
-- 'O82: shared world-state with separate prediction/update paths, learned chronological compression and
-  consumer-specific multiscale reads; unadopted and untested.'
-- 'O83: fixed compression plus bounded protection for marked events; learned event selection deferred
-  as a proposal.'
-- 'O84: discuss future prediction, completion and delayed-memory supervision before implementing the adopted
-  hybrid direction.'
-- 'O85: observation-conditioned separate memory reads, per-token residual gates and final observation-aware
-  refinement; not yet adopted.'
-- 'O86: prediction-specific queries and transition head over the same causal memory stores; no future-observation
-  access.'
-- 'O87: action/time conditioning token and one native transition per prediction, with multistep rollout
-  supervision.'
-- 'O88: task-conditioned memory queries, gated working-state updates and bounded repeated retrieval; no
-  world-time or observational-memory mutation.'
-- 'O89: train causal marking scores using replay estimates of delayed benefit minus storage cost; budget
-  and loss weights remain open.'
+- 'O82: core shared-state/read routing implemented under A03; broader variants and efficacy remain unselected.'
+- 'O83: hybrid retention implemented under A03; automatic marking utility still unvalidated.'
+- 'O84: initial prediction/completion/delayed-recall objectives implemented; general tasks and efficacy
+  remain open.'
+- 'O85: observation/memory/final-refinement path implemented under A03; no empirical superiority claim.'
+- 'O86: shared-memory causal prediction path implemented under A03; no prediction-quality claim.'
+- 'O87: action/time and short-step rollouts implemented; physical timestamp calibration remains adapter-specific.'
+- 'O88: bounded task-working memory reads implemented; general reasoning efficacy unverified.'
+- 'O89: delayed marginal mark score implemented with initial fixed loss/cost; effectiveness and richer
+  tasks remain open.'
 - 'O90: provisional capacities and delayed-memory prototype; exact compute, thresholds and data remain
   to be agreed.'
 - 'O91: delayed last-observed object-location task with structured outputs and explicit delay/retention
   controls.'
 - 'O92: spatially consistent consolidation and place/object retrieval for mapping; temporal hierarchy
   alone unvalidated.'
-- 'O96: fixed-budget observation/belief views with independent evidence retrieval and explicit conditioning/retention
-  objectives; supported as an engineering preference by Claude, not proven or adopted.'
+- 'O96: independent evidence/belief views adopted through A03; broader retrieval variations and usefulness
+  remain open.'
 - 'O97: decouple capacity from bounded attention using indexed older/protected retrieval if needed; unimplemented
   and unbenchmarked.'
 - 'O98: retain current provisional capacities for discussion, then connect history coverage to event cadence
   and delayed utility before fixing them.'
-- 'O99: scoped-reset proposal withdrawn via N146; independently addressable evidence/belief views and
-  their budget remain proposals.'
-- 'O100: recurrent-context/categorical prior-posterior filter with bounded temporary samples; an approximate
-  single-history proposal, not a tested or user-adopted model.'
+- 'O99: individual resets remain withdrawn via N146; evidence/belief views are now implemented through
+  A03.'
+- 'A03/O101: O100 crystallized through code commitment; capability interpretation remains staged.'

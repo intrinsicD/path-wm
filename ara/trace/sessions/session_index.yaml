@@ -62,20 +62,38 @@ sessions:
 - id: 2026-09-09_001
   date: '2026-09-09'
   summary: 'Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges.
-    Local ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry
-    pass improves with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests
-    and standalone browser QA pass; automation paused. Turn2 clarifies diagnostic RGB versus reconstruction
-    training; two public-only Claude exchanges, no model or loss changes. Turn3 focuses on auxiliary RGB gradients
-    into trainable E; local effect unisolated, three-arm comparison proposed and two Claude reviews reconciled.
-    No new training. Turn4 explains quality factors and inherited pretraining; small diagnostic scope acknowledged,
-    end-to-end reference strategy proposed with two reconciled Claude reviews. No new experiments. Turn5 clarifies
-    applied world-model systems research and pretrained-weight versus architecture reuse; no new model work.
-    Turn6 prioritizes human usability: audited experiment coupling and proposed a small PyTorch library, Python
-    recipes and a verified first perception migration; three public-only Claude reviews, no code migration
-    or training. Turn7 adopts and completes the modular restart: 18 library files/two editable recipes, retired
-    legacy stack preserved by tag, 505 zero-difference reference checks, 16 tests and clean-Git recipe checks,
-    CPU/GPU pause-resume and three verified local reports; standing workflow migrated. Turn8 resumes temporal-state and hierarchical-memory design discussion; user and assistant proposals remain open, with no new implementation or training. Turn9 records voice memory-fidelity preferences and proposes hybrid retention. Subsequent voice discussion establishes hybrid memory and separate consumer routes, then returns to architecture before experiments. Final interface proposal records domain-neutral tokens, explicit budgets/staging/consolidation and training boundaries; no model work. Turn25 completes three actual public-only Claude reviews, reconciles overclaims and proposes separately retrievable observation/belief views as the next discussion; no new model work. Turn26 separates memory capacity, read cost and recall quality; bounded indexed reads proposed, evidence-view choice still open and no benchmark run. Turn27 adopts bounded but useful memory as a sizing objective; illustrative counts remain provisional pending task cadence and recall needs. Turn28 records independent memory resets, recommends evidence/belief views and reconciles three abstract Claude reviews; scoped invalidation proposed without model implementation. Turn29 withdraws individual memory resets in favor of a fresh agent session; historical review preserved and evidence-view choice remains open. Turn30 completes four focused Claude exchanges and proposes a compact categorical belief filter with explicit event/learning contracts; no implementation or calibration claim.'
-  turn_count: 30
-  events_count: 73
+    Local ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins;
+    geometry pass improves with residual/worse extreme tails. All 42 reliance and 40 runtime conditions,
+    407 tests and standalone browser QA pass; automation paused. Turn2 clarifies diagnostic RGB versus
+    reconstruction training; two public-only Claude exchanges, no model or loss changes. Turn3 focuses
+    on auxiliary RGB gradients into trainable E; local effect unisolated, three-arm comparison proposed
+    and two Claude reviews reconciled. No new training. Turn4 explains quality factors and inherited pretraining;
+    small diagnostic scope acknowledged, end-to-end reference strategy proposed with two reconciled Claude
+    reviews. No new experiments. Turn5 clarifies applied world-model systems research and pretrained-weight
+    versus architecture reuse; no new model work. Turn6 prioritizes human usability: audited experiment
+    coupling and proposed a small PyTorch library, Python recipes and a verified first perception migration;
+    three public-only Claude reviews, no code migration or training. Turn7 adopts and completes the modular
+    restart: 18 library files/two editable recipes, retired legacy stack preserved by tag, 505 zero-difference
+    reference checks, 16 tests and clean-Git recipe checks, CPU/GPU pause-resume and three verified local
+    reports; standing workflow migrated. Turn8 resumes temporal-state and hierarchical-memory design discussion;
+    user and assistant proposals remain open, with no new implementation or training. Turn9 records voice
+    memory-fidelity preferences and proposes hybrid retention. Subsequent voice discussion establishes
+    hybrid memory and separate consumer routes, then returns to architecture before experiments. Final
+    interface proposal records domain-neutral tokens, explicit budgets/staging/consolidation and training
+    boundaries; no model work. Turn25 completes three actual public-only Claude reviews, reconciles overclaims
+    and proposes separately retrievable observation/belief views as the next discussion; no new model
+    work. Turn26 separates memory capacity, read cost and recall quality; bounded indexed reads proposed,
+    evidence-view choice still open and no benchmark run. Turn27 adopts bounded but useful memory as a
+    sizing objective; illustrative counts remain provisional pending task cadence and recall needs. Turn28
+    records independent memory resets, recommends evidence/belief views and reconciles three abstract
+    Claude reviews; scoped invalidation proposed without model implementation. Turn29 withdraws individual
+    memory resets in favor of a fresh agent session; historical review preserved and evidence-view choice
+    remains open. Turn30 completes four focused Claude exchanges and proposes a compact categorical belief
+    filter with explicit event/learning contracts; no implementation or calibration claim. Turn31 implements
+    the categorical belief/two-view memory path with two abstract Claude reviews; 69 CPU tests, exact
+    resume, 8+8+2 development updates and three browser-verified reports. Current predictions remain worse
+    than copying; O100 crystallized through implementation, usefulness staged separately.'
+  turn_count: 31
+  events_count: 77
   claims_touched: []
   open_threads: 20
