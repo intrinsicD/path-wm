@@ -103,10 +103,22 @@ by dropping ancestry. No authority comes from parent IDs or learned embeddings.
 A final clarification brief was prepared at
 `runs/reviews/task_outputs/final-clarifications.txt`, but automatic approval review
 rejected its external transmission as potentially non-public and insufficiently
-authorized for that payload/destination. No third response or workaround exists;
-`final-receipt.json` records the block. That optional follow-up needs explicit user
-approval. Local implementation/verification is complete; peer acknowledgment of
-those final corrections has not been obtained.
+authorized for that payload/destination. `final-receipt.json` preserves that block;
+no workaround was attempted. The user subsequently explicitly approved sending the
+exact brief, and the call completed. `approved-final-response.json` and
+`approved-final-receipt.json` preserve the successful review. Claude accepted the
+stated core contracts, including local-author fulfillment, monotone ancestry and
+independent emission enforcement, and withdrew its blanket objection to post-mask
+metrics. The assessment is of the supplied contracts, not private code conformance.
+
+Remaining extension/documentation cautions (pure replacement decoders, artifact
+modality versus information-flow controls, synthetic labels and limits on bitwise
+replay) are already explicit in the guide. Two additional interpretations do not
+change the design: a clean branch can continue receiving real observations rather
+than remaining frozen; same-runtime exact replay does not imply tensor records
+cannot be moved to another device. No further implementation or experiment followed
+this review. The user's proposed temporal/completion objectives and hierarchical
+session memory are saved as the next discussion in `project-state.md`.
 
 ## Multiscale conditioned inputs — completed slice
 

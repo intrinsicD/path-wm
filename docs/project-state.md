@@ -47,11 +47,12 @@ individual input-scale diagrams regenerate with
 runtime. Task flow shows learned proposals and explicit user emission as separate
 actual call paths.
 
-**Claude review:** two actual reviews completed. A final correction brief was
-prepared but its transmission was rejected by automatic approval review as potentially
-non-public and insufficiently explicitly authorized. No workaround was attempted.
-Local verification is complete; sending that optional final brief requires approval.
-Exact briefs/responses/receipts are retained in `runs/reviews/task_outputs/`.
+**Claude review:** the user explicitly approved the previously blocked final brief,
+and the third review completed. Claude accepted the stated core contracts and
+withdrew its blanket objection to post-mask violation metrics. These are conceptual
+findings; implementation conformance rests on local tests. Exact briefs, responses
+and receipts are retained in `runs/reviews/task_outputs/`, including
+`approved-final-response.json` and `approved-final-receipt.json`.
 
 The earlier conditioned multiscale inputs, episodic memory, stochastic dynamics,
 candidate planning and bounded update gate remain available. Their development
@@ -59,7 +60,19 @@ results are preserved under `runs/multiscale_v1/` and `runs/multimodal_v1/`; old
 checkpoints require their source snapshots. The new latent schema is v2 and fails
 closed when ancestry is absent. No data or completed runs were removed.
 
-The next discussion can review each concrete component and define the next learning
-experiment. Physical understanding, useful language generation, calibrated progress,
-semantic feature controls, scalable memory and broad self-improvement remain research
-questions. Real data still use `data/pusht_world_model/cchi_v1` directly.
+**Next discussion, saved at the user's request:** the current negative learning
+result is acceptable for now. Discuss the architecture before further implementation:
+
+- One state model, or multiple if needed, should learn latent transitions from
+  temporal data and complete deliberately withheld partial observations.
+- Keep `k` past latent states in short-term session memory; compress groups into
+  smaller representations and keep `m` past compressed states at a longer scale.
+- Include cross-scale attention. Decide how compression is trained and how memory
+  reads influence state estimation, dynamics, thinking, planning and output.
+- Decide the routing and timing of those reads/writes, and retain the distinction
+  between observed history and imagined/generated content.
+
+These are discussion points, not an implemented or finalized design. Physical
+understanding, useful language generation, calibrated progress, semantic feature
+controls, scalable memory and broad self-improvement remain research questions.
+Real data still use `data/pusht_world_model/cchi_v1` directly.
