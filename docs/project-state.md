@@ -27,6 +27,16 @@ Read the [paddle results](paddle-world-model-results-2026-09-07.md),
 
 ## Complete: overnight perception experiments (8–9 September)
 
+Follow-up [reconstruction-role clarification](reconstruction-role-2026-09-09.md):
+the user proposes a separate RGB decoder for inspecting latent state. Treat a
+diagnostic renderer as an optional consumer with detached state inputs and its
+own optimization. Keeping or removing reconstruction gradients from the main
+representation is a separate decision; current perception trainers use them.
+Early image skips do not establish recurrent-memory retention unless those
+features are themselves part of the state under inspection. Main representation
+selection should follow task/prediction/retention quality. Two public-only Claude
+exchanges checked the distinction; no model, loss or training change was made.
+
 The user authorized experiments with Claude until **9 September 07:00 Berlin**
 and removed albedo from scope. All **36 vision/geometry fits and 15 category
 probes** completed (174,000 total updates), plus 42 decoder-reliance conditions,
