@@ -112,14 +112,19 @@ python experiments/perception.py --resume runs/my_test
 
 `--check` uses one real batch and shows module/feature shapes, parameter counts,
 trainable modules, loss terms and gradient recipients before substantial compute.
-It does not prove temporal causality; alignment and no-future-input behavior need
-targeted tests. Recipes run only from an explicit main function, with no training,
+It does not prove temporal causality. Use known-index fixtures for temporal
+alignment and future-input independence tests: hold observed history and candidate
+actions fixed, vary inaccessible future observations, and verify predictions stay
+unchanged. An action-shuffling score alone is a behavioral diagnostic, not proof
+that leakage is absent. Recipes run only from an explicit main function, with no training,
 data writes, downloads or GPU allocation merely from importing model definitions.
 
 ## Runs and inspection
 
 Each run records serializable resolved settings, its recipe/source identity,
-dataset/split/checkpoint identities, versions, metrics and result/report status.
+dataset/split/checkpoint identities, package versions, device type, determinism
+flags, metrics and result/report status. Write result completion before invoking
+the reporter, so a reporting failure cannot hide successful training/evaluation.
 This combines code identity with explicit settings; it does not claim to serialize
 arbitrary Python closures automatically. Comparing two runs should expose the
 changed modules, losses, data and budgets directly.
@@ -169,12 +174,16 @@ new abstractions before the first usable path has been demonstrated.
 
 ## Review record
 
-Two public-only Claude exchanges reviewed the generic design. Exact briefs,
+Three public-only Claude exchanges reviewed the generic design. Exact briefs,
 responses and execution receipts are in `runs/reorganization_review_2026-09-09/`;
 repository code/history/data were not shared. The local audit was performed
 independently. The review tightened the resolved-record and resume contracts,
 favored named tensors with small metadata, and deferred notebook polish and a
 new caching framework. Reconciliation retained compact local HTML and existing
 cache semantics for reference parity, and clarified that one-batch checks alone
-do not prove causality. Peer review is design criticism, not implementation
+do not prove causality. Claude acknowledged the correction that action-shuffling
+scores do not prove absence of leakage; targeted alignment and future-input tests
+only establish their declared invariants. Its final suggestion to include both
+plausible and extreme future perturbations remains a test-design detail to assess
+when the temporal path is migrated. Peer review is design criticism, not implementation
 validation. No code migration, model tests or new experiments ran in this turn.

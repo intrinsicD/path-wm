@@ -2007,3 +2007,19 @@ tree:
   - N125
   - N124
   status: open
+- id: N127
+  type: pivot
+  title: Prioritize a repository the user can operate for modular experiments
+  provenance: user
+  timestamp: 2026-09-09T10:38+02:00
+  from: Architecture and world-model quality discussion
+  to: Human-usable modular model library and experiment workflow proposal
+  trigger: User says the repository is too complex to operate, wants a modular architecture for personal experiments,
+    and requests a reorganization proposal.
+  evidence:
+  - docs/reorganization.md
+  - docs/project-state.md
+  also_depends_on:
+  - N126
+  - N125
+  status: open

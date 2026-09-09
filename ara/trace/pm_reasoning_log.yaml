@@ -443,3 +443,14 @@ entries:
   - The user asks whether their interpretation is correct; this does not adopt a fixed modular implementation, endorse
     every prior proposal or authorize training. Existing hypotheses and scale, geometry, representation and temporal
     topics remain open; no new closure, contradiction or staleness flag.
+- turn: 2026-09-09_001#6
+  notes:
+  - End-of-turn epilogue after the repository audit, three Claude reviews and completed proposal. N127 records the
+    user priority pivot; O79/O80 stage the suggested structure and migration criteria. A documentation proposal
+    is not an implemented architecture or a new model experiment.
+  - The user acknowledges understanding then requests reorganization; this does not adopt all earlier systems/scale/auxiliary-loss
+    suggestions or the new proposal. Keep scientific topics open while prioritizing usability. No claim crystallization
+    or contradiction is established.
+  - Claude explicitly accepted the narrower temporal-test claim. Named invariants and declared perturbations do
+    not establish universal absence of leakage. Existing observations remain referenced; no new three-session-day
+    stale flag.

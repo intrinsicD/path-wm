@@ -2,9 +2,9 @@ session:
   id: 2026-09-09_001
   date: '2026-09-09'
   started: 2026-09-08T20:28+02:00
-  last_turn: 2026-09-09T10:10+02:00
-  turn_count: 5
-  summary: Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges. Local
+  last_turn: 2026-09-09T10:38+02:00
+  turn_count: 6
+  summary: 'Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges. Local
     ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry pass improves
     with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests and standalone browser
     QA pass; automation paused. Turn2 clarifies diagnostic RGB versus reconstruction training; two public-only Claude
@@ -12,7 +12,9 @@ session:
     unisolated, three-arm comparison proposed and two Claude reviews reconciled. No new training. Turn4 explains
     quality factors and inherited pretraining; small diagnostic scope acknowledged, end-to-end reference strategy
     proposed with two reconciled Claude reviews. No new experiments. Turn5 clarifies applied world-model systems
-    research and pretrained-weight versus architecture reuse; no new model work.
+    research and pretrained-weight versus architecture reuse; no new model work. Turn6 prioritizes human usability:
+    audited experiment coupling and proposed a small PyTorch library, Python recipes and a verified first perception
+    migration; three public-only Claude reviews, no code migration or training.'
 events_logged:
 - turn: 1
   type: decision
@@ -224,6 +226,30 @@ events_logged:
     state, action-conditioned dynamics and output modules. Architecture reuse does not inherit learned weights.
     Research contributions can be interfaces, objectives, data/training strategies or interactions validated against
     baselines; a novel layer is optional, and downstream training can remain substantial.
+- turn: 6
+  type: pivot
+  id: N127
+  routing: direct
+  provenance: user
+  summary: Prioritize a repository the user can operate for modular experiments
+- turn: 6
+  type: observation
+  id: O79
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose a small plain-PyTorch library with copyable Python recipes showing components, datasets, losses
+    and trainable parameters. Named native feature tensors with small metadata and explicit state/action/gradient
+    boundaries support declared compatible modules. Each run records settings, identities, checkpoints, metrics
+    and a portable report; avoid registries, universal trainers and historical experiment dependencies.
+- turn: 6
+  type: observation
+  id: O80
+  routing: staged
+  provenance: ai-suggested
+  summary: First migrate one established perception path unchanged and check forward/loss/update/freeze/resume behavior
+    under declared tolerances. Preserve reference data, checkpoints and cache semantics for comparison; default
+    new recipes to live features. Require the user to be able to copy, modify, check, run, resume and inspect the
+    recipe before migrating temporal/planning paths or archiving history.
 ai_actions:
 - turn: 1
   action: Implemented, developed and sealed matched encoder/decoder/objective comparisons; ran all declared units
@@ -282,6 +308,16 @@ ai_actions:
   provenance: ai-executed
   files_changed:
   - docs/model-quality-and-project-scale-2026-09-09.md
+- turn: 6
+  action: Audited 81 Python scripts, 44 curriculum modules and 76 Markdown/YAML documents; identified dated paths/deadline,
+    fixed feature assumptions, experiment imports and external reporting dependencies. Wrote a scoped reorganization
+    proposal and updated project state; reviewed generic design with actual Claude in three public-only exchanges.
+    Corrected overbroad causality-test wording. No model tests, numerical experiments or dashboard rebuild; documentation
+    diff check passed.
+  provenance: ai-executed
+  files_changed:
+  - docs/reorganization.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -299,6 +335,9 @@ key_context:
 - turn: 5
   excerpt: 'User: Are we more or less doing systems research, combining existing components and adding one or two
     pieces to train ourselves?'
+- turn: 6
+  excerpt: 'User: I want a modular architecture to experiment. The repository is complex and impossible for me to
+    operate. We need to reorganize; what do you propose?'
 open_threads:
 - Review O64-O71 and the measured architecture tradeoffs; no universal architecture or new control success has been
   adopted.
@@ -320,6 +359,8 @@ open_threads:
   recipe and suitable pretrained components; relative bottlenecks and justified scale remain unisolated.'
 - 'N126/O78: decide the concrete reusable and trainable modules for a selected capability; the systems framing does
   not fix that implementation.'
+- 'N127/O79/O80: make one directly editable perception recipe usable before broader consolidation; architecture
+  boundaries and migration remain proposed, with historical evidence preserved.'
 ai_suggestions_pending:
 - 'O64: Pretrained ViT supports substantially better foreground/category readouts than the local CNN, while P1 pixel
   reconstruction favors CNN. This is package selection evidence, not isolated architecture causality or a convolution/spatial
@@ -356,3 +397,5 @@ ai_suggestions_pending:
 - 'O76/O77: model-quality framing and one-capability reference strategy are recommendations, not adopted architecture,
   budget or new training.'
 - 'O78: scope clarification only; no fixed count of new modules, training budget or novel-layer requirement adopted.'
+- 'O79/O80: small plain-PyTorch core and Python recipes, explicit component boundaries, portable results and a behavior-preserving
+  first migration await the user response; no implementation has started.'

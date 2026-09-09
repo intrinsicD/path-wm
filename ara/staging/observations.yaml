@@ -1325,3 +1325,37 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O79
+  timestamp: 2026-09-09T10:38+02:00
+  provenance: ai-suggested
+  content: Propose a small plain-PyTorch library with copyable Python recipes showing components, datasets, losses
+    and trainable parameters. Named native feature tensors with small metadata and explicit state/action/gradient
+    boundaries support declared compatible modules. Each run records settings, identities, checkpoints, metrics
+    and a portable report; avoid registries, universal trainers and historical experiment dependencies.
+  context: Repository audit and three actual public-only Claude reviews; proposal saved in docs/reorganization.md,
+    first documentation commit 01d4a50. No model changes, code migration or new training. Claude acknowledged that
+    action-shuffling scores are not leakage proofs.
+  potential_type: architecture
+  bound_to:
+  - N127
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O80
+  timestamp: 2026-09-09T10:38+02:00
+  provenance: ai-suggested
+  content: First migrate one established perception path unchanged and check forward/loss/update/freeze/resume behavior
+    under declared tolerances. Preserve reference data, checkpoints and cache semantics for comparison; default
+    new recipes to live features. Require the user to be able to copy, modify, check, run, resume and inspect the
+    recipe before migrating temporal/planning paths or archiving history.
+  context: Repository audit and three actual public-only Claude reviews; proposal saved in docs/reorganization.md,
+    first documentation commit 01d4a50. No model changes, code migration or new training. Claude acknowledged that
+    action-shuffling scores are not leakage proofs.
+  potential_type: heuristic
+  bound_to:
+  - N127
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
