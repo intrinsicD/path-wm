@@ -1268,3 +1268,43 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O76
+  timestamp: 2026-09-09T10:01+02:00
+  provenance: ai-suggested
+  content: Model quality depends on interacting architecture/interfaces, data coverage, objectives, stable adequate
+    optimization, compute, inherited pretraining and the acting/evaluation system. DINOv2/v3 illustrate expensive
+    upstream training distilled into smaller deployed models; V-JEPA2 separates broad actionless learning from robot
+    action training. No universal ranking or causal explanation of this project follows from scale differences.
+  context: Primary DINO model cards/reports, V-JEPA2 and Dreamer sources checked; current runtime ledger and overnight
+    protocol inspected. These are conceptual comparisons, not new model measurements.
+  potential_type: concept
+  bound_to:
+  - N125
+  - N115
+  - N117
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O77
+  timestamp: 2026-09-09T10:01+02:00
+  provenance: ai-suggested
+  content: Treat current custom pipeline as a small diagnostic prototype; use suitable pretrained components and
+    an applicable successful reference recipe for one concrete end-to-end capability. Preserve existing released-weight
+    controls and tie further component work to adequate training, coverage, physical prediction and control. New
+    perception packages still need compatible U/P/control; scale remains a testable option, not the established
+    cause or a universal cure.
+  context: Two public-only Claude exchanges reconciled unsupported demo-selection and most-common-failure-cause
+    claims. Explanation committed at472b9df. No new training, download, compute purchase or architecture adoption;
+    reconstruction-gradient comparison remains open.
+  potential_type: heuristic
+  bound_to:
+  - N125
+  - N124
+  - N115
+  - N117
+  - N122
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

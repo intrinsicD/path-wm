@@ -1977,3 +1977,19 @@ tree:
   - N118
   - N119
   status: open
+- id: N125
+  type: question
+  title: What produces modern model quality, and is the project operating at too small a scale?
+  provenance: user
+  timestamp: 2026-09-09T10:01+02:00
+  description: User asks how architecture, dataset, training and scale yield high-quality neural-network results
+    and expresses concern that the current work is low-end. Explain inherited pretraining and the complete learning/acting/evaluation
+    system; no implementation or experiment requested.
+  evidence:
+  - docs/model-quality-and-project-scale-2026-09-09.md
+  also_depends_on:
+  - N107
+  - N115
+  - N117
+  - N124
+  status: open

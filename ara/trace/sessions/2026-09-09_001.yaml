@@ -2,14 +2,16 @@ session:
   id: 2026-09-09_001
   date: '2026-09-09'
   started: 2026-09-08T20:28+02:00
-  last_turn: 2026-09-09T09:33+02:00
-  turn_count: 3
+  last_turn: 2026-09-09T10:01+02:00
+  turn_count: 4
   summary: Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges. Local
     ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry pass improves
     with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests and standalone browser
     QA pass; automation paused. Turn2 clarifies diagnostic RGB versus reconstruction training; two public-only Claude
     exchanges, no model or loss changes. Turn3 focuses on auxiliary RGB gradients into trainable E; local effect
-    unisolated, three-arm comparison proposed and two Claude reviews reconciled. No new training.
+    unisolated, three-arm comparison proposed and two Claude reviews reconciled. No new training. Turn4 explains
+    quality factors and inherited pretraining; small diagnostic scope acknowledged, end-to-end reference strategy
+    proposed with two reconciled Claude reviews. No new experiments.
 events_logged:
 - turn: 1
   type: decision
@@ -181,6 +183,31 @@ events_logged:
     and compatible matched downstream fits, then physical multistep and control metrics. Tests incremental benefit
     during continuation under that recipe; pretraining necessity, joint E/dynamics optimization and non-pixel replacement
     are separate questions.
+- turn: 4
+  type: question
+  id: N125
+  routing: direct
+  provenance: user
+  summary: What produces modern model quality, and is the project operating at too small a scale?
+- turn: 4
+  type: observation
+  id: O76
+  routing: staged
+  provenance: ai-suggested
+  summary: Model quality depends on interacting architecture/interfaces, data coverage, objectives, stable adequate
+    optimization, compute, inherited pretraining and the acting/evaluation system. DINOv2/v3 illustrate expensive
+    upstream training distilled into smaller deployed models; V-JEPA2 separates broad actionless learning from robot
+    action training. No universal ranking or causal explanation of this project follows from scale differences.
+- turn: 4
+  type: observation
+  id: O77
+  routing: staged
+  provenance: ai-suggested
+  summary: Treat current custom pipeline as a small diagnostic prototype; use suitable pretrained components and
+    an applicable successful reference recipe for one concrete end-to-end capability. Preserve existing released-weight
+    controls and tie further component work to adequate training, coverage, physical prediction and control. New
+    perception packages still need compatible U/P/control; scale remains a testable option, not the established
+    cause or a universal cure.
 ai_actions:
 - turn: 1
   action: Implemented, developed and sealed matched encoder/decoder/objective comparisons; ran all declared units
@@ -224,6 +251,14 @@ ai_actions:
   files_changed:
   - docs/reconstruction-role-2026-09-09.md
   - docs/project-state.md
+- turn: 4
+  action: Compared primary DINOv2/v3, V-JEPA2 and Dreamer literature with existing source resolution, per-fit budgets,
+    encoder parameter counts and package results. Reconciled two actual public-only Claude critiques and committed
+    explanation/project-state update at472b9df. No new training, evaluation, model or dashboard change.
+  provenance: ai-executed
+  files_changed:
+  - docs/model-quality-and-project-scale-2026-09-09.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -235,6 +270,9 @@ key_context:
 - turn: 3
   excerpt: 'User: The main question is whether reconstruction in training with an unfrozen encoder helps other tasks
     and inner workings by providing helpful constraints.'
+- turn: 4
+  excerpt: 'User: How do state-of-the-art models achieve high quality: architecture, dataset, training, scale? What
+    am I missing? I feel we are working on the low end.'
 open_threads:
 - Review O64-O71 and the measured architecture tradeoffs; no universal architecture or new control success has been
   adopted.
@@ -252,6 +290,8 @@ open_threads:
   removal of auxiliary reconstruction losses.'
 - 'N124/O74/O75: isolate the incremental effect of RGB gradients into trainable E; a matched continuation comparison
   and compatible temporal/control evaluation remain proposed only.'
+- 'N125/O76/O77: connect small diagnostic studies to a concrete end-to-end capability with a successful reference
+  recipe and suitable pretrained components; relative bottlenecks and justified scale remain unisolated.'
 ai_suggestions_pending:
 - 'O64: Pretrained ViT supports substantially better foreground/category readouts than the local CNN, while P1 pixel
   reconstruction favors CNN. This is package selection evidence, not isolated architecture causality or a convolution/spatial
@@ -285,3 +325,5 @@ ai_suggestions_pending:
   benefit remains unresolved.'
 - 'O75: Blocked/weak/reference encoder-gradient comparison with paired data, active task training, declared routes
   and compatible downstream fitting is unexecuted.'
+- 'O76/O77: model-quality framing and one-capability reference strategy are recommendations, not adopted architecture,
+  budget or new training.'

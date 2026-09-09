@@ -66,8 +66,10 @@ sessions:
     with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests and standalone browser
     QA pass; automation paused. Turn2 clarifies diagnostic RGB versus reconstruction training; two public-only Claude
     exchanges, no model or loss changes. Turn3 focuses on auxiliary RGB gradients into trainable E; local effect
-    unisolated, three-arm comparison proposed and two Claude reviews reconciled. No new training.
-  turn_count: 3
-  events_count: 23
+    unisolated, three-arm comparison proposed and two Claude reviews reconciled. No new training. Turn4 explains
+    quality factors and inherited pretraining; small diagnostic scope acknowledged, end-to-end reference strategy
+    proposed with two reconciled Claude reviews. No new experiments.
+  turn_count: 4
+  events_count: 26
   claims_touched: []
-  open_threads: 8
+  open_threads: 9
