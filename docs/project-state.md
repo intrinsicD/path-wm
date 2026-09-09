@@ -5,6 +5,18 @@ steps. Standing development and experiment rules live in
 [experiment-workflow.md](experiment-workflow.md). Changing a model, dataset or
 research direction does not replace that workflow.
 
+## Active discussion: make the repository usable for personal experiments
+
+The user says the repository is too complex to operate and wants a modular
+architecture for experimenting. The [reorganization proposal](reorganization.md)
+now takes priority over further architecture experiments: a small plain-PyTorch
+library, directly readable Python recipes, explicit feature/state/gradient
+boundaries and one output directory/report per run. First migrate one existing
+perception path and verify behavior/resume before broader consolidation. Preserve
+historical code, data, checkpoints and reporting until compatibility is checked.
+This turn requests a concrete proposal; no code moves, model changes, new training
+or resource purchases have started. Existing completed results remain below.
+
 ## Objective and current outcome
 
 The user requested the fixed paddle E/U/P architecture from
