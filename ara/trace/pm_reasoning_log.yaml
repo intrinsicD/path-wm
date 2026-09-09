@@ -619,3 +619,13 @@ entries:
     details were specified locally without claiming further reviewer verification.
   - Prior architecture topics remain referenced and open; no topic-abandonment promotion, contradiction
     adjudication or new staleness. The proposal document does not create an implemented dependency.
+- turn: 2026-09-09_001#29
+  notes:
+  - Treat user correction as superseding the prior reset requirement, not as permission to restart or
+    delete actual state. Preserve N145 and O99 content with supersession annotations; this is a resolved
+    preference revision, not a failed scientific hypothesis.
+  - No need to re-review an explicitly withdrawn feature with Claude. Existing initial-session semantics
+    suffice for this documentation simplification. Do not promote the separate evidence-view proposal
+    or imply learned weights are erased.
+  - Update current open-thread pointers while retaining historical events. No new interpretation staged,
+    empirical result, claim promotion or unrelated topic abandonment.

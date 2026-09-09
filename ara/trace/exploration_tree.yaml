@@ -2325,3 +2325,25 @@ tree:
   - N142
   - N141
   status: resolved
+  superseded_by: N146
+  evidence_revision: 2f1d692
+- id: N146
+  type: decision
+  title: Replace individual memory resets with a fresh agent session
+  provenance: user-revised
+  timestamp: 2026-09-09T20:33+02:00
+  choice: User says to scratch memory reset and prefers restarting the agent completely. Remove individual
+    reset controls from the active design. Interpret restart as a fresh session using the trained parameters,
+    with empty session memory and initialized task/belief state; no restart execution was requested.
+  alternatives:
+  - Retain separate short-term and long-term reset controls
+  evidence:
+  - Current user correction
+  - N145
+  - docs/state-memory-design.md#starting-a-fresh-agent-session
+  also_depends_on:
+  - N145
+  - N141
+  supersedes:
+  - N145
+  status: resolved

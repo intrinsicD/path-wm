@@ -238,13 +238,19 @@ It does not authorize tests or settle the new two-view memory proposal on the us
 behalf. Exact review receipts remain local; the active specification retains its
 proposed status.
 
-## Follow-up: evidence views and independently resettable memory
+## Historical follow-up: independent memory resets (withdrawn)
+
+**Superseded by the user's next message:** drop individual memory reset controls
+and start a fresh agent session instead. See the current
+[session-start contract](state-memory-design.md#starting-a-fresh-agent-session).
+The following records the earlier review, not an active reset requirement. The
+separately accessible observation/belief proposal remains open.
 
 The user subsequently asked for a recommendation on memory contents and required
 independent short-term and long-term reset controls. Three further abstract Claude
 exchanges (`reset`, `reset-followup`, `reset-final`) are saved beside the original
-review receipts. The two-view recommendation remains a proposal; only the reset
-capability itself is a new user requirement.
+review receipts. The two-view recommendation remains a proposal; the reset
+capability itself was a user requirement at that point.
 
 Recommend source-only evidence writes and separately addressable belief snapshots,
 with a counted allocation for each. Keeping recent belief snapshots intact means
@@ -266,8 +272,8 @@ final review accepted input-path separation rather than semantic erasure. Struct
 execution receipts exclude internal rationale and cached belief/plan vectors; this
 does not promise that an issued action is uncorrelated with old beliefs.
 
-Remaining operational questions from the final exchange are resolved in the proposed
-[reset contract](state-memory-design.md#user-controlled-memory-reset-proposed-contract):
+Remaining operational questions from the final exchange were specified in the then-proposed
+reset contract, preserved in Git commit `2f1d692`:
 bounded outstanding-execution metadata survives reset until completion/expiry outside
 model memory; unmatched arrivals return an explicit outcome; protected admission is
 per request with reported overflow; stale-generation work fails or is discarded

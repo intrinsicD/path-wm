@@ -24,9 +24,9 @@ already accepted change to the belief-snapshot memory described here.
 - Keep memory within reasonable bounds while allocating enough capacity for useful
   recall. This is an accepted sizing objective, not approval of particular counts
   or a finding that the illustrative budget below is sufficient.
-- Give the user independent short-term and long-term memory reset controls. The
-  reset requirement is accepted; the detailed ownership and invalidation rules below
-  are proposals, not implemented behavior.
+- Use a fresh agent session when the user wants to start over. The user withdrew
+  independent short-term/long-term reset controls; the session-start contract below
+  replaces that proposal.
 - Perception, prediction and thinking make separate queries over shared memory.
   Thinking does not advance world time or create observational evidence.
 - Condition prediction on action and elapsed time; initially compose recorded
@@ -316,86 +316,31 @@ word long-term. Source records can be retained in a run audit outside the model'
 attention budget; faithful recovery from a pointer requires that its source payload
 actually remains stored.
 
-## User-controlled memory reset: proposed contract
+## Starting a fresh agent session
 
-Expose `reset_memory(scope="short" | "long" | "all")` as an exact caller control,
-outside learned marking or gating. It returns the new session state and a receipt
-of cleared stores, retained source records and invalidated derived state. This
-is a design requirement and proposed interface; no reset is being executed here.
+The user withdrew individual memory resets in favor of restarting the agent.
+Remove the proposed short/long/all reset interface from the active design. A fresh
+agent instance uses the same trained parameters and chosen configuration, with new
+session identity and initialized session state.
 
-| Scope | Cleared | Retained |
-| --- | --- | --- |
-| Short | Recent records, uncompressed staging, pending short-term marks/writes, current belief and task workspace | Existing long-term compressed blocks, consolidated state and protected records |
-| Long | Compressed history, consolidated state, all protected records including user marks, pending long-term writes; all recent belief views, current belief and workspace | Independent recent/staged observation evidence and its factual execution/time records |
-| All | Both groups and all memory-derived session state | Explicit caller task/control inputs and model parameters |
+All session memory starts empty: recent records, compression staging, compressed
+history, protected marks and consolidated session state. Initialize current belief
+and working state from their normal initial values. Do not inherit task progress,
+cached reads, generated thoughts, candidate plans or queued memory writes. The
+caller supplies the new task and observations explicitly; no automatic replay of
+old session memory or transcripts is part of fresh start.
 
-Treat protected details as long-term because their purpose is surviving recent
-eviction. Short reset discards staging directly; it must not run normal eviction
-compression or consolidation while clearing. Long reset clears any later-adopted
-persistent derived-knowledge store too. Scope refers to storage lifetime, not age
-of every fact: a protected record can be recent and a recent belief can recall an
-old fact.
+Close the previous session and prevent its in-flight computations from publishing
+into the new instance. Already-issued external actions and source files remain
+external reality; a new instance does not undo them. Caller-side execution handling
+stays outside the model, and old-session results must not be silently transferred
+as new-session internal state. Model parameters retain learned capabilities; this
+is not weight reinitialization or resuming a saved session checkpoint.
 
-After short reset, initialize belief/workspace afresh. Subsequent ordinary reads
-may consult the deliberately retained long-term memory. After long reset, initialize
-belief/workspace and mark old recent belief views invalid; retain their independent
-evidence views. Normal perception or thinking can read that evidence to form fresh
-interpretations. Thinking still updates only working state. No special chronological
-replay or rewriting of historical belief snapshots is required. Empty or invalid
-views are masked; an entirely empty memory produces the existing zero read.
-
-Independence applies to owned memory records, not continuity of shared inferred
-state. Both resets invalidate current interpretations because those may mix the two
-scopes. Preserving recent source evidence during a long reset depends on the proposed
-evidence view; a belief-only implementation would instead need to discard dependent
-recent content and expose that limitation. An action execution receipt can remain
-as an explicitly retained fact about what occurred; its old rationale or predicted
-consequences must not masquerade as independent input. Do not recover receipts from
-an unbounded external log during reset.
-
-Use a structural receipt containing execution ID, issued action kind/parameters,
-available factual status, source/execution time and arrival time. External response
-payloads enter as separately source-tagged observations. Internal rationale, cached
-belief/plan vectors and predicted outcomes are not receipt fields. An action choice
-or external text can still correlate with old beliefs; input-path separation does
-not claim semantic erasure. Generated external content retains that origin status.
-
-Reset does not execute actions, ingest observations, advance observation counts,
-emit answers, fulfill tasks or trigger compression/marking/consolidation. Normal later
-commits may compress retained short-term evidence into long-term memory again.
-That preserves deliberately retained information; it does not restore deleted blocks.
-Keep per-store capacities fixed across resets, within the overall bound. Clearing
-one scope does not silently resize the other.
-
-Every reset creates an atomic session-generation boundary. Invalidate retrieval and
-encoder caches, active imagined branches, candidate plans and derived task tokens;
-reject results or writes started before the boundary. Reset revokes pinned memory
-handles, unlike ordinary concurrent commits. Stop affected background operations
-before allowing subsequent reads, writes or action/output proposals. Re-encode
-explicit caller-held task inputs without recovering the cleared workspace. Preserve
-actual environment time and executed-action facts; do not reset event identity in
-a way that makes old work appear current.
-
-An already-issued external action is not undone by reset. A later external result
-can enter through a fresh observation-ingestion call with its actual availability
-time, original source/execution time and action ID. It cannot resume the cancelled
-plan or publish a pre-reset latent. Stale internal retrieval, thinking or compression
-results are discarded. A bounded outstanding-execution correlation table belongs
-to caller control metadata, not a historical memory-replay channel.
-This table survives all memory-reset scopes only until completion or expiry, within
-the caller's fixed outstanding-action bound, and is not exposed as model memory.
-Unmatched completions return an `unmatched_execution` outcome to the caller rather
-than entering memory automatically. A stale-generation synchronous operation returns
-`stale_generation`; asynchronous stale work is discarded with a recorded outcome.
-No automatic retry may recover its old payload. This preserves source correlation
-without preserving a cancelled plan or turning the table into durable recall.
-
-This clears accessible session memory. It does not change learned weights, source
-files or completed audit artifacts, and those artifacts must not automatically
-rehydrate a cleared store. Facts deliberately retained in the other store, explicit
-task input, or a new observation can still be learned/recalled. Erasing a fact across
-all representations would be a different, stronger requirement. No such erasure
-guarantee or implemented reset mechanism is claimed.
+This records the preferred lifecycle boundary. No agent process has been restarted,
+no stored artifacts have been deleted, and no implementation has changed. The
+historical scoped-reset review remains in the review notes and Git history. The
+observation/belief-view recommendation remains open on its own merits.
 
 ## Mark proposals and protected detail
 
@@ -412,17 +357,9 @@ entries under the same capacity. An accepted mark protects retained latent mater
 not necessarily a lossless sensory recording. Identical protected content should
 share storage rather than be duplicated by repeated marks.
 
-For the reset proposal, an accepted mark installs its protected record immediately;
-it does not wait for normal compression. Its long-term ownership survives a short
-reset, including when the implementation shares its payload with a recent record.
-Pending/unadmitted requests have no protection guarantee and are cancelled at reset.
-Admission and installation use the same atomic reset-generation check; an old
-proposal cannot install after reset. The existing user-priority/overflow and
-lower-scored-agent replacement rules still apply.
-For a batch, process user requests first and preserve caller order within each
-priority group. Return a per-request accepted or `capacity_exceeded` result;
-rejection leaves existing protection unchanged. A reset-generation mismatch returns
-`stale_generation` instead of installing or automatically retrying the old request.
+An accepted mark installs its available protected payload immediately, within the
+declared capacity. It survives ordinary recent-memory eviction. A fresh agent
+session begins without protected records or pending requests from the old session.
 
 A learned marker sees current state/event/task context only. Proposed supervision
 uses replay comparisons of protected detail versus ordinary compression: delayed
