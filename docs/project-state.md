@@ -1,5 +1,10 @@
 # Current work
 
+**In progress:** Alex authorized the selective-recall implementation and subsequent
+overnight Claude proposals through 09:00 Berlin on 10 September. Follow
+[the active implementation plan](recall-implementation-plan.md). The thread heartbeat
+`overnight-agent-design-proposals` is active every half hour, ending at that deadline.
+
 **Implemented:** the categorical belief and bounded session-memory design authorized
 by Alex on 9 September 2026. Read [the model guide](belief-model.md) and the
 [implementation plan/record](belief-implementation-plan.md). One editable
