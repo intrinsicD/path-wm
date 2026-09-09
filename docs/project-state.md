@@ -1,5 +1,8 @@
 # Current work
 
+**Active:** implement one small multimodal world model; see the
+[architecture plan](multimodal-plan.md) for scope, budget and acceptance checks.
+
 **Completed:** the modular restart and its verification.
 [Migration record](migration.md) describes retained components and evidence.
 
