@@ -2,8 +2,8 @@ session:
   id: 2026-09-09_001
   date: '2026-09-09'
   started: 2026-09-08T20:28+02:00
-  last_turn: 2026-09-09T17:53+02:00
-  turn_count: 26
+  last_turn: 2026-09-09T19:33+02:00
+  turn_count: 27
   summary: 'Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges.
     Local ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry
     pass improves with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests
@@ -17,7 +17,7 @@ session:
     recipes and a verified first perception migration; three public-only Claude reviews, no code migration
     or training. Turn7 adopts and completes the modular restart: 18 library files/two editable recipes, retired
     legacy stack preserved by tag, 505 zero-difference reference checks, 16 tests and clean-Git recipe checks,
-    CPU/GPU pause-resume and three verified local reports; standing workflow migrated. Turn8 resumes temporal-state and hierarchical-memory design discussion; user and assistant proposals remain open, with no new implementation or training. Subsequent voice discussion establishes hybrid memory and separate consumer routes, then returns to architecture before experiments. Final interface proposal records domain-neutral tokens, explicit budgets/staging/consolidation and training boundaries; no model work. Turn25 completes three actual public-only Claude reviews, reconciles overclaims and proposes separately retrievable observation/belief views as the next discussion; no new model work. Turn26 separates memory capacity, read cost and recall quality; bounded indexed reads proposed, evidence-view choice still open and no benchmark run.'
+    CPU/GPU pause-resume and three verified local reports; standing workflow migrated. Turn8 resumes temporal-state and hierarchical-memory design discussion; user and assistant proposals remain open, with no new implementation or training. Subsequent voice discussion establishes hybrid memory and separate consumer routes, then returns to architecture before experiments. Final interface proposal records domain-neutral tokens, explicit budgets/staging/consolidation and training boundaries; no model work. Turn25 completes three actual public-only Claude reviews, reconciles overclaims and proposes separately retrievable observation/belief views as the next discussion; no new model work. Turn26 separates memory capacity, read cost and recall quality; bounded indexed reads proposed, evidence-view choice still open and no benchmark run. Turn27 adopts bounded but useful memory as a sizing objective; illustrative counts remain provisional pending task cadence and recall needs.'
 events_logged:
 - turn: 1
   type: decision
@@ -602,6 +602,25 @@ events_logged:
     and transfers remain costs; approximate selection can miss evidence. More memory does not guarantee
     improved recall beyond trained delays/distractors. Fixed consolidation remains lossy. A possible evidence/belief
     split should share an explicit total budget rather than implicitly duplicate it.
+- turn: 27
+  type: decision
+  id: N144
+  routing: direct
+  provenance: user
+  summary: User requests memory within reasonable bounds but large enough to be useful. Adopt the capacity
+    objective without inferring particular counts, indexed retrieval, observation/belief allocation or
+    implementation authorization.
+- turn: 27
+  type: observation
+  id: O98
+  routing: staged
+  provenance: ai-suggested
+  summary: Retain k32, m16, b8, p8 and the small consolidated state as illustrative starting counts. Ordinary
+    coverage of 160-167 committed steps must be translated into task-specific cadence and recall horizon
+    before selecting capacity. For 160 steps, one commit per second represents about 2.7 minutes and 30
+    commits per second about 5.3 seconds; neither cadence is selected. Event ingestion must not be silently
+    thinned to claim longer useful memory. Useful capacity ultimately requires needed detail after recent
+    eviction at acceptable read cost.
 ai_actions:
 - turn: 1
   action: Implemented, developed and sealed matched encoder/decoder/objective comparisons; ran all declared units
@@ -753,6 +772,15 @@ ai_actions:
   - docs/project-state.md
   - ara/staging/observations.yaml
   - ara/trace/
+- turn: 27
+  action: Recorded bounded/useful capacity objective in current design and project state, retaining existing
+    provisional counts and documenting cadence-dependent horizon. No implementation or experiment.
+  provenance: ai-executed
+  files_changed:
+  - docs/state-memory-design.md
+  - docs/project-state.md
+  - ara/staging/observations.yaml
+  - ara/trace/
 claims_touched: []
 key_context:
 - turn: 1
@@ -823,6 +851,9 @@ key_context:
 - turn: 26
   excerpt: 'User: Yes let us settle that. One question first, can we scale memory easily or is it impacting
     performance?'
+- turn: 27
+  excerpt: 'User: Ok let us keep the memory in reasonable bounds but large enough that it is actually
+    useful.'
 open_threads:
 - Review O64-O71 and the measured architecture tradeoffs; no universal architecture or new control success
   has been adopted.
@@ -861,6 +892,8 @@ open_threads:
   and learning/action contracts.'
 - 'N143/O97: distinguish storage and read budgets; indexed retrieval remains a proposal, capacity/generalization
   and evidence-view allocation remain open.'
+- 'N144/O98: size the bounded memory against task cadence and needed recall horizon; illustrative counts
+  do not establish adequacy.'
 ai_suggestions_pending:
 - 'O64: Pretrained ViT supports substantially better foreground/category readouts than the local CNN, while
   P1 pixel reconstruction favors CNN. This is package selection evidence, not isolated architecture causality
@@ -926,3 +959,5 @@ ai_suggestions_pending:
   objectives; supported as an engineering preference by Claude, not proven or adopted.'
 - 'O97: decouple capacity from bounded attention using indexed older/protected retrieval if needed; unimplemented
   and unbenchmarked.'
+- 'O98: retain current provisional capacities for discussion, then connect history coverage to event cadence
+  and delayed utility before fixing them.'

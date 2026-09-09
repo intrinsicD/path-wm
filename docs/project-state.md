@@ -88,10 +88,12 @@ Then settle executed-action propagation/observation correction, persistent deriv
 knowledge, conflicting memory reads, learning targets and action/objective adapters.
 Exact briefs, responses and receipts are in `runs/reviews/state_memory_design_2026-09-09/`.
 
-The user's follow-up asks about memory scaling before settling the evidence view.
-The specification now distinguishes storage capacity, attention/read cost and learned
-recall quality. Bounded indexed reads are a scaling proposal; no such implementation
-or scaling benchmark exists, and the two-view choice remains open.
+The user wants memory kept within reasonable bounds while being large enough for
+useful recall. The specification distinguishes storage capacity, attention/read cost
+and learned recall quality. Keep its illustrative counts as a starting proposal;
+event cadence and required recall horizon must inform the actual capacity choice.
+Bounded indexed reads remain optional; no such implementation or scaling benchmark
+exists, and the two-view choice remains open.
 
 Physical understanding, useful language generation, calibrated progress, semantic
 feature controls, scalable memory and broad self-improvement remain research

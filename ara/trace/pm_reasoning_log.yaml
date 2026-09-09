@@ -604,3 +604,9 @@ entries:
   - Theoretical token/payload accounting is not a latency benchmark or new experiment. Source precedents
     do not prove local retrieval quality. Existing architecture topics remain referenced; no closure,
     contradiction or new staleness inferred.
+- turn: 2026-09-09_001#27
+  notes:
+  - Record the explicit bounded/useful capacity preference directly. Do not promote all of O97, whose
+    indexed-read and evidence-allocation proposals were not selected; numerical defaults remain provisional.
+  - Stage the task-cadence/retention-horizon clarification. No empirical result, model change, contradiction
+    or abandonment of referenced architecture questions; no new stale observations.

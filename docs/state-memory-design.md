@@ -21,6 +21,9 @@ already accepted change to the belief-snapshot memory described here.
 - Keep recent latent states intact, compress older groups, and preserve extra
   detail for marked events. Both user and agent can propose marks; explicit user
   marks have priority within a declared capacity.
+- Keep memory within reasonable bounds while allocating enough capacity for useful
+  recall. This is an accepted sizing objective, not approval of particular counts
+  or a finding that the illustrative budget below is sufficient.
 - Perception, prediction and thinking make separate queries over shared memory.
   Thinking does not advance world time or create observational evidence.
 - Condition prediction on action and elapsed time; initially compose recorded
@@ -77,6 +80,16 @@ block's payload. The staging buffer is explicitly budgeted: up to seven older
 states remain exact while awaiting compression. A full ordinary history covers
 approximately 160--167 committed steps, plus lossy consolidated information and any
 protected material outside that interval. Coverage is not recoverability.
+
+Retain these counts as the starting proposal for the bounded-memory discussion.
+Before fixing them, relate committed steps to the intended task's event cadence and
+recall horizon. At one commit per second, 160 steps cover about 2.7 minutes; at 30
+commits per second they cover about 5.3 seconds. Neither cadence is adopted here.
+Do not change observation ingestion or omit state updates merely to make the nominal
+memory horizon longer. Useful capacity must eventually support needed details after
+recent-memory eviction, at acceptable read cost; increasing counts alone does not
+establish that. Exact counts, cadence and adequacy remain open while model design
+continues. Indexed retrieval remains optional.
 
 The maximum memory payload, excluding current/task/working states and metadata, is
 `(k*N + (b-1)*N + m*C + p*N + G)*D` scalars. Account separately for uncertainty,

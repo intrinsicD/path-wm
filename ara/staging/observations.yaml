@@ -1710,3 +1710,24 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O98
+  timestamp: 2026-09-09T19:33+02:00
+  provenance: ai-suggested
+  content: Retain k32, m16, b8, p8 and the small consolidated state as illustrative starting counts. Ordinary
+    coverage of 160-167 committed steps must be translated into task-specific cadence and recall horizon
+    before selecting capacity. For 160 steps, one commit per second represents about 2.7 minutes and 30
+    commits per second about 5.3 seconds; neither cadence is selected. Event ingestion must not be silently
+    thinned to claim longer useful memory. Useful capacity ultimately requires needed detail after recent
+    eviction at acceptable read cost.
+  context: Documented the accepted bounded/useful sizing objective and its interpretation. Existing provisional
+    numbers are unchanged and remain unvalidated; no model work, benchmark or newly consequential scientific
+    choice requiring a further Claude review.
+  potential_type: constraint
+  bound_to:
+  - N144
+  - N143
+  - N141
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

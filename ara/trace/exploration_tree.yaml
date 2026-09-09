@@ -2288,3 +2288,21 @@ tree:
   - N142
   - N141
   status: open
+- id: N144
+  type: decision
+  title: Keep memory bounded while prioritizing useful capacity
+  provenance: user
+  timestamp: 2026-09-09T19:33+02:00
+  choice: User requests memory within reasonable bounds but large enough to be useful. Adopt the capacity
+    objective without inferring particular counts, indexed retrieval, observation/belief allocation or
+    implementation authorization.
+  alternatives:
+  - Scale stored history without a practical bound
+  - Choose capacity only for minimum resource use
+  evidence:
+  - Current user request
+  - docs/state-memory-design.md
+  also_depends_on:
+  - N143
+  - N141
+  status: resolved
