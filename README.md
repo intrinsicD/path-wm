@@ -1,73 +1,73 @@
 # PATH-WM
 
-For continuation on another computer, use the
-[verified session handoff](docs/session-handoff-2026-09-07.md) to restore the exact
-datasets, checkpoints, raw results and offline dashboard. The implementations
-run end to end, but the requested learned-control targets remain unmet; see
-[current project state](docs/project-state.md) for measured results and next steps.
+A small PyTorch workbench for experimenting with encoders, output heads, memory
+and action-conditioned prediction. Start with one readable Python recipe.
 
-The active experiment is the fixed RGB paddle E/U/P world model. Its
-[commands and architecture](docs/paddle-world-model-usage.md) and
-[implementation plan](docs/paddle-world-model-plan.md) describe the separate
-`world_model.paddle` package. Run `.venv/bin/python -m world_model --help`.
-The LeWM implementation and earlier evidence below remain preserved.
-
-The new E/U/P model also has a separate CCHI PushT track. See
-[PushT usage](docs/pusht-world-model-usage.md),
-[design and budgets](docs/pusht-world-model-design.md), and
-[source audit](docs/pusht-world-model-data-audit.md). Its CLI is
-`python -m world_model.pusht --help`; it does not use the earlier LeWM weights.
-
-The remaining sections describe the retained LeWM baseline and its historical
-evidence.
-
-The first reference is [LeWM](https://github.com/lucas-maes/le-wm), pinned to
-`8edfeb336732b5f3ce7b8b210d0ba370a09e2cac`. PushT is the first learning/control
-benchmark; TwoRoom supplies a second trajectory dataset. TAU Urban AV and
-Charades source media are retained for later passive multimodal work. The
-[source data inventory](docs/source-data.md) records every dataset's origin,
-acceptance check and current state.
-
-The previous implementation and results were reset at the user's request.
-[Retained ideas](docs/ideas.md) are hypotheses for later work, not evidence.
-No baseline success claim is made until training and evaluation establish it.
-
-[Broader PushT pilot](docs/pusht-broader-pilot.md): 13 CPU tests pass. The approved
-128-train/32-held-out configuration split completed 1,000 updates in 25.1 minutes.
-The final checkpoint modestly beats copy/shuffled prediction controls but reaches
-0/20 held-out control goals; released weights reach 17/20 on the same goals,
-recorded replay 19/20, and stationary actions 0/20. Intermediate checkpoints also
-reach 0/20. Learned control remains unestablished; focused rollout/control
-diagnosis is recommended before more training. Component research stays deferred.
-
-[Full-source reference validation](docs/reference-validation.md) reached 45/50
-with released weights on a separate case set. Both full archives are verified
-and extracted. [First diagnostic round](docs/diagnostic-results.md) and
-[earlier checks](docs/baseline-checks.md) retain the previous subset results.
-
-The standing [experiment workflow](docs/experiment-workflow.md) is independent of
-[current goals and status](docs/project-state.md). Every experiment refreshes the
-local [HTML instrument panel](runs/experiment_dashboard.html); regenerate it from
-existing logs with `python -m viewer.dashboard`. The wrapper requires Node.js and
-the installed Data Analytics portable-artifact builder; set
-`PATH_WM_ARTIFACT_BUILDER` to its `deliver_portable_artifact.mjs` if needed.
-
-Use the repository environment `.venv/bin/python`; activate it before running
-the `python` commands below. A new environment needs the project's `paddle` extra
-for paddle reporting and its `dev`, `eval` and `data` extras for the retained LeWM
-commands as applicable.
+## Start
 
 ```bash
-python -m pytest
-python run.py -m world_model.train configs/pusht_cchi_dev.yaml
-python scripts/prepare_data.py configs/datasets/pusht.yaml
-python run.py -m world_model.eval_pusht configs/datasets/pusht.yaml data/reference/lewm-pusht/weights.pt runs/reference_check --released --episodes 2
+source .venv/bin/activate                 # use the existing environment here
+python -m pip install -e '.[dev]'
+python experiments/perception.py --check
+python experiments/perception.py --output runs/my_first_test
 ```
 
-Training refuses to overwrite an existing checkpoint. Use a new `run_dir` for
-an independent run; `--resume` requires an identical recorded configuration.
-The retained LeWM long-run configurations under `configs/` are separate from the
-active paddle workflow; that workflow does not schedule additional LeWM training.
-[Recipe and protocol differences](docs/baseline.md) distinguish development
-checks from paper reproduction. [Dataset configs](configs/datasets/) keep source,
-action semantics, frame stride and history explicit for each dataset.
+Open **`runs/my_first_test/report.html`**. It contains the learning curves, exact
+validation values, reconstructions, feature PCA and resolved settings. It works
+offline, without an AI app or a report-building plugin.
+
+The default is a short **development run**, using prepared PushT images, a fresh
+CNN, an RGB decoder and a pose head. It checks ideas; it is not a trained controller.
+On another checkout, create a Python 3.11+ virtual environment first and provide
+prepared data as described in [the experiment guide](docs/experiments.md).
+
+## Change something
+
+```bash
+cp experiments/perception.py experiments/my_idea.py
+```
+
+Open **`build_model()`** to replace the encoder or heads. Open **`objective()`** to
+change what they learn. Run your copy with `--check` before spending compute.
+Each head is independent. Use `--diagnostic-rgb` to block reconstruction gradients
+into the encoder, or `--freeze-encoder` to train only output heads.
+
+```bash
+python experiments/my_idea.py --check
+python experiments/my_idea.py --output runs/my_idea --steps 200
+```
+
+Pause and resume without repeating the settings:
+
+```bash
+python experiments/perception.py --output runs/resume_example --steps 100 --stop-after 20
+python experiments/perception.py --resume runs/resume_example
+```
+
+For action prediction with the retained pretrained CNN:
+
+```bash
+python experiments/dynamics.py --check
+python experiments/dynamics.py --output runs/my_dynamics
+```
+
+## Where things live
+
+| Location | What you edit or find |
+|---|---|
+| `experiments/` | Model construction, data, loss and budget |
+| `pathwm/models/` | Ordinary `nn.Module` implementations |
+| `pathwm/data/` | Prepared images and consecutive sequence windows |
+| `pathwm/training/` | Two explicit loops: perception and dynamics |
+| `pathwm/evaluation/` | Local reporting and candidate-action scoring |
+| `pathwm/io.py` | Run records, checkpoints and resume |
+| `runs/<name>/` | One run’s results and report |
+| `tests/` | Small CPU checks for meaningful failure cases |
+
+Read [models and tensor flow](docs/models.md), [running experiments](docs/experiments.md),
+or [current work](docs/project-state.md). Standing development rules are in
+[the workflow](docs/experiment-workflow.md).
+
+Historical implementations and protocols are preserved in Git tag
+`archive/pre-modular-2026-09-09`. Existing datasets and completed runs remain on
+disk; the old aggregate dashboard is historical. [Migration record](docs/migration.md).

@@ -34,6 +34,7 @@ and gradients. No module registry, base Experiment class, universal trainer,
 recursive configuration hierarchy, import-time training/downloads or dated paths
 inside reusable code. New abstractions require a concrete consumer.
 
+Do not edit shared source during an active run; finish it or use an isolated copy.
 Dependencies point from recipes to the library. New experiments may copy a short
 recipe, not import another recipe. Helpers and model files cannot import the
 historical package, old run manifests or reporting services. Dataset/weight paths

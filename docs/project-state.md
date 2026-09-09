@@ -1,17 +1,18 @@
 # Current work
 
-**Active:** user-authorized modular restart, 9 September 2026.
-[Migration plan](migration.md) defines keep/remove choices and acceptance checks.
+**Active:** finish the user-authorized modular restart.
+[Migration plan and evidence](migration.md) define the keep/remove choices.
 
-Build a small `pathwm` library and editable perception recipe first. Verify against
-the preserved source, then migrate useful memory/prediction pieces, simplify docs
-and packaging, and remove retired active machinery. A runnable short sequence
-recipe follows the verified perception path. Development runs only; no long model
-training or new model-quality claim is authorized by this refactor.
+The new package has independent CNN/DINO encoders, output heads, causal memory and
+prediction, data adapters, two editable recipes and per-run offline reporting.
+Sixteen CPU tests pass, including exact full/resumed training equality in both
+loops. The retained CNN/head/memory computations pass 500 reference comparisons;
+DINO/local decoding passes another five, all with zero observed difference.
+
+The perception recipe has completed a short real-data pause/resume run and desktop/
+mobile report QA. Final sequence and GPU COCO examples are being checked. Next:
+remove retired active source and verify packaging, standalone imports and final
+reports. These are development checks, not new model-quality/control claims.
 
 Reference source: `archive/pre-modular-2026-09-09` at
 `e95b6a6252cae72402de0dd93f419e8e93d25d12`. Data and completed runs remain on disk.
-The old dashboard is a historical artifact. New reports belong to individual runs.
-
-Status: plan written; essential contract tests fail as expected because the new
-implementation does not yet exist. Workflow adapted to prevent renewed sprawl.

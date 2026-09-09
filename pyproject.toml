@@ -4,22 +4,17 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "path-wm"
-version = "0.1.0"
+version = "0.2.0"
+description = "Small, editable PyTorch experiments for perception and world models"
 requires-python = ">=3.11"
-dependencies = ["torch>=2.5", "torchvision", "transformers==4.57.1", "einops", "numpy", "PyYAML", "h5py", "hdf5plugin", "zstandard", "huggingface-hub"]
+dependencies = ["torch>=2.5", "numpy>=1.24", "pillow>=10", "matplotlib>=3.8"]
 
 [project.optional-dependencies]
-eval = ["gymnasium", "pygame", "pymunk==7.3.0", "opencv-python-headless", "shapely", "scipy", "matplotlib"]
-data = ["zarr<3", "numcodecs"]
-dev = ["pytest"]
-paddle = ["numpy", "PyYAML", "pillow", "matplotlib", "pytest"]
-pusht = ["gymnasium", "pygame-ce", "pymunk==7.3.0", "opencv-python-headless", "shapely", "scipy", "matplotlib", "pillow", "zarr<3", "numcodecs"]
+dev = ["pytest>=8"]
+vision = ["torchvision>=0.20"]
 
 [tool.setuptools.packages.find]
-include = ["world_model*", "third_party*", "viewer*"]
-
-[tool.setuptools.package-data]
-viewer = ["*.sql", "*.mjs", "*.css", "DESIGN.md"]
+include = ["pathwm*"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
