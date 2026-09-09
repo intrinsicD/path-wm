@@ -165,7 +165,9 @@ class MultimodalAgent(nn.Module):
             sensory=16, entities=4, context=2, working=4, reasoning=4
         )
         required = {"sensory", "entities", "context", "working", "reasoning"}
-        if set(groups) != required or any(v < 1 for v in groups.values()):
+        if set(groups) not in (required, {"world", "working", "reasoning"}) or any(
+            v < 1 for v in groups.values()
+        ):
             raise ValueError("Declare positive counts for all five latent roles")
         self.layout, offset = {}, 0
         for name, count in groups.items():

@@ -5,8 +5,9 @@ structured latent state, episodic memory, internal computation, imagined futures
 action planning and a bounded learning-update gate. All parts are ordinary PyTorch
 modules constructed in [one recipe](experiments/multimodal.py).
 
-The default is a 359,188-parameter development model with freshly initialized
-weights. Running it verifies the architecture and training path; it does not produce
+The CLI defaults to a 515,553-parameter categorical belief model with bounded
+session memory and freshly initialized weights. Read [the belief model guide](docs/belief-model.md).
+The earlier Gaussian model remains available with `--state-model gaussian`. Running it verifies the architecture and training path; it does not produce
 a generally capable language, audio or physics model.
 
 It also has task-conditioned operation/output proposals, explicit output controls,
@@ -49,10 +50,10 @@ Resume checks code, settings, data, modules, optimizer and runtime identity.
 
 ## Discuss or change a part
 
-Generate diagrams directly from the current model and a tiny recorded execution:
+Generate diagrams of the Gaussian reference from a tiny recorded execution:
 
 ```bash
-python experiments/multimodal.py --diagram
+python experiments/multimodal.py --diagram --state-model gaussian
 ```
 
 Open [architecture](docs/diagrams/architecture.svg) or
@@ -80,7 +81,11 @@ There is no registry or configuration framework to learn.
 | --- | --- |
 | `experiments/multimodal.py` | Construction, objective, data, training and inspection |
 | `pathwm/models/agent.py` | Observe, think, imagine, decode and intervene |
-| `pathwm/models/agent_state.py` | Explicit state and episodic memory |
+| `pathwm/models/agent_state.py` | Gaussian reference state and episodic memory |
+| `pathwm/models/belief.py` | Categorical prediction, correction and event transactions |
+| `pathwm/models/belief_state.py` | Belief schema, exact evidence support and memory records |
+| `pathwm/models/hybrid_memory.py` | Bounded memory, cross-scale reads and protected detail |
+| `pathwm/training/belief.py` | Categorical KL, likelihood and marking losses |
 | `pathwm/models/modalities.py` | Modality adapters and attention |
 | `pathwm/models/multiscale.py` | Input pyramids, conditioned residual blocks and feature controller |
 | `pathwm/models/tasks.py` | Task/output records, provenance encoding and learned decision heads |

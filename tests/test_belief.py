@@ -15,25 +15,38 @@ from pathwm.evaluation.agent import plan
 
 def model():
     torch.manual_seed(71)
-    return build_model(width=16, state_model="belief", memory_recent=2,
-                       memory_block=2, memory_blocks=1).eval()
+    return build_model(
+        width=16, state_model="belief", memory_recent=2, memory_block=2, memory_blocks=1
+    ).eval()
 
 
-def packet(source="camera", value=0.3, time=1.):
-    return Packet(source, "image", Observation(
-        torch.full((1, 1, 3, 16, 16), value), torch.tensor([[time]])))
+def packet(source="camera", value=0.3, time=1.0):
+    return Packet(
+        source,
+        "image",
+        Observation(torch.full((1, 1, 3, 16, 16), value), torch.tensor([[time]])),
+    )
 
 
 def event(m, state, ordinal, value=0.3):
-    pending = m.begin_event(state, event_id=f"event-{ordinal}", ordinal=ordinal,
-                            time=float(ordinal), action=torch.zeros(1, 2))
-    return m.commit_event(m.add_packet(pending, packet(time=float(ordinal), value=value)))
+    pending = m.begin_event(
+        state,
+        event_id=f"event-{ordinal}",
+        ordinal=ordinal,
+        time=float(ordinal),
+        action=torch.zeros(1, 2),
+    )
+    return m.commit_event(
+        m.add_packet(pending, packet(time=float(ordinal), value=value))
+    )
 
 
 def test_event_union_deduplicates_without_reapplying_action():
     m = model()
     start = m.initial_state(1)
-    pending = m.begin_event(start, event_id="one", ordinal=1, time=1., action=torch.zeros(1, 2))
+    pending = m.begin_event(
+        start, event_id="one", ordinal=1, time=1.0, action=torch.zeros(1, 2)
+    )
     a, b = packet("a"), packet("b", 0.7)
     ab = m.add_packet(m.add_packet(pending, a), b)
     ba = m.add_packet(m.add_packet(pending, b), a)
@@ -47,7 +60,7 @@ def test_event_union_deduplicates_without_reapplying_action():
     sealed = m.commit_event(ab)
     assert sealed.observation_count == 1 and len(sealed.memory.recent) == 1
     with pytest.raises(ValueError, match="ordinal|event"):
-        m.begin_event(sealed, event_id="one", ordinal=1, time=1.)
+        m.begin_event(sealed, event_id="one", ordinal=1, time=1.0)
     assert start.memory is None
 
 
@@ -56,18 +69,22 @@ def test_live_and_imagined_share_transition_and_no_observation_creates_no_eviden
     start = event(m, m.initial_state(1), 1)
     action = torch.ones(1, 2)
     torch.manual_seed(33)
-    live = m.begin_event(start, event_id="two", ordinal=2, time=2., action=action).prior
+    live = m.begin_event(
+        start, event_id="two", ordinal=2, time=2.0, action=action
+    ).prior
     torch.manual_seed(33)
-    imagined = m.imagine(start, action, dt=1., sample=True)
+    imagined = m.imagine(start, action, dt=1.0, sample=True)
     assert torch.equal(live.h, imagined.h)
     assert torch.equal(live.logits, imagined.logits)
-    empty = m.commit_event(m.begin_event(start, event_id="gap", ordinal=2, time=2.))
+    empty = m.commit_event(m.begin_event(start, event_id="gap", ordinal=2, time=2.0))
     assert empty.memory is start.memory
     assert torch.equal(empty.observed_time, start.observed_time)
-    instant = m.begin_event(start, event_id="instant", ordinal=2, time=1., action=action)
+    instant = m.begin_event(
+        start, event_id="instant", ordinal=2, time=1.0, action=action
+    )
     assert not torch.equal(instant.prior.h, start.h)
     with pytest.raises(ValueError, match="imagined|hypothetical"):
-        m.begin_event(imagined, event_id="bad", ordinal=3, time=3.)
+        m.begin_event(imagined, event_id="bad", ordinal=3, time=3.0)
 
 
 def test_source_features_are_independent_of_belief_and_hidden_values():
@@ -75,13 +92,20 @@ def test_source_features_are_independent_of_belief_and_hidden_values():
     start = m.initial_state(1)
     changed = replace(start, h=start.h + 9, tokens=start.tokens + 9)
     p = packet()
-    e1 = m.add_packet(m.begin_event(start, event_id="a", ordinal=1, time=1.), p)
-    e2 = m.add_packet(m.begin_event(changed, event_id="a", ordinal=1, time=1.), p)
+    e1 = m.add_packet(m.begin_event(start, event_id="a", ordinal=1, time=1.0), p)
+    e2 = m.add_packet(m.begin_event(changed, event_id="a", ordinal=1, time=1.0), p)
     assert torch.equal(e1.state.evidence, e2.state.evidence)
-    invalid = replace(p, observation=replace(p.observation,
-        values=torch.full_like(p.observation.values, float("nan")),
-        valid=torch.zeros(1, 1, dtype=torch.bool)))
-    masked = m.add_packet(m.begin_event(start, event_id="m", ordinal=1, time=1.), invalid)
+    invalid = replace(
+        p,
+        observation=replace(
+            p.observation,
+            values=torch.full_like(p.observation.values, float("nan")),
+            valid=torch.zeros(1, 1, dtype=torch.bool),
+        ),
+    )
+    masked = m.add_packet(
+        m.begin_event(start, event_id="m", ordinal=1, time=1.0), invalid
+    )
     assert torch.equal(masked.state.logits, masked.prior.logits)
     assert m.commit_event(masked).memory is None
 
@@ -92,7 +116,11 @@ def test_hierarchy_preserves_recent_envelope_and_bounds_old_history():
     for i in range(1, 15):
         state = event(m, state, i, value=i / 20)
         bank = state.memory
-        assert len(bank.recent) <= 2 and len(bank.staging) < 2 and len(bank.compressed) <= 1
+        assert (
+            len(bank.recent) <= 2
+            and len(bank.staging) < 2
+            and len(bank.compressed) <= 1
+        )
     assert bank.consolidated is not None
     assert torch.equal(bank.recent[-1].h, state.h)
     assert torch.equal(bank.recent[-1].logits, state.logits)
@@ -103,7 +131,9 @@ def test_hierarchy_preserves_recent_envelope_and_bounds_old_history():
     marked = m.mark(state, author="user", detail="retain the source")
     assert len(marked.memory.protected) == 1
     thought = m.think(marked, steps=2)
-    assert torch.equal(thought.h, marked.h) and torch.equal(thought.logits, marked.logits)
+    assert torch.equal(thought.h, marked.h) and torch.equal(
+        thought.logits, marked.logits
+    )
     assert thought.memory is marked.memory and torch.equal(thought.time, marked.time)
     fresh = m.initial_state(1)
     assert fresh.memory is None and fresh.session_id != state.session_id
@@ -125,7 +155,7 @@ def test_safe_snapshot_roundtrip_rejects_other_schemas():
 
 
 def test_kl_floor_is_after_group_sum_and_routes_gradients():
-    q = torch.tensor([[[2., -2.], [2., -2.]]], requires_grad=True)
+    q = torch.tensor([[[2.0, -2.0], [2.0, -2.0]]], requires_grad=True)
     p = torch.zeros_like(q, requires_grad=True)
     raw = categorical_kl(q, p).sum(-1)
     dyn, rep = split_kl(q, p, free_nats=0.7)
@@ -142,14 +172,204 @@ def test_planner_reuses_complete_starting_draws_across_candidates(monkeypatch):
     state = event(m, m.initial_state(1), 1)
     original = m.imagine
     seen = []
+
     def spy(branch, *args, **kwargs):
         seen.append(branch.z.clone())
         assert branch.memory is state.memory
         return original(branch, *args, **kwargs)
+
     monkeypatch.setattr(m, "imagine", spy)
     candidates = torch.zeros(1, 2, 1, 2)
-    result = plan(m, state, candidates, lambda s: s.tokens.square().mean((1, 2)),
-                  lower=-1., upper=1., samples=4)
+    result = plan(
+        m,
+        state,
+        candidates,
+        lambda s: s.tokens.square().mean((1, 2)),
+        lower=-1.0,
+        upper=1.0,
+        samples=4,
+    )
     assert len(seen) == 8
     assert all(torch.equal(a, b) for a, b in zip(seen[:4], seen[4:]))
     assert result.scores.shape == (1, 2)
+
+
+def test_repeated_seal_and_planning_restore_rng_even_on_exception():
+    from tests.test_runs import equal_tree
+
+    m = model()
+    pending = m.add_packet(
+        m.begin_event(m.initial_state(1), event_id="x", ordinal=1, time=1.0), packet()
+    )
+    a, b = m.commit_event(pending), m.commit_event(pending)
+    equal_tree(a.to_dict(), b.to_dict())
+    with pytest.raises(ValueError, match="PendingEvent"):
+        m.commit_event(a)
+    rng = torch.get_rng_state().clone()
+    candidates = torch.zeros(1, 2, 2, 2)
+    scores = plan(
+        m,
+        a,
+        candidates,
+        lambda s: s.tokens.square().mean((1, 2)),
+        lower=-1.0,
+        upper=1.0,
+    ).scores
+    assert torch.equal(scores[:, 0], scores[:, 1])
+    assert torch.equal(rng, torch.get_rng_state())
+    with pytest.raises(RuntimeError, match="cost"):
+        plan(
+            m,
+            a,
+            candidates,
+            lambda s: (_ for _ in ()).throw(RuntimeError("cost")),
+            lower=-1.0,
+            upper=1.0,
+        )
+    assert torch.equal(rng, torch.get_rng_state())
+
+
+def test_mixed_batch_mask_blocks_hidden_gradients_and_keeps_prior_code():
+    m = model()
+    start = m.initial_state(2)
+    pending = m.begin_event(start, event_id="batch", ordinal=1, time=1.0)
+    values = torch.rand(2, 1, 3, 16, 16, requires_grad=True)
+    obs = Observation(values, torch.ones(2, 1), torch.tensor([[True], [False]]))
+    update = m.add_packet(pending, Packet("image", "image", obs))
+    assert torch.equal(update.state.z[1], pending.prior.z[1])
+    assert torch.equal(update.state.logits[1], pending.prior.logits[1])
+    update.state.tokens.square().mean().backward()
+    assert values.grad[0].abs().sum() > 0 and values.grad[1].count_nonzero() == 0
+    sealed = m.commit_event(update)
+    assert sealed.memory.recent[0].valid.tolist() == [True, False]
+    assert sealed.observed_time.tolist() == [1.0, 0.0]
+
+
+def test_compression_gradients_are_bounded_and_source_compressor_has_no_belief_input():
+    m = model()
+    state = m.initial_state(1)
+    for i in range(1, 3):
+        state = event(m, state, i)
+    records = state.memory.recent
+    compressed = m.memory.summarize(records)
+    changed = m.memory.summarize(
+        tuple(replace(r, belief=r.belief + 100) for r in records)
+    )
+    assert torch.equal(compressed.evidence, changed.evidence)
+    compressed.evidence.square().mean().backward()
+    assert any(
+        p.grad is not None and p.grad.abs().sum()
+        for p in m.memory.compressors[0].parameters()
+    )
+    assert all(p.grad is None for p in m.memory.compressors[1].parameters())
+    assert all(p.grad is None for p in m.updater.parameters())
+
+
+def test_protected_admission_has_user_priority_and_explicit_overflow():
+    m = model()
+    m.memory.protected_capacity = 1
+    state = event(m, m.initial_state(1), 1)
+    state = m.mark(state, author="agent", detail="candidate", score=0.2)
+    state = event(m, state, 2)
+    state = m.mark(state, author="user", detail="keep this")
+    assert state.memory.protected[0].event_id == "event-2"
+    state = event(m, state, 3)
+    assert (
+        m.mark(state, author="agent", detail="candidate", score=100).memory
+        is state.memory
+    )
+    with pytest.raises(ValueError, match="capacity"):
+        m.mark(state, author="user", detail="keep another")
+
+
+def test_old_packets_and_consolidation_do_not_refresh_evidence_time():
+    m = model()
+    state = m.initial_state(1)
+    for ordinal in range(1, 8):
+        pending = m.begin_event(
+            state, event_id=f"e{ordinal}", ordinal=ordinal, time=float(ordinal)
+        )
+        state = m.commit_event(m.add_packet(pending, packet(f"old{ordinal}", time=0.0)))
+    assert state.time.item() == 7 and state.observed_time.item() == 0
+    record = state.memory.recent[-1]
+    assert record.state_time.item() == 7 and record.end_time.item() == 0
+    assert record.source_end.item() == 0
+    assert state.memory.consolidated.end_time.item() == 0
+    assert state.observation_counts.item() == 7
+
+
+def test_consolidation_preserves_old_member_when_new_block_has_no_evidence():
+    m = model()
+    state = event(m, m.initial_state(1), 1)
+    block = m.memory.summarize(state.memory.recent)
+    old = m.memory.consolidate(block, None)
+    missing = replace(block, valid=torch.zeros_like(block.valid))
+    updated = m.memory.consolidate(missing, old)
+    assert torch.equal(old.evidence, updated.evidence)
+    assert torch.equal(old.belief, updated.belief)
+    assert torch.equal(old.end_time, updated.end_time)
+
+
+def test_reflection_changes_workspace_but_not_next_physical_memory():
+    from tests.test_tasks import task, request, AGENT
+    from tests.test_runs import equal_tree
+
+    m = model()
+    state = event(m, m.initial_state(1), 1)
+    output = m.emit(state, task(), (request("image"),), produced_by=AGENT).outputs[0]
+    observation = output.loopback(state.time)
+    reflected = m.reflect(state, {"image": observation})
+    assert not torch.equal(state.tokens, reflected.tokens)
+    assert torch.equal(state.h, reflected.h) and torch.equal(
+        state.logits, reflected.logits
+    )
+    with pytest.raises(ValueError, match="Generated"):
+        m.observe(state, {"image": observation}, time=2.0)
+    torch.manual_seed(112)
+    clean = event(m, state, 2)
+    torch.manual_seed(112)
+    next_state = event(m, reflected, 2)
+    assert torch.equal(clean.h, next_state.h) and torch.equal(
+        clean.logits, next_state.logits
+    )
+    equal_tree(clean.memory.to_dict(), next_state.memory.to_dict())
+    assert next_state.generated_ancestry
+    assert m.memory.storage_bytes(next_state.memory) <= m.memory.capacity_bytes(
+        16, 8, 8, 8
+    )
+
+
+def test_full_belief_distribution_reaches_readers_and_compression():
+    m = model()
+    state = event(m, m.initial_state(1), 1)
+    records = state.memory.recent
+    changed = tuple(replace(r, logits=torch.randn_like(r.logits) * 8) for r in records)
+    altered = replace(state, memory=replace(state.memory, recent=changed))
+    a, b = m.memory.read(state), m.memory.read(altered)
+    assert not torch.allclose(a, b)
+    a, b = m.memory.summarize(records), m.memory.summarize(changed)
+    assert not torch.allclose(a.belief, b.belief)
+    assert torch.equal(a.evidence, b.evidence)
+
+
+def test_memory_rejects_later_ordinals_even_at_equal_time_with_old_evidence():
+    m = model()
+    start = m.initial_state(1)
+    first = m.commit_event(
+        m.add_packet(
+            m.begin_event(start, event_id="a", ordinal=1, time=1.0), packet(time=0.0)
+        )
+    )
+    later = m.commit_event(
+        m.add_packet(
+            m.begin_event(first, event_id="b", ordinal=2, time=1.0),
+            packet("another", time=0.0),
+        )
+    )
+    with pytest.raises(ValueError, match="future|later"):
+        m.memory.read(replace(first, memory=later.memory))
+    record = replace(
+        first.memory.recent[0], state_time=torch.tensor([2.0], dtype=torch.float64)
+    )
+    with pytest.raises(ValueError, match="future|later"):
+        m.memory.read(replace(first, memory=replace(first.memory, recent=(record,))))

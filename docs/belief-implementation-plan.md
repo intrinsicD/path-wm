@@ -53,3 +53,57 @@ adopted corrections and verification here when complete.
 
 Initial check receipt: existing 51 tests pass; `tests/test_belief.py` fails during
 collection on the absent `pathwm.models.belief_state` module (expected red state).
+
+## Completed implementation and review
+
+The current API and numerical/training choices are documented in
+[belief-model.md](belief-model.md). The CLI selects the categorical model by default;
+the Python constructor's Gaussian default and existing reference tests are preserved.
+The recipe explicitly constructs the new correction, dynamics and memory modules.
+The categorical schema is `pathwm-belief-v1`; it never silently loads Gaussian state.
+
+Two actual Claude CLI exchanges completed (`implementation` and
+`implementation-reconcile`). Independent notes preceded the reply. Adopted failure
+cases cover stable sampling on event retries, frozen pre-event memory, masked-value
+invariance, source-only forward independence, finite replay graphs and planning RNG.
+Claude withdrew mandatory parameter-disjointness, hard-gate replay, mask-token and
+particular RNG-mechanism claims. Our planner has a fixed rectangular horizon, so
+all candidates consume identically shaped noise; variable-length branching remains
+outside this interface. A scoped finally restores RNG on errors. Sealing accepts
+only an open transaction and has no hidden side effects. Weighted composite losses
+and feature-distribution distillation are not claimed to be an ELBO or calibrated
+world probabilities. No private implementation or measurements entered the review.
+
+Additional red/green regression checks caught missing audio/text diagnostics needed
+by the existing extra-update gate, and future memory hidden behind equal timestamps
+or old evidence. Review also corrected evidence timestamps at write time, missing
+batch members at consolidation and full-logit access in memory readers/compressors.
+Source and inferred clocks are now explicit; older summaries retain bounded support.
+
+**Validation:** 69 CPU tests pass; Ruff and diff whitespace checks pass. Exact
+pause/resume includes the teacher, replay scores, optional proposal gate, optimizer,
+RNG and metric rows. A final tiny real batch exercises forward/backward through all
+memory scales. Three preserved development runs consumed 8 synthetic + 8 instruction
++ 2 real updates, with no GPU use or extra proposals. Their short histories use
+recent=2, block=2 and compressed-block capacity=1 to force consolidation. These are
+workflow checks; no scientific pass threshold or capability claim was introduced.
+
+The eight-update synthetic model has validation image MSE 0.237670 versus copying
+0.007451. The two-update real model has 0.236499 versus 0.000050895. Predictions remain
+poor. The four-example instruction evaluation has 75% operation error and is not a
+meaningful general instruction benchmark. Earlier negative results remain intact.
+
+All three run reports are structurally verified and visually checked in the in-app
+browser at its 1280×720 viewport; images load and no horizontal overflow was found.
+A local server required sandbox approval and was restricted to localhost/the new run
+directory. The modified renderer correctly permits an unapplied world intervention
+and labels categorical observation inputs. Two completed reports were re-rendered
+from preserved metrics after a caption correction; their training metrics/checkpoints
+were not rewritten. New guard-only source changes are covered by the final suite and
+real batch; each development run retains its own exact source snapshot.
+
+Receipts and reports: `runs/belief_v1/verification.json`, the three per-run
+`report.qa.json`/`report.browser.qa.json` files, and `pusht-final-check.json`.
+No individual reset, raw archival store, indexed large-memory retrieval, variable
+length planner or claim of broadly useful trained memory was added. Those are
+separate future choices rather than hidden default behavior.

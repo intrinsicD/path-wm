@@ -1,5 +1,9 @@
 # Learned state and hybrid memory: proposed interface specification
 
+**Implementation update:** Alex subsequently authorized implementation. Read the
+[implemented contract](belief-model.md) and [implementation record](belief-implementation-plan.md).
+The architecture-only status below records the earlier discussion boundary.
+
 Status: architecture discussion, 9 September 2026. This is a concrete proposed
 contract, not implemented behavior or an approved experiment. The existing negative
 learning result remains unchanged. Finish the model design before task design or

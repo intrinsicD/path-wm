@@ -1,123 +1,78 @@
 # Current work
 
-**Active implementation:** Alex authorized implementing the reviewed categorical
-belief update with Claude. See [the implementation plan](belief-implementation-plan.md).
-The existing Gaussian recipe remains the reference. Baseline: 51 CPU tests pass;
-new essential contract tests fail because the belief module is not implemented yet.
-The earlier architecture-only boundary below is historical and superseded for this slice.
+**Implemented:** the categorical belief and bounded session-memory design authorized
+by Alex on 9 September 2026. Read [the model guide](belief-model.md) and the
+[implementation plan/record](belief-implementation-plan.md). One editable
+[recipe](../experiments/multimodal.py) still owns construction, targets, training,
+evaluation, checkpoint/resume and reporting. No second trainer or runtime LLM was added.
 
-**Implemented:** task-conditioned operation/output proposals, required/disabled/
-automatic output controls, separate control author/requester/producer attribution,
-and tagged generated-content reflection. Read [the task interfaces](tasks.md),
-[the model guide](multimodal.md), and [the implementation record](multimodal-plan.md).
+The CLI defaults to `--state-model belief`: recurrent context, grouped categorical
+prior/posterior, source-only evidence and a separate task workspace. Ordered event
+transactions advance executed action/time once, merge partial packets against a
+fixed prior and memory snapshot, and commit once. Shared dynamics power imagination.
+Thinking/reflection leave the physical belief and observational history unchanged.
+Both evidence age and inferred-state age/ordinal constrain causal memory reads.
 
-One editable [recipe](../experiments/multimodal.py) constructs the model and its
-losses. The default has 359,188 parameters, 30 world-state tokens and four computed
-task tokens. All modules remain directly replaceable PyTorch components. No external
-language model, registry or second trainer was added.
+Memory contains exact recent latent envelopes, chronological compression staging,
+compressed history, protected user/agent marks and gated consolidation. Separate
+perception/prediction/thinking readers have learned scale gates and a null choice.
+Full categorical probabilities reach readers and compression. Source-only features
+remain independently encoded and compressed. The default tensor payload is bounded
+at 318,040 bytes per FP32 stream, plus bounded metadata and temporary computation.
+Fresh `initial_state()` starts empty memory and workspace with the same model weights;
+callers discard prior task progress and plans. Individual memory resets remain withdrawn.
 
-The task interpreter reads shared multiscale text features plus exact metadata
-encodings. Its learned policy proposes think/recall/imagine/act/emit/ask/finish.
-A bounded step consumes that proposal; actions and clarification requests return to
-the caller. Discrete controls are enforced separately from raw scores. Emission
-prevalidates all requests, preserves partial successes on decoder failure, and only
-successful answers fulfill requirements. Tasks can abort with requirements pending.
+Learning now includes observable reconstruction/prediction likelihoods, split
+categorical KL, isolated full/partial teacher targets, delayed recall, frozen-reader
+compression distillation and delayed marginal mark utility. These mechanisms are
+implemented; effective long-horizon memory and calibrated uncertainty are unproven.
+The ordinary two-step default history is too short to train delayed recall across
+the default 32-record recent store. The guide gives explicit small-memory settings
+that exercise all memory scales within an eight-step development history.
 
-Generated loopback updates working/reasoning without advancing world/observational
-clocks or counts. Persistent ancestry prevents those states entering observational
-memory, including after later real observations. Keep a separate clean observational
-branch. This is a trusted-caller metadata contract, not cryptographic authentication.
+**Verification:** 69 CPU tests pass. Exact pause/resume reproduces model, optimizer,
+sampler, RNG and training rows, including the optional extra-update gate. New tests
+cover event retry/order, masked inputs, source/belief separation, mixed batches,
+full-distribution reads, memory bounds/consolidation, provenance, snapshot loading,
+common planning samples/RNG restoration and future memory at equal timestamps.
+Final real PushT forward/backward check is saved with the run receipts.
 
-**Verification:** 51 CPU tests pass. The instruction recipe completes 80 updates at
-width 16, seed 42, batch 8, on 112 train/112 held-out synthetic episodes. An exact
-pause-at-31/resume comparison matches weights, optimizer, RNG, training rows and all
-final task decisions. A two-update real PushT path also completes. No extra proposals
-or GPU job ran. Reports pass structural, media, provenance and source checks;
-**browser visual QA remains blocked** by the earlier local-URL policy.
+Three short CPU development runs completed: eight synthetic updates, eight
+instruction updates and two real PushT updates; no extra proposals or GPU runs.
+Every run has raw metrics, checkpoint, source snapshot, media and an offline report.
+The current report renderer has now passed browser visual checks at a 1280×720
+viewport, with no broken images or horizontal overflow on the three reports.
+See [verification](../runs/belief_v1/verification.json),
+[synthetic report](../runs/belief_v1/synthetic/report.html),
+[instruction report](../runs/belief_v1/instructions/report.html), and
+[real report](../runs/belief_v1/pusht/report.html).
 
-**Learning is not yet reliable:** held-out operation accuracy is 28.57%, versus
-92.86% for a lexical baseline and 21.43% with mismatched instructions. Output-format
-errors on emit examples are 50–56.25%. Completion labels are synthetic declarations,
-not measured task success. Raw/enforced decisions and this negative result are
-preserved, with no claim of general instruction following or learned compliance.
+**Learning remains weak:** synthetic held-out image MSE is 0.237670 versus 0.007451
+for copying the last image. The tiny real check gives 0.236499 versus 0.000050895.
+The four-example instruction evaluation has 75% operation error. These development
+populations are too small and training too short for capability conclusions. They
+confirm execution and expose poor current predictions, not successful world learning.
+The earlier negative instruction result is unchanged and preserved in the historical
+[task implementation record](multimodal-plan.md); its old run paths are unavailable
+in this local checkout and were not reverified or reconstructed.
 
-Results: [instruction report](../runs/task_outputs_v1/instructions_full/report.html),
-[all held-out decisions](../runs/task_outputs_v1/instructions_full/task_decisions.json),
-[real PushT report](../runs/task_outputs_v1/pusht/report.html), and
-[verification receipt](../runs/task_outputs_v1/verification.json).
+**Claude collaboration:** two actual isolated CLI exchanges reviewed abstract
+implementation invariants. No private source, dimensions or results were exported.
+Claude withdrew overbroad demands for parameter-disjoint encoders, hard gates,
+mask tokens and a particular RNG mechanism. The adopted properties are forward
+information separation, frozen event inputs, bounded replay graphs and side-effect
+free planning. Remaining fixed/variable-rollout and sealing concerns were resolved
+by the concrete fixed-horizon interface, open-event type checks and local tests.
+Receipts: `runs/reviews/state_memory_design_2026-09-09/implementation*`.
 
-**Diagrams:** [architecture](diagrams/architecture.svg),
-[world flow](diagrams/data_flow.svg), [task flow](diagrams/task_flow.svg), and four
-individual input-scale diagrams regenerate with
-`python experiments/multimodal.py --diagram`. All 29 files reproduce exactly on this
-runtime. Task flow shows learned proposals and explicit user emission as separate
-actual call paths.
+The Gaussian reference, existing task controls/output attribution and multiscale
+adapters remain usable. Python `build_model()` retains its Gaussian default; use
+`state_model="belief"` explicitly in code. Its SVG diagram exporter still describes
+the Gaussian reference; the new guide has the categorical flow. Checkpoint schemas
+are distinct, with no implicit Gaussian conversion. Completed runs retain their
+own source snapshots and must be resumed with compatible source/settings.
 
-**Claude review:** the user explicitly approved the previously blocked final brief,
-and the third review completed. Claude accepted the stated core contracts and
-withdrew its blanket objection to post-mask violation metrics. These are conceptual
-findings; implementation conformance rests on local tests. Exact briefs, responses
-and receipts are retained in `runs/reviews/task_outputs/`, including
-`approved-final-response.json` and `approved-final-receipt.json`.
-
-The earlier conditioned multiscale inputs, episodic memory, stochastic dynamics,
-candidate planning and bounded update gate remain available. Their development
-results are preserved under `runs/multiscale_v1/` and `runs/multimodal_v1/`; old
-checkpoints require their source snapshots. The new latent schema is v2 and fails
-closed when ancestry is absent. No data or completed runs were removed.
-
-**Current discussion:** the negative learning result is acceptable for now. Finish
-the model architecture before designing or running new experiments. The concrete
-[state and hybrid-memory specification](state-memory-design.md) separates directions
-accepted in conversation from newly proposed interface details and illustrative sizes.
-
-Accepted directions include recent detail plus compressed history and protected
-marks, both user and agent mark proposals, separate perception/prediction/thinking
-reads, action/time-conditioned short-step prediction, and bounded thinking that
-preserves world time and evidence boundaries. Marking should learn from delayed
-benefit. The representation should learn domain-relevant content rather than reserve
-fixed semantics for physical objects or places; document work is equally in scope.
-
-The specification proposes explicit token shapes, residual attention/gating,
-chronological compression staging, a bounded consolidated session state, write
-ordering, protected-detail admission and gradient boundaries. Consolidation details,
-numerical capacities, uncertainty family and exact training choices remain proposals.
-No model implementation, checkpoint migration or new training has occurred.
-
-**Design review completed:** three actual public-concepts-only Claude exchanges
-reviewed the complete proposal and reconciled overstatements. Read the
-[review and next-discussion agenda](state-memory-review.md). Both reviewers favor
-discussing whether memory should retain separately addressable observation features
-alongside inferred belief snapshots, under the same total budget. This is a new
-proposal, not an adopted model change; evidence encodings remain learned and lossy.
-Then settle executed-action propagation/observation correction, persistent derived
-knowledge, conflicting memory reads, learning targets and action/objective adapters.
-Exact briefs, responses and receipts are in `runs/reviews/state_memory_design_2026-09-09/`.
-
-The user wants memory kept within reasonable bounds while being large enough for
-useful recall. The specification distinguishes storage capacity, attention/read cost
-and learned recall quality. Keep its illustrative counts as a starting proposal;
-event cadence and required recall horizon must inform the actual capacity choice.
-Bounded indexed reads remain optional; no such implementation or scaling benchmark
-exists, and the two-view choice remains open.
-
-The user withdrew individual memory resets in favor of restarting the agent.
-The active design now uses a fresh agent session with the same trained parameters,
-empty memory at every scale, initialized belief/workspace and no inherited task
-progress or pending plans. Historical reset discussion and Claude receipts remain
-preserved; no actual restart or implementation change occurred. The observation/
-belief-view recommendation remains open independently of this lifecycle decision.
-
-**Belief-update recommendation:** the user requested discussion with Claude of
-present uncertainty and prediction/correction. The [concrete proposal](belief-update-design.md)
-uses recurrent context plus a categorical latent prior/posterior, shared dynamics
-for real and imagined actions, one-time event transitions and bounded temporary
-samples for decisions. The live filter retains one sampled recurrent history;
-probabilities are model-conditional and not calibrated epistemic confidence.
-Grounded output targets, partial-data teacher isolation and explicit KL routes are
-specified as proposals. Memory budgets must count logits/code and evidence fields.
-No implementation, new experiment or adoption of the full proposal is implied.
-
-Physical understanding, useful language generation, calibrated progress, semantic
-feature controls, scalable memory and broad self-improvement remain research
-questions. Real data still use `data/pusht_world_model/cchi_v1` directly.
+**Next research discussion:** choose an observable task and action/objective adapter
+that requires preserving uncertain information after compression, then declare a
+matched-budget comparison. Deployment-length replay, general mark selection,
+calibrated observable probabilities and useful closed-loop behavior remain open.

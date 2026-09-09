@@ -1,5 +1,9 @@
 # Belief updating and uncertainty: recommended starting design
 
+**Implementation update:** Alex subsequently authorized implementation. Read the
+[implemented contract](belief-model.md) and [implementation record](belief-implementation-plan.md).
+The architecture-only status below records the earlier discussion boundary.
+
 Status: architecture proposal, 9 September 2026. The user requested a Claude
 discussion and a concrete recommendation. No model implementation, training or
 checkpoint conversion is authorized by this document. The existing negative

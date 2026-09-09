@@ -124,8 +124,10 @@ def model_inspection(directory):
         '<div class="table"><table><tr><th>Latent group</th><th>Tokens</th><th>Activation RMS</th><th>Image change after zeroing group (MSE)</th></tr>',
     ]
     for name, count in meta["latent_groups"].items():
+        change = meta["zero_group_image_change_mse"].get(name)
+        change_text = "not applied" if change is None else f"{change:.6g}"
         parts.append(
-            f"<tr><td>{escape(name)}</td><td>{count}</td><td>{meta['group_activity_rms'][name]:.6g}</td><td>{meta['zero_group_image_change_mse'][name]:.6g}</td></tr>"
+            f"<tr><td>{escape(name)}</td><td>{count}</td><td>{meta['group_activity_rms'][name]:.6g}</td><td>{change_text}</td></tr>"
         )
     parts.append(
         "</table></div><p>The intervention replaces one group with zero and measures the change in the current image decoder. This is a local sensitivity test, not proof that the group has its intended semantic role.</p>"
@@ -134,12 +136,12 @@ def model_inspection(directory):
         (
             attention,
             "Observation attention",
-            "Rows: latent queries. Columns: input tokens followed by action/time context. Heads are averaged for example 1.",
+            "Rows: latent queries. Columns: the recorded observation inputs and optional context/null keys. Heads are averaged for example 1.",
         ),
         (
             activity,
             "Latent activation magnitude",
-            "Rows: latent tokens in the group order above. Columns: feature dimensions. Absolute values for example 1.",
+            "Rows: latent tokens in the model layout recorded by the recipe. Columns: feature dimensions. Absolute values for example 1.",
         ),
     ]:
         high = max(float(np.max(value)), 1e-12)

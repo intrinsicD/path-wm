@@ -31,7 +31,7 @@ def plan(
     dt=1.0,
     discount=1.0,
     uncertainty_weight=0.0,
-    samples=1,
+    samples=None,
     trace=None,
 ):
     """Score cost(next_state)->[B] at each step; lower scores are better.
@@ -65,6 +65,12 @@ def plan(
         or (candidates > hi).any()
     ):
         raise ValueError("Candidate actions violate declared bounds")
+    categorical = hasattr(model, "sample_beliefs")
+    samples = (4 if categorical else 1) if samples is None else samples
+    if categorical and uncertainty_weight:
+        raise ValueError(
+            "Gaussian variance penalty is undefined for categorical beliefs"
+        )
     if (
         not 0 < discount <= 1
         or not math.isfinite(uncertainty_weight)
@@ -77,13 +83,28 @@ def plan(
         )
     scores = []
     with evaluation_mode(model):
+        starts = (
+            model.sample_beliefs(state, samples) if categorical else [state] * samples
+        )
+        # Common future noise makes identical action sequences receive identical scores.
+        cpu_rng = torch.get_rng_state()
+        cuda_rng = (
+            torch.cuda.get_rng_state_all() if torch.cuda.is_initialized() else None
+        )
         for c in range(candidates.shape[1]):
+            if categorical:
+                torch.set_rng_state(cpu_rng)
+                if cuda_rng is not None:
+                    torch.cuda.set_rng_state_all(cuda_rng)
             total = candidates.new_zeros(len(candidates))
-            for _ in range(samples):
-                branch = state
+            for initial in starts:
+                branch = initial
                 for h in range(candidates.shape[2]):
                     branch = model.imagine(
-                        branch, candidates[:, c, h], dt=dt, sample=samples > 1
+                        branch,
+                        candidates[:, c, h],
+                        dt=dt,
+                        sample=categorical or samples > 1,
                     )
                     value = cost(branch)
                     if (
@@ -96,7 +117,11 @@ def plan(
                         or not torch.isfinite(branch.log_scale).all()
                     ):
                         raise ValueError("Planner produced a nonfinite latent state")
-                    penalty = branch.log_scale.mul(2).exp().mean((1, 2))
+                    penalty = (
+                        0.0
+                        if categorical
+                        else branch.log_scale.mul(2).exp().mean((1, 2))
+                    )
                     total += (
                         discount**h * (value + uncertainty_weight * penalty) / samples
                     )

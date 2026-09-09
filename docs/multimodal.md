@@ -1,4 +1,9 @@
-# One multimodal world model
+# Gaussian reference and shared multimodal interfaces
+
+The CLI now defaults to the [categorical belief model](belief-model.md). This page
+describes the retained Gaussian reference and shared adapters/task interfaces.
+Python `build_model()` keeps its Gaussian default for compatibility; the CLI uses
+`--state-model gaussian` to select it. The diagram exporter remains the Gaussian reference.
 
 Start in [`experiments/multimodal.py`](../experiments/multimodal.py). `build_model`
 constructs one `MultimodalAgent`; `objective` says exactly what it learns. The

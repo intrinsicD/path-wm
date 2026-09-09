@@ -1,6 +1,7 @@
 # Models and tensor flow
 
-The current unified model is described in [multimodal architecture](multimodal.md)
+The current categorical model is described in [belief and memory](belief-model.md),
+with the Gaussian reference and shared adapters in [multimodal architecture](multimodal.md)
 and built in [the multimodal recipe](../experiments/multimodal.py). The components
 below remain available as focused visual reference experiments.
 

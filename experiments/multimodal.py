@@ -33,6 +33,8 @@ from pathwm.models.multiscale import (
     MultiScaleTextEncoder,
     FeatureController,
 )
+from pathwm.models.belief import BeliefAgent, BeliefCorrection, BeliefDynamics
+from pathwm.models.hybrid_memory import HybridMemory
 from pathwm.models.agent_state import EpisodicMemory
 from pathwm.models.tasks import (
     Actor,
@@ -77,9 +79,28 @@ def build_model(
     code_width=16,
     levels=3,
     cross_scale=True,
+    state_model="gaussian",
+    memory_recent=32,
+    memory_block=8,
+    memory_blocks=16,
 ):
+    if state_model not in ("gaussian", "belief"):
+        raise ValueError("Unknown state model")
+    factory = BeliefAgent if state_model == "belief" else MultimodalAgent
+    options = (
+        dict(
+            context_tokens=16,
+            latent_groups=8,
+            latent_codes=8,
+            evidence_tokens=8,
+            time_unit="steps",
+        )
+        if state_model == "belief"
+        else {}
+    )
     # Replace a constructor here to compare components; no registration is needed.
-    return MultimodalAgent(
+    return factory(
+        **options,
         width=width,
         encoders={
             "image": MultiScaleImageEncoder(
@@ -108,10 +129,18 @@ def build_model(
             "audio": AudioDecoder(width, audio_samples),
             "text": TextDecoder(width),
         },
-        updater=ObservationUpdate(width),
-        dynamics=LatentDynamics(width),
+        updater=BeliefCorrection(width, 8, 8, 2)
+        if state_model == "belief"
+        else ObservationUpdate(width),
+        dynamics=BeliefDynamics(width, 8, 8, 2)
+        if state_model == "belief"
+        else LatentDynamics(width),
         thinker=Thinker(width),
-        memory=EpisodicMemory(capacity=16, retrieve_count=2),
+        memory=HybridMemory(
+            width, recent=memory_recent, block=memory_block, blocks=memory_blocks
+        )
+        if state_model == "belief"
+        else EpisodicMemory(capacity=16, retrieve_count=2),
         action_head=ActionHead(width),
         monitor=ErrorMonitor(width),
         feature_controller=FeatureController(width, code_width),
@@ -405,8 +434,10 @@ def task_evaluation(model, data, settings):
             text_words = words(session.request.instruction)
             neighbor = max(
                 range(len(references)),
-                key=lambda k: len(text_words & ref_words[k])
-                / max(1, len(text_words | ref_words[k])),
+                key=lambda k: (
+                    len(text_words & ref_words[k])
+                    / max(1, len(text_words | ref_words[k]))
+                ),
             )
             raw_mask = (prediction.modality_logits[j] >= 0).tolist()
             active = [r.modality for r in selected.requests]
@@ -651,7 +682,255 @@ class LearningState(nn.Module):
             target.copy_(current)
 
 
+def belief_likelihoods(model, state, batch, t, *, tokens=None):
+    """Explicit adapter distributions, joint within a modality; no cross-modal independence claim."""
+    from pathwm.training.belief import gaussian_log_likelihood
+
+    values = state.tokens if tokens is None else tokens
+    result, dimensions = {}, {}
+    for name, key in (("image", "images"), ("audio", "audio")):
+        if key in batch:
+            target = batch[key][:, t]
+            prediction = model.decoders[name](values)
+            result[name] = gaussian_log_likelihood(prediction, target, sigma=0.1)
+            dimensions[name] = target[0].numel()
+    if "text" in batch:
+        text = batch["text"][:, t]
+        prediction = model.decoders["text"](values, text[:, :-1])
+        ce = F.cross_entropy(
+            prediction.transpose(1, 2), text[:, 1:], ignore_index=0, reduction="none"
+        )
+        result["text"] = -ce.sum(1)
+        dimensions["text"] = (text[:, 1:] != 0).sum(1).clamp_min(1)
+    return result, dimensions
+
+
+def belief_objective(learner, batch, history, horizon, dropout):
+    """Bounded replay; two-draw marginal NLL with biased straight-through gradients.
+
+    Missingness is random item availability, independent of hidden values. The same
+    frame mask applies to duplicated image/video views. Full teachers share only
+    the partial causal prefix and never commit their current observation.
+    """
+    from pathwm.models.belief_state import Packet
+    from pathwm.models.hybrid_memory import detached
+    from pathwm.models.modalities import position
+    from pathwm.training.belief import split_kl, partial_kl, marginal_nll, marking_loss
+
+    model = learner.agent
+    state = model.initial_state(len(batch["images"]))
+    dynamics_losses, representation_losses, partial_losses, evidence_losses = (
+        [],
+        [],
+        [],
+        [],
+    )
+    labelled = []
+    first_record, first_state = None, None
+    for t in range(history):
+        pending = model.begin_event(
+            state,
+            event_id=f"event-{t}",
+            ordinal=t,
+            time=t,
+            action=None if t == 0 else batch["actions"][:, t - 1],
+            replay=True,
+        )
+        full = observations(batch, t)
+        visible_frames = (
+            torch.rand(len(state.tokens), t + 1, device=state.tokens.device) >= dropout
+        )
+        packets, full_packets = [], []
+        for name, observation in sorted(full.items()):
+            valid = (
+                observation.valid
+                if observation.valid is not None
+                else torch.ones_like(observation.times, dtype=torch.bool)
+            )
+            if name in ("image", "video"):
+                keep = visible_frames.gather(1, observation.times.long())
+            else:
+                keep = torch.rand_like(observation.times) >= dropout
+            partial = replace(observation, valid=valid & keep)
+            packets.append(Packet(f"{t}/{name}", name, partial))
+            full_packets.append(Packet(f"{t}/{name}", name, observation))
+        # A complete known packet set needs only one correction, independent of arrival order.
+        partial = model.correct_packets(replace(pending, packets=tuple(packets)))
+        with torch.no_grad():
+            teacher = learner.target.correct_packets(
+                replace(pending, packets=tuple(full_packets))
+            )
+        current = partial.state
+        valid = current.evidence_valid
+        dyn, rep = split_kl(current.logits, current.prior_logits, valid=valid)
+        dynamics_losses.append(dyn * valid.sum())
+        representation_losses.append(rep * valid.sum())
+        labelled.append(valid.sum())
+        partial_losses.append(partial_kl(teacher.state.logits, current.logits))
+        # Source features have their own grounding loss, with no inferred-state input.
+        source_ll, dims = belief_likelihoods(
+            model, current, batch, t, tokens=current.evidence
+        )
+        evidence_losses.append(
+            sum(
+                ((-value / dims[k]) * valid).sum() / valid.sum().clamp_min(1)
+                for k, value in source_ll.items()
+            )
+        )
+        state = model.commit_event(partial)
+        if t == 0 and state.memory is not None:
+            first_record, first_state = state.memory.recent[-1], detached(state)
+    state = model.think(state, steps=1)
+    denominator = torch.stack(labelled).sum().clamp_min(1)
+    weighted = dict(
+        dynamics_kl=torch.stack(dynamics_losses).sum() / denominator,
+        representation_kl=0.1 * torch.stack(representation_losses).sum() / denominator,
+        partial_kl=0.1 * torch.stack(partial_losses).mean(),
+        evidence_nll=0.05 * torch.stack(evidence_losses).mean(),
+    )
+    starts = model.sample_beliefs(state, 2)
+    current = [
+        belief_likelihoods(model, branch, batch, history - 1) for branch in starts
+    ]
+    for name in current[0][0]:
+        weight = 0.1 if name == "text" else 1.0
+        weighted[f"reconstruct_{name}_nll"] = (
+            0.25
+            * weight
+            * (
+                marginal_nll(torch.stack([v[0][name] for v in current]))
+                / current[0][1][name]
+            ).mean()
+        )
+    futures, observable_errors = starts, {}
+    for h in range(horizon):
+        t = history + h
+        futures = [
+            model.imagine(branch, batch["actions"][:, t - 1], dt=1.0, sample=True)
+            for branch in futures
+        ]
+        predictions = [
+            belief_likelihoods(model, branch, batch, t) for branch in futures
+        ]
+        for name in predictions[0][0]:
+            weight = 0.1 if name == "text" else 1.0
+            loss = (
+                marginal_nll(torch.stack([v[0][name] for v in predictions]))
+                / predictions[0][1][name]
+            ).mean()
+            key = f"future_{name}_nll"
+            weighted[key] = weighted.get(key, 0) + weight * loss / horizon
+        measurements = [output_losses(model, branch, batch, t) for branch in futures]
+        for name in measurements[0]:
+            observable_errors.setdefault(name, []).append(
+                torch.stack([v[name] for v in measurements]).mean(0)
+            )
+    error = torch.stack(observable_errors["image_mse"]).mean(0)
+    mean, scale = model.action_head(state.tokens)
+    action = batch["actions"][:, history - 1].clamp(-0.9999, 0.9999)
+    weighted["action_nll"] = (
+        0.05
+        * (
+            0.5 * ((torch.atanh(action) - mean) * (-scale).exp()).square()
+            + scale
+            + 0.5 * np.log(2 * np.pi)
+            + torch.log1p(-action.square())
+        ).mean()
+    )
+    weighted["self_error_mse"] = (
+        0.1 * (model.monitor(state.tokens) - error.detach()).square().mean()
+    )
+
+    # Query an old observation after exact recency eviction, without the live belief
+    # as a shortcut. The adapter supplies the requested event time, not its content.
+    if (
+        first_record is not None
+        and history >= model.memory.capacity + model.memory.block_size
+        and first_record.event_id
+        not in {r.event_id for r in state.memory.recent + state.memory.staging}
+    ):
+        query = model.initial[None, model.layout["world"]].expand(
+            len(state.tokens), -1, -1
+        )
+        query = (
+            query
+            + position(state.time.new_zeros(len(query)), model.width).to(query.dtype)[
+                :, None
+            ]
+        )
+
+        def recall_loss(bank):
+            recalled = query + model.memory.read(
+                replace(state, memory=bank), query=query, consumer="thinking"
+            )
+            ll, dims = belief_likelihoods(model, state, batch, 0, tokens=recalled)
+            return -ll["image"] / dims["image"]
+
+        without = recall_loss(state.memory)
+        protected = state.memory.protected
+        # One reserved comparison slot, same capacity. With existing marks, compare
+        # replacing the lowest agent mark; user marks never provide a free extra slot.
+        candidates = [
+            (r.score, i) for i, r in enumerate(protected) if r.author != "user"
+        ]
+        room = len(protected) < model.memory.protected_capacity
+        if room or candidates:
+            selected = list(protected)
+            if not room:
+                selected.pop(min(candidates)[1])
+            selected.append(
+                replace(first_record, author="agent", detail="training candidate")
+            )
+            with_detail = recall_loss(replace(state.memory, protected=tuple(selected)))
+            score = model.memory.propose_mark_score(first_record, first_state.tokens)
+            weighted["marking_mse"] = 0.05 * marking_loss(score, without, with_detail)
+            weighted["protected_recall_nll"] = 0.05 * with_detail.mean()
+        weighted["delayed_recall_nll"] = 0.1 * without.mean()
+
+    # Fixed-reader distribution distillation into separately parameterized view
+    # compressors. The target and query are detached; reader parameters are frozen
+    # functionally, so this auxiliary cannot make a moving reader hide information loss.
+    if state.memory is not None and len(state.memory.recent) >= 2:
+        records = detached(state.memory.recent[-2:])
+        compressed = model.memory.summarize(records)
+        consolidated = model.memory.consolidate(detached(compressed), None)
+        query = state.h.detach()
+        losses = []
+        for reader in model.memory.readers.values():
+            params = {k: v.detach() for k, v in reader.named_parameters()}
+
+            def read(groups):
+                return torch.func.functional_call(
+                    reader, params, (query, groups, state.time)
+                )
+
+            with torch.no_grad():
+                target = read(((), records, ())).flatten(1).softmax(-1)
+            for record in (compressed, consolidated):
+                log_prediction = read(((), (record,), ())).flatten(1).log_softmax(-1)
+                losses.append(F.kl_div(log_prediction, target, reduction="batchmean"))
+        weighted["compression_read_kl"] = 0.1 * torch.stack(losses).mean()
+    diagnostics = dict(
+        **{k: torch.stack(v).detach().mean() for k, v in observable_errors.items()},
+        categorical_entropy=-(state.logits.exp() * state.logits)
+        .sum(-1)
+        .mean()
+        .detach(),
+        dynamics_kl=weighted["dynamics_kl"].detach(),
+        memory_tensor_bytes=state.tokens.new_tensor(
+            model.memory.storage_bytes(state.memory)
+        ),
+    )
+    if "tasks" in batch:
+        losses, raw = task_losses(model, state, batch)
+        weighted.update(losses)
+        diagnostics.update({k: v.detach() for k, v in raw.items()})
+    return weighted, error.detach(), diagnostics
+
+
 def objective(learner, batch, history=2, horizon=2, dropout=0.0):
+    if isinstance(learner.agent, BeliefAgent):
+        return belief_objective(learner, batch, history, horizon, dropout)
     model = learner.agent
     state = observe_history(model, batch, history, dropout=dropout)
     reconstruction = output_losses(model, state, batch, history - 1)
@@ -834,7 +1113,13 @@ def check(settings):
     data = make_data(settings, "train")
     learner = LearningState(
         build_model(
-            settings["width"], settings["image_size"], settings["audio_samples"]
+            settings["width"],
+            settings["image_size"],
+            settings["audio_samples"],
+            state_model=settings.get("state_model", "gaussian"),
+            memory_recent=settings.get("memory_recent", 32),
+            memory_block=settings.get("memory_block", 8),
+            memory_blocks=settings.get("memory_blocks", 16),
         ),
         len(data),
     ).to(settings["device"])
@@ -966,9 +1251,11 @@ def save_examples(run, learner, data, settings):
             model,
             state,
             candidates,
-            lambda s: (model.decode(s, modalities=["image"])["image"] - goal)
-            .square()
-            .mean((1, 2, 3)),
+            lambda s: (
+                (model.decode(s, modalities=["image"])["image"] - goal)
+                .square()
+                .mean((1, 2, 3))
+            ),
             lower=-1.0,
             upper=1.0,
             trace=trace,
@@ -976,6 +1263,8 @@ def save_examples(run, learner, data, settings):
         baseline_image = model.decode(state, modalities=["image"])["image"]
         ablations = {}
         for role in model.layout:
+            if isinstance(model, BeliefAgent) and role == "world":
+                continue
             changed = model.decode(
                 model.intervene(state, role, 0.0), modalities=["image"]
             )["image"]
@@ -1044,9 +1333,19 @@ def save_examples(run, learner, data, settings):
                 "zero_group_image_change_mse": ablations,
                 "attention_inputs": trace["observe.input_modalities"],
                 "attention_input_scales": trace["observe.input_scales"],
-                "feature_code": trace["encode.feature_code"].tolist(),
-                "feature_code_source": trace["encode.condition_source"],
-                "feature_code_time": trace["encode.condition_time"].tolist(),
+                "feature_code": trace["encode.feature_code"].tolist()
+                if "encode.feature_code" in trace
+                else None,
+                "feature_code_source": trace.get(
+                    "encode.condition_source", "unconditioned_source_evidence"
+                ),
+                "feature_code_time": trace["encode.condition_time"].tolist()
+                if "encode.condition_time" in trace
+                else None,
+                "state_model": settings.get("state_model", "gaussian"),
+                "memory_tensor_bytes": model.memory.storage_bytes(state.memory)
+                if isinstance(model, BeliefAgent)
+                else None,
                 "audio_sample_rate": 8000,
                 "audio_samples_per_state": settings["audio_samples"],
                 "trace_keys": sorted(trace),
@@ -1094,7 +1393,13 @@ def train(settings, output, *, resume=False, stop_after=None):
     )
     learner = LearningState(
         build_model(
-            settings["width"], settings["image_size"], settings["audio_samples"]
+            settings["width"],
+            settings["image_size"],
+            settings["audio_samples"],
+            state_model=settings.get("state_model", "gaussian"),
+            memory_recent=settings.get("memory_recent", 32),
+            memory_block=settings.get("memory_block", 8),
+            memory_blocks=settings.get("memory_blocks", 16),
         ),
         len(training),
     ).to(settings["device"])
@@ -1228,9 +1533,11 @@ def export_diagrams(
             model,
             state,
             candidates,
-            lambda future: (model.decode(future, modalities=["image"])["image"] - goal)
-            .square()
-            .mean((1, 2, 3)),
+            lambda future: (
+                (model.decode(future, modalities=["image"])["image"] - goal)
+                .square()
+                .mean((1, 2, 3))
+            ),
             lower=-1.0,
             upper=1.0,
         )
@@ -1383,7 +1690,7 @@ def main():
         type=Path,
         nargs="?",
         const=Path("docs/diagrams"),
-        help="Export architecture/data-flow diagrams to this directory (CPU, no training)",
+        help="Export Gaussian reference diagrams to this directory (CPU, no training)",
     )
     parser.add_argument("--diagram-depth", type=int, default=2)
     parser.add_argument("--output", default="runs/multimodal_first")
@@ -1392,6 +1699,12 @@ def main():
     parser.add_argument(
         "--dataset", choices=["synthetic", "instructions", "pusht"], default="synthetic"
     )
+    parser.add_argument(
+        "--state-model", choices=["belief", "gaussian"], default="belief"
+    )
+    parser.add_argument("--memory-recent", type=int, default=32)
+    parser.add_argument("--memory-block", type=int, default=8)
+    parser.add_argument("--memory-blocks", type=int, default=16)
     parser.add_argument("--data-root", default="data/pusht_world_model/cchi_v1")
     for name, default in [
         ("steps", 8),
@@ -1436,6 +1749,9 @@ def main():
         args.train_windows,
         args.validation_windows,
         args.evaluate_every,
+        args.memory_recent,
+        args.memory_block,
+        args.memory_blocks,
     ]
     if (
         min(counts) < 1
@@ -1476,7 +1792,11 @@ def main():
         purpose="development",
         precision="fp32",
         time_unit="one dataset transition",
-        objective="data reconstruction + future outputs + EMA latent Gaussian NLL + action NLL + error supervision; instructions adds operation CE + modality BCE + completion BCE",
+        objective=(
+            "categorical split KL; image/audio Gaussian sigma .1; text categorical; two-sample log-mean likelihood per modality per dimension; biased straight-through gradients; partial-view teacher; bounded memory replay/distillation/mark utility"
+            if args.state_model == "belief"
+            else "data reconstruction + future outputs + EMA latent Gaussian NLL + action NLL + error supervision; instructions adds operation CE + modality BCE + completion BCE"
+        ),
         proposal_budget="one extra update per improve-every interval, rolled back on rejection",
     )
     if args.check:
