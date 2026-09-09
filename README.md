@@ -44,6 +44,19 @@ Resume checks code, settings, data, modules, optimizer and runtime identity.
 
 ## Discuss or change a part
 
+Generate diagrams directly from the current model and a tiny recorded execution:
+
+```bash
+python experiments/multimodal.py --diagram
+```
+
+Open [architecture](docs/diagrams/architecture.svg) or
+[data flow](docs/diagrams/data_flow.svg). The first shows module containment and
+parameter counts; the second shows values passed between example calls, with tensor
+shapes. Increase `--diagram-depth 3` to expand the module hierarchy. SVG/PNG rendering
+uses Graphviz (`dot`); Mermaid, DOT and JSON sources are always written.
+This CPU command needs no training or downloads. [Details](docs/multimodal.md#diagrams).
+
 Read [the concrete architecture](docs/multimodal.md), then edit `build_model` and
 `objective` in the recipe. It exposes every encoder, decoder, latent group,
 observation updater, thinker, dynamics module, memory store and action head.

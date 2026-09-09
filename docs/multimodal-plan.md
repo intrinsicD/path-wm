@@ -2,16 +2,27 @@
 
 ## Diagram follow-up
 
-Current slice: generate a compact architecture diagram from instantiated modules
+Completed slice: generate a compact architecture diagram from instantiated modules
 and a data-flow diagram from actual values passed between recorded calls. No
 profiling dashboard, training changes or hand-maintained graph connections.
-Add a small reusable diagram writer and one example script. Emit Mermaid and DOT
-sources, plus SVG/PNG when the existing Graphviz executable is available. Save
+Add a small reusable diagram writer and an export flag in the existing recipe.
+Emit Mermaid and DOT sources, plus SVG/PNG when Graphviz is available. Save
 source/config/input identities so unchanged inputs/code reproduce the diagrams.
 The flow view describes recorded call boundaries, not all possible tensor paths.
 CPU budget: one tiny synthetic inference example, repeated to verify determinism;
 no training/evaluation job or report renderer change. Tests must catch missing fork
 edges, repeated-call handling, module replacements and nondeterministic output.
+
+Evidence: three diagram tests first failed on the missing module and were committed
+in the red state. All 31 CPU tests now pass and the existing recipe's `--check`
+passes forward/backward. Two independent `--diagram` executions produced identical
+bytes for all nine JSON/Mermaid/DOT/SVG/PNG artifacts. Both PNGs were visually
+inspected for readable labels, complete arrows and unclipped layout. The data-flow
+view uses a top-to-bottom layout; module containment uses left-to-right expansion.
+The generated source/renderer identities are in `docs/diagrams/diagrams.json`.
+No new training run or report renderer change was required for this slice.
+
+## Original implementation scope
 
 Status: implementation and numerical checks complete; HTML visual QA is blocked
 by the browser URL policy. Authorized 9 September 2026.
@@ -97,7 +108,8 @@ recorded here as implementation progresses.
 - All three runs own checkpoints, source snapshots, raw metrics, multimodal
   outputs, inspection tensors and structurally verified standalone reports.
   Each report's 27 embedded media resources decode successfully. Latest validation
-  values match the ledger. All 24 source snapshots match the current library/recipe.
+  values match the ledger. All 24 source snapshots matched the library/recipe at
+  that verification; the subsequent diagram export is a new source revision.
   Exact checks are saved in `runs/multimodal_v1/verify.py` and `verification.json`.
 - The synthetic final image MSE is 0.217628 versus the copy baseline 0.004724;
   real PushT is 0.220845 versus 0.000126. Synthetic audio MSE is 0.015613 versus

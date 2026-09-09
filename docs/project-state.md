@@ -1,7 +1,10 @@
 # Current work
 
-**In progress:** reproducible architecture and data-flow diagrams from the model
-and a small recorded execution. See the diagram follow-up in the implementation record.
+**Available:** reproducible [architecture](diagrams/architecture.svg) and
+[data-flow](diagrams/data_flow.svg) diagrams. Regenerate with
+`python experiments/multimodal.py --diagram`; use `--diagram-depth 3` for more layers.
+The hierarchy comes from instantiated modules; the flow records real values passed
+between example calls. All nine exports reproduce byte for byte on this runtime.
 
 **Implemented:** one small multimodal world model, built in
 [the editable recipe](../experiments/multimodal.py). Read
@@ -13,7 +16,7 @@ futures, action proposals, candidate planning, self-error diagnostics, intervent
 and a measured update gate with rollback. It has 113,560 parameters by default.
 Every component is directly constructed as an ordinary PyTorch module.
 
-Twenty-eight CPU tests pass, including all 16 retained checks. Short synthetic and
+Thirty-one CPU tests pass, including three diagram checks and all 16 retained checks. Short synthetic and
 real PushT runs complete, pause and resume. Synthetic full/resumed model, teacher,
 replay, optimizer and RNG state match exactly. Reports contain outputs, attention,
 activation magnitude, memory provenance and group-zeroing effects; raw tensors are

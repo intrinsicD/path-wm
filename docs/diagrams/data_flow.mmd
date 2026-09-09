@@ -1,0 +1,47 @@
+flowchart TB
+    n0["image input<br/>Observation [1, 1, 3, 16, 16]"]
+    n1["video input<br/>Observation [1, 2, 3, 16, 16]"]
+    n2["audio input<br/>Observation [1, 1, 32]"]
+    n3["text input<br/>Observation [1, 12]"]
+    n4["initial_state<br/>LatentState [1, 30, 32]"]
+    n5["observe<br/>LatentState [1, 30, 32]"]
+    n6["remember<br/>LatentState [1, 30, 32]"]
+    n7["think<br/>LatentState [1, 30, 32]"]
+    n8["propose_action<br/>[1, 2]"]
+    n9["imagine<br/>LatentState [1, 30, 32]"]
+    n10["imagine<br/>LatentState [1, 30, 32]"]
+    n11["decode<br/>image: [1, 3, 16, 16], audio: [1, 32]"]
+    n12["image output<br/>[1, 3, 16, 16]"]
+    n13["audio output<br/>[1, 32]"]
+    n14["generate_text<br/>[1, 9]"]
+    n15["text output<br/>[1, 9]"]
+    n16["decode_video<br/>[1, 2, 3, 16, 16]"]
+    n17["video output<br/>[1, 2, 3, 16, 16]"]
+    n18["Candidate action sequences<br/>[1, 2, 2, 2]"]
+    n19["Goal image<br/>[1, 3, 16, 16]"]
+    n20["plan_to_image<br/>Plan"]
+    n21["Selected action sequence<br/>[1, 2, 2]"]
+    n0 --> n5
+    n1 --> n5
+    n2 --> n5
+    n3 --> n5
+    n4 --> n5
+    n5 --> n6
+    n6 --> n7
+    n7 --> n8
+    n7 --> n9
+    n8 --> n9
+    n8 --> n10
+    n9 --> n10
+    n9 --> n11
+    n11 --> n12
+    n11 --> n13
+    n9 --> n14
+    n14 --> n15
+    n9 --> n16
+    n10 --> n16
+    n16 --> n17
+    n7 --> n20
+    n18 --> n20
+    n19 --> n20
+    n20 --> n21

@@ -1,0 +1,971 @@
+{
+  "graphs": {
+    "architecture": {
+      "direction": "LR",
+      "edges": [
+        {
+          "kind": "contains",
+          "source": "n0",
+          "target": "n1"
+        },
+        {
+          "kind": "contains",
+          "source": "n1",
+          "target": "n2"
+        },
+        {
+          "kind": "contains",
+          "source": "n1",
+          "target": "n3"
+        },
+        {
+          "kind": "contains",
+          "source": "n1",
+          "target": "n4"
+        },
+        {
+          "kind": "contains",
+          "source": "n1",
+          "target": "n5"
+        },
+        {
+          "kind": "contains",
+          "source": "n0",
+          "target": "n6"
+        },
+        {
+          "kind": "contains",
+          "source": "n6",
+          "target": "n7"
+        },
+        {
+          "kind": "contains",
+          "source": "n6",
+          "target": "n8"
+        },
+        {
+          "kind": "contains",
+          "source": "n6",
+          "target": "n9"
+        },
+        {
+          "kind": "contains",
+          "source": "n0",
+          "target": "n10"
+        },
+        {
+          "kind": "contains",
+          "source": "n10",
+          "target": "n11"
+        },
+        {
+          "kind": "contains",
+          "source": "n10",
+          "target": "n12"
+        },
+        {
+          "kind": "contains",
+          "source": "n10",
+          "target": "n13"
+        },
+        {
+          "kind": "contains",
+          "source": "n0",
+          "target": "n14"
+        },
+        {
+          "kind": "contains",
+          "source": "n14",
+          "target": "n15"
+        },
+        {
+          "kind": "contains",
+          "source": "n14",
+          "target": "n16"
+        },
+        {
+          "kind": "contains",
+          "source": "n14",
+          "target": "n17"
+        },
+        {
+          "kind": "contains",
+          "source": "n14",
+          "target": "n18"
+        },
+        {
+          "kind": "contains",
+          "source": "n14",
+          "target": "n19"
+        },
+        {
+          "kind": "contains",
+          "source": "n0",
+          "target": "n20"
+        },
+        {
+          "kind": "contains",
+          "source": "n20",
+          "target": "n21"
+        },
+        {
+          "kind": "contains",
+          "source": "n20",
+          "target": "n22"
+        },
+        {
+          "kind": "contains",
+          "source": "n0",
+          "target": "n23"
+        },
+        {
+          "kind": "contains",
+          "source": "n0",
+          "target": "n24"
+        },
+        {
+          "kind": "contains",
+          "source": "n24",
+          "target": "n25"
+        },
+        {
+          "kind": "contains",
+          "source": "n0",
+          "target": "n26"
+        },
+        {
+          "kind": "contains",
+          "source": "n26",
+          "target": "n27"
+        }
+      ],
+      "nodes": [
+        {
+          "detail": "113,560 parameters\ninitial [30, 32]",
+          "direct_parameters": {
+            "initial": [
+              30,
+              32
+            ]
+          },
+          "id": "n0",
+          "kind": "module",
+          "label": "MultimodalAgent",
+          "parameters": 113560,
+          "path": "",
+          "source": {
+            "line": 142,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "13,664 parameters",
+          "direct_parameters": {},
+          "id": "n1",
+          "kind": "module",
+          "label": "encoders: ModuleDict",
+          "parameters": 13664,
+          "path": "encoders",
+          "source": {
+            "line": 511,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/container.py"
+          }
+        },
+        {
+          "detail": "1,600 parameters",
+          "direct_parameters": {
+            "modality": [
+              32
+            ]
+          },
+          "id": "n2",
+          "kind": "module",
+          "label": "image: ImageEncoder",
+          "parameters": 1600,
+          "path": "encoders.image",
+          "source": {
+            "line": 109,
+            "path": "pathwm/models/modalities.py"
+          }
+        },
+        {
+          "detail": "1,600 parameters",
+          "direct_parameters": {
+            "modality": [
+              32
+            ]
+          },
+          "id": "n3",
+          "kind": "module",
+          "label": "video: ImageEncoder",
+          "parameters": 1600,
+          "path": "encoders.video",
+          "source": {
+            "line": 109,
+            "path": "pathwm/models/modalities.py"
+          }
+        },
+        {
+          "detail": "2,144 parameters",
+          "direct_parameters": {
+            "modality": [
+              32
+            ]
+          },
+          "id": "n4",
+          "kind": "module",
+          "label": "audio: VectorEncoder",
+          "parameters": 2144,
+          "path": "encoders.audio",
+          "source": {
+            "line": 146,
+            "path": "pathwm/models/modalities.py"
+          }
+        },
+        {
+          "detail": "8,320 parameters",
+          "direct_parameters": {
+            "modality": [
+              32
+            ]
+          },
+          "id": "n5",
+          "kind": "module",
+          "label": "text: TextEncoder",
+          "parameters": 8320,
+          "path": "encoders.text",
+          "source": {
+            "line": 164,
+            "path": "pathwm/models/modalities.py"
+          }
+        },
+        {
+          "detail": "57,619 parameters",
+          "direct_parameters": {},
+          "id": "n6",
+          "kind": "module",
+          "label": "decoders: ModuleDict",
+          "parameters": 57619,
+          "path": "decoders",
+          "source": {
+            "line": 511,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/container.py"
+          }
+        },
+        {
+          "detail": "10,704 parameters",
+          "direct_parameters": {
+            "queries": [
+              16,
+              32
+            ]
+          },
+          "id": "n7",
+          "kind": "module",
+          "label": "image: ImageDecoder",
+          "parameters": 10704,
+          "path": "decoders.image",
+          "source": {
+            "line": 213,
+            "path": "pathwm/models/modalities.py"
+          }
+        },
+        {
+          "detail": "12,864 parameters",
+          "direct_parameters": {
+            "queries": [
+              4,
+              32
+            ]
+          },
+          "id": "n8",
+          "kind": "module",
+          "label": "audio: AudioDecoder",
+          "parameters": 12864,
+          "path": "decoders.audio",
+          "source": {
+            "line": 238,
+            "path": "pathwm/models/modalities.py"
+          }
+        },
+        {
+          "detail": "34,051 parameters",
+          "direct_parameters": {},
+          "id": "n9",
+          "kind": "module",
+          "label": "text: TextDecoder",
+          "parameters": 34051,
+          "path": "decoders.text",
+          "source": {
+            "line": 256,
+            "path": "pathwm/models/modalities.py"
+          }
+        },
+        {
+          "detail": "9,792 parameters",
+          "direct_parameters": {},
+          "id": "n10",
+          "kind": "module",
+          "label": "updater: ObservationUpdate",
+          "parameters": 9792,
+          "path": "updater",
+          "source": {
+            "line": 31,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "128 parameters",
+          "direct_parameters": {
+            "bias": [
+              32
+            ],
+            "weight": [
+              32,
+              3
+            ]
+          },
+          "id": "n11",
+          "kind": "module",
+          "label": "action: Linear",
+          "parameters": 128,
+          "path": "updater.action",
+          "source": {
+            "line": 53,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/linear.py"
+          }
+        },
+        {
+          "detail": "8,608 parameters",
+          "direct_parameters": {},
+          "id": "n12",
+          "kind": "module",
+          "label": "blocks: ModuleList",
+          "parameters": 8608,
+          "path": "updater.blocks",
+          "source": {
+            "line": 341,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/container.py"
+          }
+        },
+        {
+          "detail": "1,056 parameters",
+          "direct_parameters": {
+            "bias": [
+              32
+            ],
+            "weight": [
+              32,
+              32
+            ]
+          },
+          "id": "n13",
+          "kind": "module",
+          "label": "scale: Linear",
+          "parameters": 1056,
+          "path": "updater.scale",
+          "source": {
+            "line": 53,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/linear.py"
+          }
+        },
+        {
+          "detail": "20,512 parameters",
+          "direct_parameters": {},
+          "id": "n14",
+          "kind": "module",
+          "label": "dynamics: LatentDynamics",
+          "parameters": 20512,
+          "path": "dynamics",
+          "source": {
+            "line": 69,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "128 parameters",
+          "direct_parameters": {
+            "bias": [
+              32
+            ],
+            "weight": [
+              32,
+              3
+            ]
+          },
+          "id": "n15",
+          "kind": "module",
+          "label": "action: Linear",
+          "parameters": 128,
+          "path": "dynamics.action",
+          "source": {
+            "line": 53,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/linear.py"
+          }
+        },
+        {
+          "detail": "1,056 parameters",
+          "direct_parameters": {
+            "bias": [
+              32
+            ],
+            "weight": [
+              32,
+              32
+            ]
+          },
+          "id": "n16",
+          "kind": "module",
+          "label": "uncertainty: Linear",
+          "parameters": 1056,
+          "path": "dynamics.uncertainty",
+          "source": {
+            "line": 53,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/linear.py"
+          }
+        },
+        {
+          "detail": "17,216 parameters",
+          "direct_parameters": {},
+          "id": "n17",
+          "kind": "module",
+          "label": "blocks: ModuleList",
+          "parameters": 17216,
+          "path": "dynamics.blocks",
+          "source": {
+            "line": 341,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/container.py"
+          }
+        },
+        {
+          "detail": "1,056 parameters",
+          "direct_parameters": {
+            "bias": [
+              32
+            ],
+            "weight": [
+              32,
+              32
+            ]
+          },
+          "id": "n18",
+          "kind": "module",
+          "label": "delta: Linear",
+          "parameters": 1056,
+          "path": "dynamics.delta",
+          "source": {
+            "line": 53,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/linear.py"
+          }
+        },
+        {
+          "detail": "1,056 parameters",
+          "direct_parameters": {
+            "bias": [
+              32
+            ],
+            "weight": [
+              32,
+              32
+            ]
+          },
+          "id": "n19",
+          "kind": "module",
+          "label": "scale: Linear",
+          "parameters": 1056,
+          "path": "dynamics.scale",
+          "source": {
+            "line": 53,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/linear.py"
+          }
+        },
+        {
+          "detail": "9,792 parameters",
+          "direct_parameters": {},
+          "id": "n20",
+          "kind": "module",
+          "label": "thinker: Thinker",
+          "parameters": 9792,
+          "path": "thinker",
+          "source": {
+            "line": 103,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "8,608 parameters",
+          "direct_parameters": {},
+          "id": "n21",
+          "kind": "module",
+          "label": "read: Attend",
+          "parameters": 8608,
+          "path": "thinker.read",
+          "source": {
+            "line": 64,
+            "path": "pathwm/models/modalities.py"
+          }
+        },
+        {
+          "detail": "1,184 parameters",
+          "direct_parameters": {},
+          "id": "n22",
+          "kind": "module",
+          "label": "feedback: Sequential",
+          "parameters": 1184,
+          "path": "thinker.feedback",
+          "source": {
+            "line": 59,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/container.py"
+          }
+        },
+        {
+          "detail": "0 parameters",
+          "direct_parameters": {},
+          "id": "n23",
+          "kind": "module",
+          "label": "memory: EpisodicMemory",
+          "parameters": 0,
+          "path": "memory",
+          "source": {
+            "line": 78,
+            "path": "pathwm/models/agent_state.py"
+          }
+        },
+        {
+          "detail": "132 parameters",
+          "direct_parameters": {},
+          "id": "n24",
+          "kind": "module",
+          "label": "action_head: ActionHead",
+          "parameters": 132,
+          "path": "action_head",
+          "source": {
+            "line": 118,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "132 parameters",
+          "direct_parameters": {
+            "bias": [
+              4
+            ],
+            "weight": [
+              4,
+              32
+            ]
+          },
+          "id": "n25",
+          "kind": "module",
+          "label": "output: Linear",
+          "parameters": 132,
+          "path": "action_head.output",
+          "source": {
+            "line": 53,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/linear.py"
+          }
+        },
+        {
+          "detail": "1,089 parameters",
+          "direct_parameters": {},
+          "id": "n26",
+          "kind": "module",
+          "label": "monitor: ErrorMonitor",
+          "parameters": 1089,
+          "path": "monitor",
+          "source": {
+            "line": 130,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "1,089 parameters",
+          "direct_parameters": {},
+          "id": "n27",
+          "kind": "module",
+          "label": "output: Sequential",
+          "parameters": 1089,
+          "path": "monitor.output",
+          "source": {
+            "line": 59,
+            "path": ".venv/lib/python3.14/site-packages/torch/nn/modules/container.py"
+          }
+        }
+      ],
+      "relationship": "Arrows mean contains; counts include descendants.",
+      "title": "Model architecture"
+    },
+    "data_flow": {
+      "direction": "TB",
+      "edges": [
+        {
+          "kind": "value",
+          "source": "n0",
+          "target": "n5"
+        },
+        {
+          "kind": "value",
+          "source": "n1",
+          "target": "n5"
+        },
+        {
+          "kind": "value",
+          "source": "n2",
+          "target": "n5"
+        },
+        {
+          "kind": "value",
+          "source": "n3",
+          "target": "n5"
+        },
+        {
+          "kind": "value",
+          "source": "n4",
+          "target": "n5"
+        },
+        {
+          "kind": "value",
+          "source": "n5",
+          "target": "n6"
+        },
+        {
+          "kind": "value",
+          "source": "n6",
+          "target": "n7"
+        },
+        {
+          "kind": "value",
+          "source": "n7",
+          "target": "n8"
+        },
+        {
+          "kind": "value",
+          "source": "n7",
+          "target": "n9"
+        },
+        {
+          "kind": "value",
+          "source": "n8",
+          "target": "n9"
+        },
+        {
+          "kind": "value",
+          "source": "n8",
+          "target": "n10"
+        },
+        {
+          "kind": "value",
+          "source": "n9",
+          "target": "n10"
+        },
+        {
+          "kind": "value",
+          "source": "n9",
+          "target": "n11"
+        },
+        {
+          "kind": "value",
+          "source": "n11",
+          "target": "n12"
+        },
+        {
+          "kind": "value",
+          "source": "n11",
+          "target": "n13"
+        },
+        {
+          "kind": "value",
+          "source": "n9",
+          "target": "n14"
+        },
+        {
+          "kind": "value",
+          "source": "n14",
+          "target": "n15"
+        },
+        {
+          "kind": "value",
+          "source": "n9",
+          "target": "n16"
+        },
+        {
+          "kind": "value",
+          "source": "n10",
+          "target": "n16"
+        },
+        {
+          "kind": "value",
+          "source": "n16",
+          "target": "n17"
+        },
+        {
+          "kind": "value",
+          "source": "n7",
+          "target": "n20"
+        },
+        {
+          "kind": "value",
+          "source": "n18",
+          "target": "n20"
+        },
+        {
+          "kind": "value",
+          "source": "n19",
+          "target": "n20"
+        },
+        {
+          "kind": "value",
+          "source": "n20",
+          "target": "n21"
+        }
+      ],
+      "nodes": [
+        {
+          "detail": "Observation [1, 1, 3, 16, 16]",
+          "id": "n0",
+          "kind": "input",
+          "label": "image input",
+          "source": null
+        },
+        {
+          "detail": "Observation [1, 2, 3, 16, 16]",
+          "id": "n1",
+          "kind": "input",
+          "label": "video input",
+          "source": null
+        },
+        {
+          "detail": "Observation [1, 1, 32]",
+          "id": "n2",
+          "kind": "input",
+          "label": "audio input",
+          "source": null
+        },
+        {
+          "detail": "Observation [1, 12]",
+          "id": "n3",
+          "kind": "input",
+          "label": "text input",
+          "source": null
+        },
+        {
+          "detail": "LatentState [1, 30, 32]",
+          "id": "n4",
+          "kind": "call",
+          "label": "initial_state",
+          "source": {
+            "line": 183,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "LatentState [1, 30, 32]",
+          "id": "n5",
+          "kind": "call",
+          "label": "observe",
+          "source": {
+            "line": 227,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "LatentState [1, 30, 32]",
+          "id": "n6",
+          "kind": "call",
+          "label": "remember",
+          "source": {
+            "line": 281,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "LatentState [1, 30, 32]",
+          "id": "n7",
+          "kind": "call",
+          "label": "think",
+          "source": {
+            "line": 285,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "[1, 2]",
+          "id": "n8",
+          "kind": "call",
+          "label": "propose_action",
+          "source": {
+            "line": 385,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "LatentState [1, 30, 32]",
+          "id": "n9",
+          "kind": "call",
+          "label": "imagine",
+          "source": {
+            "line": 332,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "LatentState [1, 30, 32]",
+          "id": "n10",
+          "kind": "call",
+          "label": "imagine",
+          "source": {
+            "line": 332,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "image: [1, 3, 16, 16], audio: [1, 32]",
+          "id": "n11",
+          "kind": "call",
+          "label": "decode",
+          "source": {
+            "line": 355,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "[1, 3, 16, 16]",
+          "id": "n12",
+          "kind": "output",
+          "label": "image output",
+          "source": null
+        },
+        {
+          "detail": "[1, 32]",
+          "id": "n13",
+          "kind": "output",
+          "label": "audio output",
+          "source": null
+        },
+        {
+          "detail": "[1, 9]",
+          "id": "n14",
+          "kind": "call",
+          "label": "generate_text",
+          "source": {
+            "line": 381,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "[1, 9]",
+          "id": "n15",
+          "kind": "output",
+          "label": "text output",
+          "source": null
+        },
+        {
+          "detail": "[1, 2, 3, 16, 16]",
+          "id": "n16",
+          "kind": "call",
+          "label": "decode_video",
+          "source": {
+            "line": 371,
+            "path": "pathwm/models/agent.py"
+          }
+        },
+        {
+          "detail": "[1, 2, 3, 16, 16]",
+          "id": "n17",
+          "kind": "output",
+          "label": "video output",
+          "source": null
+        },
+        {
+          "detail": "[1, 2, 2, 2]",
+          "id": "n18",
+          "kind": "input",
+          "label": "Candidate action sequences",
+          "source": null
+        },
+        {
+          "detail": "[1, 3, 16, 16]",
+          "id": "n19",
+          "kind": "input",
+          "label": "Goal image",
+          "source": null
+        },
+        {
+          "detail": "Plan",
+          "id": "n20",
+          "kind": "call",
+          "label": "plan_to_image",
+          "source": {
+            "line": 769,
+            "path": "experiments/multimodal.py"
+          }
+        },
+        {
+          "detail": "[1, 2, 2]",
+          "id": "n21",
+          "kind": "output",
+          "label": "Selected action sequence",
+          "source": null
+        }
+      ],
+      "relationship": "Arrows mean values passed between recorded calls; call internals are omitted.",
+      "title": "Example data flow"
+    }
+  },
+  "graphviz": "dot - graphviz version 2.43.0 (0)",
+  "provenance": {
+    "calls": "one observation, memory write, one thought, two imagined steps and one bounded planning call",
+    "data": {
+      "audio_samples": 32,
+      "content_sha256": "214c8f2106a384c5f5e8e5160bed436252f21a58cebb45507116a0644bff1e3e",
+      "count": 1,
+      "history": 2,
+      "horizon": 2,
+      "image_size": 16,
+      "kind": "synthetic-controlled-ball-v1",
+      "sample_rate": 8000,
+      "seed": 101,
+      "split": "train",
+      "time_unit": "one generated transition"
+    },
+    "depth": 2,
+    "device": "cpu",
+    "initialization": "fresh model; no trained-capability claim",
+    "model": {
+      "audio_samples": 32,
+      "image_size": 16,
+      "width": 32
+    },
+    "seed": 42,
+    "sources": {
+      "experiments/multimodal.py": "ac86fe70b08507bde440704e9386900432561619c28de527c88eeec2a02010e1",
+      "pathwm/__init__.py": "dbe18dfe9dc29621a41aa22f9814ce4fb4a36bf5cfd0c3ed0b2659377ae45d41",
+      "pathwm/data/__init__.py": "6b1432570ee3dbd1b949c59cfcef843ba86c99bb915d95e677b55dff469a93ff",
+      "pathwm/data/images.py": "672f1531205326efd474a7e162f07ade26025e41ec5227adbee324ac21341b10",
+      "pathwm/data/sequences.py": "1ac313bb026be4ac6894cad2565f1a3272a4c6b2df33285c0799e1b3eb0f5fd5",
+      "pathwm/evaluation/__init__.py": "7173fadfcca4203232471319e879a5fa5aea400fafce7371656d2f408a1db245",
+      "pathwm/evaluation/agent.py": "89d748ae6dbed3079119d095f3ce3d259bf90dc3b457285e888ab512b6ecfd9b",
+      "pathwm/evaluation/diagrams.py": "d8d286b2076d1e23072792921e92e56fb335d89446e0f6dc10677c967b020a55",
+      "pathwm/evaluation/planning.py": "4e327047925057618974a49190f46f354ec068a5830841c4ed2d104a4c8ca1b6",
+      "pathwm/evaluation/report.py": "881675c88c411d91af8ef0ac489ae15031705e067bbb12fd2e165438139f8fe3",
+      "pathwm/io.py": "57f6a6679e0d7b4d772a1c5609e2a69a50c4f6f04c4da1c965e53e2913061441",
+      "pathwm/models/__init__.py": "cc85654c53502b8015698e9c3f8bce8efb72d4a926358a01f3e23c0147e2eba3",
+      "pathwm/models/agent.py": "3450bccdcb23221f3ec96c584b39f4238e1ef91a83c519a9a28f7f86571c2653",
+      "pathwm/models/agent_state.py": "68b0b81424381f8bfdcef724b5653bb3e1c08961502465e7c9c548911ea61c34",
+      "pathwm/models/blocks.py": "e450522830834233f06566f5d445aeb122275c6695d24fb81642f15b9e6b3ff4",
+      "pathwm/models/decoders.py": "f9a53c22baa538de344c044eb2c8eff9866f584601aaafcf441023ba4f2d2f15",
+      "pathwm/models/encoders.py": "c9e16fd16c1605e021e3781cfe439cf9b4f891a721eb5f6114ad42bc4f0530fc",
+      "pathwm/models/features.py": "a5058921937ac677df21e014bd6b481fd3b0c4b2f49bbe6ba65754e53706a656",
+      "pathwm/models/modalities.py": "7cb8b0107317b556635f8c047e8227884f43fd45991389f803803573092479d8",
+      "pathwm/models/perception.py": "215bd392ab74b495b1fc33dc8204094f40498e3ab4d4cba24c1fadeaea00b29e",
+      "pathwm/models/temporal.py": "df2e39ae0c4e93b7c3a81964e1ec3f3fc1aa9e071f4a93b02d7b47a9c07d40b5",
+      "pathwm/training/__init__.py": "561545f34720f7edd1c48f93b2dcd4530940744ba86b40bdd1fdef5ed1e31235",
+      "pathwm/training/dynamics.py": "4182fce86ab6b25cd47493ed4742e8dc6ac5a5572f4d775dafa34bb5b8596d04",
+      "pathwm/training/improvement.py": "728fdcc2138e2ee417b5f95b1b15c30c059f2c1f2bf5c2e5e2ac25b9bcc62342",
+      "pathwm/training/perception.py": "506c262ab0d9b03e37dd24a4e89b64882f4abf138d85c0b439a729b9c1805eb2"
+    },
+    "torch_version": "2.14.0+cu130"
+  },
+  "rendered": true,
+  "schema": "pathwm-diagrams-v1"
+}

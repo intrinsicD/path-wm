@@ -177,3 +177,44 @@ Input cross-attention scales with input length times latent count; latent attent
 grows quadratically with token count. Current memory is bounded and planning serial.
 Larger codecs, hierarchical state, indexed memory and batched planning can replace
 these parts after a useful small design has been demonstrated.
+
+## Diagrams
+
+```bash
+python experiments/multimodal.py --diagram
+# Optional destination and deeper module expansion:
+python experiments/multimodal.py --diagram /tmp/pathwm-diagrams --diagram-depth 3
+```
+
+The [architecture diagram](diagrams/architecture.svg) comes from the instantiated
+model's module hierarchy. Dashed arrows mean **contains**. Each node shows its
+class and recursive parameter count, so parent/child counts overlap. Depth 2 shows
+modality adapters and the main components' immediate children; larger depths expose
+attention and linear layers. Video output uses the image decoder across states.
+
+![Architecture](diagrams/architecture.png)
+
+The [data-flow diagram](diagrams/data_flow.svg) comes from one real CPU execution:
+timed image/video/audio/text observations update the state, memory is written,
+thinking refines the state, actions condition imagined futures, and decoders produce
+outputs. Planning also receives the current state, candidate actions and a goal.
+Solid arrows mean **values passed between the recorded calls**. Labels include
+actual tensor shapes; `LatentState [1,30,32]` means batch 1, 30 tokens, width 32.
+
+![Example data flow](diagrams/data_flow.png)
+
+This is a coarse call graph for the example in `export_diagrams`, not a tensor-level
+trace of every possible path. Call internals, closures, training/learning-update
+paths and optional branches are omitted. To inspect another sequence, edit those
+ordinary Python calls and regenerate. Components are discovered from `build_model`;
+flow edges are recorded from input/output object provenance, not drawn by hand.
+Any transformation outside recorded calls must itself be recorded or registered
+as a new input to appear in the graph. In-place mutation is not version-tracked.
+The recorder retains references until released and is intended for small examples.
+
+Each export writes `.mmd` (Mermaid), `.dot` (Graphviz) and `diagrams.json` with
+source hashes, source locations, model sizes, input identity, seed and runtime
+version. With Graphviz's `dot` installed, it also writes `.svg` and `.png` and records
+the renderer version. Rendering needs the same Graphviz/fonts for identical bytes.
+Without Graphviz, the source diagrams still work. The output directory is regenerated
+in place. These are fresh development weights; exporting does not train a model.

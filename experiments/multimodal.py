@@ -759,9 +759,92 @@ def train(settings, output, *, resume=False, stop_after=None):
     return run.path
 
 
+def export_diagrams(
+    output, *, depth=2, width=32, image_size=16, audio_samples=32, seed=42
+):
+    """Draw current modules and an executed example; no training or downloads."""
+    from pathwm.evaluation.diagrams import CallFlow, architecture, write_diagrams
+    from pathwm.io import source_record
+
+    def plan_to_image(model, state, candidates, goal):
+        return plan(
+            model,
+            state,
+            candidates,
+            lambda future: (model.decode(future, modalities=["image"])["image"] - goal)
+            .square()
+            .mean((1, 2, 3)),
+            lower=-1.0,
+            upper=1.0,
+        )
+
+    seed_everything(seed)
+    model = build_model(width, image_size, audio_samples).eval()
+    data = SyntheticEpisodes(
+        count=1,
+        history=2,
+        horizon=2,
+        image_size=image_size,
+        audio_samples=audio_samples,
+    )
+    batch = data.batch([0])
+    flow = CallFlow()
+    with torch.no_grad(), evaluation_mode(model):
+        inputs = {
+            name: flow.input(name + " input", observation)
+            for name, observation in observations(batch, 1).items()
+        }
+        initial = flow.call(model.initial_state, 1)
+        observed = flow.call(model.observe, initial, inputs, time=1.0)
+        remembered = flow.call(
+            model.remember, observed, source="synthetic/train/episode-0/frame-1"
+        )
+        thought = flow.call(model.think, remembered, steps=1)
+        action = flow.call(model.propose_action, thought)
+        future = flow.call(model.imagine, thought, action, dt=1.0)
+        later = flow.call(model.imagine, future, action, dt=1.0)
+        outputs = flow.call(model.decode, future, modalities=["image", "audio"])
+        for name, value in outputs.items():
+            flow.output(name + " output", value)
+        flow.output("text output", flow.call(model.generate_text, future, max_tokens=8))
+        flow.output("video output", flow.call(model.decode_video, [future, later]))
+        candidates = flow.input("Candidate action sequences", torch.zeros(1, 2, 2, 2))
+        goal = flow.input("Goal image", batch["images"][:, -1])
+        decision = flow.call(plan_to_image, model, thought, candidates, goal)
+        flow.output("Selected action sequence", decision.actions)
+    root = Path(__file__).resolve().parents[1]
+    provenance = dict(
+        seed=seed,
+        torch_version=torch.__version__,
+        device="cpu",
+        depth=depth,
+        model=dict(width=width, image_size=image_size, audio_samples=audio_samples),
+        data=data.identity,
+        initialization="fresh model; no trained-capability claim",
+        calls="one observation, memory write, one thought, two imagined steps and one bounded planning call",
+        sources={
+            str(Path(p).relative_to(root)): sha
+            for p, sha in source_record(__file__, model)["files"].items()
+        },
+    )
+    return write_diagrams(
+        output,
+        {"architecture": architecture(model, depth), "data_flow": flow.graph()},
+        provenance,
+    )
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true")
+    parser.add_argument(
+        "--diagram",
+        type=Path,
+        nargs="?",
+        const=Path("docs/diagrams"),
+        help="Export architecture/data-flow diagrams to this directory (CPU, no training)",
+    )
+    parser.add_argument("--diagram-depth", type=int, default=2)
     parser.add_argument("--output", default="runs/multimodal_first")
     parser.add_argument("--resume", type=Path)
     parser.add_argument("--stop-after", type=int)
@@ -787,7 +870,20 @@ def main():
     parser.add_argument("--learning-rate", type=float, default=3e-4)
     parser.add_argument("--ema-decay", type=float, default=0.99)
     parser.add_argument("--device", default="cpu")
-    args = resume_arguments(parser, parser.parse_args())
+    args = parser.parse_args()
+    if args.diagram is not None and (
+        args.check
+        or args.resume
+        or args.stop_after is not None
+        or args.device != "cpu"
+        or args.dataset != "synthetic"
+    ):
+        parser.error(
+            "--diagram uses a fresh synthetic CPU example; run it separately from training/check/resume"
+        )
+    if args.diagram_depth < 0:
+        parser.error("Diagram depth must be nonnegative")
+    args = resume_arguments(parser, args)
     counts = [
         args.steps,
         args.batch_size,
@@ -817,10 +913,23 @@ def main():
         parser.error("Learning rate must be positive and EMA decay in [0,1)")
     if args.stop_after is not None and args.stop_after < 1:
         parser.error("Stop-after must be positive")
+    if args.diagram is not None:
+        print(
+            export_diagrams(
+                args.diagram,
+                depth=args.diagram_depth,
+                width=args.width,
+                image_size=args.image_size,
+                audio_samples=args.audio_samples,
+                seed=args.seed,
+            )
+        )
+        return
     settings = {
         k: v
         for k, v in vars(args).items()
-        if k not in ("check", "output", "resume", "stop_after")
+        if k
+        not in ("check", "output", "resume", "stop_after", "diagram", "diagram_depth")
     }
     settings.update(
         purpose="development",
