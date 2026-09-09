@@ -17,8 +17,8 @@ is historical recall with explicit abstention and independent verification.
 | Priority | Decision | Why it matters now | Review status |
 | --- | --- | --- | --- |
 | 1 | Long-horizon learning and useful compression | A bounded forward memory is insufficient if distant write operations receive no useful learning signal | Reviewed and reconciled; proposal ready |
-| 2 | What to mark and how to spend fixed memory | Retention should serve future tasks without seeing future queries at write time | Pending |
-| 3 | Instructions, exact objectives and verification | The current controlled query adapter does not interpret arbitrary user requests | Pending |
+| 2 | What to mark and how to spend fixed memory | Retention should serve future tasks without seeing future queries at write time | Reviewed and reconciled; proposal ready |
+| 3 | Instructions, exact objectives and verification | The current controlled query adapter does not interpret arbitrary user requests | Reviewed and reconciled; proposal ready |
 | 4 | Hypothetical observation updates and sensing | Planning an inspection needs observation-conditioned continuations without contaminating live history | Pending |
 | 5 | Model uncertainty and calibration | Latent variability is not an estimate of model error; selected actions may exploit prediction mistakes | Pending |
 | 6 | Planning and thinking budgets | Search and retrieval costs need concrete caps and honest stopping signals | Pending |
@@ -158,9 +158,203 @@ distillation-first learning remains an empirical tradeoff; the recommendation he
 prioritizes grounded labels and retains a fixed-compression reference. Agreement
 does not establish effectiveness or authorize an experiment.
 
+## 2. Score a concrete protection decision within the existing capacity
+
+Keep the current store capacities and one shared protected pool. Preserve complete
+event envelopes initially; their source encoding is already lossy. A user saying
+“remember the location” supplies a retention preference, not proof that the model
+encoded that location correctly. Protecting an envelope preserves its stored values;
+it does not guarantee raw-frame reconstruction or accurate factual recall.
+
+User priority stays exact. A user request can displace an agent mark; if every
+protected slot contains a user mark, report that the new mark was not admitted.
+Do not silently evict a user mark, grow the store, or reintroduce selective memory
+reset controls. Initially mark the latest committed observation, matching the current
+interface. Addressing older still-retained events is a later extension; reconstruction
+from a compressed trace cannot recreate the original detailed envelope exactly.
+
+For agent marks, replace a permanent event-importance ranking with a proposed
+**admission-action score**. For one new candidate, enumerate the permitted actions:
+keep the current bank; insert if there is space; or replace each eligible agent
+record. Score each change relative to keeping the same current bank. Inputs are the
+current causal state/task, candidate, proposed displaced record and bounded bank
+context. Select the largest estimated positive gain; ties keep the bank unchanged.
+User records are never eligible eviction candidates for an agent proposal.
+
+This makes the scores comparable at that decision and accounts for the named
+replacement. It does not optimize every possible set of memories or guarantee that
+the score is accurate. Complementary clues can have low individual value but high
+joint value. Novelty may generate candidates; it is not the definition of usefulness.
+Use exact record identity for duplicate handling. An approximate latent-similarity
+gate can merge distinct updates and is unnecessary in the first version.
+
+The current implementation has a scalar event scorer and a batched mean in its
+admission path. The proposal requires independent admission per session and explicit
+replacement context; it is not a description of that code already working. Recompute
+action scores at admission from current context. Do not compare a fresh candidate
+to an old scalar from a different task or model version. Scores may change as the
+task changes; source timestamps and observed facts do not become fresh evidence.
+Keep weights fixed within a live session initially.
+
+For offline supervision, replay from the proposed admission point under matched
+weights, visible observations and random draws. Compare keeping the original bank
+with the capacity-respecting insertion/replacement. Both branches retain ordinary
+history, compression and belief updates. Initially suppress further mark admissions
+in both continuations, then ask the same late query. The label is the difference in
+factual NLL, detached before training the score predictor. This is the controlled
+effect of **one admission**, not the value of an entire adaptive marking policy.
+The future question is reader input only when it arrives and is never earlier
+scorer/writer input. The harness may evaluate rejected as well as admitted candidates;
+online exploration is not inherently needed for this passive replay fixture.
+The first score-regression loss updates only the score predictor over detached causal
+features; the paired replay labels and discrete admission do not backpropagate into
+the world model. Grounded state/read learning remains separate. A pool full of user
+marks has no eligible agent action and supplies no positive/negative discrimination
+label. Record this as capacity-blocked, not as measured zero usefulness.
+
+A zero gain when ordinary memory or recurrence already answers correctly is a valid
+result: extra protection supplied no improvement under that comparison. It does not
+mean the original observation was unimportant. Nor can a small score reveal which
+latent path retained the fact. Use declared source-position groups and separate
+read interventions as diagnostics, with their limited interpretation.
+
+NLL provides a dense initial training target, while actual answer cost remains a
+separate evaluation. For example, increasing the true-class probability from 0.30
+to 0.70 improves NLL substantially but still abstains at the 0.75 threshold. Moving
+from 0.74 to 0.76 gives a smaller NLL gain but changes a correct decision from
+abstention to an answer. The arithmetic is retained in
+`overnight-marking-arithmetic.json`; it is not a learned-agent experiment. Avoid
+adding an unexplained byte penalty to NLL. Equal-sized slots already impose an
+opportunity cost through the replacement; variable-sized records would require an
+explicit budget and unit convention later.
+
+Compare to fixed recency/novelty and random protection policies with the same user
+priority and capacity. Report actual occupancy and compute as well as old-fact
+recall, task loss and wrongful answers. Keep user-marked, agent-marked and unmarked
+conditions separate. A user mark conveys information about retention preferences;
+it is not an oracle usefulness or factual-truth label. If the underlying reader
+cannot use detail in either replay, utility targets may be uninformative; the
+grounded-memory work in decision 1 is a dependency.
+
+**Decision for Alex:** retain the existing user-priority capacity policy and propose
+learning insertion/replacement value for agent marks, beginning with a controlled
+single-admission replay task. The simpler alternative is fixed recency/novelty
+protection while learning the reader. Broader adaptive-policy credit and selective
+detail encoding remain separate later comparisons.
+
+Reviews: `overnight-marking` and `overnight-marking-reconcile`. Claude accepted the
+replacement-context critique and withdrew treating redundant protection's zero gap
+as an underestimated value, latent scores as causal explanation, mandatory live
+exploration, exact detail certification, semantic near-duplicate merging, new
+subquotas and release/reset controls. It retained the substantive limits: complementary
+sets, rare candidate/evictee combinations, changing bank distributions and a proxy
+loss can defeat a one-admission learner. FIFO avoids a learned ranking but its
+downstream quality is still affected by the encoder and reader; no universal
+drift-invariance or superiority claim is adopted.
+
+## 3. Resolve natural instructions into a small exact objective
+
+The existing instruction path proposes operations/output formats; the historical
+query adapter supplies an exact controlled objective. Neither demonstrates general
+language-to-goal understanding. Propose a supervised interpreter for one small task
+family first: natural paraphrases of last-observed questions, including references,
+scope, temporal distinctions, ambiguity and unsupported requests. It can share
+learned task/text components; no external runtime LLM or universal parser framework
+is required by this design.
+
+Keep the original request and a small proposed record:
+
+| Field | How it is resolved |
+| --- | --- |
+| Request/channel, task ID and revision | Caller-owned identity and history |
+| Objective kind, entity/payload, source and temporal scope | Learned interpretation constrained to supported schemas |
+| Required outputs | User controls and declared application defaults; model proposals remain attributed |
+| Capability, cost, budget and verifier-policy references | Resolve against trusted runtime definitions; the model cannot create authority or executable verifier code |
+| Applied defaults and bounded supporting source references | Audit what was assumed; proposed references do not prove a faithful interpretation |
+| Disposition: proceed, clarify or unsupported | Policy combines exact missing-field checks with an evaluated learned interpretation/ambiguity signal |
+
+The record is exact once resolved, but may still encode a mistaken interpretation.
+Schema validity is not intent accuracy. Retain learned task tokens for retrieval
+and reasoning alongside the exact record used for execution and checking. Clear
+supported requests use declared defaults automatically. Ask a focused question
+when unresolved interpretations materially change the requested action or outcome;
+do not add routine confirmation of every valid parse. Report unnecessary questions
+and confidently wrong interpretations separately.
+
+“Where did we last see the key?” is historical recall. “Where is the key now?”
+requires a different current-world objective and possibly sensing; until that
+consumer exists, do not silently answer the historical question instead. For a
+document edit, “replace this heading in the current draft” can bind to an exact
+document/version and check the actual changed heading. “Make this match the policy”
+may require resolving which document and which kind of change. A checker for the
+heading does not certify the truth or completeness of the whole document.
+
+An explicit user request to follow a referenced procedure can supply task content
+from that procedure within the user's existing authority. The referenced document
+does not become a new user-authority channel. Instructions encountered incidentally
+in an observation cannot silently create a new task or widen capabilities.
+
+Each revision invalidates pending decisions while preserving executed effects and
+spent costs. Replan against the revised goal. Any compensation is another action
+with its own capability checks and costs; do not pretend already executed effects
+were rolled back because a task record changed.
+
+Keep delivery, predicted outcome and verified outcome separate. A verification
+record names the actual candidate/output, task revision, checker/version, checked
+scope and supporting evidence. Its truth status is verified, contradicted or unknown.
+Unknown carries a reason such as inconclusive, skipped by policy, missing evidence
+or exhausted budget. Known action/check costs remain recorded; the task contract
+must specify how unverifiable outcomes affect termination and evaluation. Neither
+automatic zero penalty nor automatic failure is universal. A physical placement
+outside subsequent sensor coverage may be executed yet unverified.
+
+Specify checks before inspecting the outcome. Runtime validation enforces deterministic
+bounds and capability availability, while learned predictions remain estimates.
+Small typed outcome consumers are the initial preference; sharing their backbone
+or learning a common task-conditioned head is an empirical choice. A universal
+success logit does not replace a checker. Fallible model critiques may supply
+explicitly tagged auxiliary training feedback, but independent evaluation needs
+authoritative references or declared human judgments.
+Tag and version auxiliary judge labels so future data use can be audited or filtered.
+That does not undo parameter updates from past training; correction may require
+retraining or restoring an appropriate checkpoint.
+
+Train interpretation from approved contracts and ambiguity/unsupported examples.
+Split dialogue/paraphrase structures and fresh entity bindings; add separate
+unseen-name and unsupported-objective challenges where applicable. Do not require
+disjoint vocabularies in every fixed-head task or call difficult supported
+compositions unsupported by definition. Measure field/intent agreement, disposition,
+actual task loss and verification coverage, with an exact-contract control to
+separate parser errors from world-state/decision errors.
+
+Explicit learned interpretation and revision have precedent in
+[Task-Oriented Dialogue as Dataflow Synthesis](https://aclanthology.org/2020.tacl-1.36/).
+Testing new compositions separately is motivated by
+[Measuring Compositional Generalization](https://arxiv.org/abs/1912.09713).
+These support mechanisms and evaluation distinctions; they do not establish this
+agent's language competence or validate the proposed authority/verification contract.
+
+**Decision for Alex:** add a narrow supervised natural-language objective interpreter
+and the minimal exact contract before expanding into general actions. Preserve
+autonomous defaults, focused clarification and scoped independent verification.
+The simpler alternative is to keep exact programmatic queries while improving
+world-state and memory learning first. This choice changes interface breadth,
+not the learned semantics of world-state tokens.
+
+Reviews: `overnight-objectives` and `overnight-objectives-reconcile`. Claude withdrew
+universal cost-free unknown status, a blanket rejection of explicitly delegated
+procedure content, inevitability claims about shared heads, a ban on all weak model
+labels, and compulsory unseen-entity splits. It accepted preserving executed effects
+through revisions, one unknown status with reasons, and focused clarification without
+routine confirmation. Remaining application choices concern the cost of checks and
+the treatment of unverifiable outcomes; they must not hide unknown cases by reporting
+only successful verification. The first controlled tasks can keep complete evaluator
+truth while the online agent remains uncertain.
+
 ## Continuation for the overnight work
 
-Next: review marking and fixed-budget allocation, then the remaining rows in order.
+Next: review hypothetical observation correction/sensing, model uncertainty and
+bounded thinking/planning; then transfer/evaluation and the cross-topic dependencies.
 Avoid reopening the settled causal/gradient distinctions unless new evidence changes
 them. For each group prepare an independent note and public conceptual brief before
 reading Claude, verify consequential claims, reconcile errors, and append a concrete
