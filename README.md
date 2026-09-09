@@ -21,6 +21,11 @@ CNN, an RGB decoder and a pose head. It checks ideas; it is not a trained contro
 On another checkout, create a Python 3.11+ virtual environment first and provide
 prepared data as described in [the experiment guide](docs/experiments.md).
 
+Already available in this checkout: [perception report](runs/start_here/perception/report.html),
+[dynamics report](runs/start_here/dynamics/report.html), and
+[ViT + COCO report](runs/start_here/coco_vit/report.html). These are tiny verified
+development examples, not finished model training.
+
 ## Change something
 
 ```bash

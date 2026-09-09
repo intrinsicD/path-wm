@@ -19,7 +19,7 @@ the new package must never import it. This is a refactor, not a model-quality cl
 - Scientific integrity: source identities, freeze/gradient checks, raw metrics,
   full-state resume, verified local reports, scoped conclusions and Claude criticism.
 
-## Remove from the active tree after verification
+## Removed from the active tree after verification
 
 Historical experiment coordinators, duplicate trainers, fixed-date deadlines,
 old configs/protocols, task-specific CLIs, aggregate/plugin report machinery,
@@ -73,7 +73,16 @@ experiment-specific source/script stack.
   expose CUDA. This was an execution-environment issue, not a training result.
 - Installed-package import works from outside the repository; the old world_model
   package is unavailable. A wheel contains only pathwm and distribution metadata.
-  A final clean-Git snapshot check follows the retirement commit.
+  A clean Git snapshot of retirement commit `e083ae7`, without historical source,
+  passes all 16 tests and both real-data recipe checks. Data/assets are supplied
+  explicitly from the preserved local copies; they are not part of Git.
+- Final development examples are in `runs/start_here/perception` (12 CPU updates),
+  `runs/start_here/dynamics` (6 CPU updates, initialized from the perception run),
+  and `runs/start_here/coco_vit` (2 GPU updates). Each paused and resumed with its
+  original budget. Their saved source bytes match the active code. Desktop and
+  mobile browser checks found no page overflow, broken images, script errors or
+  external requests; report metric rows match the raw ledger. Screenshots were
+  visually inspected. Receipts identify each exact checked HTML hash.
 
 Raw migration receipts, reference comparison programs, three actual public-only
 Claude reviews and browser QA program are preserved under
@@ -81,6 +90,12 @@ Claude reviews and browser QA program are preserved under
 correction and withdrew claims that area-weighted metrics or cross-device resume
 were mandatory. Per-image metrics and strict same-runtime resume are explicit
 contracts; source/package inventories are not a complete environment recreation.
+
+Migration is complete. New entry points are [README](../README.md),
+[perception](../experiments/perception.py) and [dynamics](../experiments/dynamics.py).
+The adapted standing workflow and Claude review rules are active. Historical
+research references remain in `ara/` for agents; they are not a second active
+implementation or a queue of authorized experiments.
 
 These are scoped engineering checks. No new architecture superiority, recovered
 controller quality or completed long training curriculum is claimed. Existing
