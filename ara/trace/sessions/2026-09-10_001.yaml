@@ -2,11 +2,13 @@ session:
   id: 2026-09-10_001
   date: '2026-09-10'
   started: 2026-09-10T00:05+02:00
-  last_turn: 2026-09-10T00:05+02:00
-  turn_count: 1
+  last_turn: 2026-09-10T01:01+02:00
+  turn_count: 2
   summary: Two isolated Claude reviews produced a proposed goal/action/outcome-verification interface,
     historical recall with factual not-observed versus abstention, and bounded observation-conditioned
-    sensing. Local/source and arithmetic checks only; no model changes or training. Defaults remain proposals.
+    sensing. Turn2 works out reference costs, complete text-recall episodes, separate calibration and
+    subgroup metrics with two further Claude reviews. Local/source and arithmetic checks only; no model
+    changes or training. Defaults remain research recommendations.
 events_logged:
 - turn: 1
   type: decision
@@ -26,6 +28,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Stage bounded contingent sensing, time/provenance constraints and diagnostic sequence.
+- turn: 2
+  type: decision
+  id: N151
+  routing: direct
+  provenance: user
+  summary: User requests further Claude work on the cost/abstention and concrete first-task recommendation.
+- turn: 2
+  type: observation
+  id: O104
+  routing: staged
+  provenance: ai-suggested
+  summary: Stage reference loss, complete historical text task, all-query supervision and held-out calibration.
+- turn: 2
+  type: observation
+  id: O105
+  routing: staged
+  provenance: ai-suggested
+  summary: Stage subgroup utility/calibration constraints and corrected selective-prediction reasoning.
 ai_actions:
 - turn: 1
   action: Inspected local planner/task/categorical interfaces; wrote independent notes, completed two actual
@@ -34,14 +54,25 @@ ai_actions:
     No private repository information exported and no new model experiment or test-suite run.
   provenance: ai-executed
   files_changed: [docs/decision-design.md, docs/project-state.md, docs/tasks.md]
+- turn: 2
+  action: Completed two abstract Claude cost/task reviews after independent notes; verified temperature
+    ranking and loss arithmetic, checked primary calibration/selective-classification papers and local
+    full-session replay needs; wrote the concrete task recommendation and updated current design pointers.
+    No private information exported, model changes, training or runtime test-suite execution.
+  provenance: ai-executed
+  files_changed: [docs/recall-task-design.md, docs/decision-design.md, docs/project-state.md]
 claims_touched: []
 key_context:
 - turn: 1
   excerpt: 'User: Ok work this out with Claude. The request follows the agenda to define goal, available
     actions, observable success and when to gather information. It authorizes design collaboration,
     not unseen numerical preferences or a new training run.'
+- turn: 2
+  excerpt: 'User: ok, please work that out with claude. Continue the proposed wrong-answer/abstention
+    discussion into a concrete research task. No instruction to implement or start experiments.'
 open_threads:
-- Settle O102 error/abstention preferences and historical task contract before an implementation budget.
+- O104 supplies concrete reference preferences/task; next declare the implementation budget and later a
+  scientific effect-size/seed/split/paired-control protocol. Application-specific loss remains caller-owned.
 - General external tasks need declared handling of verification failures caused by the agent itself.
 - O103 requires a future isolated hypothetical-correction interface and validated sensing probabilities.
 - O101 long-horizon retention, calibrated outcomes and useful closed-loop behavior remain unproven.
@@ -49,3 +80,5 @@ open_threads:
 ai_suggestions_pending:
 - 'O102: historical recall first; wrong loss 1, abstention 0.25 and two retrieval rounds are proposed defaults.'
 - 'O103: finite sensing diagnostic then static-current-location inspect/answer, separately from historical recall.'
+- 'O104/O105: five factual classes,0/1/0.25loss, two reads, complete-session text replay and independent calibration;
+  old-seen utility and hierarchy attribution require their own controlled evidence.'

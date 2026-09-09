@@ -2434,3 +2434,20 @@ tree:
   - N148
   - N149
   status: resolved
+- id: N151
+  type: decision
+  title: Work out selective-recall costs and the first task protocol with Claude
+  provenance: user
+  timestamp: 2026-09-10T01:01+02:00
+  choice: User requests further Claude collaboration after the proposed wrong-answer/abstention defaults.
+    Complete the cost, confidence and historical-task recommendation with two abstract reviews; no new
+    implementation or training requested.
+  alternatives:
+  - Leave the cost rule and first-task protocol unspecified
+  evidence:
+  - 'Current user: ok, please work that out with claude'
+  - docs/recall-task-design.md
+  - runs/reviews/state_memory_design_2026-09-09/recall-policy-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/recall-policy-reconcile-receipt.json
+  also_depends_on: [N150]
+  status: resolved

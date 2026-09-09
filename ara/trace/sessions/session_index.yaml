@@ -100,9 +100,10 @@ sessions:
 - id: 2026-09-10_001
   date: '2026-09-10'
   summary: Two public-only Claude reviews reconciled a proposed objective/outcome-verification interface,
-    historical recall with abstention and bounded contingent sensing. No model changes or training;
-    numerical preferences and implementation remain open.
-  turn_count: 1
-  events_count: 3
+    historical recall with abstention and bounded contingent sensing. Turn2 adds a concrete reference
+    cost/text-task/calibration protocol with two further Claude reviews. No model changes or training;
+    reference preferences remain recommendations and implementation is next.
+  turn_count: 2
+  events_count: 6
   claims_touched: []
   open_threads: 5

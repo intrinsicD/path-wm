@@ -323,12 +323,14 @@ Moving objects during inspection are a later dynamics variant, not an implicit
 assumption. The policy's currently available observations and the target's reference
 time are separate fields even when they happen to coincide.
 
-The main preference to settle before implementation is the relative cost of a wrong
-answer, abstaining and asking/inspecting. Proposed initial defaults are wrong=1,
-abstain=0.25, two retrieval rounds, and no external acquisition for historical
-recall. Broader language-to-objective interpretation, learned stopping, model-error
-estimation and deeper contingent planning remain later extensions with distinct
-evidence requirements.
+The follow-up [selective-recall contract](recall-task-design.md) works out the initial
+defaults: wrong=1, abstain=0.25, two retrieval rounds and no external acquisition.
+It specifies factual labels, complete session replay, independent calibration and
+metrics that distinguish old-location recall from recognizing unseen entities.
+These are research defaults; application-specific costs remain caller-owned.
+The next step is an implementation budget for that concrete path. Broader
+language-to-objective interpretation, learned stopping, model-error estimation and
+deeper contingent planning remain later extensions with distinct evidence requirements.
 
 ## Claude review record
 

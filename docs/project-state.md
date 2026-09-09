@@ -82,7 +82,14 @@ recommended first slice. Active current-location inspection is a subsequent task
 requiring observation-conditioned continuations and isolated hypothetical updates.
 Existing memory bounds, reset decisions and negative results are unchanged.
 
-**Next decision:** settle the proposed error/abstention preferences and concrete
-historical task interface, then write an implementation budget and separately declare
-a matched-budget comparison. Deployment-length replay, general mark selection,
-calibrated observable probabilities and useful closed-loop behavior remain open.
+**Worked first-task recommendation:** [selective historical recall](recall-task-design.md)
+specifies four locations plus factual not-observed, separate abstention, loss 0/1/0.25,
+two retrieval rounds, complete text-observation episodes and independent calibration.
+Two further abstract Claude reviews reconcile cost/calibration and data-split claims.
+Report seen/old-history performance separately: recognizing only unseen entities can
+beat all-abstain without remembering any locations. No new model code or runs.
+
+**Next step:** budget and implement that complete episode-to-query path in the existing
+recipe, then separately declare a matched comparison. Numerical costs are explicit
+research defaults, not inferred application preferences. Deployment-length replay,
+general mark selection, calibrated probabilities and closed-loop behavior remain open.

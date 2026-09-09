@@ -1844,3 +1844,42 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O104
+  timestamp: 2026-09-10T01:01+02:00
+  provenance: ai-suggested
+  content: Recommend selective historical recall with four locations plus factual not-observed, separate
+    abstention, costs correct0/wrong1/abstain0.25, strict probability threshold0.75 and two fixed retrieval
+    rounds. Use complete fresh-session canonical text episodes, fixed output semantics, random entity-location
+    assignments and one withheld final query; five classes weighted20% each with separately balanced history
+    groups. Proposed256-record full-capacity fixture exercises source paths through consolidation. Train
+    all-query factual NLL; select checkpoint on development NLL, fit one temperature on separate calibration
+    episodes, cache frozen test logits. No visual-understanding or finite-sample confidence guarantee.
+  context: Worked first task into docs/recall-task-design.md after two isolated Claude reviews and local
+    replay/adapter checks. Shared vocabulary is intentional; partial visibility, sensing, adaptive stopping
+    and marked-memory comparisons are separate variants. No actual model edits or training; defaults are
+    research recommendations, not inferred application-wide user preferences.
+  potential_type: architecture
+  bound_to: [N151, N150]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O105
+  timestamp: 2026-09-10T01:01+02:00
+  provenance: ai-suggested
+  content: At abstain cost0.25, mean loss equals0.25+coverage*(answered_error-0.25). Recognizing only the
+    genuinely unseen20% and abstaining on all seen entities scores0.20 without recalling any location;
+    useful old-location claims need seen/old subset results and hierarchy-benefit claims need trained
+    controls. Positive temperature preserves each factual argmax but may reorder multiclass pmax across
+    examples; raw/adjusted selective metrics can differ. Extra gates may improve real loss under model
+    error, though unnecessary for the proposed reference policy. Calibration alone supplies no risk bound.
+  context: Verified arithmetic and primary Guo2017/Geifman2017 mechanisms; Claude explicitly withdrew
+    overbroad calibration, gating, vocabulary-disjointness, control-scope and boundary/algebra claims.
+    Evaluation group assignment is fixed before outcomes; ordered event scope excludes late delivery.
+    No empirical result or formally budgeted comparison occurred.
+  potential_type: constraint
+  bound_to: [N151]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
