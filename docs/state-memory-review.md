@@ -106,11 +106,11 @@ than explicitly naming the executed-action prior it corrects.
 
 Viable alternatives are a deterministic recurrent estimate with a conditional
 transition distribution, or a probabilistic filtering state with an explicit
-prior/posterior relation. Neither is inherently contradictory. The recommendation
-for discussion is to start with the simpler estimate, make executed-action
-propagation and observation correction explicit, and avoid calling transition spread
-epistemic confidence. A filtering distribution is appropriate if calibrated
-belief uncertainty is a required model function.
+prior/posterior relation. Neither is inherently contradictory. The initial review preferred the simpler estimate. The subsequent focused
+[belief-update discussion](belief-update-design.md) recommends recurrent context plus
+an explicit categorical prior/posterior as the more directly specified sampling
+interface for planning. Neither family establishes calibrated belief uncertainty;
+transition spread must not be called epistemic confidence.
 
 Hypothetical candidate rollouts and propagation after an actually executed action
 must have distinct branch roles. An action's execution receipt does not prove its
@@ -280,3 +280,45 @@ per request with reported overflow; stale-generation work fails or is discarded
 without automatic replay. Late genuine external results are newly ingested evidence,
 not permission to resume a cancelled plan. These are local contract specifications,
 not empirically validated reset behavior or new user-approved details.
+
+## Focused follow-up: present-belief uncertainty and correction
+
+The user asked for a concrete proposal after discussing how actual actions produce
+a prior that observations correct. Four additional actual Claude exchanges are saved
+as `belief`, `belief-followup`, `belief-final` and `belief-reconcile`, alongside the
+original receipts. Independent notes were written before reading the first reply;
+public PlaNet, DreamerV3 and Deep Ensembles sources and local updater/dynamics code
+were checked separately. No private code, dimensions or results entered the briefs.
+
+The [recommended design](belief-update-design.md) carries recurrent context, a
+categorical latent distribution and one representative continuation. A shared
+transition/prior supports actual and imagined action sequences. Observation
+correction has its own head; event/source identities prevent duplicate assimilation
+or time/action propagation. Memory conditions the inference without being multiplied
+as another independent sensor likelihood. Four temporary samples are proposed for
+decision comparisons, with no claim of complete mode coverage or persistent particles.
+
+Claude initially preferred a deterministic state plus completion/future distributions.
+It changed its recommendation after comparing the missing joint-state sampler in
+that sketch with the explicit latent interface. This is a preference about the
+proposed interface, not a proof that every deterministic alternative requires more
+modules or predicts worse. It explicitly withdrew overstatements about Gaussian
+latents forcing averaging, mandatory single-history stochastic models, empirical
+calibration being required for model-relative particle weights, and guarantees from
+calibration fitting. The selected single-history approximation remains a limitation.
+
+The review made the learning proposal more explicit: sum categorical-group KL before
+free-bit clipping, separate prior/representation gradient routes, isolate full-view
+teachers from partial inputs and memory, include derived-statistic masking, and define
+compression distillation through declared fixed consumers and query distributions.
+The final exchange withdrew the claim that overlapping auxiliary/grounded targets
+are intrinsically double-counted evidence, and narrowed factorization concerns to
+correlation/support errors rather than universal variance inflation. Composite loss
+weights still change target emphasis; finite-sample log-marginal bias has no magnitude
+guarantee here.
+
+The next prerequisite is the observable target/decoder distribution and validity
+semantics for each domain adapter. Actual coefficients, categorical capacity, output
+likelihoods, marginal estimator and sample/read budgets remain choices for a later
+recipe. The user requested this proposal, not its implementation or adoption of
+every new detail. Existing reset controls stay withdrawn.

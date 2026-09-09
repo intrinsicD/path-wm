@@ -102,6 +102,16 @@ progress or pending plans. Historical reset discussion and Claude receipts remai
 preserved; no actual restart or implementation change occurred. The observation/
 belief-view recommendation remains open independently of this lifecycle decision.
 
+**Belief-update recommendation:** the user requested discussion with Claude of
+present uncertainty and prediction/correction. The [concrete proposal](belief-update-design.md)
+uses recurrent context plus a categorical latent prior/posterior, shared dynamics
+for real and imagined actions, one-time event transitions and bounded temporary
+samples for decisions. The live filter retains one sampled recurrent history;
+probabilities are model-conditional and not calibrated epistemic confidence.
+Grounded output targets, partial-data teacher isolation and explicit KL routes are
+specified as proposals. Memory budgets must count logits/code and evidence fields.
+No implementation, new experiment or adoption of the full proposal is implied.
+
 Physical understanding, useful language generation, calibrated progress, semantic
 feature controls, scalable memory and broad self-improvement remain research
 questions. Real data still use `data/pusht_world_model/cchi_v1` directly.

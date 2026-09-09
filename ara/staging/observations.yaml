@@ -1758,3 +1758,31 @@ observations:
   stale: false
   superseded_in_part_by: N146
   superseded_scope: Individual reset controls withdrawn by user; observation/belief views remain proposed.
+- id: O100
+  timestamp: 2026-09-09T21:16+02:00
+  provenance: ai-suggested
+  content: Recommend recurrent context plus a factorized categorical latent prior/posterior and one representative
+    recurrent continuation. Shared transition/prior weights advance actual and imagined actions; explicit
+    event identity applies action/time once, source dedup/canonical order permits correction from the
+    same frozen prior, and no-observation intervals retain the prior without creating evidence. Store
+    full belief context/logits/code separately from source-only evidence and count added memory capacity.
+    Four temporary equal-weight posterior draws support decision comparisons, conditional on one sampled
+    past rather than persistent particles. Ground observable prediction, align prior/posterior with explicit
+    stopped-gradient KL, isolate full-view teachers in masked completion, and distil fixed consumer distributions
+    for compressed memory. Neither family, losses nor sample disagreement guarantee coherent alternatives,
+    calibration or epistemic uncertainty. Next specify observable target distributions and validity semantics.
+  context: Four abstract Claude exchanges plus primary PlaNet/DreamerV3/Deep Ensembles and local source
+    checks. Claude shifted from an incompletely specified deterministic/distribution-head sampler to supporting
+    the explicit latent interface; withdrew Gaussian averaging, compulsory single-history, weight-calibration,
+    target-overlap and universal over-dispersion claims. State-schema change remains proposed; no runtime
+    validation or model work.
+  potential_type: architecture
+  bound_to:
+  - N147
+  - N141
+  - N142
+  - N144
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

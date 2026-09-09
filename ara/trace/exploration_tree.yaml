@@ -2347,3 +2347,25 @@ tree:
   supersedes:
   - N145
   status: resolved
+- id: N147
+  type: decision
+  title: Review present-belief uncertainty and prediction/correction with Claude
+  provenance: user
+  timestamp: 2026-09-09T21:16+02:00
+  choice: User explicitly requests a Claude discussion and a concrete proposal for the live belief-update
+    loop and uncertainty representation. Continue architecture design without implementation or training
+    authorization.
+  alternatives:
+  - Implement before reviewing the belief contract
+  evidence:
+  - Current user request
+  - docs/belief-update-design.md
+  - runs/reviews/state_memory_design_2026-09-09/belief-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/belief-followup-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/belief-final-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/belief-reconcile-receipt.json
+  also_depends_on:
+  - N142
+  - N141
+  - N146
+  status: resolved

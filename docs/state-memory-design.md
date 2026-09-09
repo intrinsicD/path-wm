@@ -34,6 +34,12 @@ already accepted change to the belief-snapshot memory described here.
 - Preserve observation sources, inferred beliefs and imagined/generated ancestry.
   Spatial relationships may be learned, without imposing a spatial map on all domains.
 
+The current [belief-update recommendation](belief-update-design.md) proposes
+recurrent context plus a categorical latent prior/posterior. It replaces the earlier
+point-state/diagonal-Gaussian sketch as the preferred design to discuss. Its extra
+state fields and source-evidence view must be included in the memory budget; the
+original numerical example below remains a reference calculation.
+
 The dimensions, consolidation mechanism, distribution family and exact policies
 below are assistant proposals made to close interface gaps. They are not additional
 user-approved choices or demonstrated architectural improvements.
@@ -46,15 +52,15 @@ width. Token positions carry learned slot identities, not predefined semantic ro
 | Record | Tensor payload | Meaning of the interface |
 | --- | --- | --- |
 | Observation features | `[B,L,D]`, valid mask `[B,L]` | Variable-length outputs from modality adapters, retaining input scale and modality tags |
-| Current belief | `[B,N,D]` | Inferred current environment state; no required object/place slots |
+| Current belief | Context `[B,N_h,D]`, logits `[B,S,J]`, representative code `[B,S]` | Complete proposed filter bundle; no required object/place slots |
 | Task tokens | `[B,T,D]`, valid mask | Encoded task content; exact task controls remain separate records |
 | Working state | `[B,W,D]` | Task-specific intermediate computation |
 | Consolidated session state | `[B,G,D]`, valid mask | Lossy information carried forward as old episodic blocks leave memory |
 | Action condition | `[B,1,D]` | Encoded action kind, parameters, action-presence indicator and elapsed time |
-| Recent memory | `[B,k,N,D]` plus occupancy mask | Up to k most recent committed belief snapshots |
-| Compression staging | `[B,b-1,N,D]` plus occupancy mask | Evicted snapshots awaiting a complete chronological group |
+| Recent memory | Up to k complete belief bundles plus occupancy mask | Recent context/logits/code snapshots retained intact |
+| Compression staging | Up to b-1 complete belief bundles plus occupancy mask | Evicted snapshots awaiting a complete chronological group |
 | Compressed history | `[B,m,C,D]` plus occupancy mask | Up to m blocks, each summarizing b source states using C tokens |
-| Protected detail | `[B,p,N,D]` plus occupancy mask | At most p state-equivalent token budgets for marked material |
+| Protected detail | At most p full-state-equivalent payload budgets | Marked detail with its representation and uncertainty fields counted |
 
 Records also carry content-time support, availability time/order, source/event IDs,
 session ID, representation revision and origin/ancestry. A derived representation
@@ -102,9 +108,11 @@ split or evidence encoder has been selected.
 
 ## Concrete provisional sizes
 
-One possible first recipe is `D=64, N=32, T=4, W=8, G=16`, with four attention heads;
+The earlier belief-tensor reference recipe is `D=64, N=32, T=4, W=8, G=16`, with four attention heads;
 `k=32, b=8, C=32, m=16, p=8`. These are bookkeeping defaults, not selected optima or
-training authorization. Every module receives sizes explicitly.
+training authorization. Every module receives sizes explicitly. For the proposed
+filter, N_h can start at N while S and J remain explicit capacity choices. The
+following byte calculation excludes the new logits/code and source-evidence fields.
 
 Compression maps 8 x 32 source tokens to 32 tokens: an eightfold reduction in that
 block's payload. The staging buffer is explicitly budgeted: up to seven older
@@ -127,6 +135,10 @@ The maximum memory payload, excluding current/task/working states and metadata, 
 training activations, raw evidence storage and source-index metadata. A protected
 multi-state event consumes multiple state-equivalent slots; marking never creates
 unbounded storage. Exact raw media retention is not included in this latent budget.
+For N_h=N, add `(k+b-1+p)*S*J` floats and `(k+b-1+p)*S` code indices
+for complete uncompressed belief bundles, plus the explicit evidence-view payload.
+This assumes compressed/consolidated token counts remain fixed; their preservation
+of uncertainty is lossy and must be learned.
 
 ## Scaling considerations
 
@@ -198,46 +210,51 @@ a neural mechanism that guarantees correct inference.
 
 ## Perception update
 
-`observe(belief, observation_features, memory_snapshot, previous_action, time)`
-returns an updated belief and distribution parameters, with source metadata.
+The recommended `observe(prior, observation_packet, memory_snapshot)` corrects an
+explicit prior created by the live transition. Its complete state/gradient contract
+is in [belief updating](belief-update-design.md). It does not reapply the previous
+action or elapsed-time transition.
 
-1. Previous belief tokens cross-attend to current observation features and the
-   previous-action/time condition, producing preliminary belief tokens.
-2. These tokens query the three memory groups using perception-specific weights.
-3. Add gated memory reads residually.
-4. Cross-attend again to current observation features and refine the belief.
+1. Prior context tokens cross-attend to available observation features.
+2. These tokens query the three memory groups with perception-specific weights.
+3. Add gated memory reads residually, then refine against the observations again.
+4. Produce categorical posterior logits over the same codes as the prior. Carry
+   those logits, recurrent context and a representative latent for continuation.
 
-The second observation read supplies a direct correction route; it does not prove
-that fresh evidence always wins. Stale and conflicting-history examples must teach
-appropriate revision. The observation branch never consumes generated working
-state as clean evidence. Any optional task-conditioned sensory branch retains its
-ancestry separately.
+The learned correction can move probability to combinations that previous samples
+missed. It is not an analytic Bayesian update or a guarantee that fresh input is
+always correct. Memory is conditioning; remembered source content does not become
+another independent likelihood factor. Generated working state cannot enter the
+source-evidence encoder.
 
-Observation packets and commit events are distinct: multiple modalities can update
-one event before it is committed once. Equal-time ingestion must not silently
-duplicate a committed snapshot. Future input is rejected before encoding.
+Deduplicate and canonically order available packets within an event; additional
+packets recompute its posterior from the same prior and pre-event memory snapshot.
+A caller-provided event/transition identity and ordinal distinguish action application,
+same-time events and duplicate input. Commit once when the observed event is sealed.
+Unknown durations and late historical corrections need explicit adapter semantics.
 
 ## Prediction
 
-`predict(belief, action_record, dt, memory_snapshot)` returns a next-state
-distribution on a new imagined branch. The action adapter uses learned type and
-parameter encodings plus a presence indicator; missing action is distinct from
-explicit no-op. A continuous time encoding combines with these into one condition
-token, which the state attends to before prediction-specific memory reads.
+The live transition and `imagine` use identical dynamics and categorical-prior
+weights. Input conditioning contains the action, its presence/type, duration and
+causal memory context. Missing action is distinct from a verified no-op. A recorded
+zero-duration action can have an effect; action application is keyed by transition
+identity. Branch role remains routing metadata rather than a physical-dynamics input.
 
-After gated fusion, a transition head predicts a residual mean and log scale with
-shape `[B,N,D]`. A diagonal Gaussian is a concrete baseline distribution, not a
-claim of calibrated epistemic uncertainty or adequate multimodal futures. A later
-mixture or other distribution can replace this head at the same operation boundary.
-The mean or a sample produces one branch state; a set of rollouts retains multiple
-branches. Diagonal Gaussian samples do not solve distinct-outcome modeling by
-themselves.
+The transition computes new recurrent context from the previous context and sampled
+latent, then predicts a categorical distribution for the next latent. With no
+observation, the live branch retains that prior and advances state time without
+advancing evidence time or committing new observational memory. An arriving real
+observation corrects this live prior through the perception path above.
 
-One step initially corresponds to one recorded transition with its associated
-action and duration. Long predictions use the corresponding action sequence and
-repeated steps, with no intermediate future observations. They can re-query the
-same real history from evolving imagined states. They do not write observed memory.
-The next real observation uses the clean observation branch for correction.
+Hypothetical rollouts start from complete latent draws from the current belief and
+advance through the corresponding proposed action sequence. They read a pinned real
+memory snapshot and never receive future observations. Start with four temporary
+samples for decisions requiring alternatives, shared across candidate-action
+comparisons. Aggregate predicted decision quantities rather than averaging latent
+worlds. This is a bounded approximation conditional on one recurrent history, not
+persistent particles or calibrated confidence. The prior, posterior and observable
+heads must be trained together as specified in the linked proposal.
 
 ## Thinking and task outputs
 
@@ -269,8 +286,9 @@ buffer. On reaching b states, compress that complete group and clear the buffer.
 Readers can use staging states before compression. This preserves exactly the k
 most recent snapshots without hiding extra staging storage.
 
-The compressor has C learned query tokens. They cross-attend to the b source
-states with their chronological/action/time encodings, then pass through residual
+The compressor has C learned query tokens. They cross-attend to schema-aware token
+views of the b source belief bundles, including their distribution fields and
+chronological/action/time encodings, then pass through residual
 attention/feed-forward processing. Compression receives only information available
 at its write cutoff. The proposed baseline compressor is task-neutral; current
 tasks influence reads and marks, rather than determining all historical retention.
