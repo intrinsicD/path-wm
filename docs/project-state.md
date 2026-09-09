@@ -1,31 +1,35 @@
 # Current work
 
-**Active:** implement one small multimodal world model; see the
-[architecture plan](multimodal-plan.md) for scope, budget and acceptance checks.
+**Implemented:** one small multimodal world model, built in
+[the editable recipe](../experiments/multimodal.py). Read
+[the concrete architecture](multimodal.md) and [the implementation record](multimodal-plan.md).
 
-**Completed:** the modular restart and its verification.
-[Migration record](migration.md) describes retained components and evidence.
+The model has image/video/audio/text adapters, five latent token groups, explicit
+observation and thinking operations, bounded episodic memory, probabilistic imagined
+futures, action proposals, candidate planning, self-error diagnostics, interventions
+and a measured update gate with rollback. It has 113,560 parameters by default.
+Every component is directly constructed as an ordinary PyTorch module.
 
-The active tree now has `pathwm/`, two editable Python recipes, focused tests and
-short user/workflow guides. Retired model packages, dated scripts/configs, old
-notebooks/docs, third-party vendoring and the plugin dashboard builder are removed.
-They remain recoverable from `archive/pre-modular-2026-09-09`. Data and old runs
-remain on disk; the new package has no dependency on that historical source.
-Residual cache-only folders from the retired code and tests have also been removed.
+Twenty-eight CPU tests pass, including all 16 retained checks. Short synthetic and
+real PushT runs complete, pause and resume. Synthetic full/resumed model, teacher,
+replay, optimizer and RNG state match exactly. Reports contain outputs, attention,
+activation magnitude, memory provenance and group-zeroing effects; raw tensors are
+saved for deeper inspection.
 
-Sixteen CPU tests pass, including from a clean Git snapshot without the old source.
-Reference checks found zero difference in 505 scoped comparisons. Short CPU
-perception-to-dynamics and GPU COCO/ViT runs train, pause and resume. Their reports
-passed desktop/mobile browser checks; saved source snapshots match the active code.
-Packaging and imports work independently.
+Local results: [synthetic](../runs/multimodal_v1/synthetic/report.html),
+[real PushT](../runs/multimodal_v1/pusht/report.html), and
+[verification receipt](../runs/multimodal_v1/verification.json).
+Reports pass structural/media/provenance checks. **Browser visual QA is blocked**:
+the browser URL policy rejected local HTML navigation. No alternate route was used.
 
-Local examples: [perception](../runs/start_here/perception/report.html),
-[dynamics](../runs/start_here/dynamics/report.html),
-[ViT + COCO](../runs/start_here/coco_vit/report.html).
+These are development weights. Image predictions remain worse than copying the
+last observation; synthetic audio remains worse than silence. Token roles, physical
+understanding, useful planning, calibrated uncertainty, scalable memory and broad
+self-improvement remain scientific questions. No large run is queued.
 
-Daily starting points: [perception recipe](../experiments/perception.py),
-[experiment guide](experiments.md), [model guide](models.md). New experiments should
-edit recipes and modules directly, following [the standing workflow](experiment-workflow.md).
-No further training is queued. These short checks establish the development path,
-not model quality or closed-loop control. The next scientific experiment should be
-declared in a small recipe and plan; do not revive the historical overnight queue.
+The next discussion should review the actual state and component interfaces before
+declaring a scientific experiment. Earlier perception/dynamics recipes remain
+focused references. Historical source is preserved in
+`archive/pre-modular-2026-09-09`; data and completed results remain intact.
+The real-data recipe uses `data/pusht_world_model/cchi_v1` directly because the older
+`data/pusht64` shortcut is absent. [Migration record](migration.md).

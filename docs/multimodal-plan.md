@@ -1,6 +1,7 @@
 # One multimodal world model
 
-Status: implementation in progress. Authorized 9 September 2026.
+Status: implementation and numerical checks complete; HTML visual QA is blocked
+by the browser URL policy. Authorized 9 September 2026.
 
 Build one small, inspectable trainable system with explicit modality adapters,
 structured persistent latent state, episodic memory, internal computation,
@@ -65,3 +66,68 @@ An actual Claude review is requested using only a generic public design brief,
 without code, measurements or private data. Exact receipts belong in
 `runs/reviews/multimodal_architecture/`. Adopted corrections and local evidence are
 recorded here as implementation progresses.
+
+### Completed evidence
+
+- 28 CPU tests pass: the 16 retained tests plus 12 multimodal/state/training tests.
+  These cover modality gradients and extensibility, masks and temporal causality,
+  text generation, state/memory provenance, precise clocks, branch isolation,
+  known-transition planning, intervention, acceptance/rejection and exact resume.
+- Both synthetic and real PushT forward/backward checks succeed. The EMA target
+  receives no gradients; episodic memory has no trainable parameters by design.
+- `runs/multimodal_v1/synthetic/`: eight main updates plus two accepted proposals,
+  paused at update 3 and resumed. `synthetic_uninterrupted/` matches exactly in
+  model/EMA/replay/counters, optimizer, Python/NumPy/Torch/sampler RNG and all
+  training/proposal metric rows. Pause-boundary validation rows intentionally differ.
+- `runs/multimodal_v1/pusht/`: four main updates, paused at update 2 and resumed;
+  eight training and four validation windows, with no audio/text and no proposals.
+- All three runs own checkpoints, source snapshots, raw metrics, multimodal
+  outputs, inspection tensors and structurally verified standalone reports.
+  Each report's 27 embedded media resources decode successfully. Latest validation
+  values match the ledger. All 24 source snapshots match the current library/recipe.
+  Exact checks are saved in `runs/multimodal_v1/verify.py` and `verification.json`.
+- The synthetic final image MSE is 0.217628 versus the copy baseline 0.004724;
+  real PushT is 0.220845 versus 0.000126. Synthetic audio MSE is 0.015613 versus
+  silence 0.009775. These small budgets validate execution, not useful prediction.
+  Accepted proposals only establish local admission-metric improvements.
+
+### Adopted review decisions
+
+The sandboxed Claude call timed out; a scoped approved retry completed, followed
+by reconciliation. Claude accepted the distinction between contract checks and
+scientific baselines, and withdrew the assertion that timestamp changes affect
+only one attention weight. Softmax couples the keys. Receipts retain both responses.
+
+The implementation rejects future inputs, backward observation time, unobserved
+initial memory writes and imagined writes. Equal-time observations are explicitly
+allowed for asynchronously arriving modalities and tested. Branch `time` advances
+in imagination; `observed_time` does not. Float64 clocks preserve short intervals
+at large absolute timestamps. These rules resolve the remaining ordering question;
+Claude's suggested rejection of all equal timestamps was not adopted.
+
+Latent spread/rank, prediction error/variance and raw-space copy/silence baselines
+are recorded. They are diagnostics, not evidence of calibrated physics or an EMA
+advantage. Pixel-only/frozen-target comparisons remain future scientific experiments.
+The uncertainty planning penalty defaults to zero. Admission thresholds are fixed
+in the recipe, no-op candidates fail, and full rollback includes EMA/replay/RNG.
+Runtime episodic stores are caller-owned; training proposals recreate fresh windows
+and do not modify deployment memory. Callback file/external side effects cannot be
+rolled back and are excluded from the recipe's proposal.
+
+### Environment and budget notes
+
+The previous `data/pusht64` shortcut is absent. The new recipe uses the retained,
+manifest-verified `data/pusht_world_model/cchi_v1` directory directly. No data were
+moved or removed. The local package was installed into the existing virtual
+environment with uv, using no dependency downloads.
+
+The eight-main-update synthetic run pauses at update 3, resumes, and is compared
+with an independent uninterrupted run. Each permits two one-update improvement
+proposals, as declared before execution. The four-update real PushT run pauses at
+update 2 and resumes; extra proposals are disabled. These are CPU-only development
+checks. There is no scientific gate for prediction/control quality.
+
+The browser URL security policy rejected direct local HTML navigation. No alternate
+browser route was attempted. Reports must retain structural-only verification and
+the browser block must be disclosed; their images/audio, embedded resources, raw
+values, checkpoint identities and source snapshots are checked locally.

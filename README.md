@@ -1,78 +1,68 @@
 # PATH-WM
 
-A small PyTorch workbench for experimenting with encoders, output heads, memory
-and action-conditioned prediction. Start with one readable Python recipe.
+One small, editable multimodal world model: image/video/audio/text adapters,
+structured latent state, episodic memory, internal computation, imagined futures,
+action planning and a bounded learning-update gate. All parts are ordinary PyTorch
+modules constructed in [one recipe](experiments/multimodal.py).
+
+The default is a 113,560-parameter development model with freshly initialized
+weights. Running it verifies the architecture and training path; it does not produce
+a generally capable language, audio or physics model.
 
 ## Start
 
 ```bash
-source .venv/bin/activate                 # use the existing environment here
-python -m pip install -e '.[dev]'
-python experiments/perception.py --check
-python experiments/perception.py --output runs/my_first_test
+source .venv/bin/activate
+python experiments/multimodal.py --check
+python experiments/multimodal.py --output runs/my_multimodal
 ```
 
-Open **`runs/my_first_test/report.html`**. It contains the learning curves, exact
-validation values, reconstructions, feature PCA and resolved settings. It works
-offline, without an AI app or a report-building plugin.
+Open **`runs/my_multimodal/report.html`**. It contains training/validation values,
+generated media, attention, latent activity, memory provenance and planning scores.
+The report is self-contained and works offline. The run also owns a checkpoint,
+raw metrics, source snapshot, `inspection.pt` and `inspection.json`.
 
-The default is a short **development run**, using prepared PushT images, a fresh
-CNN, an RGB decoder and a pose head. It checks ideas; it is not a trained controller.
-On another checkout, create a Python 3.11+ virtual environment first and provide
-prepared data as described in [the experiment guide](docs/experiments.md).
+On a fresh environment: Python 3.11+ and `python -m pip install -e '.[dev]'`.
+With uv, use `uv pip install --python .venv/bin/python -e '.[dev]'`.
 
-Already available in this checkout: [perception report](runs/start_here/perception/report.html),
-[dynamics report](runs/start_here/dynamics/report.html), and
-[ViT + COCO report](runs/start_here/coco_vit/report.html). These are tiny verified
-development examples, not finished model training.
-
-## Change something
+## Real observations and resume
 
 ```bash
-cp experiments/perception.py experiments/my_idea.py
+# Existing prepared PushT images/actions; audio/text are absent.
+python experiments/multimodal.py --dataset pusht --check
+python experiments/multimodal.py --dataset pusht --steps 4 --improve-every 0 --output runs/my_real_multimodal
+
+# Start a separate run, pause after 3 of its 8 main updates, then finish it.
+python experiments/multimodal.py --steps 8 --stop-after 3 --output runs/my_resumable_multimodal
+python experiments/multimodal.py --resume runs/my_resumable_multimodal
 ```
 
-Open **`build_model()`** to replace the encoder or heads. Open **`objective()`** to
-change what they learn. Run your copy with `--check` before spending compute.
-Each head is independent. Use `--diagnostic-rgb` to block reconstruction gradients
-into the encoder, or `--freeze-encoder` to train only output heads.
+The synthetic default generates moving-ball observations, short impact waveforms
+and byte descriptions. It needs no downloads. The real path defaults to
+`data/pusht_world_model/cchi_v1`; supply `--data-root` on another machine.
+Resume checks code, settings, data, modules, optimizer and runtime identity.
 
-```bash
-python experiments/my_idea.py --check
-python experiments/my_idea.py --output runs/my_idea --steps 200
-```
+## Discuss or change a part
 
-Pause and resume without repeating the settings:
+Read [the concrete architecture](docs/multimodal.md), then edit `build_model` and
+`objective` in the recipe. It exposes every encoder, decoder, latent group,
+observation updater, thinker, dynamics module, memory store and action head.
+To make a variation, copy the recipe and edit its constructors/losses.
+There is no registry or configuration framework to learn.
 
-```bash
-python experiments/perception.py --output runs/resume_example --steps 100 --stop-after 20
-python experiments/perception.py --resume runs/resume_example
-```
+| Location | Purpose |
+| --- | --- |
+| `experiments/multimodal.py` | Construction, objective, data, training and inspection |
+| `pathwm/models/agent.py` | Observe, think, imagine, decode and intervene |
+| `pathwm/models/agent_state.py` | Explicit state and episodic memory |
+| `pathwm/models/modalities.py` | Modality adapters and attention |
+| `pathwm/evaluation/agent.py` | Bounded candidate-action planning |
+| `pathwm/training/improvement.py` | Measured update acceptance and rollback |
+| `pathwm/io.py` | Existing checkpoints, provenance and resume |
+| `runs/<name>/` | Raw results, media, inspection and standalone report |
 
-For action prediction with the retained pretrained CNN:
-
-```bash
-python experiments/dynamics.py --check
-python experiments/dynamics.py --output runs/my_dynamics
-```
-
-## Where things live
-
-| Location | What you edit or find |
-|---|---|
-| `experiments/` | Model construction, data, loss and budget |
-| `pathwm/models/` | Ordinary `nn.Module` implementations |
-| `pathwm/data/` | Prepared images and consecutive sequence windows |
-| `pathwm/training/` | Two explicit loops: perception and dynamics |
-| `pathwm/evaluation/` | Local reporting and candidate-action scoring |
-| `pathwm/io.py` | Run records, checkpoints and resume |
-| `runs/<name>/` | One run’s results and report |
-| `tests/` | Small CPU checks for meaningful failure cases |
-
-Read [models and tensor flow](docs/models.md), [running experiments](docs/experiments.md),
-or [current work](docs/project-state.md). Standing development rules are in
-[the workflow](docs/experiment-workflow.md).
-
-Historical implementations and protocols are preserved in Git tag
-`archive/pre-modular-2026-09-09`. Existing datasets and completed runs remain on
-disk; the old aggregate dashboard is historical. [Migration record](docs/migration.md).
+Run `python -m pytest` before committing shared-code changes. Follow
+[the workflow](docs/experiment-workflow.md) and [current project state](docs/project-state.md).
+The earlier perception/dynamics recipes remain focused references. Historical
+source is preserved by Git tag `archive/pre-modular-2026-09-09`; existing data and
+completed results are retained.

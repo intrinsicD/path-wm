@@ -109,6 +109,81 @@ def pca_maps(array):
     }
 
 
+def model_inspection(directory):
+    """Optional multimodal diagnostics supplied by the same recipe/run, no inference."""
+    meta_path, arrays_path = directory / "inspection.json", directory / "inspection.npz"
+    if not meta_path.exists() or not arrays_path.exists():
+        return []
+    meta = json.loads(meta_path.read_text())
+    with np.load(arrays_path, allow_pickle=False) as archive:
+        attention, activity = archive["attention"], archive["token_activity"]
+    parts = [
+        "<section><h2>Inside the multimodal model</h2>",
+        "<p>Observed inputs → modality encoders → latent state → memory and thinking → imagined states → decoders and action scoring.</p>",
+        "<p>These are development measurements. Attention and activation magnitude do not establish what a feature means.</p>",
+        '<div class="table"><table><tr><th>Latent group</th><th>Tokens</th><th>Activation RMS</th><th>Image change after zeroing group (MSE)</th></tr>',
+    ]
+    for name, count in meta["latent_groups"].items():
+        parts.append(
+            f"<tr><td>{escape(name)}</td><td>{count}</td><td>{meta['group_activity_rms'][name]:.6g}</td><td>{meta['zero_group_image_change_mse'][name]:.6g}</td></tr>"
+        )
+    parts.append(
+        "</table></div><p>The intervention replaces one group with zero and measures the change in the current image decoder. This is a local sensitivity test, not proof that the group has its intended semantic role.</p>"
+    )
+    for value, title, description in [
+        (
+            attention,
+            "Observation attention",
+            "Rows: latent queries. Columns: input tokens followed by action/time context. Heads are averaged for example 1.",
+        ),
+        (
+            activity,
+            "Latent activation magnitude",
+            "Rows: latent tokens in the group order above. Columns: feature dimensions. Absolute values for example 1.",
+        ),
+    ]:
+        high = max(float(np.max(value)), 1e-12)
+        parts.append(
+            f'<h3>{title}</h3><p>{description} Grayscale runs from 0 (black) to {high:.6g} (white).</p><img class="chart" style="max-width:620px;image-rendering:pixelated" alt="{title}" src="{image_url(value / high)}">'
+        )
+    parts.append(
+        "</section><section><h2>Generated modalities and imagined actions</h2><p>Untrained or briefly trained outputs are shown as produced, including incorrect text and noisy media.</p>"
+    )
+    gif = directory / "imagined.gif"
+    if gif.exists():
+        url = "data:image/gif;base64," + base64.b64encode(gif.read_bytes()).decode()
+        parts.append(
+            f'<figure><img style="width:160px" alt="Imagined future sequence preview" src="{url}"><figcaption>Example 1: imagined video preview. Playback timing is illustrative; state times are recorded below.</figcaption></figure>'
+        )
+    wav = directory / "imagined.wav"
+    if wav.exists():
+        url = "data:audio/wav;base64," + base64.b64encode(wav.read_bytes()).decode()
+        parts.append(
+            f'<p>Predicted waveform chunks, concatenated at {meta["audio_sample_rate"]} Hz. Each state produces {meta["audio_samples_per_state"]} samples.</p><audio style="max-width:100%" controls preload="none" src="{url}">Audio playback is unavailable in this browser.</audio>'
+        )
+    parts.append(
+        "<p>Generated text for the displayed examples:</p><pre>"
+        + escape("\n".join(meta["generated_text"]))
+        + "</pre>"
+    )
+    for label, value in [
+        ("Environmental time after observation", meta["time"]),
+        ("Imagined future times", meta["future_times"]),
+        ("Memory provenance", meta["memory_sources"]),
+        ("Candidate scores (lower is better)", meta["plan_scores"]),
+        ("Selected candidate per example", meta["selected_candidates"]),
+    ]:
+        parts.append(
+            f"<p><strong>{label}</strong></p><pre>{escape(json.dumps(value, indent=2))}</pre>"
+        )
+    parts.append(
+        "<details><summary>Inspection metadata and limits</summary><pre>"
+        + escape(json.dumps(meta, indent=2))
+        + "</pre></details></section>"
+    )
+    return parts
+
+
 def render_report(directory):
     directory = Path(directory)
     record = json.loads((directory / "run.json").read_text())
@@ -206,6 +281,7 @@ def render_report(directory):
             parts.append("</div></section>")
         if axes:
             np.savez_compressed(directory / "pca_axes.npz", **axes)
+    parts.extend(model_inspection(directory))
     for title, data in [
         ("Resolved settings and source identities", record),
         ("Exact metric rows", rows),

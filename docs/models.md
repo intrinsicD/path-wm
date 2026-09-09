@@ -1,5 +1,9 @@
 # Models and tensor flow
 
+The current unified model is described in [multimodal architecture](multimodal.md)
+and built in [the multimodal recipe](../experiments/multimodal.py). The components
+below remain available as focused visual reference experiments.
+
 These are ordinary PyTorch modules. A recipe constructs the pieces and selects
 the losses. There is no model registry or hidden experiment coordinator.
 

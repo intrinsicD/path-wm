@@ -1,5 +1,13 @@
 # Running and editing experiments
 
+The current starting point is `experiments/multimodal.py`; see the
+[multimodal architecture and training guide](multimodal.md). Run
+`python experiments/multimodal.py --check`, then use a fresh `--output` directory.
+`--dataset pusht` uses the retained real data at `data/pusht_world_model/cchi_v1`.
+The older `data/pusht64` shortcut is not present in this checkout.
+
+The following perception/dynamics recipes remain focused references.
+
 Start with `experiments/perception.py`. `build_model` shows the modules; `objective`
 shows exactly what is minimized. Copy the file for a new idea and edit it directly.
 Custom modules can live beside your recipe until they are useful enough to share.
