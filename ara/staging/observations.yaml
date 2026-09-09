@@ -1308,3 +1308,20 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O78
+  timestamp: 2026-09-09T10:10+02:00
+  provenance: ai-suggested
+  content: Applied world-model research can reuse pretrained perception and proven algorithms while training compatible
+    state, action-conditioned dynamics and output modules. Architecture reuse does not inherit learned weights.
+    Research contributions can be interfaces, objectives, data/training strategies or interactions validated against
+    baselines; a novel layer is optional, and downstream training can remain substantial.
+  context: Conceptual clarification of the existing direction, recorded in the model-quality note. No new scientific
+    choice requiring another Claude review, model run or budget adoption.
+  potential_type: concept
+  bound_to:
+  - N126
+  - N125
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

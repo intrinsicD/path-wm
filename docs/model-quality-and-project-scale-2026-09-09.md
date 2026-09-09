@@ -101,3 +101,17 @@ cause of simple-task failure; it also narrowed home-compute limitations to the
 cited frontier pretraining recipes. There is no substantive remaining disagreement.
 Peer agreement is not evidence that a particular intervention will improve this
 project. No model tests or dashboard rebuild were needed for this prose-only work.
+
+## Clarifying the research scope
+
+The user asks whether this is systems research: combining existing components and
+training selected additions. Broadly yes; applied world-model research with a
+strong systems component is a more precise description of the present direction.
+Reusing a standard architecture and reusing pretrained weights are different:
+only the latter inherits already learned parameters. Memory and action-conditioned
+prediction may still require substantial training, even with pretrained vision.
+The contribution can be a state interface, learning objective, training/data
+strategy or useful interaction between components; a new layer is not mandatory.
+Integration becomes a research result when a specific hypothesis is tested against
+appropriate baselines, including limitations and costs. This is a clarification of
+the proposed direction, not adoption of a new architecture or experiment budget.

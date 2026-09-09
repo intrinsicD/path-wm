@@ -68,8 +68,9 @@ sessions:
     exchanges, no model or loss changes. Turn3 focuses on auxiliary RGB gradients into trainable E; local effect
     unisolated, three-arm comparison proposed and two Claude reviews reconciled. No new training. Turn4 explains
     quality factors and inherited pretraining; small diagnostic scope acknowledged, end-to-end reference strategy
-    proposed with two reconciled Claude reviews. No new experiments.
-  turn_count: 4
-  events_count: 26
+    proposed with two reconciled Claude reviews. No new experiments. Turn5 clarifies applied world-model systems
+    research and pretrained-weight versus architecture reuse; no new model work.
+  turn_count: 5
+  events_count: 28
   claims_touched: []
-  open_threads: 9
+  open_threads: 10

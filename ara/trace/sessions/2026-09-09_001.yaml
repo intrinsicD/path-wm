@@ -2,8 +2,8 @@ session:
   id: 2026-09-09_001
   date: '2026-09-09'
   started: 2026-09-08T20:28+02:00
-  last_turn: 2026-09-09T10:01+02:00
-  turn_count: 4
+  last_turn: 2026-09-09T10:10+02:00
+  turn_count: 5
   summary: Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges. Local
     ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry pass improves
     with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests and standalone browser
@@ -11,7 +11,8 @@ session:
     exchanges, no model or loss changes. Turn3 focuses on auxiliary RGB gradients into trainable E; local effect
     unisolated, three-arm comparison proposed and two Claude reviews reconciled. No new training. Turn4 explains
     quality factors and inherited pretraining; small diagnostic scope acknowledged, end-to-end reference strategy
-    proposed with two reconciled Claude reviews. No new experiments.
+    proposed with two reconciled Claude reviews. No new experiments. Turn5 clarifies applied world-model systems
+    research and pretrained-weight versus architecture reuse; no new model work.
 events_logged:
 - turn: 1
   type: decision
@@ -208,6 +209,21 @@ events_logged:
     controls and tie further component work to adequate training, coverage, physical prediction and control. New
     perception packages still need compatible U/P/control; scale remains a testable option, not the established
     cause or a universal cure.
+- turn: 5
+  type: question
+  id: N126
+  routing: direct
+  provenance: user
+  summary: Is the proposed direction systems research with selected learned components?
+- turn: 5
+  type: observation
+  id: O78
+  routing: staged
+  provenance: ai-suggested
+  summary: Applied world-model research can reuse pretrained perception and proven algorithms while training compatible
+    state, action-conditioned dynamics and output modules. Architecture reuse does not inherit learned weights.
+    Research contributions can be interfaces, objectives, data/training strategies or interactions validated against
+    baselines; a novel layer is optional, and downstream training can remain substantial.
 ai_actions:
 - turn: 1
   action: Implemented, developed and sealed matched encoder/decoder/objective comparisons; ran all declared units
@@ -259,6 +275,13 @@ ai_actions:
   files_changed:
   - docs/model-quality-and-project-scale-2026-09-09.md
   - docs/project-state.md
+- turn: 5
+  action: Clarified research scope, architecture versus pretrained-weight reuse, and possible downstream training
+    effort in the existing model-quality note. No new model work, literature review, Claude exchange or dashboard
+    rebuild.
+  provenance: ai-executed
+  files_changed:
+  - docs/model-quality-and-project-scale-2026-09-09.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -273,6 +296,9 @@ key_context:
 - turn: 4
   excerpt: 'User: How do state-of-the-art models achieve high quality: architecture, dataset, training, scale? What
     am I missing? I feel we are working on the low end.'
+- turn: 5
+  excerpt: 'User: Are we more or less doing systems research, combining existing components and adding one or two
+    pieces to train ourselves?'
 open_threads:
 - Review O64-O71 and the measured architecture tradeoffs; no universal architecture or new control success has been
   adopted.
@@ -292,6 +318,8 @@ open_threads:
   and compatible temporal/control evaluation remain proposed only.'
 - 'N125/O76/O77: connect small diagnostic studies to a concrete end-to-end capability with a successful reference
   recipe and suitable pretrained components; relative bottlenecks and justified scale remain unisolated.'
+- 'N126/O78: decide the concrete reusable and trainable modules for a selected capability; the systems framing does
+  not fix that implementation.'
 ai_suggestions_pending:
 - 'O64: Pretrained ViT supports substantially better foreground/category readouts than the local CNN, while P1 pixel
   reconstruction favors CNN. This is package selection evidence, not isolated architecture causality or a convolution/spatial
@@ -327,3 +355,4 @@ ai_suggestions_pending:
   and compatible downstream fitting is unexecuted.'
 - 'O76/O77: model-quality framing and one-capability reference strategy are recommendations, not adopted architecture,
   budget or new training.'
+- 'O78: scope clarification only; no fixed count of new modules, training budget or novel-layer requirement adopted.'

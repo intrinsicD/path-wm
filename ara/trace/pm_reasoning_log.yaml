@@ -435,3 +435,11 @@ entries:
   - Architecture, data coverage, learning objectives, memory/prediction/control and earlier normalization/data-efficiency
     topics remain active in open threads. No new closure, contradiction or newly unreferenced three-session-day
     staleness established.
+- turn: 2026-09-09_001#5
+  notes:
+  - End-of-turn only after the conceptual answer and note update. N126 records the user framing question; O78 stages
+    the distinction between architecture reuse, pretrained weights and research validation. No new experiment or
+    substantive architecture choice.
+  - The user asks whether their interpretation is correct; this does not adopt a fixed modular implementation, endorse
+    every prior proposal or authorize training. Existing hypotheses and scale, geometry, representation and temporal
+    topics remain open; no new closure, contradiction or staleness flag.

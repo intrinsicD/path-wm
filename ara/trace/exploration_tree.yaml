@@ -1993,3 +1993,17 @@ tree:
   - N117
   - N124
   status: open
+- id: N126
+  type: question
+  title: Is the proposed direction systems research with selected learned components?
+  provenance: user
+  timestamp: 2026-09-09T10:10+02:00
+  description: User asks whether the project combines existing components and trains selected additions. Clarified
+    applied world-model research with systems design, pretrained-weight versus architecture reuse, and substantial
+    possible memory/dynamics training. No new execution requested.
+  evidence:
+  - docs/model-quality-and-project-scale-2026-09-09.md
+  also_depends_on:
+  - N125
+  - N124
+  status: open
