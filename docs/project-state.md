@@ -8,6 +8,7 @@ short user/workflow guides. Retired model packages, dated scripts/configs, old
 notebooks/docs, third-party vendoring and the plugin dashboard builder are removed.
 They remain recoverable from `archive/pre-modular-2026-09-09`. Data and old runs
 remain on disk; the new package has no dependency on that historical source.
+Residual cache-only folders from the retired code and tests have also been removed.
 
 Sixteen CPU tests pass, including from a clean Git snapshot without the old source.
 Reference checks found zero difference in 505 scoped comparisons. Short CPU

@@ -58,6 +58,10 @@ package is included in Git. The active interface has 18 library Python files,
 two recipes and four focused test modules (16 tests), rather than the prior
 experiment-specific source/script stack.
 
+Follow-up disk cleanup removed 223 untracked Python bytecode cache files and 42
+directories across 11 retired top-level folders and four old test folders. Every
+candidate contained only cache files; source, data and run artifacts were preserved.
+
 - Reference comparison: 500 CPU FP32 checks of CNN depths 0/2, RGB, loss,
   gradients, three AdamW updates, dense/pose outputs, memory and three-step rollout;
   maximum observed difference 0. DINO local/final/pooled features and separate
