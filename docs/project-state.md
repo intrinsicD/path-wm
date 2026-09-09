@@ -95,6 +95,18 @@ event cadence and required recall horizon must inform the actual capacity choice
 Bounded indexed reads remain optional; no such implementation or scaling benchmark
 exists, and the two-view choice remains open.
 
+The user now requires independent short-term and long-term resets. The design
+recommends separately accessible source-evidence and belief views, with counted
+capacity, and proposes short/long/all controls. Long reset preserves recent evidence
+but invalidates beliefs and working state that may contain recalled history; short
+reset preserves existing long-term records. Protected marks belong to long-term.
+Ownership, invalidation and generation-barrier details remain proposals;
+the reset requirement does not imply implementation or adoption of every detail.
+Three further abstract Claude exchanges reconciled reset semantics: retain source
+records, invalidate shared derived state, and use normal future reads rather than
+historical replay. Review follow-up also specifies protected admission and late
+external-result handling. No implementation or reset execution occurred.
+
 Physical understanding, useful language generation, calibrated progress, semantic
 feature controls, scalable memory and broad self-improvement remain research
 questions. Real data still use `data/pusht_world_model/cchi_v1` directly.

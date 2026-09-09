@@ -2,8 +2,8 @@ session:
   id: 2026-09-09_001
   date: '2026-09-09'
   started: 2026-09-08T20:28+02:00
-  last_turn: 2026-09-09T19:33+02:00
-  turn_count: 27
+  last_turn: 2026-09-09T19:46+02:00
+  turn_count: 28
   summary: 'Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges.
     Local ViT inputs and separate RGB trunks help reconstruction; FiLM/depth are not consistent wins; geometry
     pass improves with residual/worse extreme tails. All 42 reliance and 40 runtime conditions, 407 tests
@@ -17,7 +17,7 @@ session:
     recipes and a verified first perception migration; three public-only Claude reviews, no code migration
     or training. Turn7 adopts and completes the modular restart: 18 library files/two editable recipes, retired
     legacy stack preserved by tag, 505 zero-difference reference checks, 16 tests and clean-Git recipe checks,
-    CPU/GPU pause-resume and three verified local reports; standing workflow migrated. Turn8 resumes temporal-state and hierarchical-memory design discussion; user and assistant proposals remain open, with no new implementation or training. Subsequent voice discussion establishes hybrid memory and separate consumer routes, then returns to architecture before experiments. Final interface proposal records domain-neutral tokens, explicit budgets/staging/consolidation and training boundaries; no model work. Turn25 completes three actual public-only Claude reviews, reconciles overclaims and proposes separately retrievable observation/belief views as the next discussion; no new model work. Turn26 separates memory capacity, read cost and recall quality; bounded indexed reads proposed, evidence-view choice still open and no benchmark run. Turn27 adopts bounded but useful memory as a sizing objective; illustrative counts remain provisional pending task cadence and recall needs.'
+    CPU/GPU pause-resume and three verified local reports; standing workflow migrated. Turn8 resumes temporal-state and hierarchical-memory design discussion; user and assistant proposals remain open, with no new implementation or training. Subsequent voice discussion establishes hybrid memory and separate consumer routes, then returns to architecture before experiments. Final interface proposal records domain-neutral tokens, explicit budgets/staging/consolidation and training boundaries; no model work. Turn25 completes three actual public-only Claude reviews, reconciles overclaims and proposes separately retrievable observation/belief views as the next discussion; no new model work. Turn26 separates memory capacity, read cost and recall quality; bounded indexed reads proposed, evidence-view choice still open and no benchmark run. Turn27 adopts bounded but useful memory as a sizing objective; illustrative counts remain provisional pending task cadence and recall needs. Turn28 records independent memory resets, recommends evidence/belief views and reconciles three abstract Claude reviews; scoped invalidation proposed without model implementation.'
 events_logged:
 - turn: 1
   type: decision
@@ -621,6 +621,27 @@ events_logged:
     commits per second about 5.3 seconds; neither cadence is selected. Event ingestion must not be silently
     thinned to claim longer useful memory. Useful capacity ultimately requires needed detail after recent
     eviction at acceptable read cost.
+- turn: 28
+  type: decision
+  id: N145
+  routing: direct
+  provenance: user
+  summary: User asks for a recommendation on retained memory contents and explicitly requires that the
+    user can reset short-term and long-term memory individually. The reset capability is required; the
+    evidence/belief split, precise scope ownership and implementation remain proposals.
+- turn: 28
+  type: observation
+  id: O99
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Recommend independently addressable source-only evidence and belief views with counted per-store
+    capacity. Propose short/long/all reset: recent and staging belong to short-term; compressed, consolidated
+    and immediately accepted protected records belong to long-term. Both scopes invalidate shared beliefs/workspace/caches
+    and pre-reset work. Long reset keeps independent recent evidence and masks old belief views; ordinary
+    reads form fresh interpretations without historical replay. Fixed-generation control enforces reset,
+    reported protected overflow and late external-result handling. Exact latent retention is distinct
+    from reconstruction; input separation is not global fact erasure. Added evidence requires an explicit
+    budget recalculation.'
 ai_actions:
 - turn: 1
   action: Implemented, developed and sealed matched encoder/decoder/objective comparisons; ran all declared units
@@ -781,6 +802,19 @@ ai_actions:
   - docs/project-state.md
   - ara/staging/observations.yaml
   - ara/trace/
+- turn: 28
+  action: Prepared independent reset notes and three abstract Claude briefs; saved successful reset/reset-followup/reset-final
+    responses and receipts. Reconciled conceptual objections and specified view budgets, reset ownership,
+    shared-state invalidation, admission outcomes and late external-result handling in design/review/current
+    state. Checked Markdown diff and research-record YAML. No code, training or actual memory reset.
+  provenance: ai-executed
+  files_changed:
+  - docs/state-memory-design.md
+  - docs/state-memory-review.md
+  - docs/project-state.md
+  - runs/reviews/state_memory_design_2026-09-09/
+  - ara/staging/observations.yaml
+  - ara/trace/
 claims_touched: []
 key_context:
 - turn: 1
@@ -854,6 +888,9 @@ key_context:
 - turn: 27
   excerpt: 'User: Ok let us keep the memory in reasonable bounds but large enough that it is actually
     useful.'
+- turn: 28
+  excerpt: 'User: What do you propose we do? The user should also be able to reset the memory. Longterm
+    and short term individually.'
 open_threads:
 - Review O64-O71 and the measured architecture tradeoffs; no universal architecture or new control success
   has been adopted.
@@ -894,6 +931,8 @@ open_threads:
   and evidence-view allocation remain open.'
 - 'N144/O98: size the bounded memory against task cadence and needed recall horizon; illustrative counts
   do not establish adequacy.'
+- 'N145/O99: review evidence/belief allocation and precise reset contracts before implementation; independent
+  reset capability required, source-preserving invalidation remains the proposed realization.'
 ai_suggestions_pending:
 - 'O64: Pretrained ViT supports substantially better foreground/category readouts than the local CNN, while
   P1 pixel reconstruction favors CNN. This is package selection evidence, not isolated architecture causality
@@ -961,3 +1000,5 @@ ai_suggestions_pending:
   and unbenchmarked.'
 - 'O98: retain current provisional capacities for discussion, then connect history coverage to event cadence
   and delayed utility before fixing them.'
+- 'O99: two-view memory plus scoped store resets and shared derived-state invalidation; protected marks
+  belong to long-term, no reset-specific historical replay.'

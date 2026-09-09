@@ -1731,3 +1731,28 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O99
+  timestamp: 2026-09-09T19:46+02:00
+  provenance: ai-suggested
+  content: 'Recommend independently addressable source-only evidence and belief views with counted per-store
+    capacity. Propose short/long/all reset: recent and staging belong to short-term; compressed, consolidated
+    and immediately accepted protected records belong to long-term. Both scopes invalidate shared beliefs/workspace/caches
+    and pre-reset work. Long reset keeps independent recent evidence and masks old belief views; ordinary
+    reads form fresh interpretations without historical replay. Fixed-generation control enforces reset,
+    reported protected overflow and late external-result handling. Exact latent retention is distinct
+    from reconstruction; input separation is not global fact erasure. Added evidence requires an explicit
+    budget recalculation.'
+  context: Three actual abstract Claude exchanges reviewed reset and evidence contracts. Reconciled empty-read,
+    deterministic-reconstruction and receipt-laundering overclaims; accepted simpler invalidation without
+    chronological replay. Final operational questions were specified locally. No implementation, memory
+    deletion, empirical reset validation or adoption of the full proposal.
+  potential_type: architecture
+  bound_to:
+  - N145
+  - N144
+  - N142
+  - N141
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

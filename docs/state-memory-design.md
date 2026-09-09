@@ -24,6 +24,9 @@ already accepted change to the belief-snapshot memory described here.
 - Keep memory within reasonable bounds while allocating enough capacity for useful
   recall. This is an accepted sizing objective, not approval of particular counts
   or a finding that the illustrative budget below is sufficient.
+- Give the user independent short-term and long-term memory reset controls. The
+  reset requirement is accepted; the detailed ownership and invalidation rules below
+  are proposals, not implemented behavior.
 - Perception, prediction and thinking make separate queries over shared memory.
   Thinking does not advance world time or create observational evidence.
 - Condition prediction on action and elapsed time; initially compose recorded
@@ -68,6 +71,34 @@ All session tensors belong to the caller. Model parameters are separate; ordinar
 inference changes session state without changing weights. A new representation
 revision requires re-encoding retained source material or an explicit migration,
 rather than silently reusing incompatible cached tokens.
+
+## Proposed observation and belief views
+
+Recommend independently addressable evidence and belief views tied to the same
+source event. Evidence tokens encode the available observation packet and declared
+source metadata; their write path receives no recurrent belief, historical memory
+read, task conditioning or generated workspace. Any encoder cache that violates
+that independence must be excluded or explicitly reset. Belief tokens hold the
+interpretation produced by the observation-update path. Both contents remain
+learned; source-derived features are lossy and are not an assertion that the source
+is true or that every source detail can be recovered.
+
+Perception, prediction and thinking can query either view independently within their
+read allowance. Protect requested evidence detail when it remains available, with
+the belief view retained as useful context. Older evidence compression must read
+only evidence-view inputs and declared source metadata; mixing in belief would
+break the independent-source route. Separate queries/heads can share parameters,
+but the data dependencies and origin labels stay separate. Consolidated interpreted
+knowledge remains derived context. Exact sensory values or wording need a separately
+budgeted retained payload if the latent encoding cannot recover them faithfully.
+
+Reserve an explicit part of the total memory allowance for each view. Keep recent
+belief snapshots intact at their declared shape; do not silently halve them to fit
+an added evidence view. The belief-only dimensions and byte count below therefore
+remain reference bookkeeping, not the cost of this proposed extension. A selected
+two-view recipe must jointly specify evidence token count, belief token count and
+history capacities, then recompute its total storage and read cost. No particular
+split or evidence encoder has been selected.
 
 ## Concrete provisional sizes
 
@@ -285,6 +316,87 @@ word long-term. Source records can be retained in a run audit outside the model'
 attention budget; faithful recovery from a pointer requires that its source payload
 actually remains stored.
 
+## User-controlled memory reset: proposed contract
+
+Expose `reset_memory(scope="short" | "long" | "all")` as an exact caller control,
+outside learned marking or gating. It returns the new session state and a receipt
+of cleared stores, retained source records and invalidated derived state. This
+is a design requirement and proposed interface; no reset is being executed here.
+
+| Scope | Cleared | Retained |
+| --- | --- | --- |
+| Short | Recent records, uncompressed staging, pending short-term marks/writes, current belief and task workspace | Existing long-term compressed blocks, consolidated state and protected records |
+| Long | Compressed history, consolidated state, all protected records including user marks, pending long-term writes; all recent belief views, current belief and workspace | Independent recent/staged observation evidence and its factual execution/time records |
+| All | Both groups and all memory-derived session state | Explicit caller task/control inputs and model parameters |
+
+Treat protected details as long-term because their purpose is surviving recent
+eviction. Short reset discards staging directly; it must not run normal eviction
+compression or consolidation while clearing. Long reset clears any later-adopted
+persistent derived-knowledge store too. Scope refers to storage lifetime, not age
+of every fact: a protected record can be recent and a recent belief can recall an
+old fact.
+
+After short reset, initialize belief/workspace afresh. Subsequent ordinary reads
+may consult the deliberately retained long-term memory. After long reset, initialize
+belief/workspace and mark old recent belief views invalid; retain their independent
+evidence views. Normal perception or thinking can read that evidence to form fresh
+interpretations. Thinking still updates only working state. No special chronological
+replay or rewriting of historical belief snapshots is required. Empty or invalid
+views are masked; an entirely empty memory produces the existing zero read.
+
+Independence applies to owned memory records, not continuity of shared inferred
+state. Both resets invalidate current interpretations because those may mix the two
+scopes. Preserving recent source evidence during a long reset depends on the proposed
+evidence view; a belief-only implementation would instead need to discard dependent
+recent content and expose that limitation. An action execution receipt can remain
+as an explicitly retained fact about what occurred; its old rationale or predicted
+consequences must not masquerade as independent input. Do not recover receipts from
+an unbounded external log during reset.
+
+Use a structural receipt containing execution ID, issued action kind/parameters,
+available factual status, source/execution time and arrival time. External response
+payloads enter as separately source-tagged observations. Internal rationale, cached
+belief/plan vectors and predicted outcomes are not receipt fields. An action choice
+or external text can still correlate with old beliefs; input-path separation does
+not claim semantic erasure. Generated external content retains that origin status.
+
+Reset does not execute actions, ingest observations, advance observation counts,
+emit answers, fulfill tasks or trigger compression/marking/consolidation. Normal later
+commits may compress retained short-term evidence into long-term memory again.
+That preserves deliberately retained information; it does not restore deleted blocks.
+Keep per-store capacities fixed across resets, within the overall bound. Clearing
+one scope does not silently resize the other.
+
+Every reset creates an atomic session-generation boundary. Invalidate retrieval and
+encoder caches, active imagined branches, candidate plans and derived task tokens;
+reject results or writes started before the boundary. Reset revokes pinned memory
+handles, unlike ordinary concurrent commits. Stop affected background operations
+before allowing subsequent reads, writes or action/output proposals. Re-encode
+explicit caller-held task inputs without recovering the cleared workspace. Preserve
+actual environment time and executed-action facts; do not reset event identity in
+a way that makes old work appear current.
+
+An already-issued external action is not undone by reset. A later external result
+can enter through a fresh observation-ingestion call with its actual availability
+time, original source/execution time and action ID. It cannot resume the cancelled
+plan or publish a pre-reset latent. Stale internal retrieval, thinking or compression
+results are discarded. A bounded outstanding-execution correlation table belongs
+to caller control metadata, not a historical memory-replay channel.
+This table survives all memory-reset scopes only until completion or expiry, within
+the caller's fixed outstanding-action bound, and is not exposed as model memory.
+Unmatched completions return an `unmatched_execution` outcome to the caller rather
+than entering memory automatically. A stale-generation synchronous operation returns
+`stale_generation`; asynchronous stale work is discarded with a recorded outcome.
+No automatic retry may recover its old payload. This preserves source correlation
+without preserving a cancelled plan or turning the table into durable recall.
+
+This clears accessible session memory. It does not change learned weights, source
+files or completed audit artifacts, and those artifacts must not automatically
+rehydrate a cleared store. Facts deliberately retained in the other store, explicit
+task input, or a new observation can still be learned/recalled. Erasing a fact across
+all representations would be a different, stronger requirement. No such erasure
+guarantee or implemented reset mechanism is claimed.
+
 ## Mark proposals and protected detail
 
 Each proposal contains author, event/source IDs, a detail query or whole-state
@@ -299,6 +411,18 @@ do not silently promise protection. Agent entries may replace lower-scored agent
 entries under the same capacity. An accepted mark protects retained latent material,
 not necessarily a lossless sensory recording. Identical protected content should
 share storage rather than be duplicated by repeated marks.
+
+For the reset proposal, an accepted mark installs its protected record immediately;
+it does not wait for normal compression. Its long-term ownership survives a short
+reset, including when the implementation shares its payload with a recent record.
+Pending/unadmitted requests have no protection guarantee and are cancelled at reset.
+Admission and installation use the same atomic reset-generation check; an old
+proposal cannot install after reset. The existing user-priority/overflow and
+lower-scored-agent replacement rules still apply.
+For a batch, process user requests first and preserve caller order within each
+priority group. Return a per-request accepted or `capacity_exceeded` result;
+rejection leaves existing protection unchanged. A reset-generation mismatch returns
+`stale_generation` instead of installing or automatically retrying the old request.
 
 A learned marker sees current state/event/task context only. Proposed supervision
 uses replay comparisons of protected detail versus ordinary compression: delayed

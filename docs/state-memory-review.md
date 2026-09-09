@@ -237,3 +237,40 @@ The review recommends continuing architecture discussion with item 1, then item 
 It does not authorize tests or settle the new two-view memory proposal on the user's
 behalf. Exact review receipts remain local; the active specification retains its
 proposed status.
+
+## Follow-up: evidence views and independently resettable memory
+
+The user subsequently asked for a recommendation on memory contents and required
+independent short-term and long-term reset controls. Three further abstract Claude
+exchanges (`reset`, `reset-followup`, `reset-final`) are saved beside the original
+review receipts. The two-view recommendation remains a proposal; only the reset
+capability itself is a new user requirement.
+
+Recommend source-only evidence writes and separately addressable belief snapshots,
+with a counted allocation for each. Keeping recent belief snapshots intact means
+added evidence is not free under unchanged belief-only capacities. The design must
+recalculate its payload once the two-view dimensions are chosen.
+
+The reset proposal assigns recent/staged records to short-term and compressed,
+consolidated and protected records to long-term. Long reset keeps independent recent
+evidence, but both resets invalidate shared current belief/workspace and stale
+computations. Following Claude's simplification, historical replay was removed:
+normal perception/thinking can read retained evidence afresh, while invalid old
+belief views stay absent. Resetting a store does not erase every fact that also
+exists in deliberately retained inputs or model weights.
+
+Claude accepted corrections that execution facts can remain under that scoped
+contract, masked zero reads suffice without a mandatory learned sentinel, and an
+exact stored tensor is distinct from a deterministically reconstructed state. The
+final review accepted input-path separation rather than semantic erasure. Structural
+execution receipts exclude internal rationale and cached belief/plan vectors; this
+does not promise that an issued action is uncorrelated with old beliefs.
+
+Remaining operational questions from the final exchange are resolved in the proposed
+[reset contract](state-memory-design.md#user-controlled-memory-reset-proposed-contract):
+bounded outstanding-execution metadata survives reset until completion/expiry outside
+model memory; unmatched arrivals return an explicit outcome; protected admission is
+per request with reported overflow; stale-generation work fails or is discarded
+without automatic replay. Late genuine external results are newly ingested evidence,
+not permission to resume a cancelled plan. These are local contract specifications,
+not empirically validated reset behavior or new user-approved details.
