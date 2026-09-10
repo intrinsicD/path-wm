@@ -1,9 +1,9 @@
 # Decisions for the 10 September discussion
 
 Status: all seven topic reviews and the combined Claude reconciliation are complete.
-The morning agenda is ready; a final delivery check remains scheduled before 09:00
-Berlin. These are proposals for Alex, not adopted model changes or permission for new
-experiments.
+The final consistency check completed on 10 September at 08:31 Berlin, before the
+09:00 deadline. The overnight automation is paused. These are proposals for Alex,
+not adopted model changes or permission for new experiments.
 
 **Recommendation: make grounded memory learning the next implementation slice.**
 Keep the existing bounded architecture and exact recall task while teaching individual
@@ -1067,12 +1067,14 @@ project material was exported, and no new model run was launched during this syn
 
 ## Morning handoff
 
-The review and synthesis work is complete. Do not generate additional reviews merely
-to fill the remaining night. Keep the scheduled final check: at the first wake at or
-after 08:30 Berlin, verify this agenda and project state, deliver the recommendations
-by 09:00 and pause `overnight-agent-design-proposals`. Before then, stay quiet unless
-Alex supplies a correction or an actionable problem appears. If a wake occurs after
-the deadline, deliver the existing findings and pause immediately. The first discussion
-is the grounded learning slice; the next application priority can then set the order
-of document transfer versus active sensing. Broader implementation and experiments
-remain separate decisions.
+Completed before the 09:00 Berlin deadline. The final read-only check confirmed all
+21 overnight Claude responses completed successfully, the saved result/test/renderer
+hashes still match, and model, recipe and test source are unchanged since `32e9f99`.
+No test suite or model run was repeated. Receipt: `morning-handoff-check.json` in the
+review directory. The automation `overnight-agent-design-proposals` is paused and
+its persisted status was verified.
+
+The first discussion is the grounded learning slice. Next choose the application
+priority, which sets the order of document transfer versus active sensing. The five
+choices at the top summarize the seven detailed reviews; broader implementation and
+experiments remain separate decisions. No additional overnight work is pending.

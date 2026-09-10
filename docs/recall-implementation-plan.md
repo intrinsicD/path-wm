@@ -89,5 +89,6 @@ Use `python -m pathwm.evaluation.report RUN` to rebuild reports without a traini
 resume/source-compatibility check. The verification receipt is
 `runs/recall_v1/verification.json`. The implementation phase is complete; the
 seven overnight topic reviews and combined Claude reconciliation are complete in the
-morning agenda. Its final scheduled handoff remains due before 09:00 Berlin; the
-broader proposals are not implemented or adopted.
+morning agenda. The final read-only consistency check completed before 09:00 Berlin
+on 10 September and the overnight heartbeat is paused, with its saved status verified.
+The broader proposals are not implemented or adopted.

@@ -9,7 +9,7 @@ factual accuracy is 20%, every decision abstains, and task loss is 0.25. The mod
 does not yet demonstrate useful recall. Calibration selected its upper bound T=20;
 this small sample establishes no calibration guarantee.
 
-**Morning proposals ready:** all seven topic reviews and their combined reconciliation
+**Overnight work complete:** all seven topic reviews and their combined reconciliation
 with actual Claude are complete. The [decision agenda](remaining-decisions-2026-09-10.md)
 starts with five choices and the full design, followed by the detailed alternatives,
 interfaces, evidence and remaining empirical questions. Recommended next: grounded
@@ -18,11 +18,13 @@ its marginal signal is useful. Preserve fixed capacity, exact historical records
 separate live, hypothetical and offline replay state. Freeze the whole selected
 procedure before final calibration; each later task configuration needs its own evaluation.
 
-The heartbeat `overnight-agent-design-proposals` remains active for final delivery
-before 09:00 Berlin on 10 September, then will be paused. Reviews are finished;
-no new reviews or model experiments are needed while awaiting that handoff.
-These proposals remain unadopted. The read-only integration audit confirms no
-model/recipe/test changes after `32e9f99` and matches the stored results and renderer QA.
+The final consistency check completed on 10 September at 08:31 Berlin, before the
+09:00 deadline. All 21 overnight Claude responses succeeded; saved evidence and source
+identity are unchanged. The heartbeat `overnight-agent-design-proposals` is paused
+with its persisted status verified. These proposals remain unadopted. Receipts are
+`overnight-integration-local-checks.json` and `morning-handoff-check.json` under
+`runs/reviews/state_memory_design_2026-09-09/`. No model run or test suite was repeated
+for the morning handoff.
 
 **Implemented:** the categorical belief and bounded session-memory design authorized
 by Alex on 9 September 2026. Read [the model guide](belief-model.md) and the
