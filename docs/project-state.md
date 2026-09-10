@@ -11,7 +11,10 @@ this small sample establishes no calibration guarantee.
 
 **In progress:** subsequent Claude proposals through 09:00 Berlin on 10 September.
 The [morning decision agenda](remaining-decisions-2026-09-10.md) tracks remaining
-choices. The heartbeat `overnight-agent-design-proposals` is active every half hour,
+choices. Claude-reviewed proposals are ready for long-horizon learning, marking,
+instruction/verification, sensing and uncertainty. Bounded computation, transfer
+and the final dependency/decision synthesis remain. The heartbeat
+`overnight-agent-design-proposals` is active every half hour,
 ending at that deadline. Broader proposals are not permission to adopt changes or
 start additional experiments.
 

@@ -19,8 +19,8 @@ is historical recall with explicit abstention and independent verification.
 | 1 | Long-horizon learning and useful compression | A bounded forward memory is insufficient if distant write operations receive no useful learning signal | Reviewed and reconciled; proposal ready |
 | 2 | What to mark and how to spend fixed memory | Retention should serve future tasks without seeing future queries at write time | Reviewed and reconciled; proposal ready |
 | 3 | Instructions, exact objectives and verification | The current controlled query adapter does not interpret arbitrary user requests | Reviewed and reconciled; proposal ready |
-| 4 | Hypothetical observation updates and sensing | Planning an inspection needs observation-conditioned continuations without contaminating live history | Pending |
-| 5 | Model uncertainty and calibration | Latent variability is not an estimate of model error; selected actions may exploit prediction mistakes | Pending |
+| 4 | Hypothetical observation updates and sensing | Planning an inspection needs observation-conditioned continuations without contaminating live history | Reviewed and reconciled; proposal ready |
+| 5 | Model uncertainty and calibration | Latent variability is not an estimate of model error; selected actions may exploit prediction mistakes | Reviewed and reconciled; proposal ready |
 | 6 | Planning and thinking budgets | Search and retrieval costs need concrete caps and honest stopping signals | Pending |
 | 7 | Transfer and evidence for world understanding | Canonical recall alone cannot establish visual mapping, document understanding or general competence | Pending |
 
@@ -351,10 +351,276 @@ the treatment of unverifiable outcomes; they must not hide unknown cases by repo
 only successful verification. The first controlled tasks can keep complete evaluator
 truth while the online agent remains uncertain.
 
+## 4. Let planning condition on a possible observation without changing live history
+
+The first active task should inspect once and then answer or abstain about a current
+location, with the target stationary from query to answer. Historical last-observed
+recall stays a separate task: inspecting now does not retrieve an earlier fact.
+The action contract specifies duration, cost, finite returned categories and failure
+behavior. The environment owns truth; a sensor return is evidence about it.
+
+Create a private branch from a completed live event and frozen memory snapshot.
+Advance the proposed action and duration once per acquisition candidate. Enumerate
+its possible returns, correcting each in a separate branch from that same prior;
+mutually exclusive returns must not accumulate as packets in one event. Then run
+the bounded task reader. Share numerical correction components with live
+perception, while keeping an explicit scratch wrapper and hypothetical provenance.
+Branch results cannot commit, mark memory, consume real event ordinals or verify an
+answer. Their temporary state and workspace are discarded after scoring. For this
+first task, both actual and hypothetical terminal reads use the corrected state
+and the pre-event memory snapshot, before the new observation is written to memory.
+Apply any required pure state finalization consistently on both paths. The actual
+event then writes normally; no branch memory hierarchy is needed. Executing a chosen
+inspection uses a new ordinary live transaction and the actual return; it never
+copies the simulated posterior into live history. Deliver the actual answer only
+after that transaction has been handled. There is at most one inspection per attempt,
+including a failed inspection; automatic retries are outside this first scope.
+
+Planning consumes its separately declared compute budget, including failed branch
+calculations. It does not consume a real acquisition quota or fabricate external
+action costs. Telemetry may record that planning occurred, but cannot route private
+simulator truth or hidden member identity into live belief. Expose only declared
+operation counts, charged costs and remaining budget through the ledger; these are
+runtime context, not world observations. Predicted branch scores reach the planner
+through its explicit prediction interface and remain inferred quantities.
+
+A return saying the inspection failed can still be evidence if failure likelihood
+depends on location. It always carries the action/time/cost actually incurred.
+An exact example with equally likely locations and failure likelihoods 0.8/0.2 gives
+a posterior of 0.8/0.2 on failure, reversed on the other return. With wrong-answer
+cost 1, abstention 0.25 and inspection 0.02, its expected cost is 0.22 versus 0.25
+for immediate abstention. This is checked arithmetic, not a learned result. An
+uninformative failure must not falsely increase confidence; an informative failure
+must not be silently replaced by a neutral missing-data token.
+
+For one acquisition, choose the best continuation after each possible visible
+return, then average its loss and add acquisition cost. A hidden target or sampled
+model identity used by the simulator is never continuation input. Skip truly
+zero-probability branches only under the stated model; declare handling for actual
+unsupported or invalid returns instead of manufacturing a normalized belief.
+
+The existing planner evaluates fixed action sequences and has no correction branches.
+The live event API deliberately rejects imagined states and generated source content.
+A new scratch wrapper must preserve those protections; removing the guards is not
+an implementation of this proposal. Check state/memory/counter invariance under fixed
+random draws, exception-path isolation, live-versus-scratch numerical parity for
+matching inputs and ordering, and independence
+of a continuation from private labels when its permitted inputs are unchanged.
+
+The read-only guarantee covers tensor aliasing, caches, mutable statistics and RNG,
+where those exist. Shared live context is legitimate branch input; its derived
+outputs remain hypothetical. This calls for ownership and mutation-boundary checks,
+not a blanket ban on shared tensors or a compulsory generic taint framework. Software
+errors cannot roll back an external action already executed. Preserve its actual
+effects and costs, and distinguish valid sensor failure evidence from malformed or
+unavailable evidence. Expected failures/no-data belong in the normalized sensor
+alphabet. An actual out-of-contract return instead triggers explicit abstention or
+the declared error/unknown path; it cannot silently produce a confident prior-only
+answer. Preserve separately valid evidence and executed-action bookkeeping on that
+path. Include such attempts and known costs in reporting. A meaningful catch-all
+sensor status can be modeled; every private software fault need not become a
+Bayesian observation. Classify valid returns versus contract violations by rules
+fixed before execution, never according to whether the return supports a preferred
+answer. Score factual probabilities across valid evaluable episodes regardless of
+answer/abstain selection; report invalid/missing cases and all-attempt costs visibly.
+Planning wall-clock latency is separate from imaginary time;
+the first task assumes the target stays stationary throughout the attempt. A future
+moving-world task must account for actual elapsed time.
+
+**Recommended sequence:** first verify exact finite sensing algebra with a declared
+known prior and sensor likelihood. Then compare a learned finite probability model
+against the shared neural correction path. For the finite model, use a common
+`p(Y | b, query)` and a normalized `p(O | Y, b, a)` to form the joint. The likelihood
+head predicts a table across candidate target hypotheses; the actual hidden target
+only indexes its offline loss. Considering a different pure inspection cannot change
+the pre-return target marginal. The output categories belong to this task adapter,
+not to the meaning of the world-state tokens.
+
+Bayes conditioning is exact relative to that joint; its learned prior or likelihood
+can still be wrong. For an explicit finite factorization, a proper joint loss can
+train both factors without three separately supervised heads. The general neural
+correction needs a grounded posterior learning signal on actual returns, alongside
+prediction and existing world objectives. Start with supervised losses; the discrete
+action minimum is not a differentiable training path. Imagined observations are
+planning inputs, not factual labels. Complete evaluator labels and predetermined
+action coverage make online forced exploration unnecessary in this first study.
+
+The general corrector can be checked by marginalizing its predicted posteriors over
+its predicted returns and comparing with its prior. Consistency alone is weak:
+wrong or uninformative predictors can agree. Conversely, a uniform marginal over
+sensor returns can be perfectly informative about a uniform binary target. Do not
+reward entropy reduction merely to satisfy an information-gain target. Use grounded
+probability scores and realized task loss, with both calibration and discrimination.
+
+This is a staged comparison, not a requirement that every future neural corrector
+match an oracle. The known-model oracle checks decision arithmetic; the learned
+finite reference helps separate correction error from errors in predicted facts and
+sensor behavior. Finite models can also handle moving targets or deeper plans when
+their transition spaces remain tractable. Complexity is a reason to compare learned
+correction, not a theorem that it becomes necessary at a particular depth.
+
+Before deeper planning, require the causal checks, observable prior/sensor/posterior
+scores, plan-versus-actual loss, acquisition rate and costs, and comparison with
+answer-now/abstain and fixed-inspection references. Include uninformative/noisy
+returns, failed returns and cases where current location differs from last observed
+location. A known-kernel oracle and learned-head results must be labelled separately.
+Set populations, budgets and any pass thresholds before executing the comparison.
+At most `C*O` corrected continuations are considered for `C` acquisition candidates
+and `O` returns; count their actual reader/model calls as well.
+
+The observation-conditioned decision formulation follows the
+[POMDP belief update and policy construction](https://cs.brown.edu/courses/csci2951-k/papers/kaelbling98.pdf).
+The scratch transaction and training sequence above are our design proposals; that
+source does not establish learned filtering or memory sufficiency in this agent.
+
+**Decision for Alex:** use one-step inspection with an exact finite reference and
+an isolated shared correction path as the next active-task proposal, after useful
+historical learning. Prefer the common-prior finite factorization for the first
+learned reference. The viable alternative is to train the general corrector directly
+and retain finite Bayes only as an oracle diagnostic; it has fewer task-specific
+components but makes prediction and correction errors harder to separate.
+
+Reviews: `overnight-sensing`, `overnight-sensing-reconcile` and
+`overnight-sensing-boundaries`. Claude accepted the common-prior factorization and
+read-before-write ordering. It withdrew compulsory deep copies/taint machinery,
+a blanket ban on shared live context, presumed read-side mutation, mandatory three
+heads or likelihood floors, uniform-return-marginal claims, and forced online
+exploration for the controlled offline design. It also corrected exclusive error
+attribution to representation, calibration-without-discrimination, and claims that
+finite models cannot handle later dynamics/depth. The final clarification separated
+charged planning computation from external-action accounting and modeled sensor
+failures from private software faults. Its remaining ledger-readback and ex-ante
+return-classification concerns are addressed explicitly above. Correction quality,
+action coverage and selected prediction error remain empirical. The algebra checks
+in `overnight-sensing-arithmetic.json` and `overnight-sensing-consistency.json` are
+finite illustrative calculations, not model experiments.
+
+## 5. Start with observable decision risk; leave model-error estimates unclaimed
+
+Keep one model initially. Its task head predicts observable outcomes; independent
+calibration data may adjust those probabilities, and the exact task costs determine
+answering, acquisition or abstention. Report factual accuracy and proper scores
+alongside selected risk and coverage. Calibrating a nearly uninformative predictor
+cannot make it remember facts or correct its ranking mistakes.
+
+Three examples explain the distinction. A key could be in either of two locations
+because it was not seen being moved; a good inspection can reduce that uncertainty.
+A sensor may return noisy readings even when its mechanism is known. The model may
+also have learned the wrong sensor mechanism or lost a relevant memory. The entropy
+of one latent categorical distribution does not uniquely separate these causes or
+estimate the chance that its own model is wrong. Repeated thinking adds no external
+evidence, even when confidence increases.
+
+Treat unsupported task kinds and invalid contracts explicitly. A learned novelty
+or distance score is only an empirical indicator; neither low novelty nor ensemble
+agreement certifies correctness. Fixed weights do not prevent input distribution
+shift, and changing weights requires rechecking the calibration procedure.
+
+Positive temperature scaling preserves each factual logit argmax, but it can change
+which answers are accepted under abstention and which acquisition has lowest
+predicted cost. Thus marginal calibration and calibration of the selected subset
+are different questions. Freeze the complete evaluated procedure before test access,
+report the resulting selected decisions, and never infer a subgroup guarantee from
+an aggregate reliability curve. A specified calibration fit is allowed to choose
+its parameter on calibration data; an untouched test population evaluates the final
+pipeline. Repeated design tuning after inspecting test results needs new independent
+evidence, rather than renaming the same test set.
+
+A later bounded ensemble is a possible comparison. Members may have different latent
+coordinate systems; combine probabilities in common observable outcome categories.
+A cheaper shared-encoder/multiple-head alternative may miss shared representation
+errors. Separately initialized models can also agree on the same mistake. Ensemble
+variation is a model-error indicator under assumptions, not a calibrated probability
+that the true mechanism is contained in the ensemble.
+
+In sensing, mix the members' joint target/return predictions, condition the mixture
+on the visible return, and choose one continuation. Averaging individually optimal
+member decisions falsely gives the policy the member identity. With two equally
+weighted members certain about opposite locations and identical uninformative
+returns, the legitimate mixture still prefers abstention at cost 0.25. Averaging
+the member-specific optimal losses gives zero, an artificial value of information.
+Adding inspection cost 0.1 yields 0.35 versus the invalid 0.1. The fraction check
+is retained beside the review receipts.
+
+The finite sensing factorization should remain coherent through calibration: apply
+a declared transform to its normalized factors and derive joint/posterior values,
+rather than independently adjusting incompatible prior and posterior heads and
+claiming they still describe one Bayesian model. For the neural path, measure any
+resulting inconsistency; calibration does not automatically repair filtering.
+
+For action selection, prefer a calibration population with declared action coverage
+when the controlled environment supplies valid outcomes. Fit the predeclared
+transform, freeze the resulting policy, and evaluate it on independent episodes.
+The cost grid is fixed before test evaluation. An operating point chosen later
+after inspecting its test curve is not independently validated by that same curve.
+A calibrator trained only on outputs selected by an earlier policy may encounter
+a different population if it changes that policy. This is a risk to assess, not
+a universal fixed-point problem. A caller-specified abstention cost does not require
+a fitted threshold or a new threshold-selection split. Off-policy or complete
+counterfactual data may support evaluation when their assumptions and coverage hold;
+an unexecuted real action does not acquire a label merely because we want one.
+
+Declare the primary proper score, risk/cost metric and slices in an experiment plan;
+include sample counts and suitable uncertainty intervals. Distinguish descriptive
+subgroup views from confirmatory statistical tests. Binning-sensitive reliability
+plots are useful diagnostics, not proof of calibration. Bind the calibration map
+and claim to weights, input/outcome contract, fit population and evaluated procedure.
+Exhaustive controlled tasks need no invented factual out-of-vocabulary label; open
+applications must explicitly define what happens when truth lies outside the output
+space. Factual absence, structural infeasibility and operational abstention differ.
+
+A reinspection can be valuable even when the information was once available but is
+now forgotten. Whether it is worth doing depends on current attainable decision
+risk and cost, including the alternative of more retrieval. Error taxonomy alone
+cannot decide that. Likewise, selection can favor optimistic prediction errors,
+but the direction and size of the bias depend on those errors and their dependence.
+Measure chosen-versus-reference predicted and realized loss instead of assuming
+that every planner must over-inspect.
+
+An ensemble comparison should follow a concrete residual-error hypothesis and a
+declared budget; it does not require exhausting every calibration method or proving
+that all alternatives have already lost. Compare a single-model reference and the
+chosen ensemble variant under the declared primary resource constraint, and report
+the other costs. Full independent recurrent members need their own beliefs and often
+member-specific memory encodings, as well as weights and computation. The total
+session-memory budget therefore matters, not only each member's per-stream bound.
+Shared-representation heads avoid those extra stream states but cannot reveal all
+shared encoding errors. Preserve current capacity unless Alex explicitly chooses a
+different total budget. Zero disagreement does not establish safety or correctness.
+
+Conditioning a model mixture is Bayesian within that assumed mixture; it need not
+match the real world's uncertainty, even with many members. Worst-member penalties
+or disagreement bonuses change the stated decision objective and are not automatic
+upgrades to expected task cost. No calibrated epistemic-uncertainty claim is proposed
+for the initial single model or promised by the ensemble alternative.
+
+[Temperature scaling](https://proceedings.mlr.press/v70/guo17a/guo17a.pdf) supports a
+simple held-out probability adjustment while preserving factual argmax.
+[Deep ensembles](https://papers.neurips.cc/paper/7219-simple-and-scalable-predictive-uncertainty-estimation-using-deep-ensembles.pdf)
+and [PETS](https://proceedings.neurips.cc/paper/2018/file/3de568f8597b94bda53149c7d7f5958c-Paper.pdf)
+provide predictive-ensemble precedents. These do not guarantee calibration under
+this agent's memory compression, action selection or domain shift. The budget and
+mixture-conditioning recommendations are design inferences.
+
+**Decision for Alex:** keep one model with observable probability calibration and
+explicit selected-risk evaluation first. Reserve shared-head or full-model ensembles
+for a bounded comparison motivated by measured residual errors. No new universal
+epistemic score, confidence-driven stopping rule or pessimistic penalty is needed
+to complete the initial architecture.
+
+Reviews: `overnight-uncertainty` and `overnight-uncertainty-reconcile`. Claude
+withdrew universal calibration circularity, mandatory threshold splits and factual
+OOV classes, on-policy-only evidence, the claim that Bayesian conditioning requires
+a true ensemble member, and the claim that re-sensing after forgetting is necessarily
+wasteful. It accepted total member-specific memory accounting and hypothesis-driven
+ensemble comparisons. Its remaining operating-point, slice-uncertainty and resource
+matching concerns are addressed by a predeclared cost grid, counts/intervals, and
+one declared parity axis with the other costs reported. Coverage and useful
+calibration remain empirical; agreement makes no capability claim.
+
 ## Continuation for the overnight work
 
-Next: review hypothetical observation correction/sensing, model uncertainty and
-bounded thinking/planning; then transfer/evaluation and the cross-topic dependencies.
+Next: bounded thinking/planning, transfer/evaluation and the cross-topic dependencies.
 Avoid reopening the settled causal/gradient distinctions unless new evidence changes
 them. For each group prepare an independent note and public conceptual brief before
 reading Claude, verify consequential claims, reconcile errors, and append a concrete
