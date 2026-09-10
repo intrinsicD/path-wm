@@ -2591,3 +2591,47 @@ tree:
   - N153
   - N157
   status: open
+- id: N159
+  type: question
+  title: How should bounded thinking and planning spend compute and stop?
+  provenance: ai-suggested
+  timestamp: 2026-09-10T02:54+02:00
+  description: Three actual isolated Claude exchanges refine fixed schedules, a finite model-operation
+    basis, per-resource caps, charged retries, reserved actual processing and explicit status-only termination.
+    Historical cutoff scope can remain valid after later events; current actions revalidate their live
+    base. Later marginal stopping is grounded and myopic, with all scorer/offline cost accounted. Symbolic
+    design ready; hardware constants and implementation unmeasured.
+  evidence:
+  - docs/remaining-decisions-2026-09-10.md
+  - runs/reviews/state_memory_design_2026-09-09/overnight-compute-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-compute-reconcile-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-compute-contract-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-compute-arithmetic.json
+  also_depends_on:
+  - N152
+  - N157
+  - N158
+  status: open
+- id: N160
+  type: question
+  title: Which controlled transfer test can establish reuse through the learned core?
+  provenance: ai-suggested
+  timestamp: 2026-09-10T02:54+02:00
+  description: Three actual isolated Claude reviews refine controlled document revisions before an optional
+    moving-viewpoint extension, with frozen learned versus random core and matched bounded target adapters.
+    Corrected modality-only transfer, low-MSE refutation, eviction uncertainty, retrospective-cutoff,
+    reset/chance and control-strength overclaims. Neutral interface is distinct from universal capability.
+    All seven topic proposals ready; combined dependency audit and morning synthesis remain.
+  evidence:
+  - docs/remaining-decisions-2026-09-10.md
+  - runs/reviews/state_memory_design_2026-09-09/overnight-transfer-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-transfer-reconcile-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-transfer-scope-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-compute-transfer-source-checks.txt
+  also_depends_on:
+  - N152
+  - N153
+  - N154
+  - N156
+  - N159
+  status: open

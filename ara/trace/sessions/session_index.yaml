@@ -107,8 +107,9 @@ sessions:
     Three Claude exchanges produce the first remaining proposal; other reviews are scheduled through09:00Berlin.
     Turn4 adds four reconciled Claude reviews and marking/objective-interface proposals; no model work.
     Turn5 adds five reconciled sensing/uncertainty reviews and proposals, with no model work; compute/transfer
-    and morning synthesis remain.
-  turn_count: 5
-  events_count: 20
+    and morning synthesis remain. Turn6 adds six reconciled compute/transfer reviews and proposals; all
+    seven groups ready, dependency audit/morning synthesis remain. No model work.
+  turn_count: 6
+  events_count: 24
   claims_touched: []
   open_threads: 8

@@ -2,8 +2,8 @@ session:
   id: 2026-09-10_001
   date: '2026-09-10'
   started: 2026-09-10T00:05+02:00
-  last_turn: 2026-09-10T02:20+02:00
-  turn_count: 5
+  last_turn: 2026-09-10T02:54+02:00
+  turn_count: 6
   summary: Two isolated Claude reviews produced a proposed goal/action/outcome-verification interface,
     historical recall with factual not-observed versus abstention, and bounded observation-conditioned
     sensing. Turn2 works out reference costs, complete text-recall episodes, separate calibration and
@@ -16,7 +16,9 @@ session:
     no new model work. Sensing, uncertainty, compute and transfer remain for the overnight continuation.
     Turn5 completes five Claude exchanges for sensing and uncertainty, with exact finite arithmetic and
     primary-source checks. Proposals committed1fd6795; compute, transfer and final synthesis remain. No
-    model changes or experiments.
+    model changes or experiments. Turn6 completes six Claude exchanges for bounded compute and transfer;
+    exact operation contract and frozen-core contrast proposed in8b64fb2. All seven topic groups ready;
+    combined dependency audit and morning synthesis remain. No model work.
 events_logged:
 - turn: 1
   type: decision
@@ -170,6 +172,43 @@ events_logged:
     before conditioning/selection, accounts for member-specific recurrent states/memory and reports resource
     tradeoffs. Shared heads are cheaper but blind to common encoding errors; low disagreement and mixture
     Bayes do not certify real-world correctness.
+- turn: 6
+  type: question
+  id: N159
+  routing: direct
+  provenance: ai-suggested
+  summary: How should bounded thinking and planning spend compute and stop?
+- turn: 6
+  type: question
+  id: N160
+  routing: direct
+  provenance: ai-suggested
+  summary: Which controlled transfer test can establish reuse through the learned core?
+- turn: 6
+  type: observation
+  id: O112
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Propose fixed recall rounds and fixed one-inspection search with a small exact per-attempt
+    budget: finite named operation groups, mandatory count caps, optional weighted work plus separate
+    peak-byte/action/deadline limits, reserved actual processing and monotone spent counters. Charge new
+    recomputation, release unused reserves once, preserve interrupted/unknown work status, and bind outputs
+    to task/session/revision/read scope. Fixed historical scopes can finish from retained causal snapshots;
+    current actions require fresh bases. Future adaptive stopping compares grounded loss improvement against
+    incremental future compute cost, with the base reader frozen first and fixed schedules retained as
+    controls.'
+- turn: 6
+  type: observation
+  id: O113
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose controlled document-version/revision transfer after useful delayed learning, then an
+    optional coherent moving-viewpoint task. First contrast freezes belief/dynamics/memory/read/workspace
+    core, trains bounded target adapters/readouts and compares source-trained versus random frozen core
+    with identical target-data/update budgets. No raw-history or independent temporal-memory adapter bypass;
+    source pretraining cost reported. Distinguish same-domain generalization, supported frozen transfer,
+    adapter adaptation, full fine-tuning and joint training. Use scoped truth, grouped episodes and appropriate
+    proper/task scores; neither modality changes nor neutral latent interfaces prove universal world representations.
 ai_actions:
 - turn: 1
   action: Inspected local planner/task/categorical interfaces; wrote independent notes, completed two actual
@@ -218,6 +257,15 @@ ai_actions:
   files_changed:
   - docs/remaining-decisions-2026-09-10.md
   - docs/project-state.md
+- turn: 6
+  action: Completed six actual isolated Claude reviews after independent notes, reconciled overclaims
+    and specified symbolic budget operations. Checked local fixed-reader/planner/data interfaces, ACT/feature-transfer/statistical-evaluation
+    primary sources and exact two-step compute-value arithmetic. Committed8b64fb2 proposals. No private
+    export, model edits, data downloads, test-suite runs or training.
+  provenance: ai-executed
+  files_changed:
+  - docs/remaining-decisions-2026-09-10.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -238,6 +286,10 @@ key_context:
   excerpt: Heartbeat continues explicit overnight authorization. Sensing and uncertainty proposals are
     ready for Alex, not silently adopted; deadline09:00Berlin and no-new-reviews-after08:30 remain. Implementation
     already complete.
+- turn: 6
+  excerpt: Scheduled continuation of prior overnight authorization. All seven proposal groups are ready;
+    the remaining work is to audit dependencies and prepare a compact decision sheet by09:00Berlin. Reviewed
+    proposals are not user-adopted changes or new experiment permission.
 open_threads:
 - O104/A04 implemented. O106 negative development interpretation and O107 local memory-learning proposal
   remain staged. A scientific effect-size/seed/split/paired-control protocol is still required.
@@ -245,9 +297,9 @@ open_threads:
 - O103 requires a future isolated hypothetical-correction interface and validated sensing probabilities.
 - O101 long-horizon retention, calibrated outcomes and useful closed-loop behavior remain unproven.
 - Prior research questions remain open as recorded in 2026-09-09_001.yaml; no unrelated topic abandoned.
-- Complete remaining Claude decision groups by08:30; synthesize by09:00Berlin and pause the active heartbeat.
+- Complete the combined dependency audit by08:30; synthesize by09:00Berlin and pause the active heartbeat.
 - O108/O109 proposals await Alex; O110/O111 sensing/uncertainty proposals are also ready.
-- Next review bounded compute and transfer; preserve explicit data/selection/cost boundaries in final synthesis.
+- O112/O113 bounded-compute/transfer proposals are ready; preserve their data/selection/cost boundaries in final synthesis.
 ai_suggestions_pending:
 - 'O102: broader objective/capability/action interfaces remain proposed; narrow recall contract is implemented.'
 - 'O103: finite sensing diagnostic then static-current-location inspect/answer, separately from historical recall.'
@@ -259,3 +311,7 @@ ai_suggestions_pending:
   explicit failure handling.'
 - 'O111: single-model observable calibration before bounded ensemble comparison, with total recurrent-memory
   resource accounting.'
+- 'O112: fixed computation plus exact operation/resource accounting; later grounded marginal stopping
+  remains a comparison.'
+- 'O113: controlled text revision transfer through a frozen trained-versus-random core, with visual mapping
+  as a later scoped option.'

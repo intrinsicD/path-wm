@@ -708,3 +708,15 @@ entries:
     claims.
   - Preserve negative results, fixed capacity, fresh-session reset semantics and public-only export. No
     new experiment, model edit or test-suite execution; no unrelated abandonment or new stale flags inferred.
+- turn: 2026-09-10_001#6
+  notes:
+  - Record reviewed questions N159/N160 and stage O112/O113. Six actual Claude calls completed; review
+    agreement is explicitly not user adoption.
+  - 'Do not promote proposals from document commit8b64fb2: no downstream model/config now depends on them.
+    Neutral interfaces and scoped transfer are separate from any universal capability claim.'
+  - Keep symbolic call arithmetic and finite myopia example as review evidence, not model experiments
+    or profiling. Corrected peer claims do not contradict adopted research claims; no adjudication node
+    needed.
+  - All seven topics ready, but combined dependencies and final09:00Berlin synthesis remain. Preserve
+    O103/O106/O107 and other active pending questions; no unrelated abandonment/staleness or expanded
+    experiment authorization inferred.

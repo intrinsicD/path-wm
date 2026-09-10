@@ -2007,3 +2007,50 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O112
+  timestamp: 2026-09-10T02:54+02:00
+  provenance: ai-suggested
+  content: 'Propose fixed recall rounds and fixed one-inspection search with a small exact per-attempt
+    budget: finite named operation groups, mandatory count caps, optional weighted work plus separate
+    peak-byte/action/deadline limits, reserved actual processing and monotone spent counters. Charge new
+    recomputation, release unused reserves once, preserve interrupted/unknown work status, and bind outputs
+    to task/session/revision/read scope. Fixed historical scopes can finish from retained causal snapshots;
+    current actions require fresh bases. Future adaptive stopping compares grounded loss improvement against
+    incremental future compute cost, with the base reader frozen first and fixed schedules retained as
+    controls.'
+  context: Three public-only Claude exchanges checked symbolic R+2 initial, C*(2+O*(R+3)) planning and
+    R+5 actual-path operation counts, not FLOPs or latency. Exact illustrative complementary-round arithmetic
+    verifies possible one-step myopia. No scheduler implementation, profiling, tests or experiments. Current
+    capacities and no selective reset preserved.
+  potential_type: architecture
+  bound_to:
+  - N159
+  - N152
+  - N157
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O113
+  timestamp: 2026-09-10T02:54+02:00
+  provenance: ai-suggested
+  content: Propose controlled document-version/revision transfer after useful delayed learning, then an
+    optional coherent moving-viewpoint task. First contrast freezes belief/dynamics/memory/read/workspace
+    core, trains bounded target adapters/readouts and compares source-trained versus random frozen core
+    with identical target-data/update budgets. No raw-history or independent temporal-memory adapter bypass;
+    source pretraining cost reported. Distinguish same-domain generalization, supported frozen transfer,
+    adapter adaptation, full fine-tuning and joint training. Use scoped truth, grouped episodes and appropriate
+    proper/task scores; neither modality changes nor neutral latent interfaces prove universal world representations.
+  context: Three Claude reviews reconcile measurement, memory/cutoff/reset semantics and transfer terminology;
+    primary ACT, feature-transfer and statistical-evaluation sources checked. Text-first is a preference;
+    actual source-target difference, effect size and budget await a concrete plan. Proposal committed8b64fb2,
+    no source-model edits, new data downloads or experiments.
+  potential_type: architecture
+  bound_to:
+  - N160
+  - N154
+  - N153
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
