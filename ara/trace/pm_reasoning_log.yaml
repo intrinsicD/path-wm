@@ -747,3 +747,24 @@ entries:
     events.
   - Automation pause persisted and docs committed811a330. User-authorized overnight implementation/review/handoff
     is complete before09:00Berlin; broader experiments remain separate decisions.
+
+- turn: 2026-09-11_001#1
+  notes:
+  - Record request as N162; stage recommendation O115. Prose planning is not adoption, downstream
+    implementation or new empirical resolution.
+  - Retain prior staged topics referenced by the previous session; no new closure, contradiction
+    or stale flag established.
+  - The failed Claude request reports empty model usage and zero API-equivalent cost; it supplied
+    no review. Retry rejected before execution; do not bypass or label this a joint agreement.
+
+- turn: 2026-09-11_001#2
+  notes:
+  - N163 records explicit export/implementation authorization; promote O115 to H17 by verbal affirmation,
+    preserving the original staged wording as history.
+  - N164 is the actual pilot; stage O116 as interpretation. A failed preregistered gate completes
+    the pilot and stops expansion, not the workflow/report. No claim of compression failure or calibration
+    success.
+  - Claude explicitly withdrew conflated absence/abstention and categorical corruption claims; no
+    remaining review disagreement and no further review required.
+  - No other staged topics have new closure; prior open threads remain referenced. Browser full-page
+    stitching artifact was resolved with normal-viewport screenshots, without modifying raw results.

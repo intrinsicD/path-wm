@@ -1,0 +1,79 @@
+session:
+  id: 2026-09-11_001
+  date: '2026-09-11'
+  started: 2026-09-11T01:35+02:00
+  last_turn: 2026-09-11T01:56+02:00
+  turn_count: 2
+  summary: Approved Claude export, reconciled two short reviews, implemented diagnostic and completed
+    one failed-gate CPU pilot; 79 tests and report QA pass.
+events_logged:
+- turn: 1
+  type: question
+  id: N162
+  routing: direct
+  provenance: user
+  summary: Economical continuation with Claude requested.
+- turn: 1
+  type: observation
+  id: O115
+  routing: staged
+  provenance: ai-suggested
+  summary: Bounded factual diagnostic and single-owner workflow proposed.
+- turn: 2
+  type: decision
+  id: N163
+  routing: direct
+  provenance: user
+  summary: Explicit export and implementation approval.
+- turn: 2
+  type: experiment
+  id: N164
+  routing: direct
+  provenance: ai-executed
+  summary: 256-update pilot completes; both gates fail.
+- turn: 2
+  type: heuristic
+  id: H17
+  routing: crystallized
+  provenance: user-revised
+  summary: O115 adopted via verbal affirmation.
+- turn: 2
+  type: observation
+  id: O116
+  routing: staged
+  provenance: ai-suggested
+  summary: Source-fact/query-binding diagnosis proposed; cause unlocalized.
+ai_actions:
+- turn: 1
+  action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
+    timeout receipt and approval rejection. Draft next-slice plan and update project state. No tests
+    or training rerun.
+  provenance: ai-executed
+  files_changed:
+  - docs/recall-learning-plan.md
+  - docs/project-state.md
+  - runs/reviews/continuation_2026-09-11/
+- turn: 2
+  action: Two successful Claude exchanges; plan/red commit 9eceb36; implementation dbdaf64; 79 CPU
+    tests; one forward/backward check and one capped pilot; browser QA; no downstream training.
+  provenance: ai-executed
+  files_changed:
+  - experiments/multimodal.py
+  - pathwm/evaluation/report.py
+  - tests/test_recall.py
+  - docs/recall-learning-plan.md
+  - docs/project-state.md
+  - docs/recall-task.md
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: 'User: workout with claude how we should continue. be efficient due to your and claudes
+    weekly limit.'
+- turn: 2
+  excerpt: 'User: yes send it to claude. then implement your points'
+open_threads:
+- 'O116: define one bounded source-fact/query-binding control; no new run launched.'
+- O101-O114 and earlier research questions remain referenced by 2026-09-10_001.yaml; local memory
+  learning/marking/transfer remain conditional.
+ai_suggestions_pending:
+- 'O116: narrower factual-grounding/binding diagnosis after failed gates.'

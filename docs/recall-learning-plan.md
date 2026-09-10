@@ -134,3 +134,43 @@ null result falsifies reliance. It accepted a terminal fresh-example diagnostic
 after fit failure and acknowledged that a finite-budget fit failure need not be a
 bug. Exact responses and model usage are in `next-step-retry-*` and `reconcile-*`.
 No more architectural reviews are needed for this slice.
+
+## Implementation and pilot outcome
+
+Implemented in `experiments/multimodal.py`, with diagnostic sections in the existing
+report renderer. `--dataset recall --recall-mode current-recent` runs the declared
+defaults. Plan/red checks were committed as `9eceb36`; implementation as `dbdaf64`.
+The initial three contract tests failed because the historical generator required
+15-episode populations. The final suite passes all 79 CPU tests, including exact
+pause/resume apart from elapsed time, no calibration/test access, cached final
+evaluation, report-failure status and cumulative budget exhaustion. Ruff checks
+and the real width-32 diagnostic forward/backward check pass.
+
+The single pilot completed 256 updates / 1,024 sampled episode presentations in
+144.58 active seconds. It used exactly the declared populations, settings and final
+checkpoint. Training seen-location accuracy: current 11/16 (68.75%), recent 12/16
+(75%); combined NLL 0.852505. Development: current 5/40 (12.5%), recent 9/40 (22.5%);
+combined seen NLL 2.146645. Factual absence scores 8/8 in training and 7/20 in
+development. Overall development accuracy is 21%, coverage 12%, task loss 0.31.
+Both gates fail; no local memory objective, marking, calibration or further run
+was launched. This is the declared stopping outcome, not an incomplete training run.
+
+Read-only inspection confirms byte encoding preserves the whole canonical entity/
+location strings, all saved parameters are finite, and gradients reach source,
+state, memory and factual readout. Training factual NLL falls from 1.646278 to
+0.727872 overall, but the final model does not fit the seen training facts to the
+declared threshold and performs poorly on fresh episodes. These checks rule out
+an entirely disconnected objective; they do not identify a particular representation
+or optimization defect. Next propose a narrowly budgeted source-fact/query-binding
+readout control before changing retention or adding losses. Do not retune on this
+development population and present it as a new held-out result.
+
+Evidence: `runs/recall_diagnostic_v1/{tests.xml,check.json,verification.json}` and
+`pilot/{run.json,last.pt,metrics.jsonl,recall_diagnostic_manifest.json,
+recall_diagnostic_predictions.pt,recall_diagnostic.json,report.html}`. The report
+passed structural verification and browser inspection at 1280x720 with no broken
+images or horizontal overflow; normal-viewport screenshots are retained. Completed
+historical evidence remains unchanged. Only two short successful Claude exchanges
+were used; their receipts report Claude Sonnet 5 with no thinking tokens, plus
+the CLI's small Haiku overhead. Reported cost fields are API-equivalent estimates,
+not subscription charges or a measurement of weekly quota consumed.

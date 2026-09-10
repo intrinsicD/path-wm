@@ -1,13 +1,24 @@
 # Current work
 
-**Active slice, 11 September:** Alex authorized the
-[current/recent factual recall diagnostic](recall-learning-plan.md) and its capped
-CPU pilot. After explicit export approval, actual Claude completed the review and
-one reconciliation, accepting diagnostic-first scope and withdrawing absence/
-abstention and corruption-test overclaims. Implementation is in progress. Grounded
-local memory learning follows only if the diagnostic supports the next comparison.
+**Current slice complete, 11 September:** the
+[current/recent factual recall diagnostic](recall-learning-plan.md) is implemented
+in the same recipe (`--dataset recall --recall-mode current-recent`). Actual Claude
+completed one review and one reconciliation after Alex approved the export. All 79
+CPU tests pass; the actual diagnostic forward/backward check has finite losses and
+the expected gradients. The 256-update CPU pilot finished in 144.58 active seconds.
+The final checkpoint gets 71.875% seen-location accuracy on its 40 training episodes,
+but only 17.5% on the 80 seen cases among 100 fresh development episodes: current
+12.5%, recent 22.5%. Both declared gates fail. Overall development task loss is 0.31
+at 12% coverage, worse than always abstaining (0.25). No calibration/test data was
+loaded and no new memory loss or budget extension was started.
 
-**Current slice:** historical recall is implemented in the same recipe. Read the
+The [standalone report](../runs/recall_diagnostic_v1/pilot/report.html) passed
+structural and 1280x720 browser checks. `runs/recall_diagnostic_v1/verification.json`
+binds source/results/checkpoint/report hashes, tests and screenshots. Next focus is
+basic entity/location binding and generalization; this pilot does not isolate the
+input encoder, query binding, readout or insufficient optimization budget.
+
+**Prior recall slice:** historical recall is implemented in the same recipe. Read the
 [usable guide](recall-task.md) and [implementation record](recall-implementation-plan.md).
 All 76 CPU tests pass, including exact pause/resume, held-out split isolation and
 report-failure recovery. A 256-event default-memory forward/backward check completed.
@@ -123,6 +134,7 @@ Report seen/old-history performance separately: recognizing only unseen entities
 beat all-abstain without remembering any locations. The subsequent implementation
 and development evidence are recorded in the guide linked above.
 
-**Next step:** implement and evaluate the bounded diagnostic plan. Numerical
+**Next step:** declare one bounded input/binding/readout diagnostic before any new
+memory-learning objective; preserve the failed current/recent pilot. Numerical
 costs are explicit research defaults, not inferred application preferences. Deployment-length replay,
 general mark selection, calibrated probabilities and closed-loop behavior remain open.

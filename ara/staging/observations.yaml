@@ -2079,3 +2079,37 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O115
+  timestamp: 2026-09-11T01:35+02:00
+  provenance: ai-suggested
+  content: Prefer one bounded current/recent recall pilot with the existing objective before local
+    storage supervision; use a single implementation owner and at most one consequential Claude review.
+    Proposed caps and routing gates are in docs/recall-learning-plan.md and remain unadopted.
+  context: Saved negative recall evidence includes recent failures; generator currently requires
+    compressed/consolidated cohorts. Consultation blocked; no new empirical result.
+  potential_type: heuristic
+  bound_to:
+  - N162
+  - N161
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H17
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O116
+  timestamp: 2026-09-11T01:56+02:00
+  provenance: ai-suggested
+  content: The bounded pilot reduces training NLL but fails near-fact fit and fresh-example gates;
+    inspect source-fact/query binding and readout before new memory learning. Finite parameters,
+    untruncated byte input and nonzero gradients do not localize the remaining failure or distinguish
+    insufficient training from representation defects.
+  context: Terminal checkpoint, fixed independent diagnostic-development population; no post-result
+    training, tuning or new inference. See docs/recall-learning-plan.md.
+  potential_type: heuristic
+  bound_to:
+  - N164
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

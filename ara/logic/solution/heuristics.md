@@ -155,3 +155,13 @@
 - **Code ref**: [migration](../../../docs/migration.md), [perception](../../../experiments/perception.py), [dynamics](../../../experiments/dynamics.py), [run lifecycle](../../../pathwm/io.py), [focused tests](../../../tests/).
 - **From staging**: O80
 - **Evidence of adoption/execution**: N128/N129 and [source-bound receipts](../../evidence/tables/modular_migration_2026-09-09.json). Original caches, datasets and results remain preserved; active recipes compute live features. Strict same-runtime/device replay and source snapshots have explicit limits. The archived implementation is not an active dependency.
+
+## H17: Gate memory-learning changes with a bounded factual recall diagnostic
+
+- **Rationale**: Check current/recent factual learning with the existing objective and explicit finite-budget fit/fresh-example gates before adding local memory supervision. Use one implementation owner and concise consequential Claude review; preserve failed gates and stop automatic scope/budget expansion.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **Sensitivity**: high; this is an adopted sequencing rule, not proof that diagnostics identify the bottleneck or guarantee useful memory.
+- **Code ref**: [recipe](../../../experiments/multimodal.py), [pilot plan](../../../docs/recall-learning-plan.md), [contract checks](../../../tests/test_recall.py).
+- **From staging**: O115
+- **Evidence of adoption/execution**: N163/N164; Alex explicitly approved the saved export and said to implement the proposed points. The failed pilot gates stop further model changes. O116 remains an unconfirmed interpretation.

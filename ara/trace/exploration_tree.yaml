@@ -2661,3 +2661,54 @@ tree:
   - N159
   - N160
   status: open
+
+- id: N162
+  type: question
+  title: How should recall development continue with economical Claude coordination?
+  provenance: user
+  timestamp: 2026-09-11T01:35+02:00
+  description: Alex requests continuation planning with actual Claude under both weekly limits. Codex
+    proposes a current/recent diagnostic before a local-memory-loss comparison. Fresh consultation
+    timed out; network retry rejected pending explicit export approval. No new Claude agreement,
+    model changes or training.
+  evidence:
+  - docs/recall-learning-plan.md
+  - runs/reviews/continuation_2026-09-11/local-checks.json
+  - runs/reviews/continuation_2026-09-11/next-step-receipt.json
+  - runs/reviews/continuation_2026-09-11/retry-approval.json
+  status: open
+
+- id: N163
+  type: decision
+  title: Approve scoped Claude export and execute the bounded factual diagnostic
+  provenance: user
+  timestamp: 2026-09-11T01:56+02:00
+  choice: Alex approved sending the exact saved brief to Claude and implementing the proposed points.
+    Execute the diagnostic and stop downstream changes when its gates fail.
+  alternatives:
+  - Add local memory supervision before factual diagnostics
+  - Reopen broad architecture reviews
+  evidence:
+  - docs/recall-learning-plan.md
+  - runs/reviews/continuation_2026-09-11/next-step-retry-receipt.json
+  - runs/reviews/continuation_2026-09-11/reconcile-receipt.json
+  also_depends_on:
+  - N162
+  status: resolved
+
+- id: N164
+  type: experiment
+  title: Current/recent CPU pilot completes with failed fit and fresh-example gates
+  provenance: ai-executed
+  timestamp: 2026-09-11T01:56+02:00
+  result: '79 CPU tests pass. One seed-17 pilot: 256 updates, 1024 episode presentations, 144.58
+    active seconds. Train seen 23/32; development seen 14/80 (current 5/40, recent 9/40), absence
+    7/20; overall development loss 0.31 at 12% coverage. Both fixed gates fail. No new objectives,
+    calibration or additional training. Report structurally/browser verified.'
+  evidence:
+  - runs/recall_diagnostic_v1/verification.json
+  - runs/recall_diagnostic_v1/pilot/recall_diagnostic.json
+  - runs/recall_diagnostic_v1/pilot/report.html
+  also_depends_on:
+  - N163
+  status: resolved
