@@ -106,7 +106,9 @@ sessions:
     passes76 tests and a256-event check, completes8 negative development updates and verifies reports.
     Three Claude exchanges produce the first remaining proposal; other reviews are scheduled through09:00Berlin.
     Turn4 adds four reconciled Claude reviews and marking/objective-interface proposals; no model work.
-  turn_count: 4
-  events_count: 16
+    Turn5 adds five reconciled sensing/uncertainty reviews and proposals, with no model work; compute/transfer
+    and morning synthesis remain.
+  turn_count: 5
+  events_count: 20
   claims_touched: []
-  open_threads: 7
+  open_threads: 8

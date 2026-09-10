@@ -2549,3 +2549,45 @@ tree:
   - N153
   - N154
   status: open
+- id: N157
+  type: question
+  title: How should hypothetical sensing correct belief without changing live history?
+  provenance: ai-suggested
+  timestamp: 2026-09-10T02:20+02:00
+  description: 'Three actual isolated Claude exchanges refine one-inspection current-target planning:
+    common-prior finite reference, independent return branches, matched terminal reads before actual memory
+    write, failure-aware likelihoods and explicit malformed-input handling. Corrected mandatory-copy,
+    entropy, calibration-only, exploration and branch-budget overclaims. Proposal ready; no implementation
+    or learned-sensing evidence.'
+  evidence:
+  - docs/remaining-decisions-2026-09-10.md
+  - runs/reviews/state_memory_design_2026-09-09/overnight-sensing-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-sensing-reconcile-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-sensing-boundaries-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-sensing-arithmetic.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-sensing-consistency.json
+  also_depends_on:
+  - N152
+  - N154
+  - N156
+  status: open
+- id: N158
+  type: question
+  title: What uncertainty contract should precede ensemble-based planning?
+  provenance: ai-suggested
+  timestamp: 2026-09-10T02:20+02:00
+  description: Two actual isolated Claude reviews refine single-model observable outcome calibration and
+    selected-risk evaluation before a hypothesis-driven bounded ensemble comparison. Reconciled universal
+    policy-calibration circularity, on-policy-only evaluation, extra outcome classes, misspecified-mixture
+    Bayes and re-sensing claims. Member-specific beliefs/memory enter the total resource budget. No epistemic
+    calibration or ensemble capability demonstrated.
+  evidence:
+  - docs/remaining-decisions-2026-09-10.md
+  - runs/reviews/state_memory_design_2026-09-09/overnight-uncertainty-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-uncertainty-reconcile-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-sensing-uncertainty-source-checks.txt
+  also_depends_on:
+  - N152
+  - N153
+  - N157
+  status: open

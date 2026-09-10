@@ -1963,3 +1963,47 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O110
+  timestamp: 2026-09-10T02:20+02:00
+  provenance: ai-suggested
+  content: Propose one inspect-then-answer attempt on a stationary current target, with finite sensor
+    returns and an isolated correction path. Predict action/time once per candidate; correct each return
+    separately from the fixed prior. Both live and hypothetical terminal reads use corrected state plus
+    pre-event memory before the real memory write. Branches retain hypothetical origin, charge only declared
+    planning computation, and never fabricate external actions or evidence. A common p(Y|b) times normalized
+    p(O|Y,b,a) supplies an exact finite reference; learned correction needs grounded supervision. Expected
+    failures are modeled, out-of-contract returns follow predeclared abstention/error paths with executed
+    effects/costs preserved.
+  context: Three Claude exchanges and exact informative-failure/mixture-leak/consistency arithmetic. Initial
+    known-kernel diagnostic is not learned capability; reference heads are task-specific, latent semantics
+    remain learned. Deeper/retry planning deferred. Docs committed1fd6795; proposal not adopted or implemented.
+  potential_type: architecture
+  bound_to:
+  - N157
+  - N152
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O111
+  timestamp: 2026-09-10T02:20+02:00
+  provenance: ai-suggested
+  content: Propose one model with observable outcome probabilities, proper scores, independent task calibration
+    and frozen-procedure selected-risk evaluation; no calibrated model-error signal inferred from latent
+    entropy. Fit a declared action-covered calibration procedure then evaluate its resulting policy independently;
+    caller costs need no fitted threshold. Later ensemble comparison combines observable joint predictions
+    before conditioning/selection, accounts for member-specific recurrent states/memory and reports resource
+    tradeoffs. Shared heads are cheaper but blind to common encoding errors; low disagreement and mixture
+    Bayes do not certify real-world correctness.
+  context: Two Claude reviews reconciled calibration/splitting/selection overclaims, compulsory OOV classes,
+    M-closed-only Bayes and sensing-after-forgetting claims. Guo, Deep Ensembles, PETS and POMDP primary
+    sources checked. No new model work; fixed capacities and previously negative recall results preserved.
+  potential_type: architecture
+  bound_to:
+  - N158
+  - N157
+  - N153
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

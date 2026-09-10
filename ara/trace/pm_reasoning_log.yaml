@@ -697,3 +697,14 @@ entries:
   - Arithmetic/primary-source checks are not model experiments. No new code, tests, training, capacity
     changes or external private-data export. Remaining scheduled topics stay open; no unrelated abandonment
     or stale flags.
+- turn: 2026-09-10_001#5
+  notes:
+  - Record reviewed questions N157/N158 and stage O110/O111. The heartbeat continues existing authorization,
+    not a new user adoption of either architecture.
+  - 'No promotion: proposal commit1fd6795 supplies reviewable design but no downstream model/config depends
+    on it. O103 is refined, not implemented; O106/O107 and other active topics remain open.'
+  - Five actual Claude responses and independent primary/arithmetic checks establish review history, not
+    learned capability. Reconcile overclaims without treating peer revisions as contradictions of adopted
+    claims.
+  - Preserve negative results, fixed capacity, fresh-session reset semantics and public-only export. No
+    new experiment, model edit or test-suite execution; no unrelated abandonment or new stale flags inferred.

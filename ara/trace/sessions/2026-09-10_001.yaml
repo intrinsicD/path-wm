@@ -2,8 +2,8 @@ session:
   id: 2026-09-10_001
   date: '2026-09-10'
   started: 2026-09-10T00:05+02:00
-  last_turn: 2026-09-10T01:59+02:00
-  turn_count: 4
+  last_turn: 2026-09-10T02:20+02:00
+  turn_count: 5
   summary: Two isolated Claude reviews produced a proposed goal/action/outcome-verification interface,
     historical recall with factual not-observed versus abstention, and bounded observation-conditioned
     sensing. Turn2 works out reference costs, complete text-recall episodes, separate calibration and
@@ -14,6 +14,9 @@ session:
     through09:00Berlin, with no new broader implementation or experiment authorization. Turn4 completes
     four further public-only Claude reviews for marking and objective interpretation; proposals ready,
     no new model work. Sensing, uncertainty, compute and transfer remain for the overnight continuation.
+    Turn5 completes five Claude exchanges for sensing and uncertainty, with exact finite arithmetic and
+    primary-source checks. Proposals committed1fd6795; compute, transfer and final synthesis remain. No
+    model changes or experiments.
 events_logged:
 - turn: 1
   type: decision
@@ -130,6 +133,43 @@ events_logged:
     as a new action. Keep delivery, prediction and verified/contradicted/unknown-with-reason separate;
     unknown scoring is task-specific, source references do not prove intent fidelity, and explicit user
     delegation can reference procedure content without promoting its source to authority.
+- turn: 5
+  type: question
+  id: N157
+  routing: direct
+  provenance: ai-suggested
+  summary: How should hypothetical sensing correct belief without changing live history?
+- turn: 5
+  type: question
+  id: N158
+  routing: direct
+  provenance: ai-suggested
+  summary: What uncertainty contract should precede ensemble-based planning?
+- turn: 5
+  type: observation
+  id: O110
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose one inspect-then-answer attempt on a stationary current target, with finite sensor
+    returns and an isolated correction path. Predict action/time once per candidate; correct each return
+    separately from the fixed prior. Both live and hypothetical terminal reads use corrected state plus
+    pre-event memory before the real memory write. Branches retain hypothetical origin, charge only declared
+    planning computation, and never fabricate external actions or evidence. A common p(Y|b) times normalized
+    p(O|Y,b,a) supplies an exact finite reference; learned correction needs grounded supervision. Expected
+    failures are modeled, out-of-contract returns follow predeclared abstention/error paths with executed
+    effects/costs preserved.
+- turn: 5
+  type: observation
+  id: O111
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose one model with observable outcome probabilities, proper scores, independent task calibration
+    and frozen-procedure selected-risk evaluation; no calibrated model-error signal inferred from latent
+    entropy. Fit a declared action-covered calibration procedure then evaluate its resulting policy independently;
+    caller costs need no fitted threshold. Later ensemble comparison combines observable joint predictions
+    before conditioning/selection, accounts for member-specific recurrent states/memory and reports resource
+    tradeoffs. Shared heads are cheaper but blind to common encoding errors; low disagreement and mixture
+    Bayes do not certify real-world correctness.
 ai_actions:
 - turn: 1
   action: Inspected local planner/task/categorical interfaces; wrote independent notes, completed two actual
@@ -169,6 +209,15 @@ ai_actions:
   provenance: ai-executed
   files_changed:
   - docs/remaining-decisions-2026-09-10.md
+- turn: 5
+  action: Completed five public-only actual Claude reviews after independent notes; reconciled sensing/uncertainty
+    claims, inspected existing correction/planner/calibration interfaces, checked primary POMDP/PETS/temperature/deep-ensemble
+    sources and exact finite probability identities. Saved receipts and committed1fd6795. No private export,
+    source-model edits, tests or training.
+  provenance: ai-executed
+  files_changed:
+  - docs/remaining-decisions-2026-09-10.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -185,6 +234,10 @@ key_context:
 - turn: 4
   excerpt: Heartbeat continues prior explicit overnight authorization through09:00Berlin. Implementation
     remains complete; new marking/instruction recommendations await Alex rather than being silently adopted.
+- turn: 5
+  excerpt: Heartbeat continues explicit overnight authorization. Sensing and uncertainty proposals are
+    ready for Alex, not silently adopted; deadline09:00Berlin and no-new-reviews-after08:30 remain. Implementation
+    already complete.
 open_threads:
 - O104/A04 implemented. O106 negative development interpretation and O107 local memory-learning proposal
   remain staged. A scientific effect-size/seed/split/paired-control protocol is still required.
@@ -193,7 +246,8 @@ open_threads:
 - O101 long-horizon retention, calibrated outcomes and useful closed-loop behavior remain unproven.
 - Prior research questions remain open as recorded in 2026-09-09_001.yaml; no unrelated topic abandoned.
 - Complete remaining Claude decision groups by08:30; synthesize by09:00Berlin and pause the active heartbeat.
-- O108/O109 proposals await Alex; next review sensing, model uncertainty, compute budgets and transfer.
+- O108/O109 proposals await Alex; O110/O111 sensing/uncertainty proposals are also ready.
+- Next review bounded compute and transfer; preserve explicit data/selection/cost boundaries in final synthesis.
 ai_suggestions_pending:
 - 'O102: broader objective/capability/action interfaces remain proposed; narrow recall contract is implemented.'
 - 'O103: finite sensing diagnostic then static-current-location inspect/answer, separately from historical recall.'
@@ -201,3 +255,7 @@ ai_suggestions_pending:
 - 'O107: grounded one-boundary memory probes, with fixed-compression and auxiliary-on/off controls, await user design choice.'
 - 'O108: causal capacity-respecting insertion/replacement scoring with fixed user priority.'
 - 'O109: narrow learned objective interpretation with exact runtime contracts and scoped verification.'
+- 'O110: one-inspection finite reference and isolated shared correction, matched read-before-write and
+  explicit failure handling.'
+- 'O111: single-model observable calibration before bounded ensemble comparison, with total recurrent-memory
+  resource accounting.'
