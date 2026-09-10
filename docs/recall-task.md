@@ -8,6 +8,29 @@ task, not visual mapping or general instruction understanding.
 
 ## Run it
 
+For the bounded current/recent learning diagnostic, use:
+
+```bash
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 .venv/bin/python experiments/multimodal.py \
+  --dataset recall --recall-mode current-recent --output runs/my_recall_diagnostic
+```
+
+This mode defaults to four-event sessions, 40 fixed training episodes, 100 fresh
+development episodes, seed 17, batch size 4 and 256 updates with a cumulative
+900-second active-time cap. It logs training factual scores every 16 updates and
+evaluates the final checkpoint once on development. Calibration and final-test
+splits are never loaded. The time cap is checked before each update/evaluation
+episode and survives pause/resume; an in-flight operation can finish. Read the
+[declared pilot and routing gates](recall-learning-plan.md) before changing defaults.
+
+Use `--check` for a forward/backward check or `--stop-after N` and then
+`--resume runs/my_recall_diagnostic` for an intentional pause. A stopped run with an
+exhausted time budget stays stopped. Its complete split manifest, raw metrics,
+final logits, per-class/cohort results and routing gates live beside `last.pt` and
+the self-contained `report.html`. Completed report rebuilds reuse cached logits.
+
+For the original longer historical task:
+
 Use the same recipe and run/report machinery as the multimodal tasks:
 
 ```bash

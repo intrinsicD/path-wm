@@ -264,17 +264,30 @@ def diagnostic_settings():
     from tests.test_multimodal_training import settings
 
     return dict(
-        settings(), dataset="recall", state_model="belief", recall_mode="current-recent",
-        history=4, memory_recent=2, memory_block=2, memory_blocks=2,
-        recall_truncate=4, train_windows=10, validation_windows=10,
-        improve_every=0, batch_size=1, evaluate_every=1, max_seconds=900.0,
+        settings(),
+        dataset="recall",
+        state_model="belief",
+        recall_mode="current-recent",
+        history=4,
+        memory_recent=2,
+        memory_block=2,
+        memory_blocks=2,
+        recall_truncate=4,
+        train_windows=10,
+        validation_windows=10,
+        improve_every=0,
+        batch_size=1,
+        evaluate_every=1,
+        max_seconds=900.0,
     )
 
 
 def test_current_recent_fixtures_balance_bindings_and_exclude_split_duplicates():
     import experiments.multimodal as recipe
 
-    train, dev = [recipe.make_data(diagnostic_settings(), s) for s in ("train", "validation")]
+    train, dev = [
+        recipe.make_data(diagnostic_settings(), s) for s in ("train", "validation")
+    ]
     signatures = []
     for data in (train, dev):
         assert data.identity["class_counts"] == [2] * 5
@@ -291,14 +304,18 @@ def test_current_recent_fixtures_balance_bindings_and_exclude_split_duplicates()
                     assert records[-1].entity != q.entity
             else:
                 assert not matches
-            signatures[-1].add((q.entity, tuple((r.entity, r.location) for r in records)))
+            signatures[-1].add(
+                (q.entity, tuple((r.entity, r.location) for r in records))
+            )
         assert len(signatures[-1]) == len(data)
     assert signatures[0].isdisjoint(signatures[1])
     with pytest.raises(ValueError, match="diagnostic"):
         recipe.make_data(diagnostic_settings(), "test")
 
 
-def test_diagnostic_final_weights_resume_and_no_calibration_or_test(tmp_path, monkeypatch):
+def test_diagnostic_final_weights_resume_and_no_calibration_or_test(
+    tmp_path, monkeypatch
+):
     import json
     import experiments.multimodal as recipe
     from pathwm.io import state_hash
@@ -314,7 +331,9 @@ def test_diagnostic_final_weights_resume_and_no_calibration_or_test(tmp_path, mo
         return predict(model, data, settings, **kwargs)
 
     monkeypatch.setattr(recipe, "recall_predictions", recording)
-    monkeypatch.setattr(recipe, "fit_temperature", lambda *a: pytest.fail("diagnostic calibrated"))
+    monkeypatch.setattr(
+        recipe, "fit_temperature", lambda *a: pytest.fail("diagnostic calibrated")
+    )
     recipe.train(config, tmp_path / "paused", stop_after=1)
     assert all(s == "train" for s, _ in calls)
     recipe.train(config, tmp_path / "paused", resume=True)
@@ -323,13 +342,29 @@ def test_diagnostic_final_weights_resume_and_no_calibration_or_test(tmp_path, mo
     assert [h for s, h in calls if s == "validation"] == [result["model_sha256"]]
     calls.clear()
     recipe.train(config, tmp_path / "full")
-    full, resumed = [torch.load(tmp_path / n / "last.pt", weights_only=True) for n in ("full", "paused")]
+    full, resumed = [
+        torch.load(tmp_path / n / "last.pt", weights_only=True)
+        for n in ("full", "paused")
+    ]
     for state in (full, resumed):
         state["model"].pop("diagnostic_elapsed_seconds")
-    for key in ("model", "optimizer", "sampler", "torch", "rows", "step", "numpy", "random"):
+    for key in (
+        "model",
+        "optimizer",
+        "sampler",
+        "torch",
+        "rows",
+        "step",
+        "numpy",
+        "random",
+    ):
         equal_tree(full[key], resumed[key])
     calls.clear()
-    monkeypatch.setattr(recipe, "write_report", lambda *a: (_ for _ in ()).throw(RuntimeError("report failure")))
+    monkeypatch.setattr(
+        recipe,
+        "write_report",
+        lambda *a: (_ for _ in ()).throw(RuntimeError("report failure")),
+    )
     with pytest.raises(RuntimeError, match="report failure"):
         recipe.train(config, tmp_path / "paused", resume=True)
     status = json.loads((tmp_path / "paused/status.json").read_text())

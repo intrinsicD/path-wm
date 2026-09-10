@@ -53,16 +53,24 @@ def curves(rows, path, mobile=False):
     fig = Figure(figsize=(4.2 if mobile else 10, 3.5), layout="constrained")
     FigureCanvasAgg(fig)
     ax = fig.subplots()
+    title = (
+        "Training objective and factual NLL"
+        if any(r["split"].startswith("diagnostic_") for r in rows)
+        else "Training and validation objective"
+    )
     for split, color, style, marker in [
         ("train", "#2763a4", "-", "."),
         ("validation", "#b08418", "--", "o"),
+        ("diagnostic_train", "#247b59", "--", "o"),
+        ("diagnostic_development", "#b08418", ":", "s"),
     ]:
-        selected = [r for r in rows if r["split"] == split and "loss" in r]
+        metric = "nll" if split.startswith("diagnostic_") else "loss"
+        selected = [r for r in rows if r["split"] == split and metric in r]
         if selected:
             ax.plot(
                 [r["step"] for r in selected],
-                [r["loss"] for r in selected],
-                label=split,
+                [r[metric] for r in selected],
+                label=split.replace("diagnostic_", "factual NLL / "),
                 color=color,
                 linestyle=style,
                 marker=marker,
@@ -71,10 +79,10 @@ def curves(rows, path, mobile=False):
     ax.set(
         xlabel="Optimizer update",
         ylabel="Objective (recipe-defined)",
-        title="Training and validation objective",
+        title=title,
     )
     if mobile:
-        ax.set_title("Training and validation objective", fontsize=11)
+        ax.set_title(title, fontsize=11)
         ax.tick_params(labelsize=9)
     ax.grid(alpha=0.2)
     ax.spines[["top", "right"]].set_visible(False)
@@ -183,6 +191,57 @@ def model_inspection(directory):
         + escape(json.dumps(meta, indent=2))
         + "</pre></details></section>"
     )
+    return parts
+
+
+def recall_diagnostic_inspection(directory):
+    path = directory / "recall_diagnostic.json"
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text())
+    gates = data["gates"]
+    parts = [
+        "<section><h2>Current/recent recall diagnostic</h2>",
+        f"<p><strong>{'Advance to a declared memory comparison' if gates['advance_to_memory_comparison'] else 'Stop and inspect factual learning'}.</strong> "
+        f"Tiny-set fit: {'pass' if gates['tiny_set_fit'] else 'fail'}; fresh examples: {'pass' if gates['fresh_examples'] else 'fail'}.</p>",
+        f"<p>Final update {data['final_step']}; raw factual probabilities. "
+        "One terminal development evaluation; no checkpoint selection, calibration fitting or final-test access. "
+        "Factual accuracy includes abstentions; absence is a separate factual class.</p>",
+        '<div class="table"><table><tr><th>Population / group</th><th>N</th><th>Factual accuracy</th><th>NLL</th><th>Coverage</th><th>Task loss</th></tr>',
+    ]
+    for population, values in data["views"].items():
+        for group, row in [("overall", values["overall"]), *values["groups"].items()]:
+            cells = [
+                f"{population} / {group}",
+                row["examples"],
+                f"{row['factual_accuracy']:.1%}",
+                f"{row['nll']:.6g}",
+                f"{row['coverage']:.1%}",
+                f"{row['task_loss']:.6g}",
+            ]
+            parts.append(
+                "<tr>" + "".join(f"<td>{escape(str(x))}</td>" for x in cells) + "</tr>"
+            )
+    parts.append(
+        "</table></div><p>Current/recent rows contain seen entities only; absence is reported separately. Seen combines current and recent.</p>"
+    )
+    parts.append(
+        f"<details><summary>Declared routing thresholds</summary><pre>{escape(json.dumps(gates['thresholds'], indent=2))}</pre></details>"
+    )
+    parts.append(
+        f"<details><summary>Per-class metrics and counts</summary><pre>{escape(json.dumps({k: v['classes'] for k, v in data['views'].items()}, indent=2))}</pre></details></section>"
+    )
+    parts.append(
+        "<section><h2>Auditable diagnostic examples</h2><p>First example per group, chosen independently of correctness. Delivered history is evaluator evidence.</p>"
+    )
+    shown = set()
+    for example in data["examples"]:
+        if example["group"] not in shown:
+            shown.add(example["group"])
+            parts.append(
+                f"<details><summary>{escape(example['group'])}: {escape(example['query']['session_id'])}</summary><pre>{escape(json.dumps(example, indent=2))}</pre></details>"
+            )
+    parts.append("<p>" + " ".join(escape(x) for x in data["limits"]) + "</p></section>")
     return parts
 
 
@@ -421,6 +480,7 @@ def render_report(directory):
         if axes:
             np.savez_compressed(directory / "pca_axes.npz", **axes)
     parts.extend(recall_inspection(directory))
+    parts.extend(recall_diagnostic_inspection(directory))
     parts.extend(model_inspection(directory))
     for title, data in [
         ("Resolved settings and source identities", record),
