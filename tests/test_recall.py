@@ -258,3 +258,97 @@ def test_recall_resume_selects_same_weights_and_caches_heldout_results(
     assert (
         "Selective historical recall" in (tmp_path / "resume/report.html").read_text()
     )
+
+
+def diagnostic_settings():
+    from tests.test_multimodal_training import settings
+
+    return dict(
+        settings(), dataset="recall", state_model="belief", recall_mode="current-recent",
+        history=4, memory_recent=2, memory_block=2, memory_blocks=2,
+        recall_truncate=4, train_windows=10, validation_windows=10,
+        improve_every=0, batch_size=1, evaluate_every=1, max_seconds=900.0,
+    )
+
+
+def test_current_recent_fixtures_balance_bindings_and_exclude_split_duplicates():
+    import experiments.multimodal as recipe
+
+    train, dev = [recipe.make_data(diagnostic_settings(), s) for s in ("train", "validation")]
+    signatures = []
+    for data in (train, dev):
+        assert data.identity["class_counts"] == [2] * 5
+        assert data.identity["cohorts"] == {"current": 5, "recent": 5}
+        signatures.append(set())
+        for item, cohort in zip(data.items, data.cohorts):
+            records, q = item["records"], item["query"]
+            label = historical_target(records, q)
+            matches = [r for r in records if r.entity == q.entity]
+            if label < 4:
+                assert matches[-1].ordinal == (4 if cohort == "current" else 3)
+                assert matches[0].location != matches[-1].location
+                if cohort == "recent":
+                    assert records[-1].entity != q.entity
+            else:
+                assert not matches
+            signatures[-1].add((q.entity, tuple((r.entity, r.location) for r in records)))
+        assert len(signatures[-1]) == len(data)
+    assert signatures[0].isdisjoint(signatures[1])
+    with pytest.raises(ValueError, match="diagnostic"):
+        recipe.make_data(diagnostic_settings(), "test")
+
+
+def test_diagnostic_final_weights_resume_and_no_calibration_or_test(tmp_path, monkeypatch):
+    import json
+    import experiments.multimodal as recipe
+    from pathwm.io import state_hash
+    from tests.test_runs import equal_tree
+
+    config = diagnostic_settings()
+    calls = []
+    predict = recipe.recall_predictions
+
+    def recording(model, data, settings, **kwargs):
+        calls.append((data.split, state_hash(model)))
+        assert data.split in ("train", "validation")
+        return predict(model, data, settings, **kwargs)
+
+    monkeypatch.setattr(recipe, "recall_predictions", recording)
+    monkeypatch.setattr(recipe, "fit_temperature", lambda *a: pytest.fail("diagnostic calibrated"))
+    recipe.train(config, tmp_path / "paused", stop_after=1)
+    assert all(s == "train" for s, _ in calls)
+    recipe.train(config, tmp_path / "paused", resume=True)
+    result = json.loads((tmp_path / "paused/recall_diagnostic.json").read_text())
+    assert result["final_step"] == 2
+    assert [h for s, h in calls if s == "validation"] == [result["model_sha256"]]
+    calls.clear()
+    recipe.train(config, tmp_path / "full")
+    full, resumed = [torch.load(tmp_path / n / "last.pt", weights_only=True) for n in ("full", "paused")]
+    for state in (full, resumed):
+        state["model"].pop("diagnostic_elapsed_seconds")
+    for key in ("model", "optimizer", "sampler", "torch", "rows", "step", "numpy", "random"):
+        equal_tree(full[key], resumed[key])
+    calls.clear()
+    monkeypatch.setattr(recipe, "write_report", lambda *a: (_ for _ in ()).throw(RuntimeError("report failure")))
+    with pytest.raises(RuntimeError, match="report failure"):
+        recipe.train(config, tmp_path / "paused", resume=True)
+    status = json.loads((tmp_path / "paused/status.json").read_text())
+    assert status["result"] == "completed" and status["report"] == "failed"
+    assert not calls
+    assert not (tmp_path / "paused/recall_results.json").exists()
+    assert result["gates"]["advance_to_memory_comparison"] is False
+
+
+def test_diagnostic_budget_stops_and_cannot_reset_on_resume(tmp_path):
+    import json
+    import experiments.multimodal as recipe
+
+    config = dict(diagnostic_settings(), max_seconds=1e-12)
+    recipe.train(config, tmp_path / "limited")
+    for resume in (False, True):
+        if resume:
+            recipe.train(config, tmp_path / "limited", resume=True)
+        status = json.loads((tmp_path / "limited/status.json").read_text())
+        assert status["result"] == "stopped" and status["step"] == 0
+        assert status["report"] == "structural_verified"
+        assert not (tmp_path / "limited/recall_diagnostic_predictions.pt").exists()

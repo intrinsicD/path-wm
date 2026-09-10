@@ -1,5 +1,12 @@
 # Current work
 
+**Active slice, 11 September:** Alex authorized the
+[current/recent factual recall diagnostic](recall-learning-plan.md) and its capped
+CPU pilot. After explicit export approval, actual Claude completed the review and
+one reconciliation, accepting diagnostic-first scope and withdrawing absence/
+abstention and corruption-test overclaims. Implementation is in progress. Grounded
+local memory learning follows only if the diagnostic supports the next comparison.
+
 **Current slice:** historical recall is implemented in the same recipe. Read the
 [usable guide](recall-task.md) and [implementation record](recall-implementation-plan.md).
 All 76 CPU tests pass, including exact pause/resume, held-out split isolation and
@@ -116,7 +123,6 @@ Report seen/old-history performance separately: recognizing only unseen entities
 beat all-abstain without remembering any locations. The subsequent implementation
 and development evidence are recorded in the guide linked above.
 
-**Next step:** discuss the reviewed learning proposal and next application priority
-with Alex, then separately declare a bounded implementation/comparison plan. Numerical
+**Next step:** implement and evaluate the bounded diagnostic plan. Numerical
 costs are explicit research defaults, not inferred application preferences. Deployment-length replay,
 general mark selection, calibrated probabilities and closed-loop behavior remain open.
