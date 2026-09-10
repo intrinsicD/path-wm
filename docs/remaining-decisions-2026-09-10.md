@@ -1,35 +1,107 @@
 # Decisions for the 10 September discussion
 
-Status: preparation in progress overnight, authorized by Alex through 09:00 Berlin.
-The historical-recall implementation is complete in commit `32e9f99`. Entries below are
-proposals to discuss, not adopted model changes or permission for experiments.
-All seven topic groups have actual isolated Claude reviews and reconciliation;
-the combined dependency audit and compact morning recommendation are in progress.
-Stop new reviews at 08:30 and use the remaining time for the morning synthesis.
+Status: all seven topic reviews and the combined Claude reconciliation are complete.
+The morning agenda is ready; a final delivery check remains scheduled before 09:00
+Berlin. These are proposals for Alex, not adopted model changes or permission for new
+experiments.
 
-The established architecture remains: learned world-state semantics, separate
-observed evidence/current belief/task workspace, bounded recent/compressed/protected/
-consolidated session memory, and separate perception/prediction/thinking readers.
-A fresh agent session replaces selective memory reset. The first decision consumer
-is historical recall with explicit abstention and independent verification.
+**Recommendation: make grounded memory learning the next implementation slice.**
+Keep the existing bounded architecture and exact recall task while teaching individual
+compression/consolidation updates to retain useful facts. Include current/recent
+recall controls so we can distinguish input/readout problems from long-delay loss.
+Add learned mark selection only when those comparisons provide a useful signal.
 
-## Proposed discussion order
+The implemented pipeline is complete: 76 CPU tests passed, the default-memory
+256-event forward/backward check completed, and the bounded eight-update development
+run has verified reports. Its 15 test episodes give 20% factual accuracy and all
+operational decisions abstain, at task loss 0.25. The recent and old-seen location
+slices both have 0% factual accuracy. This does not yet demonstrate useful recall
+or localize the problem to compression. The [implementation record](recall-implementation-plan.md)
+and [raw-result report](../runs/recall_v1/development/report.html) retain the evidence.
+No additional model changes or training were performed during the proposal reviews.
 
-| Priority | Decision | Why it matters now | Review status |
-| --- | --- | --- | --- |
-| 1 | Long-horizon learning and useful compression | A bounded forward memory is insufficient if distant write operations receive no useful learning signal | Reviewed and reconciled; proposal ready |
-| 2 | What to mark and how to spend fixed memory | Retention should serve future tasks without seeing future queries at write time | Reviewed and reconciled; proposal ready |
-| 3 | Instructions, exact objectives and verification | The current controlled query adapter does not interpret arbitrary user requests | Reviewed and reconciled; proposal ready |
-| 4 | Hypothetical observation updates and sensing | Planning an inspection needs observation-conditioned continuations without contaminating live history | Reviewed and reconciled; proposal ready |
-| 5 | Model uncertainty and calibration | Latent variability is not an estimate of model error; selected actions may exploit prediction mistakes | Reviewed and reconciled; proposal ready |
-| 6 | Planning and thinking budgets | Search and retrieval costs need concrete caps and honest stopping signals | Reviewed and reconciled; proposal ready |
-| 7 | Transfer and evidence for world understanding | Canonical recall alone cannot establish visual mapping, document understanding or general competence | Reviewed and reconciled; proposal ready |
+## Choices for the morning
 
-Each review should supply a preferred initial design, a viable alternative, the
-interface/gradient consequences, failure cases, required evidence and the precise
-choice for Alex. Separate choices that unblock implementation from empirical
-questions that need a preregistered comparison. Do not turn every tunable number
-into a user decision. Keep proposed experiments bounded and unexecuted here.
+| Decision | Recommended starting point | Alternative or later comparison |
+| --- | --- | --- |
+| Next learning change | Grounded questions after one local memory update, plus normal observation and delayed-query losses | Longer finite-horizon credit/recomputation; fixed compression remains a reference |
+| How to protect detail | Existing user priority and capacity; learn concrete insertion/replacement value after the reader is useful | Keep a fixed marking policy when learned selection has no measured advantage |
+| Task interface | Exact queries for the learning study; a narrow language interpreter and scoped verification as a separate slice | Prioritize language first only if immediate interface breadth is the goal |
+| Runtime complexity | One world model, two fixed recall rounds, explicit budgets and observable outcome calibration | Adaptive stopping, ensembles and deeper planning only in separately budgeted comparisons |
+| Next application test | Controlled document revisions with a frozen learned-versus-random core comparison | One-inspection current-location decisions first if active sensing is the priority; visual revisits remain a further task |
+
+Loss weights, probe mixtures, training populations/seeds, numerical caps and success
+thresholds belong in the concrete plan after choosing direction. They are not a list
+of arbitrary architectural questions for Alex to answer now. The first discussion
+should settle the learning slice and the next application priority; the detailed
+recommendations below explain the defaults and their remaining empirical questions.
+
+## How the complete design fits together
+
+The world model learns what its state tokens mean from observation prediction,
+partial completion and task outcomes. It is not assigned mandatory place, object or
+document slots. During a session, observations update belief and memory; thinking
+updates a separate task workspace. Offline training updates weights. A fresh agent
+session clears its belief, episodic/consolidated memory, workspace and pending task
+progress while retaining trained weights.
+
+Memory keeps exact recent latent envelopes, chronological staging, compressed
+history, protected details and a consolidated session state. Exact storage preserves
+those latent values, not the raw source that the encoder may already have lost.
+Perception, prediction and thinking each query memory through their own read path.
+The current capacity remains fixed; retained snapshots, temporary branches and any
+future ensemble states also count toward total resource bounds.
+
+```mermaid
+flowchart LR
+  O[Actual observations] --> E[Source encoding]
+  E --> B[Predict and correct world belief]
+  A[Executed action and elapsed time] --> B
+  M[Bounded session memory] --> B
+  E --> W[Commit actual event]
+  B --> W
+  W --> M
+  B --> T[Task workspace and thinking]
+  M --> T
+  Q[Task and exact runtime contract] --> T
+  T --> D[Outcome prediction and decision]
+  B --> H[Private prediction and proposed sensing]
+  M --> H
+  Q --> H
+  H -. predicted consequences .-> D
+  D --> R[Answer, abstain or execute]
+```
+
+This diagram combines the implemented core with proposed decision consumers.
+Hypothetical branches supply predictions, never observational commits. In the
+proposed sensing path, the actual observation is processed again through the live
+transaction; a simulated posterior is not copied into live history.
+
+A protected event remains the event originally observed. A later correction enters
+ordinary memory and current belief with its own time, even if a full protected pool
+cannot admit a new mark. Verification records state exactly which contract and
+output were checked; correct execution of a mistaken interpretation does not prove
+that the user's intended goal was met.
+
+## Order of work after the design choice
+
+1. Use the exact-query configuration to diagnose grounding/current/recent recall and
+   improve delayed retention, with grounded local storage probes and trained controls.
+2. If the reader supplies useful marginal signals, fit the proposed marking scorer
+   against a fixed base, then replay development episodes under that actual policy.
+   If the base is refitted, recheck labels/scorer validity; do not silently reuse them.
+3. Freeze the entire selected inference procedure, replay independent calibration
+   episodes under it, fit the declared transform and evaluate the resulting fixed
+   procedure. Include abstentions and resource/verification failures in reporting.
+4. Create separately versioned language, sensing or transfer configurations from the
+   preserved source checkpoint. Each has its own data, budget and evaluation scope;
+   source calibration is not inherited merely because some weights remain frozen.
+
+Live commits, hypothetical calculations and offline replay updates have different
+roles. A live commit publishes an actual delivered event once. Hypothetical updates
+stay private. A local training probe reads the new memory output in its own isolated
+replay and uses labels from that output's declared source scope. Later corrections
+outside that scope are not retroactive probe targets.
 
 ## Review boundaries
 
@@ -54,7 +126,14 @@ interval. A consolidation probe tests both an older fact that should survive and
 the newer correction. Labels come from the training harness's original delivered
 records. They never come from a reconstructed memory being tested or the hidden
 current state. An absent record in a local window cannot establish whole-session
-absence.
+absence. Every query carries its source/time scope: a full-session query means the
+session through its cutoff; a local probe means the declared interval or consolidated
+coverage. Keep that qualifier in emitted assertions and downstream use. A local
+absence is never serialized as a global fact. Shared scope-conditioned reader weights
+and output indices are logically compatible, but may generalize poorly across scopes.
+Keep full-session outcomes alongside local scores, including held-out queries for
+the same entity under different scopes. Separate heads or changed auxiliary weighting
+are later responses to measured interference, not mandatory starting components.
 
 The local student reads only the new compressed or consolidated tokens, the question,
 and legitimate time/scope metadata. It cannot access the original records, the old
@@ -170,7 +249,11 @@ it does not guarantee raw-frame reconstruction or accurate factual recall.
 User priority stays exact. A user request can displace an agent mark; if every
 protected slot contains a user mark, report that the new mark was not admitted.
 Do not silently evict a user mark, grow the store, or reintroduce selective memory
-reset controls. Initially mark the latest committed observation, matching the current
+reset controls. Protected envelopes are immutable records of what was observed at
+their original time. A later correction is a new event that updates ordinary history
+and current belief even if the protected pool rejects its additional mark. Do not
+rewrite a protected record as a corrected fact while retaining its old timestamp.
+Initially mark the latest committed observation, matching the current
 interface. Addressing older still-retained events is a later extension; reconstruction
 from a compressed trace cannot recreate the original detailed envelope exactly.
 
@@ -235,7 +318,12 @@ recall, task loss and wrongful answers. Keep user-marked, agent-marked and unmar
 conditions separate. A user mark conveys information about retention preferences;
 it is not an oracle usefulness or factual-truth label. If the underlying reader
 cannot use detail in either replay, utility targets may be uninformative; the
-grounded-memory work in decision 1 is a dependency.
+grounded-memory work in decision 1 is a dependency. Before final calibration, replay
+development episodes using the actual learned admission policy. Changing protected
+choices can change the states a consumer sees, depending on its inputs and recurrent
+couplings; this is a check, not a guaranteed distribution shift. If the base is refit,
+re-evaluate utility labels and scorer validity under that new version. A bounded
+comparison may retain the fixed policy; do not assume one refit resolves every issue.
 
 **Decision for Alex:** retain the existing user-priority capacity policy and propose
 learning insertion/replacement value for agent marks, beginning with a controlled
@@ -308,6 +396,12 @@ or exhausted budget. Known action/check costs remain recorded; the task contract
 must specify how unverifiable outcomes affect termination and evaluation. Neither
 automatic zero penalty nor automatic failure is universal. A physical placement
 outside subsequent sensor coverage may be executed yet unverified.
+
+Execution verification is conditional on the checked contract. An answer can satisfy
+an incorrectly interpreted contract while missing the original request. Evaluate
+intent/field fidelity against the original request and its reference intended contract
+separately; retain the exact-contract control. Do not label intent as verified merely
+because the downstream factual checker accepted the output.
 
 Specify checks before inspecting the outcome. Runtime validation enforces deterministic
 bounds and capability availability, while learned predictions remain estimates.
@@ -565,7 +659,14 @@ Declare the primary proper score, risk/cost metric and slices in an experiment p
 include sample counts and suitable uncertainty intervals. Distinguish descriptive
 subgroup views from confirmatory statistical tests. Binning-sensitive reliability
 plots are useful diagnostics, not proof of calibration. Bind the calibration map
-and claim to weights, input/outcome contract, fit population and evaluated procedure.
+and claim to the complete selected procedure: weights, capacities, marking policy,
+task adapter, validity/clarification/abstention rules, compute/stopping rules and intended
+population. Score all evaluable emitted probability vectors, including those leading
+to abstention. Report all-attempt task loss with status counts, answer/verification
+coverage and missing/invalid probability counts. Status-only termination must not
+fabricate a probability vector. A new task adapter, learned marking policy or target
+domain creates a changed configuration; frozen core weights alone do not preserve a
+source calibration claim. Fit/evaluate the declared resulting procedure on its own data.
 Exhaustive controlled tasks need no invented factual out-of-vocabulary label; open
 applications must explicitly define what happens when truth lies outside the output
 space. Factual absence, structural infeasibility and operational abstention differ.
@@ -873,8 +974,9 @@ not a universal chance-accuracy target. Poor answers alone cannot prove isolatio
 update, dynamics, memory writes/reads/compression/consolidation and task-workspace
 transformations. Train only bounded target input/task adapters and outcome readouts.
 Compare with an independently initialized frozen core of the same architecture and
-the same adapter/head training budget. Declare every trainable/frozen module. Adapters
-must not add their own temporal archive or receive raw full history outside the bounded
+the same adapter/head training budget. Start with the same fixed marking condition in
+both arms; learned marking is a separately declared factor. Declare every trainable/frozen
+module. Adapters must not add their own temporal archive or receive raw full history outside the bounded
 state interface. Report their parameter share and actual computation.
 
 A source-core advantage would support transfer under this particular target and adapter
@@ -938,13 +1040,39 @@ reuse; modality change is not required for limited text-to-text transfer. The st
 of that claim still depends on a real specified source/target difference and adequate
 controls. No universal representation claim or user adoption follows from peer agreement.
 
-## Continuation for the overnight work
+## Combined review and evidence audit
 
-All seven decision groups have reviewed proposals. Next: audit their cross-topic
-dependencies and prepare a compact morning decision sheet, separating choices for
-Alex from implementation details and empirical questions. Check that the combined
-recommendation preserves fixed capacity, source/belief separation, current versus
-historical targets, cost/calibration boundaries and the priority of useful learning.
-Do not repeat resolved reviews or implement proposed features.
-By 08:30 stop initiating reviews; deliver the consolidated agenda by 09:00 Berlin
-and pause `overnight-agent-design-proposals`.
+The combined proposal was independently reviewed in `overnight-integration`, then
+reconciled in `overnight-integration-reconcile` and `overnight-integration-scope`.
+All three actual Claude CLI responses completed successfully. Claude withdrew the
+claims that user-priority saturation required rewriting historical records, that
+calibration was answered-only, that exact queries had to await language interpretation,
+and that versioned sensing/transfer work conflicted with a frozen source evaluation.
+It accepted the explicit source/time scope after withdrawing an unscoped-query premise.
+The retained concerns are empirical: retention of corrections, utility-label staleness,
+shared-reader interference, selection effects and transfer under a defined budget.
+No peer agreement establishes model effectiveness or adopts these proposals.
+
+The local audit re-read stored evidence without rerunning tests or the model:
+76 passing tests; 15 test episodes, 20% factual accuracy, no answers and task loss 0.25;
+0% recent and seen-old factual accuracy; no model/recipe/test changes after the recall
+implementation commit `32e9f99`; current report renderer matches its verified hash.
+Receipt: `overnight-integration-local-checks.json`. The recent failures mean the tiny
+negative result cannot be assigned specifically to distant compression. The separately
+verified default-memory check establishes execution at that capacity, not useful recall.
+
+One automatic approval review timed out before the reconciliation command started.
+Its explicitly permitted single retry succeeded. No review remained blocked, no private
+project material was exported, and no new model run was launched during this synthesis.
+
+## Morning handoff
+
+The review and synthesis work is complete. Do not generate additional reviews merely
+to fill the remaining night. Keep the scheduled final check: at the first wake at or
+after 08:30 Berlin, verify this agenda and project state, deliver the recommendations
+by 09:00 and pause `overnight-agent-design-proposals`. Before then, stay quiet unless
+Alex supplies a correction or an actionable problem appears. If a wake occurs after
+the deadline, deliver the existing findings and pause immediately. The first discussion
+is the grounded learning slice; the next application priority can then set the order
+of document transfer versus active sensing. Broader implementation and experiments
+remain separate decisions.

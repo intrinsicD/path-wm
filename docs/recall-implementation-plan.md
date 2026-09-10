@@ -88,4 +88,6 @@ training source remain unchanged, while QA records the renderer actually used.
 Use `python -m pathwm.evaluation.report RUN` to rebuild reports without a training
 resume/source-compatibility check. The verification receipt is
 `runs/recall_v1/verification.json`. The implementation phase is complete; the
-remaining overnight design discussions continue in the morning agenda.
+seven overnight topic reviews and combined Claude reconciliation are complete in the
+morning agenda. Its final scheduled handoff remains due before 09:00 Berlin; the
+broader proposals are not implemented or adopted.

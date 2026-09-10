@@ -9,15 +9,20 @@ factual accuracy is 20%, every decision abstains, and task loss is 0.25. The mod
 does not yet demonstrate useful recall. Calibration selected its upper bound T=20;
 this small sample establishes no calibration guarantee.
 
-**In progress:** subsequent Claude proposals through 09:00 Berlin on 10 September.
-The [morning decision agenda](remaining-decisions-2026-09-10.md) tracks remaining
-choices. Claude-reviewed proposals are ready for long-horizon learning, marking,
-instruction/verification, sensing, uncertainty, bounded computation and transfer.
-All seven groups are ready; the cross-topic dependency audit and compact morning
-decision synthesis remain. The heartbeat
-`overnight-agent-design-proposals` is active every half hour,
-ending at that deadline. Broader proposals are not permission to adopt changes or
-start additional experiments.
+**Morning proposals ready:** all seven topic reviews and their combined reconciliation
+with actual Claude are complete. The [decision agenda](remaining-decisions-2026-09-10.md)
+starts with five choices and the full design, followed by the detailed alternatives,
+interfaces, evidence and remaining empirical questions. Recommended next: grounded
+local memory learning with current/recent recall controls, then learned marking if
+its marginal signal is useful. Preserve fixed capacity, exact historical records and
+separate live, hypothetical and offline replay state. Freeze the whole selected
+procedure before final calibration; each later task configuration needs its own evaluation.
+
+The heartbeat `overnight-agent-design-proposals` remains active for final delivery
+before 09:00 Berlin on 10 September, then will be paused. Reviews are finished;
+no new reviews or model experiments are needed while awaiting that handoff.
+These proposals remain unadopted. The read-only integration audit confirms no
+model/recipe/test changes after `32e9f99` and matches the stored results and renderer QA.
 
 **Implemented:** the categorical belief and bounded session-memory design authorized
 by Alex on 9 September 2026. Read [the model guide](belief-model.md) and the
@@ -49,8 +54,8 @@ The ordinary two-step default history is too short to train delayed recall acros
 the default 32-record recent store. The guide gives explicit small-memory settings
 that exercise all memory scales within an eight-step development history.
 
-**Verification:** 69 CPU tests pass. Exact pause/resume reproduces model, optimizer,
-sampler, RNG and training rows, including the optional extra-update gate. New tests
+**Earlier belief-slice verification:** 69 CPU tests passed at that stage. Exact
+pause/resume reproduces model, optimizer, sampler, RNG and training rows, including the optional extra-update gate. New tests
 cover event retry/order, masked inputs, source/belief separation, mixed batches,
 full-distribution reads, memory bounds/consolidation, provenance, snapshot loading,
 common planning samples/RNG restoration and future memory at equal timestamps.
@@ -109,7 +114,7 @@ Report seen/old-history performance separately: recognizing only unseen entities
 beat all-abstain without remembering any locations. The subsequent implementation
 and development evidence are recorded in the guide linked above.
 
-**Next step:** resolve the long-horizon learning proposal and remaining model decisions
-with Claude, then separately declare a matched comparison. Numerical costs are explicit
-research defaults, not inferred application preferences. Deployment-length replay,
+**Next step:** discuss the reviewed learning proposal and next application priority
+with Alex, then separately declare a bounded implementation/comparison plan. Numerical
+costs are explicit research defaults, not inferred application preferences. Deployment-length replay,
 general mark selection, calibrated probabilities and closed-loop behavior remain open.
