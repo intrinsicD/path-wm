@@ -3,7 +3,8 @@
 Status: preparation in progress overnight, authorized by Alex through 09:00 Berlin.
 The historical-recall implementation is complete in commit `32e9f99`. Entries below are
 proposals to discuss, not adopted model changes or permission for experiments.
-Actual isolated Claude reviews and reconciliation will be attached as completed.
+All seven topic groups have actual isolated Claude reviews and reconciliation;
+the combined dependency audit and compact morning recommendation are in progress.
 Stop new reviews at 08:30 and use the remaining time for the morning synthesis.
 
 The established architecture remains: learned world-state semantics, separate
@@ -21,8 +22,8 @@ is historical recall with explicit abstention and independent verification.
 | 3 | Instructions, exact objectives and verification | The current controlled query adapter does not interpret arbitrary user requests | Reviewed and reconciled; proposal ready |
 | 4 | Hypothetical observation updates and sensing | Planning an inspection needs observation-conditioned continuations without contaminating live history | Reviewed and reconciled; proposal ready |
 | 5 | Model uncertainty and calibration | Latent variability is not an estimate of model error; selected actions may exploit prediction mistakes | Reviewed and reconciled; proposal ready |
-| 6 | Planning and thinking budgets | Search and retrieval costs need concrete caps and honest stopping signals | Pending |
-| 7 | Transfer and evidence for world understanding | Canonical recall alone cannot establish visual mapping, document understanding or general competence | Pending |
+| 6 | Planning and thinking budgets | Search and retrieval costs need concrete caps and honest stopping signals | Reviewed and reconciled; proposal ready |
+| 7 | Transfer and evidence for world understanding | Canonical recall alone cannot establish visual mapping, document understanding or general competence | Reviewed and reconciled; proposal ready |
 
 Each review should supply a preferred initial design, a viable alternative, the
 interface/gradient consequences, failure cases, required evidence and the precise
@@ -618,13 +619,332 @@ matching concerns are addressed by a predeclared cost grid, counts/intervals, an
 one declared parity axis with the other costs reported. Coverage and useful
 calibration remain empirical; agreement makes no capability claim.
 
+## 6. Keep a fixed schedule and make its computation budget explicit
+
+Keep the current two-round historical reader initially. The proposed sensing task
+adds a fixed finite enumeration and one real inspection at most. Learned stopping,
+automatic retries and deeper contingent trees are separate later comparisons.
+Useful memory does not require a learned scheduler from the beginning.
+
+Put a small per-attempt budget record next to the exact task contract. It records
+operation counts/costs, peak temporary memory, deadline and the task/session/revision
+and snapshot to which pending results belong. The recipe defines a fixed set of
+billable operations and checks admission before dispatch. Count one declared level
+of work, including failed/discarded branches, without charging both a parent and its
+nested calls. A helper is enough; do not build a generic interception framework.
+Model-call counts, estimated work and measured wall time are different quantities.
+
+Use a fixed operation basis in the initial recipe: `task_prepare` (input/metadata
+encoding and interpretation), `think_round` (memory read and workspace update),
+`outcome_predict`, `dynamics_predict` (including prediction reads/prior head),
+`observation_encode`, `posterior_correct`, `sensor_predict`, and `memory_commit`
+(the bounded normal write/compression/consolidation transaction). One dispatch adds
+one count in its group; nested numerical modules are included in that group.
+Every group has a mandatory finite ceiling. Optional nonnegative weights for
+an additional total work ceiling do not remove those individual caps. Independent memory, action/cost and deadline caps must also fit. Input
+and output lengths belong to the recipe's bounded operation contract. More capable
+future tasks must declare any additional operation; hidden generation loops are not
+covered merely by calling them one prediction.
+
+Charge an admitted operation ordinal before its numerical call so failure is not
+free. A held reserve is unavailable capacity, not an already-spent charge: release
+it or turn it into an actual charge once, without double billing. A fixed schedule
+can reserve its complete remaining path. The first prototype does not resume an
+in-flight device call or automatically retry an uncertain external action. Known
+record/serialization overhead is measured separately; a zero model-call status is
+not a promise of zero CPU time.
+
+For the uncached neural sensing schedule with `R` reader rounds, initial
+`task_prepare + R*think_round + outcome_predict` uses `R+2` groups. Each of `C`
+candidates uses a prior and sensor prediction, then each of `O` returns needs
+encoding, correction, `R` rounds and an outcome prediction: `C*(2+O*(R+3))`.
+Reserve the actual post-action path, including its eventual memory commit, as
+`R+5` groups plus separately declared external execution/check costs. Cache reuse
+or an exact finite reference changes the call graph and must report actual counts.
+Peak memory includes retained snapshots, candidate arrays and outputs: sequential
+branch processing does not bound an uncapped candidate array. Start with one active attempt per stream, one retained read snapshot and
+sequential candidates. Concurrent attempts would require an explicit aggregate cap. If batching is later introduced, count semantic work
+items per stream/candidate as well as physical dispatches; batching several candidates
+into one call must not erase their counts. A call's declared group is known before
+admission, even when the next group is selected dynamically.
+
+Retain the live snapshot, one candidate prior, one return posterior/workspace and
+a bounded best-candidate/score record. Share immutable memory context; release branch
+activations after each return. Candidate arrays are capped in advance. Full activation
+traces are off by default and require their own bounded diagnostic allowance. These
+are retention rules; device peaks and host overhead still need measurement.
+
+Spent counters are monotone. Unused reservations are released once; replaying that
+release or a completed record is idempotent. Preserve whether the last admitted work
+completed, failed or was interrupted with an unknown result, without treating those
+states as factual outcomes. Status-only termination reads task authorization/scope,
+ledger/deadline and an already validated cached candidate; it performs no new latent
+read, learned scoring or implicit generation.
+
+Serialize the actual single-stream event update against its fixed prior/read set.
+Revalidate the current-world base before external dispatch, and task authorization
+again before emission. An already executed action still completes its bookkeeping
+and valid evidence update if a task is cancelled; the cancelled output is not emitted.
+Any future adaptive reader must have a finite maximum and a reservation rule of its
+own; the formulas above deliberately describe the initial fixed schedule.
+
+| Resource or event | Proposed rule |
+| --- | --- |
+| Thinking, candidate, outcome, horizon and sample limits | Explicit recipe/caller maxima; no internal loop may silently exceed them |
+| Model operations | Check/reserve before dispatch; count all executed work, including unchosen branches and new recomputation on retry |
+| Terminal processing and required online checks | Reserve their declared cost; exact budget-exhausted status requires no extra model forward |
+| Temporary memory | Bound live allocation/peak, not an additive sum of allocations that were released |
+| External actions | Charge actual executed action/time/cost, including failures; hypothetical calls do not consume a real acquisition quota |
+| Plan invalidation or task revision | Preserve spent computation and executed effects; future work uses remaining budget |
+| Deadline | Stop admitting work when its bound/reservation no longer fits; record actual overruns for non-preemptible kernels or tool calls |
+
+Expose only declared counts, charged costs and remaining budget. Predicted branch
+values return through the planner's explicit prediction interface. Private evaluator
+labels, hidden simulator targets and sampled model identity cannot travel through
+telemetry. Runtime inference keeps weights fixed and does not retain training graphs in its
+state. Training replay graphs and offline auxiliary probes have separate budgets;
+bounded online memory does not bound them automatically.
+
+A fixed schedule should either fit the available budget or end with the specified
+fallback. During later partial search, an incompletely evaluated acquisition cannot
+be scored by renormalizing the subset of sensor returns that happened to finish.
+Use only complete candidate evaluations, or a separately justified bound in a future
+algorithm. The initial finite task can reserve a complete enumeration before starting.
+Its cheaper answer/abstain alternative remains available.
+
+Use one abstention action with a reason such as predicted task cost, budget exhaustion,
+deadline or invalid input. These reasons aid evaluation; none is a factual label or
+proof of epistemic uncertainty. Preserve a valid completed terminal candidate only
+while its authorization and information scope remain valid. Check this at delivery. The fixed-history versus current-world rule is an exact
+task-kind property chosen when the contract is created; a matching ID is not enough
+if the candidate was computed from a different read set.
+Current-world action plans are tied to their current snapshot. A fixed historical
+answer may finish from its causal cutoff snapshot after later events arrive, provided
+its task/session/scope are unchanged; it must not incorporate those later records.
+A total ordering of unrelated task identities is unnecessary for these equality checks.
+
+Use the declared reason priority: invalid contract, invalidated task/session/revision,
+deadline, then resource limits in a fixed resource order. Preserve all violations
+alongside that primary reason. The same seed does
+not make a hardware deadline deterministic. A repeated ledger commit is idempotent;
+actually running an operation again costs again. A process or external action cannot
+be rolled back merely because its result arrived after a timeout.
+
+When computation has a task-cost exchange rate, include that rate explicitly.
+Already spent computation is a sunk cost at the next choice, although it remains in
+total attempt cost. Score the future incremental work when deciding to continue.
+Likewise, simulation calls are charged when planning runs; expected later live
+processing is a separate future cost and is charged when actually performed. Do not
+add past planning work a second time to the chosen action. Report physical task loss,
+external-action cost and compute cost separately as well as their declared total.
+Offline evaluator access is not an online verification capability.
+
+For a later multi-step action consumer, retain the proposed sum of running/action
+costs plus terminal loss once, execute the first action, observe and replan. Pure
+sensing still requires a continuation conditioned on its return. Replanning a
+prior-only rollout does not supply that value-of-information calculation.
+
+**Later adaptive-compute comparison:** start from a useful fixed/anytime reader and
+freeze it initially. At permitted prefix states, compare stopping with one further
+allowed computation under the same history. Grounded evaluator outcomes supply the
+signed task-loss improvement, less incremental future compute cost. Train a small
+score predictor on detached legal task/workspace/budget features; the future result
+and label are not its inputs. Include the predictor's own execution cost in total
+policy accounting. A declared zero threshold chooses positive estimated net value;
+no extra tuned threshold is required by definition.
+
+One extra round is a myopic target. With illustrative expected terminal risks
+0.25, 0.25 and 0.05 after zero, one and two extra computations, each costing 0.02,
+the first step alone has net gain -0.02, while both have gain 0.16. A greedy stop
+would miss that benefit. This exact fraction check is not a model result. A bounded
+multi-round diagnostic can reveal such complementarity; it does not certify an
+optimal stopping policy.
+
+For a frozen reader whose only choice is stop versus the next fixed round, collecting
+all prefixes through its maximum covers the states any stopping-only policy can visit.
+Selection still changes their frequencies and difficulty. Different computation types,
+changed weights or external actions can change support and require new evaluation.
+Intermediate states need explicit grounding/evaluation before claiming anytime output.
+Paired continuation labels require valid outcomes and declared sampling; pairing alone
+does not cure arbitrary selection bias. Extra offline continuation work is budgeted.
+
+Compare adaptive allocation with fixed schedules using the same trained backbone to
+isolate allocation, and with suitably trained fixed-round references if claiming a
+better complete method. A cheap task-conditioned fixed schedule is an optional
+alternative. NLL improvement is a possible auxiliary proxy; increased confidence
+alone is not evidence of better decisions. Neither a particular rank-correlation
+statistic nor a learned halting unit is a prerequisite for the initial model.
+
+[Adaptive Computation Time](https://arxiv.org/pdf/1603.08983) is a precedent for
+learning halting with an explicit computation penalty and cap. Its jointly trained
+ponder objective differs from this proposed frozen-reader marginal-value comparison;
+its results do not validate the proposal or impose the runtime contract above.
+
+**Decision for Alex:** retain two fixed recall rounds and fixed one-inspection search,
+add a small exact per-attempt budget when the active task is implemented, and postpone
+learned stopping until extra computation has measurable grounded value. The simpler
+alternative is task-specific fixed schedules without a learned scorer; it stays a
+reference even if adaptive computation is later chosen.
+
+Reviews: `overnight-compute`, `overnight-compute-reconcile` and
+`overnight-compute-contract`. Claude accepted fixed schedules, explicit operation
+accounting and future-incremental stopping cost. It withdrew compulsory scheduler
+frameworks, extra abstention types, globally ordered identities, blanket historical
+snapshot invalidation and guaranteed wall-clock reproducibility. It also narrowed
+reachable-state, greedy-optimality, paired-label, mandatory threshold/proxy and
+offline-cost claims. The final review checked the symbolic call formulas; remaining
+cap, batching, reserve, interruption and retention declarations are specified above.
+We do not adopt its suggestion that dynamically chosen operation groups prevent
+exact accounting, or that adding sunk cost necessarily biases toward continuing;
+neither follows generally. Hardware costs, numeric reserves and later adaptive-study
+thresholds remain implementation/experiment choices, not measurements from review.
+
+## 7. Test transfer through the learned core, one explicit shift at a time
+
+The architecture can share state and memory interfaces across domains without
+assigning latent tokens a universal ontology. That limited design property does
+not establish universal capability. Cross-domain reuse can be tested within text
+or across modalities; either supports only its declared source-to-target shift.
+A document revision and a moving object can both require retaining identity and
+updating a belief, while imposing different input, temporal and output demands.
+Task labels define what is tested; they need not prescribe token meanings.
+
+After useful controlled delayed learning, prefer **controlled document fragments and
+revisions** as the first target shift. Reuse text input while changing binding,
+version, scope and correction demands. A later query might ask for a value in a
+particular delivered version, or for the latest value the agent actually saw. A
+current-file read is an acquisition and cannot retroactively change an earlier
+historical label. Start with generated, exactly labelled episodes; natural documents
+and real edit workflows are a later external-validity check, not implied available data.
+
+Then consider **moving viewpoints and revisits** to test visual identity correspondence
+and relationships through occlusion and visible changes. Existing fixed-view PushT
+records alone do not supply that test. Use a controlled environment or a verified
+suitable dataset under a separate data/budget plan. Abrupt camera relocations and
+revisits may test continuity shortcuts when they belong to a coherent episode process;
+random frame shuffling that violates that process is not automatically a valid control.
+If all distinguishing evidence is removed, the task must allow uncertainty rather
+than demand a uniquely knowable identity.
+
+Controlled text first is an economy preference. Controlled vision first is a viable
+alternative if spatial mapping is Alex's immediate priority. Neither modality change
+nor staying within text determines whether a transfer claim is valid: define the
+source/target distributions, what was trained and what changes at evaluation.
+
+| Claim | Evidence the task should expose |
+| --- | --- |
+| Perceptual grounding | Observable feature/content labels, with input/encoder controls |
+| Partial completion | Explicit masking/availability and a scored distribution or appropriate target under ambiguity |
+| Temporal/action prediction | Held-out observable consequences under the declared action coverage and time semantics |
+| Delayed retention | Correct seen-old facts after defined interference/compression depth, with task-prior and trained memory references |
+| Updating stale information | Correct response to a relevant new observation/revision while retaining still-valid older facts |
+| Interpretation and decisions | Correct objective/scope, factual scores, abstention/task loss and independent verification coverage |
+| Transfer | A stated source-to-target advantage under the exact frozen/adapted module and resource contract |
+
+A low latent loss, good reconstruction, attention pattern or attractive state plot
+cannot establish the whole matrix. Low MSE does not refute a distributional model
+either: a correct multimodal prediction can have an accurate conditional mean.
+Score the quantity actually claimed. Equivalent latent coordinate systems may yield
+the same behavior; no finite benchmark uniquely identifies a true world representation.
+
+For historical controls, distinguish the latest event in an episode from the latest
+value of the queried entity by interposing other events. Compare separately replayed
+prefixes of one episode at different cutoffs, using only the delivered prefix for each
+answer. This tests update/alignment; arbitrary retrospective queries from a later state
+would be a distinct interface extension. Group never-delivered-by-cutoff, first delivered only
+after cutoff, and seen-then-evicted cases. Eviction is not a factual uncertainty label:
+recurrent or compressed state may still retain the answer.
+
+Report elapsed time, record/token counts, intervening entities and consolidation depth
+separately, varying them where the fixed memory policy and data permit. Do not promise
+that all can be independently crossed. Test sensitivity to relevant coherent changes
+alongside factual correctness and invariance to irrelevant changes. A policy that
+flips every answer could look sensitive while being wrong.
+
+Split whole episode/document/scene families appropriate to the claim, preserving
+related versions and frames together where leakage would defeat it. Fresh bindings
+and unseen compositions differ from unsupported vocabulary; choose each deliberately.
+Keep late questions out of earlier writes, and separate explicit user-mark conditions.
+Fresh session checks include empty memory/workspace/task metadata and relevant caches.
+A behavioral no-evidence reference should match the declared task prior/cost optimum,
+not a universal chance-accuracy target. Poor answers alone cannot prove isolation.
+
+**Preferred first transfer contrast:** freeze the source-trained recurrent belief
+update, dynamics, memory writes/reads/compression/consolidation and task-workspace
+transformations. Train only bounded target input/task adapters and outcome readouts.
+Compare with an independently initialized frozen core of the same architecture and
+the same adapter/head training budget. Declare every trainable/frozen module. Adapters
+must not add their own temporal archive or receive raw full history outside the bounded
+state interface. Report their parameter share and actual computation.
+
+A source-core advantage would support transfer under this particular target and adapter
+budget. A tie means the comparison has not shown such an advantage; it does not prove
+that the adapter alone implements the model. A large adapter can complicate attribution,
+but a declared controlled comparison remains falsifiable. Randomly permuting a trained
+core without transforming its interfaces is not equivalent to a random-core control.
+Retraining a permuted final label head may be a trivial symmetry, not proof of learned
+world semantics.
+
+| Training/evaluation setup | Appropriate interpretation |
+| --- | --- |
+| New examples from the trained domain | Held-out generalization under its split |
+| Frozen core and compatible already-trained interfaces on a new domain | Evaluation without target adaptation; claim limited to that supported shift |
+| Target adapters/readouts trained, core frozen | Adaptation through bounded interfaces; compare trained versus random core |
+| Source initialization followed by full target fine-tuning | Initialization/adaptation benefit under the recipe; also re-evaluate source performance |
+| Joint training on the evaluated domains | Shared trained-domain capability; later held-out-domain evaluation can separately test transfer |
+
+Choose fixed target-data exposure as the primary resource axis for the initial
+transfer comparison, with the same declared adapter update budget and other costs
+reported. Source pretraining cost remains visible; lower target-data demand is not
+necessarily lower total compute. Full fine-tuning versus scratch answers a different
+valid question and is a later contrast. Fresh evaluation sessions isolate transfer
+through weights from cross-episode memory carryover.
+
+For objective and hierarchy claims, retain the controls in section 1: same-architecture
+auxiliary on/off for a learning-objective effect; trained recurrent/recent-only and
+fixed-compression references for a hierarchy effect. Evaluation-only memory removal
+measures reliance. Full-history access is an information-budget reference, not a matched
+bounded-memory control, and a learned full-history model is not automatically an oracle.
+Use counterfactual action outcomes only when the environment/data actually supports them.
+
+The next concrete experiment plan must fix the primary metric, smallest useful effect,
+resource axis, populations/seeds, grouping for uncertainty, selection/stopping rules and
+report requirements before execution. Many correlated frames are not independent runs.
+Distinguish descriptive slices from claims used to gate progress; include sample counts
+and suitable intervals. A bounded negative result diagnoses that recipe and population,
+not every possible world-model architecture.
+
+[Frozen and fine-tuned feature-transfer comparisons](https://proceedings.neurips.cc/paper_files/paper/2014/file/532a2f85b6977104bc93f8580abbb330-Paper.pdf)
+provide a methodological precedent. Their image-classification results do not establish
+transfer through recurrent memory. [Statistical Precipice](https://papers.nips.cc/paper/2021/file/f514cec81cb148559cf475e7426eed5e-Paper.pdf)
+supports accounting for uncertainty across finite training runs; it does not prescribe
+a universal seed count or confidence procedure for these episodes. The task sequence
+and restricted-core comparison are our proposals.
+
+**Decision for Alex:** after useful delayed learning, test a frozen learned core on
+controlled document revisions against a matched frozen random core, then choose a
+moving-viewpoint extension if spatial mapping remains the priority. Keep the first
+claim narrow: source-core benefit for specified held-out version/retention/correction
+cases under a stated target-data and adapter budget. It would not complete all claims
+of general world understanding.
+
+Reviews: `overnight-transfer`, `overnight-transfer-reconcile` and
+`overnight-transfer-scope`. Claude accepted the frozen trained-versus-random core
+contrast and controlled-text-first preference. It withdrew low-MSE/refutation,
+eviction-as-uncertainty, compulsory retrospective queries, chance-level reset,
+label-permutation, incoherent visual-control and unique-identification claims.
+The final clarification distinguishes a neutral interface from empirical cross-domain
+reuse; modality change is not required for limited text-to-text transfer. The strength
+of that claim still depends on a real specified source/target difference and adequate
+controls. No universal representation claim or user adoption follows from peer agreement.
+
 ## Continuation for the overnight work
 
-Next: bounded thinking/planning, transfer/evaluation and the cross-topic dependencies.
-Avoid reopening the settled causal/gradient distinctions unless new evidence changes
-them. For each group prepare an independent note and public conceptual brief before
-reading Claude, verify consequential claims, reconcile errors, and append a concrete
-recommendation here. Keep all implementation and experiment proposals unexecuted.
-By 08:30 stop initiating reviews, then produce a compact decision sheet and identify
-which choices need Alex versus a separately declared experiment. Deliver by 09:00
-Berlin and pause `overnight-agent-design-proposals`.
+All seven decision groups have reviewed proposals. Next: audit their cross-topic
+dependencies and prepare a compact morning decision sheet, separating choices for
+Alex from implementation details and empirical questions. Check that the combined
+recommendation preserves fixed capacity, source/belief separation, current versus
+historical targets, cost/calibration boundaries and the priority of useful learning.
+Do not repeat resolved reviews or implement proposed features.
+By 08:30 stop initiating reviews; deliver the consolidated agenda by 09:00 Berlin
+and pause `overnight-agent-design-proposals`.
