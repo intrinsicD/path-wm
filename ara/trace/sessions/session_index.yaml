@@ -110,8 +110,9 @@ sessions:
     and morning synthesis remain. Turn6 adds six reconciled compute/transfer reviews and proposals; all
     seven groups ready, dependency audit/morning synthesis remain. No model work. Turn7 completes three
     combined Claude reviews and the five-choice morning synthesis; stored evidence checked without model
-    work. Final handoff remains scheduled by09:00Berlin.
-  turn_count: 7
+    work. Final handoff remains scheduled by09:00Berlin. Turn8 completes the final handoff and verifies
+    the automation is paused before09:00Berlin; no model work or proposal adoption.
+  turn_count: 8
   events_count: 26
   claims_touched: []
-  open_threads: 8
+  open_threads: 7
