@@ -2054,3 +2054,28 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O114
+  timestamp: 2026-09-10T03:30+02:00
+  provenance: ai-suggested
+  content: Propose grounded exact-query memory learning first, then frozen-base admission scoring and
+    development replay of its actual policy, then complete-procedure calibration/evaluation. Refit bases
+    require renewed utility-label/scorer checks; later language, sensing and transfer are separate versioned
+    configurations. Protected records remain immutable, corrections are new ordinary events even when
+    protection is full, and local absence retains explicit source/time scope through all consumers. Shared-reader
+    cross-scope interference is empirical, not a logical inconsistency. Execution verification does not
+    certify original intent fidelity.
+  context: Combined Claude reconciliation completed; evidence audit only re-read the stored negative run
+    and 76 passing tests. Recent and old-seen accuracy are both zero, so failure is not localized to compression.
+    Proposal committed7882e20; no model/config implementation, new experiment or user adoption. Morning
+    final delivery remains scheduled.
+  potential_type: architecture
+  bound_to:
+  - N161
+  - N154
+  - N155
+  - N156
+  - N158
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

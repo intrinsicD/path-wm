@@ -2635,3 +2635,29 @@ tree:
   - N156
   - N159
   status: open
+- id: N161
+  type: question
+  title: How should the seven reviewed proposals fit into one development order?
+  provenance: ai-suggested
+  timestamp: 2026-09-10T03:30+02:00
+  description: Three actual isolated Claude exchanges reconcile the combined design. Preserve immutable
+    event times and source-scoped absence; check the learned marking policy in development before freezing
+    the whole procedure for calibration. Each later task configuration has separate evaluation. Grounded
+    memory learning with current/recent controls is the recommended first slice. Five morning choices
+    and detailed proposals are ready; Alex has not adopted them.
+  evidence:
+  - docs/remaining-decisions-2026-09-10.md
+  - runs/reviews/state_memory_design_2026-09-09/overnight-integration-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-integration-reconcile-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-integration-scope-receipt.json
+  - runs/reviews/state_memory_design_2026-09-09/overnight-integration-local-checks.json
+  also_depends_on:
+  - N153
+  - N154
+  - N155
+  - N156
+  - N157
+  - N158
+  - N159
+  - N160
+  status: open

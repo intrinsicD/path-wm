@@ -2,8 +2,8 @@ session:
   id: 2026-09-10_001
   date: '2026-09-10'
   started: 2026-09-10T00:05+02:00
-  last_turn: 2026-09-10T02:54+02:00
-  turn_count: 6
+  last_turn: 2026-09-10T03:30+02:00
+  turn_count: 7
   summary: Two isolated Claude reviews produced a proposed goal/action/outcome-verification interface,
     historical recall with factual not-observed versus abstention, and bounded observation-conditioned
     sensing. Turn2 works out reference costs, complete text-recall episodes, separate calibration and
@@ -18,7 +18,11 @@ session:
     primary-source checks. Proposals committed1fd6795; compute, transfer and final synthesis remain. No
     model changes or experiments. Turn6 completes six Claude exchanges for bounded compute and transfer;
     exact operation contract and frozen-core contrast proposed in8b64fb2. All seven topic groups ready;
-    combined dependency audit and morning synthesis remain. No model work.
+    combined dependency audit and morning synthesis remain. No model work. Turn7 completes three combined
+    Claude reviews and reconciles scope, immutable correction, marking-development and calibration dependencies.
+    Five-choice morning agenda committed7882e20; stored evidence rechecked without model work. Final delivery
+    remains scheduled before09:00Berlin.
+
 events_logged:
 - turn: 1
   type: decision
@@ -209,6 +213,24 @@ events_logged:
     source pretraining cost reported. Distinguish same-domain generalization, supported frozen transfer,
     adapter adaptation, full fine-tuning and joint training. Use scoped truth, grouped episodes and appropriate
     proper/task scores; neither modality changes nor neutral latent interfaces prove universal world representations.
+- turn: 7
+  type: question
+  id: N161
+  routing: direct
+  provenance: ai-suggested
+  summary: How should the seven reviewed proposals fit into one development order?
+- turn: 7
+  type: observation
+  id: O114
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose grounded exact-query memory learning first, then frozen-base admission scoring and
+    development replay of its actual policy, then complete-procedure calibration/evaluation. Refit bases
+    require renewed utility-label/scorer checks; later language, sensing and transfer are separate versioned
+    configurations. Protected records remain immutable, corrections are new ordinary events even when
+    protection is full, and local absence retains explicit source/time scope through all consumers. Shared-reader
+    cross-scope interference is empirical, not a logical inconsistency. Execution verification does not
+    certify original intent fidelity.
 ai_actions:
 - turn: 1
   action: Inspected local planner/task/categorical interfaces; wrote independent notes, completed two actual
@@ -266,6 +288,17 @@ ai_actions:
   files_changed:
   - docs/remaining-decisions-2026-09-10.md
   - docs/project-state.md
+- turn: 7
+  action: Completed three public-only actual Claude integration reviews after independent notes. Reconciled
+    overclaims and audited existing JUnit, raw metrics, source diff and renderer hash; no test/model rerun.
+    Automatic approval timed out before one reconciliation launch; its permitted single retry succeeded.
+    Committed7882e20 combined agenda and updated the existing heartbeat for quiet waiting, final delivery
+    after08:30 and pause by09:00Berlin. No private export or model changes.
+  provenance: ai-executed
+  files_changed:
+  - docs/remaining-decisions-2026-09-10.md
+  - docs/project-state.md
+  - docs/recall-implementation-plan.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -290,6 +323,10 @@ key_context:
   excerpt: Scheduled continuation of prior overnight authorization. All seven proposal groups are ready;
     the remaining work is to audit dependencies and prepare a compact decision sheet by09:00Berlin. Reviewed
     proposals are not user-adopted changes or new experiment permission.
+- turn: 7
+  excerpt: Scheduled continuation of the prior overnight authorization. Reviews and synthesis are complete;
+    five choices are ready for Alex, with grounded memory learning recommended first. Final morning delivery
+    remains scheduled; no proposal adoption or additional model experiment is inferred.
 open_threads:
 - O104/A04 implemented. O106 negative development interpretation and O107 local memory-learning proposal
   remain staged. A scientific effect-size/seed/split/paired-control protocol is still required.
@@ -297,9 +334,9 @@ open_threads:
 - O103 requires a future isolated hypothetical-correction interface and validated sensing probabilities.
 - O101 long-horizon retention, calibrated outcomes and useful closed-loop behavior remain unproven.
 - Prior research questions remain open as recorded in 2026-09-09_001.yaml; no unrelated topic abandoned.
-- Complete the combined dependency audit by08:30; synthesize by09:00Berlin and pause the active heartbeat.
+- Combined review and morning synthesis complete (N161/O114); deliver after08:30 and by09:00Berlin, then pause the heartbeat.
 - O108/O109 proposals await Alex; O110/O111 sensing/uncertainty proposals are also ready.
-- O112/O113 bounded-compute/transfer proposals are ready; preserve their data/selection/cost boundaries in final synthesis.
+- O112/O113/O114 compute, transfer and integration proposals await Alex; preserve their data/selection/cost and scope boundaries.
 ai_suggestions_pending:
 - 'O102: broader objective/capability/action interfaces remain proposed; narrow recall contract is implemented.'
 - 'O103: finite sensing diagnostic then static-current-location inspect/answer, separately from historical recall.'
@@ -315,3 +352,5 @@ ai_suggestions_pending:
   remains a comparison.'
 - 'O113: controlled text revision transfer through a frozen trained-versus-random core, with visual mapping
   as a later scoped option.'
+- 'O114: grounded learning then marking development check, full-procedure calibration and separately versioned
+  task extensions.'
