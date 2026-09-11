@@ -158,3 +158,8 @@ def evaluate_key_box(model, families=16, seed=2401):
         and c["absent_stop"] == 1,
         limitations="Supplied descriptors and action dynamics; frozen learned state donor, trained workspace readout. No learned dynamics or visual discovery.",
     )
+
+
+def second_key_query(latent, target, switch):
+    """Permute retrieved records and their labels together, without new information."""
+    return (latent.flip(0), target.flip(0)) if switch else (latent, target)

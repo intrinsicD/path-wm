@@ -94,11 +94,38 @@ def test_key_box_recipe_resume_and_action_budget(tmp_path, monkeypatch):
     assert all(len(r["actions"]) <= 4 for r in data["episodes"])
     train_key_box(matcher, cell, output, steps=2, families=1, resume=True)
     assert (output / "key_box.json").read_bytes() == raw
+    switched = tmp_path / "switched"
+    train_key_box(
+        matcher,
+        cell,
+        switched,
+        steps=2,
+        families=1,
+        query_switch=True,
+        eval_seed=2411,
+        reference_weights=output / "last.pt",
+    )
+    comparison = json.loads((switched / "key_box.json").read_text())
+    assert len(comparison["reference"]["episodes"]) == len(comparison["episodes"])
+    frozen = (switched / "key_box.json").read_bytes()
+    train_key_box(
+        matcher,
+        cell,
+        switched,
+        steps=2,
+        families=1,
+        query_switch=True,
+        eval_seed=2411,
+        reference_weights=output / "last.pt",
+        resume=True,
+    )
+    assert (switched / "key_box.json").read_bytes() == frozen
 
 
 def test_switched_query_targets_remain_aligned():
     import torch
     from pathwm.evaluation.key_box import second_key_query
+
     latent = torch.arange(12).reshape(3, 4)
     target = torch.tensor([0, 1, 0])
     values, labels = second_key_query(latent, target, True)

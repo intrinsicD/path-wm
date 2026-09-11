@@ -65,3 +65,10 @@ seed2411 (16 families, same conditions), all existing gates unchanged. Preserve 
 run; no further tuning this slice.240CPU seconds including both evaluations; no repeat
 baseline training. Bind baseline checkpoint hash to candidate run. No clearing working
 state to hide interference; candidate training directly exercises query switches.
+
+Claude reviewed query-switch intervention. Batch indices are not model inputs and
+attention operates within each example, so reversing iid batch examples supplies
+new within-example query pairings rather than an exposed index shortcut. Retain
+its narrower concern: improvement would not uniquely distinguish learning to switch
+from benefits of decorrelated repeated supervision. Do not claim that mechanism.
+No new hyperparameters or labels introduced. Added full comparison-path resume smoke.

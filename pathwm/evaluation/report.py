@@ -211,6 +211,20 @@ def entity_inspection(directory):
         parts.append(
             "</table></div><p>Acceptance: known accuracy≥95%, reachable success and absent correct stop≥90%, utility advantage over no-history≥0.01; supplied-state control100%. All required. Four-action budget. Utility=verified success−0.05×external cost.</p>"
         )
+        if "reference" in data:
+            parts.append(
+                "<p>Frozen first-model comparison on the same fresh cases:</p><pre>"
+                + escape(
+                    json.dumps(
+                        dict(
+                            known_accuracy=data["reference"]["known_accuracy"],
+                            summary=data["reference"]["summary"],
+                        ),
+                        indent=2,
+                    )
+                )
+                + "</pre>"
+            )
         for condition in ("remembered", "moved", "uncertain", "absent"):
             row = next(
                 r

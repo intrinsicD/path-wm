@@ -2912,12 +2912,25 @@ def entity_growth(weights, output, resume=False, seed=61):
 
 
 def train_key_box(
-    matcher_weights, cell_weights, output, *, steps=256, families=16, resume=False
+    matcher_weights,
+    cell_weights,
+    output,
+    *,
+    steps=256,
+    families=16,
+    resume=False,
+    query_switch=False,
+    eval_seed=2401,
+    reference_weights=None,
 ):
     """Train the entity-to-belief workspace bridge, then execute bounded plans."""
     from pathwm.models.key_box import KeyBoxReader
     from pathwm.models.entity_state import EntityStateCell
-    from pathwm.evaluation.key_box import key_training_batch, evaluate_key_box
+    from pathwm.evaluation.key_box import (
+        key_training_batch,
+        evaluate_key_box,
+        second_key_query,
+    )
 
     seed_everything(2301)
     matcher_weights, cell_weights = (
@@ -2949,6 +2962,10 @@ def train_key_box(
         output,
         settings=dict(
             seed=2301,
+            query_switch=query_switch,
+            reference_sha256=file_hash(reference_weights)
+            if reference_weights
+            else None,
             steps=steps,
             families=families,
             lr=0.003,
@@ -2958,7 +2975,7 @@ def train_key_box(
             max_seconds=240,
             planner="supplied_expectimax4",
         ),
-        data=dict(training_seed=2301, evaluation_seed=2401, batch=32),
+        data=dict(training_seed=2301, evaluation_seed=eval_seed, batch=32),
         recipe=__file__,
         model=model,
         optimizer=optimizer,
@@ -2972,9 +2989,12 @@ def train_key_box(
         for step in range(run.step, steps):
             state, latent, target = key_training_batch(model, run.sampler)
             logits, working = model(state, latent)
-            second, _ = model(working, latent)
+            second_latent, second_target = second_key_query(
+                latent, target, query_switch
+            )
+            second, _ = model(working, second_latent)
             loss = (
-                F.cross_entropy(logits, target) + F.cross_entropy(second, target)
+                F.cross_entropy(logits, target) + F.cross_entropy(second, second_target)
             ) / 2
             optimizer.zero_grad()
             loss.backward()
@@ -2988,11 +3008,24 @@ def train_key_box(
                 raise TimeoutError("Key-box budget exhausted")
         model.eval()
         if not (resume and path.exists()):
-            result = evaluate_key_box(model, families=families)
+            result = evaluate_key_box(model, families=families, seed=eval_seed)
             if donor_hashes != dict(matcher=state_hash(matcher), cell=state_hash(cell)):
                 raise RuntimeError("Entity donor changed")
             if perf_counter() - started > 240:
                 raise TimeoutError("Key-box budget exhausted")
+            if reference_weights:
+                reference = copy.deepcopy(model).eval()
+                reference.load_state_dict(
+                    torch.load(
+                        reference_weights, map_location="cpu", weights_only=True
+                    )["model"]
+                )
+                result["reference"] = evaluate_key_box(
+                    reference, families=families, seed=eval_seed
+                )
+                result["reference"]["model_sha256"] = state_hash(reference)
+                if perf_counter() - started > 240:
+                    raise TimeoutError("Key-box comparison budget exhausted")
             result["donor_hashes"] = donor_hashes
             result["model_sha256"] = state_hash(model)
             atomic_json(path, result)
