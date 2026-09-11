@@ -234,3 +234,22 @@ and permutation-consistent readout before interpreting graph learning.
 
 Report and verification: `runs/entity_alignment_v1/observed/report.html` and
 `runs/entity_alignment_v1/verification.json`. The earlier raw run remains untouched.
+
+## Shared entity-update diagnostic
+
+Authorized continuation: add `--entity-reader shared` with observed association only.
+Two shared GRU streams process the initial observation and visible set-action event,
+using observation-derived routing to initial object order. Each stream has width64,
+so persistent latent capacity remains 128 floats. Heads share parameters: identity
+score per object, binary state distribution, and binary effect distribution conditioned
+on whether that object receives the proposed action. Updating/toggling is learned,
+not implemented as switch arithmetic. Joint pair probabilities factor within each
+known assignment; final occlusion mixes two coherent assignments with equal prior.
+This assumes the supplied two-object independent-switch task, not arbitrary relations.
+
+Fix seed31, width64, lr0.003/wd0.01, batch32, same 512/256 manifests, 256 updates,
+450 active CPU seconds, final-only development and unchanged gates. One run, no sweep.
+Report parameter changes; initialization cannot be tensor-matched to the different
+architecture. This tests shared processing plus structured readout, not graph learning
+or uniquely one causal mechanism. Verify all 8 independent per-frame permutations,
+probability normalization, earliest-state gradients, no input mutation and exact resume.

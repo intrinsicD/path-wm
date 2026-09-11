@@ -140,3 +140,24 @@ def test_observed_association_input_only_and_missingness():
     assert torch.count_nonzero(y[..., 2:8]) == 0
     swap = observed_association(x.flip(2))
     torch.testing.assert_close(swap[..., :2], y.flip(2)[..., [1, 0]])
+
+
+def test_shared_entity_permutations_and_gradients():
+    import itertools
+    from pathwm.models.entities import SharedEntityReader
+    from pathwm.data.entities import EntityEpisodes
+
+    model = SharedEntityReader(16)
+    x = EntityEpisodes('validation', 32).inputs.clone().requires_grad_()
+    base = model(x)
+    for order in itertools.product([False, True], repeat=3):
+        moved = torch.stack([x[:, t].flip(1) if flip else x[:, t] for t, flip in enumerate(order)], 1)
+        for j, (a, b) in enumerate(zip(base, model(moved))):
+            permutation = [1, 0] if j == 0 else [0, 2, 1, 3]
+            if order[-1]:
+                b = b[:, permutation]
+            torch.testing.assert_close(a.softmax(-1), b.softmax(-1), atol=1e-6, rtol=1e-5)
+            torch.testing.assert_close(a.exp().sum(-1), torch.ones(len(x)))
+    sum(v.square().mean() for v in base).backward()
+    assert x.grad[:, 0, :, 9].abs().sum() > 0
+    assert all(torch.isfinite(p.grad).all() for p in model.parameters() if p.grad is not None)
