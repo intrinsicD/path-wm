@@ -41,6 +41,7 @@ def evaluate_growth(model, families, max_seconds=60):
             events.append(("overflow", None, family["descriptors"][8]))
             receipts, retry_equal, restore_equal = [], True, True
             restored = None
+            bindings = {}
             for time, (kind, identity, descriptor) in enumerate(events):
                 if perf_counter() > deadline:
                     raise TimeoutError("Growing-memory screen exceeded budget")
@@ -58,14 +59,17 @@ def evaluate_growth(model, families, max_seconds=60):
                 expected_reason = dict(
                     create="created", revisit="matched", overflow="capacity"
                 )[kind]
-                correct = (
-                    receipt["reason"] == expected_reason
-                    and receipt["entity_id"] == identity
+                if kind == "create" and receipt["reason"] == "created":
+                    bindings[identity] = receipt["entity_id"]
+                expected_id = bindings.get(identity)
+                correct = receipt["reason"] == expected_reason and (
+                    kind == "create" or receipt["entity_id"] == expected_id
                 )
                 receipts.append(
                     dict(
                         kind=kind,
-                        expected_id=identity,
+                        expected_id=expected_id,
+                        truth_entity=identity,
                         correct=correct,
                         receipt=receipt,
                     )

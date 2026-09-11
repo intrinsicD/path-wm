@@ -52,3 +52,19 @@ def test_recipe_frozen_screen_and_cached_resume(tmp_path):
     assert (output / "entity_growth.json").read_bytes() == raw
     assert json.loads((output / "status.json").read_text())["result"] == "completed"
     assert "Frozen growing entity memory" in (output / "report.html").read_text()
+
+
+def test_deferred_creation_does_not_shift_identity_ground_truth():
+    families = growth_inputs(count=1)
+    skipped = torch.tensor(families[0]["descriptors"][1])
+
+    class SkipOne(Scorer):
+        def match(self, query, memory):
+            if (query[0] - skipped).norm() < 0.1:
+                return query.new_zeros((len(query), memory.shape[1] + 1))
+            return super().match(query, memory)
+
+    result = evaluate_growth(SkipOne(), families)
+    assert result["scores"]["4"]["create"]["correct"] == 3
+    assert result["scores"]["4"]["revisit"]["correct"] == 3
+    assert result["scores"]["4"]["revisit"]["wrong_id"] == 0
