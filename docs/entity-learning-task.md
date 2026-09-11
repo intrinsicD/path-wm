@@ -1209,3 +1209,18 @@ static independent-noise assumption, not learned sensing or calibrated uncertain
 Claude acknowledged that always-two supplies the requested unconditional baseline;
 duplicate is a deterministic sanity check, not proof of independence.18 relevant
 tests pass including cost/duplicate behavior and reobservation cached resume.
+
+
+Reobservation result (c5bd083): declared diagnostic PASS. At sigma0.60 first
+accuracy72.265625%, selective82.8125%, reread42.578125%, utility0.819609375
+versus first0.72265625. Ignore93.75%→98.4375%, accept50.78125%→67.1875%.
+Always-two accuracy87.109375%, utility0.85109375 exceeds selective at cost0.02;
+do not claim selective policy optimality. Duplicate decisions exact, no gain.
+Low-noise accuracy preserved/improved; cost can make unnecessary clean rereads
+worse in utility.18 relevant tests, cached resume, frozen hash and independent
+reconstruction/decision/recall/cost audit pass. No model updates or memory-store
+integration. Report structural-only under prior browser denial.
+Evidence: `runs/entity_gate_reobserve_v1/verification.json`. Run existing frozen
+shift command with `--entity-gate-reobserve`; resume with `--resume DIR`.
+Next candidate: correlated-noise reread diagnostic; independent fresh observations
+are an assumption here and may overstate value when errors share a cause.

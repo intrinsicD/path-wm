@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Clean retention fails acceptance;16 relevant tests, both resumes and independent objective audit pass."
-  turn_count: 41
-  events_count: 118
+  summary: "Reobservation passes bounded test; always-two has higher high-noise utility.18 relevant tests and resume pass."
+  turn_count: 42
+  events_count: 121
   claims_touched: []
   open_threads: 13

@@ -1,0 +1,135 @@
+{
+  "passed": true,
+  "independent_decisions_and_cost": true,
+  "duplicate_exact": true,
+  "frozen_hash": true,
+  "cohorts": {
+    "0.03": {
+      "always_two": {
+        "accuracy": 1.0,
+        "negative_recall": 1.0,
+        "positive_recall": 1.0,
+        "reread_rate": 1.0,
+        "utility": 0.98
+      },
+      "duplicate": {
+        "accuracy": 1.0,
+        "negative_recall": 1.0,
+        "positive_recall": 1.0,
+        "reread_rate": 0.05078125,
+        "utility": 0.998984375
+      },
+      "first": {
+        "accuracy": 1.0,
+        "negative_recall": 1.0,
+        "positive_recall": 1.0,
+        "reread_rate": 0.0,
+        "utility": 1.0
+      },
+      "selective": {
+        "accuracy": 1.0,
+        "negative_recall": 1.0,
+        "positive_recall": 1.0,
+        "reread_rate": 0.05078125,
+        "utility": 0.998984375
+      }
+    },
+    "0.15": {
+      "always_two": {
+        "accuracy": 1.0,
+        "negative_recall": 1.0,
+        "positive_recall": 1.0,
+        "reread_rate": 1.0,
+        "utility": 0.98
+      },
+      "duplicate": {
+        "accuracy": 0.98828125,
+        "negative_recall": 0.9765625,
+        "positive_recall": 1.0,
+        "reread_rate": 0.20703125,
+        "utility": 0.984140625
+      },
+      "first": {
+        "accuracy": 0.98828125,
+        "negative_recall": 0.9765625,
+        "positive_recall": 1.0,
+        "reread_rate": 0.0,
+        "utility": 0.98828125
+      },
+      "selective": {
+        "accuracy": 1.0,
+        "negative_recall": 1.0,
+        "positive_recall": 1.0,
+        "reread_rate": 0.20703125,
+        "utility": 0.995859375
+      }
+    },
+    "0.3": {
+      "always_two": {
+        "accuracy": 0.9921875,
+        "negative_recall": 0.984375,
+        "positive_recall": 1.0,
+        "reread_rate": 1.0,
+        "utility": 0.9721875
+      },
+      "duplicate": {
+        "accuracy": 0.93359375,
+        "negative_recall": 0.96875,
+        "positive_recall": 0.8984375,
+        "reread_rate": 0.41015625,
+        "utility": 0.925390625
+      },
+      "first": {
+        "accuracy": 0.93359375,
+        "negative_recall": 0.96875,
+        "positive_recall": 0.8984375,
+        "reread_rate": 0.0,
+        "utility": 0.93359375
+      },
+      "selective": {
+        "accuracy": 0.98046875,
+        "negative_recall": 0.984375,
+        "positive_recall": 0.9765625,
+        "reread_rate": 0.41015625,
+        "utility": 0.972265625
+      }
+    },
+    "0.6": {
+      "always_two": {
+        "accuracy": 0.87109375,
+        "negative_recall": 0.96875,
+        "positive_recall": 0.7734375,
+        "reread_rate": 1.0,
+        "utility": 0.85109375
+      },
+      "duplicate": {
+        "accuracy": 0.72265625,
+        "negative_recall": 0.9375,
+        "positive_recall": 0.5078125,
+        "reread_rate": 0.42578125,
+        "utility": 0.714140625
+      },
+      "first": {
+        "accuracy": 0.72265625,
+        "negative_recall": 0.9375,
+        "positive_recall": 0.5078125,
+        "reread_rate": 0.0,
+        "utility": 0.72265625
+      },
+      "selective": {
+        "accuracy": 0.828125,
+        "negative_recall": 0.984375,
+        "positive_recall": 0.671875,
+        "reread_rate": 0.42578125,
+        "utility": 0.819609375
+      }
+    }
+  },
+  "browser_checked": false,
+  "report_validation": "structural_only_prior_policy_denial",
+  "sha256": {
+    "entity_gate_shift.json": "1701802bcb3de42f3ddb43ba8769336d7739ece908f1b662719f995941115d9f",
+    "last.pt": "db27c54c3f19ea95be1e33161f9bdb2c21153c94fa3b4808b7af9970cf7639bf",
+    "report.html": "304a30d09b79b5ed714ba7b50b26e92f7702499217fbb700b11658bf7254e224"
+  }
+}

@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T16:09+02:00
-  turn_count: 41
-  summary: "Clean retention fails acceptance;16 relevant tests, both resumes and independent objective audit pass."
+  last_turn: 2026-09-11T16:17+02:00
+  turn_count: 42
+  summary: "Reobservation passes bounded test; always-two has higher high-noise utility.18 relevant tests and resume pass."
 events_logged:
 - turn: 1
   type: question
@@ -744,6 +744,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Propose defer-and-reobserve diagnostic.
+- turn: 42
+  type: experiment
+  id: N225
+  routing: direct
+  provenance: ai-executed
+  summary: Costed reobservation comparison passes.
+- turn: 42
+  type: observation
+  id: O146
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Method promoted to H39 by code commitment.
+- turn: 42
+  type: observation
+  id: O147
+  routing: staged
+  provenance: ai-suggested
+  summary: Correlated noise test proposed.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1027,6 +1045,14 @@ ai_actions:
   action: Implemented detached retention, corrected Claude evaluation misunderstanding, ran16 tests, two arms/resumes and objective audit.
   provenance: ai-executed
   files_changed: [experiments/multimodal.py, pathwm/evaluation/entity_gate.py, pathwm/evaluation/report.py]
+- turn: 42
+  action: Implemented and reviewed reobservation controls;18 tests, frozen run, resume
+    and independent decision/cost audit.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/evaluation/entity_gate.py
+  - experiments/multimodal.py
+  - pathwm/evaluation/report.py
 claims_touched: []
 key_context:
 - turn: 1

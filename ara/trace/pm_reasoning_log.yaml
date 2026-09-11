@@ -1087,3 +1087,9 @@ entries:
   - Promote retention testing method O145, not repair success; full criteria fail.
   - Teacher divergence and correctness differ; preserve failed ground-truth checks.
   - Stage defer/reobserve O146; no calibrated uncertainty claim or new operation yet.
+
+- turn: 2026-09-11_001#42
+  notes:
+  - Promote diagnostic method, not learned sensing; preserve stronger always-two utility.
+  - Duplicate control is a sanity check, not evidence of independent noise.
+  - Stage correlated-noise O147 before memory integration.

@@ -89,3 +89,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Two conditional replications](tables/entity_gate_replicate_2026-09-11.json): N223; gains recur, both full criteria fail.
 
 - [Clean retention](tables/entity_gate_retain_2026-09-11.json): N224; weight-one penalty fails acceptance, reference preserved.
+
+- [Costed reobservation](tables/entity_gate_reobserve_2026-09-11.json): N225; selective improves first-only, always-two remains better at declared cost.

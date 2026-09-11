@@ -373,3 +373,13 @@
 - **Sensitivity**: Method commitment only; weight-one retention fails this screen and does not establish coefficient robustness.
 - **Code ref**: [retention loss](../../../pathwm/evaluation/entity_gate.py), [recipe](../../../experiments/multimodal.py).
 - **Evidence**: [negative result](../../evidence/tables/entity_gate_retain_2026-09-11.json).
+
+## H39: Compare selective reobservation with unconditional sensing and duplicate evidence
+
+- **Rationale**: Fix a sensing policy and observation cost, compare first-only, selective, duplicate and always-two on identical static contexts.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O146
+- **Sensitivity**: Independent noise and static context assumed; no learned deferral, calibration or optimality claim. Always-two has higher high-noise utility here.
+- **Code ref**: [reobservation](../../../pathwm/evaluation/entity_gate.py).
+- **Evidence**: [comparison](../../evidence/tables/entity_gate_reobserve_2026-09-11.json).

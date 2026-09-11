@@ -3481,3 +3481,17 @@ tree:
   evidence: [ara/evidence/tables/entity_gate_retain_2026-09-11.json, "git:9f819c6"]
   also_depends_on: [N223]
   status: resolved
+
+- id: N225
+  type: experiment
+  title: Independent reobservation improves frozen decisions
+  provenance: ai-executed
+  timestamp: 2026-09-11T16:17+02:00
+  result: High-noise72.27 to82.81 percent with42.58 percent rereads; always-two87.11
+    percent.18 tests and resume pass.
+  evidence:
+  - ara/evidence/tables/entity_gate_reobserve_2026-09-11.json
+  - git:c5bd083
+  also_depends_on:
+  - N224
+  status: resolved

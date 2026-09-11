@@ -1,5 +1,14 @@
 # Current work
 
+**Reobservation diagnostic passes, 11 September:** high-noise accuracy72.27%→82.81%
+with selective rereads42.58%; ignore recall93.75%→98.44%. Duplicate replay gives
+no gain. Always-two reaches87.11% and higher utility at the declared cost0.02.
+18 relevant tests, cached resume and independent decision/cost audit pass.
+[Report](../runs/entity_gate_reobserve_v1/reference/report.html) structural-only.
+This is a supplied static-context sensing policy, not learned deferral or a new
+memory operation. Next candidate: test correlated second-observation noise before
+integrating sensing; independent reread benefit may not survive shared errors.
+
 **Clean retention does not repair the tradeoff, 11 September:** weight-one teacher
 KL leaves clean-runtime NLL unchanged0.0237295 and low-noise ignore90.625% at
 sigma0.15; high-noise accuracy81.25%→80.08%. Full criteria fail in both arms.
