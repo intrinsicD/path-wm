@@ -546,3 +546,36 @@ both geometry and cardinality distribution; it is not a causal isolation of coun
 Compare original and adapted frozen models on identical fresh seed73 growth families
 (32 families, capacities1/2/4/8), unchanged95% lifecycle gates and0.75 threshold.
 One training run; no tuning after results. Separate test split remains reserved.
+
+### Variable-count result
+
+Implementation38db3f5;115 CPU tests pass. One256-update training run passes all
+matching gates:128/128 known and128/128 novel development queries correct,100%
+coverage above0.75, NLL0.02105163. Masked padding is gradient-free and leaves valid
+scores unchanged. Both Claude conceptual reviews completed without unresolved
+critical contradiction; neither inspected private source or measurements.
+
+On identical fresh seed73 histories, the original model fails capacity8 (allocation
+and revisit252/256, overflow28/32). The adapted model gets every allocation, revisit
+and final capacity deferral correct at capacities1/2/4/8, with no uncertainty,
+wrong-ID matches or false splits. All128 histories pass retry and snapshot checks.
+These are descriptive results on32 shared synthetic families. Adaptation changed
+geometry and candidate counts together; no causal count-only conclusion or visual
+identity/calibration/graph-learning claim follows.
+
+Training resume reserializes its checkpoint, changing file SHA despite unchanged
+weights; the first dependent evaluation correctly refused that changed donor on
+resume. Preserve an immutable copy before dependent evaluations. The final
+`frozen_adapted.pt` and `adapted_pinned` run have exactly the same predictions as
+`adapted`; their CLI resume passes. This was provenance repair, no extra training
+or parameter adjustment. Raw first evaluation remains preserved.
+
+[Training report](../runs/entity_variable_v1/training/report.html),
+[matched baseline](../runs/entity_variable_v1/baseline/report.html),
+[adapted lifecycle](../runs/entity_variable_v1/adapted_pinned/report.html),
+[verification](../runs/entity_variable_v1/verification.json).
+Reports passed browser QA. Verified frozen weights, identical evaluation inputs,
+disjoint descriptors, independent NLL and cached resume. Commands add
+`--entity-variable` to `--dataset entity-matching`; frozen comparisons accept
+`--entity-growth-seed 73`. Next proposed: freeze this recognizer and test changing
+learned state attached to persistent IDs, before broader graph learning.

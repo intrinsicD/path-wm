@@ -2412,6 +2412,21 @@ observations:
   potential_type: heuristic
   bound_to:
   - N202
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H26
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O134
+  timestamp: 2026-09-11T13:16+02:00
+  provenance: ai-suggested
+  content: Next freeze the adapted recognizer and test changing learned state attached
+    to persistent entity IDs before general graph learning.
+  context: Controlled allocation and revisit matching now pass; latent belief updates
+    are not implemented.
+  potential_type: heuristic
+  bound_to:
+  - N204
   promoted: false
   promoted_to: null
   crystallized_via: null

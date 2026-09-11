@@ -3234,3 +3234,25 @@ tree:
   - N200
   - N201
   status: resolved
+
+- id: N203
+  type: decision
+  title: Continue Claude-reviewed distribution adaptation
+  provenance: user
+  timestamp: 2026-09-11T13:16+02:00
+  choice: Implement, review, test, fix and iterate.
+  status: resolved
+- id: N204
+  type: experiment
+  title: Variable-count matcher passes fresh lifecycle comparison
+  provenance: ai-executed
+  timestamp: 2026-09-11T13:16+02:00
+  result: Variable-count adaptation passes fresh lifecycle gates; original capacity8
+    fails. 115 tests, browser QA and immutable donor resume verified.
+  evidence:
+  - ara/evidence/tables/entity_variable_2026-09-11.json
+  - docs/entity-learning-task.md
+  also_depends_on:
+  - N202
+  - N203
+  status: resolved

@@ -1,5 +1,13 @@
 # Current work
 
+**Variable-count adaptation succeeds, 11 September:**115 tests pass. One256-update
+run gives100% development matching/coverage and passes every fresh lifecycle gate
+at capacities1/2/4/8. The matched original model still fails capacity8. Claude reviewed
+the design twice. [Adapted report](../runs/entity_variable_v1/adapted_pinned/report.html)
+is browser verified; weights, descriptor isolation and resume are checked. Geometry
+and candidate counts changed together. Next: learned changing state bound to stable
+IDs; visual discovery and learned graph structure remain open.
+
 **Frozen growth screen completed, 11 September:** capacities1/2 pass; capacities4/8
 fail the declared lifecycle gate. Capacity8 allocation/revisit accuracy is98.44%,
 with no wrong-ID matches; uncertain novelty leaves some stores underfilled. All

@@ -63,3 +63,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Known-versus-new matching](tables/entity_novelty_2026-09-11.json): N198; fixed-margin screen and browser verification, no allocation.
 
 - [Frozen entity growth](tables/entity_growth_2026-09-11.json): N202; corrected scoring, capacity4/8 gates fail, transaction checks pass.
+
+- [Variable-count adaptation](tables/entity_variable_2026-09-11.json): N204; matched fresh lifecycle gates pass, original capacity8 fails.

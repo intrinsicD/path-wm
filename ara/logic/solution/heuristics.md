@@ -246,3 +246,12 @@
 - **Sensitivity**: high; transaction correctness does not establish calibrated recognition.
 - **Code ref**: [runtime](../../../pathwm/models/entity_memory.py), [growth screen](../../../pathwm/evaluation/entity_growth.py), [regression](../../../tests/test_entity_growth.py).
 - **From staging**: O132
+
+## H26: Adapt matcher training to the runtime candidate distribution
+
+- **Rationale**: Train variable candidate counts with masked padding and compare frozen models on identical fresh families. Geometry adaptation is a simultaneous intervention, so do not attribute gains to count alone.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; bounded synthetic results do not establish open-world calibration.
+- **Code ref**: [data](../../../pathwm/data/entities.py), [matcher](../../../pathwm/models/entities.py), [padding tests](../../../tests/test_entity_variable.py).
+- **From staging**: O133

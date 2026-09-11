@@ -983,3 +983,12 @@ entries:
     mapping removes artificial ID switches.
   - Stage variable-cardinality training; no tuned threshold or general calibration
     claim.
+
+- turn: 2026-09-11_001#28
+  notes:
+  - Promote O133 through implemented and tested intervention; preserve original model
+    failure on matched fresh families.
+  - 'No causal count-only or calibrated perception claim: geometry and counts adapted
+    together.'
+  - Training resume changed donor bytes; immutable copy restored reproducible dependency.
+    No additional training or tuning.

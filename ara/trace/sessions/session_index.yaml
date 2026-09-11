@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Frozen growth fails capacity4/8 lifecycle gates; no ID swaps. Scoring bugs fixed, 113 tests pass, report verified."
-  turn_count: 27
-  events_count: 70
+  summary: "Variable-count adaptation passes fresh lifecycle gates; original capacity8 fails. 115 tests, browser QA and immutable donor resume verified."
+  turn_count: 28
+  events_count: 74
   claims_touched: []
   open_threads: 12

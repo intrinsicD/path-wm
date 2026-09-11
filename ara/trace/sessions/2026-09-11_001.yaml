@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T13:07+02:00
-  turn_count: 27
-  summary: "Frozen growth fails capacity4/8 lifecycle gates; no ID swaps. Scoring bugs fixed, 113 tests pass, report verified."
+  last_turn: 2026-09-11T13:16+02:00
+  turn_count: 28
+  summary: "Variable-count adaptation passes fresh lifecycle gates; original capacity8 fails. 115 tests, browser QA and immutable donor resume verified."
 events_logged:
 - turn: 1
   type: question
@@ -439,6 +439,32 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O132 committed through persistent runtime and frozen screen.
+
+- turn: 28
+  type: decision
+  id: N203
+  routing: direct
+  provenance: user
+  summary: Implement, review, test, fix and iterate.
+- turn: 28
+  type: experiment
+  id: N204
+  routing: direct
+  provenance: ai-executed
+  summary: Variable-count adaptation passes fresh lifecycle gates; original capacity8
+    fails. 115 tests, browser QA and immutable donor resume verified.
+- turn: 28
+  type: observation
+  id: O134
+  routing: staged
+  provenance: ai-suggested
+  summary: Learned changing state binding proposed.
+- turn: 28
+  type: heuristic
+  id: H26
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O133 committed through variable-count adaptation.
 
 ai_actions:
 - turn: 1
