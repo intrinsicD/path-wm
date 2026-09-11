@@ -747,3 +747,44 @@ Both training arms see the same histories. Policy is a persistent buffer only in
 the new mode, preserving legacy state keys and binding new snapshots to semantics.
 The first runtime test failure was a randomized recognizer fixture mismatch, fixed
 by restoring with the same recognizer; no runtime compatibility check was weakened.
+
+### Explicit idle preservation result
+
+Implementation9e22167;128 CPU tests pass. The single256-update mixed-history run
+passes development at100% pair accuracy, NLL0.006980. Matched training manifests,
+settings and optimizer are verified; only the explicit idle policy changes.
+Frozen recognition and both evaluated cells are unchanged during evaluation.
+
+On fresh seed131 descriptors, all seven adapted conditions pass at100% pair accuracy.
+The previous mixed-history baseline scores75% after14 idle events and25% after31;
+the new cell scores100% on both. Added3/14/31 idle events preserve final logits and
+persistent latents exactly relative to the reference history. This is an engineered
+invariant; it is not evidence that the model learned temporal belief persistence.
+
+Reference, reset order, repeated toggles and unseen mixed histories retain100%
+accuracy. Their NLLs rise (largest0.073697 on repeated toggles), remaining below the
+predeclared0.15 gate. All routing, retries, restore and latent-tolerance checks pass
+for both models; maximum batch/runtime latent error is2.98e-7. Independent target
+simulation/NLL, balanced pairs, matched histories and descriptor isolation pass.
+Training and adapted cached resume pass; immutable new donor copied after resume.
+Both Claude conceptual reviews completed, with the gradient claim corrected.
+
+[Training](../runs/entity_noinfo_v1/training/report.html),
+[baseline](../runs/entity_noinfo_v1/baseline/report.html),
+[adapted](../runs/entity_noinfo_v1/adapted/report.html),
+[verification](../runs/entity_noinfo_v1/verification.json) are retained. All three
+reports pass1280×720 browser QA, including expanded training examples.
+
+Train through the existing recipe with `--entity-state-weights MATCHER.pt
+--entity-state-varied --entity-state-preserve --output DIR`. Evaluate using
+`--entity-state-weights MATCHER.pt --entity-temporal-cell CELL.pt
+--entity-temporal-seed 131 --entity-temporal-varied --entity-temporal-idle --output DIR`.
+Resume with `--resume DIR`. Legacy donors omit the policy buffer and remain ungated;
+new donors persist it and snapshots reject a policy mismatch.
+
+Next proposed slice: a controlled interaction whose correct update depends on a
+second entity's remembered state, with paired histories and swapped-role controls.
+The present cell updates entities independently, so passing this slice alone does
+not implement learned edges, concept discovery, visual identity or general graphs.
+Keep the deterministic idle rule scoped to this task; time passage in an evolving
+world can warrant belief changes even without observations.

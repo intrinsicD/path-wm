@@ -1016,3 +1016,12 @@ entries:
     difference1.78e-6. Adapted latent checks all pass.'
   - Promote only implemented training intervention; explicit no-op remains proposed
     O137.
+
+- turn: 2026-09-11_001#32
+  notes:
+  - Record the explicit invariant as engineering, not learned temporal capability;
+    promote O137 only by code commitment.
+  - All seven accuracy gates pass, but report higher control NLL and correlated histories.
+    Claude withdrew gradient-blocking claim.
+  - Stage cross-entity interactions O138; no graph learning or original encoder diagnosis
+    established.

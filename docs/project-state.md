@@ -1,5 +1,13 @@
 # Current work
 
+**Explicit idle preservation passes the bounded screen, 11 September:**128 tests
+pass. With31 extra idle events, accuracy improves25%→100%; all seven frozen
+conditions pass. Latents remain exactly stable across idle stretches; resets and
+actions still work. This is an explicit deterministic rule, not learned belief
+persistence. [Report](../runs/entity_noinfo_v1/adapted/report.html) is browser verified.
+Next proposed: an update depending on another entity’s remembered state, before
+claiming learned interaction edges or graph structure.
+
 **Mixed-history adaptation improves ordering but still fails idle stability,
 11 September:**123 tests pass. Reset-order accuracy rises62.5%→100% and unseen
 composition38.7%→100%; long no-information remains75%, with worse NLL. Recognition

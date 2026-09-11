@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T13:52+02:00
-  turn_count: 31
-  summary: "Mixed histories repair reset order and random compositions; long no-information remains75 percent.123 tests and report QA pass."
+  last_turn: 2026-09-11T14:16+02:00
+  turn_count: 32
+  summary: "Explicit idle preservation passes all seven conditions; idle31 improves25 to100 percent.128 tests and browser QA pass."
 events_logged:
 - turn: 1
   type: question
@@ -544,6 +544,32 @@ events_logged:
   provenance: ai-suggested
   summary: O136 training-distribution intervention committed.
 
+- turn: 32
+  type: decision
+  id: N211
+  routing: direct
+  provenance: user
+  summary: Implement, review, test, fix and iterate.
+- turn: 32
+  type: experiment
+  id: N212
+  routing: direct
+  provenance: ai-executed
+  summary: Explicit idle preservation passes all seven conditions; idle31 improves25
+    to100 percent.128 tests and browser QA pass.
+- turn: 32
+  type: observation
+  id: O138
+  routing: staged
+  provenance: ai-suggested
+  summary: Cross-entity interaction dependency proposed.
+- turn: 32
+  type: heuristic
+  id: H30
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O137 explicit idle policy committed.
+
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -759,6 +785,16 @@ ai_actions:
   - pathwm/evaluation/report.py
   - experiments/multimodal.py
   - tests/test_entities.py
+- turn: 32
+  action: Implemented shared policy-buffer-bound identity update;128 tests, one256-step
+    training run, two frozen comparisons, cached resumes, independent audits and three
+    browser reports. Two abstract Claude reviews reconciled the gradient claim.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/entity_state.py
+  - experiments/multimodal.py
+  - docs/entity-learning-task.md
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -790,6 +826,7 @@ key_context:
 - turn: 25
   excerpt: "User: continue with claude. implement this, review, test, fix and iterate"
 open_threads:
+- "O138: cross-entity state-dependent interaction remains proposed."
 - O132: persistent allocation/revisit behavior remains proposed.
 - O130: learned matching remains proposed; shared reader is now a successful controlled reference.
 - O128: isolate association versus state updating after failed recurrent baseline.

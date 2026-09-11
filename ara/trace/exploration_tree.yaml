@@ -3322,3 +3322,27 @@ tree:
   - N208
   - N209
   status: resolved
+
+- id: N211
+  type: decision
+  title: Continue entity-state implementation and Claude review
+  provenance: user
+  timestamp: 2026-09-11T14:16+02:00
+  choice: Implement, review, test, fix and iterate.
+  evidence:
+  - N210
+  status: resolved
+- id: N212
+  type: experiment
+  title: Explicit deterministic idle identity preserves learned state
+  provenance: ai-executed
+  timestamp: 2026-09-11T14:16+02:00
+  result: Explicit idle preservation passes all seven conditions; idle31 improves25
+    to100 percent.128 tests and browser QA pass.
+  evidence:
+  - ara/evidence/tables/entity_noinfo_2026-09-11.json
+  - docs/entity-learning-task.md
+  also_depends_on:
+  - N210
+  - N211
+  status: resolved

@@ -1,0 +1,214 @@
+{
+  "adapted_resume": true,
+  "all_routing_correct": true,
+  "browser": {
+    "adapted": {
+      "broken_images": 0,
+      "browser_checked": true,
+      "horizontal_overflow": false,
+      "renderer_sha256": "adfc7c9cf0192f6caee35efdc15f72036189492678d019a77b75b89782a1e764",
+      "report_sha256": "23be982f3cc202b105584c6139d766ae3f6c1124957f0409bbf0ea38c4950e8b",
+      "rows": 7,
+      "self_contained": true,
+      "status": "browser_verified",
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    "baseline": {
+      "broken_images": 0,
+      "browser_checked": true,
+      "horizontal_overflow": false,
+      "renderer_sha256": "adfc7c9cf0192f6caee35efdc15f72036189492678d019a77b75b89782a1e764",
+      "report_sha256": "dcb2e284a9f29ac21ce831e014002ce837053ad2746a4f89a9d3b48e006f640a",
+      "rows": 7,
+      "self_contained": true,
+      "status": "browser_verified",
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    "training": {
+      "broken_images": 0,
+      "browser_checked": true,
+      "horizontal_overflow": false,
+      "renderer_sha256": "adfc7c9cf0192f6caee35efdc15f72036189492678d019a77b75b89782a1e764",
+      "report_sha256": "667ed42fafff0bcd4fbb38e740440e5f93cc68c009998156a4c0b50c7fcc03b0",
+      "rows": 257,
+      "self_contained": true,
+      "status": "browser_verified",
+      "viewport": [
+        1280,
+        720
+      ]
+    }
+  },
+  "claude_reviews": {
+    "entity-noinfo": "87a807b384b8709e0d422a707f3a725f5ab488dcd0080e37e1d5490b1e5a078e",
+    "entity-noinfo-reconcile": "22d5c060d83a111ac1f79d5f6ec94321598ef92b3c6daf26718d619a0b951328"
+  },
+  "comparison": {
+    "adapted": {
+      "idle_3": {
+        "examples": 256,
+        "latent_agreement": true,
+        "latent_max_abs_error": 1.1920928955078125e-07,
+        "nll": 0.009690875187516212,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "transactions": true
+      },
+      "idle_31": {
+        "examples": 256,
+        "latent_agreement": true,
+        "latent_max_abs_error": 1.1920928955078125e-07,
+        "nll": 0.009690875187516212,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "transactions": true
+      },
+      "no_information_length": {
+        "examples": 256,
+        "latent_agreement": true,
+        "latent_max_abs_error": 1.1920928955078125e-07,
+        "nll": 0.009690875187516212,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "transactions": true
+      },
+      "reference": {
+        "examples": 256,
+        "latent_agreement": true,
+        "latent_max_abs_error": 1.1920928955078125e-07,
+        "nll": 0.009690875187516212,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "transactions": true
+      },
+      "reset_order": {
+        "examples": 256,
+        "latent_agreement": true,
+        "latent_max_abs_error": 1.7881393432617188e-07,
+        "nll": 0.007900038734078407,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "transactions": true
+      },
+      "toggle_length": {
+        "examples": 256,
+        "latent_agreement": true,
+        "latent_max_abs_error": 2.980232238769531e-07,
+        "nll": 0.07369732856750488,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "transactions": true
+      },
+      "unseen_composition": {
+        "examples": 256,
+        "latent_agreement": true,
+        "latent_max_abs_error": 1.7881393432617188e-07,
+        "nll": 0.00728963315486908,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "transactions": true
+      }
+    },
+    "baseline": {
+      "idle_3": {
+        "examples": 256,
+        "latent_agreement": true,
+        "latent_max_abs_error": 2.384185791015625e-07,
+        "nll": 0.00891126785427332,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "transactions": true
+      },
+      "idle_31": {
+        "examples": 256,
+        "latent_agreement": true,
+        "latent_max_abs_error": 5.960464477539063e-08,
+        "nll": 0.7195382118225098,
+        "pair_accuracy": 0.25,
+        "passed": false,
+        "transactions": true
+      },
+      "no_information_length": {
+        "examples": 256,
+        "latent_agreement": true,
+        "latent_max_abs_error": 5.960464477539063e-08,
+        "nll": 0.4129563271999359,
+        "pair_accuracy": 0.75,
+        "passed": false,
+        "transactions": true
+      },
+      "reference": {
+        "examples": 256,
+        "latent_agreement": true,
+        "latent_max_abs_error": 1.1920928955078125e-07,
+        "nll": 0.0032642963342368603,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "transactions": true
+      },
+      "reset_order": {
+        "examples": 256,
+        "latent_agreement": true,
+        "latent_max_abs_error": 1.7881393432617188e-07,
+        "nll": 0.0011149344500154257,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "transactions": true
+      },
+      "toggle_length": {
+        "examples": 256,
+        "latent_agreement": true,
+        "latent_max_abs_error": 1.7881393432617188e-07,
+        "nll": 0.02677801437675953,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "transactions": true
+      },
+      "unseen_composition": {
+        "examples": 256,
+        "latent_agreement": true,
+        "latent_max_abs_error": 2.980232238769531e-07,
+        "nll": 0.005200034473091364,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "transactions": true
+      }
+    }
+  },
+  "descriptor_splits_disjoint": true,
+  "exact_idle_invariance": true,
+  "frozen_weights": true,
+  "hashes": {
+    "adapted": {
+      "entity_temporal.json": "1b9de60a3b87059b1cc6a33edce1e7485426a669c66ca932c1f1f8560395f8a6",
+      "last.pt": "94f0fb352bd49740c4aef5836a60583c23404d57693edf2c0970e7bd1cb74a88",
+      "report.html": "23be982f3cc202b105584c6139d766ae3f6c1124957f0409bbf0ea38c4950e8b",
+      "run.json": "0af9d6f566bac9f02f874d98fb80ae4ddd4f999ff5ef888eb1c0e6ccbeb928e9"
+    },
+    "baseline": {
+      "entity_temporal.json": "e234690c764bb56176cf8b3c765de1a378c3e16ae59a6c75c8fdbaad4b9df98a",
+      "last.pt": "0dcb90183d832b030481ac31a1884ee138220b29dbd3b2ecc8b5746c2be63889",
+      "report.html": "dcb2e284a9f29ac21ce831e014002ce837053ad2746a4f89a9d3b48e006f640a",
+      "run.json": "17add589221eaab42bab3c9152bc87539e2835314fcbf826917fbc67fd67e10b"
+    },
+    "training": {
+      "entity_state.json": "c4726aeafa1c6ad97db2e790d29e03c6dcbda67973ebed9b26533cfe836a8a78",
+      "last.pt": "ec7a13ef6f204a4c5d1425dd22b69b337bd54463fa52f60ffd2c38f312b3872e",
+      "report.html": "667ed42fafff0bcd4fbb38e740440e5f93cc68c009998156a4c0b50c7fcc03b0",
+      "run.json": "79dd1df175d83f438278ce29a6281465d42f624c99e6cef17899f10743c48393"
+    }
+  },
+  "identical_evaluation_histories": true,
+  "independent_targets_and_nll": true,
+  "matched_training_data_settings_optimizer": true,
+  "scope": "Explicit deterministic no-information invariant, not learned belief persistence or graph learning. One seed, correlated histories. Control NLLs increased but pass fixed gates.",
+  "source_commit": "9e22167",
+  "tests_passed": 128,
+  "training_resume": true
+}

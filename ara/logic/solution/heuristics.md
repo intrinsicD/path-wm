@@ -283,3 +283,13 @@
 - **Code ref**: [mixed histories](../../../pathwm/data/entity_state.py), [recipe](../../../experiments/multimodal.py).
 - **From staging**: O136
 - **Scope**: Training-distribution intervention implemented; explicit no-op remains O137.
+
+## H30: Preserve state explicitly for a deterministic no-information opcode
+
+- **Rationale**: Use a differentiable identity for the exact idle opcode in both training and transactional runtime; persist this policy in checkpoint and snapshot identity. Keep learned action/observation updates and matched legacy comparisons.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; assumes no autonomous evolution. This rule does not establish learned temporal beliefs.
+- **Code ref**: [state update](../../../pathwm/models/entity_state.py), [gradient and persistence tests](../../../tests/test_entity_noinfo.py).
+- **From staging**: O137
+- **Evidence**: [bounded comparison](../../evidence/tables/entity_noinfo_2026-09-11.json); control NLL increases remain below declared gate.
