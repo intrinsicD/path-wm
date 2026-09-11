@@ -1051,3 +1051,9 @@ entries:
   - Normal source/state accuracy100 percent; erased source0 percent and state50 percent,
     with full rejection. Paired pre-read states independently verified identical.
   - No graph-discovery claim; stage learned overwrite/preserve gate O141.
+
+- turn: 2026-09-11_001#36
+  notes:
+  - Record runtime checks as N219; do not promote the unperformed learned-gate experiment O141.
+  - Claude concurrency concern reconciled against existing single-writer scope.
+  - Training and soft-versus-hard held-out comparisons remain outstanding; no new accuracy claim.

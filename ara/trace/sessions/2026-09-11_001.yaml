@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T15:09+02:00
-  turn_count: 35
-  summary: "Learned relation keys support destination-only recall at100 percent; erased keys reject.140 tests, resume and browser QA pass."
+  last_turn: 2026-09-11T15:21+02:00
+  turn_count: 36
+  summary: "Context write gate runtime committed and tested; learned write-policy comparison remains pending."
 events_logged:
 - turn: 1
   type: question
@@ -648,6 +648,12 @@ events_logged:
   provenance: ai-suggested
   summary: O140 remembered relation diagnostic committed.
 
+- turn: 36
+  type: experiment
+  id: N219
+  routing: direct
+  provenance: ai-executed
+  summary: Transactional gate checks pass; no new training result.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -907,6 +913,10 @@ ai_actions:
   - experiments/multimodal.py
   - docs/entity-learning-task.md
 
+- turn: 36
+  action: Implemented optional gate, reviewed public design with Claude twice, tested rollback/retries/threshold and full suite.
+  provenance: ai-executed
+  files_changed: [pathwm/models/entity_relations.py, tests/test_entity_gate.py]
 claims_touched: []
 key_context:
 - turn: 1

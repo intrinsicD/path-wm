@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Learned relation keys support destination-only recall at100 percent; erased keys reject.140 tests, resume and browser QA pass."
-  turn_count: 35
-  events_count: 102
+  summary: "Context write gate runtime committed and tested; learned write-policy comparison remains pending."
+  turn_count: 36
+  events_count: 103
   claims_touched: []
   open_threads: 13

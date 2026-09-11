@@ -3418,3 +3418,16 @@ tree:
   - N216
   - N217
   status: resolved
+
+- id: N219
+  type: experiment
+  title: Context write gate runtime transactions
+  provenance: ai-executed
+  timestamp: 2026-09-11T15:21+02:00
+  result: Full 142-test suite passed; additional repeated-ignore threshold test passed separately. Gate training remains pending.
+  evidence:
+  - tests/test_entity_gate.py
+  - pathwm/models/entity_relations.py
+  - "git:4fb0bd6"
+  also_depends_on: [N218]
+  status: resolved
