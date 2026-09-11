@@ -1,5 +1,15 @@
 # Current work
 
+**Task definition complete, 11 September:** [the first entity-learning task](entity-learning-task.md)
+defines two-object identity persistence, state updates and action-effect prediction.
+Both graph structure and latent values are intended to be learned; readable labels
+are inspection aids, not imposed semantics. Two actual Claude reviews are reconciled.
+A finite 512-case specification check confirms an exact history oracle and final-view-only
+bounds of 50% identity and 25% state-pair accuracy. These are contract checks, not model
+results. Next implementation step is the task generator/reference path and existing-reader
+diagnosis, followed by a bounded recurrent baseline before any graph comparison.
+No new neural training or graph implementation was started in this definition slice.
+
 **Entity-design discussion, 11 September:** the user accepted diagnosing accessible
 identity first, then testing controlled two-object binding. Subsequent discussion
 proposes per-entity learned beliefs and external retrieval. Two actual Claude

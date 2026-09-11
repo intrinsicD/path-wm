@@ -2968,3 +2968,43 @@ tree:
   - docs/entity-memory-design.md
   - ara/evidence/tables/graph_payload_review_2026-09-11.json
   status: resolved
+
+- id: N182
+  type: question
+  title: Explore readable graph-node lookup and decoded latent inspection
+  provenance: user
+  timestamp: 2026-09-11T10:51+02:00
+  description: Propose string-addressable latent nodes plus edges, with person names linked to recognition
+    representations and decoder-based visual inspection. Clarify stable keys versus nonunique names, trained
+    decoder compatibility, and reconstruction versus source evidence.
+  status: open
+
+- id: N183
+  type: decision
+  title: Define the initial task and learning signal for learned entity structure and contents
+  provenance: user
+  timestamp: 2026-09-11T11:16+02:00
+  choice: Alex explicitly says to do the proposed task/learning-signal definition first, starting with controlled
+    two-entity interaction. Preserve the stated requirement to learn structure and values and inspect their
+    behavior without imposed semantic labels.
+  alternatives:
+  - Implement a universal graph before choosing a learning signal
+  evidence:
+  - docs/entity-learning-task.md
+  status: resolved
+
+- id: N184
+  type: experiment
+  title: Finite entity-task contract has exact history answers and computed final-view limits
+  provenance: ai-executed
+  timestamp: 2026-09-11T11:16+02:00
+  result: Specification check enumerates 512 short cases; observation-history oracle exactly matches simulator.
+    Grouped final-view-only optimum is 0.50 for cued identity and 0.25 for each state-pair family. Separate
+    symmetric ambiguity example has identity posterior [0.5,0.5]. No neural training/inference or learned graph
+    evaluated; future random generator and longer histories remain untested.
+  evidence:
+  - runs/entity_task_contract_v1/verification.json
+  - ara/evidence/tables/entity_task_definition_2026-09-11.json
+  also_depends_on:
+  - N183
+  status: resolved

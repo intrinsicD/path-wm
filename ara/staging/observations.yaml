@@ -2289,3 +2289,40 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O126
+  timestamp: 2026-09-11T10:51+02:00
+  provenance: user
+  content: Consider a map of human-interpretable string keys to latent representations with explicit graph
+    edges, enabling debug lookup of a named entity and decoding its stored representation for inspection.
+  context: Tentative voice design. Assistant recommends stable internal handles with readable aliases
+    and distinguishes a trained decoder reconstruction from original evidence or a faithful account of
+    all beliefs. No graph or face decoder implemented.
+  potential_type: architecture
+  bound_to:
+  - N182
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+
+- id: O127
+  timestamp: 2026-09-11T11:16+02:00
+  provenance: ai-suggested
+  content: Use two anonymous objects with stable episode-local appearance, randomized candidate order, visible
+    state-changing actions and partial observations. Train equal-weight proper log loss for cued identity,
+    supported state pair and post-toggle state pair; derive act/inspect decisions from costs. Compare exact
+    history oracle, recurrent baseline and only then a bounded learned-structure candidate. High task accuracy
+    does not establish graph necessity or interpretable semantic labels.
+  context: Two actual Claude exchanges reconcile task scoring, conditional ambiguity and shortcut controls.
+    A finite contract checker validates illustrative input groups, not model learning. Plan records proposed
+    gates and caps; network/config/manifests must be fixed before launch. No user endorsement of the new numeric
+    gates or new model implementation inferred.
+  potential_type: heuristic
+  bound_to:
+  - N183
+  - N184
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

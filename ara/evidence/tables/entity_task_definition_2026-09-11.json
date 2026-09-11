@@ -1,0 +1,169 @@
+{
+  "recorded_at": "2026-09-11T11:16+02:00",
+  "contract": {
+    "kind": "finite_task_contract_check_not_model_evaluation",
+    "episodes": 512,
+    "oracle_exact": true,
+    "final_view_only_optimal_accuracy": {
+      "cued_candidate": 0.5,
+      "state_pair": 0.25,
+      "post_action_pair": 0.25
+    },
+    "all_final_view_groups_require_history": true,
+    "symmetric_ambiguity_target_probabilities": [
+      0.5,
+      0.5
+    ],
+    "limits": "One visible set action and toggle query; finite illustrative descriptors. Does not validate a future random generator, longer episodes, graph learning or model performance.",
+    "checker_sha256": "5e44c7dad646fd427ebd65b025875641aeb1bd0147483bedc4a1c33824ff86d4"
+  },
+  "checker_source": "\"\"\"Finite specification check only: no neural model, training, or discovery.\"\"\"\nimport itertools,json,hashlib\nfrom collections import defaultdict,Counter\nfrom pathlib import Path\n\norders=list(itertools.permutations(range(2)))\nrecords=[]\nfor bits,cue,actor,value,o0,o1,o2,future in itertools.product(itertools.product(range(2),repeat=2),range(2),range(2),range(2),orders,orders,orders,range(2)):\n descriptors=('shape-A','shape-B')\n first=[(descriptors[e],bits[e]) for e in o0]\n action=dict(candidates=[descriptors[e] for e in o1],slot=o1.index(actor),value=value)\n final=[descriptors[e] for e in o2]\n true=list(bits);true[actor]=value\n after=list(true);after[o2[future]]=1-after[o2[future]]\n truth=(o2.index(cue),tuple(true[e] for e in o2),tuple(after[e] for e in o2))\n # Reader only consumes observations, initial cue position and visible action arguments.\n remembered=dict(first);selected=first[o0.index(cue)][0]\n remembered[action['candidates'][action['slot']]]=action['value']\n current=tuple(remembered[e] for e in final)\n predicted=list(current);predicted[future]=1-predicted[future]\n answer=(final.index(selected),current,tuple(predicted))\n assert answer==truth\n records.append(dict(first=first,cue_slot=o0.index(cue),action=action,final=final,future=future,answer=answer))\nbounds={}\nfor i,name in enumerate(('cued_candidate','state_pair','post_action_pair')):\n groups=defaultdict(Counter)\n for r in records:\n  groups[json.dumps([r['final'],r['future']])][r['answer'][i]]+=1\n bounds[name]=sum(max(c.values()) for c in groups.values())/len(records)\n assert all(len(c)>1 for c in groups.values())\nassert bounds['cued_candidate']==0.5\n# An identical descriptor after an unobserved symmetric crossing leaves target position unresolved.\n# Only this explicitly equiprobable construction has target posterior [1/2, 1/2].\nambiguous_worlds=[dict(history=('cue-left','both-occluded','identical-pair-reappears'),target=i) for i in range(2)]\nassert ambiguous_worlds[0]['history']==ambiguous_worlds[1]['history']\nresult=dict(kind='finite_task_contract_check_not_model_evaluation',episodes=len(records),oracle_exact=True,\n final_view_only_optimal_accuracy=bounds,all_final_view_groups_require_history=True,\n symmetric_ambiguity_target_probabilities=[0.5,0.5],limits='One visible set action and toggle query; finite illustrative descriptors. Does not validate a future random generator, longer episodes, graph learning or model performance.',\n checker_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest())\nPath(__file__).with_name('verification.json').write_text(json.dumps(result,indent=2)+'\\n')\nprint(json.dumps(result,indent=2))\n",
+  "reviews": {
+    "entity-task": {
+      "receipt": {
+        "round": "entity-task",
+        "returncode": 0,
+        "elapsed_seconds": 14.72,
+        "brief_sha256": "699030e9c70af30e1036f1b370fa07bc5de4cf6450c26dfd7cad493014a5c9a4",
+        "command": [
+          "/home/alex/.local/bin/claude",
+          "--print",
+          "--safe-mode",
+          "--model",
+          "sonnet",
+          "--effort",
+          "low",
+          "--tools",
+          "",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--disable-slash-commands",
+          "--no-chrome",
+          "--permission-mode",
+          "dontAsk",
+          "--no-session-persistence",
+          "--output-format",
+          "json",
+          "--system-prompt",
+          "You are an independent machine-learning architecture reviewer. Reason only from the supplied conceptual brief. You have no tools or private project access. Distinguish evidence, assumptions and preferences. Do not imply you inspected any implementation."
+        ],
+        "context": "isolated temporary cwd; no tools/settings/MCP/plugins; public conceptual brief only",
+        "is_error": false,
+        "model_usage": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 1316,
+            "outputTokens": 16,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.0013959999999999999,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-sonnet-5": {
+            "inputTokens": 2,
+            "outputTokens": 942,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 1195,
+            "webSearchRequests": 0,
+            "costUSD": 0.014204000000000001,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-sonnet-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "api_equivalent_cost_usd_not_subscription_bill": 0.015600000000000001,
+        "session_id": "c9a085c3-1f10-4b1d-a92d-aedcc4f6b493"
+      },
+      "sha256": {
+        "runs/reviews/continuation_2026-09-11/entity-task-brief.txt": "699030e9c70af30e1036f1b370fa07bc5de4cf6450c26dfd7cad493014a5c9a4",
+        "runs/reviews/continuation_2026-09-11/entity-task-response.json": "2fd66e96dac36f4b5e333c09208629ad73f122f6fd6f162ba625cc5ff62a9b1d",
+        "runs/reviews/continuation_2026-09-11/entity-task-receipt.json": "e04efffe70a193e1014ce548506efcab0db26525605dc00a5cbeb0d03591239f"
+      }
+    },
+    "entity-task-reconcile": {
+      "receipt": {
+        "round": "entity-task-reconcile",
+        "returncode": 0,
+        "elapsed_seconds": 7.118,
+        "brief_sha256": "513058937337ea17e628c976778846f025ed094b0bd7f99909e6ad4e328b71ed",
+        "command": [
+          "/home/alex/.local/bin/claude",
+          "--print",
+          "--safe-mode",
+          "--model",
+          "sonnet",
+          "--effort",
+          "low",
+          "--tools",
+          "",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--disable-slash-commands",
+          "--no-chrome",
+          "--permission-mode",
+          "dontAsk",
+          "--no-session-persistence",
+          "--output-format",
+          "json",
+          "--system-prompt",
+          "You are an independent machine-learning architecture reviewer. Reason only from the supplied conceptual brief. You have no tools or private project access. Distinguish evidence, assumptions and preferences. Do not imply you inspected any implementation."
+        ],
+        "context": "isolated temporary cwd; no tools/settings/MCP/plugins; public conceptual brief only",
+        "is_error": false,
+        "model_usage": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 1255,
+            "outputTokens": 14,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.001325,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-sonnet-5": {
+            "inputTokens": 2,
+            "outputTokens": 528,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 1109,
+            "webSearchRequests": 0,
+            "costUSD": 0.00972,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-sonnet-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "api_equivalent_cost_usd_not_subscription_bill": 0.011045,
+        "session_id": "aac27017-e4ce-4afd-abc7-4e7fb89db1a1"
+      },
+      "sha256": {
+        "runs/reviews/continuation_2026-09-11/entity-task-reconcile-brief.txt": "513058937337ea17e628c976778846f025ed094b0bd7f99909e6ad4e328b71ed",
+        "runs/reviews/continuation_2026-09-11/entity-task-reconcile-response.json": "81c0a9a9d17e3f9dc91c58dba97f8a3c9b88792991f296b462eda6f22ba33502",
+        "runs/reviews/continuation_2026-09-11/entity-task-reconcile-receipt.json": "2b0c976b945648ee1ed4200430e033949260a858a71ac0bf6ba5a06b85130b7b"
+      }
+    }
+  },
+  "plan": "docs/entity-learning-task.md",
+  "scope": "Task definition and finite specification audit only; no neural experiment."
+}

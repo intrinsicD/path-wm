@@ -896,3 +896,22 @@ entries:
   - Distinguish encoder reuse from fresh-event ingestion, source lineage from retrieval counters, and semantic
     regression from arbitrary latent distance. No guarantee of reconstruction after source loss or automatic
     gradient through persisted tensors.
+
+- turn: 2026-09-11_001#17
+  notes:
+  - Stage tentative user design without inferring implementation approval. A readable name is an alias,
+    not guaranteed unique identity; a hash is not semantic interpretation.
+  - Do not endorse arbitrary latent invertibility or decoded imagery as ground truth or exhaustive belief
+    access. Recognition and reconstruction objectives differ; retained sources support comparison. No
+    capability claim or prior-proposal closure.
+
+- turn: 2026-09-11_001#18
+  notes:
+  - Record explicit task-definition authorization, not a full graph implementation mandate. Preserve learned
+    structure/values and inspectability requirements without prescribing semantic labels.
+  - The finite checker is a specification experiment with exact inputs and bounds, not a learned capability
+    result. Stage the concrete screen proposal; prose commitment does not establish graph utility.
+  - Claude remaining request for a specified no-memory control is addressed by final-view-only grouping and
+    exact local calculation. No private audit outputs exported, and no further review needed for verified arithmetic.
+  - Earlier graph/payload and diagnostic questions remain open. No unrelated closure, automatic proposal adoption
+    or new neural run.

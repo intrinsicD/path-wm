@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T10:46+02:00
-  turn_count: 16
-  summary: Warm encoder controls improve location but fail entity extraction; 88 tests and reports verified. Voice discussion explores learned per-entity beliefs and external identity retrieval. Two Claude design reviews reconciled; controlled association before discovery proposed, no new model or run.
+  last_turn: 2026-09-11T11:16+02:00
+  turn_count: 18
+  summary: Warm entity extraction remains unsuccessful. Entity-graph design reviews complete; user requests learning both structure and values with inspection. First two-object task defined, Claude-reviewed and checked on 512 finite cases; no new neural training.
 events_logged:
 - turn: 1
   type: question
@@ -225,6 +225,36 @@ events_logged:
   provenance: ai-suggested
   summary: Stage typed graph operations, optional payloads and historical encoder
     read path.
+- turn: 17
+  type: question
+  id: N182
+  routing: direct
+  provenance: user
+  summary: Explore inspectable named graph nodes and latent reconstruction.
+- turn: 17
+  type: observation
+  id: O126
+  routing: staged
+  provenance: user
+  summary: Propose readable lookup and decoded latent debugging.
+- turn: 18
+  type: decision
+  id: N183
+  routing: direct
+  provenance: user
+  summary: Authorize initial task and learning-signal definition.
+- turn: 18
+  type: experiment
+  id: N184
+  routing: direct
+  provenance: ai-executed
+  summary: Finite task contract passes 512 cases; no model evaluation.
+- turn: 18
+  type: observation
+  id: O127
+  routing: staged
+  provenance: ai-suggested
+  summary: Stage concrete task/objective and bounded model-screen proposal.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -353,6 +383,21 @@ ai_actions:
   - docs/entity-memory-design.md
   - docs/project-state.md
   - runs/reviews/continuation_2026-09-11/
+- turn: 17
+  action: Explain aliases, stable identity and limits of decoding recognition latents;
+    no model execution or implementation.
+  provenance: ai-executed
+  files_changed: []
+- turn: 18
+  action: Two public-only Claude exchanges, local finite checker, concrete task/objective/gates/budget
+    document and project-state update. Transcript tail ended voice but did not cancel
+    active work. No neural training or graph implementation.
+  provenance: ai-executed
+  files_changed:
+  - docs/entity-learning-task.md
+  - docs/project-state.md
+  - runs/entity_task_contract_v1/
+  - runs/reviews/continuation_2026-09-11/
 claims_touched: []
 key_context:
 - turn: 1
@@ -370,6 +415,8 @@ key_context:
   excerpt: User asks what entity accuracy is, what can be done, and whether everything first needs to fall
     into place.
 open_threads:
+- O127: implement and validate the specified task before evaluating learned graph structure.
+- O126: readable graph lookup and decoder debugging remain proposed.
 - O125: graph/runtime and historical-payload contract remains proposed.
 - O124: reconciled entity association architecture and controlled comparison remain proposed.
 - O123: external entity-belief store remains a tentative proposal.

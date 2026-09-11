@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: Warm encoder controls improve location but fail entity extraction; 88 tests and reports verified. Voice discussion explores learned per-entity beliefs and external identity retrieval. Two Claude design reviews reconciled; controlled association before discovery proposed, no new model or run.
-  turn_count: 16
-  events_count: 35
+  summary: Warm entity extraction remains unsuccessful. Entity-graph design reviews complete; user requests learning both structure and values with inspection. First two-object task defined, Claude-reviewed and checked on 512 finite cases; no new neural training.
+  turn_count: 18
+  events_count: 40
   claims_touched: []
-  open_threads: 8
+  open_threads: 10
