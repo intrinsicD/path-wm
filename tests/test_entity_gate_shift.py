@@ -80,3 +80,17 @@ def test_correlated_noise_endpoints():
     )
     with pytest.raises(ValueError):
         gate_reobserve_examples(8, correlation=1.1)
+
+
+def test_alternate_sources_share_first_observation():
+    from pathwm.evaluation.entity_gate import score_evidence_sources
+    result = score_evidence_sources(RelationWriteGate(), pairs=4)
+    for n in result['sources']['same']['cohorts']:
+        a = result['sources']['same']['cohorts'][n]
+        b = result['sources']['alternate']['cohorts'][n]
+        assert a['defer'] == b['defer']
+        assert a['strategies']['first'] == b['strategies']['first']
+        assert a['duplicate_exact'] and b['duplicate_exact']
+        for c,cost in ((a,.02),(b,.05)):
+            s=c['strategies']['selective']
+            assert abs(s['utility']-(s['accuracy']-cost*s['reread_rate']))<1e-7

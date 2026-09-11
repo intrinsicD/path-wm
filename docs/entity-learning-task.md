@@ -1284,3 +1284,18 @@ confidence; no benefit, calibration, novelty or noise-detection capability claim
 Claude accepted these corrections and requested an explicit correctness label source;
 known task-generating labels provide it in the synthetic test. No code or experiment
 changes made; exact implementation, populations and budgets remain unspecified.
+
+### Alternate evidence source (2026-09-11)
+
+Resume O148, not reliability-estimator O149. Frozen original gate;128 fresh
+prototype pairs seed1501, shared innovation1502. Same-source second noise uses
+rho0.9/cost0.02; alternate-source uses rho0/cost0.05, identical marginal noise.
+Source properties are supplied environment assumptions, not observable policy
+inputs. Fixed policies compare actions, not learned source choice. Preserve four
+sigmas, defer0.2–0.8, one reread and normalized cue averaging. No fitting;30s.
+Success at sigma0.60: alternate selective accuracy>=same selective+2points,
+alternate utility>same utility and first-only utility, ignore recall loss<=2points;
+low-noise accuracy loss<=1point versus same-source. Duplicate decisions unchanged,
+first observations/deferrals identical. Report all strategies/classes/costs and a
+break-even alternate cost; no claims of real sensor independence or optimal choice.
+Structural report QA only under prior browser restriction.
