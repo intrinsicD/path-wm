@@ -3622,3 +3622,16 @@ tree:
   also_depends_on:
   - N233
   status: resolved
+
+- id: N235
+  type: question
+  title: Whole-model readiness and first integrated test
+  provenance: user
+  timestamp: 2026-09-11T17:41+02:00
+  description: User requested review of the whole model and remaining work before
+    a complete test. Source review identifies separate entity and belief paths; implementation
+    and learning gaps documented.
+  evidence:
+  - docs/model-readiness-review.md
+  - experiments/multimodal.py
+  status: resolved

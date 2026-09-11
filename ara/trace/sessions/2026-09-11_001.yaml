@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T17:32+02:00
-  turn_count: 51
-  summary: "Matched-cost coverage increases eligible checks but fails utility gain;11 source tests, resume and independent replay pass."
+  last_turn: 2026-09-11T17:41+02:00
+  turn_count: 52
+  summary: "Whole-model review identifies integration and full-path learning gaps; controlled integration proposed, no new tests or model changes."
 events_logged:
 - turn: 1
   type: question
@@ -918,6 +918,18 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Source-selection headroom diagnosis proposed.
+- turn: 52
+  type: question
+  id: N235
+  routing: direct
+  provenance: user
+  summary: Whole-model readiness review requested and delivered.
+- turn: 52
+  type: observation
+  id: O157
+  routing: staged
+  provenance: ai-suggested
+  summary: Integrated controlled test proposed before more source tuning.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1283,6 +1295,12 @@ ai_actions:
   - pathwm/evaluation/source_choice.py
   - experiments/multimodal.py
   - pathwm/evaluation/report.py
+- turn: 52
+  action: Read architecture, constructors, runtime modules and saved result summaries;
+    wrote whole-model readiness review. No training/test suite rerun.
+  provenance: ai-executed
+  files_changed:
+  - docs/model-readiness-review.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -1314,6 +1332,7 @@ key_context:
 - turn: 25
   excerpt: "User: continue with claude. implement this, review, test, fix and iterate"
 open_threads:
+- "O157: controlled integration proposed; not yet adopted or implemented."
 - "O156: quantify source-selection headroom before further tuning."
 - "Reliability proposal O149: define frozen correctness labels and matched-confidence comparison before implementation."
 - "O141: learned relation-update gating remains proposed; remembered-key addressing O140 is implemented."

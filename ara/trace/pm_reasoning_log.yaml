@@ -1156,3 +1156,10 @@ entries:
   - 'Claude scheduling-ablation objection not adopted: schedule fixed, total intervention
     measured.'
   - Stage O156 headroom diagnostic; no attainable-policy claim from hindsight bounds.
+
+- turn: 2026-09-11_001#52
+  notes:
+  - Stage integration priority O157; user asked review, not approval of a new architecture.
+  - Keep O156 headroom proposal open; review does not cancel it.
+  - Do not equate old component pass counts with current full-suite execution or integrated
+    capability.

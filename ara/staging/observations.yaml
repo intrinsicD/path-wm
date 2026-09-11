@@ -2747,3 +2747,18 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O157
+  timestamp: 2026-09-11T17:41+02:00
+  provenance: ai-suggested
+  content: Prioritize a controlled entity-store/belief-agent integration and full-path
+    learning test before more source-selection tuning.
+  context: 'Whole-model review: successful component entity readers bypass BeliefAgent;
+    original full-agent entity extraction remains unresolved.'
+  potential_type: architecture
+  bound_to:
+  - N235
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Matched-cost coverage increases eligible checks but fails utility gain;11 source tests, resume and independent replay pass."
-  turn_count: 51
-  events_count: 147
+  summary: "Whole-model review identifies integration and full-path learning gaps; controlled integration proposed, no new tests or model changes."
+  turn_count: 52
+  events_count: 149
   claims_touched: []
-  open_threads: 15
+  open_threads: 16
