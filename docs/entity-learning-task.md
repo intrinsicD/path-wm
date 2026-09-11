@@ -482,3 +482,8 @@ Claude's suggestion that tie deferral requires calibrated probabilities is not
 needed: two equal maxima cannot individually exceed one half of a softmax, regardless
 of calibration. Snapshot rollback is explicitly caller-owned. No neural evaluation,
 training, graph learning or new report was performed for this runtime-only slice.
+
+Verification: the full collected regression suite passed (108 tests), followed by
+coverage of all four lifecycle tests including the added atomic-file/failure case
+(109 distinct tests overall). Ruff and whitespace checks pass. Implementation commit
+`7180e2d`; red contract commit `69f9191`. No extra model training consumed the budget.

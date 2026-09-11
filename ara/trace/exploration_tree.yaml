@@ -3189,3 +3189,26 @@ tree:
   - N197
   - N194
   status: resolved
+
+- id: N199
+  type: decision
+  title: Continue bounded entity lifecycle implementation
+  provenance: user
+  timestamp: 2026-09-11T12:56+02:00
+  choice: Continue implementation, review, tests and fixes with Claude.
+  status: resolved
+- id: N200
+  type: decision
+  title: Implement persistent entity runtime with explicit limits
+  provenance: ai-executed
+  timestamp: 2026-09-11T12:56+02:00
+  choice: Bounded entity lifecycle implemented with two Claude reviews; regression
+    and transaction tests pass. Variable-cardinality recognition and graph learning
+    remain unvalidated.
+  evidence:
+  - pathwm/models/entity_memory.py
+  - tests/test_entity_memory.py
+  - docs/entity-learning-task.md
+  - runs/reviews/continuation_2026-09-11/entity-lifecycle-receipt.json
+  - runs/reviews/continuation_2026-09-11/entity-lifecycle-reconcile-receipt.json
+  status: resolved

@@ -966,3 +966,11 @@ entries:
     O132; prediction is not a persistent write.
   - Claude accepts narrow scope; correct memory swap interpretation is output/label covariance and invariant
     error metrics, verified locally.
+
+- turn: 2026-09-11_001#26
+  notes:
+  - Record runtime implementation and test completion; no new scientific run or report.
+  - 'Leave O132 staged: full learned recognition over allocation/revisits still needs
+    a frozen-model evaluation.'
+  - Claude tie-calibration objection is mathematically unnecessary; equal softmax
+    maxima cannot exceed one half.

@@ -2,9 +2,10 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T12:45+02:00
-  turn_count: 25
-  summary: "Known-versus-new matching passes fixed-margin gates with105 tests and browser QA. Both Claude reviews completed. Persistent allocation and revisit identity remain open."
+  last_turn: 2026-09-11T12:56+02:00
+  turn_count: 26
+  summary: "Bounded entity lifecycle implemented with two Claude reviews; regression and transaction\
+  \ tests pass. Variable-cardinality recognition and graph learning remain unvalidated."
 events_logged:
 - turn: 1
   type: question
@@ -399,6 +400,21 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Propose allocation/revisit lifecycle next.
+- turn: 26
+  type: decision
+  id: N199
+  routing: direct
+  provenance: user
+  summary: Continue implementation, review, tests and fixes with Claude.
+- turn: 26
+  type: decision
+  id: N200
+  routing: direct
+  provenance: ai-executed
+  summary: Bounded entity lifecycle implemented with two Claude reviews; regression
+    and transaction tests pass. Variable-cardinality recognition and graph learning
+    remain unvalidated.
+
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
