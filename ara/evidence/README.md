@@ -110,3 +110,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 
 - [First integrated key-box run](tables/key_box_first_2026-09-11.json): N238; failed content/success gates.
 - [Query-switch repair](tables/key_box_switch_2026-09-11.json): N239; initial content100%, success95.83%, still fails utility versus no-history.
+
+- [Interleaved key reads](tables/key_box_history_2026-09-11.json): N240; registered screen passes, supplied mechanics only.

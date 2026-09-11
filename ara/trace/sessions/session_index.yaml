@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Integrated key-box loop built and iterated; switched-query readout100%, goal success95.83%, utility gate fails;29 relevant tests and audits pass."
-  turn_count: 54
-  events_count: 156
+  summary: "Interleaved read training passes bounded key-box screen;30 tests, resume and independent replay pass; replication pending."
+  turn_count: 55
+  events_count: 158
   claims_touched: []
   open_threads: 17

@@ -1,5 +1,15 @@
 # Current work
 
+**Interleaved key-box training passes controlled screen, 11 September:**
+four read pairs separated by observation events preserve working state during
+training. Fresh seed2421: known content100%, reachable96/96, absent32/32;
+utility0.9203125 beats no-history0.9046875 by0.015625 (required0.01).
+Frozen previous model fails the same screen.30 tests, lint, cached resume and
+independent execution replay pass. [Report](../runs/key_box_v1/history/report.html)
+structural-only; [active plan](key-box-integration-plan.md). Next: replication and
+stronger state-change/history checks. Supplied descriptors and action mechanics;
+this does not validate learned dynamics or general action planning.
+
 **Integrated key-box loop implemented, 11 September:** entity state now reaches the
 actual belief-agent workspace; supplied expectimax action mechanics execute and
 replan from real feedback. First training screen failed. Query-switch repair raises

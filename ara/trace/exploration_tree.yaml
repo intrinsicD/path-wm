@@ -3694,3 +3694,19 @@ tree:
   also_depends_on:
   - N238
   status: resolved
+
+- id: N240
+  type: experiment
+  title: Interleaved key reads pass controlled integration screen
+  provenance: ai-executed
+  timestamp: 2026-09-11T20:44+02:00
+  result: 'Fresh seed2421: known100%, reachable96/96, absent32/32; utility0.9203125
+    vs no-history0.9046875 clears0.01 advantage. Frozen prior model fails same screen.30
+    tests, resume, independent execution audit pass. Bundled sequence/compute intervention,
+    single seed.'
+  evidence:
+  - ara/evidence/tables/key_box_history_2026-09-11.json
+  - git:df68457
+  also_depends_on:
+  - N239
+  status: resolved

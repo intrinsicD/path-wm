@@ -1180,3 +1180,10 @@ entries:
   - Preserve both failed gates; query-switch intervention improves readout but does
     not prove a unique mechanism.
   - Stage O159 full action-history stability; no further tuning after second result.
+
+- turn: 2026-09-11_001#55
+  notes:
+  - Record N240 as bounded empirical pass, not general planning capability.
+  - 'O159 is only partially exercised: neutral observation gaps, no on-policy changing-content
+    unroll. Keep staged rather than promote full-history heuristic.'
+  - Stage O160 replication; no scientific threshold or eval tuning.

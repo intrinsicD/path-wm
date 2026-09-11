@@ -126,3 +126,20 @@ Claude agrees this can only test the bundled recipe; extra reads and observation
 gaps are confounded. Accepted that limit, deferred ablations. Baseline has one pair,
 candidate four pairs (eight reads).30 relevant tests pass, including actual four-pair
 smoke/comparison/resume and synthetic sequence/gradient check. Formal result pending.
+
+History iteration(df68457), seed2421: full screen PASS. Known content100%;
+reachable96/96, absent32/32. Utility0.9203125 vs no-history0.9046875,
+advantage0.015625>=0.01; supplied-state utility0.925. Frozen switched model on
+same cases: reachable94/96, absent32/32, utility0.90625 versus its no-history
+0.89765625, below required advantage. No extra fitting after evaluation.
+30 relevant tests, lint, cached resume and independent planner/physical execution
+replay pass. Initial weights and training sampler match frozen reference; donors
+and non-thinker agent weights unchanged. Evidence: runs/key_box_v1/history_verification.json.
+Report: runs/key_box_v1/history/report.html, structural-only. Completed within240s.
+Claude reconciliation confirmed the contract and requested checking normalization:
+one update per batch, loss mean over all eight reads. This does not equalize gradient
+variance or compute with the reference; causal attribution remains open.
+Use history_pairs=4, query_switch=True with the recipe for this candidate.
+Next: independently replicated seeds and stronger state-change/longer-history
+checks before expanding the task or claiming general planning. This pass is confined
+to the registered descriptor task with supplied action mechanics.

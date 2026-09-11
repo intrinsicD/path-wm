@@ -1,0 +1,59 @@
+{
+  "reference_summary": {
+    "integrated": {
+      "absent_stop": 1.0,
+      "mean_cost": 1.5625,
+      "success": 0.9791666666666666,
+      "utility": 0.90625
+    },
+    "no_history": {
+      "absent_stop": 1.0,
+      "mean_cost": 1.890625,
+      "success": 0.9895833333333334,
+      "utility": 0.8976562499999999
+    },
+    "supplied_state": {
+      "absent_stop": 1.0,
+      "mean_cost": 1.5,
+      "success": 1.0,
+      "utility": 0.925
+    }
+  },
+  "reference_known_accuracy": 1.0,
+  "passed": true,
+  "summary": {
+    "integrated": {
+      "absent_stop": 1.0,
+      "mean_cost": 1.59375,
+      "success": 1.0,
+      "utility": 0.9203125
+    },
+    "no_history": {
+      "absent_stop": 1.0,
+      "mean_cost": 1.90625,
+      "success": 1.0,
+      "utility": 0.9046875
+    },
+    "supplied_state": {
+      "absent_stop": 1.0,
+      "mean_cost": 1.5,
+      "success": 1.0,
+      "utility": 0.925
+    }
+  },
+  "known_accuracy": 1.0,
+  "independent_planner_and_execution_replay": true,
+  "no_history_initial_state_verified": true,
+  "cached_resume": true,
+  "browser_checked": false,
+  "report_validation": "structural_only_prior_policy_denial",
+  "sha256": {
+    "key_box.json": "2b5b163dc6b3d7591ff4e1be46325ec4927ebf37f7b648218967715232c4a875",
+    "last.pt": "69fa1376a812aa1598c509ee094f865dd7424eb76fc6e38566d42d0f70ba064f",
+    "report.html": "d3bf11cd96d22fcce6f90693c3ab3fcfef8f2a4f1db28c80f9b0bf1feb89cd51"
+  },
+  "initialization_matched": true,
+  "training_sampler_matched": true,
+  "donors_and_non_thinker_agent_weights_unchanged": true,
+  "frozen_reference_identity_verified": true
+}
