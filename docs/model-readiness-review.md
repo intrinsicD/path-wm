@@ -1,5 +1,11 @@
 # Whole-model readiness review — 11 September 2026
 
+**Subsequent implementation:** [the key-box slice](key-box-integration-plan.md) now
+connects entity-state retrieval to the belief-agent workspace and a supplied-dynamics
+planner. Two iterations run end to end; the repaired model reaches95.83% goal success
+but still fails its utility comparison. The review below records the pre-integration
+assessment; general perception, learned dynamics and semantic compression remain open.
+
 Assessment of current source and saved results; no new training or test-suite run.
 Historical test counts in project-state are not current full-suite results.
 

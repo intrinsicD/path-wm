@@ -3635,3 +3635,62 @@ tree:
   - docs/model-readiness-review.md
   - experiments/multimodal.py
   status: resolved
+
+- id: N236
+  type: question
+  title: Goal-directed action DAG over predicted belief states
+  provenance: user
+  timestamp: 2026-09-11T18:42+02:00
+  description: User proposes actions as edges, predicted states as nodes, current
+    state as root, and observed/predicted matching to monitor progress. Asked how
+    to implement search.
+  evidence:
+  - pathwm/evaluation/planning.py
+  - pathwm/models/belief.py
+  status: resolved
+
+- id: N237
+  type: decision
+  title: Implement controlled entity-belief planning loop
+  provenance: user
+  timestamp: 2026-09-11T20:29+02:00
+  choice: User authorized working with Claude to implement, review, test, fix and
+    iterate the proposed key-box integration.
+  alternatives:
+  - Continue isolated source-selection tuning
+  evidence:
+  - O157
+  - docs/key-box-integration-plan.md
+  status: resolved
+
+- id: N238
+  type: experiment
+  title: First integrated workspace readout fails capability gates
+  provenance: ai-executed
+  timestamp: 2026-09-11T20:29+02:00
+  result: Known content82.29%, reachable75%, absent100%; utility0.738672 vs no-history0.630469.
+    First-query content100%, second-query lower on remembered/moved. Full screen fails;
+    execution/planner audit passes.
+  evidence:
+  - ara/evidence/tables/key_box_first_2026-09-11.json
+  - git:8f00d8d
+  also_depends_on:
+  - N237
+  status: resolved
+
+- id: N239
+  type: experiment
+  title: Switched-query training repairs initial readout but fails action-loop utility
+  provenance: ai-executed
+  timestamp: 2026-09-11T20:29+02:00
+  result: 'Fresh matched cases: content100% vs frozen82.8125%; reachable95.8333% vs76.0417%.
+    Candidate utility0.891016 vs no-history0.904688 fails declared advantage. Four
+    later-read false stops.29 distinct relevant tests, resumes and independent search/execution
+    replay pass; initial model and training sampler match; donor/non-thinker weights
+    unchanged.'
+  evidence:
+  - ara/evidence/tables/key_box_switch_2026-09-11.json
+  - git:2b2fb61
+  also_depends_on:
+  - N238
+  status: resolved

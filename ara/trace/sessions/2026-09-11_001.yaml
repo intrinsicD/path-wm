@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T17:41+02:00
-  turn_count: 52
-  summary: "Whole-model review identifies integration and full-path learning gaps; controlled integration proposed, no new tests or model changes."
+  last_turn: 2026-09-11T20:29+02:00
+  turn_count: 54
+  summary: "Integrated key-box loop built and iterated; switched-query readout100%, goal success95.83%, utility gate fails;29 relevant tests and audits pass."
 events_logged:
 - turn: 1
   type: question
@@ -930,6 +930,48 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Integrated controlled test proposed before more source tuning.
+- turn: 53
+  type: question
+  id: N236
+  routing: direct
+  provenance: user
+  summary: Action DAG design requested.
+- turn: 53
+  type: observation
+  id: O158
+  routing: staged
+  provenance: ai-suggested
+  summary: Bounded belief search and replanning proposed.
+- turn: 54
+  type: decision
+  id: N237
+  routing: direct
+  provenance: user
+  summary: Controlled integration implementation authorized.
+- turn: 54
+  type: experiment
+  id: N238
+  routing: direct
+  provenance: ai-executed
+  summary: First model fails; repeated-query training mismatch identified.
+- turn: 54
+  type: experiment
+  id: N239
+  routing: direct
+  provenance: ai-executed
+  summary: Switch repair improves readout/success; utility gate still fails.
+- turn: 54
+  type: observation
+  id: O157
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Controlled integration promoted to A05 by implementation.
+- turn: 54
+  type: observation
+  id: O159
+  routing: staged
+  provenance: ai-suggested
+  summary: Full action-history readout stability proposed.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1301,6 +1343,23 @@ ai_actions:
   provenance: ai-executed
   files_changed:
   - docs/model-readiness-review.md
+- turn: 53
+  action: Inspected current sequence scorer; consulted primary latent-world-model
+    and MPC sources; explained proposed planner and limits.
+  provenance: ai-executed
+  files_changed: []
+- turn: 54
+  action: Three public-only Claude reviews; implemented integrated session/readout/planner,
+    fixed packet shape, two fixed training/evaluation iterations,29 distinct relevant
+    tests, resumes and independent execution audits.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/key_box.py
+  - pathwm/evaluation/key_box.py
+  - experiments/multimodal.py
+  - pathwm/evaluation/report.py
+  - tests/test_key_box.py
+  - docs/key-box-integration-plan.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -1332,7 +1391,8 @@ key_context:
 - turn: 25
   excerpt: "User: continue with claude. implement this, review, test, fix and iterate"
 open_threads:
-- "O157: controlled integration proposed; not yet adopted or implemented."
+- "O158: action DAG/belief-tree planner proposed; goal evaluator and integration remain open."
+- "O159: train full action-history readout stability after integrated utility failure."
 - "O156: quantify source-selection headroom before further tuning."
 - "Reliability proposal O149: define frozen correctness labels and matched-confidence comparison before implementation."
 - "O141: learned relation-update gating remains proposed; remembered-key addressing O140 is implemented."

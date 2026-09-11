@@ -72,3 +72,42 @@ new within-example query pairings rather than an exposed index shortcut. Retain
 its narrower concern: improvement would not uniquely distinguish learning to switch
 from benefits of decorrelated repeated supervision. Do not claim that mechanism.
 No new hyperparameters or labels introduced. Added full comparison-path resume smoke.
+
+Run the integrated slice through the existing editable recipe:
+
+```python
+from experiments.multimodal import train_key_box
+train_key_box(
+    'runs/entity_variable_v1/frozen_adapted.pt',
+    'runs/entity_noinfo_v1/frozen_state.pt',
+    'runs/my_key_box',
+    query_switch=True,
+    eval_seed=2411,
+)
+```
+
+Use identical arguments plus `resume=True` for cached resume. A reference checkpoint
+can be passed as `reference_weights=...` for the matched frozen comparison. The
+entity-memory snapshots preserve semantic content; the generic agent's episodic
+stores receive neutral event packets in this slice. Thus success would validate
+external entity retrieval into the workspace, not long-term semantic compression
+inside the generic belief memory. Goal/action semantics and invalidation notices
+remain supplied by the task harness. No full mid-action environment restore claim.
+
+Second iteration (2b2fb61), fresh seed2411: known initial content100%; reachable
+92/96=95.8333%; absent32/32=100%. Frozen first model on identical cases: known
+82.8125%, reachable73/96=76.0417%. Candidate utility0.891015625 remains below
+no-history0.9046875 (required advantage0.01), so full screen FAIL; no promotion.
+Four candidate failures are false stops (families2/3, remembered/uncertain). Traces
+show confidence falling on later reads despite an initial correct read or positive
+inspection. No extra fitting or threshold changes after this result. Next proposal:
+train/test readout stability across the actual observe/read/act interleaving, not
+only two reads. Attribution to a specific internal mechanism remains unproven.
+
+29 distinct relevant tests pass (28-test integration suite plus query-switch test);
+comparison-path smoke/resume, formal cached resumes, independent search/physical
+execution replay, initial-model equality, training-sampler equality, frozen donor/
+non-thinker equality and frozen-reference identity all pass. Original result:
+`runs/key_box_v1/verification.json`; second result:
+`runs/key_box_v1/switched_verification.json`. Reports are structural-only under
+prior browser restriction. Both failed capability screens remain available.

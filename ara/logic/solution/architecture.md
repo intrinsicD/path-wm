@@ -41,3 +41,14 @@
 - **Code**: [query/decision/verifier](../../../pathwm/models/recall.py), [calibration/metrics](../../../pathwm/evaluation/recall.py), [recipe](../../../experiments/multimodal.py), [guide](../../../docs/recall-task.md).
 - **Verification**: N153; [source-bound receipt](../../evidence/tables/recall_implementation_2026-09-10.json).
 - **Scope**: Full forward history with bounded gradient suffix; local memory boundaries also detach old inputs. No source-log lookup for policy, visual mapping, arbitrary instruction parsing, sensing or capability guarantee. Memory-learning extensions remain proposed as O107.
+
+## A05: Controlled entity-store to belief-workspace planning integration
+
+- **Design**: Frozen learned descriptor matcher and per-entity binary state feed retrieved latent tokens through the actual BeliefAgent thinker. Heads read working tokens only. Supplied expectimax mechanics choose inspect/open/retrieve or stop; real feedback commits entity and neutral agent events once. Each action triggers replanning under a four-action budget.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O157
+- **Adoption/implementation**: N237; implementation8f00d8d, query-switch repair2b2fb61.
+- **Code**: [reader/session/planner](../../../pathwm/models/key_box.py), [executed episodes](../../../pathwm/evaluation/key_box.py), [recipe](../../../experiments/multimodal.py).
+- **Verification**: N238/N239; [first](../../evidence/tables/key_box_first_2026-09-11.json), [repair](../../evidence/tables/key_box_switch_2026-09-11.json).
+- **Scope**: Operational integration, not a capability pass. Latest success95.83% but utility gate fails. Supplied descriptors, invalidation flags and action dynamics; generic episodic memory receives neutral packets. Does not establish visual discovery, learned imagined dynamics, semantic compression, arbitrary tasks or mid-action environment restoration. O158 broader planning design remains partial/proposed.

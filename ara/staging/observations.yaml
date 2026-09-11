@@ -2758,6 +2758,38 @@ observations:
   potential_type: architecture
   bound_to:
   - N235
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A05
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O158
+  timestamp: 2026-09-11T18:42+02:00
+  provenance: ai-suggested
+  content: Start bounded goal-conditioned belief-tree search with action cost, goal
+    readout, uncertain outcomes and execution-time replanning; postpone node merging
+    until equivalence preserves future decisions.
+  context: User action-DAG proposal; existing imagination and sequence scoring do
+    not implement full belief-graph planning. Latent distance alone is not a goal
+    metric.
+  potential_type: architecture
+  bound_to:
+  - N236
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+
+- id: O159
+  timestamp: 2026-09-11T20:29+02:00
+  provenance: ai-suggested
+  content: Train and evaluate entity readout stability across full observe/read/act
+    histories, not only two consecutive retrievals.
+  context: Switched-query training fixes initial known content but four later false
+    stops defeat the no-history utility comparison.
+  potential_type: heuristic
+  bound_to:
+  - N239
   promoted: false
   promoted_to: null
   crystallized_via: null

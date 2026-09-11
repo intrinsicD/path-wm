@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Whole-model review identifies integration and full-path learning gaps; controlled integration proposed, no new tests or model changes."
-  turn_count: 52
-  events_count: 149
+  summary: "Integrated key-box loop built and iterated; switched-query readout100%, goal success95.83%, utility gate fails;29 relevant tests and audits pass."
+  turn_count: 54
+  events_count: 156
   claims_touched: []
-  open_threads: 16
+  open_threads: 17

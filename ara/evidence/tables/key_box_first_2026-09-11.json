@@ -1,0 +1,34 @@
+{
+  "passed": false,
+  "summary": {
+    "integrated": {
+      "absent_stop": 1.0,
+      "mean_cost": 1.4765625,
+      "success": 0.75,
+      "utility": 0.738671875
+    },
+    "no_history": {
+      "absent_stop": 1.0,
+      "mean_cost": 1.296875,
+      "success": 0.59375,
+      "utility": 0.63046875
+    },
+    "supplied_state": {
+      "absent_stop": 1.0,
+      "mean_cost": 1.5,
+      "success": 1.0,
+      "utility": 0.925
+    }
+  },
+  "known_accuracy": 0.8229166666666666,
+  "independent_planner_and_execution_replay": true,
+  "no_history_initial_state_verified": true,
+  "cached_resume": true,
+  "browser_checked": false,
+  "report_validation": "structural_only_prior_policy_denial",
+  "sha256": {
+    "key_box.json": "88522054bcabaa35c687e804b54c68e90a8aabb8939f91d01df3f4c277056768",
+    "last.pt": "63f06be7a5aff6a313b3a3c4ae87b4ad1498b354ea86bf2f50457ba5619fdc54",
+    "report.html": "400fa8455704d62bfff3c2ab64f309b3ce3d81957f0a890f6bbeed368a30b686"
+  }
+}

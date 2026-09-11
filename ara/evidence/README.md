@@ -107,3 +107,6 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Source trace diagnosis](tables/entity_source_diagnosis_2026-09-11.json): N233; availability versus below-threshold checks, no capability claim.
 
 - [Matched-budget coverage](tables/entity_source_coverage_2026-09-11.json): N234; check availability improves but utility gate fails.
+
+- [First integrated key-box run](tables/key_box_first_2026-09-11.json): N238; failed content/success gates.
+- [Query-switch repair](tables/key_box_switch_2026-09-11.json): N239; initial content100%, success95.83%, still fails utility versus no-history.

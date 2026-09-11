@@ -1,5 +1,16 @@
 # Current work
 
+**Integrated key-box loop implemented, 11 September:** entity state now reaches the
+actual belief-agent workspace; supplied expectimax action mechanics execute and
+replan from real feedback. First training screen failed. Query-switch repair raises
+known content82.81%→100% and reachable success76.04%→95.83% on matched fresh cases,
+but utility0.891016<no-history0.904688, so full screen still fails. Four false stops
+follow later readout confidence loss.29 distinct relevant tests, resumes and independent
+execution replay pass. [Report](../runs/key_box_v1/switched/report.html) structural-only.
+[Active plan](key-box-integration-plan.md). Next: full action-history readout stability.
+Source-selection tuning is paused. This is controlled descriptor/explicit-dynamics
+integration, not visual discovery or learned world-model planning.
+
 **Matched-budget coverage fails utility gain, 11 September:** eligible drift
 source checks29/32 versus21/32, but late utility gain0.000977<0.01. Static cost
 and reset guards pass.11 source tests, cached resume and independent allocation/

@@ -1,5 +1,9 @@
 # Models and tensor flow
 
+[Key-box integration](key-box-integration-plan.md) is a controlled entity-store →
+belief-workspace → supplied-dynamics planning path. It is separate from the default
+multimodal training configuration; current capability limits are in project-state.
+
 The current categorical model is described in [belief and memory](belief-model.md),
 with the Gaussian reference and shared adapters in [multimodal architecture](multimodal.md)
 and built in [the multimodal recipe](../experiments/multimodal.py). The components
