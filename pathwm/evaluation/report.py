@@ -229,6 +229,26 @@ def entity_inspection(directory):
     drift = directory / "entity_source_drift.json"
     if drift.exists():
         data = json.loads(drift.read_text())
+        if "coverage" in data:
+            parts = [
+                "<section><h2>Matched-budget source coverage</h2>",
+                f"<p>Declared screen: {'pass' if data['passed'] else 'fail'}.</p>",
+                "<p>Both policies acquire on every deferred case, cost0.055 including feedback. Same epsilon0.5 coins; exploratory source is random versus lower lifetime acquisition count. Exploitation and detector (z2,block32) are shared. This is conditional on forced acquisition, not the original stopping policy.</p>",
+                '<div class="table"><table><tr><th>Condition</th><th>Policy</th><th>Early utility</th><th>Late utility</th><th>Whole utility</th></tr>',
+            ]
+            for condition, policies in data["summary"].items():
+                for name, values in policies.items():
+                    parts.append(
+                        f"<tr><td>{condition}</td><td>{name}</td><td>{values['early_utility']:.6f}</td><td>{values['late_utility']:.6f}</td><td>{values['utility']:.6f}</td></tr>"
+                    )
+            parts.append("</table></div>")
+            parts.append(
+                f"<p>Drift sources reaching an eligible pure-feedback check: {escape(str(data['coverage']['pure_source_counts']))}. Coverage static reset episodes: {data['detector']['static_reset_episode_rate']:.2%}.</p>"
+            )
+            parts.append(
+                "<p>Acceptance: late drift gain≥0.01; whole drift loss≤0.01; static loss≤0.02; static reset episodes≤25%; strictly more sources reaching pure checks. All criteria required. Raw action counts and diagnostic check records are in entity_source_drift.json. Coverage alone is not utility improvement.</p></section>"
+            )
+            return parts
         triggered = "detector" in data
         candidate = data.get("detector", {}).get("candidate", "triggered")
         parts = [

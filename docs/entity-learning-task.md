@@ -1556,3 +1556,10 @@ checks strictly increases under drift. Exact acquisition/feedback count equality
 30CPU seconds frozen original gate. New callable recipe uses existing Run/report;
 no new trainer/CLI. Tests cover causal source counts, identical action masks/costs,
 source permutation and cached resume. Structural report QA only.
+
+Claude review retained forced-schedule/high-exploration limits and possible feedback
+interactions. Its final objection requested a scheduling ablation; not adopted:
+schedule is already identical and the utility/coverage thresholds were declared
+before execution. This tests the total allocation intervention, not a decomposition
+of its downstream dynamics. No causal claim about an individual mediator.11 source
+checks pass, including exact masks, feedback/lifetime counts and cached resume.

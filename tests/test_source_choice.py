@@ -225,9 +225,44 @@ def test_source_diagnosis_mixed_blocks_and_tampering(tmp_path):
 
 def test_coverage_exploration_counts_and_permutation():
     from pathwm.evaluation.source_choice import coverage_action
+
     assert coverage_action([10, 2], True, 0, 0, True) == 1
     assert coverage_action([2, 10], True, 1, 1, True) == 0
     assert coverage_action([2, 2], True, 1, 0, True) == 1
     assert coverage_action([10, 2], True, 0, 0, False) == 0
     assert coverage_action([10, 2], False, 1, 0, True) == 0
     assert coverage_action([10, 2], False, 1, None, True) == 1
+
+
+def test_coverage_budget_and_resume(tmp_path):
+    import json
+    import torch
+    from pathwm.models.entity_relations import RelationWriteGate
+    from experiments.multimodal import evaluate_entity_source_coverage
+
+    donor = tmp_path / "gate.pt"
+    torch.save({"model": RelationWriteGate().state_dict()}, donor)
+    output = tmp_path / "coverage"
+    evaluate_entity_source_coverage(donor, output)
+    raw = (output / "entity_source_drift.json").read_bytes()
+    data = json.loads(raw)
+    for world in range(16):
+        for swapped in (False, True):
+            pair = [
+                r
+                for r in data["episodes"]
+                if r["world"] == world and r["swapped"] == swapped
+            ]
+            assert len(pair) == 2
+            masks = [[e["source"] is not None for e in r["actions"]] for r in pair]
+            assert masks[0] == masks[1] == data["environment"][world]["defer"][512:]
+            for row in pair:
+                for event in row["actions"]:
+                    assert (event["feedback"] is not None) == (
+                        event["source"] is not None
+                    )
+                    assert sum(event["lifetime_after"]) - sum(
+                        event["lifetime_before"]
+                    ) == int(event["source"] is not None)
+    evaluate_entity_source_coverage(donor, output, resume=True)
+    assert (output / "entity_source_drift.json").read_bytes() == raw

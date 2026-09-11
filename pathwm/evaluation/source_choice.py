@@ -125,11 +125,15 @@ def evaluate_source_choice(gate, worlds=16, seed=1601):
     )
 
 
-def evaluate_source_drift(gate, worlds=16, seed=1801, change_z=None, static_only=False):
+def evaluate_source_drift(
+    gate, worlds=16, seed=1801, change_z=None, static_only=False, coverage=False
+):
     calibration = evaluate_source_choice(gate, worlds, seed=seed)
     names = ("frozen", "cumulative", "window", "triggered", "no_feedback")
     if change_z is not None:
         names += ("uncertainty",)
+    if coverage:
+        names = ("random", "coverage")
     rows = []
     for base in calibration["worlds"]:
         labels = torch.tensor(base["labels"])
@@ -144,12 +148,20 @@ def evaluate_source_drift(gate, worlds=16, seed=1801, change_z=None, static_only
             for name in names:
                 policy = SourceChoice(
                     window=32 if name == "window" else None,
-                    change_block=32 if name in ("triggered", "uncertainty") else None,
-                    change_z=change_z if name == "uncertainty" else None,
+                    change_block=32
+                    if name in ("triggered", "uncertainty", "random", "coverage")
+                    else None,
+                    change_z=change_z
+                    if name in ("uncertainty", "random", "coverage")
+                    else None,
                 )
                 for event in base["feedback"]:
                     policy.observe(event["source"], event["gain"] - 0.005)
                 initial = policy.snapshot()
+                lifetime = [
+                    sum(f["source"] == source for f in base["feedback"])
+                    for source in range(2)
+                ]
                 actions = []
                 rewards = []
                 for j in range(256):
@@ -164,11 +176,27 @@ def evaluate_source_drift(gate, worlds=16, seed=1801, change_z=None, static_only
                             if name != "frozen" and coins[j] < 0.2
                             else policy.choose()
                         )
+                    if coverage and bool(mask[i]):
+                        action = coverage_action(
+                            lifetime,
+                            bool(coins[j] < 0.5),
+                            int(explore[j]),
+                            policy.choose(),
+                            name == "coverage",
+                        )
+                    lifetime_before = lifetime.copy()
                     feedback = None
                     if action is not None:
                         pred = bool(outcomes[i, action])
                         fee = 0.05
-                        if name in ("cumulative", "window", "triggered", "uncertainty"):
+                        if name in (
+                            "cumulative",
+                            "window",
+                            "triggered",
+                            "uncertainty",
+                            "random",
+                            "coverage",
+                        ):
                             fee += 0.005
                             feedback = (
                                 float(pred == bool(labels[i]))
@@ -176,11 +204,14 @@ def evaluate_source_drift(gate, worlds=16, seed=1801, change_z=None, static_only
                                 - 0.055
                             )
                             policy.observe(action, feedback)
+                            lifetime[action] += 1
                     reward = float(pred == bool(labels[i])) - fee
                     rewards.append(reward)
                     actions.append(
                         dict(
                             index=i,
+                            lifetime_before=lifetime_before,
+                            lifetime_after=lifetime.copy(),
                             source=action,
                             feedback=feedback,
                             reward=reward,
@@ -233,7 +264,13 @@ def evaluate_source_drift(gate, worlds=16, seed=1801, change_z=None, static_only
                     "combined_utility",
                 )
             }
-    candidate = "uncertainty" if change_z is not None else "triggered"
+    candidate = (
+        "coverage"
+        if coverage
+        else "uncertainty"
+        if change_z is not None
+        else "triggered"
+    )
     d = summary.get("drift", summary["static"])
     s = summary["static"]
     static_resets = (
@@ -244,7 +281,7 @@ def evaluate_source_drift(gate, worlds=16, seed=1801, change_z=None, static_only
         )
         / worlds
     )
-    return dict(
+    result = dict(
         detector=dict(
             block=32,
             threshold=0.15,
@@ -255,12 +292,44 @@ def evaluate_source_drift(gate, worlds=16, seed=1801, change_z=None, static_only
         summary=summary,
         episodes=rows,
         environment=calibration["worlds"],
-        passed=d[candidate]["late_utility"] >= d["frozen"]["late_utility"] + 0.01
+        passed=False
+        if coverage
+        else d[candidate]["late_utility"] >= d["frozen"]["late_utility"] + 0.01
         and d[candidate]["late_utility"] >= d["cumulative"]["late_utility"] + 0.01
         and d[candidate]["utility"] >= d["frozen"]["utility"] - 0.01
         and s[candidate]["utility"] >= s["frozen"]["utility"] - 0.02
         and static_resets <= 0.25,
     )
+
+    if coverage:
+        diagnostic = {}
+        for name in names:
+            selected = [
+                dict(r, policy="uncertainty") for r in rows if r["policy"] == name
+            ]
+            diagnostic[name] = diagnose_source_changes(dict(episodes=selected))
+        pure = {
+            name: sum(
+                r["pure_checks"] > 0
+                for r in diagnostic[name]["sources"]
+                if r["swapped"]
+            )
+            for name in names
+        }
+        result["coverage"] = dict(
+            epsilon=0.5,
+            pure_source_counts=pure,
+            diagnostics=diagnostic,
+            acquisition="all_deferred",
+        )
+        result["passed"] = (
+            d["coverage"]["late_utility"] >= d["random"]["late_utility"] + 0.01
+            and d["coverage"]["utility"] >= d["random"]["utility"] - 0.01
+            and s["coverage"]["utility"] >= s["random"]["utility"] - 0.02
+            and static_resets <= 0.25
+            and pure["coverage"] > pure["random"]
+        )
+    return result
 
 
 def evaluate_source_uncertainty(gate):
@@ -391,3 +460,12 @@ def diagnose_source_changes(data):
         for condition, swapped in (("static", False), ("drift", True))
     }
     return dict(sources=rows, summary=summary, reset_agreement=True)
+
+
+def coverage_action(counts, exploring, random_source, choice, balanced):
+    """Same acquisition opportunity; only exploratory source allocation differs."""
+    if exploring:
+        if balanced and counts[0] != counts[1]:
+            return int(counts[1] < counts[0])
+        return random_source
+    return random_source if choice is None else choice
