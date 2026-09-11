@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Source diagnosis separates check availability from threshold outcomes;9 source tests, resume and independent reconstruction pass."
-  turn_count: 50
-  events_count: 144
+  summary: "Matched-cost coverage increases eligible checks but fails utility gain;11 source tests, resume and independent replay pass."
+  turn_count: 51
+  events_count: 147
   claims_touched: []
   open_threads: 15

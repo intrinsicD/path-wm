@@ -453,3 +453,13 @@
 - **Sensitivity**: Descriptive availability categories are not causal evidence of utility benefit. Older comparator can include calibration.
 - **Code ref**: [diagnostic](../../../pathwm/evaluation/source_choice.py).
 - **Evidence**: [trace verification](../../evidence/tables/entity_source_diagnosis_2026-09-11.json).
+
+## H47: Match acquisition opportunities when testing exploratory allocation
+
+- **Rationale**: Hold schedule, fees and detector fixed while comparing random and less-sampled exploratory sources; require utility improvement as well as coverage.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O155
+- **Sensitivity**: Forced acquisition and epsilon0.5 limit scope. Present candidate improves coverage but fails utility gain.
+- **Code ref**: [allocation comparison](../../../pathwm/evaluation/source_choice.py).
+- **Evidence**: [failed screen](../../evidence/tables/entity_source_coverage_2026-09-11.json).

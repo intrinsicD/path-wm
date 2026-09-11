@@ -1148,3 +1148,11 @@ entries:
   - Independent full-feedback reconstruction agrees; mixed blocks are retained in
     diagnosis.
   - Stage O155 matched-budget coverage; no automatic threshold tuning.
+
+- turn: 2026-09-11_001#51
+  notes:
+  - Promote O155 comparison method, not candidate success.
+  - Coverage alone cannot pass; retain failed utility gain without retuning.
+  - 'Claude scheduling-ablation objection not adopted: schedule fixed, total intervention
+    measured.'
+  - Stage O156 headroom diagnostic; no attainable-policy claim from hindsight bounds.

@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T17:24+02:00
-  turn_count: 50
-  summary: "Source diagnosis separates check availability from threshold outcomes;9 source tests, resume and independent reconstruction pass."
+  last_turn: 2026-09-11T17:32+02:00
+  turn_count: 51
+  summary: "Matched-cost coverage increases eligible checks but fails utility gain;11 source tests, resume and independent replay pass."
 events_logged:
 - turn: 1
   type: question
@@ -900,6 +900,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Matched-budget feedback coverage proposed.
+- turn: 51
+  type: experiment
+  id: N234
+  routing: direct
+  provenance: ai-executed
+  summary: Coverage improves; utility gain gate fails.
+- turn: 51
+  type: observation
+  id: O155
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Matched-cost method promoted to H47 by implementation.
+- turn: 51
+  type: observation
+  id: O156
+  routing: staged
+  provenance: ai-suggested
+  summary: Source-selection headroom diagnosis proposed.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1257,6 +1275,14 @@ ai_actions:
   - pathwm/evaluation/source_choice.py
   - experiments/multimodal.py
   - pathwm/evaluation/report.py
+- turn: 51
+  action: Two Claude reviews; implemented matched-cost comparison;11 source tests,
+    fresh evaluation/resume and independent replay.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/evaluation/source_choice.py
+  - experiments/multimodal.py
+  - pathwm/evaluation/report.py
 claims_touched: []
 key_context:
 - turn: 1
@@ -1288,7 +1314,7 @@ key_context:
 - turn: 25
   excerpt: "User: continue with claude. implement this, review, test, fix and iterate"
 open_threads:
-- "O155: test matched-budget feedback coverage with detector fixed."
+- "O156: quantify source-selection headroom before further tuning."
 - "Reliability proposal O149: define frozen correctness labels and matched-confidence comparison before implementation."
 - "O141: learned relation-update gating remains proposed; remembered-key addressing O140 is implemented."
 - O132: persistent allocation/revisit behavior remains proposed.

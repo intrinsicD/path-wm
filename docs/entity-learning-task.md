@@ -1563,3 +1563,16 @@ schedule is already identical and the utility/coverage thresholds were declared
 before execution. This tests the total allocation intervention, not a decomposition
 of its downstream dynamics. No causal claim about an individual mediator.11 source
 checks pass, including exact masks, feedback/lifetime counts and cached resume.
+
+Coverage result (95f36af): full screen FAIL utility gain. Eligible pure-check sources
+under drift29/32 coverage versus21/32 random. Late drift utility0.744904785 versus
+0.743928223 gains0.000976562<0.01. Whole drift gain0.001220703; static loss
+0.009277344 within0.02; coverage static reset episodes1/16=6.25% pass25%.
+No tuning/promotion.11 source tests, cached resume and independent allocation,
+feedback, lifetime-count and detector replay pass; acquisition masks/costs exactly
+matched. Original gate unchanged; report structural-only. Evidence:
+`runs/entity_source_coverage_v1/verification.json`. Callable existing recipe:
+`evaluate_entity_source_coverage(GATE_PATH, OUTPUT_DIR, resume=False)`;
+use `resume=True` for cached resume. Findings apply to forced acquisition/epsilon0.5.
+Next proposal: quantify descriptive source-selection headroom on saved cases before
+more tuning, clearly separating any hindsight bound from an attainable online policy.

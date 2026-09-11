@@ -3607,3 +3607,18 @@ tree:
   also_depends_on:
   - N232
   status: resolved
+
+- id: N234
+  type: experiment
+  title: Matched-budget source coverage fails utility gain
+  provenance: ai-executed
+  timestamp: 2026-09-11T17:32+02:00
+  result: Eligible drift source checks29/32 vs21/32; late utility gain0.000977 fails0.01.
+    Static guards pass.11 source tests, resume and independent replay pass; exact
+    matched costs.
+  evidence:
+  - ara/evidence/tables/entity_source_coverage_2026-09-11.json
+  - git:95f36af
+  also_depends_on:
+  - N233
+  status: resolved

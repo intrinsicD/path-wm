@@ -1,5 +1,12 @@
 # Current work
 
+**Matched-budget coverage fails utility gain, 11 September:** eligible drift
+source checks29/32 versus21/32, but late utility gain0.000977<0.01. Static cost
+and reset guards pass.11 source tests, cached resume and independent allocation/
+feedback replay pass; costs exactly matched. [Report](../runs/entity_source_coverage_v1/reference/report.html)
+structural-only. No promotion; result conditional on forced acquisition/epsilon0.5.
+Next proposal: source-selection headroom diagnostic before further tuning.
+
 **Source-local diagnosis complete, 11 September:** of32 drift source records,14
 never reached an eligible all-new-feedback block,10 reached checks but stayed below
 threshold,8 reset. This separates check availability from threshold outcomes; it

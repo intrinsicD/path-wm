@@ -1,0 +1,48 @@
+{
+  "passed": false,
+  "summary": {
+    "drift": {
+      "coverage": {
+        "combined_utility": 0.7389444986979132,
+        "early_utility": 0.7313623046875,
+        "late_utility": 0.74490478515625,
+        "utility": 0.738133544921875
+      },
+      "random": {
+        "combined_utility": 0.7385375976562466,
+        "early_utility": 0.7298974609375,
+        "late_utility": 0.74392822265625,
+        "utility": 0.736912841796875
+      }
+    },
+    "static": {
+      "coverage": {
+        "combined_utility": 0.74057210286458,
+        "early_utility": 0.7357568359375,
+        "late_utility": 0.75027587890625,
+        "utility": 0.743016357421875
+      },
+      "random": {
+        "combined_utility": 0.7436645507812466,
+        "early_utility": 0.7406396484375,
+        "late_utility": 0.76394775390625,
+        "utility": 0.752293701171875
+      }
+    }
+  },
+  "static_reset_rate": 0.0625,
+  "pure_source_counts": {
+    "coverage": 29,
+    "random": 21
+  },
+  "independent_allocation_feedback_replay": true,
+  "exact_matched_acquisition_cost": true,
+  "cached_resume": true,
+  "browser_checked": false,
+  "report_validation": "structural_only_prior_policy_denial",
+  "sha256": {
+    "entity_source_drift.json": "d89147a53265ec66b4fc5bd5f930aa2345503432c024ed042ff61e87e3cabc64",
+    "last.pt": "e55e7017a7e61e972bfddfde3b842d987f04abd4c272841a8c8a3aedefeca4e7",
+    "report.html": "57a7a3114949f3246e40f0f616c5b33fc9e92706c1df77398daa7a8bd442230f"
+  }
+}

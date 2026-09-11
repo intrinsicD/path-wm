@@ -105,3 +105,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Variance-aware forgetting](tables/entity_source_uncertainty_2026-09-11.json): N232; static reset guard passes but adaptation margin fails.
 
 - [Source trace diagnosis](tables/entity_source_diagnosis_2026-09-11.json): N233; availability versus below-threshold checks, no capability claim.
+
+- [Matched-budget coverage](tables/entity_source_coverage_2026-09-11.json): N234; check availability improves but utility gate fails.

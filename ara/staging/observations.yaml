@@ -2728,6 +2728,21 @@ observations:
   potential_type: heuristic
   bound_to:
   - N233
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H47
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O156
+  timestamp: 2026-09-11T17:32+02:00
+  provenance: ai-suggested
+  content: Quantify descriptive source-selection headroom on saved cases before further
+    tuning; distinguish hindsight bounds from attainable policies.
+  context: Matched-budget exploration improves check coverage but misses required
+    utility gain.
+  potential_type: heuristic
+  bound_to:
+  - N234
   promoted: false
   promoted_to: null
   crystallized_via: null
