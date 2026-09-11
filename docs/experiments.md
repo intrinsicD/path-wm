@@ -175,3 +175,9 @@ The fixed first screen uses 256 updates and at most 450 active CPU seconds. Its
 proper log losses, paired-history scores and selection costs. Development is read
 only at the final checkpoint; test data is reserved. See
 [the declared gates and graph prerequisite](entity-learning-task.md).
+
+To bypass synthetic descriptor matching while retaining learned state updates, use
+`--dataset entities --entity-association observed`. Correspondences are computed
+from visible descriptors only. This diagnostic supplies association; it does not
+learn recognition or graph structure. Use a fresh output directory, for example
+`runs/entity_alignment_v1/observed`, and the same fixed defaults as the raw baseline.

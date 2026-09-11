@@ -110,11 +110,12 @@ def build_model(
     recall=False,
     facts=False,
     entities=False,
+    entity_association="raw",
     fact_reader="direct",
     fact_encoder_weights=None,
 ):
     if entities:
-        return EntityReader(width)
+        return EntityReader(width, entity_association)
     if fact_encoder_weights is not None and (not facts or fact_reader != "event"):
         raise ValueError("Fact encoder weights require the event fact reader")
     if facts:
@@ -476,7 +477,8 @@ def finish_entities(run, learner, training, validation, settings, deadline):
             scores=scores,
             final_view_bounds=validation.final_view_bounds(),
             examples=examples,
-            scope="Controlled candidate features; three observations; recurrent baseline only. Half the episodes hide final identity. No visual discovery, graph learning, motor control or independent final-test claim.",
+            association=settings.get("entity_association", "raw"),
+            scope=f"Association mode: {settings.get('entity_association', 'raw')}. Controlled candidate features; three observations; recurrent baseline only. Half the episodes hide final identity. No visual discovery, graph learning, motor control or independent final-test claim.",
         ),
     )
     if not any(r["split"] == "diagnostic_development" for r in run.rows):
@@ -2045,6 +2047,7 @@ def check(settings):
             recall=settings["dataset"] == "recall",
             facts=settings["dataset"] == "facts",
             entities=settings["dataset"] == "entities",
+            entity_association=settings.get("entity_association", "raw"),
             fact_reader=settings.get("fact_reader", "direct"),
             fact_encoder_weights=settings.get("fact_encoder_weights"),
         ),
@@ -2361,6 +2364,7 @@ def train(settings, output, *, resume=False, stop_after=None):
             recall=is_recall,
             facts=is_facts,
             entities=is_entities,
+            entity_association=settings.get("entity_association", "raw"),
             fact_reader=settings.get("fact_reader", "direct"),
             fact_encoder_weights=settings.get("fact_encoder_weights"),
         ),
@@ -2774,6 +2778,9 @@ def export_diagrams(
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--entity-association", choices=["raw", "observed"], default="raw"
+    )
     parser.add_argument("--check", action="store_true")
     parser.add_argument(
         "--diagram",
@@ -2866,6 +2873,8 @@ def main():
     diagnostic = args.dataset in ("facts", "entities") or (
         args.dataset == "recall" and args.recall_mode == "current-recent"
     )
+    if args.entity_association != "raw" and args.dataset != "entities":
+        parser.error("--entity-association requires --dataset entities")
     if args.recall_mode != "history" and args.dataset != "recall":
         parser.error("--recall-mode requires --dataset recall")
     if args.dataset == "entities":

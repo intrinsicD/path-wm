@@ -60,10 +60,12 @@ def test_entity_recurrent_temporal_gradient_and_no_mutation():
     )
 
 
-def test_entity_resume_cache_and_final_only(tmp_path, monkeypatch):
+@pytest.mark.parametrize("association", ["raw", "observed"])
+def test_entity_resume_cache_and_final_only(tmp_path, monkeypatch, association):
     import experiments.multimodal as recipe
     from tests.test_runs import equal_tree
 
+    configuration = dict(config(), entity_association=association)
     calls = []
     predict = recipe.entity_predictions
 
@@ -72,10 +74,10 @@ def test_entity_resume_cache_and_final_only(tmp_path, monkeypatch):
         return predict(model, data, settings, **kwargs)
 
     monkeypatch.setattr(recipe, "entity_predictions", capture)
-    recipe.train(config(), tmp_path / "resume", stop_after=1)
+    recipe.train(configuration, tmp_path / "resume", stop_after=1)
     assert set(calls) == {"train"}
-    recipe.train(config(), tmp_path / "resume", resume=True)
-    recipe.train(config(), tmp_path / "full")
+    recipe.train(configuration, tmp_path / "resume", resume=True)
+    recipe.train(configuration, tmp_path / "full")
     states = [
         torch.load(tmp_path / n / "last.pt", weights_only=True)
         for n in ("resume", "full")
@@ -94,7 +96,7 @@ def test_entity_resume_cache_and_final_only(tmp_path, monkeypatch):
     ):
         equal_tree(states[0][key], states[1][key])
     calls.clear()
-    recipe.train(config(), tmp_path / "resume", resume=True)
+    recipe.train(configuration, tmp_path / "resume", resume=True)
     assert not calls
     result = json.loads((tmp_path / "resume/entity_results.json").read_text())
     assert result["final_step"] == 2
@@ -128,13 +130,13 @@ def test_observed_association_input_only_and_missingness():
     from pathwm.models.entities import observed_association
     from pathwm.data.entities import EntityEpisodes
 
-    x = EntityEpisodes('train', 32).inputs
+    x = EntityEpisodes("train", 32).inputs
     before = x.clone()
     y = observed_association(x)
     assert torch.equal(x, before)
     assert torch.equal(y[..., 8:], x[..., 8:])
     torch.testing.assert_close(y[:, 0, :, :2], torch.eye(2).expand(32, -1, -1))
-    torch.testing.assert_close(y[16:, -1, :, :2], torch.full((16, 2, 2), .5))
+    torch.testing.assert_close(y[16:, -1, :, :2], torch.full((16, 2, 2), 0.5))
     assert torch.count_nonzero(y[..., 2:8]) == 0
     swap = observed_association(x.flip(2))
     torch.testing.assert_close(swap[..., :2], y.flip(2)[..., [1, 0]])
