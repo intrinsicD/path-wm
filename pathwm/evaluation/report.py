@@ -195,6 +195,26 @@ def model_inspection(directory):
 
 
 def entity_inspection(directory):
+    gate = directory / "entity_gate.json"
+    if gate.exists():
+        data = json.loads(gate.read_text())
+        parts = [
+            "<section><h2>Context write gate</h2>",
+            f"<p>Declared gates: {'pass' if data['passed'] else 'fail'}.</p>",
+            "<p>Only context comparison trains through frozen source-selection loss. Near-matching versus separated contexts define relevance; ambiguous contexts and semantic discovery are not established. Correlated cases share descriptor families.</p>",
+            '<div class="table"><table><tr><th>Condition</th><th>State accuracy</th><th>Source accuracy</th><th>Source NLL</th><th>Soft/hard agreement</th><th>Integrity</th><th>Pass</th></tr>',
+        ]
+        for name, c in data["cohorts"].items():
+            parts.append(
+                f"<tr><td>{name}</td><td>{c['accuracy']:.2%}</td><td>{c['source_accuracy']:.2%}</td><td>{c['nll']:.6f}</td><td>{c['soft_hard_agreement']:.2%}</td><td>{c['integrity']}</td><td>{c['passed']}</td></tr>"
+            )
+        parts.append(
+            "</table></div><p>Source: entity_gate.json. Learned gates require ≥95% source/state accuracy and soft/hard agreement, NLL≤0.15; controls require50% accuracy. All require integrity.</p>"
+        )
+        parts.append(
+            f"<details><summary>Gate examples and unlabelled distance sweep</summary><pre>{escape(json.dumps(dict(examples=data['cohorts']['reference']['episodes'][:2], sweep=data['distance_sweep']), indent=2))}</pre></details></section>"
+        )
+        return parts
     relation = directory / "entity_relations.json"
     if relation.exists():
         data = json.loads(relation.read_text())

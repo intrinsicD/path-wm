@@ -1023,3 +1023,9 @@ starts zero. Gates: learned source and complete-state accuracy>=95%, source NLL
 non-target-state preservation. Controls must score50% source/state accuracy.
 These are correlated synthetic context-rule tests, not graph discovery. No tuning
 on evaluation results; preserve any failure. Check cached resume before report QA.
+
+Claude review (`gate-training`, `gate-training-reconcile`) accepted the narrowed
+scope after identifying the easy separated regimes. Added an unlabelled sweep
+along a fixed unit-circle arc; Euclidean input distance is independent of learned
+weights, although these same context coordinates are deliberately gate inputs.
+This is a boundary diagnostic, not calibration or evidence of ambiguous relevance.

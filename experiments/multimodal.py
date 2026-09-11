@@ -2911,6 +2911,140 @@ def entity_growth(weights, output, resume=False, seed=61):
     return run.path
 
 
+def train_entity_gate(weights, cell_weights, key_weights, output, resume=False):
+    """Fit only context relevance through frozen source-selection loss."""
+    from pathwm.models.entities import EntityMatchReader
+    from pathwm.models.entity_state import EntityInteractionCell
+    from pathwm.models.entity_relations import RelationKey, RelationWriteGate
+    from pathwm.evaluation.entity_growth import growth_inputs
+    from pathwm.evaluation.entity_gate import gate_examples, gate_logits, evaluate_gate
+
+    seed_everything(61)
+    weights, cell_weights = Path(weights).resolve(), Path(cell_weights).resolve()
+    matcher = EntityMatchReader().eval().requires_grad_(False)
+    donor = torch.load(weights, map_location="cpu", weights_only=True)["model"]
+    matcher.load_state_dict(
+        {
+            k.removeprefix("agent."): v
+            for k, v in donor.items()
+            if k.startswith("agent.")
+        }
+    )
+    cell = EntityInteractionCell().eval().requires_grad_(False)
+    cell.load_state_dict(
+        torch.load(cell_weights, map_location="cpu", weights_only=True)["model"]
+    )
+    if bool(cell._interaction_blind):
+        raise ValueError("Relations require a source-aware interaction")
+    key_weights = Path(key_weights).resolve()
+    key = RelationKey().eval().requires_grad_(False)
+    key.load_state_dict(
+        torch.load(key_weights, map_location="cpu", weights_only=True)["model"]
+    )
+    gate = RelationWriteGate()
+    before = (state_hash(matcher), state_hash(cell), state_hash(key))
+    families = {
+        name: growth_inputs(seed, count)
+        for name, seed, count in [
+            ("train", 601, 32),
+            ("development", 602, 8),
+            ("evaluation", 603, 8),
+        ]
+    }
+    train = gate_examples(families["train"], 701)
+    dev = gate_examples(families["development"], 702)
+    evaluation = gate_examples(families["evaluation"], 703)
+    optimizer = torch.optim.AdamW(gate.parameters(), lr=0.01, weight_decay=0.01)
+    run = Run(
+        output,
+        settings=dict(
+            seed=61,
+            purpose="diagnostic",
+            entity_gate=True,
+            entity_relation_key=str(key_weights),
+            key_file_sha256=file_hash(key_weights),
+            context_seeds=[701, 702, 703],
+            entity_state_weights=str(weights),
+            entity_temporal_cell=str(cell_weights),
+            matcher_sha256=file_hash(weights),
+            cell_sha256=file_hash(cell_weights),
+            steps=256,
+            batch_size=32,
+            learning_rate=0.01,
+            max_seconds=450,
+        ),
+        data={name: digest(f) for name, f in families.items()},
+        recipe=__file__,
+        model=gate,
+        optimizer=optimizer,
+        device="cpu",
+        resume=resume,
+    )
+    path = run.path / "entity_gate.json"
+    deadline = perf_counter() + 450
+    try:
+        if resume:
+            result = json.loads(path.read_text())
+            if result["gate_sha256"] != state_hash(gate):
+                raise ValueError("Relation cache mismatch")
+        else:
+            for step in range(256):
+                if perf_counter() > deadline:
+                    raise TimeoutError("Relation training budget exhausted")
+                ix = torch.randint(len(train["labels"]), (32,), generator=run.sampler)
+                logits, _ = gate_logits(
+                    gate, key, matcher, {k: v[ix] for k, v in train.items()}
+                )
+                loss = F.cross_entropy(logits, train["labels"][ix])
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+                run.step = step + 1
+                run.log(dict(step=run.step, split="train", loss=loss.item()))
+            with torch.inference_mode():
+                logits, _ = gate_logits(gate, key, matcher, dev)
+                dev_scores = dict(
+                    accuracy=(logits.argmax(-1) == dev["labels"]).float().mean().item(),
+                    nll=F.cross_entropy(logits, dev["labels"]).item(),
+                    examples=len(dev["labels"]),
+                )
+            result = evaluate_gate(
+                matcher, cell, key, gate, families["evaluation"], evaluation, deadline
+            )
+            if (state_hash(matcher), state_hash(cell), state_hash(key)) != before:
+                raise RuntimeError("Frozen relation consumers changed")
+            result.update(
+                development=dev_scores,
+                gate_sha256=state_hash(gate),
+                evaluation={k: v.tolist() for k, v in evaluation.items()},
+                frozen_sha256=before,
+                families=families,
+            )
+            result["passed"] &= (
+                dev_scores["accuracy"] >= 0.95 and dev_scores["nll"] <= 0.15
+            )
+            atomic_json(path, result)
+            run.log(
+                dict(
+                    step=run.step,
+                    split="validation",
+                    loss=dev_scores["nll"],
+                    accuracy=dev_scores["accuracy"],
+                )
+            )
+            run.save()
+        run.status("completed", "pending")
+    except BaseException as exc:
+        run.status("failed", "pending", str(exc))
+        raise
+    try:
+        render_report(run.path)
+    except BaseException as exc:
+        run.status("completed", "failed", str(exc))
+        raise
+    return run.path
+
+
 def train_entity_relations(weights, cell_weights, output, resume=False):
     """Fit only relation addressing; persistence and relation type are explicit."""
     from pathwm.models.entities import EntityMatchReader
@@ -3567,6 +3701,8 @@ def main():
     parser.add_argument(
         "--entity-temporal-cell", help="Frozen state checkpoint for temporal evaluation"
     )
+    parser.add_argument("--entity-gate", action="store_true")
+    parser.add_argument("--entity-relation-key", type=Path)
     parser.add_argument("--entity-relations", action="store_true")
     parser.add_argument("--entity-source", action="store_true")
     parser.add_argument("--entity-interaction", action="store_true")
@@ -3637,6 +3773,28 @@ def main():
     if args.diagram_depth < 0:
         parser.error("Diagram depth must be nonnegative")
     args = resume_arguments(parser, args)
+    if args.entity_gate:
+        if any(
+            v is None
+            for v in (
+                args.entity_state_weights,
+                args.entity_temporal_cell,
+                args.entity_relation_key,
+            )
+        ):
+            parser.error(
+                "--entity-gate requires matcher, interaction and relation key checkpoints"
+            )
+        print(
+            train_entity_gate(
+                args.entity_state_weights,
+                args.entity_temporal_cell,
+                args.entity_relation_key,
+                args.resume or args.output,
+                bool(args.resume),
+            )
+        )
+        return
     if args.entity_relations:
         if args.entity_state_weights is None or args.entity_temporal_cell is None:
             parser.error(
