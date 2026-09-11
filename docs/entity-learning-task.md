@@ -1537,3 +1537,22 @@ diagnose_entity_sources(SOURCE_DIR, OUTPUT_DIR)`; cached resume uses `resume=Tru
 Next proposal: test feedback coverage under matched acquisition budgets while holding
 the detector fixed. Existing traces do not establish that this improves utility;
 retain static false-reset and cost guards in any fresh comparison.
+
+### Matched-budget source coverage (2026-09-11)
+
+Compare random versus least-lifetime-count exploratory source allocation. Both
+acquire on every fixed deferred observation; same epsilon0.5 exploration coins,
+random source draws, acquisition0.05 and feedback0.005. Exploit existing positive
+values otherwise; if choose returnsNone use shared random action (forced schedule).
+Coverage exploratory action chooses lower lifetime acquired count, ties shared random.
+Lifetime counts include calibration and never reset when detector resets or swap occurs.
+Detector fixed at block32,z2, floor0.15, variance floor0.0001. Fresh16 worlds2101..2116,
+innovation3101..3116, exploration4101..4116;512 calibration/256 evaluation, matched
+silent-swap/static. No parameter selection. Conditional intervention on forced
+acquisition, not improvement to the original abstaining policy. Success: coverage
+late drift utility>=random+0.01; whole drift>=random−0.01; static>=random−0.02;
+static reset episodes<=25%; number of sources reaching eligible pure post-boundary
+checks strictly increases under drift. Exact acquisition/feedback count equality.
+30CPU seconds frozen original gate. New callable recipe uses existing Run/report;
+no new trainer/CLI. Tests cover causal source counts, identical action masks/costs,
+source permutation and cached resume. Structural report QA only.

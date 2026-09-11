@@ -221,3 +221,13 @@ def test_source_diagnosis_mixed_blocks_and_tampering(tmp_path):
     raw = (output / "entity_source_diagnosis.json").read_bytes()
     diagnose_entity_sources(source, output, resume=True)
     assert (output / "entity_source_diagnosis.json").read_bytes() == raw
+
+
+def test_coverage_exploration_counts_and_permutation():
+    from pathwm.evaluation.source_choice import coverage_action
+    assert coverage_action([10, 2], True, 0, 0, True) == 1
+    assert coverage_action([2, 10], True, 1, 1, True) == 0
+    assert coverage_action([2, 2], True, 1, 0, True) == 1
+    assert coverage_action([10, 2], True, 0, 0, False) == 0
+    assert coverage_action([10, 2], False, 1, 0, True) == 0
+    assert coverage_action([10, 2], False, 1, None, True) == 1
