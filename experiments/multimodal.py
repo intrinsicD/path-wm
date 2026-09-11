@@ -2911,6 +2911,76 @@ def entity_growth(weights, output, resume=False, seed=61):
     return run.path
 
 
+def evaluate_entity_gate_shift(weights, output, resume=False):
+    """Frozen context-noise sensitivity; no optimization."""
+    from pathwm.models.entity_relations import RelationWriteGate
+    from pathwm.evaluation.entity_gate import gate_shift_examples, score_gate_shift
+
+    weights = Path(weights).resolve()
+    model = RelationWriteGate().eval().requires_grad_(False)
+    model.load_state_dict(
+        torch.load(weights, map_location="cpu", weights_only=True)["model"]
+    )
+    before = state_hash(model)
+    data = gate_shift_examples()
+    run = Run(
+        output,
+        settings=dict(
+            seed=801,
+            purpose="diagnostic",
+            entity_gate_shift=True,
+            entity_gate_weights=str(weights),
+            gate_file_sha256=file_hash(weights),
+            max_seconds=30,
+            sigmas=[0.03, 0.15, 0.30, 0.60],
+            thresholds=[0.4, 0.5, 0.6],
+            pairs=128,
+        ),
+        data=dict(contexts=digest({k: v.tolist() for k, v in data.items()})),
+        recipe=__file__,
+        model=model,
+        optimizer=torch.optim.AdamW(model.parameters(), lr=0),
+        device="cpu",
+        resume=resume,
+    )
+    path = run.path / "entity_gate_shift.json"
+    started = perf_counter()
+    try:
+        if resume:
+            result = json.loads(path.read_text())
+            if result["model_sha256"] != state_hash(model):
+                raise ValueError("Gate shift cache mismatch")
+        else:
+            result = score_gate_shift(model, data)
+            if state_hash(model) != before:
+                raise RuntimeError("Frozen gate changed")
+            if perf_counter() - started > 30:
+                raise TimeoutError("Gate shift budget exhausted")
+            result["model_sha256"] = before
+            atomic_json(path, result)
+            for name, c in result["cohorts"].items():
+                run.log(
+                    dict(
+                        step=0,
+                        split="frozen_gate_shift",
+                        condition=name,
+                        accuracy=c["thresholds"]["0.5"]["accuracy"],
+                        brier=c["brier"],
+                    )
+                )
+            run.save()
+        run.status("completed", "pending")
+    except BaseException as exc:
+        run.status("failed", "pending", str(exc))
+        raise
+    try:
+        render_report(run.path)
+    except BaseException as exc:
+        run.status("completed", "failed", str(exc))
+        raise
+    return run.path
+
+
 def train_entity_gate(weights, cell_weights, key_weights, output, resume=False):
     """Fit only context relevance through frozen source-selection loss."""
     from pathwm.models.entities import EntityMatchReader
@@ -3701,6 +3771,8 @@ def main():
     parser.add_argument(
         "--entity-temporal-cell", help="Frozen state checkpoint for temporal evaluation"
     )
+    parser.add_argument("--entity-gate-shift", action="store_true")
+    parser.add_argument("--entity-gate-weights", type=Path)
     parser.add_argument("--entity-gate", action="store_true")
     parser.add_argument("--entity-relation-key", type=Path)
     parser.add_argument("--entity-relations", action="store_true")
@@ -3773,6 +3845,15 @@ def main():
     if args.diagram_depth < 0:
         parser.error("Diagram depth must be nonnegative")
     args = resume_arguments(parser, args)
+    if args.entity_gate_shift:
+        if args.entity_gate_weights is None:
+            parser.error("--entity-gate-shift requires --entity-gate-weights")
+        print(
+            evaluate_entity_gate_shift(
+                args.entity_gate_weights, args.resume or args.output, bool(args.resume)
+            )
+        )
+        return
     if args.entity_gate:
         if any(
             v is None

@@ -1063,3 +1063,7 @@ Budget30 CPU seconds, no optimization. This isolates write decisions and does no
 retest downstream state accuracy. Save raw contexts/probabilities/labels, checkpoint,
 manifest, report and cached resume. Browser QA remains unavailable after the prior
 local-file policy denial; do not try an alternate route.
+
+Claude identified noise/separation ambiguity. Added a fixed Euclidean-distance
+baseline (accept when distance<0.5, not an oracle) and per-case pre-normalization
+noise/separation ratios. These are descriptive and cannot establish a Bayes floor.

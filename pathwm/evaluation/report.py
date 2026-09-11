@@ -195,6 +195,35 @@ def model_inspection(directory):
 
 
 def entity_inspection(directory):
+    shift = directory / "entity_gate_shift.json"
+    if shift.exists():
+        data = json.loads(shift.read_text())
+        parts = [
+            "<section><h2>Frozen gate noise sensitivity</h2>",
+            f"<p>Robustness gate: {'pass' if data['passed'] else 'fail'}. No training.</p>",
+            "<p>Labels follow underlying context identity; noise affects observations. All severities share128 prototype pairs. High-noise errors can reflect ambiguity; this does not diagnose a unique model defect. Probability scores are not calibrated beliefs.</p>",
+            '<div class="table"><table><tr><th>Noise</th><th>Threshold</th><th>Accuracy</th><th>Accept recall</th><th>Ignore recall</th><th>Brier</th></tr>',
+        ]
+        for name, c in data["cohorts"].items():
+            for threshold, v in c["thresholds"].items():
+                parts.append(
+                    f"<tr><td>{name}</td><td>{threshold}</td><td>{v['accuracy']:.2%}</td><td>{v['positive_recall']:.2%}</td><td>{v['negative_recall']:.2%}</td><td>{c['brier']:.6f}</td></tr>"
+                )
+        parts.append(
+            "</table></div><p>Source: entity_gate_shift.json. Primary gate requires both class recalls≥95% at threshold0.5 in every severity. Other thresholds are descriptive. Distance baseline accepts below0.5 Euclidean distance; it is not an oracle.</p>"
+        )
+        examples = {
+            name: dict(
+                distance_baseline=c["distance_baseline"],
+                noise_to_separation=c["noise_to_separation"][:4],
+                probabilities=c["probability"][:4],
+            )
+            for name, c in data["cohorts"].items()
+        }
+        parts.append(
+            f"<details><summary>Baseline and paired examples</summary><pre>{escape(json.dumps(examples, indent=2))}</pre></details></section>"
+        )
+        return parts
     gate = directory / "entity_gate.json"
     if gate.exists():
         data = json.loads(gate.read_text())
@@ -730,7 +759,12 @@ def render_report(directory):
     ]
     if not any(
         (directory / name).exists()
-        for name in ("entity_growth.json", "entity_temporal.json", "entity_source.json")
+        for name in (
+            "entity_growth.json",
+            "entity_temporal.json",
+            "entity_source.json",
+            "entity_gate_shift.json",
+        )
     ):
         curve_path = directory / "learning_curve.png"
         curves(rows, curve_path)
@@ -759,7 +793,12 @@ def render_report(directory):
         parts.append(f"<p><strong>Failure:</strong> {escape(status['error'])}</p>")
     if not any(
         (directory / name).exists()
-        for name in ("entity_growth.json", "entity_temporal.json", "entity_source.json")
+        for name in (
+            "entity_growth.json",
+            "entity_temporal.json",
+            "entity_source.json",
+            "entity_gate_shift.json",
+        )
     ):
         parts.append(
             f'<section><picture><source media="(max-width: 600px)" srcset="{mobile_picture}"><img class="chart" alt="Training and validation objective by optimizer update" src="{picture}"></picture><p>Source: metrics.jsonl. Validation population and weighted loss terms are fixed by this run’s recipe.</p></section>'

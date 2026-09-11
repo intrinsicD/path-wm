@@ -185,3 +185,63 @@ def evaluate_gate(matcher, cell, key, gate, families, data, deadline):
             distance=(active - cue).norm(dim=-1).tolist(), probability=sweep
         ),
     )
+
+
+def gate_shift_examples(seed=801, pairs=128):
+    rng = torch.Generator().manual_seed(seed)
+    active, prototypes, noise, separation = [], [], [], []
+    for _ in range(pairs):
+        a = F.normalize(torch.randn(4, generator=rng), dim=0)
+        b = F.normalize(torch.randn(4, generator=rng), dim=0)
+        while (a - b).norm() < 0.9:
+            b = F.normalize(torch.randn(4, generator=rng), dim=0)
+        eps = torch.randn(4, generator=rng)
+        active.extend([a, a])
+        prototypes.extend([a, b])
+        noise.extend([eps, eps])
+        separation.extend([(a - b).norm()] * 2)
+    return dict(
+        active=torch.stack(active),
+        prototypes=torch.stack(prototypes),
+        noise=torch.stack(noise),
+        separation=torch.stack(separation),
+        labels=torch.tensor([True, False] * pairs),
+    )
+
+
+def score_gate_shift(gate, data):
+    labels = data["labels"]
+
+    def scores(predicted):
+        return dict(
+            accuracy=(predicted == labels).float().mean().item(),
+            positive_recall=predicted[labels].float().mean().item(),
+            negative_recall=(~predicted[~labels]).float().mean().item(),
+        )
+
+    cohorts = {}
+    with torch.inference_mode():
+        for sigma in (0.03, 0.15, 0.30, 0.60):
+            cue = F.normalize(data["prototypes"] + sigma * data["noise"], dim=-1)
+            probability = gate(data["active"], cue)
+            distance = (data["active"] - cue).norm(dim=-1)
+            thresholds = {str(t): scores(probability > t) for t in (0.4, 0.5, 0.6)}
+            primary = thresholds["0.5"]
+            cohorts[str(sigma)] = dict(
+                thresholds=thresholds,
+                brier=(probability - labels.float()).square().mean().item(),
+                distance_baseline=scores(distance < 0.5),
+                noise_to_separation=(
+                    sigma * data["noise"].norm(dim=-1) / data["separation"]
+                ).tolist(),
+                distance=distance.tolist(),
+                cue=cue.tolist(),
+                probability=probability.tolist(),
+                passed=primary["positive_recall"] >= 0.95
+                and primary["negative_recall"] >= 0.95,
+            )
+    return dict(
+        cohorts=cohorts,
+        passed=all(c["passed"] for c in cohorts.values()),
+        data={k: v.tolist() for k, v in data.items()},
+    )
