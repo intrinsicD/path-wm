@@ -1043,3 +1043,11 @@ entries:
     intentionally score0 percent as sensitivity control.
   - Preserve supplied-query boundary and stage earlier-cue relational-memory test
     O140.
+
+- turn: 2026-09-11_001#35
+  notes:
+  - Promote O140 through implementation commitment; distinguish learned key encoding/decoding
+    from explicit storage and latest-write semantics.
+  - Normal source/state accuracy100 percent; erased source0 percent and state50 percent,
+    with full rejection. Paired pre-read states independently verified identical.
+  - No graph-discovery claim; stage learned overwrite/preserve gate O141.

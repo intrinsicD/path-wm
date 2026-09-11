@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Frozen source lookup matches oracle at100 percent; unknown queries fully roll back.136 tests, resume and browser QA pass."
-  turn_count: 34
-  events_count: 98
+  summary: "Learned relation keys support destination-only recall at100 percent; erased keys reject.140 tests, resume and browser QA pass."
+  turn_count: 35
+  events_count: 102
   claims_touched: []
   open_threads: 13

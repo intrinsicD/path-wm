@@ -1,0 +1,89 @@
+{
+  "browser": {
+    "broken_images": 0,
+    "browser_checked": true,
+    "horizontal_overflow": false,
+    "renderer_sha256": "05839195207a1879179f3e01747d5fc48a9a7b132c8af9a6773627ae0fed2f1f",
+    "report_sha256": "66fcc4087661b0ce00402c0cc2b2282f6e753d1990404005ed625be5ce8f70b8",
+    "rows": 257,
+    "self_contained": true,
+    "status": "browser_verified",
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "claude_reviews": {
+    "entity-relation": "a0ef4c7841f4839288239aa7daa0c579409520826b4cfb8e32dd2b9eab45f516",
+    "entity-relation-reconcile": "37ab91be0328972b6960d70a221c566f21eb31dcecc7b313fdc3d842f56b4b8c"
+  },
+  "comparison": {
+    "erased": {
+      "accuracy": 0.5,
+      "examples": 192,
+      "integrity": true,
+      "nll": 0.7775302529335022,
+      "paired_source_success": 0.0,
+      "passed": true,
+      "rejection_rate": 1.0,
+      "source_accuracy": 0.0
+    },
+    "gap": {
+      "accuracy": 1.0,
+      "examples": 192,
+      "integrity": true,
+      "nll": 0.006948140915483236,
+      "paired_source_success": 1.0,
+      "passed": true,
+      "rejection_rate": 0.0,
+      "source_accuracy": 1.0
+    },
+    "permuted": {
+      "accuracy": 1.0,
+      "examples": 192,
+      "integrity": true,
+      "nll": 0.006948140915483236,
+      "paired_source_success": 1.0,
+      "passed": true,
+      "rejection_rate": 0.0,
+      "source_accuracy": 1.0
+    },
+    "rebind": {
+      "accuracy": 1.0,
+      "examples": 192,
+      "integrity": true,
+      "nll": 0.006948140915483236,
+      "paired_source_success": 1.0,
+      "passed": true,
+      "rejection_rate": 0.0,
+      "source_accuracy": 1.0
+    },
+    "reference": {
+      "accuracy": 1.0,
+      "examples": 192,
+      "integrity": true,
+      "nll": 0.006948140915483236,
+      "paired_source_success": 1.0,
+      "passed": true,
+      "rejection_rate": 0.0,
+      "source_accuracy": 1.0
+    }
+  },
+  "decoded_sources_recomputed": true,
+  "descriptor_splits_disjoint": true,
+  "exact_rebind_gap_permutation_equivalence": true,
+  "frozen_consumer_hashes_match": true,
+  "frozen_key_sha256": "3ef99f22533d6e42a27d1bf0b820f753f571d71aaca16c029204ba4e8dec83cc",
+  "hashes": {
+    "entity_relations.json": "86ba4c57879b72bc102f1dee65a0e71615475e5e03754ab1e87b26157e6c7ef5",
+    "last.pt": "3ef99f22533d6e42a27d1bf0b820f753f571d71aaca16c029204ba4e8dec83cc",
+    "report.html": "66fcc4087661b0ce00402c0cc2b2282f6e753d1990404005ed625be5ce8f70b8",
+    "run.json": "77d29802afab9744b28f80255b7a46de8b971ab5d13fe883a5eff98daae65151"
+  },
+  "independent_targets_nll": true,
+  "paired_states_identical": true,
+  "resume": true,
+  "scope": "Learned key addressing with explicit per-destination relation storage, latest-write semantics and supplied bind/read operations. Single relation type; correlated variants; no general graph discovery.",
+  "source_commit": "7347bf1",
+  "tests_passed": 140
+}

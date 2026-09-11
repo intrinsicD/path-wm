@@ -313,3 +313,13 @@
 - **Code ref**: [lookup](../../../pathwm/models/entity_memory.py), [transaction](../../../pathwm/models/entity_state.py), [screen](../../../pathwm/evaluation/entity_source.py).
 - **From staging**: O139
 - **Evidence**: [frozen comparison](../../evidence/tables/entity_source_2026-09-11.json).
+
+## H33: Separate learned relation addressing from supplied persistence
+
+- **Rationale**: Encode an earlier cue into a per-destination latent key; test destination-only retrieval after source-state changes using paired histories, rebinds, gaps and erased-key controls. Freeze the matcher and interaction to isolate key learning.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; one relation slot/type, explicit storage and write policy do not establish learned topology or write decisions.
+- **Code ref**: [relation memory](../../../pathwm/models/entity_relations.py), [controls](../../../pathwm/evaluation/entity_relations.py).
+- **From staging**: O140
+- **Evidence**: [bounded result](../../evidence/tables/entity_relations_2026-09-11.json).

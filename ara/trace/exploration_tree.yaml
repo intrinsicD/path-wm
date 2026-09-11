@@ -3394,3 +3394,27 @@ tree:
   - N214
   - N215
   status: resolved
+
+- id: N217
+  type: decision
+  title: Continue remembered relation implementation with Claude
+  provenance: user
+  timestamp: 2026-09-11T15:09+02:00
+  choice: Implement, review, test, fix and iterate.
+  evidence:
+  - N216
+  status: resolved
+- id: N218
+  type: experiment
+  title: Learned keys retrieve an earlier relation after its cue disappears
+  provenance: ai-executed
+  timestamp: 2026-09-11T15:09+02:00
+  result: Learned relation keys support destination-only recall at100 percent; erased
+    keys reject.140 tests, resume and browser QA pass.
+  evidence:
+  - ara/evidence/tables/entity_relations_2026-09-11.json
+  - docs/entity-learning-task.md
+  also_depends_on:
+  - N216
+  - N217
+  status: resolved

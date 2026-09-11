@@ -1,5 +1,12 @@
 # Current work
 
+**Remembered relation keys pass, 11 September:**140 tests pass. A learned key supports
+destination-only recall after the source cue disappears:100% source/state accuracy
+through replacement, gaps and allocation changes. Erasing keys yields0% source
+accuracy. Only key addressing trained; persistence and write policy remain explicit.
+[Report](../runs/entity_relations_v1/reference/report.html) is browser verified. Next
+proposed: learn whether a new cue should overwrite or preserve a relation.
+
 **Frozen source retrieval passes, 11 September:**136 tests pass. Descriptor queries
 select the source among three records at100% accuracy, matching oracle outcomes.
 Allocation permutation passes; all unknown queries roll back. No model fitting.

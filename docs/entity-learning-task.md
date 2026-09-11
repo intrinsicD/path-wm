@@ -950,3 +950,39 @@ state labels. Fresh actions read the live destination key; retries intentionally
 return the old receipt and cannot undo a later rebind. Tests cover two independent
 bindings. Erased keys are an experimental zero-latent ablation, not a promised
 forgetting API: unresolved reads reject, while confident misrouting is measured.
+
+### Remembered relation key result
+
+Implementation7347bf1;140 CPU tests pass. One256-update run trains only the280-parameter
+key encoder/decoder. Development retrieval is100% over24 fresh queries, NLL0.023475.
+Reference, replacement,31-event gap and permuted allocation each achieve100% source
+and complete-state accuracy on192 episodes, NLL0.006948. Their logits are identical.
+
+Erased-key reads all reject: source accuracy0%, complete-state accuracy50%, NLL0.777530.
+This passes the predeclared negative-control criterion, not the normal capability
+gate. For all96 paired histories per normal condition, state latents before recall
+are identical while correct targets differ; both sources are recalled correctly.
+Erased-key paired-source success is0%. Sources toggle after binding, so successful
+recall reads current state rather than a cached binding-time value.
+
+Independent target/NLL and decoded-source recomputation, descriptor split isolation,
+frozen-consumer hashes, non-target and key preservation, retries/restores and cached
+resume pass. Tests additionally cover multiple bindings, missing relations, model
+compatibility, failed-transition rollback and old retries after rebind. Two Claude
+conceptual reviews were reconciled. Browser QA passes1280×720 including expanded
+examples. The key checkpoint was copied immutably after resume.
+
+[Report](../runs/entity_relations_v1/reference/report.html),
+[verification](../runs/entity_relations_v1/verification.json).
+Run `python -m experiments.multimodal --entity-relations --entity-state-weights MATCHER.pt
+--entity-temporal-cell INTERACTION.pt --output DIR`; resume with `--resume DIR`.
+`EntityRelationMemory` wraps the state store: ordinary `observe`, early
+`bind(event_id, destination_descriptor, source_query, timestamp)`, then
+`recall(event_id, destination_descriptor, timestamp)` without the source cue.
+Snapshots persist learned keys and bind restoration to all model fingerprints.
+
+This establishes learned key addressing across a stored relation, with explicit
+slots, bind/read calls and latest-write policy. Persistence itself is supplied.
+Next proposed: learn a relation-update gate that distinguishes a valid binding cue
+from an irrelevant cue, using paired histories that require either overwrite or
+preservation. No claim of learned graph topology or general concepts follows yet.

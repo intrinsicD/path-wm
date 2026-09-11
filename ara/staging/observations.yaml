@@ -2520,6 +2520,21 @@ observations:
   potential_type: heuristic
   bound_to:
   - N216
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H33
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O141
+  timestamp: 2026-09-11T15:09+02:00
+  provenance: ai-suggested
+  content: Next learn a relation-update gate that distinguishes binding cues from
+    irrelevant cues, with paired overwrite-versus-preserve histories.
+  context: Key addressing succeeds after earlier cue storage; bind/read calls and
+    latest-write policy are still supplied.
+  potential_type: heuristic
+  bound_to:
+  - N218
   promoted: false
   promoted_to: null
   crystallized_via: null

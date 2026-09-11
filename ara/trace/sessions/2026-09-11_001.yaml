@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T14:49+02:00
-  turn_count: 34
-  summary: "Frozen source lookup matches oracle at100 percent; unknown queries fully roll back.136 tests, resume and browser QA pass."
+  last_turn: 2026-09-11T15:09+02:00
+  turn_count: 35
+  summary: "Learned relation keys support destination-only recall at100 percent; erased keys reject.140 tests, resume and browser QA pass."
 events_logged:
 - turn: 1
   type: question
@@ -622,6 +622,32 @@ events_logged:
   provenance: ai-suggested
   summary: O139 frozen source retrieval diagnostic committed.
 
+- turn: 35
+  type: decision
+  id: N217
+  routing: direct
+  provenance: user
+  summary: Implement, review, test, fix and iterate.
+- turn: 35
+  type: experiment
+  id: N218
+  routing: direct
+  provenance: ai-executed
+  summary: Learned relation keys support destination-only recall at100 percent; erased
+    keys reject.140 tests, resume and browser QA pass.
+- turn: 35
+  type: observation
+  id: O141
+  routing: staged
+  provenance: ai-suggested
+  summary: Learned relation-update gate proposed.
+- turn: 35
+  type: heuristic
+  id: H33
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O140 remembered relation diagnostic committed.
+
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -870,6 +896,17 @@ ai_actions:
   - experiments/multimodal.py
   - docs/entity-learning-task.md
 
+- turn: 35
+  action: Implemented learned key addressing with explicit transactional relation
+    slots;140 tests, one256-update run, five runtime conditions, cached resume, independent
+    audit and browser report. Two Claude reviews completed.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/entity_relations.py
+  - pathwm/evaluation/entity_relations.py
+  - experiments/multimodal.py
+  - docs/entity-learning-task.md
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -901,7 +938,7 @@ key_context:
 - turn: 25
   excerpt: "User: continue with claude. implement this, review, test, fix and iterate"
 open_threads:
-- "O140: relation memory after the source cue disappears remains proposed; descriptor lookup O139 is implemented."
+- "O141: learned relation-update gating remains proposed; remembered-key addressing O140 is implemented."
 - O132: persistent allocation/revisit behavior remains proposed.
 - O130: learned matching remains proposed; shared reader is now a successful controlled reference.
 - O128: isolate association versus state updating after failed recurrent baseline.
