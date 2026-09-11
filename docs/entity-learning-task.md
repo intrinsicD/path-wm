@@ -534,3 +534,15 @@ resume with `python -m experiments.multimodal --resume DIR`. The present next re
 question is training novelty decisions across varying candidate counts, with the
 failed frozen reference retained and fresh held-out families. No threshold tuning,
 new training, or learned graph updates were performed in this slice.
+
+### Variable-count adaptation (predeclared)
+
+Train the same642-parameter matcher from seed31 for256 AdamW updates, lr0.003,
+wd0.01, batch32,512 train/256 development queries; CPU450s. Candidate counts1..8,
+each balanced known/new. Independent pairs of queries share a fresh descriptor family;
+unit descriptors separated by>=0.9; known perturbation norm0.05 then renormalization.
+Pad to8, explicitly mask absent candidate logits, final class means new. This changes
+both geometry and cardinality distribution; it is not a causal isolation of count.
+Compare original and adapted frozen models on identical fresh seed73 growth families
+(32 families, capacities1/2/4/8), unchanged95% lifecycle gates and0.75 threshold.
+One training run; no tuning after results. Separate test split remains reserved.
