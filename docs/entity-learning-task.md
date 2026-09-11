@@ -920,3 +920,26 @@ and copy operation. It does not discover graph structure or learn what to retrie
 from a task. Next proposed: remember a source relation from an earlier cue, then use
 it for a later destination-only action after the source cue disappears. Use paired
 relation histories with identical final observations to test relational memory.
+
+### Remembered relation key plan
+
+Add one explicit relation slot per destination containing a learned latent key.
+An earlier bind cue writes that key; a later destination-only recall decodes it and
+retrieves the current source through the frozen matcher. Only the key encoder/decoder
+trains (8→16→8 with normalization). The existing state dynamics and copy module stay
+frozen. Latest-write replacement, storage and relation type are explicit machinery,
+not learned graph discovery. Bind/read operations stage all changes atomically.
+Read retry identity binds destination/action/time, not a newly decoded key, so exact
+retries after rebind return their original result without undoing the new relation.
+
+One seed51 training run:256 updates, batch32, AdamW0.01,450-second budget. Train96
+source queries from32 families seed501; develop24 from8 families seed502. Objective:
+source cross entropy through the frozen matcher. Frozen runtime screen uses8 fresh
+families seed503 with24 variants each. Paired variants keep all state observations
+and final action fixed while earlier relation cues select opposing-state sources.
+Conditions: reference, latest-cue replacement,31-event gap, allocation permutation,
+and erased relation key. Sources change state after binding, so cached old values
+cannot solve recall. Fixed gates: development source accuracy>=95%, NLL<=0.15;
+reference/rebind/gap/permutation source and full-state accuracy>=95%, NLL<=0.15.
+Erased source accuracy<=60%. All conditions require retry/restore, non-target-state
+preservation and relation-key preservation on reads. Record failures without tuning.
