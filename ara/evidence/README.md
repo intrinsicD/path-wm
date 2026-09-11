@@ -75,3 +75,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Explicit idle preservation](tables/entity_noinfo_2026-09-11.json): N212; all seven conditions pass with an engineered deterministic invariant.
 
 - [Directed interaction](tables/entity_interaction_2026-09-11.json): N214; learned source-dependent copy update with supplied endpoints and matched source-zero control.
+
+- [Frozen source retrieval](tables/entity_source_2026-09-11.json): N216; descriptor lookup matches oracle, with rejection and distractor controls.

@@ -887,3 +887,36 @@ use the same explicit lookup error and full rollback; no fallback source is chos
 Wrong-query cohorts are sensitivity controls, not robustness claims. Matching margins
 are not treated as calibrated correctness. Source receipt validation rejects unknown
 persisted source IDs while retaining compatibility with ordinary legacy receipts.
+
+### Frozen source retrieval result
+
+Implementationf86a0ae;136 CPU tests pass. No fitting: the matcher, ordinary state
+cell and learned interaction remain frozen. Oracle, lookup and allocation-permuted
+conditions each achieve100% complete-state and source accuracy on192 episodes;
+NLL0.006948. Oracle and lookup logits are identical. Semantic outputs agree after
+allocation permutation. Minimum accepted source confidence0.97638 exceeds the
+unchanged0.75 threshold; this is a score/selectivity observation, not calibration.
+
+All192 unknown queries reject and preserve the prior state. Deliberately wrong
+queries select the opposing-state distractor, producing0% intended-source and
+intended-state accuracy as required by the sensitivity control. This does not claim
+robustness to wrong instructions. All retry/restore, non-target preservation and
+batch/runtime latent checks pass. Independent target/NLL and source-selection
+recomputation, metadata counts and frozen checkpoint comparisons pass. Cached resume
+passes. The report passes1280×720 browser QA with expanded examples. Three short
+Claude conceptual reviews close threshold, identity and abstention concerns.
+
+[Report](../runs/entity_source_v1/reference/report.html),
+[verification](../runs/entity_source_v1/verification.json).
+Run `python -m experiments.multimodal --entity-source --entity-state-weights MATCHER.pt
+--entity-temporal-cell INTERACTION.pt --output DIR`; resume with `--resume DIR`.
+Runtime accepts `source_query=UNIT_DESCRIPTOR` instead of `source_id` for a copy
+observation with four zero features. `memory.lookup` is read-only. Unresolved queries
+raise `LookupError` with no committed change. Exact replay returns the recorded source;
+changed query payloads conflict even if they resolve to that same record.
+
+This removes externally supplied source IDs, but still supplies the descriptor query
+and copy operation. It does not discover graph structure or learn what to retrieve
+from a task. Next proposed: remember a source relation from an earlier cue, then use
+it for a later destination-only action after the source cue disappears. Use paired
+relation histories with identical final observations to test relational memory.

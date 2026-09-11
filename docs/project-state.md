@@ -1,5 +1,12 @@
 # Current work
 
+**Frozen source retrieval passes, 11 September:**136 tests pass. Descriptor queries
+select the source among three records at100% accuracy, matching oracle outcomes.
+Allocation permutation passes; all unknown queries roll back. No model fitting.
+[Report](../runs/entity_source_v1/reference/report.html) is browser verified. The
+source query is still supplied. Next proposed: remember a relation from an earlier
+cue and retrieve it for a later destination-only action.
+
 **Directed state interaction passes, 11 September:**132 tests pass. A learned
 interaction uses another entity’s latent state:100% across all tested conditions,
 including a second copy. The matched source-zero control scores50% reference and

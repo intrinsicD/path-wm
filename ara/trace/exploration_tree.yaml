@@ -3370,3 +3370,27 @@ tree:
   - N212
   - N213
   status: resolved
+
+- id: N215
+  type: decision
+  title: Continue source retrieval implementation with Claude
+  provenance: user
+  timestamp: 2026-09-11T14:49+02:00
+  choice: Implement, review, test, fix and iterate.
+  evidence:
+  - N214
+  status: resolved
+- id: N216
+  type: experiment
+  title: Frozen descriptor lookup selects interaction source among distractors
+  provenance: ai-executed
+  timestamp: 2026-09-11T14:49+02:00
+  result: Frozen source lookup matches oracle at100 percent; unknown queries fully
+    roll back.136 tests, resume and browser QA pass.
+  evidence:
+  - ara/evidence/tables/entity_source_2026-09-11.json
+  - docs/entity-learning-task.md
+  also_depends_on:
+  - N214
+  - N215
+  status: resolved

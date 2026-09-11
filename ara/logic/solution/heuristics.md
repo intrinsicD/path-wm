@@ -303,3 +303,13 @@
 - **Code ref**: [interaction model](../../../pathwm/models/entity_state.py), [histories](../../../pathwm/data/entity_interaction.py), [runtime checks](../../../tests/test_entity_interaction.py).
 - **From staging**: O138
 - **Evidence**: [controlled comparison](../../evidence/tables/entity_interaction_2026-09-11.json).
+
+## H32: Test frozen descriptor retrieval before adding another learner
+
+- **Rationale**: Replace source IDs with read-only learned matching, bind the query and selected source into transaction replay, and compare against oracle IDs, allocation permutations, opposing-state distractors and unknown queries.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; queries remain supplied and matcher confidence is not calibrated correctness. No graph-memory capability follows.
+- **Code ref**: [lookup](../../../pathwm/models/entity_memory.py), [transaction](../../../pathwm/models/entity_state.py), [screen](../../../pathwm/evaluation/entity_source.py).
+- **From staging**: O139
+- **Evidence**: [frozen comparison](../../evidence/tables/entity_source_2026-09-11.json).

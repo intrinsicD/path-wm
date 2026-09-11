@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Directed interaction passes all conditions at100 percent; source-zero reference50 percent.132 tests, resumes and browser QA pass."
-  turn_count: 33
-  events_count: 94
+  summary: "Frozen source lookup matches oracle at100 percent; unknown queries fully roll back.136 tests, resume and browser QA pass."
+  turn_count: 34
+  events_count: 98
   claims_touched: []
   open_threads: 13

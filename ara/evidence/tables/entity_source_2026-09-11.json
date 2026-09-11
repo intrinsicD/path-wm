@@ -1,0 +1,86 @@
+{
+  "allocation_permutation_agrees": true,
+  "allocation_permutation_exact": true,
+  "browser": {
+    "broken_images": 0,
+    "browser_checked": true,
+    "horizontal_overflow": false,
+    "renderer_sha256": "0c03ae8590664e678807b8ab7d466cb63b1eb0e5189708d0d930af550baeec11",
+    "report_sha256": "e15dee021adfed7b6dee59b720757ae322aaf7f9166f42ef6964b9a4bffd14ba",
+    "rows": 5,
+    "self_contained": true,
+    "status": "browser_verified",
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "claude_reviews": {
+    "entity-source": "6b56f7408847d1f35c0618042a017318c669dd5b1bb9decc5363bb46b71e2e94",
+    "entity-source-abstention": "c5398b0b2078c441241246bbc17ec4c53bec013787d7410fe1c8f8afef581403",
+    "entity-source-reconcile": "30684bbef6e0e372923f97bbfecf21657084634013f74bfa96b8980b41dda706"
+  },
+  "comparison": {
+    "lookup": {
+      "accuracy": 1.0,
+      "examples": 192,
+      "integrity": true,
+      "nll": 0.006948141381144524,
+      "passed": true,
+      "rejection_rate": 0.0,
+      "source_accuracy": 1.0
+    },
+    "oracle": {
+      "accuracy": 1.0,
+      "examples": 192,
+      "integrity": true,
+      "nll": 0.006948141381144524,
+      "passed": true,
+      "rejection_rate": 0.0,
+      "source_accuracy": 1.0
+    },
+    "permuted": {
+      "accuracy": 1.0,
+      "examples": 192,
+      "integrity": true,
+      "nll": 0.006948141381144524,
+      "passed": true,
+      "rejection_rate": 0.0,
+      "source_accuracy": 1.0
+    },
+    "unknown": {
+      "accuracy": 1.0,
+      "examples": 192,
+      "integrity": true,
+      "nll": 0.009985370561480522,
+      "passed": true,
+      "rejection_rate": 1.0,
+      "source_accuracy": 0.0
+    },
+    "wrong_query": {
+      "accuracy": 0.0,
+      "examples": 192,
+      "integrity": true,
+      "nll": 2.356610059738159,
+      "passed": true,
+      "rejection_rate": 0.0,
+      "source_accuracy": 0.0
+    }
+  },
+  "frozen_weights": true,
+  "hashes": {
+    "entity_source.json": "1139c32c54686720a99a5440e3363c40b6baa547eef35c15807fe106b994fced",
+    "last.pt": "92be196cb31094ee2133c3d8f612e6f617cbfe5c8dd0bcc759532f6f008a2deb",
+    "report.html": "e15dee021adfed7b6dee59b720757ae322aaf7f9166f42ef6964b9a4bffd14ba",
+    "run.json": "3a8ca796407dc7388f5909825f8f6c330349028bc5012385437e978075998953"
+  },
+  "independent_targets_nll": true,
+  "metadata_counts_correct": true,
+  "min_accepted_confidence": 0.9763803482055664,
+  "oracle_lookup_exact": true,
+  "resume": true,
+  "scope": "Frozen learned retrieval from supplied descriptor queries; no new training, no learned relation memory or graph discovery. Eight families with correlated controlled variants.",
+  "selected_sources_recomputed": true,
+  "source_commit": "f86a0ae",
+  "tests_passed": 136
+}

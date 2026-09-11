@@ -2504,6 +2504,22 @@ observations:
   potential_type: heuristic
   bound_to:
   - N214
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H32
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O140
+  timestamp: 2026-09-11T14:49+02:00
+  provenance: ai-suggested
+  content: Next remember a source relation from an earlier cue, then retrieve it for
+    a destination-only action after the cue disappears; pair relation histories with
+    identical final observations.
+  context: Frozen descriptor retrieval succeeds but still receives an explicit source
+    query; relation memory and graph discovery remain untested.
+  potential_type: heuristic
+  bound_to:
+  - N216
   promoted: false
   promoted_to: null
   crystallized_via: null
