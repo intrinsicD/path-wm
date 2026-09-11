@@ -3577,3 +3577,18 @@ tree:
   also_depends_on:
   - N230
   status: resolved
+
+- id: N232
+  type: experiment
+  title: Variance-aware forgetting fails adaptation margin
+  provenance: ai-executed
+  timestamp: 2026-09-11T17:17+02:00
+  result: Development selects z2. Static resets4/16 pass25%; late drift gain over
+    cumulative0.008103 fails0.01.29 distinct relevant tests, resume and independent
+    development/held-out replay pass.
+  evidence:
+  - ara/evidence/tables/entity_source_uncertainty_2026-09-11.json
+  - git:4778bfd
+  also_depends_on:
+  - N231
+  status: resolved

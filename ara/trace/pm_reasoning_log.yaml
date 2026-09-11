@@ -1134,3 +1134,10 @@ entries:
   - Promote O152 testing method through committed implementation, not detector success.
   - Preserve failed false-reset screen; no threshold retuning.
   - Stage O153 uncertainty-aware checks; reliability proposal O149 remains separate.
+
+- turn: 2026-09-11_001#49
+  notes:
+  - Promote O153 selection method, not scientific success.
+  - Preserve adaptation failure; empirical variance threshold is not a confidence
+    guarantee.
+  - Stage O154 diagnostic decomposition; no new detector tuning or reliability model.

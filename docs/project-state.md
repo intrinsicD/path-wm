@@ -1,5 +1,13 @@
 # Current work
 
+**Variance-aware forgetting fails adaptation margin, 11 September:** development
+selects z2; held-out static resets4/16 meet25% (matched fixed-trigger8/16). Late
+drift utility0.731096 beats cumulative0.722993 by0.008103, below required0.01.
+Other utility guards pass.29 distinct relevant tests, cached resume and independent
+development/held-out replay pass. [Report](../runs/entity_source_uncertainty_v1/reference/report.html)
+structural-only. No promotion or tuning; next diagnose missed/late changes from
+existing traces before choosing another detector. Original gate unchanged.
+
 **Triggered forgetting fails false-reset guard, 11 September:** late drift utility
 0.742107 versus frozen0.713721 and cumulative0.723066; static utility loss0.011832
 is within0.02. But10/16 unchanged worlds reset (62.5%>25%), so full screen fails.

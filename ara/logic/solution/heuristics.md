@@ -433,3 +433,13 @@
 - **Sensitivity**: Fixed32-outcome blocks and0.15 threshold are uncalibrated; selected feedback controls detection latency. Present screen fails its reset guard.
 - **Code ref**: [detector](../../../pathwm/models/source_choice.py), [comparison](../../../pathwm/evaluation/source_choice.py).
 - **Evidence**: [failed full screen](../../evidence/tables/entity_source_change_2026-09-11.json).
+
+## H45: Isolate stationary threshold selection from held-out adaptation testing
+
+- **Rationale**: Select a variance multiplier on separate stationary worlds and freeze it before evaluating all adaptation and false-reset criteria. Reject unqualified fallback.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O153
+- **Sensitivity**: Eight development worlds and adaptive feedback offer no statistical error guarantee. Present candidate fails the adaptation criterion.
+- **Code ref**: [selection](../../../pathwm/evaluation/source_choice.py), [variance threshold](../../../pathwm/models/source_choice.py).
+- **Evidence**: [failed full screen](../../evidence/tables/entity_source_uncertainty_2026-09-11.json).

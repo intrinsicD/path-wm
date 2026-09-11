@@ -2698,6 +2698,21 @@ observations:
   potential_type: heuristic
   bound_to:
   - N231
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H45
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O154
+  timestamp: 2026-09-11T17:17+02:00
+  provenance: ai-suggested
+  content: Diagnose missed and delayed changes using source-specific selected feedback
+    opportunities before changing detector again.
+  context: Variance-aware screen meets static reset guard but misses late drift advantage
+    over cumulative.
+  potential_type: heuristic
+  bound_to:
+  - N232
   promoted: false
   promoted_to: null
   crystallized_via: null

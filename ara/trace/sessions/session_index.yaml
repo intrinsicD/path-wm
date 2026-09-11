@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Triggered forgetting passes utility criteria but fails false-reset guard;26 relevant tests, resume and independent replay pass."
-  turn_count: 48
-  events_count: 138
+  summary: "Variance-aware forgetting meets static reset guard but fails adaptation margin;29 distinct relevant tests, resume and replay pass."
+  turn_count: 49
+  events_count: 141
   claims_touched: []
   open_threads: 15

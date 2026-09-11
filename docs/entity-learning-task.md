@@ -1480,3 +1480,19 @@ floor raises rather than lowers the variance threshold, and max0.15 remains a fl
 The development margin is engineered, not a confidence bound. Preserve individual
 reset traces; no downstream promotion on a partial pass. Two public-only receipts
 under `runs/reviews/continuation_2026-09-11/source-uncertainty{,-reconcile}-receipt.json`.
+
+Variance-aware result (4778bfd): full screen FAIL adaptation margin. Development
+reset rates0/8 for z2,3,4 select z2. Held-out static reset episodes4/16=25% pass;
+matched fixed-trigger control8/16=50%. Late drift utility0.731096191 exceeds frozen
+0.720434570 by0.010661621, but exceeds cumulative0.722993164 by only0.008103027
+(required0.01). Whole drift0.726669922>=frozen0.718005371; static utility loss
+0.008442383 is within0.02. No tuning or promotion.8/16 drift episodes reset;
+first reset cases40..208 among those; remaining8 never reset. Reset timing does not
+identify whether matching, exploration or threshold accounts for utility deficits.
+29 distinct relevant tests pass (28-test suite plus added fallback test); cached
+resume and independent full development/held-out action, feedback, variance and
+reset replay pass. Report structural-only; original gate unchanged. Evidence:
+`runs/entity_source_uncertainty_v1/verification.json`. Existing source-drift CLI and
+resume path retained. Next proposed step: diagnostic decomposition of missed/late
+changes using recorded selected feedback and source-specific opportunities before
+another detector change. This is source-reward uncertainty, not input reliability learning.
