@@ -1,12 +1,28 @@
 # Current work
 
-**Active slice, 11 September:** implement and test the
-[direct fact extraction and binding controls](fact-learning-plan.md) in the same
-recipe (`--dataset facts`). Alex authorized implementation, actual Claude review,
-testing, fixes and bounded iteration. Two brief conceptual reviews are complete;
-local checks and the predeclared CPU pilots follow.
-
 **Current slice complete, 11 September:** the
+[direct fact extraction and binding controls](fact-learning-plan.md) run in the
+same recipe (`--dataset facts`). Two short actual Claude reviews are reconciled.
+All 83 CPU tests passed; 12 focused fact/run checks passed after the report revision.
+The first 512-update reference passed every declared gate in 10.3502 active CPU
+seconds: entity, location and joint accuracy are 100% on 96 training and 32 held-out
+combinations. Mean held-out NLL is 0.211649. The fixed selector answers every
+enumerated two-record query correctly, including 768 queries / 384 pairs whose
+constituent facts are both held out. Coherent location swaps also pass. These
+reused fact combinations are not independent samples or natural-language evidence.
+No second learning-rate run was needed.
+
+The [standalone fact report](../runs/fact_grounding_v1/reference/report.html) has
+verified tables, curves and expandable examples at 1280x720, with no broken images
+or horizontal overflow. `runs/fact_grounding_v1/verification.json` binds the intact
+training snapshot, separate final renderer, checkpoint/results, tests and browser
+receipts. CLI resume reused cached predictions and unchanged result/metric files;
+an independent probability-space calculation matches every saved binding score.
+Next proposed: test the same factual task through the existing agent event/reader
+path. Success of this freshly trained encoder and explicit selector does not prove
+the world model's learned binding, recurrent retention or memory compression.
+
+**Prior diagnostic slice, 11 September:** the
 [current/recent factual recall diagnostic](recall-learning-plan.md) is implemented
 in the same recipe (`--dataset recall --recall-mode current-recent`). Actual Claude
 completed one review and one reconciliation after Alex approved the export. All 79

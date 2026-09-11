@@ -1,0 +1,243 @@
+{
+  "verification": {
+    "verified_at": "2026-09-11T00:18:57.508958+00:00",
+    "implementation_commit": "4fc07dd",
+    "training_source_snapshot_intact": true,
+    "training_and_scoring_sources_match": true,
+    "reporting_only_changes": [
+      "pathwm/evaluation/report.py"
+    ],
+    "final_renderer_sha256": "98d4055078d9543043bda139d0a45e68165ae94d9049d2e6a44ef874e7a43fbc",
+    "cpu_tests": {
+      "tests.xml": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "83",
+        "time": "71.484",
+        "timestamp": "2026-09-11T02:13:01.860883+02:00",
+        "hostname": "alex-home"
+      },
+      "fact-tests.xml": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "4",
+        "time": "2.574",
+        "timestamp": "2026-09-11T02:14:36.529407+02:00",
+        "hostname": "alex-home"
+      },
+      "report-tests.xml": {
+        "name": "pytest",
+        "errors": "0",
+        "failures": "0",
+        "skipped": "0",
+        "tests": "12",
+        "time": "5.215",
+        "timestamp": "2026-09-11T02:17:09.744618+02:00",
+        "hostname": "alex-home"
+      }
+    },
+    "run": {
+      "step": 512,
+      "presentations": 8192,
+      "seed": 23,
+      "training_active_seconds": 10.350238185026683,
+      "cumulative_active_seconds_after_cached_resume": 10.397404975024983,
+      "training_attempts": 1,
+      "conditional_lr_attempt": "not_needed",
+      "splits_loaded": [
+        "train",
+        "validation"
+      ],
+      "gates": {
+        "extraction": true,
+        "fresh_combinations": true,
+        "training_fit": true
+      },
+      "binding_gate": true
+    },
+    "post_run_checks": {
+      "probability_space_reference_matches_saved_logspace_selector": true,
+      "all_queries_and_coherent_swaps_correct": true,
+      "all_checkpoint_floats_finite": true,
+      "cached_predictions_results_and_rows_unchanged": true,
+      "new_inference_or_training": false
+    },
+    "report": {
+      "structural": "verified",
+      "browser": "verified",
+      "viewport": [
+        1280,
+        720
+      ],
+      "broken_images": 0,
+      "horizontal_overflow": false,
+      "examples_expand": true,
+      "screenshots": [
+        "report-top.png",
+        "report-metrics.png"
+      ],
+      "initial_report_preserved": "reference/report.initial.html"
+    },
+    "claude_receipts": [
+      "runs/reviews/continuation_2026-09-11/fact-start-receipt.json",
+      "runs/reviews/continuation_2026-09-11/fact-review-receipt.json"
+    ],
+    "sha256": {
+      "tests.xml": "d5c857e3d6e741bda0d40232f8092857178b8889ddaf8495406694da90a59d19",
+      "fact-tests.xml": "41f177153e56aa0ceee04e1fd24b96c8fde5e6ba5535320c3294bf31d4355564",
+      "report-tests.xml": "ec4aa27f59aa41aa800c5753ea6eb49075b09e8f6636a1bd0a12bd7191f37d1b",
+      "check.json": "db75e763a387db92b8fe59eb51320afd0cbe75ac369a7b7134814f095f28c682",
+      "resume-verification.json": "81f0545a34907dae9c6edf3ee190064f26893bb894f5f36ce7e3113aec9e069b",
+      "report-top.png": "08fe1795d60f0e69382a863ec220dfe6b14038564c3daaea6e04458ea9725c51",
+      "report-metrics.png": "8f7b91dccc897987d477afbd6ebd714bb844c5cb919f061bed7e6ca4441c9ad8",
+      "verify.py": "05f3155167a63e63dd96730df4f85a7fb761fee51e728a40a38820c411860959",
+      "reference/run.json": "1e036669748ec263e0c49880a4645e60d448833fdaa2446c93283a38cb14d852",
+      "reference/last.pt": "eec43cc215980aff9bd31023c39bfc41364f0d4ec79244972728318fc2305508",
+      "reference/metrics.jsonl": "4377660080709668c9d5180a765a40789a4d2afbf2571ba1776d33e608170437",
+      "reference/fact_manifest.json": "8ee1cb49da789e94e01c9774f535cb0da8ab548ee8faa1f9a96811307cbc9248",
+      "reference/fact_predictions.pt": "368b8ad7951d47e96f8a45a9de91d622a6ac4bbd5977bb6623d9495ebceef066",
+      "reference/fact_results.json": "20062b2578ca43cbb5ef8eff59fd095ebcdfa153f5589c2ce3ab8c8a2a23c9af",
+      "reference/binding_predictions.pt": "842d3c31b620c26d9e81c48c5cca7c6859de2b996ac400d2e828da1757ff9ec8",
+      "reference/report.initial.html": "90a67cd7837c4af2f69899d75b05fc17451dadbc8c53a45d1018209be5efa433",
+      "reference/report.html": "8e110c1976a8056b339d1f403a72863a18b14d83a946a43140521d6eaecb9b8a",
+      "reference/report.qa.json": "abb56c86cb92c6d76ddb5f19cac2bd53484fdb6c1a07a2a12513608d4dd84e31"
+    }
+  },
+  "views": {
+    "development": {
+      "entity_accuracy": 1.0,
+      "entity_nll": 0.40311195806116984,
+      "examples": 32,
+      "factual_accuracy": 1.0,
+      "location_accuracy": 1.0,
+      "location_nll": 0.020185926459579,
+      "nll": 0.21164894226037442
+    },
+    "train": {
+      "entity_accuracy": 1.0,
+      "entity_nll": 0.3979835801438312,
+      "examples": 96,
+      "factual_accuracy": 1.0,
+      "location_accuracy": 1.0,
+      "location_nll": 0.020059012081229437,
+      "nll": 0.2090212961125303
+    }
+  },
+  "gates": {
+    "extraction": true,
+    "fresh_combinations": true,
+    "training_fit": true
+  },
+  "binding": {
+    "coherent_swap_success": 1.0,
+    "gate": true,
+    "groups": {
+      "held_out": {
+        "accuracy": 1.0,
+        "constituent_baseline": {
+          "entity_accuracy": 1.0,
+          "entity_nll": 0.4031119580611698,
+          "examples": 768,
+          "factual_accuracy": 1.0,
+          "location_accuracy": 1.0,
+          "location_nll": 0.020185926459578996,
+          "nll": 0.2116489422603744
+        },
+        "nll": 0.036231423387566256,
+        "paired_success": 1.0,
+        "pairs": 384,
+        "queries": 768
+      },
+      "mixed": {
+        "accuracy": 1.0,
+        "constituent_baseline": {
+          "entity_accuracy": 1.0,
+          "entity_nll": 0.40054776910250045,
+          "examples": 4416,
+          "factual_accuracy": 1.0,
+          "location_accuracy": 1.0,
+          "location_nll": 0.02012246927040422,
+          "nll": 0.21033511918645234
+        },
+        "nll": 0.03553414758245786,
+        "paired_success": 1.0,
+        "pairs": 2208,
+        "queries": 4416
+      },
+      "seen": {
+        "accuracy": 1.0,
+        "constituent_baseline": {
+          "entity_accuracy": 1.0,
+          "entity_nll": 0.3979835801438312,
+          "examples": 6720,
+          "factual_accuracy": 1.0,
+          "location_accuracy": 1.0,
+          "location_nll": 0.020059012081229444,
+          "nll": 0.2090212961125303
+        },
+        "nll": 0.0355164050144832,
+        "paired_success": 1.0,
+        "pairs": 3360,
+        "queries": 6720
+      }
+    },
+    "order_max_log_probability_delta": 0.0,
+    "scope": "Explicit selector with exact entity queries; not the world-model task reader. Swapped facts use their own constituent split groups.",
+    "status": "evaluated",
+    "swapped_groups": {
+      "held_out": {
+        "accuracy": 1.0,
+        "constituent_baseline": {
+          "entity_accuracy": 1.0,
+          "entity_nll": 0.4031119580611698,
+          "examples": 768,
+          "factual_accuracy": 1.0,
+          "location_accuracy": 1.0,
+          "location_nll": 0.020185926459578996,
+          "nll": 0.2116489422603744
+        },
+        "nll": 0.036231423387566256,
+        "paired_success": 1.0,
+        "pairs": 384,
+        "queries": 768
+      },
+      "mixed": {
+        "accuracy": 1.0,
+        "constituent_baseline": {
+          "entity_accuracy": 1.0,
+          "entity_nll": 0.4005477691025004,
+          "examples": 4416,
+          "factual_accuracy": 1.0,
+          "location_accuracy": 1.0,
+          "location_nll": 0.02012246927040422,
+          "nll": 0.2103351191864523
+        },
+        "nll": 0.035534147582457876,
+        "paired_success": 1.0,
+        "pairs": 2208,
+        "queries": 4416
+      },
+      "seen": {
+        "accuracy": 1.0,
+        "constituent_baseline": {
+          "entity_accuracy": 1.0,
+          "entity_nll": 0.3979835801438312,
+          "examples": 6720,
+          "factual_accuracy": 1.0,
+          "location_accuracy": 1.0,
+          "location_nll": 0.020059012081229444,
+          "nll": 0.2090212961125303
+        },
+        "nll": 0.0355164050144832,
+        "paired_success": 1.0,
+        "pairs": 3360,
+        "queries": 6720
+      }
+    }
+  },
+  "scope": "Same encoder architecture trained from scratch; direct extraction and an explicit binding reference. No recurrent model, calibration or final test."
+}

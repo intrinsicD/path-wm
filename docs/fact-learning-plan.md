@@ -81,3 +81,54 @@ accuracy beside pair results, so recognition errors remain visible in each group
 Reject its request to avoid near-hard selector weights: confident selection of the
 correct record is valid and no soft-mixing behavior is required by this task.
 No unresolved review disagreement changes the declared gates or compute budget.
+
+## Outcome, 11 September 2026
+
+Implemented in commit `4fc07dd`, following the red plan/check commit `6bfc66b`.
+All 83 CPU tests passed. Four focused fact checks also passed after adding the
+constituent baselines. The real `--check` path has finite losses and gradients in
+the encoder, attention reader and both heads; the inert target has no gradients.
+
+`runs/fact_grounding_v1/reference` completed all 512 updates / 8,192 sampled fact
+presentations in 10.3502 active seconds (checkpoint/report overhead excluded by the
+declared timer). Training and held-out entity, location and joint accuracy are all
+100% (96 training and 32 development combinations). Mean entity/location NLL is
+0.209021 on train and 0.211649 on development; development entity NLL is 0.403112
+and location NLL 0.0201859. Both extraction gates pass on the first attempt, so the
+conditional learning-rate comparison was not run. No additional seeds or training.
+
+The fixed selector answers all 11,904 enumerated queries correctly, with 100%
+paired success in each constituent group. Both-held-out results are 768 queries /
+384 pairs, location NLL 0.0362314. Coherent swaps are correct before and after;
+reversing record order changes log probabilities by exactly zero. These pair
+counts reuse 128 finite canonical facts and are not independent sample sizes.
+Single-record baselines in every pair group are also perfect in accuracy.
+
+The completed CLI resume path reuses cached outputs: prediction cache, result JSON
+and raw metric rows remain byte-identical. The original report is preserved as
+`report.initial.html`; the final renderer replaces its long binding JSON display
+with a concise table and expandable exact metrics. Reporting revisions use saved
+results only and do not change trained source snapshots or measured predictions.
+Verification receipts and report screenshots live in `runs/fact_grounding_v1/`.
+
+Twelve focused fact/run tests passed after the reporting revision. The final report
+passed structural and 1280x720 browser checks, including expanded examples, with no
+broken images or horizontal overflow. A separately written probability-space
+calculation reproduces all saved log-space binding probabilities within 1e-12;
+all checkpoint floats are finite. The complete original training source snapshot
+is intact and matches current training/scoring code. Only the renderer changed
+after the run; its distinct hash is recorded. To resume this historical pilot's
+training lifecycle, use its source version (`4fc07dd`), as required by strict resume
+identity. Current report regeneration needs no resume or inference:
+
+```bash
+python -c 'from pathwm.evaluation.report import render_report; render_report("runs/fact_grounding_v1/reference")'
+```
+
+Interpretation: this encoder architecture plus a directly supervised reader can
+learn these canonical facts and support a fixed exact-entity selector. This does
+not establish learned query binding, recurrent belief retention, old-checkpoint
+information, calibrated uncertainty or natural-language generalization. The next
+proposed comparison is the same simple factual task through the existing agent's
+event/reader path, using this successful control to identify where performance is
+lost. Memory compression and new losses should wait for that evidence.

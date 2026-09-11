@@ -226,8 +226,42 @@ def fact_inspection(directory):
     parts.append(
         f"<details><summary>Per-entity metrics and counts</summary><pre>{escape(json.dumps(data['per_entity'], indent=2))}</pre></details></section>"
     )
+    binding = data["binding"]
+    parts.append("<section><h2>Two-record binding reference</h2>")
+    if binding["status"] == "evaluated":
+        parts.append(
+            f"<p><strong>Binding gate: {'pass' if binding['gate'] else 'fail'}.</strong> "
+            f"Correct before and after location swaps: {binding['coherent_swap_success']:.1%}. "
+            "Each pair is queried for both entities; paired success requires both answers.</p>"
+        )
+        parts.append(
+            '<div class="table"><table><tr><th>Constituents</th><th>Pairs</th><th>Queries</th><th>Query accuracy</th><th>Paired success</th><th>Location NLL</th><th>Single-fact joint accuracy</th></tr>'
+        )
+        for name in ("seen", "mixed", "held_out"):
+            r = binding["groups"][name]
+            cells = [
+                {
+                    "seen": "Both seen",
+                    "mixed": "One held out",
+                    "held_out": "Both held out",
+                }[name],
+                r["pairs"],
+                r["queries"],
+                f"{r['accuracy']:.1%}",
+                f"{r['paired_success']:.1%}",
+                f"{r['nll']:.6g}",
+                f"{r['constituent_baseline']['factual_accuracy']:.1%}",
+            ]
+            parts.append(
+                "<tr>" + "".join(f"<td>{escape(str(c))}</td>" for c in cells) + "</tr>"
+            )
+        parts.append("</table></div>")
+    else:
+        parts.append(
+            "<p>Binding evaluation skipped because the extraction gates failed.</p>"
+        )
     parts.append(
-        f"<section><h2>Two-record binding reference</h2><pre>{escape(json.dumps(data['binding'], indent=2))}</pre><p>The selector is explicit and parameter-free. Pair-order invariance checks implementation, not learned binding. Swapped facts are grouped by their own training/development membership.</p></section>"
+        f"<p>The selector is explicit and parameter-free. Pair-order invariance checks implementation, not learned binding. Swapped facts are grouped by their own training/development membership. Pair counts reuse the same 128 canonical facts and are not independent samples.</p><details><summary>Exact binding metrics, constituent baselines and swaps</summary><pre>{escape(json.dumps(binding, indent=2))}</pre></details></section>"
     )
     parts.append(
         f"<section><h2>Held-out factual examples</h2><details><summary>All fixed development examples</summary><pre>{escape(json.dumps(data['examples'], indent=2))}</pre></details></section>"

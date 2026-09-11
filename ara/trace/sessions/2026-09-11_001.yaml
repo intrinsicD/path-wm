@@ -2,10 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T01:56+02:00
-  turn_count: 2
-  summary: Approved Claude export, reconciled two short reviews, implemented diagnostic and completed
-    one failed-gate CPU pilot; 79 tests and report QA pass.
+  last_turn: 2026-09-11T02:20+02:00
+  turn_count: 3
+  summary: Current/recent recall gates failed; direct fact and explicit binding controls now pass on one capped pilot;83 CPU tests, cached resume and final browser QA verified.
 events_logged:
 - turn: 1
   type: question
@@ -43,6 +42,30 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Source-fact/query-binding diagnosis proposed; cause unlocalized.
+- turn: 3
+  type: decision
+  id: N165
+  routing: direct
+  provenance: user
+  summary: Implement the fact/binding control with Claude and bounded iteration.
+- turn: 3
+  type: experiment
+  id: N166
+  routing: direct
+  provenance: ai-executed
+  summary: First direct-fact pilot passes extraction and fixed binding gates.
+- turn: 3
+  type: heuristic
+  id: H18
+  routing: crystallized
+  provenance: user-revised
+  summary: O116 adopted by implementation request; cause localization still open.
+- turn: 3
+  type: observation
+  id: O117
+  routing: staged
+  provenance: ai-suggested
+  summary: Successful canonical reference motivates existing event/reader-path comparison.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -64,6 +87,20 @@ ai_actions:
   - docs/recall-learning-plan.md
   - docs/project-state.md
   - docs/recall-task.md
+- turn: 3
+  action: Two concise actual Claude reviews; red commit6bfc66b and implementation4fc07dd;83 tests, one
+    direct check, one512-update pilot and cached resume. Improve binding report table,12 focused tests,
+    browser QA and independent saved-probability audit. No second training attempt.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/facts.py
+  - pathwm/evaluation/facts.py
+  - pathwm/evaluation/report.py
+  - experiments/multimodal.py
+  - tests/test_facts.py
+  - docs/fact-learning-plan.md
+  - docs/project-state.md
+  - docs/experiments.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -71,9 +108,11 @@ key_context:
     weekly limit.'
 - turn: 2
   excerpt: 'User: yes send it to claude. then implement your points'
+- turn: 3
+  excerpt: 'User: continue with claude. implement this, review, test, fix and iterate'
 open_threads:
-- 'O116: define one bounded source-fact/query-binding control; no new run launched.'
+- 'O117: compare the successful direct control with the existing agent event/reader path; not yet run.'
 - O101-O114 and earlier research questions remain referenced by 2026-09-10_001.yaml; local memory
   learning/marking/transfer remain conditional.
 ai_suggestions_pending:
-- 'O116: narrower factual-grounding/binding diagnosis after failed gates.'
+- 'O117: canonical-fact success does not establish learned recurrent binding; proposed next diagnostic remains unconfirmed.'

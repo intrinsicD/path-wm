@@ -768,3 +768,16 @@ entries:
     remaining review disagreement and no further review required.
   - No other staged topics have new closure; prior open threads remain referenced. Browser full-page
     stitching artifact was resolved with normal-viewport screenshots, without modifying raw results.
+
+- turn: 2026-09-11_001#3
+  notes:
+  - N165 captures explicit continuation/implementation authorization; O116 promotes to H18 by verbal affirmation
+    of the proposed control, not by a new capability claim.
+  - 'N166 records actual finite results. Stage O117: researcher has not yet commented on new results,
+    and no downstream recurrent-reader artifact depends on the interpretation.'
+  - Claude acknowledged swap failures cannot localize binding and selector probabilities need not be calibrated.
+    Adopt constituent baselines; reject mandatory soft selector weights as irrelevant. No conflict with
+    an adopted claim.
+  - Retain earlier open research topics by reference to prior sessions; no other closure signal or new
+    stale-status determination. One pilot passed, so predeclared conditional optimizer comparison was
+    unnecessary.

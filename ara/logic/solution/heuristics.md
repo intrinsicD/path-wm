@@ -165,3 +165,14 @@
 - **Code ref**: [recipe](../../../experiments/multimodal.py), [pilot plan](../../../docs/recall-learning-plan.md), [contract checks](../../../tests/test_recall.py).
 - **From staging**: O115
 - **Evidence of adoption/execution**: N163/N164; Alex explicitly approved the saved export and said to implement the proposed points. The failed pilot gates stop further model changes. O116 remains an unconfirmed interpretation.
+
+
+## H18: Establish direct factual grounding before diagnosing the recurrent reader
+
+- **Rationale**: After failed near-fact recall gates, test entity/location extraction and query selection in a finite supervised control before adding memory objectives. Nonzero gradients and finite weights alone do not identify a learning bottleneck.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **Sensitivity**: high; success of a new direct reader does not establish what the previous checkpoint encoded or where its recurrent path fails.
+- **Code ref**: [fact reader](../../../pathwm/models/facts.py), [recipe](../../../experiments/multimodal.py), [declared control](../../../docs/fact-learning-plan.md).
+- **From staging**: O116
+- **Evidence of adoption/execution**: N165/N166; Alex requested implementation/review/test/fix/iteration after the direct fact and competing-record control proposal. H17's earlier unconfirmed status for O116 is superseded here.

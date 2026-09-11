@@ -2712,3 +2712,39 @@ tree:
   also_depends_on:
   - N163
   status: resolved
+
+- id: N165
+  type: decision
+  title: Implement and iterate the direct fact and binding controls with Claude
+  provenance: user
+  timestamp: 2026-09-11T02:20+02:00
+  choice: Alex requested continuation with Claude, implementation, review, tests, fixes and iteration
+    on the proposed fact/binding diagnosis. Execute the bounded plan before further memory changes.
+  alternatives:
+  - Add memory losses before a successful extraction reference
+  - Reopen broad architecture review
+  evidence:
+  - docs/fact-learning-plan.md
+  - O116
+  also_depends_on:
+  - N164
+  status: resolved
+
+- id: N166
+  type: experiment
+  title: Direct fact extraction and fixed binding reference pass on the first capped run
+  provenance: ai-executed
+  timestamp: 2026-09-11T02:20+02:00
+  result: 'Seed23, 512 updates / 8192 presentations, 10.3502 active CPU seconds. All 96 train and 32 held-out
+    semantic combinations have correct entity/location predictions; held-out mean NLL0.211649. Fixed binding:
+    all11904 queries correct, including768 both-held-out queries/384 pairs; coherent swaps pass. 83 CPU
+    tests and12 post-renderer focused checks pass. Cached CLI resume unchanged; independent probability-space
+    audit agrees. No second pilot.'
+  evidence:
+  - ara/evidence/tables/fact_grounding_2026-09-11.json
+  - runs/fact_grounding_v1/reference/fact_results.json
+  - runs/fact_grounding_v1/reference/report.html
+  - runs/fact_grounding_v1/verification.json
+  also_depends_on:
+  - N165
+  status: resolved

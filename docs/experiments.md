@@ -10,6 +10,23 @@ to the same training loop. [Task contracts and evaluation](tasks.md).
 
 The following perception/dynamics recipes remain focused references.
 
+For the finite single-observation entity/location control, use the same recipe:
+
+```bash
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 python experiments/multimodal.py --dataset facts --check
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 python experiments/multimodal.py --dataset facts --output runs/my_fact_control
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 python experiments/multimodal.py --resume runs/my_fact_control
+```
+
+Activate the installed project environment first (this checkout provides
+`.venv/bin/python`). Facts defaults to 512 updates, seed 23, 96 training and 32
+held-out entity/location pairs, and a cumulative 450-second active CPU cap. It
+trains the text encoder and direct heads from scratch and evaluates the final
+checkpoint. Passing extraction gates enables an untrained two-record selector
+using cached predictions. The standalone report includes both stages; raw logits,
+split manifest, metrics and checkpoint remain beside it. Read the
+[declared plan and results](fact-learning-plan.md) for gates and interpretation.
+
 Start with `experiments/perception.py`. `build_model` shows the modules; `objective`
 shows exactly what is minimized. Copy the file for a new idea and edit it directly.
 Custom modules can live beside your recipe until they are useful enough to share.

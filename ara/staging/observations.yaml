@@ -2109,6 +2109,25 @@ observations:
   potential_type: heuristic
   bound_to:
   - N164
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H18
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O117
+  timestamp: 2026-09-11T02:20+02:00
+  provenance: ai-suggested
+  content: The freshly trained source encoder plus direct supervised heads and fixed exact-entity selector
+    provide a successful finite canonical-fact reference. Propose testing the same task through the existing
+    agent event/reader path next; do not infer learned recurrent binding or memory retention from this
+    success.
+  context: N166 passes predeclared gates on one seed. Pair counts reuse128 facts. No old-checkpoint probe,
+    natural-language variation, calibration, second pilot or new memory objective. Researcher has not
+    commented on these new results.
+  potential_type: heuristic
+  bound_to:
+  - N166
+  - N164
   promoted: false
   promoted_to: null
   crystallized_via: null
