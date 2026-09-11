@@ -245,6 +245,9 @@ def entity_inspection(directory):
         )
         if "shift_after" in data:
             parts.append(
+                f"<p>Clean-retention KL weight: {data.get('retention_weight', 0)}. Teacher consistency is not ground-truth correctness; all acceptance checks use held-out labels.</p>"
+            )
+            parts.append(
                 f"<section><h2>Matched continuation: {'noise mixture' if data['augmented'] else 'low-noise control'}</h2><p>Adaptation gate: {data['adaptation_passed']}. Compare each class at fixed threshold0.5. Exposure adaptation is not denoising or calibrated semantic relevance.</p>"
             )
             parts.append(

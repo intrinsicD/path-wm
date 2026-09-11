@@ -146,7 +146,9 @@ def test_gate_recipe_resume(tmp_path, monkeypatch, continuation):
     if continuation:
         gate_donor = tmp_path / "gate.pt"
         torch.save({"model": RelationWriteGate().state_dict()}, gate_donor)
-        kwargs = dict(gate_weights=gate_donor, augmented=True, replicate=1)
+        kwargs = dict(
+            gate_weights=gate_donor, augmented=True, replicate=1, retention=1.0
+        )
     train_entity_gate(donor, cell, key, output, **kwargs)
     raw = (output / "entity_gate.json").read_bytes()
     train_entity_gate(donor, cell, key, output, resume=True, **kwargs)
@@ -184,8 +186,9 @@ def test_replication_seed_contract():
 
 def test_retention_detaches_teacher_and_has_correct_direction():
     from pathwm.evaluation.entity_gate import gate_retention_loss
-    student = torch.tensor([.2,.8], requires_grad=True)
-    teacher = torch.tensor([.8,.2], requires_grad=True)
+
+    student = torch.tensor([0.2, 0.8], requires_grad=True)
+    teacher = torch.tensor([0.8, 0.2], requires_grad=True)
     loss = gate_retention_loss(student, teacher)
     loss.backward()
     assert teacher.grad is None

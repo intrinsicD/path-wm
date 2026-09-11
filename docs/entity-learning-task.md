@@ -1170,3 +1170,8 @@ Keep all prior adaptation/runtime/development guards. Retention comparison passe
 only if treatment passes those guards, clean runtime NLL is lower than control,
 and sigma0.60 accuracy loses<=2 points versus control. No coefficient search.
 Teacher consistency is not truth or calibration; errors may be preserved.
+
+Claude corrected its initial misunderstanding: held-out ground-truth labels, not
+teacher agreement, determine acceptance. Fixed coefficient sensitivity remains
+untested; no broader retention claim follows from this single setting.16 relevant
+tests pass including teacher detachment, noisy retention training and cached resume.

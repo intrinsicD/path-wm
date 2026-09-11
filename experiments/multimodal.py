@@ -2997,6 +2997,7 @@ def train_entity_gate(
     gate_weights=None,
     augmented=False,
     replicate=0,
+    retention=0.0,
 ):
     """Fit only context relevance through frozen source-selection loss."""
     from pathwm.models.entities import EntityMatchReader
@@ -3009,10 +3010,17 @@ def train_entity_gate(
         augmented_gate_examples,
         gate_shift_examples,
         score_gate_shift,
+        gate_retention_loss,
     )
 
     if augmented and gate_weights is None:
         raise ValueError("Augmentation requires a gate donor")
+    if not 0 <= retention <= 100 or (
+        retention and (gate_weights is None or not augmented)
+    ):
+        raise ValueError(
+            "Retention requires noisy continuation and a finite weight in [0,100]"
+        )
     continuation = gate_weights is not None
     replication_seed, offset = gate_replication_seeds(replicate)
     if replicate and not continuation:
@@ -3066,12 +3074,24 @@ def train_entity_gate(
     evaluation = gate_examples(
         families["evaluation"], 913 + offset if continuation else 703
     )
+    clean = (
+        augmented_gate_examples(families["train"], 911 + offset, False)
+        if continuation
+        else None
+    )
+    with torch.no_grad():
+        teacher = (
+            gate(clean["active"], clean["cue"]).detach().clone()
+            if continuation
+            else None
+        )
     optimizer = torch.optim.AdamW(gate.parameters(), lr=0.01, weight_decay=0.01)
     run = Run(
         output,
         settings=dict(
             seed=replication_seed if continuation else 61,
             entity_gate_replicate=replicate,
+            entity_gate_retain=retention,
             entity_gate_weights=str(gate_weights) if continuation else None,
             entity_gate_augment=augmented,
             initial_gate_sha256=initial_gate_sha256,
@@ -3114,12 +3134,28 @@ def train_entity_gate(
                 logits, _ = gate_logits(
                     gate, key, matcher, {k: v[ix] for k, v in train.items()}
                 )
-                loss = F.cross_entropy(logits, train["labels"][ix])
+                source_loss = F.cross_entropy(logits, train["labels"][ix])
+                retention_loss = (
+                    gate_retention_loss(
+                        gate(clean["active"][ix], clean["cue"][ix]), teacher[ix]
+                    )
+                    if continuation
+                    else source_loss.new_zeros(())
+                )
+                loss = source_loss + retention * retention_loss
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
                 run.step = step + 1
-                run.log(dict(step=run.step, split="train", loss=loss.item()))
+                run.log(
+                    dict(
+                        step=run.step,
+                        split="train",
+                        loss=loss.item(),
+                        source_loss=source_loss.item(),
+                        retention_loss=retention_loss.item(),
+                    )
+                )
             with torch.inference_mode():
                 logits, _ = gate_logits(gate, key, matcher, dev)
                 dev_scores = dict(
@@ -3133,6 +3169,7 @@ def train_entity_gate(
             if (state_hash(matcher), state_hash(cell), state_hash(key)) != before:
                 raise RuntimeError("Frozen relation consumers changed")
             result.update(
+                retention_weight=retention,
                 development=dev_scores,
                 gate_sha256=state_hash(gate),
                 evaluation={k: v.tolist() for k, v in evaluation.items()},
@@ -3847,6 +3884,7 @@ def main():
     )
     parser.add_argument("--entity-gate-shift", action="store_true")
     parser.add_argument("--entity-gate-weights", type=Path)
+    parser.add_argument("--entity-gate-retain", type=float, default=0.0)
     parser.add_argument("--entity-gate-replicate", type=int, default=0)
     parser.add_argument("--entity-gate-augment", action="store_true")
     parser.add_argument("--entity-gate", action="store_true")
@@ -3952,6 +3990,7 @@ def main():
                 gate_weights=args.entity_gate_weights,
                 augmented=args.entity_gate_augment,
                 replicate=args.entity_gate_replicate,
+                retention=args.entity_gate_retain,
             )
         )
         return

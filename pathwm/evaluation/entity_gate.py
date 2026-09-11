@@ -260,3 +260,13 @@ def augmented_gate_examples(families, seed, augmented):
         chunk["cue"] = F.normalize(prototypes + sigma * noise, dim=-1)
         chunks.append(chunk)
     return {k: torch.cat([c[k] for c in chunks]) for k in data}
+
+
+def gate_retention_loss(probability, teacher):
+    """Bernoulli KL from frozen teacher to current gate, averaged over examples."""
+    target = teacher.detach().clamp(1e-6, 1 - 1e-6)
+    current = probability.clamp(1e-6, 1 - 1e-6)
+    return (
+        target * (target.log() - current.log())
+        + (1 - target) * ((1 - target).log() - (1 - current).log())
+    ).mean()
