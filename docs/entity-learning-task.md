@@ -788,3 +788,28 @@ The present cell updates entities independently, so passing this slice alone doe
 not implement learned edges, concept discovery, visual identity or general graphs.
 Keep the deterministic idle rule scoped to this task; time passage in an evolving
 world can warrant belief changes even without observations.
+
+### Directed interaction plan
+
+Introduce a learned copy-state update receiving destination and source latents.
+Keep the successful no-information cell/readout and recognition frozen; train only
+an added interaction MLP. IDs route records but are not features. Relationship type
+and endpoints are supplied, not learned. Persistent observation accepts an optional
+known source ID with a zero feature vector, includes it in retry identity, stages
+recognition and state together, and preserves the source. Batch/runtime share the
+same interaction function. Reject absent sources and conflicting retry payloads;
+injected failures must leave the whole snapshot unchanged.
+
+Compare full source access with an identically initialized/trained source-zero
+control. One256-update seed41 run per arm, AdamW0.003, batch32,450 seconds each.
+Use immutable recognition and no-information donors. Train32 descriptor families
+seed301, develop16 seed302; independent middle-history seeds311/312. Each family
+contains16 balanced initial-state/direction/post-toggle variants. Frozen evaluation
+uses16 fresh families seed303, history seed313: reference, swapped roles,31 inserted
+idle steps and a second copy using the first updated entity as source. Models see
+no answer or raw identity label. Fixed full-model gates: pair accuracy>=95%, NLL<=0.15,
+runtime accuracy>=95%, all retries/restores and existing latent agreement tolerance.
+The source-zero control should remain<=60% reference pair accuracy. Counterfactual
+source changes must affect destination answers, with source latents unchanged.
+Record any held-out-composition failure without tuning. These correlated variants
+are a bounded interaction diagnostic, not evidence of learned graph structure.
