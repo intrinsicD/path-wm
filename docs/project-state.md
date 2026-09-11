@@ -1,5 +1,12 @@
 # Current work
 
+**Source-local diagnosis complete, 11 September:** of32 drift source records,14
+never reached an eligible all-new-feedback block,10 reached checks but stayed below
+threshold,8 reset. This separates check availability from threshold outcomes; it
+does not establish a repair.9 source tests, resume and independent full-feedback
+reconstruction pass; original artifacts unchanged. [Report](../runs/entity_source_diagnosis_v1/reference/report.html)
+structural-only. Next proposal: matched-budget feedback coverage with detector fixed.
+
 **Variance-aware forgetting fails adaptation margin, 11 September:** development
 selects z2; held-out static resets4/16 meet25% (matched fixed-trigger8/16). Late
 drift utility0.731096 beats cumulative0.722993 by0.008103, below required0.01.

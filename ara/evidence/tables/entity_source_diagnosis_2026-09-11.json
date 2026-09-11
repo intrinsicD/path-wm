@@ -1,0 +1,26 @@
+{
+  "summary": {
+    "drift": {
+      "eligible_below_threshold": 10,
+      "no_completed_block": 10,
+      "no_eligible_pure_block": 4,
+      "reset": 8
+    },
+    "static": {
+      "eligible_below_threshold": 12,
+      "no_completed_block": 11,
+      "no_eligible_pure_block": 5,
+      "reset": 4
+    }
+  },
+  "independent_full_feedback_reconstruction": true,
+  "source_artifacts_unchanged": true,
+  "cached_resume": true,
+  "browser_checked": false,
+  "report_validation": "structural_only_prior_policy_denial",
+  "sha256": {
+    "entity_source_diagnosis.json": "4bee1dd9130b99e425bca3276ca1137fe3a6e9a799719d1d8db29ca905686c8d",
+    "report.html": "54f9be5a747aab236cf2babe3e7ea2ba087c24db6487650a16e656080ca27916",
+    "last.pt": "0d65d15021c267233b0d347d4530f4f390bff06421377b791346244db9049c4d"
+  }
+}

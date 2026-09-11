@@ -1141,3 +1141,10 @@ entries:
   - Preserve adaptation failure; empirical variance threshold is not a confidence
     guarantee.
   - Stage O154 diagnostic decomposition; no new detector tuning or reliability model.
+
+- turn: 2026-09-11_001#50
+  notes:
+  - Promote O154 diagnostic method; no repair or policy-quality claim.
+  - Independent full-feedback reconstruction agrees; mixed blocks are retained in
+    diagnosis.
+  - Stage O155 matched-budget coverage; no automatic threshold tuning.

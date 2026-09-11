@@ -103,3 +103,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Triggered forgetting](tables/entity_source_change_2026-09-11.json): N231; utility criteria pass but static false-reset guard fails.
 
 - [Variance-aware forgetting](tables/entity_source_uncertainty_2026-09-11.json): N232; static reset guard passes but adaptation margin fails.
+
+- [Source trace diagnosis](tables/entity_source_diagnosis_2026-09-11.json): N233; availability versus below-threshold checks, no capability claim.

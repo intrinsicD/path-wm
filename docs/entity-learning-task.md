@@ -1522,3 +1522,18 @@ utility claim. Rule parameters remain in source snapshots and source/version has
 in the diagnostic manifest. Receipts: `source-diagnosis{,-reconcile}` under the
 existing public-only review directory. Recipe smoke exposed missing Run seed metadata;
 fixed to seed0 (no sampling) and added source-checkpoint identity before formal use.
+
+Diagnosis result (5e1c2b2): integrity passes; no capability repair claimed. Among32
+source records in drift:8 reset,10 had eligible pure blocks below threshold,10 had
+no completed block,4 completed blocks but no eligible pure block. Static:4/12/11/5
+respectively. Drift acquired feedback per source ranges6..110;22 mixed checks and23
+eligible pure checks. These are source-level counts, not world-level detection rates.
+All reconstructed checks match recorded resets.9 source tests including recipe/resume
+pass; independent reconstruction from full calibration+selected feedback agrees with
+all gaps, thresholds and categories. Source JSON/checkpoint/report hashes unchanged.
+Own report structural-only. Evidence `runs/entity_source_diagnosis_v1/verification.json`.
+Callable recipe: `from experiments.multimodal import diagnose_entity_sources;
+diagnose_entity_sources(SOURCE_DIR, OUTPUT_DIR)`; cached resume uses `resume=True`.
+Next proposal: test feedback coverage under matched acquisition budgets while holding
+the detector fixed. Existing traces do not establish that this improves utility;
+retain static false-reset and cost guards in any fresh comparison.

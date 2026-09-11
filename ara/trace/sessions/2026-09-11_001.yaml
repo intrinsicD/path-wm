@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T17:17+02:00
-  turn_count: 49
-  summary: "Variance-aware forgetting meets static reset guard but fails adaptation margin;29 distinct relevant tests, resume and replay pass."
+  last_turn: 2026-09-11T17:24+02:00
+  turn_count: 50
+  summary: "Source diagnosis separates check availability from threshold outcomes;9 source tests, resume and independent reconstruction pass."
 events_logged:
 - turn: 1
   type: question
@@ -882,6 +882,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Missed/late change diagnosis proposed.
+- turn: 50
+  type: experiment
+  id: N233
+  routing: direct
+  provenance: ai-executed
+  summary: Feedback availability versus threshold outcomes reconstructed.
+- turn: 50
+  type: observation
+  id: O154
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Diagnostic method promoted to H46 by implementation.
+- turn: 50
+  type: observation
+  id: O155
+  routing: staged
+  provenance: ai-suggested
+  summary: Matched-budget feedback coverage proposed.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1231,6 +1249,14 @@ ai_actions:
   - pathwm/evaluation/source_choice.py
   - experiments/multimodal.py
   - pathwm/evaluation/report.py
+- turn: 50
+  action: Two Claude reviews; implemented diagnostic; fixed missing Run seed;9 source
+    tests, saved-run analysis/resume and independent reconstruction.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/evaluation/source_choice.py
+  - experiments/multimodal.py
+  - pathwm/evaluation/report.py
 claims_touched: []
 key_context:
 - turn: 1
@@ -1262,7 +1288,7 @@ key_context:
 - turn: 25
   excerpt: "User: continue with claude. implement this, review, test, fix and iterate"
 open_threads:
-- "O154: diagnose missed/late source changes before another detector alteration."
+- "O155: test matched-budget feedback coverage with detector fixed."
 - "Reliability proposal O149: define frozen correctness labels and matched-confidence comparison before implementation."
 - "O141: learned relation-update gating remains proposed; remembered-key addressing O140 is implemented."
 - O132: persistent allocation/revisit behavior remains proposed.

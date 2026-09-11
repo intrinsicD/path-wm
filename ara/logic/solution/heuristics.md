@@ -443,3 +443,13 @@
 - **Sensitivity**: Eight development worlds and adaptive feedback offer no statistical error guarantee. Present candidate fails the adaptation criterion.
 - **Code ref**: [selection](../../../pathwm/evaluation/source_choice.py), [variance threshold](../../../pathwm/models/source_choice.py).
 - **Evidence**: [failed full screen](../../evidence/tables/entity_source_uncertainty_2026-09-11.json).
+
+## H46: Separate missing feedback checks from below-threshold outcomes
+
+- **Rationale**: Reconstruct each source block and preserve mixed versus pure feedback tags before interpreting missed resets. Include unselected sources.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O154
+- **Sensitivity**: Descriptive availability categories are not causal evidence of utility benefit. Older comparator can include calibration.
+- **Code ref**: [diagnostic](../../../pathwm/evaluation/source_choice.py).
+- **Evidence**: [trace verification](../../evidence/tables/entity_source_diagnosis_2026-09-11.json).

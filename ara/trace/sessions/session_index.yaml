@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Variance-aware forgetting meets static reset guard but fails adaptation margin;29 distinct relevant tests, resume and replay pass."
-  turn_count: 49
-  events_count: 141
+  summary: "Source diagnosis separates check availability from threshold outcomes;9 source tests, resume and independent reconstruction pass."
+  turn_count: 50
+  events_count: 144
   claims_touched: []
   open_threads: 15

@@ -3592,3 +3592,18 @@ tree:
   also_depends_on:
   - N231
   status: resolved
+
+- id: N233
+  type: experiment
+  title: Source feedback availability and threshold outcomes separated
+  provenance: ai-executed
+  timestamp: 2026-09-11T17:24+02:00
+  result: 32 drift source records:8 reset,10 eligible below threshold,10 no completed
+    block,4 no eligible pure block.9 source tests, resume and independent reconstruction
+    pass; source artifacts unchanged.
+  evidence:
+  - ara/evidence/tables/entity_source_diagnosis_2026-09-11.json
+  - git:5e1c2b2
+  also_depends_on:
+  - N232
+  status: resolved
