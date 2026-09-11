@@ -86,6 +86,8 @@ from pathwm.evaluation.recall import (
     recall_metrics,
     confidence_diagnostics,
 )
+from pathwm.models.facts import FactReader
+from pathwm.evaluation.facts import fact_metrics, extraction_gates, binding_reference
 
 
 def build_model(
@@ -101,7 +103,10 @@ def build_model(
     memory_block=8,
     memory_blocks=16,
     recall=False,
+    facts=False,
 ):
+    if facts:
+        return FactReader(width)
     if state_model not in ("gaussian", "belief"):
         raise ValueError("Unknown state model")
     factory = BeliefAgent if state_model == "belief" else MultimodalAgent
@@ -191,6 +196,159 @@ def retention_tiers(length, recent, block, blocks):
         compressed=[x for b in compressed for x in b],
         consolidated=consolidated,
     )
+
+
+class FactExamples:
+    """Finite semantic-pair split; labels never enter the model forward call."""
+
+    def __init__(self, split, count):
+        if split not in ("train", "validation"):
+            raise ValueError("Fact control uses train/development only")
+        self.split = split
+        pairs = [
+            (e, loc)
+            for e in range(32)
+            for loc in range(4)
+            if ((e + loc) % 4 == 0) == (split == "validation")
+        ]
+        if count != len(pairs):
+            raise ValueError(
+                "Fact control requires exactly 96 train and 32 development pairs"
+            )
+        self.entities, self.locations = map(list, zip(*pairs))
+        self.texts = [SeenRecord(1, e, loc).text for e, loc in pairs]
+        self.manifest = [
+            dict(entity=e, location=loc, text=t)
+            for (e, loc), t in zip(pairs, self.texts)
+        ]
+        self.cohorts = self.groups = [split] * len(pairs)
+        self.identity = dict(
+            dataset="direct_facts_v1",
+            split=split,
+            count=count,
+            rule="development iff (entity+location)%4==0",
+            sha256=digest(self.manifest),
+            episode_sha256=[digest(x) for x in pairs],
+        )
+
+    def __len__(self):
+        return len(self.entities)
+
+    def batch(self, indices, device="cpu"):
+        if any(not 0 <= int(i) < len(self) for i in indices):
+            raise ValueError("Fact example index out of bounds")
+        ids, valid = bytes_batch([self.texts[int(i)] for i in indices], device)
+        return dict(
+            fact_observation=Observation(
+                ids, torch.zeros_like(ids, dtype=torch.float64), valid
+            ),
+            entities=torch.tensor(
+                [self.entities[int(i)] for i in indices], device=device
+            ),
+            locations=torch.tensor(
+                [self.locations[int(i)] for i in indices], device=device
+            ),
+        )
+
+
+@torch.no_grad()
+def fact_predictions(model, data, settings, *, deadline=None):
+    outputs = []
+    with evaluation_mode(model):
+        for start in range(0, len(data), settings["batch_size"]):
+            if deadline is not None and perf_counter() >= deadline:
+                raise TimeoutError("Fact diagnostic active-time budget exhausted")
+            batch = data.batch(
+                range(start, min(start + settings["batch_size"], len(data))),
+                settings["device"],
+            )
+            entity, location = model(batch["fact_observation"])
+            outputs.append((entity.cpu(), location.cpu()))
+    return dict(
+        entity_logits=torch.cat([x[0] for x in outputs]),
+        location_logits=torch.cat([x[1] for x in outputs]),
+        entities=torch.tensor(data.entities),
+        locations=torch.tensor(data.locations),
+    )
+
+
+@torch.no_grad()
+def finish_facts(run, learner, training, validation, settings, deadline):
+    identity = dict(
+        model_sha256=state_hash(learner.agent),
+        final_step=run.step,
+        train=training.identity,
+        development=validation.identity,
+    )
+    path = run.path / "fact_predictions.pt"
+    if path.exists():
+        cache = torch.load(path, map_location="cpu", weights_only=True)
+        if (
+            cache.get("identity") != identity
+            or cache.get("schema") != "pathwm-fact-predictions-v1"
+        ):
+            raise ValueError(
+                "Fact prediction cache does not match final checkpoint/splits"
+            )
+    else:
+        cache = dict(
+            schema="pathwm-fact-predictions-v1",
+            identity=identity,
+            train=fact_predictions(
+                learner.agent, training, settings, deadline=deadline
+            ),
+            development=fact_predictions(
+                learner.agent, validation, settings, deadline=deadline
+            ),
+        )
+        temporary = path.with_suffix(".partial")
+        torch.save(cache, temporary)
+        temporary.replace(path)
+    views = {name: fact_metrics(**cache[name]) for name in ("train", "development")}
+    gates = extraction_gates(views["train"], views["development"])
+    binding = dict(status="skipped_failed_extraction_gate")
+    if gates["extraction"]:
+        combined = {
+            k: torch.cat([cache[s][k] for s in ("train", "development")])
+            for k in cache["train"]
+        }
+        binding, raw = binding_reference(**combined)
+        temporary = run.path / "binding_predictions.partial"
+        torch.save(raw, temporary)
+        temporary.replace(run.path / "binding_predictions.pt")
+    per_entity = {}
+    for name in ("train", "development"):
+        rows = cache[name]
+        per_entity[name] = {
+            str(e): fact_metrics(
+                **{k: v[rows["entities"] == e] for k, v in rows.items()}
+            )
+            for e in range(32)
+        }
+    examples = [
+        dict(
+            **record,
+            predicted_entity=int(cache["development"]["entity_logits"][i].argmax()),
+            predicted_location=int(cache["development"]["location_logits"][i].argmax()),
+        )
+        for i, record in enumerate(validation.manifest)
+    ]
+    atomic_json(
+        run.path / "fact_results.json",
+        dict(
+            schema="pathwm-fact-results-v1",
+            **identity,
+            views=views,
+            gates=gates,
+            per_entity=per_entity,
+            binding=binding,
+            examples=examples,
+            scope="Same encoder architecture trained from scratch; direct extraction and an explicit binding reference. No recurrent model, calibration or final test.",
+        ),
+    )
+    if not any(r["split"] == "diagnostic_development" for r in run.rows):
+        for name, values in views.items():
+            run.log(dict(step=run.step, split=f"diagnostic_{name}", **values))
 
 
 class RecallEpisodes:
@@ -1507,6 +1665,14 @@ def belief_objective(learner, batch, history, horizon, dropout):
 
 
 def objective(learner, batch, history=2, horizon=2, dropout=0.0):
+    if "fact_observation" in batch:
+        entity, location = learner.agent(batch["fact_observation"])
+        entity_loss = F.cross_entropy(entity, batch["entities"], reduction="none")
+        location_loss = F.cross_entropy(location, batch["locations"], reduction="none")
+        losses = dict(
+            entity_nll=0.5 * entity_loss.mean(), location_nll=0.5 * location_loss.mean()
+        )
+        return losses, (0.5 * (entity_loss + location_loss)).detach(), {}
     if "recall_inputs" in batch:
         return recall_objective(learner, batch)
     if isinstance(learner.agent, BeliefAgent):
@@ -1598,7 +1764,7 @@ def update(learner, optimizer, data, indices, settings):
         trainable_parameters(learner), 1.0, error_if_nonfinite=True
     )
     optimizer.step()
-    if not isinstance(data, RecallEpisodes):
+    if not isinstance(data, (RecallEpisodes, FactExamples)):
         learner.update_target(settings["ema_decay"])
     with torch.no_grad():
         # Duplicate sampled indices are deliberately averaged, independently of order.
@@ -1666,6 +1832,10 @@ def evaluate(learner, data, settings):
 
 
 def make_data(settings, split):
+    if settings["dataset"] == "facts":
+        return FactExamples(
+            split, settings.get(f"{split}_windows", 96 if split == "train" else 32)
+        )
     if settings["dataset"] == "recall":
         return RecallEpisodes(
             split=split,
@@ -1720,6 +1890,7 @@ def check(settings):
             memory_block=settings.get("memory_block", 8),
             memory_blocks=settings.get("memory_blocks", 16),
             recall=settings["dataset"] == "recall",
+            facts=settings["dataset"] == "facts",
         ),
         len(data),
     ).to(settings["device"])
@@ -1820,7 +1991,7 @@ def save_task_example(run, model, data, settings):
 
 @torch.no_grad()
 def save_examples(run, learner, data, settings):
-    if isinstance(data, RecallEpisodes):
+    if isinstance(data, (RecallEpisodes, FactExamples)):
         return write_report(run.path)
     with evaluation_mode(learner):
         model = learner.agent
@@ -1989,13 +2160,18 @@ def save_examples(run, learner, data, settings):
 
 def train(settings, output, *, resume=False, stop_after=None):
     is_recall = settings["dataset"] == "recall"
-    diagnostic = is_recall and settings.get("recall_mode") == "current-recent"
+    is_facts = settings["dataset"] == "facts"
+    diagnostic = is_facts or (
+        is_recall and settings.get("recall_mode") == "current-recent"
+    )
+    if is_facts and (settings["improve_every"] or settings["device"] != "cpu"):
+        raise ValueError("Fact diagnostic requires CPU and no extra-update gate")
     if diagnostic and (
         not np.isfinite(settings.get("max_seconds", 900.0))
         or settings.get("max_seconds", 900.0) <= 0
     ):
         raise ValueError(
-            "Recall diagnostic requires a positive finite active-time budget"
+            "Diagnostic requires a positive finite active-time budget"
         )
     if is_recall and (
         settings.get("state_model") != "belief" or settings["improve_every"]
@@ -2018,6 +2194,7 @@ def train(settings, output, *, resume=False, stop_after=None):
             memory_block=settings.get("memory_block", 8),
             memory_blocks=settings.get("memory_blocks", 16),
             recall=is_recall,
+            facts=is_facts,
         ),
         len(training),
         diagnostic=diagnostic,
@@ -2050,7 +2227,8 @@ def train(settings, output, *, resume=False, stop_after=None):
     elapsed = float(learner.diagnostic_elapsed_seconds) if diagnostic else 0.0
     if diagnostic and not resume:
         atomic_json(
-            run.path / "recall_diagnostic_manifest.json",
+            run.path
+            / ("fact_manifest.json" if is_facts else "recall_diagnostic_manifest.json"),
             {
                 split: dict(
                     episodes=data.manifest, cohorts=data.cohorts, groups=data.groups
@@ -2075,10 +2253,20 @@ def train(settings, output, *, resume=False, stop_after=None):
             deadline += overhead
 
     def training_probe():
-        logits, labels, examples = recall_predictions(
-            learner.agent, training, settings, deadline=deadline
-        )
-        view = diagnostic_metrics(logits, labels, examples, settings)
+        if is_facts:
+            view = dict(
+                overall=fact_metrics(
+                    **fact_predictions(
+                        learner.agent, training, settings, deadline=deadline
+                    )
+                ),
+                groups={},
+            )
+        else:
+            logits, labels, examples = recall_predictions(
+                learner.agent, training, settings, deadline=deadline
+            )
+            view = diagnostic_metrics(logits, labels, examples, settings)
         run.log(
             dict(
                 step=run.step,
@@ -2097,7 +2285,7 @@ def train(settings, output, *, resume=False, stop_after=None):
         )
 
     def sample():
-        if is_recall:
+        if is_recall or is_facts:
             return run.sample(len(training), settings["batch_size"])
         probabilities = replay_probabilities(learner.replay_errors.cpu())
         return torch.multinomial(
@@ -2135,7 +2323,7 @@ def train(settings, output, *, resume=False, stop_after=None):
         )
         for step in range(run.step + 1, end + 1):
             if diagnostic and perf_counter() >= deadline:
-                raise TimeoutError("Recall diagnostic active-time budget exhausted")
+                raise TimeoutError("Diagnostic active-time budget exhausted")
             metrics = update(learner, optimizer, training, sample(), settings)
             run.step = step
             run.log(
@@ -2205,9 +2393,8 @@ def train(settings, output, *, resume=False, stop_after=None):
             save_progress()
         result = "completed" if run.step == settings["steps"] else "paused"
         if diagnostic and result == "completed":
-            finish_recall_diagnostic(
-                run, learner, training, validation, settings, deadline
-            )
+            finish_diagnostic = finish_facts if is_facts else finish_recall_diagnostic
+            finish_diagnostic(run, learner, training, validation, settings, deadline)
             save_progress()
         elif is_recall and result == "completed":
             finish_recall(run, learner, calibration, test, settings)
@@ -2410,7 +2597,7 @@ def main():
     parser.add_argument("--stop-after", type=int)
     parser.add_argument(
         "--dataset",
-        choices=["synthetic", "instructions", "pusht", "recall"],
+        choices=["synthetic", "instructions", "pusht", "recall", "facts"],
         default="synthetic",
     )
     parser.add_argument(
@@ -2426,7 +2613,7 @@ def main():
         "--max-seconds",
         type=float,
         default=0.0,
-        help="Cumulative active-time cap for the recall diagnostic only",
+        help="Cumulative active-time cap for recall or direct fact diagnostics",
     )
     parser.add_argument(
         "--recall-truncate",
@@ -2470,9 +2657,36 @@ def main():
     if args.diagram_depth < 0:
         parser.error("Diagram depth must be nonnegative")
     args = resume_arguments(parser, args)
-    diagnostic = args.dataset == "recall" and args.recall_mode == "current-recent"
+    diagnostic = args.dataset == "facts" or (
+        args.dataset == "recall" and args.recall_mode == "current-recent"
+    )
     if args.recall_mode != "history" and args.dataset != "recall":
         parser.error("--recall-mode requires --dataset recall")
+    if args.dataset == "facts":
+        import sys
+
+        supplied = {
+            arg.split("=", 1)[0] for arg in sys.argv[1:] if arg.startswith("--")
+        }
+        if args.resume is None:
+            for name, value in (
+                ("history", 1),
+                ("horizon", 1),
+                ("train_windows", 96),
+                ("validation_windows", 32),
+                ("steps", 512),
+                ("batch_size", 16),
+                ("evaluate_every", 32),
+                ("seed", 23),
+                ("improve_every", 0),
+                ("max_seconds", 450.0),
+            ):
+                if "--" + name.replace("_", "-") not in supplied:
+                    setattr(args, name, value)
+        if args.device != "cpu" or args.improve_every or args.max_seconds <= 0:
+            parser.error(
+                "Facts require CPU, improve-every 0 and a positive active-time cap"
+            )
     if (
         not np.isfinite(args.max_seconds)
         or args.max_seconds < 0
@@ -2610,6 +2824,13 @@ def main():
                 objective="all-query factual CE + text/source grounding and split categorical KL; final checkpoint; train/development diagnostic only; no calibration",
                 purpose="diagnostic",
             )
+    if args.dataset == "facts":
+        settings.update(
+            purpose="diagnostic",
+            objective="equal-weight entity/location CE from one observation; end-to-end source encoder; final checkpoint only",
+            proposal_budget="none",
+            time_unit="single observation at neutral time zero",
+        )
     if args.check:
         print(json.dumps(check(settings), indent=2))
     else:

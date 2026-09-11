@@ -74,3 +74,10 @@ The first review requested a fixed selector and finer-grained held-out metrics;
 these are included above. Its suggestion that a single failed swap localizes the
 cause is too strong: entity recognition, location extraction and selection remain
 possible sources. Review agreement is not empirical validation.
+
+The follow-up acknowledged both the swap-localization correction and the heuristic
+selector interpretation. Adopt its request for per-constituent single-record
+accuracy beside pair results, so recognition errors remain visible in each group.
+Reject its request to avoid near-hard selector weights: confident selection of the
+correct record is valid and no soft-mixing behavior is required by this task.
+No unresolved review disagreement changes the declared gates or compute budget.

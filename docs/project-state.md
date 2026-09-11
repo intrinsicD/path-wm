@@ -1,5 +1,11 @@
 # Current work
 
+**Active slice, 11 September:** implement and test the
+[direct fact extraction and binding controls](fact-learning-plan.md) in the same
+recipe (`--dataset facts`). Alex authorized implementation, actual Claude review,
+testing, fixes and bounded iteration. Two brief conceptual reviews are complete;
+local checks and the predeclared CPU pilots follow.
+
 **Current slice complete, 11 September:** the
 [current/recent factual recall diagnostic](recall-learning-plan.md) is implemented
 in the same recipe (`--dataset recall --recall-mode current-recent`). Actual Claude

@@ -194,6 +194,47 @@ def model_inspection(directory):
     return parts
 
 
+def fact_inspection(directory):
+    path = directory / "fact_results.json"
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text())
+    parts = [
+        "<section><h2>Direct fact extraction</h2>",
+        f"<p><strong>Extraction gates: {'pass' if data['gates']['extraction'] else 'fail'}.</strong> "
+        f"Final update {data['final_step']}. Entity, location and joint accuracy are scored separately.</p>",
+        f"<p>{escape(data['scope'])}</p>",
+        '<div class="table"><table><tr><th>Population</th><th>N</th><th>Entity accuracy</th><th>Location accuracy</th><th>Joint accuracy</th><th>Entity NLL</th><th>Location NLL</th></tr>',
+    ]
+    for name, r in data["views"].items():
+        cells = [
+            name,
+            r["examples"],
+            *[
+                f"{r[k]:.1%}"
+                for k in ("entity_accuracy", "location_accuracy", "factual_accuracy")
+            ],
+            f"{r['entity_nll']:.6g}",
+            f"{r['location_nll']:.6g}",
+        ]
+        parts.append(
+            "<tr>" + "".join(f"<td>{escape(str(c))}</td>" for c in cells) + "</tr>"
+        )
+    parts.append(
+        "</table></div><p>Development holds out entity/location combinations, while every entity and location appears in training. Canonical text only.</p>"
+    )
+    parts.append(
+        f"<details><summary>Per-entity metrics and counts</summary><pre>{escape(json.dumps(data['per_entity'], indent=2))}</pre></details></section>"
+    )
+    parts.append(
+        f"<section><h2>Two-record binding reference</h2><pre>{escape(json.dumps(data['binding'], indent=2))}</pre><p>The selector is explicit and parameter-free. Pair-order invariance checks implementation, not learned binding. Swapped facts are grouped by their own training/development membership.</p></section>"
+    )
+    parts.append(
+        f"<section><h2>Held-out factual examples</h2><details><summary>All fixed development examples</summary><pre>{escape(json.dumps(data['examples'], indent=2))}</pre></details></section>"
+    )
+    return parts
+
+
 def recall_diagnostic_inspection(directory):
     path = directory / "recall_diagnostic.json"
     if not path.exists():
@@ -481,6 +522,7 @@ def render_report(directory):
             np.savez_compressed(directory / "pca_axes.npz", **axes)
     parts.extend(recall_inspection(directory))
     parts.extend(recall_diagnostic_inspection(directory))
+    parts.extend(fact_inspection(directory))
     parts.extend(model_inspection(directory))
     for title, data in [
         ("Resolved settings and source identities", record),
