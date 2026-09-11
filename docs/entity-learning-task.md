@@ -487,3 +487,16 @@ Verification: the full collected regression suite passed (108 tests), followed b
 coverage of all four lifecycle tests including the added atomic-file/failure case
 (109 distinct tests overall). Ruff and whitespace checks pass. Implementation commit
 `7180e2d`; red contract commit `69f9191`. No extra model training consumed the budget.
+
+### Frozen growing-memory screen (predeclared)
+
+Use the existing novelty checkpoint unchanged. Seed61; 32 independent descriptor
+families, each shared across capacities1,2,4,8. Generate nine random unit 8D descriptors
+with pairwise distance>=0.9, at most10000 proposals per family. Introduce the first N,
+revisit them in reverse order with normalized additive noise of norm0.05, then present
+the ninth descriptor as overflow. Fixed threshold0.75. Per capacity require >=95%
+correct allocations, stable-ID revisits and capacity deferrals; uncertainty is a miss.
+Require exact retry and mid-episode snapshot continuation equality on every episode.
+Record all inputs/receipts, separated family dependence and donor/source identities.
+No training, sweep, calibration or graph-learning claim. CPU evaluation budget60s,
+excluding report generation. Implement in the existing recipe/report pipeline.
