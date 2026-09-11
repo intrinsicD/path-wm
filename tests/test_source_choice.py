@@ -85,3 +85,26 @@ def test_drift_feedback_timing_and_resume(tmp_path):
                 assert event["feedback"] is not None
     evaluate_entity_source_drift(donor, output, resume=True)
     assert (output / "entity_source_drift.json").read_bytes() == raw
+
+
+def test_triggered_forgetting_is_evidence_driven_and_source_local():
+    policy = SourceChoice(change_block=4)
+    for _ in range(8):
+        policy.observe(0, 0.5)
+    assert policy.snapshot()["resets"] == [0, 0]
+    policy.observe(1, 0.8)
+    before_other = policy.snapshot()["counts"][1]
+    for _ in range(3):
+        policy.observe(0, -0.5)
+    assert policy.snapshot()["resets"] == [0, 0]
+    policy.observe(0, -0.5)
+    state = policy.snapshot()
+    assert state["resets"] == [1, 0]
+    assert state["counts"] == [4, before_other]
+    assert state["sums"][0] == -2
+    assert policy.choose() == 1
+    with pytest.raises(ValueError):
+        policy.observe(0, float("nan"))
+    assert policy.snapshot() == state
+    with pytest.raises(ValueError):
+        SourceChoice(window=4, change_block=4)

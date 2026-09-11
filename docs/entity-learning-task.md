@@ -1409,3 +1409,24 @@ GATE.pt --output DIR`; cached resume `--resume DIR`.
 Next candidate: evidence-triggered forgetting/change tests before discarding older
 source outcomes; explicit false-alarm/static-source criteria and feedback cost.
 This is proposed, not an implemented learned detector or reliable repair.
+
+### Evidence-triggered forgetting (2026-09-11)
+
+Hypothesis: retain cumulative source outcomes until a fixed change check warrants
+forgetting, reducing the stationary cost of unconditional recency. Extend existing
+source-drift recipe with a triggered policy; retain frozen/cumulative/window and
+no-feedback controls. For each source check disjoint blocks of32 selected rewards
+against all earlier retained outcomes (at least32); absolute mean difference>=0.15
+resets values to the latest block. Operate throughout calibration and evaluation;
+no change signal, label-dependent exploration or reset at evaluation boundary.
+This is an engineered heuristic, not a calibrated statistical test or learned detector.
+Fresh16 worlds1801..1816, innovations2801..2816, exploration3801..3816; same512/256
+cases, silent swap/static pairing, epsilon0.2, acquisition0.05 and feedback0.005.
+Acceptance: triggered late drift utility>=frozen+0.01 and cumulative+0.01;
+whole drift>=frozen−0.01, static>=frozen−0.02; at most25% of static episodes
+have any post-calibration reset. Report calibration resets separately, early/late
+utility and reset counts. Thresholds fixed before run; no adjustment after results.
+30CPU seconds, frozen original gate, structural report QA under browser restriction.
+Tests: unchanged and changed feedback streams, block boundaries, source isolation,
+invalid feedback rollback, action-before-feedback and cached resume. Source changes
+committed before formal evaluation; existing completed artifacts remain untouched.
