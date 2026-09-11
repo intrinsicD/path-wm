@@ -3112,3 +3112,40 @@ tree:
   - N191
   - N190
   status: resolved
+
+- id: N193
+  type: decision
+  title: Continue learned association under bounded descriptor variation
+  provenance: user
+  timestamp: 2026-09-11T12:28+02:00
+  choice: Continue implementation and Claude review; first isolate bounded descriptor variation before
+    new-entity allocation.
+  evidence:
+  - docs/entity-learning-task.md
+  status: resolved
+- id: N194
+  type: experiment
+  title: Bounded-variation training passes entity gates
+  provenance: ai-executed
+  timestamp: 2026-09-11T12:28+02:00
+  result: One 256-update alpha0.2 run; all development gates pass, identifiable task and matching accuracy100
+    percent. 102 tests pass. All768 oracle targets, perturbation norm bound, reference initialization,
+    zero-noise compatibility, raw scores, exact resume and all8 reorderings verified. New-entity allocation
+    remains unimplemented.
+  evidence:
+  - ara/evidence/tables/entity_variation_2026-09-11.json
+  also_depends_on:
+  - N193
+  - N192
+  status: resolved
+- id: N195
+  type: question
+  title: Claude reconciliation requires payload-specific approval
+  provenance: ai-executed
+  timestamp: 2026-09-11T12:28+02:00
+  description: First Claude review completed. Automatic approval review rejected the prepared public-only
+    follow-up before execution, citing insufficient payload-specific authorization. Do not claim acknowledgment
+    or bypass the rejection; ask user about the exact prepared brief after local work.
+  evidence:
+  - runs/reviews/continuation_2026-09-11/entity-variation-reconcile-blocked.json
+  status: open

@@ -943,3 +943,10 @@ entries:
     graph capability.
   - O130 includes controlled feature variation, which remains untested; do not promote the entire proposal
     on partial implementation. Stage O131 and preserve earlier causal questions.
+
+- turn: 2026-09-11_001#23
+  notes:
+  - Promote O130 by completed learned-association and variation artifact commitment; preserve ai-suggested
+    provenance. O131 still includes unimplemented new-entity handling.
+  - Record the automatic-review rejection separately. One actual critique is not two reconciled reviews;
+    no follow-up transmission occurred. No unrestricted robustness or graph claim.

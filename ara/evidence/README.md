@@ -55,3 +55,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Shared entity reader](tables/entity_shared_2026-09-11.json): N190; successful supplied-association screen and exact permutation audit.
 
 - [Learned association](tables/entity_learned_2026-09-11.json): N192; stable-descriptor matching and task gates pass; no learned graph claim.
+
+- [Bounded descriptor variation](tables/entity_variation_2026-09-11.json): N194; matched initial tensors, all learning gates pass; follow-up Claude approval remains pending.

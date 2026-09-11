@@ -217,3 +217,13 @@
 - **Code ref**: [shared reader](../../../pathwm/models/entities.py), [tests](../../../tests/test_entities.py), [recipe](../../../experiments/multimodal.py).
 - **From staging**: O129
 - **Evidence of commitment**: implementation 98e36af and N190; task accuracy and exact permutation checks are separately recorded.
+
+## H23: Test learned association under identifiable feature variation
+
+- **Rationale**: Preserve a working shared reader while replacing lookup with task-trained association and perturbing descriptors within a declared separation margin. Keep known-task outcomes distinct from general recognition claims.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; fixed slots, two-object hypotheses and bounded synthetic variation do not establish graph allocation or visual identity.
+- **Code ref**: [generator](../../../pathwm/data/entities.py), [matcher](../../../pathwm/models/entities.py), [tests](../../../tests/test_entities.py).
+- **From staging**: O130
+- **Evidence of commitment**: implementations cf5a506/76338f4 and N192/N194 now cover learned matching and controlled variation.

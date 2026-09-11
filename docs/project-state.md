@@ -1,5 +1,14 @@
 # Current work
 
+**Bounded descriptor variation succeeds, 11 September:** the learned/shared reader
+trained at `--entity-noise 0.2` passes every declared development gate after 256 updates;
+matching and identifiable task accuracy are 100%. All 102 CPU tests pass. Oracle,
+geometry, zero-noise compatibility, raw scores, resume and reorderings are verified.
+[Report](../runs/entity_variation_v1/reference/report.html). Claude completed one
+review; automatic approval review blocked the prepared follow-up before sending it.
+See [task record](entity-learning-task.md). New-entity allocation remains next,
+not implemented. This is bounded synthetic drift, not general visual robustness.
+
 **Learned association succeeds on stable descriptors, 11 September:** the
 Claude-reviewed `--entity-reader shared --entity-association learned` mode passes
 all fixed development gates after 256 updates. Matching improves from 37.5% to 100%

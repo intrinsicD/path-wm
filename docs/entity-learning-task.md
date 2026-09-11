@@ -353,8 +353,38 @@ noisy initial features same-object distance is at most2alpha D and different-obj
 distance at least(1-2alpha)D. The nearest-initial oracle remains identifiable. This
 is controlled bounded drift, not arbitrary noise or image recognition.
 
-One fresh seed31 run at alpha0.2: same learned shared model, parameter initialization,
+One fresh seed31 run at alpha 0.2: same learned shared model, parameter initialization,
 512/256 populations, lr0.003/wd0.01, batch32, 256 updates and450 active CPU seconds;
 unchanged gates. No sweep or new-entity allocation in this slice. Preserve zero-noise
 compatibility. Evaluate matching with a nearest-initial oracle only in diagnostics;
 train using answer loss only. Report the8 development groups and paired controls.
+
+### Descriptor-variation result
+
+Implementation `76338f4`; all 102 CPU tests pass. Claude's first public-only review
+accepts the positive separation margin and identifies the narrow single-condition
+scope. The prepared reconciliation was rejected by automatic approval review before
+execution because payload-specific authorization was judged insufficient. No follow-up
+was sent; acknowledgment remains pending. Local implementation and verification are
+complete. Review/blocked receipts: `entity-variation*` under the continuation directory.
+
+The one 256-update run at alpha 0.2 passes every declared development gate. All 128
+identifiable cases and paired cases are correct for identity/state/effect, with 100%
+selection coverage and no errors. Ambiguous excess NLL is 0 / 0.00022755 / 0.01080668;
+uniform unresolved identity is the specified prior, not general learned calibration.
+Matching reaches 100% on eight held-out descriptor groups (initial action 37.5%, final
+62.5%). Data geometry, all 768 training/development oracle targets, unchanged labels/
+nonappearance features, and exact zero-noise compatibility are verified. Predicted
+probabilities have zero maximum difference across all 8 per-frame reorderings.
+
+All initial tensors match the stable learned-association reference. Model size stays
+30,342 parameters and 256 hypothesis-state floats. Training used 2.43 active CPU seconds
+before cached-resume bookkeeping, excluding checkpoints/report overhead. This trains
+and evaluates within the same bounded variation condition; it is not a frozen-transfer
+result or arbitrary-noise guarantee. No test split or new-entity allocation was used.
+
+`runs/entity_variation_v1/verification.json` binds source, raw-score, geometry, resume
+and test checks. `runs/entity_variation_v1/reference/report.html` is structurally
+verified with the unchanged previously browser-verified renderer; no new browser QA
+is claimed. Next proposed is explicit unmatched/new-entity handling in a separately
+defined task. Learned graph allocation and concept/edge semantics remain unimplemented.
