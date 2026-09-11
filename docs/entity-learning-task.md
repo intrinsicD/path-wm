@@ -986,3 +986,15 @@ slots, bind/read calls and latest-write policy. Persistence itself is supplied.
 Next proposed: learn a relation-update gate that distinguishes a valid binding cue
 from an irrelevant cue, using paired histories that require either overwrite or
 preservation. No claim of learned graph topology or general concepts follows yet.
+
+### Context write gate: transactional interface (2026-09-11)
+
+First implement the runtime boundary: optional learned four-dimensional context
+comparison, fixed probability > 0.5 write decision, full retry payloads, exact key
+preservation on ignored cues, and atomic rollback on accepted unresolved sources.
+Gate fingerprints must accompany snapshots. Existing ungated snapshots remain
+compatible. CPU unit checks only in this slice (no training or quality claim).
+The subsequent experiment must separately predeclare its populations and compare
+soft training with hard decisions and always/never-write controls. Claude's public
+review emphasized this mismatch and repeated-ignore drift. Squared differences
+are symmetric but do distinguish opposite vectors; state bits are not gate inputs.
