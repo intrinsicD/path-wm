@@ -59,3 +59,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Bounded descriptor variation](tables/entity_variation_2026-09-11.json): N194; matched initial tensors, all learning gates pass; follow-up Claude approval remains pending.
 
 - [Variation reconciliation](tables/entity_variation_reconciliation_2026-09-11.json): exact user-approved Claude follow-up completed; closes N195.
+
+- [Known-versus-new matching](tables/entity_novelty_2026-09-11.json): N198; fixed-margin screen and browser verification, no allocation.

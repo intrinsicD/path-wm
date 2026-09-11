@@ -227,3 +227,13 @@
 - **Code ref**: [generator](../../../pathwm/data/entities.py), [matcher](../../../pathwm/models/entities.py), [tests](../../../tests/test_entities.py).
 - **From staging**: O130
 - **Evidence of commitment**: implementations cf5a506/76338f4 and N192/N194 now cover learned matching and controlled variation.
+
+## H24: Separate novelty classification from entity allocation
+
+- **Rationale**: After learned matching and bounded variation, test known identities versus an explicit new answer. Report false merges/splits and coverage before connecting predictions to persistent writes.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; the separated synthetic margins do not establish open-world novelty or calibrated allocation.
+- **Code ref**: [matching data](../../../pathwm/data/entities.py), [reader](../../../pathwm/models/entities.py), [metrics](../../../pathwm/evaluation/entities.py).
+- **From staging**: O131
+- **Evidence of commitment**: 365bb2b and N198 implement the unmatched-query screen; allocation remains proposed.

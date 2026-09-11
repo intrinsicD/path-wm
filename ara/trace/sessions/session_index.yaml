@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Bounded variation result remains passing with102 tests. Exact Claude follow-up approved and completed; no remaining conceptual objection. New entities and graph growth remain open."
-  turn_count: 24
-  events_count: 60
+  summary: "Known-versus-new matching passes fixed-margin gates with105 tests and browser QA. Both Claude reviews completed. Persistent allocation and revisit identity remain open."
+  turn_count: 25
+  events_count: 64
   claims_touched: []
   open_threads: 12

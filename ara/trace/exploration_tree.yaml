@@ -3163,3 +3163,29 @@ tree:
   - N195
   - ara/evidence/tables/entity_variation_reconciliation_2026-09-11.json
   status: resolved
+
+- id: N197
+  type: decision
+  title: Continue with known-versus-new matching before allocation
+  provenance: user
+  timestamp: 2026-09-11T12:45+02:00
+  choice: Continue Claude-reviewed implementation/testing iteration; isolate unmatched query decisions
+    before memory writes.
+  evidence:
+  - docs/entity-learning-task.md
+  status: resolved
+- id: N198
+  type: experiment
+  title: Novelty matching passes fixed-margin screen
+  provenance: ai-executed
+  timestamp: 2026-09-11T12:45+02:00
+  result: One 256-update run; 128/128 known and128/128 novel development predictions correct across64
+    memory groups; zero false merges/splits. Novel coverage96.09375 percent, known100 percent, selected
+    errors0. NLL0.02360923. 105 tests pass; source/raw-score/cache/swap/browser audits verified. No allocation
+    or general novelty/calibration claim.
+  evidence:
+  - ara/evidence/tables/entity_novelty_2026-09-11.json
+  also_depends_on:
+  - N197
+  - N194
+  status: resolved

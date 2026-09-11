@@ -1,5 +1,14 @@
 # Current work
 
+**Known-versus-new matching succeeds, 11 September:** `--dataset entity-matching`
+is implemented and reviewed with Claude. All 105 CPU tests pass; the 256-update run
+gets 128/128 known identities and 128/128 novel rejections correct, with zero false
+merges/splits on development. Novel selection coverage is 96.1%; memory swaps preserve
+probabilities and metrics. [Report](../runs/entity_novelty_v1/reference/report.html)
+passed browser QA. The distance-separated task is a sanity check, not general novelty
+or calibration. No memory records are allocated yet; the next proposed slice is
+transactional allocation/revisit behavior. See [task record](entity-learning-task.md).
+
 **Bounded descriptor variation succeeds, 11 September:** the learned/shared reader
 trained at `--entity-noise 0.2` passes every declared development gate after 256 updates;
 matching and identifiable task accuracy are 100%. All 102 CPU tests pass. Oracle,

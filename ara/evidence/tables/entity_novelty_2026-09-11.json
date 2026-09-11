@@ -1,0 +1,110 @@
+{
+  "source_commit": "365bb2b",
+  "tests_passed": 105,
+  "step": 256,
+  "parameters": 642,
+  "active_seconds": 0.5872071622870862,
+  "independent_nll_matches": true,
+  "source_snapshot_matches": true,
+  "train_development_descriptors_disjoint": true,
+  "development_groups": 64,
+  "swap_probability_error": 0.0,
+  "swap_metrics_identical": true,
+  "scores": {
+    "development": {
+      "gates": {
+        "decisions": true,
+        "false_merge": true,
+        "false_split": true,
+        "known": true,
+        "nll": true,
+        "novel": true,
+        "passed": true
+      },
+      "overall": {
+        "examples": 256,
+        "factual_accuracy": 1.0,
+        "nll": 0.023609229164757026
+      },
+      "views": {
+        "known": {
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "examples": 128,
+          "false_merge": null,
+          "false_split": 0.0,
+          "nll": 0.021317978621617606,
+          "selected_error": 0.0
+        },
+        "novel": {
+          "accuracy": 1.0,
+          "coverage": 0.9609375,
+          "examples": 128,
+          "false_merge": 0.0,
+          "false_split": null,
+          "nll": 0.025900479707896447,
+          "selected_error": 0.0
+        }
+      }
+    },
+    "train": {
+      "gates": {
+        "decisions": true,
+        "false_merge": true,
+        "false_split": true,
+        "known": true,
+        "nll": true,
+        "novel": true,
+        "passed": true
+      },
+      "overall": {
+        "examples": 512,
+        "factual_accuracy": 0.998046875,
+        "nll": 0.017237447084978836
+      },
+      "views": {
+        "known": {
+          "accuracy": 1.0,
+          "coverage": 1.0,
+          "examples": 256,
+          "false_merge": null,
+          "false_split": 0.0,
+          "nll": 0.019022366053863732,
+          "selected_error": 0.0
+        },
+        "novel": {
+          "accuracy": 0.99609375,
+          "coverage": 0.99609375,
+          "examples": 256,
+          "false_merge": 0.00390625,
+          "false_split": null,
+          "nll": 0.01545252811609394,
+          "selected_error": 0.0
+        }
+      }
+    }
+  },
+  "allocation_implemented": false,
+  "claude_reviews": [
+    "entity-novelty",
+    "entity-novelty-reconcile"
+  ],
+  "hashes": {
+    "last.pt": "9a38810f5248891dc50ba7939e110ea9950698e5e9e7b4ba2055385099e45e0f",
+    "entity_predictions.pt": "ae210c9ef96581214cdd5837658fddaf950ed325e72825d2c925de4eaa8d73eb",
+    "entity_results.json": "fe40446abf2d0563bd50944e25b9de7fd8780a33b4fdbba9dab474d5a5f135e1",
+    "metrics.jsonl": "fefc7003ced65c08e96812dc17082f9bd5eec439f94704754779e16f0e275d0b",
+    "run.json": "288df2292c461ab246b71adf9924561c2ccc5d74248a39e6a9d196993926cdcd",
+    "report.html": "0766456e5adb10a9f0f251ac3338055e8492bc00f6b549532401f7d57981c864",
+    "report.qa.json": "c2be3c013bf2b68c62e59fa6fa849a518483b435decb852315c258032d77adc1"
+  },
+  "cached_resume_unchanged": true,
+  "browser": {
+    "width": 1280,
+    "height": 720,
+    "overflow": false,
+    "broken_images": 0,
+    "expanded_examples": true,
+    "screenshot_sha256": "91da92908a839863b4308cd0522f27f5113177c4142d9a5c7862f8682ff65928"
+  }
+}

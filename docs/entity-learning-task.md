@@ -416,3 +416,30 @@ Gates: known identity and novel rejection accuracy each>=95%; false merge/split 
 overall NLL<=0.15 nats. Test memory-order covariance, unit-norm/margin/label contracts,
 episode isolation and exact resume. This new task is not directly comparable to the
 three-head historical state task. Near-boundary and unknown priors are later work.
+
+### Known-versus-new result
+
+Implementation `365bb2b`; all 105 CPU tests pass. Two actual public-only Claude
+reviews (`entity-novelty*`) support this deliberately separated sanity check. A second
+margin and real novelty/calibration are deferred, not established. Memory swaps must
+permute identity labels, while false-merge/split metrics remain invariant; both
+probabilities and all metrics are verified identical in the swapped evaluation.
+No private source/results were supplied to Claude.
+
+The one seed31/256-update run passes all gates. On 256 development queries sharing 64
+memory groups: known identity accuracy 128/128; novel rejection 128/128; false merges
+and false splits both 0. Coverage above 0.75 is 100% known and 96.09375% novel, with no
+selected errors. Mean NLL 0.02360923 nats. Training has one false merge among 256 novel
+queries; this is preserved, not hidden by aggregate development success. The 642-parameter
+model uses a learned null logit, not a generator threshold in forward. Active CPU time
+was 0.5872 seconds before resume bookkeeping, excluding checkpoint/report overhead.
+
+Disjoint train/development descriptors, exact resume, independent NLL, source snapshot,
+memory-order covariance and 1280×720 browser QA are bound in
+`runs/entity_novelty_v1/verification.json`. Report:
+`runs/entity_novelty_v1/reference/report.html`. Selection thresholds and generator
+margins were declared before training; no generalization evidence beyond this condition
+or posterior calibration is claimed. This model classifies new observations; it does
+not allocate IDs, persist entities or learn graph edges. Next proposed: a bounded
+transactional memory lifecycle that can defer uncertain matches, allocate confirmed
+new entities and recognize them on return, with explicit identity-switch tests.

@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T12:33+02:00
-  turn_count: 24
-  summary: "Bounded variation result remains passing with102 tests. Exact Claude follow-up approved and completed; no remaining conceptual objection. New entities and graph growth remain open."
+  last_turn: 2026-09-11T12:45+02:00
+  turn_count: 25
+  summary: "Known-versus-new matching passes fixed-margin gates with105 tests and browser QA. Both Claude reviews completed. Persistent allocation and revisit identity remain open."
 events_logged:
 - turn: 1
   type: question
@@ -375,6 +375,30 @@ events_logged:
   routing: direct
   provenance: ai-executed
   summary: Pending reconciliation resolved; Claude accepts conceptual corrections.
+- turn: 25
+  type: decision
+  id: N197
+  routing: direct
+  provenance: user
+  summary: Continue novelty matching implementation.
+- turn: 25
+  type: experiment
+  id: N198
+  routing: direct
+  provenance: ai-executed
+  summary: Fixed-margin novelty gates pass.
+- turn: 25
+  type: heuristic
+  id: H24
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O131 now implemented through unmatched-query screening.
+- turn: 25
+  type: observation
+  id: O132
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose allocation/revisit lifecycle next.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -578,6 +602,18 @@ ai_actions:
   files_changed:
   - docs/entity-learning-task.md
   - docs/project-state.md
+- turn: 25
+  action: Two public Claude reviews; implement novelty data/scorer/metrics/report;105
+    tests and one run; verify source/cache/raw scores/swapped metrics and browser
+    layout.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/data/entities.py
+  - pathwm/models/entities.py
+  - pathwm/evaluation/entities.py
+  - pathwm/evaluation/report.py
+  - experiments/multimodal.py
+  - tests/test_entities.py
 claims_touched: []
 key_context:
 - turn: 1
@@ -606,8 +642,10 @@ key_context:
   excerpt: "User: continue with claude. implement this, review, test, fix and iterate"
 - turn: 24
   excerpt: "User: yes please (approval of exact linked Claude brief)."
+- turn: 25
+  excerpt: "User: continue with claude. implement this, review, test, fix and iterate"
 open_threads:
-- O131: feature variation and new entities remain proposed.
+- O132: persistent allocation/revisit behavior remains proposed.
 - O130: learned matching remains proposed; shared reader is now a successful controlled reference.
 - O128: isolate association versus state updating after failed recurrent baseline.
 - O126: readable graph lookup and decoder debugging remain proposed.
