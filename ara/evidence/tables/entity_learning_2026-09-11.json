@@ -1,0 +1,139 @@
+{
+  "schema": "entity-learning-verification-v1",
+  "source_commit": "24b22b9",
+  "tests_passed": 92,
+  "step": 256,
+  "active_seconds": 1.348219517734833,
+  "cached_resume_unchanged": true,
+  "source_snapshot_matches": true,
+  "full_population_oracle_matches": true,
+  "independent_nll_matches": true,
+  "permutation_contract_test_passed": true,
+  "model_equivariance_not_established": true,
+  "test_split_not_used_for_training": true,
+  "graph_run_started": false,
+  "scores": {
+    "development": {
+      "gates": {
+        "ambiguity": false,
+        "decisions": false,
+        "effect": false,
+        "identity": false,
+        "paired": false,
+        "passed": false,
+        "state": false
+      },
+      "overall": {
+        "examples": 256,
+        "factual_accuracy": 0.5911458333333334,
+        "nll": 1.2047151800443103
+      },
+      "views": {
+        "ambiguous": {
+          "coverage": 0.0546875,
+          "decision_cost": 0.263671875,
+          "effect_excess_nll": 1.0837532283106324,
+          "effect_nll": 1.430326818590605,
+          "examples": 128,
+          "identity_excess_nll": 0.04106187284240715,
+          "identity_nll": 0.7342090534023524,
+          "nll": 1.207488332227353,
+          "selected_error": 0.5,
+          "state_excess_nll": 1.1113555344091295,
+          "state_nll": 1.4579291246891022
+        },
+        "identifiable": {
+          "coverage": 0.09375,
+          "decision_cost": 0.2421875,
+          "effect_accuracy": 0.546875,
+          "effect_excess_nll": 1.4883076627073828,
+          "effect_nll": 1.4883076627073828,
+          "examples": 128,
+          "identity_accuracy": 0.6015625,
+          "identity_excess_nll": 0.6573330829761579,
+          "identity_nll": 0.6573330829761579,
+          "nll": 1.2019420278612676,
+          "paired_effect": 0.3125,
+          "paired_identity": 0.453125,
+          "paired_state": 0.484375,
+          "selected_error": 0.16666666666666666,
+          "state_accuracy": 0.625,
+          "state_excess_nll": 1.4601853379002616,
+          "state_nll": 1.4601853379002616
+        }
+      }
+    },
+    "train": {
+      "gates": {
+        "ambiguity": true,
+        "decisions": false,
+        "effect": true,
+        "identity": false,
+        "paired": false,
+        "passed": false,
+        "state": true
+      },
+      "overall": {
+        "examples": 512,
+        "factual_accuracy": 0.88671875,
+        "nll": 0.37829583346776824
+      },
+      "views": {
+        "ambiguous": {
+          "coverage": 0.07421875,
+          "decision_cost": 0.2685546875,
+          "effect_excess_nll": 0.05245386480919665,
+          "effect_nll": 0.39902745508916926,
+          "examples": 256,
+          "identity_excess_nll": 0.04548407163301088,
+          "identity_nll": 0.7386312521929562,
+          "nll": 0.5098987937304176,
+          "selected_error": 0.5,
+          "state_excess_nll": 0.045464083629154634,
+          "state_nll": 0.39203767390912736
+        },
+        "identifiable": {
+          "coverage": 0.12109375,
+          "decision_cost": 0.2197265625,
+          "effect_accuracy": 0.9921875,
+          "effect_excess_nll": 0.10577707171294862,
+          "effect_nll": 0.10577707171294862,
+          "examples": 256,
+          "identity_accuracy": 0.66796875,
+          "identity_excess_nll": 0.5855539417170237,
+          "identity_nll": 0.5855539417170237,
+          "nll": 0.24669287320511887,
+          "paired_effect": 0.984375,
+          "paired_identity": 0.5,
+          "paired_state": 1.0,
+          "selected_error": 0.0,
+          "state_accuracy": 1.0,
+          "state_excess_nll": 0.048747606185384346,
+          "state_nll": 0.048747606185384346
+        }
+      }
+    }
+  },
+  "hashes": {
+    "last.pt": "db23c62912ac92425ebe2e7f7e5c77146348a42f418f6348274d3354bf17f41b",
+    "run.json": "79c86a48563c4fe1a391b9cf730df17e941b22da36d21712a6877d3d80d42f75",
+    "entity_manifest.json": "e442266520a4b6d368977c4b0bcbfcb843c0bf8a59b5b14c36a45339b5c676a6",
+    "entity_predictions.pt": "2f30adbba0137d188e6b2291aea73812d321028734cf98b8b2bbb49e95ad77c6",
+    "entity_results.json": "8963d332a2122f44758906dce5ed1ed77e3de1368e4c47cc1172921f3d7ca005",
+    "metrics.jsonl": "259f6835eacf285780c1098f6a7b76b696bed7d1636f2da61a936d11c54f5681",
+    "report.html": "7420172af1785f95ab61fccccbb61238b8328f8814513e7770eb3b7e4e5dbd71",
+    "report.qa.json": "76be75d4dac8c8fc732278ef4c85621301bffd6d79778fc7fcfedc68b5d52b8b"
+  },
+  "browser": {
+    "width": 1280,
+    "height": 720,
+    "broken_images": 0,
+    "horizontal_overflow": false,
+    "expanded_gates": true,
+    "expanded_case": true,
+    "screenshots": {
+      "reference-top.png": "b898e04096a472fa8588e7f5dc87306b87381de45837736b5b94c9dbeb759e8b",
+      "reference-metrics.png": "49ee7a84106ccc73816cf032ffc506ddc721a56fe1bee2bc4fe702901e798040"
+    }
+  }
+}

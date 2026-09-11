@@ -2322,6 +2322,21 @@ observations:
   bound_to:
   - N183
   - N184
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H21
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O128
+  timestamp: 2026-09-11T11:41+02:00
+  provenance: ai-suggested
+  content: Next isolate descriptor association from state updating. Identity is weak on training too;
+    state/effect fit transfers poorly across the limited fresh appearance groups. Current result does
+    not establish the cause or graph necessity.
+  context: Capped baseline failed; no parameter extension or graph comparison launched.
+  potential_type: heuristic
+  bound_to:
+  - N186
   promoted: false
   promoted_to: null
   crystallized_via: null

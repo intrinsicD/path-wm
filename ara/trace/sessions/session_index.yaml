@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: Warm entity extraction remains unsuccessful. Entity-graph design reviews complete; user requests learning both structure and values with inspection. First two-object task defined, Claude-reviewed and checked on 512 finite cases; no new neural training.
-  turn_count: 18
-  events_count: 40
+  summary: "Controlled entity baseline implemented: 92 tests pass, 256-update development gates fail; graph comparison deferred. Earlier reader cause and graph design remain open."
+  turn_count: 19
+  events_count: 44
   claims_touched: []
   open_threads: 10

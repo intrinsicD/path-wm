@@ -3008,3 +3008,29 @@ tree:
   also_depends_on:
   - N183
   status: resolved
+
+- id: N185
+  type: decision
+  title: Build the controlled entity-learning baseline
+  provenance: user
+  timestamp: 2026-09-11T11:41+02:00
+  choice: User authorizes implementation of the defined first task and capped recurrent baseline; graph
+    comparison remains conditional on baseline gates.
+  evidence:
+  - docs/entity-learning-task.md
+  - O127
+  status: resolved
+- id: N186
+  type: experiment
+  title: Capped recurrent entity baseline misses development gates
+  provenance: ai-executed
+  timestamp: 2026-09-11T11:41+02:00
+  result: 256 updates; identifiable development identity/state/effect accuracy 60.15625/62.5/54.6875 percent.
+    Training 66.796875/100/99.21875 percent. All combined development gates fail. 92 CPU tests pass; full-population
+    oracle, raw NLL, source snapshot, cached resume and browser report verified. No graph run.
+  evidence:
+  - ara/evidence/tables/entity_learning_2026-09-11.json
+  - runs/entity_learning_v1/verification.json
+  also_depends_on:
+  - N185
+  status: resolved

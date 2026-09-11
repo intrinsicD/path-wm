@@ -3,8 +3,8 @@
 Alex authorized defining the initial task and learning signal on 11 September 2026.
 The design requirement is to learn both graph structure and latent contents, with
 evidence-based inspection. Human-readable relation names are not a prescribed ontology.
-This document completes that task-definition step; no neural training or graph
-implementation was launched. The existing reader diagnosis remains a prerequisite
+The initial recurrent baseline is now implemented and evaluated below; graph
+implementation remains conditional on successful baseline learning. The existing reader diagnosis remains a prerequisite
 to interpreting a new graph's learning failure.
 
 ## Task: follow and update two anonymous objects
@@ -159,3 +159,35 @@ Reserve separately generated test data; do not load it in this development scree
 Each32-row group varies initial state/cue/action value exhaustively within identifiable
 and ambiguous cohorts. Shared final views provide exact no-history controls.
 If baseline gates fail, no graph training starts; preserve and diagnose its errors.
+
+## Implemented baseline result, 11 September
+
+The recipe, three-observation generator, recurrent reader, proper scores, cached
+final evaluation and inspectable standalone report are implemented. All 92 CPU tests
+pass, including exact resume, conditional oracle scoring and candidate-order target
+equivariance. Input-gradient checks reach the first observation. Every generated
+training/development target matches the independent history oracle. Model equivariance
+is not established by the data permutation test.
+
+The fixed seed31 run completed 256 updates within the 450-second cap (1.35 active
+CPU seconds including cached-resume bookkeeping, excluding checkpoint/report overhead).
+On 128 identifiable development cases: identity 60.15625%, state pair 62.5%, effect
+pair 54.6875%. Training values are 66.796875%, 100%, 99.21875%. Development paired
+success is 45.3125%, 48.4375%, 31.25%; identity selection coverage is 9.375% with
+16.6667% error among selected targets. Ambiguous development excess NLL is 0.041062,
+1.111356, 1.083753 nats by head. All combined development gates fail.
+
+No graph run or parameter search was started. Identity remains weak even on training
+examples, while state/effect fitting does not transfer well to fresh descriptor groups.
+This does not isolate whether association, capacity, optimization or data diversity
+caused the failure. A next diagnostic should separate descriptor matching from state
+updating before adding graph complexity; the earlier event-reader probes also remain
+open. The 32 examples within a descriptor group are controlled variants, not independent
+appearance samples (16 training groups, 8 development groups).
+
+Raw scores, unchanged prediction/result/metric hashes after cached resume, source
+snapshots and 1280×720 browser QA are bound in
+`runs/entity_learning_v1/verification.json`. The report is
+`runs/entity_learning_v1/reference/report.html`. Prior Claude task reviews supplied
+the conceptual critique; this implementation used local tests and audits without another
+external review round. No test population was loaded by the training recipe.

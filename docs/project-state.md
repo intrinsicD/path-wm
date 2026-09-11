@@ -1,5 +1,16 @@
 # Current work
 
+**Entity baseline built and evaluated, 11 September:** `--dataset entities` now runs
+the [controlled two-object task](entity-learning-task.md) through the existing recipe.
+All 92 CPU tests pass. The fixed 256-update baseline reaches development identity/state/
+effect accuracy of 60.2%/62.5%/54.7%; every combined development gate fails. Training
+state accuracy reaches 100%, but identity is only 66.8%. The graph comparison is
+deferred under the declared stop rule. Source, cached resume, oracle, raw scores and
+browser report checks are recorded in `runs/entity_learning_v1/verification.json`.
+[Open the report](../runs/entity_learning_v1/reference/report.html). Next diagnostic:
+separate descriptor association from state updating; no extra run is authorized by
+this result, and the earlier entity-reader bottleneck remains unresolved.
+
 **Task definition complete, 11 September:** [the first entity-learning task](entity-learning-task.md)
 defines two-object identity persistence, state updates and action-effect prediction.
 Both graph structure and latent values are intended to be learned; readable labels

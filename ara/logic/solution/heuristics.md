@@ -197,3 +197,13 @@
 - **Code ref**: [recipe](../../../experiments/multimodal.py), [transfer and resume tests](../../../tests/test_facts.py), [plan and outcomes](../../../docs/warm-encoder-plan.md).
 - **From staging**: O118
 - **Evidence of commitment**: N169/N170 and implementation `4c3aebf`; exact donor transfer and matched cold initialization/settings/sampler are verified in the [evidence snapshot](../../evidence/tables/warm_encoder_2026-09-11.json). The user authorized execution; the outcome interpretation and frozen-encoder proposal remain staged as O119.
+
+## H21: Establish a controlled history-dependent entity task before graph comparison
+
+- **Rationale**: Use visible candidate histories, exact conditional answer targets and final-view-only bounds to test identity, state persistence and action effects. Gate graph comparison on a recurrent baseline learning the same task.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; supplied candidates, short histories and grouped appearances do not establish discovery, general calibration or graph utility.
+- **Code ref**: [generator](../../../pathwm/data/entities.py), [reader](../../../pathwm/models/entities.py), [scores](../../../pathwm/evaluation/entities.py), [recipe](../../../experiments/multimodal.py).
+- **From staging**: O127
+- **Evidence of commitment**: N185/N186; implementation 24b22b9. Baseline gates failed, so the conditional graph comparison remains deferred.

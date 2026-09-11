@@ -47,3 +47,5 @@ Entity association and external belief design: [review receipts](tables/entity_a
 Entity graph runtime and payload review: [receipts](tables/graph_payload_review_2026-09-11.json); [design](../../docs/entity-memory-design.md). Four reconciled public-only Claude exchanges and local source checks. Explicit gradient, temporal-provenance and replay boundaries; raw/latent/readable payload alternatives remain unimplemented proposals.
 
 First learned-entity task definition: [finite contract and review evidence](tables/entity_task_definition_2026-09-11.json); [task and objective](../../docs/entity-learning-task.md). 512 illustrative oracle checks and exact final-view limits; two Claude exchanges. No neural model performance or learned graph result.
+
+- [Entity baseline, 11 September](tables/entity_learning_2026-09-11.json): fixed recurrent screen, failed development gates, source/cache/score and browser verification; N186.
