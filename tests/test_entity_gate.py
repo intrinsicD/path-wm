@@ -165,3 +165,11 @@ def test_augmented_pairs_preserve_supervision():
         assert torch.equal(control[key], augmented[key])
     assert torch.equal(control["cue"][:12], augmented["cue"][:12])
     assert not torch.equal(control["cue"][12:], augmented["cue"][12:])
+
+
+def test_replication_seed_contract():
+    from experiments.multimodal import gate_replication_seeds
+    assert gate_replication_seeds(0) == (71, 0)
+    assert gate_replication_seeds(2) == (73, 200)
+    with pytest.raises(ValueError):
+        gate_replication_seeds(-1)

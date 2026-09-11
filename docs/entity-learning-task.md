@@ -1128,3 +1128,13 @@ add `--entity-gate-augment` for the treatment, omit for matched control. Resume
 with `--resume DIR`. No candidate promoted to the immutable reference.
 Next proposed: independent-seed replication with the same criteria to estimate
 whether the false-write cost persists before changing loss or uncertainty policy.
+
+### Two fresh matched replications (2026-09-11)
+
+Add explicit nonnegative continuation replicate index; index0 preserves prior
+seeds. For indices1 and2 use seed71+index and add100*index to descriptor and
+context seeds (including stress). Same donor, optimizer,256steps/batch32,450s per
+arm; four runs total, no tuning. Preserve all previous criteria. Replication passes
+only if both treatments pass their full gates AND gain>=2 points over their paired
+controls at sigma0.60. Report each replicate separately; no pooled confidence or
+best-seed selection. This is conditional on one donor, not initialization variance.
