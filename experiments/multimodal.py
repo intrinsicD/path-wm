@@ -69,6 +69,8 @@ from pathwm.io import (
     trainable_parameters,
     resume_arguments,
     state_hash,
+    file_hash,
+    load_component,
 )
 from pathwm.training.improvement import replay_probabilities, try_improvement
 from pathwm.models.recall import (
@@ -105,7 +107,10 @@ def build_model(
     recall=False,
     facts=False,
     fact_reader="direct",
+    fact_encoder_weights=None,
 ):
+    if fact_encoder_weights is not None and (not facts or fact_reader != "event"):
+        raise ValueError("Fact encoder weights require the event fact reader")
     if facts:
         direct = FactReader(width)
         if fact_reader == "direct":
@@ -183,7 +188,24 @@ def build_model(
             raise ValueError("Recall requires the categorical belief model")
         model.recall_head = RecallHead(width)
     if facts:
-        return EventFactReader(model, direct)
+        model = EventFactReader(model, direct)
+        if fact_encoder_weights is not None:
+            path = Path(fact_encoder_weights).resolve()
+            expected = file_hash(path)
+            encoder = model.agent.encoders["text"]
+            load_component(encoder, path, "agent.encoder")
+            if file_hash(path) != expected:
+                raise ValueError("Fact encoder checkpoint changed during loading")
+            if any(not torch.isfinite(v).all() for v in encoder.state_dict().values()):
+                raise ValueError("Nonfinite fact encoder checkpoint")
+            model.encoder_initialization = dict(
+                checkpoint=str(path),
+                sha256=expected,
+                component="agent.encoder",
+                encoder_sha256=state_hash(encoder),
+                trainable=True,
+            )
+        return model
     return model
 
 
@@ -352,6 +374,7 @@ def finish_facts(run, learner, training, validation, settings, deadline):
             schema="pathwm-fact-results-v1",
             **identity,
             reader=settings.get("fact_reader", "direct"),
+            encoder_initialization=settings.get("fact_encoder_initialization"),
             views=views,
             gates=gates,
             per_entity=per_entity,
@@ -361,6 +384,11 @@ def finish_facts(run, learner, training, validation, settings, deadline):
                 "Fresh single-event agent state, ordinary task interpreter and two thinking/memory reads; heads read working tokens only. Fixed-seed categorical evaluation is one repeatable realization. No retention, learned entity-query binding, calibration or final-test claim."
                 if settings.get("fact_reader", "direct") == "event"
                 else "Same encoder architecture trained from scratch; direct extraction and an explicit binding reference. No recurrent model, calibration or final test."
+            )
+            + (
+                " Shared text encoder initialized from a direct-fact checkpoint and kept trainable; all other parameters start fresh. Development combinations were inspected previously. Recipient curves exclude donor training exposure."
+                if settings.get("fact_encoder_initialization")
+                else ""
             ),
         ),
     )
@@ -1910,6 +1938,7 @@ def check(settings):
             recall=settings["dataset"] == "recall",
             facts=settings["dataset"] == "facts",
             fact_reader=settings.get("fact_reader", "direct"),
+            fact_encoder_weights=settings.get("fact_encoder_weights"),
         ),
         len(data),
     ).to(settings["device"])
@@ -1920,6 +1949,9 @@ def check(settings):
     sum(losses.values()).backward()
     return {
         "data": data.identity,
+        "encoder_initialization": getattr(
+            learner.agent, "encoder_initialization", None
+        ),
         "parameters": sum(p.numel() for p in learner.agent.parameters()),
         "losses": {k: float(v.detach()) for k, v in losses.items()},
         "gradients": {
@@ -2213,10 +2245,14 @@ def train(settings, output, *, resume=False, stop_after=None):
             recall=is_recall,
             facts=is_facts,
             fact_reader=settings.get("fact_reader", "direct"),
+            fact_encoder_weights=settings.get("fact_encoder_weights"),
         ),
         len(training),
         diagnostic=diagnostic,
     ).to(settings["device"])
+    initialization = getattr(learner.agent, "encoder_initialization", None)
+    if initialization is not None:
+        settings = dict(settings, fact_encoder_initialization=initialization)
     optimizer = torch.optim.AdamW(
         trainable_parameters(learner), lr=settings["learning_rate"]
     )
@@ -2622,6 +2658,10 @@ def main():
         "--state-model", choices=["belief", "gaussian"], default="belief"
     )
     parser.add_argument("--fact-reader", choices=["direct", "event"], default="direct")
+    parser.add_argument(
+        "--fact-encoder-weights",
+        help="Direct-fact checkpoint: load only agent.encoder into the trainable event reader",
+    )
     parser.add_argument("--memory-recent", type=int, default=32)
     parser.add_argument("--memory-block", type=int, default=8)
     parser.add_argument("--memory-blocks", type=int, default=16)
@@ -2676,6 +2716,12 @@ def main():
     if args.diagram_depth < 0:
         parser.error("Diagram depth must be nonnegative")
     args = resume_arguments(parser, args)
+    if args.fact_encoder_weights is not None and (
+        args.dataset != "facts" or args.fact_reader != "event"
+    ):
+        parser.error(
+            "--fact-encoder-weights requires --dataset facts --fact-reader event"
+        )
     if args.fact_reader != "direct" and (
         args.dataset != "facts" or args.state_model != "belief"
     ):

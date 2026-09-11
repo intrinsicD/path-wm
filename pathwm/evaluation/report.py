@@ -209,8 +209,16 @@ def fact_inspection(directory):
         f"<p><strong>Extraction gates: {'pass' if data['gates']['extraction'] else 'fail'}.</strong> "
         f"Final update {data['final_step']}. Entity, location and joint accuracy are scored separately.</p>",
         f"<p>{escape(data['scope'])}</p>",
-        '<div class="table"><table><tr><th>Population</th><th>N</th><th>Entity accuracy</th><th>Location accuracy</th><th>Joint accuracy</th><th>Entity NLL</th><th>Location NLL</th></tr>',
     ]
+    if data.get("encoder_initialization"):
+        parts.append(
+            "<details><summary>Transferred encoder identity</summary><pre>"
+            + escape(json.dumps(data["encoder_initialization"], indent=2))
+            + "</pre></details>"
+        )
+    parts.append(
+        '<div class="table"><table><tr><th>Population</th><th>N</th><th>Entity accuracy</th><th>Location accuracy</th><th>Joint accuracy</th><th>Entity NLL</th><th>Location NLL</th></tr>'
+    )
     for name, r in data["views"].items():
         cells = [
             name,

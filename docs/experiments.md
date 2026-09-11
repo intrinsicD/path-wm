@@ -35,6 +35,19 @@ heads match the direct control's initialization. Evaluation keeps categorical
 sampling with fixed batch seeds; it is one repeatable realization. The
 [event-control plan](event-fact-plan.md) declares the comparison, limits and results.
 
+Initialize only the event reader's trainable text encoder from a direct-fact run:
+
+```bash
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 python experiments/multimodal.py --dataset facts --fact-reader event --fact-encoder-weights runs/fact_grounding_v1/reference/last.pt --check
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 python experiments/multimodal.py --dataset facts --fact-reader event --fact-encoder-weights runs/fact_grounding_v1/reference/last.pt --output runs/my_initialized_reader
+```
+
+The donor heads, optimizer and state are not loaded. The recipient retains a fresh
+optimizer and trainable encoder. Run settings bind the donor file/component hashes;
+resume restores recipient progress and rejects changed donor contents. Keep the donor
+available at its recorded path. The [initialization plan](warm-encoder-plan.md)
+separates donor exposure from recipient training and labels reused development data.
+
 Start with `experiments/perception.py`. `build_model` shows the modules; `objective`
 shows exactly what is minimized. Copy the file for a new idea and edit it directly.
 Custom modules can live beside your recipe until they are useful enough to share.
