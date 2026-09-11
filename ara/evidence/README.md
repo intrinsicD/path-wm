@@ -51,3 +51,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Entity baseline, 11 September](tables/entity_learning_2026-09-11.json): fixed recurrent screen, failed development gates, source/cache/score and browser verification; N186.
 
 - [Supplied association diagnostic](tables/entity_alignment_2026-09-11.json): N188; matched reference, failed gates and learned permutation audit.
+
+- [Shared entity reader](tables/entity_shared_2026-09-11.json): N190; successful supplied-association screen and exact permutation audit.

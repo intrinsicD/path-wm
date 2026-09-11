@@ -2352,6 +2352,21 @@ observations:
   potential_type: heuristic
   bound_to:
   - N188
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H22
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O130
+  timestamp: 2026-09-11T12:06+02:00
+  provenance: ai-suggested
+  content: Preserve the successful shared reader and next test learned association under controlled feature
+    variation. This task success with supplied matching/fixed slots does not establish learned graph structure
+    or locate the older event-reader failure.
+  context: Successful bounded shared-reader diagnostic; no further run started.
+  potential_type: heuristic
+  bound_to:
+  - N190
   promoted: false
   promoted_to: null
   crystallized_via: null

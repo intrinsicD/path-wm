@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T11:50+02:00
-  turn_count: 20
-  summary: "Supplied association improves identity to 88.3 percent but combined gates and learned reordering consistency fail; 94 tests pass, Claude review and report verified. Graph remains deferred."
+  last_turn: 2026-09-11T12:06+02:00
+  turn_count: 21
+  summary: "Shared supplied-association reader passes every controlled development gate; 96 tests and exact reorderings pass. Learned matching and graph structure remain open."
 events_logged:
 - turn: 1
   type: question
@@ -297,6 +297,30 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Propose shared entity updates and consistent readout.
+- turn: 21
+  type: decision
+  id: N189
+  routing: direct
+  provenance: user
+  summary: Continue shared-reader implementation.
+- turn: 21
+  type: experiment
+  id: N190
+  routing: direct
+  provenance: ai-executed
+  summary: All controlled learning gates pass.
+- turn: 21
+  type: heuristic
+  id: H22
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O129 implemented as shared streams and coherent readout.
+- turn: 21
+  type: observation
+  id: O130
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose learned matching next.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -461,6 +485,16 @@ ai_actions:
   - experiments/multimodal.py
   - tests/test_entities.py
   - docs/entity-learning-task.md
+- turn: 21
+  action: Two actual public-only Claude reviews; shared reader and tests; fixed run;
+    source/raw-score/permutation/cache audits; structurally verified report with unchanged
+    renderer.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/entities.py
+  - experiments/multimodal.py
+  - tests/test_entities.py
+  - docs/entity-learning-task.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -481,8 +515,10 @@ key_context:
   excerpt: "User: ok. can we build this now?"
 - turn: 20
   excerpt: "User: Continue. Work with Claude. Implement, review, test and fix. Iterate"
+- turn: 21
+  excerpt: "User: continue with claude. implement this, review, test, fix and iterate"
 open_threads:
-- O129: shared per-entity updates and consistent readout remain proposed.
+- O130: learned matching remains proposed; shared reader is now a successful controlled reference.
 - O128: isolate association versus state updating after failed recurrent baseline.
 - O126: readable graph lookup and decoder debugging remain proposed.
 - O125: graph/runtime and historical-payload contract remains proposed.

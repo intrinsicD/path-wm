@@ -253,3 +253,36 @@ Report parameter changes; initialization cannot be tensor-matched to the differe
 architecture. This tests shared processing plus structured readout, not graph learning
 or uniquely one causal mechanism. Verify all 8 independent per-frame permutations,
 probability normalization, earliest-state gradients, no input mutation and exact resume.
+
+### Shared-reader result
+
+Implementation `98e36af`; all 96 CPU tests pass. Two actual public-only Claude
+exchanges (`entity-shared*`) reconciled assignment mixing, independent-switch scope,
+readout input boundaries and capacity versus compute. No private source/results exported.
+The full model audit confirms zero maximum probability difference across all eight
+independent per-frame candidate permutations on the 256 development episodes.
+
+The fixed seed31/256-update run passes every declared development gate. All 128
+identifiable development cases have correct identity, state pair and action-effect
+pair; each paired-history success rate is 100%. Selection coverage is 100% with no
+errors. Ambiguous identity stays exactly uniform and selection coverage is zero.
+Excess NLL above the conditional oracle is 0 / 0.00043944 / 0.01034916 nats for
+identity/state/effect. This is the known finite ambiguity construction, not general
+calibration. Both training and development identifiable accuracy are 100% by head.
+
+The network has 30,021 parameters versus 102,154 in the flattened reader, with the
+same 128-float persistent state capacity. One run used 1.51 active CPU seconds before
+cached-resume overhead, excluding checkpoint/report time; architecture and computation
+are different, so this is not a tensor-matched or equal-compute causal comparison.
+The dataset and training budget are matched. The changed shared updates and structured
+readout jointly solve this supplied-association task under the budget.
+
+Results, independent NLL recalculation, source snapshots, exact cached resume and
+permutation audit: `runs/entity_shared_v1/verification.json`. Report:
+`runs/entity_shared_v1/reference/report.html`. Report validation is structural using
+the unchanged previously browser-verified renderer; no new browser receipt is claimed.
+No test split or graph training was used. Exact descriptor matching, fixed slots and
+two-assignment enumeration are supplied. Next proposed step is learned association
+under controlled feature variation, retaining this successful reader as a reference;
+success here does not establish learned graph structure or a cause for the older
+agent event-reader failure.

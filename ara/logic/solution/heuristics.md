@@ -207,3 +207,13 @@
 - **Code ref**: [generator](../../../pathwm/data/entities.py), [reader](../../../pathwm/models/entities.py), [scores](../../../pathwm/evaluation/entities.py), [recipe](../../../experiments/multimodal.py).
 - **From staging**: O127
 - **Evidence of commitment**: N185/N186; implementation 24b22b9. Baseline gates failed, so the conditional graph comparison remains deferred.
+
+## H22: Share entity updates and mix coherent final assignments
+
+- **Rationale**: Process supplied object streams with a shared recurrent cell and shared readouts; marginalize complete assignment hypotheses to preserve joint uncertainty.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; independent switches, fixed slots and exact observed matching are supplied. No arbitrary interaction or graph-growth claim.
+- **Code ref**: [shared reader](../../../pathwm/models/entities.py), [tests](../../../tests/test_entities.py), [recipe](../../../experiments/multimodal.py).
+- **From staging**: O129
+- **Evidence of commitment**: implementation 98e36af and N190; task accuracy and exact permutation checks are separately recorded.

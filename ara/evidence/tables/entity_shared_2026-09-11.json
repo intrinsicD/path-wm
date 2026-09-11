@@ -1,0 +1,128 @@
+{
+  "source_commit": "98e36af",
+  "steps": 256,
+  "active_seconds": 1.5084354643477127,
+  "parameters": 30021,
+  "reference_parameters": 102154,
+  "persistent_state_floats": 128,
+  "same_manifest": true,
+  "source_snapshot_matches": true,
+  "independent_nll_matches": true,
+  "all_eight_permutations_max_probability_error": 0.0,
+  "scores": {
+    "development": {
+      "gates": {
+        "ambiguity": true,
+        "decisions": true,
+        "effect": true,
+        "identity": true,
+        "paired": true,
+        "passed": true,
+        "state": true
+      },
+      "overall": {
+        "examples": 256,
+        "factual_accuracy": 1.0,
+        "nll": 0.23466882549197218
+      },
+      "views": {
+        "ambiguous": {
+          "coverage": 0.0,
+          "decision_cost": 0.25,
+          "effect_excess_nll": 0.010349159708352955,
+          "effect_nll": 0.35692274998832557,
+          "examples": 128,
+          "identity_excess_nll": 0.0,
+          "identity_nll": 0.6931471805599453,
+          "nll": 0.4656943205674871,
+          "selected_error": null,
+          "state_excess_nll": 0.0004394408742178071,
+          "state_nll": 0.34701303115419047
+        },
+        "identifiable": {
+          "coverage": 1.0,
+          "decision_cost": 0.0,
+          "effect_accuracy": 1.0,
+          "effect_excess_nll": 0.010131903550576022,
+          "effect_nll": 0.010131903550576022,
+          "examples": 128,
+          "identity_accuracy": 1.0,
+          "identity_excess_nll": 0.00035862396357167853,
+          "identity_nll": 0.00035862396357167853,
+          "nll": 0.0036433304164572404,
+          "paired_effect": 1.0,
+          "paired_identity": 1.0,
+          "paired_state": 1.0,
+          "selected_error": 0.0,
+          "state_accuracy": 1.0,
+          "state_excess_nll": 0.0004394637352240204,
+          "state_nll": 0.0004394637352240204
+        }
+      }
+    },
+    "train": {
+      "gates": {
+        "ambiguity": true,
+        "decisions": true,
+        "effect": true,
+        "identity": true,
+        "paired": true,
+        "passed": true,
+        "state": true
+      },
+      "overall": {
+        "examples": 512,
+        "factual_accuracy": 1.0,
+        "nll": 0.23469773885841194
+      },
+      "views": {
+        "ambiguous": {
+          "coverage": 0.0,
+          "decision_cost": 0.25,
+          "effect_excess_nll": 0.010349159708352955,
+          "effect_nll": 0.3569227499883256,
+          "examples": 256,
+          "identity_excess_nll": 0.0,
+          "identity_nll": 0.6931471805599453,
+          "nll": 0.4656943205674871,
+          "selected_error": null,
+          "state_excess_nll": 0.0004394408742178071,
+          "state_nll": 0.3470130311541904
+        },
+        "identifiable": {
+          "coverage": 1.0,
+          "decision_cost": 0.0,
+          "effect_accuracy": 1.0,
+          "effect_excess_nll": 0.010305383749214574,
+          "effect_nll": 0.010305383749214574,
+          "examples": 256,
+          "identity_accuracy": 1.0,
+          "identity_excess_nll": 0.0003586239635716785,
+          "identity_nll": 0.0003586239635716785,
+          "nll": 0.0037011571493367566,
+          "paired_effect": 1.0,
+          "paired_identity": 1.0,
+          "paired_state": 1.0,
+          "selected_error": 0.0,
+          "state_accuracy": 1.0,
+          "state_excess_nll": 0.00043946373522401705,
+          "state_nll": 0.00043946373522401705
+        }
+      }
+    }
+  },
+  "tests_passed": 96,
+  "graph_implemented": false,
+  "association": "supplied exact observed descriptors",
+  "report_validation": "structural; unchanged previously browser-verified renderer",
+  "hashes": {
+    "last.pt": "15e8b302f5866cce26a427cbc5639fffdd82fe009dacebcd6db4b9d1bdcdcdec",
+    "entity_results.json": "01c2f5825e4f82636bf13517784358ed6f146bf01b96a17324bd1fd1e6ddeb1d",
+    "entity_predictions.pt": "5deebfafab0bbbbaeebdac9f11daf234cceb7074ec27b34d90c562736fbd04ae",
+    "metrics.jsonl": "f1c1de0d0bd226d5fcba0434e1c769103da38c96f855bfdb6247c7090d7b23d1",
+    "run.json": "16ba146c14e72a9f97de08ddf0ee6434b455e82d77773b15b66cf34e9fe81a06",
+    "report.html": "72a0cf2e90d1c0d8b4133c7959e8c00a7402feca64449aadafd47deb9d9cef89",
+    "report.qa.json": "05d0103a1a9a1d7f8f093023f6258ed235b31e68cac8bbaa2da23b0c31fe8fa2"
+  },
+  "cached_resume_unchanged": true
+}

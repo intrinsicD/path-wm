@@ -1,5 +1,16 @@
 # Current work
 
+**Shared entity reader succeeds, 11 September:** the Claude-reviewed
+`--entity-reader shared --entity-association observed` path passes all declared
+development gates after 256 updates: 100% identity/state/effect accuracy on 128
+identifiable cases and correct bounded ambiguity handling. All 96 CPU tests pass.
+Predicted probabilities are unchanged under all eight per-frame reorderings after
+undoing output order. It uses 30,021 parameters and 128 persistent state floats.
+[Report](../runs/entity_shared_v1/reference/report.html) and
+[task evidence](entity-learning-task.md) retain limitations: association, two object
+slots and the finite hypothesis set are supplied; graph learning remains unimplemented.
+Next proposed: learn association while preserving this working reference.
+
 **Supplied association complete, 11 September:** the Claude-reviewed
 `--entity-association observed` diagnostic is implemented; 94 CPU tests pass.
 Matched 256-update development identity accuracy improves to 88.3%, but state/effect

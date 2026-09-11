@@ -929,3 +929,10 @@ entries:
     this intervention changes feature geometry too.
   - Stage O129 without claiming graph capability or endorsing a new run. Keep older graph and reader threads
     open.
+
+- turn: 2026-09-11_001#21
+  notes:
+  - Promote O129 by source commitment with unchanged ai-suggested provenance. Record task success as experiment,
+    not unrestricted entity capability.
+  - Stage learned-association next step O130. No causal closure of older failures; supplied matching and
+    slots remain limitations.

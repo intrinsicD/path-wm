@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Supplied association improves identity to 88.3 percent but combined gates and learned reordering consistency fail; 94 tests pass, Claude review and report verified. Graph remains deferred."
-  turn_count: 20
-  events_count: 47
+  summary: "Shared supplied-association reader passes every controlled development gate; 96 tests and exact reorderings pass. Learned matching and graph structure remain open."
+  turn_count: 21
+  events_count: 51
   claims_touched: []
   open_threads: 11
