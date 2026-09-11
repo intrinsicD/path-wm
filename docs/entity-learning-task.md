@@ -443,3 +443,16 @@ or posterior calibration is claimed. This model classifies new observations; it 
 not allocate IDs, persist entities or learn graph edges. Next proposed: a bounded
 transactional memory lifecycle that can defer uncertain matches, allocate confirmed
 new entities and recognize them on return, with explicit identity-switch tests.
+
+### Persistent entity lifecycle: implementation contract
+
+Add a single-writer bounded EntityMemory around a frozen descriptor scorer. Stable
+IDs are bookkeeping; prototypes stay fixed, while last-seen/count metadata updates.
+Confidence <=0.75 and capacity exhaustion defer. Exact retries are idempotent;
+conflicting retries and non-increasing new timestamps reject without mutation.
+Bounded receipts retain replay answers; expired events reject through the clock.
+Snapshots bind weights, validate state and preserve identity continuity. Essential
+CPU tests use controlled scores to isolate transaction correctness, plus the real
+reader for variable-cardinality and snapshot checks. No new training or scientific
+accuracy claim in this slice: variable-cardinality confidence remains unvalidated.
+Budget: CPU tests only. Existing novelty experiment and report remain unchanged.
