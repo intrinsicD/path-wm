@@ -2,10 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T12:56+02:00
-  turn_count: 26
-  summary: "Bounded entity lifecycle implemented with two Claude reviews; regression and transaction\
-  \ tests pass. Variable-cardinality recognition and graph learning remain unvalidated."
+  last_turn: 2026-09-11T13:07+02:00
+  turn_count: 27
+  summary: "Frozen growth fails capacity4/8 lifecycle gates; no ID swaps. Scoring bugs fixed, 113 tests pass, report verified."
 events_logged:
 - turn: 1
   type: question
@@ -414,6 +413,32 @@ events_logged:
   summary: Bounded entity lifecycle implemented with two Claude reviews; regression
     and transaction tests pass. Variable-cardinality recognition and graph learning
     remain unvalidated.
+
+- turn: 27
+  type: decision
+  id: N201
+  routing: direct
+  provenance: user
+  summary: Implement, review, test, fix and iterate.
+- turn: 27
+  type: experiment
+  id: N202
+  routing: direct
+  provenance: ai-executed
+  summary: Frozen growth fails capacity4/8 lifecycle gates; no ID swaps. Scoring bugs
+    fixed, 113 tests pass, report verified.
+- turn: 27
+  type: observation
+  id: O133
+  routing: staged
+  provenance: ai-suggested
+  summary: Variable-cardinality training remains proposed.
+- turn: 27
+  type: heuristic
+  id: H25
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O132 committed through persistent runtime and frozen screen.
 
 ai_actions:
 - turn: 1

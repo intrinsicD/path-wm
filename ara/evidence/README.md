@@ -61,3 +61,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Variation reconciliation](tables/entity_variation_reconciliation_2026-09-11.json): exact user-approved Claude follow-up completed; closes N195.
 
 - [Known-versus-new matching](tables/entity_novelty_2026-09-11.json): N198; fixed-margin screen and browser verification, no allocation.
+
+- [Frozen entity growth](tables/entity_growth_2026-09-11.json): N202; corrected scoring, capacity4/8 gates fail, transaction checks pass.

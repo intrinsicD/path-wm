@@ -1,5 +1,13 @@
 # Current work
 
+**Frozen growth screen completed, 11 September:** capacities1/2 pass; capacities4/8
+fail the declared lifecycle gate. Capacity8 allocation/revisit accuracy is98.44%,
+with no wrong-ID matches; uncertain novelty leaves some stores underfilled. All
+retry/restore checks pass. Fixed checkpoint loading and evaluator ID-offset errors;
+113 distinct tests pass. [Corrected report](../runs/entity_growth_v1/corrected/report.html)
+is browser verified. Next: predeclare variable-cardinality training; preserve this
+failed frozen reference. No new model training or graph learning yet.
+
 **Entity lifecycle implemented, 11 September:** a bounded Python `EntityMemory`
 allocates stable IDs, reuses them on confident matches, defers at capacity or low
 confidence, and supports idempotent retries and JSON snapshot restoration. Claude

@@ -3212,3 +3212,25 @@ tree:
   - runs/reviews/continuation_2026-09-11/entity-lifecycle-receipt.json
   - runs/reviews/continuation_2026-09-11/entity-lifecycle-reconcile-receipt.json
   status: resolved
+
+- id: N201
+  type: decision
+  title: Continue Claude-reviewed entity growth evaluation
+  provenance: user
+  timestamp: 2026-09-11T13:07+02:00
+  choice: Implement, review, test, fix and iterate.
+  status: resolved
+- id: N202
+  type: experiment
+  title: Frozen growing-memory screen exposes uncertain novelty
+  provenance: ai-executed
+  timestamp: 2026-09-11T13:07+02:00
+  result: Frozen growth fails capacity4/8 lifecycle gates; no ID swaps. Scoring bugs
+    fixed, 113 tests pass, report verified.
+  evidence:
+  - ara/evidence/tables/entity_growth_2026-09-11.json
+  - docs/entity-learning-task.md
+  also_depends_on:
+  - N200
+  - N201
+  status: resolved

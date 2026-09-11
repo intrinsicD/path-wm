@@ -237,3 +237,12 @@
 - **Code ref**: [matching data](../../../pathwm/data/entities.py), [reader](../../../pathwm/models/entities.py), [metrics](../../../pathwm/evaluation/entities.py).
 - **From staging**: O131
 - **Evidence of commitment**: 365bb2b and N198 implement the unmatched-query screen; allocation remains proposed.
+
+## H25: Test persistent identity separately from classifier labels
+
+- **Rationale**: Bind evaluator truth to allocated record IDs; test retries and restored continuation independently of recognition accuracy. Missed allocations can shift record indices without causing identity switches.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; transaction correctness does not establish calibrated recognition.
+- **Code ref**: [runtime](../../../pathwm/models/entity_memory.py), [growth screen](../../../pathwm/evaluation/entity_growth.py), [regression](../../../tests/test_entity_growth.py).
+- **From staging**: O132

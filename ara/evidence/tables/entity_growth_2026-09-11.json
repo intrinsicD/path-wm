@@ -1,0 +1,153 @@
+{
+  "additional_regression_tests": 1,
+  "all_passed": true,
+  "full_suite_tests": 112,
+  "hashes": {
+    "entity_growth.json": "e42a56da59953d52436d4accfdb077b22f9b794027a83b6603ec0ede10a1ebb9",
+    "last.pt": "ac1b5c53ea5da15b9eb232caef2ba503050fbecb36a71aaa60fda949c804678f",
+    "report.html": "a84632d4c88fff093a5694b96b224e53ccf4c989642e0d467340edef02b5d04a",
+    "run.json": "3b96b9c95a90339d8baf3f53adcdb1fbd2f98f0ec82e04b2083d52a3d43d7b2e"
+  },
+  "identical_inputs_and_model_receipts_after_metric_fix": true,
+  "qa": {
+    "broken_images": 0,
+    "browser_checked": true,
+    "expanded_details": 1,
+    "horizontal_overflow": false,
+    "renderer_sha256": "4900e1e86bad0d5724cfc969ec9ff0f41ec3ec587edf5a073dc7922f6e19acc7",
+    "report_sha256": "a84632d4c88fff093a5694b96b224e53ccf4c989642e0d467340edef02b5d04a",
+    "rows": 4,
+    "self_contained": true,
+    "status": "browser_verified",
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "retry_restore_all": true,
+  "scope": "Fixed synthetic families; first attempt preserved with invalid identity-offset metrics. Corrected screen fails capacity4/8 lifecycle gates; no calibration or general recognition claim.",
+  "scores": {
+    "1": {
+      "create": {
+        "accuracy": 1.0,
+        "correct": 32,
+        "count": 32,
+        "false_split": 0,
+        "uncertain": 0,
+        "wrong_id": 0
+      },
+      "nearest_separation_mean": null,
+      "nearest_separation_min": null,
+      "overflow": {
+        "accuracy": 1.0,
+        "correct": 32,
+        "count": 32,
+        "false_split": 0,
+        "uncertain": 0,
+        "wrong_id": 0
+      },
+      "passed": true,
+      "revisit": {
+        "accuracy": 1.0,
+        "correct": 32,
+        "count": 32,
+        "false_split": 0,
+        "uncertain": 0,
+        "wrong_id": 0
+      },
+      "transactions": true
+    },
+    "2": {
+      "create": {
+        "accuracy": 1.0,
+        "correct": 64,
+        "count": 64,
+        "false_split": 0,
+        "uncertain": 0,
+        "wrong_id": 0
+      },
+      "nearest_separation_mean": 1.4446964468806982,
+      "nearest_separation_min": 0.9113005995750427,
+      "overflow": {
+        "accuracy": 1.0,
+        "correct": 32,
+        "count": 32,
+        "false_split": 0,
+        "uncertain": 0,
+        "wrong_id": 0
+      },
+      "passed": true,
+      "revisit": {
+        "accuracy": 1.0,
+        "correct": 64,
+        "count": 64,
+        "false_split": 0,
+        "uncertain": 0,
+        "wrong_id": 0
+      },
+      "transactions": true
+    },
+    "4": {
+      "create": {
+        "accuracy": 0.9921875,
+        "correct": 127,
+        "count": 128,
+        "false_split": 0,
+        "uncertain": 1,
+        "wrong_id": 0
+      },
+      "nearest_separation_mean": 1.2432354986667633,
+      "nearest_separation_min": 0.9113005995750427,
+      "overflow": {
+        "accuracy": 0.9375,
+        "correct": 30,
+        "count": 32,
+        "false_split": 0,
+        "uncertain": 1,
+        "wrong_id": 0
+      },
+      "passed": false,
+      "revisit": {
+        "accuracy": 0.9921875,
+        "correct": 127,
+        "count": 128,
+        "false_split": 0,
+        "uncertain": 1,
+        "wrong_id": 0
+      },
+      "transactions": true
+    },
+    "8": {
+      "create": {
+        "accuracy": 0.984375,
+        "correct": 252,
+        "count": 256,
+        "false_split": 0,
+        "uncertain": 4,
+        "wrong_id": 0
+      },
+      "nearest_separation_mean": 1.0971569728571922,
+      "nearest_separation_min": 0.9021444320678711,
+      "overflow": {
+        "accuracy": 0.8125,
+        "correct": 26,
+        "count": 32,
+        "false_split": 0,
+        "uncertain": 2,
+        "wrong_id": 0
+      },
+      "passed": false,
+      "revisit": {
+        "accuracy": 0.984375,
+        "correct": 252,
+        "count": 256,
+        "false_split": 0,
+        "uncertain": 4,
+        "wrong_id": 0
+      },
+      "transactions": true
+    }
+  },
+  "source_commit": "cf6f4b6",
+  "weights_unchanged": true
+}

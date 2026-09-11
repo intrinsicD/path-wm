@@ -500,3 +500,37 @@ Require exact retry and mid-episode snapshot continuation equality on every epis
 Record all inputs/receipts, separated family dependence and donor/source identities.
 No training, sweep, calibration or graph-learning claim. CPU evaluation budget60s,
 excluding report generation. Implement in the existing recipe/report pipeline.
+
+### Frozen growth outcome
+
+The corrected screen (`cf6f4b6`) completes with a **failed scientific gate** at
+capacities4/8. At capacities1/2 every event is correct. At capacity4 allocation and
+revisit correctness are127/128 each, and final capacity deferrals30/32. At capacity8
+these are252/256 each and26/32. There are no wrong-ID matches or false splits in the
+corrected receipts. All128 episodes preserve exact retries and restored continuation.
+The final-event criterion is end-to-end: one capacity4 episode and four capacity8
+episodes remain underfilled after uncertain allocations, so creating a final new
+record is locally valid but fails the intended complete-lifecycle sequence. The
+remaining final-event misses are uncertainty (one/two respectively). This does not
+indicate a capacity enforcement bug.
+
+Two implementation defects were fixed: loading nested `agent` checkpoint weights
+(preflight failed before a run existed), and scoring through stable allocated IDs
+instead of assuming IDs equal simulator indices after a missed allocation. The first
+screen remains at `runs/entity_growth_v1/reference` with superseded identity-offset
+metrics. The corrected screen has identical inputs and model receipts; only identity
+scoring changed. Donor/checkpoint weights are equal, no optimizer steps occurred,
+and cached CLI resume succeeds. Both conceptual Claude reviews completed. Reported
+rates are descriptive on32 shared families, not independent confidence intervals.
+
+Full regression suite112 tests passed; the additional ID-offset regression passed
+with all four growth tests (113 distinct tests total). The corrected report passed
+1280×720 browser QA, with no overflow/broken images and working score details.
+[Report](../runs/entity_growth_v1/corrected/report.html),
+[verification](../runs/entity_growth_v1/verification.json).
+
+Run with `python -m experiments.multimodal --entity-growth-weights PATH --output DIR`;
+resume with `python -m experiments.multimodal --resume DIR`. The present next research
+question is training novelty decisions across varying candidate counts, with the
+failed frozen reference retained and fresh held-out families. No threshold tuning,
+new training, or learned graph updates were performed in this slice.

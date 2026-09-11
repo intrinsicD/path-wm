@@ -2397,6 +2397,21 @@ observations:
   potential_type: heuristic
   bound_to:
   - N198
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H25
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O133
+  timestamp: 2026-09-11T13:07+02:00
+  provenance: ai-suggested
+  content: Next predeclare variable-cardinality novelty training with fresh held-out
+    families, retaining failed frozen baseline and fixed decision rule.
+  context: Uncertain allocations and final-query deferrals cause growth gates to fail;
+    geometry and candidate competition are entangled.
+  potential_type: heuristic
+  bound_to:
+  - N202
   promoted: false
   promoted_to: null
   crystallized_via: null

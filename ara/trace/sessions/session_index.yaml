@@ -119,9 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Bounded entity lifecycle implemented with two Claude reviews; regression and transaction\
-  \ tests pass. Variable-cardinality recognition and graph learning remain unvalidated."
-  turn_count: 26
-  events_count: 66
+  summary: "Frozen growth fails capacity4/8 lifecycle gates; no ID swaps. Scoring bugs fixed, 113 tests pass, report verified."
+  turn_count: 27
+  events_count: 70
   claims_touched: []
   open_threads: 12

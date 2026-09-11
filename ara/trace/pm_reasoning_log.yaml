@@ -974,3 +974,12 @@ entries:
     a frozen-model evaluation.'
   - Claude tie-calibration objection is mathematically unnecessary; equal softmax
     maxima cannot exceed one half.
+
+- turn: 2026-09-11_001#27
+  notes:
+  - Promote O132 via implemented persistent lifecycle and corrected growth screen,
+    not a claim that all gates pass.
+  - Preserve failed original scores and identical receipts; corrected ground-truth
+    mapping removes artificial ID switches.
+  - Stage variable-cardinality training; no tuned threshold or general calibration
+    claim.
