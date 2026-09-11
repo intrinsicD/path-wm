@@ -132,3 +132,27 @@ def test_switched_query_targets_remain_aligned():
     assert torch.equal(values, latent.flip(0))
     assert torch.equal(labels, target.flip(0))
     assert torch.equal(second_key_query(latent, target, False)[0], latent)
+
+
+def test_history_reads_keep_targets_and_interleave_events(monkeypatch):
+    import torch
+    import pathwm.evaluation.key_box as module
+
+    seen = []
+
+    class Reader:
+        agent = object()
+
+        def __call__(self, state, latent):
+            seen.append((state, latent.clone()))
+            return latent, state + 1
+
+    monkeypatch.setattr(module, "neutral_event", lambda agent, state, time: state + 10)
+    latent = torch.tensor([[2.0, 0.0], [0.0, 2.0]], requires_grad=True)
+    target = torch.tensor([0, 1])
+    losses = module.key_read_losses(Reader(), 0, latent, target, True, 4, 8)
+    assert [state for state, _ in seen] == [0, 1, 12, 13, 24, 25, 36, 37]
+    assert len(losses) == 8
+    torch.testing.assert_close(torch.stack(losses), losses[0].expand(8))
+    torch.stack(losses).mean().backward()
+    assert latent.grad.abs().sum() > 0

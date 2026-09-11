@@ -111,3 +111,14 @@ non-thinker equality and frozen-reference identity all pass. Original result:
 `runs/key_box_v1/verification.json`; second result:
 `runs/key_box_v1/switched_verification.json`. Reports are structural-only under
 prior browser restriction. Both failed capability screens remain available.
+
+History stability iteration: train four read pairs with a neutral observation
+between each pair, keeping the recurrent workspace. Same seed2301, batch32,
+256 updates, optimizer and donors; query switching stays enabled. Average all
+eight supervised read losses. This changes sequence exposure and compute, not
+architecture; it is not a matched-compute attribution test. Fresh evaluation
+seed2421,16 families, frozen switched checkpoint comparison; all gates unchanged.
+Budget240 CPU seconds. Check read/target alignment, event ordering, gradients,
+report and cached resume. No controller-derived supervision or oracle inputs.
+This approximates action interleaving; changing entity contents within that
+unroll and on-policy training remain outside this bounded comparison.
