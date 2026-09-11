@@ -333,3 +333,13 @@
 - **Sensitivity**: Separated synthetic contexts supply the relevance rule. No ambiguous semantic relevance or graph discovery established.
 - **Code ref**: [gate comparison](../../../pathwm/evaluation/entity_gate.py), [recipe](../../../experiments/multimodal.py).
 - **Evidence**: [bounded comparison](../../evidence/tables/entity_gate_2026-09-11.json).
+
+## H35: Separate frozen gate sensitivity from observation ambiguity
+
+- **Rationale**: Reuse prototypes and noise across severities, retain generative labels, report both class recalls and fixed threshold sensitivity with a distance baseline.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O142
+- **Sensitivity**: High-noise failure cannot identify a unique gate defect or Bayes limit. Baseline is not an oracle.
+- **Code ref**: [noise screen](../../../pathwm/evaluation/entity_gate.py).
+- **Evidence**: [frozen shift](../../evidence/tables/entity_gate_shift_2026-09-11.json).

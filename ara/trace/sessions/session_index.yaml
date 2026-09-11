@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Context gate learns bounded relevance at100 percent versus50 percent controls;145 tests and resume pass, visual QA denied."
-  turn_count: 37
-  events_count: 106
+  summary: "Frozen gate robustness fails at larger noise;12 relevant tests and resume pass, no retraining or threshold selection."
+  turn_count: 38
+  events_count: 109
   claims_touched: []
   open_threads: 13

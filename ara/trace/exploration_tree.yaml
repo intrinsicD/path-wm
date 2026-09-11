@@ -3441,3 +3441,13 @@ tree:
   evidence: [ara/evidence/tables/entity_gate_2026-09-11.json, docs/entity-learning-task.md, "git:78c7f4c"]
   also_depends_on: [N219]
   status: resolved
+
+- id: N221
+  type: experiment
+  title: Frozen gate noise stress fails at larger shifts
+  provenance: ai-executed
+  timestamp: 2026-09-11T15:49+02:00
+  result: Sigma0.03/0.15 pass;0.30/0.60 fail per-class recall gate. Accept recall92.97/55.47 percent.12 relevant tests and cached resume pass.
+  evidence: [ara/evidence/tables/entity_gate_shift_2026-09-11.json, "git:5a241b8"]
+  also_depends_on: [N220]
+  status: resolved

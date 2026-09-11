@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T15:30+02:00
-  turn_count: 37
-  summary: "Context gate learns bounded relevance at100 percent versus50 percent controls;145 tests and resume pass, visual QA denied."
+  last_turn: 2026-09-11T15:49+02:00
+  turn_count: 38
+  summary: "Frozen gate robustness fails at larger noise;12 relevant tests and resume pass, no retraining or threshold selection."
 events_logged:
 - turn: 1
   type: question
@@ -672,6 +672,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Propose noise-shift comparison.
+- turn: 38
+  type: experiment
+  id: N221
+  routing: direct
+  provenance: ai-executed
+  summary: Preserve failed high-noise robustness screen.
+- turn: 38
+  type: observation
+  id: O142
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Noise sensitivity method promoted to H35 by code commitment.
+- turn: 38
+  type: observation
+  id: O143
+  routing: staged
+  provenance: ai-suggested
+  summary: Candidate noise-augmentation comparison.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -937,6 +955,10 @@ ai_actions:
   files_changed: [pathwm/models/entity_relations.py, tests/test_entity_gate.py]
 - turn: 37
   action: Implemented trained gate recipe, reconciled two Claude reviews, ran tests/training/resume/audit; preserved browser denial.
+  provenance: ai-executed
+  files_changed: [experiments/multimodal.py, pathwm/evaluation/entity_gate.py, pathwm/evaluation/report.py]
+- turn: 38
+  action: Implemented frozen stress recipe, reconciled Claude critique twice, ran12 tests, comparison, resume and independent audit.
   provenance: ai-executed
   files_changed: [experiments/multimodal.py, pathwm/evaluation/entity_gate.py, pathwm/evaluation/report.py]
 claims_touched: []

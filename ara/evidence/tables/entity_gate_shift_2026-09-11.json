@@ -1,0 +1,71 @@
+{
+  "passed": false,
+  "independent_metrics": true,
+  "frozen_hash": true,
+  "noise_reconstruction": true,
+  "cohorts": {
+    "0.03": {
+      "primary": {
+        "accuracy": 1.0,
+        "negative_recall": 1.0,
+        "positive_recall": 1.0
+      },
+      "baseline": {
+        "accuracy": 1.0,
+        "negative_recall": 1.0,
+        "positive_recall": 1.0
+      },
+      "brier": 0.02086292952299118,
+      "passed": true
+    },
+    "0.15": {
+      "primary": {
+        "accuracy": 1.0,
+        "negative_recall": 1.0,
+        "positive_recall": 1.0
+      },
+      "baseline": {
+        "accuracy": 0.9921875,
+        "negative_recall": 1.0,
+        "positive_recall": 0.984375
+      },
+      "brier": 0.0272350050508976,
+      "passed": true
+    },
+    "0.3": {
+      "primary": {
+        "accuracy": 0.953125,
+        "negative_recall": 0.9765625,
+        "positive_recall": 0.9296875
+      },
+      "baseline": {
+        "accuracy": 0.84375,
+        "negative_recall": 1.0,
+        "positive_recall": 0.6875
+      },
+      "brier": 0.05966610834002495,
+      "passed": false
+    },
+    "0.6": {
+      "primary": {
+        "accuracy": 0.75390625,
+        "negative_recall": 0.953125,
+        "positive_recall": 0.5546875
+      },
+      "baseline": {
+        "accuracy": 0.609375,
+        "negative_recall": 0.9765625,
+        "positive_recall": 0.2421875
+      },
+      "brier": 0.17258143424987793,
+      "passed": false
+    }
+  },
+  "browser_checked": false,
+  "report_validation": "structural_only_prior_browser_policy_denial",
+  "sha256": {
+    "entity_gate_shift.json": "c752b5a2a7f43dfe5caeb11b0a7cb72b454e7679ecf6338df7f0ace213a58938",
+    "last.pt": "47b8fce576b7334692f9b9efe878e76f064982427372948f47f1115d093d785b",
+    "report.html": "22bea988a919fbb7ef730aa4465cde3231c35798b59f84a9e2cd0426d4b6e45f"
+  }
+}

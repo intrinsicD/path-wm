@@ -1063,3 +1063,9 @@ entries:
   - Promote O141 by implemented learning path, preserving synthetic context-rule scope.
   - Record test outcomes separately from denied visual QA; no browser workaround.
   - Stage O142; distance sweep alone has no semantic calibration interpretation.
+
+- turn: 2026-09-11_001#38
+  notes:
+  - Promote the sensitivity method O142, not a robustness claim; negative results remain visible.
+  - No threshold tuning; prototype/noise ambiguity prevents diagnosing a unique defect.
+  - Stage O143 as a candidate repair experiment, not an established solution.

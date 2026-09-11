@@ -2547,6 +2547,18 @@ observations:
   context: Separated context-rule screen passes; intermediate distance sweep has no ground-truth labels.
   potential_type: heuristic
   bound_to: [N220]
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H35
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O143
+  timestamp: 2026-09-11T15:49+02:00
+  provenance: ai-suggested
+  content: Test noise-augmented gate training against preserved frozen reference using fresh evaluation contexts.
+  context: Higher noise lowers accept recall; observational ambiguity remains a competing explanation.
+  potential_type: heuristic
+  bound_to: [N221]
   promoted: false
   promoted_to: null
   crystallized_via: null

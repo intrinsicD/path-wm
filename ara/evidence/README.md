@@ -81,3 +81,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Remembered relation keys](tables/entity_relations_2026-09-11.json): N218; destination-only recall after earlier cues, with explicit persistence and learned addressing.
 
 - [Context write gate](tables/entity_gate_2026-09-11.json): N220; frozen-consumer learning on separated context regimes; visual QA unavailable.
+
+- [Frozen gate noise shift](tables/entity_gate_shift_2026-09-11.json): N221; high-noise accept recall fails declared robustness gate.

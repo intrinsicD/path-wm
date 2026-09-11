@@ -1,5 +1,14 @@
 # Current work
 
+**Frozen gate noise shift finds a limit, 11 September:** the primary per-class
+robustness gate fails at sigma0.30 and0.60. Accept recall drops92.97% then55.47%;
+ignore recall remains≥95%. Sigma0.03/0.15 pass at100%. No retraining or threshold
+selection.12 relevant tests, cached resume and independent metric audit pass.
+[Report](../runs/entity_gate_shift_v1/reference/report.html) is structurally verified;
+visual QA remains unavailable under the prior browser policy denial. Next proposed:
+noise-augmented training with fresh evaluation contexts; high-noise ambiguity
+means this failure does not identify a unique architectural defect.
+
 **Context write gate passes the bounded screen, 11 September:** the gate learns
 from source-selection loss with matcher, key and interaction weights frozen.
 All96 held-out cases pass source/state prediction, including allocation permutation

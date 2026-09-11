@@ -1067,3 +1067,22 @@ local-file policy denial; do not try an alternate route.
 Claude identified noise/separation ambiguity. Added a fixed Euclidean-distance
 baseline (accept when distance<0.5, not an oracle) and per-case pre-normalization
 noise/separation ratios. These are descriptive and cannot establish a Bayes floor.
+
+
+Frozen shift result (implementation5a241b8): robustness gate FAIL, retained.
+At sigma0.03/0.15 both recalls100%. At0.30 accuracy95.3125%, accept92.96875%,
+ignore97.65625%; at0.60 accuracy75.390625%, accept55.46875%, ignore95.3125%.
+Distance baseline accuracy100/99.21875/84.375/60.9375%. Threshold0.4/0.5/0.6
+accuracy at0.60 is79.6875/75.390625/69.921875%; no threshold was selected.
+Claude accepted the diagnostic scope after adding baseline/noise-separation checks.
+12 gate and multimodal training/report tests pass; cached resume and independent
+probability, context reconstruction, metrics and frozen-weight audit pass. One
+initial test command named a nonexistent report test file; corrected to the actual
+multimodal report/resume tests before validation. No model weights changed.
+Report structural QA passes; visual QA remains unavailable after prior browser
+policy denial. Evidence: `runs/entity_gate_shift_v1/verification.json`.
+Run `python -m experiments.multimodal --entity-gate-shift --entity-gate-weights
+GATE.pt --output DIR`; cached resume `--resume DIR`.
+Next candidate: noise-augmented training, fresh held-out contexts and per-class
+checks, preserving this frozen reference. This is not yet an adopted repair or
+proof that training can overcome observation ambiguity.
