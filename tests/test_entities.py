@@ -174,3 +174,22 @@ def test_shared_entity_permutations_and_gradients():
     assert all(
         torch.isfinite(p.grad).all() for p in model.parameters() if p.grad is not None
     )
+
+
+def test_learned_association_task_gradients_and_no_exact_lookup(monkeypatch):
+    import pathwm.models.entities as module
+    from pathwm.data.entities import EntityEpisodes
+
+    model = module.SharedEntityReader(16, association='learned')
+    x = EntityEpisodes('validation', 32).inputs
+    def forbidden(*args):
+        raise AssertionError('Learned path called exact matching')
+    monkeypatch.setattr(module, 'observed_association', forbidden)
+    output = model(x)
+    targets = EntityEpisodes('validation', 32).targets
+    loss = sum(-(t * p.log_softmax(-1)).sum(-1).mean() for p, t in zip(output, targets))
+    loss.backward()
+    assert sum(p.grad.abs().sum() for p in model.matcher.parameters()) > 0
+    for p in output:
+        torch.testing.assert_close(p.exp().sum(-1), torch.ones(len(x)))
+    torch.testing.assert_close(model.assignment_weights(x)[16:, -1], torch.full((16, 2), .5))

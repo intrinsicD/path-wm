@@ -286,3 +286,23 @@ two-assignment enumeration are supplied. Next proposed step is learned associati
 under controlled feature variation, retaining this successful reader as a reference;
 success here does not establish learned graph structure or a cause for the older
 agent event-reader failure.
+
+## Learned-association screen
+
+Authorized continuation: shared reader with `--entity-association learned`. Add a
+shared pair scorer, squared descriptor difference → Linear(8,32) → GELU → Linear(32,1).
+Sum scores over each of the two bijections and softmax. No exact equality or teacher
+correspondence enters forward/training. Initial slots remain bookkeeping. Enumerate
+both action-time assignments with separate shared recurrent states and marginalize
+answer probabilities over action/final assignments. Missing final descriptors use the
+known symmetric prior. No latent averaging. Descriptor noise/discovery/graph growth
+are outside this first test of replacing exact matching.
+
+Keep existing reader initialization (construct scorer afterward), seed31, width64,
+lr0.003/wd0.01, batch32, 512/256 manifests, 256 updates and450 active CPU seconds.
+One run; retain prior gates. Report the extra321 parameters and256 floats across two
+128-float hypothesis states, versus128 in the reference; no equal-compute claim.
+Report initial/final association accuracy separately using evaluator-only matching,
+including distinct descriptor-group counts rather than treating replicated episodes
+as independent evidence. Development task evaluation remains final-only; initial
+association scoring is a declared fixed diagnostic and does not select training.
