@@ -1325,3 +1325,21 @@ Next candidate: outcome-trained acquisition policy with opaque source identifier
 and known costs, withholding hidden correlation/noise labels; test on fresh source
 assignments before claiming learned source choice. Reliability O149 remains a
 separate, unimplemented discussion proposal.
+
+### Outcome-trained source choice (2026-09-11)
+
+First learner is a per-episode action-value table, not a neural source selector.
+16 worlds, seeds1601..1616; each512 calibration cases then256 disjoint evaluation
+cases, normalized context generator and sigma0.60. Hidden rho0/rho0.9 sources are
+assigned to opaque A/B with balanced swaps across worlds; both cost0.05, so price
+cannot reveal quality. Frozen original gate/defer band. On deferred calibration
+cases, randomly shuffled balanced exploration chooses one source; update only its
+mean (selected correctness minus first correctness minus0.05). Explicit ground-truth
+outcome feedback is supplied after calibration actions. Freeze values for evaluation;
+choose positive best mean or stop. No eval feedback or hidden rho in policy inputs.
+No-feedback policy starts at zero and stops. Compare fixed A/B and first-only,
+channel permutation and duplicated feedback-free evaluation; report exploration
+cost, evaluation utility, and combined utility separately. Success: evaluation
+utility>=best fixed A/B+0.01 and>first-only, correct useful-source choice>=75%,
+combined utility>=first-only over calibration+evaluation.30CPU seconds. No
+threshold tuning; outcome availability/static source quality are assumptions.
