@@ -1436,3 +1436,20 @@ feedback latency and untested threshold sensitivity. Reconciliation retains fixe
 settings and reports every episode's first-reset case (including no reset), not
 just a mean; no claim of calibrated detection or timing robustness. Review receipts:
 `runs/reviews/continuation_2026-09-11/source-change{,-reconcile}-receipt.json`.
+
+Triggered-forgetting result (56d4c7a): full screen FAIL false-reset guard.
+Late drift utility0.742106934 exceeds frozen0.713720703 and cumulative0.723066406
+by required0.01. Whole drift0.729368896 exceeds frozen0.713940430. Static
+utility0.767781982 versus frozen0.779614258 loses0.011832275, within0.02.
+However10/16 static episodes reset (62.5%>25%). Drift12/16 reset; first-reset
+cases14..238 among those, with four no-reset episodes; reset is not true detection.
+Calibration produced15 resets across16 worlds, reported separately. Window results
+on these same fresh worlds remain controls; do not compare different-seed runs
+as an isolated treatment effect. No settings tuned and no candidate promoted.
+26 relevant tests pass; updated report/resume smoke rerun; formal cached resume
+and independent action/feedback/block/reset timing replay pass. Original gate unchanged.
+Evidence `runs/entity_source_change_v1/verification.json`; report structural-only.
+Command uses existing `--entity-source-drift --entity-gate-weights GATE.pt --output DIR`;
+resume `--resume DIR`. Next candidate: uncertainty-aware change checks, calibrated
+on separate stationary development worlds with a held-out false-alarm budget.
+That candidate remains proposed; the present heuristic is not a learned reliability model.

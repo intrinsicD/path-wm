@@ -2683,6 +2683,21 @@ observations:
   potential_type: heuristic
   bound_to:
   - N230
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H44
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O153
+  timestamp: 2026-09-11T17:10+02:00
+  provenance: ai-suggested
+  content: Compare uncertainty-aware change checks calibrated on separate stationary
+    development worlds against a held-out false-alarm budget.
+  context: Fixed block mean-difference detector passes utility criteria but resets
+    in62.5% of unchanged worlds.
+  potential_type: heuristic
+  bound_to:
+  - N231
   promoted: false
   promoted_to: null
   crystallized_via: null

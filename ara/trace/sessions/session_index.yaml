@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Online recency gains drift utility but fails static guardrail;25 relevant tests, resume and independent replay pass."
-  turn_count: 47
-  events_count: 135
+  summary: "Triggered forgetting passes utility criteria but fails false-reset guard;26 relevant tests, resume and independent replay pass."
+  turn_count: 48
+  events_count: 138
   claims_touched: []
-  open_threads: 14
+  open_threads: 15

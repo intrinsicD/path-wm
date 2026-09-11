@@ -3562,3 +3562,18 @@ tree:
   also_depends_on:
   - N229
   status: resolved
+
+- id: N231
+  type: experiment
+  title: Triggered forgetting fails stationary false-reset guard
+  provenance: ai-executed
+  timestamp: 2026-09-11T17:10+02:00
+  result: Late drift utility0.742107 vs frozen0.713721; static loss0.011832 within0.02.
+    Static reset episodes10/16 exceed25%; full screen fails.26 relevant tests, resume
+    and independent replay pass.
+  evidence:
+  - ara/evidence/tables/entity_source_change_2026-09-11.json
+  - git:56d4c7a
+  also_depends_on:
+  - N230
+  status: resolved

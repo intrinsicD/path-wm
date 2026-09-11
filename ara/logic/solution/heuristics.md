@@ -423,3 +423,13 @@
 - **Sensitivity**: Fixed window and swap timing, not learned change detection. Faster adaptation can violate stable-environment utility guards.
 - **Code ref**: [source history](../../../pathwm/models/source_choice.py), [drift evaluation](../../../pathwm/evaluation/source_choice.py).
 - **Evidence**: [failed full screen](../../evidence/tables/entity_source_drift_2026-09-11.json).
+
+## H44: Test evidence-triggered forgetting against explicit stationary reset limits
+
+- **Rationale**: Measure false resets and their timing alongside utility before accepting a forgetting rule. Implemented test method does not imply successful detection.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O152
+- **Sensitivity**: Fixed32-outcome blocks and0.15 threshold are uncalibrated; selected feedback controls detection latency. Present screen fails its reset guard.
+- **Code ref**: [detector](../../../pathwm/models/source_choice.py), [comparison](../../../pathwm/evaluation/source_choice.py).
+- **Evidence**: [failed full screen](../../evidence/tables/entity_source_change_2026-09-11.json).

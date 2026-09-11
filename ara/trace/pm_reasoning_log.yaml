@@ -1128,3 +1128,9 @@ entries:
   - Cumulative adaptation guarantee corrected by Claude; update is after selected
     feedback.
   - Stage evidence-triggered forgetting O152; no learned detector implemented.
+
+- turn: 2026-09-11_001#48
+  notes:
+  - Promote O152 testing method through committed implementation, not detector success.
+  - Preserve failed false-reset screen; no threshold retuning.
+  - Stage O153 uncertainty-aware checks; reliability proposal O149 remains separate.

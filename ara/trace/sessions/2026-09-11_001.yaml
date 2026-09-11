@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T16:59+02:00
-  turn_count: 47
-  summary: "Online recency gains drift utility but fails static guardrail;25 relevant tests, resume and independent replay pass."
+  last_turn: 2026-09-11T17:10+02:00
+  turn_count: 48
+  summary: "Triggered forgetting passes utility criteria but fails false-reset guard;26 relevant tests, resume and independent replay pass."
 events_logged:
 - turn: 1
   type: question
@@ -846,6 +846,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Evidence-triggered forgetting proposed.
+- turn: 48
+  type: experiment
+  id: N231
+  routing: direct
+  provenance: ai-executed
+  summary: Utility criteria pass; stationary false-reset guard fails.
+- turn: 48
+  type: observation
+  id: O152
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Test method promoted to H44 by implementation, not success claim.
+- turn: 48
+  type: observation
+  id: O153
+  routing: staged
+  provenance: ai-suggested
+  summary: Uncertainty-aware change checks proposed.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1177,6 +1195,15 @@ ai_actions:
   - pathwm/evaluation/source_choice.py
   - experiments/multimodal.py
   - pathwm/evaluation/report.py
+- turn: 48
+  action: Two actual Claude conceptual reviews; implemented detector and report;26
+    tests, fresh fixed run, cached resume and independent replay.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/source_choice.py
+  - pathwm/evaluation/source_choice.py
+  - experiments/multimodal.py
+  - pathwm/evaluation/report.py
 claims_touched: []
 key_context:
 - turn: 1
@@ -1208,6 +1235,7 @@ key_context:
 - turn: 25
   excerpt: "User: continue with claude. implement this, review, test, fix and iterate"
 open_threads:
+- "O153: uncertainty-aware change tests proposed after fixed detector fails false-reset guard."
 - "Reliability proposal O149: define frozen correctness labels and matched-confidence comparison before implementation."
 - "O141: learned relation-update gating remains proposed; remembered-key addressing O140 is implemented."
 - O132: persistent allocation/revisit behavior remains proposed.

@@ -99,3 +99,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Outcome-trained source choice](tables/entity_source_choice_2026-09-11.json): N229; selected calibration feedback learns useful source, evaluation frozen.
 
 - [Online source drift](tables/entity_source_drift_2026-09-11.json): N230; recency adapts but fails stable-source utility guardrail.
+
+- [Triggered forgetting](tables/entity_source_change_2026-09-11.json): N231; utility criteria pass but static false-reset guard fails.

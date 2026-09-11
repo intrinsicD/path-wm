@@ -1,0 +1,86 @@
+{
+  "detector": {
+    "block": 32,
+    "static_reset_episode_rate": 0.625,
+    "threshold": 0.15
+  },
+  "reset_timing_verified": true,
+  "passed": false,
+  "summary": {
+    "drift": {
+      "cumulative": {
+        "combined_utility": 0.7375663248697882,
+        "early_utility": 0.71798583984375,
+        "late_utility": 0.72306640625,
+        "utility": 0.720526123046875
+      },
+      "frozen": {
+        "combined_utility": 0.7353710937499965,
+        "early_utility": 0.71416015625,
+        "late_utility": 0.713720703125,
+        "utility": 0.7139404296874999
+      },
+      "no_feedback": {
+        "combined_utility": 0.7376985677083299,
+        "early_utility": 0.7201416015625,
+        "late_utility": 0.7217041015625,
+        "utility": 0.7209228515625
+      },
+      "triggered": {
+        "combined_utility": 0.7405139160156216,
+        "early_utility": 0.7166308593749999,
+        "late_utility": 0.74210693359375,
+        "utility": 0.729368896484375
+      },
+      "window": {
+        "combined_utility": 0.7405847167968715,
+        "early_utility": 0.71822509765625,
+        "late_utility": 0.7409375,
+        "utility": 0.729581298828125
+      }
+    },
+    "static": {
+      "cumulative": {
+        "combined_utility": 0.7561405436197882,
+        "early_utility": 0.77691162109375,
+        "late_utility": 0.7755859374999999,
+        "utility": 0.776248779296875
+      },
+      "frozen": {
+        "combined_utility": 0.7572623697916632,
+        "early_utility": 0.78056640625,
+        "late_utility": 0.778662109375,
+        "utility": 0.7796142578124999
+      },
+      "no_feedback": {
+        "combined_utility": 0.7560904947916632,
+        "early_utility": 0.7767822265625,
+        "late_utility": 0.7754150390625,
+        "utility": 0.7760986328125
+      },
+      "triggered": {
+        "combined_utility": 0.7533182779947882,
+        "early_utility": 0.7674755859375,
+        "late_utility": 0.76808837890625,
+        "utility": 0.767781982421875
+      },
+      "window": {
+        "combined_utility": 0.7521561686197883,
+        "early_utility": 0.76560302734375,
+        "late_utility": 0.76298828125,
+        "utility": 0.764295654296875
+      }
+    }
+  },
+  "independent_action_feedback_replay": true,
+  "common_exploration_verified": true,
+  "no_hidden_drift_signal": true,
+  "frozen_gate_hash": true,
+  "browser_checked": false,
+  "report_validation": "structural_only_prior_policy_denial",
+  "sha256": {
+    "entity_source_drift.json": "49d55ada2046f41f8ebe35c3311769ab2f71a6e31e762034fe5580f68cef9f01",
+    "last.pt": "08f8031edf8e5df520ffcfc139e63c8a4b1f0eef5dd4e86734dca571e70b4b0d",
+    "report.html": "a527090fd442550c69e958a7382fd217f05cc1f901df4c4894fec9ce9e10906e"
+  }
+}

@@ -1,5 +1,13 @@
 # Current work
 
+**Triggered forgetting fails false-reset guard, 11 September:** late drift utility
+0.742107 versus frozen0.713721 and cumulative0.723066; static utility loss0.011832
+is within0.02. But10/16 unchanged worlds reset (62.5%>25%), so full screen fails.
+26 relevant tests, cached resume and independent action/feedback/reset replay pass.
+[Report](../runs/entity_source_change_v1/reference/report.html) structural-only.
+Original gate unchanged. Next candidate: uncertainty-aware change checks with
+separate stationary calibration and held-out false-alarm controls; no tuning here.
+
 **Online recency adapts but fails stable-source guardrail, 11 September:** drift late
 utility window0.760835 versus frozen0.723169 and cumulative0.733477. Static
 utility falls0.780920→0.754734 (loss0.026187>0.02), so full screen fails.25 relevant
