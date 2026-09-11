@@ -1224,3 +1224,17 @@ Evidence: `runs/entity_gate_reobserve_v1/verification.json`. Run existing frozen
 shift command with `--entity-gate-reobserve`; resume with `--resume DIR`.
 Next candidate: correlated-noise reread diagnostic; independent fresh observations
 are an assumption here and may overstate value when errors share a cause.
+
+### Correlated reobservation screen (2026-09-11)
+
+Frozen original gate, fresh128 prototype pairs seed1401 and innovations1402.
+Four matched arms rho0/0.5/0.9/1; second raw error=rho*first error+
+sqrt(1-rho²)*innovation. Same first observations and innovation vectors across
+arms, unit marginal Gaussian variance before normalization. Preserve sigma grid,
+defer band, fusion and0.02 sensing cost. No training;30s per arm. Correlation
+robustness passes only if previous reobservation gates pass at rho0/0.5/0.9.
+At rho1 require exact first/second errors and unchanged decisions, with cost
+accounted; do not require a gain. rho describes raw noise, not normalized cues.
+Each arm owns raw data/checkpoint/report/resume; report class recalls and utility
+separately. No thresholds selected after evaluation; structural QA only under prior
+browser restriction. This is a static synthetic sensitivity test, not sensing integration.

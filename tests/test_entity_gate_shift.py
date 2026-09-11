@@ -56,3 +56,15 @@ def test_reobserve_duplicate_and_cost():
         assert strategies["selective"]["reread_rate"] == 1
         assert strategies["selective"]["utility"] == 0.48
         assert strategies["first"]["utility"] == 0.5
+
+
+def test_correlated_noise_endpoints():
+    from pathwm.evaluation.entity_gate import gate_reobserve_examples
+    independent = gate_reobserve_examples(8, correlation=0)
+    shared = gate_reobserve_examples(8, correlation=1)
+    middle = gate_reobserve_examples(8, correlation=.5)
+    assert torch.equal(independent['noise'], shared['noise'])
+    assert torch.equal(shared['noise'], shared['second_noise'])
+    assert torch.allclose(middle['second_noise'], .5*middle['noise']+(3**.5/2)*independent['second_noise'])
+    with pytest.raises(ValueError):
+        gate_reobserve_examples(8, correlation=1.1)
