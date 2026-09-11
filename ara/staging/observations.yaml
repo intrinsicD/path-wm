@@ -2191,3 +2191,79 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O121
+  timestamp: 2026-09-11T10:11+02:00
+  provenance: ai-suggested
+  content: For reliable entity-centered memory, consider learned perception and association combined with
+    an explicit persistent identity and flexible attribute representation. Keep observed versus inferred
+    values, time provenance and uncertainty distinguishable; known timestamps need not be rediscovered
+    by the neural model. Such structure biases binding but does not solve identity association. Fixed
+    32-way diagnostic labels are not a general dynamic identity system; readout-only supervision is not
+    a guarantee of consistent cross-time binding.
+  context: Voice architecture discussion; no entity schema, new model, loss or experiment adopted. Current
+    entity-learning failure does not establish that an explicit entity architecture is necessary. This
+    recommendation must be compared against the existing distributed representation before a rewrite.
+  potential_type: architecture
+  bound_to:
+  - N176
+  - N170
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+
+- id: O122
+  timestamp: 2026-09-11T10:17+02:00
+  provenance: user
+  content: It may be helpful to keep a latent state for each entity and let training determine what information
+    it holds, supporting recognition, identity and beliefs about what a person is doing and how they are
+    doing.
+  context: Tentative user proposal in voice discussion. Assistant distinguishes explicit entity association
+    from learned latent contents, explains that useful contents require training signals, and preserves
+    observations separately from inferred belief. No new architecture or experiment implemented.
+  potential_type: architecture
+  bound_to:
+  - N178
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+
+- id: O123
+  timestamp: 2026-09-11T10:19+02:00
+  provenance: user
+  content: Consider storing an entity-associated latent state in an external memory or database, identifying
+    the entity through an ID, retrieving its stored state/belief and extracting specific information from
+    it.
+  context: Exploratory voice question. Assistant notes that lookup does not solve perceptual identity
+    association or readout learning; suggests a minimal local mapping prototype and timestamped, model-versioned
+    beliefs with separate evidence. No persistence policy, database product or architecture adopted.
+  potential_type: architecture
+  bound_to:
+  - N179
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+
+- id: O124
+  timestamp: 2026-09-11T10:28+02:00
+  provenance: ai-suggested
+  content: 'Propose controlled association/update comparison before learned discovery: observation-conditioned
+    candidates, bounded recognition retrieval, existing/new/unresolved assignments, learned entity beliefs
+    and bookkeeping keys. Compare forced nearest-neighbor, confidence-gated matching and bounded hypotheses;
+    measure coverage and false-new/miss/retrieval errors as well as merges, switches and correct attribute
+    updates. Retain attributed evidence and repair/replay behavior because confident assignments can still
+    be wrong. Learned proposal discovery is a separate later test.'
+  context: Two actual Claude exchanges reconcile optional slow/fast partitions and hierarchy, type-versus-instance
+    vocabulary, mutable-belief retrieval and overclaims about soft assignment. Primary Slot Attention/SAVi
+    abstracts support narrower candidate-learning precedents only. No new architecture, experiment, database
+    selection or user adoption of this full design.
+  potential_type: architecture
+  bound_to:
+  - N180
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

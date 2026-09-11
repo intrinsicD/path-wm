@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: Trainable encoder transfer improves held-out locations to 31/32 and 32/32, but entity accuracy is 0/32 in both runs. Both gates fail; 88 CPU tests, donor-bound resume, cold matching, raw scores and browser reports pass; 103.5041 new active seconds. Explained exact entity scoring; cached guesses suggest location shortcuts, with frozen-encoder and stage diagnostics proposed.
-  turn_count: 6
-  events_count: 20
+  summary: Warm encoder controls improve location but fail entity extraction; 88 tests and reports verified. Voice discussion explores learned per-entity beliefs and external identity retrieval. Two Claude design reviews reconciled; controlled association before discovery proposed, no new model or run.
+  turn_count: 15
+  events_count: 33
   claims_touched: []
-  open_threads: 3
+  open_threads: 7

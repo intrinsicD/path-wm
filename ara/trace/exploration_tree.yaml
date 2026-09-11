@@ -2843,3 +2843,115 @@ tree:
   - N170
   - N166
   status: resolved
+
+- id: N172
+  type: question
+  title: Distinguish attention queries and heads from session memory and entity labels
+  provenance: user
+  timestamp: 2026-09-11T10:02+02:00
+  description: Voice question asks whether query weights or Q heads are memory and
+    whether entities are explicitly modeled. Explain trained read mechanisms, two
+    fact-query vectors, four attention heads, and explicit output labels versus learned
+    internal representations.
+  evidence:
+  - pathwm/models/facts.py
+  - pathwm/models/modalities.py
+  status: resolved
+
+- id: N173
+  type: question
+  title: Distinguish inaccessible entity representations from an unsuccessful trained reader
+  provenance: user
+  timestamp: 2026-09-11T10:03+02:00
+  description: Explain frozen-checkpoint diagnostic readers on identical internal inputs at successive
+    stages. Successful held-out decoding establishes accessible identity; failed probes do not prove information
+    absence. This elaborates O120 without executing or adopting the diagnostic.
+  evidence:
+  - pathwm/models/facts.py
+  - O120
+  status: resolved
+
+- id: N174
+  type: question
+  title: Explain how supervised targets assign entity meaning to latent readouts
+  provenance: user
+  timestamp: 2026-09-11T10:05+02:00
+  description: Explain byte-text encoding, agent working-token readout, 32 fixed entity outputs, external
+    integer targets and cross-entropy learning. Labels designate identity across locations; this finite
+    task does not define or discover a general concept of an entity. Full reader sees working tokens rather
+    than every encoder latent directly.
+  evidence:
+  - pathwm/models/facts.py
+  - experiments/multimodal.py
+  - pathwm/evaluation/facts.py
+  status: resolved
+
+- id: N175
+  type: question
+  title: Distinguish image classification, spatial labels and persistent instance identity
+  provenance: user
+  timestamp: 2026-09-11T10:07+02:00
+  description: Ask whether visual entity learning requires masks, segmentation or attention-region labels,
+    or whether image-level key-presence labels suffice. Explain category presence versus localization,
+    pixel membership and cross-observation instance identity; current entity diagnostic is text-only.
+    No visual supervision policy selected.
+  status: resolved
+
+- id: N176
+  type: question
+  title: Compare implicit latent entity learning with explicit identity and attribute structure
+  provenance: user
+  timestamp: 2026-09-11T10:11+02:00
+  description: Alex asks whether a supervised readout suffices or the model should explicitly represent
+    entities with attached location, extent, discovery time, color and other properties. Discuss representational
+    structure versus learned perception and association without selecting or implementing a new design.
+  status: open
+
+- id: N177
+  type: decision
+  title: Accept staged entity diagnosis and binding comparison; clarify person-state applicability
+  provenance: user
+  timestamp: 2026-09-11T10:14+02:00
+  choice: 'Alex says the proposed sequence sounds good: diagnose accessible identity with frozen-model
+    readers, then test controlled two-object identity/property binding before selecting an explicit entity
+    architecture. Asks whether the approach can extend to faces, persons and beliefs about person state.'
+  alternatives:
+  - Adopt a full explicit entity architecture before the bounded comparison
+  evidence:
+  - pathwm/models/facts.py
+  - docs/warm-encoder-plan.md
+  status: resolved
+
+- id: N178
+  type: question
+  title: Explore a learned latent belief state attached to each entity
+  provenance: user
+  timestamp: 2026-09-11T10:17+02:00
+  description: Alex suggests a latent state about an entity such as a person, with learned contents supporting
+    recognition, identity and beliefs about activity and condition. Tentative design discussion; not an
+    implementation command.
+  status: open
+
+- id: N179
+  type: question
+  title: Explore external retrieval of entity-associated latent belief
+  provenance: user
+  timestamp: 2026-09-11T10:19+02:00
+  description: Alex asks whether entity IDs should address latent states in an external database, allowing
+    retrieval and extraction of specific beliefs. Explain recognition/association before exact lookup,
+    timestamped belief updates, learned readout and bounded active retrieval. No external store selected
+    or implemented.
+  status: open
+
+- id: N180
+  type: question
+  title: Reconcile actual Claude review of open-instance association and persistent entity beliefs
+  provenance: user
+  timestamp: 2026-09-11T10:28+02:00
+  description: Alex requests actual Claude discussion of discovering entities, associating observations without
+    false merges, and connecting uncertain associations to persistent IDs. Two public-only exchanges complete
+    and all five correction groups are acknowledged. Preserve proposal separately from implementation.
+  evidence:
+  - docs/entity-memory-design.md
+  - ara/evidence/tables/entity_association_review_2026-09-11.json
+  status: resolved

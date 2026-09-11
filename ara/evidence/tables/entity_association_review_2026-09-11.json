@@ -1,0 +1,163 @@
+{
+  "recorded_at": "2026-09-11T10:28+02:00",
+  "scope": "Public conceptual review; no private source/data/results exported; no experiment or model change.",
+  "reviews": {
+    "entity-association": {
+      "receipt": {
+        "round": "entity-association",
+        "returncode": 0,
+        "elapsed_seconds": 17.435,
+        "brief_sha256": "8f4b17396bb92581a19dfdedcdc6d681fb9e7635f99b737690e34f7489cb733a",
+        "command": [
+          "/home/alex/.local/bin/claude",
+          "--print",
+          "--safe-mode",
+          "--model",
+          "sonnet",
+          "--effort",
+          "low",
+          "--tools",
+          "",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--disable-slash-commands",
+          "--no-chrome",
+          "--permission-mode",
+          "dontAsk",
+          "--no-session-persistence",
+          "--output-format",
+          "json",
+          "--system-prompt",
+          "You are an independent machine-learning architecture reviewer. Reason only from the supplied conceptual brief. You have no tools or private project access. Distinguish evidence, assumptions and preferences. Do not imply you inspected any implementation."
+        ],
+        "context": "isolated temporary cwd; no tools/settings/MCP/plugins; public conceptual brief only",
+        "is_error": false,
+        "model_usage": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 1240,
+            "outputTokens": 19,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.001335,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-sonnet-5": {
+            "inputTokens": 2,
+            "outputTokens": 1284,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 1093,
+            "webSearchRequests": 0,
+            "costUSD": 0.017216000000000002,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-sonnet-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "api_equivalent_cost_usd_not_subscription_bill": 0.018551,
+        "session_id": "70671726-8877-4051-8344-1ef8751579b1"
+      },
+      "files": {
+        "runs/reviews/continuation_2026-09-11/entity-association-brief.txt": "8f4b17396bb92581a19dfdedcdc6d681fb9e7635f99b737690e34f7489cb733a",
+        "runs/reviews/continuation_2026-09-11/entity-association-response.json": "5761d0f7494f9ea4124d48578460eb6174a96eef293b8cda33f39f7461cc7281",
+        "runs/reviews/continuation_2026-09-11/entity-association-receipt.json": "bee544cbec5c007ad13e39fd985cfd8836e2129f6de5219e09b232865f3bd1be"
+      }
+    },
+    "entity-association-reconcile": {
+      "receipt": {
+        "round": "entity-association-reconcile",
+        "returncode": 0,
+        "elapsed_seconds": 8.215,
+        "brief_sha256": "b0c60ee34c3baac03a471e419a11adf710dfc857a7a1b0ac08f3499a7188447f",
+        "command": [
+          "/home/alex/.local/bin/claude",
+          "--print",
+          "--safe-mode",
+          "--model",
+          "sonnet",
+          "--effort",
+          "low",
+          "--tools",
+          "",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--disable-slash-commands",
+          "--no-chrome",
+          "--permission-mode",
+          "dontAsk",
+          "--no-session-persistence",
+          "--output-format",
+          "json",
+          "--system-prompt",
+          "You are an independent machine-learning architecture reviewer. Reason only from the supplied conceptual brief. You have no tools or private project access. Distinguish evidence, assumptions and preferences. Do not imply you inspected any implementation."
+        ],
+        "context": "isolated temporary cwd; no tools/settings/MCP/plugins; public conceptual brief only",
+        "is_error": false,
+        "model_usage": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 1284,
+            "outputTokens": 14,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.001354,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-sonnet-5": {
+            "inputTokens": 2,
+            "outputTokens": 567,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 1159,
+            "webSearchRequests": 0,
+            "costUSD": 0.01031,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-sonnet-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "api_equivalent_cost_usd_not_subscription_bill": 0.011663999999999999,
+        "session_id": "791bae14-6e67-403b-bcc7-29867bd1aeff"
+      },
+      "files": {
+        "runs/reviews/continuation_2026-09-11/entity-association-reconcile-brief.txt": "b0c60ee34c3baac03a471e419a11adf710dfc857a7a1b0ac08f3499a7188447f",
+        "runs/reviews/continuation_2026-09-11/entity-association-reconcile-response.json": "0672572ca4e907819f12c11f56ae32170f065799137348295e009133d1b4f3b9",
+        "runs/reviews/continuation_2026-09-11/entity-association-reconcile-receipt.json": "42569f095017ed2443fefedd42623879bdc8fcc005d75eb89c0d68741b8209e2"
+      }
+    }
+  },
+  "primary_sources": [
+    "https://arxiv.org/abs/2006.15055",
+    "https://arxiv.org/abs/2111.12594"
+  ],
+  "proposal": "docs/entity-memory-design.md",
+  "corrections": [
+    "Recognition retrieval need not use mutable belief; slow/fast separation optional.",
+    "Fixed-granularity task does not require hierarchy; type ontology differs from instance vocabulary.",
+    "Hard matching with abstention can express uncertainty; soft assignments do not prevent confident wrong writes.",
+    "Coverage, missed entities, false-new and retrieval recall accompany identity and attribute metrics.",
+    "Controlled proposals test association, not discovery; indistinguishable histories can remain unresolved."
+  ],
+  "no_remaining_review_disagreement": true
+}

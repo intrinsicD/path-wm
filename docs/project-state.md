@@ -1,5 +1,12 @@
 # Current work
 
+**Entity-design discussion, 11 September:** the user accepted diagnosing accessible
+identity first, then testing controlled two-object binding. Subsequent discussion
+proposes per-entity learned beliefs and external retrieval. Two actual Claude
+exchanges are reconciled in [the design note](entity-memory-design.md): candidate
+extraction, uncertain association and persistent keys are separate mechanisms.
+Explicit entity storage remains a proposal; no new architecture or run was started.
+
 **Current slice complete, 11 September:** the
 [trainable encoder initialization comparison](warm-encoder-plan.md) is implemented
 as `--fact-encoder-weights` for the event fact reader. Two brief actual Claude

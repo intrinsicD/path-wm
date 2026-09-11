@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T09:12+02:00
-  turn_count: 6
-  summary: Trainable encoder transfer improves held-out locations to 31/32 and 32/32, but entity accuracy is 0/32 in both runs. Both gates fail; 88 CPU tests, donor-bound resume, cold matching, raw scores and browser reports pass; 103.5041 new active seconds. Explained exact entity scoring; cached guesses suggest location shortcuts, with frozen-encoder and stage diagnostics proposed.
+  last_turn: 2026-09-11T10:28+02:00
+  turn_count: 15
+  summary: Warm encoder controls improve location but fail entity extraction; 88 tests and reports verified. Voice discussion explores learned per-entity beliefs and external identity retrieval. Two Claude design reviews reconciled; controlled association before discovery proposed, no new model or run.
 events_logged:
 - turn: 1
   type: question
@@ -126,6 +126,91 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Cached location-dependent guesses motivate a bounded feature-preservation and stage diagnosis.
+- turn: 7
+  type: question
+  id: N172
+  routing: direct
+  provenance: user
+  summary: Explain attention read parameters versus stored facts and explicit entity
+    output labels.
+- turn: 8
+  type: question
+  id: N173
+  routing: direct
+  provenance: user
+  summary: Clarify frozen diagnostic readers and asymmetric interpretation of probe
+    success/failure.
+- turn: 9
+  type: question
+  id: N174
+  routing: direct
+  provenance: user
+  summary: Explain supervised entity targets, latent features and the full-reader
+    input boundary.
+- turn: 10
+  type: question
+  id: N175
+  routing: direct
+  provenance: user
+  summary: Explain what image labels, boxes, masks and temporal identity supervision
+    teach.
+- turn: 11
+  type: question
+  id: N176
+  routing: direct
+  provenance: user
+  summary: Ask whether explicit entity identity and metadata organization is needed.
+- turn: 11
+  type: observation
+  id: O121
+  routing: staged
+  provenance: ai-suggested
+  summary: Consider explicit identity with learned perception and flexible attributes; no adoption.
+- turn: 12
+  type: decision
+  id: N177
+  routing: direct
+  provenance: user
+  summary: Accept diagnostic-then-binding sequence; ask about person identity and
+    state.
+- turn: 13
+  type: question
+  id: N178
+  routing: direct
+  provenance: user
+  summary: Explore per-entity learned latent belief.
+- turn: 13
+  type: observation
+  id: O122
+  routing: staged
+  provenance: user
+  summary: Tentatively propose learned contents in a persistent entity-associated
+    state.
+- turn: 14
+  type: question
+  id: N179
+  routing: direct
+  provenance: user
+  summary: Explore external ID-addressed entity belief storage.
+- turn: 14
+  type: observation
+  id: O123
+  routing: staged
+  provenance: user
+  summary: Propose retrieving latent entity beliefs from an external memory.
+- turn: 15
+  type: question
+  id: N180
+  routing: direct
+  provenance: user
+  summary: Complete requested actual Claude review and concrete reconciliation.
+- turn: 15
+  type: observation
+  id: O124
+  routing: staged
+  provenance: ai-suggested
+  summary: Refine bounded association/update comparison; discovery and full entity
+    store remain proposals.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -194,6 +279,57 @@ ai_actions:
     proposed diagnostics. No training, inference, tests, source edits or new Claude consultation.
   provenance: ai-executed
   files_changed: []
+- turn: 7
+  action: Read fact reader and Attend implementation; explain query vectors, attention
+    heads and session-memory distinction. No model changes or experiments.
+  provenance: ai-executed
+  files_changed: []
+- turn: 8
+  action: Explain the previously proposed stage diagnosis; no model execution, new
+    experiment or architecture change.
+  provenance: ai-executed
+  files_changed: []
+- turn: 9
+  action: Explain existing labeled-example training and fixed entity vocabulary; no
+    new experiment, code change or proposal adoption.
+  provenance: ai-executed
+  files_changed: []
+- turn: 10
+  action: Explain general supervision distinctions and the limits of image-level category
+    labels; no new model, data choice or experiment.
+  provenance: ai-executed
+  files_changed: []
+- turn: 11
+  action: Explain implicit versus structured entity representations, attribute binding
+    and identity association. No new model or experiments.
+  provenance: ai-executed
+  files_changed: []
+- turn: 12
+  action: Explain potential extension to person identity and time-varying beliefs;
+    separate observations from uncertain inferred state. No person-recognition implementation
+    or evidence claimed.
+  provenance: ai-executed
+  files_changed: []
+- turn: 13
+  action: Explain explicit identity association with learned belief contents, training
+    requirements and separate observational evidence. No implementation or experiment.
+  provenance: ai-executed
+  files_changed: []
+- turn: 14
+  action: Explain persistent store versus active memory, identity association, learned
+    readout/update, freshness and model-version compatibility. No implementation or
+    experiments.
+  provenance: ai-executed
+  files_changed: []
+- turn: 15
+  action: Run two isolated conceptual Claude calls; verify primary Slot Attention/SAVi abstracts and local
+    model boundaries; reconcile all correction groups; write design note and source-bound review receipt. No
+    tests or model experiments repeated.
+  provenance: ai-executed
+  files_changed:
+  - docs/entity-memory-design.md
+  - docs/project-state.md
+  - runs/reviews/continuation_2026-09-11/
 claims_touched: []
 key_context:
 - turn: 1
@@ -211,6 +347,10 @@ key_context:
   excerpt: User asks what entity accuracy is, what can be done, and whether everything first needs to fall
     into place.
 open_threads:
+- O124: reconciled entity association architecture and controlled comparison remain proposed.
+- O123: external entity-belief store remains a tentative proposal.
+- O122: per-entity latent belief is a tentative user design proposal.
+- O121: explicit entity structure is a proposal, not an adopted replacement.
 - 'O120: location-shortcut hypothesis and successive-stage diagnostics remain unconfirmed.'
 - 'O119: consider freezing the donor encoder in one matched diagnostic; no frozen-encoder run started.'
 - O101-O114 and earlier research questions remain referenced by 2026-09-10_001.yaml; local memory
@@ -218,3 +358,5 @@ open_threads:
 ai_suggestions_pending:
 - 'O119: entity failure remains unlocalized; feature-preservation diagnostic is proposed, not executed.'
 - 'O120: stage diagnostics may help locate accessible identity; no cause or repair established.'
+- O121: compare learned distributed memory with explicit identity and flexible attributes before adopting a change.
+- O124: test association and updates separately from discovery before committing a full entity store.
