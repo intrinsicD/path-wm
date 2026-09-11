@@ -1086,3 +1086,22 @@ GATE.pt --output DIR`; cached resume `--resume DIR`.
 Next candidate: noise-augmented training, fresh held-out contexts and per-class
 checks, preserving this frozen reference. This is not yet an adopted repair or
 proof that training can overcome observation ambiguity.
+
+### Matched gate continuation (2026-09-11)
+
+Continue the immutable gate donor in two arms: low-noise control and augmentation.
+Both use seed71,256 AdamW updates lr0.01/wd0.01,batch32,450CPU seconds each,
+identical descriptor/context rows and initial gate; matcher/key/interaction frozen.
+Descriptor seeds901/902/903 with32/8/8 families; context seeds911/912/913.
+Training contexts use paired same/different prototypes and shared Gaussian noise;
+control repeats sigma0.03 four times, treatment uses0.03/0.15/0.30/0.60.
+Same row count1536 and sampler trajectory; labels derive from generating identity.
+Use source-selection CE through frozen consumers, no direct gate supervision.
+Fresh stress contexts seed921,128 pairs, existing four severities and thresholds.
+Each arm reports frozen-before and after on identical cases; no evaluation tuning.
+Success: prior low-noise runtime gates pass, both class recalls>=95% at0.03/0.15,
+and high-noise0.60 accuracy improves>=2 percentage points over frozen while ignore
+recall loses<=5 points. Treatment must additionally improve>=2 points over the
+matched control to support augmentation benefit. Preserve every failed criterion.
+Moderate/high-noise results do not imply calibrated semantic beliefs. Visual QA
+remains unavailable under prior browser policy; structural report checks required.

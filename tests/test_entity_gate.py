@@ -145,3 +145,16 @@ def test_gate_recipe_resume(tmp_path, monkeypatch):
     raw = (output / "entity_gate.json").read_bytes()
     train_entity_gate(donor, cell, key, output, resume=True)
     assert (output / "entity_gate.json").read_bytes() == raw
+
+
+def test_augmented_pairs_preserve_supervision():
+    from pathwm.evaluation.entity_gate import augmented_gate_examples
+    from pathwm.evaluation.entity_growth import growth_inputs
+    families = growth_inputs(901, 1)
+    control = augmented_gate_examples(families, 911, False)
+    augmented = augmented_gate_examples(families, 911, True)
+    assert len(control['labels']) == len(augmented['labels']) == 48
+    for key in ('old','new','labels','active','accept'):
+        assert torch.equal(control[key], augmented[key])
+    assert torch.equal(control['cue'][:12], augmented['cue'][:12])
+    assert not torch.equal(control['cue'][12:], augmented['cue'][12:])
