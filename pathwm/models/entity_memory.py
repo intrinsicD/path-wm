@@ -49,7 +49,7 @@ class EntityMemory:
             raise ValueError("Descriptor must have unit norm")
         return value.tolist()
 
-    def observe(self, event_id, descriptor, timestamp):
+    def observe(self, event_id, descriptor, timestamp, *, content=None):
         if not isinstance(event_id, str) or not event_id:
             raise ValueError("event_id must be a nonempty string")
         if (
@@ -60,7 +60,11 @@ class EntityMemory:
         ):
             raise ValueError("timestamp must be finite")
         descriptor = self._descriptor(descriptor)
-        payload = digest([descriptor, timestamp])
+        payload = digest(
+            [descriptor, timestamp]
+            if content is None
+            else [descriptor, timestamp, content]
+        )
         state = self._state
         for old in state["receipts"]:
             if old["event_id"] == event_id:

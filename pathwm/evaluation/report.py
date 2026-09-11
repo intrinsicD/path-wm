@@ -195,6 +195,28 @@ def model_inspection(directory):
 
 
 def entity_inspection(directory):
+    state = directory / "entity_state.json"
+    if state.exists():
+        data = json.loads(state.read_text())
+        parts = [
+            "<section><h2>Learned persistent entity state</h2>",
+            f"<p>Declared gates: {'pass' if data['passed'] else 'fail'}.</p>",
+            "<p>Frozen recognition; shared learned binary-state updates. Paired histories have identical final observations. This is controlled state tracking, not general belief or graph learning.</p>",
+            '<div class="table"><table><tr><th>Population</th><th>Episodes</th><th>State-pair accuracy</th><th>NLL per entity</th></tr>',
+        ]
+        for name in ("train", "development"):
+            row = data[name]
+            parts.append(
+                f"<tr><td>{name}</td><td>{row['examples']}</td><td>{row['pair_accuracy']:.2%}</td><td>{row['nll']:.6f}</td></tr>"
+            )
+        runtime = data["runtime"]
+        parts.append(
+            f"</table></div><p>Persistent runtime accuracy: {runtime['pair_accuracy']:.2%}. Retry/restore equality: {runtime['transactions']}. Runtime/training latent agreement: {runtime['latent_agreement']}.</p>"
+        )
+        parts.append(
+            f"<details><summary>Example histories and persisted state</summary><pre>{escape(json.dumps(dict(inputs=data['manifest'][:2], outputs=runtime['episodes'][:2]), indent=2))}</pre></details></section>"
+        )
+        return parts
     growth = directory / "entity_growth.json"
     if growth.exists():
         data = json.loads(growth.read_text())

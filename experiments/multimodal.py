@@ -2911,6 +2911,120 @@ def entity_growth(weights, output, resume=False, seed=61):
     return run.path
 
 
+def train_entity_state(weights, output, resume=False):
+    """One fixed learned-state diagnostic with a frozen recognition component."""
+    from pathwm.models.entities import EntityMatchReader
+    from pathwm.models.entity_state import EntityStateCell
+    from pathwm.data.entity_state import state_episodes
+    from pathwm.evaluation.entity_growth import growth_inputs
+    from pathwm.evaluation.entity_state import state_metrics, state_runtime
+
+    seed_everything(31)
+    weights = Path(weights).resolve()
+    donor = torch.load(weights, map_location="cpu", weights_only=True)["model"]
+    donor = {
+        k.removeprefix("agent."): v for k, v in donor.items() if k.startswith("agent.")
+    }
+    matcher = EntityMatchReader()
+    matcher.load_state_dict(donor)
+    matcher.eval().requires_grad_(False)
+    matcher_hash = state_hash(matcher)
+    training = state_episodes(matcher, growth_inputs(seed=101, count=32))
+    development = state_episodes(matcher, growth_inputs(seed=102, count=16))
+    cell = EntityStateCell()
+    optimizer = torch.optim.AdamW(cell.parameters(), lr=0.003, weight_decay=0.01)
+    settings = dict(
+        seed=31,
+        purpose="diagnostic",
+        entity_state_weights=str(weights),
+        donor_sha256=file_hash(weights),
+        steps=256,
+        batch_size=32,
+        max_seconds=450,
+        learning_rate=0.003,
+        width=16,
+    )
+    run = Run(
+        output,
+        settings=settings,
+        data={
+            k: digest(v["manifest"])
+            for k, v in [("train", training), ("development", development)]
+        },
+        recipe=__file__,
+        model=cell,
+        optimizer=optimizer,
+        device="cpu",
+        resume=resume,
+    )
+    path = run.path / "entity_state.json"
+    deadline = perf_counter() + 450
+    try:
+        if resume:
+            result = json.loads(path.read_text())
+            if result["cell_sha256"] != state_hash(cell):
+                raise ValueError("State cache mismatch")
+        else:
+            for step in range(256):
+                if perf_counter() > deadline:
+                    raise TimeoutError("State training budget exhausted")
+                indices = torch.randint(
+                    len(training["slots"]), (32,), generator=run.sampler
+                )
+                logits, _ = cell(
+                    training["observations"][indices], training["slots"][indices]
+                )
+                loss = F.cross_entropy(
+                    logits.flatten(0, 1), training["targets"][indices].flatten()
+                )
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+                run.step = step + 1
+                run.log(dict(step=run.step, split="train", loss=loss.item()))
+            train_scores, _, _ = state_metrics(cell, training)
+            dev_scores, logits, _ = state_metrics(cell, development)
+            runtime = state_runtime(cell, matcher, development)
+            if state_hash(matcher) != matcher_hash:
+                raise RuntimeError("Frozen recognizer changed")
+            result = dict(
+                train=train_scores,
+                development=dev_scores,
+                runtime=runtime,
+                cell_sha256=state_hash(cell),
+                matcher_sha256=matcher_hash,
+                manifest=development["manifest"],
+                logits=logits.tolist(),
+            )
+            result["passed"] = (
+                dev_scores["pair_accuracy"] >= 0.95
+                and dev_scores["nll"] <= 0.15
+                and runtime["pair_accuracy"] >= 0.95
+                and runtime["transactions"]
+                and runtime["latent_agreement"]
+            )
+            atomic_json(path, result)
+            run.log(
+                dict(
+                    step=run.step,
+                    split="validation",
+                    loss=dev_scores["nll"],
+                    pair_accuracy=dev_scores["pair_accuracy"],
+                )
+            )
+            run.save()
+        run.status("completed", "pending")
+    except BaseException as exc:
+        run.status("failed", "pending", str(exc))
+        raise
+    try:
+        render_report(run.path)
+    except BaseException as exc:
+        run.status("completed", "failed", str(exc))
+        raise
+    return run.path
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -2951,6 +3065,10 @@ def main():
     parser.add_argument(
         "--entity-growth-weights",
         help="Frozen entity matcher checkpoint for growth evaluation",
+    )
+    parser.add_argument(
+        "--entity-state-weights",
+        help="Frozen recognizer checkpoint for learned state binding",
     )
     parser.add_argument("--entity-variable", action="store_true")
     parser.add_argument("--entity-growth-seed", type=int, default=61)
@@ -3013,6 +3131,13 @@ def main():
     if args.diagram_depth < 0:
         parser.error("Diagram depth must be nonnegative")
     args = resume_arguments(parser, args)
+    if args.entity_state_weights is not None:
+        print(
+            train_entity_state(
+                args.entity_state_weights, args.resume or args.output, bool(args.resume)
+            )
+        )
+        return
     if args.entity_growth_weights is not None:
         print(
             entity_growth(
