@@ -860,3 +860,23 @@ This learns the update for a supplied directed copy relation. It does not learn
 which edge to create, which source to retrieve, general concepts or visual identity.
 Next proposed: source selection with a distractor entity and counterfactual routing
 controls, removing the supplied source ID before claiming learned relational retrieval.
+
+### Frozen source retrieval plan
+
+Reuse the learned matcher and learned interaction, both frozen. Replace externally
+supplied source IDs with descriptor queries over three remembered entities. Add
+read-only lookup, query-bound retries, persisted selected-source receipts, unknown
+source rollback and batch state allocation for an explicit entity count. IDs remain
+bookkeeping. Exact retries must return their original receipt before re-resolving;
+different queries that match the same record still conflict under one event ID.
+
+No training or new optimizer updates. One seed401 frozen screen,8 descriptor families,
+24 balanced destination/source/bit variants each:192 episodes per condition. Source
+and distractor bits oppose each other, making wrong retrieval observable. Conditions:
+oracle source IDs, learned query lookup, permuted allocation order, deliberately
+wrong queries and unknown queries. Fixed gates: oracle/lookup/permuted complete-state
+accuracy>=95%, NLL<=0.15 and lookup source accuracy>=95%; wrong-query source/state
+accuracy<=5%; unknown rejection100%. All conditions require retries/restore,
+non-target preservation and existing batch/runtime latent tolerance. Budget180 seconds
+for the entire screen. Ordinary dynamics, copy update, thresholds and descriptors
+are unchanged. This tests frozen learned retrieval integration, not graph discovery.
