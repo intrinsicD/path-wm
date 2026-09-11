@@ -1,0 +1,48 @@
+{
+  "cached_resume": true,
+  "creation_order_audit_correct": 256,
+  "creation_order_audit_posthoc": true,
+  "descriptor_disjoint": true,
+  "development": {
+    "examples": 256,
+    "nll": 0.0014531834749504924,
+    "pair_accuracy": 1.0
+  },
+  "frozen_recognizer_verified": true,
+  "hashes": {
+    "entity_state.json": "b330715f7c0be9bc07267a36406ea3db11c6505c6210b261a37e1850845251ac",
+    "last.pt": "e101eabea05009cf641bab7287923c0c402bc22a716c2d36c225efdf9608d459",
+    "report.html": "d7a392ae52253e4c0eaccf877daea845c371d5c5c53a7718a7407edfd0d9a9ec",
+    "run.json": "d496b7d6d842358514b58cd9e6003e4d2c8d0685766489450598c7446b7eb08f"
+  },
+  "independent_nll": 0.0014532218889114783,
+  "last_view_optimal_pair_accuracy": 0.25,
+  "qa": {
+    "broken_images": 0,
+    "browser_checked": true,
+    "expanded_details": 1,
+    "horizontal_overflow": false,
+    "renderer_sha256": "e3d3cd7251e6331a74ce95214908a5904d67f86aa018755d14aef4dc214116cd",
+    "report_sha256": "d7a392ae52253e4c0eaccf877daea845c371d5c5c53a7718a7407edfd0d9a9ec",
+    "rows": 257,
+    "self_contained": true,
+    "status": "browser_verified",
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "runtime": {
+    "latent_agreement": true,
+    "pair_accuracy": 1.0,
+    "transactions": true
+  },
+  "scope": "Fresh descriptors, same16 state/action templates across splits. No new temporal-template generalization, broader belief or graph-learning claim.",
+  "source_commit": "08839f3",
+  "tests_passed": 119,
+  "train": {
+    "examples": 512,
+    "nll": 0.0014531834749504924,
+    "pair_accuracy": 1.0
+  }
+}

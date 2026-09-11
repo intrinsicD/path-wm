@@ -1,5 +1,13 @@
 # Current work
 
+**Learned persistent state succeeds on the bounded task, 11 September:**119 tests
+pass. A frozen recognizer routes observations into learned per-entity16-float states;
+256/256 development pairs and persistent-runtime outputs are correct. Retry/restore,
+rollback and reversed allocation-order checks pass. [Report](../runs/entity_state_v1/reference/report.html)
+is browser verified. Splits share16 temporal templates and differ in descriptors;
+this does not establish temporal generalization. Next: frozen held-out composition
+and length tests before broader attributes or graph learning.
+
 **Variable-count adaptation succeeds, 11 September:**115 tests pass. One256-update
 run gives100% development matching/coverage and passes every fresh lifecycle gate
 at capacities1/2/4/8. The matched original model still fails capacity8. Claude reviewed

@@ -255,3 +255,12 @@
 - **Sensitivity**: high; bounded synthetic results do not establish open-world calibration.
 - **Code ref**: [data](../../../pathwm/data/entities.py), [matcher](../../../pathwm/models/entities.py), [padding tests](../../../tests/test_entity_variable.py).
 - **From staging**: O133
+
+## H27: Commit identity and learned state together
+
+- **Rationale**: Stage identity routing and recurrent updates before publishing either. Full-payload retries return without a second state update; failures leave both tables unchanged. Compare runtime latents with training-time routing.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; synthetic template success does not establish general belief updating.
+- **Code ref**: [runtime](../../../pathwm/models/entity_state.py), [tests](../../../tests/test_entity_state.py).
+- **From staging**: O134

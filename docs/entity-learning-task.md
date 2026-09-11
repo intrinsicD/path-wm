@@ -594,3 +594,38 @@ restore and unaffected-entity tests pass. No last-view-only solution can disting
 paired histories. State-cell training uses matcher-routed slots; deployment uses
 transactional EntityStateMemory with the same cell. No general belief uncertainty,
 visual discovery or learned graph claim. One run; no post-result tuning.
+
+### Learned persistent state result
+
+Implementation08839f3;119 CPU tests pass, including uncertain retries, unaffected
+entities and rollback after a state-update exception. Both Claude conceptual reviews
+completed. Exact retries precede bookkeeping advancement; uncertain retries are
+also idempotent. Fixed observe-then-toggle order is retained, with broader temporal
+order generalization deferred.
+
+One256-update run passes the declared gates:512/512 training and256/256 development
+state pairs correct, NLL0.00145318 per entity. All256 persistent runtime episodes
+recover both states, reproduce the training-path latents and preserve retries and
+restored continuation. Recognizer weights remain frozen. Independent targets/NLL,
+descriptor split isolation and cached CLI resume pass. A post-run metamorphic audit
+reverses creation order while retaining within-entity event order:256/256 outputs
+remain correct when read through their allocated IDs. This audit was not a tuned
+training condition or an additional predeclared gate.
+
+**Scope:** both splits contain the same16 state/action templates; only descriptors
+are fresh. Identical train/dev NLL is therefore expected. This establishes the small
+binding task, not unseen temporal-pattern generalization. Each final-view group has
+four equally likely target pairs, so last-view-only best accuracy is25%. State is a
+learned16-float vector per entity with binary readout, not a general belief model.
+Graph edges, visual discovery, arbitrary properties and long histories remain open.
+
+[Report](../runs/entity_state_v1/reference/report.html) passed1280×720 browser QA;
+[verification](../runs/entity_state_v1/verification.json) binds raw outputs and models.
+Run `python -m experiments.multimodal --entity-state-weights IMMUTABLE_MATCHER.pt
+--output DIR`; resume with `--resume DIR`. The runtime is
+`pathwm.models.entity_state.EntityStateMemory(matcher, cell)`, with
+`observe(event_id, descriptor, timestamp, observation)`, `read(id)`, `snapshot()` and
+`restore(matcher, cell, snapshot)`. Persist the whole snapshot atomically. The four
+input features encode observed0, observed1, toggle and no-information respectively.
+Next proposed: held-out temporal compositions and lengths with this model frozen,
+before adding richer attributes or learned graph structure.

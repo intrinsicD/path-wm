@@ -63,6 +63,9 @@ def test_failed_and_uncertain_updates_preserve_latents():
     store.observe("first", a, 0, obs)
     before = store.snapshot()
     assert store.observe("second", a, 1, obs)["reason"] == "uncertain"
+    deferred = store.snapshot()
+    assert store.observe("second", a, 1, obs)["reason"] == "uncertain"
+    assert store.snapshot() == deferred
     assert store.latents == before["latents"]
     assert store.memory.snapshot()["records"] == before["memory"]["records"]
 

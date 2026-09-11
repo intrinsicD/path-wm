@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Variable-count adaptation passes fresh lifecycle gates; original capacity8 fails. 115 tests, browser QA and immutable donor resume verified."
-  turn_count: 28
-  events_count: 74
+  summary: "Learned persistent binary state passes bounded task and transaction checks;119 tests. Temporal templates shared across splits; generalization remains open."
+  turn_count: 29
+  events_count: 78
   claims_touched: []
   open_threads: 12

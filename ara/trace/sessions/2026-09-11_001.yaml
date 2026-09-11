@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T13:16+02:00
-  turn_count: 28
-  summary: "Variable-count adaptation passes fresh lifecycle gates; original capacity8 fails. 115 tests, browser QA and immutable donor resume verified."
+  last_turn: 2026-09-11T13:28+02:00
+  turn_count: 29
+  summary: "Learned persistent binary state passes bounded task and transaction checks;119 tests. Temporal templates shared across splits; generalization remains open."
 events_logged:
 - turn: 1
   type: question
@@ -465,6 +465,32 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O133 committed through variable-count adaptation.
+
+- turn: 29
+  type: decision
+  id: N205
+  routing: direct
+  provenance: user
+  summary: Implement, review, test, fix and iterate.
+- turn: 29
+  type: experiment
+  id: N206
+  routing: direct
+  provenance: ai-executed
+  summary: Learned persistent binary state passes bounded task and transaction checks;119
+    tests. Temporal templates shared across splits; generalization remains open.
+- turn: 29
+  type: observation
+  id: O135
+  routing: staged
+  provenance: ai-suggested
+  summary: Frozen temporal generalization proposed.
+- turn: 29
+  type: heuristic
+  id: H27
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O134 committed through learned state runtime.
 
 ai_actions:
 - turn: 1

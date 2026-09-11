@@ -992,3 +992,12 @@ entries:
     together.'
   - Training resume changed donor bytes; immutable copy restored reproducible dependency.
     No additional training or tuning.
+
+- turn: 2026-09-11_001#29
+  notes:
+  - Promote O134 through learned transactional state; staged O135 addresses shared
+    temporal templates.
+  - Distinguish descriptor holdout from temporal holdout; identical train/dev NLL
+    is expected here.
+  - Creation-order audit is post-run metamorphic verification, not a tuned or predeclared
+    scientific gate.

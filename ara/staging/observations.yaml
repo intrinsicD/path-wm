@@ -2427,6 +2427,21 @@ observations:
   potential_type: heuristic
   bound_to:
   - N204
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H27
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O135
+  timestamp: 2026-09-11T13:28+02:00
+  provenance: ai-suggested
+  content: Next evaluate the frozen learned state on unseen temporal compositions
+    and lengths before richer state or graph learning.
+  context: The same16 state templates occur in both training and development; fresh
+    descriptors alone do not establish temporal generalization.
+  potential_type: heuristic
+  bound_to:
+  - N206
   promoted: false
   promoted_to: null
   crystallized_via: null

@@ -3256,3 +3256,25 @@ tree:
   - N202
   - N203
   status: resolved
+
+- id: N205
+  type: decision
+  title: Continue learned entity-state binding with Claude
+  provenance: user
+  timestamp: 2026-09-11T13:28+02:00
+  choice: Implement, review, test, fix and iterate.
+  status: resolved
+- id: N206
+  type: experiment
+  title: Learned entity state passes controlled binding task
+  provenance: ai-executed
+  timestamp: 2026-09-11T13:28+02:00
+  result: Learned persistent binary state passes bounded task and transaction checks;119
+    tests. Temporal templates shared across splits; generalization remains open.
+  evidence:
+  - ara/evidence/tables/entity_state_2026-09-11.json
+  - docs/entity-learning-task.md
+  also_depends_on:
+  - N204
+  - N205
+  status: resolved
