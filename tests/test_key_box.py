@@ -158,3 +158,41 @@ def test_history_reads_keep_targets_and_interleave_events(monkeypatch):
     torch.testing.assert_close(torch.stack(losses), losses[0].expand(8))
     torch.stack(losses).mean().backward()
     assert latent.grad.abs().sum() > 0
+
+
+def test_stress_correction_precedes_next_decision(monkeypatch):
+    import torch
+    from types import SimpleNamespace
+    import pathwm.evaluation.key_box as module
+
+    class Session:
+        def __init__(self, *args):
+            self.known = [False, False]
+            self.bits = [0, 0]
+            self.state = SimpleNamespace(time=torch.tensor([0.0]))
+
+        def observe(self, event, box=None, bit=None, invalidate=False):
+            self.state.time += 1
+            if box is not None:
+                self.known[box] = True
+                self.bits[box] = bit
+            if invalidate:
+                self.known = [False, False]
+
+        def probabilities(self):
+            p = [float(b) if k else 0.5 for b, k in zip(self.bits, self.known)]
+            q = [p[0]*(1-p[1]), p[1]*(1-p[0]), (1-p[0])*(1-p[1])]
+            return tuple(v/sum(q) for v in q), p
+
+    monkeypatch.setattr(module, "KeyBoxSession", Session)
+    result = module.evaluate_key_box(None, families=1, seed=2431, stress=True)
+    assert result["passed"]
+    for row in result["episodes"]:
+        for event in row["actions"]:
+            if event["step"] == 1 and row["initial_truth"] is not None:
+                assert event["truth"] == 1-row["initial_truth"]
+                assert event["correction"]["truth"] == event["truth"]
+                assert event["agent_time"] == row["actions"][0]["after_time"] + 2
+                if row["policy"] != "supplied_state":
+                    assert event["belief"][event["truth"]] == 1
+        assert row["success"]

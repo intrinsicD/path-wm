@@ -143,3 +143,22 @@ Use history_pairs=4, query_switch=True with the recipe for this candidate.
 Next: independently replicated seeds and stronger state-change/longer-history
 checks before expanding the task or claiming general planning. This pass is confined
 to the registered descriptor task with supplied action mechanics.
+
+Replication/state-change slice: independently initialize/train seed2302 with the
+unchanged four-pair recipe (256 updates,batch32,lr0.003); evaluate fresh seed2431,
+16 families against frozen history checkpoint. Ordinary gates unchanged. Add
+separate stress population: delay12+family%7 events; relocate present key once
+before decision1, delivering both corrected box observations to every policy.
+Absent worlds remain absent; completed episodes stop normally. Same four-action
+budget. Log initial truth, per-decision truth and correction timing. Stress gates:
+integrated reachable>=0.9, absent>=0.9, supplied-state both1; utility descriptive
+because correction changes available information. Require ordinary AND stress
+pass for overall robustness. Budget360CPU seconds including four evaluations.
+No tuning on either population; one extra seed is limited replication. Test timely
+correction, oracle feasibility, unchanged historical traces, raw report/resume.
+Claude review: retain bounded seed-sensitivity language, no broad robustness claim.
+Add stress correction-read accuracy>=0.95 over both known boxes at decision1,
+computed before taking the next action. This guards against successful guessing
+without reading the update. Raw traces support false-stop/wrong-action diagnosis.
+Timing is deliberately fixed; latency/timing generalization and correction ablation
+remain untested. Frozen comparison quantifies variation, not a causal mechanism.
