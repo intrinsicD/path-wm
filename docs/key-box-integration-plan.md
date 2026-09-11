@@ -162,3 +162,10 @@ computed before taking the next action. This guards against successful guessing
 without reading the update. Raw traces support false-stop/wrong-action diagnosis.
 Timing is deliberately fixed; latency/timing generalization and correction ablation
 remain untested. Frozen comparison quantifies variation, not a causal mechanism.
+Reconciliation: post-correction score is exact binary contents of each named box,
+not a spatial/IoU tolerance; Claude's spatial-tolerance concern does not apply.
+Correction labels are used only for scoring and ordinary delivered observations.
+Initial test collection caught a malformed seed default; corrected before runs.
+31 relevant tests pass, including actual stress/reference smoke and cached resume;
+lint and diff checks pass. Report changes receive structural-only QA under prior
+browser restriction. Commit implementation before formal replica training.

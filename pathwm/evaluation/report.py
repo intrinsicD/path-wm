@@ -213,7 +213,7 @@ def entity_inspection(directory):
         )
         if "reference" in data:
             parts.append(
-                "<p>Frozen first-model comparison on the same fresh cases:</p><pre>"
+                "<p>Frozen checkpoint comparison on the same fresh cases:</p><pre>"
                 + escape(
                     json.dumps(
                         dict(
@@ -224,6 +224,41 @@ def entity_inspection(directory):
                     )
                 )
                 + "</pre>"
+            )
+        if isinstance(data.get("stress"), dict):
+            stress = data["stress"]
+            parts.append(
+                "<h3>Long history and mid-episode relocation</h3>"
+                + f"<p>Combined screen: {'pass' if data['robustness_passed'] else 'fail'}. "
+                + "Stress requires known and correction read accuracy≥95%, reachable/absent≥90%, oracle100%. Utility is descriptive. One correction before decision1; not arbitrary change timing.</p><pre>"
+                + escape(
+                    json.dumps(
+                        dict(
+                            passed=stress["passed"],
+                            correction_accuracy=stress["correction_accuracy"],
+                            correction_reads=stress["correction_reads"],
+                            summary=stress["summary"],
+                            reference=data.get("reference", {})
+                            .get("stress", {})
+                            .get("summary"),
+                        ),
+                        indent=2,
+                    )
+                )
+                + "</pre>"
+                + "<details><summary>State-change example</summary><pre>"
+                + escape(
+                    json.dumps(
+                        next(
+                            r
+                            for r in stress["episodes"]
+                            if r["policy"] == "integrated"
+                            and r["condition"] == "remembered"
+                        ),
+                        indent=2,
+                    )
+                )
+                + "</pre></details>"
             )
         for condition in ("remembered", "moved", "uncertain", "absent"):
             row = next(

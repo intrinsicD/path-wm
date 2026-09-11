@@ -103,6 +103,8 @@ def test_key_box_recipe_resume_and_action_budget(tmp_path, monkeypatch):
         families=1,
         query_switch=True,
         history_pairs=4,
+        training_seed=2302,
+        stress=True,
         eval_seed=2411,
         reference_weights=output / "last.pt",
     )
@@ -117,6 +119,8 @@ def test_key_box_recipe_resume_and_action_budget(tmp_path, monkeypatch):
         families=1,
         query_switch=True,
         history_pairs=4,
+        training_seed=2302,
+        stress=True,
         eval_seed=2411,
         reference_weights=output / "last.pt",
         resume=True,
@@ -181,8 +185,8 @@ def test_stress_correction_precedes_next_decision(monkeypatch):
 
         def probabilities(self):
             p = [float(b) if k else 0.5 for b, k in zip(self.bits, self.known)]
-            q = [p[0]*(1-p[1]), p[1]*(1-p[0]), (1-p[0])*(1-p[1])]
-            return tuple(v/sum(q) for v in q), p
+            q = [p[0] * (1 - p[1]), p[1] * (1 - p[0]), (1 - p[0]) * (1 - p[1])]
+            return tuple(v / sum(q) for v in q), p
 
     monkeypatch.setattr(module, "KeyBoxSession", Session)
     result = module.evaluate_key_box(None, families=1, seed=2431, stress=True)
@@ -190,7 +194,7 @@ def test_stress_correction_precedes_next_decision(monkeypatch):
     for row in result["episodes"]:
         for event in row["actions"]:
             if event["step"] == 1 and row["initial_truth"] is not None:
-                assert event["truth"] == 1-row["initial_truth"]
+                assert event["truth"] == 1 - row["initial_truth"]
                 assert event["correction"]["truth"] == event["truth"]
                 assert event["agent_time"] == row["actions"][0]["after_time"] + 2
                 if row["policy"] != "supplied_state":

@@ -24,7 +24,7 @@ def key_training_batch(model, generator, batch=32):
 
 
 @torch.no_grad()
-def evaluate_key_box(model, families=16, seed=2401):
+def evaluate_key_box(model, families=16, seed=2401, stress=False):
     rows = []
     inputs = growth_inputs(seed, families)
     for family, descriptors in enumerate(inputs):
@@ -51,7 +51,7 @@ def evaluate_key_box(model, families=16, seed=2401):
                         truth = None
                         for box in range(2):
                             session.observe(f"empty-{box}", box, 0)
-                    for t in range(2 + family % 7):
+                    for t in range((12 if stress else 2) + family % 7):
                         session.observe(f"delay-{t}")
                     if policy == "no_history":
                         session = KeyBoxSession(
@@ -59,6 +59,7 @@ def evaluate_key_box(model, families=16, seed=2401):
                             descriptors["descriptors"][:2],
                             f"reset-{family}-{start}",
                         )
+                    initial_truth = truth
                     opened = [False, False]
                     actions = []
                     total_cost = 0.0
@@ -66,6 +67,17 @@ def evaluate_key_box(model, families=16, seed=2401):
                     outcome = "budget_exhausted"
                     initial_correct = []
                     for step in range(4):
+                        correction = None
+                        if stress and step == 1 and truth is not None:
+                            truth = 1 - truth
+                            for box in range(2):
+                                session.observe(
+                                    f"relocation-{box}", box, int(box == truth)
+                                )
+                            correction = dict(
+                                truth=truth, time=float(session.state.time[0])
+                            )
+
                         if policy == "supplied_state":
                             q = tuple(
                                 float(i == (2 if truth is None else truth))
@@ -84,6 +96,14 @@ def evaluate_key_box(model, families=16, seed=2401):
                         kind, box = action
                         record = dict(
                             step=step,
+                            truth=truth,
+                            correction=correction,
+                            correction_read_correct=[
+                                int((p > 0.5) == (box == truth))
+                                for box, p in enumerate(probabilities)
+                            ]
+                            if correction and policy == "integrated"
+                            else [],
                             action=list(action),
                             belief=list(q),
                             known=session.known.copy(),
@@ -124,6 +144,7 @@ def evaluate_key_box(model, families=16, seed=2401):
                             condition=condition,
                             policy=policy,
                             truth=truth,
+                            initial_truth=initial_truth,
                             success=success,
                             outcome=outcome,
                             cost=total_cost,
@@ -146,14 +167,28 @@ def evaluate_key_box(model, families=16, seed=2401):
     known = [v for r in rows for v in r["initial_correct"]]
     accuracy = sum(known) / len(known)
     a, b, c = (summary[p] for p in ("integrated", "no_history", "supplied_state"))
+    corrections = [
+        v
+        for row in rows
+        for event in row["actions"]
+        for v in event["correction_read_correct"]
+    ]
+    correction_accuracy = sum(corrections) / len(corrections) if corrections else None
     return dict(
+        stress=stress,
+        correction_accuracy=correction_accuracy,
+        correction_reads=len(corrections),
         episodes=rows,
         summary=summary,
         known_accuracy=accuracy,
         passed=accuracy >= 0.95
         and a["success"] >= 0.9
         and a["absent_stop"] >= 0.9
-        and a["utility"] >= b["utility"] + 0.01
+        and (
+            (correction_accuracy is not None and correction_accuracy >= 0.95)
+            if stress
+            else a["utility"] >= b["utility"] + 0.01
+        )
         and c["success"] == 1
         and c["absent_stop"] == 1,
         limitations="Supplied descriptors and action dynamics; frozen learned state donor, trained workspace readout. No learned dynamics or visual discovery.",

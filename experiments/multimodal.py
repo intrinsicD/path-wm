@@ -2922,6 +2922,9 @@ def train_key_box(
     query_switch=False,
     history_pairs=1,
     eval_seed=2401,
+    training_seed=2301,
+    stress=False,
+    max_seconds=240,
     reference_weights=None,
 ):
     """Train the entity-to-belief workspace bridge, then execute bounded plans."""
@@ -2935,7 +2938,7 @@ def train_key_box(
 
     if history_pairs not in (1, 4):
         raise ValueError("history_pairs must be 1 or 4")
-    seed_everything(2301)
+    seed_everything(training_seed)
     matcher_weights, cell_weights = (
         Path(matcher_weights).resolve(),
         Path(cell_weights).resolve(),
@@ -2964,7 +2967,7 @@ def train_key_box(
     run = Run(
         output,
         settings=dict(
-            seed=2301,
+            seed=training_seed,
             query_switch=query_switch,
             history_pairs=history_pairs,
             reference_sha256=file_hash(reference_weights)
@@ -2976,10 +2979,11 @@ def train_key_box(
             purpose="diagnostic",
             matcher_sha256=file_hash(matcher_weights),
             cell_sha256=file_hash(cell_weights),
-            max_seconds=240,
+            max_seconds=max_seconds,
+            stress=stress,
             planner="supplied_expectimax4",
         ),
-        data=dict(training_seed=2301, evaluation_seed=eval_seed, batch=32),
+        data=dict(training_seed=training_seed, evaluation_seed=eval_seed, batch=32),
         recipe=__file__,
         model=model,
         optimizer=optimizer,
@@ -3011,14 +3015,14 @@ def train_key_box(
             optimizer.step()
             run.step = step + 1
             run.log(dict(step=run.step, split="train", loss=float(loss.detach())))
-            if perf_counter() - started > 240:
+            if perf_counter() - started > max_seconds:
                 raise TimeoutError("Key-box budget exhausted")
         model.eval()
         if not (resume and path.exists()):
             result = evaluate_key_box(model, families=families, seed=eval_seed)
             if donor_hashes != dict(matcher=state_hash(matcher), cell=state_hash(cell)):
                 raise RuntimeError("Entity donor changed")
-            if perf_counter() - started > 240:
+            if perf_counter() - started > max_seconds:
                 raise TimeoutError("Key-box budget exhausted")
             if reference_weights:
                 reference = copy.deepcopy(model).eval()
@@ -3031,8 +3035,21 @@ def train_key_box(
                     reference, families=families, seed=eval_seed
                 )
                 result["reference"]["model_sha256"] = state_hash(reference)
-                if perf_counter() - started > 240:
+                if perf_counter() - started > max_seconds:
                     raise TimeoutError("Key-box comparison budget exhausted")
+            if stress:
+                result["stress"] = evaluate_key_box(
+                    model, families=families, seed=eval_seed, stress=True
+                )
+                if reference_weights:
+                    result["reference"]["stress"] = evaluate_key_box(
+                        reference, families=families, seed=eval_seed, stress=True
+                    )
+                result["robustness_passed"] = (
+                    result["passed"] and result["stress"]["passed"]
+                )
+                if perf_counter() - started > max_seconds:
+                    raise TimeoutError("Key-box stress budget exhausted")
             result["donor_hashes"] = donor_hashes
             result["model_sha256"] = state_hash(model)
             atomic_json(path, result)
