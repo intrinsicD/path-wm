@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Explicit idle preservation passes all seven conditions; idle31 improves25 to100 percent.128 tests and browser QA pass."
-  turn_count: 32
-  events_count: 90
+  summary: "Directed interaction passes all conditions at100 percent; source-zero reference50 percent.132 tests, resumes and browser QA pass."
+  turn_count: 33
+  events_count: 94
   claims_touched: []
   open_threads: 13

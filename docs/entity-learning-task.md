@@ -820,3 +820,43 @@ an interaction-produced latent is compatible with a subsequent interaction. That
 exactly what the composition cohort tests; a failure will count against the declared
 capability gate, not be dismissed as an artifact. The same runtime checks apply to
 both copies. Swapped roles are labeled symmetry, not novel-ID generalization.
+
+### Directed interaction result
+
+Implementation71c6d97;132 CPU tests pass. One256-update run per arm, with matched
+initialization, data and optimizer. Frozen recognition and ordinary state weights
+remain unchanged. Only the interaction MLP trains. The full model passes all five
+populations at100% pair accuracy: development, reference, swapped roles, idle and
+second-copy composition. Reference NLL0.004632; composition NLL0.000961.
+
+The source-zero control scores50% on reference/development/idle/swapped populations
+and29.296875% on composition. It meets the declared<=60% reference control criterion;
+its capability failures remain visible. Among128 counterfactual pairs whose source
+history changes while destination history stays fixed, the full model answers both
+members correctly in100% of pairs; the control does so in0%. Source identity labels
+never enter the interaction network. Idle outputs are exactly invariant and swapped
+outputs exactly exchange entity positions. Independent simulation/NLL and routing
+checks pass. The composition population has two balanced final pairs; other cohorts
+have four. These are correlated controlled variants, not independent samples.
+
+Runtime retries, restore and batch-latent agreement pass for both models. Tests
+cover unchanged source latents, missing source rejection, conflicting retry source
+IDs and injected-transition rollback. Both cached resumes pass. An immutable full
+checkpoint was copied after resume. Two abstract Claude reviews were reconciled;
+no private code or measurements were sent. Both reports pass1280×720 browser QA,
+including expanded examples. A transient screenshot capture failed and succeeded
+on retry; no report defect was found.
+
+[Full model](../runs/entity_interaction_v1/full/report.html),
+[source-zero control](../runs/entity_interaction_v1/blind/report.html),
+[verification](../runs/entity_interaction_v1/verification.json).
+Use the existing recipe: `python -m experiments.multimodal --entity-interaction
+--entity-state-weights MATCHER.pt --entity-temporal-cell IDLE_STATE.pt --output DIR`;
+add `--entity-interaction-blind` for the control. Resume with `--resume DIR`.
+The base donor must be the ordinary idle-preserving cell, not a prior interaction
+checkpoint. Runtime adds `source_id=KNOWN_ID` to `observe` with four zero features.
+
+This learns the update for a supplied directed copy relation. It does not learn
+which edge to create, which source to retrieve, general concepts or visual identity.
+Next proposed: source selection with a distractor entity and counterfactual routing
+controls, removing the supplied source ID before claiming learned relational retrieval.

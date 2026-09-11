@@ -1,5 +1,13 @@
 # Current work
 
+**Directed state interaction passes, 11 September:**132 tests pass. A learned
+interaction uses another entity’s latent state:100% across all tested conditions,
+including a second copy. The matched source-zero control scores50% reference and
+29.3% composition. Frozen dynamics, transactions and browser QA pass.
+[Report](../runs/entity_interaction_v1/full/report.html). Endpoints and copy type are
+still supplied. Next proposed: selecting a source among distractors before claiming
+learned relational retrieval or graph structure.
+
 **Explicit idle preservation passes the bounded screen, 11 September:**128 tests
 pass. With31 extra idle events, accuracy improves25%→100%; all seven frozen
 conditions pass. Latents remain exactly stable across idle stretches; resets and

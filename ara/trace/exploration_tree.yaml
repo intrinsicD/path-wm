@@ -3346,3 +3346,27 @@ tree:
   - N210
   - N211
   status: resolved
+
+- id: N213
+  type: decision
+  title: Continue interaction implementation and Claude review
+  provenance: user
+  timestamp: 2026-09-11T14:33+02:00
+  choice: Implement, review, test, fix and iterate.
+  evidence:
+  - N212
+  status: resolved
+- id: N214
+  type: experiment
+  title: Learned directed state update uses remembered source
+  provenance: ai-executed
+  timestamp: 2026-09-11T14:33+02:00
+  result: Directed interaction passes all conditions at100 percent; source-zero reference50
+    percent.132 tests, resumes and browser QA pass.
+  evidence:
+  - ara/evidence/tables/entity_interaction_2026-09-11.json
+  - docs/entity-learning-task.md
+  also_depends_on:
+  - N212
+  - N213
+  status: resolved

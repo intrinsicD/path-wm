@@ -1,0 +1,207 @@
+{
+  "comparison": {
+    "blind": {
+      "composition": {
+        "examples": 256,
+        "latent_agreement": true,
+        "nll": 0.6940577030181885,
+        "pair_accuracy": 0.29296875,
+        "passed": false,
+        "target_counts": {
+          "(0, 0)": 128,
+          "(1, 1)": 128
+        },
+        "transactions": true
+      },
+      "counterfactual_pair_success": 0.0,
+      "development": {
+        "examples": 256,
+        "latent_agreement": true,
+        "nll": 0.35051247477531433,
+        "pair_accuracy": 0.5,
+        "passed": false,
+        "target_counts": {
+          "(0, 0)": 64,
+          "(0, 1)": 64,
+          "(1, 0)": 64,
+          "(1, 1)": 64
+        },
+        "transactions": true
+      },
+      "idle": {
+        "examples": 256,
+        "latent_agreement": true,
+        "nll": 0.3508133888244629,
+        "pair_accuracy": 0.5,
+        "passed": false,
+        "target_counts": {
+          "(0, 0)": 64,
+          "(0, 1)": 64,
+          "(1, 0)": 64,
+          "(1, 1)": 64
+        },
+        "transactions": true
+      },
+      "reference": {
+        "examples": 256,
+        "latent_agreement": true,
+        "nll": 0.3508133888244629,
+        "pair_accuracy": 0.5,
+        "passed": false,
+        "target_counts": {
+          "(0, 0)": 64,
+          "(0, 1)": 64,
+          "(1, 0)": 64,
+          "(1, 1)": 64
+        },
+        "transactions": true
+      },
+      "swapped": {
+        "examples": 256,
+        "latent_agreement": true,
+        "nll": 0.3508133888244629,
+        "pair_accuracy": 0.5,
+        "passed": false,
+        "target_counts": {
+          "(0, 0)": 64,
+          "(0, 1)": 64,
+          "(1, 0)": 64,
+          "(1, 1)": 64
+        },
+        "transactions": true
+      }
+    },
+    "full": {
+      "composition": {
+        "examples": 256,
+        "latent_agreement": true,
+        "nll": 0.0009612887515686452,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "target_counts": {
+          "(0, 0)": 128,
+          "(1, 1)": 128
+        },
+        "transactions": true
+      },
+      "counterfactual_pair_success": 1.0,
+      "development": {
+        "examples": 256,
+        "latent_agreement": true,
+        "nll": 0.004332252312451601,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "target_counts": {
+          "(0, 0)": 64,
+          "(0, 1)": 64,
+          "(1, 0)": 64,
+          "(1, 1)": 64
+        },
+        "transactions": true
+      },
+      "idle": {
+        "examples": 256,
+        "latent_agreement": true,
+        "nll": 0.004632055293768644,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "target_counts": {
+          "(0, 0)": 64,
+          "(0, 1)": 64,
+          "(1, 0)": 64,
+          "(1, 1)": 64
+        },
+        "transactions": true
+      },
+      "reference": {
+        "examples": 256,
+        "latent_agreement": true,
+        "nll": 0.004632055293768644,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "target_counts": {
+          "(0, 0)": 64,
+          "(0, 1)": 64,
+          "(1, 0)": 64,
+          "(1, 1)": 64
+        },
+        "transactions": true
+      },
+      "swapped": {
+        "examples": 256,
+        "latent_agreement": true,
+        "nll": 0.004632055293768644,
+        "pair_accuracy": 1.0,
+        "passed": true,
+        "target_counts": {
+          "(0, 0)": 64,
+          "(0, 1)": 64,
+          "(1, 0)": 64,
+          "(1, 1)": 64
+        },
+        "transactions": true
+      }
+    }
+  },
+  "descriptor_splits_disjoint": true,
+  "exact_idle_and_role_symmetry": true,
+  "frozen_base_weights": true,
+  "hashes": {
+    "blind": {
+      "entity_interaction.json": "b0b1c211779d8a1ddb41faeb7789618eee38b23aeffe0aa2b3c5a3912b3dec71",
+      "last.pt": "4f8e57a8422a97851bd439bec8a193b93a3cd682117a0a45095f554487af75de",
+      "report.html": "1c9041080084412dbc849375b23e844c7a69a921b50b1eda2dbae7889b95c938",
+      "run.json": "7568d2a003d02a1c7abd5c4b5288087c5a4ddc9b2b1069166c00206ba1ea907f"
+    },
+    "full": {
+      "entity_interaction.json": "c4dff095949c85048be4a53f27ad98d7d344cc30945aeec2d833e80454b9b69a",
+      "last.pt": "f73dea13cc6793f6db20e91b4524f390df08d482c2bd1fc63e49aa23a70a3584",
+      "report.html": "767e7387a8f1b33424a88159d2e69ae9028231ad26af455f24116340ad7af2a5",
+      "run.json": "faf2e410966d7ccf5c6f37b6cc5b0e5b6d5fbe78955e73a44afe37d24298bd9c"
+    }
+  },
+  "independent_targets_nll": true,
+  "matched_populations_settings_initialization": true,
+  "routing_correct": true,
+  "tests_passed": 132,
+  "browser": {
+    "full": {
+      "browser_checked": true,
+      "renderer_sha256": "6fa2f30bd9c567dbb87011677b51ccfcf1287e303a02fcac25d0ed5298b2c89c",
+      "report_sha256": "767e7387a8f1b33424a88159d2e69ae9028231ad26af455f24116340ad7af2a5",
+      "rows": 261,
+      "self_contained": true,
+      "status": "browser_verified",
+      "viewport": [
+        1280,
+        720
+      ],
+      "horizontal_overflow": false,
+      "broken_images": 0
+    },
+    "blind": {
+      "browser_checked": true,
+      "renderer_sha256": "6fa2f30bd9c567dbb87011677b51ccfcf1287e303a02fcac25d0ed5298b2c89c",
+      "report_sha256": "1c9041080084412dbc849375b23e844c7a69a921b50b1eda2dbae7889b95c938",
+      "rows": 261,
+      "self_contained": true,
+      "status": "browser_verified",
+      "viewport": [
+        1280,
+        720
+      ],
+      "horizontal_overflow": false,
+      "broken_images": 0
+    }
+  },
+  "source_commit": "71c6d97",
+  "full_resume": true,
+  "blind_resume": true,
+  "source_zero_reference_gate": true,
+  "scope": "Supplied directed copy endpoints; learned update only. Correlated variants and one seed. No learned graph structure or visual entity discovery.",
+  "frozen_interaction_sha256": "f73dea13cc6793f6db20e91b4524f390df08d482c2bd1fc63e49aa23a70a3584",
+  "claude_reviews": {
+    "entity-interaction": "71993af67fec66c63f0eaae852e93f1c044dc7c8e3037d609c617ca084a2bd3e",
+    "entity-interaction-reconcile": "73d005ee5e3132371505d92749b91e44b9a7ac3fd83b5a9aaf0d8573509c712e"
+  }
+}

@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T14:16+02:00
-  turn_count: 32
-  summary: "Explicit idle preservation passes all seven conditions; idle31 improves25 to100 percent.128 tests and browser QA pass."
+  last_turn: 2026-09-11T14:33+02:00
+  turn_count: 33
+  summary: "Directed interaction passes all conditions at100 percent; source-zero reference50 percent.132 tests, resumes and browser QA pass."
 events_logged:
 - turn: 1
   type: question
@@ -570,6 +570,32 @@ events_logged:
   provenance: ai-suggested
   summary: O137 explicit idle policy committed.
 
+- turn: 33
+  type: decision
+  id: N213
+  routing: direct
+  provenance: user
+  summary: Implement, review, test, fix and iterate.
+- turn: 33
+  type: experiment
+  id: N214
+  routing: direct
+  provenance: ai-executed
+  summary: Directed interaction passes all conditions at100 percent; source-zero reference50
+    percent.132 tests, resumes and browser QA pass.
+- turn: 33
+  type: observation
+  id: O139
+  routing: staged
+  provenance: ai-suggested
+  summary: Source selection with distractors proposed.
+- turn: 33
+  type: heuristic
+  id: H31
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O138 interaction diagnostic committed.
+
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -795,6 +821,17 @@ ai_actions:
   - experiments/multimodal.py
   - docs/entity-learning-task.md
 
+- turn: 33
+  action: Implemented supplied directed interaction and transactional source binding;132
+    tests, two256-step runs, cached resumes, independent counterfactual audits and
+    two browser reports. Two Claude conceptual reviews completed.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/entity_state.py
+  - pathwm/data/entity_interaction.py
+  - experiments/multimodal.py
+  - docs/entity-learning-task.md
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -826,7 +863,7 @@ key_context:
 - turn: 25
   excerpt: "User: continue with claude. implement this, review, test, fix and iterate"
 open_threads:
-- "O138: cross-entity state-dependent interaction remains proposed."
+- "O139: source selection with distractors remains proposed; supplied interaction diagnostic O138 is implemented."
 - O132: persistent allocation/revisit behavior remains proposed.
 - O130: learned matching remains proposed; shared reader is now a successful controlled reference.
 - O128: isolate association versus state updating after failed recurrent baseline.

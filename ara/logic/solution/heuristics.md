@@ -293,3 +293,13 @@
 - **Code ref**: [state update](../../../pathwm/models/entity_state.py), [gradient and persistence tests](../../../tests/test_entity_noinfo.py).
 - **From staging**: O137
 - **Evidence**: [bounded comparison](../../evidence/tables/entity_noinfo_2026-09-11.json); control NLL increases remain below declared gate.
+
+## H31: Isolate a learned interaction with counterfactual source histories
+
+- **Rationale**: Freeze ordinary state dynamics; compare latents-only directed updates with a matched source-zero control. Pair source changes with unchanged destination histories and test reuse of updated states.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; supplied endpoints and a single copy relation do not establish graph discovery or source selection.
+- **Code ref**: [interaction model](../../../pathwm/models/entity_state.py), [histories](../../../pathwm/data/entity_interaction.py), [runtime checks](../../../tests/test_entity_interaction.py).
+- **From staging**: O138
+- **Evidence**: [controlled comparison](../../evidence/tables/entity_interaction_2026-09-11.json).
