@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T02:20+02:00
-  turn_count: 3
-  summary: Current/recent recall gates failed; direct fact and explicit binding controls now pass on one capped pilot;83 CPU tests, cached resume and final browser QA verified.
+  last_turn: 2026-09-11T02:48+02:00
+  turn_count: 4
+  summary: Direct fact control passes; both single-event agent-reader attempts fail extraction gates. 86 CPU tests, observed-fact gradients, cached resume and browser reports verified; 109.4034 active seconds.
 events_logged:
 - turn: 1
   type: question
@@ -66,6 +66,30 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Successful canonical reference motivates existing event/reader-path comparison.
+- turn: 4
+  type: decision
+  id: N167
+  routing: direct
+  provenance: user
+  summary: Continue with Claude and implement the existing agent-reader comparison.
+- turn: 4
+  type: experiment
+  id: N168
+  routing: direct
+  provenance: ai-executed
+  summary: Two matched bounded attempts fail extraction; raw results and reports verified.
+- turn: 4
+  type: heuristic
+  id: H19
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O117 committed in the implemented control; no causal interpretation endorsed.
+- turn: 4
+  type: observation
+  id: O118
+  routing: staged
+  provenance: ai-suggested
+  summary: Warm-start only the source encoder as the proposed next comparison.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -101,6 +125,20 @@ ai_actions:
   - docs/fact-learning-plan.md
   - docs/project-state.md
   - docs/experiments.md
+- turn: 4
+  action: Two concise actual Claude reviews reconciled; red plan aed1688, implementation f09400c. Correct
+    test ordinal assumption, pass 86 CPU tests and real check; run two declared 512-update pilots; strengthen
+    observed-input gradient test; verify exact resume, matched settings/init/sampler, raw metrics, source
+    snapshots and both browser reports.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/facts.py
+  - experiments/multimodal.py
+  - pathwm/evaluation/report.py
+  - tests/test_facts.py
+  - docs/event-fact-plan.md
+  - docs/project-state.md
+  - docs/experiments.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -110,9 +148,11 @@ key_context:
   excerpt: 'User: yes send it to claude. then implement your points'
 - turn: 3
   excerpt: 'User: continue with claude. implement this, review, test, fix and iterate'
+- turn: 4
+  excerpt: 'User: continue with claude. implement this, review, test, fix and iterate'
 open_threads:
-- 'O117: compare the successful direct control with the existing agent event/reader path; not yet run.'
+- 'O118: consider warm-starting only the trainable text encoder from the direct control; not implemented or run.'
 - O101-O114 and earlier research questions remain referenced by 2026-09-10_001.yaml; local memory
   learning/marking/transfer remain conditional.
 ai_suggestions_pending:
-- 'O117: canonical-fact success does not establish learned recurrent binding; proposed next diagnostic remains unconfirmed.'
+- 'O118: whether learned input features help the existing reader remains an unconfirmed next comparison.'

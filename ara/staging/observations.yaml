@@ -2128,6 +2128,25 @@ observations:
   bound_to:
   - N166
   - N164
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H19
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O118
+  timestamp: 2026-09-11T02:48+02:00
+  provenance: ai-suggested
+  content: Propose warm-starting only the trainable source text encoder from the successful direct-control
+    checkpoint, keeping the agent route, classification loss and budget fixed. This tests whether learned
+    input features help the downstream path. The failed whole-path controls do not isolate a component
+    or establish that detached recent-memory records cause the failure.
+  context: 'N168: both predeclared attempts fail. Source review confirms stored recent records detach,
+    while the strengthened local test proves gradients still reach the observed fact via the live path.
+    No warm-start run, new loss or memory edit was made; researcher has not commented on these new outcomes.'
+  potential_type: heuristic
+  bound_to:
+  - N168
+  - N166
   promoted: false
   promoted_to: null
   crystallized_via: null

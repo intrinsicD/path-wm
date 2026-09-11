@@ -66,3 +66,65 @@ Claude explicitly withdrew the padding and pre-training-decoding recommendations
 Its remaining cautions are addressed by the declared contract: zero is the fixed
 input timestamp, not deterministic dynamics; the intervention replaces exactly
 the final working-token input. No further review round is needed for these points.
+
+## Outcome, 11 September 2026
+
+Red checks were committed in `aed1688`; implementation is `f09400c`. All 86 CPU
+tests passed, including both fact-reader resume/cache paths. The initial forward
+check has finite losses and gradients in the agent, matched attention reader and
+both heads. Tests verify exact shared initialization, ordinary event/interpreter/
+think calls, constant task metadata, fresh-state reset, gradients to the updater
+and thinker, and fixed evaluation draws without training-RNG consumption.
+
+The first boundary test incorrectly expected a fresh event ordinal of zero. The
+existing agent starts at -1 and `observe()` commits ordinal zero; the test was
+corrected to that contract. After the first negative pilot, the gradient test was
+strengthened to retain the first encoder call's scale tensors. It passes: gradients
+reach the actual observed fact, not merely the later constant instruction that
+shares the encoder. No experiment source changed between the two pilots.
+
+Both attempts finished all 512 updates / 8192 fact presentations:
+
+| Reader / learning rate | Held-out entity | Held-out location | Held-out joint | Mean held-out NLL | Active seconds |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Prior direct / 0.0003 | 32/32 | 32/32 | 32/32 | 0.211649 | 10.3502 |
+| Agent reference / 0.0003 | 1/32 | 8/32 | 0/32 | 2.431158 | 56.5757 |
+| Agent comparison / 0.001 | 0/32 | 24/32 | 0/32 | 2.171213 | 52.8277 |
+
+Training entity/location/joint accuracy was 3.125% / 25% / 1.0417% for the agent
+reference, and 5.2083% / 75% / 4.1667% for the comparison. Both extraction gates
+failed in both runs; the two-record selector was correctly skipped. The higher
+learning rate learned some location discrimination but did not recover entities.
+Total new active training/evaluation time was 109.4034 seconds, excluding the
+declared checkpoint/report overhead. No third run, extra seed, new objective,
+calibration or final-test population was used.
+
+The audit confirms the same initial model hash and final sampler state between
+the two agent runs, with only learning rate changed in resolved settings. The
+prior direct control and agent reference share the data identities and core
+settings; shared component initialization is covered by the exact tensor check.
+All trained source/snapshots match current source. Both CLI resumes preserve the
+prediction caches, result JSON and metric rows byte-for-byte. Saved logits reproduce
+all reported entity/location/joint metrics and NLLs; checkpoint floats are finite.
+
+Both standalone reports passed structural and 1280x720 browser checks, including
+expanded examples, with no broken images or horizontal overflow. Receipts, raw
+results, checkpoints, exact review exchanges and screenshots are bound by
+`runs/event_fact_v1/verification.json`:
+
+- [Reference report](../runs/event_fact_v1/reference/report.html)
+- [Learning-rate comparison](../runs/event_fact_v1/lr_control/report.html)
+
+The whole existing agent route failed this fixed-budget task. This does not isolate
+the source encoder, categorical bottleneck, task interpreter, memory reader or
+optimization dynamics. Source review confirms recent-memory writes detach stored
+records even during replay; replay keeps newly created compression/consolidation
+graphs, not original observation graphs (`HybridMemory.write`). The live categorical
+path still gives observed-fact gradients, as tested. This existing storage policy
+was preserved and is not established as the cause of failure.
+
+Next proposed single-factor test: initialize only the source text encoder from the
+successful direct-control checkpoint, keep it trainable, and leave the agent route,
+classification loss and budget fixed. This tests whether learned input features
+help downstream learning. It is not implemented or run here; neither new memory
+losses nor compression changes are justified by these results alone.

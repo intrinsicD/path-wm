@@ -1,0 +1,244 @@
+{
+  "verified_at": "2026-09-11T00:46:35.152137+00:00",
+  "implementation_commit": "f09400c",
+  "runs": {
+    "reference": {
+      "settings": {
+        "abstain_cost": 0.25,
+        "audio_samples": 32,
+        "batch_size": 16,
+        "calibration_windows": 15,
+        "data_root": "data/pusht_world_model/cchi_v1",
+        "dataset": "facts",
+        "device": "cpu",
+        "ema_decay": 0.99,
+        "evaluate_every": 32,
+        "fact_reader": "event",
+        "history": 1,
+        "horizon": 1,
+        "image_size": 16,
+        "improve_every": 0,
+        "learning_rate": 0.0003,
+        "max_seconds": 450.0,
+        "memory_block": 8,
+        "memory_blocks": 16,
+        "memory_recent": 32,
+        "objective": "equal-weight entity/location CE through one committed agent event, task interpreter and working-token readout; final checkpoint only; fixed batch evaluation seeds",
+        "precision": "fp32",
+        "proposal_budget": "none",
+        "purpose": "diagnostic",
+        "recall_mode": "history",
+        "recall_truncate": 32,
+        "seed": 23,
+        "state_model": "belief",
+        "steps": 512,
+        "test_windows": 15,
+        "time_unit": "single observation at neutral time zero",
+        "train_windows": 96,
+        "validation_windows": 32,
+        "width": 32
+      },
+      "initial_model_sha256": "8511e1e360c4333b3e57270409c7eb96f43352bea37381d890830940b1eb928e",
+      "step": 512,
+      "training_active_seconds": 56.575721645960584,
+      "views": {
+        "development": {
+          "entity_accuracy": 0.03125,
+          "entity_nll": 3.475470932133923,
+          "examples": 32,
+          "factual_accuracy": 0.0,
+          "location_accuracy": 0.25,
+          "location_nll": 1.386844576558876,
+          "nll": 2.4311577543463994
+        },
+        "train": {
+          "entity_accuracy": 0.03125,
+          "entity_nll": 3.471990687369086,
+          "examples": 96,
+          "factual_accuracy": 0.010416666666666666,
+          "location_accuracy": 0.25,
+          "location_nll": 1.3911851456342286,
+          "nll": 2.431587916501657
+        }
+      },
+      "gates": {
+        "extraction": false,
+        "fresh_combinations": false,
+        "training_fit": false
+      },
+      "binding": {
+        "status": "skipped_failed_extraction_gate"
+      },
+      "all_checkpoint_floats_finite": true,
+      "raw_metric_recomputation_matches": true,
+      "binding_audit": "skipped_failed_extraction_gate",
+      "cached_predictions_results_and_rows_unchanged": true,
+      "source_and_snapshot_match": true,
+      "report": {
+        "width": 1280,
+        "height": 720,
+        "overflow": false,
+        "brokenImages": 0,
+        "examples_expand": true,
+        "structural": "verified",
+        "browser": "verified",
+        "report_sha256": "ecb513503e7302657e298717892e9c613b48251a683483e4b746c1ff918e94d4"
+      }
+    },
+    "lr_control": {
+      "settings": {
+        "abstain_cost": 0.25,
+        "audio_samples": 32,
+        "batch_size": 16,
+        "calibration_windows": 15,
+        "data_root": "data/pusht_world_model/cchi_v1",
+        "dataset": "facts",
+        "device": "cpu",
+        "ema_decay": 0.99,
+        "evaluate_every": 32,
+        "fact_reader": "event",
+        "history": 1,
+        "horizon": 1,
+        "image_size": 16,
+        "improve_every": 0,
+        "learning_rate": 0.001,
+        "max_seconds": 450.0,
+        "memory_block": 8,
+        "memory_blocks": 16,
+        "memory_recent": 32,
+        "objective": "equal-weight entity/location CE through one committed agent event, task interpreter and working-token readout; final checkpoint only; fixed batch evaluation seeds",
+        "precision": "fp32",
+        "proposal_budget": "none",
+        "purpose": "diagnostic",
+        "recall_mode": "history",
+        "recall_truncate": 32,
+        "seed": 23,
+        "state_model": "belief",
+        "steps": 512,
+        "test_windows": 15,
+        "time_unit": "single observation at neutral time zero",
+        "train_windows": 96,
+        "validation_windows": 32,
+        "width": 32
+      },
+      "initial_model_sha256": "8511e1e360c4333b3e57270409c7eb96f43352bea37381d890830940b1eb928e",
+      "step": 512,
+      "training_active_seconds": 52.827695181476884,
+      "views": {
+        "development": {
+          "entity_accuracy": 0.0,
+          "entity_nll": 3.767302697936149,
+          "examples": 32,
+          "factual_accuracy": 0.0,
+          "location_accuracy": 0.75,
+          "location_nll": 0.5751233120090458,
+          "nll": 2.1712130049725973
+        },
+        "train": {
+          "entity_accuracy": 0.052083333333333336,
+          "entity_nll": 3.4388474740489836,
+          "examples": 96,
+          "factual_accuracy": 0.041666666666666664,
+          "location_accuracy": 0.75,
+          "location_nll": 0.5725076702357961,
+          "nll": 2.00567757214239
+        }
+      },
+      "gates": {
+        "extraction": false,
+        "fresh_combinations": false,
+        "training_fit": false
+      },
+      "binding": {
+        "status": "skipped_failed_extraction_gate"
+      },
+      "all_checkpoint_floats_finite": true,
+      "raw_metric_recomputation_matches": true,
+      "binding_audit": "skipped_failed_extraction_gate",
+      "cached_predictions_results_and_rows_unchanged": true,
+      "source_and_snapshot_match": true,
+      "report": {
+        "width": 1280,
+        "height": 720,
+        "overflow": false,
+        "brokenImages": 0,
+        "examples_expand": true,
+        "structural": "verified",
+        "browser": "verified",
+        "report_sha256": "b83ab2eee6b3901ff0be759107c2f29db0a4880d4583636fda1cbef29fe76f07"
+      }
+    }
+  },
+  "total_training_active_seconds": 109.40341682743747,
+  "total_training_attempts": 2,
+  "direct_reference_data_and_core_settings_match": true,
+  "tests": {
+    "tests.xml": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "86",
+      "time": "72.205",
+      "timestamp": "2026-09-11T02:39:37.297001+02:00",
+      "hostname": "alex-home"
+    },
+    "fact-tests.xml": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "7",
+      "time": "8.462",
+      "timestamp": "2026-09-11T02:38:51.542694+02:00",
+      "hostname": "alex-home"
+    },
+    "source-gradient-test.xml": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "1",
+      "time": "0.399",
+      "timestamp": "2026-09-11T02:43:41.988229+02:00",
+      "hostname": "alex-home"
+    }
+  },
+  "limits": "One fixed-seed categorical evaluation realization per batch; shared initialization and exposure do not isolate capacity or optimization. No multi-event retention or learned query-binding conclusion.",
+  "claude_receipts": [
+    "runs/reviews/continuation_2026-09-11/event-start-receipt.json",
+    "runs/reviews/continuation_2026-09-11/event-reconcile-receipt.json"
+  ],
+  "sha256": {
+    "reference/run.json": "13aa3edd63b68b6e4b4aa73cb511ba10446a9587f090fdb9224e08278cf27a68",
+    "reference/last.pt": "5a258ce503881e6aa7ebabbfe81f3c4e9a9a2573b05c632bf73e1d0f790436d9",
+    "reference/metrics.jsonl": "628e59ecfe9dd3cfd1ef2537e0aa47701dc5e2344e36ae8d72b4e93ff4f375e9",
+    "reference/fact_manifest.json": "8ee1cb49da789e94e01c9774f535cb0da8ab548ee8faa1f9a96811307cbc9248",
+    "reference/fact_results.json": "4e73f71373ef12da6564fa00837da9ed06472ad00313380bf18e58b4aa99f5ee",
+    "reference/fact_predictions.pt": "f6ebadf98b8318b1570ca20c35b6bd180ef33a2b888143939a27ef6a327e1d6a",
+    "reference/report.html": "ecb513503e7302657e298717892e9c613b48251a683483e4b746c1ff918e94d4",
+    "reference/report.qa.json": "45e8b0cd965a098aeafb35aacd9a813fab2476e506e3bd939eae9440dd6c7a89",
+    "reference-resume.json": "3215969fbd562e7c87202aa303f242c8706c3c45b916d92bf1a02d301fbabd39",
+    "reference-browser.json": "b12c1b5579ebe0eaffdc418256a62c41e06a710c54559ee21e62166e6186440c",
+    "reference-top.png": "67da36322862ee406b99330cfb667a68a8391a4a11424ee06a08710a9ac80c61",
+    "reference-metrics.png": "a62ec1c00aa8ff236fb125e1fa84ce2312b9e6e82f3d58aae345096fe995023a",
+    "lr_control/run.json": "1a58cd927c10d2afc03b053f627d8d5cff0708824f679b3f2a6e8737c8e17c41",
+    "lr_control/last.pt": "d3d51a5a675ff42b205779a092cbbfce5db9278fae31cedd7578ef96d36be38b",
+    "lr_control/metrics.jsonl": "d1936d84985e236dbd7ac55270f5d135cdf9802d93684c280f8ccf42b0a78a20",
+    "lr_control/fact_manifest.json": "8ee1cb49da789e94e01c9774f535cb0da8ab548ee8faa1f9a96811307cbc9248",
+    "lr_control/fact_results.json": "743985d1874ae9cd4cc12a1b91de1a447a627875fed558ad2e481712a8711dfb",
+    "lr_control/fact_predictions.pt": "73d367929a6b9c6e7793faea71e0238b469ea203bfd949a0a8fff24fb57209ea",
+    "lr_control/report.html": "b83ab2eee6b3901ff0be759107c2f29db0a4880d4583636fda1cbef29fe76f07",
+    "lr_control/report.qa.json": "cb23b4ab336cf70a36cf151c492d9a394579603df2b0d432b5f5d6b5f0c1c538",
+    "lr_control-resume.json": "603f9e41ebf80978f345aab040bfe929bd6eecf728fd6273410afc04041f3bd9",
+    "lr_control-browser.json": "d1ae1df2e56ab8a1e66a749cc5c09907e5dfe2b034cd67ae3e8a83343c1e342f",
+    "lr_control-top.png": "5ca727ff34100e82590b967deb18b286bfd5bd7cbd27d6eccc37261da2975eb3",
+    "lr_control-metrics.png": "16b9e326e1e618ea8150b07208275dc295bdb830d3caad0ec6173bcc4bf4f3da",
+    "tests.xml": "9639785f71533cf4cb1e50edf0487be0c5bb24e2c1939a5bb3c33e3f8650c608",
+    "fact-tests.xml": "2d41f20557379de76b1c0842efb69b7e0ff4f030ba9ad2a946efb7f44c471f52",
+    "source-gradient-test.xml": "180c72eccca83fac1df4f0f012470909ee7fb2bb1262aa913e1fde7532e37ea9",
+    "check.json": "41012d6dac3fb5c36129d5b48c7fec31f40e0e7b6a8e1c2d1223d02f4a3c7172",
+    "verify.py": "9aac89e5ae99377168b91efce367c3bd4e3a87d23fa0044211bc82755d1f1020",
+    "resume_check.py": "a2d078e93307ef5471ee5c1e658147c6650e1a804cc78d649892a1584d06f437"
+  }
+}

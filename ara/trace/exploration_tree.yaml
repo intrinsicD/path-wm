@@ -2748,3 +2748,40 @@ tree:
   also_depends_on:
   - N165
   status: resolved
+
+- id: N167
+  type: decision
+  title: Continue the factual control through the existing agent reader
+  provenance: user
+  timestamp: 2026-09-11T02:48+02:00
+  choice: Alex requests continued Claude collaboration and implementation, review, testing, fixes and
+    iteration on the agent-reader comparison proposed after the successful direct control.
+  alternatives:
+  - Add memory objectives before checking the existing reader
+  - Reopen broad architecture design
+  evidence:
+  - docs/event-fact-plan.md
+  - O117
+  also_depends_on:
+  - N166
+  status: resolved
+
+- id: N168
+  type: experiment
+  title: Both bounded single-event agent-reader attempts fail extraction gates
+  provenance: ai-executed
+  timestamp: 2026-09-11T02:48+02:00
+  result: 'Two seed-23, 512-update runs use identical initialization, data and sampler; only lr changes
+    0.0003 to 0.001. Held-out entity/location/joint: 1/32,8/32,0/32 versus 0/32,24/32,0/32. Total active
+    time 109.4034 seconds. All 86 CPU tests pass, strengthened observed-fact gradient check passes, both
+    cached resumes and browser reports verified. Binding skipped; no third run or architecture repair
+    inferred.'
+  evidence:
+  - ara/evidence/tables/event_facts_2026-09-11.json
+  - runs/event_fact_v1/verification.json
+  - runs/event_fact_v1/reference/fact_results.json
+  - runs/event_fact_v1/lr_control/fact_results.json
+  also_depends_on:
+  - N167
+  - N166
+  status: resolved

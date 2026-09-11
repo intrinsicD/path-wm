@@ -176,3 +176,14 @@
 - **Code ref**: [fact reader](../../../pathwm/models/facts.py), [recipe](../../../experiments/multimodal.py), [declared control](../../../docs/fact-learning-plan.md).
 - **From staging**: O116
 - **Evidence of adoption/execution**: N165/N166; Alex requested implementation/review/test/fix/iteration after the direct fact and competing-record control proposal. H17's earlier unconfirmed status for O116 is superseded here.
+
+
+## H19: Compare a successful direct fact control with the existing event/task reader
+
+- **Rationale**: Keep semantic pairs, shared component initialization, supervised heads and exposure fixed while routing the same task through the ordinary event, interpretation and thinking path. Treat results as whole-path trainability evidence; added capacity and optimization prevent component-level causal attribution.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; a single committed event and fixed categorical evaluation draws do not establish later retention, learned query selection or robust stochastic performance.
+- **Code ref**: [event reader](../../../pathwm/models/facts.py), [recipe](../../../experiments/multimodal.py), [contract checks](../../../tests/test_facts.py), [plan and outcomes](../../../docs/event-fact-plan.md).
+- **From staging**: O117
+- **Evidence of commitment**: N167/N168 and implementation `f09400c`; the event control now implements the proposed comparison. The user authorized execution, not a localized causal explanation.

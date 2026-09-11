@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: Current/recent recall gates failed; direct fact and explicit binding controls now pass on one capped pilot;83 CPU tests, cached resume and final browser QA verified.
-  turn_count: 3
-  events_count: 10
+  summary: Direct fact control passes; both single-event agent-reader attempts fail extraction gates. 86 CPU tests, observed-fact gradients, cached resume and browser reports verified; 109.4034 active seconds.
+  turn_count: 4
+  events_count: 14
   claims_touched: []
   open_threads: 2

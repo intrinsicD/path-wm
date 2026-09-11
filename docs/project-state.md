@@ -1,12 +1,26 @@
 # Current work
 
-**Active slice, 11 September:** implement the
-[single-event agent-reader control](event-fact-plan.md) using `--dataset facts
---fact-reader event`. Alex authorized Claude review, implementation and bounded
-iteration on the previous handoff. Shared initialization and the semantic-pair
-population are fixed; existing categorical draws get repeatable evaluation seeds.
-
 **Current slice complete, 11 September:** the
+[single-event agent-reader control](event-fact-plan.md) is implemented as
+`--dataset facts --fact-reader event`. Two brief actual Claude reviews are
+reconciled; all 86 CPU tests pass. A strengthened gradient check confirms the loss
+reaches the observed fact, and exact resume preserves cached outputs. Two matched
+512-update runs took 109.4034 active CPU seconds total. At lr0.0003, held-out entity/
+location accuracy was 3.125% / 25%; at lr0.001 it was 0% / 75%. Joint accuracy was
+0/32 in both runs. Both extraction gates fail and binding evaluation is skipped.
+No third training run, new objective or memory change was started.
+
+The [reference report](../runs/event_fact_v1/reference/report.html) and
+[learning-rate comparison](../runs/event_fact_v1/lr_control/report.html) passed
+structural and 1280x720 browser QA. `runs/event_fact_v1/verification.json` binds
+source snapshots, settings/data/init/sampler matching, raw-score checks, exact
+resume, tests and screenshots. The existing whole path does not learn the task
+under this budget; the failing component is not isolated. Recent records are
+detached on storage by the existing memory policy, while the live categorical
+path still carries gradients. Next proposed: warm-start only the trainable text
+encoder from the successful direct control, keeping the rest of this recipe fixed.
+
+**Prior direct-control slice, 11 September:** the
 [direct fact extraction and binding controls](fact-learning-plan.md) run in the
 same recipe (`--dataset facts`). Two short actual Claude reviews are reconciled.
 All 83 CPU tests passed; 12 focused fact/run checks passed after the report revision.

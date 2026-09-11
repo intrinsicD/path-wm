@@ -198,12 +198,28 @@ def test_event_fact_matched_initialization_and_working_token_boundary(monkeypatc
     monkeypatch.setattr(event.agent, "observe", observing)
     monkeypatch.setattr(event.agent, "task_tokens", interpreting)
     monkeypatch.setattr(event.agent, "think", thinking)
+    encoded = []
+
+    def retain_source(module, inputs, output):
+        encoded.append(output)
+        for scale in output.scales:
+            scale.values.retain_grad()
+
+    handle = event.agent.encoders["text"].register_forward_hook(retain_source)
     entity, location = event(batch["fact_observation"])
+    handle.remove()
     assert calls == ["observe", "interpret", "think"]
     loss = torch.nn.functional.cross_entropy(
         entity, batch["entities"]
     ) + torch.nn.functional.cross_entropy(location, batch["locations"])
     loss.backward()
+    assert len(encoded) == 2  # Observed fact first, constant task instruction second.
+    assert any(
+        scale.values.grad is not None
+        and torch.isfinite(scale.values.grad).all()
+        and scale.values.grad.abs().sum() > 0
+        for scale in encoded[0].scales
+    )
     for module in (
         event.agent.encoders["text"],
         event.agent.updater,
