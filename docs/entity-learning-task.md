@@ -1453,3 +1453,23 @@ Command uses existing `--entity-source-drift --entity-gate-weights GATE.pt --out
 resume `--resume DIR`. Next candidate: uncertainty-aware change checks, calibrated
 on separate stationary development worlds with a held-out false-alarm budget.
 That candidate remains proposed; the present heuristic is not a learned reliability model.
+
+### Variance-aware forgetting (2026-09-11)
+
+Hypothesis: scaling the change threshold by empirical reward uncertainty reduces
+false resets while preserving adaptation. Same disjoint32 blocks; threshold is
+max(0.15,z*sqrt(s2_old/n_old+s2_recent/32+0.0001)), unbiased sample variances.
+Choose smallest z in[2,3,4] with post-calibration static reset episode rate<=12.5%
+on8 development worlds1901..1908; no drift metrics used in selection. If none
+qualifies, z4 remains diagnostic and full acceptance is false. Freeze selection
+before16 held-out worlds2001..2016 (innovation+1000, exploration+2000).
+Retain frozen/cumulative/window/fixed-trigger/no-feedback controls. Same512/256
+cases, selected feedback only, costs0.05+0.005, epsilon0.2, continuous detector.
+Held-out acceptance: variance-aware late drift utility>=frozen+0.01 and cumulative+0.01;
+whole drift>=frozen−0.01; static>=frozen−0.02; static reset episodes<=25%; development
+selection must qualify. No held-out tuning.120CPU seconds including development;
+original gate frozen. Calibration is heuristic empirical selection, not a valid
+sequential confidence bound;8 worlds give a noisy development estimate. Preserve
+candidate development traces separately from held-out results. Structural report QA.
+Tests: noisy equal-scale mean shifts suppressed, sharp low-variance shift detected,
+invalid configurations, causal updates, development-only selection, cached resume.

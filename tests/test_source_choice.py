@@ -108,3 +108,20 @@ def test_triggered_forgetting_is_evidence_driven_and_source_local():
     assert policy.snapshot() == state
     with pytest.raises(ValueError):
         SourceChoice(window=4, change_block=4)
+
+
+def test_variance_aware_change_distinguishes_noisy_and_sharp_shift():
+    noisy = SourceChoice(change_block=4, change_z=3)
+    for value in [-1, 1, -1, 1, -0.5, 1.5, -0.5, 1.5]:
+        noisy.observe(0, value)
+    assert noisy.snapshot()["resets"] == [0, 0]
+    sharp = SourceChoice(change_block=4, change_z=3)
+    for value in [0.5] * 4 + [-0.5] * 4:
+        sharp.observe(0, value)
+    assert sharp.snapshot()["resets"] == [1, 0]
+    assert sharp.snapshot()["squares"] == [1, 0]
+    for z in [0, -1, float("nan")]:
+        with pytest.raises(ValueError):
+            SourceChoice(change_block=4, change_z=z)
+    with pytest.raises(ValueError):
+        SourceChoice(change_z=3)
