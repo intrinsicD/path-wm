@@ -3772,3 +3772,17 @@ tree:
   - N242
   - N243
   status: resolved
+
+- id: N245
+  type: decision
+  title: Long-term multimodal and software-tool capability scope
+  provenance: user
+  timestamp: 2026-09-12T00:28+02:00
+  choice: Eventually see using a webcam, talk/write, create images/videos and use
+    software tools. Partial S02 answer; no first-experiment or implementation choice.
+  alternatives: []
+  evidence:
+  - docs/agent-specification-questions.md#recorded-answers
+  also_depends_on:
+  - N244
+  status: resolved

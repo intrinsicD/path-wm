@@ -1,5 +1,9 @@
 # Current work
 
+**S02 long-term scope recorded, 12 September:** eventual webcam vision, speech and
+writing, image/video creation and software-tool use. [Questionnaire answer](agent-specification-questions.md#recorded-answers)
+is partial: first experiment and learned-versus-supplied boundaries remain open.
+
 **Specification questionnaire prepared, 11 September:**
 [85 numbered questions](agent-specification-questions.md) cover scope, goals,
 evidence, perception, identity, graph learning, memory, focus, dynamics, planning,

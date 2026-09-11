@@ -1214,3 +1214,11 @@ entries:
     them.'
   - No new performance claim or numerical experiment setting adopted; existing evidence
     unchanged.
+
+- turn: 2026-09-12_001#1
+  notes:
+  - Record direct user scope decision N245; eventual capabilities do not select an
+    implementation or immediate experiment.
+  - Keep microphone/listening, tool set, generative backends and learned-versus-supplied
+    choices unresolved.
+  - Do not promote prior O162/O163 on this unrelated scope answer.

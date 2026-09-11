@@ -1,6 +1,6 @@
 # Agent specification questionnaire
 
-Status: unanswered decision questionnaire, based on the
+Status: partially answered decision questionnaire, based on the
 [current readiness review](model-readiness-review.md). Answers define an
 implementable, testable design and its first experiment; tests must still establish
 whether the implementation and learned behavior work. This is not a new architecture
@@ -35,6 +35,18 @@ roles. The earlier design documents contain proposals, not automatic answers.
 Suggested discussion order: S → G → B → D → A → T, then the supporting entity,
 memory and runtime contracts. Vision, general concepts and skills can be deferred
 explicitly. The final check must cover every section, including deferrals.
+
+## Recorded answers
+
+**S02 — long-term scope (user, 12 September 2026; first experiment still open).**
+The agent should eventually see through a webcam, speak and write, create images
+and videos, and use software tools. “At some point” defines the intended later
+capabilities; it does not select which interface enters the first experiment.
+Relevant follow-ups: P01 (modalities), A07 (communication/tool tasks), S03/L01
+(which abilities our model learns versus supplied components). Whether speaking
+also includes microphone/listening input, which software tools, and how generation
+is implemented are not yet specified. No initial modality, architecture or rollout
+order is chosen by this answer.
 
 ## S — Scope and the claim we want to test
 
