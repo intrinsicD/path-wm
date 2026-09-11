@@ -1099,3 +1099,11 @@ entries:
   - Promote correlation method without claiming robust sensing; rho0.9 fails.
   - Raw marginal invariance correction acknowledged by Claude.
   - Stage alternate evidence O148; correlation not available to the policy.
+
+- turn: 2026-09-11_001#44
+  notes:
+  - Discussion request does not adopt implementation; stage O149 without crystallization.
+  - Correctness differs from physical quality; preserve symmetry-based cue-only information
+    limit.
+  - Earlier alternate-evidence O148 remains open; no contradictory conclusion or performance
+    claim.

@@ -3509,3 +3509,14 @@ tree:
   also_depends_on:
   - N225
   status: resolved
+
+- id: N227
+  type: question
+  title: Discuss explicit input reliability with Claude before implementation
+  provenance: user
+  timestamp: 2026-09-11T16:30+02:00
+  description: User asks for peer discussion first; two reviews completed and reconciled.
+    No model change.
+  evidence:
+  - docs/entity-learning-task.md
+  status: resolved

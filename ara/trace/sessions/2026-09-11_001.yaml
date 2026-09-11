@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T16:26+02:00
-  turn_count: 43
-  summary: "Correlated reread gain fails at rho0.9;19 relevant tests, four resumes and independent audit pass."
+  last_turn: 2026-09-11T16:30+02:00
+  turn_count: 44
+  summary: "Claude reliability discussion complete; task-conditioned correctness proposal staged, no implementation."
 events_logged:
 - turn: 1
   type: question
@@ -780,6 +780,18 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Alternate evidence acquisition proposed.
+- turn: 44
+  type: question
+  id: N227
+  routing: direct
+  provenance: user
+  summary: Discuss reliability with Claude first.
+- turn: 44
+  type: observation
+  id: O149
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose correctness readout baseline comparison, not generic noise inference.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1079,6 +1091,12 @@ ai_actions:
   - pathwm/evaluation/entity_gate.py
   - experiments/multimodal.py
   - pathwm/evaluation/report.py
+- turn: 44
+  action: Two bounded Claude reviews; reconciled correctness-versus-quality and cue-only
+    information limit; saved proposal only.
+  provenance: ai-executed
+  files_changed:
+  - docs/entity-learning-task.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -1110,6 +1128,7 @@ key_context:
 - turn: 25
   excerpt: "User: continue with claude. implement this, review, test, fix and iterate"
 open_threads:
+- "Reliability proposal O149: define frozen correctness labels and matched-confidence comparison before implementation."
 - "O141: learned relation-update gating remains proposed; remembered-key addressing O140 is implemented."
 - O132: persistent allocation/revisit behavior remains proposed.
 - O130: learned matching remains proposed; shared reader is now a successful controlled reference.

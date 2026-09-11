@@ -1259,3 +1259,28 @@ Use `--entity-gate-correlation RHO` with frozen reobservation command; omission
 preserves the earlier independent dataset. No model updates or policy integration.
 Next candidate: compare alternate evidence acquisition against same-source repeats;
 correlation is supplied only to this diagnostic, not observable agent knowledge.
+
+### Reliability discussion with Claude (2026-09-11; proposal only)
+
+User requested discussion before implementation. Two public-only reviews
+`reliability-discuss` and `reliability-reconcile` distinguish intrinsic observation
+quality, task-conditioned reader correctness, relevance and evidence independence.
+First candidate target: probability that the frozen reader decision matches the
+known generating task label. This measures reader correctness, not sensor quality.
+Use disjoint reliability-fit/calibration/test contexts; compare existing confidence
+with a learned readout on identical available inputs, then error at matched coverage
+and false-write/valid-update rates at fixed sensing cost. Freeze reader/encoder
+initially; do not let abstention reduce their learning objective. Test unseen
+corruption types and avoid using held-out outcomes as fitting data.
+
+Information limit: a uniformly random unit-sphere prototype plus isotropic Gaussian
+noise, normalized, has uniform marginal direction at every noise scale. A single
+cue alone cannot identify noise scale in that setting. Context/repeated views can
+add relational evidence but do not guarantee noise recovery. Include a cue-only
+negative control; test physically observable quality cues separately. Hidden
+corruption parameters may appear only in an explicitly labelled oracle diagnostic,
+never as deployable model inputs. Learned correctness may merely recalibrate existing
+confidence; no benefit, calibration, novelty or noise-detection capability claimed.
+Claude accepted these corrections and requested an explicit correctness label source;
+known task-generating labels provide it in the synthetic test. No code or experiment
+changes made; exact implementation, populations and budgets remain unspecified.

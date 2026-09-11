@@ -2627,3 +2627,18 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O149
+  timestamp: 2026-09-11T16:30+02:00
+  provenance: ai-suggested
+  content: First compare task-conditioned reader correctness against existing confidence
+    on identical inputs; distinguish quality and evidence independence.
+  context: Claude discussion identifies cue-only noise-scale unidentifiability for
+    uniform normalized isotropic data. Proposal only.
+  potential_type: heuristic
+  bound_to:
+  - N227
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

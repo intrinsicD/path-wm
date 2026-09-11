@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Correlated reread gain fails at rho0.9;19 relevant tests, four resumes and independent audit pass."
-  turn_count: 43
-  events_count: 124
+  summary: "Claude reliability discussion complete; task-conditioned correctness proposal staged, no implementation."
+  turn_count: 44
+  events_count: 126
   claims_touched: []
-  open_threads: 13
+  open_threads: 14
