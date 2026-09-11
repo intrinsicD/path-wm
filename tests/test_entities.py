@@ -233,3 +233,22 @@ def test_entity_variation_oracle_controls_and_zero_compatibility():
     for value in [-0.1, 0.25, float("nan")]:
         with pytest.raises(ValueError):
             EntityEpisodes("train", 32, noise=value)
+
+
+def test_entity_matching_contract_and_equivariance():
+    from pathwm.data.entities import EntityMatches
+    from pathwm.models.entities import EntityMatchReader
+    data = EntityMatches('validation', 32)
+    x = data.inputs
+    memory, query = x[:, 0, :, :8], x[:, -1, 0, :8]
+    torch.testing.assert_close(memory.norm(dim=-1), torch.ones(32, 2))
+    torch.testing.assert_close(query.norm(dim=-1), torch.ones(32))
+    distance = (memory-query[:, None]).norm(dim=-1)
+    separation = (memory[:,0]-memory[:,1]).norm(dim=-1)
+    labels = data.targets[0].argmax(-1)
+    assert (distance[labels<2].min(-1).values < .35*separation[labels<2]).all()
+    assert (distance[labels==2].min(-1).values > .65*separation[labels==2]).all()
+    assert torch.equal(distance[labels<2].argmin(-1), labels[labels<2])
+    m = EntityMatchReader(16)
+    moved = x.clone(); moved[:,0] = x[:,0].flip(1)
+    torch.testing.assert_close(m(x)[0], m(moved)[0][:,[1,0,2]])

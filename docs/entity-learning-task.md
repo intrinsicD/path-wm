@@ -394,3 +394,25 @@ The completed reconciliation requires no model change or additional run. Noise u
 independent draws from one separate noise RNG, not a separate RNG instance per object.
 Claude reviewed the abstract construction; the existing local audits supply implementation
 evidence. No broader robustness or graph capability is inferred from peer agreement.
+
+## Novelty-matching diagnostic
+
+Authorized continuation: add `--dataset entity-matching` to the existing recipe.
+Inputs hold two unit memory descriptors and one unit query, in the existing tensor
+envelope; task outputs are memory0, memory1, or new/neither. Each four-row group
+contains one query for each known memory and two novel queries. Known queries use
+normalized perturbations and remain within0.35 times memory separation; novel queries
+are farther than0.65 times separation from both. Norms and presentation match. This
+is a deliberately separated first rejection task, not boundary calibration or graph
+allocation. Unused event/features remain zero; no generator IDs enter model inputs.
+
+Model: shared squared-difference scorer Linear(8,64), GELU, Linear(64,1), plus learned
+null logit; no threshold/equality oracle in forward. Train3-class CE. Seed31, AdamW
+lr0.003/wd0.01, batch32, 512 train/256 development rows (128/64 descriptor groups),
+256 updates, FP32/two CPU threads and450 active seconds. Development at final only;
+separate test split remains reserved. One run, no sweep or actual database writes.
+Gates: known identity and novel rejection accuracy each>=95%; false merge/split each
+<=5%; each cohort selection coverage>=90% and selected error<=5% at confidence>0.75;
+overall NLL<=0.15 nats. Test memory-order covariance, unit-norm/margin/label contracts,
+episode isolation and exact resume. This new task is not directly comparable to the
+three-head historical state task. Near-boundary and unknown priors are later work.
