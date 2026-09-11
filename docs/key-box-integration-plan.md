@@ -122,3 +122,7 @@ Budget240 CPU seconds. Check read/target alignment, event ordering, gradients,
 report and cached resume. No controller-derived supervision or oracle inputs.
 This approximates action interleaving; changing entity contents within that
 unroll and on-policy training remain outside this bounded comparison.
+Claude agrees this can only test the bundled recipe; extra reads and observation
+gaps are confounded. Accepted that limit, deferred ablations. Baseline has one pair,
+candidate four pairs (eight reads).30 relevant tests pass, including actual four-pair
+smoke/comparison/resume and synthetic sequence/gradient check. Formal result pending.

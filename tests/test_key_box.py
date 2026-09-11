@@ -102,6 +102,7 @@ def test_key_box_recipe_resume_and_action_budget(tmp_path, monkeypatch):
         steps=2,
         families=1,
         query_switch=True,
+        history_pairs=4,
         eval_seed=2411,
         reference_weights=output / "last.pt",
     )
@@ -115,6 +116,7 @@ def test_key_box_recipe_resume_and_action_budget(tmp_path, monkeypatch):
         steps=2,
         families=1,
         query_switch=True,
+        history_pairs=4,
         eval_seed=2411,
         reference_weights=output / "last.pt",
         resume=True,

@@ -163,3 +163,16 @@ def evaluate_key_box(model, families=16, seed=2401):
 def second_key_query(latent, target, switch):
     """Permute retrieved records and their labels together, without new information."""
     return (latent.flip(0), target.flip(0)) if switch else (latent, target)
+
+
+def key_read_losses(model, state, latent, target, switch, pairs, start_time):
+    """Supervise recurrent reads across observation gaps; targets never enter state."""
+    losses = []
+    other, labels = second_key_query(latent, target, switch)
+    for pair in range(pairs):
+        if pair:
+            state = neutral_event(model.agent, state, start_time + pair)
+        for values, expected in ((latent, target), (other, labels)):
+            logits, state = model(state, values)
+            losses.append(torch.nn.functional.cross_entropy(logits, expected))
+    return losses

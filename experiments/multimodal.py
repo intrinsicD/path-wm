@@ -2920,6 +2920,7 @@ def train_key_box(
     families=16,
     resume=False,
     query_switch=False,
+    history_pairs=1,
     eval_seed=2401,
     reference_weights=None,
 ):
@@ -2929,9 +2930,11 @@ def train_key_box(
     from pathwm.evaluation.key_box import (
         key_training_batch,
         evaluate_key_box,
-        second_key_query,
+        key_read_losses,
     )
 
+    if history_pairs not in (1, 4):
+        raise ValueError("history_pairs must be 1 or 4")
     seed_everything(2301)
     matcher_weights, cell_weights = (
         Path(matcher_weights).resolve(),
@@ -2963,6 +2966,7 @@ def train_key_box(
         settings=dict(
             seed=2301,
             query_switch=query_switch,
+            history_pairs=history_pairs,
             reference_sha256=file_hash(reference_weights)
             if reference_weights
             else None,
@@ -2988,14 +2992,17 @@ def train_key_box(
         model.train()
         for step in range(run.step, steps):
             state, latent, target = key_training_batch(model, run.sampler)
-            logits, working = model(state, latent)
-            second_latent, second_target = second_key_query(
-                latent, target, query_switch
-            )
-            second, _ = model(working, second_latent)
-            loss = (
-                F.cross_entropy(logits, target) + F.cross_entropy(second, second_target)
-            ) / 2
+            loss = torch.stack(
+                key_read_losses(
+                    model,
+                    state,
+                    latent,
+                    target,
+                    query_switch,
+                    history_pairs,
+                    float(state.time[0]),
+                )
+            ).mean()
             optimizer.zero_grad()
             loss.backward()
             torch.nn.utils.clip_grad_norm_(
