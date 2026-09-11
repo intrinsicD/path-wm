@@ -273,3 +273,13 @@
 - **Sensitivity**: high; length and repetition are not causally isolated by these cohorts.
 - **Code ref**: [controls](../../../pathwm/data/entity_temporal.py), [runtime checks](../../../pathwm/evaluation/entity_state.py).
 - **From staging**: O135
+
+## H29: Broaden temporal coverage before claiming state-update generality
+
+- **Rationale**: Mix resets, toggles and no-information events with balanced complemented targets; preserve model/compute and evaluate fresh compositions and lengths. Separately report persistent idle failures.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; matched update count is not matched convergence, and no-information stability is not guaranteed.
+- **Code ref**: [mixed histories](../../../pathwm/data/entity_state.py), [recipe](../../../experiments/multimodal.py).
+- **From staging**: O136
+- **Scope**: Training-distribution intervention implemented; explicit no-op remains O137.

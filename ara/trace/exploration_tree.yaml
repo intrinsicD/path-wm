@@ -3300,3 +3300,25 @@ tree:
   - N206
   - N207
   status: resolved
+
+- id: N209
+  type: decision
+  title: Continue mixed-history adaptation with Claude
+  provenance: user
+  timestamp: 2026-09-11T13:52+02:00
+  choice: Implement, review, test, fix and iterate.
+  status: resolved
+- id: N210
+  type: experiment
+  title: Mixed state training improves composition but not idle stability
+  provenance: ai-executed
+  timestamp: 2026-09-11T13:52+02:00
+  result: Mixed histories repair reset order and random compositions; long no-information
+    remains75 percent.123 tests and report QA pass.
+  evidence:
+  - ara/evidence/tables/entity_state_varied_2026-09-11.json
+  - docs/entity-learning-task.md
+  also_depends_on:
+  - N208
+  - N209
+  status: resolved

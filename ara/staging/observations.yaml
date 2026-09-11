@@ -2458,6 +2458,22 @@ observations:
   potential_type: heuristic
   bound_to:
   - N208
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H29
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O137
+  timestamp: 2026-09-11T13:52+02:00
+  provenance: ai-suggested
+  content: Next test explicit state preservation for the no-information opcode in
+    this deterministic task, against fresh idle lengths and retained mixed-training
+    baseline.
+  context: Mixed temporal training repairs reset/random-composition errors but no-information
+    length remains75 percent and NLL worsens.
+  potential_type: heuristic
+  bound_to:
+  - N210
   promoted: false
   promoted_to: null
   crystallized_via: null

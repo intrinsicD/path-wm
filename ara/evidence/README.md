@@ -69,3 +69,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Learned entity state](tables/entity_state_2026-09-11.json): N206; binary-state binding passes, temporal generalization remains open.
 
 - [Frozen temporal screen](tables/entity_temporal_2026-09-11.json): N208; reset-order and no-information-length failures, persistence checks pass.
+
+- [Mixed-history adaptation](tables/entity_state_varied_2026-09-11.json): N210; ordering/composition improves, idle stability remains failed.

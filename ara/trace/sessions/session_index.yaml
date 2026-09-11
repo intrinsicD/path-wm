@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Frozen temporal screen fails reset order and no-information length; routing and persistence pass.121 tests; no fitting."
-  turn_count: 30
-  events_count: 82
+  summary: "Mixed histories repair reset order and random compositions; long no-information remains75 percent.123 tests and report QA pass."
+  turn_count: 31
+  events_count: 86
   claims_touched: []
   open_threads: 12

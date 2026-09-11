@@ -687,3 +687,37 @@ Same >=95% pair accuracy, NLL<=0.15, runtime accuracy and transaction/latent gat
 No hard no-information gate, extra supervision, optimizer-budget change or tuning.
 The intervention is training-distribution adaptation; descriptor/template holdouts
 and frozen models must be audited. Preserve failures.
+
+### Mixed-history adaptation result
+
+Implementatione828131;123 CPU tests pass. One256-update run reaches100% train and
+development state-pair accuracy (development NLL0.003449); persistent runtime agrees.
+Training/development temporal signatures and descriptors are disjoint, and evaluation
+uses different lengths with fresh shared descriptors. Both Claude conceptual reviews
+completed. Only the recurrent cell/readout trained; recognition stayed frozen.
+
+Matched frozen comparison on seed121: reset order improves62.5% to100%; unseen random
+compositions38.671875% to100%. Reference and repeated-toggle conditions remain100%.
+Long no-information histories remain75%; NLL worsens from0.263887 to0.412956. Therefore
+the adapted model still fails the overall gate. No hard no-op, threshold tuning or
+extra training was introduced after seeing the results. Mixed random no-information
+examples did not establish stability over long consecutive stretches.
+
+All routing and retry/restore checks pass. Adapted runtime latents agree in every
+condition. The old model's unseen-composition cohort has two numerical latent-check
+failures (maximum absolute difference1.78069e-6), retained under the fixed tolerance;
+its runtime accuracy is unchanged. Frozen weights, independent targets/NLL, balanced
+pairs, exact matched histories and cached training/adapted resume were verified.
+An immutable state checkpoint copy was made after training resume, before evaluation.
+
+[Training](../runs/entity_state_varied_v1/training/report.html),
+[baseline](../runs/entity_state_varied_v1/baseline/report.html),
+[adapted comparison](../runs/entity_state_varied_v1/adapted/report.html),
+[verification](../runs/entity_state_varied_v1/verification.json).
+All reports passed1280×720 browser QA. Train with `--entity-state-varied`; comparisons
+add `--entity-temporal-seed 121 --entity-temporal-varied`. Shared descriptor families
+and complemented templates imply correlated rows, not independent confidence bounds.
+Next proposed: test a state-preserving no-information update for this deterministic
+task, with fresh idle lengths and the failed learned-update reference preserved.
+This would be a task-specific architectural intervention, not a general rule for
+belief evolution without observations. No graph-learning claim follows.

@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T13:37+02:00
-  turn_count: 30
-  summary: "Frozen temporal screen fails reset order and no-information length; routing and persistence pass.121 tests; no fitting."
+  last_turn: 2026-09-11T13:52+02:00
+  turn_count: 31
+  summary: "Mixed histories repair reset order and random compositions; long no-information remains75 percent.123 tests and report QA pass."
 events_logged:
 - turn: 1
   type: question
@@ -517,6 +517,32 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O135 committed through frozen temporal screen.
+
+- turn: 31
+  type: decision
+  id: N209
+  routing: direct
+  provenance: user
+  summary: Implement, review, test, fix and iterate.
+- turn: 31
+  type: experiment
+  id: N210
+  routing: direct
+  provenance: ai-executed
+  summary: Mixed histories repair reset order and random compositions; long no-information
+    remains75 percent.123 tests and report QA pass.
+- turn: 31
+  type: observation
+  id: O137
+  routing: staged
+  provenance: ai-suggested
+  summary: Task-specific no-information preservation proposed.
+- turn: 31
+  type: heuristic
+  id: H29
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O136 training-distribution intervention committed.
 
 ai_actions:
 - turn: 1

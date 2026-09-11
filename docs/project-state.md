@@ -1,5 +1,12 @@
 # Current work
 
+**Mixed-history adaptation improves ordering but still fails idle stability,
+11 September:**123 tests pass. Reset-order accuracy rises62.5%→100% and unseen
+composition38.7%→100%; long no-information remains75%, with worse NLL. Recognition
+is frozen; adapted runtime/transaction checks pass. [Report](../runs/entity_state_varied_v1/adapted/report.html)
+is browser verified. Next: a task-specific state-preserving no-information update,
+keeping this failed baseline and fresh idle-length tests.
+
 **Frozen temporal screen exposes state-update limits, 11 September:**121 tests pass.
 Reference and repeated-toggle histories score100%; reset-order histories62.5% and
 extra no-information events75%. All routing, retry/restore and latent-agreement checks

@@ -1007,3 +1007,12 @@ entries:
   - Promote the test strategy O135, not an unsupported claim of temporal capability.
   - Keep failed model scores alongside fully correct routing and persistence checks.
   - Stage repair O136; no weight or threshold tuning happened.
+
+- turn: 2026-09-11_001#31
+  notes:
+  - Record mixed-history gains alongside idle accuracy remaining75 percent and NLL
+    worsening.
+  - 'Original baseline latent-tolerance failures retained: two cases, max absolute
+    difference1.78e-6. Adapted latent checks all pass.'
+  - Promote only implemented training intervention; explicit no-op remains proposed
+    O137.
