@@ -1,0 +1,9 @@
+{
+  "status": "completed",
+  "user_approved_exact_payload": true,
+  "receipt_sha256": "55101f4314705558fb42528b834f6ce6caabc6bad68edb32e971fcaf7316cec0",
+  "response_sha256": "424452f84f4cb4f9fdb2872df6cd99d6c6eb07ca978617db772b52db44e2477a",
+  "outcome": "No remaining conceptual objection; implementation evidence remains local",
+  "model_changes": false,
+  "new_runs": false
+}

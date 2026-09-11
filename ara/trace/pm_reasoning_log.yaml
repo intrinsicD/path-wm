@@ -950,3 +950,10 @@ entries:
     provenance. O131 still includes unimplemented new-entity handling.
   - Record the automatic-review rejection separately. One actual critique is not two reconciled reviews;
     no follow-up transmission occurred. No unrestricted robustness or graph claim.
+
+- turn: 2026-09-11_001#24
+  notes:
+  - Record exact payload approval and successful reconciliation; preserve prior rejection as historical
+    fact.
+  - No new model evidence, tests or architecture adoption. Peer agreement closes N195 only; broader graph/new-entity
+    proposals remain open.

@@ -364,9 +364,10 @@ train using answer loss only. Report the8 development groups and paired controls
 Implementation `76338f4`; all 102 CPU tests pass. Claude's first public-only review
 accepts the positive separation margin and identifies the narrow single-condition
 scope. The prepared reconciliation was rejected by automatic approval review before
-execution because payload-specific authorization was judged insufficient. No follow-up
-was sent; acknowledgment remains pending. Local implementation and verification are
-complete. Review/blocked receipts: `entity-variation*` under the continuation directory.
+execution because payload-specific authorization was judged insufficient. The user subsequently approved the exact payload; the follow-up completed and Claude
+accepted the reconciliation with no remaining conceptual objection. The original blocked
+attempt is retained as history. Local implementation and verification are complete.
+Review/blocked receipts: `entity-variation*` under the continuation directory.
 
 The one 256-update run at alpha 0.2 passes every declared development gate. All 128
 identifiable cases and paired cases are correct for identity/state/effect, with 100%
@@ -388,3 +389,8 @@ and test checks. `runs/entity_variation_v1/reference/report.html` is structurall
 verified with the unchanged previously browser-verified renderer; no new browser QA
 is claimed. Next proposed is explicit unmatched/new-entity handling in a separately
 defined task. Learned graph allocation and concept/edge semantics remain unimplemented.
+
+The completed reconciliation requires no model change or additional run. Noise uses
+independent draws from one separate noise RNG, not a separate RNG instance per object.
+Claude reviewed the abstract construction; the existing local audits supply implementation
+evidence. No broader robustness or graph capability is inferred from peer agreement.

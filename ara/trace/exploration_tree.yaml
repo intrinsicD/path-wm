@@ -3148,4 +3148,18 @@ tree:
     or bypass the rejection; ask user about the exact prepared brief after local work.
   evidence:
   - runs/reviews/continuation_2026-09-11/entity-variation-reconcile-blocked.json
-  status: open
+  status: resolved
+  resolution: User approved the exact brief; actual Claude reconciliation completed with no remaining conceptual objection.
+  resolution_evidence: ara/evidence/tables/entity_variation_reconciliation_2026-09-11.json
+
+- id: N196
+  type: decision
+  title: Approve the exact prepared Claude reconciliation
+  provenance: user
+  timestamp: 2026-09-11T12:33+02:00
+  choice: User says yes please to sending the linked public-only follow-up to Claude. Approved transmission
+    completed successfully; no model changes required.
+  evidence:
+  - N195
+  - ara/evidence/tables/entity_variation_reconciliation_2026-09-11.json
+  status: resolved
