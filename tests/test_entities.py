@@ -203,3 +203,23 @@ def test_learned_association_task_gradients_and_no_exact_lookup(monkeypatch):
     torch.testing.assert_close(
         model.assignment_weights(x)[16:, -1], torch.full((16, 2), 0.5)
     )
+
+
+def test_entity_variation_oracle_controls_and_zero_compatibility():
+    from pathwm.data.entities import EntityEpisodes, entity_oracle
+
+    clean = EntityEpisodes('validation', 64)
+    noisy = EntityEpisodes('validation', 64, noise=.2)
+    assert torch.equal(clean.inputs, EntityEpisodes('validation', 64, noise=0).inputs)
+    assert torch.equal(clean.inputs[..., 8:], noisy.inputs[..., 8:])
+    assert not torch.equal(clean.inputs[..., :8], noisy.inputs[..., :8])
+    for a, b in zip(clean.targets, noisy.targets):
+        assert torch.equal(a, b)
+    for i, x in enumerate(noisy.inputs):
+        for actual, target in zip(entity_oracle(x), noisy.targets):
+            torch.testing.assert_close(actual, target[i])
+    assert noisy.final_view_bounds() == clean.final_view_bounds()
+    assert torch.count_nonzero(noisy.inputs[16:32, -1, :, :8]) == 0
+    for value in [-.1, .25, float('nan')]:
+        with pytest.raises(ValueError):
+            EntityEpisodes('train', 32, noise=value)

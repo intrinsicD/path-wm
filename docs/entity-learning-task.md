@@ -341,3 +341,20 @@ source snapshots, exact cached resume, tests and symmetry audit are bound in
 previously browser-verified renderer. No new browser receipt, test-split result, graph
 allocation or learned concept/edge semantics. Next proposed: controlled descriptor
 variation and unmatched/new-entity handling, preserving this passing baseline.
+
+## Bounded descriptor-variation screen
+
+Authorized continuation: add `--entity-noise 0.2` to the learned/shared path. For each
+of three times and two physical objects, independently perturb its descriptor by a
+vector of norm alpha times the original pair separation. Noise is shared within the
+32-row counterfactual group; masks, actions, clean descriptors and targets stay fixed.
+Use a separate deterministic noise RNG. Require finite 0<=alpha<0.25, so even with
+noisy initial features same-object distance is at most2alpha D and different-object
+distance at least(1-2alpha)D. The nearest-initial oracle remains identifiable. This
+is controlled bounded drift, not arbitrary noise or image recognition.
+
+One fresh seed31 run at alpha0.2: same learned shared model, parameter initialization,
+512/256 populations, lr0.003/wd0.01, batch32, 256 updates and450 active CPU seconds;
+unchanged gates. No sweep or new-entity allocation in this slice. Preserve zero-noise
+compatibility. Evaluate matching with a nearest-initial oracle only in diagnostics;
+train using answer loss only. Report the8 development groups and paired controls.
