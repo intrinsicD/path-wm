@@ -886,3 +886,13 @@ entries:
   - Claude retracts architecture necessities and uncertainty guarantees. Primary-source abstracts bound precedent
     to studied object-centric tasks; no universal object discovery, person recognition or persistent database
     demonstrated.
+
+- turn: 2026-09-11_001#16
+  notes:
+  - The payload question extends the active runtime review; complete both rather than discard the first request.
+    Four actual Claude replies are successful, all correction groups acknowledged.
+  - 'Stage proposal, not implemented architecture: prose commitment and peer agreement do not settle payload
+    policy or demonstrate learned memory. Earlier topics remain referenced without unrelated closure.'
+  - Distinguish encoder reuse from fresh-event ingestion, source lineage from retrieval counters, and semantic
+    regression from arbitrary latent distance. No guarantee of reconstruction after source loss or automatic
+    gradient through persisted tensors.

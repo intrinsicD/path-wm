@@ -2267,3 +2267,25 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O125
+  timestamp: 2026-09-11T10:46+02:00
+  provenance: ai-suggested
+  content: 'Propose a small entity-store interface alongside existing memory: pure bounded reads, learned proposals,
+    versioned observed-event commits, separately typed belief revisions and isolated planning snapshots. Typed
+    payload alternatives can coexist without requiring every kind: retained source references, versioned latents
+    and optional summaries/facts. Reuse modality encoder weights for historical content through a memory-context
+    path, preserving stable evidence IDs, source time and derivations; no new observation or independent evidence
+    count from retrieval. Train consumers normally and define bounded writer replay/recomputation explicitly;
+    hard lookup itself provides no gradient.'
+  context: Four actual Claude exchanges accepted gradient, payload, provenance, capacity and compatibility
+    corrections. Local source confirms detached latent memory and observed-event counters; raw-media archival
+    and entity graph remain proposed additions. No source changes, new model evaluation, tests or database
+    implementation.
+  potential_type: architecture
+  bound_to:
+  - N181
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

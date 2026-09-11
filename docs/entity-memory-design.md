@@ -90,3 +90,89 @@ a slot position is not automatically a persistent identity.
 using optical-flow targets and initial object-location cues on synthetic video.
 These are relevant starting points, not evidence of universal entity discovery or
 a ready-made persistent entity database. Peer agreement is not empirical validation.
+
+## Runtime and learned-model boundary
+
+A subsequent user-requested review covers how to connect the proposed graph to the
+existing memory hierarchy and which payloads to retain. Four compact actual Claude
+exchanges (`graph-interface*` and `entity-payload*` in the same review directory)
+reconcile the following contract. This remains design work, not implementation.
+
+The library would provide a small caller-owned entity store alongside existing
+session memory. Runtime code owns key allocation, versioning, capacity limits and
+transaction execution. Trainable modules produce recognition queries, association
+scores and belief/link proposals. The experiment recipe owns construction and
+training; no separate trainer or graph framework is needed.
+
+| Proposed operation | Contract |
+| --- | --- |
+| Read | Query a snapshot with explicit candidate/neighbor limits; return tensors, masks, opaque handles, source kinds and provenance. No mutation. |
+| Propose | Learned association, new/unresolved scores and candidate belief/link changes. No committed side effects. |
+| Commit observed event | Validate expected version and event identity; apply attributed updates once. Real observations only. |
+| Revise belief | Explicitly revise an inference using cited evidence, including old evidence. Do not fabricate a new observation. |
+| Snapshot / branch | Isolate planning from live state. Speculative branches cannot commit observational history. |
+
+Exact recent evidence, compressed history and entity beliefs may share a transport
+envelope while retaining different provenance, temporal masks and reliability rules.
+They are not interchangeable evidence. Capacity pressure must not force false entity
+merges; reject/defer or evict under a declared policy. Bound tentative hypotheses,
+retrieved records and adjacency expansion as well as active tensor storage.
+
+Training uses the same forward operations. Stored snapshots are detached: ordinary
+backpropagation trains their consumers, not the historical writer automatically.
+The first comparison can supervise association/retrieval scores using correspondence
+targets. To train earlier writers from later outcomes, explicitly recompute a bounded
+observed sequence under current weights or retain a declared bounded autograd history.
+Hard candidate lookup and ID allocation do not provide gradients to query keys by
+themselves. Policy gradients are not a prerequisite. Evaluate predicted retrieval and
+assignments; identical APIs do not remove teacher-routing distribution shift.
+
+Checkpoint compatibility includes model/latent/schema versions, allocator state,
+tentative records, retrieval configuration and RNG where used. Essential checks are
+idempotent commits, branch isolation, capacity behavior, provenance round trips,
+declared gradient boundaries and exact compatible resume.
+
+## Entity payloads and historical retrieval
+
+| Representation | Useful for | Limitation |
+| --- | --- | --- |
+| Original text/image/audio or a retained reference | Re-examination and source-grounded questions | Storage and re-encoding cost; may be evicted. |
+| Versioned recognition features and latent belief | Fast candidate search and learned readout | Model compatibility and stale beliefs; cannot recover missing source details automatically. |
+| Optional supported facts, relations or summaries | Explicit queries and inspectable links | Derived summaries are lossy; conflicts and derivations need provenance. |
+
+Do not require every payload kind for every entity. A first prototype can combine
+selected evidence references with a versioned latent cache. A source-only design is
+also possible at higher encoding cost. A directly recorded measurement or exact quote
+is not automatically an inference merely because it is structured; a quote supports
+what was reported, not necessarily the truth of the reported event.
+
+Historical image/text may reuse the same modality encoder weights. The result enters
+the memory-read/working-context path, not the ordinary fresh-observation transaction.
+In particular, a retrieved image must not call the current event-observation path
+as if the camera had just seen it. Preserve original source IDs and observation time;
+keep retrieval time separate. Distinguish historical evidence, inferred summaries and
+hypothetical content through routing, masks and tests, not only a learned origin label.
+
+Retrieval alone must not advance world/event time, append observational history or
+count the same source as independent support again. A deliberate belief revision may
+use old evidence while preserving its origin. Carry stable evidence IDs and derivation
+links through crops, summaries and re-encodings; retrieval counters alone cannot detect
+shared evidence. Test repeated reads and overlapping derived sources explicitly.
+
+Pin compatible latent versions or regenerate caches from retained evidence. Compare
+task outputs, retrieval behavior and semantic invariants under a declared migration
+policy, not raw latent distances alone. When required evidence is gone, invalidate or
+mark a belief stale rather than claim it can always be reconstructed. Selective raw
+retention has a separate budget from active latent memory.
+
+Local source inspection confirms that current `MemoryRecord` stores encoded evidence
+and belief tensors with provenance. It is not an archive of every original image or
+audio sample. `HybridMemory.write` detaches stored records and accepts sealed observed
+events; `commit_event` advances observation counts. The proposed raw-evidence retention
+and graph adapter are therefore additions, while their read path must preserve those
+existing event boundaries.
+
+Claude accepted all corrections: no mandatory payload trio, no automatic gradient
+through a database, no mandatory policy-gradient algorithm, no fixed identity-class
+vocabulary, no guarantee from origin tags or soft scores, and no universal recovery
+after evidence loss. No new model run or database implementation was started.

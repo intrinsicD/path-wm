@@ -2,8 +2,8 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T10:28+02:00
-  turn_count: 15
+  last_turn: 2026-09-11T10:46+02:00
+  turn_count: 16
   summary: Warm encoder controls improve location but fail entity extraction; 88 tests and reports verified. Voice discussion explores learned per-entity beliefs and external identity retrieval. Two Claude design reviews reconciled; controlled association before discovery proposed, no new model or run.
 events_logged:
 - turn: 1
@@ -211,6 +211,20 @@ events_logged:
   provenance: ai-suggested
   summary: Refine bounded association/update comparison; discovery and full entity
     store remain proposals.
+- turn: 16
+  type: question
+  id: N181
+  routing: direct
+  provenance: user
+  summary: Complete runtime and payload review requested across the continued voice
+    task.
+- turn: 16
+  type: observation
+  id: O125
+  routing: staged
+  provenance: ai-suggested
+  summary: Stage typed graph operations, optional payloads and historical encoder
+    read path.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -330,6 +344,15 @@ ai_actions:
   - docs/entity-memory-design.md
   - docs/project-state.md
   - runs/reviews/continuation_2026-09-11/
+- turn: 16
+  action: Four isolated Claude exchanges; inspect existing memory/event source; reconcile
+    detached gradient, evidence deduplication and versioning claims; extend design
+    note. No model changes or experiments.
+  provenance: ai-executed
+  files_changed:
+  - docs/entity-memory-design.md
+  - docs/project-state.md
+  - runs/reviews/continuation_2026-09-11/
 claims_touched: []
 key_context:
 - turn: 1
@@ -347,6 +370,7 @@ key_context:
   excerpt: User asks what entity accuracy is, what can be done, and whether everything first needs to fall
     into place.
 open_threads:
+- O125: graph/runtime and historical-payload contract remains proposed.
 - O124: reconciled entity association architecture and controlled comparison remain proposed.
 - O123: external entity-belief store remains a tentative proposal.
 - O122: per-entity latent belief is a tentative user design proposal.

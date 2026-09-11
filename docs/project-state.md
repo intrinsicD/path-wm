@@ -6,6 +6,11 @@ proposes per-entity learned beliefs and external retrieval. Two actual Claude
 exchanges are reconciled in [the design note](entity-memory-design.md): candidate
 extraction, uncertain association and persistent keys are separate mechanisms.
 Explicit entity storage remains a proposal; no new architecture or run was started.
+The follow-up runtime/payload review adds four reconciled Claude exchanges: small
+read/propose/commit interfaces, explicit gradient boundaries, and optional raw,
+latent or readable payloads. Recalled media may reuse modality encoders but cannot
+silently enter as new observations. Source IDs, historical time and typed revisions
+remain distinct; a memory-origin label alone is insufficient.
 
 **Current slice complete, 11 September:** the
 [trainable encoder initialization comparison](warm-encoder-plan.md) is implemented

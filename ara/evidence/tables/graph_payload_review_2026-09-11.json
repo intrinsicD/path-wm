@@ -1,0 +1,301 @@
+{
+  "recorded_at": "2026-09-11T10:46+02:00",
+  "scope": "Public-only conceptual review; no private repository content exported; no model experiments.",
+  "reviews": {
+    "graph-interface": {
+      "receipt": {
+        "round": "graph-interface",
+        "returncode": 0,
+        "elapsed_seconds": 18.503,
+        "brief_sha256": "ff3fe10ce11dcc9ab8f6e00fda4fa230a17ce9eebeee219cd81a2ca35d3f30dc",
+        "command": [
+          "/home/alex/.local/bin/claude",
+          "--print",
+          "--safe-mode",
+          "--model",
+          "sonnet",
+          "--effort",
+          "low",
+          "--tools",
+          "",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--disable-slash-commands",
+          "--no-chrome",
+          "--permission-mode",
+          "dontAsk",
+          "--no-session-persistence",
+          "--output-format",
+          "json",
+          "--system-prompt",
+          "You are an independent machine-learning architecture reviewer. Reason only from the supplied conceptual brief. You have no tools or private project access. Distinguish evidence, assumptions and preferences. Do not imply you inspected any implementation."
+        ],
+        "context": "isolated temporary cwd; no tools/settings/MCP/plugins; public conceptual brief only",
+        "is_error": false,
+        "model_usage": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 1243,
+            "outputTokens": 18,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.001333,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-sonnet-5": {
+            "inputTokens": 2,
+            "outputTokens": 1063,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 1104,
+            "webSearchRequests": 0,
+            "costUSD": 0.01505,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-sonnet-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "api_equivalent_cost_usd_not_subscription_bill": 0.016382999999999998,
+        "session_id": "77d6bb7d-d20b-4aa5-9b13-1f67e8b7373c"
+      },
+      "sha256": {
+        "runs/reviews/continuation_2026-09-11/graph-interface-brief.txt": "ff3fe10ce11dcc9ab8f6e00fda4fa230a17ce9eebeee219cd81a2ca35d3f30dc",
+        "runs/reviews/continuation_2026-09-11/graph-interface-response.json": "8b66b1ea8c9ff4f7773d87293064703f99ee918d3a93863ce76a63878c1db3cf",
+        "runs/reviews/continuation_2026-09-11/graph-interface-receipt.json": "c1a33ed8b5cb5023cba162d22f553778700ca6ecf14a7a87bd36aa1819ebc0c1"
+      }
+    },
+    "graph-interface-reconcile": {
+      "receipt": {
+        "round": "graph-interface-reconcile",
+        "returncode": 0,
+        "elapsed_seconds": 11.146,
+        "brief_sha256": "62d10997e62b06ed4800582e154baf8ebdead4e28fbeb0afac236b0e043cd584",
+        "command": [
+          "/home/alex/.local/bin/claude",
+          "--print",
+          "--safe-mode",
+          "--model",
+          "sonnet",
+          "--effort",
+          "low",
+          "--tools",
+          "",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--disable-slash-commands",
+          "--no-chrome",
+          "--permission-mode",
+          "dontAsk",
+          "--no-session-persistence",
+          "--output-format",
+          "json",
+          "--system-prompt",
+          "You are an independent machine-learning architecture reviewer. Reason only from the supplied conceptual brief. You have no tools or private project access. Distinguish evidence, assumptions and preferences. Do not imply you inspected any implementation."
+        ],
+        "context": "isolated temporary cwd; no tools/settings/MCP/plugins; public conceptual brief only",
+        "is_error": false,
+        "model_usage": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 1299,
+            "outputTokens": 17,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.001384,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-sonnet-5": {
+            "inputTokens": 2,
+            "outputTokens": 746,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 1195,
+            "webSearchRequests": 0,
+            "costUSD": 0.012244000000000001,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-sonnet-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "api_equivalent_cost_usd_not_subscription_bill": 0.013628000000000001,
+        "session_id": "c5f70d82-7813-4b41-93f3-cae615ad072f"
+      },
+      "sha256": {
+        "runs/reviews/continuation_2026-09-11/graph-interface-reconcile-brief.txt": "62d10997e62b06ed4800582e154baf8ebdead4e28fbeb0afac236b0e043cd584",
+        "runs/reviews/continuation_2026-09-11/graph-interface-reconcile-response.json": "de4b606f711a3cdb8edbf5a523e856db14c35bce166331c56b52786b8f3e40d0",
+        "runs/reviews/continuation_2026-09-11/graph-interface-reconcile-receipt.json": "98be7c035f0a9897208eb37b6ff28ec684e155069b36af949730a67ab4548de0"
+      }
+    },
+    "entity-payload": {
+      "receipt": {
+        "round": "entity-payload",
+        "returncode": 0,
+        "elapsed_seconds": 13.391,
+        "brief_sha256": "b230d29cf6f7c4198f8ac2635ede47546058f6d683f25c622a55487b44b966bb",
+        "command": [
+          "/home/alex/.local/bin/claude",
+          "--print",
+          "--safe-mode",
+          "--model",
+          "sonnet",
+          "--effort",
+          "low",
+          "--tools",
+          "",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--disable-slash-commands",
+          "--no-chrome",
+          "--permission-mode",
+          "dontAsk",
+          "--no-session-persistence",
+          "--output-format",
+          "json",
+          "--system-prompt",
+          "You are an independent machine-learning architecture reviewer. Reason only from the supplied conceptual brief. You have no tools or private project access. Distinguish evidence, assumptions and preferences. Do not imply you inspected any implementation."
+        ],
+        "context": "isolated temporary cwd; no tools/settings/MCP/plugins; public conceptual brief only",
+        "is_error": false,
+        "model_usage": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 1276,
+            "outputTokens": 17,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.001361,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-sonnet-5": {
+            "inputTokens": 2,
+            "outputTokens": 825,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 1126,
+            "webSearchRequests": 0,
+            "costUSD": 0.012758000000000002,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-sonnet-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "api_equivalent_cost_usd_not_subscription_bill": 0.014119000000000001,
+        "session_id": "61613249-b05a-43b6-b68f-f1d456460924"
+      },
+      "sha256": {
+        "runs/reviews/continuation_2026-09-11/entity-payload-brief.txt": "b230d29cf6f7c4198f8ac2635ede47546058f6d683f25c622a55487b44b966bb",
+        "runs/reviews/continuation_2026-09-11/entity-payload-response.json": "80ea0a0122c1018bd3d9c4d132aee646d57f03e3d82ceae230f99500c3462675",
+        "runs/reviews/continuation_2026-09-11/entity-payload-receipt.json": "94814829727ace4ec3116efe4b444ec0c5e112b6c0c243ed8cf23e60728cbd89"
+      }
+    },
+    "entity-payload-reconcile": {
+      "receipt": {
+        "round": "entity-payload-reconcile",
+        "returncode": 0,
+        "elapsed_seconds": 6.294,
+        "brief_sha256": "a8173576f8a06ff4c9d7bc3d521be91da103e2594ec4e18657ca01f9f4c29528",
+        "command": [
+          "/home/alex/.local/bin/claude",
+          "--print",
+          "--safe-mode",
+          "--model",
+          "sonnet",
+          "--effort",
+          "low",
+          "--tools",
+          "",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--disable-slash-commands",
+          "--no-chrome",
+          "--permission-mode",
+          "dontAsk",
+          "--no-session-persistence",
+          "--output-format",
+          "json",
+          "--system-prompt",
+          "You are an independent machine-learning architecture reviewer. Reason only from the supplied conceptual brief. You have no tools or private project access. Distinguish evidence, assumptions and preferences. Do not imply you inspected any implementation."
+        ],
+        "context": "isolated temporary cwd; no tools/settings/MCP/plugins; public conceptual brief only",
+        "is_error": false,
+        "model_usage": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 1197,
+            "outputTokens": 16,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.001277,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-sonnet-5": {
+            "inputTokens": 1018,
+            "outputTokens": 466,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.0066960000000000006,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-sonnet-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "api_equivalent_cost_usd_not_subscription_bill": 0.007973000000000001,
+        "session_id": "6df5f6f3-a134-47fb-bcb0-5ed878056a62"
+      },
+      "sha256": {
+        "runs/reviews/continuation_2026-09-11/entity-payload-reconcile-brief.txt": "a8173576f8a06ff4c9d7bc3d521be91da103e2594ec4e18657ca01f9f4c29528",
+        "runs/reviews/continuation_2026-09-11/entity-payload-reconcile-response.json": "56a57ab0df24ff9eb0695d8932b280780d5e0ef93ed8707e3dbf129e4734e9d3",
+        "runs/reviews/continuation_2026-09-11/entity-payload-reconcile-receipt.json": "97736e21eebde6ab454558989f06966c89ffeb63c0009b138ac39093d4d531f7"
+      }
+    }
+  },
+  "local_sources": [
+    "pathwm/models/belief_state.py",
+    "pathwm/models/hybrid_memory.py",
+    "pathwm/models/belief.py"
+  ],
+  "proposal": "docs/entity-memory-design.md",
+  "all_corrections_acknowledged": true
+}

@@ -2955,3 +2955,16 @@ tree:
   - docs/entity-memory-design.md
   - ara/evidence/tables/entity_association_review_2026-09-11.json
   status: resolved
+
+- id: N181
+  type: question
+  title: Reconcile graph/runtime interface and latent versus original-media entity payloads with Claude
+  provenance: user
+  timestamp: 2026-09-11T10:46+02:00
+  description: Alex requests a concrete graph/harness setup discussion with Claude, then adds what entity records
+    should contain and whether historical text/images can reuse input encoders with memory provenance. Four
+    public-only exchanges completed and corrected; no architecture implementation.
+  evidence:
+  - docs/entity-memory-design.md
+  - ara/evidence/tables/graph_payload_review_2026-09-11.json
+  status: resolved
