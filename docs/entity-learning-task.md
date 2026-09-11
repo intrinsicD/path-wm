@@ -140,3 +140,22 @@ from accuracy, conditional ambiguity from blanket uniformity, and derived decisi
 from arbitrary action labels. Claude's remaining request for an explicit no-memory
 control is addressed above and by the finite input-group calculation. No private source,
 data or measurements were sent; peer agreement is not a learning result.
+
+## Authorized implementation slice
+
+Build `--dataset entities` in the existing multimodal recipe. Reusable controlled
+candidate data, a small recurrent reader and exact outcome metrics live in `pathwm/`.
+The existing Run, update loop, checkpoint/cache and report own the lifecycle.
+Use three observations: initial cue/states, visible set action, final hidden-state
+view with a proposed toggle. Half the episodes mask final identity features and use
+an exact two-assignment posterior. This first three-event screen does not claim
+long-horizon discovery, arbitrary graph growth or a motor controller.
+
+Before training fix: seed31, width64, recurrent state128 floats, shared candidate
+input projection and GRU, AdamW lr0.003/weight decay0.01, batch32, 256 updates,
+512 training and256 development episodes, FP32/two CPU threads, clip1 and450 active
+seconds. Evaluate training every32 updates and development only at the final checkpoint.
+Reserve separately generated test data; do not load it in this development screen.
+Each32-row group varies initial state/cue/action value exhaustively within identifiable
+and ambiguous cohorts. Shared final views provide exact no-history controls.
+If baseline gates fail, no graph training starts; preserve and diagnose its errors.
