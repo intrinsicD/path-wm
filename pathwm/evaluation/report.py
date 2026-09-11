@@ -243,6 +243,22 @@ def entity_inspection(directory):
         parts.append(
             f"<details><summary>Gate examples and unlabelled distance sweep</summary><pre>{escape(json.dumps(dict(examples=data['cohorts']['reference']['episodes'][:2], sweep=data['distance_sweep']), indent=2))}</pre></details></section>"
         )
+        if "shift_after" in data:
+            parts.append(
+                f"<section><h2>Matched continuation: {'noise mixture' if data['augmented'] else 'low-noise control'}</h2><p>Adaptation gate: {data['adaptation_passed']}. Compare each class at fixed threshold0.5. Exposure adaptation is not denoising or calibrated semantic relevance.</p>"
+            )
+            parts.append(
+                '<div class="table"><table><tr><th>Model</th><th>Noise</th><th>Accuracy</th><th>Accept recall</th><th>Ignore recall</th></tr>'
+            )
+            for label in ("shift_before", "shift_after"):
+                for noise, cohort in data[label]["cohorts"].items():
+                    v = cohort["thresholds"]["0.5"]
+                    parts.append(
+                        f"<tr><td>{label}</td><td>{noise}</td><td>{v['accuracy']:.2%}</td><td>{v['positive_recall']:.2%}</td><td>{v['negative_recall']:.2%}</td></tr>"
+                    )
+            parts.append(
+                "</table></div><p>Adaptation requires both low-noise recalls≥95%, high-noise accuracy gain≥2 points over frozen and ignore recall loss≤5 points. Benefit over the matched control is audited separately. All contexts are synthetic; high noise can be ambiguous.</p></section>"
+            )
         return parts
     relation = directory / "entity_relations.json"
     if relation.exists():

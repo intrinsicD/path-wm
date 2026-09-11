@@ -245,3 +245,18 @@ def score_gate_shift(gate, data):
         passed=all(c["passed"] for c in cohorts.values()),
         data={k: v.tolist() for k, v in data.items()},
     )
+
+
+def augmented_gate_examples(families, seed, augmented):
+    data = gate_examples(families, seed)
+    rng = torch.Generator().manual_seed(seed + 10000)
+    noise = torch.randn(len(data["labels"]) // 2, 4, generator=rng).repeat_interleave(
+        2, 0
+    )
+    prototypes = torch.where(data["accept"][:, None], data["active"], data["cue"])
+    chunks = []
+    for sigma in (0.03, 0.15, 0.30, 0.60) if augmented else (0.03,) * 4:
+        chunk = {k: v.clone() for k, v in data.items()}
+        chunk["cue"] = F.normalize(prototypes + sigma * noise, dim=-1)
+        chunks.append(chunk)
+    return {k: torch.cat([c[k] for c in chunks]) for k in data}

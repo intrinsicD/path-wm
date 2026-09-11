@@ -107,7 +107,8 @@ def test_gate_examples_and_frozen_credit():
     assert all(p.grad is None for m in (matcher, key) for p in m.parameters())
 
 
-def test_gate_recipe_resume(tmp_path, monkeypatch):
+@pytest.mark.parametrize("continuation", [False, True])
+def test_gate_recipe_resume(tmp_path, monkeypatch, continuation):
     from pathwm.models.entities import EntityMatchReader
     from pathwm.evaluation import entity_growth
     from experiments.multimodal import train_entity_gate
@@ -141,20 +142,26 @@ def test_gate_recipe_resume(tmp_path, monkeypatch):
         model.decoder.bias.zero_()
     torch.save({"model": model.state_dict()}, key)
     output = tmp_path / "gate"
-    train_entity_gate(donor, cell, key, output)
+    kwargs = {}
+    if continuation:
+        gate_donor = tmp_path / "gate.pt"
+        torch.save({"model": RelationWriteGate().state_dict()}, gate_donor)
+        kwargs = dict(gate_weights=gate_donor, augmented=True)
+    train_entity_gate(donor, cell, key, output, **kwargs)
     raw = (output / "entity_gate.json").read_bytes()
-    train_entity_gate(donor, cell, key, output, resume=True)
+    train_entity_gate(donor, cell, key, output, resume=True, **kwargs)
     assert (output / "entity_gate.json").read_bytes() == raw
 
 
 def test_augmented_pairs_preserve_supervision():
     from pathwm.evaluation.entity_gate import augmented_gate_examples
     from pathwm.evaluation.entity_growth import growth_inputs
+
     families = growth_inputs(901, 1)
     control = augmented_gate_examples(families, 911, False)
     augmented = augmented_gate_examples(families, 911, True)
-    assert len(control['labels']) == len(augmented['labels']) == 48
-    for key in ('old','new','labels','active','accept'):
+    assert len(control["labels"]) == len(augmented["labels"]) == 48
+    for key in ("old", "new", "labels", "active", "accept"):
         assert torch.equal(control[key], augmented[key])
-    assert torch.equal(control['cue'][:12], augmented['cue'][:12])
-    assert not torch.equal(control['cue'][12:], augmented['cue'][12:])
+    assert torch.equal(control["cue"][:12], augmented["cue"][:12])
+    assert not torch.equal(control["cue"][12:], augmented["cue"][12:])

@@ -1105,3 +1105,8 @@ recall loses<=5 points. Treatment must additionally improve>=2 points over the
 matched control to support augmentation benefit. Preserve every failed criterion.
 Moderate/high-noise results do not imply calibrated semantic beliefs. Visual QA
 remains unavailable under prior browser policy; structural report checks required.
+
+Claude reconciliation accepts the narrow exposure-adaptation claim. Control rows
+repeat the same underlying pairs, matching treatment rows and sampler, but this
+is not a comparison with additional independent low-noise observations. Per-bin
+class recalls and false-write regressions remain required; no denoising claim.

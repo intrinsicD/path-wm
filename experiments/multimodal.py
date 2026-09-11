@@ -2981,7 +2981,16 @@ def evaluate_entity_gate_shift(weights, output, resume=False):
     return run.path
 
 
-def train_entity_gate(weights, cell_weights, key_weights, output, resume=False):
+def train_entity_gate(
+    weights,
+    cell_weights,
+    key_weights,
+    output,
+    resume=False,
+    *,
+    gate_weights=None,
+    augmented=False,
+):
     """Fit only context relevance through frozen source-selection loss."""
     from pathwm.models.entities import EntityMatchReader
     from pathwm.models.entity_state import EntityInteractionCell
@@ -2989,7 +2998,16 @@ def train_entity_gate(weights, cell_weights, key_weights, output, resume=False):
     from pathwm.evaluation.entity_growth import growth_inputs
     from pathwm.evaluation.entity_gate import gate_examples, gate_logits, evaluate_gate
 
-    seed_everything(61)
+    from pathwm.evaluation.entity_gate import (
+        augmented_gate_examples,
+        gate_shift_examples,
+        score_gate_shift,
+    )
+
+    if augmented and gate_weights is None:
+        raise ValueError("Augmentation requires a gate donor")
+    continuation = gate_weights is not None
+    seed_everything(71 if continuation else 61)
     weights, cell_weights = Path(weights).resolve(), Path(cell_weights).resolve()
     matcher = EntityMatchReader().eval().requires_grad_(False)
     donor = torch.load(weights, map_location="cpu", weights_only=True)["model"]
@@ -3012,28 +3030,44 @@ def train_entity_gate(weights, cell_weights, key_weights, output, resume=False):
         torch.load(key_weights, map_location="cpu", weights_only=True)["model"]
     )
     gate = RelationWriteGate()
+    if continuation:
+        gate_weights = Path(gate_weights).resolve()
+        gate.load_state_dict(
+            torch.load(gate_weights, map_location="cpu", weights_only=True)["model"]
+        )
+    initial_gate_sha256 = state_hash(gate)
+    shift_data = gate_shift_examples(921) if continuation else None
+    shift_before = score_gate_shift(gate, shift_data) if continuation else None
     before = (state_hash(matcher), state_hash(cell), state_hash(key))
     families = {
-        name: growth_inputs(seed, count)
+        name: growth_inputs(seed + (300 if continuation else 0), count)
         for name, seed, count in [
             ("train", 601, 32),
             ("development", 602, 8),
             ("evaluation", 603, 8),
         ]
     }
-    train = gate_examples(families["train"], 701)
-    dev = gate_examples(families["development"], 702)
-    evaluation = gate_examples(families["evaluation"], 703)
+    train = (
+        augmented_gate_examples(families["train"], 911, augmented)
+        if continuation
+        else gate_examples(families["train"], 701)
+    )
+    dev = gate_examples(families["development"], 912 if continuation else 702)
+    evaluation = gate_examples(families["evaluation"], 913 if continuation else 703)
     optimizer = torch.optim.AdamW(gate.parameters(), lr=0.01, weight_decay=0.01)
     run = Run(
         output,
         settings=dict(
-            seed=61,
+            seed=71 if continuation else 61,
+            entity_gate_weights=str(gate_weights) if continuation else None,
+            entity_gate_augment=augmented,
+            initial_gate_sha256=initial_gate_sha256,
+            gate_file_sha256=file_hash(gate_weights) if continuation else None,
             purpose="diagnostic",
             entity_gate=True,
             entity_relation_key=str(key_weights),
             key_file_sha256=file_hash(key_weights),
-            context_seeds=[701, 702, 703],
+            context_seeds=[911, 912, 913, 921] if continuation else [701, 702, 703],
             entity_state_weights=str(weights),
             entity_temporal_cell=str(cell_weights),
             matcher_sha256=file_hash(weights),
@@ -3093,6 +3127,31 @@ def train_entity_gate(weights, cell_weights, key_weights, output, resume=False):
             result["passed"] &= (
                 dev_scores["accuracy"] >= 0.95 and dev_scores["nll"] <= 0.15
             )
+            if continuation:
+                after = score_gate_shift(gate, shift_data)
+                high = after["cohorts"]["0.6"]["thresholds"]["0.5"]
+                base = shift_before["cohorts"]["0.6"]["thresholds"]["0.5"]
+                low_ok = all(
+                    min(
+                        after["cohorts"][n]["thresholds"]["0.5"][k]
+                        for k in ("positive_recall", "negative_recall")
+                    )
+                    >= 0.95
+                    for n in ("0.03", "0.15")
+                )
+                adaptation_passed = (
+                    low_ok
+                    and high["accuracy"] >= base["accuracy"] + 0.02
+                    and high["negative_recall"] >= base["negative_recall"] - 0.05
+                )
+                result.update(
+                    shift_before=shift_before,
+                    shift_after=after,
+                    adaptation_passed=adaptation_passed,
+                    augmented=augmented,
+                    initial_gate_sha256=initial_gate_sha256,
+                )
+                result["passed"] &= adaptation_passed
             atomic_json(path, result)
             run.log(
                 dict(
@@ -3773,6 +3832,7 @@ def main():
     )
     parser.add_argument("--entity-gate-shift", action="store_true")
     parser.add_argument("--entity-gate-weights", type=Path)
+    parser.add_argument("--entity-gate-augment", action="store_true")
     parser.add_argument("--entity-gate", action="store_true")
     parser.add_argument("--entity-relation-key", type=Path)
     parser.add_argument("--entity-relations", action="store_true")
@@ -3873,6 +3933,8 @@ def main():
                 args.entity_relation_key,
                 args.resume or args.output,
                 bool(args.resume),
+                gate_weights=args.entity_gate_weights,
+                augmented=args.entity_gate_augment,
             )
         )
         return
