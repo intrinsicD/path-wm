@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Context write gate runtime committed and tested; learned write-policy comparison remains pending."
-  turn_count: 36
-  events_count: 103
+  summary: "Context gate learns bounded relevance at100 percent versus50 percent controls;145 tests and resume pass, visual QA denied."
+  turn_count: 37
+  events_count: 106
   claims_touched: []
   open_threads: 13

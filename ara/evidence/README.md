@@ -79,3 +79,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Frozen source retrieval](tables/entity_source_2026-09-11.json): N216; descriptor lookup matches oracle, with rejection and distractor controls.
 
 - [Remembered relation keys](tables/entity_relations_2026-09-11.json): N218; destination-only recall after earlier cues, with explicit persistence and learned addressing.
+
+- [Context write gate](tables/entity_gate_2026-09-11.json): N220; frozen-consumer learning on separated context regimes; visual QA unavailable.

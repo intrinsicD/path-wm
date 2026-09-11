@@ -3431,3 +3431,13 @@ tree:
   - "git:4fb0bd6"
   also_depends_on: [N218]
   status: resolved
+
+- id: N220
+  type: experiment
+  title: Learn context write decisions through frozen source selection
+  provenance: ai-executed
+  timestamp: 2026-09-11T15:30+02:00
+  result: Learned source/state accuracy100 percent versus always/never50 percent; soft/hard agreement100 percent.145 tests and cached resume pass; browser QA denied.
+  evidence: [ara/evidence/tables/entity_gate_2026-09-11.json, docs/entity-learning-task.md, "git:78c7f4c"]
+  also_depends_on: [N219]
+  status: resolved

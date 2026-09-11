@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T15:21+02:00
-  turn_count: 36
-  summary: "Context write gate runtime committed and tested; learned write-policy comparison remains pending."
+  last_turn: 2026-09-11T15:30+02:00
+  turn_count: 37
+  summary: "Context gate learns bounded relevance at100 percent versus50 percent controls;145 tests and resume pass, visual QA denied."
 events_logged:
 - turn: 1
   type: question
@@ -654,6 +654,24 @@ events_logged:
   routing: direct
   provenance: ai-executed
   summary: Transactional gate checks pass; no new training result.
+- turn: 37
+  type: experiment
+  id: N220
+  routing: direct
+  provenance: ai-executed
+  summary: Learned gate comparison passes with controls; visual QA denied.
+- turn: 37
+  type: observation
+  id: O141
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Promote learned-gate method to H34 by implementation commitment.
+- turn: 37
+  type: observation
+  id: O142
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose noise-shift comparison.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -917,6 +935,10 @@ ai_actions:
   action: Implemented optional gate, reviewed public design with Claude twice, tested rollback/retries/threshold and full suite.
   provenance: ai-executed
   files_changed: [pathwm/models/entity_relations.py, tests/test_entity_gate.py]
+- turn: 37
+  action: Implemented trained gate recipe, reconciled two Claude reviews, ran tests/training/resume/audit; preserved browser denial.
+  provenance: ai-executed
+  files_changed: [experiments/multimodal.py, pathwm/evaluation/entity_gate.py, pathwm/evaluation/report.py]
 claims_touched: []
 key_context:
 - turn: 1

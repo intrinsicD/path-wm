@@ -1029,3 +1029,21 @@ scope after identifying the easy separated regimes. Added an unlabelled sweep
 along a fixed unit-circle arc; Euclidean input distance is independent of learned
 weights, although these same context coordinates are deliberately gate inputs.
 This is a boundary diagnostic, not calibration or evidence of ambiguous relevance.
+
+
+Result: source/state accuracy100% in reference, permuted and repeated conditions
+(96 cases each); source NLL0.02357394 and soft/hard source agreement100%.
+Always/never-write controls each50%, NLL7.13082. All integrity checks pass.
+Development96 cases accuracy100%, NLL0.02842698. Held-out ignored probabilities
+range0.01038–0.30586; accepted0.82645–0.82904. These are not calibrated beliefs.
+Full145 CPU tests, cached resume, independent target/NLL/hash/split audit pass.
+Implementation commit78c7f4c. No evaluation tuning or additional training.
+Report is self-contained and structurally verified; browser security denied local
+file navigation, so visual QA remains incomplete and no workaround was attempted.
+
+Run `python -m experiments.multimodal --entity-gate --entity-state-weights MATCHER.pt
+--entity-temporal-cell INTERACTION.pt --entity-relation-key KEY.pt --output DIR`;
+resume with `--resume DIR`. Evidence: `runs/entity_gate_v1/verification.json`;
+immutable donor copied after resume to `runs/entity_gate_v1/frozen_gate.pt`.
+Next proposed: explicitly labelled noise-shift cohorts and threshold sensitivity,
+without interpreting an unlabelled distance sweep as calibrated relevance.

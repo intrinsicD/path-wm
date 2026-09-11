@@ -323,3 +323,13 @@
 - **Code ref**: [relation memory](../../../pathwm/models/entity_relations.py), [controls](../../../pathwm/evaluation/entity_relations.py).
 - **From staging**: O140
 - **Evidence**: [bounded result](../../evidence/tables/entity_relations_2026-09-11.json).
+
+## H34: Isolate relation-write learning through frozen consumers
+
+- **Rationale**: Learn context-conditioned overwrite/preserve through source-selection loss; compare hard runtime behavior with soft training and constant write controls on paired histories.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O141
+- **Sensitivity**: Separated synthetic contexts supply the relevance rule. No ambiguous semantic relevance or graph discovery established.
+- **Code ref**: [gate comparison](../../../pathwm/evaluation/entity_gate.py), [recipe](../../../experiments/multimodal.py).
+- **Evidence**: [bounded comparison](../../evidence/tables/entity_gate_2026-09-11.json).

@@ -1,0 +1,62 @@
+{
+  "frozen_hashes": true,
+  "independent_nll": true,
+  "paired_targets": true,
+  "permutation_and_repetition_exact": true,
+  "descriptor_splits_disjoint": true,
+  "passed": true,
+  "browser_checked": false,
+  "report_validation": "structural_only_browser_policy_denied",
+  "sha256": {
+    "entity_gate.json": "a7c27ac8346a1b9738d71d4b2b92435788f2b338f91b1ed1d49aed64481527c3",
+    "last.pt": "7f97f1d1360d40c42db365e826dd871215c473e785375b5a731b03ff4780ad2e",
+    "report.html": "a99c9c1f32984431cbbf69dddf995f1fb231d9fc80601fdc0d891d7d497f351d"
+  },
+  "cohorts": {
+    "always": {
+      "accuracy": 0.5,
+      "integrity": true,
+      "nll": 7.130823612213135,
+      "passed": true,
+      "soft_hard_agreement": 0.5,
+      "source_accuracy": 0.5
+    },
+    "never": {
+      "accuracy": 0.5,
+      "integrity": true,
+      "nll": 7.130824565887451,
+      "passed": true,
+      "soft_hard_agreement": 0.5,
+      "source_accuracy": 0.5
+    },
+    "permuted": {
+      "accuracy": 1.0,
+      "integrity": true,
+      "nll": 0.023573940619826317,
+      "passed": true,
+      "soft_hard_agreement": 1.0,
+      "source_accuracy": 1.0
+    },
+    "reference": {
+      "accuracy": 1.0,
+      "integrity": true,
+      "nll": 0.023573940619826317,
+      "passed": true,
+      "soft_hard_agreement": 1.0,
+      "source_accuracy": 1.0
+    },
+    "repeated": {
+      "accuracy": 1.0,
+      "integrity": true,
+      "nll": 0.023573940619826317,
+      "passed": true,
+      "soft_hard_agreement": 1.0,
+      "source_accuracy": 1.0
+    }
+  },
+  "development": {
+    "accuracy": 1.0,
+    "examples": 96,
+    "nll": 0.028426984325051308
+  }
+}

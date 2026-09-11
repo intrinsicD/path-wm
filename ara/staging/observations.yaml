@@ -2535,6 +2535,18 @@ observations:
   potential_type: heuristic
   bound_to:
   - N218
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H34
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O142
+  timestamp: 2026-09-11T15:30+02:00
+  provenance: ai-suggested
+  content: Next predeclare context-noise shifts and threshold sensitivity before broader relevance claims.
+  context: Separated context-rule screen passes; intermediate distance sweep has no ground-truth labels.
+  potential_type: heuristic
+  bound_to: [N220]
   promoted: false
   promoted_to: null
   crystallized_via: null

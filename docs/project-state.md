@@ -1,9 +1,15 @@
 # Current work
 
-Latest implementation: optional context-based relation write gate with atomic
-accept/ignore, replay, and snapshot compatibility checks. This is a single-writer
-runtime interface; learned quality is not evaluated yet. Next: predeclare and run
-the frozen-consumer gate training comparison.
+**Context write gate passes the bounded screen, 11 September:** the gate learns
+from source-selection loss with matcher, key and interaction weights frozen.
+All96 held-out cases pass source/state prediction, including allocation permutation
+and repeated irrelevant cues; always/never-write controls score50%. Soft/hard
+source choices agree100%. Full145-test suite and cached resume pass.
+[Report](../runs/entity_gate_v1/reference/report.html),
+[verification](../runs/entity_gate_v1/verification.json). Report structural checks
+pass; browser policy blocked visual QA. This tests separated context regimes,
+not ambiguous semantic relevance. Next proposed: predeclare a context-noise shift
+comparison before extending the claim or adding graph operations.
 
 **Remembered relation keys pass, 11 September:**140 tests pass. A learned key supports
 destination-only recall after the source cue disappears:100% source/state accuracy

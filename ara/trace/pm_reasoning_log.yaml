@@ -1057,3 +1057,9 @@ entries:
   - Record runtime checks as N219; do not promote the unperformed learned-gate experiment O141.
   - Claude concurrency concern reconciled against existing single-writer scope.
   - Training and soft-versus-hard held-out comparisons remain outstanding; no new accuracy claim.
+
+- turn: 2026-09-11_001#37
+  notes:
+  - Promote O141 by implemented learning path, preserving synthetic context-rule scope.
+  - Record test outcomes separately from denied visual QA; no browser workaround.
+  - Stage O142; distance sweep alone has no semantic calibration interpretation.
