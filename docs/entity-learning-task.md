@@ -629,3 +629,16 @@ Run `python -m experiments.multimodal --entity-state-weights IMMUTABLE_MATCHER.p
 input features encode observed0, observed1, toggle and no-information respectively.
 Next proposed: held-out temporal compositions and lengths with this model frozen,
 before adding richer attributes or learned graph structure.
+
+### Frozen temporal generalization (predeclared)
+
+Freeze the saved state cell and immutable recognizer. Fresh seed111,16 shared
+descriptor families;16 balanced binary/action variants per family per condition.
+Four cohorts: reference6 events; reset-order6 events (middle reset/toggle pair on
+entity0, both orders with same multiset); toggle-length20 (16 middle toggles);
+no-information-length20 (reference two toggles followed by14 no-information events).
+All finish with identical no-information views of both entities. Compute targets by
+an independent binary simulator. Require >=95% state-pair accuracy, <=0.15 NLL per
+entity, >=95% persistent-runtime accuracy, exact retries/restores and latent agreement
+in every cohort. Budget120 CPU seconds excluding report generation, no fitting or
+tuning. Report each condition separately; shared families imply correlated scores.
