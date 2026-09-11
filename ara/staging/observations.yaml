@@ -2804,6 +2804,21 @@ observations:
   potential_type: unknown
   bound_to:
   - N240
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H48
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O161
+  timestamp: 2026-09-11T21:08+02:00
+  provenance: ai-suggested
+  content: Vary correction timing and observation availability, including unknown
+    state, before introducing learned planner dynamics.
+  context: Fixed full-correction schedule passes but stress memory utility trails
+    no-history.
+  potential_type: unknown
+  bound_to:
+  - N241
   promoted: false
   promoted_to: null
   crystallized_via: null

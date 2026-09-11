@@ -1,0 +1,120 @@
+{
+  "independent_planner_execution_and_correction_replay": true,
+  "independent_initialization_and_sampler": true,
+  "donors_unchanged": true,
+  "frozen_reference_identity": true,
+  "cached_resume": true,
+  "browser_checked": false,
+  "robustness_passed": true,
+  "populations": {
+    "candidate": {
+      "passed": true,
+      "known_accuracy": 1.0,
+      "correction_accuracy": null,
+      "correction_reads": 0,
+      "summary": {
+        "integrated": {
+          "absent_stop": 1.0,
+          "mean_cost": 1.59375,
+          "success": 1.0,
+          "utility": 0.9203125
+        },
+        "no_history": {
+          "absent_stop": 1.0,
+          "mean_cost": 1.90625,
+          "success": 1.0,
+          "utility": 0.9046875
+        },
+        "supplied_state": {
+          "absent_stop": 1.0,
+          "mean_cost": 1.5,
+          "success": 1.0,
+          "utility": 0.925
+        }
+      }
+    },
+    "reference": {
+      "passed": true,
+      "known_accuracy": 1.0,
+      "correction_accuracy": null,
+      "correction_reads": 0,
+      "summary": {
+        "integrated": {
+          "absent_stop": 1.0,
+          "mean_cost": 1.59375,
+          "success": 1.0,
+          "utility": 0.9203125
+        },
+        "no_history": {
+          "absent_stop": 1.0,
+          "mean_cost": 1.90625,
+          "success": 1.0,
+          "utility": 0.9046875
+        },
+        "supplied_state": {
+          "absent_stop": 1.0,
+          "mean_cost": 1.5,
+          "success": 1.0,
+          "utility": 0.925
+        }
+      }
+    },
+    "candidate_stress": {
+      "passed": true,
+      "known_accuracy": 1.0,
+      "correction_accuracy": 1.0,
+      "correction_reads": 192,
+      "summary": {
+        "integrated": {
+          "absent_stop": 1.0,
+          "mean_cost": 2.0625,
+          "success": 1.0,
+          "utility": 0.896875
+        },
+        "no_history": {
+          "absent_stop": 1.0,
+          "mean_cost": 1.8125,
+          "success": 1.0,
+          "utility": 0.9093749999999999
+        },
+        "supplied_state": {
+          "absent_stop": 1.0,
+          "mean_cost": 2.25,
+          "success": 1.0,
+          "utility": 0.8875
+        }
+      }
+    },
+    "reference_stress": {
+      "passed": true,
+      "known_accuracy": 1.0,
+      "correction_accuracy": 0.9947916666666666,
+      "correction_reads": 192,
+      "summary": {
+        "integrated": {
+          "absent_stop": 1.0,
+          "mean_cost": 2.0625,
+          "success": 1.0,
+          "utility": 0.896875
+        },
+        "no_history": {
+          "absent_stop": 1.0,
+          "mean_cost": 1.8125,
+          "success": 1.0,
+          "utility": 0.9093749999999999
+        },
+        "supplied_state": {
+          "absent_stop": 1.0,
+          "mean_cost": 2.25,
+          "success": 1.0,
+          "utility": 0.8875
+        }
+      }
+    }
+  },
+  "sha256": {
+    "key_box.json": "36d5d0ec6f3febc8ebb5220e20c54d9243e1d002e7a9856ff6efa8e8eb321247",
+    "last.pt": "7ed6cb1156b35ffe964339935a84408ab4fe9e86852e1f53baed96632c4cf4d9",
+    "report.html": "8c4db96a04bd148f24b32251fe3b907b1ade4c8f1d397153f206c916de2c3a6e"
+  }
+}

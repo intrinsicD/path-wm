@@ -1,5 +1,15 @@
 # Current work
 
+**Independent key-box replication and correction screen pass, 11 September:**
+new training seed2302, fresh evaluation2431: ordinary and longer-history relocation
+cases both96/96 reachable and32/32 absent; correction readout192/192. Frozen prior
+model also passes (correction191/192). Ordinary memory utility advantage remains
+0.015625; under relocation memory costs more than no-history, so no universal
+utility benefit.31 tests, lint, cached resume and independent time-varying execution
+and correction audit pass. [Report](../runs/key_box_v1/replica/report.html)
+structural-only; [active plan](key-box-integration-plan.md). Next: varied change
+and observation timing. Still supplied descriptors, corrections and action mechanics.
+
 **Interleaved key-box training passes controlled screen, 11 September:**
 four read pairs separated by observation events preserve working state during
 training. Fresh seed2421: known content100%, reachable96/96, absent32/32;

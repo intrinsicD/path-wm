@@ -1187,3 +1187,11 @@ entries:
   - 'O159 is only partially exercised: neutral observation gaps, no on-policy changing-content
     unroll. Keep staged rather than promote full-history heuristic.'
   - Stage O160 replication; no scientific threshold or eval tuning.
+
+- turn: 2026-09-11_001#56
+  notes:
+  - Promote O160 method to H48 by implementation, not a general performance claim.
+  - Record both pass gates and stress cost disadvantage; no contradictory universal
+    memory-benefit claim introduced.
+  - Stage O161 timing/availability extension. O159 broader full-history training remains
+    partial.

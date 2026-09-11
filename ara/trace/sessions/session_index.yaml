@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Interleaved read training passes bounded key-box screen;30 tests, resume and independent replay pass; replication pending."
-  turn_count: 55
-  events_count: 158
+  summary: "Independent seed and fixed-relocation screens pass; correction192/192;31 tests and audits pass, stress memory costs more."
+  turn_count: 56
+  events_count: 161
   claims_touched: []
   open_threads: 17

@@ -463,3 +463,13 @@
 - **Sensitivity**: Forced acquisition and epsilon0.5 limit scope. Present candidate improves coverage but fails utility gain.
 - **Code ref**: [allocation comparison](../../../pathwm/evaluation/source_choice.py).
 - **Evidence**: [failed screen](../../evidence/tables/entity_source_coverage_2026-09-11.json).
+
+## H48: Check an independent seed and explicit state corrections before expansion
+
+- **Rationale**: Separate ordinary-task performance from controlled correction handling; retain frozen weights on matched fresh cases and audit actions against changing truth.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O160
+- **Sensitivity**: One additional seed and fixed correction timing do not estimate broad robustness. Utility must remain visible when success passes.
+- **Code ref**: [evaluation](../../../pathwm/evaluation/key_box.py), [recipe](../../../experiments/multimodal.py).
+- **Evidence**: [replication](../../evidence/tables/key_box_replica_2026-09-11.json); N241.

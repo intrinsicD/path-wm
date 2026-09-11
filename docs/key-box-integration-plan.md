@@ -169,3 +169,23 @@ Initial test collection caught a malformed seed default; corrected before runs.
 31 relevant tests pass, including actual stress/reference smoke and cached resume;
 lint and diff checks pass. Report changes receive structural-only QA under prior
 browser restriction. Commit implementation before formal replica training.
+
+Replica a729483 completed within360s: seed2302 ordinary PASS, known100%,
+reachable96/96, absent32/32, utility0.9203125 vs no-history0.9046875.
+Stress PASS: initial known100%, correction192/192, reachable96/96, absent32/32.
+Frozen seed2301 history weights also pass ordinary/stress on same seed2431 cases;
+correction191/192. Candidate and reference stress utility0.896875 versus
+no-history0.909375. Thus memory benefit does not extend to this abrupt relocation
+schedule: acting on earlier knowledge can incur extra cost before correction.
+Supplied-state control has current truth, not advance knowledge of relocation.
+No retraining/tuning after results. This is one independent training replication,
+fixed timing and binary supplied observations, not arbitrary-change robustness.
+31 relevant tests and lint pass; cached resume, independent time-varying physical
+execution/planner/correction-score replay, donor equality, distinct initialization
+and sampler, frozen-reference identity all pass. Report structural-only:
+runs/key_box_v1/replica/report.html; audit runs/key_box_v1/replica_verification.json.
+Use training_seed=2302, eval_seed=2431, history_pairs=4, query_switch=True,
+stress=True, max_seconds=360 for this recipe configuration. Next proposed extension:
+vary change timing and observation availability, including explicit unknown state,
+before replacing supplied dynamics with learned predictions. Avoid fitting to this
+single deterministic change schedule.

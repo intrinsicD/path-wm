@@ -3710,3 +3710,20 @@ tree:
   also_depends_on:
   - N239
   status: resolved
+
+- id: N241
+  type: experiment
+  title: Independent initialization and fixed correction timing pass
+  provenance: ai-executed
+  timestamp: 2026-09-11T21:08+02:00
+  result: 'Seed2302/eval2431: ordinary and stress reachable96/96 absent32/32; correction192/192.
+    Frozen seed2301 also passes with correction191/192. Ordinary memory utility advantage0.015625,
+    stress utility0.896875 below no-history0.909375.31 tests, resume and independent
+    changing-truth replay pass. One additional training seed, supplied binary observations
+    and mechanics.'
+  evidence:
+  - ara/evidence/tables/key_box_replica_2026-09-11.json
+  - git:a729483
+  also_depends_on:
+  - N240
+  status: resolved

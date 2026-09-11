@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T20:44+02:00
-  turn_count: 55
-  summary: "Interleaved read training passes bounded key-box screen;30 tests, resume and independent replay pass; replication pending."
+  last_turn: 2026-09-11T21:08+02:00
+  turn_count: 56
+  summary: "Independent seed and fixed-relocation screens pass; correction192/192;31 tests and audits pass, stress memory costs more."
 events_logged:
 - turn: 1
   type: question
@@ -985,6 +985,25 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Replication and stronger state-change checks proposed.
+- turn: 56
+  type: experiment
+  id: N241
+  routing: direct
+  provenance: ai-executed
+  summary: Independent seed and fixed-relocation screens pass; correction192/192;31
+    tests and audits pass, stress memory costs more.
+- turn: 56
+  type: observation
+  id: O160
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Replication/correction method committed as H48.
+- turn: 56
+  type: observation
+  id: O161
+  routing: staged
+  provenance: ai-suggested
+  summary: Vary timing and observation availability next.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1380,6 +1399,16 @@ ai_actions:
   files_changed:
   - pathwm/evaluation/key_box.py
   - experiments/multimodal.py
+  - tests/test_key_box.py
+  - docs/key-box-integration-plan.md
+- turn: 56
+  action: Claude review/reconciliation; implemented seed parameter and stress evaluation,
+    fixed default, tested31 cases, trained replica, resumed and audited.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/evaluation/key_box.py
+  - experiments/multimodal.py
+  - pathwm/evaluation/report.py
   - tests/test_key_box.py
   - docs/key-box-integration-plan.md
 claims_touched: []
