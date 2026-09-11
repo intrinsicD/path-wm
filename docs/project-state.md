@@ -1,5 +1,14 @@
 # Current work
 
+**Two conditional replications retain the augmentation tradeoff, 11 September:**
+high-noise gains+8.98/+11.72 points over controls, but both full acceptance gates
+fail. Rep1 clean-runtime NLL0.152775 exceeds0.15; rep2 NLL0.269396, development
+and low-noise ignore checks fail.15 relevant tests, four cached resumes and paired
+audits pass. Reference unchanged. Reports: [rep1](../runs/entity_gate_replicate_v1/rep1_augmented/report.html),
+[rep2](../runs/entity_gate_replicate_v1/rep2_augmented/report.html), structural QA only.
+Next candidate: explicit clean-behavior retention during noisy continuation, tested
+against these preserved results on fresh contexts. No broad robustness claim.
+
 **Noise augmentation improves recall but fails acceptance, 11 September:** on fresh
 contexts high-noise accuracy80.08% versus matched control71.48% (frozen75.78%).
 Low-noise0.15 ignore recall94.53% misses95% criterion; reference stays unchanged.

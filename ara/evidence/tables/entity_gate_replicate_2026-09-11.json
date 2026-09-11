@@ -1,0 +1,146 @@
+{
+  "replicates": {
+    "1": {
+      "arms": {
+        "control": {
+          "passed": false,
+          "adaptation_passed": false,
+          "scores": {
+            "0.03": {
+              "accuracy": 1.0,
+              "negative_recall": 1.0,
+              "positive_recall": 1.0
+            },
+            "0.15": {
+              "accuracy": 1.0,
+              "negative_recall": 1.0,
+              "positive_recall": 1.0
+            },
+            "0.3": {
+              "accuracy": 0.9375,
+              "negative_recall": 0.9765625,
+              "positive_recall": 0.8984375
+            },
+            "0.6": {
+              "accuracy": 0.7109375,
+              "negative_recall": 0.953125,
+              "positive_recall": 0.46875
+            }
+          },
+          "sha256": {
+            "entity_gate.json": "61940f995781d90021cfd6cb870326aa6a1cfdfbf93eab11e12f3849fd5c1cb9",
+            "last.pt": "5aa9ded9547c3627af46624a83d42d6b448e6441f41a3ee0d8c5f17817054e91",
+            "report.html": "477c046a1f8e39ae1fe17ecf805556f1807ac37b8fbccecce76e768ce7ee9da7"
+          }
+        },
+        "augmented": {
+          "passed": false,
+          "adaptation_passed": true,
+          "scores": {
+            "0.03": {
+              "accuracy": 0.98828125,
+              "negative_recall": 0.9765625,
+              "positive_recall": 1.0
+            },
+            "0.15": {
+              "accuracy": 0.98046875,
+              "negative_recall": 0.9609375,
+              "positive_recall": 1.0
+            },
+            "0.3": {
+              "accuracy": 0.94921875,
+              "negative_recall": 0.9296875,
+              "positive_recall": 0.96875
+            },
+            "0.6": {
+              "accuracy": 0.80078125,
+              "negative_recall": 0.921875,
+              "positive_recall": 0.6796875
+            }
+          },
+          "sha256": {
+            "entity_gate.json": "55277d26da8c76316ed570037ad351e98aade1a08317a31a579ba67c711664bc",
+            "last.pt": "8708e9a7c05125fd62c51cd37551c05ff8128276612853505009c26e96151ae9",
+            "report.html": "e2831a058a33e45aaafbb36d4a0ae38304f4945ddb1a45ab44024ec322c3be63"
+          }
+        }
+      },
+      "gain": 0.08984375,
+      "passed": false
+    },
+    "2": {
+      "arms": {
+        "control": {
+          "passed": false,
+          "adaptation_passed": false,
+          "scores": {
+            "0.03": {
+              "accuracy": 1.0,
+              "negative_recall": 1.0,
+              "positive_recall": 1.0
+            },
+            "0.15": {
+              "accuracy": 1.0,
+              "negative_recall": 1.0,
+              "positive_recall": 1.0
+            },
+            "0.3": {
+              "accuracy": 0.9375,
+              "negative_recall": 0.984375,
+              "positive_recall": 0.890625
+            },
+            "0.6": {
+              "accuracy": 0.68359375,
+              "negative_recall": 0.9375,
+              "positive_recall": 0.4296875
+            }
+          },
+          "sha256": {
+            "entity_gate.json": "9f2efa6f75954f762a9bda28e836c69ddf8809ccf1a834b6d1259cfe4b44271c",
+            "last.pt": "311fabf0525dfd4d9484ab46bb4157538fc3ee760a2d53d16b2f86ba1ad1cb87",
+            "report.html": "c9528ae4c2426ad03920f590e74907ae029d31938ffbd6d9c2c03d070346ca6b"
+          }
+        },
+        "augmented": {
+          "passed": false,
+          "adaptation_passed": false,
+          "scores": {
+            "0.03": {
+              "accuracy": 0.98046875,
+              "negative_recall": 0.9609375,
+              "positive_recall": 1.0
+            },
+            "0.15": {
+              "accuracy": 0.96875,
+              "negative_recall": 0.9375,
+              "positive_recall": 1.0
+            },
+            "0.3": {
+              "accuracy": 0.94140625,
+              "negative_recall": 0.9140625,
+              "positive_recall": 0.96875
+            },
+            "0.6": {
+              "accuracy": 0.80078125,
+              "negative_recall": 0.8671875,
+              "positive_recall": 0.734375
+            }
+          },
+          "sha256": {
+            "entity_gate.json": "c0092cfad3d86d9ddf889590cb84b59150360816784d60cae8915b88b3e999a0",
+            "last.pt": "986b7cc271ad07d20848d0c4105095cee08d360058932a70b4f66371983925be",
+            "report.html": "2d3793009a739ed35f57b5039eeb760c99883f919247bb0b40430e82d79b6d87"
+          }
+        }
+      },
+      "gain": 0.1171875,
+      "passed": false
+    }
+  },
+  "passed": false,
+  "matched_arms": true,
+  "fresh_populations": true,
+  "independent_metrics": true,
+  "browser_checked": false,
+  "report_validation": "structural_only_prior_policy_denial"
+}

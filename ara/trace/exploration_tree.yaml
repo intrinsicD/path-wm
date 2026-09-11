@@ -3461,3 +3461,13 @@ tree:
   evidence: [ara/evidence/tables/entity_gate_augment_2026-09-11.json, "git:0139198"]
   also_depends_on: [N221]
   status: resolved
+
+- id: N223
+  type: experiment
+  title: Two matched seed replications retain gains and failed criteria
+  provenance: ai-executed
+  timestamp: 2026-09-11T16:04+02:00
+  result: High-noise gains8.98/11.72 points; both full gates fail.15 relevant tests and four resumes pass. Reference unchanged.
+  evidence: [ara/evidence/tables/entity_gate_replicate_2026-09-11.json, "git:a5c7b69"]
+  also_depends_on: [N222]
+  status: resolved

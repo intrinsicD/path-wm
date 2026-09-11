@@ -1075,3 +1075,9 @@ entries:
   - Promote experiment method O143 without treating failed guardrail as a successful repair.
   - Preserve control and frozen reference; no threshold tuning or donor replacement.
   - Stage independent-seed replication O144 to assess stability of the tradeoff.
+
+- turn: 2026-09-11_001#40
+  notes:
+  - Promote replication method O144, not model acceptance; both full gates fail.
+  - Preserve per-replicate results and single-donor limitation, with no pooled promotion.
+  - Stage clean retention O145 as a candidate, not an established repair.

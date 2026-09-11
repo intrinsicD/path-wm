@@ -1142,3 +1142,18 @@ best-seed selection. This is conditional on one donor, not initialization varian
 Claude reconciliation: two single-donor repeats are a descriptive screen, not
 statistical confirmation. Report each class/severity, no pooled promotion; even
 two passes remain provisional.15 relevant tests pass, including nonzero-index resume.
+
+
+Replication result (a5c7b69): BOTH full gates FAIL. High-noise accuracy gains over
+matched control are8.984375 and11.71875 points; treatment accuracy80.078125%
+in both. Rep1 adaptation subgate passes but clean-runtime NLL0.152775>0.15.
+Rep2 clean-runtime NLL0.269396, development accuracy92.7083%/NLL0.232708,
+and low-noise0.15 ignore93.75% fail. Thus augmentation gains recur but do not
+qualify the model for replacement. These are two conditional single-donor runs.
+15 relevant tests, four cached resumes and independent paired metrics/donor audit
+pass. Structural report QA only; prior browser-policy limit remains. No threshold
+changes, additional tuning, or donor promotion. Evidence:
+`runs/entity_gate_replicate_v1/verification.json`. Use `--entity-gate-replicate 1`
+or2 with the existing matched continuation command; index0 preserves prior seeds.
+Next candidate: clean-behavior retention term during noisy continuation, with
+separately declared tradeoff weights and fresh evaluation. Not implemented yet.

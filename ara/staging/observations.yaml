@@ -2571,6 +2571,18 @@ observations:
   context: Single-seed augmentation improves accuracy but fails false-write guardrail.
   potential_type: heuristic
   bound_to: [N222]
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H37
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O145
+  timestamp: 2026-09-11T16:04+02:00
+  provenance: ai-suggested
+  content: Test explicit clean-behavior retention during noisy continuation on fresh contexts.
+  context: Conditional replications improve high-noise accuracy but fail clean loss and recall criteria.
+  potential_type: heuristic
+  bound_to: [N223]
   promoted: false
   promoted_to: null
   crystallized_via: null

@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Matched augmentation improves high-noise accuracy but fails ignore guardrail;14 relevant tests and both resumes pass."
-  turn_count: 39
-  events_count: 112
+  summary: "Two conditional replications repeat accuracy gains but fail full gates;15 relevant tests and four resumes pass."
+  turn_count: 40
+  events_count: 115
   claims_touched: []
   open_threads: 13
