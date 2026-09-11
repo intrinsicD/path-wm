@@ -2609,6 +2609,20 @@ observations:
   potential_type: heuristic
   bound_to:
   - N225
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H40
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O148
+  timestamp: 2026-09-11T16:26+02:00
+  provenance: ai-suggested
+  content: Compare acquiring alternate evidence with repeated same-source observations.
+  context: Highly correlated rereads add little information; correlation is not known
+    to the agent.
+  potential_type: heuristic
+  bound_to:
+  - N226
   promoted: false
   promoted_to: null
   crystallized_via: null

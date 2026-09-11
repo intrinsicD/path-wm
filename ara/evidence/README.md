@@ -91,3 +91,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Clean retention](tables/entity_gate_retain_2026-09-11.json): N224; weight-one penalty fails acceptance, reference preserved.
 
 - [Costed reobservation](tables/entity_gate_reobserve_2026-09-11.json): N225; selective improves first-only, always-two remains better at declared cost.
+
+- [Correlated rereads](tables/entity_gate_correlation_2026-09-11.json): N226; benefit shrinks with shared errors, rho0.9 fails gain criterion.

@@ -383,3 +383,13 @@
 - **Sensitivity**: Independent noise and static context assumed; no learned deferral, calibration or optimality claim. Always-two has higher high-noise utility here.
 - **Code ref**: [reobservation](../../../pathwm/evaluation/entity_gate.py).
 - **Evidence**: [comparison](../../evidence/tables/entity_gate_reobserve_2026-09-11.json).
+
+## H40: Hold marginal noise fixed when testing reread dependence
+
+- **Rationale**: Correlate raw errors with shared first draws and innovations, keeping the sensing policy and cost fixed; verify the fully shared endpoint.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O147
+- **Sensitivity**: Raw correlation differs from normalized-cue dependence; fixed-policy performance is not per-correlation optimal utility.
+- **Code ref**: [correlated generator](../../../pathwm/evaluation/entity_gate.py).
+- **Evidence**: [failed robustness](../../evidence/tables/entity_gate_correlation_2026-09-11.json).

@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T16:17+02:00
-  turn_count: 42
-  summary: "Reobservation passes bounded test; always-two has higher high-noise utility.18 relevant tests and resume pass."
+  last_turn: 2026-09-11T16:26+02:00
+  turn_count: 43
+  summary: "Correlated reread gain fails at rho0.9;19 relevant tests, four resumes and independent audit pass."
 events_logged:
 - turn: 1
   type: question
@@ -762,6 +762,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Correlated noise test proposed.
+- turn: 43
+  type: experiment
+  id: N226
+  routing: direct
+  provenance: ai-executed
+  summary: Correlation robustness fails; shared endpoint passes.
+- turn: 43
+  type: observation
+  id: O147
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Method promoted to H40 by implementation.
+- turn: 43
+  type: observation
+  id: O148
+  routing: staged
+  provenance: ai-suggested
+  summary: Alternate evidence acquisition proposed.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1048,6 +1066,14 @@ ai_actions:
 - turn: 42
   action: Implemented and reviewed reobservation controls;18 tests, frozen run, resume
     and independent decision/cost audit.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/evaluation/entity_gate.py
+  - experiments/multimodal.py
+  - pathwm/evaluation/report.py
+- turn: 43
+  action: Implemented correlated errors, reconciled Claude marginal correction;19
+    tests, four evaluations/resumes and independent audit.
   provenance: ai-executed
   files_changed:
   - pathwm/evaluation/entity_gate.py

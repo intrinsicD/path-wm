@@ -1093,3 +1093,9 @@ entries:
   - Promote diagnostic method, not learned sensing; preserve stronger always-two utility.
   - Duplicate control is a sanity check, not evidence of independent noise.
   - Stage correlated-noise O147 before memory integration.
+
+- turn: 2026-09-11_001#43
+  notes:
+  - Promote correlation method without claiming robust sensing; rho0.9 fails.
+  - Raw marginal invariance correction acknowledged by Claude.
+  - Stage alternate evidence O148; correlation not available to the policy.

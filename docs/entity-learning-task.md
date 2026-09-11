@@ -1243,3 +1243,19 @@ Claude accepted the marginal-distribution correction: normalization alone does
 not change rho-invariant marginals systematically; joint geometry and finite
 samples vary. Raw norms/correlation are recorded; fixed-policy sensitivity is not
 per-rho optimal utility.19 relevant tests pass including correlated cached resume.
+
+
+Correlation result (6568a7b): overall robustness FAIL. First-only high-noise
+accuracy71.875% in every arm. Selective accuracy81.640625/76.953125/73.046875%
+at rho0/0.5/0.9; gains9.765625/5.078125/1.171875 points. Rho0.9 fails2-point
+gain criterion despite a small positive utility change. Rho1 endpoint passes
+unchanged decisions; selective utility0.70984375 versus first0.71875. Fully
+shared rereads add cost without information. Always-two utility exceeds selective
+at rho0 but not0.5/0.9 under cost0.02. No policy-optimality claim.
+19 relevant tests, four cached resumes, frozen hash and independent matched-input/
+noise reconstruction/decision/cost audits pass. Structural report QA only; prior
+browser restriction remains. Evidence: `runs/entity_gate_correlation_v1/verification.json`.
+Use `--entity-gate-correlation RHO` with frozen reobservation command; omission
+preserves the earlier independent dataset. No model updates or policy integration.
+Next candidate: compare alternate evidence acquisition against same-source repeats;
+correlation is supplied only to this diagnostic, not observable agent knowledge.

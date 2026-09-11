@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Reobservation passes bounded test; always-two has higher high-noise utility.18 relevant tests and resume pass."
-  turn_count: 42
-  events_count: 121
+  summary: "Correlated reread gain fails at rho0.9;19 relevant tests, four resumes and independent audit pass."
+  turn_count: 43
+  events_count: 124
   claims_touched: []
   open_threads: 13

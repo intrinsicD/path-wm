@@ -1,5 +1,14 @@
 # Current work
 
+**Correlated rereads expose the independence limit, 11 September:** selective
+high-noise gains9.77/5.08/1.17 points at rho0/0.5/0.9; rho0.9 fails the2-point
+gate. Rho1 adds no information and loses sensing cost.19 relevant tests, four
+resumes and independent shared-observation/decision/cost audits pass.
+[Report](../runs/entity_gate_correlation_v1/rho0.9/report.html) structural-only.
+Reference unchanged; no memory integration. Next candidate: compare acquiring a
+different evidence source with repeating the same source, without assuming the
+agent already knows error correlation.
+
 **Reobservation diagnostic passes, 11 September:** high-noise accuracy72.27%→82.81%
 with selective rereads42.58%; ignore recall93.75%→98.44%. Duplicate replay gives
 no gain. Always-two reaches87.11% and higher utility at the declared cost0.02.

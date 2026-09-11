@@ -3495,3 +3495,17 @@ tree:
   also_depends_on:
   - N224
   status: resolved
+
+- id: N226
+  type: experiment
+  title: Correlated rereads fail robust gain criterion
+  provenance: ai-executed
+  timestamp: 2026-09-11T16:26+02:00
+  result: Gains9.77/5.08/1.17 points at rho0/0.5/0.9; shared endpoint no gain.19 tests
+    and four resumes pass.
+  evidence:
+  - ara/evidence/tables/entity_gate_correlation_2026-09-11.json
+  - git:6568a7b
+  also_depends_on:
+  - N225
+  status: resolved
