@@ -1,4 +1,5 @@
 from collections import Counter
+import pytest
 from pathwm.data.entity_state import mixed_state_episodes
 from pathwm.evaluation.entity_growth import growth_inputs
 from tests.test_entity_memory import Scorer
@@ -27,7 +28,8 @@ def test_complement_balance_and_simulator():
     }
 
 
-def test_varied_recipe_and_resume(tmp_path, monkeypatch):
+@pytest.mark.parametrize("preserve", [False, True])
+def test_varied_recipe_and_resume(tmp_path, monkeypatch, preserve):
     import torch
     from pathwm.models.entities import EntityMatchReader
     from pathwm.evaluation import entity_growth
@@ -47,7 +49,7 @@ def test_varied_recipe_and_resume(tmp_path, monkeypatch):
         donor,
     )
     output = tmp_path / "state"
-    train_entity_state(donor, output, varied=True)
+    train_entity_state(donor, output, varied=True, preserve=preserve)
     raw = (output / "entity_state.json").read_bytes()
-    train_entity_state(donor, output, resume=True, varied=True)
+    train_entity_state(donor, output, resume=True, varied=True, preserve=preserve)
     assert (output / "entity_state.json").read_bytes() == raw

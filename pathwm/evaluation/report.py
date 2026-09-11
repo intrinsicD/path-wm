@@ -200,6 +200,11 @@ def entity_inspection(directory):
         data = json.loads(temporal.read_text())
         parts = [
             "<section><h2>Frozen temporal generalization</h2>",
+            (
+                "<p>No-information updates: explicit identity rule for deterministic dynamics; preservation is imposed, not learned.</p>"
+                if data.get("preserve_no_information")
+                else "<p>No-information updates: learned recurrent transition.</p>"
+            ),
             f"<p>Declared gates: {'pass' if data['passed'] else 'fail'}. No training.</p>",
             "<p>Fresh descriptor families shared across conditions. Reset order changes event order; longer-toggle and no-information conditions test different length effects. These controlled scores do not establish general belief or graph learning.</p>",
             '<div class="table"><table><tr><th>Condition</th><th>Episodes</th><th>Pair accuracy</th><th>NLL/entity</th><th>Runtime accuracy</th><th>Transactions / latents</th><th>Gate</th></tr>',
@@ -218,6 +223,11 @@ def entity_inspection(directory):
         data = json.loads(state.read_text())
         parts = [
             "<section><h2>Learned persistent entity state</h2>",
+            (
+                "<p>No-information updates: explicit identity rule for deterministic dynamics; preservation is imposed, not learned.</p>"
+                if data.get("preserve_no_information")
+                else "<p>No-information updates: learned recurrent transition.</p>"
+            ),
             f"<p>Declared gates: {'pass' if data['passed'] else 'fail'}.</p>",
             "<p>Frozen recognition; shared learned binary-state updates. Paired histories have identical final observations. This is controlled state tracking, not general belief or graph learning.</p>",
             '<div class="table"><table><tr><th>Population</th><th>Episodes</th><th>State-pair accuracy</th><th>NLL per entity</th></tr>',

@@ -739,3 +739,11 @@ accuracy>=95%, all transaction and existing latent-tolerance checks. Require exa
 idle preservation additionally. Reuse the original mixed-history immutable donor;
 copy the new donor only after cached training resume. This establishes an explicit
 invariant for deterministic dynamics, not learned general belief persistence.
+
+Claude reviewed the abstract design and withdrew the claim that an exact identity
+necessarily blocks gradients. The implementation uses differentiable selection;
+checks compare parameter gradients with and without an inserted idle stretch.
+Both training arms see the same histories. Policy is a persistent buffer only in
+the new mode, preserving legacy state keys and binding new snapshots to semantics.
+The first runtime test failure was a randomized recognizer fixture mismatch, fixed
+by restoring with the same recognizer; no runtime compatibility check was weakened.

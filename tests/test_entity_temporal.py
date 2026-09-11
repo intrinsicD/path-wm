@@ -1,3 +1,4 @@
+import pytest
 from pathwm.data.entity_temporal import temporal_episodes
 from pathwm.evaluation.entity_growth import growth_inputs
 from tests.test_entity_memory import Scorer
@@ -25,7 +26,8 @@ def test_temporal_controls_and_order_targets():
         assert left["target"][0] != right["target"][0]
 
 
-def test_temporal_recipe_cache(tmp_path, monkeypatch):
+@pytest.mark.parametrize("preserve", [False, True])
+def test_temporal_recipe_cache(tmp_path, monkeypatch, preserve):
     import torch
     from pathwm.models.entities import EntityMatchReader
     from pathwm.models.entity_state import EntityStateCell
@@ -46,9 +48,9 @@ def test_temporal_recipe_cache(tmp_path, monkeypatch):
         },
         matcher,
     )
-    torch.save({"model": EntityStateCell().state_dict()}, cell)
+    torch.save({"model": EntityStateCell(preserve_no_information=preserve).state_dict()}, cell)
     output = tmp_path / "evaluation"
-    evaluate_entity_temporal(matcher, cell, output)
+    evaluate_entity_temporal(matcher, cell, output, idle=True)
     raw = (output / "entity_temporal.json").read_bytes()
-    evaluate_entity_temporal(matcher, cell, output, resume=True)
+    evaluate_entity_temporal(matcher, cell, output, resume=True, idle=True)
     assert (output / "entity_temporal.json").read_bytes() == raw

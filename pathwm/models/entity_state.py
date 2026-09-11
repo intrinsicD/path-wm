@@ -8,18 +8,30 @@ from pathwm.models.entity_memory import EntityMemory
 
 
 class EntityStateCell(nn.Module):
-    def __init__(self, width=16):
+    def __init__(self, width=16, preserve_no_information=False):
         super().__init__()
         self.width = width
         self.cell = nn.GRUCell(4, width)
         self.head = nn.Linear(width, 2)
+        # Absence preserves legacy checkpoint keys and semantics. Presence is hashed.
+        if preserve_no_information:
+            self.register_buffer("_preserve_no_information", torch.tensor(True))
+
+    def update(self, observations, previous):
+        updated = self.cell(observations, previous)
+        if hasattr(self, "_preserve_no_information"):
+            idle = (observations == observations.new_tensor([0, 0, 0, 1])).all(-1)
+            updated = torch.where(
+                (idle & self._preserve_no_information)[..., None], previous, updated
+            )
+        return updated
 
     def forward(self, observations, slots):
         hidden = observations.new_zeros((len(observations), 2, self.width))
         for t in range(observations.shape[1]):
             safe = slots[:, t].clamp_min(0)
             previous = hidden[torch.arange(len(hidden)), safe]
-            updated = self.cell(observations[:, t], previous)
+            updated = self.update(observations[:, t], previous)
             mask = torch.nn.functional.one_hot(safe, 2).bool() & (
                 slots[:, t, None] >= 0
             )
@@ -55,7 +67,7 @@ class EntityStateMemory:
                 else torch.tensor(latents[identity])
             )
             with torch.inference_mode():
-                updated = self.cell.cell(observation[None], previous[None])[0]
+                updated = self.cell.update(observation[None], previous[None])[0]
             if updated.shape != (self.cell.width,) or not torch.isfinite(updated).all():
                 raise ValueError("Invalid state update")
             if identity == len(latents):

@@ -5,9 +5,10 @@ import torch
 from pathwm.models.entity_memory import EntityMemory
 
 
-def temporal_episodes(matcher, families):
+def temporal_episodes(matcher, families, idle_lengths=()):
     cohorts = {}
-    for name in ("reference", "reset_order", "toggle_length", "no_information_length"):
+    names = ("reference", "reset_order", "toggle_length", "no_information_length")
+    for name in (*names, *(f"idle_{n}" for n in idle_lengths)):
         rows = []
         for family_id, family in enumerate(families):
             for a, b, u, v in itertools.product(range(2), repeat=4):
@@ -18,6 +19,8 @@ def temporal_episodes(matcher, families):
                     middle *= 8
                 elif name == "no_information_length":
                     middle += [(i % 2, 3) for i in range(14)]
+                elif name.startswith("idle_"):
+                    middle += [(i % 2, 3) for i in range(int(name[5:]))]
                 events = [(0, a), (1, b)] + middle + [(0, 3), (1, 3)]
                 truth = [None, None]
                 memory = EntityMemory(matcher, capacity=2)

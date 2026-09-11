@@ -2911,7 +2911,7 @@ def entity_growth(weights, output, resume=False, seed=61):
     return run.path
 
 
-def train_entity_state(weights, output, resume=False, varied=False):
+def train_entity_state(weights, output, resume=False, varied=False, preserve=False):
     """One fixed learned-state diagnostic with a frozen recognition component."""
     from pathwm.models.entities import EntityMatchReader
     from pathwm.models.entity_state import EntityStateCell
@@ -2939,13 +2939,14 @@ def train_entity_state(weights, output, resume=False, varied=False):
     else:
         training = state_episodes(matcher, growth_inputs(seed=101, count=32))
         development = state_episodes(matcher, growth_inputs(seed=102, count=16))
-    cell = EntityStateCell()
+    cell = EntityStateCell(preserve_no_information=preserve)
     optimizer = torch.optim.AdamW(cell.parameters(), lr=0.003, weight_decay=0.01)
     settings = dict(
         seed=31,
         purpose="diagnostic",
         entity_state_weights=str(weights),
         entity_state_varied=varied,
+        entity_state_preserve=preserve,
         donor_sha256=file_hash(weights),
         steps=256,
         batch_size=32,
@@ -2997,6 +2998,7 @@ def train_entity_state(weights, output, resume=False, varied=False):
             if state_hash(matcher) != matcher_hash:
                 raise RuntimeError("Frozen recognizer changed")
             result = dict(
+                preserve_no_information=preserve,
                 train=train_scores,
                 development=dev_scores,
                 runtime=runtime,
@@ -3035,7 +3037,13 @@ def train_entity_state(weights, output, resume=False, varied=False):
 
 
 def evaluate_entity_temporal(
-    matcher_weights, cell_weights, output, resume=False, seed=111, varied=False
+    matcher_weights,
+    cell_weights,
+    output,
+    resume=False,
+    seed=111,
+    varied=False,
+    idle=False,
 ):
     from pathwm.models.entities import EntityMatchReader
     from pathwm.models.entity_state import EntityStateCell
@@ -3057,17 +3065,22 @@ def evaluate_entity_temporal(
             if k.startswith("agent.")
         }
     )
-    cell = EntityStateCell()
-    cell.load_state_dict(
-        torch.load(cell_weights, map_location="cpu", weights_only=True)["model"]
+    cell_state = torch.load(cell_weights, map_location="cpu", weights_only=True)[
+        "model"
+    ]
+    cell = EntityStateCell(
+        preserve_no_information="_preserve_no_information" in cell_state
     )
+    cell.load_state_dict(cell_state)
     models = (
         nn.ModuleDict(dict(matcher=matcher, cell=cell)).eval().requires_grad_(False)
     )
     before = state_hash(models)
-    deadline = perf_counter() + 120
+    deadline = perf_counter() + (240 if idle else 120)
     families = growth_inputs(seed, 16)
-    populations = temporal_episodes(matcher, families)
+    populations = temporal_episodes(
+        matcher, families, idle_lengths=(3, 31) if idle else ()
+    )
     if varied:
         from pathwm.data.entity_state import mixed_state_episodes
 
@@ -3078,12 +3091,13 @@ def evaluate_entity_temporal(
         seed=seed,
         entity_temporal_seed=seed,
         entity_temporal_varied=varied,
+        entity_temporal_idle=idle,
         purpose="diagnostic",
         entity_state_weights=str(matcher_weights),
         entity_temporal_cell=str(cell_weights),
         matcher_sha256=file_hash(matcher_weights),
         cell_sha256=file_hash(cell_weights),
-        max_seconds=120,
+        max_seconds=240 if idle else 120,
     )
     run = Run(
         output,
@@ -3124,6 +3138,9 @@ def evaluate_entity_temporal(
             if state_hash(models) != before:
                 raise RuntimeError("Frozen models changed")
             result = dict(
+                preserve_no_information=bool(
+                    getattr(cell, "_preserve_no_information", False)
+                ),
                 cohorts=cohorts,
                 model_sha256=before,
                 passed=all(c["passed"] for c in cohorts.values()),
@@ -3191,6 +3208,8 @@ def main():
         "--entity-temporal-cell", help="Frozen state checkpoint for temporal evaluation"
     )
     parser.add_argument("--entity-state-varied", action="store_true")
+    parser.add_argument("--entity-state-preserve", action="store_true")
+    parser.add_argument("--entity-temporal-idle", action="store_true")
     parser.add_argument("--entity-temporal-seed", type=int, default=111)
     parser.add_argument("--entity-temporal-varied", action="store_true")
     parser.add_argument("--entity-variable", action="store_true")
@@ -3265,6 +3284,7 @@ def main():
                 bool(args.resume),
                 seed=args.entity_temporal_seed,
                 varied=args.entity_temporal_varied,
+                idle=args.entity_temporal_idle,
             )
         )
         return
@@ -3275,6 +3295,7 @@ def main():
                 args.resume or args.output,
                 bool(args.resume),
                 varied=args.entity_state_varied,
+                preserve=args.entity_state_preserve,
             )
         )
         return
