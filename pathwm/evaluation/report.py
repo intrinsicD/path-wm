@@ -223,9 +223,13 @@ def entity_inspection(directory):
         parts.append(
             f"<details><summary>Baseline and paired examples</summary><pre>{escape(json.dumps(examples, indent=2))}</pre></details></section>"
         )
+        if "correlation" in data:
+            parts.append(
+                f"<p>Raw-noise correlation parameter: {data['correlation']}. Rho1 is an unchanged-decision endpoint check, not a gain requirement. Matched first observations and innovations; static context. Diagnostics: {escape(json.dumps(data['noise_diagnostics']))}.</p>"
+            )
         if data.get("reobserve"):
             parts.append(
-                "<section><h2>Defer and reobserve</h2><p>Supplied policy: reread once at probability0.2–0.8, then average unit cues. Independent noise and unchanged context are assumed. Cost0.02 per extra observation; no calibration or learned sensing claim.</p><div class=table><table><tr><th>Noise</th><th>Strategy</th><th>Accuracy</th><th>Accept recall</th><th>Ignore recall</th><th>Reread rate</th><th>Utility</th></tr>"
+                "<section><h2>Defer and reobserve</h2><p>Supplied policy: reread once at probability0.2–0.8, then average unit cues. Unchanged context is assumed; noise independence applies only when correlation is zero. Cost0.02 per extra observation; no calibration or learned sensing claim.</p><div class=table><table><tr><th>Noise</th><th>Strategy</th><th>Accuracy</th><th>Accept recall</th><th>Ignore recall</th><th>Reread rate</th><th>Utility</th></tr>"
             )
             for noise, c in data["cohorts"].items():
                 for name, v in c["strategies"].items():

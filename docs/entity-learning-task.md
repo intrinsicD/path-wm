@@ -1238,3 +1238,8 @@ accounted; do not require a gain. rho describes raw noise, not normalized cues.
 Each arm owns raw data/checkpoint/report/resume; report class recalls and utility
 separately. No thresholds selected after evaluation; structural QA only under prior
 browser restriction. This is a static synthetic sensitivity test, not sensing integration.
+
+Claude accepted the marginal-distribution correction: normalization alone does
+not change rho-invariant marginals systematically; joint geometry and finite
+samples vary. Raw norms/correlation are recorded; fixed-policy sensitivity is not
+per-rho optimal utility.19 relevant tests pass including correlated cached resume.

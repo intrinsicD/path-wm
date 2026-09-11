@@ -31,9 +31,17 @@ def test_shift_recipe_resume(tmp_path, reobserve):
     donor = tmp_path / "gate.pt"
     torch.save({"model": RelationWriteGate().state_dict()}, donor)
     output = tmp_path / "shift"
-    evaluate_entity_gate_shift(donor, output, reobserve=reobserve)
+    evaluate_entity_gate_shift(
+        donor, output, reobserve=reobserve, correlation=0.5 if reobserve else None
+    )
     raw = (output / "entity_gate_shift.json").read_bytes()
-    evaluate_entity_gate_shift(donor, output, resume=True, reobserve=reobserve)
+    evaluate_entity_gate_shift(
+        donor,
+        output,
+        resume=True,
+        reobserve=reobserve,
+        correlation=0.5 if reobserve else None,
+    )
     assert (output / "entity_gate_shift.json").read_bytes() == raw
 
 
@@ -60,11 +68,15 @@ def test_reobserve_duplicate_and_cost():
 
 def test_correlated_noise_endpoints():
     from pathwm.evaluation.entity_gate import gate_reobserve_examples
+
     independent = gate_reobserve_examples(8, correlation=0)
     shared = gate_reobserve_examples(8, correlation=1)
-    middle = gate_reobserve_examples(8, correlation=.5)
-    assert torch.equal(independent['noise'], shared['noise'])
-    assert torch.equal(shared['noise'], shared['second_noise'])
-    assert torch.allclose(middle['second_noise'], .5*middle['noise']+(3**.5/2)*independent['second_noise'])
+    middle = gate_reobserve_examples(8, correlation=0.5)
+    assert torch.equal(independent["noise"], shared["noise"])
+    assert torch.equal(shared["noise"], shared["second_noise"])
+    assert torch.allclose(
+        middle["second_noise"],
+        0.5 * middle["noise"] + (3**0.5 / 2) * independent["second_noise"],
+    )
     with pytest.raises(ValueError):
         gate_reobserve_examples(8, correlation=1.1)

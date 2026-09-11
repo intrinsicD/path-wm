@@ -2911,7 +2911,9 @@ def entity_growth(weights, output, resume=False, seed=61):
     return run.path
 
 
-def evaluate_entity_gate_shift(weights, output, resume=False, *, reobserve=False):
+def evaluate_entity_gate_shift(
+    weights, output, resume=False, *, reobserve=False, correlation=None
+):
     """Frozen context-noise sensitivity; no optimization."""
     from pathwm.models.entity_relations import RelationWriteGate
     from pathwm.evaluation.entity_gate import (
@@ -2921,19 +2923,26 @@ def evaluate_entity_gate_shift(weights, output, resume=False, *, reobserve=False
         score_gate_reobserve,
     )
 
+    if correlation is not None and not reobserve:
+        raise ValueError("Correlation requires reobservation")
     weights = Path(weights).resolve()
     model = RelationWriteGate().eval().requires_grad_(False)
     model.load_state_dict(
         torch.load(weights, map_location="cpu", weights_only=True)["model"]
     )
     before = state_hash(model)
-    data = gate_reobserve_examples() if reobserve else gate_shift_examples()
+    data = (
+        gate_reobserve_examples(correlation=correlation)
+        if reobserve
+        else gate_shift_examples()
+    )
     run = Run(
         output,
         settings=dict(
-            seed=1301 if reobserve else 801,
+            seed=(1301 if correlation is None else 1401) if reobserve else 801,
+            entity_gate_correlation=correlation,
             entity_gate_reobserve=reobserve,
-            reread_seed=1302 if reobserve else None,
+            reread_seed=(1302 if correlation is None else 1402) if reobserve else None,
             defer_bounds=[0.2, 0.8] if reobserve else None,
             observation_cost=0.02 if reobserve else None,
             purpose="diagnostic",
@@ -2969,6 +2978,27 @@ def evaluate_entity_gate_shift(weights, output, resume=False, *, reobserve=False
                 raise RuntimeError("Frozen gate changed")
             if perf_counter() - started > 30:
                 raise TimeoutError("Gate shift budget exhausted")
+            if correlation is not None:
+                result["correlation"] = correlation
+                result["noise_diagnostics"] = dict(
+                    first_norm_mean=data["noise"].norm(dim=-1).mean().item(),
+                    second_norm_mean=data["second_noise"].norm(dim=-1).mean().item(),
+                    empirical_raw_correlation=torch.corrcoef(
+                        torch.stack(
+                            [data["noise"].flatten(), data["second_noise"].flatten()]
+                        )
+                    )[0, 1].item(),
+                )
+                if correlation == 1:
+                    result["passed"] = all(
+                        c["strategies"]["first"]["probability"]
+                        == c["strategies"]["selective"]["probability"]
+                        or [v > 0.5 for v in c["strategies"]["first"]["probability"]]
+                        == [
+                            v > 0.5 for v in c["strategies"]["selective"]["probability"]
+                        ]
+                        for c in result["cohorts"].values()
+                    )
             result["model_sha256"] = before
             atomic_json(path, result)
             for name, c in result["cohorts"].items():
@@ -3895,6 +3925,7 @@ def main():
     parser.add_argument(
         "--entity-temporal-cell", help="Frozen state checkpoint for temporal evaluation"
     )
+    parser.add_argument("--entity-gate-correlation", type=float)
     parser.add_argument("--entity-gate-reobserve", action="store_true")
     parser.add_argument("--entity-gate-shift", action="store_true")
     parser.add_argument("--entity-gate-weights", type=Path)
@@ -3982,6 +4013,7 @@ def main():
                 args.resume or args.output,
                 bool(args.resume),
                 reobserve=args.entity_gate_reobserve,
+                correlation=args.entity_gate_correlation,
             )
         )
         return

@@ -272,10 +272,15 @@ def gate_retention_loss(probability, teacher):
     ).mean()
 
 
-def gate_reobserve_examples(pairs=128):
-    data = gate_shift_examples(1301, pairs)
-    rng = torch.Generator().manual_seed(1302)
-    data["second_noise"] = torch.randn(pairs, 4, generator=rng).repeat_interleave(2, 0)
+def gate_reobserve_examples(pairs=128, correlation=None):
+    if correlation is not None and not 0 <= correlation <= 1:
+        raise ValueError("Correlation must be finite and in [0,1]")
+    data = gate_shift_examples(1301 if correlation is None else 1401, pairs)
+    rng = torch.Generator().manual_seed(1302 if correlation is None else 1402)
+    innovation = torch.randn(pairs, 4, generator=rng).repeat_interleave(2, 0)
+    rho = 0 if correlation is None else correlation
+    data["innovation"] = innovation
+    data["second_noise"] = rho * data["noise"] + (1 - rho * rho) ** 0.5 * innovation
     return data
 
 
