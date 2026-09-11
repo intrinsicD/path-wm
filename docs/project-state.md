@@ -1,5 +1,11 @@
 # Current work
 
+**Active slice, 11 September:** implement the
+[single-event agent-reader control](event-fact-plan.md) using `--dataset facts
+--fact-reader event`. Alex authorized Claude review, implementation and bounded
+iteration on the previous handoff. Shared initialization and the semantic-pair
+population are fixed; existing categorical draws get repeatable evaluation seeds.
+
 **Current slice complete, 11 September:** the
 [direct fact extraction and binding controls](fact-learning-plan.md) run in the
 same recipe (`--dataset facts`). Two short actual Claude reviews are reconciled.

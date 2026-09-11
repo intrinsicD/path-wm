@@ -96,7 +96,8 @@ def test_exhaustive_binding_reference_perfect_logits():
         )
 
 
-def test_fact_resume_cache_and_no_heldout_selection(tmp_path, monkeypatch):
+@pytest.mark.parametrize("reader", ["direct", "event"])
+def test_fact_resume_cache_and_no_heldout_selection(tmp_path, monkeypatch, reader):
     import experiments.multimodal as recipe
     from tests.test_runs import equal_tree
 
@@ -108,11 +109,12 @@ def test_fact_resume_cache_and_no_heldout_selection(tmp_path, monkeypatch):
         return predict(model, data, settings, **kwargs)
 
     monkeypatch.setattr(recipe, "fact_predictions", recording)
-    recipe.train(config(), tmp_path / "resumed", stop_after=1)
+    settings = dict(config(), fact_reader=reader, state_model="belief")
+    recipe.train(settings, tmp_path / "resumed", stop_after=1)
     assert set(calls) == {"train"}
-    recipe.train(config(), tmp_path / "resumed", resume=True)
+    recipe.train(settings, tmp_path / "resumed", resume=True)
     assert calls.count("validation") == 1
-    recipe.train(config(), tmp_path / "full")
+    recipe.train(settings, tmp_path / "full")
     states = [
         torch.load(tmp_path / n / "last.pt", weights_only=True)
         for n in ("resumed", "full")
@@ -131,9 +133,119 @@ def test_fact_resume_cache_and_no_heldout_selection(tmp_path, monkeypatch):
     ):
         equal_tree(states[0][key], states[1][key])
     calls.clear()
-    recipe.train(config(), tmp_path / "resumed", resume=True)
+    recipe.train(settings, tmp_path / "resumed", resume=True)
     assert not calls
     d = json.loads((tmp_path / "resumed/fact_results.json").read_text())
     assert d["final_step"] == 2 and not d["gates"]["extraction"]
     assert d["binding"]["status"] == "skipped_failed_extraction_gate"
-    assert "Direct fact extraction" in (tmp_path / "resumed/report.html").read_text()
+    assert d["reader"] == reader
+    title = (
+        "Direct fact extraction"
+        if reader == "direct"
+        else "Facts through the agent reader"
+    )
+    assert title in (tmp_path / "resumed/report.html").read_text()
+
+
+def test_event_fact_matched_initialization_and_working_token_boundary(monkeypatch):
+    from dataclasses import replace
+    import experiments.multimodal as recipe
+
+    torch.manual_seed(23)
+    direct = recipe.build_model(width=16, facts=True)
+    torch.manual_seed(23)
+    event = recipe.build_model(
+        width=16, facts=True, fact_reader="event", state_model="belief"
+    )
+    for key, value in direct.encoder.state_dict().items():
+        torch.testing.assert_close(
+            value, event.agent.encoders["text"].state_dict()[key], rtol=0, atol=0
+        )
+    for name in ("reader", "entity_head", "location_head"):
+        for key, value in getattr(direct, name).state_dict().items():
+            torch.testing.assert_close(
+                value, getattr(event, name).state_dict()[key], rtol=0, atol=0
+            )
+    torch.testing.assert_close(direct.queries, event.queries, rtol=0, atol=0)
+    data = recipe.make_data(config(), "train")
+    batch = data.batch([0, 7])
+    calls = []
+    observe, task, think = (
+        event.agent.observe,
+        event.agent.task_tokens,
+        event.agent.think,
+    )
+
+    def observing(state, observations, **kwargs):
+        assert state.ordinal == 0 and state.observation_count == 0
+        assert set(observations) == {"text"} and kwargs["time"] == 0
+        calls.append("observe")
+        return observe(state, observations, **kwargs)
+
+    def interpreting(state, sessions, **kwargs):
+        assert state.ordinal == state.observation_count == 1
+        assert len({s.request.instruction for s in sessions}) == 1
+        assert sessions[0].context_record() == sessions[1].context_record()
+        assert "e00" not in sessions[0].request.instruction
+        calls.append("interpret")
+        return task(state, sessions, **kwargs)
+
+    def thinking(state, **kwargs):
+        assert kwargs["steps"] == 2
+        calls.append("think")
+        return think(state, **kwargs)
+
+    monkeypatch.setattr(event.agent, "observe", observing)
+    monkeypatch.setattr(event.agent, "task_tokens", interpreting)
+    monkeypatch.setattr(event.agent, "think", thinking)
+    entity, location = event(batch["fact_observation"])
+    assert calls == ["observe", "interpret", "think"]
+    loss = torch.nn.functional.cross_entropy(
+        entity, batch["entities"]
+    ) + torch.nn.functional.cross_entropy(location, batch["locations"])
+    loss.backward()
+    for module in (
+        event.agent.encoders["text"],
+        event.agent.updater,
+        event.agent.thinker,
+        event.reader,
+        event.entity_head,
+        event.location_head,
+    ):
+        assert any(
+            p.grad is not None
+            and torch.isfinite(p.grad).all()
+            and p.grad.abs().sum() > 0
+            for p in module.parameters()
+        )
+
+    def erased(state, **kwargs):
+        result = thinking(state, **kwargs)
+        tokens = result.tokens.clone()
+        tokens[:, event.agent.layout["working"]] = 0
+        return replace(result, tokens=tokens)
+
+    monkeypatch.setattr(event.agent, "think", erased)
+    a, b = event(batch["fact_observation"])
+    torch.testing.assert_close(a[0], a[1], rtol=0, atol=0)
+    torch.testing.assert_close(b[0], b[1], rtol=0, atol=0)
+
+
+def test_event_fact_evaluation_fixed_draws_preserve_training_rng():
+    import experiments.multimodal as recipe
+
+    settings = dict(config(), fact_reader="event", state_model="belief", batch_size=16)
+    model = recipe.build_model(
+        width=16, facts=True, fact_reader="event", state_model="belief"
+    )
+    data = recipe.make_data(settings, "validation")
+    torch.manual_seed(8)
+    before = torch.get_rng_state().clone()
+    first = recipe.fact_predictions(model, data, settings)
+    assert torch.equal(before, torch.get_rng_state()) and model.training
+    torch.manual_seed(81)
+    before = torch.get_rng_state().clone()
+    second = recipe.fact_predictions(model, data, settings)
+    assert torch.equal(before, torch.get_rng_state()) and model.training
+    for key in first:
+        torch.testing.assert_close(first[key], second[key], rtol=0, atol=0)
