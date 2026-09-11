@@ -48,3 +48,16 @@ def test_calibration_only_feedback_and_resume(tmp_path):
         assert row["values"]["counts"] == [256, 256]
     evaluate_entity_source_choice(donor, output, resume=True)
     assert (output / "entity_source_choice.json").read_bytes() == raw
+
+
+def test_window_forgets_without_reset():
+    policy=SourceChoice(window=2)
+    policy.observe(0,1)
+    policy.observe(0,1)
+    assert policy.choose()==0
+    policy.observe(0,-.1)
+    policy.observe(0,-.1)
+    assert policy.choose() is None
+    assert policy.snapshot()['counts']==[2,0]
+    assert policy.snapshot()['history']==[[-.1,-.1],[]]
+    with pytest.raises(ValueError):SourceChoice(window=0)

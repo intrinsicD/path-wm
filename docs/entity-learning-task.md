@@ -1369,3 +1369,20 @@ GATE.pt --output DIR`; cached resume `--resume DIR`.
 Next candidate: change source quality after calibration and compare frozen versus
 online values, with feedback availability/cost explicit. Static-source success
 does not imply adaptation to drifting or unobserved outcomes.
+
+### Online source drift (2026-09-11)
+
+Fresh16 worlds seeds1701..1716, matched512 calibration/256 post-calibration cases.
+Compare silent quality swap versus unchanged sources on identical cases. Policies:
+frozen cumulative values; online cumulative; online last32 acquired outcomes per
+source; same exploration with no feedback. Initialize each from calibration history,
+never reset at change. Online/no-feedback exploration epsilon0.2 uses common
+pre-generated coins/source draws seed3701+world, independent of labels. Update
+only chosen-source reward after action. Acquisition cost0.05, feedback cost0.005
+per acquired online outcome; include feedback cost in utility and learned gain.
+Calibration feedback cost accounted for all policies. Source swap not policy input.
+Success: last128 drift-case utility of window policy>=frozen+0.01 and cumulative+0.01;
+whole drift utility>=frozen−0.01; unchanged-source utility>=frozen−0.02. Report
+no-feedback and early/late results, with traces and source counts; no tuning.
+30CPU seconds, frozen gate. Window/exploration are engineered controls, not learned
+change detection. Structural report QA only under prior browser restriction.
