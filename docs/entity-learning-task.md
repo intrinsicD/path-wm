@@ -1175,3 +1175,19 @@ Claude corrected its initial misunderstanding: held-out ground-truth labels, not
 teacher agreement, determine acceptance. Fixed coefficient sensitivity remains
 untested; no broader retention claim follows from this single setting.16 relevant
 tests pass including teacher detachment, noisy retention training and cached resume.
+
+
+Retention result (9f819c6): FAIL, preserved. Control/retained clean runtime NLL
+identical0.023729503; state accuracy100%. At sigma0.15 ignore recall90.625% in
+both, below95%. High-noise accuracy81.25%→80.078125% (−1.171875points), ignore
+85.15625% unchanged, accept77.34375%→75%. Retention lowers final-batch teacher
+KL0.116683→0.072586 but this does not establish held-out correctness. Both full
+adaptation gates fail; strict clean-loss improvement also fails. No coefficient
+sweep, threshold tuning, or reference promotion.
+16 relevant tests, both cached resumes and independent donor/population/metrics/
+objective-decomposition audit pass. Report structural-only under prior browser
+policy denial. Evidence: `runs/entity_gate_retain_v1/verification.json`.
+Command: matched noisy continuation with replicate3 and `--entity-gate-retain 1`
+for treatment versus0 for control. Next candidate: a separately defined
+ambiguity/defer-and-reobserve test; do not equate soft probabilities with calibrated
+uncertainty. No defer operation implemented in this slice.

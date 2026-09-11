@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T16:04+02:00
-  turn_count: 40
-  summary: "Two conditional replications repeat accuracy gains but fail full gates;15 relevant tests and four resumes pass."
+  last_turn: 2026-09-11T16:09+02:00
+  turn_count: 41
+  summary: "Clean retention fails acceptance;16 relevant tests, both resumes and independent objective audit pass."
 events_logged:
 - turn: 1
   type: question
@@ -726,6 +726,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Propose clean retention term.
+- turn: 41
+  type: experiment
+  id: N224
+  routing: direct
+  provenance: ai-executed
+  summary: Retention fails without reference replacement.
+- turn: 41
+  type: observation
+  id: O145
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Retention test method promoted to H38.
+- turn: 41
+  type: observation
+  id: O146
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose defer-and-reobserve diagnostic.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1005,6 +1023,10 @@ ai_actions:
   action: Implemented replicate indices, reconciled Claude scope, ran15 tests, four training runs/resumes and independent audit.
   provenance: ai-executed
   files_changed: [experiments/multimodal.py, tests/test_entity_gate.py]
+- turn: 41
+  action: Implemented detached retention, corrected Claude evaluation misunderstanding, ran16 tests, two arms/resumes and objective audit.
+  provenance: ai-executed
+  files_changed: [experiments/multimodal.py, pathwm/evaluation/entity_gate.py, pathwm/evaluation/report.py]
 claims_touched: []
 key_context:
 - turn: 1

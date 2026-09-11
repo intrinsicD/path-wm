@@ -1,0 +1,80 @@
+{
+  "matched_donors": true,
+  "matched_populations": true,
+  "independent_metrics": true,
+  "passed": false,
+  "arms": {
+    "control": {
+      "passed": false,
+      "adaptation_passed": false,
+      "runtime_accuracy": 1.0,
+      "scores": {
+        "0.03": {
+          "accuracy": 0.96484375,
+          "negative_recall": 0.9296875,
+          "positive_recall": 1.0
+        },
+        "0.15": {
+          "accuracy": 0.953125,
+          "negative_recall": 0.90625,
+          "positive_recall": 1.0
+        },
+        "0.3": {
+          "accuracy": 0.9453125,
+          "negative_recall": 0.8984375,
+          "positive_recall": 0.9921875
+        },
+        "0.6": {
+          "accuracy": 0.8125,
+          "negative_recall": 0.8515625,
+          "positive_recall": 0.7734375
+        }
+      },
+      "clean_nll": 0.02372950315475464
+    },
+    "retained": {
+      "passed": false,
+      "adaptation_passed": false,
+      "runtime_accuracy": 1.0,
+      "scores": {
+        "0.03": {
+          "accuracy": 0.96484375,
+          "negative_recall": 0.9296875,
+          "positive_recall": 1.0
+        },
+        "0.15": {
+          "accuracy": 0.953125,
+          "negative_recall": 0.90625,
+          "positive_recall": 1.0
+        },
+        "0.3": {
+          "accuracy": 0.9453125,
+          "negative_recall": 0.8984375,
+          "positive_recall": 0.9921875
+        },
+        "0.6": {
+          "accuracy": 0.80078125,
+          "negative_recall": 0.8515625,
+          "positive_recall": 0.75
+        }
+      },
+      "clean_nll": 0.02372950315475464
+    }
+  },
+  "browser_checked": false,
+  "report_validation": "structural_only_prior_policy_denial",
+  "sha256": {
+    "control": {
+      "entity_gate.json": "58d6546fbb9f9096dc4f8f6150fb028bfdd5ede3d972cad4af84b95156c75fcc",
+      "last.pt": "cbfde175f464b78c8ef746c3977739b42af3968060abc58506ada5c85ade8dfd",
+      "report.html": "c6b74c4285ad006564502f9ff2b6ed74b86e5a53906071e68032bf9818a4e678"
+    },
+    "retained": {
+      "entity_gate.json": "1c50afb51c176c0762506debcfeb2f4cc515012f569cb760a761c9f39e864da5",
+      "last.pt": "b8ff056485f4a41e7f4f50f80c2b216286625a7c9b44eb8240ef3605dd1ee314",
+      "report.html": "e511f5863d9850c3dc31a8d2c7d2903677944b25cf944b71aee331c71d4e08b5"
+    }
+  },
+  "retention_accuracy_delta": -0.01171875,
+  "objective_decomposition_checked": true
+}

@@ -1,5 +1,14 @@
 # Current work
 
+**Clean retention does not repair the tradeoff, 11 September:** weight-one teacher
+KL leaves clean-runtime NLL unchanged0.0237295 and low-noise ignore90.625% at
+sigma0.15; high-noise accuracy81.25%→80.08%. Full criteria fail in both arms.
+16 relevant tests, two resumes and independent objective/metric audits pass.
+[Report](../runs/entity_gate_retain_v1/retained/report.html) is structurally verified;
+visual QA remains unavailable. Reference unchanged. Next candidate: diagnose
+whether the binary write decision needs an explicit defer/reobserve option under
+ambiguous cues, before another loss-weight experiment. This remains a proposal.
+
 **Two conditional replications retain the augmentation tradeoff, 11 September:**
 high-noise gains+8.98/+11.72 points over controls, but both full acceptance gates
 fail. Rep1 clean-runtime NLL0.152775 exceeds0.15; rep2 NLL0.269396, development

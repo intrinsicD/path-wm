@@ -363,3 +363,13 @@
 - **Sensitivity**: Two runs from one donor are descriptive, not broad statistical robustness or initialization replication.
 - **Code ref**: [replication seeds](../../../experiments/multimodal.py).
 - **Evidence**: [replications](../../evidence/tables/entity_gate_replicate_2026-09-11.json).
+
+## H38: Distinguish clean teacher retention from held-out correctness
+
+- **Rationale**: Cache detached train-only teacher targets, match replay across arms and evaluate ground-truth correctness separately from teacher consistency.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O145
+- **Sensitivity**: Method commitment only; weight-one retention fails this screen and does not establish coefficient robustness.
+- **Code ref**: [retention loss](../../../pathwm/evaluation/entity_gate.py), [recipe](../../../experiments/multimodal.py).
+- **Evidence**: [negative result](../../evidence/tables/entity_gate_retain_2026-09-11.json).

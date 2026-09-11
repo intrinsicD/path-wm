@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Two conditional replications repeat accuracy gains but fail full gates;15 relevant tests and four resumes pass."
-  turn_count: 40
-  events_count: 115
+  summary: "Clean retention fails acceptance;16 relevant tests, both resumes and independent objective audit pass."
+  turn_count: 41
+  events_count: 118
   claims_touched: []
   open_threads: 13

@@ -3471,3 +3471,13 @@ tree:
   evidence: [ara/evidence/tables/entity_gate_replicate_2026-09-11.json, "git:a5c7b69"]
   also_depends_on: [N222]
   status: resolved
+
+- id: N224
+  type: experiment
+  title: Clean teacher retention fails to repair acceptance
+  provenance: ai-executed
+  timestamp: 2026-09-11T16:09+02:00
+  result: Clean runtime loss unchanged; ignore90.625 percent at0.15; high-noise accuracy81.25 to80.08 percent.16 tests and both resumes pass.
+  evidence: [ara/evidence/tables/entity_gate_retain_2026-09-11.json, "git:9f819c6"]
+  also_depends_on: [N223]
+  status: resolved

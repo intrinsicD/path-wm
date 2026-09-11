@@ -2583,6 +2583,18 @@ observations:
   context: Conditional replications improve high-noise accuracy but fail clean loss and recall criteria.
   potential_type: heuristic
   bound_to: [N223]
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H38
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O146
+  timestamp: 2026-09-11T16:09+02:00
+  provenance: ai-suggested
+  content: Test explicit defer-and-reobserve under ambiguous cues before more retention coefficients.
+  context: Single-observation binary gate has persistent recall versus false-write tradeoff; retention setting failed.
+  potential_type: heuristic
+  bound_to: [N224]
   promoted: false
   promoted_to: null
   crystallized_via: null

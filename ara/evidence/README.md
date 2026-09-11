@@ -87,3 +87,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Matched noise augmentation](tables/entity_gate_augment_2026-09-11.json): N222; accuracy improves but ignore-recall guardrail fails.
 
 - [Two conditional replications](tables/entity_gate_replicate_2026-09-11.json): N223; gains recur, both full criteria fail.
+
+- [Clean retention](tables/entity_gate_retain_2026-09-11.json): N224; weight-one penalty fails acceptance, reference preserved.
