@@ -670,3 +670,20 @@ state-update training distribution with reset order and no-information events, t
 compare frozen models on fresh unseen temporal compositions. Keep the recognizer
 frozen and separately inspect whether no-information should be an explicit no-op
 for this deterministic task. Neither repair has been implemented or validated yet.
+
+### Mixed-history state adaptation (predeclared)
+
+Keep recognizer, width16 GRU/readout, seed31, AdamW lr0.003/wd0.01, batch32 and256
+updates unchanged. One training run, CPU450s. Train12-event histories: two initial
+values, eight random targeted operations (observed0/1, toggle, no-information), two
+final no-information queries. Per family four random templates with four entity-wise
+binary complements each balance all final pairs.32 train/16 development descriptor
+families (seeds201/202); separate temporal seeds211/212.512/256 histories.
+
+Compare original and adapted frozen cells on identical fresh descriptor seed121,
+16 families. Keep four existing temporal cohorts and add mixed20-event histories
+(seed221,16 middle operations); thus evaluation lengths6/20 differ from training12.
+Same >=95% pair accuracy, NLL<=0.15, runtime accuracy and transaction/latent gates.
+No hard no-information gate, extra supervision, optimizer-budget change or tuning.
+The intervention is training-distribution adaptation; descriptor/template holdouts
+and frozen models must be audited. Preserve failures.
