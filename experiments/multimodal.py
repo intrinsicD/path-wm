@@ -2911,10 +2911,15 @@ def entity_growth(weights, output, resume=False, seed=61):
     return run.path
 
 
-def evaluate_entity_gate_shift(weights, output, resume=False):
+def evaluate_entity_gate_shift(weights, output, resume=False, *, reobserve=False):
     """Frozen context-noise sensitivity; no optimization."""
     from pathwm.models.entity_relations import RelationWriteGate
-    from pathwm.evaluation.entity_gate import gate_shift_examples, score_gate_shift
+    from pathwm.evaluation.entity_gate import (
+        gate_shift_examples,
+        score_gate_shift,
+        gate_reobserve_examples,
+        score_gate_reobserve,
+    )
 
     weights = Path(weights).resolve()
     model = RelationWriteGate().eval().requires_grad_(False)
@@ -2922,11 +2927,15 @@ def evaluate_entity_gate_shift(weights, output, resume=False):
         torch.load(weights, map_location="cpu", weights_only=True)["model"]
     )
     before = state_hash(model)
-    data = gate_shift_examples()
+    data = gate_reobserve_examples() if reobserve else gate_shift_examples()
     run = Run(
         output,
         settings=dict(
-            seed=801,
+            seed=1301 if reobserve else 801,
+            entity_gate_reobserve=reobserve,
+            reread_seed=1302 if reobserve else None,
+            defer_bounds=[0.2, 0.8] if reobserve else None,
+            observation_cost=0.02 if reobserve else None,
             purpose="diagnostic",
             entity_gate_shift=True,
             entity_gate_weights=str(weights),
@@ -2951,7 +2960,11 @@ def evaluate_entity_gate_shift(weights, output, resume=False):
             if result["model_sha256"] != state_hash(model):
                 raise ValueError("Gate shift cache mismatch")
         else:
-            result = score_gate_shift(model, data)
+            result = (
+                score_gate_reobserve(model, data)
+                if reobserve
+                else score_gate_shift(model, data)
+            )
             if state_hash(model) != before:
                 raise RuntimeError("Frozen gate changed")
             if perf_counter() - started > 30:
@@ -3882,6 +3895,7 @@ def main():
     parser.add_argument(
         "--entity-temporal-cell", help="Frozen state checkpoint for temporal evaluation"
     )
+    parser.add_argument("--entity-gate-reobserve", action="store_true")
     parser.add_argument("--entity-gate-shift", action="store_true")
     parser.add_argument("--entity-gate-weights", type=Path)
     parser.add_argument("--entity-gate-retain", type=float, default=0.0)
@@ -3964,7 +3978,10 @@ def main():
             parser.error("--entity-gate-shift requires --entity-gate-weights")
         print(
             evaluate_entity_gate_shift(
-                args.entity_gate_weights, args.resume or args.output, bool(args.resume)
+                args.entity_gate_weights,
+                args.resume or args.output,
+                bool(args.resume),
+                reobserve=args.entity_gate_reobserve,
             )
         )
         return

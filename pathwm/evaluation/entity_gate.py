@@ -270,3 +270,67 @@ def gate_retention_loss(probability, teacher):
         target * (target.log() - current.log())
         + (1 - target) * ((1 - target).log() - (1 - current).log())
     ).mean()
+
+
+def gate_reobserve_examples(pairs=128):
+    data = gate_shift_examples(1301, pairs)
+    rng = torch.Generator().manual_seed(1302)
+    data["second_noise"] = torch.randn(pairs, 4, generator=rng).repeat_interleave(2, 0)
+    return data
+
+
+def score_gate_reobserve(gate, data):
+    result = score_gate_shift(gate, data)
+    labels = data["labels"]
+    with torch.inference_mode():
+        for sigma, c in result["cohorts"].items():
+            first = torch.tensor(c["cue"])
+            p = torch.tensor(c["probability"])
+            defer = (p >= 0.2) & (p <= 0.8)
+            second = F.normalize(
+                data["prototypes"] + float(sigma) * data["second_noise"], dim=-1
+            )
+            averaged = F.normalize(first + second, dim=-1)
+            p_two = gate(data["active"], averaged)
+            p_duplicate = gate(data["active"], F.normalize(first + first, dim=-1))
+            strategies = {}
+            for name, prob, reread in (
+                ("first", p, torch.zeros_like(defer)),
+                ("selective", torch.where(defer, p_two, p), defer),
+                ("duplicate", torch.where(defer, p_duplicate, p), defer),
+                ("always_two", p_two, torch.ones_like(defer)),
+            ):
+                predicted = prob > 0.5
+                accuracy = (predicted == labels).float().mean().item()
+                rate = reread.float().mean().item()
+                strategies[name] = dict(
+                    accuracy=accuracy,
+                    positive_recall=predicted[labels].float().mean().item(),
+                    negative_recall=(~predicted[~labels]).float().mean().item(),
+                    reread_rate=rate,
+                    utility=accuracy - 0.02 * rate,
+                    probability=prob.tolist(),
+                )
+            c.update(
+                strategies=strategies,
+                second_cue=second.tolist(),
+                defer=defer.tolist(),
+                duplicate_exact=torch.equal(
+                    p > 0.5, torch.tensor(strategies["duplicate"]["probability"]) > 0.5
+                ),
+            )
+    high = result["cohorts"]["0.6"]["strategies"]
+    result["passed"] = (
+        high["selective"]["accuracy"] >= high["first"]["accuracy"] + 0.02
+        and high["selective"]["utility"] > high["first"]["utility"]
+        and high["selective"]["negative_recall"]
+        >= high["first"]["negative_recall"] - 0.02
+        and all(c["duplicate_exact"] for c in result["cohorts"].values())
+        and all(
+            result["cohorts"][n]["strategies"]["selective"]["accuracy"]
+            >= result["cohorts"][n]["strategies"]["first"]["accuracy"] - 0.01
+            for n in ("0.03", "0.15")
+        )
+    )
+    result["reobserve"] = True
+    return result

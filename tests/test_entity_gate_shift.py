@@ -1,3 +1,4 @@
+import pytest
 import torch
 from pathwm.models.entity_relations import RelationWriteGate
 
@@ -23,29 +24,35 @@ def test_shift_pairing_and_scores():
         assert c["thresholds"]["0.4"]["negative_recall"] == 0
 
 
-def test_shift_recipe_resume(tmp_path):
+@pytest.mark.parametrize("reobserve", [False, True])
+def test_shift_recipe_resume(tmp_path, reobserve):
     from experiments.multimodal import evaluate_entity_gate_shift
 
     donor = tmp_path / "gate.pt"
     torch.save({"model": RelationWriteGate().state_dict()}, donor)
     output = tmp_path / "shift"
-    evaluate_entity_gate_shift(donor, output)
+    evaluate_entity_gate_shift(donor, output, reobserve=reobserve)
     raw = (output / "entity_gate_shift.json").read_bytes()
-    evaluate_entity_gate_shift(donor, output, resume=True)
+    evaluate_entity_gate_shift(donor, output, resume=True, reobserve=reobserve)
     assert (output / "entity_gate_shift.json").read_bytes() == raw
 
 
 def test_reobserve_duplicate_and_cost():
-    from pathwm.evaluation.entity_gate import gate_reobserve_examples, score_gate_reobserve
+    from pathwm.evaluation.entity_gate import (
+        gate_reobserve_examples,
+        score_gate_reobserve,
+    )
+
     data = gate_reobserve_examples(4)
-    assert not torch.equal(data['noise'], data['second_noise'])
+    assert not torch.equal(data["noise"], data["second_noise"])
     model = RelationWriteGate()
     with torch.no_grad():
-        for p in model.parameters(): p.zero_()
+        for p in model.parameters():
+            p.zero_()
     result = score_gate_reobserve(model, data)
-    for c in result['cohorts'].values():
-        strategies = c['strategies']
-        assert c['duplicate_exact']
-        assert strategies['selective']['reread_rate'] == 1
-        assert strategies['selective']['utility'] == .48
-        assert strategies['first']['utility'] == .5
+    for c in result["cohorts"].values():
+        strategies = c["strategies"]
+        assert c["duplicate_exact"]
+        assert strategies["selective"]["reread_rate"] == 1
+        assert strategies["selective"]["utility"] == 0.48
+        assert strategies["first"]["utility"] == 0.5

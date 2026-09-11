@@ -1205,3 +1205,7 @@ cost; ignore recall drops<=2points, low-noise0.03/0.15 accuracy drops<=1point;
 duplicate decisions exactly equal first-only, all weights unchanged. Record both
 recalls, reread rates and all probabilities.30CPU seconds. A supplied policy and
 static independent-noise assumption, not learned sensing or calibrated uncertainty.
+
+Claude acknowledged that always-two supplies the requested unconditional baseline;
+duplicate is a deterministic sanity check, not proof of independence.18 relevant
+tests pass including cost/duplicate behavior and reobservation cached resume.

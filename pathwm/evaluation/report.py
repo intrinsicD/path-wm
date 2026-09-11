@@ -200,7 +200,7 @@ def entity_inspection(directory):
         data = json.loads(shift.read_text())
         parts = [
             "<section><h2>Frozen gate noise sensitivity</h2>",
-            f"<p>Robustness gate: {'pass' if data['passed'] else 'fail'}. No training.</p>",
+            f"<p>{'Reobservation' if data.get('reobserve') else 'Robustness'} gate: {'pass' if data['passed'] else 'fail'}. No training.</p>",
             "<p>Labels follow underlying context identity; noise affects observations. All severities share128 prototype pairs. High-noise errors can reflect ambiguity; this does not diagnose a unique model defect. Probability scores are not calibrated beliefs.</p>",
             '<div class="table"><table><tr><th>Noise</th><th>Threshold</th><th>Accuracy</th><th>Accept recall</th><th>Ignore recall</th><th>Brier</th></tr>',
         ]
@@ -223,6 +223,18 @@ def entity_inspection(directory):
         parts.append(
             f"<details><summary>Baseline and paired examples</summary><pre>{escape(json.dumps(examples, indent=2))}</pre></details></section>"
         )
+        if data.get("reobserve"):
+            parts.append(
+                "<section><h2>Defer and reobserve</h2><p>Supplied policy: reread once at probability0.2–0.8, then average unit cues. Independent noise and unchanged context are assumed. Cost0.02 per extra observation; no calibration or learned sensing claim.</p><div class=table><table><tr><th>Noise</th><th>Strategy</th><th>Accuracy</th><th>Accept recall</th><th>Ignore recall</th><th>Reread rate</th><th>Utility</th></tr>"
+            )
+            for noise, c in data["cohorts"].items():
+                for name, v in c["strategies"].items():
+                    parts.append(
+                        f"<tr><td>{noise}</td><td>{name}</td><td>{v['accuracy']:.2%}</td><td>{v['positive_recall']:.2%}</td><td>{v['negative_recall']:.2%}</td><td>{v['reread_rate']:.2%}</td><td>{v['utility']:.6f}</td></tr>"
+                    )
+            parts.append(
+                "</table></div><p>Reobservation pass requires ≥2-point high-noise gain, positive net utility gain, ignore loss≤2 points and low-noise accuracy loss≤1 point. Duplicate decisions must be identical. The robustness criterion above applies to the first-observation baseline only.</p></section>"
+            )
         return parts
     gate = directory / "entity_gate.json"
     if gate.exists():
