@@ -579,3 +579,18 @@ disjoint descriptors, independent NLL and cached resume. Commands add
 `--entity-variable` to `--dataset entity-matching`; frozen comparisons accept
 `--entity-growth-seed 73`. Next proposed: freeze this recognizer and test changing
 learned state attached to persistent IDs, before broader graph learning.
+
+### Learned state attached to persistent IDs (predeclared)
+
+Freeze the immutable adapted matcher. Train a shared width16 GRU cell and binary
+readout on observed0/observed1/toggle/no-information events. Per episode introduce
+two entities with binary states, perform two targeted toggles, then revisit both
+with no new state information. Six events;16 balanced state/action variants share
+a descriptor family and identical final views.32 training/16 development families,
+512/256 episodes, independent generator seeds101/102. Labels stay outside matcher
+and recurrent state. Train seed31, AdamW lr0.003/wd0.01, batch32,256 updates, CPU450s.
+End gates: >=95% complete state-pair accuracy, <=0.15 NLL per entity, and all retry,
+restore and unaffected-entity tests pass. No last-view-only solution can distinguish
+paired histories. State-cell training uses matcher-routed slots; deployment uses
+transactional EntityStateMemory with the same cell. No general belief uncertainty,
+visual discovery or learned graph claim. One run; no post-result tuning.
