@@ -36,7 +36,15 @@ def test_recipe_frozen_screen_and_cached_resume(tmp_path):
     import json
 
     donor = tmp_path / "donor.pt"
-    torch.save({"model": EntityMatchReader().state_dict()}, donor)
+    torch.save(
+        {
+            "model": {
+                "agent." + name: value
+                for name, value in EntityMatchReader().state_dict().items()
+            }
+        },
+        donor,
+    )
     output = tmp_path / "screen"
     entity_growth(donor, output)
     raw = (output / "entity_growth.json").read_bytes()

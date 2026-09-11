@@ -2832,6 +2832,12 @@ def entity_growth(weights, output, resume=False):
     weights = Path(weights).resolve()
     checkpoint = torch.load(weights, map_location="cpu", weights_only=True)
     state = checkpoint["model"]
+    if any(name.startswith("agent.") for name in state):
+        state = {
+            name.removeprefix("agent."): value
+            for name, value in state.items()
+            if name.startswith("agent.")
+        }
     model = EntityMatchReader(width=state["matcher.0.weight"].shape[0])
     model.load_state_dict(state)
     model.eval().requires_grad_(False)
