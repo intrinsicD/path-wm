@@ -265,3 +265,111 @@ def test_event_fact_evaluation_fixed_draws_preserve_training_rng():
     assert torch.equal(before, torch.get_rng_state()) and model.training
     for key in first:
         torch.testing.assert_close(first[key], second[key], rtol=0, atol=0)
+
+
+def donor_checkpoint(tmp_path):
+    from pathwm.models.facts import FactReader
+
+    torch.manual_seed(101)
+    donor = FactReader(width=16)
+    with torch.no_grad():
+        for p in donor.encoder.parameters():
+            p.add_(0.03)
+        for p in donor.entity_head.parameters():
+            p.fill_(77)
+    path = tmp_path / "donor.pt"
+    torch.save(
+        dict(
+            schema="pathwm-run-v1",
+            model={"agent." + k: v for k, v in donor.state_dict().items()},
+            optimizer={"must_not_load": True},
+            step=512,
+        ),
+        path,
+    )
+    return path, donor
+
+
+def test_warm_encoder_transfer_boundary_rng_and_updates(tmp_path):
+    import experiments.multimodal as recipe
+    from pathwm.io import file_hash, state_hash, trainable_parameters
+
+    path, donor = donor_checkpoint(tmp_path)
+    torch.manual_seed(23)
+    cold = recipe.build_model(
+        width=16, facts=True, fact_reader="event", state_model="belief"
+    )
+    cold_rng = torch.get_rng_state().clone()
+    torch.manual_seed(23)
+    warm = recipe.build_model(
+        width=16,
+        facts=True,
+        fact_reader="event",
+        state_model="belief",
+        fact_encoder_weights=path,
+    )
+    assert torch.equal(cold_rng, torch.get_rng_state())
+    encoder = warm.agent.encoders["text"]
+    for key, value in donor.encoder.state_dict().items():
+        torch.testing.assert_close(value, encoder.state_dict()[key], rtol=0, atol=0)
+    for key, value in cold.state_dict().items():
+        if not key.startswith("agent.encoders.text."):
+            torch.testing.assert_close(value, warm.state_dict()[key], rtol=0, atol=0)
+    assert all(p.requires_grad for p in encoder.parameters())
+    assert warm.encoder_initialization["sha256"] == file_hash(path)
+    assert warm.encoder_initialization["encoder_sha256"] == state_hash(encoder)
+    before = state_hash(encoder)
+    data = recipe.make_data(config(), "train")
+    learner = recipe.LearningState(warm, len(data))
+    optimizer = torch.optim.AdamW(trainable_parameters(learner), lr=0.0003)
+    assert not optimizer.state
+    recipe.update(learner, optimizer, data, [0, 7, 10, 22], config())
+    assert state_hash(encoder) != before
+    with pytest.raises(ValueError, match="event"):
+        recipe.build_model(width=16, facts=True, fact_encoder_weights=path)
+
+
+def test_warm_encoder_resume_cache_and_changed_donor_rejection(tmp_path, monkeypatch):
+    import experiments.multimodal as recipe
+    from tests.test_runs import equal_tree
+
+    path, _ = donor_checkpoint(tmp_path)
+    settings = dict(
+        config(),
+        fact_reader="event",
+        state_model="belief",
+        fact_encoder_weights=str(path),
+    )
+    recipe.train(settings, tmp_path / "resumed", stop_after=1)
+    recipe.train(settings, tmp_path / "resumed", resume=True)
+    recipe.train(settings, tmp_path / "full")
+    states = [
+        torch.load(tmp_path / n / "last.pt", weights_only=True)
+        for n in ("resumed", "full")
+    ]
+    for state in states:
+        state["model"].pop("diagnostic_elapsed_seconds")
+    for key in (
+        "model",
+        "optimizer",
+        "sampler",
+        "torch",
+        "numpy",
+        "random",
+        "rows",
+        "step",
+    ):
+        equal_tree(states[0][key], states[1][key])
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Completed resume must reuse cached predictions")
+
+    monkeypatch.setattr(recipe, "fact_predictions", forbidden)
+    recipe.train(settings, tmp_path / "resumed", resume=True)
+    before = (tmp_path / "resumed/last.pt").read_bytes()
+    donor = torch.load(path, weights_only=True)
+    donor["model"]["agent.encoder.stem.embedding.weight"] += 1
+    torch.save(donor, path)
+    with pytest.raises(ValueError, match="Incompatible resume"):
+        recipe.train(settings, tmp_path / "resumed", resume=True)
+    assert (tmp_path / "resumed/last.pt").read_bytes() == before

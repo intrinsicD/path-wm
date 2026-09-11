@@ -1,5 +1,11 @@
 # Current work
 
+**Active slice, 11 September:** implement the
+[trainable encoder initialization comparison](warm-encoder-plan.md). Load only the
+successful direct control's encoder into the otherwise fresh event reader. Keep
+it trainable and retain the prior path/loss/budgets. The donor hash is verified;
+development combinations are reused and extra donor exposure will be explicit.
+
 **Current slice complete, 11 September:** the
 [single-event agent-reader control](event-fact-plan.md) is implemented as
 `--dataset facts --fact-reader event`. Two brief actual Claude reviews are
