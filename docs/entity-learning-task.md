@@ -1191,3 +1191,17 @@ Command: matched noisy continuation with replicate3 and `--entity-gate-retain 1`
 for treatment versus0 for control. Next candidate: a separately defined
 ambiguity/defer-and-reobserve test; do not equate soft probabilities with calibrated
 uncertainty. No defer operation implemented in this slice.
+
+### Frozen defer/reobserve diagnostic (2026-09-11)
+
+Original immutable gate; no fitting or memory-store changes. Fresh128 pairs,
+prototype/first-noise seed1301 and independent second-noise seed1302; unchanged
+latent context identity during reread. Four existing noise severities. Defer only
+when0.2<=first probability<=0.8; one additional observation, normalize the sum of
+first/second unit cues, decide at>0.5. Compare first-only, selective independent,
+selective duplicate, always-two. Cost0.02 accuracy units per extra observation.
+Success: high-noise selective accuracy gain>=2points and positive net gain after
+cost; ignore recall drops<=2points, low-noise0.03/0.15 accuracy drops<=1point;
+duplicate decisions exactly equal first-only, all weights unchanged. Record both
+recalls, reread rates and all probabilities.30CPU seconds. A supplied policy and
+static independent-noise assumption, not learned sensing or calibrated uncertainty.

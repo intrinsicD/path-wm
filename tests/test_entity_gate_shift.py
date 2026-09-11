@@ -33,3 +33,19 @@ def test_shift_recipe_resume(tmp_path):
     raw = (output / "entity_gate_shift.json").read_bytes()
     evaluate_entity_gate_shift(donor, output, resume=True)
     assert (output / "entity_gate_shift.json").read_bytes() == raw
+
+
+def test_reobserve_duplicate_and_cost():
+    from pathwm.evaluation.entity_gate import gate_reobserve_examples, score_gate_reobserve
+    data = gate_reobserve_examples(4)
+    assert not torch.equal(data['noise'], data['second_noise'])
+    model = RelationWriteGate()
+    with torch.no_grad():
+        for p in model.parameters(): p.zero_()
+    result = score_gate_reobserve(model, data)
+    for c in result['cohorts'].values():
+        strategies = c['strategies']
+        assert c['duplicate_exact']
+        assert strategies['selective']['reread_rate'] == 1
+        assert strategies['selective']['utility'] == .48
+        assert strategies['first']['utility'] == .5
