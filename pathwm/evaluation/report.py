@@ -195,6 +195,43 @@ def model_inspection(directory):
 
 
 def entity_inspection(directory):
+    choice = directory / "entity_source_choice.json"
+    if choice.exists():
+        data = json.loads(choice.read_text())
+        parts = [
+            "<section><h2>Outcome-trained source choice</h2>",
+            f"<p>Declared screen: {'pass' if data['passed'] else 'fail'}.</p>",
+            "<p>A two-action value table learns from selected calibration outcomes. Perception is frozen; both sources cost0.05. Hidden source properties swap between16 worlds. No learned reliability head or persistent-memory integration.</p>",
+            '<div class="table"><table><tr><th>Policy</th><th>Evaluation utility</th><th>Accuracy</th><th>Accept recall</th><th>Ignore recall</th><th>Acquisition rate</th></tr>',
+        ]
+        for name, v in data["summary"].items():
+            parts.append(
+                f"<tr><td>{name}</td><td>{v['utility']:.6f}</td><td>{v['accuracy']:.2%}</td><td>{v['positive_recall']:.2%}</td><td>{v['negative_recall']:.2%}</td><td>{v['acquisition_rate']:.2%}</td></tr>"
+            )
+        parts.append(
+            f"</table></div><p>Useful source selected: {data['useful_source_rate']:.2%}. Mean exploration cost: {data['calibration_cost_mean']:.4f} accuracy units per world. Combined calibration/evaluation utility: {data['combined_utility']:.6f}; stop baseline: {data['combined_stop']:.6f}.</p>"
+        )
+        parts.append(
+            "<p>Acceptance: evaluation utility≥best fixed source+0.01 and above stop, useful source≥75%, combined utility≥stop. Each world has512 calibration and256 evaluation cases. Feedback requires known task outcomes; source quality stays static. Source: entity_source_choice.json.</p>"
+        )
+        examples = [
+            {
+                k: r[k]
+                for k in (
+                    "world",
+                    "choice",
+                    "useful_source",
+                    "values",
+                    "permutation",
+                    "scores",
+                )
+            }
+            for r in data["worlds"][:2]
+        ]
+        parts.append(
+            f"<details><summary>Source learning examples</summary><pre>{escape(json.dumps(examples, indent=2))}</pre></details></section>"
+        )
+        return parts
     evidence = directory / "entity_evidence_sources.json"
     if evidence.exists():
         data = json.loads(evidence.read_text())
@@ -822,6 +859,7 @@ def render_report(directory):
             "entity_source.json",
             "entity_gate_shift.json",
             "entity_evidence_sources.json",
+            "entity_source_choice.json",
         )
     ):
         curve_path = directory / "learning_curve.png"
@@ -857,6 +895,7 @@ def render_report(directory):
             "entity_source.json",
             "entity_gate_shift.json",
             "entity_evidence_sources.json",
+            "entity_source_choice.json",
         )
     ):
         parts.append(

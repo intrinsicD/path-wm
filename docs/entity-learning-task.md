@@ -1343,3 +1343,10 @@ cost, evaluation utility, and combined utility separately. Success: evaluation
 utility>=best fixed A/B+0.01 and>first-only, correct useful-source choice>=75%,
 combined utility>=first-only over calibration+evaluation.30CPU seconds. No
 threshold tuning; outcome availability/static source quality are assumptions.
+
+Claude reconciliation accepts source-ID symmetry, selected-only feedback and
+read-only evaluation. Values persist as counts/summed gains per opaque source;
+equal or nonpositive means stop, gate ties use existing strict>0.5. Partial feedback
+is not introduced: every chosen calibration action has an outcome, evaluation has
+none.23 relevant tests pass, including zero-gain stop, source permutation, rejected
+nonfinite feedback, calibration-only indices and cached resume.
