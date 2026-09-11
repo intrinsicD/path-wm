@@ -195,6 +195,28 @@ def model_inspection(directory):
 
 
 def entity_inspection(directory):
+    growth = directory / "entity_growth.json"
+    if growth.exists():
+        data = json.loads(growth.read_text())
+        parts = [
+            "<section><h2>Frozen growing entity memory</h2>",
+            f"<p>Declared gates: {'pass' if data['passed'] else 'fail'}. No optimizer updates.</p>",
+            "<p>32 descriptor families shared across capacities; synthetic separated unit descriptors. Confidence is not calibrated. Allocation and revisit accuracy include uncertain deferrals as misses.</p>",
+            '<div class="table"><table><tr><th>Capacity</th><th>Event</th><th>Correct / total</th><th>Accuracy</th><th>Uncertain</th></tr>',
+        ]
+        for capacity, scores in data["scores"].items():
+            for kind in ("create", "revisit", "overflow"):
+                row = scores[kind]
+                parts.append(
+                    f"<tr><td>{capacity}</td><td>{kind}</td><td>{row['correct']} / {row['count']}</td><td>{row['accuracy']:.2%}</td><td>{row['uncertain']}</td></tr>"
+                )
+        parts.append(
+            "</table></div><p>Source: entity_growth.json. Gates require 95% per event and exact retry/restore equality. The first allocation is automatic.</p>"
+        )
+        parts.append(
+            f"<details><summary>Exact scores and transaction checks</summary><pre>{escape(json.dumps(data['scores'], indent=2))}</pre></details></section>"
+        )
+        return parts
     path = directory / "entity_results.json"
     if not path.exists():
         return []
@@ -575,16 +597,19 @@ def render_report(directory):
         for s in (directory / "metrics.jsonl").read_text().splitlines()
         if s
     ]
-    curve_path = directory / "learning_curve.png"
-    curves(rows, curve_path)
-    mobile_curve = directory / "learning_curve_mobile.png"
-    curves(rows, mobile_curve, mobile=True)
-    mobile_picture = (
-        "data:image/png;base64," + base64.b64encode(mobile_curve.read_bytes()).decode()
-    )
-    picture = (
-        "data:image/png;base64," + base64.b64encode(curve_path.read_bytes()).decode()
-    )
+    if not (directory / "entity_growth.json").exists():
+        curve_path = directory / "learning_curve.png"
+        curves(rows, curve_path)
+        mobile_curve = directory / "learning_curve_mobile.png"
+        curves(rows, mobile_curve, mobile=True)
+        mobile_picture = (
+            "data:image/png;base64,"
+            + base64.b64encode(mobile_curve.read_bytes()).decode()
+        )
+        picture = (
+            "data:image/png;base64,"
+            + base64.b64encode(curve_path.read_bytes()).decode()
+        )
     title = escape(directory.name)
     parts = [
         f'<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{title} — PATH-WM</title><style>{STYLE}</style><main>',
@@ -598,9 +623,10 @@ def render_report(directory):
     ]
     if status.get("error"):
         parts.append(f"<p><strong>Failure:</strong> {escape(status['error'])}</p>")
-    parts.append(
-        f'<section><picture><source media="(max-width: 600px)" srcset="{mobile_picture}"><img class="chart" alt="Training and validation objective by optimizer update" src="{picture}"></picture><p>Source: metrics.jsonl. Validation population and weighted loss terms are fixed by this run’s recipe.</p></section>'
-    )
+    if not (directory / "entity_growth.json").exists():
+        parts.append(
+            f'<section><picture><source media="(max-width: 600px)" srcset="{mobile_picture}"><img class="chart" alt="Training and validation objective by optimizer update" src="{picture}"></picture><p>Source: metrics.jsonl. Validation population and weighted loss terms are fixed by this run’s recipe.</p></section>'
+        )
     validation = [r for r in rows if r["split"] == "validation"]
     if validation:
         parts.append(

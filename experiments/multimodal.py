@@ -2823,6 +2823,77 @@ def export_diagrams(
     )
 
 
+def entity_growth(weights, output, resume=False):
+    """Frozen checkpoint screen, using the ordinary run and report lifecycle."""
+    from pathwm.models.entities import EntityMatchReader
+    from pathwm.evaluation.entity_growth import growth_inputs, evaluate_growth
+
+    seed_everything(61)
+    weights = Path(weights).resolve()
+    checkpoint = torch.load(weights, map_location="cpu", weights_only=True)
+    state = checkpoint["model"]
+    model = EntityMatchReader(width=state["matcher.0.weight"].shape[0])
+    model.load_state_dict(state)
+    model.eval().requires_grad_(False)
+    before = state_hash(model)
+    families = growth_inputs()
+    settings = dict(
+        seed=61,
+        purpose="diagnostic",
+        entity_growth_weights=str(weights),
+        donor_sha256=file_hash(weights),
+        max_seconds=60,
+        threshold=0.75,
+        capacities=[1, 2, 4, 8],
+        families=32,
+        mode="frozen-growth",
+    )
+    run = Run(
+        output,
+        settings=settings,
+        data={"families": digest(families)},
+        recipe=__file__,
+        model=model,
+        optimizer=torch.optim.AdamW(model.parameters(), lr=0),
+        device="cpu",
+        resume=resume,
+    )
+    result_path = run.path / "entity_growth.json"
+    try:
+        if resume:
+            results = json.loads(result_path.read_text())
+            if results["model_sha256"] != before or results["inputs"] != families:
+                raise ValueError("Growth cache identity mismatch")
+        else:
+            results = evaluate_growth(model, families)
+            if state_hash(model) != before:
+                raise RuntimeError("Frozen matcher changed")
+            results.update(inputs=families, model_sha256=before)
+            atomic_json(result_path, results)
+            for capacity, scores in results["scores"].items():
+                run.log(
+                    dict(
+                        step=0,
+                        split="frozen_growth",
+                        capacity=int(capacity),
+                        create_accuracy=scores["create"]["accuracy"],
+                        revisit_accuracy=scores["revisit"]["accuracy"],
+                        overflow_accuracy=scores["overflow"]["accuracy"],
+                    )
+                )
+            run.save()
+        run.status("completed", "pending")
+    except BaseException as exc:
+        run.status("failed", "pending", str(exc))
+        raise
+    try:
+        render_report(run.path)
+    except BaseException as exc:
+        run.status("completed", "failed", str(exc))
+        raise
+    return run.path
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -2859,6 +2930,10 @@ def main():
     )
     parser.add_argument(
         "--state-model", choices=["belief", "gaussian"], default="belief"
+    )
+    parser.add_argument(
+        "--entity-growth-weights",
+        help="Frozen entity matcher checkpoint for growth evaluation",
     )
     parser.add_argument("--fact-reader", choices=["direct", "event"], default="direct")
     parser.add_argument(
@@ -2919,6 +2994,15 @@ def main():
     if args.diagram_depth < 0:
         parser.error("Diagram depth must be nonnegative")
     args = resume_arguments(parser, args)
+    if args.entity_growth_weights is not None:
+        print(
+            entity_growth(
+                args.entity_growth_weights,
+                args.resume or args.output,
+                bool(args.resume),
+            )
+        )
+        return
     if args.fact_encoder_weights is not None and (
         args.dataset != "facts" or args.fact_reader != "event"
     ):
