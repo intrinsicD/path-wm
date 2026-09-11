@@ -79,9 +79,8 @@ def association_diagnostics(model, data):
     """Evaluator-only matching labels; one row per independent descriptor group."""
     x = data.inputs[::32]
     weights = model.assignment_weights(x)
-    labels = (x[:, :, 0, :8] == x[:, None, 0, 0, :8]).all(-1).long()
-    # Equality to initial candidate zero means identity assignment (index zero).
-    labels = 1 - labels
+    # Evaluator-only nearest matching is valid within the generator's strict margin.
+    labels = (x[:, :, 0, None, :8] - x[:, None, 0, :, :8]).square().sum(-1).argmin(-1)
     result = {"descriptor_groups": len(x)}
     for time, name in ((1, "action"), (2, "final")):
         p = weights[:, time].double()

@@ -12,15 +12,19 @@ NAMES = ("identity", "state", "effect")
 
 
 def entity_oracle(inputs):
-    """Read only visible history; enumerate unresolved final associations."""
+    """Read visible history with a nearest-descriptor oracle within the declared margin."""
     x = inputs.cpu()
     keys = [tuple(v[:8].tolist()) for v in x[0]]
     state = {k: int(x[0, i, 9]) for i, k in enumerate(keys)}
     target = keys[int(x[0, :, 11].argmax())]
     acting = int(x[1, :, 13].argmax())
-    state[tuple(x[1, acting, :8].tolist())] = int(x[1, acting, 12])
+
+    def nearest(feature):
+        return keys[int((x[0, :, :8] - feature).square().sum(-1).argmin())]
+
+    state[nearest(x[1, acting, :8])] = int(x[1, acting, 12])
     orders = (
-        ([tuple(v[:8].tolist()) for v in x[2]],)
+        ([nearest(v[:8]) for v in x[2]],)
         if x[2, :, 8].all()
         else tuple(itertools.permutations(keys))
     )
@@ -36,7 +40,10 @@ def entity_oracle(inputs):
 
 
 class EntityEpisodes:
-    def __init__(self, split, count):
+    def __init__(self, split, count, noise=0.0):
+        if not np.isfinite(noise) or not 0 <= noise < 0.25:
+            raise ValueError("Entity noise must be finite in [0, 0.25)")
+        self.noise = float(noise)
         if split not in ("train", "validation", "test") or count <= 0 or count % 32:
             raise ValueError(
                 "Entity episodes require a known split and a positive multiple of 32"
@@ -44,6 +51,9 @@ class EntityEpisodes:
         self.split = split
         rng = np.random.default_rng(
             {"train": 8131, "validation": 19231, "test": 38131}[split]
+        )
+        noise_rng = np.random.default_rng(
+            {"train": 9351, "validation": 17391, "test": 33591}[split]
         )
         rows, labels = [], [[], [], []]
         self.manifest, self.descriptor_ids, self.cohorts, self.groups = [], [], [], []
@@ -53,13 +63,17 @@ class EntityEpisodes:
             self.descriptor_ids.extend(digest(d.tolist()) for d in desc)
             orders = [rng.permutation(2) for _ in range(3)]
             actor, future = rng.integers(2, size=2).tolist()
+            drift = noise_rng.normal(size=(3, 2, 8)).astype(np.float32)
+            drift /= np.linalg.norm(drift, axis=-1, keepdims=True)
+            views = desc[None] + drift * (noise * np.linalg.norm(desc[0] - desc[1]))
+
             for ambiguous, bits, cue, value in itertools.product(
                 (False, True), itertools.product(range(2), repeat=2), range(2), range(2)
             ):
                 x = np.zeros((3, 2, FEATURES), dtype=np.float32)
                 for t, order in enumerate(orders):
                     if t != 2 or not ambiguous:
-                        x[t, :, :8] = desc[order]
+                        x[t, :, :8] = views[t, order] if noise else desc[order]
                         x[t, :, 8] = 1
                 x[0, :, 9] = np.array(bits)[orders[0]]
                 x[0, :, 10] = 1

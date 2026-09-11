@@ -505,8 +505,9 @@ def finish_entities(run, learner, training, validation, settings, deadline):
             association_diagnostics=cache.get("association_diagnostics"),
             association=settings.get("entity_association", "raw"),
             reader=settings.get("entity_reader", "recurrent"),
+            descriptor_noise=settings.get("entity_noise", 0.0),
             scope=association_note
-            + f"Reader: {settings.get('entity_reader', 'recurrent')}. Association mode: {settings.get('entity_association', 'raw')}. Controlled candidate features; three observations; fixed candidate streams; no learned graph. Half the episodes hide final identity. No visual discovery, graph learning, motor control or independent final-test claim.",
+            + f"Descriptor noise fraction: {settings.get('entity_noise', 0.0)}. Reader: {settings.get('entity_reader', 'recurrent')}. Association mode: {settings.get('entity_association', 'raw')}. Controlled candidate features; three observations; fixed candidate streams; no learned graph. Half the episodes hide final identity. No visual discovery, graph learning, motor control or independent final-test claim.",
         ),
     )
     if not any(r["split"] == "diagnostic_development" for r in run.rows):
@@ -2013,7 +2014,9 @@ def evaluate(learner, data, settings):
 def make_data(settings, split):
     if settings["dataset"] == "entities":
         return EntityEpisodes(
-            split, settings.get(f"{split}_windows", 512 if split == "train" else 256)
+            split,
+            settings.get(f"{split}_windows", 512 if split == "train" else 256),
+            noise=settings.get("entity_noise", 0.0),
         )
     if settings["dataset"] == "facts":
         return FactExamples(
@@ -2814,6 +2817,7 @@ def main():
     parser.add_argument(
         "--entity-reader", choices=["recurrent", "shared"], default="recurrent"
     )
+    parser.add_argument("--entity-noise", type=float, default=0.0)
     parser.add_argument("--check", action="store_true")
     parser.add_argument(
         "--diagram",
@@ -2906,6 +2910,12 @@ def main():
     diagnostic = args.dataset in ("facts", "entities") or (
         args.dataset == "recall" and args.recall_mode == "current-recent"
     )
+    if not np.isfinite(args.entity_noise) or not 0 <= args.entity_noise < 0.25:
+        parser.error("Entity noise must be finite in [0, 0.25)")
+    if args.entity_noise and (
+        args.dataset != "entities" or args.entity_association != "learned"
+    ):
+        parser.error("Entity noise requires entities and learned association")
     if args.entity_association == "learned" and args.entity_reader != "shared":
         parser.error("Learned association requires shared reader")
     if args.entity_reader == "shared" and (

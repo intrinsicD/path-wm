@@ -193,3 +193,9 @@ retains both possible action-time assignments and mixes answer probabilities;
 fixed slots and the two-object hypothesis set remain supplied. The declared first
 run uses `--output runs/entity_learned_v1/reference`. Its report includes initial
 and final matching accuracy on distinct development descriptor groups.
+
+Add `--entity-noise 0.2` to the shared/learned condition to perturb descriptors at
+every observation within a guaranteed identity-separation margin. Zero is the
+unchanged stable baseline; allowed values are finite and below0.25. The declared
+single run uses `--output runs/entity_variation_v1/reference`. Matching remains
+learned; the nearest-descriptor oracle is used only for evaluation and tests.

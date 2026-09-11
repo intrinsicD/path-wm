@@ -61,19 +61,27 @@ def test_entity_recurrent_temporal_gradient_and_no_mutation():
 
 
 @pytest.mark.parametrize(
-    "association,reader",
+    "association,reader,noise",
     [
-        ("raw", "recurrent"),
-        ("observed", "recurrent"),
-        ("observed", "shared"),
-        ("learned", "shared"),
+        ("raw", "recurrent", 0),
+        ("observed", "recurrent", 0),
+        ("observed", "shared", 0),
+        ("learned", "shared", 0),
+        ("learned", "shared", 0.2),
     ],
 )
-def test_entity_resume_cache_and_final_only(tmp_path, monkeypatch, association, reader):
+def test_entity_resume_cache_and_final_only(
+    tmp_path, monkeypatch, association, reader, noise
+):
     import experiments.multimodal as recipe
     from tests.test_runs import equal_tree
 
-    configuration = dict(config(), entity_association=association, entity_reader=reader)
+    configuration = dict(
+        config(),
+        entity_association=association,
+        entity_reader=reader,
+        entity_noise=noise,
+    )
     calls = []
     predict = recipe.entity_predictions
 
@@ -150,14 +158,16 @@ def test_observed_association_input_only_and_missingness():
     torch.testing.assert_close(swap[..., :2], y.flip(2)[..., [1, 0]])
 
 
-@pytest.mark.parametrize("association", ["observed", "learned"])
-def test_shared_entity_permutations_and_gradients(association):
+@pytest.mark.parametrize(
+    "association,noise", [("observed", 0), ("learned", 0), ("learned", 0.2)]
+)
+def test_shared_entity_permutations_and_gradients(association, noise):
     import itertools
     from pathwm.models.entities import SharedEntityReader
     from pathwm.data.entities import EntityEpisodes
 
     model = SharedEntityReader(16, association)
-    x = EntityEpisodes("validation", 32).inputs.clone().requires_grad_()
+    x = EntityEpisodes("validation", 32, noise=noise).inputs.clone().requires_grad_()
     original = x.detach().clone()
     base = model(x)
     torch.testing.assert_close(base[0][16:].exp(), torch.full((16, 2), 0.5))
@@ -208,9 +218,9 @@ def test_learned_association_task_gradients_and_no_exact_lookup(monkeypatch):
 def test_entity_variation_oracle_controls_and_zero_compatibility():
     from pathwm.data.entities import EntityEpisodes, entity_oracle
 
-    clean = EntityEpisodes('validation', 64)
-    noisy = EntityEpisodes('validation', 64, noise=.2)
-    assert torch.equal(clean.inputs, EntityEpisodes('validation', 64, noise=0).inputs)
+    clean = EntityEpisodes("validation", 64)
+    noisy = EntityEpisodes("validation", 64, noise=0.2)
+    assert torch.equal(clean.inputs, EntityEpisodes("validation", 64, noise=0).inputs)
     assert torch.equal(clean.inputs[..., 8:], noisy.inputs[..., 8:])
     assert not torch.equal(clean.inputs[..., :8], noisy.inputs[..., :8])
     for a, b in zip(clean.targets, noisy.targets):
@@ -220,6 +230,6 @@ def test_entity_variation_oracle_controls_and_zero_compatibility():
             torch.testing.assert_close(actual, target[i])
     assert noisy.final_view_bounds() == clean.final_view_bounds()
     assert torch.count_nonzero(noisy.inputs[16:32, -1, :, :8]) == 0
-    for value in [-.1, .25, float('nan')]:
+    for value in [-0.1, 0.25, float("nan")]:
         with pytest.raises(ValueError):
-            EntityEpisodes('train', 32, noise=value)
+            EntityEpisodes("train", 32, noise=value)
