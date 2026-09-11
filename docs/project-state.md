@@ -1,5 +1,14 @@
 # Current work
 
+**Online recency adapts but fails stable-source guardrail, 11 September:** drift late
+utility window0.760835 versus frozen0.723169 and cumulative0.733477. Static
+utility falls0.780920→0.754734 (loss0.026187>0.02), so full screen fails.25 relevant
+tests, resume and independent action/feedback replay pass.
+[Report](../runs/entity_source_drift_v1/reference/report.html) structural-only.
+Reference unchanged; fixed window is not learned drift detection. Next candidate:
+evidence-triggered forgetting rather than unconditional recency, with stable-source
+controls and feedback costs preserved.
+
 **Outcome-trained source choice passes, 11 September:** a per-world action-value
 table selects the useful opaque source in16/16 worlds from calibration feedback.
 Evaluation accuracy79.91% versus best fixed77.00%; utility0.777112 versus0.748059.

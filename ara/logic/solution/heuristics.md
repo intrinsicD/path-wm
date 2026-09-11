@@ -413,3 +413,13 @@
 - **Sensitivity**: Static sources and known outcome feedback assumed. A value table is not a general reliability estimator or neural selector.
 - **Code ref**: [policy](../../../pathwm/models/source_choice.py), [screen](../../../pathwm/evaluation/source_choice.py).
 - **Evidence**: [static adaptation](../../evidence/tables/entity_source_choice_2026-09-11.json).
+
+## H43: Audit online feedback timing and stable-source cost alongside adaptation
+
+- **Rationale**: Compare frozen, cumulative, recent-window and no-feedback policies on matched silent swaps and no-change environments, charging for exploration and feedback.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O151
+- **Sensitivity**: Fixed window and swap timing, not learned change detection. Faster adaptation can violate stable-environment utility guards.
+- **Code ref**: [source history](../../../pathwm/models/source_choice.py), [drift evaluation](../../../pathwm/evaluation/source_choice.py).
+- **Evidence**: [failed full screen](../../evidence/tables/entity_source_drift_2026-09-11.json).

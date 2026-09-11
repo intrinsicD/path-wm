@@ -2668,6 +2668,21 @@ observations:
   potential_type: heuristic
   bound_to:
   - N229
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H43
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O152
+  timestamp: 2026-09-11T16:59+02:00
+  provenance: ai-suggested
+  content: Test evidence-triggered forgetting with false-alarm/static-source criteria
+    before unconditional recency.
+  context: Fixed recent window adapts after swap but violates stable-source utility
+    guardrail.
+  potential_type: heuristic
+  bound_to:
+  - N230
   promoted: false
   promoted_to: null
   crystallized_via: null

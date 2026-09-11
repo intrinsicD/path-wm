@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Outcome-trained source choice passes static screen;23 relevant tests, resume and selected-feedback audit pass."
-  turn_count: 46
-  events_count: 132
+  summary: "Online recency gains drift utility but fails static guardrail;25 relevant tests, resume and independent replay pass."
+  turn_count: 47
+  events_count: 135
   claims_touched: []
   open_threads: 14

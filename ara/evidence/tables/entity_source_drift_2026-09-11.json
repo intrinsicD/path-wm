@@ -1,0 +1,68 @@
+{
+  "passed": false,
+  "summary": {
+    "drift": {
+      "cumulative": {
+        "combined_utility": 0.7367948404947883,
+        "early_utility": 0.709501953125,
+        "late_utility": 0.7334765624999999,
+        "utility": 0.7214892578125
+      },
+      "frozen": {
+        "combined_utility": 0.734958089192705,
+        "early_utility": 0.7087890625,
+        "late_utility": 0.7231689453125,
+        "utility": 0.71597900390625
+      },
+      "no_feedback": {
+        "combined_utility": 0.7365043131510383,
+        "early_utility": 0.71171875,
+        "late_utility": 0.7295166015625,
+        "utility": 0.72061767578125
+      },
+      "window": {
+        "combined_utility": 0.742912190755205,
+        "early_utility": 0.71884765625,
+        "late_utility": 0.7608349609375,
+        "utility": 0.73984130859375
+      }
+    },
+    "static": {
+      "cumulative": {
+        "combined_utility": 0.7543155924479134,
+        "early_utility": 0.770537109375,
+        "late_utility": 0.77756591796875,
+        "utility": 0.774051513671875
+      },
+      "frozen": {
+        "combined_utility": 0.7566052246093716,
+        "early_utility": 0.77568359375,
+        "late_utility": 0.7861572265625,
+        "utility": 0.78092041015625
+      },
+      "no_feedback": {
+        "combined_utility": 0.7550590006510383,
+        "early_utility": 0.77275390625,
+        "late_utility": 0.7798095703125,
+        "utility": 0.77628173828125
+      },
+      "window": {
+        "combined_utility": 0.7478763834635384,
+        "early_utility": 0.7537304687499999,
+        "late_utility": 0.7557373046875,
+        "utility": 0.75473388671875
+      }
+    }
+  },
+  "independent_action_feedback_replay": true,
+  "common_exploration_verified": true,
+  "no_hidden_drift_signal": true,
+  "frozen_gate_hash": true,
+  "browser_checked": false,
+  "report_validation": "structural_only_prior_policy_denial",
+  "sha256": {
+    "entity_source_drift.json": "5615cce23e8958c1f2e137fd44b9b9e075a88f540f1c66f80637e03f0f29eda2",
+    "last.pt": "1a7d501d8ae083f4bbd3b21765d45708f6e0de1ac29311463f34f6e79fc1be14",
+    "report.html": "33dd20e8c54a318c04c96ccf679ceab34017962cdc28fc10357882e69ab321cf"
+  }
+}

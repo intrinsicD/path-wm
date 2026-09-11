@@ -97,3 +97,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Alternate evidence](tables/entity_evidence_sources_2026-09-11.json): N228; fixed alternate source improves utility despite higher cost.
 
 - [Outcome-trained source choice](tables/entity_source_choice_2026-09-11.json): N229; selected calibration feedback learns useful source, evaluation frozen.
+
+- [Online source drift](tables/entity_source_drift_2026-09-11.json): N230; recency adapts but fails stable-source utility guardrail.

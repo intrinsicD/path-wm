@@ -1392,3 +1392,20 @@ adapt them. The window is an engineered recency intervention, not learned drift
 detection; no-change controls contextualize its costs.25 relevant tests pass,
 including window eviction, no-feedback immutability, action-before-feedback and
 cached drift resume. No window/timing robustness claim.
+
+
+Source-drift result (a4857c2): FAIL stable-source guardrail, preserved. Drift late
+utility window0.760834961 versus frozen0.723168945 and cumulative0.733476562;
+whole drift0.739841309 versus frozen0.715979004. But static utility window
+0.754733887 versus frozen0.780920410 loses0.026186523>0.02. No-feedback drift
+utility0.720617676 shows exploration alone accounts for some gain. Costs and
+calibration included in separately reported combined metrics. No window tuning.
+25 relevant tests, cached resume and independent replay of every action, selected
+feedback, exploration draw, window update and reward pass. Original gate unchanged.
+Reports structural-only under prior browser policy. Evidence:
+`runs/entity_source_drift_v1/verification.json`. Command:
+`python -m experiments.multimodal --entity-source-drift --entity-gate-weights
+GATE.pt --output DIR`; cached resume `--resume DIR`.
+Next candidate: evidence-triggered forgetting/change tests before discarding older
+source outcomes; explicit false-alarm/static-source criteria and feedback cost.
+This is proposed, not an implemented learned detector or reliable repair.

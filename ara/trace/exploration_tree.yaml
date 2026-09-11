@@ -3548,3 +3548,17 @@ tree:
   also_depends_on:
   - N228
   status: resolved
+
+- id: N230
+  type: experiment
+  title: Online recency improves drift adaptation but harms static utility
+  provenance: ai-executed
+  timestamp: 2026-09-11T16:59+02:00
+  result: Window late drift0.760835 beats frozen0.723169; static loss0.026187 exceeds0.02.25
+    tests and resume pass; full screen fails.
+  evidence:
+  - ara/evidence/tables/entity_source_drift_2026-09-11.json
+  - git:a4857c2
+  also_depends_on:
+  - N229
+  status: resolved

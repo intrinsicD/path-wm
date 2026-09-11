@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T16:47+02:00
-  turn_count: 46
-  summary: "Outcome-trained source choice passes static screen;23 relevant tests, resume and selected-feedback audit pass."
+  last_turn: 2026-09-11T16:59+02:00
+  turn_count: 47
+  summary: "Online recency gains drift utility but fails static guardrail;25 relevant tests, resume and independent replay pass."
 events_logged:
 - turn: 1
   type: question
@@ -828,6 +828,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Source drift comparison proposed.
+- turn: 47
+  type: experiment
+  id: N230
+  routing: direct
+  provenance: ai-executed
+  summary: Drift adaptation improves; static guardrail fails.
+- turn: 47
+  type: observation
+  id: O151
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Method promoted to H43 by implementation.
+- turn: 47
+  type: observation
+  id: O152
+  routing: staged
+  provenance: ai-suggested
+  summary: Evidence-triggered forgetting proposed.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1144,6 +1162,15 @@ ai_actions:
 - turn: 46
   action: Implemented outcome value table, reconciled Claude review;23 tests, run/resume
     and independent selected-feedback replay.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/source_choice.py
+  - pathwm/evaluation/source_choice.py
+  - experiments/multimodal.py
+  - pathwm/evaluation/report.py
+- turn: 47
+  action: Implemented bounded source history and online controls; reconciled Claude
+    claim;25 tests, run/resume and full feedback/action replay.
   provenance: ai-executed
   files_changed:
   - pathwm/models/source_choice.py
