@@ -60,12 +60,15 @@ def test_entity_recurrent_temporal_gradient_and_no_mutation():
     )
 
 
-@pytest.mark.parametrize("association", ["raw", "observed"])
-def test_entity_resume_cache_and_final_only(tmp_path, monkeypatch, association):
+@pytest.mark.parametrize(
+    "association,reader",
+    [("raw", "recurrent"), ("observed", "recurrent"), ("observed", "shared")],
+)
+def test_entity_resume_cache_and_final_only(tmp_path, monkeypatch, association, reader):
     import experiments.multimodal as recipe
     from tests.test_runs import equal_tree
 
-    configuration = dict(config(), entity_association=association)
+    configuration = dict(config(), entity_association=association, entity_reader=reader)
     calls = []
     predict = recipe.entity_predictions
 
@@ -148,16 +151,26 @@ def test_shared_entity_permutations_and_gradients():
     from pathwm.data.entities import EntityEpisodes
 
     model = SharedEntityReader(16)
-    x = EntityEpisodes('validation', 32).inputs.clone().requires_grad_()
+    x = EntityEpisodes("validation", 32).inputs.clone().requires_grad_()
+    original = x.detach().clone()
     base = model(x)
+    torch.testing.assert_close(base[0][16:].exp(), torch.full((16, 2), 0.5))
+    torch.testing.assert_close(base[1][16:, 1].exp(), base[1][16:, 2].exp())
+    assert torch.equal(x.detach(), original)
     for order in itertools.product([False, True], repeat=3):
-        moved = torch.stack([x[:, t].flip(1) if flip else x[:, t] for t, flip in enumerate(order)], 1)
+        moved = torch.stack(
+            [x[:, t].flip(1) if flip else x[:, t] for t, flip in enumerate(order)], 1
+        )
         for j, (a, b) in enumerate(zip(base, model(moved))):
             permutation = [1, 0] if j == 0 else [0, 2, 1, 3]
             if order[-1]:
                 b = b[:, permutation]
-            torch.testing.assert_close(a.softmax(-1), b.softmax(-1), atol=1e-6, rtol=1e-5)
+            torch.testing.assert_close(
+                a.softmax(-1), b.softmax(-1), atol=1e-6, rtol=1e-5
+            )
             torch.testing.assert_close(a.exp().sum(-1), torch.ones(len(x)))
     sum(v.square().mean() for v in base).backward()
     assert x.grad[:, 0, :, 9].abs().sum() > 0
-    assert all(torch.isfinite(p.grad).all() for p in model.parameters() if p.grad is not None)
+    assert all(
+        torch.isfinite(p.grad).all() for p in model.parameters() if p.grad is not None
+    )

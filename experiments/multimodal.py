@@ -89,7 +89,7 @@ from pathwm.evaluation.recall import (
     confidence_diagnostics,
 )
 from pathwm.data.entities import EntityEpisodes, NAMES as ENTITY_NAMES
-from pathwm.models.entities import EntityReader
+from pathwm.models.entities import EntityReader, SharedEntityReader
 from pathwm.evaluation.entities import entity_metrics
 from pathwm.models.facts import FactReader, EventFactReader
 from pathwm.evaluation.facts import fact_metrics, extraction_gates, binding_reference
@@ -111,10 +111,15 @@ def build_model(
     facts=False,
     entities=False,
     entity_association="raw",
+    entity_reader="recurrent",
     fact_reader="direct",
     fact_encoder_weights=None,
 ):
     if entities:
+        if entity_reader == "shared":
+            if entity_association != "observed":
+                raise ValueError("Shared entity reader requires observed association")
+            return SharedEntityReader(width)
         return EntityReader(width, entity_association)
     if fact_encoder_weights is not None and (not facts or fact_reader != "event"):
         raise ValueError("Fact encoder weights require the event fact reader")
@@ -478,7 +483,8 @@ def finish_entities(run, learner, training, validation, settings, deadline):
             final_view_bounds=validation.final_view_bounds(),
             examples=examples,
             association=settings.get("entity_association", "raw"),
-            scope=f"Association mode: {settings.get('entity_association', 'raw')}. Controlled candidate features; three observations; recurrent baseline only. Half the episodes hide final identity. No visual discovery, graph learning, motor control or independent final-test claim.",
+            reader=settings.get("entity_reader", "recurrent"),
+            scope=f"Reader: {settings.get('entity_reader', 'recurrent')}. Association mode: {settings.get('entity_association', 'raw')}. Controlled candidate features; three observations; fixed candidate streams; no learned graph. Half the episodes hide final identity. No visual discovery, graph learning, motor control or independent final-test claim.",
         ),
     )
     if not any(r["split"] == "diagnostic_development" for r in run.rows):
@@ -2047,6 +2053,7 @@ def check(settings):
             recall=settings["dataset"] == "recall",
             facts=settings["dataset"] == "facts",
             entities=settings["dataset"] == "entities",
+            entity_reader=settings.get("entity_reader", "recurrent"),
             entity_association=settings.get("entity_association", "raw"),
             fact_reader=settings.get("fact_reader", "direct"),
             fact_encoder_weights=settings.get("fact_encoder_weights"),
@@ -2364,6 +2371,7 @@ def train(settings, output, *, resume=False, stop_after=None):
             recall=is_recall,
             facts=is_facts,
             entities=is_entities,
+            entity_reader=settings.get("entity_reader", "recurrent"),
             entity_association=settings.get("entity_association", "raw"),
             fact_reader=settings.get("fact_reader", "direct"),
             fact_encoder_weights=settings.get("fact_encoder_weights"),
@@ -2781,6 +2789,9 @@ def main():
     parser.add_argument(
         "--entity-association", choices=["raw", "observed"], default="raw"
     )
+    parser.add_argument(
+        "--entity-reader", choices=["recurrent", "shared"], default="recurrent"
+    )
     parser.add_argument("--check", action="store_true")
     parser.add_argument(
         "--diagram",
@@ -2873,6 +2884,10 @@ def main():
     diagnostic = args.dataset in ("facts", "entities") or (
         args.dataset == "recall" and args.recall_mode == "current-recent"
     )
+    if args.entity_reader == "shared" and (
+        args.dataset != "entities" or args.entity_association != "observed"
+    ):
+        parser.error("Shared reader requires entities and observed association")
     if args.entity_association != "raw" and args.dataset != "entities":
         parser.error("--entity-association requires --dataset entities")
     if args.recall_mode != "history" and args.dataset != "recall":

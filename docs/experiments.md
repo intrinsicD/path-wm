@@ -181,3 +181,8 @@ To bypass synthetic descriptor matching while retaining learned state updates, u
 from visible descriptors only. This diagnostic supplies association; it does not
 learn recognition or graph structure. Use a fresh output directory, for example
 `runs/entity_alignment_v1/observed`, and the same fixed defaults as the raw baseline.
+
+`--dataset entities --entity-association observed --entity-reader shared` uses
+shared per-object recurrent updates and a coherent mixture over unresolved final
+assignments. It retains two fixed object slots; it is not learned graph allocation.
+Use `--output runs/entity_shared_v1/reference` for the declared 256-update screen.
