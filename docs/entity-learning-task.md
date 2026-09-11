@@ -1350,3 +1350,22 @@ equal or nonpositive means stop, gate ties use existing strict>0.5. Partial feed
 is not introduced: every chosen calibration action has an outcome, evaluation has
 none.23 relevant tests pass, including zero-gain stop, source permutation, rejected
 nonfinite feedback, calibration-only indices and cached resume.
+
+
+Source-choice result (40861cf): PASS. Useful source chosen16/16 worlds. Evaluation
+learned accuracy79.9072266%, best fixed77.0019531%, stop72.8027344%. Learned
+utility0.777111813 versus best fixed0.748059079 and stop0.728027344. Combined
+calibration/evaluation utility0.752103677 exceeds stop0.728352863; mean calibration
+acquisition cost11.2625 accuracy units/world. Evaluation acquisition rate43.9209%.
+23 relevant tests, cached resume and independent feedback replay, disjoint-context,
+choice, first-decision, cost and utility audits pass. Only selected calibration
+feedback trains the table; evaluation values are frozen and source swaps pass.
+Raw JSON persists each table, counts, gains and feedback alongside frozen gate
+checkpoint. No neural selector, reliability head or persistent-memory integration.
+Report structural-only under prior browser restriction. Evidence:
+`runs/entity_source_choice_v1/verification.json`. Command:
+`python -m experiments.multimodal --entity-source-choice --entity-gate-weights
+GATE.pt --output DIR`; cached resume `--resume DIR`.
+Next candidate: change source quality after calibration and compare frozen versus
+online values, with feedback availability/cost explicit. Static-source success
+does not imply adaptation to drifting or unobserved outcomes.

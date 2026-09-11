@@ -1115,3 +1115,9 @@ entries:
     limits.
   - Stage O150 acquisition learning; alternate source independence not discovered
     here.
+
+- turn: 2026-09-11_001#46
+  notes:
+  - Promote outcome-only method O150 with static feedback assumptions.
+  - No evaluation outcomes enter the policy; raw trace enables selected-feedback replay.
+  - Stage drift O151; reliability O149 remains separate and unimplemented.

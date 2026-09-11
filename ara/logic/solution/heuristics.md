@@ -403,3 +403,13 @@
 - **Sensitivity**: Fixed source properties and policies; no learned source choice or real sensor independence established. Always-alternate remains stronger at the chosen cost.
 - **Code ref**: [source comparison](../../../pathwm/evaluation/entity_gate.py).
 - **Evidence**: [bounded result](../../evidence/tables/entity_evidence_sources_2026-09-11.json).
+
+## H42: Learn source action values from selected calibration feedback before adding a neural policy
+
+- **Rationale**: Update opaque-source mean gains using only acquired outcomes; freeze evaluation, swap hidden source assignments and account for exploration costs.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O150
+- **Sensitivity**: Static sources and known outcome feedback assumed. A value table is not a general reliability estimator or neural selector.
+- **Code ref**: [policy](../../../pathwm/models/source_choice.py), [screen](../../../pathwm/evaluation/source_choice.py).
+- **Evidence**: [static adaptation](../../evidence/tables/entity_source_choice_2026-09-11.json).

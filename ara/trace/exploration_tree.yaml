@@ -3534,3 +3534,17 @@ tree:
   also_depends_on:
   - N226
   status: resolved
+
+- id: N229
+  type: experiment
+  title: Outcome-updated source values pass static acquisition screen
+  provenance: ai-executed
+  timestamp: 2026-09-11T16:47+02:00
+  result: Useful source16/16; evaluation79.91 versus best fixed77.00 percent, combined
+    utility exceeds stop.23 tests and resume pass.
+  evidence:
+  - ara/evidence/tables/entity_source_choice_2026-09-11.json
+  - git:40861cf
+  also_depends_on:
+  - N228
+  status: resolved

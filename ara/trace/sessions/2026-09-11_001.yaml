@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T16:36+02:00
-  turn_count: 45
-  summary: "Alternate evidence comparison passes under supplied properties;21 relevant tests, resume and paired audit pass."
+  last_turn: 2026-09-11T16:47+02:00
+  turn_count: 46
+  summary: "Outcome-trained source choice passes static screen;23 relevant tests, resume and selected-feedback audit pass."
 events_logged:
 - turn: 1
   type: question
@@ -810,6 +810,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Outcome-trained source choice proposed.
+- turn: 46
+  type: experiment
+  id: N229
+  routing: direct
+  provenance: ai-executed
+  summary: Static source choice passes from selected feedback.
+- turn: 46
+  type: observation
+  id: O150
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Method promoted to H42 by implementation.
+- turn: 46
+  type: observation
+  id: O151
+  routing: staged
+  provenance: ai-suggested
+  summary: Source drift comparison proposed.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1121,6 +1139,15 @@ ai_actions:
   provenance: ai-executed
   files_changed:
   - pathwm/evaluation/entity_gate.py
+  - experiments/multimodal.py
+  - pathwm/evaluation/report.py
+- turn: 46
+  action: Implemented outcome value table, reconciled Claude review;23 tests, run/resume
+    and independent selected-feedback replay.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/source_choice.py
+  - pathwm/evaluation/source_choice.py
   - experiments/multimodal.py
   - pathwm/evaluation/report.py
 claims_touched: []

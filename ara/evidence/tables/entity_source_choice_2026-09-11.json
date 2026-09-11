@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "summary": {
+    "fixed_a": {
+      "accuracy": 0.765869140625,
+      "acquisition_rate": 0.439208984375,
+      "negative_recall": 0.96337890625,
+      "positive_recall": 0.568359375,
+      "utility": 0.7439086847007275
+    },
+    "fixed_b": {
+      "accuracy": 0.77001953125,
+      "acquisition_rate": 0.439208984375,
+      "negative_recall": 0.966796875,
+      "positive_recall": 0.5732421875,
+      "utility": 0.7480590790510178
+    },
+    "learned": {
+      "accuracy": 0.799072265625,
+      "acquisition_rate": 0.439208984375,
+      "negative_recall": 0.974609375,
+      "positive_recall": 0.62353515625,
+      "utility": 0.7771118134260178
+    },
+    "no_feedback": {
+      "accuracy": 0.72802734375,
+      "acquisition_rate": 0.0,
+      "negative_recall": 0.955078125,
+      "positive_recall": 0.5009765625,
+      "utility": 0.72802734375
+    },
+    "stop": {
+      "accuracy": 0.72802734375,
+      "acquisition_rate": 0.0,
+      "negative_recall": 0.955078125,
+      "positive_recall": 0.5009765625,
+      "utility": 0.72802734375
+    }
+  },
+  "useful_source_rate": 1.0,
+  "calibration_cost_mean": 11.262500000000001,
+  "combined_utility": 0.7521036773920026,
+  "combined_stop": 0.7283528633415699,
+  "integrity": true,
+  "selected_feedback_replayed": true,
+  "no_eval_feedback": true,
+  "disjoint_contexts": true,
+  "frozen_gate_hash": true,
+  "independent_utility": true,
+  "browser_checked": false,
+  "report_validation": "structural_only_prior_policy_denial",
+  "sha256": {
+    "entity_source_choice.json": "4a182dd9c401ec6dabb4ce3c8631b454ef0b63254727a46d3227327fc31c8ae1",
+    "last.pt": "601e5948e5f5a355b52ac74bebb590283a702424f6a96f47540c9adc7a38c2a2",
+    "report.html": "e074f3438b9eea716cb88803a0a864902fc10451e61959d9186a65820fdf36af"
+  }
+}

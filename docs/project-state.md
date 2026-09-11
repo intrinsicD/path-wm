@@ -1,5 +1,15 @@
 # Current work
 
+**Outcome-trained source choice passes, 11 September:** a per-world action-value
+table selects the useful opaque source in16/16 worlds from calibration feedback.
+Evaluation accuracy79.91% versus best fixed77.00%; utility0.777112 versus0.748059.
+Combined calibration/evaluation utility0.752104 exceeds stop0.728353.23 relevant
+tests, resume and independent selected-feedback audit pass.
+[Report](../runs/entity_source_choice_v1/reference/report.html) structural-only.
+This is static-source adaptation with supplied outcome feedback, not a neural
+selector or general reliability estimator. Next candidate: source-quality changes
+and online updating, with explicit feedback availability and stale-value controls.
+
 **Alternate evidence is worth its declared cost, 11 September:** selective high-noise
 accuracy80.86% alternate versus73.44% same-source, both reread42.58%. Utility
 0.787305 versus0.725859 despite alternate cost0.05 versus0.02. Paired descriptive

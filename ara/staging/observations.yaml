@@ -2653,6 +2653,21 @@ observations:
   potential_type: heuristic
   bound_to:
   - N228
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H42
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O151
+  timestamp: 2026-09-11T16:47+02:00
+  provenance: ai-suggested
+  content: Test source quality drift with online versus frozen values and explicit
+    feedback availability.
+  context: Static source selection succeeds with supplied calibration outcomes; drifting
+    sources remain untested.
+  potential_type: heuristic
+  bound_to:
+  - N229
   promoted: false
   promoted_to: null
   crystallized_via: null

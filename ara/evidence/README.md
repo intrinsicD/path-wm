@@ -95,3 +95,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Correlated rereads](tables/entity_gate_correlation_2026-09-11.json): N226; benefit shrinks with shared errors, rho0.9 fails gain criterion.
 
 - [Alternate evidence](tables/entity_evidence_sources_2026-09-11.json): N228; fixed alternate source improves utility despite higher cost.
+
+- [Outcome-trained source choice](tables/entity_source_choice_2026-09-11.json): N229; selected calibration feedback learns useful source, evaluation frozen.
