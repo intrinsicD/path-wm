@@ -1195,3 +1195,14 @@ entries:
     memory-benefit claim introduced.
   - Stage O161 timing/availability extension. O159 broader full-history training remains
     partial.
+
+- turn: 2026-09-11_001#57
+  notes:
+  - Preserve N241 finite-task pass; objective mismatch narrows optimality claims,
+    no contradiction with measured success.
+  - Stage O162/O163 design priorities; no implementation/adoption signal for a specific
+    new objective yet.
+  - O161 partial-observation checks remain useful under the task contract; do not
+    treat a broader audit as task abandonment.
+  - Claude withdrew unfalsifiable-supervision and absent-controls implications; source
+    shows cross-entropy and no-history controls.

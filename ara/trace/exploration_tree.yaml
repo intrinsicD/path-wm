@@ -3727,3 +3727,32 @@ tree:
   also_depends_on:
   - N240
   status: resolved
+
+- id: N242
+  type: question
+  title: Which parts still block meaningful whole-model experiments?
+  provenance: user
+  timestamp: 2026-09-11T22:13+02:00
+  description: User requested missing, shaky and unspecified pieces after controlled
+    integration passed. Current review separates first learned-control prerequisites
+    from broader graph/perception/skill claims.
+  evidence:
+  - docs/model-readiness-review.md
+  - N241
+  status: resolved
+
+- id: N243
+  type: experiment
+  title: Planner and reported utility rank choices differently
+  provenance: ai-executed
+  timestamp: 2026-09-11T22:13+02:00
+  result: 'Direct code probe: q=(.15,0,.85), box0 open, horizon1 selects retrieve(value.5).
+    Reported expected utility is.10 for retrieve and.85 for absent stop. Confirms
+    different objectives; does not invalidate recorded policy outcomes.'
+  evidence:
+  - ara/evidence/tables/key_box_objective_review_2026-09-11.json
+  - pathwm/models/key_box.py
+  - pathwm/evaluation/key_box.py
+  also_depends_on:
+  - N242
+  status: resolved

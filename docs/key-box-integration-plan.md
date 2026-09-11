@@ -189,3 +189,12 @@ stress=True, max_seconds=360 for this recipe configuration. Next proposed extens
 vary change timing and observation availability, including explicit unknown state,
 before replacing supplied dynamics with learned predictions. Avoid fitting to this
 single deterministic change schedule.
+
+
+Whole-model review follow-up: before further planner utility tuning, reconcile
+plan_key reward10/cost1/stop0 with evaluator success-0.05cost and absent-stop success.
+Counterexample q=(0.15,0,0.85), box0 open, horizon1: planner retrieves(value0.5),
+reported expected utility0.10 vs stop0.85. This is a contract discrepancy; prior
+results remain as measured. No policy/gate changed during review. Current readiness
+review prioritizes this plus action/evidence semantics before a learned-dynamics
+integration experiment. Delayed/partial observations remain useful contract tests.

@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Independent seed and fixed-relocation screens pass; correction192/192;31 tests and audits pass, stress memory costs more."
-  turn_count: 56
-  events_count: 161
+  summary: "Whole-model readiness audited; planner/metric objective mismatch confirmed; task/evidence contract and learned dynamics prioritized."
+  turn_count: 57
+  events_count: 165
   claims_touched: []
   open_threads: 17

@@ -1,5 +1,15 @@
 # Current work
 
+**Whole-model audit updated, 11 September:** controlled integration is working,
+but learned dynamics, uncertainty semantics and general task execution remain
+separate or supplied. Concrete planner/metric objective mismatch confirmed: under
+85% absence belief, current one-step planner retrieves although reported expected
+utility favors stopping0.85 over retrieval0.10. Prior measurements remain valid;
+they do not establish optimization of that utility. [Current readiness review](model-readiness-review.md)
+replaces the stale pre-integration assessment. Next: resolve the task/cost/evidence
+contract, then connect action-conditioned prediction to the integrated path.
+Review only; no model changes or new training/full-suite result.
+
 **Independent key-box replication and correction screen pass, 11 September:**
 new training seed2302, fresh evaluation2431: ordinary and longer-history relocation
 cases both96/96 reachable and32/32 absent; correction readout192/192. Frozen prior

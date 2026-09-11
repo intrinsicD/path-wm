@@ -1,0 +1,24 @@
+{
+  "source_commit": "f6e30fb",
+  "kind": "direct_code_counterexample",
+  "belief": [
+    0.15,
+    0,
+    0.85
+  ],
+  "opened": [
+    true,
+    false
+  ],
+  "horizon": 1,
+  "actual_action": [
+    "retrieve",
+    0
+  ],
+  "planner_value": 0.5,
+  "expected_reported_utility": {
+    "retrieve": 0.1,
+    "stop": 0.85
+  },
+  "scope": "Policy objective differs from evaluator utility; previous measured outcomes remain valid. No training or full-suite run."
+}

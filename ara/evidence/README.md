@@ -114,3 +114,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Interleaved key reads](tables/key_box_history_2026-09-11.json): N240; registered screen passes, supplied mechanics only.
 
 - [Key-box replication/correction](tables/key_box_replica_2026-09-11.json): N241; ordinary/stress pass, stress utility below no-history.
+
+- [Key-box objective counterexample](tables/key_box_objective_review_2026-09-11.json): N243; direct code probe, not a new benchmark.

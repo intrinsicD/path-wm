@@ -2823,3 +2823,36 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O162
+  timestamp: 2026-09-11T22:13+02:00
+  provenance: ai-suggested
+  content: Align planner reward, stopping semantics and evaluation utility, or explicitly
+    declare the planner objective a surrogate before new comparisons.
+  context: Readiness audit; source inspection plus Claude generic review reconciled
+    against local evidence.
+  potential_type: constraint
+  bound_to:
+  - N243
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+
+- id: O163
+  timestamp: 2026-09-11T22:13+02:00
+  provenance: ai-suggested
+  content: Before larger training, fix the task/action/evidence contract and route
+    executed actions and meaningful observations into grounded learned predictions
+    on the integrated path. General graph, vision and skill hierarchy can remain separate
+    scoped claims.
+  context: Readiness audit; source inspection plus Claude generic review reconciled
+    against local evidence.
+  potential_type: architecture
+  bound_to:
+  - N242
+  - N243
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

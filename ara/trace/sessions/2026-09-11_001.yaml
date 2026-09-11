@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T21:08+02:00
-  turn_count: 56
-  summary: "Independent seed and fixed-relocation screens pass; correction192/192;31 tests and audits pass, stress memory costs more."
+  last_turn: 2026-09-11T22:13+02:00
+  turn_count: 57
+  summary: "Whole-model readiness audited; planner/metric objective mismatch confirmed; task/evidence contract and learned dynamics prioritized."
 events_logged:
 - turn: 1
   type: question
@@ -1004,6 +1004,30 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Vary timing and observation availability next.
+- turn: 57
+  type: question
+  id: N242
+  routing: direct
+  provenance: user
+  summary: Whole-model readiness reassessment requested.
+- turn: 57
+  type: experiment
+  id: N243
+  routing: direct
+  provenance: ai-executed
+  summary: Direct probe confirms planner/metric objective discrepancy.
+- turn: 57
+  type: observation
+  id: O162
+  routing: staged
+  provenance: ai-suggested
+  summary: Align or explicitly separate planner and metric objectives.
+- turn: 57
+  type: observation
+  id: O163
+  routing: staged
+  provenance: ai-suggested
+  summary: Task/evidence contract then learned-dynamics integration proposed.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1410,6 +1434,15 @@ ai_actions:
   - experiments/multimodal.py
   - pathwm/evaluation/report.py
   - tests/test_key_box.py
+  - docs/key-box-integration-plan.md
+- turn: 57
+  action: Reviewed core/entity/task/memory/planner code and saved evidence; public-only
+    Claude critique/reconciliation; direct objective probe; updated stale readiness
+    review. No model changes or new training/full-suite run.
+  provenance: ai-executed
+  files_changed:
+  - docs/model-readiness-review.md
+  - docs/project-state.md
   - docs/key-box-integration-plan.md
 claims_touched: []
 key_context:

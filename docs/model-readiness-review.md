@@ -1,73 +1,121 @@
 # Whole-model readiness review — 11 September 2026
 
-**Subsequent implementation:** [the key-box slice](key-box-integration-plan.md) now
-connects entity-state retrieval to the belief-agent workspace and a supplied-dynamics
-planner. Two iterations run end to end; the repaired model reaches95.83% goal success
-but still fails its utility comparison. The review below records the pre-integration
-assessment; general perception, learned dynamics and semantic compression remain open.
-
-Assessment of current source and saved results; no new training or test-suite run.
-Historical test counts in project-state are not current full-suite results.
+This replaces the pre-integration assessment. Source and saved results reviewed at
+f6e30fb; one direct planner counterexample checked. No training, model changes or
+new full-suite run. The latest key-box slice has31 relevant passing tests, not a
+current whole-repository test result.
 
 ## Verdict
 
-An execution smoke test of the multimodal belief agent is already possible. A
-meaningful integrated entity-memory-agent test still needs a connecting runtime and
-training/evaluation recipe. Component success is not whole-model success. We do
-not need to perfect drifting-source selection before building that test.
+Controlled experiments are already running, with real falsifiable results. The
+entity-store → belief workspace → supplied planner → executed feedback loop passes
+a small two-box task and one independent training-seed replication. This is useful
+integration evidence. It is not yet a complete learned world-model planning test.
 
-## What exists, and what remains open
+The biggest missing piece is the learning/execution contract across components,
+not an absence of neural modules. The successful loop still supplies observations,
+entity queries, task mechanics and success checking. Different focused recipes
+exercise other components; their successes must not be combined as though a single
+trained agent performed all of them.
 
-| Area | Implemented | Remaining gap |
+## What is solid enough to reuse
+
+- Actual learned entity-state retrieval reaches BeliefAgent working tokens; there
+  is no direct entity-latent-to-final-head bypass in KeyBoxReader.
+- Bounded entity records, observation retry handling and entity/belief snapshots
+  exist. Generated/reflected content and source observations have separate paths
+  in the general agent.
+- Bounded supplied expectimax replans after executed feedback. Raw action traces,
+  frozen-reference comparisons, no-history controls and externally checked outcomes
+  exist. Training uses supervised binary-content cross-entropy, a testable target.
+- Ordinary and fixed-relocation tests pass for the new seed;192/192 immediate
+  correction reads. Memory's ordinary utility advantage is0.015625, but relocation
+  utility is0.896875 versus no-history0.909375. This is not universal memory benefit.
+- Checkpoints, source manifests, cached resume and structural report QA work.
+  Browser QA remains unavailable under the earlier restriction.
+
+Evidence: [replica verification](../runs/key_box_v1/replica_verification.json),
+[active experiment plan](key-box-integration-plan.md).
+
+## Open interfaces and capability gaps
+
+| Area | Current implementation | Still required / scope |
 | --- | --- | --- |
-| Multimodal perception | Image/video/audio/text adapters, reconstruction outputs | Grounded object candidates are not produced for the entity runtime; learned visual instance recognition is untested. |
-| Belief core | Recurrent context, categorical prior/posterior, observation correction, thinking and imagination | Useful prediction and factual identity through the full core remain unproven. Saved tiny prediction runs lose to copy-last; warm event fact reader retains0/32 entity accuracy. |
-| Session memory | Recent/staged/compressed/protected/consolidated stores; source/belief separation | Delayed useful recall and learned marking remain unproven. Default training history does not span default recent-memory capacity. |
-| Entity memory | Descriptor matching, stable IDs, bounded allocation, snapshots, per-entity latent updates | Separate from BeliefAgent; consumes supplied normalized eight-value descriptors. Real candidate extraction, ambiguous tracking/correction and larger-scale retrieval remain open. |
-| Relations | Learned stored keys, directed latent interaction, context write gate | One supplied relation type and explicit operations; no general concept hierarchy or learned graph topology. |
-| Evidence acquisition | Controlled source choice, noise/drift/coverage experiments | Supplied outcome feedback and synthetic cues; not integrated agent sensing or learned input reliability. Latest coverage screen fails utility gain. |
-| Tasks/actions | Task contracts, output heads, action proposals and imagined transitions | No demonstrated integrated observation→entity retrieval→decision→executed action→observed outcome success. |
-| Persistence/debugging | Version/hash checks, bounded snapshots, reports and provenance | No unified entity+belief+task session persistence contract; learned latent semantics are not automatically interpretable or invertible. |
+| Objective and completion | Key task and fees hard-coded; general TaskSession tracks delivered outputs | One explicit success/failure/unknown contract, terminal loss and action/compute costs. Output delivered is not objective verified. Required for an interpretable integrated planning experiment. |
+| Belief and evidence | Frozen learned binary cell; explicit known flags; supplied exact descriptors and content updates | Define unknown vs absent, observation time vs arrival, stale evidence, conflicting sources and action-failure updates. Exact matching/clean labels do not establish calibrated belief. Required before partial/noisy sensing claims. |
+| Learned transitions | General BeliefAgent.imagine and prediction losses exist separately | Successful key planner uses supplied mechanics and never calls imagine. Encode actual actions/durations, train grounded outcome predictions and test them inside planning. Required for learned world-model planning. |
+| Retrieval and internal actions | Both boxes read in fixed order; two thinking steps per read; task operation heads exist elsewhere | No integrated policy for what to recall, what to inspect, how long to think or when to stop thinking. Fixed scheduling is acceptable for a first dynamics experiment if declared. Learned scheduling requires costed training/evaluation. |
+| Memory hierarchy | Recent/compressed/consolidated/source/belief stores exist | Key core receives neutral event text; semantic box content lives in a separate entity store and enters via retrieval. This pass does not demonstrate useful semantic compression, eviction-resistant recall or learned importance marking in that hierarchy. |
+| Graph and concepts | Stable IDs, learned descriptors/values and one supplied relation type in a separate wrapper | No general learned topology, concept/instance hierarchy, variable relation vocabulary, skill nodes or learned inspectable meaning. Not a prerequisite to the first controlled dynamics experiment; required for the broader entity-graph goal. |
+| Perception | Multimodal encoders and reconstruction heads exist | No integrated pixels→object candidate→stable entity across views path. Supplied eight-value descriptors are not learned visual identity. Required for a visual test, not a structured-observation test. |
+| Runtime and persistence | KeyBoxSession snapshots memory/belief/receipts; generic task runner returns physical action proposals | No joint restore of environment, opened boxes, pending action, task verification and remaining budgets. Need execution-result/time/retry ownership before long-running interactive trials. Cached training resume is not mid-action recovery. |
+| Experimental scope | Two training seeds for this recipe; fresh descriptors, fixed templates and correction timing | Broader held-out episodes/actions/timings, multiple seeds and uncertainty metrics remain. Fresh descriptor families do not alone establish task or environment generalization. |
 
-Code evidence: `experiments/multimodal.py:build_model` returns EntityMatchReader or
-EntityReader/SharedEntityReader before constructing BeliefAgent. EntityMemory,
-EntityStateMemory and EntityRelationMemory are distinct runtime wrappers. Neither
-BeliefAgent nor MultimodalAgent invokes those wrappers. SourceChoice is used by
-controlled evaluators, not the live agent observation/decision path.
+## Concrete issues worth resolving first
 
-Saved evidence: `runs/warm_encoder_v1/verification.json`,
-`runs/entity_gate_v1/verification.json`, `runs/entity_source_coverage_v1/verification.json`;
-see project-state for original population sizes, training budgets and limitations.
-Earlier negative runs show that their configurations failed, not an impossibility
-result for the architecture. Later descriptor-based successes do not repair or
-localize the earlier agent-level failure.
+1. **Planner objective differs from reported utility.** `plan_key` uses retrieval
+   reward10, action cost1/inspection0.25 and stop value0. The evaluator reports
+   success−0.05×cost and counts correct absent stopping as success. These are not
+   equivalent objectives. Direct check: belief(key in open box0)=0.15,
+   belief(absent)=0.85, one action left. Current planner selects retrieve (internal
+   value0.5); reported expected utility would be0.10 for retrieve versus0.85 for
+   stopping. Prior scores remain valid measurements of the implemented policy;
+   they cannot establish optimization of the reported utility. Choose one contract
+   or explicitly label planner reward as a surrogate before a new comparison.
+   Evidence: [planner](../pathwm/models/key_box.py:59),
+   [evaluation](../pathwm/evaluation/key_box.py:114).
+2. **The successful core does not learn physical dynamics.** KeyBoxReader freezes
+   the agent except thinker; the recipe freshly constructs the other agent modules.
+   `neutral_event` passes literal `event` and no previous_action. Opening/inspection
+   mechanics and opened-state live in the harness. Merely adding more key episodes
+   does not train the agent's world transition model. A new experiment must send
+   executed actions and meaningful evidence into it, or explicitly test a separate
+   learned transition module. Evidence: [reader](../pathwm/models/key_box.py:15),
+   [construction](../experiments/multimodal.py:2914).
+3. **Uncertainty is partially supplied.** Harness `known` flags determine when a
+   box becomes unknown; two Bernoulli readouts are multiplied and normalized over
+   box0/box1/absent, excluding two simultaneous keys. Inspection branches assume
+   perfect observations. This is a concrete finite task assumption, not a general
+   model of uncertainty, identity ambiguity or source reliability. Softmax accuracy
+   alone is not calibration. Evidence: [belief mapping](../pathwm/models/key_box.py:150).
+4. **The proposed general action DAG is not implemented.** There is bounded cached
+   search over supplied task beliefs, and separately candidate-sequence evaluation
+   with `imagine`. There is no general learned goal predicate, reusable skill/subgoal
+   decomposition, trajectory node equivalence, uncertainty-aware predicted/observed
+   matching or persistent branch invalidation. A first short-horizon learned test
+   can omit hierarchical skills and a persistent DAG; their absence must be explicit.
+   Evidence: [generic planner](../pathwm/evaluation/agent.py:23),
+   [task execution](../pathwm/models/agent.py:637), [proposed contract](decision-design.md).
 
-## Minimum path to a complete controlled test
+## Recommended next work
 
-1. Define one integration boundary: observation candidates enter the entity store;
-   retrieved entity states enter the agent workspace; agent requests explicit reads,
-   updates or actions; committed outcomes update memory once. Define the authoritative
-   owner of changing entity state, provenance, retries and joint session restoration.
-2. Build one small episode runner and shared readout for that path, initially using
-   the existing synthetic candidates. This avoids making visual discovery a prerequisite.
-   Use two or three entities, movement/state changes, a delayed query and an interaction.
-3. Train and probe the exact deployed path. Verify entity identity and state are
-   recoverable at encoder output, agent state and final workspace. Fix the observed
-   failure stage rather than assuming the successful standalone reader transfers.
-4. Exercise memory eviction/compression and corrections inside episodes. Keep paired
-   histories with identical final observations but different correct answers.
-5. Freeze one complete configuration, then evaluate unseen episodes against no-memory,
-   last-observation, wrong-entity and supplied-association diagnostic controls. Measure
-   identity errors, state/query accuracy, action outcome, abstention, memory use and
-   cost. Declare numerical thresholds and budgets before the new run; use separate
-   development and final evaluation populations.
+Do one specification/implementation slice before another larger training sweep.
+Use the existing controlled environment; do not make raw vision, a general graph
+or essay/bicycle skills prerequisites.
 
-This would test one integrated entity-memory agent on controlled inputs. It would
-not establish recognition of arbitrary people/objects or general world understanding.
-For a raw-image test, candidate extraction and identity across views become additional
-requirements. For a general learned knowledge graph, concept learning, relation
-creation/deletion, multiple relation types and belief correction become requirements.
-Those do not block the first controlled integration test.
+1. Freeze a small executable task contract: available observations and actions,
+   time/identity semantics, success/unknown/failed status, costs and horizon.
+   Resolve the planner/metric discrepancy and define delayed/partial correction
+   behavior. Keep evaluator truth out of the online agent.
+2. Route the executed action plus actual observations through one declared belief
+   path. Choose what the next learned model predicts: observable next contents,
+   action success and observation outcomes, with explicit supervision masks for
+   unavailable labels. Retain the supplied dynamics as a diagnostic control.
+3. Train and test those predictions before longer search, including action-sensitive
+   counterfactual pairs and multi-step rollouts. Predicting no change/copying the
+   last state must be a baseline. Use observable errors/proper probability scores;
+   latent distance alone is not task success or a calibrated state-match rule.
+4. Freeze the configuration and run the complete controller on held-out episodes
+   with no-history, simple reactive/copy-last, learned-dynamics and supplied-dynamics
+   controls. Measure success, action cost, recovery, uncertainty and failure types;
+   predeclare gates and a final evaluation population. Inspect randomized/delayed/
+   partial observations on the fixed current loop first if needed to define the
+   contract; do not endlessly tune the binary reader instead of integrating dynamics.
 
-Recommendation: prioritize integration and basic full-path learning now. Keep source
-headroom/drift tuning as a separate experiment branch until that integration works.
+This would be the first meaningful learned world-model control experiment on the
+current integrated path. Broader graph structure, visual identity, learned internal
+scheduling and hierarchical skill discovery should be separate subsequent claims.
+
+Claude supplied public-only critique and reconciliation; receipts under
+runs/reviews/continuation_2026-09-11/readiness-current*. The short brief omitted
+supervised loss and existing controls; omissions were not accepted as defects.
