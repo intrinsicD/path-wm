@@ -1107,3 +1107,11 @@ entries:
     limit.
   - Earlier alternate-evidence O148 remains open; no contradictory conclusion or performance
     claim.
+
+- turn: 2026-09-11_001#45
+  notes:
+  - User resumed pre-reliability thread; O149 remains staged and unimplemented.
+  - Promote O148 method, not learned source selection; preserve cost and supplied-environment
+    limits.
+  - Stage O150 acquisition learning; alternate source independence not discovered
+    here.

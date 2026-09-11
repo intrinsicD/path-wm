@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Claude reliability discussion complete; task-conditioned correctness proposal staged, no implementation."
-  turn_count: 44
-  events_count: 126
+  summary: "Alternate evidence comparison passes under supplied properties;21 relevant tests, resume and paired audit pass."
+  turn_count: 45
+  events_count: 129
   claims_touched: []
   open_threads: 14

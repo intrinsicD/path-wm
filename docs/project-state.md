@@ -1,5 +1,14 @@
 # Current work
 
+**Alternate evidence is worth its declared cost, 11 September:** selective high-noise
+accuracy80.86% alternate versus73.44% same-source, both reread42.58%. Utility
+0.787305 versus0.725859 despite alternate cost0.05 versus0.02. Paired descriptive
+95% interval for utility gain[0.024129,0.101331].21 relevant tests, resume and
+independent audit pass. [Report](../runs/entity_evidence_sources_v1/reference/report.html)
+structural-only. Fixed sensor properties/policies; no learned source selection.
+Next candidate: learn acquisition choice from outcome feedback without giving the
+policy hidden noise/correlation labels. Reliability-estimation proposal remains separate.
+
 **Correlated rereads expose the independence limit, 11 September:** selective
 high-noise gains9.77/5.08/1.17 points at rho0/0.5/0.9; rho0.9 fails the2-point
 gate. Rho1 adds no information and loses sensing cost.19 relevant tests, four

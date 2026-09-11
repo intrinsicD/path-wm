@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T16:30+02:00
-  turn_count: 44
-  summary: "Claude reliability discussion complete; task-conditioned correctness proposal staged, no implementation."
+  last_turn: 2026-09-11T16:36+02:00
+  turn_count: 45
+  summary: "Alternate evidence comparison passes under supplied properties;21 relevant tests, resume and paired audit pass."
 events_logged:
 - turn: 1
   type: question
@@ -792,6 +792,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Propose correctness readout baseline comparison, not generic noise inference.
+- turn: 45
+  type: experiment
+  id: N228
+  routing: direct
+  provenance: ai-executed
+  summary: Resumed alternate-evidence thread; comparison passes.
+- turn: 45
+  type: observation
+  id: O148
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Method promoted to H41 by implementation.
+- turn: 45
+  type: observation
+  id: O150
+  routing: staged
+  provenance: ai-suggested
+  summary: Outcome-trained source choice proposed.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1097,6 +1115,14 @@ ai_actions:
   provenance: ai-executed
   files_changed:
   - docs/entity-learning-task.md
+- turn: 45
+  action: Implemented fixed source comparison, reconciled Claude controls;21 tests,
+    evaluation/resume and independent paired bootstrap audit.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/evaluation/entity_gate.py
+  - experiments/multimodal.py
+  - pathwm/evaluation/report.py
 claims_touched: []
 key_context:
 - turn: 1

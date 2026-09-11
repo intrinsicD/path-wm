@@ -1,0 +1,82 @@
+{
+  "passed": true,
+  "independent_decisions_costs": true,
+  "matched_inputs": true,
+  "frozen_hash": true,
+  "paired_bootstrap_checked": true,
+  "paired_utility_delta": 0.06144531250000007,
+  "paired_bootstrap_95": [
+    0.02412891574203968,
+    0.10133106261491776
+  ],
+  "break_even_alternate_cost": 0.19431192660550464,
+  "high_noise": {
+    "alternate": {
+      "always_two": {
+        "accuracy": 0.8515625,
+        "negative_recall": 1.0,
+        "positive_recall": 0.703125,
+        "reread_rate": 1.0,
+        "utility": 0.8015625
+      },
+      "duplicate": {
+        "accuracy": 0.71875,
+        "negative_recall": 0.9453125,
+        "positive_recall": 0.4921875,
+        "reread_rate": 0.42578125,
+        "utility": 0.6974609375
+      },
+      "first": {
+        "accuracy": 0.71875,
+        "negative_recall": 0.9453125,
+        "positive_recall": 0.4921875,
+        "reread_rate": 0.0,
+        "utility": 0.71875
+      },
+      "selective": {
+        "accuracy": 0.80859375,
+        "negative_recall": 1.0,
+        "positive_recall": 0.6171875,
+        "reread_rate": 0.42578125,
+        "utility": 0.7873046875
+      }
+    },
+    "same": {
+      "always_two": {
+        "accuracy": 0.734375,
+        "negative_recall": 0.953125,
+        "positive_recall": 0.515625,
+        "reread_rate": 1.0,
+        "utility": 0.714375
+      },
+      "duplicate": {
+        "accuracy": 0.71875,
+        "negative_recall": 0.9453125,
+        "positive_recall": 0.4921875,
+        "reread_rate": 0.42578125,
+        "utility": 0.710234375
+      },
+      "first": {
+        "accuracy": 0.71875,
+        "negative_recall": 0.9453125,
+        "positive_recall": 0.4921875,
+        "reread_rate": 0.0,
+        "utility": 0.71875
+      },
+      "selective": {
+        "accuracy": 0.734375,
+        "negative_recall": 0.953125,
+        "positive_recall": 0.515625,
+        "reread_rate": 0.42578125,
+        "utility": 0.725859375
+      }
+    }
+  },
+  "browser_checked": false,
+  "report_validation": "structural_only_prior_policy_denial",
+  "sha256": {
+    "entity_evidence_sources.json": "c4a9e446ff5ff18808eee4806d27d525777a2408df23e66e91530c22d92c6938",
+    "last.pt": "200d09c5c72d8c71ac2528df40ee32a0aa4046d9f7b3caa27dd14882c5923a59",
+    "report.html": "9a37455b4c4ef6b6ab3b1e4c77b546ea8baa586f7f6ab4a5a22ebe792c320a7c"
+  }
+}

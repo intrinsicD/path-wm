@@ -1305,3 +1305,23 @@ fixed first-observation deferrals. Added descriptive2000-resample paired bootstr
 (seed1503) over128 pairs, not pooled severities; no CI-based acceptance change.
 Empirical raw correlations and break-even cost contextualize supplied assumptions.
 No calibration, policy learning or optimality claim; reliability proposal remains staged.
+
+
+Alternate-source result (4280e35): PASS under supplied environment properties.
+High-noise selective alternate accuracy80.859375% versus same73.4375%, with
+42.578125% rereads each. Alternate cost0.05 yields utility0.7873046875 versus
+same cost0.02 utility0.725859375; paired gain0.0614453125, descriptive95% paired
+bootstrap interval[0.024128916,0.101331063]. Ignore recall100% versus95.3125%.
+First-only accuracy71.875%. Always-alternate accuracy85.15625% and utility0.8015625
+exceeds selective alternate, so no selective-policy optimality claim. Break-even
+alternate cost against selective same is0.194312 accuracy units per reread.
+21 relevant tests, cached resume, matched-input/frozen-hash/independent decision,
+cost and bootstrap audits pass. Structural QA only under prior browser restriction.
+No model updates or persistent-memory operations added. Evidence:
+`runs/entity_evidence_sources_v1/verification.json`. Run
+`python -m experiments.multimodal --entity-evidence-sources --entity-gate-weights
+GATE.pt --output DIR`; cached resume `--resume DIR`.
+Next candidate: outcome-trained acquisition policy with opaque source identifiers
+and known costs, withholding hidden correlation/noise labels; test on fresh source
+assignments before claiming learned source choice. Reliability O149 remains a
+separate, unimplemented discussion proposal.

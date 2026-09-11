@@ -2623,9 +2623,9 @@ observations:
   potential_type: heuristic
   bound_to:
   - N226
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H41
+  crystallized_via: artifact-commitment
   stale: false
 
 - id: O149
@@ -2638,6 +2638,21 @@ observations:
   potential_type: heuristic
   bound_to:
   - N227
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+
+- id: O150
+  timestamp: 2026-09-11T16:36+02:00
+  provenance: ai-suggested
+  content: Learn acquisition choice from outcomes using opaque source IDs and known
+    costs, withholding latent source quality.
+  context: Fixed alternate-source policy is useful under supplied sensor properties;
+    source choice remains explicit.
+  potential_type: heuristic
+  bound_to:
+  - N228
   promoted: false
   promoted_to: null
   crystallized_via: null

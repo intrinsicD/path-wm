@@ -393,3 +393,13 @@
 - **Sensitivity**: Raw correlation differs from normalized-cue dependence; fixed-policy performance is not per-correlation optimal utility.
 - **Code ref**: [correlated generator](../../../pathwm/evaluation/entity_gate.py).
 - **Evidence**: [failed robustness](../../evidence/tables/entity_gate_correlation_2026-09-11.json).
+
+## H41: Compare alternate evidence on matched deferrals with explicit costs
+
+- **Rationale**: Match first observations and deferrals, vary supplied second-source dependence and cost, report paired utility and both recalls with unconditional baselines.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O148
+- **Sensitivity**: Fixed source properties and policies; no learned source choice or real sensor independence established. Always-alternate remains stronger at the chosen cost.
+- **Code ref**: [source comparison](../../../pathwm/evaluation/entity_gate.py).
+- **Evidence**: [bounded result](../../evidence/tables/entity_evidence_sources_2026-09-11.json).

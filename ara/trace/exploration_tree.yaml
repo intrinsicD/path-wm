@@ -3520,3 +3520,17 @@ tree:
   evidence:
   - docs/entity-learning-task.md
   status: resolved
+
+- id: N228
+  type: experiment
+  title: Alternate source acquisition beats correlated rereading at declared cost
+  provenance: ai-executed
+  timestamp: 2026-09-11T16:36+02:00
+  result: High-noise80.86 versus73.44 percent; paired utility gain0.061445.21 tests
+    and resume pass.
+  evidence:
+  - ara/evidence/tables/entity_evidence_sources_2026-09-11.json
+  - git:4280e35
+  also_depends_on:
+  - N226
+  status: resolved
