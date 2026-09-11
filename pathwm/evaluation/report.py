@@ -195,6 +195,24 @@ def model_inspection(directory):
 
 
 def entity_inspection(directory):
+    temporal = directory / "entity_temporal.json"
+    if temporal.exists():
+        data = json.loads(temporal.read_text())
+        parts = [
+            "<section><h2>Frozen temporal generalization</h2>",
+            f"<p>Declared gates: {'pass' if data['passed'] else 'fail'}. No training.</p>",
+            "<p>Fresh descriptor families shared across conditions. Reset order changes event order; longer-toggle and no-information conditions test different length effects. These controlled scores do not establish general belief or graph learning.</p>",
+            '<div class="table"><table><tr><th>Condition</th><th>Episodes</th><th>Pair accuracy</th><th>NLL/entity</th><th>Runtime accuracy</th><th>Transactions / latents</th><th>Gate</th></tr>',
+        ]
+        for name, row in data["cohorts"].items():
+            scores, runtime = row["scores"], row["runtime"]
+            parts.append(
+                f"<tr><td>{name}</td><td>{scores['examples']}</td><td>{scores['pair_accuracy']:.2%}</td><td>{scores['nll']:.6f}</td><td>{runtime['pair_accuracy']:.2%}</td><td>{runtime['transactions']} / {runtime['latent_agreement']}</td><td>{row['passed']}</td></tr>"
+            )
+        parts.append(
+            "</table></div><p>Source: entity_temporal.json. Each condition requires95% pair accuracy, NLL≤0.15 and runtime agreement. Shared families imply correlated scores.</p></section>"
+        )
+        return parts
     state = directory / "entity_state.json"
     if state.exists():
         data = json.loads(state.read_text())
@@ -619,7 +637,10 @@ def render_report(directory):
         for s in (directory / "metrics.jsonl").read_text().splitlines()
         if s
     ]
-    if not (directory / "entity_growth.json").exists():
+    if not any(
+        (directory / name).exists()
+        for name in ("entity_growth.json", "entity_temporal.json")
+    ):
         curve_path = directory / "learning_curve.png"
         curves(rows, curve_path)
         mobile_curve = directory / "learning_curve_mobile.png"
@@ -645,7 +666,10 @@ def render_report(directory):
     ]
     if status.get("error"):
         parts.append(f"<p><strong>Failure:</strong> {escape(status['error'])}</p>")
-    if not (directory / "entity_growth.json").exists():
+    if not any(
+        (directory / name).exists()
+        for name in ("entity_growth.json", "entity_temporal.json")
+    ):
         parts.append(
             f'<section><picture><source media="(max-width: 600px)" srcset="{mobile_picture}"><img class="chart" alt="Training and validation objective by optimizer update" src="{picture}"></picture><p>Source: metrics.jsonl. Validation population and weighted loss terms are fixed by this run’s recipe.</p></section>'
         )

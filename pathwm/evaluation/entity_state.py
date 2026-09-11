@@ -1,5 +1,6 @@
 """State readout and persistent-runtime agreement checks."""
 
+from time import perf_counter
 import torch
 from pathwm.models.entity_state import EntityStateMemory
 
@@ -14,10 +15,12 @@ def state_metrics(cell, data):
     return dict(pair_accuracy=accuracy, nll=nll, examples=len(logits)), logits, hidden
 
 
-def state_runtime(cell, matcher, data):
+def state_runtime(cell, matcher, data, deadline=None):
     _, _, expected = state_metrics(cell, data)
     results = []
     for index, episode in enumerate(data["manifest"]):
+        if deadline is not None and perf_counter() > deadline:
+            raise TimeoutError("State runtime evaluation budget exhausted")
         store = EntityStateMemory(matcher, cell)
         restored = None
         replay = True

@@ -3025,6 +3025,103 @@ def train_entity_state(weights, output, resume=False):
     return run.path
 
 
+def evaluate_entity_temporal(matcher_weights, cell_weights, output, resume=False):
+    from pathwm.models.entities import EntityMatchReader
+    from pathwm.models.entity_state import EntityStateCell
+    from pathwm.data.entity_temporal import temporal_episodes
+    from pathwm.evaluation.entity_growth import growth_inputs
+    from pathwm.evaluation.entity_state import state_metrics, state_runtime
+
+    seed_everything(111)
+    matcher_weights, cell_weights = (
+        Path(matcher_weights).resolve(),
+        Path(cell_weights).resolve(),
+    )
+    donor = torch.load(matcher_weights, map_location="cpu", weights_only=True)["model"]
+    matcher = EntityMatchReader()
+    matcher.load_state_dict(
+        {
+            k.removeprefix("agent."): v
+            for k, v in donor.items()
+            if k.startswith("agent.")
+        }
+    )
+    cell = EntityStateCell()
+    cell.load_state_dict(
+        torch.load(cell_weights, map_location="cpu", weights_only=True)["model"]
+    )
+    models = (
+        nn.ModuleDict(dict(matcher=matcher, cell=cell)).eval().requires_grad_(False)
+    )
+    before = state_hash(models)
+    deadline = perf_counter() + 120
+    populations = temporal_episodes(matcher, growth_inputs(111, 16))
+    settings = dict(
+        seed=111,
+        purpose="diagnostic",
+        entity_state_weights=str(matcher_weights),
+        entity_temporal_cell=str(cell_weights),
+        matcher_sha256=file_hash(matcher_weights),
+        cell_sha256=file_hash(cell_weights),
+        max_seconds=120,
+    )
+    run = Run(
+        output,
+        settings=settings,
+        data={k: digest(v["manifest"]) for k, v in populations.items()},
+        recipe=__file__,
+        model=models,
+        optimizer=torch.optim.AdamW(models.parameters(), lr=0),
+        device="cpu",
+        resume=resume,
+    )
+    path = run.path / "entity_temporal.json"
+    try:
+        if resume:
+            result = json.loads(path.read_text())
+            if result["model_sha256"] != state_hash(models):
+                raise ValueError("Temporal cache mismatch")
+        else:
+            cohorts = {}
+            for name, data in populations.items():
+                scores, logits, _ = state_metrics(cell, data)
+                runtime = state_runtime(cell, matcher, data, deadline=deadline)
+                passed = (
+                    scores["pair_accuracy"] >= 0.95
+                    and scores["nll"] <= 0.15
+                    and runtime["pair_accuracy"] >= 0.95
+                    and runtime["transactions"]
+                    and runtime["latent_agreement"]
+                )
+                cohorts[name] = dict(
+                    scores=scores,
+                    runtime=runtime,
+                    passed=passed,
+                    manifest=data["manifest"],
+                    logits=logits.tolist(),
+                )
+                run.log(dict(step=0, split="frozen_temporal", condition=name, **scores))
+            if state_hash(models) != before:
+                raise RuntimeError("Frozen models changed")
+            result = dict(
+                cohorts=cohorts,
+                model_sha256=before,
+                passed=all(c["passed"] for c in cohorts.values()),
+            )
+            atomic_json(path, result)
+            run.save()
+        run.status("completed", "pending")
+    except BaseException as exc:
+        run.status("failed", "pending", str(exc))
+        raise
+    try:
+        render_report(run.path)
+    except BaseException as exc:
+        run.status("completed", "failed", str(exc))
+        raise
+    return run.path
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -3069,6 +3166,9 @@ def main():
     parser.add_argument(
         "--entity-state-weights",
         help="Frozen recognizer checkpoint for learned state binding",
+    )
+    parser.add_argument(
+        "--entity-temporal-cell", help="Frozen state checkpoint for temporal evaluation"
     )
     parser.add_argument("--entity-variable", action="store_true")
     parser.add_argument("--entity-growth-seed", type=int, default=61)
@@ -3131,6 +3231,18 @@ def main():
     if args.diagram_depth < 0:
         parser.error("Diagram depth must be nonnegative")
     args = resume_arguments(parser, args)
+    if args.entity_temporal_cell is not None:
+        if args.entity_state_weights is None:
+            parser.error("--entity-temporal-cell requires --entity-state-weights")
+        print(
+            evaluate_entity_temporal(
+                args.entity_state_weights,
+                args.entity_temporal_cell,
+                args.resume or args.output,
+                bool(args.resume),
+            )
+        )
+        return
     if args.entity_state_weights is not None:
         print(
             train_entity_state(
