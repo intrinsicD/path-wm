@@ -6,11 +6,11 @@ from pathwm.models.source_choice import SourceChoice
 from pathwm.evaluation.entity_gate import gate_shift_examples
 
 
-def evaluate_source_choice(gate, worlds=16):
+def evaluate_source_choice(gate, worlds=16, seed=1601):
     rows = []
     for world in range(worlds):
-        data = gate_shift_examples(1601 + world, 384)
-        rng = torch.Generator().manual_seed(2601 + world)
+        data = gate_shift_examples(seed + world, 384)
+        rng = torch.Generator().manual_seed(seed + 1000 + world)
         innovation = torch.randn(384, 4, generator=rng).repeat_interleave(2, 0)
         first = F.normalize(data["prototypes"] + 0.6 * data["noise"], dim=-1)
         with torch.inference_mode():
@@ -72,7 +72,7 @@ def evaluate_source_choice(gate, worlds=16):
         rows.append(
             dict(
                 world=world,
-                seed=1601 + world,
+                seed=seed + world,
                 choice=choice,
                 useful_source=world % 2,
                 values=snapshot,
@@ -122,4 +122,106 @@ def evaluate_source_choice(gate, worlds=16):
         and learned > summary["stop"]["utility"]
         and useful >= 0.75
         and combined >= stop,
+    )
+
+
+def evaluate_source_drift(gate, worlds=16):
+    calibration = evaluate_source_choice(gate, worlds, seed=1701)
+    rows = []
+    for base in calibration["worlds"]:
+        labels = torch.tensor(base["labels"])
+        first = torch.tensor(base["first_predictions"])
+        sources = torch.tensor(base["source_predictions"]).T
+        mask = torch.tensor(base["defer"])
+        rng = torch.Generator().manual_seed(3701 + base["world"])
+        coins = torch.rand(256, generator=rng)
+        explore = torch.randint(2, (256,), generator=rng)
+        for swapped in (False, True):
+            outcomes = sources[:, [1, 0]] if swapped else sources
+            for name in ("frozen", "cumulative", "window", "no_feedback"):
+                policy = SourceChoice(window=32 if name == "window" else None)
+                for event in base["feedback"]:
+                    policy.observe(event["source"], event["gain"] - 0.005)
+                initial = policy.snapshot()
+                actions = []
+                rewards = []
+                for j in range(256):
+                    i = j + 512
+                    before = policy.snapshot()
+                    action = None
+                    pred = bool(first[i])
+                    fee = 0.0
+                    if bool(mask[i]):
+                        action = (
+                            int(explore[j])
+                            if name != "frozen" and coins[j] < 0.2
+                            else policy.choose()
+                        )
+                    feedback = None
+                    if action is not None:
+                        pred = bool(outcomes[i, action])
+                        fee = 0.05
+                        if name in ("cumulative", "window"):
+                            fee += 0.005
+                            feedback = (
+                                float(pred == bool(labels[i]))
+                                - float(bool(first[i]) == bool(labels[i]))
+                                - 0.055
+                            )
+                            policy.observe(action, feedback)
+                    reward = float(pred == bool(labels[i])) - fee
+                    rewards.append(reward)
+                    actions.append(
+                        dict(
+                            index=i,
+                            source=action,
+                            feedback=feedback,
+                            reward=reward,
+                            before=before,
+                            after=policy.snapshot(),
+                        )
+                    )
+                cal_utility = (
+                    base["calibration_utility"] - 0.005 * len(base["feedback"]) / 512
+                )
+                rows.append(
+                    dict(
+                        world=base["world"],
+                        swapped=swapped,
+                        policy=name,
+                        initial=initial,
+                        feedback_calibration=base["feedback"],
+                        actions=actions,
+                        early_utility=sum(rewards[:128]) / 128,
+                        late_utility=sum(rewards[128:]) / 128,
+                        utility=sum(rewards) / 256,
+                        combined_utility=(512 * cal_utility + sum(rewards)) / 768,
+                    )
+                )
+    summary = {}
+    for swapped in (False, True):
+        summary["drift" if swapped else "static"] = {}
+        for name in ("frozen", "cumulative", "window", "no_feedback"):
+            chosen = [
+                r for r in rows if r["swapped"] == swapped and r["policy"] == name
+            ]
+            summary["drift" if swapped else "static"][name] = {
+                k: sum(r[k] for r in chosen) / len(chosen)
+                for k in (
+                    "early_utility",
+                    "late_utility",
+                    "utility",
+                    "combined_utility",
+                )
+            }
+    d = summary["drift"]
+    s = summary["static"]
+    return dict(
+        summary=summary,
+        episodes=rows,
+        environment=calibration["worlds"],
+        passed=d["window"]["late_utility"] >= d["frozen"]["late_utility"] + 0.01
+        and d["window"]["late_utility"] >= d["cumulative"]["late_utility"] + 0.01
+        and d["window"]["utility"] >= d["frozen"]["utility"] - 0.01
+        and s["window"]["utility"] >= s["frozen"]["utility"] - 0.02,
     )

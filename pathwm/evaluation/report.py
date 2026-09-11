@@ -195,6 +195,24 @@ def model_inspection(directory):
 
 
 def entity_inspection(directory):
+    drift = directory / "entity_source_drift.json"
+    if drift.exists():
+        data = json.loads(drift.read_text())
+        parts = [
+            "<section><h2>Online source drift</h2>",
+            f"<p>Declared adaptation screen: {'pass' if data['passed'] else 'fail'}.</p>",
+            "<p>Opaque sources silently swap quality after calibration; matched unchanged-source control. Online means update only after acquired outcomes, with epsilon0.2 exploration. Recent window32 is supplied, not learned change detection. Acquisition costs0.05 and online outcome feedback0.005.</p>",
+            '<div class="table"><table><tr><th>Condition</th><th>Policy</th><th>Early utility</th><th>Late utility</th><th>Post-calibration utility</th><th>Combined utility</th></tr>',
+        ]
+        for condition, policies in data["summary"].items():
+            for name, v in policies.items():
+                parts.append(
+                    f"<tr><td>{condition}</td><td>{name}</td><td>{v['early_utility']:.6f}</td><td>{v['late_utility']:.6f}</td><td>{v['utility']:.6f}</td><td>{v['combined_utility']:.6f}</td></tr>"
+                )
+        parts.append(
+            "</table></div><p>Late is the last128 of256 post-calibration cases. Acceptance: window late drift utility≥frozen and cumulative+0.01, whole drift≥frozen−0.01, static≥frozen−0.02. Same exploration coins and candidate actions across online policies. Feedback availability and fixed change timing are supplied assumptions. Source: entity_source_drift.json.</p></section>"
+        )
+        return parts
     choice = directory / "entity_source_choice.json"
     if choice.exists():
         data = json.loads(choice.read_text())
@@ -860,6 +878,7 @@ def render_report(directory):
             "entity_gate_shift.json",
             "entity_evidence_sources.json",
             "entity_source_choice.json",
+            "entity_source_drift.json",
         )
     ):
         curve_path = directory / "learning_curve.png"
@@ -896,6 +915,7 @@ def render_report(directory):
             "entity_gate_shift.json",
             "entity_evidence_sources.json",
             "entity_source_choice.json",
+            "entity_source_drift.json",
         )
     ):
         parts.append(

@@ -1386,3 +1386,9 @@ whole drift utility>=frozen−0.01; unchanged-source utility>=frozen−0.02. Rep
 no-feedback and early/late results, with traces and source counts; no tuning.
 30CPU seconds, frozen gate. Window/exploration are engineered controls, not learned
 change detection. Structural report QA only under prior browser restriction.
+
+Claude withdrew its guarantee that cumulative means fail: selected feedback can
+adapt them. The window is an engineered recency intervention, not learned drift
+detection; no-change controls contextualize its costs.25 relevant tests pass,
+including window eviction, no-feedback immutability, action-before-feedback and
+cached drift resume. No window/timing robustness claim.

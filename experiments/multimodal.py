@@ -2911,6 +2911,85 @@ def entity_growth(weights, output, resume=False, seed=61):
     return run.path
 
 
+def evaluate_entity_source_drift(weights, output, resume=False):
+    """Online source values after an unannounced quality swap."""
+    from pathwm.models.entity_relations import RelationWriteGate
+    from pathwm.evaluation.source_choice import evaluate_source_drift
+
+    weights = Path(weights).resolve()
+    model = RelationWriteGate().eval().requires_grad_(False)
+    model.load_state_dict(
+        torch.load(weights, map_location="cpu", weights_only=True)["model"]
+    )
+    before = state_hash(model)
+    run = Run(
+        output,
+        settings=dict(
+            seed=1701,
+            innovation_seed=2701,
+            exploration_seed=3701,
+            window=32,
+            epsilon=0.2,
+            feedback_cost=0.005,
+            worlds=16,
+            pairs=384,
+            purpose="diagnostic",
+            entity_source_drift=True,
+            entity_gate_weights=str(weights),
+            gate_file_sha256=file_hash(weights),
+            max_seconds=30,
+            costs=[0.05, 0.05],
+            correlations=[0.9, 0.0],
+            defer_bounds=[0.2, 0.8],
+            sigmas=[0.03, 0.15, 0.3, 0.6],
+        ),
+        data=dict(generator="gate_shift_examples", pairs=384, seeds=[1701, 2701, 3701]),
+        recipe=__file__,
+        model=model,
+        optimizer=torch.optim.AdamW(model.parameters(), lr=0),
+        device="cpu",
+        resume=resume,
+    )
+    path = run.path / "entity_source_drift.json"
+    started = perf_counter()
+    try:
+        if resume:
+            result = json.loads(path.read_text())
+            if result["model_sha256"] != state_hash(model):
+                raise ValueError("Evidence source cache mismatch")
+        else:
+            result = evaluate_source_drift(model)
+            if state_hash(model) != before:
+                raise RuntimeError("Frozen source gate changed")
+            if perf_counter() - started > 30:
+                raise TimeoutError("Evidence source budget exhausted")
+            result["model_sha256"] = before
+            atomic_json(path, result)
+            for condition, policies in result["summary"].items():
+                for name, scores in policies.items():
+                    run.log(
+                        dict(
+                            step=0,
+                            split="source_drift",
+                            condition=condition,
+                            policy=name,
+                            utility=scores["utility"],
+                            late_utility=scores["late_utility"],
+                        )
+                    )
+            run.save()
+        run.status("completed", "pending")
+    except BaseException as exc:
+        run.status("failed", "pending", str(exc))
+        raise
+    try:
+        render_report(run.path)
+    except BaseException as exc:
+        run.status("completed", "failed", str(exc))
+        raise
+    return run.path
+
+
 def evaluate_entity_source_choice(weights, output, resume=False):
     """Outcome-trained source choice with frozen perception."""
     from pathwm.models.entity_relations import RelationWriteGate
@@ -4074,6 +4153,7 @@ def main():
     parser.add_argument(
         "--entity-temporal-cell", help="Frozen state checkpoint for temporal evaluation"
     )
+    parser.add_argument("--entity-source-drift", action="store_true")
     parser.add_argument("--entity-source-choice", action="store_true")
     parser.add_argument("--entity-evidence-sources", action="store_true")
     parser.add_argument("--entity-gate-correlation", type=float)
@@ -4155,6 +4235,15 @@ def main():
     if args.diagram_depth < 0:
         parser.error("Diagram depth must be nonnegative")
     args = resume_arguments(parser, args)
+    if args.entity_source_drift:
+        if args.entity_gate_weights is None:
+            parser.error("--entity-source-drift requires --entity-gate-weights")
+        print(
+            evaluate_entity_source_drift(
+                args.entity_gate_weights, args.resume or args.output, bool(args.resume)
+            )
+        )
+        return
     if args.entity_source_choice:
         if args.entity_gate_weights is None:
             parser.error("--entity-source-choice requires --entity-gate-weights")

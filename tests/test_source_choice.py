@@ -51,13 +51,37 @@ def test_calibration_only_feedback_and_resume(tmp_path):
 
 
 def test_window_forgets_without_reset():
-    policy=SourceChoice(window=2)
-    policy.observe(0,1)
-    policy.observe(0,1)
-    assert policy.choose()==0
-    policy.observe(0,-.1)
-    policy.observe(0,-.1)
+    policy = SourceChoice(window=2)
+    policy.observe(0, 1)
+    policy.observe(0, 1)
+    assert policy.choose() == 0
+    policy.observe(0, -0.1)
+    policy.observe(0, -0.1)
     assert policy.choose() is None
-    assert policy.snapshot()['counts']==[2,0]
-    assert policy.snapshot()['history']==[[-.1,-.1],[]]
-    with pytest.raises(ValueError):SourceChoice(window=0)
+    assert policy.snapshot()["counts"] == [2, 0]
+    assert policy.snapshot()["history"] == [[-0.1, -0.1], []]
+    with pytest.raises(ValueError):
+        SourceChoice(window=0)
+
+
+def test_drift_feedback_timing_and_resume(tmp_path):
+    import json
+    import torch
+    from pathwm.models.entity_relations import RelationWriteGate
+    from experiments.multimodal import evaluate_entity_source_drift
+
+    donor = tmp_path / "gate.pt"
+    torch.save({"model": RelationWriteGate().state_dict()}, donor)
+    output = tmp_path / "drift"
+    evaluate_entity_source_drift(donor, output)
+    raw = (output / "entity_source_drift.json").read_bytes()
+    data = json.loads(raw)
+    for row in data["episodes"]:
+        for event in row["actions"]:
+            if row["policy"] in ("frozen", "no_feedback") or event["source"] is None:
+                assert event["feedback"] is None
+                assert event["before"] == event["after"]
+            else:
+                assert event["feedback"] is not None
+    evaluate_entity_source_drift(donor, output, resume=True)
+    assert (output / "entity_source_drift.json").read_bytes() == raw
