@@ -141,3 +141,74 @@ class EntityEpisodes:
                 sum(c.values()) for c in groups.values()
             )
         return result
+
+
+class EntityMatches(EntityEpisodes):
+    """Two stored unit descriptors and a query; explicit known-versus-new labels."""
+
+    def __init__(self, split, count):
+        if split not in ("train", "validation", "test") or count <= 0 or count % 4:
+            raise ValueError(
+                "Matching episodes require a known split and multiple of four"
+            )
+        self.split = split
+        rng = np.random.default_rng(
+            {"train": 41631, "validation": 51731, "test": 61831}[split]
+        )
+        self.manifest, self.descriptor_ids, self.cohorts, self.groups = [], [], [], []
+        rows, labels = [], []
+
+        def unit():
+            v = rng.normal(size=8).astype(np.float32)
+            return v / np.linalg.norm(v)
+
+        for group in range(count // 4):
+            memory = np.stack([unit(), unit()])
+            separation = np.linalg.norm(memory[0] - memory[1])
+            self.descriptor_ids.extend(digest(v.tolist()) for v in memory)
+            for target in (0, 1, 2, 2):
+                for _ in range(10000):
+                    q = (
+                        memory[target] + 0.15 * separation * unit()
+                        if target < 2
+                        else unit()
+                    )
+                    q /= np.linalg.norm(q)
+                    distances = np.linalg.norm(memory - q, axis=-1)
+                    if (target < 2 and distances[target] < 0.35 * separation) or (
+                        target == 2 and distances.min() > 0.65 * separation
+                    ):
+                        break
+                else:
+                    raise RuntimeError("Unable to sample novelty margin")
+                x = np.zeros((3, 2, FEATURES), dtype=np.float32)
+                x[0, :, :8] = memory
+                x[-1, 0, :8] = q
+                target_prob = np.eye(3, dtype=np.float32)[target]
+                cohort = "known" if target < 2 else "novel"
+                self.manifest.append(
+                    dict(
+                        inputs=x.tolist(),
+                        targets=[target_prob.tolist()],
+                        cohort=cohort,
+                        group=group,
+                    )
+                )
+                self.cohorts.append(cohort)
+                self.groups.append(group)
+                rows.append(x)
+                labels.append(target_prob)
+                self.descriptor_ids.append(digest(q.tolist()))
+        self.inputs = torch.from_numpy(np.stack(rows))
+        self.targets = (torch.from_numpy(np.stack(labels)),)
+        self.identity = dict(
+            dataset="entity_matches_v1",
+            split=split,
+            count=count,
+            sha256=digest(self.manifest),
+            episode_sha256=[digest(r) for r in self.manifest],
+            descriptor_sha256=self.descriptor_ids,
+        )
+
+    def final_view_bounds(self):
+        return {}

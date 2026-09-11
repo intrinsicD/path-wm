@@ -64,6 +64,7 @@ def test_entity_recurrent_temporal_gradient_and_no_mutation():
     "association,reader,noise",
     [
         ("raw", "recurrent", 0),
+        ("raw", "matching", 0),
         ("observed", "recurrent", 0),
         ("observed", "shared", 0),
         ("learned", "shared", 0),
@@ -82,6 +83,8 @@ def test_entity_resume_cache_and_final_only(
         entity_reader=reader,
         entity_noise=noise,
     )
+    if reader == "matching":
+        configuration.update(dataset="entity-matching", entity_reader="recurrent")
     calls = []
     predict = recipe.entity_predictions
 
@@ -116,7 +119,11 @@ def test_entity_resume_cache_and_final_only(
     assert not calls
     result = json.loads((tmp_path / "resume/entity_results.json").read_text())
     assert result["final_step"] == 2
-    assert "Two-object entity memory" in (tmp_path / "resume/report.html").read_text()
+    assert (
+        "Known versus new entity matching"
+        if reader == "matching"
+        else "Two-object entity memory"
+    ) in (tmp_path / "resume/report.html").read_text()
 
 
 def test_entity_scores_oracle_and_abstention():
@@ -238,17 +245,34 @@ def test_entity_variation_oracle_controls_and_zero_compatibility():
 def test_entity_matching_contract_and_equivariance():
     from pathwm.data.entities import EntityMatches
     from pathwm.models.entities import EntityMatchReader
-    data = EntityMatches('validation', 32)
+
+    data = EntityMatches("validation", 32)
     x = data.inputs
     memory, query = x[:, 0, :, :8], x[:, -1, 0, :8]
     torch.testing.assert_close(memory.norm(dim=-1), torch.ones(32, 2))
     torch.testing.assert_close(query.norm(dim=-1), torch.ones(32))
-    distance = (memory-query[:, None]).norm(dim=-1)
-    separation = (memory[:,0]-memory[:,1]).norm(dim=-1)
+    distance = (memory - query[:, None]).norm(dim=-1)
+    separation = (memory[:, 0] - memory[:, 1]).norm(dim=-1)
     labels = data.targets[0].argmax(-1)
-    assert (distance[labels<2].min(-1).values < .35*separation[labels<2]).all()
-    assert (distance[labels==2].min(-1).values > .65*separation[labels==2]).all()
-    assert torch.equal(distance[labels<2].argmin(-1), labels[labels<2])
+    assert (distance[labels < 2].min(-1).values < 0.35 * separation[labels < 2]).all()
+    assert (distance[labels == 2].min(-1).values > 0.65 * separation[labels == 2]).all()
+    assert torch.equal(distance[labels < 2].argmin(-1), labels[labels < 2])
     m = EntityMatchReader(16)
-    moved = x.clone(); moved[:,0] = x[:,0].flip(1)
-    torch.testing.assert_close(m(x)[0], m(moved)[0][:,[1,0,2]])
+    moved = x.clone()
+    moved[:, 0] = x[:, 0].flip(1)
+    torch.testing.assert_close(m(x)[0], m(moved)[0][:, [1, 0, 2]])
+
+
+def test_matching_metrics_reject_all_cannot_pass():
+    from pathwm.data.entities import EntityMatches
+    from pathwm.evaluation.entities import matching_metrics
+
+    data = EntityMatches("validation", 32)
+    perfect = data.targets[0] * 20
+    good = matching_metrics((perfect,), data.targets, data.cohorts)
+    assert good["gates"]["passed"]
+    reject = torch.zeros_like(perfect)
+    reject[:, 2] = 20
+    bad = matching_metrics((reject,), data.targets, data.cohorts)
+    assert bad["views"]["known"]["false_split"] == 1
+    assert not bad["gates"]["passed"]

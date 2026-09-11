@@ -88,8 +88,8 @@ from pathwm.evaluation.recall import (
     recall_metrics,
     confidence_diagnostics,
 )
-from pathwm.data.entities import EntityEpisodes, NAMES as ENTITY_NAMES
-from pathwm.models.entities import EntityReader, SharedEntityReader
+from pathwm.data.entities import EntityEpisodes, EntityMatches, NAMES as ENTITY_NAMES
+from pathwm.models.entities import EntityReader, SharedEntityReader, EntityMatchReader
 from pathwm.evaluation.entities import entity_metrics, association_diagnostics
 from pathwm.models.facts import FactReader, EventFactReader
 from pathwm.evaluation.facts import fact_metrics, extraction_gates, binding_reference
@@ -110,11 +110,14 @@ def build_model(
     recall=False,
     facts=False,
     entities=False,
+    entity_matching=False,
     entity_association="raw",
     entity_reader="recurrent",
     fact_reader="direct",
     fact_encoder_weights=None,
 ):
+    if entity_matching:
+        return EntityMatchReader(width)
     if entities:
         if entity_reader == "shared":
             if entity_association not in ("observed", "learned"):
@@ -411,7 +414,7 @@ def finish_facts(run, learner, training, validation, settings, deadline):
 
 @torch.no_grad()
 def entity_predictions(model, data, settings, *, deadline=None):
-    outputs = [[], [], []]
+    outputs = [[] for _ in data.targets]
     with evaluation_mode(model):
         for start in range(0, len(data), settings["batch_size"]):
             if deadline is not None and perf_counter() >= deadline:
@@ -505,9 +508,14 @@ def finish_entities(run, learner, training, validation, settings, deadline):
             association_diagnostics=cache.get("association_diagnostics"),
             association=settings.get("entity_association", "raw"),
             reader=settings.get("entity_reader", "recurrent"),
+            task="matching" if settings["dataset"] == "entity-matching" else "tracking",
             descriptor_noise=settings.get("entity_noise", 0.0),
-            scope=association_note
-            + f"Descriptor noise fraction: {settings.get('entity_noise', 0.0)}. Reader: {settings.get('entity_reader', 'recurrent')}. Association mode: {settings.get('entity_association', 'raw')}. Controlled candidate features; three observations; fixed candidate streams; no learned graph. Half the episodes hide final identity. No visual discovery, graph learning, motor control or independent final-test claim.",
+            scope=(
+                "Known-versus-new matching; separated synthetic query distances, fixed two-record memory, no allocation or open-world calibration. "
+                if settings["dataset"] == "entity-matching"
+                else association_note
+                + f"Descriptor noise fraction: {settings.get('entity_noise', 0.0)}. Reader: {settings.get('entity_reader', 'recurrent')}. Association mode: {settings.get('entity_association', 'raw')}. Controlled candidate features; three observations; fixed candidate streams; no learned graph. Half the episodes hide final identity. No visual discovery, graph learning, motor control or independent final-test claim."
+            ),
         ),
     )
     if not any(r["split"] == "diagnostic_development" for r in run.rows):
@@ -1841,7 +1849,7 @@ def objective(learner, batch, history=2, horizon=2, dropout=0.0):
             for score, p in zip(logits, batch["entity_targets"])
         ]
         return (
-            {n + "_nll": v.mean() / 3 for n, v in zip(ENTITY_NAMES, terms)},
+            {n + "_nll": v.mean() / len(terms) for n, v in zip(ENTITY_NAMES, terms)},
             torch.stack(terms).mean(0).detach(),
             {},
         )
@@ -2012,7 +2020,11 @@ def evaluate(learner, data, settings):
 
 
 def make_data(settings, split):
-    if settings["dataset"] == "entities":
+    if settings["dataset"] == "entity-matching":
+        return EntityMatches(
+            split, settings.get(f"{split}_windows", 512 if split == "train" else 256)
+        )
+    if settings["dataset"] in ("entities", "entity-matching"):
         return EntityEpisodes(
             split,
             settings.get(f"{split}_windows", 512 if split == "train" else 256),
@@ -2077,7 +2089,8 @@ def check(settings):
             memory_blocks=settings.get("memory_blocks", 16),
             recall=settings["dataset"] == "recall",
             facts=settings["dataset"] == "facts",
-            entities=settings["dataset"] == "entities",
+            entities=settings["dataset"] in ("entities", "entity-matching"),
+            entity_matching=settings["dataset"] == "entity-matching",
             entity_reader=settings.get("entity_reader", "recurrent"),
             entity_association=settings.get("entity_association", "raw"),
             fact_reader=settings.get("fact_reader", "direct"),
@@ -2185,7 +2198,7 @@ def save_task_example(run, model, data, settings):
 
 @torch.no_grad()
 def save_examples(run, learner, data, settings):
-    if settings["dataset"] == "entities":
+    if settings["dataset"] in ("entities", "entity-matching"):
         render_report(run.path)
         return
     if isinstance(data, (RecallEpisodes, FactExamples, EntityEpisodes)):
@@ -2358,7 +2371,7 @@ def save_examples(run, learner, data, settings):
 def train(settings, output, *, resume=False, stop_after=None):
     is_recall = settings["dataset"] == "recall"
     is_facts = settings["dataset"] == "facts"
-    is_entities = settings["dataset"] == "entities"
+    is_entities = settings["dataset"] in ("entities", "entity-matching")
     diagnostic = (
         is_entities
         or is_facts
@@ -2396,6 +2409,7 @@ def train(settings, output, *, resume=False, stop_after=None):
             recall=is_recall,
             facts=is_facts,
             entities=is_entities,
+            entity_matching=settings["dataset"] == "entity-matching",
             entity_reader=settings.get("entity_reader", "recurrent"),
             entity_association=settings.get("entity_association", "raw"),
             fact_reader=settings.get("fact_reader", "direct"),
@@ -2832,7 +2846,15 @@ def main():
     parser.add_argument("--stop-after", type=int)
     parser.add_argument(
         "--dataset",
-        choices=["synthetic", "instructions", "pusht", "recall", "facts", "entities"],
+        choices=[
+            "synthetic",
+            "instructions",
+            "pusht",
+            "recall",
+            "facts",
+            "entities",
+            "entity-matching",
+        ],
         default="synthetic",
     )
     parser.add_argument(
@@ -2907,7 +2929,7 @@ def main():
         args.dataset != "facts" or args.state_model != "belief"
     ):
         parser.error("--fact-reader event requires --dataset facts and belief state")
-    diagnostic = args.dataset in ("facts", "entities") or (
+    diagnostic = args.dataset in ("facts", "entities", "entity-matching") or (
         args.dataset == "recall" and args.recall_mode == "current-recent"
     )
     if not np.isfinite(args.entity_noise) or not 0 <= args.entity_noise < 0.25:
@@ -2927,7 +2949,7 @@ def main():
         parser.error("--entity-association requires --dataset entities")
     if args.recall_mode != "history" and args.dataset != "recall":
         parser.error("--recall-mode requires --dataset recall")
-    if args.dataset == "entities":
+    if args.dataset in ("entities", "entity-matching"):
         import sys
 
         supplied = {v.split("=", 1)[0] for v in sys.argv[1:] if v.startswith("--")}
@@ -3123,13 +3145,15 @@ def main():
             proposal_budget="none",
             time_unit="single observation at neutral time zero",
         )
-    if args.dataset == "entities":
+    if args.dataset in ("entities", "entity-matching"):
         settings.update(
             purpose="diagnostic",
             objective="equal-weight identity/state-pair/post-action proper CE; recurrent controlled proposals; final checkpoint",
             proposal_budget="none",
             time_unit="one controlled observed event",
         )
+    if args.dataset == "entity-matching":
+        settings["objective"] = "three-class known-memory-or-new CE; final checkpoint"
     if args.check:
         print(json.dumps(check(settings), indent=2))
     else:

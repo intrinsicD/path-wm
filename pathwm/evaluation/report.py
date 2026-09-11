@@ -199,6 +199,45 @@ def entity_inspection(directory):
     if not path.exists():
         return []
     data = json.loads(path.read_text())
+    if data.get("task") == "matching":
+        parts = [
+            "<section><h2>Known versus new entity matching</h2>",
+            f"<p>{escape(data['scope'])}</p>",
+            f"<p>Development gates: {'pass' if data['scores']['development']['gates']['passed'] else 'fail'}. Update {data['final_step']}.</p>",
+            '<div class="table"><table><tr><th>Population</th><th>N</th><th>Accuracy</th><th>NLL</th><th>Coverage</th><th>Selected error</th><th>False merge</th><th>False split</th></tr>',
+        ]
+        for split, scores in data["scores"].items():
+            for cohort, row in scores["views"].items():
+                values = [
+                    split + " / " + cohort,
+                    row["examples"],
+                    f"{row['accuracy']:.1%}",
+                    f"{row['nll']:.6f}",
+                ]
+                values += [
+                    "—" if row[k] is None else f"{row[k]:.1%}"
+                    for k in (
+                        "coverage",
+                        "selected_error",
+                        "false_merge",
+                        "false_split",
+                    )
+                ]
+                parts.append(
+                    "<tr>"
+                    + "".join(f"<td>{escape(str(v))}</td>" for v in values)
+                    + "</tr>"
+                )
+        parts.append(
+            "</table></div><p>New is a classification answer; no memory record is allocated. Each four-query group shares a two-record memory. The margins deliberately separate known and new queries.</p>"
+        )
+        parts.append(
+            f"<details><summary>Exact novelty gates and scores</summary><pre>{escape(json.dumps(data['scores'], indent=2))}</pre></details>"
+        )
+        parts.append(
+            f"<details><summary>Matching inputs and predictions</summary><p>Answer order: memory 0, memory 1, new.</p><pre>{escape(json.dumps(data['examples'], indent=2))}</pre></details></section>"
+        )
+        return parts
     passed = data["scores"]["development"]["gates"]["passed"]
     parts = [
         "<section><h2>Two-object entity memory</h2>",

@@ -5,6 +5,8 @@ from pathwm.data.entities import NAMES
 
 
 def entity_metrics(logits, targets, cohorts, groups):
+    if len(logits) == 1:
+        return matching_metrics(logits, targets, cohorts)
     out = {}
     for cohort in ("identifiable", "ambiguous"):
         mask = torch.tensor([c == cohort for c in cohorts])
@@ -91,3 +93,55 @@ def association_diagnostics(model, data):
             -p.gather(1, labels[:, time, None]).clamp_min(1e-30).log().mean()
         )
     return result
+
+
+def matching_metrics(logits, targets, cohorts):
+    scores, target = logits[0].double(), targets[0].argmax(-1)
+    if not torch.isfinite(scores).all():
+        raise ValueError("Nonfinite matching predictions")
+    logp = scores.log_softmax(-1)
+    confidence, chosen = logp.exp().max(-1)
+    correct, select = chosen == target, confidence > 0.75
+    nll = -logp.gather(1, target[:, None]).squeeze(1)
+    views = {}
+    for cohort in ("known", "novel"):
+        mask = torch.tensor([c == cohort for c in cohorts])
+        selected = mask & select
+        views[cohort] = dict(
+            examples=int(mask.sum()),
+            accuracy=float(correct[mask].double().mean()),
+            nll=float(nll[mask].mean()),
+            coverage=float(select[mask].double().mean()),
+            selected_error=float((~correct[selected]).double().mean())
+            if selected.any()
+            else None,
+            false_merge=float((chosen[mask] < 2).double().mean())
+            if cohort == "novel"
+            else None,
+            false_split=float((chosen[mask] == 2).double().mean())
+            if cohort == "known"
+            else None,
+        )
+    gates = dict(
+        known=views["known"]["accuracy"] >= 0.95,
+        novel=views["novel"]["accuracy"] >= 0.95,
+        false_merge=views["novel"]["false_merge"] <= 0.05,
+        false_split=views["known"]["false_split"] <= 0.05,
+        nll=float(nll.mean()) <= 0.15,
+        decisions=all(
+            v["coverage"] >= 0.9
+            and v["selected_error"] is not None
+            and v["selected_error"] <= 0.05
+            for v in views.values()
+        ),
+    )
+    gates["passed"] = all(gates.values())
+    return dict(
+        views=views,
+        gates=gates,
+        overall=dict(
+            nll=float(nll.mean()),
+            factual_accuracy=float(correct.double().mean()),
+            examples=len(target),
+        ),
+    )

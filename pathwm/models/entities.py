@@ -142,3 +142,21 @@ class SharedEntityReader(nn.Module):
             (torch.stack(values, 1) * weights[..., None]).sum(1).clamp_min(1e-30).log()
             for values in outputs
         )
+
+
+class EntityMatchReader(nn.Module):
+    """Learned compatibility scores compete with a trainable new-entity logit."""
+
+    def __init__(self, width=64):
+        super().__init__()
+        self.matcher = nn.Sequential(
+            nn.Linear(8, width), nn.GELU(), nn.Linear(width, 1)
+        )
+        self.null = nn.Parameter(torch.zeros(()))
+
+    def forward(self, inputs):
+        if inputs.ndim != 4 or inputs.shape[1:] != (3, 2, FEATURES):
+            raise ValueError("Matching reader requires the entity input envelope")
+        difference = inputs[:, 0, :, :8] - inputs[:, -1, 0, None, :8]
+        scores = self.matcher(difference.square()).squeeze(-1)
+        return (torch.cat([scores, self.null.expand(len(inputs), 1)], -1),)

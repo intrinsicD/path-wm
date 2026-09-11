@@ -199,3 +199,10 @@ every observation within a guaranteed identity-separation margin. Zero is the
 unchanged stable baseline; allowed values are finite and below 0.25. The declared
 single run uses `--output runs/entity_variation_v1/reference`. Matching remains
 learned; the nearest-descriptor oracle is used only for evaluation and tests.
+
+`--dataset entity-matching` tests whether a unit query matches one of two stored
+unit descriptors or neither. It trains a shared pair scorer and a new-entity logit,
+without allocating records. Use `--output runs/entity_novelty_v1/reference` for the
+fixed 256-update screen. Reports separate false merges, false splits, identity,
+NLL and selection coverage. Known/new distances are deliberately separated; this
+is not general open-world novelty detection or calibrated graph allocation.
