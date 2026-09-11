@@ -27,6 +27,14 @@ using cached predictions. The standalone report includes both stages; raw logits
 split manifest, metrics and checkpoint remain beside it. Read the
 [declared plan and results](fact-learning-plan.md) for gates and interpretation.
 
+To run the same fact task through the existing agent event/task reader, add
+`--fact-reader event` to both check and training commands. It starts a fresh agent
+session for every batch, commits one observation, interprets a constant instruction,
+and reads working tokens after two thinking rounds. The source encoder and final
+heads match the direct control's initialization. Evaluation keeps categorical
+sampling with fixed batch seeds; it is one repeatable realization. The
+[event-control plan](event-fact-plan.md) declares the comparison, limits and results.
+
 Start with `experiments/perception.py`. `build_model` shows the modules; `objective`
 shows exactly what is minimized. Copy the file for a new idea and edit it directly.
 Custom modules can live beside your recipe until they are useful enough to share.

@@ -199,8 +199,13 @@ def fact_inspection(directory):
     if not path.exists():
         return []
     data = json.loads(path.read_text())
+    title = (
+        "Facts through the agent reader"
+        if data.get("reader", "direct") == "event"
+        else "Direct fact extraction"
+    )
     parts = [
-        "<section><h2>Direct fact extraction</h2>",
+        f"<section><h2>{title}</h2>",
         f"<p><strong>Extraction gates: {'pass' if data['gates']['extraction'] else 'fail'}.</strong> "
         f"Final update {data['final_step']}. Entity, location and joint accuracy are scored separately.</p>",
         f"<p>{escape(data['scope'])}</p>",

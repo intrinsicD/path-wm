@@ -86,7 +86,7 @@ from pathwm.evaluation.recall import (
     recall_metrics,
     confidence_diagnostics,
 )
-from pathwm.models.facts import FactReader
+from pathwm.models.facts import FactReader, EventFactReader
 from pathwm.evaluation.facts import fact_metrics, extraction_gates, binding_reference
 
 
@@ -104,9 +104,16 @@ def build_model(
     memory_blocks=16,
     recall=False,
     facts=False,
+    fact_reader="direct",
 ):
     if facts:
-        return FactReader(width)
+        direct = FactReader(width)
+        if fact_reader == "direct":
+            return direct
+        if fact_reader != "event" or state_model != "belief":
+            raise ValueError("Event fact reader requires the categorical belief model")
+    elif fact_reader != "direct":
+        raise ValueError("Fact reader choice requires the facts dataset")
     if state_model not in ("gaussian", "belief"):
         raise ValueError("Unknown state model")
     factory = BeliefAgent if state_model == "belief" else MultimodalAgent
@@ -175,6 +182,8 @@ def build_model(
         if state_model != "belief":
             raise ValueError("Recall requires the categorical belief model")
         model.recall_head = RecallHead(width)
+    if facts:
+        return EventFactReader(model, direct)
     return model
 
 
@@ -262,6 +271,10 @@ def fact_predictions(model, data, settings, *, deadline=None):
                 range(start, min(start + settings["batch_size"], len(data))),
                 settings["device"],
             )
+            if settings.get("fact_reader", "direct") == "event":
+                # One repeatable categorical realization, not a posterior expectation.
+                # evaluation_mode restores the caller's RNG after the complete pass.
+                torch.manual_seed(settings["seed"] + 1000000 + start)
             entity, location = model(batch["fact_observation"])
             outputs.append((entity.cpu(), location.cpu()))
     return dict(
@@ -338,12 +351,17 @@ def finish_facts(run, learner, training, validation, settings, deadline):
         dict(
             schema="pathwm-fact-results-v1",
             **identity,
+            reader=settings.get("fact_reader", "direct"),
             views=views,
             gates=gates,
             per_entity=per_entity,
             binding=binding,
             examples=examples,
-            scope="Same encoder architecture trained from scratch; direct extraction and an explicit binding reference. No recurrent model, calibration or final test.",
+            scope=(
+                "Fresh single-event agent state, ordinary task interpreter and two thinking/memory reads; heads read working tokens only. Fixed-seed categorical evaluation is one repeatable realization. No retention, learned entity-query binding, calibration or final-test claim."
+                if settings.get("fact_reader", "direct") == "event"
+                else "Same encoder architecture trained from scratch; direct extraction and an explicit binding reference. No recurrent model, calibration or final test."
+            ),
         ),
     )
     if not any(r["split"] == "diagnostic_development" for r in run.rows):
@@ -1891,6 +1909,7 @@ def check(settings):
             memory_blocks=settings.get("memory_blocks", 16),
             recall=settings["dataset"] == "recall",
             facts=settings["dataset"] == "facts",
+            fact_reader=settings.get("fact_reader", "direct"),
         ),
         len(data),
     ).to(settings["device"])
@@ -2170,9 +2189,7 @@ def train(settings, output, *, resume=False, stop_after=None):
         not np.isfinite(settings.get("max_seconds", 900.0))
         or settings.get("max_seconds", 900.0) <= 0
     ):
-        raise ValueError(
-            "Diagnostic requires a positive finite active-time budget"
-        )
+        raise ValueError("Diagnostic requires a positive finite active-time budget")
     if is_recall and (
         settings.get("state_model") != "belief" or settings["improve_every"]
     ):
@@ -2195,6 +2212,7 @@ def train(settings, output, *, resume=False, stop_after=None):
             memory_blocks=settings.get("memory_blocks", 16),
             recall=is_recall,
             facts=is_facts,
+            fact_reader=settings.get("fact_reader", "direct"),
         ),
         len(training),
         diagnostic=diagnostic,
@@ -2603,6 +2621,7 @@ def main():
     parser.add_argument(
         "--state-model", choices=["belief", "gaussian"], default="belief"
     )
+    parser.add_argument("--fact-reader", choices=["direct", "event"], default="direct")
     parser.add_argument("--memory-recent", type=int, default=32)
     parser.add_argument("--memory-block", type=int, default=8)
     parser.add_argument("--memory-blocks", type=int, default=16)
@@ -2657,6 +2676,10 @@ def main():
     if args.diagram_depth < 0:
         parser.error("Diagram depth must be nonnegative")
     args = resume_arguments(parser, args)
+    if args.fact_reader != "direct" and (
+        args.dataset != "facts" or args.state_model != "belief"
+    ):
+        parser.error("--fact-reader event requires --dataset facts and belief state")
     diagnostic = args.dataset == "facts" or (
         args.dataset == "recall" and args.recall_mode == "current-recent"
     )
@@ -2827,7 +2850,11 @@ def main():
     if args.dataset == "facts":
         settings.update(
             purpose="diagnostic",
-            objective="equal-weight entity/location CE from one observation; end-to-end source encoder; final checkpoint only",
+            objective=(
+                "equal-weight entity/location CE through one committed agent event, task interpreter and working-token readout; final checkpoint only; fixed batch evaluation seeds"
+                if args.fact_reader == "event"
+                else "equal-weight entity/location CE from one observation; end-to-end source encoder; final checkpoint only"
+            ),
             proposal_budget="none",
             time_unit="single observation at neutral time zero",
         )

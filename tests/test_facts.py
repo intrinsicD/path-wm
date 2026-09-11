@@ -177,13 +177,13 @@ def test_event_fact_matched_initialization_and_working_token_boundary(monkeypatc
     )
 
     def observing(state, observations, **kwargs):
-        assert state.ordinal == 0 and state.observation_count == 0
+        assert state.ordinal == -1 and state.observation_count == 0
         assert set(observations) == {"text"} and kwargs["time"] == 0
         calls.append("observe")
         return observe(state, observations, **kwargs)
 
     def interpreting(state, sessions, **kwargs):
-        assert state.ordinal == state.observation_count == 1
+        assert state.ordinal == 0 and state.observation_count == 1
         assert len({s.request.instruction for s in sessions}) == 1
         assert sessions[0].context_record() == sessions[1].context_record()
         assert "e00" not in sessions[0].request.instruction

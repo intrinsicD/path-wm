@@ -1,10 +1,11 @@
-"""Direct text-fact reference; no session state or evaluator inputs."""
+"""Direct and single-event text-fact controls with label-free forward boundaries."""
 
 import torch
 from torch import nn
 
 from .modalities import Attend
 from .multiscale import MultiScaleTextEncoder
+from .tasks import Actor, TaskRequest, TaskSession
 
 
 class FactReader(nn.Module):
@@ -23,6 +24,44 @@ class FactReader(nn.Module):
             tokens.values,
             valid=tokens.valid,
         )
+        return self.entity_head(read[:, 0]), self.location_head(read[:, 1])
+
+
+class EventFactReader(nn.Module):
+    """Single-event control using the ordinary task interpreter and working tokens.
+
+    The supplied direct reader contributes the matched encoder/readout initialization.
+    No state persists between calls. Labels and per-fact task metadata are not inputs.
+    Categorical draws retain the agent's normal behavior, including in eval mode.
+    """
+
+    def __init__(self, agent, direct):
+        super().__init__()
+        self.agent = agent
+        self.agent.encoders["text"] = direct.encoder
+        self.queries = direct.queries
+        self.reader = direct.reader
+        self.entity_head = direct.entity_head
+        self.location_head = direct.location_head
+
+    def forward(self, observation):
+        state = self.agent.initial_state(
+            len(observation.values), time=0, session_id="fact-control"
+        )
+        state = self.agent.observe(
+            state, {"text": observation}, time=0, replay=self.training
+        )
+        session = TaskSession(
+            TaskRequest(
+                "fact-control",
+                "Identify the observed entity and location.",
+                Actor("user", "fact-control"),
+            )
+        )
+        goal = self.agent.task_tokens(state, [session] * len(state.tokens))
+        working = self.agent.think(state, steps=2, goal=goal)
+        tokens = working.tokens[:, self.agent.layout["working"]]
+        read = self.reader(self.queries.expand(len(tokens), -1, -1), tokens)
         return self.entity_head(read[:, 0]), self.location_head(read[:, 1])
 
 
