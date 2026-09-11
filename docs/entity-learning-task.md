@@ -1047,3 +1047,19 @@ resume with `--resume DIR`. Evidence: `runs/entity_gate_v1/verification.json`;
 immutable donor copied after resume to `runs/entity_gate_v1/frozen_gate.pt`.
 Next proposed: explicitly labelled noise-shift cohorts and threshold sensitivity,
 without interpreting an unlabelled distance sweep as calibrated relevance.
+
+### Frozen gate noise shift (2026-09-11)
+
+No retraining. Freeze `entity_gate_v1/frozen_gate.pt`. Seed801 generates128 pairs
+of four-dimensional unit prototypes; negative prototype distance>=0.9. Each pair
+contains one same-prototype and one different-prototype cue. Add the same sampled
+Gaussian vector to each cue at sigma0.03/0.15/0.30/0.60, then renormalize. Active
+context remains clean. Labels follow generating identity, not observed distance.
+All cohorts share underlying prototypes/noise;256 cases each, not independent
+across severity. Evaluate decision thresholds0.4/0.5/0.6. Primary robustness gate:
+at threshold0.5 each class recall>=95% in EVERY severity; retain failure. Other
+thresholds, Brier score and distance overlap are descriptive, not calibration.
+Budget30 CPU seconds, no optimization. This isolates write decisions and does not
+retest downstream state accuracy. Save raw contexts/probabilities/labels, checkpoint,
+manifest, report and cached resume. Browser QA remains unavailable after the prior
+local-file policy denial; do not try an alternate route.
