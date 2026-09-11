@@ -1069,3 +1069,9 @@ entries:
   - Promote the sensitivity method O142, not a robustness claim; negative results remain visible.
   - No threshold tuning; prototype/noise ambiguity prevents diagnosing a unique defect.
   - Stage O143 as a candidate repair experiment, not an established solution.
+
+- turn: 2026-09-11_001#39
+  notes:
+  - Promote experiment method O143 without treating failed guardrail as a successful repair.
+  - Preserve control and frozen reference; no threshold tuning or donor replacement.
+  - Stage independent-seed replication O144 to assess stability of the tradeoff.

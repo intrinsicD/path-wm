@@ -1110,3 +1110,21 @@ Claude reconciliation accepts the narrow exposure-adaptation claim. Control rows
 repeat the same underlying pairs, matching treatment rows and sampler, but this
 is not a comparison with additional independent low-noise observations. Per-bin
 class recalls and false-write regressions remain required; no denoising claim.
+
+
+Matched continuation result (0139198): acceptance FAIL, preserved. At high noise,
+frozen accuracy75.78125%, control71.484375%, augmented80.078125%; treatment gain
+8.59375 points over control,4.296875 over frozen. Treatment accept recall70.3125%
+versus control49.21875%, but ignore recall89.84375% versus93.75%. At noise0.15,
+treatment ignore94.53125% violates95% guardrail (7 false writes/128 negatives).
+No threshold selected and reference donor unchanged. Both clean runtime state
+accuracies100%; treatment development95.8333%, NLL0.128206. These correlated
+single-seed results establish a tradeoff, not a reliable repair.
+14 relevant tests pass; both cached resumes and independent donor/population/
+probability/metric audit pass. Reports structural-only under prior browser denial.
+Evidence: `runs/entity_gate_augment_v1/verification.json`.
+Use the existing `--entity-gate` command with `--entity-gate-weights INITIAL.pt`;
+add `--entity-gate-augment` for the treatment, omit for matched control. Resume
+with `--resume DIR`. No candidate promoted to the immutable reference.
+Next proposed: independent-seed replication with the same criteria to estimate
+whether the false-write cost persists before changing loss or uncertainty policy.

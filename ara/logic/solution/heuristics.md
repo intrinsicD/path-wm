@@ -343,3 +343,13 @@
 - **Sensitivity**: High-noise failure cannot identify a unique gate defect or Bayes limit. Baseline is not an oracle.
 - **Code ref**: [noise screen](../../../pathwm/evaluation/entity_gate.py).
 - **Evidence**: [frozen shift](../../evidence/tables/entity_gate_shift_2026-09-11.json).
+
+## H36: Match continuation exposure before attributing augmentation gains
+
+- **Rationale**: Compare identical initial gates, source pairs, row counts and optimizer trajectories while varying only cue noise; preserve frozen and clean references.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O143
+- **Sensitivity**: Method commitment, not repair success. Repeated control rows are not additional independent observations; higher recall can increase false writes.
+- **Code ref**: [augmentation](../../../pathwm/evaluation/entity_gate.py), [recipe](../../../experiments/multimodal.py).
+- **Evidence**: [failed guardrail](../../evidence/tables/entity_gate_augment_2026-09-11.json).

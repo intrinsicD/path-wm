@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T15:49+02:00
-  turn_count: 38
-  summary: "Frozen gate robustness fails at larger noise;12 relevant tests and resume pass, no retraining or threshold selection."
+  last_turn: 2026-09-11T15:57+02:00
+  turn_count: 39
+  summary: "Matched augmentation improves high-noise accuracy but fails ignore guardrail;14 relevant tests and both resumes pass."
 events_logged:
 - turn: 1
   type: question
@@ -690,6 +690,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Candidate noise-augmentation comparison.
+- turn: 39
+  type: experiment
+  id: N222
+  routing: direct
+  provenance: ai-executed
+  summary: Matched augmentation fails guardrail despite accuracy gain.
+- turn: 39
+  type: observation
+  id: O143
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Matched method promoted to H36 by artifact commitment.
+- turn: 39
+  type: observation
+  id: O144
+  routing: staged
+  provenance: ai-suggested
+  summary: Independent-seed replication proposed.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -959,6 +977,10 @@ ai_actions:
   files_changed: [experiments/multimodal.py, pathwm/evaluation/entity_gate.py, pathwm/evaluation/report.py]
 - turn: 38
   action: Implemented frozen stress recipe, reconciled Claude critique twice, ran12 tests, comparison, resume and independent audit.
+  provenance: ai-executed
+  files_changed: [experiments/multimodal.py, pathwm/evaluation/entity_gate.py, pathwm/evaluation/report.py]
+- turn: 39
+  action: Implemented matched continuation, reconciled Claude review, ran14 tests, two training arms and resumes, independently audited results.
   provenance: ai-executed
   files_changed: [experiments/multimodal.py, pathwm/evaluation/entity_gate.py, pathwm/evaluation/report.py]
 claims_touched: []

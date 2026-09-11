@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Frozen gate robustness fails at larger noise;12 relevant tests and resume pass, no retraining or threshold selection."
-  turn_count: 38
-  events_count: 109
+  summary: "Matched augmentation improves high-noise accuracy but fails ignore guardrail;14 relevant tests and both resumes pass."
+  turn_count: 39
+  events_count: 112
   claims_touched: []
   open_threads: 13

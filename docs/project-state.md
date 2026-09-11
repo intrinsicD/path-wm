@@ -1,5 +1,14 @@
 # Current work
 
+**Noise augmentation improves recall but fails acceptance, 11 September:** on fresh
+contexts high-noise accuracy80.08% versus matched control71.48% (frozen75.78%).
+Low-noise0.15 ignore recall94.53% misses95% criterion; reference stays unchanged.
+Both arms preserve100% clean runtime state accuracy.14 relevant tests, both cached
+resumes and independent paired audit pass. [Treatment report](../runs/entity_gate_augment_v1/augmented/report.html)
+and [control](../runs/entity_gate_augment_v1/control/report.html) are structurally
+verified; visual QA remains unavailable. Next proposed: independent-seed replication
+of the recall/false-write tradeoff before another repair or threshold choice.
+
 **Frozen gate noise shift finds a limit, 11 September:** the primary per-class
 robustness gate fails at sigma0.30 and0.60. Accept recall drops92.97% then55.47%;
 ignore recall remains≥95%. Sigma0.03/0.15 pass at100%. No retraining or threshold

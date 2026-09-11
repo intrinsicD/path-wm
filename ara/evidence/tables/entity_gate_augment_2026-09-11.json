@@ -1,0 +1,77 @@
+{
+  "matched_donors": true,
+  "matched_populations": true,
+  "independent_metrics": true,
+  "augmentation_gain": 0.0859375,
+  "passed": false,
+  "arms": {
+    "control": {
+      "passed": false,
+      "adaptation_passed": false,
+      "runtime_accuracy": 1.0,
+      "scores": {
+        "0.03": {
+          "accuracy": 1.0,
+          "negative_recall": 1.0,
+          "positive_recall": 1.0
+        },
+        "0.15": {
+          "accuracy": 1.0,
+          "negative_recall": 1.0,
+          "positive_recall": 1.0
+        },
+        "0.3": {
+          "accuracy": 0.92578125,
+          "negative_recall": 0.9921875,
+          "positive_recall": 0.859375
+        },
+        "0.6": {
+          "accuracy": 0.71484375,
+          "negative_recall": 0.9375,
+          "positive_recall": 0.4921875
+        }
+      }
+    },
+    "augmented": {
+      "passed": false,
+      "adaptation_passed": false,
+      "runtime_accuracy": 1.0,
+      "scores": {
+        "0.03": {
+          "accuracy": 0.984375,
+          "negative_recall": 0.96875,
+          "positive_recall": 1.0
+        },
+        "0.15": {
+          "accuracy": 0.97265625,
+          "negative_recall": 0.9453125,
+          "positive_recall": 1.0
+        },
+        "0.3": {
+          "accuracy": 0.94921875,
+          "negative_recall": 0.921875,
+          "positive_recall": 0.9765625
+        },
+        "0.6": {
+          "accuracy": 0.80078125,
+          "negative_recall": 0.8984375,
+          "positive_recall": 0.703125
+        }
+      }
+    }
+  },
+  "browser_checked": false,
+  "report_validation": "structural_only_prior_policy_denial",
+  "sha256": {
+    "control": {
+      "entity_gate.json": "c82a65a64f37382118592df7419a4f0461e14a6846a4248bd43dd6b845fa528a",
+      "last.pt": "0d34b3486998c3e2fd79b8c08bba600eae6e92ce6c1e43e1bc2a440bb2d0d8d6",
+      "report.html": "ddb577de700c49fe3014f377e9315aaf82fe0f7c19ef8fb3003cb4cda3acda7c"
+    },
+    "augmented": {
+      "entity_gate.json": "131635880650cfc6bcdb354ed4530fbb663be44ba669ab1c93ebde0712941790",
+      "last.pt": "c4c98c74cbefda730c308e28ce9b9ee67886a05b05bdcc27621d259b4baf23dd",
+      "report.html": "bce67cc0a05b5b0c5d74d709021e88a7726e62db5ac671ff3fff22285c6f97ff"
+    }
+  }
+}

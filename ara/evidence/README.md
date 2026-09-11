@@ -83,3 +83,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Context write gate](tables/entity_gate_2026-09-11.json): N220; frozen-consumer learning on separated context regimes; visual QA unavailable.
 
 - [Frozen gate noise shift](tables/entity_gate_shift_2026-09-11.json): N221; high-noise accept recall fails declared robustness gate.
+
+- [Matched noise augmentation](tables/entity_gate_augment_2026-09-11.json): N222; accuracy improves but ignore-recall guardrail fails.

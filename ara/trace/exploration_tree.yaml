@@ -3451,3 +3451,13 @@ tree:
   evidence: [ara/evidence/tables/entity_gate_shift_2026-09-11.json, "git:5a241b8"]
   also_depends_on: [N220]
   status: resolved
+
+- id: N222
+  type: experiment
+  title: Noise augmentation trades fewer misses for more false writes
+  provenance: ai-executed
+  timestamp: 2026-09-11T15:57+02:00
+  result: High-noise accuracy80.08 versus control71.48 percent; low-noise ignore94.53 misses95 percent guardrail.14 relevant tests and both resumes pass; reference unchanged.
+  evidence: [ara/evidence/tables/entity_gate_augment_2026-09-11.json, "git:0139198"]
+  also_depends_on: [N221]
+  status: resolved
