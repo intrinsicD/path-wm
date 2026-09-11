@@ -1430,3 +1430,9 @@ utility and reset counts. Thresholds fixed before run; no adjustment after resul
 Tests: unchanged and changed feedback streams, block boundaries, source isolation,
 invalid feedback rollback, action-before-feedback and cached resume. Source changes
 committed before formal evaluation; existing completed artifacts remain untouched.
+
+Claude review: accepted the bounded screen, stressing false resets, selected-source
+feedback latency and untested threshold sensitivity. Reconciliation retains fixed
+settings and reports every episode's first-reset case (including no reset), not
+just a mean; no claim of calibrated detection or timing robustness. Review receipts:
+`runs/reviews/continuation_2026-09-11/source-change{,-reconcile}-receipt.json`.

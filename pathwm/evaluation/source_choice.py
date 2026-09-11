@@ -126,20 +126,23 @@ def evaluate_source_choice(gate, worlds=16, seed=1601):
 
 
 def evaluate_source_drift(gate, worlds=16):
-    calibration = evaluate_source_choice(gate, worlds, seed=1701)
+    calibration = evaluate_source_choice(gate, worlds, seed=1801)
     rows = []
     for base in calibration["worlds"]:
         labels = torch.tensor(base["labels"])
         first = torch.tensor(base["first_predictions"])
         sources = torch.tensor(base["source_predictions"]).T
         mask = torch.tensor(base["defer"])
-        rng = torch.Generator().manual_seed(3701 + base["world"])
+        rng = torch.Generator().manual_seed(3801 + base["world"])
         coins = torch.rand(256, generator=rng)
         explore = torch.randint(2, (256,), generator=rng)
         for swapped in (False, True):
             outcomes = sources[:, [1, 0]] if swapped else sources
-            for name in ("frozen", "cumulative", "window", "no_feedback"):
-                policy = SourceChoice(window=32 if name == "window" else None)
+            for name in ("frozen", "cumulative", "window", "triggered", "no_feedback"):
+                policy = SourceChoice(
+                    window=32 if name == "window" else None,
+                    change_block=32 if name == "triggered" else None,
+                )
                 for event in base["feedback"]:
                     policy.observe(event["source"], event["gain"] - 0.005)
                 initial = policy.snapshot()
@@ -161,7 +164,7 @@ def evaluate_source_drift(gate, worlds=16):
                     if action is not None:
                         pred = bool(outcomes[i, action])
                         fee = 0.05
-                        if name in ("cumulative", "window"):
+                        if name in ("cumulative", "window", "triggered"):
                             fee += 0.005
                             feedback = (
                                 float(pred == bool(labels[i]))
@@ -192,6 +195,18 @@ def evaluate_source_drift(gate, worlds=16):
                         initial=initial,
                         feedback_calibration=base["feedback"],
                         actions=actions,
+                        calibration_resets=sum(initial.get("resets", [])),
+                        post_resets=sum(policy.snapshot().get("resets", []))
+                        - sum(initial.get("resets", [])),
+                        first_reset_case=next(
+                            (
+                                j
+                                for j, event in enumerate(actions)
+                                if event["before"].get("resets")
+                                != event["after"].get("resets")
+                            ),
+                            None,
+                        ),
                         early_utility=sum(rewards[:128]) / 128,
                         late_utility=sum(rewards[128:]) / 128,
                         utility=sum(rewards) / 256,
@@ -201,7 +216,7 @@ def evaluate_source_drift(gate, worlds=16):
     summary = {}
     for swapped in (False, True):
         summary["drift" if swapped else "static"] = {}
-        for name in ("frozen", "cumulative", "window", "no_feedback"):
+        for name in ("frozen", "cumulative", "window", "triggered", "no_feedback"):
             chosen = [
                 r for r in rows if r["swapped"] == swapped and r["policy"] == name
             ]
@@ -216,12 +231,24 @@ def evaluate_source_drift(gate, worlds=16):
             }
     d = summary["drift"]
     s = summary["static"]
+    static_resets = (
+        sum(
+            r["post_resets"] > 0
+            for r in rows
+            if not r["swapped"] and r["policy"] == "triggered"
+        )
+        / worlds
+    )
     return dict(
+        detector=dict(
+            block=32, threshold=0.15, static_reset_episode_rate=static_resets
+        ),
         summary=summary,
         episodes=rows,
         environment=calibration["worlds"],
-        passed=d["window"]["late_utility"] >= d["frozen"]["late_utility"] + 0.01
-        and d["window"]["late_utility"] >= d["cumulative"]["late_utility"] + 0.01
-        and d["window"]["utility"] >= d["frozen"]["utility"] - 0.01
-        and s["window"]["utility"] >= s["frozen"]["utility"] - 0.02,
+        passed=d["triggered"]["late_utility"] >= d["frozen"]["late_utility"] + 0.01
+        and d["triggered"]["late_utility"] >= d["cumulative"]["late_utility"] + 0.01
+        and d["triggered"]["utility"] >= d["frozen"]["utility"] - 0.01
+        and s["triggered"]["utility"] >= s["frozen"]["utility"] - 0.02
+        and static_resets <= 0.25,
     )
