@@ -721,3 +721,21 @@ Next proposed: test a state-preserving no-information update for this determinis
 task, with fresh idle lengths and the failed learned-update reference preserved.
 This would be a task-specific architectural intervention, not a general rule for
 belief evolution without observations. No graph-learning claim follows.
+
+### Explicit idle preservation plan
+
+Compare a task-specific exact `[0,0,0,1]` no-information bypass with the frozen
+mixed-history cell. Persist the policy in checkpoint state; legacy checkpoints keep
+learned updates. Training and transactional runtime share one update operation.
+Essential red checks cover exact latent preservation, gradient identity, non-idle
+updates, retries and rejection of snapshots with different update semantics.
+
+One seed31 mixed-history training run, same512/256 examples,256 updates,32 batch,
+AdamW0.003 and450-second budget. Recognition remains frozen. No tuning. Frozen
+comparison uses fresh descriptor seed131,16 families, the existing five temporal
+cohorts plus idle stretches of3 and31 events;256 rows per cohort. Evaluation budget
+240 seconds per model. Fixed gates remain pair accuracy>=95%, NLL<=0.15, runtime
+accuracy>=95%, all transaction and existing latent-tolerance checks. Require exact
+idle preservation additionally. Reuse the original mixed-history immutable donor;
+copy the new donor only after cached training resume. This establishes an explicit
+invariant for deterministic dynamics, not learned general belief persistence.
