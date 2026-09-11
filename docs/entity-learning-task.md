@@ -1157,3 +1157,16 @@ changes, additional tuning, or donor promotion. Evidence:
 or2 with the existing matched continuation command; index0 preserves prior seeds.
 Next candidate: clean-behavior retention term during noisy continuation, with
 separately declared tradeoff weights and fresh evaluation. Not implemented yet.
+
+### Clean-retention comparison (2026-09-11)
+
+Replicate index3 (seed74, descriptor1201/1202/1203, context1211/1212/1213,
+stress1221), two noisy continuation arms, same immutable gate donor. Existing
+256steps/batch32/lr0.01/wd0.01/450s per arm. Treatment adds Bernoulli KL weight1
+between current and initial gate probabilities on corresponding low-noise replay
+contexts; control weight0. Cache detached teacher probabilities from train only.
+Same sampled rows and clean forwards in both arms; no additional sampler draws.
+Keep all prior adaptation/runtime/development guards. Retention comparison passes
+only if treatment passes those guards, clean runtime NLL is lower than control,
+and sigma0.60 accuracy loses<=2 points versus control. No coefficient search.
+Teacher consistency is not truth or calibration; errors may be preserved.

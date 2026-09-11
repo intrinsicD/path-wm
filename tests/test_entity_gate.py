@@ -180,3 +180,14 @@ def test_replication_seed_contract():
     assert torch.equal(a["labels"], b["labels"])
     with pytest.raises(ValueError):
         gate_replication_seeds(-1)
+
+
+def test_retention_detaches_teacher_and_has_correct_direction():
+    from pathwm.evaluation.entity_gate import gate_retention_loss
+    student = torch.tensor([.2,.8], requires_grad=True)
+    teacher = torch.tensor([.8,.2], requires_grad=True)
+    loss = gate_retention_loss(student, teacher)
+    loss.backward()
+    assert teacher.grad is None
+    assert student.grad[0] < 0 and student.grad[1] > 0
+    assert abs(gate_retention_loss(teacher, teacher).item()) < 1e-6
