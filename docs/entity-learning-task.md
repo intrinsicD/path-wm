@@ -191,3 +191,17 @@ snapshots and 1280×720 browser QA are bound in
 `runs/entity_learning_v1/reference/report.html`. Prior Claude task reviews supplied
 the conceptual critique; this implementation used local tests and audits without another
 external review round. No test population was loaded by the training recipe.
+
+## Association-bypass diagnostic (authorized continuation)
+
+Add `--entity-association observed` as a deterministic input transform: replace the
+8 appearance coordinates by two exact visible-descriptor matches to the initial
+candidate order, padded with zeros. Hidden descriptors receive a symmetric 0.5/0.5
+assignment while their visibility flag stays false. Other features and candidate
+order remain unchanged. This supplies association, not switch-state answers or hidden
+simulator IDs; it is a synthetic diagnostic, not learned recognition or a graph.
+Keep the same GRU, parameter initialization, data, seed31, optimizer and 256-update /
+450-active-second cap as the preserved raw reference. One run, unchanged gates; no
+sweep or graph run in this slice. Report the intervention explicitly. Improvements
+cannot isolate the original failure's sole cause. Test input-only matching, missingness,
+permutation covariance, no mutation, and exact resume for the new condition.

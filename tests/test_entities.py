@@ -122,3 +122,19 @@ def test_entity_scores_oracle_and_abstention():
         torch.testing.assert_close(swapped[0], expected[0].flip(0))
         for actual, target in zip(swapped[1:], expected[1:]):
             torch.testing.assert_close(actual, target[[0, 2, 1, 3]])
+
+
+def test_observed_association_input_only_and_missingness():
+    from pathwm.models.entities import observed_association
+    from pathwm.data.entities import EntityEpisodes
+
+    x = EntityEpisodes('train', 32).inputs
+    before = x.clone()
+    y = observed_association(x)
+    assert torch.equal(x, before)
+    assert torch.equal(y[..., 8:], x[..., 8:])
+    torch.testing.assert_close(y[:, 0, :, :2], torch.eye(2).expand(32, -1, -1))
+    torch.testing.assert_close(y[16:, -1, :, :2], torch.full((16, 2, 2), .5))
+    assert torch.count_nonzero(y[..., 2:8]) == 0
+    swap = observed_association(x.flip(2))
+    torch.testing.assert_close(swap[..., :2], y.flip(2)[..., [1, 0]])
