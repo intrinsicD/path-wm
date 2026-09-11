@@ -1138,3 +1138,7 @@ arm; four runs total, no tuning. Preserve all previous criteria. Replication pas
 only if both treatments pass their full gates AND gain>=2 points over their paired
 controls at sigma0.60. Report each replicate separately; no pooled confidence or
 best-seed selection. This is conditional on one donor, not initialization variance.
+
+Claude reconciliation: two single-donor repeats are a descriptive screen, not
+statistical confirmation. Report each class/severity, no pooled promotion; even
+two passes remain provisional.15 relevant tests pass, including nonzero-index resume.

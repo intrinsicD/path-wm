@@ -146,7 +146,7 @@ def test_gate_recipe_resume(tmp_path, monkeypatch, continuation):
     if continuation:
         gate_donor = tmp_path / "gate.pt"
         torch.save({"model": RelationWriteGate().state_dict()}, gate_donor)
-        kwargs = dict(gate_weights=gate_donor, augmented=True)
+        kwargs = dict(gate_weights=gate_donor, augmented=True, replicate=1)
     train_entity_gate(donor, cell, key, output, **kwargs)
     raw = (output / "entity_gate.json").read_bytes()
     train_entity_gate(donor, cell, key, output, resume=True, **kwargs)
@@ -169,7 +169,14 @@ def test_augmented_pairs_preserve_supervision():
 
 def test_replication_seed_contract():
     from experiments.multimodal import gate_replication_seeds
+
     assert gate_replication_seeds(0) == (71, 0)
     assert gate_replication_seeds(2) == (73, 200)
+    from pathwm.evaluation.entity_gate import gate_shift_examples
+
+    a = gate_shift_examples(921 + gate_replication_seeds(1)[1], 4)
+    b = gate_shift_examples(921 + gate_replication_seeds(2)[1], 4)
+    assert not torch.equal(a["active"], b["active"])
+    assert torch.equal(a["labels"], b["labels"])
     with pytest.raises(ValueError):
         gate_replication_seeds(-1)
