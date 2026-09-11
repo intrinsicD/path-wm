@@ -1,0 +1,365 @@
+{
+  "verified_at": "2026-09-11T07:07:21.884241+00:00",
+  "implementation_commit": "4c3aebf92a90604a33096de9a19543f11a48288a",
+  "runs": {
+    "reference": {
+      "settings": {
+        "abstain_cost": 0.25,
+        "audio_samples": 32,
+        "batch_size": 16,
+        "calibration_windows": 15,
+        "data_root": "data/pusht_world_model/cchi_v1",
+        "dataset": "facts",
+        "device": "cpu",
+        "ema_decay": 0.99,
+        "evaluate_every": 32,
+        "fact_encoder_initialization": {
+          "checkpoint": "/home/alex/Documents/path-wm/runs/fact_grounding_v1/reference/last.pt",
+          "component": "agent.encoder",
+          "encoder_sha256": "93f955cdef171ca400a163a6302586da61a5b6c456b3e2e932f76e9beb000248",
+          "sha256": "eec43cc215980aff9bd31023c39bfc41364f0d4ec79244972728318fc2305508",
+          "trainable": true
+        },
+        "fact_encoder_weights": "runs/fact_grounding_v1/reference/last.pt",
+        "fact_reader": "event",
+        "history": 1,
+        "horizon": 1,
+        "image_size": 16,
+        "improve_every": 0,
+        "learning_rate": 0.0003,
+        "max_seconds": 450.0,
+        "memory_block": 8,
+        "memory_blocks": 16,
+        "memory_recent": 32,
+        "objective": "equal-weight entity/location CE through one committed agent event, task interpreter and working-token readout; final checkpoint only; fixed batch evaluation seeds",
+        "precision": "fp32",
+        "proposal_budget": "none",
+        "purpose": "diagnostic",
+        "recall_mode": "history",
+        "recall_truncate": 32,
+        "seed": 23,
+        "state_model": "belief",
+        "steps": 512,
+        "test_windows": 15,
+        "time_unit": "single observation at neutral time zero",
+        "train_windows": 96,
+        "validation_windows": 32,
+        "width": 32
+      },
+      "initial_model_sha256": "b837d0eb4ccac7707c5ce56cb6a55d6fa975eb4039e520d0ecb670cfcaed84d3",
+      "step": 512,
+      "training_active_seconds": 51.913029176648706,
+      "views": {
+        "development": {
+          "entity_accuracy": 0.0,
+          "entity_nll": 3.840849405076529,
+          "examples": 32,
+          "factual_accuracy": 0.0,
+          "location_accuracy": 0.96875,
+          "location_nll": 0.2864358410544266,
+          "nll": 2.063642623065478
+        },
+        "train": {
+          "entity_accuracy": 0.03125,
+          "entity_nll": 3.4430783411870145,
+          "examples": 96,
+          "factual_accuracy": 0.03125,
+          "location_accuracy": 0.9895833333333334,
+          "location_nll": 0.277688363584287,
+          "nll": 1.8603833523856508
+        }
+      },
+      "gates": {
+        "extraction": false,
+        "fresh_combinations": false,
+        "training_fit": false
+      },
+      "binding": {
+        "status": "skipped_failed_extraction_gate"
+      },
+      "all_checkpoint_floats_finite": true,
+      "raw_metric_recomputation_matches": true,
+      "binding_audit": "skipped_failed_extraction_gate",
+      "cached_predictions_results_and_rows_unchanged": true,
+      "source_and_snapshot_match": true,
+      "report": {
+        "width": 1280,
+        "height": 720,
+        "overflow": false,
+        "brokenImages": 0,
+        "examples_expand": true,
+        "encoder_identity_expand": true,
+        "structural_verified": true,
+        "browser_verified": true,
+        "report_sha256": "98f21d08099adfb845bb4680c4d237087b1b32d3c6f91a89694d03b6943551e3"
+      }
+    },
+    "lr_control": {
+      "settings": {
+        "abstain_cost": 0.25,
+        "audio_samples": 32,
+        "batch_size": 16,
+        "calibration_windows": 15,
+        "data_root": "data/pusht_world_model/cchi_v1",
+        "dataset": "facts",
+        "device": "cpu",
+        "ema_decay": 0.99,
+        "evaluate_every": 32,
+        "fact_encoder_initialization": {
+          "checkpoint": "/home/alex/Documents/path-wm/runs/fact_grounding_v1/reference/last.pt",
+          "component": "agent.encoder",
+          "encoder_sha256": "93f955cdef171ca400a163a6302586da61a5b6c456b3e2e932f76e9beb000248",
+          "sha256": "eec43cc215980aff9bd31023c39bfc41364f0d4ec79244972728318fc2305508",
+          "trainable": true
+        },
+        "fact_encoder_weights": "runs/fact_grounding_v1/reference/last.pt",
+        "fact_reader": "event",
+        "history": 1,
+        "horizon": 1,
+        "image_size": 16,
+        "improve_every": 0,
+        "learning_rate": 0.001,
+        "max_seconds": 450.0,
+        "memory_block": 8,
+        "memory_blocks": 16,
+        "memory_recent": 32,
+        "objective": "equal-weight entity/location CE through one committed agent event, task interpreter and working-token readout; final checkpoint only; fixed batch evaluation seeds",
+        "precision": "fp32",
+        "proposal_budget": "none",
+        "purpose": "diagnostic",
+        "recall_mode": "history",
+        "recall_truncate": 32,
+        "seed": 23,
+        "state_model": "belief",
+        "steps": 512,
+        "test_windows": 15,
+        "time_unit": "single observation at neutral time zero",
+        "train_windows": 96,
+        "validation_windows": 32,
+        "width": 32
+      },
+      "initial_model_sha256": "b837d0eb4ccac7707c5ce56cb6a55d6fa975eb4039e520d0ecb670cfcaed84d3",
+      "step": 512,
+      "training_active_seconds": 51.59109652217012,
+      "views": {
+        "development": {
+          "entity_accuracy": 0.0,
+          "entity_nll": 4.774020401926862,
+          "examples": 32,
+          "factual_accuracy": 0.0,
+          "location_accuracy": 1.0,
+          "location_nll": 0.012223011125418713,
+          "nll": 2.39312170652614
+        },
+        "train": {
+          "entity_accuracy": 0.03125,
+          "entity_nll": 3.285444600283505,
+          "examples": 96,
+          "factual_accuracy": 0.03125,
+          "location_accuracy": 1.0,
+          "location_nll": 0.011936437875163025,
+          "nll": 1.6486905190793342
+        }
+      },
+      "gates": {
+        "extraction": false,
+        "fresh_combinations": false,
+        "training_fit": false
+      },
+      "binding": {
+        "status": "skipped_failed_extraction_gate"
+      },
+      "all_checkpoint_floats_finite": true,
+      "raw_metric_recomputation_matches": true,
+      "binding_audit": "skipped_failed_extraction_gate",
+      "cached_predictions_results_and_rows_unchanged": true,
+      "source_and_snapshot_match": true,
+      "report": {
+        "width": 1280,
+        "height": 720,
+        "overflow": false,
+        "brokenImages": 0,
+        "examples_expand": true,
+        "encoder_identity_expand": true,
+        "structural_verified": true,
+        "browser_verified": true,
+        "report_sha256": "0e8c726011c67e5fe32a19d083891fe580ab1bef39e5e4cd948395b6d067d845"
+      }
+    }
+  },
+  "total_training_active_seconds": 103.50412569881883,
+  "total_training_attempts": 2,
+  "direct_reference_data_and_core_settings_match": true,
+  "initialization_audit": {
+    "cold_initializer_matches_saved_run": true,
+    "construction_rng_unchanged": true,
+    "exactly_transferred_tensors_including_inert_target": 160,
+    "unchanged_other_tensors": 1392,
+    "cold_initial_model_sha256": "8511e1e360c4333b3e57270409c7eb96f43352bea37381d890830940b1eb928e",
+    "warm_initial_model_sha256": "b837d0eb4ccac7707c5ce56cb6a55d6fa975eb4039e520d0ecb670cfcaed84d3",
+    "encoder_initialization": {
+      "checkpoint": "/home/alex/Documents/path-wm/runs/fact_grounding_v1/reference/last.pt",
+      "sha256": "eec43cc215980aff9bd31023c39bfc41364f0d4ec79244972728318fc2305508",
+      "component": "agent.encoder",
+      "encoder_sha256": "93f955cdef171ca400a163a6302586da61a5b6c456b3e2e932f76e9beb000248",
+      "trainable": true
+    }
+  },
+  "cold_warm_comparisons": {
+    "reference": {
+      "cold_views": {
+        "development": {
+          "entity_accuracy": 0.03125,
+          "entity_nll": 3.475470932133923,
+          "examples": 32,
+          "factual_accuracy": 0.0,
+          "location_accuracy": 0.25,
+          "location_nll": 1.386844576558876,
+          "nll": 2.4311577543463994
+        },
+        "train": {
+          "entity_accuracy": 0.03125,
+          "entity_nll": 3.471990687369086,
+          "examples": 96,
+          "factual_accuracy": 0.010416666666666666,
+          "location_accuracy": 0.25,
+          "location_nll": 1.3911851456342286,
+          "nll": 2.431587916501657
+        }
+      },
+      "warm_views": {
+        "development": {
+          "entity_accuracy": 0.0,
+          "entity_nll": 3.840849405076529,
+          "examples": 32,
+          "factual_accuracy": 0.0,
+          "location_accuracy": 0.96875,
+          "location_nll": 0.2864358410544266,
+          "nll": 2.063642623065478
+        },
+        "train": {
+          "entity_accuracy": 0.03125,
+          "entity_nll": 3.4430783411870145,
+          "examples": 96,
+          "factual_accuracy": 0.03125,
+          "location_accuracy": 0.9895833333333334,
+          "location_nll": 0.277688363584287,
+          "nll": 1.8603833523856508
+        }
+      },
+      "same_core_settings": true,
+      "same_final_sampler": true
+    },
+    "lr_control": {
+      "cold_views": {
+        "development": {
+          "entity_accuracy": 0.0,
+          "entity_nll": 3.767302697936149,
+          "examples": 32,
+          "factual_accuracy": 0.0,
+          "location_accuracy": 0.75,
+          "location_nll": 0.5751233120090458,
+          "nll": 2.1712130049725973
+        },
+        "train": {
+          "entity_accuracy": 0.052083333333333336,
+          "entity_nll": 3.4388474740489836,
+          "examples": 96,
+          "factual_accuracy": 0.041666666666666664,
+          "location_accuracy": 0.75,
+          "location_nll": 0.5725076702357961,
+          "nll": 2.00567757214239
+        }
+      },
+      "warm_views": {
+        "development": {
+          "entity_accuracy": 0.0,
+          "entity_nll": 4.774020401926862,
+          "examples": 32,
+          "factual_accuracy": 0.0,
+          "location_accuracy": 1.0,
+          "location_nll": 0.012223011125418713,
+          "nll": 2.39312170652614
+        },
+        "train": {
+          "entity_accuracy": 0.03125,
+          "entity_nll": 3.285444600283505,
+          "examples": 96,
+          "factual_accuracy": 0.03125,
+          "location_accuracy": 1.0,
+          "location_nll": 0.011936437875163025,
+          "nll": 1.6486905190793342
+        }
+      },
+      "same_core_settings": true,
+      "same_final_sampler": true
+    }
+  },
+  "donor_exposure": {
+    "updates": 512,
+    "fact_presentations": 8192,
+    "active_seconds": 10.350238185026683
+  },
+  "tests": {
+    "tests.xml": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "88",
+      "time": "75.305",
+      "timestamp": "2026-09-11T08:54:47.706181+02:00",
+      "hostname": "alex-home"
+    },
+    "fact-tests.xml": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "0",
+      "tests": "9",
+      "time": "15.266",
+      "timestamp": "2026-09-11T08:53:15.162255+02:00",
+      "hostname": "alex-home"
+    }
+  },
+  "limits": "Reused development combinations; additional donor training exposure. Shared text encoder also reads the fixed instruction. One fixed-seed categorical evaluation realization per batch; shared initialization and exposure do not isolate capacity or optimization. No multi-event retention or learned query-binding conclusion.",
+  "claude_receipts": [
+    "runs/reviews/continuation_2026-09-11/warm-start-receipt.json",
+    "runs/reviews/continuation_2026-09-11/warm-reconcile-receipt.json"
+  ],
+  "sha256": {
+    "reference/run.json": "ff36553229164d0130b85bec822ce95651595cd11f9104862878c69f47a2383b",
+    "reference/last.pt": "2212d2aa4c670f5a56725c004f008ad8ca534f1292fc2f4f7806a06570f39186",
+    "reference/metrics.jsonl": "8563b95e45c645b0a95ac77529c0c6e7540880a114536ee4fa2c7ef1d7d37ba2",
+    "reference/fact_manifest.json": "8ee1cb49da789e94e01c9774f535cb0da8ab548ee8faa1f9a96811307cbc9248",
+    "reference/fact_results.json": "67dd83bbaefa3f55ac35ea6effaa9270f72db0ddd230fce254dba92a961ff4e6",
+    "reference/fact_predictions.pt": "f64dc0bc90d624daf635541642acc7ba0b0326379897c24711979c808f05af3b",
+    "reference/report.html": "98f21d08099adfb845bb4680c4d237087b1b32d3c6f91a89694d03b6943551e3",
+    "reference/report.qa.json": "632ecaed4f209d562bcd552b104e74803a3acd7136ee8df7a6ce20209e1f33b4",
+    "reference-resume.json": "13bc8006da09f69a7290e193d9edd3bf2a7a6b2a40e56e8d51bb6347149347dd",
+    "reference-browser.json": "ea12e82d13d2f64e17a254e32927bfd8ea23637384bd0f2357539943d6e3b9b3",
+    "reference-top.png": "f1168e9e198b2d42c9fa1a9529603e23e233a67277ddd2cacb13d46ab0a2bc8a",
+    "reference-metrics.png": "95dcccbe22bdb117dccaa638436b5679caf92b75d4782a1eaa1dffd944411f67",
+    "lr_control/run.json": "d1961844ad2ab82c0933e501b23d418485f413772c234e5a60cc3330e757f1c8",
+    "lr_control/last.pt": "50354f0a778137faacfc53e719cd7e63392081f0ac46880f491629b0a2b292c4",
+    "lr_control/metrics.jsonl": "a6f0c5739d7b81f2d4bcc1c5fb085a6b2dc11bb0b09b091a0950e315a08613ab",
+    "lr_control/fact_manifest.json": "8ee1cb49da789e94e01c9774f535cb0da8ab548ee8faa1f9a96811307cbc9248",
+    "lr_control/fact_results.json": "83dda0efa3fde42b14d799c60ce557788dbcfdd08bdba953d97d07c069d3bd20",
+    "lr_control/fact_predictions.pt": "9c89b684f92c0d1ac7f213dc02f012fb07d7426f9c873fc54e7fce4739bd1096",
+    "lr_control/report.html": "0e8c726011c67e5fe32a19d083891fe580ab1bef39e5e4cd948395b6d067d845",
+    "lr_control/report.qa.json": "7ef647b7d33094e9a46f59da242f6de98ad4703584ce4605fd133e340957560d",
+    "lr_control-resume.json": "cd0efa9a534075e0ddc021c861beb0824b11d53f2ad133b91dbabf36d1cd9fd3",
+    "lr_control-browser.json": "8e19ddf400982432f737073a03000647d886c62b0c34de8c06d0a760c8155f74",
+    "lr_control-top.png": "768f599ec0eb14fc4335e6580d0be97b41f4bfa5624d5b36db9318e1ec9d894f",
+    "lr_control-metrics.png": "efa13c2efc2d9a19ceaefab9cb22b4f3f953de35b5f2ec04a4123461f1acb9b6",
+    "tests.xml": "9df3fea46414f795bb223eadeec1967b523cff510752c58cb20b18f793b13278",
+    "fact-tests.xml": "7fa387d529f9f2a7d4d98b9d8ecc08d334cef396af647bc05b899b351c647b52",
+    "check.json": "b6c3d8656a61c8bbde7f8c7579e11270d84030070e06ee1a506132abb82b429c",
+    "verify.py": "655c7ff58a6a6aa2c292503afe388fa8f778b01628c4a91571e76bacb06ef55f",
+    "resume_check.py": "a2d078e93307ef5471ee5c1e658147c6650e1a804cc78d649892a1584d06f437",
+    "initialization.json": "56169995401bcc42318ca1b98be671f74650adc1eff068471093c652c111e9e0",
+    "check_initialization.py": "b3e3755b4ed2f114b1fe0ddd2c0052ae2a8ba464e24cc8a43f928ffa15a6c707",
+    "runs/reviews/continuation_2026-09-11/warm-start-receipt.json": "95834b89befb9318d83f654f5d31d9dd086a1ba1d5b923bd1b0304d7cf7c90ec",
+    "runs/reviews/continuation_2026-09-11/warm-reconcile-receipt.json": "5205e758138724d8eee75fbaeab68570b74f7f279e34f34038227db3f9a64a17"
+  }
+}

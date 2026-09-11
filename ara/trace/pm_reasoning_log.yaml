@@ -794,3 +794,20 @@ entries:
     detached memory snapshot policy was read, not altered or experimentally isolated as a cause.
   - 'Prior topics remain explicitly open through previous session references; no other closure or stale-status
     change. No contradiction with the successful direct control: architectures and gradient paths differ.'
+
+- turn: 2026-09-11_001#5
+  notes:
+  - N169 records continuation authorization. Promote O118 to H20 by artifact commitment in 4c3aebf, preserving
+    ai-suggested provenance and the original staged wording as history.
+  - 'N170 records both prespecified warm attempts and verified failed gates. Stage O119 separately: the user
+    has not endorsed the new interpretation or feature-preservation proposal; no inherent architecture defect
+    or unique cause is established.'
+  - Claude acknowledged that prior development evaluation is adaptive reuse rather than automatic gradient-training
+    leakage. Additional donor exposure and shared instruction encoding remain explicit. Execution/resume integrity
+    does not confer statistical independence.
+  - All 88 CPU tests and 9 focused checks pass. Exact donor tensor transfer, unchanged other initialization/RNG,
+    fresh optimizer and encoder updates have direct checks. Cached outputs, raw logits and browser content
+    match saved receipts.
+  - Stop at the declared two recipients without more seeds, learning rates, freezing or a new objective. Earlier
+    research topics remain referenced and open; no unrelated abandonment, contradiction or stale-status change
+    is inferred.

@@ -1,12 +1,27 @@
 # Current work
 
-**Active slice, 11 September:** implement the
-[trainable encoder initialization comparison](warm-encoder-plan.md). Load only the
-successful direct control's encoder into the otherwise fresh event reader. Keep
-it trainable and retain the prior path/loss/budgets. The donor hash is verified;
-development combinations are reused and extra donor exposure will be explicit.
-
 **Current slice complete, 11 September:** the
+[trainable encoder initialization comparison](warm-encoder-plan.md) is implemented
+as `--fact-encoder-weights` for the event fact reader. Two brief actual Claude
+reviews are reconciled; all 88 CPU tests pass. Exact transfer, unchanged remaining
+initialization/RNG, encoder updates and donor-bound resume checks pass. Both new
+512-update recipients finished in 103.5041 active CPU seconds total. At lr0.0003,
+held-out location accuracy improves from the saved cold run's 8/32 to 31/32; at
+lr0.001 it improves from 24/32 to 32/32. Held-out entity and joint accuracy remain
+0/32 in both warm runs. Training entity accuracy is only 3/96 in each. Both
+extraction gates fail; binding is skipped and the declared two-run slice is complete.
+
+The [reference report](../runs/warm_encoder_v1/reference/report.html) and
+[learning-rate comparison](../runs/warm_encoder_v1/lr_control/report.html) passed
+structural and 1280x720 browser QA. `runs/warm_encoder_v1/verification.json` binds
+raw-score, source, donor, matching cold settings/sampler, cached-resume, test and
+browser checks. Development combinations are reused; the donor adds 512 upstream
+updates / 8192 presentations. The shared encoder also reads the fixed instruction.
+These results leave entity learning unresolved without isolating its cause.
+Next proposed: freeze the donor encoder in one otherwise matched diagnostic to
+test whether preserving its features changes entity learning.
+
+**Prior single-event slice, 11 September:** the
 [single-event agent-reader control](event-fact-plan.md) is implemented as
 `--dataset facts --fact-reader event`. Two brief actual Claude reviews are
 reconciled; all 86 CPU tests pass. A strengthened gradient check confirms the loss
@@ -23,8 +38,8 @@ source snapshots, settings/data/init/sampler matching, raw-score checks, exact
 resume, tests and screenshots. The existing whole path does not learn the task
 under this budget; the failing component is not isolated. Recent records are
 detached on storage by the existing memory policy, while the live categorical
-path still carries gradients. Next proposed: warm-start only the trainable text
-encoder from the successful direct control, keeping the rest of this recipe fixed.
+path still carries gradients. The trainable encoder initialization follow-up is
+now complete above.
 
 **Prior direct-control slice, 11 September:** the
 [direct fact extraction and binding controls](fact-learning-plan.md) run in the

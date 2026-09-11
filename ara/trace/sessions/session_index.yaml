@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: Direct fact control passes; both single-event agent-reader attempts fail extraction gates. 86 CPU tests, observed-fact gradients, cached resume and browser reports verified; 109.4034 active seconds.
-  turn_count: 4
-  events_count: 14
+  summary: Trainable encoder transfer improves held-out locations to 31/32 and 32/32, but entity accuracy is 0/32 in both runs. Both gates fail; 88 CPU tests, donor-bound resume, cold matching, raw scores and browser reports pass; 103.5041 new active seconds.
+  turn_count: 5
+  events_count: 18
   claims_touched: []
   open_threads: 2

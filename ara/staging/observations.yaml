@@ -2147,6 +2147,26 @@ observations:
   bound_to:
   - N168
   - N166
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H20
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O119
+  timestamp: 2026-09-11T09:09+02:00
+  provenance: ai-suggested
+  content: Trainable transfer improves location extraction in both matched runs but does not establish successful
+    entity extraction. Propose one otherwise matched event-reader diagnostic with the donor encoder frozen
+    to test whether preserving its features changes entity learning. This would not alone prove forgetting,
+    detached storage or another component caused the failure.
+  context: 'N170: both final checkpoints fail extraction gates. The shared encoder also processes the constant
+    task instruction and changes during training. Reused development pairs and extra donor exposure limit comparison
+    claims. No frozen-encoder run or memory change was made; the researcher has not commented on the new outcomes.'
+  potential_type: heuristic
+  bound_to:
+  - N170
+  - N168
+  - N166
   promoted: false
   promoted_to: null
   crystallized_via: null

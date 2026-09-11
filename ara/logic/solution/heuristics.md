@@ -187,3 +187,13 @@
 - **Code ref**: [event reader](../../../pathwm/models/facts.py), [recipe](../../../experiments/multimodal.py), [contract checks](../../../tests/test_facts.py), [plan and outcomes](../../../docs/event-fact-plan.md).
 - **From staging**: O117
 - **Evidence of commitment**: N167/N168 and implementation `f09400c`; the event control now implements the proposed comparison. The user authorized execution, not a localized causal explanation.
+
+## H20: Test transferred encoder initialization with an explicit donor boundary
+
+- **Rationale**: Load only the successful direct control's encoder into the ordinary fresh recipient, preserve other tensors and construction RNG, and compare each recipient with its matched cold run. Keep the encoder trainable and bind donor file/component/tensor identity into resume compatibility. Count upstream training exposure separately.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; the shared encoder also reads the task instruction and keeps changing. Reused development combinations are not an independent final test. This intervention does not localize a failing component or establish improved total-compute efficiency.
+- **Code ref**: [recipe](../../../experiments/multimodal.py), [transfer and resume tests](../../../tests/test_facts.py), [plan and outcomes](../../../docs/warm-encoder-plan.md).
+- **From staging**: O118
+- **Evidence of commitment**: N169/N170 and implementation `4c3aebf`; exact donor transfer and matched cold initialization/settings/sampler are verified in the [evidence snapshot](../../evidence/tables/warm_encoder_2026-09-11.json). The user authorized execution; the outcome interpretation and frozen-encoder proposal remain staged as O119.
