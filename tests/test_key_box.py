@@ -94,3 +94,14 @@ def test_key_box_recipe_resume_and_action_budget(tmp_path, monkeypatch):
     assert all(len(r["actions"]) <= 4 for r in data["episodes"])
     train_key_box(matcher, cell, output, steps=2, families=1, resume=True)
     assert (output / "key_box.json").read_bytes() == raw
+
+
+def test_switched_query_targets_remain_aligned():
+    import torch
+    from pathwm.evaluation.key_box import second_key_query
+    latent = torch.arange(12).reshape(3, 4)
+    target = torch.tensor([0, 1, 0])
+    values, labels = second_key_query(latent, target, True)
+    assert torch.equal(values, latent.flip(0))
+    assert torch.equal(labels, target.flip(0))
+    assert torch.equal(second_key_query(latent, target, False)[0], latent)

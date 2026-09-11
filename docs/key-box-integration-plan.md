@@ -49,3 +49,19 @@ is separately tested. Review receipts: key-box-contract and key-box-reconcile un
 runs/reviews/continuation_2026-09-11. Smoke uses a declared exact matcher substitute
 for transaction plumbing; formal evaluation uses the actual frozen learned matcher.
 Fixed text event shape to the encoder's [B,T] contract after smoke failure.
+
+First integration (8f00d8d): full screen fails; known readout82.29%, reachable75%,
+absent100%, integrated utility0.738672 vs no-history0.630469. Supplied-state100%.
+Independent execution/search replay passes. In remembered/moved known pairs the
+first queried box is100% correct, second43.75%/50%; training's repeated same-entity
+second read differs from deployment's switched-entity second read. This is a
+training-contract hypothesis, not proof that every failure has that cause.
+
+One targeted iteration: keep original seed2301, batches, initialization, steps256,
+first read and optimizer unchanged. Second read receives batch-reversed entity latents
+and batch-reversed targets instead of the same entity. Test alignment explicitly.
+Final candidate and saved first-model weights evaluated on fresh descriptor families
+seed2411 (16 families, same conditions), all existing gates unchanged. Preserve first
+run; no further tuning this slice.240CPU seconds including both evaluations; no repeat
+baseline training. Bind baseline checkpoint hash to candidate run. No clearing working
+state to hide interference; candidate training directly exercises query switches.
