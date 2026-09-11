@@ -2825,3 +2825,21 @@ tree:
   - N168
   - N166
   status: resolved
+
+- id: N171
+  type: question
+  title: Clarify entity accuracy and whether basic entity learning can be repaired independently
+  provenance: user
+  timestamp: 2026-09-11T09:12+02:00
+  description: Alex asks what entity accuracy means, what can be done about its failure, and whether the rest
+    of the system must first fall into place. Explain exact-ID scoring and propose a bounded diagnostic sequence
+    without launching new training.
+  evidence:
+  - pathwm/evaluation/facts.py
+  - pathwm/models/facts.py
+  - runs/warm_encoder_v1/lr_control/fact_results.json
+  - docs/warm-encoder-plan.md
+  also_depends_on:
+  - N170
+  - N166
+  status: resolved

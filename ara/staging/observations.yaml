@@ -2171,3 +2171,23 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O120
+  timestamp: 2026-09-11T09:12+02:00
+  provenance: ai-suggested
+  content: Saved warm lr0.001 development predictions assign e27 to all eight l3 examples and e21 to all eight
+    l2 examples, despite distinct true IDs. This suggests location-dependent identity guessing, not a proven
+    internal mechanism. The successful direct control and poor training entity accuracy motivate freezing the
+    donor encoder, then testing accessible entity identity at successive agent stages before choosing a repair.
+  context: Read-only source and saved-result inspection answering N171; no model inference, new training, source
+    change or Claude call. Exact entity score is top-1 over 32 IDs; all IDs occur in training and only entity/location
+    combinations are held out. Probe failure would still confound inaccessible information with probe optimization/capacity.
+  potential_type: heuristic
+  bound_to:
+  - N171
+  - N170
+  - N166
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

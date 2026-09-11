@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T09:09+02:00
-  turn_count: 5
-  summary: Trainable encoder transfer improves held-out locations to 31/32 and 32/32, but entity accuracy is 0/32 in both runs. Both gates fail; 88 CPU tests, donor-bound resume, cold matching, raw scores and browser reports pass; 103.5041 new active seconds.
+  last_turn: 2026-09-11T09:12+02:00
+  turn_count: 6
+  summary: Trainable encoder transfer improves held-out locations to 31/32 and 32/32, but entity accuracy is 0/32 in both runs. Both gates fail; 88 CPU tests, donor-bound resume, cold matching, raw scores and browser reports pass; 103.5041 new active seconds. Explained exact entity scoring; cached guesses suggest location shortcuts, with frozen-encoder and stage diagnostics proposed.
 events_logged:
 - turn: 1
   type: question
@@ -114,6 +114,18 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Propose holding the donor encoder fixed; entity failure remains unlocalized.
+- turn: 6
+  type: question
+  id: N171
+  routing: direct
+  provenance: user
+  summary: Define entity accuracy and assess whether basic entity learning can be repaired now.
+- turn: 6
+  type: observation
+  id: O120
+  routing: staged
+  provenance: ai-suggested
+  summary: Cached location-dependent guesses motivate a bounded feature-preservation and stage diagnosis.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -176,6 +188,12 @@ ai_actions:
   - docs/warm-encoder-plan.md
   - docs/project-state.md
   - docs/experiments.md
+- turn: 6
+  action: Read metric, dataset and model boundaries; inspect saved direct and warm results and group existing
+    development entity predictions by location. Explain exact IDs, chance reference, single-event scope and
+    proposed diagnostics. No training, inference, tests, source edits or new Claude consultation.
+  provenance: ai-executed
+  files_changed: []
 claims_touched: []
 key_context:
 - turn: 1
@@ -189,9 +207,14 @@ key_context:
   excerpt: 'User: continue with claude. implement this, review, test, fix and iterate'
 - turn: 5
   excerpt: 'User: continue with claude. implement this, review, test, fix and iterate'
+- turn: 6
+  excerpt: User asks what entity accuracy is, what can be done, and whether everything first needs to fall
+    into place.
 open_threads:
+- 'O120: location-shortcut hypothesis and successive-stage diagnostics remain unconfirmed.'
 - 'O119: consider freezing the donor encoder in one matched diagnostic; no frozen-encoder run started.'
 - O101-O114 and earlier research questions remain referenced by 2026-09-10_001.yaml; local memory
   learning/marking/transfer remain conditional.
 ai_suggestions_pending:
 - 'O119: entity failure remains unlocalized; feature-preservation diagnostic is proposed, not executed.'
+- 'O120: stage diagnostics may help locate accessible identity; no cause or repair established.'

@@ -811,3 +811,15 @@ entries:
   - Stop at the declared two recipients without more seeds, learning rates, freezing or a new objective. Earlier
     research topics remain referenced and open; no unrelated abandonment, contradiction or stale-status change
     is inferred.
+
+- turn: 2026-09-11_001#6
+  notes:
+  - N171 is an explanatory research question, not approval of another training run. Source and cached-result
+    inspection are AI actions; do not record a fresh experiment.
+  - 'Stage O120 for the shortcut hypothesis and diagnostic refinement. Leave composite O119 unpromoted: user
+    asks about the failure but does not endorse the proposed freezing intervention or establish a mechanism.'
+  - Exact score definitions and saved examples are grounded in code/results. Poor training accuracy and the
+    successful direct reference motivate basic path diagnosis without requiring long-term memory or planning
+    to work first.
+  - Retain prior open research threads; no new abandonment, contradiction, stale flag or capability claim.
+    No extra Claude consumption for this explanation.
