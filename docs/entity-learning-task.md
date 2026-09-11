@@ -1004,3 +1004,22 @@ Runtime implementation: `RelationWriteGate` and optional
 `entity-gate-reconcile` identified concurrency: this interface retains the
 existing single-writer contract; callers must serialize access. It does not add
 concurrent transactions. No gate training/evaluation run has been performed.
+
+### Gate learning comparison (2026-09-11)
+
+Freeze matcher, interaction cell and relation key donors. Train only the 97-parameter
+context gate, seed61, AdamW lr0.01/wd0.01,256 steps,batch32,CPU450s total.
+Descriptor families: train601/32, development602/8, evaluation603/8; context
+seeds701/702/703 respectively. Per family use all six ordered distinct source
+pairs, each with matched and unrelated contexts (12 examples). Matched context
+is unit active plus0.03 Gaussian noise, renormalized; unrelated unit context has
+distance>=0.9. Gate sees only squared context differences. Loss is source CE
+through the frozen decoder/matcher on a sigmoid blend of old/new keys.
+
+Evaluate hard runtime decisions on the96 held-out cases, reference/permuted/
+31-repeated-irrelevant/always-write/never-write. Source states oppose, destination
+starts zero. Gates: learned source and complete-state accuracy>=95%, source NLL
+<=0.15, soft/hard source agreement>=95%, exact replay/restore and ignored-key/
+non-target-state preservation. Controls must score50% source/state accuracy.
+These are correlated synthetic context-rule tests, not graph discovery. No tuning
+on evaluation results; preserve any failure. Check cached resume before report QA.

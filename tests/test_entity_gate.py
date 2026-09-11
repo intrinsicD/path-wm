@@ -88,3 +88,19 @@ def test_repeated_ignores_and_threshold():
         EntityRelationMemory.restore(
             matcher, cell, key, store.snapshot(), gate_model=wrong
         )
+
+
+def test_gate_examples_and_frozen_credit():
+    from pathwm.evaluation.entity_gate import gate_examples, gate_logits
+    from pathwm.evaluation.entity_growth import growth_inputs
+    data = gate_examples(growth_inputs(601, 2), 701)
+    assert len(data['labels']) == 24
+    assert torch.equal(data['old'][::2], data['old'][1::2])
+    assert torch.equal(data['new'][::2], data['new'][1::2])
+    assert torch.all(data['labels'][::2] != data['labels'][1::2])
+    matcher, key = Scorer().requires_grad_(False), key_model().requires_grad_(False)
+    gate = RelationWriteGate()
+    logits, _ = gate_logits(gate, key, matcher, data)
+    torch.nn.functional.cross_entropy(logits, data['labels']).backward()
+    assert any(p.grad is not None and p.grad.abs().sum() for p in gate.parameters())
+    assert all(p.grad is None for m in (matcher, key) for p in m.parameters())
