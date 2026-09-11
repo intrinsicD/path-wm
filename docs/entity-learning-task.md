@@ -1514,3 +1514,11 @@ Add diagnostic reader in existing source evaluation module and callable recipe i
 experiments/multimodal.py; same Run/report machinery, own artifacts and cached resume.
 Tests cover a block crossing the evaluation boundary, missing feedback and tampered
 reset traces. Existing browser restriction means structural report QA only.
+
+Claude reconciliation: preserve mixed checks rather than discarding them; report
+all retained historical values as the comparator; no oracle-regret attribution.
+Deterministic crossing/reset agreement verifies the saved rule, not a counterfactual
+utility claim. Rule parameters remain in source snapshots and source/version hashes
+in the diagnostic manifest. Receipts: `source-diagnosis{,-reconcile}` under the
+existing public-only review directory. Recipe smoke exposed missing Run seed metadata;
+fixed to seed0 (no sampling) and added source-checkpoint identity before formal use.

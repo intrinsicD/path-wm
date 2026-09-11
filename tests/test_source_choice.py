@@ -165,22 +165,38 @@ def test_uncertainty_unqualified_fallback_cannot_pass(monkeypatch):
     assert not result["passed"]
 
 
-def test_source_diagnosis_mixed_blocks_and_tampering():
+def test_source_diagnosis_mixed_blocks_and_tampering(tmp_path):
     from pathwm.evaluation.source_choice import diagnose_source_changes
     import copy
 
     policy = SourceChoice(change_block=4, change_z=2)
     for _ in range(6):
-        policy.observe(0, .5)
+        policy.observe(0, 0.5)
     initial = policy.snapshot()
     actions = []
     for i in range(6):
         before = policy.snapshot()
-        policy.observe(0, .5)
-        actions.append(dict(index=512+i, source=0, feedback=.5,
-                            before=before, after=policy.snapshot()))
-    data = dict(episodes=[dict(world=0, swapped=True, policy="uncertainty",
-                               initial=initial, actions=actions)])
+        policy.observe(0, 0.5)
+        actions.append(
+            dict(
+                index=512 + i,
+                source=0,
+                feedback=0.5,
+                before=before,
+                after=policy.snapshot(),
+            )
+        )
+    data = dict(
+        episodes=[
+            dict(
+                world=0,
+                swapped=True,
+                policy="uncertainty",
+                initial=initial,
+                actions=actions,
+            )
+        ]
+    )
     rows = diagnose_source_changes(data)["sources"]
     assert rows[0]["mixed_checks"] == 1
     assert rows[0]["pure_checks"] == 1
@@ -190,3 +206,18 @@ def test_source_diagnosis_mixed_blocks_and_tampering():
     bad["episodes"][0]["actions"][1]["after"]["resets"][0] += 1
     with pytest.raises(ValueError, match="reset"):
         diagnose_source_changes(bad)
+
+    import json
+    import torch
+    from pathwm.models.entity_relations import RelationWriteGate
+    from experiments.multimodal import diagnose_entity_sources
+
+    source = tmp_path / "source"
+    source.mkdir()
+    (source / "entity_source_drift.json").write_text(json.dumps(data))
+    torch.save({"model": RelationWriteGate().state_dict()}, source / "last.pt")
+    output = tmp_path / "diagnosis"
+    diagnose_entity_sources(source, output)
+    raw = (output / "entity_source_diagnosis.json").read_bytes()
+    diagnose_entity_sources(source, output, resume=True)
+    assert (output / "entity_source_diagnosis.json").read_bytes() == raw

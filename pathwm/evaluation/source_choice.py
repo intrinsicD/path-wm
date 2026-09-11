@@ -285,3 +285,109 @@ def evaluate_source_uncertainty(gate):
     held_out["development"] = development
     held_out["passed"] = held_out["passed"] and bool(qualified)
     return held_out
+
+
+def diagnose_source_changes(data):
+    """Describe saved source checks without changing or rerunning the policy."""
+    import math
+    from collections import Counter
+
+    rows = []
+    for episode in data["episodes"]:
+        if episode["policy"] != "uncertainty":
+            continue
+        previous = episode["initial"]
+        origins = [[False] * len(p) for p in previous["pending"]]
+        local = [
+            dict(
+                world=episode["world"],
+                swapped=episode["swapped"],
+                source=s,
+                acquired=0,
+                checks=[],
+                first_reset_case=None,
+            )
+            for s in range(2)
+        ]
+        for case, event in enumerate(episode["actions"]):
+            before, after = event["before"], event["after"]
+            if before != previous:
+                raise ValueError("Discontinuous source trace")
+            previous = after
+            source, gain = event["source"], event["feedback"]
+            if gain is None:
+                if before != after:
+                    raise ValueError("State changed without feedback")
+                continue
+            row = local[source]
+            row["acquired"] += 1
+            origins[source].append(True)
+            block = before["pending"][source] + [gain]
+            n = before["change_block"]
+            crossing = False
+            if len(block) == n:
+                old_n = before["counts"][source] + 1 - n
+                check = dict(
+                    case=case,
+                    pure=all(origins[source]),
+                    older_count=old_n,
+                    eligible=old_n >= n,
+                    gap=None,
+                    threshold=None,
+                    crossing=False,
+                )
+                if old_n >= n:
+                    recent_sum = sum(block)
+                    recent_squares = sum(g * g for g in block)
+                    old_sum = before["sums"][source] + gain - recent_sum
+                    old_squares = (
+                        before["squares"][source] + gain * gain - recent_squares
+                    )
+                    old_var = max(0.0, (old_squares - old_sum**2 / old_n) / (old_n - 1))
+                    recent_var = max(
+                        0.0, (recent_squares - recent_sum**2 / n) / (n - 1)
+                    )
+                    threshold = max(
+                        0.15,
+                        before["change_z"]
+                        * math.sqrt(old_var / old_n + recent_var / n + 0.0001),
+                    )
+                    gap = abs(recent_sum / n - old_sum / old_n)
+                    crossing = gap >= threshold
+                    check.update(gap=gap, threshold=threshold, crossing=crossing)
+                row["checks"].append(check)
+                origins[source] = []
+            delta = after["resets"][source] - before["resets"][source]
+            if (
+                delta != int(crossing)
+                or after["resets"][1 - source] != before["resets"][1 - source]
+            ):
+                raise ValueError("Recorded reset disagrees with reconstructed check")
+            if crossing and row["first_reset_case"] is None:
+                row["first_reset_case"] = case
+        for row in local:
+            checks = row["checks"]
+            pure = [c for c in checks if c["pure"] and c["eligible"]]
+            row.update(
+                mixed_checks=sum(not c["pure"] for c in checks),
+                pure_checks=len(pure),
+                first_pure_check_case=pure[0]["case"] if pure else None,
+                first_crossing_case=next(
+                    (c["case"] for c in checks if c["crossing"]), None
+                ),
+                category="reset"
+                if row["first_reset_case"] is not None
+                else "no_completed_block"
+                if not checks
+                else "no_eligible_pure_block"
+                if not pure
+                else "eligible_below_threshold",
+            )
+            rows.append(row)
+    if not rows:
+        raise ValueError("No variance-aware source traces")
+    summary = {
+        condition: dict(Counter(r["category"] for r in rows if r["swapped"] == swapped))
+        for condition, swapped in (("static", False), ("drift", True))
+    }
+    return dict(sources=rows, summary=summary, reset_agreement=True)

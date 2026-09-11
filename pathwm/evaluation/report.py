@@ -195,6 +195,37 @@ def model_inspection(directory):
 
 
 def entity_inspection(directory):
+    diagnosis = directory / "entity_source_diagnosis.json"
+    if diagnosis.exists():
+        data = json.loads(diagnosis.read_text())
+        parts = [
+            "<section><h2>Source-change trace diagnosis</h2><p>Saved variance-aware trajectories only. No policy change or new evaluation. Categories describe check availability, not causal explanations. Pure means all rewards in the recent block were acquired after the evaluation boundary; older values may still include calibration.</p>"
+        ]
+        parts.append("<pre>" + escape(json.dumps(data["summary"], indent=2)) + "</pre>")
+        parts.append(
+            '<div class="table"><table><tr><th>World</th><th>Condition</th><th>Source</th><th>Acquired</th><th>Mixed checks</th><th>Eligible pure checks</th><th>First pure check</th><th>First reset</th><th>Category</th></tr>'
+        )
+        for row in data["sources"]:
+            values = [
+                row["world"],
+                "drift" if row["swapped"] else "static",
+                row["source"],
+                row["acquired"],
+                row["mixed_checks"],
+                row["pure_checks"],
+                row["first_pure_check_case"],
+                row["first_reset_case"],
+                row["category"],
+            ]
+            parts.append(
+                "<tr>"
+                + "".join("<td>" + escape(str(v)) + "</td>" for v in values)
+                + "</tr>"
+            )
+        parts.append(
+            "</table></div><p>Case indices are zero-based after calibration. None means no event. Every threshold crossing agrees with the recorded reset. Raw gaps and thresholds: entity_source_diagnosis.json. This is integrity verification, not a capability pass.</p></section>"
+        )
+        return parts
     drift = directory / "entity_source_drift.json"
     if drift.exists():
         data = json.loads(drift.read_text())
@@ -913,6 +944,7 @@ def render_report(directory):
             "entity_gate_shift.json",
             "entity_evidence_sources.json",
             "entity_source_choice.json",
+            "entity_source_diagnosis.json",
             "entity_source_drift.json",
         )
     ):
@@ -950,6 +982,7 @@ def render_report(directory):
             "entity_gate_shift.json",
             "entity_evidence_sources.json",
             "entity_source_choice.json",
+            "entity_source_diagnosis.json",
             "entity_source_drift.json",
         )
     ):

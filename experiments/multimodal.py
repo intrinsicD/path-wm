@@ -2911,6 +2911,69 @@ def entity_growth(weights, output, resume=False, seed=61):
     return run.path
 
 
+def diagnose_entity_sources(source, output, resume=False):
+    """Inspect a completed source run; no new samples or policy updates."""
+    from pathwm.models.entity_relations import RelationWriteGate
+    from pathwm.evaluation.source_choice import diagnose_source_changes
+
+    source = Path(source).resolve()
+    raw = source / "entity_source_drift.json"
+    model = RelationWriteGate().eval().requires_grad_(False)
+    model.load_state_dict(
+        torch.load(source / "last.pt", map_location="cpu", weights_only=False)["model"]
+    )
+    run = Run(
+        output,
+        settings=dict(
+            seed=0,
+            source_checkpoint_sha256=file_hash(source / "last.pt"),
+            purpose="diagnostic",
+            source=str(source),
+            source_sha256=file_hash(raw),
+            max_seconds=30,
+        ),
+        data=dict(source_sha256=file_hash(raw)),
+        recipe=__file__,
+        model=model,
+        optimizer=torch.optim.AdamW(model.parameters(), lr=0),
+        device="cpu",
+        resume=resume,
+    )
+    path = run.path / "entity_source_diagnosis.json"
+    try:
+        if not resume:
+            started = perf_counter()
+            result = diagnose_source_changes(json.loads(raw.read_text()))
+            if perf_counter() - started > 30:
+                raise TimeoutError("Source diagnosis budget exhausted")
+            result["source_sha256"] = file_hash(raw)
+            atomic_json(path, result)
+            for condition, counts in result["summary"].items():
+                for category, count in counts.items():
+                    run.log(
+                        dict(
+                            step=0,
+                            split="source_diagnosis",
+                            condition=condition,
+                            category=category,
+                            count=count,
+                        )
+                    )
+            run.save()
+        elif json.loads(path.read_text())["source_sha256"] != file_hash(raw):
+            raise ValueError("Source diagnosis cache mismatch")
+        run.status("completed", "pending")
+    except BaseException as exc:
+        run.status("failed", "pending", str(exc))
+        raise
+    try:
+        render_report(run.path)
+    except BaseException as exc:
+        run.status("completed", "failed", str(exc))
+        raise
+    return run.path
+
+
 def evaluate_entity_source_drift(weights, output, resume=False):
     """Online source values after an unannounced quality swap."""
     from pathwm.models.entity_relations import RelationWriteGate
