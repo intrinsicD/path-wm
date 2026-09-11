@@ -194,6 +194,63 @@ def model_inspection(directory):
     return parts
 
 
+def entity_inspection(directory):
+    path = directory / "entity_results.json"
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text())
+    passed = data["scores"]["development"]["gates"]["passed"]
+    parts = [
+        "<section><h2>Two-object entity memory</h2>",
+        f"<p><strong>Development gates: {'pass' if passed else 'fail'}.</strong> Final update {data['final_step']}.</p>",
+        f"<p>{escape(data['scope'])}</p>",
+        '<div class="table"><table><tr><th>Population</th><th>N</th><th>Identity</th><th>State pair</th><th>Effect pair</th><th>Mean NLL</th><th>Selection coverage</th></tr>',
+    ]
+    for split, measured in data["scores"].items():
+        row = measured["views"]["identifiable"]
+        cells = [
+            split + " / identifiable",
+            row["examples"],
+            *[f"{row[n + '_accuracy']:.1%}" for n in ("identity", "state", "effect")],
+            f"{row['nll']:.6f}",
+            f"{row['coverage']:.1%}",
+        ]
+        parts.append(
+            "<tr>" + "".join(f"<td>{escape(str(c))}</td>" for c in cells) + "</tr>"
+        )
+    parts.append(
+        "</table></div><p>Final-view-only optimal accuracy: identity 50%; each state pair 25%. Simulator identities are not model inputs.</p>"
+    )
+    parts.append(
+        '<h3>Ambiguous development episodes</h3><div class="table"><table><tr><th>Answer</th><th>Excess NLL above oracle</th></tr>'
+    )
+    row = data["scores"]["development"]["views"]["ambiguous"]
+    for name in ("identity", "state", "effect"):
+        parts.append(
+            f"<tr><td>{name}</td><td>{row[name + '_excess_nll']:.6f}</td></tr>"
+        )
+    parts.append(
+        "</table></div><p>These episodes hide final recognition features. Excess log loss uses the exact conditional target distribution; it is not a general calibration guarantee.</p>"
+    )
+    parts.append(
+        f"<details><summary>Exact gates, paired controls and decision costs</summary><pre>{escape(json.dumps(data['scores'], indent=2))}</pre></details></section>"
+    )
+    parts.append(
+        "<section><h2>Inspectable development cases</h2><p>Target probabilities and model probabilities are ordered as identity candidate 0/1 and state pairs 00/01/10/11.</p>"
+    )
+    for i in (0, 1, 2, 3, 16, 17, 18, 19):
+        if i >= len(data["examples"]):
+            continue
+        example = data["examples"][i]
+        parts.append(
+            f"<details><summary>Case {i}: {escape(example['cohort'])}</summary><pre>{escape(json.dumps(example, indent=2))}</pre></details>"
+        )
+    parts.append(
+        f"<details><summary>All fixed development examples</summary><pre>{escape(json.dumps(data['examples'], indent=2))}</pre></details></section>"
+    )
+    return parts
+
+
 def fact_inspection(directory):
     path = directory / "fact_results.json"
     if not path.exists():
@@ -569,6 +626,7 @@ def render_report(directory):
             np.savez_compressed(directory / "pca_axes.npz", **axes)
     parts.extend(recall_inspection(directory))
     parts.extend(recall_diagnostic_inspection(directory))
+    parts.extend(entity_inspection(directory))
     parts.extend(fact_inspection(directory))
     parts.extend(model_inspection(directory))
     for title, data in [

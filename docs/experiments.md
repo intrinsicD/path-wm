@@ -155,3 +155,23 @@ QA if its visual verification is to be claimed.
 
 Run `python -m pytest` before committing shared-code changes. Keep the standing
 [workflow](experiment-workflow.md) and the current plan small.
+
+### Controlled entity learning
+
+`--dataset entities` uses three observations of two supplied candidates, with fresh
+split-specific appearance descriptors. It asks for cued identity, remembered binary
+states and a proposed toggle's effect. Half the final views hide identity features;
+those targets are exact conditional distributions. This is a recurrent baseline,
+not yet the learned entity graph or visual object discovery.
+
+```bash
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 .venv/bin/python experiments/multimodal.py --dataset entities --check
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 .venv/bin/python experiments/multimodal.py --dataset entities --output runs/entity_learning_v1/reference
+.venv/bin/python experiments/multimodal.py --resume runs/entity_learning_v1/reference
+```
+
+The fixed first screen uses 256 updates and at most 450 active CPU seconds. Its
+`entity_results.json`, prediction cache and standalone report retain both cohorts,
+proper log losses, paired-history scores and selection costs. Development is read
+only at the final checkpoint; test data is reserved. See
+[the declared gates and graph prerequisite](entity-learning-task.md).
