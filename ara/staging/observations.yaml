@@ -2371,3 +2371,18 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O131
+  timestamp: 2026-09-11T12:20+02:00
+  provenance: ai-suggested
+  content: Preserve the passing task-trained matcher; next test descriptor variation and unmatched/new-entity
+    handling. Stable synthetic matching does not establish visual identity or learned graph structure.
+  context: One bounded learned-association run; two actual public-only Claude exchanges reconciled normalization
+    versus correct matching. No noisy-descriptor or new-entity run.
+  potential_type: heuristic
+  bound_to:
+  - N192
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -1,5 +1,15 @@
 # Current work
 
+**Learned association succeeds on stable descriptors, 11 September:** the
+Claude-reviewed `--entity-reader shared --entity-association learned` mode passes
+all fixed development gates after 256 updates. Matching improves from 37.5% to 100%
+on eight held-out descriptor groups; task accuracy is 100% on 128 identifiable cases.
+Task-loss gradients reach the matcher; no exact lookup is used by its forward path.
+All per-frame reorderings preserve probabilities. [Report](../runs/entity_learned_v1/reference/report.html)
+and [task record](entity-learning-task.md) retain the scope: stable synthetic features,
+fixed two-object slots and enumerated hypotheses; graph structure is not learned.
+Next proposed: feature variation and unmatched/new entities.
+
 **Shared entity reader succeeds, 11 September:** the Claude-reviewed
 `--entity-reader shared --entity-association observed` path passes all declared
 development gates after 256 updates: 100% identity/state/effect accuracy on 128

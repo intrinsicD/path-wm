@@ -3086,3 +3086,29 @@ tree:
   - N189
   - N188
   status: resolved
+
+- id: N191
+  type: decision
+  title: Continue toward learned association with Claude
+  provenance: user
+  timestamp: 2026-09-11T12:20+02:00
+  choice: Implement, review, test and iterate from the successful supplied-association reader.
+  evidence:
+  - docs/entity-learning-task.md
+  status: resolved
+- id: N192
+  type: experiment
+  title: Task-trained matching passes stable-descriptor entity screen
+  provenance: ai-executed
+  timestamp: 2026-09-11T12:20+02:00
+  result: 256 updates; all development gates pass. Identifiable task and paired accuracy 100 percent.
+    Matching improves 37.5 to100 percent on8 held-out descriptor groups. 99 tests pass; exact lookup forbidden
+    in learned forward, matcher task gradients and updates verified, all8 permutation probability differences
+    zero. Fixed slots and two-object enumeration remain supplied. 30342 parameters;256 hypothesis-state
+    floats.
+  evidence:
+  - ara/evidence/tables/entity_learned_2026-09-11.json
+  also_depends_on:
+  - N191
+  - N190
+  status: resolved

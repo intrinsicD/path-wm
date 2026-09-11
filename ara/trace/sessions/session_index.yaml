@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Shared supplied-association reader passes every controlled development gate; 96 tests and exact reorderings pass. Learned matching and graph structure remain open."
-  turn_count: 21
-  events_count: 51
+  summary: "Task-trained association passes stable-descriptor task; matching improves 37.5 to100 percent on8 held-out groups. 99 tests pass. Feature variation, new entities and graph structure remain open."
+  turn_count: 22
+  events_count: 54
   claims_touched: []
-  open_threads: 11
+  open_threads: 12

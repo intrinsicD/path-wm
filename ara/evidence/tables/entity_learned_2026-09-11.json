@@ -1,0 +1,164 @@
+{
+  "shared_initialization_matched": true,
+  "matcher_updated": true,
+  "source_commit": "cf5a506",
+  "steps": 256,
+  "active_seconds": 3.442616024869494,
+  "parameters": 30342,
+  "reference_parameters": 30021,
+  "persistent_state_floats": 256,
+  "same_manifest": true,
+  "source_snapshot_matches": true,
+  "independent_nll_matches": true,
+  "all_eight_permutations_max_probability_error": 0.0,
+  "scores": {
+    "development": {
+      "gates": {
+        "ambiguity": true,
+        "decisions": true,
+        "effect": true,
+        "identity": true,
+        "paired": true,
+        "passed": true,
+        "state": true
+      },
+      "overall": {
+        "examples": 256,
+        "factual_accuracy": 1.0,
+        "nll": 0.2348344309607207
+      },
+      "views": {
+        "ambiguous": {
+          "coverage": 0.0,
+          "decision_cost": 0.25,
+          "effect_excess_nll": 0.01106636411743784,
+          "effect_nll": 0.3576399543974105,
+          "examples": 128,
+          "identity_excess_nll": 0.0,
+          "identity_nll": 0.6931471805599453,
+          "nll": 0.4658635873269204,
+          "selected_error": null,
+          "state_excess_nll": 0.00023003674343276482,
+          "state_nll": 0.3468036270234054
+        },
+        "identifiable": {
+          "coverage": 1.0,
+          "decision_cost": 0.0,
+          "effect_accuracy": 1.0,
+          "effect_excess_nll": 0.01090288825120649,
+          "effect_nll": 0.01090288825120649,
+          "examples": 128,
+          "identity_accuracy": 1.0,
+          "identity_excess_nll": 0.0002776761775891104,
+          "identity_nll": 0.0002776761775891104,
+          "nll": 0.0038052745945209954,
+          "paired_effect": 1.0,
+          "paired_identity": 1.0,
+          "paired_state": 1.0,
+          "selected_error": 0.0,
+          "state_accuracy": 1.0,
+          "state_excess_nll": 0.00023525935476738504,
+          "state_nll": 0.00023525935476738504
+        }
+      }
+    },
+    "train": {
+      "gates": {
+        "ambiguity": true,
+        "decisions": true,
+        "effect": true,
+        "identity": true,
+        "paired": true,
+        "passed": true,
+        "state": true
+      },
+      "overall": {
+        "examples": 512,
+        "factual_accuracy": 1.0,
+        "nll": 0.2353211812520781
+      },
+      "views": {
+        "ambiguous": {
+          "coverage": 0.0,
+          "decision_cost": 0.25,
+          "effect_excess_nll": 0.01137373197732163,
+          "effect_nll": 0.3579473222572943,
+          "examples": 256,
+          "identity_excess_nll": 0.0,
+          "identity_nll": 0.6931471805599453,
+          "nll": 0.46606925868653515,
+          "selected_error": null,
+          "state_excess_nll": 0.0005396829623931481,
+          "state_nll": 0.3471132732423658
+        },
+        "identifiable": {
+          "coverage": 1.0,
+          "decision_cost": 0.0,
+          "effect_accuracy": 1.0,
+          "effect_excess_nll": 0.01181350711825302,
+          "effect_nll": 0.01181350711825302,
+          "examples": 256,
+          "identity_accuracy": 1.0,
+          "identity_excess_nll": 0.0008969407843482754,
+          "identity_nll": 0.0008969407843482754,
+          "nll": 0.0045731038176210735,
+          "paired_effect": 1.0,
+          "paired_identity": 1.0,
+          "paired_state": 1.0,
+          "selected_error": 0.0,
+          "state_accuracy": 1.0,
+          "state_excess_nll": 0.0010088635502619266,
+          "state_nll": 0.0010088635502619266
+        }
+      }
+    }
+  },
+  "tests_passed": 99,
+  "graph_implemented": false,
+  "association": "task-trained scorer over squared descriptor differences",
+  "association_diagnostics": {
+    "final": {
+      "development": {
+        "action_accuracy": 1.0,
+        "action_nll": 6.944078932127616e-06,
+        "descriptor_groups": 8,
+        "final_accuracy": 1.0,
+        "final_nll": 6.944078932127616e-06
+      },
+      "train": {
+        "action_accuracy": 1.0,
+        "action_nll": 0.0006263904366446478,
+        "descriptor_groups": 16,
+        "final_accuracy": 1.0,
+        "final_nll": 0.0006263904366446478
+      }
+    },
+    "initial": {
+      "development": {
+        "action_accuracy": 0.375,
+        "action_nll": 0.7042077175481511,
+        "descriptor_groups": 8,
+        "final_accuracy": 0.375,
+        "final_nll": 0.7042077175481511
+      },
+      "train": {
+        "action_accuracy": 0.5625,
+        "action_nll": 0.6687436461744523,
+        "descriptor_groups": 16,
+        "final_accuracy": 0.5625,
+        "final_nll": 0.6687436461744523
+      }
+    }
+  },
+  "report_validation": "structural; unchanged previously browser-verified renderer",
+  "hashes": {
+    "last.pt": "7ee200924c039c4273032e1c60b8db1c2615069a064992696df3abba4ae50142",
+    "entity_results.json": "5615347f9d7dcccdd5fda31eba4ef717ebf27d5e9c7b2ff60bf375e0234b0976",
+    "entity_predictions.pt": "4d2e1a83ce80ad1133357d287ae104a399fd162de1ac5ea05b35dbcc3cb35cb3",
+    "metrics.jsonl": "8399918836ae63e67e4993cc8be6a23239c65f913d34ae80f4575c2f5b295596",
+    "run.json": "3f9e4129a08e52ca26d0e9b350c54ad4579b648eea3b0e36675a38e5a27c4135",
+    "report.html": "acc3fa424ada5911ef5c30a99aecd4b6b7d3ee4a9837238b327283e62d3f7d50",
+    "report.qa.json": "a30dbce95b90faea8d7ffbe2b8f367c88dbf87eaca70aba32659856e03479d14"
+  },
+  "cached_resume_unchanged": true
+}

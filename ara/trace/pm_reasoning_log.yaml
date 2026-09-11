@@ -936,3 +936,10 @@ entries:
     not unrestricted entity capability.
   - Stage learned-association next step O130. No causal closure of older failures; supplied matching and
     slots remain limitations.
+
+- turn: 2026-09-11_001#22
+  notes:
+  - Record learned stable-descriptor matching as a bounded experiment, not general recognition or learned
+    graph capability.
+  - O130 includes controlled feature variation, which remains untested; do not promote the entire proposal
+    on partial implementation. Stage O131 and preserve earlier causal questions.

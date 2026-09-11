@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T12:06+02:00
-  turn_count: 21
-  summary: "Shared supplied-association reader passes every controlled development gate; 96 tests and exact reorderings pass. Learned matching and graph structure remain open."
+  last_turn: 2026-09-11T12:20+02:00
+  turn_count: 22
+  summary: "Task-trained association passes stable-descriptor task; matching improves 37.5 to100 percent on8 held-out groups. 99 tests pass. Feature variation, new entities and graph structure remain open."
 events_logged:
 - turn: 1
   type: question
@@ -321,6 +321,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Propose learned matching next.
+- turn: 22
+  type: decision
+  id: N191
+  routing: direct
+  provenance: user
+  summary: Continue with Claude and learned association.
+- turn: 22
+  type: experiment
+  id: N192
+  routing: direct
+  provenance: ai-executed
+  summary: All stable-descriptor learning gates pass.
+- turn: 22
+  type: observation
+  id: O131
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose variation and unmatched entities next.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -495,6 +513,17 @@ ai_actions:
   - experiments/multimodal.py
   - tests/test_entities.py
   - docs/entity-learning-task.md
+- turn: 22
+  action: Implement task-trained matcher and coherent history hypotheses; two Claude
+    reviews; 99 tests; one fixed run; source/init/cache/raw-score/permutation verification.
+    Structural report check with unchanged renderer.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/entities.py
+  - pathwm/evaluation/entities.py
+  - experiments/multimodal.py
+  - tests/test_entities.py
+  - docs/entity-learning-task.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -517,7 +546,10 @@ key_context:
   excerpt: "User: Continue. Work with Claude. Implement, review, test and fix. Iterate"
 - turn: 21
   excerpt: "User: continue with claude. implement this, review, test, fix and iterate"
+- turn: 22
+  excerpt: "User: continue with claude. implement this, review, test, fix and iterate"
 open_threads:
+- O131: feature variation and new entities remain proposed.
 - O130: learned matching remains proposed; shared reader is now a successful controlled reference.
 - O128: isolate association versus state updating after failed recurrent baseline.
 - O126: readable graph lookup and decoder debugging remain proposed.

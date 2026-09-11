@@ -53,3 +53,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Supplied association diagnostic](tables/entity_alignment_2026-09-11.json): N188; matched reference, failed gates and learned permutation audit.
 
 - [Shared entity reader](tables/entity_shared_2026-09-11.json): N190; successful supplied-association screen and exact permutation audit.
+
+- [Learned association](tables/entity_learned_2026-09-11.json): N192; stable-descriptor matching and task gates pass; no learned graph claim.

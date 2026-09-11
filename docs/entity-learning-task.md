@@ -153,7 +153,7 @@ long-horizon discovery, arbitrary graph growth or a motor controller.
 
 Before training fix: seed31, width64, recurrent state128 floats, shared candidate
 input projection and GRU, AdamW lr0.003/weight decay0.01, batch32, 256 updates,
-512 training and256 development episodes, FP32/two CPU threads, clip1 and450 active
+512 training and 256 development episodes, FP32/two CPU threads, clip1 and450 active
 seconds. Evaluate training every32 updates and development only at the final checkpoint.
 Reserve separately generated test data; do not load it in this development screen.
 Each32-row group varies initial state/cue/action value exhaustively within identifiable
@@ -300,9 +300,44 @@ are outside this first test of replacing exact matching.
 
 Keep existing reader initialization (construct scorer afterward), seed31, width64,
 lr0.003/wd0.01, batch32, 512/256 manifests, 256 updates and450 active CPU seconds.
-One run; retain prior gates. Report the extra321 parameters and256 floats across two
-128-float hypothesis states, versus128 in the reference; no equal-compute claim.
+One run; retain prior gates. Report the extra321 parameters and 256 floats across two
+128-float hypothesis states, versus 128 in the reference; no equal-compute claim.
 Report initial/final association accuracy separately using evaluator-only matching,
 including distinct descriptor-group counts rather than treating replicated episodes
 as independent evidence. Development task evaluation remains final-only; initial
 association scoring is a declared fixed diagnostic and does not select training.
+
+### Learned-association result
+
+Implementation `cf5a506` replaces exact lookup in the shared reader's learned mode.
+Two actual public-only Claude exchanges (`entity-learned*`) are reconciled. Claude
+accepted that shared pair scoring over bijections guarantees probability covariance
+without guaranteeing correct assignments or calibrated posteriors. The factorial
+hypothesis enumeration is explicitly scoped to two objects. No private source or
+results were exported. Local tests forbid exact lookup in the learned forward path
+and confirm task-loss gradients reach the matcher.
+
+The one seed31/256-update run passes all declared development gates. Identity,
+state-pair, action-effect and paired-history accuracies are 100% on the 128 identifiable
+development cases; coverage is 100% with no errors. On ambiguous cases identity is
+uniform by the specified prior and mixture, coverage is zero, and excess NLL is
+0 / 0.00023004 / 0.01106636 nats by head. This is not learned general uncertainty.
+
+Association accuracy on eight distinct held-out descriptor groups improves from
+37.5% to 100% at both visible action/final times, NLL 0.704208 to 0.000006944. The two
+measurements share descriptors and are not independent trials. Training group accuracy
+improves from 56.25% to 100% on 16 groups. The labels are evaluator-only and diagnostics
+are cached. Actual matcher tensors change; the reference's shared initial tensors
+and manifests match exactly. All eight per-frame reorderings have zero maximum
+probability difference on development. The matcher sees stable synthetic descriptors;
+no noisy-view or image recognition result is claimed.
+
+The model has 30,342 parameters (321 extra) and 256 latent floats across two hypothesis
+states versus 128 in the reference; 3.44 active CPU seconds before resume bookkeeping,
+excluding reports/checkpoints. No equal-capacity or equal-compute claim. Raw scores,
+source snapshots, exact cached resume, tests and symmetry audit are bound in
+`runs/entity_learned_v1/verification.json`. Report:
+`runs/entity_learned_v1/reference/report.html`; structural validation uses the unchanged
+previously browser-verified renderer. No new browser receipt, test-split result, graph
+allocation or learned concept/edge semantics. Next proposed: controlled descriptor
+variation and unmatched/new-entity handling, preserving this passing baseline.
