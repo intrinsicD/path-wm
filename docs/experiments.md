@@ -186,3 +186,10 @@ learn recognition or graph structure. Use a fresh output directory, for example
 shared per-object recurrent updates and a coherent mixture over unresolved final
 assignments. It retains two fixed object slots; it is not learned graph allocation.
 Use `--output runs/entity_shared_v1/reference` for the declared 256-update screen.
+
+Use `--dataset entities --entity-reader shared --entity-association learned` to
+train a pair scorer from answer loss instead of exact descriptor matching. It
+retains both possible action-time assignments and mixes answer probabilities;
+fixed slots and the two-object hypothesis set remain supplied. The declared first
+run uses `--output runs/entity_learned_v1/reference`. Its report includes initial
+and final matching accuracy on distinct development descriptor groups.

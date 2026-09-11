@@ -62,7 +62,12 @@ def test_entity_recurrent_temporal_gradient_and_no_mutation():
 
 @pytest.mark.parametrize(
     "association,reader",
-    [("raw", "recurrent"), ("observed", "recurrent"), ("observed", "shared")],
+    [
+        ("raw", "recurrent"),
+        ("observed", "recurrent"),
+        ("observed", "shared"),
+        ("learned", "shared"),
+    ],
 )
 def test_entity_resume_cache_and_final_only(tmp_path, monkeypatch, association, reader):
     import experiments.multimodal as recipe
@@ -145,12 +150,13 @@ def test_observed_association_input_only_and_missingness():
     torch.testing.assert_close(swap[..., :2], y.flip(2)[..., [1, 0]])
 
 
-def test_shared_entity_permutations_and_gradients():
+@pytest.mark.parametrize("association", ["observed", "learned"])
+def test_shared_entity_permutations_and_gradients(association):
     import itertools
     from pathwm.models.entities import SharedEntityReader
     from pathwm.data.entities import EntityEpisodes
 
-    model = SharedEntityReader(16)
+    model = SharedEntityReader(16, association)
     x = EntityEpisodes("validation", 32).inputs.clone().requires_grad_()
     original = x.detach().clone()
     base = model(x)
@@ -180,16 +186,20 @@ def test_learned_association_task_gradients_and_no_exact_lookup(monkeypatch):
     import pathwm.models.entities as module
     from pathwm.data.entities import EntityEpisodes
 
-    model = module.SharedEntityReader(16, association='learned')
-    x = EntityEpisodes('validation', 32).inputs
+    model = module.SharedEntityReader(16, association="learned")
+    x = EntityEpisodes("validation", 32).inputs
+
     def forbidden(*args):
-        raise AssertionError('Learned path called exact matching')
-    monkeypatch.setattr(module, 'observed_association', forbidden)
+        raise AssertionError("Learned path called exact matching")
+
+    monkeypatch.setattr(module, "observed_association", forbidden)
     output = model(x)
-    targets = EntityEpisodes('validation', 32).targets
+    targets = EntityEpisodes("validation", 32).targets
     loss = sum(-(t * p.log_softmax(-1)).sum(-1).mean() for p, t in zip(output, targets))
     loss.backward()
     assert sum(p.grad.abs().sum() for p in model.matcher.parameters()) > 0
     for p in output:
         torch.testing.assert_close(p.exp().sum(-1), torch.ones(len(x)))
-    torch.testing.assert_close(model.assignment_weights(x)[16:, -1], torch.full((16, 2), .5))
+    torch.testing.assert_close(
+        model.assignment_weights(x)[16:, -1], torch.full((16, 2), 0.5)
+    )

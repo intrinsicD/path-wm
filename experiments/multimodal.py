@@ -90,7 +90,7 @@ from pathwm.evaluation.recall import (
 )
 from pathwm.data.entities import EntityEpisodes, NAMES as ENTITY_NAMES
 from pathwm.models.entities import EntityReader, SharedEntityReader
-from pathwm.evaluation.entities import entity_metrics
+from pathwm.evaluation.entities import entity_metrics, association_diagnostics
 from pathwm.models.facts import FactReader, EventFactReader
 from pathwm.evaluation.facts import fact_metrics, extraction_gates, binding_reference
 
@@ -117,9 +117,9 @@ def build_model(
 ):
     if entities:
         if entity_reader == "shared":
-            if entity_association != "observed":
+            if entity_association not in ("observed", "learned"):
                 raise ValueError("Shared entity reader requires observed association")
-            return SharedEntityReader(width)
+            return SharedEntityReader(width, entity_association)
         return EntityReader(width, entity_association)
     if fact_encoder_weights is not None and (not facts or fact_reader != "event"):
         raise ValueError("Fact encoder weights require the event fact reader")
@@ -452,6 +452,17 @@ def finish_entities(run, learner, training, validation, settings, deadline):
                 learner.agent, validation, settings, deadline=deadline
             ),
         )
+        if settings.get("entity_association") == "learned":
+            cache["association_diagnostics"] = {
+                stage: {
+                    name: association_diagnostics(model, data)
+                    for name, data in (("train", training), ("development", validation))
+                }
+                for stage, model in (
+                    ("initial", learner.target),
+                    ("final", learner.agent),
+                )
+            }
         temporary = path.with_suffix(".partial")
         torch.save(cache, temporary)
         temporary.replace(path)
@@ -474,6 +485,15 @@ def finish_entities(run, learner, training, validation, settings, deadline):
         )
         for i, r in enumerate(validation.manifest)
     ]
+    association_note = ""
+    if "association_diagnostics" in cache:
+        initial = cache["association_diagnostics"]["initial"]["development"]
+        final = cache["association_diagnostics"]["final"]["development"]
+        association_note = (
+            f" Association diagnostic on {final['descriptor_groups']} development descriptor groups: "
+            f"action matching {initial['action_accuracy']:.1%} to {final['action_accuracy']:.1%}; "
+            f"final matching {initial['final_accuracy']:.1%} to {final['final_accuracy']:.1%}. "
+        )
     atomic_json(
         run.path / "entity_results.json",
         dict(
@@ -482,9 +502,11 @@ def finish_entities(run, learner, training, validation, settings, deadline):
             scores=scores,
             final_view_bounds=validation.final_view_bounds(),
             examples=examples,
+            association_diagnostics=cache.get("association_diagnostics"),
             association=settings.get("entity_association", "raw"),
             reader=settings.get("entity_reader", "recurrent"),
-            scope=f"Reader: {settings.get('entity_reader', 'recurrent')}. Association mode: {settings.get('entity_association', 'raw')}. Controlled candidate features; three observations; fixed candidate streams; no learned graph. Half the episodes hide final identity. No visual discovery, graph learning, motor control or independent final-test claim.",
+            scope=association_note
+            + f"Reader: {settings.get('entity_reader', 'recurrent')}. Association mode: {settings.get('entity_association', 'raw')}. Controlled candidate features; three observations; fixed candidate streams; no learned graph. Half the episodes hide final identity. No visual discovery, graph learning, motor control or independent final-test claim.",
         ),
     )
     if not any(r["split"] == "diagnostic_development" for r in run.rows):
@@ -2787,7 +2809,7 @@ def export_diagrams(
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--entity-association", choices=["raw", "observed"], default="raw"
+        "--entity-association", choices=["raw", "observed", "learned"], default="raw"
     )
     parser.add_argument(
         "--entity-reader", choices=["recurrent", "shared"], default="recurrent"
@@ -2884,8 +2906,11 @@ def main():
     diagnostic = args.dataset in ("facts", "entities") or (
         args.dataset == "recall" and args.recall_mode == "current-recent"
     )
+    if args.entity_association == "learned" and args.entity_reader != "shared":
+        parser.error("Learned association requires shared reader")
     if args.entity_reader == "shared" and (
-        args.dataset != "entities" or args.entity_association != "observed"
+        args.dataset != "entities"
+        or args.entity_association not in ("observed", "learned")
     ):
         parser.error("Shared reader requires entities and observed association")
     if args.entity_association != "raw" and args.dataset != "entities":

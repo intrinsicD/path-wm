@@ -46,8 +46,11 @@ class EntityReader(nn.Module):
 class SharedEntityReader(nn.Module):
     """Fixed supplied object streams; learned updates, coherent assignment mixture."""
 
-    def __init__(self, width=64):
+    def __init__(self, width=64, association="observed"):
+        if association not in ("observed", "learned"):
+            raise ValueError("Shared reader requires observed or learned association")
         super().__init__()
+        self.association = association
         self.encode = nn.Sequential(nn.Linear(7, width), nn.GELU())
         self.recurrent = nn.GRU(width, width, batch_first=True)
         self.heads = nn.ModuleList(
@@ -60,16 +63,56 @@ class SharedEntityReader(nn.Module):
             ]
         )
 
+        # Construct after the reference modules to preserve their initialization.
+        if association == "learned":
+            self.matcher = nn.Sequential(nn.Linear(8, 32), nn.GELU(), nn.Linear(32, 1))
+
+    def assignment_weights(self, inputs):
+        """Task-trained probabilities over both complete candidate bijections."""
+        difference = inputs[..., :8].unsqueeze(-2) - inputs[:, None, None, 0, :, :8]
+        scores = self.matcher(difference.square()).squeeze(-1)
+        assignments = torch.stack(
+            [
+                scores[..., 0, 0] + scores[..., 1, 1],
+                scores[..., 0, 1] + scores[..., 1, 0],
+            ],
+            -1,
+        )
+        visible = inputs[..., 8].bool().all(-1, keepdim=True)
+        return torch.where(visible, assignments.softmax(-1), 0.5)
+
     def forward(self, inputs):
         if inputs.ndim != 4 or inputs.shape[1:] != (3, 2, FEATURES):
             raise ValueError(
                 "Shared entity reader requires three two-candidate observations"
             )
-        associated = observed_association(inputs)
         if not inputs[:, :2, :, 8].bool().all():
             raise ValueError(
                 "Shared diagnostic requires visible initial/action descriptors"
             )
+        if self.association == "observed":
+            return self._assigned(inputs, observed_association(inputs))
+        weights = self.assignment_weights(inputs)
+        paths = []
+        for order in ([0, 1], [1, 0]):
+            associated = inputs.new_zeros(inputs.shape)
+            associated[:, 0, :, :2] = torch.eye(
+                2, device=inputs.device, dtype=inputs.dtype
+            )
+            associated[:, 1, :, :2] = torch.eye(
+                2, device=inputs.device, dtype=inputs.dtype
+            )[order]
+            associated[:, -1, 0, :2] = weights[:, -1]
+            paths.append(self._assigned(inputs, associated))
+        return tuple(
+            (torch.stack([path[j].exp() for path in paths], 1) * weights[:, 1, :, None])
+            .sum(1)
+            .clamp_min(1e-30)
+            .log()
+            for j in range(3)
+        )
+
+    def _assigned(self, inputs, associated):
         # Route each observed candidate to its initial object stream. Only features
         # from the first two observations enter the recurrent update.
         routed = torch.einsum(

@@ -72,3 +72,23 @@ def entity_metrics(logits, targets, cohorts, groups):
             examples=len(cohorts),
         ),
     )
+
+
+@torch.no_grad()
+def association_diagnostics(model, data):
+    """Evaluator-only matching labels; one row per independent descriptor group."""
+    x = data.inputs[::32]
+    weights = model.assignment_weights(x)
+    labels = (x[:, :, 0, :8] == x[:, None, 0, 0, :8]).all(-1).long()
+    # Equality to initial candidate zero means identity assignment (index zero).
+    labels = 1 - labels
+    result = {"descriptor_groups": len(x)}
+    for time, name in ((1, "action"), (2, "final")):
+        p = weights[:, time].double()
+        result[name + "_accuracy"] = float(
+            (p.argmax(-1) == labels[:, time]).double().mean()
+        )
+        result[name + "_nll"] = float(
+            -p.gather(1, labels[:, time, None]).clamp_min(1e-30).log().mean()
+        )
+    return result
