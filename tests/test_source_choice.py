@@ -125,3 +125,41 @@ def test_variance_aware_change_distinguishes_noisy_and_sharp_shift():
             SourceChoice(change_block=4, change_z=z)
     with pytest.raises(ValueError):
         SourceChoice(change_z=3)
+
+
+def test_uncertainty_selection_uses_only_stationary_development(monkeypatch):
+    import pathwm.evaluation.source_choice as module
+
+    calls = []
+
+    def fake(gate, **kwargs):
+        calls.append(kwargs)
+        z = kwargs["change_z"]
+        return dict(
+            detector=dict(
+                change_z=z, static_reset_episode_rate={2: 0.5, 3: 0.125, 4: 0}[z]
+            ),
+            passed=True,
+        )
+
+    monkeypatch.setattr(module, "evaluate_source_drift", fake)
+    result = module.evaluate_source_uncertainty(None)
+    assert result["selection"]["selected_z"] == 3
+    assert all(c["static_only"] and c["seed"] == 1901 for c in calls[:3])
+    assert calls[3] == dict(worlds=16, seed=2001, change_z=3)
+
+
+def test_uncertainty_unqualified_fallback_cannot_pass(monkeypatch):
+    import pathwm.evaluation.source_choice as module
+
+    def fake(gate, **kwargs):
+        return dict(
+            detector=dict(change_z=kwargs["change_z"], static_reset_episode_rate=1),
+            passed=True,
+        )
+
+    monkeypatch.setattr(module, "evaluate_source_drift", fake)
+    result = module.evaluate_source_uncertainty(None)
+    assert result["selection"]["selected_z"] == 4
+    assert not result["selection"]["qualified"]
+    assert not result["passed"]

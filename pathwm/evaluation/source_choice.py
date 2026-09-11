@@ -125,23 +125,27 @@ def evaluate_source_choice(gate, worlds=16, seed=1601):
     )
 
 
-def evaluate_source_drift(gate, worlds=16):
-    calibration = evaluate_source_choice(gate, worlds, seed=1801)
+def evaluate_source_drift(gate, worlds=16, seed=1801, change_z=None, static_only=False):
+    calibration = evaluate_source_choice(gate, worlds, seed=seed)
+    names = ("frozen", "cumulative", "window", "triggered", "no_feedback")
+    if change_z is not None:
+        names += ("uncertainty",)
     rows = []
     for base in calibration["worlds"]:
         labels = torch.tensor(base["labels"])
         first = torch.tensor(base["first_predictions"])
         sources = torch.tensor(base["source_predictions"]).T
         mask = torch.tensor(base["defer"])
-        rng = torch.Generator().manual_seed(3801 + base["world"])
+        rng = torch.Generator().manual_seed(seed + 2000 + base["world"])
         coins = torch.rand(256, generator=rng)
         explore = torch.randint(2, (256,), generator=rng)
-        for swapped in (False, True):
+        for swapped in (False,) if static_only else (False, True):
             outcomes = sources[:, [1, 0]] if swapped else sources
-            for name in ("frozen", "cumulative", "window", "triggered", "no_feedback"):
+            for name in names:
                 policy = SourceChoice(
                     window=32 if name == "window" else None,
-                    change_block=32 if name == "triggered" else None,
+                    change_block=32 if name in ("triggered", "uncertainty") else None,
+                    change_z=change_z if name == "uncertainty" else None,
                 )
                 for event in base["feedback"]:
                     policy.observe(event["source"], event["gain"] - 0.005)
@@ -164,7 +168,7 @@ def evaluate_source_drift(gate, worlds=16):
                     if action is not None:
                         pred = bool(outcomes[i, action])
                         fee = 0.05
-                        if name in ("cumulative", "window", "triggered"):
+                        if name in ("cumulative", "window", "triggered", "uncertainty"):
                             fee += 0.005
                             feedback = (
                                 float(pred == bool(labels[i]))
@@ -214,9 +218,9 @@ def evaluate_source_drift(gate, worlds=16):
                     )
                 )
     summary = {}
-    for swapped in (False, True):
+    for swapped in (False,) if static_only else (False, True):
         summary["drift" if swapped else "static"] = {}
-        for name in ("frozen", "cumulative", "window", "triggered", "no_feedback"):
+        for name in names:
             chosen = [
                 r for r in rows if r["swapped"] == swapped and r["policy"] == name
             ]
@@ -229,26 +233,55 @@ def evaluate_source_drift(gate, worlds=16):
                     "combined_utility",
                 )
             }
-    d = summary["drift"]
+    candidate = "uncertainty" if change_z is not None else "triggered"
+    d = summary.get("drift", summary["static"])
     s = summary["static"]
     static_resets = (
         sum(
             r["post_resets"] > 0
             for r in rows
-            if not r["swapped"] and r["policy"] == "triggered"
+            if not r["swapped"] and r["policy"] == candidate
         )
         / worlds
     )
     return dict(
         detector=dict(
-            block=32, threshold=0.15, static_reset_episode_rate=static_resets
+            block=32,
+            threshold=0.15,
+            change_z=change_z,
+            candidate=candidate,
+            static_reset_episode_rate=static_resets,
         ),
         summary=summary,
         episodes=rows,
         environment=calibration["worlds"],
-        passed=d["triggered"]["late_utility"] >= d["frozen"]["late_utility"] + 0.01
-        and d["triggered"]["late_utility"] >= d["cumulative"]["late_utility"] + 0.01
-        and d["triggered"]["utility"] >= d["frozen"]["utility"] - 0.01
-        and s["triggered"]["utility"] >= s["frozen"]["utility"] - 0.02
+        passed=d[candidate]["late_utility"] >= d["frozen"]["late_utility"] + 0.01
+        and d[candidate]["late_utility"] >= d["cumulative"]["late_utility"] + 0.01
+        and d[candidate]["utility"] >= d["frozen"]["utility"] - 0.01
+        and s[candidate]["utility"] >= s["frozen"]["utility"] - 0.02
         and static_resets <= 0.25,
     )
+
+
+def evaluate_source_uncertainty(gate):
+    """Select on stationary development worlds before touching held-out worlds."""
+    development = []
+    for z in (2, 3, 4):
+        result = evaluate_source_drift(
+            gate, worlds=8, seed=1901, change_z=z, static_only=True
+        )
+        development.append(result)
+    qualified = [
+        r for r in development if r["detector"]["static_reset_episode_rate"] <= 0.125
+    ]
+    z = qualified[0]["detector"]["change_z"] if qualified else 4
+    held_out = evaluate_source_drift(gate, worlds=16, seed=2001, change_z=z)
+    held_out["selection"] = dict(
+        selected_z=z,
+        qualified=bool(qualified),
+        development_seed=1901,
+        held_out_seed=2001,
+    )
+    held_out["development"] = development
+    held_out["passed"] = held_out["passed"] and bool(qualified)
+    return held_out

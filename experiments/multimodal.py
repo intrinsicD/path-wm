@@ -2914,7 +2914,7 @@ def entity_growth(weights, output, resume=False, seed=61):
 def evaluate_entity_source_drift(weights, output, resume=False):
     """Online source values after an unannounced quality swap."""
     from pathwm.models.entity_relations import RelationWriteGate
-    from pathwm.evaluation.source_choice import evaluate_source_drift
+    from pathwm.evaluation.source_choice import evaluate_source_uncertainty
 
     weights = Path(weights).resolve()
     model = RelationWriteGate().eval().requires_grad_(False)
@@ -2925,9 +2925,14 @@ def evaluate_entity_source_drift(weights, output, resume=False):
     run = Run(
         output,
         settings=dict(
-            seed=1801,
-            innovation_seed=2801,
-            exploration_seed=3801,
+            seed=2001,
+            innovation_seed=3001,
+            exploration_seed=4001,
+            development_seed=1901,
+            development_worlds=8,
+            change_z_candidates=[2, 3, 4],
+            development_reset_limit=0.125,
+            variance_floor=0.0001,
             window=32,
             change_block=32,
             change_threshold=0.15,
@@ -2939,13 +2944,17 @@ def evaluate_entity_source_drift(weights, output, resume=False):
             entity_source_drift=True,
             entity_gate_weights=str(weights),
             gate_file_sha256=file_hash(weights),
-            max_seconds=30,
+            max_seconds=120,
             costs=[0.05, 0.05],
             correlations=[0.9, 0.0],
             defer_bounds=[0.2, 0.8],
             sigmas=[0.03, 0.15, 0.3, 0.6],
         ),
-        data=dict(generator="gate_shift_examples", pairs=384, seeds=[1801, 2801, 3801]),
+        data=dict(
+            generator="gate_shift_examples",
+            pairs=384,
+            seeds=[1901, 2901, 3901, 2001, 3001, 4001],
+        ),
         recipe=__file__,
         model=model,
         optimizer=torch.optim.AdamW(model.parameters(), lr=0),
@@ -2960,10 +2969,10 @@ def evaluate_entity_source_drift(weights, output, resume=False):
             if result["model_sha256"] != state_hash(model):
                 raise ValueError("Evidence source cache mismatch")
         else:
-            result = evaluate_source_drift(model)
+            result = evaluate_source_uncertainty(model)
             if state_hash(model) != before:
                 raise RuntimeError("Frozen source gate changed")
-            if perf_counter() - started > 30:
+            if perf_counter() - started > 120:
                 raise TimeoutError("Evidence source budget exhausted")
             result["model_sha256"] = before
             atomic_json(path, result)

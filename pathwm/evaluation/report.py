@@ -199,6 +199,7 @@ def entity_inspection(directory):
     if drift.exists():
         data = json.loads(drift.read_text())
         triggered = "detector" in data
+        candidate = data.get("detector", {}).get("candidate", "triggered")
         parts = [
             "<section><h2>Online source drift</h2>",
             f"<p>Declared adaptation screen: {'pass' if data['passed'] else 'fail'}.</p>",
@@ -215,15 +216,23 @@ def entity_inspection(directory):
                     f"<tr><td>{condition}</td><td>{name}</td><td>{v['early_utility']:.6f}</td><td>{v['late_utility']:.6f}</td><td>{v['utility']:.6f}</td><td>{v['combined_utility']:.6f}</td></tr>"
                 )
         parts.append("</table></div>")
+        if "selection" in data:
+            parts.append(
+                f"<p>Variance-aware policy: z={data['selection']['selected_z']}; development qualified={data['selection']['qualified']}. Threshold=max(0.15,z√(s²_old/n_old+s²_recent/32+0.0001)). This heuristic has no sequential confidence guarantee. Select smallest z with stationary reset rate≤12.5% on8 development worlds; freeze before16 held-out worlds.</p>"
+            )
+            for trial in data["development"]:
+                parts.append(
+                    f"<p>Development z={trial['detector']['change_z']}: reset episodes {trial['detector']['static_reset_episode_rate']:.2%}.</p>"
+                )
         if triggered:
             parts.append(
-                f"<p>Static episodes with post-calibration resets: {data['detector']['static_reset_episode_rate']:.2%} (limit25%).</p>"
+                f"<p>Candidate: {candidate}. Static episodes with post-calibration resets: {data['detector']['static_reset_episode_rate']:.2%} (limit25%).</p>"
             )
             parts.append(
                 '<div class="table"><table><tr><th>World</th><th>Condition</th><th>Calibration resets</th><th>Post resets</th><th>First post reset (case, zero-based)</th></tr>'
             )
             for row in data["episodes"]:
-                if row["policy"] == "triggered":
+                if row["policy"] == candidate:
                     when = row["first_reset_case"]
                     parts.append(
                         f"<tr><td>{row['world']}</td><td>{'drift' if row['swapped'] else 'static'}</td><td>{row['calibration_resets']}</td><td>{row['post_resets']}</td><td>{when if when is not None else 'none'}</td></tr>"
@@ -233,7 +242,7 @@ def entity_inspection(directory):
             )
         parts.append(
             (
-                "<p>Late is the last128 of256 post-calibration cases. Acceptance: triggered late drift utility≥frozen+0.01 and cumulative+0.01, whole drift≥frozen−0.01, static≥frozen−0.02; static episodes with resets≤25%. Same exploration coins and candidate actions across online policies. Feedback availability and fixed change timing are supplied assumptions. Source: entity_source_drift.json.</p></section>"
+                "<p>Late is the last128 of256 post-calibration cases. Acceptance: candidate late drift utility≥frozen+0.01 and cumulative+0.01, whole drift≥frozen−0.01, static≥frozen−0.02; static episodes with resets≤25%; development selection must qualify when present. Same exploration coins and candidate actions across online policies. Feedback availability and fixed change timing are supplied assumptions. Source: entity_source_drift.json.</p></section>"
                 if triggered
                 else "<p>Acceptance: window late drift≥frozen+0.01 and cumulative+0.01; whole drift≥frozen−0.01; static≥frozen−0.02.</p></section>"
             )

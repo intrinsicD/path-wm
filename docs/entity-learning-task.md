@@ -1473,3 +1473,10 @@ sequential confidence bound;8 worlds give a noisy development estimate. Preserve
 candidate development traces separately from held-out results. Structural report QA.
 Tests: noisy equal-scale mean shifts suppressed, sharp low-variance shift detected,
 invalid configurations, causal updates, development-only selection, cached resume.
+
+Claude reconciliation: small development sample and adaptive selected feedback limit
+interpretation. All criteria are conjunctive; fallback cannot pass. Positive variance
+floor raises rather than lowers the variance threshold, and max0.15 remains a floor.
+The development margin is engineered, not a confidence bound. Preserve individual
+reset traces; no downstream promotion on a partial pass. Two public-only receipts
+under `runs/reviews/continuation_2026-09-11/source-uncertainty{,-reconcile}-receipt.json`.
