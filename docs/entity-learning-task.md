@@ -1299,3 +1299,9 @@ low-noise accuracy loss<=1point versus same-source. Duplicate decisions unchange
 first observations/deferrals identical. Report all strategies/classes/costs and a
 break-even alternate cost; no claims of real sensor independence or optimal choice.
 Structural report QA only under prior browser restriction.
+
+Claude reconciliation accepts balanced paired labels, explicit utility units and
+fixed first-observation deferrals. Added descriptive2000-resample paired bootstrap
+(seed1503) over128 pairs, not pooled severities; no CI-based acceptance change.
+Empirical raw correlations and break-even cost contextualize supplied assumptions.
+No calibration, policy learning or optimality claim; reliability proposal remains staged.

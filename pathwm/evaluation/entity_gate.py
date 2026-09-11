@@ -339,3 +339,79 @@ def score_gate_reobserve(gate, data):
     )
     result["reobserve"] = True
     return result
+
+
+def score_evidence_sources(gate, pairs=128):
+    data = gate_shift_examples(1501, pairs)
+    rng = torch.Generator().manual_seed(1502)
+    innovation = torch.randn(pairs, 4, generator=rng).repeat_interleave(2, 0)
+    sources = {}
+    for name, rho, cost in (("same", 0.9, 0.02), ("alternate", 0.0, 0.05)):
+        source = {k: v.clone() for k, v in data.items()}
+        source["innovation"] = innovation
+        source["second_noise"] = (
+            rho * source["noise"] + (1 - rho * rho) ** 0.5 * innovation
+        )
+        result = score_gate_reobserve(gate, source)
+        for cohort in result["cohorts"].values():
+            for scores in cohort["strategies"].values():
+                scores["utility"] = scores["accuracy"] - cost * scores["reread_rate"]
+        result.update(
+            cost=cost,
+            raw_correlation=rho,
+            empirical_raw_correlation=torch.corrcoef(
+                torch.stack(
+                    (source["noise"].flatten(), source["second_noise"].flatten())
+                )
+            )[0, 1].item(),
+        )
+        # Parent acceptance is a source comparison, not the old cost0.02 reread gate.
+        result.pop("passed")
+        sources[name] = result
+    same = sources["same"]["cohorts"]["0.6"]["strategies"]["selective"]
+    alternate = sources["alternate"]["cohorts"]["0.6"]["strategies"]["selective"]
+    first = sources["same"]["cohorts"]["0.6"]["strategies"]["first"]
+    y = data["labels"]
+    p_same = torch.tensor(same["probability"]) > 0.5
+    p_alt = torch.tensor(alternate["probability"]) > 0.5
+    mask = torch.tensor(sources["same"]["cohorts"]["0.6"]["defer"])
+    paired = (
+        ((p_alt == y).float() - (p_same == y).float() - 0.03 * mask.float())
+        .reshape(pairs, 2)
+        .mean(-1)
+    )
+    rng = torch.Generator().manual_seed(1503)
+    boot = paired[torch.randint(pairs, (2000, pairs), generator=rng)].mean(-1)
+    intervals = torch.quantile(boot, torch.tensor([0.025, 0.975])).tolist()
+    integrity = all(
+        sources["same"]["cohorts"][n]["defer"]
+        == sources["alternate"]["cohorts"][n]["defer"]
+        and sources["same"]["cohorts"][n]["strategies"]["first"]
+        == sources["alternate"]["cohorts"][n]["strategies"]["first"]
+        and all(s["cohorts"][n]["duplicate_exact"] for s in sources.values())
+        for n in sources["same"]["cohorts"]
+    )
+    passed = (
+        integrity
+        and alternate["accuracy"] >= same["accuracy"] + 0.02
+        and alternate["utility"] > same["utility"]
+        and alternate["utility"] > first["utility"]
+        and alternate["negative_recall"] >= same["negative_recall"] - 0.02
+        and all(
+            sources["alternate"]["cohorts"][n]["strategies"]["selective"]["accuracy"]
+            >= sources["same"]["cohorts"][n]["strategies"]["selective"]["accuracy"]
+            - 0.01
+            for n in ("0.03", "0.15")
+        )
+    )
+    rate = alternate["reread_rate"]
+    return dict(
+        sources=sources,
+        passed=passed,
+        integrity=integrity,
+        paired_utility_delta=alternate["utility"] - same["utility"],
+        paired_bootstrap_95=intervals,
+        break_even_alternate_cost=(alternate["accuracy"] - same["utility"]) / rate
+        if rate
+        else None,
+    )

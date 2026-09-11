@@ -84,13 +84,26 @@ def test_correlated_noise_endpoints():
 
 def test_alternate_sources_share_first_observation():
     from pathwm.evaluation.entity_gate import score_evidence_sources
+
     result = score_evidence_sources(RelationWriteGate(), pairs=4)
-    for n in result['sources']['same']['cohorts']:
-        a = result['sources']['same']['cohorts'][n]
-        b = result['sources']['alternate']['cohorts'][n]
-        assert a['defer'] == b['defer']
-        assert a['strategies']['first'] == b['strategies']['first']
-        assert a['duplicate_exact'] and b['duplicate_exact']
-        for c,cost in ((a,.02),(b,.05)):
-            s=c['strategies']['selective']
-            assert abs(s['utility']-(s['accuracy']-cost*s['reread_rate']))<1e-7
+    for n in result["sources"]["same"]["cohorts"]:
+        a = result["sources"]["same"]["cohorts"][n]
+        b = result["sources"]["alternate"]["cohorts"][n]
+        assert a["defer"] == b["defer"]
+        assert a["strategies"]["first"] == b["strategies"]["first"]
+        assert a["duplicate_exact"] and b["duplicate_exact"]
+        for c, cost in ((a, 0.02), (b, 0.05)):
+            s = c["strategies"]["selective"]
+            assert abs(s["utility"] - (s["accuracy"] - cost * s["reread_rate"])) < 1e-7
+
+
+def test_evidence_source_recipe_resume(tmp_path):
+    from experiments.multimodal import evaluate_entity_evidence_sources
+
+    donor = tmp_path / "gate.pt"
+    torch.save({"model": RelationWriteGate().state_dict()}, donor)
+    output = tmp_path / "sources"
+    evaluate_entity_evidence_sources(donor, output)
+    raw = (output / "entity_evidence_sources.json").read_bytes()
+    evaluate_entity_evidence_sources(donor, output, resume=True)
+    assert (output / "entity_evidence_sources.json").read_bytes() == raw

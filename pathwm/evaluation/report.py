@@ -195,6 +195,28 @@ def model_inspection(directory):
 
 
 def entity_inspection(directory):
+    evidence = directory / "entity_evidence_sources.json"
+    if evidence.exists():
+        data = json.loads(evidence.read_text())
+        parts = [
+            "<section><h2>Alternate evidence acquisition</h2>",
+            f"<p>Declared comparison: {'pass' if data['passed'] else 'fail'}.</p>",
+            "<p>Fixed source policies; same-source rho0.9 costs0.02, alternate rho0 costs0.05. Utility is accuracy minus cost per extra observation. Correlation is an environment assumption, never a policy input. No learned source choice or reliability estimation.</p>",
+            '<div class="table"><table><tr><th>Source</th><th>Noise</th><th>Strategy</th><th>Accuracy</th><th>Accept recall</th><th>Ignore recall</th><th>Reread rate</th><th>Utility</th></tr>',
+        ]
+        for source, result in data["sources"].items():
+            for noise, c in result["cohorts"].items():
+                for strategy, v in c["strategies"].items():
+                    parts.append(
+                        f"<tr><td>{source}</td><td>{noise}</td><td>{strategy}</td><td>{v['accuracy']:.2%}</td><td>{v['positive_recall']:.2%}</td><td>{v['negative_recall']:.2%}</td><td>{v['reread_rate']:.2%}</td><td>{v['utility']:.6f}</td></tr>"
+                    )
+        parts.append(
+            f"</table></div><p>High-noise paired utility delta: {data['paired_utility_delta']:.6f}; descriptive paired bootstrap95% interval: {data['paired_bootstrap_95']}. Break-even alternate cost against selective same-source: {data['break_even_alternate_cost']}. Bootstrap resamples128 underlying pairs, not severity rows.</p>"
+        )
+        parts.append(
+            "<p>Acceptance requires ≥2-point high-noise accuracy gain, positive utility gains over same-source and first-only, ignore loss≤2 points and low-noise loss≤1 point. Source: entity_evidence_sources.json. Marginal noise matched; both labels balanced. Results are conditional on supplied static sensor properties.</p></section>"
+        )
+        return parts
     shift = directory / "entity_gate_shift.json"
     if shift.exists():
         data = json.loads(shift.read_text())
@@ -799,6 +821,7 @@ def render_report(directory):
             "entity_temporal.json",
             "entity_source.json",
             "entity_gate_shift.json",
+            "entity_evidence_sources.json",
         )
     ):
         curve_path = directory / "learning_curve.png"
@@ -833,6 +856,7 @@ def render_report(directory):
             "entity_temporal.json",
             "entity_source.json",
             "entity_gate_shift.json",
+            "entity_evidence_sources.json",
         )
     ):
         parts.append(
