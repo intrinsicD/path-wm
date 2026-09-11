@@ -195,6 +195,39 @@ def model_inspection(directory):
 
 
 def entity_inspection(directory):
+    key_box = directory / "key_box.json"
+    if key_box.exists():
+        data = json.loads(key_box.read_text())
+        parts = [
+            "<section><h2>Integrated key-and-box task</h2>",
+            f"<p>Declared screen: {'pass' if data['passed'] else 'fail'}. Known initial content accuracy: {data['known_accuracy']:.2%}.</p>",
+            "<p>Entity latents enter the actual belief-agent thinking workspace. Planner uses supplied task mechanics, not learned imagined dynamics. Inspect/open/retrieve feedback is committed after execution. No-history control removes historical store and agent state before the action loop.</p>",
+            '<div class="table"><table><tr><th>Policy</th><th>Reachable success</th><th>Absent correct stop</th><th>Utility</th><th>Mean cost</th></tr>',
+        ]
+        for policy, scores in data["summary"].items():
+            parts.append(
+                f"<tr><td>{policy}</td><td>{scores['success']:.2%}</td><td>{scores['absent_stop']:.2%}</td><td>{scores['utility']:.6f}</td><td>{scores['mean_cost']:.4f}</td></tr>"
+            )
+        parts.append(
+            "</table></div><p>Acceptance: known accuracy≥95%, reachable success and absent correct stop≥90%, utility advantage over no-history≥0.01; supplied-state control100%. All required. Four-action budget. Utility=verified success−0.05×external cost.</p>"
+        )
+        for condition in ("remembered", "moved", "uncertain", "absent"):
+            row = next(
+                r
+                for r in data["episodes"]
+                if r["condition"] == condition and r["policy"] == "integrated"
+            )
+            parts.append(
+                "<details><summary>"
+                + escape(condition)
+                + " example</summary><pre>"
+                + escape(json.dumps(row, indent=2))
+                + "</pre></details>"
+            )
+        parts.append(
+            "<p>Same task templates with fresh descriptors; not broad transfer. Raw results: key_box.json.</p></section>"
+        )
+        return parts
     diagnosis = directory / "entity_source_diagnosis.json"
     if diagnosis.exists():
         data = json.loads(diagnosis.read_text())

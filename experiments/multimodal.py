@@ -2911,6 +2911,106 @@ def entity_growth(weights, output, resume=False, seed=61):
     return run.path
 
 
+def train_key_box(
+    matcher_weights, cell_weights, output, *, steps=256, families=16, resume=False
+):
+    """Train the entity-to-belief workspace bridge, then execute bounded plans."""
+    from pathwm.models.key_box import KeyBoxReader
+    from pathwm.models.entity_state import EntityStateCell
+    from pathwm.evaluation.key_box import key_training_batch, evaluate_key_box
+
+    seed_everything(2301)
+    matcher_weights, cell_weights = (
+        Path(matcher_weights).resolve(),
+        Path(cell_weights).resolve(),
+    )
+    matcher = EntityMatchReader()
+    donor = torch.load(matcher_weights, map_location="cpu", weights_only=True)["model"]
+    matcher.load_state_dict(
+        {
+            k.removeprefix("agent."): v
+            for k, v in donor.items()
+            if k.startswith("agent.")
+        }
+    )
+    cell = EntityStateCell(preserve_no_information=True)
+    cell.load_state_dict(
+        torch.load(cell_weights, map_location="cpu", weights_only=True)["model"]
+    )
+    agent = build_model(
+        width=16, state_model="belief", memory_recent=2, memory_block=2, memory_blocks=1
+    )
+    model = KeyBoxReader(agent, matcher, cell)
+    optimizer = torch.optim.AdamW(
+        [p for p in model.parameters() if p.requires_grad], lr=0.003
+    )
+    donor_hashes = dict(matcher=state_hash(matcher), cell=state_hash(cell))
+    run = Run(
+        output,
+        settings=dict(
+            seed=2301,
+            steps=steps,
+            families=families,
+            lr=0.003,
+            purpose="diagnostic",
+            matcher_sha256=file_hash(matcher_weights),
+            cell_sha256=file_hash(cell_weights),
+            max_seconds=240,
+            planner="supplied_expectimax4",
+        ),
+        data=dict(training_seed=2301, evaluation_seed=2401, batch=32),
+        recipe=__file__,
+        model=model,
+        optimizer=optimizer,
+        device="cpu",
+        resume=resume,
+    )
+    path = run.path / "key_box.json"
+    started = perf_counter()
+    try:
+        model.train()
+        for step in range(run.step, steps):
+            state, latent, target = key_training_batch(model, run.sampler)
+            logits, working = model(state, latent)
+            second, _ = model(working, latent)
+            loss = (
+                F.cross_entropy(logits, target) + F.cross_entropy(second, target)
+            ) / 2
+            optimizer.zero_grad()
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(
+                [p for p in model.parameters() if p.requires_grad], 5
+            )
+            optimizer.step()
+            run.step = step + 1
+            run.log(dict(step=run.step, split="train", loss=float(loss.detach())))
+            if perf_counter() - started > 240:
+                raise TimeoutError("Key-box budget exhausted")
+        model.eval()
+        if not (resume and path.exists()):
+            result = evaluate_key_box(model, families=families)
+            if donor_hashes != dict(matcher=state_hash(matcher), cell=state_hash(cell)):
+                raise RuntimeError("Entity donor changed")
+            if perf_counter() - started > 240:
+                raise TimeoutError("Key-box budget exhausted")
+            result["donor_hashes"] = donor_hashes
+            result["model_sha256"] = state_hash(model)
+            atomic_json(path, result)
+            run.save()
+        elif json.loads(path.read_text())["model_sha256"] != state_hash(model):
+            raise ValueError("Key-box result cache mismatch")
+        run.status("completed", "pending")
+    except BaseException as exc:
+        run.status("failed", "pending", str(exc))
+        raise
+    try:
+        render_report(run.path)
+    except BaseException as exc:
+        run.status("completed", "failed", str(exc))
+        raise
+    return run.path
+
+
 def diagnose_entity_sources(source, output, resume=False):
     """Inspect a completed source run; no new samples or policy updates."""
     from pathwm.models.entity_relations import RelationWriteGate

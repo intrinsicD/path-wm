@@ -37,3 +37,15 @@ branch nonmutation, readout gradient through actual thinker, no label forward in
 entity retry and joint snapshot restore, bounded action loop, donor hashes and resume.
 Use existing multimodal recipe/Run/reports, new small task/model modules. Structural
 report QA under existing browser restriction. Preserve failures rather than tuning.
+
+Claude reconciliation: no oracle actions in training; new external observations are
+retained in the no-history control. Deterministic search order is box0 then box1,
+inspect/open/retrieve; a candidate replaces the incumbent only above1e-9, with stop
+initially preferred at equal value. Budget exhaustion without verified success is
+failure (utility minus incurred cost), recorded separately from false stop. Snapshot
+covers entity/belief/known/receipt state at call boundaries; this slice does not yet
+resume a running external environment halfway through an action. Cached run resume
+is separately tested. Review receipts: key-box-contract and key-box-reconcile under
+runs/reviews/continuation_2026-09-11. Smoke uses a declared exact matcher substitute
+for transaction plumbing; formal evaluation uses the actual frozen learned matcher.
+Fixed text event shape to the encoder's [B,T] contract after smoke failure.
