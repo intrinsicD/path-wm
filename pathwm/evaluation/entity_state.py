@@ -7,7 +7,9 @@ from pathwm.models.entity_state import EntityStateMemory
 
 def state_metrics(cell, data):
     with torch.inference_mode():
-        logits, hidden = cell(data["observations"], data["slots"])
+        logits, hidden = cell(
+            data["observations"], data["slots"], sources=data.get("sources")
+        )
         nll = torch.nn.functional.cross_entropy(
             logits.flatten(0, 1), data["targets"].flatten()
         ).item()
@@ -27,13 +29,17 @@ def state_runtime(cell, matcher, data, deadline=None):
         receipts = []
         for t, descriptor in enumerate(episode["descriptors"]):
             args = (str(t), descriptor, t, data["observations"][index, t])
-            receipt = store.observe(*args)
+            source = episode.get("sources", [-1] * len(episode["descriptors"]))[t]
+            kwargs = dict(source_id=source if source >= 0 else None)
+            receipt = store.observe(*args, **kwargs)
             receipts.append(receipt)
             before = store.snapshot()
-            replay &= store.observe(*args) == receipt and store.snapshot() == before
+            replay &= (
+                store.observe(*args, **kwargs) == receipt and store.snapshot() == before
+            )
             if restored is not None:
                 replay &= (
-                    restored.observe(*args) == receipt
+                    restored.observe(*args, **kwargs) == receipt
                     and restored.snapshot() == store.snapshot()
                 )
             if t == 2:

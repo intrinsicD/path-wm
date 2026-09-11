@@ -195,6 +195,27 @@ def model_inspection(directory):
 
 
 def entity_inspection(directory):
+    interaction = directory / "entity_interaction.json"
+    if interaction.exists():
+        data = json.loads(interaction.read_text())
+        parts = [
+            "<section><h2>Directed entity interaction</h2>",
+            f"<p>Source latent: {'zeroed control' if data['blind'] else 'available'}. Capability gates: {'pass' if data['passed'] else 'fail'}.</p>",
+            "<p>Only the interaction update trains. Recognition and ordinary state dynamics remain frozen. Directed endpoints and copy type are supplied; graph structure is not learned. Swapped roles test symmetry, not novel IDs. Families share correlated variants.</p>",
+            '<div class="table"><table><tr><th>Condition</th><th>Episodes</th><th>Pair accuracy</th><th>NLL/entity</th><th>Runtime</th><th>Transactions / latents</th><th>Gate</th></tr>',
+        ]
+        for name, row in data["cohorts"].items():
+            scores, runtime = row["scores"], row["runtime"]
+            parts.append(
+                f"<tr><td>{name}</td><td>{scores['examples']}</td><td>{scores['pair_accuracy']:.2%}</td><td>{scores['nll']:.6f}</td><td>{runtime['pair_accuracy']:.2%}</td><td>{runtime['transactions']} / {runtime['latent_agreement']}</td><td>{row['passed']}</td></tr>"
+            )
+        parts.append(
+            "</table></div><p>Source: entity_interaction.json. Capability gates require95% pair accuracy and NLL≤0.15, plus runtime checks. The source-zero control is expected to fail capability gates and remain at most60% on reference histories.</p>"
+        )
+        parts.append(
+            f"<details><summary>Interaction examples</summary><pre>{escape(json.dumps(data['cohorts']['reference']['runtime']['episodes'][:2], indent=2))}</pre></details></section>"
+        )
+        return parts
     temporal = directory / "entity_temporal.json"
     if temporal.exists():
         data = json.loads(temporal.read_text())

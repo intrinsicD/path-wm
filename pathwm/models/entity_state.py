@@ -26,17 +26,43 @@ class EntityStateCell(nn.Module):
             )
         return updated
 
-    def forward(self, observations, slots):
+    def forward(self, observations, slots, sources=None):
         hidden = observations.new_zeros((len(observations), 2, self.width))
         for t in range(observations.shape[1]):
             safe = slots[:, t].clamp_min(0)
             previous = hidden[torch.arange(len(hidden)), safe]
             updated = self.update(observations[:, t], previous)
+            if sources is not None:
+                source = hidden[torch.arange(len(hidden)), sources[:, t].clamp_min(0)]
+                interaction = self.interact(previous, source)
+                updated = torch.where(
+                    (sources[:, t] >= 0)[:, None], interaction, updated
+                )
             mask = torch.nn.functional.one_hot(safe, 2).bool() & (
                 slots[:, t, None] >= 0
             )
             hidden = torch.where(mask[:, :, None], updated[:, None], hidden)
         return self.head(hidden), hidden
+
+
+class EntityInteractionCell(EntityStateCell):
+    """A supplied directed relation; only its latent update is learned."""
+
+    def __init__(self, width=16, blind=False):
+        super().__init__(width, preserve_no_information=True)
+        self.cell.requires_grad_(False)
+        self.head.requires_grad_(False)
+        self.interaction = nn.Sequential(
+            nn.Linear(2 * width, 2 * width),
+            nn.Tanh(),
+            nn.Linear(2 * width, width),
+            nn.Tanh(),
+        )
+        self.register_buffer("_interaction_blind", torch.tensor(blind))
+
+    def interact(self, destination, source):
+        source = torch.where(self._interaction_blind, torch.zeros_like(source), source)
+        return self.interaction(torch.cat([destination, source], -1))
 
 
 class EntityStateMemory:
@@ -47,15 +73,25 @@ class EntityStateMemory:
         self.cell = copy.deepcopy(cell).cpu().eval().requires_grad_(False)
         self.latents = []
 
-    def observe(self, event_id, descriptor, timestamp, observation):
+    def observe(self, event_id, descriptor, timestamp, observation, *, source_id=None):
         observation = torch.as_tensor(observation, dtype=torch.float32).detach().cpu()
         if observation.shape != (4,) or not torch.isfinite(observation).all():
             raise ValueError("Expected four finite state features")
+        content = observation.tolist()
+        if source_id is not None:
+            if (
+                type(source_id) is not int
+                or not 0 <= source_id < len(self.latents)
+                or observation.any()
+                or not hasattr(self.cell, "interact")
+            ):
+                raise ValueError(
+                    "Interaction requires a known source and zero state features"
+                )
+            content = dict(observation=content, source_id=source_id)
         before = self.memory.snapshot()
         staged = EntityMemory.restore(self.memory._model, before)
-        receipt = staged.observe(
-            event_id, descriptor, timestamp, content=observation.tolist()
-        )
+        receipt = staged.observe(event_id, descriptor, timestamp, content=content)
         if staged.snapshot() == before:
             return receipt
         latents = copy.deepcopy(self.latents)
@@ -67,7 +103,14 @@ class EntityStateMemory:
                 else torch.tensor(latents[identity])
             )
             with torch.inference_mode():
-                updated = self.cell.update(observation[None], previous[None])[0]
+                if source_id is None:
+                    updated = self.cell.update(observation[None], previous[None])[0]
+                else:
+                    if identity == source_id:
+                        raise ValueError("Interaction endpoints must differ")
+                    updated = self.cell.interact(
+                        previous[None], torch.tensor(latents[source_id])[None]
+                    )[0]
             if updated.shape != (self.cell.width,) or not torch.isfinite(updated).all():
                 raise ValueError("Invalid state update")
             if identity == len(latents):

@@ -813,3 +813,10 @@ The source-zero control should remain<=60% reference pair accuracy. Counterfactu
 source changes must affect destination answers, with source latents unchanged.
 Record any held-out-composition failure without tuning. These correlated variants
 are a bounded interaction diagnostic, not evidence of learned graph structure.
+
+Claude's two conceptual reviews support the latents-only interface, source isolation,
+transaction checks and separately trained ablation. Its remaining concern is whether
+an interaction-produced latent is compatible with a subsequent interaction. That is
+exactly what the composition cohort tests; a failure will count against the declared
+capability gate, not be dismissed as an artifact. The same runtime checks apply to
+both copies. Swapped roles are labeled symmetry, not novel-ID generalization.

@@ -2911,6 +2911,159 @@ def entity_growth(weights, output, resume=False, seed=61):
     return run.path
 
 
+def train_entity_interaction(weights, cell_weights, output, resume=False, blind=False):
+    """One bounded interaction fit with frozen recognition and ordinary state dynamics."""
+    from pathwm.models.entities import EntityMatchReader
+    from pathwm.models.entity_state import EntityInteractionCell
+    from pathwm.data.entity_interaction import interaction_episodes
+    from pathwm.evaluation.entity_growth import growth_inputs
+    from pathwm.evaluation.entity_state import state_metrics, state_runtime
+
+    seed_everything(41)
+    weights, cell_weights = Path(weights).resolve(), Path(cell_weights).resolve()
+    matcher = EntityMatchReader().eval().requires_grad_(False)
+    donor = torch.load(weights, map_location="cpu", weights_only=True)["model"]
+    matcher.load_state_dict(
+        {
+            k.removeprefix("agent."): v
+            for k, v in donor.items()
+            if k.startswith("agent.")
+        }
+    )
+    cell = EntityInteractionCell(blind=blind)
+    base = torch.load(cell_weights, map_location="cpu", weights_only=True)["model"]
+    expected = {
+        k
+        for k in cell.state_dict()
+        if not k.startswith("interaction.") and k != "_interaction_blind"
+    }
+    if set(base) != expected or not bool(base["_preserve_no_information"]):
+        raise ValueError("Interaction requires the explicit idle-preserving base cell")
+    cell.load_state_dict({**cell.state_dict(), **base})
+
+    def frozen():
+        return (state_hash(matcher), state_hash(cell.cell), state_hash(cell.head))
+
+    before = frozen()
+    training = interaction_episodes(matcher, growth_inputs(301, 32), 311)
+    development = interaction_episodes(matcher, growth_inputs(302, 16), 312)
+    families = growth_inputs(303, 16)
+    populations = {
+        name: interaction_episodes(matcher, families, 313, name)
+        for name in ("reference", "swapped", "idle", "composition")
+    }
+    optimizer = torch.optim.AdamW(
+        cell.interaction.parameters(), lr=0.003, weight_decay=0.01
+    )
+    settings = dict(
+        seed=41,
+        purpose="diagnostic",
+        entity_interaction=True,
+        entity_interaction_blind=blind,
+        entity_state_weights=str(weights),
+        entity_temporal_cell=str(cell_weights),
+        donor_sha256=file_hash(weights),
+        state_sha256=file_hash(cell_weights),
+        steps=256,
+        batch_size=32,
+        max_seconds=450,
+        learning_rate=0.003,
+        width=16,
+    )
+    run = Run(
+        output,
+        settings=settings,
+        data={
+            k: digest(v["manifest"])
+            for k, v in dict(
+                train=training, development=development, **populations
+            ).items()
+        },
+        recipe=__file__,
+        model=cell,
+        optimizer=optimizer,
+        device="cpu",
+        resume=resume,
+    )
+    path = run.path / "entity_interaction.json"
+    deadline = perf_counter() + 450
+    try:
+        if resume:
+            result = json.loads(path.read_text())
+            if result["cell_sha256"] != state_hash(cell):
+                raise ValueError("Interaction cache mismatch")
+        else:
+            for step in range(256):
+                if perf_counter() > deadline:
+                    raise TimeoutError("Interaction training budget exhausted")
+                ix = torch.randint(len(training["slots"]), (32,), generator=run.sampler)
+                logits, _ = cell(
+                    training["observations"][ix],
+                    training["slots"][ix],
+                    training["sources"][ix],
+                )
+                loss = F.cross_entropy(
+                    logits.flatten(0, 1), training["targets"][ix].flatten()
+                )
+                optimizer.zero_grad()
+                loss.backward()
+                optimizer.step()
+                run.step = step + 1
+                run.log(dict(step=run.step, split="train", loss=loss.item()))
+            train_scores, _, _ = state_metrics(cell, training)
+            cohorts = {}
+            for name, data in dict(development=development, **populations).items():
+                scores, logits, _ = state_metrics(cell, data)
+                runtime = state_runtime(cell, matcher, data, deadline=deadline)
+                passed = (
+                    scores["pair_accuracy"] >= 0.95
+                    and scores["nll"] <= 0.15
+                    and runtime["pair_accuracy"] >= 0.95
+                    and runtime["transactions"]
+                    and runtime["latent_agreement"]
+                )
+                cohorts[name] = dict(
+                    scores=scores,
+                    runtime=runtime,
+                    passed=passed,
+                    manifest=data["manifest"],
+                    logits=logits.tolist(),
+                )
+                run.log(
+                    dict(
+                        step=run.step,
+                        split="validation"
+                        if name == "development"
+                        else "frozen_interaction",
+                        condition=name,
+                        loss=scores["nll"],
+                        pair_accuracy=scores["pair_accuracy"],
+                    )
+                )
+            if frozen() != before:
+                raise RuntimeError("Frozen recognition or state dynamics changed")
+            result = dict(
+                train=train_scores,
+                cohorts=cohorts,
+                blind=blind,
+                cell_sha256=state_hash(cell),
+                frozen_sha256=before,
+                passed=all(c["passed"] for c in cohorts.values()),
+            )
+            atomic_json(path, result)
+            run.save()
+        run.status("completed", "pending")
+    except BaseException as exc:
+        run.status("failed", "pending", str(exc))
+        raise
+    try:
+        render_report(run.path)
+    except BaseException as exc:
+        run.status("completed", "failed", str(exc))
+        raise
+    return run.path
+
+
 def train_entity_state(weights, output, resume=False, varied=False, preserve=False):
     """One fixed learned-state diagnostic with a frozen recognition component."""
     from pathwm.models.entities import EntityMatchReader
@@ -3207,6 +3360,8 @@ def main():
     parser.add_argument(
         "--entity-temporal-cell", help="Frozen state checkpoint for temporal evaluation"
     )
+    parser.add_argument("--entity-interaction", action="store_true")
+    parser.add_argument("--entity-interaction-blind", action="store_true")
     parser.add_argument("--entity-state-varied", action="store_true")
     parser.add_argument("--entity-state-preserve", action="store_true")
     parser.add_argument("--entity-temporal-idle", action="store_true")
@@ -3273,6 +3428,21 @@ def main():
     if args.diagram_depth < 0:
         parser.error("Diagram depth must be nonnegative")
     args = resume_arguments(parser, args)
+    if args.entity_interaction:
+        if args.entity_state_weights is None or args.entity_temporal_cell is None:
+            parser.error(
+                "--entity-interaction requires recognition and state checkpoints"
+            )
+        print(
+            train_entity_interaction(
+                args.entity_state_weights,
+                args.entity_temporal_cell,
+                args.resume or args.output,
+                bool(args.resume),
+                args.entity_interaction_blind,
+            )
+        )
+        return
     if args.entity_temporal_cell is not None:
         if args.entity_state_weights is None:
             parser.error("--entity-temporal-cell requires --entity-state-weights")
