@@ -1,5 +1,10 @@
 # Current work
 
+Latest implementation: optional context-based relation write gate with atomic
+accept/ignore, replay, and snapshot compatibility checks. This is a single-writer
+runtime interface; learned quality is not evaluated yet. Next: predeclare and run
+the frozen-consumer gate training comparison.
+
 **Remembered relation keys pass, 11 September:**140 tests pass. A learned key supports
 destination-only recall after the source cue disappears:100% source/state accuracy
 through replacement, gaps and allocation changes. Erasing keys yields0% source

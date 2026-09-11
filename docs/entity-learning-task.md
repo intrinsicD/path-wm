@@ -998,3 +998,9 @@ The subsequent experiment must separately predeclare its populations and compare
 soft training with hard decisions and always/never-write controls. Claude's public
 review emphasized this mismatch and repeated-ignore drift. Squared differences
 are symmetric but do distinguish opposite vectors; state bits are not gate inputs.
+
+Runtime implementation: `RelationWriteGate` and optional
+`EntityRelationMemory.consider` now provide this boundary. Claude follow-up
+`entity-gate-reconcile` identified concurrency: this interface retains the
+existing single-writer contract; callers must serialize access. It does not add
+concurrent transactions. No gate training/evaluation run has been performed.
