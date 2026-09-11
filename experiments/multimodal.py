@@ -88,7 +88,12 @@ from pathwm.evaluation.recall import (
     recall_metrics,
     confidence_diagnostics,
 )
-from pathwm.data.entities import EntityEpisodes, EntityMatches, NAMES as ENTITY_NAMES
+from pathwm.data.entities import (
+    EntityEpisodes,
+    EntityMatches,
+    VariableEntityMatches,
+    NAMES as ENTITY_NAMES,
+)
 from pathwm.models.entities import EntityReader, SharedEntityReader, EntityMatchReader
 from pathwm.evaluation.entities import entity_metrics, association_diagnostics
 from pathwm.models.facts import FactReader, EventFactReader
@@ -511,7 +516,7 @@ def finish_entities(run, learner, training, validation, settings, deadline):
             task="matching" if settings["dataset"] == "entity-matching" else "tracking",
             descriptor_noise=settings.get("entity_noise", 0.0),
             scope=(
-                "Known-versus-new matching; separated synthetic query distances, fixed two-record memory, no allocation or open-world calibration. "
+                "Known-versus-new matching; separated synthetic query distances, candidate count follows the recorded dataset; no allocation or open-world calibration. "
                 if settings["dataset"] == "entity-matching"
                 else association_note
                 + f"Descriptor noise fraction: {settings.get('entity_noise', 0.0)}. Reader: {settings.get('entity_reader', 'recurrent')}. Association mode: {settings.get('entity_association', 'raw')}. Controlled candidate features; three observations; fixed candidate streams; no learned graph. Half the episodes hide final identity. No visual discovery, graph learning, motor control or independent final-test claim."
@@ -2021,7 +2026,12 @@ def evaluate(learner, data, settings):
 
 def make_data(settings, split):
     if settings["dataset"] == "entity-matching":
-        return EntityMatches(
+        dataset = (
+            VariableEntityMatches
+            if settings.get("entity_variable", False)
+            else EntityMatches
+        )
+        return dataset(
             split, settings.get(f"{split}_windows", 512 if split == "train" else 256)
         )
     if settings["dataset"] in ("entities", "entity-matching"):
@@ -2823,12 +2833,12 @@ def export_diagrams(
     )
 
 
-def entity_growth(weights, output, resume=False):
+def entity_growth(weights, output, resume=False, seed=61):
     """Frozen checkpoint screen, using the ordinary run and report lifecycle."""
     from pathwm.models.entities import EntityMatchReader
     from pathwm.evaluation.entity_growth import growth_inputs, evaluate_growth
 
-    seed_everything(61)
+    seed_everything(seed)
     weights = Path(weights).resolve()
     checkpoint = torch.load(weights, map_location="cpu", weights_only=True)
     state = checkpoint["model"]
@@ -2842,9 +2852,10 @@ def entity_growth(weights, output, resume=False):
     model.load_state_dict(state)
     model.eval().requires_grad_(False)
     before = state_hash(model)
-    families = growth_inputs()
+    families = growth_inputs(seed=seed)
     settings = dict(
-        seed=61,
+        seed=seed,
+        entity_growth_seed=seed,
         purpose="diagnostic",
         entity_growth_weights=str(weights),
         donor_sha256=file_hash(weights),
@@ -2941,6 +2952,8 @@ def main():
         "--entity-growth-weights",
         help="Frozen entity matcher checkpoint for growth evaluation",
     )
+    parser.add_argument("--entity-variable", action="store_true")
+    parser.add_argument("--entity-growth-seed", type=int, default=61)
     parser.add_argument("--fact-reader", choices=["direct", "event"], default="direct")
     parser.add_argument(
         "--fact-encoder-weights",
@@ -3006,6 +3019,7 @@ def main():
                 args.entity_growth_weights,
                 args.resume or args.output,
                 bool(args.resume),
+                seed=args.entity_growth_seed,
             )
         )
         return
@@ -3243,7 +3257,9 @@ def main():
             time_unit="one controlled observed event",
         )
     if args.dataset == "entity-matching":
-        settings["objective"] = "three-class known-memory-or-new CE; final checkpoint"
+        settings["objective"] = (
+            "known-memory-or-new CE with dataset-defined candidate count; final checkpoint"
+        )
     if args.check:
         print(json.dumps(check(settings), indent=2))
     else:

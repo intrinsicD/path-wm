@@ -155,9 +155,19 @@ class EntityMatchReader(nn.Module):
         self.null = nn.Parameter(torch.zeros(()))
 
     def forward(self, inputs):
-        if inputs.ndim != 4 or inputs.shape[1:] != (3, 2, FEATURES):
+        if inputs.ndim != 4 or inputs.shape[1] != 3 or inputs.shape[-1] != FEATURES:
             raise ValueError("Matching reader requires the entity input envelope")
-        return (self.match(inputs[:, -1, 0, :8], inputs[:, 0, :, :8]),)
+        logits = self.match(inputs[:, -1, 0, :8], inputs[:, 0, :, :8])
+        if inputs.shape[2] != 2:
+            valid = inputs[:, 0, :, 14] == 1
+            if not valid.any(-1).all():
+                raise ValueError(
+                    "Matching memory requires at least one valid candidate"
+                )
+            logits = torch.cat(
+                (logits[:, :-1].masked_fill(~valid, -1e9), logits[:, -1:]), -1
+            )
+        return (logits,)
 
     def match(self, query, memory):
         """Score B×8 queries against B×N×8 records, followed by new-entity."""

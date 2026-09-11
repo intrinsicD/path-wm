@@ -212,3 +212,69 @@ class EntityMatches(EntityEpisodes):
 
     def final_view_bounds(self):
         return {}
+
+
+class VariableEntityMatches(EntityMatches):
+    """Balanced candidate counts with masked padding and separated unit features."""
+
+    def __init__(self, split, count):
+        if split not in ("train", "validation", "test") or count <= 0 or count % 16:
+            raise ValueError("Variable matching requires a split and multiple of16")
+        rng = np.random.default_rng(
+            {"train": 71631, "validation": 81731, "test": 91831}[split]
+        )
+        self.split = split
+        self.manifest, self.descriptor_ids, self.cohorts, self.groups = [], [], [], []
+        rows, labels = [], []
+
+        def unit():
+            value = rng.normal(size=8).astype(np.float32)
+            return value / np.linalg.norm(value)
+
+        for group in range(count // 2):
+            size = group % 8 + 1
+            points = []
+            for _ in range(10000):
+                value = unit()
+                if all(np.linalg.norm(value - old) >= 0.9 for old in points):
+                    points.append(value)
+                if len(points) == size + 1:
+                    break
+            if len(points) != size + 1:
+                raise RuntimeError("Descriptor proposal budget exhausted")
+            self.descriptor_ids.extend(digest(v.tolist()) for v in points)
+            target = int(rng.integers(size))
+            query = points[target] + 0.05 * unit()
+            query /= np.linalg.norm(query)
+            for answer, q, cohort in (
+                (target, query, "known"),
+                (8, points[-1], "novel"),
+            ):
+                x = np.zeros((3, 8, FEATURES), dtype=np.float32)
+                x[0, :size, :8] = points[:size]
+                x[0, :size, 14] = 1
+                x[-1, 0, :8] = q
+                y = np.eye(9, dtype=np.float32)[answer]
+                self.manifest.append(
+                    dict(
+                        inputs=x.tolist(),
+                        targets=[y.tolist()],
+                        cohort=cohort,
+                        group=group,
+                    )
+                )
+                rows.append(x)
+                labels.append(y)
+                self.cohorts.append(cohort)
+                self.groups.append(group)
+                self.descriptor_ids.append(digest(q.tolist()))
+        self.inputs = torch.from_numpy(np.stack(rows))
+        self.targets = (torch.from_numpy(np.stack(labels)),)
+        self.identity = dict(
+            dataset="variable_entity_matches_v1",
+            split=split,
+            count=count,
+            sha256=digest(self.manifest),
+            episode_sha256=[digest(r) for r in self.manifest],
+            descriptor_sha256=self.descriptor_ids,
+        )

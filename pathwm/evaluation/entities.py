@@ -115,10 +115,10 @@ def matching_metrics(logits, targets, cohorts):
             selected_error=float((~correct[selected]).double().mean())
             if selected.any()
             else None,
-            false_merge=float((chosen[mask] < 2).double().mean())
+            false_merge=float((chosen[mask] < scores.shape[-1] - 1).double().mean())
             if cohort == "novel"
             else None,
-            false_split=float((chosen[mask] == 2).double().mean())
+            false_split=float((chosen[mask] == scores.shape[-1] - 1).double().mean())
             if cohort == "known"
             else None,
         )

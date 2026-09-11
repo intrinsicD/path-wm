@@ -251,13 +251,13 @@ def entity_inspection(directory):
                     + "</tr>"
                 )
         parts.append(
-            "</table></div><p>New is a classification answer; no memory record is allocated. Each four-query group shares a two-record memory. The margins deliberately separate known and new queries.</p>"
+            "</table></div><p>New is a classification answer; no memory record is allocated. Candidate counts and shared descriptor groups follow the recorded dataset. The margins deliberately separate known and new queries.</p>"
         )
         parts.append(
             f"<details><summary>Exact novelty gates and scores</summary><pre>{escape(json.dumps(data['scores'], indent=2))}</pre></details>"
         )
         parts.append(
-            f"<details><summary>Matching inputs and predictions</summary><p>Answer order: memory 0, memory 1, new.</p><pre>{escape(json.dumps(data['examples'], indent=2))}</pre></details></section>"
+            f"<details><summary>Matching inputs and predictions</summary><p>Answer order: candidate slots followed by new; padded slots are masked.</p><pre>{escape(json.dumps(data['examples'], indent=2))}</pre></details></section>"
         )
         return parts
     passed = data["scores"]["development"]["gates"]["passed"]
