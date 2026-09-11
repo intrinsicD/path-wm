@@ -163,3 +163,30 @@ def test_uncertainty_unqualified_fallback_cannot_pass(monkeypatch):
     assert result["selection"]["selected_z"] == 4
     assert not result["selection"]["qualified"]
     assert not result["passed"]
+
+
+def test_source_diagnosis_mixed_blocks_and_tampering():
+    from pathwm.evaluation.source_choice import diagnose_source_changes
+    import copy
+
+    policy = SourceChoice(change_block=4, change_z=2)
+    for _ in range(6):
+        policy.observe(0, .5)
+    initial = policy.snapshot()
+    actions = []
+    for i in range(6):
+        before = policy.snapshot()
+        policy.observe(0, .5)
+        actions.append(dict(index=512+i, source=0, feedback=.5,
+                            before=before, after=policy.snapshot()))
+    data = dict(episodes=[dict(world=0, swapped=True, policy="uncertainty",
+                               initial=initial, actions=actions)])
+    rows = diagnose_source_changes(data)["sources"]
+    assert rows[0]["mixed_checks"] == 1
+    assert rows[0]["pure_checks"] == 1
+    assert rows[0]["category"] == "eligible_below_threshold"
+    assert rows[1]["category"] == "no_completed_block"
+    bad = copy.deepcopy(data)
+    bad["episodes"][0]["actions"][1]["after"]["resets"][0] += 1
+    with pytest.raises(ValueError, match="reset"):
+        diagnose_source_changes(bad)

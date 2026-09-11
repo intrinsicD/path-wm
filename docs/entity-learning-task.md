@@ -1496,3 +1496,21 @@ reset replay pass. Report structural-only; original gate unchanged. Evidence:
 resume path retained. Next proposed step: diagnostic decomposition of missed/late
 changes using recorded selected feedback and source-specific opportunities before
 another detector change. This is source-reward uncertainty, not input reliability learning.
+
+### Source-change trace diagnosis (2026-09-11)
+
+Analyze the saved uncertainty run only; no new worlds, policy fitting, or threshold
+selection. For each variance-aware world/condition/source reconstruct block completion,
+number of acquired post-boundary rewards, mixed/pure post-boundary checks, eligible
+checks (older retained count>=block), mean gap, effective threshold and reset timing.
+No-reset categories: no completed block; completed blocks but no eligible pure block;
+eligible pure checks below threshold. Reset sources remain a separate category.
+Report both static and drift, all sources including unselected ones, and distinguish
+an operational reset from correct detection. Do not infer causes or prescribe new
+parameters from these descriptive categories. Omit oracle regret to keep this slice
+focused on feedback/check availability. Success is exact check/reset agreement with
+saved traces and source immutability, not a scientific capability gate.30CPU seconds.
+Add diagnostic reader in existing source evaluation module and callable recipe in
+experiments/multimodal.py; same Run/report machinery, own artifacts and cached resume.
+Tests cover a block crossing the evaluation boundary, missing feedback and tampered
+reset traces. Existing browser restriction means structural report QA only.
