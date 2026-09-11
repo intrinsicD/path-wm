@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T22:13+02:00
-  turn_count: 57
-  summary: "Whole-model readiness audited; planner/metric objective mismatch confirmed; task/evidence contract and learned dynamics prioritized."
+  last_turn: 2026-09-11T22:28+02:00
+  turn_count: 58
+  summary: "Prepared85 specification questions across14 areas; explicit scope/deferral and interface/learning/evaluation sheets; answers pending."
 events_logged:
 - turn: 1
   type: question
@@ -1028,6 +1028,12 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Task/evidence contract then learned-dynamics integration proposed.
+- turn: 58
+  type: question
+  id: N244
+  routing: direct
+  provenance: user
+  summary: Complete decision questionnaire delivered; substantive answers pending.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -1444,6 +1450,15 @@ ai_actions:
   - docs/model-readiness-review.md
   - docs/project-state.md
   - docs/key-box-integration-plan.md
+- turn: 58
+  action: Built85-question specification document with14 sections; Claude public-only
+    review added explicit global failure/budget consistency; checked IDs/links; updated
+    readiness/state links. No training or model changes.
+  provenance: ai-executed
+  files_changed:
+  - docs/agent-specification-questions.md
+  - docs/model-readiness-review.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1

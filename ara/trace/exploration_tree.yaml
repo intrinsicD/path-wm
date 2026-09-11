@@ -3756,3 +3756,19 @@ tree:
   also_depends_on:
   - N242
   status: resolved
+
+- id: N244
+  type: question
+  title: Define every readiness gap through an answerable specification questionnaire
+  provenance: user
+  timestamp: 2026-09-11T22:28+02:00
+  description: User requested questions whose answers specify all open areas. Delivered85
+    questions with stable IDs across14 sections, technical completion sheets and consistency
+    traces. Claude reviewed integration coverage. No architecture answers adopted.
+  evidence:
+  - docs/agent-specification-questions.md
+  - docs/model-readiness-review.md
+  also_depends_on:
+  - N242
+  - N243
+  status: resolved

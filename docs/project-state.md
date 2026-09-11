@@ -1,5 +1,13 @@
 # Current work
 
+**Specification questionnaire prepared, 11 September:**
+[85 numbered questions](agent-specification-questions.md) cover scope, goals,
+evidence, perception, identity, graph learning, memory, focus, dynamics, planning,
+training, execution, inspection and experiment gates. Begin with S01–S05 and then
+the task/evidence/dynamics contracts. Explicit deferrals define what the first
+experiment does not claim. Answers remain pending; no architecture change or
+training was launched. Claude reviewed integration-level coverage.
+
 **Whole-model audit updated, 11 September:** controlled integration is working,
 but learned dynamics, uncertainty semantics and general task execution remain
 separate or supplied. Concrete planner/metric objective mismatch confirmed: under

@@ -5,6 +5,9 @@ f6e30fb; one direct planner counterexample checked. No training, model changes o
 new full-suite run. The latest key-box slice has31 relevant passing tests, not a
 current whole-repository test result.
 
+The [specification questionnaire](agent-specification-questions.md) turns these
+gaps into numbered decisions and concrete implementation/experiment sheets.
+
 ## Verdict
 
 Controlled experiments are already running, with real falsifiable results. The
