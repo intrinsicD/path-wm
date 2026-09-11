@@ -880,3 +880,10 @@ accuracy<=5%; unknown rejection100%. All conditions require retries/restore,
 non-target preservation and existing batch/runtime latent tolerance. Budget180 seconds
 for the entire screen. Ordinary dynamics, copy update, thresholds and descriptors
 are unchanged. This tests frozen learned retrieval integration, not graph discovery.
+
+Claude confirms threshold/selectivity semantics and the query-bound transaction
+contract. All unresolved cases, including ambiguity and below-threshold matches,
+use the same explicit lookup error and full rollback; no fallback source is chosen.
+Wrong-query cohorts are sensitivity controls, not robustness claims. Matching margins
+are not treated as calibrated correctness. Source receipt validation rejects unknown
+persisted source IDs while retaining compatibility with ordinary legacy receipts.

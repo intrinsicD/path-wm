@@ -2911,6 +2911,91 @@ def entity_growth(weights, output, resume=False, seed=61):
     return run.path
 
 
+def evaluate_entity_source(weights, cell_weights, output, resume=False):
+    """One frozen retrieval integration screen; no parameter updates."""
+    from pathwm.models.entities import EntityMatchReader
+    from pathwm.models.entity_state import EntityInteractionCell
+    from pathwm.evaluation.entity_growth import growth_inputs
+    from pathwm.evaluation.entity_source import evaluate_sources
+
+    seed_everything(401)
+    weights, cell_weights = Path(weights).resolve(), Path(cell_weights).resolve()
+    matcher = EntityMatchReader()
+    donor = torch.load(weights, map_location="cpu", weights_only=True)["model"]
+    matcher.load_state_dict(
+        {
+            k.removeprefix("agent."): v
+            for k, v in donor.items()
+            if k.startswith("agent.")
+        }
+    )
+    cell = EntityInteractionCell()
+    cell.load_state_dict(
+        torch.load(cell_weights, map_location="cpu", weights_only=True)["model"]
+    )
+    if bool(cell._interaction_blind):
+        raise ValueError("Source retrieval requires a source-aware interaction donor")
+    models = (
+        nn.ModuleDict(dict(matcher=matcher, cell=cell)).eval().requires_grad_(False)
+    )
+    before = state_hash(models)
+    families = growth_inputs(401, 8)
+    run = Run(
+        output,
+        settings=dict(
+            seed=401,
+            purpose="diagnostic",
+            entity_source=True,
+            entity_state_weights=str(weights),
+            entity_temporal_cell=str(cell_weights),
+            matcher_sha256=file_hash(weights),
+            cell_sha256=file_hash(cell_weights),
+            max_seconds=180,
+        ),
+        data=dict(families=digest(families)),
+        recipe=__file__,
+        model=models,
+        optimizer=torch.optim.AdamW(models.parameters(), lr=0),
+        device="cpu",
+        resume=resume,
+    )
+    path = run.path / "entity_source.json"
+    try:
+        if resume:
+            result = json.loads(path.read_text())
+            if result["model_sha256"] != state_hash(models):
+                raise ValueError("Source cache mismatch")
+        else:
+            result = evaluate_sources(matcher, cell, families)
+            if state_hash(models) != before:
+                raise RuntimeError("Frozen retrieval models changed")
+            result["model_sha256"] = before
+            result["families"] = families
+            atomic_json(path, result)
+            for name, c in result["cohorts"].items():
+                run.log(
+                    dict(
+                        step=0,
+                        split="frozen_source",
+                        condition=name,
+                        accuracy=c["accuracy"],
+                        nll=c["nll"],
+                        source_accuracy=c["source_accuracy"],
+                    )
+                )
+            run.save()
+        run.status("completed", "pending")
+    except BaseException as exc:
+        run.status("failed", "pending", str(exc))
+        raise
+    try:
+        render_report(run.path)
+    except BaseException as exc:
+        run.status("completed", "failed", str(exc))
+        raise
+    return run.path
+
+
 def train_entity_interaction(weights, cell_weights, output, resume=False, blind=False):
     """One bounded interaction fit with frozen recognition and ordinary state dynamics."""
     from pathwm.models.entities import EntityMatchReader
@@ -3360,6 +3445,7 @@ def main():
     parser.add_argument(
         "--entity-temporal-cell", help="Frozen state checkpoint for temporal evaluation"
     )
+    parser.add_argument("--entity-source", action="store_true")
     parser.add_argument("--entity-interaction", action="store_true")
     parser.add_argument("--entity-interaction-blind", action="store_true")
     parser.add_argument("--entity-state-varied", action="store_true")
@@ -3428,6 +3514,20 @@ def main():
     if args.diagram_depth < 0:
         parser.error("Diagram depth must be nonnegative")
     args = resume_arguments(parser, args)
+    if args.entity_source:
+        if args.entity_state_weights is None or args.entity_temporal_cell is None:
+            parser.error(
+                "--entity-source requires recognition and interaction checkpoints"
+            )
+        print(
+            evaluate_entity_source(
+                args.entity_state_weights,
+                args.entity_temporal_cell,
+                args.resume or args.output,
+                bool(args.resume),
+            )
+        )
+        return
     if args.entity_interaction:
         if args.entity_state_weights is None or args.entity_temporal_cell is None:
             parser.error(

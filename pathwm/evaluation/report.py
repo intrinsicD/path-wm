@@ -195,6 +195,26 @@ def model_inspection(directory):
 
 
 def entity_inspection(directory):
+    source = directory / "entity_source.json"
+    if source.exists():
+        data = json.loads(source.read_text())
+        parts = [
+            "<section><h2>Frozen source retrieval</h2>",
+            f"<p>Declared gates: {'pass' if data['passed'] else 'fail'}. No training.</p>",
+            "<p>A learned descriptor matcher selects the source among three records. The learned copy update remains frozen. Wrong-query controls deliberately point at the opposing-state distractor; their low accuracy is expected. Unknown queries must roll back the entire event. This does not establish learned graph discovery.</p>",
+            '<div class="table"><table><tr><th>Condition</th><th>Episodes</th><th>State accuracy</th><th>Source accuracy</th><th>NLL/entity</th><th>Rejection</th><th>Integrity</th><th>Gate</th></tr>',
+        ]
+        for name, c in data["cohorts"].items():
+            parts.append(
+                f"<tr><td>{name}</td><td>{c['examples']}</td><td>{c['accuracy']:.2%}</td><td>{c['source_accuracy']:.2%}</td><td>{c['nll']:.6f}</td><td>{c['rejection_rate']:.2%}</td><td>{c['integrity']}</td><td>{c['passed']}</td></tr>"
+            )
+        parts.append(
+            "</table></div><p>Source: entity_source.json. Lookup gates require95% state/source accuracy and NLL≤0.15; wrong-query accuracy≤5%; unknown rejection100%. Unknown-state accuracy measures preservation. Integrity covers retries, restoration, non-target preservation and batch/runtime agreement. Variants share descriptor families.</p>"
+        )
+        parts.append(
+            f"<details><summary>Source retrieval examples</summary><pre>{escape(json.dumps(data['cohorts']['lookup']['episodes'][:2], indent=2))}</pre></details></section>"
+        )
+        return parts
     interaction = directory / "entity_interaction.json"
     if interaction.exists():
         data = json.loads(interaction.read_text())
@@ -670,7 +690,7 @@ def render_report(directory):
     ]
     if not any(
         (directory / name).exists()
-        for name in ("entity_growth.json", "entity_temporal.json")
+        for name in ("entity_growth.json", "entity_temporal.json", "entity_source.json")
     ):
         curve_path = directory / "learning_curve.png"
         curves(rows, curve_path)
@@ -699,7 +719,7 @@ def render_report(directory):
         parts.append(f"<p><strong>Failure:</strong> {escape(status['error'])}</p>")
     if not any(
         (directory / name).exists()
-        for name in ("entity_growth.json", "entity_temporal.json")
+        for name in ("entity_growth.json", "entity_temporal.json", "entity_source.json")
     ):
         parts.append(
             f'<section><picture><source media="(max-width: 600px)" srcset="{mobile_picture}"><img class="chart" alt="Training and validation objective by optimizer update" src="{picture}"></picture><p>Source: metrics.jsonl. Validation population and weighted loss terms are fixed by this run’s recipe.</p></section>'

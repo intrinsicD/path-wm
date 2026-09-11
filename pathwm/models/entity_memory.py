@@ -49,6 +49,32 @@ class EntityMemory:
             raise ValueError("Descriptor must have unit norm")
         return value.tolist()
 
+    def _match(self, descriptor):
+        records = self._state["records"]
+        index, confidence = len(records), 1.0
+        if records:
+            query = torch.tensor([descriptor])
+            memory = torch.tensor([[r["descriptor"] for r in records]])
+            with torch.inference_mode():
+                logits = self._model.match(query, memory)
+                if (
+                    logits.shape != (1, len(records) + 1)
+                    or not torch.isfinite(logits).all()
+                ):
+                    raise ValueError("Invalid matcher scores")
+                probability, chosen = logits.softmax(-1).max(-1)
+                index, confidence = chosen.item(), probability.item()
+        return index, confidence
+
+    def lookup(self, descriptor):
+        """Read-only recognition; unknown queries never allocate records."""
+        descriptor = self._descriptor(descriptor)
+        index, confidence = self._match(descriptor)
+        known = confidence > self._state["threshold"] and index < len(
+            self._state["records"]
+        )
+        return dict(entity_id=index if known else None, confidence=confidence)
+
     def observe(self, event_id, descriptor, timestamp, *, content=None):
         if not isinstance(event_id, str) or not event_id:
             raise ValueError("event_id must be a nonempty string")
@@ -74,19 +100,7 @@ class EntityMemory:
         if state["clock"] is not None and timestamp <= state["clock"]:
             raise ValueError("New events must advance the clock; retry has expired")
         records = state["records"]
-        index, confidence = len(records), 1.0
-        if records:
-            query = torch.tensor([descriptor])
-            memory = torch.tensor([[r["descriptor"] for r in records]])
-            with torch.inference_mode():
-                logits = self._model.match(query, memory)
-                if (
-                    logits.shape != (1, len(records) + 1)
-                    or not torch.isfinite(logits).all()
-                ):
-                    raise ValueError("Invalid matcher scores")
-                probability, chosen = logits.softmax(-1).max(-1)
-                index, confidence = chosen.item(), probability.item()
+        index, confidence = self._match(descriptor)
         result = dict(entity_id=None, reason="uncertain", confidence=confidence)
         if confidence > state["threshold"]:
             if index < len(records):

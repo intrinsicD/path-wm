@@ -26,8 +26,8 @@ class EntityStateCell(nn.Module):
             )
         return updated
 
-    def forward(self, observations, slots, sources=None):
-        hidden = observations.new_zeros((len(observations), 2, self.width))
+    def forward(self, observations, slots, sources=None, entity_count=2):
+        hidden = observations.new_zeros((len(observations), entity_count, self.width))
         for t in range(observations.shape[1]):
             safe = slots[:, t].clamp_min(0)
             previous = hidden[torch.arange(len(hidden)), safe]
@@ -38,7 +38,7 @@ class EntityStateCell(nn.Module):
                 updated = torch.where(
                     (sources[:, t] >= 0)[:, None], interaction, updated
                 )
-            mask = torch.nn.functional.one_hot(safe, 2).bool() & (
+            mask = torch.nn.functional.one_hot(safe, entity_count).bool() & (
                 slots[:, t, None] >= 0
             )
             hidden = torch.where(mask[:, :, None], updated[:, None], hidden)
@@ -73,7 +73,16 @@ class EntityStateMemory:
         self.cell = copy.deepcopy(cell).cpu().eval().requires_grad_(False)
         self.latents = []
 
-    def observe(self, event_id, descriptor, timestamp, observation, *, source_id=None):
+    def observe(
+        self,
+        event_id,
+        descriptor,
+        timestamp,
+        observation,
+        *,
+        source_id=None,
+        source_query=None,
+    ):
         observation = torch.as_tensor(observation, dtype=torch.float32).detach().cpu()
         if observation.shape != (4,) or not torch.isfinite(observation).all():
             raise ValueError("Expected four finite state features")
@@ -89,11 +98,26 @@ class EntityStateMemory:
                     "Interaction requires a known source and zero state features"
                 )
             content = dict(observation=content, source_id=source_id)
+        if source_query is not None:
+            if (
+                source_id is not None
+                or observation.any()
+                or not hasattr(self.cell, "interact")
+            ):
+                raise ValueError(
+                    "Supply either a source ID or query with zero state features"
+                )
+            source_query = self.memory._descriptor(source_query)
+            content = dict(observation=observation.tolist(), source_query=source_query)
         before = self.memory.snapshot()
         staged = EntityMemory.restore(self.memory._model, before)
         receipt = staged.observe(event_id, descriptor, timestamp, content=content)
         if staged.snapshot() == before:
             return receipt
+        if source_query is not None:
+            source_id = self.memory.lookup(source_query)["entity_id"]
+            if source_id is None:
+                raise LookupError("Unresolved interaction source")
         latents = copy.deepcopy(self.latents)
         identity = receipt["entity_id"]
         if identity is not None:
@@ -117,6 +141,9 @@ class EntityStateMemory:
                 latents.append(updated.tolist())
             else:
                 latents[identity] = updated.tolist()
+        if source_query is not None:
+            receipt["source_id"] = source_id
+            staged._state["receipts"][-1]["result"] = copy.deepcopy(receipt)
         self.memory, self.latents = staged, latents
         return receipt
 
@@ -150,5 +177,12 @@ class EntityStateMemory:
                 or not torch.isfinite(values).all()
             ):
                 raise ValueError("Invalid persisted state")
+        for receipt in snapshot["memory"]["receipts"]:
+            result = receipt["result"]
+            if "source_id" in result and (
+                type(result["source_id"]) is not int
+                or not 0 <= result["source_id"] < len(latents)
+            ):
+                raise ValueError("Invalid persisted source")
         store.latents = latents
         return store
