@@ -943,3 +943,10 @@ cannot solve recall. Fixed gates: development source accuracy>=95%, NLL<=0.15;
 reference/rebind/gap/permutation source and full-state accuracy>=95%, NLL<=0.15.
 Erased source accuracy<=60%. All conditions require retry/restore, non-target-state
 preservation and relation-key preservation on reads. Record failures without tuning.
+
+Claude's two conceptual reviews distinguish source-key learning from supplied storage
+semantics. The encoder consumes only the cue descriptor, never candidate order or
+state labels. Fresh actions read the live destination key; retries intentionally
+return the old receipt and cannot undo a later rebind. Tests cover two independent
+bindings. Erased keys are an experimental zero-latent ablation, not a promised
+forgetting API: unresolved reads reject, while confident misrouting is measured.

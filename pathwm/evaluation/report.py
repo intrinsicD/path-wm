@@ -195,6 +195,26 @@ def model_inspection(directory):
 
 
 def entity_inspection(directory):
+    relation = directory / "entity_relations.json"
+    if relation.exists():
+        data = json.loads(relation.read_text())
+        parts = [
+            "<section><h2>Remembered relation keys</h2>",
+            f"<p>Declared gates: {'pass' if data['passed'] else 'fail'}.</p>",
+            "<p>An earlier cue writes a learned key. A later destination-only action retrieves the current source state. Only key encoding/decoding trains; relation slots, latest-write replacement and persistence are explicit. This is not general graph discovery.</p>",
+            '<div class="table"><table><tr><th>Condition</th><th>Episodes</th><th>State accuracy</th><th>Source accuracy</th><th>NLL/entity</th><th>Rejection</th><th>Integrity</th><th>Gate</th></tr>',
+        ]
+        for name, c in data["cohorts"].items():
+            parts.append(
+                f"<tr><td>{name}</td><td>{c['examples']}</td><td>{c['accuracy']:.2%}</td><td>{c['source_accuracy']:.2%}</td><td>{c['nll']:.6f}</td><td>{c['rejection_rate']:.2%}</td><td>{c['integrity']}</td><td>{c['passed']}</td></tr>"
+            )
+        parts.append(
+            "</table></div><p>Source: entity_relations.json. Normal gates require95% state/source accuracy and NLL≤0.15; erased-key source accuracy must stay≤60%. Key erasure is an ablation, not a supported forgetting operation. Correlated variants share families. Integrity checks replay/restore and unchanged non-target states/relation keys.</p>"
+        )
+        parts.append(
+            f"<details><summary>Relation memory examples</summary><pre>{escape(json.dumps(data['cohorts']['reference']['episodes'][:2], indent=2))}</pre></details></section>"
+        )
+        return parts
     source = directory / "entity_source.json"
     if source.exists():
         data = json.loads(source.read_text())
