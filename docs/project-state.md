@@ -1,5 +1,12 @@
 # Current work
 
+**Frozen temporal screen exposes state-update limits, 11 September:**121 tests pass.
+Reference and repeated-toggle histories score100%; reset-order histories62.5% and
+extra no-information events75%. All routing, retry/restore and latent-agreement checks
+pass; model weights are unchanged. [Report](../runs/entity_temporal_v1/reference/report.html)
+is browser verified. Next: broaden state-update training with fresh held-out histories;
+retain this failed frozen baseline. No general temporal or graph-learning claim.
+
 **Learned persistent state succeeds on the bounded task, 11 September:**119 tests
 pass. A frozen recognizer routes observations into learned per-entity16-float states;
 256/256 development pairs and persistent-runtime outputs are correct. Retry/restore,

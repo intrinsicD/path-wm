@@ -3278,3 +3278,25 @@ tree:
   - N204
   - N205
   status: resolved
+
+- id: N207
+  type: decision
+  title: Continue frozen temporal testing with Claude
+  provenance: user
+  timestamp: 2026-09-11T13:37+02:00
+  choice: Implement, review, test, fix and iterate.
+  status: resolved
+- id: N208
+  type: experiment
+  title: Frozen state fails new temporal compositions
+  provenance: ai-executed
+  timestamp: 2026-09-11T13:37+02:00
+  result: Frozen temporal screen fails reset order and no-information length; routing
+    and persistence pass.121 tests; no fitting.
+  evidence:
+  - ara/evidence/tables/entity_temporal_2026-09-11.json
+  - docs/entity-learning-task.md
+  also_depends_on:
+  - N206
+  - N207
+  status: resolved

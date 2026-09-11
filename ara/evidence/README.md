@@ -67,3 +67,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Variable-count adaptation](tables/entity_variable_2026-09-11.json): N204; matched fresh lifecycle gates pass, original capacity8 fails.
 
 - [Learned entity state](tables/entity_state_2026-09-11.json): N206; binary-state binding passes, temporal generalization remains open.
+
+- [Frozen temporal screen](tables/entity_temporal_2026-09-11.json): N208; reset-order and no-information-length failures, persistence checks pass.

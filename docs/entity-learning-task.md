@@ -642,3 +642,31 @@ an independent binary simulator. Require >=95% state-pair accuracy, <=0.15 NLL p
 entity, >=95% persistent-runtime accuracy, exact retries/restores and latent agreement
 in every cohort. Budget120 CPU seconds excluding report generation, no fitting or
 tuning. Report each condition separately; shared families imply correlated scores.
+
+### Frozen temporal result
+
+Implementation216e587;121 CPU tests pass. Both Claude conceptual reviews completed.
+The frozen screen completes with failed gates: reference256/256 correct, NLL0.001453;
+long toggles256/256, NLL0.001271; reset order160/256 (62.5%), NLL0.570421;
+no-information length192/256 (75%), NLL0.263887. Runtime predictions and latents agree
+with the batch evaluator in every cohort; all1024 histories pass retries/restores.
+Independent simulation confirms labels and balanced pair counts; every observation
+routes to the correct entity. Frozen matcher/cell weights and descriptor holdout are
+verified. This narrows the observed failure to learned state behavior under these
+new histories, without proving a general cause or isolating length from repetition.
+
+No training or threshold tuning occurred. Preserve the negative screen as the next
+reference. The repeated-toggle condition specifically repeats a two-target pattern;
+its success is not evidence for arbitrary long histories. All four cohorts share16
+fresh descriptor families, so episode rows are correlated. No-information opcode
+has no state-value input and appears separately from reset/toggle order pairs.
+
+[Report](../runs/entity_temporal_v1/reference/report.html) passed1280×720 browser QA;
+[verification](../runs/entity_temporal_v1/verification.json) binds raw outputs,
+independent NLL/labels, frozen weights and successful cached CLI resume.
+Use `--entity-temporal-cell STATE_CHECKPOINT --entity-state-weights MATCHER_CHECKPOINT
+--output DIR`; `--resume DIR` reuses cached results. Next proposed: broaden the
+state-update training distribution with reset order and no-information events, then
+compare frozen models on fresh unseen temporal compositions. Keep the recognizer
+frozen and separately inspect whether no-information should be an explicit no-op
+for this deterministic task. Neither repair has been implemented or validated yet.

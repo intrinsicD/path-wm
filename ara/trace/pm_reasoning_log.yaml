@@ -1001,3 +1001,9 @@ entries:
     is expected here.
   - Creation-order audit is post-run metamorphic verification, not a tuned or predeclared
     scientific gate.
+
+- turn: 2026-09-11_001#30
+  notes:
+  - Promote the test strategy O135, not an unsupported claim of temporal capability.
+  - Keep failed model scores alongside fully correct routing and persistence checks.
+  - Stage repair O136; no weight or threshold tuning happened.

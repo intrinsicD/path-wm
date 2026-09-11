@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Learned persistent binary state passes bounded task and transaction checks;119 tests. Temporal templates shared across splits; generalization remains open."
-  turn_count: 29
-  events_count: 78
+  summary: "Frozen temporal screen fails reset order and no-information length; routing and persistence pass.121 tests; no fitting."
+  turn_count: 30
+  events_count: 82
   claims_touched: []
   open_threads: 12

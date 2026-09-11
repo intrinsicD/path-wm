@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T13:28+02:00
-  turn_count: 29
-  summary: "Learned persistent binary state passes bounded task and transaction checks;119 tests. Temporal templates shared across splits; generalization remains open."
+  last_turn: 2026-09-11T13:37+02:00
+  turn_count: 30
+  summary: "Frozen temporal screen fails reset order and no-information length; routing and persistence pass.121 tests; no fitting."
 events_logged:
 - turn: 1
   type: question
@@ -491,6 +491,32 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O134 committed through learned state runtime.
+
+- turn: 30
+  type: decision
+  id: N207
+  routing: direct
+  provenance: user
+  summary: Implement, review, test, fix and iterate.
+- turn: 30
+  type: experiment
+  id: N208
+  routing: direct
+  provenance: ai-executed
+  summary: Frozen temporal screen fails reset order and no-information length; routing
+    and persistence pass.121 tests; no fitting.
+- turn: 30
+  type: observation
+  id: O136
+  routing: staged
+  provenance: ai-suggested
+  summary: Broader temporal training proposed.
+- turn: 30
+  type: heuristic
+  id: H28
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O135 committed through frozen temporal screen.
 
 ai_actions:
 - turn: 1

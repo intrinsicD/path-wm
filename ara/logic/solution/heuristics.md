@@ -264,3 +264,12 @@
 - **Sensitivity**: high; synthetic template success does not establish general belief updating.
 - **Code ref**: [runtime](../../../pathwm/models/entity_state.py), [tests](../../../tests/test_entity_state.py).
 - **From staging**: O134
+
+## H28: Separate descriptor holdout from temporal generalization
+
+- **Rationale**: After shared-template success, freeze both models and vary event composition and length with independently simulated targets. Report runtime agreement separately from learned-state accuracy.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **Sensitivity**: high; length and repetition are not causally isolated by these cohorts.
+- **Code ref**: [controls](../../../pathwm/data/entity_temporal.py), [runtime checks](../../../pathwm/evaluation/entity_state.py).
+- **From staging**: O135

@@ -1,0 +1,69 @@
+{
+  "all_routing_correct": true,
+  "balanced_pairs": true,
+  "cached_resume": true,
+  "descriptor_disjoint": true,
+  "frozen_weights": true,
+  "hashes": {
+    "entity_temporal.json": "d2c80c4d2898c2a9f732859cd5db945278f5babd527b612d053498c270710543",
+    "last.pt": "77cc1ef0bfa15ebf4804b3646f023aadd38f9c83b1d5c7d255fa27ccbfcaa8ce",
+    "report.html": "d9839eb39d3a6aaed18b73d27d38183150e6fedd68fe3e53e410f280c18bf039",
+    "run.json": "bcd9d852d2b5439cac47151d2d741f1923a8a9a908a0424b2697c4d96e133593"
+  },
+  "independent_targets": true,
+  "qa": {
+    "broken_images": 0,
+    "browser_checked": true,
+    "horizontal_overflow": false,
+    "renderer_sha256": "b3947f10435df4bf08bcb4e39f97a41622e318c1db9ab996ea7a8793c4ff7810",
+    "report_sha256": "d9839eb39d3a6aaed18b73d27d38183150e6fedd68fe3e53e410f280c18bf039",
+    "rows": 4,
+    "self_contained": true,
+    "status": "browser_verified",
+    "viewport": [
+      1280,
+      720
+    ]
+  },
+  "scope": "Frozen diagnostic; reset-order and no-information-length gates fail. Shared synthetic families; no causal isolation of length/repetition.",
+  "scores": {
+    "no_information_length": {
+      "examples": 256,
+      "independent_nll": 0.2638869424345599,
+      "latent_agreement": true,
+      "nll": 0.263886958360672,
+      "pair_accuracy": 0.75,
+      "passed": false,
+      "transactions": true
+    },
+    "reference": {
+      "examples": 256,
+      "independent_nll": 0.0014532218889114783,
+      "latent_agreement": true,
+      "nll": 0.0014531834749504924,
+      "pair_accuracy": 1.0,
+      "passed": true,
+      "transactions": true
+    },
+    "reset_order": {
+      "examples": 256,
+      "independent_nll": 0.5704212576561506,
+      "latent_agreement": true,
+      "nll": 0.5704212784767151,
+      "pair_accuracy": 0.625,
+      "passed": false,
+      "transactions": true
+    },
+    "toggle_length": {
+      "examples": 256,
+      "independent_nll": 0.0012709464045202316,
+      "latent_agreement": true,
+      "nll": 0.0012709384318441153,
+      "pair_accuracy": 1.0,
+      "passed": true,
+      "transactions": true
+    }
+  },
+  "source_commit": "216e587",
+  "tests_passed": 121
+}

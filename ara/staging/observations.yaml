@@ -2442,6 +2442,22 @@ observations:
   potential_type: heuristic
   bound_to:
   - N206
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H28
+  crystallized_via: artifact-commitment
+  stale: false
+
+- id: O136
+  timestamp: 2026-09-11T13:37+02:00
+  provenance: ai-suggested
+  content: Broaden state training with reset order and no-information events; compare
+    on fresh histories. Separately consider explicit no-information identity update
+    for this deterministic task.
+  context: Frozen reset-order accuracy62.5 percent and no-information length75 percent;
+    recognition/persistence checks pass.
+  potential_type: heuristic
+  bound_to:
+  - N208
   promoted: false
   promoted_to: null
   crystallized_via: null
