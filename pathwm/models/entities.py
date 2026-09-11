@@ -157,6 +157,13 @@ class EntityMatchReader(nn.Module):
     def forward(self, inputs):
         if inputs.ndim != 4 or inputs.shape[1:] != (3, 2, FEATURES):
             raise ValueError("Matching reader requires the entity input envelope")
-        difference = inputs[:, 0, :, :8] - inputs[:, -1, 0, None, :8]
-        scores = self.matcher(difference.square()).squeeze(-1)
-        return (torch.cat([scores, self.null.expand(len(inputs), 1)], -1),)
+        return (self.match(inputs[:, -1, 0, :8], inputs[:, 0, :, :8]),)
+
+    def match(self, query, memory):
+        """Score B×8 queries against B×N×8 records, followed by new-entity."""
+        if query.ndim != 2 or query.shape[-1] != 8 or memory.ndim != 3:
+            raise ValueError("Expected B×8 queries and B×N×8 memory")
+        if memory.shape[0] != len(query) or memory.shape[-1] != 8:
+            raise ValueError("Query and memory shapes disagree")
+        scores = self.matcher((memory - query[:, None]).square()).squeeze(-1)
+        return torch.cat([scores, self.null.expand(len(query), 1)], -1)

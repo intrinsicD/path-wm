@@ -1,5 +1,12 @@
 # Current work
 
+**Entity lifecycle implemented, 11 September:** a bounded Python `EntityMemory`
+allocates stable IDs, reuses them on confident matches, defers at capacity or low
+confidence, and supports idempotent retries and JSON snapshot restoration. Claude
+reviewed the transaction contract twice. Recognition prototypes remain frozen;
+variable-cardinality accuracy and learned belief/graph updates remain unvalidated.
+See [usage and scope](entity-learning-task.md).
+
 **Known-versus-new matching succeeds, 11 September:** `--dataset entity-matching`
 is implemented and reviewed with Claude. All 105 CPU tests pass; the 256-update run
 gets 128/128 known identities and 128/128 novel rejections correct, with zero false

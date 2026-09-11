@@ -456,3 +456,29 @@ CPU tests use controlled scores to isolate transaction correctness, plus the rea
 reader for variable-cardinality and snapshot checks. No new training or scientific
 accuracy claim in this slice: variable-cardinality confidence remains unvalidated.
 Budget: CPU tests only. Existing novelty experiment and report remain unchanged.
+
+The runtime is available as `pathwm.models.entity_memory.EntityMemory`. It takes an
+`EntityMatchReader` (including a caller-loaded checkpoint), copies/freezes it on CPU,
+and exposes `observe(event_id, unit_descriptor, timestamp)`, `snapshot()` and
+`EntityMemory.restore(model, snapshot)`. Persist snapshots with `pathwm.io.atomic_json`.
+For example:
+
+```python
+memory = EntityMemory(reader, capacity=3)
+receipt = memory.observe('camera-event-1', descriptor, timestamp=1)
+atomic_json('memory.json', memory.snapshot())
+```
+
+This is an explicit Python harness component, not automatic integration into the
+agent's input loop. The caller owns event IDs and latest-snapshot selection; retries
+must retain the original payload and timestamp. Metadata is last observed time and
+count, not a learned belief state. Stable IDs remain contiguous because this slice
+has no deletion or eviction. Scorer weights and type are checked on restoration;
+compatible implementation code is still the caller's responsibility.
+
+Both short Claude reviews completed (`entity-lifecycle*`). Adopted concerns include
+cardinality shift, replay expiry, immutable prototypes and deferred-record isolation.
+Claude's suggestion that tie deferral requires calibrated probabilities is not
+needed: two equal maxima cannot individually exceed one half of a softmax, regardless
+of calibration. Snapshot rollback is explicitly caller-owned. No neural evaluation,
+training, graph learning or new report was performed for this runtime-only slice.
