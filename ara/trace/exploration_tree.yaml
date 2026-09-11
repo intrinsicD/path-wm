@@ -3034,3 +3034,28 @@ tree:
   also_depends_on:
   - N185
   status: resolved
+
+- id: N187
+  type: decision
+  title: Continue bounded diagnostics with actual Claude
+  provenance: user
+  timestamp: 2026-09-11T11:50+02:00
+  choice: Implement, review, test, fix and iterate; use the supplied-association diagnostic before graph
+    work.
+  evidence:
+  - docs/entity-learning-task.md
+  status: resolved
+- id: N188
+  type: experiment
+  title: Supplied association improves identity but misses combined gates
+  provenance: ai-executed
+  timestamp: 2026-09-11T11:50+02:00
+  result: Matched initialization/manifests and 256 updates. Development identity/state/effect 88.28125/64.84375/57.8125
+    percent. Combined gates fail. Learned predictions change under candidate reordering. 94 tests pass;
+    source, scores, cache and browser verified. Two actual public-only Claude rounds reconciled.
+  evidence:
+  - ara/evidence/tables/entity_alignment_2026-09-11.json
+  also_depends_on:
+  - N187
+  - N186
+  status: resolved

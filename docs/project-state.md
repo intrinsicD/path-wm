@@ -1,5 +1,15 @@
 # Current work
 
+**Supplied association complete, 11 September:** the Claude-reviewed
+`--entity-association observed` diagnostic is implemented; 94 CPU tests pass.
+Matched 256-update development identity accuracy improves to 88.3%, but state/effect
+remain 64.8%/57.8% and combined gates fail. The trained recurrent reader changes its
+probabilities under candidate reordering. This is a useful diagnostic gain, not
+reliable binding or learned graph structure. See the
+[updated task record](entity-learning-task.md) and
+[report](../runs/entity_alignment_v1/observed/report.html). Next proposed diagnostic:
+shared per-entity updates and permutation-consistent readout.
+
 **Entity baseline built and evaluated, 11 September:** `--dataset entities` now runs
 the [controlled two-object task](entity-learning-task.md) through the existing recipe.
 All 92 CPU tests pass. The fixed 256-update baseline reaches development identity/state/

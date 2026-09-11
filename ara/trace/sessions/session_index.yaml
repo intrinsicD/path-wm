@@ -119,8 +119,8 @@ sessions:
 
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Controlled entity baseline implemented: 92 tests pass, 256-update development gates fail; graph comparison deferred. Earlier reader cause and graph design remain open."
-  turn_count: 19
-  events_count: 44
+  summary: "Supplied association improves identity to 88.3 percent but combined gates and learned reordering consistency fail; 94 tests pass, Claude review and report verified. Graph remains deferred."
+  turn_count: 20
+  events_count: 47
   claims_touched: []
-  open_threads: 10
+  open_threads: 11

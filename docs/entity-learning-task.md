@@ -205,3 +205,32 @@ Keep the same GRU, parameter initialization, data, seed31, optimizer and 256-upd
 sweep or graph run in this slice. Report the intervention explicitly. Improvements
 cannot isolate the original failure's sole cause. Test input-only matching, missingness,
 permutation covariance, no mutation, and exact resume for the new condition.
+
+### Supplied-association outcome
+
+Actual Claude reviewed the public-only diagnostic and accepted the correction that
+this changes both matching and feature geometry, rather than isolating a unique cause.
+Its requested learned permutation measurement is reported separately from the exact
+transform covariance test. Review receipts: `entity-alignment*` in the continuation
+review directory. No private source or measurements were exported.
+
+Implementation `c64bd39` adds `--entity-association observed`. All 94 CPU tests pass,
+including both association modes' exact pause/resume and cached final evaluation.
+The one 256-update run has identical manifests and initial parameters to the raw
+reference. Development identifiable identity/state/effect accuracy is
+88.28125%/64.84375%/57.8125%, versus 60.15625%/62.5%/54.6875% raw. Every combined gate
+still fails. Identity selection coverage is 85.15625% with zero observed selected
+errors; ambiguous coverage is 25.78125%, costing 0.314453 versus 0.25 for abstention.
+
+Swapping both candidate positions throughout each complete development history and
+undoing the output permutation gives mean absolute probability differences
+0.178131/0.106659/0.120512 across the three heads. Argmax agreement is
+58.59375%/68.359375%/57.421875%; ambiguous ties make argmax agreement alone inadequate.
+The probability changes establish that the learned reader is not equivariant despite
+the correct transform. This does not establish a learned graph, reliable state updating,
+or the sole cause of the original failure. No additional training run was started.
+A subsequent architectural diagnostic should enforce shared per-entity processing
+and permutation-consistent readout before interpreting graph learning.
+
+Report and verification: `runs/entity_alignment_v1/observed/report.html` and
+`runs/entity_alignment_v1/verification.json`. The earlier raw run remains untouched.

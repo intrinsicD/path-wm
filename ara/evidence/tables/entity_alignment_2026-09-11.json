@@ -1,0 +1,146 @@
+{
+  "source_commit": "c64bd39",
+  "same_initial_parameters": true,
+  "same_manifest": true,
+  "source_snapshot_matches": true,
+  "steps": 256,
+  "active_seconds": 1.5934677514014766,
+  "permutation": {
+    "identity": {
+      "mean_probability_change": 0.17813095450401306,
+      "argmax_agreement": 0.5859375
+    },
+    "state": {
+      "mean_probability_change": 0.1066586971282959,
+      "argmax_agreement": 0.68359375
+    },
+    "effect": {
+      "mean_probability_change": 0.12051208317279816,
+      "argmax_agreement": 0.57421875
+    }
+  },
+  "scores": {
+    "development": {
+      "gates": {
+        "ambiguity": false,
+        "decisions": false,
+        "effect": false,
+        "identity": false,
+        "paired": false,
+        "passed": false,
+        "state": false
+      },
+      "overall": {
+        "examples": 256,
+        "factual_accuracy": 0.703125,
+        "nll": 0.7374641861152282
+      },
+      "views": {
+        "ambiguous": {
+          "coverage": 0.2578125,
+          "decision_cost": 0.314453125,
+          "effect_excess_nll": 0.5085040890055671,
+          "effect_nll": 0.8550776792855397,
+          "examples": 128,
+          "identity_excess_nll": 0.0963328591940684,
+          "identity_nll": 0.7894800397540138,
+          "nll": 0.8291549323646059,
+          "selected_error": 0.5,
+          "state_excess_nll": 0.49633348777429165,
+          "state_nll": 0.8429070780542643
+        },
+        "identifiable": {
+          "coverage": 0.8515625,
+          "decision_cost": 0.037109375,
+          "effect_accuracy": 0.578125,
+          "effect_excess_nll": 0.8987813571144638,
+          "effect_nll": 0.8987813571144638,
+          "examples": 128,
+          "identity_accuracy": 0.8828125,
+          "identity_excess_nll": 0.21251874724229675,
+          "identity_nll": 0.21251874724229675,
+          "nll": 0.6457734398658506,
+          "paired_effect": 0.3125,
+          "paired_identity": 0.765625,
+          "paired_state": 0.484375,
+          "selected_error": 0.0,
+          "state_accuracy": 0.6484375,
+          "state_excess_nll": 0.8260202152407912,
+          "state_nll": 0.8260202152407912
+        }
+      }
+    },
+    "train": {
+      "gates": {
+        "ambiguity": false,
+        "decisions": true,
+        "effect": false,
+        "identity": true,
+        "paired": false,
+        "passed": false,
+        "state": false
+      },
+      "overall": {
+        "examples": 512,
+        "factual_accuracy": 0.7825520833333334,
+        "nll": 0.6271013699963468
+      },
+      "views": {
+        "ambiguous": {
+          "coverage": 0.109375,
+          "decision_cost": 0.27734375,
+          "effect_excess_nll": 0.41181973350946033,
+          "effect_nll": 0.758393323789433,
+          "examples": 256,
+          "identity_excess_nll": 0.0478288914723586,
+          "identity_nll": 0.7409760720323039,
+          "nll": 0.7447824488645174,
+          "selected_error": 0.5,
+          "state_excess_nll": 0.38840436049184274,
+          "state_nll": 0.7349779507718153
+        },
+        "identifiable": {
+          "coverage": 0.921875,
+          "decision_cost": 0.01953125,
+          "effect_accuracy": 0.66796875,
+          "effect_excess_nll": 0.7322765940420245,
+          "effect_nll": 0.7322765940420245,
+          "examples": 256,
+          "identity_accuracy": 1.0,
+          "identity_excess_nll": 0.10761309864249421,
+          "identity_nll": 0.10761309864249421,
+          "nll": 0.5094202911281762,
+          "paired_effect": 0.4609375,
+          "paired_identity": 1.0,
+          "paired_state": 0.546875,
+          "selected_error": 0.0,
+          "state_accuracy": 0.6796875,
+          "state_excess_nll": 0.68837118070001,
+          "state_nll": 0.68837118070001
+        }
+      }
+    }
+  },
+  "hashes": {
+    "entity_predictions.pt": "dcd4ed214a9c9e23fc32ccec6b59a1b72be04c0d18e3c753db647abd8d5b995a",
+    "entity_results.json": "67fd51abee99e1a34b764466a35a34576cb0fbf6e288ff95078ca471b001173b",
+    "metrics.jsonl": "949f0bd1541fd1cecf9c1068e2bbe3dd2b323e1895062244f202be2efed841c1",
+    "last.pt": "3ef13ee146a946325f4bedcee49c77d447685a0501a13d875e8e6ad7f87a0f93",
+    "report.html": "1dfaa5384f39aedd60574109816fb2bfd7074b5ce1bda7319ad81d76429bdfce"
+  },
+  "claude_reviews": [
+    "entity-alignment",
+    "entity-alignment-reconcile"
+  ],
+  "graph_implemented": false,
+  "tests_passed": 94,
+  "cached_resume_unchanged": true,
+  "independent_nll_matches": true,
+  "browser": {
+    "width": 1280,
+    "height": 720,
+    "overflow": false,
+    "broken_images": 0,
+    "screenshot_sha256": "8f060d8dd3eea655c036cd80db3c4e1043a7aff350f8245e10607986511b5fc6"
+  }
+}

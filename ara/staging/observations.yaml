@@ -2341,3 +2341,18 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O129
+  timestamp: 2026-09-11T11:50+02:00
+  provenance: ai-suggested
+  content: Next test shared per-entity updates and permutation-consistent readout. Supplied association
+    improves identity but changing feature geometry prevents unique causal attribution; state/effect and
+    reordering remain weak.
+  context: One reviewed bounded diagnostic completed; no graph or extra run.
+  potential_type: heuristic
+  bound_to:
+  - N188
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

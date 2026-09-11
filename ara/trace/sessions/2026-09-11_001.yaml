@@ -2,9 +2,9 @@ session:
   id: 2026-09-11_001
   date: '2026-09-11'
   started: 2026-09-11T01:35+02:00
-  last_turn: 2026-09-11T11:41+02:00
-  turn_count: 19
-  summary: "Controlled entity baseline implemented: 92 tests pass, 256-update development gates fail; graph comparison deferred. Earlier reader cause and graph design remain open."
+  last_turn: 2026-09-11T11:50+02:00
+  turn_count: 20
+  summary: "Supplied association improves identity to 88.3 percent but combined gates and learned reordering consistency fail; 94 tests pass, Claude review and report verified. Graph remains deferred."
 events_logged:
 - turn: 1
   type: question
@@ -279,6 +279,24 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Propose separating matching and state update diagnosis.
+- turn: 20
+  type: decision
+  id: N187
+  routing: direct
+  provenance: user
+  summary: Continue with Claude and implementation.
+- turn: 20
+  type: experiment
+  id: N188
+  routing: direct
+  provenance: ai-executed
+  summary: Supplied association measured; gates still fail.
+- turn: 20
+  type: observation
+  id: O129
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose shared entity updates and consistent readout.
 ai_actions:
 - turn: 1
   action: Read existing source/results; save local evidence receipt, exact abstract Claude brief,
@@ -434,6 +452,15 @@ ai_actions:
   - experiments/multimodal.py
   - pathwm/evaluation/report.py
   - tests/test_entities.py
+- turn: 20
+  action: Implement input-only association; two public-only Claude exchanges; 94 tests;
+    fixed run; initialization/population/cache/raw-score/permutation/browser audits.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/entities.py
+  - experiments/multimodal.py
+  - tests/test_entities.py
+  - docs/entity-learning-task.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -452,7 +479,10 @@ key_context:
     into place.
 - turn: 19
   excerpt: "User: ok. can we build this now?"
+- turn: 20
+  excerpt: "User: Continue. Work with Claude. Implement, review, test and fix. Iterate"
 open_threads:
+- O129: shared per-entity updates and consistent readout remain proposed.
 - O128: isolate association versus state updating after failed recurrent baseline.
 - O126: readable graph lookup and decoder debugging remain proposed.
 - O125: graph/runtime and historical-payload contract remains proposed.

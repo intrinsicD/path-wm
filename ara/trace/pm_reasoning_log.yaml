@@ -922,3 +922,10 @@ entries:
     commitment, preserving ai-suggested provenance.
   - Stage next diagnostic O128; do not infer a cause, graph capability or user adoption of new experiments.
     Earlier graph/probe threads remain open.
+
+- turn: 2026-09-11_001#20
+  notes:
+  - Record actual diagnostic result, not a repaired entity system. O128 causal isolation remains open;
+    this intervention changes feature geometry too.
+  - Stage O129 without claiming graph capability or endorsing a new run. Keep older graph and reader threads
+    open.
