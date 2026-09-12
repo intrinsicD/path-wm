@@ -3,12 +3,69 @@ from types import SimpleNamespace
 
 import numpy as np
 import torch
+import pytest
 
 from experiments.hierarchy_fusion import build_model, objective
 from experiments.perception import build_model as perception_model
 from pathwm.data.images import Frames
 from pathwm.io import state_hash
 from pathwm.training.perception import train_perception
+
+
+def handwritten_file(tmp_path):
+    from experiments.hierarchy_fusion import construct_weights
+    model, _ = build_model(7599, "deep_fusion")
+    construct_weights(model)
+    path = tmp_path / "handwritten.pt"
+    torch.save(dict(schema="pathwm-hierarchy-weights-v1", method="constructed", model=model.state_dict()), path)
+    return path, state_hash(model)
+
+
+@pytest.mark.parametrize("part", ["both", "encoder", "decoder"])
+def test_handwritten_training_freezes_exact_modules_and_preserves_gradient_path(tmp_path, part):
+    from experiments.hierarchy_fusion import configure_training, rgb_objective
+    from pathwm.training.perception import step
+    path, expected = handwritten_file(tmp_path)
+    model, _ = build_model(7598, "deep_fusion")
+    info = configure_training(model, initial_weights=path, train_part=part, loss_mode="rgb")
+    assert state_hash(model) == expected == info["initial_model_sha256"]
+    modules = dict(encoder=model.encoder, rgb=model.heads["rgb"], mask=model.heads["mask"])
+    before = {k: state_hash(m) for k,m in modules.items()}
+    batch = {"rgb": torch.rand(2,3,64,64)}
+    optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=0.0003)
+    step(model,batch,rgb_objective,optimizer)
+    for name,module in modules.items():
+        expected_change = name != "mask" and (part == "both" or (part == "encoder" and name == "encoder") or (part == "decoder" and name == "rgb"))
+        assert (state_hash(module) != before[name]) == expected_change
+        assert any(p.grad is not None and bool(p.grad.abs().sum()) for p in module.parameters()) == expected_change
+
+
+def test_handwritten_features_collapse_equal_patch_means(tmp_path):
+    from experiments.hierarchy_fusion import configure_training, information_probe
+    path,_ = handwritten_file(tmp_path)
+    model,_ = build_model(7598,"deep_fusion")
+    configure_training(model,initial_weights=path,loss_mode="rgb")
+    probe = information_probe(model)
+    assert probe["input_pair_mse"] > 0.3
+    assert probe["patch_projection_rank"] == 3
+    assert all(v == 0 for v in probe["scale_pair_max_difference"].values())
+    assert probe["rgb_pair_max_difference"] == 0
+
+
+def test_opening_dormant_decoder_branch_keeps_output_and_enables_weight_gradient(tmp_path):
+    from experiments.hierarchy_fusion import configure_training, rgb_objective
+    path,_ = handwritten_file(tmp_path)
+    plain,_=build_model(7598,"deep_fusion")
+    opened,_=build_model(7598,"deep_fusion")
+    configure_training(plain,initial_weights=path,loss_mode="rgb")
+    configure_training(opened,initial_weights=path,loss_mode="rgb",open_residual_branches=True,seed=7598)
+    batch={"rgb":torch.rand(2,3,64,64)}
+    assert torch.equal(plain(batch["rgb"])["rgb"],opened(batch["rgb"])["rgb"])
+    assert state_hash(plain.heads["mask"]) == state_hash(opened.heads["mask"])
+    for model in (plain,opened):
+        sum(rgb_objective(model(batch["rgb"]),batch).values()).backward()
+    assert plain.heads["rgb"].trunk[1].net[5].weight.grad.count_nonzero() == 0
+    assert opened.heads["rgb"].trunk[1].net[5].weight.grad.abs().sum() > 0
 
 
 def test_constructed_hierarchy_is_deterministic_active_and_reloadable(tmp_path):
@@ -221,3 +278,26 @@ def test_fused_hierarchy_training_resumes_exactly(tmp_path):
         json.loads((tmp_path / "resumed/status.json").read_text())["report"]
         == "structural_verified"
     )
+
+
+def test_handwritten_frozen_training_resumes_exactly(tmp_path):
+    from experiments.hierarchy_fusion import configure_training, rgb_objective
+    path,_=handwritten_file(tmp_path)
+    frames=np.random.default_rng(8891).integers(0,256,(4,64,64,3),dtype=np.uint8)
+    data=Frames(frames,range(4),labels={"mask":np.zeros((4,1,64,64),dtype="float32"),"valid":np.ones((4,1,64,64),dtype="float32")})
+    def run(output,resume=False,stop=None):
+        model,_=build_model(7598,"deep_fusion")
+        config=configure_training(model,initial_weights=path,train_part="decoder",loss_mode="rgb",open_residual_branches=True,seed=7598)
+        optimizer=torch.optim.AdamW([p for p in model.parameters() if p.requires_grad],lr=0.0003)
+        settings=dict(seed=7598,steps=3,batch_size=1,evaluate_every=3,grad_clip=1.0,initialization=config)
+        train_perception(model,data,data,rgb_objective,optimizer,settings=settings,recipe=__file__,output=output,resume=resume,stop_after=stop)
+        return torch.load(output/"last.pt",weights_only=True)
+    complete=run(tmp_path/"complete")
+    run(tmp_path/"resume",stop=1)
+    resumed=run(tmp_path/"resume",resume=True)
+    assert complete["step"] == resumed["step"] == 3
+    for k,v in complete["model"].items(): assert torch.equal(v,resumed["model"][k])
+    for k,v in complete["optimizer"]["state"].items():
+        for field,value in v.items(): assert torch.equal(value,resumed["optimizer"]["state"][k][field])
+    assert torch.equal(complete["sampler"],resumed["sampler"])
+    assert torch.equal(complete["torch"],resumed["torch"])

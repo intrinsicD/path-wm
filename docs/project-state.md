@@ -1,5 +1,12 @@
 # Current work
 
+**Training from handwritten initialization in progress, 12 September:** user adopts
+the handwritten hierarchy weights for training and requests reconstruction diagnosis.
+[Frozen comparison](hierarchy-training-plan.md) separates encoder-only, decoder-only
+and joint RGB learning, with ordinary initialization and an explicit dormant-branch
+opening control. Preserve the source binary and prior experiments. Claude export
+remains blocked; local implementation and checks proceed.
+
 **Direct hierarchy weights completed, 12 September:** wrote the same1.80M-parameter
 image hierarchy as explicit numbers, plus a separately labeled132-coefficient fitted
 readout. [Plan/results/load commands](hierarchy-weights-plan.md#completed-comparison),
