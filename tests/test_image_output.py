@@ -128,3 +128,28 @@ def test_request_training_resumes_exactly_and_preserves_frozen_head(tmp_path):
     assert [r for r in full["rows"] if r["split"] == "train"] == [
         r for r in resumed["rows"] if r["split"] == "train"
     ]
+
+
+def test_other_modalities_can_decode_without_matching_input_modality():
+    from experiments.multimodal import build_model
+    from pathwm.models.modalities import Observation, bytes_batch
+
+    agent = build_model(width=16, image_size=16, audio_samples=32)
+    for name in ("image", "video", "audio"):
+        del agent.encoders[name]
+    ids, valid = bytes_batch(["make an image and a sound"])
+    observed = agent.observe(
+        agent.initial_state(1),
+        {"text": Observation(ids, torch.zeros_like(ids, dtype=torch.float), valid)},
+        time=0,
+    )
+    output = agent.decode(observed, text_prefix=torch.ones(1, 1, dtype=torch.long))
+    assert output["image"].shape == (1, 3, 16, 16)
+    assert output["audio"].shape == (1, 32)
+    assert output["text"].shape == (1, 1, 259)
+    video = agent.decode_video([observed, agent.imagine(observed, dt=1)])
+    assert video.shape == (1, 2, 3, 16, 16)
+    assert all(torch.isfinite(v).all() for v in (*output.values(), video))
+    # Gradient/shape check only; these random other-modality outputs are not skills.
+    sum(v.square().mean() for v in (*output.values(), video)).backward()
+    assert agent.encoders["text"].stem.embedding.weight.grad.abs().sum() > 0

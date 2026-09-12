@@ -1,11 +1,19 @@
 # Current work
 
-**Active: image detail and state-produced decoder inputs, 12 September:**
-[Plan](image-output-plan.md) separates a real-image detail-transport control from a
-request-only fit through the actual agent state. Preserve the handwritten donor;
-make every decoder feature producible without an image encoder. Three essential
-tests are RED before implementation. Public-only Claude review confirms the need
-to keep reconstruction capacity, memorization and general generation distinct.
+**Image detail and request-only output interface pass scoped screens, 12 September:**
+the opt-in detail channel reduces real COCO reconstruction MSE0.012395→0.000879
+(92.9%,128 reused images, zero updates). This transports source pixels; it is not
+learned compression or evidence of state-mediated photo reconstruction. A learned
+state-to-spatial adapter supplies every feature to the same frozen RGB head with
+no image encoder in the agent. Four training stripe requests fit to MSE0.000110
+after512 updates; erased/shuffled requests0.138158/0.266283. This is memorization,
+not novel-prompt generation. All212 donor tensors are unchanged.35 targeted checks,
+exact CPU resume, actual GPU256+256 resume, standalone reload and8-metric audit pass.
+Training12.12s; peak106MiB reserved. Public-concepts-only Claude review completed;
+HTML QA structural-only, comparison PNGs visually inspected.
+[Protocol/results/load instructions](image-output-plan.md#completed-screens),
+[report](../runs/image_output_v1/report.html). Next: compact learned visual codec and
+held-out paired image/request training; audio/video generation training still open.
 
 **Handwritten initialization trained and diagnosed, 12 September:** the exact source
 binary now supports strict initialization, component freezing and resumable RGB
