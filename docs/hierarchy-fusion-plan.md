@@ -108,3 +108,64 @@ multiple fusion blocks. No bound recomputation is needed while every block respe
 it. Segment recurrence has a public precedent in
 [Transformer-XL](https://arxiv.org/abs/1901.02860); a temporal cache does not have to
 compress history. That precedent does not establish video/audio memory here.
+
+## Completed comparison
+
+Implementationf4ada32, after plan/RED commitcf303b6. All194 CPU tests pass in171.37s.
+Against the actual pre-change source, disabled fusion preserves state keys, initial
+weights and outputs bit-for-bit for image/video/audio/text. Exact fused-model
+pause/resume passes on a separate small fixture. No scope or scoring deviations.
+
+Eight sequential GPU runs complete in589.13s total, including process/setup overhead.
+All use the fixed final checkpoint and identical shared initialization per seed.
+Each trained model has about1.74–1.80M parameters, with55–108k in its encoder.
+
+| Arm | Mask IoU7401 | Mask IoU7402 | RGB MSE7401 | RGB MSE7402 |
+|---|---:|---:|---:|---:|
+| shallow | 0.186538 | 0.306008 | 0.010736 | 0.009733 |
+| deep | 0.183979 | 0.304350 | 0.011048 | 0.009808 |
+| deep_fusion | 0.257652 | 0.238005 | 0.010849 | 0.011635 |
+| shallow_long | 0.264077 | 0.284291 | 0.006998 | 0.007139 |
+
+Fusion versus deep: IoU+0.073673 and RGB MSE ratio0.98199 at7401, but IoU−0.066345
+and RGB ratio1.18631 at7402. **Fails the prespecified both-seed screen.** Extra depth
+also fails: mask IoU slightly declines on both seeds. Longer shallow training
+improves RGB on both seeds; its mask effect is mixed. Do not turn these results
+into a claim that depth or fusion can never help, or that more training always
+improves segmentation. This setup is not a matched-elapsed-time comparison.
+
+Absolute mask quality remains weak: the full-foreground reference reaches0.321622,
+above every trained model at the fixed logit0 threshold; some zero-feature readouts
+also outperform their observed-feature mask IoU. Meanwhile all observed RGB errors
+beat gray0.071908, and shuffled/zero features worsen reconstruction. Thus the image
+path learns useful reconstruction here without establishing satisfactory foreground
+perception. Threshold calibration, training/data budget and objective allocation
+remain possible issues; the experiment does not identify their causal roles.
+
+Measured training/evaluation peaks are170–184MiB reserved, with at least4.65GiB free
+afterward; the separate preflight peaked at202MiB. All resource gates pass. These
+are small64px image-pair measurements, not full-agent/live-stream GPU claims.
+Per-run wall times vary; resource receipts include validation, saving and reporting.
+
+[Comparison report](../runs/hierarchy_fusion_v1/report.html),
+[raw comparison](../runs/hierarchy_fusion_v1/comparison.json),
+[independent verification](../runs/hierarchy_fusion_v1/verification.json), and
+[GPU resume verification](../runs/hierarchy_fusion_v1/resume_check.json).
+All72 observed/shuffled/zero RGB/BCE/IoU values recompute within2.3e-16; source,
+checkpoint and output hashes and all report hash receipts pass. Completed-run GPU
+resume makes no optimizer updates and preserves checkpoint/output files exactly.
+Each run has raw arrays, learned weights, curves, reconstructed images and feature
+maps. Report QA is structural-only; no browser verification is claimed.
+
+Keep `fusion_depth=0` as the default and the proposed stack as an experimental
+option. A possible later optimization test is a fusion residual initialized near
+identity, so new mixing initially perturbs the trained features less. That is a
+hypothesis, not an implemented fix or a result from this comparison.
+
+Recurrence remains unimplemented in these encoders. The next minimal interface
+would take `(current_window, previous_state)` and return `(features, next_state)`,
+with bounded per-stream state and explicit reset. Measure historical-answer benefit
+against reset state on matched two-window histories before adding more recurrent
+iterations or claiming persistent audio/video understanding. The current module
+already handles causal attention within a window; repeated processing alone does
+not supply cross-window information.

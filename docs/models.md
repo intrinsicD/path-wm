@@ -1,5 +1,12 @@
 # Models and tensor flow
 
+The modality encoders now support [final all-scale fusion](hierarchy-fusion-plan.md):
+`depth` transformer blocks finish each scale before the next merge, then optional
+`fusion_depth` blocks jointly process all scale tokens and return the same layouts.
+Time/support masks apply in every fusion block. Default0 preserves existing model
+weights and behavior. `PyramidEncoder` exposes the image hierarchy to the ordinary
+spatial heads; the first two-seed comparison did not support adopting fusion by default.
+
 [Key-box integration](key-box-integration-plan.md) is a controlled entity-store →
 belief-workspace → supplied-dynamics planning path. It is separate from the default
 multimodal training configuration; current capability limits are in project-state.

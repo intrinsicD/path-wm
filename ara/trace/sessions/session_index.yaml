@@ -127,8 +127,8 @@ sessions:
 
 - id: 2026-09-12_001
   date: '2026-09-12'
-  summary: "Frozen34-case baseline retained; encoder/decoder review distinguishes training, readout and input-contract issues; proposed comparisons, no new training."
-  turn_count: 9
-  events_count: 18
+  summary: "Optional hierarchy fusion implemented;194 tests, eight real-image GPU runs. Neither depth nor fusion passes both-seed improvement screen; recurrence remains open."
+  turn_count: 10
+  events_count: 22
   claims_touched: []
-  open_threads: 6
+  open_threads: 7

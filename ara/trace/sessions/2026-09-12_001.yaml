@@ -2,9 +2,9 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T17:27+02:00
-  turn_count: 9
-  summary: "Frozen34-case baseline retained; pair-by-pair architecture/training review proposes vision reuse, isolated state readouts and speech-contract changes; no new training."
+  last_turn: 2026-09-12T19:58+02:00
+  turn_count: 10
+  summary: "Implemented optional causal final fusion;194 tests and eight GPU runs. Depth/fusion fail consistent improvement gates; reconstruction improves, mask quality weak; recurrence remains open."
 events_logged:
 - turn: 1
   type: decision
@@ -125,6 +125,30 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Reuse useful donors, isolate feature/state paths, compare depth with training budget and redefine audio context before speech.
+- turn: 10
+  type: decision
+  id: N258
+  routing: direct
+  provenance: user
+  summary: User selects processed hierarchy plus final all-scale stack for a test.
+- turn: 10
+  type: experiment
+  id: N259
+  routing: direct
+  provenance: ai-executed
+  summary: Eight real-image runs; fusion effect reverses by seed, depth fails both;194 software tests and raw audit pass.
+- turn: 10
+  type: question
+  id: N260
+  routing: direct
+  provenance: user
+  summary: Possible audio/video recurrence clarified as a separate cross-window memory test.
+- turn: 10
+  type: observation
+  id: O169
+  routing: staged
+  provenance: ai-suggested
+  summary: Retain optional fusion but do not adopt it from inconsistent short-screen gains.
 ai_actions:
 - turn: 1
   action: Recorded partial S02 answer and updated current state; no model changes
@@ -215,6 +239,27 @@ ai_actions:
   files_changed:
   - docs/encoder-decoder-review.md
   - docs/project-state.md
+- turn: 10
+  action: Obtained two public conceptual Claude reviews and corrected the support-bound
+    composition concern. Committed RED plan/tests then fusion, spatial adapter and
+    readable comparison recipe; fixed CUDA device-index, head-level wiring and
+    report receipt/status issues.194 CPU tests, GPU preflight, eight formal runs,
+    independent72-metric audit and exact completed GPU resume pass. Updated results;
+    no recurrent encoder implemented, report verification structural-only.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/multiscale.py
+  - pathwm/models/encoders.py
+  - experiments/perception.py
+  - experiments/multimodal.py
+  - experiments/hierarchy_fusion.py
+  - tests/test_multiscale.py
+  - tests/test_contracts.py
+  - tests/test_hierarchy_fusion.py
+  - docs/hierarchy-fusion-plan.md
+  - docs/project-state.md
+  - docs/experiments.md
+  - docs/models.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -242,6 +287,9 @@ key_context:
 - turn: 9
   excerpt: Look at each encoder-decoder pair; different architectures, continued training,
     training from scratch, or extended processing before multistage features?
+- turn: 10
+  excerpt: Test modality-specific input layers, k transformer layers before each
+    hierarchy level, then all-scale attention; video/audio might need recurrence.
 open_threads:
 - 'S02/S04/T01: record own webcam scenes and verify labels; model-visible inputs, task ranges and acceptance gates remain open.'
 - 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
@@ -249,10 +297,12 @@ open_threads:
   proposed.'
 - 'O165: generated visual input/readout slice now exists; broader optimizer curriculum is deferred and real-footage learning remains open.'
 - 'N256: freeze this baseline; useful general-agent recall, color-independent visual identity and learned prediction remain open.'
-- 'O168/N257: turn the pair review into a bounded diagnostic with declared data, gates, seeds and GPU budget; no architecture selected yet.'
+- 'O168/N259: optional hierarchy/fusion now tested; stable perception, frozen text readouts and state-mediated diagnostics remain open.'
+- 'N260: define and test bounded cross-window encoder state against reset histories; recurrence remains unimplemented.'
 ai_suggestions_pending:
 - 'O164: 28-take development pilot is proposed; no footage or memory benchmark completed.'
 - 'O165: curriculum authorized in principle; direct-weight test took priority, so ordinary training/real transfer remain incomplete.'
 - 'O166: do not generalize the fixed-task weight-construction pass beyond its measured scope.'
 - 'O167: baseline scope interpretation staged; no researcher endorsement of broader conclusions yet.'
 - 'O168: modality-specific repair and depth/training comparisons proposed; historical evidence is not new validation of the integrated agent.'
+- 'O169: two-seed fusion interpretation staged; no researcher response to new results, no broad architecture rejection.'

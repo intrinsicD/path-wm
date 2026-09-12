@@ -3995,3 +3995,54 @@ tree:
   - runs/reviews/continuation_2026-09-11/encoder-decoder-reconcile-receipt.json
   also_depends_on: [N256, N246, N248]
   status: resolved
+
+- id: N258
+  type: decision
+  title: Test per-scale transformer processing followed by final all-scale attention
+  provenance: user
+  timestamp: 2026-09-12T19:58+02:00
+  choice: User proposes modality-specific stems, k transformer layers at each of m
+    scales, then a transformer stack over all completed scales; explicitly requests
+    a test. Implement optional fusion and run a bounded direct-perception comparison.
+  alternatives:
+  - Only continue training the previous hierarchy
+  - Change every modality architecture at once without an isolated comparison
+  evidence:
+  - docs/hierarchy-fusion-plan.md
+  also_depends_on: [N257]
+  status: resolved
+- id: N259
+  type: experiment
+  title: Final fusion improves one seed and worsens another in the real-image screen
+  provenance: ai-executed
+  timestamp: 2026-09-12T19:58+02:00
+  result: Implemented causal final fusion for image/video/audio/text and spatial
+    adapter;194 CPU tests pass, exact default compatibility and pause/resume.
+    Eight GPU runs on512 train/128 validation/128 reused test COCO images, two seeds,
+    384 or768 updates. Fusion versus deep mask IoU+0.073673 at7401 but−0.066345 at7402,
+    latter RGB MSE18.63% worse; fails both-seed gate. Depth alone slightly worse
+    on both seeds. Longer shallow training improves RGB, mask effects mixed. All
+    mask IoUs below full-foreground0.321622.589.13s total;170–184MiB reserved.
+    Independent72-metric audit within2.3e-16, hashes and GPU resume pass. Default
+    fusion remains0; reports structural-only, no temporal memory capability claim.
+  evidence:
+  - ara/evidence/tables/hierarchy_fusion_2026-09-12.json
+  - runs/hierarchy_fusion_v1/comparison.json
+  - runs/hierarchy_fusion_v1/verification.json
+  - runs/hierarchy_fusion_v1/resume_check.json
+  also_depends_on: [N258]
+  status: resolved
+- id: N260
+  type: question
+  title: Should video and audio encoders carry recurrent state between windows?
+  provenance: user
+  timestamp: 2026-09-12T19:58+02:00
+  description: User suggests recurrence or loops. Distinguish within-window refinement
+    from cross-window persistence. Proposed bounded explicit previous/next state,
+    reset and two histories with identical final window but different historical
+    answers. Causality tests now cover fusion, but cross-window encoder recurrence
+    is not implemented or evaluated.
+  evidence:
+  - docs/hierarchy-fusion-plan.md#recurrence-after-this-comparison
+  also_depends_on: [N258, N259]
+  status: open

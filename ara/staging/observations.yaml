@@ -2951,3 +2951,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O169
+  timestamp: 2026-09-12T19:58+02:00
+  provenance: ai-suggested
+  content: This short real-image screen does not support adopting extra per-scale
+    transformer depth or final all-scale fusion by default. Fusion's effect reverses
+    across the two seeds; longer training improves RGB but not masks consistently.
+    Reconstruction learning does not establish good foreground perception, entity
+    binding or temporal memory. Retain the optional architecture and original default.
+  context: Fixed final checkpoints, identical shared initialization/data streams,
+    foreground-union targets and reused internal test images. Both prespecified
+    improvement screens fail; no broader negative architecture conclusion follows.
+  potential_type: claim
+  bound_to: [N259]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -1,0 +1,354 @@
+{
+  "provenance": "ai-executed",
+  "date": "2026-09-12",
+  "source_commit": "f4ada32",
+  "plan_commit": "cf303b6",
+  "protocol": "docs/hierarchy-fusion-plan.md",
+  "result": "completed; depth and fusion screens both fail",
+  "software_tests": 194,
+  "wall_seconds": 589.1272775019752,
+  "comparisons": {
+    "fusion": {
+      "pairs": [
+        {
+          "seed": 7401,
+          "iou_gain": 0.07367253943331828,
+          "rgb_mse_ratio": 0.9819901491925515,
+          "pass_screen": true
+        },
+        {
+          "seed": 7402,
+          "iou_gain": -0.06634528356166955,
+          "rgb_mse_ratio": 1.1863137451462553,
+          "pass_screen": false
+        }
+      ],
+      "pass_screen": false
+    },
+    "depth": {
+      "pairs": [
+        {
+          "seed": 7401,
+          "iou_gain": -0.002558845749695504,
+          "rgb_mse_ratio": 1.0290622335961601,
+          "pass_screen": false
+        },
+        {
+          "seed": 7402,
+          "iou_gain": -0.0016578598539478406,
+          "rgb_mse_ratio": 1.0076691657798733,
+          "pass_screen": false
+        }
+      ],
+      "pass_screen": false
+    }
+  },
+  "records": [
+    {
+      "seed": 7401,
+      "arm": "shallow",
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035
+        },
+        "observed": {
+          "mask_bce": 0.5548274342156343,
+          "mask_iou": 0.18653795007515087,
+          "rgb_mse": 0.010735673944037337
+        },
+        "shuffled": {
+          "mask_bce": 0.6314620631673931,
+          "mask_iou": 0.126416757141256,
+          "rgb_mse": 0.13352309820999397
+        },
+        "zero": {
+          "mask_bce": 0.6234971685388925,
+          "mask_iou": 0.272789623355895,
+          "rgb_mse": 0.1807849347366095
+        }
+      },
+      "resources": {
+        "encoder_parameters": 54976,
+        "free_device_bytes": 5007015936,
+        "parameters": 1743748,
+        "peak_allocated_bytes": 158113280,
+        "peak_reserved_bytes": 178257920,
+        "reserved_limit_bytes": 4201709568,
+        "seconds": 33.20074752299115
+      },
+      "checkpoint_sha256": "b101f46696207efd54803d3b47af3c856853d5360b4b713661be7375f55fa085",
+      "arrays_sha256": "a9755cc76b6b9e120f4c58bfe7a1e62ff3b0683dd7581e18b93d1f0670afc6d6"
+    },
+    {
+      "seed": 7401,
+      "arm": "deep",
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035
+        },
+        "observed": {
+          "mask_bce": 0.5614777756197298,
+          "mask_iou": 0.18397910432545536,
+          "rgb_mse": 0.01104767660801116
+        },
+        "shuffled": {
+          "mask_bce": 0.6404557463369859,
+          "mask_iou": 0.1350686100286037,
+          "rgb_mse": 0.12452536662861417
+        },
+        "zero": {
+          "mask_bce": 0.6190382175269968,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.08071972035665566
+        }
+      },
+      "resources": {
+        "encoder_parameters": 86944,
+        "free_device_bytes": 5006753792,
+        "parameters": 1775716,
+        "peak_allocated_bytes": 167297536,
+        "peak_reserved_bytes": 178257920,
+        "reserved_limit_bytes": 4201709568,
+        "seconds": 92.67918144597206
+      },
+      "checkpoint_sha256": "cdf89e10c6858c7453a90d219559cfa30d273d0a4b378eccc3dffb9cfa47d390",
+      "arrays_sha256": "d01902d633cc61cf036b8372eed9d225f01310854a3a155ff083657180bf10a0"
+    },
+    {
+      "seed": 7401,
+      "arm": "deep_fusion",
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035
+        },
+        "observed": {
+          "mask_bce": 0.5605806627698844,
+          "mask_iou": 0.25765164375877364,
+          "rgb_mse": 0.01084870960053194
+        },
+        "shuffled": {
+          "mask_bce": 0.634107905310665,
+          "mask_iou": 0.1664049533369492,
+          "rgb_mse": 0.11956740939925332
+        },
+        "zero": {
+          "mask_bce": 0.6101068031143047,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.136933493415552
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4992073728,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 185065984,
+        "peak_reserved_bytes": 192937984,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 76.20678533497266
+      },
+      "checkpoint_sha256": "c72838b1b49ca40ff5d41bd49310ffcd892d1af34c3e35f59f8a8468464051b0",
+      "arrays_sha256": "716f1e67c97526277185a9a4e8df66867b8130fb1274fd4f35a22ae37af510a0"
+    },
+    {
+      "seed": 7401,
+      "arm": "shallow_long",
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035
+        },
+        "observed": {
+          "mask_bce": 0.5351145982061027,
+          "mask_iou": 0.2640774445181293,
+          "rgb_mse": 0.006998445543457881
+        },
+        "shuffled": {
+          "mask_bce": 0.670964557165282,
+          "mask_iou": 0.1476495196422602,
+          "rgb_mse": 0.12602840854247996
+        },
+        "zero": {
+          "mask_bce": 0.6181538370022202,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.08398881417207338
+        }
+      },
+      "resources": {
+        "encoder_parameters": 54976,
+        "free_device_bytes": 5006753792,
+        "parameters": 1743748,
+        "peak_allocated_bytes": 158113280,
+        "peak_reserved_bytes": 178257920,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 110.26573647803161
+      },
+      "checkpoint_sha256": "4059a37a070b990c93389a418a802fec588a48d9e24ea0bf553080881a22f6ac",
+      "arrays_sha256": "4776940f9cad5a199b923acc15d2a9d2d33ed88cf45dc50ce4deb008ea960f3b"
+    },
+    {
+      "seed": 7402,
+      "arm": "shallow_long",
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035
+        },
+        "observed": {
+          "mask_bce": 0.5470113049383609,
+          "mask_iou": 0.28429075262223,
+          "rgb_mse": 0.007139369540191176
+        },
+        "shuffled": {
+          "mask_bce": 0.6783048821667856,
+          "mask_iou": 0.17504484582800464,
+          "rgb_mse": 0.12890811492526233
+        },
+        "zero": {
+          "mask_bce": 0.6575987803650338,
+          "mask_iou": 0.31532959612113576,
+          "rgb_mse": 0.08754840346066904
+        }
+      },
+      "resources": {
+        "encoder_parameters": 54976,
+        "free_device_bytes": 5006753792,
+        "parameters": 1743748,
+        "peak_allocated_bytes": 158113280,
+        "peak_reserved_bytes": 178257920,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 113.04468383395579
+      },
+      "checkpoint_sha256": "ac36148f81436442b5ee7305da286b3f8025c1ee43e6f86941e1aa28110adf42",
+      "arrays_sha256": "d4baa907ab90b3538a4205f3ea17532bf3a337a60f1e6d4b1f964725e793ac59"
+    },
+    {
+      "seed": 7402,
+      "arm": "deep_fusion",
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035
+        },
+        "observed": {
+          "mask_bce": 0.5480264464976338,
+          "mask_iou": 0.2380048398789382,
+          "rgb_mse": 0.011634797688483092
+        },
+        "shuffled": {
+          "mask_bce": 0.6435820065513063,
+          "mask_iou": 0.16455269807897216,
+          "rgb_mse": 0.11587215150041498
+        },
+        "zero": {
+          "mask_bce": 0.6303138932781087,
+          "mask_iou": 0.3061303332084585,
+          "rgb_mse": 0.10046993417819734
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4992073728,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 185065984,
+        "peak_reserved_bytes": 192937984,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 42.11035205994267
+      },
+      "checkpoint_sha256": "71d7163f8eec52d990192e2bb7d2bb874a54ad8132dafe3db31983afa22304e4",
+      "arrays_sha256": "b12eaaf9111a7102c534c99893c5f158388258c583254e66244a6dd469a90e45"
+    },
+    {
+      "seed": 7402,
+      "arm": "deep",
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035
+        },
+        "observed": {
+          "mask_bce": 0.551194271121058,
+          "mask_iou": 0.30435012344060774,
+          "rgb_mse": 0.009807521607236112
+        },
+        "shuffled": {
+          "mask_bce": 0.6408311313921233,
+          "mask_iou": 0.2096713740769495,
+          "rgb_mse": 0.1229782965328054
+        },
+        "zero": {
+          "mask_bce": 0.6327948401627184,
+          "mask_iou": 0.2689814598414244,
+          "rgb_mse": 0.11360978649783894
+        }
+      },
+      "resources": {
+        "encoder_parameters": 86944,
+        "free_device_bytes": 5007015936,
+        "parameters": 1775716,
+        "peak_allocated_bytes": 167297536,
+        "peak_reserved_bytes": 178257920,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 56.71885840804316
+      },
+      "checkpoint_sha256": "2325043e7d86930d98850faeb5850173b666b2fd13952356aa8c8ebb50466039",
+      "arrays_sha256": "4e92a4a10c24431437b475d9fd19fcd2f2a11d6e956b9aa092beae34f86813cc"
+    },
+    {
+      "seed": 7402,
+      "arm": "shallow",
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035
+        },
+        "observed": {
+          "mask_bce": 0.5496824191805993,
+          "mask_iou": 0.3060079832945556,
+          "rgb_mse": 0.009732878548135091
+        },
+        "shuffled": {
+          "mask_bce": 0.643683744265502,
+          "mask_iou": 0.2120159089596219,
+          "rgb_mse": 0.12077864974124462
+        },
+        "zero": {
+          "mask_bce": 0.6467516520788461,
+          "mask_iou": 0.312038436790532,
+          "rgb_mse": 0.08722011961688426
+        }
+      },
+      "resources": {
+        "encoder_parameters": 54976,
+        "free_device_bytes": 5007015936,
+        "parameters": 1743748,
+        "peak_allocated_bytes": 158113280,
+        "peak_reserved_bytes": 178257920,
+        "reserved_limit_bytes": 4201709568,
+        "seconds": 32.60644224390853
+      },
+      "checkpoint_sha256": "34d5d286c106e2b62bef1969d42737f5ff209f2d0f7e970991b3b5a393807382",
+      "arrays_sha256": "8f41ebbe18413317963f3251acbc707aac568110ffcfb6efea760951724ab702"
+    }
+  ],
+  "maximum_independent_metric_error": 2.220446049250313e-16,
+  "report_validation": "structural-only",
+  "evidence": {
+    "runs/hierarchy_fusion_v1/comparison.json": "8563527d8bfb676ae5fdac8971dbdb3c96967f6be1f1536116b5c84445bd8b2f",
+    "runs/hierarchy_fusion_v1/verification.json": "256428d44ba03660dff41e381446a3a52deaa3381e0f99ab0e524226b340b19c",
+    "runs/hierarchy_fusion_v1/resume_check.json": "29590d92893984f7027a97882b6530d5309a91648e0b2e94f8fe9310e2b947a5",
+    "runs/hierarchy_fusion_v1/default_compatibility.json": "392bf94b1b05a52995ba7328ca35033c2a458c21f1b6205d11a938443e4ea89b",
+    "runs/hierarchy_fusion_v1/software.junit.xml": "54e25e00105d11e3d629ba7facbbb83c51d4d253668c8e93679d67e7fb86b1ba",
+    "runs/hierarchy_fusion_v1/report.html": "105dc9a2dadc1943f578d22e272e790d05582b0d92d5e1ee7a2c7b470616f2af"
+  }
+}

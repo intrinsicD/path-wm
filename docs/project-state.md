@@ -1,11 +1,17 @@
 # Current work
 
-**Hierarchy/fusion experiment in progress, 12 September:** user requests processed
-scales followed by a final transformer stack over all scales. [Frozen plan](hierarchy-fusion-plan.md)
-adds configurable causal fusion while preserving the existing default, then compares
-depth/fusion and extra training on real COCO images and foreground masks. Temporal
-recurrence remains a separate cross-window experiment; causal software checks cover
-video/audio/text now. No formal result yet.
+**Hierarchy/fusion comparison completed, 12 September:** implemented the requested
+per-scale transformer depth plus optional final all-scale stack.194 CPU tests pass,
+including causal video/audio/text, invalid gradients and exact resume; disabled
+fusion matches pre-change outputs exactly. Eight real COCO RGB/foreground runs,
+two seeds,589s: fusion improves IoU0.184→0.258 at7401 but worsens0.304→0.238 at7402
+with18.6% worse RGB. Extra depth helps neither seed. Both proposed improvements fail
+the prespecified screen; longer shallow training improves RGB, mask effects mixed.
+All mask IoUs remain below the full-foreground reference.170–184MiB reserved GPU;
+independent raw metrics/hash audit and completed GPU resume pass. [Results/plan](hierarchy-fusion-plan.md#completed-comparison),
+[report](../runs/hierarchy_fusion_v1/report.html) (structural-only). Keep fusion
+default0 and the option available. Encoder recurrence remains a separately specified
+cross-window test; no new speech, video-memory or integrated-agent claim.
 
 **Encoder–decoder review completed, 12 September:**
 [Pair-by-pair review and proposed comparisons](encoder-decoder-review.md) distinguish

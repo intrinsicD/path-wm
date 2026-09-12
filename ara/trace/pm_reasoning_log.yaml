@@ -1304,3 +1304,17 @@ entries:
   - Record two public-only Claude exchanges and explicit withdrawal of three claims.
     Local evidence and primary literature bound the recommendations; documentation
     edits neither alter the baseline nor establish successful retraining or GPU fit.
+
+- turn: 2026-09-12_001#10
+  notes:
+  - N258 records the user's requested test, not endorsement of its superiority.
+    N259 records completed execution and failed improvement gates; O169 interpretation
+    stays staged without researcher comment on results.
+  - N260 keeps recurrence open. Software prefix causality does not establish temporal
+    memory. Do not reinterpret loops over one window as cross-window state.
+  - O168's compound repair proposal is only partly exercised, not wholly adopted.
+    Earlier CNN depth gains concerned another architecture/task; this result creates
+    no contradiction or broad refutation. Existing entity/data/planning topics remain active.
+  - Dataset/test reuse, matched shared weights, fixed checkpoints, all eight arms and
+    weak absolute foreground quality remain visible. Claude acknowledged inductive
+    mask-bound composition; no private results/source exported. No claims promoted.
