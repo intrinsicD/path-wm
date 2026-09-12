@@ -1,5 +1,11 @@
 # Current work
 
+**Capability baseline in progress, 12 September:** user requests a complete current
+test and durable future comparison. [Frozen evaluation plan](capability-baseline-plan.md)
+covers the direct weights, separately identified specialists, general-agent pilots,
+real-input compatibility, software contracts and explicit unimplemented gaps.
+Three essential checks fail before implementation as expected. No training planned.
+
 **Direct weight test completed, 12 September:** at the user's explicit request,
 constructed binary model weights and adjusted them without backpropagation. First
 candidate family fails (39/64 final answers). A bounded numeric timing/routing revision
