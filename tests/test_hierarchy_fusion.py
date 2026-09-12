@@ -319,7 +319,11 @@ def test_fused_hierarchy_training_resumes_exactly(tmp_path):
 
 @pytest.mark.parametrize("decoder_rate", [None, 0.000003])
 def test_handwritten_frozen_training_resumes_exactly(tmp_path, decoder_rate):
-    from experiments.hierarchy_fusion import configure_training, rgb_objective, build_training_optimizer
+    from experiments.hierarchy_fusion import (
+        configure_training,
+        rgb_objective,
+        build_training_optimizer,
+    )
 
     path, _ = handwritten_file(tmp_path)
     frames = np.random.default_rng(8891).integers(
@@ -382,15 +386,19 @@ def test_handwritten_frozen_training_resumes_exactly(tmp_path, decoder_rate):
 
 @pytest.mark.parametrize("part", ["both", "encoder", "decoder"])
 def test_separate_decoder_rate_routes_only_the_trainable_parameters(tmp_path, part):
-    from experiments.hierarchy_fusion import configure_training, build_training_optimizer
-    path,_=handwritten_file(tmp_path)
-    model,_=build_model(7598,"deep_fusion")
+    from experiments.hierarchy_fusion import (
+        configure_training,
+        build_training_optimizer,
+    )
+
+    path, _ = handwritten_file(tmp_path)
+    model, _ = build_model(7598, "deep_fusion")
     configure_training(model, initial_weights=path, train_part=part, loss_mode="rgb")
-    opt=build_training_optimizer(model,decoder_learning_rate=0.000003)
-    seen=set()
+    opt = build_training_optimizer(model, decoder_learning_rate=0.000003)
+    seen = set()
     for group in opt.param_groups:
         expected = model.encoder if group["name"] == "encoder" else model.heads
-        ids={id(p) for p in group["params"]}
+        ids = {id(p) for p in group["params"]}
         assert ids == {id(p) for p in expected.parameters() if p.requires_grad}
         assert not seen & ids
         seen |= ids

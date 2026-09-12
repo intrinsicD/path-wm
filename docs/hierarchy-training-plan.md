@@ -138,3 +138,8 @@ effects. Same10%/5% reconstruction gates. Additional10-minute GPU training/evalu
 cap including trials,4GiB allocator and1GiB headroom. Preserve exact source file.
 No test-guided threshold or numerical revision. Targeted rate-group/freeze/resume
 tests must pass and source must be committed before these trials.
+
+The repair passes all15 focused recipe tests in9.36s, including separate optimizer
+groups for each freeze scope and exact interrupted resume with the smaller decoder
+rate. Ruff passes. The earlier203-test full suite remains the full-suite evidence;
+this optimizer-only change has focused validation and no shared model changes.

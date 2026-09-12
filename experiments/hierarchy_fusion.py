@@ -81,6 +81,23 @@ def rgb_objective(outputs, batch):
     return {"rgb_mse": F.mse_loss(outputs["rgb"], batch["rgb"])}
 
 
+def build_training_optimizer(model, *, decoder_learning_rate=None):
+    if decoder_learning_rate is None:
+        parameters = trainable_parameters(model)
+    else:
+        if not np.isfinite(decoder_learning_rate) or decoder_learning_rate <= 0:
+            raise ValueError("Decoder learning rate must be finite and positive")
+        parameters = [
+            dict(params=trainable_parameters(module), lr=rate, name=name)
+            for name, module, rate in [
+                ("encoder", model.encoder, 0.0003),
+                ("decoder", model.heads, decoder_learning_rate),
+            ]
+            if trainable_parameters(module)
+        ]
+    return torch.optim.AdamW(parameters, lr=0.0003, weight_decay=0.0001)
+
+
 def configure_training(
     model,
     *,
@@ -623,6 +640,7 @@ def main():
     )
     parser.add_argument("--loss-mode", choices=("joint", "rgb"), default="joint")
     parser.add_argument("--open-residual-branches", action="store_true")
+    parser.add_argument("--decoder-learning-rate", type=float)
     parser.add_argument(
         "--weight-method",
         choices=("trained", "untrained", "constructed", "ridge"),
@@ -638,6 +656,7 @@ def main():
         or args.train_part != "both"
         or args.loss_mode != "joint"
         or args.open_residual_branches
+        or args.decoder_learning_rate is not None
     )
     if adaptation and args.weight_method != "trained":
         parser.error("Initialization/freeze settings are for optimizer training")
@@ -722,6 +741,8 @@ def main():
             training_setup=setup,
             purpose="handwritten initialization and reconstruction diagnosis",
         )
+        if args.decoder_learning_rate is not None:
+            settings["decoder_learning_rate"] = args.decoder_learning_rate
     started = time.monotonic()
     output = (
         args.resume
@@ -750,8 +771,8 @@ def main():
                         model, data["train"].batch(np.arange(4), args.device), loss
                     ),
                 )
-        optimizer = torch.optim.AdamW(
-            trainable_parameters(model), lr=0.0003, weight_decay=0.0001
+        optimizer = build_training_optimizer(
+            model, decoder_learning_rate=args.decoder_learning_rate
         )
         train_perception(
             model,
