@@ -127,8 +127,8 @@ sessions:
 
 - id: 2026-09-12_001
   date: '2026-09-12'
-  summary: "User prefers real webcam data; selected 12 stills and 6 real clips, verified import tooling and prepared recording/label protocol; own captures and reviewed answers remain missing."
-  turn_count: 5
-  events_count: 7
+  summary: "User explores assistant-authored multimodal teaching data; scoped visual-memory curriculum reviewed with Claude and recorded; no corpus or training launched."
+  turn_count: 6
+  events_count: 9
   claims_touched: []
-  open_threads: 3
+  open_threads: 4

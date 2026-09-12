@@ -1,5 +1,14 @@
 # Current work
 
+**Assistant-authored curriculum discussed, 12 September:** the user proposes having
+the assistant generate teaching modalities and train the learner. [Curriculum proposal](webcam-memory-data-plan.md#assistant-authored-teaching-data-12-september-discussion)
+combines controlled histories and checked questions/images with separate real-footage
+evaluation. One brief Claude review emphasized pixel/label checks; the local
+reconciliation avoids assuming a perfect automated verifier. Text/image generation
+is available; realistic video/speech generation is not yet connected. No new corpus
+or training run. Visual-memory interfaces, objective, gates and GPU budget still need
+a concrete experiment specification; prior real-footage preference remains intact.
+
 **Real-footage development pack prepared, 12 September:** the user prefers real
 webcam footage for observation memory. Selected 12 COCO train photographs and 6
 Charades official-train indoor clips, preserving source hashes, annotations and

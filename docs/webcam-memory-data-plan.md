@@ -145,3 +145,56 @@ annotations. The source media remain unchanged. No camera has been activated and
 no training has run. Own webcam footage and reviewed memory labels remain missing.
 The three focused tests cover successful import/alignment, invalid settings before
 device access, and preserving evidence/failure status for a broken video.
+
+## Assistant-authored teaching data (12 September discussion)
+
+The user asks whether the assistant can generate modalities and train the learner.
+Yes: data authoring, curriculum construction, running local optimization and reviewing
+errors can be automated. Text and image generation are available in this session.
+Controlled video sequences can be rendered with code and assembled with local FFmpeg;
+a realistic free-form video or speech generator is not currently a verified callable
+capability here. Generating examples does not transfer the teacher's abilities directly
+into the learner; the learner still needs an objective, optimization and evaluation.
+
+Proposed next curriculum keeps observation memory first:
+
+1. Define an episode's object identities, positions, visibility and changes, then
+   render its observations and derive historical answers from the event trace. Begin
+   with a visible move, hiding and reappearance. Include cases where current state
+   is unknowable from the available observations.
+2. Generate varied question wording and, where useful, visual appearances. Check
+   generated pixels against their labels. Intended image prompts do not establish
+   actual object counts, identities or positions. Rendered histories must also be
+   checked for visibility and identity cues: a correct scene file alone is insufficient.
+3. Construct paired histories with identical final rendered observations but different
+   supported historical answers. Keep the whole pair and related appearance assets
+   in one split. Keep answer-bearing annotations and future frames out of model inputs.
+4. Train the scoped visual-memory task on the local GPU, comparing against a current-view
+   control under a fixed data/compute budget. Add checked real training examples and
+   measure on independently reviewed, untouched real recordings. Report synthetic
+   and real performance separately. Real-data adaptation requires a fresh held-out
+   population; do not repeatedly use the evaluation clips as a training guide.
+
+This can reduce manual authoring of training labels. It does not eliminate the need
+for real evidence of webcam transfer. The existing real pack remains development-only.
+Speech and other tasks can follow once the first visual-memory objective works;
+there is no reason to make every modality part of the first experiment.
+
+Claude's short public-only review emphasized independent pixel/label verification.
+Adopt independent checks and inspection of the observable evidence; do not assume
+an automated vision verifier is a perfect oracle or require one before a controlled
+pilot can start. Use deterministic renderer/output checks where possible and record
+manual review/disagreements for generated or real imagery. Synthetic-label validity
+and real-label validity have their own checks; no equal acceptance-rate target is
+justified. This is the local reconciliation, not a claimed Claude endorsement of
+those qualifications. Receipt: `runs/reviews/continuation_2026-09-11/teacher-curriculum-receipt.json`.
+
+Public precedent: [CLEVRER](https://clevrer.csail.mit.edu/) pairs controlled synthetic
+videos with annotations and reasoning questions. It establishes that such datasets
+can be constructed; it does not establish this project's learning or webcam transfer.
+
+This subsection is a curriculum proposal. No new generated corpus or training run
+has been launched. Before execution, fill the exact visual input/readout interface,
+population, seeds, objective, numerical gates and measured GPU budget in the active
+experiment plan. The current recipe already trains image perception and controlled
+descriptor memory separately; raw-video memory is still an integration step.

@@ -3871,3 +3871,20 @@ tree:
   also_depends_on:
   - N249
   status: resolved
+
+- id: N251
+  type: question
+  title: Can the assistant author multimodal teaching data and train the learner?
+  provenance: user
+  timestamp: 2026-09-12T15:26+02:00
+  description: User proposes assistant-generated images and other modalities as teaching
+    data. Explained available image/text tools and controlled video rendering, proposed
+    an event-grounded visual-memory curriculum, and separated real-footage transfer
+    evaluation. No corpus generation or training occurred.
+  evidence:
+  - docs/webcam-memory-data-plan.md#assistant-authored-teaching-data-12-september-discussion
+  - runs/reviews/continuation_2026-09-11/teacher-curriculum-receipt.json
+  also_depends_on:
+  - N249
+  - N250
+  status: resolved

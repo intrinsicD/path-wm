@@ -2874,3 +2874,22 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O165
+  timestamp: 2026-09-12T15:26+02:00
+  provenance: ai-suggested
+  content: Propose assistant-authored controlled visual histories with event-derived
+    historical answers, checked generated image/text variants and paired final-view
+    controls. Train a scoped local visual-memory task and measure real-footage transfer
+    separately; synthetic data validity needs observable-evidence checks.
+  context: User asks whether assistant can provide teaching data and run training.
+    Brief Claude review stresses pixel-label verification; local reconciliation does
+    not assume an automated verifier is a perfect oracle. CLEVRER is public precedent
+    for synthetic video QA, not proof of project transfer.
+  potential_type: architecture
+  bound_to:
+  - N251
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

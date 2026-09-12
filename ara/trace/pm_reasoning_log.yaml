@@ -1254,3 +1254,13 @@ entries:
     data or measured GPU fit. No prior proposal is promoted by this data selection.
   - Keep existing task/cost/evidence and dynamics topics open; no abandonment or researcher
     interpretation of new training results occurred.
+
+- turn: 2026-09-12_001#6
+  notes:
+  - N251 records a feasibility/design question, not completion of requested model
+    capabilities. O165 remains proposed; raw-video memory integration is still open.
+  - Preserve real-webcam target and O164 collection option; the user has not abandoned
+    real-data evaluation or specified a synthetic-only experiment.
+  - Claude advocated automated independent verification; local reconciliation accepts
+    evidence checks without claiming such a verifier is available or perfect. No new
+    experiment supports a capability claim.
