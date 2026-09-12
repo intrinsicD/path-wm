@@ -91,4 +91,20 @@ browser access is unavailable. Save target/history/prediction panels and raw arr
 Claude public-only review identified useful intact-state/no-bank and pixel-scoring
 controls. Locally reject treating intended composition or a decoder prior as
 inherent leakage; distinguish supervised writes from independent probes. Follow-up
-acknowledgment pending. Briefs/receipts: runs/reviews/continuation_2026-09-11/memory-output-*. No private source/data/results sent.
+acknowledgment received: Claude withdrew the two leakage characterizations and
+accepted the auxiliary-training distinction. Its requested distractor-scaling test
+is deferred because this slice explicitly makes no retrieval-selection claim.
+Briefs/receipts: runs/reviews/continuation_2026-09-11/memory-output-*.
+No private source/data/results sent.
+
+## Implementation checks before formal execution
+
+Four new tests pass, including paired split/target checks, reset/erase/swap and
+future-memory isolation, supervised-write versus frozen-module gradients, exact
+CPU optimizer/model/RNG/sampler resume, standalone strict reload and report content.
+Together with image-output, visual-memory, multimodal and run regressions,28 tests
+pass; lint passes. A separate GPU check and16 development updates (seed17801,
+data17701/17702/17703) complete. Training-loop time2.925s, peak402MiB reserved.
+This is workflow evidence, not a capability pass or model selection. Development
+episodes inspected visually. Reports embed raw-result summaries and labeled
+history/target/ordinary/reset/erased/swapped panels; structural HTML QA only.

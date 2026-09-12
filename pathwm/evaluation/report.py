@@ -1215,6 +1215,49 @@ def render_report(directory):
     ]
     if status.get("error"):
         parts.append(f"<p><strong>Failure:</strong> {escape(status['error'])}</p>")
+    result_path = directory / "result.json"
+    if result_path.exists():
+        result = json.loads(result_path.read_text())
+        parts.append("<section><h2>Recorded result</h2>")
+        scope = result.get("evaluation_split", result.get("evaluation_scope", ""))
+        parts.append(f"<p>{escape(str(scope))}</p>")
+        if "gate" in result:
+            label = "passed" if result["gate"] is True else "not passed"
+            parts.append(
+                f"<p><strong>Declared capability screen: {label}.</strong></p>"
+            )
+        parts.append(
+            "<p>Accuracy values are fractions from 0 to 1. Error metrics retain the recipe's scale.</p>"
+        )
+        metrics = result.get("metrics", {})
+        for name, value in (metrics.items() if isinstance(metrics, dict) else []):
+            if isinstance(value, dict):
+                parts.append(
+                    f"<details><summary>{escape(name.replace('_', ' '))}</summary><table><tr><th>Metric</th><th>Value</th></tr>"
+                )
+                for metric, number in value.items():
+                    parts.append(
+                        f"<tr><td>{escape(metric.replace('_', ' '))}</td><td>{escape(str(number))}</td></tr>"
+                    )
+                parts.append("</table></details>")
+            else:
+                parts.append(
+                    f"<p>{escape(name.replace('_', ' '))}: <strong>{escape(str(value))}</strong></p>"
+                )
+        parts.append(
+            "<details><summary>Exact result and limitations</summary><pre>"
+            + escape(result_path.read_text())
+            + "</pre></details></section>"
+        )
+    comparison_panel = directory / "comparison.png"
+    if comparison_panel.exists():
+        panel = (
+            "data:image/png;base64,"
+            + base64.b64encode(comparison_panel.read_bytes()).decode()
+        )
+        parts.append(
+            f'<section><h2>Examples in context</h2><img class="chart" alt="Labeled observation, target and output comparison" src="{panel}"></section>'
+        )
     if not any(
         (directory / name).exists()
         for name in (

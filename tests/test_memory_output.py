@@ -12,7 +12,13 @@ def model_fixture():
     from pathwm.models.perception import Perception
 
     encoder = PyramidEncoder(width=16, levels=2)
-    head = DenseHead(encoder.feature_spec, channels=3, activation="sigmoid")
+    head = DenseHead(
+        encoder.feature_spec,
+        levels=tuple(encoder.feature_spec),
+        channels=3,
+        activation="sigmoid",
+        retain_statistics=True,
+    )
     codec = Perception(PatchDetailEncoder(encoder), {"rgb": PatchDetailHead(head)})
     return build_model(codec.requires_grad_(False), width=16)
 
@@ -52,7 +58,9 @@ def test_recalled_state_depends_only_on_selected_bank_and_has_no_target_path():
     assert bank.values.grad_fn is None and bank.values.shape[1] == 2
     before = bank.values.clone()
     recalled = model.query(history["final"], b["images"][:, -1], "reset")
-    changed = replace(history["final"], tokens=torch.randn_like(history["final"].tokens))
+    changed = replace(
+        history["final"], tokens=torch.randn_like(history["final"].tokens)
+    )
     other = model.query(changed, b["images"][:, -1], "reset")
     torch.testing.assert_close(recalled.tokens, other.tokens, atol=0, rtol=0)
     erased = model.query(changed, b["images"][:, -1], "reset_erased")
@@ -61,7 +69,9 @@ def test_recalled_state_depends_only_on_selected_bank_and_has_no_target_path():
     torch.testing.assert_close(swapped.tokens, recalled.tokens[torch.arange(4) ^ 1])
     assert torch.equal(bank.values, before)
     restored = LatentState.from_dict(history["final"].to_dict())
-    torch.testing.assert_close(model.query(restored, b["images"][:, -1], "reset").tokens, recalled.tokens)
+    torch.testing.assert_close(
+        model.query(restored, b["images"][:, -1], "reset").tokens, recalled.tokens
+    )
     with pytest.raises(ValueError, match="future"):
         future = replace(restored, memory=replace(bank, times=bank.times + 100))
         model.query(future, b["images"][:, -1], "reset")
@@ -79,8 +89,14 @@ def test_supervised_writes_and_frozen_decoder_have_intended_gradients():
     model.agent.decoders["image"].calibrate(target_features)
     loss, _ = objective(model, b, reset=True)
     loss.backward()
-    assert any(p.grad is not None and p.grad.abs().sum() > 0 for p in model.agent.updater.parameters())
-    assert any(p.grad is not None and p.grad.abs().sum() > 0 for p in model.agent.thinker.parameters())
+    assert any(
+        p.grad is not None and p.grad.abs().sum() > 0
+        for p in model.agent.updater.parameters()
+    )
+    assert any(
+        p.grad is not None and p.grad.abs().sum() > 0
+        for p in model.agent.thinker.parameters()
+    )
     assert all(p.grad is None for p in model.teacher.parameters())
     assert all(p.grad is None for p in model.agent.decoders["image"].head.parameters())
     assert all(p.grad is None for p in model.direct.parameters())
@@ -99,11 +115,23 @@ def test_training_resume_and_standalone_reload(tmp_path):
         torch.manual_seed(21)
         model = model_fixture()
         settings = default_settings(21)
-        settings.update(steps=4, batch_size=2, width=16, levels=2, depth=1, fusion_depth=0)
+        settings.update(
+            steps=4, batch_size=2, width=16, levels=2, depth=1, fusion_depth=0
+        )
         with torch.no_grad():
-            model.agent.decoders["image"].calibrate(model.teacher(train_data.batch(range(8))["target"]))
-        result = train(model, train_data, val, test, output=path, settings=settings,
-                       resume=resume, stop_after=stop_after)
+            model.agent.decoders["image"].calibrate(
+                model.teacher(train_data.batch(range(8))["target"])
+            )
+        result = train(
+            model,
+            train_data,
+            val,
+            test,
+            output=path,
+            settings=settings,
+            resume=resume,
+            stop_after=stop_after,
+        )
         return result, torch.load(path / "last.pt", weights_only=True)
 
     full_model, full = run(tmp_path / "full")
@@ -119,3 +147,6 @@ def test_training_resume_and_standalone_reload(tmp_path):
     torch.testing.assert_close(actual["image"], expected["image"], atol=0, rtol=0)
     saved = np.load(tmp_path / "full" / "predictions.npz")
     assert np.isfinite(saved["reset_image"]).all()
+    html = (tmp_path / "full" / "report.html").read_text()
+    assert "Recorded result" in html and "factual accuracy" in html
+    assert "Labeled observation, target and output comparison" in html
