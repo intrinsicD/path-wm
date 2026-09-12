@@ -103,3 +103,38 @@ present, mask gradients absent. The checkerboard pair has exactly equal features
 every initial scale and patch-projection rank3. No weights or thresholds were changed
 from the plan in response to real evaluation data. Formal runs start after source
 commit; no shared model-library changes were needed.
+
+## First comparison and bounded optimizer repair
+
+Original sourcee1e89c7; ten runs completed in521.15s. Exact-handwritten joint test
+RGB MSE0.273862/0.185825, decoder-only0.273862/0.201883, encoder-only0.013102/0.013112;
+ordinary joint0.007319/0.007859. Opening the branch did not prevent collapse at the
+old decoder rate. All trained mask weights stayed frozen. Independent90-metric audit
+agrees within2.3e-16; original weights, frozen components and matched sampling verify.
+The checkerboard and rank probes distinguish input ambiguity from optimization.
+
+Validation logs, examined before the follow-up, show joint and decoder-only runs
+saturating after early updates; encoder-only improves in both seeds. At7501, all
+six inspected validation RGB outputs are below1e-6. This is an optimizer sensitivity
+of the handwritten decoder; the experiment does not identify one normalization layer
+as its unique cause. Do not use these collapsed weights as the training recommendation.
+The original results/reports remain in `runs/hierarchy_training_v1/`.
+
+Predeclared follow-up (also recorded before source edits in
+`runs/hierarchy_training_v1/decoder_step_followup.txt`): expose decoder learning rate,
+keep encoder rate0.0003 and all other settings fixed. Validate exact handwritten joint
+training at decoder rates0.00003/0.000003/0.0000003, seed7590,32 updates each, two16-step
+segments. All use512 training and128 validation images; no final-test scoring in these
+paused trials. Eligible if final validation MSE does not exceed initial, all finite,
+and post-initial validation values stay within1.2 times initial. Choose lowest final
+validation MSE among eligible candidates, ties smaller rate; freeze selection JSON
+before test access. If none is eligible, stop without an unplanned search.
+
+Then two seeds7501/7502,384 updates each for hand_both, hand_decoder,
+hand_open_decoder and ordinary_both, with selected decoder rate. Reuse the original
+hand_encoder references: their only learning rate is unchanged0.0003. Retain the
+original ordinary-rate controls too; separate optimizer repair from pure initialization
+effects. Same10%/5% reconstruction gates. Additional10-minute GPU training/evaluation
+cap including trials,4GiB allocator and1GiB headroom. Preserve exact source file.
+No test-guided threshold or numerical revision. Targeted rate-group/freeze/resume
+tests must pass and source must be committed before these trials.
