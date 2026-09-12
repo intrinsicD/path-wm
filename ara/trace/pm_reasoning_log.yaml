@@ -1416,3 +1416,15 @@ entries:
     and has no user-selected implementation or measured synchronization result.
   - O175's scoped capability interpretation and older repair/training proposals are
     not promoted by this architecture approval. Related topics remain active.
+
+- turn: 2026-09-12_001#19
+  notes:
+  - N274 records a source-backed explanation; O178 stages proposed grounding diagnostics.
+    A06 remains adopted, but no specific conditioning implementation or new efficacy claim
+    follows from this question. The intervening pure acknowledgment was skipped.
+  - Decoders directly see tokens rather than every state field. The belief readout uses
+    sampled codes plus context; entropy enters thinking. Do not imply all uncertainty,
+    provenance and time metadata are automatically available or correctly interpreted.
+  - Four-request image fitting validates text-through-state generation, not recalled facts
+    or physics. Hypothetical modality examples are design targets. Revisited O175/O177
+    remain staged; no abandonment, contradiction or new model-selection decision.

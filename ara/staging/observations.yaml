@@ -3125,3 +3125,24 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O178
+  timestamp: 2026-09-12T23:51+02:00
+  provenance: ai-suggested
+  content: Each modality should learn to read task-relevant state information through
+    its own conditioning queries while its generator supplies learned output structure.
+    Reliable factual influence requires matched-history or controlled-state tests with
+    request and sampling seed fixed; attention weights, gradient flow and a four-prompt
+    fit alone do not establish semantic grounding. State uncertainty and chosen world
+    time need explicit usable conditioning and objectives; sampling texture variation
+    is not automatically belief uncertainty. Shared state does not guarantee consistent
+    speech, text and video. Additional generation iterations are not environmental time.
+  context: Source-backed explanation of adopted output design. Hypothetical red-ball
+    examples illustrate desired behavior, not current capabilities. No universal latent
+    coordinate semantics, state-modality teacher mapping or new experiment adopted.
+  potential_type: heuristic
+  bound_to: [N274, N273, N271]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

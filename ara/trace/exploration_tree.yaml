@@ -4272,3 +4272,23 @@ tree:
   evidence: [O176, docs/multimodal.md#adopted-output-design]
   also_depends_on: [N272]
   status: resolved
+
+- id: N274
+  type: question
+  title: Explain how internal world state influences each modality output
+  provenance: user
+  timestamp: 2026-09-12T23:51+02:00
+  description: Traced current decode/emit/think/imagine and image/audio/text adapters.
+    Decoders consume state.tokens; task and retrieved memory enter through thinking.
+    Categorical readout combines recurrent context and projected sampled codes;
+    uncertainty affects thinker feedback, not an automatic calibrated output contract.
+    Video currently decodes explicit advancing states frame by frame. Explain learned
+    state conditioning, modality-specific queries, generative priors, selected future
+    states and separate internal-generation versus environmental time. No code edits,
+    new tests/training or evidence of general semantic grounding.
+  evidence: [pathwm/models/agent.py, pathwm/models/belief.py,
+    pathwm/models/modalities.py, pathwm/models/decoders.py, docs/multimodal.md,
+    'https://arxiv.org/abs/1706.03762', 'https://arxiv.org/abs/2112.10752',
+    'https://arxiv.org/abs/2304.08818', 'https://arxiv.org/abs/2301.02111']
+  also_depends_on: [N271, N273]
+  status: resolved

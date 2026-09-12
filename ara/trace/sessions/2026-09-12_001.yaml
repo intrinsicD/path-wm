@@ -2,8 +2,8 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T23:24+02:00
-  turn_count: 18
+  last_turn: 2026-09-12T23:51+02:00
+  turn_count: 19
   summary: Exact handwritten initialization trained after decoder-rate repair; joint
     reconstruction improves10% on both seeds but ordinary initialization remains better.
     Encoder ambiguity and decoder sensitivity isolated; one extra control budget-stopped.
@@ -301,6 +301,19 @@ events_logged:
   provenance: ai-suggested
   summary: Cross-modal content/timing agreement requires explicit coordination tests.
 
+- turn: 19
+  type: question
+  id: N274
+  routing: direct
+  provenance: user
+  summary: Explain source-level state-to-output paths and intended conditioning for every modality.
+- turn: 19
+  type: observation
+  id: O178
+  routing: staged
+  provenance: ai-suggested
+  summary: Distinguish learned factual conditioning from gradient/attention sensitivity and test controlled changes.
+
 ai_actions:
 - turn: 11
   action: Inspected residual stages, merges, fusion, timing contracts and completed plan; checked
@@ -493,6 +506,13 @@ ai_actions:
   provenance: ai-executed
   files_changed: [docs/multimodal.md, docs/project-state.md]
 
+- turn: 19
+  action: Read agent state/think/emit/decode, categorical readout and modality queries;
+    checked primary attention, latent-image/video and codec-speech sources. Distinguished
+    current token interface from intended semantic guidance. No new model work or tests.
+  provenance: ai-executed
+  files_changed: []
+
 claims_touched: []
 key_context:
 - turn: 11
@@ -552,6 +572,9 @@ key_context:
 - turn: 18
   excerpt: yes ok, this sounds good. it should similarly work for the other modalities...
 
+- turn: 19
+  excerpt: Can you elaborate on how the world model's internal state influences each output modality?
+
 open_threads:
 - 'S02/S04/T01: record own webcam scenes and verify labels; model-visible inputs, task ranges and acceptance gates remain open.'
 - 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
@@ -588,3 +611,4 @@ ai_suggestions_pending:
 - 'O174: tiny fit and transport control completed; full compact-codec, matched-duration and higher-resolution sequence not yet implemented.'
 - 'O175: scoped transport and state-producer interpretation awaits researcher response; do not equate memorization with generation quality.'
 - 'O177: explicit cross-modal content/timing tests proposed; no synchronization mechanism selected.'
+- 'O178: controlled state-to-output grounding and explicit uncertainty/time guidance need concrete objectives and tests.'
