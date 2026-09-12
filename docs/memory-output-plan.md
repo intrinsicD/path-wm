@@ -150,3 +150,91 @@ All30 targeted tests pass before the repair run, including normalized replay and
 standalone loading, exact no-op gradients and unchanged teacher weights. The GPU
 normalization check passes. Traces distinguish raw encoder outputs from normalized
 published features and retain the fixed channel statistics.
+
+## Completed results
+
+Reference source ab22ff5; normalization source dd26b05. All three runs complete1536
+updates within their declared300s caps. Existing runs and donor are unchanged.
+
+| Condition | Recall factual joint accuracy | Recall image joint accuracy | Training seconds |
+| --- | ---: | ---: | ---: |
+| Raw features,7801 |25%|0%|273.897|
+| Raw features,7802 |12.5%|0%|257.496|
+| Fixed channel calibration,7801 |0%|0%|279.418|
+
+All held-out gates FAIL. The normalized model reaches100% factual/image accuracy
+on fresh-background validation episodes with familiar combinations. This is a
+learning improvement under this setup; it does not establish held-out composition
+or separate representational effects from optimization. The normalized checkpoint
+is an opt-in experimental artifact, not a replacement for the frozen broad baseline.
+
+Frozen-checkpoint CPU validation replay saves all64 familiar-combination episodes
+and controls separately. Ordinary and reset recall each give64/64 factual answers
+and images,32/32 complete pairs. Reset-erased-bank gives8/64; swapped banks give
+64/64 correct alternate answers/images. Thus this trained path uses the supplied
+memory for familiar combinations. Raw validation arrays and scores are retained
+under normalized_7801/validation_predictions.npz and validation_result.json.
+
+On128 held-out examples after reset/recall, factual color128/128, shape128/128 and
+side0/128. Image-derived color123/128, shape127/128, side0/128. All128 factual
+predictions are members of the eight training triples. The independent direct
+reader instead gets color/side128/128 but shape3/128;122/128 stored-state predictions
+and125/128 direct-reader predictions also belong to training triples. These patterns
+strongly suggest learning the parity correlation instead of independently binding
+every property. The training design permits this shortcut: any two target factors
+determine the third. Joint failure does not mean that identity is entirely absent.
+Teacher-feature decoding classifies every held-out target correctly (RGB MSE0.00010315).
+
+The next proposed curriculum must vary location independently of appearance, with
+paired counterfactual moves and held-out histories. Any new compositional split
+needs its own identifiability/shortcut audit. Do not relabel this failed parity
+benchmark as passing, or replace its held-out data retrospectively. No additional
+training beyond the single declared normalization repair was performed.
+
+Software and numerical verification:30 targeted checks pass, including exact CPU
+model/optimizer/RNG/sampler resume for both configurations, exact no-op outputs and
+gradients, trainable-initialization equality, metadata/trace preservation and frozen
+parameters/statistics. All180 saved test metrics independently recompute within
+5.10e-9. GPU512+1024 resume preserves its ledger prefix. The normalized standalone
+checkpoint reproduces all128 saved GPU images and logits exactly at batch16.
+Its CPU outputs differ by up to0.003258884 per pixel, failing the preexisting1e-4
+audit threshold; all128 factual labels and nearest-template image labels agree.
+This failed cross-device tolerance remains visible, not silently relaxed. Raw-
+feature checkpoints differ by at most7.08e-6. All checkpoints strictly reload;
+the normalized encoder/decoder hashes match the raw-feature reference exactly.
+
+Peak CUDA reserved402MiB; three formal training loops total810.811s, plus2.925s
+development training. Preprocessing, final evaluations/reload audits and reports
+are outside loop timing. Combined and per-run HTML are structurally checked only;
+static and moving comparison PNGs were visually inspected. Inspection does not
+substitute for browser QA.
+
+[Combined report](../runs/memory_output_v1/report.html),
+[independent audit](../runs/memory_output_v1/verification.json),
+[attribute/combination diagnosis](../runs/memory_output_v1/combination_diagnostic.json),
+[normalized checkpoint](../runs/memory_output_v1/normalized_7801/weights.pt).
+Checkpoint SHA256 ad1e4d9115eb569755d73bde150126ddd1139929bb41909a4e1dddadaabe9238.
+
+Reproduce the normalized comparison into a fresh directory:
+
+```bash
+.venv/bin/python -m experiments.memory_output --weights runs/hierarchy_training_v1/decoder_rate_repair/seed_7501/hand_both/weights.pt --output runs/memory_output_v1/new_normalized --device cuda:0 --seed 7801 --normalize-input
+```
+
+The exported model needs no donor file or target data for inference:
+
+```python
+import torch
+from experiments.memory_output import load_model, fact_labels
+
+model = load_model("runs/memory_output_v1/normalized_7801/weights.pt")
+with torch.no_grad():
+    output = model(history_rgb, mode="reset")  # [B,3,3,64,64] observed frames
+    image = output["image"]
+    color_shape_side = fact_labels(output["facts"])
+```
+
+This fixed task interprets the visual selection cue; it has no language-request
+parser. The last frame is hidden context, not the target. The harness stores two
+detached observed states and retrieves both; learned search, entity discovery,
+general image generation and natural-video transfer remain untested.

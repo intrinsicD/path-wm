@@ -1,10 +1,23 @@
 # Current work
 
-**Memory-grounded output implementation started, 13 September:** user approved a
-held-out two-object history task with factual and image outputs. Compare continuous
-state and reset-before-recall, with erased/swapped memory and separate encoder/
-stored-state readouts. [Active protocol](memory-output-plan.md). Two small local
-runs planned; no new learned result yet. Preserve earlier image and broad baselines.
+**Memory-output experiment and normalization repair completed, 13 September:**
+two raw-feature seeds fail (held-out recall facts25%/12.5%, images0%). Fixed input
+channel calibration enables100% factual/image validation accuracy on familiar
+combinations in one matched seed, but held-out joint accuracy remains0%. Crucially,
+reset-recall color and shape are each128/128 correct; location is0/128. Every factual
+prediction belongs to the training combinations. The parity split lets location
+be inferred from appearance; results strongly suggest this correlation shortcut,
+not a demonstrated loss of all entity information. Teacher decoding remains100%.
+30 targeted tests, exact CPU replay/no-op gradients and unchanged frozen encoder/
+decoder checks pass.180 saved metrics independently verify. GPU standalone reload
+is exact on128 episodes; normalized CPU/GPU max pixel difference0.003259 fails the
+tight1e-4 check, although factual and rendered-image labels agree on all128.
+Three1536-update runs total810.81s; peak402MiB reserved. Four brief public-only
+Claude exchanges reconciled. HTML structural-only; comparison panels inspected.
+[Protocol/results](memory-output-plan.md#completed-results),
+[report](../runs/memory_output_v1/report.html). Next: break appearance/location
+correlations with counterfactual relocation training and a separately specified
+generalization test. No further training launched; broad baseline remains intact.
 
 **Shared modality-output boundary adopted, 12 September:** state/request/memory
 conditioning feeds replaceable modality-specific generators and matching codecs.
