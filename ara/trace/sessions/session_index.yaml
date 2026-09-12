@@ -136,3 +136,11 @@ sessions:
   events_count: 46
   claims_touched: []
   open_threads: 12
+
+- id: 2026-09-13_001
+  date: '2026-09-13'
+  summary: Status reconciled with saved evidence; propose held-out memory-grounded output before broader generator training. No model changes or new run.
+  turn_count: 1
+  events_count: 2
+  claims_touched: []
+  open_threads: 9

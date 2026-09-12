@@ -4292,3 +4292,20 @@ tree:
     'https://arxiv.org/abs/2304.08818', 'https://arxiv.org/abs/2301.02111']
   also_depends_on: [N271, N273]
   status: resolved
+
+- id: N275
+  type: question
+  title: Locate current readiness and choose the next bounded learning experiment
+  provenance: user
+  timestamp: 2026-09-13T00:08+02:00
+  description: User asks where the project stands after the modality-conditioning
+    explanation. Reconcile completed detail transport and four-request fitting with
+    the frozen broad capability baseline and adopted observation-memory priority.
+    Recommend held-out history-conditioned state/output testing, then compact codec
+    and broader generation work. This is a proposed ordering, not a newly adopted
+    protocol or budget. No model edits, training, tests or new Claude review.
+  evidence: [docs/project-state.md, docs/image-output-plan.md,
+    docs/capability-baseline-plan.md, docs/multimodal.md,
+    runs/image_output_v1/verification.json]
+  also_depends_on: [N256, N271, N273, N274]
+  status: resolved

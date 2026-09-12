@@ -3146,3 +3146,26 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O179
+  timestamp: 2026-09-13T00:08+02:00
+  provenance: ai-suggested
+  content: Prioritize a held-out observation-to-memory-to-state-to-output experiment
+    before expanding generation quality. Use paired two-object histories with the
+    same final view and request but different remembered answers; produce a simple
+    factual readout and image without current target-image input. Compare direct
+    encoder and state-mediated readouts, erased or shuffled history/memory, and
+    unseen property/location combinations. Test state-grounded correctness separately
+    from visual fidelity. Then train a compact learned codec and broader conditional
+    generator, followed by action prediction and planning as previously ordered.
+  context: Proposed refinement of the image plan's held-out paired training step to
+    address the existing failed general-agent identity/recall baseline. The detail
+    channel transports many source values and the four-prompt fit memorizes training
+    examples; neither establishes this proposed capability. Exact protocol, seeds,
+    thresholds and budget remain to be specified; no new experiment performed.
+  potential_type: heuristic
+  bound_to: [N275, N256, N271, N274]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

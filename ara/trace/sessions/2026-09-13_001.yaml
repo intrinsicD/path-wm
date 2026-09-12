@@ -1,0 +1,50 @@
+session:
+  id: 2026-09-13_001
+  date: '2026-09-13'
+  started: 2026-09-13T00:08+02:00
+  last_turn: 2026-09-13T00:08+02:00
+  turn_count: 1
+  summary: Reconciled scoped image progress with broad agent failures; propose held-out memory-grounded output as next learning slice.
+
+events_logged:
+- turn: 1
+  type: question
+  id: N275
+  routing: direct
+  provenance: user
+  summary: Current readiness and next-step recommendation requested.
+- turn: 1
+  type: observation
+  id: O179
+  routing: staged
+  provenance: ai-suggested
+  summary: Test paired histories through memory and state before broader generation training.
+
+ai_actions:
+- turn: 1
+  action: Reconciled existing plans and saved evidence; recorded recommendation without model changes or new evaluation.
+  provenance: ai-executed
+  files_changed: [ara/trace/exploration_tree.yaml, ara/staging/observations.yaml,
+    ara/trace/sessions/2026-09-13_001.yaml, ara/trace/sessions/session_index.yaml,
+    ara/trace/pm_reasoning_log.yaml]
+
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: 'yes. now how do we continue? where are we at?'
+
+open_threads:
+- 'N275/O179: specify held-out history-conditioned state/output task, seeds, gates and budget; ordering remains proposed.'
+- 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception and learned prediction remain weak.'
+- 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and other-modality quality remain open.'
+- 'N273/A06/O177/O178: adopted output boundary needs concrete conditioning, uncertainty/time inputs, backends and cross-modal consistency tests.'
+- 'S02/S04/T01/O164/O165: own webcam footage, verified entity/event/query labels and synthetic-to-real curriculum remain incomplete.'
+- 'S03/R06: comfortable local GPU training/inference required; own components preferred, pretrained adapter fallback and numerical gates unresolved.'
+- 'O162/O163: task/cost/evidence contract, planner reward/utility mismatch and learned-dynamics integration remain open.'
+- 'N260: bounded cross-window encoder recurrence is unimplemented; define reset-history comparison.'
+- 'N263/N266/O172: earlier private Claude brief remains blocked; last same-rate ordinary reconstruction control budget-stopped. New public-only review is separate.'
+
+ai_suggestions_pending:
+- 'O179: grounded-memory test before broader output training; no exact experiment adopted this turn.'
+- 'O164-O175: earlier curriculum, diagnosis and scoped capability interpretations retain their original provenance and closure status.'
+- 'O177/O178: coordination and state-grounding diagnostics remain staged; acknowledgment does not select their complete implementation.'
