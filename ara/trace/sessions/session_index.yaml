@@ -127,8 +127,10 @@ sessions:
 
 - id: 2026-09-12_001
   date: '2026-09-12'
-  summary: "Optional hierarchy fusion implemented;194 tests, eight real-image GPU runs. Neither depth nor fusion passes both-seed improvement screen; recurrence remains open."
-  turn_count: 11
-  events_count: 24
+  summary: Direct hierarchy weights and fitted readout tested;197 tests, four GPU
+    evaluations, both perception gates fail. Trained references retained; Claude
+    export blocked and encoder recurrence remains open.
+  turn_count: 12
+  events_count: 27
   claims_touched: []
-  open_threads: 7
+  open_threads: 8

@@ -1,0 +1,223 @@
+{
+  "status": "completed",
+  "scope": "same reused128 internal COCO test images; no fresh-generalization or identity claim",
+  "maximum_metric_error": 2.220446049250313e-16,
+  "metrics_recomputed": 36,
+  "historical_files_unchanged": true,
+  "fitted_changed_tensors": [
+    "heads.rgb.trunk.12.weight",
+    "heads.rgb.trunk.12.bias",
+    "heads.mask.trunk.12.weight",
+    "heads.mask.trunk.12.bias"
+  ],
+  "all_direct_optimizer_updates": 0,
+  "source_commit": "3d19e17",
+  "plan": "docs/hierarchy-weights-plan.md",
+  "full_receipt": "runs/hierarchy_weights_v1/comparison.json",
+  "records": [
+    {
+      "method": "untrained",
+      "seed": 7401,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035
+        },
+        "observed": {
+          "mask_bce": 0.697517088112311,
+          "mask_iou": 0.2579030890973068,
+          "rgb_mse": 0.07982319637780727
+        },
+        "shuffled": {
+          "mask_bce": 0.7079554775810886,
+          "mask_iou": 0.23429659569139658,
+          "rgb_mse": 0.0782837812641009
+        },
+        "zero": {
+          "mask_bce": 0.7279342216748379,
+          "mask_iou": 0.3191418607488084,
+          "rgb_mse": 0.07879250099316175
+        }
+      },
+      "pass_perception": false,
+      "against_trained": [
+        {
+          "iou_gain": 0.00025144533853316275,
+          "pass_screen": false,
+          "rgb_mse_ratio": 7.357851700067014,
+          "seed": 7401
+        },
+        {
+          "iou_gain": 0.019898249218368608,
+          "pass_screen": false,
+          "rgb_mse_ratio": 6.86072921206199,
+          "seed": 7402
+        }
+      ],
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 5096931328,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 98516480,
+        "peak_reserved_bytes": 125829120,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 2.803437050082721
+      },
+      "weights_sha256": "6075f80624a08e04862650e91a1e31a599475ad6ccd04a5b02d3c36736a3ddb6"
+    },
+    {
+      "method": "untrained",
+      "seed": 7402,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035
+        },
+        "observed": {
+          "mask_bce": 0.7163190330535467,
+          "mask_iou": 0.09375881618868208,
+          "rgb_mse": 0.07805554910968408
+        },
+        "shuffled": {
+          "mask_bce": 0.7174345089952323,
+          "mask_iou": 0.08936413779583896,
+          "rgb_mse": 0.07683991510385907
+        },
+        "zero": {
+          "mask_bce": 0.7307054140952577,
+          "mask_iou": 0.31776521457572426,
+          "rgb_mse": 0.08012692519413345
+        }
+      },
+      "pass_perception": false,
+      "against_trained": [
+        {
+          "iou_gain": -0.16389282757009155,
+          "pass_screen": false,
+          "rgb_mse_ratio": 7.194915523027441,
+          "seed": 7401
+        },
+        {
+          "iou_gain": -0.14424602369025613,
+          "pass_screen": false,
+          "rgb_mse_ratio": 6.7088015795022145,
+          "seed": 7402
+        }
+      ],
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 5096931328,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 98516480,
+        "peak_reserved_bytes": 125829120,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 2.8442800970515236
+      },
+      "weights_sha256": "686feafc182e57361e4ec385d39e027e00dde4615e7f980a7aef79d62c24db22"
+    },
+    {
+      "method": "constructed",
+      "seed": 7401,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035
+        },
+        "observed": {
+          "mask_bce": 0.7140761325311874,
+          "mask_iou": 0.204784062565395,
+          "rgb_mse": 0.013852761497730048
+        },
+        "shuffled": {
+          "mask_bce": 0.7346968063874233,
+          "mask_iou": 0.16102184409280368,
+          "rgb_mse": 0.10973443403673215
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.07190796711131035
+        }
+      },
+      "pass_perception": false,
+      "against_trained": [
+        {
+          "iou_gain": -0.05286758119337864,
+          "pass_screen": false,
+          "rgb_mse_ratio": 1.276904075029422,
+          "seed": 7401
+        },
+        {
+          "iou_gain": -0.0332207773135432,
+          "pass_screen": false,
+          "rgb_mse_ratio": 1.1906319188895262,
+          "seed": 7402
+        }
+      ],
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 5096931328,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 98516480,
+        "peak_reserved_bytes": 125829120,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 2.375944470986724
+      },
+      "weights_sha256": "52468a4e01937ba547c79ab41208f11e3c060146ff1ba7b754721fcbea878c98"
+    },
+    {
+      "method": "ridge",
+      "seed": 7401,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035
+        },
+        "observed": {
+          "mask_bce": 0.5874176134524643,
+          "mask_iou": 0.0720542307017702,
+          "rgb_mse": 0.013693281018750857
+        },
+        "shuffled": {
+          "mask_bce": 0.6478042332733798,
+          "mask_iou": 0.03698599253000244,
+          "rgb_mse": 0.14161317789425523
+        },
+        "zero": {
+          "mask_bce": 0.6284206653181812,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.07290069894154481
+        }
+      },
+      "pass_perception": false,
+      "against_trained": [
+        {
+          "iou_gain": -0.18559741305700345,
+          "pass_screen": false,
+          "rgb_mse_ratio": 1.2622036650404431,
+          "seed": 7401
+        },
+        {
+          "iou_gain": -0.165950609177168,
+          "pass_screen": false,
+          "rgb_mse_ratio": 1.1769247205996018,
+          "seed": 7402
+        }
+      ],
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4941742080,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 126716928,
+        "peak_reserved_bytes": 142606336,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 3.66711447306443
+      },
+      "weights_sha256": "5ed605a8bf24313b986534de52b6340b309fcf207b4e4a809437e1d88b3ed1e1"
+    }
+  ]
+}

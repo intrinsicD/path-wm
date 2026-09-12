@@ -2,9 +2,12 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T20:44+02:00
-  turn_count: 11
-  summary: "Implemented optional causal final fusion;194 tests and eight GPU runs. Depth/fusion fail consistent improvement gates; reconstruction improves, mask quality weak; recurrence remains open."
+  last_turn: 2026-09-12T21:06+02:00
+  turn_count: 12
+  summary: Direct hierarchy weights and132-coefficient fit tested;197 tests pass.
+    Color transport works, both perception gates fail; trained references retained.
+    Claude send blocked before launch; temporal memory remains open.
+
 events_logged:
 - turn: 11
   type: observation
@@ -163,6 +166,27 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Retain optional fusion but do not adopt it from inconsistent short-screen gains.
+- turn: 12
+  type: decision
+  id: N262
+  routing: direct
+  provenance: user
+  summary: User requests hand-generated weights and repeated hierarchy evaluation.
+- turn: 12
+  type: experiment
+  id: N263
+  routing: direct
+  provenance: ai-executed
+  summary: Four zero-update GPU evaluations; both constructed candidates fail perception gates,
+    full checks and binary reload pass.
+- turn: 12
+  type: observation
+  id: O171
+  routing: staged
+  provenance: ai-suggested
+  summary: Color transport demonstrates a narrow constructed circuit, not pretrained semantics
+    or adequate foreground quality.
+
 ai_actions:
 - turn: 11
   action: Inspected residual stages, merges, fusion, timing contracts and completed plan; checked
@@ -285,6 +309,20 @@ ai_actions:
   - docs/project-state.md
   - docs/experiments.md
   - docs/models.md
+- turn: 12
+  action: Committed plan/RED checks, implemented explicit weights and final-layer ridge fitting
+    in the existing recipe. Fixed synthetic fixture label alignment;197 CPU tests, GPU preflight,
+    four evaluations,36-metric independent audit, cached GPU resume and visual validation panel
+    checks completed. Attempted Claude send was rejected before execution; no retry or alternate
+    route.
+  provenance: ai-executed
+  files_changed:
+  - experiments/hierarchy_fusion.py
+  - tests/test_hierarchy_fusion.py
+  - docs/hierarchy-weights-plan.md
+  - docs/project-state.md
+  - docs/experiments.md
+
 claims_touched: []
 key_context:
 - turn: 11
@@ -318,6 +356,9 @@ key_context:
 - turn: 10
   excerpt: Test modality-specific input layers, k transformer layers before each
     hierarchy level, then all-scale attention; video/audio might need recurrence.
+- turn: 12
+  excerpt: Did you generate the weights for this as well? If not please do and run the test again.
+
 open_threads:
 - 'S02/S04/T01: record own webcam scenes and verify labels; model-visible inputs, task ranges and acceptance gates remain open.'
 - 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
@@ -327,6 +368,9 @@ open_threads:
 - 'N256: freeze this baseline; useful general-agent recall, color-independent visual identity and learned prediction remain open.'
 - 'O168/N259: optional hierarchy/fusion now tested; stable perception, frozen text readouts and state-mediated diagnostics remain open.'
 - 'N260: define and test bounded cross-window encoder state against reset histories; recurrence remains unimplemented.'
+- 'N263: Claude review brief awaits specific export approval after automatic rejection; no external
+  review completed.'
+
 ai_suggestions_pending:
 - 'O170: structural plausibility and locality/semantics distinction; no established cause of weak
   perception or new redesign adopted.'
@@ -336,3 +380,5 @@ ai_suggestions_pending:
 - 'O167: baseline scope interpretation staged; no researcher endorsement of broader conclusions yet.'
 - 'O168: modality-specific repair and depth/training comparisons proposed; historical evidence is not new validation of the integrated agent.'
 - 'O169: two-seed fusion interpretation staged; no researcher response to new results, no broad architecture rejection.'
+- 'O171: direct image weight experiment interpretation staged; no general pretrained-weight or
+  architecture-failure conclusion.'

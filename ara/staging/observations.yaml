@@ -2991,3 +2991,22 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O171
+  timestamp: 2026-09-12T21:06+02:00
+  provenance: ai-suggested
+  content: Direct numerical assignment can construct an input-sensitive color-transport circuit
+    in this residual image hierarchy, but this candidate and its training-fitted final readout
+    do not establish useful foreground perception or outperform the trained references. Better
+    mask BCE can coexist with worse thresholded IoU. This negative test does not reject the architecture
+    or arbitrary weight generation generally.
+  context: Frozen handwritten coefficients, unchanged modules and previously used evaluation population.
+    Ridge fitting uses512 training images and132 final parameters; it is supervised despite zero
+    optimizer updates. No model adoption or additional test-guided numerical revision.
+  potential_type: claim
+  bound_to:
+  - N263
+  - N262
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

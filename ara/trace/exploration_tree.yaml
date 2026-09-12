@@ -4065,3 +4065,41 @@ tree:
   - N259
   - N260
   status: resolved
+- id: N262
+  type: decision
+  title: Construct numerical weights for the residual hierarchy and repeat its test
+  provenance: user
+  timestamp: 2026-09-12T21:06+02:00
+  choice: User requests direct weight generation for the new hierarchy. Freeze a handwritten color-transport
+    candidate and a separately labeled training-only ridge readout, compare both with untrained
+    and prior trained references; no optimizer updates.
+  alternatives:
+  - Only reuse the previously trained hierarchy checkpoints
+  evidence:
+  - docs/hierarchy-weights-plan.md
+  also_depends_on:
+  - N258
+  - N261
+  - N254
+  status: resolved
+- id: N263
+  type: experiment
+  title: Handwritten hierarchy transports colors but fails foreground perception gates
+  provenance: ai-executed
+  timestamp: 2026-09-12T21:06+02:00
+  result: Four GPU evaluations on the same128 previously used COCO test images. Handwritten RGB
+    MSE0.013853/IoU0.204784;132-coefficient training-fitted readout0.013693/0.072054. Both below
+    full-foreground IoU0.321622 and trail trained references; no test-guided revision. Same1,797,028-parameter
+    architecture,4,843/4,930 nonzero values; zero backward/optimizer calls.197 CPU tests pass;36-metric
+    audit agrees within2.3e-16; strict reload/cached GPU resume and historical file hashes pass.25.91s
+    total,120–136MiB reserved. Validation panel inspected, HTML structural-only. Claude send blocked
+    before launch by automatic approval review; no external response.
+  evidence:
+  - ara/evidence/tables/hierarchy_weights_2026-09-12.json
+  - runs/hierarchy_weights_v1/comparison.json
+  - runs/hierarchy_weights_v1/resume_check.json
+  - runs/reviews/continuation_2026-09-11/constructed-hierarchy-blocked.json
+  also_depends_on:
+  - N262
+  - N259
+  status: resolved

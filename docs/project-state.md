@@ -1,10 +1,15 @@
 # Current work
 
-**Direct hierarchy weights in progress, 12 September:** user requests hand-generated
-numbers for the new residual hierarchy and another test. [Frozen plan](hierarchy-weights-plan.md)
-compares untrained, fully handwritten and separately labeled training-fitted final
-readouts on the existing real-image screen. Preserve trained references; no optimizer
-training. Claude send rejected by automatic approval review; local work continues.
+**Direct hierarchy weights completed, 12 September:** wrote the same1.80M-parameter
+image hierarchy as explicit numbers, plus a separately labeled132-coefficient fitted
+readout. [Plan/results/load commands](hierarchy-weights-plan.md#completed-comparison),
+[report](../runs/hierarchy_weights_v1/report.html). Four GPU evaluations,25.91s,
+zero optimizer updates; handwritten RGB MSE0.013853/IoU0.204784, fitted0.013693/0.072054.
+Both fail perception gates and trail trained references; color transport works,
+foreground perception remains weak.197 tests,36-metric audit, strict binary reload
+and cached GPU resume pass;120–136MiB reserved. Previous checkpoints unchanged.
+HTML QA structural-only. Claude send rejected by automatic approval review; no
+external peer review was performed for this comparison.
 
 **Hierarchy/fusion comparison completed, 12 September:** implemented the requested
 per-scale transformer depth plus optional final all-scale stack.194 CPU tests pass,

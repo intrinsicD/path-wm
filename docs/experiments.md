@@ -24,6 +24,13 @@ The general perception recipe also accepts `--encoder pyramid --stage-depth 2
 accept `fusion_depth`; the multimodal Python constructor exposes `feature_depth`
 and `fusion_depth`. Default fusion remains0, preserving previous model layouts.
 
+The same recipe supports [direct numerical weights](hierarchy-weights-plan.md):
+`--arm deep_fusion --weight-method constructed` writes the handwritten candidate;
+`--weight-method ridge` additionally fits132 final-readout coefficients from training
+pixels. Both use zero optimizer updates and save strict-loadable `weights.pt`, the
+ordinary checkpoint and report. The completed screen did not beat the trained models;
+these are color-transport diagnostics, not pretrained semantic weights.
+
 For the finite single-observation entity/location control, use the same recipe:
 
 ```bash
