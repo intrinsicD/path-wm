@@ -4178,3 +4178,21 @@ tree:
   - experiments/hierarchy_fusion.py
   also_depends_on: [N266]
   status: resolved
+
+- id: N268
+  type: question
+  title: Locate detail loss and distinguish architecture, capacity, training and perceptual fidelity
+  provenance: user
+  timestamp: 2026-09-12T22:11+02:00
+  description: User asks where detail is lost and how advanced models reconstruct high-resolution
+    images; compare architecture, parameter scaling, compute, duration, data and curriculum.
+    Source review locates48-to32 linear patch projection before attention, with only rank3
+    under handwritten weights. Finer scale remains available to decoder. Checkpoint SVD
+    reconfirms ranks3/11/32 for hand/repaired hand/ordinary at seed7501. Published DC-AE,
+    DC-AE1.5, latent diffusion and perception-distortion work separate information capacity,
+    optimization, training objectives and image realism. No new training or architecture change.
+  evidence:
+  - docs/reconstruction-bottleneck-review.md
+  - ara/evidence/tables/reconstruction_bottlenecks_2026-09-12.json
+  also_depends_on: [N266, N267]
+  status: resolved

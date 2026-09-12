@@ -3049,3 +3049,22 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O174
+  timestamp: 2026-09-12T22:11+02:00
+  provenance: ai-suggested
+  content: Address the handwritten representation and trainability before indiscriminate
+    parameter scaling. A smaller spatial grid can preserve data by moving values into
+    channels; current color averaging does not. Latent information capacity differs from
+    transform parameter count. Short384-update pilots cannot establish converged quality.
+    Distinguish faithful pixel recovery from plausible inferred texture, especially for
+    observation memory. Propose tiny-set fit, held-out reconstruction, matched architecture
+    and duration controls, then higher-resolution data/targets.
+  context: Source and existing checkpoints plus primary-paper review. No learned-model
+    experiment, causal attribution fractions, current leaderboard claim or new run budget.
+  potential_type: heuristic
+  bound_to: [N268, N267, N266]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

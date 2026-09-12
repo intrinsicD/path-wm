@@ -1,0 +1,46 @@
+{
+  "provenance": "ai-executed",
+  "scope": "Read-only source/checkpoint inspection and primary literature; no training",
+  "source_sha256": {
+    "pathwm/models/modalities.py": "294c5533f1ae13cc070362af51f5fdf90f91124cf162c31fdebc2de644f147bf",
+    "pathwm/models/multiscale.py": "dce10e858e25808a293aaf3ac5b772bf7c5ba527bd33230d3e081a247a963673",
+    "pathwm/models/decoders.py": "f9a53c22baa538de344c044eb2c8eff9866f584601aaafcf441023ba4f2d2f15",
+    "experiments/hierarchy_fusion.py": "e82e33c8432605b396221ca6b2b34a928fdda14f186b850f6a79d9f492482ae1",
+    "runs/hierarchy_training_v1/decoder_rate_repair/seed_7501/hand_both/run.json": "cb699a324fe010df7c9598ad5140aeda40e9ea00eca1355a7c01554248565667"
+  },
+  "patch_matrix_shape": [
+    32,
+    48
+  ],
+  "rank_relative_tolerance": 1e-08,
+  "ranks_seed7501": {
+    "handwritten": 3,
+    "repaired_hand": 11,
+    "ordinary": 32
+  },
+  "training": {
+    "optimizer_updates": 384,
+    "batch_size": 4,
+    "training_population": 512,
+    "sampled_exposures": 1536
+  },
+  "sources": [
+    {
+      "title": "DC-AE",
+      "url": "https://arxiv.org/html/2410.10733v8"
+    },
+    {
+      "title": "DC-AE 1.5",
+      "url": "https://arxiv.org/html/2508.00413v1"
+    },
+    {
+      "title": "Latent diffusion",
+      "url": "https://arxiv.org/html/2112.10752v2"
+    },
+    {
+      "title": "Perception-distortion",
+      "url": "https://arxiv.org/abs/1711.06077"
+    }
+  ],
+  "review": "docs/reconstruction-bottleneck-review.md"
+}

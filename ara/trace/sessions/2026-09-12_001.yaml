@@ -2,12 +2,13 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T22:01+02:00
-  turn_count: 14
+  last_turn: 2026-09-12T22:11+02:00
+  turn_count: 15
   summary: Exact handwritten initialization trained after decoder-rate repair; joint
     reconstruction improves10% on both seeds but ordinary initialization remains better.
     Encoder ambiguity and decoder sensitivity isolated; one extra control budget-stopped.
-    Clarified64x64 output versus blocky16x16-scale detail; higher-resolution work proposed.
+    Traced detail loss before attention; reviewed capacity, optimization and fidelity with
+    primary autoencoder papers. Higher-resolution work remains proposed.
     Claude retry blocked; temporal memory and fine-detail learning remain open.
 
 events_logged:
@@ -227,6 +228,19 @@ events_logged:
   provenance: ai-suggested
   summary: Improve retained spatial detail; larger output dimensions alone are insufficient.
 
+- turn: 15
+  type: question
+  id: N268
+  routing: direct
+  provenance: user
+  summary: Explain exact information loss and architecture/scaling/training factors using published reconstruction models.
+- turn: 15
+  type: observation
+  id: O174
+  routing: staged
+  provenance: ai-suggested
+  summary: Separate retained information, model parameters, optimization and perceptual appearance before scaling.
+
 ai_actions:
 - turn: 11
   action: Inspected residual stages, merges, fusion, timing contracts and completed plan; checked
@@ -386,6 +400,14 @@ ai_actions:
   provenance: ai-executed
   files_changed: [docs/hierarchy-training-plan.md]
 
+- turn: 15
+  action: Traced stem, multiscale retention and decoder assignments; reconfirmed saved patch
+    projection ranks and384-update/batch4/512-image settings. Read DC-AE, DC-AE1.5, latent
+    diffusion and perception-distortion primary papers; documented source-backed local
+    diagnosis and scoped comparison proposals. No model changes, training or Claude send.
+  provenance: ai-executed
+  files_changed: [docs/reconstruction-bottleneck-review.md]
+
 claims_touched: []
 key_context:
 - turn: 11
@@ -429,6 +451,10 @@ key_context:
 - turn: 14
   excerpt: Do reconstructed images have lower resolution; why so pixelated, and can we create the same or higher resolution?
 
+- turn: 15
+  excerpt: Where exactly is detail lost; is high-resolution reconstruction about architecture,
+    parameter scaling/compute, training duration, dataset, curriculum, or all of these?
+
 open_threads:
 - 'S02/S04/T01: record own webcam scenes and verify labels; model-visible inputs, task ranges and acceptance gates remain open.'
 - 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
@@ -460,3 +486,5 @@ ai_suggestions_pending:
   reused test images; await researcher interpretation of the new results.'
 
 - 'O173: detail-preserving reconstruction before resolution scaling is proposed; no architecture revision adopted.'
+
+- 'O174: tiny-set fit and controlled capacity/duration comparisons are proposed, not adopted experiments.'

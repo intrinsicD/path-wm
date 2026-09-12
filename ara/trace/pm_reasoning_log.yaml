@@ -1369,3 +1369,15 @@ entries:
     No promotion or broad bottleneck claim follows; all hierarchy/retention/temporal topics remain open.
   - Within-block RMS quantifies variation, not accuracy; noise would increase it. No new neural evaluation,
     GPU use, training or report-image smoothing, and no Claude retry without explicit payload permission.
+
+- turn: 2026-09-12_001#15
+  notes:
+  - N268 is a source/literature question; O174 stays staged. The user's follow-up requests
+    explanation, not adoption of a revised stem, loss, curriculum or scaling budget.
+  - O172/O173 are revisited without endorsement of their compound causal/recommendation
+    claims. Later coarser pooling is not a unique bottleneck because the fine scale is retained.
+  - Linear rank48-to32 is a continuous projection restriction, not a dataset error floor,
+    compression-bit estimate or proof that wider latents learn useful semantic structure.
+  - Published autoencoder reconstruction and downstream diffusion training are distinct.
+    Do not attribute USiT GPU counts or iteration budgets to autoencoder pretraining, or
+    claim perceptual sharpness establishes exact recovery. No claims promoted or Claude retry.

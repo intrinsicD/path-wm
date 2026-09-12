@@ -125,3 +125,6 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 
 - [Resolution versus detail](tables/hierarchy_resolution_2026-09-12.json): N267; same64x64 arrays,
   handwritten constant4x4 blocks and retained variation after training; no new model run.
+
+- [Reconstruction bottleneck review](tables/reconstruction_bottlenecks_2026-09-12.json): N268;
+  local projection ranks, short training exposure and primary-paper capacity/fidelity distinctions.
