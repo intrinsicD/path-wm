@@ -29,7 +29,7 @@ RGB/mask training runs have a different objective and are contextual references 
 | hand_open_decoder | Handwritten file + dormant-branch opening below | Encoder and RGB decoder |
 
 Dormant-branch opening is a separately labeled initialization variation: in each
-zeroed SpatialResidual branch, initialize ONLY the first convolution weight with
+zeroed RGB-decoder SpatialResidual branch, initialize ONLY the first convolution weight with
 normal std0.001 (generator seed+200000), retaining its zero second convolution.
 The initial branch output and complete model predictions must stay bit-identical
 to handwritten initialization; the second convolution must then receive gradients.
@@ -86,3 +86,20 @@ The user replied 'Ok' after the saved Claude brief permission question; retrying
 that exact send was again rejected by automatic approval review as ambiguous consent
 to that payload/destination. No external contact or bypass occurred. Local source
 analysis, mathematical checks and tests proceed; Claude remains separately blocked.
+
+## Implementation checks before formal training
+
+Six RED cases confirmed missing setup/probes, then passed: exact binary initialization,
+three freeze scopes with actual optimizer updates, equal-mean feature collision,
+function-preserving branch opening and exact interrupted initialized/frozen training.
+All203 CPU tests pass in175.34s. The decoder's zeroed convolution weights have no
+gradient; its final bias can still learn a constant residual. Opening the first
+convolution preserves the initial function and produces a nonzero second-convolution
+weight gradient. The mask head remains byte-identical and frozen.
+
+GPU preflight uses the actual handwritten file, RGB loss and opening control:
+202MiB peak reserved, finite forward/backward, encoder and RGB decoder gradients
+present, mask gradients absent. The checkerboard pair has exactly equal features at
+every initial scale and patch-projection rank3. No weights or thresholds were changed
+from the plan in response to real evaluation data. Formal runs start after source
+commit; no shared model-library changes were needed.

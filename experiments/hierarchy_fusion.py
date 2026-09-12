@@ -23,7 +23,9 @@ from pathwm.io import (
     seed_everything,
     state_hash,
     trainable_parameters,
+    evaluation_mode,
 )
+from pathwm.models.blocks import SpatialResidual
 from pathwm.models.decoders import DenseHead
 from pathwm.models.encoders import PyramidEncoder
 from pathwm.models.perception import Perception
@@ -73,6 +75,153 @@ def build_model(seed, arm):
     model.load_state_dict(state, strict=True)
     seed_everything(seed)
     return model, state_hash(anchor)
+
+
+def rgb_objective(outputs, batch):
+    return {"rgb_mse": F.mse_loss(outputs["rgb"], batch["rgb"])}
+
+
+def configure_training(
+    model,
+    *,
+    initial_weights=None,
+    train_part="both",
+    loss_mode="joint",
+    open_residual_branches=False,
+    seed=7501,
+):
+    """Strict initialization and explicit freeze rules, before optimizer creation."""
+    if train_part not in ("both", "encoder", "decoder") or loss_mode not in (
+        "joint",
+        "rgb",
+    ):
+        raise ValueError("Unsupported train part or loss mode")
+    source = None
+    if initial_weights is not None:
+        path = Path(initial_weights).resolve()
+        payload = torch.load(path, map_location="cpu", weights_only=True)
+        model.load_state_dict(payload["model"], strict=True)
+        source = dict(
+            path=str(path),
+            sha256=file_hash(path),
+            method=payload.get("method", payload.get("schema")),
+        )
+    if not all(torch.isfinite(p).all() for p in model.parameters()):
+        raise ValueError("Nonfinite initialization")
+    loaded_hash = state_hash(model)
+    model.requires_grad_(True)
+    if train_part == "decoder":
+        model.encoder.requires_grad_(False)
+    if train_part == "encoder":
+        model.heads.requires_grad_(False)
+    if loss_mode == "rgb":
+        model.heads["mask"].requires_grad_(False)
+    opened = []
+    if open_residual_branches:
+        if (
+            source is None
+            or source["method"] != "constructed"
+            or train_part == "encoder"
+        ):
+            raise ValueError(
+                "Opening requires a handwritten file and a trainable decoder"
+            )
+        generator = torch.Generator().manual_seed(seed + 200000)
+        with torch.no_grad():
+            for name, module in model.heads["rgb"].named_modules():
+                if isinstance(module, SpatialResidual):
+                    first, last = module.net[2], module.net[5]
+                    if any(
+                        torch.count_nonzero(p)
+                        for layer in (first, last)
+                        for p in layer.parameters()
+                    ):
+                        raise ValueError("Expected an exactly zero dormant branch")
+                    first.weight.copy_(
+                        0.001
+                        * torch.randn(first.weight.shape, generator=generator).to(
+                            first.weight
+                        )
+                    )
+                    opened.append("heads.rgb." + name)
+        if not opened:
+            raise ValueError("No dormant RGB decoder branch found")
+    modules = dict(
+        encoder=model.encoder, rgb=model.heads["rgb"], mask=model.heads["mask"]
+    )
+    return dict(
+        source=source,
+        loaded_model_sha256=loaded_hash,
+        initial_model_sha256=state_hash(model),
+        opened_branches=opened,
+        module_hashes={k: state_hash(m) for k, m in modules.items()},
+        frozen_module_hashes={
+            k: state_hash(m)
+            for k, m in modules.items()
+            if not any(p.requires_grad for p in m.parameters())
+        },
+    )
+
+
+@torch.no_grad()
+def information_probe(model):
+    """Known equal-mean ambiguity, independent of real train/evaluation images."""
+    patch = model.encoder.encoder.stem.patch
+    coordinates = torch.arange(64, device=patch.weight.device)
+    checker = ((coordinates[:, None] + coordinates[None, :]) % 2).to(patch.weight.dtype)
+    images = patch.weight.new_full((2, 3, 64, 64), 0.5)
+    images[0, 0], images[1, 0] = checker, 1 - checker
+    with evaluation_mode(model):
+        features = model.encoder(images)
+        rgb = model.heads["rgb"](features)
+    singular = torch.linalg.svdvals(patch.weight.flatten(1).detach().double().cpu())
+    threshold = float(singular.max()) * 1e-8
+    return dict(
+        input_pair_mse=float((images[0].double() - images[1].double()).square().mean()),
+        scale_pair_max_difference={
+            k: float((v[0] - v[1]).abs().max()) for k, v in features.items()
+        },
+        rgb_pair_max_difference=float((rgb[0] - rgb[1]).abs().max()),
+        patch_projection_rank=int((singular > threshold).sum()),
+        singular_values=singular.tolist(),
+        rank_relative_tolerance=1e-8,
+        rgb_residual_weight_norms={
+            name: float(p.detach().double().norm())
+            for name, p in model.heads["rgb"].trunk[1].named_parameters()
+            if name in ("net.2.weight", "net.5.weight")
+        },
+    )
+
+
+def gradient_probe(model, batch, loss):
+    """One non-updating training-data backward; clear gradients and restore RNG/mode."""
+    with evaluation_mode(model):
+        model.zero_grad(set_to_none=True)
+        sum(loss(model(batch["rgb"]), batch).values()).backward()
+        modules = dict(
+            encoder=model.encoder, rgb=model.heads["rgb"], mask=model.heads["mask"]
+        )
+        result = {
+            k: dict(
+                trainable_parameters=sum(
+                    p.numel() for p in m.parameters() if p.requires_grad
+                ),
+                gradient_l2=sum(
+                    float(p.grad.double().square().sum())
+                    for p in m.parameters()
+                    if p.grad is not None
+                )
+                ** 0.5,
+            )
+            for k, m in modules.items()
+        }
+        result["rgb_residual_weight_gradients"] = {
+            name: float(p.grad.double().norm()) if p.grad is not None else None
+            for name, p in model.heads["rgb"].trunk[1].named_parameters()
+            if name in ("net.2.weight", "net.5.weight")
+        }
+        model.zero_grad(set_to_none=True)
+    return result
 
 
 @torch.no_grad()
@@ -359,6 +508,9 @@ def score(model, data, output, device):
         other = model.encoder(data.batch(shifted[ids], device)["rgb"])
         values = {
             "target_rgb": batch["rgb"],
+            "patch_mean_rgb": F.interpolate(
+                F.avg_pool2d(batch["rgb"], 4), scale_factor=4, mode="nearest"
+            ),
             "target_mask": batch["mask"],
             "valid": batch["valid"],
         }
@@ -403,6 +555,11 @@ def score(model, data, output, device):
         ),
         empty_mask_iou=iou(np.zeros_like(target)),
         full_mask_iou=iou(valid),
+        patch_mean_rgb_mse=float(
+            np.square(
+                arrays["patch_mean_rgb"].astype(np.float64) - arrays["target_rgb"]
+            ).mean()
+        ),
     )
     if before != state_hash(model):
         raise RuntimeError("Scoring changed model weights or buffers")
@@ -460,6 +617,12 @@ def main():
     parser.add_argument("--resume", type=Path)
     parser.add_argument("--stop-after", type=int)
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--initial-weights", type=Path)
+    parser.add_argument(
+        "--train-part", choices=("both", "encoder", "decoder"), default="both"
+    )
+    parser.add_argument("--loss-mode", choices=("joint", "rgb"), default="joint")
+    parser.add_argument("--open-residual-branches", action="store_true")
     parser.add_argument(
         "--weight-method",
         choices=("trained", "untrained", "constructed", "ridge"),
@@ -470,6 +633,14 @@ def main():
     args = resume_arguments(parser, parser.parse_args())
     if args.stop_after is not None and args.stop_after < 1:
         parser.error("stop-after must be positive")
+    adaptation = (
+        args.initial_weights is not None
+        or args.train_part != "both"
+        or args.loss_mode != "joint"
+        or args.open_residual_branches
+    )
+    if adaptation and args.weight_method != "trained":
+        parser.error("Initialization/freeze settings are for optimizer training")
     seed_everything(args.seed)
     gpu = torch.device(args.device).type == "cuda"
     limit = None
@@ -485,10 +656,28 @@ def main():
         torch.cuda.reset_peak_memory_stats(args.device)
     data = data_splits(args.data_root, args.masks)
     model, anchor_hash = build_model(args.seed, args.arm)
+    setup = (
+        configure_training(
+            model,
+            initial_weights=args.initial_weights,
+            train_part=args.train_part,
+            loss_mode=args.loss_mode,
+            open_residual_branches=args.open_residual_branches,
+            seed=args.seed,
+        )
+        if adaptation
+        else None
+    )
+    loss = rgb_objective if args.loss_mode == "rgb" else objective
     model.to(args.device)
     if args.check:
         if args.weight_method == "trained":
-            result = check(model, data["train"], objective, args.device, batch_size=4)
+            result = check(model, data["train"], loss, args.device, batch_size=4)
+            if adaptation:
+                result["information"] = information_probe(model)
+                result["gradients"] = gradient_probe(
+                    model, data["train"].batch(np.arange(4), args.device), loss
+                )
         else:
             if args.weight_method in ("constructed", "ridge"):
                 construct_weights(model)
@@ -524,17 +713,43 @@ def main():
         initial_anchor_sha256=anchor_hash,
         test_identity=data["test"].identity,
     )
+    if adaptation:
+        settings.update(
+            initial_weights=str(args.initial_weights) if args.initial_weights else None,
+            train_part=args.train_part,
+            loss_mode=args.loss_mode,
+            open_residual_branches=args.open_residual_branches,
+            training_setup=setup,
+            purpose="handwritten initialization and reconstruction diagnosis",
+        )
     started = time.monotonic()
     output = (
         args.resume
         or args.output
         or (
-            Path(f"runs/hierarchy_fusion_v1/seed_{args.seed}/{args.arm}")
+            (
+                Path(
+                    f"runs/hierarchy_training_v1/seed_{args.seed}/{'hand' if args.initial_weights else 'ordinary'}_{args.train_part}{'_open' if args.open_residual_branches else ''}"
+                )
+                if adaptation
+                else Path(f"runs/hierarchy_fusion_v1/seed_{args.seed}/{args.arm}")
+            )
             if args.weight_method == "trained"
             else Path(f"runs/hierarchy_weights_v1/{args.weight_method}_{args.seed}")
         )
     )
     if args.weight_method == "trained":
+        before = None
+        if adaptation:
+            if args.resume and (output / "adaptation.json").exists():
+                before = json.loads((output / "adaptation.json").read_text())["before"]
+            else:
+                before = dict(
+                    information=information_probe(model),
+                    gradients=gradient_probe(
+                        model, data["train"].batch(np.arange(4), args.device), loss
+                    ),
+                )
         optimizer = torch.optim.AdamW(
             trainable_parameters(model), lr=0.0003, weight_decay=0.0001
         )
@@ -542,7 +757,7 @@ def main():
             model,
             data["train"],
             data["validation"],
-            objective,
+            loss,
             optimizer,
             settings=settings,
             recipe=__file__,
@@ -551,6 +766,34 @@ def main():
             resume=args.resume is not None,
             stop_after=args.stop_after,
         )
+        if adaptation:
+            modules = dict(
+                encoder=model.encoder, rgb=model.heads["rgb"], mask=model.heads["mask"]
+            )
+            hashes = {k: state_hash(m) for k, m in modules.items()}
+            if any(hashes[k] != v for k, v in setup["frozen_module_hashes"].items()):
+                atomic_json(
+                    output / "status.json",
+                    dict(
+                        result="failed",
+                        report="pending",
+                        error="Frozen component changed",
+                    ),
+                )
+                raise RuntimeError("Frozen component changed")
+            atomic_json(
+                output / "adaptation.json",
+                dict(
+                    initialization=setup,
+                    before=before,
+                    after=information_probe(model),
+                    final_module_hashes=hashes,
+                    changed_modules={
+                        k: v != setup["module_hashes"][k] for k, v in hashes.items()
+                    },
+                    frozen_modules_verified=True,
+                ),
+            )
     else:
         if args.stop_after is not None:
             parser.error("Direct weights do not have optimizer steps")
@@ -570,6 +813,24 @@ def main():
         )
     status = json.loads((output / "status.json").read_text())
     if status["result"] == "completed" and args.weight_method == "trained":
+        if adaptation:
+            torch.save(
+                dict(
+                    schema="pathwm-hierarchy-weights-v1",
+                    method="trained_from_handwritten"
+                    if args.initial_weights
+                    else "trained_ordinary",
+                    loss_mode=args.loss_mode,
+                    train_part=args.train_part,
+                    initialization=setup,
+                    optimizer_updates=status["step"],
+                    model={
+                        k: v.detach().cpu().clone()
+                        for k, v in model.state_dict().items()
+                    },
+                ),
+                output / "weights.pt",
+            )
         result = score(model, data["test"], output, args.device)
         try:
             append_test_table(output, result)
