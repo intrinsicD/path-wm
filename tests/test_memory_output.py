@@ -5,7 +5,7 @@ import pytest
 import torch
 
 
-def model_fixture():
+def model_fixture(normalize=False):
     from experiments.memory_output import build_model
     from pathwm.models.encoders import PyramidEncoder, PatchDetailEncoder
     from pathwm.models.decoders import DenseHead, PatchDetailHead
@@ -20,7 +20,7 @@ def model_fixture():
         retain_statistics=True,
     )
     codec = Perception(PatchDetailEncoder(encoder), {"rgb": PatchDetailHead(head)})
-    return build_model(codec.requires_grad_(False), width=16)
+    return build_model(codec.requires_grad_(False), width=16, normalize_input=normalize)
 
 
 def test_pairs_require_history_and_target_combinations_are_disjoint():
@@ -102,7 +102,8 @@ def test_supervised_writes_and_frozen_decoder_have_intended_gradients():
     assert all(p.grad is None for p in model.direct.parameters())
 
 
-def test_training_resume_and_standalone_reload(tmp_path):
+@pytest.mark.parametrize("normalize", [False, True])
+def test_training_resume_and_standalone_reload(tmp_path, normalize):
     from pathwm.data.memory_output import MemoryOutputEpisodes
     from experiments.memory_output import train, default_settings, load_model
     from tests.test_runs import equal_tree
@@ -113,15 +114,21 @@ def test_training_resume_and_standalone_reload(tmp_path):
 
     def run(path, resume=False, stop_after=None):
         torch.manual_seed(21)
-        model = model_fixture()
+        model = model_fixture(normalize)
         settings = default_settings(21)
         settings.update(
-            steps=4, batch_size=2, width=16, levels=2, depth=1, fusion_depth=0
+            steps=4, batch_size=2, width=16, levels=2, depth=1, fusion_depth=0,
+            normalize_input=normalize,
         )
         with torch.no_grad():
             model.agent.decoders["image"].calibrate(
                 model.teacher(train_data.batch(range(8))["target"])
             )
+        if normalize:
+            from pathwm.models.modalities import Observation
+            images = train_data.batch(range(8))["images"]
+            model.agent.encoders["image"].calibrate([
+                Observation(images[:, t:t+1], torch.full((8, 1), float(t))) for t in range(3)])
         result = train(
             model,
             train_data,
@@ -150,3 +157,40 @@ def test_training_resume_and_standalone_reload(tmp_path):
     html = (tmp_path / "full" / "report.html").read_text()
     assert "Recorded result" in html and "factual accuracy" in html
     assert "Labeled observation, target and output comparison" in html
+
+
+def test_input_calibration_preserves_noop_metadata_and_frozen_model():
+    from pathwm.data.memory_output import MemoryOutputEpisodes
+    from pathwm.models.modalities import Observation
+    from pathwm.io import state_hash
+
+    torch.manual_seed(91)
+    plain = model_fixture()
+    torch.manual_seed(91)
+    normalized = model_fixture(True)
+    p = {k:v for k,v in plain.named_parameters() if v.requires_grad}
+    q = {k:v for k,v in normalized.named_parameters() if v.requires_grad}
+    assert p.keys() == q.keys()
+    assert all(torch.equal(p[k], q[k]) for k in p)
+    images = MemoryOutputEpisodes(4, seed=17).batch(range(8))["images"]
+    obs = Observation(images[:, :1], torch.zeros(8, 1))
+    encoder = normalized.agent.encoders["image"]
+    raw = plain.agent.encoders["image"](obs)
+    noop = encoder(obs)
+    for a,b in zip(raw.scales, noop.scales):
+        for key in ("values", "valid", "times", "content_times", "ends"):
+            torch.testing.assert_close(getattr(a,key), getattr(b,key), atol=0, rtol=0)
+        assert a.grid == b.grid
+    torch.testing.assert_close(plain(images)["image"], normalized(images)["image"], atol=0, rtol=0)
+    before = state_hash(normalized.teacher)
+    encoder.calibrate([obs])
+    fixed = state_hash(encoder)
+    out = encoder(obs)
+    for a,b in zip(raw.scales,out.scales):
+        torch.testing.assert_close(b.values.mean((0,1)), torch.zeros(16), atol=2e-5, rtol=0)
+        assert torch.equal(a.times,b.times) and torch.equal(a.valid,b.valid)
+    assert state_hash(encoder) == fixed and state_hash(normalized.teacher) == before
+    with pytest.raises(ValueError):
+        encoder.calibrate([])
+    with pytest.raises(ValueError):
+        encoder.calibrate([Observation(torch.full_like(obs.values, float('nan')), obs.times)])

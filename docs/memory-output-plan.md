@@ -108,3 +108,40 @@ data17701/17702/17703) complete. Training-loop time2.925s, peak402MiB reserved.
 This is workflow evidence, not a capability pass or model selection. Development
 episodes inspected visually. Reports embed raw-result summaries and labeled
 history/target/ordinary/reset/erased/swapped panels; structural HTML QA only.
+
+## First comparison and bounded normalization repair
+
+Both reference seeds completed1536 updates (273.897s/257.496s). Neither passes.
+Seed7801 ordinary/reset factual accuracy25%, image0%, complete pairs0%; seed7802
+results retained unchanged in its run. Teacher-feature decoding classifies every
+held-out object correctly. Validation factual readouts remain weak as well, so
+this is not merely a held-out distribution problem. Initial independent audit
+reproduces60 saved metrics to4.98e-9 and CPU reload to6.56e-6; actual GPU resume
+ledger prefix matches. Reports/predictions show averaged objects rather than
+selection-dependent output. No learned memory capability is claimed.
+
+Development-only feature inspection (seed17704) finds per-level RMS1049.8/1070.9/
+1092.8. Paired selection contrast after token LayerNorm is0.01794/0.01136/0.00965;
+fixed per-channel standardization before LayerNorm gives0.669/0.966/0.765. This
+numeric contrast motivates a test; it is not proof of better learning or the sole
+cause of failure. Preserve raw encoder and decoder weights. Fit per-level channel
+mean/std from TRAIN OBSERVATIONS only, floor std at0.01; freeze and save buffers.
+Preserve all feature validity/time/content-time/grid metadata. Encoder normalization
+does not alter the teacher or decoder's expected raw feature representation.
+
+Predeclare ONE added repair run, seed7801, same1536 updates, data, losses, batch,
+optimizer, initialization of trainable tensors and300s training-loop cap. This is
+an additional bounded stage after the original two-run budget; no sweep or best-
+checkpoint selection. Gates unchanged. The previously tested combination split
+is reused for the explicit preprocessing comparison, not a newly untouched test.
+This single seed cannot establish robust general benefit. No further repair run
+is part of this slice if it fails. Source committed before the repair run.
+
+Essential new checks: the no-op normalization wrapper yields identical metadata,
+outputs and trainable initialization; calibration ignores invalid entries, rejects
+empty/nonfinite observations and never updates during inference; teacher unchanged;
+normalized full/checkpoint-resume/standalone routes agree. An independent direct
+reader uses the same changed input preprocessing. No new trainable parameters.
+Claude recommends an identity-transform control; exact no-op equivalence is checked
+in software. Effects on optimization are a possible mechanism, not evidence that
+the task was independently solved. Statistics are never fit on validation/test.
