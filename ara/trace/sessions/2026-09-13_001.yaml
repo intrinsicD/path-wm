@@ -2,9 +2,9 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T00:08+02:00
-  turn_count: 1
-  summary: Reconciled scoped image progress with broad agent failures; propose held-out memory-grounded output as next learning slice.
+  last_turn: 2026-09-13T01:11+02:00
+  turn_count: 2
+  summary: Built paired memory-output test; normalization enables familiar recall but held-out location binding fails through a training-combination shortcut.
 
 events_logged:
 - turn: 1
@@ -20,6 +20,43 @@ events_logged:
   provenance: ai-suggested
   summary: Test paired histories through memory and state before broader generation training.
 
+- turn: 2
+  type: decision
+  id: N276
+  routing: direct
+  provenance: user
+  summary: Approve memory-grounded factual/image implementation and testing.
+- turn: 2
+  type: heuristic
+  id: H49
+  routing: crystallized
+  provenance: user-revised
+  summary: O179 closes through explicit approval; memory-grounding-first order adopted.
+- turn: 2
+  type: experiment
+  id: N277
+  routing: direct
+  provenance: ai-executed
+  summary: Two reference seeds fail held-out memory/output gates.
+- turn: 2
+  type: experiment
+  id: N278
+  routing: direct
+  provenance: ai-executed
+  summary: One normalization repair learns familiar combinations; held-out color/shape correct, location wrong throughout.
+- turn: 2
+  type: observation
+  id: O180
+  routing: staged
+  provenance: ai-suggested
+  summary: Per-property failures suggest deterministic training correlations, not complete loss of entity information.
+- turn: 2
+  type: observation
+  id: O181
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose independently varied appearance/location and counterfactual relocation curriculum.
+
 ai_actions:
 - turn: 1
   action: Reconciled existing plans and saved evidence; recorded recommendation without model changes or new evaluation.
@@ -28,13 +65,26 @@ ai_actions:
     ara/trace/sessions/2026-09-13_001.yaml, ara/trace/sessions/session_index.yaml,
     ara/trace/pm_reasoning_log.yaml]
 
+- turn: 2
+  action: Implemented paired data/state-memory output recipe, normalization and reports;
+    reconciled four public-only Claude exchanges; ran30 targeted tests, three formal
+    GPU runs, replay and independent audits; preserved failed gates and CPU/GPU tolerance.
+  provenance: ai-executed
+  files_changed: [experiments/memory_output.py, pathwm/data/memory_output.py,
+    pathwm/models/memory_output.py, pathwm/evaluation/report.py,
+    tests/test_memory_output.py, docs/memory-output-plan.md, docs/project-state.md,
+    ara/evidence/tables/memory_output_2026-09-13.json]
+
 claims_touched: []
 key_context:
 - turn: 1
   excerpt: 'yes. now how do we continue? where are we at?'
+- turn: 2
+  excerpt: ok yes
 
 open_threads:
-- 'N275/O179: specify held-out history-conditioned state/output task, seeds, gates and budget; ordering remains proposed.'
+- 'N278/O181: define counterfactual relocation curriculum and split without deterministic appearance/location shortcut; preserve failed parity benchmark.'
+- 'N278: normalized CPU/GPU pixel differences exceed1e-4 despite exact GPU replay and identical categorical labels; portability tolerance remains open.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and other-modality quality remain open.'
 - 'N273/A06/O177/O178: adopted output boundary needs concrete conditioning, uncertainty/time inputs, backends and cross-modal consistency tests.'
@@ -45,6 +95,7 @@ open_threads:
 - 'N263/N266/O172: earlier private Claude brief remains blocked; last same-rate ordinary reconstruction control budget-stopped. New public-only review is separate.'
 
 ai_suggestions_pending:
-- 'O179: grounded-memory test before broader output training; no exact experiment adopted this turn.'
+- 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
+- 'O181: counterfactual relocation training proposed, not executed.'
 - 'O164-O175: earlier curriculum, diagnosis and scoped capability interpretations retain their original provenance and closure status.'
 - 'O177/O178: coordination and state-grounding diagnostics remain staged; acknowledgment does not select their complete implementation.'

@@ -4309,3 +4309,59 @@ tree:
     runs/image_output_v1/verification.json]
   also_depends_on: [N256, N271, N273, N274]
   status: resolved
+
+- id: N276
+  type: decision
+  title: Build and test the memory-grounded output slice
+  provenance: user
+  timestamp: 2026-09-13T01:11+02:00
+  choice: User says ok yes to the proposed paired-history factual/image experiment
+    before broader output learning. Implement the concrete local protocol, review,
+    test and compare while preserving previous baselines.
+  alternatives: [Expand general generation before establishing recalled-state grounding]
+  evidence: [O179, docs/memory-output-plan.md]
+  also_depends_on: [N275]
+  status: resolved
+
+- id: N277
+  type: experiment
+  title: Paired memory-output reference fails across two seeds
+  provenance: ai-executed
+  timestamp: 2026-09-13T01:11+02:00
+  result: Source ab22ff5; seeds7801/7802 each1536 updates,273.897s/257.496s.
+    Frozen trained handwritten visual encoder and RGB head; new Gaussian-agent
+    state/thinker/producer. Held-out reset factual accuracy25%/12.5%, image0%,
+    complete pairs0%; all gates fail. Teacher decoding100%. Four essential new
+    tests plus24 regressions pass. Exact CPU replay, GPU512+1024 resume and source/
+    frozen artifacts verified. Public-only Claude review reconciled; no private export.
+  evidence: [ara/evidence/tables/memory_output_2026-09-13.json,
+    runs/memory_output_v1/seed_7801/result.json,
+    runs/memory_output_v1/seed_7802/result.json, docs/memory-output-plan.md]
+  also_depends_on: [N276]
+  status: resolved
+
+- id: N278
+  type: experiment
+  title: Fixed input normalization enables familiar recall but exposes a location shortcut
+  provenance: ai-executed
+  timestamp: 2026-09-13T01:11+02:00
+  result: Development numeric contrast motivates one predeclared added300s repair.
+    Source dd26b05, matched seed7801,1536 updates in279.418s; same frozen encoder/head,
+    no extra trainable parameters. Familiar validation64/64 factual/image outputs,
+    reset-erased8/64, swapped-bank alternate64/64. Held-out reset color/shape128/128,
+    side0/128, factual/image joint0%; all128 factual triples were seen in training.
+    Direct readout color/side128/128 but shape3/128.30 targeted checks, no-op output/
+    gradient equality and normalized CPU resume pass.180 raw metrics verify within
+    5.10e-9. GPU reload exactly reproduces128 outputs; normalized CPU/GPU max pixel
+    difference0.003259 fails1e-4 threshold, while all categorical labels agree.
+    Three formal loops total810.811s, peak402MiB. Reports structural-only and panels
+    inspected. Four public-only Claude exchanges total across both stages. No further
+    training; failed gates and the numerical limitation remain explicit.
+  evidence: [ara/evidence/tables/memory_output_2026-09-13.json,
+    runs/memory_output_v1/normalized_7801/result.json,
+    runs/memory_output_v1/normalized_7801/validation_result.json,
+    runs/memory_output_v1/verification.json, runs/memory_output_v1/combination_diagnostic.json,
+    runs/memory_output_v1/development/feature_scale_diagnostic.json,
+    runs/memory_output_v1/report.html, docs/memory-output-plan.md]
+  also_depends_on: [N277]
+  status: resolved

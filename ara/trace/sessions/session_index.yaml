@@ -139,8 +139,8 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: Status reconciled with saved evidence; propose held-out memory-grounded output before broader generator training. No model changes or new run.
-  turn_count: 1
-  events_count: 2
+  summary: Paired memory-output task implemented and tested. Normalization enables familiar recall but held-out location binding fails;30 tests and three bounded runs, explicit numerical portability limit.
+  turn_count: 2
+  events_count: 8
   claims_touched: []
-  open_threads: 9
+  open_threads: 10

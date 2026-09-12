@@ -3165,6 +3165,46 @@ observations:
     thresholds and budget remain to be specified; no new experiment performed.
   potential_type: heuristic
   bound_to: [N275, N256, N271, N274]
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H49
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O180
+  timestamp: 2026-09-13T01:11+02:00
+  provenance: ai-suggested
+  content: Fixed training-observation channel normalization makes the selected-object
+    task learnable on familiar combinations in one matched seed, while the disjoint
+    parity-combination screen still fails. Reset recall recovers color and shape on
+    all128 test cases but predicts the wrong side on all128; every output triple is
+    a training triple. Direct reading instead usually gets shape wrong with correct
+    color/side. These errors strongly suggest correlation shortcuts allowed by the
+    training split; joint accuracy alone cannot establish loss of entity information.
+    The intervention does not separate representational from optimization mechanisms.
+  context: Three bounded1536-update runs and independent saved-output audits completed.
+    User has not yet interpreted results. Familiar validation64/64 drops to8/64 after
+    erasing the reset bank; swapped banks correctly select alternate targets64/64.
+    All held-out joint gates fail. No general natural-image or learned-search claim.
+  potential_type: claim
+  bound_to: [N277, N278]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+
+- id: O181
+  timestamp: 2026-09-13T01:11+02:00
+  provenance: ai-suggested
+  content: Next vary location independently of appearance using paired counterfactual
+    relocation histories, and audit the proposed training/test split for deterministic
+    factor correlations before another generalization claim. Preserve the failed
+    parity benchmark; any easier or differently held-out population must be separately
+    named and specified. Diagnose per-property accuracy as well as joint answers.
+  context: Proposed next curriculum, not another training run or retrospective gate
+    change. The current fixed-statistics repair remains opt-in and has a disclosed
+    CPU/GPU pixel-tolerance failure despite identical categorical answers.
+  potential_type: heuristic
+  bound_to: [N278]
   promoted: false
   promoted_to: null
   crystallized_via: null

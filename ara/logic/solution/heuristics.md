@@ -473,3 +473,13 @@
 - **Sensitivity**: One additional seed and fixed correction timing do not estimate broad robustness. Utility must remain visible when success passes.
 - **Code ref**: [evaluation](../../../pathwm/evaluation/key_box.py), [recipe](../../../experiments/multimodal.py).
 - **Evidence**: [replication](../../evidence/tables/key_box_replica_2026-09-11.json); N241.
+
+## H49: Test remembered-state grounding before expanding generation quality
+
+- **Rationale**: Use paired histories with identical final observations/requests and different answers, compare encoder, state and recalled readouts, and score factual correctness separately from visual fidelity. Establish the observation-memory-output path before broader generation and the previously ordered prediction/planning stages.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O179
+- **Sensitivity**: High. A fixed synthetic task and a restrictive combination split can reward shortcuts; implemented screening is not evidence that its learned-capability gate passed.
+- **Code ref**: [recipe](../../../experiments/memory_output.py), [state/memory wrapper](../../../pathwm/models/memory_output.py), [paired data](../../../pathwm/data/memory_output.py).
+- **Evidence**: N276; [three-run record](../../evidence/tables/memory_output_2026-09-13.json).
