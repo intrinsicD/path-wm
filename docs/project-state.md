@@ -1,5 +1,11 @@
 # Current work
 
+**Direct hierarchy weights in progress, 12 September:** user requests hand-generated
+numbers for the new residual hierarchy and another test. [Frozen plan](hierarchy-weights-plan.md)
+compares untrained, fully handwritten and separately labeled training-fitted final
+readouts on the existing real-image screen. Preserve trained references; no optimizer
+training. Claude send rejected by automatic approval review; local work continues.
+
 **Hierarchy/fusion comparison completed, 12 September:** implemented the requested
 per-scale transformer depth plus optional final all-scale stack.194 CPU tests pass,
 including causal video/audio/text, invalid gradients and exact resume; disabled

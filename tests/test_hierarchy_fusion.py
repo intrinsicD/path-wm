@@ -11,6 +11,65 @@ from pathwm.io import state_hash
 from pathwm.training.perception import train_perception
 
 
+def test_constructed_hierarchy_is_deterministic_active_and_reloadable(tmp_path):
+    from experiments.hierarchy_fusion import construct_weights
+
+    first, _ = build_model(7498, "deep_fusion")
+    second, _ = build_model(7499, "deep_fusion")
+    construct_weights(first)
+    construct_weights(second)
+    assert state_hash(first) == state_hash(second)
+    images = torch.zeros(3, 3, 64, 64)
+    for c in range(3):
+        images[c, c] = 1
+    with torch.no_grad():
+        output = first(images)
+        features = first.encoder(images)
+    assert all(torch.isfinite(v).all() for v in output.values())
+    colors = output["rgb"].mean((2, 3))
+    assert torch.equal(colors.argmax(1), torch.arange(3))
+    assert (colors.max(1).values - colors.min(1).values > 0.5).all()
+    for block in first.encoder.encoder.pyramid.modules():
+        if hasattr(block, "attention") and hasattr(block.attention, "out_proj"):
+            assert block.attention.out_proj.weight.abs().sum() > 0
+    # Fusion really contributes; this is not an identity-only circuit.
+    for block in first.encoder.encoder.pyramid.fusion:
+        torch.nn.init.zeros_(block.attention.out_proj.weight)
+        torch.nn.init.zeros_(block.mlp[-1].weight)
+    with torch.no_grad():
+        changed = first.encoder(images)
+    assert any(not torch.equal(features[k], changed[k]) for k in features)
+    torch.save(second.state_dict(), tmp_path / "weights.pt")
+    first.load_state_dict(torch.load(tmp_path / "weights.pt", weights_only=True), strict=True)
+    with torch.no_grad():
+        assert torch.equal(first(images)["rgb"], output["rgb"])
+
+
+def test_constructed_readout_fit_only_changes_final_layers_without_optimization(monkeypatch):
+    from experiments.hierarchy_fusion import construct_weights, fit_readouts
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Direct construction must not optimize or backpropagate")
+
+    monkeypatch.setattr(torch.Tensor, "backward", forbidden)
+    monkeypatch.setattr(torch.optim.SGD, "step", forbidden)
+    monkeypatch.setattr(torch.optim.AdamW, "step", forbidden)
+    frames = np.random.default_rng(8881).integers(0, 256, (4, 64, 64, 3), dtype=np.uint8)
+    data = Frames(frames, range(4), labels={
+        "mask": (frames[:, :, :, 0] > 128)[:, None].astype("float32"),
+        "valid": np.ones((4, 1, 64, 64), dtype="float32"),
+    })
+    model, _ = build_model(7498, "deep_fusion")
+    construct_weights(model)
+    before = {k: v.clone() for k, v in model.state_dict().items()}
+    receipt = fit_readouts(model, data, "cpu")
+    changed = {k for k, v in model.state_dict().items() if not torch.equal(v, before[k])}
+    assert changed == {f"heads.{name}.trunk.12.{kind}" for name in ("rgb", "mask") for kind in ("weight", "bias")}
+    assert receipt["fitted_parameters"] == 132
+    assert receipt["training_rows"] == data.rows.tolist()
+    assert all(p.grad is None for p in model.parameters())
+
+
 def test_comparison_copies_all_shared_weights_and_recipe_uses_every_scale():
     shallow, anchor_hash = build_model(7498, "shallow")
     fused, other_hash = build_model(7498, "deep_fusion")
