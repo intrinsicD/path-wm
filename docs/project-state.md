@@ -2,8 +2,9 @@
 
 **S03/R06 preference recorded, 12 September:** comfortable fit on the user's GPU
 is required; prefer own components, with pretrained model plus adapter if quality
-is inadequate. Local hardware query reports RTX3050/8192MiB. Training-versus-inference
-scope and numerical headroom/quality gates remain open. [Recorded answers](agent-specification-questions.md#recorded-answers).
+is inadequate. Local hardware query reports RTX3050/8192MiB. User confirmed both
+training and inference must fit now; scaling comes later. Numerical headroom and
+quality gates remain open. [Recorded answers](agent-specification-questions.md#recorded-answers).
 
 **S02 long-term scope recorded, 12 September:** eventual webcam vision, speech and
 writing, image/video creation and software-tool use. [Questionnaire answer](agent-specification-questions.md#recorded-answers)

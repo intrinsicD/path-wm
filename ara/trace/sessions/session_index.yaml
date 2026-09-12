@@ -127,8 +127,8 @@ sessions:
 
 - id: 2026-09-12_001
   date: '2026-09-12'
-  summary: "User requires comfortable local GPU fit; prefers own components with pretrained-plus-adapter fallback; training/inference scope open."
-  turn_count: 2
-  events_count: 2
+  summary: "User confirms both training and inference must fit current local GPU comfortably; scaling deferred, numerical budgets still open."
+  turn_count: 3
+  events_count: 3
   claims_touched: []
   open_threads: 3

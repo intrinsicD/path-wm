@@ -56,11 +56,15 @@ capability succeed from scratch. A read-only hardware query reports an NVIDIA
 GeForce RTX 3050 with8192MiB VRAM on this machine. Current free memory is transient
 and does not define the permitted budget.
 
-Still to resolve: whether the fit requirement covers training as well as inference;
-numerical VRAM headroom, latency and quality criteria; which components may use
+**R06 clarification (user, 12 September 2026): both training and inference must
+fit comfortably on the current GPU. Scaling is for later; the initial design must
+not depend on a hardware upgrade.** No scaling target or schedule was selected.
+
+Still to resolve: numerical VRAM headroom, latency and quality criteria; which components may use
 pretrained fallbacks; and whether modules may be loaded sequentially or offloaded.
-The resource accounting must include the relevant weights, activations, workspace,
-retrieved memory, adapters and simultaneous modules. This answer does not select a
+The resource accounting must include the relevant weights, gradients, optimizer
+states, activations, workspace, retrieved memory, adapters and simultaneous modules;
+training and inference need their own measured peak budgets. This answer does not select a
 particular pretrained model or launch training. Follow-ups: R06, L04 and T01/T06.
 
 ## S — Scope and the claim we want to test

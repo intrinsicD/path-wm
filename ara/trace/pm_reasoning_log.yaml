@@ -1231,3 +1231,10 @@ entries:
     budget.
   - No model-size, generation-quality or training-fit claim made; budget scope needs
     clarification.
+
+- turn: 2026-09-12_001#3
+  notes:
+  - N247 resolves the operating-scope question from N246; earlier trace is historical
+    and remains intact.
+  - Do not interpret later scaling as a commitment to a hardware purchase, larger
+    experiment or exact VRAM cap.

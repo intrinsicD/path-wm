@@ -2,9 +2,9 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T10:36+02:00
-  turn_count: 2
-  summary: "User requires comfortable local GPU fit; prefers own components with pretrained-plus-adapter fallback; training/inference scope open."
+  last_turn: 2026-09-12T12:29+02:00
+  turn_count: 3
+  summary: "User confirms both training and inference must fit current local GPU comfortably; scaling deferred, numerical budgets still open."
 events_logged:
 - turn: 1
   type: decision
@@ -20,6 +20,13 @@ events_logged:
   provenance: user
   summary: User requires comfortable local GPU fit; prefers own components with pretrained-plus-adapter
     fallback; training/inference scope open.
+- turn: 3
+  type: decision
+  id: N247
+  routing: direct
+  provenance: user
+  summary: User confirms both training and inference must fit current local GPU comfortably;
+    scaling deferred, numerical budgets still open.
 ai_actions:
 - turn: 1
   action: Recorded partial S02 answer and updated current state; no model changes
@@ -36,6 +43,13 @@ ai_actions:
   files_changed:
   - docs/agent-specification-questions.md
   - docs/project-state.md
+- turn: 3
+  action: Recorded both-training-and-inference scope; documented separate measured
+    peak budgets including optimizer/gradients; no numerical cap chosen or model changed.
+  provenance: ai-executed
+  files_changed:
+  - docs/agent-specification-questions.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -44,9 +58,11 @@ key_context:
 - turn: 2
   excerpt: It must fit on my own gpu comfortably; prefer my own, with pretrained model
     and adapter if it does not work well.
+- turn: 3
+  excerpt: "Both. I\u2019ll scale later."
 open_threads:
 - 'S01/S02: choose first experiment and initial interface.'
-- 'S03/R06: own components preferred, pretrained adapters allowed; resolve training/inference budget and fallback gates.'
+- 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
 - 'O162/O163: task/cost/evidence contract and learned-dynamics integration remain
   proposed.'
 ai_suggestions_pending: []

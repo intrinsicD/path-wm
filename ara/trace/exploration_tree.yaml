@@ -3803,3 +3803,19 @@ tree:
   also_depends_on:
   - N245
   status: resolved
+
+- id: N247
+  type: decision
+  title: Current GPU must support training and inference
+  provenance: user
+  timestamp: 2026-09-12T12:29+02:00
+  choice: Both training and inference must fit comfortably on current own GPU; scale
+    later. Clarifies N246 scope without selecting numerical memory/time budgets or
+    a future hardware target.
+  alternatives:
+  - Require only inference to fit current GPU
+  evidence:
+  - docs/agent-specification-questions.md#recorded-answers
+  also_depends_on:
+  - N246
+  status: resolved
