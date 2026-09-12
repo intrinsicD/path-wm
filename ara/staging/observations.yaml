@@ -2930,3 +2930,24 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O168
+  timestamp: 2026-09-12T17:27+02:00
+  provenance: ai-suggested
+  content: Preserve useful trained vision components and isolate direct feature
+    readout from state-mediated readout before replacement. Compare modest depth
+    against extra shallow training and width with explicit compute/exposure.
+    Freeze and probe the successful text donor; trainable transfer already failed
+    identity. Real speech needs meaningful context and temporal output, not only
+    deeper toy encoders. Reconstruction, recognition and persistence require
+    separate task controls; pretrained adapters remain a scoped fallback.
+  context: Retrospective pair review with public-source architecture precedents and
+    reconciled Claude critique. Existing per-scale processing, short pilot updates,
+    historical decoder recovery/retention tradeoff and depth results are evidence;
+    no new experiment identifies current failure causes or establishes GPU fit.
+  potential_type: heuristic
+  bound_to: [N257, N256]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

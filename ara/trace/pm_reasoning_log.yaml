@@ -1289,3 +1289,18 @@ entries:
     by a comprehensive measurement turn. No broad latent-information-loss inference.
   - Frozen seeds, source/checkpoint hashes, all34 primary score audits and183 passing
     software tests support reproducibility. Browser QA remains unavailable; no bypass.
+
+- turn: 2026-09-12_001#9
+  notes:
+  - N257 records the requested architecture/training review; retrospective extraction
+    is not a new model experiment. O168 is a proposed heuristic, not an adopted design.
+  - Revisit O119/O120 frozen-donor diagnostics and O39/O40/O42 decoder/retention topics;
+    no topic abandonment or new empirical-resolution signal. C04 concerns combined
+    E/D forgetting and remains consistent with historical frozen-encoder recovery.
+  - No broad latent-information-loss inference, no promotion from Claude agreement,
+    and no interpretation of the user's review request as endorsement of O167.
+    Existing integration/data/curriculum topics remain open; no unrelated stale
+    housekeeping inferred from this broad model review.
+  - Record two public-only Claude exchanges and explicit withdrawal of three claims.
+    Local evidence and primary literature bound the recommendations; documentation
+    edits neither alter the baseline nor establish successful retraining or GPU fit.

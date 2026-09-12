@@ -3977,3 +3977,21 @@ tree:
   - runs/capabilities_v1/software.json
   also_depends_on: [N255, N254, N243, N241]
   status: resolved
+
+- id: N257
+  type: question
+  title: Which encoder and decoder problems call for training or architectural changes?
+  provenance: user
+  timestamp: 2026-09-12T17:27+02:00
+  description: User requests inspection of every pair, comparing continued training,
+    scratch training, alternative architectures and more processing before feature
+    publication. Source and retained evidence reviewed; modality-specific options
+    and diagnostic comparisons documented. No new model execution or architecture
+    selection. Claude reviewed public concepts and accepted three corrections.
+  evidence:
+  - docs/encoder-decoder-review.md
+  - runs/reviews/continuation_2026-09-11/encoder-decoder-local-evidence.json
+  - runs/reviews/continuation_2026-09-11/encoder-decoder-review-receipt.json
+  - runs/reviews/continuation_2026-09-11/encoder-decoder-reconcile-receipt.json
+  also_depends_on: [N256, N246, N248]
+  status: resolved

@@ -127,8 +127,8 @@ sessions:
 
 - id: 2026-09-12_001
   date: '2026-09-12'
-  summary: "Frozen baseline:34 checks/13 model roles,183 software tests; controlled specialists pass, broader recall/prediction/instructions fail;10 gaps and no weight changes."
-  turn_count: 8
-  events_count: 16
+  summary: "Frozen34-case baseline retained; encoder/decoder review distinguishes training, readout and input-contract issues; proposed comparisons, no new training."
+  turn_count: 9
+  events_count: 18
   claims_touched: []
-  open_threads: 5
+  open_threads: 6

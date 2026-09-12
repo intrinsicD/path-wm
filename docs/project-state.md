@@ -1,5 +1,18 @@
 # Current work
 
+**Encoder–decoder review completed, 12 September:**
+[Pair-by-pair review and proposed comparisons](encoder-decoder-review.md) distinguish
+short-pilot undertraining, decoder mismatch, state-path failures and missing speech
+context. Every multimodal feature scale already has attention/MLP processing.
+Historical extra CNN depth helped geometry but missed its gate; frozen-encoder
+decoder repair recovered COCO reconstruction with a PushT retention tradeoff.
+Proposed next: reuse useful vision donors, compare direct versus state-mediated
+readouts, and freeze/probe the successful text donor before adding capacity.
+Audio needs a meaningful temporal contract before speech training. Claude reviewed
+public concepts and accepted corrections; no model changes or new training/tests.
+The capability baseline remains the frozen comparison point. Numerical gates and
+budgets for the next formal experiment still require a predeclared specification.
+
 **Capability baseline completed, 12 September:**34 behavioral/mechanism checks across
 13 separately identified checkpoint roles,183 passing software tests,10 explicit
 coverage gaps. [Report](../runs/capabilities_v1/reference/report.html) and

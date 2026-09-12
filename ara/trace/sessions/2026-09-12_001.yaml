@@ -2,9 +2,9 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T16:44+02:00
-  turn_count: 8
-  summary: "Frozen baseline:34 checks/13 model roles,183 software tests; controlled specialists pass, broader recall/prediction/instructions fail;10 gaps and no weight changes."
+  last_turn: 2026-09-12T17:27+02:00
+  turn_count: 9
+  summary: "Frozen34-case baseline retained; pair-by-pair architecture/training review proposes vision reuse, isolated state readouts and speech-contract changes; no new training."
 events_logged:
 - turn: 1
   type: decision
@@ -113,6 +113,18 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Separate checkpoint successes do not constitute one complete trained agent; direct visual pass remains color-specific.
+- turn: 9
+  type: question
+  id: N257
+  routing: direct
+  provenance: user
+  summary: Review each encoder/decoder and training versus deeper or different architecture options.
+- turn: 9
+  type: observation
+  id: O168
+  routing: staged
+  provenance: ai-suggested
+  summary: Reuse useful donors, isolate feature/state paths, compare depth with training budget and redefine audio context before speech.
 ai_actions:
 - turn: 1
   action: Recorded partial S02 answer and updated current state; no model changes
@@ -193,6 +205,16 @@ ai_actions:
   - docs/capability-baseline-plan.md
   - docs/experiments.md
   - docs/project-state.md
+- turn: 9
+  action: Inspected current modality modules, checkpoint training settings and historical
+    depth/DINO/decoder-recovery results; checked public primary sources. Obtained
+    two bounded conceptual Claude responses including explicit corrections. Saved
+    pair review,22-input hash/evidence extract and verified10 local links; no model
+    code/weights changed, no new tests or capability evaluation.
+  provenance: ai-executed
+  files_changed:
+  - docs/encoder-decoder-review.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -217,6 +239,9 @@ key_context:
     numerical weights, test them and adjust.
 - turn: 8
   excerpt: Please test those too; full test of all currently available capabilities to compare now and later.
+- turn: 9
+  excerpt: Look at each encoder-decoder pair; different architectures, continued training,
+    training from scratch, or extended processing before multistage features?
 open_threads:
 - 'S02/S04/T01: record own webcam scenes and verify labels; model-visible inputs, task ranges and acceptance gates remain open.'
 - 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
@@ -224,8 +249,10 @@ open_threads:
   proposed.'
 - 'O165: generated visual input/readout slice now exists; broader optimizer curriculum is deferred and real-footage learning remains open.'
 - 'N256: freeze this baseline; useful general-agent recall, color-independent visual identity and learned prediction remain open.'
+- 'O168/N257: turn the pair review into a bounded diagnostic with declared data, gates, seeds and GPU budget; no architecture selected yet.'
 ai_suggestions_pending:
 - 'O164: 28-take development pilot is proposed; no footage or memory benchmark completed.'
 - 'O165: curriculum authorized in principle; direct-weight test took priority, so ordinary training/real transfer remain incomplete.'
 - 'O166: do not generalize the fixed-task weight-construction pass beyond its measured scope.'
 - 'O167: baseline scope interpretation staged; no researcher endorsement of broader conclusions yet.'
+- 'O168: modality-specific repair and depth/training comparisons proposed; historical evidence is not new validation of the integrated agent.'
