@@ -2,14 +2,16 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T22:11+02:00
-  turn_count: 15
+  last_turn: 2026-09-12T22:56+02:00
+  turn_count: 16
   summary: Exact handwritten initialization trained after decoder-rate repair; joint
     reconstruction improves10% on both seeds but ordinary initialization remains better.
     Encoder ambiguity and decoder sensitivity isolated; one extra control budget-stopped.
     Traced detail loss before attention; reviewed capacity, optimization and fidelity with
     primary autoencoder papers. Higher-resolution work remains proposed.
-    Claude retry blocked; temporal memory and fine-detail learning remain open.
+    Public-only Claude review completed for a new state-output slice. Source-detail
+    transport repairs blockiness and request-only four-pattern fitting passes. General
+    generation, compact detail retention and temporal memory remain open.
 
 events_logged:
 - turn: 11
@@ -241,6 +243,31 @@ events_logged:
   provenance: ai-suggested
   summary: Separate retained information, model parameters, optimization and perceptual appearance before scaling.
 
+- turn: 16
+  type: decision
+  id: N269
+  routing: direct
+  provenance: user
+  summary: Repair detail while requiring output from model state without matching modality observations.
+- turn: 16
+  type: experiment
+  id: N270
+  routing: direct
+  provenance: ai-executed
+  summary: Real-image residual transport improves MSE92.9%; no compression or state-retention claim.
+- turn: 16
+  type: experiment
+  id: N271
+  routing: direct
+  provenance: ai-executed
+  summary: Four text requests fit through state to frozen decoder; no image encoder,512 updates, gate passes.
+- turn: 16
+  type: observation
+  id: O175
+  routing: staged
+  provenance: ai-suggested
+  summary: Distinguish codec capacity, conditional memorization and general multimodal generation.
+
 ai_actions:
 - turn: 11
   action: Inspected residual stages, merges, fusion, timing contracts and completed plan; checked
@@ -408,6 +435,17 @@ ai_actions:
   provenance: ai-executed
   files_changed: [docs/reconstruction-bottleneck-review.md]
 
+- turn: 16
+  action: Obtained approved public-only Claude critique; committed RED checks and opt-in
+    detail encoder/head plus StateFeatureDecoder. Completed COCO capacity and request-only
+    training screens,35 relevant tests, actual GPU and exact CPU resume, eight-score audit,
+    standalone export/load and plot inspection. Updated protocol/load instructions and
+    reports; HTML QA structural-only. No private brief retry or unbounded training.
+  provenance: ai-executed
+  files_changed: [pathwm/models/encoders.py, pathwm/models/decoders.py,
+    pathwm/evaluation/report.py, experiments/image_output.py, tests/test_image_output.py,
+    docs/image-output-plan.md, docs/project-state.md]
+
 claims_touched: []
 key_context:
 - turn: 11
@@ -455,6 +493,11 @@ key_context:
   excerpt: Where exactly is detail lost; is high-resolution reconstruction about architecture,
     parameter scaling/compute, training duration, dataset, curriculum, or all of these?
 
+- turn: 16
+  excerpt: Fix what can be fixed; the decoder needs detail from model state, memory and
+    prediction/planning even with no image input. Is more input needed, analogously for
+    every modality?
+
 open_threads:
 - 'S02/S04/T01: record own webcam scenes and verify labels; model-visible inputs, task ranges and acceptance gates remain open.'
 - 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
@@ -464,12 +507,12 @@ open_threads:
 - 'N256: freeze this baseline; useful general-agent recall, color-independent visual identity and learned prediction remain open.'
 - 'O168/N259: optional hierarchy/fusion now tested; stable perception, frozen text readouts and state-mediated diagnostics remain open.'
 - 'N260: define and test bounded cross-window encoder state against reset histories; recurrence remains unimplemented.'
-- 'N263: Claude review brief awaits specific export approval after automatic rejection; no external
-  review completed.'
+- 'N263: earlier private Claude brief remains blocked; N271 received only a new public-concepts review.'
 - 'N266/O172: fine-detail recovery and stable useful feature learning remain open; last same-rate
   ordinary control incomplete at the fixed compute cap. Do not infer additive E/D error shares.'
 
-- 'N267/O173: preserve within-patch detail and define a higher-resolution training comparison; no128x128 run implemented.'
+- 'N267/O173: explicit detail transport works; compact learned detail and higher-resolution comparison remain open.'
+- 'N271/O175: held-out paired image/request learning, compact codec, memory/dynamics integration and useful other-modality generation remain open.'
 
 ai_suggestions_pending:
 - 'O170: structural plausibility and locality/semantics distinction; no established cause of weak
@@ -485,6 +528,7 @@ ai_suggestions_pending:
 - 'O172: initialized reconstruction diagnosis stays scoped to two seeds, RGB-only training and
   reused test images; await researcher interpretation of the new results.'
 
-- 'O173: detail-preserving reconstruction before resolution scaling is proposed; no architecture revision adopted.'
+- 'O173: explicit detail transport implemented; richer learned features and higher-resolution conclusions remain unendorsed.'
 
-- 'O174: tiny-set fit and controlled capacity/duration comparisons are proposed, not adopted experiments.'
+- 'O174: tiny fit and transport control completed; full compact-codec, matched-duration and higher-resolution sequence not yet implemented.'
+- 'O175: scoped transport and state-producer interpretation awaits researcher response; do not equate memorization with generation quality.'

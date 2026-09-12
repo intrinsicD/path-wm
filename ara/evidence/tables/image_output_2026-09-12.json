@@ -1,0 +1,66 @@
+{
+  "provenance": "ai-executed",
+  "source_commit": "4cda45b",
+  "results_commit": "ec15f23",
+  "scope": "Opt-in RGB detail capacity control and four-training-request state-to-decoder fit; no held-out generative claim",
+  "capacity": {
+    "evaluated_images": 128,
+    "gate": true,
+    "metrics": {
+      "base": 0.012395417519515207,
+      "detail": 0.0008786256093616368,
+      "shuffled": 0.022866835855859562,
+      "zero": 0.01248802629548896
+    },
+    "optimizer_updates": 0,
+    "scope": "high-bandwidth encoder transport control; reused internal test; not agent output",
+    "weights_unchanged": true
+  },
+  "request": {
+    "completed": true,
+    "evaluation_scope": "same four training requests; no generalization claim",
+    "frozen_decoder_unchanged": true,
+    "gate": true,
+    "image_observations": 0,
+    "metrics": {
+      "erased_mse": 0.13815803825855255,
+      "latent_mse": 0.0005305850645527244,
+      "rgb_mse": 0.00010997323988704011,
+      "shuffled_mse": 0.2662827968597412,
+      "teacher_mse": 6.577969179488719e-05
+    },
+    "step": 512
+  },
+  "audit": {
+    "completed_resume_prefix_preserved": true,
+    "donor_sha256": "4aea4208baa1bf1c6462355163bbbca09c7a76311f1b456afd56871984feea3a",
+    "donor_tensors_unchanged": 212,
+    "frozen_decoder_matches_control": true,
+    "image_encoders": 0,
+    "max_metric_error": 2.5162142702761514e-08,
+    "scores_checked": 8,
+    "standalone_reload_max_abs_difference": 4.112720489501953e-06,
+    "state_sha256": "afc56492ba1c5e392d6e8d892648d6fd1dd536d856374f22a3bb3fc2da704906",
+    "weights_sha256": "a65528adaf3e41ad59b721125d99faf5ce4c30109916877e4660b5d9e6badf75"
+  },
+  "resources": {
+    "capacity": {
+      "peak_reserved_bytes": 88080384
+    },
+    "request": {
+      "peak_reserved_bytes": 111149056
+    }
+  },
+  "runtime": {
+    "training_seconds": 12.118123972904868
+  },
+  "tests": {
+    "targeted_unique_checks": 35,
+    "exact_cpu_resume": true,
+    "actual_gpu_resume": "256+256 updates"
+  },
+  "claude_review": "runs/reviews/continuation_2026-09-11/output-contract-public-receipt.json",
+  "report": "runs/image_output_v1/report.html",
+  "report_qa": "structural only; comparison PNGs visually inspected",
+  "method": "Source-pixel residual transport is not learned compression; conditional four-target fit is not general image generation."
+}

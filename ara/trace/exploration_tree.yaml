@@ -4196,3 +4196,48 @@ tree:
   - ara/evidence/tables/reconstruction_bottlenecks_2026-09-12.json
   also_depends_on: [N266, N267]
   status: resolved
+
+- id: N269
+  type: decision
+  title: Repair decoder detail while allowing output without matching modality input
+  provenance: user
+  timestamp: 2026-09-12T22:56+02:00
+  choice: Fix actionable information bottlenecks and require image output from model state,
+    request and available memories even when the session has no image observation;
+    apply the same conceptual contract to other modalities.
+  alternatives: [Rely only on an encoder-to-decoder detail shortcut]
+  evidence: [docs/image-output-plan.md]
+  also_depends_on: [N268, N266]
+  status: resolved
+- id: N270
+  type: experiment
+  title: Explicit detail transport repairs real-image blockiness in the controlled route
+  provenance: ai-executed
+  timestamp: 2026-09-12T22:56+02:00
+  result: Opt-in patch-residual channel with identity projections; all212 donor tensors
+    unchanged. On128 reused COCO64 images, RGB MSE0.0123954 becomes0.000878626,
+    versus zero-detail0.0124880 and shuffled-detail0.0228668. Predeclared gate passes;
+    zero updates,84MiB peak reserved. The12288-float residual plus10752 hierarchy
+    values is a high-bandwidth transport control, not learned compression or proof
+    of real-image detail retained by the compact state.
+  evidence: [ara/evidence/tables/image_output_2026-09-12.json, runs/image_output_v1/capacity/result.json]
+  also_depends_on: [N269]
+  status: resolved
+- id: N271
+  type: experiment
+  title: State produces complete decoder features in a request-only four-pattern fit
+  provenance: ai-executed
+  timestamp: 2026-09-12T22:56+02:00
+  result: Actual agent has only a text encoder. StateFeatureDecoder generates all spatial
+    features for the same frozen RGB head. Four training stripe requests, seed7601,
+    512 updates in256+256 chunks,12.118s and106MiB reserved. Final pixel MSE0.000109973,
+    teacher-feature reference0.0000657797; erased/shuffled0.138158/0.266283. Gate passes,
+    but no held-out generation claim.35 targeted checks, exact CPU resume, actual GPU
+    resumed ledger, eight raw pixel metrics and standalone weights verify; max CPU/GPU
+    reload difference4.12e-6. Public-only Claude critique adopted, no private payload sent.
+    HTML structural-only; comparison PNGs inspected. Other modalities pass only a
+    no-matching-input gradient/shape check, not semantic-quality training.
+  evidence: [ara/evidence/tables/image_output_2026-09-12.json, runs/image_output_v1/request/result.json,
+    runs/image_output_v1/verification.json, docs/image-output-plan.md]
+  also_depends_on: [N269, N270]
+  status: resolved

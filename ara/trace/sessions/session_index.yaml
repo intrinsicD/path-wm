@@ -129,8 +129,9 @@ sessions:
   date: '2026-09-12'
   summary: Handwritten initialization trained after decoder-rate repair; joint reconstruction
     improves10% across two seeds. Input ambiguity and decoder sensitivity isolated;
-    original ordinary models remain better, one extra control budget-stopped. Claude blocked.
-  turn_count: 15
-  events_count: 35
+    original ordinary models remain better, one extra control budget-stopped. New detail
+    transport and state-only four-prompt fit pass; public-only Claude critique completed.
+  turn_count: 16
+  events_count: 39
   claims_touched: []
-  open_threads: 10
+  open_threads: 11

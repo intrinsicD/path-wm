@@ -3068,3 +3068,23 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O175
+  timestamp: 2026-09-12T22:56+02:00
+  provenance: ai-suggested
+  content: Decoder detail capacity and the ability of a conditional state producer to
+    supply it must be tested separately. Explicit pixel residual transport repairs
+    reconstruction, while a state-only four-prompt fit proves a learnable output interface.
+    Neither demonstrates compact visual memory, held-out language-to-image transfer,
+    learned physics or general multimodal generation. A learned conditional producer
+    needs matched latent distributions and suitable paired objectives; optional noise
+    selects alternatives but adds no factual evidence.
+  context: User requires generation without corresponding input modality. Independent
+    public-concept Claude review, opt-in implementation, real transport control and
+    four-pattern training complete; researcher has not yet interpreted these results.
+  potential_type: claim
+  bound_to: [N269, N270, N271]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
