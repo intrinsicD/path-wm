@@ -2969,3 +2969,25 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O170
+  timestamp: 2026-09-12T20:44+02:00
+  provenance: ai-suggested
+  content: The residual hierarchy is a conventional architectural pattern, but coarser grids do
+    not guarantee entity/concept semantics. Current image self-attention is global within each
+    scale, so no strict local-to-global receptive-field progression is enforced. Fixed-width mean
+    pooling plus learned local cross-attention is a simplifying compression choice, not a diagnosed
+    bug. Dense attention scaling and absent encoder state across windows remain explicit limits.
+    Existing short-screen failures do not isolate architecture, optimization, objective or readout
+    causes.
+  context: Read-only source and primary-literature assessment in response to design clarification.
+    No source or weights changed, no new training/tests or Claude request. Preserve existing defaults
+    and comparison evidence.
+  potential_type: architecture
+  bound_to:
+  - N261
+  - N259
+  - N260
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -4046,3 +4046,22 @@ tree:
   - docs/hierarchy-fusion-plan.md#recurrence-after-this-comparison
   also_depends_on: [N258, N259]
   status: open
+- id: N261
+  type: question
+  title: Is the residual feature hierarchy structurally natural and what remains uncertain?
+  provenance: user
+  timestamp: 2026-09-12T20:44+02:00
+  description: User confirms per-scale residual blocks were intended and asks whether the overall
+    design has expected machinery. Source review confirms processed fine-to-coarse stages and
+    optional final fusion. Public Swin/MViT precedents support architectural coherence; representation
+    quality and failure causes remain unresolved.
+  evidence:
+  - pathwm/models/multiscale.py
+  - docs/hierarchy-fusion-plan.md
+  - https://arxiv.org/abs/2103.14030
+  - https://arxiv.org/abs/2104.11227
+  also_depends_on:
+  - N258
+  - N259
+  - N260
+  status: resolved

@@ -1318,3 +1318,11 @@ entries:
   - Dataset/test reuse, matched shared weights, fixed checkpoints, all eight arms and
     weak absolute foreground quality remain visible. Claude acknowledged inductive
     mask-bound composition; no private results/source exported. No claims promoted.
+- turn: 2026-09-12_001#11
+  notes:
+  - N261 answers structural plausibility; O170 stays staged because the user has not endorsed
+    the interpretation or an architectural change.
+  - Residual confirmation does not endorse superiority or identify a failure cause. O169 remains
+    staged; the design question supplies no specific empirical adjudication.
+  - Revisited hierarchy, objectives, temporal memory and compute topics remain open. No claim
+    promotion, new experiment or contradiction inferred from resemblance to public architectures.
