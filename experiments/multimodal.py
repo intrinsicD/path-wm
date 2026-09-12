@@ -4465,6 +4465,8 @@ def direct_visual_weights(
         raise ValueError("Positive populations and finite time cap required")
     device = str(device)
     if torch.device(device).type == "cuda":
+        if torch.device(device).index is None:
+            device = f"cuda:{torch.cuda.current_device()}"
         torch.cuda.set_per_process_memory_fraction(
             2**30 / torch.cuda.get_device_properties(device).total_memory, device
         )
