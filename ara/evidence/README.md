@@ -122,3 +122,6 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Handwritten initialization training](tables/hierarchy_training_2026-09-12.json): N265/N266;
   original decoder-rate collapse, validation-selected repair, two-seed frozen-component
   diagnosis, exact trained binaries, and one budget-stopped ordinary control.
+
+- [Resolution versus detail](tables/hierarchy_resolution_2026-09-12.json): N267; same64x64 arrays,
+  handwritten constant4x4 blocks and retained variation after training; no new model run.

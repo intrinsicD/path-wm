@@ -3031,3 +3031,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O173
+  timestamp: 2026-09-12T22:01+02:00
+  provenance: ai-suggested
+  content: Pixel dimensions and reconstructed spatial detail are distinct. The current hand
+    path outputs64x64 but carries almost no within4x4 detail; nearest-neighbor stages with
+    initially center-only convolutions preserve blocks. The same decoder architecture can
+    produce finer variation after ordinary training. Learn richer patch features and spatial
+    readout before attributing improvement to a larger output canvas; genuine higher-resolution
+    reconstruction should use correspondingly detailed inputs and targets.
+  context: Read-only source and six saved validation examples. Block RMS is descriptive,
+    not fidelity or a new quality gate. No new model, training, resize or128x128 evaluation.
+  potential_type: heuristic
+  bound_to: [N267, N266]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

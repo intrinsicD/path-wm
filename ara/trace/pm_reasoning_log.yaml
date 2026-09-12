@@ -1360,3 +1360,12 @@ entries:
   - Retry of the exact saved Claude brief was blocked as ambiguous specific consent.
     Record zero external contact and no later retry. Finish authorized local work, retain
     reviewable brief and request specific permission separately; do not invent peer review.
+
+- turn: 2026-09-12_001#14
+  notes:
+  - N267 records a resolution question, not authorization of a particular redesign or higher-resolution benchmark.
+    O173 remains staged; dimensional source facts and saved-image measurements are recorded separately.
+  - User comments on image pixelation but does not adjudicate the compound attribution in O172.
+    No promotion or broad bottleneck claim follows; all hierarchy/retention/temporal topics remain open.
+  - Within-block RMS quantifies variation, not accuracy; noise would increase it. No new neural evaluation,
+    GPU use, training or report-image smoothing, and no Claude retry without explicit payload permission.

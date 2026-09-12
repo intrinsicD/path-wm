@@ -4159,3 +4159,22 @@ tree:
   - runs/reviews/continuation_2026-09-11/constructed-hierarchy-retry-blocked.json
   also_depends_on: [N264, N265]
   status: resolved
+
+- id: N267
+  type: question
+  title: Why are same-size reconstructions pixelated and can output resolution increase?
+  provenance: user
+  timestamp: 2026-09-12T22:01+02:00
+  description: User asks whether reconstructed images have fewer pixels and whether equal or
+    higher resolution is possible. Saved inputs and outputs both64x64; features16/8/4 square.
+    Handwritten patch means and center-only decoder kernels initially yield constant4x4
+    blocks. Same architecture trained ordinarily has much more within-block variation.
+    Higher sizes are configurable, but changing only output_size interpolates logits;
+    higher-detail learning and a higher-resolution data/target comparison remain proposed.
+  evidence:
+  - docs/hierarchy-training-plan.md#resolution-clarification
+  - ara/evidence/tables/hierarchy_resolution_2026-09-12.json
+  - pathwm/models/decoders.py
+  - experiments/hierarchy_fusion.py
+  also_depends_on: [N266]
+  status: resolved

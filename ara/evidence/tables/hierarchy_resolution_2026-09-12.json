@@ -1,0 +1,82 @@
+{
+  "provenance": "ai-executed",
+  "scope": "Read-only first six saved validation examples, seed7501; descriptive variation, not fidelity metric",
+  "formula": "sqrt(mean((pixels - mean_of_their_4x4_block)**2)); float64",
+  "rows": [
+    {
+      "label": "handwritten_initial",
+      "path": "runs/hierarchy_weights_v1/constructed_7401/examples.npz",
+      "sha256": "d0fb149b72eda60b9a01118774d1e1ee475199a68ce56023d2f015d8d90a7170",
+      "values": {
+        "input": {
+          "shape": [
+            6,
+            3,
+            64,
+            64
+          ],
+          "within_4x4_block_rms": 0.091646518583596
+        },
+        "rgb": {
+          "shape": [
+            6,
+            3,
+            64,
+            64
+          ],
+          "within_4x4_block_rms": 0.0
+        }
+      }
+    },
+    {
+      "label": "handwritten_trained",
+      "path": "runs/hierarchy_training_v1/decoder_rate_repair/seed_7501/hand_both/examples.npz",
+      "sha256": "5b69c0ed13a7f927970d1ddf24f8cd9cdfc16794475c94258137cfd1c01c6767",
+      "values": {
+        "input": {
+          "shape": [
+            6,
+            3,
+            64,
+            64
+          ],
+          "within_4x4_block_rms": 0.091646518583596
+        },
+        "rgb": {
+          "shape": [
+            6,
+            3,
+            64,
+            64
+          ],
+          "within_4x4_block_rms": 0.0015877085306001213
+        }
+      }
+    },
+    {
+      "label": "ordinary_trained",
+      "path": "runs/hierarchy_training_v1/seed_7501/ordinary_both/examples.npz",
+      "sha256": "e25328cffb252a6c0d250a00e948a45207b4621d8dd518e43b346e4dc851d21d",
+      "values": {
+        "input": {
+          "shape": [
+            6,
+            3,
+            64,
+            64
+          ],
+          "within_4x4_block_rms": 0.091646518583596
+        },
+        "rgb": {
+          "shape": [
+            6,
+            3,
+            64,
+            64
+          ],
+          "within_4x4_block_rms": 0.06756395731056812
+        }
+      }
+    }
+  ]
+}

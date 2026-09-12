@@ -2,11 +2,12 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T21:52+02:00
-  turn_count: 13
+  last_turn: 2026-09-12T22:01+02:00
+  turn_count: 14
   summary: Exact handwritten initialization trained after decoder-rate repair; joint
     reconstruction improves10% on both seeds but ordinary initialization remains better.
     Encoder ambiguity and decoder sensitivity isolated; one extra control budget-stopped.
+    Clarified64x64 output versus blocky16x16-scale detail; higher-resolution work proposed.
     Claude retry blocked; temporal memory and fine-detail learning remain open.
 
 events_logged:
@@ -213,6 +214,19 @@ events_logged:
   provenance: ai-suggested
   summary: Both input ambiguity and decoder conditioning contribute; no additive error attribution or superiority claim.
 
+- turn: 14
+  type: question
+  id: N267
+  routing: direct
+  provenance: user
+  summary: Clarify output size, pixelation and feasibility of higher-resolution reconstruction.
+- turn: 14
+  type: observation
+  id: O173
+  routing: staged
+  provenance: ai-suggested
+  summary: Improve retained spatial detail; larger output dimensions alone are insufficient.
+
 ai_actions:
 - turn: 11
   action: Inspected residual stages, merges, fusion, timing contracts and completed plan; checked
@@ -365,6 +379,13 @@ ai_actions:
   - docs/project-state.md
   - docs/experiments.md
 
+- turn: 14
+  action: Verified saved input/output64x64 and feature16/8/4 grids, traced decoder upsampling
+    and handwritten center-only kernels, and measured block RMS on six existing validation
+    examples. Documented resolution versus detail; no training, model change or Claude send.
+  provenance: ai-executed
+  files_changed: [docs/hierarchy-training-plan.md]
+
 claims_touched: []
 key_context:
 - turn: 11
@@ -405,6 +426,9 @@ key_context:
   excerpt: I want the handwritten weights used as initialization; start training there and
     find whether poor reconstruction is caused by learned encoder/features, decoder, or both.
 
+- turn: 14
+  excerpt: Do reconstructed images have lower resolution; why so pixelated, and can we create the same or higher resolution?
+
 open_threads:
 - 'S02/S04/T01: record own webcam scenes and verify labels; model-visible inputs, task ranges and acceptance gates remain open.'
 - 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
@@ -419,6 +443,8 @@ open_threads:
 - 'N266/O172: fine-detail recovery and stable useful feature learning remain open; last same-rate
   ordinary control incomplete at the fixed compute cap. Do not infer additive E/D error shares.'
 
+- 'N267/O173: preserve within-patch detail and define a higher-resolution training comparison; no128x128 run implemented.'
+
 ai_suggestions_pending:
 - 'O170: structural plausibility and locality/semantics distinction; no established cause of weak
   perception or new redesign adopted.'
@@ -432,3 +458,5 @@ ai_suggestions_pending:
   architecture-failure conclusion.'
 - 'O172: initialized reconstruction diagnosis stays scoped to two seeds, RGB-only training and
   reused test images; await researcher interpretation of the new results.'
+
+- 'O173: detail-preserving reconstruction before resolution scaling is proposed; no architecture revision adopted.'

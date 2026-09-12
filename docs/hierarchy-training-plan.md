@@ -217,3 +217,27 @@ Use `--initial-weights` for a fresh optimizer run and `--resume` for an interrup
 run; [copyable commands and strict loading](experiments.md) describe both. Default
 branch opening stays off. Both seed-specific exact-handwritten trained files are
 retained; no winner was selected using test scores.
+
+## Resolution clarification
+
+The saved input and RGB reconstruction are both64×64; original photographs were
+resized/cropped for this pilot. Feature grids are16×16,8×8 and4×4. DenseHead aligns
+features at16×16 and uses two nearest-neighbor2× upsampling stages with trainable
+convolutions to produce64×64. Lower-resolution features do not inherently require
+blocky output: the ordinary-trained reference uses this same decoder architecture.
+
+The handwritten constructor is particularly restrictive: patch weights retain RGB
+means and decoder convolution weights initially occupy only kernel centers. Each
+initial4×4 output block is therefore constant. Read-only analysis of the same first
+six validation examples gives within-block RGB RMS variation0.000000 initially,
+0.001588 after repaired hand training,0.067564 for original-rate ordinary training,
+and0.091647 for the inputs. This quantifies blockiness, not reconstruction fidelity;
+arbitrary noise would also increase that statistic. No new training/evaluation run.
+
+Higher image sizes are configurable in PyramidEncoder and DenseHead, but the current
+recipe/data are fixed to64×64. Changing only DenseHead.output_size adds a final
+bilinear resize of logits; it does not train higher-resolution detail. A useful next
+comparison would retain more within-patch detail and learn spatial reconstruction
+at64×64 first, then use higher-resolution source images/targets with matching feature
+grids and output size. This is proposed work, not an implemented128×128 experiment
+or an established GPU-memory estimate.
