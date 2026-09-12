@@ -1,10 +1,19 @@
 # Current work
 
-**Capability baseline in progress, 12 September:** user requests a complete current
-test and durable future comparison. [Frozen evaluation plan](capability-baseline-plan.md)
-covers the direct weights, separately identified specialists, general-agent pilots,
-real-input compatibility, software contracts and explicit unimplemented gaps.
-Three essential checks fail before implementation as expected. No training planned.
+**Capability baseline completed, 12 September:**34 behavioral/mechanism checks across
+13 separately identified checkpoint roles,183 passing software tests,10 explicit
+coverage gaps. [Report](../runs/capabilities_v1/reference/report.html) and
+[protocol, results and comparison commands](capability-baseline-plan.md#completed-baseline).
+Direct visual weights retain100% accuracy on original/mirrored/dim/noisy scenes but
+fall to48.44% with red/blue swapped and50% grayscale. Their other outputs are gray,
+silence and empty text, with zero response to the tested audio/text/video input contrasts or opposing actions.
+Structured entity/state/relation and supplied-mechanics planning screens pass;
+through-agent fact identity0%, historical recall answers0/15, instructions12.5%,
+and learned prediction loses to copy-last. Known planner reward/utility mismatch
+persists. No weight changes. CPU evaluation211s/804MiB peak process RSS. Independent
+raw checks across all34 cases, checkpoint hashes, cached resume and comparison guards
+pass. Browser QA remains structural-only. This is a baseline of separate components,
+not a complete jointly trained agent or evidence of general webcam capability.
 
 **Direct weight test completed, 12 September:** at the user's explicit request,
 constructed binary model weights and adjusted them without backpropagation. First

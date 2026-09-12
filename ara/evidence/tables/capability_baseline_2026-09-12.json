@@ -1,0 +1,1175 @@
+{
+  "cases": [
+    {
+      "gates": {
+        "accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        "history_advantage": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.3,
+          "value": 0.5
+        },
+        "pair_both": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.8,
+          "value": 1.0
+        },
+        "reversal_accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.8,
+          "value": 1.0
+        }
+      },
+      "id": "visual_original",
+      "metrics": {
+        "accuracy": 1.0,
+        "erased_accuracy": 0.5,
+        "history_advantage": 0.5,
+        "nll": 0.12889758096372042,
+        "pair_both": 1.0,
+        "reversal_accuracy": 1.0
+      },
+      "scope": "Fixed question, one target, four frames. Specific perturbation only; paired scenes are the sampling units.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        "history_advantage": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.3,
+          "value": 0.5
+        },
+        "pair_both": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.8,
+          "value": 1.0
+        },
+        "reversal_accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.8,
+          "value": 1.0
+        }
+      },
+      "id": "visual_mirror",
+      "metrics": {
+        "accuracy": 1.0,
+        "erased_accuracy": 0.5,
+        "history_advantage": 0.5,
+        "nll": 0.1386130895079902,
+        "pair_both": 1.0,
+        "reversal_accuracy": 1.0
+      },
+      "scope": "Fixed question, one target, four frames. Specific perturbation only; paired scenes are the sampling units.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "accuracy": {
+          "direction": "higher",
+          "status": "fail",
+          "strict": false,
+          "threshold": 0.9,
+          "value": 0.484375
+        },
+        "history_advantage": {
+          "direction": "higher",
+          "status": "fail",
+          "strict": false,
+          "threshold": 0.3,
+          "value": -0.015625
+        },
+        "pair_both": {
+          "direction": "higher",
+          "status": "fail",
+          "strict": false,
+          "threshold": 0.8,
+          "value": 0.0
+        },
+        "reversal_accuracy": {
+          "direction": "higher",
+          "status": "fail",
+          "strict": false,
+          "threshold": 0.8,
+          "value": 0.5
+        }
+      },
+      "id": "visual_swap_red_blue",
+      "metrics": {
+        "accuracy": 0.484375,
+        "erased_accuracy": 0.5,
+        "history_advantage": -0.015625,
+        "nll": 0.7041764064775721,
+        "pair_both": 0.0,
+        "reversal_accuracy": 0.5
+      },
+      "scope": "Fixed question, one target, four frames. Specific perturbation only; paired scenes are the sampling units.",
+      "status": "fail"
+    },
+    {
+      "gates": {
+        "accuracy": {
+          "direction": "higher",
+          "status": "fail",
+          "strict": false,
+          "threshold": 0.9,
+          "value": 0.5
+        },
+        "history_advantage": {
+          "direction": "higher",
+          "status": "fail",
+          "strict": false,
+          "threshold": 0.3,
+          "value": 0.0
+        },
+        "pair_both": {
+          "direction": "higher",
+          "status": "fail",
+          "strict": false,
+          "threshold": 0.8,
+          "value": 0.0
+        },
+        "reversal_accuracy": {
+          "direction": "higher",
+          "status": "fail",
+          "strict": false,
+          "threshold": 0.8,
+          "value": 0.5
+        }
+      },
+      "id": "visual_grayscale",
+      "metrics": {
+        "accuracy": 0.5,
+        "erased_accuracy": 0.5,
+        "history_advantage": 0.0,
+        "nll": 0.8979192642746674,
+        "pair_both": 0.0,
+        "reversal_accuracy": 0.5
+      },
+      "scope": "Fixed question, one target, four frames. Specific perturbation only; paired scenes are the sampling units.",
+      "status": "fail"
+    },
+    {
+      "gates": {
+        "accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        "history_advantage": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.3,
+          "value": 0.5
+        },
+        "pair_both": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.8,
+          "value": 1.0
+        },
+        "reversal_accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.8,
+          "value": 1.0
+        }
+      },
+      "id": "visual_dim",
+      "metrics": {
+        "accuracy": 1.0,
+        "erased_accuracy": 0.5,
+        "history_advantage": 0.5,
+        "nll": 0.08431379367143448,
+        "pair_both": 1.0,
+        "reversal_accuracy": 1.0
+      },
+      "scope": "Fixed question, one target, four frames. Specific perturbation only; paired scenes are the sampling units.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        "history_advantage": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.3,
+          "value": 0.5
+        },
+        "pair_both": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.8,
+          "value": 1.0
+        },
+        "reversal_accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.8,
+          "value": 1.0
+        }
+      },
+      "id": "visual_noise",
+      "metrics": {
+        "accuracy": 1.0,
+        "erased_accuracy": 0.5,
+        "history_advantage": 0.5,
+        "nll": 0.1287867065807432,
+        "pair_both": 1.0,
+        "reversal_accuracy": 1.0
+      },
+      "scope": "Fixed question, one target, four frames. Specific perturbation only; paired scenes are the sampling units.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "image_beats_gray": {
+          "direction": "lower",
+          "status": "fail",
+          "strict": true,
+          "threshold": 0.09216263145208359,
+          "value": 0.09216263145208359
+        }
+      },
+      "id": "constructed_modalities",
+      "metrics": {
+        "action_token_change": 0.0,
+        "audio_input_feature_change": 0.0,
+        "audio_output_rms": 0.0,
+        "generated_content_tokens": 0,
+        "gray_image_mse": 0.09216263145208359,
+        "image_input_feature_change": 1.2766329050064087,
+        "image_mse": 0.09216263145208359,
+        "image_output_std": 0.0,
+        "text_input_feature_change": 0.0,
+        "video_input_feature_change": 0.0
+      },
+      "scope": "Real COCO development photographs, image/audio/text/video output and action sensitivity. No semantic memory labels.",
+      "status": "fail"
+    },
+    {
+      "gates": {
+        "audio_beats_silence": {
+          "direction": "lower",
+          "status": "fail",
+          "strict": true,
+          "threshold": 0.007238992489874363,
+          "value": 0.026923809200525284
+        },
+        "image_beats_copy": {
+          "direction": "lower",
+          "status": "fail",
+          "strict": true,
+          "threshold": 0.005635282024741173,
+          "value": 0.23659807443618774
+        }
+      },
+      "id": "prediction_synthetic",
+      "metrics": {
+        "action_token_mean_absolute_change": 0.00485088347340934,
+        "audio_mse": 0.026923809200525284,
+        "copy_image_mse": 0.005635282024741173,
+        "examples": 16,
+        "gray_image_mse": 0.24041104316711426,
+        "image_mse": 0.23659807443618774,
+        "silence_audio_mse": 0.007238992489874363,
+        "text_exact_match": 0.0
+      },
+      "scope": "Short-pilot weights; free rollout, fixed test split. PushT windows overlap within an episode. Sensitivity is not correctness.",
+      "status": "fail"
+    },
+    {
+      "gates": {
+        "audio_beats_silence": {
+          "direction": "lower",
+          "status": "fail",
+          "strict": true,
+          "threshold": 0.007238992489874363,
+          "value": 0.026973437517881393
+        },
+        "image_beats_copy": {
+          "direction": "lower",
+          "status": "fail",
+          "strict": true,
+          "threshold": 0.005635282024741173,
+          "value": 0.23661039769649506
+        }
+      },
+      "id": "prediction_instructions",
+      "metrics": {
+        "action_token_mean_absolute_change": 0.007763336529023945,
+        "audio_mse": 0.026973437517881393,
+        "copy_image_mse": 0.005635282024741173,
+        "examples": 16,
+        "gray_image_mse": 0.24041104316711426,
+        "image_mse": 0.23661039769649506,
+        "silence_audio_mse": 0.007238992489874363,
+        "text_exact_match": 0.0
+      },
+      "scope": "Short-pilot weights; free rollout, fixed test split. PushT windows overlap within an episode. Sensitivity is not correctness.",
+      "status": "fail"
+    },
+    {
+      "gates": {
+        "operation": {
+          "direction": "higher",
+          "status": "fail",
+          "strict": false,
+          "threshold": 0.9,
+          "value": 0.125
+        }
+      },
+      "id": "instructions",
+      "metrics": {
+        "task_audio_error": 0.0625,
+        "task_completion_error": 0.875,
+        "task_emit_audio_error": 0.5,
+        "task_emit_image_error": 0.5,
+        "task_emit_text_error": 0.0,
+        "task_emit_video_error": 1.0,
+        "task_gate_violations": 0,
+        "task_image_error": 0.9375,
+        "task_lexical_completion_error": 0.0,
+        "task_lexical_modality_error": 0.015625,
+        "task_lexical_operation_error": 0.375,
+        "task_modality_error": 0.484375,
+        "task_operation_error": 0.875,
+        "task_raw_gate_violations": 0,
+        "task_shuffled_completion_error": 0.75,
+        "task_shuffled_modality_error": 0.484375,
+        "task_shuffled_operation_error": 1.0,
+        "task_text_error": 0.0625,
+        "task_video_error": 0.875
+      },
+      "scope": "Finite operation templates and enforced output contracts; not general dialogue or tool execution.",
+      "status": "fail"
+    },
+    {
+      "gates": {
+        "image_beats_copy": {
+          "direction": "lower",
+          "status": "fail",
+          "strict": true,
+          "threshold": 7.198417006293312e-05,
+          "value": 0.2371027022600174
+        }
+      },
+      "id": "prediction_pusht",
+      "metrics": {
+        "action_token_mean_absolute_change": 0.0028736899548675865,
+        "copy_image_mse": 7.198417006293312e-05,
+        "examples": 16,
+        "gray_image_mse": 0.2340501993894577,
+        "image_mse": 0.2371027022600174
+      },
+      "scope": "Short-pilot weights; free rollout, fixed test split. PushT windows overlap within an episode. Sensitivity is not correctness.",
+      "status": "fail"
+    },
+    {
+      "gates": {
+        "entity_accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.9,
+          "value": 1.0
+        },
+        "location_accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.9,
+          "value": 1.0
+        }
+      },
+      "id": "facts_direct",
+      "metrics": {
+        "entity_accuracy": 1.0,
+        "entity_nll": 0.40311195806116984,
+        "examples": 32,
+        "factual_accuracy": 1.0,
+        "location_accuracy": 1.0,
+        "location_nll": 0.020185926459579,
+        "nll": 0.21164894226037442
+      },
+      "scope": "Reused 32 development combinations of predefined IDs; regression, not new visual identity evidence.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "entity_accuracy": {
+          "direction": "higher",
+          "status": "fail",
+          "strict": false,
+          "threshold": 0.9,
+          "value": 0.0
+        },
+        "location_accuracy": {
+          "direction": "higher",
+          "status": "fail",
+          "strict": false,
+          "threshold": 0.9,
+          "value": 0.75
+        }
+      },
+      "id": "facts_event",
+      "metrics": {
+        "entity_accuracy": 0.0,
+        "entity_nll": 3.767302697936149,
+        "examples": 32,
+        "factual_accuracy": 0.0,
+        "location_accuracy": 0.75,
+        "location_nll": 0.5751233120090458,
+        "nll": 2.1712130049725973
+      },
+      "scope": "Reused 32 development combinations of predefined IDs; regression, not new visual identity evidence.",
+      "status": "fail"
+    },
+    {
+      "gates": {
+        "beats_abstain": {
+          "direction": "lower",
+          "status": "fail",
+          "strict": true,
+          "threshold": 0.25,
+          "value": 0.25
+        }
+      },
+      "id": "recall",
+      "metrics": {
+        "abstained": 15,
+        "answered": 0,
+        "answered_error": null,
+        "brier": 0.8011974113128042,
+        "coverage": 0.0,
+        "examples": 15,
+        "factual_accuracy": 0.2,
+        "false_not_observed": 0,
+        "invalid": 0,
+        "invented_location": 0,
+        "mean_answer_confidence": null,
+        "nll": 1.6114396204235135,
+        "seen_examples": 12,
+        "task_loss": 0.25,
+        "unseen_examples": 3,
+        "wrong_location": 0
+      },
+      "scope": "Existing test population reused; development-selected target checkpoint; raw temperature1, no new fitting.",
+      "status": "fail"
+    },
+    {
+      "gates": {
+        "known": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        },
+        "novel": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        }
+      },
+      "id": "entity_novelty",
+      "metrics": {
+        "accuracy": 1.0,
+        "known_accuracy": 1.0,
+        "novel_accuracy": 1.0
+      },
+      "scope": "Reused variable-candidate development descriptors. Raw false merges/splits and abstention coverage retained; not visual discovery.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        }
+      },
+      "id": "entity_matching",
+      "metrics": {
+        "accuracy": 1.0,
+        "examples": 16
+      },
+      "scope": "Supplied descriptors and known two-entity candidates; novelty/ambiguous matching remains covered by specialist software checks.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "pair_accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        }
+      },
+      "id": "state_reference",
+      "metrics": {
+        "examples": 128,
+        "latent_agreement": true,
+        "nll": 0.009690874256193638,
+        "pair_accuracy": 1.0,
+        "runtime_pair_accuracy": 1.0,
+        "transactions": true
+      },
+      "scope": "Learned state cell with supplied operation vectors; explicit identity records and no-information preservation.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "pair_accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        }
+      },
+      "id": "state_reset_order",
+      "metrics": {
+        "examples": 128,
+        "latent_agreement": true,
+        "nll": 0.007900038734078407,
+        "pair_accuracy": 1.0,
+        "runtime_pair_accuracy": 1.0,
+        "transactions": true
+      },
+      "scope": "Learned state cell with supplied operation vectors; explicit identity records and no-information preservation.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "pair_accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        }
+      },
+      "id": "state_toggle_length",
+      "metrics": {
+        "examples": 128,
+        "latent_agreement": true,
+        "nll": 0.07369732856750488,
+        "pair_accuracy": 1.0,
+        "runtime_pair_accuracy": 1.0,
+        "transactions": true
+      },
+      "scope": "Learned state cell with supplied operation vectors; explicit identity records and no-information preservation.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "pair_accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        }
+      },
+      "id": "state_no_information_length",
+      "metrics": {
+        "examples": 128,
+        "latent_agreement": true,
+        "nll": 0.009690874256193638,
+        "pair_accuracy": 1.0,
+        "runtime_pair_accuracy": 1.0,
+        "transactions": true
+      },
+      "scope": "Learned state cell with supplied operation vectors; explicit identity records and no-information preservation.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "pair_accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        }
+      },
+      "id": "state_idle_3",
+      "metrics": {
+        "examples": 128,
+        "latent_agreement": true,
+        "nll": 0.009690874256193638,
+        "pair_accuracy": 1.0,
+        "runtime_pair_accuracy": 1.0,
+        "transactions": true
+      },
+      "scope": "Learned state cell with supplied operation vectors; explicit identity records and no-information preservation.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "pair_accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        }
+      },
+      "id": "state_idle_31",
+      "metrics": {
+        "examples": 128,
+        "latent_agreement": true,
+        "nll": 0.009690874256193638,
+        "pair_accuracy": 1.0,
+        "runtime_pair_accuracy": 1.0,
+        "transactions": true
+      },
+      "scope": "Learned state cell with supplied operation vectors; explicit identity records and no-information preservation.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        }
+      },
+      "id": "relation_reference",
+      "metrics": {
+        "accuracy": 1.0,
+        "examples": 48,
+        "integrity": true,
+        "nll": 0.006948141381144524,
+        "passed": true,
+        "rejection_rate": 0.0,
+        "source_accuracy": 1.0
+      },
+      "scope": "One supplied relation type; learned addressing and state interaction, not learned graph topology.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        }
+      },
+      "id": "relation_rebind",
+      "metrics": {
+        "accuracy": 1.0,
+        "examples": 48,
+        "integrity": true,
+        "nll": 0.006948141381144524,
+        "passed": true,
+        "rejection_rate": 0.0,
+        "source_accuracy": 1.0
+      },
+      "scope": "One supplied relation type; learned addressing and state interaction, not learned graph topology.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        }
+      },
+      "id": "relation_gap",
+      "metrics": {
+        "accuracy": 1.0,
+        "examples": 48,
+        "integrity": true,
+        "nll": 0.006948141381144524,
+        "passed": true,
+        "rejection_rate": 0.0,
+        "source_accuracy": 1.0
+      },
+      "scope": "One supplied relation type; learned addressing and state interaction, not learned graph topology.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "accuracy": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        }
+      },
+      "id": "relation_permuted",
+      "metrics": {
+        "accuracy": 1.0,
+        "examples": 48,
+        "integrity": true,
+        "nll": 0.006948141381144524,
+        "passed": true,
+        "rejection_rate": 0.0,
+        "source_accuracy": 1.0
+      },
+      "scope": "One supplied relation type; learned addressing and state interaction, not learned graph topology.",
+      "status": "pass"
+    },
+    {
+      "gates": {},
+      "id": "relation_erased",
+      "metrics": {
+        "accuracy": 0.5,
+        "examples": 48,
+        "integrity": true,
+        "nll": 0.7775301933288574,
+        "passed": true,
+        "rejection_rate": 1.0,
+        "source_accuracy": 0.0
+      },
+      "scope": "One supplied relation type; learned addressing and state interaction, not learned graph topology.",
+      "status": "measured"
+    },
+    {
+      "gates": {
+        "beats_stop": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": true,
+          "threshold": 0.733154296875,
+          "value": 0.7697753682732582
+        }
+      },
+      "id": "source_static",
+      "metrics": {
+        "accuracy": 0.79052734375,
+        "stop_utility": 0.733154296875,
+        "useful_source_rate": 0.9375,
+        "utility": 0.7697753682732582
+      },
+      "scope": "Outcome-feedback adaptation with supplied sources; no neural reliability estimator. Raw source feedback retained.",
+      "status": "pass"
+    },
+    {
+      "gates": {},
+      "id": "source_drift",
+      "metrics": {
+        "drift_cumulative_combined_utility": 0.7408935546874966,
+        "drift_cumulative_early_utility": 0.732509765625,
+        "drift_cumulative_late_utility": 0.730634765625,
+        "drift_cumulative_utility": 0.731572265625,
+        "drift_frozen_combined_utility": 0.7388289388020799,
+        "drift_frozen_early_utility": 0.72890625,
+        "drift_frozen_late_utility": 0.7218505859375,
+        "drift_frozen_utility": 0.7253784179687499,
+        "drift_no_feedback_combined_utility": 0.7412703450520799,
+        "drift_no_feedback_early_utility": 0.7357421875,
+        "drift_no_feedback_late_utility": 0.7296630859375,
+        "drift_no_feedback_utility": 0.7327026367187499,
+        "drift_triggered_combined_utility": 0.7455444335937467,
+        "drift_triggered_early_utility": 0.7404248046874999,
+        "drift_triggered_late_utility": 0.750625,
+        "drift_triggered_utility": 0.74552490234375,
+        "drift_window_combined_utility": 0.74914143880208,
+        "drift_window_early_utility": 0.75665283203125,
+        "drift_window_late_utility": 0.7559790039062501,
+        "drift_window_utility": 0.75631591796875,
+        "static_cumulative_combined_utility": 0.7554235839843716,
+        "static_cumulative_early_utility": 0.786171875,
+        "static_cumulative_late_utility": 0.76415283203125,
+        "static_cumulative_utility": 0.775162353515625,
+        "static_frozen_combined_utility": 0.7586043294270799,
+        "static_frozen_early_utility": 0.7953125,
+        "static_frozen_late_utility": 0.7740966796875,
+        "static_frozen_utility": 0.7847045898437499,
+        "static_no_feedback_combined_utility": 0.7561629231770799,
+        "static_no_feedback_early_utility": 0.7884765625,
+        "static_no_feedback_late_utility": 0.7662841796875,
+        "static_no_feedback_utility": 0.7773803710937499,
+        "static_triggered_combined_utility": 0.7551139322916632,
+        "static_triggered_early_utility": 0.78455810546875,
+        "static_triggered_late_utility": 0.76390869140625,
+        "static_triggered_utility": 0.7742333984374999,
+        "static_window_combined_utility": 0.7511547851562466,
+        "static_window_early_utility": 0.7709765625,
+        "static_window_late_utility": 0.7537353515625,
+        "static_window_utility": 0.76235595703125
+      },
+      "scope": "Outcome-feedback adaptation with supplied sources; no neural reliability estimator. Raw source feedback retained.",
+      "status": "measured"
+    },
+    {
+      "gates": {
+        "absent": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        },
+        "success": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        }
+      },
+      "id": "planning_ordinary",
+      "metrics": {
+        "absent_stop": 1.0,
+        "known_accuracy": 1.0,
+        "mean_cost": 1.59375,
+        "no_history_utility": 0.8888671874999999,
+        "success": 1.0,
+        "supplied_state_success": 1.0,
+        "utility": 0.9203125
+      },
+      "scope": "Supplied expectimax mechanics, four-action horizon, learned workspace reading. No learned world-model planner.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "absent": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        },
+        "success": {
+          "direction": "higher",
+          "status": "pass",
+          "strict": false,
+          "threshold": 0.95,
+          "value": 1.0
+        }
+      },
+      "id": "planning_relocation",
+      "metrics": {
+        "absent_stop": 1.0,
+        "correction_accuracy": 1.0,
+        "known_accuracy": 1.0,
+        "mean_cost": 2.0625,
+        "no_history_utility": 0.9093749999999999,
+        "success": 1.0,
+        "supplied_state_success": 1.0,
+        "utility": 0.896875
+      },
+      "scope": "Supplied expectimax mechanics, four-action horizon, learned workspace reading. No learned world-model planner.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "alignment": {
+          "direction": "higher",
+          "status": "fail",
+          "strict": false,
+          "threshold": 0.85,
+          "value": 0.1
+        }
+      },
+      "id": "planner_objective",
+      "metrics": {
+        "best_utility": 0.85,
+        "selected_utility": 0.1
+      },
+      "scope": "Previously known surrogate-reward mismatch, retained unchanged for the baseline.",
+      "status": "fail"
+    },
+    {
+      "gates": {
+        "rgb": {
+          "direction": "lower",
+          "status": "pass",
+          "strict": true,
+          "threshold": 0.23402000963687897,
+          "value": 0.05080489441752434
+        }
+      },
+      "id": "perception",
+      "metrics": {
+        "gray_mse": 0.23402000963687897,
+        "pose_mse": 0.01493518054485321,
+        "rgb_mse": 0.05080489441752434
+      },
+      "scope": "Separate short-trained CNN reconstruction/pose reference. Grouped test-frame prefix.",
+      "status": "pass"
+    },
+    {
+      "gates": {
+        "beats_copy": {
+          "direction": "lower",
+          "status": "fail",
+          "strict": true,
+          "threshold": 0.00046186341205611825,
+          "value": 0.05084492266178131
+        }
+      },
+      "id": "dynamics",
+      "metrics": {
+        "copy_image_mse": 0.00046186341205611825,
+        "gray_image_mse": 0.2340204417705536,
+        "image_mse": 0.05084492266178131
+      },
+      "scope": "Separate temporal reference, paired diagnostic decoder; overlapping real test windows.",
+      "status": "fail"
+    }
+  ],
+  "checkpoints": {
+    "dynamics": {
+      "parameters": 261792,
+      "path": "/home/alex/Documents/path-wm/runs/examples/dynamics/last.pt",
+      "prefix": "",
+      "sha256": "e3767f6824348fc5a50aa5e602831a01b7c65852e91d1b23a056769ea0c4b0cb",
+      "state_sha256": "e020d9ac9aaa7aeeea5288f072f6a4d509e80e2a0b53693d5f5c78c5d0c12acd"
+    },
+    "facts_direct": {
+      "parameters": 71684,
+      "path": "/home/alex/Documents/path-wm/runs/fact_grounding_v1/reference/last.pt",
+      "prefix": "agent.",
+      "sha256": "eec43cc215980aff9bd31023c39bfc41364f0d4ec79244972728318fc2305508",
+      "state_sha256": "e4fdf5c008d7711b2734057de26289cf23e3c49f92216abf7c4d32e418bc5b99"
+    },
+    "facts_event": {
+      "parameters": 525541,
+      "path": "/home/alex/Documents/path-wm/runs/event_fact_v1/lr_control/last.pt",
+      "prefix": "agent.",
+      "sha256": "d3d51a5a675ff42b205779a092cbbfce5db9278fae31cedd7578ef96d36be38b",
+      "state_sha256": "8e5d7294d0e74905c79fb28b1415525872a58d6d8fab5b2ee3049c186b03b1f8"
+    },
+    "gate": {
+      "parameters": 97,
+      "path": "/home/alex/Documents/path-wm/runs/entity_gate_v1/frozen_gate.pt",
+      "prefix": "",
+      "sha256": "7f97f1d1360d40c42db365e826dd871215c473e785375b5a731b03ff4780ad2e",
+      "state_sha256": "fad84354d565fb9a11e870fc41e2b294b6a0ca7d6ab9d7fc59e3a1c048593ad6"
+    },
+    "instructions": {
+      "parameters": 158449,
+      "path": "/home/alex/Documents/path-wm/runs/belief_v1/instructions/last.pt",
+      "prefix": "agent.",
+      "sha256": "aed8aa5e0e0861349109c95b32935aae3f9edb9d6ba19fc99aee5538393e8c45",
+      "state_sha256": "f5f8690d3029fc78a74d5d37701591f6f4ffbad812e25a9d21f5a2e979743998"
+    },
+    "interaction": {
+      "parameters": 2674,
+      "path": "/home/alex/Documents/path-wm/runs/entity_interaction_v1/frozen_interaction.pt",
+      "prefix": "",
+      "sha256": "f73dea13cc6793f6db20e91b4524f390df08d482c2bd1fc63e49aa23a70a3584",
+      "state_sha256": "0fa5dc4cdfbf1cb2c5949eae02c9f6d75d75c053a4ff51193c0a3923fcad4fde"
+    },
+    "key_box": {
+      "parameters": 162759,
+      "path": "/home/alex/Documents/path-wm/runs/key_box_v1/replica/last.pt",
+      "prefix": "",
+      "sha256": "7ed6cb1156b35ffe964339935a84408ab4fe9e86852e1f53baed96632c4cf4d9",
+      "state_sha256": "6ccfd0e18bb298ba60af48682453402a318edd036044241f79cffe3847e7a71c"
+    },
+    "perception": {
+      "parameters": 1111944,
+      "path": "/home/alex/Documents/path-wm/runs/examples/perception/last.pt",
+      "prefix": "",
+      "sha256": "bdd9f6e31bd0737640b486ec039f70cf630dcab814317ac3dbb21fc1bb3e449b",
+      "state_sha256": "41f69ce459e870c4ad1f6c8b76f86d83e65afdd139654cd50f873981e53cea99"
+    },
+    "pusht": {
+      "parameters": 158449,
+      "path": "/home/alex/Documents/path-wm/runs/belief_v1/pusht/last.pt",
+      "prefix": "agent.",
+      "sha256": "8688cb1171f135e7886acc0f2470edc211c4b2f904a0b045bb3d1b96b95fe5d1",
+      "state_sha256": "8dc108594445b53cff32da302c10930b615da021c8c79e489c81f6ad1a114a6f"
+    },
+    "recall": {
+      "parameters": 516838,
+      "path": "/home/alex/Documents/path-wm/runs/recall_v1/development/last.pt",
+      "prefix": "target.",
+      "sha256": "9196983685e59213952139ebd79d525769f39809cb48b7eb5491e12c0df37889",
+      "state_sha256": "baf3f9808b9715d08b67461980955fb7f4430b7515a0a09f7f1cedd8cf6a2e89"
+    },
+    "relation": {
+      "parameters": 280,
+      "path": "/home/alex/Documents/path-wm/runs/entity_relations_v1/frozen_key.pt",
+      "prefix": "",
+      "sha256": "3ef99f22533d6e42a27d1bf0b820f753f571d71aaca16c029204ba4e8dec83cc",
+      "state_sha256": "5360b33844d06d3ba972c72b597084171a0d81b165f29419f2597a0b8d8e497e"
+    },
+    "synthetic": {
+      "parameters": 158449,
+      "path": "/home/alex/Documents/path-wm/runs/belief_v1/synthetic/last.pt",
+      "prefix": "agent.",
+      "sha256": "e486848c3b193e3766348db76e05a6171efc5e70631b38f7b6daf69d60e6a464",
+      "state_sha256": "e9244ab31a1e5272144f7a7325091cb3fd13b1bdd19232d3a38f2f7b924d41f8"
+    },
+    "visual": {
+      "parameters": 108915,
+      "path": "/home/alex/Documents/path-wm/runs/direct_weights_v1/timing/weights.pt",
+      "prefix": "",
+      "sha256": "cae587512ee5f3cf089ce0e06296e6ad62f104f29ce818e0bc2c02f263d65f26",
+      "state_sha256": "546d39cfd8b5be056b92ba497b78fcb5155011d39defa959fce7f9b7a308fa38"
+    }
+  },
+  "gaps": [
+    {
+      "id": "real_visual_identity",
+      "reason": "No trained pixels-to-entity candidate/matching interface or reviewed real temporal identity answers.",
+      "status": "not_measured"
+    },
+    {
+      "id": "faces_and_person_beliefs",
+      "reason": "No current trained face recognition or person-state evaluation interface.",
+      "status": "not_measured"
+    },
+    {
+      "id": "learned_graph_and_concepts",
+      "reason": "Records and a supplied relation exist; learned topology/concept/skill formation is not implemented.",
+      "status": "not_measured"
+    },
+    {
+      "id": "speech_and_conversation",
+      "reason": "Toy waveform and byte decoders exist; no usable speech or conversational training/evaluation contract.",
+      "status": "not_measured"
+    },
+    {
+      "id": "essays_and_general_writing",
+      "reason": "No general language model/checkpoint or grounded writing evaluator.",
+      "status": "not_measured"
+    },
+    {
+      "id": "goal_directed_image_video",
+      "reason": "Reconstruction/imagined frames are measured above; prompt-conditioned content generation is not implemented.",
+      "status": "not_measured"
+    },
+    {
+      "id": "general_software_tools",
+      "reason": "Task proposals/output contracts exist; no integrated external software executor and verified completion loop.",
+      "status": "not_measured"
+    },
+    {
+      "id": "learned_dynamics_planning",
+      "reason": "Learned prediction and supplied-mechanics planning remain separate; no combined learned controller.",
+      "status": "not_measured"
+    },
+    {
+      "id": "live_webcam_memory",
+      "reason": "Camera/import software tested separately; live camera and reviewed real memory labels are not in this run.",
+      "status": "not_measured"
+    },
+    {
+      "id": "whole_agent_gpu_budget",
+      "reason": "This run measures CPU inference. Previous narrow visual GPU test cannot establish full training/inference headroom.",
+      "status": "not_measured"
+    }
+  ],
+  "optimizer_updates": 0,
+  "protocol_sha256": "92b95faf5caed2a2419debe1e8169553bbd7fa0b113624bd8e843aada55e6c86",
+  "provenance": "ai-executed",
+  "report_sha256": "dc83564932b6af3e07042e91a25a54e4b786786f5405e3f2b74b29ca55ffda21",
+  "resources": {
+    "cpu_wall_seconds": 211.15311760199256,
+    "peak_process_rss_bytes": 842817536
+  },
+  "result_file": "runs/capabilities_v1/reference/capabilities.json",
+  "result_sha256": "6f5386336cd716d6f028df091d09e6a2a6ddfb4a34f51111e15a5bd42557f99d",
+  "schema": "capability-baseline-evidence-v1",
+  "software_tests": 183,
+  "source_commit": "895cc86",
+  "verification": {
+    "all_gates_recomputed": true,
+    "audit_note": "Verifier corrected its own feedback-fee assumption for the frozen/no-feedback policies; all recorded costs then match the explicit contract.",
+    "cached_resume": true,
+    "cases": 34,
+    "checkpoint_and_artifact_hashes": true,
+    "comparison_check": "779836ae0dae71120e0d0b00f7d0a52df0aada24f4bc64da3d084d4dae5700a9",
+    "completed_status_after_resume": true,
+    "raw_results_unchanged_after_resume": true,
+    "recomputed_cases": [
+      "visual_original",
+      "visual_mirror",
+      "visual_swap_red_blue",
+      "visual_grayscale",
+      "visual_dim",
+      "visual_noise",
+      "constructed_modalities",
+      "prediction_synthetic",
+      "prediction_instructions",
+      "prediction_pusht",
+      "facts_direct",
+      "facts_event",
+      "recall",
+      "entity_novelty",
+      "entity_matching",
+      "state_reference",
+      "state_reset_order",
+      "state_toggle_length",
+      "state_no_information_length",
+      "state_idle_3",
+      "state_idle_31",
+      "relation_reference",
+      "relation_rebind",
+      "relation_gap",
+      "relation_permuted",
+      "relation_erased",
+      "source_static",
+      "planning_ordinary",
+      "planning_relocation",
+      "perception",
+      "dynamics",
+      "instructions",
+      "planner_objective",
+      "source_drift"
+    ],
+    "report_qa": "structural_only",
+    "report_sha256": "dc83564932b6af3e07042e91a25a54e4b786786f5405e3f2b74b29ca55ffda21",
+    "result_sha256": "6f5386336cd716d6f028df091d09e6a2a6ddfb4a34f51111e15a5bd42557f99d",
+    "schema": "capability-independent-audit-v1",
+    "software_tests": 183
+  }
+}

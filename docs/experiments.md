@@ -206,3 +206,13 @@ without allocating records. Use `--output runs/entity_novelty_v1/reference` for 
 fixed 256-update screen. Reports separate false merges, false splits, identity,
 NLL and selection coverage. Known/new distances are deliberately separated; this
 is not general open-world novelty detection or calibrated graph allocation.
+
+## Full current-capability baseline
+
+The [capability baseline](capability-baseline-plan.md#completed-baseline) records34
+behavioral/mechanism checks across13 separate checkpoint roles, plus the complete
+software suite and explicit missing capabilities. Use `--dataset capabilities`
+with a fresh output; `--baseline-reference runs/capabilities_v1/reference` produces
+metric deltas only when the protocol/populations match. `--capability-weights`
+accepts explicit compatible checkpoint overrides. No training occurs. Separate
+component successes do not constitute one fully trained agent.

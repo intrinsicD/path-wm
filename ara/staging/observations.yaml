@@ -2912,3 +2912,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O167
+  timestamp: 2026-09-12T16:44+02:00
+  provenance: ai-suggested
+  content: The frozen current paths support controlled visual recall and structured
+    entity/state/relation/planning specialists, while the tested general-agent
+    readout/prediction/instruction paths remain weak. These separate checkpoint
+    results cannot be combined into one trained-agent capability claim. The direct
+    color-sensitive circuit is not general visual identity or pretrained synthesis.
+  context: User requested a full comparison baseline; no weights changed. Fixed
+    small screens, some reused development populations and10 explicit gaps. Failures
+    concern evaluated paths and do not prove all latent information is absent.
+  potential_type: claim
+  bound_to: [N256]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

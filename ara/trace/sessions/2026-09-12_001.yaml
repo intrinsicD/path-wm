@@ -2,9 +2,9 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T16:04+02:00
-  turn_count: 7
-  summary: "User-directed binary weight experiment: first attempt fails, timing revision plus34 fitted head values passes64/64 fresh controlled answers;180 tests pass, no backprop or webcam claim."
+  last_turn: 2026-09-12T16:44+02:00
+  turn_count: 8
+  summary: "Frozen baseline:34 checks/13 model roles,183 software tests; controlled specialists pass, broader recall/prediction/instructions fail;10 gaps and no weight changes."
 events_logged:
 - turn: 1
   type: decision
@@ -95,6 +95,24 @@ events_logged:
   provenance: ai-suggested
   summary: Task-specific construction plus label fitting works on this finite check;
     generality and causal attribution remain untested.
+- turn: 8
+  type: decision
+  id: N255
+  routing: direct
+  provenance: user
+  summary: Request a complete current-capability baseline for later comparison.
+- turn: 8
+  type: experiment
+  id: N256
+  routing: direct
+  provenance: ai-executed
+  summary: 34 cases and183 software tests; successful specialists, failing general paths,10 gaps, no weight changes.
+- turn: 8
+  type: observation
+  id: O167
+  routing: staged
+  provenance: ai-suggested
+  summary: Separate checkpoint successes do not constitute one complete trained agent; direct visual pass remains color-specific.
 ai_actions:
 - turn: 1
   action: Recorded partial S02 answer and updated current state; no model changes
@@ -162,6 +180,19 @@ ai_actions:
   - docs/direct-weights-plan.md
   - docs/visual-memory-plan.md
   - docs/project-state.md
+- turn: 8
+  action: Obtained bounded public-only Claude critique; implemented frozen recipe,
+    raw reports and comparison guards; strict-loaded13 roles, ran all183 CPU tests,
+    evaluated34 cases, independently recomputed raw scores, verified cached resume.
+  provenance: ai-executed
+  files_changed:
+  - experiments/multimodal.py
+  - pathwm/evaluation/capabilities.py
+  - pathwm/evaluation/report.py
+  - tests/test_capabilities.py
+  - docs/capability-baseline-plan.md
+  - docs/experiments.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -184,13 +215,17 @@ key_context:
 - turn: 7
   excerpt: Create the weights file in binary; look at the architecture and guess the
     numerical weights, test them and adjust.
+- turn: 8
+  excerpt: Please test those too; full test of all currently available capabilities to compare now and later.
 open_threads:
 - 'S02/S04/T01: record own webcam scenes and verify labels; model-visible inputs, task ranges and acceptance gates remain open.'
 - 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
 - 'O162/O163: task/cost/evidence contract and learned-dynamics integration remain
   proposed.'
 - 'O165: generated visual input/readout slice now exists; broader optimizer curriculum is deferred and real-footage learning remains open.'
+- 'N256: freeze this baseline; useful general-agent recall, color-independent visual identity and learned prediction remain open.'
 ai_suggestions_pending:
 - 'O164: 28-take development pilot is proposed; no footage or memory benchmark completed.'
 - 'O165: curriculum authorized in principle; direct-weight test took priority, so ordinary training/real transfer remain incomplete.'
 - 'O166: do not generalize the fixed-task weight-construction pass beyond its measured scope.'
+- 'O167: baseline scope interpretation staged; no researcher endorsement of broader conclusions yet.'

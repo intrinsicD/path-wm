@@ -1278,3 +1278,14 @@ entries:
     or real-transfer promotion.
   - Claude withdrew incorrect test-selection-bias and memory-erasure descriptions.180
     tests and source/pixel/numeric audits support implementation; browser QA is structural-only.
+
+- turn: 2026-09-12_001#8
+  notes:
+  - N255 is the user's benchmark request, not acceptance of a new architecture.
+    N256 records execution and negatives without training or cross-component capability aggregation.
+  - Stage O167; no researcher comment on the new results yet. O166 remains bounded
+    and consistent with the color-shift failure; no contradiction or new claim promotion.
+  - O162/O163 and real-footage/optimizer-curriculum threads remain open, not abandoned
+    by a comprehensive measurement turn. No broad latent-information-loss inference.
+  - Frozen seeds, source/checkpoint hashes, all34 primary score audits and183 passing
+    software tests support reproducibility. Browser QA remains unavailable; no bypass.

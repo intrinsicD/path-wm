@@ -127,8 +127,8 @@ sessions:
 
 - id: 2026-09-12_001
   date: '2026-09-12'
-  summary: "User-directed binary weight experiment: first attempt fails, timing revision plus34 fitted head values passes64/64 fresh controlled answers;180 tests pass, no backprop or webcam claim."
-  turn_count: 7
-  events_count: 13
+  summary: "Frozen baseline:34 checks/13 model roles,183 software tests; controlled specialists pass, broader recall/prediction/instructions fail;10 gaps and no weight changes."
+  turn_count: 8
+  events_count: 16
   claims_touched: []
-  open_threads: 4
+  open_threads: 5

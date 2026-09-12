@@ -117,3 +117,98 @@ encoders. Raw text token IDs and image/audio/video arrays remain inspectable.
 No threshold is added after scoring. Methodological gates are diagnostic targets,
 not estimates of general competence. Failure to beat a baseline describes the
 observed deployed path; it does not prove all underlying representations are useless.
+
+## Completed baseline
+
+Implementation/source895cc86; no scoring or weight-selection deviations. All13
+roles load strictly.183 CPU tests pass in167.56s. The formal evaluation finishes in
+211.15s with842817536 bytes peak process RSS (803.77MiB); this includes loading and
+retaining several model roles and data, not a single-agent deployment footprint.
+
+[Standalone report](../runs/capabilities_v1/reference/report.html),
+[raw scorecard](../runs/capabilities_v1/reference/capabilities.json),
+[independent verification](../runs/capabilities_v1/verification.json).
+The34 case rows comprise21 passing diagnostic screens,11 failing screens and2
+measurements without an aggregate gate. These counts are coverage, not an overall
+capability score. Ten other abilities/budget claims have explicit coverage gaps.
+
+| Path and evaluated scope | Baseline |
+| --- | --- |
+| Constructed visual memory: original, reflection, half brightness, noise |64/64 correct per condition;32/32 complete pairs; erased controls50% |
+| Same checkpoint, red/blue channel swap |31/64 correct (48.4375%);0 complete pairs |
+| Same checkpoint, grayscale |32/64 correct;0 complete pairs |
+| Same checkpoint, other modalities and actions |Constant0.5 RGB, zero audio, no generated content tokens; tested text/audio/video encoder contrasts and opposite actions cause zero feature/state change |
+| Direct structured facts, reused32 combinations |32/32 entity and location answers |
+| Through-agent structured facts, same32 combinations |0/32 entities,24/32 locations |
+| Historical recall, reused15 episodes |0 answered, all abstained; forced factual accuracy20%; cost0.25 equals all-abstain |
+| Instruction operation selection,16 toy test templates |2/16 correct; lexical reference10/16; enforced output-contract violations0 |
+| Variable candidate identity matching |256/256 on reused development descriptors; fresh two-candidate matching16/16 |
+| State updates, six temporal/no-information/idle conditions |128/128 entity pairs per condition; runtime readout, retry and restore agreement pass |
+| Learned relation addressing/interaction |48/48 three-state outcomes for each non-erased condition; erased relation rejects48/48 and state accuracy50% |
+| Static source feedback |Useful source15/16 worlds; utility0.769775 vs stop0.733154; accuracy79.05% |
+| Source changes |Window adaptation improves drift utility but harms static utility; all policy traces retained, no universal reliability claim |
+| Supplied-mechanics key planning, ordinary and relocation |96/96 reachable and32/32 absent per condition;192/192 relocation correction reads |
+| Planner objective alignment |Still fails: selects expected reported utility0.10 while stop would give0.85 |
+| Separate short-trained perception reference |RGB MSE0.050805 vs gray0.234020; pose MSE0.014935 |
+| General belief-agent prediction, synthetic and real |Image MSE0.236598 vs copy0.005635; real0.237103 vs copy0.000071984; synthetic audio also loses to silence |
+| Separate learned temporal reference |RGB MSE0.050845 vs copy0.000461863 |
+
+The learned planning core's ordinary memory utility advantage is0.0314453;
+relocation utility0.896875 is below no-history0.909375. Its task-success pass still
+does not demonstrate universally useful memory or learned transition planning.
+
+Checksums and primary scores were independently recomputed for all34 cases from
+raw logits, targets, arrays or execution/feedback traces. The independent verifier
+initially assigned a feedback fee to the no-feedback policy; correcting that
+verifier assumption produced exact agreement with the existing explicit fee contract.
+No model or measured result was changed. Cached resume leaves raw results and the
+report hash unchanged; same-run comparisons give zero deltas and changed populations
+are rejected. Reports have structural verification only; browser QA remains unavailable
+under the existing restriction. Prior media decode receipts are historical evidence;
+this run adds actual image-input/decoder tests, not labeled real-scene memory tests.
+
+### Repeat and compare
+
+Run from the repository with its installed environment, using a fresh output path:
+
+```bash
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 .venv/bin/python experiments/multimodal.py \
+  --dataset capabilities --check
+
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 .venv/bin/python experiments/multimodal.py \
+  --dataset capabilities --output runs/my_capability_check \
+  --baseline-reference runs/capabilities_v1/reference
+
+# Cached report regeneration; no repeated model evaluation.
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 .venv/bin/python experiments/multimodal.py \
+  --resume runs/capabilities_v1/reference
+```
+
+Use `--capability-weights /path/to/weights.json` to test changed weights. That JSON
+maps explicit roles to compatible checkpoint files, for example:
+
+```json
+{"visual": "runs/my_new_visual_model/weights.pt"}
+```
+
+Unspecified roles keep the original checkpoint paths. Roles with ordinary agent
+checkpoints require the accompanying `run.json` settings and the existing schema;
+architecture changes need an explicit constructor change. The suite never selects
+a winner or fits readouts. Reusing these cases establishes a regression comparison;
+reserve a fresh separately declared evaluation for generalization claims. A changed
+population, evaluator protocol or metric set cannot silently become a comparable
+number. New capabilities require a protocol extension while retaining the v1 cases.
+
+Software verification can be attached with `--capability-software PATH`: this
+baseline's `runs/capabilities_v1/software.json` binds its full test run to exact
+source hashes and includes per-module counts. It is rejected after relevant source
+changes. Raw behavior and software evidence remain separate. `reference/last.pt`
+is an evaluation snapshot containing all13 named model roles; it is not a newly
+trained unified agent. The original visual `weights.pt` remains unchanged.
+
+Next work should address the measured failures, with this baseline frozen: broaden
+visual identity beyond a color circuit, repair useful through-agent recall, and
+train/evaluate action-conditioned predictions before combining them with planning.
+Real webcam identity/memory still needs a pixel-to-entity path and reviewed temporal
+answer keys. Speech, general writing, generative media, software execution, learned
+concept/topology formation and a joint GPU budget remain explicitly unestablished.

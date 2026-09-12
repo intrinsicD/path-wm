@@ -3941,3 +3941,39 @@ tree:
   - N252
   - N253
   status: resolved
+
+- id: N255
+  type: decision
+  title: Establish a full current-capability baseline before future improvements
+  provenance: user
+  timestamp: 2026-09-12T16:44+02:00
+  choice: User requests tests of the remaining capabilities as well as the direct
+    weights so current and later performance can be compared. Freeze evaluation
+    checkpoints and populations; preserve missing capabilities explicitly.
+  alternatives:
+  - Extrapolate the narrow visual-memory pass to general competence
+  - Change weights during baseline scoring
+  evidence:
+  - docs/capability-baseline-plan.md
+  also_depends_on: [N254]
+  status: resolved
+- id: N256
+  type: experiment
+  title: Frozen multi-component baseline separates working specialists from general-agent failures
+  provenance: ai-executed
+  timestamp: 2026-09-12T16:44+02:00
+  result: 34 checks across13 checkpoint roles;183 software tests pass. Direct visual
+    original/mirror/dim/noise64/64, red-blue31/64, grayscale32/64; non-image input
+    contrasts and opposing actions show zero sensitivity in that constructed agent,
+    which emits gray/silence/no text content. Structured state/relations and supplied
+    planner pass; through-agent fact identity0/32, recall answers0/15, instructions2/16,
+    learned prediction loses to copy. Known objective mismatch persists. Ten gaps.
+    No neural weight changes;211.15s CPU,803.77MiB peak RSS. All34 raw-case audits,
+    hashes, cached resume and comparison checks pass; report structural-only.
+  evidence:
+  - ara/evidence/tables/capability_baseline_2026-09-12.json
+  - runs/capabilities_v1/reference/capabilities.json
+  - runs/capabilities_v1/verification.json
+  - runs/capabilities_v1/software.json
+  also_depends_on: [N255, N254, N243, N241]
+  status: resolved
