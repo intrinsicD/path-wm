@@ -1,5 +1,15 @@
 # Adopted architecture investigations
 
+## A06: Replaceable modality generators conditioned on agent state
+
+- **Design**: Agent state, request and relevant memory guide modality-specific generators through learned conditioning adapters. Keep each generator and its matching codec/decoder replaceable. Agent latents need not equal codec latents. Establish the conditioning/output boundary early; allow separate pretraining and staged alignment. Swapping implementations can require adapter retraining and codec-version handling. Text may combine generator and decoder in one token model; an extra codec is not mandatory for every modality.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O176
+- **Adoption**: N273; user endorses the preceding image-generation proposal and extends it to the other modalities.
+- **Design/source binding**: [adopted multimodal boundary](../../../docs/multimodal.md#adopted-output-design), [current image adapter](../../../pathwm/models/decoders.py), [image slice](../../../docs/image-output-plan.md).
+- **Scope**: Adopted design, not general generation implemented or a backend selected. Existing image transport/four-request fit and modality shape/gradient checks remain the only new image-slice evidence. Exact shared schema, training objectives, temporal coordination and resource validation remain open.
+
 ## A01: Bounded encoder diagnostic and depth/exchange study
 
 - **Design**: Adopt O49 as an investigation: bounded frozen readout/pretrained reference, then two residual blocks per branch crossed with exchange on/off, preserving the 320×64 latent interface. Additional scales, registers and broader tasks remain conditional. Adoption does not designate a production replacement or establish efficacy.

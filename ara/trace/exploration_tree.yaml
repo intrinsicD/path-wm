@@ -4259,3 +4259,16 @@ tree:
     'https://huggingface.co/docs/diffusers/main/api/pipelines/flux']
   also_depends_on: [N269, N271]
   status: resolved
+
+- id: N273
+  type: decision
+  title: Adopt the replaceable conditioned-output boundary for all modalities
+  provenance: user
+  timestamp: 2026-09-12T23:24+02:00
+  choice: Endorse the preceding modular latent-guided image-generation design and
+    apply the same separation to other modality outputs. Preserve modality-specific
+    internal architectures, training and temporal contracts.
+  alternatives: [Bind every output permanently to one codec latent space]
+  evidence: [O176, docs/multimodal.md#adopted-output-design]
+  also_depends_on: [N272]
+  status: resolved

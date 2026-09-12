@@ -131,7 +131,8 @@ sessions:
     improves10% across two seeds. Input ambiguity and decoder sensitivity isolated;
     original ordinary models remain better, one extra control budget-stopped. New detail
     transport and state-only four-prompt fit pass; public-only Claude critique completed.
-  turn_count: 17
-  events_count: 41
+    Shared replaceable modality-output design adopted.
+  turn_count: 18
+  events_count: 44
   claims_touched: []
   open_threads: 12

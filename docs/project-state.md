@@ -1,5 +1,11 @@
 # Current work
 
+**Shared modality-output boundary adopted, 12 September:** state/request/memory
+conditioning feeds replaceable modality-specific generators and matching codecs.
+Separate training is allowed; state alignment and cross-modal timing/content need
+explicit tests. [Design](multimodal.md#adopted-output-design). Documentation only;
+no backend selected, model changed or new capability result.
+
 **Image detail and request-only output interface pass scoped screens, 12 September:**
 the opt-in detail channel reduces real COCO reconstruction MSE0.012395→0.000879
 (92.9%,128 reused images, zero updates). This transports source pixels; it is not

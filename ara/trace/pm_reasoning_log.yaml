@@ -1406,3 +1406,13 @@ entries:
   - Primary sources support separate latent generation/decoding and learned adapter
     conditioning. They do not show this agent's states can already control a pretrained
     generator or that any selected model fits its local GPU. No new empirical claim.
+
+- turn: 2026-09-12_001#18
+  notes:
+  - Explicit user endorsement of the immediately preceding modular-generation proposal
+    and extension to other modalities closes O176; promote to A06 with user-revised
+    provenance. N273 records adoption, not an experiment or chosen backend.
+  - Stage O177 as a coordination requirement; it was introduced in this explanation
+    and has no user-selected implementation or measured synchronization result.
+  - O175's scoped capability interpretation and older repair/training proposals are
+    not promoted by this architecture approval. Related topics remain active.

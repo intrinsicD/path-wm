@@ -2,8 +2,8 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T23:13+02:00
-  turn_count: 17
+  last_turn: 2026-09-12T23:24+02:00
+  turn_count: 18
   summary: Exact handwritten initialization trained after decoder-rate repair; joint
     reconstruction improves10% on both seeds but ordinary initialization remains better.
     Encoder ambiguity and decoder sensitivity isolated; one extra control budget-stopped.
@@ -11,7 +11,8 @@ session:
     primary autoencoder papers. Higher-resolution work remains proposed.
     Public-only Claude review completed for a new state-output slice. Source-detail
     transport repairs blockiness and request-only four-pattern fitting passes. General
-    generation, compact detail retention and temporal memory remain open.
+    generation, compact detail retention and temporal memory remain open. Shared
+    replaceable modality-output boundary adopted; implementation details remain open.
 
 events_logged:
 - turn: 11
@@ -281,6 +282,25 @@ events_logged:
   provenance: ai-suggested
   summary: Define latent conditioning early, allow separate generator/codec training and later aligned replacement.
 
+- turn: 18
+  type: decision
+  id: N273
+  routing: direct
+  provenance: user
+  summary: Adopt modular latent-guided output generation across modalities.
+- turn: 18
+  type: architecture
+  id: A06
+  routing: crystallized
+  provenance: user-revised
+  summary: O176 crystallized through explicit endorsement and extension to other modalities.
+- turn: 18
+  type: observation
+  id: O177
+  routing: staged
+  provenance: ai-suggested
+  summary: Cross-modal content/timing agreement requires explicit coordination tests.
+
 ai_actions:
 - turn: 11
   action: Inspected residual stages, merges, fusion, timing contracts and completed plan; checked
@@ -466,6 +486,13 @@ ai_actions:
   provenance: ai-executed
   files_changed: []
 
+- turn: 18
+  action: Documented adopted modality-output design and its text/audio/video distinctions;
+    checked primary audio-codec and video-generation papers. No source model changes,
+    downloads, training, tests or new capability measurements.
+  provenance: ai-executed
+  files_changed: [docs/multimodal.md, docs/project-state.md]
+
 claims_touched: []
 key_context:
 - turn: 11
@@ -522,6 +549,9 @@ key_context:
   excerpt: I want latent-guided general image generation; is it primarily a decoder
     thing we can exchange later, or must it be integrated from the start?
 
+- turn: 18
+  excerpt: yes ok, this sounds good. it should similarly work for the other modalities...
+
 open_threads:
 - 'S02/S04/T01: record own webcam scenes and verify labels; model-visible inputs, task ranges and acceptance gates remain open.'
 - 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
@@ -537,7 +567,7 @@ open_threads:
 
 - 'N267/O173: explicit detail transport works; compact learned detail and higher-resolution comparison remain open.'
 - 'N271/O175: held-out paired image/request learning, compact codec, memory/dynamics integration and useful other-modality generation remain open.'
-- 'N272/O176: proposed replaceable generator/codec and trained conditioning boundary; concrete contract/backend selection remain open.'
+- 'N273/A06: output boundary adopted across modalities; concrete schema, backends, objectives, timing and resource tests remain open.'
 
 ai_suggestions_pending:
 - 'O170: structural plausibility and locality/semantics distinction; no established cause of weak
@@ -557,4 +587,4 @@ ai_suggestions_pending:
 
 - 'O174: tiny fit and transport control completed; full compact-codec, matched-duration and higher-resolution sequence not yet implemented.'
 - 'O175: scoped transport and state-producer interpretation awaits researcher response; do not equate memorization with generation quality.'
-- 'O176: modular generation and early conditioning recommendation awaits adoption; no backend or training strategy fixed.'
+- 'O177: explicit cross-modal content/timing tests proposed; no synchronization mechanism selected.'

@@ -14,6 +14,43 @@ Instructions now have a task-token interpreter and learned operation/output head
 [Output controls, requester/producer attribution and generated feedback](tasks.md)
 describe the concrete interfaces, enforcement rules and synthetic training path.
 
+## Adopted output design
+
+Alex adopted this boundary for all modality outputs on12 September2026:
+
+`request + agent state + relevant memory → learned conditioning → modality generator → output`.
+
+Each modality's generator and matching decoder/codec form a replaceable subsystem.
+The shared interface carries relevant context, validity and output requirements;
+each adapter learns how that context guides its particular generator. Agent states
+need not use the same latent coordinates as image/audio/video codecs. A replacement
+may require adapter retraining and codec-version migration. Matching tensor shapes
+does not establish semantic compatibility. Separate pretraining and staged adapter
+training are allowed; useful conditioning must be evaluated early.
+
+| Modality | Intended output production |
+| --- | --- |
+| Text | Generate a token sequence; generator and decoder may be the same autoregressive network. |
+| Image | Generate a spatial image representation, then decode pixels. |
+| Audio/speech | Generate a timed waveform or codec sequence, then decode samples where a codec is used. |
+| Video | Generate a temporally coherent visual sequence, then decode frames or video-codec latents. |
+
+Audio codecs such as [EnCodec](https://arxiv.org/abs/2210.13438) and temporal image-
+generator extensions such as [Video LDM](https://arxiv.org/abs/2304.08818) illustrate
+different internal implementations; neither is selected or installed here. There
+is no requirement to add an extra codec layer to every modality.
+
+Combined outputs must agree on shared content and timing. For example, spoken words
+should agree with generated text, and audiovisual events should align in time.
+The interface must support that coordination; shared conditioning alone is not a
+guarantee of agreement. Generated outputs retain the existing provenance rules.
+
+This is an adopted design, not newly implemented general generation. The concrete
+[image-output slice](image-output-plan.md) currently validates a source-detail
+transport control and a four-request state-only fit. The other modalities retain
+their documented development adapters. Backend choices, exact conditioning schema,
+modality objectives, synchronization tests and measured resource budgets remain open.
+
 ## State and components
 
 The default state has 30 tokens of width 32. Parameters and learned initial tokens

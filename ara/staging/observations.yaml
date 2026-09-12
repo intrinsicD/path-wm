@@ -3106,6 +3106,21 @@ observations:
     not ready-made compatibility with this agent's arbitrary state tensors.
   potential_type: architecture
   bound_to: [N272, N271]
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A06
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O177
+  timestamp: 2026-09-12T23:24+02:00
+  provenance: ai-suggested
+  content: Combined modality outputs should share intended content and timing, with
+    explicit tests for agreement. Shared latent conditioning alone does not establish
+    that speech matches text or that audiovisual events are synchronized.
+  context: Generalizing the adopted output boundary to audio, video and text; no
+    synchronization mechanism, training or cross-modal quality experiment added.
+  potential_type: constraint
+  bound_to: [N273]
   promoted: false
   promoted_to: null
   crystallized_via: null
