@@ -10,6 +10,40 @@ from .modalities import Observation
 from .multiscale import MultiScaleImageEncoder
 
 
+class PatchDetailEncoder(nn.Module):
+    """Opt-in detail transport alongside an existing encoder.
+
+    This high-bandwidth residual is a capacity control, not compressed semantics.
+    A state producer must predict it too when no source image is available.
+    """
+
+    def __init__(self, base, image_size=64, patch_size=4):
+        super().__init__()
+        if min(image_size, patch_size) < 1 or image_size % patch_size:
+            raise ValueError("Image size must be positive and divisible by patch size")
+        if "detail" in base.feature_spec:
+            raise ValueError("Base already declares detail features")
+        self.base, self.image_size, self.patch_size = base, image_size, patch_size
+        channels, side = 3 * patch_size**2, image_size // patch_size
+        self.projection = nn.Conv2d(channels, channels, 1, bias=False)
+        with torch.no_grad():
+            self.projection.weight.copy_(torch.eye(channels)[:, :, None, None])
+        self.feature_spec = dict(base.feature_spec)
+        self.feature_spec["detail"] = FeatureSpec(
+            channels, (side, side), "within-patch RGB residual transport"
+        )
+
+    def forward(self, rgb):
+        if rgb.ndim != 4 or rgb.shape[1:] != (3, self.image_size, self.image_size):
+            raise ValueError("RGB shape differs from declared detail image size")
+        p = self.patch_size
+        means = F.interpolate(F.avg_pool2d(rgb, p), scale_factor=p, mode="nearest")
+        return {
+            **self.base(rgb),
+            "detail": self.projection(F.pixel_unshuffle(rgb - means, p)),
+        }
+
+
 class PyramidEncoder(nn.Module):
     """Single-image spatial adapter for the processed modality hierarchy.
 

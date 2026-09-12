@@ -54,11 +54,16 @@ def test_state_produces_all_features_and_gradients_cross_frozen_decoder():
     assert set(decoder.features(tokens)) == set(encoder.feature_spec)
     x.square().mean().backward()
     assert tokens.grad.abs().sum() > 0
-    assert any(p.grad is not None and p.grad.abs().sum() > 0 for p in decoder.reader.parameters())
+    assert any(
+        p.grad is not None and p.grad.abs().sum() > 0
+        for p in decoder.reader.parameters()
+    )
     assert all(p.grad is None for p in head.parameters())
     assert not torch.equal(decoder(tokens), decoder(tokens.flip(0)))
     with pytest.raises(ValueError, match="finite"):
-        decoder.calibrate({k: torch.full_like(v, float("nan")) for k, v in targets.items()})
+        decoder.calibrate(
+            {k: torch.full_like(v, float("nan")) for k, v in targets.items()}
+        )
 
 
 def test_request_path_has_no_image_encoder_and_responds_to_request():
@@ -75,4 +80,51 @@ def test_request_path_has_no_image_encoder_and_responds_to_request():
     state = agent.observe(agent.initial_state(2), {"text": obs}, time=0)
     image = agent.decode(state, modalities=["image"])["image"]
     assert not torch.equal(image[0], image[1])
-    assert torch.equal(image, agent.decode(replace(state, tokens=state.tokens.clone()), modalities=["image"])["image"])
+    assert torch.equal(
+        image,
+        agent.decode(replace(state, tokens=state.tokens.clone()), modalities=["image"])[
+            "image"
+        ],
+    )
+
+
+def test_request_training_resumes_exactly_and_preserves_frozen_head(tmp_path):
+    from experiments.image_output import build_agent, patterns, train_request
+    from pathwm.models.encoders import PatchDetailEncoder
+    from pathwm.models.decoders import PatchDetailHead, StateFeatureDecoder
+    from pathwm.io import state_hash
+    from tests.test_runs import equal_tree
+
+    def run(path, resume=False, stop_after=None):
+        torch.manual_seed(21)
+        encoder = PatchDetailEncoder(BaseEncoder(), image_size=8)
+        head = PatchDetailHead(BaseHead()).requires_grad_(False)
+        decoder = StateFeatureDecoder(16, encoder.feature_spec, head)
+        requests, pixels = patterns(8)
+        with torch.no_grad():
+            targets = encoder(pixels)
+        decoder.calibrate(targets)
+        agent = build_agent(decoder, width=16)
+        before = state_hash(head)
+        trained = train_request(
+            agent,
+            requests,
+            pixels,
+            targets,
+            output=path,
+            settings=dict(seed=21, steps=4, batch_size=2, wall_seconds=300),
+            resume=resume,
+            stop_after=stop_after,
+        )
+        assert state_hash(head) == before
+        assert all(p.grad is None for p in head.parameters())
+        return torch.load(trained.path / "last.pt", weights_only=True)
+
+    full = run(tmp_path / "full")
+    run(tmp_path / "resumed", stop_after=2)
+    resumed = run(tmp_path / "resumed", resume=True)
+    for key in ("model", "optimizer", "sampler", "torch", "step"):
+        equal_tree(full[key], resumed[key])
+    assert [r for r in full["rows"] if r["split"] == "train"] == [
+        r for r in resumed["rows"] if r["split"] == "train"
+    ]

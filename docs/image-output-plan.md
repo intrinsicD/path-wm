@@ -51,3 +51,12 @@ specify every detail. A dynamics objective alone does not teach this function.
 The same contract applies to text/audio/video, but their autoregressive/temporal
 objectives, synchronization and practical codecs need separate training and tests.
 This slice makes no claim that those capabilities are repaired.
+
+Implementation review: Claude reviewed only generic public concepts, with no
+repository access or private measurements. Its leakage and memorization cautions
+are adopted above; exact brief/response/receipt are retained under
+`runs/reviews/continuation_2026-09-11/output-contract-public-*`. No additional
+round was needed because there was no disputed recommendation. Local review
+added standalone checkpoint loading and target-aware report labels. All34
+targeted image-output, hierarchy, multimodal and checkpoint tests pass, including
+exact CPU interrupted/resumed model/optimizer/RNG/sampler equality. Lint passes.

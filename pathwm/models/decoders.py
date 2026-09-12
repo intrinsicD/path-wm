@@ -5,6 +5,112 @@ from torch import nn
 from torch.nn import functional as F
 from .blocks import SpatialResidual
 from .features import validate
+from .modalities import Attend
+
+
+class PatchDetailHead(nn.Module):
+    """Combine base patch means and independently supplied intra-patch detail.
+
+    Both inputs must come from the same producer. No encoder or source image is
+    owned by this head. The identity detail initialization is not a learned codec.
+    """
+
+    def __init__(self, base, patch_size=4):
+        super().__init__()
+        if patch_size < 1:
+            raise ValueError("Patch size must be positive")
+        self.base, self.patch_size = base, patch_size
+        channels = 3 * patch_size**2
+        self.projection = nn.Conv2d(channels, channels, 1, bias=False)
+        with torch.no_grad():
+            self.projection.weight.copy_(torch.eye(channels)[:, :, None, None])
+
+    def forward(self, features):
+        if "detail" not in features:
+            raise ValueError("Decoder requires explicit detail features")
+        base, detail, p = self.base(features), features["detail"], self.patch_size
+        if (
+            base.ndim != 4
+            or base.shape[1] != 3
+            or base.shape[-2] % p
+            or base.shape[-1] % p
+            or detail.shape
+            != (len(base), 3 * p**2, base.shape[-2] // p, base.shape[-1] // p)
+        ):
+            raise ValueError("Base output and detail feature shapes disagree")
+        residual = F.pixel_shuffle(self.projection(detail), p)
+        residual = residual - F.interpolate(
+            F.avg_pool2d(residual, p), scale_factor=p, mode="nearest"
+        )
+        means = F.interpolate(F.avg_pool2d(base, p), scale_factor=p, mode="nearest")
+        return (means + residual).clamp(0, 1)
+
+
+class StateFeatureDecoder(nn.Module):
+    """Produce a spatial decoder's complete input from model state tokens.
+
+    Calibration uses training features only; buffers travel with checkpoints.
+    Freezing the head leaves the path to these predicted features differentiable.
+    This deterministic producer is not a trained general generative prior.
+    """
+
+    def __init__(self, width, feature_spec, head):
+        super().__init__()
+        if not feature_spec:
+            raise ValueError("A state decoder requires spatial feature specifications")
+        self.width, self.feature_spec, self.head = width, dict(feature_spec), head
+        self.queries = nn.ParameterDict()
+        self.reader, self.projections = nn.ModuleDict(), nn.ModuleDict()
+        for i, (name, spec) in enumerate(self.feature_spec.items()):
+            self.queries[name] = nn.Parameter(
+                torch.randn(spec.size[0] * spec.size[1], width) * 0.02
+            )
+            self.reader[name] = Attend(width)
+            self.projections[name] = nn.Linear(width, spec.channels)
+            self.register_buffer(f"mean_{i}", torch.zeros(1, spec.channels, 1, 1))
+            self.register_buffer(f"scale_{i}", torch.ones(1, spec.channels, 1, 1))
+
+    @torch.no_grad()
+    def calibrate(self, training_features):
+        validate(training_features, self.feature_spec)
+        if not all(
+            torch.isfinite(training_features[k]).all() for k in self.feature_spec
+        ):
+            raise ValueError("Calibration requires finite training features")
+        for i, name in enumerate(self.feature_spec):
+            value = training_features[name]
+            getattr(self, f"mean_{i}").copy_(value.mean((0, 2, 3), keepdim=True))
+            getattr(self, f"scale_{i}").copy_(
+                value.std((0, 2, 3), correction=0, keepdim=True).clamp_min(0.01)
+            )
+
+    def features(self, tokens, trace=None):
+        if tokens.ndim != 3 or tokens.shape[-1] != self.width or tokens.shape[1] < 1:
+            raise ValueError("State decoder requires nonempty [B,N,width] tokens")
+        result = {}
+        for i, (name, spec) in enumerate(self.feature_spec.items()):
+            query = self.queries[name].expand(len(tokens), -1, -1)
+            x = self.reader[name](
+                query, tokens, trace=trace, name=f"decode.{name}.attention"
+            )
+            x = (
+                self.projections[name](x)
+                .transpose(1, 2)
+                .reshape(len(tokens), spec.channels, *spec.size)
+            )
+            result[name] = x * getattr(self, f"scale_{i}") + getattr(self, f"mean_{i}")
+        return result
+
+    def latent_loss(self, generated, target):
+        validate(generated, self.feature_spec)
+        validate(target, self.feature_spec)
+        return sum(
+            ((generated[k] - target[k]) / getattr(self, f"scale_{i}")).square().mean()
+            for i, k in enumerate(self.feature_spec)
+        ) / len(self.feature_spec)
+
+    def forward(self, tokens, trace=None):
+        return self.head(self.features(tokens, trace=trace))
 
 
 class ReconstructionDecoder(nn.Module):

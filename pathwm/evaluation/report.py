@@ -1272,6 +1272,9 @@ def render_report(directory):
         ]:
             if key not in examples:
                 continue
+            label = escape(
+                record["identity"]["settings"].get("example_labels", {}).get(key, label)
+            )
             parts.append(f'<section><h2>{label}</h2><div class="gallery">')
             for i, x in enumerate(examples[key]):
                 parts.append(
