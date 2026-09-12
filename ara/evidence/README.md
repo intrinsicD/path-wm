@@ -118,3 +118,7 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Key-box objective counterexample](tables/key_box_objective_review_2026-09-11.json): N243; direct code probe, not a new benchmark.
 
 - [Full current capability baseline](tables/capability_baseline_2026-09-12.json): N256;34 cases/13 checkpoint roles,183 software tests, explicit failures and10 gaps.
+
+- [Handwritten initialization training](tables/hierarchy_training_2026-09-12.json): N265/N266;
+  original decoder-rate collapse, validation-selected repair, two-seed frozen-component
+  diagnosis, exact trained binaries, and one budget-stopped ordinary control.

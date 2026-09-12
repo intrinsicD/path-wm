@@ -2,11 +2,12 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T21:06+02:00
-  turn_count: 12
-  summary: Direct hierarchy weights and132-coefficient fit tested;197 tests pass.
-    Color transport works, both perception gates fail; trained references retained.
-    Claude send blocked before launch; temporal memory remains open.
+  last_turn: 2026-09-12T21:52+02:00
+  turn_count: 13
+  summary: Exact handwritten initialization trained after decoder-rate repair; joint
+    reconstruction improves10% on both seeds but ordinary initialization remains better.
+    Encoder ambiguity and decoder sensitivity isolated; one extra control budget-stopped.
+    Claude retry blocked; temporal memory and fine-detail learning remain open.
 
 events_logged:
 - turn: 11
@@ -187,6 +188,31 @@ events_logged:
   summary: Color transport demonstrates a narrow constructed circuit, not pretrained semantics
     or adequate foreground quality.
 
+- turn: 13
+  type: decision
+  id: N264
+  routing: direct
+  provenance: user
+  summary: Adopt exact handwritten initialization for training and request encoder-versus-decoder diagnosis.
+- turn: 13
+  type: experiment
+  id: N265
+  routing: direct
+  provenance: ai-executed
+  summary: Original rate collapses joint and decoder-only hand runs; frozen encoder-only improves.
+- turn: 13
+  type: experiment
+  id: N266
+  routing: direct
+  provenance: ai-executed
+  summary: Validation-selected smaller decoder rate enables10% joint improvement; one ordinary control stops at budget.
+- turn: 13
+  type: observation
+  id: O172
+  routing: staged
+  provenance: ai-suggested
+  summary: Both input ambiguity and decoder conditioning contribute; no additive error attribution or superiority claim.
+
 ai_actions:
 - turn: 11
   action: Inspected residual stages, merges, fusion, timing contracts and completed plan; checked
@@ -323,6 +349,22 @@ ai_actions:
   - docs/project-state.md
   - docs/experiments.md
 
+- turn: 13
+  action: Implemented strict initialization, freeze scopes, RGB-only learning, information/gradient
+    probes, function-preserving residual opening and separate decoder rate in the existing recipe.
+   203 full-suite and15 focused checks pass. Original10 runs and repair7 completed runs,
+    three paused validation trials and one budget-stopped control retained. Independent90/81
+    metric audits and binary/frozen/sampling checks pass; GPU trial resumes and CPU binary
+    inference verified. Claude retry blocked before launch; no external review. Inspected
+    plots and fixed examples, documented usage and limitations, structural-only HTML QA.
+  provenance: ai-executed
+  files_changed:
+  - experiments/hierarchy_fusion.py
+  - tests/test_hierarchy_fusion.py
+  - docs/hierarchy-training-plan.md
+  - docs/project-state.md
+  - docs/experiments.md
+
 claims_touched: []
 key_context:
 - turn: 11
@@ -359,6 +401,10 @@ key_context:
 - turn: 12
   excerpt: Did you generate the weights for this as well? If not please do and run the test again.
 
+- turn: 13
+  excerpt: I want the handwritten weights used as initialization; start training there and
+    find whether poor reconstruction is caused by learned encoder/features, decoder, or both.
+
 open_threads:
 - 'S02/S04/T01: record own webcam scenes and verify labels; model-visible inputs, task ranges and acceptance gates remain open.'
 - 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
@@ -370,6 +416,8 @@ open_threads:
 - 'N260: define and test bounded cross-window encoder state against reset histories; recurrence remains unimplemented.'
 - 'N263: Claude review brief awaits specific export approval after automatic rejection; no external
   review completed.'
+- 'N266/O172: fine-detail recovery and stable useful feature learning remain open; last same-rate
+  ordinary control incomplete at the fixed compute cap. Do not infer additive E/D error shares.'
 
 ai_suggestions_pending:
 - 'O170: structural plausibility and locality/semantics distinction; no established cause of weak
@@ -382,3 +430,5 @@ ai_suggestions_pending:
 - 'O169: two-seed fusion interpretation staged; no researcher response to new results, no broad architecture rejection.'
 - 'O171: direct image weight experiment interpretation staged; no general pretrained-weight or
   architecture-failure conclusion.'
+- 'O172: initialized reconstruction diagnosis stays scoped to two seeds, RGB-only training and
+  reused test images; await researcher interpretation of the new results.'

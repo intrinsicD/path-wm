@@ -1,0 +1,903 @@
+{
+  "artifacts": {
+    "runs/hierarchy_training_v1/comparison.json": "ce2b7cf0c0842a36907fb069d0cfa932a1bb5121891b48404741f15d2b105ff9",
+    "runs/hierarchy_training_v1/decoder_rate_repair/budget_stop.json": "e450b7b3fb80bd1804cbf82791238e691dc955f85af76cd6206fb3517c18c5f8",
+    "runs/hierarchy_training_v1/decoder_rate_repair/comparison.json": "b23970e3f1083de11d539ae344616f6203fee1f2eeef58bd2d2f23289a315bc9",
+    "runs/hierarchy_training_v1/decoder_rate_repair/load_check.json": "d50fe112b817a2be46c16d692a5e4418b38e7533af1ae0b2b15ac94ea033f93b",
+    "runs/hierarchy_training_v1/decoder_rate_repair/report.qa.json": "4854d512c54ea930ae6367ce59b4471fd83ea03d318d38776e9f5f73b38fa143",
+    "runs/hierarchy_training_v1/decoder_rate_repair/selection.json": "c5da8d3f1a4706478b43114f57192f8a4a1932d1dc547d08457300299d346834",
+    "runs/hierarchy_training_v1/decoder_rate_repair/verification.json": "c63600096f63b7bca6cc51fb244bb53fabdc18d86e3dbf07cb79dacb5cb3e8d2",
+    "runs/hierarchy_training_v1/rate_software.junit.xml": "df230c6cc93ac8a9c6a82dc92d82bbe4fa4729de5e0fd368b243cfa6259fdaa1",
+    "runs/hierarchy_training_v1/software.junit.xml": "1bacfb0ef1c07dbfb9bfd4d25d90f75c6492b64dc850d0ce3dcbd398de16a9fd",
+    "runs/hierarchy_training_v1/verification.json": "90a324939bf6651f5c5aec759aada62babd1779f06c5f3afe42fd7842f29cf6e"
+  },
+  "budget_stop": {
+    "cleanup": "CPU strict reload and first six validation examples only; no further training or final test scoring",
+    "completed_final_runs": 7,
+    "gpu_budget_seconds": 600,
+    "last_successful_execution_sha256": "9fb4fca10db3c7eca670c65e8fbf565bdda1002cda592d8f7d9c2c0fae88bedf",
+    "planned_final_runs": 8,
+    "reason": "Subprocess timeout after remaining23.6259seconds; all six handwritten final runs completed. Original ordinary controls remain available for both seeds.",
+    "status": "budget_stopped",
+    "stopped_control": {
+      "arm": "ordinary_both",
+      "checkpoint_sha256": "261addd7c90d35c3893f9894c939fa8ace81732a71841069434e529e2fe14b98",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/decoder_rate_repair/seed_7502/ordinary_both",
+      "no_final_test": true,
+      "seed": 7502,
+      "step": 103
+    }
+  },
+  "claude_contacted": false,
+  "claude_rejection": "runs/reviews/continuation_2026-09-11/constructed-hierarchy-retry-blocked.json",
+  "comparisons": {
+    "hand_vs_ordinary": {
+      "evaluable": false,
+      "pairs": [
+        {
+          "mse_ratio": 0.6626408499913486,
+          "pass_screen": true,
+          "seed": 7501
+        },
+        {
+          "mse_ratio": null,
+          "pass_screen": false,
+          "seed": 7502,
+          "status": "incomplete_control"
+        }
+      ],
+      "pass_both_seeds": false
+    },
+    "joint_vs_decoder": {
+      "evaluable": true,
+      "pairs": [
+        {
+          "mse_ratio": 0.9990811950889666,
+          "pass_screen": false,
+          "seed": 7501
+        },
+        {
+          "mse_ratio": 0.989265097727775,
+          "pass_screen": false,
+          "seed": 7502
+        }
+      ],
+      "pass_both_seeds": false
+    },
+    "joint_vs_encoder": {
+      "evaluable": true,
+      "pairs": [
+        {
+          "mse_ratio": 0.9460894344439961,
+          "pass_screen": true,
+          "seed": 7501
+        },
+        {
+          "mse_ratio": 0.9493288837392284,
+          "pass_screen": true,
+          "seed": 7502
+        }
+      ],
+      "pass_both_seeds": true
+    },
+    "open_vs_hand": {
+      "evaluable": true,
+      "pairs": [
+        {
+          "mse_ratio": 1.0017281597627714,
+          "pass_screen": false,
+          "seed": 7501
+        },
+        {
+          "mse_ratio": 1.0086633770249995,
+          "pass_screen": false,
+          "seed": 7502
+        }
+      ],
+      "pass_both_seeds": false
+    }
+  },
+  "initial_hand_mse": 0.013852761497730048,
+  "initial_information": {
+    "input_pair_mse": 0.3333333333333333,
+    "patch_projection_rank": 3,
+    "rank_relative_tolerance": 1e-08,
+    "rgb_pair_max_difference": 0.0,
+    "rgb_residual_weight_norms": {
+      "net.2.weight": 0.0,
+      "net.5.weight": 0.0
+    },
+    "scale_pair_max_difference": {
+      "scale_0": 0.0,
+      "scale_1": 0.0,
+      "scale_2": 0.0
+    },
+    "singular_values": [
+      90.5096679918781,
+      90.50966799187809,
+      90.50966799187809,
+      1.945901422236197e-14,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "original": [
+    {
+      "arm": "hand_both",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/seed_7501/hand_both",
+      "improvement_from_hand": -18.76950276380864,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.713916348893924,
+          "mask_iou": 0.20643188508306004,
+          "rgb_mse": 0.27386220671575606
+        },
+        "shuffled": {
+          "mask_bce": 0.735447233502954,
+          "mask_iou": 0.1618618741027547,
+          "rgb_mse": 0.2738622067157705
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.2738622067150637
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4985782272,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 163661312,
+        "peak_reserved_bytes": 199229440,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 36.80639332602732
+      },
+      "seed": 7501,
+      "weights_sha256": "3ef60e07968f8eb5aa91c1a97f592f803c6419890920ee106250dad5acda727f"
+    },
+    {
+      "arm": "hand_encoder",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/seed_7501/hand_encoder",
+      "improvement_from_hand": 0.05421459037223508,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7391071565494329,
+          "mask_iou": 0.22011913996830415,
+          "rgb_mse": 0.013101739707606344
+        },
+        "shuffled": {
+          "mask_bce": 0.76286012712182,
+          "mask_iou": 0.17423207429308207,
+          "rgb_mse": 0.11461264166475216
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.07190796711131035
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4988141568,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 156472320,
+        "peak_reserved_bytes": 197132288,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 70.33298528101295
+      },
+      "seed": 7501,
+      "weights_sha256": "234fd4b501efffe69595c60d5cb3b75877844b1ae71ade5f26ac7533a09ad295"
+    },
+    {
+      "arm": "hand_decoder",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/seed_7501/hand_decoder",
+      "improvement_from_hand": -18.769502763808617,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7140761325311874,
+          "mask_iou": 0.204784062565395,
+          "rgb_mse": 0.2738622067157558
+        },
+        "shuffled": {
+          "mask_bce": 0.7346968063874233,
+          "mask_iou": 0.16102184409280368,
+          "rgb_mse": 0.2738622067157703
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.2738622067150634
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 5015404544,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 142567936,
+        "peak_reserved_bytes": 169869312,
+        "reserved_limit_bytes": 4201709568,
+        "seconds": 25.484393747057766
+      },
+      "seed": 7501,
+      "weights_sha256": "0fa4d7588e4ecb8b7b68cf9f34289e3c3d36028abfaf052b701ea5ab9c5bafce"
+    },
+    {
+      "arm": "ordinary_both",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/seed_7501/ordinary_both",
+      "improvement_from_hand": 0.47162692985894483,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7044653369418634,
+          "mask_iou": 0.22871706688550908,
+          "rgb_mse": 0.007319426122487427
+        },
+        "shuffled": {
+          "mask_bce": 0.7080652048616551,
+          "mask_iou": 0.22213635253018726,
+          "rgb_mse": 0.13275716170332705
+        },
+        "zero": {
+          "mask_bce": 0.732276779163769,
+          "mask_iou": 0.31745434240074366,
+          "rgb_mse": 0.12741088365018274
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4986044416,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 163661312,
+        "peak_reserved_bytes": 199229440,
+        "reserved_limit_bytes": 4201709568,
+        "seconds": 36.7803381140111
+      },
+      "seed": 7501,
+      "weights_sha256": "629e9b6ed56e14286762d8c6027d9e3a2f3ca212618e166012dd0f336ca317f4"
+    },
+    {
+      "arm": "hand_open_decoder",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/seed_7501/hand_open_decoder",
+      "improvement_from_hand": -18.769502763807235,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7139114535102128,
+          "mask_iou": 0.20645341312256826,
+          "rgb_mse": 0.27386220671573663
+        },
+        "shuffled": {
+          "mask_bce": 0.7354525329669519,
+          "mask_iou": 0.161964328043955,
+          "rgb_mse": 0.27386220671575434
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.27386220671487155
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4985782272,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 163661312,
+        "peak_reserved_bytes": 199229440,
+        "reserved_limit_bytes": 4201709568,
+        "seconds": 73.16214042704087
+      },
+      "seed": 7501,
+      "weights_sha256": "8e559a063794ce0ff80edafd2e35fc18957b95fe44a0c3cf33b0724bc190e3e4"
+    },
+    {
+      "arm": "hand_both",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/seed_7502/hand_both",
+      "improvement_from_hand": -12.414326898174606,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7176105739454861,
+          "mask_iou": 0.20723211629810673,
+          "rgb_mse": 0.18582547117299772
+        },
+        "shuffled": {
+          "mask_bce": 0.7382649885262458,
+          "mask_iou": 0.16271932729001876,
+          "rgb_mse": 0.2217921333078968
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.21878657120549583
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4985782272,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 163661312,
+        "peak_reserved_bytes": 199229440,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 36.85695870197378
+      },
+      "seed": 7502,
+      "weights_sha256": "147b60e831633d05fea9cba48e4a90d4617cb4c9618984dbfa053ec4d5b44fe9"
+    },
+    {
+      "arm": "hand_encoder",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/seed_7502/hand_encoder",
+      "improvement_from_hand": 0.05349764611469099,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.738460331135786,
+          "mask_iou": 0.22009985429685214,
+          "rgb_mse": 0.01311167136541327
+        },
+        "shuffled": {
+          "mask_bce": 0.7622808648972261,
+          "mask_iou": 0.17402138650700716,
+          "rgb_mse": 0.11450857076845662
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.07190796711131035
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4987879424,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 156472320,
+        "peak_reserved_bytes": 197132288,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 52.293902955017984
+      },
+      "seed": 7502,
+      "weights_sha256": "1499f6dd7197f26c760038ba3969f26dcc81c7927ba1afe21080281eed739b27"
+    },
+    {
+      "arm": "hand_decoder",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/seed_7502/hand_decoder",
+      "improvement_from_hand": -13.573513200797429,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7140761325311874,
+          "mask_iou": 0.204784062565395,
+          "rgb_mse": 0.20188340255466722
+        },
+        "shuffled": {
+          "mask_bce": 0.7346968063874233,
+          "mask_iou": 0.16102184409280368,
+          "rgb_mse": 0.2310156800158589
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.2036225344380457
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 5012455424,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 142567936,
+        "peak_reserved_bytes": 169869312,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 35.528301001060754
+      },
+      "seed": 7502,
+      "weights_sha256": "0bc68015feb51ff91cd3a5645bae0496794afab52aa0bc81e68b0fcf7177100f"
+    },
+    {
+      "arm": "ordinary_both",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/seed_7502/ordinary_both",
+      "improvement_from_hand": 0.4326971179018413,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7011739169451018,
+          "mask_iou": 0.20352877580876744,
+          "rgb_mse": 0.007858711522680662
+        },
+        "shuffled": {
+          "mask_bce": 0.7006038399763179,
+          "mask_iou": 0.2003434501767003,
+          "rgb_mse": 0.13143563584883142
+        },
+        "zero": {
+          "mask_bce": 0.65297911865231,
+          "mask_iou": 0.027602659260180722,
+          "rgb_mse": 0.12940956052065658
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4987289600,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 163661312,
+        "peak_reserved_bytes": 199229440,
+        "reserved_limit_bytes": 4198760448,
+        "seconds": 65.40815835795365
+      },
+      "seed": 7502,
+      "weights_sha256": "908233df9808dbbbecb3a96d91ad519019a02438a85bc9b670837604b8a06cce"
+    },
+    {
+      "arm": "hand_open_decoder",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/seed_7502/hand_open_decoder",
+      "improvement_from_hand": -12.573476355558638,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.718098389934104,
+          "mask_iou": 0.20796296820741603,
+          "rgb_mse": 0.18803013064863186
+        },
+        "shuffled": {
+          "mask_bce": 0.7388357711664317,
+          "mask_iou": 0.16280076101590074,
+          "rgb_mse": 0.22026490117985797
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.20967578381651578
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4987289600,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 163661312,
+        "peak_reserved_bytes": 199229440,
+        "reserved_limit_bytes": 4202954752,
+        "seconds": 52.35442999901716
+      },
+      "seed": 7502,
+      "weights_sha256": "4743e5bb1823b9439e6a981cc7b914a8f256797ac1d40bffc38ad5079b4941bf"
+    }
+  ],
+  "original_source_commit": "e1e89c75b1e34c0415194190f51b777a6178a57b",
+  "provenance": "ai-executed",
+  "repair": [
+    {
+      "arm": "hand_both",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/decoder_rate_repair/seed_7501/hand_both",
+      "improvement_from_hand": 0.10520241669988473,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7195736360231734,
+          "mask_iou": 0.2066476232249102,
+          "rgb_mse": 0.012395417510201732
+        },
+        "shuffled": {
+          "mask_bce": 0.7396156016977311,
+          "mask_iou": 0.16293189195825364,
+          "rgb_mse": 0.12470610047983928
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.07231599167098256
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4987158528,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 163661312,
+        "peak_reserved_bytes": 199229440,
+        "reserved_limit_bytes": 4202823680,
+        "seconds": 67.98157254594844
+      },
+      "seed": 7501,
+      "weights_sha256": "4aea4208baa1bf1c6462355163bbbca09c7a76311f1b456afd56871984feea3a"
+    },
+    {
+      "arm": "hand_decoder",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/decoder_rate_repair/seed_7501/hand_decoder",
+      "improvement_from_hand": 0.1043795162009481,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7140761325311874,
+          "mask_iou": 0.204784062565395,
+          "rgb_mse": 0.012406816954549864
+        },
+        "shuffled": {
+          "mask_bce": 0.7346968063874233,
+          "mask_iou": 0.16102184409280368,
+          "rgb_mse": 0.1245614983153105
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.07255546643289186
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 5016518656,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 142567936,
+        "peak_reserved_bytes": 169869312,
+        "reserved_limit_bytes": 4202823680,
+        "seconds": 37.58798461104743
+      },
+      "seed": 7501,
+      "weights_sha256": "e8cac119fd808f2bad626a76e5923b4e409d132a5d0eaee6c17eb4d5eada9a30"
+    },
+    {
+      "arm": "hand_open_decoder",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/decoder_rate_repair/seed_7501/hand_open_decoder",
+      "improvement_from_hand": 0.1036560635206003,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7195688420483703,
+          "mask_iou": 0.20651149115376005,
+          "rgb_mse": 0.012416838771985616
+        },
+        "shuffled": {
+          "mask_bce": 0.7395510701263113,
+          "mask_iou": 0.162832402778616,
+          "rgb_mse": 0.12475433455331238
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.07170349788966877
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4987158528,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 163661312,
+        "peak_reserved_bytes": 199229440,
+        "reserved_limit_bytes": 4202823680,
+        "seconds": 41.57323935907334
+      },
+      "seed": 7501,
+      "weights_sha256": "7b522435861a263ed670541df9ff38dba42fa6162a2fd6e95995b1be6291ebe0"
+    },
+    {
+      "arm": "ordinary_both",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/decoder_rate_repair/seed_7501/ordinary_both",
+      "improvement_from_hand": -0.3503507719329373,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7398517557572254,
+          "mask_iou": 0.27854749895290454,
+          "rgb_mse": 0.018706087181862643
+        },
+        "shuffled": {
+          "mask_bce": 0.7325689513448486,
+          "mask_iou": 0.2876080962643341,
+          "rgb_mse": 0.10476421882921588
+        },
+        "zero": {
+          "mask_bce": 0.732276779163769,
+          "mask_iou": 0.31745434240074366,
+          "rgb_mse": 0.10920360573428323
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4987420672,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 163661312,
+        "peak_reserved_bytes": 199229440,
+        "reserved_limit_bytes": 4202823680,
+        "seconds": 115.86303650506306
+      },
+      "seed": 7501,
+      "weights_sha256": "582543a95af31948053dddc25069e2e984b1134fc67a4105ec7da2ebfd444b83"
+    },
+    {
+      "arm": "hand_both",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/decoder_rate_repair/seed_7502/hand_both",
+      "improvement_from_hand": 0.10145797692950742,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7192047988733417,
+          "mask_iou": 0.20661427214242076,
+          "rgb_mse": 0.012447288341283384
+        },
+        "shuffled": {
+          "mask_bce": 0.7393199042836613,
+          "mask_iou": 0.16275237155158068,
+          "rgb_mse": 0.12436543450152097
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.07138497962335762
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4987420672,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 163661312,
+        "peak_reserved_bytes": 199229440,
+        "reserved_limit_bytes": 4203085824,
+        "seconds": 64.50552057393361
+      },
+      "seed": 7502,
+      "weights_sha256": "7ee1ba43553c7e7777c953008d5fbbe5920cd76829baccd0f47e2c7ac77f9cd5"
+    },
+    {
+      "arm": "hand_decoder",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/decoder_rate_repair/seed_7502/hand_decoder",
+      "improvement_from_hand": 0.0917075462034016,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7140761325311874,
+          "mask_iou": 0.204784062565395,
+          "rgb_mse": 0.012582358732632267
+        },
+        "shuffled": {
+          "mask_bce": 0.7346968063874233,
+          "mask_iou": 0.16102184409280368,
+          "rgb_mse": 0.12461775428356642
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.07169603327244932
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 5016518656,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 142567936,
+        "peak_reserved_bytes": 169869312,
+        "reserved_limit_bytes": 4203085824,
+        "seconds": 41.68671711394563
+      },
+      "seed": 7502,
+      "weights_sha256": "ef04f9d1e7284b2ab682026df8ff01c653583914d6deff66cc2f5a88e75c4f72"
+    },
+    {
+      "arm": "hand_open_decoder",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/decoder_rate_repair/seed_7502/hand_open_decoder",
+      "improvement_from_hand": 0.09367356861084186,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7193840629585109,
+          "mask_iou": 0.2065191966640358,
+          "rgb_mse": 0.012555123893122805
+        },
+        "shuffled": {
+          "mask_bce": 0.7394414536081271,
+          "mask_iou": 0.16274022003801972,
+          "rgb_mse": 0.12470028125063032
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.07121946791687621
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4987289600,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 163661312,
+        "peak_reserved_bytes": 199229440,
+        "reserved_limit_bytes": 4202823680,
+        "seconds": 111.33560167299584
+      },
+      "seed": 7502,
+      "weights_sha256": "ad5ce2eb0d4d23029c5bdebbb5533790e9450ea0b2197ccfb3da7166d6b01839"
+    },
+    {
+      "arm": "hand_encoder",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/seed_7501/hand_encoder",
+      "improvement_from_hand": 0.05421459037223508,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.7391071565494329,
+          "mask_iou": 0.22011913996830415,
+          "rgb_mse": 0.013101739707606344
+        },
+        "shuffled": {
+          "mask_bce": 0.76286012712182,
+          "mask_iou": 0.17423207429308207,
+          "rgb_mse": 0.11461264166475216
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.07190796711131035
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4988141568,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 156472320,
+        "peak_reserved_bytes": 197132288,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 70.33298528101295
+      },
+      "seed": 7501,
+      "weights_sha256": "234fd4b501efffe69595c60d5cb3b75877844b1ae71ade5f26ac7533a09ad295"
+    },
+    {
+      "arm": "hand_encoder",
+      "directory": "/home/alex/Documents/path-wm/runs/hierarchy_training_v1/seed_7502/hand_encoder",
+      "improvement_from_hand": 0.05349764611469099,
+      "metrics": {
+        "baselines": {
+          "empty_mask_iou": 0.0078125,
+          "full_mask_iou": 0.3216217694578288,
+          "gray_rgb_mse": 0.07190796711131035,
+          "patch_mean_rgb_mse": 0.01160347521271562
+        },
+        "observed": {
+          "mask_bce": 0.738460331135786,
+          "mask_iou": 0.22009985429685214,
+          "rgb_mse": 0.01311167136541327
+        },
+        "shuffled": {
+          "mask_bce": 0.7622808648972261,
+          "mask_iou": 0.17402138650700716,
+          "rgb_mse": 0.11450857076845662
+        },
+        "zero": {
+          "mask_bce": 0.634888508865427,
+          "mask_iou": 0.0078125,
+          "rgb_mse": 0.07190796711131035
+        }
+      },
+      "resources": {
+        "encoder_parameters": 108256,
+        "free_device_bytes": 4987879424,
+        "parameters": 1797028,
+        "peak_allocated_bytes": 156472320,
+        "peak_reserved_bytes": 197132288,
+        "reserved_limit_bytes": 4201447424,
+        "seconds": 52.293902955017984
+      },
+      "seed": 7502,
+      "weights_sha256": "1499f6dd7197f26c760038ba3969f26dcc81c7927ba1afe21080281eed739b27"
+    }
+  ],
+  "repair_source_commit": "32f145220efcacbfd19ec33e490dd6b7414e7aaa",
+  "scope": "RGB-only learning on reused internal COCO test images; no independent generalization claim",
+  "software": {
+    "focused_recipe_passed": 15,
+    "full_suite_passed": 203
+  }
+}

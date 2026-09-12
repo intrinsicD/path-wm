@@ -127,10 +127,10 @@ sessions:
 
 - id: 2026-09-12_001
   date: '2026-09-12'
-  summary: Direct hierarchy weights and fitted readout tested;197 tests, four GPU
-    evaluations, both perception gates fail. Trained references retained; Claude
-    export blocked and encoder recurrence remains open.
-  turn_count: 12
-  events_count: 27
+  summary: Handwritten initialization trained after decoder-rate repair; joint reconstruction
+    improves10% across two seeds. Input ambiguity and decoder sensitivity isolated;
+    original ordinary models remain better, one extra control budget-stopped. Claude blocked.
+  turn_count: 13
+  events_count: 31
   claims_touched: []
-  open_threads: 8
+  open_threads: 9

@@ -4103,3 +4103,59 @@ tree:
   - N262
   - N259
   status: resolved
+
+- id: N264
+  type: decision
+  title: Train from the handwritten hierarchy weights and isolate reconstruction limitations
+  provenance: user
+  timestamp: 2026-09-12T21:52+02:00
+  choice: Use the exact handwritten binary as initialization and begin optimizer training;
+    distinguish encoder feature limitations from decoder limitations with frozen controls.
+  alternatives:
+  - Continue only from ordinary initialization
+  - Attribute poor reconstruction to architecture without component controls
+  evidence:
+  - docs/hierarchy-training-plan.md
+  also_depends_on: [N263]
+  status: resolved
+- id: N265
+  type: experiment
+  title: Original decoder rate destabilizes handwritten initialization in both seeds
+  provenance: ai-executed
+  timestamp: 2026-09-12T21:52+02:00
+  result: Ten RGB-only runs of384 updates, seeds7501/7502. Joint MSE0.273862/0.185825,
+    decoder-only0.273862/0.201883, encoder-only0.013102/0.013112 from hand0.013853.
+    Ordinary joint0.007319/0.007859. Opening a dormant residual branch preserves initial
+    predictions but does not avoid collapse at0.0003. Initial rank3 patch means collapse
+    opposite checkerboards at every feature scale.203 CPU tests and90-score raw audit pass;
+    source/frozen/sample/export hashes verify,521.15s GPU run envelope. Original binary retained.
+  evidence:
+  - ara/evidence/tables/hierarchy_training_2026-09-12.json
+  - runs/hierarchy_training_v1/comparison.json
+  - runs/hierarchy_training_v1/verification.json
+  also_depends_on: [N264]
+  status: resolved
+- id: N266
+  type: experiment
+  title: Validation-selected decoder rate enables modest learning from exact hand weights
+  provenance: ai-executed
+  timestamp: 2026-09-12T21:52+02:00
+  result: Three32-update validation-only trials select decoder0.000003, encoder0.0003.
+    Joint final MSE0.012395/0.012447 improves10.52%/10.15%; decoder-only9.17–10.44%,
+    encoder-only5.35–5.42%. Joint passes5% advantage over encoder-only but not decoder-only;
+    opened branch fails improvement gate. Ordinary original-rate controls remain better.
+    Seven repair runs complete; last same-rate ordinary control stops at103/384 under600s
+    cap, leaving its paired gate unevaluable. Partial CPU report and checkpoint retained.
+    Fifteen focused tests, actual trial resumes,81-score audit and strict binary forward
+    pass;190MiB reserved. Image-only/frozen mask, reused test data, structural-only HTML QA.
+    Claude retry rejected by automatic review as ambiguous specific payload authorization;
+    no external contact or subsequent retry. O172 interpretation remains staged.
+  evidence:
+  - ara/evidence/tables/hierarchy_training_2026-09-12.json
+  - runs/hierarchy_training_v1/decoder_rate_repair/comparison.json
+  - runs/hierarchy_training_v1/decoder_rate_repair/verification.json
+  - runs/hierarchy_training_v1/decoder_rate_repair/budget_stop.json
+  - runs/hierarchy_training_v1/decoder_rate_repair/load_check.json
+  - runs/reviews/continuation_2026-09-11/constructed-hierarchy-retry-blocked.json
+  also_depends_on: [N264, N265]
+  status: resolved

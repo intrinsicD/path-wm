@@ -1,11 +1,23 @@
 # Current work
 
-**Training from handwritten initialization in progress, 12 September:** user adopts
-the handwritten hierarchy weights for training and requests reconstruction diagnosis.
-[Frozen comparison](hierarchy-training-plan.md) separates encoder-only, decoder-only
-and joint RGB learning, with ordinary initialization and an explicit dormant-branch
-opening control. Preserve the source binary and prior experiments. Claude export
-remains blocked; local implementation and checks proceed.
+**Handwritten initialization trained and diagnosed, 12 September:** the exact source
+binary now supports strict initialization, component freezing and resumable RGB
+training. The original decoder rate collapsed both seeds; validation-only selection
+of0.000003 (encoder0.0003) stabilizes training. Joint RGB MSE0.012395/0.012447 improves
+10.52%/10.15% from the handwritten baseline. Decoder-only improves9–10%, encoder-only
+5%; joint fails the5% advantage screen against decoder-only. Initial patch features
+retain only three color averages and collapse an equal-mean checkerboard pair.
+Both information loss and decoder optimization matter; this is not an additive error
+attribution. Ordinary initialization at its original rate remains better0.007319/0.007859.
+[Protocol/results/load instructions](hierarchy-training-plan.md#completed-diagnosis),
+[report and trained binaries](../runs/hierarchy_training_v1/decoder_rate_repair/report.html).
+203 full-suite tests plus15 focused rate/freeze/resume checks pass; original90 and
+repaired81 raw scores independently verify. Source/frozen/export hashes and paired
+sampling pass. Seven repair runs complete; the last ordinary control stops at103/384
+updates under the600-second cap, so its same-rate paired comparison is incomplete.
+190MiB peak reserved for completed repair runs; original521s plus repair600s.
+Mask head frozen, image-only scope, reused test population, HTML QA structural-only.
+Claude retry was rejected by automatic approval review; no external review occurred.
 
 **Direct hierarchy weights completed, 12 September:** wrote the same1.80M-parameter
 image hierarchy as explicit numbers, plus a separately labeled132-coefficient fitted

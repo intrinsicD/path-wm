@@ -3010,3 +3010,24 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O172
+  timestamp: 2026-09-12T21:52+02:00
+  provenance: ai-suggested
+  content: This handwritten initialization has both a demonstrated encoder ambiguity and
+    decoder optimization sensitivity. Small decoder steps enable useful color-reconstruction
+    adaptation, but joint training has no strong advantage over decoder-only and remains behind
+    ordinary initialization at its original rate. Rank growth with nearly unchanged checkerboard
+    reconstructions does not establish useful fine-detail recovery. These conditional short-run
+    effects cannot be partitioned into additive encoder/decoder error percentages or generalized
+    to every modality or complete-agent capability.
+  context: User adopts the binary as an initialization, not as proof of better learned features.
+    RGB-only objective, frozen mask, two seeds and reused128-image test population. Initial-rate
+    failure retained; repair rate selected on validation only. One extra ordinary control
+    budget-stopped, so same-rate paired superiority is not evaluable.
+  potential_type: claim
+  bound_to: [N264, N265, N266]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

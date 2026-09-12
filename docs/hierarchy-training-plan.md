@@ -143,3 +143,77 @@ The repair passes all15 focused recipe tests in9.36s, including separate optimiz
 groups for each freeze scope and exact interrupted resume with the smaller decoder
 rate. Ruff passes. The earlier203-test full suite remains the full-suite evidence;
 this optimizer-only change has focused validation and no shared model changes.
+
+## Completed diagnosis
+
+Exact handwritten source weights are now a working training initialization. Preserve
+`runs/hierarchy_weights_v1/constructed_7401/weights.pt` (SHA256
+`52468a4e01937ba547c79ab41208f11e3c060146ff1ba7b754721fcbea878c98`).
+The repaired source is32f1452. Validation-only32-update trials select decoder
+rate0.000003: final validation MSE0.013782, versus0.016323 at0.00003 (ineligible)
+and0.013966 at0.0000003. Encoder rate remains0.0003. Selection JSON was frozen
+before final test scoring and its hash verifies; no trial has test metrics.
+
+Test RGB MSE after384 updates (lower is better; reused128-image internal test):
+
+| Setup | Seed7501 | Seed7502 | ≥10% improvement from hand on both? |
+| --- | ---: | ---: | --- |
+| Exact handwritten, before training | 0.013853 | 0.013853 | baseline |
+| Hand, encoder only (original references) | 0.013102 | 0.013112 | no |
+| Hand, decoder only, repaired rate | 0.012407 | 0.012582 | no |
+| Hand, both, repaired rate | 0.012395 | 0.012447 | yes |
+| Hand, opened branch and both | 0.012417 | 0.012555 | no |
+| Ordinary, repaired small decoder rate | 0.018706 | incomplete | not evaluable |
+| Ordinary, original0.0003 decoder rate | 0.007319 | 0.007859 | yes |
+
+Joint training improves10.52%/10.15% from the exact starting function. It passes
+5% advantage against encoder-only, but improves only0.09%/1.07% against decoder-only,
+so the joint-versus-decoder gate fails. Opening the dormant branch is slightly worse
+in both seeds and fails its5% benefit gate. Keep this optional control distinct from
+the exact initialization. The ordinary same-rate paired gate is not evaluable because
+its second run is incomplete; do not call it a negative scientific result. The
+original ordinary models, with their original rate, remain better than trained hand.
+
+What can be attributed: the initial encoder provably discards some input distinctions;
+it retains only rank3 paired patch-color averages, and an opposite-checkerboard pair
+produces bit-identical features/output. A frozen encoder cannot distinguish that pair.
+The decoder also limits recoverable performance: training it alone at the repaired
+rate improves9.17–10.44%, and the original rate destabilized it even with the encoder
+frozen. Encoder-only improves5.35–5.42%. These are conditional adaptation effects,
+not additive error percentages or proof of one intrinsic capacity bottleneck.
+
+After joint learning the patch rank is11/12, but checkerboard output separation is
+only7.75e-7/1.31e-6, and the fixed validation panels remain visibly blocky. Numerical
+rank growth does not establish useful spatial detail recovery. The direct patch-mean
+reference MSE0.011603 remains below every repaired handwritten run; that reference
+is not a universal information-theoretic floor for natural images. Useful finer
+features and a better-conditioned readout remain unresolved. This diagnosis does
+not establish segmentation quality, audio/video reconstruction or full-agent skills.
+
+Compute deviation: the600-second follow-up cap stopped the last ordinary control
+(seed7502) at103/384 updates. All six handwritten runs and one ordinary run completed;
+retain the partial checkpoint, ledger and `budget_stop.json`. CPU-only cleanup strictly
+loaded that checkpoint and rendered the first six validation examples; no additional
+training or final test scoring. Its report explicitly says budget_stopped. Total GPU
+run envelopes: original521.15s plus repair600s. Completed repair runs reserve at most
+190MiB; preflight202MiB. No additional GPU resume/evaluation after the cap. Three
+actual GPU16+16-update trial resumes pass, in addition to exact CPU resume tests.
+
+Independent final audit recomputes81 scores for seven new completed runs plus the
+two reused encoder references (original90-score audit remains intact), maximum error
+2.23e-16. Verifies source identity, exact initialization, byte-unchanged frozen tensors,
+full checkpoint/export equality, matched sampling and original binary retention.
+The original encoder references retain sourcee1e89c7; only their optimizer learning
+rate is relevant and is unchanged. Full software suite203 passes before rate repair;
+all15 focused recipe tests pass after it, including all rate/freeze scopes and exact
+resume. Ruff passes. Fixed six-image panels and validation plots inspected; HTML QA
+is structural-only under the prior browser restriction. No Claude review occurred:
+the exact saved brief retry was rejected again as ambiguous payload authorization.
+
+[Repaired comparison and trained binaries](../runs/hierarchy_training_v1/decoder_rate_repair/report.html),
+[raw evidence](../runs/hierarchy_training_v1/decoder_rate_repair/comparison.json),
+[original failed-rate comparison](../runs/hierarchy_training_v1/report.html).
+Use `--initial-weights` for a fresh optimizer run and `--resume` for an interrupted
+run; [copyable commands and strict loading](experiments.md) describe both. Default
+branch opening stays off. Both seed-specific exact-handwritten trained files are
+retained; no winner was selected using test scores.

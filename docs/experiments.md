@@ -31,6 +31,51 @@ pixels. Both use zero optimizer updates and save strict-loadable `weights.pt`, t
 ordinary checkpoint and report. The completed screen did not beat the trained models;
 these are color-transport diagnostics, not pretrained semantic weights.
 
+The same recipe now supports [training from handwritten initialization and frozen
+component diagnosis](hierarchy-training-plan.md). Reproduce the repaired RGB-only
+training with a fresh output directory:
+
+```bash
+.venv/bin/python -m experiments.hierarchy_fusion \
+  --arm deep_fusion --seed 7501 --device cuda \
+  --initial-weights runs/hierarchy_weights_v1/constructed_7401/weights.pt \
+  --loss-mode rgb --decoder-learning-rate 0.000003 \
+  --output runs/my_handwritten_training
+```
+
+The encoder rate remains0.0003. `--train-part encoder` or `decoder` freezes the
+other component; RGB-only training always freezes the mask head. The optional
+`--open-residual-branches` seeds initially inactive RGB residual weights while
+preserving the initial predictions; it is a separate initialization variant.
+It was not needed to stabilize the repaired comparison. Keep the smaller decoder
+rate explicit: the old0.0003 decoder rate collapsed the handwritten runs.
+
+`--stop-after 16` pauses a run after16 additional updates. Resume it using
+`--resume runs/my_handwritten_training`; the stored initial-file identity, rates,
+freeze settings, sampler and optimizer are restored and conflicting settings fail.
+The deep_fusion recipe has a fixed384-update target; resuming an already complete
+run rechecks/reports it, rather than extending its training budget.
+
+Each completed adaptation exports a CPU `weights.pt` (model state) and `last.pt`
+(full resume state). To load the completed exact-handwritten run for inference:
+
+```python
+import torch
+from experiments.hierarchy_fusion import build_model
+
+model, _ = build_model(7501, "deep_fusion")
+path = "runs/hierarchy_training_v1/decoder_rate_repair/seed_7501/hand_both/weights.pt"
+payload = torch.load(path, map_location="cpu", weights_only=True)
+model.load_state_dict(payload["model"], strict=True)
+model.eval()
+# model(rgb_float_tensor) accepts B×3×64×64 in [0,1].
+```
+
+A new run can use this exported file as `--initial-weights` with a fresh output;
+that warm-starts the model but starts a new optimizer and sampler. Use `--resume`
+for exact continuation of an interrupted run. The trained mask output remains
+unvalidated: its head is frozen, while the shared encoder can change.
+
 For the finite single-observation entity/location control, use the same recipe:
 
 ```bash
