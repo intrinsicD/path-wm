@@ -95,3 +95,25 @@ and cached resume. Browser QA currently unavailable: report structural-only.
 
 Claude review is public conceptual only, bounded to one brief; local verification
 remains authoritative. Preserve review receipts and reconcile any material issue.
+
+## Pre-execution review and implementation clarification
+
+Claude's abstract review raised conditional exposure, scope and readout-inference
+risks. Adopt explicit reused-population labels, checkpoint provenance and negative
+result wording; the review did not inspect code and does not establish those defects.
+One review round, no private source/results exported. All13 checkpoint roles load
+strictly. Tiny development-only paths pass, including state, relations, source
+feedback, planning, all modality encoders and CNN/temporal references. These use
+validation data or separate seeds106xxx, not the frozen new scoring seeds.
+
+Add the existing variable-candidate matching development set (256 examples) to
+measure known/new decisions and false merges/splits, beyond the fresh two-entity
+matching screen. This reused population is explicitly a regression diagnostic.
+The CNN and temporal references are compatible: evaluate first16 real test frames
+and first16 history2/horizon3 windows using the actual prepared path; no alias change.
+Input sensitivity tests use fixed equal-length contrasting inputs in all four
+encoders. Raw text token IDs and image/audio/video arrays remain inspectable.
+
+No threshold is added after scoring. Methodological gates are diagnostic targets,
+not estimates of general competence. Failure to beat a baseline describes the
+observed deployed path; it does not prove all underlying representations are useless.

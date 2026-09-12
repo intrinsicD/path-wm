@@ -1075,6 +1075,97 @@ def visual_memory_inspection(directory):
     return parts
 
 
+def capability_inspection(directory):
+    path = directory / "capabilities.json"
+    if not path.exists():
+        return []
+    data = json.loads(path.read_text())
+    parts = [
+        "<section><h2>Current capability baseline</h2>",
+        "<p><strong>These are separate saved checkpoints, not one agent with all these abilities.</strong> No neural weights were trained or selected during this evaluation. Pass/fail refers to the declared small screen, not general competence.</p>",
+        "<p>Frozen protocol: <code>"
+        + data["protocol_sha256"]
+        + "</code>. Future repeats measure regression; they are no longer fresh generalization tests. Specific input perturbations do not establish general robustness.</p>",
+        '<div class="table"><table><tr><th>Capability / checkpoint role</th><th>Screen</th><th>Measurements and limits</th></tr>',
+    ]
+    for case in data["cases"]:
+        roles = ", ".join(case["checkpoint"])
+        visible = list(case["metrics"].items())[:8]
+        metrics = "; ".join(
+            f"{k}: {v:.6g}" if isinstance(v, (int, float)) else f"{k}: {v}"
+            for k, v in visible
+        )
+        detail = dict(
+            metrics=case["metrics"],
+            gates=case["gates"],
+            input_sha256=case["input_sha256"],
+            raw_file=case["raw_file"],
+        )
+        parts.append(
+            f"<tr><td><strong>{escape(case['id'])}</strong><br>{escape(roles)}</td><td>{escape(case['status'])}</td><td>{escape(metrics)}<br><small>{escape(case['scope'])}</small><details><summary>Exact scores and gates</summary><pre>{escape(json.dumps(detail, indent=2))}</pre></details></td></tr>"
+        )
+    parts.append(
+        "</table></div></section><section><h2>Coverage gaps</h2><p>These have no valid capability score yet. Missing evaluation or implementation is different from failing a measured task.</p><ul>"
+    )
+    for gap in data["gaps"]:
+        parts.append(
+            f"<li><strong>{escape(gap['id'])}:</strong> {escape(gap['reason'])}</li>"
+        )
+    parts.append("</ul></section>")
+    parts.append(
+        "<section><h2>What the model actually saw and produced</h2><p>Targets and predictions are displayed separately. Reconstructions are model outputs, not interpretations of everything retained in memory.</p>"
+    )
+    for condition in ("original", "swap_red_blue", "noise"):
+        with np.load(directory / f"visual_{condition}.npz", allow_pickle=False) as z:
+            film = np.concatenate(list(z["images"][1]), axis=1).astype("float32") / 255
+        parts.append(
+            f'<figure><img style="max-width:650px" alt="Four observation frames: {condition}" src="{image_url(film)}"><figcaption>Visual memory: {condition}, episode 1. Query concerns the last visible location; the final view hides the target.</figcaption></figure>'
+        )
+    for name in ("prediction_synthetic", "prediction_pusht", "constructed_modalities"):
+        with np.load(directory / f"{name}.npz", allow_pickle=False) as z:
+            if name == "constructed_modalities":
+                panels = [z["input"][0], z["image"][0]]
+                label = "Real photo input | constructed-checkpoint reconstruction"
+            else:
+                panels = [z["current"][0], z["target"][0, -1], z["predicted"][0, -1]]
+                label = name + ": last observation | true future | predicted future"
+            film = np.concatenate([x.transpose(1, 2, 0) for x in panels], axis=1)
+        parts.append(
+            f'<figure><img style="max-width:420px" alt="{escape(label)}" src="{image_url(film)}"><figcaption>{escape(label)}</figcaption></figure>'
+        )
+    parts.append("</section>")
+    software = directory / "software.json"
+    if software.exists():
+        evidence = json.loads(software.read_text())
+        parts.append(
+            "<section><h2>Software contracts, separately tested</h2><p>Unit and integration checks cover implementation behavior, not learned task quality.</p><pre>"
+            + escape(json.dumps(evidence, indent=2))
+            + "</pre></section>"
+        )
+    parts.append(
+        "<section><h2>Checkpoint identities and resources</h2><pre>"
+        + escape(
+            json.dumps(
+                dict(
+                    checkpoints=data["checkpoints"],
+                    resources=data["resources"],
+                    limits=data["limits"],
+                ),
+                indent=2,
+            )
+        )
+        + "</pre></section>"
+    )
+    comparison = directory / "comparison.json"
+    if comparison.exists():
+        parts.append(
+            "<section><h2>Change from the specified baseline</h2><p>Signed raw metric differences: new minus previous. Check the metric direction before interpreting improvement.</p><pre>"
+            + escape(comparison.read_text())
+            + "</pre></section>"
+        )
+    return parts
+
+
 def render_report(directory):
     directory = Path(directory)
     record = json.loads((directory / "run.json").read_text())
@@ -1087,6 +1178,7 @@ def render_report(directory):
     if not any(
         (directory / name).exists()
         for name in (
+            "capabilities.json",
             "visual_memory.json",
             "entity_growth.json",
             "entity_temporal.json",
@@ -1126,6 +1218,7 @@ def render_report(directory):
     if not any(
         (directory / name).exists()
         for name in (
+            "capabilities.json",
             "visual_memory.json",
             "entity_growth.json",
             "entity_temporal.json",
@@ -1206,6 +1299,7 @@ def render_report(directory):
     parts.extend(recall_diagnostic_inspection(directory))
     parts.extend(entity_inspection(directory))
     parts.extend(fact_inspection(directory))
+    parts.extend(capability_inspection(directory))
     parts.extend(visual_memory_inspection(directory))
     parts.extend(model_inspection(directory))
     for title, data in [

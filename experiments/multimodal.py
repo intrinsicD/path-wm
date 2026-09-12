@@ -4713,6 +4713,990 @@ def direct_visual_weights(
     return run.path
 
 
+def capability_models(overrides=None):
+    """Explicit roles and strict loads; these checkpoints are NOT one trained agent."""
+    from pathwm.models.key_box import KeyBoxReader
+    from pathwm.models.entity_state import EntityStateCell, EntityInteractionCell
+    from pathwm.models.entity_relations import RelationKey, RelationWriteGate
+    from pathwm.models.encoders import CNNEncoder
+    from pathwm.models.decoders import ReconstructionDecoder, PushTPoseHead
+    from pathwm.models.perception import Perception
+    from pathwm.models.temporal import MemoryUpdater, Predictor, WorldModel
+
+    paths = dict(
+        visual="runs/direct_weights_v1/timing/weights.pt",
+        synthetic="runs/belief_v1/synthetic/last.pt",
+        instructions="runs/belief_v1/instructions/last.pt",
+        pusht="runs/belief_v1/pusht/last.pt",
+        facts_direct="runs/fact_grounding_v1/reference/last.pt",
+        facts_event="runs/event_fact_v1/lr_control/last.pt",
+        recall="runs/recall_v1/development/last.pt",
+        key_box="runs/key_box_v1/replica/last.pt",
+        interaction="runs/entity_interaction_v1/frozen_interaction.pt",
+        relation="runs/entity_relations_v1/frozen_key.pt",
+        gate="runs/entity_gate_v1/frozen_gate.pt",
+        perception="runs/examples/perception/last.pt",
+        dynamics="runs/examples/dynamics/last.pt",
+    )
+    if set(overrides or {}) - set(paths):
+        raise ValueError("Unknown checkpoint role")
+    paths.update(overrides or {})
+    models, settings, receipts = nn.ModuleDict(), {}, {}
+    for name, filename in paths.items():
+        path = Path(filename).resolve()
+        sha = file_hash(path)
+        prefix = ""
+        if name in (
+            "synthetic",
+            "instructions",
+            "pusht",
+            "facts_direct",
+            "facts_event",
+            "recall",
+        ):
+            settings[name] = json.loads((path.parent / "run.json").read_text())[
+                "identity"
+            ]["settings"]
+            s = settings[name]
+            model = build_model(
+                s["width"],
+                s["image_size"],
+                s["audio_samples"],
+                state_model=s["state_model"],
+                memory_recent=s["memory_recent"],
+                memory_block=s["memory_block"],
+                memory_blocks=s["memory_blocks"],
+                facts=name.startswith("facts_"),
+                fact_reader=s.get("fact_reader", "direct"),
+                recall=name == "recall",
+            )
+            # Existing recall recipe deploys its development-selected target copy.
+            prefix = "target." if name == "recall" else "agent."
+        elif name == "visual":
+            model = build_visual_memory()
+        elif name == "key_box":
+            model = KeyBoxReader(
+                build_model(
+                    width=16,
+                    state_model="belief",
+                    memory_recent=2,
+                    memory_block=2,
+                    memory_blocks=1,
+                ),
+                EntityMatchReader(),
+                EntityStateCell(preserve_no_information=True),
+            )
+        elif name == "interaction":
+            model = EntityInteractionCell()
+        elif name == "relation":
+            model = RelationKey()
+        elif name == "gate":
+            model = RelationWriteGate()
+        elif name == "perception":
+            encoder = CNNEncoder(depth=0)
+            model = Perception(
+                encoder,
+                dict(
+                    rgb=ReconstructionDecoder(encoder.feature_spec),
+                    pose=PushTPoseHead(encoder.feature_spec),
+                ),
+            )
+        else:
+            encoder = CNNEncoder(depth=0)
+            model = WorldModel(
+                encoder,
+                MemoryUpdater(encoder.feature_spec, action_width=2, memory_width=128),
+                Predictor(
+                    encoder.feature_spec, action_width=2, memory_width=128, depth=2
+                ),
+            )
+        raw = torch.load(path, map_location="cpu", weights_only=True)["model"]
+        weights = {k[len(prefix) :]: v for k, v in raw.items() if k.startswith(prefix)}
+        model.load_state_dict(weights, strict=True)
+        if file_hash(path) != sha:
+            raise ValueError("Checkpoint changed during load")
+        models[name] = model.eval().requires_grad_(False)
+        receipts[name] = dict(
+            path=str(path),
+            sha256=sha,
+            prefix=prefix,
+            parameters=sum(p.numel() for p in model.parameters()),
+            state_sha256=state_hash(model),
+        )
+    return models, settings, receipts
+
+
+@torch.no_grad()
+def capability_rollout(agent, data, settings, directory, name):
+    """Observable free rollouts; future targets never enter the observation path."""
+    from pathwm.evaluation.capabilities import prediction_metrics
+
+    predicted, targets, currents, audios, audio_targets, actions_delta = (
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+    )
+    generated, target_text, text_correct, source_rows = [], [], [], []
+    for start in range(0, len(data), 2):
+        ids = list(range(start, min(start + 2, len(data))))
+        batch = data.batch(ids)
+        torch.manual_seed(6801 + start)
+        h, horizon = settings["history"], settings["horizon"]
+        state = observe_history(agent, batch, h)
+        a = batch["actions"][:, h - 1]
+        torch.manual_seed(6901 + start)
+        plus = agent.imagine(state, a)
+        torch.manual_seed(6901 + start)
+        minus = agent.imagine(state, -a)
+        actions_delta.append(float((plus.tokens - minus.tokens).abs().mean()))
+        future, sound = [], []
+        for t in range(h, h + horizon):
+            torch.manual_seed(7001 + start * horizon + t)
+            state = agent.imagine(state, batch["actions"][:, t - 1])
+            out = agent.decode(state)
+            future.append(out["image"])
+            sound.append(out["audio"])
+        predicted.append(torch.stack(future, 1))
+        targets.append(batch["images"][:, h : h + horizon])
+        currents.append(batch["images"][:, h - 1])
+        source_rows.extend(batch["sources"])
+        if "audio" in batch:
+            audios.append(torch.stack(sound, 1))
+            audio_targets.append(batch["audio"][:, h : h + horizon])
+        tokens = agent.generate_text(state, max_tokens=32).cpu().tolist()
+        generated.extend(tokens)
+        if "text" in batch:
+            truth = batch["text"][:, h + horizon - 1].tolist()
+            target_text.extend(truth)
+
+            # BOS/PAD removed; compare content up to and including EOS.
+            def content(row):
+                r = [int(v) for v in row if v not in (0, 1)]
+                return r[: r.index(2) + 1] if 2 in r else r
+
+            text_correct.extend(content(a) == content(b) for a, b in zip(tokens, truth))
+    predicted, targets, currents = map(torch.cat, (predicted, targets, currents))
+    metrics = prediction_metrics(predicted, targets, currents)
+    metrics.update(
+        examples=len(data),
+        action_token_mean_absolute_change=float(np.mean(actions_delta)),
+    )
+    arrays = dict(
+        predicted=predicted.numpy(), target=targets.numpy(), current=currents.numpy()
+    )
+    if audios:
+        sound, truth = torch.cat(audios), torch.cat(audio_targets)
+        metrics.update(
+            audio_mse=float((sound - truth).square().mean()),
+            silence_audio_mse=float(truth.square().mean()),
+        )
+        arrays.update(audio_predicted=sound.numpy(), audio_target=truth.numpy())
+    if text_correct:
+        metrics["text_exact_match"] = float(np.mean(text_correct))
+    np.savez_compressed(directory / f"{name}.npz", **arrays)
+    atomic_json(
+        directory / f"{name}.json",
+        dict(
+            metrics=metrics,
+            generated_token_ids=generated,
+            target_token_ids=target_text,
+            source_rows=source_rows,
+            identity=data.identity,
+            action_token_changes=actions_delta,
+            arrays=f"{name}.npz",
+        ),
+    )
+    return metrics
+
+
+@torch.no_grad()
+def capability_baseline(
+    output,
+    *,
+    resume=False,
+    check_only=False,
+    overrides=None,
+    reference=None,
+    software=None,
+):
+    """Fixed current-capability scorecard; no training and no checkpoint selection."""
+    import inspect
+    import resource
+    from PIL import Image
+    from pathwm.data.visual_memory import VisualMemoryEpisodes
+    from pathwm.evaluation.visual_memory import visual_features, visual_metrics
+    from pathwm.evaluation.capabilities import (
+        transform_visual,
+        score,
+        case_record,
+        compare_baselines,
+    )
+    from pathwm.evaluation.entity_growth import growth_inputs
+    from pathwm.data.entity_temporal import temporal_episodes
+    from pathwm.evaluation.entity_state import state_metrics, state_runtime
+    from pathwm.evaluation.entity_relations import evaluate_relations
+    from pathwm.evaluation.source_choice import (
+        evaluate_source_choice,
+        evaluate_source_drift,
+    )
+    from pathwm.evaluation.key_box import evaluate_key_box
+    from pathwm.models.key_box import plan_key
+    from pathwm.data.images import PushTFrames
+
+    if resume:
+        saved_settings = json.loads((Path(output) / "run.json").read_text())[
+            "identity"
+        ]["settings"]
+        overrides = (
+            saved_settings["checkpoint_overrides"] if overrides is None else overrides
+        )
+    seed_everything(6001)
+    models, model_settings, checkpoints = capability_models(overrides)
+    if check_only:
+        return dict(status="strict_checkpoint_loads_pass", checkpoints=checkpoints)
+    started = perf_counter()
+    deadline = started + 1200
+    protocol = dict(
+        schema="pathwm-capabilities-v1",
+        seed=6001,
+        pairs=32,
+        visual_seed=6301,
+        noise_seed=6401,
+        rollout_count=16,
+        temporal_seed=6501,
+        relation_seed=6502,
+        source_seed=6601,
+        drift_seed=6651,
+        planner_seed=6701,
+        perturbations=[
+            "original",
+            "mirror",
+            "swap_red_blue",
+            "grayscale",
+            "dim",
+            "noise",
+        ],
+        math="MSE over every pixel/sample; paired accuracy; CE; original component probability/cost metrics",
+        recipe_evaluator_sha256=digest(
+            inspect.getsource(capability_baseline)
+            + inspect.getsource(capability_rollout)
+        ),
+        evaluators={
+            p.name: file_hash(p)
+            for p in Path("pathwm/evaluation").glob("*.py")
+            if p.name not in ("report.py", "diagrams.py")
+        },
+        settings={
+            k: {
+                x: v
+                for x, v in s.items()
+                if x not in ("device", "learning_rate", "steps", "seed")
+            }
+            for k, s in model_settings.items()
+        },
+    )
+    media_root = Path("data/memory_media_v1")
+    media = json.loads((media_root / "manifest.json").read_text())
+    for r in media["records"]:
+        if file_hash(media_root / r["path"]) != r["sha256"]:
+            raise ValueError("Real-media source checksum mismatch")
+    settings = dict(
+        dataset="capabilities",
+        device="cpu",
+        seed=6001,
+        purpose="diagnostic",
+        protocol_sha256=digest(protocol),
+        checkpoint_overrides=overrides or {},
+        checkpoint_files=checkpoints,
+        max_seconds=1200,
+        optimizer_updates=0,
+        baseline_reference=str(reference) if reference else None,
+        capability_software=str(software) if software else None,
+        software_sha256=file_hash(software) if software else None,
+    )
+    optimizer = torch.optim.SGD(
+        models.parameters(), lr=0.0
+    )  # Run schema only; never stepped.
+    run = Run(
+        output,
+        settings=settings,
+        data=dict(protocol=protocol, media=media),
+        recipe=__file__,
+        model=models,
+        optimizer=optimizer,
+        device="cpu",
+        resume=resume,
+    )
+    if resume:
+        result = json.loads((run.path / "capabilities.json").read_text())
+        for filename, sha in json.loads(
+            (run.path / "artifacts.json").read_text()
+        ).items():
+            if file_hash(run.path / filename) != sha:
+                raise ValueError(f"Cached result changed: {filename}")
+        if reference:
+            atomic_json(
+                run.path / "comparison.json",
+                compare_baselines(
+                    json.loads((Path(reference) / "capabilities.json").read_text()),
+                    result,
+                ),
+            )
+        run.status("completed", "pending")
+        return render_report(run.path)
+    if software:
+        import shutil
+
+        evidence = json.loads(Path(software).read_text())
+        if any(file_hash(path) != sha for path, sha in evidence["sources"].items()):
+            raise ValueError("Software-test source differs from evaluation source")
+        shutil.copyfile(software, run.path / "software.json")
+    before = state_hash(models)
+    cases, gaps = [], []
+
+    def record(name, role, inputs, metrics, gates=None, scope="", raw=None):
+        if perf_counter() > deadline:
+            raise TimeoutError("Capability evaluation budget exhausted")
+        roles = role if isinstance(role, list) else [role]
+        row = case_record(
+            name,
+            {k: checkpoints[k] for k in roles},
+            inputs,
+            metrics,
+            gates or {},
+            scope,
+            raw or f"{name}.json",
+        )
+        cases.append(row)
+        atomic_json(
+            run.path / "capabilities.partial.json",
+            dict(protocol_sha256=digest(protocol), cases=cases),
+        )
+        print(name, row["status"], json.dumps(metrics), flush=True)
+
+    with evaluation_mode(models):
+        # Every variant preserves the opposite-label paired final observation.
+        data = VisualMemoryEpisodes(pairs=32, seed=6301)
+        for condition in protocol["perturbations"]:
+            changed = transform_visual(data, condition, seed=6401)
+            full = visual_metrics(
+                models["visual"].head(visual_features(models["visual"], changed)),
+                changed,
+            )
+            erased = visual_metrics(
+                models["visual"].head(
+                    visual_features(models["visual"], changed, erased=True)
+                ),
+                changed,
+            )
+            if not torch.equal(
+                torch.tensor(erased["logits"])[::2],
+                torch.tensor(erased["logits"])[1::2],
+            ):
+                raise ValueError("Erased-history paired control differs")
+            name = f"visual_{condition}"
+            metrics = {k: full[k] for k in ("accuracy", "pair_both", "nll")}
+            metrics.update(
+                reversal_accuracy=full["reversal"]["accuracy"],
+                erased_accuracy=erased["accuracy"],
+                history_advantage=full["accuracy"] - erased["accuracy"],
+            )
+            gates = {
+                k: score(metrics[k], v)
+                for k, v in dict(
+                    accuracy=0.9,
+                    pair_both=0.8,
+                    reversal_accuracy=0.8,
+                    history_advantage=0.3,
+                ).items()
+            }
+            atomic_json(
+                run.path / f"{name}.json",
+                dict(full=full, erased=erased, identity=changed.identity),
+            )
+            np.savez_compressed(
+                run.path / f"{name}.npz", images=changed.images, labels=changed.labels
+            )
+            record(
+                name,
+                "visual",
+                changed.identity,
+                metrics,
+                gates,
+                "Fixed question, one target, four frames. Specific perturbation only; paired scenes are the sampling units.",
+            )
+
+        # Test real image input and actual decoder outputs of the constructed checkpoint.
+        photos = [r for r in media["records"] if r["kind"] == "coco_image"]
+        rgb = torch.stack(
+            [
+                torch.from_numpy(
+                    np.asarray(
+                        Image.open(media_root / r["path"])
+                        .convert("RGB")
+                        .resize((32, 32))
+                    ).copy()
+                )
+                .permute(2, 0, 1)
+                .float()
+                / 255
+                for r in photos
+            ]
+        )
+        agent = models["visual"].agent
+        torch.manual_seed(7101)
+        state = agent.initial_state(len(rgb))
+        state = agent.observe(
+            state,
+            {"image": Observation(rgb[:, None], torch.zeros(len(rgb), 1))},
+            time=0,
+        )
+        outputs = agent.decode(state)
+        tokens = agent.generate_text(state)
+        torch.manual_seed(7201)
+        plus = agent.imagine(state, torch.ones(len(rgb), 2))
+        torch.manual_seed(7201)
+        minus = agent.imagine(state, -torch.ones(len(rgb), 2))
+        metric = dict(
+            image_mse=float((outputs["image"] - rgb).square().mean()),
+            gray_image_mse=float((0.5 - rgb).square().mean()),
+            image_output_std=float(outputs["image"].std(unbiased=False)),
+            audio_output_rms=float(outputs["audio"].square().mean().sqrt()),
+            generated_content_tokens=int((tokens > 2).sum()),
+            action_token_change=float((plus.tokens - minus.tokens).abs().mean()),
+        )
+        modality_arrays = {}
+        for modality in ("image", "video", "audio", "text"):
+            if modality == "text":
+                values, valid = bytes_batch(["left", "rght"])
+                obs = Observation(
+                    values, torch.zeros_like(values, dtype=torch.float32), valid
+                )
+            elif modality == "audio":
+                values = torch.stack((torch.zeros(1, 32), torch.ones(1, 32)))
+                obs = Observation(values, torch.zeros(2, 1))
+            else:
+                values = torch.zeros(2, 1, 3, 32, 32)
+                values[1, :, 0] = 1
+                obs = Observation(values, torch.zeros(2, 1))
+            encoded = (
+                agent.encode(agent.initial_state(2), {modality: obs}, time=0)[modality]
+                .as_tokens()
+                .values
+            )
+            metric[f"{modality}_input_feature_change"] = float(
+                (encoded[0] - encoded[1]).abs().mean()
+            )
+            modality_arrays[modality] = encoded.numpy()
+        np.savez_compressed(
+            run.path / "constructed_input_features.npz", **modality_arrays
+        )
+        counts = {
+            name: dict(
+                parameters=sum(p.numel() for p in m.parameters()),
+                nonzero=sum(int(p.count_nonzero()) for p in m.parameters()),
+            )
+            for name, m in agent.named_children()
+        }
+        np.savez_compressed(
+            run.path / "constructed_modalities.npz",
+            input=rgb.numpy(),
+            image=outputs["image"].numpy(),
+            audio=outputs["audio"].numpy(),
+            text=tokens.numpy(),
+            video=agent.decode_video([state, plus]).numpy(),
+        )
+        atomic_json(
+            run.path / "constructed_modalities.json",
+            dict(
+                metrics=metric,
+                parameter_counts=counts,
+                generated_token_ids=tokens.tolist(),
+                photos=photos,
+            ),
+        )
+        record(
+            "constructed_modalities",
+            "visual",
+            photos,
+            metric,
+            dict(
+                image_beats_gray=score(
+                    metric["image_mse"],
+                    metric["gray_image_mse"],
+                    lower=True,
+                    strict=True,
+                )
+            ),
+            "Real COCO development photographs, image/audio/text/video output and action sensitivity. No semantic memory labels.",
+        )
+
+        for name in ("synthetic", "instructions", "pusht"):
+            s = dict(
+                model_settings[name],
+                validation_windows=16,
+                test_windows=16,
+                device="cpu",
+                batch_size=2,
+            )
+            data = make_data(s, "test")
+            metrics = capability_rollout(
+                models[name], data, s, run.path, f"prediction_{name}"
+            )
+            gates = dict(
+                image_beats_copy=score(
+                    metrics["image_mse"],
+                    metrics["copy_image_mse"],
+                    lower=True,
+                    strict=True,
+                )
+            )
+            if "audio_mse" in metrics:
+                gates["audio_beats_silence"] = score(
+                    metrics["audio_mse"],
+                    metrics["silence_audio_mse"],
+                    lower=True,
+                    strict=True,
+                )
+            record(
+                f"prediction_{name}",
+                name,
+                data.identity,
+                metrics,
+                gates,
+                "Short-pilot weights; free rollout, fixed test split. PushT windows overlap within an episode. Sensitivity is not correctness.",
+            )
+            if name == "instructions":
+                task_metrics, task_rows = task_evaluation(models[name], data, s)
+                atomic_json(
+                    run.path / "instructions.json",
+                    dict(metrics=task_metrics, rows=task_rows),
+                )
+                record(
+                    "instructions",
+                    name,
+                    data.identity,
+                    task_metrics,
+                    dict(
+                        operation=score(1 - task_metrics["task_operation_error"], 0.9)
+                    ),
+                    "Finite operation templates and enforced output contracts; not general dialogue or tool execution.",
+                )
+        for role in ("facts_direct", "facts_event"):
+            s = dict(model_settings[role], device="cpu")
+            data = make_data(s, "validation")
+            raw = fact_predictions(models[role], data, s, deadline=deadline)
+            metrics = fact_metrics(**raw)
+            atomic_json(
+                run.path / f"{role}.json", {k: v.tolist() for k, v in raw.items()}
+            )
+            record(
+                role,
+                role,
+                data.identity,
+                metrics,
+                {
+                    k: score(metrics[k], 0.9)
+                    for k in ("entity_accuracy", "location_accuracy")
+                },
+                "Reused 32 development combinations of predefined IDs; regression, not new visual identity evidence.",
+            )
+        s = dict(model_settings["recall"], device="cpu")
+        data = make_data(s, "test")
+        logits, labels, examples = recall_predictions(
+            models["recall"], data, s, deadline=deadline
+        )
+        metric = recall_metrics(logits, labels)
+        groups = {
+            g: recall_metrics(
+                logits[torch.tensor([r["group"] == g for r in examples])],
+                labels[torch.tensor([r["group"] == g for r in examples])],
+            )
+            for g in sorted({r["group"] for r in examples})
+        }
+        atomic_json(
+            run.path / "recall.json",
+            dict(
+                logits=logits.tolist(),
+                labels=labels.tolist(),
+                examples=examples,
+                groups=groups,
+            ),
+        )
+        record(
+            "recall",
+            "recall",
+            data.identity,
+            metric,
+            dict(
+                beats_abstain=score(metric["task_loss"], 0.25, lower=True, strict=True)
+            ),
+            "Existing test population reused; development-selected target checkpoint; raw temperature1, no new fitting.",
+        )
+
+        key = models["key_box"]
+        from pathwm.evaluation.entities import matching_metrics
+
+        novelty = VariableEntityMatches("validation", 256)
+        scores = entity_predictions(
+            key.matcher, novelty, dict(batch_size=32, device="cpu"), deadline=deadline
+        )
+        raw = matching_metrics(scores["logits"], scores["targets"], novelty.cohorts)
+        logits = scores["logits"][0]
+        target = scores["targets"][0].argmax(-1)
+        metric = dict(accuracy=float((logits.argmax(-1) == target).float().mean()))
+        for cohort in ("known", "novel"):
+            mask = torch.tensor([x == cohort for x in novelty.cohorts])
+            metric[cohort + "_accuracy"] = float(
+                (logits.argmax(-1)[mask] == target[mask]).float().mean()
+            )
+        atomic_json(
+            run.path / "entity_novelty.json",
+            dict(
+                scores=raw,
+                logits=logits.tolist(),
+                labels=target.tolist(),
+                manifest=novelty.manifest,
+            ),
+        )
+        record(
+            "entity_novelty",
+            "key_box",
+            novelty.identity,
+            metric,
+            dict(
+                known=score(metric["known_accuracy"], 0.95),
+                novel=score(metric["novel_accuracy"], 0.95),
+            ),
+            "Reused variable-candidate development descriptors. Raw false merges/splits and abstention coverage retained; not visual discovery.",
+        )
+        families = growth_inputs(6501, 8)
+        populations = temporal_episodes(key.matcher, families, idle_lengths=(3, 31))
+        # Direct matching makes identity ambiguity visible independently of state readout.
+        query = torch.tensor([f["revisits"][i] for f in families for i in range(2)])
+        memory = torch.tensor(
+            [f["descriptors"][:2] for f in families for _ in range(2)]
+        )
+        matching = key.matcher.match(query, memory)
+        labels = torch.tensor([0, 1] * len(families))
+        metric = dict(
+            accuracy=float((matching.argmax(-1) == labels).float().mean()),
+            examples=len(labels),
+        )
+        atomic_json(
+            run.path / "entity_matching.json",
+            dict(logits=matching.tolist(), labels=labels.tolist(), families=families),
+        )
+        record(
+            "entity_matching",
+            "key_box",
+            families,
+            metric,
+            dict(accuracy=score(metric["accuracy"], 0.95)),
+            "Supplied descriptors and known two-entity candidates; novelty/ambiguous matching remains covered by specialist software checks.",
+        )
+        for condition, data in populations.items():
+            metric, logits, _ = state_metrics(key.cell, data)
+            runtime = state_runtime(key.cell, key.matcher, data, deadline)
+            metric.update(
+                runtime_pair_accuracy=runtime["pair_accuracy"],
+                transactions=runtime["transactions"],
+                latent_agreement=runtime["latent_agreement"],
+            )
+            name = f"state_{condition}"
+            atomic_json(
+                run.path / f"{name}.json",
+                dict(
+                    logits=logits.tolist(),
+                    targets=data["targets"].tolist(),
+                    runtime=runtime,
+                ),
+            )
+            record(
+                name,
+                "key_box",
+                {k: v for k, v in data.items() if k != "slots"},
+                metric,
+                dict(pair_accuracy=score(metric["pair_accuracy"], 0.95)),
+                "Learned state cell with supplied operation vectors; explicit identity records and no-information preservation.",
+            )
+        families = growth_inputs(6502, 2)
+        relation = evaluate_relations(
+            key.matcher, models["interaction"], models["relation"], families, deadline
+        )
+        for condition, raw in relation["cohorts"].items():
+            name = f"relation_{condition}"
+            atomic_json(run.path / f"{name}.json", raw)
+            metric = {k: v for k, v in raw.items() if isinstance(v, (float, int, bool))}
+            record(
+                name,
+                ["key_box", "interaction", "relation"],
+                dict(families=families, condition=condition),
+                metric,
+                dict(accuracy=score(metric["accuracy"], 0.95))
+                if condition != "erased"
+                else {},
+                scope="One supplied relation type; learned addressing and state interaction, not learned graph topology.",
+            )
+        for name, raw in (
+            ("source_static", evaluate_source_choice(models["gate"], 16, seed=6601)),
+            ("source_drift", evaluate_source_drift(models["gate"], 16, seed=6651)),
+        ):
+            atomic_json(run.path / f"{name}.json", raw)
+            if name == "source_static":
+                metric = dict(
+                    useful_source_rate=raw["useful_source_rate"],
+                    utility=raw["summary"]["learned"]["utility"],
+                    stop_utility=raw["summary"]["stop"]["utility"],
+                    accuracy=raw["summary"]["learned"]["accuracy"],
+                )
+                gates = dict(
+                    beats_stop=score(
+                        metric["utility"], metric["stop_utility"], strict=True
+                    )
+                )
+            else:
+                metric = {
+                    f"{condition}_{policy}_{k}": v
+                    for condition, policies in raw["summary"].items()
+                    for policy, metrics in policies.items()
+                    for k, v in metrics.items()
+                }
+                gates = {}
+            record(
+                name,
+                "gate",
+                dict(seed=6601 if name == "source_static" else 6651, worlds=16),
+                metric,
+                gates,
+                "Outcome-feedback adaptation with supplied sources; no neural reliability estimator. Raw source feedback retained.",
+            )
+        for stress in (False, True):
+            raw = evaluate_key_box(key, families=16, seed=6701, stress=stress)
+            name = "planning_relocation" if stress else "planning_ordinary"
+            atomic_json(run.path / f"{name}.json", raw)
+            metric = dict(
+                raw["summary"]["integrated"],
+                known_accuracy=raw["known_accuracy"],
+                no_history_utility=raw["summary"]["no_history"]["utility"],
+                supplied_state_success=raw["summary"]["supplied_state"]["success"],
+            )
+            if raw["correction_accuracy"] is not None:
+                metric["correction_accuracy"] = raw["correction_accuracy"]
+            record(
+                name,
+                "key_box",
+                dict(families=growth_inputs(6701, 16), stress=stress),
+                metric,
+                dict(
+                    success=score(metric["success"], 0.95),
+                    absent=score(metric["absent_stop"], 0.95),
+                ),
+                "Supplied expectimax mechanics, four-action horizon, learned workspace reading. No learned world-model planner.",
+            )
+        action, value = plan_key((0.15, 0, 0.85), (True, False), 1)
+        selected = (
+            0.1
+            if action == ("retrieve", 0)
+            else 0.85
+            if action == ("stop", -1)
+            else None
+        )
+        raw = dict(
+            belief=[0.15, 0, 0.85],
+            opened=[True, False],
+            horizon=1,
+            action=action,
+            planner_value=value,
+            reported_expected_utility=selected,
+            stop_expected_utility=0.85,
+        )
+        atomic_json(run.path / "planner_objective.json", raw)
+        record(
+            "planner_objective",
+            "key_box",
+            dict(belief=raw["belief"], opened=raw["opened"], horizon=1),
+            dict(selected_utility=selected, best_utility=0.85),
+            dict(alignment=score(selected, 0.85)),
+            "Previously known surrogate-reward mismatch, retained unchanged for the baseline.",
+        )
+
+        # The separately trained CNN/temporal references use their own compatible weights.
+        frames = PushTFrames("data/pusht_world_model/cchi_v1", split="test")
+        batch = frames.batch(range(16))
+        frame_identity = dict(
+            frames.identity,
+            evaluated_rows=frames.rows[:16].tolist(),
+            evaluated_count=16,
+        )
+        predicted = models["perception"](batch["rgb"])
+        if isinstance(predicted, tuple):
+            predicted = predicted[0]
+        metric = dict(
+            rgb_mse=float((predicted["rgb"] - batch["rgb"]).square().mean()),
+            gray_mse=float((0.5 - batch["rgb"]).square().mean()),
+            pose_mse=float((predicted["pose"] - batch["pose"]).square().mean()),
+        )
+        np.savez_compressed(
+            run.path / "perception.npz",
+            input=batch["rgb"].numpy(),
+            predicted=predicted["rgb"].numpy(),
+            pose=predicted["pose"].numpy(),
+            target_pose=batch["pose"].numpy(),
+        )
+        atomic_json(
+            run.path / "perception.json", dict(metrics=metric, identity=frame_identity)
+        )
+        record(
+            "perception",
+            "perception",
+            frame_identity,
+            metric,
+            dict(
+                rgb=score(
+                    metric["rgb_mse"], metric["gray_mse"], lower=True, strict=True
+                )
+            ),
+            "Separate short-trained CNN reconstruction/pose reference. Grouped test-frame prefix.",
+        )
+        sequences = PushTSequences(
+            "data/pusht_world_model/cchi_v1", "test", history=2, horizon=3, limit=16
+        )
+        predictions, targets, currents = [], [], []
+        for start in range(0, 16, 2):
+            batch = sequences.batch(range(start, start + 2))
+            states = models["dynamics"](
+                batch["history"],
+                batch["history_actions"],
+                batch["actions"],
+                batch["initial_previous_action"],
+            )
+            predictions.append(
+                torch.stack(
+                    [models["perception"].heads["rgb"](x[0]) for x in states], 1
+                )
+            )
+            targets.append(batch["future"])
+            currents.append(batch["history"][:, -1])
+        from pathwm.evaluation.capabilities import prediction_metrics
+
+        p, t, c = map(torch.cat, (predictions, targets, currents))
+        metric = prediction_metrics(p, t, c)
+        np.savez_compressed(
+            run.path / "dynamics.npz",
+            predicted=p.numpy(),
+            target=t.numpy(),
+            current=c.numpy(),
+        )
+        atomic_json(
+            run.path / "dynamics.json",
+            dict(metrics=metric, identity=sequences.identity),
+        )
+        record(
+            "dynamics",
+            ["dynamics", "perception"],
+            sequences.identity,
+            metric,
+            dict(
+                beats_copy=score(
+                    metric["image_mse"],
+                    metric["copy_image_mse"],
+                    lower=True,
+                    strict=True,
+                )
+            ),
+            "Separate temporal reference, paired diagnostic decoder; overlapping real test windows.",
+        )
+
+    for name, reason in [
+        (
+            "real_visual_identity",
+            "No trained pixels-to-entity candidate/matching interface or reviewed real temporal identity answers.",
+        ),
+        (
+            "faces_and_person_beliefs",
+            "No current trained face recognition or person-state evaluation interface.",
+        ),
+        (
+            "learned_graph_and_concepts",
+            "Records and a supplied relation exist; learned topology/concept/skill formation is not implemented.",
+        ),
+        (
+            "speech_and_conversation",
+            "Toy waveform and byte decoders exist; no usable speech or conversational training/evaluation contract.",
+        ),
+        (
+            "essays_and_general_writing",
+            "No general language model/checkpoint or grounded writing evaluator.",
+        ),
+        (
+            "goal_directed_image_video",
+            "Reconstruction/imagined frames are measured above; prompt-conditioned content generation is not implemented.",
+        ),
+        (
+            "general_software_tools",
+            "Task proposals/output contracts exist; no integrated external software executor and verified completion loop.",
+        ),
+        (
+            "learned_dynamics_planning",
+            "Learned prediction and supplied-mechanics planning remain separate; no combined learned controller.",
+        ),
+        (
+            "live_webcam_memory",
+            "Camera/import software tested separately; live camera and reviewed real memory labels are not in this run.",
+        ),
+        (
+            "whole_agent_gpu_budget",
+            "This run measures CPU inference. Previous narrow visual GPU test cannot establish full training/inference headroom.",
+        ),
+    ]:
+        gaps.append(dict(id=name, status="not_measured", reason=reason))
+    if state_hash(models) != before:
+        raise ValueError("Evaluation mutated checkpoint tensors")
+    result = dict(
+        schema="pathwm-capabilities-v1",
+        protocol=protocol,
+        protocol_sha256=digest(protocol),
+        cases=cases,
+        gaps=gaps,
+        checkpoints=checkpoints,
+        resources=dict(
+            cpu_wall_seconds=perf_counter() - started,
+            peak_process_rss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
+            * 1024,
+        ),
+        limits=[
+            "Separate checkpoints, not one multi-capability agent.",
+            "Frozen small screens, no training or checkpoint selection; finite robustness only.",
+            "Failures describe these evaluated paths, not proof that latent information is absent.",
+            "Raw artifacts support audit; software passing is separate from learned performance.",
+        ],
+    )
+    atomic_json(run.path / "capabilities.json", result)
+    if reference:
+        atomic_json(
+            run.path / "comparison.json",
+            compare_baselines(
+                json.loads((Path(reference) / "capabilities.json").read_text()), result
+            ),
+        )
+    run.save()
+    atomic_json(
+        run.path / "artifacts.json",
+        {
+            p.name: file_hash(p)
+            for p in run.path.iterdir()
+            if p.suffix in (".json", ".npz", ".pt")
+            and p.name not in ("status.json", "artifacts.json")
+        },
+    )
+    run.status("completed", "pending")
+    return render_report(run.path)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -4727,6 +5711,21 @@ def main():
         "--entity-reader", choices=["recurrent", "shared"], default="recurrent"
     )
     parser.add_argument("--entity-noise", type=float, default=0.0)
+    parser.add_argument(
+        "--capability-software",
+        type=Path,
+        help="Explicit full-suite verification JSON to retain beside behavioral results",
+    )
+    parser.add_argument(
+        "--capability-weights",
+        type=Path,
+        help="JSON role-to-checkpoint overrides for a frozen capability comparison",
+    )
+    parser.add_argument(
+        "--baseline-reference",
+        type=Path,
+        help="Compare with a run of the identical capability protocol",
+    )
     parser.add_argument("--check", action="store_true")
     parser.add_argument(
         "--diagram",
@@ -4742,6 +5741,7 @@ def main():
     parser.add_argument(
         "--dataset",
         choices=[
+            "capabilities",
             "synthetic",
             "instructions",
             "pusht",
@@ -4849,6 +5849,27 @@ def main():
     if args.diagram_depth < 0:
         parser.error("Diagram depth must be nonnegative")
     args = resume_arguments(parser, args)
+    if args.dataset == "capabilities":
+        if args.device != "cpu" or args.stop_after is not None:
+            parser.error(
+                "Capability baseline uses CPU evaluation without optimizer steps"
+            )
+        overrides = (
+            json.loads(args.capability_weights.read_text())
+            if args.capability_weights
+            else None
+        )
+        print(
+            capability_baseline(
+                args.resume or args.output,
+                resume=bool(args.resume),
+                check_only=args.check,
+                overrides=overrides,
+                reference=args.baseline_reference,
+                software=args.capability_software,
+            )
+        )
+        return
     if args.dataset == "direct-weights":
         if args.check or args.stop_after is not None:
             parser.error(
