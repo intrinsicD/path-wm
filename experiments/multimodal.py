@@ -4450,6 +4450,8 @@ def direct_visual_weights(
     device="cpu",
     max_seconds=600,
     resume=False,
+    timing=False,
+    seed_offset=0,
 ):
     """Construct and test weight files without gradients or optimizer updates."""
     import shutil
@@ -4473,8 +4475,12 @@ def direct_visual_weights(
         torch.cuda.reset_peak_memory_stats(device)
     seed_everything(3001)
     fit, development, test = [
-        VisualMemoryEpisodes(n, seed=s)
-        for n, s in [(fit_pairs, 3101), (development_pairs, 3201), (test_pairs, 3301)]
+        VisualMemoryEpisodes(n, seed=s + seed_offset)
+        for n, s in [
+            (fit_pairs, 3101),
+            (development_pairs, 3201),
+            (test_pairs, 5301 if timing else 3301),
+        ]
     ]
     for key in ("scene_sha256", "final_sha256"):
         groups = [set(d.identity[key]) for d in (fit, development, test)]
@@ -4485,6 +4491,8 @@ def direct_visual_weights(
     optimizer = torch.optim.SGD(model.parameters(), lr=0)
     settings = dict(
         dataset="direct-weights",
+        direct_weight_timing=timing,
+        seed_offset=seed_offset,
         seed=3001,
         fit_pairs=fit_pairs,
         development_pairs=development_pairs,
@@ -4558,9 +4566,11 @@ def direct_visual_weights(
             )
             baseline_development = scores(development, 3501)
             candidates = []
-            construct_weights(model)
+            construct_weights(model, timing=timing)
             constructed = save_weights(
-                "constructed.pt", "handwritten_numeric_assignment"
+                "constructed.pt",
+                "handwritten_numeric_assignment"
+                + ("_timing_revision" if timing else ""),
             )
             candidates.append(
                 dict(
@@ -4574,7 +4584,9 @@ def direct_visual_weights(
             )
             fit_centroid_head(model, fit_features, torch.from_numpy(fit.labels))
             adjusted = save_weights(
-                "adjusted.pt", "label_fitted_centroid_head_on_constructed_backbone"
+                "adjusted.pt",
+                "label_fitted_centroid_head_on_constructed_backbone"
+                + ("_timing_revision" if timing else ""),
             )
             candidates.append(
                 dict(
@@ -4703,6 +4715,11 @@ def direct_visual_weights(
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--direct-weight-timing",
+        action="store_true",
+        help="Use the predeclared numeric timing revision and fresh test scenes",
+    )
     parser.add_argument(
         "--entity-association", choices=["raw", "observed", "learned"], default="raw"
     )
@@ -4842,6 +4859,7 @@ def main():
                 args.resume or args.output,
                 device=args.device,
                 resume=args.resume is not None,
+                timing=args.direct_weight_timing,
             )
         )
         return

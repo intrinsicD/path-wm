@@ -37,7 +37,7 @@ class VisualMemoryReader(nn.Module):
 
 
 @torch.no_grad()
-def construct_weights(model):
+def construct_weights(model, *, timing=False):
     """Handwritten red-salience routing and horizontal signed readout; no data fit."""
     for parameter in model.parameters():
         parameter.zero_()
@@ -58,6 +58,15 @@ def construct_weights(model):
     patch.weight[0, 1:].fill_(-4 / area)
     model.head.weight[0, 8] = -4
     model.head.weight[1, 8] = 4
+    if timing:
+        model.agent.dynamics.transition.attention.out_proj.weight.zero_()
+        clock = model.agent.memory.clocks[0]
+        clock.weight[0, width] = 16
+        clock.bias[0] = -8
+        for reader in model.agent.memory.readers.values():
+            reader.view[0, 0] = 4
+            reader.view[1, 0] = -16
+            reader.gate.bias.copy_(reader.gate.bias.new_tensor([-8, 8, -8, -8]))
 
 
 @torch.no_grad()

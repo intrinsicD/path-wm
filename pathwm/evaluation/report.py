@@ -1059,7 +1059,8 @@ def visual_memory_inspection(directory):
     )
     with np.load(Path(directory) / "visual_examples.npz", allow_pickle=False) as data:
         parts.append(
-            '<section><h2>Observed histories, in time order</h2><div class="gallery">'
+            '<section><h2>Observed histories, in time order</h2><div class="gallery" '
+            'style="grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))">'
         )
         for i, (frames, label) in enumerate(zip(data["images"], data["labels"])):
             strip = np.concatenate(list(frames), axis=1).astype("float32") / 255

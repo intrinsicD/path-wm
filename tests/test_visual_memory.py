@@ -67,7 +67,7 @@ def test_real_agent_history_gradients_and_erasure_invariance():
     torch.testing.assert_close(x, y, rtol=0, atol=0)
 
 
-@pytest.mark.parametrize('timing', [False, True])
+@pytest.mark.parametrize("timing", [False, True])
 def test_direct_weights_save_reload_without_optimization(tmp_path, monkeypatch, timing):
     from experiments.multimodal import direct_visual_weights, build_visual_memory
     from pathwm.io import file_hash
@@ -81,14 +81,20 @@ def test_direct_weights_save_reload_without_optimization(tmp_path, monkeypatch, 
     monkeypatch.setattr(torch.Tensor, "backward", forbidden)
     monkeypatch.setattr(torch.optim.SGD, "step", forbidden)
     opts = dict(
-        fit_pairs=2, development_pairs=2, test_pairs=2, device="cpu", max_seconds=120, timing=timing
+        fit_pairs=2,
+        development_pairs=2,
+        test_pairs=2,
+        device="cpu",
+        max_seconds=120,
+        timing=timing,
+        seed_offset=100000,
     )
     direct_visual_weights(tmp_path / "full", **opts)
     model = build_visual_memory()
     payload = torch.load(tmp_path / "full/weights.pt", weights_only=True)
     model.load_state_dict(payload["model"])
     model.eval()
-    data = VisualMemoryEpisodes(2, seed=4301 if timing else 3301)
+    data = VisualMemoryEpisodes(2, seed=105301 if timing else 103301)
     result = json.loads((tmp_path / "full/visual_memory.json").read_text())
     torch.manual_seed(3401)
     with torch.no_grad():

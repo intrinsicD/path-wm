@@ -130,7 +130,15 @@ and development splits. This is hand-engineered for the fixed short scene/timing
 contract; it is not a general temporal-reasoning mechanism.
 
 Freeze that development-selected procedure before accessing fresh final-test scene
-seed4301 (32pairs). Same four gates, device cap, baseline, no-gradient checks and600s
+seed5301 (32pairs). Same four gates, device cap, baseline, no-gradient checks and600s
 budget. Report it independently from the first test; never claim seed3301 remained
 unseen after the first result. No further adjustment is authorized by this bounded
 experiment plan. Use `--direct-weight-timing` and a fresh output directory.
+
+Pre-execution isolation correction: tiny software tests initially exercised the first
+two scenes of the recipe's default evaluation seed. They checked serialization,
+not capability thresholds, and their performance was not used to choose weights.
+Move unit fixtures to a separate100000 seed offset and use never-scored seed5301 for
+the second final evaluation (replacing proposed4301, which the tiny check exercised).
+The first reference's nominal holdout therefore had limited software-check exposure;
+retain that limitation alongside its failed result rather than retroactively relabel it.
