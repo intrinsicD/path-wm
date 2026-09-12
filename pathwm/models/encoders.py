@@ -6,6 +6,50 @@ from torch import nn
 from torch.nn import functional as F
 from .blocks import Attention, SpatialResidual, mlp
 from .features import FeatureSpec
+from .modalities import Observation
+from .multiscale import MultiScaleImageEncoder
+
+
+class PyramidEncoder(nn.Module):
+    """Single-image spatial adapter for the processed modality hierarchy.
+
+    Keeps every scale, optionally after final fusion. No temporal state is carried
+    across calls. The recipe chooses compatible heads and train/freeze rules.
+    """
+
+    def __init__(self, image_size=64, width=32, levels=3, depth=1, fusion_depth=0):
+        super().__init__()
+        if image_size < 4 or image_size % 4:
+            raise ValueError("RGB image size must be positive and divisible by four")
+        self.image_size, self.width = image_size, width
+        self.encoder = MultiScaleImageEncoder(
+            width,
+            levels=levels,
+            depth=depth,
+            fusion_depth=fusion_depth,
+        )
+        self.feature_spec = {}
+        side = image_size // 4
+        for i in range(levels):
+            self.feature_spec[f"scale_{i}"] = FeatureSpec(
+                width, (side, side), f"processed image scale {i}"
+            )
+            side = (side + 1) // 2
+
+    def forward(self, rgb):
+        if rgb.ndim != 4 or tuple(rgb.shape[1:]) != (
+            3,
+            self.image_size,
+            self.image_size,
+        ):
+            raise ValueError(
+                f"RGB input must be [B,3,{self.image_size},{self.image_size}]"
+            )
+        output = self.encoder(Observation(rgb[:, None], rgb.new_zeros(len(rgb), 1)))
+        return {
+            name: scale.values.transpose(1, 2).reshape(len(rgb), self.width, *spec.size)
+            for (name, spec), scale in zip(self.feature_spec.items(), output.scales)
+        }
 
 
 class CNNEncoder(nn.Module):

@@ -128,10 +128,14 @@ def test_pooling_matches_support_ancestors_and_handles_odd_masked_groups():
 @pytest.mark.parametrize("kind", ["video", "audio", "text"])
 def test_temporal_and_equal_timestamp_prefix_causality(kind, fusion_depth):
     if kind == "video":
-        encoder = MultiScaleImageEncoder(16, video=True, code_width=8, fusion_depth=fusion_depth)
+        encoder = MultiScaleImageEncoder(
+            16, video=True, code_width=8, fusion_depth=fusion_depth
+        )
         values = torch.rand(1, 3, 3, 12, 20)
     elif kind == "audio":
-        encoder = MultiScaleAudioEncoder(9, 16, patch_size=4, code_width=8, fusion_depth=fusion_depth)
+        encoder = MultiScaleAudioEncoder(
+            9, 16, patch_size=4, code_width=8, fusion_depth=fusion_depth
+        )
         values = torch.rand(1, 3, 9)
     else:
         encoder = MultiScaleTextEncoder(16, code_width=8, fusion_depth=fusion_depth)
@@ -249,7 +253,9 @@ def test_agent_control_uses_prior_state_user_override_and_cutoff_before_encoders
 
 @pytest.mark.parametrize("fusion_depth", [0, 2])
 def test_masked_video_nans_do_not_reach_any_scale_or_gradient(fusion_depth):
-    encoder = MultiScaleImageEncoder(16, video=True, code_width=8, fusion_depth=fusion_depth)
+    encoder = MultiScaleImageEncoder(
+        16, video=True, code_width=8, fusion_depth=fusion_depth
+    )
     values = torch.rand(2, 3, 3, 12, 20)
     valid = torch.tensor([[True, False, True], [False, False, False]])
     values[~valid] = float("nan")
@@ -300,7 +306,9 @@ def test_final_fusion_reads_coarse_features_and_preserves_scale_contract():
     assert any(g.abs().sum() > 0 for g in gradients)
 
     def intervene(module, args, output):
-        return replace(output, values=output.values + torch.arange(16).to(output.values))
+        return replace(
+            output, values=output.values + torch.arange(16).to(output.values)
+        )
 
     handle = encoder.pyramid.stages[-1].register_forward_hook(intervene)
     after = encoder(examples()["image"])
@@ -309,23 +317,29 @@ def test_final_fusion_reads_coarse_features_and_preserves_scale_contract():
     for i, (a, b) in enumerate(zip(before.scales, after.scales)):
         assert a.grid == b.grid
         for name in ("times", "content_times", "ends", "valid"):
-            torch.testing.assert_close(getattr(a, name), getattr(b, name), rtol=0, atol=0)
+            torch.testing.assert_close(
+                getattr(a, name), getattr(b, name), rtol=0, atol=0
+            )
         torch.testing.assert_close(a.values, trace[f"scale.{i}.values"], rtol=0, atol=0)
     sizes = [s.values.shape[1] for s in before.scales]
     for i in range(2):
         weights = trace[f"fusion.{i}.attention"]
         assert weights.shape[-2:] == (sum(sizes), sum(sizes))
-        assert weights[..., :sizes[0], -sizes[-1]:].sum() > 0
+        assert weights[..., : sizes[0], -sizes[-1] :].sum() > 0
 
 
 def test_fusion_mask_uses_support_ends_when_condition_equalizes_availability():
     encoder = MultiScaleTextEncoder(16, code_width=8, fusion_depth=2)
     values = torch.tensor([[1, 8, 9, 2], [0, 0, 0, 0]])
     trace = {}
-    output = encoder(Observation(values, torch.zeros(2, 4)), condition_time=5, trace=trace)
+    output = encoder(
+        Observation(values, torch.zeros(2, 4)), condition_time=5, trace=trace
+    )
     ends = torch.cat([s.ends for s in output.scales], 1)
     valid = output.as_tokens().valid
-    allowed = valid[:, :, None] & valid[:, None, :] & (ends[:, None] <= ends[:, :, None])
+    allowed = (
+        valid[:, :, None] & valid[:, None, :] & (ends[:, None] <= ends[:, :, None])
+    )
     for i in range(2):
         weights = trace[f"fusion.{i}.attention"]
         assert weights.masked_select(~allowed[:, None]).count_nonzero() == 0
@@ -341,7 +355,11 @@ def test_disabled_fusion_preserves_default_state_and_outputs():
     assert original.state_dict().keys() == disabled.state_dict().keys()
     disabled.load_state_dict(original.state_dict(), strict=True)
     observation = examples()["image"]
-    torch.testing.assert_close(original(observation).as_tokens().values,
-                               disabled(observation).as_tokens().values, rtol=0, atol=0)
+    torch.testing.assert_close(
+        original(observation).as_tokens().values,
+        disabled(observation).as_tokens().values,
+        rtol=0,
+        atol=0,
+    )
     with pytest.raises(ValueError, match="fusion"):
         MultiScaleImageEncoder(16, fusion_depth=-1)

@@ -10,6 +10,20 @@ to the same training loop. [Task contracts and evaluation](tasks.md).
 
 The following perception/dynamics recipes remain focused references.
 
+The [hierarchy/fusion comparison](hierarchy-fusion-plan.md) tests additional per-scale
+transformer depth and final attention over all scales on real COCO RGB/foreground:
+
+```bash
+.venv/bin/python -m experiments.hierarchy_fusion --arm deep_fusion --seed 7401 --device cuda --check
+.venv/bin/python -m experiments.hierarchy_fusion --arm deep_fusion --seed 7401 --device cuda
+```
+
+Use a fresh output for a new run, or `--resume RUN` to continue that exact configuration.
+The general perception recipe also accepts `--encoder pyramid --stage-depth 2
+--fusion-depth 2`, with `--levels` and `--width`. All modality encoder constructors
+accept `fusion_depth`; the multimodal Python constructor exposes `feature_depth`
+and `fusion_depth`. Default fusion remains0, preserving previous model layouts.
+
 For the finite single-observation entity/location control, use the same recipe:
 
 ```bash

@@ -9,7 +9,7 @@ from pathlib import Path
 import json
 import torch
 from torch.nn import functional as F
-from pathwm.models.encoders import CNNEncoder, DinoEncoder
+from pathwm.models.encoders import CNNEncoder, DinoEncoder, PyramidEncoder
 from pathwm.models.decoders import ReconstructionDecoder, DenseHead, PushTPoseHead
 from pathwm.models.perception import Perception
 from pathwm.data.images import PushTFrames, CocoFrames, CocoMasks
@@ -52,6 +52,22 @@ def build_model(args):
         if args.encoder_weights:
             load_component(encoder, args.encoder_weights, "encoder")
         rgb = ReconstructionDecoder(encoder.feature_spec)
+    elif args.encoder == "pyramid":
+        encoder = PyramidEncoder(
+            width=args.width,
+            levels=args.levels,
+            depth=args.stage_depth,
+            fusion_depth=args.fusion_depth,
+        )
+        if args.encoder_weights:
+            load_component(encoder, args.encoder_weights, "encoder")
+        rgb = DenseHead(
+            encoder.feature_spec,
+            channels=3,
+            levels=tuple(encoder.feature_spec),
+            activation="sigmoid",
+            retain_statistics=True,
+        )
     else:
         encoder = DinoEncoder(
             args.dino_source, args.encoder_weights or "data/assets/dinov2/weights.pth"
@@ -65,15 +81,18 @@ def build_model(args):
         )
     encoder.requires_grad_(not args.freeze_encoder)
     heads = {"rgb": rgb}
+    spatial_levels = (
+        tuple(encoder.feature_spec) if args.encoder == "pyramid" else ("fine", "coarse")
+    )
     if args.dataset == "pusht" and not args.rgb_only:
-        heads["pose"] = PushTPoseHead(encoder.feature_spec)
+        heads["pose"] = PushTPoseHead(encoder.feature_spec, levels=spatial_levels)
     if args.dataset == "coco" and args.masks and not args.rgb_only:
         heads["mask"] = DenseHead(
             encoder.feature_spec,
             levels=("local", "fine", "coarse")
             if args.encoder == "dino"
-            else ("fine", "coarse"),
-            retain_statistics=args.encoder == "dino",
+            else spatial_levels,
+            retain_statistics=args.encoder in ("dino", "pyramid"),
         )
     # Diagnostic RGB cannot update E; task heads can still train it.
     return Perception(
@@ -102,7 +121,18 @@ def main():
         type=Path,
         help="Prepared COCO mask directory, e.g. data/assets/coco_masks",
     )
-    p.add_argument("--encoder", choices=["cnn", "dino"], default="cnn")
+    p.add_argument("--encoder", choices=["cnn", "dino", "pyramid"], default="cnn")
+    p.add_argument("--width", type=int, default=32, help="Pyramid feature width")
+    p.add_argument("--levels", type=int, default=3, help="Pyramid scale count")
+    p.add_argument(
+        "--stage-depth",
+        type=int,
+        default=1,
+        help="Transformer blocks per pyramid scale",
+    )
+    p.add_argument(
+        "--fusion-depth", type=int, default=0, help="Final all-scale transformer blocks"
+    )
     p.add_argument(
         "--encoder-weights",
         type=Path,
@@ -128,6 +158,15 @@ def main():
     p.add_argument("--seed", type=int, default=42)
     p.add_argument("--device", default="cpu")
     args = resume_arguments(p, p.parse_args())
+    if args.encoder != "pyramid" and (
+        args.width,
+        args.levels,
+        args.stage_depth,
+        args.fusion_depth,
+    ) != (32, 3, 1, 0):
+        p.error(
+            "Width, levels, stage-depth and fusion-depth options require --encoder pyramid"
+        )
     if min(
         args.steps,
         args.batch_size,

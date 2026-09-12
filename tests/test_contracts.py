@@ -24,16 +24,28 @@ def test_pyramid_spatial_adapter_and_dense_heads_train_through_fusion():
     encoder = PyramidEncoder(image_size=32, width=16, levels=3, depth=2, fusion_depth=2)
     features = encoder(torch.rand(2, 3, 32, 32))
     assert {k: tuple(v.shape) for k, v in features.items()} == {
-        "scale_0": (2, 16, 8, 8), "scale_1": (2, 16, 4, 4), "scale_2": (2, 16, 2, 2)
+        "scale_0": (2, 16, 8, 8),
+        "scale_1": (2, 16, 4, 4),
+        "scale_2": (2, 16, 2, 2),
     }
-    head = DenseHead(encoder.feature_spec, channels=3, levels=tuple(features),
-                     output_size=(32, 32), activation="sigmoid", retain_statistics=True)
+    head = DenseHead(
+        encoder.feature_spec,
+        channels=3,
+        levels=tuple(features),
+        output_size=(32, 32),
+        activation="sigmoid",
+        retain_statistics=True,
+    )
     output = head(features)
     assert output.shape == (2, 3, 32, 32)
     output.square().mean().backward()
     assert encoder.encoder.stem.patch.weight.grad.abs().sum() > 0
-    assert all(p.grad is None or torch.isfinite(p.grad).all() for p in encoder.parameters())
-    assert encoder.encoder.pyramid.fusion[0].attention.in_proj_weight.grad.abs().sum() > 0
+    assert all(
+        p.grad is None or torch.isfinite(p.grad).all() for p in encoder.parameters()
+    )
+    assert (
+        encoder.encoder.pyramid.fusion[0].attention.in_proj_weight.grad.abs().sum() > 0
+    )
 
 
 def test_decoder_uses_selected_scales_only():

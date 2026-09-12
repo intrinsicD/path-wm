@@ -108,6 +108,8 @@ def build_model(
     code_width=16,
     levels=3,
     cross_scale=True,
+    feature_depth=1,
+    fusion_depth=0,
     state_model="gaussian",
     memory_recent=32,
     memory_block=8,
@@ -159,7 +161,12 @@ def build_model(
         width=width,
         encoders={
             "image": MultiScaleImageEncoder(
-                width, code_width=code_width, levels=levels, cross_scale=cross_scale
+                width,
+                code_width=code_width,
+                levels=levels,
+                cross_scale=cross_scale,
+                depth=feature_depth,
+                fusion_depth=fusion_depth,
             ),
             "video": MultiScaleImageEncoder(
                 width,
@@ -167,6 +174,8 @@ def build_model(
                 code_width=code_width,
                 levels=levels,
                 cross_scale=cross_scale,
+                depth=feature_depth,
+                fusion_depth=fusion_depth,
             ),
             "audio": MultiScaleAudioEncoder(
                 audio_samples,
@@ -174,9 +183,16 @@ def build_model(
                 code_width=code_width,
                 levels=levels,
                 cross_scale=cross_scale,
+                depth=feature_depth,
+                fusion_depth=fusion_depth,
             ),
             "text": MultiScaleTextEncoder(
-                width, code_width=code_width, levels=levels, cross_scale=cross_scale
+                width,
+                code_width=code_width,
+                levels=levels,
+                cross_scale=cross_scale,
+                depth=feature_depth,
+                fusion_depth=fusion_depth,
             ),
         },
         decoders={

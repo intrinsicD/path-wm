@@ -205,10 +205,22 @@ class ScaleMerge(nn.Module):
 
 
 class FeatureHierarchy(nn.Module):
-    def __init__(self, width, code_width, factors, levels=3, depth=1, cross_scale=True):
+    def __init__(
+        self,
+        width,
+        code_width,
+        factors,
+        levels=3,
+        depth=1,
+        cross_scale=True,
+        *,
+        fusion_depth=0,
+    ):
         super().__init__()
         if levels < 1:
             raise ValueError("Feature hierarchy needs at least one scale")
+        if fusion_depth < 0:
+            raise ValueError("Final fusion depth must be nonnegative")
         self.stages = nn.ModuleList(
             [ScaleProcessor(width, code_width, depth) for _ in range(levels)]
         )
@@ -218,6 +230,9 @@ class FeatureHierarchy(nn.Module):
                 for _ in range(levels - 1)
             ]
         )
+        self.fusion = nn.ModuleList(
+            [ConditionedBlock(width, code_width) for _ in range(fusion_depth)]
+        )
 
     def forward(self, fine, condition, *, condition_time=None, trace=None):
         scales = []
@@ -226,10 +241,30 @@ class FeatureHierarchy(nn.Module):
                 fine = self.merges[i - 1](
                     scales[-1], condition, trace=trace, name=f"merge.{i - 1}"
                 )
-            # This finished value is the sole source for BOTH public output and merge.
+            # Later levels consume the fully processed preceding scale.
             finished = stage(fine, condition, trace=trace, name=f"scale.{i}")
             scales.append(finished)
-            if trace is not None:
+        if self.fusion:
+            sizes = [s.values.shape[1] for s in scales]
+            combined = FeatureScale(
+                *(
+                    torch.cat([getattr(s, name) for s in scales], 1)
+                    for name in ("values", "times", "valid", "ends")
+                ),
+                grid=(sum(sizes),),
+            )
+            # Scale/position encodings are already in the values. Support bounds
+            # remain valid inductively: every block reads only earlier/equal keys.
+            for i, block in enumerate(self.fusion):
+                combined = block(
+                    combined, condition, trace=trace, name=f"fusion.{i}.attention"
+                )
+            scales = [
+                replace(s, values=v)
+                for s, v in zip(scales, combined.values.split(sizes, dim=1))
+            ]
+        if trace is not None:
+            for i, finished in enumerate(scales):
                 for field in ("values", "times", "content_times", "valid", "ends"):
                     trace[f"scale.{i}.{field}"] = (
                         getattr(finished, field).detach().cpu().clone()
@@ -305,12 +340,19 @@ class MultiScaleImageEncoder(nn.Module):
         levels=3,
         depth=1,
         cross_scale=True,
+        fusion_depth=0,
     ):
         super().__init__()
         self.width, self.code_width, self.video = width, code_width, video
         self.stem = ImageEncoder(width, patch_size)
         self.pyramid = FeatureHierarchy(
-            width, code_width, (2 if video else 1, 2, 2), levels, depth, cross_scale
+            width,
+            code_width,
+            (2 if video else 1, 2, 2),
+            levels,
+            depth,
+            cross_scale,
+            fusion_depth=fusion_depth,
         )
 
     def forward(self, observation, *, condition=None, condition_time=None, trace=None):
@@ -343,6 +385,7 @@ class MultiScaleAudioEncoder(nn.Module):
         levels=3,
         depth=1,
         cross_scale=True,
+        fusion_depth=0,
     ):
         super().__init__()
         if min(samples, patch_size) < 1:
@@ -356,7 +399,13 @@ class MultiScaleAudioEncoder(nn.Module):
         self.stem = nn.Linear(patch_size, width)
         self.modality = nn.Parameter(torch.randn(width) * 0.02)
         self.pyramid = FeatureHierarchy(
-            width, code_width, (2,), levels, depth, cross_scale
+            width,
+            code_width,
+            (2,),
+            levels,
+            depth,
+            cross_scale,
+            fusion_depth=fusion_depth,
         )
 
     def forward(self, observation, *, condition=None, condition_time=None, trace=None):
@@ -396,12 +445,19 @@ class MultiScaleTextEncoder(nn.Module):
         levels=3,
         depth=1,
         cross_scale=True,
+        fusion_depth=0,
     ):
         super().__init__()
         self.width, self.code_width = width, code_width
         self.stem = TextEncoder(width, vocabulary)
         self.pyramid = FeatureHierarchy(
-            width, code_width, (2,), levels, depth, cross_scale
+            width,
+            code_width,
+            (2,),
+            levels,
+            depth,
+            cross_scale,
+            fusion_depth=fusion_depth,
         )
 
     def forward(self, observation, *, condition=None, condition_time=None, trace=None):

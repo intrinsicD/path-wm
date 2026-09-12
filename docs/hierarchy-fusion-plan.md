@@ -92,3 +92,19 @@ within-window refinement and cross-window persistence are separate ablations.
 Claude critique is public conceptual only. Verify pooling maxima and stacked masks
 locally; exact briefs/responses/receipts in runs/reviews/continuation_2026-09-11/
 hierarchy-fusion*. Agreement is not empirical validation.
+
+## Implementation review before formal training
+
+Four informative RED failures confirmed missing fusion/adapter behavior. Targeted
+causality, coarse-to-fine gradients and invalid-token checks pass after implementation.
+Real RGB/mask backward succeeds. GPU preflight initially failed before model execution
+because the allocator limit API required an explicit device index; fixed that call.
+The completed4-example backward plus16-example validation preflight reserves202MiB.
+Resume weights/optimizer/RNG matched exactly; its test initially expected the wrong
+report-status label, corrected to the existing `structural_verified` contract.
+
+Claude acknowledged that the time/support mask invariant composes inductively over
+multiple fusion blocks. No bound recomputation is needed while every block respects
+it. Segment recurrence has a public precedent in
+[Transformer-XL](https://arxiv.org/abs/1901.02860); a temporal cache does not have to
+compress history. That precedent does not establish video/audio memory here.
