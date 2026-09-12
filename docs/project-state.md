@@ -1,5 +1,11 @@
 # Current work
 
+**Memory-grounded output implementation started, 13 September:** user approved a
+held-out two-object history task with factual and image outputs. Compare continuous
+state and reset-before-recall, with erased/swapped memory and separate encoder/
+stored-state readouts. [Active protocol](memory-output-plan.md). Two small local
+runs planned; no new learned result yet. Preserve earlier image and broad baselines.
+
 **Shared modality-output boundary adopted, 12 September:** state/request/memory
 conditioning feeds replaceable modality-specific generators and matching codecs.
 Separate training is allowed; state alignment and cross-modal timing/content need
