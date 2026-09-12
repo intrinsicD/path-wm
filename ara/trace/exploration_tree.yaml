@@ -3819,3 +3819,20 @@ tree:
   also_depends_on:
   - N246
   status: resolved
+
+- id: N248
+  type: decision
+  title: Order memory, prediction and learned planning milestones
+  provenance: user
+  timestamp: 2026-09-12T12:46+02:00
+  choice: Proceed first with remembering observations, then predicting action consequences,
+    then using predictions to plan toward a goal. Observation memory is immediate
+    target; exact environment, gates and budgets remain open.
+  alternatives:
+  - Start directly with learned planning
+  evidence:
+  - docs/agent-specification-questions.md#recorded-answers
+  also_depends_on:
+  - N244
+  - N247
+  status: resolved

@@ -127,8 +127,8 @@ sessions:
 
 - id: 2026-09-12_001
   date: '2026-09-12'
-  summary: "User confirms both training and inference must fit current local GPU comfortably; scaling deferred, numerical budgets still open."
-  turn_count: 3
-  events_count: 3
+  summary: "User selects sequence: remember observations, predict action consequences, then plan with predictions; first experiment details pending."
+  turn_count: 4
+  events_count: 4
   claims_touched: []
   open_threads: 3

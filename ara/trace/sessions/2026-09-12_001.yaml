@@ -2,9 +2,9 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T12:29+02:00
-  turn_count: 3
-  summary: "User confirms both training and inference must fit current local GPU comfortably; scaling deferred, numerical budgets still open."
+  last_turn: 2026-09-12T12:46+02:00
+  turn_count: 4
+  summary: "User selects sequence: remember observations, predict action consequences, then plan with predictions; first experiment details pending."
 events_logged:
 - turn: 1
   type: decision
@@ -27,6 +27,13 @@ events_logged:
   provenance: user
   summary: User confirms both training and inference must fit current local GPU comfortably;
     scaling deferred, numerical budgets still open.
+- turn: 4
+  type: decision
+  id: N248
+  routing: direct
+  provenance: user
+  summary: 'User selects sequence: remember observations, predict action consequences,
+    then plan with predictions; first experiment details pending.'
 ai_actions:
 - turn: 1
   action: Recorded partial S02 answer and updated current state; no model changes
@@ -50,6 +57,13 @@ ai_actions:
   files_changed:
   - docs/agent-specification-questions.md
   - docs/project-state.md
+- turn: 4
+  action: Recorded S01 milestone sequence and updated current target; no experiment
+    started or model changed.
+  provenance: ai-executed
+  files_changed:
+  - docs/agent-specification-questions.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -60,8 +74,11 @@ key_context:
     and adapter if it does not work well.
 - turn: 3
   excerpt: "Both. I\u2019ll scale later."
+- turn: 4
+  excerpt: "Let\u2019s do those in that order: remembering observations, predicting\
+    \ action consequences, then planning toward a goal."
 open_threads:
-- 'S01/S02: choose first experiment and initial interface.'
+- 'S02/S04/T01: choose observation-memory input, task ranges and acceptance gates; S01 sequence decided.'
 - 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
 - 'O162/O163: task/cost/evidence contract and learned-dynamics integration remain
   proposed.'

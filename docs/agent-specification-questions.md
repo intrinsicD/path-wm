@@ -38,6 +38,15 @@ explicitly. The final check must cover every section, including deferrals.
 
 ## Recorded answers
 
+**S01 — ordered capability milestones (user, 12 September 2026; sequence decided).**
+Proceed in this order: (1) remember observations, (2) predict action consequences,
+(3) use those predictions to plan toward a goal. The immediate capability target
+is observation memory. The eventual multimodal/tool scope and current-GPU
+training/inference requirement apply throughout. This order does not declare any
+stage already passed: prior key-box evidence has its documented limited scope.
+Exact first-environment/input choices, memory queries, pass/fail criteria and
+per-stage budgets remain to be specified. Follow-ups: S02/S04/S05, M07 and T01–T07.
+
 **S02 — long-term scope (user, 12 September 2026; first experiment still open).**
 The agent should eventually see through a webcam, speak and write, create images
 and videos, and use software tools. “At some point” defines the intended later

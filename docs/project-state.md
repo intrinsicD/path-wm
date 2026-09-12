@@ -1,5 +1,11 @@
 # Current work
 
+**S01 sequence adopted, 12 September:** first remember observations, then predict
+action consequences, then plan toward a goal using those predictions. Observation
+memory is the next capability target. First environment/input and numerical gates
+remain open. [Recorded answers](agent-specification-questions.md#recorded-answers).
+Both training and inference must fit the current local GPU; scale later.
+
 **S03/R06 preference recorded, 12 September:** comfortable fit on the user's GPU
 is required; prefer own components, with pretrained model plus adapter if quality
 is inadequate. Local hardware query reports RTX3050/8192MiB. User confirmed both

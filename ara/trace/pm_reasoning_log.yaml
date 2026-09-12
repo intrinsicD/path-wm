@@ -1238,3 +1238,10 @@ entries:
     and remains intact.
   - Do not interpret later scaling as a commitment to a hardware purchase, larger
     experiment or exact VRAM cap.
+
+- turn: 2026-09-12_001#4
+  notes:
+  - N248 captures explicit user milestone order; it does not declare an earlier limited
+    memory screen sufficient for the new stage.
+  - Do not treat sequence selection as approval of a specific environment, loss, numerical
+    experiment or all previously proposed architecture details.
