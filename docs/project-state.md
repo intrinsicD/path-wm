@@ -1,5 +1,12 @@
 # Current work
 
+**Hierarchy/fusion experiment in progress, 12 September:** user requests processed
+scales followed by a final transformer stack over all scales. [Frozen plan](hierarchy-fusion-plan.md)
+adds configurable causal fusion while preserving the existing default, then compares
+depth/fusion and extra training on real COCO images and foreground masks. Temporal
+recurrence remains a separate cross-window experiment; causal software checks cover
+video/audio/text now. No formal result yet.
+
 **Encoder–decoder review completed, 12 September:**
 [Pair-by-pair review and proposed comparisons](encoder-decoder-review.md) distinguish
 short-pilot undertraining, decoder mismatch, state-path failures and missing speech
