@@ -4424,6 +4424,281 @@ def evaluate_entity_temporal(
     return run.path
 
 
+def build_visual_memory():
+    from pathwm.models.visual_memory import VisualMemoryReader
+
+    return VisualMemoryReader(
+        build_model(
+            width=16,
+            image_size=32,
+            levels=1,
+            state_model="belief",
+            memory_recent=2,
+            memory_block=2,
+            memory_blocks=1,
+        )
+    )
+
+
+@torch.no_grad()
+def direct_visual_weights(
+    output,
+    *,
+    fit_pairs=32,
+    development_pairs=16,
+    test_pairs=32,
+    device="cpu",
+    max_seconds=600,
+    resume=False,
+):
+    """Construct and test weight files without gradients or optimizer updates."""
+    import shutil
+    from pathwm.data.visual_memory import VisualMemoryEpisodes
+    from pathwm.models.visual_memory import construct_weights, fit_centroid_head
+    from pathwm.evaluation.visual_memory import visual_features, visual_metrics
+
+    if (
+        min(fit_pairs, development_pairs, test_pairs) < 1
+        or not np.isfinite(max_seconds)
+        or max_seconds <= 0
+    ):
+        raise ValueError("Positive populations and finite time cap required")
+    device = str(device)
+    if torch.device(device).type == "cuda":
+        torch.cuda.set_per_process_memory_fraction(
+            2**30 / torch.cuda.get_device_properties(device).total_memory, device
+        )
+        torch.cuda.reset_peak_memory_stats(device)
+    seed_everything(3001)
+    fit, development, test = [
+        VisualMemoryEpisodes(n, seed=s)
+        for n, s in [(fit_pairs, 3101), (development_pairs, 3201), (test_pairs, 3301)]
+    ]
+    for key in ("scene_sha256", "final_sha256"):
+        groups = [set(d.identity[key]) for d in (fit, development, test)]
+        if any(groups[i] & groups[j] for i in range(3) for j in range(i)):
+            raise ValueError("Visual-memory split overlap")
+    model = build_visual_memory().to(device).eval()
+    # Unused, zero-lr optimizer exists only for the existing checkpoint schema.
+    optimizer = torch.optim.SGD(model.parameters(), lr=0)
+    settings = dict(
+        dataset="direct-weights",
+        seed=3001,
+        fit_pairs=fit_pairs,
+        development_pairs=development_pairs,
+        test_pairs=test_pairs,
+        device=device,
+        max_seconds=max_seconds,
+        purpose="diagnostic",
+        precision="float32",
+        method="direct_hand_construction_then_label_fitted_centroid_head",
+        optimizer_updates=0,
+        backward_calls=0,
+        gpu_allocator_cap_bytes=2**30,
+    )
+    run = Run(
+        output,
+        settings=settings,
+        data={
+            k: d.identity
+            for k, d in zip(("fit", "development", "test"), (fit, development, test))
+        },
+        recipe=__file__,
+        model=model,
+        optimizer=optimizer,
+        device=device,
+        resume=resume,
+    )
+    path = run.path / "visual_memory.json"
+    started = perf_counter()
+    deadline = started + max_seconds
+
+    def scores(data, seed, erased=False):
+        features = visual_features(
+            model, data, device=device, seed=seed, erased=erased, deadline=deadline
+        )
+        return visual_metrics(model.head(features.to(device)), data)
+
+    def save_weights(name, method):
+        target = run.path / name
+        torch.save(
+            dict(
+                schema="pathwm-visual-weights-v1",
+                architecture="build_visual_memory(width16, RGB32, four frames)",
+                method=method,
+                optimizer_updates=0,
+                model={
+                    k: v.detach().cpu().clone() for k, v in model.state_dict().items()
+                },
+            ),
+            target,
+        )
+        expected = state_hash(model)
+        loaded = torch.load(target, map_location=device, weights_only=True)
+        model.load_state_dict(loaded["model"], strict=True)
+        if state_hash(model) != expected:
+            raise RuntimeError("Serialized weights do not reproduce state")
+        return dict(
+            path=name, sha256=file_hash(target), model_sha256=expected, method=method
+        )
+
+    try:
+        if resume and path.exists():
+            cached = json.loads(path.read_text())
+            if (
+                state_hash(model) != cached["model_sha256"]
+                or file_hash(run.path / "weights.pt") != cached["weights_sha256"]
+            ):
+                raise ValueError("Direct-weight result cache mismatch")
+        else:
+            baseline_file = save_weights(
+                "ordinary_initialization.pt", "ordinary_seed3001_initialization"
+            )
+            baseline_development = scores(development, 3501)
+            candidates = []
+            construct_weights(model)
+            constructed = save_weights(
+                "constructed.pt", "handwritten_numeric_assignment"
+            )
+            candidates.append(
+                dict(
+                    name="constructed",
+                    file=constructed,
+                    development=scores(development, 3501),
+                )
+            )
+            fit_features = visual_features(
+                model, fit, device=device, seed=3601, deadline=deadline
+            )
+            fit_centroid_head(model, fit_features, torch.from_numpy(fit.labels))
+            adjusted = save_weights(
+                "adjusted.pt", "label_fitted_centroid_head_on_constructed_backbone"
+            )
+            candidates.append(
+                dict(
+                    name="adjusted",
+                    file=adjusted,
+                    development=scores(development, 3501),
+                )
+            )
+            selected = max(
+                candidates,
+                key=lambda c: (c["development"]["accuracy"], -c["development"]["nll"]),
+            )
+            # Persist selection BEFORE any final-test forward pass.
+            atomic_json(
+                run.path / "selection.json",
+                dict(
+                    selected=selected["name"],
+                    rule="development accuracy, then NLL, stable candidate order",
+                    candidates=candidates,
+                ),
+            )
+            model.load_state_dict(
+                torch.load(
+                    run.path / selected["file"]["path"],
+                    map_location=device,
+                    weights_only=True,
+                )["model"]
+            )
+            shutil.copyfile(
+                run.path / selected["file"]["path"], run.path / "weights.pt"
+            )
+            evaluation = scores(test, 3401)
+            erased = scores(test, 3401, erased=True)
+            if not np.array_equal(
+                np.asarray(erased["logits"])[::2], np.asarray(erased["logits"])[1::2]
+            ):
+                raise RuntimeError(
+                    "Identical paired erased histories produced different logits"
+                )
+            selected_state = {
+                k: v.detach().clone() for k, v in model.state_dict().items()
+            }
+            model.load_state_dict(
+                torch.load(
+                    run.path / "ordinary_initialization.pt",
+                    map_location=device,
+                    weights_only=True,
+                )["model"]
+            )
+            baseline = scores(test, 3401)
+            model.load_state_dict(selected_state)
+            peak = (
+                dict(
+                    allocated_bytes=torch.cuda.max_memory_allocated(device),
+                    reserved_bytes=torch.cuda.max_memory_reserved(device),
+                )
+                if torch.device(device).type == "cuda"
+                else None
+            )
+            if peak is not None and peak["reserved_bytes"] > 2**30:
+                raise RuntimeError("GPU allocator peak exceeds pilot budget")
+            gates = dict(
+                accuracy=evaluation["accuracy"] >= 0.9,
+                pair_both=evaluation["pair_both"] >= 0.8,
+                reversal=evaluation["reversal"]["accuracy"] is not None
+                and evaluation["reversal"]["accuracy"] >= 0.8,
+                history_advantage=evaluation["accuracy"] - erased["accuracy"] >= 0.3,
+            )
+            result = dict(
+                selected=selected["name"],
+                candidates=candidates,
+                evaluation=evaluation,
+                erased=erased,
+                baseline=baseline,
+                baseline_development=baseline_development,
+                baseline_file=baseline_file,
+                gates=gates,
+                passed=all(gates.values()),
+                model_sha256=state_hash(model),
+                weights_sha256=file_hash(run.path / "weights.pt"),
+                optimizer_updates=0,
+                backward_calls=0,
+                inference_gpu_peak=peak,
+                parameter_count=sum(p.numel() for p in model.parameters()),
+                active_seconds=perf_counter() - started,
+                limits="Task-specific synthetic four-frame recall; no webcam transfer, general entity learning or directly generated pretrained model demonstrated.",
+            )
+            if result["active_seconds"] > max_seconds:
+                raise TimeoutError("Direct-weight evaluation budget exhausted")
+            np.savez_compressed(
+                run.path / "visual_examples.npz",
+                images=test.images[:8],
+                labels=test.labels[:8],
+            )
+            atomic_json(
+                run.path / "visual_data.json",
+                {
+                    k: dict(identity=d.identity, records=d.records)
+                    for k, d in zip(
+                        ("fit", "development", "test"), (fit, development, test)
+                    )
+                },
+            )
+            for i, candidate in enumerate(candidates):
+                run.log(
+                    dict(
+                        step=i,
+                        split="validation",
+                        loss=candidate["development"]["nll"],
+                        accuracy=candidate["development"]["accuracy"],
+                    )
+                )
+            run.save()
+            atomic_json(path, result)
+        run.status("completed", "pending")
+    except BaseException as exc:
+        run.status("failed", "pending", str(exc))
+        raise
+    try:
+        render_report(run.path)
+    except BaseException as exc:
+        run.status("completed", "failed", str(exc))
+        raise
+    return run.path
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -4455,6 +4730,7 @@ def main():
             "facts",
             "entities",
             "entity-matching",
+            "direct-weights",
         ],
         default="synthetic",
     )
@@ -4554,6 +4830,19 @@ def main():
     if args.diagram_depth < 0:
         parser.error("Diagram depth must be nonnegative")
     args = resume_arguments(parser, args)
+    if args.dataset == "direct-weights":
+        if args.check or args.stop_after is not None:
+            parser.error(
+                "Direct-weight construction is an evaluation recipe; use its focused tests for checks"
+            )
+        print(
+            direct_visual_weights(
+                args.resume or args.output,
+                device=args.device,
+                resume=args.resume is not None,
+            )
+        )
+        return
     if args.entity_source_drift:
         if args.entity_gate_weights is None:
             parser.error("--entity-source-drift requires --entity-gate-weights")

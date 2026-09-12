@@ -1028,6 +1028,52 @@ def recall_inspection(directory):
     return parts
 
 
+def visual_memory_inspection(directory):
+    path = Path(directory) / "visual_memory.json"
+    if not path.exists():
+        return []
+    result = json.loads(path.read_text())
+    parts = [
+        "<section><h2>Direct numerical weights</h2><p>Zero optimizer updates. "
+        "Constructed weights use handwritten routing; the adjusted head is fitted from labeled examples. "
+        "Selection used development scenes before final evaluation.</p>",
+        f"<p>Selected: {escape(result['selected'])}. All declared gates passed: {result['passed']}.</p>",
+        '<div class="table"><table><tr><th>Version / population</th><th>Accuracy</th><th>Both in pair</th><th>NLL</th></tr>',
+    ]
+    metrics = [
+        (c["name"] + " / development", c["development"]) for c in result["candidates"]
+    ]
+    metrics += [
+        ("Ordinary initialization / test", result["baseline"]),
+        ("Selected / test", result["evaluation"]),
+        ("Earlier history erased / test", result["erased"]),
+    ]
+    for name, values in metrics:
+        parts.append(
+            f"<tr><td>{escape(name)}</td><td>{values['accuracy']:.4f}</td><td>{values['pair_both']:.4f}</td><td>{values['nll']:.6f}</td></tr>"
+        )
+    parts.append(
+        "</table></div><p>Left/right labels denote last visible association. "
+        "Paired histories end with identical pixels; reversal cases begin at the opposite location. "
+        "This is a synthetic, task-specific test. Real webcam transfer is untested.</p></section>"
+    )
+    with np.load(Path(directory) / "visual_examples.npz", allow_pickle=False) as data:
+        parts.append(
+            '<section><h2>Observed histories, in time order</h2><div class="gallery">'
+        )
+        for i, (frames, label) in enumerate(zip(data["images"], data["labels"])):
+            strip = np.concatenate(list(frames), axis=1).astype("float32") / 255
+            prediction = int(np.argmax(result["evaluation"]["logits"][i]))
+            parts.append(
+                f'<figure><img alt="Four observed frames for episode {i}" src="{image_url(strip)}"><figcaption>Episode {i}: answer {("left", "right")[int(label)]}; predicted {("left", "right")[prediction]}</figcaption></figure>'
+            )
+        parts.append("</div></section>")
+    parts.append(
+        f"<section><details><summary>Exact results, resource use and weight provenance</summary><pre>{escape(json.dumps(result, indent=2))}</pre></details></section>"
+    )
+    return parts
+
+
 def render_report(directory):
     directory = Path(directory)
     record = json.loads((directory / "run.json").read_text())
@@ -1040,6 +1086,7 @@ def render_report(directory):
     if not any(
         (directory / name).exists()
         for name in (
+            "visual_memory.json",
             "entity_growth.json",
             "entity_temporal.json",
             "entity_source.json",
@@ -1078,6 +1125,7 @@ def render_report(directory):
     if not any(
         (directory / name).exists()
         for name in (
+            "visual_memory.json",
             "entity_growth.json",
             "entity_temporal.json",
             "entity_source.json",
@@ -1157,6 +1205,7 @@ def render_report(directory):
     parts.extend(recall_diagnostic_inspection(directory))
     parts.extend(entity_inspection(directory))
     parts.extend(fact_inspection(directory))
+    parts.extend(visual_memory_inspection(directory))
     parts.extend(model_inspection(directory))
     for title, data in [
         ("Resolved settings and source identities", record),

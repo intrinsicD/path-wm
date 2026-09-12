@@ -17,7 +17,11 @@ def test_rendered_pairs_are_visible_balanced_and_split_isolated():
     assert batch["labels"].tolist() == [0, 1] * 8
     for i in range(0, 16, 2):
         left, right = batch["images"][i : i + 2]
-        assert torch.equal(left[0], right[0])
+        if (i // 2) % 2 == 0:
+            assert torch.equal(left[0], right[0])
+        else:
+            assert torch.equal(left[0], right[1])
+            assert torch.equal(right[0], left[1])
         assert torch.equal(left[2:], right[2:])
         delta = (left[1] - right[1]).abs().sum(0)
         assert delta[:, :16].sum() > 0 and delta[:, 16:].sum() > 0

@@ -62,3 +62,45 @@ Browser/report checks and honest real-webcam limits follow the ordinary workflow
 Direct generation of useful arbitrary networks remains an open research idea.
 [HyperNetworks](https://arxiv.org/abs/1609.09106) learns a network that generates other
 weights; that precedent does not supply a trained generator for this model.
+
+## Implementation review before evaluation
+
+Implemented in `experiments/multimodal.py --dataset direct-weights`, using new small
+visual data/readout modules and the existing report path. Three focused tests pass:
+paired pixels/visible evidence/splits; gradients through the untouched original
+architecture and erased-input invariance; direct-file reload/cache equivalence with
+backward and optimizer steps explicitly forbidden during the construction run.
+The complete CPU regression suite passes. The independent GPU preflight has108,915
+parameters, finite logits,36MiB reserved/34.53MiB allocated peak for four episodes.
+The limit measures this process's PyTorch allocator, not total GPU use or future training.
+Rendered center-start/reversal strips were visually inspected before final-test access.
+
+Claude's visual-task review requested reversed histories; those are now included.
+The direct-weight review correctly distinguished fitted centroids from handwritten
+weights. It initially mischaracterized independent test selection as optimistic and
+history erasure as clearing state; both points were explicitly withdrawn in the
+reconciliation. Final test estimates the frozen development-selected procedure;
+erasure replaces input history and starts each episode fresh. Receipts are under
+`runs/reviews/continuation_2026-09-11/direct-weight*`.
+
+Run and load (same configured architecture is required):
+
+```bash
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 .venv/bin/python experiments/multimodal.py \
+  --dataset direct-weights --device cuda --output runs/direct_weights_v1/reference
+```
+
+```python
+import torch
+from experiments.multimodal import build_visual_memory
+model = build_visual_memory()
+payload = torch.load("runs/direct_weights_v1/reference/weights.pt", weights_only=True)
+model.load_state_dict(payload["model"], strict=True)
+model.eval()
+# model(images): images has shape [batch, 4, 3, 32, 32], RGB floats in [0, 1].
+```
+
+`constructed.pt` is the purely handwritten candidate; `adjusted.pt` has a data-fitted
+head. `weights.pt` is whichever development selects. Each payload records its method.
+These files target this small configured agent plus its two-class task readout, not
+an arbitrary default-width model. `last.pt` additionally preserves Run metadata/RNG.
