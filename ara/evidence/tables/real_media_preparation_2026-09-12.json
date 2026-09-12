@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "role": "development_only",
+  "manifest_sha256": "2a09ec244114d03baa55c5a006973739bb2ba36059c4145e98425d3c83175e0f",
+  "records": [
+    {
+      "path": "images/COCO_train2014_000000000127.jpg",
+      "source_and_copy_sha256_verified": true,
+      "train_group_and_annotation_verified": true
+    },
+    {
+      "path": "images/COCO_train2014_000000000562.jpg",
+      "source_and_copy_sha256_verified": true,
+      "train_group_and_annotation_verified": true
+    },
+    {
+      "path": "images/COCO_train2014_000000000142.jpg",
+      "source_and_copy_sha256_verified": true,
+      "train_group_and_annotation_verified": true
+    },
+    {
+      "path": "images/COCO_train2014_000000000909.jpg",
+      "source_and_copy_sha256_verified": true,
+      "train_group_and_annotation_verified": true
+    },
+    {
+      "path": "images/COCO_train2014_000000000941.jpg",
+      "source_and_copy_sha256_verified": true,
+      "train_group_and_annotation_verified": true
+    },
+    {
+      "path": "images/COCO_train2014_000000001264.jpg",
+      "source_and_copy_sha256_verified": true,
+      "train_group_and_annotation_verified": true
+    },
+    {
+      "path": "images/COCO_train2014_000000000762.jpg",
+      "source_and_copy_sha256_verified": true,
+      "train_group_and_annotation_verified": true
+    },
+    {
+      "path": "images/COCO_train2014_000000001144.jpg",
+      "source_and_copy_sha256_verified": true,
+      "train_group_and_annotation_verified": true
+    },
+    {
+      "path": "images/COCO_train2014_000000000716.jpg",
+      "source_and_copy_sha256_verified": true,
+      "train_group_and_annotation_verified": true
+    },
+    {
+      "path": "images/COCO_train2014_000000001895.jpg",
+      "source_and_copy_sha256_verified": true,
+      "train_group_and_annotation_verified": true
+    },
+    {
+      "path": "images/COCO_train2014_000000000009.jpg",
+      "source_and_copy_sha256_verified": true,
+      "train_group_and_annotation_verified": true
+    },
+    {
+      "path": "images/COCO_train2014_000000000853.jpg",
+      "source_and_copy_sha256_verified": true,
+      "train_group_and_annotation_verified": true
+    },
+    {
+      "path": "videos/0EJAG.mp4",
+      "source_and_copy_sha256_verified": true,
+      "full_video_decode_passed": true,
+      "episode": "episodes/0EJAG",
+      "frames": 788,
+      "annotation_status": "pending"
+    },
+    {
+      "path": "videos/0JQ26.mp4",
+      "source_and_copy_sha256_verified": true,
+      "full_video_decode_passed": true,
+      "episode": "episodes/0JQ26",
+      "frames": 570,
+      "annotation_status": "pending"
+    },
+    {
+      "path": "videos/0LDP7.mp4",
+      "source_and_copy_sha256_verified": true,
+      "full_video_decode_passed": true,
+      "episode": "episodes/0LDP7",
+      "frames": 648,
+      "annotation_status": "pending"
+    },
+    {
+      "path": "videos/12VVC.mp4",
+      "source_and_copy_sha256_verified": true,
+      "full_video_decode_passed": true,
+      "episode": "episodes/12VVC",
+      "frames": 609,
+      "annotation_status": "pending"
+    },
+    {
+      "path": "videos/0GFE8.mp4",
+      "source_and_copy_sha256_verified": true,
+      "full_video_decode_passed": true,
+      "episode": "episodes/0GFE8",
+      "frames": 493,
+      "annotation_status": "pending"
+    },
+    {
+      "path": "videos/1KKYX.mp4",
+      "source_and_copy_sha256_verified": true,
+      "full_video_decode_passed": true,
+      "episode": "episodes/1KKYX",
+      "frames": 772,
+      "annotation_status": "pending"
+    }
+  ],
+  "coco_images": 12,
+  "charades_videos": 6,
+  "charades_subject_counts": {
+    "KFGP": 2,
+    "5LWB": 1,
+    "HR43": 1,
+    "UTMU": 1,
+    "MR42": 1
+  },
+  "contact_sheets_review": "Five frames per video and 12 still previews visually inspected; no full semantic annotation",
+  "contact_sheet_sha256": {
+    "charades_selection.jpg": "057c69ca1dd74caf4535cce546032501a8339047d1c2c64705280eefcfbf3795",
+    "coco_selection.jpg": "e15b3c55aad809250b5ee667f6c08baf5670bb2acf411e3868db15a953a256d4"
+  },
+  "remaining": "Own webcam recordings; independently verified identity/event/query labels; frozen split and task gates",
+  "camera_opened": false,
+  "model_training_run": false,
+  "focused_tests": "3 passed: tests/test_webcam_capture.py; no full-suite run",
+  "lint": "ruff check and format --check passed",
+  "claude_receipt": "runs/reviews/continuation_2026-09-11/real-memory-data-receipt.json"
+}

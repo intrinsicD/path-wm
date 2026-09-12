@@ -57,6 +57,17 @@ also includes microphone/listening input, which software tools, and how generati
 is implemented are not yet specified. No initial modality, architecture or rollout
 order is chosen by this answer.
 
+**S02 clarification — real footage preference (user, 12 September 2026).**
+The user prefers real webcam footage, asks to select images from existing Documents
+datasets and add the missing pieces, and does not want to assume synthetic-only
+data. Real observation memory is the immediate data direction. A small local COCO
+and Charades development pack and a user-run capture/import recipe are now prepared;
+see [the data plan](webcam-memory-data-plan.md). These supporting dataset choices
+are an AI-executed development selection, not a sufficient training corpus or a
+final benchmark. Own webcam capture, verified event/identity/recall labels, exact
+model-visible inputs and numerical gates remain open. Synthetic data may support
+controlled checks; it cannot alone establish the requested real-footage capability.
+
 **S03 / R06 — component preference and hardware constraint (user, 12 September 2026; partial).**
 The complete agent must fit comfortably on the user's own GPU. Prefer the project's
 own components; if their quality is inadequate, use a pretrained model with an

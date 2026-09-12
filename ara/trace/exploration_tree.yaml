@@ -3836,3 +3836,38 @@ tree:
   - N244
   - N247
   status: resolved
+
+- id: N249
+  type: decision
+  title: Prefer real webcam footage for observation memory
+  provenance: user
+  timestamp: 2026-09-12T14:58+02:00
+  choice: Select existing local Documents images and add missing data preparation;
+    user prefers real webcam footage over synthetic-only data. Recording and model-input
+    details are not fully specified.
+  alternatives:
+  - Use synthetic-only capability evidence
+  evidence:
+  - docs/agent-specification-questions.md#recorded-answers
+  - docs/webcam-memory-data-plan.md
+  also_depends_on:
+  - N248
+  status: resolved
+- id: N250
+  type: experiment
+  title: Prepare and verify local real-media development pack
+  provenance: ai-executed
+  timestamp: 2026-09-12T14:58+02:00
+  result: 12 original COCO train images with distinct prior duplicate groups; 6 official-train
+    Charades clips fully decode, 3880 frames. Contact sheets inspected; six imports
+    preserve hashes, timestamps and pending annotations. Three focused importer tests
+    pass. No camera activation, reviewed recall labels or model training. Source scripts
+    remain metadata, not ground truth.
+  evidence:
+  - ara/evidence/tables/real_media_preparation_2026-09-12.json
+  - data/memory_media_v1/manifest.json
+  - data/memory_media_v1/verification.json
+  - tests/test_webcam_capture.py
+  also_depends_on:
+  - N249
+  status: resolved

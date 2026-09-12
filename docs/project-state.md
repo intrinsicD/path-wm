@@ -1,5 +1,15 @@
 # Current work
 
+**Real-footage development pack prepared, 12 September:** the user prefers real
+webcam footage for observation memory. Selected 12 COCO train photographs and 6
+Charades official-train indoor clips, preserving source hashes, annotations and
+split/subject groups. Contact sheets inspected; six imported video episodes have
+timestamps and pending annotation templates. [Data and recording guide](webcam-memory-data-plan.md)
+defines the first 28-take pilot and independent answer-key checks following Claude's
+review. Three capture/import tests pass. No camera activation or training. Own
+recordings, reviewed entity/event/query labels and the experiment gates remain open;
+this selection is development material, not a trained or validated memory capability.
+
 **S01 sequence adopted, 12 September:** first remember observations, then predict
 action consequences, then plan toward a goal using those predictions. Observation
 memory is the next capability target. First environment/input and numerical gates

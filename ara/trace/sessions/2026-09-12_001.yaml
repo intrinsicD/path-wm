@@ -2,9 +2,9 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T12:46+02:00
-  turn_count: 4
-  summary: "User selects sequence: remember observations, predict action consequences, then plan with predictions; first experiment details pending."
+  last_turn: 2026-09-12T14:58+02:00
+  turn_count: 5
+  summary: "User prefers real webcam data; selected 12 stills and 6 real clips, verified import tooling and prepared recording/label protocol; own captures and reviewed answers remain missing."
 events_logged:
 - turn: 1
   type: decision
@@ -34,6 +34,27 @@ events_logged:
   provenance: user
   summary: 'User selects sequence: remember observations, predict action consequences,
     then plan with predictions; first experiment details pending.'
+- turn: 5
+  type: decision
+  id: N249
+  routing: direct
+  provenance: user
+  summary: Prefer real webcam footage; select local images and prepare missing data
+    pieces.
+- turn: 5
+  type: experiment
+  id: N250
+  routing: direct
+  provenance: ai-executed
+  summary: Curated and verified 12 stills/6 clips; 3880 video frames imported, three
+    tests pass; no camera or training.
+- turn: 5
+  type: observation
+  id: O164
+  routing: staged
+  provenance: ai-suggested
+  summary: Proposed 28-take pilot with independently reviewed memory labels and fresh
+    grouped evaluation.
 ai_actions:
 - turn: 1
   action: Recorded partial S02 answer and updated current state; no model changes
@@ -64,6 +85,18 @@ ai_actions:
   files_changed:
   - docs/agent-specification-questions.md
   - docs/project-state.md
+- turn: 5
+  action: Inspected Documents and project datasets; obtained one short public-only
+    Claude review, adopted annotation verification protocol, curated local pack, implemented/tested
+    recorder/importer and documented remaining data gaps.
+  provenance: ai-executed
+  files_changed:
+  - docs/webcam-memory-data-plan.md
+  - docs/agent-specification-questions.md
+  - docs/project-state.md
+  - experiments/capture_webcam.py
+  - tests/test_webcam_capture.py
+  - data/memory_media_v1/
 claims_touched: []
 key_context:
 - turn: 1
@@ -77,9 +110,13 @@ key_context:
 - turn: 4
   excerpt: "Let\u2019s do those in that order: remembering observations, predicting\
     \ action consequences, then planning toward a goal."
+- turn: 5
+  excerpt: Can you pick images from the datasets I have in Documents and add what
+    is missing? I would like real webcam footage.
 open_threads:
-- 'S02/S04/T01: choose observation-memory input, task ranges and acceptance gates; S01 sequence decided.'
+- 'S02/S04/T01: record own webcam scenes and verify labels; model-visible inputs, task ranges and acceptance gates remain open.'
 - 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
 - 'O162/O163: task/cost/evidence contract and learned-dynamics integration remain
   proposed.'
-ai_suggestions_pending: []
+ai_suggestions_pending:
+- 'O164: 28-take development pilot is proposed; no footage or memory benchmark completed.'

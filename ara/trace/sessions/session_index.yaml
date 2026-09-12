@@ -127,8 +127,8 @@ sessions:
 
 - id: 2026-09-12_001
   date: '2026-09-12'
-  summary: "User selects sequence: remember observations, predict action consequences, then plan with predictions; first experiment details pending."
-  turn_count: 4
-  events_count: 4
+  summary: "User prefers real webcam data; selected 12 stills and 6 real clips, verified import tooling and prepared recording/label protocol; own captures and reviewed answers remain missing."
+  turn_count: 5
+  events_count: 7
   claims_touched: []
   open_threads: 3

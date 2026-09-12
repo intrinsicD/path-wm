@@ -1245,3 +1245,12 @@ entries:
     memory screen sufficient for the new stage.
   - Do not treat sequence selection as approval of a specific environment, loss, numerical
     experiment or all previously proposed architecture details.
+
+- turn: 2026-09-12_001#5
+  notes:
+  - N249 records explicit real-footage preference; N250 records data preparation and
+    software checks, not learned capability.
+  - Stage O164 pilot proposal; recording defaults do not imply sufficient training
+    data or measured GPU fit. No prior proposal is promoted by this data selection.
+  - Keep existing task/cost/evidence and dynamics topics open; no abandonment or researcher
+    interpretation of new training results occurred.

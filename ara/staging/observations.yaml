@@ -2856,3 +2856,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O164
+  timestamp: 2026-09-12T14:58+02:00
+  provenance: ai-suggested
+  content: 'Propose a 28-take own-webcam development pilot across four sessions: visible
+    moves, hiding, similar objects, state changes, unavailable observations and paired
+    histories. Review independent identity/event/query labels before any benchmark;
+    freeze grouped splits and test last-view shortcuts.'
+  context: User requests real footage; local data pack and capture recipe prepared,
+    but own recordings and task gates remain missing.
+  potential_type: unknown
+  bound_to:
+  - N249
+  - N250
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
