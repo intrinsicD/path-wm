@@ -104,3 +104,33 @@ model.eval()
 head. `weights.pt` is whichever development selects. Each payload records its method.
 These files target this small configured agent plus its two-class task readout, not
 an arbitrary default-width model. `last.pt` additionally preserves Run metadata/RNG.
+
+## First result and bounded numerical revision
+
+First run `runs/direct_weights_v1/reference` completed with zero optimizer updates
+in2.504 active seconds. Development: handwritten50% overall,100% center-start and0%
+reversal; centroid-adjusted56.25% overall,12.5% center-start and100% reversal. The
+development-selected adjustment gets39/64 final-test answers right (60.9375%); the
+ordinary and erased controls score50%. Three of four gates fail. This is a negative
+result, not useful pretrained-weight generation. Inference allocator peak40MiB.
+
+The development pattern motivates one explicitly bounded second candidate family,
+still changing numeric weights only. Preserve the first run. Its architecture's
+zeroed chronology projections discard explicit time labels during compression, while
+identity transition attention may repeatedly accumulate old evidence. This is a
+code-based explanation to test, not yet an isolated causal finding.
+
+Revision: zero the dynamics transition attention's output weights (retain h instead
+of repeatedly adding read context); project sin(end_time) with gain16 and bias−8
+into compression channel0 so the later of the two early observations is favored;
+set memory-reader evidence-view channel0 to+4 and belief-view to−16; gate compressed
+history with biases [−8,+8,−8,−8]. All other handwritten numbers unchanged. Compare
+its signed-position head and the same centroid-fitting procedure on the existing fit
+and development splits. This is hand-engineered for the fixed short scene/timing
+contract; it is not a general temporal-reasoning mechanism.
+
+Freeze that development-selected procedure before accessing fresh final-test scene
+seed4301 (32pairs). Same four gates, device cap, baseline, no-gradient checks and600s
+budget. Report it independently from the first test; never claim seed3301 remained
+unseen after the first result. No further adjustment is authorized by this bounded
+experiment plan. Use `--direct-weight-timing` and a fresh output directory.
