@@ -4241,3 +4241,21 @@ tree:
     runs/image_output_v1/verification.json, docs/image-output-plan.md]
   also_depends_on: [N269, N270]
   status: resolved
+
+- id: N272
+  type: question
+  title: Can latent-guided general image generation be a replaceable output subsystem?
+  provenance: user
+  timestamp: 2026-09-12T23:13+02:00
+  description: User responds positively to the scoped image slice, asks what remains
+    for general image generation, and whether it is mainly a decoder component that
+    can be exchanged later or needs integration now. Read current state-feature
+    adapter and primary latent-diffusion, IP-Adapter and pipeline documentation.
+    Distinguish agent conditioning from codec image latents, generator from pixel
+    decoder, and staged training from an untrained plug-compatible replacement.
+    No model edits, downloads, new training/tests or Claude contact this turn.
+  evidence: [pathwm/models/decoders.py, docs/image-output-plan.md,
+    'https://arxiv.org/abs/2112.10752', 'https://arxiv.org/abs/2308.06721',
+    'https://huggingface.co/docs/diffusers/main/api/pipelines/flux']
+  also_depends_on: [N269, N271]
+  status: resolved

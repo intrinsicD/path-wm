@@ -3088,3 +3088,25 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O176
+  timestamp: 2026-09-12T23:13+02:00
+  provenance: ai-suggested
+  content: Make the whole image-generation subsystem replaceable, with an explicit
+    learned conditioning adapter from agent state/request/memory into a conditional
+    generator and its matched image codec. Establish the conditioning and output
+    contract early; joint training of every component from the outset is unnecessary.
+    Agent state and spatial image-codec latents need not be identical. Replacing a
+    backend can require adapter alignment/retraining and codec version handling;
+    matching tensor dimensions alone does not preserve meaning. General generation
+    still needs visual priors, useful conditioning, varied data and held-out tests.
+  context: Read-only recommendation; no selected generator, fixed adapter contract,
+    hardware benchmark or assertion that a frozen core already contains needed detail.
+    IP-Adapter supports the general possibility of trained additional conditioning,
+    not ready-made compatibility with this agent's arbitrary state tensors.
+  potential_type: architecture
+  bound_to: [N272, N271]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -1395,3 +1395,14 @@ entries:
   - The new Claude brief contained public concepts only, in isolated no-tool/no-repository
     execution, and was approved. The previous private brief remains blocked and was not
     retried or laundered through another interface. Review agreement is not validation.
+
+- turn: 2026-09-12_001#17
+  notes:
+  - N272 is a design clarification, not authorization to select/download a large model
+    or train a diffusion backend. O176 remains an architectural recommendation.
+  - User's positive response acknowledges the preceding work but asks about its scope;
+    do not treat it as explicit endorsement of every causal/capability clause in O175.
+    Related O173/O174/O175 topics are revisited and not abandoned.
+  - Primary sources support separate latent generation/decoding and learned adapter
+    conditioning. They do not show this agent's states can already control a pretrained
+    generator or that any selected model fits its local GPU. No new empirical claim.

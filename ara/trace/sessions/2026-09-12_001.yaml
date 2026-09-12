@@ -2,8 +2,8 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T22:56+02:00
-  turn_count: 16
+  last_turn: 2026-09-12T23:13+02:00
+  turn_count: 17
   summary: Exact handwritten initialization trained after decoder-rate repair; joint
     reconstruction improves10% on both seeds but ordinary initialization remains better.
     Encoder ambiguity and decoder sensitivity isolated; one extra control budget-stopped.
@@ -268,6 +268,19 @@ events_logged:
   provenance: ai-suggested
   summary: Distinguish codec capacity, conditional memorization and general multimodal generation.
 
+- turn: 17
+  type: question
+  id: N272
+  routing: direct
+  provenance: user
+  summary: Clarify missing general generation and whether the output subsystem can be exchanged later.
+- turn: 17
+  type: observation
+  id: O176
+  routing: staged
+  provenance: ai-suggested
+  summary: Define latent conditioning early, allow separate generator/codec training and later aligned replacement.
+
 ai_actions:
 - turn: 11
   action: Inspected residual stages, merges, fusion, timing contracts and completed plan; checked
@@ -446,6 +459,13 @@ ai_actions:
     pathwm/evaluation/report.py, experiments/image_output.py, tests/test_image_output.py,
     docs/image-output-plan.md, docs/project-state.md]
 
+- turn: 17
+  action: Inspected current output adapter and protocol; checked primary latent-diffusion,
+    IP-Adapter and official pipeline sources. Explained generator/decoder roles and
+    latent alignment. No model changes, training, downloads or peer-review claim.
+  provenance: ai-executed
+  files_changed: []
+
 claims_touched: []
 key_context:
 - turn: 11
@@ -498,6 +518,10 @@ key_context:
     prediction/planning even with no image input. Is more input needed, analogously for
     every modality?
 
+- turn: 17
+  excerpt: I want latent-guided general image generation; is it primarily a decoder
+    thing we can exchange later, or must it be integrated from the start?
+
 open_threads:
 - 'S02/S04/T01: record own webcam scenes and verify labels; model-visible inputs, task ranges and acceptance gates remain open.'
 - 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
@@ -513,6 +537,7 @@ open_threads:
 
 - 'N267/O173: explicit detail transport works; compact learned detail and higher-resolution comparison remain open.'
 - 'N271/O175: held-out paired image/request learning, compact codec, memory/dynamics integration and useful other-modality generation remain open.'
+- 'N272/O176: proposed replaceable generator/codec and trained conditioning boundary; concrete contract/backend selection remain open.'
 
 ai_suggestions_pending:
 - 'O170: structural plausibility and locality/semantics distinction; no established cause of weak
@@ -532,3 +557,4 @@ ai_suggestions_pending:
 
 - 'O174: tiny fit and transport control completed; full compact-codec, matched-duration and higher-resolution sequence not yet implemented.'
 - 'O175: scoped transport and state-producer interpretation awaits researcher response; do not equate memorization with generation quality.'
+- 'O176: modular generation and early conditioning recommendation awaits adoption; no backend or training strategy fixed.'
