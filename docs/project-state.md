@@ -1,5 +1,12 @@
 # Current work
 
+**Active: image detail and state-produced decoder inputs, 12 September:**
+[Plan](image-output-plan.md) separates a real-image detail-transport control from a
+request-only fit through the actual agent state. Preserve the handwritten donor;
+make every decoder feature producible without an image encoder. Three essential
+tests are RED before implementation. Public-only Claude review confirms the need
+to keep reconstruction capacity, memorization and general generation distinct.
+
 **Handwritten initialization trained and diagnosed, 12 September:** the exact source
 binary now supports strict initialization, component freezing and resumable RGB
 training. The original decoder rate collapsed both seeds; validation-only selection
