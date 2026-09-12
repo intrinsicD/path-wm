@@ -40,12 +40,16 @@ def test_constructed_hierarchy_is_deterministic_active_and_reloadable(tmp_path):
         changed = first.encoder(images)
     assert any(not torch.equal(features[k], changed[k]) for k in features)
     torch.save(second.state_dict(), tmp_path / "weights.pt")
-    first.load_state_dict(torch.load(tmp_path / "weights.pt", weights_only=True), strict=True)
+    first.load_state_dict(
+        torch.load(tmp_path / "weights.pt", weights_only=True), strict=True
+    )
     with torch.no_grad():
         assert torch.equal(first(images)["rgb"], output["rgb"])
 
 
-def test_constructed_readout_fit_only_changes_final_layers_without_optimization(monkeypatch):
+def test_constructed_readout_fit_only_changes_final_layers_without_optimization(
+    monkeypatch,
+):
     from experiments.hierarchy_fusion import construct_weights, fit_readouts
 
     def forbidden(*args, **kwargs):
@@ -54,20 +58,88 @@ def test_constructed_readout_fit_only_changes_final_layers_without_optimization(
     monkeypatch.setattr(torch.Tensor, "backward", forbidden)
     monkeypatch.setattr(torch.optim.SGD, "step", forbidden)
     monkeypatch.setattr(torch.optim.AdamW, "step", forbidden)
-    frames = np.random.default_rng(8881).integers(0, 256, (4, 64, 64, 3), dtype=np.uint8)
-    data = Frames(frames, range(4), labels={
-        "mask": (frames[:, :, :, 0] > 128)[:, None].astype("float32"),
-        "valid": np.ones((4, 1, 64, 64), dtype="float32"),
-    })
+    frames = np.random.default_rng(8881).integers(
+        0, 256, (4, 64, 64, 3), dtype=np.uint8
+    )
+    data = Frames(
+        frames,
+        range(4),
+        labels={
+            "mask": (frames[:, :, :, 0] > 128)[:, None].astype("float32"),
+            "valid": np.ones((4, 1, 64, 64), dtype="float32"),
+        },
+    )
     model, _ = build_model(7498, "deep_fusion")
     construct_weights(model)
     before = {k: v.clone() for k, v in model.state_dict().items()}
     receipt = fit_readouts(model, data, "cpu")
-    changed = {k for k, v in model.state_dict().items() if not torch.equal(v, before[k])}
-    assert changed == {f"heads.{name}.trunk.12.{kind}" for name in ("rgb", "mask") for kind in ("weight", "bias")}
+    changed = {
+        k for k, v in model.state_dict().items() if not torch.equal(v, before[k])
+    }
+    assert changed == {
+        f"heads.{name}.trunk.12.{kind}"
+        for name in ("rgb", "mask")
+        for kind in ("weight", "bias")
+    }
     assert receipt["fitted_parameters"] == 132
     assert receipt["training_rows"] == data.rows.tolist()
     assert all(p.grad is None for p in model.parameters())
+
+
+def test_direct_hierarchy_run_and_resume_do_not_refit_or_rescore(tmp_path, monkeypatch):
+    import experiments.hierarchy_fusion as recipe
+    from pathwm.io import file_hash
+
+    frames = np.random.default_rng(8882).integers(
+        0, 256, (12, 64, 64, 3), dtype=np.uint8
+    )
+    labels = dict(
+        mask=(frames[:, :, :, 0] > 128)[:, None].astype("float32"),
+        valid=np.ones((12, 1, 64, 64), dtype="float32"),
+    )
+    data = {
+        name: Frames(
+            frames,
+            range(start, start + 4),
+            labels={k: v[start : start + 4] for k, v in labels.items()},
+        )
+        for name, start in [("train", 0), ("validation", 4), ("test", 8)]
+    }
+    settings = dict(
+        weight_method="ridge",
+        seed=7498,
+        arm="deep_fusion",
+        width=32,
+        levels=3,
+        stage_depth=2,
+        fusion_depth=2,
+        steps=0,
+    )
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Unexpected fitting, scoring or optimization")
+
+    monkeypatch.setattr(torch.Tensor, "backward", forbidden)
+    monkeypatch.setattr(torch.optim.SGD, "step", forbidden)
+    model, _ = build_model(7498, "deep_fusion")
+    output = tmp_path / "direct"
+    recipe.direct_weights(model, data, settings, output, "cpu")
+    record = json.loads((output / "direct_weights.json").read_text())
+    assert record["fit"]["training_rows"] == [0, 1, 2, 3]
+    checkpoint = torch.load(output / "last.pt", weights_only=True)
+    assert checkpoint["step"] == 0 and not checkpoint["optimizer"]["state"]
+    monkeypatch.setattr(recipe, "fit_readouts", forbidden)
+    monkeypatch.setattr(recipe, "score", forbidden)
+    other, _ = build_model(7498, "deep_fusion")
+    recipe.direct_weights(other, data, settings, output, "cpu", resume=True)
+    for name, expected in {**record["files"], **record["report_files"]}.items():
+        assert file_hash(output / name) == expected
+    assert state_hash(model) == state_hash(other)
+    (output / "test_outputs.npz").write_bytes(b"damaged")
+    import pytest
+
+    with pytest.raises(ValueError, match="Cached direct-weight file changed"):
+        recipe.direct_weights(other, data, settings, output, "cpu", resume=True)
 
 
 def test_comparison_copies_all_shared_weights_and_recipe_uses_every_scale():

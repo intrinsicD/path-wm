@@ -66,3 +66,19 @@ Claude review was attempted with a bounded conceptual brief. Automatic approval
 review rejected the external send as containing nonpublic architecture/experiment
 details; no response was received and no alternate route is used. Local review and
 tests proceed. Brief: runs/reviews/continuation_2026-09-11/constructed-hierarchy-brief.txt.
+
+## Implementation checks before real evaluation
+
+Two initial checks failed on the missing constructor/fitter, then passed. Added a
+synthetic end-to-end run, strict reload, cached resume and corruption rejection with
+backward/optimizer calls forbidden. Its initial fixture passed full-population labels
+to a subset API; fixed the fixture alignment without changing the data implementation.
+All197 CPU tests pass in173.09s. The unchanged hierarchy remains active (fusion
+ablation changes features); primary-color inputs yield the correct dominant output
+channel with over0.5 separation. Same hand assignment has the same state hash from
+different random seeds. Ridge fitting changes exactly the four declared final-layer
+tensors. GPU forward preflight reserves112MiB, with no backward call.
+
+Implementation is in the existing `experiments/hierarchy_fusion.py` recipe through
+`--weight-method untrained|constructed|ridge`; default `trained` preserves the ordinary
+experiment path. Formal real-image evaluation starts only after this source is committed.
