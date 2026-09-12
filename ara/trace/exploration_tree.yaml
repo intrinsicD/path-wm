@@ -3786,3 +3786,20 @@ tree:
   also_depends_on:
   - N244
   status: resolved
+
+- id: N246
+  type: decision
+  title: Local GPU fit and own-component preference with pretrained fallback
+  provenance: user
+  timestamp: 2026-09-12T10:36+02:00
+  choice: Agent must fit comfortably on own GPU. Prefer own components; use pretrained
+    model and adapter if quality is inadequate. Numerical fit/quality gates and training-versus-inference
+    scope unresolved.
+  alternatives:
+  - Require all capabilities to use own components regardless of quality
+  - Adopt pretrained components immediately
+  evidence:
+  - docs/agent-specification-questions.md#recorded-answers
+  also_depends_on:
+  - N245
+  status: resolved

@@ -127,9 +127,8 @@ sessions:
 
 - id: 2026-09-12_001
   date: '2026-09-12'
-  summary: User specifies eventual webcam vision, speech/writing, image/video creation
-    and software tools; initial interface remains open.
-  turn_count: 1
-  events_count: 1
+  summary: "User requires comfortable local GPU fit; prefers own components with pretrained-plus-adapter fallback; training/inference scope open."
+  turn_count: 2
+  events_count: 2
   claims_touched: []
   open_threads: 3

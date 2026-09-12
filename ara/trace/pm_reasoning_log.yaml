@@ -1222,3 +1222,12 @@ entries:
   - Keep microphone/listening, tool set, generative backends and learned-versus-supplied
     choices unresolved.
   - Do not promote prior O162/O163 on this unrelated scope answer.
+
+- turn: 2026-09-12_001#2
+  notes:
+  - Record own-component preference as conditional, not a prohibition on pretrained
+    models.
+  - Hardware name/capacity are tool observations, not a user-selected numerical VRAM
+    budget.
+  - No model-size, generation-quality or training-fit claim made; budget scope needs
+    clarification.

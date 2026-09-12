@@ -48,6 +48,21 @@ also includes microphone/listening input, which software tools, and how generati
 is implemented are not yet specified. No initial modality, architecture or rollout
 order is chosen by this answer.
 
+**S03 / R06 — component preference and hardware constraint (user, 12 September 2026; partial).**
+The complete agent must fit comfortably on the user's own GPU. Prefer the project's
+own components; if their quality is inadequate, use a pretrained model with an
+adapter. This is a preference with a fallback, not a requirement that every
+capability succeed from scratch. A read-only hardware query reports an NVIDIA
+GeForce RTX 3050 with8192MiB VRAM on this machine. Current free memory is transient
+and does not define the permitted budget.
+
+Still to resolve: whether the fit requirement covers training as well as inference;
+numerical VRAM headroom, latency and quality criteria; which components may use
+pretrained fallbacks; and whether modules may be loaded sequentially or offloaded.
+The resource accounting must include the relevant weights, activations, workspace,
+retrieved memory, adapters and simultaneous modules. This answer does not select a
+particular pretrained model or launch training. Follow-ups: R06, L04 and T01/T06.
+
 ## S — Scope and the claim we want to test
 
 - **S01.** What single capability should the next experiment establish: using memory
