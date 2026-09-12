@@ -127,8 +127,8 @@ sessions:
 
 - id: 2026-09-12_001
   date: '2026-09-12'
-  summary: "User explores assistant-authored multimodal teaching data; scoped visual-memory curriculum reviewed with Claude and recorded; no corpus or training launched."
-  turn_count: 6
-  events_count: 9
+  summary: "User-directed binary weight experiment: first attempt fails, timing revision plus34 fitted head values passes64/64 fresh controlled answers;180 tests pass, no backprop or webcam claim."
+  turn_count: 7
+  events_count: 13
   claims_touched: []
   open_threads: 4

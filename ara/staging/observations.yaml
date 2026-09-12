@@ -2893,3 +2893,22 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+
+- id: O166
+  timestamp: 2026-09-12T16:04+02:00
+  provenance: ai-suggested
+  content: The controlled pass supports direct task-specific weight construction plus
+    a small labeled readout fit, not unaided guessing of a general trained model.
+    Timing/source/transition changes were bundled; the result does not isolate which
+    numerical change caused the improvement or establish broader temporal reasoning.
+  context: User requested direct binary numerical weights; one failed family and one
+    predeclared repaired family evaluated. Both use existing small belief/memory architecture;
+    no backward or optimizer step.
+  potential_type: claim
+  bound_to:
+  - N253
+  - N254
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

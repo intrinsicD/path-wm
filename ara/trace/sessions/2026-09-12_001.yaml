@@ -2,9 +2,9 @@ session:
   id: 2026-09-12_001
   date: '2026-09-12'
   started: 2026-09-12T00:28+02:00
-  last_turn: 2026-09-12T15:26+02:00
-  turn_count: 6
-  summary: "User explores assistant-authored multimodal teaching data; scoped visual-memory curriculum reviewed with Claude and recorded; no corpus or training launched."
+  last_turn: 2026-09-12T16:04+02:00
+  turn_count: 7
+  summary: "User-directed binary weight experiment: first attempt fails, timing revision plus34 fitted head values passes64/64 fresh controlled answers;180 tests pass, no backprop or webcam claim."
 events_logged:
 - turn: 1
   type: decision
@@ -68,6 +68,33 @@ events_logged:
   provenance: ai-suggested
   summary: Proposed checked synthetic histories and questions with separate real transfer
     evaluation.
+- turn: 7
+  type: decision
+  id: N252
+  routing: direct
+  provenance: user
+  summary: Prioritize architecture-based numeric weight guesses, binary files and
+    testing.
+- turn: 7
+  type: experiment
+  id: N253
+  routing: direct
+  provenance: ai-executed
+  summary: First direct family fails:39/64 final answers; original evidence preserved.
+- turn: 7
+  type: experiment
+  id: N254
+  routing: direct
+  provenance: ai-executed
+  summary: Timing revision plus34 fitted head values passes64/64 fresh answers with
+    zero optimizer updates.
+- turn: 7
+  type: observation
+  id: O166
+  routing: staged
+  provenance: ai-suggested
+  summary: Task-specific construction plus label fitting works on this finite check;
+    generality and causal attribution remain untested.
 ai_actions:
 - turn: 1
   action: Recorded partial S02 answer and updated current state; no model changes
@@ -118,6 +145,23 @@ ai_actions:
   files_changed:
   - docs/webcam-memory-data-plan.md
   - docs/project-state.md
+- turn: 7
+  action: Implemented paired RGB histories, real-agent readout, direct numerical constructor
+    and centroid adjustment, binary reload/evaluation/report paths; reviewed with
+    Claude and reconciled errors. Two bounded GPU evaluations; CUDA startup repaired
+    before scoring.180 CPU tests and independent artifact audits pass; previous ordinary
+    training deferred by user steering.
+  provenance: ai-executed
+  files_changed:
+  - experiments/multimodal.py
+  - pathwm/data/visual_memory.py
+  - pathwm/models/visual_memory.py
+  - pathwm/evaluation/visual_memory.py
+  - pathwm/evaluation/report.py
+  - tests/test_visual_memory.py
+  - docs/direct-weights-plan.md
+  - docs/visual-memory-plan.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -137,12 +181,16 @@ key_context:
 - turn: 6
   excerpt: Or what about you train it? You can create images and the other modalities,
     right?
+- turn: 7
+  excerpt: Create the weights file in binary; look at the architecture and guess the
+    numerical weights, test them and adjust.
 open_threads:
 - 'S02/S04/T01: record own webcam scenes and verify labels; model-visible inputs, task ranges and acceptance gates remain open.'
 - 'S03/R06: own components preferred, pretrained adapters allowed; both training/inference must fit; resolve numerical budgets and fallback gates.'
 - 'O162/O163: task/cost/evidence contract and learned-dynamics integration remain
   proposed.'
-- 'O165: define and connect visual-memory training with checked teacher-generated data; exact objective, gates and GPU budget still open.'
+- 'O165: generated visual input/readout slice now exists; broader optimizer curriculum is deferred and real-footage learning remains open.'
 ai_suggestions_pending:
 - 'O164: 28-take development pilot is proposed; no footage or memory benchmark completed.'
-- 'O165: proposed assistant-authored curriculum; user has not settled its detailed execution settings.'
+- 'O165: curriculum authorized in principle; direct-weight test took priority, so ordinary training/real transfer remain incomplete.'
+- 'O166: do not generalize the fixed-task weight-construction pass beyond its measured scope.'

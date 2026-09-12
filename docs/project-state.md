@@ -1,5 +1,17 @@
 # Current work
 
+**Direct weight test completed, 12 September:** at the user's explicit request,
+constructed binary model weights and adjusted them without backpropagation. First
+candidate family fails (39/64 final answers). A bounded numeric timing/routing revision
+with34 label-fitted readout parameters passes on a fresh set:64/64 answers,32/32 complete
+pairs and32/32 reversals; ordinary/erased controls50%. Zero optimizer updates,40MiB
+inference allocator peak;180 CPU tests and independent artifact/metric checks pass.
+[Weights and scope](direct-weights-plan.md#completed-revision),
+[report](../runs/direct_weights_v1/timing/report.html) (structural-only).
+This is a hand-built fixed-task circuit in the small existing model configuration,
+not general pretrained-weight generation. Real webcam transfer remains open. The
+previous optimizer-based visual curriculum is deferred by this user-requested test.
+
 **Assistant-authored curriculum discussed, 12 September:** the user proposes having
 the assistant generate teaching modalities and train the learner. [Curriculum proposal](webcam-memory-data-plan.md#assistant-authored-teaching-data-12-september-discussion)
 combines controlled histories and checked questions/images with separate real-footage

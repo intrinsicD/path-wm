@@ -1264,3 +1264,17 @@ entries:
   - Claude advocated automated independent verification; local reconciliation accepts
     evidence checks without claiming such a verifier is available or perfect. No new
     experiment supports a capability claim.
+
+- turn: 2026-09-12_001#7
+  notes:
+  - Record the user steering explicitly; do not present ordinary optimized weights
+    as manually generated pretrained weights. Closed-form labeled estimation is still
+    fitting.
+  - Keep N253 negative and note software-fixture exposure; N254 uses fresh disjoint
+    test scenes after fixture seed separation. Different test populations are not
+    a matched numerical improvement comparison.
+  - Stage O166 bounded interpretation; no researcher response to results yet. O165
+    compound curriculum is only partly implemented and remains open; no whole-model
+    or real-transfer promotion.
+  - Claude withdrew incorrect test-selection-bias and memory-erasure descriptions.180
+    tests and source/pixel/numeric audits support implementation; browser QA is structural-only.

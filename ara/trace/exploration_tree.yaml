@@ -3888,3 +3888,56 @@ tree:
   - N249
   - N250
   status: resolved
+
+- id: N252
+  type: decision
+  title: Test directly authored numeric model weights first
+  provenance: user
+  timestamp: 2026-09-12T16:04+02:00
+  choice: After authorizing the visual curriculum, user clarifies a request to create
+    binary weight files directly from architectural guesses, test them and adjust.
+    Prioritize this experiment before ordinary optimizer training.
+  alternatives:
+  - Only explain why direct synthesis is difficult
+  - Run ordinary backpropagation and call its outputs direct guesses
+  evidence:
+  - docs/direct-weights-plan.md
+  also_depends_on:
+  - N251
+  status: resolved
+- id: N253
+  type: experiment
+  title: Initial handwritten routes plus fitted head fail direct-weight screen
+  provenance: ai-executed
+  timestamp: 2026-09-12T16:04+02:00
+  result: Constructed development accuracy50% (center100%, reversal0%); centroid adjustment56.25%
+    selected. Final39/64 answers,32/64 controls; fails3/4 gates. No optimizer/backward.2.504
+    active seconds,40MiB inference reserved. Limited first-two-scene software-test
+    exposure disclosed; original run preserved.
+  evidence:
+  - ara/evidence/tables/direct_weights_2026-09-12.json
+  - runs/direct_weights_v1/reference/visual_memory.json
+  - runs/direct_weights_v1/reference_verification.json
+  also_depends_on:
+  - N252
+  status: resolved
+- id: N254
+  type: experiment
+  title: Handwritten timing revision and centroid head pass fresh controlled scenes
+  provenance: ai-executed
+  timestamp: 2026-09-12T16:04+02:00
+  result: Fixed numeric chronology/source/gate/transition revision; 34 head parameters
+    fitted on64 fit episodes. Selected on development before fresh seed5301 test.64/64
+    answers,32/32 complete pairs,32/32 reversal answers; baseline/erased32/64. NLL0.126380;
+    all4 gates pass.108915 parameters,603453-byte binary;2.559 active seconds,40MiB
+    inference reserved.180 CPU tests, cached reload and independent source/metric/pixel/weight
+    audits pass. No optimizer updates or webcam claim.
+  evidence:
+  - ara/evidence/tables/direct_weights_2026-09-12.json
+  - runs/direct_weights_v1/timing/weights.pt
+  - runs/direct_weights_v1/timing/visual_memory.json
+  - runs/direct_weights_v1/timing_verification.json
+  also_depends_on:
+  - N252
+  - N253
+  status: resolved

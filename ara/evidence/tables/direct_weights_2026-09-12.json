@@ -1,0 +1,224 @@
+{
+  "reference": {
+    "selected": "adjusted",
+    "passed": false,
+    "gates": {
+      "accuracy": false,
+      "history_advantage": false,
+      "pair_both": false,
+      "reversal": true
+    },
+    "active_seconds": 2.503747611073777,
+    "parameter_count": 108915,
+    "inference_gpu_peak": {
+      "allocated_bytes": 39779840,
+      "reserved_bytes": 41943040
+    },
+    "optimizer_updates": 0,
+    "weights_sha256": "6c7b70efda4eef58063bc1c8fc1365d19aafc825d4644570d77188a536ae05a2",
+    "model_sha256": "ccb3d091200b08d599abab11ff0c8ef34fddb56a2ce77db86b93c09b8e857335",
+    "metrics": {
+      "evaluation": {
+        "accuracy": 0.609375,
+        "center_start": {
+          "accuracy": 0.21875,
+          "count": 32
+        },
+        "nll": 1.0815927339614257,
+        "pair_both": 0.5,
+        "reversal": {
+          "accuracy": 1.0,
+          "count": 32
+        }
+      },
+      "baseline": {
+        "accuracy": 0.5,
+        "center_start": {
+          "accuracy": 0.5,
+          "count": 32
+        },
+        "nll": 0.7061278045241666,
+        "pair_both": 0.0,
+        "reversal": {
+          "accuracy": 0.5,
+          "count": 32
+        }
+      },
+      "erased": {
+        "accuracy": 0.5,
+        "center_start": {
+          "accuracy": 0.5,
+          "count": 32
+        },
+        "nll": 5.689220623098565,
+        "pair_both": 0.0,
+        "reversal": {
+          "accuracy": 0.5,
+          "count": 32
+        }
+      }
+    },
+    "development": {
+      "constructed": {
+        "accuracy": 0.5,
+        "center_start": {
+          "accuracy": 1.0,
+          "count": 16
+        },
+        "nll": 1.2901120141878701,
+        "pair_both": 0.5,
+        "reversal": {
+          "accuracy": 0.0,
+          "count": 16
+        }
+      },
+      "adjusted": {
+        "accuracy": 0.5625,
+        "center_start": {
+          "accuracy": 0.125,
+          "count": 16
+        },
+        "nll": 1.1287211204463274,
+        "pair_both": 0.5,
+        "reversal": {
+          "accuracy": 1.0,
+          "count": 16
+        }
+      }
+    },
+    "verification": {
+      "result_sha256": "b2dcfcae412eef9f4f9a368db57aaabd0415b16aca956f6becb723b065d6470f",
+      "weights_sha256": "6c7b70efda4eef58063bc1c8fc1365d19aafc825d4644570d77188a536ae05a2",
+      "report_sha256": "6eb2b752ad5a57964e3a818124449797c5dfe5360bfb8e4ebc217bbdf5552d9b",
+      "independent_probability_space_metrics": true,
+      "selection_rule_verified": true,
+      "source_snapshots_verified": true,
+      "rendered_label_pixels_and_pair_balance_verified": true,
+      "adjustment_changes_only": [
+        "head.weight",
+        "head.bias"
+      ],
+      "report_validation": "structural_only",
+      "optimizer_updates": 0,
+      "selected": "adjusted",
+      "heldout_accuracy": 0.609375,
+      "passed": false
+    }
+  },
+  "timing": {
+    "selected": "adjusted",
+    "passed": true,
+    "gates": {
+      "accuracy": true,
+      "history_advantage": true,
+      "pair_both": true,
+      "reversal": true
+    },
+    "active_seconds": 2.5592346049379557,
+    "parameter_count": 108915,
+    "inference_gpu_peak": {
+      "allocated_bytes": 39779840,
+      "reserved_bytes": 41943040
+    },
+    "optimizer_updates": 0,
+    "weights_sha256": "cae587512ee5f3cf089ce0e06296e6ad62f104f29ce818e0bc2c02f263d65f26",
+    "model_sha256": "546d39cfd8b5be056b92ba497b78fcb5155011d39defa959fce7f9b7a308fa38",
+    "metrics": {
+      "evaluation": {
+        "accuracy": 1.0,
+        "center_start": {
+          "accuracy": 1.0,
+          "count": 32
+        },
+        "nll": 0.1263800623566096,
+        "pair_both": 1.0,
+        "reversal": {
+          "accuracy": 1.0,
+          "count": 32
+        }
+      },
+      "baseline": {
+        "accuracy": 0.5,
+        "center_start": {
+          "accuracy": 0.5,
+          "count": 32
+        },
+        "nll": 0.705951100169328,
+        "pair_both": 0.0,
+        "reversal": {
+          "accuracy": 0.5,
+          "count": 32
+        }
+      },
+      "erased": {
+        "accuracy": 0.5,
+        "center_start": {
+          "accuracy": 0.5,
+          "count": 32
+        },
+        "nll": 0.8885905834623102,
+        "pair_both": 0.0,
+        "reversal": {
+          "accuracy": 0.5,
+          "count": 32
+        }
+      }
+    },
+    "development": {
+      "constructed": {
+        "accuracy": 0.5,
+        "center_start": {
+          "accuracy": 0.5,
+          "count": 16
+        },
+        "nll": 0.9739546885954459,
+        "pair_both": 0.0,
+        "reversal": {
+          "accuracy": 0.5,
+          "count": 16
+        }
+      },
+      "adjusted": {
+        "accuracy": 1.0,
+        "center_start": {
+          "accuracy": 1.0,
+          "count": 16
+        },
+        "nll": 0.1276589788935947,
+        "pair_both": 1.0,
+        "reversal": {
+          "accuracy": 1.0,
+          "count": 16
+        }
+      }
+    },
+    "verification": {
+      "result_sha256": "65bba7b8b4d4d02c8ace056ff927380c50173e02e05a1efd8162b8c2626de5f6",
+      "weights_sha256": "cae587512ee5f3cf089ce0e06296e6ad62f104f29ce818e0bc2c02f263d65f26",
+      "report_sha256": "8b6338310ec221eca9e9f8c5caeff22688edd67167ea7934403bb9afd40853ac",
+      "independent_probability_space_metrics": true,
+      "selection_rule_verified": true,
+      "source_snapshots_verified": true,
+      "rendered_label_pixels_and_pair_balance_verified": true,
+      "adjustment_changes_only": [
+        "head.weight",
+        "head.bias"
+      ],
+      "report_validation": "structural_only",
+      "optimizer_updates": 0,
+      "selected": "adjusted",
+      "heldout_accuracy": 1.0,
+      "passed": true,
+      "fresh_test_disjoint_from_reference": true,
+      "full_cpu_tests": 180,
+      "focused_tests": 4,
+      "cached_resume": "completed; selected weight and report checksums reverified",
+      "browser_qa": "not performed; existing browser-access restriction, structural checks only"
+    }
+  },
+  "limitations": [
+    "Task-specific red-mug/fixed-four-frame circuit; 34 head values fitted with labels; no general pretrained-weight synthesis or webcam transfer.",
+    "Reference test had limited tiny software-check exposure; revised unit fixture offset and seed5301 final test avoid it.",
+    "Reports structural-only under existing browser restriction."
+  ]
+}

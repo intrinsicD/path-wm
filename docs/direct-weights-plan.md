@@ -142,3 +142,50 @@ Move unit fixtures to a separate100000 seed offset and use never-scored seed5301
 the second final evaluation (replacing proposed4301, which the tiny check exercised).
 The first reference's nominal holdout therefore had limited software-check exposure;
 retain that limitation alongside its failed result rather than retroactively relabel it.
+
+## Completed revision
+
+`runs/direct_weights_v1/timing` passes all four declared gates on fresh seed5301:
+64/64 answers,32/32 complete pairs,32/32 reversal answers. Both ordinary initialization
+and erased-history controls score32/64 (50%). Final NLL0.126380. The handwritten timed
+head alone scores50% on development; its centroid-adjusted head scores100%, so the
+adjusted candidate was selected before final-test scoring. Do not attribute the pass
+to unaided guessing of every value:34 output-head parameters were fitted using64 labeled
+fit episodes. No backward or optimizer update was used in either experiment.
+
+Evaluation and file production took2.559 active seconds; inference allocator peak
+40MiB reserved /37.94MiB allocated. These are inference values, not a training or
+whole-desktop peak. The selected binary contains108,915 parameters (2,670 nonzero),
+603,453 bytes. Most parameters deliberately stay zero; the module layout is unchanged,
+but this is a small hand-built circuit for this fixed visual/history task.
+
+Full regression:180 CPU tests pass, including4 focused visual checks. Cached resume,
+strict binary reload, independent probability-space metric reconstruction, rendered
+pixel/label checks, source snapshots and fresh-test disjointness all pass. The raw
+evidence is `runs/direct_weights_v1/timing_verification.json`. The local
+`timing/report.html` is structurally verified; browser QA remains unavailable under
+the existing access restriction. The first failed run is unchanged. A CUDA launch
+failure before any scoring was repaired by resolving the device index explicitly.
+
+Use the successful files rather than the failed reference for this configured task:
+
+```bash
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 .venv/bin/python experiments/multimodal.py \
+  --dataset direct-weights --direct-weight-timing --device cuda --output runs/my_direct_weights
+# To reload a completed compatible run without fitting or rescoring:
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 .venv/bin/python experiments/multimodal.py \
+  --resume runs/direct_weights_v1/timing
+```
+
+The load example above applies with `timing/weights.pt` in place of
+`reference/weights.pt`. `timing/constructed.pt` contains the pure hand assignment;
+`timing/adjusted.pt` and `timing/weights.pt` include the fitted readout.
+`timing/weight_inspection.json` exposes those34 fitted numbers and file provenance.
+Earlier runs retain their source snapshots; resume with their matching source version
+if later implementation changes make the normal strict resume check reject them.
+
+This demonstrates direct weight construction plus narrow data fitting can implement
+one controlled behavior. It does not establish useful webcam perception, long memory,
+multiple-entity binding, learned concepts, general action planning or synthesis of
+arbitrary pretrained networks. The earlier optimizer curriculum remains deferred while
+this requested direct-weight test is completed; no broader training was silently run.
