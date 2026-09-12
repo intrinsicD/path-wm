@@ -23,7 +23,8 @@ from pathwm.models.agent import (
 from pathwm.models.agent_state import EpisodicMemory
 from pathwm.models.decoders import DenseHead, PatchDetailHead, StateFeatureDecoder
 from pathwm.models.encoders import PyramidEncoder, PatchDetailEncoder
-from pathwm.models.memory_output import MemoryOutput
+from pathwm.models.memory_output import MemoryOutput, FrozenFeatureNormalization
+from pathwm.models.modalities import Observation
 from pathwm.models.perception import Perception
 
 
@@ -51,10 +52,15 @@ def make_codec(width=32, levels=3, depth=2, fusion_depth=2, weights=None):
     ).requires_grad_(False)
 
 
-def build_model(codec, width=32):
+def build_model(codec, width=32, normalize_input=False):
+    encoder = codec.encoder.base.encoder
+    if normalize_input:
+        encoder = FrozenFeatureNormalization(
+            encoder, len(codec.encoder.base.feature_spec), width
+        )
     agent = MultimodalAgent(
         width=width,
-        encoders={"image": codec.encoder.base.encoder},
+        encoders={"image": encoder},
         decoders={
             "image": StateFeatureDecoder(
                 width, codec.encoder.feature_spec, codec.heads["rgb"]
@@ -76,7 +82,9 @@ def load_model(path, device="cpu"):
     codec = make_codec(
         **{k: settings[k] for k in ("width", "levels", "depth", "fusion_depth")}
     )
-    model = build_model(codec, settings["width"])
+    model = build_model(
+        codec, settings["width"], settings.get("normalize_input", False)
+    )
     model.load_state_dict(record["model"], strict=True)
     return model.to(device).eval()
 
@@ -324,6 +332,7 @@ def train(
     frozen = dict(
         encoder=state_hash(model.teacher),
         decoder=state_hash(model.agent.decoders["image"].head),
+        input_adapter=state_hash(model.agent.encoders["image"]),
     )
     prior = (
         json.loads((run.path / "runtime.json").read_text())["training_seconds"]
@@ -411,6 +420,7 @@ def train(
         unchanged = frozen == dict(
             encoder=state_hash(model.teacher),
             decoder=state_hash(model.agent.decoders["image"].head),
+            input_adapter=state_hash(model.agent.encoders["image"]),
         )
         if not unchanged or not all(np.isfinite(v).all() for v in arrays.values()):
             raise RuntimeError("Frozen mutation or nonfinite evaluation output")
@@ -467,6 +477,7 @@ def main():
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--stop-after", type=int)
     parser.add_argument("--check", action="store_true")
+    parser.add_argument("--normalize-input", action="store_true")
     args = parser.parse_args()
     seed_everything(args.seed)
     if torch.device(args.device).type == "cuda":
@@ -478,15 +489,29 @@ def main():
         torch.cuda.set_per_process_memory_fraction(limit / total, index)
         torch.cuda.reset_peak_memory_stats(args.device)
     codec = make_codec(weights=args.weights).to(args.device).eval()
-    model = build_model(codec).to(args.device).eval()
+    model = (
+        build_model(codec, normalize_input=args.normalize_input).to(args.device).eval()
+    )
     training = MemoryOutputEpisodes(128, seed=7701)
     validation = MemoryOutputEpisodes(32, seed=7702)
     test = MemoryOutputEpisodes(64, seed=7703, split="test")
+    if args.normalize_input:
+
+        def observations():
+            for start in range(0, len(training), 16):
+                images = training.batch(range(start, start + 16), args.device)["images"]
+                for t in range(3):
+                    yield Observation(
+                        images[:, t : t + 1], images.new_full((16, 1), float(t))
+                    )
+
+        model.agent.encoders["image"].calibrate(observations())
     with torch.no_grad():
         # Eight unique training targets suffice; no validation/test target calibration.
         targets = training.batch(range(8), args.device)["target"]
         model.agent.decoders["image"].calibrate(model.teacher(targets))
     settings = default_settings(args.seed)
+    settings["normalize_input"] = args.normalize_input
     settings["donor_sha256"] = file_hash(args.weights)
     if args.check:
         batch = MemoryOutputEpisodes(4, seed=17701).batch(range(4), args.device)

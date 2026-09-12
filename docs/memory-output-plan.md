@@ -145,3 +145,8 @@ reader uses the same changed input preprocessing. No new trainable parameters.
 Claude recommends an identity-transform control; exact no-op equivalence is checked
 in software. Effects on optimization are a possible mechanism, not evidence that
 the task was independently solved. Statistics are never fit on validation/test.
+Follow-up Claude acknowledgment accepts this framing and the exact no-op control.
+All30 targeted tests pass before the repair run, including normalized replay and
+standalone loading, exact no-op gradients and unchanged teacher weights. The GPU
+normalization check passes. Traces distinguish raw encoder outputs from normalized
+published features and retain the fixed channel statistics.

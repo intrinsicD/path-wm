@@ -117,7 +117,12 @@ def test_training_resume_and_standalone_reload(tmp_path, normalize):
         model = model_fixture(normalize)
         settings = default_settings(21)
         settings.update(
-            steps=4, batch_size=2, width=16, levels=2, depth=1, fusion_depth=0,
+            steps=4,
+            batch_size=2,
+            width=16,
+            levels=2,
+            depth=1,
+            fusion_depth=0,
             normalize_input=normalize,
         )
         with torch.no_grad():
@@ -126,9 +131,14 @@ def test_training_resume_and_standalone_reload(tmp_path, normalize):
             )
         if normalize:
             from pathwm.models.modalities import Observation
+
             images = train_data.batch(range(8))["images"]
-            model.agent.encoders["image"].calibrate([
-                Observation(images[:, t:t+1], torch.full((8, 1), float(t))) for t in range(3)])
+            model.agent.encoders["image"].calibrate(
+                [
+                    Observation(images[:, t : t + 1], torch.full((8, 1), float(t)))
+                    for t in range(3)
+                ]
+            )
         result = train(
             model,
             train_data,
@@ -168,8 +178,8 @@ def test_input_calibration_preserves_noop_metadata_and_frozen_model():
     plain = model_fixture()
     torch.manual_seed(91)
     normalized = model_fixture(True)
-    p = {k:v for k,v in plain.named_parameters() if v.requires_grad}
-    q = {k:v for k,v in normalized.named_parameters() if v.requires_grad}
+    p = {k: v for k, v in plain.named_parameters() if v.requires_grad}
+    q = {k: v for k, v in normalized.named_parameters() if v.requires_grad}
     assert p.keys() == q.keys()
     assert all(torch.equal(p[k], q[k]) for k in p)
     images = MemoryOutputEpisodes(4, seed=17).batch(range(8))["images"]
@@ -177,20 +187,43 @@ def test_input_calibration_preserves_noop_metadata_and_frozen_model():
     encoder = normalized.agent.encoders["image"]
     raw = plain.agent.encoders["image"](obs)
     noop = encoder(obs)
-    for a,b in zip(raw.scales, noop.scales):
+    for a, b in zip(raw.scales, noop.scales):
         for key in ("values", "valid", "times", "content_times", "ends"):
-            torch.testing.assert_close(getattr(a,key), getattr(b,key), atol=0, rtol=0)
+            torch.testing.assert_close(getattr(a, key), getattr(b, key), atol=0, rtol=0)
         assert a.grid == b.grid
-    torch.testing.assert_close(plain(images)["image"], normalized(images)["image"], atol=0, rtol=0)
+    a, b = plain(images)["image"], normalized(images)["image"]
+    torch.testing.assert_close(a, b, atol=0, rtol=0)
+    a.square().mean().backward()
+    b.square().mean().backward()
+    for k in p:
+        if p[k].grad is None:
+            assert q[k].grad is None
+        else:
+            torch.testing.assert_close(p[k].grad, q[k].grad, atol=0, rtol=0)
     before = state_hash(normalized.teacher)
     encoder.calibrate([obs])
     fixed = state_hash(encoder)
-    out = encoder(obs)
-    for a,b in zip(raw.scales,out.scales):
-        torch.testing.assert_close(b.values.mean((0,1)), torch.zeros(16), atol=2e-5, rtol=0)
-        assert torch.equal(a.times,b.times) and torch.equal(a.valid,b.valid)
+    trace = {}
+    out = encoder(obs, trace=trace)
+    torch.testing.assert_close(
+        trace["scale.0.values"], out.scales[0].values, atol=0, rtol=0
+    )
+    for a, b in zip(raw.scales, out.scales):
+        torch.testing.assert_close(
+            b.values.mean((0, 1)), torch.zeros(16), atol=2e-5, rtol=0
+        )
+        assert torch.equal(a.times, b.times) and torch.equal(a.valid, b.valid)
     assert state_hash(encoder) == fixed and state_hash(normalized.teacher) == before
+    invalid = Observation(
+        torch.full_like(obs.values, float("nan")),
+        obs.times,
+        torch.zeros_like(obs.times, dtype=torch.bool),
+    )
+    encoder.calibrate([obs, invalid])
+    assert state_hash(encoder) == fixed
     with pytest.raises(ValueError):
         encoder.calibrate([])
     with pytest.raises(ValueError):
-        encoder.calibrate([Observation(torch.full_like(obs.values, float('nan')), obs.times)])
+        encoder.calibrate(
+            [Observation(torch.full_like(obs.values, float("nan")), obs.times)]
+        )

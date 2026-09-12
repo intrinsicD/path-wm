@@ -8,6 +8,76 @@ from torch import nn
 from .modalities import Attend, Observation, position
 
 
+class FrozenFeatureNormalization(nn.Module):
+    """Fixed training-observation channel statistics; retain complete provenance."""
+
+    def __init__(self, base, levels, width):
+        super().__init__()
+        if any(p.requires_grad for p in base.parameters()):
+            raise ValueError("Input normalization expects a frozen encoder")
+        self.base, self.levels, self.code_width = base, levels, base.code_width
+        for i in range(levels):
+            self.register_buffer(f"mean_{i}", torch.zeros(1, 1, width))
+            self.register_buffer(f"std_{i}", torch.ones(1, 1, width))
+
+    @torch.no_grad()
+    def calibrate(self, observations):
+        totals, squares, counts = (
+            [None] * self.levels,
+            [None] * self.levels,
+            [0] * self.levels,
+        )
+        for obs in observations:
+            if obs.valid is not None and not obs.valid.any():
+                continue
+            for i, scale in enumerate(self.base(obs).scales):
+                values = scale.values[scale.valid].double()
+                if len(values) == 0:
+                    continue
+                if not torch.isfinite(values).all():
+                    raise ValueError("Calibration requires finite valid features")
+                total, square = values.sum(0), values.square().sum(0)
+                totals[i] = total if totals[i] is None else totals[i] + total
+                squares[i] = square if squares[i] is None else squares[i] + square
+                counts[i] += len(values)
+        if not all(counts):
+            raise ValueError(
+                "Calibration needs valid training observations at every level"
+            )
+        for i, count in enumerate(counts):
+            mean = totals[i] / count
+            std = (
+                (squares[i] / count - mean.square()).clamp_min(0).sqrt().clamp_min(0.01)
+            )
+            getattr(self, f"mean_{i}").copy_(mean[None, None])
+            getattr(self, f"std_{i}").copy_(std[None, None])
+
+    def forward(self, observation, **kwargs):
+        pyramid = self.base(observation, **kwargs)
+        scales = tuple(
+            replace(
+                scale,
+                values=(
+                    (scale.values - getattr(self, f"mean_{i}"))
+                    / getattr(self, f"std_{i}")
+                ).masked_fill(~scale.valid[..., None], 0),
+            )
+            for i, scale in enumerate(pyramid.scales)
+        )
+        trace = kwargs.get("trace")
+        if trace is not None:
+            for i, (raw, scaled) in enumerate(zip(pyramid.scales, scales)):
+                trace[f"normalization.{i}.input"] = raw.values.detach().cpu().clone()
+                trace[f"normalization.{i}.mean"] = (
+                    getattr(self, f"mean_{i}").detach().cpu().clone()
+                )
+                trace[f"normalization.{i}.std"] = (
+                    getattr(self, f"std_{i}").detach().cpu().clone()
+                )
+                trace[f"scale.{i}.values"] = scaled.values.detach().cpu().clone()
+        return replace(pyramid, scales=scales)
+
+
 class FactHead(nn.Module):
     def __init__(self, width, depth=1):
         super().__init__()
