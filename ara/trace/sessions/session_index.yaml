@@ -139,10 +139,10 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: 'Joint factual continuation fails benefit: warm/texture errors 10 to 14/512; factual retention
-    10/12 vs 12/12 control. Image branches exact, full repair false. 61 tests, 10,188 metrics, 40 exact
-    GPU reloads; three actual Claude reviews.'
-  turn_count: 21
-  events_count: 118
+  summary: 'Marigold V2 reviewed: pretrained task-specific latent regression supports an output-interface
+    direction, not arbitrary state-to-image sufficiency. No model changes; factual-readout negative
+    result and lower-rate proposal remain open.'
+  turn_count: 22
+  events_count: 120
   claims_touched: []
-  open_threads: 10
+  open_threads: 11

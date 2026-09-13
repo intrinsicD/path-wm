@@ -3887,3 +3887,24 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O221
+  timestamp: 2026-09-13T23:35+02:00
+  provenance: ai-suggested
+  content: Marigold V2 supports task-trained latent mapping on a pretrained image backbone; it does
+    not establish arbitrary internal-state-to-image generation. Its fixed-timestep RGB-to-depth regression
+    differs from temporal world dynamics. For PATH-WM, a learned state/request conditioner plus a
+    capable generative backend is a plausible extension; decoder-compatible representation, detailed
+    state information, output supervision and causal content checks remain necessary. A compact adapter
+    alone is not guaranteed sufficient; novel sampling does not recover unrecorded evidence.
+  context: Primary Marigold V2 method and model card compared with existing deterministic StateFeatureDecoder;
+    source URLs bound through N330. Paper includes pixel/gradient/semantic losses and decoder fine-tuning
+    in its refinement stage. No new local training, benchmark, model download or architecture choice.
+  potential_type: architecture
+  bound_to:
+  - N330
+  - N271
+  - N273
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

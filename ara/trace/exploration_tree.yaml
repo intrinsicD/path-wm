@@ -5463,3 +5463,20 @@ tree:
   - N328
   - N326
   status: resolved
+- id: N330
+  type: question
+  title: Does Marigold V2 imply latent transitions suffice for general image output?
+  provenance: user
+  timestamp: 2026-09-13T23:35+02:00
+  description: User asks whether Marigold V2 permits desired image outputs through learning a latent
+    transition, subject to training-data coverage. Literature and local interface inspected; no implementation
+    or empirical adoption requested.
+  evidence:
+  - https://arxiv.org/html/2609.08084v1#S3.SS2
+  - https://arxiv.org/html/2609.08084v1#S3.SS4
+  - https://huggingface.co/huawei-bayerlab/marigold-v2-0
+  - pathwm/models/decoders.py:49
+  status: open
+  also_depends_on:
+  - N271
+  - N273

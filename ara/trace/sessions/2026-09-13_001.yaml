@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T23:24+02:00
-  turn_count: 21
-  summary: 'Joint factual continuation fails benefit: warm/texture errors 10 to 14/512; factual retention
-    10/12 vs 12/12 control. Image branches exact, full repair false. 61 tests, 10,188 metrics, 40 exact
-    GPU reloads; three actual Claude reviews.'
+  last_turn: 2026-09-13T23:35+02:00
+  turn_count: 22
+  summary: 'Marigold V2 reviewed: pretrained task-specific latent regression supports an output-interface
+    direction, not arbitrary state-to-image sufficiency. No model changes; factual-readout negative
+    result and lower-rate proposal remain open.'
 
 events_logged:
 - turn: 1
@@ -777,6 +777,24 @@ events_logged:
   provenance: user-revised
   summary: O218 matched factual+image comparison method adopted; new failed-benefit interpretation remains
     staged.
+- turn: 22
+  type: question
+  id: N330
+  routing: direct
+  provenance: user
+  summary: Asked whether Marigold V2 makes a learned latent transition sufficient for general requested
+    image output.
+- turn: 22
+  type: observation
+  id: O221
+  routing: staged
+  provenance: ai-suggested
+  summary: Marigold V2 supports task-trained latent mapping on a pretrained image backbone; it does
+    not establish arbitrary internal-state-to-image generation. Its fixed-timestep RGB-to-depth regression
+    differs from temporal world dynamics. For PATH-WM, a learned state/request conditioner plus a
+    capable generative backend is a plausible extension; decoder-compatible representation, detailed
+    state information, output supervision and causal content checks remain necessary. A compact adapter
+    alone is not guaranteed sufficient; novel sampling does not recover unrecorded evidence.
 
 ai_actions:
 - turn: 1
@@ -1081,6 +1099,17 @@ ai_actions:
   - docs/project-state.md
   - runs/factual_readout_v1/
   - ara/evidence/tables/factual_readout_2026-09-13.json
+- turn: 22
+  action: Read primary Marigold V2 paper sections 3.1-3.4, implementation and model-card checkpoint
+    details; compared with local StateFeatureDecoder. Paper-based interpretation only; no benchmark,
+    model changes, Claude call or model download.
+  provenance: ai-executed
+  files_changed:
+  - ara/trace/exploration_tree.yaml
+  - ara/staging/observations.yaml
+  - ara/trace/sessions/2026-09-13_001.yaml
+  - ara/trace/sessions/session_index.yaml
+  - ara/trace/pm_reasoning_log.yaml
 
 claims_touched: []
 key_context:
@@ -1157,6 +1186,9 @@ key_context:
   excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate.
     This adopts the next bounded comparison; no user interpretation yet of the newly measured failed factual
     benefit.'
+- turn: 22
+  excerpt: 'User: Does this mean that we just need to train a latent transition to get any image output
+    we want, unless we have not trained on that data?'
 
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate;
@@ -1182,6 +1214,9 @@ open_threads:
 - 'N260: bounded cross-window encoder recurrence is unimplemented; define reset-history comparison.'
 - 'N263/N266/O172: earlier private Claude brief remains blocked; last same-rate ordinary reconstruction
   control budget-stopped. New public-only review is separate.'
+- 'N330/O221: Marigold-style transfer motivates testing state-conditioned generation with a pretrained
+  backend; faithful remembered content, decoder capacity and local GPU feasibility remain untested.
+  This inquiry does not adopt the pending lower-rate experiment.'
 
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher
@@ -1224,3 +1259,5 @@ ai_suggestions_pending:
   researcher interpretation pending.'
 - 'O220: lower-rate readout comparison and difficult-scene diagnostics proposed; no unique cause or successful
   repair assumed.'
+- 'O221: conditional-generation interpretation of Marigold V2 remains proposed, with no backend selection
+  or implementation commitment.'
