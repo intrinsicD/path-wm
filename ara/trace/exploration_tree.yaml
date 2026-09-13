@@ -5393,3 +5393,73 @@ tree:
   - N325
   - N323
   status: resolved
+
+- id: N327
+  type: decision
+  title: Continue factual and image readout comparison with Claude
+  provenance: user
+  timestamp: 2026-09-13T23:24+02:00
+  choice: User explicitly requests continued plan, implement, review, test and fix. Adopt the bounded
+    factual+image versus image-only comparison with corrected loss, frozen upstream/backend components,
+    fresh confirmation and unchanged scene/causal criteria.
+  alternatives:
+  - Adopt added image capacity without demonstrated benefit
+  - Assume factual learning directly improves parameter-disjoint image generation
+  evidence:
+  - O218
+  - N326
+  also_depends_on:
+  - N326
+  status: resolved
+- id: N328
+  type: experiment
+  title: Separate clipping verifies factual-image optimizer isolation
+  provenance: ai-executed
+  timestamp: 2026-09-13T23:24+02:00
+  result: Three informative RED failures followed by opt-in separate norm1 clipping and cached box-weighted
+    joint-head support. Default global clipping, architecture, loss and inference remain unchanged. Eight
+    new clipping cases and prior scopes total 61 passing tests; factual-only backward has no image gradients,
+    unknown/shared trainable scope and nonfinite gradients rejected, exact odd-step resume and exported
+    trainability verified. Paired 16-update GPU development matches every post-clip image gradient and
+    pre/post-step parameter/AdamW state. Preflight raw factual logits differed by at most 7.63e-6 under
+    differing trainability, images exact; correcting the check to the existing evaluator convention restored
+    initial equality before any fit. Failed and corrected receipts retained, no source/loss/gate change.
+    Three actual generic Claude reviews withdrew a mistaken essential timing-gap claim about post-step
+    checks. No private code/data/results exported.
+  evidence:
+  - ara/evidence/tables/factual_readout_2026-09-13.json
+  - tests/test_readout_clipping.py
+  - runs/factual_readout_v1/development_traces.json
+  - runs/factual_readout_v1/initial_execution_check.json
+  - runs/factual_readout_v1/preparation.log
+  - runs/factual_readout_v1/review_status.json
+  also_depends_on:
+  - N327
+  status: resolved
+- id: N329
+  type: experiment
+  title: Joint factual learning fails benefit despite exact image branch equality
+  provenance: ai-executed
+  timestamp: 2026-09-13T23:24+02:00
+  result: 'Source 1bd776c: two 1536-update fits from producer-control 8502, seed 9901, 1024 training histories.
+    Joint 67,032 vs image-only 58,128 trainable parameters, no added capacity. Forty fresh 37073/37074
+    cells with 64 histories each: joint/control/unchanged all 12/12 task gates, raw 4/4. Warm/texture
+    factual errors 14 vs 10/512 correlated responses; assessable benefit fails and paired scores regress.
+    Factual retention joint 10/12 vs control 12/12; warm reset facts 92.1875%/93.75% vs 95.3125%/96.875%,
+    cool joint facts 100%. Images exact across all paired modes; warm reset images 90.625%/93.75%; image/full
+    retention 10/12, full repair false. Final image weights/AdamW states and all 1536 image norm/RGB/feature-loss
+    records exact. Image clips 0 steps, max norm 0.179754; joint facts clip 307 steps, max 20.36434. Saved
+    training warm CE 0.009646 to 0.027268 and texture 0.006859 to 0.013675 worsen; cool improves. Frozen
+    tensors/cache/sampler/RNG and 10,188 metrics verified; 40 exact GPU reloads. Training 119.150 s, evaluation
+    173.497 s, peak 646 MiB. Forty-five reports structurally checked and two figures inspected, browser
+    limitation retained. Prior source preserved, no post-confirmation fit or threshold change.'
+  evidence:
+  - ara/evidence/tables/factual_readout_2026-09-13.json
+  - runs/factual_readout_v1/verification.json
+  - runs/factual_readout_v1/loss_analysis.json
+  - docs/recall-repair-plan.md#factual-readout-repair-results
+  also_depends_on:
+  - N327
+  - N328
+  - N326
+  status: resolved

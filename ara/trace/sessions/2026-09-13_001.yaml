@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T22:54+02:00
-  turn_count: 20
-  summary: Both extra-training arms reach 100% cool images; capacity benefit unassessable. Task gates
-    11/12, strict retention 8/12; warm/texture failures remain. 58 tests, 10,188 independent metrics,
-    40 exact GPU replays; two actual Claude reviews.
+  last_turn: 2026-09-13T23:24+02:00
+  turn_count: 21
+  summary: 'Joint factual continuation fails benefit: warm/texture errors 10 to 14/512; factual retention
+    10/12 vs 12/12 control. Image branches exact, full repair false. 61 tests, 10,188 metrics, 40 exact
+    GPU reloads; three actual Claude reviews.'
 
 events_logged:
 - turn: 1
@@ -733,6 +733,50 @@ events_logged:
   provenance: user-revised
   summary: O216 separate image refinement/factual repair method adopted; new capacity/retention interpretation
     remains staged.
+- turn: 21
+  type: decision
+  id: N327
+  routing: direct
+  provenance: user
+  summary: Continue factual and image readout comparison with Claude
+- turn: 21
+  type: experiment
+  id: N328
+  routing: direct
+  provenance: ai-executed
+  summary: Separate clipping verifies factual-image optimizer isolation
+- turn: 21
+  type: experiment
+  id: N329
+  routing: direct
+  provenance: ai-executed
+  summary: Joint factual learning fails benefit despite exact image branch equality
+- turn: 21
+  type: observation
+  id: O219
+  routing: staged
+  provenance: ai-suggested
+  summary: With branch isolation verified, this fixed-rate joint continuation fails factual benefit and
+    worsens warm/texture terminal training losses while improving cool facts. It does not establish a
+    wiring failure, an intrinsic capacity limit or that factual learning cannot help. Joint training creates
+    no new semantic connection between the parameter-disjoint outputs.
+- turn: 21
+  type: observation
+  id: O220
+  routing: staged
+  provenance: ai-suggested
+  summary: Next test a lower readout learning rate against the current rate from the preserved pre-experiment
+    source, with equal data/updates and separate clips. Include difficult-scene loss diagnostics, fresh
+    confirmation and unchanged retention/causal gates. Diagnose optimization before adding architecture;
+    lower-rate success and a unique cause are not established. Broader real imagery, reliability, CPU
+    portability, upstream replication and general generation remain open.
+- turn: 21
+  type: heuristic
+  id: H69
+  routing: crystallized
+  provenance: user-revised
+  summary: O218 matched factual+image comparison method adopted; new failed-benefit interpretation remains
+    staged.
 
 ai_actions:
 - turn: 1
@@ -1020,6 +1064,23 @@ ai_actions:
   - docs/project-state.md
   - runs/producer_refinement_v1/
   - ara/evidence/tables/producer_refinement_2026-09-13.json
+- turn: 21
+  action: Implemented separate readout clipping and box-weighted joint cached training after RED checks;
+    preserved old default behavior. Verified factual gradient isolation, resume, exact per-step paired
+    GPU development and final image optimizer/weight/trajectory equality. Repaired preflight measurement
+    to the existing evaluation trainability convention before any formal fit. Completed two fixed fits,
+    40 fresh 64-history cells, independent task/loss diagnostics and exact GPU replay. Three actual generic
+    Claude exchanges reconciled. Preserved negative factual/retention result and prior source; updated
+    report, recipe, plan and project state and committed completed work.
+  provenance: ai-executed
+  files_changed:
+  - experiments/memory_output.py
+  - tests/test_readout_clipping.py
+  - docs/experiments.md
+  - docs/recall-repair-plan.md
+  - docs/project-state.md
+  - runs/factual_readout_v1/
+  - ara/evidence/tables/factual_readout_2026-09-13.json
 
 claims_touched: []
 key_context:
@@ -1092,16 +1153,20 @@ key_context:
   excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate.
     This adopts the next bounded method; no user interpretation yet of the newly completed capacity-ceiling
     and warm/texture results.'
+- turn: 21
+  excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate.
+    This adopts the next bounded comparison; no user interpretation yet of the newly measured failed factual
+    benefit.'
 
 open_threads:
-- 'N325/N326/O217/O218: both continuations reach the sampled cool-image ceiling; added-capacity benefit
-  unassessable, warm/texture and frozen factual repair open. Next bounded factual+image vs image-only
-  head learning under corrected loss, fresh confirmation and unchanged scene/causal gates. Broader real
-  scenes, learned reliability, upstream replication and general generation remain open; preserve completed
+- 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate;
+  image/full retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene
+  diagnostics, fresh confirmation and unchanged causal/retention criteria. Prior candidate not replaced.
+  Broader real imagery, reliability, upstream replication and general generation remain open; preserve
   runs and disk floor.'
-- 'N278-N326: CPU/GPU portability unresolved; current 58 scoped tests and 40 exact GPU replays do not
-  repair earlier CPU inference differences. Sandbox CUDA visibility was an execution preflight, resolved
-  with approved local GPU access.'
+- 'N278-N329: CPU/GPU portability remains unresolved. Current 61 scoped tests and 40 exact GPU reloads
+  do not repair prior CPU differences. Trainability-dependent raw GPU logit discrepancy is handled by
+  the existing standardized evaluator; only the preflight check was corrected.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
   and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and
@@ -1155,5 +1220,7 @@ ai_suggestions_pending:
   response pending.'
 - 'O217: cool extra-training sufficiency on sampled histories, unassessable capacity benefit and remaining
   warm/texture interpretation; researcher response pending.'
-- 'O218: factual+image versus image-only continuation under corrected loss proposed, with fresh gates
-  and broader milestones preserved.'
+- 'O219: failed factual benefit despite branch isolation, with warm/texture terminal-loss deterioration;
+  researcher interpretation pending.'
+- 'O220: lower-rate readout comparison and difficult-scene diagnostics proposed; no unique cause or successful
+  repair assumed.'

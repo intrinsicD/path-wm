@@ -139,10 +139,10 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: Both extra-training arms reach 100% cool images; capacity benefit unassessable. Task gates
-    11/12, strict retention 8/12; warm/texture failures remain. 58 tests, 10,188 independent metrics,
-    40 exact GPU replays; two actual Claude reviews.
-  turn_count: 20
-  events_count: 112
+  summary: 'Joint factual continuation fails benefit: warm/texture errors 10 to 14/512; factual retention
+    10/12 vs 12/12 control. Image branches exact, full repair false. 61 tests, 10,188 metrics, 40 exact
+    GPU reloads; three actual Claude reviews.'
+  turn_count: 21
+  events_count: 118
   claims_touched: []
   open_threads: 10

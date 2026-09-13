@@ -1775,3 +1775,20 @@ entries:
   - Source c22f1e5 frozen for formal runs; no post-confirmation optimizer updates or threshold changes.
     GPU sandbox preflight failed before training, approved retry succeeded and logs retained. Prior browser
     URL restriction not bypassed; earlier CPU portability issues remain separate.
+
+- turn: 2026-09-13_001#21
+  notes:
+  - O218 method promoted to H69 on explicit continuation; O219 interpretation and O220 lower-rate proposal
+    staged. New results not endorsed by user. Prior scoped claims and broad open topics retained; no abandonment
+    closure.
+  - N329 is a completed negative experiment, not abandonment of factual learning. The proposed test did
+    not promise success; current rate/budget fails benefit, so no contradiction with the earlier heuristic.
+    Different rendering populations prevent treating prior task-pass counts as longitudinal gains.
+  - Separate clips remove gradient-norm coupling; exact image optimizer/weight/loss equality does not
+    imply semantic cross-modal consistency. Global clipping is an intentional default, not labeled a universal
+    bug. Warm/texture terminal CE worsens; lower-rate benefit and unique optimization mechanism remain
+    unproved.
+  - Initial raw GPU trainability comparison was wrong for the established evaluator. It was corrected
+    before optimizer updates, retaining failure receipts and frozen formal source 1bd776c. Three actual
+    generic Claude reviews withdrew an erroneous post-step timing objection. No private export, browser
+    workaround, post-confirmation fit, threshold change or bad-checkpoint adoption.

@@ -674,3 +674,13 @@
 - **Sensitivity**: High. A control at ceiling makes relative capacity benefit unassessable. An active residual branch need not be necessary; added parameters also change the optimization parameterization. Passing one rendering sample does not settle robustness.
 - **Code ref**: [producer](../../../pathwm/models/decoders.py), [recipe](../../../experiments/memory_output.py), [refinement checks](../../../tests/test_producer_refinement.py).
 - **Evidence**: N324/N325/N326; [comparison proof](../../evidence/tables/producer_refinement_2026-09-13.json).
+
+## H69: Isolate factual learning from image optimization
+
+- **Rationale**: Compare factual+image head learning with a matched image-only control while preserving the corrected loss and frozen encoder/state/backend. Require fresh confirmation, scene retention and causal checks; shared frozen input does not supply a trainable semantic connection between the readouts.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O218
+- **Sensitivity**: High. Global gradient clipping can couple otherwise disjoint branches. Verify the gradient/optimizer boundary and distinguish per-step development checks from final-fit evidence. Passing implementation tests does not imply a beneficial learned checkpoint.
+- **Code ref**: [recipe and clipping](../../../experiments/memory_output.py), [isolation tests](../../../tests/test_readout_clipping.py).
+- **Evidence**: N327/N328/N329; [readout comparison proof](../../evidence/tables/factual_readout_2026-09-13.json).

@@ -1,0 +1,5500 @@
+{
+  "block_audit": {
+    "all_four_cache_blocks_identical": true,
+    "fits": {
+      "source_8502_control": {
+        "blocks": [
+          {
+            "block": 0,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "neutral"
+          },
+          {
+            "block": 1,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 0.984375,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 0.984375,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 0.9375,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 0.9375,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "background-tint"
+          },
+          {
+            "block": 2,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 0.97265625,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 0.97265625,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "background-cool"
+          },
+          {
+            "block": 3,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 0.99609375,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 0.99609375,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "background-texture"
+          }
+        ],
+        "cache_hashes_exact": true,
+        "training_targets_exact": true,
+        "verified_metrics": 64
+      },
+      "source_8502_joint": {
+        "blocks": [
+          {
+            "block": 0,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "neutral"
+          },
+          {
+            "block": 1,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 0.9375,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 0.9375,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 0.9375,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 0.9375,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "background-tint"
+          },
+          {
+            "block": 2,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "background-cool"
+          },
+          {
+            "block": 3,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 0.98828125,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 0.98828125,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 0.98828125,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 0.9921875,
+                "factual_side_accuracy": 0.99609375,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "background-texture"
+          }
+        ],
+        "cache_hashes_exact": true,
+        "training_targets_exact": true,
+        "verified_metrics": 64
+      }
+    }
+  },
+  "development_verification": {
+    "post_clip_gradients_exact": true,
+    "pre_and_post_step_optimizer_exact": true,
+    "pre_and_post_step_parameters_exact": true,
+    "steps": 16
+  },
+  "error_analysis": {
+    "source_8502_control": [
+      {
+        "block": 0,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "neutral",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 0,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "reset",
+        "scene": "neutral",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 1,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "background-tint",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 1,
+        "correct_facts_wrong_image": 12,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            112,
+            16
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "reset",
+        "scene": "background-tint",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 16,
+          "side": 0
+        }
+      },
+      {
+        "block": 2,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "background-cool",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 2,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "reset",
+        "scene": "background-cool",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 3,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "background-texture",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 3,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "reset",
+        "scene": "background-texture",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      }
+    ],
+    "source_8502_joint": [
+      {
+        "block": 0,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "neutral",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 0,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "reset",
+        "scene": "neutral",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 1,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "background-tint",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 1,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            112,
+            16
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "reset",
+        "scene": "background-tint",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 16,
+          "side": 0
+        }
+      },
+      {
+        "block": 2,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "background-cool",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 2,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "reset",
+        "scene": "background-cool",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 3,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "background-texture",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 3,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "reset",
+        "scene": "background-texture",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      }
+    ]
+  },
+  "initial_execution_check": {
+    "raw_trainability_max_differences": {
+      "ordinary_tokens": {
+        "facts": 7.62939453125e-06,
+        "image": 0.0
+      },
+      "tokens": {
+        "facts": 3.814697265625e-06,
+        "image": 0.0
+      }
+    },
+    "reason": "Use the existing evaluate() trainability convention; prior raw initialization comparison was mismatched. No optimizer updates before correction.",
+    "standard_evaluation_initial_exact": true
+  },
+  "loss_analysis": {
+    "records": [
+      {
+        "block": 0,
+        "factor_ce": {
+          "color": 2.380524100319649e-07,
+          "shape": 4.3011398974990574e-07,
+          "side": 2.40767775943613e-05
+        },
+        "factual_accuracy": 1.0,
+        "factual_ce": 8.248314664714391e-06,
+        "histories": 256,
+        "mode": "ordinary",
+        "policy": "control",
+        "scene": "neutral",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 0,
+        "factor_ce": {
+          "color": 4.3236774109884e-06,
+          "shape": 1.1192932598763996e-05,
+          "side": 9.645142334293207e-05
+        },
+        "factual_accuracy": 1.0,
+        "factual_ce": 3.7322677784228156e-05,
+        "histories": 256,
+        "mode": "reset",
+        "policy": "control",
+        "scene": "neutral",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 1,
+        "factor_ce": {
+          "color": 0.00015977441369363645,
+          "shape": 0.00017513543440748924,
+          "side": 0.0001657505544646068
+        },
+        "factual_accuracy": 1.0,
+        "factual_ce": 0.00016688680085524417,
+        "histories": 256,
+        "mode": "ordinary",
+        "policy": "control",
+        "scene": "background-tint",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 1,
+        "factor_ce": {
+          "color": 2.433539227848875e-05,
+          "shape": 0.02879662512780175,
+          "side": 0.00011600231556657196
+        },
+        "factual_accuracy": 0.984375,
+        "factual_ce": 0.009645654278548937,
+        "histories": 256,
+        "mode": "reset",
+        "policy": "control",
+        "scene": "background-tint",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 4,
+          "side": 0
+        }
+      },
+      {
+        "block": 2,
+        "factor_ce": {
+          "color": 2.4172910589689694e-06,
+          "shape": 0.0001357181960672524,
+          "side": 9.817637822870278e-05
+        },
+        "factual_accuracy": 1.0,
+        "factual_ce": 7.877062178497471e-05,
+        "histories": 256,
+        "mode": "ordinary",
+        "policy": "control",
+        "scene": "background-cool",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 2,
+        "factor_ce": {
+          "color": 3.041715766987285e-06,
+          "shape": 0.034391809676645756,
+          "side": 0.00033575948938426183
+        },
+        "factual_accuracy": 0.97265625,
+        "factual_ce": 0.011576870293932335,
+        "histories": 256,
+        "mode": "reset",
+        "policy": "control",
+        "scene": "background-cool",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 7,
+          "side": 0
+        }
+      },
+      {
+        "block": 3,
+        "factor_ce": {
+          "color": 0.0013858955554612207,
+          "shape": 0.00814563756485977,
+          "side": 0.0036027321009011307
+        },
+        "factual_accuracy": 0.99609375,
+        "factual_ce": 0.004378088407074041,
+        "histories": 256,
+        "mode": "ordinary",
+        "policy": "control",
+        "scene": "background-texture",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 1,
+          "side": 0
+        }
+      },
+      {
+        "block": 3,
+        "factor_ce": {
+          "color": 0.007059573179623419,
+          "shape": 0.0023704611761972347,
+          "side": 0.011147771769699395
+        },
+        "factual_accuracy": 1.0,
+        "factual_ce": 0.006859268708506683,
+        "histories": 256,
+        "mode": "reset",
+        "policy": "control",
+        "scene": "background-texture",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 0,
+        "factor_ce": {
+          "color": 6.751370495157798e-08,
+          "shape": 4.760806262257331e-07,
+          "side": 3.263299957839302e-05
+        },
+        "factual_accuracy": 1.0,
+        "factual_ce": 1.1058864636523444e-05,
+        "histories": 256,
+        "mode": "ordinary",
+        "policy": "joint",
+        "scene": "neutral",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 0,
+        "factor_ce": {
+          "color": 1.689745469523882e-07,
+          "shape": 3.801932821012219e-06,
+          "side": 2.617059377515318e-05
+        },
+        "factual_accuracy": 1.0,
+        "factual_ce": 1.0047167047705928e-05,
+        "histories": 256,
+        "mode": "reset",
+        "policy": "joint",
+        "scene": "neutral",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 1,
+        "factor_ce": {
+          "color": 2.9743567188803728e-06,
+          "shape": 0.00012091569637020048,
+          "side": 0.00020219469700970367
+        },
+        "factual_accuracy": 1.0,
+        "factual_ce": 0.00010869491669959485,
+        "histories": 256,
+        "mode": "ordinary",
+        "policy": "joint",
+        "scene": "background-tint",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 1,
+        "factor_ce": {
+          "color": 4.739956618201313e-06,
+          "shape": 0.08170469326067085,
+          "side": 9.310160329287784e-05
+        },
+        "factual_accuracy": 0.9375,
+        "factual_ce": 0.027267511606860643,
+        "histories": 256,
+        "mode": "reset",
+        "policy": "joint",
+        "scene": "background-tint",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 16,
+          "side": 0
+        }
+      },
+      {
+        "block": 2,
+        "factor_ce": {
+          "color": 1.3587041264674222e-06,
+          "shape": 4.752451310276008e-05,
+          "side": 0.0003248663920139649
+        },
+        "factual_accuracy": 1.0,
+        "factual_ce": 0.00012458320308106414,
+        "histories": 256,
+        "mode": "ordinary",
+        "policy": "joint",
+        "scene": "background-cool",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 2,
+        "factor_ce": {
+          "color": 2.050779359743805e-06,
+          "shape": 0.009273281560485087,
+          "side": 0.00027881713776067006
+        },
+        "factual_accuracy": 1.0,
+        "factual_ce": 0.0031847164925351665,
+        "histories": 256,
+        "mode": "reset",
+        "policy": "joint",
+        "scene": "background-cool",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 3,
+        "factor_ce": {
+          "color": 0.0002847076828212641,
+          "shape": 0.03844431001475873,
+          "side": 0.0004523906534335435
+        },
+        "factual_accuracy": 0.98828125,
+        "factual_ce": 0.013060469450337847,
+        "histories": 256,
+        "mode": "ordinary",
+        "policy": "joint",
+        "scene": "background-texture",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 3,
+          "side": 0
+        }
+      },
+      {
+        "block": 3,
+        "factor_ce": {
+          "color": 0.0018232552575465305,
+          "shape": 0.02932270663842214,
+          "side": 0.009878004102827216
+        },
+        "factual_accuracy": 0.98828125,
+        "factual_ce": 0.013674655332931962,
+        "histories": 256,
+        "mode": "reset",
+        "policy": "joint",
+        "scene": "background-texture",
+        "wrong_by_factor": {
+          "color": 0,
+          "shape": 2,
+          "side": 1
+        }
+      }
+    ],
+    "scope": "Post-hoc saved training logits, no checkpoint selection or optimization. Cross-entropy is not calibration evidence."
+  },
+  "native_scores": {
+    "source_8502_control_37073_background-cool": {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.96875,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_37073_background-cool-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_37073_background-texture": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        0.984375
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": true
+    },
+    "source_8502_control_37073_background-tint": {
+      "accuracy": [
+        0.96875,
+        0.96875,
+        0.953125,
+        0.90625
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_37073_background-warm-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_37073_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_37074_background-cool": {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.96875,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_37074_background-cool-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_37074_background-texture": {
+      "accuracy": [
+        0.984375,
+        0.984375,
+        0.96875,
+        0.96875
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": true
+    },
+    "source_8502_control_37074_background-tint": {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.96875,
+        0.9375
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_37074_background-warm-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_37074_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_joint_37073_background-cool": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_joint_37073_background-cool-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_joint_37073_background-texture": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        0.984375
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": true
+    },
+    "source_8502_joint_37073_background-tint": {
+      "accuracy": [
+        1.0,
+        0.96875,
+        0.921875,
+        0.90625
+      ],
+      "factual_retention": false,
+      "gate": true,
+      "image_retention": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_joint_37073_background-warm-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_joint_37073_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_joint_37074_background-cool": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_joint_37074_background-cool-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_joint_37074_background-texture": {
+      "accuracy": [
+        0.953125,
+        0.984375,
+        0.96875,
+        0.96875
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": true
+    },
+    "source_8502_joint_37074_background-tint": {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.9375,
+        0.9375
+      ],
+      "factual_retention": false,
+      "gate": true,
+      "image_retention": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_joint_37074_background-warm-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_joint_37074_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_raw_37073_background-texture": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": null,
+      "gate": true,
+      "image_retention": null,
+      "raw_neutral_retention": null,
+      "raw_texture_retention": null
+    },
+    "source_8502_raw_37073_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": null,
+      "gate": true,
+      "image_retention": null,
+      "raw_neutral_retention": null,
+      "raw_texture_retention": null
+    },
+    "source_8502_raw_37074_background-texture": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": null,
+      "gate": true,
+      "image_retention": null,
+      "raw_neutral_retention": null,
+      "raw_texture_retention": null
+    },
+    "source_8502_raw_37074_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": null,
+      "gate": true,
+      "image_retention": null,
+      "raw_neutral_retention": null,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_37073_background-cool": {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.96875,
+        0.984375
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_37073_background-cool-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_37073_background-texture": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": true
+    },
+    "source_8502_unchanged_37073_background-tint": {
+      "accuracy": [
+        0.96875,
+        0.96875,
+        0.953125,
+        0.921875
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_37073_background-warm-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_37073_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_37074_background-cool": {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.96875,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_37074_background-cool-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_37074_background-texture": {
+      "accuracy": [
+        0.984375,
+        0.984375,
+        0.96875,
+        0.984375
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": true
+    },
+    "source_8502_unchanged_37074_background-tint": {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.96875,
+        0.9375
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_37074_background-warm-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_37074_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "factual_retention": true,
+      "gate": true,
+      "image_retention": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    }
+  },
+  "preparation": {
+    "all_range_valid": true,
+    "cache_live_exact": true,
+    "frames_disjoint": true,
+    "fresh_hashes": true,
+    "git_head": "1bd776cf86105e98a04a24610cfe3edb82d4407a",
+    "initial_outputs_exact": true,
+    "initial_state_sha256": "b7ff4224523774ecc0627b7a15fa9920e04e2160a11bd73d9af036e9cf14f6ab",
+    "populations": {
+      "37073_background-cool": {
+        "images_sha256": "af2bb887f80547c84d338325350aaad86d606933b11936717a9f0f577d41599f",
+        "input_transform": {
+          "kind": "relocation-scene-v1",
+          "parameters": {
+            "background_offset": [
+              -8,
+              0,
+              12
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 0
+          },
+          "source_data": {
+            "images_sha256": "8852f33e0ef23246d67a1b21160f0d88426e96fefe87955c01f16f0c42f54adc",
+            "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+            "pairs": 32,
+            "schema": "memory-output-relocation-v1",
+            "seed": 37073,
+            "split": "test",
+            "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+            "triples": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                1
+              ],
+              [
+                2,
+                1,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ],
+              [
+                3,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                3,
+                1,
+                0
+              ],
+              [
+                3,
+                1,
+                1
+              ]
+            ]
+          },
+          "targets": "unchanged canonical color/shape/final-side rendering"
+        },
+        "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+        "pairs": 32,
+        "schema": "memory-output-relocation-v1",
+        "seed": 37073,
+        "split": "test",
+        "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+        "triples": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            3,
+            1,
+            0
+          ],
+          [
+            3,
+            1,
+            1
+          ]
+        ]
+      },
+      "37073_background-cool-mild": {
+        "images_sha256": "e467169c311fdd5994daad60ba96ad9f0a638eae67d4e36af038a83cbc1dd152",
+        "input_transform": {
+          "kind": "relocation-scene-v1",
+          "parameters": {
+            "background_offset": [
+              -4,
+              0,
+              8
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 0
+          },
+          "source_data": {
+            "images_sha256": "8852f33e0ef23246d67a1b21160f0d88426e96fefe87955c01f16f0c42f54adc",
+            "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+            "pairs": 32,
+            "schema": "memory-output-relocation-v1",
+            "seed": 37073,
+            "split": "test",
+            "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+            "triples": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                1
+              ],
+              [
+                2,
+                1,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ],
+              [
+                3,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                3,
+                1,
+                0
+              ],
+              [
+                3,
+                1,
+                1
+              ]
+            ]
+          },
+          "targets": "unchanged canonical color/shape/final-side rendering"
+        },
+        "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+        "pairs": 32,
+        "schema": "memory-output-relocation-v1",
+        "seed": 37073,
+        "split": "test",
+        "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+        "triples": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            3,
+            1,
+            0
+          ],
+          [
+            3,
+            1,
+            1
+          ]
+        ]
+      },
+      "37073_background-texture": {
+        "images_sha256": "2dbf00cb874bee98ecd5d46c79e9c129e1437a2f7cb640a02d69f386ecf05552",
+        "input_transform": {
+          "kind": "relocation-scene-v1",
+          "parameters": {
+            "background_offset": [
+              0,
+              0,
+              0
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 8
+          },
+          "source_data": {
+            "images_sha256": "8852f33e0ef23246d67a1b21160f0d88426e96fefe87955c01f16f0c42f54adc",
+            "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+            "pairs": 32,
+            "schema": "memory-output-relocation-v1",
+            "seed": 37073,
+            "split": "test",
+            "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+            "triples": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                1
+              ],
+              [
+                2,
+                1,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ],
+              [
+                3,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                3,
+                1,
+                0
+              ],
+              [
+                3,
+                1,
+                1
+              ]
+            ]
+          },
+          "targets": "unchanged canonical color/shape/final-side rendering"
+        },
+        "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+        "pairs": 32,
+        "schema": "memory-output-relocation-v1",
+        "seed": 37073,
+        "split": "test",
+        "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+        "triples": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            3,
+            1,
+            0
+          ],
+          [
+            3,
+            1,
+            1
+          ]
+        ]
+      },
+      "37073_background-tint": {
+        "images_sha256": "2e1bec72ec0d9455cdac5c4a8e232a8cff8eb15df7bd8d04752cc81ab7d7d097",
+        "input_transform": {
+          "kind": "relocation-scene-v1",
+          "parameters": {
+            "background_offset": [
+              12,
+              0,
+              -8
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 0
+          },
+          "source_data": {
+            "images_sha256": "8852f33e0ef23246d67a1b21160f0d88426e96fefe87955c01f16f0c42f54adc",
+            "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+            "pairs": 32,
+            "schema": "memory-output-relocation-v1",
+            "seed": 37073,
+            "split": "test",
+            "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+            "triples": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                1
+              ],
+              [
+                2,
+                1,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ],
+              [
+                3,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                3,
+                1,
+                0
+              ],
+              [
+                3,
+                1,
+                1
+              ]
+            ]
+          },
+          "targets": "unchanged canonical color/shape/final-side rendering"
+        },
+        "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+        "pairs": 32,
+        "schema": "memory-output-relocation-v1",
+        "seed": 37073,
+        "split": "test",
+        "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+        "triples": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            3,
+            1,
+            0
+          ],
+          [
+            3,
+            1,
+            1
+          ]
+        ]
+      },
+      "37073_background-warm-mild": {
+        "images_sha256": "c4ce03aaa3d9575c4903927c04845123c73bd9fadf2c6287ad04276ba2399c15",
+        "input_transform": {
+          "kind": "relocation-scene-v1",
+          "parameters": {
+            "background_offset": [
+              8,
+              0,
+              -4
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 0
+          },
+          "source_data": {
+            "images_sha256": "8852f33e0ef23246d67a1b21160f0d88426e96fefe87955c01f16f0c42f54adc",
+            "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+            "pairs": 32,
+            "schema": "memory-output-relocation-v1",
+            "seed": 37073,
+            "split": "test",
+            "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+            "triples": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                1
+              ],
+              [
+                2,
+                1,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ],
+              [
+                3,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                3,
+                1,
+                0
+              ],
+              [
+                3,
+                1,
+                1
+              ]
+            ]
+          },
+          "targets": "unchanged canonical color/shape/final-side rendering"
+        },
+        "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+        "pairs": 32,
+        "schema": "memory-output-relocation-v1",
+        "seed": 37073,
+        "split": "test",
+        "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+        "triples": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            3,
+            1,
+            0
+          ],
+          [
+            3,
+            1,
+            1
+          ]
+        ]
+      },
+      "37073_neutral": {
+        "images_sha256": "8852f33e0ef23246d67a1b21160f0d88426e96fefe87955c01f16f0c42f54adc",
+        "input_transform": {
+          "kind": "relocation-scene-v1",
+          "parameters": {
+            "background_offset": [
+              0,
+              0,
+              0
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 0
+          },
+          "source_data": {
+            "images_sha256": "8852f33e0ef23246d67a1b21160f0d88426e96fefe87955c01f16f0c42f54adc",
+            "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+            "pairs": 32,
+            "schema": "memory-output-relocation-v1",
+            "seed": 37073,
+            "split": "test",
+            "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+            "triples": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                1
+              ],
+              [
+                2,
+                1,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ],
+              [
+                3,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                3,
+                1,
+                0
+              ],
+              [
+                3,
+                1,
+                1
+              ]
+            ]
+          },
+          "targets": "unchanged canonical color/shape/final-side rendering"
+        },
+        "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+        "pairs": 32,
+        "schema": "memory-output-relocation-v1",
+        "seed": 37073,
+        "split": "test",
+        "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+        "triples": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            3,
+            1,
+            0
+          ],
+          [
+            3,
+            1,
+            1
+          ]
+        ]
+      },
+      "37074_background-cool": {
+        "images_sha256": "eb76ebad683a74a3ffbb9a66cf7ac328236f6e6b9f63b3a814a2e32393555476",
+        "input_transform": {
+          "kind": "relocation-scene-v1",
+          "parameters": {
+            "background_offset": [
+              -8,
+              0,
+              12
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 0
+          },
+          "source_data": {
+            "images_sha256": "3e032df39413385435bdf74c6e712d4dc4abdd2d9856b6afd98a62ca05a862d4",
+            "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+            "pairs": 32,
+            "schema": "memory-output-relocation-v1",
+            "seed": 37074,
+            "split": "test",
+            "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+            "triples": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                1
+              ],
+              [
+                2,
+                1,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ],
+              [
+                3,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                3,
+                1,
+                0
+              ],
+              [
+                3,
+                1,
+                1
+              ]
+            ]
+          },
+          "targets": "unchanged canonical color/shape/final-side rendering"
+        },
+        "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+        "pairs": 32,
+        "schema": "memory-output-relocation-v1",
+        "seed": 37074,
+        "split": "test",
+        "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+        "triples": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            3,
+            1,
+            0
+          ],
+          [
+            3,
+            1,
+            1
+          ]
+        ]
+      },
+      "37074_background-cool-mild": {
+        "images_sha256": "9d9a538a0168f40065c407a0ab761d4935065e52639f426aff05a2d79f523268",
+        "input_transform": {
+          "kind": "relocation-scene-v1",
+          "parameters": {
+            "background_offset": [
+              -4,
+              0,
+              8
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 0
+          },
+          "source_data": {
+            "images_sha256": "3e032df39413385435bdf74c6e712d4dc4abdd2d9856b6afd98a62ca05a862d4",
+            "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+            "pairs": 32,
+            "schema": "memory-output-relocation-v1",
+            "seed": 37074,
+            "split": "test",
+            "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+            "triples": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                1
+              ],
+              [
+                2,
+                1,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ],
+              [
+                3,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                3,
+                1,
+                0
+              ],
+              [
+                3,
+                1,
+                1
+              ]
+            ]
+          },
+          "targets": "unchanged canonical color/shape/final-side rendering"
+        },
+        "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+        "pairs": 32,
+        "schema": "memory-output-relocation-v1",
+        "seed": 37074,
+        "split": "test",
+        "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+        "triples": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            3,
+            1,
+            0
+          ],
+          [
+            3,
+            1,
+            1
+          ]
+        ]
+      },
+      "37074_background-texture": {
+        "images_sha256": "38beca3162e43a1f0b6b9a8914f240ab79f0f0159d5489c3ae9ef39a4ef25fa8",
+        "input_transform": {
+          "kind": "relocation-scene-v1",
+          "parameters": {
+            "background_offset": [
+              0,
+              0,
+              0
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 8
+          },
+          "source_data": {
+            "images_sha256": "3e032df39413385435bdf74c6e712d4dc4abdd2d9856b6afd98a62ca05a862d4",
+            "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+            "pairs": 32,
+            "schema": "memory-output-relocation-v1",
+            "seed": 37074,
+            "split": "test",
+            "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+            "triples": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                1
+              ],
+              [
+                2,
+                1,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ],
+              [
+                3,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                3,
+                1,
+                0
+              ],
+              [
+                3,
+                1,
+                1
+              ]
+            ]
+          },
+          "targets": "unchanged canonical color/shape/final-side rendering"
+        },
+        "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+        "pairs": 32,
+        "schema": "memory-output-relocation-v1",
+        "seed": 37074,
+        "split": "test",
+        "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+        "triples": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            3,
+            1,
+            0
+          ],
+          [
+            3,
+            1,
+            1
+          ]
+        ]
+      },
+      "37074_background-tint": {
+        "images_sha256": "88572cea7a787dda2ac9c85cc90a5e65fd81e1f719baea0077ae1e2cb455f2ed",
+        "input_transform": {
+          "kind": "relocation-scene-v1",
+          "parameters": {
+            "background_offset": [
+              12,
+              0,
+              -8
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 0
+          },
+          "source_data": {
+            "images_sha256": "3e032df39413385435bdf74c6e712d4dc4abdd2d9856b6afd98a62ca05a862d4",
+            "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+            "pairs": 32,
+            "schema": "memory-output-relocation-v1",
+            "seed": 37074,
+            "split": "test",
+            "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+            "triples": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                1
+              ],
+              [
+                2,
+                1,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ],
+              [
+                3,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                3,
+                1,
+                0
+              ],
+              [
+                3,
+                1,
+                1
+              ]
+            ]
+          },
+          "targets": "unchanged canonical color/shape/final-side rendering"
+        },
+        "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+        "pairs": 32,
+        "schema": "memory-output-relocation-v1",
+        "seed": 37074,
+        "split": "test",
+        "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+        "triples": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            3,
+            1,
+            0
+          ],
+          [
+            3,
+            1,
+            1
+          ]
+        ]
+      },
+      "37074_background-warm-mild": {
+        "images_sha256": "07b03f7c65a89611d8c70d3f957d6ab60d0e21542614a4c0993558e0058d1c2a",
+        "input_transform": {
+          "kind": "relocation-scene-v1",
+          "parameters": {
+            "background_offset": [
+              8,
+              0,
+              -4
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 0
+          },
+          "source_data": {
+            "images_sha256": "3e032df39413385435bdf74c6e712d4dc4abdd2d9856b6afd98a62ca05a862d4",
+            "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+            "pairs": 32,
+            "schema": "memory-output-relocation-v1",
+            "seed": 37074,
+            "split": "test",
+            "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+            "triples": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                1
+              ],
+              [
+                2,
+                1,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ],
+              [
+                3,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                3,
+                1,
+                0
+              ],
+              [
+                3,
+                1,
+                1
+              ]
+            ]
+          },
+          "targets": "unchanged canonical color/shape/final-side rendering"
+        },
+        "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+        "pairs": 32,
+        "schema": "memory-output-relocation-v1",
+        "seed": 37074,
+        "split": "test",
+        "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+        "triples": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            3,
+            1,
+            0
+          ],
+          [
+            3,
+            1,
+            1
+          ]
+        ]
+      },
+      "37074_neutral": {
+        "images_sha256": "3e032df39413385435bdf74c6e712d4dc4abdd2d9856b6afd98a62ca05a862d4",
+        "input_transform": {
+          "kind": "relocation-scene-v1",
+          "parameters": {
+            "background_offset": [
+              0,
+              0,
+              0
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 0
+          },
+          "source_data": {
+            "images_sha256": "3e032df39413385435bdf74c6e712d4dc4abdd2d9856b6afd98a62ca05a862d4",
+            "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+            "pairs": 32,
+            "schema": "memory-output-relocation-v1",
+            "seed": 37074,
+            "split": "test",
+            "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+            "triples": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                1
+              ],
+              [
+                0,
+                1,
+                0
+              ],
+              [
+                0,
+                1,
+                1
+              ],
+              [
+                1,
+                0,
+                0
+              ],
+              [
+                1,
+                0,
+                1
+              ],
+              [
+                1,
+                1,
+                0
+              ],
+              [
+                1,
+                1,
+                1
+              ],
+              [
+                2,
+                0,
+                0
+              ],
+              [
+                2,
+                0,
+                1
+              ],
+              [
+                2,
+                1,
+                0
+              ],
+              [
+                2,
+                1,
+                1
+              ],
+              [
+                3,
+                0,
+                0
+              ],
+              [
+                3,
+                0,
+                1
+              ],
+              [
+                3,
+                1,
+                0
+              ],
+              [
+                3,
+                1,
+                1
+              ]
+            ]
+          },
+          "targets": "unchanged canonical color/shape/final-side rendering"
+        },
+        "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+        "pairs": 32,
+        "schema": "memory-output-relocation-v1",
+        "seed": 37074,
+        "split": "test",
+        "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+        "triples": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            1
+          ],
+          [
+            1,
+            0,
+            0
+          ],
+          [
+            1,
+            0,
+            1
+          ],
+          [
+            1,
+            1,
+            0
+          ],
+          [
+            1,
+            1,
+            1
+          ],
+          [
+            2,
+            0,
+            0
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            1
+          ],
+          [
+            3,
+            0,
+            0
+          ],
+          [
+            3,
+            0,
+            1
+          ],
+          [
+            3,
+            1,
+            0
+          ],
+          [
+            3,
+            1,
+            1
+          ]
+        ]
+      }
+    },
+    "rng_preserved": true,
+    "shared_weights_exact": true,
+    "source_sha256": "e2e09cfba2d0b07435dd8a772c87b4d12cfc452e85487ce58b71d1c8e831309a",
+    "test": {
+      "images_sha256": "e9540c5648c44a8ac02f6356fc94e7a7281b990030c7fa9e9f50b7180cae1fbf",
+      "labels_sha256": "a394ebe49c3a5f7e442ab504049f6841d03358d00fea465d180b96013dd549e8",
+      "pairs": 64,
+      "schema": "memory-output-relocation-v1",
+      "seed": 37071,
+      "split": "test",
+      "targets_sha256": "a65451eaec7ae89989fb52925176e675f6d4e3594c775dc99c234b62c49a677b",
+      "triples": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ],
+        [
+          2,
+          1,
+          1
+        ],
+        [
+          3,
+          0,
+          0
+        ],
+        [
+          3,
+          0,
+          1
+        ],
+        [
+          3,
+          1,
+          0
+        ],
+        [
+          3,
+          1,
+          1
+        ]
+      ]
+    },
+    "train": {
+      "images_sha256": "d70e72798598fac7977885a097ff207fd3ce466aeab98ba8383657b589eecc15",
+      "input_augmentation": {
+        "kind": "whole-history-scenes-v1",
+        "scenes": [
+          {
+            "background_offset": [
+              0,
+              0,
+              0
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 0
+          },
+          {
+            "background_offset": [
+              12,
+              0,
+              -8
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 0
+          },
+          {
+            "background_offset": [
+              -8,
+              0,
+              12
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 0
+          },
+          {
+            "background_offset": [
+              0,
+              0,
+              0
+            ],
+            "clutter": false,
+            "frame_offsets": [
+              0,
+              0,
+              0
+            ],
+            "gain": 1.0,
+            "radius": 8,
+            "rgb_offset": [
+              0,
+              0,
+              0
+            ],
+            "shadow": 0,
+            "texture": 8
+          }
+        ],
+        "source_data": {
+          "images_sha256": "fec33634df656dc41881298f02378e9329c024c2a000ddf45f8dc6eb7a67aa57",
+          "labels_sha256": "ad4ff237dd9a012dfb0490cee64f6d257520c46703072af19dd0ca3c5ac10aa8",
+          "pairs": 128,
+          "schema": "memory-output-relocation-v1",
+          "seed": 7701,
+          "split": "train",
+          "targets_sha256": "52443f02f818d2f0700556ca8a9ddc3fa59104d58477e97cabb54a2535ee9562",
+          "triples": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              1
+            ],
+            [
+              0,
+              1,
+              0
+            ],
+            [
+              0,
+              1,
+              1
+            ],
+            [
+              1,
+              0,
+              0
+            ],
+            [
+              1,
+              0,
+              1
+            ],
+            [
+              1,
+              1,
+              0
+            ],
+            [
+              1,
+              1,
+              1
+            ],
+            [
+              2,
+              0,
+              0
+            ],
+            [
+              2,
+              0,
+              1
+            ],
+            [
+              2,
+              1,
+              0
+            ],
+            [
+              2,
+              1,
+              1
+            ],
+            [
+              3,
+              0,
+              0
+            ],
+            [
+              3,
+              0,
+              1
+            ],
+            [
+              3,
+              1,
+              0
+            ],
+            [
+              3,
+              1,
+              1
+            ]
+          ]
+        }
+      },
+      "labels_sha256": "f7d084c30962820236388d75db47e988b0edcc65f5a0e4086c35ed4444ffc6d8",
+      "pairs": 512,
+      "schema": "memory-output-relocation-v1",
+      "seed": 7701,
+      "split": "train",
+      "targets_sha256": "817250ac634dbff5953ad9686bfea38ed0d517b342b83977b30ead0db0a03da4",
+      "triples": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ],
+        [
+          2,
+          1,
+          1
+        ],
+        [
+          3,
+          0,
+          0
+        ],
+        [
+          3,
+          0,
+          1
+        ],
+        [
+          3,
+          1,
+          0
+        ],
+        [
+          3,
+          1,
+          1
+        ]
+      ]
+    },
+    "trainable_parameters": {
+      "control": 58128,
+      "joint": 67032
+    },
+    "validation": {
+      "images_sha256": "1185ec698d4158e83371ea89cf7d047232452d79e0c70444f5b3beb2225777bc",
+      "labels_sha256": "4e70340ec2c6d2628f8c6b16d0c597626ca7e8a905d0e9510abbee62ee1e5338",
+      "pairs": 32,
+      "schema": "memory-output-relocation-v1",
+      "seed": 37072,
+      "split": "train",
+      "targets_sha256": "109e118dfc2e6e1ca1555d919f0a9178c6edc5ed0c15863d6b15e8e57b8b6c4b",
+      "triples": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          1,
+          0
+        ],
+        [
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          0
+        ],
+        [
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          0
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          2,
+          0,
+          0
+        ],
+        [
+          2,
+          0,
+          1
+        ],
+        [
+          2,
+          1,
+          0
+        ],
+        [
+          2,
+          1,
+          1
+        ],
+        [
+          3,
+          0,
+          0
+        ],
+        [
+          3,
+          0,
+          1
+        ],
+        [
+          3,
+          1,
+          0
+        ],
+        [
+          3,
+          1,
+          1
+        ]
+      ]
+    }
+  },
+  "review_status": {
+    "actual_claude": true,
+    "adopted": [
+      "assert factual-only backward has no image gradients",
+      "separate clipping and per-parameter optimizer-state equality",
+      "match data/cache/RNG and fixed terminal checkpoint",
+      "distinguish per-step development traces and final-fit checks"
+    ],
+    "corrections": "Claude withdrew its mistaken essential-timing-gap claim about post-step optimizer-state comparison. Post-clip gradient equality plus equal initial inputs and updated parameter/moment checks directly verify update equality.",
+    "export": "Generic methodology only; no private code, datasets or measurements.",
+    "remaining": "No material disagreement; private implementation and results reviewed locally.",
+    "rounds": [
+      "runs/reviews/continuation_2026-09-11/readout-repair-public-receipt.json",
+      "runs/reviews/continuation_2026-09-11/readout-repair-reconcile-public-receipt.json",
+      "runs/reviews/continuation_2026-09-11/readout-repair-correction-public-receipt.json"
+    ]
+  },
+  "scope": "Isolated factual-readout continuation on one selected synthetic source; failed factual benefit under a fixed optimizer/budget, not an impossibility result.",
+  "source_manifest": {
+    "/home/alex/Documents/path-wm/runs/image_continuation_v1/source_8502_joint/result.json": "f8d1130d992bcee5a799c176d4111c26c2d55d2182505474dfa8e0e3d2ff3863",
+    "/home/alex/Documents/path-wm/runs/image_continuation_v1/source_8502_joint/run.json": "545447d170f8089a8b9e51b01a42ba830a79eb697f3613b8ee032aff69638b82",
+    "/home/alex/Documents/path-wm/runs/image_continuation_v1/source_8502_joint/weights.pt": "5ecf75d2b8982545fff297340e614772cebafa2d9d188128eef20333d1ce5e96",
+    "/home/alex/Documents/path-wm/runs/producer_refinement_v1/source_8502_control/result.json": "2a681bf5bceab14acdc9c35e8d0f9ccc311b009577cfdeebf1a0a689fbdfdf6f",
+    "/home/alex/Documents/path-wm/runs/producer_refinement_v1/source_8502_control/run.json": "d748e6b2e471a0315b6e69bd0ba989c351f6d3c912c0ffe6dadd140529d7ab4d",
+    "/home/alex/Documents/path-wm/runs/producer_refinement_v1/source_8502_control/weights.pt": "e2e09cfba2d0b07435dd8a772c87b4d12cfc452e85487ce58b71d1c8e831309a",
+    "experiments/capture_webcam.py": "07d4210a7b7a8f526b72e7ab40066a38a20c17b03c34c0c5ee11f4b58be9b6ea",
+    "experiments/dynamics.py": "42ac6ad0d582a62635761ee3da97c703ce9a4b5d00db78ce382dc1da0eb0af9f",
+    "experiments/hierarchy_fusion.py": "e82e33c8432605b396221ca6b2b34a928fdda14f186b850f6a79d9f492482ae1",
+    "experiments/image_output.py": "3eb6008fdbf319efcd12a88c06fa947436510349bb46a39abefdf562f2624e96",
+    "experiments/memory_output.py": "4dc57e32f1be47767b0e726a78fc95f01b536850e43f3784fdeb45a286593817",
+    "experiments/memory_probes.py": "33603afb59edfd6781b315c1ef17988c2cf96528d79b94234060fc571f71e2cd",
+    "experiments/multimodal.py": "04b1f2784e50e947cd172f435ed4df420f8ce45262c41e7f94d1ffa919c71c98",
+    "experiments/perception.py": "e20e4d5ea96264e0a8e22f887db7aa8937f788f0bf62cf8e01ab614dd18902d7",
+    "pathwm/__init__.py": "dbe18dfe9dc29621a41aa22f9814ce4fb4a36bf5cfd0c3ed0b2659377ae45d41",
+    "pathwm/data/__init__.py": "6b1432570ee3dbd1b949c59cfcef843ba86c99bb915d95e677b55dff469a93ff",
+    "pathwm/data/entities.py": "a14a663e193e94cb57d61cd1f4ed8b3291fd001acdae557cb36062c3e4ab18ca",
+    "pathwm/data/entity_interaction.py": "dc78da4c10fd6ffa9d2e0bb28fb2e5b371d464af8ea23695bd604c7138791312",
+    "pathwm/data/entity_state.py": "08a24a8ac7146185a424f4db5dca0e2dee6ab9f72957d9a557b6be97842329f3",
+    "pathwm/data/entity_temporal.py": "dcacb6fe453ed00c286c39b2ee823c7cdd996f405e55b8bb9cda2929d78bfdaf",
+    "pathwm/data/images.py": "672f1531205326efd474a7e162f07ade26025e41ec5227adbee324ac21341b10",
+    "pathwm/data/memory_output.py": "6c684b8c77cc1ea87bad749ce789dee0530cbf9967afd65ebca981a1edf165d1",
+    "pathwm/data/sequences.py": "1ac313bb026be4ac6894cad2565f1a3272a4c6b2df33285c0799e1b3eb0f5fd5",
+    "pathwm/data/visual_memory.py": "5c1cddbb5938c2c2308e6b406cdabd5d2c82bb259b22aaf4bf1b981a3f6dd219",
+    "pathwm/evaluation/__init__.py": "7173fadfcca4203232471319e879a5fa5aea400fafce7371656d2f408a1db245",
+    "pathwm/evaluation/agent.py": "7d7bdf8065f4ce7b4b42317a83aaba9a8e5c78147cfa0c9b209e471e4c66c060",
+    "pathwm/evaluation/capabilities.py": "afcb76d623545acba14697e94442302a45c9dd18f0eecd8a9b6d9620caa23f7c",
+    "pathwm/evaluation/diagrams.py": "dba3876814463a73aabbf373d896e9f062f5f1015342382d6d4e9b8f357cdb23",
+    "pathwm/evaluation/entities.py": "fedfd5799b55f6a5cdc5f05c26e24a9056d2962e5139c351a8ff91efe5f81c11",
+    "pathwm/evaluation/entity_gate.py": "c11fc421205778f1bbe6435e060390c999b3a8e5df78170efba756e9bcc76b6d",
+    "pathwm/evaluation/entity_growth.py": "300b913cd290fddc74d4c419f16766b901f79dafc5084a317c14069ae0276638",
+    "pathwm/evaluation/entity_relations.py": "0662469572e3c2553ffca01b8754abfb9cc63826b9646b3374d5770303c2cad1",
+    "pathwm/evaluation/entity_source.py": "808c37698bed3da94773d8e90412f6011bf5549e5bcfc1b730f8f4c0509270fe",
+    "pathwm/evaluation/entity_state.py": "013daea0cea9ed1a239010b99c3352d0dd34401d26991e243eec7ee5e3931bd0",
+    "pathwm/evaluation/facts.py": "f75e5b053625f3abc340b4a82d8de41958a5e32dd009b411bc9bcd8da8f53b30",
+    "pathwm/evaluation/key_box.py": "fee5ed1869e6cf0e03aa84ada5f44512981ba876a988b00cdd7992e66b030f6d",
+    "pathwm/evaluation/planning.py": "4e327047925057618974a49190f46f354ec068a5830841c4ed2d104a4c8ca1b6",
+    "pathwm/evaluation/recall.py": "09b7d4761223b6513e9565ea132e44e2e6bb3c64a416f9049673c71f770cf464",
+    "pathwm/evaluation/report.py": "7fa9318294dce014fe164f62d993ba25d4ae2ffd235917427fcbf6cc671287e4",
+    "pathwm/evaluation/source_choice.py": "b460cae91d3f65451f9cb3fdde0844aa579d9b5c5ba4952a6e8ee667e7658e7a",
+    "pathwm/evaluation/visual_memory.py": "ce372069bfde258bf87f25294011e5fd4fd716e234580e626cd410cad8961ea4",
+    "pathwm/io.py": "57f6a6679e0d7b4d772a1c5609e2a69a50c4f6f04c4da1c965e53e2913061441",
+    "pathwm/models/__init__.py": "cc85654c53502b8015698e9c3f8bce8efb72d4a926358a01f3e23c0147e2eba3",
+    "pathwm/models/agent.py": "2a19c0aa214002f57f3e4b4e6bdc4a4b6ed76eedb0ead7488712de8542217a98",
+    "pathwm/models/agent_state.py": "d5d855a5301b1df30bf3362e4c8835f3c5ea6e2c7ab297b46736ea8e78eff447",
+    "pathwm/models/belief.py": "589581b53d9c69a9828de40980b10cb5e03cc591c5b49ae2a2283e36e65802df",
+    "pathwm/models/belief_state.py": "8ea85269330abbffefb409c7ff3937799527c8de13af7759e65be8f2e454aa24",
+    "pathwm/models/blocks.py": "e450522830834233f06566f5d445aeb122275c6695d24fb81642f15b9e6b3ff4",
+    "pathwm/models/decoders.py": "566c76291451cfb00d18a4239f28ded248d3da7a2db40ab1b126e9f120a27491",
+    "pathwm/models/encoders.py": "c3aaef90a2bd76a45268559890a23aba5ec116226d15fd006567341954a6d919",
+    "pathwm/models/entities.py": "943ef45018792698f1cdbf2b7d79344291e3b3a22f389b3141c68769cc548580",
+    "pathwm/models/entity_memory.py": "bea6d66161cbc99d45f8b587729f75e20f5f0a2bc861d3620400ab7d1f22952f",
+    "pathwm/models/entity_relations.py": "5701d6cd4d6d949f4a394d89d7225f79f7348545e60b24774a4df5171dca8bae",
+    "pathwm/models/entity_state.py": "70f55bc1b97ae91ee0e501cd0630e76a4f55a2e5e0c5588af39d707e5c4a049a",
+    "pathwm/models/facts.py": "0b6135edbb51e4e436b38e1b20292fde640200b127d7427c8137e0504c937585",
+    "pathwm/models/features.py": "a5058921937ac677df21e014bd6b481fd3b0c4b2f49bbe6ba65754e53706a656",
+    "pathwm/models/hybrid_memory.py": "7dbc8abcdca93e80967de4dd22954a7bbada5280817660bee7ded9ea20b08bd7",
+    "pathwm/models/key_box.py": "beb19a79f996065374226122a0b4351cea888d0bce07a18bce3471e6480d9305",
+    "pathwm/models/memory_output.py": "cab1188dbb8643c6121ec396c42851c897d93ec81da9120c1c72911de5773524",
+    "pathwm/models/modalities.py": "294c5533f1ae13cc070362af51f5fdf90f91124cf162c31fdebc2de644f147bf",
+    "pathwm/models/multiscale.py": "dce10e858e25808a293aaf3ac5b772bf7c5ba527bd33230d3e081a247a963673",
+    "pathwm/models/perception.py": "215bd392ab74b495b1fc33dc8204094f40498e3ab4d4cba24c1fadeaea00b29e",
+    "pathwm/models/recall.py": "f985181ceb16246f0e8579e09d88024ecb5b4ba8222f9c68dd9581876dca541c",
+    "pathwm/models/source_choice.py": "bce54b502b53aa274bfd6599156f5a453b458d8c1e5e2a7534ea00300bd83944",
+    "pathwm/models/tasks.py": "69bc3f5a2847e6779c01c1c77a99f9a84514b0855ddea6b41d684b24168724e9",
+    "pathwm/models/temporal.py": "df2e39ae0c4e93b7c3a81964e1ec3f3fc1aa9e071f4a93b02d7b47a9c07d40b5",
+    "pathwm/models/visual_memory.py": "08a12c21709ecb572be1db1d2c2e36892d750600e6a4a2086f28ca642be543e5",
+    "pathwm/training/__init__.py": "561545f34720f7edd1c48f93b2dcd4530940744ba86b40bdd1fdef5ed1e31235",
+    "pathwm/training/belief.py": "f965ce75ae34c40b095ba90f597894855c75603c7b00a275913bf3fde7323eca",
+    "pathwm/training/dynamics.py": "4182fce86ab6b25cd47493ed4742e8dc6ac5a5572f4d775dafa34bb5b8596d04",
+    "pathwm/training/improvement.py": "728fdcc2138e2ee417b5f95b1b15c30c059f2c1f2bf5c2e5e2ac25b9bcc62342",
+    "pathwm/training/perception.py": "506c262ab0d9b03e37dd24a4e89b64882f4abf138d85c0b439a729b9c1805eb2"
+  },
+  "summary": {
+    "absolute_error_reduction": -4,
+    "added_factual_benefit": false,
+    "benefit_assessable": true,
+    "correlation": "Two factual responses per history across two scenes; rendering seeds, paired histories and quartets are correlated.",
+    "groups": {
+      "control": {
+        "accuracy_range": [
+          0.90625,
+          1.0
+        ],
+        "cells": 12,
+        "factual_retention": 12,
+        "full_retention": 10,
+        "image_retention": 10,
+        "task_passes": 12
+      },
+      "joint": {
+        "accuracy_range": [
+          0.90625,
+          1.0
+        ],
+        "cells": 12,
+        "factual_retention": 10,
+        "full_retention": 10,
+        "image_retention": 10,
+        "task_passes": 12
+      },
+      "raw": {
+        "accuracy_range": [
+          1.0,
+          1.0
+        ],
+        "cells": 4,
+        "task_passes": 4
+      },
+      "unchanged": {
+        "accuracy_range": [
+          0.921875,
+          1.0
+        ],
+        "cells": 12,
+        "factual_retention": 12,
+        "full_retention": 10,
+        "image_retention": 10,
+        "task_passes": 12
+      }
+    },
+    "paired_factual_scores_nonregressing": false,
+    "paired_quartets": [
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 0,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 1,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 2,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 3,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 4,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 5,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 6,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 7,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          -1
+        ],
+        "histories": 4,
+        "quartet": 8,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 9,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 10,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 11,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          2,
+          0
+        ],
+        "histories": 4,
+        "quartet": 12,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 13,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          -1
+        ],
+        "histories": 4,
+        "quartet": 14,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 15,
+        "scene": "background-tint",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 0,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 1,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 2,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 3,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 4,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 5,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 6,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 7,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 8,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 9,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 10,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 11,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 12,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 13,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 14,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 15,
+        "scene": "background-texture",
+        "seed": 37073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          -1
+        ],
+        "histories": 4,
+        "quartet": 0,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 1,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 2,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 3,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 4,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 5,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 6,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 7,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          -1
+        ],
+        "histories": 4,
+        "quartet": 8,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 9,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 10,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 11,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 12,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 13,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 14,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 15,
+        "scene": "background-tint",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 0,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 1,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 2,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 3,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 4,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 5,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 6,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          -2,
+          0
+        ],
+        "histories": 4,
+        "quartet": 7,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 8,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 9,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 10,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 11,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 12,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 13,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 14,
+        "scene": "background-texture",
+        "seed": 37074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 15,
+        "scene": "background-texture",
+        "seed": 37074
+      }
+    ],
+    "predictions_per_arm": 512,
+    "relative_error_reduction": -0.4,
+    "repair": false,
+    "source_selection": "One selected source, no added model capacity or independent upstream replication.",
+    "warm_texture_factual_errors": {
+      "control": 10,
+      "joint": 14
+    }
+  },
+  "timestamp": "2026-09-13T23:24+02:00",
+  "training_audit": {
+    "source_8502_control": {
+      "changed_names": [
+        "agent.decoders.image.queries.scale_0",
+        "agent.decoders.image.queries.scale_1",
+        "agent.decoders.image.queries.scale_2",
+        "agent.decoders.image.queries.detail",
+        "agent.decoders.image.reader.scale_0.query_norm.weight",
+        "agent.decoders.image.reader.scale_0.query_norm.bias",
+        "agent.decoders.image.reader.scale_0.key_norm.weight",
+        "agent.decoders.image.reader.scale_0.key_norm.bias",
+        "agent.decoders.image.reader.scale_0.attention.in_proj_weight",
+        "agent.decoders.image.reader.scale_0.attention.in_proj_bias",
+        "agent.decoders.image.reader.scale_0.attention.out_proj.weight",
+        "agent.decoders.image.reader.scale_0.attention.out_proj.bias",
+        "agent.decoders.image.reader.scale_0.mlp.0.weight",
+        "agent.decoders.image.reader.scale_0.mlp.0.bias",
+        "agent.decoders.image.reader.scale_0.mlp.1.weight",
+        "agent.decoders.image.reader.scale_0.mlp.1.bias",
+        "agent.decoders.image.reader.scale_0.mlp.3.weight",
+        "agent.decoders.image.reader.scale_0.mlp.3.bias",
+        "agent.decoders.image.reader.scale_1.query_norm.weight",
+        "agent.decoders.image.reader.scale_1.query_norm.bias",
+        "agent.decoders.image.reader.scale_1.key_norm.weight",
+        "agent.decoders.image.reader.scale_1.key_norm.bias",
+        "agent.decoders.image.reader.scale_1.attention.in_proj_weight",
+        "agent.decoders.image.reader.scale_1.attention.in_proj_bias",
+        "agent.decoders.image.reader.scale_1.attention.out_proj.weight",
+        "agent.decoders.image.reader.scale_1.attention.out_proj.bias",
+        "agent.decoders.image.reader.scale_1.mlp.0.weight",
+        "agent.decoders.image.reader.scale_1.mlp.0.bias",
+        "agent.decoders.image.reader.scale_1.mlp.1.weight",
+        "agent.decoders.image.reader.scale_1.mlp.1.bias",
+        "agent.decoders.image.reader.scale_1.mlp.3.weight",
+        "agent.decoders.image.reader.scale_1.mlp.3.bias",
+        "agent.decoders.image.reader.scale_2.query_norm.weight",
+        "agent.decoders.image.reader.scale_2.query_norm.bias",
+        "agent.decoders.image.reader.scale_2.key_norm.weight",
+        "agent.decoders.image.reader.scale_2.key_norm.bias",
+        "agent.decoders.image.reader.scale_2.attention.in_proj_weight",
+        "agent.decoders.image.reader.scale_2.attention.in_proj_bias",
+        "agent.decoders.image.reader.scale_2.attention.out_proj.weight",
+        "agent.decoders.image.reader.scale_2.attention.out_proj.bias",
+        "agent.decoders.image.reader.scale_2.mlp.0.weight",
+        "agent.decoders.image.reader.scale_2.mlp.0.bias",
+        "agent.decoders.image.reader.scale_2.mlp.1.weight",
+        "agent.decoders.image.reader.scale_2.mlp.1.bias",
+        "agent.decoders.image.reader.scale_2.mlp.3.weight",
+        "agent.decoders.image.reader.scale_2.mlp.3.bias",
+        "agent.decoders.image.reader.detail.query_norm.weight",
+        "agent.decoders.image.reader.detail.query_norm.bias",
+        "agent.decoders.image.reader.detail.key_norm.weight",
+        "agent.decoders.image.reader.detail.key_norm.bias",
+        "agent.decoders.image.reader.detail.attention.in_proj_weight",
+        "agent.decoders.image.reader.detail.attention.in_proj_bias",
+        "agent.decoders.image.reader.detail.attention.out_proj.weight",
+        "agent.decoders.image.reader.detail.attention.out_proj.bias",
+        "agent.decoders.image.reader.detail.mlp.0.weight",
+        "agent.decoders.image.reader.detail.mlp.0.bias",
+        "agent.decoders.image.reader.detail.mlp.1.weight",
+        "agent.decoders.image.reader.detail.mlp.1.bias",
+        "agent.decoders.image.reader.detail.mlp.3.weight",
+        "agent.decoders.image.reader.detail.mlp.3.bias",
+        "agent.decoders.image.projections.scale_0.weight",
+        "agent.decoders.image.projections.scale_0.bias",
+        "agent.decoders.image.projections.scale_1.weight",
+        "agent.decoders.image.projections.scale_1.bias",
+        "agent.decoders.image.projections.scale_2.weight",
+        "agent.decoders.image.projections.scale_2.bias",
+        "agent.decoders.image.projections.detail.weight",
+        "agent.decoders.image.projections.detail.bias"
+      ],
+      "clipping": {
+        "facts": {
+          "clipped_steps": 0,
+          "max_norm": 0.0
+        },
+        "image": {
+          "clipped_steps": 0,
+          "max_norm": 0.1797538548707962
+        }
+      },
+      "final_image_weights_and_optimizer_exact": true,
+      "final_sha256": "d729254e8e9eac9b75f562af52b6e6cb698bc3b73b8c690a5aeb22ef4dde5737",
+      "frozen_parameters_and_buffers_exact": true,
+      "image_norm_and_loss_trajectory_exact": true,
+      "initial_exact": true,
+      "max_metric_error": 7.66599157764336e-09,
+      "metric_groups": [
+        237,
+        53
+      ],
+      "ordinary_reset_presentations_equal": true,
+      "presentations": 24576,
+      "source_sha256": "e2e09cfba2d0b07435dd8a772c87b4d12cfc452e85487ce58b71d1c8e831309a",
+      "steps": 1536,
+      "trainable_parameters": 58128,
+      "verified_metrics": 290
+    },
+    "source_8502_joint": {
+      "changed_names": [
+        "agent.decoders.image.queries.scale_0",
+        "agent.decoders.image.queries.scale_1",
+        "agent.decoders.image.queries.scale_2",
+        "agent.decoders.image.queries.detail",
+        "agent.decoders.image.reader.scale_0.query_norm.weight",
+        "agent.decoders.image.reader.scale_0.query_norm.bias",
+        "agent.decoders.image.reader.scale_0.key_norm.weight",
+        "agent.decoders.image.reader.scale_0.key_norm.bias",
+        "agent.decoders.image.reader.scale_0.attention.in_proj_weight",
+        "agent.decoders.image.reader.scale_0.attention.in_proj_bias",
+        "agent.decoders.image.reader.scale_0.attention.out_proj.weight",
+        "agent.decoders.image.reader.scale_0.attention.out_proj.bias",
+        "agent.decoders.image.reader.scale_0.mlp.0.weight",
+        "agent.decoders.image.reader.scale_0.mlp.0.bias",
+        "agent.decoders.image.reader.scale_0.mlp.1.weight",
+        "agent.decoders.image.reader.scale_0.mlp.1.bias",
+        "agent.decoders.image.reader.scale_0.mlp.3.weight",
+        "agent.decoders.image.reader.scale_0.mlp.3.bias",
+        "agent.decoders.image.reader.scale_1.query_norm.weight",
+        "agent.decoders.image.reader.scale_1.query_norm.bias",
+        "agent.decoders.image.reader.scale_1.key_norm.weight",
+        "agent.decoders.image.reader.scale_1.key_norm.bias",
+        "agent.decoders.image.reader.scale_1.attention.in_proj_weight",
+        "agent.decoders.image.reader.scale_1.attention.in_proj_bias",
+        "agent.decoders.image.reader.scale_1.attention.out_proj.weight",
+        "agent.decoders.image.reader.scale_1.attention.out_proj.bias",
+        "agent.decoders.image.reader.scale_1.mlp.0.weight",
+        "agent.decoders.image.reader.scale_1.mlp.0.bias",
+        "agent.decoders.image.reader.scale_1.mlp.1.weight",
+        "agent.decoders.image.reader.scale_1.mlp.1.bias",
+        "agent.decoders.image.reader.scale_1.mlp.3.weight",
+        "agent.decoders.image.reader.scale_1.mlp.3.bias",
+        "agent.decoders.image.reader.scale_2.query_norm.weight",
+        "agent.decoders.image.reader.scale_2.query_norm.bias",
+        "agent.decoders.image.reader.scale_2.key_norm.weight",
+        "agent.decoders.image.reader.scale_2.key_norm.bias",
+        "agent.decoders.image.reader.scale_2.attention.in_proj_weight",
+        "agent.decoders.image.reader.scale_2.attention.in_proj_bias",
+        "agent.decoders.image.reader.scale_2.attention.out_proj.weight",
+        "agent.decoders.image.reader.scale_2.attention.out_proj.bias",
+        "agent.decoders.image.reader.scale_2.mlp.0.weight",
+        "agent.decoders.image.reader.scale_2.mlp.0.bias",
+        "agent.decoders.image.reader.scale_2.mlp.1.weight",
+        "agent.decoders.image.reader.scale_2.mlp.1.bias",
+        "agent.decoders.image.reader.scale_2.mlp.3.weight",
+        "agent.decoders.image.reader.scale_2.mlp.3.bias",
+        "agent.decoders.image.reader.detail.query_norm.weight",
+        "agent.decoders.image.reader.detail.query_norm.bias",
+        "agent.decoders.image.reader.detail.key_norm.weight",
+        "agent.decoders.image.reader.detail.key_norm.bias",
+        "agent.decoders.image.reader.detail.attention.in_proj_weight",
+        "agent.decoders.image.reader.detail.attention.in_proj_bias",
+        "agent.decoders.image.reader.detail.attention.out_proj.weight",
+        "agent.decoders.image.reader.detail.attention.out_proj.bias",
+        "agent.decoders.image.reader.detail.mlp.0.weight",
+        "agent.decoders.image.reader.detail.mlp.0.bias",
+        "agent.decoders.image.reader.detail.mlp.1.weight",
+        "agent.decoders.image.reader.detail.mlp.1.bias",
+        "agent.decoders.image.reader.detail.mlp.3.weight",
+        "agent.decoders.image.reader.detail.mlp.3.bias",
+        "agent.decoders.image.projections.scale_0.weight",
+        "agent.decoders.image.projections.scale_0.bias",
+        "agent.decoders.image.projections.scale_1.weight",
+        "agent.decoders.image.projections.scale_1.bias",
+        "agent.decoders.image.projections.scale_2.weight",
+        "agent.decoders.image.projections.scale_2.bias",
+        "agent.decoders.image.projections.detail.weight",
+        "agent.decoders.image.projections.detail.bias",
+        "facts.query",
+        "facts.readers.0.query_norm.weight",
+        "facts.readers.0.query_norm.bias",
+        "facts.readers.0.key_norm.weight",
+        "facts.readers.0.key_norm.bias",
+        "facts.readers.0.attention.in_proj_weight",
+        "facts.readers.0.attention.in_proj_bias",
+        "facts.readers.0.attention.out_proj.weight",
+        "facts.readers.0.attention.out_proj.bias",
+        "facts.readers.0.mlp.0.weight",
+        "facts.readers.0.mlp.0.bias",
+        "facts.readers.0.mlp.1.weight",
+        "facts.readers.0.mlp.1.bias",
+        "facts.readers.0.mlp.3.weight",
+        "facts.readers.0.mlp.3.bias",
+        "facts.output.weight",
+        "facts.output.bias"
+      ],
+      "clipping": {
+        "facts": {
+          "clipped_steps": 307,
+          "max_norm": 20.36433982849121
+        },
+        "image": {
+          "clipped_steps": 0,
+          "max_norm": 0.1797538548707962
+        }
+      },
+      "final_image_weights_and_optimizer_exact": true,
+      "final_sha256": "032332310e573ecfed6a0524594b50ca1a094fd0d3b83302069f806366484715",
+      "frozen_parameters_and_buffers_exact": true,
+      "image_norm_and_loss_trajectory_exact": true,
+      "initial_exact": true,
+      "max_metric_error": 7.66599157764336e-09,
+      "metric_groups": [
+        237,
+        53
+      ],
+      "ordinary_reset_presentations_equal": true,
+      "presentations": 24576,
+      "source_sha256": "e2e09cfba2d0b07435dd8a772c87b4d12cfc452e85487ce58b71d1c8e831309a",
+      "steps": 1536,
+      "trainable_parameters": 67032,
+      "verified_metrics": 290
+    }
+  },
+  "verification": {
+    "added_factual_benefit": false,
+    "browser_qa": {
+      "reason": "Prior browser local-file URL denial; shared renderer unchanged, no workaround.",
+      "status": "unavailable"
+    },
+    "control_factual_logits_exact_all_modes": true,
+    "default_global_clipping_unchanged": true,
+    "distinct_tests_passed": 61,
+    "evaluation_seconds": 173.49660390906502,
+    "exact_gpu_replays": 40,
+    "figures_inspected": [
+      "development_joint/comparison.png",
+      "comparison.png"
+    ],
+    "final_image_weights_and_optimizer_exact": true,
+    "fit_loop_seconds": 204.3362426139647,
+    "fits": 2,
+    "formal_cells": 40,
+    "formal_source": "1bd776c",
+    "free_disk_bytes": 6723203072,
+    "histories_per_cell": 64,
+    "image_norm_and_loss_trajectory_exact": true,
+    "independent_metrics": 10188,
+    "initial_outputs_exact_in_standard_evaluation": true,
+    "model_architecture_loss_metrics_data_and_renderer_unchanged": true,
+    "new_clipping_tests_passed": 8,
+    "paired_images_exact_all_modes": true,
+    "peak_gpu_reserved_bytes": 677380096,
+    "preflight_correction": "Raw factual logits differed with trainability; use existing evaluate() flags. Failed check preceded optimizer updates, no source/loss/gate change.",
+    "prior_recipe_functions_changed": [
+      "train",
+      "main"
+    ],
+    "receipt_sha256": {
+      "arrays_audit.json": "0439575cba76582c8957c5e3aa3d5b7a1b194e5554afa180192ca4265d302730",
+      "block_audit.json": "de4581d07fd209347c2a06f7862e495617e37027ab02268472ec6203b92865f7",
+      "development_traces.json": "fb4afde5a1a245c66d4c6b6c9c5cf8bd51084a583555dc5e0d42a99340ceaae7",
+      "development_verification.json": "2c914a907b78e95c0aad66fe8b43c838840e05d4b45b6434608e3ffb5205e459",
+      "error_analysis.json": "1556acd22b7a44a4954f208f9d6358f70a86d4e7224ffb6d692a49c6083a61a5",
+      "gpu_audit.json": "deda2410d80df1c64d0d52663570a9fcbb8ce8b4ccb22c57cb1752dea8073fe3",
+      "initial_execution_check.json": "ec3263acb46512a534e8ba33e63e01222bb0600fadab695db6ef39189dcfee26",
+      "loss_analysis.json": "2c403c45e4edf8312ba710ef63a3d1a108f355ad106aa0f485cd6f3b33aa76ba",
+      "preparation.json": "ef736840f001d051c6a45c94c21e825d098c60748442c71b078c0ae771cca468",
+      "red.log": "6d831818c31bcf510eca490cf8b54360c4c7e7dad6df9ab4ee69b8806b40415d",
+      "report_checks.json": "69f6cb90da263573d10a6047c9547d41e9c2129d582ac169ef2aa1b518defbe5",
+      "review_status.json": "4f624d119b415bd17ff4b37268a5ce126fc15b8b0def750ccdc65556f018e50d",
+      "source_manifest.json": "d968c72d0389f61c25a051686e7293a6f5c784451a8a0cceb23f149fbff131dc",
+      "summary.json": "ff4e6d4f32b6fca9c1ed3ffbb56083cd9e1e67fbb76e0324582d40bede51e3b0",
+      "tests.log": "1c296f620adc850f9ed88d75c847738d725f60f1de7a89002059c40eff811d9a",
+      "training_audit.json": "ddf09130e9dc76658d3ba541324d5e853b76c1941972a189b2a2e9bb099f1f1d"
+    },
+    "repair": false,
+    "reports": 45,
+    "reviews": {
+      "runs/reviews/continuation_2026-09-11/readout-repair-correction-public-receipt.json": "4b8bea7f4b1d12f81f7354496898bacf4caf3dbf4e5ffaa541944851e1f5359a",
+      "runs/reviews/continuation_2026-09-11/readout-repair-public-receipt.json": "dcac159633235c096ef54dc6f8d95c14c92eff480dd476515533a177c46f58c0",
+      "runs/reviews/continuation_2026-09-11/readout-repair-reconcile-public-receipt.json": "3e6bd12531798b31e484e575da0dedd3496ef192823377428548672a541104a6"
+    },
+    "script_sha256": {
+      "audit.py": "8c0a6d3d2f461b3d75d3a4c511dc39bbe82bcd3433cefbb7cdd05e00c93153d2",
+      "block_audit.py": "982f9ac03ecb28015900f867742f3fefbdd488e589bb18c80a05cec11ba7fc2a",
+      "develop.py": "d3773ba6c5ac75e1446294bd10e41a0d5c52d2faed341de177f265fee262f2fc",
+      "error_analysis.py": "9ab15e4d8c171e8e00922be83c09c33936f88c1073e73266e4487e87f509a344",
+      "final_verify.py": "1ec453213d10f465eef9d020e4fb50780920f503496bdd8fe10cfdbba49bd795",
+      "loss_analysis.py": "1409cf9f23cb1933fedfb0bd5ab2ed34f15710035555ab1705177291bf400b30",
+      "numeric.py": "c1d7199654f81a0d4a39d9fe7e83cd2d1e5ebe497e85f24665ea8e95e15cff00",
+      "prepare.py": "78a3f46c0b53ca586e191ca69a1bbdce880e7a05443002e05a113773a6135e68",
+      "report_audit.py": "fe30891b6f716344753a8cfaa7f969e6a84d278c9f7c982827a611d9cbe25234",
+      "run_evaluations.py": "8921f2bbfa33d2088bc998f97be3c6cd1103c9288a6cc60bf6ab414604a785a6",
+      "run_fits.py": "b9c5b8bef080d803fdeb11689f0bd96da8e35c3ccab036820aa2af568a0c477f",
+      "summary.py": "6ef0e703bf864b5dbf408d7c62a42f87491c45c656b5c2716265a33449d18188",
+      "training_audit.py": "c689cc4c0e988d1eaf862affe906ef4832b141b38474cf7564257b6470c6e965"
+    },
+    "separate_clipping_opt_in": true,
+    "source_unchanged": true,
+    "steps_per_fit": 1536,
+    "trainable_parameters": {
+      "control": 58128,
+      "joint": 67032
+    },
+    "training_seconds": 119.15024320210796
+  }
+}

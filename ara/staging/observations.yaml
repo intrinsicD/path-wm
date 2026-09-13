@@ -3848,6 +3848,41 @@ observations:
   potential_type: heuristic
   bound_to:
   - N326
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H69
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O219
+  timestamp: 2026-09-13T23:24+02:00
+  provenance: ai-suggested
+  content: With branch isolation verified, this fixed-rate joint continuation fails factual benefit and
+    worsens warm/texture terminal training losses while improving cool facts. It does not establish a
+    wiring failure, an intrinsic capacity limit or that factual learning cannot help. Joint training creates
+    no new semantic connection between the parameter-disjoint outputs.
+  context: New matched results, including an assessable failed benefit and negative retention; no researcher
+    interpretation yet. Correlated synthetic histories from one source, not independent replication.
+  potential_type: claim
+  bound_to:
+  - N328
+  - N329
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O220
+  timestamp: 2026-09-13T23:24+02:00
+  provenance: ai-suggested
+  content: Next test a lower readout learning rate against the current rate from the preserved pre-experiment
+    source, with equal data/updates and separate clips. Include difficult-scene loss diagnostics, fresh
+    confirmation and unchanged retention/causal gates. Diagnose optimization before adding architecture;
+    lower-rate success and a unique cause are not established. Broader real imagery, reliability, CPU
+    portability, upstream replication and general generation remain open.
+  context: Next method proposed after confirmation; no additional fit, adaptive extension or checkpoint
+    selection occurred.
+  potential_type: heuristic
+  bound_to:
+  - N329
   promoted: false
   promoted_to: null
   crystallized_via: null
