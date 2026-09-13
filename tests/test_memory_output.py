@@ -146,7 +146,7 @@ def test_evaluate_export_preserves_origin_and_completed_results(
     (origin / "run.json").write_text(json.dumps(manifest))
     (origin / "metrics.jsonl").write_text('{"step":3,"split":"train","loss":1.0}\n')
     hashes = {p.name: file_hash(p) for p in origin.iterdir()}
-    data = MemoryOutputEpisodes(16, seed=39, split="test", curriculum="relocation")
+    data = MemoryOutputEpisodes(16, seed=39, split="test", curriculum="relocation", input_offset=16)
     output = tmp_path / "evaluation"
     monkeypatch.setattr(
         torch.optim,
@@ -577,3 +577,62 @@ def test_evaluation_freezes_parameters_temporarily_and_restores_on_failure(fail)
     else:
         evaluate(model, data, "cpu", ["ordinary", "reset"])
     assert flags == {n: p.requires_grad for n, p in model.named_parameters()}
+
+
+@pytest.mark.parametrize("offset", [-16, 0, 16])
+def test_input_offset_preserves_identity_targets_and_counterfactual_ambiguity(offset):
+    import hashlib
+    from pathwm.data.memory_output import MemoryOutputEpisodes, COLORS
+
+    base = MemoryOutputEpisodes(16, seed=63, split="test", curriculum="relocation")
+    shifted = MemoryOutputEpisodes(16, seed=63, split="test", curriculum="relocation",
+                                  input_offset=offset)
+    assert np.array_equal(shifted.images.astype(np.int16) - offset, base.images)
+    assert np.array_equal(shifted.targets, base.targets)
+    assert np.array_equal(shifted.labels, base.labels)
+    assert shifted.shortcut_audit() == base.shortcut_audit()
+    for start in range(0, len(shifted), 4):
+        x = shifted.images[start:start + 4]
+        assert np.array_equal(x[0, 1:], x[1, 1:])
+        assert np.array_equal(x[2, 1:], x[3, 1:])
+        assert np.array_equal(x[:2, 0], x[2:, 0])
+    colors = COLORS.astype(np.int16) + offset
+    distances = ((colors[:, None].astype(float) - COLORS[None]) ** 2).sum(2)
+    assert np.array_equal(distances.argmin(1), np.arange(4))
+    if offset:
+        assert shifted.identity["input_transform"] == dict(
+            kind="additive-rgb-offset-v1", offset_uint8=offset,
+            source_images_sha256=hashlib.sha256(base.images.tobytes()).hexdigest(),
+            targets="unchanged canonical rendering")
+        assert shifted.identity["images_sha256"] != base.identity["images_sha256"]
+    else:
+        assert shifted.identity == base.identity
+
+
+@pytest.mark.parametrize("offset", [-31, 21, 65536, True, 1.5])
+def test_input_offset_rejects_clipping_or_noninteger_values(offset):
+    from pathwm.data.memory_output import MemoryOutputEpisodes
+    with pytest.raises(ValueError, match="offset"):
+        MemoryOutputEpisodes(16, seed=63, input_offset=offset)
+
+
+def test_input_offset_cli_is_evaluation_only(monkeypatch, tmp_path):
+    import sys
+    import experiments.memory_output as recipe
+    from pathwm.data.memory_output import MemoryOutputEpisodes
+
+    weights = tmp_path / "weights.pt"
+    torch.save(dict(settings=dict(curriculum="relocation")), weights)
+    seen = []
+    monkeypatch.setattr(recipe, "evaluate_export",
+                        lambda weights, data, **kw: seen.append(data))
+    args = ["memory_output", "--weights", str(weights), "--output", str(tmp_path / "out"),
+            "--test-seed", "63", "--input-offset", "-16"]
+    monkeypatch.setattr(sys, "argv", args + ["--evaluate-only"])
+    recipe.main()
+    assert seen[0].identity == MemoryOutputEpisodes(
+        64, seed=63, split="test", curriculum="relocation", input_offset=-16).identity
+    monkeypatch.setattr(sys, "argv", args)
+    with pytest.raises(SystemExit) as exc:
+        recipe.main()
+    assert exc.value.code == 2

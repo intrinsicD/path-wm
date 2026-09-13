@@ -1270,3 +1270,73 @@ inference receipts. `--image-only` is a targeted option, not a declaration that
 frozen-state training is universally preferable. Both completed policies should
 remain fixed for a newly declared robustness evaluation before longer histories
 or real observations. No further benchmark or fit launched.
+
+
+## Fixed-checkpoint nuisance robustness protocol — 13 September
+
+User adopted the fixed-checkpoint robustness follow-up. Keep all four final
+image_continuation_v1 source8501/8502 image-only/joint checkpoints and both their
+unchanged writer_reader_v1 sources fixed. One upstream initialization and codec,
+two previously explored optimization trajectories. No new optimizer, selection,
+calibration, training, capacity change or test-guided repair of model performance.
+
+Declare three new procedural test seeds20073/20074/20075,64 pairs each (128 histories,
+32 semantic quartets). Seed varies background texture/intensity only; semantics,
+positions, shapes and label combinations remain familiar. Each seed is evaluated
+at input RGB offsets-16,0,+16 in8-bit units, applied to ALL observed pixels and
+frames, including the hidden query. Target renderings remain canonical and labels
+unchanged. Offset is an operational exposure perturbation, not new scene semantics.
+Verify no clipping, invertible shift, nearest canonical foreground color preserved,
+exact selection/movement quartet ambiguity and target equality before inference.
+Keep default offset0 data/identity exactly backward compatible. Nonzero transform
+identity records parent-image hash and offset. Expose `--input-offset` only on the
+existing evaluation-only CLI; training rejects this evaluation override.
+
+Six checkpoints x three seeds x three offsets =54 evaluation-only runs, all10 causal
+query modes, with standalone reports. GPU4GiB cap/1GiB headroom; zero training budget.
+Evaluation/report loop wall cap900s (preserve partial completion if exhausted),
+separate verification up to900s; no extra cases selected from failures. One separate
+workflow development evaluation at seed21073/offset+16, same128 histories, no fitting.
+Preflight records checkpoint hashes, origin/settings, split freshness against prior
+runs, disjoint exact frames from original train/validation/test populations and
+between current seed/offset populations. No claim of semantic or model independence.
+
+Primary neutral gate per policy: both checkpoints pass existing full task/causal
+screen at EVERY new seed/offset0. Primary stress gate: same conjunction at both
+nonzero offsets. Separate retention gate: each ordinary/reset factual/image accuracy
+loses<=5 percentage points against its own same-seed neutral cell.5pp is a declared
+engineering tolerance, not statistical significance. Report each accuracy and exact
+continuous margin for all seeds/offsets, never pool to conceal a failure. Source
+controls receive all cells but are excluded from trained-policy conjunctions.
+At each offset/seed, image-only factual logits and state must equal the unchanged
+source under matched inference flags. This is a freeze invariant, not brightness
+invariance or learning evidence. Keep GPU numeric and CPU numeric1e-4/categorical
+portability separate; no population CI from correlated seeds/checkpoints/quartets.
+
+Essential RED tests cover transformed inputs/unchanged canonical targets, quartet
+ambiguity, no-op identity, clipping/type rejection and evaluation-only CLI routing.
+Extend existing immutable-export test to a shifted dataset to verify recorded
+transform/source provenance. Relevant data/evaluation/freeze/resume tests follow.
+Do not add another runner/framework; new reusable code is the small dataset input
+transform and existing recipe option. Independent run-local orchestration/scoring
+is retained beside raw results.
+
+NumPy re-scores all54 outputs and task gates. Audit unchanged checkpoint/parent
+hashes, paired populations, detached memory values/time/source/order and exact GPU
+replay for all36 trained-model cells. CPU checks cover the same36 cells, with
+separate categorical differences, no silent tolerance relaxation. Reuse existing
+renderer; all55 individual reports and overview require structural receipts and
+inspected representative figures. Browser QA unavailable.
+
+Claude conceptual review requested color-semantics checks, continuous per-cell
+margins, explicit single-lineage scope and tolerance labeling. Adopted. Its extra
+post-hoc offset suggestion is deferred to a separately declared protocol. Clarified
+that factual/state invariance compares source and image-only at the SAME offset;
+images themselves are tested, not assumed invariant. Public-only briefs; private
+implementation remains local. No fresh outcomes examined while setting this plan.
+
+Trace coverage is the first complete16-history batch of each population; full
+ordinary/reset export predictions and factual invariance cover all128 histories.
+This bounds inspection overhead; it is not an exhaustive per-intermediate-tensor
+proof for every example. Default-off replay and objective/forward AST equality
+against2bb8bb9 are checked before formal evaluation.
