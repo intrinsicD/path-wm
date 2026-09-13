@@ -319,3 +319,34 @@ conventions, input provenance and RNG isolation. Reconciliation will clarify tha
 flow training samples continuous progress, not a specific inference solver schedule;
 zero-input direct regression is a declared baseline, and context erasure is an
 intentional causal intervention, not claimed in-distribution performance.
+
+Pre-formal local correction: the source detail level has48 channels, so a32-wide
+input projection necessarily discards some noise directions. Separate context width
+from generator width and use64 for both new arms; the agent remains width32. The
+original16-update width32 development result is retained (1.896s,134MiB); it was
+not a quality-selection run. Repeat at most16 updates per arm at64 for corrected
+profiling before formal execution. Hidden width defaults to context width when
+absent, preserving the first development export's parameter layout. No formal fit
+has begun. Baseline usability, fixed before formal results: direct validation seen
+ordinary/reset accuracy must each reach.95, otherwise flow-superiority is reported
+unassessable even if a raw difference favors flow. Capability failures remain failures.
+
+Three actual compact Claude method reviews completed. Adopt paired counterfactual
+swap targets, sample-ID noise isolation, fixed terminal checkpoints and explicit
+unequal inference compute. Claude incorrectly said it had avoided the phrase
+compute-controlled; its earlier receipt contains that recommendation. We retain
+this wording disagreement and use equal-architecture/equal-update throughout.
+Erasure is distribution-shifting sensitivity, not independent proof of grounding.
+Private implementation and measurements were reviewed locally. Receipts are under
+`runs/reviews/conditional_image_v1/`.
+
+Implementation checks:57 scoped tests pass before the width correction; all7 focused
+checks pass afterward (59 distinct cases across the two selections). CPU full versus
+1+3 resumed updates matches model/optimizer/sampler/RNG exactly. Standalone generator
+exports preserve calibration, field settings and frozen modules; source/target
+encoders are forbidden during generator-only inference. Paired sampling noise is
+explicitly inspected. Counterfactual swap MSE and seen/unseen grouping use swapped
+targets. Corrected flow development16 updates completes at158MiB peak; direct16 also
+completes. Reports structurally verified and the flow development panel inspected.
+The tiny development outputs remain untrained/noisy; no quality selection follows.
+Freeze library/recipe source before the formal fits and fresh confirmation.

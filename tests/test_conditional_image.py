@@ -1,4 +1,5 @@
 """Conditional output: field algebra, masked context, local RNG and frozen codec."""
+
 from copy import deepcopy
 import pytest
 import torch
@@ -6,72 +7,214 @@ from torch import nn
 from pathwm.models.features import FeatureSpec
 
 
-def generator(kind='flow'):
+def generator(kind="flow"):
     from pathwm.models.conditional_image import ConditionalFeatureGenerator
-    spec = {'fine': FeatureSpec(3, (2, 2), 'test'), 'coarse': FeatureSpec(3, (1, 1), 'test')}
+
+    spec = {
+        "fine": FeatureSpec(3, (2, 2), "test"),
+        "coarse": FeatureSpec(3, (1, 1), "test"),
+    }
+
     class Head(nn.Module):
         def __init__(self):
-            super().__init__(); self.scale = nn.Parameter(torch.ones(()), requires_grad=False)
-        def forward(self, values): return self.scale * values['fine']
-    return ConditionalFeatureGenerator(8, spec, Head(), depth=1, fusion_depth=1, objective=kind, steps=4)
+            super().__init__()
+            self.scale = nn.Parameter(torch.ones(()), requires_grad=False)
+
+        def forward(self, values):
+            return self.scale * values["fine"]
+
+    return ConditionalFeatureGenerator(
+        8, spec, Head(), depth=1, fusion_depth=1, objective=kind, steps=4
+    )
 
 
 def test_flow_algebra_and_integration_reference():
     from pathwm.models.conditional_image import flow_pair, integrate
-    target = {'x': torch.tensor([[[[4.]]], [[[8.]]]])}
-    noise = {'x': torch.tensor([[[[2.]]], [[[0.]]]])}
-    t = torch.tensor([0., 1.])
+
+    target = {"x": torch.tensor([[[[4.0]]], [[[8.0]]]])}
+    noise = {"x": torch.tensor([[[[2.0]]], [[[0.0]]]])}
+    t = torch.tensor([0.0, 1.0])
     x, v = flow_pair(target, noise, t)
-    assert torch.equal(x['x'], torch.tensor([[[[2.]]], [[[8.]]]]))
-    assert torch.equal(v['x'], target['x']-noise['x'])
+    assert torch.equal(x["x"], torch.tensor([[[[2.0]]], [[[8.0]]]]))
+    assert torch.equal(v["x"], target["x"] - noise["x"])
     calls = []
+
     def field(x, tau):
-        calls.append(tau); return v
+        calls.append(tau)
+        return v
+
     result = integrate(field, noise, 4)
-    assert calls == [0., .25, .5, .75]
-    assert torch.equal(result['x'], target['x'])
-    assert torch.equal(noise['x'], torch.tensor([[[[2.]]], [[[0.]]]]))
-    with pytest.raises(ValueError): integrate(field, noise, 0)
+    assert calls == [0.0, 0.25, 0.5, 0.75]
+    assert torch.equal(result["x"], target["x"])
+    assert torch.equal(noise["x"], torch.tensor([[[[2.0]]], [[[0.0]]]]))
+    with pytest.raises(ValueError):
+        integrate(field, noise, 0)
 
 
 def test_masks_cross_scale_context_gradients_and_frozen_head():
-    torch.manual_seed(13); g = generator('direct')
+    torch.manual_seed(13)
+    g = generator("direct")
     context = torch.randn(2, 3, 8, requires_grad=True)
-    valid = torch.tensor([[1,1,0],[1,1,0]], dtype=torch.bool)
-    poisoned = context.detach().clone(); poisoned[:,2] = float('nan')
+    valid = torch.tensor([[1, 1, 0], [1, 1, 0]], dtype=torch.bool)
+    poisoned = context.detach().clone()
+    poisoned[:, 2] = float("nan")
     with torch.no_grad():
-        a=g.features(context, valid=valid);b=g.features(poisoned, valid=valid)
-    assert all(torch.equal(a[k],b[k]) for k in a)
-    loss=g.head(g.features(context, valid=valid)).square().mean();loss.backward()
-    assert context.grad[:,:2].abs().sum()>0 and context.grad[:,2].count_nonzero()==0
+        a = g.features(context, valid=valid)
+        b = g.features(poisoned, valid=valid)
+    assert all(torch.equal(a[k], b[k]) for k in a)
+    loss = g.head(g.features(context, valid=valid)).square().mean()
+    loss.backward()
+    assert (
+        context.grad[:, :2].abs().sum() > 0 and context.grad[:, 2].count_nonzero() == 0
+    )
     assert g.head.scale.grad is None
     assert all(p.grad is not None for p in g.fusion.parameters())
-    with pytest.raises(ValueError, match='context'):g.features(context, valid=torch.zeros_like(valid))
-    changed=context.detach().clone(); changed[:,0]+=2
+    with pytest.raises(ValueError, match="context"):
+        g.features(context, valid=torch.zeros_like(valid))
+    changed = context.detach().clone()
+    changed[:, 0, 0] += 2
     with torch.no_grad():
-        assert not torch.equal(g.features(changed)['fine'],g.features(context)['fine'])
+        assert not torch.equal(g.features(changed)["fine"], g.features(context)["fine"])
 
 
 def test_sampling_is_local_reproducible_and_sample_ids_preserve_partition():
-    torch.manual_seed(14);g=generator();c=torch.randn(3,2,8);rng=torch.get_rng_state().clone()
-    before={k:v.clone() for k,v in g.state_dict().items()}
+    torch.manual_seed(14)
+    g = generator()
+    c = torch.randn(3, 2, 8)
+    rng = torch.get_rng_state().clone()
+    before = {k: v.clone() for k, v in g.state_dict().items()}
     with torch.no_grad():
-        a=g.features(c,seed=71,sample_ids=[4,4,9]);b=g.features(c,seed=71,sample_ids=[4,4,9])
-        parts=[g.features(c[i:i+1],seed=71,sample_ids=[s]) for i,s in enumerate([4,4,9])]
-        d=g.features(c,seed=72,sample_ids=[4,4,9])
-    assert torch.equal(rng,torch.get_rng_state())
-    assert all(torch.equal(a[k],b[k]) for k in a)
-    assert all(torch.allclose(a[k],torch.cat([p[k] for p in parts]),atol=1e-6,rtol=1e-6) for k in a)
-    assert any(not torch.equal(a[k],d[k]) for k in a)
-    assert all(torch.equal(v,g.state_dict()[k]) for k,v in before.items())
-    with pytest.raises(ValueError):g.features(c,sample_ids=[1])
+        a = g.features(c, seed=71, sample_ids=[4, 4, 9])
+        b = g.features(c, seed=71, sample_ids=[4, 4, 9])
+        parts = [
+            g.features(c[i : i + 1], seed=71, sample_ids=[s])
+            for i, s in enumerate([4, 4, 9])
+        ]
+        d = g.features(c, seed=72, sample_ids=[4, 4, 9])
+    assert torch.equal(rng, torch.get_rng_state())
+    assert all(torch.equal(a[k], b[k]) for k in a)
+    assert all(
+        torch.allclose(a[k], torch.cat([p[k] for p in parts]), atol=1e-6, rtol=1e-6)
+        for k in a
+    )
+    assert any(not torch.equal(a[k], d[k]) for k in a)
+    assert all(torch.equal(v, g.state_dict()[k]) for k, v in before.items())
+    with pytest.raises(ValueError):
+        g.features(c, sample_ids=[1])
 
 
 def test_calibration_and_equal_architecture_objectives():
-    torch.manual_seed(15);a=generator();torch.manual_seed(15);b=generator('direct')
-    assert all(torch.equal(v,b.state_dict()[k]) for k,v in a.state_dict().items())
-    target={k:torch.randn(4,s.channels,*s.size) for k,s in a.feature_spec.items()}
-    a.calibrate(target);z=a.standardize(target)
-    assert all(torch.allclose(a.unstandardize(z)[k],v,atol=1e-6) for k,v in target.items())
-    malformed=deepcopy(target);malformed['fine'][0,0,0,0]=float('nan')
-    with pytest.raises(ValueError):a.calibrate(malformed)
+    torch.manual_seed(15)
+    a = generator()
+    torch.manual_seed(15)
+    b = generator("direct")
+    assert all(torch.equal(v, b.state_dict()[k]) for k, v in a.state_dict().items())
+    target = {k: torch.randn(4, s.channels, *s.size) for k, s in a.feature_spec.items()}
+    a.calibrate(target)
+    z = a.standardize(target)
+    assert all(
+        torch.allclose(a.unstandardize(z)[k], v, atol=1e-6) for k, v in target.items()
+    )
+    malformed = deepcopy(target)
+    malformed["fine"][0, 0, 0, 0] = float("nan")
+    with pytest.raises(ValueError):
+        a.calibrate(malformed)
+
+
+def test_training_resume_standalone_export_and_target_exclusion(tmp_path):
+    from tests.test_tint_readout import centered_export
+    from tests.test_runs import equal_tree
+    from pathwm.models.memory_output import load_model, frozen_tensors
+    from experiments.conditional_image import build, settings, train, evaluate
+    from pathwm.io import seed_everything
+
+    seed_everything(21)
+    _, data, source_settings = centered_export(tmp_path)
+    source = tmp_path / "weights.pt"
+    config = dict(source_settings, **settings(seed=21))
+    config.update(steps=4, batch_size=2, wall_seconds=120, disk_free_gib=0)
+    config["feature_generator"]["steps"] = 2
+
+    def run(name, resume=False, stop_after=None):
+        model, cache = build(source, data, config)
+        assert all(c % 2 == s for c, s, _ in cache["labels"].tolist())
+        frozen = {k: v.clone() for k, v in frozen_tensors(model).items()}
+        train(
+            model,
+            cache,
+            data,
+            data,
+            output=tmp_path / name,
+            config=config,
+            resume=resume,
+            stop_after=stop_after,
+        )
+        assert all(torch.equal(v, frozen_tensors(model)[k]) for k, v in frozen.items())
+        return model, torch.load(tmp_path / name / "last.pt", weights_only=True)
+
+    full, a = run("full")
+    run("resume", stop_after=1)
+    _, b = run("resume", resume=True)
+    for k in ["model", "optimizer", "torch", "sampler", "step"]:
+        equal_tree(a[k], b[k])
+    loaded = load_model(tmp_path / "full/weights.pt")
+    before = evaluate(full, data, "cpu")
+    after = evaluate(loaded, data, "cpu")
+    for k in before:
+        assert torch.equal(before[k], after[k])
+    g = loaded.agent.decoders["image"]
+    tokens = torch.randn(2, 8, loaded.agent.width)
+    # Inference through the new output module has no encoder access.
+    loaded.teacher.forward = lambda *_: pytest.fail("target encoder used in generation")
+    loaded.agent.encoders["image"].forward = lambda *_: pytest.fail(
+        "observation encoder used in generation"
+    )
+    with torch.no_grad():
+        assert torch.isfinite(g(tokens)).all()
+    bad = deepcopy(config)
+    bad["feature_generator"]["steps"] = 3
+    m, c = build(source, data, bad)
+    with pytest.raises(ValueError, match="Incompatible resume"):
+        train(m, c, data, data, output=tmp_path / "resume", config=bad, resume=True)
+
+
+def test_generator_width_and_paired_noise_are_independent_of_context_width():
+    from pathwm.models.conditional_image import ConditionalFeatureGenerator
+
+    torch.manual_seed(25)
+    base = generator()
+    g = ConditionalFeatureGenerator(
+        8, base.feature_spec, base.head, hidden_width=16, steps=2
+    )
+    context = torch.randn(2, 3, 8)
+    seen = []
+    original = g.field
+
+    def capture(x, t, c, valid=None):
+        if t == 0:
+            seen.append({k: v.clone() for k, v in x.items()})
+        return original(x, t, c, valid)
+
+    g.field = capture
+    with torch.no_grad():
+        g.features(context, sample_ids=[7, 7])
+    assert all(torch.equal(v[0], v[1]) for v in seen[0].values())
+    x = {k: torch.zeros(2, s.channels, *s.size) for k, s in g.feature_spec.items()}
+    result = original(x, 0.5, context)
+    sum(v.square().mean() for v in result.values()).backward()
+    assert g.context_projection.weight.grad.abs().sum() > 0
+
+
+def test_swapped_scores_use_counterfactual_targets_and_composition_groups():
+    from pathwm.data.memory_output import MemoryOutputEpisodes
+    from experiments.conditional_image import score, MODES
+
+    b = MemoryOutputEpisodes(16, seed=37, curriculum="relocation").batch(range(32))
+    a = dict(target=b["target"], labels=b["labels"], teacher_image=b["target"])
+    for mode in MODES:
+        ids = torch.arange(32) ^ 1 if mode == "reset_swapped" else torch.arange(32)
+        a[mode + "_image"] = b["target"][ids]
+        a[mode + "_facts"] = b["labels"][ids]
+    metrics = score(a)
+    assert metrics["reset_swapped/seen"]["weighted_mse"] == 0
+    assert metrics["reset_swapped/unseen"]["image_accuracy"] == 1

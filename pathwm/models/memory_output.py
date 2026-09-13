@@ -545,6 +545,10 @@ def load_model(path, device="cpu"):
         )
     if settings.get("input_centering"):
         configure_input_centering(model, settings["input_centering"])
+    if settings.get("feature_generator"):
+        from .conditional_image import configure_generator
+
+        configure_generator(model, settings["feature_generator"])
     model.load_state_dict(record["model"], strict=True)
     if settings.get("input_centering"):
         configure_input_centering(model, settings["input_centering"])
