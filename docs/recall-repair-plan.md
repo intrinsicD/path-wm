@@ -300,3 +300,53 @@ native workspace path on exactly the same values, using it as a concrete referen
 for a reader repair. Check weaker stored-state accessibility separately. Another
 timestamp feature or unbounded continuation is not supported by this comparison;
 the exact next interface and budget still need declaration. No new run launched.
+
+## Frozen-reader workspace supervision protocol
+
+User approved the next repair on13 September. Test a task-specific training signal:
+apply the existing frozen stored-working TokenProbe to post-think working tokens
+and add mean factor cross-entropy against TRAIN labels, coefficient1. The matched
+control has the same attached frozen probe and coefficient0. Native factual/image
+outputs still come exclusively from their existing working-token heads; neither
+probe answers nor stored-state targets enter inference. This is auxiliary supervised
+learning, not teacher-logit distillation or exact latent reconstruction.
+
+Start from both untimed continuations in runs/memory_time_v1/agent_780{1,2}_identity.
+Keep writer, initial state, input encoder/calibration, raw memory, decoder head and
+probe weights/statistics frozen. Only the same thinker, native factual head and
+image feature producer learn. Use old stored-working probe seed7901 for each writer
+(the first of exactly two existing seeds, not a new search); evaluate7902 equally
+prominently as an unoptimized reader sensitivity check. The convention uses a
+previously observed reader, so this is hypothesis generation, not independent
+selection validation. Reuse the normalized reader in the library; no recipe imports.
+
+Four fixed1536-update fits, batch16, AdamW lr0.001/wd0.0001, clip1, continuation
+seed8201, same sample sequence,300s training cap each,4GiB GPU cap/1GiB headroom.
+Training128pairs seed7701; validation32pairs7742; test64pairs7743, final checkpoint
+only. Same trained tuples/motions; held-out backgrounds, not new concepts. Separate
+16-update development seed18201/train17701/validation17842/test17843,60s cap.
+One formal supervised fit uses768+768 explicit resume; no budget extensions/tuning.
+
+Primary existing reliability gate remains unchanged: ordinary/reset native factual
+and image accuracy>=90%, complete selection and relocation pairs>=80%, required
+memory/cue/later-view erasure drops>=30points, swapped-bank alternate>=80%, image
+error beating fixed background and pair-mean controls. Auxiliary benefit requires
+>=10percentage-point improvement in BOTH reset native outputs for BOTH writers
+over matched coefficient0. Also report both frozen readers on stored and recalled
+working tokens, per-factor accuracy and paired histories. Reader-only improvement
+does not pass the repair gate, and disagreement between readers limits any claim
+about general accessibility. Failed probes do not prove absent information.
+
+Essential checks: isolated auxiliary gradients through frozen reader into thinker;
+zero-weight exact baseline; frozen buffers/writer/raw banks; strict self-contained
+export/resume; invalid weight/missing or mismatched reader rejection; unchanged
+native inference if inspection reader is modified. Verify all native raw-array
+metrics independently, frozen source/probe hashes, training identities, GPU reload,
+CPU differences and memory permutations. Existing report renderer, structural QA
+and inspected PNGs; browser QA unavailable. Preserve previous artifacts.
+
+Claude's public-only review identifies reader-boundary exploitation and shifted
+normalization as real interpretation limits. We retain two-reader diagnostics and
+native causal output gates. A shuffled-label auxiliary arm and exact normalized
+token reconstruction remain untested alternatives; no claim that this signal is
+uniquely effective or restores general latent fidelity. No more arms in this budget.
