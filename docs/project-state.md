@@ -1,10 +1,23 @@
 # Current work
 
-**Frozen-state probes active, 13 September:** user approved testing accessible
-location at encoder, initial, pre-storage and post-recall stages. Two frozen agents,
-two independent probe seeds, training-only calibration, initial-view and shuffled-
-label controls; no agent training.38 targeted checks and development pass. Exact
-protocol and interpretation limits: [probe plan](memory-probes-plan.md).
+**Frozen-state probes completed, 13 September:** four1536-update fits, two frozen
+agents × two reader seeds. Every direct encoder probe scores100%; before-storage
+location70.31–96.09%, after-recall49.22–51.56%. Initial future-side50% as expected;
+all four diagnostic control screens pass. One individual pre-storage working-token
+probe passes, but no state stage passes in both probe seeds. This demonstrates
+partial recoverability before storage and poor recovery after recall for this
+probe family; it does not prove erased information or a unique causal mechanism.
+The source bank stores the pre-storage tensor exactly. Both agent checkpoints
+remain unchanged.38 targeted tests,672 independently verified train/test metrics,
+exact768+768 GPU resume ledger and exact GPU probe reloads pass. CPU probe replay
+on the SAME GPU cache stays within1.55e-5, all categorical predictions agree; this
+does not fix the older raw-encoder cross-device discrepancy.217.14s total probe
+training,90MiB reserved; caches take9.28s. Two public-only Claude exchanges,
+structural reports and inspected stage plot. [Protocol/results](memory-probes-plan.md#results),
+[report](../runs/memory_probes_v1/report.html). Next proposed repair: train memory
+reading/working-state formation against frozen stored states; keep pre-storage
+probes and consider a probe sensitivity control before interpreting failures.
+No native agent repair or larger encoder/decoder training performed.
 
 **Balanced relocation comparison completed, 13 September:** both new seeds fail
 the declared screen. On128 fresh-background histories with all tuples/motions
