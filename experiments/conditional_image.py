@@ -14,7 +14,7 @@ import numpy as np
 import torch
 from pathwm.data.memory_output import MemoryOutputEpisodes, image_labels, BACKGROUND
 from pathwm.models.memory_output import load_model, frozen_tensors
-from pathwm.models.conditional_image import configure_generator, flow_pair
+from pathwm.models.conditional_image import configure_generator, flow_pair, integrate
 from pathwm.io import (
     Run,
     atomic_json,
@@ -40,6 +40,7 @@ def settings(seed=41011, objective="flow"):
         weight_decay=0.0001,
         zero_progress_probability=0.0,
         decoded_image_weight=0.0,
+        decoded_image_path="endpoint",
         memory_mib=3072,
         disk_free_gib=3,
         feature_generator=dict(
@@ -101,10 +102,19 @@ def progress_mixture(draw, zero_probability):
 
 
 def objective(
-    generator, cache, ids, step, zero_probability=0.0, *, decoded_image_weight=0.0
+    generator,
+    cache,
+    ids,
+    step,
+    zero_probability=0.0,
+    *,
+    decoded_image_weight=0.0,
+    decoded_image_path="endpoint",
 ):
     if not math.isfinite(decoded_image_weight) or decoded_image_weight < 0:
         raise ValueError("Decoded-image weight must be finite and nonnegative")
+    if decoded_image_path not in ("endpoint", "sample"):
+        raise ValueError("Decoded-image path must be endpoint or sample")
     ordinary = (torch.arange(len(ids), device=cache["reset"].device) + step) % 2 == 0
     context = torch.where(
         ordinary[:, None, None], cache["ordinary"][ids], cache["reset"][ids]
@@ -139,8 +149,14 @@ def objective(
         ordinary_examples=int(ordinary.sum()),
     )
     if decoded_image_weight:
-        # Endpoint proxy, not an unrolled sample. Frozen head still passes gradients.
-        image = generator.head(generator.unstandardize(estimate))
+        image_features = estimate
+        if decoded_image_path == "sample" and generator.objective == "flow":
+            # Pure-noise path with gradients through every actual sampling step.
+            image_features = integrate(
+                lambda x, t: generator.field(x, t, context), noise, generator.steps
+            )
+        # Frozen head still passes gradients to generated features.
+        image = generator.head(generator.unstandardize(image_features))
         image_loss = weighted_error(image, cache["target"][ids]).mean()
         loss = loss + decoded_image_weight * image_loss
         metrics["decoded_image_loss"] = float(image_loss.detach())
@@ -317,6 +333,7 @@ def train(
                 step,
                 config.get("zero_progress_probability", 0.0),
                 decoded_image_weight=config.get("decoded_image_weight", 0.0),
+                decoded_image_path=config.get("decoded_image_path", "endpoint"),
             )
             if not torch.isfinite(loss):
                 raise ValueError("Nonfinite generator objective")
@@ -422,13 +439,19 @@ def main():
     parser.add_argument("--objective", choices=("flow", "direct"), default="flow")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--stop-after", type=int)
+    parser.add_argument("--steps", type=int, default=1024)
     parser.add_argument("--development", action="store_true")
     parser.add_argument("--evaluate-only", action="store_true")
     parser.add_argument("--test-seed", type=int, default=41073)
     parser.add_argument("--sample-seed", type=int, default=13)
     parser.add_argument("--zero-progress-probability", type=float, default=0.0)
     parser.add_argument("--decoded-image-weight", type=float, default=0.0)
+    parser.add_argument(
+        "--decoded-image-path", choices=("endpoint", "sample"), default="endpoint"
+    )
     args = parser.parse_args()
+    if args.steps < 1:
+        parser.error("Training steps must be positive")
     if not 0 <= args.zero_progress_probability < 1 or (
         args.objective != "flow" and args.zero_progress_probability
     ):
@@ -502,10 +525,12 @@ def main():
         "settings"
     ]
     config = dict(source_config, **settings(objective=args.objective))
+    config["steps"] = args.steps
     config["zero_progress_probability"] = args.zero_progress_probability
     config["decoded_image_weight"] = args.decoded_image_weight
+    config["decoded_image_path"] = args.decoded_image_path
     if args.decoded_image_weight:
-        config["objective"] += " + decoded endpoint image supervision"
+        config["objective"] += f" + decoded {args.decoded_image_path} image supervision"
     config.update(
         source_weights_sha256=file_hash(args.weights),
         source_weights_path=str(args.weights.resolve()),

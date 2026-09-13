@@ -139,6 +139,7 @@ def test_training_resume_standalone_export_and_target_exclusion(tmp_path):
         disk_free_gib=0,
         zero_progress_probability=0.5,
         decoded_image_weight=10.0,
+        decoded_image_path="sample",
     )
     config["feature_generator"]["steps"] = 2
 
@@ -179,7 +180,7 @@ def test_training_resume_standalone_export_and_target_exclusion(tmp_path):
     with torch.no_grad():
         assert torch.isfinite(g(tokens)).all()
     bad = deepcopy(config)
-    bad["decoded_image_weight"] = 5.0
+    bad["decoded_image_path"] = "endpoint"
     m, c = build(source, data, bad)
     with pytest.raises(ValueError, match="Incompatible resume"):
         train(m, c, data, data, output=tmp_path / "resume", config=bad, resume=True)
@@ -330,12 +331,17 @@ def test_sampled_image_supervision_matches_full_manual_unroll_gradient():
 
     torch.manual_seed(83)
     g = generator()
-    cache = dict(ordinary=torch.randn(2, 3, 8), reset=torch.randn(2, 3, 8),
-                 target=torch.rand(2, 3, 2, 2),
-                 features={k: torch.randn(2, s.channels, *s.size) for k, s in g.feature_spec.items()})
+    cache = dict(
+        ordinary=torch.randn(2, 3, 8),
+        reset=torch.randn(2, 3, 8),
+        target=torch.rand(2, 3, 2, 2),
+        features={
+            k: torch.randn(2, s.channels, *s.size) for k, s in g.feature_spec.items()
+        },
+    )
     params = [p for p in g.parameters() if p.requires_grad]
     torch.manual_seed(89)
-    latent, _ = objective(g, cache, [0, 1], 1, .5)
+    latent, _ = objective(g, cache, [0, 1], 1, 0.5)
     base = torch.autograd.grad(latent, params)
     rng_after = torch.get_rng_state().clone()
     torch.manual_seed(89)
@@ -348,8 +354,9 @@ def test_sampled_image_supervision_matches_full_manual_unroll_gradient():
     reference = weighted_error(g.head(g.unstandardize(x)), cache["target"]).mean()
     gradients = torch.autograd.grad(reference, params)
     torch.manual_seed(89)
-    actual, metrics = objective(g, cache, [0, 1], 1, .5,
-                                decoded_image_weight=10, decoded_image_path="sample")
+    actual, metrics = objective(
+        g, cache, [0, 1], 1, 0.5, decoded_image_weight=10, decoded_image_path="sample"
+    )
     actual.backward()
     assert torch.allclose(actual, latent + 10 * reference)
     assert metrics["decoded_image_loss"] == pytest.approx(float(reference.detach()))

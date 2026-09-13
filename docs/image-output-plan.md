@@ -575,3 +575,15 @@ full seen/withheld, erasure and counterfactual swap gates. Also report mean pixe
 error>=5% benefit with all-cell/subset category nonregression. No post-confirmation
 fit, sampler or coefficient tuning in this follow-up. Generic Claude method review
 runs separately from private implementation/evidence review.
+
+Pre-formal resource amendment, based on development timing rather than quality:
+16 unrolled updates take5.986s/546MiB, projecting above the300s cap for1024. Reduce
+BOTH follow-up arms to512 updates; retrain a matched endpoint512 control instead of
+using the old1024 checkpoint as the primary control. Keep all other settings, new
+confirmation seeds and gates above fixed. Existing1024 results remain untouched.
+Add the ordinary recipe `--steps` override (development remains16). The two new
+fits are endpoint512 and sample512, each capped300s; no extension after results.
+12 focused tests pass, including actual-unroll gradient/RNG equivalence and exact
+sample-loss resumed training. Frozen values preserved. Development report structurally
+verified. The comparison is objective-path only at equal512 updates, not an equal
+compute claim or a direct cross-budget comparison to the earlier1024 results.
