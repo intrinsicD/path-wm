@@ -139,10 +139,10 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: Writer-only learning fails full gates; joint writer/thinker passes both controlled task screens
-    but not replicated all-output benefit. Six new fits,850.90s,404MiB;52 tests,exact GPU replay. CPU
-    portability and independent-source robustness open.
-  turn_count: 10
-  events_count: 51
+  summary: "Existing-source robustness fails: stronger source100% under both policies, weaker joint images86.7\u2013\
+    93.8% on fresh test. Four fits515.28s,404MiB;54 tests,2794 metrics,exact GPU replay. Shape-output\
+    \ and CPU portability gaps retained."
+  turn_count: 11
+  events_count: 56
   claims_touched: []
   open_threads: 10

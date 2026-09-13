@@ -4758,3 +4758,53 @@ tree:
   - N294
   timestamp: 2026-09-13T14:23+02:00
   status: resolved
+
+- id: N297
+  type: decision
+  title: Approve validation across upstream initializations
+  provenance: user
+  timestamp: 2026-09-13T15:16+02:00
+  choice: Yes please. Continue together with Claude; plan, implement, review, test, fix and iterate. Adopts
+    O198 upstream-initialization validation. Reusing two existing explored agent sources, shared codec,
+    exact policies/seeds/gates and fresh evaluation implementation are agent choices; not user claims
+    of blinded replication.
+  alternatives:
+  - Expand history/distractors before checking source sensitivity
+  - Tune only the previously successful weak-source checkpoints
+  evidence:
+  - O198
+  - N296
+  - docs/recall-repair-plan.md#existing-source-robustness-protocol--13-september
+  status: resolved
+- id: N298
+  type: experiment
+  title: Existing-source comparison exposes fresh-test image failures despite strong-source success
+  provenance: ai-executed
+  timestamp: 2026-09-13T15:16+02:00
+  result: Source6c9f284; four new source7801 fits (writer-only/joint x8501/8502),four unchanged source7802
+    exports freshly evaluated on7793,two unchanged-source controls. Every7801 cell has100% ordinary/reset
+    facts/images and passes full task gates. Reused7802 joint8501 ordinary99.21875/86.71875%,reset100/93.75%;joint8502
+    ordinary92.1875/88.28125%,reset92.96875/89.0625%. Both full gates fail; all-source robustness false.
+    Source-retention<=5-point gate passes all joint cells. Writer-only7802 ordinary84.375/89.84375% and86.71875/83.59375%,reset81.25/76.5625%
+    and81.25/75%. Prior7783 passes retained; new7793 data differ, no checkpoint tuning.16/8 ordinary image
+    errors occur with fully correct factual answers; shape dominates, ordinary color/side100% in both
+    joint checkpoints. Independent source initialization and identical codecs verified; both previously
+    explored and codec shared, not blind new-seed replication.54 tests plus focused post-fix reruns,2794
+    independent metrics; all8 GPU exports and frozen/bank/provenance checks exact. CPU native max logits.2586591244/pixels.0092121363
+    fails1e-4; only7802 joint8501 ordinary factual shape case99 changes. Four fits515.275510s,404MiB;
+    zero optimization in reused evaluations. Evaluation-only path fixes tuple/list manifest equality and
+    preserves completed results under partial-render failure. Empty chart fixb1cbc04; seven before-fix
+    report copies and development failure retained.12 individual reports plus overview structurally checked,10
+    formal/control,2 development,2 error panels and chart inspected; browser unavailable. Three public-only
+    Claude reviews. No further training launched.
+  evidence:
+  - ara/evidence/tables/cross_source_2026-09-13.json
+  - runs/cross_source_v1/verification.json
+  - runs/cross_source_v1/preparation.json
+  - runs/cross_source_v1/image_errors.json
+  - docs/recall-repair-plan.md#existing-source-robustness-results
+  also_depends_on:
+  - N297
+  - N296
+  - N294
+  status: resolved

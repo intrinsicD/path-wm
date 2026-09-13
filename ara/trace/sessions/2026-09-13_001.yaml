@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T14:23+02:00
-  turn_count: 10
-  summary: Writer-only learning fails full gates; joint writer/thinker passes both controlled task screens
-    but not replicated all-output benefit. Six new fits,850.90s,404MiB;52 tests,exact GPU replay. CPU
-    portability and independent-source robustness open.
+  last_turn: 2026-09-13T15:16+02:00
+  turn_count: 11
+  summary: "Existing-source robustness fails: stronger source100% under both policies, weaker joint images86.7\u2013\
+    93.8% on fresh test. Four fits515.28s,404MiB;54 tests,2794 metrics,exact GPU replay. Shape-output\
+    \ and CPU portability gaps retained."
 
 events_logged:
 - turn: 1
@@ -326,6 +326,36 @@ events_logged:
   routing: crystallized
   provenance: user-revised
   summary: O195 diagnostic method adopted; no guarantee of repair.
+- turn: 11
+  type: decision
+  id: N297
+  routing: direct
+  provenance: user
+  summary: Adopt O198 upstream-initialization validation with continued Claude iteration.
+- turn: 11
+  type: experiment
+  id: N298
+  routing: direct
+  provenance: ai-executed
+  summary: Strong source succeeds; weaker images fail fresh-task robustness, with source retention preserved.
+- turn: 11
+  type: observation
+  id: O199
+  routing: staged
+  provenance: ai-suggested
+  summary: Conditional source/sample dependence and image-path discrepancy; unique cause unproven.
+- turn: 11
+  type: observation
+  id: O200
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose frozen-state image-output training versus continued joint learning.
+- turn: 11
+  type: heuristic
+  id: H58
+  routing: crystallized
+  provenance: user-revised
+  summary: O198 validation method adopted; existing-source limitation explicit.
 
 ai_actions:
 - turn: 1
@@ -452,6 +482,21 @@ ai_actions:
   - runs/writer_learning_v1/
   - runs/writer_reader_v1/
   - ara/evidence/tables/writer_joint_2026-09-13.json
+- turn: 11
+  action: Three bounded actual public-only Claude reviews; reconstructed source chains and initializer/codec
+    checks; evaluation-only implementation with RED tests and development. Fixed nested-settings and empty-chart
+    bugs, preserved failed development and before-fix reports. Four new fits, six evaluation-only runs,
+    all8-cell GPU/CPU and2794-metric audits, error galleries, documentation and commits.
+  provenance: ai-executed
+  files_changed:
+  - experiments/memory_output.py
+  - tests/test_memory_output.py
+  - pathwm/evaluation/report.py
+  - docs/experiments.md
+  - docs/recall-repair-plan.md
+  - docs/project-state.md
+  - runs/cross_source_v1/
+  - ara/evidence/tables/cross_source_2026-09-13.json
 
 claims_touched: []
 key_context:
@@ -485,12 +530,18 @@ key_context:
 - turn: 10
   excerpt: 'User: Continue together with Claude. Plan, implement, review, test, fix. Iterate this. Joint
     full task gates pass both seeds; benefit gate fails one. Broad model goals remain open.'
+- turn: 11
+  excerpt: User explicitly says Yes please and asks continued Claude planning/implementation/testing.
+    Fresh robustness fails on weaker generated shapes despite factual correctness; next diagnostic proposed,
+    no new training launched.
 
 open_threads:
-- 'N294/N296/O196/O197/O198: joint task gates pass two optimization seeds from one weak source; combined
-  benefit replication fails. Independent upstream replication proposed before longer histories/distractors.'
-- "N278\u2013N296: CPU/GPU numerical tolerance unresolved. New joint comparison max native logits.2179412842/pixels.0079333782;\
-  \ one ordinary factual shape and one baseline image side change. Prior mismatches preserved."
+- 'N298/O199/O200: existing-source robustness fails on weak joint images; strong source reaches100% under
+  either policy. Targeted frozen-state image-output versus continued joint diagnostic proposed; blind
+  new-source/codec replication still open.'
+- "N278\u2013N298: CPU/GPU numerical tolerance unresolved. Current native max logits.2586591244/pixels.0092121363;\
+  \ one ordinary factual-shape flip, image/reset categories agree here. Earlier categorical differences\
+  \ retained."
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
   and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and
@@ -527,4 +578,6 @@ ai_suggestions_pending:
 - 'O194: one-source mixed-context policy repair; no general mechanism or replicated reliability claim.'
 - 'O196: partial writer learning and gradient reachability do not establish a unique failure mechanism.'
 - 'O197: joint controlled-task sufficiency with limited replication and CPU portability.'
-- 'O198: independent upstream initialization replication proposed; no new run launched.'
+- 'O199: source/sample-specific task success and conditional factual-versus-image discrepancy; no unique
+  mechanism.'
+- 'O200: targeted image-output learning on frozen final joint states versus continued joint learning proposed.'

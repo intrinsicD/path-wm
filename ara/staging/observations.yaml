@@ -3499,6 +3499,40 @@ observations:
   potential_type: heuristic
   bound_to:
   - N296
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H58
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O199
+  timestamp: 2026-09-13T15:16+02:00
+  provenance: ai-suggested
+  content: Joint adaptation success is source- and test-sample-dependent under this fixed budget. Stronger
+    existing source succeeds under either writer-only or joint training; weaker joint exports fail a fresh
+    sample mainly on image shape. Fully correct factual outputs with incorrect images support inspecting
+    the state-to-image path, without uniquely diagnosing decoder versus feature-production/learning failure.
+  context: New full robustness gate fails while source retention passes; old population-specific results
+    remain intact. Researcher has not interpreted the new outcomes.
+  potential_type: claim
+  bound_to:
+  - N298
+  - N296
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O200
+  timestamp: 2026-09-13T15:16+02:00
+  provenance: ai-suggested
+  content: Next compare targeted image-output learning on frozen final joint states with matched continued
+    joint learning. Preserve ordinary/reset factual and causal gates, use new predeclared data/budget,
+    and keep CPU portability separate. Do not assume the original raw encoder or memory must be enlarged
+    from image-head failures alone.
+  context: Proposed follow-up after16/8 factual-correct image-error cases; no additional fit launched.
+  potential_type: heuristic
+  bound_to:
+  - N298
+  - N296
   promoted: false
   promoted_to: null
   crystallized_via: null

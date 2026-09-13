@@ -564,3 +564,13 @@
 - **Sensitivity**: High. Shared observer processing and extra trainable capacity limit component attribution. Writer-only partial gains and joint task success do not establish general reliability; keep independent-source and numerical portability gaps open.
 - **Code ref**: [ephemeral replay and trainability](../../../pathwm/models/memory_output.py), [live objective](../../../experiments/memory_output.py), [gradient/freeze checks](../../../tests/test_direct_readout.py), [resume/export checks](../../../tests/test_memory_output.py).
 - **Evidence**: N293–N296; [two-iteration record](../../evidence/tables/writer_joint_2026-09-13.json).
+
+## H58: Check upstream-initialization sensitivity before expanding the task
+
+- **Rationale**: Keep task gates and training policy fixed while evaluating distinct upstream agent starts. Pair initial weights and sampler budgets explicitly, preserve original checkpoint provenance when reusing runs, and distinguish task success from benefit at a ceiling.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O198
+- **Sensitivity**: High. Existing explored sources and a shared codec yield conditional robustness evidence, not blinded independent-model replication. Fresh samples may fail earlier population-specific gates; retain both outcomes and numerical portability limits.
+- **Code ref**: [evaluation-only recipe](../../../experiments/memory_output.py), [provenance and failure checks](../../../tests/test_memory_output.py), [renderer](../../../pathwm/evaluation/report.py).
+- **Evidence**: N297/N298; [source comparison record](../../evidence/tables/cross_source_2026-09-13.json).
