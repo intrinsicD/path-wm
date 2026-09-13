@@ -160,3 +160,51 @@ Compare an explicitly time-aware reader against this continuation, retaining raw
 stored-state controls and checking the weaker writer separately. This is an open
 hypothesis and needs a fresh bounded protocol; no extra training or larger model
 was launched after these failed gates.
+
+## Snapshot timing comparison
+
+13 September: Alex approved the proposed temporal-memory test. Continue from BOTH
+previous identity-repair checkpoints (writer7801 and7802), preserving them. For each,
+compare another untimed continuation with a temporal continuation from identical
+weights. All freeze rules, losses and trainable parameters remain as above. Temporal
+retrieval adds `position(snapshot_time - query_time) - position(0)` to each token in
+that selected snapshot, using the existing sinusoidal function with unit amplitude.
+No normalization, learned time embedding, extra parameters or raw-storage changes.
+Gather values AND timestamps with the same top-k indices. Query time is state.time;
+thinking steps do not advance it. Existing future-observation checks remain. Common
+clock-origin shifts cancel. Defaults and old standalone exports stay untimed.
+
+Fresh validation32 pairs seed7732 and test64 pairs7733, training128 pairs7701. All
+appearance/movement support remains familiar; timestamps are0/1 at query2 for every
+quartet. They cannot alone distinguish the correct side. No absolute-time or unseen-
+delay generalization claim. Evaluate both frozen source continuations on the SAME
+new test; apply both unchanged pre-storage working probes to these histories as
+conditional access controls, with no retuning. Timestamp metadata comes from the
+harness observation clock, not labels or image targets.
+
+Four1536-update fits, continuation seed8101 for all arms, batch16, AdamW lr0.001
+wd0.0001, gradient clip1, FP32/IEEE, final checkpoint only. Validation every128 steps;
+max300 training-loop seconds per fit (1200s total), GPU cap4GiB with1GiB headroom.
+Development16 steps with seed18101, train17701/validation17832/test17833, at most60s.
+One actual768+768 resume plus exact CPU regression. No source changes during a run.
+Commit RED checks/plan before implementation, then working source before formal fits.
+
+Retain the complete90% facts/images,80% complete-pair and intervention screen above.
+Call the time cue beneficial at this budget only if reset facts AND images improve
+by>=10 percentage points over matched untimed continuation in BOTH source pairs.
+Additionally report test-only reset-time-erasure (all snapshots assigned query time,
+zero additive code) and reset-time-swap (reverse timestamps, keep values/keys fixed).
+An attachment-sensitivity screen requires each intervention to reduce reset facts
+AND images by>=10 points in BOTH temporal runs. This is an OOD sensitivity check,
+not a proof of causal temporal understanding or an alternate valid-world answer.
+Untimed runs must be exact no-ops under both time interventions. Full reliability,
+benefit and sensitivity gates are separate; failures cannot be hidden by averages.
+
+Essential checks: timestamp/value gather alignment including a top-k subset and
+batch-specific choices, common clock-shift invariance, bank permutation equivariance,
+zero-age identity, erased/future/nonfinite memory, unchanged raw banks/gradients,
+full-query time interventions, frozen tensors, standalone reload and resume. Save
+new intervention logits/images and independent metrics, raw source/probe controls,
+resource/precision metadata and standalone reports. Use existing renderer; browser
+QA remains unavailable, so structural QA plus inspection of exported PNGs. Prior
+CPU/GPU numeric failures remain open; match precision explicitly in replay scripts.
