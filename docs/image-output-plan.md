@@ -525,3 +525,53 @@ Both16-update GPU runs complete with frozen tensors unchanged; control/image pea
 latent.38187, cosine-.01427 (near orthogonal); no population-gradient conclusion or
 coefficient tuning. Reports structurally verified and the learning curve inspected.
 Freeze the implementation for the predeclared two formal fits.
+
+After the two fixed fits and fresh confirmations: declare a validation-only
+trajectory diagnostic before running it. For unchanged weights, validation41002,
+seed13 with pair-shared noise, capture all eight fixed Euler steps and the predicted
+one-step endpoint at each step; compare rendered errors/categories separately for
+seen/withheld targets. No target features enter the path, no optimization or solver
+selection. Compare both arms, wall60s/reserved3GiB, preserve raw images and context.
+A full32-history diagnostic batch may have arithmetic differences from scored batch8;
+exact export replay is a separate check. This tests whether a good first endpoint
+is lost during sampling versus already-wrong conditioning.
+
+## Sampled-image supervision follow-up — 14 September
+
+Initial comparison sourcea37b994 completed: added endpoint RGB loss reduces mean
+fresh weighted pixel MSE58.0%; reset familiar accuracy13.28125%→55.46875%, withheld
+14.84375%→20.3125%. However, some withheld cells regress, the primary/full gates and
+the benefit-with-nonregression gate fail. Preserve both results and thresholds.
+Control terminal model/optimizer and CPU/CUDA/sampler states exactly reproduce the
+prior flow_zero. Two fits27.238/34.306s, peaks156/200MiB;8 GPU confirmations plus2
+validation exports replay exactly,456 numeric metrics independently reproduced.
+
+Validation-only trajectory: endpoint-loss model initial pure-noise one-step endpoint
+87.5% familiar/12.5% withheld, after Euler8 62.5%/25%. Familiar weightedMSE
+.0049926→.00860385. This motivates a separate repair, not a solver selection or an
+extension of the completed fit. It does not establish a unique source of all errors.
+
+Add optional `decoded_image_path=sample` to the same recipe. Keep latent velocity
+loss and half-t0 progress unchanged. For the auxiliary RGB term only, start from
+that batch's existing pure-noise draw, integrate the same8 Euler steps conditioned
+on context, unstandardize and decode. Differentiate through every step and frozen
+head; no target in the initial state, no truncation, extra RNG, learned parameters
+or changed inference. Default remains endpoint; weight0 retains exact baseline.
+This is a hybrid sampler-supervised objective, not vanilla CFM optimality. Reusing
+noise may correlate loss gradients, but introduces no target leakage.
+
+New RED check: match actual sampler loss and gradient against a manual unroll;
+ensure progress, RNG, frozen-head and target separation; test nonzero sample-loss
+resume/reload. One16-update development/profile, then one fresh fit from the same
+source/init41011/data41001/314576 parameters/AdamW/batch8/1024 updates. Pixel weight10,
+Euler8 fixed; only auxiliary path changes versus the retained endpoint model.
+Source freeze before fit. Fit cap300s, GPU3GiB reserved/free>=1GiB, disk>=3GiB;
+preserve an incomplete budget stop without extending it. Higher training FLOPs
+and memory are expected and reported, not matched compute.
+
+Fresh44073/44074,32 pairs each, seeds13/29, both retained endpoint and new sample-loss
+checkpoint. Same primary familiar>=.95,MSE<=.01 and withheld nonregression; unchanged
+full seen/withheld, erasure and counterfactual swap gates. Also report mean pixel
+error>=5% benefit with all-cell/subset category nonregression. No post-confirmation
+fit, sampler or coefficient tuning in this follow-up. Generic Claude method review
+runs separately from private implementation/evidence review.

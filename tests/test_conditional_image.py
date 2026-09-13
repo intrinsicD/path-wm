@@ -323,3 +323,39 @@ def test_zero_decoded_weight_bypasses_head_and_rejects_invalid_before_rng():
         with pytest.raises(ValueError, match="Decoded-image weight"):
             objective(g, cache, [0, 1], 1, 0.5, decoded_image_weight=weight)
         assert torch.equal(after, torch.get_rng_state())
+
+
+def test_sampled_image_supervision_matches_full_manual_unroll_gradient():
+    from experiments.conditional_image import objective, weighted_error
+
+    torch.manual_seed(83)
+    g = generator()
+    cache = dict(ordinary=torch.randn(2, 3, 8), reset=torch.randn(2, 3, 8),
+                 target=torch.rand(2, 3, 2, 2),
+                 features={k: torch.randn(2, s.channels, *s.size) for k, s in g.feature_spec.items()})
+    params = [p for p in g.parameters() if p.requires_grad]
+    torch.manual_seed(89)
+    latent, _ = objective(g, cache, [0, 1], 1, .5)
+    base = torch.autograd.grad(latent, params)
+    rng_after = torch.get_rng_state().clone()
+    torch.manual_seed(89)
+    torch.rand(2)  # existing progress draw
+    x = {k: torch.randn_like(v) for k, v in cache["features"].items()}
+    context = torch.stack([cache["reset"][0], cache["ordinary"][1]])
+    for i in range(g.steps):
+        v = g.field(x, i / g.steps, context)
+        x = {k: x[k] + v[k] / g.steps for k in x}
+    reference = weighted_error(g.head(g.unstandardize(x)), cache["target"]).mean()
+    gradients = torch.autograd.grad(reference, params)
+    torch.manual_seed(89)
+    actual, metrics = objective(g, cache, [0, 1], 1, .5,
+                                decoded_image_weight=10, decoded_image_path="sample")
+    actual.backward()
+    assert torch.allclose(actual, latent + 10 * reference)
+    assert metrics["decoded_image_loss"] == pytest.approx(float(reference.detach()))
+    assert torch.equal(rng_after, torch.get_rng_state())
+    for p, a, b in zip(params, base, gradients):
+        assert torch.allclose(p.grad, a + 10 * b, atol=2e-5, rtol=1e-5)
+    assert all(p.grad is None for p in g.head.parameters())
+    with pytest.raises(ValueError, match="Decoded-image path"):
+        objective(g, cache, [0, 1], 1, decoded_image_path="unknown")
