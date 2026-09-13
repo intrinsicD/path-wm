@@ -1,5 +1,34 @@
 # Current work
 
+**Existing-source robustness comparison completed, 13 September:** the overall
+joint-task robustness gate fails on fresh test 7793. All four new source7801 fits
+(writer-only/joint × two optimizer seeds) reach 100% facts/images in ordinary and
+reset modes and pass every task gate. Both unchanged source7802 joint checkpoints
+fail this fresh screen: ordinary facts/images 99.219/86.719% and 92.188/88.281%;
+reset 100/93.750% and 92.969/89.063%. Source-retention passes all joint cells.
+Earlier test7783 passes remain scoped to that sample. Both sources were already
+explored and share one codec; this is not blinded replication or new codec training.
+
+Shape rendering is the main remaining error. In ordinary mode, the weaker joint
+checkpoints have 16 and 8 cases with fully correct factual answers but incorrect
+images. Color and side are 100% correct in both; shape is 86.719/88.281%. This
+supports testing the image-output path, without uniquely locating a decoder fault.
+[Comparison and error examples](../runs/cross_source_v1/report.html),
+[protocol/results](recall-repair-plan.md#existing-source-robustness-results).
+
+Added `--evaluate-only` to the existing recipe with immutable checkpoint provenance,
+separate evaluation identity and report-failure preservation. Fixed nested JSON
+settings comparison and misleading empty training charts. All 54 relevant tests
+pass; focused regressions rerun after fixes. 2,794 metrics independently checked;
+all eight GPU exports, frozen tensors, paired initialization/sampling and memory
+provenance pass. CPU numerical gate fails (native logits0.258659/pixels0.009212);
+one ordinary factual-shape answer changes, all image/reset categories agree here.
+Four new fits: 515.28s training, 404MiB reserved. Four checkpoints reused; two unchanged
+sources freshly scored. Three public-only Claude reviews; 12 individual reports
+plus overview verified structurally, figures inspected, browser QA unavailable.
+Next proposed: compare targeted image-output training on frozen final joint states
+against matched continued joint training. No additional fit launched.
+
 **Joint writer and workspace-reader learning completed, 13 September:** both new
 fits pass the full controlled-task gate. Ordinary facts/images are 99.219/90.625%
 and 93.750/92.188%; reset 100/95.313% and 94.531/91.406%. The matched writer-only

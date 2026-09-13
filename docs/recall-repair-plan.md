@@ -1052,3 +1052,64 @@ now skips curves when no metric rows exist. Two focused evaluation tests and all
 with before-fix HTML/QA receipts retained and raw metrics unchanged. Training and
 inference code are unchanged; formal source remains6c9f284, renderer repair recorded
 separately. Browser QA unavailable; report validation remains structural plus figures.
+
+## Existing-source robustness results
+
+Formal source6c9f284; post-fit empty-chart renderer fixb1cbc04. Fresh test7793:
+
+| Source / optimizer seed / policy | Ordinary facts | Ordinary images | Reset facts | Reset images | Full gate |
+| --- | ---: | ---: | ---: | ---: | --- |
+| 7801 / 8501 / writer | 100% | 100% | 100% | 100% | pass |
+| 7801 / 8501 / joint | 100% | 100% | 100% | 100% | pass |
+| 7801 / 8502 / writer | 100% | 100% | 100% | 100% | pass |
+| 7801 / 8502 / joint | 100% | 100% | 100% | 100% | pass |
+| 7802 / 8501 / writer, reused | 84.375% | 89.84375% | 81.25% | 76.5625% | fail |
+| 7802 / 8501 / joint, reused | 99.21875% | 86.71875% | 100% | 93.75% | fail |
+| 7802 / 8502 / writer, reused | 86.71875% | 83.59375% | 81.25% | 75% | fail |
+| 7802 / 8502 / joint, reused | 92.1875% | 88.28125% | 92.96875% | 89.0625% | fail |
+
+All-source joint task robustness fails; the separate <=5-point source-retention
+screen passes all four joint cells. Both policies succeed in the stronger source,
+so that source does not demonstrate joint-training superiority. The earlier weaker
+source's test7783 gates remain passed on that population; fresh7793 failures reveal
+sample sensitivity, without altering those earlier results or benefit thresholds.
+Unchanged source7801 ordinary97.65625/96.09375%, reset96.875/91.40625%; source7802
+ordinary75/76.5625%, reset75/75% facts/images.
+
+Weaker joint ordinary image color/side are100% in both seeds; shape86.71875/88.28125%.
+There are16/8 ordinary cases with entirely correct factual outputs but incorrect
+images, independently confirmed from saved arrays. First eight per checkpoint are
+shown as explicitly selected error examples, with original case indices retained.
+This establishes access for the factual head on those cases; it does not uniquely
+identify which representation/feature producer/decoder component needs repair.
+
+All54 relevant tests pass; focused two-test nested-settings and report regressions
+rerun after fixes, plus all8 run/report tests. NumPy verifies2,794 metrics:1,896 fresh
+cell-test metrics,424 original training-fit metrics,474 unchanged-source metrics.
+All four pairs have exact initial weights and sampler/optimizer budgets; differing
+upstream initializations and identical codecs/input calibration confirmed. Fixed
+decoder calibration equality also checked after fitting. All source files unchanged.
+Every eight-checkpoint GPU ordinary/reset export reproduces exactly; permitted
+writer/thinker updates, other frozen tensors, bank value/time/source provenance,
+detached inference and bank-order/replay equality pass. CPU audit covered all eight
+cells in two disjoint partitions, first three overlapping the last GPU fit.
+
+CPU numerical tolerance1e-4 still fails: maximum native logits0.2586591244 and pixels
+0.0092121363. Source7802 joint8501 ordinary factual shape case99 changes from GPU
+[2,0,0] to CPU[2,1,0]. All other native categories agree in this sample. Earlier
+cross-device factual/image disagreements remain evidence; no portability claim.
+
+Four new fits complete in515.275510s training, peak423,624,704 bytes (404MiB). Reused
+cells and source controls perform zero optimizer updates. Twelve completed individual
+reports (including development fit/evaluation) and the overview are structurally
+verified; ten formal/control panels, two development panels, two error panels and
+the comparison chart inspected. Failed original development evaluation is retained;
+seven before-fix evaluation report copies preserved. Browser QA unavailable.
+Raw results/audits/provenance in `runs/cross_source_v1/`; [report](../runs/cross_source_v1/report.html).
+
+Interpretation remains conditional on two previously explored sources and a common
+codec. No new initialization population or unseen-world generalization was tested.
+The next proposed comparison is image-output-only learning on frozen final joint
+states versus matched continued joint learning, retaining factual and causal gates
+and using a new declared test. This is a proposed diagnostic, not a decided repair;
+no further training launched after this comparison.
