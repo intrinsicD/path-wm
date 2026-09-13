@@ -3779,6 +3779,41 @@ observations:
   bound_to:
   - N319
   - N320
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H67
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O215
+  timestamp: 2026-09-13T22:18+02:00
+  provenance: ai-suggested
+  content: Rectangle-weighted reconstruction training improves recall shape at fixed producer capacity
+    and factual predictions, but does not close strict retention. The controlled intervention establishes
+    a scoped weighting-policy effect (mask and normalizer together), not a unique cause of every error.
+    Positive local gradient cosines do not prove absence of optimization conflict.
+  context: Completed matched comparison on one selected synthetic checkpoint; no researcher interpretation
+    of the new results yet. Correlated responses, no independent-replication or general imagery claim.
+  potential_type: claim
+  bound_to:
+  - N322
+  - N323
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O216
+  timestamp: 2026-09-13T22:18+02:00
+  provenance: ai-suggested
+  content: Retain the demonstrated loss improvement and separate correct-facts/wrong-image producer refinement
+    from frozen warm factual repair. A small declared producer-capacity/refinement comparison and a distinct
+    factual trainable path need fresh confirmation under unchanged gates. Real imagery, learned reliability,
+    independent upstream replication, CPU portability, streaming and general generative backends remain
+    open.
+  context: Next-step proposal; no extra optimization or selection on 33073/33074 after confirmation.
+  potential_type: heuristic
+  bound_to:
+  - N322
+  - N323
   promoted: false
   promoted_to: null
   crystallized_via: null

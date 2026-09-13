@@ -654,3 +654,13 @@
 - **Sensitivity**: High. A selected difficult checkpoint supports diagnosis, not upstream replication. Extra-update sufficiency, added data benefit, task gates and retention answer different questions.
 - **Code ref**: [scene recipe](../../../experiments/memory_output.py), [scene reporting](../../../pathwm/evaluation/report.py), [alignment tests](../../../tests/test_training_scenes.py).
 - **Evidence**: N318/N319/N320; [comparison proof](../../evidence/tables/texture_shape_2026-09-13.json).
+
+## H67: Inspect reconstruction costs and gradients before increasing capacity
+
+- **Rationale**: Where factual identity remains readable but image shape fails, inspect per-condition fitting, shape-sensitive loss contributions and producer gradients before choosing a bounded objective or capacity intervention. Keep matched budgets, raw/clean retention and fresh confirmation. Training-target supervision is distinct from giving targets to inference.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O214
+- **Sensitivity**: High. A local gradient snapshot does not identify a global mechanism. Changing a weighting policy may jointly change mask support and normalization; evaluate the whole intervention while preserving evaluation metrics.
+- **Code ref**: [image-output recipe](../../../experiments/memory_output.py), [weighting tests](../../../tests/test_shape_weighting.py).
+- **Evidence**: N321/N322/N323; [recall shape proof](../../evidence/tables/recall_shape_2026-09-13.json).

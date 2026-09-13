@@ -5256,3 +5256,71 @@ tree:
   - N318
   - N319
   status: resolved
+
+- id: N321
+  type: decision
+  title: Continue reconstruction-objective diagnosis and controlled repair with Claude
+  provenance: user
+  timestamp: 2026-09-13T22:18+02:00
+  choice: User explicitly requests continued plan, implement, review, test and fix on the open points.
+    Adopt the bounded recall image-producer loss/gradient diagnosis before a controlled objective or capacity
+    intervention, retaining matched budgets and fresh confirmation.
+  alternatives:
+  - Increase capacity without checking reconstruction costs
+  - Add further untargeted data before diagnosing residual recall errors
+  evidence:
+  - O214
+  - N319
+  - N320
+  also_depends_on:
+  - N319
+  - N320
+  status: resolved
+- id: N322
+  type: experiment
+  title: Foreground reconstruction weighting creates asymmetric shape costs
+  provenance: ai-executed
+  timestamp: 2026-09-13T22:18+02:00
+  result: 'Zero-update diagnostic on fixed batches: all eight pixel/weighted-feature gradient cosines
+    positive, 0.145–0.635, no saturation, every feature level reachable. This does not establish a unique
+    mechanism or rule out conflicts elsewhere. Foreground weighting penalizes missing square corners much
+    more than filling plus corners. Independent conditional-risk reference verifies foreground switching
+    threshold 0.09900990099009901 (normalizers 6400 and 5824), versus 0.5 for identical rectangle weights.
+    These are objective algebra, not measured model confidence. Rectangle weighting changes both mask
+    support and its normalization.'
+  evidence:
+  - ara/evidence/tables/recall_shape_2026-09-13.json
+  - runs/recall_shape_v1/diagnostic.json
+  - runs/recall_shape_v1/diagnostic_verification.json
+  also_depends_on:
+  - N321
+  - N319
+  status: resolved
+- id: N323
+  type: experiment
+  title: Rectangle-weighted producer training halves cool image errors but strict retention remains open
+  provenance: ai-executed
+  timestamp: 2026-09-13T22:18+02:00
+  result: 'Added opt-in training-only box weighting and cached image-only continuation, preserving default
+    objective, inference, scoring and data. Four informative RED failures, eight new checks; 47 focused
+    tests pass including exact resume, CLI guards and frozen tensors. Two matched 1536-update fits from
+    texture source 8502, seed 9501, 1024 train histories; 58,128 producer parameters only. Forty fresh
+    33073/33074 cells: box 12/12 task gates, control and unchanged 10/12, raw 4/4. Cool image errors 5
+    vs 10/128, declared benefit passes without paired score regression. Cool reset images 90.625%/93.75%;
+    clean 100%, texture retention 2/2. Full repair false: all-scene strict retention 9/12, with two cool
+    image cells and one frozen warm factual score (93.75%) below 95%. Factual logits exact in all modes
+    across 24 trained cells. Training correct-facts/wrong-image cool cases 24 to 12. 10,188 independent
+    metrics, 40 exact GPU replays; source 0287a24, matched caches/RNG/frozen tensors. Training 95.158
+    s, evaluation 92.157 s, peak 646 MiB. Three actual generic Claude reviews; target-supervision and
+    intervention-scope corrections reconciled, denominator shorthand qualified locally. Forty-four reports
+    structurally checked and figures inspected; prior browser URL denial remains a limitation, no workaround.'
+  evidence:
+  - ara/evidence/tables/recall_shape_2026-09-13.json
+  - runs/recall_shape_v1/verification.json
+  - runs/recall_shape_v1/review_status.json
+  - tests/test_shape_weighting.py
+  - docs/recall-repair-plan.md#recall-shape-weighting-results
+  also_depends_on:
+  - N321
+  - N322
+  status: resolved

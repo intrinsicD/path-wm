@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T21:48+02:00
-  turn_count: 18
-  summary: Texture mixture10/12 task passes vs8/12 matched continuation;errors34→8,clean100%. Cool recall
-    shape and strict repair unresolved. Scene diagnostics/rounding fixed;74 tests,10188 independent metrics,40
-    exact GPU replays; two actual Claude reviews.
+  last_turn: 2026-09-13T22:18+02:00
+  turn_count: 19
+  summary: Rectangle weighting passes 12/12 task cells vs 10/12 control, halves cool image errors 10 to
+    5; clean 100%, texture retained. Strict retention remains 9/12. 47 tests, 10,188 independent metrics,
+    40 exact GPU replays; three actual Claude reviews.
 
 events_logged:
 - turn: 1
@@ -645,6 +645,50 @@ events_logged:
   routing: crystallized
   provenance: user-revised
   summary: O212 matched texture/shape continuation method adopted; new results not yet endorsed.
+- turn: 19
+  type: decision
+  id: N321
+  routing: direct
+  provenance: user
+  summary: Continue reconstruction-objective diagnosis and controlled repair with Claude
+- turn: 19
+  type: experiment
+  id: N322
+  routing: direct
+  provenance: ai-executed
+  summary: Foreground reconstruction weighting creates asymmetric shape costs
+- turn: 19
+  type: experiment
+  id: N323
+  routing: direct
+  provenance: ai-executed
+  summary: Rectangle-weighted producer training halves cool image errors but strict retention remains
+    open
+- turn: 19
+  type: observation
+  id: O215
+  routing: staged
+  provenance: ai-suggested
+  summary: Rectangle-weighted reconstruction training improves recall shape at fixed producer capacity
+    and factual predictions, but does not close strict retention. The controlled intervention establishes
+    a scoped weighting-policy effect (mask and normalizer together), not a unique cause of every error.
+    Positive local gradient cosines do not prove absence of optimization conflict.
+- turn: 19
+  type: observation
+  id: O216
+  routing: staged
+  provenance: ai-suggested
+  summary: Retain the demonstrated loss improvement and separate correct-facts/wrong-image producer refinement
+    from frozen warm factual repair. A small declared producer-capacity/refinement comparison and a distinct
+    factual trainable path need fresh confirmation under unchanged gates. Real imagery, learned reliability,
+    independent upstream replication, CPU portability, streaming and general generative backends remain
+    open.
+- turn: 19
+  type: heuristic
+  id: H67
+  routing: crystallized
+  provenance: user-revised
+  summary: O214 reconstruction loss/gradient diagnosis method adopted; newly measured results remain staged.
 
 ai_actions:
 - turn: 1
@@ -898,6 +942,22 @@ ai_actions:
   - docs/experiments.md
   - runs/texture_shape_v1/
   - ara/evidence/tables/texture_shape_2026-09-13.json
+- turn: 19
+  action: Verified asymmetric shape costs and local gradient snapshots; implemented training-only rectangle
+    weighting and cached image-only continuation. Preserved default training/evaluation and frozen paths,
+    completed RED/development/resume checks, two matched fits and forty fresh evaluations. Three actual
+    generic Claude exchanges with corrections; private implementation/results reviewed locally. Independent
+    metric, source, cache, RNG and GPU replay verification; 44 reports structurally checked, figures inspected.
+    No post-confirmation optimization or threshold changes. Committed code, results and recipe documentation.
+  provenance: ai-executed
+  files_changed:
+  - experiments/memory_output.py
+  - tests/test_shape_weighting.py
+  - docs/project-state.md
+  - docs/recall-repair-plan.md
+  - docs/experiments.md
+  - runs/recall_shape_v1/
+  - ara/evidence/tables/recall_shape_2026-09-13.json
 
 claims_touched: []
 key_context:
@@ -962,15 +1022,19 @@ key_context:
   excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
     these open points. This adopts the next bounded method; no researcher comment yet on the resulting
     texture/cool-shape measurements.'
+- turn: 19
+  excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
+    these open points. This adopts the next bounded method; no researcher interpretation yet of the resulting
+    weighting-policy improvement and remaining retention failures.'
 
 open_threads:
-- 'N319/N320/O213/O214: texture data improves beyond matched continuation but cool recall shape and strict
-  texture retention remain open. Next inspect recall image producer loss/gradients before controlled objective/capacity
-  change; fresh confirmation required. General scenes, real recordings, reliability and independent upstream
-  runs remain open. Preserve completed runs and disk floor.'
-- 'N278-N320: CPU/GPU portability unresolved; preserve earlier numerical/categorical differences. Current40
-  exact GPU replays and74 scoped tests do not repair CPU inference portability; normalization-rounding
-  diagnostic tolerance is separate.'
+- 'N322/N323/O215/O216: rectangle weighting improves cool recall shape and passes all task gates, but
+  strict retention is 9/12. Next separate producer refinement for correct-facts/wrong-image cases from
+  frozen warm factual repair; fresh confirmation under unchanged thresholds. General scenes, real recordings,
+  reliability, upstream replication and generative backends remain open. Preserve runs and disk floor.'
+- 'N278-N323: CPU/GPU portability remains unresolved. Current 47 scoped tests and 40 exact GPU replays
+  do not repair previously observed CPU inference differences; training-target roundoff tolerance is a
+  separate diagnostic concern.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
   and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and
@@ -1020,5 +1084,7 @@ ai_suggestions_pending:
   response pending.'
 - 'O213: conditional texture-mixture benefit and persistent recall shape shortfall interpretation; researcher
   response pending.'
-- 'O214: recall image producer objective/gradient/capacity diagnosis proposed, with fresh confirmation
-  and retention.'
+- 'O215: scoped rectangle-weighting improvement and unresolved strict retention interpretation; researcher
+  response pending.'
+- 'O216: separate residual cool image-producer refinement and frozen warm factual repair, with fresh confirmation;
+  broader milestones open.'

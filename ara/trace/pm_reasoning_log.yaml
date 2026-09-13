@@ -1743,3 +1743,20 @@ entries:
     RED/fix, and fixed plot readability. Source38cf923 frozen throughout formal comparisons; no post-confirmation
     optimization or threshold changes. Existing CPU portability issues remain distinct from this diagnostic
     float tolerance.
+
+- turn: 2026-09-13_001#19
+  notes:
+  - O214 method promoted to H67 on explicit continuation; O215 results interpretation and O216 next intervention
+    staged. No user endorsement of new results. Claims unchanged; older modality, memory, planning and
+    reliability scopes remain open without abandonment closure.
+  - N322 separates normalized objective algebra and local gradients from a unique model mechanism. N323
+    records task success and failed strict retention separately. The policy changes mask and denominator;
+    correlated synthetic responses and a selected checkpoint do not establish generalization or independent
+    replication.
+  - Three compact actual Claude conceptual reviews exported only generic hypothetical methods/algebra,
+    no private source/data/results. Supervision-leakage and intervention-scope mistakes were corrected
+    and acknowledged; equal-denominator shorthand is limited to equal rectangle weights, with independent
+    numeric reference authoritative.
+  - Formal source 0287a24 fixed during comparison. No post-confirmation training or changed thresholds.
+    Prior browser local-file denial remains disclosed; no new denied attempt or workaround. Existing CPU
+    portability and broad reliability findings remain unchanged.
