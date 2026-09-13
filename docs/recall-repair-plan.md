@@ -1942,3 +1942,48 @@ encoder lost identity. Independent upstream replication, real recordings, confid
 CPU portability, broader scene/illumination coverage and streaming runtime remain
 open. Disk headroom remains limited; another large matrix needs a fresh capacity check
 while preserving completed runs and the3GiB free-space floor.
+
+## Texture and shape continuation: locked diagnostic protocol
+
+User requests the next implemented/reviewed comparison. Select the weaker source8502
+augmented checkpoint from tint_readout_v1 deliberately for diagnosis, not blinded
+selection or independent replication. Two equal continuations train native factual
+and image-feature heads only (67,032 parameters), with fixed encoders/state/memory,
+image backend, centering reference and independent probes. From identical weights,
+seed9101, AdamW/loss unchanged,1,536 additional updates,batch16,180s training cap:
+train7701/128 pairs per block; neutral,warm,cool,texture8 versus neutral,warm,cool,
+neutral. Each arm has1,024 histories. Neutral validation30072/32 pairs and terminal
+30071/64 pairs never select weights. Small separate development31701/31072/31071,
+16 pairs each,16 updates checks the workflow before formal comparison.
+
+Fresh confirmation30073/30074,16 pairs=32 histories per condition; complete paired
+quartets and canonical tuple support. Six conditions: neutral,warm,cool,mildwarm,
+mildcool,texture8. Evaluate both new fits and unchanged source on all conditions;
+raw original8502 source on neutral/texture only:40 cells, all10 causal/task modes.
+No new model or training adjustment after confirmation. Full task gates unchanged.
+Repair requires every texture-arm cell to pass and all four ordinary/reset factual/
+image accuracies within5pp of matched raw-neutral; texture additionally within5pp
+of raw-texture. Report clean-only retention separately. Added texture-mixture benefit
+is separate: pool the four response types across both seeds (256 predictions),
+require at least25% relative error reduction versus continuation and no regression
+in any of the eight paired response accuracies. Relative benefit is assessable only
+when continuation has at least8 errors; below that, report unassessable, not a pass.
+Always show absolute errors and exact differences per correlated four-history group;
+no independence-based significance, inferred effective sample size or replication
+claim. Both arms succeeding without assessable benefit supports extra optimization,
+not a necessary texture-data advantage. Training-condition shape fit is descriptive.
+
+Expose ordered scene training scores in the existing recipe/report, including shape
+and joint accuracy, with duplicate clean blocks separate and provenance/alignment
+checks. Keep aggregate training metrics and held-out gates unchanged. Essential RED
+checks cover hidden shape failure, bad alignment, duplicate blocks, report labeling,
+and the existing exact centered-scene resume path. CPU checks plus tiny GPU development,
+then freeze source; independent NumPy scores, frozen-tensor/source/cache checks and
+exact live GPU reloads follow formal runs. Browser QA for the changed table if available.
+
+Budget: two fits,40 evaluation cells,900s evaluation loop,4GiB GPU cap and1GiB free
+headroom; preserve all completed runs and3GiB disk floor. Starting disk4.4GiB supports
+this smaller matrix, not another80-cell comparison. Actual Claude generic review
+requested a matched continuation already present; correction sent for reconciliation.
+Adopt condition-level diagnostics, absolute-error reporting and diagnostic-only scope.
+Receipts: runs/reviews/continuation_2026-09-11/texture-*-public-*.
