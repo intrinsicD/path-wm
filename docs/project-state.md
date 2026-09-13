@@ -1,5 +1,33 @@
 # Current work
 
+**Real-photo training completed, 14 September:** continued the existing own image
+generator on 1,024 local COCO photographs, with 128 validation and 256 test photos
+held out from this continuation. Encoder, state/memory and codec stayed frozen.
+[Report](../runs/real_photo_v1/report.html), [protocol and results](real-photo-plan.md),
+[weights](../runs/real_photo_v1/training/weights.pt). Original runs are preserved.
+
+After 2,048 updates, test reset MSE falls 0.09674→0.05867 (39.4%), PSNR
+10.34→12.73 dB. Ordinary image error falls 41.4%. Reset error is 15.8% below the
+training-mean baseline and 26.8–49.8% below wrong-memory, blind-history and erased
+controls; swapped outputs track the swapped target. The predeclared learning and
+context screens pass. However, the first eight fixed examples show mostly broad
+color fields, not recognizable photographs. Direct codec reconstruction reaches
+30.92 dB: it receives the image and carries residual detail directly, so this is
+an adequacy control, not a compact-memory result. General generation remains open.
+
+Same architecture, 314,576 trainable generator parameters, 370.03 training seconds,
+700 MiB peak GPU reserve. Fifteen focused tests, exact GPU pause/resume and four
+GPU reload comparisons, 160 independent metric values, all 520 frozen tensors and
+60 source/snapshot files verified. Seven reports structurally checked; scientific
+figures inspected; browser QA unavailable. Actual Claude method review used the
+user-approved brief; local code/results review and remaining disagreements recorded.
+
+Next proposed diagnostic: compare recoverable real-photo detail at encoder features,
+stored state and final workspace using matched readers, then train the implicated
+path. The current result does not identify a unique loss location or prove that a
+larger generator is needed. The earlier synthetic placement and factual-readout
+proposals remain separate, unadopted next steps.
+
 **Decoded-image supervision implemented and iterated, 14 September:** an optional
 image loss now differentiates through the frozen decoder, either from a one-step
 endpoint estimate or through the actual eight-step sampler. Your agent and codec

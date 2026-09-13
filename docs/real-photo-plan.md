@@ -70,3 +70,77 @@ then training, fresh heldout outputs, independent metric and GPU reload verifica
 Use the existing Run and report code via an ordinary readable recipe. No new trainer
 framework. Claude public-method review was initially denied; user explicitly approved
 sending the exact saved brief. No private photographs, code or measurements exported.
+
+## Implementation and development
+
+Plan and three informative failing checks committed as `2311939`; implemented
+recipe and fixed protocol as `d97372a`. Fifteen focused tests pass: real-photo
+selection/history/metric checks, frozen parameters and buffers, nonzero updates,
+exact CPU resume, standalone reload and generator inference without an encoder,
+plus the existing conditional-generator and decoded-loss checks.
+
+The separate 16-update GPU development run used the next 16 training and validation
+groups after the formal selection. It completed in 3.85 training seconds with
+544 MiB peak reserve. Direct codec reconstruction averaged 30.50 dB PSNR on those
+development photos. The development learning screen failed; no hyperparameters
+or fit budget were changed based on quality. Its report is structurally verified,
+and the first six photo/codec/generated examples were visually inspected.
+
+An actual Claude Sonnet methodology review was completed after the user approved
+the exact brief. Matched noise and a content-blind history control were adopted.
+Unsupported prior-training/capacity assumptions and the requested ordering of
+different null interventions remain documented disagreements; no withdrawal or
+private code/result review is claimed. The CLI reported $0.012266 API-equivalent
+usage, not a subscription charge. Receipts: `runs/reviews/real_photo_v1/`.
+
+Training and evaluation commands are in [experiments](experiments.md). Run-local
+`verify.py` and `summarize.py` preserve independent numeric checks and figure/report
+reproduction from saved outputs; neither is a new library or experiment framework.
+
+## Formal result
+
+The declared run completed all 2,048 updates in 370.03 training seconds, with
+700 MiB peak GPU reserve. It optimized the same 314,576 generator parameters;
+all 520 frozen tensors, including feature statistics, stayed bitwise equal to the
+prepared initial model. The terminal checkpoint was evaluated without test-driven
+selection, further fitting or budget extension.
+
+| Fixed test, 256 photos | Before MSE | After MSE | After mean PSNR |
+| --- | ---: | ---: | ---: |
+| Ordinary state | 0.097074 | 0.056845 | 12.87 dB |
+| Reset + correct memory | 0.096738 | 0.058667 | 12.73 dB |
+| Training-mean image | 0.069642 | 0.069642 | 11.94 dB |
+| Direct codec reconstruction | 0.000912 | 0.000912 | 30.92 dB |
+
+Reset pixel MSE improves 39.36%; ordinary improves 41.44%. Correct recall is
+15.76% below the mean-image baseline, 49.82% below erased memory, 39.01% below a
+blank-only history and 26.75% below swapped memory scored against the original
+photo. Swapped-target error equals correct recall within numeric precision.
+Both declared learning/context screens pass on validation and test.
+
+These screens establish this pilot's relative optimization and context sensitivity,
+not photographic fidelity. The first eight predetermined examples lose the old
+synthetic square pattern but remain mostly coarse color fields; the actual objects
+are not reconstructed. The direct codec looks substantially better. Neither these
+metrics nor that visual comparison uniquely identify whether the remaining gap is
+encoding, state/memory compression, generator readout or optimization. Only one fit
+seed and one fixed noise realization were tested; no broad replication is claimed.
+
+Independent NumPy calculations reproduce 160 saved metric/count values. Fresh GPU
+reloads reproduce both full 128-photo validation outputs and both 32-photo test
+prefixes exactly, across eight saved tensors each. A separate disjoint development
+check reproduces four uninterrupted GPU updates versus one plus three resumed
+updates, including parameters, AdamW state, metrics and RNG. Source checkpoint,
+60 code/snapshot files, training-mean calculation and split separation are verified.
+Seven standalone reports pass structural checks, and the development/final figures
+were visually inspected. The unchanged renderer's browser QA remains unavailable.
+
+Use [report](../runs/real_photo_v1/report.html) and
+[comparison figure](../runs/real_photo_v1/comparison.png) to inspect the outcome.
+The loadable checkpoint is `runs/real_photo_v1/training/weights.pt`; the initial
+baseline, optimizer/RNG checkpoint, raw predictions and verification receipt stay
+beside it. The default renderer and original weights were not replaced.
+
+Next proposed test: locate recoverable photographic detail at the encoder, stored
+state and workspace with matched diagnostic readers before deciding which stage
+to train next. This is a proposal, not an implemented repair or a causal conclusion.

@@ -10,6 +10,25 @@ to the same training loop. [Task contracts and evaluation](tasks.md).
 
 The following perception/dynamics recipes remain focused references.
 
+`experiments/real_photo.py` continues the existing conditional generator on local
+COCO photographs. It shows each photo twice, removes it, then trains image output
+from ordinary or recalled state. Only the generator learns; the encoder, agent,
+memory and reconstruction codec are frozen. See the [protocol](real-photo-plan.md).
+
+```bash
+.venv/bin/python -m experiments.real_photo --weights runs/decoded_image_v1/sample512/weights.pt --output runs/real_photo_v1/development --device cuda --development
+.venv/bin/python -m experiments.real_photo --weights runs/decoded_image_v1/sample512/weights.pt --output runs/real_photo_v1/training --device cuda
+.venv/bin/python -m experiments.real_photo --weights runs/real_photo_v1/training/weights.pt --output runs/real_photo_v1/trained_test --device cuda --evaluate-only
+```
+
+These are the recorded run paths: use fresh output directories for new fits/tests.
+To pause explicitly, add `--stop-after N`; resume with the same original source,
+output and flags plus `--resume`. Code, data, settings and device must match.
+The prepared pre-optimizer export is `initial_weights.pt`; both exports include
+training-only calibration and the training-mean image used for evaluation.
+Photo targets are uniform RGB64 crops, without synthetic object labels or
+foreground weights. This is real-photo recall, not arbitrary prompt generation.
+
 `experiments/conditional_image.py` trains the optional multiscale image generator
 on frozen memory contexts, with direct-regression and flow-matching objectives.
 The [commands, comparison and limits](image-output-plan.md#conditional-generator-results)

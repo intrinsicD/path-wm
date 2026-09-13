@@ -41,6 +41,15 @@ inference uses the same generator and sampler. Coefficient0 preserves prior loss
 and RNG, and no target image becomes a generation input. The [new comparison](image-output-plan.md#decoded-image-supervision-results)
 improves weighted image error but still fails reliable placement and full capability.
 
+The [real-photo continuation](real-photo-plan.md) uses this same generator with
+uniform image loss on actual COCO crops. It removes the synthetic-background
+`PixelMedianCentering` input wrapper and exports `input_centering=null`; other
+upstream parameters and normalization stay fixed. Generator feature statistics
+are fitted to training photos, then frozen before baseline evaluation and updates.
+Recalled workspace tokens remain the only image-dependent generator input.
+The direct codec comparison sees the original photo and carries within-patch
+residual detail; its reconstruction quality is not evidence of compact memory.
+
 `MemoryOutput` connects detached episodic snapshots to native factual and image
 outputs through working/reasoning tokens. Its optional `workspace_reference` is a
 frozen `TokenProbe`: fixed training-channel statistics followed by an attention
