@@ -543,3 +543,14 @@
 - **Sensitivity**: High. Native initialization favors a familiar format, equal budgets need not equalize fitting, and reset-only success may regress ordinary behavior. The completed comparison supports conditional native readout in only one source.
 - **Code ref**: [stage selection and normalization](../../../pathwm/models/memory_output.py), [cached native-output training](../../../experiments/memory_output.py), [causality/cache/gradient checks](../../../tests/test_direct_readout.py).
 - **Evidence**: N289/N290; [eight-fit record](../../evidence/tables/direct_readout_2026-09-13.json).
+
+
+## H56: Train shared output heads across their actual operating contexts
+
+- **Rationale**: With upstream formation frozen, compare mixed ordinary/reset workspace training against reset-only training at matched total presentations and history sampling. Verify actual token differences, live-cache identity, target alignment and resumed context phase. Evaluate each operating mode and causal controls independently.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O193
+- **Sensitivity**: High. Mixed training halves reset exposure at fixed total budget; it identifies a policy effect, not a unique mechanism. The completed screen passes in one source only; weaker-writer and numerical portability limitations remain.
+- **Code ref**: [mixed-context recipe](../../../experiments/memory_output.py), [cache/gradient checks](../../../tests/test_direct_readout.py), [resume and export checks](../../../tests/test_memory_output.py).
+- **Evidence**: N291/N292; [four-fit record](../../evidence/tables/mixed_context_2026-09-13.json).

@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T11:09+02:00
-  turn_count: 8
-  summary: Frozen-stage head training passes reset readout in one source but regresses ordinary outputs;
-    weaker writer and all full/replicated gates fail.59 distinct tests,2930 metrics, exact GPU/cache replay;
-    CPU factual-side differences remain.
+  last_turn: 2026-09-13T12:47+02:00
+  turn_count: 9
+  summary: Mixed-context output training passes full and benefit screens in one frozen source; weaker
+    writer remains75%, replicated repair fails.46 tests,1826 metrics, exact GPU/cache replay; CPU numerical
+    gate fails with labels agreeing in this slice.
 
 events_logged:
 - turn: 1
@@ -247,6 +247,38 @@ events_logged:
   provenance: user-revised
   summary: O191 diagnostic method adopted, not a guaranteed direct-route repair.
 
+- turn: 9
+  type: decision
+  id: N291
+  routing: direct
+  provenance: user
+  summary: Approve O193 ordinary/reset head-training experiment.
+- turn: 9
+  type: experiment
+  id: N292
+  routing: direct
+  provenance: ai-executed
+  summary: One writer repaired on both modes; weaker writer and replicated gates fail, numerical limits
+    retained.
+- turn: 9
+  type: observation
+  id: O194
+  routing: staged
+  provenance: ai-suggested
+  summary: Conditional policy-level repair; mechanism, weaker writer and CPU portability remain open.
+- turn: 9
+  type: observation
+  id: O195
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose controlled writer/workspace learning comparison retaining mixed output training.
+- turn: 9
+  type: heuristic
+  id: H56
+  routing: crystallized
+  provenance: user-revised
+  summary: O193 adopted via verbal affirmation; method is not a guaranteed repair.
+
 ai_actions:
 - turn: 1
   action: Reconciled existing plans and saved evidence; recorded recommendation without model changes or new evaluation.
@@ -344,6 +376,20 @@ ai_actions:
   - docs/project-state.md
   - docs/models.md
 
+- turn: 9
+  action: Two actual public-only Claude reviews; predeclared protocol, RED checks, implementation,46 tests,
+    development plus four fits,769+767 restart,1826 independent metrics, frozen/cache/GPU/CPU checks,
+    reports and commits. No additional experiment.
+  provenance: ai-executed
+  files_changed:
+  - experiments/memory_output.py
+  - tests/test_direct_readout.py
+  - tests/test_memory_output.py
+  - docs/recall-repair-plan.md
+  - docs/project-state.md
+  - runs/mixed_context_v1/
+  - ara/evidence/tables/mixed_context_2026-09-13.json
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -370,13 +416,15 @@ key_context:
     \ after head-only training, but ordinary81.25/59.38%; direct stored78.91/95.31%, weaker writer~75\u2013\
     77%. Separate conditional readout sufficiency from complete repair."
 
+- turn: 9
+  excerpt: 'User: Yes please do that. Mixed writer7801 ordinary96.875/96.875%, reset97.65625/94.53125%;
+    full/benefit passes. Writer7802 all75% even training; replication fails.'
+
 open_threads:
-- 'N290/O192/O193: stronger native reset workspace supports accurate outputs, ordinary mode regresses
-  under reset-only fitting. Test mixed ordinary/reset head training; weaker writer remains a separate
-  accessibility problem.'
-- 'N278/N280/N284/N286/N288/N290: CPU/GPU numerical tolerance unresolved despite exact GPU replay. Current
-  max native logits0.815565/pixels0.0159254; five factual-side changes across three7801 arms. Image labels
-  agree in this slice; prior image differences remain documented.'
+- 'N292/O194/O195: mixed output training repairs stronger frozen source; weaker writer remains75% even
+  training. Define a controlled writer/workspace experiment before further fitting.'
+- 'N278/N280/N284/N286/N288/N290/N292: CPU/GPU numerical tolerance unresolved. Current max logits1.104984/pixels0.02662665,
+  ordinary/reset labels agree here; earlier factual/image differences remain evidence.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
   and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and
@@ -406,8 +454,9 @@ ai_suggestions_pending:
 - 'O190: auxiliary compatibility versus native-output failure; mechanism remains unconfirmed.'
 - 'O192: conditional native reset accessibility and ordinary regression; no general mechanism or full
   repair established.'
-- 'O193: mixed ordinary/reset head training proposed; exact sampling/budget unconfirmed.'
 - 'O164-O175: earlier curriculum, diagnosis and scoped capability interpretations retain their original
   provenance and closure status.'
 - 'O177/O178: coordination and state-grounding diagnostics remain staged; acknowledgment does not select
   their complete implementation.'
+- 'O194: one-source mixed-context policy repair; no general mechanism or replicated reliability claim.'
+- 'O195: controlled weaker-writer/workspace comparison proposed; exact loss/budget unconfirmed.'

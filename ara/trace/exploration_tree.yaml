@@ -4634,3 +4634,45 @@ tree:
   - N288
   - N282
   status: resolved
+
+- id: N291
+  type: decision
+  title: Approve mixed ordinary/reset native output training
+  provenance: user
+  timestamp: 2026-09-13T12:47+02:00
+  choice: 'Yes please do that: adopt O193 frozen-upstream head training on ordinary and reset workspaces.
+    Balanced replacement, matched sampling, raw native route, exact seeds/gates/budget are agent implementation
+    choices.'
+  alternatives:
+  - Further reset-only head fitting
+  - Change writer or codec before checking ordinary-state retention
+  evidence:
+  - O193
+  - N290
+  - docs/recall-repair-plan.md#mixed-ordinaryreset-output-training-protocol--13-september
+  status: resolved
+- id: N292
+  type: experiment
+  title: Mixed-context head training repairs one frozen source; replication fails
+  provenance: ai-executed
+  timestamp: 2026-09-13T12:47+02:00
+  result: 'Source f0ac167. Four1536-update fits, seed8401,67032 trainables, two source writers x reset-only/mixed
+    native workspaces. Writer7801 mixed ordinary facts/images96.875/96.875% versus82.8125/58.59375%; reset97.65625/94.53125%
+    versus97.65625/96.09375%. Full and policy-benefit gates pass only7801 mixed. Writer7802 all75% in
+    both contexts, including training; replicated repair fails. Matched initial heads, histories/total
+    presentations; mixed has half reset exposure. Writer/thinker/codecs/probes/banks frozen.140.834s training
+    plus9.210s cache including resume,458MiB.46 tests;1826 independently verified metrics within7.57e-8.
+    All ordinary/reset GPU exports and both live caches exact. Different workspaces for all256 histories;
+    balanced counts and phase audited.769+767 GPU restart preserves776 ledger rows; exact CPU optimizer/RNG
+    resume tested. CPU1e-4 numeric gate fails: max native logits1.104984/pixels0.02662665, all factual/image
+    labels agree this slice. Two public-only Claude reviews, structural reports and inspected figures.
+    No further training launched.'
+  evidence:
+  - ara/evidence/tables/mixed_context_2026-09-13.json
+  - runs/mixed_context_v1/report.html
+  - runs/mixed_context_v1/verification.json
+  - docs/recall-repair-plan.md#mixed-ordinaryreset-results
+  also_depends_on:
+  - N291
+  - N290
+  status: resolved

@@ -3419,6 +3419,41 @@ observations:
   potential_type: heuristic
   bound_to:
   - N290
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H56
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O194
+  timestamp: 2026-09-13T12:47+02:00
+  provenance: ai-suggested
+  content: At matched total head-training budget, replacing half the reset workspaces with ordinary workspaces
+    repairs both output modes for the stronger frozen source while retaining reset accuracy within the
+    declared allowance. This is a policy-level conditional result, not a unique mixing mechanism, equal
+    reset dose or general agent reliability. Weaker source stays75% even on training; neither inaccessible
+    information nor a writer-only cause is established. CPU numerical portability remains unresolved despite
+    categorical agreement in this slice.
+  context: One full/benefit pass, replicated repair fails; researcher has not interpreted these new results.
+  potential_type: claim
+  bound_to:
+  - N292
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O195
+  timestamp: 2026-09-13T12:47+02:00
+  provenance: ai-suggested
+  content: Next target weaker-writer/workspace formation while retaining mixed output training. A matched
+    frozen-versus-trainable writer comparison is a candidate; declare loss, budget and causal claims first.
+    Keep CPU numerical portability separate and do not enlarge codecs solely because head-only fitting
+    failed.
+  context: Proposed after mixed-context training repairs the stronger source but not weaker training/test
+    outputs; no further run launched.
+  potential_type: heuristic
+  bound_to:
+  - N292
+  - N282
   promoted: false
   promoted_to: null
   crystallized_via: null

@@ -139,10 +139,10 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: Frozen-stage head training passes reset readout in one source but regresses ordinary outputs;
-    weaker writer and all full/replicated gates fail.59 distinct tests,2930 metrics, exact GPU/cache replay;
-    CPU factual-side differences remain.
-  turn_count: 8
-  events_count: 38
+  summary: Mixed-context output training passes full and benefit screens in one frozen source; weaker
+    writer remains75%, replicated repair fails.46 tests,1826 metrics, exact GPU/cache replay; CPU numerical
+    gate fails with labels agreeing in this slice.
+  turn_count: 9
+  events_count: 43
   claims_touched: []
   open_threads: 10
