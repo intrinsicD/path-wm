@@ -75,6 +75,71 @@ run completes in3.576s with414MiB peak reserved; report structural checks pass a
 the actual selection/relocation quartet panel is inspected. This establishes the
 workflow, not learned capability. No formal evaluation outcomes used for changes.
 
+## Relocation results
+
+Source f0feb61. Both seeds complete1536 updates within their300s training caps:
+7801 takes241.305s,7802 takes293.527s (534.832s total). Peak reserved GPU402MiB each.
+The independently trained direct encoder readers score128/128 joint answers in
+both runs. Teacher target-feature reconstruction also scores128/128. Agent results:
+
+| Model on the same128 relocation episodes | Reset facts | Reset images | Factual color / shape / side | Complete relocation pairs (facts/images) |
+| --- | ---: | ---: | --- | --- |
+| Preserved normalized correlated7801 |64/128|64/128|128 /128 /64|0 /0|
+| Balanced7801 |62/128|61/128|128 /124 /64|0 /0|
+| Balanced7802 |64/128|64/128|128 /128 /64|0 /0|
+
+All gates FAIL. Each balanced seed gets8/128 factual answers after reset-erased
+memory and8/128 after removing the initial cue. Removing the later visible frame
+leaves factual accuracy unchanged (62/128 and64/128). The agent learns selected
+appearance but has not learned the required location update at this budget.
+Actual images show faint objects at both possible positions. No evidence here
+justifies blaming image-decoder capacity or declaring all location information
+lost: the trained state head is not an independent probe. Optimization, insufficient
+training and state/readout learning remain possible causes. Training all tuples
+corrects the split shortcut; it does not solve the agent task or establish unique
+causal attribution to the old correlation.
+
+Every original data population and all three prior checkpoints are unchanged.
+Seed7801's entire initial model hash matches the old normalized7801 run exactly;
+both new runs preserve encoder/head/input-adapter hashes and all four output
+calibration buffers. The frozen reference is evaluated on identical new histories
+with zero updates; the previous parity held-out benchmark stays failed and intact.
+
+34 targeted tests pass, including exact CPU optimizer/model/RNG/sampler resume and
+standalone loads for both curricula. Independent NumPy reconstruction from raw
+history pixels verifies every target;522 saved metrics agree to5.90e-9. All three
+standalone GPU reloads reproduce all128 saved reset outputs exactly. The existing
+CPU/GPU1e-4 pixel check FAILS:7801 max0.00106190,7802 max0.00482583, old control
+max0.00309020. All factual labels agree; image labels agree127/128 for7801 and128/128
+for the other two. Keep this numerical limitation visible; no threshold relaxation.
+Individual and combined reports are self-contained and structurally verified;
+all actual quartet panels inspected. Browser QA unavailable.
+
+Artifacts: `runs/memory_relocation_v1/report.html`, per-run `result.json`,
+`predictions.npz`, `weights.pt`, `last.pt`, source/settings ledger, report and raw
+replays. `verification.json` combines all audits; `data_audit.json` records input
+shortcut bounds and split hashes. Development and public-only Claude receipts are
+retained. No model is promoted as a successful replacement.
+
+Run a fresh comparison (never overwrite an existing directory):
+
+```bash
+.venv/bin/python -m experiments.memory_output \
+  --weights runs/hierarchy_training_v1/decoder_rate_repair/seed_7501/hand_both/weights.pt \
+  --output runs/memory_relocation_v1/new_seed_7801 \
+  --device cuda:0 --seed 7801 --normalize-input --curriculum relocation
+```
+
+Next proposed slice, not yet run: freeze each trained agent; cache its initial,
+pre-storage and post-recall states; fit matched diagnostic readers on training
+episodes only and test fresh counterfactual groups. A successful location probe
+would support a readout repair; failure would motivate testing earlier stages and
+explicit update supervision, while retaining the successful direct reader as a
+positive control. Set probe budgets and gates before execution. Do not increase
+encoder/decoder size or claim absent information solely from these current scores.
+
+## Original composition experiment
+
 13 September 2026. Alex approved the proposed observation-memory-output slice.
 Use the actual Gaussian reference agent, bounded detached episodic snapshots and
 the existing state-to-spatial RGB decoder. This is a controlled synthetic learning

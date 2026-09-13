@@ -1,5 +1,26 @@
 # Current work
 
+**Balanced relocation comparison completed, 13 September:** both new seeds fail
+the declared screen. On128 fresh-background histories with all tuples/motions
+represented in training, independently trained direct encoder readers score100%.
+Reset recall facts48.44%/50%, images47.66%/50%; color100%, shape96.875%/100%,
+location50% in both factual outputs. Complete relocation-pair accuracy0% for both
+outputs/seeds. Removing the later view leaves factual accuracy unchanged; removing
+the cue or memory reduces it to6.25%. The old normalized checkpoint scores50% on
+this same population. Thus balancing removes the data shortcut but does not repair
+learning of location updates through the agent state/memory path. It does not prove
+location information is absent from those states. No unseen-combination claim.
+Frozen visual weights and both calibrations match the reference; seed7801 initial
+model hash is identical.34 targeted tests pass;522 metrics and rendered-history
+answers independently verify. All three GPU reloads exact. CPU/GPU pixel tolerance
+still fails (max0.004826); factual labels agree, one seed7801 image label changes.
+Two1536-update runs,534.83s total,402MiB peak reserved; two public-only Claude
+exchanges. Reports structural-only; all quartet PNGs inspected. Old benchmark and
+weights unchanged. [Protocol/results](memory-output-plan.md#relocation-results),
+[report](../runs/memory_relocation_v1/report.html).
+Next: frozen-state probes before changing the updater or adding training; separate
+recoverable-but-unused location from inadequate state learning. No probe run yet.
+
 **Memory-output experiment and normalization repair completed, 13 September:**
 two raw-feature seeds fail (held-out recall facts25%/12.5%, images0%). Fixed input
 channel calibration enables100% factual/image validation accuracy on familiar
