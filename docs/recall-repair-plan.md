@@ -1924,3 +1924,21 @@ A mismatch must mark failed status, preserve checkpoint/committed metrics and ru
 no optimizer steps. Regression: existing exact odd-step centered-scene resume stays
 valid. Budget: focused CPU checks only, zero new capability training/evaluation.
 Keep formal5451ce1 source evidence distinct; no inference/metric change is needed.
+
+Resume repair: the new RED case attempted an optimizer update with an intentionally
+mismatched restored reference. The new guard now rejects it, records failed status,
+and preserves checkpoint and committed metrics. All18 focused cases pass, including
+valid odd-step resume and standalone reload;109 distinct relevant cases pass across
+this iteration. No scientific fits, scores or thresholds changed. The final fix
+changes only this post-restore validation in train; all inference/objective/metric
+functions and the80 verified GPU predictions retain their formal source evidence.
+
+86 reports structurally verified and embedded PNGs decoded successfully; development,
+accuracy grid and a labeled post-hoc cool-shape error panel inspected. Browser QA
+unavailable. [Report](../runs/tint_readout_v1/report.html). Next: separate balanced
+texture/shape fitting comparison with clean/raw retention, plus image-feature
+producer diagnostics where factual shape is already correct. Do not conclude the
+encoder lost identity. Independent upstream replication, real recordings, confidence,
+CPU portability, broader scene/illumination coverage and streaming runtime remain
+open. About3.8GiB disk free remains; another large matrix needs additional headroom
+while preserving completed runs and the3GiB free-space floor.

@@ -594,6 +594,9 @@ def train(
     )
     start = perf_counter()
     try:
+        if centering:
+            # Run may have restored a different buffer after the initial preflight.
+            configure_input_centering(model, centering)
         end = (
             settings["steps"]
             if stop_after is None

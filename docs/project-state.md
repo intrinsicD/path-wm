@@ -1,5 +1,31 @@
 # Current work
 
+**Centered tint learning and checkpoint repair completed, 13 September:** native
+output-head augmentation passes19/24 full task cells, versus14/24 for neutral-only
+and unchanged centered controls. Warm tint improves0/4→4/4; clean accuracy stays
+98.438–100%. Full repair still fails: cool tint2/4, texture1/4; raw texture remains
+100%. Texture retention0/4; strict warm-benefit threshold1/4. Both sources share
+upstream initialization. [Report](../runs/tint_readout_v1/report.html),
+[protocol/results](recall-repair-plan.md#centered-tint-comparison-results-and-resume-guard).
+
+Added whole-history scene augmentation to the existing recipe. Fixed centering is
+stored with trained weights, automatically restored and checked on standalone load
+and training resume. Invalid restored references fail before optimization. Four
+matched1,536-update fits change only67,032 native output parameters; all frozen
+state/encoder/backend tensors stay exact. Training315.46s, peak602MiB; evaluation
+458.95s. GPU contention documented; elapsed allowance amended before confirmation.
+
+109 distinct relevant tests pass;80 exact GPU replays;20,120 independently checked
+metrics;12 default datasets byte-exact. Two actual Claude conceptual reviews complete,
+with follow-up explicitly approved after an initial automatic-review rejection.
+86 reports structurally verified, figures inspected; browser QA unavailable.
+
+Next: residual shape fitting and texture training with raw/clean retention. In one
+cool-tint training block facts are100% correct but48/256 recall images have the wrong
+shape, supporting an image-output learning shortfall on those examples. General
+perception, independent upstream runs, real recordings, confidence, CPU portability
+and streaming tests remain open. Preserve old runs; disk has roughly3.8GiB free.
+
 **Scene/lighting challenge and reporting repair completed, 13 September:** centered
 input passes12/40 attempted cells (neutral, temporal additive and RGB-channel
 additive); raw passes8/40 (neutral and textured background). All those successes

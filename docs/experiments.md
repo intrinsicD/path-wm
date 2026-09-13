@@ -329,6 +329,23 @@ whole histories and canonical targets; `--train-input-offsets 0 0 0 0 0` provide
 matched neutral presentations. Use an explicit source, seed and fresh validation/
 test seeds. This option rejects writer learning and output standardization.
 
+For scene learning on frozen states, use `--repair identity --readout-stage native
+--readout-context mixed --center-input --train-scenes neutral background-tint
+background-cool`. The three ordered blocks retain canonical targets and paired
+histories; three `neutral` entries give a matched presentation control. This option
+rejects live writer learning, output standardization and simultaneous training RGB
+offsets. Additional presets include `background-warm-mild` and
+`background-cool-mild`. Choose explicit source/optimizer/validation/test seeds.
+
+Training centering uses neutral training inputs before augmentation. Its fixed RGB
+reference, version and calibration identity are saved with the weights. Ordinary
+`load_model()` and `--evaluate-only` restore this preprocessing automatically;
+adding `--center-input` again does not refit or double-wrap it. Buffer/settings
+mismatches are rejected, including after training checkpoint restoration. Training
+preflights all train/validation/test histories and requires complete range coverage.
+Cache manifests record preprocessing and source-weight provenance. This remains a
+chosen preprocessing policy; a checkpoint trained with it depends on it.
+
 For a separate zero-update diagnostic, add `--center-input` to `--evaluate-only`.
 The recipe reconstructs and verifies the original neutral training observations,
 fits a fixed per-channel reference median, then centers each observed frame before
