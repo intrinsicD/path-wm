@@ -5041,3 +5041,18 @@ tree:
   - N304
   timestamp: 2026-09-13T18:00+02:00
   status: resolved
+- id: N310
+  type: question
+  title: Define completion tests for the current visual brightness repair
+  provenance: user
+  timestamp: 2026-09-13T19:18+02:00
+  description: User asks where the work stands and every test needed to consider this part solved. Response
+    scopes the current visual-input/memory/factual-image task, separates synthetic completion from learned
+    invariance and webcam readiness, and writes a proposed checklist without launching experiments.
+  evidence:
+  - docs/recall-repair-plan.md#proposed-brightness-robustness-closure-checklist
+  - runs/brightness_repair_v1/interpretation.json
+  also_depends_on:
+  - N307
+  - N309
+  status: open

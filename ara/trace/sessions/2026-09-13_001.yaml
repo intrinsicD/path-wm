@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T18:00+02:00
-  turn_count: 14
-  summary: Centering passes all12 brightness conditions at100% categories with unchanged weights; head
-    augmentation fails stress/retention.78 tests,12536 metrics,48 exact GPU replays; CPU differences persist.139.52s
-    training,712MiB; broader centering validation proposed.
+  last_turn: 2026-09-13T19:18+02:00
+  turn_count: 15
+  summary: 'Brightness closure checklist proposed: scene/lighting coverage, causal memory, clean fidelity,
+    fresh independent confirmation, failure handling and runtime integration; learned invariance and webcam
+    readiness separate. No new training or evaluation.'
 
 events_logged:
 - turn: 1
@@ -491,6 +491,18 @@ events_logged:
   routing: crystallized
   provenance: user-revised
   summary: O205 method adopted; separate centering and matched augmentation before encoder changes.
+- turn: 15
+  type: question
+  id: N310
+  routing: direct
+  provenance: user
+  summary: Ask current status and tests needed to close this part.
+- turn: 15
+  type: observation
+  id: O208
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose scoped completion checklist and cheapest frozen-weight challenge before further learning.
 
 ai_actions:
 - turn: 1
@@ -682,6 +694,12 @@ ai_actions:
   - docs/recall-repair-plan.md
   - runs/brightness_repair_v1/
   - ara/evidence/tables/brightness_repair_2026-09-13.json
+- turn: 15
+  action: Reviewed recorded brightness outcomes and active protocol; appended proposed closure checklist
+    to the active plan. No model changes, new training/evaluation, or fresh Claude review.
+  provenance: ai-executed
+  files_changed:
+  - docs/recall-repair-plan.md
 
 claims_touched: []
 key_context:
@@ -731,11 +749,14 @@ key_context:
   excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
     this. Fixed-reference centering succeeds on the scoped synthetic task; augmentation alone fails declared
     repair. No test-guided next fit or default deployment.'
+- turn: 15
+  excerpt: 'User: Where are we at? List everything we need to test to have this part solved. Answer interprets
+    this part as brightness robustness of visual observations feeding memory and factual/image output.'
 
 open_threads:
-- 'N307/N309/O206/O207: centering passes scoped brightness conditions; head augmentation remains underfit
-  and fails repair. Challenge background/coverage/illumination priors before defaulting; learned state/head
-  optimization, independent upstream replication and real observations remain open.'
+- 'N307/N309/N310/O206/O207/O208: scoped centering success and incomplete learned repair; closure checklist
+  proposed. Background/coverage/illumination challenge, independent upstream confirmation, integration/runtime
+  and later real recordings remain open.'
 - 'N278-N309: CPU/GPU numerical portability unresolved; current logits4.991394043/pixels0.035994232, native-category
   differences11 cells,none centered. Current48 GPU replays and original defaults exact; prior cases retained.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
@@ -784,3 +805,5 @@ ai_suggestions_pending:
   pending.'
 - 'O207: challenge centering priors and diagnose learned head/state optimization under fresh confirmation
   and neutral retention.'
+- 'O208: proposed closure matrix; fix new nuisance ranges, populations and thresholds before the next
+  protocol.'

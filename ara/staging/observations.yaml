@@ -3655,3 +3655,23 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O208
+  timestamp: 2026-09-13T19:18+02:00
+  provenance: ai-suggested
+  content: 'Proposed closure: specify nuisance versus meaningful signal; challenge background/coverage
+    and illumination; preserve temporal identity, memory causality, clean task and image pixels; confirm
+    on fresh scenes and independent upstream initializations; define invalid-input fallback and package/replay
+    the selected policy within runtime limits. Learned invariance requires a separate underfitting diagnosis;
+    real webcam claims require held-out recordings and sustained runtime checks.'
+  context: Status/checklist request only. Existing gates retained; new ranges, seeds, replication counts,
+    thresholds and budgets are not yet declared. Checklist is a proposal, not deployment authorization
+    or a new empirical result.
+  potential_type: heuristic
+  bound_to:
+  - N307
+  - N309
+  - N310
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

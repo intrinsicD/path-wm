@@ -1587,3 +1587,62 @@ new declared screen before treating centering as a default input policy. If purs
 learned invariance, first investigate the head/state optimization shortfall under a
 fresh protocol with neutral retention. No automatic deployment or further training
 was performed; current test populations are now examined diagnostic evidence.
+
+## Proposed brightness robustness closure checklist
+
+Status review, 13 September. This scopes “this part” to visual observations feeding
+the current memory task and its factual/image outputs. It is a proposed definition
+of completion, not an approved new experiment protocol or a claim about general
+image generation. No additional training or evaluation was launched for this review.
+
+Already demonstrated: centered original weights pass all 12 declared synthetic
+conditions, including ordinary/reset factual and image-category accuracy and causal
+gates. The 78 relevant tests pass and 48 GPU replays are exact. Augmented head
+training remains an unsuccessful repair; CPU numerical portability remains open.
+
+The following checks are required before making centering the normal input policy
+for a declared synthetic operating range. Specify populations, ranges, fresh seeds,
+budgets and any new thresholds before running; retain the existing gates below.
+
+| Check | What must be established |
+| --- | --- |
+| Define nuisance versus signal | Specify which lighting changes should leave identity/state unchanged and which brightness/color changes are actual task information. Current image targets are canonical, not copies of the altered camera pixels. Include paired cases with nuisance changes and genuine object/state changes. |
+| Challenge the scene assumptions | Vary background color, brightness, texture, clutter and foreground coverage. Include large objects and scenes without a stable background reference. Correct identity, state and output must survive within the declared domain. |
+| Challenge illumination | Test fresh additive offsets and temporally varying shifts; separately test gain, contrast/gamma, per-channel color shifts and local shadows. Test selected combinations after single-factor diagnosis. Median centering only guarantees cancellation of uniform additive shifts without clipping; broader task performance needs evidence. |
+| Preserve memory and causality | Change lighting between selection, last observation and query; include occlusion/reappearance and distinguish appearance changes from identity changes. Repeat ordinary/reset, selection/relocation pairs, history/cue erasures and memory swaps. Check that preprocessing uses neither future frames nor target/offset labels. |
+| Preserve the clean task and image content | Retain factual/image-category gates, neutral-retention bounds and pixel-error baselines. Examine actual colors, shape, location, boundaries and representative reconstruction errors. Category accuracy alone cannot establish high-quality pixels. |
+| Fresh confirmation and replication | Separate diagnostic and confirmation scenes; freeze the policy/reference before confirmation. Use independently initialized upstream models as well as new data seeds. The two existing source trajectories share an initialization and codec. Predeclare replication count and uncertainty reporting within budget. |
+| Handle invalid and unsupported input | Existing guards reject clipping/out-of-range centered values. Define and test the consumer's fallback for rejection, saturation, missing/corrupt frames and inputs outside the supported range. Do not silently clip or write an invalid observation into memory. If claiming learned reliability, separately test whether predicted confidence tracks actual errors. |
+| Integrate and reproduce the selected policy | Package the fixed training reference and transform version with the deployed configuration; test training/evaluation/streaming/recalled-input consistency and reload. Preserve time/source attribution. Resolve CPU/GPU discrepancies or explicitly support the validated GPU path only. Measure complete-path latency, peak memory and sustained memory growth; current 712 MiB measures the tiny training task. |
+
+Existing minimum task gates remain: at least 90% factual and image-category accuracy
+for ordinary/reset queries; at least 80% selection/relocation pair performance;
+required causal erasure drops of at least 30 percentage points; at least 80%
+alternate-target performance after memory swaps; pixel error below the recorded
+background/pair-mean baselines. Neutral losses must stay within five percentage
+points of the matched original. Retain the declared stress-benefit requirement
+where comparing a repair. These are engineering tolerances, not confidence bounds;
+new perturbation-specific ranges and criteria are still to be declared.
+
+Learned robustness is a separate question from deploying a fixed normalization
+policy. If it is required, first diagnose why augmented heads fail even on seen
+training extremes. Use bounded optimization/capacity/readout comparisons with
+matched controls and clean retention; probe state accessibility before expanding
+the trainable encoder/state path. A failed probe or head fit alone cannot establish
+information loss. Successful fixed centering would not close this learning question.
+
+Before claiming webcam readiness, add held-out real recordings with different
+sessions, backgrounds, motion, occlusion, exposure/white-balance changes, blur,
+sensor noise and compression. Split by recording/session rather than neighboring
+frames. Verify real-time latency, sustained memory use, and failure/re-observation
+behavior at the intended camera resolution. This is a later boundary beyond the
+synthetic closure, not a prerequisite to report the bounded synthetic result.
+
+Efficient next order: (1) freeze original weights and challenge backgrounds,
+coverage and frame-varying/local lighting; (2) repair only demonstrated failures,
+including any consumer fallback; (3) confirm the selected path on fresh scenes and
+independent upstream runs; (4) validate integration and the declared runtime;
+(5) run a small held-out webcam pilot. Keep the learned-robustness branch separate
+unless fixed preprocessing fails the required task or learned invariance is chosen
+as an additional objective. Full graph learning, planning and other modalities are
+not prerequisites for closing this bounded visual-input task.
