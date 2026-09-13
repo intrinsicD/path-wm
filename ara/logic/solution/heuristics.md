@@ -684,3 +684,13 @@
 - **Sensitivity**: High. Global gradient clipping can couple otherwise disjoint branches. Verify the gradient/optimizer boundary and distinguish per-step development checks from final-fit evidence. Passing implementation tests does not imply a beneficial learned checkpoint.
 - **Code ref**: [recipe and clipping](../../../experiments/memory_output.py), [isolation tests](../../../tests/test_readout_clipping.py).
 - **Evidence**: N327/N328/N329; [readout comparison proof](../../evidence/tables/factual_readout_2026-09-13.json).
+
+## H70: Compare decoded supervision with a frozen agent and codec
+
+- **Rationale**: Test whether a decoded-image objective improves binding beyond latent regression while keeping the generator, progress distribution, initialization and update budget matched. Require fresh familiar/withheld and memory-intervention criteria; lower pixel loss alone is not capability.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O225
+- **Sensitivity**: High. Frozen decoder parameters still need input gradients. A one-pass endpoint proxy differs from an actual sampled trajectory; the latter has greater compute cost. Hybrid image loss need not preserve vanilla flow-matching optimality, and held-out combinations concern new generator training only.
+- **Code ref**: [objective and recipe](../../../experiments/conditional_image.py), [numeric, unroll and resume tests](../../../tests/test_conditional_image.py).
+- **Evidence**: Adoption N336; execution N337–N339; [source-bound results](../../evidence/tables/decoded_image_2026-09-14.json). Investigation adopted, not a claim of reliable generation.

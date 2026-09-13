@@ -5573,3 +5573,81 @@ tree:
   - N333
   - N334
   status: resolved
+- id: N336
+  type: decision
+  title: Adopt frozen-decoder image supervision investigation
+  provenance: user
+  timestamp: 2026-09-14T01:11+02:00
+  choice: User endorses the proposed decoded-image supervision comparison and requests continued Claude
+    planning/review, implementation, tests and repair iteration. Keep the own agent and codec; budgets
+    and loss weights are AI experimental choices, not claimed user-selected optima.
+  alternatives:
+  - Expand the agent architecture before testing output supervision
+  evidence:
+  - O225
+  - 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate'
+  - docs/image-output-plan.md#decoded-image-supervision-comparison--14-september
+  also_depends_on:
+  - N335
+  - N332
+  status: resolved
+- id: N337
+  type: experiment
+  title: Endpoint image loss lowers error but fails nonregression and capability
+  provenance: ai-executed
+  timestamp: 2026-09-14T01:11+02:00
+  result: 'Sourcea37b994: two1024-update matched314576-parameter flow fits, half-t0 policy, image
+    coefficient0 versus10, frozen own agent/codec. Fresh43073/43074 x13/29 weightedMSE0.04083330 to0.01714073
+    (-58.023%); reset seen13.28125% to55.46875%, withheld14.84375% to20.3125%. One withheld ordinary
+    cell43073/13 drops21.875% to18.75%; primary repair, nonregression benefit and full capability
+    fail,0/4 cells. Control terminal model/optimizer/CPU/CUDA/sampler states reproduce preserved flow_zero
+    exactly. Fit27.238/34.306s, peaks156/200MiB. Original renderer retained.'
+  evidence:
+  - ara/evidence/tables/decoded_image_2026-09-14.json
+  - runs/decoded_image_v1/verification.json
+  - runs/decoded_image_v1/fit_verification.json
+  also_depends_on:
+  - N336
+  status: resolved
+- id: N338
+  type: experiment
+  title: Pure-noise trajectory diagnostic exposes degraded endpoint prediction
+  provenance: ai-executed
+  timestamp: 2026-09-14T01:11+02:00
+  result: 'Validation41002, sample13, unchanged eight-step path, no target features: endpoint-loss
+    initial extrapolation87.5% familiar/12.5% withheld versus final sample62.5%/25%; familiar weightedMSE0.0049926
+    to0.00860385.4.450s post-hoc diagnostic, no fit or selected solver. Whole-batch32 diagnostic arithmetic
+    is separate from exact batch8 confirmation replay.'
+  evidence:
+  - ara/evidence/tables/decoded_image_2026-09-14.json
+  - runs/decoded_image_v1/trajectory.json
+  - runs/decoded_image_v1/trajectory.npz
+  also_depends_on:
+  - N337
+  status: resolved
+- id: N339
+  type: experiment
+  title: Full-sampler image supervision improves matched benefit but placement stays weak
+  provenance: ai-executed
+  timestamp: 2026-09-14T01:11+02:00
+  result: 'Source46a392c: auxiliary RGB loss differentiates through every fixed Euler step, shared
+    pure-noise draw, no target initialization or truncation. Development16 updates5.986s/546MiB motivated
+    pre-formal512 updates in BOTH new arms under300s cap. Fresh44073/44074 x13/29: weightedMSE0.02666533
+    to0.01482193 (-44.415%); all ordinary/reset seen/withheld joint-category nonregression and pixel
+    benefit pass. Familiar45.3125%, withheld reset14.84375%; primary/full capability fail,0/4. Post-hoc
+    reset attributes color73.4375% to90.234375%, shape46.09375% to64.84375%, side64.453125% to54.6875%;
+    wrong-half contrast0.49216 to0.49836, not an object-count metric. Four total fits3072 updates215.949s,
+    peak566MiB.12 focused tests,16 exact64-history GPU replays plus4 validation exports,912 independent
+    metrics,513 frozen source tensors and60 source snapshots per fit verified. Four actual public-only
+    Claude reviews with misreadings withdrawn;24 structural reports and figures checked, browser QA
+    unavailable. No default replacement or post-confirmation fitting.'
+  evidence:
+  - ara/evidence/tables/decoded_image_2026-09-14.json
+  - runs/decoded_image_v1/sample_fit_verification.json
+  - runs/decoded_image_v1/attribute_diagnostic.json
+  - runs/decoded_image_v1/software.json
+  - runs/reviews/decoded_image_v1/review_status.json
+  also_depends_on:
+  - N337
+  - N338
+  status: resolved

@@ -3978,6 +3978,59 @@ observations:
   - N333
   - N334
   - N335
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H70
+  crystallized_via: verbal-affirmation
+  stale: false
+- id: O226
+  timestamp: 2026-09-14T01:11+02:00
+  provenance: ai-suggested
+  content: Decoded endpoint image supervision improves average pixel error and familiar generation
+    at this fixed budget, but target-free multi-step sampling can degrade its initial extrapolation
+    and one withheld cell regresses. This supports testing the actual sampled loss without proving
+    solver error is the unique cause or that the hybrid objective preserves vanilla flow-matching
+    optimality.
+  context: First matched comparison and validation-only diagnostic; no researcher interpretation of
+    new measurements.
+  potential_type: claim
+  bound_to:
+  - N337
+  - N338
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O227
+  timestamp: 2026-09-14T01:11+02:00
+  provenance: ai-suggested
+  content: Full-sampler supervision passes its scoped composite benefit test but not reliable generation.
+    Color/shape gains coexist with weaker left/right placement and near-even contrast across image
+    halves. A joint-category nonregression gate does not guarantee nonregression of every component
+    attribute; source-factual accessibility does not ensure image binding. This is one initialization
+    with correlated synthetic histories and a frozen high-bandwidth codec, not general image capability.
+  context: Matched512-update follow-up and post-hoc attribute/visual analysis; no revised gates or
+    researcher response.
+  potential_type: claim
+  bound_to:
+  - N339
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O228
+  timestamp: 2026-09-14T01:11+02:00
+  provenance: ai-suggested
+  content: Next test a spatial placement/occupancy training signal on generated features or images,
+    with inference conditions derived only from workspace. Keep data, budget and current withheld/intervention
+    gates matched. Color/shape coupling in the training set is a separate risk; any balanced-factor
+    diagnostic must stay distinct from the existing hard test. Do not assume added scale or a pretrained
+    backend is necessary.
+  context: Unexecuted next repair after two completed objective comparisons; efficacy and unique failure
+    mechanism remain unknown.
+  potential_type: heuristic
+  bound_to:
+  - N337
+  - N339
   promoted: false
   promoted_to: null
   crystallized_via: null

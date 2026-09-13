@@ -148,10 +148,10 @@ sessions:
   open_threads: 12
 - id: 2026-09-14_001
   date: '2026-09-14'
-  summary: Own conditional multiscale generator implemented with Claude method review. Direct fits
-    familiar combinations only; flow and pure-noise follow-up fail capability despite25.7% pixel-error
-    reduction. Original renderer retained; decoded-image supervision proposed.
-  turn_count: 1
-  events_count: 8
+  summary: Decoded endpoint loss improves error58% but fails capability/nonregression. Full-sampler
+    follow-up improves matched error44.4% without joint-category regression; placement and capability
+    remain weak. Original renderer retained, spatial supervision proposed.
+  turn_count: 2
+  events_count: 16
   claims_touched: []
   open_threads: 12

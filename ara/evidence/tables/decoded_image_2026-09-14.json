@@ -1,0 +1,246 @@
+{
+  "commits": {
+    "documentation": "574c133",
+    "endpoint": "a37b994",
+    "sampler": "46a392c"
+  },
+  "limitations": [
+    "One initialization and correlated synthetic histories; upstream knows all categories",
+    "Frozen high-bandwidth codec; no general photography, arbitrary prompt parsing or diversity claim",
+    "Training compute differs; follow-up reduced both arms to512 updates before formal runs due profiled cost",
+    "Memory erasure is distribution-shifting sensitivity; swap targets counterfactual",
+    "Browser QA unavailable; unchanged renderer structurally checked and scientific figures inspected"
+  ],
+  "metrics": {
+    "First comparison (1024 updates each)": {
+      "control_mean_weighted_mse": 0.04083329765126109,
+      "full_capability_cells": 0,
+      "image_mean_weighted_mse": 0.017140730749815702,
+      "pixel_benefit": false,
+      "primary_repair": false,
+      "relative_error_reduction": 0.580226635227774,
+      "seen_capability": false,
+      "unseen_nonregression": false
+    },
+    "First comparison category accuracy": {
+      "control_categories:ordinary/seen": 0.1171875,
+      "control_categories:ordinary/unseen": 0.171875,
+      "control_categories:reset/seen": 0.1328125,
+      "control_categories:reset/unseen": 0.1484375,
+      "image_categories:ordinary/seen": 0.4921875,
+      "image_categories:ordinary/unseen": 0.1796875,
+      "image_categories:reset/seen": 0.5546875,
+      "image_categories:reset/unseen": 0.203125
+    },
+    "Follow-up (512 updates each)": {
+      "all_category_nonregression": true,
+      "cells": 4,
+      "endpoint512_categories": {
+        "ordinary/seen": 0.3125,
+        "ordinary/unseen": 0.046875,
+        "reset/seen": 0.28125,
+        "reset/unseen": 0.046875
+      },
+      "endpoint_capability_cells": 0,
+      "endpoint_mean_weighted_mse": 0.026665332494303584,
+      "full_capability_cells": 0,
+      "pixel_benefit": true,
+      "primary_repair": false,
+      "relative_error_reduction": 0.4441498378225779,
+      "sample512_categories": {
+        "ordinary/seen": 0.453125,
+        "ordinary/unseen": 0.1953125,
+        "reset/seen": 0.453125,
+        "reset/unseen": 0.1484375
+      },
+      "sample_mean_weighted_mse": 0.014821929391473532,
+      "seen_capability": false,
+      "unseen_nonregression": true
+    },
+    "Follow-up reset attributes": {
+      "endpoint512/reset:color_accuracy": 0.734375,
+      "endpoint512/reset:responses": 256,
+      "endpoint512/reset:shape_accuracy": 0.4609375,
+      "endpoint512/reset:side_accuracy": 0.64453125,
+      "endpoint512/reset:wrong_half_contrast_fraction": 0.492162823677063,
+      "sample512/reset:color_accuracy": 0.90234375,
+      "sample512/reset:responses": 256,
+      "sample512/reset:shape_accuracy": 0.6484375,
+      "sample512/reset:side_accuracy": 0.546875,
+      "sample512/reset:wrong_half_contrast_fraction": 0.4983595013618469
+    },
+    "Resources": {
+      "formal_training_seconds": 215.9493097519735,
+      "formal_updates": 3072,
+      "new_trainable_parameters": 314576,
+      "peak_reserved_mib": 566.0
+    }
+  },
+  "provenance": "ai-executed",
+  "scope": "Frozen-agent selected-object image generation. Endpoint and sampled supervision are distinct objectives. Recorded correctness/causal gates determine capability, not lower pixel error alone. All capability gates fail. Sampled-image supervision passes its declared pixel-benefit/nonregression test, but left/right placement remains weak. Original renderer retained. All failed runs retained.",
+  "software": {
+    "actual_claude_public_method_reviews": 4,
+    "browser_qa": "Unavailable; structural-only HTML QA",
+    "endpoint_default_exact": {
+      "gradients_exact": true,
+      "loss_exact": true,
+      "metrics_exact": true,
+      "rng_exact": true,
+      "source": "Preserved first endpoint-loss recipe image/recipe.py"
+    },
+    "exact_gpu_confirmation_replays": 16,
+    "exact_validation_export_replays": 4,
+    "figure_files": [
+      "overview.png",
+      "trajectory.png",
+      "development_image/learning_curve.png"
+    ],
+    "figures_inspected": true,
+    "focused_tests_passed": 12,
+    "frozen_source_and_source_snapshots": {
+      "all_initial_tensors_equal": true,
+      "endpoint_first512_loss_and_gradient_norm_exact": true,
+      "fits": {
+        "control": {
+          "frozen_source_tensors": 513,
+          "source_snapshots_verified": 60,
+          "steps": 1024
+        },
+        "endpoint512": {
+          "frozen_source_tensors": 513,
+          "source_snapshots_verified": 60,
+          "steps": 512
+        },
+        "image": {
+          "frozen_source_tensors": 513,
+          "source_snapshots_verified": 60,
+          "steps": 1024
+        },
+        "sample512": {
+          "frozen_source_tensors": 513,
+          "source_snapshots_verified": 60,
+          "steps": 512
+        }
+      },
+      "frozen_source_equal": true
+    },
+    "full_gradient_and_resume_checked": true,
+    "independent_numeric_checks": 912,
+    "renderer_changed": false,
+    "reports_structurally_verified": 24,
+    "zero_weight_default_exact": {
+      "reference": "flow/recipe.py preserved original source",
+      "uniform_default_exact_gradients": true,
+      "uniform_default_exact_loss": true,
+      "uniform_default_exact_metrics": true,
+      "uniform_default_exact_rng": true
+    }
+  },
+  "sources": [
+    {
+      "path": "runs/decoded_image_v1/result.json",
+      "sha256": "bb17255cfc78625b7071b011f845ffd05cb1c269927fd7cd12e7d424405784c2"
+    },
+    {
+      "path": "runs/decoded_image_v1/verification.json",
+      "sha256": "1f83617fe9060d8c6775898e18b99ca57b05b12c055ef2e954a7a67b07c2a7a3"
+    },
+    {
+      "path": "runs/decoded_image_v1/software.json",
+      "sha256": "afdcce37a6505fbaa5d6a7366143db3ce6c3d7ae02a8563e6f094b2abdedc406"
+    },
+    {
+      "path": "runs/decoded_image_v1/integrity.json",
+      "sha256": "23d8f95c082633e467b384b99fe24861ab618721882912a79978f9110da69c0c"
+    },
+    {
+      "path": "runs/decoded_image_v1/fit_verification.json",
+      "sha256": "22dbc8a81a781a76e3b9c34e4fc37e788f381399586fac8cc53fc825fcecca0b"
+    },
+    {
+      "path": "runs/decoded_image_v1/sample_fit_verification.json",
+      "sha256": "204ca0051763277c07ddecd2b2e7ad9046dd6135e636ba157efc832413ed8baf"
+    },
+    {
+      "path": "runs/decoded_image_v1/gpu_replay.json",
+      "sha256": "38422684b59bbffc6ea3833ab1bcf4a3c6ffe9c4af041529dfa98e8836a532fd"
+    },
+    {
+      "path": "runs/decoded_image_v1/sample_gpu_replay.json",
+      "sha256": "b22a26ab3ac6ceec3b80511adb481218069e7ae2351c1ec6a7b8ddc85558dd1b"
+    },
+    {
+      "path": "runs/decoded_image_v1/trajectory.json",
+      "sha256": "54dcdd2be9409286791cb5af9581b4e0ffc4b6a5bd2eac6bb4bc6278ac537b0e"
+    },
+    {
+      "path": "runs/decoded_image_v1/attribute_diagnostic.json",
+      "sha256": "6174f4e33dbf466691611dcb45055ac02ba342c3940283c79cf429f4a0f7648a"
+    },
+    {
+      "path": "runs/decoded_image_v1/gradient_audit.json",
+      "sha256": "7c6a1cc3c84b9dd3b0eec426dd9529f0919d3c99c7e3513b48722d4f502d222b"
+    },
+    {
+      "path": "runs/decoded_image_v1/default_preflight.json",
+      "sha256": "058b5d39fbda942030ca96109c54b56048dff046fde6e5bb5479f693ca03cb67"
+    },
+    {
+      "path": "runs/decoded_image_v1/endpoint_default_preflight.json",
+      "sha256": "2ef1f1bde80a235a12cdcefa7e2e21713862fe2c774af24f3410dbd698422df9"
+    },
+    {
+      "path": "runs/decoded_image_v1/overview.png",
+      "sha256": "e6fae444877d1a1dddf48bca9d8e5552117dcfc86960376c8eb094d4e9cea551"
+    },
+    {
+      "path": "runs/reviews/decoded_image_v1/method-receipt.json",
+      "sha256": "315a899015868c8a68e6fbb9c32eccc95e146c90303527a304401df1342e1871"
+    },
+    {
+      "path": "runs/reviews/decoded_image_v1/reconcile-receipt.json",
+      "sha256": "9b547c47efd60a172034a1708c0a0538fcb7f435640d5599df67acf55a9aef3c"
+    },
+    {
+      "path": "runs/reviews/decoded_image_v1/trajectory-receipt.json",
+      "sha256": "58b1c1a682bf56d1ffac441f0b83698ba99173372ac16a00318fb2d130fa9b0f"
+    },
+    {
+      "path": "runs/reviews/decoded_image_v1/trajectory-reconcile-receipt.json",
+      "sha256": "5b4d88b7f0406a3a882644d2242ae60c050c2c19eb6202f8929b44ce7cd49065"
+    }
+  ],
+  "timestamp": "2026-09-14T01:11+02:00",
+  "verification": {
+    "cells": 16,
+    "follow_up": {
+      "all_category_nonregression": true,
+      "cells": 4,
+      "endpoint512_categories": {
+        "ordinary/seen": 0.3125,
+        "ordinary/unseen": 0.046875,
+        "reset/seen": 0.28125,
+        "reset/unseen": 0.046875
+      },
+      "endpoint_capability_cells": 0,
+      "endpoint_mean_weighted_mse": 0.026665332494303584,
+      "full_capability_cells": 0,
+      "pixel_benefit": true,
+      "primary_repair": false,
+      "relative_error_reduction": 0.4441498378225779,
+      "sample512_categories": {
+        "ordinary/seen": 0.453125,
+        "ordinary/unseen": 0.1953125,
+        "reset/seen": 0.453125,
+        "reset/unseen": 0.1484375
+      },
+      "sample_mean_weighted_mse": 0.014821929391473532,
+      "seen_capability": false,
+      "unseen_nonregression": true
+    },
+    "full_capability_cells": 0,
+    "independent_numeric_checks": 912,
+    "pixel_benefit": false,
+    "primary_repair": false
+  }
+}

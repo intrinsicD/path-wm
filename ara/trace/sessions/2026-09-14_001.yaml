@@ -2,11 +2,11 @@ session:
   id: 2026-09-14_001
   date: '2026-09-14'
   started: 2026-09-14T00:40+02:00
-  last_turn: 2026-09-14T00:40+02:00
-  turn_count: 1
-  summary: Own conditional multiscale generator implemented with Claude method review. Direct fits
-    familiar combinations only; flow and pure-noise follow-up fail capability despite25.7% pixel-error
-    reduction. Original renderer retained; decoded-image supervision proposed.
+  last_turn: 2026-09-14T01:11+02:00
+  turn_count: 2
+  summary: Decoded endpoint loss improves error58% but fails capability/nonregression. Full-sampler
+    follow-up improves matched error44.4% without joint-category regression; placement and capability
+    remain weak. Original renderer retained, spatial supervision proposed.
 events_logged:
 - turn: 1
   type: decision
@@ -66,6 +66,67 @@ events_logged:
   routing: crystallized
   provenance: user-revised
   summary: O222 adopted via explicit user affirmation; efficacy remains unestablished.
+- turn: 2
+  type: decision
+  id: N336
+  routing: direct
+  provenance: user
+  summary: Adopt frozen-decoder image supervision investigation
+- turn: 2
+  type: experiment
+  id: N337
+  routing: direct
+  provenance: ai-executed
+  summary: Endpoint image loss lowers error but fails nonregression and capability
+- turn: 2
+  type: experiment
+  id: N338
+  routing: direct
+  provenance: ai-executed
+  summary: Pure-noise trajectory diagnostic exposes degraded endpoint prediction
+- turn: 2
+  type: experiment
+  id: N339
+  routing: direct
+  provenance: ai-executed
+  summary: Full-sampler image supervision improves matched benefit but placement stays weak
+- turn: 2
+  type: observation
+  id: O226
+  routing: staged
+  provenance: ai-suggested
+  summary: Decoded endpoint image supervision improves average pixel error and familiar generation
+    at this fixed budget, but target-free multi-step sampling can degrade its initial extrapolation
+    and one withheld cell regresses. This supports testing the actual sampled loss without proving
+    solver error is the unique cause or that the hybrid objective preserves vanilla flow-matching
+    optimality.
+- turn: 2
+  type: observation
+  id: O227
+  routing: staged
+  provenance: ai-suggested
+  summary: Full-sampler supervision passes its scoped composite benefit test but not reliable generation.
+    Color/shape gains coexist with weaker left/right placement and near-even contrast across image
+    halves. A joint-category nonregression gate does not guarantee nonregression of every component
+    attribute; source-factual accessibility does not ensure image binding. This is one initialization
+    with correlated synthetic histories and a frozen high-bandwidth codec, not general image capability.
+- turn: 2
+  type: observation
+  id: O228
+  routing: staged
+  provenance: ai-suggested
+  summary: Next test a spatial placement/occupancy training signal on generated features or images,
+    with inference conditions derived only from workspace. Keep data, budget and current withheld/intervention
+    gates matched. Color/shape coupling in the training set is a separate risk; any balanced-factor
+    diagnostic must stay distinct from the existing hard test. Do not assume added scale or a pretrained
+    backend is necessary.
+- turn: 2
+  type: heuristic
+  id: H70
+  routing: crystallized
+  provenance: user-revised
+  summary: O225 promoted through explicit endorsement of the decoded-image investigation; no efficacy
+    claim.
 ai_actions:
 - turn: 1
   action: Implemented optional generator and direct control, repaired noise width, added isolated
@@ -82,9 +143,24 @@ ai_actions:
   - docs/project-state.md
   - docs/models.md
   - docs/experiments.md
+- turn: 2
+  action: Implemented optional decoded endpoint and sampled-image losses in the existing recipe, wrote
+    RED/gradient/RNG/resume checks, ran bounded matched comparisons and diagnostics, reconciled four
+    actual generic Claude reviews, verified immutable sources/exports/metrics, and updated standalone
+    reports and documentation.
+  provenance: ai-executed
+  files_changed:
+  - experiments/conditional_image.py
+  - tests/test_conditional_image.py
+  - docs/image-output-plan.md
+  - docs/project-state.md
+  - docs/models.md
+  - docs/experiments.md
 claims_touched: []
 key_context:
 - turn: 1
+  excerpt: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
+- turn: 2
   excerpt: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate;
@@ -113,9 +189,9 @@ open_threads:
 - 'N330/O221: Marigold-style transfer motivates testing state-conditioned generation with a pretrained
   backend; faithful remembered content, decoder capacity and local GPU feasibility remain untested.
   This inquiry does not adopt the pending lower-rate experiment.'
-- 'N332-N335/A07/O223-O225: own conditional multiscale generator implemented and three fits completed;
-  strict capability fails. Next decoded-image supervision comparison, fresh binding gates and local
-  resources; general generation still open. Original renderer preserved.'
+- 'N336-N339/H70/O226-O228: decoded endpoint and full-sampler supervision implemented, matched benefit
+  improves but full capability fails. Placement/occupancy supervision proposed; preserve all hard
+  tests, broad generation and original renderer.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher
   response.'
@@ -169,7 +245,17 @@ ai_suggestions_pending:
   but does not repair faithful familiar output or full capability. Pixel-error improvement alone is
   insufficient evidence of correct state-conditioned generation. No general rejection of flow matching
   or scaling follows from this fixed-budget result.'
-- 'O225: Next compare adding decoded-image supervision through the frozen codec against latent-only
-  supervision, holding generator architecture, progress distribution, initialization and update budget
-  fixed. Use fresh paired histories and unchanged familiar/withheld, erasure and counterfactual swap
-  gates. Diagnose whether the output objective improves binding before expanding the agent.'
+- 'O226: Decoded endpoint image supervision improves average pixel error and familiar generation at
+  this fixed budget, but target-free multi-step sampling can degrade its initial extrapolation and
+  one withheld cell regresses. This supports testing the actual sampled loss without proving solver
+  error is the unique cause or that the hybrid objective preserves vanilla flow-matching optimality.'
+- 'O227: Full-sampler supervision passes its scoped composite benefit test but not reliable generation.
+  Color/shape gains coexist with weaker left/right placement and near-even contrast across image halves.
+  A joint-category nonregression gate does not guarantee nonregression of every component attribute;
+  source-factual accessibility does not ensure image binding. This is one initialization with correlated
+  synthetic histories and a frozen high-bandwidth codec, not general image capability.'
+- 'O228: Next test a spatial placement/occupancy training signal on generated features or images,
+  with inference conditions derived only from workspace. Keep data, budget and current withheld/intervention
+  gates matched. Color/shape coupling in the training set is a separate risk; any balanced-factor
+  diagnostic must stay distinct from the existing hard test. Do not assume added scale or a pretrained
+  backend is necessary.'
