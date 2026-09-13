@@ -1,5 +1,23 @@
 # Current work
 
+**Frozen-reader supervision completed, 13 September:** adding a frozen stored-state
+reader loss does not improve native recall over equal training. Writer7801 falls
+from86.72/89.06% facts/images to84.38/86.72%; writer7802 remains74.22% for both.
+All four full reliability gates and the replicated10-point benefit gate fail.
+The optimized reader improves strongly on recalled tokens, and the second reader
+also improves joint accuracy, but neither establishes better native output.
+Stored-state accessibility remains stronger in writer7801 and reader-dependent.
+Four1536-update fits,708.51s total training,424MiB reserved;49 relevant tests and
+1,572 independently checked metrics pass. Frozen writer/codecs/reader and raw banks
+unchanged; identical within-pair initialization/data/sampler, exact GPU exports and
+bank-order workspace checks. CPU numeric tolerance still fails: writer7801 supervised
+changes two factual-side labels and one image-side label. Two public-only Claude
+reviews; standalone reports structurally verified and exported figures inspected.
+[Protocol/results](recall-repair-plan.md#frozen-reader-supervision-results),
+[report](../runs/reader_supervision_v1/report.html). The extra loss stays optional.
+Next proposed: a controlled direct stored-working-token route into native output
+heads, to separate workspace formation from output learning. No further run launched.
+
 **Snapshot timing comparison completed, 13 September:** explicit snapshot ages
 raise writer7801 reset facts72.66→77.34% and images75→75.78% versus equal untimed
 continuation; writer7802 stays74.22% for both outputs. All reliability, replicated

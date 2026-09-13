@@ -19,6 +19,18 @@ below remain available as focused visual reference experiments.
 These are ordinary PyTorch modules. A recipe constructs the pieces and selects
 the losses. There is no model registry or hidden experiment coordinator.
 
+## Controlled visual memory output
+
+`MemoryOutput` connects detached episodic snapshots to native factual and image
+outputs through working/reasoning tokens. Its optional `workspace_reference` is a
+frozen `TokenProbe`: fixed training-channel statistics followed by an attention
+classifier. It supplies diagnostics and an optional training loss; its answers never
+feed the native factual head or image feature producer. Strict exports include its
+weights and buffers, so loading does not require the original probe file. The writer,
+input codec and reconstruction head stay frozen during recall repair. The
+[bounded supervision comparison](recall-repair-plan.md#frozen-reader-supervision-results)
+did not improve native recall over equal training; this is not a default repair.
+
 ## Perception
 
 ```text

@@ -361,3 +361,83 @@ No development quality tuning. Formal source is committed before training.
 
 Command (both writers; reference-weight0 baseline,1 supervised):
 `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.memory_output --weights runs/memory_time_v1/agent_7801_identity/weights.pt --repair identity --workspace-reference runs/memory_probes_v1/agent_7801_probe_7901/weights.pt --reference-weight 1 --seed 8201 --validation-seed 7742 --test-seed 7743 --output runs/reader_supervision_v1/agent_7801_supervised --device cuda:0`
+
+
+## Frozen-reader supervision results
+
+Source4bc44f4; all four predeclared1536-update fits complete under their300s caps.
+Both arms attach the same frozen17,512-parameter reference and train the same76,824
+native parameters. Within each pair, initial model tensors, data/source identities
+and final sampler states match exactly. Frozen writer, codecs, calibration, probe
+and raw banks stay unchanged. No new inference input or larger model was introduced.
+
+Test128 fresh-background histories, all appearances/motions supported in training:
+
+| Writer | Condition | Reset facts | Reset images | Complete relocation pairs, facts | Complete relocation pairs, images |
+| --- | --- | ---: | ---: | ---: | ---: |
+|7801|Frozen source|74.21875%|71.09375%|48.4375%|42.1875%|
+|7801|Equal training, weight0|86.71875%|89.0625%|73.4375%|79.6875%|
+|7801|Reader supervision, weight1|84.375%|86.71875%|68.75%|75%|
+|7802|Frozen source|72.65625%|74.21875%|45.3125%|48.4375%|
+|7802|Equal training, weight0|74.21875%|74.21875%|48.4375%|48.4375%|
+|7802|Reader supervision, weight1|74.21875%|74.21875%|48.4375%|48.4375%|
+
+The added loss loses three correct native factual answers and three correct images
+in writer7801; writer7802 is unchanged. All four full reliability gates and the
+replicated10-point native-benefit gate fail. Ordinary factual/image accuracy is
+96.09375/95.3125% for7801 baseline,93.75/92.1875% supervised, and74.21875/74.21875%
+for both7802 runs. Final checkpoints only; late validation fluctuations did not
+trigger checkpoint selection, coefficient tuning or budget extensions.
+
+Both frozen readers on the same held-out stored/recalled working tokens:
+
+| Writer | Reader seed | Stored joint, all conditions | Recall joint, equal training | Recall joint, supervision |
+| --- | --- | ---: | ---: | ---: |
+|7801|7901 (auxiliary gradient)|96.09375%|25%|89.0625%|
+|7801|7902 (no auxiliary gradient)|80.46875%|22.65625%|63.28125%|
+|7802|7901 (auxiliary gradient)|77.34375%|32.8125%|74.21875%|
+|7802|7902 (no auxiliary gradient)|74.21875%|22.65625%|50.78125%|
+
+This demonstrates improved compatibility with the diagnostic readers, not better
+native recall. Even the second reader's joint gains do not imply improved location:
+its side accuracy drops66.40625→64.84375% in7801 and74.21875→67.1875% in7802.
+It shares the same probe family and is not a general semantic interpreter. Different
+readout coordinates, representation shifts and optimization effects remain possible;
+these results do not prove loss of stored information or unique reader exploitation.
+Original encoder/teacher-image controls remain100%. Raw erasure/swap/cue/later-view
+interventions, both readers' per-factor/pair scores and normalized workspace statistics
+are retained in the report. No shuffled-label auxiliary or direct token reconstruction
+arm was run, so no comparative claim about those alternatives.
+
+Training seconds:164.016562,163.478603,163.892945,217.121054; total708.509163
+(11.81min),424MiB reserved per fit. The16-update development check took2.6975s.
+49 relevant tests and lint pass. Independent NumPy checks verify948 fitted metrics,
+432 unchanged-source metrics and192 two-reader metrics:1,572 total, maximum error
+3.88e-7. Split frame hashes are disjoint. Real768+768 supervised7801 resume preserves
+774 ledger-prefix rows; exact optimizer/RNG resume is covered in the CPU test.
+
+All native and auxiliary GPU logits/pixels reload exactly. Actual post-think workspace
+is exactly invariant to complete-bank reordering across128 cases per model on both
+GPU and CPU. Frozen source and original-writer tensors, reader weights, raw banks
+and input checkpoint hashes match. The optional probe can be mutated without changing
+native inference, and the isolated auxiliary gradient reaches the thinker without
+updating the frozen probe, writer or output heads.
+
+CPU raw-observation replay still fails1e-4. Maximum native logit discrepancy0.460575,
+pixel discrepancy0.025750. Writer7801 supervised changes factual-side labels on cases90
+and122 and an image-side label on case27; other runs' native categorical outputs agree.
+This is not harmless numerical portability. It remains a separate unresolved issue;
+GPU results were not replaced by CPU results or tolerance-relaxed. A focused replay
+recorded the newly observed factual mismatch indices in addition to image differences.
+
+Two actual public-only Claude reviews; conceptual claims narrowed before training,
+and the requested gradient-through-frozen-reader check passes. Every run and the
+overview have standalone structurally verified reports, with all four example panels
+and the score/learning-curve plot inspected. Browser QA unavailable. All historical
+weights/results preserved. No checkpoint promoted as a complete repair.
+
+Next proposed diagnostic: feed the stored working tokens directly to native factual
+and image output heads in a controlled frozen-writer comparison. This would separate
+workspace formation from output learning without treating a successful auxiliary
+classifier as a repaired agent. It would be a supplied routing control for this task,
+not a general learned retrieval architecture; its exact protocol remains to be set.
