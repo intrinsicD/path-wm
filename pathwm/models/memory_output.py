@@ -526,6 +526,8 @@ def load_model(path, device="cpu"):
     model = build_model(
         codec, settings["width"], settings.get("normalize_input", False)
     )
+    if settings.get("producer_refinement"):
+        model.agent.decoders["image"].enable_refinement()
     if settings.get("recall_repair"):
         configure_recall_repair(
             model, relative_time=settings["recall_repair"] == "temporal"

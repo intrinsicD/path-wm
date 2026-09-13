@@ -2221,3 +2221,15 @@ renderer unchanged; structural/figure QA with prior browser limitation disclosed
 Actual Claude conceptual review supports the comparison; correct its first-step
 gradient wording and retain its recommendation to inspect residual usage. Only
 generic methods are sent externally; local code/results review remains separate.
+
+Implementation/development: three informative RED failures now pass; all58 focused
+checks pass (six refinement cases plus prior weighting/readout/scene tests and
+five general image-output tests). Optional refiners preserve initial outputs and
+RNG, legacy checkpoints load without new keys, saved refined checkpoints load
+strictly, and odd-step resume is exact. Frozen facts/state/backend remain intact.
+A sandbox GPU preflight could not access CUDA (retained development.log); the
+approved local GPU retry completed16 updates with a standalone report and inspected
+panel. No failed optimizer run was hidden. Ruff check/format pass. Two compact
+actual Claude exchanges complete, first-step gradient correction acknowledged;
+activation magnitude demonstrates use only, not causal necessity. Freeze source
+before formal runs; no shared renderer change or browser-policy workaround.

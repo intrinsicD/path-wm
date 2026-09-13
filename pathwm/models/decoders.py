@@ -61,6 +61,7 @@ class StateFeatureDecoder(nn.Module):
         self.width, self.feature_spec, self.head = width, dict(feature_spec), head
         self.queries = nn.ParameterDict()
         self.reader, self.projections = nn.ModuleDict(), nn.ModuleDict()
+        self.refinements = nn.ModuleDict()
         for i, (name, spec) in enumerate(self.feature_spec.items()):
             self.queries[name] = nn.Parameter(
                 torch.randn(spec.size[0] * spec.size[1], width) * 0.02
@@ -69,6 +70,30 @@ class StateFeatureDecoder(nn.Module):
             self.projections[name] = nn.Linear(width, spec.channels)
             self.register_buffer(f"mean_{i}", torch.zeros(1, spec.channels, 1, 1))
             self.register_buffer(f"scale_{i}", torch.ones(1, spec.channels, 1, 1))
+
+    def enable_refinement(self):
+        """Add one initially inactive pointwise residual MLP per feature scale.
+
+        Existing weights and RNG streams are preserved. Only the final linear
+        receives a gradient on the first step; earlier layers learn afterward.
+        Trainability is chosen by the caller, alongside the rest of the producer.
+        """
+        if self.refinements:
+            return self
+        with torch.random.fork_rng(devices=[]):
+            for name in self.feature_spec:
+                layer = nn.Sequential(
+                    nn.LayerNorm(self.width),
+                    nn.Linear(self.width, 2 * self.width),
+                    nn.GELU(),
+                    nn.Linear(2 * self.width, self.width),
+                )
+                nn.init.zeros_(layer[-1].weight)
+                nn.init.zeros_(layer[-1].bias)
+                self.refinements[name] = layer.to(self.queries[name]).train(
+                    self.training
+                )
+        return self
 
     @torch.no_grad()
     def calibrate(self, training_features):
@@ -93,6 +118,8 @@ class StateFeatureDecoder(nn.Module):
             x = self.reader[name](
                 query, tokens, trace=trace, name=f"decode.{name}.attention"
             )
+            if self.refinements:
+                x = x + self.refinements[name](x)
             x = (
                 self.projections[name](x)
                 .transpose(1, 2)

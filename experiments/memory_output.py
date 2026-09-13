@@ -505,6 +505,19 @@ def train(
 ):
     cache = None
     coverage = None
+    refinement = settings.get("producer_refinement", False)
+    if bool(refinement) != bool(model.agent.decoders["image"].refinements):
+        raise ValueError("Producer refinement settings and model differ")
+    if refinement and (
+        not settings.get("image_only")
+        or settings.get("readout_stage") != "native"
+        or settings.get("readout_context") != "mixed"
+        or settings.get("writer_learning") is not None
+        or settings.get("standardize_output")
+    ):
+        raise ValueError(
+            "Producer refinement requires cached raw mixed image-only learning"
+        )
     centering = settings.get("input_centering")
     wrapped = isinstance(model.agent.encoders["image"], PixelMedianCentering)
     if bool(centering) != wrapped:
@@ -1136,6 +1149,11 @@ def main():
         choices=("foreground", "box"),
         help="Training-only RGB weighting for cached image-only continuation",
     )
+    parser.add_argument(
+        "--refine-image",
+        action="store_true",
+        help="Add an identity-initialized residual MLP per image-producer scale",
+    )
     parser.add_argument("--evaluate-only", action="store_true")
     parser.add_argument(
         "--scene",
@@ -1174,6 +1192,16 @@ def main():
         "--curriculum", choices=("parity", "relocation"), default="parity"
     )
     args = parser.parse_args()
+    if args.refine_image and (
+        args.evaluate_only
+        or args.repair != "identity"
+        or args.readout_stage != "native"
+        or args.readout_context != "mixed"
+        or not args.image_only
+        or args.writer_learning is not None
+        or args.standardize_output
+    ):
+        parser.error("Producer refinement requires cached raw mixed image-only repair")
     if args.image_weighting is not None and (
         args.evaluate_only
         or args.repair != "identity"
@@ -1390,6 +1418,9 @@ def main():
                 "Continuing a supervised export requires its explicit reference"
             )
         if args.readout_stage:
+            if args.refine_image:
+                model.agent.decoders["image"].enable_refinement()
+                settings["producer_refinement"] = True
             configure_output_readout(
                 model,
                 args.readout_stage,
@@ -1418,6 +1449,8 @@ def main():
             settings["objective"] += (
                 "; image feature producer only; factual CE constant"
             )
+        if settings.get("producer_refinement"):
+            settings["objective"] += "; residual MLP per image-producer scale"
         if args.image_weighting is not None:
             settings["image_weighting"] = args.image_weighting
         if settings.get("image_weighting", "foreground") != "foreground":
