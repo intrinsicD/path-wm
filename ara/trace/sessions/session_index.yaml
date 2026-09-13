@@ -139,10 +139,10 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: Mixed-context output training passes full and benefit screens in one frozen source; weaker
-    writer remains75%, replicated repair fails.46 tests,1826 metrics, exact GPU/cache replay; CPU numerical
-    gate fails with labels agreeing in this slice.
-  turn_count: 9
-  events_count: 43
+  summary: Writer-only learning fails full gates; joint writer/thinker passes both controlled task screens
+    but not replicated all-output benefit. Six new fits,850.90s,404MiB;52 tests,exact GPU replay. CPU
+    portability and independent-source robustness open.
+  turn_count: 10
+  events_count: 51
   claims_touched: []
   open_threads: 10

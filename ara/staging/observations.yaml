@@ -3454,6 +3454,51 @@ observations:
   bound_to:
   - N292
   - N282
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H57
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O196
+  timestamp: 2026-09-13T14:23+02:00
+  provenance: ai-suggested
+  content: Shared updater adaptation gives partial gains at the declared budget without full writer-only
+    repair. Historical gradients exist but neither useful optimization nor uniquely missing writer information
+    is established; shared current/reset-query processing and extra capacity prevent isolated attribution.
+  context: Completed negative first comparison; joint follow-up changes a new factor, not its prior result.
+  potential_type: claim
+  bound_to:
+  - N294
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O197
+  timestamp: 2026-09-13T14:23+02:00
+  provenance: ai-suggested
+  content: Joint writer/thinker adaptation is sufficient for the controlled full task screen in both tested
+    optimization seeds from one upstream model. The stricter all-output benefit is not replicated. This
+    does not identify a uniquely defective component, establish independent-source robustness, general
+    entity discovery or high-quality general generation. CPU portability remains unresolved.
+  context: Fresh test and matched reused baselines verified; researcher has not commented on these outcomes.
+  potential_type: claim
+  bound_to:
+  - N296
+  - N294
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O198
+  timestamp: 2026-09-13T14:23+02:00
+  provenance: ai-suggested
+  content: Next replicate the joint recipe across independently initialized upstream models before increasing
+    history length or distractors. Preserve the same native causal task gates, retain failed benefit results
+    and keep CPU portability separate.
+  context: Proposed next validation; no additional training launched.
+  potential_type: heuristic
+  bound_to:
+  - N296
   promoted: false
   promoted_to: null
   crystallized_via: null

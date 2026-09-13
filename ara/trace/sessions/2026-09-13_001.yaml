@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T12:47+02:00
-  turn_count: 9
-  summary: Mixed-context output training passes full and benefit screens in one frozen source; weaker
-    writer remains75%, replicated repair fails.46 tests,1826 metrics, exact GPU/cache replay; CPU numerical
-    gate fails with labels agreeing in this slice.
+  last_turn: 2026-09-13T14:23+02:00
+  turn_count: 10
+  summary: Writer-only learning fails full gates; joint writer/thinker passes both controlled task screens
+    but not replicated all-output benefit. Six new fits,850.90s,404MiB;52 tests,exact GPU replay. CPU
+    portability and independent-source robustness open.
 
 events_logged:
 - turn: 1
@@ -278,6 +278,54 @@ events_logged:
   routing: crystallized
   provenance: user-revised
   summary: O193 adopted via verbal affirmation; method is not a guaranteed repair.
+- turn: 10
+  type: decision
+  id: N293
+  routing: direct
+  provenance: user
+  summary: Continue O195 writer/workspace diagnosis and bounded Claude collaboration.
+- turn: 10
+  type: experiment
+  id: N294
+  routing: direct
+  provenance: ai-executed
+  summary: Writer-only partial gains; full and10-point benefit gates fail.
+- turn: 10
+  type: pivot
+  id: N295
+  routing: direct
+  provenance: ai-executed
+  summary: Declare joint thinker training with preserved reused baselines and fresh test.
+- turn: 10
+  type: experiment
+  id: N296
+  routing: direct
+  provenance: ai-executed
+  summary: Both joint task gates pass; one5-point benefit gate fails; CPU limits retained.
+- turn: 10
+  type: observation
+  id: O196
+  routing: staged
+  provenance: ai-suggested
+  summary: Historical gradient reachability is not useful writer learning or unique mechanism proof.
+- turn: 10
+  type: observation
+  id: O197
+  routing: staged
+  provenance: ai-suggested
+  summary: Scoped joint task sufficiency; independent-source and full-benefit replication unresolved.
+- turn: 10
+  type: observation
+  id: O198
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose independent upstream replication before task expansion.
+- turn: 10
+  type: heuristic
+  id: H57
+  routing: crystallized
+  provenance: user-revised
+  summary: O195 diagnostic method adopted; no guarantee of repair.
 
 ai_actions:
 - turn: 1
@@ -389,6 +437,21 @@ ai_actions:
   - docs/project-state.md
   - runs/mixed_context_v1/
   - ara/evidence/tables/mixed_context_2026-09-13.json
+- turn: 10
+  action: Four public-only actual Claude reviews, two plan/RED/implementation cycles,50 then52 relevant
+    tests, two16-update development runs, six formal fits, fresh baseline evaluations, default-off compatibility,
+    gradient diagnostic, two independent audits, inspected reports and source/result commits.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/memory_output.py
+  - experiments/memory_output.py
+  - tests/test_direct_readout.py
+  - tests/test_memory_output.py
+  - docs/recall-repair-plan.md
+  - docs/project-state.md
+  - runs/writer_learning_v1/
+  - runs/writer_reader_v1/
+  - ara/evidence/tables/writer_joint_2026-09-13.json
 
 claims_touched: []
 key_context:
@@ -419,12 +482,15 @@ key_context:
 - turn: 9
   excerpt: 'User: Yes please do that. Mixed writer7801 ordinary96.875/96.875%, reset97.65625/94.53125%;
     full/benefit passes. Writer7802 all75% even training; replication fails.'
+- turn: 10
+  excerpt: 'User: Continue together with Claude. Plan, implement, review, test, fix. Iterate this. Joint
+    full task gates pass both seeds; benefit gate fails one. Broad model goals remain open.'
 
 open_threads:
-- 'N292/O194/O195: mixed output training repairs stronger frozen source; weaker writer remains75% even
-  training. Define a controlled writer/workspace experiment before further fitting.'
-- 'N278/N280/N284/N286/N288/N290/N292: CPU/GPU numerical tolerance unresolved. Current max logits1.104984/pixels0.02662665,
-  ordinary/reset labels agree here; earlier factual/image differences remain evidence.'
+- 'N294/N296/O196/O197/O198: joint task gates pass two optimization seeds from one weak source; combined
+  benefit replication fails. Independent upstream replication proposed before longer histories/distractors.'
+- "N278\u2013N296: CPU/GPU numerical tolerance unresolved. New joint comparison max native logits.2179412842/pixels.0079333782;\
+  \ one ordinary factual shape and one baseline image side change. Prior mismatches preserved."
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
   and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and
@@ -459,4 +525,6 @@ ai_suggestions_pending:
 - 'O177/O178: coordination and state-grounding diagnostics remain staged; acknowledgment does not select
   their complete implementation.'
 - 'O194: one-source mixed-context policy repair; no general mechanism or replicated reliability claim.'
-- 'O195: controlled weaker-writer/workspace comparison proposed; exact loss/budget unconfirmed.'
+- 'O196: partial writer learning and gradient reachability do not establish a unique failure mechanism.'
+- 'O197: joint controlled-task sufficiency with limited replication and CPU portability.'
+- 'O198: independent upstream initialization replication proposed; no new run launched.'

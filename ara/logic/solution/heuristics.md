@@ -554,3 +554,13 @@
 - **Sensitivity**: High. Mixed training halves reset exposure at fixed total budget; it identifies a policy effect, not a unique mechanism. The completed screen passes in one source only; weaker-writer and numerical portability limitations remain.
 - **Code ref**: [mixed-context recipe](../../../experiments/memory_output.py), [cache/gradient checks](../../../tests/test_direct_readout.py), [resume and export checks](../../../tests/test_memory_output.py).
 - **Evidence**: N291/N292; [four-fit record](../../evidence/tables/mixed_context_2026-09-13.json).
+
+## H57: Compare writer and workspace learning under matched native output training
+
+- **Rationale**: Preserve mixed ordinary/reset output training while testing frozen versus trainable upstream formation at matched histories, optimizer budgets and initialization. Recompute live working states when upstream parameters change; audit gradient reachability separately from actual native task success.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O195
+- **Sensitivity**: High. Shared observer processing and extra trainable capacity limit component attribution. Writer-only partial gains and joint task success do not establish general reliability; keep independent-source and numerical portability gaps open.
+- **Code ref**: [ephemeral replay and trainability](../../../pathwm/models/memory_output.py), [live objective](../../../experiments/memory_output.py), [gradient/freeze checks](../../../tests/test_direct_readout.py), [resume/export checks](../../../tests/test_memory_output.py).
+- **Evidence**: N293–N296; [two-iteration record](../../evidence/tables/writer_joint_2026-09-13.json).

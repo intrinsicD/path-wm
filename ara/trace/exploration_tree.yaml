@@ -4676,3 +4676,85 @@ tree:
   - N291
   - N290
   status: resolved
+
+- id: N293
+  type: decision
+  title: Continue weaker-writer and workspace learning with Claude review
+  provenance: user
+  choice: Continue together with Claude; plan, implement, review, test, fix and iterate. Adopts O195 diagnostic
+    direction. Exact live replay mechanism, factors, seeds and gates are implementing-agent choices.
+  alternatives:
+  - Further head-only fitting
+  - Enlarge codecs before controlled writer/workspace diagnosis
+  evidence:
+  - O195
+  - N292
+  - docs/recall-repair-plan.md
+  timestamp: 2026-09-13T14:23+02:00
+  status: resolved
+- id: N294
+  type: experiment
+  title: Shared writer learning gives partial gains but fails full and benefit gates
+  provenance: ai-executed
+  result: Source bc7a7a6. Four 1024-update fits, frozen versus trainable shared updater at two optimization
+    seeds from one weak source; live mixed ordinary/reset loss and exact ephemeral value-gradient replay
+    in both arms. Test7773 writer ordinary facts/images83.59375/89.84375% and86.71875/82.8125%, both reset81.25/75%;
+    all full and replicated10-point benefit gates fail. Fixed thinker/codecs and nontrainable tensors
+    unchanged. 50 tests,1826 independent metrics, all4 GPU exports exact, odd513+511 GPU restart. Gradient
+    diagnostic shows earlier-state paths with detached query and no paths after bank erasure; no weights
+    updated by diagnostic, nonzero gradient does not prove useful learning. CPU one ordinary factual-side
+    label changes. Training481.754467s,404MiB peak. Two public-only Claude reviews, reports and figures
+    retained.
+  evidence:
+  - ara/evidence/tables/writer_joint_2026-09-13.json
+  - runs/writer_learning_v1/verification.json
+  - runs/writer_learning_v1/gradient_audit.json
+  - docs/recall-repair-plan.md#shared-observerwriter-learning-results
+  also_depends_on:
+  - N293
+  - N292
+  timestamp: 2026-09-13T14:23+02:00
+  status: resolved
+- id: N295
+  type: pivot
+  title: Test joint workspace-reader adaptation after writer-only partial improvement
+  provenance: ai-executed
+  from: Train shared writer with workspace reader frozen
+  to: Unfreeze thinker jointly; reuse unchanged matched writer-only checkpoints with fresh common test
+    and original source provenance
+  trigger: Writer-only full gates fail while live and isolated historical gradients exist. Predeclare
+    new5-point benefit screen and fresh7783 test; do not change prior10-point failure. Two further public-only
+    Claude exchanges reconcile baseline validity.
+  evidence:
+  - N294
+  - docs/recall-repair-plan.md#joint-observer-and-workspace-reader-protocol--13-september
+  - ara/evidence/tables/writer_joint_2026-09-13.json
+  timestamp: 2026-09-13T14:23+02:00
+  status: resolved
+- id: N296
+  type: experiment
+  title: Joint adaptation passes both task screens; stricter benefit replication fails
+  provenance: ai-executed
+  result: 'Source872b4d7; two final1024-update joint fits,85,560 trainables versus75,768 reused writer-only
+    parameters. Fresh7783 ordinary facts/images99.21875/90.625% and93.75/92.1875%, reset100/95.3125% and94.53125/91.40625%.
+    Both full task gates pass including pairs, erasures, swap and pixel controls. Baseline ordinary84.375/90.625%
+    and86.71875/83.59375%, reset81.25/75% and81.25/75.78125%, both full gates fail. Separate5-point ALL-output
+    benefit fails8501 because ordinary image unchanged; passes8502. Replicated task success true; combined
+    task-and-benefit replication false. Same initial model, train/validation, optimizer and sample budgets;
+    no baseline refit, old test scores excluded.52 tests and1826 independent metrics; default-off all4
+    old exports/trainable sets exact; new4 GPU replay exact, bank-order/replay provenance intact. Joint
+    exact odd-step resume tested on CPU. CPU numerical gate fails: max native logits.2179412842/pixels.0079333782;
+    joint8501 ordinary factual shape case67 and baseline8502 ordinary image side case76 differ, reset
+    labels agree.369.148984s new training,18.056552s baseline reevaluation,404MiB; six-fit total850.903451s.
+    Structural reports and inspected figures; browser unavailable. One upstream model only, synthetic
+    templates and residual image artifacts, no general-agent claim.'
+  evidence:
+  - ara/evidence/tables/writer_joint_2026-09-13.json
+  - runs/writer_reader_v1/verification.json
+  - runs/writer_reader_v1/default_off_compatibility.json
+  - docs/recall-repair-plan.md#joint-observer-and-workspace-reader-results
+  also_depends_on:
+  - N295
+  - N294
+  timestamp: 2026-09-13T14:23+02:00
+  status: resolved
