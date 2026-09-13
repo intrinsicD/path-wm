@@ -168,3 +168,95 @@ def test_mixed_cache_alignment_live_gradients_and_context_phase(step):
     assert all(torch.equal(v, fixed[k]) for k, v in frozen_tensors(m).items())
     with pytest.raises(ValueError, match="even"):
         readout_objective(m, cache, [0], context="mixed", step=step)
+
+
+def test_training_replay_preserves_runtime_bank_and_exposes_earlier_write_gradients():
+    from pathwm.models.memory_output import configure_output_readout, frozen_tensors
+    from experiments.memory_output import live_readout_objective
+
+    torch.manual_seed(54)
+    m = configure_output_readout(
+        model_fixture(True), "native", train_writer=True
+    ).eval()
+    b = MemoryOutputEpisodes(16, seed=55, curriculum="relocation").batch(range(4))
+    fixed = {k: v.clone() for k, v in frozen_tensors(m).items()}
+    previous = None
+    optimizer = torch.optim.AdamW([p for p in m.parameters() if p.requires_grad])
+    for step in (1, 2):
+        h = m.observe_history(b["images"], memory_grad=True)
+        runtime = m.observe_history(b["images"])
+        bank = h["final"].memory
+        assert (
+            bank.values.requires_grad
+            and not runtime["final"].memory.values.requires_grad
+        )
+        for k in ("values", "keys", "times"):
+            assert torch.equal(getattr(bank, k), getattr(runtime["final"].memory, k))
+        assert bank.sources == runtime["final"].memory.sources
+        assert not bank.keys.requires_grad and not bank.times.requires_grad
+        assert torch.equal(bank.values[:, 0], h["initial"].tokens)
+        assert torch.equal(bank.values[:, 1], h["stored"].tokens)
+        for mode in ("ordinary", "reset"):
+            a = m.query(h["final"], b["images"][:, -1], mode)
+            r = m.query(runtime["final"], b["images"][:, -1], mode)
+            assert torch.equal(a.tokens, r.tokens)
+        # Cut the live query/state path: only the actual past values can teach writes.
+        q = replace(
+            h["final"],
+            tokens=h["final"].tokens.detach(),
+            log_scale=h["final"].log_scale.detach(),
+        )
+        out = m.output(m.agent.think(q, steps=2))
+        loss = out["facts"].square().mean() + out["image"].square().mean()
+        grads = torch.autograd.grad(
+            loss, (h["initial"].tokens, h["stored"].tokens), retain_graph=True
+        )
+        assert all(g.abs().sum() > 0 for g in grads)
+        erased = m.output(m.agent.think(replace(q, memory=None), steps=2))
+        grads = torch.autograd.grad(
+            erased["facts"].square().mean(),
+            (h["initial"].tokens, h["stored"].tokens),
+            allow_unused=True,
+        )
+        assert grads == (None, None)
+        if previous is not None:
+            assert not torch.equal(previous, bank.values)
+        previous = bank.values.detach().clone()
+        optimizer.zero_grad(set_to_none=True)
+        actual, metrics = live_readout_objective(m, b, step=step)
+        assert metrics["ordinary_examples"] == metrics["reset_examples"] == 2
+        actual.backward()
+        assert any(
+            p.grad is not None and p.grad.abs().sum() > 0
+            for p in m.agent.updater.parameters()
+        )
+        assert all(p.grad is None for p in m.parameters() if not p.requires_grad)
+        optimizer.step()
+        assert all(torch.equal(v, fixed[k]) for k, v in frozen_tensors(m).items())
+        assert m.agent.initial_state(4).memory is None
+        assert all(v.grad_fn is None for v in m.buffers())
+
+
+def test_frozen_live_writer_policy_equals_cached_mixed_head_training():
+    from pathwm.models.memory_output import configure_output_readout
+    from experiments.memory_output import (
+        cache_readout,
+        readout_objective,
+        live_readout_objective,
+    )
+
+    torch.manual_seed(56)
+    m = configure_output_readout(model_fixture(True), "native").eval()
+    d = MemoryOutputEpisodes(16, seed=57, curriculum="relocation")
+    cache = cache_readout(m, d, "cpu", batch_size=4, mode="mixed")
+    ids = [10, 7, 2, 7]
+    a, _ = readout_objective(m, cache, ids, context="mixed", step=3)
+    a.backward()
+    grads = {n: p.grad.clone() for n, p in m.named_parameters() if p.grad is not None}
+    m.zero_grad(set_to_none=True)
+    b, _ = live_readout_objective(m, d.batch(ids), step=3)
+    b.backward()
+    torch.testing.assert_close(a, b, atol=1e-7, rtol=1e-6)
+    for n, p in m.named_parameters():
+        if n in grads:
+            torch.testing.assert_close(p.grad, grads[n], atol=1e-6, rtol=1e-5)

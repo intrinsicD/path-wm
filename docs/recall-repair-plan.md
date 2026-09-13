@@ -760,3 +760,64 @@ output training. A matched comparison allowing the writer to learn is a candidat
 its exact loss/budget and causal claims need declaration before any fit. Current
 probe/head failures do not prove missing information or a writer-only cause.
 Keep CPU numerical portability separate. No further training launched.
+
+## Shared observer/writer learning protocol — 13 September
+
+User requested the next Claude-reviewed implement/test/fix iteration. Test whether
+unfreezing the shared observation updater repairs the weaker source while retaining
+mixed ordinary/reset native output training. This updater forms historical writes,
+ordinary state and reset-query state; the experiment does not isolate a memory-only
+mechanism. Initial state, encoder, thinker, monitor, dynamics, actions, reference
+readers, reconstruction head and all calibration buffers stay fixed. Only native
+heads plus updater action/attention blocks learn; updater uncertainty scale stays
+fixed because this task's monitor feedback is detached.
+
+Runtime episodic writes are detached. During each short supervised training episode,
+retain the two actual observed-state tensors and replace ONLY the temporary bank's
+values with their stack. Assert exact equality to the normal write values at each
+write; preserve keys, times, sources, capacity and causal guards. Keys/selection
+remain detached/nondifferentiable. Default inference/export still uses ordinary
+detached writes, with no persistent training graph or cross-batch memory. This opens
+a task-loss gradient to earlier writes; it does not add inputs or auxiliary labels.
+
+Four fits from `runs/mixed_context_v1/agent_7802_mixed/weights.pt`: training seeds8501
+and8502 × frozen/trainable updater. Both arms run the SAME live mixed-context loss;
+no working-state caching in either. Same source heads, history samples, optimizer,
+updates and16 output presentations per update. Ordinary iff(position+step)%2==0.
+Native raw output; zero auxiliary loss. AdamW lr0.001/wd0.0001, clip1,1024 updates,
+360s training cap per fit, final checkpoint only. Train128 pairs7701; validation32
+pairs7772; held-out64 pairs7773. Familiar tuples/motions, fresh backgrounds. Two
+training seeds from one weak source are limited optimization repeats, not independent
+writer replication or a precise effect-size estimate. Additional trainable capacity
+and gradient paths are the intended treatment, not separately identified causes.
+
+Primary repair: BOTH trainable fits pass existing full ordinary/reset>=90% factual
+and image accuracy, complete selection/relocation pairs>=80%, pixel error below
+background/pair-mean controls; intact baselines>=90% with>=30-point all-history,
+bank/cue/later-view erasure drops as already specified; swapped alternate>=80%.
+Benefit additionally requires>=10-point gain in all four ordinary/reset factual/image
+metrics against each seed's frozen control. Report individual gates if replication
+fails. CPU/GPU numeric1e-4 remains a separate portability gate. No tuning thresholds,
+extra writer losses, ratio sweep or budget expansion after formal results.
+
+Essential RED checks: equal runtime/replay bank values/metadata/outputs pre/post
+update, isolated earlier-write gradients with query state detached and zero path
+after bank erasure, refreshed live inputs after optimizer updates, empty new episode
+banks, frozen buffers/modules, no stale cache, exact optimizer/RNG odd-step resume,
+and standalone inference using detached banks. Audit current live states and historical
+bank provenance; changes in bank content are allowed only in trainable-writer arms.
+Compare unchanged source/stronger successful control and two frozen diagnostic readers
+on the fresh test. Recompute metrics independently and audit GPU/CPU exports.
+
+Development16 updates: seed18501, train17701/validation18072/test18073,60s cap.
+Formal8501 trainable pauses at513 then resumes511 to exercise odd mask phase.
+GPU cap4GiB with1GiB headroom. Existing report renderer, structural QA plus inspected
+figures; browser QA unavailable. Record source, raw metrics and elapsed/resource
+receipts. Commit plan/RED checks, then implementation, before formal fits.
+
+Actual Claude reviewed two public-only briefs. It accepted the shared-updater scope
+after initially treating the diagnostic detached query as a required training rule.
+Adopted exact replay bookkeeping checks at every training write, gradient-isolation
+tests, live recomputation, episode isolation and explicit limited-seed/capacity claims.
+Direct stored-state auxiliary supervision is a different future intervention, not
+part of this comparison. Receipts: `runs/reviews/continuation_2026-09-11/writer-learning*-receipt.json`.
