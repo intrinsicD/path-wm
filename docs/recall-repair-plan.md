@@ -1800,3 +1800,30 @@ any rejected history yields completed result/gate-false/task-unscored, zero mode
 queries and no predictions. Report failure preserves that completed result. Five
 new tests pass;45 focused checks including accepted exports, prior centering and
 scene tests pass. No renderer change or clipping/fallback policy was introduced.
+
+## Coverage repair verification
+
+Source716d661; four GPU exports complete in16.367s with zero training. Both
+accepted25073 neutral/temporal-offset source8501 exports reproduce every saved
+prediction array and metric exactly against screen311c3ca, including all10 causal
+modes. Fresh27073 bright-background exports on both sources accept16/128 histories,
+record all per-frame decisions exactly against independent NumPy calculation,
+complete coverage-failed reports, and generate no model predictions. All source
+checkpoints and the repair's recorded source manifest remain unchanged during checks.
+
+The turn covers92 distinct relevant CPU test cases, with45 focused reruns after the
+range/report repair. The initial24 scene RED failures and5 reporting RED failures
+remain preserved. No model weights were trained, no raw fallback/clipping was
+introduced, and no broader robustness gate was relaxed. The screen and repair have
+separate recorded code identities. All86 reports across screen, development,
+overview and repair receive structural checks; representative panels/heatmap are
+inspected. Browser QA unavailable. [Updated report](../runs/centering_challenge_v1/report.html).
+
+Next learning question: begin a matched clean/scene-variation state/readout
+comparison, starting with background tint where the existing direct reader proves
+encoder-level accessibility on the tested population. Keep clean retention and
+fresh held-out confirmation; do not infer lost encoder information from native
+failure. Texture provides a required raw-input control against a harmful centering
+prior. Clutter, size, gain, shadows and wider scenes require further training/design
+experiments. Independent upstream initializations, real recordings, confidence
+calibration, CPU portability and deployed streaming resource tests remain open.

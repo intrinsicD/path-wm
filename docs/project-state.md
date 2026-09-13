@@ -1,5 +1,34 @@
 # Current work
 
+**Scene/lighting challenge and reporting repair completed, 13 September:** centered
+input passes12/40 attempted cells (neutral, temporal additive and RGB-channel
+additive); raw passes8/40 (neutral and textured background). All those successes
+reach100% ordinary/reset factual/image categories. Centering hurts texture:
+raw100% becomes76.562–86.719%. Clutter, larger objects, gain, tint and shadows remain
+unreliable. Bright backgrounds fail centering coverage; accepted histories only
+15.625–21.875% on screen seeds, with no accepted-subset accuracy reported.
+[Report](../runs/centering_challenge_v1/report.html),
+[protocol/results](recall-repair-plan.md#centering-challenge-results).
+
+The ordinary evaluation recipe now writes input_coverage.json and completes an
+explicit coverage-failed report before any model query when centering rejects a
+history. No fabricated predictions, clipping, fallback or learned confidence.
+Two valid full GPU exports remain bitwise exact after this repair; two fresh
+rejection exports correctly report12.5% history coverage. Centering stays opt-in.
+
+92 distinct relevant tests pass;45 focused reruns after repair.76 scored GPU replays
+exact;18,012 metrics independently verified;12 legacy data cases byte-exact.80-cell
+screen571.93s/298MiB, four repair checks16.37s; zero optimizer updates. Two actual
+Claude public conceptual reviews with corrections reconciled; private code/results
+reviewed locally.86 reports structurally checked, figures inspected, browser QA
+unavailable. Separate screen311c3ca and repair716d661 source identities retained.
+
+Next: controlled state/readout learning with scene variation and clean retention;
+centered tint has100% direct-reader accuracy yet weak native answers, so no unique
+encoder-loss conclusion follows. Independent upstream replication, confidence,
+real recordings, CPU portability and deployed runtime tests remain open.
+
+
 **Brightness repair comparison completed, 13 September:** opt-in frame centering
 passes all 12 confirmation conditions with 100% factual/image-category accuracy,
 including full causal task gates, neutral retention and stress benefit. It uses
