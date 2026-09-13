@@ -506,3 +506,22 @@ answers, independent numeric reproduction, exact GPU export replay and structura
 reports/figure inspection. Existing browser restriction is retained as a QA limit.
 Claude reviews generic public methodology only. No post-confirmation optimizer
 extension, coefficient selection or threshold changes within this comparison.
+
+Two actual Claude method reviews completed. Accepted hybrid-objective semantics,
+endpoint-versus-trajectory distinction and capability/intervention checks. Claude
+withdrew its requirement to retain unused decoder computation in the zero-weight
+arm, and corrected its reversed near-zero/near-one target-proximity statement.
+The zero-weight path is independently compared with the preserved prior recipe;
+formal terminal model/optimizer reproduction is also required. Gradient decomposition
+and a finite development-batch cosine are measurable; alignment with an unknown
+population optimum is not a prerequisite or claimed proof. Reports include compute
+inequality. No private code/data/results were supplied to Claude.
+
+Development completed:11 focused tests pass, including exact four-update versus
+one-plus-three resumed training with RGB coefficient10 and refusal of changed-loss
+resume. Zero-weight loss/metrics/RNG/gradients match the saved prior recipe exactly.
+Both16-update GPU runs complete with frozen tensors unchanged; control/image peaks
+158/190MiB, training.571/.597s. Initial development pixel-gradient norm.02526 versus
+latent.38187, cosine-.01427 (near orthogonal); no population-gradient conclusion or
+coefficient tuning. Reports structurally verified and the learning curve inspected.
+Freeze the implementation for the predeclared two formal fits.

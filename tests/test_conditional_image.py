@@ -138,6 +138,7 @@ def test_training_resume_standalone_export_and_target_exclusion(tmp_path):
         wall_seconds=120,
         disk_free_gib=0,
         zero_progress_probability=0.5,
+        decoded_image_weight=10.0,
     )
     config["feature_generator"]["steps"] = 2
 
@@ -178,7 +179,7 @@ def test_training_resume_standalone_export_and_target_exclusion(tmp_path):
     with torch.no_grad():
         assert torch.isfinite(g(tokens)).all()
     bad = deepcopy(config)
-    bad["feature_generator"]["steps"] = 3
+    bad["decoded_image_weight"] = 5.0
     m, c = build(source, data, bad)
     with pytest.raises(ValueError, match="Incompatible resume"):
         train(m, c, data, data, output=tmp_path / "resume", config=bad, resume=True)
@@ -246,11 +247,15 @@ def test_decoded_supervision_endpoint_and_frozen_gradient_reference(kind):
 
     torch.manual_seed(71)
     g = generator(kind)
-    features = {k: torch.randn(4, s.channels, *s.size) for k, s in g.feature_spec.items()}
+    features = {
+        k: torch.randn(4, s.channels, *s.size) for k, s in g.feature_spec.items()
+    }
     g.calibrate(features)
     cache = dict(
-        ordinary=torch.randn(4, 3, 8), reset=torch.randn(4, 3, 8),
-        features=features, target=torch.rand(4, 3, 2, 2),
+        ordinary=torch.randn(4, 3, 8),
+        reset=torch.randn(4, 3, 8),
+        features=features,
+        target=torch.rand(4, 3, 2, 2),
     )
     captured = {}
     original = g.field
@@ -266,21 +271,30 @@ def test_decoded_supervision_endpoint_and_frozen_gradient_reference(kind):
     base_grad = torch.autograd.grad(base, g.output["fine"].weight)[0]
     torch.manual_seed(73)
     loss, metrics = objective(g, cache, [0, 1, 2, 3], 1, 0.5, decoded_image_weight=10)
-    endpoint = captured["prediction"] if kind == "direct" else {
-        k: x + (1 - captured["t"][:, None, None, None]) * captured["prediction"][k]
-        for k, x in captured["x"].items()
-    }
+    endpoint = (
+        captured["prediction"]
+        if kind == "direct"
+        else {
+            k: x + (1 - captured["t"][:, None, None, None]) * captured["prediction"][k]
+            for k, x in captured["x"].items()
+        }
+    )
     pixels = g.head(g.unstandardize(endpoint))
     target = cache["target"]
-    w = 1 + 9 * ((target - 40 / 255).abs().amax(1, keepdim=True) > .01)
-    expected = (((pixels - target).square() * w).sum((1, 2, 3)) /
-                (3 * w.sum((1, 2, 3)))).mean()
+    w = 1 + 9 * ((target - 40 / 255).abs().amax(1, keepdim=True) > 0.01)
+    expected = (
+        ((pixels - target).square() * w).sum((1, 2, 3)) / (3 * w.sum((1, 2, 3)))
+    ).mean()
     assert torch.allclose(loss, base + 10 * expected)
     assert metrics["decoded_image_loss"] == pytest.approx(float(expected.detach()))
     assert metrics["latent_loss"] == base_metrics["latent_loss"]
-    pixel_grad = torch.autograd.grad(expected, g.output["fine"].weight, retain_graph=True)[0]
+    pixel_grad = torch.autograd.grad(
+        expected, g.output["fine"].weight, retain_graph=True
+    )[0]
     loss.backward()
-    assert torch.allclose(g.output["fine"].weight.grad, base_grad + 10 * pixel_grad, atol=1e-5)
+    assert torch.allclose(
+        g.output["fine"].weight.grad, base_grad + 10 * pixel_grad, atol=1e-5
+    )
     assert pixel_grad.abs().sum() > 0
     assert g.context_norm.weight.grad.abs().sum() > 0
     assert g.head.scale.grad is None and not g.head.scale.requires_grad
@@ -291,16 +305,21 @@ def test_zero_decoded_weight_bypasses_head_and_rejects_invalid_before_rng():
 
     torch.manual_seed(79)
     g = generator()
-    cache = dict(ordinary=torch.randn(2, 3, 8), reset=torch.randn(2, 3, 8),
-                 features={k: torch.randn(2, s.channels, *s.size) for k, s in g.feature_spec.items()})
+    cache = dict(
+        ordinary=torch.randn(2, 3, 8),
+        reset=torch.randn(2, 3, 8),
+        features={
+            k: torch.randn(2, s.channels, *s.size) for k, s in g.feature_spec.items()
+        },
+    )
     g.head.forward = lambda *_: pytest.fail("zero weight called image head")
     rng = torch.get_rng_state().clone()
-    a, am = objective(g, cache, [0, 1], 1, .5)
+    a, am = objective(g, cache, [0, 1], 1, 0.5)
     after = torch.get_rng_state().clone()
     torch.set_rng_state(rng)
-    b, bm = objective(g, cache, [0, 1], 1, .5, decoded_image_weight=0)
+    b, bm = objective(g, cache, [0, 1], 1, 0.5, decoded_image_weight=0)
     assert torch.equal(a, b) and am == bm and torch.equal(after, torch.get_rng_state())
     for weight in [-1, float("nan"), float("inf")]:
         with pytest.raises(ValueError, match="Decoded-image weight"):
-            objective(g, cache, [0, 1], 1, .5, decoded_image_weight=weight)
+            objective(g, cache, [0, 1], 1, 0.5, decoded_image_weight=weight)
         assert torch.equal(after, torch.get_rng_state())

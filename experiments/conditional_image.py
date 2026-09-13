@@ -6,6 +6,7 @@ has seen the categories. Targets are canonical synthetic images, not photography
 
 import argparse
 import json
+import math
 import shutil
 from pathlib import Path
 from time import perf_counter
@@ -38,6 +39,7 @@ def settings(seed=41011, objective="flow"):
         lr=0.0003,
         weight_decay=0.0001,
         zero_progress_probability=0.0,
+        decoded_image_weight=0.0,
         memory_mib=3072,
         disk_free_gib=3,
         feature_generator=dict(
@@ -98,7 +100,11 @@ def progress_mixture(draw, zero_probability):
     )
 
 
-def objective(generator, cache, ids, step, zero_probability=0.0):
+def objective(
+    generator, cache, ids, step, zero_probability=0.0, *, decoded_image_weight=0.0
+):
+    if not math.isfinite(decoded_image_weight) or decoded_image_weight < 0:
+        raise ValueError("Decoded-image weight must be finite and nonnegative")
     ordinary = (torch.arange(len(ids), device=cache["reset"].device) + step) % 2 == 0
     context = torch.where(
         ordinary[:, None, None], cache["ordinary"][ids], cache["reset"][ids]
@@ -127,11 +133,18 @@ def objective(generator, cache, ids, step, zero_probability=0.0):
     endpoint = sum((estimate[k] - target[k]).square().mean() for k in target) / len(
         target
     )
-    return loss, dict(
+    metrics = dict(
         latent_loss=float(loss.detach()),
         endpoint_mse=float(endpoint.detach()),
         ordinary_examples=int(ordinary.sum()),
     )
+    if decoded_image_weight:
+        # Endpoint proxy, not an unrolled sample. Frozen head still passes gradients.
+        image = generator.head(generator.unstandardize(estimate))
+        image_loss = weighted_error(image, cache["target"][ids]).mean()
+        loss = loss + decoded_image_weight * image_loss
+        metrics["decoded_image_loss"] = float(image_loss.detach())
+    return loss, metrics
 
 
 @torch.no_grad()
@@ -298,7 +311,12 @@ def train(
             ids = run.sample(len(cache["target"]), config["batch_size"])
             optimizer.zero_grad(set_to_none=True)
             loss, metrics = objective(
-                decoder, cache, ids, step, config.get("zero_progress_probability", 0.0)
+                decoder,
+                cache,
+                ids,
+                step,
+                config.get("zero_progress_probability", 0.0),
+                decoded_image_weight=config.get("decoded_image_weight", 0.0),
             )
             if not torch.isfinite(loss):
                 raise ValueError("Nonfinite generator objective")
@@ -409,11 +427,14 @@ def main():
     parser.add_argument("--test-seed", type=int, default=41073)
     parser.add_argument("--sample-seed", type=int, default=13)
     parser.add_argument("--zero-progress-probability", type=float, default=0.0)
+    parser.add_argument("--decoded-image-weight", type=float, default=0.0)
     args = parser.parse_args()
     if not 0 <= args.zero_progress_probability < 1 or (
         args.objective != "flow" and args.zero_progress_probability
     ):
         parser.error("Zero-progress weighting requires flow and a probability in [0,1)")
+    if not math.isfinite(args.decoded_image_weight) or args.decoded_image_weight < 0:
+        parser.error("Decoded-image weight must be finite and nonnegative")
     if args.evaluate_only:
         args.output.mkdir(parents=True, exist_ok=False)
         start = perf_counter()
@@ -482,6 +503,9 @@ def main():
     ]
     config = dict(source_config, **settings(objective=args.objective))
     config["zero_progress_probability"] = args.zero_progress_probability
+    config["decoded_image_weight"] = args.decoded_image_weight
+    if args.decoded_image_weight:
+        config["objective"] += " + decoded endpoint image supervision"
     config.update(
         source_weights_sha256=file_hash(args.weights),
         source_weights_path=str(args.weights.resolve()),
