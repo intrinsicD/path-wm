@@ -1883,3 +1883,44 @@ Initial101-case suite has98 behavioral passes and3 incorrect new expectations
 all16 tint-focused cases pass, including7 CLI/continuation checks. The suite includes
 exact odd-step centered-scene resume. Sixteen-update GPU development29071 completed
 with a structurally verified report and inspected panel. No formal results yet.
+
+## Centered tint comparison results and resume guard
+
+Formal source5451ce1; all four1,536-update fits and80 evaluations complete. Every
+frozen tensor/buffer stays exact; starts, samplers, RNG and presentations match.
+Native augmentation passes19/24 full task cells; both neutral-only and unchanged
+centered controls pass14/24. Warm tint improves from0/4 to4/4 full task passes
+(92.188–100% native accuracy). Mild warm/cool and neutral each pass4/4; clean native
+accuracy98.438–100%. Strong cool passes2/4 (recall images as low as81.25%). Texture
+passes1/4 and81.25–98.438%, while raw inputs remain100% on all texture cells.
+
+Overall repair fails. All-scene accuracy within5pp of raw-neutral passes14/24;
+clean-cell retention itself passes4/4. Texture retention passes0/4. Primary warm
+benefit passes1/4; some control image scores exceed95%, leaving less than5pp of
+possible improvement. This predeclared threshold is not relaxed. Training already
+underfits: source8502 cool recall has100% factual answers and48/256 wrong rendered
+shapes. Failure is not uniquely attributable to the encoder.
+
+108 distinct relevant tests pass across the original suite and corrected focused
+checks.20,120 metrics independently reproduced;80 ordinary/reset GPU replays exact;
+12 original datasets byte-exact and7 inference/objective functions unchanged.
+Training315.46s total, peak602MiB; full fit loop500.52s, evaluation458.95s. Concurrent
+user GPU processes affected timing; no isolated speed claim. Before confirmation,
+recorded timing_amendment.json increased elapsed evaluation allowance900→1,800s;
+updates, populations, gates, VRAM and disk limits stayed fixed. Actual loop<900s.
+
+The initially rejected Claude follow-up was subsequently explicitly authorized by
+Alex and completed. Claude accepted cache/live provenance, scoped native live-task
+success, bounded negative-result and texture-control corrections. One remaining
+claim is not adopted: shared initialization limits across-model generalization,
+but does not confound a within-model history intervention with weights held fixed.
+Both actual review receipts and the initial rejection remain recorded.
+
+Local review then reproduced a resume-only integrity gap using an intentionally
+altered checkpoint: standalone loading checks centering buffer against settings,
+but Run restoration inside training bypasses that check. Add the same validation
+inside the existing failure-handled training block after restore, before updates.
+A mismatch must mark failed status, preserve checkpoint/committed metrics and run
+no optimizer steps. Regression: existing exact odd-step centered-scene resume stays
+valid. Budget: focused CPU checks only, zero new capability training/evaluation.
+Keep formal5451ce1 source evidence distinct; no inference/metric change is needed.

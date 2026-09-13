@@ -256,3 +256,57 @@ def test_scene_cli_uses_original_centering_and_correct_augmented_data(
         ],
     )
     r.main()
+
+
+def test_resume_rejects_restored_reference_mismatch_before_updates(
+    tmp_path, monkeypatch
+):
+    from experiments.memory_output import train
+    from pathwm.models.memory_output import load_model, configure_output_readout
+    from pathwm.io import file_hash
+
+    _, data, settings = centered_export(tmp_path)
+    settings.update(
+        steps=4,
+        batch_size=2,
+        readout_stage="native",
+        readout_context="mixed",
+        recall_repair="identity",
+        wall_seconds=120,
+    )
+
+    def run(resume=False):
+        model = configure_output_readout(load_model(tmp_path / "weights.pt"), "native")
+        return train(
+            model,
+            data,
+            data,
+            data,
+            output=tmp_path / "fit",
+            settings=settings,
+            resume=resume,
+            stop_after=1,
+        )
+
+    run()
+    path = tmp_path / "fit" / "last.pt"
+    record = torch.load(path, weights_only=True)
+    record["model"]["agent.encoders.image.reference"].add_(0.001)
+    torch.save(record, path)
+    before = file_hash(path)
+    rows = (tmp_path / "fit" / "metrics.jsonl").read_bytes()
+    monkeypatch.setattr(
+        torch.optim.AdamW,
+        "step",
+        lambda *a, **k: pytest.fail("Updated with a mismatched centering reference"),
+    )
+    with pytest.raises(ValueError, match="reference"):
+        run(True)
+    assert file_hash(path) == before
+    assert (tmp_path / "fit" / "metrics.jsonl").read_bytes() == rows
+    status = json.loads((tmp_path / "fit" / "status.json").read_text())
+    assert (
+        status["result"] == "failed"
+        and status["step"] == 1
+        and "reference" in status["error"]
+    )
