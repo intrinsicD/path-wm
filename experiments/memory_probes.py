@@ -21,7 +21,7 @@ from pathwm.io import (
     source_record,
     state_hash,
 )
-from pathwm.models.memory_output import FactHead, load_model
+from pathwm.models.memory_output import TokenProbe, load_model
 
 
 @torch.no_grad()
@@ -99,27 +99,6 @@ def prepare(checkpoint, directory, device):
             preparation_seconds=perf_counter() - start,
         ),
     )
-
-
-class TokenProbe(nn.Module):
-    def __init__(self, training):
-        super().__init__()
-        if training.ndim != 3 or not torch.isfinite(training).all():
-            raise ValueError("Probe calibration requires finite training tokens")
-        values = training.detach().double()
-        self.register_buffer(
-            "mean", values.mean((0, 1), keepdim=True).to(training.dtype)
-        )
-        self.register_buffer(
-            "std",
-            values.std((0, 1), correction=0, keepdim=True)
-            .clamp_min(1e-4)
-            .to(training.dtype),
-        )
-        self.head = FactHead(training.shape[-1], depth=2)
-
-    def forward(self, tokens):
-        return self.head((tokens - self.mean) / self.std)
 
 
 def make_probes(training, seed):

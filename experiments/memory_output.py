@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import math
 from pathlib import Path
 from time import perf_counter
 
@@ -18,6 +19,7 @@ from pathwm.models.memory_output import (
     load_model as load_model,
     configure_recall_repair,
     frozen_tensors,
+    load_workspace_reference,
 )
 from pathwm.models.modalities import Observation
 
@@ -43,7 +45,11 @@ def weighted_error(image, target):
     )
 
 
-def objective(model, batch, reset, repair=False):
+def objective(model, batch, reset, repair=False, reference_weight=0.0):
+    if not math.isfinite(reference_weight) or reference_weight < 0:
+        raise ValueError("Reference loss weight must be finite and nonnegative")
+    if reference_weight and (not repair or model.workspace_reference is None):
+        raise ValueError("Reference supervision requires repair and a frozen reader")
     history = model.observe_history(batch["images"])
     state = model.query(
         history["final"], batch["images"][:, -1], "reset" if reset else "ordinary"
@@ -56,8 +62,16 @@ def objective(model, batch, reset, repair=False):
     write = factual_loss(stored, batch["labels"])
     pixels = weighted_error(output["image"], batch["target"]).mean()
     latent = model.agent.decoders["image"].latent_loss(output["features"], targets)
+    reference = (
+        factual_loss(output["reference_facts"], batch["labels"])
+        if model.workspace_reference is not None
+        else facts.new_zeros(())
+    )
     loss = facts + (0.0 if repair else 0.5) * write + pixels + 0.1 * latent
+    if reference_weight:
+        loss = loss + reference_weight * reference
     return loss, dict(
+        reference_loss=float(reference.detach()),
         factual_loss=float(facts.detach()),
         write_loss=float(write.detach()),
         rgb_loss=float(pixels.detach()),
@@ -93,12 +107,20 @@ def evaluate(model, data, device, modes, batch_size=16):
         "stored_logits": [],
         "teacher_image": [],
     }
+    if model.workspace_reference is not None:
+        arrays["reference_stored_logits"] = []
+        for mode in modes:
+            arrays[mode + "_reference_logits"] = []
     for mode in modes:
         arrays[mode + "_logits"], arrays[mode + "_image"] = [], []
     for start in range(0, len(data), batch_size):
         batch = data.batch(range(start, min(start + batch_size, len(data))), device)
         images = batch["images"]
         history = model.observe_history(images)
+        if model.workspace_reference is not None:
+            arrays["reference_stored_logits"].append(
+                model.workspace_reference(model.working(history["stored"])).cpu()
+            )
         for key, value in dict(
             target=batch["target"],
             labels=batch["labels"],
@@ -116,6 +138,10 @@ def evaluate(model, data, device, modes, batch_size=16):
             else:
                 output = model.output(
                     model.query(history["final"], images[:, -1], mode)
+                )
+            if model.workspace_reference is not None:
+                arrays[mode + "_reference_logits"].append(
+                    output["reference_facts"].cpu()
                 )
             arrays[mode + "_logits"].append(output["facts"].cpu())
             arrays[mode + "_image"].append(output["image"].cpu())
@@ -143,6 +169,13 @@ def score(arrays, modes, *, relocation=False):
     result["pair_mean_weighted_mse"] = float(
         weighted_error((target + target[paired]) / 2, target).mean()
     )
+    if "reference_stored_logits" in arrays:
+        result["reference_stored_accuracy"] = float(
+            (fact_labels(arrays["reference_stored_logits"]) == labels)
+            .all(1)
+            .float()
+            .mean()
+        )
     for mode in modes:
         pixels, facts = arrays[mode + "_image"], fact_labels(arrays[mode + "_logits"])
         visual = image_labels(pixels)
@@ -162,6 +195,12 @@ def score(arrays, modes, *, relocation=False):
                 (visual == labels[paired]).all(1).float().mean()
             ),
         )
+        if mode + "_reference_logits" in arrays:
+            correct = fact_labels(arrays[mode + "_reference_logits"]) == labels
+            result[mode]["reference_accuracy"] = float(correct.all(1).float().mean())
+            result[mode]["reference_side_accuracy"] = float(
+                correct[:, 2].float().mean()
+            )
         for kind, prediction in (("factual", facts), ("image", visual)):
             for i, name in enumerate(("color", "shape", "side")):
                 result[mode][f"{kind}_{name}_accuracy"] = float(
@@ -344,7 +383,13 @@ def train(
                 run.sample(len(training), settings["batch_size"]), device
             )
             optimizer.zero_grad(set_to_none=True)
-            loss, metrics = objective(model, batch, reset=bool(step % 2), repair=repair)
+            loss, metrics = objective(
+                model,
+                batch,
+                reset=bool(step % 2),
+                repair=repair,
+                reference_weight=settings.get("reference_weight", 0.0),
+            )
             direct = (
                 loss.new_zeros(())
                 if repair
@@ -492,6 +537,8 @@ def main():
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--normalize-input", action="store_true")
     parser.add_argument("--repair", choices=("identity", "calibrated", "temporal"))
+    parser.add_argument("--workspace-reference", type=Path)
+    parser.add_argument("--reference-weight", type=float, default=0.0)
     parser.add_argument("--validation-seed", type=int)
     parser.add_argument("--test-seed", type=int)
     parser.add_argument("--development", action="store_true")
@@ -499,6 +546,16 @@ def main():
         "--curriculum", choices=("parity", "relocation"), default="parity"
     )
     args = parser.parse_args()
+    if (
+        not math.isfinite(args.reference_weight)
+        or args.reference_weight < 0
+        or (args.reference_weight and args.workspace_reference is None)
+    ):
+        parser.error(
+            "Reference weight requires a reader and must be finite/nonnegative"
+        )
+    if args.workspace_reference is not None and args.repair != "identity":
+        parser.error("Workspace supervision currently requires --repair identity")
     if args.curriculum == "relocation" and not args.normalize_input:
         if not args.repair:
             parser.error("The relocation comparison requires --normalize-input")
@@ -527,6 +584,10 @@ def main():
             load_model(args.weights, args.device),
             relative_time=args.repair == "temporal",
         )
+        if args.workspace_reference is not None:
+            model.workspace_reference = load_workspace_reference(
+                args.workspace_reference, model.agent.width, args.device
+            )
         training = MemoryOutputEpisodes(
             128, seed=17701 if args.development else 7701, curriculum="relocation"
         )
@@ -569,6 +630,18 @@ def main():
             objective="frozen writer; factor CE + foreground-weighted RGB MSE + 0.1 standardized feature MSE",
             memory_calibration_data=training.identity,
         )
+        if args.workspace_reference is not None:
+            settings.update(
+                workspace_reference_sha256=file_hash(args.workspace_reference),
+                reference_weight=args.reference_weight,
+                objective=settings["objective"]
+                + "; frozen-reader workspace CE x "
+                + str(args.reference_weight),
+            )
+        elif settings.get("workspace_reference_sha256"):
+            parser.error(
+                "Continuing a supervised export requires its explicit reference"
+            )
         if args.development:
             settings.update(steps=16, wall_seconds=60)
         calibration_seconds = perf_counter() - calibration_start

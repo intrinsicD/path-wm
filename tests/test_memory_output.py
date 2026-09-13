@@ -203,6 +203,7 @@ def test_supervised_writes_and_frozen_decoder_have_intended_gradients():
         (True, "relocation", False),
         (True, "relocation", True),
         (True, "relocation", "temporal"),
+        (True, "relocation", "reference"),
     ],
 )
 def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum, repair):
@@ -254,6 +255,12 @@ def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum, 
             settings["recall_repair"] = (
                 "temporal" if repair == "temporal" else "calibrated"
             )
+        if repair == "reference":
+            from pathwm.models.memory_output import TokenProbe
+
+            model.workspace_reference = TokenProbe(model.working(history["stored"]))
+            model.workspace_reference.requires_grad_(False)
+            settings.update(workspace_reference_sha256="fixture", reference_weight=1.0)
         result = train(
             model,
             train_data,
@@ -277,6 +284,10 @@ def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum, 
         expected = full_model(b["images"], mode="reset")
         actual = loaded(b["images"], mode="reset")
     torch.testing.assert_close(actual["image"], expected["image"], atol=0, rtol=0)
+    if repair == "reference":
+        torch.testing.assert_close(
+            actual["reference_facts"], expected["reference_facts"], atol=0, rtol=0
+        )
     saved = np.load(tmp_path / "full" / "predictions.npz")
     assert np.isfinite(saved["reset_image"]).all()
     html = (tmp_path / "full" / "report.html").read_text()

@@ -104,6 +104,50 @@ class FactHead(nn.Module):
         return self.output(query[:, 0])
 
 
+class TokenProbe(nn.Module):
+    def __init__(self, training):
+        super().__init__()
+        if training.ndim != 3 or not torch.isfinite(training).all():
+            raise ValueError("Probe calibration requires finite training tokens")
+        values = training.detach().double()
+        self.register_buffer(
+            "mean", values.mean((0, 1), keepdim=True).to(training.dtype)
+        )
+        self.register_buffer(
+            "std",
+            values.std((0, 1), correction=0, keepdim=True)
+            .clamp_min(1e-4)
+            .to(training.dtype),
+        )
+        self.head = FactHead(training.shape[-1], depth=2)
+
+    def forward(self, tokens):
+        return self.head((tokens - self.mean) / self.std)
+
+
+def load_workspace_reference(path, width, device="cpu"):
+    """Load only the stored-working diagnostic; exported agent owns its own copy."""
+    record = torch.load(path, map_location="cpu", weights_only=True)
+    if record["width"] != width or "stored_working" not in record["stages"]:
+        raise ValueError("Reference width/stage must match the working state")
+    reference = TokenProbe(torch.zeros(1, 1, width))
+    prefix = "stored_working."
+    reference.load_state_dict(
+        {
+            k[len(prefix) :]: v
+            for k, v in record["model"].items()
+            if k.startswith(prefix)
+        },
+        strict=True,
+    )
+    if (
+        not all(torch.isfinite(v).all() for v in reference.state_dict().values())
+        or not (reference.std > 0).all()
+    ):
+        raise ValueError("Reference requires finite weights and positive scales")
+    return reference.to(device).requires_grad_(False).eval()
+
+
 class CalibratedMemory(EpisodicMemory):
     """Read-only affine calibration; raw storage and retrieval selection are intact."""
 
@@ -181,6 +225,7 @@ class MemoryOutput(nn.Module):
         self.agent, self.teacher = agent, teacher
         self.facts = FactHead(agent.width)
         self.direct = FactHead(agent.width, depth=2)
+        self.workspace_reference = None
 
     def working(self, state):
         return torch.cat(
@@ -246,9 +291,13 @@ class MemoryOutput(nn.Module):
         tokens = self.working(state)
         decoder = self.agent.decoders["image"]
         features = decoder.features(tokens)
-        return dict(
+        output = dict(
             facts=self.facts(tokens), image=decoder.head(features), features=features
         )
+        if self.workspace_reference is not None:
+            # Diagnostic/training readout only; never an input to native outputs.
+            output["reference_facts"] = self.workspace_reference(tokens)
+        return output
 
     def direct_tokens(self, images):
         with torch.no_grad():
@@ -332,5 +381,8 @@ def load_model(path, device="cpu"):
         configure_recall_repair(
             model, relative_time=settings["recall_repair"] == "temporal"
         )
+    if settings.get("workspace_reference_sha256"):
+        model.workspace_reference = TokenProbe(torch.zeros(1, 1, settings["width"]))
+        model.workspace_reference.requires_grad_(False)
     model.load_state_dict(record["model"], strict=True)
     return model.to(device).eval()

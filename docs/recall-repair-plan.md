@@ -350,3 +350,14 @@ normalization as real interpretation limits. We retain two-reader diagnostics an
 native causal output gates. A shuffled-label auxiliary arm and exact normalized
 token reconstruction remain untested alternatives; no claim that this signal is
 uniquely effective or restores general latent fidelity. No more arms in this budget.
+
+Implementation validation:49 relevant tests and lint pass, including exact zero-weight
+baseline, isolated auxiliary gradient, unchanged inference after reader mutation,
+strict standalone reader reload and4-update exact optimizer/RNG resume. The16-update
+GPU development check completes in2.6975s,424MiB reserved, all frozen tensors fixed;
+standalone report structurally verified and comparison PNG inspected. Claude accepted
+the narrowed diagnostic scope; its gradient-flow blocker is covered by the test.
+No development quality tuning. Formal source is committed before training.
+
+Command (both writers; reference-weight0 baseline,1 supervised):
+`OMP_NUM_THREADS=2 .venv/bin/python -m experiments.memory_output --weights runs/memory_time_v1/agent_7801_identity/weights.pt --repair identity --workspace-reference runs/memory_probes_v1/agent_7801_probe_7901/weights.pt --reference-weight 1 --seed 8201 --validation-seed 7742 --test-seed 7743 --output runs/reader_supervision_v1/agent_7801_supervised --device cuda:0`
