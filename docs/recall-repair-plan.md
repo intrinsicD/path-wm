@@ -225,3 +225,78 @@ and comparison PNG inspected. No quality tuning from this development run.
 
 Formal command (use both writer7801/7802 and repair identity/temporal):
 `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.memory_output --weights runs/recall_repair_v1/agent_7801_identity/weights.pt --repair temporal --validation-seed 7732 --test-seed 7733 --seed 8101 --output runs/memory_time_v1/agent_7801_temporal --device cuda:0`
+
+## Snapshot timing results
+
+Sourceca42e39. All four1536-update fits complete under their fixed300s caps. Both
+arms have76,824 trainable parameters and identical initial tensor hashes within
+each source pair; only the explicit age-cue setting differs. Frozen weights, raw
+stored states and original source checkpoints remain unchanged. Old untimed defaults
+are preserved. No larger encoder/decoder, tag-control arm or further training added.
+
+Fresh-background test128 histories, identical across all rows:
+
+| Writer | Condition | Reset facts | Reset images | Complete relocation pairs, facts | Complete relocation pairs, images |
+| --- | --- | ---: | ---: | ---: | ---: |
+|7801|Frozen prior repair|69.53125%|66.40625%|40.625%|34.375%|
+|7801|More untimed training|72.65625%|75%|45.3125%|50%|
+|7801|Temporal continuation|77.34375%|75.78125%|54.6875%|51.5625%|
+|7802|Frozen prior repair|74.21875%|74.21875%|48.4375%|48.4375%|
+|7802|More untimed training|74.21875%|74.21875%|48.4375%|48.4375%|
+|7802|Temporal continuation|74.21875%|74.21875%|48.4375%|48.4375%|
+
+All four full reliability gates fail, as does the replicated10-point age-cue benefit
+gate. The first temporal model gains six correct factual answers and one correct
+image versus equal untimed training; the second gains none. No robust benefit is
+established. Color and shape factual accuracy are100% in all four final models;
+remaining factual errors concern final location. Ordinary facts/images are78.90625/
+75.78125%,78.90625/78.125%,74.21875/74.21875%,74.21875/74.21875% in writer7801
+identity/temporal then7802 identity/temporal order. No90% ordinary result either.
+
+Temporal-model test interventions, facts/images:
+
+| Writer | Correct ages | Ages collapsed to query time | Ages misassigned between snapshots |
+| --- | ---: | ---: | ---: |
+|7801|77.34375/75.78125%|57.8125/55.46875%|64.84375/64.84375%|
+|7802|74.21875/74.21875%|74.21875/74.21875%|69.53125/69.53125%|
+
+The replicated sensitivity screen fails because the second writer is unaffected by
+age erasure and loses less than10 points under misalignment. Both interventions are
+exact no-ops in both untimed models. The first model's functional sensitivity does
+not establish elapsed-time semantics: these are OOD metadata changes with fixed
+training ages. Arbitrary snapshot tags remain an untested alternative mechanism.
+
+Unchanged direct encoder and teacher-image controls score100%. The previously fitted
+stored-working readers score98.4375/82.8125% location on writer7801,75.78125/74.21875%
+on writer7802. This retains the gap between accessible stored information and native
+recall in the stronger source, while the weaker source/probe uncertainty remains.
+It does not identify a perfect information ceiling or prove the writer lost location.
+
+Training seconds:161.488,161.303,159.149,160.714; total642.654 (10.71min),424MiB
+reserved per run. Final checkpoint only; learning curves and failed gates retained.
+76 relevant tests pass:46 focused checks plus30 tests of shared-memory consumers
+(belief, multimodal training and task contracts). Independent NumPy audits verify
+864 fitted-run metrics,432 unchanged-source metrics and32 fixed-probe metrics,1,328
+total; worst error7.67e-9. Exact split frame hashes are disjoint. The real768+768
+resume preserves774 ledger rows; exact CPU optimizer/RNG resume is covered by tests.
+
+All four strict standalone GPU exports reproduce logits/pixels exactly under matched
+IEEE/deterministic settings. Reordering complete stored records also leaves the
+actual post-think workspace exactly unchanged on all128 cases per model, on GPU and
+CPU; timestamps remain attached to the selected values. CPU raw-observation replay
+still fails1e-4: maximum logit error0.475857, pixel error0.015305. Factual labels agree
+throughout, but writer7801 temporal produces different image-side labels on two
+episodes (indices68 and100). Do not claim numerical portability fixed or silently
+relax the tolerance. A stale calibrated-arm path in the reused array audit was
+corrected and that audit rerun; model training and reported metrics were untouched.
+
+Each run and the overview have standalone structurally verified reports, with raw
+arrays, source/probe controls, resume receipt, resources and independent audits.
+All four comparison panels and score/learning-curve plot inspected; browser QA
+unavailable. Two actual public-only Claude reviews, no private repository export.
+
+Next proposed work: compare the successful direct stored-state readout with the
+native workspace path on exactly the same values, using it as a concrete reference
+for a reader repair. Check weaker stored-state accessibility separately. Another
+timestamp feature or unbounded continuation is not supported by this comparison;
+the exact next interface and budget still need declaration. No new run launched.

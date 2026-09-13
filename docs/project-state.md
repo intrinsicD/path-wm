@@ -1,12 +1,21 @@
 # Current work
 
-**Snapshot timing comparison in progress, 13 September:** Alex approved testing
-explicit temporal/snapshot differentiation. The existing recipe now supports
-`--repair temporal`, timestamp erasure/misalignment diagnostics and explicit split
-seeds.46 targeted tests and a separate16-update GPU development run pass; source
-writer/codecs remain frozen. [Active protocol](recall-repair-plan.md#snapshot-timing-comparison).
-Compare matched untimed and temporal continuations from both previous identity
-checkpoints; no temporal benefit or general-time-reasoning claim yet.
+**Snapshot timing comparison completed, 13 September:** explicit snapshot ages
+raise writer7801 reset facts72.66→77.34% and images75→75.78% versus equal untimed
+continuation; writer7802 stays74.22% for both outputs. All reliability, replicated
+10-point benefit and replicated time-sensitivity screens fail. Timestamp erasure
+reduces the first temporal model to57.81/55.47%, but leaves the second unchanged;
+misalignment affects both, weakly in the second. Keep the cue opt-in: response to
+metadata is not general temporal understanding or a reliable repair.
+Four1536-update fits,642.65s training,424MiB reserved.76 relevant tests and1,328
+independent metric checks pass. GPU reload and bank-order workspace checks exact;
+774-row resume prefix preserved. Source weights, writer and codecs unchanged.
+CPU numeric tolerance still fails; factual labels agree, two image-side labels differ
+for writer7801 temporal. Two public-only Claude reviews; structural reports and
+inspected figures. [Protocol/results](recall-repair-plan.md#snapshot-timing-results),
+[report](../runs/memory_time_v1/report.html). Next proposed: use the successful
+direct stored-state readout as a reference for the native workspace path, and check
+the weaker writer separately, before adding more memory cues. No next repair run.
 
 **Frozen-writer recall repair completed, 13 September:** focused retraining improves
 reset factual accuracy from48.44/50% to66.41/75%, and generated-image accuracy from
