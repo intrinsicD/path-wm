@@ -164,6 +164,38 @@ class MemoryOutputEpisodes:
         )
         return result
 
+    def with_scenes(self, scenes):
+        """Ordered whole-history scene blocks with unchanged canonical targets."""
+        if (
+            not isinstance(scenes, (list, tuple))
+            or not scenes
+            or any(not isinstance(scene, dict) for scene in scenes)
+        ):
+            raise ValueError("Scenes must be a nonempty list of parameter dictionaries")
+        if "input_transform" in self.identity or "input_augmentation" in self.identity:
+            raise ValueError("Scenes require untransformed source histories")
+        variants = [self.with_scene(**scene) for scene in scenes]
+        result = copy(self)
+        result.images = np.concatenate([v.images for v in variants])
+        result.targets = np.concatenate([v.targets for v in variants])
+        result.labels = np.concatenate([v.labels for v in variants])
+        result.identity = dict(
+            deepcopy(self.identity),
+            pairs=self.identity["pairs"] * len(variants),
+            images_sha256=hashlib.sha256(result.images.tobytes()).hexdigest(),
+            targets_sha256=hashlib.sha256(result.targets.tobytes()).hexdigest(),
+            labels_sha256=hashlib.sha256(result.labels.tobytes()).hexdigest(),
+            input_augmentation=dict(
+                kind="whole-history-scenes-v1",
+                scenes=[
+                    deepcopy(v.identity["input_transform"]["parameters"])
+                    for v in variants
+                ],
+                source_data=deepcopy(self.identity),
+            ),
+        )
+        return result
+
     def with_scene(
         self,
         *,

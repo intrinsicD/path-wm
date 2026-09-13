@@ -304,6 +304,7 @@ def test_supervised_writes_and_frozen_decoder_have_intended_gradients():
         (True, "relocation", "stored_readout"),
         (True, "relocation", "mixed_readout"),
         (True, "relocation", "augmented_readout"),
+        (True, "relocation", "centered_scene_readout"),
         (True, "relocation", "frozen_writer"),
         (True, "relocation", "trainable_writer"),
         (True, "relocation", "joint_writer"),
@@ -335,8 +336,13 @@ def test_training_resume_and_standalone_reload(
 
     pairs = 16 if curriculum == "relocation" else 4
     train_data = MemoryOutputEpisodes(pairs, seed=17, curriculum=curriculum)
+    neutral_training = train_data
     if repair == "augmented_readout":
         train_data = train_data.with_input_offsets([-16, 0, 16])
+    if repair == "centered_scene_readout":
+        train_data = train_data.with_scenes(
+            [{}, {"background_offset": (12, 0, -8)}, {"background_offset": (-8, 0, 12)}]
+        )
     val = MemoryOutputEpisodes(pairs, seed=18, curriculum=curriculum)
     test = MemoryOutputEpisodes(pairs, seed=19, split="test", curriculum=curriculum)
 
@@ -390,21 +396,34 @@ def test_training_resume_and_standalone_reload(
             "stored_readout",
             "mixed_readout",
             "augmented_readout",
+            "centered_scene_readout",
         ):
             from pathwm.models.memory_output import configure_output_readout
 
             stage = (
                 "native"
-                if repair in ("mixed_readout", "augmented_readout")
+                if repair
+                in ("mixed_readout", "augmented_readout", "centered_scene_readout")
                 else repair.split("_")[0]
             )
             configure_output_readout(model, stage)
             settings.update(readout_stage=stage, standardize_output=True)
-            if repair in ("mixed_readout", "augmented_readout"):
+            if repair in (
+                "mixed_readout",
+                "augmented_readout",
+                "centered_scene_readout",
+            ):
                 settings["readout_context"] = "mixed"
             if repair == "augmented_readout":
                 settings.update(
                     standardize_output=False, train_input_offsets=[-16, 0, 16]
+                )
+            if repair == "centered_scene_readout":
+                from experiments.memory_output import center_from_training
+
+                settings.update(
+                    standardize_output=False,
+                    input_centering=center_from_training(model, neutral_training),
                 )
         if writer_case:
             from pathwm.models.memory_output import configure_output_readout
@@ -442,7 +461,8 @@ def test_training_resume_and_standalone_reload(
     run(
         tmp_path / "resumed",
         stop_after=1
-        if repair in ("mixed_readout", "augmented_readout") or writer_case
+        if repair in ("mixed_readout", "augmented_readout", "centered_scene_readout")
+        or writer_case
         else 2,
     )
     _, resumed = run(tmp_path / "resumed", resume=True)

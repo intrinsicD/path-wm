@@ -31,6 +31,7 @@ from pathwm.models.memory_output import (
     load_workspace_reference,
     configure_output_readout,
     PixelMedianCentering,
+    configure_input_centering,
 )
 from pathwm.models.modalities import Observation
 
@@ -41,6 +42,9 @@ SCENE_CHALLENGES = {
     "temporal-offset": dict(frame_offsets=(-12, 12, -8)),
     "channel-offset": dict(rgb_offset=(8, -8, 4)),
     "background-tint": dict(background_offset=(12, 0, -8)),
+    "background-cool": dict(background_offset=(-8, 0, 12)),
+    "background-warm-mild": dict(background_offset=(8, 0, -4)),
+    "background-cool-mild": dict(background_offset=(-4, 0, 8)),
     "background-texture": dict(texture=8),
     "background-bright": dict(background_offset=(48, 48, 48)),
     "foreground-large": dict(radius=12),
@@ -423,6 +427,25 @@ def train(
     stop_after=None,
 ):
     cache = None
+    coverage = None
+    centering = settings.get("input_centering")
+    wrapped = isinstance(model.agent.encoders["image"], PixelMedianCentering)
+    if bool(centering) != wrapped:
+        raise ValueError("Input centering settings and encoder configuration differ")
+    if centering:
+        configure_input_centering(model, centering)
+        coverage = {
+            name: centering_coverage(model.agent.encoders["image"], data, device)
+            for name, data in (
+                ("train", training),
+                ("validation", validation),
+                ("test", test),
+            )
+        }
+        if any(c["coverage"] != 1.0 for c in coverage.values()):
+            raise ValueError(
+                "Input centering coverage must include every training/evaluation history"
+            )
     writer_learning = settings.get("writer_learning")
     if settings.get("image_only") and (
         writer_learning != "frozen" or settings.get("train_thinker")
@@ -494,6 +517,8 @@ def train(
         device=device,
         resume=resume,
     )
+    if coverage is not None and not resume:
+        atomic_json(run.path / "input_coverage.json", coverage)
     if cache is not None and not resume:
         torch.save(
             {k: v.cpu() for k, v in tensors.items()}, run.path / "training_cache.pt"
@@ -507,6 +532,8 @@ def train(
                 stage=settings["readout_stage"],
                 context=readout_context,
                 standardize_output=settings.get("standardize_output", False),
+                input_centering=centering,
+                source_weights_sha256=settings.get("source_sha256"),
             ),
         )
     if cache is not None:
@@ -755,15 +782,14 @@ def center_from_training(model, training):
     ):
         raise ValueError("Centering reference requires neutral training observations")
     reference = np.median(training.images.reshape(-1, 3), axis=0) / 255
-    model.agent.encoders["image"] = PixelMedianCentering(
-        model.agent.encoders["image"], reference.tolist()
-    ).to(model.agent.initial)
-    return dict(
+    config = dict(
         kind="per-frame-rgb-median-v1",
         reference_rgb=reference.tolist(),
         calibration_data=training.identity,
         scope="training-only fixed reference; no targets/offset metadata; no clipping",
     )
+    configure_input_centering(model, config)
+    return config
 
 
 def centering_coverage(encoder, data, device, batch_size=16):
@@ -807,8 +833,8 @@ def evaluate_export(weights, data, *, output, device="cpu", center_input=False):
         if original["identity"]["settings"] != json.loads(json.dumps(settings)):
             raise ValueError("Export settings differ from original training manifest")
         model = load_model(weights, device)
-        centering = None
-        if center_input:
+        centering = settings.get("input_centering")
+        if center_input and centering is None:
             source_data = original["identity"]["data"]["train"]
             source_data = source_data.get("input_augmentation", {}).get(
                 "source_data", source_data
@@ -852,7 +878,7 @@ def evaluate_export(weights, data, *, output, device="cpu", center_input=False):
         )
         (output / "recipe.py").write_text(Path(__file__).read_text())
         (output / "metrics.jsonl").write_text("")
-        if center_input:
+        if centering:
             coverage = centering_coverage(model.agent.encoders["image"], data, device)
             atomic_json(output / "input_coverage.json", coverage)
             if coverage["accepted_histories"] != len(data):
@@ -1011,7 +1037,13 @@ def main():
     parser.add_argument(
         "--center-input",
         action="store_true",
-        help="Evaluation-only per-frame centering using original training observations",
+        help="Fixed per-frame centering for evaluation or native mixed head-only repair",
+    )
+    parser.add_argument(
+        "--train-scenes",
+        nargs="+",
+        choices=SCENE_CHALLENGES,
+        help="Ordered whole-history scene variants for native mixed head-only repair",
     )
     parser.add_argument(
         "--train-input-offsets",
@@ -1038,9 +1070,11 @@ def main():
         parser.error("Scene changes require evaluation-only without input-offset")
     if args.input_offset and not args.evaluate_only:
         parser.error("Input offset is an evaluation-only override")
-    if args.center_input and not args.evaluate_only:
-        parser.error("Input centering is an evaluation-only diagnostic")
-    if args.train_input_offsets is not None and (
+    if (
+        args.train_scenes is not None
+        or args.train_input_offsets is not None
+        or (args.center_input and not args.evaluate_only)
+    ) and (
         args.evaluate_only
         or args.repair != "identity"
         or args.readout_stage != "native"
@@ -1048,7 +1082,11 @@ def main():
         or args.writer_learning is not None
         or args.standardize_output
     ):
-        parser.error("Training offsets require native raw mixed head-only repair")
+        parser.error(
+            "Training scenes/offsets/centering require native raw mixed head-only repair"
+        )
+    if args.train_scenes is not None and args.train_input_offsets is not None:
+        parser.error("Choose training scenes or training offsets")
     if args.evaluate_only:
         if (
             args.repair
@@ -1164,6 +1202,13 @@ def main():
         training = MemoryOutputEpisodes(
             128, seed=17701 if args.development else 7701, curriculum="relocation"
         )
+        centering = source["settings"].get("input_centering")
+        if args.center_input and centering is None:
+            centering = center_from_training(model, training)
+        if args.train_scenes is not None:
+            training = training.with_scenes(
+                [SCENE_CHALLENGES[s] for s in args.train_scenes]
+            )
         if args.train_input_offsets is not None:
             training = training.with_input_offsets(args.train_input_offsets)
         validation = MemoryOutputEpisodes(
@@ -1192,6 +1237,10 @@ def main():
 
             model.agent.memory.calibrate(values())
         settings = dict(source["settings"])
+        settings.pop("train_scenes", None)
+        settings.pop("train_input_offsets", None)
+        if centering:
+            settings["input_centering"] = centering
         settings.update(default_settings(args.seed))
         settings.update(
             {
@@ -1249,6 +1298,9 @@ def main():
         if args.train_input_offsets is not None:
             settings["train_input_offsets"] = args.train_input_offsets
             settings["objective"] += "; ordered whole-history training RGB offsets"
+        if args.train_scenes is not None:
+            settings["train_scenes"] = args.train_scenes
+            settings["objective"] += "; ordered whole-history training scenes"
         if args.development:
             settings.update(steps=16, wall_seconds=60)
         calibration_seconds = perf_counter() - calibration_start

@@ -68,6 +68,25 @@ class PixelMedianCentering(nn.Module):
         return self.base(observation.derive(centered), **kwargs)
 
 
+def configure_input_centering(model, config):
+    """Restore/validate fixed preprocessing; storage metadata must match its buffer."""
+    if not isinstance(config, dict) or config.get("kind") != "per-frame-rgb-median-v1":
+        raise ValueError("Unknown input centering kind")
+    encoder = model.agent.encoders["image"]
+    if isinstance(encoder, PixelMedianCentering):
+        expected = torch.as_tensor(config["reference_rgb"]).to(encoder.reference)
+        if expected.shape != (3,) or not torch.equal(
+            expected, encoder.reference.flatten()
+        ):
+            raise ValueError(
+                "Input centering reference differs from checkpoint settings"
+            )
+    else:
+        model.agent.encoders["image"] = PixelMedianCentering(
+            encoder, config["reference_rgb"]
+        ).to(model.agent.initial)
+
+
 class FrozenFeatureNormalization(nn.Module):
     """Fixed training-observation channel statistics; retain complete provenance."""
 
@@ -522,5 +541,9 @@ def load_model(path, device="cpu"):
             train_thinker=settings.get("train_thinker", False),
             image_only=settings.get("image_only", False),
         )
+    if settings.get("input_centering"):
+        configure_input_centering(model, settings["input_centering"])
     model.load_state_dict(record["model"], strict=True)
+    if settings.get("input_centering"):
+        configure_input_centering(model, settings["input_centering"])
     return model.to(device).eval()

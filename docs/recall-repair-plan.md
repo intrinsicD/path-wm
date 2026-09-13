@@ -1871,3 +1871,15 @@ The follow-up reconciliation was rejected by automatic approval review as contai
 nonpublic experimental details and was not sent. No bypass or further export.
 Receipts: runs/reviews/continuation_2026-09-11/tint-learning-public-*.
 Private implementation/results are reviewed locally; reconciliation is outstanding.
+
+Tint implementation/development:9 essential RED cases reproduced missing scene
+augmentation and checkpoint centering. Added whole-history scene blocks and bounded
+warm/cool interpolation presets; fixed-reference centering now persists with training
+exports and is automatically restored/validated before standalone evaluation. All
+training/validation/test inputs receive coverage preflight; caches record reference,
+version and source weights. Native inference/objective remain unchanged.
+Initial101-case suite has98 behavioral passes and3 incorrect new expectations
+(counts scale with repeated blocks; JSON normalizes tuples). Corrected expectations;
+all16 tint-focused cases pass, including7 CLI/continuation checks. The suite includes
+exact odd-step centered-scene resume. Sixteen-update GPU development29071 completed
+with a structurally verified report and inspected panel. No formal results yet.
