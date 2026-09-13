@@ -261,3 +261,61 @@ checks. A new generator does not itself repair the previous factual-readout
 failure, missing visual memories or learned world dynamics. Text can retain its
 autoregressive output path; audio/video can later receive their own generators
 under the shared conditioning contract, with separate timing/coherence objectives.
+
+## Conditional generator implementation comparison — 13 September
+
+User adopted the extension and requested Claude planning/review plus implementation,
+tests and iteration. Implement `ConditionalFeatureGenerator` in the ordinary model
+library and `experiments/conditional_image.py` as the readable recipe. Existing
+`MemoryOutput` exports gain opt-in generator settings; older checkpoints retain
+their old architecture. No general trainer or renderer is introduced.
+
+Frozen source: `runs/producer_refinement_v1/source_8502_control/weights.pt`. Keep its
+own trained codec and complete observer/memory/factual path. New output parameters
+use ordinary initialization; the source's handwritten-derived codec weights remain.
+Train-only feature calibration, no current/target image encoder in generation.
+One residual block per scale and one cross-scale fusion block, width32, four heads;
+all required inherited64px feature layouts. Flow and direct controls instantiate
+identical parameters; direct uses zero spatial input at progress0, flow uses the
+noise-to-target field. This equal-architecture/update test does not match inference
+FLOPs or effective noise/time diversity. Original source is descriptive baseline.
+
+Training: relocation curriculum, seed41001,128 pairs/256 histories, retain only
+color%2==shape (128 histories,8 of16 target triples) for new output learning. Frozen
+upstream/codec were previously exposed to all target categories: held-out composition
+claims apply ONLY to the new generator's training, not the whole system. Cache both
+ordinary/reset working contexts and teacher targets; mixed batches contain4 of each.
+Batch8,1024 updates, AdamW lr0.0003/weight_decay0.0001, clip1, same init seed41011 and
+sampler/order across arms. Both arms draw identical progress/noise streams. Normalized
+per-scale feature objective only; no pixel/semantic loss addition in this comparison.
+Small development uses separate seeds/pairs and at most32 updates per arm; no model
+selection. Validation seed41002,16 pairs, diagnostic only. Terminal checkpoints only.
+
+Confirmations41073/41074 each32 pairs/64 histories; sample seeds13/29, Euler8 steps
+fixed before results. Each adjacent selection pair shares sampling noise by explicit
+pair ID. Score ordinary/reset/reset-erased/reset-swapped live memory routes; images
+and old facts separately. Report seen/unseen generator triples, sample-seed stability,
+weighted RGB MSE, teacher floor and swap targets. Confirm pairs have identical final
+observations with differing target identity. No target enters the output context.
+
+Adequacy: frozen teacher must reach100% template categories and weighted RGB MSE<=.01
+on all targets. Capability: ordinary/reset image joint accuracy>=.95 on each seen and
+unseen subset in every confirmation/seed; ordinary/reset weighted MSE<=.01; erased
+reset joint accuracy drop>=.25; swapped-bank target accuracy>=.95. Flow benefit:
+mean ordinary/reset weighted MSE at least5% below matched direct control, with no
+joint accuracy regression in any cell. Failure is retained; no adaptive fit extension.
+These deterministic synthetic targets cannot establish diverse photographic generation.
+
+Resource caps: each formal fit300s including periodic saves, GPU reserved<=3GiB with
+>=1GiB free; preflight development profiles before formal execution. Disk floor3GiB;
+no model downloads. Eval wall budget300s per arm, preserving completed raw cells on
+failure. CPU tests cover reference field integration, invalid/masked values, context
+and frozen-head gradients, sample-local RNG, same-device resume and standalone reload.
+All runs save source/settings, optimizer/RNG/progress, raw outputs and existing reports.
+Browser limitations and report completion remain distinct. Source freezes during runs.
+
+Claude's initial generic review accepts the controls and emphasizes integration
+conventions, input provenance and RNG isolation. Reconciliation will clarify that
+flow training samples continuous progress, not a specific inference solver schedule;
+zero-input direct regression is a declared baseline, and context erasure is an
+intentional causal intervention, not claimed in-distribution performance.
