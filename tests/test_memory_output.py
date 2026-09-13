@@ -116,6 +116,50 @@ def model_fixture(normalize=False):
     return build_model(codec.requires_grad_(False), width=16, normalize_input=normalize)
 
 
+@pytest.mark.parametrize("broken_report", [False, True])
+def test_evaluate_export_preserves_origin_and_completed_results(tmp_path, monkeypatch, broken_report):
+    import json
+    import experiments.memory_output as recipe
+    from pathwm.io import file_hash
+    from pathwm.data.memory_output import MemoryOutputEpisodes
+
+    origin = tmp_path / "origin"
+    origin.mkdir()
+    settings = recipe.default_settings(37)
+    settings.update(width=16, levels=2, depth=1, fusion_depth=0, steps=3)
+    torch.save(dict(model=model_fixture().state_dict(), settings=settings), origin / "weights.pt")
+    manifest = dict(identity=dict(settings=settings), source=dict(git_commit="training-fixture"))
+    (origin / "run.json").write_text(json.dumps(manifest))
+    (origin / "metrics.jsonl").write_text('{"step":3,"split":"train","loss":1.0}\n')
+    hashes = {p.name: file_hash(p) for p in origin.iterdir()}
+    data = MemoryOutputEpisodes(16, seed=39, split="test", curriculum="relocation")
+    output = tmp_path / "evaluation"
+    monkeypatch.setattr(torch.optim, "AdamW", lambda *a, **k: pytest.fail("Evaluation created optimizer"))
+    if broken_report:
+        def fail(*args, **kwargs):
+            raise RuntimeError("render failure")
+        monkeypatch.setattr(recipe, "write_report", fail)
+        with pytest.raises(RuntimeError, match="render failure"):
+            recipe.evaluate_export(origin / "weights.pt", data, output=output)
+    else:
+        recipe.evaluate_export(origin / "weights.pt", data, output=output)
+    result = json.loads((output / "result.json").read_text())
+    assert result["completed"] and result["evaluation_only"] and result["step"] == 0
+    assert result["checkpoint_sha256"] == hashes["weights.pt"]
+    run = json.loads((output / "run.json").read_text())
+    assert run["origin"]["run"] == manifest
+    assert run["identity"]["data"]["test"] == data.identity
+    assert run["identity"]["settings"]["purpose"] == "evaluation only; no optimization"
+    assert (output / "metrics.jsonl").read_text() == ""
+    assert not (output / "last.pt").exists() and not (output / "weights.pt").exists()
+    status = json.loads((output / "status.json").read_text())
+    assert status["result"] == "completed"
+    assert status["report"] == ("failed" if broken_report else "structural-only")
+    assert hashes == {p.name: file_hash(p) for p in origin.iterdir()}
+    with pytest.raises(FileExistsError):
+        recipe.evaluate_export(origin / "weights.pt", data, output=output)
+
+
 def test_pairs_require_history_and_target_combinations_are_disjoint():
     from pathwm.data.memory_output import MemoryOutputEpisodes, templates, image_labels
 

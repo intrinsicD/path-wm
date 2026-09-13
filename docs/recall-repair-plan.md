@@ -985,3 +985,50 @@ OMP_NUM_THREADS=2 .venv/bin/python -m experiments.memory_output \
   --validation-seed 7772 --test-seed 7783 --device cuda:0 \
   --output runs/joint_writer_reproduction
 ```
+
+## Existing-source robustness protocol — 13 September
+
+User adopts independent-initialization validation and continued Claude iteration.
+Use the two existing agent sources from initialization seeds 7801/7802, sharing a
+frozen codec. Both followed the same five preparation stages (relocation1536;
+identity repair1536; untimed continuation1536; unsupervised continuation1536;
+mixed head training1536). Both were previously explored, and the joint recipe was
+selected using source7802. This is robustness across existing sources, not blinded
+replication or independently initialized codecs. Exact lineage, prior-exposure and
+initial-weight/codec checks go in `runs/cross_source_v1/preparation.json` before fits.
+
+For source7801, four NEW fits: writer-only versus joint, each optimizer seed8501/8502.
+Source `runs/mixed_context_v1/agent_7801_mixed/weights.pt`. Reuse the four unchanged
+source7802 checkpoints from writer_learning_v1 and writer_reader_v1; re-evaluate all
+cells on fresh64-pair test7793. Same train7701/validation7772,1024updates,batch16,
+AdamW.001/wd.0001,clip1,live equal ordinary/reset loss, final-step selection,360s caps.
+No changes to training mechanics. Primary robustness gate: ALL FOUR joint cells pass
+existing full>=90% factual/image ordinary/reset,>=80% pair/alternate,>=30-point erasure
+and pixel-baseline gates. Secondary source-retention gate: no joint output accuracy
+falls more than5 points below its unchanged source on the same fresh test. Report
+writer-only contrasts descriptively for every source/seed; no positive gain required
+at ceiling. Preserve earlier failed benefit gates separately. Do not treat cell/test
+examples as independent model-initialization replicates or compute a population CI.
+
+Implement an evaluation-only path in the existing memory_output recipe: load exact
+export settings, preserve original run/checkpoint provenance separately from current
+code/data/environment, no optimizer or copied training ledger, no overwrite. Complete
+results survive report failure. Essential RED tests cover these failure modes and
+source immutability; existing gradient/freeze/resume tests remain. Tiny development
+fit16updates seed18701/train17701/validation18272/test18273; development evaluation
+uses the fresh-evaluation path. Do not inspect formal test scores to choose settings.
+
+Preflight verifies source histories, differing seeded agent initialization/tensors,
+identical codecs/calibration, within-pair starts and independent sampler states,
+fresh test and exact-frame disjointness. Fresh scorer gets no old metrics as inputs.
+Audit all8 cells with independent NumPy scoring, GPU replay, frozen tensors, permitted
+updates, bank order/value/time/source identity and detached inference. Separate CPU
+portability checks stay at1e-4 including categorical differences. Source controls use
+the same fresh test. No new fitting of probes. Four fits max1440s training; GPU4GiB
+cap with1GiB headroom. Reuse report renderer; structural checks and inspected figures,
+browser QA unavailable. Commit plan/RED, implementation/development, then formal runs.
+
+Claude public-only review requested explicit prior-exploration ledger, codec checks,
+seed semantics and source/evaluation identity. Adopted; clarified fresh procedural
+test is from the same task distribution, so no literal absence of all correlation.
+Review receipts `cross-source*-receipt.json` under the existing reviews directory.
