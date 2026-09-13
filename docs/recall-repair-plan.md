@@ -1646,3 +1646,84 @@ independent upstream runs; (4) validate integration and the declared runtime;
 unless fixed preprocessing fails the required task or learned invariance is chosen
 as an additional objective. Full graph learning, planning and other modalities are
 not prerequisites for closing this bounded visual-input task.
+
+## Centering scene and lighting challenge protocol
+
+User adopted the open-point iteration. First complete this fixed-weight challenge
+before choosing learned repair, integration or real-camera claims. No task weights
+will change in this screen. The current output contract is a canonical selected
+object (color/shape/final side), deliberately invariant to observed size/background
+and the declared lighting changes. Actual changes between the existing color/shape
+classes must still be distinguished. Absolute scene illumination is not a target;
+centering discards it and must not be described as a generally lossless interface.
+
+Two original sources: image_continuation_v1/source_8501_joint and
+source_8502_joint. Raw versus training-referenced centered input; two fresh test
+seeds25073/25074, 64 selection pairs each, relocation curriculum. Both sources
+share an upstream initialization/codec: this is replication across explored
+trajectories and fresh scenes, not independent upstream training. Development uses
+seed26073 with16 pairs; confirmation is not used for implementation choices.
+
+Ten declared conditions, each applied identically within a complete counterfactual
+quartet, canonical targets unchanged:
+
+| Condition | Exact observation change, in 8-bit units unless stated |
+| --- | --- |
+| neutral | Original observations |
+| temporal-offset | Whole-frame offsets[-12,+12,-8] over the three frames |
+| channel-offset | Whole-image RGB offset[+8,-8,+4] |
+| background-tint | Background-only RGB offset[+12,0,-8], foreground/cue unchanged |
+| background-texture | Background-only 8px checkerboard, amplitude8 |
+| background-bright | Background-only RGB offset[+48,+48,+48] |
+| foreground-large | Object half-size12 instead of8, cross half-width6 instead of4; selection border resized; canonical target size unchanged |
+| clutter | Fixed RGB[70,95,110] bands at rows8:18 and46:56; no task objects/cues overwritten |
+| gain-dark | Multiply all observed pixels by0.75, round to nearest integer |
+| local-shadow | Subtract12 from the left half of every observed frame |
+
+Implement a bounded scene-transform method on existing relocation episodes and
+an evaluation-only recipe option. Dataset renderer may use its object metadata;
+model inputs remain RGB only. No target/label/foreground mask/offset value enters
+preprocessing or model. Transform provenance includes full source identity and
+parameters. Reject unsupported arguments, transformations of already-transformed
+sources and any uint8 clipping; retain all originals and default identities.
+
+Essential RED checks: exact neutral/default rendering; label/target/source identity
+and quartet/shortcut bounds; background-only changes spare object and cue pixels;
+large rendering preserves color/shape/side and cue meaning; frame/channel additive
+cancellation under per-frame centering; source/timestamp/validity causality;
+non-injectivity when absolute brightness is meaningful; bounds/clipping guards;
+CLI evaluation-only and provenance through immutable report export.
+
+Pass criteria: unchanged full task gates and five-point retention relative to
+matched raw neutral scores, required separately for every attempted condition.
+Centering coverage must be100% of histories/frames for a condition to pass. If
+centering rejects any history, report exact coverage/reasons and mark that cell
+not passed; do not score a selected accepted subset or hide the rejection. For
+all-rejected conditions end-to-end correct-answer yield is zero. For partially
+rejected conditions no accuracy is claimed until an explicit partial-service
+protocol exists. Report raw versus centered changes and pixel errors continuously;
+new-scene robustness does not require an arbitrary positive gain over already
+successful raw conditions. Prior brightness-repair benefit gates remain unchanged
+for the earlier comparison; this screen has a different coverage/retention question.
+
+Budget: zero optimizer updates;40 formal cells, each all10 existing causal modes,
+900s evaluation/report cap,4GiB GPU cap with1GiB free headroom. Stop before writing
+if free disk falls below3GiB; do not delete prior artifacts. Verify all recorded
+metrics independently, GPU replay ordinary/reset, model/checkpoint immutability,
+provenance and fresh-frame disjointness. Preserve rejected/failed cells. Reports
+use existing renderer plus run-local overview; structural and figure QA, browser
+QA if accessible. CPU portability remains an explicitly unresolved separate issue;
+no repeated full CPU matrix is needed unless this work changes that path.
+
+Claude public conceptual review supports axis separation and coverage reporting.
+Reconciliation requested for overstrong claims: discarded median is non-injective
+in-range; arbitrary frame-varying additive shifts cancel algebraically; neutral
+retention and causal dependencies need not imply identical raw/centered outputs;
+broader calibration alone does not guarantee repair. Private code/results remain
+local. Next repair will be predeclared from diagnostic findings, not silently tuned
+on these confirmation populations.
+
+Pre-implementation:24 new cases fail for the missing scene API/CLI. Actual Claude
+acknowledged all five corrections in the public reconciliation; no outstanding
+mathematical disagreement. Both exact exchanges and receipts are preserved under
+runs/reviews/continuation_2026-09-11/centering-challenge-*-public*.
