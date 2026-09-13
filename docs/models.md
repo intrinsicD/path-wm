@@ -34,6 +34,13 @@ and follow-up fail capability gates; these are experimental weights, not a defau
 upgrade. This recipe trains a fixed selected-object request through working/reasoning
 tokens, not arbitrary natural-language image requests.
 
+The recipe can add decoded-image supervision through the frozen head. `endpoint`
+uses a one-pass clean-feature estimate; `sample` differentiates through the actual
+fixed Euler trajectory from noise. These change training objectives only; exported
+inference uses the same generator and sampler. Coefficient0 preserves prior loss
+and RNG, and no target image becomes a generation input. The [new comparison](image-output-plan.md#decoded-image-supervision-results)
+improves weighted image error but still fails reliable placement and full capability.
+
 `MemoryOutput` connects detached episodic snapshots to native factual and image
 outputs through working/reasoning tokens. Its optional `workspace_reference` is a
 frozen `TokenProbe`: fixed training-channel statistics followed by an attention

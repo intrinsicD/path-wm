@@ -1,5 +1,38 @@
 # Current work
 
+**Decoded-image supervision implemented and iterated, 14 September:** an optional
+image loss now differentiates through the frozen decoder, either from a one-step
+endpoint estimate or through the actual eight-step sampler. Your agent and codec
+stay unchanged. [Report](../runs/decoded_image_v1/report.html),
+[protocol/results](image-output-plan.md#decoded-image-supervision-results).
+
+At1024 updates each, adding endpoint image loss lowers fresh weighted pixel MSE58.0%
+and increases familiar reset accuracy13.28%→55.47%. One withheld cell regresses;
+primary repair, nonregression benefit and full capability fail. A validation diagnostic
+finds familiar first-endpoint accuracy87.5%, versus62.5% after eight sampling steps.
+
+A separate matched512-update comparison trains through all eight steps: pixel error
+falls44.4% versus endpoint supervision, with no joint-category regression in any
+ordinary/reset seen/withheld cell. That benefit passes, but familiar accuracy45.31%
+and withheld reset14.84% remain below capability requirements. The original renderer
+remains default. Post-hoc attribute checks reveal a tradeoff: reset color73.44%→90.23%
+and shape46.09%→64.84%, while side64.45%→54.69%; about half the generated contrast is
+on the wrong side. Lower image error does not mean reliable placement.
+
+Four fits3072 updates215.95s, maximum GPU reserve566MiB.12 focused tests,16 exact
+64-history GPU confirmation replays plus4 validation reloads,912 independently
+reproduced metrics; all513 frozen source tensors and all source snapshots verified.
+24 reports structurally checked and scientific figures inspected; browser QA unavailable.
+Four actual public-method Claude reviews, concrete misreadings corrected in receipts;
+private code/results reviewed locally. Sourcea37b994/46a392c; original runs preserved.
+
+Next proposed repair: add a training signal for spatial placement/occupancy to the
+state-conditioned generator, without target-derived input at inference. Keep the
+same data and hard tests for a matched comparison. Perfect color/shape coupling in
+this generator's training set is a separate generalization risk; don't silently
+relax the withheld test to obtain a pass. General imagery, arbitrary prompts and
+other modalities remain open; no population-optimum or unique-cause claim.
+
 **Conditional image generator implemented and compared, 14 September:** optional
 residual transformers per scale and cross-scale attention produce all image-decoder
 features from the existing workspace. Agent and own codec stay frozen; no pretrained

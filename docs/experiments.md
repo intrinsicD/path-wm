@@ -14,6 +14,10 @@ The following perception/dynamics recipes remain focused references.
 on frozen memory contexts, with direct-regression and flow-matching objectives.
 The [commands, comparison and limits](image-output-plan.md#conditional-generator-results)
 include its pure-noise weighting option, strict checkpoint loading and resume.
+Use `--decoded-image-weight 10 --decoded-image-path endpoint` for the image loss
+on the endpoint estimate, or `--decoded-image-path sample` for full sampler gradients.
+`--steps` sets the fit budget; full-sampler training costs more. See the [decoded-image
+comparison](image-output-plan.md#decoded-image-supervision-results) for exact commands.
 The completed comparisons fail capability gates; the original renderer remains
 the default. This is a controlled64px experiment, not general image generation.
 

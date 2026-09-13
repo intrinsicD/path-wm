@@ -587,3 +587,76 @@ fits are endpoint512 and sample512, each capped300s; no extension after results.
 sample-loss resumed training. Frozen values preserved. Development report structurally
 verified. The comparison is objective-path only at equal512 updates, not an equal
 compute claim or a direct cross-budget comparison to the earlier1024 results.
+
+## Decoded-image supervision results
+
+Completed14 September, sourcea37b994 for endpoint loss and46a392c for sampled loss.
+All four models retain314576 trainable parameters; agent, memory, factual outputs,
+codec and all513 shared source tensors remain exact. No default renderer replacement.
+
+First comparison, two1024-update fits: mean ordinary/reset weightedMSE
+.04083329765→.01714073075 (58.023% lower). Reset seen joint accuracy13.28125%→55.46875%,
+withheld14.84375%→20.3125%. Ordinary49.21875%/17.96875% for the endpoint model.
+One withheld cell (43073/13 ordinary) drops21.875%→18.75%, so both primary repair and
+pixel-benefit-with-category-nonregression fail; full capability0/4 in both arms.
+The zero-weight terminal model, optimizer, CPU/CUDA/sampler states reproduce the
+retained prior flow_zero exactly. No failed result was replaced or reinterpreted as pass.
+
+Fixed-noise validation41002 diagnostic takes4.450s, no target-containing features:
+endpoint-supervised initial extrapolation87.5% seen/12.5% withheld, versus final
+sample62.5%/25%; seen weightedMSE.0049926→.00860385. The trajectory can degrade the
+initial endpoint estimate, but this is not a proof that solver error uniquely causes
+all failures, nor a selected one-step deployment sampler.
+
+Separate pre-formal resource amendment reduced BOTH follow-up arms to512 updates.
+Fresh44073/44074: full-sampler RGB supervision lowers mean ordinary/reset weightedMSE
+.02666533249→.01482192939 (44.415%). No joint category regression in any ordinary/reset
+seen/withheld cell; the predeclared pixel-benefit screen passes. Seen45.3125% in both
+modes, withheld ordinary19.53125%/reset14.84375%; familiar and full capability still
+fail,0/4 cells. Compare against its matched512 endpoint control, not the earlier1024
+endpoint model as though training were equal. Sample training133.060s versus21.346s
+endpoint512; first1024 arms27.238/34.306s. Total215.949s,3072 updates, peak566MiB.
+All runs complete inside300s and3GiB caps; three16-update developments are separate.
+
+Post-hoc attribute diagnostic leaves all gates unchanged. Full-sampler versus
+endpoint512 reset accuracy: color73.4375%→90.234375%, shape46.09375%→64.84375%, side
+64.453125%→54.6875%. Mean wrong-half contrast fraction.49216→.49836. Contrast is
+absolute RGB deviation from background, not an object count; examples show duplicated
+or blended placement. This explains why the composite benefit and good-looking color
+cannot be called a placement repair. The existing factual answers remain100% on these
+ordinary/reset cases, so accessible state information alone does not ensure image binding.
+
+12 focused tests pass, including numeric frozen-head and full-unroll gradient
+references, coefficient-zero/endpoint-default exact loss+metrics+RNG+gradients,
+nonzero sampled-loss resume, target exclusion, and changed-loss resume rejection.
+16 exact64-history GPU export replays plus4 validation reloads.912 independently
+reproduced NumPy metrics, original frozen tensor comparison, initial tensors and
+source snapshots verified. New endpoint512 logs exactly reproduce the first512
+loss/gradient-norm records of the previous1024 endpoint fit.24 reports structurally
+verified; overview/trajectory/development figures inspected. Browser QA unavailable;
+the renderer did not change. Four actual Claude public-method reviews; noise reuse,
+untruncated gradients and fixed-ground-truth target misunderstandings were explicitly
+withdrawn. No private code/data/results exported. No further fitting or gate changes.
+
+[Report](../runs/decoded_image_v1/report.html), [image comparison](../runs/decoded_image_v1/overview.png),
+[trajectory](../runs/decoded_image_v1/trajectory.png), [metrics](../runs/decoded_image_v1/verification.json),
+[attributes](../runs/decoded_image_v1/attribute_diagnostic.json), [integrity](../runs/decoded_image_v1/integrity.json).
+
+Run with a fresh output directory (source must be the preserved deterministic export):
+
+```bash
+.venv/bin/python -m experiments.conditional_image --weights runs/producer_refinement_v1/source_8502_control/weights.pt --output runs/decoded_image_new --device cuda --zero-progress-probability .5 --decoded-image-weight 10 --decoded-image-path endpoint --steps 1024
+.venv/bin/python -m experiments.conditional_image --weights runs/producer_refinement_v1/source_8502_control/weights.pt --output runs/sampled_image_new --device cuda --zero-progress-probability .5 --decoded-image-weight 10 --decoded-image-path sample --steps 512
+```
+
+For resume repeat original training flags and add`--resume`; `--stop-after` pauses
+without changing the full budget. Evaluation-only uses settings stored in the export.
+Coefficient0 skips the head/sampler auxiliary path. Full-sampler supervision retains
+all step gradients; no hidden truncation or target-conditioned initialization.
+
+Next proposal, not executed: test explicit spatial placement/occupancy supervision
+on generated features or images with all inference conditions still derived from
+workspace. Hold data, budget and existing withheld/intervention gates fixed. Separate
+color/shape training confounding from placement learning; any balanced-factor data
+study is a distinct diagnostic, not a silent weakening of the current test. No new
+architecture size or pretrained model is yet justified by these results alone.
