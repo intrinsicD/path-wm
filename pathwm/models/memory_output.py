@@ -230,14 +230,16 @@ class TokenNormalization(nn.Module):
         return (tokens - self.mean) / self.std
 
 
-def configure_output_readout(model, stage, *, train_writer=False):
+def configure_output_readout(model, stage, *, train_writer=False, train_thinker=False):
     """Learn output heads, optionally unfreezing the shared observation updater."""
     if stage not in ("native", "stored"):
         raise ValueError("Readout stage must be native or stored")
     if train_writer and stage != "native":
         raise ValueError("Writer learning requires the native route")
+    if train_thinker and not train_writer:
+        raise ValueError("Joint thinker learning requires a trainable writer")
     configure_recall_repair(model)
-    model.agent.thinker.requires_grad_(False)
+    model.agent.thinker.requires_grad_(train_thinker)
     model.agent.updater.requires_grad_(train_writer)
     model.agent.updater.scale.requires_grad_(False)
     model.readout_stage = stage
@@ -464,6 +466,7 @@ def load_model(path, device="cpu"):
             model,
             settings["readout_stage"],
             train_writer=settings.get("writer_learning") == "trainable",
+            train_thinker=settings.get("train_thinker", False),
         )
     model.load_state_dict(record["model"], strict=True)
     return model.to(device).eval()

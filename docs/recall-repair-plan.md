@@ -904,3 +904,12 @@ fresh re-evaluation of reused baselines IS valid comparison evidence; stale prio
 numbers are excluded. They require preserved provenance, default-off regression checks,
 freeze/gradient checks and limited attribution. Receipts: `joint-reader*-receipt.json`
 under the same ignored reviews directory. No claim of a uniquely isolated memory cause.
+
+Joint implementation check: new gradient/freeze test failed RED before the flag was
+added. All52 relevant tests pass, including joint odd-step resume and standalone
+inference with detached banks; lint passes. Default-off loading reproduces all four
+writer-study GPU ordinary/reset exports exactly and matches original trainable
+names/counts. Compatibility receipts live separately under `runs/writer_reader_v1/`;
+original writer-study receipts are retained. Joint parameters85,560. Development16
+updates3.243214s,404MiB; structural report and inspected panel pass. No quality tuning;
+source is committed before the two formal fits and fresh baseline evaluations.

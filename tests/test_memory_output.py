@@ -209,6 +209,7 @@ def test_supervised_writes_and_frozen_decoder_have_intended_gradients():
         (True, "relocation", "mixed_readout"),
         (True, "relocation", "frozen_writer"),
         (True, "relocation", "trainable_writer"),
+        (True, "relocation", "joint_writer"),
     ],
 )
 def test_training_resume_and_standalone_reload(
@@ -218,7 +219,7 @@ def test_training_resume_and_standalone_reload(
     from experiments.memory_output import train, default_settings, load_model
     from tests.test_runs import equal_tree
 
-    writer_case = repair in ("frozen_writer", "trainable_writer")
+    writer_case = repair in ("frozen_writer", "trainable_writer", "joint_writer")
     if writer_case:
         import experiments.memory_output as recipe
 
@@ -291,13 +292,17 @@ def test_training_resume_and_standalone_reload(
             from pathwm.models.memory_output import configure_output_readout
 
             configure_output_readout(
-                model, "native", train_writer=repair == "trainable_writer"
+                model,
+                "native",
+                train_writer=repair != "frozen_writer",
+                train_thinker=repair == "joint_writer",
             )
             settings.update(
                 readout_stage="native",
                 readout_context="mixed",
                 standardize_output=False,
-                writer_learning=repair.split("_")[0],
+                writer_learning="frozen" if repair == "frozen_writer" else "trainable",
+                train_thinker=repair == "joint_writer",
             )
         result = train(
             model,
@@ -332,7 +337,10 @@ def test_training_resume_and_standalone_reload(
         assert all(r["memory_replay_verified"] == 1 for r in rows)
         loaded = load_model(tmp_path / "full/weights.pt")
         assert any(p.requires_grad for p in loaded.agent.updater.parameters()) == (
-            repair == "trainable_writer"
+            repair != "frozen_writer"
+        )
+        assert any(p.requires_grad for p in loaded.agent.thinker.parameters()) == (
+            repair == "joint_writer"
         )
         with torch.no_grad():
             x = test.batch(range(4))["images"]

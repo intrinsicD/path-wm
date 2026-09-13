@@ -392,6 +392,8 @@ def train(
 ):
     cache = None
     writer_learning = settings.get("writer_learning")
+    if settings.get("train_thinker") and writer_learning != "trainable":
+        raise ValueError("Joint thinker learning requires a trainable writer")
     readout_context = settings.get("readout_context", "reset")
     if readout_context not in ("reset", "mixed"):
         raise ValueError("Readout context must be reset or mixed")
@@ -414,6 +416,10 @@ def train(
             writer_learning == "trainable"
         ):
             raise ValueError("Writer freeze configuration differs from settings")
+        if any(p.requires_grad for p in model.agent.thinker.parameters()) != bool(
+            settings.get("train_thinker")
+        ):
+            raise ValueError("Thinker freeze configuration differs from settings")
     if settings.get("readout_stage") and writer_learning is None:
         cache = cache_readout(model, training, device, mode=readout_context)
         if settings.get("standardize_output"):
@@ -716,6 +722,7 @@ def main():
     )
     parser.add_argument("--standardize-output", action="store_true")
     parser.add_argument("--writer-learning", choices=("frozen", "trainable"))
+    parser.add_argument("--train-thinker", action="store_true")
     parser.add_argument("--workspace-reference", type=Path)
     parser.add_argument("--reference-weight", type=float, default=0.0)
     parser.add_argument("--validation-seed", type=int)
@@ -745,6 +752,8 @@ def main():
         or args.standardize_output
     ):
         parser.error("Writer learning requires native raw mixed readout")
+    if args.train_thinker and args.writer_learning != "trainable":
+        parser.error("Joint thinker learning requires --writer-learning trainable")
     if args.workspace_reference is not None and args.repair != "identity":
         parser.error("Workspace supervision currently requires --repair identity")
     if args.curriculum == "relocation" and not args.normalize_input:
@@ -838,11 +847,13 @@ def main():
                 model,
                 args.readout_stage,
                 train_writer=args.writer_learning == "trainable",
+                train_thinker=args.train_thinker,
             )
             settings.update(
                 readout_stage=args.readout_stage,
                 readout_context=args.readout_context,
                 writer_learning=args.writer_learning,
+                train_thinker=args.train_thinker,
                 standardize_output=args.standardize_output,
                 reference_weight=0.0,
                 wall_seconds=180,
@@ -852,7 +863,7 @@ def main():
                 settings.update(
                     steps=1024,
                     wall_seconds=360,
-                    objective=f"{args.writer_learning} shared observer; frozen thinker; live mixed task CE + weighted RGB MSE + 0.1 standardized feature MSE; ephemeral value gradients",
+                    objective=f"{args.writer_learning} shared observer; {'trainable' if args.train_thinker else 'frozen'} thinker; live mixed task CE + weighted RGB MSE + 0.1 standardized feature MSE; ephemeral value gradients",
                 )
         if args.development:
             settings.update(steps=16, wall_seconds=60)
