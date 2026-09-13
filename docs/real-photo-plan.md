@@ -53,6 +53,15 @@ correct reset. Both needed for this pilot's success; quality metrics remain expl
 not proof of high-fidelity or general generation. All gates fixed before execution.
 Test resolution and task scope must be visible with the outputs.
 
+Pre-execution review addition: also evaluate a photo-free history, with all three
+observations blank and otherwise identical memory operations/noise. Require correct
+reset MSE at least10% below this content-blind baseline. This helps distinguish
+retention of a particular photo from a generic photographic prior. Do not require
+any ordering between the blind-history and erased-bank controls: they are different
+interventions. Claude's prior-exposure and codec-adequacy concerns are incorporated;
+the brief does not establish that the generator itself already had a real-photo
+prior or set a numeric resolution/parameter fidelity ceiling.
+
 Essential checks: group split isolation and deterministic subset selection; history
 causality/blank current input; swap alignment; train-only calibration, frozen gradients,
 nonzero optimizer update, exact pause/resume and standalone export/encoder exclusion
