@@ -380,7 +380,7 @@ metrics or capability gates; target/source alignment is checked before scoring.
 For the controlled single-object shape-loss diagnostic, add `--image-only
 --image-weighting box` to native raw mixed scene training. This uses cached frozen
 states and trains only the image feature producer; the factual head and image backend
-stay frozen. Weight10 covers the target foreground's whole bounding rectangle, including
+stay frozen when `--image-only` is supplied. Weight10 covers the target foreground's whole bounding rectangle, including
 empty shape corners; weight1 applies outside. Blank targets use uniform weights. Each
 policy normalizes by its own weight sum. The default remains `foreground`; explicitly
 use `--image-weighting foreground` for a matched control. Target masks affect only the
@@ -402,3 +402,16 @@ loading restores it strictly; a continuation inherits an already refined source 
 does not reinitialize its layers. Evaluation cannot add or remove it. It is currently
 scoped to cached native raw mixed image-only training, without output standardization
 or live writer training. General image generation is still a separate capability.
+
+To train factual and image readouts together under box weighting, omit `--image-only`
+and add `--separate-readout-clipping` to the same cached native raw mixed path. Each
+readout then clips its own gradient norm to1. This prevents large factual gradients
+from changing the image producer's step size. Include `--image-only` in the matched
+control while retaining separate clipping; it matches global clipping when only the
+image producer trains. Logs record each pre-clip norm and clipping indicator.
+
+This option rejects live writer/thinker learning, stored readout, output standardization
+and evaluation overrides. Saved continuations inherit the policy. Default global
+clipping remains unchanged. These parameter-disjoint readouts share frozen inputs;
+joint training adds no semantic connection between them. A passing implementation
+check does not establish improved model quality—retain held-out scene/causal criteria.

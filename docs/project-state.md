@@ -1,34 +1,37 @@
 # Current work
 
-**Producer refinement completed, 13 September:** extra training with the corrected
-loss gives100% cool-tint images on both fresh confirmation seeds, with or without
-added residual MLPs. The planned capacity-benefit test is unassessable at the control
-ceiling; no added-capacity claim. Both fits pass11/12 task cells versus10/12 unchanged.
-[Report](../runs/producer_refinement_v1/report.html),
-[protocol/results](recall-repair-plan.md#producer-refinement-results).
+**Factual readout comparison completed, 13 September:** the proposed joint continuation
+fails its declared benefit. Warm/texture factual errors increase10→14/512 correlated
+responses. Both fits and unchanged source pass12/12 task gates on fresh64-history cells,
+but full repair remains false. Retain the prior source; no jointly trained checkpoint
+adoption. [Report](../runs/factual_readout_v1/report.html),
+[protocol/results](recall-repair-plan.md#factual-readout-repair-results).
 
-Full repair remains false: image and full retention8/12. Warm recall images87.5–93.75%
-with refinement (81.25–93.75% control), texture93.75% both; clean/mild tints100%.
-Warm/texture factual errors remain frozen, including93.75% responses. Texture misses
-also occur in the unchanged source on these new seeds; do not compare prior sample
-passes as proof of a new training regression. Warm35074 does regress after either fit.
+Joint factual retention10/12 versus12/12 image-only. Warm recall facts92.1875–93.75%
+versus95.3125–96.875% control; joint cool facts100%. Images are bitwise identical across
+fitted arms: warm recall90.625–93.75%, image retention10/12. Saved training warm/texture
+cross-entropy worsens too, while cool improves. A more conservative optimization test
+is warranted; neither a unique cause nor a successful lower rate is established.
 
-Optional per-scale residual MLPs add17,024 parameters (75,152 vs58,128 trainable).
-Initial outputs/shared weights/RNG exact; old checkpoints/default inference preserved.
-All layers become active, which does not prove they are necessary. Keep refinement
-optional. The source [rectangle-loss improvement](../runs/recall_shape_v1/report.html)
-and earlier [texture comparison](../runs/texture_shape_v1/report.html) are preserved.
+Added opt-in separate gradient clipping and enabled box-weighted joint cached training.
+The branches are parameter-disjoint; factual learning does not directly change image
+semantics. Image weights/AdamW states and all1536-step image loss/norm records match
+exactly. Image clipping0 steps; joint factual clipping307 steps. No new architecture
+or parameters;67,032 trainable joint versus58,128 image-only.
 
-58 focused tests,10,188 independent metrics,40 exact GPU reloads; all factual logits
-unchanged in24 trained cells. Training89.43s, peak646MiB. Two actual Claude conceptual
-reviews reconciled;44 reports structurally verified and figures inspected. Prior
-browser local-file denial remains a QA limitation.
+61 tests,10,188 independent metrics,40 exact64-history GPU reloads. Paired16-step GPU
+development additionally verifies gradients and optimizer updates at every step. The
+initial raw-logit preflight mismatch was corrected to use the existing evaluator's
+trainability convention before any training; receipts preserved. Training119.15s,
+peak646MiB. Three actual Claude reviews reconciled;45 reports structurally checked,
+figures inspected. Prior browser local-file restriction remains a QA limitation.
 
-Next: a controlled factual+image head continuation versus image-only learning under
-the corrected loss, targeting warm/texture readout failures with frozen encoder,
-state/memory and backend. Fresh confirmation and current thresholds required. General
-scene robustness, real imagery, learned reliability, upstream replication, CPU
-portability, streaming and general generative backends remain open.
+Next: compare a lower readout learning rate with the current rate from the preserved
+source, with equal data/updates and separate clips; add difficult-scene loss diagnostics,
+fresh confirmation and unchanged retention/causal gates. Prior [refinement](../runs/producer_refinement_v1/report.html)
+and [loss correction](../runs/recall_shape_v1/report.html) remain preserved. General scene
+robustness, real imagery, learned reliability, upstream replication, CPU portability,
+streaming and general generative backends remain open.
 
 **Scene/lighting challenge and reporting repair completed, 13 September:** centered
 input passes12/40 attempted cells (neutral, temporal additive and RGB-channel

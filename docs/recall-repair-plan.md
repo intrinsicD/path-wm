@@ -2345,3 +2345,61 @@ structurally checked, joint example panel inspected. Three actual compact Claude
 reviews complete: it withdrew an incorrect claim that post-step optimizer comparisons
 necessarily leave a timing gap. Per-step development evidence and final formal-fit
 checks remain distinguished. Freeze source now; no shared renderer changes.
+
+## Factual readout repair results
+
+Formal source1bd776c, two1,536-update fits completed;40 fresh37073/37074 cells with
+64 histories each. Both fits and unchanged source pass12/12 task gates, raw4/4
+at100%. The declared factual benefit fails: warm/texture factual errors14/512
+joint versus10/512 image-only, four more errors, with paired score regressions.
+The criterion is assessable; this is not a capacity-ceiling result. These counts
+are correlated synthetic responses, not512 independent trials.
+
+Factual retention falls from12/12 control to10/12 joint. Warm reset factual accuracy
+92.1875%/93.75% joint versus95.3125%/96.875% control. Joint cool facts improve to100%,
+but that does not satisfy the warm/texture nonregression requirement. Both arms have
+image and full retention10/12. Warm reset images90.625%/93.75% remain below95%; texture
+images96.875–100% on this sample. These are fresh populations; do not infer improvement
+from the preceding run's task-pass count. Full repair remains false; retain the prior
+source as reference rather than adopting this jointly trained checkpoint.
+
+The intended isolation holds: complete trained image weights, AdamW moment/step
+states and1536-step image norm/RGB/feature-loss histories are exactly equal. Images
+match bitwise across all10 evaluation modes in all12 paired cells. Control factual
+logits remain exact versus source. All frozen tensors/caches/sampler/RNG verified.
+Image norms never clip (max0.179754); factual norms clip307/1536 joint steps, max20.36434.
+Trainable counts67,032 joint versus58,128 image-only; no parameters were added.
+
+Post-hoc saved-training-logit analysis, independently checked against cross-entropy,
+shows warm reset factual accuracy98.4375%→93.75% and mean factor CE0.009646→0.027268.
+Cool accuracy97.265625%→100%, CE0.011577→0.003185; texture100%→98.828125%,
+CE0.006859→0.013675. Warm/texture losses themselves worsen, not just their categorical
+scores. This motivates more conservative optimization, without identifying a unique
+cause or establishing that a smaller step size will repair it. Neutral-only validation
+was diagnostic and never selected the terminal checkpoint; it does not expose this drift.
+
+A preflight incorrectly compared raw GPU logits under different trainability flags:
+maximum factual difference7.63e-6, images exact. The existing evaluator normalizes
+flags; using that same convention restores exact initialization equality. Failed
+preparation.log and corrected receipt are retained; no optimizer updates, code, data,
+loss or gate change preceded the correction. Formal shared source stayed frozen.
+
+61 focused tests pass,10,188 task metrics independently reproduced,40 exact GPU
+reloads on64 histories each. Paired16-step development additionally verifies each
+post-clip gradient and pre/post-step parameter/optimizer state. Formal training uses
+uninstrumented AdamW. Training119.150s, fit loop204.336s, evaluation173.497s, peak646MiB;
+disk/headroom floors respected. Three actual generic Claude reviews reconciled the
+post-step-verification timing correction; no private source/data/results exported.
+45 reports structurally checked, joint development and overview figures inspected;
+prior browser restriction remains disclosed, no workaround.
+[Report](../runs/factual_readout_v1/report.html),
+[verification](../runs/factual_readout_v1/verification.json).
+
+Next: a bounded lower-readout-learning-rate comparison against the current rate,
+from the preserved pre-experiment source, with equal data/updates and separate clips.
+Check difficult-scene training/validation losses as diagnostics while preserving fresh
+confirmation, fixed retention and causal gates. Test optimization before adding more
+architecture; do not assume factual learning automatically repairs image semantics.
+No additional fit or checkpoint selection followed this confirmation. Real imagery,
+learned reliability, upstream replication, CPU portability and general multimodal
+conditioning/generation remain open.
