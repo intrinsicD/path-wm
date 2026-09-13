@@ -230,12 +230,16 @@ class TokenNormalization(nn.Module):
         return (tokens - self.mean) / self.std
 
 
-def configure_output_readout(model, stage):
-    """Freeze both routes; learn only native facts and image feature production."""
+def configure_output_readout(model, stage, *, train_writer=False):
+    """Learn output heads, optionally unfreezing the shared observation updater."""
     if stage not in ("native", "stored"):
         raise ValueError("Readout stage must be native or stored")
+    if train_writer and stage != "native":
+        raise ValueError("Writer learning requires the native route")
     configure_recall_repair(model)
     model.agent.thinker.requires_grad_(False)
+    model.agent.updater.requires_grad_(train_writer)
+    model.agent.updater.scale.requires_grad_(False)
     model.readout_stage = stage
     # A new route starts raw; its own training cache may then fit fresh statistics.
     # Standalone loading restores the exported buffers after configuration.
@@ -274,11 +278,13 @@ class MemoryOutput(nn.Module):
             [state.tokens[:, self.agent.layout[k]] for k in ("working", "reasoning")], 1
         )
 
-    def observe_history(self, images):
+    def observe_history(self, images, *, memory_grad=False):
+        """Replay this short episode; optional value gradients never alter runtime writes."""
         if images.ndim != 5 or images.shape[1:] != (3, 3, 64, 64):
             raise ValueError("Need three RGB64 history frames")
         state = self.agent.initial_state(len(images))
         stored = initial = None
+        observed = []
         for t in range(3):
             obs = Observation(
                 images[:, t : t + 1], images.new_full((len(images), 1), float(t))
@@ -289,6 +295,14 @@ class MemoryOutput(nn.Module):
             if t < 2:
                 stored = state
                 state = self.agent.remember(state, source=f"observed-frame-{t}")
+                if memory_grad:
+                    observed.append(stored.tokens)
+                    values = torch.stack(observed[-self.agent.memory.capacity :], 1)
+                    if not torch.equal(values, state.memory.values):
+                        raise RuntimeError(
+                            "Training replay differs from runtime memory"
+                        )
+                    state = replace(state, memory=replace(state.memory, values=values))
         return dict(initial=initial, stored=stored, final=state)
 
     def query(self, state, hidden, mode="ordinary"):
@@ -446,6 +460,10 @@ def load_model(path, device="cpu"):
         model.workspace_reference = TokenProbe(torch.zeros(1, 1, settings["width"]))
         model.workspace_reference.requires_grad_(False)
     if settings.get("readout_stage"):
-        configure_output_readout(model, settings["readout_stage"])
+        configure_output_readout(
+            model,
+            settings["readout_stage"],
+            train_writer=settings.get("writer_learning") == "trainable",
+        )
     model.load_state_dict(record["model"], strict=True)
     return model.to(device).eval()

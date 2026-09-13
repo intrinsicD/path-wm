@@ -821,3 +821,13 @@ Adopted exact replay bookkeeping checks at every training write, gradient-isolat
 tests, live recomputation, episode isolation and explicit limited-seed/capacity claims.
 Direct stored-state auxiliary supervision is a different future intervention, not
 part of this comparison. Receipts: `runs/reviews/continuation_2026-09-11/writer-learning*-receipt.json`.
+
+Implementation verification: two RED failures demonstrated missing live replay.
+All50 relevant CPU tests and lint pass; earlier-write gradient isolation uses the
+actual fresh hidden-query state detached from the updater. Runtime/replay values
+and query tokens agree before and after learning; no stale workspace cache is used.
+Both frozen/trainable policies pass exact optimizer/RNG odd-step resume and standalone
+ordinary/reset export tests. Frozen control has67,032 trainable parameters; adding
+the shared updater action/attention blocks gives75,768 (8,736 extra). Development16
+updates complete in3.190238s,402MiB reserved, structural report and inspected panel.
+No quality-based tuning. Implementation is committed before formal comparisons.

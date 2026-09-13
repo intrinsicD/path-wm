@@ -173,6 +173,7 @@ def test_mixed_cache_alignment_live_gradients_and_context_phase(step):
 def test_training_replay_preserves_runtime_bank_and_exposes_earlier_write_gradients():
     from pathwm.models.memory_output import configure_output_readout, frozen_tensors
     from experiments.memory_output import live_readout_objective
+    from pathwm.models.modalities import Observation
 
     torch.manual_seed(54)
     m = configure_output_readout(
@@ -201,11 +202,13 @@ def test_training_replay_preserves_runtime_bank_and_exposes_earlier_write_gradie
             r = m.query(runtime["final"], b["images"][:, -1], mode)
             assert torch.equal(a.tokens, r.tokens)
         # Cut the live query/state path: only the actual past values can teach writes.
-        q = replace(
-            h["final"],
-            tokens=h["final"].tokens.detach(),
-            log_scale=h["final"].log_scale.detach(),
-        )
+        with torch.no_grad():
+            fresh = m.agent.observe(
+                m.agent.initial_state(4, time=2),
+                {"image": Observation(b["images"][:, -1:], torch.full((4, 1), 2.0))},
+                time=2,
+            )
+        q = replace(fresh, memory=bank)
         out = m.output(m.agent.think(q, steps=2))
         loss = out["facts"].square().mean() + out["image"].square().mean()
         grads = torch.autograd.grad(

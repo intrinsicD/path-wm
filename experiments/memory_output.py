@@ -140,6 +140,22 @@ def readout_objective(model, cache, ids, *, context="reset", step=1):
     )
 
 
+def live_readout_objective(model, batch, *, step):
+    """Recompute differentiable working states after every observer update."""
+    images = batch["images"]
+    history = model.observe_history(images, memory_grad=True)
+    values = dict(labels=batch["labels"], target=batch["target"])
+    for mode, name in (("reset", "tokens"), ("ordinary", "ordinary_tokens")):
+        values[name] = model.working(model.query(history["final"], images[:, -1], mode))
+    with torch.no_grad():
+        values["features"] = model.teacher(batch["target"])
+    loss, metrics = readout_objective(
+        model, values, range(len(images)), context="mixed", step=step
+    )
+    metrics["memory_replay_verified"] = 1  # observe_history checked each actual write
+    return loss, metrics
+
+
 def default_settings(seed=7801):
     return dict(
         seed=seed,
@@ -375,6 +391,7 @@ def train(
     stop_after=None,
 ):
     cache = None
+    writer_learning = settings.get("writer_learning")
     readout_context = settings.get("readout_context", "reset")
     if readout_context not in ("reset", "mixed"):
         raise ValueError("Readout context must be reset or mixed")
@@ -383,7 +400,21 @@ def train(
     ):
         raise ValueError("Mixed context requires native readout and an even batch")
     preparation = perf_counter()
-    if settings.get("readout_stage"):
+    if writer_learning is not None:
+        if writer_learning not in ("frozen", "trainable") or (
+            settings.get("readout_stage") != "native"
+            or readout_context != "mixed"
+            or settings.get("standardize_output")
+            or settings.get("reference_weight", 0)
+        ):
+            raise ValueError(
+                "Writer learning requires native raw mixed readout and no auxiliary loss"
+            )
+        if any(p.requires_grad for p in model.agent.updater.parameters()) != (
+            writer_learning == "trainable"
+        ):
+            raise ValueError("Writer freeze configuration differs from settings")
+    if settings.get("readout_stage") and writer_learning is None:
         cache = cache_readout(model, training, device, mode=readout_context)
         if settings.get("standardize_output"):
             calibration = cache["tokens"]
@@ -499,7 +530,11 @@ def train(
                 break
             ids = run.sample(len(training), settings["batch_size"])
             optimizer.zero_grad(set_to_none=True)
-            if cache is not None:
+            if writer_learning is not None:
+                loss, metrics = live_readout_objective(
+                    model, training.batch(ids, device), step=step
+                )
+            elif cache is not None:
                 loss, metrics = readout_objective(
                     model, cache, ids, context=readout_context, step=step
                 )
@@ -599,7 +634,7 @@ def train(
         unchanged = unchanged and all_frozen_unchanged
         if not unchanged or not all(np.isfinite(v).all() for v in arrays.values()):
             raise RuntimeError("Frozen mutation or nonfinite evaluation output")
-        if cache is not None and completed:
+        if (cache is not None or writer_learning is not None) and completed:
             training_scores, training_arrays = evaluate(
                 model, training, device, ["ordinary", "reset"]
             )
@@ -632,7 +667,9 @@ def train(
                     "supplied latest-snapshot route with zero fallback/tie averaging; not learned retrieval"
                     if settings.get("readout_stage") == "stored"
                     else "two supplied snapshots both retrieved; no search or learned write policy",
-                    "frozen writer; stored logits use the adapting output head, not an independent probe"
+                    "shared observer learns across historical writes and current/query observations; not isolated memory-only learning"
+                    if writer_learning == "trainable"
+                    else "frozen writer; stored logits use the adapting output head, not an independent probe"
                     if repair
                     else "supervised write readout differs from independent direct encoder diagnostic",
                 ],
@@ -678,6 +715,7 @@ def main():
         "--readout-context", choices=("reset", "mixed"), default="reset"
     )
     parser.add_argument("--standardize-output", action="store_true")
+    parser.add_argument("--writer-learning", choices=("frozen", "trainable"))
     parser.add_argument("--workspace-reference", type=Path)
     parser.add_argument("--reference-weight", type=float, default=0.0)
     parser.add_argument("--validation-seed", type=int)
@@ -701,6 +739,12 @@ def main():
         parser.error("Output standardization requires a declared readout stage")
     if args.readout_context == "mixed" and args.readout_stage != "native":
         parser.error("Mixed context requires native readout")
+    if args.writer_learning is not None and (
+        args.readout_stage != "native"
+        or args.readout_context != "mixed"
+        or args.standardize_output
+    ):
+        parser.error("Writer learning requires native raw mixed readout")
     if args.workspace_reference is not None and args.repair != "identity":
         parser.error("Workspace supervision currently requires --repair identity")
     if args.curriculum == "relocation" and not args.normalize_input:
@@ -790,15 +834,26 @@ def main():
                 "Continuing a supervised export requires its explicit reference"
             )
         if args.readout_stage:
-            configure_output_readout(model, args.readout_stage)
+            configure_output_readout(
+                model,
+                args.readout_stage,
+                train_writer=args.writer_learning == "trainable",
+            )
             settings.update(
                 readout_stage=args.readout_stage,
                 readout_context=args.readout_context,
+                writer_learning=args.writer_learning,
                 standardize_output=args.standardize_output,
                 reference_weight=0.0,
                 wall_seconds=180,
                 objective=f"frozen writer and thinker; cached {args.readout_context} tokens; native factor CE + weighted RGB MSE + 0.1 standardized feature MSE",
             )
+            if args.writer_learning is not None:
+                settings.update(
+                    steps=1024,
+                    wall_seconds=360,
+                    objective=f"{args.writer_learning} shared observer; frozen thinker; live mixed task CE + weighted RGB MSE + 0.1 standardized feature MSE; ephemeral value gradients",
+                )
         if args.development:
             settings.update(steps=16, wall_seconds=60)
         calibration_seconds = perf_counter() - calibration_start

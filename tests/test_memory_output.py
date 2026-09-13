@@ -207,12 +207,27 @@ def test_supervised_writes_and_frozen_decoder_have_intended_gradients():
         (True, "relocation", "native_readout"),
         (True, "relocation", "stored_readout"),
         (True, "relocation", "mixed_readout"),
+        (True, "relocation", "frozen_writer"),
+        (True, "relocation", "trainable_writer"),
     ],
 )
-def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum, repair):
+def test_training_resume_and_standalone_reload(
+    tmp_path, normalize, curriculum, repair, monkeypatch
+):
     from pathwm.data.memory_output import MemoryOutputEpisodes
     from experiments.memory_output import train, default_settings, load_model
     from tests.test_runs import equal_tree
+
+    writer_case = repair in ("frozen_writer", "trainable_writer")
+    if writer_case:
+        import experiments.memory_output as recipe
+
+        def stale_cache(*args, **kwargs):
+            raise AssertionError(
+                "Live writer learning must not construct a workspace cache"
+            )
+
+        monkeypatch.setattr(recipe, "cache_readout", stale_cache)
 
     pairs = 16 if curriculum == "relocation" else 4
     train_data = MemoryOutputEpisodes(pairs, seed=17, curriculum=curriculum)
@@ -272,6 +287,18 @@ def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum, 
             settings.update(readout_stage=stage, standardize_output=True)
             if repair == "mixed_readout":
                 settings["readout_context"] = "mixed"
+        if writer_case:
+            from pathwm.models.memory_output import configure_output_readout
+
+            configure_output_readout(
+                model, "native", train_writer=repair == "trainable_writer"
+            )
+            settings.update(
+                readout_stage="native",
+                readout_context="mixed",
+                standardize_output=False,
+                writer_learning=repair.split("_")[0],
+            )
         result = train(
             model,
             train_data,
@@ -285,10 +312,34 @@ def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum, 
         return result, torch.load(path / "last.pt", weights_only=True)
 
     full_model, full = run(tmp_path / "full")
-    run(tmp_path / "resumed", stop_after=1 if repair == "mixed_readout" else 2)
+    run(
+        tmp_path / "resumed",
+        stop_after=1 if repair == "mixed_readout" or writer_case else 2,
+    )
     _, resumed = run(tmp_path / "resumed", resume=True)
     for key in ("model", "optimizer", "sampler", "torch", "step"):
         equal_tree(full[key], resumed[key])
+    if writer_case:
+        import json
+
+        assert not (tmp_path / "full/training_cache.pt").exists()
+        rows = [
+            json.loads(s)
+            for s in (tmp_path / "resumed/metrics.jsonl").read_text().splitlines()
+        ]
+        rows = [r for r in rows if r["split"] == "train"]
+        assert [r["first_ordinary"] for r in rows] == [0, 1, 0, 1]
+        assert all(r["memory_replay_verified"] == 1 for r in rows)
+        loaded = load_model(tmp_path / "full/weights.pt")
+        assert any(p.requires_grad for p in loaded.agent.updater.parameters()) == (
+            repair == "trainable_writer"
+        )
+        with torch.no_grad():
+            x = test.batch(range(4))["images"]
+            assert not loaded.observe_history(x)["final"].memory.values.requires_grad
+            for mode in ("ordinary", "reset"):
+                for k in ("facts", "image"):
+                    assert torch.equal(loaded(x, mode)[k], full_model(x, mode)[k])
     if repair == "mixed_readout":
         import json
 
