@@ -1170,3 +1170,14 @@ A post-hoc doubled-budget suggestion is deferred: it cannot strengthen the decla
 fixed-budget claim and would require a fresh protocol/test. All frozen tensors and
 source workspace comparisons cover silent calibration drift. No private code/results
 are sent externally; local implementation review and tests remain necessary.
+
+Implementation completed: opt-in `--image-only` freezes the factual head in the
+existing native live recipe, with conflicting flags rejected and export/resume
+freeze rules restored. Two RED checks reproduced before implementation; all56
+relevant tests pass, including exact odd-step restart and standalone predictions.
+Source reconfiguration preserves every source tensor; image-only58,128 versus
+joint85,560 trainable parameters. Fresh19073 and disjoint split frames verified.
+Development16updates3.098006s completed; structural report and panel inspected.
+Final review also corrected image-only report limitation text to identify the
+factual head as frozen. Two public Claude exchanges found no remaining material
+conceptual contradiction; implementation review remains local.

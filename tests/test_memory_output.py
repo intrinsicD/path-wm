@@ -290,7 +290,12 @@ def test_training_resume_and_standalone_reload(
     from experiments.memory_output import train, default_settings, load_model
     from tests.test_runs import equal_tree
 
-    writer_case = repair in ("frozen_writer", "trainable_writer", "joint_writer", "image_only")
+    writer_case = repair in (
+        "frozen_writer",
+        "trainable_writer",
+        "joint_writer",
+        "image_only",
+    )
     if writer_case:
         import experiments.memory_output as recipe
 
@@ -373,7 +378,9 @@ def test_training_resume_and_standalone_reload(
                 readout_stage="native",
                 readout_context="mixed",
                 standardize_output=False,
-                writer_learning="frozen" if repair in ("frozen_writer", "image_only") else "trainable",
+                writer_learning="frozen"
+                if repair in ("frozen_writer", "image_only")
+                else "trainable",
                 image_only=repair == "image_only",
                 train_thinker=repair == "joint_writer",
             )
@@ -412,7 +419,9 @@ def test_training_resume_and_standalone_reload(
         assert any(p.requires_grad for p in loaded.agent.updater.parameters()) == (
             repair not in ("frozen_writer", "image_only")
         )
-        assert any(p.requires_grad for p in loaded.facts.parameters()) == (repair != "image_only")
+        assert any(p.requires_grad for p in loaded.facts.parameters()) == (
+            repair != "image_only"
+        )
         assert any(p.requires_grad for p in loaded.agent.thinker.parameters()) == (
             repair == "joint_writer"
         )

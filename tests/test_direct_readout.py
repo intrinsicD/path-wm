@@ -300,25 +300,33 @@ def test_image_only_learning_preserves_workspace_facts_and_frozen_buffers():
     fixed = {k: v.clone() for k, v in frozen_tensors(m).items()}
     before = {mode: m(b["images"], mode) for mode in ("ordinary", "reset")}
     h = m.observe_history(b["images"])
-    states = {mode: m.query(h["final"], b["images"][:, -1], mode).tokens.clone()
-              for mode in before}
+    states = {
+        mode: m.query(h["final"], b["images"][:, -1], mode).tokens.clone()
+        for mode in before
+    }
     trainable = {n: p.clone() for n, p in m.named_parameters() if p.requires_grad}
-    assert trainable and all(n.startswith("agent.decoders.image.") and
-                             not n.startswith("agent.decoders.image.head.")
-                             for n in trainable)
+    assert trainable and all(
+        n.startswith("agent.decoders.image.")
+        and not n.startswith("agent.decoders.image.head.")
+        for n in trainable
+    )
     loss, _ = live_readout_objective(m, b, step=1)
     loss.backward()
     assert any(p.grad is not None and p.grad.abs().sum() > 0 for p in m.parameters())
     assert all(p.grad is None for p in m.parameters() if not p.requires_grad)
     torch.optim.AdamW([p for p in m.parameters() if p.requires_grad]).step()
     assert all(torch.equal(v, fixed[k]) for k, v in frozen_tensors(m).items())
-    assert any(not torch.equal(p, trainable[n]) for n, p in m.named_parameters()
-               if n in trainable)
+    assert any(
+        not torch.equal(p, trainable[n])
+        for n, p in m.named_parameters()
+        if n in trainable
+    )
     for mode in before:
         assert torch.equal(m(b["images"], mode)["facts"], before[mode]["facts"])
         h = m.observe_history(b["images"])
-        assert torch.equal(m.query(h["final"], b["images"][:, -1], mode).tokens,
-                           states[mode])
+        assert torch.equal(
+            m.query(h["final"], b["images"][:, -1], mode).tokens, states[mode]
+        )
     for kw in ({"stage": "stored"}, {"stage": "native", "train_writer": True}):
         with pytest.raises(ValueError, match="Image-only"):
             configure_output_readout(m, image_only=True, **kw)

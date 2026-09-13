@@ -297,3 +297,13 @@ Use a new output directory. The export's original `run.json` must accompany it;
 new results record that provenance separately from evaluation code and data. No
 optimizer or training curve is created. Training overrides are rejected, and a
 report failure leaves completed metrics available. See the [active recall plan](recall-repair-plan.md).
+
+
+For a frozen-state image-output diagnostic, use the same native live mixed recipe
+with `--writer-learning frozen --image-only`. This freezes the factual head too;
+only image feature production learns, while its reconstruction backend stays fixed.
+Without `--image-only`, the existing head/writer/thinker policies are unchanged.
+Standalone exports restore the selected freeze policy. Compare to joint continuation
+with `--writer-learning trainable --train-thinker`, explicit source checkpoints and
+fresh declared validation/test seeds. Both restart AdamW; they do not restore the
+source optimizer. See the active plan for the fixed-budget comparison and limits.

@@ -400,6 +400,10 @@ def train(
 ):
     cache = None
     writer_learning = settings.get("writer_learning")
+    if settings.get("image_only") and (
+        writer_learning != "frozen" or settings.get("train_thinker")
+    ):
+        raise ValueError("Image-only learning requires the frozen live writer policy")
     if settings.get("train_thinker") and writer_learning != "trainable":
         raise ValueError("Joint thinker learning requires a trainable writer")
     readout_context = settings.get("readout_context", "reset")
@@ -428,6 +432,11 @@ def train(
             settings.get("train_thinker")
         ):
             raise ValueError("Thinker freeze configuration differs from settings")
+    if settings.get("readout_stage") and any(
+        p.requires_grad != (not settings.get("image_only", False))
+        for p in model.facts.parameters()
+    ):
+        raise ValueError("Factual head freeze configuration differs from settings")
     if settings.get("readout_stage") and writer_learning is None:
         cache = cache_readout(model, training, device, mode=readout_context)
         if settings.get("standardize_output"):
@@ -681,7 +690,9 @@ def train(
                     "supplied latest-snapshot route with zero fallback/tie averaging; not learned retrieval"
                     if settings.get("readout_stage") == "stored"
                     else "two supplied snapshots both retrieved; no search or learned write policy",
-                    "shared observer learns across historical writes and current/query observations; not isolated memory-only learning"
+                    "frozen state formation and factual head; only image feature production learns"
+                    if settings.get("image_only")
+                    else "shared observer learns across historical writes and current/query observations; not isolated memory-only learning"
                     if writer_learning == "trainable"
                     else "frozen writer; stored logits use the adapting output head, not an independent probe"
                     if repair
@@ -851,6 +862,11 @@ def main():
     parser.add_argument("--standardize-output", action="store_true")
     parser.add_argument("--writer-learning", choices=("frozen", "trainable"))
     parser.add_argument("--train-thinker", action="store_true")
+    parser.add_argument(
+        "--image-only",
+        action="store_true",
+        help="Freeze native state and facts; train only image features",
+    )
     parser.add_argument("--evaluate-only", action="store_true")
     parser.add_argument("--workspace-reference", type=Path)
     parser.add_argument("--reference-weight", type=float, default=0.0)
@@ -867,6 +883,7 @@ def main():
             or args.readout_stage
             or args.writer_learning
             or args.train_thinker
+            or args.image_only
             or args.normalize_input
             or args.standardize_output
             or args.workspace_reference
@@ -925,6 +942,8 @@ def main():
         or args.standardize_output
     ):
         parser.error("Writer learning requires native raw mixed readout")
+    if args.image_only and (args.writer_learning != "frozen" or args.train_thinker):
+        parser.error("Image-only learning requires --writer-learning frozen")
     if args.train_thinker and args.writer_learning != "trainable":
         parser.error("Joint thinker learning requires --writer-learning trainable")
     if args.workspace_reference is not None and args.repair != "identity":
@@ -1021,12 +1040,14 @@ def main():
                 args.readout_stage,
                 train_writer=args.writer_learning == "trainable",
                 train_thinker=args.train_thinker,
+                image_only=args.image_only,
             )
             settings.update(
                 readout_stage=args.readout_stage,
                 readout_context=args.readout_context,
                 writer_learning=args.writer_learning,
                 train_thinker=args.train_thinker,
+                image_only=args.image_only,
                 standardize_output=args.standardize_output,
                 reference_weight=0.0,
                 wall_seconds=180,
@@ -1038,6 +1059,10 @@ def main():
                     wall_seconds=360,
                     objective=f"{args.writer_learning} shared observer; {'trainable' if args.train_thinker else 'frozen'} thinker; live mixed task CE + weighted RGB MSE + 0.1 standardized feature MSE; ephemeral value gradients",
                 )
+        if args.image_only:
+            settings["objective"] += (
+                "; image feature producer only; factual CE constant"
+            )
         if args.development:
             settings.update(steps=16, wall_seconds=60)
         calibration_seconds = perf_counter() - calibration_start
