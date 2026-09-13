@@ -1706,7 +1706,7 @@ new-scene robustness does not require an arbitrary positive gain over already
 successful raw conditions. Prior brightness-repair benefit gates remain unchanged
 for the earlier comparison; this screen has a different coverage/retention question.
 
-Budget: zero optimizer updates;40 formal cells, each all10 existing causal modes,
+Budget: zero optimizer updates;80 formal cells, each all10 existing causal modes,
 900s evaluation/report cap,4GiB GPU cap with1GiB free headroom. Stop before writing
 if free disk falls below3GiB; do not delete prior artifacts. Verify all recorded
 metrics independently, GPU replay ordinary/reset, model/checkpoint immutability,
@@ -1727,3 +1727,13 @@ Pre-implementation:24 new cases fail for the missing scene API/CLI. Actual Claud
 acknowledged all five corrections in the public reconciliation; no outstanding
 mathematical disagreement. Both exact exchanges and receipts are preserved under
 runs/reviews/continuation_2026-09-11/centering-challenge-*-public*.
+
+Implementation/development:24 new integrity cases pass;72 affected cases including
+export/report-failure variants pass. The GPU development export on separate26073
+completes; its comparison panel was inspected and report structurally verified.
+Before formal inference, population construction exposed a protocol arithmetic
+error:10 conditions ×2 seeds ×2 sources ×2 input policies is80 cells, not40. The
+declared conditions/seeds remain unchanged; corrected count fits the existing900s
+and disk budgets (roughly37MiB per successful export). No formal model scores were
+seen. Deterministic pixel preflight predicts partial centering rejection for bright
+backgrounds; those cells will be marked failed coverage without subset scoring.

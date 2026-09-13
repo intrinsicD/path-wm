@@ -35,6 +35,21 @@ from pathwm.models.memory_output import (
 from pathwm.models.modalities import Observation
 
 
+# Bounded fixed-weight diagnostic populations; ordinary data defaults stay intact.
+SCENE_CHALLENGES = {
+    "neutral": {},
+    "temporal-offset": dict(frame_offsets=(-12, 12, -8)),
+    "channel-offset": dict(rgb_offset=(8, -8, 4)),
+    "background-tint": dict(background_offset=(12, 0, -8)),
+    "background-texture": dict(texture=8),
+    "background-bright": dict(background_offset=(48, 48, 48)),
+    "foreground-large": dict(radius=12),
+    "clutter": dict(clutter=True),
+    "gain-dark": dict(gain=0.75),
+    "local-shadow": dict(shadow=12),
+}
+
+
 def fact_labels(logits):
     return torch.stack([x.argmax(1) for x in logits.split((4, 2, 2), -1)], -1)
 
@@ -913,6 +928,11 @@ def main():
     )
     parser.add_argument("--evaluate-only", action="store_true")
     parser.add_argument(
+        "--scene",
+        choices=SCENE_CHALLENGES,
+        help="Evaluation-only scene/lighting challenge with canonical output targets",
+    )
+    parser.add_argument(
         "--center-input",
         action="store_true",
         help="Evaluation-only per-frame centering using original training observations",
@@ -938,6 +958,8 @@ def main():
         "--curriculum", choices=("parity", "relocation"), default="parity"
     )
     args = parser.parse_args()
+    if args.scene and (not args.evaluate_only or args.input_offset):
+        parser.error("Scene changes require evaluation-only without input-offset")
     if args.input_offset and not args.evaluate_only:
         parser.error("Input offset is an evaluation-only override")
     if args.center_input and not args.evaluate_only:
@@ -995,6 +1017,8 @@ def main():
             curriculum=saved.get("curriculum", "parity"),
             input_offset=args.input_offset,
         )
+        if args.scene:
+            data = data.with_scene(**SCENE_CHALLENGES[args.scene])
         evaluate_export(
             args.weights,
             data,

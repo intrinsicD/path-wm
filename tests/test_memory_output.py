@@ -118,8 +118,9 @@ def model_fixture(normalize=False):
 
 @pytest.mark.parametrize("broken_report", [False, True])
 @pytest.mark.parametrize("center_input", [False, True])
+@pytest.mark.parametrize("scene", [None, "temporal-offset"])
 def test_evaluate_export_preserves_origin_and_completed_results(
-    tmp_path, monkeypatch, broken_report, center_input
+    tmp_path, monkeypatch, broken_report, center_input, scene
 ):
     import json
     import experiments.memory_output as recipe
@@ -152,8 +153,14 @@ def test_evaluate_export_preserves_origin_and_completed_results(
     (origin / "metrics.jsonl").write_text('{"step":3,"split":"train","loss":1.0}\n')
     hashes = {p.name: file_hash(p) for p in origin.iterdir()}
     data = MemoryOutputEpisodes(
-        16, seed=39, split="test", curriculum="relocation", input_offset=16
+        16,
+        seed=39,
+        split="test",
+        curriculum="relocation",
+        input_offset=0 if scene else 16,
     )
+    if scene:
+        data = data.with_scene(**recipe.SCENE_CHALLENGES[scene])
     output = tmp_path / "evaluation"
     monkeypatch.setattr(
         torch.optim,

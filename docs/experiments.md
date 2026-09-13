@@ -337,3 +337,15 @@ the checkpoint remains unchanged. The operation has no access to labels, targets
 shift metadata or future frames and rejects out-of-range values. This task-specific
 preprocessing can remove meaningful absolute intensity; it is not a learned
 invariance or a default deployment policy. GPU median uses deterministic sorting.
+
+To challenge this policy with scene and illumination changes, add an evaluation-only
+`--scene temporal-offset` (or `background-tint`, `background-texture`,
+`background-bright`, `foreground-large`, `clutter`, `gain-dark`, `local-shadow`,
+`channel-offset`, `neutral`). The recipe declares each bounded transform in
+`SCENE_CHALLENGES`; data construction preserves canonical targets and paired
+histories. This requires the relocation curriculum saved in the source checkpoint
+and cannot be combined with `--input-offset`. `--center-input` remains optional.
+Background masks are used only by the renderer, never as model inputs. Range
+rejection is a failure of supported coverage; do not omit rejected examples from
+claims of accuracy. The current generic export raises on rejected inputs, while
+the declared challenge records coverage failures separately.

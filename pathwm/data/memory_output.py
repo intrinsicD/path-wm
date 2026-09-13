@@ -15,16 +15,18 @@ COLORS = np.array(
 BACKGROUND = 40
 
 
-def draw(image, color, shape, side, selected=False):
+def draw(image, color, shape, side, selected=False, *, radius=8):
     x, y = 16 + 32 * side, 32
     if selected:
-        image[y - 12 : y + 12, x - 12 : x + 12] = 235
-        image[y - 10 : y + 10, x - 10 : x + 10] = BACKGROUND
+        outer, inner = radius + 4, radius + 2
+        image[y - outer : y + outer, x - outer : x + outer] = 235
+        image[y - inner : y + inner, x - inner : x + inner] = BACKGROUND
     if shape == 0:
-        image[y - 8 : y + 8, x - 8 : x + 8] = COLORS[color]
+        image[y - radius : y + radius, x - radius : x + radius] = COLORS[color]
     else:
-        image[y - 8 : y + 8, x - 4 : x + 4] = COLORS[color]
-        image[y - 4 : y + 4, x - 8 : x + 8] = COLORS[color]
+        half = radius // 2
+        image[y - radius : y + radius, x - half : x + half] = COLORS[color]
+        image[y - half : y + half, x - radius : x + radius] = COLORS[color]
 
 
 def templates(device="cpu"):
@@ -158,6 +160,103 @@ class MemoryOutputEpisodes:
                 kind="whole-history-rgb-offsets-v1",
                 offsets_uint8=list(offsets),
                 source_data=deepcopy(self.identity),
+            ),
+        )
+        return result
+
+    def with_scene(
+        self,
+        *,
+        background_offset=(0, 0, 0),
+        texture=0,
+        clutter=False,
+        radius=8,
+        frame_offsets=(0, 0, 0),
+        rgb_offset=(0, 0, 0),
+        gain=1.0,
+        shadow=0,
+    ):
+        """Render a controlled relocation challenge; outputs retain canonical size.
+
+        Renderer metadata locates objects for data construction only. Neither the
+        mask nor parameters are returned in model batches. Background interventions
+        precede whole-image gain/offset/shadow; rounding occurs once, without clipping.
+        """
+        if self.curriculum != "relocation" or any(
+            k in self.identity for k in ("input_transform", "input_augmentation")
+        ):
+            raise ValueError("Scene changes require original relocation histories")
+        for value in (background_offset, frame_offsets, rgb_offset):
+            if (
+                not isinstance(value, (tuple, list))
+                or len(value) != 3
+                or any(type(x) is not int or not -255 <= x <= 255 for x in value)
+            ):
+                raise ValueError("Scene offsets require three bounded integers")
+        if (
+            type(radius) is not int
+            or radius not in (4, 6, 8, 10, 12)
+            or type(texture) is not int
+            or not 0 <= texture <= 255
+            or type(shadow) is not int
+            or not 0 <= shadow <= 255
+            or type(clutter) is not bool
+            or type(gain) not in (int, float)
+            or not np.isfinite(gain)
+            or gain <= 0
+        ):
+            raise ValueError("Invalid scene size, texture, clutter, gain or shadow")
+        images = self.images.copy()
+        if radius != 8:
+            for i in range(len(self)):
+                images[i, :2] = self.images[i, 2]
+                for side, (color, shape, final_side) in enumerate(
+                    self.labels[2 * (i // 2) : 2 * (i // 2) + 2]
+                ):
+                    draw(images[i, 0], color, shape, side, side == i % 2, radius=radius)
+                    draw(images[i, 1], color, shape, final_side, radius=radius)
+        foreground = np.any(
+            np.all(images[..., None, :] == COLORS, axis=-1), axis=-1
+        ) | np.all(images == 235, axis=-1)
+        y, x = np.indices((64, 64))
+        checker = 2 * ((x // 8 + y // 8) % 2) - 1
+        background_delta = np.array(background_offset) + texture * checker[..., None]
+        changed = (
+            images.astype(np.float64) + (~foreground[..., None]) * background_delta
+        )
+        if clutter:
+            bands = ((y >= 8) & (y < 18)) | ((y >= 46) & (y < 56))
+            changed[np.broadcast_to(bands, foreground.shape) & ~foreground] = [
+                70,
+                95,
+                110,
+            ]
+        changed *= gain
+        changed += np.array(frame_offsets)[None, :, None, None, None]
+        changed += np.array(rgb_offset)
+        changed -= shadow * (x < 32)[..., None]
+        if not np.isfinite(changed).all() or changed.min() < 0 or changed.max() > 255:
+            raise ValueError("Scene transform would clip observed RGB values")
+        result = copy(self)
+        result.images = np.rint(changed).astype(np.uint8)
+        result.labels, result.targets = self.labels.copy(), self.targets.copy()
+        result.identity = dict(
+            deepcopy(self.identity),
+            images_sha256=hashlib.sha256(result.images.tobytes()).hexdigest(),
+            input_transform=dict(
+                kind="relocation-scene-v1",
+                source_data=deepcopy(self.identity),
+                parameters=dict(
+                    background_offset=list(background_offset),
+                    texture=texture,
+                    clutter=clutter,
+                    radius=radius,
+                    frame_offsets=list(frame_offsets),
+                    rgb_offset=list(rgb_offset),
+                    gain=float(gain),
+                    shadow=shadow,
+                ),
+                targets="unchanged canonical color/shape/final-side rendering",
             ),
         )
         return result
