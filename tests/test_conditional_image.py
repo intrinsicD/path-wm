@@ -132,7 +132,13 @@ def test_training_resume_standalone_export_and_target_exclusion(tmp_path):
     _, data, source_settings = centered_export(tmp_path)
     source = tmp_path / "weights.pt"
     config = dict(source_settings, **settings(seed=21))
-    config.update(steps=4, batch_size=2, wall_seconds=120, disk_free_gib=0)
+    config.update(
+        steps=4,
+        batch_size=2,
+        wall_seconds=120,
+        disk_free_gib=0,
+        zero_progress_probability=0.5,
+    )
     config["feature_generator"]["steps"] = 2
 
     def run(name, resume=False, stop_after=None):
@@ -222,11 +228,13 @@ def test_swapped_scores_use_counterfactual_targets_and_composition_groups():
 
 def test_zero_progress_mixture_has_no_extra_rng_and_keeps_zero_policy_exact():
     from experiments.conditional_image import progress_mixture
-    draw=torch.tensor([0., .1, .49, .5, .75, .99])
-    rng=torch.get_rng_state().clone()
-    assert progress_mixture(draw,0) is draw
-    actual=progress_mixture(draw,.5)
-    assert torch.equal(actual,torch.tensor([0.,0.,0.,0.,.5,.98]))
-    assert torch.equal(rng,torch.get_rng_state())
-    for p in [-.1,1.,float('nan')]:
-        with pytest.raises(ValueError):progress_mixture(draw,p)
+
+    draw = torch.tensor([0.0, 0.1, 0.49, 0.5, 0.75, 0.99])
+    rng = torch.get_rng_state().clone()
+    assert progress_mixture(draw, 0) is draw
+    actual = progress_mixture(draw, 0.5)
+    assert torch.equal(actual, torch.tensor([0.0, 0.0, 0.0, 0.0, 0.5, 0.98]))
+    assert torch.equal(rng, torch.get_rng_state())
+    for p in [-0.1, 1.0, float("nan")]:
+        with pytest.raises(ValueError):
+            progress_mixture(draw, p)

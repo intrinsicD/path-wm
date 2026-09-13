@@ -37,6 +37,7 @@ def settings(seed=41011, objective="flow"):
         eval_wall_seconds=300,
         lr=0.0003,
         weight_decay=0.0001,
+        zero_progress_probability=0.0,
         memory_mib=3072,
         disk_free_gib=3,
         feature_generator=dict(
@@ -86,7 +87,18 @@ def cache_context(model, data, device, batch_size=8):
     )
 
 
-def objective(generator, cache, ids, step):
+def progress_mixture(draw, zero_probability):
+    """Change supervision weighting without consuming another RNG stream."""
+    if not 0 <= zero_probability < 1:
+        raise ValueError("Zero-progress probability must be in [0,1)")
+    if zero_probability == 0:
+        return draw
+    return torch.where(
+        draw < zero_probability, 0.0, (draw - zero_probability) / (1 - zero_probability)
+    )
+
+
+def objective(generator, cache, ids, step, zero_probability=0.0):
     ordinary = (torch.arange(len(ids), device=cache["reset"].device) + step) % 2 == 0
     context = torch.where(
         ordinary[:, None, None], cache["ordinary"][ids], cache["reset"][ids]
@@ -94,6 +106,7 @@ def objective(generator, cache, ids, step):
     target = generator.standardize({k: v[ids] for k, v in cache["features"].items()})
     # Draw in both arms: the data sampler and training RNG streams stay matched.
     progress = torch.rand(len(ids), device=context.device)
+    progress = progress_mixture(progress, zero_probability)
     noise = {k: torch.randn_like(v) for k, v in target.items()}
     x, velocity = flow_pair(target, noise, progress)
     if generator.objective == "direct":
@@ -284,7 +297,9 @@ def train(
                 break
             ids = run.sample(len(cache["target"]), config["batch_size"])
             optimizer.zero_grad(set_to_none=True)
-            loss, metrics = objective(decoder, cache, ids, step)
+            loss, metrics = objective(
+                decoder, cache, ids, step, config.get("zero_progress_probability", 0.0)
+            )
             if not torch.isfinite(loss):
                 raise ValueError("Nonfinite generator objective")
             loss.backward()
@@ -393,7 +408,12 @@ def main():
     parser.add_argument("--evaluate-only", action="store_true")
     parser.add_argument("--test-seed", type=int, default=41073)
     parser.add_argument("--sample-seed", type=int, default=13)
+    parser.add_argument("--zero-progress-probability", type=float, default=0.0)
     args = parser.parse_args()
+    if not 0 <= args.zero_progress_probability < 1 or (
+        args.objective != "flow" and args.zero_progress_probability
+    ):
+        parser.error("Zero-progress weighting requires flow and a probability in [0,1)")
     if args.evaluate_only:
         args.output.mkdir(parents=True, exist_ok=False)
         start = perf_counter()
@@ -461,6 +481,7 @@ def main():
         "settings"
     ]
     config = dict(source_config, **settings(objective=args.objective))
+    config["zero_progress_probability"] = args.zero_progress_probability
     config.update(
         source_weights_sha256=file_hash(args.weights),
         source_weights_path=str(args.weights.resolve()),
