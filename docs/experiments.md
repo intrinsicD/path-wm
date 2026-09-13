@@ -321,3 +321,19 @@ rejected. Data identity records the original image hash and exact transform. Thi
 option is rejected for training, and offset0 preserves prior data identities.
 Use predeclared offsets/seeds and report neutral versus shifted gates separately;
 these backgrounds do not test new semantic combinations or real-world robustness.
+
+For a frozen-state brightness repair, use `--repair identity --readout-stage native
+--readout-context mixed --train-input-offsets -16 -8 0 8 16`. Only native factual and
+image feature heads learn from cached working tokens. Ordered variants preserve
+whole histories and canonical targets; `--train-input-offsets 0 0 0 0 0` provides
+matched neutral presentations. Use an explicit source, seed and fresh validation/
+test seeds. This option rejects writer learning and output standardization.
+
+For a separate zero-update diagnostic, add `--center-input` to `--evaluate-only`.
+The recipe reconstructs and verifies the original neutral training observations,
+fits a fixed per-channel reference median, then centers each observed frame before
+encoding. The evaluation manifest records the reference and calibration identity;
+the checkpoint remains unchanged. The operation has no access to labels, targets,
+shift metadata or future frames and rejects out-of-range values. This task-specific
+preprocessing can remove meaningful absolute intensity; it is not a learned
+invariance or a default deployment policy. GPU median uses deterministic sorting.

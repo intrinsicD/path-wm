@@ -5,7 +5,7 @@ from dataclasses import replace
 import torch
 from torch import nn
 
-from .modalities import Attend, Observation, position
+from .modalities import Attend, Observation, position, observation_values
 from .agent import (
     MultimodalAgent,
     ObservationUpdate,
@@ -18,6 +18,39 @@ from .agent_state import EpisodicMemory
 from .decoders import DenseHead, PatchDetailHead, StateFeatureDecoder
 from .encoders import PyramidEncoder, PatchDetailEncoder
 from .perception import Perception
+
+
+class PixelMedianCentering(nn.Module):
+    """Causal per-frame diagnostic; a fixed reference may remove useful intensity."""
+
+    def __init__(self, base, reference_rgb):
+        super().__init__()
+        reference = torch.as_tensor(reference_rgb, dtype=torch.float32)
+        if (
+            reference.shape != (3,)
+            or not torch.isfinite(reference).all()
+            or ((reference < 0) | (reference > 1)).any()
+        ):
+            raise ValueError("RGB reference must contain three finite values in [0, 1]")
+        self.base, self.code_width = base, base.code_width
+        self.register_buffer("reference", reference.reshape(1, 1, 3, 1, 1))
+
+    def forward(self, observation, **kwargs):
+        x, _, valid = observation_values(observation)
+        if x.ndim != 5 or x.shape[2] != 3 or not x.is_floating_point():
+            raise ValueError("Centering expects floating RGB [B,T,C,H,W]")
+        # CUDA median-with-indices rejects deterministic mode. Sorting preserves
+        # the same lower median without weakening the inference contract.
+        pixels = x.flatten(-2)
+        median = pixels.sort(dim=-1, stable=True).values[
+            ..., (pixels.shape[-1] - 1) // 2
+        ]
+        median = median[..., None, None]
+        centered = x - median + self.reference
+        if any(((v[valid] < 0) | (v[valid] > 1)).any() for v in (x, centered)):
+            raise ValueError("Input centering would exceed the valid RGB range")
+        centered = centered.masked_fill(~valid[..., None, None, None], 0)
+        return self.base(observation.derive(centered), **kwargs)
 
 
 class FrozenFeatureNormalization(nn.Module):

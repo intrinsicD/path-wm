@@ -1,6 +1,7 @@
 """Paired rendered histories with explicit composition or relocation populations."""
 
 from collections import Counter, defaultdict
+from copy import copy, deepcopy
 from itertools import product
 import hashlib
 
@@ -127,6 +128,39 @@ class MemoryOutputEpisodes:
                 source_images_sha256=source_images_hash,
                 targets="unchanged canonical rendering",
             )
+
+    def with_input_offsets(self, offsets):
+        """Whole-history variants; targets stay canonical and ordering is explicit."""
+        if (
+            not isinstance(offsets, (tuple, list))
+            or not offsets
+            or any(type(x) is not int or not -255 <= x <= 255 for x in offsets)
+        ):
+            raise ValueError(
+                "Input offsets must be a nonempty list of bounded integers"
+            )
+        if "input_transform" in self.identity or "input_augmentation" in self.identity:
+            raise ValueError("Input offsets require untransformed source histories")
+        variants = [self.images.astype(np.int16) + x for x in offsets]
+        if any(x.min() < 0 or x.max() > 255 for x in variants):
+            raise ValueError("Input offsets would clip observed RGB values")
+        result = copy(self)
+        result.images = np.concatenate(variants).astype(np.uint8)
+        result.targets = np.concatenate([self.targets] * len(offsets))
+        result.labels = np.concatenate([self.labels] * len(offsets))
+        result.identity = dict(
+            deepcopy(self.identity),
+            pairs=self.identity["pairs"] * len(offsets),
+            images_sha256=hashlib.sha256(result.images.tobytes()).hexdigest(),
+            targets_sha256=hashlib.sha256(result.targets.tobytes()).hexdigest(),
+            labels_sha256=hashlib.sha256(result.labels.tobytes()).hexdigest(),
+            input_augmentation=dict(
+                kind="whole-history-rgb-offsets-v1",
+                offsets_uint8=list(offsets),
+                source_data=deepcopy(self.identity),
+            ),
+        )
+        return result
 
     def shortcut_audit(self):
         """Empirical majority bounds over exact available inputs, not model scores."""

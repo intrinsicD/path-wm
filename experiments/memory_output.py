@@ -30,6 +30,7 @@ from pathwm.models.memory_output import (
     frozen_tensors,
     load_workspace_reference,
     configure_output_readout,
+    PixelMedianCentering,
 )
 from pathwm.models.modalities import Observation
 
@@ -732,7 +733,25 @@ def train(
         raise
 
 
-def evaluate_export(weights, data, *, output, device="cpu"):
+def center_from_training(model, training):
+    """Configure an input-only diagnostic from recorded neutral training pixels."""
+    if training.identity["split"] != "train" or any(
+        k in training.identity for k in ("input_transform", "input_augmentation")
+    ):
+        raise ValueError("Centering reference requires neutral training observations")
+    reference = np.median(training.images.reshape(-1, 3), axis=0) / 255
+    model.agent.encoders["image"] = PixelMedianCentering(
+        model.agent.encoders["image"], reference.tolist()
+    ).to(model.agent.initial)
+    return dict(
+        kind="per-frame-rgb-median-v1",
+        reference_rgb=reference.tolist(),
+        calibration_data=training.identity,
+        scope="training-only fixed reference; no targets/offset metadata; no clipping",
+    )
+
+
+def evaluate_export(weights, data, *, output, device="cpu", center_input=False):
     """Score an unchanged export with separate training and evaluation identities."""
     weights, output = Path(weights).resolve(), Path(output)
     output.mkdir(parents=True, exist_ok=False)
@@ -751,6 +770,22 @@ def evaluate_export(weights, data, *, output, device="cpu"):
         if original["identity"]["settings"] != json.loads(json.dumps(settings)):
             raise ValueError("Export settings differ from original training manifest")
         model = load_model(weights, device)
+        centering = None
+        if center_input:
+            source_data = original["identity"]["data"]["train"]
+            source_data = source_data.get("input_augmentation", {}).get(
+                "source_data", source_data
+            )
+            training = MemoryOutputEpisodes(
+                source_data["pairs"],
+                seed=source_data["seed"],
+                curriculum=settings.get("curriculum", "parity"),
+            )
+            if json.loads(json.dumps(training.identity)) != source_data:
+                raise ValueError(
+                    "Centering training observations differ from provenance"
+                )
+            centering = center_from_training(model, training)
         model_hash = state_hash(model)
         source = source_record(__file__, model)
         atomic_json(
@@ -759,6 +794,7 @@ def evaluate_export(weights, data, *, output, device="cpu"):
                 identity=dict(
                     settings=dict(
                         purpose="evaluation only; no optimization",
+                        **({"input_centering": centering} if centering else {}),
                         example_labels={
                             "input": "Held-out targets (never query inputs)",
                             "rgb": "Reset-recall image outputs",
@@ -877,6 +913,17 @@ def main():
     )
     parser.add_argument("--evaluate-only", action="store_true")
     parser.add_argument(
+        "--center-input",
+        action="store_true",
+        help="Evaluation-only per-frame centering using original training observations",
+    )
+    parser.add_argument(
+        "--train-input-offsets",
+        type=int,
+        nargs="+",
+        help="Whole-history RGB variants for native mixed head-only training",
+    )
+    parser.add_argument(
         "--input-offset",
         type=int,
         default=0,
@@ -893,6 +940,17 @@ def main():
     args = parser.parse_args()
     if args.input_offset and not args.evaluate_only:
         parser.error("Input offset is an evaluation-only override")
+    if args.center_input and not args.evaluate_only:
+        parser.error("Input centering is an evaluation-only diagnostic")
+    if args.train_input_offsets is not None and (
+        args.evaluate_only
+        or args.repair != "identity"
+        or args.readout_stage != "native"
+        or args.readout_context != "mixed"
+        or args.writer_learning is not None
+        or args.standardize_output
+    ):
+        parser.error("Training offsets require native raw mixed head-only repair")
     if args.evaluate_only:
         if (
             args.repair
@@ -937,7 +995,13 @@ def main():
             curriculum=saved.get("curriculum", "parity"),
             input_offset=args.input_offset,
         )
-        evaluate_export(args.weights, data, output=args.output, device=args.device)
+        evaluate_export(
+            args.weights,
+            data,
+            output=args.output,
+            device=args.device,
+            center_input=args.center_input,
+        )
         return
     if (
         not math.isfinite(args.reference_weight)
@@ -1000,6 +1064,8 @@ def main():
         training = MemoryOutputEpisodes(
             128, seed=17701 if args.development else 7701, curriculum="relocation"
         )
+        if args.train_input_offsets is not None:
+            training = training.with_input_offsets(args.train_input_offsets)
         validation = MemoryOutputEpisodes(
             32,
             seed=args.validation_seed
@@ -1080,6 +1146,9 @@ def main():
             settings["objective"] += (
                 "; image feature producer only; factual CE constant"
             )
+        if args.train_input_offsets is not None:
+            settings["train_input_offsets"] = args.train_input_offsets
+            settings["objective"] += "; ordered whole-history training RGB offsets"
         if args.development:
             settings.update(steps=16, wall_seconds=60)
         calibration_seconds = perf_counter() - calibration_start

@@ -1486,3 +1486,14 @@ inferences were corrected: failed head learning does not uniquely justify encode
 replacement; failed centering does not prove deeper feature entanglement. Claude
 acknowledged these corrections and median translation algebra. Two public-only
 exchanges; implementation/results remain local. No formal confirmation scores seen.
+
+Implementation verified before formal fitting: 78 relevant tests pass, including
+augmented exact odd-step resume and centered immutable-export/report-failure checks.
+GPU preflight found CUDA median-with-indices incompatible with deterministic mode;
+original failure preserved, replaced with deterministic sorting for the same lower
+median. All 13 affected tests pass again; GPU cache/live/source equality and centering
+bounds/equivariance pass. Fresh confirmation hashes and frame disjointness verified.
+Development16-update augmented fit completes with a verified report/inspected panel.
+Eight old training/inference/scoring function ASTs unchanged. No formal test scores
+used to change the protocol. Centering reference is serialized in evaluation records;
+it remains an explicit evaluation-time diagnostic, not a modified weight export.

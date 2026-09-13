@@ -142,7 +142,11 @@ def test_evaluate_export_preserves_origin_and_completed_results(
         origin / "weights.pt",
     )
     manifest = dict(
-        identity=dict(settings=settings, data=dict(train=MemoryOutputEpisodes(4, seed=38).identity)), source=dict(git_commit="training-fixture")
+        identity=dict(
+            settings=settings,
+            data=dict(train=MemoryOutputEpisodes(4, seed=38).identity),
+        ),
+        source=dict(git_commit="training-fixture"),
     )
     (origin / "run.json").write_text(json.dumps(manifest))
     (origin / "metrics.jsonl").write_text('{"step":3,"split":"train","loss":1.0}\n')
@@ -164,9 +168,13 @@ def test_evaluate_export_preserves_origin_and_completed_results(
 
         monkeypatch.setattr(recipe, "write_report", fail)
         with pytest.raises(RuntimeError, match="render failure"):
-            recipe.evaluate_export(origin / "weights.pt", data, output=output, center_input=center_input)
+            recipe.evaluate_export(
+                origin / "weights.pt", data, output=output, center_input=center_input
+            )
     else:
-        recipe.evaluate_export(origin / "weights.pt", data, output=output, center_input=center_input)
+        recipe.evaluate_export(
+            origin / "weights.pt", data, output=output, center_input=center_input
+        )
     result = json.loads((output / "result.json").read_text())
     assert result["completed"] and result["evaluation_only"] and result["step"] == 0
     assert result["checkpoint_sha256"] == hashes["weights.pt"]
@@ -176,7 +184,9 @@ def test_evaluate_export_preserves_origin_and_completed_results(
     assert run["identity"]["settings"]["purpose"] == "evaluation only; no optimization"
     if center_input:
         centering = run["identity"]["settings"]["input_centering"]
-        assert centering["calibration_data"] == json.loads(json.dumps(manifest["identity"]["data"]["train"]))
+        assert centering["calibration_data"] == json.loads(
+            json.dumps(manifest["identity"]["data"]["train"])
+        )
         assert len(centering["reference_rgb"]) == 3
     else:
         assert "input_centering" not in run["identity"]["settings"]
@@ -368,16 +378,27 @@ def test_training_resume_and_standalone_reload(
             model.workspace_reference = TokenProbe(model.working(history["stored"]))
             model.workspace_reference.requires_grad_(False)
             settings.update(workspace_reference_sha256="fixture", reference_weight=1.0)
-        if repair in ("native_readout", "stored_readout", "mixed_readout", "augmented_readout"):
+        if repair in (
+            "native_readout",
+            "stored_readout",
+            "mixed_readout",
+            "augmented_readout",
+        ):
             from pathwm.models.memory_output import configure_output_readout
 
-            stage = "native" if repair in ("mixed_readout", "augmented_readout") else repair.split("_")[0]
+            stage = (
+                "native"
+                if repair in ("mixed_readout", "augmented_readout")
+                else repair.split("_")[0]
+            )
             configure_output_readout(model, stage)
             settings.update(readout_stage=stage, standardize_output=True)
             if repair in ("mixed_readout", "augmented_readout"):
                 settings["readout_context"] = "mixed"
             if repair == "augmented_readout":
-                settings.update(standardize_output=False, train_input_offsets=[-16, 0, 16])
+                settings.update(
+                    standardize_output=False, train_input_offsets=[-16, 0, 16]
+                )
         if writer_case:
             from pathwm.models.memory_output import configure_output_readout
 
@@ -413,7 +434,9 @@ def test_training_resume_and_standalone_reload(
     full_model, full = run(tmp_path / "full")
     run(
         tmp_path / "resumed",
-        stop_after=1 if repair in ("mixed_readout", "augmented_readout") or writer_case else 2,
+        stop_after=1
+        if repair in ("mixed_readout", "augmented_readout") or writer_case
+        else 2,
     )
     _, resumed = run(tmp_path / "resumed", resume=True)
     for key in ("model", "optimizer", "sampler", "torch", "step"):
