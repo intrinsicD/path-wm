@@ -5,6 +5,76 @@ import pytest
 import torch
 
 
+def test_relocation_curriculum_breaks_appearance_and_initial_frame_shortcuts():
+    from collections import Counter
+    import hashlib
+    from pathwm.data.memory_output import MemoryOutputEpisodes, image_labels
+
+    datasets = [
+        MemoryOutputEpisodes(16, seed=s, curriculum="relocation") for s in (17, 18)
+    ]
+    frame_sets = []
+    for data in datasets:
+        b = data.batch(range(len(data)))
+        assert torch.equal(image_labels(b["target"]), b["labels"])
+        counts = Counter(map(tuple, data.labels.tolist()))
+        assert len(counts) == 16 and set(counts.values()) == {2}
+        for start in range(0, len(data), 4):
+            frames = b["images"][start : start + 4]
+            labels = b["labels"][start : start + 4]
+            assert torch.equal(frames[:2, 0], frames[2:, 0])
+            assert torch.equal(frames[0, 1:], frames[1, 1:])
+            assert torch.equal(frames[2, 1:], frames[3, 1:])
+            assert not torch.equal(frames[0, 1], frames[2, 1])
+            assert torch.equal(labels[:2, :2], labels[2:, :2])
+            assert (labels[:2, 2] != labels[2:, 2]).all()
+        audit = data.shortcut_audit()
+        assert audit["appearance_only_side_accuracy"] == 0.5
+        assert audit["initial_frame_only_side_accuracy"] == 0.5
+        assert audit["final_frame_only_joint_accuracy"] == 0.5
+        assert audit["hidden_frame_only_side_accuracy"] == 0.5
+        assert audit["hidden_frame_only_joint_accuracy"] == 0.25
+        frame_sets.append({hashlib.sha256(x.tobytes()).hexdigest() for x in data.images[:, 0]})
+    assert not frame_sets[0] & frame_sets[1]
+    with pytest.raises(ValueError, match="complete"):
+        MemoryOutputEpisodes(17, curriculum="relocation")
+
+
+def test_relocation_metrics_detect_correct_appearance_at_the_wrong_location():
+    from pathwm.data.memory_output import MemoryOutputEpisodes
+    from experiments.memory_output import score, passes
+
+    b = MemoryOutputEpisodes(16, seed=17, curriculum="relocation").batch(range(32))
+    labels = b["labels"]
+    logits = torch.cat([torch.nn.functional.one_hot(labels[:, i], n) for i, n in enumerate((4, 2, 2))], 1).float()
+    arrays = dict(target=b["target"], labels=labels, direct_logits=logits,
+                  stored_logits=logits, teacher_image=b["target"])
+    modes = ["ordinary", "reset", "reset_erased", "erased_history", "reset_swapped", "cue_erased", "last_seen_erased"]
+    for mode in modes:
+        ids = torch.arange(32)
+        if mode == "reset_swapped":
+            ids ^= 1
+        elif mode in ("reset_erased", "erased_history", "cue_erased", "last_seen_erased"):
+            ids *= 0
+        arrays[mode + "_logits"] = logits[ids].clone()
+        arrays[mode + "_image"] = b["target"][ids].clone()
+    metrics = score(arrays, modes, relocation=True)
+    assert passes(metrics)
+    assert metrics["reset"]["factual_relocation_pair_accuracy"] == 1
+    # Copying the static counterpart preserves appearance but misses every move.
+    moving = torch.arange(32) % 4 >= 2
+    arrays["reset_logits"][moving] = logits[torch.arange(32)[moving] - 2]
+    arrays["reset_image"][moving] = b["target"][torch.arange(32)[moving] - 2]
+    metrics = score(arrays, modes, relocation=True)
+    assert metrics["reset"]["factual_color_accuracy"] == 1
+    assert metrics["reset"]["factual_shape_accuracy"] == 1
+    assert metrics["reset"]["factual_side_accuracy"] == 0.5
+    assert metrics["reset"]["factual_relocation_pair_accuracy"] == 0
+    assert metrics["reset"]["image_relocation_pair_accuracy"] == 0
+    assert metrics["reset"]["moved_factual_accuracy"] == 0
+    assert not passes(metrics)
+
+
 def model_fixture(normalize=False):
     from experiments.memory_output import build_model
     from pathwm.models.encoders import PyramidEncoder, PatchDetailEncoder

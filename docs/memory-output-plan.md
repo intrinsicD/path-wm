@@ -1,5 +1,66 @@
 # Remember a selected object and render its last observed state
 
+## Active relocation comparison (13 September, approved continuation)
+
+Hypothesis: independently varying an object's final side while preserving its
+appearance and initial selection removes the appearance-to-location shortcut.
+This is a data intervention in the existing three-frame task. No architecture,
+loss, trainable initialization or normalization change is included.
+
+Add an opt-in `relocation` curriculum; preserve the original `parity` generator
+and completed runs. Each quartet shares background and initial object arrangement:
+select left/right, then repeat both selections with the final objects swapped.
+All four colors, both shapes, both initial sides and both final sides are balanced.
+Eight initial appearance arrangements form a complete cycle of16 selection pairs.
+Require complete cycles. Whole quartets stay in one dataset; independent seeds
+give disjoint noisy backgrounds. Train128 pairs7701, validation32 pairs7702,
+evaluation64 pairs7703. All16 target tuples and both movement types occur in every
+split. Evaluation tests fresh rendered histories within the trained support;
+it does NOT test novel tuples, motion rules, categories or longer histories.
+
+Audit counts and exact inputs before training: within each quartet, relocation
+counterparts have identical first frames and appearance but opposite target side;
+selection counterparts share their final two frames but differ in target identity.
+Bayes majority predictors using appearance alone or the exact initial frame
+achieve at most50% final-side accuracy. Final-frame-only joint accuracy is at most
+50%. Check split input hashes and complete quartet membership. The previous
+parity held-out results remain failed; those tuples now occur in training and
+cannot be called held-out composition in the new comparison.
+
+Use the same frozen handwritten visual donor. BOTH input normalization and output
+feature calibration continue to use the original parity TRAIN population, exactly
+as before, keeping their buffers fixed across this intervention. Fresh trainable
+initialization seeds7801/7802; no fine-tuning from the failed agent. AdamW and all
+settings unchanged:1536 updates, batch16,300s training-loop cap per seed,600s total,
+FP32, CUDA cap4GiB leaving1GiB free. Final checkpoint only; no checkpoint selection.
+Development checks use separate seeds and at most16 updates. Source committed
+before formal execution. Score the preserved normalized7801 checkpoint on the
+same new evaluation population as a frozen control (no updates).
+
+Keep every existing gate and additionally require ordinary and reset factual/image
+accuracy on BOTH members of each relocation pair >=80%. Report per-attribute,
+static/moved, and complete-selection/relocation-pair scores. Preserve all controls
+and raw histories/outputs. Independently recompute counts and image-template scores;
+strict standalone GPU reload must match saved outputs within1e-4. CPU/GPU pixel
+agreement is separately checked against the existing1e-4 threshold; prior failure
+remains visible and cannot be silently relaxed. No general generation or learned
+retrieval-selection claim follows from a pass. Reports remain structural-only
+while browser QA is unavailable; inspect the actual comparison PNGs.
+
+Essential RED checks: factorial/input counterfactual alignment, exact split
+separation, shortcut bounds, per-attribute/relocation scoring and gates. Extend
+the existing exact resume/reload fixture to exercise the new dataset. Preserve
+old tests and strict default behavior.
+
+Public-only Claude review adds hidden-background prediction bounds and cue removal.
+Also remove the later visible frame: neither single visible frame suffices for
+the full task. Evaluate both removals after a state reset; require full reset
+accuracy to exceed each by>=30 points for facts and images. Hidden-frame-only
+side accuracy must be<=50%, joint<=25%. These are pre-run controls. A follow-up
+corrects Claude's claim that the cue frame alone suffices and limits causal
+interpretation of a data-balancing intervention. Receipts under
+`runs/reviews/continuation_2026-09-11/relocation-*`.
+
 13 September 2026. Alex approved the proposed observation-memory-output slice.
 Use the actual Gaussian reference agent, bounded detached episodic snapshots and
 the existing state-to-spatial RGB decoder. This is a controlled synthetic learning
