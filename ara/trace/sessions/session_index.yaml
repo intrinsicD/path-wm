@@ -139,10 +139,10 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: 'Scene challenge: centering12/40 and raw8/40 passes; texture harms and bright-background coverage
-    failures. Coverage-reporting repair verified;92 tests,18012 metrics,76 exact GPU replays plus2 full
-    regressions; no training. Broad learned/camera robustness remains open.'
-  turn_count: 16
-  events_count: 87
+  summary: Tint learning19/24 task passes, warm4/4 vs0/4; cool-shape/texture and strict repair unresolved.
+    Persistent centering load/resume fixed;109 tests,20120 metrics,80 exact GPU replays. Two actual Claude
+    reviews after explicit follow-up approval.
+  turn_count: 17
+  events_count: 94
   claims_touched: []
   open_threads: 10

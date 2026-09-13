@@ -634,3 +634,13 @@
 - **Sensitivity**: High. Median subtraction discards an offset statistic and may distort foreground colors when the median changes with background content. This comparison does not establish arbitrary corruption robustness or lost information.
 - **Code ref**: [scene renderer](../../../pathwm/data/memory_output.py), [centering and range inspection](../../../pathwm/models/memory_output.py), [integrity tests](../../../tests/test_centering_challenge.py).
 - **Evidence**: N312/N313; [fixed screen](../../evidence/tables/centering_challenge_2026-09-13.json).
+
+## H65: Test native scene learning with matched clean and raw controls
+
+- **Rationale**: Start where an existing direct reader establishes encoder accessibility; compare native head learning on fixed working states under matched clean/scene histories, budgets and preprocessing. Preserve canonical targets, raw texture controls, clean retention and fresh confirmation before expanding trainable perception.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O210
+- **Sensitivity**: High. A failed fixed-budget fit does not uniquely identify information loss. Shared upstream initialization is not independent replication; task passage, comparative benefit and retention are separate criteria.
+- **Code ref**: [whole-history scenes](../../../pathwm/data/memory_output.py), [persistent preprocessing](../../../pathwm/models/memory_output.py), [training/evaluation recipe](../../../experiments/memory_output.py), [integrity tests](../../../tests/test_tint_readout.py).
+- **Evidence**: N314/N315/N317; [comparison proof](../../evidence/tables/tint_readout_2026-09-13.json).

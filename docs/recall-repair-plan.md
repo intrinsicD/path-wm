@@ -1904,7 +1904,7 @@ shapes. Failure is not uniquely attributable to the encoder.
 108 distinct relevant tests pass across the original suite and corrected focused
 checks.20,120 metrics independently reproduced;80 ordinary/reset GPU replays exact;
 12 original datasets byte-exact and7 inference/objective functions unchanged.
-Training315.46s total, peak602MiB; full fit loop500.52s, evaluation458.95s. Concurrent
+Training315.47s total, peak602MiB; full fit loop500.52s, evaluation458.95s. Concurrent
 user GPU processes affected timing; no isolated speed claim. Before confirmation,
 recorded timing_amendment.json increased elapsed evaluation allowance900→1,800s;
 updates, populations, gates, VRAM and disk limits stayed fixed. Actual loop<900s.
@@ -1940,5 +1940,5 @@ texture/shape fitting comparison with clean/raw retention, plus image-feature
 producer diagnostics where factual shape is already correct. Do not conclude the
 encoder lost identity. Independent upstream replication, real recordings, confidence,
 CPU portability, broader scene/illumination coverage and streaming runtime remain
-open. About3.8GiB disk free remains; another large matrix needs additional headroom
+open. Disk headroom remains limited; another large matrix needs a fresh capacity check
 while preserving completed runs and the3GiB free-space floor.

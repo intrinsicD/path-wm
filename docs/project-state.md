@@ -12,7 +12,7 @@ Added whole-history scene augmentation to the existing recipe. Fixed centering i
 stored with trained weights, automatically restored and checked on standalone load
 and training resume. Invalid restored references fail before optimization. Four
 matched1,536-update fits change only67,032 native output parameters; all frozen
-state/encoder/backend tensors stay exact. Training315.46s, peak602MiB; evaluation
+state/encoder/backend tensors stay exact. Training315.47s, peak602MiB; evaluation
 458.95s. GPU contention documented; elapsed allowance amended before confirmation.
 
 109 distinct relevant tests pass;80 exact GPU replays;20,120 independently checked
@@ -24,7 +24,7 @@ Next: residual shape fitting and texture training with raw/clean retention. In o
 cool-tint training block facts are100% correct but48/256 recall images have the wrong
 shape, supporting an image-output learning shortfall on those examples. General
 perception, independent upstream runs, real recordings, confidence, CPU portability
-and streaming tests remain open. Preserve old runs; disk has roughly3.8GiB free.
+and streaming tests remain open. Preserve old runs; disk headroom remains limited.
 
 **Scene/lighting challenge and reporting repair completed, 13 September:** centered
 input passes12/40 attempted cells (neutral, temporal additive and RGB-channel

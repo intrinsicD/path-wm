@@ -3706,6 +3706,44 @@ observations:
   bound_to:
   - N312
   - N313
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H65
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O211
+  timestamp: 2026-09-13T21:11+02:00
+  provenance: ai-suggested
+  content: Native head learning on fixed centered states improves warm-tint task sufficiency while retaining
+    clean answers, but does not close broad scene robustness. Cool-shape and texture failures remain,
+    including training examples whose factual shape is correct but rendering is wrong. This supports an
+    output-learning shortfall on those examples without uniquely identifying its mechanism or lost encoder
+    information.
+  context: Completed comparison and integrity repair; researcher has not interpreted the new outcomes.
+    Shared upstream initialization limits generalization; fixed-model interventions retain their conditional
+    scope.
+  potential_type: claim
+  bound_to:
+  - N315
+  - N317
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O212
+  timestamp: 2026-09-13T21:11+02:00
+  provenance: ai-suggested
+  content: Next separately compare balanced texture/shape learning with matched extra-update controls,
+    fresh confirmation and raw/clean retention. Diagnose the image feature producer where factual shape
+    is already readable before replacing the encoder. Declare benefits that respect ceiling effects beforehand.
+    Check disk headroom before another large matrix; retain independent upstream, real footage, confidence,
+    CPU and streaming milestones.
+  context: Next experiment proposal only; no extra fit, scene-specific model selection or threshold relaxation
+    after confirmation.
+  potential_type: heuristic
+  bound_to:
+  - N315
+  - N317
   promoted: false
   promoted_to: null
   crystallized_via: null

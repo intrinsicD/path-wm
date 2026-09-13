@@ -128,3 +128,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 
 - [Reconstruction bottleneck review](tables/reconstruction_bottlenecks_2026-09-12.json): N268;
   local projection ranks, short training exposure and primary-paper capacity/fidelity distinctions.
+
+- [Centered tint native learning and resume guard](tables/tint_readout_2026-09-13.json): N314–N317; four fits,80 cells,109 tests; overall repair fails despite warm-tint improvement.

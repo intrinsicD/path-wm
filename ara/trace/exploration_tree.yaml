@@ -5115,3 +5115,79 @@ tree:
   - N312
   timestamp: 2026-09-13T20:16+02:00
   status: resolved
+
+- id: N314
+  type: decision
+  title: Adopt the next controlled scene/readout learning comparison
+  provenance: user
+  timestamp: 2026-09-13T21:11+02:00
+  choice: Continue the listed open points with Claude, implementation, review, tests and fixes. Start
+    with matched tint-versus-clean native output learning and retain raw/clean controls.
+  alternatives:
+  - Treat prior centering diagnostic as sufficient
+  - Replace encoder without downstream learning diagnosis
+  evidence:
+  - O210
+  - N312
+  - N313
+  also_depends_on:
+  - N312
+  - N313
+  status: resolved
+- id: N315
+  type: experiment
+  title: Tint augmentation improves native output but fails the full repair gate
+  provenance: ai-executed
+  timestamp: 2026-09-13T21:11+02:00
+  result: Four matched1536-update fits,67032 head parameters, two shared-upstream sources.80 fresh28073/28074
+    evaluations. Augmented19/24 task passes; each centered control14/24. Warm4/4 vs0/4, native92.188–100%;
+    mild warm/cool and neutral4/4 each; clean98.438–100%. Cool2/4 and texture1/4, both minimum81.25%;
+    raw texture100%. All-scene raw-neutral retention14/24, clean4/4, texture0/4, strict warm benefit1/4.
+    Source8502 cool training facts100%,48/256 incorrect recall shapes. All frozen tensors, starts, sampler/RNG
+    and update counts exact.20120 independently reproduced metrics,80 exact GPU replays,12 legacy datasets
+    exact.315.465s formal training,602MiB peak;500.518s fit loop,458.947s evaluation. GPU contention;
+    elapsed evaluation cap amended900→1800 before confirmation, all scientific settings unchanged. Formal5451ce1.
+  evidence:
+  - ara/evidence/tables/tint_readout_2026-09-13.json
+  - runs/tint_readout_v1/verification.json
+  - docs/recall-repair-plan.md#centered-tint-comparison-results-and-resume-guard
+  also_depends_on:
+  - N314
+  - N312
+  status: resolved
+- id: N316
+  type: decision
+  title: Explicitly authorize the exact Claude reconciliation brief after initial rejection
+  provenance: user
+  timestamp: 2026-09-13T21:11+02:00
+  choice: Send this brief to Claude, through the installed CLI, as explicitly approved in the asynchronous
+    question. Initial automatic-review rejection retained; no general private-data export waiver.
+  alternatives:
+  - Keep the remaining review local
+  evidence:
+  - runs/reviews/continuation_2026-09-11/tint-learning-reconcile-public-brief.txt
+  - runs/reviews/continuation_2026-09-11/tint-learning-reconcile-public-receipt.json
+  - runs/tint_readout_v1/review_status.json
+  also_depends_on:
+  - N314
+  status: resolved
+- id: N317
+  type: experiment
+  title: Persistent centering rejects inconsistent standalone and resumed checkpoints
+  provenance: ai-executed
+  timestamp: 2026-09-13T21:11+02:00
+  result: Whole-history scene augmentation and train-only calibrated centering persist reference/version/identity
+    in weights and cache provenance. Coverage preflight includes train/validation/test; standalone load
+    restores wrapper and rejects mismatched buffer. Local RED repro found training Run restore bypassed
+    the reference check and reached an optimizer step. Post-restore guard now rejects before updates,
+    marks failed, preserves checkpoint/committed metrics.18 focused checks including exact odd-step resume
+    pass;109 unique relevant tests total. Only train guard changed after formal evaluation, fix970d7f7;
+    no inference/score change.86 reports structurally verified, figures inspected, browser unavailable.
+  evidence:
+  - ara/evidence/tables/tint_readout_2026-09-13.json
+  - tests/test_tint_readout.py
+  - runs/tint_readout_v1/resume_guard_test_red.txt
+  - runs/tint_readout_v1/resume_guard_tests.txt
+  also_depends_on:
+  - N315
+  status: resolved

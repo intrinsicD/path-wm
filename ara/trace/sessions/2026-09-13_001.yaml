@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T20:16+02:00
-  turn_count: 16
-  summary: 'Scene challenge: centering12/40 and raw8/40 passes; texture harms and bright-background coverage
-    failures. Coverage-reporting repair verified;92 tests,18012 metrics,76 exact GPU replays plus2 full
-    regressions; no training. Broad learned/camera robustness remains open.'
+  last_turn: 2026-09-13T21:11+02:00
+  turn_count: 17
+  summary: Tint learning19/24 task passes, warm4/4 vs0/4; cool-shape/texture and strict repair unresolved.
+    Persistent centering load/resume fixed;109 tests,20120 metrics,80 exact GPU replays. Two actual Claude
+    reviews after explicit follow-up approval.
 
 events_logged:
 - turn: 1
@@ -552,6 +552,56 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O207 prior challenge committed in scene tests and fixed-weight comparison.
+- turn: 17
+  type: decision
+  id: N314
+  routing: direct
+  provenance: user
+  summary: Adopt the next controlled scene/readout learning comparison
+- turn: 17
+  type: experiment
+  id: N315
+  routing: direct
+  provenance: ai-executed
+  summary: Tint augmentation improves native output but fails the full repair gate
+- turn: 17
+  type: decision
+  id: N316
+  routing: direct
+  provenance: user
+  summary: Explicitly authorize the exact Claude reconciliation brief after initial rejection
+- turn: 17
+  type: experiment
+  id: N317
+  routing: direct
+  provenance: ai-executed
+  summary: Persistent centering rejects inconsistent standalone and resumed checkpoints
+- turn: 17
+  type: observation
+  id: O211
+  routing: staged
+  provenance: ai-suggested
+  summary: Native head learning on fixed centered states improves warm-tint task sufficiency while retaining
+    clean answers, but does not close broad scene robustness. Cool-shape and texture failures remain,
+    including training examples whose factual shape is correct but rendering is wrong. This supports an
+    output-learning shortfall on those examples without uniquely identifying its mechanism or lost encoder
+    information.
+- turn: 17
+  type: observation
+  id: O212
+  routing: staged
+  provenance: ai-suggested
+  summary: Next separately compare balanced texture/shape learning with matched extra-update controls,
+    fresh confirmation and raw/clean retention. Diagnose the image feature producer where factual shape
+    is already readable before replacing the encoder. Declare benefits that respect ceiling effects beforehand.
+    Check disk headroom before another large matrix; retain independent upstream, real footage, confidence,
+    CPU and streaming milestones.
+- turn: 17
+  type: heuristic
+  id: H65
+  routing: crystallized
+  provenance: user-revised
+  summary: O210 controlled clean/scene comparison explicitly adopted; no empirical outcome endorsed.
 
 ai_actions:
 - turn: 1
@@ -768,6 +818,25 @@ ai_actions:
   - docs/recall-repair-plan.md
   - runs/centering_challenge_v1/
   - ara/evidence/tables/centering_challenge_2026-09-13.json
+- turn: 17
+  action: Implemented whole-history scene augmentation, persistent centering/cache provenance and coverage
+    preflight;9 RED cases,16 focused cases, exact resume,16-update GPU development. Four matched fits
+    and80 immutable cells; independent metrics/frozen/source/RNG checks,80 GPU replays,12 legacy data
+    comparisons. Found and fixed resumed-reference bypass with separate RED/18 focused checks.109 distinct
+    tests. Two Claude conceptual exchanges, initial follow-up denial preserved then exact brief explicitly
+    approved and sent. Reports/code/docs committed; no broad robustness claim.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/data/memory_output.py
+  - pathwm/models/memory_output.py
+  - experiments/memory_output.py
+  - tests/test_tint_readout.py
+  - tests/test_memory_output.py
+  - docs/experiments.md
+  - docs/project-state.md
+  - docs/recall-repair-plan.md
+  - runs/tint_readout_v1/
+  - ara/evidence/tables/tint_readout_2026-09-13.json
 
 claims_touched: []
 key_context:
@@ -824,14 +893,17 @@ key_context:
   excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
     these open points. Scoped closure method adopted; deterministic reporting repaired without a false
     robustness claim.'
+- turn: 17
+  excerpt: User requests continued Claude plan/implement/review/test/fix iteration on open points, then
+    explicitly selects Send this brief to Claude for the linked protocol follow-up. This is specific payload
+    approval, not unrestricted private export. No researcher response yet to new model outcomes.
 
 open_threads:
-- 'N312/N313/O209/O210: centering fails broad scene range; coverage reporting fixed. Next controlled state/readout
-  learning with clean/raw controls and fresh confirmation; independent upstream models, real observations
-  and deployed runtime remain open.'
-- 'N278-N313: CPU/GPU portability unresolved; earlier logits4.991394043/pixels0.035994232 and categorical
-  differences retained. New76 GPU replays plus2 full post-repair regression exports exact; no CPU portability
-  repair claimed.'
+- 'N315/N317/O211/O212: warm-tint output learning improves; cool-shape and texture retention remain incomplete.
+  Next separately declared texture/shape fitting comparison with raw/clean controls and fresh data. General
+  scenes, real recordings, independent upstream runs and runtime still open; disk headroom limited.'
+- 'N278-N317: CPU/GPU portability unresolved; preserve earlier numerical/categorical differences. This
+  iteration adds80 exact ordinary/reset GPU replays and109 integrity tests, not a CPU portability repair.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
   and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and
@@ -877,4 +949,7 @@ ai_suggestions_pending:
 - 'O206: task-specific centering sufficiency with incomplete learned augmentation; researcher interpretation
   pending.'
 - 'O209: scene-limited centering and diagnostic accessibility interpretation; researcher response pending.'
-- 'O210: matched clean/scene state-readout learning with raw controls and fresh confirmation proposed.'
+- 'O211: partial scene/native output sufficiency and residual shape fitting interpretation; researcher
+  response pending.'
+- 'O212: balanced texture/shape continuation and producer diagnosis proposed, with fresh gates and resource
+  headroom.'
