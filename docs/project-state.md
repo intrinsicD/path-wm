@@ -1,5 +1,11 @@
 # Current work
 
+**Frozen-writer recall repair in progress, 13 September:** Alex approved the next
+repair. [Active protocol](recall-repair-plan.md) compares matched native reader/
+workspace/output retraining with identity versus training-only memory calibration,
+on both frozen relocation agents.41 targeted tests and a separate16-update GPU
+development run pass; source snapshots/codecs remain frozen. Formal results pending.
+
 **Frozen-state probes completed, 13 September:** four1536-update fits, two frozen
 agents × two reader seeds. Every direct encoder probe scores100%; before-storage
 location70.31–96.09%, after-recall49.22–51.56%. Initial future-side50% as expected;

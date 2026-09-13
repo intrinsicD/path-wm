@@ -50,16 +50,23 @@ def test_repair_freezes_writer_and_both_codec_paths_but_trains_output():
     loss, _ = objective(model, batch, reset=True, repair=True)
     loss.backward()
     for prefix in ("agent.thinker.", "facts.", "agent.decoders.image.projections."):
-        assert any(p.grad is not None and p.grad.abs().sum() > 0
-                   for n, p in model.named_parameters() if n.startswith(prefix))
+        assert any(
+            p.grad is not None and p.grad.abs().sum() > 0
+            for n, p in model.named_parameters()
+            if n.startswith(prefix)
+        )
     assert all(p.grad is None for p in model.parameters() if not p.requires_grad)
     optimizer.step()
     assert all(torch.equal(v, frozen[k]) for k, v in frozen_tensors(model).items())
-    assert torch.equal(model.observe_history(batch["images"])["final"].memory.values, original)
+    assert torch.equal(
+        model.observe_history(batch["images"])["final"].memory.values, original
+    )
     with torch.no_grad():
         recall = model(batch["images"], "reset")
         swapped = model(batch["images"], "reset_swapped")
         erased = model(batch["images"], "reset_erased")
     for key in ("image", "facts"):
-        torch.testing.assert_close(swapped[key], recall[key][[1, 0, 3, 2]], atol=1e-6, rtol=0)
+        torch.testing.assert_close(
+            swapped[key], recall[key][[1, 0, 3, 2]], atol=1e-6, rtol=0
+        )
         assert torch.equal(erased[key][0], erased[key][1])

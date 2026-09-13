@@ -196,9 +196,15 @@ def test_supervised_writes_and_frozen_decoder_have_intended_gradients():
 
 
 @pytest.mark.parametrize(
-    "normalize,curriculum", [(False, "parity"), (True, "parity"), (True, "relocation")]
+    "normalize,curriculum,repair",
+    [
+        (False, "parity", False),
+        (True, "parity", False),
+        (True, "relocation", False),
+        (True, "relocation", True),
+    ],
 )
-def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum):
+def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum, repair):
     from pathwm.data.memory_output import MemoryOutputEpisodes
     from experiments.memory_output import train, default_settings, load_model
     from tests.test_runs import equal_tree
@@ -236,6 +242,14 @@ def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum):
                     for t in range(3)
                 ]
             )
+        if repair:
+            from pathwm.models.memory_output import configure_recall_repair
+
+            configure_recall_repair(model)
+            with torch.no_grad():
+                history = model.observe_history(train_data.batch(range(8))["images"])
+            model.agent.memory.calibrate([history["final"].memory.values])
+            settings["recall_repair"] = "calibrated"
         result = train(
             model,
             train_data,

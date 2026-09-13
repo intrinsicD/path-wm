@@ -12,7 +12,13 @@ from torch.nn import functional as F
 from pathwm.data.memory_output import MemoryOutputEpisodes, image_labels, BACKGROUND
 from pathwm.evaluation.report import write_report
 from pathwm.io import Run, atomic_json, file_hash, seed_everything, state_hash
-from pathwm.models.memory_output import make_codec, build_model, load_model as load_model
+from pathwm.models.memory_output import (
+    make_codec,
+    build_model,
+    load_model as load_model,
+    configure_recall_repair,
+    frozen_tensors,
+)
 from pathwm.models.modalities import Observation
 
 
@@ -37,7 +43,7 @@ def weighted_error(image, target):
     )
 
 
-def objective(model, batch, reset):
+def objective(model, batch, reset, repair=False):
     history = model.observe_history(batch["images"])
     state = model.query(
         history["final"], batch["images"][:, -1], "reset" if reset else "ordinary"
@@ -50,7 +56,7 @@ def objective(model, batch, reset):
     write = factual_loss(stored, batch["labels"])
     pixels = weighted_error(output["image"], batch["target"]).mean()
     latent = model.agent.decoders["image"].latent_loss(output["features"], targets)
-    loss = facts + 0.5 * write + pixels + 0.1 * latent
+    loss = facts + (0.0 if repair else 0.5) * write + pixels + 0.1 * latent
     return loss, dict(
         factual_loss=float(facts.detach()),
         write_loss=float(write.detach()),
@@ -302,6 +308,23 @@ def train(
         decoder=state_hash(model.agent.decoders["image"].head),
         input_adapter=state_hash(model.agent.encoders["image"]),
     )
+    repair = bool(settings.get("recall_repair"))
+    fixed_values = {
+        k: v.detach().cpu().clone() for k, v in frozen_tensors(model).items()
+    }
+    if not resume:
+        atomic_json(
+            run.path / "initialization.json",
+            dict(
+                model_sha256=state_hash(model),
+                trainable_parameters=sum(
+                    p.numel() for p in model.parameters() if p.requires_grad
+                ),
+                trainable_names=[
+                    n for n, p in model.named_parameters() if p.requires_grad
+                ],
+            ),
+        )
     prior = (
         json.loads((run.path / "runtime.json").read_text())["training_seconds"]
         if resume
@@ -321,9 +344,13 @@ def train(
                 run.sample(len(training), settings["batch_size"]), device
             )
             optimizer.zero_grad(set_to_none=True)
-            loss, metrics = objective(model, batch, reset=bool(step % 2))
-            direct = factual_loss(
-                model.direct(model.direct_tokens(batch["images"])), batch["labels"]
+            loss, metrics = objective(model, batch, reset=bool(step % 2), repair=repair)
+            direct = (
+                loss.new_zeros(())
+                if repair
+                else factual_loss(
+                    model.direct(model.direct_tokens(batch["images"])), batch["labels"]
+                )
             )
             if not torch.isfinite(loss + direct):
                 raise ValueError("Nonfinite training loss")
@@ -392,6 +419,11 @@ def train(
             decoder=state_hash(model.agent.decoders["image"].head),
             input_adapter=state_hash(model.agent.encoders["image"]),
         )
+        all_frozen_unchanged = all(
+            torch.equal(v.detach().cpu(), fixed_values[k])
+            for k, v in frozen_tensors(model).items()
+        )
+        unchanged = unchanged and all_frozen_unchanged
         if not unchanged or not all(np.isfinite(v).all() for v in arrays.values()):
             raise RuntimeError("Frozen mutation or nonfinite evaluation output")
         atomic_json(
@@ -410,13 +442,16 @@ def train(
                 metrics=scores,
                 frozen_unchanged=unchanged,
                 frozen_hashes=frozen,
+                all_frozen_tensors_unchanged=all_frozen_unchanged,
                 limitations=[
                     "synthetic familiar tuples and motion; no unseen-combination claim"
                     if relocation
                     else "synthetic familiar factors, unseen combinations",
                     "fixed task; no general language",
                     "two supplied snapshots both retrieved; no search or learned write policy",
-                    "supervised write readout differs from independent direct encoder diagnostic",
+                    "frozen writer; stored logits use the adapting output head, not an independent probe"
+                    if repair
+                    else "supervised write readout differs from independent direct encoder diagnostic",
                 ],
             ),
         )
@@ -454,12 +489,19 @@ def main():
     parser.add_argument("--stop-after", type=int)
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--normalize-input", action="store_true")
+    parser.add_argument("--repair", choices=("identity", "calibrated"))
+    parser.add_argument("--development", action="store_true")
     parser.add_argument(
         "--curriculum", choices=("parity", "relocation"), default="parity"
     )
     args = parser.parse_args()
     if args.curriculum == "relocation" and not args.normalize_input:
-        parser.error("The relocation comparison requires --normalize-input")
+        if not args.repair:
+            parser.error("The relocation comparison requires --normalize-input")
+    if args.development and not args.repair:
+        parser.error("--development is scoped to recall repair")
+    if args.repair and args.check:
+        parser.error("Use --development for the bounded recall-repair check")
     seed_everything(args.seed)
     if torch.device(args.device).type == "cuda":
         free, total = torch.cuda.mem_get_info(args.device)
@@ -469,6 +511,73 @@ def main():
         index = torch.device(args.device).index or 0
         torch.cuda.set_per_process_memory_fraction(limit / total, index)
         torch.cuda.reset_peak_memory_stats(args.device)
+    if args.repair:
+        source = torch.load(args.weights, map_location="cpu", weights_only=True)
+        if source["settings"].get("curriculum") != "relocation" or source[
+            "settings"
+        ].get("recall_repair"):
+            parser.error("Repair requires an original balanced-relocation checkpoint")
+        model = configure_recall_repair(load_model(args.weights, args.device))
+        training = MemoryOutputEpisodes(
+            128, seed=17701 if args.development else 7701, curriculum="relocation"
+        )
+        validation = MemoryOutputEpisodes(
+            32, seed=17722 if args.development else 7722, curriculum="relocation"
+        )
+        test = MemoryOutputEpisodes(
+            64,
+            seed=17723 if args.development else 7723,
+            split="test",
+            curriculum="relocation",
+        )
+        calibration_start = perf_counter()
+        if args.repair == "calibrated":
+
+            @torch.no_grad()
+            def values():
+                for start in range(0, len(training), 16):
+                    batch = training.batch(range(start, start + 16), args.device)
+                    yield model.observe_history(batch["images"])["final"].memory.values
+
+            model.agent.memory.calibrate(values())
+        settings = dict(source["settings"])
+        settings.update(default_settings(args.seed))
+        settings.update(
+            {
+                k: source["settings"][k]
+                for k in ("width", "levels", "depth", "fusion_depth")
+            }
+        )
+        settings.update(
+            recall_repair=args.repair,
+            source_sha256=file_hash(args.weights),
+            objective="frozen writer; factor CE + foreground-weighted RGB MSE + 0.1 standardized feature MSE",
+            memory_calibration_data=training.identity,
+        )
+        if args.development:
+            settings.update(steps=16, wall_seconds=60)
+        calibration_seconds = perf_counter() - calibration_start
+        train(
+            model,
+            training,
+            validation,
+            test,
+            output=args.output,
+            settings=settings,
+            device=args.device,
+            resume=args.resume,
+            stop_after=args.stop_after,
+        )
+        atomic_json(
+            args.output / "resources.json",
+            dict(
+                peak_cuda_reserved_bytes=torch.cuda.max_memory_reserved(args.device)
+                if torch.device(args.device).type == "cuda"
+                else 0,
+                calibration_seconds=calibration_seconds,
+            ),
+        )
+        return
     codec = make_codec(weights=args.weights).to(args.device).eval()
     model = (
         build_model(codec, normalize_input=args.normalize_input).to(args.device).eval()

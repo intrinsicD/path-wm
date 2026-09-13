@@ -104,6 +104,76 @@ class FactHead(nn.Module):
         return self.output(query[:, 0])
 
 
+class CalibratedMemory(EpisodicMemory):
+    """Read-only affine calibration; raw storage and retrieval selection are intact."""
+
+    def __init__(self, width, capacity=4, retrieve_count=2):
+        super().__init__(capacity, retrieve_count)
+        self.register_buffer("mean", torch.zeros(1, 1, width))
+        self.register_buffer("std", torch.ones(1, 1, width))
+
+    @torch.no_grad()
+    def calibrate(self, training_values):
+        total = square = None
+        count = 0
+        for value in training_values:
+            if value.ndim != 4 or value.shape[-1] != self.mean.shape[-1]:
+                raise ValueError("Calibration needs [B,snapshots,tokens,width]")
+            flat = value.detach().flatten(0, 2).double()
+            if not len(flat) or not torch.isfinite(flat).all():
+                raise ValueError("Calibration needs nonempty finite training values")
+            total = flat.sum(0) if total is None else total + flat.sum(0)
+            square = (
+                flat.square().sum(0)
+                if square is None
+                else square + flat.square().sum(0)
+            )
+            count += len(flat)
+        if not count:
+            raise ValueError("Calibration needs training values")
+        mean = total / count
+        std = (square / count - mean.square()).clamp_min(0).sqrt().clamp_min(1e-4)
+        self.mean.copy_(mean[None, None])
+        self.std.copy_(std[None, None])
+
+    def read(self, state, trace=None, name="memory"):
+        raw = super().read(state, trace=trace, name=name)
+        result = (raw - self.mean) / self.std
+        if trace is not None:
+            trace[name + "_raw_values"] = raw.detach().cpu().clone()
+            trace[name + "_calibrated_values"] = result.detach().cpu().clone()
+        return result
+
+
+def configure_recall_repair(model):
+    """Only the native reader/workspace, factual head and image producer can learn."""
+    memory = model.agent.memory
+    if not isinstance(memory, CalibratedMemory):
+        model.agent.memory = CalibratedMemory(
+            model.agent.width, memory.capacity, memory.retrieve_count
+        ).to(model.agent.initial)
+    model.requires_grad_(False)
+    model.agent.thinker.requires_grad_(True)
+    model.facts.requires_grad_(True)
+    model.agent.decoders["image"].requires_grad_(True)
+    model.agent.decoders["image"].head.requires_grad_(False)
+    return model
+
+
+def frozen_tensors(model):
+    """All frozen named parameters AND buffers, including shared codec aliases."""
+    trainable = {
+        name
+        for name, p in model.named_parameters(remove_duplicate=False)
+        if p.requires_grad
+    }
+    return {
+        name: value
+        for name, value in model.state_dict().items()
+        if name not in trainable
+    }
+
+
 class MemoryOutput(nn.Module):
     def __init__(self, agent, teacher):
         super().__init__()
@@ -247,5 +317,7 @@ def load_model(path, device="cpu"):
     model = build_model(
         codec, settings["width"], settings.get("normalize_input", False)
     )
+    if settings.get("recall_repair"):
+        configure_recall_repair(model)
     model.load_state_dict(record["model"], strict=True)
     return model.to(device).eval()

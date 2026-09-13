@@ -65,3 +65,20 @@ Claude's public-only review accepts the bounded comparison with caveats: report
 learning curves and fix the std floor before evaluation; improved conditioning or
 faster fitting is a valid bounded outcome, not proof of erased-information recovery.
 No private code, data or measurements were exported.
+
+## Implementation checks
+
+Added a read-only calibration adapter and an opt-in `--repair identity|calibrated`
+path in the existing recipe. Older checkpoints and training defaults remain valid.
+The complete frozen parameter/buffer set is checked in addition to prior codec
+hashes.41 targeted tests and lint pass, including calibrated exact CPU training
+resume/reload, unchanged stored banks after optimization, positive gradients into
+all three intended trainable parts, and bank erasure/swapping causality. The RED
+checks were committed before implementation. The16-update development run takes
+2.801s training plus1.544s calibration,424MiB reserved; report structurally verified
+and comparison PNG inspected. No development accuracy used to tune the design.
+Claude explicitly accepts fixed-budget practical improvement without requiring
+either arm to converge asymptotically. Both public-only receipts are retained.
+
+Example formal command (change source7801 to7802 and arm identity to calibrated):
+`OMP_NUM_THREADS=2 .venv/bin/python -m experiments.memory_output --weights runs/memory_relocation_v1/seed_7801/weights.pt --repair identity --seed 8001 --output runs/recall_repair_v1/agent_7801_identity --device cuda:0`
