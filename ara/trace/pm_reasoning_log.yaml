@@ -1473,3 +1473,21 @@ entries:
     covered by exact-input counterfactuals without claiming a unique internal algorithm.
   - Older model/data/output/planning topics remain referenced and open; no new abandonment or contradiction
     inferred from this narrow failed screen.
+
+- turn: 2026-09-13_001#4
+  notes:
+  - Explicit Yes, please do that adopts O183 probing-first method; crystallize H51 as user-revised.
+    Probe seeds, normalization, budgets and thresholds were specified by the agent, not separately
+    selected by the researcher.
+  - N282 records observed fits and control passes separately from failed replicated state-stage screens.
+    O184/O185 remain staged; positive readout does not repair the native agent, and negative probe
+    results do not prove lost information.
+  - 'Do not describe70-96% pre-storage accuracy as robust preservation: only one individual state
+    probe passed and no state stage replicated across both probe seeds. Keep training accuracy and
+    seed spread visible.'
+  - All CPU probe replays use the identical GPU-extracted cache. They do not close the older raw
+    encoder CPU/GPU failure. Source agents unchanged; library constructor relocation preserves old
+    recipe imports.
+  - Claude accepted restricted positive recoverability after requesting capacity controls. No private
+    export or browser QA. Older general-generation, webcam, graph, dynamics and planning topics remain
+    open; no new abandonment or contradiction inferred.

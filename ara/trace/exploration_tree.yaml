@@ -4408,3 +4408,45 @@ tree:
   - N279
   - N278
   status: resolved
+
+- id: N281
+  type: decision
+  title: Probe frozen states before repairing the agent
+  provenance: user
+  timestamp: 2026-09-13T08:20+02:00
+  choice: Yes, please do that approves fitting diagnostic readers to the existing states to distinguish
+    positive recoverability from weak native readout, while freezing both relocation agents.
+  alternatives:
+  - Change the state updater or grow the encoder/decoder before diagnosing stored representations
+  evidence:
+  - O183
+  - N280
+  - docs/memory-probes-plan.md
+  also_depends_on:
+  - N280
+  status: resolved
+- id: N282
+  type: experiment
+  title: Location is partly recoverable before storage but remains near chance after recall
+  provenance: ai-executed
+  timestamp: 2026-09-13T08:20+02:00
+  result: Source248eef0. Four1536-update runs (agents7801/7802 x probes7901/7902),217.144s total,90MiB
+    GPU per fit; caches9.282s. All direct probes/native encoder readers100%. Pre-storage working-side96.09/82.03/77.34/74.22%;
+    all-state87.50/89.84/70.31/85.94%. Recall-working50/50.78/50.78/50.78%; recall-all50/49.22/51.56/51.56%.
+    Initial-side50 expected; randomized-label-side46.88-50%; all4 diagnostic-control screens pass.
+    Only one individual state reader passes full stage gate, no state stage passes both probe seeds.
+    Source checkpoints unchanged and stored bank entry equals pre-storage tensor.38 targeted tests;672
+    independent metric checks within1.25e-7; exact GPU768+768 ledger and all exported GPU probe replays.
+    CPU replay on SAME GPU cache <=1.55e-5 logits and categorical agreement throughout; old raw encoder
+    portability failure remains open. Two public-only Claude exchanges accept conditional positive-recoverability
+    scope. Structural reports, inspected stage PNG/SVG; no agent repair or promoted checkpoint.
+  evidence:
+  - ara/evidence/tables/memory_probes_2026-09-13.json
+  - runs/memory_probes_v1/report.html
+  - runs/memory_probes_v1/verification.json
+  - runs/memory_probes_v1/cache_audit.json
+  - docs/memory-probes-plan.md
+  also_depends_on:
+  - N281
+  - N280
+  status: resolved

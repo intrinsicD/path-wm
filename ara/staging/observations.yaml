@@ -3242,6 +3242,43 @@ observations:
   potential_type: heuristic
   bound_to:
   - N280
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H51
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O184
+  timestamp: 2026-09-13T08:20+02:00
+  provenance: ai-suggested
+  content: Under the fixed17,512-parameter two-attention-layer probes, location is partly recoverable
+    before storage (70.31-96.09%) but not successfully recovered after recall (49.22-51.56%). The
+    exact stored-bank equality confirms that at least some informative pre-storage representation
+    reaches memory. This supports prioritizing the learned recall/working-state path, while pre-storage
+    coding/readout also remains imperfect. Failed probes do not prove information destruction; different
+    input access, normalization and extraction difficulty prevent unique causal localization.
+  context: Four frozen-agent probe fits complete; every diagnostic control passes, but no state stage
+    meets the full screen in both probe seeds. Positive accessibility is conditional on this reader
+    and population. No researcher interpretation of these outcomes yet.
+  potential_type: claim
+  bound_to:
+  - N282
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O185
+  timestamp: 2026-09-13T08:20+02:00
+  provenance: ai-suggested
+  content: Next test training only memory reading/working-state formation and its output readout
+    against frozen stored states, with direct access to the same stored values as a control. Preserve
+    stage probes and predeclare objectives/budget. A scale-preserving or stronger diagnostic reader
+    can test sensitivity before making information-loss claims; do not enlarge visual encoders/decoders
+    based solely on these results.
+  context: Proposed narrow repair after the completed frozen-state screen; no native agent update,
+    sensitivity sweep or new experiment performed.
+  potential_type: heuristic
+  bound_to:
+  - N282
   promoted: false
   promoted_to: null
   crystallized_via: null

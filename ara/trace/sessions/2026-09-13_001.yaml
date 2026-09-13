@@ -2,9 +2,9 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T07:52+02:00
-  turn_count: 3
-  summary: Balanced relocation removes the data shortcut; direct readers succeed but agent location remains at chance in two seeds. Frozen-state diagnosis next.
+  last_turn: 2026-09-13T08:20+02:00
+  turn_count: 4
+  summary: Frozen probes recover some location before storage but stay near chance after recall; conditional accessibility established, native agent repair still pending.
 
 events_logged:
 - turn: 1
@@ -88,6 +88,37 @@ events_logged:
   provenance: ai-suggested
   summary: Probe frozen states before choosing readout repair or state-update supervision.
 
+- turn: 4
+  type: decision
+  id: N281
+  routing: direct
+  provenance: user
+  summary: Approve frozen-state probes before producer/readout changes.
+- turn: 4
+  type: heuristic
+  id: H51
+  routing: crystallized
+  provenance: user-revised
+  summary: O183 probing-first method adopted by explicit affirmation.
+- turn: 4
+  type: experiment
+  id: N282
+  routing: direct
+  provenance: ai-executed
+  summary: Four fits recover70-96% location before storage and49-52% after recall; no replicated state-stage pass.
+- turn: 4
+  type: observation
+  id: O184
+  routing: staged
+  provenance: ai-suggested
+  summary: Conditional accessibility gap motivates recall-path investigation without proving information destruction.
+- turn: 4
+  type: observation
+  id: O185
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose frozen-state recall/working-state repair and probe sensitivity control.
+
 ai_actions:
 - turn: 1
   action: Reconciled existing plans and saved evidence; recorded recommendation without model changes or new evaluation.
@@ -115,6 +146,16 @@ ai_actions:
     experiments/memory_output.py, tests/test_memory_output.py, docs/memory-output-plan.md,
     docs/project-state.md, ara/evidence/tables/memory_relocation_2026-09-13.json]
 
+- turn: 4
+  action: Added cache/probe recipe and causal capture checks; reused library checkpoint
+    construction;38 targeted tests, four probe fits,672 independent metric checks,
+    exact GPU resume/replay, report and stage plot; preserved frozen agents and scope.
+  provenance: ai-executed
+  files_changed: [experiments/memory_probes.py, experiments/memory_output.py,
+    pathwm/models/memory_output.py, tests/test_memory_probes.py,
+    docs/memory-probes-plan.md, docs/project-state.md,
+    ara/evidence/tables/memory_probes_2026-09-13.json]
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -123,9 +164,11 @@ key_context:
   excerpt: ok yes
 - turn: 3
   excerpt: Yes ok
+- turn: 4
+  excerpt: Yes, please do that
 
 open_threads:
-- 'N280/O182/O183: probe frozen states to separate unused-but-readable location from inadequate state learning; set probe budget/gates before execution.'
+- 'N282/O184/O185: pre-storage location partly readable but post-recall probes near chance; specify recall/working-state repair and consider probe sensitivity before information-loss claims.'
 - 'N278/N280: normalized CPU/GPU pixel differences exceed1e-4 despite exact GPU replay; one7801 rendered label now differs, factual labels agree. Numerical portability remains open.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and other-modality quality remain open.'
@@ -139,6 +182,7 @@ open_threads:
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased location information.'
-- 'O183: matched frozen-state probes proposed; no probe run yet.'
+- 'O184: partial pre-storage recoverability and weak post-recall accessibility under tested probe family; no unique mechanism identified.'
+- 'O185: frozen-state recall/working-state training proposed, with optional scale/capacity sensitivity checks; not executed.'
 - 'O164-O175: earlier curriculum, diagnosis and scoped capability interpretations retain their original provenance and closure status.'
 - 'O177/O178: coordination and state-grounding diagnostics remain staged; acknowledgment does not select their complete implementation.'

@@ -493,3 +493,13 @@
 - **Sensitivity**: High. Within-support relocation is weaker than unseen-tuple or natural-scene generalization; balanced training still fails the tested agent location screen.
 - **Code ref**: [paired data](../../../pathwm/data/memory_output.py), [recipe and controls](../../../experiments/memory_output.py), [frame-removal path](../../../pathwm/models/memory_output.py).
 - **Evidence**: N279/N280; [relocation runs](../../evidence/tables/memory_relocation_2026-09-13.json).
+
+## H51: Probe frozen intermediate states before changing their producer
+
+- **Rationale**: Train independent readers on cached, detached intermediate states using training-only calibration and matched data/budgets. Include an encoder positive control, causally uninformative initial-state control and randomized-label control. Positive readout establishes conditional accessibility; failure cannot establish information absence.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O183
+- **Sensitivity**: High. Equal parameter count and updates do not equalize extraction difficulty; report access differences, training fit and every seed.
+- **Code ref**: [probe recipe](../../../experiments/memory_probes.py), [state snapshots](../../../pathwm/models/memory_output.py), [checks](../../../tests/test_memory_probes.py).
+- **Evidence**: N281/N282; [frozen-state results](../../evidence/tables/memory_probes_2026-09-13.json).

@@ -139,8 +139,8 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: Memory-output calibration enables familiar recall. Balanced relocation removes the data shortcut but agent location remains at chance despite perfect direct readers;34 targeted tests, preserved failures and numerical limits.
-  turn_count: 3
-  events_count: 13
+  summary: Memory-output and balanced relocation screens fail location; frozen probes recover partial location before storage but near chance after recall.38 targeted tests, conditional findings and numerical limits preserved.
+  turn_count: 4
+  events_count: 18
   claims_touched: []
   open_threads: 10
