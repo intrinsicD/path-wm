@@ -313,3 +313,11 @@ in a `finally` block. In this GPU environment, `no_grad` alone left small numeri
 differences between otherwise identical frozen/joint states. This normalizes the
 recipe's inference contract without changing checkpoints or optimizer state. Direct
 model calls should use matched inference/trainability settings for bitwise comparisons.
+
+For fixed-checkpoint brightness sensitivity, add `--input-offset -16` (or `16`)
+to `--evaluate-only --test-seed ...`. Every observed RGB pixel is shifted in8-bit
+units; canonical targets and labels stay unchanged. Values that would clip are
+rejected. Data identity records the original image hash and exact transform. This
+option is rejected for training, and offset0 preserves prior data identities.
+Use predeclared offsets/seeds and report neutral versus shifted gates separately;
+these backgrounds do not test new semantic combinations or real-world robustness.

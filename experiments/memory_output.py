@@ -876,6 +876,12 @@ def main():
         help="Freeze native state and facts; train only image features",
     )
     parser.add_argument("--evaluate-only", action="store_true")
+    parser.add_argument(
+        "--input-offset",
+        type=int,
+        default=0,
+        help="Evaluation-only observed RGB offset in 8-bit units",
+    )
     parser.add_argument("--workspace-reference", type=Path)
     parser.add_argument("--reference-weight", type=float, default=0.0)
     parser.add_argument("--validation-seed", type=int)
@@ -885,6 +891,8 @@ def main():
         "--curriculum", choices=("parity", "relocation"), default="parity"
     )
     args = parser.parse_args()
+    if args.input_offset and not args.evaluate_only:
+        parser.error("Input offset is an evaluation-only override")
     if args.evaluate_only:
         if (
             args.repair
@@ -927,6 +935,7 @@ def main():
             seed=args.test_seed,
             split="test",
             curriculum=saved.get("curriculum", "parity"),
+            input_offset=args.input_offset,
         )
         evaluate_export(args.weights, data, output=args.output, device=args.device)
         return

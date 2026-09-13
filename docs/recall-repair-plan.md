@@ -1340,3 +1340,12 @@ ordinary/reset export predictions and factual invariance cover all128 histories.
 This bounds inspection overhead; it is not an exhaustive per-intermediate-tensor
 proof for every example. Default-off replay and objective/forward AST equality
 against2bb8bb9 are checked before formal evaluation.
+
+Implementation complete: nine RED transformation/CLI cases reproduced, all67
+relevant tests pass. Shifted-data export provenance and report-failure preservation
+verified. Eight training/evaluation function ASTs and model source remain unchanged
+from2bb8bb9; default datasets match original manifests. Preflight verifies all nine
+populations, clipping/inverse/color margins, paired ambiguity, unchanged checkpoints
+and exact-frame disjointness. Development evaluation completes with zero updates,
+structurally checked report and inspected panel. Claude reconciliation finds no
+material conceptual contradiction. No formal population scored before this commit.

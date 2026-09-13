@@ -44,13 +44,23 @@ def image_labels(images):
 
 
 class MemoryOutputEpisodes:
-    def __init__(self, pairs=128, *, seed=7701, split="train", curriculum="parity"):
+    def __init__(
+        self,
+        pairs=128,
+        *,
+        seed=7701,
+        split="train",
+        curriculum="parity",
+        input_offset=0,
+    ):
         if type(pairs) is not int or pairs < 1 or split not in ("train", "test"):
             raise ValueError("Positive pair count and train/test split required")
         if curriculum not in ("parity", "relocation"):
             raise ValueError("Unknown memory-output curriculum")
         if curriculum == "relocation" and pairs % 16:
             raise ValueError("Relocation requires complete cycles of16 selection pairs")
+        if type(input_offset) is not int or not -255 <= input_offset <= 255:
+            raise ValueError("Input offset must be an integer in [-255, 255]")
         self.curriculum = curriculum
         rng = np.random.default_rng(seed)
         images, labels, targets = [], [], []
@@ -91,6 +101,12 @@ class MemoryOutputEpisodes:
                 targets.append(target)
         self.images, self.targets = np.stack(images), np.stack(targets)
         self.labels = np.array(labels, dtype=np.int64)
+        source_images_hash = hashlib.sha256(self.images.tobytes()).hexdigest()
+        if input_offset:
+            shifted = self.images.astype(np.int16) + input_offset
+            if shifted.min() < 0 or shifted.max() > 255:
+                raise ValueError("Input offset would clip observed RGB values")
+            self.images = shifted.astype(np.uint8)
         self.identity = dict(
             schema="memory-output-v1"
             if curriculum == "parity"
@@ -103,6 +119,14 @@ class MemoryOutputEpisodes:
             targets_sha256=hashlib.sha256(self.targets.tobytes()).hexdigest(),
             labels_sha256=hashlib.sha256(self.labels.tobytes()).hexdigest(),
         )
+
+        if input_offset:
+            self.identity["input_transform"] = dict(
+                kind="additive-rgb-offset-v1",
+                offset_uint8=input_offset,
+                source_images_sha256=source_images_hash,
+                targets="unchanged canonical rendering",
+            )
 
     def shortcut_audit(self):
         """Empirical majority bounds over exact available inputs, not model scores."""
