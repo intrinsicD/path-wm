@@ -2233,3 +2233,51 @@ panel. No failed optimizer run was hidden. Ruff check/format pass. Two compact
 actual Claude exchanges complete, first-step gradient correction acknowledged;
 activation magnitude demonstrates use only, not causal necessity. Freeze source
 before formal runs; no shared renderer change or browser-policy workaround.
+
+## Producer refinement results
+
+Formal source c22f1e5. Both 1,536-update fits and all40 fresh35073/35074 evaluations
+completed. Each trained arm passes11/12 task cells, versus10/12 unchanged; raw4/4
+at100%. Both have zero cool image errors out of128 correlated ordinary/reset
+responses. Unchanged cool reset images score93.75%/90.625%; both continuations
+reach100%. The primary added-capacity benefit is unassessable because the control
+is at ceiling, not a demonstrated refinement win or a proof capacity never helps.
+
+Image repair and full repair remain false. Both arms retain images in8/12 cells
+under the fixed95% requirement; warm and texture fail on both fresh seeds. Refined
+warm reset images87.5%/93.75%, versus81.25%/93.75% control. Warm35073 also fails the
+original reset image/pair/relocation-pair task checks. Texture reset images93.75%
+both seeds for both arms. Clean and both mild-tint conditions have100% images.
+Factual logits are exactly unchanged across every mode in24 trained cells: warm35073
+ordinary facts93.75%, texture35074 ordinary/reset facts93.75%. Image-only training
+cannot repair those. The unchanged source itself misses texture retention on these
+fresh seeds (reset87.5%/93.75%); this is not evidence that continuation caused the
+whole shortfall. Warm35074 does regress from source100% to93.75% after either fit.
+
+Training cool reset images98.828125% control versus100% refined; warm93.75% both;
+texture100% control versus99.609375% refined. All refinement scales are active on the
+fixed training diagnostic (residual RMS0.003915–0.136701); activity does not establish
+causal necessity. Refinement adds17,024 parameters (75,152 vs58,128 total trainable).
+No branch, checkpoint or new threshold was selected after seeing confirmation.
+Keep the module optional; the primary test does not justify adopting added capacity.
+
+All58 distinct focused tests pass. Original objective, scoring, data and shared
+report renderer are unchanged; old default inference is intact. New refined exports
+strictly restore their architecture. Exact initial outputs/shared weights/RNG,
+identical full training caches and final sampler/RNG, frozen tensors,10,188 independent
+metrics and40 exact GPU reloads verified. Training89.427s, fit loop165.991s,
+evaluation89.370s, peak646MiB; disk/headroom floors respected. Two actual Claude
+conceptual reviews reconciled the first-step gradient correction and the distinction
+between activation and usefulness.44 reports structurally checked, development and
+overview figures inspected; prior browser URL limitation remains, no workaround.
+[Report](../runs/producer_refinement_v1/report.html),
+[verification](../runs/producer_refinement_v1/verification.json).
+
+Next: isolate warm/texture readout learning and the factual path under the corrected
+loss, rather than assuming more image capacity is necessary. A bounded factual+image
+head continuation against matched image-only training could test factual repair while
+keeping encoder, memory/state and image backend fixed. Declare fresh confirmation
+and unchanged scene retention/causal gates first. Current failures also show that
+passing one small rendering sample does not close robustness. Broad real imagery,
+learned reliability, independent upstream replication, CPU portability and general
+multimodal generation remain open.

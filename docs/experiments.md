@@ -388,3 +388,17 @@ training loss, never inference. Evaluation retains the original foreground-weigh
 metric, and the box run logs `foreground_rgb_loss` alongside its actual training loss.
 This task-specific option rejects live writer learning and output standardization;
 existing `--writer-learning frozen --image-only` remains available with the original loss.
+
+For a controlled image-producer capacity comparison, add `--refine-image` to the
+cached native mixed image-only path. This adds one residual MLP after attention at
+each image feature scale, before feature projection. Its last projection starts at
+zero, preserving the source's outputs and RNG state initially. Both existing producer
+weights and the added layers then train; factual/state/backend components stay frozen.
+Keep the same weighting policy and budget in the control, omitting `--refine-image`.
+This compares the chosen capacity and parameterization, not an intrinsic capacity limit.
+
+Refinement is opt-in and recorded as `producer_refinement` in settings. Standalone
+loading restores it strictly; a continuation inherits an already refined source and
+does not reinitialize its layers. Evaluation cannot add or remove it. It is currently
+scoped to cached native raw mixed image-only training, without output standardization
+or live writer training. General image generation is still a separate capability.

@@ -1,30 +1,34 @@
 # Current work
 
-**Recall shape weighting completed, 13 September:** rectangle-weighted image-only
-training passes12/12 task cells versus10/12 for matched continuation and unchanged
-source. Cool image errors10→5/128 (50% reduction); clean100%, texture retention2/2.
-Full repair remains false: strict all-scene retention9/12; cool reset image90.625–93.75%
-and one frozen warm factual score93.75% remain below95%.
-[Report](../runs/recall_shape_v1/report.html),
-[protocol/results](recall-repair-plan.md#recall-shape-weighting-results).
+**Producer refinement completed, 13 September:** extra training with the corrected
+loss gives100% cool-tint images on both fresh confirmation seeds, with or without
+added residual MLPs. The planned capacity-benefit test is unassessable at the control
+ceiling; no added-capacity claim. Both fits pass11/12 task cells versus10/12 unchanged.
+[Report](../runs/producer_refinement_v1/report.html),
+[protocol/results](recall-repair-plan.md#producer-refinement-results).
 
-The original foreground loss makes extra colored shape corners much cheaper than
-missing them. Added opt-in training weights covering the complete object rectangle;
-default training and evaluation metrics stay unchanged. No capacity change. Two matched
-1,536-update fits train58,128 image-producer parameters; factual/state/encoder/backend
-components remain exact. Correct-facts/wrong-image cool training cases fall24→12.
-The loss-policy effect is scoped; the unique remaining mechanism is not established.
+Full repair remains false: image and full retention8/12. Warm recall images87.5–93.75%
+with refinement (81.25–93.75% control), texture93.75% both; clean/mild tints100%.
+Warm/texture factual errors remain frozen, including93.75% responses. Texture misses
+also occur in the unchanged source on these new seeds; do not compare prior sample
+passes as proof of a new training regression. Warm35074 does regress after either fit.
 
-47 focused tests pass;40 exact GPU reloads and10,188 independent metric checks. Factual
-logits identical across all modes in24 trained cells. Training95.16s, peak646MiB;
-evaluation92.16s. Three actual Claude conceptual reviews reconciled;44 reports structurally
-verified and figures inspected. Prior browser local-file denial remains a QA limitation.
+Optional per-scale residual MLPs add17,024 parameters (75,152 vs58,128 trainable).
+Initial outputs/shared weights/RNG exact; old checkpoints/default inference preserved.
+All layers become active, which does not prove they are necessary. Keep refinement
+optional. The source [rectangle-loss improvement](../runs/recall_shape_v1/report.html)
+and earlier [texture comparison](../runs/texture_shape_v1/report.html) are preserved.
 
-Next: retain this loss improvement, isolate remaining cool image-producer capacity/shape
-learning and separately repair warm factual errors. Fresh confirmation required; current
-thresholds stay fixed. Real imagery, learned reliability, independent upstream runs,
-CPU portability and streaming remain open. Previous [texture comparison](../runs/texture_shape_v1/report.html)
-and [tint comparison](../runs/tint_readout_v1/report.html) are preserved.
+58 focused tests,10,188 independent metrics,40 exact GPU reloads; all factual logits
+unchanged in24 trained cells. Training89.43s, peak646MiB. Two actual Claude conceptual
+reviews reconciled;44 reports structurally verified and figures inspected. Prior
+browser local-file denial remains a QA limitation.
+
+Next: a controlled factual+image head continuation versus image-only learning under
+the corrected loss, targeting warm/texture readout failures with frozen encoder,
+state/memory and backend. Fresh confirmation and current thresholds required. General
+scene robustness, real imagery, learned reliability, upstream replication, CPU
+portability, streaming and general generative backends remain open.
 
 **Scene/lighting challenge and reporting repair completed, 13 September:** centered
 input passes12/40 attempted cells (neutral, temporal additive and RGB-channel
