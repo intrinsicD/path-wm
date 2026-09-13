@@ -1113,3 +1113,60 @@ The next proposed comparison is image-output-only learning on frozen final joint
 states versus matched continued joint learning, retaining factual and causal gates
 and using a new declared test. This is a proposed diagnostic, not a decided repair;
 no further training launched after this comparison.
+
+
+## Image-output continuation protocol — 13 September
+
+User adopted the proposed diagnostic. Hypothesis: further image-producer learning
+can repair residual shape output errors from frozen final joint states, without
+changing factual answers. Compare against continued joint adaptation as a practical
+training-policy contrast. Parameter count, coupled gradients and optimization
+cost differ by design; this does not isolate one mechanistic cause.
+
+Sources: writer_reader_v1/seed_8501_joint and seed_8502_joint, both previously explored
+and sharing the same upstream initialization and frozen codec. For each source,
+image-only versus joint continuation with optimizer seed8601/8602 respectively.
+Four NEW fits, identical within-pair source tensors, sampler, data and optimizer.
+Train128 pairs seed7701, validation32 pairs19072, fresh test64 pairs19073. Validate
+fresh test identity and exact-frame split disjointness before fits. Final1024updates,
+batch16, AdamWlr.001/wd.0001,clip1,360s per-fit cap,4GiB GPU cap/1GiB free headroom.
+Unchanged sources get evaluation-only reports on19073. Development16updates on
+train17701/validation19372/test19373, seed19601, max60s. No test-based selection,
+extra budget, capacity sweep or follow-up fit within this comparison.
+
+Only factor is trainability. New opt-in image-only configuration freezes updater,
+thinker and factual head; only the image feature producer learns. Joint continues
+updater+thinker+facts+image producer. Both retain frozen input encoders, image
+reconstruction backend, initial state, probes and calibration buffers. Both run the
+same live histories and alternating8 ordinary/8 reset loss examples per batch;
+no cache. Factual CE+weighted RGB MSE+.1 standardized feature MSE remains identical;
+CE contributes no gradient in image-only. No detached image targets enter inputs.
+Fresh optimizer state in both arms, not an exact continuation of the old optimizer.
+
+Primary gate: each arm's BOTH source cases pass the unchanged full task gates
+(ordinary/reset>=90% facts/images,>=80% selection/relocation pairs and swapped
+alternate accuracy,>=30-point causal erasure drops, pixel baseline gates). Separate
+image sufficiency/retention screen: each ordinary/reset image accuracy>=90%, no
+image decrease>2 points versus its unchanged source, joint facts decrease<=2 points.
+Image-only factual logits and workspace tensors must remain exactly unchanged on
+the same GPU; this is an implementation invariant, not evidence of learning.
+Report gains, shape errors, factual/image disagreements, feature/pixel loss curves
+and trainable counts. No superiority claim from both passing. Failure cannot prove
+information absent or rule out larger capacity/budget. Success is conditional on
+these two explored optimization trajectories, not independent-init replication.
+
+Essential RED checks: exact freeze/update and factual/workspace invariance, reject
+conflicting configuration, standalone trainability restoration and exact odd-step
+resume. Retain all default-off tests. Tiny development fit and structural report
+inspection before source commit/formal fits. Independently recompute every saved
+metric, audit paired initialization/sampling, original source immutability, frozen
+parameters AND buffers, native GPU export replay, detached inference bank provenance
+and replay/order equivalence. CPU numeric1e-4 and categorical portability audited
+separately before conclusions. Reuse renderer; browser QA unavailable, inspect PNGs.
+
+Claude public-only review accepted constant CE and requested explicit conditional
+scope, parameter/cost reporting, split-context gates and calibration checks. Adopted.
+A post-hoc doubled-budget suggestion is deferred: it cannot strengthen the declared
+fixed-budget claim and would require a fresh protocol/test. All frozen tensors and
+source workspace comparisons cover silent calibration drift. No private code/results
+are sent externally; local implementation review and tests remain necessary.

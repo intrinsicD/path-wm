@@ -280,6 +280,7 @@ def test_supervised_writes_and_frozen_decoder_have_intended_gradients():
         (True, "relocation", "frozen_writer"),
         (True, "relocation", "trainable_writer"),
         (True, "relocation", "joint_writer"),
+        (True, "relocation", "image_only"),
     ],
 )
 def test_training_resume_and_standalone_reload(
@@ -289,7 +290,7 @@ def test_training_resume_and_standalone_reload(
     from experiments.memory_output import train, default_settings, load_model
     from tests.test_runs import equal_tree
 
-    writer_case = repair in ("frozen_writer", "trainable_writer", "joint_writer")
+    writer_case = repair in ("frozen_writer", "trainable_writer", "joint_writer", "image_only")
     if writer_case:
         import experiments.memory_output as recipe
 
@@ -364,14 +365,16 @@ def test_training_resume_and_standalone_reload(
             configure_output_readout(
                 model,
                 "native",
-                train_writer=repair != "frozen_writer",
+                train_writer=repair not in ("frozen_writer", "image_only"),
+                image_only=repair == "image_only",
                 train_thinker=repair == "joint_writer",
             )
             settings.update(
                 readout_stage="native",
                 readout_context="mixed",
                 standardize_output=False,
-                writer_learning="frozen" if repair == "frozen_writer" else "trainable",
+                writer_learning="frozen" if repair in ("frozen_writer", "image_only") else "trainable",
+                image_only=repair == "image_only",
                 train_thinker=repair == "joint_writer",
             )
         result = train(
@@ -407,8 +410,9 @@ def test_training_resume_and_standalone_reload(
         assert all(r["memory_replay_verified"] == 1 for r in rows)
         loaded = load_model(tmp_path / "full/weights.pt")
         assert any(p.requires_grad for p in loaded.agent.updater.parameters()) == (
-            repair != "frozen_writer"
+            repair not in ("frozen_writer", "image_only")
         )
+        assert any(p.requires_grad for p in loaded.facts.parameters()) == (repair != "image_only")
         assert any(p.requires_grad for p in loaded.agent.thinker.parameters()) == (
             repair == "joint_writer"
         )
