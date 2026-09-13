@@ -168,3 +168,96 @@ Their existing state-only interfaces work mechanically, but their useful learned
 generation remains open. The next experiment should test a compact learned visual
 codec and held-out paired image/request production before adding those modalities
 or claiming higher-resolution generation.
+
+## Proposed extension after the Marigold V2 discussion
+
+13 September 2026. Proposal requested by Alex, who wants to preserve the current
+design and add extensions where needed. This section specifies a candidate; it is
+not an implemented generator or a predeclared training comparison. Existing run
+results and the pending factual-readout optimization comparison remain separate.
+
+The existing output boundary already supports this direction. Retain the modality
+encoders, multiscale processing, latent state, memory, dynamics and planner. Extend
+image output with an ordinary conditional feature-generator module, using the
+same residual-transformer pattern with separate output weights. Initially use our
+own encoder/decoder and existing weights. A pretrained generator/codec is an
+optional later comparison through the same state-conditioning boundary, not a
+replacement requirement for the agent.
+
+### Concrete output path
+
+The agent retrieves relevant memory into its workspace using its existing memory
+operations. Select the current, recalled or imagined state to render. Context
+contains those state tokens, the encoded request, masks, source/world-time metadata
+and output requirements such as resolution. Context preparation must preserve
+token detail; do not force everything into one pooled vector. The generator reads
+this context through learned cross-attention. It does not independently search
+the database or ingest target-image features during generation.
+
+Keep StateFeatureDecoder as the deterministic reference. The new route produces
+the same calibrated feature dictionary required by the chosen image head:
+
+`state/request context + noise -> conditional feature generator -> image head -> RGB`.
+
+Inside the generator, each noisy feature scale is projected into tokens with
+position and scale embeddings, processed by k residual transformer blocks, and
+conditioned on the workspace and generation progress. Cross-scale attention
+jointly updates the scales before projection back to their native channel counts.
+Every feature required by the head must be produced, including its detail input;
+no bypass from the current image encoder is permitted on the generation route.
+Start with the existing 64px feature layouts. Their present high-bandwidth detail
+control is not a compact codec; record its size and compare learned compression
+separately rather than claiming memory efficiency from the interface.
+
+### Candidate learning objective
+
+Use conditional flow matching as the first generative candidate. With the image
+encoder and calibration frozen, encode training target y into standardized feature
+pyramid z. Draw an independent noise pyramid epsilon and progress tau in [0,1].
+Form x_tau = (1-tau)*epsilon + tau*z and train the generator's velocity prediction
+v(x_tau, tau, context) toward z-epsilon, averaging normalized losses across scales.
+During sampling, start at noise and numerically integrate the learned field with
+context fixed, then undo feature calibration and decode. Targets enter training
+loss construction only. Joint processing learns correlations across the feature
+scales; independently sampled initial noise does not assert independent outputs.
+
+This is a proposed application of [Flow Matching](https://arxiv.org/abs/2210.02747)
+to our existing feature interface. The separation of image representations and
+conditional generation is supported by [Latent Diffusion](https://arxiv.org/abs/2112.10752).
+No single-pass guarantee follows from Marigold's pretrained task-specific result.
+The generation-progress variable tau and repeated generator evaluations must not
+advance world time or mutate observed memory. Sampling variation is not calibrated
+belief uncertainty, and inferred texture is not recovered evidence.
+
+### Development and comparison order
+
+1. Establish the image reconstruction floor on held-out images using our own
+   encoder/head. Continue their training if necessary before freezing a version
+   for generator targets. Encoder-to-decoder reconstruction needs no workspace
+   compression; this isolates codec limitations from state limitations.
+2. Freeze that codec and the upstream state/memory path. Train only the generator
+   and its context projections on paired states/requests/targets. Start with the
+   controlled recall task and unseen attribute combinations. Add real paired data
+   only where the observations and requests support the target; arbitrary COCO
+   photographs are useful for codec training but are not labeled memory episodes.
+3. Compare against the existing deterministic route and a matched-capacity direct
+   regression control. Assess image fidelity separately from correct entity,
+   attributes, arrangement and time. Hold the sampling seed fixed while changing
+   state, memory or request; erase/shuffle each source and include histories with
+   identical final observations but different correct recalled outputs. Where
+   multiple images are valid, score specified properties across seeds rather than
+   insisting on one exact pixel target. No target input may reach inference.
+4. If correct content is inaccessible to diagnostic readers of the frozen state,
+   investigate upstream state/memory preservation before expanding the generator.
+   If it is recoverable but generation fails, investigate conditioning and output
+   learning. A failed diagnostic reader alone does not prove information loss.
+5. Profile actual peak memory, latency and checkpoint/disk use before increasing
+   resolution or capacity. Fix data splits, numeric gates, seeds, parameter counts,
+   update/sample budgets and a local-GPU headroom floor before any formal run.
+   Review that bounded protocol with Claude under the existing export policy.
+
+Reconstruction, latent prediction and state-faithful generation remain distinct
+checks. A new generator does not itself repair the previous factual-readout
+failure, missing visual memories or learned world dynamics. Text can retain its
+autoregressive output path; audio/video can later receive their own generators
+under the shared conditioning contract, with separate timing/coherence objectives.

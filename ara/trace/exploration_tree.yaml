@@ -5480,3 +5480,19 @@ tree:
   also_depends_on:
   - N271
   - N273
+- id: N331
+  type: decision
+  title: Preserve the agent design while considering necessary output extensions
+  provenance: user
+  timestamp: 2026-09-13T23:45+02:00
+  choice: User requests an exact proposal and explicitly wants to keep the existing design, allowing
+    extensions where needed. No particular new generator or pretrained backend is selected.
+  alternatives:
+  - Replace the overall agent architecture
+  evidence:
+  - 'User message: I want to keep my design but if it needs extension I would like to add it.'
+  - docs/image-output-plan.md#proposed-extension-after-the-marigold-v2-discussion
+  also_depends_on:
+  - N330
+  - N273
+  status: resolved

@@ -139,10 +139,10 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: 'Marigold V2 reviewed: pretrained task-specific latent regression supports an output-interface
-    direction, not arbitrary state-to-image sufficiency. No model changes; factual-readout negative
-    result and lower-rate proposal remain open.'
-  turn_count: 22
-  events_count: 120
+  summary: User wants to preserve the agent design. Proposed an optional own conditional multiscale
+    feature generator, with codec/state separation and grounding controls; no model implementation
+    or training. Prior factual-readout repair remains open.
+  turn_count: 23
+  events_count: 122
   claims_touched: []
-  open_threads: 11
+  open_threads: 12

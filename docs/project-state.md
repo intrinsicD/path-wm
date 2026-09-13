@@ -1,5 +1,12 @@
 # Current work
 
+**Output extension proposed, 13 September:** preserve the agent design and add an
+optional conditional image-feature generator using residual transformers per scale
+and cross-scale attention. Start with our own encoder/decoder; pretrained output
+components remain an optional comparison. [Concrete proposal](image-output-plan.md#proposed-extension-after-the-marigold-v2-discussion).
+No generator implementation or new training run yet; the factual-readout result
+and pending optimization comparison below remain separate.
+
 **Factual readout comparison completed, 13 September:** the proposed joint continuation
 fails its declared benefit. Warm/texture factual errors increase10→14/512 correlated
 responses. Both fits and unchanged source pass12/12 task gates on fresh64-history cells,

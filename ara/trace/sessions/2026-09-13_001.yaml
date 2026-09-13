@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T23:35+02:00
-  turn_count: 22
-  summary: 'Marigold V2 reviewed: pretrained task-specific latent regression supports an output-interface
-    direction, not arbitrary state-to-image sufficiency. No model changes; factual-readout negative
-    result and lower-rate proposal remain open.'
+  last_turn: 2026-09-13T23:45+02:00
+  turn_count: 23
+  summary: User wants to preserve the agent design. Proposed an optional own conditional multiscale
+    feature generator, with codec/state separation and grounding controls; no model implementation
+    or training. Prior factual-readout repair remains open.
 
 events_logged:
 - turn: 1
@@ -795,6 +795,25 @@ events_logged:
     capable generative backend is a plausible extension; decoder-compatible representation, detailed
     state information, output supervision and causal content checks remain necessary. A compact adapter
     alone is not guaranteed sufficient; novel sampling does not recover unrecorded evidence.
+- turn: 23
+  type: decision
+  id: N331
+  routing: direct
+  provenance: user
+  summary: Preserve existing architecture and propose additions where needed; no generator/backbone
+    selection.
+- turn: 23
+  type: observation
+  id: O222
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose an optional conditional feature generator using residual transformer processing
+    per scale, cross-attention to state/request context, and cross-scale fusion. Start with the existing
+    own-codec feature interface and weights; keep deterministic StateFeatureDecoder as reference.
+    Conditional flow matching supplies a candidate training objective and iterative sampling; generation
+    progress is separate from world time. Establish held-out codec reconstruction, freeze codec/upstream
+    state, compare matched-capacity direct regression and state-faithful output under interventions,
+    then scale only after measured GPU profiling. Pretrained output components remain optional.
 
 ai_actions:
 - turn: 1
@@ -1110,6 +1129,20 @@ ai_actions:
   - ara/trace/sessions/2026-09-13_001.yaml
   - ara/trace/sessions/session_index.yaml
   - ara/trace/pm_reasoning_log.yaml
+- turn: 23
+  action: Inspected current multiscale/state/output interfaces and read primary Flow Matching and
+    Latent Diffusion abstracts. Wrote a concrete own-design extension proposal with target routing,
+    objectives, controls and unresolved formal-run choices. No model code, weights, training, benchmark
+    or Claude review changed.
+  provenance: ai-executed
+  files_changed:
+  - docs/image-output-plan.md
+  - docs/project-state.md
+  - ara/trace/exploration_tree.yaml
+  - ara/staging/observations.yaml
+  - ara/trace/sessions/2026-09-13_001.yaml
+  - ara/trace/sessions/session_index.yaml
+  - ara/trace/pm_reasoning_log.yaml
 
 claims_touched: []
 key_context:
@@ -1189,6 +1222,9 @@ key_context:
 - turn: 22
   excerpt: 'User: Does this mean that we just need to train a latent transition to get any image output
     we want, unless we have not trained on that data?'
+- turn: 23
+  excerpt: User asks exactly what to add while preserving their model design. Proposed own conditional
+    feature generator; pretrained output fallback remains optional.
 
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate;
@@ -1217,6 +1253,9 @@ open_threads:
 - 'N330/O221: Marigold-style transfer motivates testing state-conditioned generation with a pretrained
   backend; faithful remembered content, decoder capacity and local GPU feasibility remain untested.
   This inquiry does not adopt the pending lower-rate experiment.'
+- 'N331/O222: conditional multiscale feature generator proposed; own-codec fidelity, state grounding,
+  data/budgets and public-method review needed before a formal run. User has not selected flow matching
+  or a pretrained replacement.'
 
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher
@@ -1261,3 +1300,5 @@ ai_suggestions_pending:
   repair assumed.'
 - 'O221: conditional-generation interpretation of Marigold V2 remains proposed, with no backend selection
   or implementation commitment.'
+- 'O222: concrete multiscale conditional-flow generator proposal awaits architecture selection; draft
+  documentation alone does not constitute adoption.'

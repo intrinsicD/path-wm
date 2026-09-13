@@ -3908,3 +3908,25 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O222
+  timestamp: 2026-09-13T23:45+02:00
+  provenance: ai-suggested
+  content: Propose an optional conditional feature generator using residual transformer processing
+    per scale, cross-attention to state/request context, and cross-scale fusion. Start with the existing
+    own-codec feature interface and weights; keep deterministic StateFeatureDecoder as reference.
+    Conditional flow matching supplies a candidate training objective and iterative sampling; generation
+    progress is separate from world time. Establish held-out codec reconstruction, freeze codec/upstream
+    state, compare matched-capacity direct regression and state-faithful output under interventions,
+    then scale only after measured GPU profiling. Pretrained output components remain optional.
+  context: 'Concrete draft added to docs/image-output-plan.md and linked from project-state. User
+    preference is preserved; proposal is not implementation, a selected experimental protocol, or
+    proof of local quality/resource feasibility. Sources: https://arxiv.org/abs/2210.02747 and https://arxiv.org/abs/2112.10752.'
+  potential_type: architecture
+  bound_to:
+  - N331
+  - N330
+  - N273
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
