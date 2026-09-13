@@ -1987,3 +1987,28 @@ this smaller matrix, not another80-cell comparison. Actual Claude generic review
 requested a matched continuation already present; correction sent for reconciliation.
 Adopt condition-level diagnostics, absolute-error reporting and diagnostic-only scope.
 Receipts: runs/reviews/continuation_2026-09-11/texture-*-public-*.
+
+Development review:7 new RED cases reproduced missing scene diagnostics. Added the
+ordered block artifact and standard report table. Actual Claude acknowledged the
+existing continuation arm and withdrew its redundant third-arm request. It accepts
+exact quartet differences without unsupported effective sample sizes. Residual wording
+is narrowed locally: continuation versus unchanged measures that retained-mixture
+continuation, not a data-independent pure optimization effect.
+
+The first tiny GPU development reached16 updates but then exposed a diagnostic-only
+CPU/CUDA rounding mismatch in reconstructed target floats. Preserve the failed run;
+repair alignment validation to tolerate only float normalization rounding while still
+checking original block hashes and labels exactly. Add regression coverage before
+retrying development. This changes no training objective or held-out scoring.
+
+Implementation verified:73-case CPU suite had72 behavioral passes and one test API
+mistake (renderer returns a Path, not HTML); corrected. New roundoff RED regression
+failed exact float comparison as intended. All9 focused checks now pass, including
+exact centered-scene resume, all new diagnostics and1/255 target corruption rejection;
+74 distinct relevant cases pass across this iteration. Repeated16-update GPU development
+completed after the1e-7 absolute normalization tolerance; original uint8 block hashes
+remain exact. Original failed development is retained with an explicit failure report.
+Standard reports structurally verified; development example panel inspected. Supported
+browser runtime initialized but URL policy blocked local-file navigation; no workaround.
+Browser QA unavailable. Development does not establish capability. Source is now frozen
+for the two fits and40 confirmation cells; thresholds and budgets unchanged.

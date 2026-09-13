@@ -334,6 +334,53 @@ def score(arrays, modes, *, relocation=False):
     return result
 
 
+def training_scene_scores(data, arrays):
+    """Describe ordered training blocks; these scores never select or gate a run."""
+    augmentation = data.identity.get("input_augmentation", {})
+    if augmentation.get("kind") != "whole-history-scenes-v1":
+        return None
+    source = augmentation["source_data"]
+    scenes = augmentation["scenes"]
+    size = source["pairs"] * 2
+    if not scenes or size % 4 or size * len(scenes) != len(data):
+        raise ValueError("Scene block population does not match provenance")
+    if any(len(a) != len(data) for a in arrays.values()):
+        raise ValueError("Training prediction population is not aligned")
+    if not np.array_equal(arrays["labels"], data.labels):
+        raise ValueError("Training labels are not aligned")
+    blocks = []
+    for i, scene in enumerate(scenes):
+        sl = slice(i * size, (i + 1) * size)
+        for name in ("labels", "targets"):
+            expected = source[name + "_sha256"]
+            if (
+                hashlib.sha256(getattr(data, name)[sl].tobytes()).hexdigest()
+                != expected
+            ):
+                raise ValueError("Training block labels or targets are not aligned")
+        target = data.batch(range(i * size, (i + 1) * size))["target"].numpy()
+        # CUDA and CPU division by 255 can differ by one float32 rounding step.
+        # Original uint8 target hashes above remain exact.
+        if not np.allclose(arrays["target"][sl], target, atol=1e-7, rtol=0):
+            raise ValueError("Training target predictions are not aligned")
+        labels = torch.as_tensor(arrays["labels"][sl])
+        metrics = {}
+        for mode in ("ordinary", "reset"):
+            metrics[mode] = {}
+            for kind, prediction in (
+                ("factual", fact_labels(torch.as_tensor(arrays[mode + "_logits"][sl]))),
+                ("image", image_labels(torch.as_tensor(arrays[mode + "_image"][sl]))),
+            ):
+                correct = prediction == labels
+                metrics[mode][kind + "_accuracy"] = float(correct.all(1).float().mean())
+                for j, factor in enumerate(("color", "shape", "side")):
+                    metrics[mode][f"{kind}_{factor}_accuracy"] = float(
+                        correct[:, j].float().mean()
+                    )
+        blocks.append(dict(block=i, scene=scene, examples=size, metrics=metrics))
+    return dict(scope="training diagnostics only; not a held-out gate", blocks=blocks)
+
+
 def passes(metrics):
     for mode in ("ordinary", "reset"):
         m = metrics[mode]
@@ -719,6 +766,9 @@ def train(
             np.savez_compressed(
                 run.path / "training_predictions.npz", **training_arrays
             )
+            scene_scores = training_scene_scores(training, training_arrays)
+            if scene_scores is not None:
+                atomic_json(run.path / "training_scene_fit.json", scene_scores)
         atomic_json(
             run.path / "result.json",
             dict(

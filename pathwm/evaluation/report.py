@@ -1249,6 +1249,39 @@ def render_report(directory):
             + escape(result_path.read_text())
             + "</pre></details></section>"
         )
+    scene_fit = directory / "training_scene_fit.json"
+    if scene_fit.exists():
+        training = json.loads(scene_fit.read_text())
+        parts.append(
+            "<section><h2>Training fit by scene</h2><p>Training diagnostics only; "
+            "not a held-out gate. Duplicate conditions retain their separate block "
+            "indices. Accuracy is a fraction from 0 to 1.</p>"
+            '<div class="table"><table><tr><th>Block / scene parameters</th>'
+            "<th>Histories</th><th>Query</th><th>Facts</th><th>Image</th>"
+            "<th>Factual shape</th><th>Image shape</th></tr>"
+        )
+        for block in training["blocks"]:
+            label = escape(
+                str(block["block"]) + " / " + json.dumps(block["scene"], sort_keys=True)
+            )
+            for mode, scores in block["metrics"].items():
+                cells = "".join(
+                    f"<td>{escape(str(scores[k]))}</td>"
+                    for k in (
+                        "factual_accuracy",
+                        "image_accuracy",
+                        "factual_shape_accuracy",
+                        "image_shape_accuracy",
+                    )
+                )
+                parts.append(
+                    f"<tr><td>{label}</td><td>{escape(str(block['examples']))}</td><td>{escape(mode)}</td>{cells}</tr>"
+                )
+        parts.append(
+            "</table></div><details><summary>Exact training scene scores</summary><pre>"
+            + escape(scene_fit.read_text())
+            + "</pre></details></section>"
+        )
     comparison_panel = directory / "comparison.png"
     if comparison_panel.exists():
         panel = (

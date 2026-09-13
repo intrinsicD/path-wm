@@ -499,13 +499,17 @@ def test_training_resume_and_standalone_reload(
         import json
 
         scene_fit = json.loads((tmp_path / "full/training_scene_fit.json").read_text())
-        resumed_fit = json.loads((tmp_path / "resume/training_scene_fit.json").read_text())
+        resumed_fit = json.loads(
+            (tmp_path / "resumed/training_scene_fit.json").read_text()
+        )
         assert scene_fit == resumed_fit
         assert len(scene_fit["blocks"]) == 3
         aggregate = json.loads((tmp_path / "full/training_fit.json").read_text())
         for mode in ("ordinary", "reset"):
             for metric in ("factual_accuracy", "image_accuracy"):
-                assert sum(b["metrics"][mode][metric] for b in scene_fit["blocks"]) / 3 == pytest.approx(aggregate[mode][metric])
+                assert sum(
+                    b["metrics"][mode][metric] for b in scene_fit["blocks"]
+                ) / 3 == pytest.approx(aggregate[mode][metric])
     if repair == "mixed_readout":
         import json
 
