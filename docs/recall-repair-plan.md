@@ -1793,3 +1793,10 @@ Centering remains opt-in. Broad learned robustness, independent upstream runs an
 real recordings remain open. Five coverage-reporting tests now fail informatively:
 missing pure range API and rejected exports incorrectly entering model evaluation.
 The following implementation is a reporting/validity repair, not a perception fix.
+
+Coverage implementation: pure per-frame range inspection shares the exact centering
+computation with strict forward validation. Normal exports save input_coverage.json;
+any rejected history yields completed result/gate-false/task-unscored, zero model
+queries and no predictions. Report failure preserves that completed result. Five
+new tests pass;45 focused checks including accepted exports, prior centering and
+scene tests pass. No renderer change or clipping/fallback policy was introduced.

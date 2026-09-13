@@ -35,7 +35,7 @@ class PixelMedianCentering(nn.Module):
         self.base, self.code_width = base, base.code_width
         self.register_buffer("reference", reference.reshape(1, 1, 3, 1, 1))
 
-    def forward(self, observation, **kwargs):
+    def _centered(self, observation):
         x, _, valid = observation_values(observation)
         if x.ndim != 5 or x.shape[2] != 3 or not x.is_floating_point():
             raise ValueError("Centering expects floating RGB [B,T,C,H,W]")
@@ -47,9 +47,24 @@ class PixelMedianCentering(nn.Module):
         ]
         median = median[..., None, None]
         centered = x - median + self.reference
-        if any(((v[valid] < 0) | (v[valid] > 1)).any() for v in (x, centered)):
-            raise ValueError("Input centering would exceed the valid RGB range")
+        in_range = (
+            ((x >= 0) & (x <= 1) & (centered >= 0) & (centered <= 1)).flatten(2).all(-1)
+        ) | ~valid
         centered = centered.masked_fill(~valid[..., None, None, None], 0)
+        return centered, in_range
+
+    def range_validity(self, observation):
+        """Inspect [B,T] range validity without calling the encoder or changing state.
+
+        Masked frames are ignored. This is deterministic input validation, not a
+        confidence estimate; valid nonfinite inputs still raise their original error.
+        """
+        return self._centered(observation)[1]
+
+    def forward(self, observation, **kwargs):
+        centered, in_range = self._centered(observation)
+        if not in_range.all():
+            raise ValueError("Input centering would exceed the valid RGB range")
         return self.base(observation.derive(centered), **kwargs)
 
 

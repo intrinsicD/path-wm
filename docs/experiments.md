@@ -347,5 +347,10 @@ histories. This requires the relocation curriculum saved in the source checkpoin
 and cannot be combined with `--input-offset`. `--center-input` remains optional.
 Background masks are used only by the renderer, never as model inputs. Range
 rejection is a failure of supported coverage; do not omit rejected examples from
-claims of accuracy. The current generic export raises on rejected inputs, while
-the declared challenge records coverage failures separately.
+claims of accuracy. Centered exports preflight every frame and write
+`input_coverage.json`. If any complete history fails the range check, the recipe
+finishes a coverage-failed report with `task_scored: false`; it runs no model
+queries and produces no predictions or accepted-subset accuracy. Valid populations
+retain the normal evaluation path. The encoder's strict forward guard still
+rejects out-of-range values; this reporting behavior is not a fallback policy or
+learned confidence estimate.

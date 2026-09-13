@@ -766,8 +766,30 @@ def center_from_training(model, training):
     )
 
 
+def centering_coverage(encoder, data, device, batch_size=16):
+    """Preflight every observed frame; never select an easier subset for scoring."""
+    validity = []
+    for start in range(0, len(data), batch_size):
+        x = data.batch(range(start, min(start + batch_size, len(data))), device)[
+            "images"
+        ]
+        times = torch.arange(x.shape[1], device=device).float().expand(len(x), -1)
+        validity.append(encoder.range_validity(Observation(x, times)).cpu())
+    valid = torch.cat(validity)
+    return dict(
+        kind="centering-range-v1",
+        attempted_histories=len(data),
+        accepted_histories=int(valid.all(1).sum()),
+        attempted_frames=valid.numel(),
+        accepted_frames=int(valid.sum()),
+        coverage=float(valid.all(1).float().mean()),
+        valid_frames=valid.tolist(),
+        meaning="Deterministic RGB range validity; not learned confidence",
+    )
+
+
 def evaluate_export(weights, data, *, output, device="cpu", center_input=False):
-    """Score an unchanged export with separate training and evaluation identities."""
+    """Score an unchanged export; return None for a completed coverage failure."""
     weights, output = Path(weights).resolve(), Path(output)
     output.mkdir(parents=True, exist_ok=False)
     atomic_json(
@@ -830,6 +852,60 @@ def evaluate_export(weights, data, *, output, device="cpu", center_input=False):
         )
         (output / "recipe.py").write_text(Path(__file__).read_text())
         (output / "metrics.jsonl").write_text("")
+        if center_input:
+            coverage = centering_coverage(model.agent.encoders["image"], data, device)
+            atomic_json(output / "input_coverage.json", coverage)
+            if coverage["accepted_histories"] != len(data):
+                if (
+                    state_hash(model) != model_hash
+                    or file_hash(weights) != checkpoint_hash
+                ):
+                    raise RuntimeError("Coverage inspection mutated the source model")
+                atomic_json(
+                    output / "runtime.json",
+                    dict(
+                        training_seconds=0.0,
+                        evaluation_seconds=perf_counter() - started,
+                    ),
+                )
+                atomic_json(
+                    output / "resources.json",
+                    dict(
+                        peak_cuda_reserved_bytes=torch.cuda.max_memory_reserved(device)
+                        if torch.device(device).type == "cuda"
+                        else 0,
+                        training_performed=False,
+                    ),
+                )
+                atomic_json(
+                    output / "result.json",
+                    dict(
+                        completed=True,
+                        evaluation_only=True,
+                        step=0,
+                        gate=False,
+                        task_scored=False,
+                        coverage=coverage["coverage"],
+                        checkpoint_sha256=checkpoint_hash,
+                        evaluation_scope=(
+                            f"Input coverage failed: {coverage['accepted_histories']}/"
+                            f"{len(data)} histories pass centering range checks. Task not scored; "
+                            "no model queries, fabricated predictions or accepted-only accuracy. "
+                            "See input_coverage.json for per-frame validity. Zero optimizer updates."
+                        ),
+                    ),
+                )
+                completed = True
+                atomic_json(
+                    output / "status.json",
+                    dict(result="completed", report="pending", step=0),
+                )
+                write_report(output)
+                atomic_json(
+                    output / "status.json",
+                    dict(result="completed", report="structural-only", step=0),
+                )
+                return None
         modes = [
             "ordinary",
             "ordinary_no_bank",
