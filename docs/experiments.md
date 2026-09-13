@@ -376,3 +376,15 @@ Scene-augmented native readout runs also save `training_scene_fit.json` and disp
 training joint/shape accuracy per ordered scene block in their ordinary report.
 Repeated scene blocks remain separate. These diagnostics do not change held-out
 metrics or capability gates; target/source alignment is checked before scoring.
+
+For the controlled single-object shape-loss diagnostic, add `--image-only
+--image-weighting box` to native raw mixed scene training. This uses cached frozen
+states and trains only the image feature producer; the factual head and image backend
+stay frozen. Weight10 covers the target foreground's whole bounding rectangle, including
+empty shape corners; weight1 applies outside. Blank targets use uniform weights. Each
+policy normalizes by its own weight sum. The default remains `foreground`; explicitly
+use `--image-weighting foreground` for a matched control. Target masks affect only the
+training loss, never inference. Evaluation retains the original foreground-weighted
+metric, and the box run logs `foreground_rgb_loss` alongside its actual training loss.
+This task-specific option rejects live writer learning and output standardization;
+existing `--writer-learning frozen --image-only` remains available with the original loss.

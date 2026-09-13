@@ -1,30 +1,30 @@
 # Current work
 
-**Texture continuation completed, 13 September:** texture training passes10/12
-fresh task cells versus8/12 for matched continuation and unchanged source. Texture
-errors fall34→8 across256 correlated responses (76.47% reduction); clean accuracy
-stays100%. Full repair still fails: cool recall image accuracy78.125–81.25%, texture
-retention1/2, all-scene retention7/12. One deliberately selected difficult checkpoint;
-no independent replication claim. [Report](../runs/texture_shape_v1/report.html),
-[protocol/results](recall-repair-plan.md#texture-continuation-results).
+**Recall shape weighting completed, 13 September:** rectangle-weighted image-only
+training passes12/12 task cells versus10/12 for matched continuation and unchanged
+source. Cool image errors10→5/128 (50% reduction); clean100%, texture retention2/2.
+Full repair remains false: strict all-scene retention9/12; cool reset image90.625–93.75%
+and one frozen warm factual score93.75% remain below95%.
+[Report](../runs/recall_shape_v1/report.html),
+[protocol/results](recall-repair-plan.md#recall-shape-weighting-results).
 
-Added per-scene training diagnostics to the normal recipe/report and repaired a
-CPU/CUDA target-rounding alignment check. Two equal1,536-update fits change only67,032
-output parameters; frozen components remain exact. Cool training still has46 correct
-factual answers with incorrect rendered shapes, so the next target is recall image
-feature production and its loss/capacity, not an assumed encoder failure.
+The original foreground loss makes extra colored shape corners much cheaper than
+missing them. Added opt-in training weights covering the complete object rectangle;
+default training and evaluation metrics stay unchanged. No capacity change. Two matched
+1,536-update fits train58,128 image-producer parameters; factual/state/encoder/backend
+components remain exact. Correct-facts/wrong-image cool training cases fall24→12.
+The loss-policy effect is scoped; the unique remaining mechanism is not established.
 
-74 relevant tests pass;40 exact GPU reloads and10,188 independent metric checks.
-Training197.99s, peak646MiB; evaluation189.83s. Two actual Claude conceptual reviews
-reconciled, private implementation checked locally.45 reports structurally verified;
-figures inspected. Browser URL policy blocked local-file QA; no workaround attempted.
-Failed development preserved with a failure report, successful rerun separately saved.
+47 focused tests pass;40 exact GPU reloads and10,188 independent metric checks. Factual
+logits identical across all modes in24 trained cells. Training95.16s, peak646MiB;
+evaluation92.16s. Three actual Claude conceptual reviews reconciled;44 reports structurally
+verified and figures inspected. Prior browser local-file denial remains a QA limitation.
 
-Next: diagnose recall shape loss/gradients before a new controlled producer intervention;
-preserve clean/raw retention and use fresh confirmation. General perception, learned
-reliability, independent upstream runs, real recordings, CPU portability and streaming
-remain open. Previous tint evidence remains in its [report](../runs/tint_readout_v1/report.html)
-and the active plan. Preserve completed runs and the3GiB disk floor.
+Next: retain this loss improvement, isolate remaining cool image-producer capacity/shape
+learning and separately repair warm factual errors. Fresh confirmation required; current
+thresholds stay fixed. Real imagery, learned reliability, independent upstream runs,
+CPU portability and streaming remain open. Previous [texture comparison](../runs/texture_shape_v1/report.html)
+and [tint comparison](../runs/tint_readout_v1/report.html) are preserved.
 
 **Scene/lighting challenge and reporting repair completed, 13 September:** centered
 input passes12/40 attempted cells (neutral, temporal additive and RGB-channel

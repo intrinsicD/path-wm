@@ -2134,3 +2134,48 @@ Three compact actual Claude reviews complete, with target-supervision leakage an
 intervention-scope corrections acknowledged. The denominator shorthand in its final
 reply is read only for equal box weights, not the foreground10:1 formula; numerical
 reference checks remain authoritative. No private source/data/results were exported.
+
+## Recall shape weighting results
+
+Formal source0287a24. Both1,536-update fits and all40 fresh33073/33074 evaluations
+completed. Box weighting passes12/12 task cells; matched foreground continuation and
+unchanged source each pass10/12. Cool image errors5/128 vs10/128, a50% reduction with
+no regression in the four paired image accuracies; the declared benefit passes.
+Ordinary cool images are100%; reset cool images90.625%/93.75%, versus84.375%/84.375%
+for continuation and81.25%/81.25% unchanged. These are correlated familiar synthetic
+responses from one selected source, not independent replication or calibrated beliefs.
+
+Full repair still fails the stricter retention criterion. Clean retention2/2 at100%,
+texture retention2/2 at96.875–100%, all-scene retention9/12. Failures are two cool reset
+image scores below95% and warm33074 reset factual accuracy93.75%. The latter is frozen
+and exactly unchanged; image-only training cannot repair that factual output. All
+factual logits, including every causal mode and independent probes, remain bitwise
+identical across the24 trained evaluation cells versus their unchanged reference.
+
+Training cool reset shape errors fall31→19/256; correct-facts/wrong-image cases24→12.
+All remaining wrong image categories in that block are plus→square, with color/side
+correct. The weighting-policy effect is demonstrated without capacity or feature-loss
+changes, but neither masks alone nor a unique global mechanism is isolated. Both mask
+support and per-image normalization are part of the intervention. The independent
+conditional-risk calculation gives foreground threshold.0990099 versus box.5; these
+are analytic objective thresholds, not measured model probabilities. Fixed-batch
+positive gradient cosines and zero saturation do not rule out conflicts elsewhere.
+
+All47 focused tests pass, including8 new loss/CLI/freeze/resume cases.10,188 metrics
+independently reproduced;40 GPU reloads exact; identical full training caches, sampler/
+RNG/initialization and all frozen tensors. Inference, scoring, default training behavior
+and data generation remain unchanged. Training95.158s, fit loop169.802s, evaluation
+92.157s, peak646MiB; resource floors preserved and no budget/threshold amendments.
+Three compact actual Claude reviews complete; supervision, geometric equality and
+intervention-scope corrections reconciled, with denominator shorthand qualified locally.
+44 standalone reports structurally verified; development, overview and matched error
+panels inspected. Prior browser URL denial remains a disclosed limitation; no workaround.
+[Report](../runs/recall_shape_v1/report.html),
+[verification](../runs/recall_shape_v1/verification.json).
+
+Next: preserve the demonstrated loss improvement and separately diagnose the remaining
+cool image and warm factual errors. A small producer-refinement/capacity comparison
+can target correct-facts/wrong-image cases; factual repair needs its own declared
+trainable path. Keep current thresholds and use fresh confirmation rather than selecting
+on33073/33074. Broader learned reliability, natural scenes, upstream replication,
+CPU portability and streaming remain open; no general generative backend has been trained.
