@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T22:18+02:00
-  turn_count: 19
-  summary: Rectangle weighting passes 12/12 task cells vs 10/12 control, halves cool image errors 10 to
-    5; clean 100%, texture retained. Strict retention remains 9/12. 47 tests, 10,188 independent metrics,
-    40 exact GPU replays; three actual Claude reviews.
+  last_turn: 2026-09-13T22:54+02:00
+  turn_count: 20
+  summary: Both extra-training arms reach 100% cool images; capacity benefit unassessable. Task gates
+    11/12, strict retention 8/12; warm/texture failures remain. 58 tests, 10,188 independent metrics,
+    40 exact GPU replays; two actual Claude reviews.
 
 events_logged:
 - turn: 1
@@ -689,6 +689,50 @@ events_logged:
   routing: crystallized
   provenance: user-revised
   summary: O214 reconstruction loss/gradient diagnosis method adopted; newly measured results remain staged.
+- turn: 20
+  type: decision
+  id: N324
+  routing: direct
+  provenance: user
+  summary: Continue separate image-producer and factual repair with Claude
+- turn: 20
+  type: experiment
+  id: N325
+  routing: direct
+  provenance: ai-executed
+  summary: Optional residual image refinement preserves initialization and strict replay
+- turn: 20
+  type: experiment
+  id: N326
+  routing: direct
+  provenance: ai-executed
+  summary: Equal extra training reaches cool image ceiling while warm and texture retention fail
+- turn: 20
+  type: observation
+  id: O217
+  routing: staged
+  provenance: ai-suggested
+  summary: Equal extra training with the corrected loss is sufficient for the sampled cool-image confirmation,
+    so this ceiling comparison does not establish an added-capacity benefit. Warm/texture and frozen factual
+    failures remain; one passing rendering sample cannot establish scene robustness. The active residual
+    branch is not thereby necessary.
+- turn: 20
+  type: observation
+  id: O218
+  routing: staged
+  provenance: ai-suggested
+  summary: Next compare a bounded factual+image head continuation against image-only learning under the
+    corrected loss, with encoder, state/memory and image backend fixed. Target warm/texture readout failures,
+    retain all scene/causal gates and use fresh confirmation. Keep added image refinement optional absent
+    demonstrated benefit; broader real imagery, reliability, CPU portability, upstream replication and
+    general generation remain open.
+- turn: 20
+  type: heuristic
+  id: H68
+  routing: crystallized
+  provenance: user-revised
+  summary: O216 separate image refinement/factual repair method adopted; new capacity/retention interpretation
+    remains staged.
 
 ai_actions:
 - turn: 1
@@ -958,6 +1002,24 @@ ai_actions:
   - docs/experiments.md
   - runs/recall_shape_v1/
   - ara/evidence/tables/recall_shape_2026-09-13.json
+- turn: 20
+  action: Implemented optional initially inactive per-scale residual MLPs and strict checkpoint/recipe
+    support after meaningful RED checks. Verified initial identity/RNG, gradient sequence, frozen boundaries
+    and resume; ran local GPU development, two matched fixed fits and 40 fresh evaluations. Independently
+    checked metrics, data/cache/source/RNG and exact GPU replay. Reconciled two actual generic Claude
+    exchanges. Reported unassessable primary benefit and failed scene retention without adopting added
+    capacity. Updated report/recipe/plan/project state and committed completed work.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/decoders.py
+  - pathwm/models/memory_output.py
+  - experiments/memory_output.py
+  - tests/test_producer_refinement.py
+  - docs/experiments.md
+  - docs/recall-repair-plan.md
+  - docs/project-state.md
+  - runs/producer_refinement_v1/
+  - ara/evidence/tables/producer_refinement_2026-09-13.json
 
 claims_touched: []
 key_context:
@@ -1026,15 +1088,20 @@ key_context:
   excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
     these open points. This adopts the next bounded method; no researcher interpretation yet of the resulting
     weighting-policy improvement and remaining retention failures.'
+- turn: 20
+  excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate.
+    This adopts the next bounded method; no user interpretation yet of the newly completed capacity-ceiling
+    and warm/texture results.'
 
 open_threads:
-- 'N322/N323/O215/O216: rectangle weighting improves cool recall shape and passes all task gates, but
-  strict retention is 9/12. Next separate producer refinement for correct-facts/wrong-image cases from
-  frozen warm factual repair; fresh confirmation under unchanged thresholds. General scenes, real recordings,
-  reliability, upstream replication and generative backends remain open. Preserve runs and disk floor.'
-- 'N278-N323: CPU/GPU portability remains unresolved. Current 47 scoped tests and 40 exact GPU replays
-  do not repair previously observed CPU inference differences; training-target roundoff tolerance is a
-  separate diagnostic concern.'
+- 'N325/N326/O217/O218: both continuations reach the sampled cool-image ceiling; added-capacity benefit
+  unassessable, warm/texture and frozen factual repair open. Next bounded factual+image vs image-only
+  head learning under corrected loss, fresh confirmation and unchanged scene/causal gates. Broader real
+  scenes, learned reliability, upstream replication and general generation remain open; preserve completed
+  runs and disk floor.'
+- 'N278-N326: CPU/GPU portability unresolved; current 58 scoped tests and 40 exact GPU replays do not
+  repair earlier CPU inference differences. Sandbox CUDA visibility was an execution preflight, resolved
+  with approved local GPU access.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
   and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and
@@ -1086,5 +1153,7 @@ ai_suggestions_pending:
   response pending.'
 - 'O215: scoped rectangle-weighting improvement and unresolved strict retention interpretation; researcher
   response pending.'
-- 'O216: separate residual cool image-producer refinement and frozen warm factual repair, with fresh confirmation;
-  broader milestones open.'
+- 'O217: cool extra-training sufficiency on sampled histories, unassessable capacity benefit and remaining
+  warm/texture interpretation; researcher response pending.'
+- 'O218: factual+image versus image-only continuation under corrected loss proposed, with fresh gates
+  and broader milestones preserved.'

@@ -5324,3 +5324,72 @@ tree:
   - N321
   - N322
   status: resolved
+
+- id: N324
+  type: decision
+  title: Continue separate image-producer and factual repair with Claude
+  provenance: user
+  timestamp: 2026-09-13T22:54+02:00
+  choice: 'User explicitly requests continued plan, implement, review, test and fix. Adopt the next bounded
+    method: retain corrected loss, compare producer refinement against matched continuation, keep frozen
+    factual repair a distinct question and require fresh confirmation under unchanged gates.'
+  alternatives:
+  - Increase capacity without a matched continuation control
+  - Treat frozen factual errors as repairable through image-only training
+  evidence:
+  - O216
+  - N322
+  - N323
+  also_depends_on:
+  - N322
+  - N323
+  status: resolved
+- id: N325
+  type: experiment
+  title: Optional residual image refinement preserves initialization and strict replay
+  provenance: ai-executed
+  timestamp: 2026-09-13T22:54+02:00
+  result: 'Three informative RED failures followed by implementation of one pointwise residual MLP per
+    image feature scale. Final projection zero-initialized: first-step gradient reaches it; earlier residual
+    layers begin learning after it changes. Existing outputs/weights and CPU/GPU RNG preserved, default
+    and legacy exports intact, refined settings/load strict and odd-step resume exact. Six new refinement
+    cases plus prior scopes total 58 passing tests. Local GPU 16-update development succeeds after a sandbox-only
+    CUDA preflight failure before any optimizer run. Two actual generic Claude reviews acknowledge the
+    gradient correction and that branch activity does not establish necessity. No private source/data/results
+    exported; implementation reviewed locally.'
+  evidence:
+  - ara/evidence/tables/producer_refinement_2026-09-13.json
+  - tests/test_producer_refinement.py
+  - runs/producer_refinement_v1/red.log
+  - runs/producer_refinement_v1/development.log
+  - runs/producer_refinement_v1/development_gpu.log
+  - runs/producer_refinement_v1/review_status.json
+  also_depends_on:
+  - N324
+  status: resolved
+- id: N326
+  type: experiment
+  title: Equal extra training reaches cool image ceiling while warm and texture retention fail
+  provenance: ai-executed
+  timestamp: 2026-09-13T22:54+02:00
+  result: 'Source c22f1e5: two 1536-update image-only fits from prior box source 8502, seed 9701, 1024
+    train histories. Refinement 75,152 trainable parameters vs 58,128 control. Forty fresh 35073/35074
+    cells: both fits 11/12 task gates, unchanged 10/12, raw 4/4 at 100%. Both fits zero cool image errors
+    out of 128 correlated responses; added-capacity benefit unassessable at control ceiling. Image and
+    full retention 8/12, full repair false. Refined warm recall images 87.5%/93.75%, control 81.25%/93.75%;
+    texture recall 93.75% both. Clean/mild tints 100% images. Warm and texture factual scores include
+    93.75%, unchanged in all modes across 24 trained cells. Unchanged source already misses texture on
+    these new seeds; warm 35074 declines from source 100% after either fit. Training cool recall 98.828125%
+    control vs 100% refined; all residual scales active (RMS 0.003915–0.136701), not proof of necessity.
+    Identical caches/sampler/RNG, frozen tensors, 10,188 independent metrics and 40 exact GPU replays.
+    Training 89.427 s, evaluation 89.370 s, peak 646 MiB. Forty-four reports structurally checked and
+    two figures inspected; prior browser limitation preserved. No post-confirmation fit or threshold change.'
+  evidence:
+  - ara/evidence/tables/producer_refinement_2026-09-13.json
+  - runs/producer_refinement_v1/verification.json
+  - docs/recall-repair-plan.md#producer-refinement-results
+  also_depends_on:
+  - N324
+  - N325
+  - N323
+  status: resolved

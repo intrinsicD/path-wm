@@ -1760,3 +1760,18 @@ entries:
   - Formal source 0287a24 fixed during comparison. No post-confirmation training or changed thresholds.
     Prior browser local-file denial remains disclosed; no new denied attempt or workaround. Existing CPU
     portability and broad reliability findings remain unchanged.
+
+- turn: 2026-09-13_001#20
+  notes:
+  - O216 method promoted to H68 on explicit continuation; new interpretation O217 and next method O218
+    staged. Prior results interpretations and broader claims remain unchanged; open threads retain modality,
+    planning, memory, real-data and reliability topics, so no abandonment closure.
+  - 'N326 is an experiment, not a dead end: control ceiling makes added-capacity benefit unassessable,
+    not refuted. Fresh texture failures coexist with earlier sample-specific passes, and the unchanged
+    source also fails on these seeds; no contradictory general robustness claim is introduced.'
+  - Two actual generic Claude exchanges corrected first-step gradient wording and scoped activation evidence.
+    No private source/data/results exported. Initial exact outputs do not imply identical later optimization
+    trajectories; keep added parameterization and fixed budget explicit.
+  - Source c22f1e5 frozen for formal runs; no post-confirmation optimizer updates or threshold changes.
+    GPU sandbox preflight failed before training, approved retry succeeded and logs retained. Prior browser
+    URL restriction not bypassed; earlier CPU portability issues remain separate.

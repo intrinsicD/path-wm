@@ -3814,6 +3814,40 @@ observations:
   bound_to:
   - N322
   - N323
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H68
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O217
+  timestamp: 2026-09-13T22:54+02:00
+  provenance: ai-suggested
+  content: Equal extra training with the corrected loss is sufficient for the sampled cool-image confirmation,
+    so this ceiling comparison does not establish an added-capacity benefit. Warm/texture and frozen factual
+    failures remain; one passing rendering sample cannot establish scene robustness. The active residual
+    branch is not thereby necessary.
+  context: New matched measurements completed; researcher has not interpreted them yet. Scope is one selected
+    source and correlated synthetic histories, not independent upstream replication or general imagery.
+  potential_type: claim
+  bound_to:
+  - N325
+  - N326
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O218
+  timestamp: 2026-09-13T22:54+02:00
+  provenance: ai-suggested
+  content: Next compare a bounded factual+image head continuation against image-only learning under the
+    corrected loss, with encoder, state/memory and image backend fixed. Target warm/texture readout failures,
+    retain all scene/causal gates and use fresh confirmation. Keep added image refinement optional absent
+    demonstrated benefit; broader real imagery, reliability, CPU portability, upstream replication and
+    general generation remain open.
+  context: Next-step proposal; no further optimizer updates or model selection after 35073/35074 confirmation.
+  potential_type: heuristic
+  bound_to:
+  - N326
   promoted: false
   promoted_to: null
   crystallized_via: null

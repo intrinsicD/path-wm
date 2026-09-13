@@ -664,3 +664,13 @@
 - **Sensitivity**: High. A local gradient snapshot does not identify a global mechanism. Changing a weighting policy may jointly change mask support and normalization; evaluate the whole intervention while preserving evaluation metrics.
 - **Code ref**: [image-output recipe](../../../experiments/memory_output.py), [weighting tests](../../../tests/test_shape_weighting.py).
 - **Evidence**: N321/N322/N323; [recall shape proof](../../evidence/tables/recall_shape_2026-09-13.json).
+
+## H68: Separate producer refinement from factual repair
+
+- **Rationale**: Preserve a demonstrated reconstruction-loss improvement while comparing a small producer refinement against matched extra optimization. Keep frozen factual errors a distinct learning question, and require fresh confirmation and unchanged retention/causal criteria before adoption.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O216
+- **Sensitivity**: High. A control at ceiling makes relative capacity benefit unassessable. An active residual branch need not be necessary; added parameters also change the optimization parameterization. Passing one rendering sample does not settle robustness.
+- **Code ref**: [producer](../../../pathwm/models/decoders.py), [recipe](../../../experiments/memory_output.py), [refinement checks](../../../tests/test_producer_refinement.py).
+- **Evidence**: N324/N325/N326; [comparison proof](../../evidence/tables/producer_refinement_2026-09-13.json).

@@ -139,10 +139,10 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: Rectangle weighting passes 12/12 task cells vs 10/12 control, halves cool image errors 10 to
-    5; clean 100%, texture retained. Strict retention remains 9/12. 47 tests, 10,188 independent metrics,
-    40 exact GPU replays; three actual Claude reviews.
-  turn_count: 19
-  events_count: 106
+  summary: Both extra-training arms reach 100% cool images; capacity benefit unassessable. Task gates
+    11/12, strict retention 8/12; warm/texture failures remain. 58 tests, 10,188 independent metrics,
+    40 exact GPU replays; two actual Claude reviews.
+  turn_count: 20
+  events_count: 112
   claims_touched: []
   open_threads: 10
