@@ -671,3 +671,11 @@ that mechanism identification is a separate study. Adopted checks: actual worksp
 differences, context counts/phase, no cross-example leakage and matched intact/erased
 accuracy gates. The intact>=90% requirement above already supplies its final caveat.
 Receipts: `runs/reviews/continuation_2026-09-11/mixed-context*-receipt.json`.
+
+Implementation check: two RED failures demonstrated the missing mixed cache path;
+44 relevant CPU tests and lint now pass, including mixed loss/gradient equality,
+TRAIN-pooled normalization, both mask phases, exact odd-step optimizer/RNG resume
+and ordinary/reset standalone reload. Development16 updates complete in1.2498s,
+cache preparation2.1106s; standalone structural QA and example inspection pass.
+Formal writer7801 mixed run will pause after769 updates and resume the remaining767
+to check mask phase through a real GPU restart. Source is committed before fitting.

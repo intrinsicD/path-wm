@@ -85,11 +85,22 @@ def objective(model, batch, reset, repair=False, reference_weight=0.0):
 def cache_readout(model, data, device, batch_size=16, mode="reset"):
     """Detached training inputs; labels/teacher targets never enter state formation."""
     values = {k: [] for k in ("tokens", "labels", "target")}
+    if mode == "mixed":
+        values["ordinary_tokens"] = []
     features = {}
     for start in range(0, len(data), batch_size):
         b = data.batch(range(start, min(start + batch_size, len(data))), device)
         h = model.observe_history(b["images"])
-        tokens = model.working(model.query(h["final"], b["images"][:, -1], mode))
+        tokens = model.working(
+            model.query(
+                h["final"], b["images"][:, -1], "reset" if mode == "mixed" else mode
+            )
+        )
+        if mode == "mixed":
+            ordinary = model.working(
+                model.query(h["final"], b["images"][:, -1], "ordinary")
+            )
+            values["ordinary_tokens"].append(ordinary.detach().clone())
         for k, v in dict(tokens=tokens, labels=b["labels"], target=b["target"]).items():
             values[k].append(v.detach().clone())
         for k, v in model.teacher(b["target"]).items():
@@ -100,14 +111,29 @@ def cache_readout(model, data, device, batch_size=16, mode="reset"):
     )
 
 
-def readout_objective(model, cache, ids):
-    out = model.output_tokens(cache["tokens"][ids])
+def readout_objective(model, cache, ids, *, context="reset", step=1):
+    """Equal total presentations; mixed batches replace half with ordinary states."""
+    if context not in ("reset", "mixed"):
+        raise ValueError("Readout context must be reset or mixed")
+    tokens = cache["tokens"][ids]
+    ordinary = torch.zeros(len(ids), dtype=torch.bool, device=tokens.device)
+    if context == "mixed":
+        if not len(ids) or len(ids) % 2:
+            raise ValueError("Mixed readout requires a nonempty even batch")
+        ordinary = (torch.arange(len(ids), device=tokens.device) + step) % 2 == 0
+        tokens = torch.where(
+            ordinary[:, None, None], cache["ordinary_tokens"][ids], tokens
+        )
+    out = model.output_tokens(tokens)
     facts = factual_loss(out["facts"], cache["labels"][ids])
     pixels = weighted_error(out["image"], cache["target"][ids]).mean()
     latent = model.agent.decoders["image"].latent_loss(
         out["features"], {k: v[ids] for k, v in cache["features"].items()}
     )
     return facts + pixels + 0.1 * latent, dict(
+        ordinary_examples=int(ordinary.sum()),
+        reset_examples=len(ids) - int(ordinary.sum()),
+        first_ordinary=int(ordinary[0]),
         factual_loss=float(facts.detach()),
         rgb_loss=float(pixels.detach()),
         latent_loss=float(latent.detach()),
@@ -349,11 +375,21 @@ def train(
     stop_after=None,
 ):
     cache = None
+    readout_context = settings.get("readout_context", "reset")
+    if readout_context not in ("reset", "mixed"):
+        raise ValueError("Readout context must be reset or mixed")
+    if readout_context == "mixed" and (
+        settings.get("readout_stage") != "native" or settings["batch_size"] % 2
+    ):
+        raise ValueError("Mixed context requires native readout and an even batch")
     preparation = perf_counter()
     if settings.get("readout_stage"):
-        cache = cache_readout(model, training, device)
+        cache = cache_readout(model, training, device, mode=readout_context)
         if settings.get("standardize_output"):
-            model.output_normalization.calibrate(cache["tokens"])
+            calibration = cache["tokens"]
+            if readout_context == "mixed":
+                calibration = torch.cat([calibration, cache["ordinary_tokens"]])
+            model.output_normalization.calibrate(calibration)
     preparation_seconds = perf_counter() - preparation
     optimizer = torch.optim.AdamW(
         [p for p in model.parameters() if p.requires_grad],
@@ -391,9 +427,19 @@ def train(
                 preparation_seconds=preparation_seconds,
                 data=training.identity,
                 stage=settings["readout_stage"],
+                context=readout_context,
                 standardize_output=settings.get("standardize_output", False),
             ),
         )
+    if cache is not None:
+        # Each invocation gets a receipt, including the preparation repeated on resume.
+        with (run.path / "cache_preparations.jsonl").open("a") as stream:
+            stream.write(
+                json.dumps(
+                    dict(resume=resume, step=run.step, seconds=preparation_seconds)
+                )
+                + "\n"
+            )
     relocation = training.curriculum == "relocation"
     if relocation:
         atomic_json(
@@ -454,7 +500,9 @@ def train(
             ids = run.sample(len(training), settings["batch_size"])
             optimizer.zero_grad(set_to_none=True)
             if cache is not None:
-                loss, metrics = readout_objective(model, cache, ids)
+                loss, metrics = readout_objective(
+                    model, cache, ids, context=readout_context, step=step
+                )
             else:
                 batch = training.batch(ids, device)
                 loss, metrics = objective(
@@ -504,6 +552,10 @@ def train(
                         ),
                         factual_accuracy=scores["reset"]["factual_accuracy"],
                         image_accuracy=scores["reset"]["image_accuracy"],
+                        ordinary_factual_accuracy=scores["ordinary"][
+                            "factual_accuracy"
+                        ],
+                        ordinary_image_accuracy=scores["ordinary"]["image_accuracy"],
                     )
                 )
                 print(
@@ -549,7 +601,7 @@ def train(
             raise RuntimeError("Frozen mutation or nonfinite evaluation output")
         if cache is not None and completed:
             training_scores, training_arrays = evaluate(
-                model, training, device, ["reset"]
+                model, training, device, ["ordinary", "reset"]
             )
             atomic_json(run.path / "training_fit.json", training_scores)
             np.savez_compressed(
@@ -622,6 +674,9 @@ def main():
     parser.add_argument("--normalize-input", action="store_true")
     parser.add_argument("--repair", choices=("identity", "calibrated", "temporal"))
     parser.add_argument("--readout-stage", choices=("native", "stored"))
+    parser.add_argument(
+        "--readout-context", choices=("reset", "mixed"), default="reset"
+    )
     parser.add_argument("--standardize-output", action="store_true")
     parser.add_argument("--workspace-reference", type=Path)
     parser.add_argument("--reference-weight", type=float, default=0.0)
@@ -644,6 +699,8 @@ def main():
         parser.error("Direct readout requires identity repair and zero auxiliary loss")
     if args.standardize_output and not args.readout_stage:
         parser.error("Output standardization requires a declared readout stage")
+    if args.readout_context == "mixed" and args.readout_stage != "native":
+        parser.error("Mixed context requires native readout")
     if args.workspace_reference is not None and args.repair != "identity":
         parser.error("Workspace supervision currently requires --repair identity")
     if args.curriculum == "relocation" and not args.normalize_input:
@@ -736,10 +793,11 @@ def main():
             configure_output_readout(model, args.readout_stage)
             settings.update(
                 readout_stage=args.readout_stage,
+                readout_context=args.readout_context,
                 standardize_output=args.standardize_output,
                 reference_weight=0.0,
                 wall_seconds=180,
-                objective="frozen writer and thinker; cached reset tokens; native factor CE + weighted RGB MSE + 0.1 standardized feature MSE",
+                objective=f"frozen writer and thinker; cached {args.readout_context} tokens; native factor CE + weighted RGB MSE + 0.1 standardized feature MSE",
             )
         if args.development:
             settings.update(steps=16, wall_seconds=60)
