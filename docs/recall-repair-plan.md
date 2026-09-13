@@ -1737,3 +1737,59 @@ declared conditions/seeds remain unchanged; corrected count fits the existing900
 and disk budgets (roughly37MiB per successful export). No formal model scores were
 seen. Deterministic pixel preflight predicts partial centering rejection for bright
 backgrounds; those cells will be marked failed coverage without subset scoring.
+
+## Coverage reporting repair protocol
+
+The new challenge exposes a user-path gap independently of task scores: generic
+`--evaluate-only --scene background-bright --center-input` raises on out-of-range
+centering, leaving result failed/report pending. The run-local challenge can report
+coverage, but the normal recipe must offer the same inspectable failure outcome.
+After the frozen screen and its audits finish, implement a shared per-frame range
+inspection on PixelMedianCentering and recipe preflight. Keep strict forward range
+rejection unchanged. If any history is unsupported, complete a coverage-failed
+result/report with attempted/accepted counts and frame validity; run no model
+queries, save no fabricated predictions, and do not score an accepted subset.
+No automatic clipping, raw fallback, learned confidence or deployment is implied.
+All-valid exports retain their original predictions and task gates.
+
+RED checks: pure range inspection preserves time/validity and does not call the
+wrapped encoder; consistency with strict forward guards including invalid masked
+frames and bad valid values; rejected export leaves source model/checkpoint exact,
+never invokes observe_history or an optimizer, and reports partial/all coverage
+without an accuracy claim. Report failure must preserve a completed coverage
+result and remain report-failed. Verify accepted export/reload behavior too.
+
+Budget: zero optimization; focused CPU tests and at most four GPU exports (two
+accepted regression cases and two rejected cases),150s cap and unchanged4GiB GPU/
+3GiB disk limits. Accepted regressions reuse already-scored25073 neutral and
+temporal-offset source8501, compared bitwise against this screen, explicitly not
+fresh confirmation. Rejection examples use fresh27073, both source trajectories.
+Keep the frozen screen's source identity and results intact; record the new source
+commit separately. This repairs observability/workflow only, not perception accuracy.
+
+## Centering challenge results
+
+Formal source311c3ca;80 attempted cells,76 task-scored and4 coverage-failed.
+Centered input passes12/40 full-task/retention cells: neutral, temporal additive and
+RGB-channel additive conditions each4/4 at100% facts/images. Raw passes8/40: neutral
+and background texture each4/4 at100%. Centering drops texture scores to76.562–86.719%.
+All other condition groups fail every full-task cell. Centered clutter9.375–22.656%,
+large objects45.312–58.594%, gain71.875–88.281%, local shadows71.875–91.406% across
+ordinary/reset factual/image cells; these ranges do not imply all metrics pass.
+Bright-background centering accepts only28/128 histories on25073 and20/128 on25074;
+no accepted subset is scored. Raw brightness-background scores0–12.5%. Centered
+background-tint direct-reader accuracy100% contrasts with native ordinary facts
+73.438–79.688% and reset75.781–81.25%; this does not uniquely localize failure.
+
+All18,012 recorded metrics and task gates independently verified. All76 scored
+ordinary/reset GPU replays are bitwise exact on128 histories each. Original model,
+checkpoints and recorded source files unchanged;12 original data cases byte-exact.
+87 relevant CPU tests pass. Screen571.926s, zero training, peak298MiB. All82 reports
+(including development/overview) structurally checked; heatmap and representative
+panels inspected; browser QA unavailable. Both reviewed source trajectories still
+share an upstream initialization/codec. [Report](../runs/centering_challenge_v1/report.html).
+
+Centering remains opt-in. Broad learned robustness, independent upstream runs and
+real recordings remain open. Five coverage-reporting tests now fail informatively:
+missing pure range API and rejected exports incorrectly entering model evaluation.
+The following implementation is a reporting/validity repair, not a perception fix.
