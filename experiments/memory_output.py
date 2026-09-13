@@ -75,6 +75,27 @@ def weighted_error(image, target):
     )
 
 
+def training_image_error(image, target, weighting="foreground"):
+    """Task-specific training weights; evaluation always uses weighted_error.
+
+    A rectangle treats filled and empty pixels within the same object extent
+    equally. It is derived from supervised targets only, never model inputs.
+    Each policy normalizes by its own weight sum, including blank targets.
+    """
+    if weighting == "foreground":
+        return weighted_error(image, target)
+    if weighting != "box":
+        raise ValueError("Unknown image weighting policy")
+    foreground = (target - BACKGROUND / 255).abs().amax(1, keepdim=True) > 0.01
+    rows, columns = foreground.any(-1, keepdim=True), foreground.any(-2, keepdim=True)
+    rows = (rows.cumsum(-2) > 0) & (rows.flip(-2).cumsum(-2).flip(-2) > 0)
+    columns = (columns.cumsum(-1) > 0) & (columns.flip(-1).cumsum(-1).flip(-1) > 0)
+    weights = 1 + 9 * (rows & columns)
+    return ((image - target).square() * weights).sum((1, 2, 3)) / (
+        3 * weights.sum((1, 2, 3))
+    )
+
+
 def objective(model, batch, reset, repair=False, reference_weight=0.0):
     if not math.isfinite(reference_weight) or reference_weight < 0:
         raise ValueError("Reference loss weight must be finite and nonnegative")
@@ -139,7 +160,9 @@ def cache_readout(model, data, device, batch_size=16, mode="reset"):
     )
 
 
-def readout_objective(model, cache, ids, *, context="reset", step=1):
+def readout_objective(
+    model, cache, ids, *, context="reset", step=1, image_weighting="foreground"
+):
     """Equal total presentations; mixed batches replace half with ordinary states."""
     if context not in ("reset", "mixed"):
         raise ValueError("Readout context must be reset or mixed")
@@ -154,11 +177,13 @@ def readout_objective(model, cache, ids, *, context="reset", step=1):
         )
     out = model.output_tokens(tokens)
     facts = factual_loss(out["facts"], cache["labels"][ids])
-    pixels = weighted_error(out["image"], cache["target"][ids]).mean()
+    pixels = training_image_error(
+        out["image"], cache["target"][ids], image_weighting
+    ).mean()
     latent = model.agent.decoders["image"].latent_loss(
         out["features"], {k: v[ids] for k, v in cache["features"].items()}
     )
-    return facts + pixels + 0.1 * latent, dict(
+    metrics = dict(
         ordinary_examples=int(ordinary.sum()),
         reset_examples=len(ids) - int(ordinary.sum()),
         first_ordinary=int(ordinary[0]),
@@ -166,6 +191,11 @@ def readout_objective(model, cache, ids, *, context="reset", step=1):
         rgb_loss=float(pixels.detach()),
         latent_loss=float(latent.detach()),
     )
+    if image_weighting != "foreground":
+        metrics["foreground_rgb_loss"] = float(
+            weighted_error(out["image"], cache["target"][ids]).mean().detach()
+        )
+    return facts + pixels + 0.1 * latent, metrics
 
 
 def live_readout_objective(model, batch, *, step):
@@ -495,9 +525,24 @@ def train(
             )
     writer_learning = settings.get("writer_learning")
     if settings.get("image_only") and (
-        writer_learning != "frozen" or settings.get("train_thinker")
+        writer_learning not in (None, "frozen")
+        or settings.get("train_thinker")
+        or settings.get("readout_stage") != "native"
     ):
-        raise ValueError("Image-only learning requires the frozen live writer policy")
+        raise ValueError("Image-only learning requires frozen native state formation")
+    image_weighting = settings.get("image_weighting", "foreground")
+    if image_weighting not in ("foreground", "box") or (
+        image_weighting != "foreground"
+        and (
+            not settings.get("image_only")
+            or writer_learning is not None
+            or settings.get("readout_context") != "mixed"
+            or settings.get("standardize_output")
+        )
+    ):
+        raise ValueError(
+            "Box image weighting requires cached raw mixed image-only learning"
+        )
     if settings.get("train_thinker") and writer_learning != "trainable":
         raise ValueError("Joint thinker learning requires a trainable writer")
     readout_context = settings.get("readout_context", "reset")
@@ -660,7 +705,12 @@ def train(
                 )
             elif cache is not None:
                 loss, metrics = readout_objective(
-                    model, cache, ids, context=readout_context, step=step
+                    model,
+                    cache,
+                    ids,
+                    context=readout_context,
+                    step=step,
+                    image_weighting=image_weighting,
                 )
             else:
                 batch = training.batch(ids, device)
@@ -1081,6 +1131,11 @@ def main():
         action="store_true",
         help="Freeze native state and facts; train only image features",
     )
+    parser.add_argument(
+        "--image-weighting",
+        choices=("foreground", "box"),
+        help="Training-only RGB weighting for cached image-only continuation",
+    )
     parser.add_argument("--evaluate-only", action="store_true")
     parser.add_argument(
         "--scene",
@@ -1119,6 +1174,16 @@ def main():
         "--curriculum", choices=("parity", "relocation"), default="parity"
     )
     args = parser.parse_args()
+    if args.image_weighting is not None and (
+        args.evaluate_only
+        or args.repair != "identity"
+        or args.readout_stage != "native"
+        or args.readout_context != "mixed"
+        or not args.image_only
+        or args.writer_learning is not None
+        or args.standardize_output
+    ):
+        parser.error("Image weighting requires cached raw mixed image-only repair")
     if args.scene and (not args.evaluate_only or args.input_offset):
         parser.error("Scene changes require evaluation-only without input-offset")
     if args.input_offset and not args.evaluate_only:
@@ -1214,8 +1279,13 @@ def main():
         or args.standardize_output
     ):
         parser.error("Writer learning requires native raw mixed readout")
-    if args.image_only and (args.writer_learning != "frozen" or args.train_thinker):
-        parser.error("Image-only learning requires --writer-learning frozen")
+    if args.image_only and (
+        args.writer_learning not in (None, "frozen")
+        or args.train_thinker
+        or args.readout_stage != "native"
+        or args.readout_context != "mixed"
+    ):
+        parser.error("Image-only learning requires frozen native mixed readout")
     if args.train_thinker and args.writer_learning != "trainable":
         parser.error("Joint thinker learning requires --writer-learning trainable")
     if args.workspace_reference is not None and args.repair != "identity":
@@ -1347,6 +1417,12 @@ def main():
         if args.image_only:
             settings["objective"] += (
                 "; image feature producer only; factual CE constant"
+            )
+        if args.image_weighting is not None:
+            settings["image_weighting"] = args.image_weighting
+        if settings.get("image_weighting", "foreground") != "foreground":
+            settings["objective"] += (
+                "; target bounding-rectangle RGB weights, own normalization"
             )
         if args.train_input_offsets is not None:
             settings["train_input_offsets"] = args.train_input_offsets

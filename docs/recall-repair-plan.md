@@ -2117,3 +2117,20 @@ only into producer; CLI scope; exact odd-step resume/reload including settings; 
 facts/state/backend. Small GPU development precedes source freeze and formal comparison.
 Actual Claude accepts bounded gradient/ablation scope; follow-up correction addresses
 its mistaken target-supervision leakage claim and mask-versus-normalization distinction.
+
+Implementation: four informative RED failures covered missing loss, cached image-only
+training, resume and CLI path; four invalid CLI cases also remain rejected after the
+option exists. All47 focused checks pass:8 new weighting cases,14 direct-readout,
+17 tint and8 scene-diagnostic cases. Default loss matches exactly; canonical reciprocal
+shape errors become symmetric, blank targets finite, and target masks never enter
+inference. Cached image-only training now accepts frozen native state with exact
+odd-step resume/reload, settings provenance and frozen facts/backend. Existing live
+image-only mode remains intact; box weighting rejects unsupported paths.
+
+Sixteen-update GPU development completed; report structurally checked and panel inspected.
+No shared renderer change. Prior browser local-file URL denial remains a QA limitation;
+no workaround or repeated blocked navigation. Source now freezes for the comparison.
+Three compact actual Claude reviews complete, with target-supervision leakage and
+intervention-scope corrections acknowledged. The denominator shorthand in its final
+reply is read only for equal box weights, not the foreground10:1 formula; numerical
+reference checks remain authoritative. No private source/data/results were exported.
