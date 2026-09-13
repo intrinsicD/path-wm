@@ -1181,3 +1181,23 @@ Development16updates3.098006s completed; structural report and panel inspected.
 Final review also corrected image-only report limitation text to identify the
 factual head as frozen. Two public Claude exchanges found no remaining material
 conceptual contradiction; implementation review remains local.
+
+Post-fit audit found a real inference-mode defect. All four task gates passed,
+but the declared bitwise frozen-state invariant failed on GPU, despite identical
+frozen weights/buffers. Factual logit deltas versus unchanged-source evaluations
+were up to4.2915344e-5, with no categorical change. Explicitly freezing the source's
+parameter flags makes its states/facts exactly equal in the diagnostic; CPU had
+matched already. Preserve the original comparison and failed invariant. This is
+not evidence that image learning altered frozen parameters. Parameter flags affect
+GPU numerical execution even under no_grad in this environment; no unverified
+claim about a particular backend kernel is needed.
+
+Repair evaluation to temporarily clear requires_grad flags and restore them even
+on exceptions. RED checks precede repair. No additional optimization, checkpoint
+selection, budget or gate changes. Re-evaluate all four exact checkpoints and both
+unchanged sources on the SAME declared19073 test under the corrected inference
+contract in distinct evaluation directories. Preserve original raw metrics/arrays
+and expose pre/post numeric and categorical differences. Record post-fix inference
+and gate results separately from the original bitwise failure. Re-run exact resume,
+export and all relevant tests; audit GPU replay and source-equivalent frozen states
+with matched inference flags. CPU portability remains an independent gate.

@@ -549,3 +549,30 @@ def test_input_calibration_preserves_noop_metadata_and_frozen_model():
         encoder.calibrate(
             [Observation(torch.full_like(obs.values, float("nan")), obs.times)]
         )
+
+@pytest.mark.parametrize("fail", [False, True])
+def test_evaluation_freezes_parameters_temporarily_and_restores_on_failure(fail):
+    from pathwm.data.memory_output import MemoryOutputEpisodes
+    from experiments.memory_output import evaluate
+    from pathwm.models.memory_output import configure_output_readout
+
+    model = configure_output_readout(
+        model_fixture(True), "native", train_writer=True, train_thinker=True
+    ).eval()
+    flags = {n: p.requires_grad for n, p in model.named_parameters()}
+    original = model.observe_history
+
+    def checked(*args, **kwargs):
+        assert not any(p.requires_grad for p in model.parameters())
+        if fail:
+            raise RuntimeError("inference failure fixture")
+        return original(*args, **kwargs)
+
+    model.observe_history = checked
+    data = MemoryOutputEpisodes(16, seed=62, curriculum="relocation")
+    if fail:
+        with pytest.raises(RuntimeError, match="inference failure fixture"):
+            evaluate(model, data, "cpu", ["ordinary", "reset"])
+    else:
+        evaluate(model, data, "cpu", ["ordinary", "reset"])
+    assert flags == {n: p.requires_grad for n, p in model.named_parameters()}
