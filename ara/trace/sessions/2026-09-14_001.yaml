@@ -2,11 +2,11 @@ session:
   id: 2026-09-14_001
   date: '2026-09-14'
   started: 2026-09-14T00:40+02:00
-  last_turn: 2026-09-14T01:11+02:00
-  turn_count: 2
-  summary: Decoded endpoint loss improves error58% but fails capability/nonregression. Full-sampler
-    follow-up improves matched error44.4% without joint-category regression; placement and capability
-    remain weak. Original renderer retained, spatial supervision proposed.
+  last_turn: 2026-09-14T01:45+02:00
+  turn_count: 3
+  summary: Real-photo continuation on1024 COCO crops lowers held-out recall MSE39.4% and passes relative
+    context/learning screens, but images remain coarse color fields. Frozen codec30.92dB versus recall12.73dB;
+    locate photographic detail loss next. Original weights preserved.
 events_logged:
 - turn: 1
   type: decision
@@ -127,6 +127,42 @@ events_logged:
   provenance: user-revised
   summary: O225 promoted through explicit endorsement of the decoded-image investigation; no efficacy
     claim.
+- turn: 3
+  type: decision
+  id: N340
+  routing: direct
+  provenance: user
+  summary: Train the existing image path on real photographs
+- turn: 3
+  type: experiment
+  id: N341
+  routing: direct
+  provenance: ai-executed
+  summary: Real-photo continuation improves error and context screens but leaves unrecognizable output
+- turn: 3
+  type: experiment
+  id: N342
+  routing: direct
+  provenance: ai-executed
+  summary: Real-photo split freeze export resume and metric verification passes
+- turn: 3
+  type: observation
+  id: O229
+  routing: staged
+  provenance: ai-suggested
+  summary: Real-photo generator continuation improves aggregate error and responds to photo-specific
+    context, yet the displayed outputs retain mostly coarse color fields. Passing relative learning/ablation
+    screens is not photographic fidelity. Direct codec adequacy and poor state-conditioned output
+    expose a gap without uniquely locating it in encoding, state/memory compression, readout or optimization.
+- turn: 3
+  type: observation
+  id: O230
+  routing: staged
+  provenance: ai-suggested
+  summary: Next compare recoverable photographic detail at encoder features, stored state and final
+    workspace using matched diagnostic readers, then train the implicated path before deciding on
+    generator scaling. Keep train/test separation and fixed context interventions; the direct residual
+    codec is not a compact-memory benchmark.
 ai_actions:
 - turn: 1
   action: Implemented optional generator and direct control, repaired noise width, added isolated
@@ -156,12 +192,28 @@ ai_actions:
   - docs/project-state.md
   - docs/models.md
   - docs/experiments.md
+- turn: 3
+  action: Implemented real-photo recall recipe, removed synthetic-only input centering, calibrated
+    feature statistics on training photos, trained frozen-upstream generator, checked actual Claude
+    brief within exact user authorization, reviewed code locally, verified GPU resume/reloads and
+    independent metrics, saved loadable weights and report. No further test-driven fitting.
+  provenance: ai-executed
+  files_changed:
+  - experiments/real_photo.py
+  - tests/test_real_photo.py
+  - docs/real-photo-plan.md
+  - docs/project-state.md
+  - docs/models.md
+  - docs/experiments.md
 claims_touched: []
 key_context:
 - turn: 1
   excerpt: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
 - turn: 2
   excerpt: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
+- turn: 3
+  excerpt: 'User asks real-image training, then approves: Send this brief to Claude. Approval is scoped
+    to the saved method brief; no raw photos/code/results sent.'
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate;
   image/full retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene
@@ -192,6 +244,9 @@ open_threads:
 - 'N336-N339/H70/O226-O228: decoded endpoint and full-sampler supervision implemented, matched benefit
   improves but full capability fails. Placement/occupancy supervision proposed; preserve all hard
   tests, broad generation and original renderer.'
+- 'N340-N342/O229/O230: real-photo continuation improves relative recall but not recognizable photographs.
+  Probe encoder/state/workspace detail and train the implicated path; higher resolution, general prompts/video
+  and causal localization remain open. O228 synthetic placement remains a separate unadopted proposal.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher
   response.'
@@ -259,3 +314,11 @@ ai_suggestions_pending:
   gates matched. Color/shape coupling in the training set is a separate risk; any balanced-factor
   diagnostic must stay distinct from the existing hard test. Do not assume added scale or a pretrained
   backend is necessary.'
+- 'O229: Real-photo generator continuation improves aggregate error and responds to photo-specific
+  context, yet the displayed outputs retain mostly coarse color fields. Passing relative learning/ablation
+  screens is not photographic fidelity. Direct codec adequacy and poor state-conditioned output expose
+  a gap without uniquely locating it in encoding, state/memory compression, readout or optimization.'
+- 'O230: Next compare recoverable photographic detail at encoder features, stored state and final
+  workspace using matched diagnostic readers, then train the implicated path before deciding on generator
+  scaling. Keep train/test separation and fixed context interventions; the direct residual codec is
+  not a compact-memory benchmark.'

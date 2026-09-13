@@ -5651,3 +5651,66 @@ tree:
   - N337
   - N338
   status: resolved
+- id: N340
+  type: decision
+  title: Train the existing image path on real photographs
+  provenance: user
+  timestamp: 2026-09-14T01:45+02:00
+  choice: User requests real-image training after prolonged synthetic experiments, then explicitly
+    authorizes sending the exact saved real-photo methodology brief to Claude. Continue own weights
+    locally; this request does not adopt the earlier synthetic placement proposal O228. Photo subset,
+    frozen upstream, loss and budget are AI implementation choices.
+  alternatives:
+  - Continue only the proposed synthetic placement experiment
+  evidence:
+  - 'User: training was prettymuch syntheic for a whole while, can you train it on real images too?'
+  - 'User: Send this brief to Claude'
+  - docs/real-photo-plan.md
+  - runs/reviews/real_photo_v1/method-receipt.json
+  also_depends_on:
+  - N339
+  status: resolved
+- id: N341
+  type: experiment
+  title: Real-photo continuation improves error and context screens but leaves unrecognizable output
+  provenance: ai-executed
+  timestamp: 2026-09-14T01:45+02:00
+  result: 'Sourced97372a: existing own sample512 generator continued on1024 COCO64 photos;128 validation/256
+    test, one per duplicate group, seed45001. Synthetic median centering removed; feature calibration
+    train-only; prepared initial baseline shares both changes. Encoder/state/memory/codec frozen.314576
+    trainable parameters,2048 updates370.033s,700MiB peak. Test ordinary MSE0.09707413 to0.05684535
+    (-41.441%); reset0.09673812 to0.05866681 (-39.355%), PSNR10.339 to12.727dB. Reset15.759% better
+    than train mean,26.754-49.817% better than swapped-original/blind/erased; swapped-target matches
+    reset. Learning/context screens pass. Direct codec30.918dB receives raw image/residual details.
+    First8 fixed examples remain coarse color fields without reconstructed objects. One fit/noise
+    seed, constructed still-photo recall, no arbitrary prompts or real video. Original checkpoints
+    preserved.'
+  evidence:
+  - ara/evidence/tables/real_photo_2026-09-14.json
+  - runs/real_photo_v1/training/result.json
+  - runs/real_photo_v1/result.json
+  - runs/real_photo_v1/comparison.png
+  also_depends_on:
+  - N340
+  status: resolved
+- id: N342
+  type: experiment
+  title: Real-photo split freeze export resume and metric verification passes
+  provenance: ai-executed
+  timestamp: 2026-09-14T01:45+02:00
+  result: 'Three informative RED checks then15 focused passes. Separate16-update real development3.855s/544MiB.
+    Four same-device GPU reloads exact: initial/trained full128-photo validation and32-photo test
+    prefixes, eight tensors each. Separate four-step GPU fit equals1+3 resume for parameters/optimizer/RNG/train
+    rows.160 independent metric/count values,520 frozen tensors,60 source/snapshot files,train mean
+    and group separation verified. Seven reports structural, figures inspected, browser QA unavailable.
+    Actual Claude conceptual review after exact-brief user approval; pair-noise/blind control adopted,
+    unsupported generator-prior/capacity assumptions and null-control ordering retained as disagreements.
+    No private code/photos/results exported or claimed externally reviewed.'
+  evidence:
+  - ara/evidence/tables/real_photo_2026-09-14.json
+  - runs/real_photo_v1/verification.json
+  - runs/real_photo_v1/completion.json
+  - runs/reviews/real_photo_v1/review_status.json
+  also_depends_on:
+  - N341
+  status: resolved

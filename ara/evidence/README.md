@@ -138,3 +138,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Producer refinement comparison](tables/producer_refinement_2026-09-13.json): N324–N326; cool-image ceiling under either continuation, unassessable capacity benefit and unresolved warm/texture retention; 58 tests, 40 exact GPU reloads, 10,188 independent metrics.
 
 - [Factual readout comparison](tables/factual_readout_2026-09-13.json): N327–N329; verified branch isolation but failed factual benefit and warm retention; 61 tests, 40 exact GPU reloads, 10,188 independent task metrics.
+
+- [Real-photo continuation](tables/real_photo_2026-09-14.json): N340-N342;1024 local COCO training photos,39.4% recall-error reduction, poor visible detail; exact GPU resume/reloads and160 independently checked values.

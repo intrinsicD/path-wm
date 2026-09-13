@@ -1,0 +1,239 @@
+{
+  "commits": {
+    "documentation": "8596829",
+    "red": "2311939",
+    "source": "d97372a"
+  },
+  "metrics": {
+    "blind": {
+      "initial_mean_psnr": 10.190227508544922,
+      "initial_rgb_mse": 0.10081503540277481,
+      "mse_reduction_percent": 4.583049574814879,
+      "trained_edge_mse": 0.011672789230942726,
+      "trained_mean_psnr": 10.779979705810547,
+      "trained_rgb_mse": 0.09619463235139847
+    },
+    "erased": {
+      "initial_mean_psnr": 10.247588157653809,
+      "initial_rgb_mse": 0.09948312491178513,
+      "mse_reduction_percent": -17.51223881191688,
+      "trained_edge_mse": 0.01151285506784916,
+      "trained_mean_psnr": 9.972476959228516,
+      "trained_rgb_mse": 0.1169048473238945
+    },
+    "mean": {
+      "initial_mean_psnr": 11.940752029418945,
+      "initial_rgb_mse": 0.06964193284511566,
+      "mse_reduction_percent": 0.0,
+      "trained_edge_mse": 0.010673655197024345,
+      "trained_mean_psnr": 11.940752029418945,
+      "trained_rgb_mse": 0.06964193284511566
+    },
+    "ordinary": {
+      "initial_mean_psnr": 10.335227966308594,
+      "initial_rgb_mse": 0.09707412868738174,
+      "mse_reduction_percent": 41.44129561367739,
+      "trained_edge_mse": 0.01142562460154295,
+      "trained_mean_psnr": 12.872384071350098,
+      "trained_rgb_mse": 0.05684535205364227
+    },
+    "reset": {
+      "initial_mean_psnr": 10.338565826416016,
+      "initial_rgb_mse": 0.09673812240362167,
+      "mse_reduction_percent": 39.35502859641322,
+      "trained_edge_mse": 0.011407521553337574,
+      "trained_mean_psnr": 12.727348327636719,
+      "trained_rgb_mse": 0.05866680666804314
+    },
+    "swapped_original": {
+      "initial_mean_psnr": 10.099075317382812,
+      "initial_rgb_mse": 0.10284019261598587,
+      "mse_reduction_percent": 22.116468063375027,
+      "trained_edge_mse": 0.01141048688441515,
+      "trained_mean_psnr": 11.42663860321045,
+      "trained_rgb_mse": 0.080095574259758
+    },
+    "swapped_target": {
+      "initial_mean_psnr": 10.338566780090332,
+      "initial_rgb_mse": 0.09673811495304108,
+      "mse_reduction_percent": 39.35502392565602,
+      "trained_edge_mse": 0.011407521553337574,
+      "trained_mean_psnr": 12.727348327636719,
+      "trained_rgb_mse": 0.05866680666804314
+    },
+    "teacher": {
+      "initial_mean_psnr": 30.917661666870117,
+      "initial_rgb_mse": 0.0009121696930378675,
+      "mse_reduction_percent": 0.0,
+      "trained_edge_mse": 0.000193493309780024,
+      "trained_mean_psnr": 30.917661666870117,
+      "trained_rgb_mse": 0.0009121696930378675
+    }
+  },
+  "provenance": "ai-executed",
+  "scope": "Real COCO photographs, 64\u00d764 center crops. The existing output generator was trained on 1,024 photos; 256 test photos are held out from this continuation. The photo is seen twice, then removed; the generated output receives only the agent workspace and noise. This tests still-image recall, not arbitrary text-to-image generation or real video. Encoder, state/memory and codec were frozen. Reset image MSE changed from 0.09674 to 0.05867 (39.4% lower); trained recall PSNR is 12.73 dB, versus 30.92 dB for direct codec reconstruction. The codec control receives the original image and transports within-patch detail; it is not compact semantic memory. In the first eight fixed test examples, training removes the synthetic square pattern but outputs remain mostly coarse color fields; the photographed objects are not reconstructed. Passing the declared optimization/context screens does not establish detailed or general photographic generation. A single training seed and fixed pair-shared sampling noise were used. Prior upstream COCO exposure limits the holdout claim.",
+  "screens": {
+    "context": true,
+    "learning": true,
+    "passed": true
+  },
+  "sources": [
+    {
+      "path": "runs/real_photo_v1/result.json",
+      "sha256": "d6f7a0cf820794875baaa3a882e378531de89afeb1bd30a2aeca28720a26c28e"
+    },
+    {
+      "path": "runs/real_photo_v1/verification.json",
+      "sha256": "7b2e00df1082d7f678c6cca83895557c96c0bbcc291a1ddefa59d75d11a8ee42"
+    },
+    {
+      "path": "runs/real_photo_v1/completion.json",
+      "sha256": "f18a581ca94327f0b91bdb92529028a6708b93e689a5181211190bf0534197c5"
+    },
+    {
+      "path": "runs/real_photo_v1/training/run.json",
+      "sha256": "d24d43ee7fe8198982bcb1d48702e36e6c5b81ecf2c3faa99e77d431353a8e00"
+    },
+    {
+      "path": "runs/real_photo_v1/training/result.json",
+      "sha256": "6f4464fb21bd91f26c7f57b39a49581e294ce02b5cc6cce666ebe60f50864761"
+    },
+    {
+      "path": "runs/real_photo_v1/training/weights.pt",
+      "sha256": "09596004e070d3d95f190e288b18084da683f87fbe10c9a153581b4de0d7a28b"
+    },
+    {
+      "path": "runs/real_photo_v1/training/initial_weights.pt",
+      "sha256": "23ce00e0f8e78974d0d15bae72eed427dc591e0b9a77a7c7adf05a4725806b67"
+    },
+    {
+      "path": "runs/real_photo_v1/initial_test/result.json",
+      "sha256": "a01fe584bc4e75bb8c9502b6e56740db8588c2a96dd2db21625019bea0d74b81"
+    },
+    {
+      "path": "runs/real_photo_v1/initial_test/predictions.npz",
+      "sha256": "67bad7944ae7a67ae1f9875d8c2e38fc949b721b87ae3ef20c5e3a0be4f8fcf7"
+    },
+    {
+      "path": "runs/real_photo_v1/trained_test/result.json",
+      "sha256": "40221820ec818e2778712c576f5c4904cf6a4642ff3605f0a44dabc9251cadcd"
+    },
+    {
+      "path": "runs/real_photo_v1/trained_test/predictions.npz",
+      "sha256": "1f31d8a8359b2c3d6a7d36067c8d595db8718e7c7486a995bf74a57ca6719367"
+    },
+    {
+      "path": "runs/real_photo_v1/comparison.png",
+      "sha256": "7512deed2e14b81161b33d207e669c6ded05187e4c07d17e6e64989561c5bd92"
+    },
+    {
+      "path": "runs/reviews/real_photo_v1/method-receipt.json",
+      "sha256": "4f8d3923df75451c10542e3e406d8020f2066139a01c502a6810158edcf19862"
+    },
+    {
+      "path": "runs/reviews/real_photo_v1/method-response.json",
+      "sha256": "a3307096440d6ab8a16e03877ff1f7e1f09c93e5ac81263272a92abc4c03e7a8"
+    },
+    {
+      "path": "runs/reviews/real_photo_v1/review_status.json",
+      "sha256": "7af0601524ba202f598bf06c72747a493cba507084f2a09492190424cd19452e"
+    }
+  ],
+  "timestamp": "2026-09-14T01:45+02:00",
+  "training": {
+    "peak_reserved_mib": 700.0,
+    "test_images": 256,
+    "trainable_parameters": 314576,
+    "training_images": 1024,
+    "training_resolution": [
+      64,
+      64
+    ],
+    "training_seconds": 370.0325525669614,
+    "training_updates": 2048,
+    "validation_images": 128
+  },
+  "verification": {
+    "browser_checked": false,
+    "changed_generator_tensors": 118,
+    "cpu_tests": 15,
+    "development_train_rows": [
+      43472,
+      76828,
+      17474,
+      12438,
+      33440,
+      72344,
+      64714,
+      42235,
+      51932,
+      12444,
+      6103,
+      56786,
+      39560,
+      40623,
+      51697,
+      22510
+    ],
+    "development_validation_rows": [
+      3284,
+      26711,
+      70591,
+      20697,
+      21307,
+      8395,
+      71839,
+      49612,
+      47943,
+      80288,
+      51058,
+      35769,
+      73612,
+      79174,
+      74641,
+      26431
+    ],
+    "frozen_tensors_equal": 520,
+    "gpu_reload": [
+      {
+        "exact": true,
+        "name": "initial_validation",
+        "photos": 128,
+        "tensors": 8
+      },
+      {
+        "exact": true,
+        "name": "trained_validation",
+        "photos": 128,
+        "tensors": 8
+      },
+      {
+        "exact": true,
+        "name": "initial_test",
+        "photos": 32,
+        "tensors": 8
+      },
+      {
+        "exact": true,
+        "name": "trained_test",
+        "photos": 32,
+        "tensors": 8
+      }
+    ],
+    "gpu_resume_exact": true,
+    "independent_metric_values": 160,
+    "reports": [
+      "initial_test",
+      "training",
+      "development",
+      "trained_test",
+      "verification/full",
+      "verification/resume"
+    ],
+    "scope": "Same-device FP32 deterministic replay. No claim across devices or general photographic generation.",
+    "source_and_snapshot_files_verified": 60,
+    "source_weights_preserved": true,
+    "train_mean_verified": true,
+    "trainable_parameters": 314576
+  }
+}

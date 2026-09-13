@@ -4035,3 +4035,37 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O229
+  timestamp: 2026-09-14T01:45+02:00
+  provenance: ai-suggested
+  content: Real-photo generator continuation improves aggregate error and responds to photo-specific
+    context, yet the displayed outputs retain mostly coarse color fields. Passing relative learning/ablation
+    screens is not photographic fidelity. Direct codec adequacy and poor state-conditioned output
+    expose a gap without uniquely locating it in encoding, state/memory compression, readout or optimization.
+  context: Completed fixed-budget real-photo fit and verification; no researcher interpretation of
+    the new result or adoption of the next diagnostic yet.
+  potential_type: claim
+  bound_to:
+  - N341
+  - N342
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O230
+  timestamp: 2026-09-14T01:45+02:00
+  provenance: ai-suggested
+  content: Next compare recoverable photographic detail at encoder features, stored state and final
+    workspace using matched diagnostic readers, then train the implicated path before deciding on
+    generator scaling. Keep train/test separation and fixed context interventions; the direct residual
+    codec is not a compact-memory benchmark.
+  context: Completed fixed-budget real-photo fit and verification; no researcher interpretation of
+    the new result or adoption of the next diagnostic yet.
+  potential_type: heuristic
+  bound_to:
+  - N341
+  - N342
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
