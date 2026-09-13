@@ -2055,3 +2055,65 @@ while factual shape remains readable. Keep existing comparisons and clean/raw re
 use fresh confirmation for any later intervention, not repeated selection on30073/30074.
 Learned input reliability, general scene invariance, independent upstream replication,
 real images, CPU portability and streaming runtime remain separate open points.
+
+## Recall shape diagnosis before the next intervention
+
+Continue the unresolved cool recall shape task. First run a zero-update local loss
+and gradient diagnostic on the texture-trained source8502 checkpoint and its verified
+frozen training cache. Fixed first32 histories of each of four256-history scene blocks
+cover all16 canonical tuples and complete quartets. Ordinary and reset contexts are
+separate. Record pixel and standardized-feature losses, producer gradient norms/cosine,
+combined-gradient projection onto pixel descent, per-level feature contributions and
+output saturation. Keep source/cache hashes exact; no confirmation samples or parameter
+updates. Budget60s GPU,4GiB cap/1GiB headroom,3GiB disk floor. These are local diagnostics,
+not proof of a unique failure mechanism. Actual Claude generic review is in progress.
+Choose and preregister a bounded matched intervention only after this diagnostic.
+
+Zero-update diagnostic completed: all eight scene/context aggregate gradient cosines
+positive(.145–.635), no output saturation, and nonzero pixel gradients through every
+feature level. On cool reset the weighted feature-gradient norm is2.59x pixel, cosine
+.595; this does not support an aggregate opposing-gradient or clamp explanation.
+A separate concrete concern is target-dependent foreground weighting: false negatives
+cost10x false positives in the differing shape corners. Normalization also differs
+by shape. Before changing capacity, verify that asymmetry with canonical target pairs
+and test a training-only rectangle mask that treats the shared shape extent equally.
+Keep existing evaluation metrics untouched and the teacher-feature coefficient fixed.
+A second generic Claude review is pending; no causal mechanism inferred from gradients.
+
+## Recall shape weighting comparison: locked protocol
+
+Test the full training weighting policy (mask plus its own normalization), not mask
+support alone. Keep the feature penalty0.1 and producer capacity unchanged. Compare
+foreground-only weighting to weight10 throughout the foreground bounding rectangle
+and1 outside, derived only from canonical training target pixels. For matched square/
+plus targets the rectangles and box denominators must be exactly equal; blank targets
+use uniform weights. This training supervision never enters inference. Existing
+weighted-error evaluation metrics, nearest-template labels and all task gates remain
+unchanged. Measure original loss asymmetry and corrected symmetry independently.
+
+Both arms start from texture_shape_v1/source_8502_augmented, seed9501, frozen native
+state, factual head, image backend, centering and calibration. Only58,128 image-producer
+parameters train. Extend the existing cached image-only recipe path; do not add model
+capacity. Train7701/128 pairs × neutral,warm,cool,texture blocks=1,024 histories;
+1,536 updates,batch16,existing AdamW,180s training cap. Neutral validation33072/32 pairs,
+terminal33071/64 pairs do not select. Development32701/34072/34071,16 pairs,16 updates.
+
+Fresh confirmation33073/33074,16 pairs=32 histories per cell; same six neutral/warm/
+cool/mild-warm/mild-cool/texture conditions. Both fits and unchanged source on all,
+raw original8502 on neutral/texture:40 cells,all10 modes. Full repair requires all12
+box cells pass unchanged task gates and all four ordinary/reset factual/image responses
+within5pp of raw-neutral; texture additionally within5pp of raw-texture. Report clean,
+texture and all-scene retention separately. Primary cool image benefit: pool ordinary/
+reset images over both seeds (128 correlated responses), require≥25% error reduction
+and no regression in any of four paired image accuracies. Assessable only if control
+has≥8 errors; otherwise report unassessable. Factual logits must remain exactly equal
+to unchanged source throughout every evaluation mode. Report absolute errors, original
+weighted MSE and exact quartet differences; do not claim independent trials or unique
+mechanism. No extra architecture/fit/threshold change after confirmation.
+
+Budgets:2fits,40cells,900s evaluation,4GiB GPU with1GiB headroom,3GiB disk floor. Essential
+REDs: canonical mask/symmetry and blank/error cases; default loss unchanged; box gradients
+only into producer; CLI scope; exact odd-step resume/reload including settings; frozen
+facts/state/backend. Small GPU development precedes source freeze and formal comparison.
+Actual Claude accepts bounded gradient/ablation scope; follow-up correction addresses
+its mistaken target-supervision leakage claim and mask-versus-normalization distinction.
