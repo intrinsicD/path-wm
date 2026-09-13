@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T19:18+02:00
-  turn_count: 15
-  summary: 'Brightness closure checklist proposed: scene/lighting coverage, causal memory, clean fidelity,
-    fresh independent confirmation, failure handling and runtime integration; learned invariance and webcam
-    readiness separate. No new training or evaluation.'
+  last_turn: 2026-09-13T20:16+02:00
+  turn_count: 16
+  summary: 'Scene challenge: centering12/40 and raw8/40 passes; texture harms and bright-background coverage
+    failures. Coverage-reporting repair verified;92 tests,18012 metrics,76 exact GPU replays plus2 full
+    regressions; no training. Broad learned/camera robustness remains open.'
 
 events_logged:
 - turn: 1
@@ -503,6 +503,55 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Propose scoped completion checklist and cheapest frozen-weight challenge before further learning.
+- turn: 16
+  type: decision
+  id: N311
+  routing: direct
+  provenance: user
+  summary: Adopt scoped closure checklist and continue review/test/repair iteration
+- turn: 16
+  type: experiment
+  id: N312
+  routing: direct
+  provenance: ai-executed
+  summary: Frozen scene challenge refutes broad default centering for this task
+- turn: 16
+  type: experiment
+  id: N313
+  routing: direct
+  provenance: ai-executed
+  summary: Coverage preflight completes rejected evaluations without model predictions
+- turn: 16
+  type: observation
+  id: O209
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Fixed-reference median centering suffices for tested per-frame/channel additive nuisance but
+    is not a general scene-invariance solution: it harms the texture control and rejects most bright-background
+    histories. Perfect direct reading on centered tint separates encoder accessibility from native memory/output
+    success. Rejection reporting is repaired but is neither perceptual repair nor learned reliability.'
+- turn: 16
+  type: observation
+  id: O210
+  routing: staged
+  provenance: ai-suggested
+  summary: Next use a matched clean/scene-variation state/readout learning comparison, beginning with
+    tint where an existing direct reader demonstrates accessible encoder information. Retain raw texture
+    controls, clean retention and fresh confirmation; expand trainable perception only when diagnostics
+    justify it. Independent upstream runs, real recordings, calibrated reliability, CPU portability and
+    deployed runtime checks remain open.
+- turn: 16
+  type: heuristic
+  id: H63
+  routing: crystallized
+  provenance: user-revised
+  summary: O208 scoped checklist explicitly adopted.
+- turn: 16
+  type: heuristic
+  id: H64
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O207 prior challenge committed in scene tests and fixed-weight comparison.
 
 ai_actions:
 - turn: 1
@@ -700,6 +749,25 @@ ai_actions:
   provenance: ai-executed
   files_changed:
   - docs/recall-repair-plan.md
+- turn: 16
+  action: Two actual public-only Claude reviews with five mathematical/evaluation corrections reconciled.
+    Added scene data/CLI with24 RED checks;87 screen tests, separate GPU development,80 immutable cells,18012
+    metric audit,76 exact GPU replays,legacy-data parity and report QA. Then5 RED coverage tests, pure
+    range inspection and completed unscored reporting,45 focused checks,4 GPU verification exports;92
+    unique tests total. Updated docs/reports and committed slices; no model training.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/data/memory_output.py
+  - pathwm/models/memory_output.py
+  - experiments/memory_output.py
+  - tests/test_centering_challenge.py
+  - tests/test_centering_coverage.py
+  - tests/test_memory_output.py
+  - docs/experiments.md
+  - docs/project-state.md
+  - docs/recall-repair-plan.md
+  - runs/centering_challenge_v1/
+  - ara/evidence/tables/centering_challenge_2026-09-13.json
 
 claims_touched: []
 key_context:
@@ -752,13 +820,18 @@ key_context:
 - turn: 15
   excerpt: 'User: Where are we at? List everything we need to test to have this part solved. Answer interprets
     this part as brightness robustness of visual observations feeding memory and factual/image output.'
+- turn: 16
+  excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
+    these open points. Scoped closure method adopted; deterministic reporting repaired without a false
+    robustness claim.'
 
 open_threads:
-- 'N307/N309/N310/O206/O207/O208: scoped centering success and incomplete learned repair; closure checklist
-  proposed. Background/coverage/illumination challenge, independent upstream confirmation, integration/runtime
-  and later real recordings remain open.'
-- 'N278-N309: CPU/GPU numerical portability unresolved; current logits4.991394043/pixels0.035994232, native-category
-  differences11 cells,none centered. Current48 GPU replays and original defaults exact; prior cases retained.'
+- 'N312/N313/O209/O210: centering fails broad scene range; coverage reporting fixed. Next controlled state/readout
+  learning with clean/raw controls and fresh confirmation; independent upstream models, real observations
+  and deployed runtime remain open.'
+- 'N278-N313: CPU/GPU portability unresolved; earlier logits4.991394043/pixels0.035994232 and categorical
+  differences retained. New76 GPU replays plus2 full post-repair regression exports exact; no CPU portability
+  repair claimed.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
   and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and
@@ -803,7 +876,5 @@ ai_suggestions_pending:
   researcher interpretation pending.'
 - 'O206: task-specific centering sufficiency with incomplete learned augmentation; researcher interpretation
   pending.'
-- 'O207: challenge centering priors and diagnose learned head/state optimization under fresh confirmation
-  and neutral retention.'
-- 'O208: proposed closure matrix; fix new nuisance ranges, populations and thresholds before the next
-  protocol.'
+- 'O209: scene-limited centering and diagnostic accessibility interpretation; researcher response pending.'
+- 'O210: matched clean/scene state-readout learning with raw controls and fresh confirmation proposed.'

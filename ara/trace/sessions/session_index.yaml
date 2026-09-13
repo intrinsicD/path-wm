@@ -139,10 +139,10 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: 'Brightness closure checklist proposed: scene/lighting coverage, causal memory, clean fidelity,
-    fresh independent confirmation, failure handling and runtime integration; learned invariance and webcam
-    readiness separate. No new training or evaluation.'
-  turn_count: 15
-  events_count: 80
+  summary: 'Scene challenge: centering12/40 and raw8/40 passes; texture harms and bright-background coverage
+    failures. Coverage-reporting repair verified;92 tests,18012 metrics,76 exact GPU replays plus2 full
+    regressions; no training. Broad learned/camera robustness remains open.'
+  turn_count: 16
+  events_count: 87
   claims_touched: []
   open_threads: 10

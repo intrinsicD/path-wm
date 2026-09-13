@@ -1,0 +1,4995 @@
+{
+  "timestamp": "2026-09-13T20:16+02:00",
+  "scope": "Fixed-source scene/lighting challenge, followed by evaluation coverage-reporting repair; no model training.",
+  "commits": {
+    "plan_red": "a849dc1",
+    "screen": "311c3ca",
+    "results_repair_red": "453e687",
+    "repair": "716d661",
+    "completed_docs": "06ae723"
+  },
+  "groups": {
+    "background-bright": {
+      "centered": {
+        "accuracy_ranges": null,
+        "cells": 4,
+        "coverage_range": [
+          0.15625,
+          0.21875
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      },
+      "raw": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            0.09375,
+            0.125
+          ],
+          "ordinary.image_accuracy": [
+            0.0625,
+            0.1015625
+          ],
+          "reset.factual_accuracy": [
+            0.0,
+            0.125
+          ],
+          "reset.image_accuracy": [
+            0.09375,
+            0.1171875
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      }
+    },
+    "background-texture": {
+      "centered": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            0.765625,
+            0.8515625
+          ],
+          "ordinary.image_accuracy": [
+            0.8046875,
+            0.859375
+          ],
+          "reset.factual_accuracy": [
+            0.7734375,
+            0.84375
+          ],
+          "reset.image_accuracy": [
+            0.84375,
+            0.8671875
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      },
+      "raw": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            1.0,
+            1.0
+          ],
+          "ordinary.image_accuracy": [
+            1.0,
+            1.0
+          ],
+          "reset.factual_accuracy": [
+            1.0,
+            1.0
+          ],
+          "reset.image_accuracy": [
+            1.0,
+            1.0
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 4,
+        "task_passes": 4
+      }
+    },
+    "background-tint": {
+      "centered": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            0.734375,
+            0.796875
+          ],
+          "ordinary.image_accuracy": [
+            0.78125,
+            0.890625
+          ],
+          "reset.factual_accuracy": [
+            0.7578125,
+            0.8125
+          ],
+          "reset.image_accuracy": [
+            0.78125,
+            0.921875
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      },
+      "raw": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            0.6328125,
+            0.75
+          ],
+          "ordinary.image_accuracy": [
+            0.6875,
+            0.828125
+          ],
+          "reset.factual_accuracy": [
+            0.578125,
+            0.7578125
+          ],
+          "reset.image_accuracy": [
+            0.6171875,
+            0.8046875
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      }
+    },
+    "channel-offset": {
+      "centered": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            1.0,
+            1.0
+          ],
+          "ordinary.image_accuracy": [
+            1.0,
+            1.0
+          ],
+          "reset.factual_accuracy": [
+            1.0,
+            1.0
+          ],
+          "reset.image_accuracy": [
+            1.0,
+            1.0
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 4,
+        "task_passes": 4
+      },
+      "raw": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            0.4609375,
+            0.6015625
+          ],
+          "ordinary.image_accuracy": [
+            0.4296875,
+            0.4609375
+          ],
+          "reset.factual_accuracy": [
+            0.5625,
+            0.625
+          ],
+          "reset.image_accuracy": [
+            0.40625,
+            0.4453125
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      }
+    },
+    "clutter": {
+      "centered": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            0.1328125,
+            0.1640625
+          ],
+          "ordinary.image_accuracy": [
+            0.125,
+            0.1953125
+          ],
+          "reset.factual_accuracy": [
+            0.09375,
+            0.1640625
+          ],
+          "reset.image_accuracy": [
+            0.1875,
+            0.2265625
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      },
+      "raw": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            0.1328125,
+            0.15625
+          ],
+          "ordinary.image_accuracy": [
+            0.125,
+            0.171875
+          ],
+          "reset.factual_accuracy": [
+            0.09375,
+            0.171875
+          ],
+          "reset.image_accuracy": [
+            0.1875,
+            0.21875
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      }
+    },
+    "foreground-large": {
+      "centered": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            0.453125,
+            0.546875
+          ],
+          "ordinary.image_accuracy": [
+            0.4765625,
+            0.5859375
+          ],
+          "reset.factual_accuracy": [
+            0.484375,
+            0.546875
+          ],
+          "reset.image_accuracy": [
+            0.4921875,
+            0.578125
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      },
+      "raw": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            0.4609375,
+            0.5625
+          ],
+          "ordinary.image_accuracy": [
+            0.4765625,
+            0.625
+          ],
+          "reset.factual_accuracy": [
+            0.4765625,
+            0.546875
+          ],
+          "reset.image_accuracy": [
+            0.46875,
+            0.6171875
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      }
+    },
+    "gain-dark": {
+      "centered": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            0.8046875,
+            0.8828125
+          ],
+          "ordinary.image_accuracy": [
+            0.8515625,
+            0.875
+          ],
+          "reset.factual_accuracy": [
+            0.71875,
+            0.859375
+          ],
+          "reset.image_accuracy": [
+            0.75,
+            0.8671875
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      },
+      "raw": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            0.2421875,
+            0.3125
+          ],
+          "ordinary.image_accuracy": [
+            0.2578125,
+            0.28125
+          ],
+          "reset.factual_accuracy": [
+            0.2265625,
+            0.28125
+          ],
+          "reset.image_accuracy": [
+            0.1875,
+            0.2265625
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      }
+    },
+    "local-shadow": {
+      "centered": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            0.71875,
+            0.8984375
+          ],
+          "ordinary.image_accuracy": [
+            0.796875,
+            0.890625
+          ],
+          "reset.factual_accuracy": [
+            0.8203125,
+            0.9140625
+          ],
+          "reset.image_accuracy": [
+            0.8203125,
+            0.890625
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      },
+      "raw": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            0.6640625,
+            0.75
+          ],
+          "ordinary.image_accuracy": [
+            0.75,
+            0.7734375
+          ],
+          "reset.factual_accuracy": [
+            0.7109375,
+            0.7578125
+          ],
+          "reset.image_accuracy": [
+            0.765625,
+            0.7890625
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      }
+    },
+    "neutral": {
+      "centered": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            1.0,
+            1.0
+          ],
+          "ordinary.image_accuracy": [
+            1.0,
+            1.0
+          ],
+          "reset.factual_accuracy": [
+            1.0,
+            1.0
+          ],
+          "reset.image_accuracy": [
+            1.0,
+            1.0
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 4,
+        "task_passes": 4
+      },
+      "raw": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            1.0,
+            1.0
+          ],
+          "ordinary.image_accuracy": [
+            1.0,
+            1.0
+          ],
+          "reset.factual_accuracy": [
+            1.0,
+            1.0
+          ],
+          "reset.image_accuracy": [
+            1.0,
+            1.0
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 4,
+        "task_passes": 4
+      }
+    },
+    "temporal-offset": {
+      "centered": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            1.0,
+            1.0
+          ],
+          "ordinary.image_accuracy": [
+            1.0,
+            1.0
+          ],
+          "reset.factual_accuracy": [
+            1.0,
+            1.0
+          ],
+          "reset.image_accuracy": [
+            1.0,
+            1.0
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 4,
+        "task_passes": 4
+      },
+      "raw": {
+        "accuracy_ranges": {
+          "ordinary.factual_accuracy": [
+            0.3671875,
+            0.484375
+          ],
+          "ordinary.image_accuracy": [
+            0.3359375,
+            0.4609375
+          ],
+          "reset.factual_accuracy": [
+            0.3515625,
+            0.4609375
+          ],
+          "reset.image_accuracy": [
+            0.3671875,
+            0.4453125
+          ]
+        },
+        "cells": 4,
+        "coverage_range": [
+          1.0,
+          1.0
+        ],
+        "range_passes": 0,
+        "task_passes": 0
+      }
+    }
+  },
+  "per_cell": {
+    "8501_25073_background-bright_centered": {
+      "coverage": 0.21875,
+      "range_pass": false,
+      "retention_margins": null,
+      "retention_pass": false,
+      "scored": false,
+      "task_pass": false
+    },
+    "8501_25073_background-bright_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.825,
+        "ordinary.image_accuracy": -0.85625,
+        "reset.factual_accuracy": -0.825,
+        "reset.image_accuracy": -0.840625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25073_background-texture_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.0984375,
+        "ordinary.image_accuracy": -0.0984375,
+        "reset.factual_accuracy": -0.10625,
+        "reset.image_accuracy": -0.0828125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25073_background-texture_raw": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8501_25073_background-tint_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.153125,
+        "ordinary.image_accuracy": -0.1140625,
+        "reset.factual_accuracy": -0.1375,
+        "reset.image_accuracy": -0.1140625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25073_background-tint_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.2625,
+        "ordinary.image_accuracy": -0.1765625,
+        "reset.factual_accuracy": -0.23125,
+        "reset.image_accuracy": -0.2078125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25073_channel-offset_centered": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8501_25073_channel-offset_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.4890625,
+        "ordinary.image_accuracy": -0.5046875,
+        "reset.factual_accuracy": -0.3484375,
+        "reset.image_accuracy": -0.54375
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25073_clutter_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.8015625,
+        "ordinary.image_accuracy": -0.778125,
+        "reset.factual_accuracy": -0.85625,
+        "reset.image_accuracy": -0.7625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25073_clutter_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.8171875,
+        "ordinary.image_accuracy": -0.7859375,
+        "reset.factual_accuracy": -0.85625,
+        "reset.image_accuracy": -0.746875
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25073_foreground-large_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.403125,
+        "ordinary.image_accuracy": -0.3640625,
+        "reset.factual_accuracy": -0.403125,
+        "reset.image_accuracy": -0.3796875
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25073_foreground-large_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.41875,
+        "ordinary.image_accuracy": -0.35625,
+        "reset.factual_accuracy": -0.403125,
+        "reset.image_accuracy": -0.35625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25073_gain-dark_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.0671875,
+        "ordinary.image_accuracy": -0.0828125,
+        "reset.factual_accuracy": -0.10625,
+        "reset.image_accuracy": -0.0984375
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25073_gain-dark_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.684375,
+        "ordinary.image_accuracy": -0.6921875,
+        "reset.factual_accuracy": -0.66875,
+        "reset.image_accuracy": -0.7234375
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25073_local-shadow_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.23125,
+        "ordinary.image_accuracy": -0.153125,
+        "reset.factual_accuracy": -0.1296875,
+        "reset.image_accuracy": -0.1140625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25073_local-shadow_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.2859375,
+        "ordinary.image_accuracy": -0.184375,
+        "reset.factual_accuracy": -0.2390625,
+        "reset.image_accuracy": -0.16875
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25073_neutral_centered": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8501_25073_neutral_raw": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8501_25073_temporal-offset_centered": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8501_25073_temporal-offset_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.465625,
+        "ordinary.image_accuracy": -0.4890625,
+        "reset.factual_accuracy": -0.4890625,
+        "reset.image_accuracy": -0.5046875
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25074_background-bright_centered": {
+      "coverage": 0.15625,
+      "range_pass": false,
+      "retention_margins": null,
+      "retention_pass": false,
+      "scored": false,
+      "task_pass": false
+    },
+    "8501_25074_background-bright_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.825,
+        "ordinary.image_accuracy": -0.8484375,
+        "reset.factual_accuracy": -0.825,
+        "reset.image_accuracy": -0.8328125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25074_background-texture_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.153125,
+        "ordinary.image_accuracy": -0.1453125,
+        "reset.factual_accuracy": -0.1375,
+        "reset.image_accuracy": -0.10625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25074_background-texture_raw": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8501_25074_background-tint_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.1765625,
+        "ordinary.image_accuracy": -0.16875,
+        "reset.factual_accuracy": -0.1609375,
+        "reset.image_accuracy": -0.16875
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25074_background-tint_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.2,
+        "ordinary.image_accuracy": -0.121875,
+        "reset.factual_accuracy": -0.1921875,
+        "reset.image_accuracy": -0.1453125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25074_channel-offset_centered": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8501_25074_channel-offset_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.434375,
+        "ordinary.image_accuracy": -0.4890625,
+        "reset.factual_accuracy": -0.325,
+        "reset.image_accuracy": -0.5046875
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25074_clutter_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.7859375,
+        "ordinary.image_accuracy": -0.7546875,
+        "reset.factual_accuracy": -0.840625,
+        "reset.image_accuracy": -0.7625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25074_clutter_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.809375,
+        "ordinary.image_accuracy": -0.778125,
+        "reset.factual_accuracy": -0.8484375,
+        "reset.image_accuracy": -0.7625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25074_foreground-large_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.434375,
+        "ordinary.image_accuracy": -0.3640625,
+        "reset.factual_accuracy": -0.4109375,
+        "reset.image_accuracy": -0.371875
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25074_foreground-large_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.3875,
+        "ordinary.image_accuracy": -0.325,
+        "reset.factual_accuracy": -0.4109375,
+        "reset.image_accuracy": -0.3328125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25074_gain-dark_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.10625,
+        "ordinary.image_accuracy": -0.075,
+        "reset.factual_accuracy": -0.090625,
+        "reset.image_accuracy": -0.0828125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25074_gain-dark_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.7078125,
+        "ordinary.image_accuracy": -0.6921875,
+        "reset.factual_accuracy": -0.6765625,
+        "reset.image_accuracy": -0.7234375
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25074_local-shadow_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.215625,
+        "ordinary.image_accuracy": -0.1453125,
+        "reset.factual_accuracy": -0.121875,
+        "reset.image_accuracy": -0.1296875
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25074_local-shadow_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.2625,
+        "ordinary.image_accuracy": -0.1765625,
+        "reset.factual_accuracy": -0.23125,
+        "reset.image_accuracy": -0.1609375
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8501_25074_neutral_centered": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8501_25074_neutral_raw": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8501_25074_temporal-offset_centered": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8501_25074_temporal-offset_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.528125,
+        "ordinary.image_accuracy": -0.528125,
+        "reset.factual_accuracy": -0.5203125,
+        "reset.image_accuracy": -0.528125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25073_background-bright_centered": {
+      "coverage": 0.21875,
+      "range_pass": false,
+      "retention_margins": null,
+      "retention_pass": false,
+      "scored": false,
+      "task_pass": false
+    },
+    "8502_25073_background-bright_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.85625,
+        "ordinary.image_accuracy": -0.8875,
+        "reset.factual_accuracy": -0.95,
+        "reset.image_accuracy": -0.85625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25073_background-texture_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.1375,
+        "ordinary.image_accuracy": -0.090625,
+        "reset.factual_accuracy": -0.1296875,
+        "reset.image_accuracy": -0.0828125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25073_background-texture_raw": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8502_25073_background-tint_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.1609375,
+        "ordinary.image_accuracy": -0.059375,
+        "reset.factual_accuracy": -0.1453125,
+        "reset.image_accuracy": -0.028124999999999997
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25073_background-tint_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.3171875,
+        "ordinary.image_accuracy": -0.2625,
+        "reset.factual_accuracy": -0.371875,
+        "reset.image_accuracy": -0.3328125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25073_channel-offset_centered": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8502_25073_channel-offset_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.3640625,
+        "ordinary.image_accuracy": -0.5203125,
+        "reset.factual_accuracy": -0.3875,
+        "reset.image_accuracy": -0.528125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25073_clutter_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.8171875,
+        "ordinary.image_accuracy": -0.825,
+        "reset.factual_accuracy": -0.7859375,
+        "reset.image_accuracy": -0.7390625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25073_clutter_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.8015625,
+        "ordinary.image_accuracy": -0.825,
+        "reset.factual_accuracy": -0.8015625,
+        "reset.image_accuracy": -0.7390625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25073_foreground-large_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.48125,
+        "ordinary.image_accuracy": -0.4734375,
+        "reset.factual_accuracy": -0.45,
+        "reset.image_accuracy": -0.4578125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25073_foreground-large_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.4890625,
+        "ordinary.image_accuracy": -0.4734375,
+        "reset.factual_accuracy": -0.4734375,
+        "reset.image_accuracy": -0.4734375
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25073_gain-dark_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.1453125,
+        "ordinary.image_accuracy": -0.0984375,
+        "reset.factual_accuracy": -0.23125,
+        "reset.image_accuracy": -0.2
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25073_gain-dark_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.6375,
+        "ordinary.image_accuracy": -0.66875,
+        "reset.factual_accuracy": -0.7234375,
+        "reset.image_accuracy": -0.7625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25073_local-shadow_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.0671875,
+        "ordinary.image_accuracy": -0.10625,
+        "reset.factual_accuracy": -0.0515625,
+        "reset.image_accuracy": -0.090625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25073_local-shadow_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.2,
+        "ordinary.image_accuracy": -0.184375,
+        "reset.factual_accuracy": -0.1921875,
+        "reset.image_accuracy": -0.184375
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25073_neutral_centered": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8502_25073_neutral_raw": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8502_25073_temporal-offset_centered": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8502_25073_temporal-offset_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.5671875,
+        "ordinary.image_accuracy": -0.559375,
+        "reset.factual_accuracy": -0.5671875,
+        "reset.image_accuracy": -0.5671875
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25074_background-bright_centered": {
+      "coverage": 0.15625,
+      "range_pass": false,
+      "retention_margins": null,
+      "retention_pass": false,
+      "scored": false,
+      "task_pass": false
+    },
+    "8502_25074_background-bright_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.85625,
+        "ordinary.image_accuracy": -0.8875,
+        "reset.factual_accuracy": -0.95,
+        "reset.image_accuracy": -0.85625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25074_background-texture_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.184375,
+        "ordinary.image_accuracy": -0.1375,
+        "reset.factual_accuracy": -0.1765625,
+        "reset.image_accuracy": -0.10625
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25074_background-texture_raw": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8502_25074_background-tint_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.215625,
+        "ordinary.image_accuracy": -0.1140625,
+        "reset.factual_accuracy": -0.1921875,
+        "reset.image_accuracy": -0.04375
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25074_background-tint_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.309375,
+        "ordinary.image_accuracy": -0.2546875,
+        "reset.factual_accuracy": -0.3484375,
+        "reset.image_accuracy": -0.29375
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25074_channel-offset_centered": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8502_25074_channel-offset_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.3484375,
+        "ordinary.image_accuracy": -0.5125,
+        "reset.factual_accuracy": -0.371875,
+        "reset.image_accuracy": -0.5359375
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25074_clutter_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.8171875,
+        "ordinary.image_accuracy": -0.825,
+        "reset.factual_accuracy": -0.79375,
+        "reset.image_accuracy": -0.7234375
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25074_clutter_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.79375,
+        "ordinary.image_accuracy": -0.825,
+        "reset.factual_accuracy": -0.778125,
+        "reset.image_accuracy": -0.73125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25074_foreground-large_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.496875,
+        "ordinary.image_accuracy": -0.4734375,
+        "reset.factual_accuracy": -0.465625,
+        "reset.image_accuracy": -0.4578125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25074_foreground-large_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.48125,
+        "ordinary.image_accuracy": -0.4734375,
+        "reset.factual_accuracy": -0.45,
+        "reset.image_accuracy": -0.48125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25074_gain-dark_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.1296875,
+        "ordinary.image_accuracy": -0.090625,
+        "reset.factual_accuracy": -0.184375,
+        "reset.image_accuracy": -0.184375
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25074_gain-dark_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.6375,
+        "ordinary.image_accuracy": -0.66875,
+        "reset.factual_accuracy": -0.7,
+        "reset.image_accuracy": -0.73125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25074_local-shadow_centered": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.0515625,
+        "ordinary.image_accuracy": -0.059375,
+        "reset.factual_accuracy": -0.0359375,
+        "reset.image_accuracy": -0.059375
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25074_local-shadow_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.246875,
+        "ordinary.image_accuracy": -0.2,
+        "reset.factual_accuracy": -0.2,
+        "reset.image_accuracy": -0.184375
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    },
+    "8502_25074_neutral_centered": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8502_25074_neutral_raw": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8502_25074_temporal-offset_centered": {
+      "coverage": 1.0,
+      "range_pass": true,
+      "retention_margins": {
+        "ordinary.factual_accuracy": 0.05,
+        "ordinary.image_accuracy": 0.05,
+        "reset.factual_accuracy": 0.05,
+        "reset.image_accuracy": 0.05
+      },
+      "retention_pass": true,
+      "scored": true,
+      "task_pass": true
+    },
+    "8502_25074_temporal-offset_raw": {
+      "coverage": 1.0,
+      "range_pass": false,
+      "retention_margins": {
+        "ordinary.factual_accuracy": -0.5828125,
+        "ordinary.image_accuracy": -0.6140625,
+        "reset.factual_accuracy": -0.5984375,
+        "reset.image_accuracy": -0.5828125
+      },
+      "retention_pass": false,
+      "scored": true,
+      "task_pass": false
+    }
+  },
+  "sources": {
+    "runs/image_continuation_v1/source_8501_joint/run.json": "e3fffca45761e472c5b7992591a4397bc77eefa2fdb0d21e425da2c4179ec069",
+    "runs/image_continuation_v1/source_8501_joint/weights.pt": "9f4f9d26d32b5be48bed4bae7bf916d7cc755b7f0b265ec4cfd81c742234ad5c",
+    "runs/image_continuation_v1/source_8502_joint/run.json": "545447d170f8089a8b9e51b01a42ba830a79eb697f3613b8ee032aff69638b82",
+    "runs/image_continuation_v1/source_8502_joint/weights.pt": "5ecf75d2b8982545fff297340e614772cebafa2d9d188128eef20333d1ce5e96"
+  },
+  "screen": {
+    "attempted_cells": 80,
+    "scored_cells": 76,
+    "coverage_failed_cells": 4,
+    "verified_metrics": 18012,
+    "exact_gpu_replays": 76,
+    "evaluation_seconds": 571.9264237669995,
+    "peak_cuda_reserved_bytes": 312475648,
+    "training_updates": 0
+  },
+  "repair": {
+    "verification": {
+      "cases": {
+        "8501_25073_neutral": {
+          "coverage": {
+            "accepted_frames": 384,
+            "accepted_histories": 128,
+            "attempted_frames": 384,
+            "attempted_histories": 128,
+            "coverage": 1.0,
+            "kind": "centering-range-v1",
+            "meaning": "Deterministic RGB range validity; not learned confidence",
+            "valid_frames": [
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ]
+            ]
+          },
+          "exact_full_export": true,
+          "max_errors": {
+            "cue_erased_image": 0.0,
+            "cue_erased_logits": 0.0,
+            "cue_erased_reference_logits": 0.0,
+            "direct_logits": 0.0,
+            "erased_history_image": 0.0,
+            "erased_history_logits": 0.0,
+            "erased_history_reference_logits": 0.0,
+            "history": 0.0,
+            "labels": 0.0,
+            "last_seen_erased_image": 0.0,
+            "last_seen_erased_logits": 0.0,
+            "last_seen_erased_reference_logits": 0.0,
+            "ordinary_image": 0.0,
+            "ordinary_logits": 0.0,
+            "ordinary_no_bank_image": 0.0,
+            "ordinary_no_bank_logits": 0.0,
+            "ordinary_no_bank_reference_logits": 0.0,
+            "ordinary_reference_logits": 0.0,
+            "reference_stored_logits": 0.0,
+            "reset_erased_image": 0.0,
+            "reset_erased_logits": 0.0,
+            "reset_erased_reference_logits": 0.0,
+            "reset_image": 0.0,
+            "reset_logits": 0.0,
+            "reset_reference_logits": 0.0,
+            "reset_swapped_image": 0.0,
+            "reset_swapped_logits": 0.0,
+            "reset_swapped_reference_logits": 0.0,
+            "reset_time_erased_image": 0.0,
+            "reset_time_erased_logits": 0.0,
+            "reset_time_erased_reference_logits": 0.0,
+            "reset_time_swapped_image": 0.0,
+            "reset_time_swapped_logits": 0.0,
+            "reset_time_swapped_reference_logits": 0.0,
+            "stored_logits": 0.0,
+            "target": 0.0,
+            "teacher_image": 0.0
+          },
+          "task_scored": true
+        },
+        "8501_25073_temporal-offset": {
+          "coverage": {
+            "accepted_frames": 384,
+            "accepted_histories": 128,
+            "attempted_frames": 384,
+            "attempted_histories": 128,
+            "coverage": 1.0,
+            "kind": "centering-range-v1",
+            "meaning": "Deterministic RGB range validity; not learned confidence",
+            "valid_frames": [
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ]
+            ]
+          },
+          "exact_full_export": true,
+          "max_errors": {
+            "cue_erased_image": 0.0,
+            "cue_erased_logits": 0.0,
+            "cue_erased_reference_logits": 0.0,
+            "direct_logits": 0.0,
+            "erased_history_image": 0.0,
+            "erased_history_logits": 0.0,
+            "erased_history_reference_logits": 0.0,
+            "history": 0.0,
+            "labels": 0.0,
+            "last_seen_erased_image": 0.0,
+            "last_seen_erased_logits": 0.0,
+            "last_seen_erased_reference_logits": 0.0,
+            "ordinary_image": 0.0,
+            "ordinary_logits": 0.0,
+            "ordinary_no_bank_image": 0.0,
+            "ordinary_no_bank_logits": 0.0,
+            "ordinary_no_bank_reference_logits": 0.0,
+            "ordinary_reference_logits": 0.0,
+            "reference_stored_logits": 0.0,
+            "reset_erased_image": 0.0,
+            "reset_erased_logits": 0.0,
+            "reset_erased_reference_logits": 0.0,
+            "reset_image": 0.0,
+            "reset_logits": 0.0,
+            "reset_reference_logits": 0.0,
+            "reset_swapped_image": 0.0,
+            "reset_swapped_logits": 0.0,
+            "reset_swapped_reference_logits": 0.0,
+            "reset_time_erased_image": 0.0,
+            "reset_time_erased_logits": 0.0,
+            "reset_time_erased_reference_logits": 0.0,
+            "reset_time_swapped_image": 0.0,
+            "reset_time_swapped_logits": 0.0,
+            "reset_time_swapped_reference_logits": 0.0,
+            "stored_logits": 0.0,
+            "target": 0.0,
+            "teacher_image": 0.0
+          },
+          "task_scored": true
+        },
+        "8501_27073_background-bright": {
+          "coverage": {
+            "accepted_frames": 160,
+            "accepted_histories": 16,
+            "attempted_frames": 384,
+            "attempted_histories": 128,
+            "coverage": 0.125,
+            "kind": "centering-range-v1",
+            "meaning": "Deterministic RGB range validity; not learned confidence",
+            "valid_frames": [
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ]
+            ]
+          },
+          "independent_range_check": true,
+          "task_scored": false
+        },
+        "8502_27073_background-bright": {
+          "coverage": {
+            "accepted_frames": 160,
+            "accepted_histories": 16,
+            "attempted_frames": 384,
+            "attempted_histories": 128,
+            "coverage": 0.125,
+            "kind": "centering-range-v1",
+            "meaning": "Deterministic RGB range validity; not learned confidence",
+            "valid_frames": [
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                true,
+                true,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ],
+              [
+                false,
+                false,
+                true
+              ]
+            ]
+          },
+          "independent_range_check": true,
+          "task_scored": false
+        }
+      },
+      "source_unchanged": true,
+      "training_updates": 0,
+      "wall_seconds": 16.366994027979672
+    },
+    "unique_relevant_tests": 92,
+    "focused_rerun_tests": 45
+  },
+  "final_checks": {
+    "fresh_coverage_exports": 2,
+    "inspected_figures": {
+      "runs/centering_challenge_v1/8501_25073_background-texture_centered/comparison.png": "93137b2dcb8f64c89913378eb4c839288f831d9858c0bf1df7491ebaa657d3e5",
+      "runs/centering_challenge_v1/8501_25073_foreground-large_centered/comparison.png": "6478bdb396db1d51362228ad961293d319d4c158a155af0b056ff89de685a1b2",
+      "runs/centering_challenge_v1/accuracy_grid.png": "332d3e5923ff6d1d6ba9c6669638948c334f0371953b55124eb7ff6e6c99faf9",
+      "runs/centering_challenge_v1/development/comparison.png": "8bae2d5a464a8246f4a9936a2bbda24e8b5be18390e8e801c08c06134b46c530"
+    },
+    "original_data_exact_cases": 12,
+    "post_repair_exact_full_exports": 2,
+    "post_repair_focused_tests": 45,
+    "repair_source_matches_current": true,
+    "report_count": 86,
+    "reports": {
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_background-bright_centered": {
+        "browser_checked": false,
+        "images": 0,
+        "report_sha256": "4d7d1845582f5a7a82a82e26ec95f23ec7af8c2bc83f900fb555cde84d5472a7",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_background-bright_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "14672be99feb6a62d72325400969b6112197fd0b6556236fea8954e9739936da",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_background-texture_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "d1e38331ebc0b917ee71fe5c684f2f1910406c8fe57790569d59391c007593a8",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_background-texture_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "1136edb3e000bd0511e12c44a86022af07e75830904a2a18836b69d80811c738",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_background-tint_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "cb4926059091880a46f92245593ad25145016dab18d2f74597ec323bb0a98d4e",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_background-tint_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "05d2a50e4d68dfbb9f0912363b7d1801767c2862f5eee83d5994b2fad4fa5d2e",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_channel-offset_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "3b22bc9c8a9f85497b2d35488c194d03e3d418ee1d4f0a818c6f6acb4440c201",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_channel-offset_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "e80a7e20943c5d5c7f7c471f6d87efb281f837f107b9545f73a49b89a619336e",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_clutter_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "bfdbfcf91928d4cc4e7a49c4215ba2e476c6076a85fabff6ccff2be14bc362f9",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_clutter_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "77abeb171355db3646c8f1198eefcca7d039c0d1c28018c91658d2f9929e345f",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_foreground-large_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "998c2d6c6e9310b47fd47447ae5d20c7664c96e53be41b281251a78c9178d291",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_foreground-large_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "e620ef199742b9e200a5bb27086dc7cfc0cd3a6d628b7b7d641037177c45f605",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_gain-dark_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "04fc3671e3b658d3b899bf28c8eab56681f4677b92bde2de918cca08e0421251",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_gain-dark_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "a5d24a704e3d0cf5c0685de59b70b7c74120bd8cead012a43957ff3141d99848",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_local-shadow_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "35815a9c45a62e1934b7a44fc8bf4cf37c63e927d75873a3793543981082135e",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_local-shadow_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "34e25b9708574176a3fa0acdc28f7916f25726b887270e61f3aec1dc55559b70",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_neutral_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "9e73eb0f0bba090207f9597e8e4aca52520a9783585bc2fa9e358498760c419e",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_neutral_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "a206c9480d6a9a4cd6c45770d6b019600e3b085dd2ac94acce183a5c568608de",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_temporal-offset_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "447e588c5ff4ef1748b7ca88d4dee49f10bed23cad4a0dde82e304b3fc5b9349",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25073_temporal-offset_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "c77ec27df31b0ea0d559a07022c689dfd3dd430a03183778f7f5940e783f8145",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_background-bright_centered": {
+        "browser_checked": false,
+        "images": 0,
+        "report_sha256": "5b39e62d8577e3986da0f7521afad78e0ba55046dfe9f8702d4f14bfc95043a9",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_background-bright_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "00e0774c723502040f210a1db36004c587cd19c331948c0c555f1ee6881cc0e4",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_background-texture_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "fdf190353b04f0647e8eb726442029c0a247efa31a1bcf887ff47925252a5dd3",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_background-texture_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "4e54ed2fa1a0955e5b2ba578f4c1c6dd56b3ea4258be441280c6254256010713",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_background-tint_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "db96a26190fc7126ba1747c65f229bea093c124c532e863100f3d1808d75a392",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_background-tint_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "51d8e2093a9409ace2658781b8ed0cfa345aa5d94974df81fac180e611739d1b",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_channel-offset_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "c3403b84282654c92847fa4fb3885d0886f3c5e7e9a15e751d5851e88b0a2a31",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_channel-offset_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "0190a7f79e04b9888150b22ca2a0ed60e691bf0aab273a2b4d7008629729ea19",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_clutter_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "e96f034f37b2e1804c2789dc1d6df48a14f22bb4baad4d3f361b6fdce7d4435b",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_clutter_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "8d448325587a419452f1b411cfdc210bb862871e70df7a4d19664d2e0a2c955e",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_foreground-large_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "edd46f32468171ca7f0cd112699e004c1cb553808c20bdf57738e2c61f8f2c62",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_foreground-large_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "930b546893941f2194830ec74f14faef6ed23da44ef2c8786b5a4eca1cf48dbc",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_gain-dark_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "a61ed192f0e47f115c0daf1649847dc9bc868c40ef5616173c8633a4f53beb67",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_gain-dark_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "e0b54058da09dcf637f84519fcb26470f92a420001c7c83a9cc598f41e49138f",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_local-shadow_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "395dc040c2a7fa5bb70dc24bda5f54dfeaba139f73ef84a0b3ee83d1ed5178ed",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_local-shadow_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "e11a25d58dc4d38af2a14f3d6cce5bf03621ed06f62ff26aff83019866f6a0c2",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_neutral_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "4ff90b459f91d58a67063fd245bebac8863e09b2212522265b65b251c23f116e",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_neutral_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "06ab10438d0d52ff450c4ef111d227e2ee0a8e922a69953a69fc08f231958008",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_temporal-offset_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "eb8169e40ecca3d290d3a514d0d2910d5ff61c39d8dee9f2c091c37afb4ca833",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8501_25074_temporal-offset_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "8630716dc7b0a2ee18e66a768376510a74b6984f537c62cb25064887e53997cd",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_background-bright_centered": {
+        "browser_checked": false,
+        "images": 0,
+        "report_sha256": "c7e686ddc8025c4d814b0737063b60bbcf8d4ef4be241501789aeb4e6cc228ce",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_background-bright_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "a9b124c5118673568a9c02ac76610581202ca065a2f4e4a29822f6570f21d857",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_background-texture_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "e4b9a4737e509313e36d2c19777fc73461cfe1e487a6e759b8d34ebab1d6198f",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_background-texture_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "1e8ef8ec578b4a565bbc7c5cc4319abebcdc2883b4c61414f6f542a4d0c2a8a2",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_background-tint_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "f4982bc5edfad85181db732f4a51ca77e7611670589a7a9299fa312395a5c339",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_background-tint_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "0b703377bc213053687d9f78186efe9c2fbb14eb2775d5cbc7933d00d2a75c5b",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_channel-offset_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "821c0b39ceb3b3b9264d6791bde805456c81517b915010b130ce2aa062973c70",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_channel-offset_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "f901058f58c98d5e849fa4ce4071d8678e3ade687927f67c6e230216ec2354f9",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_clutter_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "2380369c3daabdcb855c99ecc8e47917fcb0b70c09680dbd61538eb608c4428d",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_clutter_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "17f58e5ef90897eafcba6295f72d1a84e67e41a31405e5b5b948a738bfdbdb9c",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_foreground-large_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "963a4ba825245a552960f99d73bdfe23046545b28abeea309f416b04e71bd7f4",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_foreground-large_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "e927ec709ca87326ee7abfcf2ab1c213350da5222b1bd5834fa0a5bde6a8ad49",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_gain-dark_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "8f9c1851f12edce80a46bd6baf34a3814603fb744c30e78d79f59d76c29725e0",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_gain-dark_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "c6a7382e789bdb410a0b4f89b39f6a3d57b6a3e705eef7987ac1027d4421beaa",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_local-shadow_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "e9d02cd0a118ac40b0590f0d9cbac8e09a78fa7e2b707fbc0d9d599eba6dd10c",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_local-shadow_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "33c9559aa6ec355cd507851e761da86e2c74b2f7494b29b28bc068949763dac7",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_neutral_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "b7642e5e8af2fd4623574d19acbcb8977a4ca76adb9eef5d2f11bf7e91d4b9e4",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_neutral_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "09a584d18cd485fbd886f48e0e69100ec18da5e4f25891814689201769adfc9a",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_temporal-offset_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "b9af3aaa52779dba0d63e93223fd192d8922ed92ebb07126950ad085a8ade734",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25073_temporal-offset_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "7c1b89c8fb0bedd9a2843b3c175b4376941ef7583159905efc683f8ad9d86c49",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_background-bright_centered": {
+        "browser_checked": false,
+        "images": 0,
+        "report_sha256": "3ee37b23fca1fc0cb32cf4cbbff5d03ca00cff8eabe226448cfcabba7a763a0c",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_background-bright_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "fc4ca7ba72b084bd855f7a9667a8224e38db777c5a8b1fd62b451c9c55513424",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_background-texture_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "5e1ffd67090d314fe4e4a9d2489644728d7711689488eea4ff29a09564033b10",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_background-texture_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "24f978f5e90e2c55c520162a2673c88e0d06ad78beaaf3636f72d069a4ed0209",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_background-tint_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "00e5e2383f4bd9b25647a0b7e188d7eb6c35afd65899a1a3849e6274fc24ed21",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_background-tint_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "97e7275285bc55a14a44ea777391522d337a672148b2cb066964d19e064556a7",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_channel-offset_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "0c5ab5506972b9deddef6259c3f79d2f676a6e095a527e54f3eee836957424e9",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_channel-offset_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "3ab6998e1561ab0d124ee84a23fe5e6a619b232860c37137050e45eee3e927c1",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_clutter_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "be45ea5463e41dd04708dd583464193340b3e91816d2b16510d8e9380980e42e",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_clutter_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "3fbd7d1a96b74d2b4d0e760bad39c108dfefb5ca1ff6d563907e98736c18237f",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_foreground-large_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "399faf71242cb0acd4c13b626acb2b44241ffcfc5fa66b48563f92e8af098e48",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_foreground-large_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "e03522360e9529be3298c070f5e1783299c41e2c74d18bb11748bd664ab18e48",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_gain-dark_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "e60c980a3cc3fc8ea9cc345e9feced773bbe6daf2d2c9ebb05ebfdc764d0834b",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_gain-dark_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "1c50df8907bb3536cb6414e3859cbdc052253bbf37c753979c48ef23c1e67d2e",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_local-shadow_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "9f070e124ad0f8c835d4e53c0880a2423e31b3dd5d96bd537bc21df50cd7e98a",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_local-shadow_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "2138015ced77c6a805d142e993a3bb82b61411c1baeb5f53d1f4cd77a3012f96",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_neutral_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "d2bb0f214c461c711f46a4c8e050265629bdc12cb820bef3db157056ae3949ba",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_neutral_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "68a5ea1e996c6350d07334c9215588a4b34e61310f174b3af48ca29fadfe3fbd",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_temporal-offset_centered": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "e64ac5653e0b4353e07c2f076bd02bbfc746d80791e4c7e73fb454ffb5a9dea0",
+        "structural_verified": true
+      },
+      "/home/alex/Documents/path-wm/runs/centering_challenge_v1/8502_25074_temporal-offset_raw": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "81c7c5efed5881fbc9cfecedbe914cfd6c6c0a42df1d5062ad4e0dae67c12f35",
+        "structural_verified": true
+      },
+      "runs/centering_challenge_v1": {
+        "browser_checked": false,
+        "images": 13,
+        "report_sha256": "ecb19ebd9fe11925c94b5ca5e964d8905cf30d6cabc33baf8d7b09e034d7a8fb",
+        "structural_verified": true
+      },
+      "runs/centering_challenge_v1/coverage_repair/8501_25073_neutral": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "31450a162e2b16707da34c6839777b22c9249d32659c2c13d874f399b774d179",
+        "structural_verified": true
+      },
+      "runs/centering_challenge_v1/coverage_repair/8501_25073_temporal-offset": {
+        "browser_checked": false,
+        "images": 257,
+        "report_sha256": "1f03b4cc86bca6c0d604e646971d16ae6fab0c6858650339c6f0865f26270bc9",
+        "structural_verified": true
+      },
+      "runs/centering_challenge_v1/coverage_repair/8501_27073_background-bright": {
+        "browser_checked": false,
+        "images": 0,
+        "report_sha256": "87e5dee557a94313c1d8db58aca84df2a20de2956193ba7fb3c9df7949bb1b36",
+        "structural_verified": true
+      },
+      "runs/centering_challenge_v1/coverage_repair/8502_27073_background-bright": {
+        "browser_checked": false,
+        "images": 0,
+        "report_sha256": "ecc3de0e76676bd670d83546e90254a5140437461ed853087cf57a98d300dc6f",
+        "structural_verified": true
+      },
+      "runs/centering_challenge_v1/development": {
+        "browser_checked": false,
+        "images": 65,
+        "report_sha256": "3039a20aa4427ec3f3303fdf1a2a1d50de166fb4cb7f39eb62de3735a5e26742",
+        "structural_verified": true
+      }
+    },
+    "screen_exact_gpu_replays": 76,
+    "screen_source_matches_git": "311c3ca",
+    "screen_verified_metrics": 18012,
+    "training_updates": 0,
+    "unique_relevant_tests": 92
+  },
+  "receipts": {
+    "runs/centering_challenge_v1/verification.json": "2b10ce7305350d69bb955539fb5bb923fe7ba812fd24270458bf0a61433b8d31",
+    "runs/centering_challenge_v1/arrays_audit.json": "7c9e93c9681f87dc5c1c032971d9fc9d533fbc27fb0b1bc2af450d658416993d",
+    "runs/centering_challenge_v1/gpu_audit.json": "78efc606201df178af19bc11dae4c444425bf563dd15f7ee41b408ad3ca48782",
+    "runs/centering_challenge_v1/preparation.json": "569dd5a3a55f3ff951c60a8820dc56132b138d46b5dfeb0bb90de35217144c94",
+    "runs/centering_challenge_v1/default_data_audit.json": "04df1a4c1d61c1a328182760b4170d22be0a8d37b2723e389d2d41d750a5b0e0",
+    "runs/centering_challenge_v1/screen_checks.json": "4025635aca7a2f01b31b30a4a2319af69f441e7a9759fb1f6e81de4a3e9f7792",
+    "runs/centering_challenge_v1/final_checks.json": "5f6a9f1f7630dd0da4ab1ba408b78ebfa31054b0f1b26a8d18769de21528c34a",
+    "runs/centering_challenge_v1/red.log": "412a06398eafdd8d73f889ca84460427b10e031cb0e2fc1d4c10d84b5c23ed4a",
+    "runs/centering_challenge_v1/tests.log": "af8795c37b916b9e4bfd0c5009085590b60d58614d67da81b4788d3b79ee435f",
+    "runs/centering_challenge_v1/regressions.log": "a2270ae535b6d63c34afa1e2a2fab4f1f7f960fd5eed12d9b0cfb32dd108c46c",
+    "runs/centering_challenge_v1/coverage_red.log": "502be080381beb3214dd282003e415302f5661e9be0c68364d7cd8b45ea3e123",
+    "runs/centering_challenge_v1/coverage_tests.log": "e4c4baadd9067f9648e1260a03f167e54015dc1fb25d27c9eb2643621313c497",
+    "runs/centering_challenge_v1/coverage_repair/verification.json": "42d855d1cd76191452d2e33061b41b4aa9218c44da0832b6e1a1a7714366eda6"
+  },
+  "claude_reviews": {
+    "centering-challenge-public": {
+      "receipt": {
+        "round": "centering-challenge-public",
+        "returncode": 0,
+        "elapsed_seconds": 16.44,
+        "brief_sha256": "bc52ed5c7c8fcfb72396e50f04e116c3fdd5e71ac36a67bfdc0c58978baf3fcf",
+        "command": [
+          "/home/alex/.local/bin/claude",
+          "--print",
+          "--safe-mode",
+          "--model",
+          "sonnet",
+          "--effort",
+          "low",
+          "--tools",
+          "",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--disable-slash-commands",
+          "--no-chrome",
+          "--permission-mode",
+          "dontAsk",
+          "--no-session-persistence",
+          "--output-format",
+          "json",
+          "--system-prompt",
+          "You are an independent machine-learning architecture reviewer. Reason only from the supplied conceptual brief. You have no tools or private project access. Distinguish evidence, assumptions and preferences. Do not imply you inspected any implementation."
+        ],
+        "context": "isolated temporary cwd; no tools/settings/MCP/plugins; public conceptual brief only",
+        "is_error": false,
+        "model_usage": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 1244,
+            "outputTokens": 15,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.001319,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-sonnet-5": {
+            "inputTokens": 2,
+            "outputTokens": 1158,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 1083,
+            "webSearchRequests": 0,
+            "costUSD": 0.015916,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-sonnet-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "api_equivalent_cost_usd_not_subscription_bill": 0.017235,
+        "session_id": "34b5e557-0eb9-4668-99ea-cb6ce7322b7a"
+      },
+      "brief_sha256": "bc52ed5c7c8fcfb72396e50f04e116c3fdd5e71ac36a67bfdc0c58978baf3fcf",
+      "response_sha256": "e23e6cd583de03d53a9b786d5903cb186f67e7c438d763691b71baa9ea41ee5f"
+    },
+    "centering-challenge-reconcile-public": {
+      "receipt": {
+        "round": "centering-challenge-reconcile-public",
+        "returncode": 0,
+        "elapsed_seconds": 8.554,
+        "brief_sha256": "2e0fee51f9bb5ec3d2013a1061ea8a03c661889b8a639041ef099191e2c70a9d",
+        "command": [
+          "/home/alex/.local/bin/claude",
+          "--print",
+          "--safe-mode",
+          "--model",
+          "sonnet",
+          "--effort",
+          "low",
+          "--tools",
+          "",
+          "--strict-mcp-config",
+          "--mcp-config",
+          "{\"mcpServers\":{}}",
+          "--setting-sources",
+          "",
+          "--disable-slash-commands",
+          "--no-chrome",
+          "--permission-mode",
+          "dontAsk",
+          "--no-session-persistence",
+          "--output-format",
+          "json",
+          "--system-prompt",
+          "You are an independent machine-learning architecture reviewer. Reason only from the supplied conceptual brief. You have no tools or private project access. Distinguish evidence, assumptions and preferences. Do not imply you inspected any implementation."
+        ],
+        "context": "isolated temporary cwd; no tools/settings/MCP/plugins; public conceptual brief only",
+        "is_error": false,
+        "model_usage": {
+          "claude-haiku-4-5-20251001": {
+            "inputTokens": 1226,
+            "outputTokens": 14,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0,
+            "webSearchRequests": 0,
+            "costUSD": 0.001296,
+            "contextWindow": 200000,
+            "maxOutputTokens": 32000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-haiku-4-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          },
+          "claude-sonnet-5": {
+            "inputTokens": 2,
+            "outputTokens": 540,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 1037,
+            "webSearchRequests": 0,
+            "costUSD": 0.009552,
+            "contextWindow": 1000000,
+            "maxOutputTokens": 64000,
+            "thinkingTokens": 0,
+            "canonicalModel": "claude-sonnet-5",
+            "provider": "firstParty",
+            "costBasis": "list"
+          }
+        },
+        "api_equivalent_cost_usd_not_subscription_bill": 0.010848,
+        "session_id": "09bca870-073b-4cb9-85c2-880fe9142e28"
+      },
+      "brief_sha256": "2e0fee51f9bb5ec3d2013a1061ea8a03c661889b8a639041ef099191e2c70a9d",
+      "response_sha256": "c4797aefd9d033e92c027f943f40561b7d83b74a84d1fb2bcd9f167a3ca2760f"
+    }
+  }
+}

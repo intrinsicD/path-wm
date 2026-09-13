@@ -3651,9 +3651,9 @@ observations:
   bound_to:
   - N307
   - N309
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H64
+  crystallized_via: artifact-commitment
   stale: false
 - id: O208
   timestamp: 2026-09-13T19:18+02:00
@@ -3671,6 +3671,41 @@ observations:
   - N307
   - N309
   - N310
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H63
+  crystallized_via: verbal-affirmation
+  stale: false
+- id: O209
+  timestamp: 2026-09-13T20:16+02:00
+  provenance: ai-suggested
+  content: 'Fixed-reference median centering suffices for tested per-frame/channel additive nuisance but
+    is not a general scene-invariance solution: it harms the texture control and rejects most bright-background
+    histories. Perfect direct reading on centered tint separates encoder accessibility from native memory/output
+    success. Rejection reporting is repaired but is neither perceptual repair nor learned reliability.'
+  context: Completed fixed-weight screen and reporting repair; researcher has not interpreted these new
+    outcomes. Earlier additive-only success remains valid under its original scope.
+  potential_type: claim
+  bound_to:
+  - N312
+  - N313
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O210
+  timestamp: 2026-09-13T20:16+02:00
+  provenance: ai-suggested
+  content: Next use a matched clean/scene-variation state/readout learning comparison, beginning with
+    tint where an existing direct reader demonstrates accessible encoder information. Retain raw texture
+    controls, clean retention and fresh confirmation; expand trainable perception only when diagnostics
+    justify it. Independent upstream runs, real recordings, calibrated reliability, CPU portability and
+    deployed runtime checks remain open.
+  context: Proposed next learning experiment only; no optimizer, architecture replacement, deployment
+    or additional model fit launched.
+  potential_type: heuristic
+  bound_to:
+  - N312
+  - N313
   promoted: false
   promoted_to: null
   crystallized_via: null

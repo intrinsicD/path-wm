@@ -614,3 +614,23 @@
 - **Sensitivity**: High. Fixed-budget head failure does not uniquely locate lost information. Centering may discard meaningful intensity and its success is task-specific. Two source trajectories share upstream initialization/codec; no general perceptual invariance or deployment endorsement follows.
 - **Code ref**: [whole-history variants](../../../pathwm/data/memory_output.py), [pixel centering](../../../pathwm/models/memory_output.py), [recipe and reference provenance](../../../experiments/memory_output.py), [integrity tests](../../../tests/test_brightness_repair.py).
 - **Evidence**: N306/N307/N308/N309; [comparison proof](../../evidence/tables/brightness_repair_2026-09-13.json).
+
+## H63: Define scoped visual-input closure separately from learned and real-camera claims
+
+- **Rationale**: Specify nuisance versus useful signal, scene/lighting range, memory causality, clean fidelity, independent confirmation, validity handling and runtime integration. Freeze new populations and criteria before the next comparison. Treat learned invariance and real-recording readiness as distinct milestones.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O208
+- **Sensitivity**: High. Checklist adoption is not evidence that its milestones are complete; current task has canonical synthetic outputs and shared upstream initialization.
+- **Code ref**: [active closure checklist](../../../docs/recall-repair-plan.md#proposed-brightness-robustness-closure-checklist), [scene API](../../../pathwm/data/memory_output.py), [evaluation](../../../experiments/memory_output.py).
+- **Evidence**: N311/N312/N313; [screen and reporting proof](../../evidence/tables/centering_challenge_2026-09-13.json).
+
+## H64: Challenge centering assumptions before making it the default input policy
+
+- **Rationale**: Separate background, object coverage and local illumination interventions from additive camera shifts; retain raw controls, neutral retention and full attempted-population coverage. Diagnose head/state learning before inferring encoder replacement from failure.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O207
+- **Sensitivity**: High. Median subtraction discards an offset statistic and may distort foreground colors when the median changes with background content. This comparison does not establish arbitrary corruption robustness or lost information.
+- **Code ref**: [scene renderer](../../../pathwm/data/memory_output.py), [centering and range inspection](../../../pathwm/models/memory_output.py), [integrity tests](../../../tests/test_centering_challenge.py).
+- **Evidence**: N312/N313; [fixed screen](../../evidence/tables/centering_challenge_2026-09-13.json).

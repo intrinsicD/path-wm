@@ -5056,3 +5056,62 @@ tree:
   - N307
   - N309
   status: open
+- id: N311
+  type: decision
+  title: Adopt scoped closure checklist and continue review/test/repair iteration
+  provenance: user
+  choice: Continue with Claude across the listed open points; first challenge fixed centering against
+    varied scenes and lighting, retaining scoped gates and later learned/webcam milestones.
+  alternatives:
+  - Treat the narrow additive result as complete
+  - Change model architecture before challenging the preprocessing
+  evidence:
+  - N310
+  - O208
+  also_depends_on:
+  - N310
+  timestamp: 2026-09-13T20:16+02:00
+  status: resolved
+- id: N312
+  type: experiment
+  title: Frozen scene challenge refutes broad default centering for this task
+  provenance: ai-executed
+  result: 80 attempted cells:2 shared-upstream source trajectories x2 scene seeds25073/25074 x10 conditions
+    x raw/centered.76 scored,4 coverage-failed. Centered12/40 full-task/retention passes:neutral,temporal-additive,channel-additive
+    each4/4 at100% ordinary/reset facts/images. Raw8/40:neutral/texture each100%. Centered texture76.562-86.719%;
+    all other full-task groups fail. Bright-background centered valid histories28/128 and20/128; no subset
+    scored. Centered tint direct100% vs native ordinary73.438-79.688/reset75.781-81.25%. All18012 metrics
+    independently verified;76 GPU replays exact,12 legacy data cases byte-exact,87 tests.571.926s,298MiB,zero
+    training. Two public Claude reviews corrected/reconciled; private review local. Shared initialization/codec,
+    familiar semantics, no CPU repair.
+  evidence:
+  - ara/evidence/tables/centering_challenge_2026-09-13.json
+  - runs/centering_challenge_v1/verification.json
+  - docs/recall-repair-plan.md#centering-challenge-results
+  also_depends_on:
+  - N311
+  - N309
+  - N307
+  timestamp: 2026-09-13T20:16+02:00
+  status: resolved
+- id: N313
+  type: experiment
+  title: Coverage preflight completes rejected evaluations without model predictions
+  provenance: ai-executed
+  result: Five RED cases expose missing pure range inspection and rejected exports entering model queries.
+    Shared centering range inspection plus recipe preflight preserves strict guards and timestamps/validity.
+    Any rejected history completes gate-false/task-unscored report, no queries/predictions/accepted-subset
+    accuracy. Report failure keeps completed result.92 distinct relevant tests total,45 focused reruns.
+    Four GPU exports16.367s:two full accepted regressions exactly match every original array/metric; two
+    fresh27073 rejected exports each16/128 history coverage match independent frame calculations. Zero
+    training/clipping/raw fallback.86 final reports structurally verified,figures inspected,browser unavailable.
+    Separate screen311c3ca and repair716d661 retained.
+  evidence:
+  - ara/evidence/tables/centering_challenge_2026-09-13.json
+  - runs/centering_challenge_v1/coverage_repair/verification.json
+  - tests/test_centering_coverage.py
+  - docs/recall-repair-plan.md#coverage-repair-verification
+  also_depends_on:
+  - N312
+  timestamp: 2026-09-13T20:16+02:00
+  status: resolved
