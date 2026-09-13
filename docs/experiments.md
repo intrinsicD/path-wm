@@ -307,3 +307,9 @@ Standalone exports restore the selected freeze policy. Compare to joint continua
 with `--writer-learning trainable --train-thinker`, explicit source checkpoints and
 fresh declared validation/test seeds. Both restart AdamW; they do not restore the
 source optimizer. See the active plan for the fixed-budget comparison and limits.
+
+Evaluation temporarily clears all parameter trainability flags, then restores them
+in a `finally` block. In this GPU environment, `no_grad` alone left small numerical
+differences between otherwise identical frozen/joint states. This normalizes the
+recipe's inference contract without changing checkpoints or optimizer state. Direct
+model calls should use matched inference/trainability settings for bitwise comparisons.

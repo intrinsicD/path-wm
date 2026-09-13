@@ -550,6 +550,7 @@ def test_input_calibration_preserves_noop_metadata_and_frozen_model():
             [Observation(torch.full_like(obs.values, float("nan")), obs.times)]
         )
 
+
 @pytest.mark.parametrize("fail", [False, True])
 def test_evaluation_freezes_parameters_temporarily_and_restores_on_failure(fail):
     from pathwm.data.memory_output import MemoryOutputEpisodes

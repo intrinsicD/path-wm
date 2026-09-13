@@ -1201,3 +1201,10 @@ and expose pre/post numeric and categorical differences. Record post-fix inferen
 and gate results separately from the original bitwise failure. Re-run exact resume,
 export and all relevant tests; audit GPU replay and source-equivalent frozen states
 with matched inference flags. CPU portability remains an independent gate.
+
+The two inference-mode RED checks reproduced the missing normalization. Repair
+uses a try/finally flag restore; all58 relevant tests now pass, including restart
+and failure paths. The existing development checkpoint evaluates successfully
+under the new contract, with zero optimizer updates and a separate report.
+The original development limitation-text error was also corrected with before
+copies retained and metrics/gates/checkpoints unchanged.

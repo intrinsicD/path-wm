@@ -184,58 +184,66 @@ def default_settings(seed=7801):
 
 @torch.no_grad()
 def evaluate(model, data, device, modes, batch_size=16):
-    arrays = {
-        "target": [],
-        "labels": [],
-        "history": [],
-        "direct_logits": [],
-        "stored_logits": [],
-        "teacher_image": [],
-    }
-    if model.workspace_reference is not None:
-        arrays["reference_stored_logits"] = []
-        for mode in modes:
-            arrays[mode + "_reference_logits"] = []
-    for mode in modes:
-        arrays[mode + "_logits"], arrays[mode + "_image"] = [], []
-    for start in range(0, len(data), batch_size):
-        batch = data.batch(range(start, min(start + batch_size, len(data))), device)
-        images = batch["images"]
-        history = model.observe_history(images)
+    # no_grad alone does not normalize trainability-dependent GPU execution.
+    # Keep validation/export inference comparable across training policies.
+    flags = [(p, p.requires_grad) for p in model.parameters()]
+    try:
+        model.requires_grad_(False)
+        arrays = {
+            "target": [],
+            "labels": [],
+            "history": [],
+            "direct_logits": [],
+            "stored_logits": [],
+            "teacher_image": [],
+        }
         if model.workspace_reference is not None:
-            arrays["reference_stored_logits"].append(
-                model.workspace_reference(model.working(history["stored"])).cpu()
-            )
-        for key, value in dict(
-            target=batch["target"],
-            labels=batch["labels"],
-            history=images,
-            direct_logits=model.direct(model.direct_tokens(images)),
-            stored_logits=model.facts(
-                model.output_normalization(model.working(history["stored"]))
-            ),
-            teacher_image=model.agent.decoders["image"].head(
-                model.teacher(batch["target"])
-            ),
-        ).items():
-            arrays[key].append(value.cpu())
+            arrays["reference_stored_logits"] = []
+            for mode in modes:
+                arrays[mode + "_reference_logits"] = []
         for mode in modes:
-            if mode in ("erased_history", "cue_erased", "last_seen_erased"):
-                output = model(images, mode)
-            else:
-                output = model.output(
-                    model.query(history["final"], images[:, -1], mode)
-                )
+            arrays[mode + "_logits"], arrays[mode + "_image"] = [], []
+        for start in range(0, len(data), batch_size):
+            batch = data.batch(range(start, min(start + batch_size, len(data))), device)
+            images = batch["images"]
+            history = model.observe_history(images)
             if model.workspace_reference is not None:
-                arrays[mode + "_reference_logits"].append(
-                    output["reference_facts"].cpu()
+                arrays["reference_stored_logits"].append(
+                    model.workspace_reference(model.working(history["stored"])).cpu()
                 )
-            arrays[mode + "_logits"].append(output["facts"].cpu())
-            arrays[mode + "_image"].append(output["image"].cpu())
-    tensors = {key: torch.cat(value) for key, value in arrays.items()}
-    return score(tensors, modes, relocation=data.curriculum == "relocation"), {
-        k: v.numpy() for k, v in tensors.items()
-    }
+            for key, value in dict(
+                target=batch["target"],
+                labels=batch["labels"],
+                history=images,
+                direct_logits=model.direct(model.direct_tokens(images)),
+                stored_logits=model.facts(
+                    model.output_normalization(model.working(history["stored"]))
+                ),
+                teacher_image=model.agent.decoders["image"].head(
+                    model.teacher(batch["target"])
+                ),
+            ).items():
+                arrays[key].append(value.cpu())
+            for mode in modes:
+                if mode in ("erased_history", "cue_erased", "last_seen_erased"):
+                    output = model(images, mode)
+                else:
+                    output = model.output(
+                        model.query(history["final"], images[:, -1], mode)
+                    )
+                if model.workspace_reference is not None:
+                    arrays[mode + "_reference_logits"].append(
+                        output["reference_facts"].cpu()
+                    )
+                arrays[mode + "_logits"].append(output["facts"].cpu())
+                arrays[mode + "_image"].append(output["image"].cpu())
+        tensors = {key: torch.cat(value) for key, value in arrays.items()}
+        return score(tensors, modes, relocation=data.curriculum == "relocation"), {
+            k: v.numpy() for k, v in tensors.items()
+        }
+    finally:
+        for parameter, trainable in flags:
+            parameter.requires_grad_(trainable)
 
 
 def score(arrays, modes, *, relocation=False):
