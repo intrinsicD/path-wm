@@ -504,3 +504,116 @@ Source committed before formal comparison; no development quality tuning.
 
 Command (both sources, stages native/stored, with/without --standardize-output):
 `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.memory_output --weights runs/reader_supervision_v1/agent_7801_baseline/weights.pt --repair identity --readout-stage stored --standardize-output --seed 8301 --validation-seed 7752 --test-seed 7753 --output runs/direct_readout_v1/agent_7801_stored_standardized --device cuda:0`
+
+
+## Direct native-output readout results
+
+Source504a587. Eight1536-update fits complete under180s training caps. Only67,032
+native factual/image-producer parameters learn; encoder, snapshot writer, thinker,
+initial state, reconstruction head and reference probes stay frozen. Same initial
+head tensor hash and final sampler state in all four arms per writer. Standardizer
+buffers are independently verified from each stage's training cache. No held-out
+statistics, probe-answer inputs or learned retrieval claimed.
+
+Held-out128 histories, fresh backgrounds within trained tuple/motion support:
+
+| Writer | Input route | Scaling | Reset facts | Reset images | Ordinary facts | Ordinary images | Reset-only gate | Full gate |
+| --- | --- | --- | ---: | ---: | ---: | ---: | --- | --- |
+|7801|native|raw|96.87500%|98.43750%|81.25000%|59.37500%|True|False|
+|7801|native|standardized|98.43750%|96.87500%|68.75000%|50.78125%|True|False|
+|7801|stored|raw|78.90625%|95.31250%|78.90625%|95.31250%|False|False|
+|7801|stored|standardized|75.00000%|94.53125%|75.00000%|94.53125%|False|False|
+|7802|native|raw|75.00000%|75.78125%|75.00000%|75.00000%|False|False|
+|7802|native|standardized|75.00000%|75.00000%|75.00000%|75.00000%|False|False|
+|7802|stored|raw|76.56250%|75.78125%|76.56250%|75.78125%|False|False|
+|7802|stored|standardized|77.34375%|76.56250%|77.34375%|76.56250%|False|False|
+
+The first writer's raw native reset workspace supports96.875% factual and98.4375%
+image accuracy after head-only training, versus frozen-source90.625/89.84375% on
+this SAME test population. Raw native complete relocation pairs score93.75/96.875%.
+Standardized native reset scores98.4375/96.875%, with pairs96.875/93.75%. Both pass
+all reset-only causal screens: bank/cue erasure reduces accuracy strongly, later-view
+erasure loses more than30points, swapped answers follow the alternate bank, and
+pixel error beats background and pair-mean controls. This positively establishes
+conditional usability of these current frozen workspace tokens.
+
+However, ordinary running-state output was not trained in this diagnostic and
+regresses severely. All eight full gates fail; no model is promoted as a complete
+repair. The raw first native run's ordinary facts/images fall to81.25/59.375%; its
+standardized counterpart68.75/50.78125%. The failure is exposed rather than redefining
+ordinary success. Reset-only sufficiency was declared separately before the runs.
+
+Direct stored input does not beat native input at this budget. The first writer's
+stored raw image output reaches95.3125% while its factual head reaches78.90625%;
+standardization yields75/94.53125%. This difference between output heads accessing
+the same stored tokens is not evidence that those tokens lack location information.
+Prior native head weights are already adapted to native workspaces; identical
+initial weights/budgets do not equalize optimization difficulty across input formats.
+Neither stage's normalization contrast passes the replicated10-point benefit gate,
+and neither scaling choice passes replicated direct-route advantage. No superiority
+of raw input or inevitable failure of direct routing is established in general.
+
+The weaker writer remains limited, including on training histories. Its native raw
+training facts/images are75/76.5625%, standardized75/75%, stored raw76.171875/76.5625%,
+stored standardized79.296875/78.125%. First-writer native training is100/99.21875%
+raw and100/100% standardized; stored training83.59375/96.875% raw and80.859375/98.828125%
+standardized. Thus failure is not solely unseen-background generalization. These
+fixed heads/readers still do not define a perfect information ceiling.
+
+Unchanged old stored-working readers score98.4375/82.8125% joint for writer7801,
+77.34375/75% for7802. Both are evaluated on all routes; no auxiliary loss is used.
+Frozen raw native workspaces themselves remain unchanged despite much better new
+head readout in writer7801. Original encoder and teacher-image controls stay100%.
+All causal/time interventions and ordinary/reset examples remain in raw arrays.
+Stored latest selection, zero fallback before standardization and averaging of tied
+latest timestamps are supplied policies, not learned temporal understanding.
+
+Training seconds by7801 native raw/standardized, stored raw/standardized, then7802:
+35.311589,34.458273,34.650228,34.877306,38.434092,40.226550,39.996134,38.809122;
+total296.763295s (4.95min),460MiB reserved. Eight first cache preparations total
+14.330486s; the resume reconstructs its cache, but that second preparation duration
+was not separately recorded. Training caps exclude cache preparation and final test
+reporting. The16-update development fit took1.175333s plus1.941675s cache preparation.
+
+58 relevant tests and lint pass. Independent NumPy audits verify1,896 fitted test
+metrics,240 training-fit metrics,474 unchanged-source metrics and320 frozen-reader
+metrics:2,930 total; maximum error1.86e-7. Actual inputs/teacher features match the
+saved GPU training caches EXACTLY across all256 cases per fit in shuffled16-example
+batches. Labels/targets and cache hashes also match. CPU loss/gradient equivalence tests
+cover native/stored, normal/erased/tied-time inputs. Cache identity participates in
+strict resume; real768+768 stored-standardized7801 resume preserves774 ledger rows,
+and exact optimizer/RNG resume is tested for both standardized routes.
+
+Every exported GPU native/reference logit and pixel matches saved predictions exactly.
+Full post-query workspace is exactly invariant to complete-bank reordering across128
+cases per model on both devices. All frozen source tensors, reader weights, raw banks
+and original file hashes stay unchanged. Standardizers match independently calculated
+training-only channel means/stds; raw arms retain exact zero/one buffers.
+
+CPU raw-observation replay still fails1e-4: max native logit discrepancy0.815565,
+max pixel discrepancy0.0159254. Five factual-side predictions differ across three
+writer7801 runs: native raw case111, stored raw13/109, stored standardized45/74.
+All native image classifications agree across devices in this comparison. Exact GPU
+replay and within-device bank equality do not fix cross-device portability.
+
+Two actual public-only Claude reviews resolve the per-route calibration and empirical
+cache-equivalence contracts. Every run and the overview has a self-contained report
+with structural QA, all eight example panels and score/learning-curve plot inspected.
+Browser QA unavailable. Original runs/weights retained; no further fit or promotion.
+
+Next proposed repair: keep upstream modules frozen and train native output heads on
+both ordinary and reset working states, rather than optimizing only reset readout.
+Use the weaker writer as a separate conditional-accessibility check, and retain CPU
+numerical gates. The exact mixed-context sampling/budget remains to be declared;
+this result does not justify another memory cue or automatic codec expansion.
+
+
+Post-comparison review found and fixed a reconfiguration edge case: a raw run started
+from an already-standardized export could retain the old route's scaling. A new RED
+check demonstrated it. Configuring a route now starts with identity scaling; that
+route's training cache may fit new statistics, and standalone loading restores its
+saved buffers afterward. Ten focused tests pass (including one new regression;
+59 distinct relevant tests across this slice). All eight original GPU exports again
+reproduce native/reference logits and pixels exactly after the fix. Formal training
+remains source504a587 and its audited raw/standardized buffers were correct; no result
+was rerun or replaced. The post-fix replay receipt is retained separately.

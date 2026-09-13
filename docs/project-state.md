@@ -1,5 +1,24 @@
 # Current work
 
+**Direct output-readout diagnostic completed, 13 September:** with writer AND thinker
+frozen, head-only training on native reset tokens reaches96.88/98.44% facts/images
+for writer7801 (raw),98.44/96.88% standardized. Both pass the predeclared reset-only
+accuracy/pair/causal screen. Ordinary outputs regress to81.25/59.38% and68.75/50.78%;
+all eight full gates fail. Direct stored-token routing scores78.91/95.31% raw and
+75/94.53% standardized for7801;7802 stays near75–77%. No replicated route advantage,
+normalization benefit or reset sufficiency. This identifies conditional native
+readout success in one source, not absent state information or a complete repair.
+Eight1536-update cached fits,296.76s training plus14.33s first cache preparation,
+460MiB reserved.59 distinct tests and2,930 independent metrics pass. Frozen writer/thinker/
+codecs/probes/banks unchanged; live shuffled-batch caches and all GPU exports exact;
+774-row resume prefix retained. CPU numeric tolerance fails with five factual-side
+differences across three7801 runs; image labels agree. Two public-only Claude reviews,
+structural reports and all figures inspected. [Protocol/results](recall-repair-plan.md#direct-native-output-readout-results),
+[report](../runs/direct_readout_v1/report.html). Next proposed: freeze upstream and
+train native heads on both ordinary and reset workspaces; retain the weaker writer
+as a separate accessibility problem. A stale-scaling reconfiguration bug was fixed;
+all eight exports replay exactly afterward. No next training run launched.
+
 **Frozen-reader supervision completed, 13 September:** adding a frozen stored-state
 reader loss does not improve native recall over equal training. Writer7801 falls
 from86.72/89.06% facts/images to84.38/86.72%; writer7802 remains74.22% for both.

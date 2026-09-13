@@ -31,6 +31,16 @@ input codec and reconstruction head stay frozen during recall repair. The
 [bounded supervision comparison](recall-repair-plan.md#frozen-reader-supervision-results)
 did not improve native recall over equal training; this is not a default repair.
 
+For frozen-stage diagnostics, `configure_output_readout(model, stage)` also freezes
+the thinker. The optional stored route copies working/reasoning tokens from the
+latest real bank snapshot, supplies zero tokens for absent memory and averages tied
+latest candidates after causal validation. `output_tokens` applies identity or fixed
+training-only `TokenNormalization` before the native heads. The recipe caches fixed
+training tokens and teacher features, while evaluation and standalone exports still
+execute the live history/bank route. Stage, statistics and cache identity are explicit;
+[the comparison](recall-repair-plan.md#direct-native-output-readout-results) demonstrates
+reset-only readout success in one source with ordinary-mode regression.
+
 ## Perception
 
 ```text
