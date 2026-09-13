@@ -35,7 +35,8 @@ def test_memory_calibration_changes_read_only_and_is_atomic():
         assert all(torch.equal(before[k], v) for k, v in memory.state_dict().items())
 
 
-def test_repair_freezes_writer_and_both_codec_paths_but_trains_output():
+@pytest.mark.parametrize("relative_time", [False, True])
+def test_repair_freezes_writer_and_both_codec_paths_but_trains_output(relative_time):
     from pathwm.models.memory_output import configure_recall_repair, frozen_tensors
     from experiments.memory_output import objective
 
@@ -43,7 +44,7 @@ def test_repair_freezes_writer_and_both_codec_paths_but_trains_output():
     model = model_fixture(True).eval()
     batch = MemoryOutputEpisodes(16, seed=29, curriculum="relocation").batch(range(4))
     original = model.observe_history(batch["images"])["final"].memory.values.clone()
-    configure_recall_repair(model)
+    configure_recall_repair(model, relative_time=relative_time)
     model.agent.memory.calibrate([original])
     frozen = {k: v.clone() for k, v in frozen_tensors(model).items()}
     optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad])

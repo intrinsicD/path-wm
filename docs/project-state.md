@@ -1,5 +1,13 @@
 # Current work
 
+**Snapshot timing comparison in progress, 13 September:** Alex approved testing
+explicit temporal/snapshot differentiation. The existing recipe now supports
+`--repair temporal`, timestamp erasure/misalignment diagnostics and explicit split
+seeds.46 targeted tests and a separate16-update GPU development run pass; source
+writer/codecs remain frozen. [Active protocol](recall-repair-plan.md#snapshot-timing-comparison).
+Compare matched untimed and temporal continuations from both previous identity
+checkpoints; no temporal benefit or general-time-reasoning claim yet.
+
 **Frozen-writer recall repair completed, 13 September:** focused retraining improves
 reset factual accuracy from48.44/50% to66.41/75%, and generated-image accuracy from
 47.66/51.56% to63.28/75%. Fixed memory calibration scores58.59/73.44% facts and

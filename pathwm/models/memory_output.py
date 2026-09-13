@@ -145,13 +145,14 @@ class CalibratedMemory(EpisodicMemory):
         return result
 
 
-def configure_recall_repair(model):
+def configure_recall_repair(model, *, relative_time=False):
     """Only the native reader/workspace, factual head and image producer can learn."""
     memory = model.agent.memory
     if not isinstance(memory, CalibratedMemory):
         model.agent.memory = CalibratedMemory(
             model.agent.width, memory.capacity, memory.retrieve_count
         ).to(model.agent.initial)
+    model.agent.memory.relative_time = relative_time
     model.requires_grad_(False)
     model.agent.thinker.requires_grad_(True)
     model.facts.requires_grad_(True)
@@ -210,6 +211,8 @@ class MemoryOutput(nn.Module):
             "reset",
             "reset_erased",
             "reset_swapped",
+            "reset_time_erased",
+            "reset_time_swapped",
         ):
             raise ValueError("Unknown memory-output query condition")
         bank = state.memory
@@ -229,6 +232,14 @@ class MemoryOutput(nn.Module):
                 values=bank.values[permutation],
                 times=bank.times[permutation],
             )
+        if mode in ("reset_time_erased", "reset_time_swapped") and bank is not None:
+            # Diagnostic metadata interventions; never mutate observed history.
+            times = (
+                state.time[:, None].expand_as(bank.times)
+                if mode == "reset_time_erased"
+                else bank.times.flip(1)
+            )
+            bank = replace(bank, times=times)
         return self.agent.think(replace(state, memory=bank), steps=2)
 
     def output(self, state):
@@ -318,6 +329,8 @@ def load_model(path, device="cpu"):
         codec, settings["width"], settings.get("normalize_input", False)
     )
     if settings.get("recall_repair"):
-        configure_recall_repair(model)
+        configure_recall_repair(
+            model, relative_time=settings["recall_repair"] == "temporal"
+        )
     model.load_state_dict(record["model"], strict=True)
     return model.to(device).eval()

@@ -7,6 +7,7 @@ from torch import nn
 from torch.nn import functional as F
 
 from .tasks import Provenance
+from .modalities import position
 
 
 @dataclass(frozen=True)
@@ -91,14 +92,18 @@ class EpisodicMemory(nn.Module):
     attention. Batch members are separate episode streams, never mixed together.
     """
 
-    def __init__(self, capacity=16, retrieve_count=2):
+    def __init__(self, capacity=16, retrieve_count=2, *, relative_time=False):
         super().__init__()
         if min(capacity, retrieve_count) < 1:
             raise ValueError("Memory capacity and retrieval count must be positive")
         self.capacity, self.retrieve_count = capacity, retrieve_count
+        self.relative_time = relative_time
 
     def extra_repr(self):
-        return f"capacity={self.capacity}, retrieve_count={self.retrieve_count}"
+        return (
+            f"capacity={self.capacity}, retrieve_count={self.retrieve_count}, "
+            f"relative_time={self.relative_time}"
+        )
 
     def write(self, state, source):
         if state.generated_ancestry:
@@ -145,6 +150,14 @@ class EpisodicMemory(nn.Module):
             or bank.values.shape[-2:] != state.tokens.shape[-2:]
         ):
             raise ValueError("Memory shape differs from latent state")
+        if (
+            bank.times.shape != bank.values.shape[:2]
+            or state.time.shape != (len(state.tokens),)
+            or not torch.isfinite(bank.times).all()
+            or not torch.isfinite(state.time).all()
+            or not torch.isfinite(state.observed_time).all()
+        ):
+            raise ValueError("Memory and query times must be finite and batch-aligned")
         if (bank.times > state.observed_time[:, None]).any():
             raise ValueError("Memory contains future observations")
         score = torch.einsum(
@@ -154,8 +167,17 @@ class EpisodicMemory(nn.Module):
         values = bank.values[
             torch.arange(len(score), device=score.device)[:, None], indices
         ]
+        times = bank.times.gather(1, indices)
+        if self.relative_time:
+            age = times - state.time[:, None]
+            code = position(age, values.shape[-1]) - position(
+                torch.zeros_like(age), values.shape[-1]
+            )
+            values = values + code.to(values.dtype)[:, :, None]
         if trace is not None:
             trace[name + "_indices"] = indices.detach().cpu().clone()
             trace[name + "_scores"] = score.detach().cpu().clone()
             trace[name + "_sources"] = list(bank.sources)
+            trace[name + "_times"] = times.detach().cpu().clone()
+            trace[name + "_relative_time"] = self.relative_time
         return values.flatten(1, 2)

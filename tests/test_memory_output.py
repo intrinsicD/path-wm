@@ -202,6 +202,7 @@ def test_supervised_writes_and_frozen_decoder_have_intended_gradients():
         (True, "parity", False),
         (True, "relocation", False),
         (True, "relocation", True),
+        (True, "relocation", "temporal"),
     ],
 )
 def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum, repair):
@@ -245,11 +246,14 @@ def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum, 
         if repair:
             from pathwm.models.memory_output import configure_recall_repair
 
-            configure_recall_repair(model)
+            configure_recall_repair(model, relative_time=repair == "temporal")
             with torch.no_grad():
                 history = model.observe_history(train_data.batch(range(8))["images"])
-            model.agent.memory.calibrate([history["final"].memory.values])
-            settings["recall_repair"] = "calibrated"
+            if repair != "temporal":
+                model.agent.memory.calibrate([history["final"].memory.values])
+            settings["recall_repair"] = (
+                "temporal" if repair == "temporal" else "calibrated"
+            )
         result = train(
             model,
             train_data,

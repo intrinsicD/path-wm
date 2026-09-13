@@ -208,3 +208,20 @@ new intervention logits/images and independent metrics, raw source/probe control
 resource/precision metadata and standalone reports. Use existing renderer; browser
 QA remains unavailable, so structural QA plus inspection of exported PNGs. Prior
 CPU/GPU numeric failures remain open; match precision explicitly in replay scripts.
+
+Claude's two public-only reviews identify an important interpretation limit: an
+arbitrary fixed snapshot tag could also improve pooling. This comparison tests the
+implemented age cue at two fixed ages (effectively snapshot differentiation), not
+its superiority over such tags or learned elapsed-time semantics. That distinction
+remains open rather than adding another training arm. Include bank permutation
+checks through the actual workspace, including trained exports. Image scoring is
+the unchanged shared deterministic template comparison, not a changing classifier.
+
+Implementation checks:46 targeted tests and lint pass, including temporal CPU
+training/resume/standalone replay, live workspace permutation equivariance and
+untimed timestamp-intervention no-ops. The16-update temporal development run takes
+2.910s with424MiB reserved; frozen tensors unchanged, report structural QA passed
+and comparison PNG inspected. No quality tuning from this development run.
+
+Formal command (use both writer7801/7802 and repair identity/temporal):
+`OMP_NUM_THREADS=2 .venv/bin/python -m experiments.memory_output --weights runs/recall_repair_v1/agent_7801_identity/weights.pt --repair temporal --validation-seed 7732 --test-seed 7733 --seed 8101 --output runs/memory_time_v1/agent_7801_temporal --device cuda:0`

@@ -411,6 +411,8 @@ def train(
         ]
         if relocation:
             modes += ["cue_erased", "last_seen_erased"]
+        if repair:
+            modes += ["reset_time_erased", "reset_time_swapped"]
         scores, arrays = evaluate(
             model, test if completed else validation, device, modes
         )
@@ -489,7 +491,9 @@ def main():
     parser.add_argument("--stop-after", type=int)
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--normalize-input", action="store_true")
-    parser.add_argument("--repair", choices=("identity", "calibrated"))
+    parser.add_argument("--repair", choices=("identity", "calibrated", "temporal"))
+    parser.add_argument("--validation-seed", type=int)
+    parser.add_argument("--test-seed", type=int)
     parser.add_argument("--development", action="store_true")
     parser.add_argument(
         "--curriculum", choices=("parity", "relocation"), default="parity"
@@ -515,18 +519,29 @@ def main():
         source = torch.load(args.weights, map_location="cpu", weights_only=True)
         if source["settings"].get("curriculum") != "relocation" or source[
             "settings"
-        ].get("recall_repair"):
-            parser.error("Repair requires an original balanced-relocation checkpoint")
-        model = configure_recall_repair(load_model(args.weights, args.device))
+        ].get("recall_repair") not in (None, "identity"):
+            parser.error(
+                "Repair requires an original or untimed identity-relocation checkpoint"
+            )
+        model = configure_recall_repair(
+            load_model(args.weights, args.device),
+            relative_time=args.repair == "temporal",
+        )
         training = MemoryOutputEpisodes(
             128, seed=17701 if args.development else 7701, curriculum="relocation"
         )
         validation = MemoryOutputEpisodes(
-            32, seed=17722 if args.development else 7722, curriculum="relocation"
+            32,
+            seed=args.validation_seed
+            if args.validation_seed is not None
+            else (17722 if args.development else 7722),
+            curriculum="relocation",
         )
         test = MemoryOutputEpisodes(
             64,
-            seed=17723 if args.development else 7723,
+            seed=args.test_seed
+            if args.test_seed is not None
+            else (17723 if args.development else 7723),
             split="test",
             curriculum="relocation",
         )
@@ -583,8 +598,17 @@ def main():
         build_model(codec, normalize_input=args.normalize_input).to(args.device).eval()
     )
     training = MemoryOutputEpisodes(128, seed=7701, curriculum=args.curriculum)
-    validation = MemoryOutputEpisodes(32, seed=7702, curriculum=args.curriculum)
-    test = MemoryOutputEpisodes(64, seed=7703, split="test", curriculum=args.curriculum)
+    validation = MemoryOutputEpisodes(
+        32,
+        seed=args.validation_seed if args.validation_seed is not None else 7702,
+        curriculum=args.curriculum,
+    )
+    test = MemoryOutputEpisodes(
+        64,
+        seed=args.test_seed if args.test_seed is not None else 7703,
+        split="test",
+        curriculum=args.curriculum,
+    )
     # Hold both feature calibrations fixed at the original training population.
     calibration = MemoryOutputEpisodes(128, seed=7701)
     if args.normalize_input:
