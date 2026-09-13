@@ -1,5 +1,35 @@
 # Current work
 
+**Fixed-checkpoint nuisance screen completed, 13 September:** both continuation
+policies pass all six neutral cells, but none of their twelve brightness-stress
+cells or five-point retention checks. Joint continuation retains 100% facts/images
+on fresh background seeds 20073–20075. Image-only neutral ordinary facts/images are
+96.094–100% / 98.438–100%; reset 95.313–100% / 96.875–100%. With observed RGB offsets
+−16/+16, ordinary facts fall to 31.250–65.625% and images to 31.250–57.031% across
+trained checkpoints. Targets/labels stay unchanged, no pixels clip, foreground
+color identity and history ambiguity are preserved. These are familiar synthetic
+objects from one upstream initialization/codec, not independent model replication.
+[Report](../runs/output_robustness_v1/report.html),
+[protocol/results](recall-repair-plan.md#fixed-checkpoint-nuisance-robustness-results).
+
+Added evaluation-only `--input-offset` with clipping/type guards and recorded
+transform provenance; default data identities and inference/training code remain
+unchanged. All 67 relevant tests pass; 12,798 metric values and all 54 task gates
+independently verified. All 36 trained-model GPU replays are exact; source/factual
+freeze and sampled memory/workspace invariants pass. CPU numerical tolerance fails
+in all 36 cells and native categories differ in 15 stressed cells; portability is
+still open. All checkpoints stayed fixed: zero training, 449.78s evaluation/report
+loop, 296 MiB peak GPU reservation. Two public-only Claude reviews; implementation
+reviewed locally. Fifty-five individual reports and overview structurally verified,
+representative figures inspected; browser QA unavailable.
+
+Next proposed: separately declare a brightness augmentation comparison and input
+normalization diagnostic, with neutral retention and fresh confirmation data. Facts
+and the frozen direct reader also fail under shifts, so a decoder-only explanation
+is insufficient; a failed direct reader does not prove encoder information is gone.
+Do not reuse these diagnostic populations as untouched confirmation. No repair
+training or normalization change has been launched.
+
 **Image-output continuation completed, 13 September:** image-only training on both
 frozen final joint states reaches100% ordinary/reset image answers on fresh test19073.
 Joint continuation reaches100% facts and images for both. Image-only preserves

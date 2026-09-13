@@ -1349,3 +1349,74 @@ populations, clipping/inverse/color margins, paired ambiguity, unchanged checkpo
 and exact-frame disjointness. Development evaluation completes with zero updates,
 structurally checked report and inspected panel. Claude reconciliation finds no
 material conceptual contradiction. No formal population scored before this commit.
+
+## Fixed-checkpoint nuisance robustness results
+
+Formal evaluation source f78b8ff; plan/RED commit 74b6bb4. All 54 declared cells
+completed with zero optimizer updates. Each trained policy passes all six neutral
+full-task cells, fails all twelve shifted full-task cells and all twelve shifted
+five-point retention checks. Source controls pass three of six neutral cells and
+none of twelve shifted cells. Controls do not enter the trained-policy conjunctions.
+
+| Policy / input | Ordinary facts | Ordinary images | Reset facts | Reset images |
+| --- | ---: | ---: | ---: | ---: |
+| Image-only / neutral | 96.094–100% | 98.438–100% | 95.313–100% | 96.875–100% |
+| Joint / neutral | 100% | 100% | 100% | 100% |
+| Image-only / −16 | 39.844–47.656% | 35.938–45.313% | 41.406–51.563% | 39.844–45.313% |
+| Joint / −16 | 32.813–43.750% | 35.156–46.094% | 35.156–39.844% | 35.156–42.188% |
+| Image-only / +16 | 31.250–38.281% | 31.250–35.938% | 35.938–42.969% | 35.938–42.188% |
+| Joint / +16 | 50.781–65.625% | 42.969–57.031% | 57.813–61.719% | 48.438–57.813% |
+
+Ranges describe both checkpoints and three declared background seeds, not
+independent-model uncertainty. All six checkpoints share one upstream initialized
+agent and codec. Familiar semantic quartets and rendering patterns are unchanged.
+New backgrounds confirm scoped neutral retention; the additive input stress screen
+fails decisively. No offset, gate or checkpoint was changed after seeing outcomes.
+
+The frozen direct reader drops from 100% neutral to 62.5% under −16 and
+69.531–73.438% under +16. Both facts and images lose color/shape/side accuracy.
+This broad sensitivity does not support a decoder-only account, but does not locate
+where information becomes inaccessible: the direct reader has its own learned head.
+No encoder-information-loss or general physical-lighting claim follows. Canonical
+color assignment, inverse pixel transform, clipping bounds, unchanged targets/labels
+and paired-history ambiguity all pass independently of tested model predictions.
+
+All 67 relevant tests pass after nine transformation/CLI RED cases. Eight existing
+recipe function ASTs and model source equal 2bb8bb9; default data identities match
+old manifests. NumPy recomputes 12,798 metrics (maximum discrepancy 1.172e-8) and all
+54 task gates, including each continuous margin. Origins/checkpoint hashes and
+zero-update records pass. Every image-only saved factual logit equals its unchanged
+source at the same input condition. All 36 trained-model GPU ordinary/reset replays
+are bitwise exact over 128 histories. First 16 histories per cell pass detached bank
+source/value/time/order, training-value replay and frozen-workspace checks. Traces
+are sampled intermediate checks, not an exhaustive tensor proof.
+
+CPU numerical tolerance 1e-4 fails in all 36 cells: maximum native-logit discrepancy
+0.4816207886, pixels 0.0140872598. Native categories differ in 15 stressed cells and
+in no neutral cell. Counts are ordinary facts 4, ordinary images 8, reset facts 7,
+reset images 7 example/query/checkpoint comparisons; these may overlap and are not
+unique-world counts. Detailed indices and both answers are retained. This is a
+separate portability failure; earlier numerical/categorical findings remain valid.
+
+The 54-cell evaluation/report loop took 449.777682s (7.50min); recorded evaluation
+compute sums to 429.097025s. No training or calibration, peak reservation
+310,378,496 bytes (296 MiB). One separate workflow development export also had zero
+updates. All 55 individual reports and overview verified structurally; heatmap and
+representative panels inspected. Browser QA unavailable. Two actual Claude public-
+only design/reconciliation exchanges; private implementation and results reviewed
+locally. No private scores or code were sent to Claude.
+
+[Report](../runs/output_robustness_v1/report.html) retains all cells, attribute scores,
+continuous gate/retention margins, paired source contrasts, 12 predetermined panels,
+provenance and numerical/categorical audit records. Authoritative summaries are
+`verification.json`, `array_audit.json`, `gpu_audit.json`, `cpu_audit.json` and
+`final_checks.json` beside it; run-local scripts reproduce the audits and report.
+The individual recipe remains the public entry point with `--evaluate-only` and
+`--input-offset`; the evaluation transform is deliberately rejected for training.
+
+Next proposed, not implemented here: predeclare training-time brightness
+augmentation and a normalization diagnostic, preserving neutral retention and
+fresh held-out confirmation. First test whether frozen features support a better
+reader before deciding to adapt encoders. These examined stress populations are
+now diagnostic data. A larger decoder or longer unchanged training is not yet a
+supported repair. No additional fit, normalization or test selection occurred.
