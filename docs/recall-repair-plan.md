@@ -679,3 +679,84 @@ and ordinary/reset standalone reload. Development16 updates complete in1.2498s,
 cache preparation2.1106s; standalone structural QA and example inspection pass.
 Formal writer7801 mixed run will pause after769 updates and resume the remaining767
 to check mask phase through a real GPU restart. Source is committed before fitting.
+
+## Mixed ordinary/reset results
+
+Source f0ac167. Four1536-update fits complete under180s caps, all67,032 native output
+parameters train; writer, thinker, encoder, initial state, reconstruction head,
+reference probes and raw banks remain unchanged. Each matched pair has identical
+head initialization, reset caches, targets/features, dataset identity and sampled
+history sequence. Actual mixed training uses12,288 ordinary plus12,288 reset
+presentations; reset-only uses24,576 reset presentations. No extra context feature.
+
+Held-out128 histories (familiar tuples/motions, fresh backgrounds):
+
+| Writer | Training | Ordinary facts | Ordinary images | Reset facts | Reset images | Full gate | Policy benefit |
+| --- | --- | ---: | ---: | ---: | ---: | --- | --- |
+|7801|reset only|82.8125%|58.59375%|97.65625%|96.09375%|False|control|
+|7801|mixed|96.875%|96.875%|97.65625%|94.53125%|True|True|
+|7802|reset only|75%|75%|75%|75%|False|control|
+|7802|mixed|75%|75%|75%|75%|False|False|
+
+Writer7801 mixed improves ordinary facts14.0625 points and images38.28125 points;
+reset facts are unchanged, reset images lose1.5625 points, within the declared3-point
+allowance. Ordinary complete relocation pairs93.75/93.75%; reset95.3125/89.0625%.
+It passes both the full task and policy-benefit gates. This repairs the measured
+ordinary-state regression for this source without crossing the recall-loss allowance.
+It does not establish a unique mixing mechanism, equal reset dose, or full-agent
+reliability. Replicated repair fails because writer7802 does not improve.
+
+Causal screens for the successful mixed model: erased bank and entire history
+facts/images6.25/6.25%; cue erasure6.25/4.6875%; later-view erasure43.75/42.1875%;
+swapped-bank alternate facts/images97.65625/94.53125%. Ordinary/reset weighted MSE
+0.00227671093/0.00263550482 beats background0.06856732070 and pair mean0.01887924969.
+Timestamp erasure/reversal remain exact native no-ops. These are controlled-object
+image classification/pixel results, not general image synthesis or exact reconstruction.
+
+Unchanged source on this same test: writer7801 ordinary96.875/96.09375%, reset90.625/
+89.84375%;7802 all75%. Thus mixed training preserves the source's ordinary output
+while improving recall. Old stored-working readers7901/7902 score98.4375/83.59375%
+for7801 and75.78125/75% for7802; their frozen native-workspace readouts remain weak.
+Head-only training changes native outputs without changing the underlying tokens.
+Training histories:7801 mixed ordinary100/100%, reset99.21875/98.046875%; reset-only
+ordinary81.25/56.25%, reset100/99.609375%. Both7802 arms score75% in both modes and
+outputs even on training data. This bounds this particular policy/budget, not the
+information content or best possible reader.
+
+46 relevant CPU tests pass, including exact optimizer/RNG resume at an odd step,
+TRAIN-pooled calibration and standalone ordinary/reset replay. All1,826 saved metrics
+independently recomputed (948 fit-test,212 training,474 source,192 frozen-reader),
+max error7.57e-8. All four GPU ordinary/reset native/reference logits and pixels
+replay exactly. Both cached working-state inputs and teacher targets exactly match
+shuffled live16-example batches across all256 training histories; labels/targets
+align. Ordinary and reset workspaces differ for all256 histories in both sources
+(RMS1.63049/1.14463), so the intervention is substantive. Bank reorder is exact on
+both devices. Source files, frozen tensors/probes and banks are unchanged.
+
+Actual769+767 GPU restart preserves776 prior ledger rows and the next mask phase;
+strict cache identity and optimizer/RNG resume also pass CPU tests. All cache
+preparations now have receipts, including resume. Four training times35.310234,
+35.840297,34.805949,34.877570s total140.834049s; cache preparation9.209641s including
+resume. Peak458MiB reserved. Caps exclude cache preparation and final evaluation.
+Development16 updates1.249775s plus2.110640s cache,458MiB.
+
+CPU numerical tolerance1e-4 still fails: max native logits1.10498428 and pixels
+0.02662665, though ALL ordinary/reset factual and image labels agree with GPU on
+this slice. The successful mixed export's max logits0.82806873/pixels0.02592957.
+Earlier device-dependent label failures remain historical evidence; current
+categorical agreement is not a portability repair.
+
+Two actual public-only Claude conceptual exchanges; implementation review and
+empirical checks performed locally. Every run plus overview has a self-contained,
+structurally verified report; development/four example panels and chart inspected.
+Browser QA unavailable. Report: `runs/mixed_context_v1/report.html`; full settings,
+exports, raw predictions, cache receipts and audits retained alongside it.
+
+Example repeat (use a NEW output directory):
+`OMP_NUM_THREADS=2 .venv/bin/python -m experiments.memory_output --weights runs/reader_supervision_v1/agent_7801_baseline/weights.pt --repair identity --readout-stage native --readout-context mixed --seed 8401 --validation-seed 7762 --test-seed 7763 --output runs/mixed_context_repeat --device cuda:0`
+
+Next proposed: target the weaker writer/workspace formation while retaining mixed
+output training. A matched comparison allowing the writer to learn is a candidate;
+its exact loss/budget and causal claims need declaration before any fit. Current
+probe/head failures do not prove missing information or a writer-only cause.
+Keep CPU numerical portability separate. No further training launched.

@@ -1,5 +1,22 @@
 # Current work
 
+**Mixed ordinary/reset training completed, 13 September:** training only native
+output heads on both workspaces repairs the stronger source on the controlled task.
+Writer7801 ordinary facts/images96.875/96.875% versus82.8125/58.59375% with matched
+reset-only training; reset97.65625/94.53125% versus97.65625/96.09375%. Full task and
+policy-benefit gates pass for this source. Writer7802 remains75% in both modes,
+even on training histories; replicated repair fails. No full-agent reliability claim.
+Encoder, writer, thinker, reconstruction head, probes and raw banks remain frozen.
+Four1536-update fits,140.83s training plus9.21s cache preparation including resume,
+458MiB reserved.46 relevant tests and1,826 independently verified metrics pass;
+GPU ordinary/reset exports and both live caches replay exactly,776-row restart
+prefix retained. CPU numeric tolerance still fails (max logits1.104984/pixels0.026627),
+but all native factual/image labels agree in this slice. Two public-only Claude
+reviews, structural reports and inspected figures. [Protocol/results](recall-repair-plan.md#mixed-ordinaryreset-results),
+[report](../runs/mixed_context_v1/report.html). Next proposed: test the weaker writer
+and workspace formation while retaining mixed output training; no further run launched.
+
+
 **Direct output-readout diagnostic completed, 13 September:** with writer AND thinker
 frozen, head-only training on native reset tokens reaches96.88/98.44% facts/images
 for writer7801 (raw),98.44/96.88% standardized. Both pass the predeclared reset-only
