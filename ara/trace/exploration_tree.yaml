@@ -4586,3 +4586,51 @@ tree:
   - N286
   - N282
   status: resolved
+
+- id: N289
+  type: decision
+  title: Approve direct stored-token native-output diagnostic
+  provenance: user
+  timestamp: 2026-09-13T11:09+02:00
+  choice: 'Yes please do that: adopt O191 comparison of native output learning on stored working tokens.
+    The native/stored x raw/standardized factorial, frozen thinker, reset-only caching and exact budget
+    are implementing-agent choices, not separate user instructions.'
+  alternatives:
+  - Further auxiliary-reader loss tuning
+  - Change writer or codec before isolating native output learning
+  evidence:
+  - O191
+  - N288
+  - docs/recall-repair-plan.md#direct-native-output-readout-protocol
+  status: resolved
+- id: N290
+  type: experiment
+  title: Head-only training establishes conditional native reset readout, with ordinary regression
+  provenance: ai-executed
+  timestamp: 2026-09-13T11:09+02:00
+  result: 'Source504a587. Eight1536-update fits, seed8301,67032 trainables; frozen writer AND thinker,
+    two prior native sources x native/stored route x raw/per-route standardized tokens. Source7801 native
+    reset raw96.875/98.4375% facts/images, standardized98.4375/96.875%; both pass reset-only accuracy/pair/causal
+    screen. Ordinary drops to81.25/59.375% and68.75/50.78125%. Stored7801 raw78.90625/95.3125%, standardized75/94.53125%.
+    Source7802 native raw75/75.78125%, standardized75/75%, stored raw76.5625/75.78125%, standardized77.34375/76.5625%.
+    All eight full gates, replicated reset sufficiency,10-point route advantage and normalization benefit
+    fail. Head initialization/data/sample states matched; source writer/thinker/codecs/probes/banks unchanged.296.763s
+    training,14.330s first cache preparation,460MiB; repeat resume cache preparation not separately timed.58
+    initial tests plus10 post-fix checks include one new regression (59 distinct);2930 independent metrics
+    within1.86e-7. All GPU exports and shuffled-batch cached tokens/teacher targets exact, bank-order
+    invariance exact both devices;774-row768+768 resume. CPU fails1e-4: max native logits0.815565/pixels0.0159254;
+    five factual-side changes across three7801 arms, image labels agree. Post-comparison stale-scaling
+    reconfiguration bug demonstrated RED and fixed in d3eecf3; all eight original GPU exports still replay
+    exactly. Two public-only Claude reviews, structural reports and all nine plots/panels inspected. No
+    complete model promoted or additional training run launched.'
+  evidence:
+  - ara/evidence/tables/direct_readout_2026-09-13.json
+  - runs/direct_readout_v1/report.html
+  - runs/direct_readout_v1/verification.json
+  - runs/direct_readout_v1/postfix_gpu_replay.json
+  - docs/recall-repair-plan.md#direct-native-output-readout-results
+  also_depends_on:
+  - N289
+  - N288
+  - N282
+  status: resolved

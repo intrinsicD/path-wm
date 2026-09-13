@@ -3384,6 +3384,41 @@ observations:
   bound_to:
   - N288
   - N282
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H55
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O192
+  timestamp: 2026-09-13T11:09+02:00
+  provenance: ai-suggested
+  content: The current stronger frozen native reset workspace supports high causal factual/image readout
+    with only output heads trained. This narrows its present limitation toward readout learning rather
+    than information being wholly absent, but does not establish the mechanism of older source failures.
+    Reset-only fitting regresses ordinary outputs; weaker source remains hard to fit even on training
+    data. Direct stored routing and normalization give no replicated advantage at this budget; equal initialization
+    favors heads already adapted to native tokens and does not equalize learning difficulty.
+  context: Two conditional reset passes versus all full/replicated gates failing; researcher has not interpreted
+    these new outcomes. CPU portability remains unresolved.
+  potential_type: claim
+  bound_to:
+  - N290
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O193
+  timestamp: 2026-09-13T11:09+02:00
+  provenance: ai-suggested
+  content: Next keep upstream modules frozen and train native output heads on both ordinary and reset
+    working states, preserving both modes rather than optimizing reset alone. Retain weaker-writer accessibility
+    and CPU numerical checks separately. Define matched mixed-context sampling/budget before training;
+    do not assume this will fix all sources or require new memory cues/codecs.
+  context: Proposed follow-up after ordinary regression under deliberately reset-only head training; no
+    further fit launched.
+  potential_type: heuristic
+  bound_to:
+  - N290
   promoted: false
   promoted_to: null
   crystallized_via: null

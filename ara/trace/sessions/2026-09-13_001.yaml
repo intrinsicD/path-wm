@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T10:34+02:00
-  turn_count: 7
-  summary: Frozen-reader supervision improves diagnostic compatibility but not native recall; four fits
-    fail reliability/benefit.49 tests,1572 metric checks, exact GPU replay; CPU changes two factual and
-    one image-side labels.
+  last_turn: 2026-09-13T11:09+02:00
+  turn_count: 8
+  summary: Frozen-stage head training passes reset readout in one source but regresses ordinary outputs;
+    weaker writer and all full/replicated gates fail.59 distinct tests,2930 metrics, exact GPU/cache replay;
+    CPU factual-side differences remain.
 
 events_logged:
 - turn: 1
@@ -215,6 +215,38 @@ events_logged:
   provenance: user-revised
   summary: O189 adopted as diagnostic method, not guaranteed auxiliary-loss efficacy.
 
+- turn: 8
+  type: decision
+  id: N289
+  routing: direct
+  provenance: user
+  summary: Approve native-output readout directly from stored tokens.
+- turn: 8
+  type: experiment
+  id: N290
+  routing: direct
+  provenance: ai-executed
+  summary: Eight frozen-stage fits establish conditional reset readout in one source; ordinary regresses.
+- turn: 8
+  type: observation
+  id: O192
+  routing: staged
+  provenance: ai-suggested
+  summary: Present native reset information is usable in stronger source; full reliability and weaker-source
+    questions remain.
+- turn: 8
+  type: observation
+  id: O193
+  routing: staged
+  provenance: ai-suggested
+  summary: Next train native heads on both ordinary and reset workspaces.
+- turn: 8
+  type: heuristic
+  id: H55
+  routing: crystallized
+  provenance: user-revised
+  summary: O191 diagnostic method adopted, not a guaranteed direct-route repair.
+
 ai_actions:
 - turn: 1
   action: Reconciled existing plans and saved evidence; recorded recommendation without model changes or new evaluation.
@@ -297,6 +329,21 @@ ai_actions:
   - docs/project-state.md
   - docs/models.md
 
+- turn: 8
+  action: Implement causal direct stored-token routing, per-stage normalization and frozen-input caching;
+    review concept with Claude twice; run eight fits with independent scores/live-cache/export audits;
+    demonstrate and fix stale normalization reconfiguration, verify all exports again; inspect all report
+    figures.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/memory_output.py
+  - experiments/memory_output.py
+  - tests/test_direct_readout.py
+  - tests/test_memory_output.py
+  - docs/recall-repair-plan.md
+  - docs/project-state.md
+  - docs/models.md
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -318,11 +365,18 @@ key_context:
   excerpt: 'User: Yes ok, please do that. Native reset facts/images:7801 equal training86.72/89.06%, supervision84.38/86.72%;7802
     both74.22/74.22%. Diagnostic gains are not native repair; CPU side mismatches remain.'
 
+- turn: 8
+  excerpt: "User: Yes please do that. First frozen native reset route reaches96.88/98.44% facts/images\
+    \ after head-only training, but ordinary81.25/59.38%; direct stored78.91/95.31%, weaker writer~75\u2013\
+    77%. Separate conditional readout sufficiency from complete repair."
+
 open_threads:
-- 'N288/O190/O191: auxiliary reader compatibility improves without native benefit. Isolate workspace formation
-  from native output learning with a controlled direct stored-token route; weaker writer remains uncertain.'
-- 'N278/N280/N284/N286/N288: CPU/GPU numerical tolerance unresolved despite exact GPU replay. Current
-  max native logits0.460575/pixels0.025750; supervised7801 changes factual-side cases90/122 and image-side27.'
+- 'N290/O192/O193: stronger native reset workspace supports accurate outputs, ordinary mode regresses
+  under reset-only fitting. Test mixed ordinary/reset head training; weaker writer remains a separate
+  accessibility problem.'
+- 'N278/N280/N284/N286/N288/N290: CPU/GPU numerical tolerance unresolved despite exact GPU replay. Current
+  max native logits0.815565/pixels0.0159254; five factual-side changes across three7801 arms. Image labels
+  agree in this slice; prior image differences remain documented.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
   and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and
@@ -350,7 +404,9 @@ ai_suggestions_pending:
   claim.'
 - 'O188: limited age-cue gain and heterogeneous metadata sensitivity; general time semantics not established.'
 - 'O190: auxiliary compatibility versus native-output failure; mechanism remains unconfirmed.'
-- 'O191: direct stored-token native-output diagnostic proposed, not yet specified/run.'
+- 'O192: conditional native reset accessibility and ordinary regression; no general mechanism or full
+  repair established.'
+- 'O193: mixed ordinary/reset head training proposed; exact sampling/budget unconfirmed.'
 - 'O164-O175: earlier curriculum, diagnosis and scoped capability interpretations retain their original
   provenance and closure status.'
 - 'O177/O178: coordination and state-grounding diagnostics remain staged; acknowledgment does not select

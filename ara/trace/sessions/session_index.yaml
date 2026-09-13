@@ -139,10 +139,10 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: Frozen-reader supervision improves diagnostic compatibility but not native recall; four fits
-    fail reliability/benefit.49 tests,1572 metric checks, exact GPU replay; CPU changes two factual and
-    one image-side labels.
-  turn_count: 7
-  events_count: 33
+  summary: Frozen-stage head training passes reset readout in one source but regresses ordinary outputs;
+    weaker writer and all full/replicated gates fail.59 distinct tests,2930 metrics, exact GPU/cache replay;
+    CPU factual-side differences remain.
+  turn_count: 8
+  events_count: 38
   claims_touched: []
   open_threads: 10

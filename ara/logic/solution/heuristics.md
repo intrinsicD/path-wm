@@ -533,3 +533,13 @@
 - **Sensitivity**: High. An optimized diagnostic is not independent evidence; native causal output gates remain primary. The completed auxiliary-supervision comparison gives no native benefit at its tested budget.
 - **Code ref**: [frozen reader and native outputs](../../../pathwm/models/memory_output.py), [supervision recipe](../../../experiments/memory_output.py), [gradient/inference checks](../../../tests/test_reader_supervision.py).
 - **Evidence**: N287/N288; [four-fit record](../../evidence/tables/reader_supervision_2026-09-13.json).
+
+## H55: Compare native heads on frozen intermediate states before diagnosing information loss
+
+- **Rationale**: Hold state formation fixed and test the same native output heads on stored versus recalled working tokens. Separate training-only conditioning from input stage, verify cached/live equivalence, and keep conditional readout gates distinct from full operating-mode reliability. Successful direct probes do not by themselves repair the native outputs.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O191
+- **Sensitivity**: High. Native initialization favors a familiar format, equal budgets need not equalize fitting, and reset-only success may regress ordinary behavior. The completed comparison supports conditional native readout in only one source.
+- **Code ref**: [stage selection and normalization](../../../pathwm/models/memory_output.py), [cached native-output training](../../../experiments/memory_output.py), [causality/cache/gradient checks](../../../tests/test_direct_readout.py).
+- **Evidence**: N289/N290; [eight-fit record](../../evidence/tables/direct_readout_2026-09-13.json).
