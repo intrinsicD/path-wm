@@ -3279,6 +3279,41 @@ observations:
   potential_type: heuristic
   bound_to:
   - N282
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H52
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O186
+  timestamp: 2026-09-13T09:05+02:00
+  provenance: ai-suggested
+  content: Focused native reader/workspace/producer continuation improves facts and generated images with
+    unchanged encoder, writer and decoder head, but does not establish reliable location recall. Fixed
+    channel calibration has no benefit under this matched update budget. The gain versus old checkpoints
+    also includes more training and removal of the write/direct losses, so freezing alone is not causally
+    isolated. Stored-value probe dependence and weaker writer remain; no information-ceiling or general-generation
+    claim.
+  context: All four predeclared screens fail on fresh backgrounds within familiar tuple/motion support.
+    No researcher interpretation of these new outcomes yet.
+  potential_type: claim
+  bound_to:
+  - N284
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O187
+  timestamp: 2026-09-13T09:05+02:00
+  provenance: ai-suggested
+  content: 'Next isolate temporal/snapshot routing: explicit stored timestamps currently do not enter
+    the memory attention context, which pools both snapshots. Test a time-aware reader against the frozen-writer
+    continuation, retaining direct stored-state controls and checking weaker writer accessibility. This
+    is a missing explicit cue and a hypothesis, not a proven failure cause or guaranteed repair.'
+  context: Proposed after the bounded calibration comparison; no new temporal-reader code, protocol or
+    training has been authorized specifically or executed.
+  potential_type: heuristic
+  bound_to:
+  - N284
   promoted: false
   promoted_to: null
   crystallized_via: null

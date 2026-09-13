@@ -503,3 +503,13 @@
 - **Sensitivity**: High. Equal parameter count and updates do not equalize extraction difficulty; report access differences, training fit and every seed.
 - **Code ref**: [probe recipe](../../../experiments/memory_probes.py), [state snapshots](../../../pathwm/models/memory_output.py), [checks](../../../tests/test_memory_probes.py).
 - **Evidence**: N281/N282; [frozen-state results](../../evidence/tables/memory_probes_2026-09-13.json).
+
+## H52: Isolate native recall repair against frozen stored states
+
+- **Rationale**: Keep the encoder and snapshot writer fixed while training memory reading, working-state formation and native outputs; compare against direct access to the same stored values and preserve probe sensitivity limits. Declare objectives, seeds and budgets before changing the producer or enlarging codecs.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O185
+- **Sensitivity**: High. Fixed-budget partial improvement is not full recovery; native output, matched controls and writer accessibility must all be reported. Calibration has no benefit in the completed comparison.
+- **Code ref**: [repair modules](../../../pathwm/models/memory_output.py), [recipe](../../../experiments/memory_output.py), [integrity checks](../../../tests/test_recall_repair.py).
+- **Evidence**: N283/N284; [four-run record](../../evidence/tables/recall_repair_2026-09-13.json).

@@ -4450,3 +4450,47 @@ tree:
   - N281
   - N280
   status: resolved
+
+- id: N283
+  type: decision
+  title: Repair native recall against frozen stored states
+  provenance: user
+  timestamp: 2026-09-13T09:05+02:00
+  choice: Yes ok. Do that and fix it if possible approves the proposed bounded memory-reader/workspace/output
+    repair after the frozen-state probes, preserving encoder and writer.
+  alternatives:
+  - Grow the visual encoder/decoder before testing the recall path
+  evidence:
+  - O185
+  - N282
+  - docs/recall-repair-plan.md
+  also_depends_on:
+  - N282
+  status: resolved
+- id: N284
+  type: experiment
+  title: Frozen-writer retraining partially improves recall; channel calibration does not help
+  provenance: ai-executed
+  timestamp: 2026-09-13T09:05+02:00
+  result: 'Source cfe472b. Four 1536-update fits: two frozen writers7801/7802 x identity/calibrated retrieval,
+    continuation seed8001,76824 trainable parameters. Reset facts66.41/58.59/75/73.44%; images63.28/57.03/75/73.44%,
+    versus native48.44/50% facts and47.66/51.56% images. All complete repair screens fail; calibration
+    is lower than matched identity retraining in both source pairs. Location dominates; complete relocation
+    facts32.81/17.19/50/46.88%. Direct encoder/teacher100%; unchanged stored-working probes98.44/85.94%
+    (writer7801),76.56/75% (writer7802). Frozen tensors/raw banks/source checkpoints unchanged.41 tests,1076
+    independently verified metrics within2.50e-8, exact GPU exports under matched IEEE/deterministic settings,774-row768+768
+    resume prefix. CPU categorical answers agree but max logits0.224921/pixels0.019403 fail1e-4. First
+    external audit omitted precision setup; corrected and rerun, unmatched artifacts retained.761.232s
+    training,424MiB reserved. Two public-only Claude reviews; structural reports, inspected panels and
+    score figure. No checkpoint promoted as reliable and no extra post-gate training.'
+  evidence:
+  - ara/evidence/tables/recall_repair_2026-09-13.json
+  - runs/recall_repair_v1/report.html
+  - runs/recall_repair_v1/verification.json
+  - runs/recall_repair_v1/audit_repair_note.json
+  - docs/recall-repair-plan.md
+  also_depends_on:
+  - N283
+  - N282
+  - N280
+  status: resolved

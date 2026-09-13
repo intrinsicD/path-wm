@@ -2,9 +2,9 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T08:20+02:00
-  turn_count: 4
-  summary: Frozen probes recover some location before storage but stay near chance after recall; conditional accessibility established, native agent repair still pending.
+  last_turn: 2026-09-13T09:05+02:00
+  turn_count: 5
+  summary: Frozen-writer retraining improves recall partially; calibration underperforms and all four complete repair screens fail. Frozen states and numerical limits preserved.
 
 events_logged:
 - turn: 1
@@ -119,6 +119,38 @@ events_logged:
   provenance: ai-suggested
   summary: Propose frozen-state recall/working-state repair and probe sensitivity control.
 
+- turn: 5
+  type: decision
+  id: N283
+  routing: direct
+  provenance: user
+  summary: Approve focused memory-reader repair with frozen encoder and writer.
+- turn: 5
+  type: heuristic
+  id: H52
+  routing: crystallized
+  provenance: user-revised
+  summary: O185 frozen-state native repair method adopted by explicit affirmation.
+- turn: 5
+  type: experiment
+  id: N284
+  routing: direct
+  provenance: ai-executed
+  summary: Four bounded fits improve recall partially; calibration underperforms and all reliability gates
+    fail.
+- turn: 5
+  type: observation
+  id: O186
+  routing: staged
+  provenance: ai-suggested
+  summary: Partial native-output improvement leaves location and numerical portability unresolved.
+- turn: 5
+  type: observation
+  id: O187
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose explicit temporal/snapshot routing comparison with retained frozen-state controls.
+
 ai_actions:
 - turn: 1
   action: Reconciled existing plans and saved evidence; recorded recommendation without model changes or new evaluation.
@@ -156,6 +188,20 @@ ai_actions:
     docs/memory-probes-plan.md, docs/project-state.md,
     ara/evidence/tables/memory_probes_2026-09-13.json]
 
+- turn: 5
+  action: Implemented opt-in frozen-writer recall training and memory calibration; two public-only Claude
+    reviews,41 targeted tests, four formal fits, resume/reload and1076-metric audits, source-backed report.
+    Corrected audit precision setup while preserving failures and original weights.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/memory_output.py
+  - experiments/memory_output.py
+  - tests/test_recall_repair.py
+  - tests/test_memory_output.py
+  - docs/recall-repair-plan.md
+  - docs/project-state.md
+  - ara/evidence/tables/recall_repair_2026-09-13.json
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -167,9 +213,12 @@ key_context:
 - turn: 4
   excerpt: Yes, please do that
 
+- turn: 5
+  excerpt: Yes ok. Do that and fix it if possible
+
 open_threads:
-- 'N282/O184/O185: pre-storage location partly readable but post-recall probes near chance; specify recall/working-state repair and consider probe sensitivity before information-loss claims.'
-- 'N278/N280: normalized CPU/GPU pixel differences exceed1e-4 despite exact GPU replay; one7801 rendered label now differs, factual labels agree. Numerical portability remains open.'
+- 'N284/O186/O187: frozen-writer retraining improves recall but fails reliability; calibration is lower. Test temporal/snapshot routing and retain stored-state access controls.'
+- 'N278/N280/N284: raw-encoder CPU/GPU numerical tolerance still fails despite exact GPU replay. Current repaired outputs agree categorically but max pixels0.019403 and logits0.224921 exceed1e-4.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and other-modality quality remain open.'
 - 'N273/A06/O177/O178: adopted output boundary needs concrete conditioning, uncertainty/time inputs, backends and cross-modal consistency tests.'
@@ -183,6 +232,7 @@ ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased location information.'
 - 'O184: partial pre-storage recoverability and weak post-recall accessibility under tested probe family; no unique mechanism identified.'
-- 'O185: frozen-state recall/working-state training proposed, with optional scale/capacity sensitivity checks; not executed.'
+- 'O186: partial native improvement and calibration failure at fixed budget; no asymptotic or unique mechanism claim.'
+- 'O187: proposed temporal/snapshot routing experiment; not implemented or run.'
 - 'O164-O175: earlier curriculum, diagnosis and scoped capability interpretations retain their original provenance and closure status.'
 - 'O177/O178: coordination and state-grounding diagnostics remain staged; acknowledgment does not select their complete implementation.'

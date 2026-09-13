@@ -139,8 +139,8 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: Memory-output and balanced relocation screens fail location; frozen probes recover partial location before storage but near chance after recall.38 targeted tests, conditional findings and numerical limits preserved.
-  turn_count: 4
-  events_count: 18
+  summary: Frozen probes motivate native recall repair; frozen-writer retraining improves facts/images partially, calibration underperforms, all reliability gates fail.41 tests and1076 verified metrics; CPU numerical limits remain.
+  turn_count: 5
+  events_count: 23
   claims_touched: []
   open_threads: 10
