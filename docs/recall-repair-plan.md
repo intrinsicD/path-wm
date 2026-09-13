@@ -2281,3 +2281,50 @@ and unchanged scene retention/causal gates first. Current failures also show tha
 passing one small rendering sample does not close robustness. Broad real imagery,
 learned reliability, independent upstream replication, CPU portability and general
 multimodal generation remain open.
+
+## Factual readout repair: locked protocol
+
+Continue from producer_refinement_v1/source_8502_control (no added capacity).
+Compare factual+image readout continuation against matched image-only training,
+with the corrected box RGB objective and0.1 feature penalty. Both see detached
+native mixed-context tokens; their parameters are disjoint. Factual loss has no
+image-producer gradient path. Independent norm1 clipping per readout removes the
+coupling introduced by global gradient clipping; use it in both arms. In image-only
+training this must reproduce original global clipping exactly. This tests factual
+learning, not a new cross-modal consistency mechanism or shared representation.
+
+Extend the existing box-weighted cached path to factual+image learning with explicit
+separate readout clipping. Keep global clipping/default behavior unchanged. Reject
+live writer/thinker, stored route, output standardization and evaluation overrides.
+Validate trainable parameter partition, log each pre-clip norm/clipping indicator,
+and prove image gradients, weights and optimizer states match across arms while
+only joint-arm facts adapt. All encoder/state/memory/backend/calibration tensors
+stay fixed; no new architecture. Require initial state/cache/RNG equality and exact
+odd-step resume/reload with correct saved trainability/settings.
+
+Two1536-update fits, seed9901, batch16, existing AdamW; same1024 train7701 histories
+(neutral,warm,cool,texture,128 pairs each). Validation37072/32 pairs and terminal
+37071/64 pairs never select. Development36701/38072/38071,16 pairs,16 updates.
+Fresh confirmation37073/37074,32 pairs=64 histories per cell for better diagnostic
+resolution; all6 prior scenes. Joint, image-only and unchanged source on all scenes;
+raw original8502 on neutral/texture:40 cells, all10 causal modes. No reused confirmation
+seed or post-confirmation fitting/threshold change.
+
+Full repair requires all12 joint task gates and all four ordinary/reset factual/image
+accuracies within5pp of raw-neutral, texture also within5pp of raw-texture. Report
+factual and image retention separately. Primary factual benefit pools warm/texture
+ordinary/reset factual errors across both seeds (512 correlated responses):≥25%
+relative reduction with no regression in any of eight paired factual scores;
+assessable only if image-only has≥8 errors. Otherwise explicitly unassessable.
+Require image weights/optimizer state and all evaluated images bitwise identical
+between fitted arms; violation invalidates the intended isolated comparison.
+Report branch norms/clip counts, absolute errors and quartet deltas. Rendering seeds
+are not independent upstream replications. Broader robustness/generation remain open.
+
+Budget:180s per fit,900s evaluation,4GiB GPU ceiling with1GiB headroom,3GiB disk floor.
+Essential REDs cover global-clipping confound/reference, nonfinite/unknown trainable
+scope guards, image equality and factual changes, CLI path, exact resume and exported
+freeze/settings. Small GPU development before source freeze; reports use the existing
+renderer with structural/figure checks and the prior browser limitation disclosed.
+Actual Claude reviews generic clipping/causal methodology only; private code/results
+reviewed locally. No external private export or new architecture is needed.
