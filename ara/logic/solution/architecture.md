@@ -62,3 +62,14 @@
 - **Code**: [reader/session/planner](../../../pathwm/models/key_box.py), [executed episodes](../../../pathwm/evaluation/key_box.py), [recipe](../../../experiments/multimodal.py).
 - **Verification**: N238/N239; [first](../../evidence/tables/key_box_first_2026-09-11.json), [repair](../../evidence/tables/key_box_switch_2026-09-11.json).
 - **Scope**: Operational integration, not a capability pass. Latest success95.83% but utility gate fails. Supplied descriptors, invalidation flags and action dynamics; generic episodic memory receives neutral packets. Does not establish visual discovery, learned imagined dynamics, semantic compression, arbitrary tasks or mid-action environment restoration. O158 broader planning design remains partial/proposed.
+
+## A07: Optional own conditional multiscale image generator
+
+- **Design**: State/request working context conditions residual transformer processing at each own-codec feature scale, followed by scale fusion. Compare direct clean-feature regression with conditional flow matching and iterative sampling. Sampling progress is distinct from world time; training targets are not inference inputs. Retain the existing deterministic output as reference and keep pretrained components optional.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O222
+- **Adoption**: N332; user explicitly requests implementation/review/test/fix iteration following the proposal. Widths, losses, budgets and gates are AI experimental choices, not user-selected optima.
+- **Code**: [generator](../../../pathwm/models/conditional_image.py), [recipe](../../../experiments/conditional_image.py), [focused checks](../../../tests/test_conditional_image.py), [protocol and results](../../../docs/image-output-plan.md).
+- **Verification**: N333–N335; [source-bound comparison and follow-up](../../evidence/tables/conditional_image_2026-09-14.json). Implementation98ca98f and optional progress weighting7314c56.
+- **Scope**: Implemented optional component, not a successful replacement or general image generator. Three short controlled fits fail strict output capability; the prior renderer remains default. The fixed selected-object task does not demonstrate arbitrary prompt parsing, photographic quality, compact visual memory, diversity or generalization of the complete upstream system.

@@ -3926,6 +3926,58 @@ observations:
   - N331
   - N330
   - N273
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A07
+  crystallized_via: verbal-affirmation
+  stale: false
+- id: O223
+  timestamp: 2026-09-14T00:40+02:00
+  provenance: ai-suggested
+  content: For this initialization and short synthetic fit, latent-only conditional-flow learning
+    fails reliable output from pure noise while target-containing intermediate features permit accurate
+    category decoding. Direct regression fits familiar combinations but fails withheld ones. The diagnostic
+    narrows the learned conditioning problem without uniquely identifying optimization, capacity,
+    objective or data as its cause.
+  context: Negative formal comparison and post-hoc validation diagnostic; upstream/codec saw all categories.
+    No researcher interpretation of these new results yet.
+  potential_type: claim
+  bound_to:
+  - N333
+  - N334
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O224
+  timestamp: 2026-09-14T00:40+02:00
+  provenance: ai-suggested
+  content: Half pure-noise supervision reduces mean weighted pixel error25.7% on fresh controlled
+    cases but does not repair faithful familiar output or full capability. Pixel-error improvement
+    alone is insufficient evidence of correct state-conditioned generation. No general rejection of
+    flow matching or scaling follows from this fixed-budget result.
+  context: Separately declared follow-up, independent confirmation data, unchanged upstream and original
+    renderer; no researcher interpretation yet.
+  potential_type: claim
+  bound_to:
+  - N335
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O225
+  timestamp: 2026-09-14T00:40+02:00
+  provenance: ai-suggested
+  content: Next compare adding decoded-image supervision through the frozen codec against latent-only
+    supervision, holding generator architecture, progress distribution, initialization and update
+    budget fixed. Use fresh paired histories and unchanged familiar/withheld, erasure and counterfactual
+    swap gates. Diagnose whether the output objective improves binding before expanding the agent.
+  context: Unexecuted next experiment after three bounded fits; no success, unique cause or real-image
+    generalization assumed. Prior lower-rate factual-readout experiment remains pending.
+  potential_type: heuristic
+  bound_to:
+  - N333
+  - N334
+  - N335
   promoted: false
   promoted_to: null
   crystallized_via: null

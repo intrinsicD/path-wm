@@ -1,0 +1,317 @@
+{
+  "limitations": [
+    "One initialization; correlated rendered histories; checkpoints upstream familiar with categories",
+    "Frozen high-bandwidth codec, not learned compact visual memory",
+    "Erasure is distribution-shifting sensitivity; swaps use counterfactual targets",
+    "No model downloads or original checkpoint replacements",
+    "Structural report QA and figure inspection; browser QA unavailable"
+  ],
+  "metrics": {
+    "Direct; first confirmation": {
+      "cells": 4,
+      "ordinary_reset_weighted_mse_mean": 0.00828598765656352,
+      "ordinary_seen_image_accuracy_mean": 1.0,
+      "ordinary_unseen_image_accuracy_mean": 0.0,
+      "passed_cells": 0,
+      "reset_seen_image_accuracy_mean": 1.0,
+      "reset_unseen_image_accuracy_mean": 0.0
+    },
+    "Matched-control result": {
+      "baseline_usable": true,
+      "flow_accuracy_nonregression": false,
+      "flow_benefit": false,
+      "flow_benefit_assessable": true
+    },
+    "Original source (descriptive)": {
+      "cells": 2,
+      "ordinary_reset_weighted_mse_mean": 0.00010745386316557415,
+      "ordinary_seen_image_accuracy_mean": 1.0,
+      "ordinary_unseen_image_accuracy_mean": 1.0,
+      "passed_cells": 2,
+      "reset_seen_image_accuracy_mean": 1.0,
+      "reset_unseen_image_accuracy_mean": 1.0
+    },
+    "Pure-noise follow-up": {
+      "cells": 4,
+      "full_capability_cells": 0,
+      "primary_repair": false,
+      "relative_error_reduction": 0.25696945337243493,
+      "seen_capability": false,
+      "uniform_mean_weighted_mse": 0.05558941885828972,
+      "unseen_nonregression": true,
+      "zero_mean_weighted_mse": 0.041304636280983686
+    },
+    "Pure-noise weighting; fresh follow-up": {
+      "cells": 4,
+      "ordinary_reset_weighted_mse_mean": 0.041304636280983686,
+      "ordinary_seen_image_accuracy_mean": 0.109375,
+      "ordinary_unseen_image_accuracy_mean": 0.1640625,
+      "passed_cells": 0,
+      "reset_seen_image_accuracy_mean": 0.125,
+      "reset_unseen_image_accuracy_mean": 0.15625
+    },
+    "Resources": {
+      "formal_training_seconds": 84.73364281398244,
+      "formal_updates": 3072,
+      "new_trainable_parameters": 314576,
+      "peak_reserved_mib": 1116.0
+    },
+    "Uniform flow; first confirmation": {
+      "cells": 4,
+      "ordinary_reset_weighted_mse_mean": 0.055517816450446844,
+      "ordinary_seen_image_accuracy_mean": 0.15625,
+      "ordinary_unseen_image_accuracy_mean": 0.015625,
+      "passed_cells": 0,
+      "reset_seen_image_accuracy_mean": 0.140625,
+      "reset_unseen_image_accuracy_mean": 0.015625
+    },
+    "Uniform flow; fresh follow-up": {
+      "cells": 4,
+      "ordinary_reset_weighted_mse_mean": 0.05558941885828972,
+      "ordinary_seen_image_accuracy_mean": 0.15625,
+      "ordinary_unseen_image_accuracy_mean": 0.015625,
+      "passed_cells": 0,
+      "reset_seen_image_accuracy_mean": 0.1328125,
+      "reset_unseen_image_accuracy_mean": 0.015625
+    }
+  },
+  "provenance": "ai-executed",
+  "scope": "Controlled64px selected-object memory task. Both generation methods fail held-out composition; flow benefit fails. Pure-noise follow-up reduces pixel error but fails repair. Original renderer retained. Not general photography or language-to-image generation.",
+  "software": {
+    "all_three_formal_sampler_rng_equal": true,
+    "distinct_scoped_tests": 60,
+    "final_generator_checks": 8,
+    "formal_steps_each": 1024,
+    "gpu_replays": {
+      "cells": [
+        {
+          "cell": "source_41073_13",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "e2e09cfba2d0b07435dd8a772c87b4d12cfc452e85487ce58b71d1c8e831309a"
+        },
+        {
+          "cell": "source_41074_13",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "e2e09cfba2d0b07435dd8a772c87b4d12cfc452e85487ce58b71d1c8e831309a"
+        },
+        {
+          "cell": "flow_41073_13",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "192e33815f7ac8d308bdfe3fcae37b8fe948fcb9b88387b49dbffd9aadcd0806"
+        },
+        {
+          "cell": "flow_41073_29",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "192e33815f7ac8d308bdfe3fcae37b8fe948fcb9b88387b49dbffd9aadcd0806"
+        },
+        {
+          "cell": "flow_41074_13",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "192e33815f7ac8d308bdfe3fcae37b8fe948fcb9b88387b49dbffd9aadcd0806"
+        },
+        {
+          "cell": "flow_41074_29",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "192e33815f7ac8d308bdfe3fcae37b8fe948fcb9b88387b49dbffd9aadcd0806"
+        },
+        {
+          "cell": "direct_41073_13",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "1c85dc2ffbc5c8781bbdc7513cab2105ecb176c1a7f42e2c1c59f2e7c150ce9c"
+        },
+        {
+          "cell": "direct_41073_29",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "1c85dc2ffbc5c8781bbdc7513cab2105ecb176c1a7f42e2c1c59f2e7c150ce9c"
+        },
+        {
+          "cell": "direct_41074_13",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "1c85dc2ffbc5c8781bbdc7513cab2105ecb176c1a7f42e2c1c59f2e7c150ce9c"
+        },
+        {
+          "cell": "direct_41074_29",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "1c85dc2ffbc5c8781bbdc7513cab2105ecb176c1a7f42e2c1c59f2e7c150ce9c"
+        },
+        {
+          "cell": "uniform_fresh_42073_13",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "192e33815f7ac8d308bdfe3fcae37b8fe948fcb9b88387b49dbffd9aadcd0806"
+        },
+        {
+          "cell": "uniform_fresh_42073_29",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "192e33815f7ac8d308bdfe3fcae37b8fe948fcb9b88387b49dbffd9aadcd0806"
+        },
+        {
+          "cell": "uniform_fresh_42074_13",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "192e33815f7ac8d308bdfe3fcae37b8fe948fcb9b88387b49dbffd9aadcd0806"
+        },
+        {
+          "cell": "uniform_fresh_42074_29",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "192e33815f7ac8d308bdfe3fcae37b8fe948fcb9b88387b49dbffd9aadcd0806"
+        },
+        {
+          "cell": "zero_fresh_42073_13",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "603f92844ac2365b7a48c2b4593850453ffcd95939a6b2dd1c0c9996b8b2f0cd"
+        },
+        {
+          "cell": "zero_fresh_42073_29",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "603f92844ac2365b7a48c2b4593850453ffcd95939a6b2dd1c0c9996b8b2f0cd"
+        },
+        {
+          "cell": "zero_fresh_42074_13",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "603f92844ac2365b7a48c2b4593850453ffcd95939a6b2dd1c0c9996b8b2f0cd"
+        },
+        {
+          "cell": "zero_fresh_42074_29",
+          "exact": true,
+          "histories": 64,
+          "weights_sha256": "603f92844ac2365b7a48c2b4593850453ffcd95939a6b2dd1c0c9996b8b2f0cd"
+        }
+      ],
+      "elapsed_seconds": 64.65521452901885,
+      "validation_exports_exact": 3
+    },
+    "initial_broad_checks": 57,
+    "nonzero_probability_resume_recheck": true,
+    "preflight_metric_correction": "Old codec_preflight retains pre-correction seen/unseen swap grouping; formal metrics use counterfactual grouping. Teacher adequacy unaffected.",
+    "report_status": "26 structural checks; overview and development figures inspected; browser QA unavailable",
+    "reviews": "Four actual generic Claude method reviews; private code/results reviewed locally",
+    "ruff_passed": true,
+    "source_snapshots_verified": true,
+    "uniform_default_exact_vs_saved_recipe": true
+  },
+  "source_commits": {
+    "documentation": "efc3279",
+    "follow_up": "7314c56",
+    "original": "98ca98f"
+  },
+  "sources": [
+    {
+      "path": "runs/conditional_image_v1/result.json",
+      "sha256": "7d6cf61921c1c5b8ec81a5bb6f0eed8afbe091894e524a105a25544e7f45ef74"
+    },
+    {
+      "path": "runs/conditional_image_v1/verification.json",
+      "sha256": "d54c39325c8007640711e8ea7e0faaa31c2d94756c3c9599379fe41df2c7fcce"
+    },
+    {
+      "path": "runs/conditional_image_v1/anchor_verification.json",
+      "sha256": "253c5ddd9e7167900de373823e6436ff03ac2a827043d228a206b24f51638337"
+    },
+    {
+      "path": "runs/conditional_image_v1/software.json",
+      "sha256": "9d71885a5305630757b37243d4153cacfd290fa4e0f275b6946e14e9ae3e8a0c"
+    },
+    {
+      "path": "runs/conditional_image_v1/gpu_replay.json",
+      "sha256": "bc5a00f0ff365dd8fbaeecadad3f43342a1a6267c3d0cd9ed726bb6e2503ab6f"
+    },
+    {
+      "path": "runs/conditional_image_v1/fit_verification.json",
+      "sha256": "66b7155cba7b497d43677afc4130ed0cb30846ba24000099f83fe28ce8c5c39a"
+    },
+    {
+      "path": "runs/conditional_image_v1/diagnostic.json",
+      "sha256": "d167d8487853062fdf4e4a2365e77bb305da6c745ca5535a8d237f82ad9102d1"
+    },
+    {
+      "path": "runs/conditional_image_v1/anchor_preflight.json",
+      "sha256": "058b5d39fbda942030ca96109c54b56048dff046fde6e5bb5479f693ca03cb67"
+    },
+    {
+      "path": "runs/conditional_image_v1/overview.png",
+      "sha256": "348afa708f418b7e39f851bdf8c9ec258d4a8caf567b85cf5f6a1530c920bb04"
+    },
+    {
+      "path": "runs/reviews/conditional_image_v1/review_status.json",
+      "sha256": "062026d9aa79298cc7c799cf0fb34d60276fc745f9c2941b8aeef2f2c1d63522"
+    },
+    {
+      "path": "runs/reviews/conditional_image_v1/method-receipt.json",
+      "sha256": "334e6352bdb541d45d148faab0c3134d084552364735fe01cabe4f2dab7f2a8d"
+    },
+    {
+      "path": "runs/reviews/conditional_image_v1/reconcile-receipt.json",
+      "sha256": "319213453d92908c196614256a23069054e919f8d34c6903896761a44aaa4e80"
+    },
+    {
+      "path": "runs/reviews/conditional_image_v1/final-receipt.json",
+      "sha256": "7fcb6050d44298db65077188cd4944a8206ef36c8e5700f63de5be2f7289d2c6"
+    },
+    {
+      "path": "runs/reviews/conditional_image_v1/anchor-receipt.json",
+      "sha256": "28cb9c2c891bd1bd1a9ec0f03483d897fb2d5f88289fae28a3d824f2048c7817"
+    }
+  ],
+  "timestamp": "2026-09-14T00:40+02:00",
+  "verification": {
+    "baseline_usable": true,
+    "cell_count": 4,
+    "direct_capability_cells": 0,
+    "direct_mean_weighted_mse": 0.00828598765656352,
+    "factual_outputs_unchanged": true,
+    "flow_accuracy_nonregression": false,
+    "flow_benefit": false,
+    "flow_benefit_assessable": true,
+    "flow_capability_cells": 0,
+    "flow_mean_weighted_mse": 0.055517816450446844,
+    "independent_numeric_checks": 1026,
+    "limits": "Single initialization, synthetic deterministic targets; upstream familiar with all categories. GPU replay checked separately. Browser QA unavailable; structural and figure inspection only.",
+    "matched_initial_parameters": true,
+    "matched_parameter_count": 314576,
+    "reports_structural": [
+      "report.html",
+      "flow_41074_13/report.html",
+      "direct_41074_29/report.html",
+      "source_41074_13/report.html",
+      "uniform_fresh_42074_29/report.html",
+      "zero_fresh_42073_29/report.html",
+      "codec_preflight/report.html",
+      "uniform_fresh_42074_13/report.html",
+      "source_41073_13/report.html",
+      "direct/report.html",
+      "zero_fresh_42074_29/report.html",
+      "development_direct64/report.html",
+      "flow_41073_29/report.html",
+      "flow_41074_29/report.html",
+      "zero_fresh_42074_13/report.html",
+      "direct_41073_13/report.html",
+      "flow_41073_13/report.html",
+      "uniform_fresh_42073_29/report.html",
+      "direct_41073_29/report.html",
+      "development_flow/report.html",
+      "uniform_fresh_42073_13/report.html",
+      "flow_zero/report.html",
+      "flow/report.html",
+      "direct_41074_13/report.html",
+      "zero_fresh_42073_13/report.html",
+      "development_flow64/report.html"
+    ],
+    "teacher_and_histories_equal": true
+  }
+}

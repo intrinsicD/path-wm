@@ -5496,3 +5496,80 @@ tree:
   - N330
   - N273
   status: resolved
+- id: N332
+  type: decision
+  title: Adopt the optional own conditional multiscale output experiment
+  provenance: user
+  timestamp: 2026-09-14T00:40+02:00
+  choice: User endorses the proposed own-codec conditional generator extension and requests planning,
+    implementation, actual Claude review, testing and repair iteration. Preserve the agent design;
+    a pretrained backend is not selected. Numerical training settings remain AI implementation choices.
+  alternatives:
+  - Replace the complete agent or require a pretrained output backend
+  evidence:
+  - O222
+  - 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate'
+  - docs/image-output-plan.md
+  also_depends_on:
+  - N331
+  - N273
+  status: resolved
+- id: N333
+  type: experiment
+  title: Matched direct and flow feature generators fail withheld-combination capability
+  provenance: ai-executed
+  timestamp: 2026-09-14T00:40+02:00
+  result: 'Source98ca98f: own frozen codec/upstream, four scales, context32/output64, 314576 matched
+    trainable parameters and identical initial tensors; direct and flow1024 updates each, seed41011.
+    New output training sees8/16 target combinations; upstream previously familiar with all. Fresh41073/41074
+    x noise13/29: direct seen100%/withheld0%, flow ordinary seen15.625%/withheld1.5625%, reset14.0625%/1.5625%;
+    both0/4 capability cells. Mean ordinary/reset weighted MSE direct0.0082859877 vs flow0.0555178165,
+    assessable benefit false. Original descriptive source100%,2/2 gates; codec teacher100%,MSE0.0004531737.
+    No inference-compute matching or whole-system novel-category claim. Frozen modules and factual
+    outputs retained. Width32 development discarded dimensions of48-channel noise; formal width64
+    repair preserved agent32.'
+  evidence:
+  - ara/evidence/tables/conditional_image_2026-09-14.json
+  - runs/conditional_image_v1/verification.json
+  - docs/image-output-plan.md
+  also_depends_on:
+  - N332
+  status: resolved
+- id: N334
+  type: experiment
+  title: Validation diagnostic separates target-containing interpolation from generation
+  provenance: ai-executed
+  timestamp: 2026-09-14T00:40+02:00
+  result: 'Unchanged uniform checkpoint on validation41002, seed13, reset context: pure-noise endpoint
+    categories18.75% seen/6.25% withheld; t0.25 endpoint100%/100% with target features present. No-update
+    references included. Euler8 and32 both12.5%/6.25%,32 has higher feature MSE. Post-hoc2.766s diagnostic
+    only; no target-fed result counted as generation, no checkpoint/solver selection or fit.'
+  evidence:
+  - ara/evidence/tables/conditional_image_2026-09-14.json
+  - runs/conditional_image_v1/diagnostic.json
+  also_depends_on:
+  - N333
+  status: resolved
+- id: N335
+  type: experiment
+  title: Separate pure-noise supervision follow-up lowers pixel error without faithful generation
+  provenance: ai-executed
+  timestamp: 2026-09-14T00:40+02:00
+  result: 'Source7314c56: separately declared half-t0/half-uniform progress, same initialization/data/architecture/optimizer/1024
+    updates. Fresh42073/42074 x13/29 versus unchanged uniform: weighted MSE0.0555894189 to0.0413046363
+    (-25.697%), reset seen12.5%/withheld15.625%, primary repair false and0/4 capability gates. Defaultp0
+    loss/gradients/RNG exact vs preserved recipe; p0.5 resume exact. Across three fits3072 updates84.734s,
+    peak1116MiB; all sampler/CPU/CUDA RNG states equal. Sixty distinct scoped tests,18 exact64-history
+    GPU replays and3 validation export replays,1026 independently reproduced numeric metrics,26 structurally
+    checked reports. Four actual generic Claude method reviews; private code/results reviewed locally.
+    Browser QA unavailable, figures inspected. All failed runs preserved and original renderer remains
+    default.'
+  evidence:
+  - ara/evidence/tables/conditional_image_2026-09-14.json
+  - runs/conditional_image_v1/anchor_verification.json
+  - runs/conditional_image_v1/software.json
+  - runs/reviews/conditional_image_v1/review_status.json
+  also_depends_on:
+  - N333
+  - N334
+  status: resolved

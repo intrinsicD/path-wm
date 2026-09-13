@@ -1,0 +1,175 @@
+session:
+  id: 2026-09-14_001
+  date: '2026-09-14'
+  started: 2026-09-14T00:40+02:00
+  last_turn: 2026-09-14T00:40+02:00
+  turn_count: 1
+  summary: Own conditional multiscale generator implemented with Claude method review. Direct fits
+    familiar combinations only; flow and pure-noise follow-up fail capability despite25.7% pixel-error
+    reduction. Original renderer retained; decoded-image supervision proposed.
+events_logged:
+- turn: 1
+  type: decision
+  id: N332
+  routing: direct
+  provenance: user
+  summary: Adopt the optional own conditional multiscale output experiment
+- turn: 1
+  type: experiment
+  id: N333
+  routing: direct
+  provenance: ai-executed
+  summary: Matched direct and flow feature generators fail withheld-combination capability
+- turn: 1
+  type: experiment
+  id: N334
+  routing: direct
+  provenance: ai-executed
+  summary: Validation diagnostic separates target-containing interpolation from generation
+- turn: 1
+  type: experiment
+  id: N335
+  routing: direct
+  provenance: ai-executed
+  summary: Separate pure-noise supervision follow-up lowers pixel error without faithful generation
+- turn: 1
+  type: observation
+  id: O223
+  routing: staged
+  provenance: ai-suggested
+  summary: For this initialization and short synthetic fit, latent-only conditional-flow learning
+    fails reliable output from pure noise while target-containing intermediate features permit accurate
+    category decoding. Direct regression fits familiar combinations but fails withheld ones. The diagnostic
+    narrows the learned conditioning problem without uniquely identifying optimization, capacity,
+    objective or data as its cause.
+- turn: 1
+  type: observation
+  id: O224
+  routing: staged
+  provenance: ai-suggested
+  summary: Half pure-noise supervision reduces mean weighted pixel error25.7% on fresh controlled
+    cases but does not repair faithful familiar output or full capability. Pixel-error improvement
+    alone is insufficient evidence of correct state-conditioned generation. No general rejection of
+    flow matching or scaling follows from this fixed-budget result.
+- turn: 1
+  type: observation
+  id: O225
+  routing: staged
+  provenance: ai-suggested
+  summary: Next compare adding decoded-image supervision through the frozen codec against latent-only
+    supervision, holding generator architecture, progress distribution, initialization and update
+    budget fixed. Use fresh paired histories and unchanged familiar/withheld, erasure and counterfactual
+    swap gates. Diagnose whether the output objective improves binding before expanding the agent.
+- turn: 1
+  type: architecture
+  id: A07
+  routing: crystallized
+  provenance: user-revised
+  summary: O222 adopted via explicit user affirmation; efficacy remains unestablished.
+ai_actions:
+- turn: 1
+  action: Implemented optional generator and direct control, repaired noise width, added isolated
+    recipe/protocol/replay checks, ran three formal fits plus diagnostic and confirmations, obtained
+    four actual public-method Claude reviews, independently verified results and documented failed
+    gates. No private export or default renderer replacement.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/conditional_image.py
+  - pathwm/models/memory_output.py
+  - experiments/conditional_image.py
+  - tests/test_conditional_image.py
+  - docs/image-output-plan.md
+  - docs/project-state.md
+  - docs/models.md
+  - docs/experiments.md
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
+open_threads:
+- 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate;
+  image/full retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene
+  diagnostics, fresh confirmation and unchanged causal/retention criteria. Prior candidate not replaced.
+  Broader real imagery, reliability, upstream replication and general generation remain open; preserve
+  runs and disk floor.'
+- 'N278-N329: CPU/GPU portability remains unresolved. Current 61 scoped tests and 40 exact GPU reloads
+  do not repair prior CPU differences. Trainability-dependent raw GPU logit discrepancy is handled
+  by the existing standardized evaluator; only the preflight check was corrected.'
+- 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
+  and learned prediction remain weak.'
+- 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution
+  and other-modality quality remain open.'
+- 'N273/A06/O177/O178: adopted output boundary needs concrete conditioning, uncertainty/time inputs,
+  backends and cross-modal consistency tests.'
+- 'S02/S04/T01/O164/O165: own webcam footage, verified entity/event/query labels and synthetic-to-real
+  curriculum remain incomplete.'
+- 'S03/R06: comfortable local GPU training/inference required; own components preferred, pretrained
+  adapter fallback and numerical gates unresolved.'
+- 'O162/O163: task/cost/evidence contract, planner reward/utility mismatch and learned-dynamics integration
+  remain open.'
+- 'N260: bounded cross-window encoder recurrence is unimplemented; define reset-history comparison.'
+- 'N263/N266/O172: earlier private Claude brief remains blocked; last same-rate ordinary reconstruction
+  control budget-stopped. New public-only review is separate.'
+- 'N330/O221: Marigold-style transfer motivates testing state-conditioned generation with a pretrained
+  backend; faithful remembered content, decoder capacity and local GPU feasibility remain untested.
+  This inquiry does not adopt the pending lower-rate experiment.'
+- 'N332-N335/A07/O223-O225: own conditional multiscale generator implemented and three fits completed;
+  strict capability fails. Next decoded-image supervision comparison, fresh binding gates and local
+  resources; general generation still open. Original renderer preserved.'
+ai_suggestions_pending:
+- 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher
+  response.'
+- 'O182: balanced training failure narrows the state/update/readout learning question without proving
+  erased location information.'
+- 'O184: partial pre-storage recoverability and weak post-recall accessibility under tested probe
+  family; no unique mechanism identified.'
+- 'O186: partial native improvement and calibration failure at fixed budget; no asymptotic or unique
+  mechanism claim.'
+- 'O188: limited age-cue gain and heterogeneous metadata sensitivity; general time semantics not established.'
+- 'O190: auxiliary compatibility versus native-output failure; mechanism remains unconfirmed.'
+- 'O192: conditional native reset accessibility and ordinary regression; no general mechanism or full
+  repair established.'
+- 'O164-O175: earlier curriculum, diagnosis and scoped capability interpretations retain their original
+  provenance and closure status.'
+- 'O177/O178: coordination and state-grounding diagnostics remain staged; acknowledgment does not
+  select their complete implementation.'
+- 'O194: one-source mixed-context policy repair; no general mechanism or replicated reliability claim.'
+- 'O196: partial writer learning and gradient reachability do not establish a unique failure mechanism.'
+- 'O197: joint controlled-task sufficiency with limited replication and CPU portability.'
+- 'O199: source/sample-specific task success and conditional factual-versus-image discrepancy; no
+  unique mechanism.'
+- 'O201: conditional frozen-state output recoverability with shared upstream/codec; researcher interpretation
+  pending.'
+- 'O204: broad input/readout sensitivity under declared RGB shifts, without unique failure localization;
+  researcher interpretation pending.'
+- 'O206: task-specific centering sufficiency with incomplete learned augmentation; researcher interpretation
+  pending.'
+- 'O209: scene-limited centering and diagnostic accessibility interpretation; researcher response
+  pending.'
+- 'O211: partial scene/native output sufficiency and residual shape fitting interpretation; researcher
+  response pending.'
+- 'O213: conditional texture-mixture benefit and persistent recall shape shortfall interpretation;
+  researcher response pending.'
+- 'O215: scoped rectangle-weighting improvement and unresolved strict retention interpretation; researcher
+  response pending.'
+- 'O217: cool extra-training sufficiency on sampled histories, unassessable capacity benefit and remaining
+  warm/texture interpretation; researcher response pending.'
+- 'O219: failed factual benefit despite branch isolation, with warm/texture terminal-loss deterioration;
+  researcher interpretation pending.'
+- 'O220: lower-rate readout comparison and difficult-scene diagnostics proposed; no unique cause or
+  successful repair assumed.'
+- 'O221: conditional-generation interpretation of Marigold V2 remains proposed, with no backend selection
+  or implementation commitment.'
+- 'O223: For this initialization and short synthetic fit, latent-only conditional-flow learning fails
+  reliable output from pure noise while target-containing intermediate features permit accurate category
+  decoding. Direct regression fits familiar combinations but fails withheld ones. The diagnostic narrows
+  the learned conditioning problem without uniquely identifying optimization, capacity, objective
+  or data as its cause.'
+- 'O224: Half pure-noise supervision reduces mean weighted pixel error25.7% on fresh controlled cases
+  but does not repair faithful familiar output or full capability. Pixel-error improvement alone is
+  insufficient evidence of correct state-conditioned generation. No general rejection of flow matching
+  or scaling follows from this fixed-budget result.'
+- 'O225: Next compare adding decoded-image supervision through the frozen codec against latent-only
+  supervision, holding generator architecture, progress distribution, initialization and update budget
+  fixed. Use fresh paired histories and unchanged familiar/withheld, erasure and counterfactual swap
+  gates. Diagnose whether the output objective improves binding before expanding the agent.'
