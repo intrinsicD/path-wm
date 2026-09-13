@@ -1420,3 +1420,69 @@ fresh held-out confirmation. First test whether frozen features support a better
 reader before deciding to adapt encoders. These examined stress populations are
 now diagnostic data. A larger decoder or longer unchanged training is not yet a
 supported repair. No additional fit, normalization or test selection occurred.
+
+## Brightness repair protocol — 13 September
+
+User adopted the augmentation/normalization follow-up. First test output-head
+adaptation on frozen working states, before changing encoders or state formation.
+Use both final joint checkpoints from image_continuation_v1 (source8501/8502).
+These share one upstream initialization/codec and are already explored; no
+independent-model replication or new semantic support is claimed.
+
+Four matched fits: per source, cached native mixed ordinary/reset output learning
+on five neutral copies versus five variants at RGB offsets −16, −8, 0, +8, +16.
+All variants use train7701,128 base pairs; expanded set 1,280 histories. Concatenate
+complete paired/quartet blocks, retain canonical targets, and record ordered offsets
+and parent data identity. Both policies use identical sample indices, initial weights,
+AdamW settings, 1,536 updates of batch16, optimizer seeds8701/8702, wall cap180s/fit.
+Only factual head and image feature producer learn. Freeze encoders, initial state,
+updater, thinker, memory behavior, direct/reference probes, backend and scaling.
+No fresh calibration or output standardization. Check cached/live tokens on a
+training batch before formal fits. Match training presentations, not presumed
+optimization difficulty; failure at this budget cannot locate lost information.
+
+Validation23072 is neutral and diagnostic only. Confirmation seeds23073/23074,
+64 pairs each, offsets −12,0,+12: new backgrounds and interpolation within the
+training perturbation family. No model/checkpoint/offset/gate selection from them.
+Previously examined20073–20075 populations are diagnostic history only. Preserve
+train/validation/test hashes and exact-frame disjointness checks. One separate
+16-update development fit uses17701/24072/24073 and the augmentation policy.
+
+A separate zero-update normalization diagnostic centers each observed frame per
+RGB channel on a fixed median from the original neutral training observations.
+Per-frame spatial median subtraction uses no offset metadata, labels, targets,
+background mask or later frames. Keep observation validity/time/provenance and a
+serialized calibration identity/reference in the evaluation manifest. Reject
+out-of-range valid inputs/results instead of silently clipping. Default behavior
+unchanged. This is a task-specific evaluation preprocessing option, not a new
+trained checkpoint or learned general invariance. Dominant background motivates
+the reference; median translation equivariance itself is algebraic. It may discard
+useful absolute intensity, so neutral fidelity is tested separately.
+
+Evaluate four fitted exports, two unchanged sources and two centered-source
+conditions on all six confirmation populations:48 immutable standalone evaluations,
+all10 causal modes, plus the four training-run neutral exports. Existing full task
+screen must pass every neutral/stress cell for a policy. Neutral retention allows
+at most5 percentage points loss in each ordinary/reset factual/image metric against
+its same-source neutral frozen baseline. Augmentation benefit requires at least
+5 points in EVERY stress factual/image metric against matched neutral-only fitting;
+centering benefit uses the unchanged source at that same stress input. Full passage,
+retention and benefit are separate conjunctions. Report all per-cell metrics and
+continuous margins; engineering thresholds are not confidence intervals.
+
+Budget: four fits <=720s training, evaluation/report <=900s, verification <=900s,
+GPU4GiB cap with1GiB headroom. No extra fit chosen from failures. Essential RED checks:
+augmentation alignment/provenance/clipping, cache/live equality and gradients,
+odd-step exact augmented resume/export, median equivariance/per-frame causality,
+validity/provenance and bounds, immutable centered export and CLI scope. All existing
+relevant tests follow. Original defaults must reproduce saved GPU outputs exactly.
+All48 outputs independently rescored including task gates; all48 ordinary/reset
+GPU and CPU replays, frozen parameter/source checks, first16-history bank/workspace
+traces. Preserve CPU numeric1e-4 and categorical failures separately. Reports use
+existing renderer, structural receipts and inspected figures; browser QA unavailable.
+
+Claude public review accepted controls and scope. Its stronger negative-result
+inferences were corrected: failed head learning does not uniquely justify encoder
+replacement; failed centering does not prove deeper feature entanglement. Claude
+acknowledged these corrections and median translation algebra. Two public-only
+exchanges; implementation/results remain local. No formal confirmation scores seen.

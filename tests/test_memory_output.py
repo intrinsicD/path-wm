@@ -117,8 +117,9 @@ def model_fixture(normalize=False):
 
 
 @pytest.mark.parametrize("broken_report", [False, True])
+@pytest.mark.parametrize("center_input", [False, True])
 def test_evaluate_export_preserves_origin_and_completed_results(
-    tmp_path, monkeypatch, broken_report
+    tmp_path, monkeypatch, broken_report, center_input
 ):
     import json
     import experiments.memory_output as recipe
@@ -141,7 +142,7 @@ def test_evaluate_export_preserves_origin_and_completed_results(
         origin / "weights.pt",
     )
     manifest = dict(
-        identity=dict(settings=settings), source=dict(git_commit="training-fixture")
+        identity=dict(settings=settings, data=dict(train=MemoryOutputEpisodes(4, seed=38).identity)), source=dict(git_commit="training-fixture")
     )
     (origin / "run.json").write_text(json.dumps(manifest))
     (origin / "metrics.jsonl").write_text('{"step":3,"split":"train","loss":1.0}\n')
@@ -163,9 +164,9 @@ def test_evaluate_export_preserves_origin_and_completed_results(
 
         monkeypatch.setattr(recipe, "write_report", fail)
         with pytest.raises(RuntimeError, match="render failure"):
-            recipe.evaluate_export(origin / "weights.pt", data, output=output)
+            recipe.evaluate_export(origin / "weights.pt", data, output=output, center_input=center_input)
     else:
-        recipe.evaluate_export(origin / "weights.pt", data, output=output)
+        recipe.evaluate_export(origin / "weights.pt", data, output=output, center_input=center_input)
     result = json.loads((output / "result.json").read_text())
     assert result["completed"] and result["evaluation_only"] and result["step"] == 0
     assert result["checkpoint_sha256"] == hashes["weights.pt"]
@@ -173,6 +174,12 @@ def test_evaluate_export_preserves_origin_and_completed_results(
     assert run["origin"]["run"] == json.loads(json.dumps(manifest))
     assert run["identity"]["data"]["test"] == json.loads(json.dumps(data.identity))
     assert run["identity"]["settings"]["purpose"] == "evaluation only; no optimization"
+    if center_input:
+        centering = run["identity"]["settings"]["input_centering"]
+        assert centering["calibration_data"] == json.loads(json.dumps(manifest["identity"]["data"]["train"]))
+        assert len(centering["reference_rgb"]) == 3
+    else:
+        assert "input_centering" not in run["identity"]["settings"]
     assert (output / "metrics.jsonl").read_text() == ""
     assert not (output / "last.pt").exists() and not (output / "weights.pt").exists()
     status = json.loads((output / "status.json").read_text())
@@ -279,6 +286,7 @@ def test_supervised_writes_and_frozen_decoder_have_intended_gradients():
         (True, "relocation", "native_readout"),
         (True, "relocation", "stored_readout"),
         (True, "relocation", "mixed_readout"),
+        (True, "relocation", "augmented_readout"),
         (True, "relocation", "frozen_writer"),
         (True, "relocation", "trainable_writer"),
         (True, "relocation", "joint_writer"),
@@ -310,6 +318,8 @@ def test_training_resume_and_standalone_reload(
 
     pairs = 16 if curriculum == "relocation" else 4
     train_data = MemoryOutputEpisodes(pairs, seed=17, curriculum=curriculum)
+    if repair == "augmented_readout":
+        train_data = train_data.with_input_offsets([-16, 0, 16])
     val = MemoryOutputEpisodes(pairs, seed=18, curriculum=curriculum)
     test = MemoryOutputEpisodes(pairs, seed=19, split="test", curriculum=curriculum)
 
@@ -358,14 +368,16 @@ def test_training_resume_and_standalone_reload(
             model.workspace_reference = TokenProbe(model.working(history["stored"]))
             model.workspace_reference.requires_grad_(False)
             settings.update(workspace_reference_sha256="fixture", reference_weight=1.0)
-        if repair in ("native_readout", "stored_readout", "mixed_readout"):
+        if repair in ("native_readout", "stored_readout", "mixed_readout", "augmented_readout"):
             from pathwm.models.memory_output import configure_output_readout
 
-            stage = "native" if repair == "mixed_readout" else repair.split("_")[0]
+            stage = "native" if repair in ("mixed_readout", "augmented_readout") else repair.split("_")[0]
             configure_output_readout(model, stage)
             settings.update(readout_stage=stage, standardize_output=True)
-            if repair == "mixed_readout":
+            if repair in ("mixed_readout", "augmented_readout"):
                 settings["readout_context"] = "mixed"
+            if repair == "augmented_readout":
+                settings.update(standardize_output=False, train_input_offsets=[-16, 0, 16])
         if writer_case:
             from pathwm.models.memory_output import configure_output_readout
 
@@ -401,7 +413,7 @@ def test_training_resume_and_standalone_reload(
     full_model, full = run(tmp_path / "full")
     run(
         tmp_path / "resumed",
-        stop_after=1 if repair == "mixed_readout" or writer_case else 2,
+        stop_after=1 if repair in ("mixed_readout", "augmented_readout") or writer_case else 2,
     )
     _, resumed = run(tmp_path / "resumed", resume=True)
     for key in ("model", "optimizer", "sampler", "torch", "step"):
