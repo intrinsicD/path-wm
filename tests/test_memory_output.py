@@ -206,6 +206,7 @@ def test_supervised_writes_and_frozen_decoder_have_intended_gradients():
         (True, "relocation", "reference"),
         (True, "relocation", "native_readout"),
         (True, "relocation", "stored_readout"),
+        (True, "relocation", "mixed_readout"),
     ],
 )
 def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum, repair):
@@ -263,12 +264,14 @@ def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum, 
             model.workspace_reference = TokenProbe(model.working(history["stored"]))
             model.workspace_reference.requires_grad_(False)
             settings.update(workspace_reference_sha256="fixture", reference_weight=1.0)
-        if repair in ("native_readout", "stored_readout"):
+        if repair in ("native_readout", "stored_readout", "mixed_readout"):
             from pathwm.models.memory_output import configure_output_readout
 
-            stage = repair.split("_")[0]
+            stage = "native" if repair == "mixed_readout" else repair.split("_")[0]
             configure_output_readout(model, stage)
             settings.update(readout_stage=stage, standardize_output=True)
+            if repair == "mixed_readout":
+                settings["readout_context"] = "mixed"
         result = train(
             model,
             train_data,
@@ -282,10 +285,33 @@ def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum, 
         return result, torch.load(path / "last.pt", weights_only=True)
 
     full_model, full = run(tmp_path / "full")
-    run(tmp_path / "resumed", stop_after=2)
+    run(tmp_path / "resumed", stop_after=1 if repair == "mixed_readout" else 2)
     _, resumed = run(tmp_path / "resumed", resume=True)
     for key in ("model", "optimizer", "sampler", "torch", "step"):
         equal_tree(full[key], resumed[key])
+    if repair == "mixed_readout":
+        import json
+
+        rows = [
+            json.loads(s)
+            for s in (tmp_path / "full/metrics.jsonl").read_text().splitlines()
+        ]
+        rows = [r for r in rows if r["split"] == "train"]
+        assert [r["first_ordinary"] for r in rows] == [0, 1, 0, 1]
+        assert all(r["ordinary_examples"] == r["reset_examples"] == 1 for r in rows)
+        for mode in ("ordinary", "reset"):
+            assert mode in json.loads((tmp_path / "full/training_fit.json").read_text())
+        cache = torch.load(tmp_path / "full/training_cache.pt", weights_only=True)
+        z = torch.cat([cache["tokens"], cache["ordinary_tokens"]]).double()
+        torch.testing.assert_close(
+            full_model.output_normalization.mean, z.mean((0, 1), keepdim=True).float()
+        )
+        loaded = load_model(tmp_path / "full/weights.pt")
+        with torch.no_grad():
+            x = test.batch(range(4))["images"]
+            for mode in ("ordinary", "reset"):
+                for key in ("facts", "image"):
+                    assert torch.equal(loaded(x, mode)[key], full_model(x, mode)[key])
     loaded = load_model(tmp_path / "full" / "weights.pt")
     b = test.batch(range(4))
     with torch.no_grad():

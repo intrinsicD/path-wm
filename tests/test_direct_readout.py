@@ -114,3 +114,57 @@ def test_switching_readout_stage_resets_previous_scaling():
     assert torch.equal(
         m.output_normalization.std, torch.ones_like(m.output_normalization.std)
     )
+
+
+@pytest.mark.parametrize("step", [1, 2])
+def test_mixed_cache_alignment_live_gradients_and_context_phase(step):
+    from experiments.memory_output import cache_readout, readout_objective
+    from pathwm.models.memory_output import configure_output_readout, frozen_tensors
+
+    torch.manual_seed(48)
+    m = configure_output_readout(model_fixture(True), "native").eval()
+    d = MemoryOutputEpisodes(16, seed=49, curriculum="relocation")
+    cache = cache_readout(m, d, "cpu", batch_size=4, mode="mixed")
+    ids = [11, 2, 11, 0]  # reordered and repeated histories must retain their targets
+    ordinary = (torch.arange(4) + step) % 2 == 0
+    b = d.batch(ids)
+    with torch.no_grad():
+        h = m.observe_history(b["images"])
+        a = m.working(m.query(h["final"], b["images"][:, -1], "ordinary"))
+        r = m.working(m.query(h["final"], b["images"][:, -1], "reset"))
+        assert torch.equal(cache["tokens"][ids], r)
+        assert torch.equal(cache["ordinary_tokens"][ids], a)
+        assert not torch.equal(a, r)
+        assert torch.equal(cache["labels"][ids], b["labels"])
+        assert torch.equal(cache["target"][ids], b["target"])
+        teacher = m.teacher(b["target"])
+        assert all(
+            torch.equal(v, cache["features"][k][ids]) for k, v in teacher.items()
+        )
+    assert not cache["ordinary_tokens"].requires_grad
+    fixed = {k: v.clone() for k, v in frozen_tensors(m).items()}
+    loss, metrics = readout_objective(m, cache, ids, context="mixed", step=step)
+    assert metrics["ordinary_examples"] == metrics["reset_examples"] == 2
+    assert metrics["first_ordinary"] == int(ordinary[0])
+    loss.backward()
+    grads = {n: p.grad.clone() for n, p in m.named_parameters() if p.grad is not None}
+    m.zero_grad(set_to_none=True)
+    live = dict(
+        cache,
+        tokens=torch.where(ordinary[:, None, None], a, r),
+        labels=b["labels"],
+        target=b["target"],
+        features=teacher,
+    )
+    expected, _ = readout_objective(m, live, range(4))
+    expected.backward()
+    torch.testing.assert_close(loss, expected, atol=1e-7, rtol=1e-6)
+    for n, p in m.named_parameters():
+        if n in grads:
+            torch.testing.assert_close(p.grad, grads[n], atol=1e-6, rtol=1e-5)
+        else:
+            assert p.grad is None
+    torch.optim.AdamW([p for p in m.parameters() if p.requires_grad]).step()
+    assert all(torch.equal(v, fixed[k]) for k, v in frozen_tensors(m).items())
+    with pytest.raises(ValueError, match="even"):
+        readout_objective(m, cache, [0], context="mixed", step=step)

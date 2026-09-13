@@ -617,3 +617,57 @@ saved buffers afterward. Ten focused tests pass (including one new regression;
 reproduce native/reference logits and pixels exactly after the fix. Formal training
 remains source504a587 and its audited raw/standardized buffers were correct; no result
 was rerun or replaced. The post-fix replay receipt is retained separately.
+
+## Mixed ordinary/reset output training protocol — 13 September
+
+User approved the proposed next experiment. Hypothesis: exposing the same native
+output heads to both running and reset workspaces repairs ordinary output while
+retaining recall. This tests a training policy at a fixed total budget, not a unique
+mechanism or equal reset exposure. Encoder, writer, thinker, initial state, decoder
+reconstruction head and existing reference readers stay frozen. Only the same
+67,032 native factual/image-producer parameters train. No added context feature,
+memory cue, architecture expansion or learned retrieval claim.
+
+Four fits: sources `runs/reader_supervision_v1/agent_{7801,7802}_baseline/weights.pt`
+each get reset-only and mixed training. Native route, identity output scaling.
+Both arms start from identical source head values, not the later reset-only export.
+Same sampled history IDs at each update, seed8401,1536 updates, batch16,
+AdamW lr0.001/wd0.0001, clip1,180s training cap per fit; final checkpoint only.
+Train128 pairs seed7701, validation32 pairs7762, test64 pairs7763. Familiar balanced
+appearance/motion support with fresh backgrounds; exact frame disjointness checked.
+Mixed training replaces eight reset presentations per batch with ordinary ones:
+position p uses ordinary iff (p+step)%2==0, one-based step; phase resumes exactly.
+Reset-only uses all16 reset workspaces. Histories/total presentations match; mixed
+intentionally has half the reset presentations. Heads have no cross-example layers.
+Training uses detached cached workspaces/teacher targets; cache/live equality for
+BOTH contexts checked on shuffled batches. Record token differences and actual
+per-step context counts. Calibration, if exercised in tests, uses the pooled TRAIN
+contexts only; formal runs use raw values. No held-out fitting.
+
+Success requires the existing full gate for each mixed fit: ordinary AND reset
+facts/images>=90%, selection and relocation complete pairs>=80%, weighted image
+error below both fixed-background and paired-target-mean controls. Original-target
+accuracy must drop>=30 points after all-history erasure (both modes), and after
+bank/cue/later-view erasure (reset); swapped-bank alternate facts/images>=80%.
+These>=90% intact baselines are required alongside causal drops. Policy-benefit
+gate additionally requires ordinary facts AND images improve>=10 points versus
+matched reset-only training, with reset losses<=3 points for both outputs.
+Report each writer separately; replicated repair requires both writers pass both
+full and benefit gates. No threshold changes, ratio sweep or more training after
+seeing failures. CPU/GPU replay tolerance1e-4 is a separate portability gate.
+
+Essential RED checks: two-context cache alignment and live loss/gradient equality,
+balanced step mask including odd-step resume, frozen upstream/buffers, standalone
+ordinary/reset replay and cache identity participating in strict resume. Record
+each cache preparation, including resume. Development16 updates, seed18401,
+train17701/validation17962/test17963,60s cap. GPU cap4GiB with1GiB free headroom.
+Relevant CPU tests, independent NumPy metrics, source/cache/frozen-state hashes,
+actual GPU replay and CPU categorical differences. Existing standalone renderer,
+structural QA and inspected figures; browser QA remains unavailable.
+
+Actual Claude reviewed two public-only conceptual briefs. It initially required
+a reset-dose-matched third arm, then accepted that this is a policy comparison and
+that mechanism identification is a separate study. Adopted checks: actual workspace
+differences, context counts/phase, no cross-example leakage and matched intact/erased
+accuracy gates. The intact>=90% requirement above already supplies its final caveat.
+Receipts: `runs/reviews/continuation_2026-09-11/mixed-context*-receipt.json`.
