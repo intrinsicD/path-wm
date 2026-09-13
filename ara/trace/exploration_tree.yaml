@@ -4494,3 +4494,49 @@ tree:
   - N282
   - N280
   status: resolved
+
+- id: N285
+  type: decision
+  title: Test explicit snapshot timing against matched untimed continuation
+  provenance: user
+  timestamp: 2026-09-13T09:57+02:00
+  choice: Yes ok approves the proposed investigation of earlier versus later memory snapshots, while retaining
+    frozen writer/codecs and actual Claude conceptual review.
+  alternatives:
+  - Add further training without a matched temporal-input comparison
+  evidence:
+  - O187
+  - N284
+  - docs/recall-repair-plan.md#snapshot-timing-comparison
+  also_depends_on:
+  - N284
+  status: resolved
+- id: N286
+  type: experiment
+  title: Snapshot-age cue has small unreplicated benefit and uneven intervention sensitivity
+  provenance: ai-executed
+  timestamp: 2026-09-13T09:57+02:00
+  result: Source ca42e39. Four1536-update continuations from both prior identity-repair checkpoints, seed8101,76824
+    trainable parameters and identical initial tensors within pairs. Writer7801 untimed/temporal reset
+    facts72.66/77.34%, images75/75.78%; writer7802 both74.22% for both outputs. All reliability, replicated10-point
+    benefit and replicated sensitivity gates fail. Time erasure lowers temporal7801 facts/images to57.81/55.47%,
+    but leaves7802 unchanged; time misalignment64.84/64.84% and69.53/69.53%. Untimed interventions exactly
+    no-op. Direct encoder/teacher100%; fixed stored-working probes98.44/82.81% (writer7801),75.78/74.22%
+    (writer7802). Frozen sources, banks and codecs unchanged.76 relevant tests and1328 independent metrics
+    within7.67e-9; exact GPU exports and bank-order workspace invariance on128 cases per model/device;774-row768+768
+    resume prefix. CPU fails1e-4 (max logits0.475857, pixels0.015305), factual labels agree, two temporal7801
+    image-side classifications differ.642.654s training,424MiB. Two public-only Claude reviews narrow
+    scope to fixed-age snapshot differentiation; arbitrary-tag superiority untested. Structural reports
+    and all panels/score plot inspected. Stale path in audit corrected and rerun, no model changes. No
+    reliable checkpoint promoted or further run launched.
+  evidence:
+  - ara/evidence/tables/memory_time_2026-09-13.json
+  - runs/memory_time_v1/report.html
+  - runs/memory_time_v1/verification.json
+  - runs/memory_time_v1/cpu_label_mismatches.json
+  - docs/recall-repair-plan.md#snapshot-timing-results
+  also_depends_on:
+  - N285
+  - N284
+  - N282
+  status: resolved

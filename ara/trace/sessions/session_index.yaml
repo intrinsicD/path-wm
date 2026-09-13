@@ -139,8 +139,8 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: Frozen probes motivate native recall repair; frozen-writer retraining improves facts/images partially, calibration underperforms, all reliability gates fail.41 tests and1076 verified metrics; CPU numerical limits remain.
-  turn_count: 5
-  events_count: 23
+  summary: Snapshot-time cue shows small unreplicated gain and fails reliability;76 tests,1328 metric checks, exact GPU replay. Two CPU image-side differences and broader state/readout uncertainty remain.
+  turn_count: 6
+  events_count: 28
   claims_touched: []
   open_threads: 10

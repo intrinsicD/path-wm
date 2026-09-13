@@ -513,3 +513,13 @@
 - **Sensitivity**: High. Fixed-budget partial improvement is not full recovery; native output, matched controls and writer accessibility must all be reported. Calibration has no benefit in the completed comparison.
 - **Code ref**: [repair modules](../../../pathwm/models/memory_output.py), [recipe](../../../experiments/memory_output.py), [integrity checks](../../../tests/test_recall_repair.py).
 - **Evidence**: N283/N284; [four-run record](../../evidence/tables/recall_repair_2026-09-13.json).
+
+## H53: Test snapshot-time binding with matched untimed continuation
+
+- **Rationale**: Bind retrieved values to their own observation times, keep raw storage fixed, and compare age-aware versus untimed readers from identical learned weights and update budgets. Check clock-origin invariance, storage-order equivariance and explicit timestamp interventions alongside actual facts/images.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O187
+- **Sensitivity**: High. Fixed ages also function as snapshot tags; intervention sensitivity does not establish elapsed-time semantics. The completed comparison fails replicated benefit and reliability gates.
+- **Code ref**: [memory retrieval](../../../pathwm/models/agent_state.py), [query interventions](../../../pathwm/models/memory_output.py), [recipe](../../../experiments/memory_output.py), [causal checks](../../../tests/test_memory_time.py).
+- **Evidence**: N285/N286; [comparison record](../../evidence/tables/memory_time_2026-09-13.json).

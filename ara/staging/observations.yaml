@@ -3314,6 +3314,41 @@ observations:
   potential_type: heuristic
   bound_to:
   - N284
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H53
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O188
+  timestamp: 2026-09-13T09:57+02:00
+  provenance: ai-suggested
+  content: At this fixed budget, the implemented age cue yields six additional factual answers and one
+    image for one source, none for the other. Timestamp sensitivity is uneven and all replicated benefit/reliability
+    screens fail. Explicit timing is insufficient as tested; this does not prove timestamps useless, establish
+    elapsed-time reasoning, or distinguish age semantics from arbitrary snapshot tags. The stored-state/native
+    gap and weaker-source uncertainty remain.
+  context: Fresh backgrounds within familiar appearance/motion and two fixed ages; researcher has not
+    interpreted these new results. Code remains optional and original checkpoints preserved.
+  potential_type: claim
+  bound_to:
+  - N286
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O189
+  timestamp: 2026-09-13T09:57+02:00
+  provenance: ai-suggested
+  content: Use the successful direct stored-state readout as a concrete reference for the native workspace
+    reader, on identical stored values, before another memory-cue sweep. Check the weaker writer and probe
+    sensitivity separately rather than assuming an information ceiling. Define the exact replacement/readout
+    or distillation interface and matched budget before training.
+  context: Proposed next investigation after the temporal-cue comparison; no further native-reader change
+    or new run performed.
+  potential_type: heuristic
+  bound_to:
+  - N286
+  - N282
   promoted: false
   promoted_to: null
   crystallized_via: null

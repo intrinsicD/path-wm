@@ -2,9 +2,9 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T09:05+02:00
-  turn_count: 5
-  summary: Frozen-writer retraining improves recall partially; calibration underperforms and all four complete repair screens fail. Frozen states and numerical limits preserved.
+  last_turn: 2026-09-13T09:57+02:00
+  turn_count: 6
+  summary: Snapshot-age comparison gives small unreplicated benefit; reliability and time-sensitivity gates fail.76 tests and1328 metric checks; exact GPU replay, CPU numerical/image-label differences remain.
 
 events_logged:
 - turn: 1
@@ -151,6 +151,37 @@ events_logged:
   provenance: ai-suggested
   summary: Propose explicit temporal/snapshot routing comparison with retained frozen-state controls.
 
+- turn: 6
+  type: decision
+  id: N285
+  routing: direct
+  provenance: user
+  summary: Approve earlier/later snapshot comparison.
+- turn: 6
+  type: heuristic
+  id: H53
+  routing: crystallized
+  provenance: user-revised
+  summary: O187 adopted as a matched temporal-input test, not a guaranteed repair.
+- turn: 6
+  type: experiment
+  id: N286
+  routing: direct
+  provenance: ai-executed
+  summary: Four fits show small unreplicated timing gain; reliability and sensitivity screens fail.
+- turn: 6
+  type: observation
+  id: O188
+  routing: staged
+  provenance: ai-suggested
+  summary: Explicit age cue is insufficient here; no general timing or arbitrary-tag superiority claim.
+- turn: 6
+  type: observation
+  id: O189
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose direct stored-state readout as a native-workspace repair reference.
+
 ai_actions:
 - turn: 1
   action: Reconciled existing plans and saved evidence; recorded recommendation without model changes or new evaluation.
@@ -202,6 +233,22 @@ ai_actions:
   - docs/project-state.md
   - ara/evidence/tables/recall_repair_2026-09-13.json
 
+- turn: 6
+  action: Added optional relative snapshot ages and timestamp-intervention modes; ran76 relevant tests,
+    four bounded GPU fits, replay/permutation and1328-metric audits; produced report and figures, preserved
+    frozen writers/codecs and CPU portability failures. Two public-only Claude reviews.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/agent_state.py
+  - pathwm/models/memory_output.py
+  - experiments/memory_output.py
+  - tests/test_memory_time.py
+  - tests/test_memory_output.py
+  - tests/test_recall_repair.py
+  - docs/recall-repair-plan.md
+  - docs/project-state.md
+  - ara/evidence/tables/memory_time_2026-09-13.json
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -216,9 +263,12 @@ key_context:
 - turn: 5
   excerpt: Yes ok. Do that and fix it if possible
 
+- turn: 6
+  excerpt: Yes ok
+
 open_threads:
-- 'N284/O186/O187: frozen-writer retraining improves recall but fails reliability; calibration is lower. Test temporal/snapshot routing and retain stored-state access controls.'
-- 'N278/N280/N284: raw-encoder CPU/GPU numerical tolerance still fails despite exact GPU replay. Current repaired outputs agree categorically but max pixels0.019403 and logits0.224921 exceed1e-4.'
+- 'N286/O188/O189: snapshot-age cue fails replicated benefit/reliability. Compare direct stored-state reading against native workspace formation and check weaker-writer accessibility.'
+- 'N278/N280/N284/N286: CPU/GPU numeric tolerance remains open despite exact GPU replay. Current max pixels0.015305/logits0.475857; all fact labels agree, two temporal7801 image-side labels differ.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and other-modality quality remain open.'
 - 'N273/A06/O177/O178: adopted output boundary needs concrete conditioning, uncertainty/time inputs, backends and cross-modal consistency tests.'
@@ -233,6 +283,7 @@ ai_suggestions_pending:
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased location information.'
 - 'O184: partial pre-storage recoverability and weak post-recall accessibility under tested probe family; no unique mechanism identified.'
 - 'O186: partial native improvement and calibration failure at fixed budget; no asymptotic or unique mechanism claim.'
-- 'O187: proposed temporal/snapshot routing experiment; not implemented or run.'
+- 'O188: limited age-cue gain and heterogeneous metadata sensitivity; general time semantics not established.'
+- 'O189: proposed direct stored-state readout reference for native workspace repair; exact next interface/budget not yet declared.'
 - 'O164-O175: earlier curriculum, diagnosis and scoped capability interpretations retain their original provenance and closure status.'
 - 'O177/O178: coordination and state-grounding diagnostics remain staged; acknowledgment does not select their complete implementation.'
