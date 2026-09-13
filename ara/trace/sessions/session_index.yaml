@@ -139,8 +139,10 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: Snapshot-time cue shows small unreplicated gain and fails reliability;76 tests,1328 metric checks, exact GPU replay. Two CPU image-side differences and broader state/readout uncertainty remain.
-  turn_count: 6
-  events_count: 28
+  summary: Frozen-reader supervision improves diagnostic compatibility but not native recall; four fits
+    fail reliability/benefit.49 tests,1572 metric checks, exact GPU replay; CPU changes two factual and
+    one image-side labels.
+  turn_count: 7
+  events_count: 33
   claims_touched: []
   open_threads: 10

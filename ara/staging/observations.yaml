@@ -3349,6 +3349,41 @@ observations:
   bound_to:
   - N286
   - N282
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H54
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O190
+  timestamp: 2026-09-13T10:34+02:00
+  provenance: ai-suggested
+  content: Frozen-reader auxiliary training improves diagnostic compatibility but not native factual/image
+    recall under this matched budget. The second reader also gains joint accuracy, yet its side accuracy
+    declines, so neither unique reader exploitation nor better general location accessibility is established.
+    Different coordinates, calibration shifts and optimization remain possible. Weaker-writer conditional
+    recoverability and CPU numerical portability remain open; failure does not prove erased information
+    or universal ineffectiveness of auxiliary losses.
+  context: All four reliability gates and replicated benefit fail. User has not interpreted these new
+    outcomes; no coefficient tuning or larger architecture run.
+  potential_type: claim
+  bound_to:
+  - N288
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O191
+  timestamp: 2026-09-13T10:34+02:00
+  provenance: ai-suggested
+  content: Next use a controlled direct stored-working-token route into native factual/image heads to
+    separate workspace formation from output learning. Keep writer frozen and treat supplied routing as
+    a task diagnostic, not a general learned memory architecture; declare protocol before execution.
+  context: Proposed after auxiliary-readout improvement failed to transfer to native outputs. No further
+    run or route implementation.
+  potential_type: heuristic
+  bound_to:
+  - N288
+  - N282
   promoted: false
   promoted_to: null
   crystallized_via: null

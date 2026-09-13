@@ -4540,3 +4540,49 @@ tree:
   - N284
   - N282
   status: resolved
+
+- id: N287
+  type: decision
+  title: Approve using stored-state readout as reference for native recall repair
+  provenance: user
+  timestamp: 2026-09-13T10:34+02:00
+  choice: 'Yes ok, please do that: adopt O189 reference-reader investigation and separate weaker-writer
+    check. Auxiliary CE, its weight, exact seeds and matched budget are implementing-agent choices, not
+    independently specified by the user.'
+  alternatives:
+  - Another memory-cue sweep without isolating native readout
+  - Expand writer or codec before testing access
+  evidence:
+  - O189
+  - N286
+  - docs/recall-repair-plan.md#frozen-reader-workspace-supervision-protocol
+  status: resolved
+- id: N288
+  type: experiment
+  title: Frozen-reader auxiliary supervision fails to improve native recall at matched budget
+  provenance: ai-executed
+  timestamp: 2026-09-13T10:34+02:00
+  result: 'Source4bc44f4. Four1536-update fits, seed8201; two frozen untimed sources x auxiliary weight0/1,
+    identical initialization/data/sampler and76824 trainables. Test128 fresh-background histories: writer7801
+    reset facts86.71875->84.375%, images89.0625->86.71875%; writer7802 facts/images74.21875% unchanged.
+    All full reliability and replicated10-point benefit gates fail. Optimized reference recall joint25->89.0625%
+    and32.8125->74.21875%; second reader22.65625->63.28125% and22.65625->50.78125%, while second-reader
+    side declines in both. Stored-reader joint96.09375/80.46875% for writer7801,77.34375/74.21875% for7802.
+    Frozen writer/codecs/reference/raw banks/source hashes unchanged.49 tests,1572 independent metrics
+    within3.88e-7; exact GPU native/reference replay and bank-order workspace invariance on both devices.
+    Real768+768 resume preserves774 rows; exact optimizer/RNG resume tested. CPU fails1e-4, native max
+    logits0.460575/pixels0.025750; supervised7801 changes factual-side cases90/122 and image-side27.708.509s
+    training,424MiB reserved. Two public-only Claude reviews, structurally verified reports, all panels
+    and score plot inspected. Extra loss remains optional; no reliable checkpoint promotion or further
+    run.'
+  evidence:
+  - ara/evidence/tables/reader_supervision_2026-09-13.json
+  - runs/reader_supervision_v1/report.html
+  - runs/reader_supervision_v1/verification.json
+  - runs/reader_supervision_v1/cpu_label_mismatches.json
+  - docs/recall-repair-plan.md#frozen-reader-supervision-results
+  also_depends_on:
+  - N287
+  - N286
+  - N282
+  status: resolved

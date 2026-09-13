@@ -523,3 +523,13 @@
 - **Sensitivity**: High. Fixed ages also function as snapshot tags; intervention sensitivity does not establish elapsed-time semantics. The completed comparison fails replicated benefit and reliability gates.
 - **Code ref**: [memory retrieval](../../../pathwm/models/agent_state.py), [query interventions](../../../pathwm/models/memory_output.py), [recipe](../../../experiments/memory_output.py), [causal checks](../../../tests/test_memory_time.py).
 - **Evidence**: N285/N286; [comparison record](../../evidence/tables/memory_time_2026-09-13.json).
+
+## H54: Use frozen stored-state readers as references while judging native outputs
+
+- **Rationale**: Compare native workspace/output learning with conditional access to the same frozen stored values, using matched budgets and more than one pre-existing reader. Keep writer accessibility separate from reference-reader compatibility. The adopted method is a diagnostic discipline, not a guaranteed auxiliary-loss repair.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O189
+- **Sensitivity**: High. An optimized diagnostic is not independent evidence; native causal output gates remain primary. The completed auxiliary-supervision comparison gives no native benefit at its tested budget.
+- **Code ref**: [frozen reader and native outputs](../../../pathwm/models/memory_output.py), [supervision recipe](../../../experiments/memory_output.py), [gradient/inference checks](../../../tests/test_reader_supervision.py).
+- **Evidence**: N287/N288; [four-fit record](../../evidence/tables/reader_supervision_2026-09-13.json).
