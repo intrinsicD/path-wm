@@ -204,6 +204,8 @@ def test_supervised_writes_and_frozen_decoder_have_intended_gradients():
         (True, "relocation", True),
         (True, "relocation", "temporal"),
         (True, "relocation", "reference"),
+        (True, "relocation", "native_readout"),
+        (True, "relocation", "stored_readout"),
     ],
 )
 def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum, repair):
@@ -261,6 +263,12 @@ def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum, 
             model.workspace_reference = TokenProbe(model.working(history["stored"]))
             model.workspace_reference.requires_grad_(False)
             settings.update(workspace_reference_sha256="fixture", reference_weight=1.0)
+        if repair in ("native_readout", "stored_readout"):
+            from pathwm.models.memory_output import configure_output_readout
+
+            stage = repair.split("_")[0]
+            configure_output_readout(model, stage)
+            settings.update(readout_stage=stage, standardize_output=True)
         result = train(
             model,
             train_data,

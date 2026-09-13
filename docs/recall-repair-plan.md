@@ -493,3 +493,14 @@ Claude's public-only review flags per-stage fitting and actual cache/live equiva
 as prerequisites; both are explicit above and will be checked. Zero fallback and
 mean ties are supplied policies. Equal updates need not equal optimization difficulty,
 so training and validation curves remain visible; no general workspace-loss claim.
+
+Implementation checks:58 relevant tests and lint pass, including six cache/live
+comparisons spanning both stages and normal/erased/tied-time queries, head-only
+gradients, fixed writer/thinker, and exact optimizer/RNG resume plus standalone
+exports for both standardized stages. Development16 updates complete in1.1753s;
+460MiB reserved, structural report QA passes and comparison PNG inspected. Claude
+accepted the clarified per-route statistics and empirical cache-equivalence contract.
+Source committed before formal comparison; no development quality tuning.
+
+Command (both sources, stages native/stored, with/without --standardize-output):
+`OMP_NUM_THREADS=2 .venv/bin/python -m experiments.memory_output --weights runs/reader_supervision_v1/agent_7801_baseline/weights.pt --repair identity --readout-stage stored --standardize-output --seed 8301 --validation-seed 7752 --test-seed 7753 --output runs/direct_readout_v1/agent_7801_stored_standardized --device cuda:0`

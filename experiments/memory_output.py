@@ -3,6 +3,7 @@
 import argparse
 import json
 import math
+import hashlib
 from pathlib import Path
 from time import perf_counter
 
@@ -20,6 +21,7 @@ from pathwm.models.memory_output import (
     configure_recall_repair,
     frozen_tensors,
     load_workspace_reference,
+    configure_output_readout,
 )
 from pathwm.models.modalities import Observation
 
@@ -57,7 +59,7 @@ def objective(model, batch, reset, repair=False, reference_weight=0.0):
     output = model.output(state)
     with torch.no_grad():
         targets = model.teacher(batch["target"])
-    stored = model.facts(model.working(history["stored"]))
+    stored = model.facts(model.output_normalization(model.working(history["stored"])))
     facts = factual_loss(output["facts"], batch["labels"])
     write = factual_loss(stored, batch["labels"])
     pixels = weighted_error(output["image"], batch["target"]).mean()
@@ -74,6 +76,39 @@ def objective(model, batch, reset, repair=False, reference_weight=0.0):
         reference_loss=float(reference.detach()),
         factual_loss=float(facts.detach()),
         write_loss=float(write.detach()),
+        rgb_loss=float(pixels.detach()),
+        latent_loss=float(latent.detach()),
+    )
+
+
+@torch.no_grad()
+def cache_readout(model, data, device, batch_size=16, mode="reset"):
+    """Detached training inputs; labels/teacher targets never enter state formation."""
+    values = {k: [] for k in ("tokens", "labels", "target")}
+    features = {}
+    for start in range(0, len(data), batch_size):
+        b = data.batch(range(start, min(start + batch_size, len(data))), device)
+        h = model.observe_history(b["images"])
+        tokens = model.working(model.query(h["final"], b["images"][:, -1], mode))
+        for k, v in dict(tokens=tokens, labels=b["labels"], target=b["target"]).items():
+            values[k].append(v.detach().clone())
+        for k, v in model.teacher(b["target"]).items():
+            features.setdefault(k, []).append(v.detach().clone())
+    return dict(
+        **{k: torch.cat(v) for k, v in values.items()},
+        features={k: torch.cat(v) for k, v in features.items()},
+    )
+
+
+def readout_objective(model, cache, ids):
+    out = model.output_tokens(cache["tokens"][ids])
+    facts = factual_loss(out["facts"], cache["labels"][ids])
+    pixels = weighted_error(out["image"], cache["target"][ids]).mean()
+    latent = model.agent.decoders["image"].latent_loss(
+        out["features"], {k: v[ids] for k, v in cache["features"].items()}
+    )
+    return facts + pixels + 0.1 * latent, dict(
+        factual_loss=float(facts.detach()),
         rgb_loss=float(pixels.detach()),
         latent_loss=float(latent.detach()),
     )
@@ -126,7 +161,9 @@ def evaluate(model, data, device, modes, batch_size=16):
             labels=batch["labels"],
             history=images,
             direct_logits=model.direct(model.direct_tokens(images)),
-            stored_logits=model.facts(model.working(history["stored"])),
+            stored_logits=model.facts(
+                model.output_normalization(model.working(history["stored"]))
+            ),
             teacher_image=model.agent.decoders["image"].head(
                 model.teacher(batch["target"])
             ),
@@ -311,6 +348,13 @@ def train(
     resume=False,
     stop_after=None,
 ):
+    cache = None
+    preparation = perf_counter()
+    if settings.get("readout_stage"):
+        cache = cache_readout(model, training, device)
+        if settings.get("standardize_output"):
+            model.output_normalization.calibrate(cache["tokens"])
+    preparation_seconds = perf_counter() - preparation
     optimizer = torch.optim.AdamW(
         [p for p in model.parameters() if p.requires_grad],
         lr=0.001,
@@ -319,6 +363,13 @@ def train(
     identity = dict(
         train=training.identity, validation=validation.identity, test=test.identity
     )
+    if cache is not None:
+        tensors = {k: v for k, v in cache.items() if k != "features"}
+        tensors.update({"feature." + k: v for k, v in cache["features"].items()})
+        identity["readout_cache"] = {
+            k: hashlib.sha256(v.detach().cpu().numpy().tobytes()).hexdigest()
+            for k, v in tensors.items()
+        }
     run = Run(
         output,
         settings=settings,
@@ -329,6 +380,20 @@ def train(
         device=device,
         resume=resume,
     )
+    if cache is not None and not resume:
+        torch.save(
+            {k: v.cpu() for k, v in tensors.items()}, run.path / "training_cache.pt"
+        )
+        atomic_json(
+            run.path / "cache.json",
+            dict(
+                sha256=identity["readout_cache"],
+                preparation_seconds=preparation_seconds,
+                data=training.identity,
+                stage=settings["readout_stage"],
+                standardize_output=settings.get("standardize_output", False),
+            ),
+        )
     relocation = training.curriculum == "relocation"
     if relocation:
         atomic_json(
@@ -356,6 +421,13 @@ def train(
             run.path / "initialization.json",
             dict(
                 model_sha256=state_hash(model),
+                trainable_sha256=hashlib.sha256(
+                    b"".join(
+                        n.encode() + p.detach().cpu().numpy().tobytes()
+                        for n, p in model.named_parameters()
+                        if p.requires_grad
+                    )
+                ).hexdigest(),
                 trainable_parameters=sum(
                     p.numel() for p in model.parameters() if p.requires_grad
                 ),
@@ -379,17 +451,19 @@ def train(
         for step in range(run.step + 1, end + 1):
             if prior + perf_counter() - start >= settings["wall_seconds"]:
                 break
-            batch = training.batch(
-                run.sample(len(training), settings["batch_size"]), device
-            )
+            ids = run.sample(len(training), settings["batch_size"])
             optimizer.zero_grad(set_to_none=True)
-            loss, metrics = objective(
-                model,
-                batch,
-                reset=bool(step % 2),
-                repair=repair,
-                reference_weight=settings.get("reference_weight", 0.0),
-            )
+            if cache is not None:
+                loss, metrics = readout_objective(model, cache, ids)
+            else:
+                batch = training.batch(ids, device)
+                loss, metrics = objective(
+                    model,
+                    batch,
+                    reset=bool(step % 2),
+                    repair=repair,
+                    reference_weight=settings.get("reference_weight", 0.0),
+                )
             direct = (
                 loss.new_zeros(())
                 if repair
@@ -473,6 +547,14 @@ def train(
         unchanged = unchanged and all_frozen_unchanged
         if not unchanged or not all(np.isfinite(v).all() for v in arrays.values()):
             raise RuntimeError("Frozen mutation or nonfinite evaluation output")
+        if cache is not None and completed:
+            training_scores, training_arrays = evaluate(
+                model, training, device, ["reset"]
+            )
+            atomic_json(run.path / "training_fit.json", training_scores)
+            np.savez_compressed(
+                run.path / "training_predictions.npz", **training_arrays
+            )
         atomic_json(
             run.path / "result.json",
             dict(
@@ -495,7 +577,9 @@ def train(
                     if relocation
                     else "synthetic familiar factors, unseen combinations",
                     "fixed task; no general language",
-                    "two supplied snapshots both retrieved; no search or learned write policy",
+                    "supplied latest-snapshot route with zero fallback/tie averaging; not learned retrieval"
+                    if settings.get("readout_stage") == "stored"
+                    else "two supplied snapshots both retrieved; no search or learned write policy",
                     "frozen writer; stored logits use the adapting output head, not an independent probe"
                     if repair
                     else "supervised write readout differs from independent direct encoder diagnostic",
@@ -537,6 +621,8 @@ def main():
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--normalize-input", action="store_true")
     parser.add_argument("--repair", choices=("identity", "calibrated", "temporal"))
+    parser.add_argument("--readout-stage", choices=("native", "stored"))
+    parser.add_argument("--standardize-output", action="store_true")
     parser.add_argument("--workspace-reference", type=Path)
     parser.add_argument("--reference-weight", type=float, default=0.0)
     parser.add_argument("--validation-seed", type=int)
@@ -554,6 +640,10 @@ def main():
         parser.error(
             "Reference weight requires a reader and must be finite/nonnegative"
         )
+    if args.readout_stage and (args.repair != "identity" or args.reference_weight):
+        parser.error("Direct readout requires identity repair and zero auxiliary loss")
+    if args.standardize_output and not args.readout_stage:
+        parser.error("Output standardization requires a declared readout stage")
     if args.workspace_reference is not None and args.repair != "identity":
         parser.error("Workspace supervision currently requires --repair identity")
     if args.curriculum == "relocation" and not args.normalize_input:
@@ -638,9 +728,18 @@ def main():
                 + "; frozen-reader workspace CE x "
                 + str(args.reference_weight),
             )
-        elif settings.get("workspace_reference_sha256"):
+        elif settings.get("workspace_reference_sha256") and not args.readout_stage:
             parser.error(
                 "Continuing a supervised export requires its explicit reference"
+            )
+        if args.readout_stage:
+            configure_output_readout(model, args.readout_stage)
+            settings.update(
+                readout_stage=args.readout_stage,
+                standardize_output=args.standardize_output,
+                reference_weight=0.0,
+                wall_seconds=180,
+                objective="frozen writer and thinker; cached reset tokens; native factor CE + weighted RGB MSE + 0.1 standardized feature MSE",
             )
         if args.development:
             settings.update(steps=16, wall_seconds=60)

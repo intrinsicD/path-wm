@@ -205,6 +205,45 @@ def configure_recall_repair(model, *, relative_time=False):
     return model
 
 
+class TokenNormalization(nn.Module):
+    """Identity or fixed per-channel statistics from this route's training tokens."""
+
+    def __init__(self, width):
+        super().__init__()
+        self.register_buffer("mean", torch.zeros(1, 1, width))
+        self.register_buffer("std", torch.ones(1, 1, width))
+
+    @torch.no_grad()
+    def calibrate(self, tokens):
+        if (
+            tokens.ndim != 3
+            or tokens.shape[-1] != self.mean.shape[-1]
+            or not tokens.numel()
+            or not torch.isfinite(tokens).all()
+        ):
+            raise ValueError("Normalization requires finite nonempty training tokens")
+        x = tokens.detach().double()
+        self.mean.copy_(x.mean((0, 1), keepdim=True))
+        self.std.copy_(x.std((0, 1), correction=0, keepdim=True).clamp_min(1e-4))
+
+    def forward(self, tokens):
+        return (tokens - self.mean) / self.std
+
+
+def configure_output_readout(model, stage):
+    """Freeze both routes; learn only native facts and image feature production."""
+    if stage not in ("native", "stored"):
+        raise ValueError("Readout stage must be native or stored")
+    configure_recall_repair(model)
+    model.agent.thinker.requires_grad_(False)
+    model.readout_stage = stage
+    if not isinstance(model.output_normalization, TokenNormalization):
+        model.output_normalization = TokenNormalization(model.agent.width).to(
+            model.agent.initial
+        )
+    return model
+
+
 def frozen_tensors(model):
     """All frozen named parameters AND buffers, including shared codec aliases."""
     trainable = {
@@ -226,6 +265,8 @@ class MemoryOutput(nn.Module):
         self.facts = FactHead(agent.width)
         self.direct = FactHead(agent.width, depth=2)
         self.workspace_reference = None
+        self.readout_stage = "native"
+        self.output_normalization = nn.Identity()
 
     def working(self, state):
         return torch.cat(
@@ -285,10 +326,29 @@ class MemoryOutput(nn.Module):
                 else bank.times.flip(1)
             )
             bank = replace(bank, times=times)
-        return self.agent.think(replace(state, memory=bank), steps=2)
+        state = replace(state, memory=bank)
+        if self.readout_stage == "stored":
+            # Reuse causal/shape guards; selection below uses complete-bank times.
+            self.agent.memory.read(state)
+            if bank is None:
+                values = torch.zeros_like(state.tokens)
+            else:
+                latest = bank.times == bank.times.amax(1, keepdim=True)
+                weights = latest.to(bank.values.dtype)
+                weights = weights / weights.sum(1, keepdim=True)
+                values = (bank.values * weights[:, :, None, None]).sum(1)
+            tokens = state.tokens.clone()
+            for group in ("working", "reasoning"):
+                section = self.agent.layout[group]
+                tokens[:, section] = values[:, section]
+            return replace(state, tokens=tokens)
+        return self.agent.think(state, steps=2)
 
     def output(self, state):
-        tokens = self.working(state)
+        return self.output_tokens(self.working(state))
+
+    def output_tokens(self, raw_tokens):
+        tokens = self.output_normalization(raw_tokens)
         decoder = self.agent.decoders["image"]
         features = decoder.features(tokens)
         output = dict(
@@ -296,7 +356,7 @@ class MemoryOutput(nn.Module):
         )
         if self.workspace_reference is not None:
             # Diagnostic/training readout only; never an input to native outputs.
-            output["reference_facts"] = self.workspace_reference(tokens)
+            output["reference_facts"] = self.workspace_reference(raw_tokens)
         return output
 
     def direct_tokens(self, images):
@@ -384,5 +444,7 @@ def load_model(path, device="cpu"):
     if settings.get("workspace_reference_sha256"):
         model.workspace_reference = TokenProbe(torch.zeros(1, 1, settings["width"]))
         model.workspace_reference.requires_grad_(False)
+    if settings.get("readout_stage"):
+        configure_output_readout(model, settings["readout_stage"])
     model.load_state_dict(record["model"], strict=True)
     return model.to(device).eval()
