@@ -1827,3 +1827,47 @@ failure. Texture provides a required raw-input control against a harmful centeri
 prior. Clutter, size, gain, shadows and wider scenes require further training/design
 experiments. Independent upstream initializations, real recordings, confidence
 calibration, CPU portability and deployed streaming resource tests remain open.
+
+## Centered tint readout learning protocol
+
+User adopted the open-point iteration. Test native factual and image-feature heads
+on frozen ordinary/reset working tokens, with fixed centering in both arms.
+Sources are source8501/8502 joint image continuations (shared upstream initialization,
+not independent replication). Compare three whole-history blocks: neutral/warm
+background(+12,0,-8)/cool background(-8,0,+12), against three neutral copies.
+Both retain canonical targets and complete selection/movement counterfactuals.
+Neutral training7701 supplies the single fixed RGB reference before augmentation;
+persist reference/version/calibration identity in checkpoint settings and buffer.
+Standalone loads must restore it automatically and reject metadata/buffer mismatch.
+
+Four fits:128 training pairs per block (768 histories),1,536 updates,batch16,
+optimizer8901/8902,existing AdamW/loss,67,032 native output parameters only. No output
+standardization; encoder, state writer, thinker, memory, reference readers and image
+backend fixed. Neutral diagnostic validation28072/32 pairs and terminal test28071/64
+pairs do not select checkpoints. Development17701/29072/29071,16 updates is separate.
+
+Fresh confirmation28073/28074,32 pairs each; six conditions: neutral, warm/cool
+training tint magnitudes, interpolated warm(+8,0,-4)/cool(-4,0,+8), and texture8.
+Evaluate four fits and two unchanged centered sources on all conditions, plus two
+raw sources on neutral/texture:80 cells, all10 task/causal modes. Preflight all RGB
+ranges; any unsupported history fails coverage without subset scores. Full task
+gates unchanged. Repair requires every augmented cell to pass, plus at most5pp loss
+in ordinary/reset factual/image accuracy versus matched raw neutral and raw texture
+controls. Primary warm-tint benefit requires at least5pp improvement in each of
+those four accuracies versus matched centered neutral-only fit. Other differences
+are descriptive; do not demand an improvement where a control is at ceiling.
+
+Budgets:180s per fit,900s evaluation loop,4GiB GPU cap with1GiB headroom; keep3GiB
+disk free, preserve old runs. Check data alignment, cache/live parity and gradients,
+all frozen tensors, source/transform provenance, odd-step resume, standalone reload,
+independent metrics and exact GPU replay. Record per-block training fit descriptively.
+No model selection, third arm or live-state training after seeing confirmation.
+
+Actual Claude public review requests explicit cache provenance and live consistency;
+adopt both. Local corrections: native live evaluation with causal controls can
+establish bounded trained-path success; a negative rules out this budget without
+uniquely locating failure. Texture is a robustness control, not a leakage proof.
+The follow-up reconciliation was rejected by automatic approval review as containing
+nonpublic experimental details and was not sent. No bypass or further export.
+Receipts: runs/reviews/continuation_2026-09-11/tint-learning-public-*.
+Private implementation/results are reviewed locally; reconciliation is outstanding.
