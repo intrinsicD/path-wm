@@ -214,6 +214,28 @@ def live_readout_objective(model, batch, *, step):
     return loss, metrics
 
 
+def clip_readout_gradients(model):
+    """Clip disjoint output branches without coupling their optimizer updates."""
+    groups = {
+        "image": [
+            p
+            for n, p in model.agent.decoders["image"].named_parameters()
+            if p.requires_grad and not n.startswith("head.")
+        ],
+        "facts": [p for p in model.facts.parameters() if p.requires_grad],
+    }
+    ids = [id(p) for group in groups.values() for p in group]
+    trainable = {id(p) for p in model.parameters() if p.requires_grad}
+    if not groups["image"] or len(set(ids)) != len(ids) or set(ids) != trainable:
+        raise ValueError("Separate clipping requires disjoint trainable readouts only")
+    metrics = {}
+    for name, parameters in groups.items():
+        norm = torch.nn.utils.clip_grad_norm_(parameters, 1.0, error_if_nonfinite=True)
+        metrics[name + "_grad_norm"] = float(norm)
+        metrics[name + "_grad_clipped"] = int(norm > 1.0)
+    return metrics
+
+
 def default_settings(seed=7801):
     return dict(
         seed=seed,
@@ -505,6 +527,15 @@ def train(
 ):
     cache = None
     coverage = None
+    separate_clipping = settings.get("separate_readout_clipping", False)
+    if separate_clipping and (
+        settings.get("readout_stage") != "native"
+        or settings.get("readout_context") != "mixed"
+        or settings.get("writer_learning") is not None
+        or settings.get("train_thinker")
+        or settings.get("standardize_output")
+    ):
+        raise ValueError("Separate readout clipping requires cached raw mixed learning")
     refinement = settings.get("producer_refinement", False)
     if bool(refinement) != bool(model.agent.decoders["image"].refinements):
         raise ValueError("Producer refinement settings and model differ")
@@ -547,14 +578,14 @@ def train(
     if image_weighting not in ("foreground", "box") or (
         image_weighting != "foreground"
         and (
-            not settings.get("image_only")
+            (not settings.get("image_only") and not separate_clipping)
             or writer_learning is not None
             or settings.get("readout_context") != "mixed"
             or settings.get("standardize_output")
         )
     ):
         raise ValueError(
-            "Box image weighting requires cached raw mixed image-only learning"
+            "Box image weighting requires cached raw mixed learning; joint heads need separate clipping"
         )
     if settings.get("train_thinker") and writer_learning != "trainable":
         raise ValueError("Joint thinker learning requires a trainable writer")
@@ -744,9 +775,12 @@ def train(
             if not torch.isfinite(loss + direct):
                 raise ValueError("Nonfinite training loss")
             (loss + direct).backward()
-            torch.nn.utils.clip_grad_norm_(
-                model.parameters(), 1.0, error_if_nonfinite=True
-            )
+            if separate_clipping:
+                metrics.update(clip_readout_gradients(model))
+            else:
+                torch.nn.utils.clip_grad_norm_(
+                    model.parameters(), 1.0, error_if_nonfinite=True
+                )
             optimizer.step()
             run.step = step
             run.log(
@@ -1147,7 +1181,12 @@ def main():
     parser.add_argument(
         "--image-weighting",
         choices=("foreground", "box"),
-        help="Training-only RGB weighting for cached image-only continuation",
+        help="Training RGB weighting; cached joint heads require separate clipping",
+    )
+    parser.add_argument(
+        "--separate-readout-clipping",
+        action="store_true",
+        help="Clip factual/image gradients independently in cached native mixed training",
     )
     parser.add_argument(
         "--refine-image",
@@ -1192,6 +1231,16 @@ def main():
         "--curriculum", choices=("parity", "relocation"), default="parity"
     )
     args = parser.parse_args()
+    if args.separate_readout_clipping and (
+        args.evaluate_only
+        or args.repair != "identity"
+        or args.readout_stage != "native"
+        or args.readout_context != "mixed"
+        or args.writer_learning is not None
+        or args.train_thinker
+        or args.standardize_output
+    ):
+        parser.error("Separate readout clipping requires cached raw mixed repair")
     if args.refine_image and (
         args.evaluate_only
         or args.repair != "identity"
@@ -1207,11 +1256,13 @@ def main():
         or args.repair != "identity"
         or args.readout_stage != "native"
         or args.readout_context != "mixed"
-        or not args.image_only
+        or (not args.image_only and not args.separate_readout_clipping)
         or args.writer_learning is not None
         or args.standardize_output
     ):
-        parser.error("Image weighting requires cached raw mixed image-only repair")
+        parser.error(
+            "Image weighting requires cached mixed image-only or separately clipped joint heads"
+        )
     if args.scene and (not args.evaluate_only or args.input_offset):
         parser.error("Scene changes require evaluation-only without input-offset")
     if args.input_offset and not args.evaluate_only:
@@ -1449,6 +1500,10 @@ def main():
             settings["objective"] += (
                 "; image feature producer only; factual CE constant"
             )
+        if args.separate_readout_clipping:
+            settings["separate_readout_clipping"] = True
+        if settings.get("separate_readout_clipping"):
+            settings["objective"] += "; independent norm1 clipping per output readout"
         if settings.get("producer_refinement"):
             settings["objective"] += "; residual MLP per image-producer scale"
         if args.image_weighting is not None:

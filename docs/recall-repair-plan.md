@@ -2328,3 +2328,20 @@ freeze/settings. Small GPU development before source freeze; reports use the exi
 renderer with structural/figure checks and the prior browser limitation disclosed.
 Actual Claude reviews generic clipping/causal methodology only; private code/results
 reviewed locally. No external private export or new architecture is needed.
+
+Implementation/development: three informative RED failures now pass;61 focused
+checks cover the new clipping/path controls plus previous readout, weighting,
+refinement and scene behavior. An explicit factual-only backward leaves every
+producer gradient absent. Separate clipping matches the image-only global reference;
+large factual gradients demonstrate the old global-clipping confound. Nonfinite
+and unexpected/overlapping trainable scope is rejected. Saved joint trainability,
+box policy and exact odd-step resume verified; default global path unchanged.
+
+Paired16-update GPU development completes with two standalone reports. At each step,
+post-clip image gradients and pre/post-step image parameters and AdamW states match
+bitwise across arms, including dtype/device. Formal fits use ordinary uninstrumented
+AdamW; final image weights/state and evaluation arrays must still match. Both reports
+structurally checked, joint example panel inspected. Three actual compact Claude
+reviews complete: it withdrew an incorrect claim that post-step optimizer comparisons
+necessarily leave a timing gap. Per-step development evidence and final formal-fit
+checks remain distinguished. Freeze source now; no shared renderer changes.
