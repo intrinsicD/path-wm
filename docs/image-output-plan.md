@@ -461,3 +461,48 @@ architecture/progress settings fixed, then compare fresh state-binding outcomes.
 The current latent-only objective does not ensure visible content accuracy. Continue
 checking withheld combinations separately from fitting familiar ones. This is an
 unexecuted next comparison, not a known repair or permission to overwrite prior runs.
+
+## Decoded-image supervision comparison — 14 September
+
+User endorsed the next comparison. Add an optional `decoded_image_weight` to the
+existing recipe, default0. For flow, decode the one-pass endpoint estimate
+`x_t + (1-t)*v`; direct regression decodes its clean prediction. Unstandardize first,
+then use the inherited frozen head with autograd enabled. Add coefficient10 times
+existing target-foreground-weighted RGB MSE to the unchanged standardized latent
+loss. This is a hybrid objective, not a guarantee of the original flow-matching
+population optimum. Endpoint supervision is not an unrolled Euler trajectory loss.
+The target-derived weighting is supervision only; it never enters sampling.
+
+First RED checks: numeric endpoint/unstandardization/RGB weighting and gradient
+routing for both direct/flow; coefficient0 avoids the image head and preserves
+loss/metrics/RNG/gradients; finite nonnegative coefficients; exact resume/reload
+with nonzero RGB loss. Keep all model architectures, codec and agent frozen as
+before. Existing ordinary library/recipe/report interfaces suffice.
+
+Formal comparison: two fresh fits from the preserved deterministic source
+`runs/producer_refinement_v1/source_8502_control/weights.pt`, both init41011,
+314576 trainable parameters, agent32/generator64, train41001 with128 retained
+histories (8 of16 output triples), validation41002 diagnostic only. Both flow,
+progress probability.5 at0 otherwise uniform, batch8,1024 updates, AdamW lr.0003,
+weight decay.0001, clip1. Only decoded-image weight changes0 versus10. Repeat the
+control to audit exact reproduction of the retained previous flow_zero terminal
+model and optimizer; its source is preserved. Same updates and RNG, not training
+FLOPs/time. One16-update development per arm on41003/41004; diagnostic profiling,
+no checkpoint or coefficient selection. Freeze source before formal runs.
+
+Fresh43073/43074 each32 pairs/64 histories, sample13/29 and fixed Euler8. Primary
+repair: seen ordinary/reset image joint accuracy>=.95 and weightedMSE<=.01 in every
+cell, with no withheld accuracy regression versus control. Full capability remains
+all original seen/unseen, erased-memory drop>=.25 and counterfactual-swap>=.95 gates.
+Separately report >=5% mean ordinary/reset weightedMSE benefit and category
+nonregression on each subset/cell; a pixel benefit does not rescue failed capability.
+Compare old direct/reference descriptively only, not as a matched new scientific
+factor. Upstream/codec know all categories; no whole-system compositional claim.
+
+Caps each fit300s,3GiB GPU reserved,>=1GiB GPU free,>=3GiB disk free; evaluation
+300s per arm, save all results/failures and terminal checkpoints. No downloads or
+original checkpoint replacement. Four-mode saved outputs, frozen tensors and factual
+answers, independent numeric reproduction, exact GPU export replay and structural
+reports/figure inspection. Existing browser restriction is retained as a QA limit.
+Claude reviews generic public methodology only. No post-confirmation optimizer
+extension, coefficient selection or threshold changes within this comparison.

@@ -238,3 +238,69 @@ def test_zero_progress_mixture_has_no_extra_rng_and_keeps_zero_policy_exact():
     for p in [-0.1, 1.0, float("nan")]:
         with pytest.raises(ValueError):
             progress_mixture(draw, p)
+
+
+@pytest.mark.parametrize("kind", ["flow", "direct"])
+def test_decoded_supervision_endpoint_and_frozen_gradient_reference(kind):
+    from experiments.conditional_image import objective
+
+    torch.manual_seed(71)
+    g = generator(kind)
+    features = {k: torch.randn(4, s.channels, *s.size) for k, s in g.feature_spec.items()}
+    g.calibrate(features)
+    cache = dict(
+        ordinary=torch.randn(4, 3, 8), reset=torch.randn(4, 3, 8),
+        features=features, target=torch.rand(4, 3, 2, 2),
+    )
+    captured = {}
+    original = g.field
+
+    def capture(x, t, context):
+        out = original(x, t, context)
+        captured.update(x=x, t=t, prediction=out)
+        return out
+
+    g.field = capture
+    torch.manual_seed(73)
+    base, base_metrics = objective(g, cache, [0, 1, 2, 3], 1, 0.5)
+    base_grad = torch.autograd.grad(base, g.output["fine"].weight)[0]
+    torch.manual_seed(73)
+    loss, metrics = objective(g, cache, [0, 1, 2, 3], 1, 0.5, decoded_image_weight=10)
+    endpoint = captured["prediction"] if kind == "direct" else {
+        k: x + (1 - captured["t"][:, None, None, None]) * captured["prediction"][k]
+        for k, x in captured["x"].items()
+    }
+    pixels = g.head(g.unstandardize(endpoint))
+    target = cache["target"]
+    w = 1 + 9 * ((target - 40 / 255).abs().amax(1, keepdim=True) > .01)
+    expected = (((pixels - target).square() * w).sum((1, 2, 3)) /
+                (3 * w.sum((1, 2, 3)))).mean()
+    assert torch.allclose(loss, base + 10 * expected)
+    assert metrics["decoded_image_loss"] == pytest.approx(float(expected.detach()))
+    assert metrics["latent_loss"] == base_metrics["latent_loss"]
+    pixel_grad = torch.autograd.grad(expected, g.output["fine"].weight, retain_graph=True)[0]
+    loss.backward()
+    assert torch.allclose(g.output["fine"].weight.grad, base_grad + 10 * pixel_grad, atol=1e-5)
+    assert pixel_grad.abs().sum() > 0
+    assert g.context_norm.weight.grad.abs().sum() > 0
+    assert g.head.scale.grad is None and not g.head.scale.requires_grad
+
+
+def test_zero_decoded_weight_bypasses_head_and_rejects_invalid_before_rng():
+    from experiments.conditional_image import objective
+
+    torch.manual_seed(79)
+    g = generator()
+    cache = dict(ordinary=torch.randn(2, 3, 8), reset=torch.randn(2, 3, 8),
+                 features={k: torch.randn(2, s.channels, *s.size) for k, s in g.feature_spec.items()})
+    g.head.forward = lambda *_: pytest.fail("zero weight called image head")
+    rng = torch.get_rng_state().clone()
+    a, am = objective(g, cache, [0, 1], 1, .5)
+    after = torch.get_rng_state().clone()
+    torch.set_rng_state(rng)
+    b, bm = objective(g, cache, [0, 1], 1, .5, decoded_image_weight=0)
+    assert torch.equal(a, b) and am == bm and torch.equal(after, torch.get_rng_state())
+    for weight in [-1, float("nan"), float("inf")]:
+        with pytest.raises(ValueError, match="Decoded-image weight"):
+            objective(g, cache, [0, 1], 1, .5, decoded_image_weight=weight)
+        assert torch.equal(after, torch.get_rng_state())
