@@ -237,10 +237,11 @@ def configure_output_readout(model, stage):
     configure_recall_repair(model)
     model.agent.thinker.requires_grad_(False)
     model.readout_stage = stage
-    if not isinstance(model.output_normalization, TokenNormalization):
-        model.output_normalization = TokenNormalization(model.agent.width).to(
-            model.agent.initial
-        )
+    # A new route starts raw; its own training cache may then fit fresh statistics.
+    # Standalone loading restores the exported buffers after configuration.
+    model.output_normalization = TokenNormalization(model.agent.width).to(
+        model.agent.initial
+    )
     return model
 
 

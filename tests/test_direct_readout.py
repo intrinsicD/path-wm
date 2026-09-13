@@ -106,9 +106,11 @@ def test_readout_cache_matches_live_loss_gradients_and_only_heads_learn(stage, m
 def test_switching_readout_stage_resets_previous_scaling():
     from pathwm.models.memory_output import configure_output_readout
 
-    m = configure_output_readout(model_fixture(True), 'stored')
+    m = configure_output_readout(model_fixture(True), "stored")
     m.output_normalization.mean.fill_(5)
     m.output_normalization.std.fill_(2)
-    configure_output_readout(m, 'native')
+    configure_output_readout(m, "native")
     assert torch.count_nonzero(m.output_normalization.mean) == 0
-    assert torch.equal(m.output_normalization.std, torch.ones_like(m.output_normalization.std))
+    assert torch.equal(
+        m.output_normalization.std, torch.ones_like(m.output_normalization.std)
+    )
