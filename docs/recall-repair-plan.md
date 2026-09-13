@@ -1208,3 +1208,65 @@ and failure paths. The existing development checkpoint evaluates successfully
 under the new contract, with zero optimizer updates and a separate report.
 The original development limitation-text error was also corrected with before
 copies retained and metrics/gates/checkpoints unchanged.
+
+
+## Image-output continuation results
+
+Training source1964a33; inference repair090ab5a. Final corrected evaluation uses
+unchanged checkpoints and the same test19073; no extra optimization or selection.
+
+| Source / policy | Ordinary facts | Ordinary images | Reset facts | Reset images | Full gate |
+| --- | ---: | ---: | ---: | ---: | --- |
+| 8501 / unchanged | 100% | 91.40625% | 100% | 97.65625% | pass |
+| 8501 / image-only | 100% | 100% | 100% | 100% | pass |
+| 8501 / joint | 100% | 100% | 100% | 100% | pass |
+| 8502 / unchanged | 97.65625% | 92.1875% | 99.21875% | 90.625% | pass |
+| 8502 / image-only | 97.65625% | 100% | 99.21875% | 100% | pass |
+| 8502 / joint | 100% | 100% | 100% | 100% | pass |
+
+Both policies pass both full-task cases and all separate image-sufficiency/source-
+retention screens. All rendered color/shape/side labels are correct in ordinary
+and reset modes. Joint improves the second checkpoint's remaining factual errors;
+image-only preserves factual outputs exactly under matched inference. Both unchanged
+sources already pass the minimum gate on this sample: the benefit is reduced
+residual error, not first full-task passage. Earlier7793 failures remain preserved.
+Both sources share one upstream initialization/codec and were previously explored.
+No independent-initialization or general-world success claim follows.
+
+The original GPU bitwise invariant failure remains recorded under
+`before_inference_fix/`: source/fitted factual differences up to4.2915344e-5, with
+unchanged categories. Matching parameter trainability flags gives exact states.
+The repaired evaluator temporarily freezes all parameters, then restores flags
+including on exceptions. Six evaluation-only runs preserve original manifests,
+checkpoints and raw scores; every categorical answer and full gate is unchanged
+across inference versions. Maximum numeric difference across all saved outputs is
+0.0001435279846. GPU standalone outputs and frozen-source workspaces/factual logits
+now reproduce exactly. This repairs the recipe's inference contract; direct model
+calls must use matched flags for bitwise comparisons. It does not imply CPU/GPU
+numerical identity or identify a specific backend kernel without further evidence.
+
+All58 relevant tests pass after the two new inference RED regressions, alongside
+image-only gradient/freeze, exception restore, exact odd-step resume and standalone
+checks. Independent NumPy scoring verifies3,056 values:1,422 original evaluations,
+1,422 corrected evaluations and212 unchanged training-fit metrics. Both pairs have
+exact source starts, sampler streams, optimizer/update budgets and data identities.
+All frozen parameters/buffers unchanged; permitted image-producer updates verified.
+Banks retain exact source/value/time/order and detached inference behavior. No new
+probe fit, cache, image backend, capacity or loss was introduced.
+
+CPU1e-4 numerical gate still fails: maximum native logits0.1853666306 and pixels
+0.0020754635. All native factual/image labels agree on this test; earlier categorical
+mismatches are not erased. Four1024-update fits cost507.666166s training (8.46min),
+peak423,624,704 bytes (404MiB); development16updates3.098006s. Inference correction
+adds zero optimizer updates. Fourteen individual reports and overview structurally
+verified; original/final comparison panels and score/loss figures inspected.
+Browser QA unavailable. Development's erroneous adapting-factual-head limitation
+text corrected with before copies and unchanged metrics/gates/checkpoints.
+
+Two actual Claude public-only design exchanges; local implementation/repair review.
+[Comparison](../runs/image_continuation_v1/report.html) includes exact results,
+loss components, causal controls, source mapping, original failure and corrected
+inference receipts. `--image-only` is a targeted option, not a declaration that
+frozen-state training is universally preferable. Both completed policies should
+remain fixed for a newly declared robustness evaluation before longer histories
+or real observations. No further benchmark or fit launched.

@@ -1,5 +1,32 @@
 # Current work
 
+**Image-output continuation completed, 13 September:** image-only training on both
+frozen final joint states reaches100% ordinary/reset image answers on fresh test19073.
+Joint continuation reaches100% facts and images for both. Image-only preserves
+source8502 facts at97.656/99.219%; source8501 facts remain100%. All full task and
+separate sufficiency/retention gates pass. Unchanged sources already pass the minimum
+gate here, with images91.406/97.656% and92.188/90.625% ordinary/reset. This demonstrates
+conditional output recoverability and reduced residual error; both trajectories
+share one explored upstream initialization/codec. Earlier7793 failures remain valid.
+[Report](../runs/image_continuation_v1/report.html),
+[protocol/results](recall-repair-plan.md#image-output-continuation-results).
+
+Added opt-in `--image-only` and found/fixed a GPU inference consistency issue:
+parameter trainability flags affected numeric outputs under no_grad. Evaluation
+now freezes flags temporarily and restores them even on failure. Original invariant
+failure preserved; six unchanged exports rescored with zero extra optimization.
+All categorical answers/gates unchanged. GPU exports, frozen states, factual logits
+and memory provenance now exact under the corrected inference contract. CPU1e-4
+numeric tolerance still fails (logits0.185367/pixels0.002075), but native categories
+agree on this sample. Direct model calls require matched inference flags.
+
+All58 relevant tests and3,056 independently recomputed metric values verified.
+Four fits507.67s training,404MiB peak GPU reservation. Two bounded public-only Claude
+reviews; implementation and repair reviewed locally. Fourteen individual reports
+plus overview structurally verified, figures inspected; browser QA unavailable.
+Next proposed: hold both policies fixed for a fresh declared robustness evaluation,
+then expand history/observations. No further training or benchmark launched.
+
 **Existing-source robustness comparison completed, 13 September:** the overall
 joint-task robustness gate fails on fresh test 7793. All four new source7801 fits
 (writer-only/joint × two optimizer seeds) reach 100% facts/images in ordinary and
