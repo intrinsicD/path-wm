@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T16:44+02:00
-  turn_count: 13
-  summary: 'Fixed-checkpoint brightness screen: both policies pass6/6 neutral and0/12 stress cells.67
-    tests,12798 metrics,36 exact GPU replays; CPU categories differ15 stressed cells.54 evaluations,zero
-    training,296MiB; augmentation/normalization follow-up proposed.'
+  last_turn: 2026-09-13T18:00+02:00
+  turn_count: 14
+  summary: Centering passes all12 brightness conditions at100% categories with unchanged weights; head
+    augmentation fails stress/retention.78 tests,12536 metrics,48 exact GPU replays; CPU differences persist.139.52s
+    training,712MiB; broader centering validation proposed.
 
 events_logged:
 - turn: 1
@@ -447,6 +447,50 @@ events_logged:
   routing: crystallized
   provenance: user-revised
   summary: O203 method adopted; neutral and stress gates remain distinct.
+- turn: 14
+  type: decision
+  id: N306
+  routing: direct
+  provenance: user
+  summary: Adopt O205 augmentation/normalization method with Claude.
+- turn: 14
+  type: experiment
+  id: N307
+  routing: direct
+  provenance: ai-executed
+  summary: Four matched frozen-state head fits; augmentation partial, task/retention/benefit conjunctions
+    fail.
+- turn: 14
+  type: dead_end
+  id: N308
+  routing: direct
+  provenance: ai-executed
+  summary: CUDA median rejects deterministic mode; stable sorting preserves the contract.
+- turn: 14
+  type: experiment
+  id: N309
+  routing: direct
+  provenance: ai-executed
+  summary: Centering passes12/12 conditions;78 tests,12536 metrics,48 exact GPU replays, CPU limits retained.
+- turn: 14
+  type: observation
+  id: O206
+  routing: staged
+  provenance: ai-suggested
+  summary: Task-specific preprocessing sufficiency, incomplete learned repair; no unique information-loss
+    diagnosis.
+- turn: 14
+  type: observation
+  id: O207
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose background/coverage/illumination prior challenge and fresh learned-optimization diagnosis.
+- turn: 14
+  type: heuristic
+  id: H62
+  routing: crystallized
+  provenance: user-revised
+  summary: O205 method adopted; separate centering and matched augmentation before encoder changes.
 
 ai_actions:
 - turn: 1
@@ -620,6 +664,24 @@ ai_actions:
   - docs/recall-repair-plan.md
   - runs/output_robustness_v1/
   - ara/evidence/tables/output_robustness_2026-09-13.json
+- turn: 14
+  action: Two actual public-only Claude design/reconciliation reviews; plan/RED, whole-history augmentation
+    and causal centering implementation. Fixed CUDA median deterministic incompatibility with sorting.78
+    tests,13 focused reruns,16-update development,four1536-update fits,48 confirmation exports,12536-metric
+    and frozen/source/cache/GPU/CPU audits,80 descriptive training-offset scores.53 reports plus overview
+    structural/figure QA, docs and commits; no further fitting or deployment.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/data/memory_output.py
+  - pathwm/models/memory_output.py
+  - experiments/memory_output.py
+  - tests/test_brightness_repair.py
+  - tests/test_memory_output.py
+  - docs/experiments.md
+  - docs/project-state.md
+  - docs/recall-repair-plan.md
+  - runs/brightness_repair_v1/
+  - ara/evidence/tables/brightness_repair_2026-09-13.json
 
 claims_touched: []
 key_context:
@@ -665,14 +727,17 @@ key_context:
   excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
     this. Both fixed policies retain neutral performance but fail declared brightness stress; no performance
     tuning on these scores.'
+- turn: 14
+  excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
+    this. Fixed-reference centering succeeds on the scoped synthetic task; augmentation alone fails declared
+    repair. No test-guided next fit or default deployment.'
 
 open_threads:
-- 'N304/N305/O204/O205: neutral continuation retention passes, brightness stress fails. Predeclare augmentation/normalization
-  diagnosis with fresh confirmation before longer histories/real observations; independent upstream/codec
-  replication still open.'
-- 'N278-N305: CPU/GPU numerical portability unresolved, current logits0.4816207886/pixels0.0140872598
-  and native-category differences15 stressed cells; prior cases retained. Current GPU outputs exact with
-  matched flags.'
+- 'N307/N309/O206/O207: centering passes scoped brightness conditions; head augmentation remains underfit
+  and fails repair. Challenge background/coverage/illumination priors before defaulting; learned state/head
+  optimization, independent upstream replication and real observations remain open.'
+- 'N278-N309: CPU/GPU numerical portability unresolved; current logits4.991394043/pixels0.035994232, native-category
+  differences11 cells,none centered. Current48 GPU replays and original defaults exact; prior cases retained.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
   and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and
@@ -715,5 +780,7 @@ ai_suggestions_pending:
   pending.'
 - 'O204: broad input/readout sensitivity under declared RGB shifts, without unique failure localization;
   researcher interpretation pending.'
-- 'O205: predeclare augmentation/normalization comparison, frozen-feature reader diagnostic, neutral retention
-  and fresh confirmation.'
+- 'O206: task-specific centering sufficiency with incomplete learned augmentation; researcher interpretation
+  pending.'
+- 'O207: challenge centering priors and diagnose learned head/state optimization under fresh confirmation
+  and neutral retention.'

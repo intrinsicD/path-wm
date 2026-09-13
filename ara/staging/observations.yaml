@@ -3617,6 +3617,40 @@ observations:
   bound_to:
   - N304
   - N305
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H62
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O206
+  timestamp: 2026-09-13T18:00+02:00
+  provenance: ai-suggested
+  content: Per-frame training-referenced centering is sufficient for the declared familiar synthetic brightness
+    task on both explored source checkpoints. Head-only augmentation at the fixed budget is incomplete
+    and underfits seen extremes. This separates a task-specific nuisance-removal result from learned invariance,
+    perfect reconstruction or a diagnosis of lost encoder information.
+  context: Completed comparison; researcher has not interpreted new outcomes. Original negative uncentered
+    screens remain valid.
+  potential_type: claim
+  bound_to:
+  - N307
+  - N309
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O207
+  timestamp: 2026-09-13T18:00+02:00
+  provenance: ai-suggested
+  content: Next challenge the centering prior with changed backgrounds, object coverage and nonuniform
+    illumination before making it a default. For learned robustness, diagnose head/state optimization
+    under a fresh protocol with neutral retention rather than infer encoder replacement from this fixed-budget
+    failure.
+  context: Proposed follow-up only; no further fit, performance tuning or automatic deployment launched.
+  potential_type: heuristic
+  bound_to:
+  - N307
+  - N309
   promoted: false
   promoted_to: null
   crystallized_via: null

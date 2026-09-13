@@ -4956,3 +4956,88 @@ tree:
   - N302
   timestamp: 2026-09-13T16:44+02:00
   status: resolved
+
+- id: N306
+  type: decision
+  title: Adopt frozen-state augmentation and input-normalization comparison
+  provenance: user
+  choice: Yes please; continue together with Claude, plan, implement, review, test, fix and iterate. Adopts
+    O205 follow-up method; exact offsets, sources, seeds, gates and budgets are agent choices.
+  alternatives:
+  - Replace encoder before frozen-state diagnosis
+  - Tune using the previously inspected confirmation set
+  evidence:
+  - O205
+  - N304
+  - N305
+  - docs/recall-repair-plan.md#brightness-repair-protocol--13-september
+  timestamp: 2026-09-13T18:00+02:00
+  status: resolved
+- id: N307
+  type: experiment
+  title: Head-only brightness augmentation improves errors but fails repair gates
+  provenance: ai-executed
+  result: Four matched1536-update fits, batch16, optimizer8701/8702, sources final joint8501/8502;67032
+    factual/image-feature parameters train, all state/encoder/backend tensors frozen. Train7701 five copies
+    versus offsets -16,-8,0,8,16;1280 histories, neutral validation23072. Confirmation23073/23074 at -12,0,+12.
+    Augmented neutral full gates4/4,stress0/8,neutral retention1/4,stress benefit6/8; required conjunctions
+    fail. Control and original sources neutral100% all facts/images,stress full gates0/8. Augmented ordinary
+    stress facts59.375-93.750%,images64.063-92.969%; neutral images93.750-96.094%. Seen training -16 facts46.094-62.891%
+    in descriptive saved-output grouping, so limitations occur on training variants too. Same upstream
+    initialization/codec, familiar semantics. Training139.516520s,all-fit loop276.386649s,712MiB; no additional
+    fits selected.
+  evidence:
+  - ara/evidence/tables/brightness_repair_2026-09-13.json
+  - runs/brightness_repair_v1/training_audit.json
+  - runs/brightness_repair_v1/training_offsets.json
+  - docs/recall-repair-plan.md#brightness-repair-results
+  also_depends_on:
+  - N306
+  - N304
+  timestamp: 2026-09-13T18:00+02:00
+  status: resolved
+- id: N308
+  type: dead_end
+  title: CUDA median-with-indices rejects strict deterministic execution
+  provenance: ai-executed
+  hypothesis: The direct per-frame median operator can implement centering under the existing deterministic
+    GPU inference contract.
+  failure_mode: Preflight raises because CUDA median with indices lacks a deterministic implementation.
+    CPU tests pass; original GPU failure log preserved. No formal scores exposed before correction.
+  lesson: Use deterministic stable sorting to compute the same lower median, preserve validity/provenance/bounds
+    and rerun GPU algebra/cache checks. Do not relax determinism or numerical tolerances.
+  evidence:
+  - ara/evidence/tables/brightness_repair_2026-09-13.json
+  - runs/brightness_repair_v1/median_cuda_failure.log
+  - pathwm/models/memory_output.py
+  - tests/test_brightness_repair.py
+  also_depends_on:
+  - N306
+  timestamp: 2026-09-13T18:00+02:00
+  status: resolved
+- id: N309
+  type: experiment
+  title: Training-referenced frame centering passes the bounded brightness task
+  provenance: ai-executed
+  result: Zero-update centering of original sources:100% factual/image-category accuracy ordinary/reset
+    across all12 source/seed/offset conditions, full task neutral4/4,stress8/8,retention4/4,benefit8/8.
+    Reference fitted only from verified neutral training pixels; per-frame causal RGB median subtraction
+    before encoder, no targets/offset metadata/mask/future frames, no clipping. Explicit evaluation option,
+    no modified weight export or learned-invariance claim.78 tests and13 focused post-sort checks pass;12536
+    metrics independently recomputed plus80 descriptive training-offset accuracies. All48 GPU replays
+    and old default exports exact; unchanged sources/frozen tensors and16-history bank/workspace traces
+    pass. CPU1e-4 fails48/48,max native logits4.991394043,pixels0.035994232; native categories differ11
+    cells,none centered.48-cell evaluation/report365.402301s;53 individual reports plus overview structurally
+    verified,figures inspected,browser unavailable. Two actual public-only Claude reviews; private code/results
+    reviewed locally.
+  evidence:
+  - ara/evidence/tables/brightness_repair_2026-09-13.json
+  - runs/brightness_repair_v1/final_checks.json
+  - runs/brightness_repair_v1/verification.json
+  - experiments/memory_output.py
+  also_depends_on:
+  - N308
+  - N307
+  - N304
+  timestamp: 2026-09-13T18:00+02:00
+  status: resolved

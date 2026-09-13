@@ -139,10 +139,10 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: 'Fixed-checkpoint brightness screen: both policies pass6/6 neutral and0/12 stress cells.67
-    tests,12798 metrics,36 exact GPU replays; CPU categories differ15 stressed cells.54 evaluations,zero
-    training,296MiB; augmentation/normalization follow-up proposed.'
-  turn_count: 13
-  events_count: 71
+  summary: Centering passes all12 brightness conditions at100% categories with unchanged weights; head
+    augmentation fails stress/retention.78 tests,12536 metrics,48 exact GPU replays; CPU differences persist.139.52s
+    training,712MiB; broader centering validation proposed.
+  turn_count: 14
+  events_count: 78
   claims_touched: []
   open_threads: 10

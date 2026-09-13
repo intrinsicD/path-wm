@@ -604,3 +604,13 @@
 - **Sensitivity**: High. This diagnoses the frozen checkpoints under the tested perturbation. Shared upstream initialization/codec and familiar semantics limit generalization; no training or independent-model replication follows from this method. GPU and CPU gates remain separate.
 - **Code ref**: [input transformation](../../../pathwm/data/memory_output.py), [immutable evaluation](../../../experiments/memory_output.py), [transformation/export checks](../../../tests/test_memory_output.py).
 - **Evidence**: N303/N304/N305; [robustness proof](../../evidence/tables/output_robustness_2026-09-13.json).
+
+## H62: Compare downstream augmentation and explicit nuisance removal before changing encoders
+
+- **Rationale**: Test output heads on frozen working states with matched neutral versus augmented histories, and evaluate causal training-referenced input centering separately. Preserve canonical targets, source provenance, neutral retention and fresh confirmation; keep task passage and benefit gates distinct.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O205
+- **Sensitivity**: High. Fixed-budget head failure does not uniquely locate lost information. Centering may discard meaningful intensity and its success is task-specific. Two source trajectories share upstream initialization/codec; no general perceptual invariance or deployment endorsement follows.
+- **Code ref**: [whole-history variants](../../../pathwm/data/memory_output.py), [pixel centering](../../../pathwm/models/memory_output.py), [recipe and reference provenance](../../../experiments/memory_output.py), [integrity tests](../../../tests/test_brightness_repair.py).
+- **Evidence**: N306/N307/N308/N309; [comparison proof](../../evidence/tables/brightness_repair_2026-09-13.json).
