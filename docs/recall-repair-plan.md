@@ -82,3 +82,81 @@ either arm to converge asymptotically. Both public-only receipts are retained.
 
 Example formal command (change source7801 to7802 and arm identity to calibrated):
 `OMP_NUM_THREADS=2 .venv/bin/python -m experiments.memory_output --weights runs/memory_relocation_v1/seed_7801/weights.pt --repair identity --seed 8001 --output runs/recall_repair_v1/agent_7801_identity --device cuda:0`
+
+## Results
+
+Sourcecfe472b. All four runs complete1536 updates; no checkpoint selection or
+budget extension. Two public-only Claude exchanges reconcile the fixed-budget
+interpretation. Both conditions have76,824 trainable parameters and identical
+initial learned weights/samples within each source pair. Calibration adds only
+fixed buffers, fitted from the declared training banks. All frozen tensors equal
+their originals after fitting; raw bank values and original checkpoint files match.
+
+Scores on the SAME128 fresh-background test histories:
+
+| Frozen writer | Condition | Reset facts | Reset images | Complete relocation pairs, facts | Complete relocation pairs, images |
+| --- | --- | ---: | ---: | ---: | ---: |
+|7801|Unchanged source|48.4375%|47.65625%|0%|0%|
+|7801|Retrain only|66.40625%|63.28125%|32.8125%|29.6875%|
+|7801|Retrain + calibration|58.59375%|57.03125%|17.1875%|15.625%|
+|7802|Unchanged source|50%|51.5625%|0%|3.125%|
+|7802|Retrain only|75%|75%|50%|50%|
+|7802|Retrain + calibration|73.4375%|73.4375%|46.875%|46.875%|
+
+Every run fails the complete predeclared screen. Calibration's separate10-point
+benefit gate fails too: its reset facts/images are lower than identity preprocessing
+in both matched pairs. Keep it opt-in; do not promote either condition as reliable
+recall. Focused retraining is a partial native-output improvement with unchanged
+codecs/writer, not proof that freezing alone caused the gain. More updates and a
+changed learning objective are also part of this continuation versus its source.
+This says nothing about asymptotic superiority or general image generation.
+
+Ordinary facts/images:65.625/65.625%,66.40625/66.40625%,74.21875/74.21875%,
+72.65625/72.65625% in writer7801 identity/calibrated, then7802 identity/calibrated
+order. Reset color is100%; shape is99.21875% for writer7801 calibrated and100% in
+the other factual readouts. Location remains the dominant error. Removing the later
+view reduces identity-arm facts to35.9375/
+43.75%, versus66.40625/75% with it. Erasing memory reduces them to7.03125/8.59375%;
+cue erasure6.25% for both. Bank swapping produces the alternate answer with the
+same factual/image accuracies as ordinary reset, supporting actual bank dependence.
+Paired failures and double-position images remain visible in the saved panels.
+
+Unchanged direct encoder readers and frozen teacher decoding both score100%.
+Previously fitted readers applied to these SAME stored working tokens recover
+location98.4375/85.9375% for writer7801,76.5625/75% for7802. These are conditional
+access controls, not information ceilings. The weaker writer and probe dependence
+still limit interpretation; failure after the repair cannot prove erased identity.
+
+Training seconds in the order above:241.590,176.859,171.921,170.862; total761.232
+(12.69min),424MiB peak reserved. Calibration and evaluation are separate; the split
+run's first-chunk timing/resources are preserved in its receipt. Fixed update
+budgets are matched; run-order/timing variation is not an efficiency claim.
+
+41 targeted tests and lint pass. Independent NumPy checks verify696 fitted-run
+metrics,348 unchanged-source metrics and32 stored-probe metrics (1,076 total;
+worst error2.50e-8). Split frame hashes are disjoint. The actual768+768 GPU resume
+preserves all774 prior ledger rows; the CPU test proves exact optimizer/RNG/sampler
+replay. All four standalone GPU exports reproduce logits/pixels exactly with the
+training IEEE/deterministic setup. A first audit script omitted that setup, failed
+GPU replay and was corrected; its unmatched control/CPU artifacts and repair note
+are retained. Training source and results were unchanged.
+
+CPU replay of raw observations still fails1e-4: max logit differences0.224920,
+0.156007,0.178067,0.092645; max pixel differences0.019403,0.005649,0.012029,0.005180.
+All categorical factual/image predictions agree on all128 episodes per run. This
+is the existing cross-device numerical issue, not fixed by memory training. Strict
+inference reproduction requires the same device and explicit precision setup:
+`from pathwm.io import seed_everything; seed_everything(8001)` before loading/running.
+
+The existing report renderer is unchanged. Each completed run and the combined
+overview are self-contained and structurally verified; browser QA unavailable.
+All four comparison panels and the exported score/learning-curve figure inspected.
+Raw results, source controls, fixed probe predictions, replay environments and
+audit receipts are in `runs/recall_repair_v1/`.
+
+Next proposed step: isolate temporal/snapshot routing. The current reader flattens
+both memories into one attention context and does not supply their timestamps.
+Compare an explicitly time-aware reader against this continuation, retaining raw
+stored-state controls and checking the weaker writer separately. This is an open
+hypothesis and needs a fresh bounded protocol; no extra training or larger model
+was launched after these failed gates.

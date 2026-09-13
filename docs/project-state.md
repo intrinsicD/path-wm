@@ -1,10 +1,22 @@
 # Current work
 
-**Frozen-writer recall repair in progress, 13 September:** Alex approved the next
-repair. [Active protocol](recall-repair-plan.md) compares matched native reader/
-workspace/output retraining with identity versus training-only memory calibration,
-on both frozen relocation agents.41 targeted tests and a separate16-update GPU
-development run pass; source snapshots/codecs remain frozen. Formal results pending.
+**Frozen-writer recall repair completed, 13 September:** focused retraining improves
+reset factual accuracy from48.44/50% to66.41/75%, and generated-image accuracy from
+47.66/51.56% to63.28/75%. Fixed memory calibration scores58.59/73.44% facts and
+57.03/73.44% images, worse in both matched pairs. All four runs fail the full90%
+reliability/pair/intervention screen; neither condition is promoted as a complete
+repair. Original checkpoints, writer, raw bank and codecs remain unchanged.
+Four1536-update fits,761.23s total,424MiB reserved;41 targeted tests and1,076 independent
+metric checks pass. GPU reloads exact with matched precision;768+768 resume preserves
+774 ledger rows. CPU answers agree, but numeric tolerance still fails (max logits
+0.224921, pixels0.019403). Fixed stored-value probes on these histories score98.44/
+85.94% for writer7801 and76.56/75% for7802: incomplete access/learning remains.
+Two public-only Claude reviews; reports structural-only, all comparison PNGs
+inspected. [Protocol/results](recall-repair-plan.md#results),
+[report](../runs/recall_repair_v1/report.html). Next proposed diagnostic: test temporal
+and snapshot distinctions at the memory reader, while retaining frozen-state access
+controls. Timestamps are stored but not consumed by its attention context; this is
+a concrete missing cue, not yet a demonstrated cause or guaranteed repair.
 
 **Frozen-state probes completed, 13 September:** four1536-update fits, two frozen
 agents × two reader seeds. Every direct encoder probe scores100%; before-storage
