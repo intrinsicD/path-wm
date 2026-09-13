@@ -913,3 +913,75 @@ names/counts. Compatibility receipts live separately under `runs/writer_reader_v
 original writer-study receipts are retained. Joint parameters85,560. Development16
 updates3.243214s,404MiB; structural report and inspected panel pass. No quality tuning;
 source is committed before the two formal fits and fresh baseline evaluations.
+
+## Joint observer and workspace-reader results
+
+Source 872b4d7. Both final 1024-update joint fits pass the full task gate on fresh
+test 7783; both unchanged writer-only baselines fail it. Exact matched scores:
+
+| Training seed / policy | Ordinary facts | Ordinary images | Reset facts | Reset images |
+| --- | ---: | ---: | ---: | ---: |
+| 8501 writer only | 84.375% | 90.625% | 81.25% | 75% |
+| 8501 writer + thinker | 99.21875% | 90.625% | 100% | 95.3125% |
+| 8502 writer only | 86.71875% | 83.59375% | 81.25% | 75.78125% |
+| 8502 writer + thinker | 93.75% | 92.1875% | 94.53125% | 91.40625% |
+
+All required pair, causal erasure, alternate-target swap and pixel-baseline gates
+pass for both joint fits. The separate five-point benefit gate passes only 8502;
+8501 ordinary image accuracy is unchanged. Replicated full task success therefore
+passes, while the stricter combined task-and-benefit gate fails. Neither threshold
+was revised. Joint training ordinary facts/images reach 100/91.015625% and
+97.65625/92.578125%; reset 100/97.265625% and 97.265625/91.796875%.
+
+Same train/validation data, initial full model, sampler states, optimizer settings
+and update budgets are verified. Baselines retain source bc7a7a6 and original config,
+checkpoint and training evidence; their fresh test outputs have separate evaluation
+provenance. No baseline retraining or use of old test 7773 scores in this comparison.
+Joint changes both permitted updater and thinker; baseline changes only updater.
+All frozen parameters/buffers remain equal to the original source. Every actual
+write has matching replay values, source and time; detached inference, bank-order
+invariance and temporary replay outputs pass on CPU and GPU. GPU exports are exact.
+
+52 relevant CPU tests pass, including new RED-first gradient/freeze and joint exact
+odd-step resume/export checks. Independent scoring verifies 1,826 metrics: 948 fresh
+checkpoint-test metrics, 212 training-fit metrics (including original baseline
+arrays), 474 unchanged-source metrics and 192 frozen-reader metrics. The earlier
+513+511 GPU restart belongs to the writer-only baseline; joint restart is tested
+by the CPU resume test, not claimed as another formal GPU restart. Default-off
+loading reproduces all four old writer-study GPU exports and trainable sets exactly.
+
+CPU numerical portability still fails at tolerance 1e-4. Maximum native logits
+0.2179412842 and image pixels 0.0079333782; joint 8501 ordinary factual shape changes
+at case 67 (GPU [2,0,0], CPU [2,1,0]). Reused writer 8502 ordinary image side changes
+at case 76 (GPU [3,0,0], CPU [3,0,1]). Other ordinary and all reset categories agree
+here. Capability scores are GPU results. Frozen readers are rescored on changed
+coordinates and cannot establish absence of information from failed predictions.
+
+Joint training takes 369.148984s, peak reserved 423,624,704 bytes (404MiB). Fresh
+baseline evaluation takes 18.056552s, zero optimizer updates. Combined formal training
+across the two iterations is 850.903451s for six fits; separate developer runs use
+3.190238s and 3.243214s. No cache preparation, budget expansion or test-guided tuning.
+Every completed run and comparison has a standalone structurally verified report;
+development, all eight formal/evaluation panels and both comparison charts inspected.
+Browser QA remains unavailable. Raw records: `runs/writer_reader_v1/verification.json`,
+`default_off_compatibility.json`, `implementation_checks.json`, per-run `reuse.json`
+and [report](../runs/writer_reader_v1/report.html).
+
+Interpretation: joint adaptation is sufficient for the declared task screen in two
+optimization seeds from one original model. This does not identify a uniquely broken
+writer/reader component, demonstrate independent-source robustness or establish
+general entity learning. Image scores measure synthetic color/shape/side correctness;
+rendered outputs retain artifacts despite passing pixel controls. Next proposed:
+replicate across independently initialized upstream models before extending histories
+or distractors; keep CPU portability and broad multimodal capability gaps open.
+
+Reproduce a joint fit with a fresh output directory (preserve completed runs):
+
+```bash
+OMP_NUM_THREADS=2 .venv/bin/python -m experiments.memory_output \
+  --weights runs/mixed_context_v1/agent_7802_mixed/weights.pt \
+  --repair identity --readout-stage native --readout-context mixed \
+  --writer-learning trainable --train-thinker --seed 8501 \
+  --validation-seed 7772 --test-seed 7783 --device cuda:0 \
+  --output runs/joint_writer_reproduction
+```

@@ -1,15 +1,34 @@
 # Current work
 
-**Writer-only learning comparison completed; joint follow-up in progress, 13 September:**
-unfreezing the shared updater gives partial gains but both repeats fail full reliability.
-Ordinary facts/images83.59/89.84% and86.72/82.81%; both reset81.25/75%. Four1024-update
-fits,481.75s training,404MiB peak;50 tests and1,826 independent metrics pass. Actual
-historical gradients exist; GPU exports/replay exact. CPU one ordinary factual-side
-answer changes. [Writer comparison](../runs/writer_learning_v1/report.html).
-The authorized next iteration adds opt-in thinker learning and reuses these matched
-writer-only baselines through fresh test7783 evaluations. Plan declared in
-[active protocol](recall-repair-plan.md#joint-observer-and-workspace-reader-protocol--13-september);
-new RED check demonstrated before implementation. No joint formal run started yet.
+**Joint writer and workspace-reader learning completed, 13 September:** both new
+fits pass the full controlled-task gate. Ordinary facts/images are 99.219/90.625%
+and 93.750/92.188%; reset 100/95.313% and 94.531/91.406%. The matched writer-only
+checkpoints fail the task gate on the same fresh test. The separate five-point
+benefit gate passes only seed 8502: seed 8501 ordinary image accuracy is unchanged.
+Thus replicated task success passes; the stricter combined repair-and-benefit claim
+fails. These are two optimization seeds from one upstream model, familiar synthetic
+objects and supplied snapshots; independent source replication remains open.
+
+Opt-in `--train-thinker` adds workspace-reader learning to `--writer-learning trainable`
+and live mixed ordinary/reset output training. Encoders, reconstruction backend and
+other frozen components stay fixed; inference banks stay detached. All 52 relevant
+tests pass, including joint exact resume. Default-off old exports reproduce exactly.
+New GPU outputs and bank/replay checks are exact; 1,826 metrics independently checked.
+CPU numerical equivalence fails: one joint factual-shape answer and one reused-baseline
+image-side answer change in ordinary mode. Images still have residual artifacts;
+template correctness is not general image quality. Browser QA unavailable; structural
+reports and inspected figures retained. [Report](../runs/writer_reader_v1/report.html),
+[protocol/results](recall-repair-plan.md#joint-observer-and-workspace-reader-results).
+
+The preceding writer-only iteration produced partial gains but failed all full gates:
+ordinary facts/images 83.59/89.84% and 86.72/82.81%; both reset 81.25/75% on its own
+test population. Four fits took 481.75s; two joint fits took 369.15s. Total new formal
+training this turn: six fits, 850.90s, 404MiB peak reserved. Two unchanged baselines
+were freshly rescored for the joint comparison with original provenance preserved.
+Four bounded public-only Claude design reviews; implementation reviewed locally.
+[Earlier comparison](../runs/writer_learning_v1/report.html). Next proposed validation:
+replicate the joint recipe across independently initialized upstream models before
+expanding history length or distractors. No further training launched.
 
 **Mixed ordinary/reset training completed, 13 September:** training only native
 output heads on both workspaces repairs the stronger source on the controlled task.
