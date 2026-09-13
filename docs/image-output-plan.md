@@ -389,3 +389,75 @@ gates. This distinguishes repaired familiar generation from generalization. No
 post-confirmation optimizer updates, solver selection or revised gate. The original
 comparison remains failed regardless of this follow-up. Review the generic progress
 weighting method with Claude; no private results are exported.
+
+## Conditional generator results
+
+Completed14 September. Initial comparison source98ca98f, pure-noise option7314c56.
+Three terminal1024-update fits,314,576 trainable generator parameters each, identical
+initial tensors and sampler/CPU/CUDA RNG ledgers. Upstream state, memory, factual
+outputs and own codec remain fixed. The new64-wide generator avoids the original
+48-to32 input rank bottleneck; no further architecture change or pretrained model.
+
+Fresh41073/41074: direct seen-category accuracy100%, withheld0%, for both ordinary
+and reset contexts. Uniform-flow reset accuracy averages14.0625% seen and1.5625%
+withheld; ordinary15.625%/1.5625%. Neither method passes any of4 capability cells.
+The direct baseline meets its predeclared seen-case usability criterion, so the
+flow benefit is assessable and fails: mean ordinary/reset weighted MSE0.05551782
+versus0.00828599 direct, with category regressions. The original reference passes
+2/2 cells at100%; its broader prior exposure precludes treating it as the matched
+new-producer training control.
+
+Validation-only diagnostic: at pure noise, one-pass endpoint categories18.75% seen
+and6.25% withheld; at progress.25 with target-containing features,100%/100%. Euler32
+sampling remains12.5%/6.25%, versus Euler8 at12.5%/6.25%. No sampler was selected.
+This implicates weak target-free conditioning in the tested model, without proving
+an exclusive cause or establishing that more optimization/capacity cannot help.
+The target-containing diagnostic is not an inference capability.
+
+Separately declared half-mass-at-zero training preserves the default loss, metrics,
+RNG and gradients exactly when disabled. It also passes exact resumed training
+when enabled. On new42073/42074, mean ordinary/reset weighted pixel error falls
+0.05558942→0.04130464 (25.697% reduction). However, reset seen accuracy averages12.5%
+and withheld15.625%; ordinary10.9375%/16.40625%. Primary seen-case repair fails and
+full capability0/4. Withheld nonregression passes but does not rescue the failed
+repair. Do not adopt these experimental checkpoints or describe the image generator
+as solved. No post-confirmation optimizer update or further solver selection.
+
+60 distinct relevant tests,1026 NumPy-reproduced formal metrics,18 exact64-history
+GPU confirmation reloads plus3 validation exports. Initial tensors, frozen values,
+all three formal samplers/RNG and saved source snapshots verified. GPU training
+28.140s/27.940s/28.653s, total84.734s; maximum reserved1116MiB. This peak includes the
+first driver's full-cache teacher audit, not just isolated training updates. Disk
+remains5.6GiB free. All26 reports structurally checked; overview/development figures
+inspected. Browser QA remains unavailable. Four actual generic Claude reviews,
+private implementation/results reviewed locally; receipts retain the compute-label
+wording disagreement. Earlier preflight swap-subgroup scoring predates the correction;
+its teacher adequacy and overall gates are unchanged, and the original receipt stays.
+
+[Report](../runs/conditional_image_v1/report.html),
+[figure](../runs/conditional_image_v1/overview.png),
+[raw verification](../runs/conditional_image_v1/verification.json),
+[follow-up](../runs/conditional_image_v1/anchor_verification.json),
+[software/replay](../runs/conditional_image_v1/software.json).
+
+### Run and load this experiment
+
+```bash
+.venv/bin/python -m experiments.conditional_image --weights runs/producer_refinement_v1/source_8502_control/weights.pt --output runs/conditional_image_new --device cuda --objective flow
+.venv/bin/python -m experiments.conditional_image --weights runs/producer_refinement_v1/source_8502_control/weights.pt --output runs/conditional_image_zero_new --device cuda --zero-progress-probability .5
+.venv/bin/python -m experiments.conditional_image --weights runs/conditional_image_v1/flow_zero/weights.pt --output runs/conditional_image_eval_new --device cuda --evaluate-only --test-seed 42075
+```
+
+Use a fresh output directory. `--stop-after` plus `--resume` preserves same-source,
+same-device progress; repeat the original objective/development/progress options.
+A mismatch is rejected. `pathwm.models.memory_output.load_model` strictly restores
+the standalone export without needing its donor file. Standard model calls run
+history/recall normally; for controlled sampling, call its image decoder with the
+normalized working/reasoning context and explicit seed/sample IDs. The fixed request
+is to render the selected object; arbitrary textual conditioning is not trained.
+
+Next proposal: add decoded-image supervision through the frozen head while keeping
+architecture/progress settings fixed, then compare fresh state-binding outcomes.
+The current latent-only objective does not ensure visible content accuracy. Continue
+checking withheld combinations separately from fitting familiar ones. This is an
+unexecuted next comparison, not a known repair or permission to overwrite prior runs.

@@ -21,6 +21,19 @@ the losses. There is no model registry or hidden experiment coordinator.
 
 ## Controlled visual memory output
 
+`ConditionalFeatureGenerator` is an optional replacement for the image producer,
+constructed by `configure_generator` and restored through `feature_generator`
+export settings. Separate context/hidden widths, per-scale residual attention,
+workspace cross-attention and joint-scale fusion predict every codec feature.
+The direct variant regresses clean features; the flow variant integrates a learned
+field from locally seeded noise. Explicit sample IDs control reproducible noise
+without entering network context. Generation progress never updates world time.
+Training uses detached codec targets; generator-only inference has no encoder input.
+Old exports retain StateFeatureDecoder. The [first comparison](image-output-plan.md#conditional-generator-results)
+and follow-up fail capability gates; these are experimental weights, not a default
+upgrade. This recipe trains a fixed selected-object request through working/reasoning
+tokens, not arbitrary natural-language image requests.
+
 `MemoryOutput` connects detached episodic snapshots to native factual and image
 outputs through working/reasoning tokens. Its optional `workspace_reference` is a
 frozen `TokenProbe`: fixed training-channel statistics followed by an attention

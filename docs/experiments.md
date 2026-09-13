@@ -10,6 +10,13 @@ to the same training loop. [Task contracts and evaluation](tasks.md).
 
 The following perception/dynamics recipes remain focused references.
 
+`experiments/conditional_image.py` trains the optional multiscale image generator
+on frozen memory contexts, with direct-regression and flow-matching objectives.
+The [commands, comparison and limits](image-output-plan.md#conditional-generator-results)
+include its pure-noise weighting option, strict checkpoint loading and resume.
+The completed comparisons fail capability gates; the original renderer remains
+the default. This is a controlled64px experiment, not general image generation.
+
 The [hierarchy/fusion comparison](hierarchy-fusion-plan.md) tests additional per-scale
 transformer depth and final attention over all scales on real COCO RGB/foreground:
 

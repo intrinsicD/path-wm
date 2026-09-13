@@ -1,11 +1,31 @@
 # Current work
 
-**Output extension proposed, 13 September:** preserve the agent design and add an
-optional conditional image-feature generator using residual transformers per scale
-and cross-scale attention. Start with our own encoder/decoder; pretrained output
-components remain an optional comparison. [Concrete proposal](image-output-plan.md#proposed-extension-after-the-marigold-v2-discussion).
-No generator implementation or new training run yet; the factual-readout result
-and pending optimization comparison below remain separate.
+**Conditional image generator implemented and compared, 14 September:** optional
+residual transformers per scale and cross-scale attention produce all image-decoder
+features from the existing workspace. Agent and own codec stay frozen; no pretrained
+download or default replacement. [Report](../runs/conditional_image_v1/report.html),
+[implementation/results](image-output-plan.md#conditional-generator-results).
+
+Both new methods fail the declared capability gates. Direct regression reaches100%
+on combinations seen by the new generator and0% on withheld combinations. Uniform
+flow sampling is poor even on seen cases. A separate pure-noise-weighting fit lowers
+fresh weighted pixel error25.7% but still fails faithful generation. Original native
+outputs remain100% in these neutral reference cells; its upstream/renderer already
+saw all categories, so it is descriptive rather than the matched training control.
+All factual answers and the frozen state/memory/codec remain unchanged.
+
+Three1024-update fits,314,576 new trainable parameters each,84.73s formal training,
+peak1116MiB.60 distinct scoped tests,1026 independently reproduced metrics,18 exact
+GPU confirmation replays and3 validation reloads.26 reports structurally checked;
+figures inspected, browser QA unavailable. Four actual public-method Claude reviews;
+one terminology disagreement retained. No private code/data/results exported.
+
+Next proposed comparison: decoded-image supervision through the frozen codec,
+holding the generator and progress policy fixed; retain pure-noise and withheld
+binding checks. Latent loss alone was insufficient at this budget; this is not an
+intrinsic architecture or capacity limit. General photographic generation, arbitrary
+text requests, compact memory and other modalities remain open. The separate factual
+readout optimization proposal below is still pending.
 
 **Factual readout comparison completed, 13 September:** the proposed joint continuation
 fails its declared benefit. Warm/texture factual errors increase10→14/512 correlated
