@@ -350,3 +350,42 @@ targets. Corrected flow development16 updates completes at158MiB peak; direct16 
 completes. Reports structurally verified and the flow development panel inspected.
 The tiny development outputs remain untrained/noisy; no quality selection follows.
 Freeze library/recipe source before the formal fits and fresh confirmation.
+
+Post-confirmation diagnostic, declared before execution: keep the completed fits
+and all formal8-step results fixed. On validation41002 only, seed13, inspect reset
+outputs with Euler1/8/32 and field predictions at progress0/.25/.5/.75/.9, all with
+paired fixed noise. Compare predicted endpoint and unchanged noisy input against
+the teacher feature target; record seen/unseen categories and feature error. No
+optimization, checkpoint selection, extra confirmation fit or revised pass gate.
+The intermediate-progress inputs contain target information and are diagnostic
+teacher-forcing probes, not evidence of state-only generation. GPU cap3GiB and
+wall60s; store all results before interpretation. This separates a wrong/noisy
+initial field from accumulated sampling error without assuming either explanation.
+
+## Pure-noise conditioning follow-up — 14 September
+
+The first frozen comparison is complete and retained: direct fits seen generator
+combinations but fails unseen combinations; flow sampling is poor even on seen
+ones. Validation-only field diagnostics recover100% categories when progress.25
+supplies partial target features, versus weak pure-noise endpoint prediction;
+Euler32 does not repair it. This motivates a separately declared objective-weighting
+comparison, not extension or selection within the earlier fixed fit.
+
+One new fit from the same deterministic source and same generator initialization,
+training data, seed41011,314,576 parameters, optimizer and1024-update/batch8 budget.
+Set probability.5 of exact progress0; otherwise uniformly sample(0,1). Implement
+this by remapping the existing uniform draw, preserving noise and sampler draws.
+Only progress weighting changes; no target input at progress0, no pixel/semantic
+loss, architecture, sampling or upstream change. Compare the retained uniform-flow
+checkpoint, not an extra selected candidate. Existing loss with probability0 must
+retain its original algebra/RNG. New fit cap300s,3GiB GPU reserved,1GiB GPU free,
+3GiB disk free; same report/checkpoint requirements. Separate fit name flow_zero.
+
+Fresh42073/42074 confirmations,32 pairs each, seeds13/29, Euler8. Primary repair:
+seen ordinary/reset image categories>=.95 and weighted RGB MSE<=.01 in every cell;
+unseen categories cannot regress versus the retained uniform-flow checkpoint.
+Full capability still requires the original seen/unseen and memory-intervention
+gates. This distinguishes repaired familiar generation from generalization. No
+post-confirmation optimizer updates, solver selection or revised gate. The original
+comparison remains failed regardless of this follow-up. Review the generic progress
+weighting method with Claude; no private results are exported.

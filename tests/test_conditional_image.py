@@ -218,3 +218,15 @@ def test_swapped_scores_use_counterfactual_targets_and_composition_groups():
     metrics = score(a)
     assert metrics["reset_swapped/seen"]["weighted_mse"] == 0
     assert metrics["reset_swapped/unseen"]["image_accuracy"] == 1
+
+
+def test_zero_progress_mixture_has_no_extra_rng_and_keeps_zero_policy_exact():
+    from experiments.conditional_image import progress_mixture
+    draw=torch.tensor([0., .1, .49, .5, .75, .99])
+    rng=torch.get_rng_state().clone()
+    assert progress_mixture(draw,0) is draw
+    actual=progress_mixture(draw,.5)
+    assert torch.equal(actual,torch.tensor([0.,0.,0.,0.,.5,.98]))
+    assert torch.equal(rng,torch.get_rng_state())
+    for p in [-.1,1.,float('nan')]:
+        with pytest.raises(ValueError):progress_mixture(draw,p)
