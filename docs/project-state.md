@@ -1,5 +1,39 @@
 # Current work
 
+**Brightness repair comparison completed, 13 September:** opt-in frame centering
+passes all 12 confirmation conditions with 100% factual/image-category accuracy,
+including full causal task gates, neutral retention and stress benefit. It uses
+unchanged source weights and a fixed RGB reference from verified neutral training
+observations. Available as `--evaluate-only --center-input`; it is a task-specific
+preprocessing diagnostic, not learned invariance or a default deployment policy.
+[Report](../runs/brightness_repair_v1/report.html),
+[protocol/results](recall-repair-plan.md#brightness-repair-results).
+
+Matched output-head augmentation gives partial improvement but fails repair:
+4/4 neutral task cells pass, 0/8 stress task cells pass; neutral retention passes
+only 1/4 cells and stress benefit 6/8. Neutral-only continuation retains 100%
+neutral answers but fails every stress gate. Augmented heads also underfit seen
+training extremes, so failure does not uniquely diagnose an encoder problem.
+Both explored source checkpoints share one upstream initialization/codec; fresh
+seeds23073/23074 and RGB offsets−12/0/+12 test familiar synthetic scenes and
+perturbation interpolation. Earlier negative screens remain preserved.
+
+Four matched 1,536-update fits train only 67,032 factual/image-feature parameters;
+all state/encoder/backend tensors stay fixed. Training139.52s, peak712 MiB; 48-cell
+evaluation/report loop365.40s. All78 relevant tests pass;13 focused checks rerun
+after fixing CUDA median incompatibility with deterministic sorting. All48 GPU
+replays and original default exports are exact;12,536 metrics independently
+verified plus80 descriptive training-offset accuracies. CPU numeric1e-4 fails
+all48 cells; native categories differ in11, none centered. Two public-only Claude
+reviews, private implementation/results reviewed locally. All53 individual reports
+and overview structurally checked, figures inspected; browser QA unavailable.
+
+Next proposed: challenge the centering reference with varied backgrounds, object
+coverage and nonuniform illumination before making it a default. For learned
+robustness, diagnose the head/state optimization shortfall with a fresh protocol;
+no encoder replacement follows from this fixed-budget result. No further fit or
+deployment launched.
+
 **Fixed-checkpoint nuisance screen completed, 13 September:** both continuation
 policies pass all six neutral cells, but none of their twelve brightness-stress
 cells or five-point retention checks. Joint continuation retains 100% facts/images

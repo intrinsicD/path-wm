@@ -1497,3 +1497,93 @@ Development16-update augmented fit completes with a verified report/inspected pa
 Eight old training/inference/scoring function ASTs unchanged. No formal test scores
 used to change the protocol. Centering reference is serialized in evaluation records;
 it remains an explicit evaluation-time diagnostic, not a modified weight export.
+
+## Brightness repair results
+
+Plan/RED ebc04b7; implementation/formal source 9ff3be3. Four matched fits completed
+at 1,536 updates of batch16, adapting 67,032 factual/image-feature parameters each.
+Initial models, sampler/RNG states, presentations and targets match within source;
+all frozen parameters/buffers remain exact. Only permitted output parameters change.
+No encoder, updater, thinker, memory policy, image backend or calibration is trained.
+Original neutral source weights remain unchanged for the centering diagnostic.
+
+| Condition | Neutral full task | Stress full task | Neutral retention | Stress benefit |
+| --- | ---: | ---: | ---: | ---: |
+| Unchanged source | 4/4 | 0/8 | 4/4 | Not applicable |
+| Neutral-only heads | 4/4 | 0/8 | 4/4 | Not applicable |
+| Augmented heads | 4/4 | 0/8 | 1/4 | 6/8 |
+| Centered source | 4/4 | 8/8 | 4/4 | 8/8 |
+
+Each conjunction requires all its cells; augmentation fails stress task passage,
+neutral retention and the separate benefit conjunction. Centering passes them all,
+with 100% ordinary/reset factual and image-category accuracy on every population.
+This is a zero-optimizer-update preprocessing result, not a newly trained checkpoint.
+It is exposed through `--evaluate-only --center-input`, records its training-only
+reference, and remains opt-in. Existing default exports still reproduce exactly.
+
+| Augmented input | Ordinary facts | Ordinary images | Reset facts | Reset images |
+| --- | ---: | ---: | ---: | ---: |
+| −12 | 59.375–69.531% | 64.063–76.563% | 66.406–67.969% | 62.500–69.531% |
+| Neutral | 94.531–100% | 93.750–96.094% | 92.969–100% | 93.750–95.313% |
+| +12 | 85.938–93.750% | 87.500–92.969% | 79.688–86.719% | 89.844–91.406% |
+
+Ranges describe declared cells, not independent-model uncertainty. Neutral-only
+continuation and original sources score100% on neutral inputs but fail every stress
+full-task gate. Both sources share one upstream initialized agent and codec; new
+backgrounds and intermediate offsets do not establish unseen semantics, realistic
+lighting, general generation or perfect pixel reconstruction. Canonical targets and
+complete paired/quartet histories stay unchanged; no clipping or test-based choice.
+
+A post-hoc descriptive breakdown of saved training predictions adds80 per-offset
+accuracies without a new gate or fit. At the seen −16 training offset, augmented
+factual accuracy is46.094–62.891% across sources/query modes. Thus the limitation
+already occurs on training variants; it cannot be attributed solely to interpolation
+at new offsets. Equal budgets do not equalize optimization difficulty. Optimization,
+head capacity and accessibility of frozen working states remain alternatives; no
+unique encoder information-loss or replacement conclusion follows.
+
+Centering removes uniform additive shifts algebraically: median(x+c)=median(x)+c
+without clipping. Task success is a separate empirical result. A dominant stable
+background motivates the chosen reference, which can remove meaningful absolute
+intensity elsewhere. Every observed frame is processed independently before the
+encoder, including recalled/replayed state formation, while time, validity and
+derived provenance are preserved. No labels, target pixels, shift metadata, mask
+or future frame enters the operation. GPU preflight initially rejected CUDA median
+under deterministic execution; failure log retained, deterministic sort implements
+the same lower median and passes all bounds/equivariance checks.
+
+All78 relevant tests pass and13 focused checks pass after that correction, including
+augmentation alignment, cached/live gradients, exact odd-step resumed training,
+standalone loading and centered immutable-export/report-failure behavior. NumPy
+independently reproduces12,536 recorded metrics:11,376 confirmation,948 original
+fit-export and212 training-fit metrics. Maximum confirmation metric discrepancy
+1.118e-8. All48 ordinary/reset GPU replays over128 histories are bitwise exact, as
+are both original default exports. All48 first16-history sampled bank source/value/
+time/order/replay traces pass, including source-equivalent frozen workspaces for
+trained heads. Sampled traces are not an exhaustive intermediate-tensor proof.
+
+CPU tolerance1e-4 fails all48 cells: maximum native-logit discrepancy4.991394043,
+pixels0.035994232. Native categories differ in11 cells (4 augmented,4 control,
+3 unchanged,0 centered). Counts: ordinary factual2/image3, reset factual4/image9
+example/query/checkpoint comparisons, potentially overlapping. Centered categories
+match GPU throughout, but numerical portability is not repaired. Earlier failures
+and their original thresholds are retained.
+
+Training139.516520s (2.33min), all-fit loop276.386649s including cache preparation
+and reports;48-cell evaluation/report365.402301s (6.09min). Peak training reservation
+746,586,112 bytes (712 MiB), within4GiB cap. Development16 updates1.191706s, isolated
+from formal confirmation. Two bounded actual Claude public-only design/reconciliation
+reviews; private implementation/results reviewed locally. Fifty-three individual
+reports plus overview verified structurally; heatmap, loss curves and representative
+panels inspected. Browser QA unavailable. No new fit selected from these outcomes.
+
+[Report](../runs/brightness_repair_v1/report.html) includes exact cells, continuous
+margins, training curves, per-offset training diagnostics, eight predetermined
+comparison panels, calibration provenance and full audit receipts. Run-local scripts
+and raw JSON/NPZ/checkpoints are retained under `runs/brightness_repair_v1`.
+
+Next proposed: vary backgrounds, object coverage and nonuniform illumination in a
+new declared screen before treating centering as a default input policy. If pursuing
+learned invariance, first investigate the head/state optimization shortfall under a
+fresh protocol with neutral retention. No automatic deployment or further training
+was performed; current test populations are now examined diagnostic evidence.
