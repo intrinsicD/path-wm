@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T15:16+02:00
-  turn_count: 11
-  summary: "Existing-source robustness fails: stronger source100% under both policies, weaker joint images86.7\u2013\
-    93.8% on fresh test. Four fits515.28s,404MiB;54 tests,2794 metrics,exact GPU replay. Shape-output\
-    \ and CPU portability gaps retained."
+  last_turn: 2026-09-13T16:14+02:00
+  turn_count: 12
+  summary: Image-only and joint continuation both reach100% held-out image categories; joint facts100%.
+    GPU flag-dependent invariant failure repaired without fitting;58 tests,3056 metrics,507.67s training,404MiB.
+    CPU numeric limits and conditional scope retained.
 
 events_logged:
 - turn: 1
@@ -356,6 +356,60 @@ events_logged:
   routing: crystallized
   provenance: user-revised
   summary: O198 validation method adopted; existing-source limitation explicit.
+- turn: 12
+  type: decision
+  id: N299
+  routing: direct
+  provenance: user
+  summary: Adopt O200 frozen-state image-output continuation with Claude.
+- turn: 12
+  type: experiment
+  id: N300
+  routing: direct
+  provenance: ai-executed
+  summary: Both policies reach100% images on fresh test; joint facts100%; shared upstream source.
+- turn: 12
+  type: dead_end
+  id: N301
+  routing: direct
+  provenance: ai-executed
+  summary: no_grad alone leaves trainability-dependent GPU numerics; frozen invariant fails.
+- turn: 12
+  type: experiment
+  id: N302
+  routing: direct
+  provenance: ai-executed
+  summary: Inference normalization restores exact invariance;58 tests,3056 metrics, no additional fitting.
+- turn: 12
+  type: observation
+  id: O201
+  routing: staged
+  provenance: ai-suggested
+  summary: Conditional frozen-state image recoverability, not general generation or independent robustness.
+- turn: 12
+  type: observation
+  id: O202
+  routing: staged
+  provenance: ai-suggested
+  summary: Normalize inference trainability and restore flags on all exits.
+- turn: 12
+  type: observation
+  id: O203
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose locked-checkpoint robustness before task expansion.
+- turn: 12
+  type: heuristic
+  id: H59
+  routing: crystallized
+  provenance: user-revised
+  summary: User adopts O200 controlled image-only versus joint method.
+- turn: 12
+  type: heuristic
+  id: H60
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O202 procedure committed in evaluator and failure checks.
 
 ai_actions:
 - turn: 1
@@ -497,6 +551,23 @@ ai_actions:
   - docs/project-state.md
   - runs/cross_source_v1/
   - ara/evidence/tables/cross_source_2026-09-13.json
+- turn: 12
+  action: Two bounded actual public-only Claude reviews; image-only implementation with RED checks,16-update
+    development and four1024-update fits. Diagnosed GPU flag-dependent invariant failure, preserved original
+    scores, added RED checks and consistent evaluator.58 tests, six corrected evaluations plus development,
+    GPU/CPU/bank/freeze/provenance and3056-metric audits;14 reports plus overview, docs/commits. Fixed
+    development label with before copies.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/memory_output.py
+  - experiments/memory_output.py
+  - tests/test_direct_readout.py
+  - tests/test_memory_output.py
+  - docs/experiments.md
+  - docs/recall-repair-plan.md
+  - docs/project-state.md
+  - runs/image_continuation_v1/
+  - ara/evidence/tables/image_continuation_2026-09-13.json
 
 claims_touched: []
 key_context:
@@ -534,14 +605,18 @@ key_context:
   excerpt: User explicitly says Yes please and asks continued Claude planning/implementation/testing.
     Fresh robustness fails on weaker generated shapes despite factual correctness; next diagnostic proposed,
     no new training launched.
+- turn: 12
+  excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
+    this. Conditional image readout succeeds; original invariant failure repaired with no extra optimization,
+    CPU numerical differences remain.'
 
 open_threads:
-- 'N298/O199/O200: existing-source robustness fails on weak joint images; strong source reaches100% under
-  either policy. Targeted frozen-state image-output versus continued joint diagnostic proposed; blind
-  new-source/codec replication still open.'
-- "N278\u2013N298: CPU/GPU numerical tolerance unresolved. Current native max logits.2586591244/pixels.0092121363;\
-  \ one ordinary factual-shape flip, image/reset categories agree here. Earlier categorical differences\
-  \ retained."
+- 'N300/N302/O201/O203: both continuation policies reach100% image categories; joint facts100%. Hold checkpoints
+  fixed for fresh predeclared robustness; independent upstream/codec replication and task expansion still
+  open.'
+- 'N278-N302: CPU/GPU numeric tolerance unresolved, current logits0.1853666306/pixels0.0020754635; native
+  categories agree here, earlier flips retained. Recipe GPU flag normalization repaired; direct model
+  calls need matched flags.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
   and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and
@@ -580,4 +655,7 @@ ai_suggestions_pending:
 - 'O197: joint controlled-task sufficiency with limited replication and CPU portability.'
 - 'O199: source/sample-specific task success and conditional factual-versus-image discrepancy; no unique
   mechanism.'
-- 'O200: targeted image-output learning on frozen final joint states versus continued joint learning proposed.'
+- 'O201: conditional frozen-state output recoverability with shared upstream/codec; researcher interpretation
+  pending.'
+- 'O203: hold both completed policies fixed for fresh declared robustness before larger histories/real
+  observations.'

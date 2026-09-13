@@ -3533,6 +3533,55 @@ observations:
   bound_to:
   - N298
   - N296
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H59
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O201
+  timestamp: 2026-09-13T16:14+02:00
+  provenance: ai-suggested
+  content: For these two explored final states and familiar synthetic task, the existing image feature
+    producer can learn100% ordinary/reset image categories with state formation and facts frozen. Joint
+    reaches100% facts too. This is conditional readout recoverability, not absent encoder information,
+    unique decoder mechanism, independent-init reliability, perfect pixels or general generation.
+  context: Completed four-fit comparison and inference correction; researcher has not interpreted these
+    new outcomes. Unchanged controls also pass minimum task gates.
+  potential_type: claim
+  bound_to:
+  - N300
+  - N302
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O202
+  timestamp: 2026-09-13T16:14+02:00
+  provenance: ai-suggested
+  content: Normalize the recipe inference contract by temporarily freezing parameter trainability and
+    restoring all original flags even on exceptions; compare frozen-source states under matching flags.
+    no_grad alone did not equalize GPU numerics in this environment.
+  context: Committed evaluator and failure-path tests depend on this scoped procedure; no general claim
+    that all GPU kernels behave this way.
+  potential_type: heuristic
+  bound_to:
+  - N301
+  - N302
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H60
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O203
+  timestamp: 2026-09-13T16:14+02:00
+  provenance: ai-suggested
+  content: Hold both completed continuation policies fixed for a fresh predeclared robustness evaluation
+    before longer histories or real observations. Preserve CPU numeric and independent-source limits;
+    do not select larger capacity or budgets from this observed test.
+  context: Next proposal only; no further benchmark or fit launched.
+  potential_type: heuristic
+  bound_to:
+  - N300
+  - N302
   promoted: false
   promoted_to: null
   crystallized_via: null

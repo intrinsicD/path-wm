@@ -139,10 +139,10 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: "Existing-source robustness fails: stronger source100% under both policies, weaker joint images86.7\u2013\
-    93.8% on fresh test. Four fits515.28s,404MiB;54 tests,2794 metrics,exact GPU replay. Shape-output\
-    \ and CPU portability gaps retained."
-  turn_count: 11
-  events_count: 56
+  summary: Image-only and joint continuation both reach100% held-out image categories; joint facts100%.
+    GPU flag-dependent invariant failure repaired without fitting;58 tests,3056 metrics,507.67s training,404MiB.
+    CPU numeric limits and conditional scope retained.
+  turn_count: 12
+  events_count: 65
   claims_touched: []
   open_threads: 10

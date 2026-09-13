@@ -4808,3 +4808,86 @@ tree:
   - N296
   - N294
   status: resolved
+
+- id: N299
+  type: decision
+  title: Adopt frozen-state image-output versus joint continuation diagnostic
+  provenance: user
+  choice: Yes please; continue together with Claude, plan, implement, review, test, fix and iterate. Adopts
+    O200 method; exact flags, seeds, gates and budgets are agent choices.
+  alternatives:
+  - Expand codecs before readout diagnosis
+  - Continue joint training without a frozen-state comparator
+  evidence:
+  - O200
+  - N298
+  - docs/recall-repair-plan.md#image-output-continuation-protocol--13-september
+  timestamp: 2026-09-13T16:14+02:00
+  status: resolved
+- id: N300
+  type: experiment
+  title: Both output-continuation policies remove held-out image category errors
+  provenance: ai-executed
+  result: Four1024-update fits from final joint8501/8502 checkpoints, optimizer8601/8602, train7701,val19072,test19073,
+    source1964a33. Image-only58,128 parameters; joint85,560. Image-only ordinary/reset images100% in both;
+    facts8501 all100%,8502 ordinary97.65625/reset99.21875%. Joint facts/images100% both sources/modes.
+    All full and separate sufficiency/retention gates pass. Unchanged-source image ordinary/reset91.40625/97.65625%
+    and92.1875/90.625%, both already pass full gates on this sample.507.666166s new training,404MiB;16-update
+    development3.098006s. Same upstream initialization and codec; not independent-init replication. Original
+    bitwise frozen-state invariant fails despite unchanged parameters; investigated separately, original
+    results preserved.
+  evidence:
+  - ara/evidence/tables/image_continuation_2026-09-13.json
+  - runs/image_continuation_v1/before_inference_fix/original_metrics_audit.json
+  - docs/recall-repair-plan.md#image-output-continuation-results
+  also_depends_on:
+  - N299
+  - N298
+  - N296
+  timestamp: 2026-09-13T16:14+02:00
+  status: resolved
+- id: N301
+  type: dead_end
+  title: no_grad alone does not equalize trainability-dependent GPU numerics
+  provenance: ai-executed
+  hypothesis: Bitwise-identical frozen state formation follows from equal weights and no_grad despite
+    different serialized trainability flags.
+  failure_mode: GPU image-only/source factual logit deltas up to4.2915344e-5; workspace differences nonzero,
+    CPU exact. Source.requires_grad_(False) restores exact states in direct diagnostic with no weight
+    changes. No categorical difference. Original invariant and failed audit logs retained.
+  lesson: Use matched parameter trainability for bitwise inference comparisons; do not loosen the declared
+    gate or attribute tiny execution differences to learned state changes. No specific kernel cause inferred.
+  evidence:
+  - ara/evidence/tables/image_continuation_2026-09-13.json
+  - runs/image_continuation_v1/invariance_diagnostic.json
+  - runs/image_continuation_v1/before_inference_fix/source_invariance.json
+  also_depends_on:
+  - N300
+  timestamp: 2026-09-13T16:14+02:00
+  status: resolved
+- id: N302
+  type: experiment
+  title: Normalized evaluation restores exact frozen-state invariant without optimization
+  provenance: ai-executed
+  result: Repair090ab5a temporarily freezes parameter flags during evaluate and restores in finally, including
+    exceptions. Two RED regressions;58 relevant tests pass including exact resume/export. Six unchanged-checkpoint
+    evaluations on the same19073 test; original scores/checkpoints preserved, zero extra updates. All
+    categorical answers/full gates unchanged; maximum any saved-output numeric change0.0001435279846.
+    Corrected four GPU exports and source-equivalent frozen workspaces/factual logits exact; paired initialization/samplers
+    and frozen parameters/buffers, image updates and detached bank value/time/source/order/replay verified.3,056
+    independent metrics:1,422 original,1,422 corrected,212 training-fit. CPU1e-4 fails max native logits0.1853666306/pixels0.0020754635;
+    all native categories agree here, earlier categorical failures retained.14 individual reports plus
+    overview structurally verified, figures inspected, browser unavailable. Development limitation-text
+    error fixed with before copies/unchanged metrics. Two public-only Claude design exchanges; private
+    implementation/inference repair locally reviewed.
+  evidence:
+  - ara/evidence/tables/image_continuation_2026-09-13.json
+  - runs/image_continuation_v1/verification.json
+  - runs/image_continuation_v1/inference_repair_audit.json
+  - tests/test_memory_output.py
+  - experiments/memory_output.py
+  also_depends_on:
+  - N301
+  - N300
+  timestamp: 2026-09-13T16:14+02:00
+  status: resolved

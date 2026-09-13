@@ -574,3 +574,23 @@
 - **Sensitivity**: High. Existing explored sources and a shared codec yield conditional robustness evidence, not blinded independent-model replication. Fresh samples may fail earlier population-specific gates; retain both outcomes and numerical portability limits.
 - **Code ref**: [evaluation-only recipe](../../../experiments/memory_output.py), [provenance and failure checks](../../../tests/test_memory_output.py), [renderer](../../../pathwm/evaluation/report.py).
 - **Evidence**: N297/N298; [source comparison record](../../evidence/tables/cross_source_2026-09-13.json).
+
+## H59: Test image readout learning while preserving learned state formation
+
+- **Rationale**: Compare targeted image-feature-producer training on final frozen states with matched continued joint training. Keep ordinary/reset supervision, data, steps and optimizer sampling fixed; verify factual/state invariance and preserve causal task gates.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O200
+- **Sensitivity**: High. Two explored trajectories share an upstream agent/codec; policy differences include parameter count and coupled optimization. Conditional success does not imply general decoding or preferred training policy.
+- **Code ref**: [trainability](../../../pathwm/models/memory_output.py), [live recipe](../../../experiments/memory_output.py), [freeze tests](../../../tests/test_direct_readout.py).
+- **Evidence**: N299/N300/N302; [comparison proof](../../evidence/tables/image_continuation_2026-09-13.json).
+
+## H60: Normalize parameter trainability for comparable recipe inference
+
+- **Rationale**: In the recorded GPU environment, no_grad with differing parameter flags changes frozen-state numerics. Temporarily clear trainability during evaluation and restore all original flags in finally, including on failure. Direct state comparisons must use the same inference flags.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O202
+- **Sensitivity**: High. This repairs the observed recipe contract, not arbitrary backend or CPU/GPU equivalence. Original failed invariant and pre/post outputs remain separate; no categorical change or further optimization was used.
+- **Code ref**: [evaluate](../../../experiments/memory_output.py), [normalization/failure tests](../../../tests/test_memory_output.py).
+- **Evidence**: N301/N302; [inference correction proof](../../evidence/tables/image_continuation_2026-09-13.json).
