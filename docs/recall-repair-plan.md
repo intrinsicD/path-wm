@@ -1032,3 +1032,15 @@ Claude public-only review requested explicit prior-exploration ledger, codec che
 seed semantics and source/evaluation identity. Adopted; clarified fresh procedural
 test is from the same task distribution, so no literal absence of all correlation.
 Review receipts `cross-source*-receipt.json` under the existing reviews directory.
+
+Implementation: two RED provenance tests precede the new `--evaluate-only` path.
+All54 relevant tests pass. Development exposed a real JSON-list versus checkpoint-
+tuple comparison bug in nested calibration settings; a regression reproduced it,
+canonical JSON comparison fixed it, and both focused tests pass afterward. Failed
+`development_eval` remains preserved; `development_eval_fixed` completes with a
+structurally verified report. Training16 updates3.397702s; both development panels
+inspected. Training/objective/scoring function ASTs match872b4d7; model code unchanged.
+No training-policy change was introduced by the new evaluation entry point.
+Claude accepted the final clarifications: reconstructed exposure ledger, every-pair
+checks, ties count as success for both without superiority, and partial-render failure
+preservation without a power-loss guarantee. Three bounded public-only exchanges.

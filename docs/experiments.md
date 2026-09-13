@@ -282,3 +282,18 @@ with a fresh output; `--baseline-reference runs/capabilities_v1/reference` produ
 metric deltas only when the protocol/populations match. `--capability-weights`
 accepts explicit compatible checkpoint overrides. No training occurs. Separate
 component successes do not constitute one fully trained agent.
+
+Score an existing selected-object memory export on a fresh procedural test without
+training or changing its configuration:
+
+```bash
+OMP_NUM_THREADS=2 .venv/bin/python -m experiments.memory_output \
+  --weights runs/writer_reader_v1/seed_8501_joint/weights.pt \
+  --evaluate-only --test-seed 7793 --device cuda:0 \
+  --output runs/memory_export_evaluation
+```
+
+Use a new output directory. The export's original `run.json` must accompany it;
+new results record that provenance separately from evaluation code and data. No
+optimizer or training curve is created. Training overrides are rejected, and a
+report failure leaves completed metrics available. See the [active recall plan](recall-repair-plan.md).

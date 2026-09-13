@@ -13,7 +13,15 @@ from torch.nn import functional as F
 
 from pathwm.data.memory_output import MemoryOutputEpisodes, image_labels, BACKGROUND
 from pathwm.evaluation.report import write_report
-from pathwm.io import Run, atomic_json, file_hash, seed_everything, state_hash
+from pathwm.io import (
+    Run,
+    atomic_json,
+    file_hash,
+    seed_everything,
+    state_hash,
+    source_record,
+    environment,
+)
 from pathwm.models.memory_output import (
     make_codec,
     build_model,
@@ -705,6 +713,126 @@ def train(
         raise
 
 
+def evaluate_export(weights, data, *, output, device="cpu"):
+    """Score an unchanged export with separate training and evaluation identities."""
+    weights, output = Path(weights).resolve(), Path(output)
+    output.mkdir(parents=True, exist_ok=False)
+    atomic_json(
+        output / "status.json", dict(result="running", report="pending", step=0)
+    )
+    completed = False
+    try:
+        started = perf_counter()
+        checkpoint_hash = file_hash(weights)
+        origin_path = weights.parent / "run.json"
+        original = json.loads(origin_path.read_text())
+        settings = torch.load(weights, map_location="cpu", weights_only=True)[
+            "settings"
+        ]
+        if original["identity"]["settings"] != json.loads(json.dumps(settings)):
+            raise ValueError("Export settings differ from original training manifest")
+        model = load_model(weights, device)
+        model_hash = state_hash(model)
+        source = source_record(__file__, model)
+        atomic_json(
+            output / "run.json",
+            dict(
+                identity=dict(
+                    settings=dict(
+                        purpose="evaluation only; no optimization",
+                        example_labels={
+                            "input": "Held-out targets (never query inputs)",
+                            "rgb": "Reset-recall image outputs",
+                        },
+                    ),
+                    data=dict(test=data.identity),
+                    source_sha256=source["sha256"],
+                    environment=environment(device),
+                ),
+                source=source,
+                origin=dict(
+                    checkpoint_path=str(weights),
+                    checkpoint_sha256=checkpoint_hash,
+                    run_sha256=file_hash(origin_path),
+                    run=original,
+                ),
+            ),
+        )
+        (output / "recipe.py").write_text(Path(__file__).read_text())
+        (output / "metrics.jsonl").write_text("")
+        modes = [
+            "ordinary",
+            "ordinary_no_bank",
+            "reset",
+            "reset_erased",
+            "reset_swapped",
+            "erased_history",
+            "cue_erased",
+            "last_seen_erased",
+            "reset_time_erased",
+            "reset_time_swapped",
+        ]
+        scores, arrays = evaluate(model, data, device, modes)
+        if state_hash(model) != model_hash or file_hash(weights) != checkpoint_hash:
+            raise RuntimeError("Evaluation mutated the source model")
+        if not all(np.isfinite(v).all() for v in arrays.values()):
+            raise RuntimeError("Nonfinite evaluation output")
+        temporary = output / "predictions.partial.npz"
+        np.savez_compressed(temporary, **arrays)
+        temporary.replace(output / "predictions.npz")
+        atomic_json(
+            output / "runtime.json",
+            dict(training_seconds=0.0, evaluation_seconds=perf_counter() - started),
+        )
+        atomic_json(
+            output / "resources.json",
+            dict(
+                peak_cuda_reserved_bytes=torch.cuda.max_memory_reserved(device)
+                if torch.device(device).type == "cuda"
+                else 0,
+                training_performed=False,
+            ),
+        )
+        atomic_json(
+            output / "result.json",
+            dict(
+                completed=True,
+                evaluation_only=True,
+                step=0,
+                gate=passes(scores),
+                checkpoint_sha256=checkpoint_hash,
+                metrics=scores,
+                evaluation_scope="Fresh evaluation; original training provenance is in run.json. Zero optimizer updates.",
+            ),
+        )
+        completed = True
+        atomic_json(
+            output / "status.json", dict(result="completed", report="pending", step=0)
+        )
+        comparison_panel(output / "comparison.png", arrays)
+        write_report(
+            output,
+            {"rgb": torch.from_numpy(arrays["target"])},
+            {"rgb": torch.from_numpy(arrays["reset_image"])},
+        )
+        atomic_json(
+            output / "status.json",
+            dict(result="completed", report="structural-only", step=0),
+        )
+        return scores
+    except BaseException as exc:
+        atomic_json(
+            output / "status.json",
+            dict(
+                result="completed" if completed else "failed",
+                report="failed" if completed else "pending",
+                step=0,
+                error=f"{type(exc).__name__}: {exc}",
+            ),
+        )
+        raise
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--weights", type=Path, required=True)
@@ -723,6 +851,7 @@ def main():
     parser.add_argument("--standardize-output", action="store_true")
     parser.add_argument("--writer-learning", choices=("frozen", "trainable"))
     parser.add_argument("--train-thinker", action="store_true")
+    parser.add_argument("--evaluate-only", action="store_true")
     parser.add_argument("--workspace-reference", type=Path)
     parser.add_argument("--reference-weight", type=float, default=0.0)
     parser.add_argument("--validation-seed", type=int)
@@ -732,6 +861,50 @@ def main():
         "--curriculum", choices=("parity", "relocation"), default="parity"
     )
     args = parser.parse_args()
+    if args.evaluate_only:
+        if (
+            args.repair
+            or args.readout_stage
+            or args.writer_learning
+            or args.train_thinker
+            or args.normalize_input
+            or args.standardize_output
+            or args.workspace_reference
+            or args.reference_weight
+            or args.resume
+            or args.stop_after is not None
+            or args.check
+            or args.development
+            or args.validation_seed is not None
+            or args.readout_context != "reset"
+            or args.curriculum != "parity"
+        ):
+            parser.error(
+                "Evaluation-only loads export settings; training overrides are not allowed"
+            )
+        if args.test_seed is None:
+            parser.error("Evaluation-only requires an explicit test seed")
+        seed_everything(args.seed)
+        if torch.device(args.device).type == "cuda":
+            free, total = torch.cuda.mem_get_info(args.device)
+            limit = min(4 * 1024**3, free - 1024**3)
+            if limit <= 0:
+                raise RuntimeError("Insufficient GPU headroom")
+            torch.cuda.set_per_process_memory_fraction(
+                limit / total, torch.device(args.device).index or 0
+            )
+            torch.cuda.reset_peak_memory_stats(args.device)
+        saved = torch.load(args.weights, map_location="cpu", weights_only=True)[
+            "settings"
+        ]
+        data = MemoryOutputEpisodes(
+            64,
+            seed=args.test_seed,
+            split="test",
+            curriculum=saved.get("curriculum", "parity"),
+        )
+        evaluate_export(args.weights, data, output=args.output, device=args.device)
+        return
     if (
         not math.isfinite(args.reference_weight)
         or args.reference_weight < 0
