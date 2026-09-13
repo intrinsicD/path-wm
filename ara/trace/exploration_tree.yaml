@@ -4891,3 +4891,68 @@ tree:
   - N300
   timestamp: 2026-09-13T16:14+02:00
   status: resolved
+
+- id: N303
+  type: decision
+  title: Adopt fixed-checkpoint robustness before further adaptation
+  provenance: user
+  choice: Yes please; continue together with Claude, plan, implement, review, test, fix and iterate. Adopts
+    O203 method; exact offsets, seeds, gates and budgets are agent choices.
+  alternatives:
+  - Increase model capacity before fixed-model diagnosis
+  - Continue optimization on the inspected test
+  evidence:
+  - O203
+  - N300
+  - N302
+  - docs/recall-repair-plan.md#fixed-checkpoint-nuisance-robustness-protocol--13-september
+  timestamp: 2026-09-13T16:44+02:00
+  status: resolved
+- id: N304
+  type: experiment
+  title: Neutral retention passes while additive brightness robustness fails
+  provenance: ai-executed
+  result: '54 fixed-checkpoint evaluations: source8501/8502 image-only, joint and unchanged; background
+    seeds20073/20074/20075, 128 histories each, RGB offsets -16/0/+16, all10 causal modes. Each trained
+    policy passes6/6 neutral cells,0/12 stress full gates and0/12 five-point stress retention gates. Joint
+    neutral facts/images100% all modes/seeds. Image-only ordinary neutral facts96.094-100%,images98.438-100%;
+    reset95.313-100%/96.875-100%. Across stressed trained cells ordinary facts31.250-65.625%,images31.250-57.031%;
+    reset35.156-61.719%/35.156-57.813%. Direct reader neutral100%,-16=62.5%,+16=69.531-73.438%. Sources
+    pass3/6 neutral,0/12 stressed. Zero optimizer updates;449.777682s loop,429.097025s recorded evaluation,296MiB
+    peak. Same upstream initialization/codec and familiar semantic quartets; fresh seed varies background
+    only.'
+  evidence:
+  - ara/evidence/tables/output_robustness_2026-09-13.json
+  - runs/output_robustness_v1/verification.json
+  - docs/recall-repair-plan.md#fixed-checkpoint-nuisance-robustness-results
+  also_depends_on:
+  - N303
+  - N300
+  - N302
+  timestamp: 2026-09-13T16:44+02:00
+  status: resolved
+- id: N305
+  type: experiment
+  title: Transformation integrity and GPU replay pass; CPU portability fails
+  provenance: ai-executed
+  result: Nine RED transformation/CLI cases before implementation;67 relevant tests pass. Evaluation-only
+    offset with no clipping, inverse-pixel and canonical-color checks, unchanged targets/labels and paired
+    ambiguity, source/transform provenance; defaults and eight recipe ASTs/model source equal prior version.
+    Independently recompute12798 metrics and54 full gates, max error1.172e-8. All36 trained-model GPU
+    ordinary/reset exports exact, source/factual freeze and16-history sampled bank/workspace/replay invariants
+    pass. CPU1e-4 fails36/36,max native logits0.4816207886/pixels0.0140872598; native categories differ15/36
+    stressed cells,none neutral. Ordinary fact/image differences4/8,reset7/7 potentially overlapping example/query/checkpoint
+    comparisons. Original checkpoints/results preserved.55 individual reports plus overview structurally
+    verified, figures inspected,browser unavailable. Two actual public-only Claude design/reconciliation
+    reviews; private implementation/results reviewed locally.
+  evidence:
+  - ara/evidence/tables/output_robustness_2026-09-13.json
+  - runs/output_robustness_v1/final_checks.json
+  - pathwm/data/memory_output.py
+  - experiments/memory_output.py
+  - tests/test_memory_output.py
+  also_depends_on:
+  - N304
+  - N302
+  timestamp: 2026-09-13T16:44+02:00
+  status: resolved

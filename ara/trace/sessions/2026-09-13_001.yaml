@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T16:14+02:00
-  turn_count: 12
-  summary: Image-only and joint continuation both reach100% held-out image categories; joint facts100%.
-    GPU flag-dependent invariant failure repaired without fitting;58 tests,3056 metrics,507.67s training,404MiB.
-    CPU numeric limits and conditional scope retained.
+  last_turn: 2026-09-13T16:44+02:00
+  turn_count: 13
+  summary: 'Fixed-checkpoint brightness screen: both policies pass6/6 neutral and0/12 stress cells.67
+    tests,12798 metrics,36 exact GPU replays; CPU categories differ15 stressed cells.54 evaluations,zero
+    training,296MiB; augmentation/normalization follow-up proposed.'
 
 events_logged:
 - turn: 1
@@ -410,6 +410,43 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O202 procedure committed in evaluator and failure checks.
+- turn: 13
+  type: decision
+  id: N303
+  routing: direct
+  provenance: user
+  summary: Adopt O203 fixed-checkpoint robustness with Claude.
+- turn: 13
+  type: experiment
+  id: N304
+  routing: direct
+  provenance: ai-executed
+  summary: Neutral passage 6/6 per policy; additive brightness task/retention passage 0/12 each, no training.
+- turn: 13
+  type: experiment
+  id: N305
+  routing: direct
+  provenance: ai-executed
+  summary: 67 tests,12798 metrics,36 exact GPU replays; CPU numeric/category limits and provenance retained.
+- turn: 13
+  type: observation
+  id: O204
+  routing: staged
+  provenance: ai-suggested
+  summary: Broad input/readout sensitivity; neither decoder-only localization nor encoder information
+    loss established.
+- turn: 13
+  type: observation
+  id: O205
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose augmentation/normalization comparison with fresh confirmation and neutral retention.
+- turn: 13
+  type: heuristic
+  id: H61
+  routing: crystallized
+  provenance: user-revised
+  summary: O203 method adopted; neutral and stress gates remain distinct.
 
 ai_actions:
 - turn: 1
@@ -568,6 +605,21 @@ ai_actions:
   - docs/project-state.md
   - runs/image_continuation_v1/
   - ara/evidence/tables/image_continuation_2026-09-13.json
+- turn: 13
+  action: Two bounded public-only Claude design/reconciliation reviews; committed plan/RED and evaluation-only
+    RGB-offset implementation.67 tests, development export and54 fixed evaluations,12798-metric independent
+    audit,36 GPU/CPU replays plus sampled bank/source/workspace checks.55 individual reports and overview
+    structural/figure QA; documented negative stress and CPU findings, committed results. No weight updates.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/data/memory_output.py
+  - experiments/memory_output.py
+  - tests/test_memory_output.py
+  - docs/experiments.md
+  - docs/project-state.md
+  - docs/recall-repair-plan.md
+  - runs/output_robustness_v1/
+  - ara/evidence/tables/output_robustness_2026-09-13.json
 
 claims_touched: []
 key_context:
@@ -609,14 +661,18 @@ key_context:
   excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
     this. Conditional image readout succeeds; original invariant failure repaired with no extra optimization,
     CPU numerical differences remain.'
+- turn: 13
+  excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
+    this. Both fixed policies retain neutral performance but fail declared brightness stress; no performance
+    tuning on these scores.'
 
 open_threads:
-- 'N300/N302/O201/O203: both continuation policies reach100% image categories; joint facts100%. Hold checkpoints
-  fixed for fresh predeclared robustness; independent upstream/codec replication and task expansion still
-  open.'
-- 'N278-N302: CPU/GPU numeric tolerance unresolved, current logits0.1853666306/pixels0.0020754635; native
-  categories agree here, earlier flips retained. Recipe GPU flag normalization repaired; direct model
-  calls need matched flags.'
+- 'N304/N305/O204/O205: neutral continuation retention passes, brightness stress fails. Predeclare augmentation/normalization
+  diagnosis with fresh confirmation before longer histories/real observations; independent upstream/codec
+  replication still open.'
+- 'N278-N305: CPU/GPU numerical portability unresolved, current logits0.4816207886/pixels0.0140872598
+  and native-category differences15 stressed cells; prior cases retained. Current GPU outputs exact with
+  matched flags.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
   and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and
@@ -657,5 +713,7 @@ ai_suggestions_pending:
   mechanism.'
 - 'O201: conditional frozen-state output recoverability with shared upstream/codec; researcher interpretation
   pending.'
-- 'O203: hold both completed policies fixed for fresh declared robustness before larger histories/real
-  observations.'
+- 'O204: broad input/readout sensitivity under declared RGB shifts, without unique failure localization;
+  researcher interpretation pending.'
+- 'O205: predeclare augmentation/normalization comparison, frozen-feature reader diagnostic, neutral retention
+  and fresh confirmation.'

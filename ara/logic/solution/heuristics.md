@@ -594,3 +594,13 @@
 - **Sensitivity**: High. This repairs the observed recipe contract, not arbitrary backend or CPU/GPU equivalence. Original failed invariant and pre/post outputs remain separate; no categorical change or further optimization was used.
 - **Code ref**: [evaluate](../../../experiments/memory_output.py), [normalization/failure tests](../../../tests/test_memory_output.py).
 - **Evidence**: N301/N302; [inference correction proof](../../evidence/tables/image_continuation_2026-09-13.json).
+
+## H61: Measure robustness with learned checkpoints fixed before further adaptation
+
+- **Rationale**: Preserve completed image-only and joint policies while evaluating fresh declared populations and matched input perturbations. Keep neutral task retention, stress passage and engineering loss tolerance separate; inspect every cell and provenance before choosing the next repair.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O203
+- **Sensitivity**: High. This diagnoses the frozen checkpoints under the tested perturbation. Shared upstream initialization/codec and familiar semantics limit generalization; no training or independent-model replication follows from this method. GPU and CPU gates remain separate.
+- **Code ref**: [input transformation](../../../pathwm/data/memory_output.py), [immutable evaluation](../../../experiments/memory_output.py), [transformation/export checks](../../../tests/test_memory_output.py).
+- **Evidence**: N303/N304/N305; [robustness proof](../../evidence/tables/output_robustness_2026-09-13.json).

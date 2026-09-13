@@ -3582,6 +3582,41 @@ observations:
   bound_to:
   - N300
   - N302
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H61
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O204
+  timestamp: 2026-09-13T16:44+02:00
+  provenance: ai-suggested
+  content: The existing continued models retain their scoped neutral task performance but are strongly
+    sensitive to the tested additive RGB shifts. Facts, images and frozen direct readouts all deteriorate,
+    making a decoder-only account insufficient. This does not uniquely locate missing information in the
+    encoder, prove a physics-lighting model, or establish general robustness.
+  context: Fresh fixed-checkpoint negative stress results; researcher has not interpreted outcomes. Prior
+    neutral-sample results remain scoped and valid.
+  potential_type: claim
+  bound_to:
+  - N304
+  - N305
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O205
+  timestamp: 2026-09-13T16:44+02:00
+  provenance: ai-suggested
+  content: Next predeclare a brightness-augmentation training comparison and input-normalization diagnostic,
+    retaining neutral gates and fresh held-out confirmation. First test whether frozen features support
+    an adapted reader before deciding to retrain encoders. Previously examined stress populations become
+    diagnostic data, not untouched confirmation.
+  context: Proposed repair only; no new optimizer, normalization, offset selection or capacity change
+    made after this comparison.
+  potential_type: heuristic
+  bound_to:
+  - N304
+  - N305
   promoted: false
   promoted_to: null
   crystallized_via: null
