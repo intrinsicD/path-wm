@@ -441,3 +441,55 @@ and image output heads in a controlled frozen-writer comparison. This would sepa
 workspace formation from output learning without treating a successful auxiliary
 classifier as a repaired agent. It would be a supplied routing control for this task,
 not a general learned retrieval architecture; its exact protocol remains to be set.
+
+## Direct native-output readout protocol
+
+User approved the direct stored-token diagnostic on13 September. Freeze the complete
+writer AND thinker; train only the same native factual head and image feature producer.
+Two input stages: native reset-recall working tokens, or working tokens from the actual
+latest timestamped bank snapshot with thinker bypassed. Latest selection uses bank
+metadata only, handles each batch independently, and is invariant to bank ordering.
+Absent memory supplies zero working tokens; tied latest times average candidates.
+These are explicit diagnostic policies, not learned retrieval or calibrated uncertainty.
+Keep raw storage unchanged and reuse existing causal bank validation.
+
+Cross each stage with raw versus fixed per-channel standardization fitted separately
+on THAT stage's training tokens (std floor1e-4). Thus eight fits across two frozen
+writer sources from runs/reader_supervision_v1/agent_780{1,2}_baseline/weights.pt.
+Same native head initialization in every arm per source. Normalization buffers may
+differ by stage; no test calibration. Existing frozen probes remain diagnostics,
+reference loss weight0. No extra targets or probe answers enter inference.
+
+Predeclare1536 updates, batch16, AdamW lr0.001/wd0.0001, clip1, seed8301,180s
+training cap per fit,4GiB GPU cap with1GiB headroom. Train128pairs7701, validation
+32pairs7752, test64pairs7753, final checkpoint only. Cache frozen TRAIN reset-route
+tokens and teacher features once; loss remains native factor CE + weighted pixel MSE
++0.1 standardized teacher-feature MSE. No ordinary/reset alternation in this diagnostic.
+Evaluate both modes live, plus training-fit scores, erasures/swaps and timestamp
+controls. Save cache identities/timing separately. Existing recipes/renderer suffice.
+One stored-standardized7801 fit resumes768+768. Separate16-update development uses
+seed18301, train17701/validation17852/test17853,60s cap. No coefficient/epoch tuning.
+
+Primary conditional output-sufficiency screen: reset native facts/images>=90%,
+complete selection and relocation pairs>=80%, erasure/cue/later-view drops>=30points,
+swapped-bank alternate>=80%, image error beats background and pair-mean controls.
+Retain the full existing gate (including ordinary) separately. Report each condition;
+replicated sufficiency requires both sources. Route-advantage and normalization-benefit
+screens each require>=10point reset factual AND image gains in BOTH sources for each
+matched contrast. Failure does not prove absent information or asymptotic incapacity.
+This diagnoses frozen source representations and head optimization, not a repaired
+learned retrieval system. Actual time interventions on supplied latest routing can
+change outputs; untimed native controls should remain exact no-ops.
+
+Essential RED checks: actual bank selection, per-batch latest/ties/order/future times,
+erased-bank zero output input, untouched raw bank, frozen thinker/writer/reference,
+train-only per-stage statistics, detached cache/live input/loss/gradient equivalence,
+head-only updates, standalone loading and exact resume. Audit saved native metrics
+independently, source/buffer hashes, both pre-existing readers, GPU replay and CPU
+mismatches; retain exact caches and resource/source records. All reports standalone,
+structural QA plus inspected PNGs; browser QA unavailable.
+
+Claude's public-only review flags per-stage fitting and actual cache/live equivalence
+as prerequisites; both are explicit above and will be checked. Zero fallback and
+mean ties are supplied policies. Equal updates need not equal optimization difficulty,
+so training and validation curves remain visible; no general workspace-loss claim.
