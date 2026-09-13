@@ -1175,7 +1175,7 @@ def render_report(directory):
         for s in (directory / "metrics.jsonl").read_text().splitlines()
         if s
     ]
-    if not any(
+    if rows and not any(
         (directory / name).exists()
         for name in (
             "capabilities.json",
@@ -1230,7 +1230,7 @@ def render_report(directory):
             "<p>Accuracy values are fractions from 0 to 1. Error metrics retain the recipe's scale.</p>"
         )
         metrics = result.get("metrics", {})
-        for name, value in (metrics.items() if isinstance(metrics, dict) else []):
+        for name, value in metrics.items() if isinstance(metrics, dict) else []:
             if isinstance(value, dict):
                 parts.append(
                     f"<details><summary>{escape(name.replace('_', ' '))}</summary><table><tr><th>Metric</th><th>Value</th></tr>"
@@ -1258,7 +1258,7 @@ def render_report(directory):
         parts.append(
             f'<section><h2>Examples in context</h2><img class="chart" alt="Labeled observation, target and output comparison" src="{panel}"></section>'
         )
-    if not any(
+    if rows and not any(
         (directory / name).exists()
         for name in (
             "capabilities.json",

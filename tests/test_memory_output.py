@@ -176,6 +176,11 @@ def test_evaluate_export_preserves_origin_and_completed_results(
     status = json.loads((output / "status.json").read_text())
     assert status["result"] == "completed"
     assert status["report"] == ("failed" if broken_report else "structural-only")
+    if not broken_report:
+        assert (
+            "Training and validation objective by optimizer update"
+            not in (output / "report.html").read_text()
+        )
     assert hashes == {p.name: file_hash(p) for p in origin.iterdir()}
     with pytest.raises(FileExistsError):
         recipe.evaluate_export(origin / "weights.pt", data, output=output)

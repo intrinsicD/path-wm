@@ -1044,3 +1044,11 @@ No training-policy change was introduced by the new evaluation entry point.
 Claude accepted the final clarifications: reconstructed exposure ledger, every-pair
 checks, ties count as success for both without superiority, and partial-render failure
 preservation without a power-loss guarantee. Three bounded public-only exchanges.
+
+Post-fit report review found empty evaluation ledgers still rendered a misleading
+training-chart placeholder. A RED assertion reproduced it; the existing renderer
+now skips curves when no metric rows exist. Two focused evaluation tests and all
+8 run/report regression tests pass. Seven evaluation-only reports were rebuilt,
+with before-fix HTML/QA receipts retained and raw metrics unchanged. Training and
+inference code are unchanged; formal source remains6c9f284, renderer repair recorded
+separately. Browser QA unavailable; report validation remains structural plus figures.
