@@ -1,30 +1,30 @@
 # Current work
 
-**Centered tint learning and checkpoint repair completed, 13 September:** native
-output-head augmentation passes19/24 full task cells, versus14/24 for neutral-only
-and unchanged centered controls. Warm tint improves0/4→4/4; clean accuracy stays
-98.438–100%. Full repair still fails: cool tint2/4, texture1/4; raw texture remains
-100%. Texture retention0/4; strict warm-benefit threshold1/4. Both sources share
-upstream initialization. [Report](../runs/tint_readout_v1/report.html),
-[protocol/results](recall-repair-plan.md#centered-tint-comparison-results-and-resume-guard).
+**Texture continuation completed, 13 September:** texture training passes10/12
+fresh task cells versus8/12 for matched continuation and unchanged source. Texture
+errors fall34→8 across256 correlated responses (76.47% reduction); clean accuracy
+stays100%. Full repair still fails: cool recall image accuracy78.125–81.25%, texture
+retention1/2, all-scene retention7/12. One deliberately selected difficult checkpoint;
+no independent replication claim. [Report](../runs/texture_shape_v1/report.html),
+[protocol/results](recall-repair-plan.md#texture-continuation-results).
 
-Added whole-history scene augmentation to the existing recipe. Fixed centering is
-stored with trained weights, automatically restored and checked on standalone load
-and training resume. Invalid restored references fail before optimization. Four
-matched1,536-update fits change only67,032 native output parameters; all frozen
-state/encoder/backend tensors stay exact. Training315.47s, peak602MiB; evaluation
-458.95s. GPU contention documented; elapsed allowance amended before confirmation.
+Added per-scene training diagnostics to the normal recipe/report and repaired a
+CPU/CUDA target-rounding alignment check. Two equal1,536-update fits change only67,032
+output parameters; frozen components remain exact. Cool training still has46 correct
+factual answers with incorrect rendered shapes, so the next target is recall image
+feature production and its loss/capacity, not an assumed encoder failure.
 
-109 distinct relevant tests pass;80 exact GPU replays;20,120 independently checked
-metrics;12 default datasets byte-exact. Two actual Claude conceptual reviews complete,
-with follow-up explicitly approved after an initial automatic-review rejection.
-86 reports structurally verified, figures inspected; browser QA unavailable.
+74 relevant tests pass;40 exact GPU reloads and10,188 independent metric checks.
+Training197.99s, peak646MiB; evaluation189.83s. Two actual Claude conceptual reviews
+reconciled, private implementation checked locally.45 reports structurally verified;
+figures inspected. Browser URL policy blocked local-file QA; no workaround attempted.
+Failed development preserved with a failure report, successful rerun separately saved.
 
-Next: residual shape fitting and texture training with raw/clean retention. In one
-cool-tint training block facts are100% correct but48/256 recall images have the wrong
-shape, supporting an image-output learning shortfall on those examples. General
-perception, independent upstream runs, real recordings, confidence, CPU portability
-and streaming tests remain open. Preserve old runs; disk headroom remains limited.
+Next: diagnose recall shape loss/gradients before a new controlled producer intervention;
+preserve clean/raw retention and use fresh confirmation. General perception, learned
+reliability, independent upstream runs, real recordings, CPU portability and streaming
+remain open. Previous tint evidence remains in its [report](../runs/tint_readout_v1/report.html)
+and the active plan. Preserve completed runs and the3GiB disk floor.
 
 **Scene/lighting challenge and reporting repair completed, 13 September:** centered
 input passes12/40 attempted cells (neutral, temporal additive and RGB-channel

@@ -2012,3 +2012,46 @@ Standard reports structurally verified; development example panel inspected. Sup
 browser runtime initialized but URL policy blocked local-file navigation; no workaround.
 Browser QA unavailable. Development does not establish capability. Source is now frozen
 for the two fits and40 confirmation cells; thresholds and budgets unchanged.
+
+## Texture continuation results
+
+Formal source38cf923. Both1,536-update fits and all40 confirmation cells completed.
+Texture-arm task passes10/12, versus8/12 for matched continuation and unchanged source.
+Raw neutral/texture passes4/4 at100%. Added texture benefit passes:8 versus34 errors
+across256 correlated responses (26 fewer,76.471% relative reduction), with no regression
+in any of the eight paired response accuracies. Texture task gates improve0/2→2/2;
+texture-arm accuracy93.75–100%. This is one deliberately selected difficult source,
+not independent replication or256 independent trials. Exact quartet differences saved.
+
+Full repair still fails. Cool-tint recall image accuracy81.25%/78.125%; both cool task
+cells fail. All-scene raw-neutral retention7/12, clean retention2/2 at100%, and stricter
+raw-texture retention1/2 (the other population has93.75%, below95%). Source/control
+cool training recall image accuracy remains81.25%; texture training reaches79.297%.
+In the texture fit53/256 cool training images have wrong shape (plus classified as
+square);46 of those have correct factual answers. Control has48 such errors, all with
+correct facts. Ordinary cool image accuracy is99.609% in the texture fit. Additional
+mixed-head updates and texture data do not resolve this recall shape shortfall.
+Do not infer unique encoder loss or assume more generic data fixes the decoder path.
+
+74 distinct relevant CPU cases pass,9 focused checks after the diagnostic fix;
+10,188 independently reproduced metrics;40 full-population ordinary/reset GPU reloads
+bitwise exact. Both caches have exact recorded hashes and identical first three
+blocks; targets/presentations/starts/RNG match and all frozen tensors stay exact.
+Inference, objective, scoring and data generation are unchanged frome837ac7.
+Training197.99s total, fit loop338.58s, evaluation189.83s; peak646MiB reserved. All
+original runs preserved, disk floor maintained. No fixed-budget or gate amendments.
+
+Two actual Claude conceptual reviews completed; corrections and residual interpretation
+are in review_status.json. Private implementation/results reviewed locally.45 standalone
+reports structurally checked with valid embedded PNGs; development, corrected overview
+and selected error quartet inspected. Browser URL policy rejected local-file navigation;
+no alternate route attempted. Browser QA remains unavailable. The first failed development
+and its repaired failure report remain preserved alongside the successful rerun.
+[Report](../runs/texture_shape_v1/report.html),
+[verification](../runs/texture_shape_v1/verification.json).
+
+Next: isolate the recall image feature producer's shape objective/gradients and capacity
+while factual shape remains readable. Keep existing comparisons and clean/raw retention;
+use fresh confirmation for any later intervention, not repeated selection on30073/30074.
+Learned input reliability, general scene invariance, independent upstream replication,
+real images, CPU portability and streaming runtime remain separate open points.

@@ -371,3 +371,8 @@ queries and produces no predictions or accepted-subset accuracy. Valid populatio
 retain the normal evaluation path. The encoder's strict forward guard still
 rejects out-of-range values; this reporting behavior is not a fallback policy or
 learned confidence estimate.
+
+Scene-augmented native readout runs also save `training_scene_fit.json` and display
+training joint/shape accuracy per ordered scene block in their ordinary report.
+Repeated scene blocks remain separate. These diagnostics do not change held-out
+metrics or capability gates; target/source alignment is checked before scoring.
