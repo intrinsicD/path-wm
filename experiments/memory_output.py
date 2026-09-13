@@ -178,7 +178,7 @@ def evaluate(model, data, device, modes, batch_size=16):
         ).items():
             arrays[key].append(value.cpu())
         for mode in modes:
-            if mode == "erased_history":
+            if mode in ("erased_history", "cue_erased", "last_seen_erased"):
                 output = model(images, mode)
             else:
                 output = model.output(
@@ -187,10 +187,12 @@ def evaluate(model, data, device, modes, batch_size=16):
             arrays[mode + "_logits"].append(output["facts"].cpu())
             arrays[mode + "_image"].append(output["image"].cpu())
     tensors = {key: torch.cat(value) for key, value in arrays.items()}
-    return score(tensors, modes), {k: v.numpy() for k, v in tensors.items()}
+    return score(tensors, modes, relocation=data.curriculum == "relocation"), {
+        k: v.numpy() for k, v in tensors.items()
+    }
 
 
-def score(arrays, modes):
+def score(arrays, modes, *, relocation=False):
     target, labels = arrays["target"], arrays["labels"]
     paired = torch.arange(len(labels)) ^ 1
     result = {}
@@ -227,12 +229,38 @@ def score(arrays, modes):
                 (visual == labels[paired]).all(1).float().mean()
             ),
         )
+        for kind, prediction in (("factual", facts), ("image", visual)):
+            for i, name in enumerate(("color", "shape", "side")):
+                result[mode][f"{kind}_{name}_accuracy"] = float(
+                    (prediction[:, i] == labels[:, i]).float().mean()
+                )
+        if relocation:
+            for kind, correct in (("factual", fc), ("image", vc)):
+                quartet = correct.reshape(-1, 2, 2)  # group, movement, selection
+                result[mode][f"{kind}_relocation_pair_accuracy"] = float(
+                    quartet.all(1).float().mean()
+                )
+                for moving, name in enumerate(("static", "moved")):
+                    result[mode][f"{name}_{kind}_accuracy"] = float(
+                        quartet[:, moving].float().mean()
+                    )
     return result
 
 
 def passes(metrics):
     for mode in ("ordinary", "reset"):
         m = metrics[mode]
+        if "factual_relocation_pair_accuracy" in m:
+            if any(
+                m[f"{k}_relocation_pair_accuracy"] < 0.8 for k in ("factual", "image")
+            ):
+                return False
+            if any(
+                metrics["reset"][key] - metrics[control][key] < 0.3
+                for control in ("cue_erased", "last_seen_erased")
+                for key in ("factual_accuracy", "image_accuracy")
+            ):
+                return False
         if not (
             m["factual_accuracy"] >= 0.9
             and m["image_accuracy"] >= 0.9
@@ -329,6 +357,19 @@ def train(
         device=device,
         resume=resume,
     )
+    relocation = training.curriculum == "relocation"
+    if relocation:
+        atomic_json(
+            run.path / "shortcut_audit.json",
+            {
+                name: data.shortcut_audit()
+                for name, data in (
+                    ("train", training),
+                    ("validation", validation),
+                    ("test", test),
+                )
+            },
+        )
     frozen = dict(
         encoder=state_hash(model.teacher),
         decoder=state_hash(model.agent.decoders["image"].head),
@@ -414,6 +455,8 @@ def train(
             "reset_swapped",
             "erased_history",
         ]
+        if relocation:
+            modes += ["cue_erased", "last_seen_erased"]
         scores, arrays = evaluate(
             model, test if completed else validation, device, modes
         )
@@ -430,14 +473,20 @@ def train(
                 completed=completed,
                 step=run.step,
                 gate=completed and passes(scores),
-                evaluation_split="held-out combinations"
+                evaluation_split=(
+                    "fresh-background relocation histories; trained tuple and motion support"
+                    if relocation
+                    else "held-out combinations"
+                )
                 if completed
                 else "validation only; training incomplete",
                 metrics=scores,
                 frozen_unchanged=unchanged,
                 frozen_hashes=frozen,
                 limitations=[
-                    "synthetic familiar factors, unseen combinations",
+                    "synthetic familiar tuples and motion; no unseen-combination claim"
+                    if relocation
+                    else "synthetic familiar factors, unseen combinations",
                     "fixed task; no general language",
                     "two supplied snapshots both retrieved; no search or learned write policy",
                     "supervised write readout differs from independent direct encoder diagnostic",
@@ -478,7 +527,12 @@ def main():
     parser.add_argument("--stop-after", type=int)
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--normalize-input", action="store_true")
+    parser.add_argument(
+        "--curriculum", choices=("parity", "relocation"), default="parity"
+    )
     args = parser.parse_args()
+    if args.curriculum == "relocation" and not args.normalize_input:
+        parser.error("The relocation comparison requires --normalize-input")
     seed_everything(args.seed)
     if torch.device(args.device).type == "cuda":
         free, total = torch.cuda.mem_get_info(args.device)
@@ -492,14 +546,18 @@ def main():
     model = (
         build_model(codec, normalize_input=args.normalize_input).to(args.device).eval()
     )
-    training = MemoryOutputEpisodes(128, seed=7701)
-    validation = MemoryOutputEpisodes(32, seed=7702)
-    test = MemoryOutputEpisodes(64, seed=7703, split="test")
+    training = MemoryOutputEpisodes(128, seed=7701, curriculum=args.curriculum)
+    validation = MemoryOutputEpisodes(32, seed=7702, curriculum=args.curriculum)
+    test = MemoryOutputEpisodes(64, seed=7703, split="test", curriculum=args.curriculum)
+    # Hold both feature calibrations fixed at the original training population.
+    calibration = MemoryOutputEpisodes(128, seed=7701)
     if args.normalize_input:
 
         def observations():
-            for start in range(0, len(training), 16):
-                images = training.batch(range(start, start + 16), args.device)["images"]
+            for start in range(0, len(calibration), 16):
+                images = calibration.batch(range(start, start + 16), args.device)[
+                    "images"
+                ]
                 for t in range(3):
                     yield Observation(
                         images[:, t : t + 1], images.new_full((16, 1), float(t))
@@ -508,13 +566,17 @@ def main():
         model.agent.encoders["image"].calibrate(observations())
     with torch.no_grad():
         # Eight unique training targets suffice; no validation/test target calibration.
-        targets = training.batch(range(8), args.device)["target"]
+        targets = calibration.batch(range(8), args.device)["target"]
         model.agent.decoders["image"].calibrate(model.teacher(targets))
     settings = default_settings(args.seed)
     settings["normalize_input"] = args.normalize_input
     settings["donor_sha256"] = file_hash(args.weights)
+    settings["curriculum"] = args.curriculum
+    settings["calibration_data"] = calibration.identity
     if args.check:
-        batch = MemoryOutputEpisodes(4, seed=17701).batch(range(4), args.device)
+        batch = MemoryOutputEpisodes(16, seed=17701, curriculum=args.curriculum).batch(
+            range(4), args.device
+        )
         loss, metrics = objective(model, batch, reset=True)
         loss.backward()
         args.output.mkdir(parents=True, exist_ok=False)

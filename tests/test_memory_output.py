@@ -34,7 +34,9 @@ def test_relocation_curriculum_breaks_appearance_and_initial_frame_shortcuts():
         assert audit["final_frame_only_joint_accuracy"] == 0.5
         assert audit["hidden_frame_only_side_accuracy"] == 0.5
         assert audit["hidden_frame_only_joint_accuracy"] == 0.25
-        frame_sets.append({hashlib.sha256(x.tobytes()).hexdigest() for x in data.images[:, 0]})
+        frame_sets.append(
+            {hashlib.sha256(x.tobytes()).hexdigest() for x in data.images[:, 0]}
+        )
     assert not frame_sets[0] & frame_sets[1]
     with pytest.raises(ValueError, match="complete"):
         MemoryOutputEpisodes(17, curriculum="relocation")
@@ -46,15 +48,36 @@ def test_relocation_metrics_detect_correct_appearance_at_the_wrong_location():
 
     b = MemoryOutputEpisodes(16, seed=17, curriculum="relocation").batch(range(32))
     labels = b["labels"]
-    logits = torch.cat([torch.nn.functional.one_hot(labels[:, i], n) for i, n in enumerate((4, 2, 2))], 1).float()
-    arrays = dict(target=b["target"], labels=labels, direct_logits=logits,
-                  stored_logits=logits, teacher_image=b["target"])
-    modes = ["ordinary", "reset", "reset_erased", "erased_history", "reset_swapped", "cue_erased", "last_seen_erased"]
+    logits = torch.cat(
+        [torch.nn.functional.one_hot(labels[:, i], n) for i, n in enumerate((4, 2, 2))],
+        1,
+    ).float()
+    arrays = dict(
+        target=b["target"],
+        labels=labels,
+        direct_logits=logits,
+        stored_logits=logits,
+        teacher_image=b["target"],
+    )
+    modes = [
+        "ordinary",
+        "reset",
+        "reset_erased",
+        "erased_history",
+        "reset_swapped",
+        "cue_erased",
+        "last_seen_erased",
+    ]
     for mode in modes:
         ids = torch.arange(32)
         if mode == "reset_swapped":
             ids ^= 1
-        elif mode in ("reset_erased", "erased_history", "cue_erased", "last_seen_erased"):
+        elif mode in (
+            "reset_erased",
+            "erased_history",
+            "cue_erased",
+            "last_seen_erased",
+        ):
             ids *= 0
         arrays[mode + "_logits"] = logits[ids].clone()
         arrays[mode + "_image"] = b["target"][ids].clone()
@@ -172,15 +195,18 @@ def test_supervised_writes_and_frozen_decoder_have_intended_gradients():
     assert all(p.grad is None for p in model.direct.parameters())
 
 
-@pytest.mark.parametrize("normalize", [False, True])
-def test_training_resume_and_standalone_reload(tmp_path, normalize):
+@pytest.mark.parametrize(
+    "normalize,curriculum", [(False, "parity"), (True, "parity"), (True, "relocation")]
+)
+def test_training_resume_and_standalone_reload(tmp_path, normalize, curriculum):
     from pathwm.data.memory_output import MemoryOutputEpisodes
     from experiments.memory_output import train, default_settings, load_model
     from tests.test_runs import equal_tree
 
-    train_data = MemoryOutputEpisodes(4, seed=17)
-    val = MemoryOutputEpisodes(4, seed=18)
-    test = MemoryOutputEpisodes(4, seed=19, split="test")
+    pairs = 16 if curriculum == "relocation" else 4
+    train_data = MemoryOutputEpisodes(pairs, seed=17, curriculum=curriculum)
+    val = MemoryOutputEpisodes(pairs, seed=18, curriculum=curriculum)
+    test = MemoryOutputEpisodes(pairs, seed=19, split="test", curriculum=curriculum)
 
     def run(path, resume=False, stop_after=None):
         torch.manual_seed(21)
@@ -194,6 +220,7 @@ def test_training_resume_and_standalone_reload(tmp_path, normalize):
             depth=1,
             fusion_depth=0,
             normalize_input=normalize,
+            curriculum=curriculum,
         )
         with torch.no_grad():
             model.agent.decoders["image"].calibrate(
@@ -237,6 +264,26 @@ def test_training_resume_and_standalone_reload(tmp_path, normalize):
     html = (tmp_path / "full" / "report.html").read_text()
     assert "Recorded result" in html and "factual accuracy" in html
     assert "Labeled observation, target and output comparison" in html
+
+
+def test_removing_each_visible_frame_erases_its_counterfactual_signal():
+    from pathwm.data.memory_output import MemoryOutputEpisodes
+
+    torch.manual_seed(12)
+    model = model_fixture(True).eval()
+    images = MemoryOutputEpisodes(16, seed=17, curriculum="relocation").batch(range(4))[
+        "images"
+    ]
+    for mode, permutation in (
+        ("cue_erased", [1, 0, 3, 2]),
+        ("last_seen_erased", [2, 3, 0, 1]),
+    ):
+        before = images.clone()
+        with torch.no_grad():
+            out = model(images, mode)
+        assert torch.equal(images, before)
+        for key in ("facts", "image"):
+            torch.testing.assert_close(out[key], out[key][permutation], atol=0, rtol=0)
 
 
 def test_input_calibration_preserves_noop_metadata_and_frozen_model():

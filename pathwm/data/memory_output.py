@@ -1,5 +1,6 @@
-"""Paired rendered histories with split-disjoint color/shape/location triples."""
+"""Paired rendered histories with explicit composition or relocation populations."""
 
+from collections import Counter, defaultdict
 from itertools import product
 import hashlib
 
@@ -43,9 +44,14 @@ def image_labels(images):
 
 
 class MemoryOutputEpisodes:
-    def __init__(self, pairs=128, *, seed=7701, split="train"):
+    def __init__(self, pairs=128, *, seed=7701, split="train", curriculum="parity"):
         if type(pairs) is not int or pairs < 1 or split not in ("train", "test"):
             raise ValueError("Positive pair count and train/test split required")
+        if curriculum not in ("parity", "relocation"):
+            raise ValueError("Unknown memory-output curriculum")
+        if curriculum == "relocation" and pairs % 16:
+            raise ValueError("Relocation requires complete cycles of16 selection pairs")
+        self.curriculum = curriculum
         rng = np.random.default_rng(seed)
         images, labels, targets = [], [], []
         for group in range(pairs):
@@ -56,15 +62,29 @@ class MemoryOutputEpisodes:
                 (left_color, left_shape),
                 (2 + 2 * parity - left_color, 1 - left_shape),
             ]
-            background = np.full((64, 64, 3), rng.integers(35, 46), dtype=np.uint8)
-            background[:4] = rng.integers(30, 51, (4, 64, 1))
+            if curriculum == "relocation":
+                # A quartet fixes initial identity/appearance; only selection and
+                # later movement vary. Both appearance factors vary independently.
+                block, swapped = group // 2, group % 2
+                parity = block % 2
+                left_color = parity + 2 * ((block // 2) % 2)
+                left_shape = (block // 4) % 2
+                objects = [
+                    (left_color, left_shape),
+                    (2 + 2 * parity - left_color, 1 - left_shape),
+                ]
+            if curriculum == "parity" or group % 2 == 0:
+                background = np.full((64, 64, 3), rng.integers(35, 46), dtype=np.uint8)
+                background[:4] = rng.integers(30, 51, (4, 64, 1))
+            initial_swap = swapped if curriculum == "parity" else 0
+            final_swap = swapped if curriculum == "relocation" else 0
             for selected in (0, 1):
                 first, last = background.copy(), background.copy()
                 for side, (color, shape) in enumerate(objects):
-                    draw(first, color, shape, side ^ swapped, side == selected)
-                    draw(last, color, shape, side)
+                    draw(first, color, shape, side ^ initial_swap, side == selected)
+                    draw(last, color, shape, side ^ final_swap)
                 target = np.full_like(background, BACKGROUND)
-                label = (*objects[selected], selected)
+                label = (*objects[selected], selected ^ final_swap)
                 draw(target, *label)
                 images.append(np.stack((first, last, background)))
                 labels.append(label)
@@ -72,7 +92,9 @@ class MemoryOutputEpisodes:
         self.images, self.targets = np.stack(images), np.stack(targets)
         self.labels = np.array(labels, dtype=np.int64)
         self.identity = dict(
-            schema="memory-output-v1",
+            schema="memory-output-v1"
+            if curriculum == "parity"
+            else "memory-output-relocation-v1",
             seed=seed,
             pairs=pairs,
             split=split,
@@ -80,6 +102,27 @@ class MemoryOutputEpisodes:
             images_sha256=hashlib.sha256(self.images.tobytes()).hexdigest(),
             targets_sha256=hashlib.sha256(self.targets.tobytes()).hexdigest(),
             labels_sha256=hashlib.sha256(self.labels.tobytes()).hexdigest(),
+        )
+
+    def shortcut_audit(self):
+        """Empirical majority bounds over exact available inputs, not model scores."""
+
+        def majority(keys, answers):
+            groups = defaultdict(Counter)
+            for key, answer in zip(keys, answers):
+                groups[key][answer] += 1
+            return sum(max(c.values()) for c in groups.values()) / len(self)
+
+        triples = list(map(tuple, self.labels.tolist()))
+        sides = self.labels[:, 2].tolist()
+        frames = [[x.tobytes() for x in self.images[:, t]] for t in range(3)]
+        return dict(
+            appearance_only_side_accuracy=majority([x[:2] for x in triples], sides),
+            initial_frame_only_side_accuracy=majority(frames[0], sides),
+            final_frame_only_joint_accuracy=majority(frames[1], triples),
+            hidden_frame_only_side_accuracy=majority(frames[2], sides),
+            hidden_frame_only_joint_accuracy=majority(frames[2], triples),
+            tuple_counts={str(k): v for k, v in sorted(Counter(triples).items())},
         )
 
     def __len__(self):

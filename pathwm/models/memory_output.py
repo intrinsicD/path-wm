@@ -165,6 +165,10 @@ class MemoryOutput(nn.Module):
             return (encoded.values + position(encoded.times, self.agent.width)).detach()
 
     def forward(self, images, mode="ordinary"):
+        if mode in ("cue_erased", "last_seen_erased"):
+            images = images.clone()
+            images[:, 0 if mode == "cue_erased" else 1] = images[:, -1]
+            mode = "reset"
         if mode == "erased_history":
             images = images[:, -1:].expand(-1, 3, -1, -1, -1)
             mode = "ordinary"

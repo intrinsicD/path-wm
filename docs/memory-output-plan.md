@@ -61,6 +61,20 @@ corrects Claude's claim that the cue frame alone suffices and limits causal
 interpretation of a data-balancing intervention. Receipts under
 `runs/reviews/continuation_2026-09-11/relocation-*`.
 
+Claude acknowledged both corrections. It requested an additional binding control;
+the exact-input quartet construction already makes neither single visible frame
+sufficient for joint answers. We retain the requested behavioral controls without
+claiming they uniquely identify the agent's internal algorithm. No private source,
+data or results were exported. Two short exchanges; no further review loop needed.
+
+Before formal runs:34 targeted tests and lint pass, including three exact CPU
+resume/reload cases and both frame-removal equalities. All three original parity
+populations are byte-identical to their saved identities. New split frame hashes
+are disjoint, and every predeclared shortcut bound passes. A16-update development
+run completes in3.576s with414MiB peak reserved; report structural checks pass and
+the actual selection/relocation quartet panel is inspected. This establishes the
+workflow, not learned capability. No formal evaluation outcomes used for changes.
+
 13 September 2026. Alex approved the proposed observation-memory-output slice.
 Use the actual Gaussian reference agent, bounded detached episodic snapshots and
 the existing state-to-spatial RGB decoder. This is a controlled synthetic learning
