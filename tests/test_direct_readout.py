@@ -263,3 +263,28 @@ def test_frozen_live_writer_policy_equals_cached_mixed_head_training():
     for n, p in m.named_parameters():
         if n in grads:
             torch.testing.assert_close(p.grad, grads[n], atol=1e-6, rtol=1e-5)
+
+
+def test_joint_observer_reader_gradients_and_freeze_contract():
+    from pathwm.models.memory_output import configure_output_readout, frozen_tensors
+    from experiments.memory_output import live_readout_objective
+
+    torch.manual_seed(58)
+    m = configure_output_readout(
+        model_fixture(True), "native", train_writer=True, train_thinker=True
+    )
+    fixed = {k: v.clone() for k, v in frozen_tensors(m).items()}
+    b = MemoryOutputEpisodes(16, seed=59, curriculum="relocation").batch(range(4))
+    loss, _ = live_readout_objective(m, b, step=1)
+    loss.backward()
+    for module in (m.agent.updater, m.agent.thinker, m.facts):
+        assert any(
+            p.grad is not None and p.grad.abs().sum() > 0 for p in module.parameters()
+        )
+    assert all(p.grad is None for p in m.parameters() if not p.requires_grad)
+    torch.optim.AdamW([p for p in m.parameters() if p.requires_grad]).step()
+    assert all(torch.equal(v, fixed[k]) for k, v in frozen_tensors(m).items())
+    configure_output_readout(m, "native", train_writer=True)
+    assert all(not p.requires_grad for p in m.agent.thinker.parameters())
+    with pytest.raises(ValueError):
+        configure_output_readout(m, "native", train_thinker=True)

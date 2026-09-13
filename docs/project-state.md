@@ -1,5 +1,16 @@
 # Current work
 
+**Writer-only learning comparison completed; joint follow-up in progress, 13 September:**
+unfreezing the shared updater gives partial gains but both repeats fail full reliability.
+Ordinary facts/images83.59/89.84% and86.72/82.81%; both reset81.25/75%. Four1024-update
+fits,481.75s training,404MiB peak;50 tests and1,826 independent metrics pass. Actual
+historical gradients exist; GPU exports/replay exact. CPU one ordinary factual-side
+answer changes. [Writer comparison](../runs/writer_learning_v1/report.html).
+The authorized next iteration adds opt-in thinker learning and reuses these matched
+writer-only baselines through fresh test7783 evaluations. Plan declared in
+[active protocol](recall-repair-plan.md#joint-observer-and-workspace-reader-protocol--13-september);
+new RED check demonstrated before implementation. No joint formal run started yet.
+
 **Mixed ordinary/reset training completed, 13 September:** training only native
 output heads on both workspaces repairs the stronger source on the controlled task.
 Writer7801 ordinary facts/images96.875/96.875% versus82.8125/58.59375% with matched

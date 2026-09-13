@@ -831,3 +831,76 @@ ordinary/reset export tests. Frozen control has67,032 trainable parameters; addi
 the shared updater action/attention blocks gives75,768 (8,736 extra). Development16
 updates complete in3.190238s,402MiB reserved, structural report and inspected panel.
 No quality-based tuning. Implementation is committed before formal comparisons.
+
+## Shared observer/writer learning results
+
+Source bc7a7a6. Four1024-update fits finish; all full and replicated10-point benefit
+gates fail. On fresh test7773, frozen seed8501 ordinary/reset facts/images all74.21875%;
+frozen8502 ordinary75.78125/75.78125%, reset74.21875/74.21875%. Trainable8501 ordinary
+83.59375/89.84375%, reset81.25/75%; trainable8502 ordinary86.71875/82.8125%, reset81.25/
+75%. Training ordinary scores83.984375/91.796875% and85.9375/83.203125%, reset81.25/
+75.390625% and81.25/75.78125%. A reliable repair is not established in either repeat.
+
+The stronger unchanged source on the same test scores97.65625/97.65625% ordinary,
+98.4375/96.09375% reset; weak source all74.21875%. Both pre-existing readers remain
+frozen and are rescored on changed stored/recalled states; input-coordinate shifts
+mean probe failure cannot establish absent information. Shared-updater gradients and
+extra trainable capacity, including current/reset-query processing, prevent a uniquely
+historical-write interpretation of the partial gains.
+
+50 relevant tests,1,826 independently recomputed metrics, exact four-export GPU replay,
+bank-order and replay equality pass. Every live training write checks exact values;
+new banks are empty, runtime inference banks detached, permitted writer changes occur,
+other frozen tensors unchanged.513+511 restart and odd-phase resume tested. Total
+training481.754467s. CPU numeric gate still fails: ordinary factual side case18 changes
+for8501 trainable (GPU[0,1,1], CPU[0,1,0]); images and reset labels agree here.
+
+A post-fit plateau diagnostic makes no optimizer updates. On the same first16 TRAIN
+histories, updater gradient L2 is0.012015 at the source,0.176185/0.390894 at the final
+trainable checkpoints. With the query detached, initial/stored token gradients remain
+nonzero and disappear after bank erasure. Weights remain unchanged. This rules out
+a disconnected pathway in this diagnostic, not ineffective optimization or missing
+information. All evidence/report retained at `runs/writer_learning_v1/`; interpretation
+does not promote a complete repair. The next iteration below follows this failure.
+
+## Joint observer and workspace-reader protocol — 13 September
+
+Continue the authorized iteration with one additional factor: unfreeze the thinker
+(workspace attention reader and feedback network) alongside the observer and native
+heads. Keep encoder, initial state, monitor, dynamics, action head, reconstruction
+backend, reference readers, calibration buffers and bank mechanics fixed. Same live
+mixed objective, ephemeral value-gradient replay and causal inference boundary; no
+new input, curriculum or auxiliary loss. Add an opt-in `--train-thinker` flag requiring
+trainable writer/native raw mixed context. Default loading must reproduce prior
+exports exactly, including parameter counts and frozen/trainable sets.
+
+Two new fits, seeds8501/8502, SAME original weak checkpoint
+`runs/mixed_context_v1/agent_7802_mixed/weights.pt`, train7701/validation7772,1024
+updates,batch16,AdamW0.001/wd0.0001,clip1,360s caps. Final-step selection; no schedule or
+objective change. Test is fresh64-pair seed7783. Reuse prior writer-only checkpoints
+as baselines by evaluating them on THIS SAME fresh test, with their original source,
+training/validation/settings/checkpoint hashes explicitly preserved. Old test7773
+numbers do not enter the new contrast. Same initialization/history sampling and budget;
+two seeds from one original source limit effect-size and generalization claims.
+
+Primary joint repair requires BOTH new fits pass the existing full>=90% intact
+ordinary/reset factual/image,>=80% paired/alternate,>=30-point causal-drop and pixel
+baseline screens. Benefit additionally requires>=5 points in ALL four ordinary/reset
+factual/image metrics over each matched writer-only baseline on7783. Report these gates
+separately; five points is declared now for this incremental comparison, not a revision
+of the failed prior10-point writer-learning screen. No tuning after formal results.
+
+Essential new RED check: joint writer/thinker gradients and exactly permitted parameter
+updates; default-off freeze semantics and invalid configurations. Exact odd-step resume
+and standalone detached inference for joint mode. Verify all previous writer-study GPU
+exports under the default-off new code before baseline reuse. New fits use no persistent
+cache; record both old/new source identities and exact matched optimizer/sample budgets.
+Development16 updates seed18601, train17701/validation18172/test18173,60s cap. GPU4GiB
+cap with1GiB headroom. New GPU/CPU replay, NumPy scoring and retained individual/overview
+reports; structural QA and inspected figures, browser QA unavailable.
+
+Two more public-only Claude exchanges accept this bounded comparison and clarify that
+fresh re-evaluation of reused baselines IS valid comparison evidence; stale prior-test
+numbers are excluded. They require preserved provenance, default-off regression checks,
+freeze/gradient checks and limited attribution. Receipts: `joint-reader*-receipt.json`
+under the same ignored reviews directory. No claim of a uniquely isolated memory cause.
