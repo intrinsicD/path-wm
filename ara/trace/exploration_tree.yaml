@@ -5191,3 +5191,68 @@ tree:
   also_depends_on:
   - N315
   status: resolved
+
+- id: N318
+  type: decision
+  title: Continue controlled texture and shape learning with Claude
+  provenance: user
+  timestamp: 2026-09-13T21:48+02:00
+  choice: User explicitly requests continued plan/implement/review/test/fix on the open points. Adopt
+    the bounded texture/shape comparison method with matched continuation, raw/clean retention, fresh
+    confirmation and headroom checks.
+  alternatives:
+  - Assume tint learning closes robustness
+  - Expand encoders without image-readout diagnosis
+  evidence:
+  - O212
+  - N315
+  - N317
+  also_depends_on:
+  - N315
+  - N317
+  status: resolved
+- id: N319
+  type: experiment
+  title: Texture mixture benefit passes while cool recall shape remains unresolved
+  provenance: ai-executed
+  timestamp: 2026-09-13T21:48+02:00
+  result: 'Two1536-update native-head fits from selected source8502,seed9101;1024 training histories,train7701.40
+    fresh30073/30074 cells,32 histories each,all10 modes. Texture10/12 task passes vs8/12 continuation
+    and unchanged. Raw4/4 at100%. Texture errors8 vs34 across256 correlated responses,26 fewer/76.471%
+    relative reduction; no eight-response regression, benefit passes. Texture gates2/2 vs0/2; clean100%,retention2/2.
+    Overall repair fails: cool recall images78.125/81.25%, all-scene retention7/12, texture retention1/2.
+    Cool training texture arm53/256 wrong shapes,46 despite correct facts; control48 all despite correct
+    facts. Frozen/source/cache/RNG exact;10188 independent metrics,40 exact GPU replays. Training197.988s,646MiB
+    peak,eval189.833s. Source38cf923.'
+  evidence:
+  - ara/evidence/tables/texture_shape_2026-09-13.json
+  - runs/texture_shape_v1/verification.json
+  - docs/recall-repair-plan.md#texture-continuation-results
+  also_depends_on:
+  - N318
+  - N315
+  status: resolved
+- id: N320
+  type: experiment
+  title: Training scene diagnostics expose shape underfitting and handle GPU target rounding
+  provenance: ai-executed
+  timestamp: 2026-09-13T21:48+02:00
+  result: Standard recipe/report saves ordered per-scene joint and shape scores, retaining duplicate blocks
+    and exact source hashes.7 RED cases then GPU development exposed exact CPU/CUDA normalized-target
+    mismatch.1e-7 rounding tolerance passes while1/255 corruption fails; original bytes/labels remain
+    exact. Failed16-update development retained with failure report; separate successful16-update rerun.74
+    distinct relevant tests,9 focused including exact centered-scene resume.45 reports structurally verified,three
+    figures inspected; supported browser file navigation blocked by URL policy, no workaround. Two actual
+    generic Claude reviews, redundant-control recommendation withdrawn; private implementation/results
+    reviewed locally. Inference/objective/scoring/data unchanged.
+  evidence:
+  - ara/evidence/tables/texture_shape_2026-09-13.json
+  - tests/test_training_scenes.py
+  - tests/test_memory_output.py
+  - runs/texture_shape_v1/roundoff_red.log
+  - runs/texture_shape_v1/browser_qa.json
+  - runs/texture_shape_v1/review_status.json
+  also_depends_on:
+  - N318
+  - N319
+  status: resolved

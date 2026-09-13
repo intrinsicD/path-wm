@@ -2,11 +2,11 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T21:11+02:00
-  turn_count: 17
-  summary: Tint learning19/24 task passes, warm4/4 vs0/4; cool-shape/texture and strict repair unresolved.
-    Persistent centering load/resume fixed;109 tests,20120 metrics,80 exact GPU replays. Two actual Claude
-    reviews after explicit follow-up approval.
+  last_turn: 2026-09-13T21:48+02:00
+  turn_count: 18
+  summary: Texture mixture10/12 task passes vs8/12 matched continuation;errors34→8,clean100%. Cool recall
+    shape and strict repair unresolved. Scene diagnostics/rounding fixed;74 tests,10188 independent metrics,40
+    exact GPU replays; two actual Claude reviews.
 
 events_logged:
 - turn: 1
@@ -602,6 +602,49 @@ events_logged:
   routing: crystallized
   provenance: user-revised
   summary: O210 controlled clean/scene comparison explicitly adopted; no empirical outcome endorsed.
+- turn: 18
+  type: decision
+  id: N318
+  routing: direct
+  provenance: user
+  summary: Continue controlled texture and shape learning with Claude
+- turn: 18
+  type: experiment
+  id: N319
+  routing: direct
+  provenance: ai-executed
+  summary: Texture mixture benefit passes while cool recall shape remains unresolved
+- turn: 18
+  type: experiment
+  id: N320
+  routing: direct
+  provenance: ai-executed
+  summary: Training scene diagnostics expose shape underfitting and handle GPU target rounding
+- turn: 18
+  type: observation
+  id: O213
+  routing: staged
+  provenance: ai-suggested
+  summary: Replacing the duplicate clean block with texture gives a scoped benefit beyond matched continuation,
+    but does not fix cool recall shape or satisfy full retention. Persistent training failures with correct
+    factual shape indicate a native image-output learning shortfall, without establishing whether objective,
+    capacity, optimization or upstream geometry causes it.
+- turn: 18
+  type: observation
+  id: O214
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Next isolate recall image feature production: inspect shape-sensitive loss contributions and
+    gradients before choosing a controlled objective or capacity intervention, where factual shape is
+    still readable. Retain matched budgets, raw/clean retention and fresh confirmation; avoid more untargeted
+    data or assuming encoder replacement. Broader real-input, reliability, CPU and streaming milestones
+    remain open.'
+- turn: 18
+  type: heuristic
+  id: H66
+  routing: crystallized
+  provenance: user-revised
+  summary: O212 matched texture/shape continuation method adopted; new results not yet endorsed.
 
 ai_actions:
 - turn: 1
@@ -837,6 +880,24 @@ ai_actions:
   - docs/recall-repair-plan.md
   - runs/tint_readout_v1/
   - ara/evidence/tables/tint_readout_2026-09-13.json
+- turn: 18
+  action: Implemented ordered training scene metrics/reporting; preserved RED and GPU development failure,
+    repaired CPU/CUDA normalized-target comparison and reran development. Two matched fixed fits,40 fresh
+    causal evaluations; independent source/frozen/cache/metric checks and40 exact GPU reloads. Two actual
+    conceptual Claude exchanges, correction acknowledged. Fixed unreadable plot layout, structurally checked45
+    reports; browser URL rejection preserved without workaround. Committed code/docs/results, no default
+    architecture replacement or extra fit after confirmation.
+  provenance: ai-executed
+  files_changed:
+  - experiments/memory_output.py
+  - pathwm/evaluation/report.py
+  - tests/test_training_scenes.py
+  - tests/test_memory_output.py
+  - docs/project-state.md
+  - docs/recall-repair-plan.md
+  - docs/experiments.md
+  - runs/texture_shape_v1/
+  - ara/evidence/tables/texture_shape_2026-09-13.json
 
 claims_touched: []
 key_context:
@@ -897,13 +958,19 @@ key_context:
   excerpt: User requests continued Claude plan/implement/review/test/fix iteration on open points, then
     explicitly selects Send this brief to Claude for the linked protocol follow-up. This is specific payload
     approval, not unrestricted private export. No researcher response yet to new model outcomes.
+- turn: 18
+  excerpt: 'User: Yes please. Continue together with Claude. Plan, implement, review, test, fix. Iterate
+    these open points. This adopts the next bounded method; no researcher comment yet on the resulting
+    texture/cool-shape measurements.'
 
 open_threads:
-- 'N315/N317/O211/O212: warm-tint output learning improves; cool-shape and texture retention remain incomplete.
-  Next separately declared texture/shape fitting comparison with raw/clean controls and fresh data. General
-  scenes, real recordings, independent upstream runs and runtime still open; disk headroom limited.'
-- 'N278-N317: CPU/GPU portability unresolved; preserve earlier numerical/categorical differences. This
-  iteration adds80 exact ordinary/reset GPU replays and109 integrity tests, not a CPU portability repair.'
+- 'N319/N320/O213/O214: texture data improves beyond matched continuation but cool recall shape and strict
+  texture retention remain open. Next inspect recall image producer loss/gradients before controlled objective/capacity
+  change; fresh confirmation required. General scenes, real recordings, reliability and independent upstream
+  runs remain open. Preserve completed runs and disk floor.'
+- 'N278-N320: CPU/GPU portability unresolved; preserve earlier numerical/categorical differences. Current40
+  exact GPU replays and74 scoped tests do not repair CPU inference portability; normalization-rounding
+  diagnostic tolerance is separate.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
   and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and
@@ -951,5 +1018,7 @@ ai_suggestions_pending:
 - 'O209: scene-limited centering and diagnostic accessibility interpretation; researcher response pending.'
 - 'O211: partial scene/native output sufficiency and residual shape fitting interpretation; researcher
   response pending.'
-- 'O212: balanced texture/shape continuation and producer diagnosis proposed, with fresh gates and resource
-  headroom.'
+- 'O213: conditional texture-mixture benefit and persistent recall shape shortfall interpretation; researcher
+  response pending.'
+- 'O214: recall image producer objective/gradient/capacity diagnosis proposed, with fresh confirmation
+  and retention.'

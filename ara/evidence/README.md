@@ -130,3 +130,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
   local projection ranks, short training exposure and primary-paper capacity/fidelity distinctions.
 
 - [Centered tint native learning and resume guard](tables/tint_readout_2026-09-13.json): N314–N317; four fits,80 cells,109 tests; overall repair fails despite warm-tint improvement.
+
+- [Texture and shape continuation](tables/texture_shape_2026-09-13.json): N318–N320; matched texture benefit, unresolved cool recall shape;74 tests,40 exact GPU reloads,10188 independent metrics.

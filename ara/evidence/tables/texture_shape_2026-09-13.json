@@ -1,0 +1,1629 @@
+{
+  "block_audit": {
+    "first_three_cache_blocks_identical": true,
+    "fits": {
+      "source_8502_augmented": {
+        "blocks": [
+          {
+            "block": 0,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "neutral"
+          },
+          {
+            "block": 1,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 0.99609375,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 0.99609375,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 0.984375,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 0.984375,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 0.99609375,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 0.99609375,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "background-tint"
+          },
+          {
+            "block": 2,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 0.99609375,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 0.99609375,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 0.97265625,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 0.97265625,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 0.79296875,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 0.79296875,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "background-cool"
+          },
+          {
+            "block": 3,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 0.99609375,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 0.99609375,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 0.9921875,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 0.9921875,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 0.984375,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 0.984375,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "background-texture"
+          }
+        ],
+        "cache_hashes_exact": true,
+        "training_targets_exact": true,
+        "verified_metrics": 64
+      },
+      "source_8502_control": {
+        "blocks": [
+          {
+            "block": 0,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "neutral"
+          },
+          {
+            "block": 1,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 0.97265625,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 0.97265625,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 0.98828125,
+                "image_color_accuracy": 0.9921875,
+                "image_shape_accuracy": 0.98828125,
+                "image_side_accuracy": 0.9921875
+              }
+            },
+            "scene": "background-tint"
+          },
+          {
+            "block": 2,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 0.984375,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 0.984375,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 0.8125,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 0.8125,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "background-cool"
+          },
+          {
+            "block": 3,
+            "metrics": {
+              "ordinary": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              },
+              "reset": {
+                "factual_accuracy": 1.0,
+                "factual_color_accuracy": 1.0,
+                "factual_shape_accuracy": 1.0,
+                "factual_side_accuracy": 1.0,
+                "image_accuracy": 1.0,
+                "image_color_accuracy": 1.0,
+                "image_shape_accuracy": 1.0,
+                "image_side_accuracy": 1.0
+              }
+            },
+            "scene": "neutral"
+          }
+        ],
+        "cache_hashes_exact": true,
+        "training_targets_exact": true,
+        "verified_metrics": 64
+      }
+    }
+  },
+  "error_analysis": {
+    "source_8502_augmented": [
+      {
+        "block": 0,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "neutral",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 0,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "reset",
+        "scene": "neutral",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 1,
+        "correct_facts_wrong_image": 1,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            1,
+            127
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "background-tint",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 1,
+          "side": 0
+        }
+      },
+      {
+        "block": 1,
+        "correct_facts_wrong_image": 1,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            1,
+            127
+          ]
+        ],
+        "mode": "reset",
+        "scene": "background-tint",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 1,
+          "side": 0
+        }
+      },
+      {
+        "block": 2,
+        "correct_facts_wrong_image": 1,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            1,
+            127
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "background-cool",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 1,
+          "side": 0
+        }
+      },
+      {
+        "block": 2,
+        "correct_facts_wrong_image": 46,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            53,
+            75
+          ]
+        ],
+        "mode": "reset",
+        "scene": "background-cool",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 53,
+          "side": 0
+        }
+      },
+      {
+        "block": 3,
+        "correct_facts_wrong_image": 2,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            2,
+            126
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "background-texture",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 2,
+          "side": 0
+        }
+      },
+      {
+        "block": 3,
+        "correct_facts_wrong_image": 4,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            4,
+            124
+          ]
+        ],
+        "mode": "reset",
+        "scene": "background-texture",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 4,
+          "side": 0
+        }
+      }
+    ],
+    "source_8502_control": [
+      {
+        "block": 0,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "neutral",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 0,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "reset",
+        "scene": "neutral",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 1,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "background-tint",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 1,
+        "correct_facts_wrong_image": 3,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            3,
+            125
+          ]
+        ],
+        "mode": "reset",
+        "scene": "background-tint",
+        "wrong_image_by_factor": {
+          "color": 2,
+          "shape": 3,
+          "side": 2
+        }
+      },
+      {
+        "block": 2,
+        "correct_facts_wrong_image": 4,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            4,
+            124
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "background-cool",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 4,
+          "side": 0
+        }
+      },
+      {
+        "block": 2,
+        "correct_facts_wrong_image": 48,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            48,
+            80
+          ]
+        ],
+        "mode": "reset",
+        "scene": "background-cool",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 48,
+          "side": 0
+        }
+      },
+      {
+        "block": 3,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "ordinary",
+        "scene": "neutral",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      },
+      {
+        "block": 3,
+        "correct_facts_wrong_image": 0,
+        "histories": 256,
+        "image_shape_confusion": [
+          [
+            128,
+            0
+          ],
+          [
+            0,
+            128
+          ]
+        ],
+        "mode": "reset",
+        "scene": "neutral",
+        "wrong_image_by_factor": {
+          "color": 0,
+          "shape": 0,
+          "side": 0
+        }
+      }
+    ]
+  },
+  "native_scores": {
+    "source_8502_augmented_30073_background-cool": {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.96875,
+        0.8125
+      ],
+      "gate": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_augmented_30073_background-cool-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        0.9375
+      ],
+      "gate": true,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_augmented_30073_background-texture": {
+      "accuracy": [
+        0.9375,
+        0.9375,
+        0.9375,
+        0.9375
+      ],
+      "gate": true,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": false
+    },
+    "source_8502_augmented_30073_background-tint": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_augmented_30073_background-warm-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_augmented_30073_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_augmented_30074_background-cool": {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.96875,
+        0.78125
+      ],
+      "gate": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_augmented_30074_background-cool-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        0.96875
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_augmented_30074_background-texture": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": true
+    },
+    "source_8502_augmented_30074_background-tint": {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.9375,
+        0.96875
+      ],
+      "gate": true,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_augmented_30074_background-warm-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_augmented_30074_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_30073_background-cool": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        0.8125
+      ],
+      "gate": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_30073_background-cool-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        0.9375
+      ],
+      "gate": true,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_30073_background-texture": {
+      "accuracy": [
+        0.84375,
+        0.9375,
+        0.78125,
+        0.8125
+      ],
+      "gate": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": false
+    },
+    "source_8502_control_30073_background-tint": {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.96875,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_30073_background-warm-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_30073_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_30074_background-cool": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        0.8125
+      ],
+      "gate": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_30074_background-cool-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        0.96875
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_30074_background-texture": {
+      "accuracy": [
+        0.84375,
+        0.96875,
+        0.875,
+        0.875
+      ],
+      "gate": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": false
+    },
+    "source_8502_control_30074_background-tint": {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.9375,
+        0.96875
+      ],
+      "gate": true,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_30074_background-warm-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_control_30074_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_raw_30073_background-texture": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": null,
+      "raw_texture_retention": null
+    },
+    "source_8502_raw_30073_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": null,
+      "raw_texture_retention": null
+    },
+    "source_8502_raw_30074_background-texture": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": null,
+      "raw_texture_retention": null
+    },
+    "source_8502_raw_30074_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": null,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_30073_background-cool": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        0.8125
+      ],
+      "gate": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_30073_background-cool-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_30073_background-texture": {
+      "accuracy": [
+        0.78125,
+        0.875,
+        0.75,
+        0.8125
+      ],
+      "gate": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": false
+    },
+    "source_8502_unchanged_30073_background-tint": {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.9375,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_30073_background-warm-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_30073_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_30074_background-cool": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        0.8125
+      ],
+      "gate": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_30074_background-cool-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_30074_background-texture": {
+      "accuracy": [
+        0.875,
+        0.9375,
+        0.875,
+        0.875
+      ],
+      "gate": false,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": false
+    },
+    "source_8502_unchanged_30074_background-tint": {
+      "accuracy": [
+        0.96875,
+        1.0,
+        0.90625,
+        0.96875
+      ],
+      "gate": true,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_30074_background-warm-mild": {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.9375,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": false,
+      "raw_texture_retention": null
+    },
+    "source_8502_unchanged_30074_neutral": {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "gate": true,
+      "raw_neutral_retention": true,
+      "raw_texture_retention": null
+    }
+  },
+  "review_status": {
+    "actual_claude": true,
+    "adopted": [
+      "matched continuation and unchanged baseline",
+      "condition-level training/evaluation",
+      "diagnostic checkpoint choice",
+      "absolute errors and paired quartet differences; no unsupported significance",
+      "ceiling/near-zero error guard"
+    ],
+    "correction": "Claude withdrew redundant third training arm recommendation.",
+    "export": "Generic methodological briefs only; no private source, datasets or measurements supplied.",
+    "remaining": "An unchanged checkpoint alone does not isolate a pure optimization effect independent of mixture; our clean continuation versus unchanged quantifies continuation on the retained mixture, while the two trained arms isolate replacing the duplicate clean block with texture at this fixed budget.",
+    "rounds": [
+      "runs/reviews/continuation_2026-09-11/texture-method-public-receipt.json",
+      "runs/reviews/continuation_2026-09-11/texture-reconcile-public-receipt.json"
+    ]
+  },
+  "scope": "Two matched native-head continuations of one deliberately selected weaker checkpoint; familiar synthetic scenes; diagnostic only.",
+  "source_manifest": {
+    "/home/alex/Documents/path-wm/runs/image_continuation_v1/source_8502_joint/weights.pt": "5ecf75d2b8982545fff297340e614772cebafa2d9d188128eef20333d1ce5e96",
+    "/home/alex/Documents/path-wm/runs/tint_readout_v1/source_8502_augmented/result.json": "669eac6c6d99fc24c7a6d5fd61030434615c39eb04d105ea03bf3107a65a7ae9",
+    "/home/alex/Documents/path-wm/runs/tint_readout_v1/source_8502_augmented/run.json": "2161e10a13ea8d4eef3bff5956ddae2aeaffe39ed45e23ec8c4ca2e0efd022ae",
+    "/home/alex/Documents/path-wm/runs/tint_readout_v1/source_8502_augmented/weights.pt": "00be1d70e59db2531828a159ade989d01e324109d16a766d654b5d81fc76ee8e",
+    "experiments/capture_webcam.py": "07d4210a7b7a8f526b72e7ab40066a38a20c17b03c34c0c5ee11f4b58be9b6ea",
+    "experiments/dynamics.py": "42ac6ad0d582a62635761ee3da97c703ce9a4b5d00db78ce382dc1da0eb0af9f",
+    "experiments/hierarchy_fusion.py": "e82e33c8432605b396221ca6b2b34a928fdda14f186b850f6a79d9f492482ae1",
+    "experiments/image_output.py": "3eb6008fdbf319efcd12a88c06fa947436510349bb46a39abefdf562f2624e96",
+    "experiments/memory_output.py": "aa578c2827f0c3a9097ddcb25a8b58c83ef2cffd3883756fd47094fe3db08ede",
+    "experiments/memory_probes.py": "33603afb59edfd6781b315c1ef17988c2cf96528d79b94234060fc571f71e2cd",
+    "experiments/multimodal.py": "04b1f2784e50e947cd172f435ed4df420f8ce45262c41e7f94d1ffa919c71c98",
+    "experiments/perception.py": "e20e4d5ea96264e0a8e22f887db7aa8937f788f0bf62cf8e01ab614dd18902d7",
+    "pathwm/__init__.py": "dbe18dfe9dc29621a41aa22f9814ce4fb4a36bf5cfd0c3ed0b2659377ae45d41",
+    "pathwm/data/__init__.py": "6b1432570ee3dbd1b949c59cfcef843ba86c99bb915d95e677b55dff469a93ff",
+    "pathwm/data/entities.py": "a14a663e193e94cb57d61cd1f4ed8b3291fd001acdae557cb36062c3e4ab18ca",
+    "pathwm/data/entity_interaction.py": "dc78da4c10fd6ffa9d2e0bb28fb2e5b371d464af8ea23695bd604c7138791312",
+    "pathwm/data/entity_state.py": "08a24a8ac7146185a424f4db5dca0e2dee6ab9f72957d9a557b6be97842329f3",
+    "pathwm/data/entity_temporal.py": "dcacb6fe453ed00c286c39b2ee823c7cdd996f405e55b8bb9cda2929d78bfdaf",
+    "pathwm/data/images.py": "672f1531205326efd474a7e162f07ade26025e41ec5227adbee324ac21341b10",
+    "pathwm/data/memory_output.py": "6c684b8c77cc1ea87bad749ce789dee0530cbf9967afd65ebca981a1edf165d1",
+    "pathwm/data/sequences.py": "1ac313bb026be4ac6894cad2565f1a3272a4c6b2df33285c0799e1b3eb0f5fd5",
+    "pathwm/data/visual_memory.py": "5c1cddbb5938c2c2308e6b406cdabd5d2c82bb259b22aaf4bf1b981a3f6dd219",
+    "pathwm/evaluation/__init__.py": "7173fadfcca4203232471319e879a5fa5aea400fafce7371656d2f408a1db245",
+    "pathwm/evaluation/agent.py": "7d7bdf8065f4ce7b4b42317a83aaba9a8e5c78147cfa0c9b209e471e4c66c060",
+    "pathwm/evaluation/capabilities.py": "afcb76d623545acba14697e94442302a45c9dd18f0eecd8a9b6d9620caa23f7c",
+    "pathwm/evaluation/diagrams.py": "dba3876814463a73aabbf373d896e9f062f5f1015342382d6d4e9b8f357cdb23",
+    "pathwm/evaluation/entities.py": "fedfd5799b55f6a5cdc5f05c26e24a9056d2962e5139c351a8ff91efe5f81c11",
+    "pathwm/evaluation/entity_gate.py": "c11fc421205778f1bbe6435e060390c999b3a8e5df78170efba756e9bcc76b6d",
+    "pathwm/evaluation/entity_growth.py": "300b913cd290fddc74d4c419f16766b901f79dafc5084a317c14069ae0276638",
+    "pathwm/evaluation/entity_relations.py": "0662469572e3c2553ffca01b8754abfb9cc63826b9646b3374d5770303c2cad1",
+    "pathwm/evaluation/entity_source.py": "808c37698bed3da94773d8e90412f6011bf5549e5bcfc1b730f8f4c0509270fe",
+    "pathwm/evaluation/entity_state.py": "013daea0cea9ed1a239010b99c3352d0dd34401d26991e243eec7ee5e3931bd0",
+    "pathwm/evaluation/facts.py": "f75e5b053625f3abc340b4a82d8de41958a5e32dd009b411bc9bcd8da8f53b30",
+    "pathwm/evaluation/key_box.py": "fee5ed1869e6cf0e03aa84ada5f44512981ba876a988b00cdd7992e66b030f6d",
+    "pathwm/evaluation/planning.py": "4e327047925057618974a49190f46f354ec068a5830841c4ed2d104a4c8ca1b6",
+    "pathwm/evaluation/recall.py": "09b7d4761223b6513e9565ea132e44e2e6bb3c64a416f9049673c71f770cf464",
+    "pathwm/evaluation/report.py": "7fa9318294dce014fe164f62d993ba25d4ae2ffd235917427fcbf6cc671287e4",
+    "pathwm/evaluation/source_choice.py": "b460cae91d3f65451f9cb3fdde0844aa579d9b5c5ba4952a6e8ee667e7658e7a",
+    "pathwm/evaluation/visual_memory.py": "ce372069bfde258bf87f25294011e5fd4fd716e234580e626cd410cad8961ea4",
+    "pathwm/io.py": "57f6a6679e0d7b4d772a1c5609e2a69a50c4f6f04c4da1c965e53e2913061441",
+    "pathwm/models/__init__.py": "cc85654c53502b8015698e9c3f8bce8efb72d4a926358a01f3e23c0147e2eba3",
+    "pathwm/models/agent.py": "2a19c0aa214002f57f3e4b4e6bdc4a4b6ed76eedb0ead7488712de8542217a98",
+    "pathwm/models/agent_state.py": "d5d855a5301b1df30bf3362e4c8835f3c5ea6e2c7ab297b46736ea8e78eff447",
+    "pathwm/models/belief.py": "589581b53d9c69a9828de40980b10cb5e03cc591c5b49ae2a2283e36e65802df",
+    "pathwm/models/belief_state.py": "8ea85269330abbffefb409c7ff3937799527c8de13af7759e65be8f2e454aa24",
+    "pathwm/models/blocks.py": "e450522830834233f06566f5d445aeb122275c6695d24fb81642f15b9e6b3ff4",
+    "pathwm/models/decoders.py": "19bebeed62f1e0d56d09911de637a7a461c01e6130cc95012cb76c7c999ac4f4",
+    "pathwm/models/encoders.py": "c3aaef90a2bd76a45268559890a23aba5ec116226d15fd006567341954a6d919",
+    "pathwm/models/entities.py": "943ef45018792698f1cdbf2b7d79344291e3b3a22f389b3141c68769cc548580",
+    "pathwm/models/entity_memory.py": "bea6d66161cbc99d45f8b587729f75e20f5f0a2bc861d3620400ab7d1f22952f",
+    "pathwm/models/entity_relations.py": "5701d6cd4d6d949f4a394d89d7225f79f7348545e60b24774a4df5171dca8bae",
+    "pathwm/models/entity_state.py": "70f55bc1b97ae91ee0e501cd0630e76a4f55a2e5e0c5588af39d707e5c4a049a",
+    "pathwm/models/facts.py": "0b6135edbb51e4e436b38e1b20292fde640200b127d7427c8137e0504c937585",
+    "pathwm/models/features.py": "a5058921937ac677df21e014bd6b481fd3b0c4b2f49bbe6ba65754e53706a656",
+    "pathwm/models/hybrid_memory.py": "7dbc8abcdca93e80967de4dd22954a7bbada5280817660bee7ded9ea20b08bd7",
+    "pathwm/models/key_box.py": "beb19a79f996065374226122a0b4351cea888d0bce07a18bce3471e6480d9305",
+    "pathwm/models/memory_output.py": "5415550de1f4c6ec972ab4ff3fd0c8862f37515c1076287ca892c281e95fe128",
+    "pathwm/models/modalities.py": "294c5533f1ae13cc070362af51f5fdf90f91124cf162c31fdebc2de644f147bf",
+    "pathwm/models/multiscale.py": "dce10e858e25808a293aaf3ac5b772bf7c5ba527bd33230d3e081a247a963673",
+    "pathwm/models/perception.py": "215bd392ab74b495b1fc33dc8204094f40498e3ab4d4cba24c1fadeaea00b29e",
+    "pathwm/models/recall.py": "f985181ceb16246f0e8579e09d88024ecb5b4ba8222f9c68dd9581876dca541c",
+    "pathwm/models/source_choice.py": "bce54b502b53aa274bfd6599156f5a453b458d8c1e5e2a7534ea00300bd83944",
+    "pathwm/models/tasks.py": "69bc3f5a2847e6779c01c1c77a99f9a84514b0855ddea6b41d684b24168724e9",
+    "pathwm/models/temporal.py": "df2e39ae0c4e93b7c3a81964e1ec3f3fc1aa9e071f4a93b02d7b47a9c07d40b5",
+    "pathwm/models/visual_memory.py": "08a12c21709ecb572be1db1d2c2e36892d750600e6a4a2086f28ca642be543e5",
+    "pathwm/training/__init__.py": "561545f34720f7edd1c48f93b2dcd4530940744ba86b40bdd1fdef5ed1e31235",
+    "pathwm/training/belief.py": "f965ce75ae34c40b095ba90f597894855c75603c7b00a275913bf3fde7323eca",
+    "pathwm/training/dynamics.py": "4182fce86ab6b25cd47493ed4742e8dc6ac5a5572f4d775dafa34bb5b8596d04",
+    "pathwm/training/improvement.py": "728fdcc2138e2ee417b5f95b1b15c30c059f2c1f2bf5c2e5e2ac25b9bcc62342",
+    "pathwm/training/perception.py": "506c262ab0d9b03e37dd24a4e89b64882f4abf138d85c0b439a729b9c1805eb2"
+  },
+  "summary": {
+    "absolute_error_reduction": 26,
+    "added_texture_benefit": true,
+    "all_scene_retention": 7,
+    "all_task_passes": 10,
+    "benefit_assessable": true,
+    "clean_retention": 2,
+    "correlation": "Four response types on each of 32 histories per seed; correlated quartets, exact descriptive counts only.",
+    "groups": {
+      "augmented": {
+        "accuracy_range": [
+          0.78125,
+          1.0
+        ],
+        "cells": 12,
+        "task_passes": 10
+      },
+      "control": {
+        "accuracy_range": [
+          0.78125,
+          1.0
+        ],
+        "cells": 12,
+        "task_passes": 8
+      },
+      "raw": {
+        "accuracy_range": [
+          1.0,
+          1.0
+        ],
+        "cells": 4,
+        "task_passes": 4
+      },
+      "unchanged": {
+        "accuracy_range": [
+          0.75,
+          1.0
+        ],
+        "cells": 12,
+        "task_passes": 8
+      }
+    },
+    "paired_quartets": [
+      {
+        "correct_delta_by_response": [
+          1,
+          0,
+          1,
+          0
+        ],
+        "histories": 4,
+        "quartet": 0,
+        "seed": 30073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 1,
+        "seed": 30073
+      },
+      {
+        "correct_delta_by_response": [
+          1,
+          0,
+          1,
+          2
+        ],
+        "histories": 4,
+        "quartet": 2,
+        "seed": 30073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 3,
+        "seed": 30073
+      },
+      {
+        "correct_delta_by_response": [
+          1,
+          0,
+          2,
+          2
+        ],
+        "histories": 4,
+        "quartet": 4,
+        "seed": 30073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 5,
+        "seed": 30073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "histories": 4,
+        "quartet": 6,
+        "seed": 30073
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 7,
+        "seed": 30073
+      },
+      {
+        "correct_delta_by_response": [
+          1,
+          0,
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 0,
+        "seed": 30074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 1,
+        "seed": 30074
+      },
+      {
+        "correct_delta_by_response": [
+          1,
+          0,
+          2,
+          2
+        ],
+        "histories": 4,
+        "quartet": 2,
+        "seed": 30074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 3,
+        "seed": 30074
+      },
+      {
+        "correct_delta_by_response": [
+          1,
+          1,
+          2,
+          2
+        ],
+        "histories": 4,
+        "quartet": 4,
+        "seed": 30074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 5,
+        "seed": 30074
+      },
+      {
+        "correct_delta_by_response": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 6,
+        "seed": 30074
+      },
+      {
+        "correct_delta_by_response": [
+          2,
+          0,
+          0,
+          0
+        ],
+        "histories": 4,
+        "quartet": 7,
+        "seed": 30074
+      }
+    ],
+    "predictions_per_arm": 256,
+    "relative_error_reduction": 0.7647058823529411,
+    "repair": false,
+    "source_selection": "deliberately chosen weaker checkpoint; diagnostic, not independent replication",
+    "texture_errors": {
+      "augmented": 8,
+      "control": 34
+    },
+    "texture_retention": 1
+  },
+  "timestamp": "2026-09-13T21:48+02:00",
+  "training_audit": {
+    "source_8502_augmented": {
+      "changed_names": [
+        "agent.decoders.image.queries.scale_0",
+        "agent.decoders.image.queries.scale_1",
+        "agent.decoders.image.queries.scale_2",
+        "agent.decoders.image.queries.detail",
+        "agent.decoders.image.reader.scale_0.query_norm.weight",
+        "agent.decoders.image.reader.scale_0.query_norm.bias",
+        "agent.decoders.image.reader.scale_0.key_norm.weight",
+        "agent.decoders.image.reader.scale_0.key_norm.bias",
+        "agent.decoders.image.reader.scale_0.attention.in_proj_weight",
+        "agent.decoders.image.reader.scale_0.attention.in_proj_bias",
+        "agent.decoders.image.reader.scale_0.attention.out_proj.weight",
+        "agent.decoders.image.reader.scale_0.attention.out_proj.bias",
+        "agent.decoders.image.reader.scale_0.mlp.0.weight",
+        "agent.decoders.image.reader.scale_0.mlp.0.bias",
+        "agent.decoders.image.reader.scale_0.mlp.1.weight",
+        "agent.decoders.image.reader.scale_0.mlp.1.bias",
+        "agent.decoders.image.reader.scale_0.mlp.3.weight",
+        "agent.decoders.image.reader.scale_0.mlp.3.bias",
+        "agent.decoders.image.reader.scale_1.query_norm.weight",
+        "agent.decoders.image.reader.scale_1.query_norm.bias",
+        "agent.decoders.image.reader.scale_1.key_norm.weight",
+        "agent.decoders.image.reader.scale_1.key_norm.bias",
+        "agent.decoders.image.reader.scale_1.attention.in_proj_weight",
+        "agent.decoders.image.reader.scale_1.attention.in_proj_bias",
+        "agent.decoders.image.reader.scale_1.attention.out_proj.weight",
+        "agent.decoders.image.reader.scale_1.attention.out_proj.bias",
+        "agent.decoders.image.reader.scale_1.mlp.0.weight",
+        "agent.decoders.image.reader.scale_1.mlp.0.bias",
+        "agent.decoders.image.reader.scale_1.mlp.1.weight",
+        "agent.decoders.image.reader.scale_1.mlp.1.bias",
+        "agent.decoders.image.reader.scale_1.mlp.3.weight",
+        "agent.decoders.image.reader.scale_1.mlp.3.bias",
+        "agent.decoders.image.reader.scale_2.query_norm.weight",
+        "agent.decoders.image.reader.scale_2.query_norm.bias",
+        "agent.decoders.image.reader.scale_2.key_norm.weight",
+        "agent.decoders.image.reader.scale_2.key_norm.bias",
+        "agent.decoders.image.reader.scale_2.attention.in_proj_weight",
+        "agent.decoders.image.reader.scale_2.attention.in_proj_bias",
+        "agent.decoders.image.reader.scale_2.attention.out_proj.weight",
+        "agent.decoders.image.reader.scale_2.attention.out_proj.bias",
+        "agent.decoders.image.reader.scale_2.mlp.0.weight",
+        "agent.decoders.image.reader.scale_2.mlp.0.bias",
+        "agent.decoders.image.reader.scale_2.mlp.1.weight",
+        "agent.decoders.image.reader.scale_2.mlp.1.bias",
+        "agent.decoders.image.reader.scale_2.mlp.3.weight",
+        "agent.decoders.image.reader.scale_2.mlp.3.bias",
+        "agent.decoders.image.reader.detail.query_norm.weight",
+        "agent.decoders.image.reader.detail.query_norm.bias",
+        "agent.decoders.image.reader.detail.key_norm.weight",
+        "agent.decoders.image.reader.detail.key_norm.bias",
+        "agent.decoders.image.reader.detail.attention.in_proj_weight",
+        "agent.decoders.image.reader.detail.attention.in_proj_bias",
+        "agent.decoders.image.reader.detail.attention.out_proj.weight",
+        "agent.decoders.image.reader.detail.attention.out_proj.bias",
+        "agent.decoders.image.reader.detail.mlp.0.weight",
+        "agent.decoders.image.reader.detail.mlp.0.bias",
+        "agent.decoders.image.reader.detail.mlp.1.weight",
+        "agent.decoders.image.reader.detail.mlp.1.bias",
+        "agent.decoders.image.reader.detail.mlp.3.weight",
+        "agent.decoders.image.reader.detail.mlp.3.bias",
+        "agent.decoders.image.projections.scale_0.weight",
+        "agent.decoders.image.projections.scale_0.bias",
+        "agent.decoders.image.projections.scale_1.weight",
+        "agent.decoders.image.projections.scale_1.bias",
+        "agent.decoders.image.projections.scale_2.weight",
+        "agent.decoders.image.projections.scale_2.bias",
+        "agent.decoders.image.projections.detail.weight",
+        "agent.decoders.image.projections.detail.bias",
+        "facts.query",
+        "facts.readers.0.query_norm.weight",
+        "facts.readers.0.query_norm.bias",
+        "facts.readers.0.key_norm.weight",
+        "facts.readers.0.key_norm.bias",
+        "facts.readers.0.attention.in_proj_weight",
+        "facts.readers.0.attention.in_proj_bias",
+        "facts.readers.0.attention.out_proj.weight",
+        "facts.readers.0.attention.out_proj.bias",
+        "facts.readers.0.mlp.0.weight",
+        "facts.readers.0.mlp.0.bias",
+        "facts.readers.0.mlp.1.weight",
+        "facts.readers.0.mlp.1.bias",
+        "facts.readers.0.mlp.3.weight",
+        "facts.readers.0.mlp.3.bias",
+        "facts.output.weight",
+        "facts.output.bias"
+      ],
+      "final_sha256": "41fdf72032ae60963004b2fc43fd197407cb2daf66f9326a138569b0d5e4664e",
+      "frozen_parameters_and_buffers_exact": true,
+      "initial_exact": true,
+      "max_metric_error": 7.66599157764336e-09,
+      "metric_groups": [
+        237,
+        53
+      ],
+      "ordinary_reset_presentations_equal": true,
+      "presentations": 24576,
+      "source_sha256": "00be1d70e59db2531828a159ade989d01e324109d16a766d654b5d81fc76ee8e",
+      "steps": 1536,
+      "trainable_parameters": 67032,
+      "verified_metrics": 290
+    },
+    "source_8502_control": {
+      "changed_names": [
+        "agent.decoders.image.queries.scale_0",
+        "agent.decoders.image.queries.scale_1",
+        "agent.decoders.image.queries.scale_2",
+        "agent.decoders.image.queries.detail",
+        "agent.decoders.image.reader.scale_0.query_norm.weight",
+        "agent.decoders.image.reader.scale_0.query_norm.bias",
+        "agent.decoders.image.reader.scale_0.key_norm.weight",
+        "agent.decoders.image.reader.scale_0.key_norm.bias",
+        "agent.decoders.image.reader.scale_0.attention.in_proj_weight",
+        "agent.decoders.image.reader.scale_0.attention.in_proj_bias",
+        "agent.decoders.image.reader.scale_0.attention.out_proj.weight",
+        "agent.decoders.image.reader.scale_0.attention.out_proj.bias",
+        "agent.decoders.image.reader.scale_0.mlp.0.weight",
+        "agent.decoders.image.reader.scale_0.mlp.0.bias",
+        "agent.decoders.image.reader.scale_0.mlp.1.weight",
+        "agent.decoders.image.reader.scale_0.mlp.1.bias",
+        "agent.decoders.image.reader.scale_0.mlp.3.weight",
+        "agent.decoders.image.reader.scale_0.mlp.3.bias",
+        "agent.decoders.image.reader.scale_1.query_norm.weight",
+        "agent.decoders.image.reader.scale_1.query_norm.bias",
+        "agent.decoders.image.reader.scale_1.key_norm.weight",
+        "agent.decoders.image.reader.scale_1.key_norm.bias",
+        "agent.decoders.image.reader.scale_1.attention.in_proj_weight",
+        "agent.decoders.image.reader.scale_1.attention.in_proj_bias",
+        "agent.decoders.image.reader.scale_1.attention.out_proj.weight",
+        "agent.decoders.image.reader.scale_1.attention.out_proj.bias",
+        "agent.decoders.image.reader.scale_1.mlp.0.weight",
+        "agent.decoders.image.reader.scale_1.mlp.0.bias",
+        "agent.decoders.image.reader.scale_1.mlp.1.weight",
+        "agent.decoders.image.reader.scale_1.mlp.1.bias",
+        "agent.decoders.image.reader.scale_1.mlp.3.weight",
+        "agent.decoders.image.reader.scale_1.mlp.3.bias",
+        "agent.decoders.image.reader.scale_2.query_norm.weight",
+        "agent.decoders.image.reader.scale_2.query_norm.bias",
+        "agent.decoders.image.reader.scale_2.key_norm.weight",
+        "agent.decoders.image.reader.scale_2.key_norm.bias",
+        "agent.decoders.image.reader.scale_2.attention.in_proj_weight",
+        "agent.decoders.image.reader.scale_2.attention.in_proj_bias",
+        "agent.decoders.image.reader.scale_2.attention.out_proj.weight",
+        "agent.decoders.image.reader.scale_2.attention.out_proj.bias",
+        "agent.decoders.image.reader.scale_2.mlp.0.weight",
+        "agent.decoders.image.reader.scale_2.mlp.0.bias",
+        "agent.decoders.image.reader.scale_2.mlp.1.weight",
+        "agent.decoders.image.reader.scale_2.mlp.1.bias",
+        "agent.decoders.image.reader.scale_2.mlp.3.weight",
+        "agent.decoders.image.reader.scale_2.mlp.3.bias",
+        "agent.decoders.image.reader.detail.query_norm.weight",
+        "agent.decoders.image.reader.detail.query_norm.bias",
+        "agent.decoders.image.reader.detail.key_norm.weight",
+        "agent.decoders.image.reader.detail.key_norm.bias",
+        "agent.decoders.image.reader.detail.attention.in_proj_weight",
+        "agent.decoders.image.reader.detail.attention.in_proj_bias",
+        "agent.decoders.image.reader.detail.attention.out_proj.weight",
+        "agent.decoders.image.reader.detail.attention.out_proj.bias",
+        "agent.decoders.image.reader.detail.mlp.0.weight",
+        "agent.decoders.image.reader.detail.mlp.0.bias",
+        "agent.decoders.image.reader.detail.mlp.1.weight",
+        "agent.decoders.image.reader.detail.mlp.1.bias",
+        "agent.decoders.image.reader.detail.mlp.3.weight",
+        "agent.decoders.image.reader.detail.mlp.3.bias",
+        "agent.decoders.image.projections.scale_0.weight",
+        "agent.decoders.image.projections.scale_0.bias",
+        "agent.decoders.image.projections.scale_1.weight",
+        "agent.decoders.image.projections.scale_1.bias",
+        "agent.decoders.image.projections.scale_2.weight",
+        "agent.decoders.image.projections.scale_2.bias",
+        "agent.decoders.image.projections.detail.weight",
+        "agent.decoders.image.projections.detail.bias",
+        "facts.query",
+        "facts.readers.0.query_norm.weight",
+        "facts.readers.0.query_norm.bias",
+        "facts.readers.0.key_norm.weight",
+        "facts.readers.0.key_norm.bias",
+        "facts.readers.0.attention.in_proj_weight",
+        "facts.readers.0.attention.in_proj_bias",
+        "facts.readers.0.attention.out_proj.weight",
+        "facts.readers.0.attention.out_proj.bias",
+        "facts.readers.0.mlp.0.weight",
+        "facts.readers.0.mlp.0.bias",
+        "facts.readers.0.mlp.1.weight",
+        "facts.readers.0.mlp.1.bias",
+        "facts.readers.0.mlp.3.weight",
+        "facts.readers.0.mlp.3.bias",
+        "facts.output.weight",
+        "facts.output.bias"
+      ],
+      "final_sha256": "10a50b079d67a3c46814172abaca714708f57c44760431da4acd3cc0e2b945d3",
+      "frozen_parameters_and_buffers_exact": true,
+      "initial_exact": true,
+      "max_metric_error": 7.66599157764336e-09,
+      "metric_groups": [
+        237,
+        53
+      ],
+      "ordinary_reset_presentations_equal": true,
+      "presentations": 24576,
+      "source_sha256": "00be1d70e59db2531828a159ade989d01e324109d16a766d654b5d81fc76ee8e",
+      "steps": 1536,
+      "trainable_parameters": 67032,
+      "verified_metrics": 290
+    }
+  },
+  "verification": {
+    "added_texture_benefit": true,
+    "browser_qa": {
+      "reason": "Supported in-app browser initialized, but browser URL policy rejected local file navigation. No workaround attempted.",
+      "status": "unavailable",
+      "structural_checks_retained": true,
+      "target": "/home/alex/Documents/path-wm/runs/texture_shape_v1/development_repaired/report.html"
+    },
+    "distinct_tests_passed": 74,
+    "evaluation_seconds": 189.83259117102716,
+    "exact_gpu_replays": 40,
+    "figures_inspected": [
+      "development_repaired/comparison.png",
+      "comparison.png",
+      "cool_shape_error.png"
+    ],
+    "fit_loop_seconds": 338.5824740109965,
+    "fits": 2,
+    "focused_repair_checks_passed": 9,
+    "formal_cells": 40,
+    "formal_source": "38cf923",
+    "free_disk_bytes": 9115107328,
+    "independent_metrics": 10188,
+    "inference_objective_metrics_and_data_unchanged": true,
+    "peak_gpu_reserved_bytes": 677380096,
+    "prior_functions_changed": [
+      "train"
+    ],
+    "receipt_sha256": {
+      "arrays_audit.json": "23c54eb82aec5dafd3e27ded934a7065daf0803a1193c007e05c57a7c6aaa428",
+      "block_audit.json": "316bffdac36e9681ee5e27df5a350b93102a2526cc25ece16d5b07852c162bd3",
+      "error_analysis.json": "62acb8acf1cbc7ea101ba2aa060db143a09575c40d309ef8a4c48a18450503de",
+      "error_visual.json": "51c94c172c3bbde88317c63fd97dace1e6b8a9e7627c8e8b2dc07adac45ac933",
+      "focused_tests.log": "585ba42829657b9e2d56f8614be6c3365a8405474eed008559511ab50f2ffcfb",
+      "gpu_audit.json": "94e16bc9e1092a38656fe0e554c25d7bc8c4e34c448dfae7ca7d94cb698772f8",
+      "preparation.json": "7dcfdefcf0e9581e8712ba3fdbe32b8cb9d9f5598d1e73adf864a71768592e5c",
+      "report_checks.json": "34e0b44eae1bc45928ef1e9e94adf27d42382cc9427542917c6572f656f422ae",
+      "review_status.json": "f4931f1e0a3c07bcc7fef760c0dcb7f89f62e6798716eedfcdfed5418a98708c",
+      "roundoff_red.log": "de41c7447ca15e42906cc33a3acad94141824bb0b3b5b7b173f0792275b9096a",
+      "source_manifest.json": "ab8d0db40eaa0930f8a4fc72ae00c0e6f299da981a66d8140887517165d295d1",
+      "summary.json": "61ff845b82ceedec10b2126e180d6adfed32ce20e3fc74f4471e561df41eb0d5",
+      "tests.log": "344502e6d3816d88c3471f5b4a4c92c4ff6b34ff3421437bb0d82fdd5e4a489a",
+      "training_audit.json": "1d6e89bc01cdd676d33ee6ee95e0de91743c6fa8534989582c79b8a57fe01ce9"
+    },
+    "repair": false,
+    "reports": 45,
+    "reviews": {
+      "runs/reviews/continuation_2026-09-11/texture-method-public-receipt.json": "b0c79e235d2bf397f937316f1ac98f65b70ba415bc141eead0cac021e4ab8855",
+      "runs/reviews/continuation_2026-09-11/texture-reconcile-public-receipt.json": "8529552c3c31bc8a37f100b878c2d8f8985e64ace11378eb7c1286c9e86a4ffe"
+    },
+    "script_sha256": {
+      "audit.py": "34747ff4b380f118bf16b9461c7281b98e94664ce12d5db5394607ca1c4f72d3",
+      "block_audit.py": "732c99b56be37f07fee8a162bc009c19fa4467c584487b4d365c574b455ad1ff",
+      "develop.py": "f51a527f8ac7a0704fc6b62590e7cb83291f9b0675f95b488ce5c665a7fb243e",
+      "develop_repaired.py": "d9831da6ca98f73776d6520f3d6829f6fddd1954faadd634f607b893e5c52da8",
+      "error_analysis.py": "9ab15e4d8c171e8e00922be83c09c33936f88c1073e73266e4487e87f509a344",
+      "error_visual.py": "14db29a59860dfe905fd9f025659b1a4ce161c383db2abf3df79d27fd4c957c4",
+      "final_verify.py": "fdb21c38f9818d2315f055b1c7de5d1f16c4e7a91f029a675a599b4183bebdbf",
+      "numeric.py": "c1d7199654f81a0d4a39d9fe7e83cd2d1e5ebe497e85f24665ea8e95e15cff00",
+      "prepare.py": "accea341afdd4f77d72efa62ed96704bef6fda66f50167262ce34e4ee0475b27",
+      "report_audit.py": "fe30891b6f716344753a8cfaa7f969e6a84d278c9f7c982827a611d9cbe25234",
+      "run_evaluations.py": "18b02cdd1af50fad74d9ef5692a50534ec970cf048b3dc02e4055fceeb075192",
+      "run_fits.py": "10f65efc297ba9ea077e2889a08d20262f428adb4ba000dc15832bc41c00ce72",
+      "summary.py": "fdfda00adf39dae9ad3c907e318d52408be1aa6774ddab40860384996f6181c0",
+      "training_audit.py": "cbe2b1c89fa998ecb47e69d9ef7bfd82db0915da29a2f69a65ec512893aa83c8"
+    },
+    "source_unchanged": true,
+    "steps_per_fit": 1536,
+    "trainable_parameters": 67032,
+    "training_seconds": 197.98785796912853
+  }
+}

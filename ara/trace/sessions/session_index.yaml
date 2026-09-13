@@ -139,10 +139,10 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: Tint learning19/24 task passes, warm4/4 vs0/4; cool-shape/texture and strict repair unresolved.
-    Persistent centering load/resume fixed;109 tests,20120 metrics,80 exact GPU replays. Two actual Claude
-    reviews after explicit follow-up approval.
-  turn_count: 17
-  events_count: 94
+  summary: Texture mixture10/12 task passes vs8/12 matched continuation;errors34→8,clean100%. Cool recall
+    shape and strict repair unresolved. Scene diagnostics/rounding fixed;74 tests,10188 independent metrics,40
+    exact GPU replays; two actual Claude reviews.
+  turn_count: 18
+  events_count: 100
   claims_touched: []
   open_threads: 10

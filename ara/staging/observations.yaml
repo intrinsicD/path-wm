@@ -3744,6 +3744,41 @@ observations:
   bound_to:
   - N315
   - N317
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H66
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O213
+  timestamp: 2026-09-13T21:48+02:00
+  provenance: ai-suggested
+  content: Replacing the duplicate clean block with texture gives a scoped benefit beyond matched continuation,
+    but does not fix cool recall shape or satisfy full retention. Persistent training failures with correct
+    factual shape indicate a native image-output learning shortfall, without establishing whether objective,
+    capacity, optimization or upstream geometry causes it.
+  context: New measurements completed; no researcher interpretation of these results yet. Single deliberately
+    chosen difficult source, correlated synthetic histories, no generalization or independence claim.
+  potential_type: claim
+  bound_to:
+  - N319
+  - N320
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O214
+  timestamp: 2026-09-13T21:48+02:00
+  provenance: ai-suggested
+  content: 'Next isolate recall image feature production: inspect shape-sensitive loss contributions and
+    gradients before choosing a controlled objective or capacity intervention, where factual shape is
+    still readable. Retain matched budgets, raw/clean retention and fresh confirmation; avoid more untargeted
+    data or assuming encoder replacement. Broader real-input, reliability, CPU and streaming milestones
+    remain open.'
+  context: Next-step proposal; no additional optimizer run or selection on30073/30074 after confirmation.
+  potential_type: heuristic
+  bound_to:
+  - N319
+  - N320
   promoted: false
   promoted_to: null
   crystallized_via: null

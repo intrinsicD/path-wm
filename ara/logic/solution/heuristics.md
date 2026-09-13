@@ -644,3 +644,13 @@
 - **Sensitivity**: High. A failed fixed-budget fit does not uniquely identify information loss. Shared upstream initialization is not independent replication; task passage, comparative benefit and retention are separate criteria.
 - **Code ref**: [whole-history scenes](../../../pathwm/data/memory_output.py), [persistent preprocessing](../../../pathwm/models/memory_output.py), [training/evaluation recipe](../../../experiments/memory_output.py), [integrity tests](../../../tests/test_tint_readout.py).
 - **Evidence**: N314/N315/N317; [comparison proof](../../evidence/tables/tint_readout_2026-09-13.json).
+
+## H66: Separate extra optimization from scene-mixture benefit
+
+- **Rationale**: Compare equal-budget continuations from identical weights, changing only the intended ordered history block. Retain an unchanged reference, raw/clean retention, fresh confirmation and condition-level fitting diagnostics. Declare absolute-error and ceiling-aware benefit criteria before evaluation; paired histories are not independent trials.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O212
+- **Sensitivity**: High. A selected difficult checkpoint supports diagnosis, not upstream replication. Extra-update sufficiency, added data benefit, task gates and retention answer different questions.
+- **Code ref**: [scene recipe](../../../experiments/memory_output.py), [scene reporting](../../../pathwm/evaluation/report.py), [alignment tests](../../../tests/test_training_scenes.py).
+- **Evidence**: N318/N319/N320; [comparison proof](../../evidence/tables/texture_shape_2026-09-13.json).
