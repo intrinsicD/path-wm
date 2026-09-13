@@ -91,3 +91,17 @@ Follow-up requests acknowledgment of that narrower scope. No private export.
 Use the existing Run/report renderer. Save all logits, labels, cache identities,
 normalizers, weights, curves and an explicit stage comparison. Reports get
 structural QA; browser QA remains unavailable. No external private-data export.
+
+## Implementation checks
+
+38 targeted tests and lint pass. New checks cover exact initial counterfactual
+equality, saved-bank alignment, unchanged native output, detached tensors, matched
+but independent head initialization, training-only fixed statistics, isolated
+gradients, paired scoring, exact CPU optimizer/RNG/sampler resume and standalone
+probe replay. Existing model construction/loading moved unchanged into the model
+module so recipes do not import each other; old recipe imports remain compatible.
+
+Development16 updates complete in0.919s; peak292MiB, frozen source hash unchanged,
+standalone report structurally verified. No formal outcomes used for adjustments.
+Claude accepts the restricted positive-recoverability scope; two actual public-only
+exchanges. Both seeds will be reported separately, with no broad stability claim.

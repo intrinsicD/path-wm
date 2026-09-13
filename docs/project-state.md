@@ -1,5 +1,11 @@
 # Current work
 
+**Frozen-state probes active, 13 September:** user approved testing accessible
+location at encoder, initial, pre-storage and post-recall stages. Two frozen agents,
+two independent probe seeds, training-only calibration, initial-view and shuffled-
+label controls; no agent training.38 targeted checks and development pass. Exact
+protocol and interpretation limits: [probe plan](memory-probes-plan.md).
+
 **Balanced relocation comparison completed, 13 September:** both new seeds fail
 the declared screen. On128 fresh-background histories with all tuples/motions
 represented in training, independently trained direct encoder readers score100%.

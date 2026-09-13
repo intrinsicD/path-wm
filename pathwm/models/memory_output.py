@@ -6,6 +6,18 @@ import torch
 from torch import nn
 
 from .modalities import Attend, Observation, position
+from .agent import (
+    MultimodalAgent,
+    ObservationUpdate,
+    LatentDynamics,
+    Thinker,
+    ActionHead,
+    ErrorMonitor,
+)
+from .agent_state import EpisodicMemory
+from .decoders import DenseHead, PatchDetailHead, StateFeatureDecoder
+from .encoders import PyramidEncoder, PatchDetailEncoder
+from .perception import Perception
 
 
 class FrozenFeatureNormalization(nn.Module):
@@ -108,16 +120,18 @@ class MemoryOutput(nn.Module):
         if images.ndim != 5 or images.shape[1:] != (3, 3, 64, 64):
             raise ValueError("Need three RGB64 history frames")
         state = self.agent.initial_state(len(images))
-        stored = None
+        stored = initial = None
         for t in range(3):
             obs = Observation(
                 images[:, t : t + 1], images.new_full((len(images), 1), float(t))
             )
             state = self.agent.observe(state, {"image": obs}, time=t)
+            if t == 0:
+                initial = state
             if t < 2:
                 stored = state
                 state = self.agent.remember(state, source=f"observed-frame-{t}")
-        return dict(stored=stored, final=state)
+        return dict(initial=initial, stored=stored, final=state)
 
     def query(self, state, hidden, mode="ordinary"):
         if mode not in (
@@ -174,3 +188,64 @@ class MemoryOutput(nn.Module):
             mode = "ordinary"
         history = self.observe_history(images)
         return self.output(self.query(history["final"], images[:, -1], mode))
+
+
+def make_codec(width=32, levels=3, depth=2, fusion_depth=2, weights=None):
+    encoder = PyramidEncoder(
+        width=width, levels=levels, depth=depth, fusion_depth=fusion_depth
+    )
+    options = dict(levels=tuple(encoder.feature_spec), retain_statistics=True)
+    base = Perception(
+        encoder,
+        dict(
+            rgb=DenseHead(
+                encoder.feature_spec, channels=3, activation="sigmoid", **options
+            ),
+            mask=DenseHead(encoder.feature_spec, **options),
+        ),
+    )
+    if weights is not None:
+        base.load_state_dict(
+            torch.load(weights, map_location="cpu", weights_only=True)["model"],
+            strict=True,
+        )
+    return Perception(
+        PatchDetailEncoder(base.encoder), dict(rgb=PatchDetailHead(base.heads["rgb"]))
+    ).requires_grad_(False)
+
+
+def build_model(codec, width=32, normalize_input=False):
+    encoder = codec.encoder.base.encoder
+    if normalize_input:
+        encoder = FrozenFeatureNormalization(
+            encoder, len(codec.encoder.base.feature_spec), width
+        )
+    agent = MultimodalAgent(
+        width=width,
+        encoders={"image": encoder},
+        decoders={
+            "image": StateFeatureDecoder(
+                width, codec.encoder.feature_spec, codec.heads["rgb"]
+            )
+        },
+        updater=ObservationUpdate(width),
+        dynamics=LatentDynamics(width),
+        thinker=Thinker(width),
+        memory=EpisodicMemory(capacity=4, retrieve_count=2),
+        action_head=ActionHead(width),
+        monitor=ErrorMonitor(width),
+    )
+    return MemoryOutput(agent, codec.encoder)
+
+
+def load_model(path, device="cpu"):
+    record = torch.load(path, map_location="cpu", weights_only=True)
+    settings = record["settings"]
+    codec = make_codec(
+        **{k: settings[k] for k in ("width", "levels", "depth", "fusion_depth")}
+    )
+    model = build_model(
+        codec, settings["width"], settings.get("normalize_input", False)
+    )
+    model.load_state_dict(record["model"], strict=True)
+    return model.to(device).eval()
