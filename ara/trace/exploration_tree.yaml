@@ -4365,3 +4365,46 @@ tree:
     runs/memory_output_v1/report.html, docs/memory-output-plan.md]
   also_depends_on: [N277]
   status: resolved
+
+- id: N279
+  type: decision
+  title: Adopt counterfactual relocation curriculum and preserve the failed benchmark
+  provenance: user
+  timestamp: 2026-09-13T07:52+02:00
+  choice: Yes ok authorizes the proposed balanced relocation comparison. Separate new within-support
+    histories from the old unseen-tuple benchmark; continue actual Claude conceptual review and local
+    implementation/tests.
+  alternatives:
+  - Increase model capacity before removing the split correlation
+  evidence:
+  - O181
+  - N278
+  - docs/memory-output-plan.md
+  also_depends_on:
+  - N278
+  status: resolved
+- id: N280
+  type: experiment
+  title: Balanced relocation learns appearance but leaves agent location at chance
+  provenance: ai-executed
+  timestamp: 2026-09-13T07:52+02:00
+  result: Source f0feb61; two1536-update normalized seeds7801/7802,241.305s/293.527s,402MiB peak
+    each. All16 target tuples and both moves trained; fresh-background test128episodes. Direct encoder
+    readers128/128 both. Reset facts62/128 and64/128; images61/128 and64/128. Factual color128/128
+    both, shape124/128 and128/128, side64/128 both; complete relocation pairs0 for both outputs/seeds.
+    Later-view erasure leaves factual joint unchanged; cue or bank erasure8/128. Frozen old control64/128.
+    All gates fail. Original data/checkpoints unchanged; same7801 initial model hash and fixed input/output
+    calibrations.34 targeted tests,522 independently verified metrics within5.90e-9, answers recovered
+    from rendered history pixels. All3 GPU reloads exact; CPU/GPU max pixels0.001062/0.004826/0.003090
+    fail1e-4; factual labels agree, one7801 image label differs. Two public-only Claude exchanges;
+    structural reports and inspected panels. No further training or probe run.
+  evidence:
+  - ara/evidence/tables/memory_relocation_2026-09-13.json
+  - runs/memory_relocation_v1/report.html
+  - runs/memory_relocation_v1/verification.json
+  - runs/memory_relocation_v1/data_audit.json
+  - docs/memory-output-plan.md
+  also_depends_on:
+  - N279
+  - N278
+  status: resolved

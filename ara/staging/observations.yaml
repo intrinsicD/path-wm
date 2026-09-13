@@ -3205,6 +3205,43 @@ observations:
     CPU/GPU pixel-tolerance failure despite identical categorical answers.
   potential_type: heuristic
   bound_to: [N278]
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H50
+  crystallized_via: verbal-affirmation
+  stale: false
+
+- id: O182
+  timestamp: 2026-09-13T07:52+02:00
+  provenance: ai-suggested
+  content: Removing deterministic appearance/location correlations does not make the state-memory
+    task succeed at the tested budget. Direct readers and teacher decoding are100%, while agent location
+    remains50% and later-view erasure leaves factual performance unchanged. This narrows the unresolved
+    learning problem to state/update/readout use of location; it does not establish erased information,
+    insufficient encoder/decoder capacity, or a unique cause. Longer training and optimization remain
+    possible explanations.
+  context: Two balanced runs and a preserved frozen reference scored on identical fresh-background
+    histories within trained support. All complete relocation-pair scores0; no compositional-generalization
+    claim. User has not yet interpreted this result.
+  potential_type: claim
+  bound_to:
+  - N280
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O183
+  timestamp: 2026-09-13T07:52+02:00
+  provenance: ai-suggested
+  content: Next freeze trained agents and probe initial, pre-storage and post-recall states with
+    matched diagnostic readers trained only on training histories. Retain successful direct reading
+    as a positive control. If location is recoverable, test readout repair; otherwise test earlier
+    stages and explicit state-update supervision without inferring information absence solely from
+    failed probes.
+  context: Proposed next diagnostic before larger encoders/decoders or more full-agent training.
+    Probe budgets/gates still need declaration; no probe executed.
+  potential_type: heuristic
+  bound_to:
+  - N280
   promoted: false
   promoted_to: null
   crystallized_via: null

@@ -139,8 +139,8 @@ sessions:
 
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: Paired memory-output task implemented and tested. Normalization enables familiar recall but held-out location binding fails;30 tests and three bounded runs, explicit numerical portability limit.
-  turn_count: 2
-  events_count: 8
+  summary: Memory-output calibration enables familiar recall. Balanced relocation removes the data shortcut but agent location remains at chance despite perfect direct readers;34 targeted tests, preserved failures and numerical limits.
+  turn_count: 3
+  events_count: 13
   claims_touched: []
   open_threads: 10

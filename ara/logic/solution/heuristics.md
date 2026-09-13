@@ -483,3 +483,13 @@
 - **Sensitivity**: High. A fixed synthetic task and a restrictive combination split can reward shortcuts; implemented screening is not evidence that its learned-capability gate passed.
 - **Code ref**: [recipe](../../../experiments/memory_output.py), [state/memory wrapper](../../../pathwm/models/memory_output.py), [paired data](../../../pathwm/data/memory_output.py).
 - **Evidence**: N276; [three-run record](../../evidence/tables/memory_output_2026-09-13.json).
+
+## H50: Separate appearance from location with paired counterfactual histories
+
+- **Rationale**: Hold initial appearance and selection fixed while varying final location; audit exact-input shortcut bounds and score attributes and complete pairs. Preserve failed benchmarks and name changed test populations honestly. This removes deterministic factor shortcuts without guaranteeing learned binding.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O181
+- **Sensitivity**: High. Within-support relocation is weaker than unseen-tuple or natural-scene generalization; balanced training still fails the tested agent location screen.
+- **Code ref**: [paired data](../../../pathwm/data/memory_output.py), [recipe and controls](../../../experiments/memory_output.py), [frame-removal path](../../../pathwm/models/memory_output.py).
+- **Evidence**: N279/N280; [relocation runs](../../evidence/tables/memory_relocation_2026-09-13.json).

@@ -2,9 +2,9 @@ session:
   id: 2026-09-13_001
   date: '2026-09-13'
   started: 2026-09-13T00:08+02:00
-  last_turn: 2026-09-13T01:11+02:00
-  turn_count: 2
-  summary: Built paired memory-output test; normalization enables familiar recall but held-out location binding fails through a training-combination shortcut.
+  last_turn: 2026-09-13T07:52+02:00
+  turn_count: 3
+  summary: Balanced relocation removes the data shortcut; direct readers succeed but agent location remains at chance in two seeds. Frozen-state diagnosis next.
 
 events_logged:
 - turn: 1
@@ -57,6 +57,37 @@ events_logged:
   provenance: ai-suggested
   summary: Propose independently varied appearance/location and counterfactual relocation curriculum.
 
+- turn: 3
+  type: decision
+  id: N279
+  routing: direct
+  provenance: user
+  summary: Adopt counterfactual relocation comparison while preserving failed benchmark.
+- turn: 3
+  type: heuristic
+  id: H50
+  routing: crystallized
+  provenance: user-revised
+  summary: O181 closes through explicit approval of independently varied appearance/location.
+- turn: 3
+  type: experiment
+  id: N280
+  routing: direct
+  provenance: ai-executed
+  summary: Two balanced seeds fail location binding despite perfect direct readers; exact GPU replay and explicit CPU/GPU failures.
+- turn: 3
+  type: observation
+  id: O182
+  routing: staged
+  provenance: ai-suggested
+  summary: Location update learning remains unresolved; failed heads do not establish lost information.
+- turn: 3
+  type: observation
+  id: O183
+  routing: staged
+  provenance: ai-suggested
+  summary: Probe frozen states before choosing readout repair or state-update supervision.
+
 ai_actions:
 - turn: 1
   action: Reconciled existing plans and saved evidence; recorded recommendation without model changes or new evaluation.
@@ -75,16 +106,27 @@ ai_actions:
     tests/test_memory_output.py, docs/memory-output-plan.md, docs/project-state.md,
     ara/evidence/tables/memory_output_2026-09-13.json]
 
+- turn: 3
+  action: Implemented balanced quartets and frame-removal controls; two public-only Claude
+    exchanges;34 targeted tests, two bounded GPU runs, frozen reference and522 metric
+    audits. Preserved failed screens, exact GPU replays and CPU/GPU numerical limits.
+  provenance: ai-executed
+  files_changed: [pathwm/data/memory_output.py, pathwm/models/memory_output.py,
+    experiments/memory_output.py, tests/test_memory_output.py, docs/memory-output-plan.md,
+    docs/project-state.md, ara/evidence/tables/memory_relocation_2026-09-13.json]
+
 claims_touched: []
 key_context:
 - turn: 1
   excerpt: 'yes. now how do we continue? where are we at?'
 - turn: 2
   excerpt: ok yes
+- turn: 3
+  excerpt: Yes ok
 
 open_threads:
-- 'N278/O181: define counterfactual relocation curriculum and split without deterministic appearance/location shortcut; preserve failed parity benchmark.'
-- 'N278: normalized CPU/GPU pixel differences exceed1e-4 despite exact GPU replay and identical categorical labels; portability tolerance remains open.'
+- 'N280/O182/O183: probe frozen states to separate unused-but-readable location from inadequate state learning; set probe budget/gates before execution.'
+- 'N278/N280: normalized CPU/GPU pixel differences exceed1e-4 despite exact GPU replay; one7801 rendered label now differs, factual labels agree. Numerical portability remains open.'
 - 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception and learned prediction remain weak.'
 - 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and other-modality quality remain open.'
 - 'N273/A06/O177/O178: adopted output boundary needs concrete conditioning, uncertainty/time inputs, backends and cross-modal consistency tests.'
@@ -96,6 +138,7 @@ open_threads:
 
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
-- 'O181: counterfactual relocation training proposed, not executed.'
+- 'O182: balanced training failure narrows the state/update/readout learning question without proving erased location information.'
+- 'O183: matched frozen-state probes proposed; no probe run yet.'
 - 'O164-O175: earlier curriculum, diagnosis and scoped capability interpretations retain their original provenance and closure status.'
 - 'O177/O178: coordination and state-grounding diagnostics remain staged; acknowledgment does not select their complete implementation.'
