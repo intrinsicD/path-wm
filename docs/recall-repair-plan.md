@@ -2179,3 +2179,45 @@ can target correct-facts/wrong-image cases; factual repair needs its own declare
 trainable path. Keep current thresholds and use fresh confirmation rather than selecting
 on33073/33074. Broader learned reliability, natural scenes, upstream replication,
 CPU portability and streaming remain open; no general generative backend has been trained.
+
+## Producer refinement: locked protocol
+
+Continue from recall_shape_v1/source_8502_box, preserving its rectangle-weighted
+loss and frozen factual path. Compare one residual MLP per spatial feature scale
+(LayerNorm, width→2width, GELU, 2width→width), inserted after query attention and
+before feature projection, against the original producer given identical extra
+optimization. Zero the last linear only: initial outputs must be bitwise equal;
+its weights receive first-step gradients while earlier residual layers receive
+zero gradients until that projection changes. Preserve RNG during construction.
+This tests one added parameterization under a fixed optimizer/budget, not an
+intrinsic capacity limit. The small pointwise MLP adds no spatial attention.
+
+Both arms train all existing image-producer parameters; only the refinement arm
+adds parameters. Facts, state formation, decoder backend, encoder, preprocessing
+and all calibration stay frozen. Train7701/128 pairs on neutral,warm,cool,texture
+(1,024 histories), seed9701, 1,536 updates, batch16, existing AdamW and box RGB loss
+plus 0.1 feature loss. Validation35072/32 pairs and terminal35071/64 pairs never
+select checkpoints. Development34701/36072/36071:16 pairs,16 updates. Essential
+REDs cover identity/RNG/legacy reload, first and second-step gradient reachability,
+frozen state/facts/backend, strict settings/load and exact odd-step resume.
+
+Fresh confirmation35073/35074,16 pairs each, six prior conditions. Two trained
+arms and unchanged box source on all conditions, raw original8502 on neutral and
+texture:40 cells, all10 causal modes, original metrics/gates. Primary image repair:
+all12 task gates plus ordinary/reset image accuracy within5pp of raw-neutral,
+and texture additionally within5pp of raw-texture. Report full factual+image
+retention separately; frozen factual errors cannot be attributed to refinement.
+Added cool-image benefit requires≥25% relative error reduction vs continuation,
+no regression in any of four paired cool image scores; assessable if control has
+≥4 errors out of128 correlated responses, otherwise explicitly unassessable.
+Report unchanged-source comparison, absolute errors, and quartet deltas. No
+further fit, architecture change or threshold change after confirmation.
+
+Two fits,40 cells,180s per training fit,900s evaluation,4GiB GPU ceiling with1GiB
+headroom,3GiB disk floor. Inspect refinement activations/parameter changes after
+training to establish use, not causal necessity. Verify cache/source/RNG/frozen
+parameters, independent metrics and full-population GPU reloads. Existing report
+renderer unchanged; structural/figure QA with prior browser limitation disclosed.
+Actual Claude conceptual review supports the comparison; correct its first-step
+gradient wording and retain its recommendation to inspect residual usage. Only
+generic methods are sent externally; local code/results review remains separate.
