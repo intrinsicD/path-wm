@@ -105,3 +105,21 @@ raw metrics, loadable weights, settings/source identities and standalone report.
 comparison report records all failures and validation-only trigger decisions.
 Browser QA uses the installed browser tool if available; prior local-file policy
 limits must not be bypassed. Inspect static figures if browser access is denied.
+
+## Implementation checkpoint before formal runs
+
+The three modules and the ordinary recipe are implemented. Twenty-five focused
+CPU tests pass, including numerical loss/edge references, arbitrary geometry,
+real-pixel crop provenance and exact optimizer/sampler/noise pause-resume. Local
+GPU development confirms identical initial outputs and preserved GPU noise streams
+across all variants, exact four-update pause/resume and the eight-photo deterministic
+overfit check. Review corrected a CUDA seed side effect before the formal runs.
+Development artifacts remain under `runs/spatial_vae_v1/development*` and `gpu_replay*`.
+
+Two actual Claude methodology rounds are reconciled, with receipts under
+`runs/reviews/spatial_vae_experiment_v1`. Claude retracted grouping shuffle with
+noninvertible operations and calling zero-valued F/G identity maps; comparable
+MSE units were distinguished from crop-population confounds. Added KL activity
+diagnostics and retrieval controls; no remaining methodology disagreement.
+Private code/data/results stayed local. Formal sources will be committed before
+the A/B/C runs; the predeclared comparison and conditional continuation are unchanged.
