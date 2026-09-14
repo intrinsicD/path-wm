@@ -1,0 +1,182 @@
+<svg width="1623pt" height="643pt"
+ viewBox="0.00 0.00 1623.00 643.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="13-target-graph-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 628.72)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-628.72 1608.55,-628.72 1608.55,14.4 -14.4,14.4"/>
+<!-- concept&#45;&gt;skills -->
+<g id="13-target-graph-edge7" class="edge">
+<title>concept&#45;&gt;skills</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M1383.85,-422.63C1395.11,-395.42 1410.85,-357.4 1422.06,-330.32"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1424.19,-331.59 1424.6,-324.18 1419.66,-329.71 1424.19,-331.59"/>
+<text xml:space="preserve" text-anchor="middle" x="1465.84" y="-373.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">shared interactions</text>
+</g>
+<!-- instance&#45;&gt;concept -->
+<g id="13-target-graph-edge1" class="edge">
+<title>instance&#45;&gt;concept</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M922.34,-557.78C1040.07,-542.77 1177.85,-525.2 1177.85,-525.2 1177.85,-525.2 1219.41,-510.75 1263.85,-495.3"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1264.5,-497.66 1270.31,-493.05 1262.89,-493.04 1264.5,-497.66"/>
+<text xml:space="preserve" text-anchor="middle" x="1295.52" y="-515.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">learned concept membership</text>
+</g>
+<!-- instance&#45;&gt;recognition -->
+<g id="13-target-graph-edge2" class="edge">
+<title>instance&#45;&gt;recognition</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M729.73,-544.92C715.55,-527.87 698.45,-507.29 684.49,-490.49"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="686.53,-489.11 680.17,-485.29 682.76,-492.24 686.53,-489.11"/>
+<text xml:space="preserve" text-anchor="middle" x="754.7" y="-515.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">identity support</text>
+</g>
+<!-- instance&#45;&gt;evidence -->
+<g id="13-target-graph-edge3" class="edge">
+<title>instance&#45;&gt;evidence</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M630.69,-544.68C572.49,-529.09 503.47,-510.59 444.3,-494.74"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="445.02,-492.39 437.63,-492.95 443.75,-497.13 445.02,-492.39"/>
+<text xml:space="preserve" text-anchor="middle" x="592.98" y="-515.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">observed history</text>
+</g>
+<!-- instance&#45;&gt;belief -->
+<g id="13-target-graph-edge5" class="edge">
+<title>instance&#45;&gt;belief</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M786.98,-544.84C796.11,-534.21 803.85,-525.2 803.85,-525.2 803.85,-525.2 828.85,-492 828.85,-492 828.85,-492 833.16,-386.9 835.46,-331.02"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="837.9,-331.25 835.74,-324.16 833,-331.05 837.9,-331.25"/>
+<text xml:space="preserve" text-anchor="middle" x="917.07" y="-454.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">current belief belongs to entity</text>
+</g>
+<!-- instance&#45;&gt;relations -->
+<g id="13-target-graph-edge6" class="edge">
+<title>instance&#45;&gt;relations</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M922.38,-547.06C982.4,-535.5 1035.85,-525.2 1035.85,-525.2 1035.85,-525.2 1076.85,-492 1076.85,-492 1076.85,-492 1077.26,-445.31 1077.55,-411.62"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1080,-412.05 1077.61,-405.03 1075.1,-412.01 1080,-412.05"/>
+<text xml:space="preserve" text-anchor="middle" x="1087.23" y="-515.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">learned links</text>
+</g>
+<!-- instance&#45;&gt;inspect -->
+<g id="13-target-graph-edge13" class="edge">
+<title>instance&#45;&gt;inspect</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M593.48,-559.51C375.29,-533.94 17.23,-492 17.23,-492 17.23,-492 17.23,-422.88 17.23,-422.88 17.23,-422.88 72.34,-373.54 113.57,-336.64"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="114.97,-338.67 118.56,-332.18 111.71,-335.02 114.97,-338.67"/>
+<text xml:space="preserve" text-anchor="middle" x="74.04" y="-454.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">structure and values</text>
+</g>
+<!-- evidence&#45;&gt;belief -->
+<g id="13-target-graph-edge4" class="edge">
+<title>evidence&#45;&gt;belief</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M421.8,-422.33C517.71,-393.37 653.72,-352.3 743.56,-325.17"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="744.25,-327.52 750.24,-323.15 742.83,-322.83 744.25,-327.52"/>
+<text xml:space="preserve" text-anchor="middle" x="709.23" y="-373.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">evidence for updates</text>
+</g>
+<!-- evidence&#45;&gt;inspect -->
+<g id="13-target-graph-edge14" class="edge">
+<title>evidence&#45;&gt;inspect</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M276.83,-422.63C253.18,-397.66 220.91,-363.59 195.94,-337.22"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="197.83,-335.65 191.23,-332.25 194.27,-339.01 197.83,-335.65"/>
+<text xml:space="preserve" text-anchor="middle" x="317.91" y="-373.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">ground interpretations</text>
+</g>
+<!-- belief&#45;&gt;focus -->
+<g id="13-target-graph-edge8" class="edge">
+<title>belief&#45;&gt;focus</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M872.71,-269.38C899.05,-250.55 930.28,-228.24 930.28,-228.24 930.28,-228.24 946.03,-220.95 964.87,-212.23"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="965.67,-214.56 971,-209.39 963.62,-210.11 965.67,-214.56"/>
+<text xml:space="preserve" text-anchor="middle" x="971.07" y="-231.54" font-family="DejaVu Sans" font-size="11.00" fill="#374151">retrieved state</text>
+</g>
+<!-- relations&#45;&gt;focus -->
+<g id="13-target-graph-edge9" class="edge">
+<title>relations&#45;&gt;focus</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M1058.21,-350.24C1050.32,-339.99 1043.05,-330.56 1043.05,-330.56 1043.05,-330.56 1035.88,-260.95 1031.39,-217.37"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1033.82,-217.14 1030.67,-210.43 1028.95,-217.64 1033.82,-217.14"/>
+<text xml:space="preserve" text-anchor="middle" x="1088.45" y="-292.7" font-family="DejaVu Sans" font-size="11.00" fill="#374151">relevant context</text>
+</g>
+<!-- skills&#45;&gt;focus -->
+<g id="13-target-graph-edge10" class="edge">
+<title>skills&#45;&gt;focus</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M1342.25,-269.32C1278.74,-251.9 1194.8,-228.88 1129.63,-211"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1130.38,-208.66 1122.98,-209.17 1129.08,-213.39 1130.38,-208.66"/>
+<text xml:space="preserve" text-anchor="middle" x="1275.91" y="-231.54" font-family="DejaVu Sans" font-size="11.00" fill="#374151">possible actions</text>
+</g>
+<!-- focus&#45;&gt;operations -->
+<g id="13-target-graph-edge11" class="edge">
+<title>focus&#45;&gt;operations</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M1027.85,-155.65C1027.85,-142.98 1027.85,-127.08 1027.85,-111.58"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1030.3,-111.7 1027.85,-104.7 1025.4,-111.7 1030.3,-111.7"/>
+<text xml:space="preserve" text-anchor="middle" x="1077.11" y="-126.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">learned proposals</text>
+</g>
+<!-- operations&#45;&gt;instance -->
+<g id="13-target-graph-edge12" class="edge">
+<title>operations&#45;&gt;instance</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M1117.74,-103.23C1164.02,-129.42 1210.85,-155.92 1210.85,-155.92 1210.85,-155.92 1324.85,-228.24 1324.85,-228.24 1324.85,-228.24 1324.85,-241.44 1324.85,-241.44 1324.85,-241.44 1169.22,-261.44 1169.22,-261.44 1169.22,-261.44 1134.85,-330.56 1134.85,-330.56 1134.85,-330.56 916.85,-350.56 916.85,-350.56 916.85,-350.56 916.85,-402.88 916.85,-402.88 916.85,-402.88 1007.85,-422.88 1007.85,-422.88 1007.85,-422.88 1007.85,-492 1007.85,-492 1007.85,-492 931.94,-518.34 863.78,-542"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="863.32,-539.56 857.51,-544.17 864.93,-544.19 863.32,-539.56"/>
+<text xml:space="preserve" text-anchor="middle" x="1218.53" y="-292.7" font-family="DejaVu Sans" font-size="11.00" fill="#374151">accepted updates</text>
+</g>
+<!-- concept -->
+<g id="13-target-graph-node1" class="node">
+<title>concept</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M1506.84,-492C1506.84,-492 1232.87,-492 1232.87,-492 1226.87,-492 1220.87,-486 1220.87,-480 1220.87,-480 1220.87,-434.88 1220.87,-434.88 1220.87,-428.88 1226.87,-422.88 1232.87,-422.88 1232.87,-422.88 1506.84,-422.88 1506.84,-422.88 1512.84,-422.88 1518.84,-428.88 1518.84,-434.88 1518.84,-434.88 1518.84,-480 1518.84,-480 1518.84,-486 1512.84,-492 1506.84,-492"/>
+<text xml:space="preserve" text-anchor="middle" x="1369.85" y="-470.04" font-family="DejaVu Sans" font-size="14.00">General concept</text>
+<text xml:space="preserve" text-anchor="middle" x="1369.85" y="-453.24" font-family="DejaVu Sans" font-size="14.00">Learned subgraph for shared structure</text>
+<text xml:space="preserve" text-anchor="middle" x="1369.85" y="-436.44" font-family="DejaVu Sans" font-size="14.00">Example interpretation: bicycle</text>
+</g>
+<!-- instance -->
+<g id="13-target-graph-node2" class="node">
+<title>instance</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M909.96,-614.32C909.96,-614.32 605.74,-614.32 605.74,-614.32 599.74,-614.32 593.74,-608.32 593.74,-602.32 593.74,-602.32 593.74,-557.2 593.74,-557.2 593.74,-551.2 599.74,-545.2 605.74,-545.2 605.74,-545.2 909.96,-545.2 909.96,-545.2 915.96,-545.2 921.96,-551.2 921.96,-557.2 921.96,-557.2 921.96,-602.32 921.96,-602.32 921.96,-608.32 915.96,-614.32 909.96,-614.32"/>
+<text xml:space="preserve" text-anchor="middle" x="757.85" y="-592.36" font-family="DejaVu Sans" font-size="14.00">Concrete entity instance</text>
+<text xml:space="preserve" text-anchor="middle" x="757.85" y="-575.56" font-family="DejaVu Sans" font-size="14.00">Stable storage ID + learned matching keys</text>
+<text xml:space="preserve" text-anchor="middle" x="757.85" y="-558.76" font-family="DejaVu Sans" font-size="14.00">Example interpretation: this bicycle</text>
+</g>
+<!-- recognition -->
+<g id="13-target-graph-node3" class="node">
+<title>recognition</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M806.45,-483.6C806.45,-483.6 509.26,-483.6 509.26,-483.6 503.26,-483.6 497.26,-477.6 497.26,-471.6 497.26,-471.6 497.26,-443.28 497.26,-443.28 497.26,-437.28 503.26,-431.28 509.26,-431.28 509.26,-431.28 806.45,-431.28 806.45,-431.28 812.45,-431.28 818.45,-437.28 818.45,-443.28 818.45,-443.28 818.45,-471.6 818.45,-471.6 818.45,-477.6 812.45,-483.6 806.45,-483.6"/>
+<text xml:space="preserve" text-anchor="middle" x="657.85" y="-461.64" font-family="DejaVu Sans" font-size="14.00">Recognition representations</text>
+<text xml:space="preserve" text-anchor="middle" x="657.85" y="-444.84" font-family="DejaVu Sans" font-size="14.00">Appearance / identity across observations</text>
+</g>
+<!-- evidence -->
+<g id="13-target-graph-node4" class="node">
+<title>evidence</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M464.96,-492C464.96,-492 152.74,-492 152.74,-492 146.74,-492 140.74,-486 140.74,-480 140.74,-480 140.74,-434.88 140.74,-434.88 140.74,-428.88 146.74,-422.88 152.74,-422.88 152.74,-422.88 464.96,-422.88 464.96,-422.88 470.96,-422.88 476.96,-428.88 476.96,-434.88 476.96,-434.88 476.96,-480 476.96,-480 476.96,-486 470.96,-492 464.96,-492"/>
+<text xml:space="preserve" text-anchor="middle" x="308.85" y="-470.04" font-family="DejaVu Sans" font-size="14.00">History and evidence</text>
+<text xml:space="preserve" text-anchor="middle" x="308.85" y="-453.24" font-family="DejaVu Sans" font-size="14.00">Observed events + source/time attribution</text>
+<text xml:space="preserve" text-anchor="middle" x="308.85" y="-436.44" font-family="DejaVu Sans" font-size="14.00">Selective raw media or versioned encodings</text>
+</g>
+<!-- belief -->
+<g id="13-target-graph-node5" class="node">
+<title>belief</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M976.03,-322.16C976.03,-322.16 697.67,-322.16 697.67,-322.16 691.67,-322.16 685.67,-316.16 685.67,-310.16 685.67,-310.16 685.67,-281.84 685.67,-281.84 685.67,-275.84 691.67,-269.84 697.67,-269.84 697.67,-269.84 976.03,-269.84 976.03,-269.84 982.03,-269.84 988.03,-275.84 988.03,-281.84 988.03,-281.84 988.03,-310.16 988.03,-310.16 988.03,-316.16 982.03,-322.16 976.03,-322.16"/>
+<text xml:space="preserve" text-anchor="middle" x="836.85" y="-300.2" font-family="DejaVu Sans" font-size="14.00">Current latent belief</text>
+<text xml:space="preserve" text-anchor="middle" x="836.85" y="-283.4" font-family="DejaVu Sans" font-size="14.00">Learned properties / state / uncertainty</text>
+</g>
+<!-- relations -->
+<g id="13-target-graph-node6" class="node">
+<title>relations</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M1217.2,-402.88C1217.2,-402.88 938.5,-402.88 938.5,-402.88 932.5,-402.88 926.5,-396.88 926.5,-390.88 926.5,-390.88 926.5,-362.56 926.5,-362.56 926.5,-356.56 932.5,-350.56 938.5,-350.56 938.5,-350.56 1217.2,-350.56 1217.2,-350.56 1223.2,-350.56 1229.2,-356.56 1229.2,-362.56 1229.2,-362.56 1229.2,-390.88 1229.2,-390.88 1229.2,-396.88 1223.2,-402.88 1217.2,-402.88"/>
+<text xml:space="preserve" text-anchor="middle" x="1077.85" y="-380.92" font-family="DejaVu Sans" font-size="14.00">Context and relationships</text>
+<text xml:space="preserve" text-anchor="middle" x="1077.85" y="-364.12" font-family="DejaVu Sans" font-size="14.00">Other entities / places / people / events</text>
+</g>
+<!-- skills -->
+<g id="13-target-graph-node7" class="node">
+<title>skills</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M1582.15,-322.16C1582.15,-322.16 1289.55,-322.16 1289.55,-322.16 1283.55,-322.16 1277.55,-316.16 1277.55,-310.16 1277.55,-310.16 1277.55,-281.84 1277.55,-281.84 1277.55,-275.84 1283.55,-269.84 1289.55,-269.84 1289.55,-269.84 1582.15,-269.84 1582.15,-269.84 1588.15,-269.84 1594.15,-275.84 1594.15,-281.84 1594.15,-281.84 1594.15,-310.16 1594.15,-310.16 1594.15,-316.16 1588.15,-322.16 1582.15,-322.16"/>
+<text xml:space="preserve" text-anchor="middle" x="1435.85" y="-300.2" font-family="DejaVu Sans" font-size="14.00">Interactions and skills</text>
+<text xml:space="preserve" text-anchor="middle" x="1435.85" y="-283.4" font-family="DejaVu Sans" font-size="14.00">Action models / preconditions / outcomes</text>
+</g>
+<!-- focus -->
+<g id="13-target-graph-node8" class="node">
+<title>focus</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M1188.73,-208.24C1188.73,-208.24 866.97,-208.24 866.97,-208.24 860.97,-208.24 854.97,-202.24 854.97,-196.24 854.97,-196.24 854.97,-167.92 854.97,-167.92 854.97,-161.92 860.97,-155.92 866.97,-155.92 866.97,-155.92 1188.73,-155.92 1188.73,-155.92 1194.73,-155.92 1200.73,-161.92 1200.73,-167.92 1200.73,-167.92 1200.73,-196.24 1200.73,-196.24 1200.73,-202.24 1194.73,-208.24 1188.73,-208.24"/>
+<text xml:space="preserve" text-anchor="middle" x="1027.85" y="-186.28" font-family="DejaVu Sans" font-size="14.00">Focus / task workspace</text>
+<text xml:space="preserve" text-anchor="middle" x="1027.85" y="-169.48" font-family="DejaVu Sans" font-size="14.00">Retrieve selected nodes, values and relations</text>
+</g>
+<!-- operations -->
+<g id="13-target-graph-node9" class="node">
+<title>operations</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M1180.34,-102.72C1180.34,-102.72 875.36,-102.72 875.36,-102.72 869.36,-102.72 863.36,-96.72 863.36,-90.72 863.36,-90.72 863.36,-12 863.36,-12 863.36,-6 869.36,0 875.36,0 875.36,0 1180.34,0 1180.34,0 1186.34,0 1192.34,-6 1192.34,-12 1192.34,-12 1192.34,-90.72 1192.34,-90.72 1192.34,-96.72 1186.34,-102.72 1180.34,-102.72"/>
+<text xml:space="preserve" text-anchor="middle" x="1027.85" y="-80.76" font-family="DejaVu Sans" font-size="14.00">Graph operation interface</text>
+<text xml:space="preserve" text-anchor="middle" x="1027.85" y="-63.96" font-family="DejaVu Sans" font-size="14.00">Propose / match / create / link / update /</text>
+<text xml:space="preserve" text-anchor="middle" x="1027.85" y="-47.16" font-family="DejaVu Sans" font-size="14.00">retrieve</text>
+<text xml:space="preserve" text-anchor="middle" x="1027.85" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Bounded storage, versions and uncertainty</text>
+<text xml:space="preserve" text-anchor="middle" x="1027.85" y="-13.56" font-family="DejaVu Sans" font-size="14.00">rules</text>
+</g>
+<!-- inspect -->
+<g id="13-target-graph-node10" class="node">
+<title>inspect</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M303.7,-330.56C303.7,-330.56 12,-330.56 12,-330.56 6,-330.56 0,-324.56 0,-318.56 0,-318.56 0,-273.44 0,-273.44 0,-267.44 6,-261.44 12,-261.44 12,-261.44 303.7,-261.44 303.7,-261.44 309.7,-261.44 315.7,-267.44 315.7,-273.44 315.7,-273.44 315.7,-318.56 315.7,-318.56 315.7,-324.56 309.7,-330.56 303.7,-330.56"/>
+<text xml:space="preserve" text-anchor="middle" x="157.85" y="-308.6" font-family="DejaVu Sans" font-size="14.00">Inspection layer</text>
+<text xml:space="preserve" text-anchor="middle" x="157.85" y="-291.8" font-family="DejaVu Sans" font-size="14.00">Aliases + supporting examples + probes</text>
+<text xml:space="preserve" text-anchor="middle" x="157.85" y="-275" font-family="DejaVu Sans" font-size="14.00">Trained reconstructions where supported</text>
+</g>
+</g>
+</svg>

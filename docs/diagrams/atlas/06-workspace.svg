@@ -1,0 +1,254 @@
+<svg width="1541pt" height="954pt"
+ viewBox="0.00 0.00 1541.00 954.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="06-workspace-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 939.76)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-939.76 1526.75,-939.76 1526.75,14.4 -14.4,14.4"/>
+<!-- instruction&#45;&gt;interpret -->
+<g id="06-workspace-edge1" class="edge">
+<title>instruction&#45;&gt;interpret</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M207.62,-864.14C251.3,-847.4 309.01,-825.28 357.67,-806.64"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="358.5,-808.94 364.16,-804.15 356.74,-804.37 358.5,-808.94"/>
+<text xml:space="preserve" text-anchor="middle" x="356.59" y="-826.34" font-family="DejaVu Sans" font-size="11.00" fill="#374151">instruction tokens</text>
+</g>
+<!-- metadata&#45;&gt;interpret -->
+<g id="06-workspace-edge2" class="edge">
+<title>metadata&#45;&gt;interpret</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M478.36,-855.96C474.6,-842.25 470.22,-826.27 466.25,-811.8"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="468.62,-811.19 464.41,-805.08 463.9,-812.48 468.62,-811.19"/>
+<text xml:space="preserve" text-anchor="middle" x="516.11" y="-826.34" font-family="DejaVu Sans" font-size="11.00" fill="#374151">metadata token</text>
+</g>
+<!-- state&#45;&gt;interpret -->
+<g id="06-workspace-edge3" class="edge">
+<title>state&#45;&gt;interpret</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M840.06,-872.3C774.93,-854.93 673.11,-827.76 590.48,-805.72"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="591.3,-803.4 583.9,-803.96 590.03,-808.14 591.3,-803.4"/>
+<text xml:space="preserve" text-anchor="middle" x="730.17" y="-826.34" font-family="DejaVu Sans" font-size="11.00" fill="#374151">state context</text>
+</g>
+<!-- state&#45;&gt;think -->
+<g id="06-workspace-edge10" class="edge">
+<title>state&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M931.84,-872.26C955.17,-856.64 985.64,-836.24 985.64,-836.24 985.64,-836.24 985.64,-823.04 985.64,-823.04 985.64,-823.04 970.64,-733.92 970.64,-733.92 970.64,-733.92 949.64,-700.72 949.64,-700.72 949.64,-700.72 929.66,-693.39 904.48,-684.15"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="905.5,-681.92 898.08,-681.81 903.81,-686.52 905.5,-681.92"/>
+<text xml:space="preserve" text-anchor="middle" x="1060.27" y="-765.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">world + previous workspace</text>
+</g>
+<!-- state&#45;&gt;memory -->
+<g id="06-workspace-edge5" class="edge">
+<title>state&#45;&gt;memory</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M969.48,-872.3C1041.16,-852.66 1158.49,-820.5 1242.87,-797.37"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1243.47,-799.75 1249.58,-795.53 1242.18,-795.02 1243.47,-799.75"/>
+<text xml:space="preserve" text-anchor="middle" x="1183.43" y="-826.34" font-family="DejaVu Sans" font-size="11.00" fill="#374151">memory queries</text>
+</g>
+<!-- state&#45;&gt;feedback -->
+<g id="06-workspace-edge4" class="edge">
+<title>state&#45;&gt;feedback</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M875.86,-872.26C849.34,-856.64 814.69,-836.24 814.69,-836.24 814.69,-836.24 812.83,-824.97 810.63,-811.7"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="813.07,-811.4 809.5,-804.89 808.23,-812.2 813.07,-811.4"/>
+<text xml:space="preserve" text-anchor="middle" x="899.67" y="-826.34" font-family="DejaVu Sans" font-size="11.00" fill="#374151">monitor / uncertainty / counter</text>
+</g>
+<!-- interpret&#45;&gt;policy -->
+<g id="06-workspace-edge6" class="edge">
+<title>interpret&#45;&gt;policy</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M455.77,-733.64C456.22,-719.93 456.75,-703.95 457.23,-689.48"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="459.67,-689.9 457.46,-682.82 454.77,-689.74 459.67,-689.9"/>
+<text xml:space="preserve" text-anchor="middle" x="488.53" y="-704.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">task tokens</text>
+</g>
+<!-- interpret&#45;&gt;think -->
+<g id="06-workspace-edge9" class="edge">
+<title>interpret&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M553.25,-733.48C598.03,-718.05 651.09,-699.75 696.82,-683.99"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="697.58,-686.32 703.4,-681.72 695.98,-681.68 697.58,-686.32"/>
+<text xml:space="preserve" text-anchor="middle" x="673.94" y="-704.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">goal context</text>
+</g>
+<!-- policy&#45;&gt;gate -->
+<g id="06-workspace-edge7" class="edge">
+<title>policy&#45;&gt;gate</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M468.77,-611.32C472.91,-597.48 477.74,-581.33 482.1,-566.75"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="484.33,-567.84 483.99,-560.43 479.64,-566.44 484.33,-567.84"/>
+<text xml:space="preserve" text-anchor="middle" x="513.34" y="-581.7" font-family="DejaVu Sans" font-size="11.00" fill="#374151">raw proposal</text>
+</g>
+<!-- gate&#45;&gt;dispatch -->
+<g id="06-workspace-edge8" class="edge">
+<title>gate&#45;&gt;dispatch</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M513.2,-489C520.86,-475.04 529.82,-458.71 537.87,-444.03"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="539.97,-445.29 541.19,-437.98 535.68,-442.94 539.97,-445.29"/>
+<text xml:space="preserve" text-anchor="middle" x="578.94" y="-459.38" font-family="DejaVu Sans" font-size="11.00" fill="#374151">allowed operation</text>
+</g>
+<!-- think&#45;&gt;workspace -->
+<g id="06-workspace-edge13" class="edge">
+<title>think&#45;&gt;workspace</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M801.95,-611.32C801.13,-594.87 800.15,-575.14 799.33,-558.69"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="801.8,-558.95 799,-552.08 796.9,-559.19 801.8,-558.95"/>
+<text xml:space="preserve" text-anchor="middle" x="859.02" y="-581.7" font-family="DejaVu Sans" font-size="11.00" fill="#374151">update 8 tokens only</text>
+</g>
+<!-- memory&#45;&gt;think -->
+<g id="06-workspace-edge11" class="edge">
+<title>memory&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1229.25,-741.82C1152.36,-724.72 1050.23,-702 965.29,-683.11"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="965.85,-680.73 958.49,-681.6 964.79,-685.51 965.85,-680.73"/>
+<text xml:space="preserve" text-anchor="middle" x="1138.04" y="-704.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">retrieved context</text>
+</g>
+<!-- feedback&#45;&gt;think -->
+<g id="06-workspace-edge12" class="edge">
+<title>feedback&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M803.64,-733.64C803.64,-719.93 803.64,-703.95 803.64,-689.48"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="806.09,-689.82 803.64,-682.82 801.19,-689.82 806.09,-689.82"/>
+<text xml:space="preserve" text-anchor="middle" x="874.06" y="-704.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">projected feedback token</text>
+</g>
+<!-- workspace&#45;&gt;dispatch -->
+<g id="06-workspace-edge14" class="edge">
+<title>workspace&#45;&gt;dispatch</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M743.95,-497.16C715.22,-483.41 685.67,-469.28 685.67,-469.28 685.67,-469.28 659.95,-455.54 631.83,-440.53"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="633.05,-438.41 625.72,-437.27 630.74,-442.73 633.05,-438.41"/>
+<text xml:space="preserve" text-anchor="middle" x="733.66" y="-459.38" font-family="DejaVu Sans" font-size="11.00" fill="#374151">conditioned state</text>
+</g>
+<!-- workspace&#45;&gt;actionhead -->
+<g id="06-workspace-edge15" class="edge">
+<title>workspace&#45;&gt;actionhead</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M797.64,-497.33C797.64,-455.81 797.64,-373.18 797.64,-322.68"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="800.09,-322.92 797.64,-315.92 795.19,-322.92 800.09,-322.92"/>
+<text xml:space="preserve" text-anchor="middle" x="845.63" y="-398.22" font-family="DejaVu Sans" font-size="11.00" fill="#374151">conditioned state</text>
+</g>
+<!-- dispatch&#45;&gt;actionhead -->
+<g id="06-workspace-edge16" class="edge">
+<title>dispatch&#45;&gt;actionhead</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M615.84,-366.55C642.63,-350.06 669.12,-333.76 669.12,-333.76 669.12,-333.76 686.26,-326.62 708.02,-317.55"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="708.83,-319.87 714.35,-314.91 706.94,-315.34 708.83,-319.87"/>
+<text xml:space="preserve" text-anchor="middle" x="725.38" y="-337.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">when act is selected</text>
+</g>
+<!-- dispatch&#45;&gt;output -->
+<g id="06-workspace-edge18" class="edge">
+<title>dispatch&#45;&gt;output</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M538.99,-366.73C523.37,-342.37 505.04,-313.76 505.04,-313.76 505.04,-313.76 505.04,-244.64 505.04,-244.64 505.04,-244.64 507.28,-221.58 509.32,-200.48"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="511.75,-200.8 509.99,-193.6 506.88,-200.33 511.75,-200.8"/>
+<text xml:space="preserve" text-anchor="middle" x="573.84" y="-275.9" font-family="DejaVu Sans" font-size="11.00" fill="#374151">selected operation result</text>
+</g>
+<!-- actionhead&#45;&gt;output -->
+<g id="06-workspace-edge17" class="edge">
+<title>actionhead&#45;&gt;output</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M656.52,-244.13C612.77,-233.56 575.81,-224.64 575.81,-224.64 575.81,-224.64 561.3,-211.23 546.18,-197.27"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="548.19,-195.79 541.39,-192.84 544.87,-199.39 548.19,-195.79"/>
+<text xml:space="preserve" text-anchor="middle" x="618.23" y="-214.74" font-family="DejaVu Sans" font-size="11.00" fill="#374151">action proposal</text>
+</g>
+<!-- output&#45;&gt;reflect -->
+<g id="06-workspace-edge19" class="edge">
+<title>output&#45;&gt;reflect</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M512.64,-138.76C512.64,-125.84 512.64,-109.69 512.64,-94.39"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="515.09,-94.68 512.64,-87.68 510.19,-94.68 515.09,-94.68"/>
+<text xml:space="preserve" text-anchor="middle" x="586.73" y="-109.22" font-family="DejaVu Sans" font-size="11.00" fill="#374151">generated&#45;media loopback</text>
+</g>
+<!-- reflect&#45;&gt;think -->
+<g id="06-workspace-edge20" class="edge">
+<title>reflect&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M617.23,-86.32C644.13,-97.21 665.64,-105.92 665.64,-105.92 665.64,-105.92 952.64,-244.64 952.64,-244.64 952.64,-244.64 952.64,-313.76 952.64,-313.76 952.64,-313.76 932.64,-558.4 932.64,-558.4 932.64,-558.4 922.64,-591.6 922.64,-591.6 922.64,-591.6 907.05,-598.62 887.16,-607.57"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="886.24,-605.3 880.86,-610.4 888.25,-609.77 886.24,-605.3"/>
+<text xml:space="preserve" text-anchor="middle" x="1001.05" y="-337.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">attributed context</text>
+</g>
+<!-- instruction -->
+<g id="06-workspace-node1" class="node">
+<title>instruction</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M269.28,-916.96C269.28,-916.96 12,-916.96 12,-916.96 6,-916.96 0,-910.96 0,-904.96 0,-904.96 0,-876.64 0,-876.64 0,-870.64 6,-864.64 12,-864.64 12,-864.64 269.28,-864.64 269.28,-864.64 275.28,-864.64 281.28,-870.64 281.28,-876.64 281.28,-876.64 281.28,-904.96 281.28,-904.96 281.28,-910.96 275.28,-916.96 269.28,-916.96"/>
+<text xml:space="preserve" text-anchor="middle" x="140.64" y="-895" font-family="DejaVu Sans" font-size="14.00">Instruction</text>
+<text xml:space="preserve" text-anchor="middle" x="140.64" y="-878.2" font-family="DejaVu Sans" font-size="14.00">Text encoder &#45;&gt; instruction features</text>
+</g>
+<!-- metadata -->
+<g id="06-workspace-node2" class="node">
+<title>metadata</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M661.7,-925.36C661.7,-925.36 313.59,-925.36 313.59,-925.36 307.59,-925.36 301.59,-919.36 301.59,-913.36 301.59,-913.36 301.59,-868.24 301.59,-868.24 301.59,-862.24 307.59,-856.24 313.59,-856.24 313.59,-856.24 661.7,-856.24 661.7,-856.24 667.7,-856.24 673.7,-862.24 673.7,-868.24 673.7,-868.24 673.7,-913.36 673.7,-913.36 673.7,-919.36 667.7,-925.36 661.7,-925.36"/>
+<text xml:space="preserve" text-anchor="middle" x="487.64" y="-903.4" font-family="DejaVu Sans" font-size="14.00">Task / actor / output metadata</text>
+<text xml:space="preserve" text-anchor="middle" x="487.64" y="-886.6" font-family="DejaVu Sans" font-size="14.00">Canonical bytes &#45;&gt; embedding &#45;&gt; GRU &#45;&gt; pooled</text>
+<text xml:space="preserve" text-anchor="middle" x="487.64" y="-869.8" font-family="DejaVu Sans" font-size="14.00">token</text>
+</g>
+<!-- state -->
+<g id="06-workspace-node3" class="node">
+<title>state</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M978.82,-908.8C978.82,-908.8 832.46,-908.8 832.46,-908.8 826.46,-908.8 820.46,-902.8 820.46,-896.8 820.46,-896.8 820.46,-884.8 820.46,-884.8 820.46,-878.8 826.46,-872.8 832.46,-872.8 832.46,-872.8 978.82,-872.8 978.82,-872.8 984.82,-872.8 990.82,-878.8 990.82,-884.8 990.82,-884.8 990.82,-896.8 990.82,-896.8 990.82,-902.8 984.82,-908.8 978.82,-908.8"/>
+<text xml:space="preserve" text-anchor="middle" x="905.64" y="-886.6" font-family="DejaVu Sans" font-size="14.00">Current state tokens</text>
+</g>
+<!-- interpret -->
+<g id="06-workspace-node4" class="node">
+<title>interpret</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M614.32,-803.04C614.32,-803.04 294.96,-803.04 294.96,-803.04 288.96,-803.04 282.96,-797.04 282.96,-791.04 282.96,-791.04 282.96,-745.92 282.96,-745.92 282.96,-739.92 288.96,-733.92 294.96,-733.92 294.96,-733.92 614.32,-733.92 614.32,-733.92 620.32,-733.92 626.32,-739.92 626.32,-745.92 626.32,-745.92 626.32,-791.04 626.32,-791.04 626.32,-797.04 620.32,-803.04 614.32,-803.04"/>
+<text xml:space="preserve" text-anchor="middle" x="454.64" y="-781.08" font-family="DejaVu Sans" font-size="14.00">TaskInterpreter</text>
+<text xml:space="preserve" text-anchor="middle" x="454.64" y="-764.28" font-family="DejaVu Sans" font-size="14.00">4 query tokens read instruction, then state +</text>
+<text xml:space="preserve" text-anchor="middle" x="454.64" y="-747.48" font-family="DejaVu Sans" font-size="14.00">metadata</text>
+</g>
+<!-- policy -->
+<g id="06-workspace-node5" class="node">
+<title>policy</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M589.79,-680.72C589.79,-680.72 327.49,-680.72 327.49,-680.72 321.49,-680.72 315.49,-674.72 315.49,-668.72 315.49,-668.72 315.49,-623.6 315.49,-623.6 315.49,-617.6 321.49,-611.6 327.49,-611.6 327.49,-611.6 589.79,-611.6 589.79,-611.6 595.79,-611.6 601.79,-617.6 601.79,-623.6 601.79,-623.6 601.79,-668.72 601.79,-668.72 601.79,-674.72 595.79,-680.72 589.79,-680.72"/>
+<text xml:space="preserve" text-anchor="middle" x="458.64" y="-658.76" font-family="DejaVu Sans" font-size="14.00">TaskPolicy</text>
+<text xml:space="preserve" text-anchor="middle" x="458.64" y="-641.96" font-family="DejaVu Sans" font-size="14.00">Pool &#45;&gt; MLP &#45;&gt; operation / modality /</text>
+<text xml:space="preserve" text-anchor="middle" x="458.64" y="-625.16" font-family="DejaVu Sans" font-size="14.00">completion logits</text>
+</g>
+<!-- gate -->
+<g id="06-workspace-node6" class="node">
+<title>gate</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M634.67,-558.4C634.67,-558.4 354.62,-558.4 354.62,-558.4 348.62,-558.4 342.62,-552.4 342.62,-546.4 342.62,-546.4 342.62,-501.28 342.62,-501.28 342.62,-495.28 348.62,-489.28 354.62,-489.28 354.62,-489.28 634.67,-489.28 634.67,-489.28 640.67,-489.28 646.67,-495.28 646.67,-501.28 646.67,-501.28 646.67,-546.4 646.67,-546.4 646.67,-552.4 640.67,-558.4 634.67,-558.4"/>
+<text xml:space="preserve" text-anchor="middle" x="494.64" y="-536.44" font-family="DejaVu Sans" font-size="14.00">TaskSession controls</text>
+<text xml:space="preserve" text-anchor="middle" x="494.64" y="-519.64" font-family="DejaVu Sans" font-size="14.00">Required / automatic / disabled outputs</text>
+<text xml:space="preserve" text-anchor="middle" x="494.64" y="-502.84" font-family="DejaVu Sans" font-size="14.00">Selection + fulfillment checks</text>
+</g>
+<!-- think -->
+<g id="06-workspace-node7" class="node">
+<title>think</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M971.41,-680.72C971.41,-680.72 635.87,-680.72 635.87,-680.72 629.87,-680.72 623.87,-674.72 623.87,-668.72 623.87,-668.72 623.87,-623.6 623.87,-623.6 623.87,-617.6 629.87,-611.6 635.87,-611.6 635.87,-611.6 971.41,-611.6 971.41,-611.6 977.41,-611.6 983.41,-617.6 983.41,-623.6 983.41,-623.6 983.41,-668.72 983.41,-668.72 983.41,-674.72 977.41,-680.72 971.41,-680.72"/>
+<text xml:space="preserve" text-anchor="middle" x="803.64" y="-658.76" font-family="DejaVu Sans" font-size="14.00">Thinker</text>
+<text xml:space="preserve" text-anchor="middle" x="803.64" y="-641.96" font-family="DejaVu Sans" font-size="14.00">Workspace queries attend state + recall + goal</text>
+<text xml:space="preserve" text-anchor="middle" x="803.64" y="-625.16" font-family="DejaVu Sans" font-size="14.00">+ feedback</text>
+</g>
+<!-- memory -->
+<g id="06-workspace-node8" class="node">
+<title>memory</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M1500.35,-794.64C1500.35,-794.64 1188.94,-794.64 1188.94,-794.64 1182.94,-794.64 1176.94,-788.64 1176.94,-782.64 1176.94,-782.64 1176.94,-754.32 1176.94,-754.32 1176.94,-748.32 1182.94,-742.32 1188.94,-742.32 1188.94,-742.32 1500.35,-742.32 1500.35,-742.32 1506.35,-742.32 1512.35,-748.32 1512.35,-754.32 1512.35,-754.32 1512.35,-782.64 1512.35,-782.64 1512.35,-788.64 1506.35,-794.64 1500.35,-794.64"/>
+<text xml:space="preserve" text-anchor="middle" x="1344.64" y="-772.68" font-family="DejaVu Sans" font-size="14.00">Memory reader</text>
+<text xml:space="preserve" text-anchor="middle" x="1344.64" y="-755.88" font-family="DejaVu Sans" font-size="14.00">Task&#45;dependent access through query state</text>
+</g>
+<!-- feedback -->
+<g id="06-workspace-node9" class="node">
+<title>feedback</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M948.87,-803.04C948.87,-803.04 658.42,-803.04 658.42,-803.04 652.42,-803.04 646.42,-797.04 646.42,-791.04 646.42,-791.04 646.42,-745.92 646.42,-745.92 646.42,-739.92 652.42,-733.92 658.42,-733.92 658.42,-733.92 948.87,-733.92 948.87,-733.92 954.87,-733.92 960.87,-739.92 960.87,-745.92 960.87,-745.92 960.87,-791.04 960.87,-791.04 960.87,-797.04 954.87,-803.04 948.87,-803.04"/>
+<text xml:space="preserve" text-anchor="middle" x="803.64" y="-781.08" font-family="DejaVu Sans" font-size="14.00">Feedback</text>
+<text xml:space="preserve" text-anchor="middle" x="803.64" y="-764.28" font-family="DejaVu Sans" font-size="14.00">Detached state &#45;&gt; error MLP &#45;&gt; softplus</text>
+<text xml:space="preserve" text-anchor="middle" x="803.64" y="-747.48" font-family="DejaVu Sans" font-size="14.00">Add uncertainty diagnostic + think count</text>
+</g>
+<!-- workspace -->
+<g id="06-workspace-node10" class="node">
+<title>workspace</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M910.4,-550C910.4,-550 684.88,-550 684.88,-550 678.88,-550 672.88,-544 672.88,-538 672.88,-538 672.88,-509.68 672.88,-509.68 672.88,-503.68 678.88,-497.68 684.88,-497.68 684.88,-497.68 910.4,-497.68 910.4,-497.68 916.4,-497.68 922.4,-503.68 922.4,-509.68 922.4,-509.68 922.4,-538 922.4,-538 922.4,-544 916.4,-550 910.4,-550"/>
+<text xml:space="preserve" text-anchor="middle" x="797.64" y="-528.04" font-family="DejaVu Sans" font-size="14.00">Updated workspace</text>
+<text xml:space="preserve" text-anchor="middle" x="797.64" y="-511.24" font-family="DejaVu Sans" font-size="14.00">4 working + 4 reasoning tokens</text>
+</g>
+<!-- dispatch -->
+<g id="06-workspace-node11" class="node">
+<title>dispatch</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M703.93,-436.08C703.93,-436.08 417.35,-436.08 417.35,-436.08 411.35,-436.08 405.35,-430.08 405.35,-424.08 405.35,-424.08 405.35,-378.96 405.35,-378.96 405.35,-372.96 411.35,-366.96 417.35,-366.96 417.35,-366.96 703.93,-366.96 703.93,-366.96 709.93,-366.96 715.93,-372.96 715.93,-378.96 715.93,-378.96 715.93,-424.08 715.93,-424.08 715.93,-430.08 709.93,-436.08 703.93,-436.08"/>
+<text xml:space="preserve" text-anchor="middle" x="560.64" y="-414.12" font-family="DejaVu Sans" font-size="14.00">Bounded operation dispatcher</text>
+<text xml:space="preserve" text-anchor="middle" x="560.64" y="-397.32" font-family="DejaVu Sans" font-size="14.00">think / recall / imagine / act / emit / ask /</text>
+<text xml:space="preserve" text-anchor="middle" x="560.64" y="-380.52" font-family="DejaVu Sans" font-size="14.00">finish</text>
+</g>
+<!-- actionhead -->
+<g id="06-workspace-node12" class="node">
+<title>actionhead</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M931.09,-313.76C931.09,-313.76 664.19,-313.76 664.19,-313.76 658.19,-313.76 652.19,-307.76 652.19,-301.76 652.19,-301.76 652.19,-256.64 652.19,-256.64 652.19,-250.64 658.19,-244.64 664.19,-244.64 664.19,-244.64 931.09,-244.64 931.09,-244.64 937.09,-244.64 943.09,-250.64 943.09,-256.64 943.09,-256.64 943.09,-301.76 943.09,-301.76 943.09,-307.76 937.09,-313.76 931.09,-313.76"/>
+<text xml:space="preserve" text-anchor="middle" x="797.64" y="-291.8" font-family="DejaVu Sans" font-size="14.00">ActionHead</text>
+<text xml:space="preserve" text-anchor="middle" x="797.64" y="-275" font-family="DejaVu Sans" font-size="14.00">Mean&#45;pool conditioned state &#45;&gt; linear</text>
+<text xml:space="preserve" text-anchor="middle" x="797.64" y="-258.2" font-family="DejaVu Sans" font-size="14.00">Continuous action mean + log&#45;scale</text>
+</g>
+<!-- output -->
+<g id="06-workspace-node13" class="node">
+<title>output</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M650.03,-191.44C650.03,-191.44 375.25,-191.44 375.25,-191.44 369.25,-191.44 363.25,-185.44 363.25,-179.44 363.25,-179.44 363.25,-151.12 363.25,-151.12 363.25,-145.12 369.25,-139.12 375.25,-139.12 375.25,-139.12 650.03,-139.12 650.03,-139.12 656.03,-139.12 662.03,-145.12 662.03,-151.12 662.03,-151.12 662.03,-179.44 662.03,-179.44 662.03,-185.44 656.03,-191.44 650.03,-191.44"/>
+<text xml:space="preserve" text-anchor="middle" x="512.64" y="-169.48" font-family="DejaVu Sans" font-size="14.00">Emission / action / hypothetical branch</text>
+<text xml:space="preserve" text-anchor="middle" x="512.64" y="-152.68" font-family="DejaVu Sans" font-size="14.00">Return result and provenance to caller</text>
+</g>
+<!-- reflect -->
+<g id="06-workspace-node14" class="node">
+<title>reflect</title>
+<path fill="#efeafa" stroke="#9c87b5" stroke-width="1.1" d="M668.24,-85.92C668.24,-85.92 357.05,-85.92 357.05,-85.92 351.05,-85.92 345.05,-79.92 345.05,-73.92 345.05,-73.92 345.05,-12 345.05,-12 345.05,-6 351.05,0 357.05,0 357.05,0 668.24,0 668.24,0 674.24,0 680.24,-6 680.24,-12 680.24,-12 680.24,-73.92 680.24,-73.92 680.24,-79.92 674.24,-85.92 668.24,-85.92"/>
+<text xml:space="preserve" text-anchor="middle" x="512.64" y="-63.96" font-family="DejaVu Sans" font-size="14.00">Optional reflection</text>
+<text xml:space="preserve" text-anchor="middle" x="512.64" y="-47.16" font-family="DejaVu Sans" font-size="14.00">Tagged generated output &#45;&gt; same modality</text>
+<text xml:space="preserve" text-anchor="middle" x="512.64" y="-30.36" font-family="DejaVu Sans" font-size="14.00">encoder</text>
+<text xml:space="preserve" text-anchor="middle" x="512.64" y="-13.56" font-family="DejaVu Sans" font-size="14.00">Valid feature pool + metadata</text>
+</g>
+</g>
+</svg>

@@ -1,0 +1,181 @@
+<svg width="1343pt" height="782pt"
+ viewBox="0.00 0.00 1343.00 782.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="11-planning-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 767.52)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-767.52 1328.58,-767.52 1328.58,14.4 -14.4,14.4"/>
+<!-- live&#45;&gt;branches -->
+<g id="11-planning-edge1" class="edge">
+<title>live&#45;&gt;branches</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M361.29,-716.7C376.08,-707.11 391.46,-697.12 391.46,-697.12 391.46,-697.12 426.54,-673.15 457.08,-652.29"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="458.14,-654.53 462.54,-648.55 455.38,-650.48 458.14,-654.53"/>
+<text xml:space="preserve" text-anchor="middle" x="448.22" y="-687.22" font-family="DejaVu Sans" font-size="11.00" fill="#374151">starting belief</text>
+</g>
+<!-- live&#45;&gt;dag -->
+<g id="11-planning-edge11" class="edge">
+<title>live&#45;&gt;dag</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M298.45,-716.7C278.61,-707.11 257.96,-697.12 257.96,-697.12 257.96,-697.12 242.97,-684.67 225.18,-669.9"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="226.76,-668.02 219.81,-665.44 223.63,-671.79 226.76,-668.02"/>
+<text xml:space="preserve" text-anchor="middle" x="322.21" y="-687.22" font-family="DejaVu Sans" font-size="11.00" fill="#374151">proposed starting node</text>
+</g>
+<!-- candidates&#45;&gt;rollout -->
+<g id="11-planning-edge3" class="edge">
+<title>candidates&#45;&gt;rollout</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M811.59,-585.9C782.05,-571.5 754.36,-558 754.36,-558 754.36,-558 730.33,-540.28 705.61,-522.04"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="707.07,-520.07 699.98,-517.89 704.16,-524.02 707.07,-520.07"/>
+<text xml:space="preserve" text-anchor="middle" x="809.91" y="-548.1" font-family="DejaVu Sans" font-size="11.00" fill="#374151">candidate sequence</text>
+</g>
+<!-- candidates&#45;&gt;score -->
+<g id="11-planning-edge5" class="edge">
+<title>candidates&#45;&gt;score</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M874.66,-585.9C870.7,-566.01 866.46,-544.8 866.46,-544.8 866.46,-544.8 817.46,-405.68 817.46,-405.68 817.46,-405.68 812.49,-399.92 806.1,-392.52"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="807.99,-390.96 801.56,-387.26 804.28,-394.16 807.99,-390.96"/>
+<text xml:space="preserve" text-anchor="middle" x="896.2" y="-478.54" font-family="DejaVu Sans" font-size="11.00" fill="#374151">declared cost</text>
+</g>
+<!-- branches&#45;&gt;rollout -->
+<g id="11-planning-edge2" class="edge">
+<title>branches&#45;&gt;rollout</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M503.58,-594.51C505.4,-572.71 507.73,-544.8 507.73,-544.8 507.73,-544.8 534.53,-533.33 565.07,-520.25"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="565.89,-522.56 571.37,-517.56 563.97,-518.06 565.89,-522.56"/>
+<text xml:space="preserve" text-anchor="middle" x="543.59" y="-548.1" font-family="DejaVu Sans" font-size="11.00" fill="#374151">scratch state</text>
+</g>
+<!-- rollout&#45;&gt;score -->
+<g id="11-planning-edge4" class="edge">
+<title>rollout&#45;&gt;score</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M675.9,-446.78C689.58,-426.89 704.17,-405.68 704.17,-405.68 704.17,-405.68 715.42,-398.84 729.17,-390.48"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="730.41,-392.6 735.12,-386.87 727.86,-388.41 730.41,-392.6"/>
+<text xml:space="preserve" text-anchor="middle" x="758.32" y="-408.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">imagined trajectory</text>
+</g>
+<!-- score&#45;&gt;choose -->
+<g id="11-planning-edge6" class="edge">
+<title>score&#45;&gt;choose</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M778.46,-332.84C778.46,-317.35 778.46,-297.41 778.46,-280.62"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="780.91,-280.82 778.46,-273.82 776.01,-280.82 780.91,-280.82"/>
+<text xml:space="preserve" text-anchor="middle" x="825.28" y="-303.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">candidate scores</text>
+</g>
+<!-- choose&#45;&gt;execute -->
+<g id="11-planning-edge7" class="edge">
+<title>choose&#45;&gt;execute</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M829.56,-218.98C867.11,-200.15 911.61,-177.84 911.61,-177.84 911.61,-177.84 935.64,-170.03 963.7,-160.9"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="964.22,-163.3 970.12,-158.81 962.71,-158.65 964.22,-163.3"/>
+<text xml:space="preserve" text-anchor="middle" x="941.04" y="-181.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">first action</text>
+</g>
+<!-- execute&#45;&gt;correct -->
+<g id="11-planning-edge8" class="edge">
+<title>execute&#45;&gt;correct</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1050.46,-105.09C1050.46,-91.9 1050.46,-75.64 1050.46,-61.38"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1052.91,-61.48 1050.46,-54.48 1048.01,-61.48 1052.91,-61.48"/>
+<text xml:space="preserve" text-anchor="middle" x="1078.42" y="-75.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">real event</text>
+</g>
+<!-- correct&#45;&gt;live -->
+<g id="11-planning-edge9" class="edge">
+<title>correct&#45;&gt;live</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1094.67,-52.82C1134.04,-75.67 1185.46,-105.52 1185.46,-105.52 1185.46,-105.52 1185.46,-157.84 1185.46,-157.84 1185.46,-157.84 1082.46,-177.84 1082.46,-177.84 1082.46,-177.84 958.46,-211.04 958.46,-211.04 958.46,-211.04 940.46,-385.68 940.46,-385.68 940.46,-385.68 845.46,-438.88 845.46,-438.88 845.46,-438.88 809.46,-524.8 809.46,-524.8 809.46,-524.8 732.46,-544.8 732.46,-544.8 732.46,-544.8 681.46,-663.92 681.46,-663.92 681.46,-663.92 521.54,-696.27 418.83,-717.05"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="418.62,-714.59 412.24,-718.38 419.59,-719.4 418.62,-714.59"/>
+<text xml:space="preserve" text-anchor="middle" x="985.19" y="-356.22" font-family="DejaVu Sans" font-size="11.00" fill="#374151">next live state</text>
+</g>
+<!-- keybox&#45;&gt;execute -->
+<g id="11-planning-edge10" class="edge">
+<title>keybox&#45;&gt;execute</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1113.91,-210.72C1102.03,-196.1 1088.2,-179.09 1076.49,-164.69"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1078.64,-163.45 1072.32,-159.56 1074.83,-166.54 1078.64,-163.45"/>
+<text xml:space="preserve" text-anchor="middle" x="1173.05" y="-181.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">separate controlled harness</text>
+</g>
+<!-- dag&#45;&gt;search -->
+<g id="11-planning-edge12" class="edge">
+<title>dag&#45;&gt;search</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M167.46,-577.7C167.46,-563.76 167.46,-548.1 167.46,-533.59"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="169.91,-533.86 167.46,-526.86 165.01,-533.86 169.91,-533.86"/>
+<text xml:space="preserve" text-anchor="middle" x="233.15" y="-548.1" font-family="DejaVu Sans" font-size="11.00" fill="#374151">proposed graph frontier</text>
+</g>
+<!-- search&#45;&gt;dag -->
+<g id="11-planning-edge13" class="edge">
+<title>search&#45;&gt;dag</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M335.27,-507.77C451.14,-524.99 584.46,-544.8 584.46,-544.8 584.46,-544.8 584.46,-558 584.46,-558 584.46,-558 321.46,-578 321.46,-578 321.46,-578 321.13,-578.09 320.5,-578.26"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="320.01,-575.86 313.9,-580.06 321.29,-580.59 320.01,-575.86"/>
+<text xml:space="preserve" text-anchor="middle" x="604.94" y="-548.1" font-family="DejaVu Sans" font-size="11.00" fill="#374151">expand</text>
+</g>
+<!-- live -->
+<g id="11-planning-node1" class="node">
+<title>live</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M398.19,-753.12C398.19,-753.12 270.73,-753.12 270.73,-753.12 264.73,-753.12 258.73,-747.12 258.73,-741.12 258.73,-741.12 258.73,-729.12 258.73,-729.12 258.73,-723.12 264.73,-717.12 270.73,-717.12 270.73,-717.12 398.19,-717.12 398.19,-717.12 404.19,-717.12 410.19,-723.12 410.19,-729.12 410.19,-729.12 410.19,-741.12 410.19,-741.12 410.19,-747.12 404.19,-753.12 398.19,-753.12"/>
+<text xml:space="preserve" text-anchor="middle" x="334.46" y="-730.92" font-family="DejaVu Sans" font-size="14.00">Current live belief</text>
+</g>
+<!-- candidates -->
+<g id="11-planning-node2" class="node">
+<title>candidates</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M1017.59,-655.52C1017.59,-655.52 745.34,-655.52 745.34,-655.52 739.34,-655.52 733.34,-649.52 733.34,-643.52 733.34,-643.52 733.34,-598.4 733.34,-598.4 733.34,-592.4 739.34,-586.4 745.34,-586.4 745.34,-586.4 1017.59,-586.4 1017.59,-586.4 1023.59,-586.4 1029.59,-592.4 1029.59,-598.4 1029.59,-598.4 1029.59,-643.52 1029.59,-643.52 1029.59,-649.52 1023.59,-655.52 1017.59,-655.52"/>
+<text xml:space="preserve" text-anchor="middle" x="881.46" y="-633.56" font-family="DejaVu Sans" font-size="14.00">Recipe / caller</text>
+<text xml:space="preserve" text-anchor="middle" x="881.46" y="-616.76" font-family="DejaVu Sans" font-size="14.00">Candidate action sequences + bounds</text>
+<text xml:space="preserve" text-anchor="middle" x="881.46" y="-599.96" font-family="DejaVu Sans" font-size="14.00">Goal cost + horizon + duration</text>
+</g>
+<!-- branches -->
+<g id="11-planning-node3" class="node">
+<title>branches</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M659.08,-647.12C659.08,-647.12 343.84,-647.12 343.84,-647.12 337.84,-647.12 331.84,-641.12 331.84,-635.12 331.84,-635.12 331.84,-606.8 331.84,-606.8 331.84,-600.8 337.84,-594.8 343.84,-594.8 343.84,-594.8 659.08,-594.8 659.08,-594.8 665.08,-594.8 671.08,-600.8 671.08,-606.8 671.08,-606.8 671.08,-635.12 671.08,-635.12 671.08,-641.12 665.08,-647.12 659.08,-647.12"/>
+<text xml:space="preserve" text-anchor="middle" x="501.46" y="-625.16" font-family="DejaVu Sans" font-size="14.00">Temporary starting branches</text>
+<text xml:space="preserve" text-anchor="middle" x="501.46" y="-608.36" font-family="DejaVu Sans" font-size="14.00">Categorical draws, default4; memory shared</text>
+</g>
+<!-- rollout -->
+<g id="11-planning-node4" class="node">
+<title>rollout</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M787.1,-516.4C787.1,-516.4 517.83,-516.4 517.83,-516.4 511.83,-516.4 505.83,-510.4 505.83,-504.4 505.83,-504.4 505.83,-459.28 505.83,-459.28 505.83,-453.28 511.83,-447.28 517.83,-447.28 517.83,-447.28 787.1,-447.28 787.1,-447.28 793.1,-447.28 799.1,-453.28 799.1,-459.28 799.1,-459.28 799.1,-504.4 799.1,-504.4 799.1,-510.4 793.1,-516.4 787.1,-516.4"/>
+<text xml:space="preserve" text-anchor="middle" x="652.46" y="-494.44" font-family="DejaVu Sans" font-size="14.00">Learned dynamics rollout</text>
+<text xml:space="preserve" text-anchor="middle" x="652.46" y="-477.64" font-family="DejaVu Sans" font-size="14.00">State + action &#45;&gt; imagined next state</text>
+<text xml:space="preserve" text-anchor="middle" x="652.46" y="-460.84" font-family="DejaVu Sans" font-size="14.00">Repeat for the candidate sequence</text>
+</g>
+<!-- score -->
+<g id="11-planning-node5" class="node">
+<title>score</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M918.05,-385.68C918.05,-385.68 638.88,-385.68 638.88,-385.68 632.88,-385.68 626.88,-379.68 626.88,-373.68 626.88,-373.68 626.88,-345.36 626.88,-345.36 626.88,-339.36 632.88,-333.36 638.88,-333.36 638.88,-333.36 918.05,-333.36 918.05,-333.36 924.05,-333.36 930.05,-339.36 930.05,-345.36 930.05,-345.36 930.05,-373.68 930.05,-373.68 930.05,-379.68 924.05,-385.68 918.05,-385.68"/>
+<text xml:space="preserve" text-anchor="middle" x="778.46" y="-363.72" font-family="DejaVu Sans" font-size="14.00">Evaluate predicted states</text>
+<text xml:space="preserve" text-anchor="middle" x="778.46" y="-346.92" font-family="DejaVu Sans" font-size="14.00">Discounted cost; average over samples</text>
+</g>
+<!-- choose -->
+<g id="11-planning-node6" class="node">
+<title>choose</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M894.11,-271.76C894.11,-271.76 662.82,-271.76 662.82,-271.76 656.82,-271.76 650.82,-265.76 650.82,-259.76 650.82,-259.76 650.82,-231.44 650.82,-231.44 650.82,-225.44 656.82,-219.44 662.82,-219.44 662.82,-219.44 894.11,-219.44 894.11,-219.44 900.11,-219.44 906.11,-225.44 906.11,-231.44 906.11,-231.44 906.11,-259.76 906.11,-259.76 906.11,-265.76 900.11,-271.76 894.11,-271.76"/>
+<text xml:space="preserve" text-anchor="middle" x="778.46" y="-249.8" font-family="DejaVu Sans" font-size="14.00">Choose lowest&#45;scoring sequence</text>
+<text xml:space="preserve" text-anchor="middle" x="778.46" y="-233" font-family="DejaVu Sans" font-size="14.00">Return full plan and first action</text>
+</g>
+<!-- execute -->
+<g id="11-planning-node7" class="node">
+<title>execute</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M1163.13,-157.84C1163.13,-157.84 937.8,-157.84 937.8,-157.84 931.8,-157.84 925.8,-151.84 925.8,-145.84 925.8,-145.84 925.8,-117.52 925.8,-117.52 925.8,-111.52 931.8,-105.52 937.8,-105.52 937.8,-105.52 1163.13,-105.52 1163.13,-105.52 1169.13,-105.52 1175.13,-111.52 1175.13,-117.52 1175.13,-117.52 1175.13,-145.84 1175.13,-145.84 1175.13,-151.84 1169.13,-157.84 1163.13,-157.84"/>
+<text xml:space="preserve" text-anchor="middle" x="1050.46" y="-135.88" font-family="DejaVu Sans" font-size="14.00">Caller executes one action</text>
+<text xml:space="preserve" text-anchor="middle" x="1050.46" y="-119.08" font-family="DejaVu Sans" font-size="14.00">Collect actual new observations</text>
+</g>
+<!-- correct -->
+<g id="11-planning-node8" class="node">
+<title>correct</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M1210.26,-52.32C1210.26,-52.32 890.67,-52.32 890.67,-52.32 884.67,-52.32 878.67,-46.32 878.67,-40.32 878.67,-40.32 878.67,-12 878.67,-12 878.67,-6 884.67,0 890.67,0 890.67,0 1210.26,0 1210.26,0 1216.26,0 1222.26,-6 1222.26,-12 1222.26,-12 1222.26,-40.32 1222.26,-40.32 1222.26,-46.32 1216.26,-52.32 1210.26,-52.32"/>
+<text xml:space="preserve" text-anchor="middle" x="1050.46" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Correct live belief and replan</text>
+<text xml:space="preserve" text-anchor="middle" x="1050.46" y="-13.56" font-family="DejaVu Sans" font-size="14.00">Predicted success needs external verification</text>
+</g>
+<!-- keybox -->
+<g id="11-planning-node9" class="node">
+<title>keybox</title>
+<path fill="#efeafa" stroke="#9c87b5" stroke-width="1.1" d="M1302.18,-280.16C1302.18,-280.16 980.75,-280.16 980.75,-280.16 974.75,-280.16 968.75,-274.16 968.75,-268.16 968.75,-268.16 968.75,-223.04 968.75,-223.04 968.75,-217.04 974.75,-211.04 980.75,-211.04 980.75,-211.04 1302.18,-211.04 1302.18,-211.04 1308.18,-211.04 1314.18,-217.04 1314.18,-223.04 1314.18,-223.04 1314.18,-268.16 1314.18,-268.16 1314.18,-274.16 1308.18,-280.16 1302.18,-280.16"/>
+<text xml:space="preserve" text-anchor="middle" x="1141.46" y="-258.2" font-family="DejaVu Sans" font-size="14.00">Separate key&#45;box planner</text>
+<text xml:space="preserve" text-anchor="middle" x="1141.46" y="-241.4" font-family="DejaVu Sans" font-size="14.00">Inspect / open / retrieve / stop</text>
+<text xml:space="preserve" text-anchor="middle" x="1141.46" y="-224.6" font-family="DejaVu Sans" font-size="14.00">Expectimax, supplied dynamics, horizon &lt;=4</text>
+</g>
+<!-- dag -->
+<g id="11-planning-node10" class="node">
+<title>dag</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M299.92,-663.92C299.92,-663.92 35,-663.92 35,-663.92 29,-663.92 23,-657.92 23,-651.92 23,-651.92 23,-590 23,-590 23,-584 29,-578 35,-578 35,-578 299.92,-578 299.92,-578 305.92,-578 311.92,-584 311.92,-590 311.92,-590 311.92,-651.92 311.92,-651.92 311.92,-657.92 305.92,-663.92 299.92,-663.92"/>
+<text xml:space="preserve" text-anchor="middle" x="167.46" y="-641.96" font-family="DejaVu Sans" font-size="14.00">PROPOSED / Reusable action DAG</text>
+<text xml:space="preserve" text-anchor="middle" x="167.46" y="-625.16" font-family="DejaVu Sans" font-size="14.00">Nodes: predicted belief states</text>
+<text xml:space="preserve" text-anchor="middle" x="167.46" y="-608.36" font-family="DejaVu Sans" font-size="14.00">Edges: external / internal actions and</text>
+<text xml:space="preserve" text-anchor="middle" x="167.46" y="-591.56" font-family="DejaVu Sans" font-size="14.00">outcomes</text>
+</g>
+<!-- search -->
+<g id="11-planning-node11" class="node">
+<title>search</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M322.92,-524.8C322.92,-524.8 12,-524.8 12,-524.8 6,-524.8 0,-518.8 0,-512.8 0,-512.8 0,-450.88 0,-450.88 0,-444.88 6,-438.88 12,-438.88 12,-438.88 322.92,-438.88 322.92,-438.88 328.92,-438.88 334.92,-444.88 334.92,-450.88 334.92,-450.88 334.92,-512.8 334.92,-512.8 334.92,-518.8 328.92,-524.8 322.92,-524.8"/>
+<text xml:space="preserve" text-anchor="middle" x="167.46" y="-502.84" font-family="DejaVu Sans" font-size="14.00">PROPOSED / General graph search</text>
+<text xml:space="preserve" text-anchor="middle" x="167.46" y="-486.04" font-family="DejaVu Sans" font-size="14.00">Expansion / merging / subgoals / contingent</text>
+<text xml:space="preserve" text-anchor="middle" x="167.46" y="-469.24" font-family="DejaVu Sans" font-size="14.00">branches</text>
+<text xml:space="preserve" text-anchor="middle" x="167.46" y="-452.44" font-family="DejaVu Sans" font-size="14.00">Unreachable or uncertain goal handling</text>
+</g>
+</g>
+</svg>

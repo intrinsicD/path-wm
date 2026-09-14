@@ -1,0 +1,211 @@
+<svg width="1355pt" height="993pt"
+ viewBox="0.00 0.00 1355.00 993.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="04-belief-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 978.88)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-978.88 1340.98,-978.88 1340.98,14.4 -14.4,14.4"/>
+<!-- previous&#45;&gt;dynamics -->
+<g id="04-belief-edge1" class="edge">
+<title>previous&#45;&gt;dynamics</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1053.78,-894.92C1008.26,-879.45 954.31,-861.12 907.86,-845.33"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="908.87,-843.09 901.46,-843.15 907.3,-847.72 908.87,-843.09"/>
+<text xml:space="preserve" text-anchor="middle" x="1018.01" y="-865.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">h and code</text>
+</g>
+<!-- action&#45;&gt;dynamics -->
+<g id="04-belief-edge2" class="edge">
+<title>action&#45;&gt;dynamics</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M799.8,-903.4C799.8,-888.11 799.8,-868.28 799.8,-850.72"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="802.25,-850.97 799.8,-843.97 797.35,-850.97 802.25,-850.97"/>
+<text xml:space="preserve" text-anchor="middle" x="853.18" y="-865.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">transition condition</text>
+</g>
+<!-- memory&#45;&gt;dynamics -->
+<g id="04-belief-edge3" class="edge">
+<title>memory&#45;&gt;dynamics</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M534.68,-903.26C581.75,-886.45 644.01,-864.22 696.37,-845.53"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="697.02,-847.9 702.79,-843.24 695.37,-843.28 697.02,-847.9"/>
+<text xml:space="preserve" text-anchor="middle" x="683.37" y="-865.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">prediction read</text>
+</g>
+<!-- memory&#45;&gt;correct -->
+<g id="04-belief-edge7" class="edge">
+<title>memory&#45;&gt;correct</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M461.41,-903.44C457.35,-829.07 445.8,-617.52 445.8,-617.52 445.8,-617.52 443.58,-612.62 440.4,-605.57"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="442.74,-604.8 437.62,-599.43 438.27,-606.82 442.74,-604.8"/>
+<text xml:space="preserve" text-anchor="middle" x="496.95" y="-743.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">perception read</text>
+</g>
+<!-- dynamics&#45;&gt;prior -->
+<g id="04-belief-edge4" class="edge">
+<title>dynamics&#45;&gt;prior</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M799.8,-772.76C799.8,-759.05 799.8,-743.07 799.8,-728.6"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="802.25,-728.94 799.8,-721.94 797.35,-728.94 802.25,-728.94"/>
+<text xml:space="preserve" text-anchor="middle" x="846.72" y="-743.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">h and prior logits</text>
+</g>
+<!-- prior&#45;&gt;correct -->
+<g id="04-belief-edge5" class="edge">
+<title>prior&#45;&gt;correct</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M698.68,-650.21C653.66,-635.04 600.02,-616.96 551.73,-600.69"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="552.71,-598.44 545.29,-598.52 551.15,-603.08 552.71,-598.44"/>
+<text xml:space="preserve" text-anchor="middle" x="679.94" y="-620.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">prior h as queries</text>
+</g>
+<!-- prior&#45;&gt;readout -->
+<g id="04-belief-edge9" class="edge">
+<title>prior&#45;&gt;readout</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M798.48,-650.4C795.17,-565.46 786.8,-350.16 786.8,-350.16 786.8,-350.16 746.8,-316.96 746.8,-316.96 746.8,-316.96 728.64,-309.76 705.64,-300.63"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="706.64,-298.39 699.23,-298.09 704.83,-302.94 706.64,-298.39"/>
+<text xml:space="preserve" text-anchor="middle" x="868.14" y="-462.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">h; unchanged by correction</text>
+</g>
+<!-- features&#45;&gt;correct -->
+<g id="04-belief-edge6" class="edge">
+<title>features&#45;&gt;correct</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M268.83,-658.75C290.46,-644.96 312.8,-630.72 312.8,-630.72 312.8,-630.72 330.66,-617.94 351.64,-602.92"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="352.93,-605.01 357.19,-598.94 350.08,-601.02 352.93,-605.01"/>
+<text xml:space="preserve" text-anchor="middle" x="385.5" y="-620.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">observation context</text>
+</g>
+<!-- features&#45;&gt;evidence -->
+<g id="04-belief-edge13" class="edge">
+<title>features&#45;&gt;evidence</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M196.9,-658.75C179.66,-644.96 161.87,-630.72 161.87,-630.72 161.87,-630.72 161.87,-617.52 161.87,-617.52 161.87,-617.52 163.75,-545.14 164.91,-500.58"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="167.36,-500.79 165.09,-493.73 162.46,-500.67 167.36,-500.79"/>
+<text xml:space="preserve" text-anchor="middle" x="234.83" y="-620.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">no belief/task conditioning</text>
+</g>
+<!-- correct&#45;&gt;posterior -->
+<g id="04-belief-edge8" class="edge">
+<title>correct&#45;&gt;posterior</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M401.14,-511.21C391.08,-485.62 378.31,-453.13 368.28,-427.63"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="370.58,-426.78 365.73,-421.16 366.02,-428.57 370.58,-426.78"/>
+<text xml:space="preserve" text-anchor="middle" x="435.68" y="-462.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">corrected logits</text>
+</g>
+<!-- posterior&#45;&gt;readout -->
+<g id="04-belief-edge10" class="edge">
+<title>posterior&#45;&gt;readout</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M425.26,-349.72C458.21,-334.48 497.17,-316.44 530.95,-300.82"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="531.68,-303.18 537.01,-298.01 529.62,-298.73 531.68,-303.18"/>
+<text xml:space="preserve" text-anchor="middle" x="528.09" y="-320.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">sampled code</text>
+</g>
+<!-- workspace&#45;&gt;readout -->
+<g id="04-belief-edge11" class="edge">
+<title>workspace&#45;&gt;readout</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M643.31,-358.2C638.18,-342.77 631.52,-322.72 625.64,-305.04"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="628.06,-304.56 623.53,-298.69 623.41,-306.1 628.06,-304.56"/>
+<text xml:space="preserve" text-anchor="middle" x="687.25" y="-320.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">workspace retained</text>
+</g>
+<!-- readout&#45;&gt;state -->
+<g id="04-belief-edge12" class="edge">
+<title>readout&#45;&gt;state</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M578.05,-227.56C563.61,-213.08 546.64,-196.07 531.59,-180.98"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="533.56,-179.48 526.88,-176.26 530.09,-182.94 533.56,-179.48"/>
+<text xml:space="preserve" text-anchor="middle" x="628.28" y="-197.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">world + workspace tokens</text>
+</g>
+<!-- state&#45;&gt;commit -->
+<g id="04-belief-edge15" class="edge">
+<title>state&#45;&gt;commit</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M398.13,-105.04C354.83,-89.31 303.96,-70.82 262.65,-55.81"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="263.5,-53.52 256.09,-53.43 261.83,-58.12 263.5,-53.52"/>
+<text xml:space="preserve" text-anchor="middle" x="426.12" y="-75.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">inferred view + event metadata</text>
+</g>
+<!-- evidence&#45;&gt;commit -->
+<g id="04-belief-edge14" class="edge">
+<title>evidence&#45;&gt;commit</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M165.8,-438.78C165.8,-398.4 165.8,-324.56 165.8,-324.56 165.8,-324.56 165.8,-324.56 165.8,-139.08 165.8,-139.08 173.01,-94.25 178.3,-61.33"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="180.71,-61.78 179.4,-54.48 175.87,-61 180.71,-61.78"/>
+<text xml:space="preserve" text-anchor="middle" x="198.6" y="-259.1" font-family="DejaVu Sans" font-size="11.00" fill="#374151">source view</text>
+</g>
+<!-- previous -->
+<g id="04-belief-node1" class="node">
+<title>previous</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M1314.58,-964.48C1314.58,-964.48 993.02,-964.48 993.02,-964.48 987.02,-964.48 981.02,-958.48 981.02,-952.48 981.02,-952.48 981.02,-907.36 981.02,-907.36 981.02,-901.36 987.02,-895.36 993.02,-895.36 993.02,-895.36 1314.58,-895.36 1314.58,-895.36 1320.58,-895.36 1326.58,-901.36 1326.58,-907.36 1326.58,-907.36 1326.58,-952.48 1326.58,-952.48 1326.58,-958.48 1320.58,-964.48 1314.58,-964.48"/>
+<text xml:space="preserve" text-anchor="middle" x="1153.8" y="-942.52" font-family="DejaVu Sans" font-size="14.00">Previous belief</text>
+<text xml:space="preserve" text-anchor="middle" x="1153.8" y="-925.72" font-family="DejaVu Sans" font-size="14.00">h: 16 recurrent tokens + sampled categorical</text>
+<text xml:space="preserve" text-anchor="middle" x="1153.8" y="-908.92" font-family="DejaVu Sans" font-size="14.00">code</text>
+</g>
+<!-- action -->
+<g id="04-belief-node2" class="node">
+<title>action</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M949.12,-956.08C949.12,-956.08 650.47,-956.08 650.47,-956.08 644.47,-956.08 638.47,-950.08 638.47,-944.08 638.47,-944.08 638.47,-915.76 638.47,-915.76 638.47,-909.76 644.47,-903.76 650.47,-903.76 650.47,-903.76 949.12,-903.76 949.12,-903.76 955.12,-903.76 961.12,-909.76 961.12,-915.76 961.12,-915.76 961.12,-944.08 961.12,-944.08 961.12,-950.08 955.12,-956.08 949.12,-956.08"/>
+<text xml:space="preserve" text-anchor="middle" x="799.8" y="-934.12" font-family="DejaVu Sans" font-size="14.00">Recorded action + presence flag + delta t</text>
+<text xml:space="preserve" text-anchor="middle" x="799.8" y="-917.32" font-family="DejaVu Sans" font-size="14.00">A missing action differs from a zero action</text>
+</g>
+<!-- memory -->
+<g id="04-belief-node3" class="node">
+<title>memory</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M606.38,-956.08C606.38,-956.08 319.22,-956.08 319.22,-956.08 313.22,-956.08 307.22,-950.08 307.22,-944.08 307.22,-944.08 307.22,-915.76 307.22,-915.76 307.22,-909.76 313.22,-903.76 319.22,-903.76 319.22,-903.76 606.38,-903.76 606.38,-903.76 612.38,-903.76 618.38,-909.76 618.38,-915.76 618.38,-915.76 618.38,-944.08 618.38,-944.08 618.38,-950.08 612.38,-956.08 606.38,-956.08"/>
+<text xml:space="preserve" text-anchor="middle" x="462.8" y="-934.12" font-family="DejaVu Sans" font-size="14.00">Memory snapshot</text>
+<text xml:space="preserve" text-anchor="middle" x="462.8" y="-917.32" font-family="DejaVu Sans" font-size="14.00">Separate prediction / perception readers</text>
+</g>
+<!-- dynamics -->
+<g id="04-belief-node4" class="node">
+<title>dynamics</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M947.65,-842.16C947.65,-842.16 651.95,-842.16 651.95,-842.16 645.95,-842.16 639.95,-836.16 639.95,-830.16 639.95,-830.16 639.95,-785.04 639.95,-785.04 639.95,-779.04 645.95,-773.04 651.95,-773.04 651.95,-773.04 947.65,-773.04 947.65,-773.04 953.65,-773.04 959.65,-779.04 959.65,-785.04 959.65,-785.04 959.65,-830.16 959.65,-830.16 959.65,-836.16 953.65,-842.16 947.65,-842.16"/>
+<text xml:space="preserve" text-anchor="middle" x="799.8" y="-820.2" font-family="DejaVu Sans" font-size="14.00">BeliefDynamics</text>
+<text xml:space="preserve" text-anchor="middle" x="799.8" y="-803.4" font-family="DejaVu Sans" font-size="14.00">Projected code + action/time &#45;&gt; attention</text>
+<text xml:space="preserve" text-anchor="middle" x="799.8" y="-786.6" font-family="DejaVu Sans" font-size="14.00">update</text>
+</g>
+<!-- prior -->
+<g id="04-belief-node5" class="node">
+<title>prior</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M951.51,-719.84C951.51,-719.84 648.08,-719.84 648.08,-719.84 642.08,-719.84 636.08,-713.84 636.08,-707.84 636.08,-707.84 636.08,-662.72 636.08,-662.72 636.08,-656.72 642.08,-650.72 648.08,-650.72 648.08,-650.72 951.51,-650.72 951.51,-650.72 957.51,-650.72 963.51,-656.72 963.51,-662.72 963.51,-662.72 963.51,-707.84 963.51,-707.84 963.51,-713.84 957.51,-719.84 951.51,-719.84"/>
+<text xml:space="preserve" text-anchor="middle" x="799.8" y="-697.88" font-family="DejaVu Sans" font-size="14.00">Prior</text>
+<text xml:space="preserve" text-anchor="middle" x="799.8" y="-681.08" font-family="DejaVu Sans" font-size="14.00">New h + predicted logits over 8 groups x 8</text>
+<text xml:space="preserve" text-anchor="middle" x="799.8" y="-664.28" font-family="DejaVu Sans" font-size="14.00">codes</text>
+</g>
+<!-- features -->
+<g id="04-belief-node6" class="node">
+<title>features</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M357.28,-711.44C357.28,-711.44 100.31,-711.44 100.31,-711.44 94.31,-711.44 88.31,-705.44 88.31,-699.44 88.31,-699.44 88.31,-671.12 88.31,-671.12 88.31,-665.12 94.31,-659.12 100.31,-659.12 100.31,-659.12 357.28,-659.12 357.28,-659.12 363.28,-659.12 369.28,-665.12 369.28,-671.12 369.28,-671.12 369.28,-699.44 369.28,-699.44 369.28,-705.44 363.28,-711.44 357.28,-711.44"/>
+<text xml:space="preserve" text-anchor="middle" x="228.8" y="-689.48" font-family="DejaVu Sans" font-size="14.00">Available source features</text>
+<text xml:space="preserve" text-anchor="middle" x="228.8" y="-672.68" font-family="DejaVu Sans" font-size="14.00">All modalities / scales + valid masks</text>
+</g>
+<!-- correct -->
+<g id="04-belief-node7" class="node">
+<title>correct</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M580.42,-597.52C580.42,-597.52 255.17,-597.52 255.17,-597.52 249.17,-597.52 243.17,-591.52 243.17,-585.52 243.17,-585.52 243.17,-523.6 243.17,-523.6 243.17,-517.6 249.17,-511.6 255.17,-511.6 255.17,-511.6 580.42,-511.6 580.42,-511.6 586.42,-511.6 592.42,-517.6 592.42,-523.6 592.42,-523.6 592.42,-585.52 592.42,-585.52 592.42,-591.52 586.42,-597.52 580.42,-597.52"/>
+<text xml:space="preserve" text-anchor="middle" x="417.8" y="-575.56" font-family="DejaVu Sans" font-size="14.00">BeliefCorrection</text>
+<text xml:space="preserve" text-anchor="middle" x="417.8" y="-558.76" font-family="DejaVu Sans" font-size="14.00">Attend to features &#45;&gt; add perception&#45;memory</text>
+<text xml:space="preserve" text-anchor="middle" x="417.8" y="-541.96" font-family="DejaVu Sans" font-size="14.00">read</text>
+<text xml:space="preserve" text-anchor="middle" x="417.8" y="-525.16" font-family="DejaVu Sans" font-size="14.00">&#45;&gt; attend again &#45;&gt; categorical logits</text>
+</g>
+<!-- posterior -->
+<g id="04-belief-node8" class="node">
+<title>posterior</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M495.25,-419.28C495.25,-419.28 208.35,-419.28 208.35,-419.28 202.35,-419.28 196.35,-413.28 196.35,-407.28 196.35,-407.28 196.35,-362.16 196.35,-362.16 196.35,-356.16 202.35,-350.16 208.35,-350.16 208.35,-350.16 495.25,-350.16 495.25,-350.16 501.25,-350.16 507.25,-356.16 507.25,-362.16 507.25,-362.16 507.25,-407.28 507.25,-407.28 507.25,-413.28 501.25,-419.28 495.25,-419.28"/>
+<text xml:space="preserve" text-anchor="middle" x="351.8" y="-397.32" font-family="DejaVu Sans" font-size="14.00">Posterior distribution</text>
+<text xml:space="preserve" text-anchor="middle" x="351.8" y="-380.52" font-family="DejaVu Sans" font-size="14.00">Sample code z; straight&#45;through training</text>
+<text xml:space="preserve" text-anchor="middle" x="351.8" y="-363.72" font-family="DejaVu Sans" font-size="14.00">gradient</text>
+</g>
+<!-- workspace -->
+<g id="04-belief-node9" class="node">
+<title>workspace</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M764.56,-410.88C764.56,-410.88 539.04,-410.88 539.04,-410.88 533.04,-410.88 527.04,-404.88 527.04,-398.88 527.04,-398.88 527.04,-370.56 527.04,-370.56 527.04,-364.56 533.04,-358.56 539.04,-358.56 539.04,-358.56 764.56,-358.56 764.56,-358.56 770.56,-358.56 776.56,-364.56 776.56,-370.56 776.56,-370.56 776.56,-398.88 776.56,-398.88 776.56,-404.88 770.56,-410.88 764.56,-410.88"/>
+<text xml:space="preserve" text-anchor="middle" x="651.8" y="-388.92" font-family="DejaVu Sans" font-size="14.00">Previous workspace</text>
+<text xml:space="preserve" text-anchor="middle" x="651.8" y="-372.12" font-family="DejaVu Sans" font-size="14.00">4 working + 4 reasoning tokens</text>
+</g>
+<!-- readout -->
+<g id="04-belief-node10" class="node">
+<title>readout</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M743.12,-296.96C743.12,-296.96 480.48,-296.96 480.48,-296.96 474.48,-296.96 468.48,-290.96 468.48,-284.96 468.48,-284.96 468.48,-239.84 468.48,-239.84 468.48,-233.84 474.48,-227.84 480.48,-227.84 480.48,-227.84 743.12,-227.84 743.12,-227.84 749.12,-227.84 755.12,-233.84 755.12,-239.84 755.12,-239.84 755.12,-284.96 755.12,-284.96 755.12,-290.96 749.12,-296.96 743.12,-296.96"/>
+<text xml:space="preserve" text-anchor="middle" x="611.8" y="-275" font-family="DejaVu Sans" font-size="14.00">World readout</text>
+<text xml:space="preserve" text-anchor="middle" x="611.8" y="-258.2" font-family="DejaVu Sans" font-size="14.00">h + projection(sampled code)</text>
+<text xml:space="preserve" text-anchor="middle" x="611.8" y="-241.4" font-family="DejaVu Sans" font-size="14.00">Concatenate the 8 workspace tokens</text>
+</g>
+<!-- state -->
+<g id="04-belief-node11" class="node">
+<title>state</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M616.27,-174.64C616.27,-174.64 367.33,-174.64 367.33,-174.64 361.33,-174.64 355.33,-168.64 355.33,-162.64 355.33,-162.64 355.33,-117.52 355.33,-117.52 355.33,-111.52 361.33,-105.52 367.33,-105.52 367.33,-105.52 616.27,-105.52 616.27,-105.52 622.27,-105.52 628.27,-111.52 628.27,-117.52 628.27,-117.52 628.27,-162.64 628.27,-162.64 628.27,-168.64 622.27,-174.64 616.27,-174.64"/>
+<text xml:space="preserve" text-anchor="middle" x="491.8" y="-152.68" font-family="DejaVu Sans" font-size="14.00">BeliefState</text>
+<text xml:space="preserve" text-anchor="middle" x="491.8" y="-135.88" font-family="DejaVu Sans" font-size="14.00">24 tokens x 32 + h + logits/code +</text>
+<text xml:space="preserve" text-anchor="middle" x="491.8" y="-119.08" font-family="DejaVu Sans" font-size="14.00">clocks/provenance</text>
+</g>
+<!-- evidence -->
+<g id="04-belief-node12" class="node">
+<title>evidence</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M319.6,-491.6C319.6,-491.6 12,-491.6 12,-491.6 6,-491.6 0,-485.6 0,-479.6 0,-479.6 0,-451.28 0,-451.28 0,-445.28 6,-439.28 12,-439.28 12,-439.28 319.6,-439.28 319.6,-439.28 325.6,-439.28 331.6,-445.28 331.6,-451.28 331.6,-451.28 331.6,-479.6 331.6,-479.6 331.6,-485.6 325.6,-491.6 319.6,-491.6"/>
+<text xml:space="preserve" text-anchor="middle" x="165.8" y="-469.64" font-family="DejaVu Sans" font-size="14.00">Source&#45;only evidence summary</text>
+<text xml:space="preserve" text-anchor="middle" x="165.8" y="-452.84" font-family="DejaVu Sans" font-size="14.00">8 learned queries attend to source features</text>
+</g>
+<!-- commit -->
+<g id="04-belief-node13" class="node">
+<title>commit</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M320.59,-52.32C320.59,-52.32 47,-52.32 47,-52.32 41,-52.32 35,-46.32 35,-40.32 35,-40.32 35,-12 35,-12 35,-6 41,0 47,0 47,0 320.59,0 320.59,0 326.59,0 332.59,-6 332.59,-12 332.59,-12 332.59,-40.32 332.59,-40.32 332.59,-46.32 326.59,-52.32 320.59,-52.32"/>
+<text xml:space="preserve" text-anchor="middle" x="183.8" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Seal observed event</text>
+<text xml:space="preserve" text-anchor="middle" x="183.8" y="-13.56" font-family="DejaVu Sans" font-size="14.00">Store evidence + belief envelope once</text>
+</g>
+</g>
+</svg>

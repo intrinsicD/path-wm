@@ -1,5 +1,13 @@
 # Current work
 
+**Architecture atlas, 14 September:** [thirteen source-grounded drawings](architecture-atlas.html)
+now cover the overall loop, encoders, attention, belief state, memory, tasks,
+decoders, photo generation, entities, planning and learning signals. General,
+photo-specific and proposed graph/DAG paths are explicitly distinguished.
+[Editable diagrams and notes](architecture-atlas.md). Documentation only; no model
+or weights changed. Graph structure and local links checked; SVGs inspected;
+browser interaction QA blocked by local-file URL policy.
+
 **Photo-detail path localized, 14 September:** the largest measured drop in spatial
 accessibility is the first observation-to-state update. Matched linear and RBF
 readers use 1,024 training/128 validation photos and a fresh 256-photo test suffix.

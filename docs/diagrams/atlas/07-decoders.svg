@@ -1,0 +1,199 @@
+<svg width="1399pt" height="487pt"
+ viewBox="0.00 0.00 1399.00 487.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="07-decoders-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 472.8)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-472.8 1384.94,-472.8 1384.94,14.4 -14.4,14.4"/>
+<!-- state&#45;&gt;image -->
+<g id="07-decoders-edge1" class="edge">
+<title>state&#45;&gt;image</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M321.4,-405.63C285.59,-395.43 252.73,-386.08 252.73,-386.08 252.73,-386.08 220.55,-366.96 190.63,-349.18"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="192.2,-347.26 184.93,-345.79 189.7,-351.47 192.2,-347.26"/>
+<text xml:space="preserve" text-anchor="middle" x="273.56" y="-376.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">context</text>
+</g>
+<!-- state&#45;&gt;audio -->
+<g id="07-decoders-edge3" class="edge">
+<title>state&#45;&gt;audio</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M449.19,-405.76C464.39,-395.51 478.39,-386.08 478.39,-386.08 478.39,-386.08 478.39,-372.88 478.39,-372.88 478.39,-372.88 477.71,-363.84 476.91,-353.18"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="479.38,-353.3 476.42,-346.51 474.49,-353.67 479.38,-353.3"/>
+<text xml:space="preserve" text-anchor="middle" x="499.21" y="-376.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">context</text>
+</g>
+<!-- state&#45;&gt;text -->
+<g id="07-decoders-edge6" class="edge">
+<title>state&#45;&gt;text</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M575.97,-410.7C762.04,-387.49 1039.39,-352.88 1039.39,-352.88 1039.39,-352.88 1040.13,-352.73 1041.51,-352.46"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1041.79,-354.9 1048.19,-351.15 1040.85,-350.1 1041.79,-354.9"/>
+<text xml:space="preserve" text-anchor="middle" x="891.79" y="-376.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">context</text>
+</g>
+<!-- state&#45;&gt;replace -->
+<g id="07-decoders-edge14" class="edge">
+<title>state&#45;&gt;replace</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M356.97,-405.63C335.32,-395.43 315.45,-386.08 315.45,-386.08 315.45,-386.08 315.45,-372.88 315.45,-372.88 315.45,-372.88 344.39,-283.76 344.39,-283.76 344.39,-283.76 348.49,-278.26 354.07,-270.79"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="355.83,-272.53 358.06,-265.45 351.9,-269.6 355.83,-272.53"/>
+<text xml:space="preserve" text-anchor="middle" x="394.42" y="-376.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">alternative producer context</text>
+</g>
+<!-- image&#45;&gt;rgb -->
+<g id="07-decoders-edge2" class="edge">
+<title>image&#45;&gt;rgb</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M130.38,-291.79C124.97,-278 119.39,-263.76 119.39,-263.76 119.39,-263.76 119.39,-194.64 119.39,-194.64 119.39,-194.64 125.22,-188.65 132.64,-181.03"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="134.26,-182.88 137.39,-176.16 130.75,-179.46 134.26,-182.88"/>
+<text xml:space="preserve" text-anchor="middle" x="157.89" y="-225.9" font-family="DejaVu Sans" font-size="11.00" fill="#374151">spatial tokens</text>
+</g>
+<!-- rgb&#45;&gt;emit -->
+<g id="07-decoders-edge10" class="edge">
+<title>rgb&#45;&gt;emit</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M223.81,-121.88C260.82,-106.2 301.14,-89.12 301.14,-89.12 301.14,-89.12 378.11,-76.9 458.51,-64.13"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="458.63,-66.59 465.15,-63.07 457.86,-61.75 458.63,-66.59"/>
+<text xml:space="preserve" text-anchor="middle" x="332.26" y="-92.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">RGB tensor</text>
+</g>
+<!-- audio&#45;&gt;wave -->
+<g id="07-decoders-edge4" class="edge">
+<title>audio&#45;&gt;wave</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M521.38,-291.64C546.53,-277.89 572.39,-263.76 572.39,-263.76 572.39,-263.76 599.81,-216.27 619.3,-182.52"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="621.36,-183.86 622.74,-176.57 617.12,-181.4 621.36,-183.86"/>
+<text xml:space="preserve" text-anchor="middle" x="642.54" y="-225.9" font-family="DejaVu Sans" font-size="11.00" fill="#374151">four tokens</text>
+</g>
+<!-- wave&#45;&gt;emit -->
+<g id="07-decoders-edge11" class="edge">
+<title>wave&#45;&gt;emit</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M638.39,-121.8C638.39,-108.86 638.39,-92.81 638.39,-78.09"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="640.84,-78.27 638.39,-71.27 635.94,-78.27 640.84,-78.27"/>
+<text xml:space="preserve" text-anchor="middle" x="685.08" y="-92.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">waveform tensor</text>
+</g>
+<!-- prefix&#45;&gt;text -->
+<g id="07-decoders-edge5" class="edge">
+<title>prefix&#45;&gt;text</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1210.39,-405.56C1210.39,-392.62 1210.39,-376.57 1210.39,-361.85"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1212.84,-362.03 1210.39,-355.03 1207.94,-362.03 1212.84,-362.03"/>
+<text xml:space="preserve" text-anchor="middle" x="1245.63" y="-376.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">causal prefix</text>
+</g>
+<!-- text&#45;&gt;bytes -->
+<g id="07-decoders-edge7" class="edge">
+<title>text&#45;&gt;bytes</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1209.58,-283.36C1208.88,-254.36 1207.9,-212.86 1207.2,-183.77"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1209.65,-183.78 1207.04,-176.84 1204.75,-183.89 1209.65,-183.78"/>
+<text xml:space="preserve" text-anchor="middle" x="1283.83" y="-225.9" font-family="DejaVu Sans" font-size="11.00" fill="#374151">prefix&#45;conditioned features</text>
+</g>
+<!-- bytes&#45;&gt;prefix -->
+<g id="07-decoders-edge8" class="edge">
+<title>bytes&#45;&gt;prefix</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1043.93,-172.92C967.71,-183.92 893.39,-194.64 893.39,-194.64 893.39,-194.64 645.17,-283.76 645.17,-283.76 645.17,-283.76 645.17,-352.88 645.17,-352.88 645.17,-352.88 888.39,-372.88 888.39,-372.88 888.39,-372.88 981.69,-389.79 1067.85,-405.41"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1067.2,-407.78 1074.52,-406.62 1068.07,-402.96 1067.2,-407.78"/>
+<text xml:space="preserve" text-anchor="middle" x="701.28" y="-315.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">append chosen byte</text>
+</g>
+<!-- bytes&#45;&gt;emit -->
+<g id="07-decoders-edge12" class="edge">
+<title>bytes&#45;&gt;emit</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1076.07,-121.8C999.76,-106.77 902.27,-87.56 818.67,-71.08"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="819.34,-68.72 812,-69.77 818.4,-73.53 819.34,-68.72"/>
+<text xml:space="preserve" text-anchor="middle" x="1043.95" y="-92.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">generated byte sequence</text>
+</g>
+<!-- trajectory&#45;&gt;video -->
+<g id="07-decoders-edge9" class="edge">
+<title>trajectory&#45;&gt;video</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M898.39,-291.83C898.39,-262.91 898.39,-215.61 898.39,-183.55"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="900.84,-183.6 898.39,-176.6 895.94,-183.6 900.84,-183.6"/>
+<text xml:space="preserve" text-anchor="middle" x="953.24" y="-225.9" font-family="DejaVu Sans" font-size="11.00" fill="#374151">one state per frame</text>
+</g>
+<!-- video&#45;&gt;emit -->
+<g id="07-decoders-edge13" class="edge">
+<title>video&#45;&gt;emit</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M838.74,-121.8C805.14,-107.34 762.58,-89.02 725.34,-72.99"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="726.4,-70.78 719,-70.26 724.47,-75.28 726.4,-70.78"/>
+<text xml:space="preserve" text-anchor="middle" x="836.23" y="-92.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">frame sequence</text>
+</g>
+<!-- replace&#45;&gt;emit -->
+<g id="07-decoders-edge15" class="edge">
+<title>replace&#45;&gt;emit</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M386,-194.12C387.46,-163.16 389.39,-122.32 389.39,-122.32 389.39,-122.32 464.99,-95.98 532.88,-72.32"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="533.31,-74.77 539.12,-70.15 531.7,-70.14 533.31,-74.77"/>
+<text xml:space="preserve" text-anchor="middle" x="450.39" y="-145.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">optional recipe output</text>
+</g>
+<!-- state -->
+<g id="07-decoders-node1" class="node">
+<title>state</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M563.76,-458.4C563.76,-458.4 259.01,-458.4 259.01,-458.4 253.01,-458.4 247.01,-452.4 247.01,-446.4 247.01,-446.4 247.01,-418.08 247.01,-418.08 247.01,-412.08 253.01,-406.08 259.01,-406.08 259.01,-406.08 563.76,-406.08 563.76,-406.08 569.76,-406.08 575.76,-412.08 575.76,-418.08 575.76,-418.08 575.76,-446.4 575.76,-446.4 575.76,-452.4 569.76,-458.4 563.76,-458.4"/>
+<text xml:space="preserve" text-anchor="middle" x="411.39" y="-436.44" font-family="DejaVu Sans" font-size="14.00">Task&#45;conditioned state</text>
+<text xml:space="preserve" text-anchor="middle" x="411.39" y="-419.64" font-family="DejaVu Sans" font-size="14.00">World tokens + working / reasoning tokens</text>
+</g>
+<!-- image -->
+<g id="07-decoders-node2" class="node">
+<title>image</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M268.77,-344.48C268.77,-344.48 12,-344.48 12,-344.48 6,-344.48 0,-338.48 0,-332.48 0,-332.48 0,-304.16 0,-304.16 0,-298.16 6,-292.16 12,-292.16 12,-292.16 268.77,-292.16 268.77,-292.16 274.77,-292.16 280.77,-298.16 280.77,-304.16 280.77,-304.16 280.77,-332.48 280.77,-332.48 280.77,-338.48 274.77,-344.48 268.77,-344.48"/>
+<text xml:space="preserve" text-anchor="middle" x="140.39" y="-322.52" font-family="DejaVu Sans" font-size="14.00">Image decoder</text>
+<text xml:space="preserve" text-anchor="middle" x="140.39" y="-305.72" font-family="DejaVu Sans" font-size="14.00">Learned spatial queries attend state</text>
+</g>
+<!-- rgb -->
+<g id="07-decoders-node3" class="node">
+<title>rgb</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M287.96,-174.64C287.96,-174.64 38.81,-174.64 38.81,-174.64 32.81,-174.64 26.81,-168.64 26.81,-162.64 26.81,-162.64 26.81,-134.32 26.81,-134.32 26.81,-128.32 32.81,-122.32 38.81,-122.32 38.81,-122.32 287.96,-122.32 287.96,-122.32 293.96,-122.32 299.96,-128.32 299.96,-134.32 299.96,-134.32 299.96,-162.64 299.96,-162.64 299.96,-168.64 293.96,-174.64 287.96,-174.64"/>
+<text xml:space="preserve" text-anchor="middle" x="163.39" y="-152.68" font-family="DejaVu Sans" font-size="14.00">Patch projection &#45;&gt; sigmoid</text>
+<text xml:space="preserve" text-anchor="middle" x="163.39" y="-135.88" font-family="DejaVu Sans" font-size="14.00">Rearrange RGB patches into image</text>
+</g>
+<!-- audio -->
+<g id="07-decoders-node4" class="node">
+<title>audio</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M581.97,-344.48C581.97,-344.48 366.81,-344.48 366.81,-344.48 360.81,-344.48 354.81,-338.48 354.81,-332.48 354.81,-332.48 354.81,-304.16 354.81,-304.16 354.81,-298.16 360.81,-292.16 366.81,-292.16 366.81,-292.16 581.97,-292.16 581.97,-292.16 587.97,-292.16 593.97,-298.16 593.97,-304.16 593.97,-304.16 593.97,-332.48 593.97,-332.48 593.97,-338.48 587.97,-344.48 581.97,-344.48"/>
+<text xml:space="preserve" text-anchor="middle" x="474.39" y="-322.52" font-family="DejaVu Sans" font-size="14.00">Audio decoder</text>
+<text xml:space="preserve" text-anchor="middle" x="474.39" y="-305.72" font-family="DejaVu Sans" font-size="14.00">4 learned queries attend state</text>
+</g>
+<!-- wave -->
+<g id="07-decoders-node5" class="node">
+<title>wave</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M743.62,-174.64C743.62,-174.64 533.15,-174.64 533.15,-174.64 527.15,-174.64 521.15,-168.64 521.15,-162.64 521.15,-162.64 521.15,-134.32 521.15,-134.32 521.15,-128.32 527.15,-122.32 533.15,-122.32 533.15,-122.32 743.62,-122.32 743.62,-122.32 749.62,-122.32 755.62,-128.32 755.62,-134.32 755.62,-134.32 755.62,-162.64 755.62,-162.64 755.62,-168.64 749.62,-174.64 743.62,-174.64"/>
+<text xml:space="preserve" text-anchor="middle" x="638.39" y="-152.68" font-family="DejaVu Sans" font-size="14.00">Flatten &#45;&gt; linear &#45;&gt; tanh</text>
+<text xml:space="preserve" text-anchor="middle" x="638.39" y="-135.88" font-family="DejaVu Sans" font-size="14.00">Fixed&#45;length waveform chunk</text>
+</g>
+<!-- prefix -->
+<g id="07-decoders-node6" class="node">
+<title>prefix</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M1332.47,-458.4C1332.47,-458.4 1088.3,-458.4 1088.3,-458.4 1082.3,-458.4 1076.3,-452.4 1076.3,-446.4 1076.3,-446.4 1076.3,-418.08 1076.3,-418.08 1076.3,-412.08 1082.3,-406.08 1088.3,-406.08 1088.3,-406.08 1332.47,-406.08 1332.47,-406.08 1338.47,-406.08 1344.47,-412.08 1344.47,-418.08 1344.47,-418.08 1344.47,-446.4 1344.47,-446.4 1344.47,-452.4 1338.47,-458.4 1332.47,-458.4"/>
+<text xml:space="preserve" text-anchor="middle" x="1210.39" y="-436.44" font-family="DejaVu Sans" font-size="14.00">Text prefix</text>
+<text xml:space="preserve" text-anchor="middle" x="1210.39" y="-419.64" font-family="DejaVu Sans" font-size="14.00">BOS + previously generated bytes</text>
+</g>
+<!-- text -->
+<g id="07-decoders-node7" class="node">
+<title>text</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M1358.54,-352.88C1358.54,-352.88 1062.23,-352.88 1062.23,-352.88 1056.23,-352.88 1050.23,-346.88 1050.23,-340.88 1050.23,-340.88 1050.23,-295.76 1050.23,-295.76 1050.23,-289.76 1056.23,-283.76 1062.23,-283.76 1062.23,-283.76 1358.54,-283.76 1358.54,-283.76 1364.54,-283.76 1370.54,-289.76 1370.54,-295.76 1370.54,-295.76 1370.54,-340.88 1370.54,-340.88 1370.54,-346.88 1364.54,-352.88 1358.54,-352.88"/>
+<text xml:space="preserve" text-anchor="middle" x="1210.39" y="-330.92" font-family="DejaVu Sans" font-size="14.00">Text decoder</text>
+<text xml:space="preserve" text-anchor="middle" x="1210.39" y="-314.12" font-family="DejaVu Sans" font-size="14.00">Embedding + position &#45;&gt; causal attention</text>
+<text xml:space="preserve" text-anchor="middle" x="1210.39" y="-297.32" font-family="DejaVu Sans" font-size="14.00">&#45;&gt; cross&#45;attention to state</text>
+</g>
+<!-- bytes -->
+<g id="07-decoders-node8" class="node">
+<title>bytes</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M1356.68,-174.64C1356.68,-174.64 1056.09,-174.64 1056.09,-174.64 1050.09,-174.64 1044.09,-168.64 1044.09,-162.64 1044.09,-162.64 1044.09,-134.32 1044.09,-134.32 1044.09,-128.32 1050.09,-122.32 1056.09,-122.32 1056.09,-122.32 1356.68,-122.32 1356.68,-122.32 1362.68,-122.32 1368.68,-128.32 1368.68,-134.32 1368.68,-134.32 1368.68,-162.64 1368.68,-162.64 1368.68,-168.64 1362.68,-174.64 1356.68,-174.64"/>
+<text xml:space="preserve" text-anchor="middle" x="1206.39" y="-152.68" font-family="DejaVu Sans" font-size="14.00">Vocabulary projection</text>
+<text xml:space="preserve" text-anchor="middle" x="1206.39" y="-135.88" font-family="DejaVu Sans" font-size="14.00">Next&#45;byte logits; repeat until EOS / budget</text>
+</g>
+<!-- trajectory -->
+<g id="07-decoders-node9" class="node">
+<title>trajectory</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M1017.73,-344.48C1017.73,-344.48 779.04,-344.48 779.04,-344.48 773.04,-344.48 767.04,-338.48 767.04,-332.48 767.04,-332.48 767.04,-304.16 767.04,-304.16 767.04,-298.16 773.04,-292.16 779.04,-292.16 779.04,-292.16 1017.73,-292.16 1017.73,-292.16 1023.73,-292.16 1029.73,-298.16 1029.73,-304.16 1029.73,-304.16 1029.73,-332.48 1029.73,-332.48 1029.73,-338.48 1023.73,-344.48 1017.73,-344.48"/>
+<text xml:space="preserve" text-anchor="middle" x="898.39" y="-322.52" font-family="DejaVu Sans" font-size="14.00">Video trajectory</text>
+<text xml:space="preserve" text-anchor="middle" x="898.39" y="-305.72" font-family="DejaVu Sans" font-size="14.00">Explicit states at increasing times</text>
+</g>
+<!-- video -->
+<g id="07-decoders-node10" class="node">
+<title>video</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M1009.48,-174.64C1009.48,-174.64 787.29,-174.64 787.29,-174.64 781.29,-174.64 775.29,-168.64 775.29,-162.64 775.29,-162.64 775.29,-134.32 775.29,-134.32 775.29,-128.32 781.29,-122.32 787.29,-122.32 787.29,-122.32 1009.48,-122.32 1009.48,-122.32 1015.48,-122.32 1021.48,-128.32 1021.48,-134.32 1021.48,-134.32 1021.48,-162.64 1021.48,-162.64 1021.48,-168.64 1015.48,-174.64 1009.48,-174.64"/>
+<text xml:space="preserve" text-anchor="middle" x="898.39" y="-152.68" font-family="DejaVu Sans" font-size="14.00">Reuse image decoder per state</text>
+<text xml:space="preserve" text-anchor="middle" x="898.39" y="-135.88" font-family="DejaVu Sans" font-size="14.00">Stack decoded frames</text>
+</g>
+<!-- emit -->
+<g id="07-decoders-node11" class="node">
+<title>emit</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M797.87,-69.12C797.87,-69.12 478.9,-69.12 478.9,-69.12 472.9,-69.12 466.9,-63.12 466.9,-57.12 466.9,-57.12 466.9,-12 466.9,-12 466.9,-6 472.9,0 478.9,0 478.9,0 797.87,0 797.87,0 803.87,0 809.87,-6 809.87,-12 809.87,-12 809.87,-57.12 809.87,-57.12 809.87,-63.12 803.87,-69.12 797.87,-69.12"/>
+<text xml:space="preserve" text-anchor="middle" x="638.39" y="-47.16" font-family="DejaVu Sans" font-size="14.00">Emission envelope</text>
+<text xml:space="preserve" text-anchor="middle" x="638.39" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Values + modality + requester + producer +</text>
+<text xml:space="preserve" text-anchor="middle" x="638.39" y="-13.56" font-family="DejaVu Sans" font-size="14.00">ancestry</text>
+</g>
+<!-- replace -->
+<g id="07-decoders-node12" class="node">
+<title>replace</title>
+<path fill="#efeafa" stroke="#9c87b5" stroke-width="1.1" d="M550.25,-263.76C550.25,-263.76 218.52,-263.76 218.52,-263.76 212.52,-263.76 206.52,-257.76 206.52,-251.76 206.52,-251.76 206.52,-206.64 206.52,-206.64 206.52,-200.64 212.52,-194.64 218.52,-194.64 218.52,-194.64 550.25,-194.64 550.25,-194.64 556.25,-194.64 562.25,-200.64 562.25,-206.64 562.25,-206.64 562.25,-251.76 562.25,-251.76 562.25,-257.76 556.25,-263.76 550.25,-263.76"/>
+<text xml:space="preserve" text-anchor="middle" x="384.39" y="-241.8" font-family="DejaVu Sans" font-size="14.00">Optional image replacement &#45;&gt; section 9</text>
+<text xml:space="preserve" text-anchor="middle" x="384.39" y="-225" font-family="DejaVu Sans" font-size="14.00">State &#45;&gt; generated multiscale features &#45;&gt; RGB</text>
+<text xml:space="preserve" text-anchor="middle" x="384.39" y="-208.2" font-family="DejaVu Sans" font-size="14.00">head</text>
+</g>
+</g>
+</svg>

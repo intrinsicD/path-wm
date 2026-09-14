@@ -1,5 +1,10 @@
 # Models and tensor flow
 
+[Architecture atlas](architecture-atlas.html): thirteen drawings from the complete
+agent loop down to attention, belief correction, memory readers and modality
+outputs. It separates the general categorical agent, the current Gaussian photo
+experiment and proposed entity-graph/DAG extensions. [Mermaid and source links](architecture-atlas.md).
+
 The modality encoders now support [final all-scale fusion](hierarchy-fusion-plan.md):
 `depth` transformer blocks finish each scale before the next merge, then optional
 `fusion_depth` blocks jointly process all scale tokens and return the same layouts.

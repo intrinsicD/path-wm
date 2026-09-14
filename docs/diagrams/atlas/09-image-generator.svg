@@ -1,0 +1,211 @@
+<svg width="1078pt" height="1043pt"
+ viewBox="0.00 0.00 1078.00 1043.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="09-image-generator-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 1028.48)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-1028.48 1063.72,-1028.48 1063.72,14.4 -14.4,14.4"/>
+<!-- context&#45;&gt;project -->
+<g id="09-image-generator-edge1" class="edge">
+<title>context&#45;&gt;project</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M305.91,-961.24C305.91,-945.75 305.91,-925.81 305.91,-909.02"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="308.36,-909.22 305.91,-902.22 303.46,-909.22 308.36,-909.22"/>
+<text xml:space="preserve" text-anchor="middle" x="339.85" y="-931.86" font-family="DejaVu Sans" font-size="11.00" fill="#374151">conditioning</text>
+</g>
+<!-- project&#45;&gt;block -->
+<g id="09-image-generator-edge5" class="edge">
+<title>project&#45;&gt;block</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M362.76,-847.42C399.1,-831.06 447.29,-809.37 490.09,-790.11"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="490.84,-792.46 496.22,-787.35 488.83,-787.99 490.84,-792.46"/>
+<text xml:space="preserve" text-anchor="middle" x="512.94" y="-809.54" font-family="DejaVu Sans" font-size="11.00" fill="#374151">cross&#45;attention context</text>
+</g>
+<!-- project&#45;&gt;fusion -->
+<g id="09-image-generator-edge7" class="edge">
+<title>project&#45;&gt;fusion</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M307.38,-847.52C310.15,-799.49 315.86,-700.32 315.86,-700.32 315.86,-700.32 317.94,-677.83 320,-655.75"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="322.41,-656.21 320.62,-649.01 317.53,-655.75 322.41,-656.21"/>
+<text xml:space="preserve" text-anchor="middle" x="379.88" y="-739.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">cross&#45;attention context</text>
+</g>
+<!-- noise&#45;&gt;input -->
+<g id="09-image-generator-edge2" class="edge">
+<title>noise&#45;&gt;input</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M600.35,-961.24C602.09,-948.3 604.24,-932.25 606.21,-917.53"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="608.63,-917.96 607.13,-910.7 603.77,-917.31 608.63,-917.96"/>
+<text xml:space="preserve" text-anchor="middle" x="624.54" y="-931.86" font-family="DejaVu Sans" font-size="11.00" fill="#374151">initial x</text>
+</g>
+<!-- progress&#45;&gt;input -->
+<g id="09-image-generator-edge3" class="edge">
+<title>progress&#45;&gt;input</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M850.02,-961.24C809.68,-946.63 758.46,-928.08 713.86,-911.93"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="714.89,-909.69 707.47,-909.61 713.22,-914.3 714.89,-909.69"/>
+<text xml:space="preserve" text-anchor="middle" x="850.93" y="-931.86" font-family="DejaVu Sans" font-size="11.00" fill="#374151">progress embedding</text>
+</g>
+<!-- input&#45;&gt;block -->
+<g id="09-image-generator-edge4" class="edge">
+<title>input&#45;&gt;block</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M606.66,-839.18C604.57,-825.73 602.12,-809.96 599.82,-795.19"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="602.24,-794.81 598.75,-788.27 597.4,-795.57 602.24,-794.81"/>
+<text xml:space="preserve" text-anchor="middle" x="663.34" y="-809.54" font-family="DejaVu Sans" font-size="11.00" fill="#374151">spatial feature tokens</text>
+</g>
+<!-- block&#45;&gt;fusion -->
+<g id="09-image-generator-edge6" class="edge">
+<title>block&#45;&gt;fusion</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M466.51,-699.84C434.45,-688.99 408.84,-680.32 408.84,-680.32 408.84,-680.32 391.97,-667.06 373.27,-652.36"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="375.2,-650.76 368.18,-648.36 372.17,-654.61 375.2,-650.76"/>
+<text xml:space="preserve" text-anchor="middle" x="451.38" y="-670.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">all scale tokens</text>
+</g>
+<!-- fusion&#45;&gt;velocity -->
+<g id="09-image-generator-edge8" class="edge">
+<title>fusion&#45;&gt;velocity</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M323.91,-577.68C323.91,-563.72 323.91,-547.58 323.91,-533.61"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="326.36,-533.89 323.91,-526.89 321.46,-533.9 326.36,-533.89"/>
+<text xml:space="preserve" text-anchor="middle" x="380.69" y="-548.1" font-family="DejaVu Sans" font-size="11.00" fill="#374151">split hidden features</text>
+</g>
+<!-- velocity&#45;&gt;integrate -->
+<g id="09-image-generator-edge9" class="edge">
+<title>velocity&#45;&gt;integrate</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M323.91,-471.96C323.91,-459.02 323.91,-442.97 323.91,-428.25"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="326.36,-428.43 323.91,-421.43 321.46,-428.43 326.36,-428.43"/>
+<text xml:space="preserve" text-anchor="middle" x="352.55" y="-442.58" font-family="DejaVu Sans" font-size="11.00" fill="#374151">field value</text>
+</g>
+<!-- integrate&#45;&gt;input -->
+<g id="09-image-generator-edge10" class="edge">
+<title>integrate&#45;&gt;input</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M396.11,-419.76C447.66,-444.07 507.91,-472.48 507.91,-472.48 507.91,-472.48 739.91,-700.32 739.91,-700.32 739.91,-700.32 739.91,-786.24 739.91,-786.24 739.91,-786.24 728.91,-819.44 728.91,-819.44 728.91,-819.44 713.58,-826.46 694.02,-835.41"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="693.2,-833.09 687.86,-838.23 695.24,-837.55 693.2,-833.09"/>
+<text xml:space="preserve" text-anchor="middle" x="723.49" y="-609.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">next x; repeat</text>
+</g>
+<!-- integrate&#45;&gt;features -->
+<g id="09-image-generator-edge11" class="edge">
+<title>integrate&#45;&gt;features</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M323.91,-349.88C323.91,-336.17 323.91,-320.19 323.91,-305.72"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="326.36,-306.06 323.91,-299.06 321.46,-306.06 326.36,-306.06"/>
+<text xml:space="preserve" text-anchor="middle" x="364.26" y="-320.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">after final step</text>
+</g>
+<!-- features&#45;&gt;base -->
+<g id="09-image-generator-edge12" class="edge">
+<title>features&#45;&gt;base</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M280.61,-227.56C261.82,-212.89 239.71,-195.61 220.21,-180.38"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="221.77,-178.48 214.74,-176.1 218.75,-182.34 221.77,-178.48"/>
+<text xml:space="preserve" text-anchor="middle" x="305.05" y="-197.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">three spatial scales</text>
+</g>
+<!-- features&#45;&gt;detail -->
+<g id="09-image-generator-edge13" class="edge">
+<title>features&#45;&gt;detail</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M367.5,-227.56C386.4,-212.89 408.66,-195.61 428.29,-180.38"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="429.77,-182.33 433.8,-176.1 426.77,-178.46 429.77,-182.33"/>
+<text xml:space="preserve" text-anchor="middle" x="463.45" y="-197.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">predicted detail map</text>
+</g>
+<!-- base&#45;&gt;rgb -->
+<g id="09-image-generator-edge14" class="edge">
+<title>base&#45;&gt;rgb</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M216.54,-105.2C237.28,-90.12 261.54,-72.49 281.74,-57.81"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="283.13,-59.83 287.35,-53.73 280.25,-55.86 283.13,-59.83"/>
+<text xml:space="preserve" text-anchor="middle" x="311.3" y="-75.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">base patch means</text>
+</g>
+<!-- detail&#45;&gt;rgb -->
+<g id="09-image-generator-edge15" class="edge">
+<title>detail&#45;&gt;rgb</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M431.99,-105.2C411.1,-90.12 386.69,-72.49 366.36,-57.81"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="367.81,-55.84 360.7,-53.72 364.94,-59.81 367.81,-55.84"/>
+<text xml:space="preserve" text-anchor="middle" x="459.27" y="-75.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">within&#45;patch residual</text>
+</g>
+<!-- context -->
+<g id="09-image-generator-node1" class="node">
+<title>context</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M374.28,-1014.08C374.28,-1014.08 237.55,-1014.08 237.55,-1014.08 231.55,-1014.08 225.55,-1008.08 225.55,-1002.08 225.55,-1002.08 225.55,-973.76 225.55,-973.76 225.55,-967.76 231.55,-961.76 237.55,-961.76 237.55,-961.76 374.28,-961.76 374.28,-961.76 380.28,-961.76 386.28,-967.76 386.28,-973.76 386.28,-973.76 386.28,-1002.08 386.28,-1002.08 386.28,-1008.08 380.28,-1014.08 374.28,-1014.08"/>
+<text xml:space="preserve" text-anchor="middle" x="305.91" y="-992.12" font-family="DejaVu Sans" font-size="14.00">Workspace context</text>
+<text xml:space="preserve" text-anchor="middle" x="305.91" y="-975.32" font-family="DejaVu Sans" font-size="14.00">8 tokens x 32</text>
+</g>
+<!-- project -->
+<g id="09-image-generator-node2" class="node">
+<title>project</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M405.74,-900.16C405.74,-900.16 206.08,-900.16 206.08,-900.16 200.08,-900.16 194.08,-894.16 194.08,-888.16 194.08,-888.16 194.08,-859.84 194.08,-859.84 194.08,-853.84 200.08,-847.84 206.08,-847.84 206.08,-847.84 405.74,-847.84 405.74,-847.84 411.74,-847.84 417.74,-853.84 417.74,-859.84 417.74,-859.84 417.74,-888.16 417.74,-888.16 417.74,-894.16 411.74,-900.16 405.74,-900.16"/>
+<text xml:space="preserve" text-anchor="middle" x="305.91" y="-878.2" font-family="DejaVu Sans" font-size="14.00">Normalize + project context</text>
+<text xml:space="preserve" text-anchor="middle" x="305.91" y="-861.4" font-family="DejaVu Sans" font-size="14.00">32 &#45;&gt; hidden width64</text>
+</g>
+<!-- noise -->
+<g id="09-image-generator-node3" class="node">
+<title>noise</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M760.08,-1014.08C760.08,-1014.08 433.75,-1014.08 433.75,-1014.08 427.75,-1014.08 421.75,-1008.08 421.75,-1002.08 421.75,-1002.08 421.75,-973.76 421.75,-973.76 421.75,-967.76 427.75,-961.76 433.75,-961.76 433.75,-961.76 760.08,-961.76 760.08,-961.76 766.08,-961.76 772.08,-967.76 772.08,-973.76 772.08,-973.76 772.08,-1002.08 772.08,-1002.08 772.08,-1008.08 766.08,-1014.08 760.08,-1014.08"/>
+<text xml:space="preserve" text-anchor="middle" x="596.91" y="-992.12" font-family="DejaVu Sans" font-size="14.00">Seeded noise feature maps</text>
+<text xml:space="preserve" text-anchor="middle" x="596.91" y="-975.32" font-family="DejaVu Sans" font-size="14.00">Same layouts as every required codec feature</text>
+</g>
+<!-- progress -->
+<g id="09-image-generator-node4" class="node">
+<title>progress</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M1037.32,-1014.08C1037.32,-1014.08 804.51,-1014.08 804.51,-1014.08 798.51,-1014.08 792.51,-1008.08 792.51,-1002.08 792.51,-1002.08 792.51,-973.76 792.51,-973.76 792.51,-967.76 798.51,-961.76 804.51,-961.76 804.51,-961.76 1037.32,-961.76 1037.32,-961.76 1043.32,-961.76 1049.32,-967.76 1049.32,-973.76 1049.32,-973.76 1049.32,-1002.08 1049.32,-1002.08 1049.32,-1008.08 1043.32,-1014.08 1037.32,-1014.08"/>
+<text xml:space="preserve" text-anchor="middle" x="920.91" y="-992.12" font-family="DejaVu Sans" font-size="14.00">Generation progress tau</text>
+<text xml:space="preserve" text-anchor="middle" x="920.91" y="-975.32" font-family="DejaVu Sans" font-size="14.00">0 &#45;&gt; 1; separate from world time</text>
+</g>
+<!-- input -->
+<g id="09-image-generator-node5" class="node">
+<title>input</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M774.06,-908.56C774.06,-908.56 449.76,-908.56 449.76,-908.56 443.76,-908.56 437.76,-902.56 437.76,-896.56 437.76,-896.56 437.76,-851.44 437.76,-851.44 437.76,-845.44 443.76,-839.44 449.76,-839.44 449.76,-839.44 774.06,-839.44 774.06,-839.44 780.06,-839.44 786.06,-845.44 786.06,-851.44 786.06,-851.44 786.06,-896.56 786.06,-896.56 786.06,-902.56 780.06,-908.56 774.06,-908.56"/>
+<text xml:space="preserve" text-anchor="middle" x="611.91" y="-886.6" font-family="DejaVu Sans" font-size="14.00">Per&#45;scale input projection</text>
+<text xml:space="preserve" text-anchor="middle" x="611.91" y="-869.8" font-family="DejaVu Sans" font-size="14.00">Feature channels &#45;&gt; 64 + position + progress</text>
+<text xml:space="preserve" text-anchor="middle" x="611.91" y="-853" font-family="DejaVu Sans" font-size="14.00">embedding</text>
+</g>
+<!-- block -->
+<g id="09-image-generator-node6" class="node">
+<title>block</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M717.43,-786.24C717.43,-786.24 466.39,-786.24 466.39,-786.24 460.39,-786.24 454.39,-780.24 454.39,-774.24 454.39,-774.24 454.39,-712.32 454.39,-712.32 454.39,-706.32 460.39,-700.32 466.39,-700.32 466.39,-700.32 717.43,-700.32 717.43,-700.32 723.43,-700.32 729.43,-706.32 729.43,-712.32 729.43,-712.32 729.43,-774.24 729.43,-774.24 729.43,-780.24 723.43,-786.24 717.43,-786.24"/>
+<text xml:space="preserve" text-anchor="middle" x="591.91" y="-764.28" font-family="DejaVu Sans" font-size="14.00">Per&#45;scale OutputBlock</text>
+<text xml:space="preserve" text-anchor="middle" x="591.91" y="-747.48" font-family="DejaVu Sans" font-size="14.00">Residual self&#45;attention</text>
+<text xml:space="preserve" text-anchor="middle" x="591.91" y="-730.68" font-family="DejaVu Sans" font-size="14.00">Residual workspace cross&#45;attention</text>
+<text xml:space="preserve" text-anchor="middle" x="591.91" y="-713.88" font-family="DejaVu Sans" font-size="14.00">Residual MLP</text>
+</g>
+<!-- fusion -->
+<g id="09-image-generator-node7" class="node">
+<title>fusion</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M480.92,-647.12C480.92,-647.12 166.91,-647.12 166.91,-647.12 160.91,-647.12 154.91,-641.12 154.91,-635.12 154.91,-635.12 154.91,-590 154.91,-590 154.91,-584 160.91,-578 166.91,-578 166.91,-578 480.92,-578 480.92,-578 486.92,-578 492.92,-584 492.92,-590 492.92,-590 492.92,-635.12 492.92,-635.12 492.92,-641.12 486.92,-647.12 480.92,-647.12"/>
+<text xml:space="preserve" text-anchor="middle" x="323.91" y="-625.16" font-family="DejaVu Sans" font-size="14.00">Joint&#45;scale OutputBlock</text>
+<text xml:space="preserve" text-anchor="middle" x="323.91" y="-608.36" font-family="DejaVu Sans" font-size="14.00">Concatenate scales &#45;&gt; shared processing &#45;&gt;</text>
+<text xml:space="preserve" text-anchor="middle" x="323.91" y="-591.56" font-family="DejaVu Sans" font-size="14.00">split</text>
+</g>
+<!-- velocity -->
+<g id="09-image-generator-node8" class="node">
+<title>velocity</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M485.63,-524.8C485.63,-524.8 162.2,-524.8 162.2,-524.8 156.2,-524.8 150.2,-518.8 150.2,-512.8 150.2,-512.8 150.2,-484.48 150.2,-484.48 150.2,-478.48 156.2,-472.48 162.2,-472.48 162.2,-472.48 485.63,-472.48 485.63,-472.48 491.63,-472.48 497.63,-478.48 497.63,-484.48 497.63,-484.48 497.63,-512.8 497.63,-512.8 497.63,-518.8 491.63,-524.8 485.63,-524.8"/>
+<text xml:space="preserve" text-anchor="middle" x="323.91" y="-502.84" font-family="DejaVu Sans" font-size="14.00">Per&#45;scale output projection</text>
+<text xml:space="preserve" text-anchor="middle" x="323.91" y="-486.04" font-family="DejaVu Sans" font-size="14.00">Predict velocity in standardized feature space</text>
+</g>
+<!-- integrate -->
+<g id="09-image-generator-node9" class="node">
+<title>integrate</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M404.35,-419.28C404.35,-419.28 243.48,-419.28 243.48,-419.28 237.48,-419.28 231.48,-413.28 231.48,-407.28 231.48,-407.28 231.48,-362.16 231.48,-362.16 231.48,-356.16 237.48,-350.16 243.48,-350.16 243.48,-350.16 404.35,-350.16 404.35,-350.16 410.35,-350.16 416.35,-356.16 416.35,-362.16 416.35,-362.16 416.35,-407.28 416.35,-407.28 416.35,-413.28 410.35,-419.28 404.35,-419.28"/>
+<text xml:space="preserve" text-anchor="middle" x="323.91" y="-397.32" font-family="DejaVu Sans" font-size="14.00">Euler sampler</text>
+<text xml:space="preserve" text-anchor="middle" x="323.91" y="-380.52" font-family="DejaVu Sans" font-size="14.00">x &lt;&#45; x + velocity / 8</text>
+<text xml:space="preserve" text-anchor="middle" x="323.91" y="-363.72" font-family="DejaVu Sans" font-size="14.00">Repeat at the next tau</text>
+</g>
+<!-- features -->
+<g id="09-image-generator-node10" class="node">
+<title>features</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M445.14,-296.96C445.14,-296.96 202.68,-296.96 202.68,-296.96 196.68,-296.96 190.68,-290.96 190.68,-284.96 190.68,-284.96 190.68,-239.84 190.68,-239.84 190.68,-233.84 196.68,-227.84 202.68,-227.84 202.68,-227.84 445.14,-227.84 445.14,-227.84 451.14,-227.84 457.14,-233.84 457.14,-239.84 457.14,-239.84 457.14,-284.96 457.14,-284.96 457.14,-290.96 451.14,-296.96 445.14,-296.96"/>
+<text xml:space="preserve" text-anchor="middle" x="323.91" y="-275" font-family="DejaVu Sans" font-size="14.00">Final feature maps; unstandardize</text>
+<text xml:space="preserve" text-anchor="middle" x="323.91" y="-258.2" font-family="DejaVu Sans" font-size="14.00">32x16x16 / 32x8x8 / 32x4x4</text>
+<text xml:space="preserve" text-anchor="middle" x="323.91" y="-241.4" font-family="DejaVu Sans" font-size="14.00">Detail: 48x16x16</text>
+</g>
+<!-- base -->
+<g id="09-image-generator-node11" class="node">
+<title>base</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M327.83,-174.64C327.83,-174.64 12,-174.64 12,-174.64 6,-174.64 0,-168.64 0,-162.64 0,-162.64 0,-117.52 0,-117.52 0,-111.52 6,-105.52 12,-105.52 12,-105.52 327.83,-105.52 327.83,-105.52 333.83,-105.52 339.83,-111.52 339.83,-117.52 339.83,-117.52 339.83,-162.64 339.83,-162.64 339.83,-168.64 333.83,-174.64 327.83,-174.64"/>
+<text xml:space="preserve" text-anchor="middle" x="169.91" y="-152.68" font-family="DejaVu Sans" font-size="14.00">DenseHead</text>
+<text xml:space="preserve" text-anchor="middle" x="169.91" y="-135.88" font-family="DejaVu Sans" font-size="14.00">Project / align / concatenate scales</text>
+<text xml:space="preserve" text-anchor="middle" x="169.91" y="-119.08" font-family="DejaVu Sans" font-size="14.00">Residual CNN + upsampling &#45;&gt; patch means</text>
+</g>
+<!-- detail -->
+<g id="09-image-generator-node12" class="node">
+<title>detail</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M585.81,-174.64C585.81,-174.64 372.02,-174.64 372.02,-174.64 366.02,-174.64 360.02,-168.64 360.02,-162.64 360.02,-162.64 360.02,-117.52 360.02,-117.52 360.02,-111.52 366.02,-105.52 372.02,-105.52 372.02,-105.52 585.81,-105.52 585.81,-105.52 591.81,-105.52 597.81,-111.52 597.81,-117.52 597.81,-117.52 597.81,-162.64 597.81,-162.64 597.81,-168.64 591.81,-174.64 585.81,-174.64"/>
+<text xml:space="preserve" text-anchor="middle" x="478.91" y="-152.68" font-family="DejaVu Sans" font-size="14.00">Detail head</text>
+<text xml:space="preserve" text-anchor="middle" x="478.91" y="-135.88" font-family="DejaVu Sans" font-size="14.00">1x1 projection &#45;&gt; pixel shuffle</text>
+<text xml:space="preserve" text-anchor="middle" x="478.91" y="-119.08" font-family="DejaVu Sans" font-size="14.00">Remove within&#45;patch mean</text>
+</g>
+<!-- rgb -->
+<g id="09-image-generator-node13" class="node">
+<title>rgb</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M463.81,-52.32C463.81,-52.32 184.02,-52.32 184.02,-52.32 178.02,-52.32 172.02,-46.32 172.02,-40.32 172.02,-40.32 172.02,-12 172.02,-12 172.02,-6 178.02,0 184.02,0 184.02,0 463.81,0 463.81,0 469.81,0 475.81,-6 475.81,-12 475.81,-12 475.81,-40.32 475.81,-40.32 475.81,-46.32 469.81,-52.32 463.81,-52.32"/>
+<text xml:space="preserve" text-anchor="middle" x="323.91" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Combine patch means + residual detail</text>
+<text xml:space="preserve" text-anchor="middle" x="323.91" y="-13.56" font-family="DejaVu Sans" font-size="14.00">Clamp to [0,1] &#45;&gt; RGB64</text>
+</g>
+</g>
+</svg>

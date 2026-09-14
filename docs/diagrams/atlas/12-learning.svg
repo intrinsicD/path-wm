@@ -1,0 +1,191 @@
+<svg width="1248pt" height="944pt"
+ viewBox="0.00 0.00 1248.00 944.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="12-learning-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 929.28)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-929.28 1233.24,-929.28 1233.24,14.4 -14.4,14.4"/>
+<!-- data&#45;&gt;encode -->
+<g id="12-learning-edge1" class="edge">
+<title>data&#45;&gt;encode</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M814.39,-828.5C775,-812.27 731.03,-794.15 695.41,-779.47"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="696.42,-777.24 689.01,-776.84 694.55,-781.77 696.42,-777.24"/>
+<text xml:space="preserve" text-anchor="middle" x="816.68" y="-799.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">available input only</text>
+</g>
+<!-- data&#45;&gt;worldloss -->
+<g id="12-learning-edge7" class="edge">
+<title>data&#45;&gt;worldloss</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M917.33,-828.5C917.33,-793.86 917.33,-750.6 917.33,-750.6 917.33,-750.6 917.33,-750.6 917.33,-464.84 917.33,-464.84 832.05,-386.19 778.24,-336.57"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="780.2,-335.04 773.39,-332.09 776.87,-338.64 780.2,-335.04"/>
+<text xml:space="preserve" text-anchor="middle" x="970.28" y="-576.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">supervision targets</text>
+</g>
+<!-- data&#45;&gt;teacher -->
+<g id="12-learning-edge2" class="edge">
+<title>data&#45;&gt;teacher</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M950.67,-828.78C978.16,-794.02 1016.91,-745.01 1044.1,-710.64"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="1045.92,-712.28 1048.34,-705.27 1042.08,-709.24 1045.92,-712.28"/>
+<text xml:space="preserve" text-anchor="middle" x="1062.47" y="-799.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">optional full&#45;view teacher input</text>
+</g>
+<!-- encode&#45;&gt;prior -->
+<g id="12-learning-edge3" class="edge">
+<title>encode&#45;&gt;prior</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M538.51,-722.99C503.96,-712.79 472.26,-703.44 472.26,-703.44 472.26,-703.44 471.87,-650.88 471.59,-614.56"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="474.04,-614.83 471.54,-607.84 469.14,-614.86 474.04,-614.83"/>
+<text xml:space="preserve" text-anchor="middle" x="540.8" y="-665.58" font-family="DejaVu Sans" font-size="11.00" fill="#374151">previous belief + actions</text>
+</g>
+<!-- encode&#45;&gt;decode -->
+<g id="12-learning-edge4" class="edge">
+<title>encode&#45;&gt;decode</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M623.8,-723.1C620.72,-672.2 613.83,-558.01 610.38,-500.83"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="612.85,-500.99 609.98,-494.15 607.96,-501.28 612.85,-500.99"/>
+<text xml:space="preserve" text-anchor="middle" x="664.37" y="-576.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">posterior context</text>
+</g>
+<!-- encode&#45;&gt;worldloss -->
+<g id="12-learning-edge9" class="edge">
+<title>encode&#45;&gt;worldloss</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M642.66,-723.03C669.07,-684.07 716.33,-614.32 716.33,-614.32 716.33,-614.32 782.33,-492 782.33,-492 782.33,-492 782.33,-439.68 782.33,-439.68 782.33,-439.68 760.33,-350.56 760.33,-350.56 760.33,-350.56 757.97,-345.49 754.69,-338.47"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="757.05,-337.74 751.87,-332.43 752.61,-339.81 757.05,-337.74"/>
+<text xml:space="preserve" text-anchor="middle" x="828.92" y="-515.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">posterior distribution</text>
+</g>
+<!-- encode&#45;&gt;memory -->
+<g id="12-learning-edge11" class="edge">
+<title>encode&#45;&gt;memory</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M490.4,-728.59C408.93,-716.52 320.73,-703.44 320.73,-703.44 320.73,-703.44 263.64,-655.92 220.52,-620.03"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="222.23,-618.27 215.28,-615.67 219.09,-622.03 222.23,-618.27"/>
+<text xml:space="preserve" text-anchor="middle" x="393.53" y="-665.58" font-family="DejaVu Sans" font-size="11.00" fill="#374151">observed event envelopes</text>
+</g>
+<!-- prior&#45;&gt;decode -->
+<g id="12-learning-edge5" class="edge">
+<title>prior&#45;&gt;decode</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M487.29,-553.14C499.02,-534.31 512.91,-512 512.91,-512 512.91,-512 528.31,-504.71 546.74,-495.99"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="547.43,-498.38 552.71,-493.17 545.33,-493.95 547.43,-498.38"/>
+<text xml:space="preserve" text-anchor="middle" x="561.12" y="-515.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">imagined context</text>
+</g>
+<!-- prior&#45;&gt;worldloss -->
+<g id="12-learning-edge8" class="edge">
+<title>prior&#45;&gt;worldloss</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M433.33,-553.2C395.28,-527.61 342.34,-492 342.34,-492 342.34,-492 342.34,-439.68 342.34,-439.68 342.34,-439.68 517.33,-376.15 633.77,-333.87"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="634.39,-336.25 640.14,-331.56 632.72,-331.65 634.39,-336.25"/>
+<text xml:space="preserve" text-anchor="middle" x="388.34" y="-462.54" font-family="DejaVu Sans" font-size="11.00" fill="#374151">prior distribution</text>
+</g>
+<!-- decode&#45;&gt;worldloss -->
+<g id="12-learning-edge6" class="edge">
+<title>decode&#45;&gt;worldloss</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M627.62,-439.35C648.09,-412.29 680.74,-369.16 704.72,-337.45"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="706.43,-339.26 708.7,-332.2 702.52,-336.3 706.43,-339.26"/>
+<text xml:space="preserve" text-anchor="middle" x="724.84" y="-381.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">predictions</text>
+</g>
+<!-- worldloss&#45;&gt;optimizer -->
+<g id="12-learning-edge13" class="edge">
+<title>worldloss&#45;&gt;optimizer</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M606.75,-260.92C547.91,-245.33 478.12,-226.83 418.29,-210.98"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="418.92,-208.61 411.53,-209.18 417.67,-213.35 418.92,-208.61"/>
+<text xml:space="preserve" text-anchor="middle" x="564.87" y="-231.54" font-family="DejaVu Sans" font-size="11.00" fill="#374151">world gradients</text>
+</g>
+<!-- teacher&#45;&gt;worldloss -->
+<g id="12-learning-edge10" class="edge">
+<title>teacher&#45;&gt;worldloss</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M1063.09,-634.03C1048.88,-597.72 1028.33,-545.2 1028.33,-545.2 1028.33,-545.2 933.33,-350.56 933.33,-350.56 933.33,-350.56 904.82,-342.85 869.43,-333.27"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="870.3,-330.97 862.9,-331.51 869.02,-335.7 870.3,-330.97"/>
+<text xml:space="preserve" text-anchor="middle" x="1101.71" y="-515.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">optional partial&#45;view objective</text>
+</g>
+<!-- memory&#45;&gt;memoryloss -->
+<g id="12-learning-edge12" class="edge">
+<title>memory&#45;&gt;memoryloss</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M155.34,-544.84C149.7,-534.21 144.92,-525.2 144.92,-525.2 144.92,-525.2 144.92,-512 144.92,-512 144.92,-512 148.41,-465.26 151.15,-428.74"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="153.58,-429.01 151.66,-421.85 148.7,-428.64 153.58,-429.01"/>
+<text xml:space="preserve" text-anchor="middle" x="230.62" y="-515.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">readouts / compression / utility</text>
+</g>
+<!-- memoryloss&#45;&gt;optimizer -->
+<g id="12-learning-edge14" class="edge">
+<title>memoryloss&#45;&gt;optimizer</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M174.74,-350.47C196.98,-313.78 232.59,-255.07 256.46,-215.71"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="258.37,-217.27 259.91,-210.02 254.18,-214.73 258.37,-217.27"/>
+<text xml:space="preserve" text-anchor="middle" x="292.86" y="-292.7" font-family="DejaVu Sans" font-size="11.00" fill="#374151">memory/task gradients</text>
+</g>
+<!-- optimizer&#45;&gt;evaluation -->
+<g id="12-learning-edge15" class="edge">
+<title>optimizer&#45;&gt;evaluation</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M281.33,-138.86C281.33,-125.41 281.33,-109.64 281.33,-94.87"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="283.78,-94.97 281.33,-87.97 278.88,-94.97 283.78,-94.97"/>
+<text xml:space="preserve" text-anchor="middle" x="341.63" y="-109.22" font-family="DejaVu Sans" font-size="11.00" fill="#374151">checkpoint under test</text>
+</g>
+<!-- data -->
+<g id="12-learning-node1" class="node">
+<title>data</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M1058.18,-914.88C1058.18,-914.88 776.49,-914.88 776.49,-914.88 770.49,-914.88 764.49,-908.88 764.49,-902.88 764.49,-902.88 764.49,-840.96 764.49,-840.96 764.49,-834.96 770.49,-828.96 776.49,-828.96 776.49,-828.96 1058.18,-828.96 1058.18,-828.96 1064.18,-828.96 1070.18,-834.96 1070.18,-840.96 1070.18,-840.96 1070.18,-902.88 1070.18,-902.88 1070.18,-908.88 1064.18,-914.88 1058.18,-914.88"/>
+<text xml:space="preserve" text-anchor="middle" x="917.33" y="-892.92" font-family="DejaVu Sans" font-size="14.00">Training data</text>
+<text xml:space="preserve" text-anchor="middle" x="917.33" y="-876.12" font-family="DejaVu Sans" font-size="14.00">Causal observations + recorded actions</text>
+<text xml:space="preserve" text-anchor="middle" x="917.33" y="-859.32" font-family="DejaVu Sans" font-size="14.00">Targets / task labels from the training</text>
+<text xml:space="preserve" text-anchor="middle" x="917.33" y="-842.52" font-family="DejaVu Sans" font-size="14.00">harness</text>
+</g>
+<!-- encode -->
+<g id="12-learning-node2" class="node">
+<title>encode</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M747.95,-775.76C747.95,-775.76 502.72,-775.76 502.72,-775.76 496.72,-775.76 490.72,-769.76 490.72,-763.76 490.72,-763.76 490.72,-735.44 490.72,-735.44 490.72,-729.44 496.72,-723.44 502.72,-723.44 502.72,-723.44 747.95,-723.44 747.95,-723.44 753.95,-723.44 759.95,-729.44 759.95,-735.44 759.95,-735.44 759.95,-763.76 759.95,-763.76 759.95,-769.76 753.95,-775.76 747.95,-775.76"/>
+<text xml:space="preserve" text-anchor="middle" x="625.33" y="-753.8" font-family="DejaVu Sans" font-size="14.00">Encoders + observation correction</text>
+<text xml:space="preserve" text-anchor="middle" x="625.33" y="-737" font-family="DejaVu Sans" font-size="14.00">Posterior state</text>
+</g>
+<!-- prior -->
+<g id="12-learning-node3" class="node">
+<title>prior</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M573.78,-605.92C573.78,-605.92 368.89,-605.92 368.89,-605.92 362.89,-605.92 356.89,-599.92 356.89,-593.92 356.89,-593.92 356.89,-565.6 356.89,-565.6 356.89,-559.6 362.89,-553.6 368.89,-553.6 368.89,-553.6 573.78,-553.6 573.78,-553.6 579.78,-553.6 585.78,-559.6 585.78,-565.6 585.78,-565.6 585.78,-593.92 585.78,-593.92 585.78,-599.92 579.78,-605.92 573.78,-605.92"/>
+<text xml:space="preserve" text-anchor="middle" x="471.33" y="-583.96" font-family="DejaVu Sans" font-size="14.00">Action&#45;conditioned dynamics</text>
+<text xml:space="preserve" text-anchor="middle" x="471.33" y="-567.16" font-family="DejaVu Sans" font-size="14.00">Prior / future states</text>
+</g>
+<!-- decode -->
+<g id="12-learning-node4" class="node">
+<title>decode</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M760.15,-492C760.15,-492 456.52,-492 456.52,-492 450.52,-492 444.52,-486 444.52,-480 444.52,-480 444.52,-451.68 444.52,-451.68 444.52,-445.68 450.52,-439.68 456.52,-439.68 456.52,-439.68 760.15,-439.68 760.15,-439.68 766.15,-439.68 772.15,-445.68 772.15,-451.68 772.15,-451.68 772.15,-480 772.15,-480 772.15,-486 766.15,-492 760.15,-492"/>
+<text xml:space="preserve" text-anchor="middle" x="608.33" y="-470.04" font-family="DejaVu Sans" font-size="14.00">Modality decoders</text>
+<text xml:space="preserve" text-anchor="middle" x="608.33" y="-453.24" font-family="DejaVu Sans" font-size="14.00">Observed reconstruction + prior prediction</text>
+</g>
+<!-- worldloss -->
+<g id="12-learning-node5" class="node">
+<title>worldloss</title>
+<path fill="#fff0db" stroke="#bd934d" stroke-width="1.1" d="M877.55,-330.56C877.55,-330.56 593.12,-330.56 593.12,-330.56 587.12,-330.56 581.12,-324.56 581.12,-318.56 581.12,-318.56 581.12,-273.44 581.12,-273.44 581.12,-267.44 587.12,-261.44 593.12,-261.44 593.12,-261.44 877.55,-261.44 877.55,-261.44 883.55,-261.44 889.55,-267.44 889.55,-273.44 889.55,-273.44 889.55,-318.56 889.55,-318.56 889.55,-324.56 883.55,-330.56 877.55,-330.56"/>
+<text xml:space="preserve" text-anchor="middle" x="735.33" y="-308.6" font-family="DejaVu Sans" font-size="14.00">World objectives</text>
+<text xml:space="preserve" text-anchor="middle" x="735.33" y="-291.8" font-family="DejaVu Sans" font-size="14.00">Image/audio likelihood + byte likelihood</text>
+<text xml:space="preserve" text-anchor="middle" x="735.33" y="-275" font-family="DejaVu Sans" font-size="14.00">Split prior/posterior KL</text>
+</g>
+<!-- teacher -->
+<g id="12-learning-node6" class="node">
+<title>teacher</title>
+<path fill="#fff0db" stroke="#bd934d" stroke-width="1.1" d="M1206.84,-703.44C1206.84,-703.44 945.83,-703.44 945.83,-703.44 939.83,-703.44 933.83,-697.44 933.83,-691.44 933.83,-691.44 933.83,-646.32 933.83,-646.32 933.83,-640.32 939.83,-634.32 945.83,-634.32 945.83,-634.32 1206.84,-634.32 1206.84,-634.32 1212.84,-634.32 1218.84,-640.32 1218.84,-646.32 1218.84,-646.32 1218.84,-691.44 1218.84,-691.44 1218.84,-697.44 1212.84,-703.44 1206.84,-703.44"/>
+<text xml:space="preserve" text-anchor="middle" x="1076.33" y="-681.48" font-family="DejaVu Sans" font-size="14.00">Optional partial&#45;view teacher</text>
+<text xml:space="preserve" text-anchor="middle" x="1076.33" y="-664.68" font-family="DejaVu Sans" font-size="14.00">EMA full current view + causal prefix</text>
+<text xml:space="preserve" text-anchor="middle" x="1076.33" y="-647.88" font-family="DejaVu Sans" font-size="14.00">Detached distribution targets</text>
+</g>
+<!-- memory -->
+<g id="12-learning-node7" class="node">
+<title>memory</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M314.01,-614.32C314.01,-614.32 32.66,-614.32 32.66,-614.32 26.66,-614.32 20.66,-608.32 20.66,-602.32 20.66,-602.32 20.66,-557.2 20.66,-557.2 20.66,-551.2 26.66,-545.2 32.66,-545.2 32.66,-545.2 314.01,-545.2 314.01,-545.2 320.01,-545.2 326.01,-551.2 326.01,-557.2 326.01,-557.2 326.01,-602.32 326.01,-602.32 326.01,-608.32 320.01,-614.32 314.01,-614.32"/>
+<text xml:space="preserve" text-anchor="middle" x="173.33" y="-592.36" font-family="DejaVu Sans" font-size="14.00">Memory replay / compression / marking</text>
+<text xml:space="preserve" text-anchor="middle" x="173.33" y="-575.56" font-family="DejaVu Sans" font-size="14.00">Detached stored envelopes; bounded</text>
+<text xml:space="preserve" text-anchor="middle" x="173.33" y="-558.76" font-family="DejaVu Sans" font-size="14.00">recomputation</text>
+</g>
+<!-- memoryloss -->
+<g id="12-learning-node8" class="node">
+<title>memoryloss</title>
+<path fill="#fff0db" stroke="#bd934d" stroke-width="1.1" d="M296.67,-419.68C296.67,-419.68 12,-419.68 12,-419.68 6,-419.68 0,-413.68 0,-407.68 0,-407.68 0,-362.56 0,-362.56 0,-356.56 6,-350.56 12,-350.56 12,-350.56 296.67,-350.56 296.67,-350.56 302.67,-350.56 308.67,-356.56 308.67,-362.56 308.67,-362.56 308.67,-407.68 308.67,-407.68 308.67,-413.68 302.67,-419.68 296.67,-419.68"/>
+<text xml:space="preserve" text-anchor="middle" x="154.33" y="-397.72" font-family="DejaVu Sans" font-size="14.00">Memory / task objectives</text>
+<text xml:space="preserve" text-anchor="middle" x="154.33" y="-380.92" font-family="DejaVu Sans" font-size="14.00">Recall outcomes / compression auxiliary</text>
+<text xml:space="preserve" text-anchor="middle" x="154.33" y="-364.12" font-family="DejaVu Sans" font-size="14.00">Mark utility / task policy supervision</text>
+</g>
+<!-- optimizer -->
+<g id="12-learning-node9" class="node">
+<title>optimizer</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M415.12,-208.24C415.12,-208.24 147.55,-208.24 147.55,-208.24 141.55,-208.24 135.55,-202.24 135.55,-196.24 135.55,-196.24 135.55,-151.12 135.55,-151.12 135.55,-145.12 141.55,-139.12 147.55,-139.12 147.55,-139.12 415.12,-139.12 415.12,-139.12 421.12,-139.12 427.12,-145.12 427.12,-151.12 427.12,-151.12 427.12,-196.24 427.12,-196.24 427.12,-202.24 421.12,-208.24 415.12,-208.24"/>
+<text xml:space="preserve" text-anchor="middle" x="281.33" y="-186.28" font-family="DejaVu Sans" font-size="14.00">Optimizer</text>
+<text xml:space="preserve" text-anchor="middle" x="281.33" y="-169.48" font-family="DejaVu Sans" font-size="14.00">Update only recipe&#45;declared trainable</text>
+<text xml:space="preserve" text-anchor="middle" x="281.33" y="-152.68" font-family="DejaVu Sans" font-size="14.00">parameters</text>
+</g>
+<!-- evaluation -->
+<g id="12-learning-node10" class="node">
+<title>evaluation</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M443.7,-85.92C443.7,-85.92 118.97,-85.92 118.97,-85.92 112.97,-85.92 106.97,-79.92 106.97,-73.92 106.97,-73.92 106.97,-12 106.97,-12 106.97,-6 112.97,0 118.97,0 118.97,0 443.7,0 443.7,0 449.7,0 455.7,-6 455.7,-12 455.7,-12 455.7,-73.92 455.7,-73.92 455.7,-79.92 449.7,-85.92 443.7,-85.92"/>
+<text xml:space="preserve" text-anchor="middle" x="281.33" y="-63.96" font-family="DejaVu Sans" font-size="14.00">Held&#45;out evaluation and controls</text>
+<text xml:space="preserve" text-anchor="middle" x="281.33" y="-47.16" font-family="DejaVu Sans" font-size="14.00">Reload / causality / wrong&#45;memory / ablations</text>
+<text xml:space="preserve" text-anchor="middle" x="281.33" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Quality, identity, calibration and planning</text>
+<text xml:space="preserve" text-anchor="middle" x="281.33" y="-13.56" font-family="DejaVu Sans" font-size="14.00">metrics</text>
+</g>
+</g>
+</svg>

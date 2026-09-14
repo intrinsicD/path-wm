@@ -1,0 +1,162 @@
+<svg width="1022pt" height="626pt"
+ viewBox="0.00 0.00 1022.00 626.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="03-attention-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 611.12)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-611.12 1007.61,-611.12 1007.61,14.4 -14.4,14.4"/>
+<!-- query&#45;&gt;qnorm -->
+<g id="03-attention-edge1" class="edge">
+<title>query&#45;&gt;qnorm</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M555.85,-543.97C556.62,-530.78 557.56,-514.52 558.39,-500.26"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="560.83,-500.49 558.79,-493.36 555.93,-500.2 560.83,-500.49"/>
+<text xml:space="preserve" text-anchor="middle" x="560.98" y="-514.5" font-family="DejaVu Sans" font-size="11.00" fill="#374151">x</text>
+</g>
+<!-- query&#45;&gt;add1 -->
+<g id="03-attention-edge7" class="edge">
+<title>query&#45;&gt;add1</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M582.86,-543.9C608.23,-521.05 641.37,-491.2 641.37,-491.2 641.37,-491.2 653.81,-341.27 659.54,-272.25"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="661.96,-272.69 660.1,-265.51 657.08,-272.28 661.96,-272.69"/>
+<text xml:space="preserve" text-anchor="middle" x="683.54" y="-408.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">identity path</text>
+</g>
+<!-- context&#45;&gt;kvnorm -->
+<g id="03-attention-edge2" class="edge">
+<title>context&#45;&gt;kvnorm</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M138.37,-543.97C138.37,-530.78 138.37,-514.52 138.37,-500.26"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="140.82,-500.36 138.37,-493.36 135.92,-500.36 140.82,-500.36"/>
+<text xml:space="preserve" text-anchor="middle" x="141.39" y="-514.5" font-family="DejaVu Sans" font-size="11.00" fill="#374151">c</text>
+</g>
+<!-- qnorm&#45;&gt;attention -->
+<g id="03-attention-edge3" class="edge">
+<title>qnorm&#45;&gt;attention</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M527.1,-438.36C509.07,-424.45 486.41,-406.96 466.22,-391.37"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="467.83,-389.52 460.79,-387.18 464.84,-393.4 467.83,-389.52"/>
+<text xml:space="preserve" text-anchor="middle" x="521.26" y="-408.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">queries</text>
+</g>
+<!-- kvnorm&#45;&gt;attention -->
+<g id="03-attention-edge4" class="edge">
+<title>kvnorm&#45;&gt;attention</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M201.92,-438.36C237.86,-423.84 283.43,-405.43 323.23,-389.35"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="323.99,-391.68 329.56,-386.79 322.16,-387.14 323.99,-391.68"/>
+<text xml:space="preserve" text-anchor="middle" x="321.29" y="-408.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">keys and values</text>
+</g>
+<!-- attention&#45;&gt;add1 -->
+<g id="03-attention-edge6" class="edge">
+<title>attention&#45;&gt;add1</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M490.48,-316.08C524.78,-300.54 564.99,-282.33 597.89,-267.42"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="598.77,-269.71 604.14,-264.59 596.75,-265.24 598.77,-269.71"/>
+<text xml:space="preserve" text-anchor="middle" x="590.93" y="-286.66" font-family="DejaVu Sans" font-size="11.00" fill="#374151">read result</text>
+</g>
+<!-- add1&#45;&gt;mlp -->
+<g id="03-attention-edge8" class="edge">
+<title>add1&#45;&gt;mlp</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M707.11,-210.61C732.56,-196.05 764.57,-177.75 791.17,-162.54"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="792.21,-164.76 797.07,-159.16 789.78,-160.51 792.21,-164.76"/>
+<text xml:space="preserve" text-anchor="middle" x="767.19" y="-181.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">u</text>
+</g>
+<!-- add1&#45;&gt;add2 -->
+<g id="03-attention-edge10" class="edge">
+<title>add1&#45;&gt;add2</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M664.23,-210.69C667,-172.66 671.89,-105.52 671.89,-105.52 671.89,-105.52 674.39,-82.46 676.67,-61.36"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="679.1,-61.7 677.41,-54.47 674.23,-61.17 679.1,-61.7"/>
+<text xml:space="preserve" text-anchor="middle" x="707.13" y="-128.38" font-family="DejaVu Sans" font-size="11.00" fill="#374151">identity path</text>
+</g>
+<!-- mlp&#45;&gt;add2 -->
+<g id="03-attention-edge9" class="edge">
+<title>mlp&#45;&gt;add2</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M803.08,-105.09C780.35,-90.66 751.82,-72.54 727.99,-57.41"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="729.39,-55.39 722.17,-53.71 726.76,-59.53 729.39,-55.39"/>
+<text xml:space="preserve" text-anchor="middle" x="821.18" y="-75.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">nonlinear residual</text>
+</g>
+<!-- control&#45;&gt;qnorm -->
+<g id="03-attention-edge11" class="edge">
+<title>control&#45;&gt;qnorm</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M766.1,-543.95C734.56,-533.75 705.61,-524.4 705.61,-524.4 705.61,-524.4 668.56,-509.51 631.88,-494.77"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="633.03,-492.59 625.62,-492.26 631.2,-497.14 633.03,-492.59"/>
+<text xml:space="preserve" text-anchor="middle" x="766.99" y="-514.5" font-family="DejaVu Sans" font-size="11.00" fill="#374151">ConditionedBlock only</text>
+</g>
+<!-- control&#45;&gt;mlp -->
+<g id="03-attention-edge12" class="edge">
+<title>control&#45;&gt;mlp</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M845.12,-543.97C844.83,-513.32 844.37,-466.04 844.37,-466.04 844.37,-466.04 844.37,-466.04 844.37,-236.2 844.37,-236.2 843.99,-197.04 843.7,-166.89"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="846.15,-166.91 843.63,-159.93 841.25,-166.96 846.15,-166.91"/>
+<text xml:space="preserve" text-anchor="middle" x="905.75" y="-347.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">ConditionedBlock only</text>
+</g>
+<!-- mask&#45;&gt;attention -->
+<g id="03-attention-edge5" class="edge">
+<title>mask&#45;&gt;attention</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M366.82,-438.36C374.31,-425.05 383.65,-408.47 392.12,-393.41"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="394.09,-394.92 395.39,-387.62 389.82,-392.51 394.09,-394.92"/>
+<text xml:space="preserve" text-anchor="middle" x="422.15" y="-408.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">allowed reads</text>
+</g>
+<!-- query -->
+<g id="03-attention-node1" class="node">
+<title>query</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M665.65,-596.72C665.65,-596.72 443.08,-596.72 443.08,-596.72 437.08,-596.72 431.08,-590.72 431.08,-584.72 431.08,-584.72 431.08,-556.4 431.08,-556.4 431.08,-550.4 437.08,-544.4 443.08,-544.4 443.08,-544.4 665.65,-544.4 665.65,-544.4 671.65,-544.4 677.65,-550.4 677.65,-556.4 677.65,-556.4 677.65,-584.72 677.65,-584.72 677.65,-590.72 671.65,-596.72 665.65,-596.72"/>
+<text xml:space="preserve" text-anchor="middle" x="554.37" y="-574.76" font-family="DejaVu Sans" font-size="14.00">Query tokens x</text>
+<text xml:space="preserve" text-anchor="middle" x="554.37" y="-557.96" font-family="DejaVu Sans" font-size="14.00">Positions / state slots to update</text>
+</g>
+<!-- context -->
+<g id="03-attention-node2" class="node">
+<title>context</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M264.74,-596.72C264.74,-596.72 12,-596.72 12,-596.72 6,-596.72 0,-590.72 0,-584.72 0,-584.72 0,-556.4 0,-556.4 0,-550.4 6,-544.4 12,-544.4 12,-544.4 264.74,-544.4 264.74,-544.4 270.74,-544.4 276.74,-550.4 276.74,-556.4 276.74,-556.4 276.74,-584.72 276.74,-584.72 276.74,-590.72 270.74,-596.72 264.74,-596.72"/>
+<text xml:space="preserve" text-anchor="middle" x="138.37" y="-574.76" font-family="DejaVu Sans" font-size="14.00">Context tokens c</text>
+<text xml:space="preserve" text-anchor="middle" x="138.37" y="-557.96" font-family="DejaVu Sans" font-size="14.00">Features / state / retrieved memory</text>
+</g>
+<!-- qnorm -->
+<g id="03-attention-node3" class="node">
+<title>qnorm</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M619.14,-491.2C619.14,-491.2 501.6,-491.2 501.6,-491.2 495.6,-491.2 489.6,-485.2 489.6,-479.2 489.6,-479.2 489.6,-450.88 489.6,-450.88 489.6,-444.88 495.6,-438.88 501.6,-438.88 501.6,-438.88 619.14,-438.88 619.14,-438.88 625.14,-438.88 631.14,-444.88 631.14,-450.88 631.14,-450.88 631.14,-479.2 631.14,-479.2 631.14,-485.2 625.14,-491.2 619.14,-491.2"/>
+<text xml:space="preserve" text-anchor="middle" x="560.37" y="-469.24" font-family="DejaVu Sans" font-size="14.00">Normalize query</text>
+<text xml:space="preserve" text-anchor="middle" x="560.37" y="-452.44" font-family="DejaVu Sans" font-size="14.00">Project to Q</text>
+</g>
+<!-- kvnorm -->
+<g id="03-attention-node4" class="node">
+<title>kvnorm</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M203.44,-491.2C203.44,-491.2 73.3,-491.2 73.3,-491.2 67.3,-491.2 61.3,-485.2 61.3,-479.2 61.3,-479.2 61.3,-450.88 61.3,-450.88 61.3,-444.88 67.3,-438.88 73.3,-438.88 73.3,-438.88 203.44,-438.88 203.44,-438.88 209.44,-438.88 215.44,-444.88 215.44,-450.88 215.44,-450.88 215.44,-479.2 215.44,-479.2 215.44,-485.2 209.44,-491.2 203.44,-491.2"/>
+<text xml:space="preserve" text-anchor="middle" x="138.37" y="-469.24" font-family="DejaVu Sans" font-size="14.00">Normalize context</text>
+<text xml:space="preserve" text-anchor="middle" x="138.37" y="-452.44" font-family="DejaVu Sans" font-size="14.00">Project to K and V</text>
+</g>
+<!-- attention -->
+<g id="03-attention-node5" class="node">
+<title>attention</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M557.52,-385.68C557.52,-385.68 273.22,-385.68 273.22,-385.68 267.22,-385.68 261.22,-379.68 261.22,-373.68 261.22,-373.68 261.22,-328.56 261.22,-328.56 261.22,-322.56 267.22,-316.56 273.22,-316.56 273.22,-316.56 557.52,-316.56 557.52,-316.56 563.52,-316.56 569.52,-322.56 569.52,-328.56 569.52,-328.56 569.52,-373.68 569.52,-373.68 569.52,-379.68 563.52,-385.68 557.52,-385.68"/>
+<text xml:space="preserve" text-anchor="middle" x="415.37" y="-363.72" font-family="DejaVu Sans" font-size="14.00">Multi&#45;head attention</text>
+<text xml:space="preserve" text-anchor="middle" x="415.37" y="-346.92" font-family="DejaVu Sans" font-size="14.00">Masked softmax(QK^T / sqrt d) / V</text>
+<text xml:space="preserve" text-anchor="middle" x="415.37" y="-330.12" font-family="DejaVu Sans" font-size="14.00">Concatenate heads &#45;&gt; output projection</text>
+</g>
+<!-- add1 -->
+<g id="03-attention-node6" class="node">
+<title>add1</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M749.78,-263.36C749.78,-263.36 574.95,-263.36 574.95,-263.36 568.95,-263.36 562.95,-257.36 562.95,-251.36 562.95,-251.36 562.95,-223.04 562.95,-223.04 562.95,-217.04 568.95,-211.04 574.95,-211.04 574.95,-211.04 749.78,-211.04 749.78,-211.04 755.78,-211.04 761.78,-217.04 761.78,-223.04 761.78,-223.04 761.78,-251.36 761.78,-251.36 761.78,-257.36 755.78,-263.36 749.78,-263.36"/>
+<text xml:space="preserve" text-anchor="middle" x="662.37" y="-241.4" font-family="DejaVu Sans" font-size="14.00">First residual</text>
+<text xml:space="preserve" text-anchor="middle" x="662.37" y="-224.6" font-family="DejaVu Sans" font-size="14.00">u = x + attention output</text>
+</g>
+<!-- mlp -->
+<g id="03-attention-node7" class="node">
+<title>mlp</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M922.35,-157.84C922.35,-157.84 764.39,-157.84 764.39,-157.84 758.39,-157.84 752.39,-151.84 752.39,-145.84 752.39,-145.84 752.39,-117.52 752.39,-117.52 752.39,-111.52 758.39,-105.52 764.39,-105.52 764.39,-105.52 922.35,-105.52 922.35,-105.52 928.35,-105.52 934.35,-111.52 934.35,-117.52 934.35,-117.52 934.35,-145.84 934.35,-145.84 934.35,-151.84 928.35,-157.84 922.35,-157.84"/>
+<text xml:space="preserve" text-anchor="middle" x="843.37" y="-135.88" font-family="DejaVu Sans" font-size="14.00">Normalize &#45;&gt; MLP</text>
+<text xml:space="preserve" text-anchor="middle" x="843.37" y="-119.08" font-family="DejaVu Sans" font-size="14.00">D &#45;&gt; 2D &#45;&gt; GELU &#45;&gt; D</text>
+</g>
+<!-- add2 -->
+<g id="03-attention-node8" class="node">
+<title>add2</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M750.01,-52.32C750.01,-52.32 610.72,-52.32 610.72,-52.32 604.72,-52.32 598.72,-46.32 598.72,-40.32 598.72,-40.32 598.72,-12 598.72,-12 598.72,-6 604.72,0 610.72,0 610.72,0 750.01,0 750.01,0 756.01,0 762.01,-6 762.01,-12 762.01,-12 762.01,-40.32 762.01,-40.32 762.01,-46.32 756.01,-52.32 750.01,-52.32"/>
+<text xml:space="preserve" text-anchor="middle" x="680.37" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Second residual</text>
+<text xml:space="preserve" text-anchor="middle" x="680.37" y="-13.56" font-family="DejaVu Sans" font-size="14.00">y = u + MLP output</text>
+</g>
+<!-- control -->
+<g id="03-attention-node9" class="node">
+<title>control</title>
+<path fill="#efeafa" stroke="#9c87b5" stroke-width="1.1" d="M981.21,-596.72C981.21,-596.72 709.53,-596.72 709.53,-596.72 703.53,-596.72 697.53,-590.72 697.53,-584.72 697.53,-584.72 697.53,-556.4 697.53,-556.4 697.53,-550.4 703.53,-544.4 709.53,-544.4 709.53,-544.4 981.21,-544.4 981.21,-544.4 987.21,-544.4 993.21,-550.4 993.21,-556.4 993.21,-556.4 993.21,-584.72 993.21,-584.72 993.21,-590.72 987.21,-596.72 981.21,-596.72"/>
+<text xml:space="preserve" text-anchor="middle" x="845.37" y="-574.76" font-family="DejaVu Sans" font-size="14.00">Optional feature code</text>
+<text xml:space="preserve" text-anchor="middle" x="845.37" y="-557.96" font-family="DejaVu Sans" font-size="14.00">Bias&#45;free map &#45;&gt; bounded scale / shift</text>
+</g>
+<!-- mask -->
+<g id="03-attention-node10" class="node">
+<title>mask</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M457.76,-491.2C457.76,-491.2 246.98,-491.2 246.98,-491.2 240.98,-491.2 234.98,-485.2 234.98,-479.2 234.98,-479.2 234.98,-450.88 234.98,-450.88 234.98,-444.88 240.98,-438.88 246.98,-438.88 246.98,-438.88 457.76,-438.88 457.76,-438.88 463.76,-438.88 469.76,-444.88 469.76,-450.88 469.76,-450.88 469.76,-479.2 469.76,-479.2 469.76,-485.2 463.76,-491.2 457.76,-491.2"/>
+<text xml:space="preserve" text-anchor="middle" x="352.37" y="-469.24" font-family="DejaVu Sans" font-size="14.00">Attention constraints</text>
+<text xml:space="preserve" text-anchor="middle" x="352.37" y="-452.44" font-family="DejaVu Sans" font-size="14.00">Validity / time / local footprint</text>
+</g>
+</g>
+</svg>

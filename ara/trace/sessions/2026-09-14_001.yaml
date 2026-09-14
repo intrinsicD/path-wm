@@ -2,11 +2,12 @@ session:
   id: 2026-09-14_001
   date: '2026-09-14'
   started: 2026-09-14T00:40+02:00
-  last_turn: 2026-09-14T02:24+02:00
-  turn_count: 4
+  last_turn: 2026-09-14T08:19+02:00
+  turn_count: 5
   summary: Frozen photo readers locate the main spatial-access drop at first observation update and
     a further reset/recall drop. Memory copy is exact; fine texture has a separate patch/raw-detail-interface
     constraint. Agent unchanged; train state/recall proposed, size/duration unresolved.
+    Architecture atlas documents current configurations and proposed extensions; no new model changes.
 events_logged:
 - turn: 1
   type: decision
@@ -280,6 +281,23 @@ ai_actions:
   - docs/project-state.md
   - docs/models.md
   - docs/experiments.md
+- turn: 5
+  action: 'Created a code-grounded architecture atlas: 13 drawings, 156 nodes, 199 labelled edges; categorical
+    agent, Gaussian photo path, controlled entity/planner paths and proposed graph/DAG distinguished.
+    Read 28 referenced source files; exported self-contained HTML, Mermaid and SVGs. All104 local links
+    resolve,384 IDs unique, SVG counts match, renderer warning-free, page script syntax valid; rasterized
+    drawings inspected. Browser URL policy denied local-file QA; no workaround. Editable source panel
+    queued. Documentation only; no model/weight updates, training or new Claude exchange.'
+  provenance: ai-executed
+  files_changed:
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/diagrams/render_architecture_atlas.mjs
+  - docs/diagrams/atlas/
+  - docs/diagrams/README.md
+  - docs/models.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -292,6 +310,10 @@ key_context:
 - turn: 4
   excerpt: "I guess because we haven\u2019t trained it for long enough and its size is very small\u2026\
     \ but ok, find out where the detail becomes inaccessible along that path"
+- turn: 5
+  excerpt: User requested architectural drawings of world-model parts, their inputs/outputs and inner
+    workings, from high level to low level. This documents the current architecture; it does not authorize
+    or execute the previously proposed photo-state repair.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate;
   image/full retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene

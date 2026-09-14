@@ -1,0 +1,215 @@
+<svg width="975pt" height="1111pt"
+ viewBox="0.00 0.00 975.00 1111.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="02-encoders-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 1096.8)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-1096.8 960.61,-1096.8 960.61,14.4 -14.4,14.4"/>
+<!-- image&#45;&gt;patch -->
+<g id="02-encoders-edge1" class="edge">
+<title>image&#45;&gt;patch</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M154.48,-1029.65C154.48,-1016.46 154.48,-1000.2 154.48,-985.94"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="156.93,-986.04 154.48,-979.04 152.03,-986.04 156.93,-986.04"/>
+<text xml:space="preserve" text-anchor="middle" x="201.69" y="-1000.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">B x T x 3 x H x W</text>
+</g>
+<!-- audio&#45;&gt;wave -->
+<g id="02-encoders-edge2" class="edge">
+<title>audio&#45;&gt;wave</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M477.48,-1029.65C477.48,-1016.46 477.48,-1000.2 477.48,-985.94"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="479.93,-986.04 477.48,-979.04 475.03,-986.04 479.93,-986.04"/>
+<text xml:space="preserve" text-anchor="middle" x="520.98" y="-1000.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">B x T x samples</text>
+</g>
+<!-- text&#45;&gt;embed -->
+<g id="02-encoders-edge3" class="edge">
+<title>text&#45;&gt;embed</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M796.48,-1029.65C796.48,-1016.46 796.48,-1000.2 796.48,-985.94"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="798.93,-986.04 796.48,-979.04 794.03,-986.04 798.93,-986.04"/>
+<text xml:space="preserve" text-anchor="middle" x="824.53" y="-1000.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">B x length</text>
+</g>
+<!-- patch&#45;&gt;fine -->
+<g id="02-encoders-edge4" class="edge">
+<title>patch&#45;&gt;fine</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M228.58,-924.04C270.84,-909.4 324.51,-890.8 371.2,-874.63"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="371.84,-877 377.65,-872.39 370.23,-872.37 371.84,-877"/>
+<text xml:space="preserve" text-anchor="middle" x="373.35" y="-894.66" font-family="DejaVu Sans" font-size="11.00" fill="#374151">frame / patch tokens</text>
+</g>
+<!-- wave&#45;&gt;fine -->
+<g id="02-encoders-edge5" class="edge">
+<title>wave&#45;&gt;fine</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M477.48,-924.04C477.48,-911.1 477.48,-895.05 477.48,-880.33"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="479.93,-880.51 477.48,-873.51 475.03,-880.51 479.93,-880.51"/>
+<text xml:space="preserve" text-anchor="middle" x="525.1" y="-894.66" font-family="DejaVu Sans" font-size="11.00" fill="#374151">waveform tokens</text>
+</g>
+<!-- embed&#45;&gt;fine -->
+<g id="02-encoders-edge6" class="edge">
+<title>embed&#45;&gt;fine</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M723.29,-924.04C681.56,-909.4 628.55,-890.8 582.44,-874.63"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="583.5,-872.4 576.09,-872.4 581.88,-877.03 583.5,-872.4"/>
+<text xml:space="preserve" text-anchor="middle" x="698.03" y="-894.66" font-family="DejaVu Sans" font-size="11.00" fill="#374151">byte tokens</text>
+</g>
+<!-- fine&#45;&gt;merge1 -->
+<g id="02-encoders-edge7" class="edge">
+<title>fine&#45;&gt;merge1</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M451.61,-801.96C440.73,-787.74 427.98,-771.07 416.6,-756.18"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="418.68,-754.87 412.49,-750.8 414.79,-757.85 418.68,-754.87"/>
+<text xml:space="preserve" text-anchor="middle" x="490.37" y="-772.34" font-family="DejaVu Sans" font-size="11.00" fill="#374151">processed fine scale</text>
+</g>
+<!-- fine&#45;&gt;fusion -->
+<g id="02-encoders-edge11" class="edge">
+<title>fine&#45;&gt;fusion</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M524.34,-801.88C539.03,-791.25 551.48,-782.24 551.48,-782.24 551.48,-782.24 569.48,-715.48 569.48,-715.48 569.48,-715.48 569.48,-715.48 569.48,-371.72 569.48,-371.72 516.43,-329.47 478.1,-298.96"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="479.92,-297.27 472.91,-294.83 476.86,-301.1 479.92,-297.27"/>
+<text xml:space="preserve" text-anchor="middle" x="617.94" y="-527.7" font-family="DejaVu Sans" font-size="11.00" fill="#374151">retain fine tokens</text>
+</g>
+<!-- merge1&#45;&gt;mid -->
+<g id="02-encoders-edge8" class="edge">
+<title>merge1&#45;&gt;mid</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M382.38,-679.64C381.13,-665.93 379.67,-649.95 378.35,-635.48"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="380.81,-635.56 377.74,-628.82 375.94,-636.01 380.81,-635.56"/>
+<text xml:space="preserve" text-anchor="middle" x="422.99" y="-650.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">coarser queries</text>
+</g>
+<!-- mid&#45;&gt;merge2 -->
+<g id="02-encoders-edge9" class="edge">
+<title>mid&#45;&gt;merge2</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M331.94,-557.24C318.62,-546.61 307.32,-537.6 307.32,-537.6 307.32,-537.6 297.77,-524.89 287.59,-511.34"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="289.74,-510.12 283.58,-506 285.82,-513.07 289.74,-510.12"/>
+<text xml:space="preserve" text-anchor="middle" x="365.4" y="-527.7" font-family="DejaVu Sans" font-size="11.00" fill="#374151">processed next scale</text>
+</g>
+<!-- mid&#45;&gt;fusion -->
+<g id="02-encoders-edge12" class="edge">
+<title>mid&#45;&gt;fusion</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M406.14,-557.24C416.07,-546.61 424.48,-537.6 424.48,-537.6 424.48,-537.6 433.58,-374.17 437.6,-301.89"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="440.03,-302.33 437.97,-295.21 435.14,-302.06 440.03,-302.33"/>
+<text xml:space="preserve" text-anchor="middle" x="487.85" y="-422.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">retain middle tokens</text>
+</g>
+<!-- merge2&#45;&gt;coarse -->
+<g id="02-encoders-edge10" class="edge">
+<title>merge2&#45;&gt;coarse</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M267.43,-451.65C269.49,-438.34 272.03,-421.89 274.25,-407.54"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="276.61,-408.31 275.26,-401.02 271.77,-407.56 276.61,-408.31"/>
+<text xml:space="preserve" text-anchor="middle" x="315.3" y="-422.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">coarse features</text>
+</g>
+<!-- coarse&#45;&gt;fusion -->
+<g id="02-encoders-edge13" class="edge">
+<title>coarse&#45;&gt;fusion</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M293.08,-346.29C301.49,-330.57 310.69,-313.36 310.69,-313.36 310.69,-313.36 332.59,-305.68 358.34,-296.65"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="359.06,-298.99 364.86,-294.37 357.44,-294.37 359.06,-298.99"/>
+<text xml:space="preserve" text-anchor="middle" x="367.08" y="-316.66" font-family="DejaVu Sans" font-size="11.00" fill="#374151">retain coarse tokens</text>
+</g>
+<!-- fusion&#45;&gt;out -->
+<g id="02-encoders-edge14" class="edge">
+<title>fusion&#45;&gt;out</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M439.48,-240.52C439.48,-227.58 439.48,-211.53 439.48,-196.81"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="441.93,-196.99 439.48,-189.99 437.03,-196.99 441.93,-196.99"/>
+<text xml:space="preserve" text-anchor="middle" x="496.12" y="-211.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">same output layouts</text>
+</g>
+<!-- out&#45;&gt;consumer -->
+<g id="02-encoders-edge15" class="edge">
+<title>out&#45;&gt;consumer</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M439.48,-118.42C439.48,-100.63 439.48,-78.89 439.48,-61.09"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="441.93,-61.37 439.48,-54.37 437.03,-61.37 441.93,-61.37"/>
+<text xml:space="preserve" text-anchor="middle" x="517.87" y="-88.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">all scales or selected named</text>
+<text xml:space="preserve" text-anchor="middle" x="517.87" y="-75.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">grids</text>
+</g>
+<!-- image -->
+<g id="02-encoders-node1" class="node">
+<title>image</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M203.29,-1082.4C203.29,-1082.4 105.67,-1082.4 105.67,-1082.4 99.67,-1082.4 93.67,-1076.4 93.67,-1070.4 93.67,-1070.4 93.67,-1042.08 93.67,-1042.08 93.67,-1036.08 99.67,-1030.08 105.67,-1030.08 105.67,-1030.08 203.29,-1030.08 203.29,-1030.08 209.29,-1030.08 215.29,-1036.08 215.29,-1042.08 215.29,-1042.08 215.29,-1070.4 215.29,-1070.4 215.29,-1076.4 209.29,-1082.4 203.29,-1082.4"/>
+<text xml:space="preserve" text-anchor="middle" x="154.48" y="-1060.44" font-family="DejaVu Sans" font-size="14.00">Image / video</text>
+<text xml:space="preserve" text-anchor="middle" x="154.48" y="-1043.64" font-family="DejaVu Sans" font-size="14.00">RGB frames</text>
+</g>
+<!-- audio -->
+<g id="02-encoders-node2" class="node">
+<title>audio</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M541.63,-1082.4C541.63,-1082.4 413.33,-1082.4 413.33,-1082.4 407.33,-1082.4 401.33,-1076.4 401.33,-1070.4 401.33,-1070.4 401.33,-1042.08 401.33,-1042.08 401.33,-1036.08 407.33,-1030.08 413.33,-1030.08 413.33,-1030.08 541.63,-1030.08 541.63,-1030.08 547.63,-1030.08 553.63,-1036.08 553.63,-1042.08 553.63,-1042.08 553.63,-1070.4 553.63,-1070.4 553.63,-1076.4 547.63,-1082.4 541.63,-1082.4"/>
+<text xml:space="preserve" text-anchor="middle" x="477.48" y="-1060.44" font-family="DejaVu Sans" font-size="14.00">Audio</text>
+<text xml:space="preserve" text-anchor="middle" x="477.48" y="-1043.64" font-family="DejaVu Sans" font-size="14.00">Waveform chunks</text>
+</g>
+<!-- text -->
+<g id="02-encoders-node3" class="node">
+<title>text</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M848.81,-1082.4C848.81,-1082.4 744.15,-1082.4 744.15,-1082.4 738.15,-1082.4 732.15,-1076.4 732.15,-1070.4 732.15,-1070.4 732.15,-1042.08 732.15,-1042.08 732.15,-1036.08 738.15,-1030.08 744.15,-1030.08 744.15,-1030.08 848.81,-1030.08 848.81,-1030.08 854.81,-1030.08 860.81,-1036.08 860.81,-1042.08 860.81,-1042.08 860.81,-1070.4 860.81,-1070.4 860.81,-1076.4 854.81,-1082.4 848.81,-1082.4"/>
+<text xml:space="preserve" text-anchor="middle" x="796.48" y="-1060.44" font-family="DejaVu Sans" font-size="14.00">Text</text>
+<text xml:space="preserve" text-anchor="middle" x="796.48" y="-1043.64" font-family="DejaVu Sans" font-size="14.00">Byte token IDs</text>
+</g>
+<!-- patch -->
+<g id="02-encoders-node4" class="node">
+<title>patch</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M296.96,-976.88C296.96,-976.88 12,-976.88 12,-976.88 6,-976.88 0,-970.88 0,-964.88 0,-964.88 0,-936.56 0,-936.56 0,-930.56 6,-924.56 12,-924.56 12,-924.56 296.96,-924.56 296.96,-924.56 302.96,-924.56 308.96,-930.56 308.96,-936.56 308.96,-936.56 308.96,-964.88 308.96,-964.88 308.96,-970.88 302.96,-976.88 296.96,-976.88"/>
+<text xml:space="preserve" text-anchor="middle" x="154.48" y="-954.92" font-family="DejaVu Sans" font-size="14.00">Image stem</text>
+<text xml:space="preserve" text-anchor="middle" x="154.48" y="-938.12" font-family="DejaVu Sans" font-size="14.00">Patch convolution + position + modality</text>
+</g>
+<!-- wave -->
+<g id="02-encoders-node5" class="node">
+<title>wave</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M614.46,-976.88C614.46,-976.88 340.49,-976.88 340.49,-976.88 334.49,-976.88 328.49,-970.88 328.49,-964.88 328.49,-964.88 328.49,-936.56 328.49,-936.56 328.49,-930.56 334.49,-924.56 340.49,-924.56 340.49,-924.56 614.46,-924.56 614.46,-924.56 620.46,-924.56 626.46,-930.56 626.46,-936.56 626.46,-936.56 626.46,-964.88 626.46,-964.88 626.46,-970.88 620.46,-976.88 614.46,-976.88"/>
+<text xml:space="preserve" text-anchor="middle" x="477.48" y="-954.92" font-family="DejaVu Sans" font-size="14.00">Audio stem</text>
+<text xml:space="preserve" text-anchor="middle" x="477.48" y="-938.12" font-family="DejaVu Sans" font-size="14.00">Waveform patches &#45;&gt; linear projection</text>
+</g>
+<!-- embed -->
+<g id="02-encoders-node6" class="node">
+<title>embed</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M934.21,-976.88C934.21,-976.88 658.74,-976.88 658.74,-976.88 652.74,-976.88 646.74,-970.88 646.74,-964.88 646.74,-964.88 646.74,-936.56 646.74,-936.56 646.74,-930.56 652.74,-924.56 658.74,-924.56 658.74,-924.56 934.21,-924.56 934.21,-924.56 940.21,-924.56 946.21,-930.56 946.21,-936.56 946.21,-936.56 946.21,-964.88 946.21,-964.88 946.21,-970.88 940.21,-976.88 934.21,-976.88"/>
+<text xml:space="preserve" text-anchor="middle" x="796.48" y="-954.92" font-family="DejaVu Sans" font-size="14.00">Text stem</text>
+<text xml:space="preserve" text-anchor="middle" x="796.48" y="-938.12" font-family="DejaVu Sans" font-size="14.00">Byte embedding + position + modality</text>
+</g>
+<!-- fine -->
+<g id="02-encoders-node7" class="node">
+<title>fine</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M629.94,-871.36C629.94,-871.36 325.01,-871.36 325.01,-871.36 319.01,-871.36 313.01,-865.36 313.01,-859.36 313.01,-859.36 313.01,-814.24 313.01,-814.24 313.01,-808.24 319.01,-802.24 325.01,-802.24 325.01,-802.24 629.94,-802.24 629.94,-802.24 635.94,-802.24 641.94,-808.24 641.94,-814.24 641.94,-814.24 641.94,-859.36 641.94,-859.36 641.94,-865.36 635.94,-871.36 629.94,-871.36"/>
+<text xml:space="preserve" text-anchor="middle" x="477.48" y="-849.4" font-family="DejaVu Sans" font-size="14.00">Scale 0</text>
+<text xml:space="preserve" text-anchor="middle" x="477.48" y="-832.6" font-family="DejaVu Sans" font-size="14.00">Scale embedding &#45;&gt; k residual transformer</text>
+<text xml:space="preserve" text-anchor="middle" x="477.48" y="-815.8" font-family="DejaVu Sans" font-size="14.00">blocks</text>
+</g>
+<!-- merge1 -->
+<g id="02-encoders-node8" class="node">
+<title>merge1</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M523.03,-749.04C523.03,-749.04 247.93,-749.04 247.93,-749.04 241.93,-749.04 235.93,-743.04 235.93,-737.04 235.93,-737.04 235.93,-691.92 235.93,-691.92 235.93,-685.92 241.93,-679.92 247.93,-679.92 247.93,-679.92 523.03,-679.92 523.03,-679.92 529.03,-679.92 535.03,-685.92 535.03,-691.92 535.03,-691.92 535.03,-737.04 535.03,-737.04 535.03,-743.04 529.03,-749.04 523.03,-749.04"/>
+<text xml:space="preserve" text-anchor="middle" x="385.48" y="-727.08" font-family="DejaVu Sans" font-size="14.00">Merge / pool local groups</text>
+<text xml:space="preserve" text-anchor="middle" x="385.48" y="-710.28" font-family="DejaVu Sans" font-size="14.00">Optional coarse&#45;query attention to fine</text>
+<text xml:space="preserve" text-anchor="middle" x="385.48" y="-693.48" font-family="DejaVu Sans" font-size="14.00">footprint</text>
+</g>
+<!-- mid -->
+<g id="02-encoders-node9" class="node">
+<title>mid</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M526.94,-626.72C526.94,-626.72 222.01,-626.72 222.01,-626.72 216.01,-626.72 210.01,-620.72 210.01,-614.72 210.01,-614.72 210.01,-569.6 210.01,-569.6 210.01,-563.6 216.01,-557.6 222.01,-557.6 222.01,-557.6 526.94,-557.6 526.94,-557.6 532.94,-557.6 538.94,-563.6 538.94,-569.6 538.94,-569.6 538.94,-614.72 538.94,-614.72 538.94,-620.72 532.94,-626.72 526.94,-626.72"/>
+<text xml:space="preserve" text-anchor="middle" x="374.48" y="-604.76" font-family="DejaVu Sans" font-size="14.00">Scale 1</text>
+<text xml:space="preserve" text-anchor="middle" x="374.48" y="-587.96" font-family="DejaVu Sans" font-size="14.00">Scale embedding &#45;&gt; k residual transformer</text>
+<text xml:space="preserve" text-anchor="middle" x="374.48" y="-571.16" font-family="DejaVu Sans" font-size="14.00">blocks</text>
+</g>
+<!-- merge2 -->
+<g id="02-encoders-node10" class="node">
+<title>merge2</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M396.48,-504.4C396.48,-504.4 130.47,-504.4 130.47,-504.4 124.47,-504.4 118.47,-498.4 118.47,-492.4 118.47,-492.4 118.47,-464.08 118.47,-464.08 118.47,-458.08 124.47,-452.08 130.47,-452.08 130.47,-452.08 396.48,-452.08 396.48,-452.08 402.48,-452.08 408.48,-458.08 408.48,-464.08 408.48,-464.08 408.48,-492.4 408.48,-492.4 408.48,-498.4 402.48,-504.4 396.48,-504.4"/>
+<text xml:space="preserve" text-anchor="middle" x="263.48" y="-482.44" font-family="DejaVu Sans" font-size="14.00">Repeat merge and processing</text>
+<text xml:space="preserve" text-anchor="middle" x="263.48" y="-465.64" font-family="DejaVu Sans" font-size="14.00">Until the configured number of scales</text>
+</g>
+<!-- coarse -->
+<g id="02-encoders-node11" class="node">
+<title>coarse</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M391.74,-398.88C391.74,-398.88 167.22,-398.88 167.22,-398.88 161.22,-398.88 155.22,-392.88 155.22,-386.88 155.22,-386.88 155.22,-358.56 155.22,-358.56 155.22,-352.56 161.22,-346.56 167.22,-346.56 167.22,-346.56 391.74,-346.56 391.74,-346.56 397.74,-346.56 403.74,-352.56 403.74,-358.56 403.74,-358.56 403.74,-386.88 403.74,-386.88 403.74,-392.88 397.74,-398.88 391.74,-398.88"/>
+<text xml:space="preserve" text-anchor="middle" x="279.48" y="-376.92" font-family="DejaVu Sans" font-size="14.00">Final scale</text>
+<text xml:space="preserve" text-anchor="middle" x="279.48" y="-360.12" font-family="DejaVu Sans" font-size="14.00">Fully processed coarse features</text>
+</g>
+<!-- fusion -->
+<g id="02-encoders-node12" class="node">
+<title>fusion</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M596.18,-293.36C596.18,-293.36 282.78,-293.36 282.78,-293.36 276.78,-293.36 270.78,-287.36 270.78,-281.36 270.78,-281.36 270.78,-253.04 270.78,-253.04 270.78,-247.04 276.78,-241.04 282.78,-241.04 282.78,-241.04 596.18,-241.04 596.18,-241.04 602.18,-241.04 608.18,-247.04 608.18,-253.04 608.18,-253.04 608.18,-281.36 608.18,-281.36 608.18,-287.36 602.18,-293.36 596.18,-293.36"/>
+<text xml:space="preserve" text-anchor="middle" x="439.48" y="-271.4" font-family="DejaVu Sans" font-size="14.00">Optional all&#45;scale fusion</text>
+<text xml:space="preserve" text-anchor="middle" x="439.48" y="-254.6" font-family="DejaVu Sans" font-size="14.00">Concatenate &#45;&gt; f transformer blocks &#45;&gt; split</text>
+</g>
+<!-- out -->
+<g id="02-encoders-node13" class="node">
+<title>out</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M592.26,-187.84C592.26,-187.84 286.69,-187.84 286.69,-187.84 280.69,-187.84 274.69,-181.84 274.69,-175.84 274.69,-175.84 274.69,-130.72 274.69,-130.72 274.69,-124.72 280.69,-118.72 286.69,-118.72 286.69,-118.72 592.26,-118.72 592.26,-118.72 598.26,-118.72 604.26,-124.72 604.26,-130.72 604.26,-130.72 604.26,-175.84 604.26,-175.84 604.26,-181.84 598.26,-187.84 592.26,-187.84"/>
+<text xml:space="preserve" text-anchor="middle" x="439.48" y="-165.88" font-family="DejaVu Sans" font-size="14.00">FeaturePyramid</text>
+<text xml:space="preserve" text-anchor="middle" x="439.48" y="-149.08" font-family="DejaVu Sans" font-size="14.00">Per&#45;scale tokens + grid + time + validity +</text>
+<text xml:space="preserve" text-anchor="middle" x="439.48" y="-132.28" font-family="DejaVu Sans" font-size="14.00">support</text>
+</g>
+<!-- consumer -->
+<g id="02-encoders-node14" class="node">
+<title>consumer</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M591.31,-52.32C591.31,-52.32 287.65,-52.32 287.65,-52.32 281.65,-52.32 275.65,-46.32 275.65,-40.32 275.65,-40.32 275.65,-12 275.65,-12 275.65,-6 281.65,0 287.65,0 287.65,0 591.31,0 591.31,0 597.31,0 603.31,-6 603.31,-12 603.31,-12 603.31,-40.32 603.31,-40.32 603.31,-46.32 597.31,-52.32 591.31,-52.32"/>
+<text xml:space="preserve" text-anchor="middle" x="439.48" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Consumers</text>
+<text xml:space="preserve" text-anchor="middle" x="439.48" y="-13.56" font-family="DejaVu Sans" font-size="14.00">Belief correction / spatial heads / reflection</text>
+</g>
+</g>
+</svg>

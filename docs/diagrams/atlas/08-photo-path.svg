@@ -1,0 +1,216 @@
+<svg width="943pt" height="1244pt"
+ viewBox="0.00 0.00 943.00 1244.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="08-photo-path-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 1230)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-1230 928.63,-1230 928.63,14.4 -14.4,14.4"/>
+<!-- photos&#45;&gt;encoder -->
+<g id="08-photo-path-edge1" class="edge">
+<title>photos&#45;&gt;encoder</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M537.16,-1162.96C524.36,-1152.71 512.57,-1143.28 512.57,-1143.28 512.57,-1143.28 498.11,-1123.87 483.44,-1104.18"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="485.41,-1102.72 479.26,-1098.57 481.48,-1105.64 485.41,-1102.72"/>
+<text xml:space="preserve" text-anchor="middle" x="573.29" y="-1126.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">real observation input</text>
+</g>
+<!-- photos&#45;&gt;teacher -->
+<g id="08-photo-path-edge14" class="edge">
+<title>photos&#45;&gt;teacher</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M606.25,-1162.96C621.22,-1152.71 635,-1143.28 635,-1143.28 635,-1143.28 675.67,-1062.6 699.38,-1015.58"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="701.46,-1016.9 702.42,-1009.55 697.08,-1014.69 701.46,-1016.9"/>
+<text xml:space="preserve" text-anchor="middle" x="732.29" y="-1133.38" font-family="DejaVu Sans" font-size="11.00" fill="#374151">original image, training/control</text>
+<text xml:space="preserve" text-anchor="middle" x="732.29" y="-1120.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">only</text>
+</g>
+<!-- encoder&#45;&gt;update -->
+<g id="08-photo-path-edge2" class="edge">
+<title>encoder&#45;&gt;update</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M430.34,-1027.36C414.14,-1003.09 392.1,-970.05 373.96,-942.87"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="376.05,-941.59 370.13,-937.12 371.97,-944.31 376.05,-941.59"/>
+<text xml:space="preserve" text-anchor="middle" x="467.52" y="-978.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">336 spatial tokens</text>
+</g>
+<!-- update&#45;&gt;state -->
+<g id="08-photo-path-edge3" class="edge">
+<title>update&#45;&gt;state</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M330.93,-849.12C328.35,-838.23 326.27,-829.52 326.27,-829.52 326.27,-829.52 326.24,-818.75 326.19,-805.37"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="328.64,-805.43 326.16,-798.44 323.74,-805.45 328.64,-805.43"/>
+<text xml:space="preserve" text-anchor="middle" x="418.64" y="-819.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">first major measured access drop</text>
+</g>
+<!-- state&#45;&gt;update -->
+<g id="08-photo-path-edge4" class="edge">
+<title>state&#45;&gt;update</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M453.41,-796.8C485.98,-807.65 512,-816.32 512,-816.32 512,-816.32 512,-829.52 512,-829.52 512,-829.52 492.08,-836.74 465.84,-846.25"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="465.21,-843.87 459.46,-848.56 466.88,-848.48 465.21,-843.87"/>
+<text xml:space="preserve" text-anchor="middle" x="601.48" y="-819.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">previous state; next observation</text>
+</g>
+<!-- state&#45;&gt;bank -->
+<g id="08-photo-path-edge5" class="edge">
+<title>state&#45;&gt;bank</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M383.79,-709.86C404.54,-694.59 427.82,-677.47 448.14,-662.53"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="449.37,-664.66 453.56,-658.54 446.47,-660.71 449.37,-664.66"/>
+<text xml:space="preserve" text-anchor="middle" x="512.7" y="-680.5" font-family="DejaVu Sans" font-size="11.00" fill="#374151">explicit remember; exact copies</text>
+</g>
+<!-- state&#45;&gt;start -->
+<g id="08-photo-path-edge6" class="edge">
+<title>state&#45;&gt;start</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M270.86,-709.86C251.14,-694.66 229.03,-677.62 209.71,-662.72"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="211.35,-660.9 204.31,-658.57 208.36,-664.78 211.35,-660.9"/>
+<text xml:space="preserve" text-anchor="middle" x="300.49" y="-680.5" font-family="DejaVu Sans" font-size="11.00" fill="#374151">ordinary query mode</text>
+</g>
+<!-- bank&#45;&gt;think -->
+<g id="08-photo-path-edge8" class="edge">
+<title>bank&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M489.28,-587.6C483.22,-570.02 475.78,-548.43 469.38,-529.85"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="471.85,-529.49 467.25,-523.67 467.21,-531.09 471.85,-529.49"/>
+<text xml:space="preserve" text-anchor="middle" x="565.9" y="-558.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">retrieved snapshots + relative</text>
+<text xml:space="preserve" text-anchor="middle" x="565.9" y="-544.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">time</text>
+</g>
+<!-- start&#45;&gt;think -->
+<g id="08-photo-path-edge7" class="edge">
+<title>start&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M234.46,-587.6C276.39,-568.69 328.64,-545.12 371.76,-525.67"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="372.53,-528.01 377.91,-522.9 370.52,-523.54 372.53,-528.01"/>
+<text xml:space="preserve" text-anchor="middle" x="382.06" y="-551.58" font-family="DejaVu Sans" font-size="11.00" fill="#374151">live or reset state</text>
+</g>
+<!-- think&#45;&gt;working -->
+<g id="08-photo-path-edge9" class="edge">
+<title>think&#45;&gt;working</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M455,-452.28C455,-438.57 455,-422.59 455,-408.12"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="457.45,-408.46 455,-401.46 452.55,-408.46 457.45,-408.46"/>
+<text xml:space="preserve" text-anchor="middle" x="548.1" y="-422.66" font-family="DejaVu Sans" font-size="11.00" fill="#374151">native working/reasoning readout</text>
+</g>
+<!-- working&#45;&gt;generator -->
+<g id="08-photo-path-edge10" class="edge">
+<title>working&#45;&gt;generator</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M485.61,-329.89C505.29,-308.1 527.18,-283.84 527.18,-283.84 527.18,-283.84 564.28,-275.62 606.81,-266.2"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="607.17,-268.63 613.47,-264.72 606.11,-263.84 607.17,-268.63"/>
+<text xml:space="preserve" text-anchor="middle" x="621.09" y="-300.34" font-family="DejaVu Sans" font-size="11.00" fill="#374151">only image&#45;dependent generation</text>
+<text xml:space="preserve" text-anchor="middle" x="621.09" y="-287.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">context</text>
+</g>
+<!-- working&#45;&gt;facts -->
+<g id="08-photo-path-edge13" class="edge">
+<title>working&#45;&gt;facts</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M422.65,-329.88C412.51,-319.25 403.91,-310.24 403.91,-310.24 403.91,-310.24 402.87,-291.19 401.86,-272.75"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="404.31,-272.63 401.48,-265.77 399.42,-272.9 404.31,-272.63"/>
+<text xml:space="preserve" text-anchor="middle" x="451.46" y="-293.74" font-family="DejaVu Sans" font-size="11.00" fill="#374151">separate readout</text>
+</g>
+<!-- generator&#45;&gt;head -->
+<g id="08-photo-path-edge11" class="edge">
+<title>generator&#45;&gt;head</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M731,-211C731,-198.06 731,-182.01 731,-167.29"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="733.45,-167.47 731,-160.47 728.55,-167.47 733.45,-167.47"/>
+<text xml:space="preserve" text-anchor="middle" x="801.99" y="-181.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">three scales + detail map</text>
+</g>
+<!-- head&#45;&gt;image -->
+<g id="08-photo-path-edge12" class="edge">
+<title>head&#45;&gt;image</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M731,-88.79C731,-74.57 731,-58.31 731,-45.07"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="733.45,-45.11 731,-38.11 728.55,-45.11 733.45,-45.11"/>
+<text xml:space="preserve" text-anchor="middle" x="747.05" y="-59.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">pixels</text>
+</g>
+<!-- teacher&#45;&gt;generator -->
+<g id="08-photo-path-edge15" class="edge">
+<title>teacher&#45;&gt;generator</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M718.45,-955.08C722.7,-910.68 731,-823.92 731,-823.92 731,-823.92 731,-823.92 731,-363.8 731,-363.8 731,-309.9 731,-272.85"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="733.45,-272.97 731,-265.97 728.55,-272.97 733.45,-272.97"/>
+<text xml:space="preserve" text-anchor="middle" x="809.26" y="-625.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">detached feature targets for</text>
+<text xml:space="preserve" text-anchor="middle" x="809.26" y="-612.74" font-family="DejaVu Sans" font-size="11.00" fill="#374151">losses</text>
+</g>
+<!-- photos -->
+<g id="08-photo-path-node1" class="node">
+<title>photos</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M705.63,-1215.6C705.63,-1215.6 432.37,-1215.6 432.37,-1215.6 426.37,-1215.6 420.37,-1209.6 420.37,-1203.6 420.37,-1203.6 420.37,-1175.28 420.37,-1175.28 420.37,-1169.28 426.37,-1163.28 432.37,-1163.28 432.37,-1163.28 705.63,-1163.28 705.63,-1163.28 711.63,-1163.28 717.63,-1169.28 717.63,-1175.28 717.63,-1175.28 717.63,-1203.6 717.63,-1203.6 717.63,-1209.6 711.63,-1215.6 705.63,-1215.6"/>
+<text xml:space="preserve" text-anchor="middle" x="569" y="-1193.64" font-family="DejaVu Sans" font-size="14.00">Real photo history</text>
+<text xml:space="preserve" text-anchor="middle" x="569" y="-1176.84" font-family="DejaVu Sans" font-size="14.00">RGB64 observations then a blank view</text>
+</g>
+<!-- encoder -->
+<g id="08-photo-path-node2" class="node">
+<title>encoder</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M590.24,-1096.88C590.24,-1096.88 315.77,-1096.88 315.77,-1096.88 309.77,-1096.88 303.77,-1090.88 303.77,-1084.88 303.77,-1084.88 303.77,-1039.76 303.77,-1039.76 303.77,-1033.76 309.77,-1027.76 315.77,-1027.76 315.77,-1027.76 590.24,-1027.76 590.24,-1027.76 596.24,-1027.76 602.24,-1033.76 602.24,-1039.76 602.24,-1039.76 602.24,-1084.88 602.24,-1084.88 602.24,-1090.88 596.24,-1096.88 590.24,-1096.88"/>
+<text xml:space="preserve" text-anchor="middle" x="453" y="-1074.92" font-family="DejaVu Sans" font-size="14.00">Frozen image hierarchy</text>
+<text xml:space="preserve" text-anchor="middle" x="453" y="-1058.12" font-family="DejaVu Sans" font-size="14.00">4x4 RGB patch: 48 values &#45;&gt; 32</text>
+<text xml:space="preserve" text-anchor="middle" x="453" y="-1041.32" font-family="DejaVu Sans" font-size="14.00">16^2 + 8^2 + 4^2 = 336 tokens x 32</text>
+</g>
+<!-- update -->
+<g id="08-photo-path-node3" class="node">
+<title>update</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M495.2,-935.44C495.2,-935.44 186.8,-935.44 186.8,-935.44 180.8,-935.44 174.8,-929.44 174.8,-923.44 174.8,-923.44 174.8,-861.52 174.8,-861.52 174.8,-855.52 180.8,-849.52 186.8,-849.52 186.8,-849.52 495.2,-849.52 495.2,-849.52 501.2,-849.52 507.2,-855.52 507.2,-861.52 507.2,-861.52 507.2,-923.44 507.2,-923.44 507.2,-929.44 501.2,-935.44 495.2,-935.44"/>
+<text xml:space="preserve" text-anchor="middle" x="341" y="-913.48" font-family="DejaVu Sans" font-size="14.00">ObservationUpdate</text>
+<text xml:space="preserve" text-anchor="middle" x="341" y="-896.68" font-family="DejaVu Sans" font-size="14.00">State queries attend features + action/time</text>
+<text xml:space="preserve" text-anchor="middle" x="341" y="-879.88" font-family="DejaVu Sans" font-size="14.00">token</text>
+<text xml:space="preserve" text-anchor="middle" x="341" y="-863.08" font-family="DejaVu Sans" font-size="14.00">Residual MLP + Gaussian scale head</text>
+</g>
+<!-- state -->
+<g id="08-photo-path-node4" class="node">
+<title>state</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M456.25,-796.32C456.25,-796.32 195.75,-796.32 195.75,-796.32 189.75,-796.32 183.75,-790.32 183.75,-784.32 183.75,-784.32 183.75,-722.4 183.75,-722.4 183.75,-716.4 189.75,-710.4 195.75,-710.4 195.75,-710.4 456.25,-710.4 456.25,-710.4 462.25,-710.4 468.25,-716.4 468.25,-722.4 468.25,-722.4 468.25,-784.32 468.25,-784.32 468.25,-790.32 462.25,-796.32 456.25,-796.32"/>
+<text xml:space="preserve" text-anchor="middle" x="326" y="-774.36" font-family="DejaVu Sans" font-size="14.00">Gaussian LatentState</text>
+<text xml:space="preserve" text-anchor="middle" x="326" y="-757.56" font-family="DejaVu Sans" font-size="14.00">30 tokens x 32 + log_scale</text>
+<text xml:space="preserve" text-anchor="middle" x="326" y="-740.76" font-family="DejaVu Sans" font-size="14.00">16 sensory / 4 entities / 2 context / 4</text>
+<text xml:space="preserve" text-anchor="middle" x="326" y="-723.96" font-family="DejaVu Sans" font-size="14.00">working / 4 reasoning</text>
+</g>
+<!-- bank -->
+<g id="08-photo-path-node5" class="node">
+<title>bank</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M652.12,-657.2C652.12,-657.2 349.89,-657.2 349.89,-657.2 343.89,-657.2 337.89,-651.2 337.89,-645.2 337.89,-645.2 337.89,-600.08 337.89,-600.08 337.89,-594.08 343.89,-588.08 349.89,-588.08 349.89,-588.08 652.12,-588.08 652.12,-588.08 658.12,-588.08 664.12,-594.08 664.12,-600.08 664.12,-600.08 664.12,-645.2 664.12,-645.2 664.12,-651.2 658.12,-657.2 652.12,-657.2"/>
+<text xml:space="preserve" text-anchor="middle" x="501" y="-635.24" font-family="DejaVu Sans" font-size="14.00">Episodic snapshot bank</text>
+<text xml:space="preserve" text-anchor="middle" x="501" y="-618.44" font-family="DejaVu Sans" font-size="14.00">Detached copy of all 30 tokens</text>
+<text xml:space="preserve" text-anchor="middle" x="501" y="-601.64" font-family="DejaVu Sans" font-size="14.00">Capacity4; read top2 by pooled&#45;key cosine</text>
+</g>
+<!-- start -->
+<g id="08-photo-path-node6" class="node">
+<title>start</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M306.01,-657.2C306.01,-657.2 12,-657.2 12,-657.2 6,-657.2 0,-651.2 0,-645.2 0,-645.2 0,-600.08 0,-600.08 0,-594.08 6,-588.08 12,-588.08 12,-588.08 306.01,-588.08 306.01,-588.08 312.01,-588.08 318.01,-594.08 318.01,-600.08 318.01,-600.08 318.01,-645.2 318.01,-645.2 318.01,-651.2 312.01,-657.2 306.01,-657.2"/>
+<text xml:space="preserve" text-anchor="middle" x="159" y="-635.24" font-family="DejaVu Sans" font-size="14.00">Query starting state</text>
+<text xml:space="preserve" text-anchor="middle" x="159" y="-618.44" font-family="DejaVu Sans" font-size="14.00">Final state, or fresh blank state with bank</text>
+<text xml:space="preserve" text-anchor="middle" x="159" y="-601.64" font-family="DejaVu Sans" font-size="14.00">restored</text>
+</g>
+<!-- think -->
+<g id="08-photo-path-node7" class="node">
+<title>think</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M624.74,-521.68C624.74,-521.68 285.26,-521.68 285.26,-521.68 279.26,-521.68 273.26,-515.68 273.26,-509.68 273.26,-509.68 273.26,-464.56 273.26,-464.56 273.26,-458.56 279.26,-452.56 285.26,-452.56 285.26,-452.56 624.74,-452.56 624.74,-452.56 630.74,-452.56 636.74,-458.56 636.74,-464.56 636.74,-464.56 636.74,-509.68 636.74,-509.68 636.74,-515.68 630.74,-521.68 624.74,-521.68"/>
+<text xml:space="preserve" text-anchor="middle" x="455" y="-499.72" font-family="DejaVu Sans" font-size="14.00">Native recall / Thinker x2</text>
+<text xml:space="preserve" text-anchor="middle" x="455" y="-482.92" font-family="DejaVu Sans" font-size="14.00">Read bank + current state; update 8 workspace</text>
+<text xml:space="preserve" text-anchor="middle" x="455" y="-466.12" font-family="DejaVu Sans" font-size="14.00">tokens</text>
+</g>
+<!-- working -->
+<g id="08-photo-path-node8" class="node">
+<title>working</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M585.26,-399.36C585.26,-399.36 324.74,-399.36 324.74,-399.36 318.74,-399.36 312.74,-393.36 312.74,-387.36 312.74,-387.36 312.74,-342.24 312.74,-342.24 312.74,-336.24 318.74,-330.24 324.74,-330.24 324.74,-330.24 585.26,-330.24 585.26,-330.24 591.26,-330.24 597.26,-336.24 597.26,-342.24 597.26,-342.24 597.26,-387.36 597.26,-387.36 597.26,-393.36 591.26,-399.36 585.26,-399.36"/>
+<text xml:space="preserve" text-anchor="middle" x="455" y="-377.4" font-family="DejaVu Sans" font-size="14.00">Output context</text>
+<text xml:space="preserve" text-anchor="middle" x="455" y="-360.6" font-family="DejaVu Sans" font-size="14.00">4 working + 4 reasoning tokens x 32</text>
+<text xml:space="preserve" text-anchor="middle" x="455" y="-343.8" font-family="DejaVu Sans" font-size="14.00">Fixed trained&#45;channel normalization</text>
+</g>
+<!-- generator -->
+<g id="08-photo-path-node9" class="node">
+<title>generator</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M892.22,-263.84C892.22,-263.84 569.78,-263.84 569.78,-263.84 563.78,-263.84 557.78,-257.84 557.78,-251.84 557.78,-251.84 557.78,-223.52 557.78,-223.52 557.78,-217.52 563.78,-211.52 569.78,-211.52 569.78,-211.52 892.22,-211.52 892.22,-211.52 898.22,-211.52 904.22,-217.52 904.22,-223.52 904.22,-223.52 904.22,-251.84 904.22,-251.84 904.22,-257.84 898.22,-263.84 892.22,-263.84"/>
+<text xml:space="preserve" text-anchor="middle" x="731" y="-241.88" font-family="DejaVu Sans" font-size="14.00">Conditional feature generator &#45;&gt; section 9</text>
+<text xml:space="preserve" text-anchor="middle" x="731" y="-225.08" font-family="DejaVu Sans" font-size="14.00">Noise + workspace &#45;&gt; all codec feature maps</text>
+</g>
+<!-- head -->
+<g id="08-photo-path-node10" class="node">
+<title>head</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M902.23,-158.32C902.23,-158.32 559.77,-158.32 559.77,-158.32 553.77,-158.32 547.77,-152.32 547.77,-146.32 547.77,-146.32 547.77,-101.2 547.77,-101.2 547.77,-95.2 553.77,-89.2 559.77,-89.2 559.77,-89.2 902.23,-89.2 902.23,-89.2 908.23,-89.2 914.23,-95.2 914.23,-101.2 914.23,-101.2 914.23,-146.32 914.23,-146.32 914.23,-152.32 908.23,-158.32 902.23,-158.32"/>
+<text xml:space="preserve" text-anchor="middle" x="731" y="-136.36" font-family="DejaVu Sans" font-size="14.00">Frozen PatchDetailHead</text>
+<text xml:space="preserve" text-anchor="middle" x="731" y="-119.56" font-family="DejaVu Sans" font-size="14.00">Predicted patch means + predicted within&#45;patch</text>
+<text xml:space="preserve" text-anchor="middle" x="731" y="-102.76" font-family="DejaVu Sans" font-size="14.00">detail</text>
+</g>
+<!-- image -->
+<g id="08-photo-path-node11" class="node">
+<title>image</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M834.63,-36C834.63,-36 627.38,-36 627.38,-36 621.38,-36 615.38,-30 615.38,-24 615.38,-24 615.38,-12 615.38,-12 615.38,-6 621.38,0 627.38,0 627.38,0 834.63,0 834.63,0 840.63,0 846.63,-6 846.63,-12 846.63,-12 846.63,-24 846.63,-24 846.63,-30 840.63,-36 834.63,-36"/>
+<text xml:space="preserve" text-anchor="middle" x="731" y="-13.8" font-family="DejaVu Sans" font-size="14.00">Generated 64x64 RGB image</text>
+</g>
+<!-- facts -->
+<g id="08-photo-path-node12" class="node">
+<title>facts</title>
+<path fill="#efeafa" stroke="#9c87b5" stroke-width="1.1" d="M525.96,-263.84C525.96,-263.84 274.04,-263.84 274.04,-263.84 268.04,-263.84 262.04,-257.84 262.04,-251.84 262.04,-251.84 262.04,-223.52 262.04,-223.52 262.04,-217.52 268.04,-211.52 274.04,-211.52 274.04,-211.52 525.96,-211.52 525.96,-211.52 531.96,-211.52 537.96,-217.52 537.96,-223.52 537.96,-223.52 537.96,-251.84 537.96,-251.84 537.96,-257.84 531.96,-263.84 525.96,-263.84"/>
+<text xml:space="preserve" text-anchor="middle" x="400" y="-241.88" font-family="DejaVu Sans" font-size="14.00">Parallel factual head</text>
+<text xml:space="preserve" text-anchor="middle" x="400" y="-225.08" font-family="DejaVu Sans" font-size="14.00">Controlled entity / attribute outputs</text>
+</g>
+<!-- teacher -->
+<g id="08-photo-path-node13" class="node">
+<title>teacher</title>
+<path fill="#fff0db" stroke="#bd934d" stroke-width="1.1" d="M882.98,-1007.76C882.98,-1007.76 549.02,-1007.76 549.02,-1007.76 543.02,-1007.76 537.02,-1001.76 537.02,-995.76 537.02,-995.76 537.02,-967.44 537.02,-967.44 537.02,-961.44 543.02,-955.44 549.02,-955.44 549.02,-955.44 882.98,-955.44 882.98,-955.44 888.98,-955.44 894.98,-961.44 894.98,-967.44 894.98,-967.44 894.98,-995.76 894.98,-995.76 894.98,-1001.76 888.98,-1007.76 882.98,-1007.76"/>
+<text xml:space="preserve" text-anchor="middle" x="716" y="-985.8" font-family="DejaVu Sans" font-size="14.00">Direct codec control / training teacher</text>
+<text xml:space="preserve" text-anchor="middle" x="716" y="-969" font-family="DejaVu Sans" font-size="14.00">Original RGB &#45;&gt; hierarchy + raw patch residual</text>
+</g>
+</g>
+</svg>

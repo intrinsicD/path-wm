@@ -1,0 +1,211 @@
+<svg width="1358pt" height="815pt"
+ viewBox="0.00 0.00 1358.00 815.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="10-entities-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 800.64)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-800.64 1344.01,-800.64 1344.01,14.4 -14.4,14.4"/>
+<!-- observation&#45;&gt;matcher -->
+<g id="10-entities-edge1" class="edge">
+<title>observation&#45;&gt;matcher</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M949.57,-716.84C936.92,-702.49 922.08,-685.65 908.88,-670.66"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="910.9,-669.24 904.43,-665.61 907.22,-672.48 910.9,-669.24"/>
+<text xml:space="preserve" text-anchor="middle" x="990.21" y="-687.22" font-family="DejaVu Sans" font-size="11.00" fill="#374151">recognition descriptor</text>
+</g>
+<!-- observation&#45;&gt;cell -->
+<g id="10-entities-edge7" class="edge">
+<title>observation&#45;&gt;cell</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1027.51,-716.76C1042.59,-706.13 1055.38,-697.12 1055.38,-697.12 1055.38,-697.12 1081.38,-630.36 1081.38,-630.36 1081.38,-630.36 1081.38,-630.36 1081.38,-400.52 1081.38,-400.52 1092.05,-351.46 1100.22,-313.91"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1102.57,-314.61 1101.67,-307.25 1097.78,-313.57 1102.57,-314.61"/>
+<text xml:space="preserve" text-anchor="middle" x="1119.9" y="-512.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">state features</text>
+</g>
+<!-- matcher&#45;&gt;decision -->
+<g id="10-entities-edge3" class="edge">
+<title>matcher&#45;&gt;decision</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M866.41,-594.48C863.55,-580.52 860.23,-564.38 857.36,-550.41"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="859.78,-550.02 855.97,-543.66 854.98,-551.01 859.78,-550.02"/>
+<text xml:space="preserve" text-anchor="middle" x="941.63" y="-564.9" font-family="DejaVu Sans" font-size="11.00" fill="#374151">candidate / new probabilities</text>
+</g>
+<!-- records&#45;&gt;matcher -->
+<g id="10-entities-edge2" class="edge">
+<title>records&#45;&gt;matcher</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M655.15,-436.59C697.55,-447.16 733.38,-456.08 733.38,-456.08 733.38,-456.08 733.38,-469.28 733.38,-469.28 733.38,-469.28 561.35,-489.28 561.35,-489.28 561.35,-489.28 561.35,-541.6 561.35,-541.6 561.35,-541.6 1026.38,-561.6 1026.38,-561.6 1026.38,-561.6 1026.38,-574.8 1026.38,-574.8 1026.38,-574.8 1005.26,-582.19 978.71,-591.49"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="978.08,-589.11 972.28,-593.74 979.7,-593.74 978.08,-589.11"/>
+<text xml:space="preserve" text-anchor="middle" x="640.36" y="-512.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">stored candidate descriptors</text>
+</g>
+<!-- records&#45;&gt;edge -->
+<g id="10-entities-edge12" class="edge">
+<title>records&#45;&gt;edge</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M450.52,-366.53C420.92,-351.71 385.75,-334.09 353.81,-318.1"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="355.04,-315.97 347.68,-315.03 352.85,-320.35 355.04,-315.97"/>
+<text xml:space="preserve" text-anchor="middle" x="458.82" y="-337.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">endpoint resolution</text>
+</g>
+<!-- decision&#45;&gt;records -->
+<g id="10-entities-edge4" class="edge">
+<title>decision&#45;&gt;records</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M763.74,-488.83C729.26,-478.63 697.62,-469.28 697.62,-469.28 697.62,-469.28 659.15,-454.95 617.85,-439.57"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="618.81,-437.31 611.4,-437.17 617.1,-441.9 618.81,-437.31"/>
+<text xml:space="preserve" text-anchor="middle" x="771.5" y="-459.38" font-family="DejaVu Sans" font-size="11.00" fill="#374151">admit known or new entity</text>
+</g>
+<!-- decision&#45;&gt;latent -->
+<g id="10-entities-edge5" class="edge">
+<title>decision&#45;&gt;latent</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M850.38,-488.76C850.38,-473.27 850.38,-453.33 850.38,-436.54"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="852.83,-436.74 850.38,-429.74 847.93,-436.74 852.83,-436.74"/>
+<text xml:space="preserve" text-anchor="middle" x="904.16" y="-459.38" font-family="DejaVu Sans" font-size="11.00" fill="#374151">resolved storage ID</text>
+</g>
+<!-- latent&#45;&gt;cell -->
+<g id="10-entities-edge6" class="edge">
+<title>latent&#45;&gt;cell</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M901.06,-374.9C938.31,-356.07 982.45,-333.76 982.45,-333.76 982.45,-333.76 1005.56,-322.48 1032.05,-309.55"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1032.89,-311.86 1038.1,-306.59 1030.74,-307.46 1032.89,-311.86"/>
+<text xml:space="preserve" text-anchor="middle" x="1023.91" y="-337.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">previous latent</text>
+</g>
+<!-- latent&#45;&gt;interact -->
+<g id="10-entities-edge14" class="edge">
+<title>latent&#45;&gt;interact</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M830.43,-374.96C810.46,-349.37 782.67,-313.76 782.67,-313.76 782.67,-313.76 778.4,-234.48 775.65,-183.35"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="778.1,-183.31 775.28,-176.45 773.21,-183.57 778.1,-183.31"/>
+<text xml:space="preserve" text-anchor="middle" x="858.52" y="-267.5" font-family="DejaVu Sans" font-size="11.00" fill="#374151">source + destination states</text>
+</g>
+<!-- latent&#45;&gt;read -->
+<g id="10-entities-edge16" class="edge">
+<title>latent&#45;&gt;read</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M755.69,-374.84C705.01,-361.09 652.9,-346.96 652.9,-346.96 652.9,-346.96 636.61,-329.84 619.57,-311.94"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="621.54,-310.45 614.94,-307.07 617.99,-313.83 621.54,-310.45"/>
+<text xml:space="preserve" text-anchor="middle" x="705.14" y="-337.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">stored entity belief</text>
+</g>
+<!-- cell&#45;&gt;commit -->
+<g id="10-entities-edge8" class="edge">
+<title>cell&#45;&gt;commit</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1087.37,-235.85C1050.78,-179.39 981.38,-72.32 981.38,-72.32 981.38,-72.32 976.07,-66.33 969.32,-58.71"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="971.53,-57.51 965.05,-53.89 967.86,-60.75 971.53,-57.51"/>
+<text xml:space="preserve" text-anchor="middle" x="1088.21" y="-136.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">updated latent</text>
+</g>
+<!-- commit&#45;&gt;latent -->
+<g id="10-entities-edge9" class="edge">
+<title>commit&#45;&gt;latent</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1004.57,-52.82C1060.86,-75.67 1134.38,-105.52 1134.38,-105.52 1134.38,-105.52 1284.38,-227.84 1284.38,-227.84 1284.38,-227.84 1284.38,-313.76 1284.38,-313.76 1284.38,-313.76 952.38,-333.76 952.38,-333.76 952.38,-333.76 923.65,-352.56 896.69,-370.21"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="895.43,-368.1 890.91,-373.99 898.11,-372.2 895.43,-368.1"/>
+<text xml:space="preserve" text-anchor="middle" x="1294.29" y="-197.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">persist value</text>
+</g>
+<!-- query&#45;&gt;relation -->
+<g id="10-entities-edge10" class="edge">
+<title>query&#45;&gt;relation</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M174.38,-488.76C174.38,-473.27 174.38,-453.33 174.38,-436.54"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="176.83,-436.74 174.38,-429.74 171.93,-436.74 176.83,-436.74"/>
+<text xml:space="preserve" text-anchor="middle" x="209.96" y="-459.38" font-family="DejaVu Sans" font-size="11.00" fill="#374151">relation cues</text>
+</g>
+<!-- relation&#45;&gt;edge -->
+<g id="10-entities-edge11" class="edge">
+<title>relation&#45;&gt;edge</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M191.57,-375.09C202.02,-359.62 215.72,-339.36 228.21,-320.87"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="229.93,-322.71 231.82,-315.53 225.87,-319.96 229.93,-322.71"/>
+<text xml:space="preserve" text-anchor="middle" x="275.9" y="-337.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">accepted key update</text>
+</g>
+<!-- edge&#45;&gt;interact -->
+<g id="10-entities-edge13" class="edge">
+<title>edge&#45;&gt;interact</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M409.49,-230.46C415.71,-228.81 419.38,-227.84 419.38,-227.84 419.38,-227.84 528.87,-201.01 626.06,-177.18"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="626.4,-179.63 632.61,-175.58 625.23,-174.87 626.4,-179.63"/>
+<text xml:space="preserve" text-anchor="middle" x="624.51" y="-197.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">resolved directed binding</text>
+</g>
+<!-- interact&#45;&gt;commit -->
+<g id="10-entities-edge15" class="edge">
+<title>interact&#45;&gt;commit</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M824.24,-105.2C847.07,-89.99 873.79,-72.18 895.94,-57.43"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="897.11,-59.59 901.58,-53.67 894.39,-55.52 897.11,-59.59"/>
+<text xml:space="preserve" text-anchor="middle" x="924.37" y="-75.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">destination update</text>
+</g>
+<!-- observation -->
+<g id="10-entities-node1" class="node">
+<title>observation</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M1112.62,-786.24C1112.62,-786.24 846.13,-786.24 846.13,-786.24 840.13,-786.24 834.13,-780.24 834.13,-774.24 834.13,-774.24 834.13,-729.12 834.13,-729.12 834.13,-723.12 840.13,-717.12 846.13,-717.12 846.13,-717.12 1112.62,-717.12 1112.62,-717.12 1118.62,-717.12 1124.62,-723.12 1124.62,-729.12 1124.62,-729.12 1124.62,-774.24 1124.62,-774.24 1124.62,-780.24 1118.62,-786.24 1112.62,-786.24"/>
+<text xml:space="preserve" text-anchor="middle" x="979.38" y="-764.28" font-family="DejaVu Sans" font-size="14.00">Entity observation</text>
+<text xml:space="preserve" text-anchor="middle" x="979.38" y="-747.48" font-family="DejaVu Sans" font-size="14.00">Supplied unit descriptor: 8 values</text>
+<text xml:space="preserve" text-anchor="middle" x="979.38" y="-730.68" font-family="DejaVu Sans" font-size="14.00">State features: 4 values + event/time</text>
+</g>
+<!-- matcher -->
+<g id="10-entities-node2" class="node">
+<title>matcher</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M1034.33,-663.92C1034.33,-663.92 712.43,-663.92 712.43,-663.92 706.43,-663.92 700.43,-657.92 700.43,-651.92 700.43,-651.92 700.43,-606.8 700.43,-606.8 700.43,-600.8 706.43,-594.8 712.43,-594.8 712.43,-594.8 1034.33,-594.8 1034.33,-594.8 1040.33,-594.8 1046.33,-600.8 1046.33,-606.8 1046.33,-606.8 1046.33,-651.92 1046.33,-651.92 1046.33,-657.92 1040.33,-663.92 1034.33,-663.92"/>
+<text xml:space="preserve" text-anchor="middle" x="873.38" y="-641.96" font-family="DejaVu Sans" font-size="14.00">Learned entity matcher</text>
+<text xml:space="preserve" text-anchor="middle" x="873.38" y="-625.16" font-family="DejaVu Sans" font-size="14.00">Squared descriptor differences &#45;&gt; MLP scores</text>
+<text xml:space="preserve" text-anchor="middle" x="873.38" y="-608.36" font-family="DejaVu Sans" font-size="14.00">Compete with learned new&#45;entity score</text>
+</g>
+<!-- records -->
+<g id="10-entities-node3" class="node">
+<title>records</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M656.16,-436.08C656.16,-436.08 380.6,-436.08 380.6,-436.08 374.6,-436.08 368.6,-430.08 368.6,-424.08 368.6,-424.08 368.6,-378.96 368.6,-378.96 368.6,-372.96 374.6,-366.96 380.6,-366.96 380.6,-366.96 656.16,-366.96 656.16,-366.96 662.16,-366.96 668.16,-372.96 668.16,-378.96 668.16,-378.96 668.16,-424.08 668.16,-424.08 668.16,-430.08 662.16,-436.08 656.16,-436.08"/>
+<text xml:space="preserve" text-anchor="middle" x="518.38" y="-414.12" font-family="DejaVu Sans" font-size="14.00">Bounded EntityMemory</text>
+<text xml:space="preserve" text-anchor="middle" x="518.38" y="-397.32" font-family="DejaVu Sans" font-size="14.00">Stable local integer ID + descriptor</text>
+<text xml:space="preserve" text-anchor="middle" x="518.38" y="-380.52" font-family="DejaVu Sans" font-size="14.00">First/last seen + count + retry receipts</text>
+</g>
+<!-- decision -->
+<g id="10-entities-node4" class="node">
+<title>decision</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M959.61,-541.6C959.61,-541.6 741.15,-541.6 741.15,-541.6 735.15,-541.6 729.15,-535.6 729.15,-529.6 729.15,-529.6 729.15,-501.28 729.15,-501.28 729.15,-495.28 735.15,-489.28 741.15,-489.28 741.15,-489.28 959.61,-489.28 959.61,-489.28 965.61,-489.28 971.61,-495.28 971.61,-501.28 971.61,-501.28 971.61,-529.6 971.61,-529.6 971.61,-535.6 965.61,-541.6 959.61,-541.6"/>
+<text xml:space="preserve" text-anchor="middle" x="850.38" y="-519.64" font-family="DejaVu Sans" font-size="14.00">Confidence / capacity rule</text>
+<text xml:space="preserve" text-anchor="middle" x="850.38" y="-502.84" font-family="DejaVu Sans" font-size="14.00">Match / create / uncertain / full</text>
+</g>
+<!-- latent -->
+<g id="10-entities-node5" class="node">
+<title>latent</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M1000.15,-427.68C1000.15,-427.68 700.6,-427.68 700.6,-427.68 694.6,-427.68 688.6,-421.68 688.6,-415.68 688.6,-415.68 688.6,-387.36 688.6,-387.36 688.6,-381.36 694.6,-375.36 700.6,-375.36 700.6,-375.36 1000.15,-375.36 1000.15,-375.36 1006.15,-375.36 1012.15,-381.36 1012.15,-387.36 1012.15,-387.36 1012.15,-415.68 1012.15,-415.68 1012.15,-421.68 1006.15,-427.68 1000.15,-427.68"/>
+<text xml:space="preserve" text-anchor="middle" x="850.38" y="-405.72" font-family="DejaVu Sans" font-size="14.00">Per&#45;entity latent state</text>
+<text xml:space="preserve" text-anchor="middle" x="850.38" y="-388.92" font-family="DejaVu Sans" font-size="14.00">Read the matched record&#39;s previous value</text>
+</g>
+<!-- cell -->
+<g id="10-entities-node6" class="node">
+<title>cell</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M1262.01,-305.36C1262.01,-305.36 956.74,-305.36 956.74,-305.36 950.74,-305.36 944.74,-299.36 944.74,-293.36 944.74,-293.36 944.74,-248.24 944.74,-248.24 944.74,-242.24 950.74,-236.24 956.74,-236.24 956.74,-236.24 1262.01,-236.24 1262.01,-236.24 1268.01,-236.24 1274.01,-242.24 1274.01,-248.24 1274.01,-248.24 1274.01,-293.36 1274.01,-293.36 1274.01,-299.36 1268.01,-305.36 1262.01,-305.36"/>
+<text xml:space="preserve" text-anchor="middle" x="1109.38" y="-283.4" font-family="DejaVu Sans" font-size="14.00">EntityStateCell</text>
+<text xml:space="preserve" text-anchor="middle" x="1109.38" y="-266.6" font-family="DejaVu Sans" font-size="14.00">GRUCell(4 &#45;&gt; 16) updates state</text>
+<text xml:space="preserve" text-anchor="middle" x="1109.38" y="-249.8" font-family="DejaVu Sans" font-size="14.00">Optional exact no&#45;information preservation</text>
+</g>
+<!-- commit -->
+<g id="10-entities-node7" class="node">
+<title>commit</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M1066.31,-52.32C1066.31,-52.32 816.44,-52.32 816.44,-52.32 810.44,-52.32 804.44,-46.32 804.44,-40.32 804.44,-40.32 804.44,-12 804.44,-12 804.44,-6 810.44,0 816.44,0 816.44,0 1066.31,0 1066.31,0 1072.31,0 1078.31,-6 1078.31,-12 1078.31,-12 1078.31,-40.32 1078.31,-40.32 1078.31,-46.32 1072.31,-52.32 1066.31,-52.32"/>
+<text xml:space="preserve" text-anchor="middle" x="941.38" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Atomic state update</text>
+<text xml:space="preserve" text-anchor="middle" x="941.38" y="-13.56" font-family="DejaVu Sans" font-size="14.00">New latent + identity/event receipt</text>
+</g>
+<!-- query -->
+<g id="10-entities-node8" class="node">
+<title>query</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M308.95,-541.6C308.95,-541.6 39.81,-541.6 39.81,-541.6 33.81,-541.6 27.81,-535.6 27.81,-529.6 27.81,-529.6 27.81,-501.28 27.81,-501.28 27.81,-495.28 33.81,-489.28 39.81,-489.28 39.81,-489.28 308.95,-489.28 308.95,-489.28 314.95,-489.28 320.95,-495.28 320.95,-501.28 320.95,-501.28 320.95,-529.6 320.95,-529.6 320.95,-535.6 314.95,-541.6 308.95,-541.6"/>
+<text xml:space="preserve" text-anchor="middle" x="174.38" y="-519.64" font-family="DejaVu Sans" font-size="14.00">Relation source cue + destination cue</text>
+<text xml:space="preserve" text-anchor="middle" x="174.38" y="-502.84" font-family="DejaVu Sans" font-size="14.00">Optional active/cue contexts</text>
+</g>
+<!-- relation -->
+<g id="10-entities-node9" class="node">
+<title>relation</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M336.75,-427.68C336.75,-427.68 12,-427.68 12,-427.68 6,-427.68 0,-421.68 0,-415.68 0,-415.68 0,-387.36 0,-387.36 0,-381.36 6,-375.36 12,-375.36 12,-375.36 336.75,-375.36 336.75,-375.36 342.75,-375.36 348.75,-381.36 348.75,-387.36 348.75,-387.36 348.75,-415.68 348.75,-415.68 348.75,-421.68 342.75,-427.68 336.75,-427.68"/>
+<text xml:space="preserve" text-anchor="middle" x="174.38" y="-405.72" font-family="DejaVu Sans" font-size="14.00">Relation key + optional write gate</text>
+<text xml:space="preserve" text-anchor="middle" x="174.38" y="-388.92" font-family="DejaVu Sans" font-size="14.00">Encode cue to latent key; context comparison</text>
+</g>
+<!-- edge -->
+<g id="10-entities-node10" class="node">
+<title>edge</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M397.19,-313.76C397.19,-313.76 125.57,-313.76 125.57,-313.76 119.57,-313.76 113.57,-307.76 113.57,-301.76 113.57,-301.76 113.57,-239.84 113.57,-239.84 113.57,-233.84 119.57,-227.84 125.57,-227.84 125.57,-227.84 397.19,-227.84 397.19,-227.84 403.19,-227.84 409.19,-233.84 409.19,-239.84 409.19,-239.84 409.19,-301.76 409.19,-301.76 409.19,-307.76 403.19,-313.76 397.19,-313.76"/>
+<text xml:space="preserve" text-anchor="middle" x="261.38" y="-291.8" font-family="DejaVu Sans" font-size="14.00">Per&#45;destination relation slot</text>
+<text xml:space="preserve" text-anchor="middle" x="261.38" y="-275" font-family="DejaVu Sans" font-size="14.00">One supplied directed relation type</text>
+<text xml:space="preserve" text-anchor="middle" x="261.38" y="-258.2" font-family="DejaVu Sans" font-size="14.00">Stored latent key resolves a source by</text>
+<text xml:space="preserve" text-anchor="middle" x="261.38" y="-241.4" font-family="DejaVu Sans" font-size="14.00">matching</text>
+</g>
+<!-- interact -->
+<g id="10-entities-node11" class="node">
+<title>interact</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M939.46,-174.64C939.46,-174.64 607.3,-174.64 607.3,-174.64 601.3,-174.64 595.3,-168.64 595.3,-162.64 595.3,-162.64 595.3,-117.52 595.3,-117.52 595.3,-111.52 601.3,-105.52 607.3,-105.52 607.3,-105.52 939.46,-105.52 939.46,-105.52 945.46,-105.52 951.46,-111.52 951.46,-117.52 951.46,-117.52 951.46,-162.64 951.46,-162.64 951.46,-168.64 945.46,-174.64 939.46,-174.64"/>
+<text xml:space="preserve" text-anchor="middle" x="773.38" y="-152.68" font-family="DejaVu Sans" font-size="14.00">EntityInteractionCell</text>
+<text xml:space="preserve" text-anchor="middle" x="773.38" y="-135.88" font-family="DejaVu Sans" font-size="14.00">Concatenate destination/source latents &#45;&gt; MLP</text>
+<text xml:space="preserve" text-anchor="middle" x="773.38" y="-119.08" font-family="DejaVu Sans" font-size="14.00">Update destination state</text>
+</g>
+<!-- read -->
+<g id="10-entities-node12" class="node">
+<title>read</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M721.25,-305.36C721.25,-305.36 441.5,-305.36 441.5,-305.36 435.5,-305.36 429.5,-299.36 429.5,-293.36 429.5,-293.36 429.5,-248.24 429.5,-248.24 429.5,-242.24 435.5,-236.24 441.5,-236.24 441.5,-236.24 721.25,-236.24 721.25,-236.24 727.25,-236.24 733.25,-242.24 733.25,-248.24 733.25,-248.24 733.25,-293.36 733.25,-293.36 733.25,-299.36 727.25,-305.36 721.25,-305.36"/>
+<text xml:space="preserve" text-anchor="middle" x="581.38" y="-283.4" font-family="DejaVu Sans" font-size="14.00">Readout / task adapter</text>
+<text xml:space="preserve" text-anchor="middle" x="581.38" y="-266.6" font-family="DejaVu Sans" font-size="14.00">State logits, or project entity latent into</text>
+<text xml:space="preserve" text-anchor="middle" x="581.38" y="-249.8" font-family="DejaVu Sans" font-size="14.00">workspace</text>
+</g>
+</g>
+</svg>
