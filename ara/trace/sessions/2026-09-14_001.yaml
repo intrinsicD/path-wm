@@ -2,11 +2,11 @@ session:
   id: 2026-09-14_001
   date: '2026-09-14'
   started: 2026-09-14T00:40+02:00
-  last_turn: 2026-09-14T01:45+02:00
-  turn_count: 3
-  summary: Real-photo continuation on1024 COCO crops lowers held-out recall MSE39.4% and passes relative
-    context/learning screens, but images remain coarse color fields. Frozen codec30.92dB versus recall12.73dB;
-    locate photographic detail loss next. Original weights preserved.
+  last_turn: 2026-09-14T02:24+02:00
+  turn_count: 4
+  summary: Frozen photo readers locate the main spatial-access drop at first observation update and
+    a further reset/recall drop. Memory copy is exact; fine texture has a separate patch/raw-detail-interface
+    constraint. Agent unchanged; train state/recall proposed, size/duration unresolved.
 events_logged:
 - turn: 1
   type: decision
@@ -163,6 +163,64 @@ events_logged:
     workspace using matched diagnostic readers, then train the implicated path before deciding on
     generator scaling. Keep train/test separation and fixed context interventions; the direct residual
     codec is not a compact-memory benchmark.
+- turn: 4
+  type: decision
+  id: N343
+  routing: direct
+  provenance: user
+  summary: Locate inaccessible photographic detail before further scaling
+- turn: 4
+  type: experiment
+  id: N344
+  routing: direct
+  provenance: ai-executed
+  summary: Both frozen-stage readers identify the first observation update as the main spatial-access
+    drop
+- turn: 4
+  type: experiment
+  id: N345
+  routing: direct
+  provenance: ai-executed
+  summary: Patch conditioning and raw-detail control expose a distinct fine-texture limitation
+- turn: 4
+  type: experiment
+  id: N346
+  routing: direct
+  provenance: ai-executed
+  summary: Photo-detail readers activations and independent numeric checks reproduce
+- turn: 4
+  type: observation
+  id: O231
+  routing: staged
+  provenance: user
+  summary: "Insufficient training duration and small model size may explain poor photographic recall.\
+    \ This is the user\u2019s stated guess, not an established cause; the authorized diagnostic freezes\
+    \ the model and does not test duration or capacity."
+- turn: 4
+  type: observation
+  id: O232
+  routing: staged
+  provenance: ai-suggested
+  summary: The dominant measured spatial-access loss is at the first observation-to-state update,
+    followed by reset/recall; storage copying is exact. Fine sub-patch texture is separately constrained
+    by a non-injective and poorly conditioned stem, while the good codec uses a bypass absent from
+    the agent. Closed-form readers narrow practical accessibility without proving absence under all
+    decoders or ruling out model scaling/longer training.
+- turn: 4
+  type: observation
+  id: O233
+  routing: staged
+  provenance: ai-suggested
+  summary: Next train observation/state updating and recall on real-photo spatial supervision with
+    intermediate readouts and held-out controls. Test fine input-detail transport separately; compare
+    duration/capacity after ensuring the relevant stages learn. This is a proposed repair, not an
+    executed change or an efficacy claim.
+- turn: 4
+  type: heuristic
+  id: H71
+  routing: crystallized
+  provenance: user-revised
+  summary: Diagnostic portion of O230 adopted; later repair remains pending as O233.
 ai_actions:
 - turn: 1
   action: Implemented optional generator and direct control, repaired noise width, added isolated
@@ -205,6 +263,23 @@ ai_actions:
   - docs/project-state.md
   - docs/models.md
   - docs/experiments.md
+- turn: 4
+  action: Implemented exact ridge readers, causal frozen-stage extraction and patch spectrum/nullspace
+    audit; factored shared real-photo helpers without changing selections; ran dev/formal fresh-group
+    diagnostics and independent checks; repaired misleading report labels and figure layout; saved
+    reports and documented limitations. Original agent weights unchanged.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/data/photo_recall.py
+  - pathwm/models/photo_probe.py
+  - pathwm/evaluation/photo_detail.py
+  - experiments/photo_detail.py
+  - experiments/real_photo.py
+  - tests/test_photo_detail.py
+  - docs/photo-detail-plan.md
+  - docs/project-state.md
+  - docs/models.md
+  - docs/experiments.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -214,6 +289,9 @@ key_context:
 - turn: 3
   excerpt: 'User asks real-image training, then approves: Send this brief to Claude. Approval is scoped
     to the saved method brief; no raw photos/code/results sent.'
+- turn: 4
+  excerpt: "I guess because we haven\u2019t trained it for long enough and its size is very small\u2026\
+    \ but ok, find out where the detail becomes inaccessible along that path"
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate;
   image/full retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene
@@ -244,9 +322,10 @@ open_threads:
 - 'N336-N339/H70/O226-O228: decoded endpoint and full-sampler supervision implemented, matched benefit
   improves but full capability fails. Placement/occupancy supervision proposed; preserve all hard
   tests, broad generation and original renderer.'
-- 'N340-N342/O229/O230: real-photo continuation improves relative recall but not recognizable photographs.
-  Probe encoder/state/workspace detail and train the implicated path; higher resolution, general prompts/video
-  and causal localization remain open. O228 synthetic placement remains a separate unadopted proposal.'
+- 'N343-N346/H71/O231-O233: frozen-stage spatial access drops at first observation update and reset/recall;
+  fine texture has a distinct input constraint. State/recall real-photo repair is proposed, not executed.
+  Size/duration explanations remain untested; broader output/CPU portability and O228 synthetic placement
+  stay open.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher
   response.'
@@ -318,7 +397,15 @@ ai_suggestions_pending:
   context, yet the displayed outputs retain mostly coarse color fields. Passing relative learning/ablation
   screens is not photographic fidelity. Direct codec adequacy and poor state-conditioned output expose
   a gap without uniquely locating it in encoding, state/memory compression, readout or optimization.'
-- 'O230: Next compare recoverable photographic detail at encoder features, stored state and final
-  workspace using matched diagnostic readers, then train the implicated path before deciding on generator
-  scaling. Keep train/test separation and fixed context interventions; the direct residual codec is
-  not a compact-memory benchmark.'
+- "O231: Insufficient training duration and small model size may explain poor photographic recall.\
+  \ This is the user\u2019s stated guess, not an established cause; the authorized diagnostic freezes\
+  \ the model and does not test duration or capacity."
+- 'O232: The dominant measured spatial-access loss is at the first observation-to-state update, followed
+  by reset/recall; storage copying is exact. Fine sub-patch texture is separately constrained by a
+  non-injective and poorly conditioned stem, while the good codec uses a bypass absent from the agent.
+  Closed-form readers narrow practical accessibility without proving absence under all decoders or
+  ruling out model scaling/longer training.'
+- 'O233: Next train observation/state updating and recall on real-photo spatial supervision with intermediate
+  readouts and held-out controls. Test fine input-detail transport separately; compare duration/capacity
+  after ensuring the relevant stages learn. This is a proposed repair, not an executed change or an
+  efficacy claim.'

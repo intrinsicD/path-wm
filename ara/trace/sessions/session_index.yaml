@@ -148,10 +148,10 @@ sessions:
   open_threads: 12
 - id: 2026-09-14_001
   date: '2026-09-14'
-  summary: Real-photo continuation on1024 COCO crops lowers held-out recall MSE39.4% and passes relative
-    context/learning screens, but images remain coarse color fields. Frozen codec30.92dB versus recall12.73dB;
-    locate photographic detail loss next. Original weights preserved.
-  turn_count: 3
-  events_count: 21
+  summary: Frozen photo readers locate the main spatial-access drop at first observation update and
+    a further reset/recall drop. Memory copy is exact; fine texture has a separate patch/raw-detail-interface
+    constraint. Agent unchanged; train state/recall proposed, size/duration unresolved.
+  turn_count: 4
+  events_count: 29
   claims_touched: []
   open_threads: 13

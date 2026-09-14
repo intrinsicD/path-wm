@@ -4065,6 +4065,57 @@ observations:
   bound_to:
   - N341
   - N342
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H71
+  crystallized_via: verbal-affirmation
+  stale: false
+- id: O231
+  timestamp: 2026-09-14T02:24+02:00
+  provenance: user
+  content: "Insufficient training duration and small model size may explain poor photographic recall.\
+    \ This is the user\u2019s stated guess, not an established cause; the authorized diagnostic freezes\
+    \ the model and does not test duration or capacity."
+  context: User requests localization; completed frozen-stage diagnostic and verification. No researcher
+    response to these new measurements yet.
+  potential_type: claim
+  bound_to:
+  - N343
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O232
+  timestamp: 2026-09-14T02:24+02:00
+  provenance: ai-suggested
+  content: The dominant measured spatial-access loss is at the first observation-to-state update,
+    followed by reset/recall; storage copying is exact. Fine sub-patch texture is separately constrained
+    by a non-injective and poorly conditioned stem, while the good codec uses a bypass absent from
+    the agent. Closed-form readers narrow practical accessibility without proving absence under all
+    decoders or ruling out model scaling/longer training.
+  context: User requests localization; completed frozen-stage diagnostic and verification. No researcher
+    response to these new measurements yet.
+  potential_type: claim
+  bound_to:
+  - N344
+  - N345
+  - N346
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O233
+  timestamp: 2026-09-14T02:24+02:00
+  provenance: ai-suggested
+  content: Next train observation/state updating and recall on real-photo spatial supervision with
+    intermediate readouts and held-out controls. Test fine input-detail transport separately; compare
+    duration/capacity after ensuring the relevant stages learn. This is a proposed repair, not an
+    executed change or an efficacy claim.
+  context: User requests localization; completed frozen-stage diagnostic and verification. No researcher
+    response to these new measurements yet.
+  potential_type: heuristic
+  bound_to:
+  - N344
+  - N345
   promoted: false
   promoted_to: null
   crystallized_via: null

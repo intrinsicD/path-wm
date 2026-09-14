@@ -5714,3 +5714,86 @@ tree:
   also_depends_on:
   - N341
   status: resolved
+- id: N343
+  type: decision
+  title: Locate inaccessible photographic detail before further scaling
+  provenance: user
+  timestamp: 2026-09-14T02:24+02:00
+  choice: User suspects insufficient training and small size, but explicitly asks to locate where
+    detail becomes inaccessible. Adopt the diagnostic portion of O230; no current authorization is
+    inferred for the subsequently proposed state/recall repair. Kernel choices and RGB16 targets are
+    AI protocol decisions.
+  alternatives:
+  - Only extend image-generator training before tracing intermediate states
+  evidence:
+  - O230
+  - "User: I guess because we haven\u2019t trained it for long enough and its size is very small\u2026\
+    \ but ok, find out where the detail becomes inaccessible along that path"
+  - docs/photo-detail-plan.md
+  also_depends_on:
+  - N341
+  - N342
+  status: resolved
+- id: N344
+  type: experiment
+  title: Both frozen-stage readers identify the first observation update as the main spatial-access
+    drop
+  provenance: ai-executed
+  timestamp: 2026-09-14T02:24+02:00
+  result: "Source1eaa271:1024 train/128 validation, fresh256 COCO test groups at suffix256:512 exclude\
+    \ prior test. Closed-form linear and RBF RGB16 readers, training-only statistics, validation-only\
+    \ regularization selection. Linear MSE stem0.00000242, encoder0.00000706, first-state0.033545,\
+    \ second/stored0.034603, recalled-workspace0.043975; RBF encoder0.001575 tofirst-state0.034050.\
+    \ Both flag encoder\u2192first-state and full stored\u2192reset/recall; bootstrap intervals positive.\
+    \ Mean0.056046, shuffled0.056341, native pooled0.046570. Snapshot copying exact,2/2 memories retrieved.\
+    \ Initial336x32 encoder features compress to30x32 state; recall updates8x32 workspace after reset.\
+    \ Raw linear positive control passes. Fitting10.614s CPU/extraction18.815s GPU,86MiB peak. No\
+    \ agent updates or size/duration comparison."
+  evidence:
+  - ara/evidence/tables/photo_detail_2026-09-14.json
+  - runs/photo_detail_v1/formal/result.json
+  - runs/photo_detail_v1/formal/selection.json
+  - runs/photo_detail_v1/comparison.png
+  also_depends_on:
+  - N343
+  status: resolved
+- id: N345
+  type: experiment
+  title: Patch conditioning and raw-detail control expose a distinct fine-texture limitation
+  provenance: ai-executed
+  timestamp: 2026-09-14T02:24+02:00
+  result: "Actual patch projection48\u219232 has16 null directions, float64 rank32 and float32-tolerance\
+    \ rank5. Top-three squared singular-value fraction0.999999992605; zero-mean within-patch weight-energy\
+    \ fraction3.1123e-8. Saved null direction maximum float64 response2.40e-14. Agent lacks codec\
+    \ raw-detail branch. Fresh full-image codec PSNR31.185dB falls19.742dB when branch zeroed; native12.845dB.\
+    \ These64px targets differ from RGB16 probes. Small nonzero directions are not declared absent\
+    \ and no general dataset optimality/unique-cause claim follows."
+  evidence:
+  - ara/evidence/tables/photo_detail_2026-09-14.json
+  - runs/photo_detail_v1/formal/patch.json
+  - runs/photo_detail_v1/formal/test_cache.pt
+  also_depends_on:
+  - N343
+  - N344
+  status: resolved
+- id: N346
+  type: experiment
+  title: Photo-detail readers activations and independent numeric checks reproduce
+  provenance: ai-executed
+  timestamp: 2026-09-14T02:24+02:00
+  result: Three informative RED checks then6 focused passes.17 exact full-test reader reloads, independent
+    NumPy normal-equation residuals<4e-9,157 metric/interval numeric checks,52 exact GPU stage/control
+    tensors over32 fresh photos. Frozen source checkpoint and63 snapshots verified. Shared photo selection
+    preserves prior row identities; original weights unchanged. Three reports structural, scientific
+    figure inspected, browser QA unavailable. Removed only misleading report capability label after
+    fitting, retaining numeric/source receipts. Actual Claude generic public probe/rank review, no
+    private project context/results; API-equivalent usage0.007993USD, not subscription charge.
+  evidence:
+  - ara/evidence/tables/photo_detail_2026-09-14.json
+  - runs/photo_detail_v1/verification.json
+  - runs/photo_detail_v1/completion.json
+  - runs/reviews/photo_detail_v1/review_status.json
+  also_depends_on:
+  - N344
+  - N345
+  status: resolved

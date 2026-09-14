@@ -694,3 +694,14 @@
 - **Sensitivity**: High. Frozen decoder parameters still need input gradients. A one-pass endpoint proxy differs from an actual sampled trajectory; the latter has greater compute cost. Hybrid image loss need not preserve vanilla flow-matching optimality, and held-out combinations concern new generator training only.
 - **Code ref**: [objective and recipe](../../../experiments/conditional_image.py), [numeric, unroll and resume tests](../../../tests/test_conditional_image.py).
 - **Evidence**: Adoption N336; execution N337–N339; [source-bound results](../../evidence/tables/decoded_image_2026-09-14.json). Investigation adopted, not a claim of reliable generation.
+
+## H71: Trace photographic detail with frozen intermediate readers
+
+- **Rationale**: Compare recoverable spatial structure at encoder, observed/stored state and recalled workspace before attributing failure to generator duration or size. Use controls for reader sensitivity, target leakage, storage identity and within-patch detail.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O230
+- **Sensitivity**: High. Closed-form readers remove probe SGD convergence as a confound, but dimensions, conditioning, family and data coverage still differ. Failure does not prove no decoder can recover information. Rank/nullspace conclusions apply to the inspected linear operation.
+- **Code ref**: [recipe](../../../experiments/photo_detail.py), [readers](../../../pathwm/models/photo_probe.py), [stage and patch checks](../../../pathwm/evaluation/photo_detail.py).
+- **Evidence**: N343 adoption; N344-N346 execution; [source-bound evidence](../../evidence/tables/photo_detail_2026-09-14.json).
+- **Scope**: Only the diagnostic portion of O230 was explicitly adopted here. The subsequent state/recall repair remains proposed as O233.
