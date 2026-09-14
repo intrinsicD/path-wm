@@ -39,6 +39,11 @@ training-target linear reader on final workspace as a negative control.
 
 Report grid MSE, mean per-photo PSNR, spatial edge MSE and error relative to the
 training-mean grid; save every raw test prediction and selected readout state.
+Clamp readout RGB to[0,1] before validation selection and scoring; keep the raw
+reader output available through its saved weights. Also report error after removing
+each image's per-channel spatial mean, and a target-derived uniform-color oracle,
+so global color alone is not mistaken for recovered spatial structure. Spatial
+access additionally requires20% improvement over the training-mean spatial error.
 Compare native generator output after average pooling to the same grid. Also report
 full-image direct-codec and no-residual-codec metrics separately. No synthetic
 class labels, no image-content inputs to downstream probes.
