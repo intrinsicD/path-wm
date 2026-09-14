@@ -19,6 +19,13 @@ below remain available as focused visual reference experiments.
 These are ordinary PyTorch modules. A recipe constructs the pieces and selects
 the losses. There is no model registry or hidden experiment coordinator.
 
+The [photo-detail diagnostic](photo-detail-plan.md) inspects frozen input/state
+representations without changing them. `RidgeReader` fits linear or RBF kernels with
+training-only coordinate statistics and float64 solves; it is an offline diagnostic.
+`stage_values` exposes the real encoder, observed/stored states and recalled workspace,
+and verifies memory writes are exact copies. Its RGB16 targets test spatial layout;
+the codec's raw-detail branch is a separate full-image control.
+
 ## Controlled visual memory output
 
 `ConditionalFeatureGenerator` is an optional replacement for the image producer,

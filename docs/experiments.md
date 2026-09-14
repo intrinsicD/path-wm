@@ -10,6 +10,22 @@ to the same training loop. [Task contracts and evaluation](tasks.md).
 
 The following perception/dynamics recipes remain focused references.
 
+`experiments/photo_detail.py` locates accessible photo layout along the frozen
+encoder/state/memory path using closed-form linear and RBF readers. It also audits
+the actual patch projection and the codec's separate raw-detail channel.
+
+```bash
+.venv/bin/python -m experiments.photo_detail --weights runs/real_photo_v1/training/weights.pt --output runs/photo_detail_v1/development --device cuda --development
+.venv/bin/python -m experiments.photo_detail --weights runs/real_photo_v1/training/weights.pt --output runs/photo_detail_v1/formal --device cuda
+```
+
+Use new output paths for reruns. There is no optimizer/resume loop: readers are
+solved directly and exported with training statistics, support features and fitted
+coefficients. They are diagnostic artifacts, not replacements for the agent.
+The [protocol and results](photo-detail-plan.md) distinguish RGB16 layout targets,
+full-image texture controls and limits of failed probes. Saved caches and run-local
+verification/report scripts support independent replay.
+
 `experiments/real_photo.py` continues the existing conditional generator on local
 COCO photographs. It shows each photo twice, removes it, then trains image output
 from ordinary or recalled state. Only the generator learns; the encoder, agent,

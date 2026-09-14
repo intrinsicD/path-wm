@@ -1,5 +1,38 @@
 # Current work
 
+**Photo-detail path localized, 14 September:** the largest measured drop in spatial
+accessibility is the first observation-to-state update. Matched linear and RBF
+readers use 1,024 training/128 validation photos and a fresh 256-photo test suffix.
+They reconstruct a 16×16 RGB layout, separating spatial structure from finer texture.
+[Report](../runs/photo_detail_v1/report.html), [protocol/results](photo-detail-plan.md).
+
+Linear grid MSE: encoder 0.00000706 → first observed state 0.033545 → second
+state 0.034603 → recalled workspace 0.043975. Nonlinear readers corroborate the
+main drop. Stored snapshots are bitwise copies. Both readers also flag a further
+drop between the complete stored state and the reset/recalled state. The image
+encoder supplies 336×32 features; observation updates compress to 30×32 state,
+and recall updates only the 8×32 working/reasoning tokens after reset.
+
+Fine detail has a separate constraint: the actual 4×4 RGB patch projection maps
+48 values to 32 outputs, has 16 null directions, and its top three singular
+directions hold 99.99999926% of squared weight magnitude. Tiny nonzero directions
+are poorly conditioned, not declared absent. The good direct codec additionally
+gets raw residual detail that never enters the agent. On fresh photos, full-image
+PSNR is 31.18 dB with that channel, 19.74 dB without it, and 12.84 dB for native recall.
+
+No agent weights changed. Closed-form readers remove probe SGD duration as a
+confound, but family/sample/dimension limits prevent proving all lost information
+or ruling out larger/longer-trained decoders. Six focused tests, 17 exact reader
+reloads, 52 exact GPU activation/control tensors over 32 photos, 157 independent
+numeric checks and 63 source snapshots verified. Extraction18.81s/86MiB, fitting
+10.61s CPU. Three reports structurally checked; figure inspected, browser QA unavailable.
+Actual generic Claude method review completed; private code/results stayed local.
+
+Next proposal: train the observation/state update and recall pathways on real-photo
+spatial targets with intermediate readouts. The previous generator-only training
+left these modules frozen. Test finer input-detail transport separately; size and
+duration comparisons remain open. No repair is claimed by this diagnostic.
+
 **Real-photo training completed, 14 September:** continued the existing own image
 generator on 1,024 local COCO photographs, with 128 validation and 256 test photos
 held out from this continuation. Encoder, state/memory and codec stayed frozen.

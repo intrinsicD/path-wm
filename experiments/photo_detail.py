@@ -335,7 +335,6 @@ def main():
         atomic_json(args.output / "selection.json", selection)
         result = dict(
             completed=True,
-            gate=None if args.development else positive,
             positive_control_passed=positive,
             metrics=metrics,
             full_image_controls=full_metrics,
