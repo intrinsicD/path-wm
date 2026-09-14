@@ -4159,3 +4159,42 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O236
+  timestamp: 2026-09-15T00:47+02:00
+  provenance: user
+  content: Proposed image VAE explicitly separates PixelUnshuffle spatial rearrangement, configurable
+    residual feature processing and optional 1x1 channel compression; keeps spatial Gaussian
+    mu/log_var and mirrors stages with PixelShuffle. Avoid fixed global latents, compulsory
+    orthogonality and stride2 as default. Modular simple v1 first, with alternative processing/compression
+    studies later.
+  context: User supplies architecture for Claude discussion. This stages the requested design,
+    not an implemented or empirically validated codec.
+  potential_type: architecture
+  bound_to:
+  - N350
+  - N351
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O237
+  timestamp: 2026-09-15T00:47+02:00
+  provenance: ai-suggested
+  content: Reconciled v1 preserves user architecture, scopes exactness to permutation, records
+    odd-size pad/crop and decoder geometry, uses consistent per-original-pixel reconstruction/KL
+    with explicit likelihood scale, and exposes projection expansion versus reduction. Generic
+    residuals need not preserve information; linear probe failure is not proof of loss; KL
+    is not encoded filesize. Test codec separately; arbitrary state-conditioned output needs
+    a trained latent producer and current fixed-grid consumers need adaptation.
+  context: Two actual isolated Claude CLI reviews; all six corrections explicitly accepted.
+    Proposed K3/widths32,64,128/Z8 and likelihood/logvar defaults are unmeasured choices.
+    No training budget or model replacement; docs/spatial-vae-design.md and review receipts
+    preserve scope.
+  potential_type: architecture
+  bound_to:
+  - N350
+  - N351
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -1,5 +1,15 @@
 # Current work
 
+**Spatial image VAE discussed with Claude, 15 September:** Alex's proposed
+[explicit-scale codec](spatial-vae-design.md) separates PixelUnshuffle, residual
+processing and channel projection, keeps a spatial Gaussian posterior, and mirrors
+stages with PixelShuffle. Two actual conceptual reviews reconciled six overstatements;
+small operation checks confirm exact rearrangement and strided-convolution equivalence.
+Ordinary learned processing is not guaranteed lossless. Padding/cropping, consistent
+pixel-normalized reconstruction/KL, scoped comparisons and later state-to-latent
+integration are specified. This is a design proposal; no VAE code, training or
+replacement of current components. Existing photo state/recall repair remains open.
+
 **Architecture atlas, 14 September:** [thirteen source-grounded drawings](architecture-atlas.html)
 now cover the overall loop, encoders, attention, belief state, memory, tasks,
 decoders, photo generation, entities, planning and learning signals. General,

@@ -1,0 +1,16 @@
+{
+  "shuffle_roundtrip_exact": true,
+  "three_stage_odd_size_pad_crop_exact": true,
+  "stride2_2x2_vs_unshuffle_1x1_max_error": 0.0,
+  "stride2_equivalence_allclose": true,
+  "residual_minus_identity_erases_input": true,
+  "scope": "Analytic-operation checks only; no proposed VAE implementation, learned weights or data experiment.",
+  "source": "runs/reviews/spatial_vae_v1/numerical-checks.json",
+  "seed": 1501,
+  "device": "CPU",
+  "tested_shapes": [
+    "2x3x18x26: shuffle roundtrip",
+    "1x3x63x65: 3 levels, replicate pad to multiple of 8, crop",
+    "2x3x18x26 float64: 7x3x2x2 stride2 kernel vs 7x12x1x1"
+  ]
+}

@@ -1,0 +1,198 @@
+session:
+  id: 2026-09-15_001
+  date: '2026-09-15'
+  started: 2026-09-15T00:47+02:00
+  last_turn: 2026-09-15T00:47+02:00
+  turn_count: 1
+  summary: User spatial VAE proposal reviewed with actual Claude twice; six mathematical overstatements
+    reconciled. Four operator checks pass. Minimal stage/shape/loss/consumer design recorded;
+    no VAE implementation, training or capability claim.
+events_logged:
+- turn: 1
+  type: question
+  id: N350
+  routing: direct
+  provenance: user
+  summary: Review explicit-scale resolution-flexible spatial image VAE with Claude
+- turn: 1
+  type: experiment
+  id: N351
+  routing: direct
+  provenance: ai-executed
+  summary: Check rearrangement identities and limits of the VAE design guarantees
+- turn: 1
+  type: observation
+  id: O236
+  routing: staged
+  provenance: user
+  summary: Proposed image VAE explicitly separates PixelUnshuffle spatial rearrangement, configurable
+    residual feature processing and optional 1x1 channel compression; keeps spatial Gaussian
+    mu/log_var and mirrors stages with PixelShuffle. Avoid fixed global latents, compulsory
+    orthogonality and stride2 as default. Modular simple v1 first, with alternative processing/compression
+    studies later.
+- turn: 1
+  type: observation
+  id: O237
+  routing: staged
+  provenance: ai-suggested
+  summary: Reconciled v1 preserves user architecture, scopes exactness to permutation, records
+    odd-size pad/crop and decoder geometry, uses consistent per-original-pixel reconstruction/KL
+    with explicit likelihood scale, and exposes projection expansion versus reduction. Generic
+    residuals need not preserve information; linear probe failure is not proof of loss; KL
+    is not encoded filesize. Test codec separately; arbitrary state-conditioned output needs
+    a trained latent producer and current fixed-grid consumers need adaptation.
+ai_actions:
+- turn: 1
+  action: Saved independent analysis and a bounded brief based on the user-supplied architecture;
+    ran two actual isolated Claude Sonnet reviews, corrected overclaims and obtained explicit
+    acceptance. Checked exact tensor identities/counterexample locally; read current fixed-shape
+    consumer contracts and primary PixelShuffle/VAE sources. Created proposed design note
+    and updated discussion evidence/project state; no model implementation or fitting. CLI
+    cost estimate0.044179USD is API-equivalent, not subscription charge.
+  provenance: ai-executed
+  files_changed:
+  - docs/spatial-vae-design.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-discussion.md
+  - ara/evidence/tables/spatial_vae_design_checks_2026-09-15.json
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: 'Please discuss this with Claude: I want to implement an experimental hierarchical,
+    resolution-agnostic image VAE encoder/decoder. Explicitly separate spatial scale reduction,
+    feature/information processing and actual lossy dimensionality reduction.'
+open_threads:
+- 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current
+  rate; image/full retention remains 10/12. Next lower-rate comparison from preserved source
+  with difficult-scene diagnostics, fresh confirmation and unchanged causal/retention criteria.
+  Prior candidate not replaced. Broader real imagery, reliability, upstream replication and
+  general generation remain open; preserve runs and disk floor.'
+- 'N278-N329: CPU/GPU portability remains unresolved. Current 61 scoped tests and 40 exact
+  GPU reloads do not repair prior CPU differences. Trainability-dependent raw GPU logit discrepancy
+  is handled by the existing standardized evaluator; only the preflight check was corrected.'
+- 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions,
+  stable perception and learned prediction remain weak.'
+- 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution
+  and other-modality quality remain open.'
+- 'N273/A06/O177/O178: adopted output boundary needs concrete conditioning, uncertainty/time
+  inputs, backends and cross-modal consistency tests.'
+- 'S02/S04/T01/O164/O165: own webcam footage, verified entity/event/query labels and synthetic-to-real
+  curriculum remain incomplete.'
+- 'S03/R06: comfortable local GPU training/inference required; own components preferred, pretrained
+  adapter fallback and numerical gates unresolved.'
+- 'O162/O163: task/cost/evidence contract, planner reward/utility mismatch and learned-dynamics
+  integration remain open.'
+- 'N260: bounded cross-window encoder recurrence is unimplemented; define reset-history comparison.'
+- 'N263/N266/O172: earlier private Claude brief remains blocked; last same-rate ordinary reconstruction
+  control budget-stopped. New public-only review is separate.'
+- 'N330/O221: Marigold-style transfer motivates testing state-conditioned generation with
+  a pretrained backend; faithful remembered content, decoder capacity and local GPU feasibility
+  remain untested. This inquiry does not adopt the pending lower-rate experiment.'
+- 'N336-N339/H70/O226-O228: decoded endpoint and full-sampler supervision implemented, matched
+  benefit improves but full capability fails. Placement/occupancy supervision proposed; preserve
+  all hard tests, broad generation and original renderer.'
+- 'N343-N346/H71/O231-O233: frozen-stage spatial access drops at first observation update
+  and reset/recall; fine texture has a distinct input constraint. State/recall real-photo
+  repair is proposed, not executed. Size/duration explanations remain untested; broader output/CPU
+  portability and O228 synthetic placement stay open.'
+- 'N349/O234/O235: small-model visual sample efficiency is unvalidated; local priors, self-supervision
+  and data/capacity/budget curves proposed after state/recall training. Distinguish own-data
+  learning from pretrained transfer; no new training budget adopted.'
+- 'N350/N351/O236/O237: explicit-scale spatial VAE is a reviewed proposal. Declare first codec
+  implementation/quality experiment, data/compute budgets, and distortion/rate controls; later
+  dynamic-geometry state-conditioned producer remains separate. No existing encoder/decoder
+  validation status is upgraded.'
+ai_suggestions_pending:
+- 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await
+  researcher response.'
+- 'O182: balanced training failure narrows the state/update/readout learning question without
+  proving erased location information.'
+- 'O184: partial pre-storage recoverability and weak post-recall accessibility under tested
+  probe family; no unique mechanism identified.'
+- 'O186: partial native improvement and calibration failure at fixed budget; no asymptotic
+  or unique mechanism claim.'
+- 'O188: limited age-cue gain and heterogeneous metadata sensitivity; general time semantics
+  not established.'
+- 'O190: auxiliary compatibility versus native-output failure; mechanism remains unconfirmed.'
+- 'O192: conditional native reset accessibility and ordinary regression; no general mechanism
+  or full repair established.'
+- 'O164-O175: earlier curriculum, diagnosis and scoped capability interpretations retain their
+  original provenance and closure status.'
+- 'O177/O178: coordination and state-grounding diagnostics remain staged; acknowledgment does
+  not select their complete implementation.'
+- 'O194: one-source mixed-context policy repair; no general mechanism or replicated reliability
+  claim.'
+- 'O196: partial writer learning and gradient reachability do not establish a unique failure
+  mechanism.'
+- 'O197: joint controlled-task sufficiency with limited replication and CPU portability.'
+- 'O199: source/sample-specific task success and conditional factual-versus-image discrepancy;
+  no unique mechanism.'
+- 'O201: conditional frozen-state output recoverability with shared upstream/codec; researcher
+  interpretation pending.'
+- 'O204: broad input/readout sensitivity under declared RGB shifts, without unique failure
+  localization; researcher interpretation pending.'
+- 'O206: task-specific centering sufficiency with incomplete learned augmentation; researcher
+  interpretation pending.'
+- 'O209: scene-limited centering and diagnostic accessibility interpretation; researcher response
+  pending.'
+- 'O211: partial scene/native output sufficiency and residual shape fitting interpretation;
+  researcher response pending.'
+- 'O213: conditional texture-mixture benefit and persistent recall shape shortfall interpretation;
+  researcher response pending.'
+- 'O215: scoped rectangle-weighting improvement and unresolved strict retention interpretation;
+  researcher response pending.'
+- 'O217: cool extra-training sufficiency on sampled histories, unassessable capacity benefit
+  and remaining warm/texture interpretation; researcher response pending.'
+- 'O219: failed factual benefit despite branch isolation, with warm/texture terminal-loss
+  deterioration; researcher interpretation pending.'
+- 'O220: lower-rate readout comparison and difficult-scene diagnostics proposed; no unique
+  cause or successful repair assumed.'
+- 'O221: conditional-generation interpretation of Marigold V2 remains proposed, with no backend
+  selection or implementation commitment.'
+- 'O223: For this initialization and short synthetic fit, latent-only conditional-flow learning
+  fails reliable output from pure noise while target-containing intermediate features permit
+  accurate category decoding. Direct regression fits familiar combinations but fails withheld
+  ones. The diagnostic narrows the learned conditioning problem without uniquely identifying
+  optimization, capacity, objective or data as its cause.'
+- 'O224: Half pure-noise supervision reduces mean weighted pixel error25.7% on fresh controlled
+  cases but does not repair faithful familiar output or full capability. Pixel-error improvement
+  alone is insufficient evidence of correct state-conditioned generation. No general rejection
+  of flow matching or scaling follows from this fixed-budget result.'
+- 'O226: Decoded endpoint image supervision improves average pixel error and familiar generation
+  at this fixed budget, but target-free multi-step sampling can degrade its initial extrapolation
+  and one withheld cell regresses. This supports testing the actual sampled loss without proving
+  solver error is the unique cause or that the hybrid objective preserves vanilla flow-matching
+  optimality.'
+- 'O227: Full-sampler supervision passes its scoped composite benefit test but not reliable
+  generation. Color/shape gains coexist with weaker left/right placement and near-even contrast
+  across image halves. A joint-category nonregression gate does not guarantee nonregression
+  of every component attribute; source-factual accessibility does not ensure image binding.
+  This is one initialization with correlated synthetic histories and a frozen high-bandwidth
+  codec, not general image capability.'
+- 'O228: Next test a spatial placement/occupancy training signal on generated features or
+  images, with inference conditions derived only from workspace. Keep data, budget and current
+  withheld/intervention gates matched. Color/shape coupling in the training set is a separate
+  risk; any balanced-factor diagnostic must stay distinct from the existing hard test. Do
+  not assume added scale or a pretrained backend is necessary.'
+- 'O229: Real-photo generator continuation improves aggregate error and responds to photo-specific
+  context, yet the displayed outputs retain mostly coarse color fields. Passing relative learning/ablation
+  screens is not photographic fidelity. Direct codec adequacy and poor state-conditioned output
+  expose a gap without uniquely locating it in encoding, state/memory compression, readout
+  or optimization.'
+- 'O231: Insufficient training duration and small model size may explain poor photographic
+  recall. This is the user’s stated guess, not an established cause; the authorized diagnostic
+  freezes the model and does not test duration or capacity.'
+- 'O232: The dominant measured spatial-access loss is at the first observation-to-state update,
+  followed by reset/recall; storage copying is exact. Fine sub-patch texture is separately
+  constrained by a non-injective and poorly conditioned stem, while the good codec uses a
+  bypass absent from the agent. Closed-form readers narrow practical accessibility without
+  proving absence under all decoders or ruling out model scaling/longer training.'
+- 'O233: Next train observation/state updating and recall on real-photo spatial supervision
+  with intermediate readouts and held-out controls. Test fine input-detail transport separately;
+  compare duration/capacity after ensuring the relevant stages learn. This is a proposed repair,
+  not an executed change or an efficacy claim.'
+- 'O235: visual sample-efficiency strategy and learning curves proposed; no architectural
+  commitment, efficacy claim or scheduled training.'
+- 'O237: reconciled spatial VAE defaults and checks are proposed, not verified trained behavior
+  or user-approved numerical optima.'

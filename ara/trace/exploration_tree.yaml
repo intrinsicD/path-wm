@@ -5842,3 +5842,34 @@ tree:
   - N344
   - N345
   status: open
+- id: N350
+  type: question
+  title: Review explicit-scale resolution-flexible spatial image VAE with Claude
+  provenance: user
+  timestamp: 2026-09-15T00:47+02:00
+  description: Alex supplied an experimental hierarchy separating lossless spatial rearrangement,
+    learned processing and explicit channel projection, with a spatial Gaussian posterior
+    and mirrored decoder. Requested Claude discussion. Concrete v1 is documented; model implementation/training
+    and replacement remain unexecuted.
+  also_depends_on:
+  - N349
+  - N345
+  evidence:
+  - docs/spatial-vae-design.md
+  - runs/reviews/spatial_vae_v1/review_status.json
+  status: resolved
+- id: N351
+  type: experiment
+  title: Check rearrangement identities and limits of the VAE design guarantees
+  provenance: ai-executed
+  timestamp: 2026-09-15T00:47+02:00
+  result: Exact PixelUnshuffle/Shuffle roundtrip; exact 3-stage pad/crop for 63x65; 2x2 stride2
+    convolution and unshuffle/1x1 projection maximum error0 on tested float64 tensors; residual
+    F(x)=-x erases input. These establish operator checks/counterexamples, not learned VAE
+    information retention, rate-distortion, sample efficiency or generation.
+  evidence:
+  - ara/evidence/tables/spatial_vae_design_checks_2026-09-15.json
+  - runs/reviews/spatial_vae_v1/numerical-checks.json
+  also_depends_on:
+  - N350
+  status: resolved
