@@ -40,8 +40,8 @@
           },
           "encode": {
             "status": "discussed",
-            "basis": "Discussed modality stems, residual transformer blocks per scale, hierarchy merges, fusion, temporal handling and reconstruction probes.",
-            "next": "Architecture/training improvements remain experimental; discussion coverage does not close them."
+            "basis": "Discussed modality stems, residual transformer blocks per scale, hierarchy merges, fusion, temporal handling and reconstruction probes. On 14 September, the user asked whether architectural structure and a small parameter count can reduce visual training-data requirements.",
+            "next": "Sample efficiency remains unvalidated. Proposed next checks: train the implicated state/recall path, then compare data amount, training budget and modest capacity changes on held-out scenes. Architectural locality and self-supervision are candidates, not adopted repairs."
           },
           "belief": {
             "status": "needs_discussion",

@@ -1887,3 +1887,14 @@ entries:
   - No new research experiments, O231/O232 affirmation, or O233 implementation commitment.
     Staged interpretations and live open topics remain unchanged. Static drawing QA passed;
     no new browser QA or Claude exchange claimed.
+- turn: 2026-09-14_001#8
+  notes:
+  - Opened N349 and staged user hypothesis O234 plus proposed methods O235. Architecture/data
+    discussion is not approval to implement, train or replace the backbone. Updated an already-blue
+    encoder topic; no new green validation.
+  - O231 and O234 concern current limitations versus possible better small architectures and
+    are compatible conjectures, not a demonstrated contradiction. O233 is revisited but remains
+    proposed. Existing live topics prevent abandonment; no research claim promoted.
+  - Git-only turns after the previous entry were skipped as routine workflow. This entry records
+    this substantive discussion only. Sources inform options; their benchmarks are not transferred
+    to PATH-WM capability.

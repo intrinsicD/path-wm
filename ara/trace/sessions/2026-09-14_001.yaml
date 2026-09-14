@@ -2,13 +2,14 @@ session:
   id: 2026-09-14_001
   date: '2026-09-14'
   started: 2026-09-14T00:40+02:00
-  last_turn: 2026-09-14T09:56+02:00
-  turn_count: 7
+  last_turn: 2026-09-14T15:50+02:00
+  turn_count: 8
   summary: Frozen photo readers locate the main spatial-access drop at first observation update
     and a further reset/recall drop. Memory copy is exact; fine texture has a separate patch/raw-detail-interface
     constraint. Agent unchanged; train state/recall proposed, size/duration unresolved. Architecture
     atlas documents current configurations and proposed extensions; no new model changes. Overview
-    tracks discussion coverage and scoped validation evidence.
+    tracks discussion coverage and scoped validation evidence. Visual sample-efficiency question
+    opened; architecture/data/capacity comparisons proposed.
 
 events_logged:
 - turn: 1
@@ -236,6 +237,31 @@ events_logged:
   routing: direct
   provenance: user
   summary: Use green for validated scopes alongside discussion colors.
+- turn: 8
+  type: question
+  id: N349
+  routing: direct
+  provenance: user
+  summary: Can visual architecture reduce data needs within a small local model?
+- turn: 8
+  type: observation
+  id: O234
+  routing: staged
+  provenance: user
+  summary: A suitable visual architecture with a low parameter count may achieve useful learning
+    with limited data. This is the user's hypothesis, not a measured sample-efficiency result
+    or a claim that fewer parameters alone improve generalization.
+- turn: 8
+  type: observation
+  id: O235
+  routing: staged
+  provenance: ai-suggested
+  summary: Preserve the multiscale residual design; prioritize the already implicated state/recall
+    training path before deciding on scaling. Test local/shared visual processing, task-preserving
+    augmentation, self-supervised objectives and varied real observations; measure held-out
+    learning curves across distinct data amounts, training budgets and modest capacities.
+    Separate few labels, few visual experiences and few-shot memory adaptation. Pretrained/distilled
+    fallback imports prior data exposure; no guaranteed data threshold or selected backend.
 ai_actions:
 - turn: 1
   action: Implemented optional generator and direct control, repaired noise width, added isolated
@@ -347,6 +373,16 @@ ai_actions:
   - docs/diagrams/atlas/01-overview.svg
   - docs/diagrams/README.md
   - docs/project-state.md
+- turn: 8
+  action: Reviewed local photo/state evidence and primary ConViT, MAE and DINOv2 sources;
+    explained architecture/data/capacity tradeoffs and proposed staged learning-curve checks.
+    Updated existing encoder discussion evidence and remaining questions, regenerated atlas;
+    all diagrams and colors unchanged. No architecture change, model test, training, download,
+    or new Claude exchange.
+  provenance: ai-executed
+  files_changed:
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -368,6 +404,10 @@ key_context:
     and update the color when we have.
 - turn: 7
   excerpt: Make those green we have validated
+- turn: 8
+  excerpt: How can we make sure that the agent learns from little data? For example the visual
+    system. I think we can get far with the right architecture and a low number of parameters?
+    Or do we have to scale and train on many images?
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate;
   image/full retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene
@@ -402,6 +442,9 @@ open_threads:
   fine texture has a distinct input constraint. State/recall real-photo repair is proposed, not executed.
   Size/duration explanations remain untested; broader output/CPU portability and O228 synthetic placement
   stay open.'
+- 'N349/O234/O235: small-model visual sample efficiency is unvalidated; local priors, self-supervision
+  and data/capacity/budget curves proposed after state/recall training. Distinguish own-data
+  learning from pretrained transfer; no new training budget adopted.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher
   response.'
@@ -485,3 +528,5 @@ ai_suggestions_pending:
   readouts and held-out controls. Test fine input-detail transport separately; compare duration/capacity
   after ensuring the relevant stages learn. This is a proposed repair, not an executed change or an
   efficacy claim.'
+- 'O235: visual sample-efficiency strategy and learning curves proposed; no architectural
+  commitment, efficacy claim or scheduled training.'

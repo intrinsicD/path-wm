@@ -5829,3 +5829,16 @@ tree:
   also_depends_on:
   - N347
   status: resolved
+- id: N349
+  type: question
+  title: Can visual architecture reduce data needs within a small local model?
+  provenance: user
+  timestamp: 2026-09-14T15:50+02:00
+  description: User asks how to ensure learning from little data and whether suitable architecture
+    with few parameters can avoid scaling and many images. No specific architecture, training
+    budget or sweep is adopted.
+  also_depends_on:
+  - N343
+  - N344
+  - N345
+  status: open

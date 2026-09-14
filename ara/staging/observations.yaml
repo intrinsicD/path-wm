@@ -4120,3 +4120,42 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O234
+  timestamp: 2026-09-14T15:50+02:00
+  provenance: user
+  content: A suitable visual architecture with a low parameter count may achieve useful learning
+    with limited data. This is the user's hypothesis, not a measured sample-efficiency result
+    or a claim that fewer parameters alone improve generalization.
+  context: User asks architecture versus data/model scaling; earlier current-model size/duration
+    conjecture O231 remains unresolved.
+  potential_type: claim
+  bound_to:
+  - N349
+  - N344
+  - N345
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O235
+  timestamp: 2026-09-14T15:50+02:00
+  provenance: ai-suggested
+  content: Preserve the multiscale residual design; prioritize the already implicated state/recall
+    training path before deciding on scaling. Test local/shared visual processing, task-preserving
+    augmentation, self-supervised objectives and varied real observations; measure held-out
+    learning curves across distinct data amounts, training budgets and modest capacities.
+    Separate few labels, few visual experiences and few-shot memory adaptation. Pretrained/distilled
+    fallback imports prior data exposure; no guaranteed data threshold or selected backend.
+  context: 'Primary sources consulted: ConViT https://proceedings.mlr.press/v139/d-ascoli21a.html;
+    MAE https://arxiv.org/abs/2111.06377; DINOv2 https://ai.meta.com/blog/dino-v2-computer-vision-self-supervised-learning/.
+    Suggestions are untested in PATH-WM; current coarse spatial-access evidence is docs/photo-detail-plan.md,
+    not semantic-recognition validation.'
+  potential_type: heuristic
+  bound_to:
+  - N349
+  - N344
+  - N345
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
