@@ -1,8 +1,10 @@
 # Explicit-scale spatial VAE
 
-Status: proposed experiment, 15 September 2026. Alex requested a discussion with
-Claude of this design. This note specifies a first version; no VAE implementation,
-training run, replacement of the current codec, or GPU budget is claimed here.
+Status: implemented and tested as a standalone prototype, 15 September 2026.
+The [ordered base / attention / reversible comparison](spatial-vae-plan.md) retains
+this design and the current agent. Mechanics pass; high-quality photo reconstruction
+does not. This note records the reviewed design; the linked plan owns actual
+settings, measurements, validation scope and unresolved quality limits.
 
 The defining separation is **spatial rearrangement → learned processing → explicit
 channel projection**, with optional processing before rearrangement. Preserve the

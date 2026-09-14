@@ -24,6 +24,29 @@ below remain available as focused visual reference experiments.
 These are ordinary PyTorch modules. A recipe constructs the pieces and selects
 the losses. There is no model registry or hidden experiment coordinator.
 
+## Experimental spatial image VAE
+
+`pathwm.models.spatial_vae.SpatialVAE` is a separate codec implementing the
+[explicit-scale design](spatial-vae-design.md). RGB B×3×H×W passes through optional
+pre-processing, PixelUnshuffle, local mixing and a named1×1 channel projection at
+each stage. `encode(rgb)` returns spatial `mu`, `logvar`, original/padded geometry;
+`decode(z, (H,W))` needs only the latent field and requested compatible size. Padding
+is bottom/right replication to a multiple of2^K; the decoder crops it away.
+Default K3 and latent8 give8×8×8 latent values for64×64 RGB, growing with input area.
+
+Channels, hierarchy depth, per-stage pre/post processing depths and latent channels
+are constructor arguments. The `processing` factory isolates block choice from
+the stage wiring. Variants are `base`, `attention` (coarsest queries over finer
+encoder grids) and `reversible` (attention plus additive local coupling). Only
+rearrangement and coupling have specified inverses; projections, attention and
+the Gaussian bottleneck do not. No encoder features bypass the latent into decoding.
+`vae_loss` uses per-image, original-area-normalized distortion and KL.
+
+`save`/`load` retain strict architecture and weights. The [first comparison](spatial-vae-plan.md#results-15-september)
+validates codec mechanics and variable geometry, but all three fail the photo
+quality screen. This interface does not replace the current multimodal encoder or
+state-conditioned generator; a learned state-to-spatial-latent producer remains open.
+
 The [photo-detail diagnostic](photo-detail-plan.md) inspects frozen input/state
 representations without changing them. `RidgeReader` fits linear or RBF kernels with
 training-only coordinate statistics and float64 solves; it is an offline diagnostic.

@@ -10,6 +10,41 @@ to the same training loop. [Task contracts and evaluation](tasks.md).
 
 The following perception/dynamics recipes remain focused references.
 
+`experiments/spatial_vae.py` compares the explicit-scale spatial image VAE on local
+COCO photos. [Architecture, fixed protocol and results](spatial-vae-plan.md).
+Use a new output directory for each run:
+
+```bash
+.venv/bin/python -m experiments.spatial_vae --variant base --development --device cuda --output runs/my_vae_development
+.venv/bin/python -m experiments.spatial_vae --variant base --device cuda --output runs/my_vae_base
+.venv/bin/python -m experiments.spatial_vae --variant attention --device cuda --output runs/my_vae_attention
+.venv/bin/python -m experiments.spatial_vae --variant reversible --device cuda --output runs/my_vae_reversible
+.venv/bin/python -m experiments.spatial_vae --variant base --evaluate-only --weights runs/my_vae_base/weights.pt --device cuda --output runs/my_vae_base/evaluation
+```
+
+Run comparisons in this order. Training uses1024 photos,128 validation photos,
+512 updates and batch8. Frozen evaluation uses192 test photos, verified original
+native crops, patterns, retrieval and decoder-only replay. `--overfit` runs the
+separate eight-photo deterministic development control. `--stop-after N` pauses;
+repeat the identical command plus `--resume` to resume unchanged source/settings.
+The historical completed runs preserve their executable source snapshots; later
+report-only recipe changes correctly prevent exact-resume under changed code.
+
+`--weights` warm-starts the matching architecture with a new optimizer. `--low-kl`
+requires those weights; the first comparison's validation trigger did not authorize
+that optional continuation, so it was not run. The readable recipe's `settings`
+defines scientific budgets; model construction is in `build_variant`.
+
+```python
+from pathwm.models.spatial_vae import SpatialVAE
+model = SpatialVAE.load("runs/spatial_vae_v1/strict/base/weights.pt", "cuda")
+posterior = model.encode(rgb)  # floating B×3×H×W in [0,1]
+reconstruction = model.decode(posterior.mu, posterior.original_size)
+```
+
+The three original models are independent codec prototypes. They do not yet
+produce images from agent state or arbitrary text requests. [Report](../runs/spatial_vae_v1/report.html).
+
 `experiments/photo_detail.py` locates accessible photo layout along the frozen
 encoder/state/memory path using closed-form linear and RBF readers. It also audits
 the actual patch projection and the codec's separate raw-detail channel.

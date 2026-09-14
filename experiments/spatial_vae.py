@@ -293,6 +293,35 @@ def patterns(count=32, size=64):
     return torch.stack(images)
 
 
+def example_panel(path, arrays, labels, count=8):
+    """Scientific comparison panel for the existing report renderer's PNG slot.
+
+    The shared gallery only displays its standard input/rgb keys, so custom
+    sampled/prior/variant arrays must be explicitly included in this panel.
+    """
+    from matplotlib.figure import Figure
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+
+    count = min(count, *(len(a) for a in arrays.values()))
+    fig = Figure(figsize=(2.4 * len(arrays), 2.1 * count), layout="constrained")
+    FigureCanvasAgg(fig)
+    axes = fig.subplots(count, len(arrays), squeeze=False)
+    for j, (key, values) in enumerate(arrays.items()):
+        if isinstance(values, torch.Tensor):
+            values = values.detach().cpu().numpy()
+        for i in range(count):
+            axes[i, j].imshow(
+                np.clip(values[i].transpose(1, 2, 0), 0, 1), interpolation="nearest"
+            )
+            axes[i, j].set_xticks([])
+            axes[i, j].set_yticks([])
+            if i == 0:
+                axes[i, j].set_title(labels.get(key, key), fontsize=10)
+            if j == 0:
+                axes[i, j].set_ylabel(f"Example {i + 1}")
+    fig.savefig(path, dpi=130)
+
+
 def report_evaluation(path, config, identity, model, metrics, rows, device, scope):
     path = Path(path)
     path.mkdir(parents=True, exist_ok=False)
@@ -315,6 +344,11 @@ def report_evaluation(path, config, identity, model, metrics, rows, device, scop
     )
     (path / "metrics.jsonl").write_text("")
     try:
+        example_panel(
+            path / "comparison.png",
+            {k: rows[k] for k in ("target", "mean", "sampled")},
+            dict(target="Original", mean="Posterior mean", sampled="Posterior sample"),
+        )
         write_report(
             path,
             batch={"rgb": rows["target"][:8]},
@@ -476,6 +510,15 @@ def train(
             ),
         )
         run.status(state, "pending")
+        example_panel(
+            output / "comparison.png",
+            {k: rows[k] for k in ("target", "mean", "sampled")},
+            dict(
+                target="Validation original",
+                mean="Posterior mean",
+                sampled="Posterior sample",
+            ),
+        )
         write_report(
             output,
             batch={"rgb": rows["target"][:8]},
@@ -693,6 +736,15 @@ def _evaluate_suite(output, weights, data, root, config, device):
     original = json.loads((output / "result.json").read_text())
     atomic_json(output / "suite.json", original)
     atomic_json(output / "result.json", dict(original, metrics=readable))
+    example_panel(
+        output / "comparison.png",
+        dict(original=rgb[:8], mean=images["photo64"], prior=prior),
+        dict(
+            original="Original",
+            mean="Posterior mean",
+            prior="Unconditional prior\n(unpaired; quality unvalidated)",
+        ),
+    )
     write_report(
         output,
         batch={"rgb": rgb[:8]},
@@ -797,6 +849,19 @@ def compare(root, cohort):
         v: np.load(root / cohort / v / "evaluation/photo64/predictions.npz")
         for v in results
     }
+    example_panel(
+        directory / "comparison.png",
+        dict(
+            original=arrays["base"]["target"],
+            **{v: z["mean"] for v, z in arrays.items()},
+        ),
+        dict(
+            original="Original",
+            base="Base",
+            attention="Cross-scale attention",
+            reversible="Attention + reversible",
+        ),
+    )
     write_report(
         directory,
         batch={"rgb": torch.from_numpy(arrays["base"]["target"][:8])},

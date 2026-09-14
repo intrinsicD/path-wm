@@ -1,6 +1,6 @@
 {
   "title": "PATH-WM · Architecture atlas",
-  "date": "2026-09-14",
+  "date": "2026-09-15",
   "source_commit": "5ad801d",
   "intro": "A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.",
   "graphs": [
@@ -41,7 +41,7 @@
           "encode": {
             "status": "discussed",
             "basis": "Discussed modality stems, residual transformer blocks per scale, hierarchy merges, fusion, temporal handling and reconstruction probes. On 14 September, the user asked whether architectural structure and a small parameter count can reduce visual training-data requirements. On 15 September, the user specified a spatial VAE with separate lossless rearrangement, residual processing and channel projection; Claude review was reconciled.",
-            "next": "The proposed spatial VAE is specified in docs/spatial-vae-design.md; implementation, rate/distortion quality and sample efficiency remain unvalidated. State/recall repair and data/capacity comparisons remain separate."
+            "next": "Standalone spatial VAE mechanics and geometry now pass; all three photo-quality screens fail. See docs/spatial-vae-plan.md. Current agent integration, state/recall repair, fine-detail retention and data/capacity comparisons remain open; the high-level modality encoder stays blue."
           },
           "belief": {
             "status": "needs_discussion",
@@ -109,7 +109,7 @@
           "emit": {
             "status": "discussed",
             "basis": "Discussed every encoder/decoder pair, state-conditioned outputs, image detail, conditional generation and replacement interfaces. On 15 September, discussed a mirrored PixelShuffle VAE decoder, Gaussian loss/KL units and a future state-conditioned spatial-latent producer.",
-            "next": "The proposed VAE decoder has not been implemented or trained. Reconstruction, prior sampling and controlled generation need distinct tests; existing image-output failures remain open."
+            "next": "The separate VAE decoder supports exact saved-latent replay and variable output geometry, but fine photo reconstruction and prior image quality remain weak. See docs/spatial-vae-plan.md. Current state-conditioned outputs and other modalities remain unvalidated; this node stays blue."
           },
           "act": {
             "status": "needs_discussion",

@@ -1,14 +1,37 @@
 # Current work
 
-**Spatial image VAE discussed with Claude, 15 September:** Alex's proposed
-[explicit-scale codec](spatial-vae-design.md) separates PixelUnshuffle, residual
-processing and channel projection, keeps a spatial Gaussian posterior, and mirrors
-stages with PixelShuffle. Two actual conceptual reviews reconciled six overstatements;
-small operation checks confirm exact rearrangement and strided-convolution equivalence.
-Ordinary learned processing is not guaranteed lossless. Padding/cropping, consistent
-pixel-normalized reconstruction/KL, scoped comparisons and later state-to-latent
-integration are specified. This is a design proposal; no VAE code, training or
-replacement of current components. Existing photo state/recall repair remains open.
+**Spatial image VAE implemented and compared, 15 September:** the
+[explicit-scale codec](spatial-vae-design.md) now has base, cross-scale attention,
+and attention-plus-reversible-local-mixing variants. It separates PixelUnshuffle,
+processing and channel projection, keeps a spatial Gaussian posterior, and decodes
+without encoder skips. Current agent components remain unchanged.
+[Report](../runs/spatial_vae_v1/report.html), [protocol/results](spatial-vae-plan.md).
+
+Matched 512-update fits on1024 real COCO photos,128 validation and192 test photos:
+RGB64 mean MSE base0.019200, attention0.019419, reversible0.018487. Attention alone
+worsens error1.14%; reversible improves4.79% versus attention, below the predeclared
+5% minimum despite a positive paired interval. All three fail the combined photo
+quality screen. Native128/odd reconstruction and mild instance-retrieval screens
+pass; raw pixels also retrieve100%, so this does not validate semantic recognition.
+Patterns and first-eight photo examples show severe fine-detail loss. Larger native
+crops up to192×256 retain more structure but stay blurred; input area, latent size
+and crop content change together. Prior samples are color blobs, not validated
+general images. The validation-only collapse trigger was false; no tuning on test.
+
+25 focused CPU tests, exact GPU pause/resume and880 independent source/weight/output/
+numeric checks pass. Three fits total17.93s training-loop time; evaluation21.36s;
+maximum formal GPU reserve164MiB. Small deterministic overfit control passes.
+Two actual Claude method-review rounds reconciled technical errors; private
+code/data/results stayed local. Report inspection found custom image outputs were
+hidden by the standard gallery; explicit labelled panels now repair all38 reports
+without changing weights or metrics. Structural checks and scientific-figure QA
+pass; browser interaction QA is blocked by local-file URL policy.
+
+Next proposed comparison: training duration and KL pressure separately at fixed
+geometry, then latent capacity. Keep the base as a simple reference; reversible
+mixing remains a candidate, not an adopted default. One short seed cannot establish
+sample efficiency or architecture limits. State-to-latent generation, photo state/
+recall repair and other modalities remain open.
 
 **Architecture atlas, 14 September:** [thirteen source-grounded drawings](architecture-atlas.html)
 now cover the overall loop, encoders, attention, belief state, memory, tasks,

@@ -123,3 +123,83 @@ MSE units were distinguished from crop-population confounds. Added KL activity
 diagnostics and retrieval controls; no remaining methodology disagreement.
 Private code/data/results stayed local. Formal sources will be committed before
 the A/B/C runs; the predeclared comparison and conditional continuation are unchanged.
+
+## Results, 15 September
+
+[Main report](../runs/spatial_vae_v1/report.html),
+[paired comparison](../runs/spatial_vae_v1/strict/comparison/report.html),
+[independent checks](../runs/spatial_vae_v1/verification.json).
+Formal source: `6dba00a`; 512 updates and 4,096 sampled training examples per arm,
+one seed. All completed. Validation rates were above0.02 nats/pixel and all beat
+the training-mean image substantially, so the predeclared collapse trigger did
+**not** fire. No lower-KL continuation or test-driven tuning was performed.
+
+| Metric | A: base | B: cross-scale attention | C: attention + reversible mixing |
+| --- | ---: | ---: | ---: |
+| Held-out RGB64 mean MSE | 0.019200 | 0.019419 | 0.018487 |
+| RGB64 PSNR from aggregate MSE, dB | 17.167 | 17.118 | 17.331 |
+| RGB64 sampled MSE | 0.022225 | 0.022382 | 0.021750 |
+| RGB64 edge MSE | 0.010744 | 0.010753 | 0.010768 |
+| RGB64 high-frequency residual MSE | 0.004321 | 0.004330 | 0.004320 |
+| Native128 mean MSE | 0.012431 | 0.012745 | 0.011361 |
+| Odd63×79 mean MSE | 0.013055 | 0.013370 | 0.012047 |
+| Rectangle96×160 mean MSE | 0.013357 | 0.013628 | 0.012390 |
+| Native192×256 mean MSE | 0.014691 | 0.014965 | 0.013723 |
+| Synthetic patterns mean MSE | 0.035802 | 0.036427 | 0.035085 |
+| Shifted patterns mean MSE | 0.036726 | 0.037087 | 0.035011 |
+| Photo-instance retrieval | 100% | 100% | 100% |
+| KL, nats/original pixel | 0.020970 | 0.020920 | 0.020475 |
+| Active latent channels /8 | 5 | 5 | 5 |
+| Parameters | 3,040,828 | 3,056,764 | 3,056,764 |
+| Training loop seconds | 4.737 | 6.135 | 7.057 |
+| Peak training GPU reserve, MiB | 88 | 156 | 164 |
+
+All three fail the combined capability screen because both mean and sampled RGB64
+MSE exceed0.01. The baseline-improvement, native128/odd and retrieval subchecks pass.
+Training-mean test MSE is0.070265; raw pixels also retrieve100%, RGB means63.02%,
+chance0.52%. Retrieval therefore demonstrates only stability under this mild
+transformation, not semantic entities or learned category recognition.
+
+B worsens photo error1.14% versus A; its paired95% improvement interval is entirely
+negative[-0.000260,-0.000181]. C improves4.79% versus B, with interval
+[0.000778,0.001106], but misses the declared5% minimum. Both architectural benefit
+screens fail. C retains all nonregression conditions; its native128 error is10.86%
+below B. Single-seed, equal-update results do not establish equal-rate, equal-compute
+or asymptotic architectural superiority. No winner becomes the agent default.
+
+Figures show mostly broad color/layout at64px. Native192×256 retains more recognizable
+structure but remains blurred; fine stripes/checkerboards largely disappear. C's
+color-mean error is about50% below B while high-frequency error barely changes.
+This localizes the observed benefit to these output measures, not a unique internal
+cause. Spatial layout and texture are still weak. Larger inputs have larger latents
+and different crop content, so better native-crop scores do not prove that merely
+requesting a larger output recovers missing information.
+
+Saved-latent decoder-only replay is exact for every variant. Wrong, zero and spatially
+shuffled latents substantially worsen RGB64 error: for C,0.118835,0.072164 and0.079081
+versus0.018487. Encoded content matters, without establishing semantic correctness.
+Prior samples contain color blobs; general image generation remains unvalidated.
+No prompt, agent-state, memory, video, audio or language training occurred here.
+
+Validation/reload outputs, stored decoder latents, trained coupling inverses,
+source snapshots and independently recomputed NumPy metrics pass880 checks.
+Twenty-five focused tests pass, with exact CPU and GPU pause/resume. Formal fits
+used17.93s total training-loop time; the complete frozen evaluation cohort took21.36s.
+Development overfit reduced raw MSE0.372782→0.018010 (95.2%) at128 deterministic
+updates, passing its narrow training-only control. GPU reserve stayed within164MiB
+for formal fits (184MiB including development/replay). This is a short pilot, not a
+training-duration or sample-efficiency scaling study.
+
+Review found the shared report gallery does not display custom sampled/prior/variant
+keys. The recipe now writes explicit labelled comparison PNGs using the existing
+renderer slot; all38 reports were rebuilt from saved arrays without changing
+weights or metrics. Structural QA passes; photo, native, texture and prior figures
+were inspected. Browser interaction QA was blocked by the local-file URL policy;
+no alternative browser/localhost workaround was used.
+
+Next proposed experiment: independently vary training duration and KL pressure at
+fixed latent geometry, then test increased latent capacity if detail remains weak.
+Keep A as the simple reference and retain C as a candidate. Use fresh held-out
+groups, multiple seeds and explicit achieved-rate comparisons before adoption.
+The current results do not distinguish insufficient optimization, restrictive
+objective and channel capacity. Integration into world state/recall remains separate.
