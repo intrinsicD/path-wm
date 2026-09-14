@@ -5797,3 +5797,19 @@ tree:
   - N344
   - N345
   status: resolved
+- id: N347
+  type: decision
+  title: Track architecture discussion coverage in overview colors
+  provenance: user
+  timestamp: 2026-09-14T09:48+02:00
+  choice: Maintain red for architecture-loop parts still to discuss and update colors after
+    discussion. The initial coverage assessment is revisable and does not assert model readiness.
+  alternatives:
+  - Leave discussion coverage implicit
+  evidence:
+  - 'User request: Please color in the highlevel loop which parts we haven’t discussed yet
+    in red and update the color when we have.'
+  - docs/architecture-discussion.md
+  - docs/diagrams/architecture-atlas.json
+  - CLAUDE.md
+  status: resolved

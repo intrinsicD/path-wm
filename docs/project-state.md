@@ -7,6 +7,10 @@ photo-specific and proposed graph/DAG paths are explicitly distinguished.
 [Editable diagrams and notes](architecture-atlas.md). Documentation only; no model
 or weights changed. Graph structure and local links checked; SVGs inspected;
 browser interaction QA blocked by local-file URL policy.
+The overview now tracks discussion coverage: red = a dedicated walkthrough remains,
+blue = discussed. [Checklist and conversation basis](architecture-discussion.md)
+keep the status revisable; update it as each topic is discussed. Initial red areas:
+observation adapters, categorical belief updating, task contracts and action execution.
 
 **Photo-detail path localized, 14 September:** the largest measured drop in spatial
 accessibility is the first observation-to-state update. Matched linear and RBF

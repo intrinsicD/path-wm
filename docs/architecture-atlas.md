@@ -4,7 +4,9 @@ A map of the implemented components and their interfaces, from the agent loop to
 
 Source review: 2026-09-14, repository snapshot `5ad801d`. [Open the rendered atlas](architecture-atlas.html).
 
-Blue: learned modules. Gray: explicit state/mechanics. Green: external I/O. Purple: optional path. Amber: training/control only. Dashed: proposed extension or a labelled training-only connection. Colors describe roles, not measured competence.
+Overview (1): red = to discuss; blue = discussed. [Discussion checklist](architecture-discussion.md). This tracks conversation coverage, not implementation or model quality.
+
+Detail diagrams (2–13): blue = learned modules; gray = state/mechanics; green = external I/O; purple = optional; amber = training/control; dashed = proposed or labelled training-only connections.
 
 - [1 · The agent loop](#01-overview)
 - [2 · Modality encoders and feature hierarchy](#02-encoders)
@@ -26,30 +28,34 @@ Blue: learned modules. Gray: explicit state/mechanics. Green: external I/O. Purp
 
 General categorical agent · runtime data and control flow
 
+Working assessment from our visible conversation. Red means a dedicated walkthrough is still needed, including topics mentioned only at a broad level. Blue means discussed, not implemented, agreed in every detail, or validated.
+
+Red: to discuss. Blue: discussed. [Coverage and remaining questions](architecture-discussion.md).
+
 ```mermaid
 flowchart TB
     world["World / user / environment<br/>Images · video · audio · text"]
-    class world external;
+    class world discussion_discussed;
     input["Observation adapters<br/>Values + time + validity + source"]
-    class input store;
+    class input discussion_needs_discussion;
     encode["Modality encoders → §2–3<br/>Processed features at several scales"]
-    class encode learned;
+    class encode discussion_discussed;
     belief["Predict and correct → §4<br/>Recurrent world state + categorical belief"]
-    class belief learned;
+    class belief discussion_needs_discussion;
     memory["Session memory → §5<br/>Recent · compressed · protected · consolidated"]
-    class memory store;
+    class memory discussion_discussed;
     workspace["Task workspace → §6<br/>Read state, memory and task; think"]
-    class workspace learned;
+    class workspace discussion_discussed;
     request["Task request<br/>Instruction + output controls + actor metadata"]
-    class request external;
+    class request discussion_needs_discussion;
     plan["Optional bounded planner → §11<br/>Candidate actions → imagined states → costs"]
-    class plan optional;
+    class plan discussion_discussed;
     emit["Modality outputs → §7<br/>Image · audio · text · video"]
-    class emit learned;
+    class emit discussion_discussed;
     act["Action proposal<br/>Environment adapter executes it"]
-    class act store;
+    class act discussion_needs_discussion;
     reflect["Generated-content reflection<br/>Re-encode + provenance → workspace only"]
-    class reflect store;
+    class reflect discussion_discussed;
     world -->|"delivered observations"| input
     input -->|"source packets"| encode
     encode -->|"features + support times"| belief
@@ -66,12 +72,8 @@ flowchart TB
     act -->|"external action"| world
     emit -->|"optional loopback"| reflect
     reflect -->|"generated context + provenance"| workspace
-    classDef learned fill:#e6eef8,stroke:#7696bc,color:#202a36;
-    classDef store fill:#f3f4f6,stroke:#9098a4,color:#202a36;
-    classDef external fill:#e7f1eb,stroke:#789887,color:#202a36;
-    classDef optional fill:#efeafa,stroke:#9c87b5,color:#202a36;
-    classDef training fill:#fff0db,stroke:#bd934d,color:#202a36;
-    classDef proposal fill:#fafafa,stroke:#9b9b9b,color:#202a36,stroke-dasharray:5 4;
+    classDef discussion_discussed fill:#e6eef8,stroke:#7696bc,color:#202a36;
+    classDef discussion_needs_discussion fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d;
 ```
 
 [Full-size SVG](diagrams/atlas/01-overview.svg)

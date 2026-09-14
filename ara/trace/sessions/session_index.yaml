@@ -148,11 +148,12 @@ sessions:
   open_threads: 12
 - id: 2026-09-14_001
   date: '2026-09-14'
-  summary: Frozen photo readers locate the main spatial-access drop at first observation update and
-    a further reset/recall drop. Memory copy is exact; fine texture has a separate patch/raw-detail-interface
-    constraint. Agent unchanged; train state/recall proposed, size/duration unresolved.
-    Architecture atlas documents current configurations and proposed extensions; no new model changes.
-  turn_count: 5
-  events_count: 29
+  summary: Frozen photo readers locate the main spatial-access drop at first observation update
+    and a further reset/recall drop. Memory copy is exact; fine texture has a separate patch/raw-detail-interface
+    constraint. Agent unchanged; train state/recall proposed, size/duration unresolved. Architecture
+    atlas documents current configurations and proposed extensions; no new model changes.
+    Overview now tracks discussion coverage.
+  turn_count: 6
+  events_count: 30
   claims_touched: []
   open_threads: 13

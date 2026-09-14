@@ -9,6 +9,23 @@
       "feedback_edges": [["memory", "belief"], ["reflect", "workspace"], ["act", "world"]],
       "title": "1 · The agent loop",
       "subtitle": "General categorical agent · runtime data and control flow",
+      "discussion": {
+        "updated": "2026-09-14",
+        "scope": "Working assessment from our visible conversation. Red means a dedicated walkthrough is still needed, including topics mentioned only at a broad level. Blue means discussed, not implemented, agreed in every detail, or validated.",
+        "nodes": {
+          "world": {"status": "discussed", "basis": "Discussed webcam footage, real versus synthetic data, and desired image/video/audio/text interaction.", "next": "Revisit concrete sensor and environment choices when integrating them."},
+          "input": {"status": "needs_discussion", "basis": "Desired inputs were discussed; the observation-adapter/event contract has only appeared in the architecture map.", "next": "Walk through timestamps, modality synchronization, missing/late packets and event commits."},
+          "encode": {"status": "discussed", "basis": "Discussed modality stems, residual transformer blocks per scale, hierarchy merges, fusion, temporal handling and reconstruction probes.", "next": "Architecture/training improvements remain experimental; discussion coverage does not close them."},
+          "belief": {"status": "needs_discussion", "basis": "Discussed latent world/entity beliefs conceptually, but not the actual categorical predict/correct mechanism with h, codes and logits.", "next": "Walk through one observation: prior prediction, posterior correction, uncertainty and recurrent state."},
+          "memory": {"status": "discussed", "basis": "Discussed recent inputs, hierarchical history, external entity storage, retrieval, latent versus raw evidence and provenance.", "next": "Detailed retention/compression policy can be revisited without treating the whole topic as untouched."},
+          "workspace": {"status": "discussed", "basis": "Discussed focus on entities and relationships, recalled context, internal thinking and interleaving internal/external actions.", "next": "A detailed stopping/budget policy remains open."},
+          "request": {"status": "needs_discussion", "basis": "Discussed broad goals, complex tasks and decomposition; the instruction-to-task contract has not had a dedicated walkthrough.", "next": "Define task tokens, output controls, completion criteria and who verifies success."},
+          "plan": {"status": "discussed", "basis": "Discussed action DAGs, predicted states, goal reachability, subgoals, new observations and replanning.", "next": "General DAG construction and learned search remain proposed, even though the topic has been discussed."},
+          "emit": {"status": "discussed", "basis": "Discussed every encoder/decoder pair, state-conditioned outputs, image detail, conditional generation and replacement interfaces.", "next": "General output quality and capability still need learning and evaluation."},
+          "act": {"status": "needs_discussion", "basis": "Discussed examples of physical/software actions and internal/external distinctions; the concrete action/execution interface has not been walked through.", "next": "Connect action-head outputs to typed tool/physical commands, durations, execution outcomes and feedback."},
+          "reflect": {"status": "discussed", "basis": "Discussed reusing modality encoders for recalled/generated material while routing it into focus rather than treating it as a new observation.", "next": "Distinguish the implemented generated-output reflection path from proposed raw-memory replay."}
+        }
+      },
       "direction": "TB",
       "nodes": [
         ["world", "World / user / environment\nImages · video · audio · text", "external"],

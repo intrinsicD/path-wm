@@ -1868,3 +1868,13 @@ entries:
   - Static SVG inspection and structural checks are distinct from browser QA. Local-file browser access
     was denied by URL policy; no alternate browser or server workaround was attempted. No Claude collaboration
     was claimed for this documentation turn.
+- turn: 2026-09-14_001#6
+  notes:
+  - Recorded the user's ongoing discussion-tracking preference as N347. Initial red/blue assignments
+    are an AI assessment recorded with conversation evidence and remain revisable; neither
+    color claims working capability.
+  - No new model experiment, architecture adoption, O231/O232 affirmation or O233 repair commitment.
+    Existing open research topics remain referenced and no staged research claims mature from
+    this documentation change.
+  - Saved conversational maintenance instructions, not a scheduled background task. SVG appearance
+    was inspected directly; the existing local-file browser QA limitation remains.

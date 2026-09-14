@@ -38,6 +38,10 @@ const styles = {
   training: { fill: '#fff0db', color: '#bd934d', label: 'Training / diagnostic only' },
   proposal: { fill: '#fafafa', color: '#9b9b9b', label: 'Proposed extension (dashed)' },
 };
+const discussionStyles = {
+  discussed: { fill: '#e6eef8', color: '#7696bc', text: '#202a36', label: 'Discussed' },
+  needs_discussion: { fill: '#fee2e2', color: '#b91c1c', text: '#7f1d1d', label: 'To discuss' },
+};
 const sourceCache = new Map();
 async function source(reference) {
   const [path, symbol] = reference.split('#');
@@ -56,6 +60,10 @@ for (const graph of spec.graphs) {
   if (!/^\d{2}-[a-z-]+$/.test(graph.id)) throw new Error(`Invalid graph ID: ${graph.id}`);
   const ids = new Set(graph.nodes.map(n => n[0]));
   if (ids.size !== graph.nodes.length) throw new Error(`Duplicate node: ${graph.id}`);
+  if (graph.discussion && (Object.keys(graph.discussion.nodes).length !== ids.size
+      || [...ids].some(id => !discussionStyles[graph.discussion.nodes[id]?.status]))) {
+    throw new Error(`Discussion coverage must classify every node: ${graph.id}`);
+  }
   const dot = [
     'digraph G {',
     `graph [rankdir=${graph.direction}, bgcolor="white", pad=0.2, nodesep=0.28, ranksep=0.55, splines=polyline, outputorder=edgesfirst];`,
@@ -65,10 +73,11 @@ for (const graph of spec.graphs) {
   const mermaid = [`flowchart ${graph.direction}`];
   for (const [id, label, kind] of graph.nodes) {
     if (!/^[a-z][a-z0-9_]*$/.test(id) || !styles[kind]) throw new Error(`Invalid node ${id}`);
-    const style = styles[kind];
-    dot.push(`${quote(id)} [label=${quote(wrap(graphText(label), 46))}, fillcolor=${quote(style.fill)}, color=${quote(style.color)}${kind === 'proposal' ? ', style="rounded,filled,dashed"' : ''}];`);
+    const discussion = graph.discussion?.nodes[id];
+    const style = discussion ? discussionStyles[discussion.status] : styles[kind];
+    dot.push(`${quote(id)} [label=${quote(wrap(graphText(label), 46))}, fillcolor=${quote(style.fill)}, color=${quote(style.color)}${discussion ? `, fontcolor=${quote(style.text)}` : ''}${kind === 'proposal' ? ', style="rounded,filled,dashed"' : ''}];`);
     mermaid.push(`    ${id}["${escape(label).replaceAll('\n', '<br/>')}"]`);
-    mermaid.push(`    class ${id} ${kind};`);
+    mermaid.push(`    class ${id} ${discussion ? 'discussion_' + discussion.status : kind};`);
   }
   for (const [from, to, label, kind] of graph.edges) {
     if (!ids.has(from) || !ids.has(to)) throw new Error(`Dangling edge ${graph.id}: ${from} -> ${to}`);
@@ -78,8 +87,10 @@ for (const graph of spec.graphs) {
     mermaid.push(`    ${from} ${dashed ? '-.->' : '-->'}|"${escape(label)}"| ${to}`);
   }
   dot.push('}');
-  for (const [kind, style] of Object.entries(styles)) {
-    mermaid.push(`    classDef ${kind} fill:${style.fill},stroke:${style.color},color:#202a36${kind === 'proposal' ? ',stroke-dasharray:5 4' : ''};`);
+  const activeStyles = graph.discussion
+    ? Object.fromEntries(Object.entries(discussionStyles).map(([k, v]) => ['discussion_' + k, v])) : styles;
+  for (const [kind, style] of Object.entries(activeStyles)) {
+    mermaid.push(`    classDef ${kind} fill:${style.fill},stroke:${style.color},color:${style.text || '#202a36'}${kind === 'proposal' ? ',stroke-dasharray:5 4' : ''};`);
   }
   const result = viz.render(dot.join('\n'), { format: 'svg', engine: 'dot' });
   if (result.status !== 'success' || result.errors.length) {
@@ -97,11 +108,13 @@ for (const graph of spec.graphs) {
 const markdown = [
   '# ' + spec.title, '', spec.intro, '',
   `Source review: ${spec.date}, repository snapshot \`${spec.source_commit}\`. [Open the rendered atlas](architecture-atlas.html).`, '',
-  'Blue: learned modules. Gray: explicit state/mechanics. Green: external I/O. Purple: optional path. Amber: training/control only. Dashed: proposed extension or a labelled training-only connection. Colors describe roles, not measured competence.', '',
+  'Overview (1): red = to discuss; blue = discussed. [Discussion checklist](architecture-discussion.md). This tracks conversation coverage, not implementation or model quality.', '',
+  'Detail diagrams (2–13): blue = learned modules; gray = state/mechanics; green = external I/O; purple = optional; amber = training/control; dashed = proposed or labelled training-only connections.', '',
   ...rendered.map(g => `- [${g.title}](#${g.id})`), '',
 ];
 for (const g of rendered) markdown.push(
   `<a id="${g.id}"></a>`, '', '## ' + g.title, '', g.subtitle, '',
+  ...(g.discussion ? [g.discussion.scope, '', 'Red: to discuss. Blue: discussed. [Coverage and remaining questions](architecture-discussion.md).', ''] : []),
   '```mermaid', g.mermaid, '```', '',
   `[Full-size SVG](diagrams/atlas/${g.id}.svg)`, '',
   ...g.notes.flatMap(note => [note, '']),
@@ -109,10 +122,26 @@ for (const g of rendered) markdown.push(
 );
 await writeFile(resolve(root, 'docs/architecture-atlas.md'), markdown.join('\n'));
 
+const overview = rendered.find(g => g.discussion);
+if (overview) {
+  const checklist = [
+    '# Architecture discussion checklist', '', overview.discussion.scope, '',
+    `Last updated: ${overview.discussion.updated}. [Colored overview](architecture-atlas.html#${overview.id}).`, '',
+    'The user requested red for parts still to discuss and a color update after we discuss them. After a substantive exchange, update the matching status and its conversation evidence in `docs/diagrams/architecture-atlas.json`, then regenerate the atlas. An assistant-only diagram or explanation does not automatically count as a completed discussion. User corrections override this initial assessment.', '',
+    '| Part | Discussion coverage | Conversation basis | Remaining walkthrough / follow-up |',
+    '| --- | --- | --- | --- |',
+    ...overview.nodes.map(([id, label]) => {
+      const item = overview.discussion.nodes[id];
+      return `| ${label.split('\n')[0]} | ${discussionStyles[item.status].label} | ${item.basis} | ${item.next} |`;
+    }), '',
+  ];
+  await writeFile(resolve(root, 'docs/architecture-discussion.md'), checklist.join('\n'));
+}
+
 const legend = Object.values(styles).map(s => `<span><i style="background:${s.fill};border-color:${s.color}"></i>${escape(s.label)}</span>`).join('');
 const sections = rendered.map((g, index) => `<details id="${g.id}"${index === 0 ? ' open' : ''}>
 <summary><span>${escape(g.title)}</span><small>${escape(g.subtitle)}</small></summary>
-<div class="section-body"><div class="diagram" role="img" aria-label="${escape(g.title + '. ' + g.subtitle)}">${g.svg.replace('<svg ', `<svg style="min-width:${Math.ceil(g.width * 0.8)}px" `)}</div>
+<div class="section-body">${g.discussion ? `<p><strong>Red: to discuss. Blue: discussed.</strong> <a href="architecture-discussion.md">Discussion checklist</a>.</p><p>${escape(g.discussion.scope)}</p>` : ''}<div class="diagram" role="img" aria-label="${escape(g.title + '. ' + g.subtitle)}">${g.svg.replace('<svg ', `<svg style="min-width:${Math.ceil(g.width * 0.8)}px" `)}</div>
 <p class="links"><a href="diagrams/atlas/${g.id}.svg">Open full-size drawing</a> · <a href="#top">Back to map</a></p>
 ${g.notes.map(note => `<p>${escape(note)}</p>`).join('\n')}
 <details class="sources"><summary>Implementation sources</summary><ul>${g.sources.map(s => `<li><a href="../${escape(s.path)}">${escape(s.label)}</a></li>`).join('')}</ul></details>
@@ -139,7 +168,8 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 </style></head><body><main id="top">
 <header><div class="eyebrow">Architecture review · ${escape(spec.date)}</div><h1>${escape(spec.title)}</h1>
 <p>${escape(spec.intro)}</p><p>Open a level below to inspect its inputs, outputs and inner workings. Sources and limitations accompany every drawing.</p></header>
-<div class="legend" aria-label="Diagram legend">${legend}</div>
+<p><strong>Overview: red = to discuss; blue = discussed.</strong> Colors will change as we cover each part. <a href="architecture-discussion.md">See discussion coverage</a>.</p>
+<div class="legend" aria-label="Role legend for detail diagrams 2 through 13">Detail diagrams (2–13): ${legend}</div>
 <nav aria-label="Architecture levels">${rendered.map(g => `<a href="#${g.id}">${escape(g.title)}</a>`).join('')}</nav>
 <div class="controls"><button type="button" id="expand">Expand all diagrams</button><button type="button" id="collapse">Collapse details</button></div>
 ${sections}

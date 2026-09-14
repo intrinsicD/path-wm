@@ -3,6 +3,13 @@
 Read [workflow](docs/experiment-workflow.md), then
 [current work](docs/project-state.md). Read the active plan linked there.
 
+When discussing architecture with Alex, maintain the overview's discussion colors:
+red = still to discuss, blue = discussed. Follow the
+[discussion checklist](docs/architecture-discussion.md); update the matching
+coverage/evidence in `docs/diagrams/architecture-atlas.json` and regenerate after
+substantive discussion. An assistant-only diagram does not mark a topic discussed;
+discussion coverage is separate from implementation and validation status.
+
 The product is a small Python library plus readable experiment recipes that Alex
 can operate himself. Preserve this boundary throughout implementation. A new
 experiment normally edits a recipe; it does not create another trainer, CLI,
