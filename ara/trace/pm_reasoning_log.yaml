@@ -1878,3 +1878,12 @@ entries:
     this documentation change.
   - Saved conversational maintenance instructions, not a scheduled background task. SVG appearance
     was inspected directly; the existing local-file browser QA limitation remains.
+- turn: 2026-09-14_001#7
+  notes:
+  - N348 records the user's status-display preference, not a declaration that all components
+    or learned capabilities pass. Green assignments restate independently passing implementation
+    checks with evidence and visible scope limits; the initial key-box integrated failure
+    is preserved.
+  - No new research experiments, O231/O232 affirmation, or O233 implementation commitment.
+    Staged interpretations and live open topics remain unchanged. Static drawing QA passed;
+    no new browser QA or Claude exchange claimed.

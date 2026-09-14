@@ -11,12 +11,15 @@ categorical agent, the Gaussian photo path and the controlled entity/planning
 experiments separately. Dashed proposed graph/DAG structures are not claimed as
 implemented or trained. Feedback-edge annotations only influence layout.
 
-The overview's colors now track **discussion coverage**: red = to discuss, blue =
-discussed. This overrides role colors for diagram1 only; diagrams2–13 retain their
-existing role legend. `graphs[0].discussion.nodes` records status and conversation
-evidence for every overview node. Update those records after substantive discussion
-and regenerate; [the generated checklist](../architecture-discussion.md) explains
-the initial assessment and remaining questions. Coverage is not readiness or quality.
+The overview tracks **discussion and validation**: red = to discuss, blue = discussed,
+green = validated within the labelled test scope. This overrides role colors for
+diagram1 only; diagrams2–13 retain their existing role legend.
+`graphs[0].discussion.nodes` stores discussion status separately from optional
+`validation` evidence, scope and limitations. Green takes precedence visually;
+pending discussion remains labelled. Update these records after discussion or
+validation and regenerate. [The checklist](../architecture-discussion.md) retains
+the evidence and open questions. Green mechanics do not establish general learned
+capability, and an overall failed run supports only independently passing subchecks.
 
 Regenerate offline with Node.js and `@viz-js/viz` (used version 3.25.0):
 

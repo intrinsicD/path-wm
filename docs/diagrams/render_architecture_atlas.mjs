@@ -41,7 +41,9 @@ const styles = {
 const discussionStyles = {
   discussed: { fill: '#e6eef8', color: '#7696bc', text: '#202a36', label: 'Discussed' },
   needs_discussion: { fill: '#fee2e2', color: '#b91c1c', text: '#7f1d1d', label: 'To discuss' },
+  validated: { fill: '#dcfce7', color: '#15803d', text: '#14532d', label: 'Validated within stated scope' },
 };
+const overviewLegend = 'Red: to discuss. Blue: discussed. Green: validated within the labelled scope.';
 const sourceCache = new Map();
 async function source(reference) {
   const [path, symbol] = reference.split('#');
@@ -61,7 +63,7 @@ for (const graph of spec.graphs) {
   const ids = new Set(graph.nodes.map(n => n[0]));
   if (ids.size !== graph.nodes.length) throw new Error(`Duplicate node: ${graph.id}`);
   if (graph.discussion && (Object.keys(graph.discussion.nodes).length !== ids.size
-      || [...ids].some(id => !discussionStyles[graph.discussion.nodes[id]?.status]))) {
+      || [...ids].some(id => !['discussed', 'needs_discussion'].includes(graph.discussion.nodes[id]?.status)))) {
     throw new Error(`Discussion coverage must classify every node: ${graph.id}`);
   }
   const dot = [
@@ -74,10 +76,20 @@ for (const graph of spec.graphs) {
   for (const [id, label, kind] of graph.nodes) {
     if (!/^[a-z][a-z0-9_]*$/.test(id) || !styles[kind]) throw new Error(`Invalid node ${id}`);
     const discussion = graph.discussion?.nodes[id];
-    const style = discussion ? discussionStyles[discussion.status] : styles[kind];
-    dot.push(`${quote(id)} [label=${quote(wrap(graphText(label), 46))}, fillcolor=${quote(style.fill)}, color=${quote(style.color)}${discussion ? `, fontcolor=${quote(style.text)}` : ''}${kind === 'proposal' ? ', style="rounded,filled,dashed"' : ''}];`);
-    mermaid.push(`    ${id}["${escape(label).replaceAll('\n', '<br/>')}"]`);
-    mermaid.push(`    class ${id} ${discussion ? 'discussion_' + discussion.status : kind};`);
+    const validation = discussion?.validation;
+    if (validation) {
+      if (!validation.label || !validation.scope || !validation.limits || !validation.evidence?.length) {
+        throw new Error(`Validated node needs scope, limits and evidence: ${id}`);
+      }
+      for (const evidence of validation.evidence) await readFile(resolve(root, evidence.path));
+    }
+    const status = validation ? 'validated' : discussion?.status;
+    const style = discussion ? discussionStyles[status] : styles[kind];
+    const displayLabel = label + (validation ? `\nValidated: ${validation.label}`
+      + (discussion.status === 'needs_discussion' ? '\nDiscussion still pending' : '') : '');
+    dot.push(`${quote(id)} [label=${quote(wrap(graphText(displayLabel), 46))}, fillcolor=${quote(style.fill)}, color=${quote(style.color)}${discussion ? `, fontcolor=${quote(style.text)}` : ''}${kind === 'proposal' ? ', style="rounded,filled,dashed"' : ''}];`);
+    mermaid.push(`    ${id}["${escape(displayLabel).replaceAll('\n', '<br/>')}"]`);
+    mermaid.push(`    class ${id} ${discussion ? 'discussion_' + status : kind};`);
   }
   for (const [from, to, label, kind] of graph.edges) {
     if (!ids.has(from) || !ids.has(to)) throw new Error(`Dangling edge ${graph.id}: ${from} -> ${to}`);
@@ -108,13 +120,13 @@ for (const graph of spec.graphs) {
 const markdown = [
   '# ' + spec.title, '', spec.intro, '',
   `Source review: ${spec.date}, repository snapshot \`${spec.source_commit}\`. [Open the rendered atlas](architecture-atlas.html).`, '',
-  'Overview (1): red = to discuss; blue = discussed. [Discussion checklist](architecture-discussion.md). This tracks conversation coverage, not implementation or model quality.', '',
+  `Overview (1): ${overviewLegend} [Discussion and validation checklist](architecture-discussion.md).`, '',
   'Detail diagrams (2–13): blue = learned modules; gray = state/mechanics; green = external I/O; purple = optional; amber = training/control; dashed = proposed or labelled training-only connections.', '',
   ...rendered.map(g => `- [${g.title}](#${g.id})`), '',
 ];
 for (const g of rendered) markdown.push(
   `<a id="${g.id}"></a>`, '', '## ' + g.title, '', g.subtitle, '',
-  ...(g.discussion ? [g.discussion.scope, '', 'Red: to discuss. Blue: discussed. [Coverage and remaining questions](architecture-discussion.md).', ''] : []),
+  ...(g.discussion ? [g.discussion.scope, '', overviewLegend + ' [Coverage, validation evidence and remaining questions](architecture-discussion.md).', ''] : []),
   '```mermaid', g.mermaid, '```', '',
   `[Full-size SVG](diagrams/atlas/${g.id}.svg)`, '',
   ...g.notes.flatMap(note => [note, '']),
@@ -125,15 +137,21 @@ await writeFile(resolve(root, 'docs/architecture-atlas.md'), markdown.join('\n')
 const overview = rendered.find(g => g.discussion);
 if (overview) {
   const checklist = [
-    '# Architecture discussion checklist', '', overview.discussion.scope, '',
+    '# Architecture discussion and validation checklist', '', overview.discussion.scope, '',
     `Last updated: ${overview.discussion.updated}. [Colored overview](architecture-atlas.html#${overview.id}).`, '',
-    'The user requested red for parts still to discuss and a color update after we discuss them. After a substantive exchange, update the matching status and its conversation evidence in `docs/diagrams/architecture-atlas.json`, then regenerate the atlas. An assistant-only diagram or explanation does not automatically count as a completed discussion. User corrections override this initial assessment.', '',
+    'The user requested red for parts still to discuss and green for validated parts. After substantive discussion or validation, update the matching coverage and evidence in `docs/diagrams/architecture-atlas.json`, then regenerate the atlas. Green requires a stated scope, limits and passing evidence for that scope; an overall failed experiment can support only an independently passing subcheck. Remove or revise green when that evidence no longer applies. An assistant-only explanation does not automatically complete a discussion. User corrections override the discussion assessment.', '',
     '| Part | Discussion coverage | Conversation basis | Remaining walkthrough / follow-up |',
     '| --- | --- | --- | --- |',
     ...overview.nodes.map(([id, label]) => {
       const item = overview.discussion.nodes[id];
       return `| ${label.split('\n')[0]} | ${discussionStyles[item.status].label} | ${item.basis} | ${item.next} |`;
     }), '',
+    '## Green: validated scopes', '',
+    ...overview.nodes.filter(([id]) => overview.discussion.nodes[id].validation).flatMap(([id, label]) => {
+      const v = overview.discussion.nodes[id].validation;
+      return [`### ${label.split('\n')[0]}`, '', v.scope, '', `Still open: ${v.limits}`, '',
+        'Evidence: ' + v.evidence.map(e => `[${e.label}](../${e.path})`).join(', ') + '.', ''];
+    }),
   ];
   await writeFile(resolve(root, 'docs/architecture-discussion.md'), checklist.join('\n'));
 }
@@ -141,7 +159,11 @@ if (overview) {
 const legend = Object.values(styles).map(s => `<span><i style="background:${s.fill};border-color:${s.color}"></i>${escape(s.label)}</span>`).join('');
 const sections = rendered.map((g, index) => `<details id="${g.id}"${index === 0 ? ' open' : ''}>
 <summary><span>${escape(g.title)}</span><small>${escape(g.subtitle)}</small></summary>
-<div class="section-body">${g.discussion ? `<p><strong>Red: to discuss. Blue: discussed.</strong> <a href="architecture-discussion.md">Discussion checklist</a>.</p><p>${escape(g.discussion.scope)}</p>` : ''}<div class="diagram" role="img" aria-label="${escape(g.title + '. ' + g.subtitle)}">${g.svg.replace('<svg ', `<svg style="min-width:${Math.ceil(g.width * 0.8)}px" `)}</div>
+<div class="section-body">${g.discussion ? `<p><strong>${overviewLegend}</strong> <a href="architecture-discussion.md">Discussion and validation checklist</a>.</p><p>${escape(g.discussion.scope)}</p>` : ''}<div class="diagram" role="img" aria-label="${escape(g.title + '. ' + g.subtitle)}">${g.svg.replace('<svg ', `<svg style="min-width:${Math.ceil(g.width * 0.8)}px" `)}</div>
+${g.discussion ? g.nodes.filter(([id]) => g.discussion.nodes[id].validation).map(([id, label]) => {
+  const v = g.discussion.nodes[id].validation;
+  return `<p><strong>${escape(label.split('\n')[0])} — validated scope:</strong> ${escape(v.scope)} <strong>Still open:</strong> ${escape(v.limits)} <span class="links">Evidence: ${v.evidence.map(e => `<a href="../${escape(e.path)}">${escape(e.label)}</a>`).join(' · ')}.</span></p>`;
+}).join('\n') : ''}
 <p class="links"><a href="diagrams/atlas/${g.id}.svg">Open full-size drawing</a> · <a href="#top">Back to map</a></p>
 ${g.notes.map(note => `<p>${escape(note)}</p>`).join('\n')}
 <details class="sources"><summary>Implementation sources</summary><ul>${g.sources.map(s => `<li><a href="../${escape(s.path)}">${escape(s.label)}</a></li>`).join('')}</ul></details>
@@ -168,7 +190,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 </style></head><body><main id="top">
 <header><div class="eyebrow">Architecture review · ${escape(spec.date)}</div><h1>${escape(spec.title)}</h1>
 <p>${escape(spec.intro)}</p><p>Open a level below to inspect its inputs, outputs and inner workings. Sources and limitations accompany every drawing.</p></header>
-<p><strong>Overview: red = to discuss; blue = discussed.</strong> Colors will change as we cover each part. <a href="architecture-discussion.md">See discussion coverage</a>.</p>
+<p><strong>Overview: ${overviewLegend}</strong> Colors change with discussion and validation evidence. <a href="architecture-discussion.md">See coverage and evidence</a>.</p>
 <div class="legend" aria-label="Role legend for detail diagrams 2 through 13">Detail diagrams (2–13): ${legend}</div>
 <nav aria-label="Architecture levels">${rendered.map(g => `<a href="#${g.id}">${escape(g.title)}</a>`).join('')}</nav>
 <div class="controls"><button type="button" id="expand">Expand all diagrams</button><button type="button" id="collapse">Collapse details</button></div>

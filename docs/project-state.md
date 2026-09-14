@@ -8,7 +8,11 @@ photo-specific and proposed graph/DAG paths are explicitly distinguished.
 or weights changed. Graph structure and local links checked; SVGs inspected;
 browser interaction QA blocked by local-file URL policy.
 The overview now tracks discussion coverage: red = a dedicated walkthrough remains,
-blue = discussed. [Checklist and conversation basis](architecture-discussion.md)
+blue = discussed; green = validated within a labelled test scope.
+Green now marks event mechanics, bounded memory storage/causal reads, bounded search
+mechanics and reflection routing, with saved evidence and limits. This does not
+validate learned world prediction, general recall or output quality. Event handling
+retains its pending discussion label. [Checklist and evidence](architecture-discussion.md)
 keep the status revisable; update it as each topic is discussed. Initial red areas:
 observation adapters, categorical belief updating, task contracts and action execution.
 

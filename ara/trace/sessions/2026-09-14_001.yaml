@@ -2,13 +2,13 @@ session:
   id: 2026-09-14_001
   date: '2026-09-14'
   started: 2026-09-14T00:40+02:00
-  last_turn: 2026-09-14T09:48+02:00
-  turn_count: 6
+  last_turn: 2026-09-14T09:56+02:00
+  turn_count: 7
   summary: Frozen photo readers locate the main spatial-access drop at first observation update
     and a further reset/recall drop. Memory copy is exact; fine texture has a separate patch/raw-detail-interface
     constraint. Agent unchanged; train state/recall proposed, size/duration unresolved. Architecture
     atlas documents current configurations and proposed extensions; no new model changes. Overview
-    now tracks discussion coverage.
+    tracks discussion coverage and scoped validation evidence.
 
 events_logged:
 - turn: 1
@@ -230,6 +230,12 @@ events_logged:
   routing: direct
   provenance: user
   summary: Maintain overview discussion colors and update them after substantive discussion.
+- turn: 7
+  type: decision
+  id: N348
+  routing: direct
+  provenance: user
+  summary: Use green for validated scopes alongside discussion colors.
 ai_actions:
 - turn: 1
   action: Implemented optional generator and direct control, repaired noise width, added isolated
@@ -323,6 +329,24 @@ ai_actions:
   - docs/diagrams/atlas/01-overview.svg
   - docs/diagrams/README.md
   - docs/project-state.md
+- turn: 7
+  action: Checked saved verification receipts and matching tests; marked event handling, memory
+    storage/causal reads, bounded search mechanics and reflection routing green with explicit
+    scopes and limits. Kept coverage independent and preserved failed capability outcomes.
+    Regenerated atlas/checklist; verified four green nodes, all 117 local links, 384 unique
+    IDs, 12 unchanged detailed drawings and JavaScript syntax; visually inspected overview.
+    No new model tests, training or model changes.
+  provenance: ai-executed
+  files_changed:
+  - CLAUDE.md
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/architecture-discussion.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/diagrams/render_architecture_atlas.mjs
+  - docs/diagrams/atlas/01-overview.svg
+  - docs/diagrams/README.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -342,6 +366,8 @@ key_context:
 - turn: 6
   excerpt: Please color in the highlevel loop which parts we haven’t discussed yet in red
     and update the color when we have.
+- turn: 7
+  excerpt: Make those green we have validated
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate;
   image/full retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene

@@ -4,7 +4,7 @@ A map of the implemented components and their interfaces, from the agent loop to
 
 Source review: 2026-09-14, repository snapshot `5ad801d`. [Open the rendered atlas](architecture-atlas.html).
 
-Overview (1): red = to discuss; blue = discussed. [Discussion checklist](architecture-discussion.md). This tracks conversation coverage, not implementation or model quality.
+Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
 Detail diagrams (2–13): blue = learned modules; gray = state/mechanics; green = external I/O; purple = optional; amber = training/control; dashed = proposed or labelled training-only connections.
 
@@ -28,34 +28,34 @@ Detail diagrams (2–13): blue = learned modules; gray = state/mechanics; green 
 
 General categorical agent · runtime data and control flow
 
-Working assessment from our visible conversation. Red means a dedicated walkthrough is still needed, including topics mentioned only at a broad level. Blue means discussed, not implemented, agreed in every detail, or validated.
+Red = a dedicated discussion remains. Blue = discussed, with validation still incomplete. Green = validated within the explicitly labelled test scope, not general capability. Discussion coverage is retained separately, including for green parts that still need a walkthrough. Evidence refers to the recorded configurations and must be revisited after relevant changes.
 
-Red: to discuss. Blue: discussed. [Coverage and remaining questions](architecture-discussion.md).
+Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Coverage, validation evidence and remaining questions](architecture-discussion.md).
 
 ```mermaid
 flowchart TB
     world["World / user / environment<br/>Images · video · audio · text"]
     class world discussion_discussed;
-    input["Observation adapters<br/>Values + time + validity + source"]
-    class input discussion_needs_discussion;
+    input["Observation adapters<br/>Values + time + validity + source<br/>Validated: Event mechanics<br/>Discussion still pending"]
+    class input discussion_validated;
     encode["Modality encoders → §2–3<br/>Processed features at several scales"]
     class encode discussion_discussed;
     belief["Predict and correct → §4<br/>Recurrent world state + categorical belief"]
     class belief discussion_needs_discussion;
-    memory["Session memory → §5<br/>Recent · compressed · protected · consolidated"]
-    class memory discussion_discussed;
+    memory["Session memory → §5<br/>Recent · compressed · protected · consolidated<br/>Validated: Storage / causal reads"]
+    class memory discussion_validated;
     workspace["Task workspace → §6<br/>Read state, memory and task; think"]
     class workspace discussion_discussed;
     request["Task request<br/>Instruction + output controls + actor metadata"]
     class request discussion_needs_discussion;
-    plan["Optional bounded planner → §11<br/>Candidate actions → imagined states → costs"]
-    class plan discussion_discussed;
+    plan["Optional bounded planner → §11<br/>Candidate actions → imagined states → costs<br/>Validated: Bounded search mechanics"]
+    class plan discussion_validated;
     emit["Modality outputs → §7<br/>Image · audio · text · video"]
     class emit discussion_discussed;
     act["Action proposal<br/>Environment adapter executes it"]
     class act discussion_needs_discussion;
-    reflect["Generated-content reflection<br/>Re-encode + provenance → workspace only"]
-    class reflect discussion_discussed;
+    reflect["Generated-content reflection<br/>Re-encode + provenance → workspace only<br/>Validated: Routing / provenance"]
+    class reflect discussion_validated;
     world -->|"delivered observations"| input
     input -->|"source packets"| encode
     encode -->|"features + support times"| belief
@@ -74,6 +74,7 @@ flowchart TB
     reflect -->|"generated context + provenance"| workspace
     classDef discussion_discussed fill:#e6eef8,stroke:#7696bc,color:#202a36;
     classDef discussion_needs_discussion fill:#fee2e2,stroke:#b91c1c,color:#7f1d1d;
+    classDef discussion_validated fill:#dcfce7,stroke:#15803d,color:#14532d;
 ```
 
 [Full-size SVG](diagrams/atlas/01-overview.svg)

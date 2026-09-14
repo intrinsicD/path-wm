@@ -5813,3 +5813,19 @@ tree:
   - docs/diagrams/architecture-atlas.json
   - CLAUDE.md
   status: resolved
+- id: N348
+  type: decision
+  title: Show validated scopes in green on the architecture overview
+  provenance: user
+  timestamp: 2026-09-14T09:56+02:00
+  choice: Add green for validated parts while retaining discussion tracking. Passing evidence
+    and its scope are visible separately from pending capability questions.
+  alternatives:
+  - Show discussion coverage alone
+  evidence:
+  - 'User request: Make those green we have validated'
+  - docs/architecture-discussion.md
+  - docs/diagrams/architecture-atlas.json
+  also_depends_on:
+  - N347
+  status: resolved

@@ -1,10 +1,10 @@
-# Architecture discussion checklist
+# Architecture discussion and validation checklist
 
-Working assessment from our visible conversation. Red means a dedicated walkthrough is still needed, including topics mentioned only at a broad level. Blue means discussed, not implemented, agreed in every detail, or validated.
+Red = a dedicated discussion remains. Blue = discussed, with validation still incomplete. Green = validated within the explicitly labelled test scope, not general capability. Discussion coverage is retained separately, including for green parts that still need a walkthrough. Evidence refers to the recorded configurations and must be revisited after relevant changes.
 
 Last updated: 2026-09-14. [Colored overview](architecture-atlas.html#01-overview).
 
-The user requested red for parts still to discuss and a color update after we discuss them. After a substantive exchange, update the matching status and its conversation evidence in `docs/diagrams/architecture-atlas.json`, then regenerate the atlas. An assistant-only diagram or explanation does not automatically count as a completed discussion. User corrections override this initial assessment.
+The user requested red for parts still to discuss and green for validated parts. After substantive discussion or validation, update the matching coverage and evidence in `docs/diagrams/architecture-atlas.json`, then regenerate the atlas. Green requires a stated scope, limits and passing evidence for that scope; an overall failed experiment can support only an independently passing subcheck. Remove or revise green when that evidence no longer applies. An assistant-only explanation does not automatically complete a discussion. User corrections override the discussion assessment.
 
 | Part | Discussion coverage | Conversation basis | Remaining walkthrough / follow-up |
 | --- | --- | --- | --- |
@@ -19,3 +19,37 @@ The user requested red for parts still to discuss and a color update after we di
 | Modality outputs → §7 | Discussed | Discussed every encoder/decoder pair, state-conditioned outputs, image detail, conditional generation and replacement interfaces. | General output quality and capability still need learning and evaluation. |
 | Action proposal | To discuss | Discussed examples of physical/software actions and internal/external distinctions; the concrete action/execution interface has not been walked through. | Connect action-head outputs to typed tool/physical commands, durations, execution outcomes and feedback. |
 | Generated-content reflection | Discussed | Discussed reusing modality encoders for recalled/generated material while routing it into focus rather than treating it as a new observation. | Distinguish the implemented generated-output reflection path from proposed raw-memory replay. |
+
+## Green: validated scopes
+
+### Observation adapters
+
+Packet deduplication/order, one action/time advance per event, commit-once and masked-input handling.
+
+Still open: Live webcam capture, cross-device synchronization and real streaming are not validated. Discussion walkthrough still pending.
+
+Evidence: [Belief implementation verification (69 CPU tests)](../runs/belief_v1/verification.json), [Event, masking and timestamp checks](../tests/test_belief.py).
+
+### Session memory → §5
+
+Exact recent envelopes, bounded hierarchy, source/belief separation, causal eligibility and state roundtrips.
+
+Still open: Learned compression quality and reliable long-horizon recall are not validated; the photo recall path still loses accessible detail.
+
+Evidence: [Belief implementation verification (69 CPU tests)](../runs/belief_v1/verification.json), [Memory bounds, provenance and causal-read checks](../tests/test_belief.py), [Photo recall limitations](../docs/photo-detail-plan.md).
+
+### Optional bounded planner → §11
+
+Fixed-horizon candidate evaluation, common sampling, caller-state preservation and RNG restoration; supplied key-box search has independent replay.
+
+Still open: This does not validate learned dynamics, general goal achievement or the proposed action DAG. The linked initial key-box integrated capability screen failed.
+
+Evidence: [Belief implementation verification (69 CPU tests)](../runs/belief_v1/verification.json), [Candidate rejection and state preservation](../tests/test_data_and_planning.py), [Independent search replay; integrated screen failed](../runs/key_box_v1/verification.json).
+
+### Generated-content reflection
+
+Re-encoded generated outputs can change workspace while leaving physical belief/history unchanged; generated content cannot enter source evidence.
+
+Still open: Useful self-reflection and quality of generated content are not established by these routing tests.
+
+Evidence: [Belief implementation verification (69 CPU tests)](../runs/belief_v1/verification.json), [Reflection boundary check](../tests/test_belief.py), [Loopback and provenance checks](../tests/test_tasks.py).
