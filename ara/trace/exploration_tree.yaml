@@ -5873,3 +5873,79 @@ tree:
   also_depends_on:
   - N350
   status: resolved
+- id: N352
+  type: decision
+  title: Implement and test base spatial VAE then attention then an independent modification
+  provenance: user
+  timestamp: 2026-09-15T01:24+02:00
+  choice: User authorizes the reviewed spatial VAE and ordered comparisons, including an AI-chosen
+    meaningful modification. The chosen reversible-mixing and numerical budgets are implementation
+    choices, not user-selected optima.
+  alternatives:
+  - Remain at reviewed proposal
+  evidence:
+  - O236
+  - O237
+  - docs/spatial-vae-plan.md
+  also_depends_on:
+  - N350
+  - N351
+  status: resolved
+- id: N353
+  type: experiment
+  title: Spatial VAE implementation and matched initialization pass development checks
+  provenance: ai-executed
+  timestamp: 2026-09-15T01:24+02:00
+  result: RED plan/check commit91e430d followed by implementation6dba00a.25 focused tests; exact
+    CPU/GPU pause-resume, initial-output equality and preserved CUDA noise streams. Eight-photo deterministic
+    beta0 control reduces raw training MSE0.372782 to0.018010 at128 updates. Two actual Claude conceptual
+    rounds reconcile shuffle and coupling misstatements; private code/data/results remain local.
+  evidence:
+  - ara/evidence/tables/spatial_vae_comparison_2026-09-15.json
+  - pathwm/models/spatial_vae.py
+  - experiments/spatial_vae.py
+  - runs/spatial_vae_v1/development_checks.json
+  - runs/reviews/spatial_vae_experiment_v1/review_status.json
+  also_depends_on:
+  - N352
+  status: resolved
+- id: N354
+  type: experiment
+  title: Short real-photo VAE comparison fails quality and architectural benefit gates
+  provenance: ai-executed
+  timestamp: 2026-09-15T01:24+02:00
+  result: 1024 train/128 validation/192 test COCO groups,512 updates per arm,one seed. RGB64 mean
+    MSE A0.019200,B0.019419,C0.018487; sampled0.022225,0.022382,0.021750. All quality screens fail
+    RGB64 thresholds; native128/odd and mild instance-retrieval subchecks pass. Raw pixels also retrieve100%.
+    B worsens1.14%; C improves4.79% versus B,positive paired95% interval but below5% gate. Strong
+    fine-pattern loss. Validation collapse trigger false; no continuation or test-driven tuning.
+    Formal training17.93s,total evaluation21.36s,max164MiB GPU reserve. Prior/general/state-conditioned
+    generation unvalidated.
+  evidence:
+  - ara/evidence/tables/spatial_vae_comparison_2026-09-15.json
+  - runs/spatial_vae_v1/strict/comparison/result.json
+  - runs/spatial_vae_v1/validation_decision.json
+  - docs/spatial-vae-plan.md
+  also_depends_on:
+  - N352
+  - N353
+  status: resolved
+- id: N355
+  type: experiment
+  title: VAE exports and metrics reproduce; custom report panels repaired
+  provenance: ai-executed
+  timestamp: 2026-09-15T01:24+02:00
+  result: 880 independent source/export/GPU replay/NumPy metric/native-pixel checks pass. Paired
+    bootstrap and benefit gates reproduced separately. Report gallery omitted stored custom sampled/prior/variant
+    arrays; fixed with existing comparison PNG slot in3c64b12.38 reports rebuilt and structurally
+    verified without weight/metric changes. Photo/native/pattern/prior figures inspected; browser
+    local-file URL policy blocks interaction QA, no workaround. Current agent and overview capability
+    colors unchanged.
+  evidence:
+  - ara/evidence/tables/spatial_vae_comparison_2026-09-15.json
+  - runs/spatial_vae_v1/verification.json
+  - runs/spatial_vae_v1/comparison_verification.json
+  - runs/spatial_vae_v1/report_verification.json
+  also_depends_on:
+  - N354
+  status: resolved

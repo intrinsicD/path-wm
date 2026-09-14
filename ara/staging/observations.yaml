@@ -4173,9 +4173,9 @@ observations:
   bound_to:
   - N350
   - N351
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A08
+  crystallized_via: verbal-affirmation
   stale: false
 - id: O237
   timestamp: 2026-09-15T00:47+02:00
@@ -4194,6 +4194,41 @@ observations:
   bound_to:
   - N350
   - N351
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A09
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O238
+  timestamp: 2026-09-15T01:24+02:00
+  provenance: ai-suggested
+  content: At one short matched budget, reversible local mixing modestly improves photo color/layout
+    while fine detail barely changes; attention alone does not help. Neither achieves the predeclared
+    architecture-benefit gate or photo-quality screen. These do not establish asymptotic architecture
+    limits, sample efficiency or a unique loss cause. Native larger inputs have larger latents and
+    different content; easy retrieval has a perfect raw-pixel control.
+  context: Interpretation of N354 after implementation; no researcher response to these measurements
+    yet.
+  potential_type: claim
+  bound_to:
+  - N354
+  - N355
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O239
+  timestamp: 2026-09-15T01:24+02:00
+  provenance: ai-suggested
+  content: Next vary training duration and KL pressure independently at fixed geometry, then latent
+    capacity if detail stays weak. Keep base reference and reversible candidate, use fresh held-out
+    groups and multiple seeds, and compare achieved rate and compute before adoption. World-state
+    integration remains separate.
+  context: Proposed next experiment after the authorized A/B/C comparison; no further budget or new
+    run adopted.
+  potential_type: heuristic
+  bound_to:
+  - N354
+  - N355
   promoted: false
   promoted_to: null
   crystallized_via: null

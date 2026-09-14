@@ -73,3 +73,23 @@
 - **Code**: [generator](../../../pathwm/models/conditional_image.py), [recipe](../../../experiments/conditional_image.py), [focused checks](../../../tests/test_conditional_image.py), [protocol and results](../../../docs/image-output-plan.md).
 - **Verification**: N333–N335; [source-bound comparison and follow-up](../../evidence/tables/conditional_image_2026-09-14.json). Implementation98ca98f and optional progress weighting7314c56.
 - **Scope**: Implemented optional component, not a successful replacement or general image generator. Three short controlled fits fail strict output capability; the prior renderer remains default. The fixed selected-object task does not demonstrate arbitrary prompt parsing, photographic quality, compact visual memory, diversity or generalization of the complete upstream system.
+
+## A08: Explicit-scale spatial image VAE as an independent codec
+
+- **Design**: Separate optional local processing, exact PixelUnshuffle rearrangement, learned feature mixing and explicit channel projection. Preserve spatial Gaussian mu/logvar; mirror with latent-only PixelShuffle decoding and dynamic pad/crop geometry. Compare base, cross-scale attention and a meaningful additional variant before adoption.
+- **Provenance**: user
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O236
+- **Adoption**: N352; user explicitly requested implementation and ordered testing of the reviewed design.
+- **Code**: [model](../../../pathwm/models/spatial_vae.py), [recipe](../../../experiments/spatial_vae.py), [protocol/results](../../../docs/spatial-vae-plan.md).
+- **Scope**: Implemented prototype, not an existing-agent replacement or validated high-quality codec. N354 fails photo capability; state-conditioned generation and other modalities remain open.
+
+## A09: Concrete geometry, loss and comparison contracts for the spatial VAE
+
+- **Design**: Three hierarchy levels, channels32/64/128, latent8; explicit compression and expansion; original-area-normalized distortion/KL; bounded log variance and Gaussian sampling. Compatible output-size metadata is required. Fine features enter an optional encoder attention block but never bypass the posterior into decoding. Local additive couplings are invertible; ordinary residuals and the complete VAE are not promised lossless.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O237
+- **Implementation**: Committed6dba00a; N353/N354 execute these fixed settings. Numerical defaults are experimental choices, not researcher-selected optima or efficacy claims.
+- **Bindings**: [model/loss](../../../pathwm/models/spatial_vae.py), [reviewed design](../../../docs/spatial-vae-design.md), [source-bound experiment](../../evidence/tables/spatial_vae_comparison_2026-09-15.json).
+- **Limits**: KL is not an encoded filesize, failed probes do not establish absence, and producing spatial latents from agent state requires new training. Current quality failures remain visible.

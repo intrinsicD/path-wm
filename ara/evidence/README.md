@@ -142,3 +142,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Real-photo continuation](tables/real_photo_2026-09-14.json): N340-N342;1024 local COCO training photos,39.4% recall-error reduction, poor visible detail; exact GPU resume/reloads and160 independently checked values.
 
 - [Photo-detail localization](tables/photo_detail_2026-09-14.json): N343-N346; first-state and recall accessibility drops, separate patch/raw-detail constraint,17 exact reader reloads and157 independent numeric checks; agent unchanged.
+
+- [Spatial VAE comparison](tables/spatial_vae_comparison_2026-09-15.json): N352-N355; ordered base/attention/reversible real-photo fits, failed quality/benefit gates, exact replay and880 independent checks;38 structurally verified reports.
