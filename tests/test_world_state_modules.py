@@ -446,3 +446,60 @@ def test_attention_diagnostic_probabilities_match_masked_reference():
         )
     assert torch.allclose(trace._tensors["attention"], reference, atol=1e-6)
     assert trace._tensors["attention"][..., 5:].count_nonzero() == 0
+
+
+def test_internal_transactions_keep_store_and_agent_clock_consistent(tmp_path):
+    modules = parts()
+    session = WorldSession(**modules)
+    first = session.observe(
+        "first",
+        occurred_at=1,
+        available_at=1,
+        candidates=(candidate(), candidate("b", key=(0.0, 1.0))),
+    )
+    a, b = [x["entity_id"] for x in first["bindings"]]
+    proof = session.store.evidence()[0].id
+    tx = session.store.begin("merge", occurred_at=2, available_at=3, kind="correction")
+    tx.merge(a, b, evidence=(proof,))
+    receipt = session.commit(tx, save_to=tmp_path / "combined.pt")
+    assert session.state.time.item() == 3 and session.state.event_id == "merge"
+    assert session.state.observation_count == 0
+    before = session.state
+    assert session.commit(tx) == receipt and torch.equal(
+        before.tokens, session.state.tokens
+    )
+    restored = WorldSession.restore(
+        torch.load(tmp_path / "combined.pt", weights_only=True), **modules
+    )
+    assert restored.store.snapshot() == session.store.snapshot()
+    _, context, _ = restored.think(Query(entity_ids=(a,)))
+    assert len(context.entities) == 2
+    bad = session.store.begin(
+        "bad-direct", occurred_at=4, available_at=4, kind="internal"
+    )
+    bad.create_entity("uncoordinated")
+    session.store.commit(bad)
+    with pytest.raises(ValueError, match="WorldSession.commit"):
+        session.think(Query())
+
+
+def test_inspection_handles_nested_multiscale_outputs_without_changing_them():
+    from dataclasses import dataclass
+
+    @dataclass
+    class Pyramid:
+        levels: tuple
+
+    class Nested(nn.Module):
+        def forward(self, x):
+            return Pyramid(({"features": x * 2}, x + 1))
+
+    model = Nested()
+    x = torch.ones(2, 3, requires_grad=True)
+    trace = WorldTrace(tensor_values=12)
+    with trace.capture(model, [""], gradients=True):
+        out = model(x)
+        out.levels[0]["features"].sum().backward()
+    assert any("levels.0.features" in k for k in trace)
+    assert any(k.startswith("backward.") for k in trace)
+    assert torch.equal(x.grad, torch.full_like(x, 2))

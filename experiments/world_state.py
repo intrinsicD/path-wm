@@ -252,13 +252,13 @@ def exercise(model, path, trace):
             "mistaken-link", occurred_at=3, available_at=3, kind="correction"
         )
         link = tx.merge(a, b, evidence=(proof,))
-        session.store.commit(tx)
+        session.commit(tx, trace=trace)
         assert session.store.canonical(a) == session.store.canonical(b)
         tx = session.store.begin(
             "repair-link", occurred_at=4, available_at=4, kind="correction"
         )
         tx.split(link)
-        session.store.commit(tx)
+        session.commit(tx, trace=trace)
         result["split_restores_distinct_ids"] = session.store.canonical(
             a
         ) != session.store.canonical(b)
@@ -280,7 +280,7 @@ def exercise(model, path, trace):
             role="inferred",
             data={"meaning": "one available query"},
         )
-        session.store.commit(tx)
+        session.commit(tx, trace=trace)
         result["prototype"] = concept
         control = ControlBinding(
             self_id, sensors=("supplied-regions",), actions=("inspect",)

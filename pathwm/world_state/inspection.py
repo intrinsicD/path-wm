@@ -6,7 +6,7 @@ Summaries are readouts, not semantic explanations. Exact tensors are opt-in/capp
 
 from collections.abc import MutableMapping
 from contextlib import contextmanager
-from dataclasses import asdict
+from dataclasses import asdict, fields, is_dataclass
 import copy
 from pathlib import Path
 import numpy as np
@@ -106,21 +106,32 @@ class WorldTrace(MutableMapping):
             raise ValueError("Unknown named module for inspection")
         handles, tensor_handles = [], []
 
+        def tensors(value, path="0"):
+            if isinstance(value, torch.Tensor):
+                yield path, value
+            elif is_dataclass(value):
+                for field in fields(value):
+                    yield from tensors(
+                        getattr(value, field.name), path + "." + field.name
+                    )
+            elif isinstance(value, dict):
+                for key, item in value.items():
+                    yield from tensors(item, path + "." + str(key))
+            elif isinstance(value, (tuple, list)):
+                for index, item in enumerate(value):
+                    yield from tensors(item, path + "." + str(index))
+
         def attach(name):
             def record_output(module, inputs, output):
-                tensors = (
-                    (output,)
-                    if isinstance(output, torch.Tensor)
-                    else output
-                    if isinstance(output, (list, tuple))
-                    else ()
-                )
-                for index, tensor in enumerate(tensors):
-                    if not isinstance(tensor, torch.Tensor):
-                        continue
-                    key = f"activation.{name}.{index}"
+                for path, tensor in tensors(output):
+                    key = f"activation.{name}.{path}"
                     self[key] = tensor
-                    if gradients and tensor.requires_grad:
+                    if (
+                        gradients
+                        and tensor.requires_grad
+                        and key in self
+                        and len(tensor_handles) < self.max_records
+                    ):
 
                         def grad_hook(grad, key=key):
                             self["backward." + key] = grad

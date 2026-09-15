@@ -156,6 +156,11 @@ class WorldSession:
             raise ValueError(
                 "Runtime modules must be in eval mode; use functional forwards for training"
             )
+        events = self._bundle.store.events()
+        if events and events[-1].available_at > float(self._bundle.state.time[0]):
+            raise ValueError(
+                "Store is ahead of the agent; publish updates through WorldSession.commit"
+            )
 
     @property
     def store(self):
@@ -374,6 +379,45 @@ class WorldSession:
         if trace is not None:
             trace.record("commit", snapshot_diff(original.store, draft))
         return copy.deepcopy(result)
+
+    @torch.no_grad()
+    def commit(self, transaction, *, trace=None, save_to=None):
+        """Publish a correction/internal transaction and its agent clock together."""
+        self._check_models()
+        if transaction.event.kind == "observation":
+            raise ValueError("Use observe for source observations and packets")
+        original = self._bundle
+        revision = original.store.revision
+        draft = original.store.clone()
+        receipt = draft.commit(transaction)
+        if receipt["revision"] <= revision:
+            return receipt
+        with self._rng():
+            pending = self.agent.begin_event(
+                original.state,
+                event_id=transaction.event.id,
+                ordinal=original.state.ordinal + 1,
+                time=transaction.event.available_at,
+                trace=trace,
+            )
+            state = self.agent.commit_event(pending)
+            bundle = replace(
+                original,
+                store=draft,
+                state=state,
+                rng=torch.get_rng_state().clone(),
+                cuda_rng=tuple(torch.cuda.get_rng_state_all())
+                if original.cuda_rng
+                else (),
+            )
+            if self._bundle is not original or original.store.revision != revision:
+                raise ValueError("stale session update")
+            if save_to is not None:
+                atomic_torch(save_to, self._snapshot(bundle))
+            self._bundle = bundle
+        if trace is not None:
+            trace.record("commit", snapshot_diff(original.store, draft))
+        return receipt
 
     @torch.no_grad()
     def think(self, query, *, budget=None, steps=1, trace=None, context=None):
