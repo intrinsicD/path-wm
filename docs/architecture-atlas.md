@@ -882,8 +882,8 @@ flowchart TB
 
 The intended agent learns representations and which connections are useful. Stable IDs are bookkeeping; readable labels are revisable interpretations. These boxes are conceptual distinctions, not mandatory database fields or one vector each.
 
-Only bounded matching, per-entity state, a supplied relation slot and a controlled workspace connection exist today (§10). Open-ended concept discovery, learned graph topology, scalable indexing and general skill links remain to be specified and trained.
+Only bounded matching, per-entity state, a supplied relation slot and a controlled workspace connection exist today (§10). Open-ended concept discovery, learned graph topology, scalable indexing and general skill links remain to be specified and trained. The 15 September World State review recommends provenance and restart/correction in a smaller first milestone; concept induction remains M2. Self/control binding, uncertainty, feedback and affect were reviewed as proposals, with action authority owned by the harness and exploration/affect deferred.
 
 A recognition latent cannot automatically be decoded into a faithful face or image. That requires a compatible trained decoder and retained information; a reconstruction is evidence about a readout, not a literal picture of all the agent's beliefs.
 
-Source: [docs/entity-memory-design.md](../docs/entity-memory-design.md), [docs/entity-learning-task.md](../docs/entity-learning-task.md), [pathwm/models/entity_relations.py · EntityRelationMemory:38](../pathwm/models/entity_relations.py).
+Source: [docs/entity-memory-design.md](../docs/entity-memory-design.md), [docs/entity-learning-task.md](../docs/entity-learning-task.md), [pathwm/models/entity_relations.py · EntityRelationMemory:38](../pathwm/models/entity_relations.py), [docs/world-state-proposal-review.md](../docs/world-state-proposal-review.md).

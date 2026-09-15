@@ -1,5 +1,17 @@
 # Current work
 
+**Persistent multimodal World State review, 15 September:**
+[assessment and proposed milestones](world-state-proposal-review.md). Two actual
+Claude review rounds support the hybrid entity/component/relation/evidence design.
+Source review finds existing bounded entity/state/relation paths, but no unified
+persistent multimodal store. Recommended first milestone: confusable instances,
+state/history queries, bounded retrieval and restart/correction with provenance
+from the start. Concept induction is a separate second milestone. Learning signals,
+candidate granularity and quantitative gates still need an experiment contract.
+No universal existence decay from non-observation; merges must retain attribution
+for correction. Discussion only: no model changes, new training or capability
+validation. Existing VAE quality/efficiency work below remains open.
+
 **Efficient sampled-color repair, 15 September:** [protocol/results](spatial-vae-repair-plan.md),
 [report](../runs/spatial_vae_repair_v1/report.html). Training-only color supervision
 on the same model reduces sampled global color error81–83% and raw RGB error26–27%

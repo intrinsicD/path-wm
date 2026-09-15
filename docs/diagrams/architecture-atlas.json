@@ -50,8 +50,8 @@
           },
           "memory": {
             "status": "discussed",
-            "basis": "Discussed recent inputs, hierarchical history, external entity storage, retrieval, latent versus raw evidence and provenance.",
-            "next": "Detailed retention/compression policy can be revisited without treating the whole topic as untouched.",
+            "basis": "Discussed recent inputs, hierarchical history, external entity storage, retrieval, latent versus raw evidence and provenance. On 15 September, reviewed the user-proposed multimodal World State: stable IDs, learned components/relations, evidence, reversible attribution and optional spatial representations. See docs/world-state-proposal-review.md.",
+            "next": "Specify candidate/learning/commit contracts and bounded identity/state/history/restart experiments before a unified store. Evidence starts with M1; concepts follow separately. Current storage validation does not cover this proposed extension.",
             "validation": {
               "label": "Storage / causal reads",
               "scope": "Exact recent envelopes, bounded hierarchy, source/belief separation, causal eligibility and state roundtrips.",
@@ -74,8 +74,8 @@
           },
           "workspace": {
             "status": "discussed",
-            "basis": "Discussed focus on entities and relationships, recalled context, internal thinking and interleaving internal/external actions.",
-            "next": "A detailed stopping/budget policy remains open."
+            "basis": "Discussed focus on entities and relationships, recalled context, internal thinking and interleaving internal/external actions. Reviewed separate binding-candidate and task retrieval, with bounded evidence/context and an explicit unresolved result.",
+            "next": "Define query learning and retrieval budgets in the training-time interface; compare oracle, flat episodic, structured and no-history conditions. General learned retrieval and stopping remain open."
           },
           "request": {
             "status": "needs_discussion",
@@ -712,10 +712,10 @@
       ],
       "notes": [
         "The intended agent learns representations and which connections are useful. Stable IDs are bookkeeping; readable labels are revisable interpretations. These boxes are conceptual distinctions, not mandatory database fields or one vector each.",
-        "Only bounded matching, per-entity state, a supplied relation slot and a controlled workspace connection exist today (§10). Open-ended concept discovery, learned graph topology, scalable indexing and general skill links remain to be specified and trained.",
+        "Only bounded matching, per-entity state, a supplied relation slot and a controlled workspace connection exist today (§10). Open-ended concept discovery, learned graph topology, scalable indexing and general skill links remain to be specified and trained. The 15 September World State review recommends provenance and restart/correction in a smaller first milestone; concept induction remains M2. Self/control binding, uncertainty, feedback and affect were reviewed as proposals, with action authority owned by the harness and exploration/affect deferred.",
         "A recognition latent cannot automatically be decoded into a faithful face or image. That requires a compatible trained decoder and retained information; a reconstruction is evidence about a readout, not a literal picture of all the agent's beliefs."
       ],
-      "sources": ["docs/entity-memory-design.md", "docs/entity-learning-task.md", "pathwm/models/entity_relations.py#EntityRelationMemory"]
+      "sources": ["docs/entity-memory-design.md", "docs/entity-learning-task.md", "pathwm/models/entity_relations.py#EntityRelationMemory", "docs/world-state-proposal-review.md"]
     }
   ]
 }
