@@ -114,3 +114,98 @@ clearly marked oracle context. Same native decoder initialization, training data
 nor a model improvement. It separates decoder/task difficulty from the learned
 state path; success on oracle context does not guarantee it can read learned states.
 No primary checkpoint or test-selected setting is changed by these diagnostics.
+
+## Results and interpretation
+
+[Combined report](../runs/modality_readout_v1/formal/report.html). Completed42 primary
+runs (2 cores,32 separate frozen-output fits,8 joint core/output fits),8 native
+oracle-output controls and2 closed-form state probes. Both pretrained core factor
+screens fail. All192 registered simultaneous-output screens fail, and every variant
+gets0% all-four-correct on held-out combinations. These are failures of this small
+model/training setup, not a general rejection of recurrent readout or multimodal thought.
+
+Mean complete color+location+direction accuracy, two seeds and six input modes:
+
+| Training/readout | Known-combination all-four-correct | Held-out all-four-correct |
+|---|---:|---:|
+| Frozen / native | 3.0% | 0% |
+| Frozen / adapter1 | 8.9% | 0% |
+| Frozen / adapter2 | 6.1% | 0% |
+| Frozen / adapter4 | 2.4% | 0% |
+| Joint / native | 3.6% | 0% |
+| Joint / adapter1 | 3.6% | 0% |
+| Joint / adapter2 | 3.5% | 0% |
+| Joint / adapter4 | 5.7% | 0% |
+
+No adapter passes the two-seed benefit screen. Native joint per-output known
+accuracy is30.2% text,31.4% image,28.6% audio and22.0% video; held-out is0%,0%,0%,7.1%.
+The occasional nearest-template video match is not a quality pass. Wrong/empty
+context and complementary missing-source rows remain visible in each child report.
+The failed full-information task prevents a successful fusion claim.
+
+**Fresh state probe:** validation selects ridge10 in both seeds. With all complete
+inputs, known color is100%, location60–67%, direction44–48%; held-out location is
+only2–8%. Replacing the original factor head does not repair reliable accessibility.
+This does not prove that every possible reader would fail or locate irreversible loss.
+
+**Explicit-factor oracle:** same native decoder initialization and256 updates.
+This control supplies target facts, so it is not evidence of learned agent behavior.
+
+| Output | Known complete accuracy, both seeds | Held-out complete accuracy, both seeds |
+|---|---:|---:|
+| Text, freely generated | 100% | 0% |
+| Image | 50% | 0% |
+| Audio, symbolic tone sequence | 100% | 100% |
+| Video, observed sequence reconstruction | 25% | 0% |
+
+Audio also passes waveform error gates on the oracle control. Text reproduces
+known strings but fails recombination despite complete supplied facts. Image/video
+fail their semantic/quality screens even there. Consequently the current problem
+includes both learned-state availability/readout and output learning/generalization;
+it cannot be attributed solely to the decoder or solely to lost latent information.
+These controls do not distinguish training duration, architecture, objective and
+capacity as the unique cause. The separate spatial image VAE is not this native
+16x16 agent-output head and was not retrained here.
+
+## Implementation and verification
+
+`RecurrentOutputAdapter` is optional, begins as identity, preserves masks and source
+state, and shares a local/cross-attention pair across iterations. It adds9841
+parameters per modality;1/2/4 repeats have the same parameter count but2/4/8 extra
+attention calls. Native full study model297013 parameters; with all adapters336377.
+The actual outer Thinker runs twice, followed by the local output loop. No adaptive
+inner-to-outer feedback or dynamic stopping was added. `TemporalImageDecoder` accepts
+explicit output times; it does not execute world dynamics or ingest target frames.
+
+GPU8-step full versus4+4 checkpoint resume is exact over5612 recursive checks.
+Final72 scoped tests pass. Independent saved-array audit verifies49430 checks over
+1152 metric cells and all42 formal runs. These counts measure integrity, not success
+on49430 tasks. Formal training uses about538 CPU seconds including core pretraining;
+evaluation/report time is additional. No GPU training-memory estimate from these CPU
+fits; GPU preflight allocation is recorded separately. Empty objective charts in
+closed-form diagnostic reports were found and fixed without changing weights/results.
+Reports embed exact media; summary/probe/image figures inspected. Browser interaction
+QA remains unavailable under the existing local-file policy.
+An additional5289 checks verify the oracle/probe artifacts and final report media.
+
+## Next bounded work
+
+Keep the native reference; do not adopt a recurrent variant as a repair. Diagnose
+encoder features, posterior/logit readout and final state separately for location
+and direction. Test a training intervention with a matched longer-training control
+before changing the categorical core. For text, test output-side recombination on
+oracle facts first; for image/video, establish decoder quality with adequate spatial
+and temporal conditioning. Audio's positive control justifies testing its learned
+state interface next. Natural language/speech/photo/video require separate datasets
+and quality targets after this controlled failure is repaired.
+
+Reproduce the main comparison with:
+
+```bash
+.venv/bin/python experiments/modality_readout.py --stage suite --output runs/readout_new --device cpu
+```
+
+Individual child runs accept `--stage core|frozen|joint|oracle`, `--variant`,
+`--modality`, `--core`, `--seed`, `--steps` and `--output`. Resume a specific child
+with the same arguments plus `--resume`; `--stop-after` pauses without changing
+its declared final step count. Oracle is explicitly a ground-truth control.

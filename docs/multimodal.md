@@ -43,7 +43,9 @@ not a compulsory duplicate layer. See the [latent-core walkthrough](latent-core.
 for current mechanics, the proposed comparison and unresolved information capacity.
 Nested Transformer loops are an allowed readout variant: shared latent thinking
 outside, local modality refinement inside, with weight sharing within each loop
-and explicit compute budgets. The inner loops remain proposed, not implemented.
+and explicit compute budgets. Optional inner loops are now implemented and tested
+in the [readout study](modality-readout-plan.md); none repairs reliable combined
+output or held-out recombination at the tested budget. Native defaults stay unchanged.
 
 | Modality | Intended output production |
 | --- | --- |

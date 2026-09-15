@@ -175,3 +175,41 @@ def test_model_baseline_initialization_joint_reads_and_core_gradients():
         assert any(
             p.grad is not None and p.grad.abs().sum() > 0 for p in decoder.parameters()
         )
+
+
+def test_oracle_is_explicit_complete_information_not_an_encoder_path():
+    from experiments.modality_readout import oracle_states
+    from pathwm.data.modality_readout import dataset
+
+    data = dataset("heldout")
+    contexts = oracle_states({"heldout": data})["heldout"]["all"]
+    decoded = torch.stack(
+        [
+            contexts[:, 0, :3].argmax(1),
+            contexts[:, 0, 3:6].argmax(1),
+            contexts[:, 0, 6:8].argmax(1),
+        ],
+        1,
+    )
+    assert torch.equal(decoded, data["targets"]["factors"])
+    assert contexts.shape == (48, 12, 24)
+
+
+def test_analysis_rows_without_loss_do_not_draw_empty_objective(tmp_path):
+    import json
+    from pathwm.evaluation.report import write_report
+
+    (tmp_path / "run.json").write_text(
+        json.dumps({"identity": {"settings": {"purpose": "diagnostic"}}})
+    )
+    (tmp_path / "status.json").write_text(
+        json.dumps(
+            {"result": "complete", "report": "pending", "step": 1, "error": None}
+        )
+    )
+    (tmp_path / "metrics.jsonl").write_text(
+        json.dumps({"step": 1, "split": "validation", "accuracy": 0.5}) + "\n"
+    )
+    report = write_report(tmp_path)
+    assert report.exists()
+    assert not (tmp_path / "learning_curve.png").exists()

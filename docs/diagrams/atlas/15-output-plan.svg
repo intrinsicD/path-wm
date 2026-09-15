@@ -1,8 +1,8 @@
-<svg width="2000pt" height="478pt"
- viewBox="0.00 0.00 2000.00 478.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="2050pt" height="478pt"
+ viewBox="0.00 0.00 2050.00 478.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="15-output-plan-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 463.68)">
 <title>G</title>
-<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-463.68 1985.43,-463.68 1985.43,14.4 -14.4,14.4"/>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-463.68 2035.88,-463.68 2035.88,14.4 -14.4,14.4"/>
 <!-- context&#45;&gt;work -->
 <g id="15-output-plan-edge1" class="edge">
 <title>context&#45;&gt;work</title>
@@ -41,14 +41,14 @@
 <!-- work&#45;&gt;video -->
 <g id="15-output-plan-edge5" class="edge">
 <title>work&#45;&gt;video</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M813.76,-286.53C974.89,-260.83 1221.89,-221.44 1221.89,-221.44 1221.89,-221.44 1230.22,-219.18 1243.02,-215.72"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1243.32,-218.18 1249.43,-213.98 1242.04,-213.45 1243.32,-218.18"/>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M813.76,-286.53C974.89,-260.83 1221.89,-221.44 1221.89,-221.44 1221.89,-221.44 1231.65,-219.1 1246.56,-215.52"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1246.95,-217.95 1253.18,-213.94 1245.81,-213.19 1246.95,-217.95"/>
 <text xml:space="preserve" text-anchor="middle" x="1136.47" y="-244.74" font-family="DejaVu Sans" font-size="11.00" fill="#374151">state / trajectory</text>
 </g>
 <!-- text&#45;&gt;text -->
 <g id="15-output-plan-edge12" class="edge">
 <title>text&#45;&gt;text</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M282.09,-188.66C294.21,-186.49 301.78,-183.1 301.78,-178.48 301.78,-175.02 297.52,-172.24 290.28,-170.16"/>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M282.09,-188.66C294.21,-186.49 301.78,-183.1 301.78,-178.48 301.78,-175.02 297.52,-172.24 290.28,-170.16"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="291.08,-167.83 283.71,-168.67 290,-172.61 291.08,-167.83"/>
 <text xml:space="preserve" text-anchor="middle" x="358.17" y="-175.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">optional shared loop</text>
 </g>
@@ -62,7 +62,7 @@
 <!-- image&#45;&gt;image -->
 <g id="15-output-plan-edge13" class="edge">
 <title>image&#45;&gt;image</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M678.03,-189.07C690.06,-186.94 697.69,-183.4 697.69,-178.48 697.69,-174.79 693.4,-171.88 686.17,-169.75"/>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M678.03,-189.07C690.06,-186.94 697.69,-183.4 697.69,-178.48 697.69,-174.79 693.4,-171.88 686.17,-169.75"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="687.02,-167.43 679.65,-168.26 685.93,-172.21 687.02,-167.43"/>
 <text xml:space="preserve" text-anchor="middle" x="754.08" y="-175.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">optional shared loop</text>
 </g>
@@ -76,7 +76,7 @@
 <!-- audio&#45;&gt;audio -->
 <g id="15-output-plan-edge14" class="edge">
 <title>audio&#45;&gt;audio</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M1081.13,-189.03C1093.29,-186.89 1100.99,-183.37 1100.99,-178.48 1100.99,-174.81 1096.66,-171.92 1089.36,-169.8"/>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1081.13,-189.03C1093.29,-186.89 1100.99,-183.37 1100.99,-178.48 1100.99,-174.81 1096.66,-171.92 1089.36,-169.8"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1090.12,-167.46 1082.75,-168.3 1089.04,-172.24 1090.12,-167.46"/>
 <text xml:space="preserve" text-anchor="middle" x="1157.39" y="-175.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">optional shared loop</text>
 </g>
@@ -90,24 +90,24 @@
 <!-- video&#45;&gt;video -->
 <g id="15-output-plan-edge15" class="edge">
 <title>video&#45;&gt;video</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M1522.61,-188.56C1534.75,-186.39 1542.3,-183.03 1542.3,-178.48 1542.3,-175.07 1538.05,-172.32 1530.81,-170.25"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1531.6,-167.92 1524.23,-168.77 1530.52,-172.7 1531.6,-167.92"/>
-<text xml:space="preserve" text-anchor="middle" x="1598.69" y="-175.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">optional shared loop</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1562.25,-188.16C1574.43,-185.99 1581.9,-182.76 1581.9,-178.48 1581.9,-175.27 1577.7,-172.65 1570.46,-170.63"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1571.24,-168.29 1563.88,-169.16 1570.18,-173.07 1571.24,-168.29"/>
+<text xml:space="preserve" text-anchor="middle" x="1638.3" y="-175.18" font-family="DejaVu Sans" font-size="11.00" fill="#374151">optional shared loop</text>
 </g>
 <!-- video&#45;&gt;outputs -->
 <g id="15-output-plan-edge9" class="edge">
 <title>video&#45;&gt;outputs</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M1275.54,-143.4C1211.68,-121.92 1129.27,-94.21 1063.99,-72.25"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1065.11,-70.04 1057.69,-70.13 1063.55,-74.69 1065.11,-70.04"/>
-<text xml:space="preserve" text-anchor="middle" x="1247.73" y="-99.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">temporal generation</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1290.74,-143.4C1223.85,-121.92 1137.54,-94.21 1069.16,-72.25"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1069.91,-69.92 1062.5,-70.11 1068.41,-74.58 1069.91,-69.92"/>
+<text xml:space="preserve" text-anchor="middle" x="1265.59" y="-99.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">requested&#45;time frames</text>
 </g>
 <!-- test&#45;&gt;outputs -->
 <g id="15-output-plan-edge10" class="edge">
 <title>test&#45;&gt;outputs</title>
-<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M1672.36,-138.02C1666.39,-136.44 1662.89,-135.52 1662.89,-135.52 1662.89,-135.52 1309.96,-85.69 1102.46,-56.4"/>
-<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="1102.84,-53.98 1095.57,-55.42 1102.16,-58.83 1102.84,-53.98"/>
-<text xml:space="preserve" text-anchor="middle" x="1582.04" y="-105.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">measure each branch and</text>
-<text xml:space="preserve" text-anchor="middle" x="1582.04" y="-92.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">consistency</text>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M1712.17,-137.9C1706.31,-136.4 1702.89,-135.52 1702.89,-135.52 1702.89,-135.52 1320.05,-84.36 1102.15,-55.24"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="1102.74,-52.85 1095.48,-54.35 1102.09,-57.7 1102.74,-52.85"/>
+<text xml:space="preserve" text-anchor="middle" x="1613.4" y="-105.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">measure each branch and</text>
+<text xml:space="preserve" text-anchor="middle" x="1613.4" y="-92.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">consistency</text>
 </g>
 <!-- context -->
 <g id="15-output-plan-node1" class="node">
@@ -151,10 +151,10 @@
 <!-- video -->
 <g id="15-output-plan-node6" class="node">
 <title>video</title>
-<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M1510.3,-213.04C1510.3,-213.04 1243.47,-213.04 1243.47,-213.04 1237.47,-213.04 1231.47,-207.04 1231.47,-201.04 1231.47,-201.04 1231.47,-155.92 1231.47,-155.92 1231.47,-149.92 1237.47,-143.92 1243.47,-143.92 1243.47,-143.92 1510.3,-143.92 1510.3,-143.92 1516.3,-143.92 1522.3,-149.92 1522.3,-155.92 1522.3,-155.92 1522.3,-201.04 1522.3,-201.04 1522.3,-207.04 1516.3,-213.04 1510.3,-213.04"/>
-<text xml:space="preserve" text-anchor="middle" x="1376.89" y="-191.08" font-family="DejaVu Sans" font-size="14.00">Video extension</text>
-<text xml:space="preserve" text-anchor="middle" x="1376.89" y="-174.28" font-family="DejaVu Sans" font-size="14.00">Temporal conditioning / generator</text>
-<text xml:space="preserve" text-anchor="middle" x="1376.89" y="-157.48" font-family="DejaVu Sans" font-size="14.00">Current path decodes state trajectory</text>
+<path fill="#efeafa" stroke="#9c87b5" stroke-width="1.1" d="M1549.9,-213.04C1549.9,-213.04 1243.87,-213.04 1243.87,-213.04 1237.87,-213.04 1231.87,-207.04 1231.87,-201.04 1231.87,-201.04 1231.87,-155.92 1231.87,-155.92 1231.87,-149.92 1237.87,-143.92 1243.87,-143.92 1243.87,-143.92 1549.9,-143.92 1549.9,-143.92 1555.9,-143.92 1561.9,-149.92 1561.9,-155.92 1561.9,-155.92 1561.9,-201.04 1561.9,-201.04 1561.9,-207.04 1555.9,-213.04 1549.9,-213.04"/>
+<text xml:space="preserve" text-anchor="middle" x="1396.89" y="-191.08" font-family="DejaVu Sans" font-size="14.00">Optional time&#45;conditioned image decoder</text>
+<text xml:space="preserve" text-anchor="middle" x="1396.89" y="-174.28" font-family="DejaVu Sans" font-size="14.00">Reconstruct observed sequence</text>
+<text xml:space="preserve" text-anchor="middle" x="1396.89" y="-157.48" font-family="DejaVu Sans" font-size="14.00">General temporal generation remains open</text>
 </g>
 <!-- outputs -->
 <g id="15-output-plan-node7" class="node">
@@ -167,11 +167,11 @@
 <!-- test -->
 <g id="15-output-plan-node8" class="node">
 <title>test</title>
-<path fill="#fff0db" stroke="#bd934d" stroke-width="1.1" d="M1959.03,-221.44C1959.03,-221.44 1684.75,-221.44 1684.75,-221.44 1678.75,-221.44 1672.75,-215.44 1672.75,-209.44 1672.75,-209.44 1672.75,-147.52 1672.75,-147.52 1672.75,-141.52 1678.75,-135.52 1684.75,-135.52 1684.75,-135.52 1959.03,-135.52 1959.03,-135.52 1965.03,-135.52 1971.03,-141.52 1971.03,-147.52 1971.03,-147.52 1971.03,-209.44 1971.03,-209.44 1971.03,-215.44 1965.03,-221.44 1959.03,-221.44"/>
-<text xml:space="preserve" text-anchor="middle" x="1821.89" y="-199.48" font-family="DejaVu Sans" font-size="14.00">Proposed comparison</text>
-<text xml:space="preserve" text-anchor="middle" x="1821.89" y="-182.68" font-family="DejaVu Sans" font-size="14.00">Native readout vs small adapter</text>
-<text xml:space="preserve" text-anchor="middle" x="1821.89" y="-165.88" font-family="DejaVu Sans" font-size="14.00">Held&#45;out tasks + wrong/empty context</text>
-<text xml:space="preserve" text-anchor="middle" x="1821.89" y="-149.08" font-family="DejaVu Sans" font-size="14.00">Grounding, quality, total resources</text>
+<path fill="#fff0db" stroke="#bd934d" stroke-width="1.1" d="M2009.48,-221.44C2009.48,-221.44 1724.29,-221.44 1724.29,-221.44 1718.29,-221.44 1712.29,-215.44 1712.29,-209.44 1712.29,-209.44 1712.29,-147.52 1712.29,-147.52 1712.29,-141.52 1718.29,-135.52 1724.29,-135.52 1724.29,-135.52 2009.48,-135.52 2009.48,-135.52 2015.48,-135.52 2021.48,-141.52 2021.48,-147.52 2021.48,-147.52 2021.48,-209.44 2021.48,-209.44 2021.48,-215.44 2015.48,-221.44 2009.48,-221.44"/>
+<text xml:space="preserve" text-anchor="middle" x="1866.89" y="-199.48" font-family="DejaVu Sans" font-size="14.00">Completed controlled comparison</text>
+<text xml:space="preserve" text-anchor="middle" x="1866.89" y="-182.68" font-family="DejaVu Sans" font-size="14.00">Native vs adapter1/2/4; two seeds</text>
+<text xml:space="preserve" text-anchor="middle" x="1866.89" y="-165.88" font-family="DejaVu Sans" font-size="14.00">Separate frozen reads and joint learning</text>
+<text xml:space="preserve" text-anchor="middle" x="1866.89" y="-149.08" font-family="DejaVu Sans" font-size="14.00">All192 combined screens fail</text>
 </g>
 </g>
 </svg>

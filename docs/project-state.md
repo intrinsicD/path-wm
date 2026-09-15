@@ -1,10 +1,17 @@
 # Current work
 
-**Multimodal readout comparison in progress, 15 September:**
-[registered plan](modality-readout-plan.md). User authorized separate and joint
-tests of every modality and optional recurrent readouts. Compare native attention
-with adapter1/2/4 on identical frozen core states, then joint core/output training.
-Controlled paired factors and held-out combinations; no new capability result yet.
+**Multimodal readout comparison completed, 15 September:**
+[protocol/results](modality-readout-plan.md),
+[combined report](../runs/modality_readout_v1/formal/report.html). Two seeds,
+native versus adapter1/2/4, separate frozen-state outputs then joint core/output
+training:42 runs, plus8 explicit-factor output controls and2 linear probes.
+All192 simultaneous-output screens fail; held-out all-four-correct is0% throughout.
+Core color is more readable than location/direction. With oracle facts, audio
+passes symbolic-tone recombination; text fits known strings but fails recombination,
+and native image/video remain weak. Recurrent adapters are optional, not adopted as
+a repair. Source/mask/gradient checks and exact GPU resume pass; raw reports preserve
+negative results. Next: upstream location/direction diagnostics and output-side
+recombination/spatial-conditioning controls. No general language or media capability.
 
 **Latent-core visualization, 15 September:** [source-grounded walkthrough](latent-core.md)
 and atlas §14–15 distinguish world belief, recurrent workspace, session memory and

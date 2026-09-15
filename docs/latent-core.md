@@ -3,7 +3,9 @@
 Stand: 15. September 2026, Modellcode `8937b15`. Diese Darstellung beschreibt den
 kategorischen `BeliefAgent`, ergänzt um die optionale persistente WorldSession.
 Der frühere Gaussian-Agent und die separaten Bild-VAEs sind andere Konfigurationen.
-Die optionalen Auslese-Erweiterungen unten sind Vorschläge, keine validierte Fähigkeit.
+Der Kern ist unverändert; optionale Auslese-Erweiterungen wurden inzwischen im
+[Modalitätsvergleich](modality-readout-plan.md) implementiert und getestet. Die
+kontrollierten Gesamtaufgaben scheitern weiterhin; keine allgemeine Fähigkeit ist validiert.
 
 ## Was heute im Kern liegt
 
@@ -109,7 +111,7 @@ Die vorhandenen nativen Decoder haben bereits gelerntes Auslesen:
 - **Video:** derzeit Bilddecodierung einer zeitlich geordneten Zustandsfolge;
   ein allgemeiner zeitlicher Videogenerator ist damit noch nicht gegeben.
 
-Ein optionaler Adapter könnte diese vorhandene Cross-Attention um zusätzliche
+Ein optionaler Adapter kann diese vorhandene Cross-Attention um zusätzliche
 Verarbeitung, strukturierte Abfragetokens oder die Projektion in den Latentraum
 eines austauschbaren Codecs ergänzen. Anfrage, bisherige Ausgabe und ausgewählter
 Kontext können das Auslesen steuern. Die separate Bildstrecke besitzt mit
@@ -147,8 +149,9 @@ identischem Zustand zeigt dagegen zugängliche Information.
 
 Der frühere Vorschlag, nur Arbeits-/Reasoning-Tokens als Antwortplan zu lesen,
 bleibt eine mögliche Diagnose für die Arbeitsteilung. Er ist weder angenommenes
-Pflichtdesign noch der vorrangige Erweiterungsvorschlag. Keine Module, Gewichte,
-Trainingsläufe oder Größenentscheidungen wurden mit dieser Präzisierung geändert.
+Pflichtdesign noch der vorrangige Erweiterungsvorschlag. Die anschließenden getrennten
+und gemeinsamen Tests sind im Modalitätsprotokoll dokumentiert; keine Variante wurde
+als verbesserter Standard übernommen.
 
 ## Option: geschachtelte Transformer-Schleifen
 
@@ -181,8 +184,8 @@ PATH-WM-Anordnung ist damit nicht validiert.
 
 Für einen ersten Vergleich bleiben die Wiederholungszahlen fest und klein:
 vorhandener einmaliger Readout als Referenz, dann zwei oder vier Schritte desselben
-Blocks. Die äußere Schleife existiert bereits; die inneren Adapter-Schleifen sind
-noch nicht implementiert. Mehr Wiederholungen derselben Gewichte erhöhen die
+Blocks. Die äußere Schleife existiert bereits; innere Adapter-Schleifen sind jetzt
+optional implementiert und mit1/2/4 Durchläufen getestet. Mehr Wiederholungen derselben Gewichte erhöhen die
 Rechenarbeit, nicht deren Parameterzahl; beim Training kann der Aktivierungsspeicher
 wachsen. Ein zusätzliches Modul bringt natürlich eigene Parameter mit.
 
@@ -197,8 +200,11 @@ nicht und schreibt weder World State noch Quellenhistorie automatisch um.
 Gemessen werden soll, ob wiederholtes Auslesen bei kontrolliertem Gesamtbudget mehr
 korrekten Inhalt und bessere Ausgabe liefert. Gegen zusätzliche gewöhnliche Layer
 und den bestehenden einfachen Readout vergleichen; Parameterersparnis allein ist
-kein Fähigkeitsnachweis. Diese Ergänzung definiert eine erlaubte Architekturvariante,
-keine bereits trainierte Leistung oder ausgewählte Konfiguration.
+kein Fähigkeitsnachweis. Diese Ergänzung definiert eine erlaubte Architekturvariante.
+Der Zweistartwert-Vergleich erreicht keine zuverlässige multimodale Gesamtleistung.
+Er testet zwei äußere Denkschritte mit nachgelagertem innerem Auslesen, keine
+adaptive Rückkopplung zwischen den Schleifen. Details und negative Ergebnisse
+stehen im [Bericht](../runs/modality_readout_v1/formal/report.html).
 
 ## Quellstellen
 

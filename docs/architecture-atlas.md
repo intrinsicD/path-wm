@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-15, repository snapshot `8937b15`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-15, repository snapshot `6a409e9`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
@@ -981,7 +981,7 @@ Source: [pathwm/models/belief.py · BeliefDynamics:33](../pathwm/models/belief.p
 
 ## 15 · Shared latent thought, modality-specific readout
 
-User clarification · existing decoder attention first; optional adapters need comparison
+Implemented optional readout loops / two-seed controlled comparison fails reliable combined output
 
 ```mermaid
 flowchart TB
@@ -995,27 +995,27 @@ flowchart TB
     class image learned;
     audio["Audio readout<br/>Existing learned query attention<br/>Optional timed conditioning"]
     class audio learned;
-    video["Video extension<br/>Temporal conditioning / generator<br/>Current path decodes state trajectory"]
-    class video proposal;
+    video["Optional time-conditioned image decoder<br/>Reconstruct observed sequence<br/>General temporal generation remains open"]
+    class video optional;
     outputs["Text / image / audio / video outputs<br/>Modality-specific generation<br/>Agreement and timing require tests"]
     class outputs external;
-    test["Proposed comparison<br/>Native readout vs small adapter<br/>Held-out tasks + wrong/empty context<br/>Grounding, quality, total resources"]
+    test["Completed controlled comparison<br/>Native vs adapter1/2/4; two seeds<br/>Separate frozen reads and joint learning<br/>All192 combined screens fail"]
     class test training;
     context -->|"current context interfaces"| work
     work -->|"state tokens"| text
     work -->|"state tokens"| image
     work -->|"state tokens"| audio
-    work -.->|"state / trajectory"| video
+    work -->|"state / trajectory"| video
     text -->|"causal text generation"| outputs
     image -->|"RGB / codec features"| outputs
     audio -->|"waveform / timed features"| outputs
-    video -.->|"temporal generation"| outputs
+    video -->|"requested-time frames"| outputs
     test -.->|"measure each branch and consistency"| outputs
     work -->|"existing Thinker repeats"| work
-    text -.->|"optional shared loop"| text
-    image -.->|"optional shared loop"| image
-    audio -.->|"optional shared loop"| audio
-    video -.->|"optional shared loop"| video
+    text -->|"optional shared loop"| text
+    image -->|"optional shared loop"| image
+    audio -->|"optional shared loop"| audio
+    video -->|"optional shared loop"| video
     classDef learned fill:#e6eef8,stroke:#7696bc,color:#202a36;
     classDef store fill:#f3f4f6,stroke:#9098a4,color:#202a36;
     classDef external fill:#e7f1eb,stroke:#789887,color:#202a36;
@@ -1026,7 +1026,7 @@ flowchart TB
 
 [Full-size SVG](diagrams/atlas/15-output-plan.svg)
 
-The common latent core stays multimodal. The user proposes optional modality-specific extraction before decoding, not a compulsory common answer plan or a new adapter implementation.
+The common latent core stays multimodal. The user proposes optional modality-specific extraction before decoding, not a compulsory common answer plan. The optional adapter is now implemented and tested.
 
 Native text/image/audio decoders already learn cross-attention reads. Text queries depend on the generated prefix; image/audio queries are learned parameters. Extra adapters must add a measured benefit rather than duplicate that readout.
 
@@ -1036,8 +1036,10 @@ Compare existing reads with a small adapter on fixed core states first; then con
 
 Extraction cannot recover unretained evidence. A generator can fill unspecified details using learned priors; this does not recover the original missing details. Preserve evidence metadata and test disagreement across simultaneous modalities.
 
-The earlier workspace-only answer-plan proposal remains an optional ablation, not adopted architecture. No model changes, training or new validation accompany this clarification.
+The earlier workspace-only answer-plan proposal remains an optional ablation, not adopted architecture. The following readout study adds optional modules; it does not replace the default model.
 
 User-proposed nested loops: an outer shared Thinker and inner modality-specific token refinement can reuse weights within each loop. Do not require the same weights across modalities. Begin with fixed budgets; repetitions add compute and potentially training activation memory. Autoregressive steps multiplied by inner/outer loops can become expensive. Local refinement does not mutate world evidence or trigger outer thinking automatically.
 
-Source: [pathwm/models/agent.py · Thinker:105](../pathwm/models/agent.py), [pathwm/models/agent.py · emit:508](../pathwm/models/agent.py), [pathwm/models/modalities.py · TextDecoder:327](../pathwm/models/modalities.py), [pathwm/models/modalities.py · ImageDecoder:282](../pathwm/models/modalities.py), [pathwm/models/modalities.py · AudioDecoder:308](../pathwm/models/modalities.py), [pathwm/models/conditional_image.py · ConditionalFeatureGenerator:73](../pathwm/models/conditional_image.py), [docs/multimodal.md](../docs/multimodal.md), [docs/latent-core.md](../docs/latent-core.md).
+Evidence: runs/modality_readout_v1/verification.json and controls-verification.json; docs/modality-readout-plan.md.42 primary runs plus8 explicit-factor controls. Held-out all-four-correct remains0% for every variant. Iterative adapters run after two fixed outer Thinker steps; adaptive inner-to-outer feedback is not implemented. Mechanical passing tests do not validate content learning.
+
+Source: [pathwm/models/agent.py · Thinker:105](../pathwm/models/agent.py), [pathwm/models/agent.py · emit:508](../pathwm/models/agent.py), [pathwm/models/modalities.py · TextDecoder:327](../pathwm/models/modalities.py), [pathwm/models/modalities.py · ImageDecoder:282](../pathwm/models/modalities.py), [pathwm/models/modalities.py · AudioDecoder:308](../pathwm/models/modalities.py), [pathwm/models/conditional_image.py · ConditionalFeatureGenerator:73](../pathwm/models/conditional_image.py), [docs/multimodal.md](../docs/multimodal.md), [docs/latent-core.md](../docs/latent-core.md), [pathwm/models/readout.py · RecurrentOutputAdapter:9](../pathwm/models/readout.py), [pathwm/models/readout.py · TemporalImageDecoder:72](../pathwm/models/readout.py), [docs/modality-readout-plan.md](../docs/modality-readout-plan.md).

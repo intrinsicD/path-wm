@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import time
 import wave
+import shutil
 
 import numpy as np
 import torch
@@ -274,6 +275,48 @@ def readout_inspection(directory):
                 + "</tr>"
             )
         parts.append("</table></div>")
+        if data.get("oracle_controls"):
+            parts.append(
+                '<h3>Positive output control: explicit target facts</h3><p>Same native decoder initialization and256 updates, with complete ground-truth factor vectors. This is not learned agent performance. Text accuracy requires a complete freely generated answer.</p><div class="table"><table><tr><th>Seed</th><th>Output</th><th>Known combinations</th><th>Held-out combinations</th><th>Held-out quality screen</th></tr>'
+            )
+            for r in data["oracle_controls"]:
+                vals = [
+                    r["seed"],
+                    r["output"],
+                    f"{r['seen']['all_accuracy']:.1%}",
+                    f"{r['heldout']['all_accuracy']:.1%}",
+                    r["heldout"]["gate"],
+                ]
+                parts.append(
+                    "<tr>"
+                    + "".join("<td>" + escape(str(v)) + "</td>" for v in vals)
+                    + "</tr>"
+                )
+            parts.append("</table></div>")
+        for name, label in [
+            (
+                "readout_summary.png",
+                "Complete factor correctness; averages across two seeds and six input modes",
+            ),
+            (
+                "readout_examples.png",
+                "Representative outputs: first seed, joint native readout; held-out combinations",
+            ),
+        ]:
+            if (directory / name).exists():
+                url = (
+                    "data:image/png;base64,"
+                    + base64.b64encode((directory / name).read_bytes()).decode()
+                )
+                parts.append(
+                    f'<h3>{escape(label)}</h3><img class="chart" alt="{escape(label)}" src="{url}">'
+                )
+        if data.get("example_source"):
+            parts.append(
+                "<p>Text/audio/video examples below come from "
+                + escape(data["example_source"])
+                + ". They show a fixed representative run, not a selected winner.</p>"
+            )
     else:
         if data["stage"] == "oracle":
             parts.append(
@@ -345,7 +388,7 @@ def readout_inspection(directory):
     return parts
 
 
-def aggregate(root):
+def aggregate(root, *, oracle_root=None, probe_root=None):
     root = Path(root)
     summary = []
     children = []
@@ -461,6 +504,76 @@ def aggregate(root):
         child_reports=sorted(set(children)),
         scope="Controlled learned factors; two seeds, unequal compute; no general modality capability or architectural superiority claim.",
     )
+    if oracle_root is not None:
+        data["oracle_controls"] = []
+        for path in sorted(Path(oracle_root).glob("seed*/*/readout.json")):
+            d = json.loads(path.read_text())
+            data["oracle_controls"].append(
+                dict(
+                    seed=d["seed"],
+                    output=d["modality"],
+                    seen=next(r for r in d["metrics"] if r["split"] == "seen"),
+                    heldout=next(r for r in d["metrics"] if r["split"] == "heldout"),
+                    source=str(path),
+                    source_sha256=file_hash(path),
+                )
+            )
+    if probe_root is not None:
+        data["linear_probes"] = [
+            dict(source=str(p), source_sha256=file_hash(p), **json.loads(p.read_text()))
+            for p in sorted(Path(probe_root).glob("seed*/results.json"))
+        ]
+    from matplotlib.figure import Figure
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+
+    fig = Figure(figsize=(11, 7), layout="constrained")
+    FigureCanvasAgg(fig)
+    for i, stage in enumerate(("frozen", "joint")):
+        for j, split in enumerate(("seen", "heldout")):
+            ax = fig.add_subplot(2, 2, i * 2 + j + 1)
+            matrix = []
+            for variant in ("native", "adapter1", "adapter2", "adapter4"):
+                rr = [
+                    r
+                    for r in summary
+                    if r["stage"] == stage
+                    and r["split"] == split
+                    and r["variant"] == variant
+                ]
+                matrix.append(
+                    [np.mean([r["accuracy"][k] for r in rr]) for k in KINDS]
+                    + [np.mean([r["all_correct"] for r in rr])]
+                )
+            ax.imshow(matrix, vmin=0, vmax=1, cmap="viridis")
+            ax.set_xticks(range(5), ["Text", "Image", "Audio", "Video", "All four"])
+            ax.set_yticks(range(4), ["Native", "Adapter1", "Adapter2", "Adapter4"])
+            ax.set_title(stage + " / " + split)
+            for row in range(4):
+                for col in range(5):
+                    ax.text(
+                        col,
+                        row,
+                        f"{matrix[row][col]:.0%}",
+                        ha="center",
+                        va="center",
+                        color="white" if matrix[row][col] < 0.5 else "black",
+                    )
+    fig.suptitle(
+        "Correct color + location + direction · averages, not independent repetitions"
+    )
+    fig.savefig(root / "readout_summary.png", dpi=140)
+    example = sorted(root.glob("seed*/joint_native"))[0]
+    data["example_source"] = str(example.relative_to(root))
+    for filename in (
+        "text_examples.json",
+        "readout_audio_target.wav",
+        "readout_audio_output.wav",
+        "readout_video_target.gif",
+        "readout_video_output.gif",
+    ):
+        if (example / filename).exists():
+            shutil.copyfile(example / filename, root / filename)
+    shutil.copyfile(example / "comparison.png", root / "readout_examples.png")
     atomic_json(root / "readout.json", data)
     # Analysis-only report in the same renderer, grounded in exact child records.
     identity = {
