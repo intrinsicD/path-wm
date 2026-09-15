@@ -162,3 +162,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Text decoder sizing references](tables/text_decoder_sizing_2026-09-15.json): O256/N380; official1.7B/3B model cards and local8GiB GPU check; no minimum-size or runtime benchmark.
 
 - [Latent reasoning and text division](tables/latent_language_division_2026-09-15.json): N381/O257; scoped Coconut primary-source precedent; no local capacity-saving experiment.
+
+- [Latent-core visual review](tables/latent_core_visual_2026-09-15.json): N382/O258; actual belief/workspace and proposed answer-plan graphs; source/static checks, no model or training changes.

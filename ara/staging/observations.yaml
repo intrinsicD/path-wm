@@ -4546,3 +4546,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O258
+  timestamp: 2026-09-15T21:28+02:00
+  provenance: ai-suggested
+  content: First train the existing working/reasoning tokens as an answer plan and restrict decoder conditioning
+    to that slice; compare with current full-state context. Dedicated latent plan tokens or another planning module
+    should follow a measured need, not a presumed absence of recurrence. Existing Thinker already shares attention/MLP
+    across iterations; learned grounding/readiness and explicit inference revisions remain open. Preserve evidence
+    and evaluate complete system resources rather than decoder parameter count alone.
+  context: Visual architectural review only. New diagrams/prose are not implementation of the proposed comparison
+    or adoption of additional modules.
+  potential_type: architecture
+  bound_to:
+  - N382
+  - N381
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

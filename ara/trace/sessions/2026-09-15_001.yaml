@@ -2,9 +2,9 @@ session:
   id: 2026-09-15_001
   date: '2026-09-15'
   started: 2026-09-15T00:47+02:00
-  last_turn: 2026-09-15T20:45+02:00
-  turn_count: 12
-  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training."
+  last_turn: 2026-09-15T21:28+02:00
+  turn_count: 13
+  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training. Latent-core drawings separate existing loop from proposed workspace answer plan; implementation unchanged."
 events_logged:
 - turn: 1
   type: question
@@ -444,6 +444,22 @@ events_logged:
     is current content, weights implement learned transformations. Standard language networks already operate on
     hidden vectors; omitting intermediate text is a distinct design choice. Train and compare total core-plus-decoder
     quality, memory and compute before claiming savings; prior1-3B suggestion is not a required decoder floor.'
+- turn: 13
+  type: question
+  id: N382
+  routing: direct
+  provenance: user
+  summary: Visualize internal latent core and examine minimal answer-planning extension
+- turn: 13
+  type: observation
+  id: O258
+  routing: staged
+  provenance: ai-suggested
+  summary: First train the existing working/reasoning tokens as an answer plan and restrict decoder conditioning
+    to that slice; compare with current full-state context. Dedicated latent plan tokens or another planning module
+    should follow a measured need, not a presumed absence of recurrence. Existing Thinker already shares attention/MLP
+    across iterations; learned grounding/readiness and explicit inference revisions remain open. Preserve evidence
+    and evaluate complete system resources rather than decoder parameter count alone.
 ai_actions:
 - turn: 1
   action: Saved independent analysis and a bounded brief based on the user-supplied architecture;
@@ -583,6 +599,18 @@ ai_actions:
   provenance: ai-executed
   files_changed:
   - ara/evidence/tables/latent_language_division_2026-09-15.json
+- turn: 13
+  action: Inspected categorical state/thinker/task/decoder and graph adapter source; wrote German visual walkthrough
+    and two atlas graphs, regenerated15 diagrams and checked149 links/static figures. Updated discussion notes without
+    new green scope; committed8da4b84/702ac23. No model or training change.
+  provenance: ai-executed
+  files_changed:
+  - docs/latent-core.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/diagrams/atlas/14-latent-core.svg
+  - docs/diagrams/atlas/15-output-plan.svg
+  - docs/project-state.md
+  - ara/evidence/tables/latent_core_visual_2026-09-15.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -619,6 +647,9 @@ key_context:
     und der Textdecoder soll das dekodieren.
 - turn: 12
   excerpt: Warum muss das so groß sein? Kann man das nicht im latenten Raum selber machen?
+- turn: 13
+  excerpt: Kannst du mir den internen latenten Kern nochmal visuell darstellen? Vielleicht brauchen wir noch eine
+    Erweiterung da.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current
   rate; image/full retention remains 10/12. Next lower-rate comparison from preserved source
@@ -673,6 +704,8 @@ open_threads:
   backend selected.'
 - 'N381/O257: latent answer planning versus decoder realization; total parameter/memory savings and grounded language
   quality need experiments.'
+- 'N382/O258: compare full-state decoding with trained existing workspace answer plan before dedicated plan tokens.
+  Grounding checks and reasoned belief revision remain unvalidated.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await
   researcher response.'
@@ -797,3 +830,5 @@ ai_suggestions_pending:
   or established minima.'
 - 'O257: latent language division remains proposed; no evidence that latent computation removes required learned
   capacity.'
+- 'O258: workspace-first output-plan experiment proposed; drawing does not adopt a new layer, validate thinking
+  or show capacity savings.'

@@ -6348,3 +6348,18 @@ tree:
   evidence:
   - ara/evidence/tables/latent_language_division_2026-09-15.json
   status: open
+- id: N382
+  type: question
+  title: Visualize internal latent core and examine minimal answer-planning extension
+  provenance: user
+  timestamp: 2026-09-15T21:28+02:00
+  description: User asks for a visual core walkthrough and whether extension is needed. Source-grounded drawings14-15
+    and German walkthrough now distinguish belief, workspace loop, memory and proposed output plan. Architectural
+    necessity and learned quality remain open.
+  also_depends_on:
+  - N381
+  - N375
+  evidence:
+  - ara/evidence/tables/latent_core_visual_2026-09-15.json
+  - docs/latent-core.md
+  status: resolved

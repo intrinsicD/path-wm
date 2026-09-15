@@ -1,0 +1,45 @@
+{
+  "provenance": "ai-executed",
+  "source_model_commit": "8937b15",
+  "documentation_commits": [
+    "8da4b84",
+    "702ac23"
+  ],
+  "source_facts": [
+    "BeliefDynamics advances h; BeliefCorrection returns posterior categorical logits.",
+    "think repeats shared Thinker parameters and updates only working/reasoning tokens.",
+    "Native decoders read all state tokens; WorldSession adds retrieved graph tokens via goal context.",
+    "Task operation selection exists; general answer planning/readiness is not established."
+  ],
+  "proposal": "Train existing workspace as answer plan before adding separate plan tokens; compare full-state/workspace/dedicated-plan conditioning with held-out grounding and language metrics plus total resources.",
+  "model_changed": false,
+  "new_training": false,
+  "verification": {
+    "diagrams": 15,
+    "added": [
+      "14-latent-core",
+      "15-output-plan"
+    ],
+    "source_model_commit": "8937b15",
+    "valid_local_links": 149,
+    "model_changed": false,
+    "new_training": false,
+    "new_capability_validation": false,
+    "browser_qa": "Unavailable under existing local-file policy; structural and static checks only.",
+    "html_sha256": "3315241dd98beed97702068416ebfbc219083c1c18d4b8d5b683b3526af739b4",
+    "visual_qa": "Both new graph PNGs inspected; readable labels and paths. Static inspection only.",
+    "figures": {
+      "core.png": "9b9f8623932a04fec921fd0e5882e4f6ad956a3f5ca8ae43036e9e426a4b1a96",
+      "plan.png": "3704822895e5dc74dee7294cfb9b6e6ba374ad4b9c999a8d26950a65bfa9fa31"
+    }
+  },
+  "sha256": {
+    "docs/latent-core.md": "ae132147c15c79d8d072072d9de6f37c556813ec9494095f5b1f846fb7956555",
+    "docs/diagrams/architecture-atlas.json": "8ec4adb3359fb482a19a9c27dc6534b009d592e2be3a9169caffaa273dae3919",
+    "docs/diagrams/atlas/14-latent-core.svg": "e3b468fd7880a99f98de3dc3145bd93c4ab4835cadef74c3deb8646b21167b6c",
+    "docs/diagrams/atlas/15-output-plan.svg": "633ee742a68bf0c34b2bbf14a904628a5adfc74f728cb62c0f308bc32c13f8cf",
+    "pathwm/models/belief.py": "bc61b69698fcbec89801ab24818b8b04fc9b075ea15c83ff59dff7b96a811e82",
+    "pathwm/models/agent.py": "fd489fb089d39588463cee215766b535fb32d1da85952b3a05bbe3b39c5f2b63",
+    "pathwm/world_state/session.py": "1b40def41493bfdc273cf110de4cc01e35c5f518d735d03a6322a2ae5be18f31"
+  }
+}
