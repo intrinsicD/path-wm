@@ -4751,3 +4751,38 @@ observations:
   promoted_to: logic/solution/architecture.md:A15
   crystallized_via: artifact-commitment
   stale: false
+- id: O270
+  timestamp: 2026-09-16T01:34+02:00
+  provenance: ai-suggested
+  content: The existing sampled shared latent core can learn restricted text direction without new layers,
+    but successful complete-input curriculum predictions rely on text. Access exists in audio grids/means
+    and varies after learned queries. Learning/selection is implicated without uniquely separating capacity,
+    gradients, optimization or nonlinear representation loss.
+  context: Two-stage bounded input isolation/curriculum with source omission; researcher has not assessed
+    results.
+  potential_type: claim
+  bound_to:
+  - N396
+  - N397
+  - N398
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O271
+  timestamp: 2026-09-16T01:34+02:00
+  provenance: ai-suggested
+  content: Next compare a fixed short successful-source warm-up followed by gradual source rotation/dropout,
+    requiring direction from every informative modality and source-removal robustness. Match restart/exposure
+    where possible; do not bundle projection, loss weighting, extra loops or scaling. Preserve shared
+    multimodal reasoning.
+  context: Proposed next bounded comparison after all10 registered runs/continuations; not yet run.
+  potential_type: heuristic
+  bound_to:
+  - N388
+  - N396
+  - N397
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -170,3 +170,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Direction-retention literature](tables/direction_literature_2026-09-15.json): N390/O266;12 primary works, explicit transfer limits and two corrected Claude methodology exchanges. No model experiments or capability promotion.
 
 - [Fresh direction learning](tables/direction_learning_2026-09-16.json): N391–N394;8 matched fits fail, optional continuous working access not adopted; encoder/query/code localization,59 scoped tests, exact replay and raw/report audits.
+
+Direction input isolation and matched curriculum: [source-bound evidence](tables/direction_inputs_2026-09-16.json). Six fits plus four continuations; text-only known accuracy100% in both seeds, full-input curriculum benefits but depends on text. Frozen pooling probes, repeated source-removal results,61 tests and24 verified reports. No general capability/default adoption.

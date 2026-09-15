@@ -6572,3 +6572,75 @@ tree:
   - ara/evidence/tables/direction_learning_2026-09-16.json
   - runs/direction_learning_v1/localization/report.html
   status: resolved
+- id: N395
+  type: decision
+  title: Resume direction work before video
+  provenance: user
+  timestamp: 2026-09-16T01:34+02:00
+  choice: User reverses the brief video-first detour and requests continuing direction. Claude-assisted
+    bounded implementation/review/test iterations continue; video had only repository reads and no changes
+    or runs.
+  alternatives:
+  - Video first
+  also_depends_on:
+  - N388
+  - N391
+  evidence:
+  - ara/evidence/tables/direction_inputs_2026-09-16.json
+  status: resolved
+- id: N396
+  type: experiment
+  title: Isolated text direction works in both seeds; audio and all-input training remain inconsistent
+  provenance: ai-executed
+  timestamp: 2026-09-16T01:34+02:00
+  result: 'Six frozen-encoder fits, seeds7201/7202,1152 updates. Known trained-input direction: text100/100%,
+    audio45.83/100%, all47.92/60.42%. Text and second audio remain100% over10 draws; text held-out means88.54/83.33%.
+    Fixed384 checkpoints retained. Input selector and scoped complete-cell gate implemented without model
+    changes.61 scoped tests and exact8 versus4+4 fresh/continuation replay pass.'
+  also_depends_on:
+  - N395
+  - N394
+  tests_observations:
+  - O268
+  evidence:
+  - ara/evidence/tables/direction_inputs_2026-09-16.json
+  - runs/direction_inputs_v1/report.html
+  status: resolved
+- id: N397
+  type: experiment
+  title: Text-prefix curriculum improves full-input learning but depends on text
+  provenance: ai-executed
+  timestamp: 2026-09-16T01:34+02:00
+  result: Four768-update continuations from fixed384 checkpoints; matched Adam reset and frozen encoders.
+    Text→all versus all→all gains52.08/16.67pp in original known draw, passing paired benefit but failing90%
+    capability in seed2. Ten-draw complete-input means100/73.96%, without text50/51.04%. Held-out means100/70.21%,
+    without text50/53.33%.9984 total new optimizer updates across this turn. Shared latent design retained.34802
+    raw,196 paired/repeated/Claude,130 report checks. Five actual-Claude public-only exchanges reconcile
+    prefix-exposure versus pure-ordering interpretation.
+  also_depends_on:
+  - N396
+  evidence:
+  - ara/evidence/tables/direction_inputs_2026-09-16.json
+  - runs/direction_inputs_v1/robustness_curriculum/report.html
+  status: resolved
+- id: N398
+  type: experiment
+  title: Audio direction remains accessible in grids and means before learned query access
+  provenance: ai-executed
+  timestamp: 2026-09-16T01:34+02:00
+  result: 'Frozen final isolated-audio checkpoints: raw/normalized grids and masked means give100% known-direction
+    linear access in both seeds; first queries39.58/97.92%, refined41.67/100%, final thought58.33/100%.180
+    independent NumPy checks confirm validation choice/coefficients;184 color/place argmax numerical ties
+    with maximum4.82e-13, zero direction discrepancies. Different feature widths prevent unique information-loss
+    attribution. Source-mass audit shows small image source can dominate attention; no count-balancing
+    repair adopted.'
+  also_depends_on:
+  - N396
+  - N388
+  tests_observations:
+  - O267
+  - O268
+  evidence:
+  - ara/evidence/tables/direction_inputs_2026-09-16.json
+  - runs/direction_inputs_v1/audio_pooling/report.html
+  status: resolved

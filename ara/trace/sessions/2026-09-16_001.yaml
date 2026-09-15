@@ -2,11 +2,13 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T00:28+02:00
-  turn_count: 1
-  summary: Eight matched fresh-updater controls fail direction screens; continuous working access not adopted.
+  last_turn: 2026-09-16T01:34+02:00
+  turn_count: 2
+  summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not adopted.
     Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped
-    tests, exact replay and raw/report audits pass.
+    tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
+    in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text
+    reliance; multimodal transfer stays open.61 tests and24 reports checked.'
 events_logged:
 - turn: 1
   type: decision
@@ -58,6 +60,48 @@ events_logged:
     non-mutating per-task gradient audits and optional continuous posterior conditioning of temporary working
     tokens. Sampled state/IDs/RNG and source storage remain native; saved source metadata restores the chosen
     readout mode.
+- turn: 2
+  type: decision
+  id: N395
+  routing: direct
+  provenance: user
+  summary: Resume direction work before video
+- turn: 2
+  type: experiment
+  id: N396
+  routing: direct
+  provenance: ai-executed
+  summary: Isolated text direction works in both seeds; audio and all-input training remain inconsistent
+- turn: 2
+  type: experiment
+  id: N397
+  routing: direct
+  provenance: ai-executed
+  summary: Text-prefix curriculum improves full-input learning but depends on text
+- turn: 2
+  type: experiment
+  id: N398
+  routing: direct
+  provenance: ai-executed
+  summary: Audio direction remains accessible in grids and means before learned query access
+- turn: 2
+  type: observation
+  id: O270
+  routing: staged
+  provenance: ai-suggested
+  summary: The existing sampled shared latent core can learn restricted text direction without new layers,
+    but successful complete-input curriculum predictions rely on text. Access exists in audio grids/means
+    and varies after learned queries. Learning/selection is implicated without uniquely separating capacity,
+    gradients, optimization or nonlinear representation loss.
+- turn: 2
+  type: observation
+  id: O271
+  routing: staged
+  provenance: ai-suggested
+  summary: Next compare a fixed short successful-source warm-up followed by gradual source rotation/dropout,
+    requiring direction from every informative modality and source-removal robustness. Match restart/exposure
+    where possible; do not bundle projection, loss weighting, extra loops or scaling. Preserve shared
+    multimodal reasoning.
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -72,11 +116,25 @@ ai_actions:
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
   - ara/evidence/tables/direction_learning_2026-09-16.json
+- turn: 2
+  action: Implemented explicit input-mode selection and exact checkpoint-file initialization; ran6 isolated-input
+    fits,4 matched continuations, frozen probes and repeated source-removal controls. Reconciled5 actual-Claude
+    public-only briefs, verified61 tests and24 reports, committed code/results; no default or green promotion.
+  provenance: ai-executed
+  files_changed:
+  - experiments/modality_readout.py
+  - tests/test_readout_diagnosis.py
+  - pathwm/evaluation/modality_readout.py
+  - docs/modality-readout-plan.md
+  - docs/project-state.md
+  - ara/evidence/tables/direction_inputs_2026-09-16.json
 claims_touched: []
 key_context:
 - turn: 1
   excerpt: 'User: Arbeite daran zusammen mit Claude. Plane, implementiere, überprüfe, teste und repariere.
     Iteriere dies.'
+- turn: 2
+  excerpt: 'User: Achso entschuldige. Dann doch erst bei Richtung weiter machen.'
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -135,10 +193,10 @@ open_threads:
 - 'N383: decoder readout sufficiency, optional nested loops and budgeted held-out comparisons remain open.'
 - 'N384-N386/O262-O263: combined compositional output fails; localize state access and decoder recombination.
   Prior real-data/VAE/identity and broader recurrent-efficiency questions remain open.'
-- 'N388/N391-N394/O264-O268: direction and composition remain open. Fresh frozen-encoder direction-only/joint
-  sampled/continuous controls now executed and failed; next isolate one informative input modality. Query/code
-  probes narrow access, not unique irreversible loss. Prior explicit opposite-direction pairing and output/persistence
-  work remain open.'
+- 'N388/N395-N398/O264-O271: direction/composition remain open. Isolated text succeeds on known inputs;
+  text-prefix curriculum improves all-input accuracy but relies on text. Next gradual source rotation/dropout
+  with matched restart/exposure controls, not yet executed. Video deferred; unique loss mechanism, output
+  composition and persistent memory remain open.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
@@ -262,4 +320,9 @@ ai_suggestions_pending:
 - 'O266: literature-derived comparisons remain proposed; VQ versus categorical and single-task versus multi-task
   mechanisms must stay distinct.'
 - 'O267: interpretation of failed isolation/continuous controls awaits researcher response; no unique mechanism.'
-- 'O268: proposed single-modality direction learning before multimodal mixing; not yet run.'
+- 'O268: isolated inputs and query-access diagnostics now exercised; conditional query-preserving projection
+  remains untested. Do not promote this bundled proposal wholesale.'
+- 'O270: partial curriculum/access interpretation awaits researcher assessment; no unique mechanism or
+  general transfer claim.'
+- 'O271: gradual source rotation/dropout proposed; matched continuation comparison not yet registered
+  or run.'

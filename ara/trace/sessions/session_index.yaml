@@ -167,10 +167,12 @@ sessions:
   open_threads: 25
 - id: 2026-09-16_001
   date: '2026-09-16'
-  summary: Eight matched fresh-updater controls fail direction screens; continuous working access not adopted.
-    Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped
-    tests, exact replay and raw/report audits pass.
-  turn_count: 1
-  events_count: 7
+  summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not
+    adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59
+    scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
+    in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes
+    text reliance; multimodal transfer stays open.61 tests and24 reports checked.'
+  turn_count: 2
+  events_count: 13
   claims_touched: []
   open_threads: 25
