@@ -1,5 +1,16 @@
 # Current work
 
+**Expanded VAE specification clarified, 15 September:** Alex requested precision
+before implementation. The [refined R/P/M/C specification](spatial-vae-refinement.md)
+maps onto existing modules and separates guarantees, lowest-grid self-attention,
+shared loops, detached stage probes and rate/compute comparisons. Add a
+processing-after-compression control; 2×2 stride2 and immediate unshuffle/projection
+are an equivalence check. Probe error is readout accessibility; KL in bits is a
+rate proxy. Two actual Claude conceptual rounds reconciled five review errors.
+No model, weights, new training budget or implementation commitment changed.
+The previous implementation/results below remain current; this refinement does
+not repair their quality failures or validate sample efficiency.
+
 **Spatial image VAE implemented and compared, 15 September:** the
 [explicit-scale codec](spatial-vae-design.md) now has base, cross-scale attention,
 and attention-plus-reversible-local-mixing variants. It separates PixelUnshuffle,

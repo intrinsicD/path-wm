@@ -6,6 +6,11 @@ this design and the current agent. Mechanics pass; high-quality photo reconstruc
 does not. This note records the reviewed design; the linked plan owns actual
 settings, measurements, validation scope and unresolved quality limits.
 
+The subsequent [expanded R/P/M/C specification](spatial-vae-refinement.md) is a
+reviewed proposal only: overlapping stem, lowest-grid self-attention, shared loops,
+stage probes and corrected ablations. It does not describe changes already made
+to the tested model below.
+
 The defining separation is **spatial rearrangement → learned processing → explicit
 channel projection**, with optional processing before rearrangement. Preserve the
 current world-model design and treat this as an independently testable image codec.

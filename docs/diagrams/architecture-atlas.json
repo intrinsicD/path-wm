@@ -41,7 +41,7 @@
           "encode": {
             "status": "discussed",
             "basis": "Discussed modality stems, residual transformer blocks per scale, hierarchy merges, fusion, temporal handling and reconstruction probes. On 14 September, the user asked whether architectural structure and a small parameter count can reduce visual training-data requirements. On 15 September, the user specified a spatial VAE with separate lossless rearrangement, residual processing and channel projection; Claude review was reconciled.",
-            "next": "Standalone spatial VAE mechanics and geometry now pass; all three photo-quality screens fail. See docs/spatial-vae-plan.md. Current agent integration, state/recall repair, fine-detail retention and data/capacity comparisons remain open; the high-level modality encoder stays blue."
+            "next": "Standalone spatial VAE mechanics and geometry now pass; all three photo-quality screens fail. See docs/spatial-vae-plan.md. Current agent integration, state/recall repair, fine-detail retention and data/capacity comparisons remain open; the high-level modality encoder stays blue. The subsequent R/P/M/C refinement discusses a stem, coarsest self-attention, shared loops and detached stage probes; docs/spatial-vae-refinement.md is a proposal only."
           },
           "belief": {
             "status": "needs_discussion",
@@ -109,7 +109,7 @@
           "emit": {
             "status": "discussed",
             "basis": "Discussed every encoder/decoder pair, state-conditioned outputs, image detail, conditional generation and replacement interfaces. On 15 September, discussed a mirrored PixelShuffle VAE decoder, Gaussian loss/KL units and a future state-conditioned spatial-latent producer.",
-            "next": "The separate VAE decoder supports exact saved-latent replay and variable output geometry, but fine photo reconstruction and prior image quality remain weak. See docs/spatial-vae-plan.md. Current state-conditioned outputs and other modalities remain unvalidated; this node stays blue."
+            "next": "The separate VAE decoder supports exact saved-latent replay and variable output geometry, but fine photo reconstruction and prior image quality remain weak. See docs/spatial-vae-plan.md. Current state-conditioned outputs and other modalities remain unvalidated; this node stays blue. Refined rate/probe/decoder contracts are proposed in docs/spatial-vae-refinement.md; no new output implementation or validation."
           },
           "act": {
             "status": "needs_discussion",
