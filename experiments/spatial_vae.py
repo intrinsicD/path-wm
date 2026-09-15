@@ -30,6 +30,7 @@ from pathwm.io import (
 )
 from pathwm.evaluation.report import write_report
 from pathwm.models.spatial_vae import SpatialVAE, build_variant, vae_loss
+from pathwm.models.spatial_vae_v2 import build_hierarchy
 
 
 def settings(variant="base"):
@@ -189,14 +190,26 @@ def evaluate_images(model, rgb, device="cpu", seed=56171, batch_size=8, controls
         per.update({name + "_" + k: v for k, v in errors.items()})
     mu, lv = rows["mu"], rows["logvar"]
     kl = 0.5 * (mu.square() + lv.exp() - 1 - lv)
+    nats = kl.sum((1, 2, 3)).mean()
+    area = rgb.shape[-2] * rgb.shape[-1]
+    low, high = model.config["logvar_bounds"]
     metrics["posterior"] = dict(
+        kl_nats_per_sample=float(nats),
+        kl_bits_per_sample=float(nats / np.log(2)),
+        kl_bits_per_latent_position=float(
+            nats / (np.log(2) * mu.shape[-2] * mu.shape[-1])
+        ),
+        kl_bits_per_original_pixel=float(nats / (np.log(2) * area)),
+        original_area=area,
+        latent_positions=mu.shape[-2] * mu.shape[-1],
+        rate_interpretation="KL rate proxy; no entropy coder",
         rate_nats_per_pixel=float(
             kl.sum((1, 2, 3)).mean() / (rgb.shape[-2] * rgb.shape[-1])
         ),
         active_channels=int((mu.var((0, 2, 3), unbiased=False) > 0.01).sum()),
         mean_std=float((0.5 * lv).exp().mean()),
         mu_rms=float(mu.square().mean().sqrt()),
-        logvar_saturated_fraction=float(((lv <= -12) | (lv >= 8)).float().mean()),
+        logvar_saturated_fraction=float(((lv <= low) | (lv >= high)).float().mean()),
     )
     per["kl_per_channel"] = kl.mean((0, 2, 3)).numpy()
     per["kl_per_position"] = kl.mean((0, 1)).numpy()
@@ -346,8 +359,20 @@ def report_evaluation(path, config, identity, model, metrics, rows, device, scop
     try:
         example_panel(
             path / "comparison.png",
-            {k: rows[k] for k in ("target", "mean", "sampled")},
-            dict(target="Original", mean="Posterior mean", sampled="Posterior sample"),
+            {
+                **{k: rows[k] for k in ("target", "mean", "sampled")},
+                **(
+                    {"absolute_error": (rows["mean"] - rows["target"]).abs()}
+                    if "model_config" in config
+                    else {}
+                ),
+            },
+            dict(
+                target="Original",
+                mean="Posterior mean",
+                sampled="Posterior sample",
+                absolute_error="Absolute RGB error [0,1]",
+            ),
         )
         write_report(
             path,
@@ -379,9 +404,13 @@ def train(
     model = (
         SpatialVAE.load(source, device)
         if source
-        else build_variant(config["variant"], config["seed"]).to(device)
+        else (
+            build_hierarchy(config["variant"], config["seed"], **config["model_config"])
+            if "model_config" in config
+            else build_variant(config["variant"], config["seed"])
+        ).to(device)
     )
-    if model.config["variant"] != config["variant"]:
+    if model.config.get("variant", model.config.get("ablation")) != config["variant"]:
         raise ValueError("Continuation variant must match the saved architecture")
     # Initialization/load must not alter the matched training-noise stream.
     seed_everything(config["seed"])
@@ -499,6 +528,10 @@ def train(
                 step=run.step,
                 metrics=metrics,
                 parameters=sum(p.numel() for p in model.parameters()),
+                samples_seen=run.step * config["batch_size"],
+                peak_allocated_mib=torch.cuda.max_memory_allocated(device) / 1024**2
+                if str(device).startswith("cuda")
+                else 0,
                 training_seconds=sum(
                     r["elapsed_seconds"] for r in run.rows if r["split"] == "timing"
                 ),
@@ -512,9 +545,17 @@ def train(
         run.status(state, "pending")
         example_panel(
             output / "comparison.png",
-            {k: rows[k] for k in ("target", "mean", "sampled")},
+            {
+                **{k: rows[k] for k in ("target", "mean", "sampled")},
+                **(
+                    {"absolute_error": (rows["mean"] - rows["target"]).abs()}
+                    if "model_config" in config
+                    else {}
+                ),
+            },
             dict(
                 target="Validation original",
+                absolute_error="Absolute RGB error [0,1]",
                 mean="Posterior mean",
                 sampled="Posterior sample",
             ),
@@ -872,10 +913,310 @@ def compare(root, cohort):
     return tables, benefits
 
 
+def hierarchy_settings(ablation="C", beta=1.0):
+    return dict(
+        settings(ablation),
+        seed=57101,
+        counts=[512, 64, 96],
+        beta=beta,
+        wall_seconds=120,
+        memory_mib=2048,
+        model_config={},
+        purpose="R/P/M/C spatial VAE sanity and descriptive rate-distortion study",
+        initialization="Seeded C reference common tensors; zero local residual ends; A_local different stride kernel; attention standard initialization",
+    )
+
+
+def hierarchy_data(root, config, development=False):
+    """New groups after the explicitly excluded v1 study population."""
+    offsets = [1040, 144, 192]
+    counts = config["counts"]
+    extra = [16, 16, 0]
+    source = photo_data(
+        root, [a + b + c for a, b, c in zip(offsets, counts, extra)], 56001
+    )
+    data = {}
+    for i, split in enumerate(("train", "validation", "test")):
+        start = offsets[i] + (counts[i] if development and i < 2 else 0)
+        end = start + (16 if development and i < 2 else counts[i])
+        subset = source[split]
+        data[split] = Frames(
+            subset.frames,
+            subset.rows[start:end],
+            identity=dict(
+                subset.identity,
+                selected=subset.identity["selected"][start:end],
+                excluded_prefix_groups=offsets[i],
+                development=development,
+            ),
+        )
+    return data
+
+
+def hierarchy_evaluate(output, weights, data, root, config, device):
+    try:
+        return _hierarchy_evaluate(output, weights, data, root, config, device)
+    except FileExistsError:
+        raise
+    except BaseException as error:
+        directory = Path(output)
+        directory.mkdir(parents=True, exist_ok=True)
+        atomic_json(
+            directory / "status.json",
+            dict(result="failed", report="pending", step=0, error=str(error)),
+        )
+        atomic_json(
+            directory / "failure.json",
+            dict(
+                error=str(error),
+                scope="Incomplete hierarchy evaluation; preserve partial artifacts",
+            ),
+        )
+        raise
+
+
+def _hierarchy_evaluate(output, weights, data, root, config, device):
+    from pathwm.evaluation.spatial_vae import stage_probes, profile_codec
+
+    output = Path(output)
+    if output.exists():
+        raise FileExistsError(f"Preserve prior evaluation: {output}")
+    model = SpatialVAE.load(weights, device)
+    rgb = data["test"].batch(range(len(data["test"])))["rgb"]
+    rows, metrics, per = evaluate_images(model, rgb, device)
+    train_rgb = data["train"].batch(range(len(data["train"])))["rgb"]
+    val_rgb = data["validation"].batch(range(len(data["validation"])))["rgb"]
+    metrics["train_mean"], _ = image_metrics(
+        train_rgb.mean(0)[None].expand_as(rgb), rgb
+    )
+    metrics["resources"] = profile_codec(model, rgb[:8].to(device))
+    metrics["quality_screen"] = dict(
+        mean_mse=metrics["mean"]["mse"] <= 0.01,
+        sampled_mse=metrics["sampled"]["mse"] <= 0.01,
+    )
+    report_evaluation(
+        output,
+        config,
+        data["test"].identity,
+        model,
+        metrics,
+        rows,
+        device,
+        "Heldout real COCO reconstruction, not general generation or semantic retention.",
+    )
+    # Compact raw outputs and independent per-image numbers, not all diagnostic traces.
+    np.savez_compressed(
+        output / "predictions.npz", **{k: v.numpy() for k, v in rows.items()}, **per
+    )
+    probes = stage_probes(model, train_rgb[:64], val_rgb[:16], rgb[:16], device)
+    atomic_json(output / "probes.json", probes)
+    submetrics = {}
+    for label, size in [
+        ("native96x128", (96, 128)),
+        ("native65x79", (65, 79)),
+        ("patterns", None),
+    ]:
+        if size:
+            images, identity = native_crops(root, data["test"], size, 16)
+        else:
+            images, identity = (
+                patterns(),
+                {"synthetic": "deterministic fine-pattern control"},
+            )
+        out, scores, numbers = evaluate_images(model, images, device)
+        submetrics[label] = scores
+        report_evaluation(
+            output / label,
+            config,
+            identity,
+            model,
+            scores,
+            out,
+            device,
+            "Native-pixel geometry/detail diagnostic"
+            if size
+            else "Synthetic detail retention control",
+        )
+        np.savez_compressed(output / label / "per_image.npz", **numbers)
+    metrics["diagnostics"] = submetrics
+    metrics["probe_seconds"] = probes["seconds"]
+    metrics["probe_summary"] = {
+        name: {
+            key: values["test"][key]["linear"]["normalized_mse"]
+            for key in ("feature_recovery", "rgb_before", "rgb_after")
+        }
+        for name, values in probes["stages"].items()
+    }
+    result = json.loads((output / "result.json").read_text())
+    atomic_json(
+        output / "result.json",
+        dict(
+            result,
+            metrics=metrics,
+            probes_file="probes.json",
+            weights_sha256=file_hash(weights),
+        ),
+    )
+    write_report(output)
+    return metrics
+
+
+def hierarchy_comparison(output, records):
+    """Existing HTML renderer with an explicitly labelled scientific figure."""
+    from matplotlib.figure import Figure
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+
+    output = Path(output)
+    output.mkdir(parents=True, exist_ok=True)
+    fig = Figure(figsize=(12, 5), layout="constrained")
+    FigureCanvasAgg(fig)
+    ax, bars = fig.subplots(1, 2)
+    for variant in ("A_local", "C"):
+        values = sorted(
+            [r for r in records if r["variant"] == variant],
+            key=lambda r: r["bits_per_pixel"],
+        )
+        ax.plot(
+            [r["bits_per_pixel"] for r in values],
+            [r["sampled_mse"] for r in values],
+            "o-",
+            label=variant,
+        )
+        for r in values:
+            ax.annotate(
+                f"beta={r['beta']}", (r["bits_per_pixel"], r["sampled_mse"]), fontsize=8
+            )
+    ax.set(
+        xlabel="KL bits / original pixel (rate proxy)",
+        ylabel="Sampled RGB MSE",
+        title="Fixed beta points; one seed, unequal resources",
+    )
+    ax.legend()
+    single = [r for r in records if r["beta"] == 1.0]
+    bars.bar([r["variant"] for r in single], [r["mean_mse"] for r in single])
+    bars.axhline(0.01, color="red", linestyle="--", label="Photo quality screen")
+    bars.set(
+        ylabel="Posterior-mean RGB MSE",
+        title="Same beta and updates; not matched rate/compute",
+    )
+    bars.legend()
+    fig.savefig(output / "comparison.png", dpi=130)
+    atomic_json(
+        output / "result.json",
+        dict(
+            completed=True,
+            metrics={"runs": records},
+            evaluation_scope="One-seed real-photo sanity study; no superiority, semantic or general-generation claim. See child reports for inputs/reconstructions/errors/probes.",
+        ),
+    )
+    atomic_json(
+        output / "run.json",
+        dict(
+            identity=dict(
+                settings={"protocol": "docs/spatial-vae-v2-plan.md"}, data={}
+            ),
+            source=source_record(__file__, torch.nn.Identity()),
+        ),
+    )
+    atomic_json(
+        output / "status.json",
+        dict(result="completed", report="pending", step=512, error=None),
+    )
+    (output / "metrics.jsonl").write_text("")
+    write_report(output)
+
+
+def hierarchy_study(output, root, device):
+    output = Path(output)
+    if output.exists():
+        raise FileExistsError(f"Use a new study directory; preserve {output}")
+    output.mkdir(parents=True)
+    data = hierarchy_data(root, hierarchy_settings())
+    records = []
+    arms = [
+        ("A_local", 1.0),
+        ("C", 1.0),
+        ("B", 1.0),
+        ("C_after", 1.0),
+        ("D", 1.0),
+        ("E", 1.0),
+    ]
+    arms += [(v, b) for b in (0.1, 0.01) for v in ("A_local", "C")]
+    start = perf_counter()
+    for variant, beta in arms:
+        if perf_counter() - start > 1200:
+            raise RuntimeError("Study wall-clock cap reached; preserve completed runs")
+        size = sum(p.stat().st_size for p in output.rglob("*") if p.is_file())
+        if size > 900 * 1024**2:
+            raise RuntimeError("Study artifact budget reached")
+        config = hierarchy_settings(variant, beta)
+        path = output / f"{variant}_beta{beta:g}"
+        train(path / "training", data["train"], data["validation"], config, device)
+        fit = json.loads((path / "training/result.json").read_text())
+        initial = json.loads((path / "training/initial_validation.json").read_text())
+        valid = fit["metrics"]
+        gates = dict(
+            completed=fit["completed"],
+            improves_initial=valid["mean"]["raw_mse"]
+            <= 0.8 * initial["mean"]["raw_mse"],
+            beats_mean=valid["mean"]["raw_mse"] <= 0.9 * valid["train_mean"]["raw_mse"],
+            positive_kl=valid["posterior"]["rate_nats_per_pixel"] > 0,
+            active_latent=valid["posterior"]["active_channels"] >= 1,
+        )
+        atomic_json(path / "sanity.json", dict(gates=gates, passed=all(gates.values())))
+        if not fit["completed"]:
+            raise RuntimeError("Training did not finish its fixed update budget")
+        scores = hierarchy_evaluate(
+            path / "evaluation",
+            path / "training/weights.pt",
+            data,
+            root,
+            config,
+            device,
+        )
+        records.append(
+            dict(
+                variant=variant,
+                beta=beta,
+                sanity=all(gates.values()),
+                mean_mse=scores["mean"]["mse"],
+                sampled_mse=scores["sampled"]["mse"],
+                bits_per_pixel=scores["posterior"]["kl_bits_per_original_pixel"],
+                parameters=fit["parameters"],
+                training_seconds=fit["training_seconds"],
+                peak_reserved_mib=fit["peak_reserved_mib"],
+                resources=scores["resources"],
+                photo_quality=all(scores["quality_screen"].values()),
+                report=str(path / "evaluation/report.html"),
+            )
+        )
+        atomic_json(output / "progress.json", records)
+        if len(records) == 2 and not all(r["sanity"] for r in records):
+            hierarchy_comparison(output, records)
+            raise RuntimeError(
+                "Sanity gate failed; no expanded grid permitted by protocol"
+            )
+    hierarchy_comparison(output, records)
+    return records
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument(
-        "--variant", choices=["base", "attention", "reversible"], default="base"
+        "--variant",
+        choices=[
+            "base",
+            "attention",
+            "reversible",
+            "A_local",
+            "A_exact",
+            "B",
+            "C",
+            "C_after",
+            "D",
+            "E",
+        ],
+        default="base",
     )
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--data-root", type=Path, default=Path("data/curriculum/coco_v1"))
@@ -887,6 +1228,7 @@ def main():
     p.add_argument("--overfit", action="store_true")
     p.add_argument("--evaluate-only", action="store_true")
     p.add_argument("--low-kl", action="store_true")
+    p.add_argument("--hierarchy-study", action="store_true")
     args = p.parse_args()
     if args.stop_after is not None and args.stop_after <= 0:
         p.error("--stop-after must be positive")
@@ -894,20 +1236,28 @@ def main():
         p.error("--low-kl requires the corresponding beta-one --weights")
     if sum([args.development, args.overfit, args.low_kl]) > 1:
         p.error("Development, overfit and low-KL modes are separate protocols")
-    c = settings(args.variant)
+    if args.hierarchy_study:
+        hierarchy_study(args.output, args.data_root, args.device)
+        return
+    hierarchy = args.variant in ("A_local", "A_exact", "B", "C", "C_after", "D", "E")
+    c = hierarchy_settings(args.variant) if hierarchy else settings(args.variant)
     if args.low_kl:
         c.update(beta=0.001, seed=56201)
     if args.development:
         c.update(steps=8, wall_seconds=90)
     if args.overfit:
         c.update(steps=128, beta=0.0, wall_seconds=180)
-    data = data_sets(args.data_root, c, args.development or args.overfit)
+    data = (hierarchy_data if hierarchy else data_sets)(
+        args.data_root, c, args.development or args.overfit
+    )
     if args.overfit:
         data["train"] = data["train"].take(8)
     if args.evaluate_only:
         if not args.weights:
             p.error("--weights required")
-        evaluate_suite(args.output, args.weights, data, args.data_root, c, args.device)
+        (hierarchy_evaluate if hierarchy else evaluate_suite)(
+            args.output, args.weights, data, args.data_root, c, args.device
+        )
     else:
         train(
             args.output,

@@ -317,6 +317,12 @@ class SpatialVAE(nn.Module):
     @classmethod
     def load(cls, path, device="cpu"):
         p = torch.load(path, map_location="cpu", weights_only=True)
+        if p["schema"] == "pathwm-spatial-vae-v2":
+            from .spatial_vae_v2 import HierarchicalVAE
+
+            m = HierarchicalVAE(**p["config"]).to(device)
+            m.load_state_dict(p["model"], strict=True)
+            return m
         if p["schema"] != "pathwm-spatial-vae-v1":
             raise ValueError("Wrong VAE schema")
         m = cls(**p["config"]).to(device)
@@ -338,7 +344,13 @@ def vae_loss(reconstruction, target, posterior, beta=1.0, variance=0.5):
     )
     rate = posterior.kl_per_image() / area
     return (distortion + beta * rate).mean(), dict(
-        distortion=distortion.mean(), rate=rate.mean()
+        distortion=distortion.mean(),
+        rate=rate.mean(),
+        kl_nats_per_sample=posterior.kl_per_image().mean(),
+        kl_bits_per_sample=posterior.kl_per_image().mean() / 0.6931471805599453,
+        kl_bits_per_latent_position=posterior.kl_per_image().mean()
+        / (0.6931471805599453 * posterior.mu.shape[-2] * posterior.mu.shape[-1]),
+        kl_bits_per_original_pixel=rate.mean() / 0.6931471805599453,
     )
 
 

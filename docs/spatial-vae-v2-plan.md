@@ -19,7 +19,7 @@ Small configuration: stem8, stages[16,24], latent4, one post block, no pre block
 decoder one pre/post local block per stage for every arm. Residual final1x1 starts
 at zero. C processes at widths32/64 before compression; C_after at16/24 after it.
 D uses one pre-compression Transformer64, four heads; E reuses it twice. Same-width
-untied depth2 is available for later sharing-specific claims. Token cap1024;
+untied depth2 is required before later sharing-specific claims; it is deferred in this first screen. Token cap1024;
 convolutional variants have no attention cap. Batch8, float32 deterministic math,
 AdamW3e-4, weight_decay1e-4, clip1, seed57101. All common tensors initialized from
 the same reference. No copied historical trained weights.
@@ -64,3 +64,18 @@ metrics, stage geometry/probe results, rate plot and standalone verified HTML.
 Existing renderer only: structural QA plus PNG inspection; prior browser local-file
 policy restriction remains disclosed. Actual Claude reviews receive public conceptual
 briefs only; preserve receipts and reconcile mistakes independently.
+
+## Development check before formal fits
+
+Core CPU contracts and old exports pass. Eight real-photo C updates and the complete
+photo/native/probe reporting path pass on reserved development images. E GPU8 versus
+4+4 resume is exact across367 tensors, optimizer/sampler/CPU/CUDA RNG and loss rows
+(`runs/spatial_vae_v2/gpu_resume_check.json`). Reports use the unchanged renderer;
+its labelled original/mean/sample/absolute-RGB-error panel was visually inspected.
+These are mechanics checks, not image quality evidence. Two actual Claude conceptual
+rounds are reconciled in `runs/reviews/spatial_vae_v2/reconciliation.md`.
+
+Parameter matching limitation: stem/posterior/decoder widths and common weights stay
+fixed; removing pre-compression processing lowers parameters/compute. The small
+A_local/C sanity contrast therefore is not a matched-resource superiority test.
+The full budget accounting is mandatory, and this limitation applies to its curves.
