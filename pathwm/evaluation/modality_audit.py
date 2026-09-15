@@ -46,7 +46,7 @@ def modality_inspection(directory):
     parts = [
         "<section><h2>Each modality tested independently</h2>",
         "<p>Four fixed examples per branch. Direct codec fitting is separate from the untrained persistent state path. These are not held-out speech, language or video capability tests.</p>",
-        '<div class="table"><table><tr><th>Modality</th><th>Initial loss</th><th>Final loss</th><th>Zero context</th><th>Wrong example</th><th>Untrained state path</th><th>Learning check</th></tr>',
+        '<div class="table"><table><tr><th>Modality</th><th>Initial loss</th><th>Final loss</th><th>Zero context</th><th>Wrong example</th><th>Untrained state path (example 1)</th><th>Learning check</th></tr>',
     ]
     for kind, m in data["metrics"].items():
         values = [
@@ -69,7 +69,7 @@ def modality_inspection(directory):
             + "</tr>"
         )
     parts.append(
-        "</table></div><p>Text loss is cross-entropy; other losses are normalized pixel/sample MSE. Absolute values across modalities are not comparable. Video reconstructs observed frames; its state-path score uses the last observed frame.</p>"
+        "</table></div><p>Text loss is cross-entropy; other losses are normalized pixel/sample MSE. Absolute values across modalities are not comparable. Direct scores average four examples. The untrained state path uses example 1 only and is not a matched bottleneck comparison. Video reconstructs observed frames; its state-path score uses the last observed frame.</p>"
     )
     parts.append(
         f'<img class="chart" alt="Separate training curves for each modality" src="{chart}">'

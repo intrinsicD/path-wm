@@ -18,6 +18,7 @@ from .modalities import (
     TextEncoder,
     observation_values,
     position,
+    attention_probabilities,
 )
 
 
@@ -141,12 +142,12 @@ class ConditionedBlock(nn.Module):
         safe = allowed.clone()
         safe[:, :, 0] |= empty
         mask = (~safe).repeat_interleave(self.heads, 0)
-        read, weights = self.attention(
+        read, _ = self.attention(
             q,
             key,
             key,
             attn_mask=mask,
-            need_weights=trace is not None,
+            need_weights=False,
             average_attn_weights=False,
         )
         read = read.masked_fill(empty[..., None], 0)
@@ -154,6 +155,7 @@ class ConditionedBlock(nn.Module):
         normalized = self.mlp_norm(x) * (1 + scale_m[:, None]) + shift_m[:, None]
         x = (x + self.mlp(normalized)).masked_fill(~query.valid[..., None], 0)
         if trace is not None:
+            weights = attention_probabilities(self.attention, q, key, blocked=~safe)
             trace[name] = (
                 weights.masked_fill(empty[:, None, :, None], 0).detach().cpu().clone()
             )

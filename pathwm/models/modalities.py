@@ -73,6 +73,41 @@ def observation_values(observation):
     return x.masked_fill(~valid.reshape(shape), 0), times.masked_fill(~valid, 0), valid
 
 
+@torch.no_grad()
+def attention_probabilities(attention, query, key, *, valid=None, blocked=None):
+    """Diagnostic pre-dropout weights for our equal-width Q/K/V attention blocks.
+
+    Compute independently so asking for a trace never selects a different native
+    attention kernel. ``blocked`` may be [Q,K] or [B,Q,K]. No RNG or autograd graph.
+    """
+    weights = attention.in_proj_weight.chunk(3)
+    biases = (
+        attention.in_proj_bias.chunk(3)
+        if attention.in_proj_bias is not None
+        else (None,) * 3
+    )
+    b, qn, width = query.shape
+    heads = attention.num_heads
+    depth = width // heads
+    q = (
+        F.linear(query, weights[0], biases[0])
+        .reshape(b, qn, heads, depth)
+        .transpose(1, 2)
+    )
+    k = (
+        F.linear(key, weights[1], biases[1])
+        .reshape(b, key.shape[1], heads, depth)
+        .transpose(1, 2)
+    )
+    logits = (q @ k.transpose(-1, -2)) / math.sqrt(depth)
+    if valid is not None:
+        logits = logits.masked_fill(~valid[:, None, None, :], -torch.inf)
+    if blocked is not None:
+        mask = blocked[None, None] if blocked.ndim == 2 else blocked[:, None]
+        logits = logits.masked_fill(mask, -torch.inf)
+    return logits.softmax(-1).nan_to_num()
+
+
 class Attend(nn.Module):
     """Attention plus residual MLP. Optional traces are detached CPU measurements."""
 
@@ -130,32 +165,13 @@ class Attend(nn.Module):
             # Requesting weights changes PyTorch's attention kernel and floating
             # point results. Keep the native output/gradient path untouched and
             # compute diagnostic pre-dropout probabilities separately, without RNG.
-            with torch.no_grad():
-                weights = self.attention.in_proj_weight.chunk(3)
-                biases = (
-                    self.attention.in_proj_bias.chunk(3)
-                    if self.attention.in_proj_bias is not None
-                    else (None,) * 3
+            trace[name] = (
+                attention_probabilities(
+                    self.attention, normalized_query, key, valid=valid, blocked=mask
                 )
-                b, qn, width = normalized_query.shape
-                heads = self.attention.num_heads
-                depth = width // heads
-                q = (
-                    F.linear(normalized_query, weights[0], biases[0])
-                    .reshape(b, qn, heads, depth)
-                    .transpose(1, 2)
-                )
-                k = (
-                    F.linear(key, weights[1], biases[1])
-                    .reshape(b, key.shape[1], heads, depth)
-                    .transpose(1, 2)
-                )
-                logits = (q @ k.transpose(-1, -2)) / math.sqrt(depth)
-                if valid is not None:
-                    logits = logits.masked_fill(~valid[:, None, None, :], -torch.inf)
-                if mask is not None:
-                    logits = logits.masked_fill(mask[None, None], -torch.inf)
-                trace[name] = logits.softmax(-1).nan_to_num().cpu().clone()
+                .cpu()
+                .clone()
+            )
         return out
 
 

@@ -1,4 +1,5 @@
 from dataclasses import replace
+import copy
 
 import pytest
 import torch
@@ -165,3 +166,30 @@ def test_mismatched_memory_codes_rejected_at_construction():
             action_head=base.action_head,
             monitor=base.monitor,
         )
+
+
+@pytest.mark.parametrize("kind", ["text", "audio", "video", "image"])
+@pytest.mark.parametrize("training", [True, False])
+def test_multiscale_debug_exact_outputs_gradients_rng(kind, training):
+    from experiments.modality_audit import Codec, examples
+
+    torch.manual_seed(611)
+    first = Codec(kind).encoder.train(training)
+    second = copy.deepcopy(first)
+    obs = examples()[kind]
+    rng = torch.get_rng_state().clone()
+    a = first(obs)
+    sum(s.values.square().mean() for s in a.scales).backward()
+    rng_after = torch.get_rng_state().clone()
+    torch.set_rng_state(rng)
+    trace = {}
+    b = second(obs, trace=trace)
+    sum(s.values.square().mean() for s in b.scales).backward()
+    for x, y in zip(a.scales, b.scales):
+        assert torch.equal(x.values, y.values)
+    for p, q in zip(first.parameters(), second.parameters()):
+        assert (p.grad is None and q.grad is None) or torch.equal(p.grad, q.grad)
+    assert torch.equal(torch.get_rng_state(), rng_after)
+    assert trace and all(
+        not x.requires_grad for x in trace.values() if isinstance(x, torch.Tensor)
+    )
