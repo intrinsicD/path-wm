@@ -6379,3 +6379,55 @@ tree:
   - docs/latent-core.md
   - docs/multimodal.md
   status: open
+- id: N384
+  type: decision
+  title: Test all modality readouts separately and together
+  provenance: user
+  timestamp: 2026-09-15T22:49+02:00
+  choice: Authorize the controlled text/image/audio/video native-versus-recurrent readout comparison from the
+    shared multimodal core. This is experimental scope, not default replacement or capability adoption.
+  alternatives:
+  - Single-modality-only investigation
+  - Unmeasured default adapter adoption
+  also_depends_on:
+  - N383
+  evidence:
+  - ara/evidence/tables/modality_readout_2026-09-15.json
+  - docs/modality-readout-plan.md
+  status: resolved
+- id: N385
+  type: experiment
+  title: Two-seed separate and joint readouts fail the held-out combined task
+  provenance: ai-executed
+  timestamp: 2026-09-15T22:49+02:00
+  result: 42 formal runs; native and optional1/2/4 shared repeats, frozen and joint. Both core factor screens
+    and all192 combined screens fail. Held-out all-four-correct0% for every variant/mode.72 scoped tests, exact
+    GPU resume and independent49430-check numeric/artifact audit pass; these verify integrity, not capability.
+    CPU selected by preflight before formal results.
+  also_depends_on:
+  - N384
+  tests_observations:
+  - O259
+  - O260
+  evidence:
+  - ara/evidence/tables/modality_readout_2026-09-15.json
+  - runs/modality_readout_v1/formal/report.html
+  status: resolved
+- id: N386
+  type: experiment
+  title: Oracle factors and fresh probes expose output and state-access limitations
+  provenance: ai-executed
+  timestamp: 2026-09-15T22:49+02:00
+  result: '8 native oracle fits and2 fresh validation-tuned linear probes. Oracle known/heldout tuple accuracy:
+    text1/0,image.5/0,audio1/1,video.25/0 in both seeds. Only audio passes its oracle quality gates. Fresh
+    linear state probes retain known color but unreliable location/direction; failed probes do not establish
+    absence.5289 independent control/artifact checks pass.'
+  also_depends_on:
+  - N385
+  tests_observations:
+  - O259
+  - O260
+  evidence:
+  - ara/evidence/tables/modality_readout_2026-09-15.json
+  - runs/modality_readout_v1/controls-verification.json
+  status: resolved

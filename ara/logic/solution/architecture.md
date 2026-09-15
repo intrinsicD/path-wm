@@ -132,3 +132,13 @@
 - **Implementation**: 13c27ac/567d47a/54825d2; N373/N374. [Store](../../../pathwm/world_state/store.py), [modules](../../../pathwm/world_state/modules.py), [session](../../../pathwm/world_state/session.py), [inspection](../../../pathwm/world_state/inspection.py), [recipe](../../../experiments/world_state.py).
 - **Verification**: [Source-bound receipt](../../evidence/tables/world_state_foundation_2026-09-15.json), 81 scoped tests and exact complete pause/resume. Failed trace-kernel development artifact retained.
 - **Limits**: No distributed/power-loss durability, universal bitemporal truth solver, end-to-end gradients through discrete IDs, calibrated confidence or learned ontology guarantee. Querying an old store view does not rewind neural state. O249's broader real-confusability/control/calibration study remains pending.
+
+## A14: Optional recurrent modality readout over fixed shared source context
+
+- **Design**: Existing two-step multimodal Thinker supplies fixed source tokens; an optional output-local attention pair repeats with shared parameters. Identity initialization, valid-token masks and detached traces preserve source/state boundaries. Explicit requested times condition a native image-head video wrapper.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O261
+- **Implementation**: a3a45c5, with control/report completion6a409e9/1285121. [Readout](../../../pathwm/models/readout.py), [recipe](../../../experiments/modality_readout.py), [protocol](../../../docs/modality-readout-plan.md).
+- **Verification**: [Source-bound evidence](../../evidence/tables/modality_readout_2026-09-15.json),72 scoped tests and exact GPU resume.
+- **Limits**: Opt-in experiment, not a default repair. All192 combined capability screens fail; held-out all-four-correct is0%. No adaptive inner-to-outer feedback, untied/equal-compute benefit result, general-language/media guarantee or new persistent memory write path. O259/O260 retain their broader pending scope.

@@ -2,9 +2,9 @@ session:
   id: 2026-09-15_001
   date: '2026-09-15'
   started: 2026-09-15T00:47+02:00
-  last_turn: 2026-09-15T21:50+02:00
-  turn_count: 14
-  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training. Latent-core drawings separate existing loop from proposed workspace answer plan; implementation unchanged. User clarifies shared multimodal thought with decoder-specific optional recurrent readouts; architecture sketch updated, no model change."
+  last_turn: 2026-09-15T22:49+02:00
+  turn_count: 15
+  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training. Latent-core drawings separate existing loop from proposed workspace answer plan; implementation unchanged. User clarifies shared multimodal thought with decoder-specific optional recurrent readouts; architecture sketch updated, no model change. Separate/joint readout study:42 runs,8 oracle fits and2 probes; all held-out all-four outputs fail. Optional loops implemented, not adopted as repair.72 tests and exact resume pass; oracle audio works, other output/compositional targets remain open."
 events_logged:
 - turn: 1
   type: question
@@ -478,6 +478,56 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Native/adapter/fixed-loop comparison and resource/grounding controls proposed.
+- turn: 15
+  type: decision
+  id: N384
+  routing: direct
+  provenance: user
+  summary: Test all modality readouts separately and together
+- turn: 15
+  type: experiment
+  id: N385
+  routing: direct
+  provenance: ai-executed
+  summary: Two-seed separate and joint readouts fail the held-out combined task
+- turn: 15
+  type: experiment
+  id: N386
+  routing: direct
+  provenance: ai-executed
+  summary: Oracle factors and fresh probes expose output and state-access limitations
+- turn: 15
+  type: observation
+  id: O261
+  routing: staged
+  provenance: ai-suggested
+  summary: Optional output-local shared attention adapter reads fixed multimodal source tokens after the existing
+    two-step Thinker, with mask preservation, identity initialization and detached traces. Explicit-time native
+    video wrapper reconstructs requested observed frames. Fixed1/2/4 repeats share parameters; no adaptive
+    feedback or event writes. Experimental extension only.
+- turn: 15
+  type: observation
+  id: O262
+  routing: staged
+  provenance: ai-suggested
+  summary: At this bounded setup, adding readout loops does not solve compositional multimodal output. Poor
+    location/direction probes and failed image/video/text oracle transfer indicate problems on both learned-state
+    access and output learning/generalization. These controls cannot identify irreversible loss or select a
+    unique cause among duration, architecture, objective and capacity.
+- turn: 15
+  type: observation
+  id: O263
+  routing: staged
+  provenance: ai-suggested
+  summary: Keep native reference and localize location/direction accessibility at encoder, posterior and final
+    state. Test output-side oracle recombination for text and adequate spatial/temporal conditioning for image/video;
+    compare targeted changes against matched longer training before adding loops.
+- turn: 15
+  type: architecture
+  id: A14
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O261 committed operational subset only; efficacy and broader loops remain open.
 ai_actions:
 - turn: 1
   action: Saved independent analysis and a bounded brief based on the user-supplied architecture;
@@ -639,6 +689,25 @@ ai_actions:
   - docs/multimodal.md
   - docs/diagrams/architecture-atlas.json
   - ara/evidence/tables/latent_readout_2026-09-15.json
+- turn: 15
+  action: Implemented opt-in recurrent output adapters, four-modality controlled data/recipe,42 formal fits
+    plus8 oracle controls and2 linear probes; exact resume,72 tests, independent artifact audits, static report/atlas
+    inspection. Actual Claude methodology review only. Local commits through1285121; no push.
+  provenance: ai-executed
+  files_changed:
+  - docs/modality-readout-plan.md
+  - runs/modality_readout_v1/formal/report.html
+  - runs/modality_readout_v1/verification.json
+  - runs/modality_readout_v1/controls-verification.json
+  - runs/modality_readout_v1/resume-verification.json
+  - runs/modality_readout_v1/all-focused-tests.xml
+  - runs/reviews/modality_readout_v1/receipt.json
+  - runs/reviews/modality_readout_v1/reconcile-receipt.json
+  - pathwm/models/readout.py
+  - experiments/modality_readout.py
+  - pathwm/evaluation/modality_readout.py
+  - pathwm/data/modality_readout.py
+  - ara/evidence/tables/modality_readout_2026-09-15.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -682,6 +751,9 @@ key_context:
   excerpt: 'User: Denken in allen Modalitäten; Decoder sollen aus gemeinsamem Denkraum holen was sie brauchen,
     optional eigenes vorgelagertes Modul. Steering: Das kann auch gerne entsprechend geschachtelte Loop transformer
     sein die da werkeln.'
+- turn: 15
+  excerpt: Ja, bitte teste jede Modalität. Getrennt und gemeinsam. Authorizes comparison, not proven capability
+    or new defaults.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current
   rate; image/full retention remains 10/12. Next lower-rate comparison from preserved source
@@ -739,6 +811,8 @@ open_threads:
 - 'N382/O258: compare full-state decoding with trained existing workspace answer plan before dedicated plan tokens.
   Grounding checks and reasoned belief revision remain unvalidated.'
 - "N383: decoder readout sufficiency, optional nested loops and budgeted held-out comparisons remain open."
+- 'N384-N386/O262-O263: combined compositional output fails; localize state access and decoder recombination.
+  Prior real-data/VAE/identity and broader recurrent-efficiency questions remain open.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await
   researcher response.'
@@ -866,3 +940,7 @@ ai_suggestions_pending:
 - 'O258: workspace-first output-plan experiment proposed; drawing does not adopt a new layer, validate thinking
   or show capacity savings.'
 - "O259/O260: multimodal readout clarification and fixed-loop comparison remain staged; no size/capability adoption."
+- 'O262: two-sided state-access/output limitation interpretation awaits researcher assessment; no unique cause
+  proven.'
+- 'O263: upstream stage probes and output oracle conditioning/recombination with matched training controls
+  proposed, not run.'

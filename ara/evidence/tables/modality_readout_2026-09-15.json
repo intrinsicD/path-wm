@@ -1,0 +1,218 @@
+{
+  "recorded_at": "2026-09-15T22:49+02:00",
+  "provenance": "ai-executed",
+  "request": "Ja, bitte teste jede Modalität. Getrennt und gemeinsam.",
+  "commits": [
+    "16d6304",
+    "a3a45c5",
+    "35ac3b7",
+    "6a409e9",
+    "1285121"
+  ],
+  "protocol": {
+    "seeds": [
+      7201,
+      7202
+    ],
+    "variants": [
+      "native",
+      "adapter1",
+      "adapter2",
+      "adapter4"
+    ],
+    "stages": [
+      "core",
+      "frozen",
+      "joint"
+    ],
+    "formal_runs": 42,
+    "oracle_runs": 8,
+    "linear_probes": 2,
+    "core_steps": 768,
+    "frozen_oracle_steps": 256,
+    "joint_steps": 384,
+    "batch_size": 24,
+    "formal_device": "cpu",
+    "training_seconds_approx": 538,
+    "train_examples": 144,
+    "validation": 48,
+    "known_test": 48,
+    "heldout_test": 48,
+    "scope": "Controlled short descriptions, RGB arrows, symbolic tones and observed arrow clips; not speech, photographs or general generation. Separate image VAE unused."
+  },
+  "combined_all_four_correct": {
+    "aggregation": "Mean over two seeds and six input modes, not independent repetitions.",
+    "frozen_native": {
+      "known": 0.03,
+      "heldout": 0
+    },
+    "frozen_adapter1": {
+      "known": 0.089,
+      "heldout": 0
+    },
+    "frozen_adapter2": {
+      "known": 0.061,
+      "heldout": 0
+    },
+    "frozen_adapter4": {
+      "known": 0.024,
+      "heldout": 0
+    },
+    "joint_native": {
+      "known": 0.036,
+      "heldout": 0
+    },
+    "joint_adapter1": {
+      "known": 0.036,
+      "heldout": 0
+    },
+    "joint_adapter2": {
+      "known": 0.035,
+      "heldout": 0
+    },
+    "joint_adapter4": {
+      "known": 0.057,
+      "heldout": 0
+    }
+  },
+  "oracle": {
+    "source": "Explicit ground-truth factors; not learned agent performance.",
+    "accuracy_identical_both_seeds": {
+      "text": {
+        "known": 1,
+        "heldout": 0
+      },
+      "image": {
+        "known": 0.5,
+        "heldout": 0
+      },
+      "audio": {
+        "known": 1,
+        "heldout": 1
+      },
+      "video": {
+        "known": 0.25,
+        "heldout": 0
+      }
+    },
+    "quality": "Audio passes waveform gates; image/video fail quality. Text measured free generation."
+  },
+  "linear_probe": {
+    "validation_selected_ridge": [
+      10,
+      10
+    ],
+    "all_inputs_known_color": [
+      1,
+      1
+    ],
+    "all_inputs_known_location": [
+      0.6666667,
+      0.6041667
+    ],
+    "all_inputs_known_direction": [
+      0.4791667,
+      0.4375
+    ],
+    "all_inputs_heldout_location": [
+      0.0208333,
+      0.0833333
+    ],
+    "limits": "Linear probe failure does not prove information is absent or irreversibly lost."
+  },
+  "gates": {
+    "core_factor_screens_passed": 0,
+    "combined_screens_passed": 0,
+    "combined_screens": 192,
+    "two_seed_adapter_benefit": false
+  },
+  "verification": {
+    "formal": {
+      "checks": 49430,
+      "raw_metric_cells": 1152,
+      "formal_runs": 42,
+      "passed": true,
+      "report_status": "Structural plus exact embedded media checks; static visual QA separately. Browser unavailable.",
+      "scope": "Artifact and numeric integrity, not successful capability gates."
+    },
+    "controls": {
+      "checks": 5289,
+      "passed": true,
+      "oracle_runs": 8,
+      "linear_probes": 2,
+      "final_report_sha256": "f87ef1f7826a9620b81bb9cb0973be127dcf7f25c8dde425455da2d94153e7fc",
+      "visual_qa": "Summary heatmap, linear probe heatmap, native and oracle image panels inspected. Exact source WAV/GIF bytes embedded; browser interaction unavailable.",
+      "weights_changed_by_reporting": false
+    },
+    "resume": {
+      "exact": true,
+      "checks": 5612,
+      "device": "cuda",
+      "full_steps": 8,
+      "split_steps": [
+        4,
+        4
+      ],
+      "scope": "Entire model, optimizer, rows and RNG/sampler checkpoint."
+    }
+  },
+  "scoped_tests_passed": 72,
+  "claude_scope": "Actual CLI public-methodology review and reconciliation only; no private code, datasets or measured results shared.",
+  "limitations": [
+    "No unique architecture, capacity, duration or objective cause established.",
+    "No successful complementary fusion claim; complete-information task fails.",
+    "No equal-compute or untied-depth advantage comparison.",
+    "Fixed two outer Thinker iterations followed by local output repeats; no adaptive inner-to-outer feedback.",
+    "Browser interaction QA unavailable; saved media/figures and numeric artifacts checked."
+  ],
+  "bindings": [
+    {
+      "path": "docs/modality-readout-plan.md",
+      "sha256": "e7ab025214a8b846c9de2a4751073fcca30b716d39669563f033514cf0531a74"
+    },
+    {
+      "path": "runs/modality_readout_v1/formal/report.html",
+      "sha256": "f87ef1f7826a9620b81bb9cb0973be127dcf7f25c8dde425455da2d94153e7fc"
+    },
+    {
+      "path": "runs/modality_readout_v1/verification.json",
+      "sha256": "c2f0e76026fd505b06f01f0da655846b576e9238ea41c895d74ed6c0f8e0aad1"
+    },
+    {
+      "path": "runs/modality_readout_v1/controls-verification.json",
+      "sha256": "ccac6f42738c82d9330569859e25f405b0041bac45130ade1aa230920a52e13a"
+    },
+    {
+      "path": "runs/modality_readout_v1/resume-verification.json",
+      "sha256": "682fa26a6a9fc8c23adf6a78566858f7fbbcc60457e5b7d93f7adf28aa5f6442"
+    },
+    {
+      "path": "runs/modality_readout_v1/all-focused-tests.xml",
+      "sha256": "e4e2455fc8c86f5fa73c0b7a8321fdb51feb05158ca7113e3f14be3f353d6a5b"
+    },
+    {
+      "path": "runs/reviews/modality_readout_v1/receipt.json",
+      "sha256": "7e426b964789ead6fb5572cd4e30daff3b879ee06d8059d9ad69b4bfbc684cee"
+    },
+    {
+      "path": "runs/reviews/modality_readout_v1/reconcile-receipt.json",
+      "sha256": "c2d80f2757796e1de3b5e0168fba650f81f113df4caff489c5e520566aee1213"
+    },
+    {
+      "path": "pathwm/models/readout.py",
+      "sha256": "62984b798fc326f039a03614e0caf064a3bfd7bd803e15f5cb2400c10bb5cb76"
+    },
+    {
+      "path": "experiments/modality_readout.py",
+      "sha256": "c86beeb27fdce83a565132e55f00c9bd8d0c2fc270b564075d79ecace0be64e8"
+    },
+    {
+      "path": "pathwm/evaluation/modality_readout.py",
+      "sha256": "7dc9607881bfc4f36cc41134b9983c8dd5d0098e96787235799fdef421cfaa9d"
+    },
+    {
+      "path": "pathwm/data/modality_readout.py",
+      "sha256": "b78635f15c490428c8bb4265d67f4b3215da43785da482848c1a4ce4c9c770f4"
+    }
+  ]
+}

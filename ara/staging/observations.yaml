@@ -4597,3 +4597,52 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O261
+  timestamp: 2026-09-15T22:49+02:00
+  provenance: ai-suggested
+  content: Optional output-local shared attention adapter reads fixed multimodal source tokens after the existing
+    two-step Thinker, with mask preservation, identity initialization and detached traces. Explicit-time native
+    video wrapper reconstructs requested observed frames. Fixed1/2/4 repeats share parameters; no adaptive
+    feedback or event writes. Experimental extension only.
+  context: Implemented and tested in a3a45c5; review/control/report fixes6a409e9 and1285121. This committed
+    subset does not settle broader nested-loop benefits.
+  potential_type: architecture
+  bound_to:
+  - N384
+  - N385
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A14
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O262
+  timestamp: 2026-09-15T22:49+02:00
+  provenance: ai-suggested
+  content: At this bounded setup, adding readout loops does not solve compositional multimodal output. Poor
+    location/direction probes and failed image/video/text oracle transfer indicate problems on both learned-state
+    access and output learning/generalization. These controls cannot identify irreversible loss or select a
+    unique cause among duration, architecture, objective and capacity.
+  context: Interpretation of completed controlled experiments, not yet commented on by researcher. Audio oracle
+    is a narrow positive control; general modality quality remains untested.
+  potential_type: claim
+  bound_to:
+  - N385
+  - N386
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O263
+  timestamp: 2026-09-15T22:49+02:00
+  provenance: ai-suggested
+  content: Keep native reference and localize location/direction accessibility at encoder, posterior and final
+    state. Test output-side oracle recombination for text and adequate spatial/temporal conditioning for image/video;
+    compare targeted changes against matched longer training before adding loops.
+  context: Proposed next bounded work after all formal combined gates failed; not implemented this turn.
+  potential_type: heuristic
+  bound_to:
+  - N385
+  - N386
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
