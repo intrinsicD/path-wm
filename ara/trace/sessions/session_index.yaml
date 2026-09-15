@@ -160,8 +160,8 @@ sessions:
   open_threads: 14
 - id: 2026-09-15_001
   date: '2026-09-15'
-  summary: "R/P/M/C VAE v2 implemented with Claude; ten real-photo sanity fits pass learning but fail quality. Shared attention, frozen probes, exact replay and rate/compute reports verified; fine detail and agent integration open."
-  turn_count: 4
-  events_count: 23
+  summary: "Color/grid diagnosis isolates learned decoder phase artifacts and fragile posterior color access. Four controlled fits,45 tests and813 checks; deterministic color improves but sampling fails. No replacement adopted."
+  turn_count: 5
+  events_count: 30
   claims_touched: []
-  open_threads: 16
+  open_threads: 17

@@ -4301,3 +4301,37 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O244
+  timestamp: 2026-09-15T10:47+02:00
+  provenance: ai-suggested
+  content: Current decoder maps unequal learned subpixel channel groups into a spatial grid; exact PixelShuffle
+    is not defective. Local color accessibility worsens at the final Gaussian posterior and sampling; remaining
+    mu color can be used by a mean-trained decoder but is not robust under noise. This narrows mechanisms without
+    proving unique training cause, irretrievable loss or mathematically insufficient latent width.
+  context: Interpretation of frozen controls and four short diagnostic continuations; researcher response pending.
+  potential_type: claim
+  bound_to:
+  - N362
+  - N363
+  - N364
+  - N365
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O245
+  timestamp: 2026-09-15T10:47+02:00
+  provenance: ai-suggested
+  content: Next test phase-symmetric decoder initialization/phase consistency with detail-preservation controls,
+    and posterior capacity/rate/color objectives evaluated under actual sampling. Preserve explicit rearrange/process/compress
+    design; mean-only decoder is diagnostic, not an adopted fix.
+  context: Proposed repair studies after diagnosis; no new architecture or follow-up sweep adopted.
+  potential_type: heuristic
+  bound_to:
+  - N362
+  - N364
+  - N365
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

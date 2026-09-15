@@ -6037,3 +6037,71 @@ tree:
   also_depends_on:
   - N359
   status: resolved
+- id: N361
+  type: question
+  title: Locate VAE reconstruction artifacts and weak color
+  provenance: user
+  timestamp: 2026-09-15T10:47+02:00
+  description: User reports improved reconstruction with artifacts and poor color, asks why. Diagnose current
+    codec without assuming more training or a new architecture is sufficient.
+  evidence:
+  - ara/evidence/tables/spatial_vae_color_2026-09-15.json
+  also_depends_on:
+  - N359
+  - N360
+  status: resolved
+- id: N362
+  type: experiment
+  title: Constant-latent phase tracing and frozen color readouts
+  provenance: ai-executed
+  timestamp: 2026-09-15T10:47+02:00
+  result: 'Decoded 28 constant latent fields without sampling: phase RMS below2e-8 before first shuffle, about0.1573
+    after first and0.1628 after second in feature units,0.00718 at RGB. Same local RGB patch target readout
+    MSE rises0.001091 before posterior to0.007396 at mu and0.014088 at sampled z. Finite-reader and feature-unit
+    limits retained.'
+  evidence:
+  - ara/evidence/tables/spatial_vae_color_2026-09-15.json
+  also_depends_on:
+  - N361
+  status: resolved
+- id: N363
+  type: experiment
+  title: Three matched stochastic component continuations fail repair screens
+  provenance: ai-executed
+  timestamp: 2026-09-15T10:47+02:00
+  result: Decoder-only, encoder-only and joint512-update fits from same reference/fresh optimizer/data/seed
+    improve global chroma error only0.5-3.5%; all fail20% color and50% grid screens. Frozen components bitwise
+    unchanged; source weights preserved.
+  evidence:
+  - ara/evidence/tables/spatial_vae_color_2026-09-15.json
+  also_depends_on:
+  - N362
+  status: resolved
+- id: N364
+  type: experiment
+  title: Mean-only decoder fit improves color but breaks sampled reconstruction
+  provenance: ai-executed
+  timestamp: 2026-09-15T10:47+02:00
+  result: Additional512-update decoder-only deterministic-mu fit lowers global chroma MSE0.00490865->0.00306339
+    (37.59%) and mean raw RGB MSE0.01714363->0.01310991. Sampled MSE worsens0.01836392->0.09944137. No model
+    replacement; no unique capacity or asymptotic cause established.
+  evidence:
+  - ara/evidence/tables/spatial_vae_color_2026-09-15.json
+  also_depends_on:
+  - N362
+  - N363
+  status: resolved
+- id: N365
+  type: experiment
+  title: Color diagnosis reviewed and independently audited
+  provenance: ai-executed
+  timestamp: 2026-09-15T10:47+02:00
+  result: Actual Claude public-concept review reconciled;45 tests and813 independent checks pass,18 report
+    artifacts verified. Original16 JPEG transforms exactly reproduced. Diagnostic GPU precision inconsistency
+    repaired by matching training math; new FP32 evaluations saved, originals and all training weights retained.
+    Audit resize rounding fixed; data itself correct. Browser unavailable under existing URL policy.
+  evidence:
+  - ara/evidence/tables/spatial_vae_color_2026-09-15.json
+  also_depends_on:
+  - N364
+  status: resolved

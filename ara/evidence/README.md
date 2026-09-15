@@ -146,3 +146,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Spatial VAE comparison](tables/spatial_vae_comparison_2026-09-15.json): N352-N355; ordered base/attention/reversible real-photo fits, failed quality/benefit gates, exact replay and880 independent checks;38 structurally verified reports.
 
 - [R/P/M/C VAE v2](tables/spatial_vae_v2_2026-09-15.json): N357-N360; ten real-photo fits pass sanity and fail quality,42 tests, exact367-tensor GPU resume,2203 independent checks,58 reports; unequal-resource/rate one-seed limits retained.
+
+- [VAE color and grid diagnosis](tables/spatial_vae_color_2026-09-15.json): N361-N365; constant-latent phase traces, frozen color probes, four controlled fits; deterministic color improves but sampling fails.45 tests and813 audit checks; original weights preserved.
