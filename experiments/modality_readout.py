@@ -78,10 +78,33 @@ class Core(nn.Module):
         )
         self.factor_head = nn.Linear(width * 12, 8)
 
-    def forward(self, inputs, *, trace=None, return_state=False):
+    def forward(
+        self,
+        inputs,
+        *,
+        trace=None,
+        return_state=False,
+        posterior_features=None,
+        temperature=1.0,
+    ):
+        if not np.isfinite(temperature) or temperature <= 0:
+            raise ValueError("Posterior temperature must be finite and positive")
         batch = len(next(iter(inputs.values())).values)
         state = self.agent.initial_state(batch, session_id="readout-task")
-        state = self.agent.observe(state, inputs, time=4.0, trace=trace)
+
+        def correction_logits(module, arguments, logits):
+            if posterior_features is not None:
+                posterior_features["raw_logits"] = logits
+            return logits if temperature == 1.0 else logits / temperature
+
+        hook = None
+        try:
+            if posterior_features is not None or temperature != 1.0:
+                hook = self.agent.updater.head.register_forward_hook(correction_logits)
+            state = self.agent.observe(state, inputs, time=4.0, trace=trace)
+        finally:
+            if hook is not None:
+                hook.remove()
         tokens = self.agent.think(state, steps=2, trace=trace).tokens
         return (tokens, state) if return_state else tokens
 
@@ -465,6 +488,10 @@ def perform(args):
         initialization_checkpoint_sha256=initial_source,
         initialization_optimizer="fresh Adam" if initial_source else "fresh model/Adam",
         posterior_aux_weight=args.posterior_aux,
+        posterior_aux_source=args.posterior_source,
+        temperature_warmup=args.temperature_warmup,
+        temperature_warmup_updates=512,
+        evaluation_temperature=1.0,
         objective="factor-CE"
         if args.stage == "core"
         else "sum normalized per-output losses",
@@ -523,11 +550,18 @@ def perform(args):
             wanted = target_batch(data, indices, device)
             optimizer.zero_grad(set_to_none=True)
             state = None
+            posterior_features = {} if args.posterior_source == "raw" else None
+            temperature = 1.0 + (args.temperature_warmup - 1.0) * max(
+                0.0, 1.0 - run.step / 512.0
+            )
             if args.stage in ("frozen", "oracle"):
                 tokens = cache["train"][mode][indices].to(device)
             else:
                 tokens, state = model.core(
-                    observations(data, mode, indices, device), return_state=True
+                    observations(data, mode, indices, device),
+                    return_state=True,
+                    posterior_features=posterior_features,
+                    temperature=temperature,
                 )
             if args.stage == "core":
                 loss = (
@@ -538,10 +572,15 @@ def perform(args):
                     / 3
                 )
                 metrics = dict(factor_loss=float(loss.detach()))
+                if args.temperature_warmup != 1.0:
+                    metrics["training_temperature"] = temperature
                 if args.posterior_aux:
-                    auxiliary = model.posterior_head(
+                    aux_features = (
                         state.logits.softmax(-1).flatten(1)
-                    ).split((3, 3, 2), -1)
+                        if posterior_features is None
+                        else F.layer_norm(posterior_features["raw_logits"], (32,))
+                    )
+                    auxiliary = model.posterior_head(aux_features).split((3, 3, 2), -1)
                     aux_loss = (
                         sum(
                             F.cross_entropy(p, wanted["factors"][:, i])
@@ -708,6 +747,15 @@ def main():
     parser.add_argument("--modality", choices=KINDS, default="text")
     parser.add_argument("--core", type=Path)
     parser.add_argument(
+        "--posterior-source", choices=("probabilities", "raw"), default="probabilities"
+    )
+    parser.add_argument(
+        "--temperature-warmup",
+        type=float,
+        default=1.0,
+        help="Training temperature at start; annealed to1 over512 updates, evaluation always1",
+    )
+    parser.add_argument(
         "--initial",
         type=Path,
         help="Start from saved model weights with fresh optimizer; not resume",
@@ -729,6 +777,16 @@ def main():
         parser.error("Posterior auxiliary weight must be finite and nonnegative")
     if args.posterior_aux and (args.stage != "core" or args.initial is None):
         parser.error("Posterior auxiliary requires core continuation with --initial")
+    if args.posterior_source == "raw" and not args.posterior_aux:
+        parser.error(
+            "Raw posterior auxiliary source requires positive auxiliary weight"
+        )
+    if not np.isfinite(args.temperature_warmup) or args.temperature_warmup < 1.0:
+        parser.error("Temperature warmup must be finite and >=1")
+    if args.temperature_warmup != 1.0 and (
+        args.stage != "core" or args.initial is None
+    ):
+        parser.error("Temperature warmup requires core continuation with --initial")
     if args.initial and args.stage not in ("core", "oracle"):
         parser.error("Weight initialization supported for core/oracle only")
     if args.stage == "diagnose":

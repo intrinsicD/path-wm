@@ -101,20 +101,23 @@ def test_raw_capture_and_unit_temperature_preserve_native_path():
 
     torch.manual_seed(81)
     core = Core()
-    x = observations(dataset('train'), 'all', [0,12])
+    x = observations(dataset("train"), "all", [0, 12])
     rng = torch.get_rng_state().clone()
     native = core(x)
     torch.set_rng_state(rng)
     captured = {}
-    output, state = core(x, return_state=True, posterior_features=captured, temperature=1.)
-    assert torch.equal(native,output)
-    assert captured['raw_logits'].requires_grad
-    raw = captured['raw_logits'].reshape(2,4,8)
+    output, state = core(
+        x, return_state=True, posterior_features=captured, temperature=1.0
+    )
+    assert torch.equal(native, output)
+    assert captured["raw_logits"].requires_grad
+    raw = captured["raw_logits"].reshape(2, 4, 8)
     from pathwm.models.belief import distribution
-    torch.testing.assert_close(distribution(raw),state.logits,rtol=0,atol=0)
+
+    torch.testing.assert_close(distribution(raw), state.logits, rtol=0, atol=0)
     assert not core.agent.updater.head._forward_hooks
     torch.set_rng_state(rng)
-    _, softened = core(x,return_state=True,temperature=10.)
-    assert not torch.equal(state.logits,softened.logits)
-    assert torch.all((softened.stochastic==0)|(softened.stochastic==1))
+    _, softened = core(x, return_state=True, temperature=10.0)
+    assert not torch.equal(state.logits, softened.logits)
+    assert torch.all((softened.stochastic == 0) | (softened.stochastic == 1))
     assert not core.agent.updater.head._forward_hooks
