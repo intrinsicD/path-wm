@@ -47,6 +47,8 @@ reuse frozen posterior tensors across additional draws. Equal updates are not
 equal compute: report timing and memory for each fit and require <=25% overhead
 for an efficiency pass. No compute-matched superiority claim from this design.
 
+For each seed the standard continuation defines28 constant latent fields; decode those identical fields through every candidate for the grid screen. Also retain each model's endogenous constant-field diagnostic.
+
 Per-seed screens against that seed's standard continuation: >=20% lower sampled
 global chroma MSE averaged across the three draws; >=50% lower constant-field
 phase RMS; <=5% mean and sampled raw RGB and pattern-edge regression; <=25% higher

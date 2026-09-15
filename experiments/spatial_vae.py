@@ -29,7 +29,7 @@ from pathwm.io import (
     evaluation_mode,
 )
 from pathwm.evaluation.report import write_report
-from pathwm.models.spatial_vae import SpatialVAE, build_variant, vae_loss
+from pathwm.models.spatial_vae import Posterior, SpatialVAE, build_variant, vae_loss
 from pathwm.models.spatial_vae_v2 import build_hierarchy
 
 
@@ -335,6 +335,32 @@ def example_panel(path, arrays, labels, count=8):
     fig.savefig(path, dpi=130)
 
 
+def reconstruction_report(path, rows, *, validation=False, show_error=False):
+    """One reconstruction panel/report path for both fits and frozen evaluations."""
+    example_panel(
+        Path(path) / "comparison.png",
+        {
+            **{k: rows[k] for k in ("target", "mean", "sampled")},
+            **(
+                {"absolute_error": (rows["mean"] - rows["target"]).abs()}
+                if show_error
+                else {}
+            ),
+        },
+        dict(
+            target="Validation original" if validation else "Original",
+            mean="Posterior mean",
+            sampled="Posterior sample",
+            absolute_error="Absolute RGB error [0,1]",
+        ),
+    )
+    write_report(
+        path,
+        batch={"rgb": rows["target"][:8]},
+        outputs={"rgb": rows["mean"][:8], "sampled": rows["sampled"][:8]},
+    )
+
+
 def report_evaluation(path, config, identity, model, metrics, rows, device, scope):
     path = Path(path)
     path.mkdir(parents=True, exist_ok=False)
@@ -357,28 +383,7 @@ def report_evaluation(path, config, identity, model, metrics, rows, device, scop
     )
     (path / "metrics.jsonl").write_text("")
     try:
-        example_panel(
-            path / "comparison.png",
-            {
-                **{k: rows[k] for k in ("target", "mean", "sampled")},
-                **(
-                    {"absolute_error": (rows["mean"] - rows["target"]).abs()}
-                    if "model_config" in config
-                    else {}
-                ),
-            },
-            dict(
-                target="Original",
-                mean="Posterior mean",
-                sampled="Posterior sample",
-                absolute_error="Absolute RGB error [0,1]",
-            ),
-        )
-        write_report(
-            path,
-            batch={"rgb": rows["target"][:8]},
-            outputs={"rgb": rows["mean"][:8], "sampled": rows["sampled"][:8]},
-        )
+        reconstruction_report(path, rows, show_error="model_config" in config)
     except BaseException as e:
         atomic_json(
             path / "status.json",
@@ -469,7 +474,15 @@ def train(
             x = train_rgb[ids].to(device)
             optimizer.zero_grad(set_to_none=True)
             y, p = model(x, sample=not deterministic)
-            loss, terms = vae_loss(y, x, p, config["beta"], config["variance"])
+            loss, terms = vae_loss(
+                y,
+                x,
+                p,
+                config["beta"],
+                config["variance"],
+                color_weight=config.get("color_weight", 0.0),
+                phase_weight=config.get("phase_weight", 0.0),
+            )
             if not torch.isfinite(loss):
                 raise ValueError("Nonfinite VAE objective")
             loss.backward()
@@ -550,27 +563,8 @@ def train(
             ),
         )
         run.status(state, "pending")
-        example_panel(
-            output / "comparison.png",
-            {
-                **{k: rows[k] for k in ("target", "mean", "sampled")},
-                **(
-                    {"absolute_error": (rows["mean"] - rows["target"]).abs()}
-                    if "model_config" in config
-                    else {}
-                ),
-            },
-            dict(
-                target="Validation original",
-                absolute_error="Absolute RGB error [0,1]",
-                mean="Posterior mean",
-                sampled="Posterior sample",
-            ),
-        )
-        write_report(
-            output,
-            batch={"rgb": rows["target"][:8]},
-            outputs={"rgb": rows["mean"][:8], "sampled": rows["sampled"][:8]},
+        reconstruction_report(
+            output, rows, validation=True, show_error="model_config" in config
         )
         return run
     except BaseException as e:
@@ -1584,6 +1578,247 @@ def color_sampling_followup(output, weights, root, device):
     return metrics
 
 
+@torch.no_grad()
+def color_repair_evaluation(model, images, device):
+    """Three independent draws, reusing the encoded posterior for draws two/three."""
+    from pathwm.evaluation.spatial_vae import color_grid_metrics
+
+    rows, base, _ = evaluate_images(model, images, device, controls=False)
+    scores = [color_grid_metrics(rows["sampled"], rows["target"])]
+    with evaluation_mode(model):
+        for seed in (58171, 60171):
+            outputs = []
+            for start in range(0, len(images), 8):
+                mu, lv = [
+                    rows[k][start : start + 8].to(device) for k in ("mu", "logvar")
+                ]
+                size = tuple(images.shape[-2:])
+                z = torch.cat(
+                    [
+                        Posterior(mu[i : i + 1], lv[i : i + 1], size, size).sample(
+                            torch.Generator(device=device).manual_seed(seed + start + i)
+                        )
+                        for i in range(len(mu))
+                    ]
+                )
+                outputs.append(model.decode(z, size).cpu())
+            sampled = torch.cat(outputs)
+            rows[f"sampled_{seed}"] = sampled
+            scores.append(color_grid_metrics(sampled, rows["target"]))
+    return rows, dict(
+        mean=color_grid_metrics(rows["mean"], rows["target"]),
+        sampled_draws=scores,
+        sampled_average={
+            k: float(np.mean([s[k] for s in scores]))
+            for k in ("raw_mse", "global_chroma_mse", "pixel_chroma_mse")
+        },
+        posterior=base["posterior"],
+    )
+
+
+def color_repair_study(output, weights, root, device):
+    """Fixed training-only 2x2 color/phase study, not an adaptive winner search."""
+    from pathwm.evaluation.spatial_vae import constant_decoder_diagnostic
+
+    output = Path(output)
+    if output.exists():
+        raise FileExistsError(f"Preserve existing study {output}")
+    output.mkdir(parents=True)
+    base = hierarchy_settings("C", 0.1)
+    seed_everything(57301)
+    data = hierarchy_data(root, base)
+    rgb = data["test"].batch(range(len(data["test"])))["rgb"]
+    native, native_identity = native_crops(root, data["test"], (96, 128), 16)
+    odd, odd_identity = native_crops(root, data["test"], (63, 79), 16)
+    source_hash = file_hash(weights)
+    records, pictures = [], {}
+    for seed in (57301, 57302):
+        reference = None
+        for name, color, phase in [
+            ("standard", 0.0, 0.0),
+            ("color", 6.0, 0.0),
+            ("phase", 0.0, 20.0),
+            ("both", 6.0, 20.0),
+        ]:
+            config = dict(
+                base,
+                seed=seed,
+                color_weight=color,
+                phase_weight=phase,
+                purpose=f"Sampled color/phase repair: {name}; seed{seed}",
+                objective="Gaussian RGB distortion + beta KL per pixel + weighted pooled chroma and phase-residual errors",
+            )
+            path = output / f"seed{seed}" / name
+            run = train(
+                path / "training",
+                data["train"],
+                data["validation"],
+                config,
+                device,
+                source=weights,
+            )
+            if run.step != config["steps"]:
+                raise RuntimeError("Incomplete fixed-budget repair fit")
+            model = SpatialVAE.load(path / "training/weights.pt", device)
+            rows, scores = color_repair_evaluation(model, rgb, device)
+            constants, constant_rows = constant_decoder_diagnostic(model, device)
+            scores["constant_output_rms"] = constants["output_rms"]
+            # Use identical frozen latent fields for the decoder-only phase screen.
+            # Endogenous constant controls also remain available above.
+            if reference is None:
+                fixed_latents = (
+                    torch.tensor(constants["constants"])[..., None, None]
+                    .expand(-1, -1, 32, 32)
+                    .contiguous()
+                )
+            from pathwm.evaluation.spatial_vae import phase_statistics
+
+            with torch.no_grad(), evaluation_mode(model):
+                fixed_outputs = model.decode(fixed_latents.to(device), (128, 128)).cpu()
+            scores["fixed_constant_output_rms"] = phase_statistics(
+                fixed_outputs, 4, 16
+            )["rms"]
+            domains = {}
+            for domain, batch in [
+                ("patterns", patterns()),
+                ("native", native),
+                ("odd", odd),
+            ]:
+                domain_rows, values, _ = evaluate_images(
+                    model, batch, device, controls=False
+                )
+                scores[domain] = values
+                domains[domain] = domain_rows
+            pattern_error = domains["patterns"]["mean"] - domains["patterns"]["target"]
+            scores["pattern_raw_edge_mse"] = float(
+                (
+                    pattern_error.diff(dim=-1).square().mean()
+                    + pattern_error.diff(dim=-2).square().mean()
+                )
+                / 2
+            )
+            fitted = json.loads((path / "training/result.json").read_text())
+            scores.update(
+                {
+                    k: fitted[k]
+                    for k in [
+                        "parameters",
+                        "training_seconds",
+                        "peak_reserved_mib",
+                        "peak_allocated_mib",
+                        "weights_sha256",
+                    ]
+                }
+            )
+            if reference is None:
+                reference = copy.deepcopy(scores)
+            else:
+                scores["screens"] = dict(
+                    sampled_color=scores["sampled_average"]["global_chroma_mse"]
+                    <= 0.8 * reference["sampled_average"]["global_chroma_mse"],
+                    constant_grid=scores["fixed_constant_output_rms"]
+                    <= 0.5 * reference["fixed_constant_output_rms"],
+                    mean_rgb=scores["mean"]["raw_mse"]
+                    <= 1.05 * reference["mean"]["raw_mse"],
+                    sampled_rgb=scores["sampled_average"]["raw_mse"]
+                    <= 1.05 * reference["sampled_average"]["raw_mse"],
+                    pattern_edges=scores["pattern_raw_edge_mse"]
+                    <= 1.05 * reference["pattern_raw_edge_mse"],
+                    rate=scores["posterior"]["kl_bits_per_original_pixel"]
+                    <= 1.25 * reference["posterior"]["kl_bits_per_original_pixel"],
+                    train_time=scores["training_seconds"]
+                    <= 1.25 * reference["training_seconds"],
+                )
+                scores["all_screens_pass"] = all(scores["screens"].values())
+            scores["constant_control"] = constants
+            evaluation = path / "evaluation"
+            report_evaluation(
+                evaluation,
+                config,
+                dict(
+                    photo=data["test"].identity,
+                    native=native_identity,
+                    odd=odd_identity,
+                ),
+                model,
+                scores,
+                rows,
+                device,
+                "Fixed-budget diagnostic comparison; two continuation seeds, known heldout images. Sampling and rate remain part of the test; no full-quality or generalization claim.",
+            )
+            for domain, arrays in dict(
+                photo=rows, constants=constant_rows, **domains
+            ).items():
+                np.savez_compressed(
+                    evaluation / f"{domain}.npz",
+                    **{k: v.numpy() for k, v in arrays.items()},
+                )
+            np.savez_compressed(
+                evaluation / "fixed_constants.npz",
+                latent=fixed_latents.numpy(),
+                output=fixed_outputs.numpy(),
+            )
+            record = dict(seed=seed, arm=name, **scores)
+            records.append(record)
+            atomic_json(output / "progress.json", records)
+            pictures[f"{seed}_{name}"] = rows["mean"][:6]
+            print(
+                seed,
+                name,
+                json.dumps(
+                    dict(
+                        color=scores["sampled_average"]["global_chroma_mse"],
+                        grid=scores["fixed_constant_output_rms"],
+                        screens=scores.get("screens"),
+                    )
+                ),
+                flush=True,
+            )
+            del model, run
+    assert file_hash(weights) == source_hash
+    atomic_json(
+        output / "run.json",
+        dict(
+            identity=dict(
+                settings=base, seeds=[57301, 57302], source_sha256=source_hash
+            ),
+            source=source_record(__file__, torch.nn.Identity()),
+        ),
+    )
+    atomic_json(
+        output / "result.json",
+        dict(
+            completed=True,
+            metrics=dict(
+                records=records,
+                all_seeds_pass={
+                    name: all(
+                        r.get("all_screens_pass", False)
+                        for r in records
+                        if r["arm"] == name
+                    )
+                    for name in ["color", "phase", "both"]
+                },
+            ),
+            evaluation_scope="Predeclared fixed-update diagnostic; equal updates, not equal compute. Original model retained.",
+        ),
+    )
+    atomic_json(
+        output / "status.json",
+        dict(result="completed", report="pending", step=512, error=None),
+    )
+    (output / "metrics.jsonl").write_text("")
+    # Same six source photos, every arm/seed; comparisons are not cherry-picked.
+    example_panel(
+        output / "comparison.png",
+        dict(original=rgb[:6], **pictures),
+        dict(original="Original", **{k: k.replace("_", " / ") for k in pictures}),
+        count=6,
+    )
+    write_report(output)
+    return records
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument(
@@ -1615,6 +1850,7 @@ def main():
     p.add_argument("--hierarchy-study", action="store_true")
     p.add_argument("--color-diagnosis", action="store_true")
     p.add_argument("--color-followup", action="store_true")
+    p.add_argument("--color-repair", action="store_true")
     args = p.parse_args()
     if args.stop_after is not None and args.stop_after <= 0:
         p.error("--stop-after must be positive")
@@ -1626,6 +1862,11 @@ def main():
         if not args.weights:
             p.error("--color-followup requires reference --weights")
         color_sampling_followup(args.output, args.weights, args.data_root, args.device)
+        return
+    if args.color_repair:
+        if not args.weights:
+            p.error("--color-repair requires reference --weights")
+        color_repair_study(args.output, args.weights, args.data_root, args.device)
         return
     if args.color_diagnosis:
         if not args.weights:

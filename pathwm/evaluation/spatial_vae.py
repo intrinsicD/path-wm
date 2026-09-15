@@ -208,17 +208,12 @@ def phase_statistics(x, period=4, border=8):
 
 
 def color_grid_metrics(prediction, target):
+    from pathwm.models.spatial_vae import rgb_opponents
+
     if prediction.shape != target.shape:
         raise ValueError("Color diagnostics require aligned RGB arrays")
     p, t = prediction.detach().cpu().float(), target.detach().cpu().float()
-    # Orthonormal opponent axes; these are RGB error coordinates, not perceptual DeltaE.
-    basis = torch.tensor([[1.0, -1.0, 0.0], [1.0, 1.0, -2.0]]) / torch.tensor(
-        [[2.0**0.5], [6.0**0.5]]
-    )
-    pc, tc = (
-        torch.einsum("oc,bchw->bohw", basis, p),
-        torch.einsum("oc,bchw->bohw", basis, t),
-    )
+    pc, tc = rgb_opponents(p), rgb_opponents(t)
     error = p - t
     interior = error[..., 8:-8, 8:-8]
     border_sum = error.square().sum() - interior.square().sum()

@@ -7,6 +7,7 @@ The decoder receives only a spatial latent and requested output geometry.
 
 from dataclasses import dataclass
 from pathlib import Path
+import math
 import torch
 from torch import nn
 from torch.nn import functional as F
@@ -330,28 +331,88 @@ class SpatialVAE(nn.Module):
         return m
 
 
-def vae_loss(reconstruction, target, posterior, beta=1.0, variance=0.5):
+def rgb_opponents(x):
+    """Orthonormal chroma axes in RGB coordinates, not perceptual DeltaE."""
+    basis = x.new_tensor([[1.0, -1.0, 0.0], [1.0, 1.0, -2.0]]) / x.new_tensor(
+        [[2.0**0.5], [6.0**0.5]]
+    )
+    return torch.einsum("oc,bchw->bohw", basis, x)
+
+
+def reconstruction_penalties(reconstruction, target):
+    """Training-only color/phase errors; no image-content or encoder bypass.
+
+    Partial 4x4 color cells use replicated borders. Phase averages use complete
+    period-four cells inside an eight-pixel border where possible. Correct
+    periodic texture has zero residual and therefore zero phase penalty.
+    """
+    if reconstruction.shape != target.shape or target.ndim != 4 or target.shape[1] != 3:
+        raise ValueError("Penalties require aligned BCHW RGB tensors")
+    error = reconstruction.float() - target.float()
+    chroma = rgb_opponents(error)
+    h, w = error.shape[-2:]
+    cells = F.avg_pool2d(F.pad(chroma, (0, (-w) % 4, 0, (-h) % 4), mode="replicate"), 4)
+    color = 0.5 * (chroma.mean((2, 3)).square().mean() + cells.square().mean())
+    interior = error[..., 8:-8, 8:-8] if min(h, w) >= 20 else error
+    hi, wi = interior.shape[-2:]
+    if min(hi, wi) < 4:
+        phase = error.sum() * 0
+    else:
+        hi, wi = hi // 4 * 4, wi // 4 * 4
+        phase_means = (
+            interior[..., :hi, :wi]
+            .reshape(*error.shape[:2], hi // 4, 4, wi // 4, 4)
+            .mean((2, 4))
+        )
+        phase = (phase_means - phase_means.mean((-2, -1), keepdim=True)).square().mean()
+    return color, phase
+
+
+def vae_loss(
+    reconstruction,
+    target,
+    posterior,
+    beta=1.0,
+    variance=0.5,
+    *,
+    color_weight=0.0,
+    phase_weight=0.0,
+):
     if (
         reconstruction.shape != target.shape
         or tuple(target.shape[-2:]) != posterior.original_size
         or beta < 0
         or variance <= 0
+        or any(not math.isfinite(w) or w < 0 for w in (color_weight, phase_weight))
     ):
         raise ValueError("Incompatible reconstruction or loss settings")
     area = target.shape[-2] * target.shape[-1]
     distortion = (reconstruction.float() - target.float()).square().sum((1, 2, 3)) / (
         2 * variance * area
     )
-    rate = posterior.kl_per_image() / area
-    return (distortion + beta * rate).mean(), dict(
+    kl = posterior.kl_per_image()
+    rate = kl / area
+    nats = kl.mean()
+    loss = (distortion + beta * rate).mean()
+    terms = dict(
         distortion=distortion.mean(),
         rate=rate.mean(),
-        kl_nats_per_sample=posterior.kl_per_image().mean(),
-        kl_bits_per_sample=posterior.kl_per_image().mean() / 0.6931471805599453,
-        kl_bits_per_latent_position=posterior.kl_per_image().mean()
+        kl_nats_per_sample=nats,
+        kl_bits_per_sample=nats / 0.6931471805599453,
+        kl_bits_per_latent_position=nats
         / (0.6931471805599453 * posterior.mu.shape[-2] * posterior.mu.shape[-1]),
         kl_bits_per_original_pixel=rate.mean() / 0.6931471805599453,
     )
+    if color_weight or phase_weight:
+        color, phase = reconstruction_penalties(reconstruction, target)
+        terms.update(
+            color_error=color,
+            phase_error=phase,
+            color_weighted=color_weight * color,
+            phase_weighted=phase_weight * phase,
+        )
+        loss = loss + terms["color_weighted"] + terms["phase_weighted"]
+    return loss, terms
 
 
 def build_variant(variant, seed, **kwargs):
