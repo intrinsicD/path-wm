@@ -93,3 +93,22 @@
 - **Implementation**: Committed6dba00a; N353/N354 execute these fixed settings. Numerical defaults are experimental choices, not researcher-selected optima or efficacy claims.
 - **Bindings**: [model/loss](../../../pathwm/models/spatial_vae.py), [reviewed design](../../../docs/spatial-vae-design.md), [source-bound experiment](../../evidence/tables/spatial_vae_comparison_2026-09-15.json).
 - **Limits**: KL is not an encoded filesize, failed probes do not establish absence, and producing spatial latents from agent state requires new training. Current quality failures remain visible.
+
+## A10: R/P/M/C hierarchy with spatial posterior and learnable local/global processing
+
+- **Design**: Overlapping image stem; optional pre-processing; exact spatial rearrangement; local processing; optional coarsest self-attention before explicit channel compression. Shared Transformer iterations and detached traces, spatial Gaussian posterior, latent-only PixelShuffle decoder, explicit pad/crop geometry.
+- **Provenance**: user
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O240
+- **Adoption**: N357; implementation a695db3 after red contracts d25ecda.
+- **Code/evidence**: [hierarchy](../../../pathwm/models/spatial_vae_v2.py), [recipe/protocol](../../../docs/spatial-vae-v2-plan.md), [measurements](../../evidence/tables/spatial_vae_v2_2026-09-15.json).
+- **Scope**: Opt-in codec, not agent replacement. Broad design adopted; numerical budgets chosen by AI. Adaptive budgets, untied-depth efficacy comparisons and general generation remain deferred. N359 fails photo-quality screens.
+
+## A11: Frozen common-target probes and explicit rate/resource contracts
+
+- **Design**: Only rearrangement guaranteed reversible; P/M may lose information. Register loop parameters at0 iterations but report executed parameters separately. Freeze/detach diagnostics; train-only ridge statistics and common RGB patch targets before/after compression, feature recovery and shuffled/mean/identity controls. Original-area reconstruction/KL and explicit Gaussian variance; rate in nats/bits is only a proxy.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O241
+- **Implementation**: a695db3; N358-N360. [Probes](../../../pathwm/evaluation/spatial_vae.py), [model](../../../pathwm/models/spatial_vae_v2.py), [protocol](../../../docs/spatial-vae-v2-plan.md).
+- **Limits**: Pooled feature-centered variance normalization is not per-feature whitening. Probe failures do not prove absence or a reader-only fault. Untied/matched-resource controls remain requirements before their corresponding claims; they were not run. No efficacy, semantic retention, unlimited-resolution or constant-compute guarantee is promoted.

@@ -1934,3 +1934,13 @@ entries:
   - Actual Claude errors were corrected and acknowledged, not imported as knowledge. No new experimental
     evidence, model parameters, benchmark outcomes or green architecture scopes. Source review and
     useful ablation design do not validate the proposed extensions.
+- turn: 2026-09-15_001#4
+  notes:
+  - Direct N357-N360; O240->A10 by explicit adoption, O241->A11 by committed operational contracts,
+    retaining original provenance and deferring untied-resource efficacy tests.
+  - O242/O243 staged, not validated research claims; one seed/short budget/unequal resources and no
+    researcher comment. Prior O238/O239 and state/recall/sample-efficiency topics remain live; KL sweep
+    in a new codec does not complete the older combined proposal.
+  - No architecture superiority, certified information loss, high-quality generator, agent-wide green
+    status or bulk abandonment promoted. Claude errors remain visible and rejected; raw records and
+    original source snapshots bind results.

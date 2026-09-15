@@ -1,0 +1,343 @@
+{
+  "provenance": "ai-executed",
+  "timestamp": "2026-09-15T10:21+02:00",
+  "commits": [
+    "d25ecda",
+    "a695db3",
+    "b6fdfe9"
+  ],
+  "experiments": [
+    {
+      "beta": 1.0,
+      "bits_per_pixel": 0.033966314047575,
+      "mean_mse": 0.022301366552710533,
+      "memory_scope": "Training peak; reserved includes allocator cache from preceding runs in this process",
+      "parameters": 68739,
+      "peak_allocated_mib": 34.349609375,
+      "peak_reserved_mib": 56.0,
+      "photo_quality": false,
+      "report": "runs/spatial_vae_v2/formal/A_local_beta1/evaluation/report.html",
+      "resources": {
+        "active_parameters": 68739,
+        "approximate_flops": 584712192,
+        "batch_shape": [
+          8,
+          3,
+          64,
+          64
+        ],
+        "convention": "One multiply-add=one MAC; FLOPs=2MAC. Conv/Linear/QK/AV only; norms, activation, softmax, shuffle and backward excluded.",
+        "forward_macs": 292356096,
+        "inference_seconds_per_batch": 0.0019100707955658435,
+        "parameters": 68739
+      },
+      "sampled_mse": 0.028224341571331024,
+      "sanity": true,
+      "training_seconds": 6.127293789992109,
+      "variant": "A_local"
+    },
+    {
+      "beta": 1.0,
+      "bits_per_pixel": 0.03528387099504471,
+      "mean_mse": 0.02182694710791111,
+      "memory_scope": "Training peak; reserved includes allocator cache from preceding runs in this process",
+      "parameters": 122979,
+      "peak_allocated_mib": 44.0576171875,
+      "peak_reserved_mib": 84.0,
+      "photo_quality": false,
+      "report": "runs/spatial_vae_v2/formal/C_beta1/evaluation/report.html",
+      "resources": {
+        "active_parameters": 122979,
+        "approximate_flops": 935460864,
+        "batch_shape": [
+          8,
+          3,
+          64,
+          64
+        ],
+        "convention": "One multiply-add=one MAC; FLOPs=2MAC. Conv/Linear/QK/AV only; norms, activation, softmax, shuffle and backward excluded.",
+        "forward_macs": 467730432,
+        "inference_seconds_per_batch": 0.0023291482124477626,
+        "parameters": 122979
+      },
+      "sampled_mse": 0.027747446671128273,
+      "sanity": true,
+      "training_seconds": 7.25013812398538,
+      "variant": "C"
+    },
+    {
+      "beta": 1.0,
+      "bits_per_pixel": 0.03207540512084961,
+      "mean_mse": 0.023518487811088562,
+      "memory_scope": "Training peak; reserved includes allocator cache from preceding runs in this process",
+      "parameters": 66179,
+      "peak_allocated_mib": 34.3203125,
+      "peak_reserved_mib": 84.0,
+      "photo_quality": false,
+      "report": "runs/spatial_vae_v2/formal/B_beta1/evaluation/report.html",
+      "resources": {
+        "active_parameters": 66179,
+        "approximate_flops": 566362112,
+        "batch_shape": [
+          8,
+          3,
+          64,
+          64
+        ],
+        "convention": "One multiply-add=one MAC; FLOPs=2MAC. Conv/Linear/QK/AV only; norms, activation, softmax, shuffle and backward excluded.",
+        "forward_macs": 283181056,
+        "inference_seconds_per_batch": 0.0019251632038503885,
+        "parameters": 66179
+      },
+      "sampled_mse": 0.02898620069026947,
+      "sanity": true,
+      "training_seconds": 5.859265986015089,
+      "variant": "B"
+    },
+    {
+      "beta": 1.0,
+      "bits_per_pixel": 0.03526325896382332,
+      "mean_mse": 0.021801816299557686,
+      "memory_scope": "Training peak; reserved includes allocator cache from preceding runs in this process",
+      "parameters": 75531,
+      "peak_allocated_mib": 38.64501953125,
+      "peak_reserved_mib": 84.0,
+      "photo_quality": false,
+      "report": "runs/spatial_vae_v2/formal/C_after_beta1/evaluation/report.html",
+      "resources": {
+        "active_parameters": 75531,
+        "approximate_flops": 638451712,
+        "batch_shape": [
+          8,
+          3,
+          64,
+          64
+        ],
+        "convention": "One multiply-add=one MAC; FLOPs=2MAC. Conv/Linear/QK/AV only; norms, activation, softmax, shuffle and backward excluded.",
+        "forward_macs": 319225856,
+        "inference_seconds_per_batch": 0.0021911746123805644,
+        "parameters": 75531
+      },
+      "sampled_mse": 0.027681514620780945,
+      "sanity": true,
+      "training_seconds": 7.058445055037737,
+      "variant": "C_after"
+    },
+    {
+      "beta": 1.0,
+      "bits_per_pixel": 0.03621349856257439,
+      "mean_mse": 0.02129780687391758,
+      "memory_scope": "Training peak; reserved includes allocator cache from preceding runs in this process",
+      "parameters": 156963,
+      "peak_allocated_mib": 115.5234375,
+      "peak_reserved_mib": 156.0,
+      "photo_quality": false,
+      "report": "runs/spatial_vae_v2/formal/D_beta1/evaluation/report.html",
+      "resources": {
+        "active_parameters": 156963,
+        "approximate_flops": 1204158464,
+        "batch_shape": [
+          8,
+          3,
+          64,
+          64
+        ],
+        "convention": "One multiply-add=one MAC; FLOPs=2MAC. Conv/Linear/QK/AV only; norms, activation, softmax, shuffle and backward excluded.",
+        "forward_macs": 602079232,
+        "inference_seconds_per_batch": 0.0031268076039850713,
+        "parameters": 156963
+      },
+      "sampled_mse": 0.027397921308875084,
+      "sanity": true,
+      "training_seconds": 8.487660145037808,
+      "variant": "D"
+    },
+    {
+      "beta": 1.0,
+      "bits_per_pixel": 0.03649338334798813,
+      "mean_mse": 0.021411055698990822,
+      "memory_scope": "Training peak; reserved includes allocator cache from preceding runs in this process",
+      "parameters": 156963,
+      "peak_allocated_mib": 121.5859375,
+      "peak_reserved_mib": 162.0,
+      "photo_quality": false,
+      "report": "runs/spatial_vae_v2/formal/E_beta1/evaluation/report.html",
+      "resources": {
+        "active_parameters": 156963,
+        "approximate_flops": 1472593920,
+        "batch_shape": [
+          8,
+          3,
+          64,
+          64
+        ],
+        "convention": "One multiply-add=one MAC; FLOPs=2MAC. Conv/Linear/QK/AV only; norms, activation, softmax, shuffle and backward excluded.",
+        "forward_macs": 736296960,
+        "inference_seconds_per_batch": 0.003603336797095835,
+        "parameters": 156963
+      },
+      "sampled_mse": 0.027496369555592537,
+      "sanity": true,
+      "training_seconds": 9.339334420044906,
+      "variant": "E"
+    },
+    {
+      "beta": 0.1,
+      "bits_per_pixel": 0.14738452434539795,
+      "mean_mse": 0.017313655465841293,
+      "memory_scope": "Training peak; reserved includes allocator cache from preceding runs in this process",
+      "parameters": 68739,
+      "peak_allocated_mib": 99.349609375,
+      "peak_reserved_mib": 162.0,
+      "photo_quality": false,
+      "report": "runs/spatial_vae_v2/formal/A_local_beta0.1/evaluation/report.html",
+      "resources": {
+        "active_parameters": 68739,
+        "approximate_flops": 584712192,
+        "batch_shape": [
+          8,
+          3,
+          64,
+          64
+        ],
+        "convention": "One multiply-add=one MAC; FLOPs=2MAC. Conv/Linear/QK/AV only; norms, activation, softmax, shuffle and backward excluded.",
+        "forward_macs": 292356096,
+        "inference_seconds_per_batch": 0.0019162502139806747,
+        "parameters": 68739
+      },
+      "sampled_mse": 0.018593804910779,
+      "sanity": true,
+      "training_seconds": 6.038713300949894,
+      "variant": "A_local"
+    },
+    {
+      "beta": 0.1,
+      "bits_per_pixel": 0.14009195566177368,
+      "mean_mse": 0.017132241278886795,
+      "memory_scope": "Training peak; reserved includes allocator cache from preceding runs in this process",
+      "parameters": 122979,
+      "peak_allocated_mib": 109.0576171875,
+      "peak_reserved_mib": 162.0,
+      "photo_quality": false,
+      "report": "runs/spatial_vae_v2/formal/C_beta0.1/evaluation/report.html",
+      "resources": {
+        "active_parameters": 122979,
+        "approximate_flops": 935460864,
+        "batch_shape": [
+          8,
+          3,
+          64,
+          64
+        ],
+        "convention": "One multiply-add=one MAC; FLOPs=2MAC. Conv/Linear/QK/AV only; norms, activation, softmax, shuffle and backward excluded.",
+        "forward_macs": 467730432,
+        "inference_seconds_per_batch": 0.002331423806026578,
+        "parameters": 122979
+      },
+      "sampled_mse": 0.018343765288591385,
+      "sanity": true,
+      "training_seconds": 7.252603287925012,
+      "variant": "C"
+    },
+    {
+      "beta": 0.01,
+      "bits_per_pixel": 0.5252672433853149,
+      "mean_mse": 0.017149033024907112,
+      "memory_scope": "Training peak; reserved includes allocator cache from preceding runs in this process",
+      "parameters": 68739,
+      "peak_allocated_mib": 99.349609375,
+      "peak_reserved_mib": 162.0,
+      "photo_quality": false,
+      "report": "runs/spatial_vae_v2/formal/A_local_beta0.01/evaluation/report.html",
+      "resources": {
+        "active_parameters": 68739,
+        "approximate_flops": 584712192,
+        "batch_shape": [
+          8,
+          3,
+          64,
+          64
+        ],
+        "convention": "One multiply-add=one MAC; FLOPs=2MAC. Conv/Linear/QK/AV only; norms, activation, softmax, shuffle and backward excluded.",
+        "forward_macs": 292356096,
+        "inference_seconds_per_batch": 0.0019093942129984498,
+        "parameters": 68739
+      },
+      "sampled_mse": 0.017642894759774208,
+      "sanity": true,
+      "training_seconds": 6.063455750001594,
+      "variant": "A_local"
+    },
+    {
+      "beta": 0.01,
+      "bits_per_pixel": 0.43947282433509827,
+      "mean_mse": 0.017926612868905067,
+      "memory_scope": "Training peak; reserved includes allocator cache from preceding runs in this process",
+      "parameters": 122979,
+      "peak_allocated_mib": 109.0576171875,
+      "peak_reserved_mib": 162.0,
+      "photo_quality": false,
+      "report": "runs/spatial_vae_v2/formal/C_beta0.01/evaluation/report.html",
+      "resources": {
+        "active_parameters": 122979,
+        "approximate_flops": 935460864,
+        "batch_shape": [
+          8,
+          3,
+          64,
+          64
+        ],
+        "convention": "One multiply-add=one MAC; FLOPs=2MAC. Conv/Linear/QK/AV only; norms, activation, softmax, shuffle and backward excluded.",
+        "forward_macs": 467730432,
+        "inference_seconds_per_batch": 0.0023302232148125768,
+        "parameters": 122979
+      },
+      "sampled_mse": 0.018208717927336693,
+      "sanity": true,
+      "training_seconds": 7.27094611490611,
+      "variant": "C"
+    }
+  ],
+  "verification": {
+    "browser_checked": false,
+    "checks": 2203,
+    "formal_runs": 10,
+    "passed": true,
+    "reports": 58,
+    "scope": "Independent numpy metrics/KL, exact GPU export replay, checkpoint/state equality, split and archived source identity, bounded probe budgets/units and report hashes. Original training snapshots checked after display/mislabelling-guard changes. No general quality claim."
+  },
+  "gpu_resume": {
+    "exact_tensor_checks": 367,
+    "keys": [
+      "model",
+      "optimizer",
+      "sampler",
+      "torch",
+      "cuda",
+      "step",
+      "training rows"
+    ],
+    "passed": true,
+    "scope": "E shared attention, 8 real-photo updates, uninterrupted vs 4+4 exact GPU resume"
+  },
+  "sources": {
+    "runs/spatial_vae_v2/formal/progress.json": "baa075f015ea30f811a78d6e94360caf0b5e8d2e8b10011e21fee70d78f2c70c",
+    "runs/spatial_vae_v2/verification.json": "9dd954ad7ab8ad2de9cab9cd5681cc99bb9bea64a0f9c2216e257172c353527e",
+    "runs/spatial_vae_v2/gpu_resume_check.json": "3eeca834c39d5230fe650f225b1e1f2b6d0f46fe6d8cb2b04f34046a3aeb919d",
+    "runs/reviews/spatial_vae_v2/plan-receipt.json": "9a16fd8df544cc341c62e2dfe6659261876244fa56b8d6aeb98acfd93f613bc6",
+    "runs/reviews/spatial_vae_v2/reconcile-receipt.json": "d772eaaa297041b830d42f86e6c98002b99e1bfeb71078d733d25618c7464892",
+    "runs/reviews/spatial_vae_v2/reconciliation.md": "bf4b7ed321bf04743fd5859b5e14f51a2379e1729a40d3913264b24aa1f497fe"
+  },
+  "tests": {
+    "passed": 42,
+    "new": 14,
+    "existing": 28
+  },
+  "limits": [
+    "Single seed and short budget, unequal compute/parameters/achieved rate",
+    "All photo quality screens failed",
+    "Probes measure bounded reader accessibility, not certified loss",
+    "Standalone codec, not agent or general generator",
+    "Browser not checked; structural and scientific figure QA only"
+  ]
+}

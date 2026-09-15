@@ -160,11 +160,8 @@ sessions:
   open_threads: 14
 - id: 2026-09-15_001
   date: '2026-09-15'
-  summary: 'Spatial VAE implemented and compared on real photos: base/attention/reversible all fail
-    quality gates; reversible4.79% improvement misses5% benefit. Mechanics/replay verified;38 reports
-    repaired and inspected. Fine detail and state integration remain open. Expanded R/P/M/C specification
-    refined only; new attention/loop/probe work remains proposed.'
-  turn_count: 3
-  events_count: 15
+  summary: "R/P/M/C VAE v2 implemented with Claude; ten real-photo sanity fits pass learning but fail quality. Shared attention, frozen probes, exact replay and rate/compute reports verified; fine detail and agent integration open."
+  turn_count: 4
+  events_count: 23
   claims_touched: []
   open_threads: 16

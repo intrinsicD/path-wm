@@ -5967,3 +5967,73 @@ tree:
   - N352
   - N354
   status: resolved
+- id: N357
+  type: decision
+  title: Implement refined R/P/M/C image VAE with Claude
+  provenance: user
+  timestamp: 2026-09-15T10:21+02:00
+  choice: User explicitly requests implementation, review, tests and fixes after specification refinement;
+    preserve own architecture and local training workflow.
+  alternatives:
+  - Leave expanded proposal unimplemented
+  evidence:
+  - 'User: Implementiere das mit Claude zusammen. Plan, implement, review, test, fix. Iterate'
+  - docs/spatial-vae-refinement.md
+  also_depends_on:
+  - N356
+  status: resolved
+- id: N358
+  type: experiment
+  title: Versioned VAE hierarchy, probes and replay contracts implemented
+  provenance: ai-executed
+  timestamp: 2026-09-15T10:21+02:00
+  result: RED d25ecda followed by implementation a695db3. Overlapping stem; R/P/M/C stages; dynamic
+    Fourier self-attention before final compression, shared0/1/2 iterations; latent-only decoder; optional
+    detached traces and linear/RBF probes.42 focused checks pass; old exports load; real-photo8-step
+    E GPU resume4+4 exact across367 tensors and optimizer/RNG/loss rows. Parameter and compute accounting
+    explicit.
+  evidence:
+  - ara/evidence/tables/spatial_vae_v2_2026-09-15.json
+  - docs/spatial-vae-v2-plan.md
+  - pathwm/models/spatial_vae_v2.py
+  - pathwm/evaluation/spatial_vae.py
+  also_depends_on:
+  - N357
+  status: resolved
+- id: N359
+  type: experiment
+  title: Ten fixed real-photo VAE fits pass sanity but fail high-quality reconstruction
+  provenance: ai-executed
+  timestamp: 2026-09-15T10:21+02:00
+  result: 512 train/64 validation/96 new test groups,512 updates each,seed57101. Six beta1 arms and
+    A_local/C at beta0.1/0.01. All learning sanity gates pass; all mean/sample MSE<=0.01 quality screens
+    fail. C beta1 mean0.021827/sample0.027747; beta0.1 mean0.017132/sample0.018344 at0.1401 KL bits/pixel.
+    Before/after processing essentially tied at beta1; D slightly improves C, E does not improve D.
+    C beta0.1 common RGB linear errors rise0.000932->0.003138 and0.000812->0.004357 across channel compressions.
+    Formal training70.75s; peak reserved162MiB includes allocator cache. No superiority claim.
+  evidence:
+  - ara/evidence/tables/spatial_vae_v2_2026-09-15.json
+  - runs/spatial_vae_v2/formal/progress.json
+  - runs/spatial_vae_v2/formal/C_beta0.1/evaluation/probes.json
+  also_depends_on:
+  - N358
+  status: resolved
+- id: N360
+  type: experiment
+  title: Reconciled review and independent VAE artifact audit complete
+  provenance: ai-executed
+  timestamp: 2026-09-15T10:21+02:00
+  result: 'Actual Claude two public-only conceptual rounds; corrected weight-family equivalence, pooled
+    variance interpretation and reader-only overclaim.2203 independent checks pass: archived source/split/export
+    hashes, exact GPU saved outputs, NumPy errors/KL and probe budgets.58 reports structurally verified;
+    examples/native/error/rate figures inspected. Fixed overlapping labels and evaluation-variant mislabelling
+    guard in b6fdfe9; no weights/results changed. Browser URL policy respected; agent overview remains
+    blue.'
+  evidence:
+  - ara/evidence/tables/spatial_vae_v2_2026-09-15.json
+  - runs/reviews/spatial_vae_v2/reconciliation.md
+  - runs/spatial_vae_v2/verification.json
+  - runs/spatial_vae_v2/formal/report-repair.json
+  also_depends_on:
+  - N359
+  status: resolved

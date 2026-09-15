@@ -4245,9 +4245,9 @@ observations:
   potential_type: architecture
   bound_to:
   - N356
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A10
+  crystallized_via: verbal-affirmation
   stale: false
 - id: O241
   timestamp: 2026-09-15T09:50+02:00
@@ -4265,6 +4265,38 @@ observations:
   bound_to:
   - N356
   - N354
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A11
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O242
+  timestamp: 2026-09-15T10:21+02:00
+  provenance: ai-suggested
+  content: At this short one-seed fit, relaxing KL from1 to0.1 helps reconstruction more than attention/extra
+    shared iterations. More rate at0.01 does not ensure better mean reconstruction. Processing before/after
+    compression is nearly tied at beta1 with unequal resources. Feature-variance recovery can look good
+    while common RGB access worsens. These do not prove a unique loss site or architecture/sample-efficiency
+    advantage.
+  context: Interpretation of N359; researcher has not yet commented on new results.
+  potential_type: claim
+  bound_to:
+  - N359
+  - N360
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O243
+  timestamp: 2026-09-15T10:21+02:00
+  provenance: ai-suggested
+  content: Next vary duration at fixed geometry and objective, then posterior capacity and matched-resource
+    processing placement; use replicated seeds and achieved-rate overlap. Require untied depth controls
+    before weight-sharing claims. Keep separate agent state/recall and general-generation work open.
+  context: Proposed follow-up to completed v2 sanity study; no additional runs or budget adopted.
+  potential_type: heuristic
+  bound_to:
+  - N359
+  - N360
   promoted: false
   promoted_to: null
   crystallized_via: null
