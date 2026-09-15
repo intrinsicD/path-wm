@@ -2,9 +2,9 @@ session:
   id: 2026-09-15_001
   date: '2026-09-15'
   started: 2026-09-15T00:47+02:00
-  last_turn: 2026-09-15T23:32+02:00
-  turn_count: 16
-  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training. Latent-core drawings separate existing loop from proposed workspace answer plan; implementation unchanged. User clarifies shared multimodal thought with decoder-specific optional recurrent readouts; architecture sketch updated, no model change. Separate/joint readout study:42 runs,8 oracle fits and2 probes; all held-out all-four outputs fail. Optional loops implemented, not adopted as repair.72 tests and exact resume pass; oracle audio works, other output/compositional targets remain open. Bounded follow-up:16 fits improve known oracle outputs and core position, not direction/composition. Fresh direction probes and code collisions recorded; no default adoption."
+  last_turn: 2026-09-15T23:44+02:00
+  turn_count: 17
+  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training. Latent-core drawings separate existing loop from proposed workspace answer plan; implementation unchanged. User clarifies shared multimodal thought with decoder-specific optional recurrent readouts; architecture sketch updated, no model change. Separate/joint readout study:42 runs,8 oracle fits and2 probes; all held-out all-four outputs fail. Optional loops implemented, not adopted as repair.72 tests and exact resume pass; oracle audio works, other output/compositional targets remain open. Bounded follow-up:16 fits improve known oracle outputs and core position, not direction/composition. Fresh direction probes and code collisions recorded; no default adoption. Twelve-paper direction literature review adds scoped candidates and counter-evidence; no new model runs or adoption."
 events_logged:
 - turn: 1
   type: question
@@ -566,6 +566,22 @@ events_logged:
     and held-out separate/complementary modalities. If needed compare early query averaging against retaining
     query-specific information. Preserve shared multimodal thought; no mandatory direction slot or language-only
     core and no proven need for scaling.
+- turn: 17
+  type: question
+  id: N390
+  routing: direct
+  provenance: user
+  summary: Find published results and solutions for direction-retention failures
+- turn: 17
+  type: observation
+  id: O266
+  routing: staged
+  provenance: ai-suggested
+  summary: Literature supports testing single-factor versus joint optimization, then continuous/hard categorical
+    training and targeted pooling changes. VQ warm-up is an analogy, not a theorem for softmax samplers; current
+    core factor loss has no KL. PCGrad needs measured conflicts and tuned weighted-loss controls. Paired data
+    needs a concrete objective; multiple queries do not guarantee ordered semantics. No need for a language-only
+    core follows.
 ai_actions:
 - turn: 1
   action: Saved independent analysis and a bounded brief based on the user-supplied architecture;
@@ -775,6 +791,25 @@ ai_actions:
   - runs/reviews/modality_repair_v1/reconcile-receipt.json
   - runs/reviews/modality_repair_v1/saturation-receipt.json
   - ara/evidence/tables/modality_repair_2026-09-15.json
+- turn: 17
+  action: Searched and checked12 public primary works including oneMay2026 preprint; inspected actual categorical
+    sampler/loss; reconciled two short public-only Claude reviews. Saved German comparison, sources and transfer
+    limits; updated plan/atlas notes without color or model changes.193 document/source/receipt checks; no
+    training. Committed0427f36 locally; no push.
+  provenance: ai-executed
+  files_changed:
+  - docs/direction-literature-review.md
+  - docs/modality-readout-plan.md
+  - docs/project-state.md
+  - runs/reviews/direction_literature_v1/sources.json
+  - runs/reviews/direction_literature_v1/verification.json
+  - runs/reviews/direction_literature_v1/public-brief.txt
+  - runs/reviews/direction_literature_v1/response.txt
+  - runs/reviews/direction_literature_v1/receipt.json
+  - runs/reviews/direction_literature_v1/reconcile-brief.txt
+  - runs/reviews/direction_literature_v1/reconcile-response.txt
+  - runs/reviews/direction_literature_v1/reconcile-receipt.json
+  - ara/evidence/tables/direction_literature_2026-09-15.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -824,6 +859,9 @@ key_context:
 - turn: 16
   excerpt: 'User authorizes Claude-assisted plan/implement/review/test/fix iteration; during work asks: Warum
     sind Richtungen so schwierig? Was wird benötigt um das Problem hier zu lösen?'
+- turn: 17
+  excerpt: Mache eine Literatur Recherche ob es dazu publizierte Ergebnisse und Lösungen gibt. Requests evidence
+    and solutions, not automatic adoption of a candidate.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current
   rate; image/full retention remains 10/12. Next lower-rate comparison from preserved source
@@ -1019,3 +1057,5 @@ ai_suggestions_pending:
   proposed, not run.'
 - 'O264/O265: scoped partial-repair interpretation and paired-direction next test remain staged; no broad efficacy
   or architectural necessity affirmed.'
+- 'O266: literature-derived comparisons remain proposed; VQ versus categorical and single-task versus multi-task
+  mechanisms must stay distinct.'

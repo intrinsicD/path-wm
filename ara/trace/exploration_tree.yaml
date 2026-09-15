@@ -6483,3 +6483,19 @@ tree:
   - ara/evidence/tables/modality_repair_2026-09-15.json
   - runs/modality_repair_v1/direction_localization/report.html
   status: resolved
+- id: N390
+  type: question
+  title: Find published results and solutions for direction-retention failures
+  provenance: user
+  timestamp: 2026-09-15T23:44+02:00
+  description: 'User requests literature research. Twelve primary works reviewed: categorical sampling/STE,
+    Dreamer, VQ dimensional-collapse warm-up, feature starvation and multi-task counter-evidence, paired factors,
+    attention pooling, equivariance and object dynamics. Review delivered with source/transfer limits; underlying
+    direction mechanism remains open in N388.'
+  also_depends_on:
+  - N388
+  - N389
+  evidence:
+  - ara/evidence/tables/direction_literature_2026-09-15.json
+  - docs/direction-literature-review.md
+  status: resolved

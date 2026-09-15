@@ -1,0 +1,167 @@
+{
+  "timestamp": "2026-09-15T23:44+02:00",
+  "provenance": "ai-executed",
+  "code_commit": "0427f36",
+  "request": "Mache eine Literatur Recherche ob es dazu publizierte Ergebnisse und Lösungen gibt",
+  "sources": {
+    "accessed": "2026-09-15",
+    "scope": "Targeted literature search, not systematic completeness; source summaries and transfer limits are in the linked document.",
+    "document": "docs/direction-literature-review.md",
+    "sources": [
+      {
+        "citation": "Jang, Gu, Poole: Categorical Reparameterization with Gumbel-Softmax, ICLR 2017.",
+        "url": "https://arxiv.org/abs/1611.01144",
+        "checked": "Official abstract and/or cited methods section; primary source only.",
+        "status": "peer-reviewed venue verified in original proceedings/paper"
+      },
+      {
+        "citation": "Yin et al.: Understanding Straight-Through Estimator in Training Activation Quantized Neural Nets, ICLR 2019.",
+        "url": "https://arxiv.org/abs/1903.05662",
+        "checked": "Official abstract and/or cited methods section; primary source only.",
+        "status": "peer-reviewed venue verified in original proceedings/paper"
+      },
+      {
+        "citation": "Hafner et al.: Mastering diverse control tasks through world models, Nature 2025 — DreamerV3.",
+        "url": "https://www.nature.com/articles/s41586-025-08744-2",
+        "checked": "Official abstract and/or cited methods section; primary source only.",
+        "status": "peer-reviewed venue verified in original proceedings/paper"
+      },
+      {
+        "citation": "Zhao et al.: Continuous First, Discrete Later: VQ-VAEs Without Dimensional Collapse, arXiv v2, Mai 2026.",
+        "url": "https://arxiv.org/html/2605.06870v2",
+        "checked": "Official abstract and/or cited methods section; primary source only.",
+        "status": "preprint, peer-reviewed publication not confirmed"
+      },
+      {
+        "citation": "Pezeshki et al.: Gradient Starvation: A Learning Proclivity in Neural Networks, NeurIPS 2021.",
+        "url": "https://papers.nips.cc/paper/2021/file/0987b8b338d6c90bbedd8631bc499221-Paper.pdf",
+        "checked": "Official abstract and/or cited methods section; primary source only.",
+        "status": "peer-reviewed venue verified in original proceedings/paper"
+      },
+      {
+        "citation": "Yu et al.: Gradient Surgery for Multi-Task Learning, NeurIPS 2020 — PCGrad.",
+        "url": "https://papers.nips.cc/paper/2020/hash/3fe78a8acf5fda99de95303940a2420c-Abstract.html",
+        "checked": "Official abstract and/or cited methods section; primary source only.",
+        "status": "peer-reviewed venue verified in original proceedings/paper"
+      },
+      {
+        "citation": "Xin et al.: Do Current Multi-Task Optimization Methods in Deep Learning Even Help?, NeurIPS 2022.",
+        "url": "https://papers.nips.cc/paper_files/paper/2022/hash/580c4ec4738ff61d5862a122cdf139b6-Abstract-Conference.html",
+        "checked": "Official abstract and/or cited methods section; primary source only.",
+        "status": "peer-reviewed venue verified in original proceedings/paper"
+      },
+      {
+        "citation": "Locatello et al.: Weakly-Supervised Disentanglement Without Compromises, ICML 2020.",
+        "url": "https://proceedings.mlr.press/v119/locatello20a.html",
+        "checked": "Official abstract and/or cited methods section; primary source only.",
+        "status": "peer-reviewed venue verified in original proceedings/paper"
+      },
+      {
+        "citation": "Lee et al.: Set Transformer, ICML 2019.",
+        "url": "https://proceedings.mlr.press/v97/lee19d.html",
+        "checked": "Official abstract and/or cited methods section; primary source only.",
+        "status": "peer-reviewed venue verified in original proceedings/paper"
+      },
+      {
+        "citation": "Cohen und Welling: Group Equivariant Convolutional Networks, ICML 2016.",
+        "url": "https://proceedings.mlr.press/v48/cohenc16.html",
+        "checked": "Official abstract and/or cited methods section; primary source only.",
+        "status": "peer-reviewed venue verified in original proceedings/paper"
+      },
+      {
+        "citation": "Kipf, van der Pol, Welling: Contrastive Learning of Structured World Models, ICLR 2020 — C-SWM.",
+        "url": "https://arxiv.org/abs/1911.12247",
+        "checked": "Official abstract and/or cited methods section; primary source only.",
+        "status": "peer-reviewed venue verified in original proceedings/paper"
+      },
+      {
+        "citation": "Kipf et al.: Conditional Object-Centric Learning from Video, ICLR 2022 — SAVi.",
+        "url": "https://arxiv.org/abs/2111.12594",
+        "checked": "Official abstract and/or cited methods section; primary source only.",
+        "status": "peer-reviewed venue verified in original proceedings/paper"
+      }
+    ]
+  },
+  "verification": {
+    "passed": true,
+    "checks": 193,
+    "papers": 12,
+    "new_training_runs": 0,
+    "scope": "Markdown local links, source/venue registry, Claude success receipts and unchanged graph structure/colors. No numerical model experiment or new browser QA.",
+    "files": [
+      {
+        "path": "docs/direction-literature-review.md",
+        "sha256": "371fb11c084faec056b18ea37525baac935e1f732811dda4facc2440a3cb8fa0"
+      },
+      {
+        "path": "docs/modality-readout-plan.md",
+        "sha256": "6030a88eb21d10b56501fc8126aea6359fb02342a8b112278fde10d8f49dab44"
+      },
+      {
+        "path": "docs/project-state.md",
+        "sha256": "35cac4c7654a546e7672b2c73e3c8aebdf5a9ab144a8ecfb72303031ea7a8594"
+      },
+      {
+        "path": "docs/diagrams/architecture-atlas.json",
+        "sha256": "1a6919fd030e65659745e2a9756e33f094be8dcd8ec6f01505b9c889d13f6419"
+      },
+      {
+        "path": "docs/architecture-atlas.html",
+        "sha256": "57c863b1bbb72877c8eea25530a1d0a9fb7be82ba741adc533c6c3fedfc97497"
+      },
+      {
+        "path": "runs/reviews/direction_literature_v1/sources.json",
+        "sha256": "1541d2232a6a802c64b4578761fad4821efe24bc3fef460ab24b6fed5f0abbee"
+      }
+    ]
+  },
+  "new_model_experiments": 0,
+  "claude_review_scope": "Two public-only literature-methodology exchanges. No private source/data/results exported. ST-Gumbel already in original2017 and distinct regularizers corrected and acknowledged.",
+  "interpretation_status": "Candidates and local transfer arguments remain proposed; literature does not prove a unique local mechanism.",
+  "files": [
+    {
+      "path": "docs/direction-literature-review.md",
+      "sha256": "371fb11c084faec056b18ea37525baac935e1f732811dda4facc2440a3cb8fa0"
+    },
+    {
+      "path": "docs/modality-readout-plan.md",
+      "sha256": "6030a88eb21d10b56501fc8126aea6359fb02342a8b112278fde10d8f49dab44"
+    },
+    {
+      "path": "docs/project-state.md",
+      "sha256": "35cac4c7654a546e7672b2c73e3c8aebdf5a9ab144a8ecfb72303031ea7a8594"
+    },
+    {
+      "path": "runs/reviews/direction_literature_v1/sources.json",
+      "sha256": "1541d2232a6a802c64b4578761fad4821efe24bc3fef460ab24b6fed5f0abbee"
+    },
+    {
+      "path": "runs/reviews/direction_literature_v1/verification.json",
+      "sha256": "83f6b2f930f3dcfd466ed2e9fcbc96f6899b4073e47ba341642c12a61c87a120"
+    },
+    {
+      "path": "runs/reviews/direction_literature_v1/public-brief.txt",
+      "sha256": "b3dcc263cfb871917b86782d2ac2f16d09e5c277afccb9ab6b5cd77980b33160"
+    },
+    {
+      "path": "runs/reviews/direction_literature_v1/response.txt",
+      "sha256": "ce2f9515613044af71d05bddc35527b80e6d6cba510cc93f5993223bbd92fac3"
+    },
+    {
+      "path": "runs/reviews/direction_literature_v1/receipt.json",
+      "sha256": "763fb4b8fba6a12038834a39ec0dbb85b5a66c63c4c4e52ea13ac135896ee922"
+    },
+    {
+      "path": "runs/reviews/direction_literature_v1/reconcile-brief.txt",
+      "sha256": "9e79581745dae5eed765722259e7b94a752c3254be73becb9708f39457cf2346"
+    },
+    {
+      "path": "runs/reviews/direction_literature_v1/reconcile-response.txt",
+      "sha256": "2279c1e36df7f6d07ff16080d9c9867bc8ff56dfb6697b7ca29b32059e2220d5"
+    },
+    {
+      "path": "runs/reviews/direction_literature_v1/reconcile-receipt.json",
+      "sha256": "a1630a68b70c9a31549beaeeb59ff70a899d051a3aea44d07676a3de087d8d37"
+    }
+  ]
+}

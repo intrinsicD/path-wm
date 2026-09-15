@@ -166,3 +166,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Latent-core visual review](tables/latent_core_visual_2026-09-15.json): N382/O258; actual belief/workspace and proposed answer-plan graphs; source/static checks, no model or training changes.
 
 - [Multimodal bounded repair and direction localization](tables/modality_repair_2026-09-15.json): N387–N389;16 continuations, partial known-position/oracle gains, failed direction/composition, fresh updater readers and code collisions.77 tests, independent audits and exact CPU resume; no default adoption.
+
+- [Direction-retention literature](tables/direction_literature_2026-09-15.json): N390/O266;12 primary works, explicit transfer limits and two corrected Claude methodology exchanges. No model experiments or capability promotion.

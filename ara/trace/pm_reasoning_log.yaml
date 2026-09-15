@@ -2050,3 +2050,11 @@ entries:
   - Existing unresolved topics remain in open_threads/ai_suggestions_pending; no blanket abandonment or stale
     promotion. Training source fixed during runs, failed reports retained, no general green capability or default
     adoption.
+- turn: 2026-09-15_001#17
+  notes:
+  - N390 records delivered literature inquiry; source checking is ai_action/evidence, not a local model experiment.
+    O266 staged; external paper results do not empirically resolve the local N388/O264 mechanism.
+  - O265 next experiment remains proposed. Documentation does not create implementation dependency or confirm
+    transfer. Preserve current no-KL classification scope and separate VQ/codebook assumptions.
+  - Claude mistakes about ST-Gumbel chronology and interchangeable regularizers were corrected and acknowledged;
+    not promoted as claims. Prior open topics remain referenced, so no blanket abandonment/stale promotion.

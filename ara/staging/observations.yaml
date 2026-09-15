@@ -4682,3 +4682,22 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O266
+  timestamp: 2026-09-15T23:44+02:00
+  provenance: ai-suggested
+  content: Literature supports testing single-factor versus joint optimization, then continuous/hard categorical
+    training and targeted pooling changes. VQ warm-up is an analogy, not a theorem for softmax samplers; current
+    core factor loss has no KL. PCGrad needs measured conflicts and tuned weighted-loss controls. Paired data
+    needs a concrete objective; multiple queries do not guarantee ordered semantics. No need for a language-only
+    core follows.
+  context: Primary literature and two reconciled Claude conceptual reviews; no local implementation or model
+    experiment this turn.
+  potential_type: heuristic
+  bound_to:
+  - N390
+  - N388
+  - N389
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
