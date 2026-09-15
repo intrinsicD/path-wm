@@ -481,3 +481,11 @@ identical gradients/RNG with and without the audit. Verify short exact resume be
 formal runs. Claude reviews generic public methodology only; local code/evidence
 review remains ours. Browser QA remains unavailable; inspect static report assets
 and structurally verify reports without bypassing the prior local-file restriction.
+
+Claude review reconciled before training (`runs/reviews/direction_learning_v1/`):
+the direction gradient contribution is exactly identical at fixed weights/batch;
+total update norms need not match. Near-zero cosine is not conflict, and sparse
+negative cosines cannot establish causation. Soft evaluation of a hard-trained
+reader is a distribution shift; failure would not prove upstream information loss.
+Claude acknowledged these corrections. Use fresh independent probes/controls for
+localization; keep the persistent hard-state contract unchanged in this slice.

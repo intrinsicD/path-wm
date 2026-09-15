@@ -179,6 +179,56 @@ def target_batch(data, indices, device):
     return {k: v[indices].to(device) for k, v in data["targets"].items()}
 
 
+def load_encoders(model, directory, device):
+    """Warm-start only perceptual features; leave the fresh updater/readout intact."""
+    checkpoint = torch.load(
+        directory / "last.pt", map_location=device, weights_only=True
+    )
+    prefix = "core.agent.encoders."
+    model.core.agent.encoders.load_state_dict(
+        {
+            k.removeprefix(prefix): v
+            for k, v in checkpoint["model"].items()
+            if k.startswith(prefix)
+        }
+    )
+    model.core.agent.encoders.requires_grad_(False).eval()
+    return file_hash(directory / "last.pt")
+
+
+def factor_objective(predictions, targets, task):
+    terms = [F.cross_entropy(p, targets[:, i]) for i, p in enumerate(predictions)]
+    if task not in ("all", "direction"):
+        raise ValueError("Unknown factor objective")
+    return (sum(terms) / 3 if task == "all" else terms[2] / 3), terms
+
+
+def factor_gradient_audit(terms, parameters):
+    """Unweighted per-task derivatives; no .grad, RNG or optimizer mutation."""
+    gradients = []
+    for term in terms:
+        values = torch.autograd.grad(
+            term, parameters, retain_graph=True, allow_unused=True
+        )
+        gradients.append(
+            torch.cat(
+                [
+                    (torch.zeros_like(p) if v is None else v).detach().flatten()
+                    for p, v in zip(parameters, values)
+                ]
+            )
+        )
+    names = ("color", "place", "direction")
+    norms = [g.norm() for g in gradients]
+    result = {f"task_gradient_norm_{n}": float(v) for n, v in zip(names, norms)}
+    for i in range(3):
+        for j in range(i + 1, 3):
+            result[f"task_gradient_cosine_{names[i]}_{names[j]}"] = float(
+                (gradients[i] @ gradients[j]) / (norms[i] * norms[j]).clamp_min(1e-20)
+            )
+    return result
+
+
 def scales(data):
     return {
         k: float((data["targets"][k] - data["targets"][k].mean(0)).square().mean())
@@ -441,6 +491,11 @@ def perform(args):
     initial_source = (
         None if args.initial is None else load_initial(model, args.initial, device)
     )
+    encoder_source = (
+        None
+        if args.encoder_source is None
+        else load_encoders(model, args.encoder_source, device)
+    )
     core_source = None
     cache = None
     if args.stage != "core":
@@ -466,6 +521,8 @@ def perform(args):
         model.core.requires_grad_(True)
         model.core.agent.action_head.requires_grad_(False)
         model.core.agent.monitor.requires_grad_(False)
+    if encoder_source:
+        model.core.agent.encoders.requires_grad_(False)
     if args.posterior_aux:
         model.posterior_head.requires_grad_(True)
     if args.stage == "joint":
@@ -487,6 +544,12 @@ def perform(args):
         width=24,
         outer_iterations=2,
         initialization_checkpoint_sha256=initial_source,
+        encoder_source_sha256=encoder_source,
+        factor_task=args.factor_task,
+        gradient_audit_every=args.gradient_audit_every,
+        factor_coefficients=[1 / 3, 1 / 3, 1 / 3]
+        if args.factor_task == "all"
+        else [0, 0, 1 / 3],
         initialization_optimizer="fresh Adam" if initial_source else "fresh model/Adam",
         posterior_aux_weight=args.posterior_aux,
         posterior_aux_source=args.posterior_source,
@@ -530,6 +593,7 @@ def perform(args):
         resume=args.resume,
     )
     before_core = state_hash(model.core)
+    before_encoders = state_hash(model.core.agent.encoders)
     frozen_before = {
         n: p.detach().clone()
         for n, p in model.named_parameters()
@@ -565,14 +629,32 @@ def perform(args):
                     temperature=temperature,
                 )
             if args.stage == "core":
-                loss = (
-                    sum(
-                        F.cross_entropy(p, wanted["factors"][:, i])
-                        for i, p in enumerate(model.core.factors(tokens))
-                    )
-                    / 3
+                loss, factor_terms = factor_objective(
+                    model.core.factors(tokens), wanted["factors"], args.factor_task
                 )
                 metrics = dict(factor_loss=float(loss.detach()))
+                if (
+                    args.encoder_source
+                    or args.gradient_audit_every
+                    or args.factor_task != "all"
+                ):
+                    metrics.update(
+                        {
+                            f"factor_ce_{k}": float(v.detach())
+                            for k, v in zip(
+                                ("color", "place", "direction"), factor_terms
+                            )
+                        }
+                    )
+                if (
+                    args.gradient_audit_every
+                    and run.step % args.gradient_audit_every == 0
+                ):
+                    metrics.update(
+                        factor_gradient_audit(
+                            factor_terms, list(model.core.agent.updater.parameters())
+                        )
+                    )
                 if args.temperature_warmup != 1.0:
                     metrics["training_temperature"] = temperature
                 if args.posterior_aux:
@@ -626,6 +708,8 @@ def perform(args):
                 raise AssertionError(f"Frozen parameter changed: {n}")
         if args.stage in ("frozen", "oracle"):
             assert state_hash(model.core) == before_core
+        if encoder_source:
+            assert state_hash(model.core.agent.encoders) == before_encoders
         resource = dict(
             training_seconds_this_invocation=elapsed,
             parameters=sum(p.numel() for p in model.parameters()),
@@ -645,6 +729,7 @@ def perform(args):
             if args.variant == "native"
             else 2 * int(args.variant[-1]),
             core_sha256=state_hash(model.core),
+            encoder_sha256=state_hash(model.core.agent.encoders),
             frozen_preserved=True,
             core_parameters=sum(p.numel() for p in model.core.parameters()),
             decoder_parameters={
@@ -704,6 +789,19 @@ def perform(args):
                 metrics=metrics,
                 core_scores=core_scores,
                 core_gate=core_gate,
+                factor_task=args.factor_task,
+                task_gate=None
+                if core_scores is None
+                else all(
+                    (
+                        r["factor_accuracy"][2]
+                        if args.factor_task == "direction"
+                        else min(r["factor_accuracy"])
+                    )
+                    >= 0.9
+                    for r in core_scores
+                    if r["split"] == "seen"
+                ),
                 resources=resource,
                 normalizers=normalizers,
                 partial=False,
@@ -756,6 +854,18 @@ def main():
     parser.add_argument("--modality", choices=KINDS, default="text")
     parser.add_argument("--core", type=Path)
     parser.add_argument(
+        "--encoder-source",
+        type=Path,
+        help="Load and freeze ONLY these core encoders; fresh remaining core/Adam",
+    )
+    parser.add_argument("--factor-task", choices=("all", "direction"), default="all")
+    parser.add_argument(
+        "--gradient-audit-every",
+        type=int,
+        default=0,
+        help="Observational shared-updater task gradients;0 disables",
+    )
+    parser.add_argument(
         "--reference", type=Path, help="Original study root for repair-report only"
     )
     parser.add_argument(
@@ -785,6 +895,18 @@ def main():
     parser.add_argument("--stop-after", type=int)
     parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
+    if args.gradient_audit_every < 0:
+        parser.error("Gradient audit interval must be nonnegative")
+    if args.encoder_source or args.factor_task != "all" or args.gradient_audit_every:
+        if (
+            args.stage != "core"
+            or args.initial
+            or args.posterior_aux
+            or args.temperature_warmup != 1.0
+        ):
+            parser.error(
+                "Fresh factor comparison requires core stage without continuation, auxiliary or temperature curriculum"
+            )
     if args.stage == "repair-report":
         if args.reference is None:
             parser.error("Repair report needs --reference")
