@@ -23,7 +23,146 @@ from pathwm.data.modality_readout import (
     canonical,
 )
 from pathwm.models.modalities import bytes_text
+from pathwm.models.photo_probe import RidgeReader
 from pathwm.io import atomic_json, file_hash
+
+
+def capture_readout_stages(core, inputs, *, encoder_token_cap=64):
+    """Detached measurements of the real path; no replacement or second forward.
+
+    Encoder flattening preserves spatial/temporal locations but gives different
+    probe capacities across stages. A failed linear probe is not information loss.
+    The core's optional return_state is its post-observation, pre-Thinker state.
+    """
+    encoded, hooks = {}, []
+
+    def capture(name):
+        def hook(module, arguments, result):
+            # Give each scale fixed diagnostic coordinates. Right-padding the
+            # flattened pyramid would shift coarser scales when text grows.
+            padded = []
+            for item in result.scales:
+                if item.values.shape[1] > encoder_token_cap:
+                    raise ValueError("Encoder exceeds diagnostic per-scale token cap")
+                values = item.values.masked_fill(~item.valid[..., None], 0)
+                padded.append(
+                    F.pad(values, (0, 0, 0, encoder_token_cap - values.shape[1]))
+                    .detach()
+                    .cpu()
+                    .flatten(1)
+                )
+            encoded[name] = torch.cat(padded, 1).clone()
+
+        return hook
+
+    try:
+        for name in inputs:
+            hooks.append(core.agent.encoders[name].register_forward_hook(capture(name)))
+        tokens, state = core(inputs, return_state=True)
+    finally:
+        for hook in hooks:
+            hook.remove()
+    stages = {"encoder": torch.cat([encoded[k] for k in sorted(encoded)], 1)}
+    for name, value in (
+        ("posterior", state.logits.softmax(-1)),
+        ("codes", state.stochastic),
+        ("observed", state.tokens),
+        ("thought", tokens),
+    ):
+        stages[name] = value.detach().cpu().flatten(1).clone()
+    return tokens, stages
+
+
+def predict_factor_probe(reader, features):
+    logits = (np.asarray(features, dtype=np.float64) - reader["mean"]) / reader[
+        "scale"
+    ] @ reader["weights"] + reader["bias"]
+    return np.stack([v.argmax(1) for v in np.split(logits, (3, 6), axis=1)], 1)
+
+
+def fit_factor_probe(
+    train,
+    labels,
+    validation,
+    validation_labels,
+    *,
+    alphas=(0.01, 0.1, 1.0, 10.0, 100.0),
+):
+    """Train-only standardized linear ridge; selection sees validation only."""
+    train = np.asarray(train, dtype=np.float64)
+    validation = np.asarray(validation, dtype=np.float64)
+    labels, validation_labels = np.asarray(labels), np.asarray(validation_labels)
+    if train.ndim != 2 or validation.ndim != 2 or train.shape[1] != validation.shape[1]:
+        raise ValueError("Probe inputs need matched feature dimensions")
+    if not np.isfinite(train).all() or not np.isfinite(validation).all():
+        raise ValueError("Probe features must be finite")
+    y = np.concatenate([np.eye(n)[labels[:, i]] for i, n in enumerate((3, 3, 2))], 1)
+    factor = RidgeReader.factor(torch.from_numpy(train), torch.from_numpy(y))
+    readers, choices = [], []
+    for alpha in alphas:
+        if alpha <= 0:
+            raise ValueError("Ridge must be positive")
+        # Existing reader normalizes the Gram matrix by feature width. Convert
+        # raw ridge alpha accordingly, retaining comparable declared units.
+        solved = RidgeReader.solve(factor, ridge=alpha / train.shape[1])
+        reader = dict(
+            mean=solved["mean"].numpy(),
+            scale=solved["std"].numpy(),
+            weights=(solved["training"].T @ solved["alpha"] / train.shape[1]).numpy(),
+            bias=solved["target_mean"].numpy(),
+            alpha=alpha,
+        )
+        acc = float(
+            (predict_factor_probe(reader, validation) == validation_labels).mean()
+        )
+        readers.append(reader)
+        choices.append(dict(alpha=alpha, validation_accuracy=acc))
+    return readers[int(np.argmax([c["validation_accuracy"] for c in choices]))], choices
+
+
+def save_stage_panel(directory, rows):
+    from matplotlib.figure import Figure
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+
+    stages = ("encoder", "posterior", "codes", "observed", "thought")
+    fig = Figure(figsize=(14, 8), layout="constrained")
+    FigureCanvasAgg(fig)
+    axes = fig.subplots(2, 6)
+    for si, split in enumerate(("seen", "heldout")):
+        for mi, mode in enumerate(MODES):
+            values = np.array(
+                [
+                    next(
+                        r["factor_accuracy"]
+                        for r in rows
+                        if r["split"] == split
+                        and r["input_mode"] == mode
+                        and r["stage"] == stage
+                        and r["probe"] == "ridge"
+                    )
+                    for stage in stages
+                ]
+            )
+            ax = axes[si, mi]
+            ax.imshow(values, vmin=0, vmax=1, cmap="viridis", aspect="auto")
+            ax.set_xticks(range(3), ["color", "place", "direction"], rotation=70)
+            ax.set_yticks(range(5), stages if mi == 0 else [""] * 5)
+            ax.set_title(split + " / " + mode, fontsize=9)
+            for i in range(5):
+                for j in range(3):
+                    ax.text(
+                        j,
+                        i,
+                        f"{values[i, j]:.0%}",
+                        ha="center",
+                        va="center",
+                        fontsize=8,
+                        color="white" if values[i, j] < 0.5 else "black",
+                    )
+    fig.suptitle(
+        "Frozen linear accessibility by stage · validation-selected ridge · not an information-loss proof"
+    )
+    fig.savefig(Path(directory) / "comparison.png", dpi=140)
 
 
 def text_factors(ids):
@@ -240,6 +379,14 @@ def save_panels(directory, arrays, rows):
 
 
 def readout_inspection(directory):
+    diagnostic = directory / "stage_probe.json"
+    if diagnostic.exists():
+        data = json.loads(diagnostic.read_text())
+        return [
+            "<section><h2>Frozen stage accessibility</h2><p>Train-only standardized linear readers; validation-only ridge selection. Encoder feature widths differ from posterior/code/state widths. Failures do not establish irrecoverable information loss. Source model frozen; all generated factors below are diagnostic predictions.</p><details><summary>Exact stage scores, reader selection and oracle control</summary><pre>"
+            + escape(json.dumps(data, indent=2))
+            + "</pre></details></section>"
+        ]
     path = directory / "readout.json"
     if not path.exists():
         return []

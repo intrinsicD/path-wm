@@ -38,7 +38,15 @@ from pathwm.io import (
     digest,
 )
 from pathwm.evaluation.report import write_report
-from pathwm.evaluation.modality_readout import evaluate_outputs, save_panels, aggregate
+from pathwm.evaluation.modality_readout import (
+    evaluate_outputs,
+    save_panels,
+    aggregate,
+    capture_readout_stages,
+    fit_factor_probe,
+    predict_factor_probe,
+    save_stage_panel,
+)
 
 VARIANTS = ("native", "adapter1", "adapter2", "adapter4")
 
@@ -70,11 +78,12 @@ class Core(nn.Module):
         )
         self.factor_head = nn.Linear(width * 12, 8)
 
-    def forward(self, inputs, *, trace=None):
+    def forward(self, inputs, *, trace=None, return_state=False):
         batch = len(next(iter(inputs.values())).values)
         state = self.agent.initial_state(batch, session_id="readout-task")
         state = self.agent.observe(state, inputs, time=4.0, trace=trace)
-        return self.agent.think(state, steps=2, trace=trace).tokens
+        tokens = self.agent.think(state, steps=2, trace=trace).tokens
+        return (tokens, state) if return_state else tokens
 
     def factors(self, tokens):
         return self.factor_head(tokens.flatten(1)).split((3, 3, 2), dim=-1)
@@ -121,9 +130,25 @@ class Outputs(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, variant):
+    def __init__(self, variant, *, posterior_aux=False):
         super().__init__()
         self.core, self.outputs = Core(), Outputs(variant)
+        # Diagnostic supervision only; no inference read or RNG/init change.
+        with torch.random.fork_rng():
+            self.posterior_head = nn.Linear(32, 8) if posterior_aux else None
+
+
+def load_initial(model, directory, device):
+    checkpoint = torch.load(
+        directory / "last.pt", map_location=device, weights_only=True
+    )
+    missing, unexpected = model.load_state_dict(checkpoint["model"], strict=False)
+    allowed = {"posterior_head.weight", "posterior_head.bias"}
+    if unexpected or not set(missing) <= allowed:
+        raise ValueError(
+            f"Incompatible initialization: missing={missing}, unexpected={unexpected}"
+        )
+    return file_hash(directory / "last.pt")
 
 
 def target_batch(data, indices, device):
@@ -213,6 +238,171 @@ def export_data(path, populations):
     np.savez_compressed(path, **arrays)
 
 
+def diagnose(args):
+    """Frozen stage readers using the same data, model and standalone reports."""
+    seed_everything(args.seed)
+    device = torch.device(args.device)
+    source_weights = torch.load(
+        args.core / "last.pt", map_location="cpu", weights_only=True
+    )["model"]
+    model = Model("native", posterior_aux="posterior_head.weight" in source_weights).to(
+        device
+    )
+    source_hash = load_initial(model, args.core, device)
+    model.requires_grad_(False)
+    optimizer = torch.optim.Adam(model.core.factor_head.parameters(), lr=0.003)
+    populations = {
+        s: dataset(s, args.seed) for s in ("train", "validation", "seen", "heldout")
+    }
+    run = Run(
+        args.output,
+        settings=dict(
+            seed=args.seed,
+            purpose="diagnostic",
+            source_checkpoint_sha256=source_hash,
+            core=str(args.core.resolve()),
+            method="Frozen stage ridge; train-only scaling and validation-only choice",
+            encoder_token_cap_per_scale=64,
+        ),
+        data=dict(
+            generator=file_hash("pathwm/data/modality_readout.py"), seed=args.seed
+        ),
+        recipe=__file__,
+        model=model,
+        optimizer=optimizer,
+        device=device,
+    )
+    before = state_hash(model)
+    cache, arrays, rows, choices = {}, {}, [], []
+    try:
+        with evaluation_mode(model), torch.no_grad():
+            for si, (split, data) in enumerate(populations.items()):
+                cache[split] = {}
+                arrays[f"{split}.factors"] = data["targets"]["factors"].numpy()
+                for mi, mode in enumerate(MODES):
+                    torch.manual_seed(args.seed + 1000 + si * 100 + mi)
+                    _, stages = capture_readout_stages(
+                        model.core, observations(data, mode, device=device)
+                    )
+                    cache[split][mode] = {k: v.numpy() for k, v in stages.items()}
+                    for k, v in stages.items():
+                        arrays[f"{split}.{mode}.{k}"] = v.numpy()
+        for mode in MODES:
+            for stage in cache["train"][mode]:
+                train, validation = (
+                    cache["train"][mode][stage],
+                    cache["validation"][mode][stage],
+                )
+                reader, selection = fit_factor_probe(
+                    train,
+                    arrays["train.factors"],
+                    validation,
+                    arrays["validation.factors"],
+                )
+                permutation = np.random.default_rng(args.seed + 45).permutation(
+                    len(train)
+                )
+                shuffled, _ = fit_factor_probe(
+                    train,
+                    arrays["train.factors"][permutation],
+                    validation,
+                    arrays["validation.factors"],
+                    alphas=(reader["alpha"],),
+                )
+                choices.append(
+                    dict(
+                        input_mode=mode,
+                        stage=stage,
+                        features=train.shape[1],
+                        nonconstant_features=int((train.std(0) > 1e-4).sum()),
+                        selected_alpha=reader["alpha"],
+                        validation=selection,
+                    )
+                )
+                for label, probe in (("ridge", reader), ("shuffled", shuffled)):
+                    for k, v in probe.items():
+                        arrays[f"reader.{mode}.{stage}.{label}.{k}"] = v
+                    for split in ("seen", "heldout"):
+                        pred = predict_factor_probe(probe, cache[split][mode][stage])
+                        correct = pred == arrays[f"{split}.factors"]
+                        arrays[f"prediction.{split}.{mode}.{stage}.{label}"] = pred
+                        row = dict(
+                            split=split,
+                            input_mode=mode,
+                            stage=stage,
+                            probe=label,
+                            factor_accuracy=correct.mean(0).tolist(),
+                            all_correct=float(correct.all(1).mean()),
+                        )
+                        rows.append(row)
+                        run.log(
+                            dict(
+                                step=1,
+                                split="diagnostic",
+                                population=split,
+                                input_mode=mode,
+                                stage=stage,
+                                probe=label,
+                                color=row["factor_accuracy"][0],
+                                location=row["factor_accuracy"][1],
+                                direction=row["factor_accuracy"][2],
+                                all_correct=row["all_correct"],
+                            )
+                        )
+        # Positive readout control with explicit facts, separate from core evidence.
+        oracle = oracle_states(populations)
+        positive, _ = fit_factor_probe(
+            oracle["train"]["all"].flatten(1).numpy(),
+            arrays["train.factors"],
+            oracle["validation"]["all"].flatten(1).numpy(),
+            arrays["validation.factors"],
+        )
+        oracle_scores = {}
+        for split in ("seen", "heldout"):
+            pred = predict_factor_probe(
+                positive, oracle[split]["all"].flatten(1).numpy()
+            )
+            oracle_scores[split] = float(
+                (pred == arrays[f"{split}.factors"]).all(1).mean()
+            )
+        if state_hash(model) != before:
+            raise AssertionError("Frozen diagnostic mutated source model")
+        np.savez_compressed(run.path / "stage_probes.npz", **arrays)
+        payload = dict(
+            seed=args.seed,
+            source_checkpoint_sha256=source_hash,
+            model_unchanged=True,
+            rows=rows,
+            choices=choices,
+            oracle_control=oracle_scores,
+            scope="Linear accessibility under unequal feature dimensions; not a bound on nonlinear recovery or a proof of information loss.",
+        )
+        atomic_json(run.path / "stage_probe.json", payload)
+        run.step = 1
+        run.save()
+        run.status("complete", "pending")
+        save_stage_panel(run.path, rows)
+        write_report(run.path)
+        print(
+            json.dumps(
+                dict(
+                    path=str(run.path),
+                    oracle_control=oracle_scores,
+                    model_unchanged=True,
+                )
+            ),
+            flush=True,
+        )
+    except BaseException as exc:
+        prior = json.loads((run.path / "status.json").read_text())
+        run.status(
+            prior["result"] if prior["result"] == "complete" else "failed",
+            "failed",
+            str(exc),
+        )
+        raise
+
+
 def perform(args):
     seed_everything(args.seed)
     device = torch.device(args.device)
@@ -220,8 +410,13 @@ def perform(args):
         s: dataset(s, args.seed) for s in ("train", "validation", "seen", "heldout")
     }
     data = populations["train"]
-    model = Model(args.variant).to(device)
+    model = Model(
+        args.variant, posterior_aux=args.initial is not None and args.stage == "core"
+    ).to(device)
     initial_decoders = state_hash(model.outputs.decoders)
+    initial_source = (
+        None if args.initial is None else load_initial(model, args.initial, device)
+    )
     core_source = None
     cache = None
     if args.stage != "core":
@@ -247,6 +442,8 @@ def perform(args):
         model.core.requires_grad_(True)
         model.core.agent.action_head.requires_grad_(False)
         model.core.agent.monitor.requires_grad_(False)
+    if args.posterior_aux:
+        model.posterior_head.requires_grad_(True)
     if args.stage == "joint":
         model.core.factor_head.requires_grad_(False)
     if args.stage != "core":
@@ -265,6 +462,9 @@ def perform(args):
         batch=24,
         width=24,
         outer_iterations=2,
+        initialization_checkpoint_sha256=initial_source,
+        initialization_optimizer="fresh Adam" if initial_source else "fresh model/Adam",
+        posterior_aux_weight=args.posterior_aux,
         objective="factor-CE"
         if args.stage == "core"
         else "sum normalized per-output losses",
@@ -322,11 +522,13 @@ def perform(args):
             indices = run.sample(len(data["ids"]), 24)
             wanted = target_batch(data, indices, device)
             optimizer.zero_grad(set_to_none=True)
-            tokens = (
-                cache["train"][mode][indices].to(device)
-                if args.stage in ("frozen", "oracle")
-                else model.core(observations(data, mode, indices, device))
-            )
+            state = None
+            if args.stage in ("frozen", "oracle"):
+                tokens = cache["train"][mode][indices].to(device)
+            else:
+                tokens, state = model.core(
+                    observations(data, mode, indices, device), return_state=True
+                )
             if args.stage == "core":
                 loss = (
                     sum(
@@ -335,7 +537,20 @@ def perform(args):
                     )
                     / 3
                 )
-                metrics = {}
+                metrics = dict(factor_loss=float(loss.detach()))
+                if args.posterior_aux:
+                    auxiliary = model.posterior_head(
+                        state.logits.softmax(-1).flatten(1)
+                    ).split((3, 3, 2), -1)
+                    aux_loss = (
+                        sum(
+                            F.cross_entropy(p, wanted["factors"][:, i])
+                            for i, p in enumerate(auxiliary)
+                        )
+                        / 3
+                    )
+                    metrics["posterior_aux_loss"] = float(aux_loss.detach())
+                    loss = loss + args.posterior_aux * aux_loss
             else:
                 loss, metrics = output_objective(
                     model, tokens, wanted, kinds, normalizers
@@ -484,7 +699,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--stage",
-        choices=("core", "frozen", "joint", "oracle", "suite"),
+        choices=("core", "frozen", "joint", "oracle", "suite", "diagnose"),
         default="suite",
     )
     parser.add_argument("--output", type=Path, required=True)
@@ -493,12 +708,34 @@ def main():
     parser.add_argument("--modality", choices=KINDS, default="text")
     parser.add_argument("--core", type=Path)
     parser.add_argument(
+        "--initial",
+        type=Path,
+        help="Start from saved model weights with fresh optimizer; not resume",
+    )
+    parser.add_argument(
+        "--posterior-aux",
+        type=float,
+        default=0.0,
+        help="Training-only posterior factor CE weight for core continuation",
+    )
+    parser.add_argument(
         "--device", default="cuda" if torch.cuda.is_available() else "cpu"
     )
     parser.add_argument("--steps", type=int)
     parser.add_argument("--stop-after", type=int)
     parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
+    if args.posterior_aux < 0 or not np.isfinite(args.posterior_aux):
+        parser.error("Posterior auxiliary weight must be finite and nonnegative")
+    if args.posterior_aux and (args.stage != "core" or args.initial is None):
+        parser.error("Posterior auxiliary requires core continuation with --initial")
+    if args.initial and args.stage not in ("core", "oracle"):
+        parser.error("Weight initialization supported for core/oracle only")
+    if args.stage == "diagnose":
+        if args.core is None or args.resume or args.stop_after or args.steps:
+            parser.error("Diagnosis needs --core and does not train or resume")
+        diagnose(args)
+        return
     if args.steps is not None and args.steps < 1:
         parser.error("Steps must be positive")
     if args.stop_after is not None and args.stop_after < 1:

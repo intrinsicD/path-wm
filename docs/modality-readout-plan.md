@@ -256,3 +256,17 @@ speech, photos, general video or concept discovery.
 Actual Claude public-only review: `runs/reviews/modality_repair_v1/`. Adopted reader
 limits and separation of regularization efficacy from unique mechanism. Independent
 code review/tests remain local; no code, data or measurements exported.
+
+Diagnostic preflight correction: held-out text is one byte longer than training
+text. Flattening variable pyramids made the diagnostic feature columns incompatible;
+both failed attempts are retained under diagnosis/. Source model was unchanged.
+Repair only pads each captured scale to64 token slots, then concatenates modalities
+in stable sorted order. It does not pad/alter the model inputs or resize features.
+A cap overflow raises an error. Nonconstant feature counts are reported. Existing
+RidgeReader supplies train-only statistics (std floor1e-4); alpha conversion retains
+raw-Gram ridge units. Original failed reports remain labelled failed.
+
+Core intervention benefit is measured on fresh known combinations, averaged over
+all six input modes and the location/direction factors; held-out results remain a
+separate mandatory report. Both branches use fresh optimizer state. No claim of
+unique mechanism or calibration follows from auxiliary-loss improvement.
