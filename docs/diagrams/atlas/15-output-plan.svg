@@ -1,0 +1,123 @@
+<svg width="873pt" height="676pt"
+ viewBox="0.00 0.00 873.00 676.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="15-output-plan-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 662)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-662 858.1,-662 858.1,14.4 -14.4,14.4"/>
+<!-- context&#45;&gt;work -->
+<g id="15-output-plan-edge1" class="edge">
+<title>context&#45;&gt;work</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M187.97,-594.92C214.17,-576.16 249.88,-550.59 277.61,-530.73"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="278.86,-532.84 283.12,-526.78 276.01,-528.86 278.86,-532.84"/>
+<text xml:space="preserve" text-anchor="middle" x="278.71" y="-565.38" font-family="DejaVu Sans" font-size="11.00" fill="#374151">available context</text>
+</g>
+<!-- context&#45;&gt;check -->
+<g id="15-output-plan-edge6" class="edge">
+<title>context&#45;&gt;check</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M148.53,-594.92C143.24,-559.6 134.34,-500.12 134.34,-500.12 134.34,-500.12 134.34,-500.12 134.34,-139.32 134.34,-139.32 138.45,-106.58 142.04,-77.88"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="144.44,-78.44 142.88,-71.19 139.58,-77.83 144.44,-78.44"/>
+<text xml:space="preserve" text-anchor="middle" x="184.09" y="-303.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">retained evidence</text>
+</g>
+<!-- work&#45;&gt;plan -->
+<g id="15-output-plan-edge2" class="edge">
+<title>work&#45;&gt;plan</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M322.57,-472.67C324.47,-450.87 326.91,-422.96 326.91,-422.96 326.91,-422.96 344.86,-415.76 367.59,-406.63"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="368.33,-408.97 373.92,-404.09 366.51,-404.43 368.33,-408.97"/>
+<text xml:space="preserve" text-anchor="middle" x="390.63" y="-426.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">learn prepared content</text>
+</g>
+<!-- plan&#45;&gt;decoder -->
+<g id="15-output-plan-edge3" class="edge">
+<title>plan&#45;&gt;decoder</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M460.34,-333.56C460.34,-319.85 460.34,-303.87 460.34,-289.4"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="462.79,-289.74 460.34,-282.74 457.89,-289.74 462.79,-289.74"/>
+<text xml:space="preserve" text-anchor="middle" x="521.52" y="-303.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">plan&#45;only conditioning</text>
+</g>
+<!-- decoder&#45;&gt;output -->
+<g id="15-output-plan-edge4" class="edge">
+<title>decoder&#45;&gt;output</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M434.15,-211.11C422.66,-196.21 409.45,-179.06 398.99,-165.5"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="401.02,-164.13 394.81,-160.08 397.14,-167.12 401.02,-164.13"/>
+<text xml:space="preserve" text-anchor="middle" x="474.61" y="-181.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">generated sequence</text>
+</g>
+<!-- output&#45;&gt;check -->
+<g id="15-output-plan-edge5" class="edge">
+<title>output&#45;&gt;check</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M341.08,-121.84C311.18,-108.52 268.91,-89.7 231.48,-73.03"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="232.49,-70.79 225.1,-70.18 230.49,-75.27 232.49,-70.79"/>
+<text xml:space="preserve" text-anchor="middle" x="340.48" y="-92.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">candidate answer</text>
+</g>
+<!-- check&#45;&gt;work -->
+<g id="15-output-plan-edge7" class="edge">
+<title>check&#45;&gt;work</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M157.33,-69.64C177.06,-136.98 219.16,-280.64 219.16,-280.64 219.16,-280.64 238.34,-300.64 238.34,-300.64 238.34,-300.64 283.13,-408.5 306.51,-464.79"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="304.21,-465.64 309.15,-471.17 308.73,-463.77 304.21,-465.64"/>
+<text xml:space="preserve" text-anchor="middle" x="265.25" y="-242.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">revision decision</text>
+</g>
+<!-- training&#45;&gt;plan -->
+<g id="15-output-plan-edge8" class="edge">
+<title>training&#45;&gt;plan</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M541.2,-455.68C508.43,-444.83 482.26,-436.16 482.26,-436.16 482.26,-436.16 478.49,-424.68 474.08,-411.24"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="476.46,-410.64 471.95,-404.75 471.8,-412.17 476.46,-410.64"/>
+<text xml:space="preserve" text-anchor="middle" x="566.8" y="-426.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">explicit task losses and probes</text>
+</g>
+<!-- training&#45;&gt;decoder -->
+<g id="15-output-plan-edge9" class="edge">
+<title>training&#45;&gt;decoder</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M659.75,-455.71C655.9,-438.66 652.34,-422.96 652.34,-422.96 652.34,-422.96 627.34,-333.84 627.34,-333.84 627.34,-333.84 587.34,-300.64 587.34,-300.64 587.34,-300.64 570.41,-293.5 548.91,-284.43"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="550.07,-282.26 542.67,-281.8 548.17,-286.78 550.07,-282.26"/>
+<text xml:space="preserve" text-anchor="middle" x="731.02" y="-365.1" font-family="DejaVu Sans" font-size="11.00" fill="#374151">generation losses and controls</text>
+</g>
+<!-- context -->
+<g id="15-output-plan-node1" class="node">
+<title>context</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M292.69,-647.6C292.69,-647.6 12,-647.6 12,-647.6 6,-647.6 0,-641.6 0,-635.6 0,-635.6 0,-607.28 0,-607.28 0,-601.28 6,-595.28 12,-595.28 12,-595.28 292.69,-595.28 292.69,-595.28 298.69,-595.28 304.69,-601.28 304.69,-607.28 304.69,-607.28 304.69,-635.6 304.69,-635.6 304.69,-641.6 298.69,-647.6 292.69,-647.6"/>
+<text xml:space="preserve" text-anchor="middle" x="152.34" y="-625.64" font-family="DejaVu Sans" font-size="14.00">Retrieved evidence + question + intent</text>
+<text xml:space="preserve" text-anchor="middle" x="152.34" y="-608.84" font-family="DejaVu Sans" font-size="14.00">Existing context/task interfaces</text>
+</g>
+<!-- work -->
+<g id="15-output-plan-node2" class="node">
+<title>work</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M462.89,-525.28C462.89,-525.28 177.8,-525.28 177.8,-525.28 171.8,-525.28 165.8,-519.28 165.8,-513.28 165.8,-513.28 165.8,-484.96 165.8,-484.96 165.8,-478.96 171.8,-472.96 177.8,-472.96 177.8,-472.96 462.89,-472.96 462.89,-472.96 468.89,-472.96 474.89,-478.96 474.89,-484.96 474.89,-484.96 474.89,-513.28 474.89,-513.28 474.89,-519.28 468.89,-525.28 462.89,-525.28"/>
+<text xml:space="preserve" text-anchor="middle" x="320.34" y="-503.32" font-family="DejaVu Sans" font-size="14.00">Existing latent Thinker / workspace</text>
+<text xml:space="preserve" text-anchor="middle" x="320.34" y="-486.52" font-family="DejaVu Sans" font-size="14.00">Content selection and reasoning to train</text>
+</g>
+<!-- plan -->
+<g id="15-output-plan-node3" class="node">
+<title>plan</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M604.91,-402.96C604.91,-402.96 315.78,-402.96 315.78,-402.96 309.78,-402.96 303.78,-396.96 303.78,-390.96 303.78,-390.96 303.78,-345.84 303.78,-345.84 303.78,-339.84 309.78,-333.84 315.78,-333.84 315.78,-333.84 604.91,-333.84 604.91,-333.84 610.91,-333.84 616.91,-339.84 616.91,-345.84 616.91,-345.84 616.91,-390.96 616.91,-390.96 616.91,-396.96 610.91,-402.96 604.91,-402.96"/>
+<text xml:space="preserve" text-anchor="middle" x="460.34" y="-381" font-family="DejaVu Sans" font-size="14.00">Proposed latent answer plan</text>
+<text xml:space="preserve" text-anchor="middle" x="460.34" y="-364.2" font-family="DejaVu Sans" font-size="14.00">First: existing workspace slice</text>
+<text xml:space="preserve" text-anchor="middle" x="460.34" y="-347.4" font-family="DejaVu Sans" font-size="14.00">Later comparison: dedicated plan tokens</text>
+</g>
+<!-- decoder -->
+<g id="15-output-plan-node4" class="node">
+<title>decoder</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M587.59,-280.64C587.59,-280.64 333.1,-280.64 333.1,-280.64 327.1,-280.64 321.1,-274.64 321.1,-268.64 321.1,-268.64 321.1,-223.52 321.1,-223.52 321.1,-217.52 327.1,-211.52 333.1,-211.52 333.1,-211.52 587.59,-211.52 587.59,-211.52 593.59,-211.52 599.59,-217.52 599.59,-223.52 599.59,-223.52 599.59,-268.64 599.59,-268.64 599.59,-274.64 593.59,-280.64 587.59,-280.64"/>
+<text xml:space="preserve" text-anchor="middle" x="460.34" y="-258.68" font-family="DejaVu Sans" font-size="14.00">Modality output adapter</text>
+<text xml:space="preserve" text-anchor="middle" x="460.34" y="-241.88" font-family="DejaVu Sans" font-size="14.00">Text: realize content and grammar</text>
+<text xml:space="preserve" text-anchor="middle" x="460.34" y="-225.08" font-family="DejaVu Sans" font-size="14.00">Consumes plan + own output prefix</text>
+</g>
+<!-- output -->
+<g id="15-output-plan-node5" class="node">
+<title>output</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M445.95,-158.32C445.95,-158.32 314.74,-158.32 314.74,-158.32 308.74,-158.32 302.74,-152.32 302.74,-146.32 302.74,-146.32 302.74,-134.32 302.74,-134.32 302.74,-128.32 308.74,-122.32 314.74,-122.32 314.74,-122.32 445.95,-122.32 445.95,-122.32 451.95,-122.32 457.95,-128.32 457.95,-134.32 457.95,-134.32 457.95,-146.32 457.95,-146.32 457.95,-152.32 451.95,-158.32 445.95,-158.32"/>
+<text xml:space="preserve" text-anchor="middle" x="380.34" y="-136.12" font-family="DejaVu Sans" font-size="14.00">Generated answer</text>
+</g>
+<!-- check -->
+<g id="15-output-plan-node6" class="node">
+<title>check</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M280.81,-69.12C280.81,-69.12 13.88,-69.12 13.88,-69.12 7.88,-69.12 1.88,-63.12 1.88,-57.12 1.88,-57.12 1.88,-12 1.88,-12 1.88,-6 7.88,0 13.88,0 13.88,0 280.81,0 280.81,0 286.81,0 292.81,-6 292.81,-12 292.81,-12 292.81,-57.12 292.81,-57.12 292.81,-63.12 286.81,-69.12 280.81,-69.12"/>
+<text xml:space="preserve" text-anchor="middle" x="147.34" y="-47.16" font-family="DejaVu Sans" font-size="14.00">Proposed grounding / coverage check</text>
+<text xml:space="preserve" text-anchor="middle" x="147.34" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Evidence references + answer + task</text>
+<text xml:space="preserve" text-anchor="middle" x="147.34" y="-13.56" font-family="DejaVu Sans" font-size="14.00">Revise / retrieve / ask when needed</text>
+</g>
+<!-- training -->
+<g id="15-output-plan-node7" class="node">
+<title>training</title>
+<path fill="#fff0db" stroke="#bd934d" stroke-width="1.1" d="M831.7,-542.08C831.7,-542.08 506.98,-542.08 506.98,-542.08 500.98,-542.08 494.98,-536.08 494.98,-530.08 494.98,-530.08 494.98,-468.16 494.98,-468.16 494.98,-462.16 500.98,-456.16 506.98,-456.16 506.98,-456.16 831.7,-456.16 831.7,-456.16 837.7,-456.16 843.7,-462.16 843.7,-468.16 843.7,-468.16 843.7,-530.08 843.7,-530.08 843.7,-536.08 837.7,-542.08 831.7,-542.08"/>
+<text xml:space="preserve" text-anchor="middle" x="669.34" y="-520.12" font-family="DejaVu Sans" font-size="14.00">Required comparison</text>
+<text xml:space="preserve" text-anchor="middle" x="669.34" y="-503.32" font-family="DejaVu Sans" font-size="14.00">Full&#45;state vs workspace&#45;only vs own plan</text>
+<text xml:space="preserve" text-anchor="middle" x="669.34" y="-486.52" font-family="DejaVu Sans" font-size="14.00">Grounding / language / held&#45;out combinations</text>
+<text xml:space="preserve" text-anchor="middle" x="669.34" y="-469.72" font-family="DejaVu Sans" font-size="14.00">Total parameters / memory / compute</text>
+</g>
+</g>
+</svg>

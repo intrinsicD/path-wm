@@ -1,0 +1,222 @@
+<svg width="1660pt" height="798pt"
+ viewBox="0.00 0.00 1660.00 798.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="14-latent-core-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 783.84)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-783.84 1645.8,-783.84 1645.8,14.4 -14.4,14.4"/>
+<!-- input&#45;&gt;correct -->
+<g id="14-latent-core-edge3" class="edge">
+<title>input&#45;&gt;correct</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M427.42,-585.94C428.36,-567.11 429.47,-544.8 429.47,-544.8 429.47,-544.8 436.68,-538.74 446.25,-530.69"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="447.77,-532.61 451.55,-526.23 444.61,-528.86 447.77,-532.61"/>
+<text xml:space="preserve" text-anchor="middle" x="493.81" y="-548.1" font-family="DejaVu Sans" font-size="11.00" fill="#374151">valid available features</text>
+</g>
+<!-- previous&#45;&gt;dynamics -->
+<g id="14-latent-core-edge1" class="edge">
+<title>previous&#45;&gt;dynamics</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M157.15,-708.36C157.15,-693.07 157.15,-673.24 157.15,-655.68"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="159.6,-655.93 157.15,-648.93 154.7,-655.93 159.6,-655.93"/>
+<text xml:space="preserve" text-anchor="middle" x="253.57" y="-670.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">advance event or imagined branch</text>
+</g>
+<!-- dynamics&#45;&gt;correct -->
+<g id="14-latent-core-edge2" class="edge">
+<title>dynamics&#45;&gt;correct</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M245.5,-577.5C288.19,-561.04 330.31,-544.8 330.31,-544.8 330.31,-544.8 352.98,-537.34 381.4,-527.99"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="382.09,-530.35 387.98,-525.83 380.56,-525.69 382.09,-530.35"/>
+<text xml:space="preserve" text-anchor="middle" x="377.23" y="-548.1" font-family="DejaVu Sans" font-size="11.00" fill="#374151">prior h and logits</text>
+</g>
+<!-- dynamics&#45;&gt;world -->
+<g id="14-latent-core-edge7" class="edge">
+<title>dynamics&#45;&gt;world</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M156.86,-577.77C156.65,-553.41 156.41,-524.8 156.41,-524.8 156.41,-524.8 156.41,-455.68 156.41,-455.68 156.41,-455.68 282.33,-426.29 387.59,-401.72"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="387.9,-404.17 394.16,-400.19 386.78,-399.4 387.9,-404.17"/>
+<text xml:space="preserve" text-anchor="middle" x="239.78" y="-486.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">prior&#45;only hypothetical branch</text>
+</g>
+<!-- correct&#45;&gt;world -->
+<g id="14-latent-core-edge6" class="edge">
+<title>correct&#45;&gt;world</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M502.99,-455.4C506.98,-441.69 511.63,-425.71 515.84,-411.24"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="518.19,-411.92 517.79,-404.52 513.48,-410.55 518.19,-411.92"/>
+<text xml:space="preserve" text-anchor="middle" x="587.8" y="-425.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">posterior code; h from prior</text>
+</g>
+<!-- world&#45;&gt;think -->
+<g id="14-latent-core-edge12" class="edge">
+<title>world&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M567.77,-333.15C587.2,-316.59 606.48,-300.16 606.48,-300.16 606.48,-300.16 634.66,-292.45 669.63,-282.87"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="669.96,-285.32 676.07,-281.11 668.67,-280.6 669.96,-285.32"/>
+<text xml:space="preserve" text-anchor="middle" x="641.81" y="-303.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">world tokens</text>
+</g>
+<!-- world&#45;&gt;decode -->
+<g id="14-latent-core-edge16" class="edge">
+<title>world&#45;&gt;decode</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M531.13,-333.1C536.88,-268.04 549.41,-126.15 555.16,-61.05"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="557.57,-61.6 555.74,-54.41 552.68,-61.17 557.57,-61.6"/>
+<text xml:space="preserve" text-anchor="middle" x="618.82" y="-181.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">unchanged during thinking</text>
+</g>
+<!-- memory&#45;&gt;dynamics -->
+<g id="14-latent-core-edge4" class="edge">
+<title>memory&#45;&gt;dynamics</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M462.4,-699.82C408.41,-683.36 355.15,-667.12 355.15,-667.12 355.15,-667.12 326.63,-659.41 291.24,-649.83"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="292.11,-647.53 284.71,-648.07 290.83,-652.26 292.11,-647.53"/>
+<text xml:space="preserve" text-anchor="middle" x="439.01" y="-670.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">prediction read</text>
+</g>
+<!-- memory&#45;&gt;correct -->
+<g id="14-latent-core-edge5" class="edge">
+<title>memory&#45;&gt;correct</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M571.47,-700.08C567.15,-645.69 559.15,-544.8 559.15,-544.8 559.15,-544.8 551.53,-538.62 541.48,-530.46"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="543.22,-528.72 536.24,-526.21 540.13,-532.52 543.22,-528.72"/>
+<text xml:space="preserve" text-anchor="middle" x="610.97" y="-609.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">perception read</text>
+</g>
+<!-- memory&#45;&gt;think -->
+<g id="14-latent-core-edge8" class="edge">
+<title>memory&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M607.64,-700.09C631.79,-675.73 660.15,-647.12 660.15,-647.12 660.15,-647.12 693.15,-613.56 693.15,-613.56 693.15,-613.56 693.15,-613.56 693.15,-366.92 693.15,-366.92 714.15,-333.36 714.15,-333.36 714.15,-333.36 738.43,-309.42 761.49,-286.69"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="763.17,-288.47 766.43,-281.81 759.73,-284.98 763.17,-288.47"/>
+<text xml:space="preserve" text-anchor="middle" x="729.75" y="-486.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">thinking read</text>
+</g>
+<!-- graph&#45;&gt;retrieve -->
+<g id="14-latent-core-edge9" class="edge">
+<title>graph&#45;&gt;retrieve</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M926.06,-463.72C917.56,-445.78 906.1,-421.59 896.89,-402.14"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="899.14,-401.18 893.93,-395.9 894.71,-403.28 899.14,-401.18"/>
+<text xml:space="preserve" text-anchor="middle" x="973.79" y="-425.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">pinned bounded query</text>
+</g>
+<!-- retrieve&#45;&gt;think -->
+<g id="14-latent-core-edge10" class="edge">
+<title>retrieve&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M864.39,-341.4C854.08,-325.69 840.62,-305.2 828.86,-287.29"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="831.08,-286.2 825.19,-281.7 826.99,-288.89 831.08,-286.2"/>
+<text xml:space="preserve" text-anchor="middle" x="922.81" y="-303.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">optional goal&#45;context tokens</text>
+</g>
+<!-- goal&#45;&gt;think -->
+<g id="14-latent-core-edge11" class="edge">
+<title>goal&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1134.32,-341.3C1075.67,-322.47 1006.15,-300.16 1006.15,-300.16 1006.15,-300.16 976.52,-292.38 939.85,-282.75"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="940.92,-280.5 933.53,-281.09 939.68,-285.24 940.92,-280.5"/>
+<text xml:space="preserve" text-anchor="middle" x="1122.24" y="-303.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">task and diagnostic context</text>
+</g>
+<!-- work&#45;&gt;think -->
+<g id="14-latent-core-edge13" class="edge">
+<title>work&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1411.63,-341.23C1394,-336.68 1381.15,-333.36 1381.15,-333.36 1381.15,-333.36 1203.15,-300.16 1203.15,-300.16 1203.15,-300.16 1060,-281.04 944.76,-265.65"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="945.42,-263.27 938.16,-264.77 944.77,-268.12 945.42,-263.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1321.52" y="-303.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">query and context</text>
+</g>
+<!-- think&#45;&gt;next -->
+<g id="14-latent-core-edge14" class="edge">
+<title>think&#45;&gt;next</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M780.05,-210.72C770.68,-196.36 759.82,-179.7 750.53,-165.47"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="752.62,-164.19 746.75,-159.66 748.52,-166.87 752.62,-164.19"/>
+<text xml:space="preserve" text-anchor="middle" x="816.22" y="-181.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">workspace update</text>
+</g>
+<!-- next&#45;&gt;work -->
+<g id="14-latent-core-edge15" class="edge">
+<title>next&#45;&gt;work</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M828.27,-158.3C1009.79,-205.22 1377.15,-300.16 1377.15,-300.16 1377.15,-300.16 1416.18,-319.61 1452.12,-337.51"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1450.87,-339.63 1458.23,-340.56 1453.06,-335.24 1450.87,-339.63"/>
+<text xml:space="preserve" text-anchor="middle" x="1355.58" y="-242.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">next internal iteration</text>
+</g>
+<!-- next&#45;&gt;decode -->
+<g id="14-latent-core-edge17" class="edge">
+<title>next&#45;&gt;decode</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M686.88,-105.09C662.93,-90.6 632.85,-72.38 607.79,-57.21"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="609.2,-55.21 601.95,-53.68 606.67,-59.4 609.2,-55.21"/>
+<text xml:space="preserve" text-anchor="middle" x="704.55" y="-75.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">refined workspace</text>
+</g>
+<!-- input -->
+<g id="14-latent-core-node1" class="node">
+<title>input</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M521.91,-638.72C521.91,-638.72 330.38,-638.72 330.38,-638.72 324.38,-638.72 318.38,-632.72 318.38,-626.72 318.38,-626.72 318.38,-598.4 318.38,-598.4 318.38,-592.4 324.38,-586.4 330.38,-586.4 330.38,-586.4 521.91,-586.4 521.91,-586.4 527.91,-586.4 533.91,-592.4 533.91,-598.4 533.91,-598.4 533.91,-626.72 533.91,-626.72 533.91,-632.72 527.91,-638.72 521.91,-638.72"/>
+<text xml:space="preserve" text-anchor="middle" x="426.15" y="-616.76" font-family="DejaVu Sans" font-size="14.00">Encoded source features</text>
+<text xml:space="preserve" text-anchor="middle" x="426.15" y="-599.96" font-family="DejaVu Sans" font-size="14.00">Image / audio / video / text</text>
+</g>
+<!-- previous -->
+<g id="14-latent-core-node2" class="node">
+<title>previous</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M302.29,-761.04C302.29,-761.04 12,-761.04 12,-761.04 6,-761.04 0,-755.04 0,-749.04 0,-749.04 0,-720.72 0,-720.72 0,-714.72 6,-708.72 12,-708.72 12,-708.72 302.29,-708.72 302.29,-708.72 308.29,-708.72 314.29,-714.72 314.29,-720.72 314.29,-720.72 314.29,-749.04 314.29,-749.04 314.29,-755.04 308.29,-761.04 302.29,-761.04"/>
+<text xml:space="preserve" text-anchor="middle" x="157.15" y="-739.08" font-family="DejaVu Sans" font-size="14.00">Previous h and sampled categorical code</text>
+<text xml:space="preserve" text-anchor="middle" x="157.15" y="-722.28" font-family="DejaVu Sans" font-size="14.00">Recorded action / elapsed time</text>
+</g>
+<!-- dynamics -->
+<g id="14-latent-core-node3" class="node">
+<title>dynamics</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M286.61,-647.12C286.61,-647.12 27.69,-647.12 27.69,-647.12 21.69,-647.12 15.69,-641.12 15.69,-635.12 15.69,-635.12 15.69,-590 15.69,-590 15.69,-584 21.69,-578 27.69,-578 27.69,-578 286.61,-578 286.61,-578 292.61,-578 298.61,-584 298.61,-590 298.61,-590 298.61,-635.12 298.61,-635.12 298.61,-641.12 292.61,-647.12 286.61,-647.12"/>
+<text xml:space="preserve" text-anchor="middle" x="157.15" y="-625.16" font-family="DejaVu Sans" font-size="14.00">BeliefDynamics</text>
+<text xml:space="preserve" text-anchor="middle" x="157.15" y="-608.36" font-family="DejaVu Sans" font-size="14.00">Shared attention transition &#45;&gt; new h</text>
+<text xml:space="preserve" text-anchor="middle" x="157.15" y="-591.56" font-family="DejaVu Sans" font-size="14.00">Prior categorical distribution</text>
+</g>
+<!-- correct -->
+<g id="14-latent-core-node4" class="node">
+<title>correct</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M641.1,-524.8C641.1,-524.8 345.19,-524.8 345.19,-524.8 339.19,-524.8 333.19,-518.8 333.19,-512.8 333.19,-512.8 333.19,-467.68 333.19,-467.68 333.19,-461.68 339.19,-455.68 345.19,-455.68 345.19,-455.68 641.1,-455.68 641.1,-455.68 647.1,-455.68 653.1,-461.68 653.1,-467.68 653.1,-467.68 653.1,-512.8 653.1,-512.8 653.1,-518.8 647.1,-524.8 641.1,-524.8"/>
+<text xml:space="preserve" text-anchor="middle" x="493.15" y="-502.84" font-family="DejaVu Sans" font-size="14.00">BeliefCorrection</text>
+<text xml:space="preserve" text-anchor="middle" x="493.15" y="-486.04" font-family="DejaVu Sans" font-size="14.00">Observation attention + memory + refine</text>
+<text xml:space="preserve" text-anchor="middle" x="493.15" y="-469.24" font-family="DejaVu Sans" font-size="14.00">Correct categorical logits</text>
+</g>
+<!-- world -->
+<g id="14-latent-core-node5" class="node">
+<title>world</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M648.1,-402.48C648.1,-402.48 408.2,-402.48 408.2,-402.48 402.2,-402.48 396.2,-396.48 396.2,-390.48 396.2,-390.48 396.2,-345.36 396.2,-345.36 396.2,-339.36 402.2,-333.36 408.2,-333.36 408.2,-333.36 648.1,-333.36 648.1,-333.36 654.1,-333.36 660.1,-339.36 660.1,-345.36 660.1,-345.36 660.1,-390.48 660.1,-390.48 660.1,-396.48 654.1,-402.48 648.1,-402.48"/>
+<text xml:space="preserve" text-anchor="middle" x="528.15" y="-380.52" font-family="DejaVu Sans" font-size="14.00">World readout</text>
+<text xml:space="preserve" text-anchor="middle" x="528.15" y="-363.72" font-family="DejaVu Sans" font-size="14.00">h + projection of categorical code</text>
+<text xml:space="preserve" text-anchor="middle" x="528.15" y="-346.92" font-family="DejaVu Sans" font-size="14.00">Default16 tokens x width32</text>
+</g>
+<!-- memory -->
+<g id="14-latent-core-node6" class="node">
+<title>memory</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M711.64,-769.44C711.64,-769.44 436.65,-769.44 436.65,-769.44 430.65,-769.44 424.65,-763.44 424.65,-757.44 424.65,-757.44 424.65,-712.32 424.65,-712.32 424.65,-706.32 430.65,-700.32 436.65,-700.32 436.65,-700.32 711.64,-700.32 711.64,-700.32 717.64,-700.32 723.64,-706.32 723.64,-712.32 723.64,-712.32 723.64,-757.44 723.64,-757.44 723.64,-763.44 717.64,-769.44 711.64,-769.44"/>
+<text xml:space="preserve" text-anchor="middle" x="574.15" y="-747.48" font-family="DejaVu Sans" font-size="14.00">HybridMemory</text>
+<text xml:space="preserve" text-anchor="middle" x="574.15" y="-730.68" font-family="DejaVu Sans" font-size="14.00">Bounded source and belief history</text>
+<text xml:space="preserve" text-anchor="middle" x="574.15" y="-713.88" font-family="DejaVu Sans" font-size="14.00">Perception / prediction / thinking reads</text>
+</g>
+<!-- graph -->
+<g id="14-latent-core-node7" class="node">
+<title>graph</title>
+<path fill="#efeafa" stroke="#9c87b5" stroke-width="1.1" d="M1078.27,-516.4C1078.27,-516.4 798.02,-516.4 798.02,-516.4 792.02,-516.4 786.02,-510.4 786.02,-504.4 786.02,-504.4 786.02,-476.08 786.02,-476.08 786.02,-470.08 792.02,-464.08 798.02,-464.08 798.02,-464.08 1078.27,-464.08 1078.27,-464.08 1084.27,-464.08 1090.27,-470.08 1090.27,-476.08 1090.27,-476.08 1090.27,-504.4 1090.27,-504.4 1090.27,-510.4 1084.27,-516.4 1078.27,-516.4"/>
+<text xml:space="preserve" text-anchor="middle" x="938.15" y="-494.44" font-family="DejaVu Sans" font-size="14.00">Optional WorldStore</text>
+<text xml:space="preserve" text-anchor="middle" x="938.15" y="-477.64" font-family="DejaVu Sans" font-size="14.00">Versioned entities / relations / evidence</text>
+</g>
+<!-- retrieve -->
+<g id="14-latent-core-node8" class="node">
+<title>retrieve</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M1025.72,-394.08C1025.72,-394.08 736.58,-394.08 736.58,-394.08 730.58,-394.08 724.58,-388.08 724.58,-382.08 724.58,-382.08 724.58,-353.76 724.58,-353.76 724.58,-347.76 730.58,-341.76 736.58,-341.76 736.58,-341.76 1025.72,-341.76 1025.72,-341.76 1031.72,-341.76 1037.72,-347.76 1037.72,-353.76 1037.72,-353.76 1037.72,-382.08 1037.72,-382.08 1037.72,-388.08 1031.72,-394.08 1025.72,-394.08"/>
+<text xml:space="preserve" text-anchor="middle" x="881.15" y="-372.12" font-family="DejaVu Sans" font-size="14.00">Retriever + ContextEncoder</text>
+<text xml:space="preserve" text-anchor="middle" x="881.15" y="-355.32" font-family="DejaVu Sans" font-size="14.00">Selected graph records &#45;&gt; latent context</text>
+</g>
+<!-- goal -->
+<g id="14-latent-core-node9" class="node">
+<title>goal</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M1358.7,-394.08C1358.7,-394.08 1069.6,-394.08 1069.6,-394.08 1063.6,-394.08 1057.6,-388.08 1057.6,-382.08 1057.6,-382.08 1057.6,-353.76 1057.6,-353.76 1057.6,-347.76 1063.6,-341.76 1069.6,-341.76 1069.6,-341.76 1358.7,-341.76 1358.7,-341.76 1364.7,-341.76 1370.7,-347.76 1370.7,-353.76 1370.7,-353.76 1370.7,-382.08 1370.7,-382.08 1370.7,-388.08 1364.7,-394.08 1358.7,-394.08"/>
+<text xml:space="preserve" text-anchor="middle" x="1214.15" y="-372.12" font-family="DejaVu Sans" font-size="14.00">Task / question / goal context</text>
+<text xml:space="preserve" text-anchor="middle" x="1214.15" y="-355.32" font-family="DejaVu Sans" font-size="14.00">Detached error / entropy / step feedback</text>
+</g>
+<!-- work -->
+<g id="14-latent-core-node10" class="node">
+<title>work</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M1619.4,-394.08C1619.4,-394.08 1402.9,-394.08 1402.9,-394.08 1396.9,-394.08 1390.9,-388.08 1390.9,-382.08 1390.9,-382.08 1390.9,-353.76 1390.9,-353.76 1390.9,-347.76 1396.9,-341.76 1402.9,-341.76 1402.9,-341.76 1619.4,-341.76 1619.4,-341.76 1625.4,-341.76 1631.4,-347.76 1631.4,-353.76 1631.4,-353.76 1631.4,-382.08 1631.4,-382.08 1631.4,-388.08 1625.4,-394.08 1619.4,-394.08"/>
+<text xml:space="preserve" text-anchor="middle" x="1511.15" y="-372.12" font-family="DejaVu Sans" font-size="14.00">Working and reasoning tokens</text>
+<text xml:space="preserve" text-anchor="middle" x="1511.15" y="-355.32" font-family="DejaVu Sans" font-size="14.00">Default4 + 4 tokens x width32</text>
+</g>
+<!-- think -->
+<g id="14-latent-core-node11" class="node">
+<title>think</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M923.99,-280.16C923.99,-280.16 680.31,-280.16 680.31,-280.16 674.31,-280.16 668.31,-274.16 668.31,-268.16 668.31,-268.16 668.31,-223.04 668.31,-223.04 668.31,-217.04 674.31,-211.04 680.31,-211.04 680.31,-211.04 923.99,-211.04 923.99,-211.04 929.99,-211.04 935.99,-217.04 935.99,-223.04 935.99,-223.04 935.99,-268.16 935.99,-268.16 935.99,-274.16 929.99,-280.16 923.99,-280.16"/>
+<text xml:space="preserve" text-anchor="middle" x="802.15" y="-258.2" font-family="DejaVu Sans" font-size="14.00">Thinker: one shared Attend block</text>
+<text xml:space="preserve" text-anchor="middle" x="802.15" y="-241.4" font-family="DejaVu Sans" font-size="14.00">Normalize &#45;&gt; attention &#45;&gt; residual</text>
+<text xml:space="preserve" text-anchor="middle" x="802.15" y="-224.6" font-family="DejaVu Sans" font-size="14.00">Normalize &#45;&gt; MLP &#45;&gt; residual</text>
+</g>
+<!-- next -->
+<g id="14-latent-core-node12" class="node">
+<title>next</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M862.04,-157.84C862.04,-157.84 596.25,-157.84 596.25,-157.84 590.25,-157.84 584.25,-151.84 584.25,-145.84 584.25,-145.84 584.25,-117.52 584.25,-117.52 584.25,-111.52 590.25,-105.52 596.25,-105.52 596.25,-105.52 862.04,-105.52 862.04,-105.52 868.04,-105.52 874.04,-111.52 874.04,-117.52 874.04,-117.52 874.04,-145.84 874.04,-145.84 874.04,-151.84 868.04,-157.84 862.04,-157.84"/>
+<text xml:space="preserve" text-anchor="middle" x="729.15" y="-135.88" font-family="DejaVu Sans" font-size="14.00">Updated working / reasoning tokens</text>
+<text xml:space="preserve" text-anchor="middle" x="729.15" y="-119.08" font-family="DejaVu Sans" font-size="14.00">Repeat with same weights for k steps</text>
+</g>
+<!-- decode -->
+<g id="14-latent-core-node13" class="node">
+<title>decode</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M707.27,-52.32C707.27,-52.32 409.03,-52.32 409.03,-52.32 403.03,-52.32 397.03,-46.32 397.03,-40.32 397.03,-40.32 397.03,-12 397.03,-12 397.03,-6 403.03,0 409.03,0 409.03,0 707.27,0 707.27,0 713.27,0 719.27,-6 719.27,-12 719.27,-12 719.27,-40.32 719.27,-40.32 719.27,-46.32 713.27,-52.32 707.27,-52.32"/>
+<text xml:space="preserve" text-anchor="middle" x="558.15" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Current native decoders</text>
+<text xml:space="preserve" text-anchor="middle" x="558.15" y="-13.56" font-family="DejaVu Sans" font-size="14.00">Read world + working + reasoning tokens</text>
+</g>
+</g>
+</svg>
