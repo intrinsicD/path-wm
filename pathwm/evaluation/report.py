@@ -1381,6 +1381,9 @@ def render_report(directory):
     parts.extend(capability_inspection(directory))
     parts.extend(visual_memory_inspection(directory))
     parts.extend(model_inspection(directory))
+    from pathwm.evaluation.world_state import world_state_inspection
+
+    parts.extend(world_state_inspection(directory))
     for title, data in [
         ("Resolved settings and source identities", record),
         ("Exact metric rows", rows),

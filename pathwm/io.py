@@ -53,6 +53,25 @@ def atomic_json(path, value):
         temporary.unlink(missing_ok=True)
 
 
+def atomic_torch(path, value):
+    """Publish one tensor/primitive snapshot; readers see the old or new file."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(dir=path.parent, delete=False) as f:
+        temporary = Path(f.name)
+        try:
+            torch.save(value, f)
+            f.flush()
+            os.fsync(f.fileno())
+        except BaseException:
+            temporary.unlink(missing_ok=True)
+            raise
+    try:
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
 def seed_everything(seed, threads=2):
     os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
     random.seed(seed)
@@ -292,15 +311,7 @@ class Run:
             else None,
             "sampler": self.sampler.get_state(),
         }
-        temporary = self.path / "checkpoint.partial"
-        try:
-            with temporary.open("wb") as f:
-                torch.save(state, f)
-                f.flush()
-                os.fsync(f.fileno())
-            temporary.replace(self.path / "last.pt")
-        finally:
-            temporary.unlink(missing_ok=True)
+        atomic_torch(self.path / "last.pt", state)
         self._write_rows()
 
 
