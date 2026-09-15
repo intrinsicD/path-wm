@@ -1961,3 +1961,14 @@ entries:
   - Record measured rate/quality tradeoff and failed grid/composite screens alongside color gain. AOT microbenchmark
     is not native whole-model compilation. Keep Claude review errors and audit-loader correction visible; no
     contradiction with prior mean-trained sampling failure because this intervention trains joint sampled posteriors.
+- turn: 2026-09-15_001#7
+  notes:
+  - Direct question N370, staged user architecture O248 and review refinements O249. Actual Claude/source
+    review is an ai_action, not a model experiment. No premise-bearing implementation or first-person
+    adoption; prose review commit is not a closure signal for its proposed architecture.
+  - 'No promotion of O246/O247 or broad sample-efficiency claims: user changes focus to architecture but
+    leaves VAE/state/recall topics live in open_threads. Existing staged interpretations remain tentative;
+    no abandonment inferred from this one revisit.'
+  - Claude initial errors retained and corrected, not promoted into knowledge. Only R guaranteed reversible
+    remains compatible with adopted A11. Preserve distinction between proposed M1 and measured existing
+    small task paths; no new green validation.

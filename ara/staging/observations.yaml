@@ -4369,3 +4369,37 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O248
+  timestamp: 2026-09-15T14:36+02:00
+  provenance: user
+  content: 'Proposed persistent multimodal World State combines stable entity IDs, optional learned/specialized
+    components, explicit relations and episodes with a bounded neural reasoning core. Spatial maps optional;
+    concept/instance distinction, self/control binding and later exploration/affect. Hypothesis: external
+    structured persistence improves online adaptation, consistency and sample efficiency without full
+    retraining.'
+  context: User asks for critical discussion of their planning document, not blanket implementation adoption.
+  potential_type: architecture
+  bound_to:
+  - N370
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O249
+  timestamp: 2026-09-15T14:36+02:00
+  provenance: ai-suggested
+  content: Keep hybrid direction but put provenance/versions/correction in M1; use supplied candidates
+    and frozen features with two confusable entities, bounded retrieval, state/history/restart tasks and
+    false-merge correction. Concepts become M2. Specify learning signals and compare oracle/flat/no-history
+    controls. Stable IDs do not solve recognition; revocable attribution supports split; confidence is
+    not calibrated probability, non-observation is not universal evidence of nonexistence, and prediction
+    error is not information gain.
+  context: Two Claude review rounds reconciled seven corrections; local source and primary-paper checks.
+    Document is proposed review, not executable design commitment or efficacy evidence.
+  potential_type: architecture
+  bound_to:
+  - N370
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -6165,3 +6165,15 @@ tree:
   also_depends_on:
   - N368
   status: resolved
+- id: N370
+  type: question
+  title: Review the proposed persistent multimodal hybrid World State with Claude
+  provenance: user
+  timestamp: 2026-09-15T14:36+02:00
+  description: User supplies a hybrid entity/component/relation/episode proposal with learned binding,
+    bounded retrieval, concepts and later self/exploration/affect. Requests assessment and actual Claude
+    discussion, not implementation. Review completed; adoption and experiment gates remain open.
+  evidence:
+  - ara/evidence/tables/world_state_review_2026-09-15.json
+  - docs/world-state-proposal-review.md
+  status: resolved

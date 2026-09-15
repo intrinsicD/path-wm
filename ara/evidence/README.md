@@ -150,3 +150,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [VAE color and grid diagnosis](tables/spatial_vae_color_2026-09-15.json): N361-N365; constant-latent phase traces, frozen color probes, four controlled fits; deterministic color improves but sampling fails.45 tests and813 audit checks; original weights preserved.
 
 - [Sampled-color repair and loss efficiency](tables/spatial_vae_repair_2026-09-15.json): N366-N369; two-seed color gains at higher KL, grids persist; loss/report deduplication,50 tests,5503 audit checks and scoped compiler microbenchmarks.
+
+- [Persistent World State review](tables/world_state_review_2026-09-15.json): N370; two actual Claude conceptual reviews, source/primary-paper checks and proposed smaller M1. No model experiment or new capability validation.

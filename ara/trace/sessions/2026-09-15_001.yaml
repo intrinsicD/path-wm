@@ -2,9 +2,9 @@ session:
   id: 2026-09-15_001
   date: '2026-09-15'
   started: 2026-09-15T00:47+02:00
-  last_turn: 2026-09-15T13:36+02:00
-  turn_count: 6
-  summary: "Efficient sampled-color objective improves colors in two seeds without extra inference work; KL rises and grids persist. KL/report deduplication and loss-only compiler benchmark verified;50 tests,5503 checks. No full repair or model replacement."
+  last_turn: 2026-09-15T14:36+02:00
+  turn_count: 7
+  summary: "Hybrid multimodal World State reviewed with Claude in two rounds and against local code. Provenance/correction and bounded identity/state/restart M1 proposed; concepts moved to M2. No implementation or new capability validation; VAE color/rate/grid work remains open."
 events_logged:
 - turn: 1
   type: question
@@ -263,6 +263,33 @@ events_logged:
     benefit. Next isolate decoder phase repair while preserving sampled-color gains and compare achieved-rate
     overlap. Original weights stay available; do not substitute a deterministic decoder, change global defaults
     or tune the same tests as if fresh.
+- turn: 7
+  type: question
+  id: N370
+  routing: direct
+  provenance: user
+  summary: Review the proposed persistent multimodal hybrid World State with Claude
+- turn: 7
+  type: observation
+  id: O248
+  routing: staged
+  provenance: user
+  summary: 'Proposed persistent multimodal World State combines stable entity IDs, optional learned/specialized
+    components, explicit relations and episodes with a bounded neural reasoning core. Spatial maps optional;
+    concept/instance distinction, self/control binding and later exploration/affect. Hypothesis: external
+    structured persistence improves online adaptation, consistency and sample efficiency without full
+    retraining.'
+- turn: 7
+  type: observation
+  id: O249
+  routing: staged
+  provenance: ai-suggested
+  summary: Keep hybrid direction but put provenance/versions/correction in M1; use supplied candidates
+    and frozen features with two confusable entities, bounded retrieval, state/history/restart tasks and
+    false-merge correction. Concepts become M2. Specify learning signals and compare oracle/flat/no-history
+    controls. Stable IDs do not solve recognition; revocable attribution supports split; confidence is
+    not calibrated probability, non-observation is not universal evidence of nonexistence, and prediction
+    error is not information gain.
 ai_actions:
 - turn: 1
   action: Saved independent analysis and a bounded brief based on the user-supplied architecture;
@@ -334,6 +361,20 @@ ai_actions:
   - tests/test_spatial_vae_repair.py
   - docs/spatial-vae-repair-plan.md
   - ara/evidence/tables/spatial_vae_repair_2026-09-15.json
+- turn: 7
+  action: Reviewed current entity/state/relation/commit/retrieval modules, sent two isolated conceptual
+    briefs to actual Claude and reconciled seven corrections, checked primary research, wrote proposed
+    assessment and updated atlas discussion without widening validation. Documentation commit7a9c2c6;
+    no model run.
+  provenance: ai-executed
+  files_changed:
+  - docs/world-state-proposal-review.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-discussion.md
+  - docs/architecture-atlas.md
+  - docs/architecture-atlas.html
+  - ara/evidence/tables/world_state_review_2026-09-15.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -354,6 +395,9 @@ key_context:
 - turn: 6
   excerpt: Dann würde ich die effizientere Lösung bevorzugen. Continue together with Claude. Work on the open
     points to reduce duplicate code and improve compilation time. Plan, implement, review, test and fix. Iterate
+- turn: 7
+  excerpt: Was hältst du von diesem Vorschlag? Bitte diskutiere diesen mit Claude. PATH-WM – Planungsdokument
+    für einen multimodalen, persistenten World State.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current
   rate; image/full retention remains 10/12. Next lower-rate comparison from preserved source
@@ -398,6 +442,9 @@ open_threads:
 - 'N361-N369/O244-O247: sampled-color objective now improves color at unchanged inference size but higher KL;
   decoder grids and rate-matched quality remain open. Phase term lacks consistent benefit; color-only diagnostic
   candidate and originals retained.'
+- 'N370/O248/O249: persistent hybrid World State proposal/review awaits adoption and a concrete first
+  task, candidate/learning/commit contracts, split/seed/budget/gates. Retain prior agent, output and VAE
+  limitations; no full-store implementation authorized this turn.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await
   researcher response.'
@@ -510,3 +557,5 @@ ai_suggestions_pending:
   response; no broad efficacy promotion.'
 - 'O246/O247: scoped sampled-color/rate interpretation and color-only/decoder-phase follow-up await researcher
   response; no full repair or global default adoption.'
+- 'O249: smaller evidence/correction/retrieval M1 and separate concept M2 are review recommendations,
+  not an adopted implementation or sample-efficiency result.'
