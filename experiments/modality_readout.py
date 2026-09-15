@@ -181,17 +181,16 @@ class Model(nn.Module):
 
 
 def load_initial(model, directory, device):
-    checkpoint = torch.load(
-        directory / "last.pt", map_location=device, weights_only=True
-    )
+    checkpoint_path = directory / "last.pt" if directory.is_dir() else directory
+    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=True)
     missing, unexpected = model.load_state_dict(checkpoint["model"], strict=False)
     allowed = {"posterior_head.weight", "posterior_head.bias"}
     if unexpected or not set(missing) <= allowed:
         raise ValueError(
             f"Incompatible initialization: missing={missing}, unexpected={unexpected}"
         )
-    model.core.belief_readout = source_readout(directory)
-    return file_hash(directory / "last.pt")
+    model.core.belief_readout = source_readout(checkpoint_path.parent)
+    return file_hash(checkpoint_path)
 
 
 def source_readout(directory):
@@ -537,7 +536,10 @@ def perform(args):
     }
     data = populations["train"]
     model = Model(
-        args.variant, posterior_aux=args.initial is not None and args.stage == "core"
+        args.variant,
+        posterior_aux=args.initial is not None
+        and args.stage == "core"
+        and args.encoder_source is None,
     ).to(device)
     model.core.belief_readout = args.belief_readout
     initial_decoders = state_hash(model.outputs.decoders)
@@ -598,6 +600,9 @@ def perform(args):
         width=24,
         outer_iterations=2,
         initialization_checkpoint_sha256=initial_source,
+        initialization_checkpoint=None
+        if args.initial is None
+        else str(args.initial.resolve()),
         encoder_source_sha256=encoder_source,
         factor_task=args.factor_task,
         input_mode=args.input_mode,
@@ -953,7 +958,7 @@ def main():
     parser.add_argument(
         "--initial",
         type=Path,
-        help="Start from saved model weights with fresh optimizer; not resume",
+        help="Run directory or checkpoint file: load weights/readout metadata with fresh optimizer; not resume",
     )
     parser.add_argument(
         "--posterior-aux",
@@ -981,7 +986,7 @@ def main():
     if args.encoder_source or args.factor_task != "all" or args.gradient_audit_every:
         if (
             args.stage != "core"
-            or args.initial
+            or (args.initial and args.encoder_source is None)
             or args.posterior_aux
             or args.temperature_warmup != 1.0
         ):

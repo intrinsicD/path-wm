@@ -276,8 +276,14 @@ def test_explicit_checkpoint_file_restores_selected_weights_and_readout(tmp_path
         later.core.factor_head.weight.add_(1)
     torch.save({"model": selected.state_dict()}, tmp_path / "step384.pt")
     torch.save({"model": later.state_dict()}, tmp_path / "last.pt")
-    (tmp_path / "run.json").write_text(json.dumps({"identity": {"settings": {"belief_readout": "sampled"}}}))
+    (tmp_path / "run.json").write_text(
+        json.dumps({"identity": {"settings": {"belief_readout": "sampled"}}})
+    )
     target = Model("native")
     load_initial(target, tmp_path / "step384.pt", torch.device("cpu"))
-    assert all(torch.equal(v, target.state_dict()[k]) for k, v in selected.state_dict().items())
-    assert not torch.equal(target.core.factor_head.weight, later.core.factor_head.weight)
+    assert all(
+        torch.equal(v, target.state_dict()[k]) for k, v in selected.state_dict().items()
+    )
+    assert not torch.equal(
+        target.core.factor_head.weight, later.core.factor_head.weight
+    )
