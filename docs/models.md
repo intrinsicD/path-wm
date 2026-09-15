@@ -1,5 +1,10 @@
 # Models and tensor flow
 
+[Persistent World State](world-state.md): the opt-in modular store, binding/update,
+bounded retrieval, context/relation tokens and BeliefAgent session adapter. Includes
+training/inference inspection and concrete optional concept/self/feedback clients;
+module availability does not establish general learned capability.
+
 [Architecture atlas](architecture-atlas.html): thirteen drawings from the complete
 agent loop down to attention, belief correction, memory readers and modality
 outputs. It separates the general categorical agent, the current Gaussian photo

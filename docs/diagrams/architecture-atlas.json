@@ -1,7 +1,7 @@
 {
   "title": "PATH-WM · Architecture atlas",
   "date": "2026-09-15",
-  "source_commit": "5ad801d",
+  "source_commit": "54825d2",
   "intro": "A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.",
   "graphs": [
     {
@@ -51,11 +51,11 @@
           "memory": {
             "status": "discussed",
             "basis": "Discussed recent inputs, hierarchical history, external entity storage, retrieval, latent versus raw evidence and provenance. On 15 September, reviewed the user-proposed multimodal World State: stable IDs, learned components/relations, evidence, reversible attribution and optional spatial representations. See docs/world-state-proposal-review.md.",
-            "next": "Specify candidate/learning/commit contracts and bounded identity/state/history/restart experiments before a unified store. Evidence starts with M1; concepts follow separately. Current storage validation does not cover this proposed extension.",
+            "next": "The requested modular foundation is now implemented with versioned components, provenance, atomic session commits, revocable aliases, dependent-state invalidation/replay and bounded retrieval. See docs/world-state.md. Next: real candidate/identity/state tests, learned retrieval, abstention calibration and controlled comparisons. General concept induction remains a separate capability milestone.",
             "validation": {
               "label": "Storage / causal reads",
-              "scope": "Exact recent envelopes, bounded hierarchy, source/belief separation, causal eligibility and state roundtrips.",
-              "limits": "Learned compression quality and reliable long-horizon recall are not validated; the photo recall path still loses accessible detail.",
+              "scope": "Exact recent envelopes, bounded hierarchy, source/belief separation and causal reads. The optional World State adds tested transactional identity/provenance/correction mechanics, pinned historical retrieval and exact session/training restart on the supplied-descriptor development task.",
+              "limits": "This validates storage and replay mechanics, not general entity recognition, concept induction, calibrated uncertainty, useful learned retrieval or long-horizon recall. The photo recall path still loses accessible detail. Full-agent historical evaluation must restore the corresponding neural session, not just query an old store revision.",
               "evidence": [
                 {
                   "path": "runs/belief_v1/verification.json",
@@ -68,6 +68,18 @@
                 {
                   "path": "docs/photo-detail-plan.md",
                   "label": "Photo recall limitations"
+                },
+                {
+                  "path": "runs/world_state_foundation_v1/verification.json",
+                  "label": "World State: 3293 independent development checks"
+                },
+                {
+                  "path": "runs/world_state_foundation_v1/focused-tests.xml",
+                  "label": "81 scoped World State and regression tests"
+                },
+                {
+                  "path": "docs/world-state-foundation-plan.md",
+                  "label": "Foundation protocol, failures, repairs and limits"
                 }
               ]
             }
@@ -75,7 +87,7 @@
           "workspace": {
             "status": "discussed",
             "basis": "Discussed focus on entities and relationships, recalled context, internal thinking and interleaving internal/external actions. Reviewed separate binding-candidate and task retrieval, with bounded evidence/context and an explicit unresolved result.",
-            "next": "Define query learning and retrieval budgets in the training-time interface; compare oracle, flat episodic, structured and no-history conditions. General learned retrieval and stopping remain open."
+            "next": "The optional World State now feeds bounded component/relation tokens into the actual thinker, with replaceable query/context modules and shared training/runtime projections. A tiny paired-history task works. Compare oracle, flat episodic, structured and no-history conditions on held-out tasks; general learned retrieval and stopping remain open."
           },
           "request": {
             "status": "needs_discussion",
@@ -148,7 +160,7 @@
         ["input", "Observation adapters\nValues + time + validity + source", "store"],
         ["encode", "Modality encoders → §2–3\nProcessed features at several scales", "learned"],
         ["belief", "Predict and correct → §4\nRecurrent world state + categorical belief", "learned"],
-        ["memory", "Session memory → §5\nRecent · compressed · protected · consolidated", "store"],
+        ["memory", "Session memory + optional World State → §5/13\nHistory · entities · relations · evidence", "store"],
         ["workspace", "Task workspace → §6\nRead state, memory and task; think", "learned"],
         ["request", "Task request\nInstruction + output controls + actor metadata", "external"],
         ["plan", "Optional bounded planner → §11\nCandidate actions → imagined states → costs", "optional"],
@@ -177,7 +189,7 @@
       "notes": [
         "The caller owns state, event transactions, action execution and task lifetime. The model returns proposals and tensors; it does not execute arbitrary software tools itself.",
         "Imagination uses the dynamics without future observations. Reflection and thinking leave the live world clock unchanged. Generated content is kept out of source-evidence writes.",
-        "The categorical recipe is the CLI default. The recent photo model uses the separate Gaussian configuration in §8. Entity storage and the key-box connection in §10–11 are optional experiments, not an invisible extra store in every agent."
+        "The categorical recipe is the CLI default. The recent photo model uses the separate Gaussian configuration in §8. Entity experiments in §10–11 and the modular persistent World State in §13 are opt-in paths. WorldSession connects the latter to the actual BeliefAgent; it is not an invisible extra store in every agent."
       ],
       "sources": ["experiments/multimodal.py#build_model", "pathwm/models/belief.py#BeliefAgent", "pathwm/models/agent.py#step_task"]
     },
@@ -679,43 +691,44 @@
     {
       "id": "13-target-graph",
       "feedback_edges": [["operations", "instance"]],
-      "title": "13 · The broader entity graph we discussed",
-      "subtitle": "Proposed organization · beyond the implemented controlled entity store",
+      "title": "13 · Persistent World State foundation",
+      "subtitle": "Implemented storage and neural interfaces · general learned capabilities remain unvalidated",
       "direction": "TB",
       "nodes": [
-        ["concept", "General concept\nLearned subgraph for shared structure\nExample interpretation: bicycle", "proposal"],
-        ["instance", "Concrete entity instance\nStable storage ID + learned matching keys\nExample interpretation: this bicycle", "proposal"],
-        ["recognition", "Recognition representations\nAppearance / identity across observations", "proposal"],
-        ["evidence", "History and evidence\nObserved events + source/time attribution\nSelective raw media or versioned encodings", "proposal"],
-        ["belief", "Current latent belief\nLearned properties / state / uncertainty", "proposal"],
-        ["relations", "Context and relationships\nOther entities · places · people · events", "proposal"],
+        ["concept", "Optional exemplar prototype\nArithmetic mean + supplied instance_of\nGeneral concept induction remains open", "optional"],
+        ["instance", "WorldStore entity\nStable ID + revisable label / type\nCanonical aliases retain original owners", "store"],
+        ["recognition", "Supplied candidates → versioned keys\nReplaceable encoder / association scorer\nMatched · new · unresolved", "learned"],
+        ["evidence", "Evidence and operation log\nSource · event time · availability · revision\nRaw references / versioned features", "store"],
+        ["belief", "Recurrent entity state\nReplaceable updater + parent dependencies\nInvalidation / explicit replay after correction", "learned"],
+        ["relations", "Relation store\nEntity / component endpoints + evidence\nOptional directed neural relation tokens", "store"],
         ["skills", "Interactions and skills\nAction models / preconditions / outcomes", "proposal"],
-        ["focus", "Focus / task workspace\nRetrieve selected nodes, values and relations", "proposal"],
-        ["operations", "Graph operation interface\nPropose · match · create · link · update · retrieve\nBounded storage, versions and uncertainty rules", "proposal"],
-        ["inspect", "Inspection layer\nAliases + supporting examples + probes\nTrained reconstructions where supported", "proposal"]
+        ["focus", "Bounded retrieval → ContextEncoder\nSelected component / relation tokens\nActual BeliefAgent thinker", "learned"],
+        ["operations", "WorldSession transaction boundary\nCreate · update · link / revoke · reattribute\nStore + core clock + RNG + restart snapshot", "store"],
+        ["inspect", "WorldTrace + searchable report\nEvidence / dependencies / retrieval decisions\nCapped latents · attention · activations · gradients", "training"]
       ],
       "edges": [
-        ["instance", "concept", "learned concept membership", "proposal"],
-        ["instance", "recognition", "identity support", "proposal"],
-        ["instance", "evidence", "observed history", "proposal"],
-        ["evidence", "belief", "evidence for updates", "proposal"],
-        ["instance", "belief", "current belief belongs to entity", "proposal"],
-        ["instance", "relations", "learned links", "proposal"],
+        ["instance", "concept", "supplied instance_of / prototype baseline"],
+        ["instance", "recognition", "identity support"],
+        ["instance", "evidence", "observed history"],
+        ["evidence", "belief", "evidence for updates"],
+        ["instance", "belief", "current belief belongs to entity"],
+        ["instance", "relations", "explicit links"],
         ["concept", "skills", "shared interactions", "proposal"],
-        ["belief", "focus", "retrieved state", "proposal"],
-        ["relations", "focus", "relevant context", "proposal"],
+        ["belief", "focus", "retrieved state"],
+        ["relations", "focus", "relevant context"],
         ["skills", "focus", "possible actions", "proposal"],
         ["focus", "operations", "learned proposals", "proposal"],
-        ["operations", "instance", "accepted updates", "proposal"],
-        ["instance", "inspect", "structure and values", "proposal"],
-        ["evidence", "inspect", "ground interpretations", "proposal"]
+        ["operations", "instance", "accepted updates"],
+        ["instance", "inspect", "structure and values"],
+        ["evidence", "inspect", "ground interpretations"]
       ],
       "notes": [
         "The intended agent learns representations and which connections are useful. Stable IDs are bookkeeping; readable labels are revisable interpretations. These boxes are conceptual distinctions, not mandatory database fields or one vector each.",
-        "Only bounded matching, per-entity state, a supplied relation slot and a controlled workspace connection exist today (§10). Open-ended concept discovery, learned graph topology, scalable indexing and general skill links remain to be specified and trained. The 15 September World State review recommends provenance and restart/correction in a smaller first milestone; concept induction remains M2. Self/control binding, uncertainty, feedback and affect were reviewed as proposals, with action authority owned by the harness and exploration/affect deferred.",
+        "The opt-in pathwm.world_state package implements the store, binding, recurrent update, bounded retrieval, context projections and actual thinker connection. Optional prototype, self/control, feedback, prediction and modulation clients have concrete tensor/record APIs; their useful learned behavior is not established. Discrete storage is outside autograd; neural forwards remain trainable. Action authority belongs to the harness.",
+        "81 scoped tests and 3293 independent checks pass; a 96-update CPU task using supplied descriptors preserves two identities and answers paired histories. Complete checkpoints match a 48+48 resumed run exactly. This is development evidence, not real-image recognition or sample-efficiency proof. General concept discovery, learned graph topology, retrieval calibration, scalable indexing and skill acquisition remain open. Structural report QA passes; browser interaction QA is unavailable under the existing local-file policy.",
         "A recognition latent cannot automatically be decoded into a faithful face or image. That requires a compatible trained decoder and retained information; a reconstruction is evidence about a readout, not a literal picture of all the agent's beliefs."
       ],
-      "sources": ["docs/entity-memory-design.md", "docs/entity-learning-task.md", "pathwm/models/entity_relations.py#EntityRelationMemory", "docs/world-state-proposal-review.md"]
+      "sources": ["pathwm/world_state/store.py#WorldStore", "pathwm/world_state/session.py#WorldSession", "pathwm/world_state/modules.py#ContextEncoder", "pathwm/world_state/inspection.py#WorldTrace", "docs/world-state.md", "docs/world-state-foundation-plan.md"]
     }
   ]
 }

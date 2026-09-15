@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-15, repository snapshot `5ad801d`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-15, repository snapshot `54825d2`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
@@ -20,7 +20,7 @@ Detail diagrams (2–13): blue = learned modules; gray = state/mechanics; green 
 - [10 · Entity identity, state and relations](#10-entities)
 - [11 · Planning and the proposed action DAG](#11-planning)
 - [12 · Training signals and gradient routes](#12-learning)
-- [13 · The broader entity graph we discussed](#13-target-graph)
+- [13 · Persistent World State foundation](#13-target-graph)
 
 <a id="01-overview"></a>
 
@@ -42,7 +42,7 @@ flowchart TB
     class encode discussion_discussed;
     belief["Predict and correct → §4<br/>Recurrent world state + categorical belief"]
     class belief discussion_needs_discussion;
-    memory["Session memory → §5<br/>Recent · compressed · protected · consolidated<br/>Validated: Storage / causal reads"]
+    memory["Session memory + optional World State → §5/13<br/>History · entities · relations · evidence<br/>Validated: Storage / causal reads"]
     class memory discussion_validated;
     workspace["Task workspace → §6<br/>Read state, memory and task; think"]
     class workspace discussion_discussed;
@@ -83,7 +83,7 @@ The caller owns state, event transactions, action execution and task lifetime. T
 
 Imagination uses the dynamics without future observations. Reflection and thinking leave the live world clock unchanged. Generated content is kept out of source-evidence writes.
 
-The categorical recipe is the CLI default. The recent photo model uses the separate Gaussian configuration in §8. Entity storage and the key-box connection in §10–11 are optional experiments, not an invisible extra store in every agent.
+The categorical recipe is the CLI default. The recent photo model uses the separate Gaussian configuration in §8. Entity experiments in §10–11 and the modular persistent World State in §13 are opt-in paths. WorldSession connects the latter to the actual BeliefAgent; it is not an invisible extra store in every agent.
 
 Source: [experiments/multimodal.py · build_model:103](../experiments/multimodal.py), [pathwm/models/belief.py · BeliefAgent:102](../pathwm/models/belief.py), [pathwm/models/agent.py · step_task:637](../pathwm/models/agent.py).
 
@@ -214,7 +214,7 @@ Q/K/V projection weights are learned parameters. Their per-input activations per
 
 ConditionedBlock adds bounded scale/shift on query and MLP normalization; code zero is neutral. Its time/support masks are richer than the simpler Attend block. OutputBlock (§9) adds separate self-attention and context-attention residuals.
 
-Source: [pathwm/models/modalities.py · Attend:75](../pathwm/models/modalities.py), [pathwm/models/multiscale.py · ConditionedBlock:88](../pathwm/models/multiscale.py), [pathwm/models/conditional_image.py · OutputBlock:47](../pathwm/models/conditional_image.py).
+Source: [pathwm/models/modalities.py · Attend:76](../pathwm/models/modalities.py), [pathwm/models/multiscale.py · ConditionedBlock:88](../pathwm/models/multiscale.py), [pathwm/models/conditional_image.py · OutputBlock:47](../pathwm/models/conditional_image.py).
 
 <a id="04-belief"></a>
 
@@ -496,7 +496,7 @@ The text path is a byte autoregressor, not a pretrained language model. The wave
 
 Image resolution and audio length are constructor settings. Output size alone does not establish reconstructed detail. The stronger conditional image producer is an optional controlled experiment, not a common generator already implemented for every modality.
 
-Source: [pathwm/models/modalities.py · ImageDecoder:224](../pathwm/models/modalities.py), [pathwm/models/modalities.py · AudioDecoder:249](../pathwm/models/modalities.py), [pathwm/models/modalities.py · TextDecoder:267](../pathwm/models/modalities.py), [pathwm/models/agent.py · decode_video:795](../pathwm/models/agent.py), [pathwm/models/tasks.py · GeneratedOutput:155](../pathwm/models/tasks.py).
+Source: [pathwm/models/modalities.py · ImageDecoder:254](../pathwm/models/modalities.py), [pathwm/models/modalities.py · AudioDecoder:279](../pathwm/models/modalities.py), [pathwm/models/modalities.py · TextDecoder:297](../pathwm/models/modalities.py), [pathwm/models/agent.py · decode_video:795](../pathwm/models/agent.py), [pathwm/models/tasks.py · GeneratedOutput:155](../pathwm/models/tasks.py).
 
 <a id="08-photo-path"></a>
 
@@ -830,46 +830,46 @@ Source: [pathwm/training/belief.py](../pathwm/training/belief.py), [experiments/
 
 <a id="13-target-graph"></a>
 
-## 13 · The broader entity graph we discussed
+## 13 · Persistent World State foundation
 
-Proposed organization · beyond the implemented controlled entity store
+Implemented storage and neural interfaces · general learned capabilities remain unvalidated
 
 ```mermaid
 flowchart TB
-    concept["General concept<br/>Learned subgraph for shared structure<br/>Example interpretation: bicycle"]
-    class concept proposal;
-    instance["Concrete entity instance<br/>Stable storage ID + learned matching keys<br/>Example interpretation: this bicycle"]
-    class instance proposal;
-    recognition["Recognition representations<br/>Appearance / identity across observations"]
-    class recognition proposal;
-    evidence["History and evidence<br/>Observed events + source/time attribution<br/>Selective raw media or versioned encodings"]
-    class evidence proposal;
-    belief["Current latent belief<br/>Learned properties / state / uncertainty"]
-    class belief proposal;
-    relations["Context and relationships<br/>Other entities · places · people · events"]
-    class relations proposal;
+    concept["Optional exemplar prototype<br/>Arithmetic mean + supplied instance_of<br/>General concept induction remains open"]
+    class concept optional;
+    instance["WorldStore entity<br/>Stable ID + revisable label / type<br/>Canonical aliases retain original owners"]
+    class instance store;
+    recognition["Supplied candidates → versioned keys<br/>Replaceable encoder / association scorer<br/>Matched · new · unresolved"]
+    class recognition learned;
+    evidence["Evidence and operation log<br/>Source · event time · availability · revision<br/>Raw references / versioned features"]
+    class evidence store;
+    belief["Recurrent entity state<br/>Replaceable updater + parent dependencies<br/>Invalidation / explicit replay after correction"]
+    class belief learned;
+    relations["Relation store<br/>Entity / component endpoints + evidence<br/>Optional directed neural relation tokens"]
+    class relations store;
     skills["Interactions and skills<br/>Action models / preconditions / outcomes"]
     class skills proposal;
-    focus["Focus / task workspace<br/>Retrieve selected nodes, values and relations"]
-    class focus proposal;
-    operations["Graph operation interface<br/>Propose · match · create · link · update · retrieve<br/>Bounded storage, versions and uncertainty rules"]
-    class operations proposal;
-    inspect["Inspection layer<br/>Aliases + supporting examples + probes<br/>Trained reconstructions where supported"]
-    class inspect proposal;
-    instance -.->|"learned concept membership"| concept
-    instance -.->|"identity support"| recognition
-    instance -.->|"observed history"| evidence
-    evidence -.->|"evidence for updates"| belief
-    instance -.->|"current belief belongs to entity"| belief
-    instance -.->|"learned links"| relations
+    focus["Bounded retrieval → ContextEncoder<br/>Selected component / relation tokens<br/>Actual BeliefAgent thinker"]
+    class focus learned;
+    operations["WorldSession transaction boundary<br/>Create · update · link / revoke · reattribute<br/>Store + core clock + RNG + restart snapshot"]
+    class operations store;
+    inspect["WorldTrace + searchable report<br/>Evidence / dependencies / retrieval decisions<br/>Capped latents · attention · activations · gradients"]
+    class inspect training;
+    instance -->|"supplied instance_of / prototype baseline"| concept
+    instance -->|"identity support"| recognition
+    instance -->|"observed history"| evidence
+    evidence -->|"evidence for updates"| belief
+    instance -->|"current belief belongs to entity"| belief
+    instance -->|"explicit links"| relations
     concept -.->|"shared interactions"| skills
-    belief -.->|"retrieved state"| focus
-    relations -.->|"relevant context"| focus
+    belief -->|"retrieved state"| focus
+    relations -->|"relevant context"| focus
     skills -.->|"possible actions"| focus
     focus -.->|"learned proposals"| operations
-    operations -.->|"accepted updates"| instance
-    instance -.->|"structure and values"| inspect
-    evidence -.->|"ground interpretations"| inspect
+    operations -->|"accepted updates"| instance
+    instance -->|"structure and values"| inspect
+    evidence -->|"ground interpretations"| inspect
     classDef learned fill:#e6eef8,stroke:#7696bc,color:#202a36;
     classDef store fill:#f3f4f6,stroke:#9098a4,color:#202a36;
     classDef external fill:#e7f1eb,stroke:#789887,color:#202a36;
@@ -882,8 +882,10 @@ flowchart TB
 
 The intended agent learns representations and which connections are useful. Stable IDs are bookkeeping; readable labels are revisable interpretations. These boxes are conceptual distinctions, not mandatory database fields or one vector each.
 
-Only bounded matching, per-entity state, a supplied relation slot and a controlled workspace connection exist today (§10). Open-ended concept discovery, learned graph topology, scalable indexing and general skill links remain to be specified and trained. The 15 September World State review recommends provenance and restart/correction in a smaller first milestone; concept induction remains M2. Self/control binding, uncertainty, feedback and affect were reviewed as proposals, with action authority owned by the harness and exploration/affect deferred.
+The opt-in pathwm.world_state package implements the store, binding, recurrent update, bounded retrieval, context projections and actual thinker connection. Optional prototype, self/control, feedback, prediction and modulation clients have concrete tensor/record APIs; their useful learned behavior is not established. Discrete storage is outside autograd; neural forwards remain trainable. Action authority belongs to the harness.
+
+81 scoped tests and 3293 independent checks pass; a 96-update CPU task using supplied descriptors preserves two identities and answers paired histories. Complete checkpoints match a 48+48 resumed run exactly. This is development evidence, not real-image recognition or sample-efficiency proof. General concept discovery, learned graph topology, retrieval calibration, scalable indexing and skill acquisition remain open. Structural report QA passes; browser interaction QA is unavailable under the existing local-file policy.
 
 A recognition latent cannot automatically be decoded into a faithful face or image. That requires a compatible trained decoder and retained information; a reconstruction is evidence about a readout, not a literal picture of all the agent's beliefs.
 
-Source: [docs/entity-memory-design.md](../docs/entity-memory-design.md), [docs/entity-learning-task.md](../docs/entity-learning-task.md), [pathwm/models/entity_relations.py · EntityRelationMemory:38](../pathwm/models/entity_relations.py), [docs/world-state-proposal-review.md](../docs/world-state-proposal-review.md).
+Source: [pathwm/world_state/store.py · WorldStore:175](../pathwm/world_state/store.py), [pathwm/world_state/session.py · WorldSession:75](../pathwm/world_state/session.py), [pathwm/world_state/modules.py · ContextEncoder:298](../pathwm/world_state/modules.py), [pathwm/world_state/inspection.py · WorldTrace:37](../pathwm/world_state/inspection.py), [docs/world-state.md](../docs/world-state.md), [docs/world-state-foundation-plan.md](../docs/world-state-foundation-plan.md).

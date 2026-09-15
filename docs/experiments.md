@@ -1,5 +1,12 @@
 # Running and editing experiments
 
+For the new persistent World State foundation, use
+`.venv/bin/python -m experiments.world_state --check --output runs/my_world_check`.
+[Guide, modular interfaces and debug artifacts](world-state.md),
+[fixed development protocol/results](world-state-foundation-plan.md).
+This is a small CPU supplied-candidate exercise with exact resume, not a real-image
+recognition benchmark. The broader multimodal recipe remains independent.
+
 The current starting point is `experiments/multimodal.py`; see the
 [multimodal architecture and training guide](multimodal.md). Run
 `python experiments/multimodal.py --check`, then use a fresh `--output` directory.

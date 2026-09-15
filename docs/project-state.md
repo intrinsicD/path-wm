@@ -1,9 +1,17 @@
 # Current work
 
-**World State foundation in progress, 15 September:** user authorizes modular base
-implementation and training/inference inspection. [Plan and contracts](world-state-foundation-plan.md).
-Reuse the current neural core and Run/report infrastructure; core store, correction,
-retrieval and a working adapter precede learned-capability claims.
+**World State foundation implemented, 15 September:** [guide/API](world-state.md),
+[protocol/results](world-state-foundation-plan.md),
+[debug report](../runs/world_state_foundation_v1/final/report.html).
+Versioned entity/component/relation/evidence store; atomic commits, revocable aliases,
+dependent-state invalidation/replay, bounded retrieval, interchangeable neural modules
+and actual BeliefAgent connection. Optional concept/self/feedback/prediction/selection
+clients and bounded training/inference diagnostics are usable; general learned behavior
+remains experimental. 81 focused tests and 3293 independent checks pass. A CPU 96-update
+exercise learns paired histories; full checkpoint matches 48+48 resume exactly.
+Attention tracing no longer changes native outputs/gradients; internal commits keep
+the store and core clock aligned. Structural report QA only under existing browser
+policy. Next: real candidate/identity/state tests and calibration; VAE work stays open.
 
 **Persistent multimodal World State review, 15 September:**
 [assessment and proposed milestones](world-state-proposal-review.md). Two actual

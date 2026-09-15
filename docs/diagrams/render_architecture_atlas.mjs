@@ -195,7 +195,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <nav aria-label="Architecture levels">${rendered.map(g => `<a href="#${g.id}">${escape(g.title)}</a>`).join('')}</nav>
 <div class="controls"><button type="button" id="expand">Expand all diagrams</button><button type="button" id="collapse">Collapse details</button></div>
 ${sections}
-<footer>Grounded in repository snapshot ${escape(spec.source_commit)}. Static diagrams are manually audited descriptions, not execution traces. Model code and weights are unchanged. <a href="architecture-atlas.md">Mermaid source and notes</a>.</footer>
+<footer>Grounded in repository snapshot ${escape(spec.source_commit)}. Static diagrams are manually audited descriptions, not execution traces. Rendering this atlas does not execute or modify the model. <a href="architecture-atlas.md">Mermaid source and notes</a>.</footer>
 </main><script>
 const panels = [...document.querySelectorAll('main > details')];
 document.getElementById('expand').addEventListener('click', () => panels.forEach(p => p.open = true));

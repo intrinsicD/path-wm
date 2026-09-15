@@ -72,4 +72,64 @@ not a new directory tree or a claim that optional behaviors already learn. One d
 schema serves console/raw/report views. Direct store writes reject attached tensors;
 the session deliberately detaches after neural computation.
 
-Status: plan and failing interface checks first; implementation/evidence follow below.
+## Implemented and verified
+
+Code: `pathwm/world_state/`, [API and guide](world-state.md),
+[recipe](../experiments/world_state.py). Main commits: `13c27ac`, `567d47a`, `54825d2`.
+Core records/store, scorer/policy, updater, query/context/relation modules, prediction,
+optional prototype/self/feedback clients and training/inference inspection all have
+working consumers. No new framework or backend dependency.
+
+Final evidence: [report](../runs/world_state_foundation_v1/final/report.html),
+[independent checks](../runs/world_state_foundation_v1/verification.json),
+[81 focused tests](../runs/world_state_foundation_v1/focused-tests.xml).
+All new world-state tests and selected Run, event, task, entity and multimodal
+regressions pass. Two broad test attempts were stopped to address newly discovered
+issues after 215 and 173 passing tests; no complete all-repository suite is claimed.
+
+The fixed 96-update CPU development task reduces loss 6.156751 -> 0.00448038;
+all four supplied identity/property combinations are decoded correctly. Two histories
+with identical final input produce the correct distinct answers through the persistent
+store and actual thinker. Two identities survive hidden-property updates, merge/link
+revocation works, and zeroing retrieved state changes readout logits. This is one
+tiny development task, not real-world recognition, sample-efficiency or concept proof.
+
+Continuous 96 updates and 48+48 resumed updates have exactly identical complete
+checkpoints: model, optimizer, sampler, RNG, progress and metric rows. Corrected
+session snapshots also replay exactly, including the internal commit clock.
+3293 independent checks pass. 60,934 total parameters, 3,812 trainable in this recipe.
+Final direct command 4.10s; pause/resume commands 3.42s + 3.51s, including evaluation and
+reporting. All work is CPU; all development artifacts together approximately 15 MiB.
+
+### Failures found and fixed
+
+- The four-update preflight appropriately left one candidate unresolved; no false
+  claim that an untrained scorer already distinguishes entities.
+- The first 96-update run learned the task but failed exact traced/nontraced thinker
+  replay (maximum token difference 9.54e-7). `need_weights=True` selected a different
+  attention kernel. Native attention now always uses its normal path; a detached
+  diagnostic computes probabilities separately. Tests prove equal outputs, parameter/
+  input gradients and RNG in training/eval, plus masked-weight agreement.
+- Reattribution now invalidates transitive dependent states; explicit replay and
+  preserved evidence prevent silent reuse of tainted latents.
+- Internal/correction transactions now publish store and neural clock/RNG together;
+  direct ahead-of-core store mutation fails visibly.
+- Debug hooks now traverse nested feature outputs. Exact float64 captures preserve
+  dtype; reports use the same schema. The audit's initial expectation of two `img`
+  elements was corrected: responsive charts use one `img` plus one `source`.
+
+Reports are structurally checked, embedded assets verified and untrusted labels
+escaped. Browser interaction QA remains unavailable under the established local-file
+URL policy; no alternate browser/localhost workaround was used. Original diagnostic
+runs and their failing gates remain saved.
+
+Claude review: two actual isolated conceptual rounds under
+`runs/reviews/world_state_foundation_v1/`; no private code/data/results sent. Clarified
+that completed retries return old receipts without replaying writes after correction;
+new transactions still require an exact base revision. Transitive invalidation,
+pinned snapshots, unresolved evidence and version boundaries are exercised locally.
+
+Next capability slice: fixed candidate granularity and real image/text observations,
+confusable negatives, held-out identity/state/history tests, abstention calibration
+and flat/no-history/oracle controls. General concept induction, useful exploration,
+large spatial maps and reliable generation remain separate milestones.
