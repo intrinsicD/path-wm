@@ -1,5 +1,10 @@
 # Current work
 
+**Non-image modality check in progress, 15 September:** user requests audio, text,
+video and other existing interfaces work too. [Plan](modality-foundation-plan.md).
+Inspect isolated encoder/decoder learning, add missing World State adapters and
+retain the distinction between mechanics, controlled fitting and real capability.
+
 **World State foundation implemented, 15 September:** [guide/API](world-state.md),
 [protocol/results](world-state-foundation-plan.md),
 [debug report](../runs/world_state_foundation_v1/final/report.html).
