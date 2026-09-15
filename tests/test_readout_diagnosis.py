@@ -232,3 +232,28 @@ def test_checkpoint_initialization_restores_continuous_read_path(tmp_path):
     assert all(
         torch.equal(v, target.state_dict()[k]) for k, v in source.state_dict().items()
     )
+
+
+def test_training_input_selection_is_explicit_and_screen_is_not_vacuous():
+    import pytest
+    from experiments.modality_readout import training_input_mode, factor_task_screen
+    from pathwm.data.modality_readout import MODES, dataset, observations
+
+    data = dataset("train")
+    assert [training_input_mode(i, "rotating") for i in range(12)] == list(MODES) * 2
+    for mode in MODES:
+        selected = training_input_mode(127, mode)
+        assert selected == mode
+        actual = observations(data, selected, [0, 12])
+        expected = observations(data, mode, [0, 12])
+        assert actual.keys() == expected.keys()
+        for k in actual:
+            assert torch.equal(actual[k].values, expected[k].values)
+    rows = [dict(split="seen", input_mode=m, factor_accuracy=[0.0, 0.0, 1.0 if m == "audio" else 0.5]) for m in MODES]
+    assert factor_task_screen(rows, "direction", "audio")
+    assert not factor_task_screen(rows, "all", "audio")
+    assert not factor_task_screen(rows, "direction", "rotating")
+    assert not factor_task_screen([], "direction", "audio")
+    assert not factor_task_screen(rows[1:], "direction", "rotating")
+    with pytest.raises(ValueError):
+        training_input_mode(0, "unknown")

@@ -608,3 +608,41 @@ Final report/atlas audit:103 structural checks across14 completed run/analysis
 reports; PNG payloads decode, referenced child reports exist, atlas IDs are unique,
 and every high-level discussion color and existing validation scope is preserved.
 The rendered summary is available in the workspace; no browser-interaction claim.
+
+## Input-mode isolation, 16 September — new preregistration
+
+User briefly considered video first, then explicitly returned to direction; no video
+changes or runs were made. Continue with actual Claude methodology review and preserve
+the prior failed references. Add an optional training input selector to the existing
+recipe, leaving the default six-mode rotation unchanged. A single-input task screen
+must name its trained input mode; scores on other modes remain transfer diagnostics.
+Missing test cells must never pass a screen by vacuous truth.
+
+First comparison: six fresh-updater CPU fits, seeds7201/7202 × audio-only, text-only,
+and simultaneous-all-inputs. Same frozen encoders from the original seed-specific
+core, native sampled working readout, direction CE/3, Adam0.003, clipping5, batch24,
+1152 updates and gradient audit every127. Fixed raw factor populations and the same
+paired initialization as the preceding study. Reference: the saved two direction-only
+six-mode-rotation fits; no need to spend another duplicate training budget.
+
+Primary feasibility gate: >=90% known-combination direction in the TRAINED input
+condition in both seeds, using actual sampled states. All-factor and all-input
+capability gates remain separate; passing direction-only never implies those pass.
+Report held-out combinations and all six input modes individually. Confirm passing
+trained conditions over10 independent categorical draws, reporting pooled and worst
+draw accuracy; require the worst draw >=90% for a stable narrow pass. These repeated
+draws are sampling checks on the same48 examples, not new independent test data.
+
+Save a384-update checkpoint before resuming to1152, and evaluate it read-only. A
+single audio/text mode then has384 direction-bearing source presentations per example
+batch count, matching the192 standalone plus192 simultaneous-all occurrences of that
+source in the1152-update rotating reference. This matches counts, not exact examples,
+optimizer history, total input information or compute. The primary1152 comparison
+has equal updates but greater per-source exposure, so cannot alone establish modality
+interference. The all-input condition has a different source/compute budget too.
+
+If isolated inputs succeed, a subsequent targeted schedule/combined-input test may
+use at most four additional1152-update fits, with a separately recorded preregistration.
+If isolated inputs fail, first inspect frozen direct/mean/query accessibility before
+altering projection or gradients. No immediate model scaling, text-only thinking,
+default architecture adoption or output decoder claim.
