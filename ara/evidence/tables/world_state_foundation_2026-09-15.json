@@ -1,0 +1,262 @@
+{
+  "date": "2026-09-15",
+  "provenance": "ai-executed",
+  "source_model_commit": "54825d2",
+  "documentation_commit": "c49249b",
+  "implementation_commits": [
+    "b3faceb",
+    "13c27ac",
+    "567d47a",
+    "54825d2"
+  ],
+  "protocol": "docs/world-state-foundation-plan.md",
+  "guide": "docs/world-state.md",
+  "parameters": 60934,
+  "trainable_parameters": 3812,
+  "device": "cpu",
+  "updates": 96,
+  "seed": 61201,
+  "batch_size": 16,
+  "result": {
+    "evaluation_scope": "CPU development: supplied candidates and four property/identity combinations; no independent capability test",
+    "gate": true,
+    "limitations": [
+      "No raw-image object discovery",
+      "No learned concept induction",
+      "No general dynamics/uncertainty/exploration validation"
+    ],
+    "metrics": {
+      "functional": {
+        "accuracy": 1.0,
+        "loss": 0.004468932282179594,
+        "matching": 9.736644278746098e-05,
+        "prediction_loss": 0.0008062956621870399,
+        "read_loss": 0.0,
+        "state_loss": 0.0035652699880301952
+      },
+      "runtime": {
+        "bindings_first": [
+          {
+            "candidate": "0",
+            "entity_id": "first/entity/1",
+            "evidence": "first/evidence/0",
+            "reason": "no compatible stored candidates",
+            "scores": {},
+            "status": "new"
+          },
+          {
+            "candidate": "1",
+            "entity_id": "first/entity/5",
+            "evidence": "first/evidence/4",
+            "reason": "all candidates dissimilar",
+            "scores": {
+              "first/entity/1": -0.9930415153503418
+            },
+            "status": "new"
+          }
+        ],
+        "bindings_hidden": [
+          {
+            "candidate": "0",
+            "entity_id": "first/entity/1",
+            "evidence": "hidden/evidence/0",
+            "reason": "threshold and group margin",
+            "scores": {
+              "first/entity/1": 0.9967530369758606,
+              "first/entity/5": -0.9972855448722839
+            },
+            "status": "matched"
+          },
+          {
+            "candidate": "1",
+            "entity_id": "first/entity/5",
+            "evidence": "hidden/evidence/3",
+            "reason": "threshold and group margin",
+            "scores": {
+              "first/entity/1": -0.9966328144073486,
+              "first/entity/5": 0.9978308081626892
+            },
+            "status": "matched"
+          }
+        ],
+        "exact_reasoner_replay": true,
+        "owners": 2,
+        "paired_history_answer": 1,
+        "paired_history_answers_correct": true,
+        "proposed_action_not_executed": "inspect",
+        "prototype": "prototype/entity/0",
+        "restore_equal": true,
+        "runtime_answer": 0,
+        "split_restores_distinct_ids": true,
+        "zero_memory_logit_change": 13.721199035644531
+      }
+    }
+  },
+  "verification": {
+    "status": "passed",
+    "checks": 3293,
+    "all_passed": true,
+    "parameters": 60934,
+    "trainable_parameters": 3812,
+    "resume": "Exact complete checkpoint: model, optimizer, RNG, sampler, progress and rows",
+    "report_validation": "Structural HTML/escaping/embedded assets and exact raw data checks; browser interaction QA unavailable under existing local-file URL policy.",
+    "scope": "Controlled CPU development only; no general discovery/concept/calibration/exploration capability validation.",
+    "claude_rounds": 2
+  },
+  "scoped_tests": 81,
+  "full_repository_suite_completed": false,
+  "broad_runs_interrupted_after_passing_tests": [
+    215,
+    173
+  ],
+  "execution": [
+    {
+      "name": "final",
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "experiments.world_state",
+        "--output",
+        "runs/world_state_foundation_v1/final"
+      ],
+      "seconds": 4.104109590058215,
+      "returncode": 0
+    },
+    {
+      "name": "final_resume_pause",
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "experiments.world_state",
+        "--output",
+        "runs/world_state_foundation_v1/final_resume",
+        "--stop-after",
+        "48"
+      ],
+      "seconds": 3.423250801046379,
+      "returncode": 0
+    },
+    {
+      "name": "final_resume",
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "experiments.world_state",
+        "--resume",
+        "runs/world_state_foundation_v1/final_resume"
+      ],
+      "seconds": 3.507161448011175,
+      "returncode": 0
+    }
+  ],
+  "diagnosis": {
+    "development_gate": false,
+    "reason": "Trace-enabled attention selected a different PyTorch numerical path; approximately 9.54e-7 thinker token discrepancy despite successful learning.",
+    "repair": "Keep native need_weights=False; compute detached pre-dropout weights separately. Exact outputs, input/parameter gradients and RNG tested in train/eval.",
+    "other_repairs": [
+      "Transitive dependency invalidation and explicit replay after reattribution",
+      "Coordinate internal/correction store and core clock/RNG commits",
+      "Traverse nested feature outputs in bounded diagnostics; preserve float64 captures"
+    ]
+  },
+  "resume": "Complete checkpoint equality for 96 versus 48+48 updates: weights, optimizer, sampler, RNG, progress and metric rows.",
+  "report_qa": "Structural HTML/escaping/embedded assets and exact raw data checks; browser interaction QA unavailable under existing local-file URL policy.",
+  "artifacts": {
+    "verification.json": "runs/world_state_foundation_v1/verification.json",
+    "focused-tests.xml": "runs/world_state_foundation_v1/focused-tests.xml",
+    "final/report.html": "runs/world_state_foundation_v1/final/report.html",
+    "final/last.pt": "runs/world_state_foundation_v1/final/last.pt",
+    "final/session_after_correction.pt": "runs/world_state_foundation_v1/final/session_after_correction.pt",
+    "final/world_trace.json": "runs/world_state_foundation_v1/final/world_trace.json",
+    "final/world_trace.npz": "runs/world_state_foundation_v1/final/world_trace.npz",
+    "final_resume/last.pt": "runs/world_state_foundation_v1/final_resume/last.pt",
+    "development/result.json": "runs/world_state_foundation_v1/development/result.json",
+    "documentation-verification.json": "runs/world_state_foundation_v1/documentation-verification.json"
+  },
+  "claude_reviews": [
+    {
+      "command": [
+        "/home/alex/.local/bin/claude",
+        "--print",
+        "--safe-mode",
+        "--model",
+        "sonnet",
+        "--effort",
+        "low",
+        "--tools",
+        "",
+        "--strict-mcp-config",
+        "--mcp-config",
+        "{\"mcpServers\":{}}",
+        "--setting-sources",
+        "",
+        "--disable-slash-commands",
+        "--no-chrome",
+        "--permission-mode",
+        "dontAsk",
+        "--no-session-persistence",
+        "--output-format",
+        "json",
+        "--system-prompt",
+        "Independent conceptual architecture reviewer. No repository access, tools, files or unrelated context. Distinguish proposed mechanics from tested capability."
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 18.95333634898998,
+      "brief_sha256": "da2e2ff31e4f8561a41de897f822a25a91dbfc4025b6e36fe20ebe0e15052674",
+      "authorization": "User explicitly requests continued implementation of their supplied World State; existing authorization for actual Claude conceptual review. No private code/data/results exported.",
+      "is_error": false,
+      "api_equivalent_cost_usd_not_subscription_bill": 0.021781
+    },
+    {
+      "command": [
+        "/home/alex/.local/bin/claude",
+        "--print",
+        "--safe-mode",
+        "--model",
+        "sonnet",
+        "--effort",
+        "low",
+        "--tools",
+        "",
+        "--strict-mcp-config",
+        "--mcp-config",
+        "{\"mcpServers\":{}}",
+        "--setting-sources",
+        "",
+        "--disable-slash-commands",
+        "--no-chrome",
+        "--permission-mode",
+        "dontAsk",
+        "--no-session-persistence",
+        "--output-format",
+        "json",
+        "--system-prompt",
+        "Independent conceptual architecture reviewer. No repository access, tools, files or unrelated context. Distinguish proposed mechanics from tested capability."
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 12.752760555013083,
+      "brief_sha256": "681e940c288342118f675b40b5dbbb73e9412ccc82863b5fee6ff8045da460f1",
+      "authorization": "User-authorized conceptual follow-up only; no private source/data/results.",
+      "is_error": false,
+      "api_equivalent_cost_usd_not_subscription_bill": 0.016466
+    }
+  ],
+  "source_sha256": {
+    "pathwm/world_state/__init__.py": "361c6ddb3fa0e8f3379d8cc388fa6021f117b011ae5b45f074a6d0dbed74f037",
+    "pathwm/world_state/extensions.py": "e56dd72a846759384cf8b04ffbb320cf09afba044e3f11e1e32eee8505ed68d8",
+    "pathwm/world_state/inspection.py": "1bdba23206303e2e93d5efc8cd1581da8f2d65b65c1749350fc98cd9c5177b9e",
+    "pathwm/world_state/modules.py": "1abf592817564b84da44f98007d24365f6284bf6f693d0efd5e691aaf6053a88",
+    "pathwm/world_state/records.py": "f2e1ee9a6341b11306e14a6ec18df060a7e719574d62b8cab4ce6adc77e44e29",
+    "pathwm/world_state/retrieval.py": "21e95da21a515d59d1e092575fdc02705acc5263deb0ae273f8e227a78dad283",
+    "pathwm/world_state/session.py": "f6f45c655406305743bf0c5d8368d6e6a21bfae1b665311679e5a9fa3c3056fa",
+    "pathwm/world_state/store.py": "8bdc58f7e9dbaa6e6c6b7adfab973f100b7c22348cf5af2ea55ff71b6aa63f45",
+    "pathwm/models/modalities.py": "f99167fee9a4ec483442734313baa00cf15dca2573be7bac9f4c6575c8a51723",
+    "pathwm/io.py": "e5f599563e4537c4bef8bde0b495913ef647357ad267c0f7e4c886c3496e82d6",
+    "pathwm/evaluation/world_state.py": "b842cabb6c8afb8cbfbd1abafb804ce1352f2804ac3dcedaac0b3a46a4191f5d",
+    "pathwm/evaluation/report.py": "e40494fd91f9dcc66a3012766078205800157dcd2847fe16ab6fdbc4c8654b11",
+    "experiments/world_state.py": "7fe817b052aa20ebfd5990bc995302610d037ce5c746f5b99c3e6090ce9f10dd",
+    "tests/test_world_state.py": "0e4452a8b20a59091b0136f29c1dc0abf71e3357e132e817c788de18bfce09ec",
+    "tests/test_world_state_modules.py": "e6e665f72b9f35d1a1640b1aa44768173c97fbccab31a9d6e7938d22aa06b429"
+  },
+  "scope": "Supplied two-entity descriptors and four identity/property combinations; tiny development only. No free discovery, real multimodal identity, concept induction, calibrated uncertainty, sample-efficiency or useful exploration claim. No action executed. Inference assumed for ambiguous Internet wording."
+}

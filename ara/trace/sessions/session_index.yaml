@@ -160,8 +160,8 @@ sessions:
   open_threads: 14
 - id: 2026-09-15_001
   date: '2026-09-15'
-  summary: "Hybrid multimodal World State reviewed with Claude in two rounds and against local code. Provenance/correction and bounded identity/state/restart M1 proposed; concepts moved to M2. No implementation or new capability validation; VAE color/rate/grid work remains open."
-  turn_count: 7
-  events_count: 39
+  summary: "Modular World State foundation adopted and implemented with actual Claude review; 81 scoped tests, 3293 independent checks and exact complete CPU pause/resume pass. Tiny supplied-entity histories work; general identity/concepts/calibration and prior VAE/state/recall work remain open."
+  turn_count: 8
+  events_count: 48
   claims_touched: []
   open_threads: 18

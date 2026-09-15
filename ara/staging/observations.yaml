@@ -4381,9 +4381,9 @@ observations:
   potential_type: architecture
   bound_to:
   - N370
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A12
+  crystallized_via: verbal-affirmation
   stale: false
 - id: O249
   timestamp: 2026-09-15T14:36+02:00
@@ -4399,6 +4399,58 @@ observations:
   potential_type: architecture
   bound_to:
   - N370
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O250
+  timestamp: 2026-09-15T15:54+02:00
+  provenance: ai-suggested
+  content: Operational foundation separates discrete bounded single-writer persistence from trainable tensor
+    modules. Pin revisions and representation versions, retain original alias attribution and dependency/evidence
+    paths, coordinate store/core/RNG publication, explicitly replay corrected states, and share detached bounded
+    training/inference diagnostics. Small prototype/self/feedback/prediction/modulation clients are optional,
+    not general learned behaviors.
+  context: Concrete subset of O249 refinements implemented in commits 13c27ac/567d47a/54825d2. Broader confusable-real-data/oracle/flat/calibration
+    comparisons in O249 remain proposed.
+  potential_type: architecture
+  bound_to:
+  - N371
+  - N373
+  - N374
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A13
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O251
+  timestamp: 2026-09-15T15:54+02:00
+  provenance: ai-suggested
+  content: The tiny supplied-descriptor task supports mechanical integration and local learning through persistent
+    state into the actual thinker. Exact full training/runtime replay plus neutral tracing improves inspectability,
+    but does not establish robust multimodal identity, concept learning, calibrated probabilities, useful exploration,
+    scaling or sample efficiency.
+  context: Interpretation of this development fit; researcher has not commented on these results.
+  potential_type: claim
+  bound_to:
+  - N373
+  - N374
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O252
+  timestamp: 2026-09-15T15:54+02:00
+  provenance: ai-suggested
+  content: Next fix candidate granularity for real image/text observations, add confusable negatives and held-out
+    identity/state/history cases, then calibrate abstention with matched flat/no-history/oracle controls. Keep
+    concept generalization, learned retrieval, spatial specialization and exploration as separate task-driven
+    capability increments; preserve open VAE/state/recall work.
+  context: Proposed next experimental slice after modular foundation delivery; no fresh real-data training
+    campaign executed.
+  potential_type: heuristic
+  bound_to:
+  - N371
+  - N374
   promoted: false
   promoted_to: null
   crystallized_via: null

@@ -112,3 +112,23 @@
 - **From staging**: O241
 - **Implementation**: a695db3; N358-N360. [Probes](../../../pathwm/evaluation/spatial_vae.py), [model](../../../pathwm/models/spatial_vae_v2.py), [protocol](../../../docs/spatial-vae-v2-plan.md).
 - **Limits**: Pooled feature-centered variance normalization is not per-feature whitening. Probe failures do not prove absence or a reader-only fault. Untied/matched-resource controls remain requirements before their corresponding claims; they were not run. No efficacy, semantic retention, unlimited-resolution or constant-compute guarantee is promoted.
+
+## A12: Modular persistent hybrid World State alongside the neural agent
+
+- **Design**: Stable addressable entities, optional typed/latent components, explicit relations and an evidence/event log. A bounded neural core reads selected context. Spatial state is optional; components for concepts, self/control, feedback and prediction can be added successively. Core modules are replaceable and inspectable during training and inference.
+- **Provenance**: user
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O248
+- **Adoption**: N371 explicitly requests implementation; base implementation13c27ac with fixes567d47a/54825d2.
+- **Code/evidence**: [guide](../../../docs/world-state.md), [store](../../../pathwm/world_state/store.py), [session](../../../pathwm/world_state/session.py), [measurements](../../evidence/tables/world_state_foundation_2026-09-15.json).
+- **Scope**: Architecture adoption only. O248's sample-efficiency/online-adaptation hypothesis is not promoted as a supported claim. Optional arithmetic prototypes do not establish concept discovery; the controlled supplied-descriptor task does not validate real-world perception.
+
+## A13: Versioned transactional persistence with trainable modules and neutral inspection
+
+- **Design**: Single-writer staged publication, revision/availability-pinned retrieval, original ownership across revocable aliases, parent-based transitive invalidation and explicit evidence replay. WorldSession coordinates store, actual BeliefAgent clock and RNG. Differentiable scorer/updater/query/context/predictor forwards stay outside discrete persistence. One bounded detached diagnostic schema captures training and inference without changing native attention computation.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O250
+- **Implementation**: 13c27ac/567d47a/54825d2; N373/N374. [Store](../../../pathwm/world_state/store.py), [modules](../../../pathwm/world_state/modules.py), [session](../../../pathwm/world_state/session.py), [inspection](../../../pathwm/world_state/inspection.py), [recipe](../../../experiments/world_state.py).
+- **Verification**: [Source-bound receipt](../../evidence/tables/world_state_foundation_2026-09-15.json), 81 scoped tests and exact complete pause/resume. Failed trace-kernel development artifact retained.
+- **Limits**: No distributed/power-loss durability, universal bitemporal truth solver, end-to-end gradients through discrete IDs, calibrated confidence or learned ontology guarantee. Querying an old store view does not rewind neural state. O249's broader real-confusability/control/calibration study remains pending.

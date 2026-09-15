@@ -1972,3 +1972,15 @@ entries:
   - Claude initial errors retained and corrected, not promoted into knowledge. Only R guaranteed reversible
     remains compatible with adopted A11. Preserve distinction between proposed M1 and measured existing
     small task paths; no new green validation.
+- turn: 2026-09-15_001#8
+  notes:
+  - N371 records explicit user adoption; O248->A12 crystallizes architecture only, not its sample-efficiency
+    hypothesis. N372 preserves the failed trace-kernel approach; N373/N374 record scoped software/development
+    outcomes.
+  - O249 is bundled with confusable-real-data/oracle/calibration studies that were not completed, so do not
+    promote it wholesale. Stage the concretely committed subset as O250->A13; retain ai-suggested provenance.
+    O251/O252 remain staged without researcher interpretation.
+  - Prior VAE color/rate/grid, state/recall and generation topics remain explicitly open; no abandonment or
+    bulk stale/promotion inferred. Store mechanics can be green within scope; real learned skills and general
+    multimodal recognition cannot. Preserve failed/paused runs, source hashes, exact replay limits and structural-only
+    browser QA.

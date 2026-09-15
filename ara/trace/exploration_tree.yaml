@@ -6177,3 +6177,67 @@ tree:
   - ara/evidence/tables/world_state_review_2026-09-15.json
   - docs/world-state-proposal-review.md
   status: resolved
+- id: N371
+  type: decision
+  title: Adopt the modular World State foundation and shared training/inference inspection
+  provenance: user
+  timestamp: 2026-09-15T15:54+02:00
+  choice: User requests the complete extensible base structure in code with replaceable core modules and debugging.
+    Implement concrete opt-in components alongside the existing agent; learned capabilities can be added successively.
+    Ambiguous Internet wording treated as inference after unanswered optional clarification.
+  evidence:
+  - O248
+  - ara/evidence/tables/world_state_foundation_2026-09-15.json
+  also_depends_on:
+  - N370
+  status: resolved
+- id: N372
+  type: dead_end
+  title: Trace-dependent attention kernel breaks exact replay
+  provenance: ai-executed
+  timestamp: 2026-09-15T15:54+02:00
+  hypothesis: Requesting attention weights only when tracing preserves the native computation exactly.
+  failure_mode: 'Initial 96-update development fit learns the toy task but fails exact reasoner replay: approximately
+    9.54e-7 token difference. need_weights toggles the attention execution path.'
+  lesson: Keep native attention on need_weights=False and compute detached diagnostic probabilities separately;
+    repaired tests prove identical outputs, gradients and RNG. Preserve the failed development artifact.
+  evidence:
+  - ara/evidence/tables/world_state_foundation_2026-09-15.json
+  - runs/world_state_foundation_v1/development/result.json
+  also_depends_on:
+  - N371
+  status: resolved
+- id: N373
+  type: experiment
+  title: Persistent store, neural adapter and diagnostics pass scoped contracts
+  provenance: ai-executed
+  timestamp: 2026-09-15T15:54+02:00
+  result: 81 focused tests pass for atomic retries/rejection, pinned historical views, revocable aliases, original
+    ownership, reattribution/transitive invalidation/replay, capacity/version/detach boundaries, swappable
+    neural modules, actual image packets and thinker use, nested bounded diagnostics and neutral attention.
+    Internal commits coordinate store/core clock/RNG. Two actual Claude conceptual reviews reconciled; no private
+    code/data/results exported. Full repository suite not completed.
+  evidence:
+  - ara/evidence/tables/world_state_foundation_2026-09-15.json
+  - runs/world_state_foundation_v1/focused-tests.xml
+  also_depends_on:
+  - N371
+  - N372
+  status: resolved
+- id: N374
+  type: experiment
+  title: Small supplied-entity learning task and complete restart independently verified
+  provenance: ai-executed
+  timestamp: 2026-09-15T15:54+02:00
+  result: 'CPU 96-update fit: loss 6.156750679 to 0.004480383; all four development combinations decoded correctly,
+    two entities retained, paired histories with identical final input answered 0/1 correctly. Zero-memory
+    intervention changes logits. Full 96 versus 48+48 checkpoint equality and corrected runtime replay pass;
+    3293 independent checks. 60,934 parameters, 3,812 trained. Final command 4.10s including evaluation/report;
+    browser QA unavailable, structural report and static atlas checks pass. No general capability or sample-efficiency
+    conclusion.'
+  evidence:
+  - ara/evidence/tables/world_state_foundation_2026-09-15.json
+  - runs/world_state_foundation_v1/verification.json
+  also_depends_on:
+  - N373
+  status: resolved
