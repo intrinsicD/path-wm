@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-15, repository snapshot `610818c`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-16, repository snapshot `49478f5`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
@@ -975,6 +975,8 @@ Thinker parameters are shared across the caller-specified step count. More itera
 
 Imagination uses the existing dynamics on a separate hypothetical state. Automatic search and integration of branch results into general answer planning remain outside this small loop. No model or training change accompanies this drawing.
 
+16 September: eight fresh-updater controls (direction-only/joint, sampled/continuous working readout) all fail the task screens. Frozen encoders retain100% known/held-out factor access, but updater query direction access is60–75%. No unique causal loss layer or default repair established. Next isolate one input modality before mixing modes. See docs/modality-readout-plan.md and runs/direction_learning_v1/report.html. Colors and general capability scopes stay unchanged.
+
 Source: [pathwm/models/belief.py · BeliefDynamics:33](../pathwm/models/belief.py), [pathwm/models/belief.py · BeliefCorrection:74](../pathwm/models/belief.py), [pathwm/models/belief.py · _readout:196](../pathwm/models/belief.py), [pathwm/models/agent.py · Thinker:105](../pathwm/models/agent.py), [pathwm/models/agent.py · think:709](../pathwm/models/agent.py), [pathwm/models/agent.py · decode:779](../pathwm/models/agent.py), [pathwm/world_state/session.py · think:425](../pathwm/world_state/session.py), [docs/latent-core.md](../docs/latent-core.md).
 
 <a id="15-output-plan"></a>
@@ -1041,5 +1043,7 @@ The earlier workspace-only answer-plan proposal remains an optional ablation, no
 User-proposed nested loops: an outer shared Thinker and inner modality-specific token refinement can reuse weights within each loop. Do not require the same weights across modalities. Begin with fixed budgets; repetitions add compute and potentially training activation memory. Autoregressive steps multiplied by inner/outer loops can become expensive. Local refinement does not mutate world evidence or trigger outer thinking automatically.
 
 Evidence: runs/modality_readout_v1/verification.json and controls-verification.json; docs/modality-readout-plan.md.42 primary runs plus8 explicit-factor controls. Held-out all-four-correct remains0% for every variant. Iterative adapters run after two fixed outer Thinker steps; adaptive inner-to-outer feedback is not implemented. Mechanical passing tests do not validate content learning. Follow-up: eight longer native oracle fits now pass known-output gates, but new text/image combinations and video quality still fail. Training-only raw-logit supervision improves known position to97–100%, not direction; full core gates fail. Frozen probability-to-code probes and measured direction collisions motivate paired updater learning. See docs/modality-readout-plan.md and runs/modality_repair_v1/report.html. No default or green capability promotion. This follow-up does not rerun the complete combined-output sweep. Direction localization is a linear accessibility diagnostic on saved checkpoints, not an irreversible information-loss proof.
+
+16 September: eight fresh-updater controls (direction-only/joint, sampled/continuous working readout) all fail the task screens. Frozen encoders retain100% known/held-out factor access, but updater query direction access is60–75%. No unique causal loss layer or default repair established. Next isolate one input modality before mixing modes. See docs/modality-readout-plan.md and runs/direction_learning_v1/report.html. Colors and general capability scopes stay unchanged.
 
 Source: [pathwm/models/agent.py · Thinker:105](../pathwm/models/agent.py), [pathwm/models/agent.py · emit:508](../pathwm/models/agent.py), [pathwm/models/modalities.py · TextDecoder:327](../pathwm/models/modalities.py), [pathwm/models/modalities.py · ImageDecoder:282](../pathwm/models/modalities.py), [pathwm/models/modalities.py · AudioDecoder:308](../pathwm/models/modalities.py), [pathwm/models/conditional_image.py · ConditionalFeatureGenerator:73](../pathwm/models/conditional_image.py), [docs/multimodal.md](../docs/multimodal.md), [docs/latent-core.md](../docs/latent-core.md), [pathwm/models/readout.py · RecurrentOutputAdapter:9](../pathwm/models/readout.py), [pathwm/models/readout.py · TemporalImageDecoder:72](../pathwm/models/readout.py), [docs/modality-readout-plan.md](../docs/modality-readout-plan.md).

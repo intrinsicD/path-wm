@@ -521,3 +521,90 @@ stored hard-state contract explicit, and withholding default adoption. Interpret
 is ours: a continuous benefit does not distinguish representation detail, estimator
 bias/variance and optimization without further controlled tests. Two meaningful
 checks protect identical sampled state/RNG and differentiable continuous access.
+
+Both continuous objectives also fail the registered paired benefit and capability
+screens. No additional model training in this budget; the conditional ten-draw
+confirmation is not triggered. Before interpreting the failures, run one read-only
+localization: the four final jointly trained checkpoints (hard/continuous × both
+seeds), complete inputs only, the existing fixed train/validation/test populations.
+Freeze all model parameters and fit the existing train-standardized ridge readers,
+validation choice from alpha0.01,0.1,1,10,100. Inspect encoder features, updater queries
+before/after mean, posterior probabilities, sampled codes, observed tokens and final
+thought tokens. Save features, coefficients, validation scores and predictions.
+Selection does not inspect test labels. This tests linear accessibility with different
+reader dimensions, not an information-theoretic proof of a unique loss location.
+
+### Result, 16 September
+
+[Comparison report](../runs/direction_learning_v1/report.html) ·
+[frozen localization](../runs/direction_learning_v1/localization/report.html).
+Eight complete fits, each1152 updates,237234 core parameters /113677 trainable
+parameters,450.16 seconds total measured CPU training. All eight task gates fail.
+No evidence for adopting continuous access as the repair; native sampled readout
+remains default. All source encoders and frozen outputs/monitor/action weights are
+unchanged. Paired runs have identical initial weights, populations, optimizer,
+trainable parameter set, final sampling RNG and batch-sampler state.
+
+Known-combination direction accuracy, averaged over six input modes:
+
+| Objective | Readout | Seed7201 | Seed7202 |
+|---|---|---:|---:|
+| Direction only | Sampled code |52.43% |62.15% |
+| Direction only | Posterior probabilities |50.35% |62.85% |
+| All three factors | Sampled code |51.04% |59.38% |
+| All three factors | Posterior probabilities |48.61% |55.56% |
+
+The direction-only seed7202 sampled run reaches100% on complementary inputs, but
+not on the other five input modes. The shared input-mode training regime remains
+a possible source of interference; direction-only removes competition among target
+factors, **not** competition among modalities. Negative gradient cosines occur in
+10–80% of the ten audited points per run/pair, with no consistent causal pattern.
+These sparse observations do not justify PCGrad or selecting a new loss weight.
+
+Fresh linear readers on the four jointly trained checkpoints, complete inputs only:
+encoder features give100% for all three factors on known AND held-out combinations.
+Known-direction access is60.4–75.0% in updater query tokens,54.2–68.8% after mean,
+56.3–77.1% in probabilities,50.0–52.1% in sampled codes, and54.2–75.0% in thought
+tokens. Thus useful signal is demonstrably available at the encoder and becomes
+harder to access through the updater/readout path. This is not proof that averaging,
+sampling or a single layer is uniquely responsible: probes have different widths,
+linear access is non-monotonic, and failed probes cannot establish information absence.
+The continuous control still uses the native sampled initial/dynamic state; it tests
+continuous **posterior working access**, not fully deterministic or fully unquantized
+world-model training. No stored-state or memory persistence success follows from it.
+
+Verification:59 distinct scoped tests passed across readout/belief/foundation tests;
+2909 exact checkpoint comparisons each for8 versus4+4 hard and continuous runs;
+changed-objective resume rejected without mutation;31376 raw artifact checks,
+94 paired-control/Claude receipt checks,297 frozen reader/score checks. Four short
+actual-Claude public-methodology exchanges, including acknowledgment of corrections.
+Local code and measured results were reviewed independently without exporting them.
+The first summary script had a syntax error, corrected with its failed source retained;
+the probe verification initially differed at1.5e-10 under a different CPU thread count,
+then passed at the original tolerance after restoring the experiment's two-thread
+configuration. No training result was overwritten or discarded. Static plots inspected;
+HTML structurally verified. Browser interaction QA remains unavailable.
+
+**Next bounded question, not yet executed:** can a fresh updater learn direction on
+one fully informative input modality alone, before introducing mixed input-mode
+training? Use audio's explicit direction tone as a positive-control task, then text,
+then combined inputs. Separately compare direct feature read, cross-attention query
+read and query-preserving projection only if this locates a specific failure. Avoid
+bundling query changes, gradients, extra loops and model scaling. Decoder composition,
+persistent memory and real-media generation remain separate open capability gates.
+
+Examples (fresh output directory required):
+
+```bash
+.venv/bin/python experiments/modality_readout.py --stage core --encoder-source runs/modality_readout_v1/formal/seed7201/core --factor-task direction --gradient-audit-every 127 --seed 7201 --steps 1152 --device cpu --output runs/fresh_direction_example
+.venv/bin/python experiments/modality_readout.py --stage core --encoder-source runs/modality_readout_v1/formal/seed7201/core --factor-task all --belief-readout probabilities --gradient-audit-every 127 --seed 7201 --steps 1152 --device cpu --output runs/continuous_access_example
+```
+
+These controls reuse the existing recipe, modules, Run/checkpoint and report renderer.
+`load_initial` and frozen output/diagnostic consumers recover the saved readout mode
+from run metadata; a continuous checkpoint is not silently interpreted as sampled.
+
+Final report/atlas audit:103 structural checks across14 completed run/analysis
+reports; PNG payloads decode, referenced child reports exist, atlas IDs are unique,
+and every high-level discussion color and existing validation scope is preserved.
+The rendered summary is available in the workspace; no browser-interaction claim.

@@ -1,5 +1,21 @@
 # Current work
 
+**Fresh direction learning completed, 16 September:**
+[Protocol/results](modality-readout-plan.md#result-16-september),
+[comparison](../runs/direction_learning_v1/report.html),
+[localization](../runs/direction_learning_v1/localization/report.html).
+Eight matched fits: frozen verified encoders, fresh updater/readout, direction-only
+versus all-factor training, sampled versus continuous posterior working access.
+All eight task screens fail; direction-only averages52–62% and continuous access
+50–63% across six known input modes. No default replacement. Frozen linear readers
+recover all factors at100% from the encoder, but direction only60–75% from updater
+queries. This narrows the learning/access problem without proving a unique loss layer.
+Next: isolate a single informative modality before mixing modes and altering query
+pooling.59 scoped tests, exact hard/continuous resume and independent artifact audits
+pass. Four actual-Claude public-methodology exchanges reconciled;450s CPU training.
+No new decoder, persistent-memory or general modality capability claim. Static/HTML
+structural QA completed; browser interaction unavailable.
+
 **Direction literature review, 15 September:**
 [Primary-source review and proposed comparisons](direction-literature-review.md).
 Categorical estimators, multi-task interference, paired-factor supervision and
