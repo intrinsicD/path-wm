@@ -1,5 +1,11 @@
 # Current work
 
+**Multimodal readout comparison in progress, 15 September:**
+[registered plan](modality-readout-plan.md). User authorized separate and joint
+tests of every modality and optional recurrent readouts. Compare native attention
+with adapter1/2/4 on identical frozen core states, then joint core/output training.
+Controlled paired factors and held-out combinations; no new capability result yet.
+
 **Latent-core visualization, 15 September:** [source-grounded walkthrough](latent-core.md)
 and atlas §14–15 distinguish world belief, recurrent workspace, session memory and
 optional graph context. Thinker already repeats shared attention/MLP; only workspace
