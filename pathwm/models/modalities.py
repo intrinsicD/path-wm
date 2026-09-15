@@ -10,6 +10,7 @@ import math
 
 import torch
 from torch import nn
+from torch.nn import functional as F
 
 
 @dataclass(frozen=True)
@@ -101,19 +102,48 @@ class Attend(nn.Module):
                 query.shape[1], context.shape[1], device=query.device, dtype=torch.bool
             ).triu(1)
         key = self.key_norm(context)
-        read, weights = self.attention(
-            self.query_norm(query),
+        normalized_query = self.query_norm(query)
+        read, _ = self.attention(
+            normalized_query,
             key,
             key,
             key_padding_mask=None if valid is None else ~valid,
             attn_mask=mask,
-            need_weights=trace is not None,
+            need_weights=False,
             average_attn_weights=False,
         )
         out = query + read
         out = out + self.mlp(out)
         if trace is not None:
-            trace[name] = weights.detach().cpu().clone()
+            # Requesting weights changes PyTorch's attention kernel and floating
+            # point results. Keep the native output/gradient path untouched and
+            # compute diagnostic pre-dropout probabilities separately, without RNG.
+            with torch.no_grad():
+                weights = self.attention.in_proj_weight.chunk(3)
+                biases = (
+                    self.attention.in_proj_bias.chunk(3)
+                    if self.attention.in_proj_bias is not None
+                    else (None,) * 3
+                )
+                b, qn, width = normalized_query.shape
+                heads = self.attention.num_heads
+                depth = width // heads
+                q = (
+                    F.linear(normalized_query, weights[0], biases[0])
+                    .reshape(b, qn, heads, depth)
+                    .transpose(1, 2)
+                )
+                k = (
+                    F.linear(key, weights[1], biases[1])
+                    .reshape(b, key.shape[1], heads, depth)
+                    .transpose(1, 2)
+                )
+                logits = (q @ k.transpose(-1, -2)) / math.sqrt(depth)
+                if valid is not None:
+                    logits = logits.masked_fill(~valid[:, None, None, :], -torch.inf)
+                if mask is not None:
+                    logits = logits.masked_fill(mask[None, None], -torch.inf)
+                trace[name] = logits.softmax(-1).nan_to_num().cpu().clone()
         return out
 
 

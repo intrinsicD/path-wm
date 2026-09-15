@@ -394,3 +394,55 @@ def test_report_escapes_untrusted_labels_and_exposes_debug_sections(tmp_path):
     assert "data-world-entity" in html and "world-filter" in html
     assert "Binding, retrieval" in html and "Dropped records: 1" in html
     assert not trace._tensors
+
+
+@pytest.mark.parametrize("training", [False, True])
+def test_attention_diagnostics_preserve_native_outputs_and_gradients(training):
+    from pathwm.models.modalities import Attend
+
+    torch.manual_seed(801)
+    module = Attend(16).train(training)
+    query = torch.randn(2, 4, 16, requires_grad=True)
+    memory = torch.randn(2, 7, 16, requires_grad=True)
+    native = module(query, memory)
+    native.square().sum().backward()
+    grads = [p.grad.clone() for p in module.parameters()]
+    query_grad, memory_grad = query.grad.clone(), memory.grad.clone()
+    module.zero_grad()
+    query.grad = None
+    memory.grad = None
+    rng = torch.get_rng_state().clone()
+    trace = WorldTrace()
+    traced = module(query, memory, trace=trace)
+    traced.square().sum().backward()
+    assert torch.equal(native, traced)
+    assert all(torch.equal(p.grad, g) for p, g in zip(module.parameters(), grads))
+    assert torch.equal(query.grad, query_grad) and torch.equal(memory.grad, memory_grad)
+    assert torch.equal(rng, torch.get_rng_state())
+    assert trace["attention"]["shape"] == [2, 4, 4, 7]
+
+
+def test_attention_diagnostic_probabilities_match_masked_reference():
+    from pathwm.models.modalities import Attend
+
+    module = Attend(16).eval()
+    query = torch.randn(2, 4, 16)
+    memory = torch.randn(2, 7, 16)
+    valid = torch.ones(2, 7, dtype=torch.bool)
+    valid[:, 5:] = False
+    trace = WorldTrace(tensor_values=1024)
+    module(query, memory, valid=valid, causal=True, trace=trace)
+    mask = torch.ones(4, 7, dtype=torch.bool).triu(1)
+    with torch.no_grad():
+        q, k = module.query_norm(query), module.key_norm(memory)
+        _, reference = module.attention(
+            q,
+            k,
+            k,
+            key_padding_mask=~valid,
+            attn_mask=mask,
+            need_weights=True,
+            average_attn_weights=False,
+        )
+    assert torch.allclose(trace._tensors["attention"], reference, atol=1e-6)
+    assert trace._tensors["attention"][..., 5:].count_nonzero() == 0
