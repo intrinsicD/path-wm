@@ -33,15 +33,18 @@ def test_adapter_mask_excludes_nan_payload_and_gradient():
         adapter.gain.fill_(0.5)
     x = torch.randn(2, 5, 16, requires_grad=True)
     valid = torch.tensor([[True, True, False, False, False]]).expand(2, -1)
-    output = adapter(x.masked_fill(~valid[..., None], float('nan')), valid=valid)
+    output = adapter(x.masked_fill(~valid[..., None], float("nan")), valid=valid)
     expected = adapter(x[:, :2])
     torch.testing.assert_close(output[:, :2], expected)
     assert output[:, 2:].count_nonzero() == 0
     output.square().sum().backward()
     assert x.grad[:, :2].abs().sum() > 0
     assert x.grad[:, 2:].count_nonzero() == 0
-    assert all(p.grad is not None and torch.isfinite(p.grad).all() for p in adapter.parameters())
-    with pytest.raises(ValueError, match='valid'):
+    assert all(
+        p.grad is not None and torch.isfinite(p.grad).all()
+        for p in adapter.parameters()
+    )
+    with pytest.raises(ValueError, match="valid"):
         adapter(x, valid=torch.zeros_like(valid))
 
 
@@ -60,7 +63,7 @@ def test_adapter_trace_preserves_output_gradients_rng():
     b.square().sum().backward()
     assert torch.equal(a, b)
     assert torch.equal(torch.get_rng_state(), state)
-    assert 'readout.loop.1.tokens' in trace
+    assert "readout.loop.1.tokens" in trace
     for p, q in zip(adapter.parameters(), twin.parameters()):
         assert torch.equal(p.grad, q.grad)
 
@@ -69,7 +72,7 @@ def test_temporal_decoder_reads_only_context_and_requested_times():
     decoder = TemporalImageDecoder(16, image_size=16)
     context = torch.randn(2, 5, 16, requires_grad=True)
     before = context.detach().clone()
-    times = torch.tensor([0., 1., 2., 3.])
+    times = torch.tensor([0.0, 1.0, 2.0, 3.0])
     result = decoder(context, times)
     assert result.shape == (2, 4, 3, 16, 16)
     assert not torch.equal(result[:, 0], result[:, -1])
@@ -77,11 +80,98 @@ def test_temporal_decoder_reads_only_context_and_requested_times():
     assert context.grad.abs().sum() > 0
     assert torch.equal(context.detach(), before)
     assert all(p.grad is not None for p in decoder.parameters())
-    with pytest.raises(ValueError, match='increasing'):
+    with pytest.raises(ValueError, match="increasing"):
         decoder(context, times.flip(0))
 
 
-@pytest.mark.parametrize('iterations', [-1, 1.5, True])
+@pytest.mark.parametrize("iterations", [-1, 1.5, True])
 def test_bad_iterations_rejected(iterations):
-    with pytest.raises(ValueError, match='iterations'):
+    with pytest.raises(ValueError, match="iterations"):
         RecurrentOutputAdapter(16, iterations=iterations)
+
+
+def test_paired_data_splits_and_complementary_sources():
+    from pathwm.data.modality_readout import dataset, observations
+
+    train, seen, heldout = (dataset(s) for s in ("train", "seen", "heldout"))
+    known = set(map(tuple, train["targets"]["factors"].tolist()))
+    new = set(map(tuple, heldout["targets"]["factors"].tolist()))
+    assert len(known) == 12 and len(new) == 6 and not known & new
+    assert len(train["ids"]) == 144 and len(seen["ids"]) == len(heldout["ids"]) == 48
+    for factor in range(3):
+        assert {x[factor] for x in known} == {x[factor] for x in new}
+    factors = train["targets"]["factors"]
+    comp = observations(train, "complementary")
+    for name, column in [("image", 0), ("audio", 1), ("video", 2)]:
+        values = comp[name].values
+        if name == "audio":
+            values = values[:, 1:2]  # only this chunk is valid
+        # Complete canonical complementary image/video carry exactly one factor;
+        # audio has independent noise, so compare underlying target segment.
+        if name == "audio":
+            values = train["targets"]["audio"][:, 64:128]
+        for value in factors[:, column].unique():
+            group = values[factors[:, column] == value]
+            assert torch.equal(group, group[:1].expand_as(group))
+    assert len(torch.unique(comp["text"].values, dim=0)) == 1
+    assert set(observations(train, "complementary", omit="audio")) == {
+        "text",
+        "image",
+        "video",
+    }
+
+
+def test_perfect_outputs_pass_and_wrong_template_fails():
+    import itertools
+    from pathwm.data.modality_readout import canonical
+    from pathwm.evaluation.modality_readout import scores
+
+    target = canonical(list(itertools.product(range(3), range(3), range(2))))
+    for kind in ("image", "audio", "video"):
+        result, pred = scores(kind, target[kind], target, target, 1.0)
+        assert result["gate"] and result["all_accuracy"] == 1.0 and result["mse"] == 0
+        assert torch.equal(pred, target["factors"])
+        wrong, _ = scores(kind, target[kind].roll(9, 0), target, target, 1.0)
+        assert wrong["all_accuracy"] == 0 and not wrong["gate"]
+    logits = torch.full((*target["text"][:, 1:].shape, 259), -50.0)
+    logits.scatter_(-1, target["text"][:, 1:, None], 50.0)
+    result, pred = scores("text", logits, target, target, generated=target["text"])
+    assert result["free_exact"] == 1 and result["gate"]
+
+
+def test_model_baseline_initialization_joint_reads_and_core_gradients():
+    from experiments.modality_readout import (
+        Model,
+        output_objective,
+        scales,
+        target_batch,
+    )
+    from pathwm.data.modality_readout import dataset, observations, KINDS
+    from pathwm.io import state_hash
+
+    data = dataset("train")
+    torch.manual_seed(23)
+    native = Model("native")
+    torch.manual_seed(23)
+    adapted = Model("adapter2")
+    assert state_hash(native.core) == state_hash(adapted.core)
+    assert state_hash(native.outputs.decoders) == state_hash(adapted.outputs.decoders)
+    target = target_batch(data, [0, 12], "cpu")
+    tokens = native.core(observations(data, "all", [0, 12]))
+    old = tokens.detach().clone()
+    for k in KINDS:
+        prefix = target["text"][:, :-1] if k == "text" else None
+        assert torch.equal(
+            native.outputs(k, tokens, prefix), adapted.outputs(k, tokens, prefix)
+        )
+    loss, _ = output_objective(native, tokens, target, KINDS, scales(data))
+    loss.backward()
+    assert torch.equal(tokens.detach(), old)
+    for encoder in native.core.agent.encoders.values():
+        assert any(
+            p.grad is not None and p.grad.abs().sum() > 0 for p in encoder.parameters()
+        )
+    for decoder in native.outputs.decoders.values():
+        assert any(
+            p.grad is not None and p.grad.abs().sum() > 0 for p in decoder.parameters()
+        )
