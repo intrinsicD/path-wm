@@ -96,3 +96,21 @@ costs about0.23s/update on GPU in this preflight versus0.09s/update on CPU; sele
 for the formal study to avoid launch overhead. This changes the preferred device
 before measured comparisons, not data/model/budget. GPU mechanics are tested;
 formal resource reporting therefore has no GPU allocation peak.
+
+## Diagnostic follow-up registered during the first-seed comparison
+
+The first core's original factor head learns color but poorly reads location and
+direction. Its output variants also fail held-out complete-factor checks so far.
+Before attributing this to information loss, fit a fresh linear ridge readout on
+the exact frozen state tokens. Train-only per-coordinate centering/scaling;
+regularization in {0.01,0.1,1,10,100} chosen only on validation factor accuracy.
+Use all six input modes with the same three factor targets. Retain a permuted-label
+control. Report known and held-out combinations per factor, save coefficients and
+statistics. This tests linear accessibility; failure is not proof of absence.
+
+Also allow a positive output control using explicit ground-truth factor tokens,
+clearly marked oracle context. Same native decoder initialization, training data,
+256 updates per output and final held-out evaluation. It is neither agent inference
+nor a model improvement. It separates decoder/task difficulty from the learned
+state path; success on oracle context does not guarantee it can read learned states.
+No primary checkpoint or test-selected setting is changed by these diagnostics.

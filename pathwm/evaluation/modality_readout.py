@@ -248,6 +248,9 @@ def readout_inspection(directory):
     ]
     if data.get("aggregate"):
         parts.append(
+            f"<p><strong>Registered joint screens passed: {sum(r['gate'] for r in data['summary'])}/{len(data['summary'])}.</strong> These screens require both factual correctness and output quality.</p>"
+        )
+        parts.append(
             "<p>Every frozen row combines four independently trained output branches reading the same fixed core. Joint rows train core and all outputs together. Agreement can be wrong; all-correct requires the target factors in every output. Recurrent variants add parameters versus native; iteration counts share parameters but not compute.</p>"
         )
         parts.append(
@@ -272,6 +275,10 @@ def readout_inspection(directory):
             )
         parts.append("</table></div>")
     else:
+        if data["stage"] == "oracle":
+            parts.append(
+                "<p><strong>Oracle positive control:</strong> output receives explicit ground-truth factor tokens. This measures decoder/task feasibility, not learned agent performance. The input-mode label all denotes the complete supplied facts.</p>"
+            )
         if data.get("core_scores") is not None:
             parts.append(
                 "<h3>Auxiliary core-factor readout</h3><pre>"

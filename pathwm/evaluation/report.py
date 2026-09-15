@@ -1175,7 +1175,11 @@ def render_report(directory):
         for s in (directory / "metrics.jsonl").read_text().splitlines()
         if s
     ]
-    show_objective_curve = bool(rows) and not any(
+    show_objective_curve = any(
+        (r["split"] in ("train", "validation") and "loss" in r)
+        or (r["split"].startswith("diagnostic_") and "nll" in r)
+        for r in rows
+    ) and not any(
         (directory / name).exists()
         for name in (
             "modality_audit.json",

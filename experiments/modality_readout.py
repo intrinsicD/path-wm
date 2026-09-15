@@ -138,6 +138,19 @@ def scales(data):
     }
 
 
+def oracle_states(populations):
+    """Positive control only: explicit target facts, never an agent input path."""
+    result = {}
+    for split, data in populations.items():
+        facts = data["targets"]["factors"]
+        vector = torch.cat(
+            [F.one_hot(facts[:, i], n) for i, n in enumerate((3, 3, 2))], 1
+        ).float()
+        vector = F.pad(vector, (0, 16))
+        result[split] = {"all": vector[:, None].expand(-1, 12, -1).clone()}
+    return result
+
+
 def output_objective(model, tokens, target, kinds, normalizers):
     losses = {}
     for k in kinds:
@@ -226,6 +239,8 @@ def perform(args):
             }
         )
         cache = torch.load(args.core / "states.pt", weights_only=True)
+        if args.stage == "oracle":
+            cache = oracle_states(populations)
     model.requires_grad_(False)
     kinds = KINDS if args.stage == "joint" else (args.modality,)
     if args.stage in ("core", "joint"):
@@ -255,6 +270,9 @@ def perform(args):
         else "sum normalized per-output losses",
         initial_decoder_sha256=initial_decoders,
         core_source_sha256=core_source,
+        context_source="explicit ground-truth factors (oracle control only)"
+        if args.stage == "oracle"
+        else "actual learned core states",
     )
     if args.stage != "core":
         settings["core"] = str(args.core.resolve())
@@ -270,7 +288,7 @@ def perform(args):
             for k, v in populations.items()
         },
         frozen_cache=None
-        if args.stage == "core"
+        if args.stage in ("core", "oracle")
         else file_hash(args.core / "states.pt"),
     )
     run = Run(
@@ -300,13 +318,13 @@ def perform(args):
     training_mode(model)
     try:
         while run.step < end:
-            mode = MODES[run.step % len(MODES)]
+            mode = "all" if args.stage == "oracle" else MODES[run.step % len(MODES)]
             indices = run.sample(len(data["ids"]), 24)
             wanted = target_batch(data, indices, device)
             optimizer.zero_grad(set_to_none=True)
             tokens = (
                 cache["train"][mode][indices].to(device)
-                if args.stage == "frozen"
+                if args.stage in ("frozen", "oracle")
                 else model.core(observations(data, mode, indices, device))
             )
             if args.stage == "core":
@@ -351,7 +369,7 @@ def perform(args):
         for n, p in model.named_parameters():
             if n in frozen_before and not torch.equal(p, frozen_before[n]):
                 raise AssertionError(f"Frozen parameter changed: {n}")
-        if args.stage == "frozen":
+        if args.stage in ("frozen", "oracle"):
             assert state_hash(model.core) == before_core
         resource = dict(
             training_seconds_this_invocation=elapsed,
@@ -465,7 +483,9 @@ def perform(args):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--stage", choices=("core", "frozen", "joint", "suite"), default="suite"
+        "--stage",
+        choices=("core", "frozen", "joint", "oracle", "suite"),
+        default="suite",
     )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=7201)
@@ -479,9 +499,14 @@ def main():
     parser.add_argument("--stop-after", type=int)
     parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
+    if args.steps is not None and args.steps < 1:
+        parser.error("Steps must be positive")
+    if args.stop_after is not None and args.stop_after < 1:
+        parser.error("Stop-after must be positive")
     if args.stage != "suite":
         args.steps = (
-            args.steps or {"core": 768, "frozen": 256, "joint": 384}[args.stage]
+            args.steps
+            or {"core": 768, "frozen": 256, "joint": 384, "oracle": 256}[args.stage]
         )
         perform(args)
         return
