@@ -7,9 +7,9 @@ does not. This note records the reviewed design; the linked plan owns actual
 settings, measurements, validation scope and unresolved quality limits.
 
 The subsequent [expanded R/P/M/C specification](spatial-vae-refinement.md) is a
-reviewed proposal only: overlapping stem, lowest-grid self-attention, shared loops,
-stage probes and corrected ablations. It does not describe changes already made
-to the tested model below.
+now implemented in an opt-in [v2 codec](spatial-vae-v2-plan.md): overlapping stem,
+lowest-grid self-attention, shared loops, stage probes and corrected ablations.
+The original v1 model and historical results below remain separate.
 
 The defining separation is **spatial rearrangement → learned processing → explicit
 channel projection**, with optional processing before rearrangement. Preserve the

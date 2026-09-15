@@ -1,15 +1,25 @@
 # Current work
 
-**Expanded VAE specification clarified, 15 September:** Alex requested precision
-before implementation. The [refined R/P/M/C specification](spatial-vae-refinement.md)
-maps onto existing modules and separates guarantees, lowest-grid self-attention,
-shared loops, detached stage probes and rate/compute comparisons. Add a
-processing-after-compression control; 2×2 stride2 and immediate unshuffle/projection
-are an equivalence check. Probe error is readout accessibility; KL in bits is a
-rate proxy. Two actual Claude conceptual rounds reconciled five review errors.
-No model, weights, new training budget or implementation commitment changed.
-The previous implementation/results below remain current; this refinement does
-not repair their quality failures or validate sample efficiency.
+**R/P/M/C VAE v2 implemented and tested, 15 September:**
+[Protocol, commands and results](spatial-vae-v2-plan.md),
+[comparison report](../runs/spatial_vae_v2/formal/report.html). Overlapping stem,
+separate shuffle/processing/compression, coarsest self-attention with shared loops,
+spatial posterior, latent-only decoder, detached stage probes and strict old/new
+exports work. Actual Claude reviews were reconciled; private code/data/results
+stayed local.42 focused tests and exact GPU resume pass;2203 artifact checks pass.
+
+Ten512-update fits on512 new real training photos,64 validation and96 test photos
+pass the learning sanity gates but all fail the photo-quality screen. C/beta0.1:
+mean MSE0.017132, sampled0.018344. Lower KL pressure helps this short run more than
+attention/loop changes; processing before and after compression is essentially tied
+at beta1. Unequal rate/compute/parameters and one seed prevent a superiority claim.
+Common RGB probes show reduced access after each channel compression, even when
+feature-variance reconstruction looks good; this is not proof of irreversible loss.
+58 reports verified structurally, example/error/rate figures inspected; browser QA
+unavailable due to local-file policy. Formal training totals70.75s, GPU reserved
+peak162MiB (allocator cache included), artifacts~388MiB. Codec stays separate from
+the agent. Next: controlled duration/latent-capacity and matched-resource comparisons;
+fine detail, semantic utility and state-to-latent generation remain open.
 
 **Spatial image VAE implemented and compared, 15 September:** the
 [explicit-scale codec](spatial-vae-design.md) now has base, cross-scale attention,

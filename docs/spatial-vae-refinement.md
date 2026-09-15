@@ -1,6 +1,11 @@
 # Spatial VAE: refined research specification
 
-15 September 2026. **Specification review only.** Alex explicitly requested
+15 September 2026. **Original refinement; subsequently implemented.**
+Alex has now authorized implementation. See the [v2 implementation and measured
+results](spatial-vae-v2-plan.md). The paragraphs below preserve the earlier design
+decisions; deferred experiment controls are identified in the implementation plan.
+
+Original status at refinement: **Specification review only.** Alex explicitly requested
 precision before implementation. This document refines the new R/P/M/C proposal;
 it does not change model code, weights, experiment budgets or the current agent.
 The [first implemented VAE and its results](spatial-vae-plan.md) remain the reference.

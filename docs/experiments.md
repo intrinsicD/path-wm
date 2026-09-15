@@ -496,3 +496,9 @@ and evaluation overrides. Saved continuations inherit the policy. Default global
 clipping remains unchanged. These parameter-disjoint readouts share frozen inputs;
 joint training adds no semantic connection between them. A passing implementation
 check does not establish improved model quality—retain held-out scene/causal criteria.
+
+The [R/P/M/C spatial VAE v2](spatial-vae-v2-plan.md) uses the same
+`experiments.spatial_vae` recipe: --variant A_local/B/C/C_after/D/E selects the
+opt-in hierarchy, --development runs the reserved real-photo smoke path, and
+--hierarchy-study runs the fixed ten-fit sanity/beta comparison in a new directory.
+Its default small weights preserve old codec exports and do not replace agent modules.

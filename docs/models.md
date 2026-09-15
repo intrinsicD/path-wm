@@ -26,6 +26,19 @@ the losses. There is no model registry or hidden experiment coordinator.
 
 ## Experimental spatial image VAE
 
+The opt-in `pathwm.models.spatial_vae_v2.HierarchicalVAE` implements the
+[expanded R/P/M/C design](spatial-vae-v2-plan.md), preserving the v1 model below.
+It adds a local overlapping stem, channel LayerNorm inside residual processing,
+separate compression, optional coarsest self-attention with a shared loop and a
+convolutional latent-only decoder. `inspect(rgb)` exposes detached stage/loop/posterior
+snapshots. `LoopTransformer` generates Fourier positions dynamically and refuses
+inputs above its declared token cap; zero iterations bypass position and attention
+while retaining the registered weights. P/M are not guaranteed invertible.
+`pathwm.evaluation.spatial_vae` provides frozen bounded probes and forward-MAC
+accounting. The existing `experiments.spatial_vae` recipe trains/evaluates both
+versions; `SpatialVAE.load` dispatches strict v1/v2 exports.
+
+
 `pathwm.models.spatial_vae.SpatialVAE` is a separate codec implementing the
 [explicit-scale design](spatial-vae-design.md). RGB B×3×H×W passes through optional
 pre-processing, PixelUnshuffle, local mixing and a named1×1 channel projection at

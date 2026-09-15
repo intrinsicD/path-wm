@@ -190,3 +190,17 @@ def test_common_initialization_padding_and_identity_hierarchy():
     )
     assert identity.encoder.factor == 2 and identity.encoder.widths == [4, 4, 8]
     assert identity(x)[0].shape == x.shape
+
+
+def test_evaluation_rejects_wrong_architecture_label(tmp_path):
+    import json
+    from experiments.spatial_vae import hierarchy_evaluate, hierarchy_settings
+
+    weights = tmp_path / "model.pt"
+    HierarchicalVAE(ablation="C").save(weights)
+    output = tmp_path / "wrong_label"
+    with pytest.raises(ValueError, match="variant must match"):
+        hierarchy_evaluate(output, weights, None, None, hierarchy_settings("E"), "cpu")
+    status = json.loads((output / "status.json").read_text())
+    assert status["result"] == "failed"
+    assert not (output / "report.html").exists()

@@ -982,6 +982,8 @@ def _hierarchy_evaluate(output, weights, data, root, config, device):
     if output.exists():
         raise FileExistsError(f"Preserve prior evaluation: {output}")
     model = SpatialVAE.load(weights, device)
+    if model.config.get("ablation") != config["variant"]:
+        raise ValueError("Evaluation variant must match the saved hierarchy")
     rgb = data["test"].batch(range(len(data["test"])))["rgb"]
     rows, metrics, per = evaluate_images(model, rgb, device)
     train_rgb = data["train"].batch(range(len(data["train"])))["rgb"]
@@ -1084,13 +1086,18 @@ def hierarchy_comparison(output, records):
         )
         for r in values:
             ax.annotate(
-                f"beta={r['beta']}", (r["bits_per_pixel"], r["sampled_mse"]), fontsize=8
+                f"beta={r['beta']}",
+                (r["bits_per_pixel"], r["sampled_mse"]),
+                xytext=(4, 9 if variant == "A_local" else -13),
+                textcoords="offset points",
+                fontsize=8,
             )
     ax.set(
         xlabel="KL bits / original pixel (rate proxy)",
         ylabel="Sampled RGB MSE",
         title="Fixed beta points; one seed, unequal resources",
     )
+    ax.margins(x=0.15, y=0.15)
     ax.legend()
     single = [r for r in records if r["beta"] == 1.0]
     bars.bar([r["variant"] for r in single], [r["mean_mse"] for r in single])
@@ -1185,6 +1192,8 @@ def hierarchy_study(output, root, device):
                 parameters=fit["parameters"],
                 training_seconds=fit["training_seconds"],
                 peak_reserved_mib=fit["peak_reserved_mib"],
+                peak_allocated_mib=fit["peak_allocated_mib"],
+                memory_scope="Training peak; reserved includes allocator cache from preceding runs in this process",
                 resources=scores["resources"],
                 photo_quality=all(scores["quality_screen"].values()),
                 report=str(path / "evaluation/report.html"),
