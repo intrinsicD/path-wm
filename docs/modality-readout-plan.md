@@ -653,3 +653,36 @@ text held-out failure cannot be assigned solely to the updater. Claude's public-
 review and reconciliation retain exposure/trajectory/two-seed caveats: a projection
 change also alters optimization and possibly capacity; neither its success nor failure
 uniquely localizes information loss. No separate modality subspace is mandated.
+
+### Iteration 2: registered curriculum versus matched optimizer restart
+
+First six fits complete. Text-only known direction reaches100% in both seeds;
+audio-only46%/100%, simultaneous-all48%/60%. The384-update text checkpoints score
+100%/77%, and were chosen before results, not by selecting a best checkpoint. A
+frozen audio pooling diagnostic finds100% known direction from both raw/normalized
+grids AND their means in both seeds, but first learned query access40%/98%. This
+argues against assuming that normalization or query averaging necessarily erased
+this input's direction. It does not prove a unique optimization failure.
+
+Token-count balancing was discussed with Claude but is not implemented now. Recorded
+all-input attention already gives a small image source up to63% of refinement mass,
+while sources have84 audio/21 image/45 text/73 video tokens. Counts alone do not
+explain this learned selection, and a uniform source prior is not a reliability
+estimate. Preserve this as a candidate, not a diagnosed repair.
+
+Run four further CPU continuations: seeds7201/7202 × text384→all768 versus
+all384→all768. Load the exact saved384-update checkpoint, keep the original encoders
+frozen, reset Adam identically, native sampled state, direction CE/3 and the existing
+settings. Each complete trajectory has1152 updates; no additional latent parameters.
+Control both initialization provenance and optimizer reset rather than comparing a
+fresh optimizer against uninterrupted training. Do not add an unused auxiliary head
+for these encoder-frozen continuations. Extend --initial to accept a specific saved
+checkpoint file as well as a run directory; preserve its run-level readout metadata.
+
+Primary repair benefit: known complete-input direction gains>=10 percentage points
+in BOTH seeds relative to matched all→all restart control. Capability requires>=90%
+for complete inputs in both seeds and worst-of10 independent sampled evaluations.
+Also test complete inputs without text, and every single input modality. A text-only
+cue may support complete-input success without cross-modal transfer; report that
+separately and do not call it general multimodal repair. Held-out combinations remain
+exploratory. Stop this bounded training budget after these four continuations.

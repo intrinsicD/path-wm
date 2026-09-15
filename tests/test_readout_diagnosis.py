@@ -264,3 +264,20 @@ def test_training_input_selection_is_explicit_and_screen_is_not_vacuous():
     assert not factor_task_screen(rows[1:], "direction", "rotating")
     with pytest.raises(ValueError):
         training_input_mode(0, "unknown")
+
+
+def test_explicit_checkpoint_file_restores_selected_weights_and_readout(tmp_path):
+    import json
+    from experiments.modality_readout import Model, load_initial
+
+    selected = Model("native")
+    later = copy.deepcopy(selected)
+    with torch.no_grad():
+        later.core.factor_head.weight.add_(1)
+    torch.save({"model": selected.state_dict()}, tmp_path / "step384.pt")
+    torch.save({"model": later.state_dict()}, tmp_path / "last.pt")
+    (tmp_path / "run.json").write_text(json.dumps({"identity": {"settings": {"belief_readout": "sampled"}}}))
+    target = Model("native")
+    load_initial(target, tmp_path / "step384.pt", torch.device("cpu"))
+    assert all(torch.equal(v, target.state_dict()[k]) for k, v in selected.state_dict().items())
+    assert not torch.equal(target.core.factor_head.weight, later.core.factor_head.weight)
