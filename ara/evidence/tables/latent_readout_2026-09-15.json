@@ -1,0 +1,35 @@
+{
+  "diagrams": 15,
+  "updated": [
+    "15-output-plan"
+  ],
+  "source_model_commit": "8937b15",
+  "valid_local_links": 152,
+  "discussion_colors_unchanged": true,
+  "validation_evidence_unchanged": true,
+  "model_changed": false,
+  "new_training": false,
+  "new_capability_validation": false,
+  "browser_qa": "Unavailable under existing local-file policy; structural and static checks only.",
+  "visual_qa": "Rendered readout diagram inspected; labels and arrows readable.",
+  "html_sha256": "4df881c24e750a14d46029a6093f9326f98183e1b088ad990e4c9d07a75e80c4",
+  "png_sha256": "5d50f5351db36132e2c0fc7768878000dd5ed38ed58fd81a292d36a157f809ea",
+  "timestamp": "2026-09-15T21:50+02:00",
+  "documentation_commit": "5d69c92",
+  "user_direction": "Shared multimodal thinking; decoder-specific learned extraction; optional nested Loop Transformers.",
+  "primary_sources": [
+    {
+      "url": "https://arxiv.org/abs/2301.12597",
+      "scope": "BLIP-2 learned querying bridge between frozen image encoder and language decoder; not proof of PATH-WM latent sufficiency."
+    },
+    {
+      "url": "https://arxiv.org/abs/1807.03819",
+      "scope": "Universal Transformers recurrent attention precedent; not validation of proposed nested multimodal loops."
+    }
+  ],
+  "code_sources": [
+    "pathwm/models/modalities.py",
+    "pathwm/models/agent.py",
+    "pathwm/models/conditional_image.py"
+  ]
+}

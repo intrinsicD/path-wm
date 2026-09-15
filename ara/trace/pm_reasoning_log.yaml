@@ -2021,3 +2021,11 @@ entries:
   - Existing loop/decoder source facts are evidence, not a new experiment. Preserve current overview discussion
     and green scope; an assistant walkthrough alone cannot close outstanding discussion labels. Prior modality,
     VAE, real identity and resource questions remain open.
+- turn: 2026-09-15_001#14
+  notes:
+  - N383 captures user revision and nested-loop option; O259/O260 staged. No capacity or useful-recursion claim
+    promoted. Existing adopted multimodal boundary remains consistent.
+  - 'O258 retained with scope follow-up: its optional experiment is still possible, but no longer preferred;
+    this is not a conflicting empirical assertion or an adopted mandatory design.'
+  - Documentation commitment does not instantiate inner-loop learning. Prior modality/identity/VAE/resource
+    threads remain open; no clear closure signal for older interpretations.

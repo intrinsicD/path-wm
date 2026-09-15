@@ -6363,3 +6363,19 @@ tree:
   - ara/evidence/tables/latent_core_visual_2026-09-15.json
   - docs/latent-core.md
   status: resolved
+- id: N383
+  type: question
+  title: Can modality-specific recurrent readouts extract useful outputs from shared multimodal thought?
+  provenance: user-revised
+  timestamp: 2026-09-15T21:50+02:00
+  description: User keeps common latent thinking multimodal, proposes optional decoder-specific extraction
+    and explicitly permits nested Loop Transformers. Need compare native attention, small adapter and fixed
+    shared-loop budgets. No new implementation or capacity claim.
+  also_depends_on:
+  - N381
+  - N382
+  evidence:
+  - ara/evidence/tables/latent_readout_2026-09-15.json
+  - docs/latent-core.md
+  - docs/multimodal.md
+  status: open

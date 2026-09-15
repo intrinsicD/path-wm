@@ -2,9 +2,9 @@ session:
   id: 2026-09-15_001
   date: '2026-09-15'
   started: 2026-09-15T00:47+02:00
-  last_turn: 2026-09-15T21:28+02:00
-  turn_count: 13
-  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training. Latent-core drawings separate existing loop from proposed workspace answer plan; implementation unchanged."
+  last_turn: 2026-09-15T21:50+02:00
+  turn_count: 14
+  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training. Latent-core drawings separate existing loop from proposed workspace answer plan; implementation unchanged. User clarifies shared multimodal thought with decoder-specific optional recurrent readouts; architecture sketch updated, no model change."
 events_logged:
 - turn: 1
   type: question
@@ -460,6 +460,24 @@ events_logged:
     should follow a measured need, not a presumed absence of recurrence. Existing Thinker already shares attention/MLP
     across iterations; learned grounding/readiness and explicit inference revisions remain open. Preserve evidence
     and evaluate complete system resources rather than decoder parameter count alone.
+- turn: 14
+  type: question
+  id: N383
+  routing: direct
+  provenance: user-revised
+  summary: Preserve multimodal shared thought; optional decoder readout and nested loops.
+- turn: 14
+  type: observation
+  id: O259
+  routing: staged
+  provenance: user-revised
+  summary: Modality-specific extraction and nested-loop option; no text-plan requirement.
+- turn: 14
+  type: observation
+  id: O260
+  routing: staged
+  provenance: ai-suggested
+  summary: Native/adapter/fixed-loop comparison and resource/grounding controls proposed.
 ai_actions:
 - turn: 1
   action: Saved independent analysis and a bounded brief based on the user-supplied architecture;
@@ -611,6 +629,16 @@ ai_actions:
   - docs/diagrams/atlas/15-output-plan.svg
   - docs/project-state.md
   - ara/evidence/tables/latent_core_visual_2026-09-15.json
+- turn: 14
+  action: Inspected native decoder attention and conditional image generator; checked BLIP-2 and Universal
+    Transformer primary abstracts. Updated walkthrough and atlas15, preserving colors/evidence.15 diagrams/152
+    links and static figure checked; model unchanged. Commit5d69c92.
+  provenance: ai-executed
+  files_changed:
+  - docs/latent-core.md
+  - docs/multimodal.md
+  - docs/diagrams/architecture-atlas.json
+  - ara/evidence/tables/latent_readout_2026-09-15.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -650,6 +678,10 @@ key_context:
 - turn: 13
   excerpt: Kannst du mir den internen latenten Kern nochmal visuell darstellen? Vielleicht brauchen wir noch eine
     Erweiterung da.
+- turn: 14
+  excerpt: 'User: Denken in allen Modalitäten; Decoder sollen aus gemeinsamem Denkraum holen was sie brauchen,
+    optional eigenes vorgelagertes Modul. Steering: Das kann auch gerne entsprechend geschachtelte Loop transformer
+    sein die da werkeln.'
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current
   rate; image/full retention remains 10/12. Next lower-rate comparison from preserved source
@@ -706,6 +738,7 @@ open_threads:
   quality need experiments.'
 - 'N382/O258: compare full-state decoding with trained existing workspace answer plan before dedicated plan tokens.
   Grounding checks and reasoned belief revision remain unvalidated.'
+- "N383: decoder readout sufficiency, optional nested loops and budgeted held-out comparisons remain open."
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await
   researcher response.'
@@ -832,3 +865,4 @@ ai_suggestions_pending:
   capacity.'
 - 'O258: workspace-first output-plan experiment proposed; drawing does not adopt a new layer, validate thinking
   or show capacity savings.'
+- "O259/O260: multimodal readout clarification and fixed-loop comparison remain staged; no size/capability adoption."

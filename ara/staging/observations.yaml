@@ -4564,3 +4564,36 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+  follow_up: O259 clarifies that workspace-only is an optional diagnostic, not the preferred or mandatory shared representation.
+- id: O259
+  timestamp: 2026-09-15T21:50+02:00
+  provenance: user-revised
+  content: Keep shared thought multimodal; each decoder learns to extract what its output needs. Optional modality-specific
+    adapters may use nested shared-weight Transformer loops. No mandatory common text-shaped answer plan. This
+    refines the earlier workspace-only experiment proposal; it does not adopt an inner-loop implementation
+    or establish useful language capacity.
+  context: Multimodal readout discussion and nested-loop steering; documentation commit only.
+  potential_type: architecture
+  bound_to:
+  - N383
+  - N381
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O260
+  timestamp: 2026-09-15T21:50+02:00
+  provenance: ai-suggested
+  content: Compare native cross-attention with a small adapter and fixed1/2/4 inner repeats on identical frozen
+    core states first, then consider joint training and untied-depth controls. Track held-out content/quality,
+    null and swapped context, cross-modal consistency and total compute/memory. Keep inner refinement local
+    and budget outer thinking separately; generation cannot recover unretained evidence.
+  context: Multimodal readout discussion and nested-loop steering; documentation commit only.
+  potential_type: heuristic
+  bound_to:
+  - N383
+  - N381
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
