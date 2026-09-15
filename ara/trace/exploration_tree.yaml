@@ -6323,3 +6323,16 @@ tree:
   evidence:
   - ara/evidence/tables/modality_foundation_2026-09-15.json
   status: resolved
+- id: N380
+  type: question
+  title: Can the tiny text pair support useful language despite much larger usual models?
+  provenance: user
+  timestamp: 2026-09-15T20:37+02:00
+  description: User questions feasibility because the current encoder/decoder is very small and usual language models
+    are larger. Actual constructor has18048 encoder and13059 decoder parameters. General-language sufficiency remains
+    untested.
+  evidence:
+  - ara/evidence/tables/text_capacity_2026-09-15.json
+  also_depends_on:
+  - N377
+  status: open

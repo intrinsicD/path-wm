@@ -2,9 +2,9 @@ session:
   id: 2026-09-15_001
   date: '2026-09-15'
   started: 2026-09-15T00:47+02:00
-  last_turn: 2026-09-15T17:58+02:00
-  turn_count: 9
-  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work."
+  last_turn: 2026-09-15T20:37+02:00
+  turn_count: 10
+  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training."
 events_logged:
 - turn: 1
   type: question
@@ -402,6 +402,22 @@ events_logged:
     controls, then held-out real-modality tasks. Keep video object/background tradeoffs explicit, real identity/calibration
     and VAE rate/phase repair separate. No additional large training budget or backend selection follows from this
     audit.
+- turn: 10
+  type: question
+  id: N380
+  routing: direct
+  provenance: user
+  summary: Can the tiny text pair support useful language despite much larger usual models?
+- turn: 10
+  type: observation
+  id: O255
+  routing: staged
+  provenance: ai-suggested
+  summary: A31107-parameter four-word reconstruction fit is a mechanics baseline, not evidence for broad conversation.
+    Restricted state-to-language tasks may be feasible; external memory supplies content but does not itself train
+    linguistic expression. Freezing the present decoder is a diagnostic control, not a sufficient plan for general
+    speech. Keep own World State/core and replaceable text subsystem; choose scaling/pretraining only after task-grounded
+    comparisons.
 ai_actions:
 - turn: 1
   action: Saved independent analysis and a bounded brief based on the user-supplied architecture;
@@ -523,6 +539,12 @@ ai_actions:
   - tests/test_modality_foundation.py
   - docs/modality-foundation-plan.md
   - ara/evidence/tables/modality_foundation_2026-09-15.json
+- turn: 10
+  action: Counted actual tiny text encoder/decoder parameters and explained restricted-task versus general-language
+    evidence; no model, weights or training changed.
+  provenance: ai-executed
+  files_changed:
+  - ara/evidence/tables/text_capacity_2026-09-15.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -551,6 +573,9 @@ key_context:
     sein damit sie austauschbar sind ... Strukturen ... zum debuggen beim Training und Internet.
 - turn: 9
   excerpt: Schaue dir bitte auch mal alle anderen modalitäten an nicht nur Bild. Die sollten auch funktionieren…
+- turn: 10
+  excerpt: Meinst du denn, das kann funktionieren ... sehr kleiner Encoder und Decoder ... übliche Sprachmodelle
+    sind ja viel größer.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current
   rate; image/full retention remains 10/12. Next lower-rate comparison from preserved source
@@ -601,6 +626,8 @@ open_threads:
 - 'N375-N379/O253/O254: modality mechanics and tiny direct fits checked; train state-conditioned outputs with matched
   controls, then held-out speech/language/video tasks. Weighted video repair fails total quality. Real AV transport
   is not learned identity; preserve VAE and calibration studies.'
+- 'N380/O255: tiny-text general-language feasibility and task-appropriate capacity remain untested; no fallback
+  backend selected.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await
   researcher response.'
@@ -719,3 +746,5 @@ ai_suggestions_pending:
   researcher response; no capability or sample-efficiency promotion.'
 - 'O253/O254: scoped modality interpretation and state-output/real-task follow-up remain staged; no general capability
   promotion.'
+- 'O255: restricted language versus broad conversation assessment remains tentative; parameter count alone is not
+  a measured capability limit.'

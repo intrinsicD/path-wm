@@ -1,0 +1,14 @@
+{
+  "provenance": "ai-executed",
+  "measurement": "sum(p.numel() for p in Codec(text).encoder/decoder.parameters())",
+  "encoder_parameters": 18048,
+  "decoder_parameters": 13059,
+  "total_parameters": 31107,
+  "source_model_commit": "8937b15",
+  "source_sha256": {
+    "experiments/modality_audit.py": "cff4616e12d2477b20499a7f12c5d9bce36cb92869847fae95ab3ca5b394507d",
+    "pathwm/models/modalities.py": "f375c72a21ec1e18775c40b60686186222436d851909dfe197e1285671edffc8",
+    "pathwm/models/multiscale.py": "d6b7339c2b4a63c1beda730cc318ed67ac60523cdf29c97b284639c5f444cf4a"
+  },
+  "scope": "Existing audit constructor introspection only; no training, scaling or general-language experiment."
+}

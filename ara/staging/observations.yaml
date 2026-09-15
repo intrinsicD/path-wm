@@ -4493,3 +4493,20 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O255
+  timestamp: 2026-09-15T20:37+02:00
+  provenance: ai-suggested
+  content: A31107-parameter four-word reconstruction fit is a mechanics baseline, not evidence for broad conversation.
+    Restricted state-to-language tasks may be feasible; external memory supplies content but does not itself train
+    linguistic expression. Freezing the present decoder is a diagnostic control, not a sufficient plan for general
+    speech. Keep own World State/core and replaceable text subsystem; choose scaling/pretraining only after task-grounded
+    comparisons.
+  context: Feasibility explanation after local parameter count; no backend adoption or new training budget.
+  potential_type: claim
+  bound_to:
+  - N380
+  - N377
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
