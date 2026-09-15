@@ -1,5 +1,27 @@
 # Current work
 
+**Direction input isolation and curriculum completed, 16 September:**
+[Protocol/results](modality-readout-plan.md#input-isolation-and-curriculum-result-16-september),
+[comparison](../runs/direction_inputs_v1/report.html),
+[source-removal control](../runs/direction_inputs_v1/robustness_curriculum/report.html).
+Six fresh fits plus four checkpoint continuations; shared latent architecture and
+source encoders unchanged. Text-only known direction reaches100% in both seeds,
+stable over10 sampled draws; audio46%/100%, simultaneous-all48%/60% in the original
+evaluation draw. Text384→all768 beats matched all384→all768 by52/17 percentage
+points, but complete-input capability still fails in one seed. Across10 draws,
+text-warm-start complete inputs score100%/74%; without text50%/51%. This is a narrow
+learning improvement relying on text, not reliable cross-modal transfer. Frozen
+audio grids and their means retain100% known-direction linear access in both seeds;
+learned first queries give40%/98%. No unique causal loss layer established.
+Optional input selection, explicit task scopes and exact checkpoint-file starts
+reuse the existing recipe; no additional model parameters or default change.
+61 scoped tests, exact fresh/continuation resume, raw artifact and repeated-draw
+audits pass. Five brief actual-Claude methodology exchanges; no private data exported.
+Next bounded comparison: gradual source rotation/dropout after a fixed warm-up,
+requiring direction from each informative modality, with matched restart/exposure
+controls. Not yet run. Video remains deferred at the user's request; no new output,
+memory or general modality claim. Static/HTML structural QA; browser QA unavailable.
+
 **Fresh direction learning completed, 16 September:**
 [Protocol/results](modality-readout-plan.md#result-16-september),
 [comparison](../runs/direction_learning_v1/report.html),

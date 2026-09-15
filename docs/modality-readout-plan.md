@@ -686,3 +686,105 @@ Also test complete inputs without text, and every single input modality. A text-
 cue may support complete-input success without cross-modal transfer; report that
 separately and do not call it general multimodal repair. Held-out combinations remain
 exploratory. Stop this bounded training budget after these four continuations.
+
+### Input isolation and curriculum result, 16 September
+
+[Comparison](../runs/direction_inputs_v1/report.html) ·
+[frozen audio access](../runs/direction_inputs_v1/audio_pooling/report.html) ·
+[single-source sampling](../runs/direction_inputs_v1/robustness_initial/report.html) ·
+[curriculum/source removal](../runs/direction_inputs_v1/robustness_curriculum/report.html).
+
+Six fresh fits and four continuations completed within the registered budget:
+9984 new optimizer updates, reusing the four384-step prefixes. Every complete
+trajectory contains1152 updates. The architecture remains237234 core parameters,
+113677 trainable parameters with frozen encoders. Runs use CPU with two threads.
+Recorded training time totals at least695.31 seconds: one initial384-step segment
+(seed7201/audio) has no retained timing, so this is explicitly a lower bound, not
+an exact total. All checkpoints, metric rows and negative runs are preserved.
+
+Direction accuracy for the **trained input mode**, original evaluation draw:
+
+| Training input | Seed | Known at384 | Known at1152 | Held-out at1152 |
+|---|---:|---:|---:|---:|
+| Audio |7201 |56.25% |45.83% |39.58% |
+| Audio |7202 |87.50% |100% |83.33% |
+| Text |7201 |100% |100% |85.42% |
+| Text |7202 |77.08% |100% |83.33% |
+| All simultaneously |7201 |52.08% |47.92% |54.17% |
+| All simultaneously |7202 |58.33% |60.42% |52.08% |
+
+Both text fits and the second audio fit retain100% known accuracy over all10 draws.
+Text held-out means are88.54%/83.33%, worst85.42%/83.33%. These are repeated sampled
+states on the same48 examples, not independent new test populations. Only text passes
+the two-seed single-input feasibility screen. Greater single-source exposure and
+different optimizer trajectories prevent interpreting this as a pure modality
+interference experiment. No all-factor or arbitrary-language result follows.
+
+The optional recipe input selector preserves the old rotating default. The task
+screen now explicitly lists required modes and rejects missing/duplicate cells.
+`--initial` accepts a run directory or a particular checkpoint file, preserving its
+readout metadata. Encoder-frozen checkpoint continuations do not instantiate the
+legacy auxiliary posterior head, so the curriculum adds no trainable parameters.
+Ordinary `--resume` still restores optimizer, sampler and RNG exactly.
+
+Curriculum direction accuracy, **mean of10 draws** (same original populations):
+
+| Prefix384 → continuation768 | Seed | Known/all | Known/no text | Held-out/all | Held-out/no text |
+|---|---:|---:|---:|---:|---:|
+| All → all |7201 |49.79% |49.79% |50% |50% |
+| Text → all |7201 |100% |50% |100% |50% |
+| All → all |7202 |60% |59.79% |50% |50% |
+| Text → all |7202 |73.96% |51.04% |70.21% |53.33% |
+
+The preregistered single-draw gain is52.08/16.67 percentage points, passing the
+10-point benefit condition in both seeds. The separate capability condition fails:
+the second seed reaches72.92% originally and66.67% in its worst repeated draw.
+Complete inputs without text still contain full direction evidence in image, audio
+and video; collapse toward chance therefore exposes text dependence. Individual
+image/audio/video inputs also remain near chance for the text-warm-start models.
+This is a partial training repair, not a solved multimodal direction capability.
+
+Frozen audio probes recover known direction100% from raw grids, their masked means,
+normalized grids and normalized means in both seeds. First updater queries allow
+39.58%/97.92%; refined queries41.67%/100%; final thought tokens58.33%/100%. This
+narrows the practical access/learning issue; different probe dimensions and learning
+problems prevent identifying a unique destructive operation. Mean pooling or
+normalization cannot simply be presumed responsible. The separate attention-mass
+audit also shows that source token counts alone cannot explain selection: the small
+image source can receive63% of refinement attention. No token-balancing change adopted.
+
+Five short actual-Claude public-methodology exchanges cover isolation, query controls,
+source priors and the curriculum. Reconciliation withdrew a pure-ordering interpretation:
+resetting Adam makes the transition reset comparable, but does not equalize earlier
+trajectories, source exposure or input information. Local code/results stayed local.
+
+Verification:61 distinct scoped tests;2909 exact checkpoint comparisons each for
+fresh8 versus4+4 and initialized continuation8 versus4+4;34802 raw artifact checks;
+196 paired-setting/repeated-draw/Claude-receipt checks;180 independent NumPy probe
+checks. The latter reproduce regularization selection and coefficients but record
+184 color/place argmax differences at numerical ties (largest gap4.82e-13), with
+zero direction differences. The original strict audit and its failure are retained;
+no model result was changed. Static plot inspected and report PNGs/HTML checked.
+Browser interaction QA remains unavailable, with no alternate transport attempted.
+
+**Next bounded question, not yet executed:** after a fixed short successful-source
+warm-up, can gradual rotation or source dropout make the existing shared latent
+core preserve direction from every informative modality? Register a single schedule
+change with matched restart/exposure controls before spending more training. Require
+both seeds, every trained mode, source-removal robustness and held-out reporting.
+Do not turn the common latent space into a text-only representation or add projection,
+loss weighting and model scale changes simultaneously. The requested video review
+stays deferred; output-decoder composition and persistent memory remain separate.
+
+Example user paths (new output directories required):
+
+```bash
+.venv/bin/python experiments/modality_readout.py --stage core --encoder-source runs/modality_readout_v1/formal/seed7201/core --factor-task direction --input-mode text --gradient-audit-every 127 --seed 7201 --steps 1152 --device cpu --output runs/fresh_text_direction
+.venv/bin/python experiments/modality_readout.py --stage core --initial runs/direction_inputs_v1/seed7201/text/step384.pt --encoder-source runs/modality_readout_v1/formal/seed7201/core --factor-task direction --input-mode all --gradient-audit-every 127 --seed 7201 --steps 768 --device cpu --output runs/fresh_direction_curriculum
+```
+
+Final report/atlas audit:130 checks across24 completed training/analysis reports;
+all embedded PNGs decode, summary child paths exist, atlas IDs are unique, discussion
+colors and existing validation scopes unchanged. The copied auditor first assumed
+the numeric-only pooling report had a plot; that audit assumption was corrected
+and its failed script retained. No report or scientific result was missing.
