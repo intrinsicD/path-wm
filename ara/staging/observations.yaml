@@ -4455,3 +4455,41 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O253
+  content: Isolated codec fitting and actual storage/thinker transport support these small interfaces, not general
+    language, speech, temporal prediction or learned cross-modal identity. The video foreground/motion gain coexists
+    with worse global reconstruction. Untrained first-example state output cannot identify where information is
+    irreversibly lost.
+  potential_type: claim
+  bound_to:
+  - N376
+  - N377
+  - N378
+  - N379
+  timestamp: 2026-09-15T17:58+02:00
+  provenance: ai-suggested
+  context: Interpretation and next-study proposal after this audit; repeated user modality request does not endorse
+    these new results.
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O254
+  content: Next train state-conditioned text/audio/video adapters with matched direct-feature, memory, zero/wrong-context
+    controls, then held-out real-modality tasks. Keep video object/background tradeoffs explicit, real identity/calibration
+    and VAE rate/phase repair separate. No additional large training budget or backend selection follows from this
+    audit.
+  potential_type: heuristic
+  bound_to:
+  - N375
+  - N377
+  - N378
+  - N379
+  timestamp: 2026-09-15T17:58+02:00
+  provenance: ai-suggested
+  context: Interpretation and next-study proposal after this audit; repeated user modality request does not endorse
+    these new results.
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

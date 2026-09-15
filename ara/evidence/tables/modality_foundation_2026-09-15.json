@@ -1,0 +1,475 @@
+{
+  "date": "2026-09-15",
+  "provenance": "ai-executed",
+  "source_model_commit": "8937b15",
+  "documentation_commit": "41580de",
+  "implementation_commits": [
+    "1473e75",
+    "0ebc4cc",
+    "a5ba9f4",
+    "e45a0b9",
+    "f09eea0",
+    "8937b15"
+  ],
+  "protocol": "docs/modality-foundation-plan.md",
+  "device": "cpu",
+  "seed": 61301,
+  "examples_per_modality": 4,
+  "updates_per_direct_branch": 128,
+  "video_continuation_updates_per_arm": 128,
+  "verification": {
+    "all_passed": true,
+    "checks": 6075,
+    "tests": 112,
+    "full_repository_suite": false,
+    "exact_resume": true,
+    "repair": {
+      "gates": {
+        "rgb_beats_mean": false,
+        "foreground_improves_20pct": true,
+        "motion_at_least_three_quarters": true
+      },
+      "all_passed": false,
+      "foreground_reduction": 0.9139477638334284,
+      "rgb_change": 1.4239243436884514,
+      "control": {
+        "background_mse": 0.002043291227892041,
+        "constant_reference_loss": 0.011800944805145264,
+        "copy_first_frame_loss": 0.021896159276366234,
+        "exact_session_replay": true,
+        "feature_tokens": 73,
+        "foreground_mse": 0.08163042366504669,
+        "horizontal_displacement": [
+          2.545612335205078,
+          -5.072455406188965,
+          0.1345815658569336,
+          -7.7908101081848145
+        ],
+        "initial_loss": 0.014726084657013416,
+        "learning_gate": true,
+        "loss": 0.007017487194389105,
+        "loss_ratio": 0.4765344867854586,
+        "motion_direction_fraction": 0.75,
+        "reversed_input_output_change": 0.005854418035596609,
+        "shuffled_context_loss": 0.02444111742079258,
+        "source_preserved": true,
+        "state_path_trained": false,
+        "untrained_state_path_loss": 0.07128031551837921,
+        "zero_context_loss": 0.04480371251702309
+      },
+      "weighted": {
+        "background_mse": 0.017675548791885376,
+        "constant_reference_loss": 0.011800944805145264,
+        "copy_first_frame_loss": 0.021896159276366234,
+        "exact_session_replay": true,
+        "feature_tokens": 73,
+        "foreground_mse": 0.0070244804956018925,
+        "horizontal_displacement": [
+          4.41348123550415,
+          -4.9312591552734375,
+          1.8750557899475098,
+          -7.042597770690918
+        ],
+        "initial_loss": 0.014726084657013416,
+        "learning_gate": false,
+        "loss": 0.017009858042001724,
+        "loss_ratio": 1.155083543126356,
+        "motion_direction_fraction": 1.0,
+        "reversed_input_output_change": 0.017639724537730217,
+        "shuffled_context_loss": 0.04331838712096214,
+        "source_preserved": true,
+        "state_path_trained": false,
+        "untrained_state_path_loss": 0.10000523179769516,
+        "zero_context_loss": 0.018519839271903038
+      },
+      "adopted": false,
+      "reason": "Foreground/motion improve, but background and total RGB regress; keep weight1 default."
+    },
+    "source_hash": "5498ff52724b7e73594ecacf7d751568e6373cc612eee13c6513d100b140a9de",
+    "report_qa": "Structural HTML and exact embedded-media checks; static comparison inspected separately. Browser interaction unavailable under established local-file policy.",
+    "scope": "Four-example development fitting and one real audiovisual transport source; no general capability validation.",
+    "visual_qa": {
+      "method": "Static inspection via view_image; no browser interaction",
+      "files": {
+        "runs/modality_foundation_v1/direct/modality_curves.png": "bea53a12e15dc6de3a13a0239c16bdf58ca0b3e23080285d649b6f87d1f24e57",
+        "runs/modality_foundation_v1/video_weighted/comparison.png": "5f27a72d50f974ccc76424a76ffec0dc2a1846bf9afc145da0f12f93cdd460d5",
+        "runs/modality_foundation_v1/overview.png": "c0218185991d1a80c10b74c75f0556ec066a1593a49e806b1907674140e7b8c7"
+      },
+      "finding": "Readable separate curves; video comparison visibly retains weighted background bleed. Overview keeps encoder/output blue and memory green only within mechanics scope."
+    }
+  },
+  "direct_result": {
+    "gate": true,
+    "metrics": {
+      "audio": {
+        "constant_reference_loss": 0.13500000536441803,
+        "exact_session_replay": true,
+        "feature_tokens": 112,
+        "initial_loss": 0.2533941864967346,
+        "learning_gate": true,
+        "loss": 1.2647428775380831e-05,
+        "loss_ratio": 4.9912071583946194e-05,
+        "shuffled_context_loss": 0.3595105707645416,
+        "silence_loss": 0.18000003695487976,
+        "source_preserved": true,
+        "state_path_trained": false,
+        "untrained_state_path_loss": 0.17852312326431274,
+        "zero_context_loss": 0.2514703869819641
+      },
+      "image": {
+        "constant_reference_loss": 0.011943359859287739,
+        "exact_session_replay": true,
+        "feature_tokens": 21,
+        "initial_loss": 0.18658019602298737,
+        "learning_gate": true,
+        "loss": 0.013080389238893986,
+        "loss_ratio": 0.07010598936921705,
+        "shuffled_context_loss": 0.0175817608833313,
+        "source_preserved": true,
+        "state_path_trained": false,
+        "untrained_state_path_loss": 0.023577243089675903,
+        "zero_context_loss": 0.050942327827215195
+      },
+      "text": {
+        "exact_session_replay": true,
+        "feature_tokens": 13,
+        "free_exact_match": 1.0,
+        "generated": [
+          "rot",
+          "blau",
+          "gruen",
+          "gelb"
+        ],
+        "initial_loss": 5.890933990478516,
+        "learning_gate": true,
+        "loss": 0.0035306657664477825,
+        "loss_ratio": 0.0005993388776982356,
+        "shuffled_context_loss": 2.092829465866089,
+        "source_preserved": true,
+        "state_path_trained": false,
+        "target": [
+          "rot",
+          "blau",
+          "gruen",
+          "gelb"
+        ],
+        "unigram_nll": 2.3025851249694824,
+        "untrained_state_path_loss": 0.4842057526111603,
+        "zero_context_generated": [
+          "gelb",
+          "gelb",
+          "gelb",
+          "gelb"
+        ],
+        "zero_context_loss": 0.39839351177215576
+      },
+      "video": {
+        "constant_reference_loss": 0.011800944805145264,
+        "copy_first_frame_loss": 0.021896159276366234,
+        "exact_session_replay": true,
+        "feature_tokens": 73,
+        "initial_loss": 0.2160865068435669,
+        "learning_gate": true,
+        "loss": 0.014726084657013416,
+        "loss_ratio": 0.06814902453707662,
+        "reversed_input_output_change": 6.997443051659502e-07,
+        "shuffled_context_loss": 0.014760705642402172,
+        "source_preserved": true,
+        "state_path_trained": false,
+        "untrained_state_path_loss": 0.13370920717716217,
+        "zero_context_loss": 0.03252038359642029
+      }
+    },
+    "real_transport": {
+      "audio": {
+        "candidate_shape": [
+          1,
+          1,
+          4
+        ],
+        "feature_shapes": [
+          [
+            1,
+            1984,
+            16
+          ],
+          [
+            1,
+            992,
+            16
+          ],
+          [
+            1,
+            496,
+            16
+          ]
+        ],
+        "finite": true,
+        "input_shape": [
+          1,
+          31,
+          256
+        ]
+      },
+      "mixed_event": {
+        "finite": true,
+        "observation_count": 1,
+        "sources": [
+          "audio",
+          "text",
+          "video"
+        ]
+      },
+      "text": {
+        "candidate_shape": [
+          2,
+          1,
+          4
+        ],
+        "feature_shapes": [
+          [
+            2,
+            35,
+            16
+          ],
+          [
+            2,
+            18,
+            16
+          ],
+          [
+            2,
+            9,
+            16
+          ]
+        ],
+        "finite": true,
+        "input_shape": [
+          2,
+          35
+        ]
+      },
+      "video": {
+        "candidate_shape": [
+          1,
+          1,
+          4
+        ],
+        "feature_shapes": [
+          [
+            1,
+            64,
+            16
+          ],
+          [
+            1,
+            8,
+            16
+          ],
+          [
+            1,
+            1,
+            16
+          ]
+        ],
+        "finite": true,
+        "input_shape": [
+          1,
+          4,
+          3,
+          16,
+          16
+        ]
+      }
+    },
+    "scope": "four fixed examples per branch; isolated codec learning and separate untrained persistent adapter",
+    "source_sha256": "5498ff52724b7e73594ecacf7d751568e6373cc612eee13c6513d100b140a9de"
+  },
+  "video_comparison": {
+    "gates": {
+      "rgb_beats_mean": false,
+      "foreground_improves_20pct": true,
+      "motion_at_least_three_quarters": true
+    },
+    "all_passed": false,
+    "foreground_reduction": 0.9139477638334284,
+    "rgb_change": 1.4239243436884514,
+    "control": {
+      "background_mse": 0.002043291227892041,
+      "constant_reference_loss": 0.011800944805145264,
+      "copy_first_frame_loss": 0.021896159276366234,
+      "exact_session_replay": true,
+      "feature_tokens": 73,
+      "foreground_mse": 0.08163042366504669,
+      "horizontal_displacement": [
+        2.545612335205078,
+        -5.072455406188965,
+        0.1345815658569336,
+        -7.7908101081848145
+      ],
+      "initial_loss": 0.014726084657013416,
+      "learning_gate": true,
+      "loss": 0.007017487194389105,
+      "loss_ratio": 0.4765344867854586,
+      "motion_direction_fraction": 0.75,
+      "reversed_input_output_change": 0.005854418035596609,
+      "shuffled_context_loss": 0.02444111742079258,
+      "source_preserved": true,
+      "state_path_trained": false,
+      "untrained_state_path_loss": 0.07128031551837921,
+      "zero_context_loss": 0.04480371251702309
+    },
+    "weighted": {
+      "background_mse": 0.017675548791885376,
+      "constant_reference_loss": 0.011800944805145264,
+      "copy_first_frame_loss": 0.021896159276366234,
+      "exact_session_replay": true,
+      "feature_tokens": 73,
+      "foreground_mse": 0.0070244804956018925,
+      "horizontal_displacement": [
+        4.41348123550415,
+        -4.9312591552734375,
+        1.8750557899475098,
+        -7.042597770690918
+      ],
+      "initial_loss": 0.014726084657013416,
+      "learning_gate": false,
+      "loss": 0.017009858042001724,
+      "loss_ratio": 1.155083543126356,
+      "motion_direction_fraction": 1.0,
+      "reversed_input_output_change": 0.017639724537730217,
+      "shuffled_context_loss": 0.04331838712096214,
+      "source_preserved": true,
+      "state_path_trained": false,
+      "untrained_state_path_loss": 0.10000523179769516,
+      "zero_context_loss": 0.018519839271903038
+    },
+    "adopted": false,
+    "reason": "Foreground/motion improve, but background and total RGB regress; keep weight1 default."
+  },
+  "direct_execution": {
+    "command": [
+      ".venv/bin/python",
+      "-m",
+      "experiments.modality_audit",
+      "--output",
+      "runs/modality_foundation_v1/direct"
+    ],
+    "returncode": 0,
+    "seconds": 11.38350407895632
+  },
+  "repair_execution": [
+    {
+      "name": "video_weighted",
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "experiments.modality_audit",
+        "--modalities",
+        "video",
+        "--initialize",
+        "runs/modality_foundation_v1/direct/last.pt",
+        "--video-foreground-weight",
+        "12",
+        "--output",
+        "runs/modality_foundation_v1/video_weighted"
+      ],
+      "seconds": 6.546830078004859,
+      "returncode": 0
+    },
+    {
+      "name": "video_resume_pause",
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "experiments.modality_audit",
+        "--modalities",
+        "video",
+        "--initialize",
+        "runs/modality_foundation_v1/direct/last.pt",
+        "--video-foreground-weight",
+        "12",
+        "--output",
+        "runs/modality_foundation_v1/video_resume",
+        "--stop-after",
+        "64"
+      ],
+      "seconds": 5.580634578014724,
+      "returncode": 0
+    },
+    {
+      "name": "video_resume",
+      "command": [
+        ".venv/bin/python",
+        "-m",
+        "experiments.modality_audit",
+        "--resume",
+        "runs/modality_foundation_v1/video_resume"
+      ],
+      "seconds": 5.504783038981259,
+      "returncode": 0
+    }
+  ],
+  "source_hashes": {
+    "experiments/modality_audit.py": "cff4616e12d2477b20499a7f12c5d9bce36cb92869847fae95ab3ca5b394507d",
+    "experiments/world_state.py": "58524b088a2929c6c642fb722ea89b8aa97379667bf0372b828e7e984303d34a",
+    "pathwm/models/agent.py": "fd489fb089d39588463cee215766b535fb32d1da85952b3a05bbe3b39c5f2b63",
+    "pathwm/models/belief.py": "bc61b69698fcbec89801ab24818b8b04fc9b075ea15c83ff59dff7b96a811e82",
+    "pathwm/models/modalities.py": "f375c72a21ec1e18775c40b60686186222436d851909dfe197e1285671edffc8",
+    "pathwm/models/multiscale.py": "d6b7339c2b4a63c1beda730cc318ed67ac60523cdf29c97b284639c5f444cf4a",
+    "pathwm/world_state/modules.py": "45a2fec3b36ff0449c9d571bf14b20c62378440af2b6107bf66a00ea920ead0f",
+    "pathwm/world_state/session.py": "1b40def41493bfdc273cf110de4cc01e35c5f518d735d03a6322a2ae5be18f31",
+    "pathwm/evaluation/modality_audit.py": "7387225dcde8476c75164ed01df090a8daafb0ee85f4a9032d330c24e8748555",
+    "pathwm/evaluation/report.py": "2a934d67fc5ece1e3db7628a494efc1b913454bb2287d735a9055920ff4ef933",
+    "tests/test_modality_foundation.py": "f45631153f5bb3365cb00391a134ddf59b46071140f25abb554383ae9f52afae"
+  },
+  "artifact_sha256": {
+    "runs/modality_foundation_v1/verification.json": "78fdae689b39762b2eb1d83741f5796e6525f8e5403874c708f352d3d976d104",
+    "runs/modality_foundation_v1/audit.py": "e7d85af5aa995cf5d359d108ad1ae4b6fc8af7e5f48c9b4514ebb848e6fce1e0",
+    "runs/modality_foundation_v1/comparison.json": "a531fc60cd97171341675af55ea9b151ece3d7f884d42a225e8b437db67489d5",
+    "runs/modality_foundation_v1/final-tests.xml": "0aebeed50fa3b53eacf9deedf18d0fa17a71ce5d1d6ca19a2cab4fa2c3f0c2a8",
+    "runs/modality_foundation_v1/atlas-qa.json": "39556f0c969da86fbdb9561fcf69475d411d9e4206f7961517e6224a2b260a92",
+    "runs/modality_foundation_v1/direct/last.pt": "079f1c8cf2bc16b45461f1f793d19cf3cf40a1c6054dfe44ccd7807d53651111",
+    "runs/modality_foundation_v1/direct/result.json": "ad8223cfbc43f9f1b27d3316d16bb3449617779d097e16de6b676e78c9e2ca1a",
+    "runs/modality_foundation_v1/direct/report.html": "f4fa9a08f3fb8be62f65bfed96dbe98e9d9b4fe403910321169525508c7c95cc",
+    "runs/modality_foundation_v1/direct/run.json": "f3fdf5d44092227c8ee2763ad11e37c0cac93219e4ae906f6810d04e14ec13ea",
+    "runs/modality_foundation_v1/direct/modalities.npz": "7bf9f113d8b88fb4db89531d8d3aeee331159707ed408fe72b60345f7fea9341",
+    "runs/modality_foundation_v1/direct/native_after_trace_fix.json": "c5496c2bee6879f651abac84d8af50bf2d2ed4fbf5c96cf1ffe9d6c1734f818c",
+    "runs/modality_foundation_v1/video_control/last.pt": "e949f14ee76a0fd7e5426fc9b8fcaf4009ed11ab61ac11b1d924c4d66669fad0",
+    "runs/modality_foundation_v1/video_control/result.json": "5ab94065192e626bca11ba1cbcb037384dd0042b7b34f80cfc9c3aa12b77239e",
+    "runs/modality_foundation_v1/video_control/report.html": "f72a20d4585e538bb7b806eb9a0ae96e70309739df04b83f81610e8e49c847d5",
+    "runs/modality_foundation_v1/video_control/run.json": "19028e68e7ea1c332ea6739047b84f88f1e0128ca28b46d7529646743af3cc96",
+    "runs/modality_foundation_v1/video_control/modalities.npz": "c88088c69a8f39141fe237a3154fee1fabc9f30ea5bd2283c62a64a06442b253",
+    "runs/modality_foundation_v1/video_control/native_after_trace_fix.json": "5ff58ef1f79acc6e3f8a9ae9fd886be49054eb2760ef9dfc887bc82a216ae106",
+    "runs/modality_foundation_v1/video_weighted/last.pt": "134ba0857aaf494d71e90cf1fdf1259712fc5f3fd2dd8d485ad0b27a656bc62e",
+    "runs/modality_foundation_v1/video_weighted/result.json": "713b642a4d2202d9a632ecb117f1f77bbe49ad9c7c882015313f59d0e0fca993",
+    "runs/modality_foundation_v1/video_weighted/report.html": "c9c93a20bcd99bf96db24b97c37123f982b9fe014d05f9eae5cf3af19ff49835",
+    "runs/modality_foundation_v1/video_weighted/run.json": "4c5d47cb5018bf18a72fdc821d5d735c1bf4152ae8d3458a500f8bf66f831dc3",
+    "runs/modality_foundation_v1/video_weighted/modalities.npz": "e8902fcba4bd2b8deaf48bb34d4f02ad3cd748159219f5c6dee286c9523f6967",
+    "runs/modality_foundation_v1/video_weighted/native_after_trace_fix.json": "de1621fe30f6a539cd0aa0edfc1045fee6773f71fadf0fe09e37b40e176aecf9",
+    "runs/modality_foundation_v1/video_resume/last.pt": "f3d446591359f67cb3d6e236140d3d107f900156b280a01d80c89a0bd92a6913",
+    "runs/modality_foundation_v1/video_resume/result.json": "713b642a4d2202d9a632ecb117f1f77bbe49ad9c7c882015313f59d0e0fca993",
+    "runs/modality_foundation_v1/video_resume/report.html": "a30bf3e6ab1ba96871de01496e6c5c48dad5990a7a41946a551b33cabb2da436",
+    "runs/modality_foundation_v1/video_resume/run.json": "4c5d47cb5018bf18a72fdc821d5d735c1bf4152ae8d3458a500f8bf66f831dc3",
+    "runs/modality_foundation_v1/video_resume/modalities.npz": "e8902fcba4bd2b8deaf48bb34d4f02ad3cd748159219f5c6dee286c9523f6967",
+    "runs/modality_foundation_v1/video_resume/native_after_trace_fix.json": "de1621fe30f6a539cd0aa0edfc1045fee6773f71fadf0fe09e37b40e176aecf9",
+    "runs/modality_foundation_v1/foundation_regression/last.pt": "c368d681cde74a05de11aa663e2416afd9e498b7b895951890dec62c866550ce",
+    "runs/modality_foundation_v1/foundation_regression/result.json": "2bf7f784bb8d8cc46b980fbff9bca632efeab98d0ee842d5321019fe6e1df980",
+    "runs/modality_foundation_v1/foundation_regression/report.html": "18eeee818ae00feb26bad6b5b5ed7ad8ee0f9563f566b4756d2ae417b8ee160e",
+    "runs/modality_foundation_v1/foundation_regression/run.json": "0139b7896ad74d97eb5841bdb1bb10f3ce8cc61c9d7a2ec588b018f5a560b65e",
+    "runs/reviews/modality_foundation_v1/method-brief.txt": "4aecba6a4bad0d8a42abd7c3e8970e1ed421a7bae937dc7fc26f6e2d2f55ea48",
+    "runs/reviews/modality_foundation_v1/method-response.json": "fcf9458dd7166516db702a2a4841b118e4c81f81d461c212fa3a70f6548992f6",
+    "runs/reviews/modality_foundation_v1/method-receipt.json": "dbe6e64d22341322a390126bb98fdee1f4c4f056c697f0c65a98b0fa0f6558ec",
+    "runs/reviews/modality_foundation_v1/reconcile-brief.txt": "3998c5bae76fadfb0985e32d70ac25062889130f401bbd309e8202533d99af96",
+    "runs/reviews/modality_foundation_v1/reconcile-response.json": "c11bc9e9391506e4e64a9c73e01ad5bf42854dcbc27cecdc865c96ab86d4321c",
+    "runs/reviews/modality_foundation_v1/reconcile-receipt.json": "65cc27824eda6325e247a9333bc8fc6506c00818bea65686899dc78e07522560"
+  },
+  "limits": [
+    "Four-example development fitting, not generalization or sample-efficiency evidence.",
+    "Real AV/text only exercises explicitly resampled transport, not real-media weight training.",
+    "State-to-output path untrained; first-example diagnostic cannot be compared as a matched bottleneck probe.",
+    "Weighted video repair fails total RGB gate and is not adopted.",
+    "Historical traced arrays preserved; separately versioned native outputs after neutral tracing fix.",
+    "No live webcam, speech, software-tool execution or general video forecasting established."
+  ]
+}

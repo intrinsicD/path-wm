@@ -160,8 +160,8 @@ sessions:
   open_threads: 14
 - id: 2026-09-15_001
   date: '2026-09-15'
-  summary: "Modular World State foundation adopted and implemented with actual Claude review; 81 scoped tests, 3293 independent checks and exact complete CPU pause/resume pass. Tiny supplied-entity histories work; general identity/concepts/calibration and prior VAE/state/recall work remain open."
-  turn_count: 8
-  events_count: 48
+  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work."
+  turn_count: 9
+  events_count: 55
   claims_touched: []
-  open_threads: 18
+  open_threads: 19

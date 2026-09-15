@@ -2,9 +2,9 @@ session:
   id: 2026-09-15_001
   date: '2026-09-15'
   started: 2026-09-15T00:47+02:00
-  last_turn: 2026-09-15T15:54+02:00
-  turn_count: 8
-  summary: "Modular World State foundation adopted and implemented with actual Claude review; 81 scoped tests, 3293 independent checks and exact complete CPU pause/resume pass. Tiny supplied-entity histories work; general identity/concepts/calibration and prior VAE/state/recall work remain open."
+  last_turn: 2026-09-15T17:58+02:00
+  turn_count: 9
+  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work."
 events_logged:
 - turn: 1
   type: question
@@ -354,6 +354,54 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O250 operational contracts committed; broader O249 control/calibration study stays open.
+- turn: 9
+  type: decision
+  id: N375
+  routing: direct
+  provenance: user
+  summary: Inspect and repair non-image modalities alongside World State
+- turn: 9
+  type: experiment
+  id: N376
+  routing: direct
+  provenance: ai-executed
+  summary: Actual modality packets and decoders pass repaired interface contracts
+- turn: 9
+  type: experiment
+  id: N377
+  routing: direct
+  provenance: ai-executed
+  summary: Four isolated codec fits and real audiovisual transport measured
+- turn: 9
+  type: dead_end
+  id: N378
+  routing: direct
+  provenance: ai-executed
+  summary: Foreground-weighted video repair sacrifices background and total quality
+- turn: 9
+  type: experiment
+  id: N379
+  routing: direct
+  provenance: ai-executed
+  summary: Multiscale diagnostic kernel repaired and artifacts independently replayed
+- turn: 9
+  type: observation
+  id: O253
+  routing: staged
+  provenance: ai-suggested
+  summary: Isolated codec fitting and actual storage/thinker transport support these small interfaces, not general
+    language, speech, temporal prediction or learned cross-modal identity. The video foreground/motion gain coexists
+    with worse global reconstruction. Untrained first-example state output cannot identify where information is
+    irreversibly lost.
+- turn: 9
+  type: observation
+  id: O254
+  routing: staged
+  provenance: ai-suggested
+  summary: Next train state-conditioned text/audio/video adapters with matched direct-feature, memory, zero/wrong-context
+    controls, then held-out real-modality tasks. Keep video object/background tradeoffs explicit, real identity/calibration
+    and VAE rate/phase repair separate. No additional large training budget or backend selection follows from this
+    audit.
 ai_actions:
 - turn: 1
   action: Saved independent analysis and a bounded brief based on the user-supplied architecture;
@@ -456,6 +504,25 @@ ai_actions:
   - docs/world-state.md
   - docs/diagrams/architecture-atlas.json
   - ara/evidence/tables/world_state_foundation_2026-09-15.json
+- turn: 9
+  action: Implemented all-modality foundation adapters/masks, fixed memory width and multiscale trace path; actual
+    Claude method/reconciliation, isolated CPU fits and matched video control/repair, exact resume/audit, reports
+    and scoped atlas. Committed code8937b15 and docs41580de; no push.
+  provenance: ai-executed
+  files_changed:
+  - experiments/modality_audit.py
+  - experiments/world_state.py
+  - pathwm/models/agent.py
+  - pathwm/models/belief.py
+  - pathwm/models/modalities.py
+  - pathwm/models/multiscale.py
+  - pathwm/world_state/modules.py
+  - pathwm/world_state/session.py
+  - pathwm/evaluation/modality_audit.py
+  - pathwm/evaluation/report.py
+  - tests/test_modality_foundation.py
+  - docs/modality-foundation-plan.md
+  - ara/evidence/tables/modality_foundation_2026-09-15.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -482,6 +549,8 @@ key_context:
 - turn: 8
   excerpt: Bitte setzte die gesamte Grundstruktur dafür im code um ... Alle Kern Teile sollten modular umgesetzt
     sein damit sie austauschbar sind ... Strukturen ... zum debuggen beim Training und Internet.
+- turn: 9
+  excerpt: Schaue dir bitte auch mal alle anderen modalitäten an nicht nur Bild. Die sollten auch funktionieren…
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current
   rate; image/full retention remains 10/12. Next lower-rate comparison from preserved source
@@ -529,6 +598,9 @@ open_threads:
 - 'N371-N374/A12/A13/O249-O252: modular foundation and tiny development fit implemented. Real candidate
   identity/state/history evaluation, confusable negatives, calibration and flat/oracle/no-history controls
   remain open; concepts/learned retrieval/general dynamics require new task evidence.'
+- 'N375-N379/O253/O254: modality mechanics and tiny direct fits checked; train state-conditioned outputs with matched
+  controls, then held-out speech/language/video tasks. Weighted video repair fails total quality. Real AV transport
+  is not learned identity; preserve VAE and calibration studies.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await
   researcher response.'
@@ -645,3 +717,5 @@ ai_suggestions_pending:
   oracle/flat controls and calibration study remains proposed, so the bundled observation stays staged.'
 - 'O251/O252: narrow foundation interpretation and next real-candidate/identity/calibration study await
   researcher response; no capability or sample-efficiency promotion.'
+- 'O253/O254: scoped modality interpretation and state-output/real-task follow-up remain staged; no general capability
+  promotion.'

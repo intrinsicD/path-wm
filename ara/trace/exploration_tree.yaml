@@ -6241,3 +6241,85 @@ tree:
   also_depends_on:
   - N373
   status: resolved
+- id: N375
+  type: decision
+  title: Inspect and repair non-image modalities alongside World State
+  provenance: user
+  choice: User requests checking all other modalities, not only images, and that they work. Preserve the existing
+    modular design and efficient actual Claude review; exercise isolated paths rather than allowing image input
+    to supply other targets.
+  alternatives:
+  - Keep image-only integration
+  also_depends_on:
+  - N371
+  timestamp: 2026-09-15T17:58+02:00
+  evidence:
+  - ara/evidence/tables/modality_foundation_2026-09-15.json
+  status: resolved
+- id: N376
+  type: experiment
+  title: Actual modality packets and decoders pass repaired interface contracts
+  provenance: ai-executed
+  result: 112 focused tests pass after connecting audio/video/text outputs and candidates, matching memory categorical
+    width, excluding masked NaNs/gradients, preserving candidate source ancestry and rejecting invalid singleton
+    video states. Custom vector sensor and bounded action/task interfaces covered. Existing 96-update descriptor
+    foundation gate passes; no general learned behavior implied.
+  also_depends_on:
+  - N375
+  - N373
+  timestamp: 2026-09-15T17:58+02:00
+  evidence:
+  - ara/evidence/tables/modality_foundation_2026-09-15.json
+  status: resolved
+- id: N377
+  type: experiment
+  title: Four isolated codec fits and real audiovisual transport measured
+  provenance: ai-executed
+  result: 'CPU seed61301, four examples per modality,128 updates each: text CE0.00353067 and free exact4/4; audio
+    MSE0.0000126474 vs silence0.1800; initial video0.0147261 worse than mean0.0118009; image control0.0130804 worse
+    than mean0.0119434. First second of local Charades AV resized/resampled plus UTF-8 text passes actual store/think/restart
+    and mixed event transport, without real-media training. State-output diagnostic is untrained and first-example
+    only.'
+  also_depends_on:
+  - N375
+  - N376
+  timestamp: 2026-09-15T17:58+02:00
+  evidence:
+  - ara/evidence/tables/modality_foundation_2026-09-15.json
+  status: resolved
+- id: N378
+  type: dead_end
+  title: Foreground-weighted video repair sacrifices background and total quality
+  provenance: ai-executed
+  hypothesis: Weight12 on the known synthetic object mask can improve foreground/motion while passing the registered
+    total-RGB and control-matched repair screen.
+  failure_mode: 'Matched128-update video-only continuations from direct checkpoint: ordinary RGB0.00701749, FG0.0816304,
+    BG0.00204329,motion3/4; weighted RGB0.0170099,FG0.00702448,BG0.0176755,motion4/4. FG improves91.4% but RGB worsens142.4%
+    and fails mean-control gate. Visible background trails retained.'
+  lesson: Do not adopt weight12; retain weight1 and evaluate motion/object detail jointly with background and total
+    error. More correct motion does not certify a complete reconstruction repair.
+  also_depends_on:
+  - N377
+  timestamp: 2026-09-15T17:58+02:00
+  evidence:
+  - ara/evidence/tables/modality_foundation_2026-09-15.json
+  status: resolved
+- id: N379
+  type: experiment
+  title: Multiscale diagnostic kernel repaired and artifacts independently replayed
+  provenance: ai-executed
+  result: Audit found ConditionedBlock still switched attention kernels under trace although Attend was already
+    repaired. Shared detached helper now preserves all four encoders outputs/gradients/RNG exactly in train/eval.
+    Historical traced arrays exactly reproduced using scoped legacy kernel; current native arrays saved separately
+    with tiny deltas, unchanged weights.6075 tensor/metadata/metric checks and exact whole-checkpoint128vs64+64
+    resume pass; other modality tensors unchanged. Two Claude conceptual rounds reconciled; fixed shuffled-target
+    fit is not a useful four-example control. Structural reports/static figures pass; browser unavailable.
+  also_depends_on:
+  - N372
+  - N376
+  - N377
+  - N378
+  timestamp: 2026-09-15T17:58+02:00
+  evidence:
+  - ara/evidence/tables/modality_foundation_2026-09-15.json
+  status: resolved

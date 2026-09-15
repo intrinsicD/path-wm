@@ -154,3 +154,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Persistent World State review](tables/world_state_review_2026-09-15.json): N370; two actual Claude conceptual reviews, source/primary-paper checks and proposed smaller M1. No model experiment or new capability validation.
 
 - [Modular World State foundation](tables/world_state_foundation_2026-09-15.json): N371-N374; adopted modular store/neural/debug interfaces, trace-path repair, 81 scoped tests, 3293 independent checks and exact CPU pause/resume. Controlled descriptors only; no general capability claim.
+
+- [Non-image modalities](tables/modality_foundation_2026-09-15.json): N375-N379; repaired multimodal interfaces, four-word/tone fitting, real AV/text transport, failed weighted-video quality screen,112 scoped tests and6075 independent artifact checks with exact CPU resume.
