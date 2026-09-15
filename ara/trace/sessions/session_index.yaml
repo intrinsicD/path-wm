@@ -161,7 +161,7 @@ sessions:
 - id: 2026-09-15_001
   date: '2026-09-15'
   summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training."
-  turn_count: 10
-  events_count: 57
+  turn_count: 11
+  events_count: 58
   claims_touched: []
   open_threads: 20

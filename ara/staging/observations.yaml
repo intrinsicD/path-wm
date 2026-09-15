@@ -4510,3 +4510,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O256
+  timestamp: 2026-09-15T20:41+02:00
+  provenance: ai-suggested
+  content: Decoder sizing depends on whether the core supplies an explicit answer plan or merely facts requiring
+    dialogue reasoning. Consider100-500M as a restricted-verbalizer experiment,1-3B pretrained as a conversational
+    comparison; neither is a proven minimum or guarantee. Keep a trainable latent-to-text interface and test factual
+    grounding. Existing small conversational model performance includes substantial pretraining; own scratch learning
+    is a distinct budget.8GiB local VRAM motivates bounded contexts/quantized inference and measured combined memory.
+  context: User asks how large a decoder must be when World State supplies latents; primary model cards and local
+    GPU checked. No selection, implementation or training authorized by this sizing discussion.
+  potential_type: heuristic
+  bound_to:
+  - N380
+  - N377
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -2002,3 +2002,9 @@ entries:
     not a training experiment. Earlier explanatory turns merely restated existing mechanisms and were skipped.
   - 'No promotion: user concern is not endorsement of O253/O254 or general capability. Existing VAE, real modality
     and state-output topics remain active.'
+- turn: 2026-09-15_001#11
+  notes:
+  - O256 staged sizing heuristic; external1.7B/3B examples are reference architectures, not evidence for a minimum
+    decoder size or existing latent compatibility. Actual8GiB hardware read only; no memory-fit guarantee.
+  - N380 remains open. No affirmation of prior proposals; no training, downloads, architecture adoption or promotion.
+    Existing open capability topics retained.

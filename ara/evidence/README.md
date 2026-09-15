@@ -158,3 +158,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Non-image modalities](tables/modality_foundation_2026-09-15.json): N375-N379; repaired multimodal interfaces, four-word/tone fitting, real AV/text transport, failed weighted-video quality screen,112 scoped tests and6075 independent artifact checks with exact CPU resume.
 
 - [Tiny text capacity](tables/text_capacity_2026-09-15.json): N380;18,048 encoder +13,059 decoder parameters measured from current constructor; no capability/scaling experiment.
+
+- [Text decoder sizing references](tables/text_decoder_sizing_2026-09-15.json): O256/N380; official1.7B/3B model cards and local8GiB GPU check; no minimum-size or runtime benchmark.

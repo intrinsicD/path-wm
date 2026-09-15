@@ -1,0 +1,20 @@
+{
+  "provenance": "ai-executed",
+  "checked_at": "2026-09-15T20:41+02:00",
+  "local_hardware": {
+    "method": "nvidia-smi --query-gpu=name,memory.total --format=csv,noheader",
+    "gpu": "NVIDIA GeForce RTX 3050",
+    "vram_mib": 8192
+  },
+  "primary_sources": [
+    {
+      "url": "https://huggingface.co/Qwen/Qwen3-1.7B",
+      "fact": "Publisher specifies1.7B parameters and pretraining plus post-training."
+    },
+    {
+      "url": "https://huggingface.co/HuggingFaceTB/SmolLM3-3B",
+      "fact": "Publisher describes3B multilingual model including German, pretrained on11.2T tokens."
+    }
+  ],
+  "scope": "Sizing orientation only; no decoder installation, training, latency or VRAM benchmark. World-State latent compatibility requires trained conditioning; parameter ranges below are AI experimental suggestions, not measured minima."
+}
