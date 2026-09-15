@@ -1,0 +1,265 @@
+session:
+  id: 2026-09-16_001
+  date: '2026-09-16'
+  started: 2026-09-16T00:28+02:00
+  last_turn: 2026-09-16T00:28+02:00
+  turn_count: 1
+  summary: Eight matched fresh-updater controls fail direction screens; continuous working access not adopted.
+    Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped
+    tests, exact replay and raw/report audits pass.
+events_logged:
+- turn: 1
+  type: decision
+  id: N391
+  routing: direct
+  provenance: user
+  summary: Implement the bounded literature-motivated direction controls with Claude
+- turn: 1
+  type: experiment
+  id: N392
+  routing: direct
+  provenance: ai-executed
+  summary: Eight matched factor-isolation and continuous working-readout fits fail the direction gates
+- turn: 1
+  type: dead_end
+  id: N393
+  routing: direct
+  provenance: ai-executed
+  summary: Continuous posterior working access is not adopted as the bounded direction repair
+- turn: 1
+  type: experiment
+  id: N394
+  routing: direct
+  provenance: ai-executed
+  summary: Frozen readers retain perfect encoder access but weaker updater-query direction access
+- turn: 1
+  type: observation
+  id: O267
+  routing: staged
+  provenance: ai-suggested
+  summary: Direction-only failure weakens task-factor competition as a sufficient explanation; failed continuous
+    working access weakens a simple output-code-read repair. Encoder accessibility remains high and declines
+    through updater/readout, but failed/different-dimensional linear probes cannot identify a unique irreversible
+    loss operation.
+- turn: 1
+  type: observation
+  id: O268
+  routing: staged
+  provenance: ai-suggested
+  summary: Next isolate direction learning on one informative modality, beginning with symbolic audio then
+    text, before mixing input modes. Compare direct features and updater query reads; query-preserving projection
+    is a conditional subsequent test. Do not bundle extra loops, gradient surgery and scaling.
+- turn: 1
+  type: observation
+  id: O269
+  routing: crystallized
+  provenance: ai-suggested
+  summary: The existing recipe supports encoder-only frozen initialization, matched target-factor objectives,
+    non-mutating per-task gradient audits and optional continuous posterior conditioning of temporary working
+    tokens. Sampled state/IDs/RNG and source storage remain native; saved source metadata restores the chosen
+    readout mode.
+ai_actions:
+- turn: 1
+  action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
+    public-only actual-Claude exchanges, verified independent raw artifacts, exact resume and reports; committed
+    code/docs. No private data/code/results exported and no default adoption.
+  provenance: ai-executed
+  files_changed:
+  - experiments/modality_readout.py
+  - tests/test_readout_diagnosis.py
+  - pathwm/evaluation/modality_readout.py
+  - docs/modality-readout-plan.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - ara/evidence/tables/direction_learning_2026-09-16.json
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: 'User: Arbeite daran zusammen mit Claude. Plane, implementiere, überprüfe, teste und repariere.
+    Iteriere dies.'
+open_threads:
+- 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
+  retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
+  fresh confirmation and unchanged causal/retention criteria. Prior candidate not replaced. Broader real imagery,
+  reliability, upstream replication and general generation remain open; preserve runs and disk floor.'
+- 'N278-N329: CPU/GPU portability remains unresolved. Current 61 scoped tests and 40 exact GPU reloads do not
+  repair prior CPU differences. Trainability-dependent raw GPU logit discrepancy is handled by the existing
+  standardized evaluator; only the preflight check was corrected.'
+- 'N256/O168: preserve broad baseline; general-agent fact identity, recall, instructions, stable perception
+  and learned prediction remain weak.'
+- 'N271/O173/O174/O175: compact learned codec, held-out image/request production, higher resolution and other-modality
+  quality remain open.'
+- 'N273/A06/O177/O178: adopted output boundary needs concrete conditioning, uncertainty/time inputs, backends
+  and cross-modal consistency tests.'
+- 'S02/S04/T01/O164/O165: own webcam footage, verified entity/event/query labels and synthetic-to-real curriculum
+  remain incomplete.'
+- 'S03/R06: comfortable local GPU training/inference required; own components preferred, pretrained adapter
+  fallback and numerical gates unresolved.'
+- 'O162/O163: task/cost/evidence contract, planner reward/utility mismatch and learned-dynamics integration
+  remain open.'
+- 'N260: bounded cross-window encoder recurrence is unimplemented; define reset-history comparison.'
+- 'N263/N266/O172: earlier private Claude brief remains blocked; last same-rate ordinary reconstruction control
+  budget-stopped. New public-only review is separate.'
+- 'N330/O221: Marigold-style transfer motivates testing state-conditioned generation with a pretrained backend;
+  faithful remembered content, decoder capacity and local GPU feasibility remain untested. This inquiry does
+  not adopt the pending lower-rate experiment.'
+- 'N336-N339/H70/O226-O228: decoded endpoint and full-sampler supervision implemented, matched benefit improves
+  but full capability fails. Placement/occupancy supervision proposed; preserve all hard tests, broad generation
+  and original renderer.'
+- 'N343-N346/H71/O231-O233: frozen-stage spatial access drops at first observation update and reset/recall;
+  fine texture has a distinct input constraint. State/recall real-photo repair is proposed, not executed. Size/duration
+  explanations remain untested; broader output/CPU portability and O228 synthetic placement stay open.'
+- 'N349/O234/O235: small-model visual sample efficiency is unvalidated; local priors, self-supervision and
+  data/capacity/budget curves proposed after state/recall training. Distinguish own-data learning from pretrained
+  transfer; no new training budget adopted.'
+- 'N352-N355/A08/A09/O238/O239: independent spatial VAE comparison implemented; photo-quality and architectural
+  benefit screens fail, fine detail remains weak. Next duration/KL/capacity comparisons proposed; semantics,
+  general generation and state-to-latent integration remain open.'
+- 'N357-N360/A10/A11/O242/O243: expanded hierarchy and ten-fit sanity study complete; all photo-quality screens
+  fail. Replicated duration/capacity/rate/resource controls, fine detail and agent integration remain open.'
+- 'N361-N369/O244-O247: sampled-color objective now improves color at unchanged inference size but higher KL;
+  decoder grids and rate-matched quality remain open. Phase term lacks consistent benefit; color-only diagnostic
+  candidate and originals retained.'
+- 'N371-N374/A12/A13/O249-O252: modular foundation and tiny development fit implemented. Real candidate identity/state/history
+  evaluation, confusable negatives, calibration and flat/oracle/no-history controls remain open; concepts/learned
+  retrieval/general dynamics require new task evidence.'
+- 'N375-N379/O253/O254: modality mechanics and tiny direct fits checked; train state-conditioned outputs with
+  matched controls, then held-out speech/language/video tasks. Weighted video repair fails total quality. Real
+  AV transport is not learned identity; preserve VAE and calibration studies.'
+- 'N380/O255: tiny-text general-language feasibility and task-appropriate capacity remain untested; no fallback
+  backend selected.'
+- 'N381/O257: latent answer planning versus decoder realization; total parameter/memory savings and grounded
+  language quality need experiments.'
+- 'N382/O258: compare full-state decoding with trained existing workspace answer plan before dedicated plan
+  tokens. Grounding checks and reasoned belief revision remain unvalidated.'
+- 'N383: decoder readout sufficiency, optional nested loops and budgeted held-out comparisons remain open.'
+- 'N384-N386/O262-O263: combined compositional output fails; localize state access and decoder recombination.
+  Prior real-data/VAE/identity and broader recurrent-efficiency questions remain open.'
+- 'N388/N391-N394/O264-O268: direction and composition remain open. Fresh frozen-encoder direction-only/joint
+  sampled/continuous controls now executed and failed; next isolate one informative input modality. Query/code
+  probes narrow access, not unique irreversible loss. Prior explicit opposite-direction pairing and output/persistence
+  work remain open.'
+ai_suggestions_pending:
+- 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
+- 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
+  location information.'
+- 'O184: partial pre-storage recoverability and weak post-recall accessibility under tested probe family; no
+  unique mechanism identified.'
+- 'O186: partial native improvement and calibration failure at fixed budget; no asymptotic or unique mechanism
+  claim.'
+- 'O188: limited age-cue gain and heterogeneous metadata sensitivity; general time semantics not established.'
+- 'O190: auxiliary compatibility versus native-output failure; mechanism remains unconfirmed.'
+- 'O192: conditional native reset accessibility and ordinary regression; no general mechanism or full repair
+  established.'
+- 'O164-O175: earlier curriculum, diagnosis and scoped capability interpretations retain their original provenance
+  and closure status.'
+- 'O177/O178: coordination and state-grounding diagnostics remain staged; acknowledgment does not select their
+  complete implementation.'
+- 'O194: one-source mixed-context policy repair; no general mechanism or replicated reliability claim.'
+- 'O196: partial writer learning and gradient reachability do not establish a unique failure mechanism.'
+- 'O197: joint controlled-task sufficiency with limited replication and CPU portability.'
+- 'O199: source/sample-specific task success and conditional factual-versus-image discrepancy; no unique mechanism.'
+- 'O201: conditional frozen-state output recoverability with shared upstream/codec; researcher interpretation
+  pending.'
+- 'O204: broad input/readout sensitivity under declared RGB shifts, without unique failure localization; researcher
+  interpretation pending.'
+- 'O206: task-specific centering sufficiency with incomplete learned augmentation; researcher interpretation
+  pending.'
+- 'O209: scene-limited centering and diagnostic accessibility interpretation; researcher response pending.'
+- 'O211: partial scene/native output sufficiency and residual shape fitting interpretation; researcher response
+  pending.'
+- 'O213: conditional texture-mixture benefit and persistent recall shape shortfall interpretation; researcher
+  response pending.'
+- 'O215: scoped rectangle-weighting improvement and unresolved strict retention interpretation; researcher
+  response pending.'
+- 'O217: cool extra-training sufficiency on sampled histories, unassessable capacity benefit and remaining
+  warm/texture interpretation; researcher response pending.'
+- 'O219: failed factual benefit despite branch isolation, with warm/texture terminal-loss deterioration; researcher
+  interpretation pending.'
+- 'O220: lower-rate readout comparison and difficult-scene diagnostics proposed; no unique cause or successful
+  repair assumed.'
+- 'O221: conditional-generation interpretation of Marigold V2 remains proposed, with no backend selection or
+  implementation commitment.'
+- 'O223: For this initialization and short synthetic fit, latent-only conditional-flow learning fails reliable
+  output from pure noise while target-containing intermediate features permit accurate category decoding. Direct
+  regression fits familiar combinations but fails withheld ones. The diagnostic narrows the learned conditioning
+  problem without uniquely identifying optimization, capacity, objective or data as its cause.'
+- 'O224: Half pure-noise supervision reduces mean weighted pixel error25.7% on fresh controlled cases but does
+  not repair faithful familiar output or full capability. Pixel-error improvement alone is insufficient evidence
+  of correct state-conditioned generation. No general rejection of flow matching or scaling follows from this
+  fixed-budget result.'
+- 'O226: Decoded endpoint image supervision improves average pixel error and familiar generation at this fixed
+  budget, but target-free multi-step sampling can degrade its initial extrapolation and one withheld cell regresses.
+  This supports testing the actual sampled loss without proving solver error is the unique cause or that the
+  hybrid objective preserves vanilla flow-matching optimality.'
+- 'O227: Full-sampler supervision passes its scoped composite benefit test but not reliable generation. Color/shape
+  gains coexist with weaker left/right placement and near-even contrast across image halves. A joint-category
+  nonregression gate does not guarantee nonregression of every component attribute; source-factual accessibility
+  does not ensure image binding. This is one initialization with correlated synthetic histories and a frozen
+  high-bandwidth codec, not general image capability.'
+- 'O228: Next test a spatial placement/occupancy training signal on generated features or images, with inference
+  conditions derived only from workspace. Keep data, budget and current withheld/intervention gates matched.
+  Color/shape coupling in the training set is a separate risk; any balanced-factor diagnostic must stay distinct
+  from the existing hard test. Do not assume added scale or a pretrained backend is necessary.'
+- 'O229: Real-photo generator continuation improves aggregate error and responds to photo-specific context,
+  yet the displayed outputs retain mostly coarse color fields. Passing relative learning/ablation screens is
+  not photographic fidelity. Direct codec adequacy and poor state-conditioned output expose a gap without uniquely
+  locating it in encoding, state/memory compression, readout or optimization.'
+- 'O231: Insufficient training duration and small model size may explain poor photographic recall. This is
+  the user’s stated guess, not an established cause; the authorized diagnostic freezes the model and does not
+  test duration or capacity.'
+- 'O232: The dominant measured spatial-access loss is at the first observation-to-state update, followed by
+  reset/recall; storage copying is exact. Fine sub-patch texture is separately constrained by a non-injective
+  and poorly conditioned stem, while the good codec uses a bypass absent from the agent. Closed-form readers
+  narrow practical accessibility without proving absence under all decoders or ruling out model scaling/longer
+  training.'
+- 'O233: Next train observation/state updating and recall on real-photo spatial supervision with intermediate
+  readouts and held-out controls. Test fine input-detail transport separately; compare duration/capacity after
+  ensuring the relevant stages learn. This is a proposed repair, not an executed change or an efficacy claim.'
+- 'O235: visual sample-efficiency strategy and learning curves proposed; no architectural commitment, efficacy
+  claim or scheduled training.'
+- 'O238: At one short matched budget, reversible local mixing modestly improves photo color/layout while fine
+  detail barely changes; attention alone does not help. Neither achieves the predeclared architecture-benefit
+  gate or photo-quality screen. These do not establish asymptotic architecture limits, sample efficiency or
+  a unique loss cause. Native larger inputs have larger latents and different content; easy retrieval has a
+  perfect raw-pixel control.'
+- 'O239: Next vary training duration and KL pressure independently at fixed geometry, then latent capacity
+  if detail stays weak. Keep base reference and reversible candidate, use fresh held-out groups and multiple
+  seeds, and compare achieved rate and compute before adoption. World-state integration remains separate.'
+- 'O242: At this short one-seed fit, relaxing KL from1 to0.1 helps reconstruction more than attention/extra
+  shared iterations. More rate at0.01 does not ensure better mean reconstruction. Processing before/after compression
+  is nearly tied at beta1 with unequal resources. Feature-variance recovery can look good while common RGB
+  access worsens. These do not prove a unique loss site or architecture/sample-efficiency advantage.'
+- 'O243: Next vary duration at fixed geometry and objective, then posterior capacity and matched-resource processing
+  placement; use replicated seeds and achieved-rate overlap. Require untied depth controls before weight-sharing
+  claims. Keep separate agent state/recall and general-generation work open.'
+- 'O244/O245: diagnostic mechanism interpretation and targeted decoder/posterior repair proposals await researcher
+  response; no broad efficacy promotion.'
+- 'O246/O247: scoped sampled-color/rate interpretation and color-only/decoder-phase follow-up await researcher
+  response; no full repair or global default adoption.'
+- 'O249: operational subset implemented via O250/A13; broader real-data, confusable identities, oracle/flat
+  controls and calibration study remains proposed, so the bundled observation stays staged.'
+- 'O251/O252: narrow foundation interpretation and next real-candidate/identity/calibration study await researcher
+  response; no capability or sample-efficiency promotion.'
+- 'O253/O254: scoped modality interpretation and state-output/real-task follow-up remain staged; no general
+  capability promotion.'
+- 'O255: restricted language versus broad conversation assessment remains tentative; parameter count alone
+  is not a measured capability limit.'
+- 'O256: decoder sizing ranges conditional on content planning and pretraining are hypotheses, not adopted
+  architecture or established minima.'
+- 'O257: latent language division remains proposed; no evidence that latent computation removes required learned
+  capacity.'
+- 'O258: workspace-first output-plan experiment proposed; drawing does not adopt a new layer, validate thinking
+  or show capacity savings.'
+- 'O259/O260: multimodal readout clarification and fixed-loop comparison remain staged; no size/capability
+  adoption.'
+- 'O262: two-sided state-access/output limitation interpretation awaits researcher assessment; no unique cause
+  proven.'
+- 'O263: upstream stage probes and output oracle conditioning/recombination with matched training controls
+  proposed, not run.'
+- 'O264/O265: scoped partial-repair interpretation and paired-direction next test remain staged; no broad efficacy
+  or architectural necessity affirmed.'
+- 'O266: literature-derived comparisons remain proposed; VQ versus categorical and single-task versus multi-task
+  mechanisms must stay distinct.'
+- 'O267: interpretation of failed isolation/continuous controls awaits researcher response; no unique mechanism.'
+- 'O268: proposed single-modality direction learning before multimodal mixing; not yet run.'

@@ -1,0 +1,868 @@
+{
+  "date": "2026-09-16",
+  "provenance": "ai-executed",
+  "source_commits": [
+    "0d31fd6",
+    "49478f5",
+    "e370a14"
+  ],
+  "formal_fits": 8,
+  "steps_each": 1152,
+  "measured_training_seconds": 450.1646097890334,
+  "results": {
+    "evaluation_scope": "Acht kontrollierte Fits auf Pfeilen, symbolischen Tönen und kurzen Beschreibungen. Code: tatsächlich gezogene Kategorien im Arbeitskontext. Posterior: separat trainierter kontinuierlicher Zugriff; gespeicherte Kategorien bleiben hart. Kein Nachweis allgemeiner Sprach-, Bild- oder Videofähigkeit. Bekannte/ neue Kombinationen getrennt, pro Eingangsmodalität. Kein neuer Outputdecoder-Test.",
+    "gate": false,
+    "limits": [
+      "Zwei Seeds;48 Beispiele je Testzelle; gehaltene Kombinationen bereits in früheren Studien verwendet.",
+      "Kontinuierlicher Gewinn trennt Informationsverlust, Gradientenabschätzung und Optimierung nicht eindeutig.",
+      "Ein neuer Decoder- und Gedächtnistest bleibt erforderlich; Code-Standard bleibt unverändert."
+    ],
+    "localization_report": "localization/report.html",
+    "metrics": {
+      "seed7201/all": {
+        "heldout_color": 0.9305555522441864,
+        "heldout_direction": 0.4930555671453476,
+        "heldout_minimum_direction_across_inputs": 0.4583333432674408,
+        "heldout_place": 0.020833333333333332,
+        "parameters": 237234,
+        "seen_color": 1.0,
+        "seen_direction": 0.5104166666666666,
+        "seen_minimum_direction_across_inputs": 0.4583333432674408,
+        "seen_place": 0.7430555522441864,
+        "task_gate": false,
+        "training_seconds": 56.214892388903536
+      },
+      "seed7201/direction": {
+        "heldout_color": 0.3333333333333333,
+        "heldout_direction": 0.5277777761220932,
+        "heldout_minimum_direction_across_inputs": 0.4583333432674408,
+        "heldout_place": 0.2986111044883728,
+        "parameters": 237234,
+        "seen_color": 0.3402777761220932,
+        "seen_direction": 0.524305542310079,
+        "seen_minimum_direction_across_inputs": 0.4166666567325592,
+        "seen_place": 0.3333333333333333,
+        "task_gate": false,
+        "training_seconds": 62.927488459972665
+      },
+      "seed7201/soft_all": {
+        "heldout_color": 0.9444444477558136,
+        "heldout_direction": 0.4548611144224803,
+        "heldout_minimum_direction_across_inputs": 0.375,
+        "heldout_place": 0.013888889302810034,
+        "parameters": 237234,
+        "seen_color": 1.0,
+        "seen_direction": 0.4861111144224803,
+        "seen_minimum_direction_across_inputs": 0.4375,
+        "seen_place": 0.7430555621782938,
+        "task_gate": false,
+        "training_seconds": 55.44540533807594
+      },
+      "seed7201/soft_direction": {
+        "heldout_color": 0.3125,
+        "heldout_direction": 0.4548611044883728,
+        "heldout_minimum_direction_across_inputs": 0.4166666567325592,
+        "heldout_place": 0.3090277810891469,
+        "parameters": 237234,
+        "seen_color": 0.2951388905445735,
+        "seen_direction": 0.503472218910853,
+        "seen_minimum_direction_across_inputs": 0.4583333432674408,
+        "seen_place": 0.3263888905445735,
+        "task_gate": false,
+        "training_seconds": 55.80364209099207
+      },
+      "seed7202/all": {
+        "heldout_color": 0.9131944477558136,
+        "heldout_direction": 0.5625000049670538,
+        "heldout_minimum_direction_across_inputs": 0.3958333432674408,
+        "heldout_place": 0.055555557211240135,
+        "parameters": 237234,
+        "seen_color": 0.9375,
+        "seen_direction": 0.5937499900658926,
+        "seen_minimum_direction_across_inputs": 0.5,
+        "seen_place": 0.6979166567325592,
+        "task_gate": false,
+        "training_seconds": 55.20085181505419
+      },
+      "seed7202/direction": {
+        "heldout_color": 0.3993055572112401,
+        "heldout_direction": 0.5659722139437994,
+        "heldout_minimum_direction_across_inputs": 0.4166666567325592,
+        "heldout_place": 0.2534722213943799,
+        "parameters": 237234,
+        "seen_color": 0.3472222238779068,
+        "seen_direction": 0.621527781089147,
+        "seen_minimum_direction_across_inputs": 0.4583333432674408,
+        "seen_place": 0.3298611119389534,
+        "task_gate": false,
+        "training_seconds": 54.56738021806814
+      },
+      "seed7202/soft_all": {
+        "heldout_color": 0.902777781089147,
+        "heldout_direction": 0.4965277711550395,
+        "heldout_minimum_direction_across_inputs": 0.375,
+        "heldout_place": 0.055555557211240135,
+        "parameters": 237234,
+        "seen_color": 0.9444444477558136,
+        "seen_direction": 0.555555542310079,
+        "seen_minimum_direction_across_inputs": 0.5,
+        "seen_place": 0.7048611094554266,
+        "task_gate": false,
+        "training_seconds": 55.02945152996108
+      },
+      "seed7202/soft_direction": {
+        "heldout_color": 0.3020833333333333,
+        "heldout_direction": 0.5173611094554266,
+        "heldout_minimum_direction_across_inputs": 0.3541666567325592,
+        "heldout_place": 0.3159722263614337,
+        "parameters": 237234,
+        "seen_color": 0.3298611119389534,
+        "seen_direction": 0.628472218910853,
+        "seen_minimum_direction_across_inputs": 0.5416666865348816,
+        "seen_place": 0.3472222238779068,
+        "task_gate": false,
+        "training_seconds": 54.975497948005795
+      }
+    },
+    "paired_benefit": {
+      "all": {
+        "direction_gain": {
+          "7201": -0.024305552244186346,
+          "7202": -0.0381944477558136
+        },
+        "ten_point_benefit_both_seeds": false
+      },
+      "direction": {
+        "direction_gain": {
+          "7201": -0.020833323399225945,
+          "7202": 0.006944437821706062
+        },
+        "ten_point_benefit_both_seeds": false
+      }
+    },
+    "reports": [
+      "seed7201/all/report.html",
+      "seed7201/direction/report.html",
+      "seed7201/soft_all/report.html",
+      "seed7201/soft_direction/report.html",
+      "seed7202/all/report.html",
+      "seed7202/direction/report.html",
+      "seed7202/soft_all/report.html",
+      "seed7202/soft_direction/report.html"
+    ],
+    "robustness_report": null
+  },
+  "localization": [
+    {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "features": 18432,
+      "run": "7201.all",
+      "split": "seen",
+      "stage": "encoder"
+    },
+    {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "features": 18432,
+      "run": "7201.all",
+      "split": "heldout",
+      "stage": "encoder"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.9166666666666666,
+        0.7708333333333334
+      ],
+      "features": 32,
+      "run": "7201.all",
+      "split": "seen",
+      "stage": "posterior"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.0,
+        0.5
+      ],
+      "features": 32,
+      "run": "7201.all",
+      "split": "heldout",
+      "stage": "posterior"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.7916666666666666,
+        0.5208333333333334
+      ],
+      "features": 32,
+      "run": "7201.all",
+      "split": "seen",
+      "stage": "codes"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.0,
+        0.5
+      ],
+      "features": 32,
+      "run": "7201.all",
+      "split": "heldout",
+      "stage": "codes"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.7708333333333334,
+        0.4583333333333333
+      ],
+      "features": 288,
+      "run": "7201.all",
+      "split": "seen",
+      "stage": "observed"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.0,
+        0.5625
+      ],
+      "features": 288,
+      "run": "7201.all",
+      "split": "heldout",
+      "stage": "observed"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.9791666666666666,
+        0.5833333333333334
+      ],
+      "features": 288,
+      "run": "7201.all",
+      "split": "seen",
+      "stage": "thought"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.08333333333333333,
+        0.5625
+      ],
+      "features": 288,
+      "run": "7201.all",
+      "split": "heldout",
+      "stage": "thought"
+    },
+    {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.6041666666666666
+      ],
+      "features": 96,
+      "run": "7201.all",
+      "split": "seen",
+      "stage": "queries"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.0,
+        0.7083333333333334
+      ],
+      "features": 96,
+      "run": "7201.all",
+      "split": "heldout",
+      "stage": "queries"
+    },
+    {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.5416666666666666
+      ],
+      "features": 24,
+      "run": "7201.all",
+      "split": "seen",
+      "stage": "query_mean"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.0,
+        0.7083333333333334
+      ],
+      "features": 24,
+      "run": "7201.all",
+      "split": "heldout",
+      "stage": "query_mean"
+    },
+    {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "features": 18432,
+      "run": "7201.soft_all",
+      "split": "seen",
+      "stage": "encoder"
+    },
+    {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "features": 18432,
+      "run": "7201.soft_all",
+      "split": "heldout",
+      "stage": "encoder"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.9166666666666666,
+        0.7291666666666666
+      ],
+      "features": 32,
+      "run": "7201.soft_all",
+      "split": "seen",
+      "stage": "posterior"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.0,
+        0.4791666666666667
+      ],
+      "features": 32,
+      "run": "7201.soft_all",
+      "split": "heldout",
+      "stage": "posterior"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.8333333333333334,
+        0.5
+      ],
+      "features": 32,
+      "run": "7201.soft_all",
+      "split": "seen",
+      "stage": "codes"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.0,
+        0.4791666666666667
+      ],
+      "features": 32,
+      "run": "7201.soft_all",
+      "split": "heldout",
+      "stage": "codes"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.7916666666666666,
+        0.5625
+      ],
+      "features": 288,
+      "run": "7201.soft_all",
+      "split": "seen",
+      "stage": "observed"
+    },
+    {
+      "accuracy": [
+        0.9791666666666666,
+        0.0,
+        0.6666666666666666
+      ],
+      "features": 288,
+      "run": "7201.soft_all",
+      "split": "heldout",
+      "stage": "observed"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.9791666666666666,
+        0.5416666666666666
+      ],
+      "features": 288,
+      "run": "7201.soft_all",
+      "split": "seen",
+      "stage": "thought"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.0,
+        0.3333333333333333
+      ],
+      "features": 288,
+      "run": "7201.soft_all",
+      "split": "heldout",
+      "stage": "thought"
+    },
+    {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.625
+      ],
+      "features": 96,
+      "run": "7201.soft_all",
+      "split": "seen",
+      "stage": "queries"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.10416666666666667,
+        0.5
+      ],
+      "features": 96,
+      "run": "7201.soft_all",
+      "split": "heldout",
+      "stage": "queries"
+    },
+    {
+      "accuracy": [
+        1.0,
+        1.0,
+        0.5625
+      ],
+      "features": 24,
+      "run": "7201.soft_all",
+      "split": "seen",
+      "stage": "query_mean"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.125,
+        0.4791666666666667
+      ],
+      "features": 24,
+      "run": "7201.soft_all",
+      "split": "heldout",
+      "stage": "query_mean"
+    },
+    {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "features": 18432,
+      "run": "7202.all",
+      "split": "seen",
+      "stage": "encoder"
+    },
+    {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "features": 18432,
+      "run": "7202.all",
+      "split": "heldout",
+      "stage": "encoder"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.8333333333333334,
+        0.625
+      ],
+      "features": 32,
+      "run": "7202.all",
+      "split": "seen",
+      "stage": "posterior"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.0,
+        0.3333333333333333
+      ],
+      "features": 32,
+      "run": "7202.all",
+      "split": "heldout",
+      "stage": "posterior"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.8333333333333334,
+        0.5
+      ],
+      "features": 32,
+      "run": "7202.all",
+      "split": "seen",
+      "stage": "codes"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.0,
+        0.5208333333333334
+      ],
+      "features": 32,
+      "run": "7202.all",
+      "split": "heldout",
+      "stage": "codes"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.875,
+        0.4791666666666667
+      ],
+      "features": 288,
+      "run": "7202.all",
+      "split": "seen",
+      "stage": "observed"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.0,
+        0.5208333333333334
+      ],
+      "features": 288,
+      "run": "7202.all",
+      "split": "heldout",
+      "stage": "observed"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.9375,
+        0.75
+      ],
+      "features": 288,
+      "run": "7202.all",
+      "split": "seen",
+      "stage": "thought"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.2916666666666667,
+        0.4791666666666667
+      ],
+      "features": 288,
+      "run": "7202.all",
+      "split": "heldout",
+      "stage": "thought"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.9375,
+        0.75
+      ],
+      "features": 96,
+      "run": "7202.all",
+      "split": "seen",
+      "stage": "queries"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.041666666666666664,
+        0.5833333333333334
+      ],
+      "features": 96,
+      "run": "7202.all",
+      "split": "heldout",
+      "stage": "queries"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.9166666666666666,
+        0.6875
+      ],
+      "features": 24,
+      "run": "7202.all",
+      "split": "seen",
+      "stage": "query_mean"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.041666666666666664,
+        0.6041666666666666
+      ],
+      "features": 24,
+      "run": "7202.all",
+      "split": "heldout",
+      "stage": "query_mean"
+    },
+    {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "features": 18432,
+      "run": "7202.soft_all",
+      "split": "seen",
+      "stage": "encoder"
+    },
+    {
+      "accuracy": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "features": 18432,
+      "run": "7202.soft_all",
+      "split": "heldout",
+      "stage": "encoder"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.8333333333333334,
+        0.5625
+      ],
+      "features": 32,
+      "run": "7202.soft_all",
+      "split": "seen",
+      "stage": "posterior"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.0,
+        0.5208333333333334
+      ],
+      "features": 32,
+      "run": "7202.soft_all",
+      "split": "heldout",
+      "stage": "posterior"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.8333333333333334,
+        0.5208333333333334
+      ],
+      "features": 32,
+      "run": "7202.soft_all",
+      "split": "seen",
+      "stage": "codes"
+    },
+    {
+      "accuracy": [
+        0.8958333333333334,
+        0.0,
+        0.22916666666666666
+      ],
+      "features": 32,
+      "run": "7202.soft_all",
+      "split": "heldout",
+      "stage": "codes"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.8333333333333334,
+        0.4375
+      ],
+      "features": 288,
+      "run": "7202.soft_all",
+      "split": "seen",
+      "stage": "observed"
+    },
+    {
+      "accuracy": [
+        0.8958333333333334,
+        0.0625,
+        0.3333333333333333
+      ],
+      "features": 288,
+      "run": "7202.soft_all",
+      "split": "heldout",
+      "stage": "observed"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.9166666666666666,
+        0.5833333333333334
+      ],
+      "features": 288,
+      "run": "7202.soft_all",
+      "split": "seen",
+      "stage": "thought"
+    },
+    {
+      "accuracy": [
+        0.9166666666666666,
+        0.08333333333333333,
+        0.5416666666666666
+      ],
+      "features": 288,
+      "run": "7202.soft_all",
+      "split": "heldout",
+      "stage": "thought"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.9791666666666666,
+        0.6875
+      ],
+      "features": 96,
+      "run": "7202.soft_all",
+      "split": "seen",
+      "stage": "queries"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.3333333333333333,
+        0.3958333333333333
+      ],
+      "features": 96,
+      "run": "7202.soft_all",
+      "split": "heldout",
+      "stage": "queries"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.9791666666666666,
+        0.6875
+      ],
+      "features": 24,
+      "run": "7202.soft_all",
+      "split": "seen",
+      "stage": "query_mean"
+    },
+    {
+      "accuracy": [
+        1.0,
+        0.2916666666666667,
+        0.3958333333333333
+      ],
+      "features": 24,
+      "run": "7202.soft_all",
+      "split": "heldout",
+      "stage": "query_mean"
+    }
+  ],
+  "validation": {
+    "verification.json": {
+      "checks": 31376,
+      "frozen_encoder_and_output_weights": true,
+      "metric_and_objective_recomputed": true,
+      "report_validation": "structural only",
+      "runs": 8
+    },
+    "matched_verification.json": {
+      "checks": 94,
+      "identical_initialization_and_data": true,
+      "identical_final_sampling_rng_and_batch_sampler": true,
+      "optimizer_parameters_and_budgets_matched": true,
+      "claude_receipts_verified": true
+    },
+    "resume_verification.json": {
+      "checks": 2909,
+      "exact_checkpoint": true,
+      "full": 8,
+      "split": [
+        4,
+        4
+      ]
+    },
+    "soft_resume_verification.json": {
+      "checks": 2909,
+      "exact_checkpoint": true,
+      "full": 8,
+      "split": [
+        4,
+        4
+      ]
+    },
+    "report_verification.json": {
+      "checks": 103,
+      "report_count": 14,
+      "pngs_decoded": true,
+      "static_plots_visually_inspected": true,
+      "atlas_colors_and_validation_scopes_unchanged": true,
+      "browser_interaction": "unavailable; not attempted through alternate transport"
+    },
+    "localization/verification.json": {
+      "checks": 297,
+      "coefficients_predictions_and_scores_recomputed": true,
+      "readers_refitted_with_train_validation_only": true,
+      "stored_hard_codes_verified": true
+    }
+  },
+  "sources": [
+    {
+      "path": "runs/direction_learning_v1/comparison.json",
+      "sha256": "acef8d80c89ae86e619fd9a652d9db55ae0bdfb1f0f7f4a14f4bad29b2b56b07"
+    },
+    {
+      "path": "runs/direction_learning_v1/result.json",
+      "sha256": "e770d2b61cc7c3afcdb1a6e242e3f4404c5235a5b645a61af75f4c4c5b9705e6"
+    },
+    {
+      "path": "runs/direction_learning_v1/verification.json",
+      "sha256": "1473a2b1cdf74938ff4036ecb18fa0f5abac16b515d973a3da8aa6b2f72fd42a"
+    },
+    {
+      "path": "runs/direction_learning_v1/matched_verification.json",
+      "sha256": "ec4b5ac0a0d7243a0e9c35dc8f48e128b8d638f60c4ab4ffbc7d44147031adee"
+    },
+    {
+      "path": "runs/direction_learning_v1/resume_verification.json",
+      "sha256": "cdcda034f2e798fb58c80571ccba46e2f24604d35a05485880767c59b70151f1"
+    },
+    {
+      "path": "runs/direction_learning_v1/soft_resume_verification.json",
+      "sha256": "cdcda034f2e798fb58c80571ccba46e2f24604d35a05485880767c59b70151f1"
+    },
+    {
+      "path": "runs/direction_learning_v1/report_verification.json",
+      "sha256": "af563640d23acf6528a455cac9dfe6768c996956a0edac6260e41c95b4e306ad"
+    },
+    {
+      "path": "runs/direction_learning_v1/localization/scores.json",
+      "sha256": "b752ff63c25033223dd7e59e6248ebe5aff72ac20382c76acec969cd56523837"
+    },
+    {
+      "path": "runs/direction_learning_v1/localization/verification.json",
+      "sha256": "278f4df4c930eb151e65ca7cf2265953f6f421d2641ccc041fe083af30a54fd3"
+    },
+    {
+      "path": "runs/direction_learning_v1/workflow_repairs.json",
+      "sha256": "a5a331d946b9643ee866105e22b130454c5f2c089a1b9da3fe165b11e7c24ff5"
+    }
+  ],
+  "reports": [
+    "runs/direction_learning_v1/report.html",
+    "runs/direction_learning_v1/localization/report.html"
+  ],
+  "scope": "Controlled multimodal factor retention; no output decoder retraining, general capability, unique information-loss proof or default adoption."
+}

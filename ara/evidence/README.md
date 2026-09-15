@@ -168,3 +168,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Multimodal bounded repair and direction localization](tables/modality_repair_2026-09-15.json): N387–N389;16 continuations, partial known-position/oracle gains, failed direction/composition, fresh updater readers and code collisions.77 tests, independent audits and exact CPU resume; no default adoption.
 
 - [Direction-retention literature](tables/direction_literature_2026-09-15.json): N390/O266;12 primary works, explicit transfer limits and two corrected Claude methodology exchanges. No model experiments or capability promotion.
+
+- [Fresh direction learning](tables/direction_learning_2026-09-16.json): N391–N394;8 matched fits fail, optional continuous working access not adopted; encoder/query/code localization,59 scoped tests, exact replay and raw/report audits.

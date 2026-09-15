@@ -142,3 +142,13 @@
 - **Implementation**: a3a45c5, with control/report completion6a409e9/1285121. [Readout](../../../pathwm/models/readout.py), [recipe](../../../experiments/modality_readout.py), [protocol](../../../docs/modality-readout-plan.md).
 - **Verification**: [Source-bound evidence](../../evidence/tables/modality_readout_2026-09-15.json),72 scoped tests and exact GPU resume.
 - **Limits**: Opt-in experiment, not a default repair. All192 combined capability screens fail; held-out all-four-correct is0%. No adaptive inner-to-outer feedback, untied/equal-compute benefit result, general-language/media guarantee or new persistent memory write path. O259/O260 retain their broader pending scope.
+
+## A15: Optional posterior working-context control with native categorical persistence
+
+- **Design**: The existing multimodal recipe can load/freeze only pretrained encoders, train one/all target factors with matched factor coefficients, audit shared gradients without mutation, and select sampled or continuous posterior working conditioning through the same readout matrix. Native categorical state/IDs and sampling RNG remain intact; source metadata restores the readout mode for downstream consumers.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O269
+- **Implementation**:0d31fd6/49478f5; [recipe](../../../experiments/modality_readout.py), [tests](../../../tests/test_readout_diagnosis.py), [protocol](../../../docs/modality-readout-plan.md).
+- **Verification**: [Evidence](../../evidence/tables/direction_learning_2026-09-16.json);59 scoped tests and exact hard/continuous8 versus4+4 replay. Core parameter count unchanged237234.
+- **Limits**: Experimental control only, not a default repair or a fully unquantized world model. All eight task screens and both paired continuous-benefit comparisons fail. No persistent-memory, output quality, general direction or other-modality capability is promoted.

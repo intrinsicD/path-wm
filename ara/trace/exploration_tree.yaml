@@ -6499,3 +6499,76 @@ tree:
   - ara/evidence/tables/direction_literature_2026-09-15.json
   - docs/direction-literature-review.md
   status: resolved
+- id: N391
+  type: decision
+  title: Implement the bounded literature-motivated direction controls with Claude
+  provenance: user
+  timestamp: 2026-09-16T00:28+02:00
+  choice: User authorizes Claude-assisted plan/implementation/review/test/repair iterations. Implement matched
+    fresh-updater controls while preserving the shared multimodal design and efficient fixed budgets.
+  alternatives:
+  - Literature-only follow-up
+  - Unmeasured default architecture replacement
+  also_depends_on:
+  - N390
+  - N388
+  evidence:
+  - ara/evidence/tables/direction_learning_2026-09-16.json
+  - docs/modality-readout-plan.md
+  status: resolved
+- id: N392
+  type: experiment
+  title: Eight matched factor-isolation and continuous working-readout fits fail the direction gates
+  provenance: ai-executed
+  timestamp: 2026-09-16T00:28+02:00
+  result: Frozen pretrained encoders, fresh updater/readout; seeds7201/7202,1152 updates each. Direction-only
+    sampled known direction52.43/62.15%; continuous50.35/62.85%. Joint sampled51.04/59.38%; continuous48.61/55.56%,
+    averaged six modes. All8 task gates fail.59 scoped tests; exact hard and continuous8 versus4+4 resume.31376
+    raw checks,94 paired/Claude checks.450.16 CPU training seconds. Initial weights/data/optimizer/parameter
+    set/final sampler RNG match.
+  also_depends_on:
+  - N391
+  tests_observations:
+  - O265
+  - O266
+  evidence:
+  - ara/evidence/tables/direction_learning_2026-09-16.json
+  - runs/direction_learning_v1/report.html
+  status: resolved
+- id: N393
+  type: dead_end
+  title: Continuous posterior working access is not adopted as the bounded direction repair
+  provenance: ai-executed
+  timestamp: 2026-09-16T00:28+02:00
+  hypothesis: Replacing sampled working-context conditioning with separately trained probability conditioning
+    yields at least10pp known-direction benefit in both seeds under matched budget.
+  failure_mode: Neither isolated-target nor joint-target comparison passes paired benefit or full capability.
+    Persistent hard state and native sampling remain unchanged. This is not a fully deterministic/unquantized
+    control.
+  lesson: Retain sampled default and preserve failures. This control does not uniquely separate information
+    content, gradient estimator, optimization or input-mode interference.
+  also_depends_on:
+  - N392
+  evidence:
+  - ara/evidence/tables/direction_learning_2026-09-16.json
+  status: resolved
+- id: N394
+  type: experiment
+  title: Frozen readers retain perfect encoder access but weaker updater-query direction access
+  provenance: ai-executed
+  timestamp: 2026-09-16T00:28+02:00
+  result: Four final joint checkpoints, all input modalities together, train-only standardized ridge and validation-only
+    alpha. All factors100% from encoders on known/heldout. Known direction60.4-75.0% query tokens,54.2-68.8%
+    query mean,56.3-77.1% probabilities,50.0-52.1% sampled codes,54.2-75.0% thought.297 independent coefficient/selection/prediction
+    checks pass under matching two-thread configuration; failed stricter different-thread audit repaired without
+    tolerance change.103 report/atlas checks;14 reports, unchanged colors/scopes.
+  also_depends_on:
+  - N392
+  - N388
+  tests_observations:
+  - O264
+  - O265
+  evidence:
+  - ara/evidence/tables/direction_learning_2026-09-16.json
+  - runs/direction_learning_v1/localization/report.html
+  status: resolved

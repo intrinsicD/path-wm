@@ -4701,3 +4701,53 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O267
+  timestamp: 2026-09-16T00:28+02:00
+  provenance: ai-suggested
+  content: Direction-only failure weakens task-factor competition as a sufficient explanation; failed continuous
+    working access weakens a simple output-code-read repair. Encoder accessibility remains high and declines
+    through updater/readout, but failed/different-dimensional linear probes cannot identify a unique irreversible
+    loss operation.
+  context: Interpretation of8 matched fits and4 frozen localizations; researcher has not yet commented on results.
+  potential_type: claim
+  bound_to:
+  - N392
+  - N393
+  - N394
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O268
+  timestamp: 2026-09-16T00:28+02:00
+  provenance: ai-suggested
+  content: Next isolate direction learning on one informative modality, beginning with symbolic audio then
+    text, before mixing input modes. Compare direct features and updater query reads; query-preserving projection
+    is a conditional subsequent test. Do not bundle extra loops, gradient surgery and scaling.
+  context: Bounded budget completed with no default repair. Single-factor across six modes did not isolate
+    modality competition.
+  potential_type: heuristic
+  bound_to:
+  - N388
+  - N392
+  - N394
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O269
+  timestamp: 2026-09-16T00:28+02:00
+  provenance: ai-suggested
+  content: The existing recipe supports encoder-only frozen initialization, matched target-factor objectives,
+    non-mutating per-task gradient audits and optional continuous posterior conditioning of temporary working
+    tokens. Sampled state/IDs/RNG and source storage remain native; saved source metadata restores the chosen
+    readout mode.
+  context: Committed operational experiment controls0d31fd6/49478f5 with59 scoped checks and exact replay.
+    Not a capability/default adoption.
+  potential_type: architecture
+  bound_to:
+  - N392
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A15
+  crystallized_via: artifact-commitment
+  stale: false
