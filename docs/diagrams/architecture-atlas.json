@@ -6,7 +6,20 @@
   "graphs": [
     {
       "id": "01-overview",
-      "feedback_edges": [["memory", "belief"], ["reflect", "workspace"], ["act", "world"]],
+      "feedback_edges": [
+        [
+          "memory",
+          "belief"
+        ],
+        [
+          "reflect",
+          "workspace"
+        ],
+        [
+          "act",
+          "world"
+        ]
+      ],
       "title": "1 · The agent loop",
       "subtitle": "General categorical agent · runtime data and control flow",
       "discussion": {
@@ -41,7 +54,7 @@
           "encode": {
             "status": "discussed",
             "basis": "Discussed modality stems, residual transformer blocks per scale, hierarchy merges, fusion, temporal handling and reconstruction probes. On 14 September, the user asked whether architectural structure and a small parameter count can reduce visual training-data requirements. On 15 September, the user specified a spatial VAE with separate lossless rearrangement, residual processing and channel projection; Claude review was reconciled.",
-            "next": "Opt-in spatial VAE v2 now implements the R/P/M/C stem, coarsest self-attention/shared loop and detached stage probes. Mechanics, exact GPU resume and ten real-photo learning sanity gates pass; all photo-quality screens fail. See docs/spatial-vae-v2-plan.md and runs/spatial_vae_v2/verification.json. Color diagnosis now finds reduced readout access at the final posterior projection and sampling; see docs/spatial-vae-color-plan.md. Current agent integration, semantic retention, fine detail and matched-resource/data-efficiency studies remain open; the high-level encoder stays blue."
+            "next": "Opt-in spatial VAE v2 now implements the R/P/M/C stem, coarsest self-attention/shared loop and detached stage probes. Mechanics, exact GPU resume and ten real-photo learning sanity gates pass; all photo-quality screens fail. See docs/spatial-vae-v2-plan.md and runs/spatial_vae_v2/verification.json. Color diagnosis now finds reduced readout access at the final posterior projection and sampling; see docs/spatial-vae-color-plan.md. Current agent integration, semantic retention, fine detail and matched-resource/data-efficiency studies remain open; the high-level encoder stays blue. Two-seed sampled-color supervision now improves global chroma error81–83% without new parameters/inference work; achieved KL rises37–41% and grids remain. See docs/spatial-vae-repair-plan.md. Color-only is a diagnostic candidate, not a full repair; high-level status stays blue."
           },
           "belief": {
             "status": "needs_discussion",
@@ -109,7 +122,7 @@
           "emit": {
             "status": "discussed",
             "basis": "Discussed every encoder/decoder pair, state-conditioned outputs, image detail, conditional generation and replacement interfaces. On 15 September, discussed a mirrored PixelShuffle VAE decoder, Gaussian loss/KL units and a future state-conditioned spatial-latent producer.",
-            "next": "Separate v1/v2 VAE decoders support exact saved-latent replay and variable geometry; v2 has a latent-only convolution/PixelShuffle decoder with final RGB projection. Ten photo fits still fail the quality screen; rates and common-target stage probes are measured in docs/spatial-vae-v2-plan.md. Constant latent controls locate decoder grids at learned subpixel phase channels; mean-only decoder fitting improves color but fails sampled-output reliability. See docs/spatial-vae-color-plan.md. State-conditioned generation, fine detail and other modalities remain open; this high-level output node stays blue."
+            "next": "Separate v1/v2 VAE decoders support exact saved-latent replay and variable geometry; v2 has a latent-only convolution/PixelShuffle decoder with final RGB projection. Ten photo fits still fail the quality screen; rates and common-target stage probes are measured in docs/spatial-vae-v2-plan.md. Constant latent controls locate decoder grids at learned subpixel phase channels; mean-only decoder fitting improves color but fails sampled-output reliability. See docs/spatial-vae-color-plan.md. State-conditioned generation, fine detail and other modalities remain open; this high-level output node stays blue. Two-seed sampled-color supervision now improves global chroma error81–83% without new parameters/inference work; achieved KL rises37–41% and grids remain. See docs/spatial-vae-repair-plan.md. Color-only is a diagnostic candidate, not a full repair; high-level status stays blue."
           },
           "act": {
             "status": "needs_discussion",
@@ -144,42 +157,154 @@
       },
       "direction": "TB",
       "nodes": [
-        ["world", "World / user / environment\nImages · video · audio · text", "external"],
-        ["input", "Observation adapters\nValues + time + validity + source", "store"],
-        ["encode", "Modality encoders → §2–3\nProcessed features at several scales", "learned"],
-        ["belief", "Predict and correct → §4\nRecurrent world state + categorical belief", "learned"],
-        ["memory", "Session memory → §5\nRecent · compressed · protected · consolidated", "store"],
-        ["workspace", "Task workspace → §6\nRead state, memory and task; think", "learned"],
-        ["request", "Task request\nInstruction + output controls + actor metadata", "external"],
-        ["plan", "Optional bounded planner → §11\nCandidate actions → imagined states → costs", "optional"],
-        ["emit", "Modality outputs → §7\nImage · audio · text · video", "learned"],
-        ["act", "Action proposal\nEnvironment adapter executes it", "store"],
-        ["reflect", "Generated-content reflection\nRe-encode + provenance → workspace only", "store"]
+        [
+          "world",
+          "World / user / environment\nImages · video · audio · text",
+          "external"
+        ],
+        [
+          "input",
+          "Observation adapters\nValues + time + validity + source",
+          "store"
+        ],
+        [
+          "encode",
+          "Modality encoders → §2–3\nProcessed features at several scales",
+          "learned"
+        ],
+        [
+          "belief",
+          "Predict and correct → §4\nRecurrent world state + categorical belief",
+          "learned"
+        ],
+        [
+          "memory",
+          "Session memory → §5\nRecent · compressed · protected · consolidated",
+          "store"
+        ],
+        [
+          "workspace",
+          "Task workspace → §6\nRead state, memory and task; think",
+          "learned"
+        ],
+        [
+          "request",
+          "Task request\nInstruction + output controls + actor metadata",
+          "external"
+        ],
+        [
+          "plan",
+          "Optional bounded planner → §11\nCandidate actions → imagined states → costs",
+          "optional"
+        ],
+        [
+          "emit",
+          "Modality outputs → §7\nImage · audio · text · video",
+          "learned"
+        ],
+        [
+          "act",
+          "Action proposal\nEnvironment adapter executes it",
+          "store"
+        ],
+        [
+          "reflect",
+          "Generated-content reflection\nRe-encode + provenance → workspace only",
+          "store"
+        ]
       ],
       "edges": [
-        ["world", "input", "delivered observations"],
-        ["input", "encode", "source packets"],
-        ["encode", "belief", "features + support times"],
-        ["belief", "memory", "store event"],
-        ["memory", "belief", "history reads"],
-        ["belief", "workspace", "world tokens"],
-        ["memory", "workspace", "thinking read"],
-        ["request", "workspace", "interpreted task tokens"],
-        ["workspace", "emit", "conditioned state"],
-        ["workspace", "act", "policy selects act"],
-        ["belief", "plan", "branch starting state"],
-        ["request", "plan", "recipe-defined goal / cost"],
-        ["plan", "act", "selected first action"],
-        ["act", "world", "external action"],
-        ["emit", "reflect", "optional loopback"],
-        ["reflect", "workspace", "generated context + provenance"]
+        [
+          "world",
+          "input",
+          "delivered observations"
+        ],
+        [
+          "input",
+          "encode",
+          "source packets"
+        ],
+        [
+          "encode",
+          "belief",
+          "features + support times"
+        ],
+        [
+          "belief",
+          "memory",
+          "store event"
+        ],
+        [
+          "memory",
+          "belief",
+          "history reads"
+        ],
+        [
+          "belief",
+          "workspace",
+          "world tokens"
+        ],
+        [
+          "memory",
+          "workspace",
+          "thinking read"
+        ],
+        [
+          "request",
+          "workspace",
+          "interpreted task tokens"
+        ],
+        [
+          "workspace",
+          "emit",
+          "conditioned state"
+        ],
+        [
+          "workspace",
+          "act",
+          "policy selects act"
+        ],
+        [
+          "belief",
+          "plan",
+          "branch starting state"
+        ],
+        [
+          "request",
+          "plan",
+          "recipe-defined goal / cost"
+        ],
+        [
+          "plan",
+          "act",
+          "selected first action"
+        ],
+        [
+          "act",
+          "world",
+          "external action"
+        ],
+        [
+          "emit",
+          "reflect",
+          "optional loopback"
+        ],
+        [
+          "reflect",
+          "workspace",
+          "generated context + provenance"
+        ]
       ],
       "notes": [
         "The caller owns state, event transactions, action execution and task lifetime. The model returns proposals and tensors; it does not execute arbitrary software tools itself.",
         "Imagination uses the dynamics without future observations. Reflection and thinking leave the live world clock unchanged. Generated content is kept out of source-evidence writes.",
         "The categorical recipe is the CLI default. The recent photo model uses the separate Gaussian configuration in §8. Entity storage and the key-box connection in §10–11 are optional experiments, not an invisible extra store in every agent."
       ],
-      "sources": ["experiments/multimodal.py#build_model", "pathwm/models/belief.py#BeliefAgent", "pathwm/models/agent.py#step_task"]
+      "sources": [
+        "experiments/multimodal.py#build_model",
+        "pathwm/models/belief.py#BeliefAgent",
+        "pathwm/models/agent.py#step_task"
+      ]
     },
     {
       "id": "02-encoders",
@@ -187,37 +312,153 @@
       "subtitle": "Same hierarchy pattern, separately instantiated parameters per modality",
       "direction": "TB",
       "nodes": [
-        ["image", "Image / video\nRGB frames", "external"],
-        ["audio", "Audio\nWaveform chunks", "external"],
-        ["text", "Text\nByte token IDs", "external"],
-        ["patch", "Image stem\nPatch convolution + position + modality", "learned"],
-        ["wave", "Audio stem\nWaveform patches → linear projection", "learned"],
-        ["embed", "Text stem\nByte embedding + position + modality", "learned"],
-        ["fine", "Scale 0\nScale embedding → k residual transformer blocks", "learned"],
-        ["merge1", "Merge / pool local groups\nOptional coarse-query attention to fine footprint", "learned"],
-        ["mid", "Scale 1\nScale embedding → k residual transformer blocks", "learned"],
-        ["merge2", "Repeat merge and processing\nUntil the configured number of scales", "learned"],
-        ["coarse", "Final scale\nFully processed coarse features", "learned"],
-        ["fusion", "Optional all-scale fusion\nConcatenate → f transformer blocks → split", "learned"],
-        ["out", "FeaturePyramid\nPer-scale tokens + grid + time + validity + support", "store"],
-        ["consumer", "Consumers\nBelief correction / spatial heads / reflection", "store"]
+        [
+          "image",
+          "Image / video\nRGB frames",
+          "external"
+        ],
+        [
+          "audio",
+          "Audio\nWaveform chunks",
+          "external"
+        ],
+        [
+          "text",
+          "Text\nByte token IDs",
+          "external"
+        ],
+        [
+          "patch",
+          "Image stem\nPatch convolution + position + modality",
+          "learned"
+        ],
+        [
+          "wave",
+          "Audio stem\nWaveform patches → linear projection",
+          "learned"
+        ],
+        [
+          "embed",
+          "Text stem\nByte embedding + position + modality",
+          "learned"
+        ],
+        [
+          "fine",
+          "Scale 0\nScale embedding → k residual transformer blocks",
+          "learned"
+        ],
+        [
+          "merge1",
+          "Merge / pool local groups\nOptional coarse-query attention to fine footprint",
+          "learned"
+        ],
+        [
+          "mid",
+          "Scale 1\nScale embedding → k residual transformer blocks",
+          "learned"
+        ],
+        [
+          "merge2",
+          "Repeat merge and processing\nUntil the configured number of scales",
+          "learned"
+        ],
+        [
+          "coarse",
+          "Final scale\nFully processed coarse features",
+          "learned"
+        ],
+        [
+          "fusion",
+          "Optional all-scale fusion\nConcatenate → f transformer blocks → split",
+          "learned"
+        ],
+        [
+          "out",
+          "FeaturePyramid\nPer-scale tokens + grid + time + validity + support",
+          "store"
+        ],
+        [
+          "consumer",
+          "Consumers\nBelief correction / spatial heads / reflection",
+          "store"
+        ]
       ],
       "edges": [
-        ["image", "patch", "B × T × 3 × H × W"],
-        ["audio", "wave", "B × T × samples"],
-        ["text", "embed", "B × length"],
-        ["patch", "fine", "frame / patch tokens"],
-        ["wave", "fine", "waveform tokens"],
-        ["embed", "fine", "byte tokens"],
-        ["fine", "merge1", "processed fine scale"],
-        ["merge1", "mid", "coarser queries"],
-        ["mid", "merge2", "processed next scale"],
-        ["merge2", "coarse", "coarse features"],
-        ["fine", "fusion", "retain fine tokens"],
-        ["mid", "fusion", "retain middle tokens"],
-        ["coarse", "fusion", "retain coarse tokens"],
-        ["fusion", "out", "same output layouts"],
-        ["out", "consumer", "all scales or selected named grids"]
+        [
+          "image",
+          "patch",
+          "B × T × 3 × H × W"
+        ],
+        [
+          "audio",
+          "wave",
+          "B × T × samples"
+        ],
+        [
+          "text",
+          "embed",
+          "B × length"
+        ],
+        [
+          "patch",
+          "fine",
+          "frame / patch tokens"
+        ],
+        [
+          "wave",
+          "fine",
+          "waveform tokens"
+        ],
+        [
+          "embed",
+          "fine",
+          "byte tokens"
+        ],
+        [
+          "fine",
+          "merge1",
+          "processed fine scale"
+        ],
+        [
+          "merge1",
+          "mid",
+          "coarser queries"
+        ],
+        [
+          "mid",
+          "merge2",
+          "processed next scale"
+        ],
+        [
+          "merge2",
+          "coarse",
+          "coarse features"
+        ],
+        [
+          "fine",
+          "fusion",
+          "retain fine tokens"
+        ],
+        [
+          "mid",
+          "fusion",
+          "retain middle tokens"
+        ],
+        [
+          "coarse",
+          "fusion",
+          "retain coarse tokens"
+        ],
+        [
+          "fusion",
+          "out",
+          "same output layouts"
+        ],
+        [
+          "out",
+          "consumer",
+          "all scales or selected named grids"
+        ]
       ],
       "notes": [
         "Each later scale consumes the fully processed previous scale. The final fusion is optional: f=0 in the general defaults, f=2 in the current photo checkpoint. k and scale count are recipe choices.",
@@ -225,7 +466,13 @@
         "Masks prevent reading later support. The categorical source-evidence path uses no task, belief or feature-controller conditioning. Optional controls apply on permitted task/reflection paths.",
         "Example for the photo configuration: RGB64 → 16×16 → 8×8 → 4×4, all width32; k=2 and f=2. The hierarchy emits 336 tokens."
       ],
-      "sources": ["pathwm/models/multiscale.py#FeatureHierarchy", "pathwm/models/multiscale.py#MultiScaleImageEncoder", "pathwm/models/multiscale.py#MultiScaleAudioEncoder", "pathwm/models/multiscale.py#MultiScaleTextEncoder", "pathwm/models/belief.py#_features"]
+      "sources": [
+        "pathwm/models/multiscale.py#FeatureHierarchy",
+        "pathwm/models/multiscale.py#MultiScaleImageEncoder",
+        "pathwm/models/multiscale.py#MultiScaleAudioEncoder",
+        "pathwm/models/multiscale.py#MultiScaleTextEncoder",
+        "pathwm/models/belief.py#_features"
+      ]
     },
     {
       "id": "03-attention",
@@ -233,37 +480,129 @@
       "subtitle": "Attention reads representations; a query head is not a persistent memory slot",
       "direction": "TB",
       "nodes": [
-        ["query", "Query tokens x\nPositions / state slots to update", "store"],
-        ["context", "Context tokens c\nFeatures / state / retrieved memory", "store"],
-        ["qnorm", "Normalize query\nProject to Q", "learned"],
-        ["kvnorm", "Normalize context\nProject to K and V", "learned"],
-        ["attention", "Multi-head attention\nMasked softmax(QKᵀ / √d) · V\nConcatenate heads → output projection", "learned"],
-        ["add1", "First residual\nu = x + attention output", "store"],
-        ["mlp", "Normalize → MLP\nD → 2D → GELU → D", "learned"],
-        ["add2", "Second residual\ny = u + MLP output", "store"],
-        ["control", "Optional feature code\nBias-free map → bounded scale / shift", "optional"],
-        ["mask", "Attention constraints\nValidity · time · local footprint", "store"]
+        [
+          "query",
+          "Query tokens x\nPositions / state slots to update",
+          "store"
+        ],
+        [
+          "context",
+          "Context tokens c\nFeatures / state / retrieved memory",
+          "store"
+        ],
+        [
+          "qnorm",
+          "Normalize query\nProject to Q",
+          "learned"
+        ],
+        [
+          "kvnorm",
+          "Normalize context\nProject to K and V",
+          "learned"
+        ],
+        [
+          "attention",
+          "Multi-head attention\nMasked softmax(QKᵀ / √d) · V\nConcatenate heads → output projection",
+          "learned"
+        ],
+        [
+          "add1",
+          "First residual\nu = x + attention output",
+          "store"
+        ],
+        [
+          "mlp",
+          "Normalize → MLP\nD → 2D → GELU → D",
+          "learned"
+        ],
+        [
+          "add2",
+          "Second residual\ny = u + MLP output",
+          "store"
+        ],
+        [
+          "control",
+          "Optional feature code\nBias-free map → bounded scale / shift",
+          "optional"
+        ],
+        [
+          "mask",
+          "Attention constraints\nValidity · time · local footprint",
+          "store"
+        ]
       ],
       "edges": [
-        ["query", "qnorm", "x"],
-        ["context", "kvnorm", "c"],
-        ["qnorm", "attention", "queries"],
-        ["kvnorm", "attention", "keys and values"],
-        ["mask", "attention", "allowed reads"],
-        ["attention", "add1", "read result"],
-        ["query", "add1", "identity path"],
-        ["add1", "mlp", "u"],
-        ["mlp", "add2", "nonlinear residual"],
-        ["add1", "add2", "identity path"],
-        ["control", "qnorm", "ConditionedBlock only"],
-        ["control", "mlp", "ConditionedBlock only"]
+        [
+          "query",
+          "qnorm",
+          "x"
+        ],
+        [
+          "context",
+          "kvnorm",
+          "c"
+        ],
+        [
+          "qnorm",
+          "attention",
+          "queries"
+        ],
+        [
+          "kvnorm",
+          "attention",
+          "keys and values"
+        ],
+        [
+          "mask",
+          "attention",
+          "allowed reads"
+        ],
+        [
+          "attention",
+          "add1",
+          "read result"
+        ],
+        [
+          "query",
+          "add1",
+          "identity path"
+        ],
+        [
+          "add1",
+          "mlp",
+          "u"
+        ],
+        [
+          "mlp",
+          "add2",
+          "nonlinear residual"
+        ],
+        [
+          "add1",
+          "add2",
+          "identity path"
+        ],
+        [
+          "control",
+          "qnorm",
+          "ConditionedBlock only"
+        ],
+        [
+          "control",
+          "mlp",
+          "ConditionedBlock only"
+        ]
       ],
       "notes": [
         "Self-attention uses the same token set as query and context; cross-attention uses distinct sets. Attend uses four heads by default. Learned query tokens acquire roles through their consumer and training targets.",
         "Q/K/V projection weights are learned parameters. Their per-input activations perform a read; memory records are stored separately. Neither attention weights nor readable slot names guarantee a semantic interpretation.",
         "ConditionedBlock adds bounded scale/shift on query and MLP normalization; code zero is neutral. Its time/support masks are richer than the simpler Attend block. OutputBlock (§9) adds separate self-attention and context-attention residuals."
       ],
-      "sources": ["pathwm/models/modalities.py#Attend", "pathwm/models/multiscale.py#ConditionedBlock", "pathwm/models/conditional_image.py#OutputBlock"]
+      "sources": [
+        "pathwm/models/modalities.py#Attend",
+        "pathwm/models/multiscale.py#ConditionedBlock",
+        "pathwm/models/conditional_image.py#OutputBlock"
+      ]
     },
     {
       "id": "04-belief",
@@ -271,36 +610,148 @@
       "subtitle": "Categorical BeliefAgent · nominal width32 configuration",
       "direction": "TB",
       "nodes": [
-        ["previous", "Previous belief\nh: 16 recurrent tokens + sampled categorical code", "store"],
-        ["action", "Recorded action + presence flag + Δt\nA missing action differs from a zero action", "external"],
-        ["memory", "Memory snapshot\nSeparate prediction / perception readers", "store"],
-        ["dynamics", "BeliefDynamics\nProjected code + action/time → attention update", "learned"],
-        ["prior", "Prior\nNew h + predicted logits over 8 groups × 8 codes", "store"],
-        ["features", "Available source features\nAll modalities / scales + valid masks", "store"],
-        ["correct", "BeliefCorrection\nAttend to features → add perception-memory read\n→ attend again → categorical logits", "learned"],
-        ["posterior", "Posterior distribution\nSample code z; straight-through training gradient", "store"],
-        ["workspace", "Previous workspace\n4 working + 4 reasoning tokens", "store"],
-        ["readout", "World readout\nh + projection(sampled code)\nConcatenate the 8 workspace tokens", "learned"],
-        ["state", "BeliefState\n24 tokens × 32 + h + logits/code + clocks/provenance", "store"],
-        ["evidence", "Source-only evidence summary\n8 learned queries attend to source features", "learned"],
-        ["commit", "Seal observed event\nStore evidence + belief envelope once", "store"]
+        [
+          "previous",
+          "Previous belief\nh: 16 recurrent tokens + sampled categorical code",
+          "store"
+        ],
+        [
+          "action",
+          "Recorded action + presence flag + Δt\nA missing action differs from a zero action",
+          "external"
+        ],
+        [
+          "memory",
+          "Memory snapshot\nSeparate prediction / perception readers",
+          "store"
+        ],
+        [
+          "dynamics",
+          "BeliefDynamics\nProjected code + action/time → attention update",
+          "learned"
+        ],
+        [
+          "prior",
+          "Prior\nNew h + predicted logits over 8 groups × 8 codes",
+          "store"
+        ],
+        [
+          "features",
+          "Available source features\nAll modalities / scales + valid masks",
+          "store"
+        ],
+        [
+          "correct",
+          "BeliefCorrection\nAttend to features → add perception-memory read\n→ attend again → categorical logits",
+          "learned"
+        ],
+        [
+          "posterior",
+          "Posterior distribution\nSample code z; straight-through training gradient",
+          "store"
+        ],
+        [
+          "workspace",
+          "Previous workspace\n4 working + 4 reasoning tokens",
+          "store"
+        ],
+        [
+          "readout",
+          "World readout\nh + projection(sampled code)\nConcatenate the 8 workspace tokens",
+          "learned"
+        ],
+        [
+          "state",
+          "BeliefState\n24 tokens × 32 + h + logits/code + clocks/provenance",
+          "store"
+        ],
+        [
+          "evidence",
+          "Source-only evidence summary\n8 learned queries attend to source features",
+          "learned"
+        ],
+        [
+          "commit",
+          "Seal observed event\nStore evidence + belief envelope once",
+          "store"
+        ]
       ],
       "edges": [
-        ["previous", "dynamics", "h and code"],
-        ["action", "dynamics", "transition condition"],
-        ["memory", "dynamics", "prediction read"],
-        ["dynamics", "prior", "h and prior logits"],
-        ["prior", "correct", "prior h as queries"],
-        ["features", "correct", "observation context"],
-        ["memory", "correct", "perception read"],
-        ["correct", "posterior", "corrected logits"],
-        ["prior", "readout", "h; unchanged by correction"],
-        ["posterior", "readout", "sampled code"],
-        ["workspace", "readout", "workspace retained"],
-        ["readout", "state", "world + workspace tokens"],
-        ["features", "evidence", "no belief/task conditioning"],
-        ["evidence", "commit", "source view"],
-        ["state", "commit", "inferred view + event metadata"]
+        [
+          "previous",
+          "dynamics",
+          "h and code"
+        ],
+        [
+          "action",
+          "dynamics",
+          "transition condition"
+        ],
+        [
+          "memory",
+          "dynamics",
+          "prediction read"
+        ],
+        [
+          "dynamics",
+          "prior",
+          "h and prior logits"
+        ],
+        [
+          "prior",
+          "correct",
+          "prior h as queries"
+        ],
+        [
+          "features",
+          "correct",
+          "observation context"
+        ],
+        [
+          "memory",
+          "correct",
+          "perception read"
+        ],
+        [
+          "correct",
+          "posterior",
+          "corrected logits"
+        ],
+        [
+          "prior",
+          "readout",
+          "h; unchanged by correction"
+        ],
+        [
+          "posterior",
+          "readout",
+          "sampled code"
+        ],
+        [
+          "workspace",
+          "readout",
+          "workspace retained"
+        ],
+        [
+          "readout",
+          "state",
+          "world + workspace tokens"
+        ],
+        [
+          "features",
+          "evidence",
+          "no belief/task conditioning"
+        ],
+        [
+          "evidence",
+          "commit",
+          "source view"
+        ],
+        [
+          "state",
+          "commit",
+          "inferred view + event metadata"
+        ]
       ],
       "notes": [
         "The observation correction changes the categorical distribution, not the recurrent h directly. Its sampled code changes world readout immediately and influences h on the next transition.",
@@ -308,48 +759,183 @@
         "Events are caller-owned transactions with ordered IDs. Partial packet arrivals are corrected against one prior and one memory snapshot. Source times and state time remain distinct.",
         "Categorical entropy is a diagnostic; it is not established calibrated confidence or model-parameter uncertainty. The Gaussian log_scale inherited for compatibility is zero here, not the belief uncertainty."
       ],
-      "sources": ["pathwm/models/belief.py#BeliefDynamics", "pathwm/models/belief.py#BeliefCorrection", "pathwm/models/belief.py#correct_packets", "pathwm/models/belief.py#_readout", "pathwm/models/belief_state.py#BeliefState"]
+      "sources": [
+        "pathwm/models/belief.py#BeliefDynamics",
+        "pathwm/models/belief.py#BeliefCorrection",
+        "pathwm/models/belief.py#correct_packets",
+        "pathwm/models/belief.py#_readout",
+        "pathwm/models/belief_state.py#BeliefState"
+      ]
     },
     {
       "id": "05-memory",
-      "feedback_edges": [["long", "consolidate"]],
+      "feedback_edges": [
+        [
+          "long",
+          "consolidate"
+        ]
+      ],
       "title": "5 · Short and long session memory",
       "subtitle": "HybridMemory · bounded storage mechanics plus learned compression and reading",
       "direction": "TB",
       "nodes": [
-        ["event", "Committed observed event\nSource features + inferred belief + provenance", "store"],
-        ["record", "Detached event record\nSeparate evidence and belief views", "store"],
-        ["recent", "Recent store\n32 records; exact stored latent envelope", "store"],
-        ["staging", "Staging FIFO\nUp to 7 records waiting for a block of 8", "store"],
-        ["compress", "Two learned compressors\nSeparate attention queries for evidence / belief", "learned"],
-        ["blocks", "Compressed store\n16 blocks · 8 tokens per view per block", "store"],
-        ["consolidate", "Gated consolidation\nOld accumulator + departing block", "learned"],
-        ["long", "Consolidated store\n8 tokens per view; bounded recurrent summary", "store"],
-        ["protect", "Protected store\n8 marked records; user priority / agent utility", "store"],
-        ["query", "Consumer query + current time\nPerception / prediction / thinking", "store"],
-        ["read", "Three reader branches\nRecent + staging / compressed + consolidated / protected\nAdd view identity and source/state ages → attention", "learned"],
-        ["gate", "Token-wise softmax gate\nMix 3 reads + no-memory option", "learned"],
-        ["result", "Memory context\nTo correction, dynamics or workspace", "store"]
+        [
+          "event",
+          "Committed observed event\nSource features + inferred belief + provenance",
+          "store"
+        ],
+        [
+          "record",
+          "Detached event record\nSeparate evidence and belief views",
+          "store"
+        ],
+        [
+          "recent",
+          "Recent store\n32 records; exact stored latent envelope",
+          "store"
+        ],
+        [
+          "staging",
+          "Staging FIFO\nUp to 7 records waiting for a block of 8",
+          "store"
+        ],
+        [
+          "compress",
+          "Two learned compressors\nSeparate attention queries for evidence / belief",
+          "learned"
+        ],
+        [
+          "blocks",
+          "Compressed store\n16 blocks · 8 tokens per view per block",
+          "store"
+        ],
+        [
+          "consolidate",
+          "Gated consolidation\nOld accumulator + departing block",
+          "learned"
+        ],
+        [
+          "long",
+          "Consolidated store\n8 tokens per view; bounded recurrent summary",
+          "store"
+        ],
+        [
+          "protect",
+          "Protected store\n8 marked records; user priority / agent utility",
+          "store"
+        ],
+        [
+          "query",
+          "Consumer query + current time\nPerception / prediction / thinking",
+          "store"
+        ],
+        [
+          "read",
+          "Three reader branches\nRecent + staging / compressed + consolidated / protected\nAdd view identity and source/state ages → attention",
+          "learned"
+        ],
+        [
+          "gate",
+          "Token-wise softmax gate\nMix 3 reads + no-memory option",
+          "learned"
+        ],
+        [
+          "result",
+          "Memory context\nTo correction, dynamics or workspace",
+          "store"
+        ]
       ],
       "edges": [
-        ["event", "record", "validated live evidence"],
-        ["record", "recent", "append"],
-        ["recent", "staging", "oldest eviction"],
-        ["staging", "compress", "full chronological block"],
-        ["compress", "blocks", "two compressed views"],
-        ["blocks", "consolidate", "oldest block eviction"],
-        ["consolidate", "long", "new summary"],
-        ["long", "consolidate", "old summary"],
-        ["recent", "protect", "mark latest observed event"],
-        ["recent", "read", "recent records"],
-        ["staging", "read", "uncompressed overflow"],
-        ["blocks", "read", "compressed blocks"],
-        ["long", "read", "oldest summarized history"],
-        ["protect", "read", "retained marked detail"],
-        ["query", "read", "attention queries"],
-        ["query", "gate", "mixing weights"],
-        ["read", "gate", "three read residuals"],
-        ["gate", "result", "weighted context"]
+        [
+          "event",
+          "record",
+          "validated live evidence"
+        ],
+        [
+          "record",
+          "recent",
+          "append"
+        ],
+        [
+          "recent",
+          "staging",
+          "oldest eviction"
+        ],
+        [
+          "staging",
+          "compress",
+          "full chronological block"
+        ],
+        [
+          "compress",
+          "blocks",
+          "two compressed views"
+        ],
+        [
+          "blocks",
+          "consolidate",
+          "oldest block eviction"
+        ],
+        [
+          "consolidate",
+          "long",
+          "new summary"
+        ],
+        [
+          "long",
+          "consolidate",
+          "old summary"
+        ],
+        [
+          "recent",
+          "protect",
+          "mark latest observed event"
+        ],
+        [
+          "recent",
+          "read",
+          "recent records"
+        ],
+        [
+          "staging",
+          "read",
+          "uncompressed overflow"
+        ],
+        [
+          "blocks",
+          "read",
+          "compressed blocks"
+        ],
+        [
+          "long",
+          "read",
+          "oldest summarized history"
+        ],
+        [
+          "protect",
+          "read",
+          "retained marked detail"
+        ],
+        [
+          "query",
+          "read",
+          "attention queries"
+        ],
+        [
+          "query",
+          "gate",
+          "mixing weights"
+        ],
+        [
+          "read",
+          "gate",
+          "three read residuals"
+        ],
+        [
+          "gate",
+          "result",
+          "weighted context"
+        ]
       ],
       "notes": [
         "These capacities are general defaults, not universal constants. Source and inferred views stay separate through compression; categorical probabilities, not only sampled codes, reach belief readers.",
@@ -357,51 +943,197 @@
         "Exact recent storage means exact latent copies, not exact raw pixels. Compression loses detailed source alignment; support intervals and bounded source labels are retained. Learned read/compression quality needs its own evaluation.",
         "The photo experiment uses simpler episodic top-k snapshots instead (§8). The explicit entity store (§10) is another separate mechanism."
       ],
-      "sources": ["pathwm/models/hybrid_memory.py#HybridMemory", "pathwm/models/hybrid_memory.py#MemoryRead", "pathwm/models/belief_state.py#MemoryRecord", "docs/belief-model.md"]
+      "sources": [
+        "pathwm/models/hybrid_memory.py#HybridMemory",
+        "pathwm/models/hybrid_memory.py#MemoryRead",
+        "pathwm/models/belief_state.py#MemoryRecord",
+        "docs/belief-model.md"
+      ]
     },
     {
       "id": "06-workspace",
-      "feedback_edges": [["reflect", "think"]],
+      "feedback_edges": [
+        [
+          "reflect",
+          "think"
+        ]
+      ],
       "title": "6 · Tasks, focus, thinking and output control",
       "subtitle": "Workspace updates are internal computation; external actions return to the caller",
       "direction": "TB",
       "nodes": [
-        ["instruction", "Instruction\nText encoder → instruction features", "learned"],
-        ["metadata", "Task / actor / output metadata\nCanonical bytes → embedding → GRU → pooled token", "learned"],
-        ["state", "Current state tokens", "store"],
-        ["interpret", "TaskInterpreter\n4 query tokens read instruction, then state + metadata", "learned"],
-        ["policy", "TaskPolicy\nPool → MLP → operation / modality / completion logits", "learned"],
-        ["gate", "TaskSession controls\nRequired / automatic / disabled outputs\nSelection + fulfillment checks", "store"],
-        ["think", "Thinker\nWorkspace queries attend state + recall + goal + feedback", "learned"],
-        ["memory", "Memory reader\nTask-dependent access through query state", "learned"],
-        ["feedback", "Feedback\nDetached state → error MLP → softplus\nAdd uncertainty diagnostic + think count", "learned"],
-        ["workspace", "Updated workspace\n4 working + 4 reasoning tokens", "store"],
-        ["dispatch", "Bounded operation dispatcher\nthink · recall · imagine · act · emit · ask · finish", "store"],
-        ["actionhead", "ActionHead\nMean-pool conditioned state → linear\nContinuous action mean + log-scale", "learned"],
-        ["output", "Emission / action / hypothetical branch\nReturn result and provenance to caller", "store"],
-        ["reflect", "Optional reflection\nTagged generated output → same modality encoder\nValid feature pool + metadata", "optional"]
+        [
+          "instruction",
+          "Instruction\nText encoder → instruction features",
+          "learned"
+        ],
+        [
+          "metadata",
+          "Task / actor / output metadata\nCanonical bytes → embedding → GRU → pooled token",
+          "learned"
+        ],
+        [
+          "state",
+          "Current state tokens",
+          "store"
+        ],
+        [
+          "interpret",
+          "TaskInterpreter\n4 query tokens read instruction, then state + metadata",
+          "learned"
+        ],
+        [
+          "policy",
+          "TaskPolicy\nPool → MLP → operation / modality / completion logits",
+          "learned"
+        ],
+        [
+          "gate",
+          "TaskSession controls\nRequired / automatic / disabled outputs\nSelection + fulfillment checks",
+          "store"
+        ],
+        [
+          "think",
+          "Thinker\nWorkspace queries attend state + recall + goal + feedback",
+          "learned"
+        ],
+        [
+          "memory",
+          "Memory reader\nTask-dependent access through query state",
+          "learned"
+        ],
+        [
+          "feedback",
+          "Feedback\nDetached state → error MLP → softplus\nAdd uncertainty diagnostic + think count",
+          "learned"
+        ],
+        [
+          "workspace",
+          "Updated workspace\n4 working + 4 reasoning tokens",
+          "store"
+        ],
+        [
+          "dispatch",
+          "Bounded operation dispatcher\nthink · recall · imagine · act · emit · ask · finish",
+          "store"
+        ],
+        [
+          "actionhead",
+          "ActionHead\nMean-pool conditioned state → linear\nContinuous action mean + log-scale",
+          "learned"
+        ],
+        [
+          "output",
+          "Emission / action / hypothetical branch\nReturn result and provenance to caller",
+          "store"
+        ],
+        [
+          "reflect",
+          "Optional reflection\nTagged generated output → same modality encoder\nValid feature pool + metadata",
+          "optional"
+        ]
       ],
       "edges": [
-        ["instruction", "interpret", "instruction tokens"],
-        ["metadata", "interpret", "metadata token"],
-        ["state", "interpret", "state context"],
-        ["state", "feedback", "monitor / uncertainty / counter"],
-        ["state", "memory", "memory queries"],
-        ["interpret", "policy", "task tokens"],
-        ["policy", "gate", "raw proposal"],
-        ["gate", "dispatch", "allowed operation"],
-        ["interpret", "think", "goal context"],
-        ["state", "think", "world + previous workspace"],
-        ["memory", "think", "retrieved context"],
-        ["feedback", "think", "projected feedback token"],
-        ["think", "workspace", "update 8 tokens only"],
-        ["workspace", "dispatch", "conditioned state"],
-        ["workspace", "actionhead", "conditioned state"],
-        ["dispatch", "actionhead", "when act is selected"],
-        ["actionhead", "output", "action proposal"],
-        ["dispatch", "output", "selected operation result"],
-        ["output", "reflect", "generated-media loopback"],
-        ["reflect", "think", "attributed context"]
+        [
+          "instruction",
+          "interpret",
+          "instruction tokens"
+        ],
+        [
+          "metadata",
+          "interpret",
+          "metadata token"
+        ],
+        [
+          "state",
+          "interpret",
+          "state context"
+        ],
+        [
+          "state",
+          "feedback",
+          "monitor / uncertainty / counter"
+        ],
+        [
+          "state",
+          "memory",
+          "memory queries"
+        ],
+        [
+          "interpret",
+          "policy",
+          "task tokens"
+        ],
+        [
+          "policy",
+          "gate",
+          "raw proposal"
+        ],
+        [
+          "gate",
+          "dispatch",
+          "allowed operation"
+        ],
+        [
+          "interpret",
+          "think",
+          "goal context"
+        ],
+        [
+          "state",
+          "think",
+          "world + previous workspace"
+        ],
+        [
+          "memory",
+          "think",
+          "retrieved context"
+        ],
+        [
+          "feedback",
+          "think",
+          "projected feedback token"
+        ],
+        [
+          "think",
+          "workspace",
+          "update 8 tokens only"
+        ],
+        [
+          "workspace",
+          "dispatch",
+          "conditioned state"
+        ],
+        [
+          "workspace",
+          "actionhead",
+          "conditioned state"
+        ],
+        [
+          "dispatch",
+          "actionhead",
+          "when act is selected"
+        ],
+        [
+          "actionhead",
+          "output",
+          "action proposal"
+        ],
+        [
+          "dispatch",
+          "output",
+          "selected operation result"
+        ],
+        [
+          "output",
+          "reflect",
+          "generated-media loopback"
+        ],
+        [
+          "reflect",
+          "think",
+          "attributed context"
+        ]
       ],
       "notes": [
         "Thinker uses the same residual attention primitive as §3. More thinking repeats this read/update loop; it does not advance the live world clock or by itself acquire evidence.",
@@ -409,89 +1141,335 @@
         "The feature controller can propose a bounded feature code for supported reads. It is excluded from categorical source encoding. Reflection uses shared encoder weights but preserves generated ancestry; it is not a new camera event.",
         "finish is a policy/session operation, not independent proof of task success. The historical-recall experiment has an external verifier based on the delivered event log. General tool execution, open-ended decomposition and calibrated stopping remain incomplete."
       ],
-      "sources": ["pathwm/models/tasks.py#TaskInterpreter", "pathwm/models/tasks.py#TaskPolicy", "pathwm/models/tasks.py#MetadataEncoder", "pathwm/models/agent.py#think", "pathwm/models/agent.py#emit", "pathwm/models/agent.py#reflect", "pathwm/models/recall.py#verify_recall"]
+      "sources": [
+        "pathwm/models/tasks.py#TaskInterpreter",
+        "pathwm/models/tasks.py#TaskPolicy",
+        "pathwm/models/tasks.py#MetadataEncoder",
+        "pathwm/models/agent.py#think",
+        "pathwm/models/agent.py#emit",
+        "pathwm/models/agent.py#reflect",
+        "pathwm/models/recall.py#verify_recall"
+      ]
     },
     {
       "id": "07-decoders",
-      "feedback_edges": [["bytes", "prefix"]],
+      "feedback_edges": [
+        [
+          "bytes",
+          "prefix"
+        ]
+      ],
       "title": "7 · How state reaches each output modality",
       "subtitle": "General multimodal recipe · reference decoders are small learned readouts",
       "direction": "TB",
       "nodes": [
-        ["state", "Task-conditioned state\nWorld tokens + working / reasoning tokens", "store"],
-        ["image", "Image decoder\nLearned spatial queries attend state", "learned"],
-        ["rgb", "Patch projection → sigmoid\nRearrange RGB patches into image", "learned"],
-        ["audio", "Audio decoder\n4 learned queries attend state", "learned"],
-        ["wave", "Flatten → linear → tanh\nFixed-length waveform chunk", "learned"],
-        ["prefix", "Text prefix\nBOS + previously generated bytes", "store"],
-        ["text", "Text decoder\nEmbedding + position → causal attention\n→ cross-attention to state", "learned"],
-        ["bytes", "Vocabulary projection\nNext-byte logits; repeat until EOS / budget", "learned"],
-        ["trajectory", "Video trajectory\nExplicit states at increasing times", "store"],
-        ["video", "Reuse image decoder per state\nStack decoded frames", "learned"],
-        ["emit", "Emission envelope\nValues + modality + requester + producer + ancestry", "store"],
-        ["replace", "Optional image replacement → §9\nState → generated multiscale features → RGB head", "optional"]
+        [
+          "state",
+          "Task-conditioned state\nWorld tokens + working / reasoning tokens",
+          "store"
+        ],
+        [
+          "image",
+          "Image decoder\nLearned spatial queries attend state",
+          "learned"
+        ],
+        [
+          "rgb",
+          "Patch projection → sigmoid\nRearrange RGB patches into image",
+          "learned"
+        ],
+        [
+          "audio",
+          "Audio decoder\n4 learned queries attend state",
+          "learned"
+        ],
+        [
+          "wave",
+          "Flatten → linear → tanh\nFixed-length waveform chunk",
+          "learned"
+        ],
+        [
+          "prefix",
+          "Text prefix\nBOS + previously generated bytes",
+          "store"
+        ],
+        [
+          "text",
+          "Text decoder\nEmbedding + position → causal attention\n→ cross-attention to state",
+          "learned"
+        ],
+        [
+          "bytes",
+          "Vocabulary projection\nNext-byte logits; repeat until EOS / budget",
+          "learned"
+        ],
+        [
+          "trajectory",
+          "Video trajectory\nExplicit states at increasing times",
+          "store"
+        ],
+        [
+          "video",
+          "Reuse image decoder per state\nStack decoded frames",
+          "learned"
+        ],
+        [
+          "emit",
+          "Emission envelope\nValues + modality + requester + producer + ancestry",
+          "store"
+        ],
+        [
+          "replace",
+          "Optional image replacement → §9\nState → generated multiscale features → RGB head",
+          "optional"
+        ]
       ],
       "edges": [
-        ["state", "image", "context"],
-        ["image", "rgb", "spatial tokens"],
-        ["state", "audio", "context"],
-        ["audio", "wave", "four tokens"],
-        ["prefix", "text", "causal prefix"],
-        ["state", "text", "context"],
-        ["text", "bytes", "prefix-conditioned features"],
-        ["bytes", "prefix", "append chosen byte"],
-        ["trajectory", "video", "one state per frame"],
-        ["rgb", "emit", "RGB tensor"],
-        ["wave", "emit", "waveform tensor"],
-        ["bytes", "emit", "generated byte sequence"],
-        ["video", "emit", "frame sequence"],
-        ["state", "replace", "alternative producer context"],
-        ["replace", "emit", "optional recipe output"]
+        [
+          "state",
+          "image",
+          "context"
+        ],
+        [
+          "image",
+          "rgb",
+          "spatial tokens"
+        ],
+        [
+          "state",
+          "audio",
+          "context"
+        ],
+        [
+          "audio",
+          "wave",
+          "four tokens"
+        ],
+        [
+          "prefix",
+          "text",
+          "causal prefix"
+        ],
+        [
+          "state",
+          "text",
+          "context"
+        ],
+        [
+          "text",
+          "bytes",
+          "prefix-conditioned features"
+        ],
+        [
+          "bytes",
+          "prefix",
+          "append chosen byte"
+        ],
+        [
+          "trajectory",
+          "video",
+          "one state per frame"
+        ],
+        [
+          "rgb",
+          "emit",
+          "RGB tensor"
+        ],
+        [
+          "wave",
+          "emit",
+          "waveform tensor"
+        ],
+        [
+          "bytes",
+          "emit",
+          "generated byte sequence"
+        ],
+        [
+          "video",
+          "emit",
+          "frame sequence"
+        ],
+        [
+          "state",
+          "replace",
+          "alternative producer context"
+        ],
+        [
+          "replace",
+          "emit",
+          "optional recipe output"
+        ]
       ],
       "notes": [
         "An output does not require an input of the same modality: decoder inputs are internal state. Whether useful content is present depends on learned representations, memory, objectives and training data.",
         "The text path is a byte autoregressor, not a pretrained language model. The waveform path is not established general speech synthesis. Video currently decodes a supplied state trajectory; there is no general video diffusion generator in this recipe.",
         "Image resolution and audio length are constructor settings. Output size alone does not establish reconstructed detail. The stronger conditional image producer is an optional controlled experiment, not a common generator already implemented for every modality."
       ],
-      "sources": ["pathwm/models/modalities.py#ImageDecoder", "pathwm/models/modalities.py#AudioDecoder", "pathwm/models/modalities.py#TextDecoder", "pathwm/models/agent.py#decode_video", "pathwm/models/tasks.py#GeneratedOutput"]
+      "sources": [
+        "pathwm/models/modalities.py#ImageDecoder",
+        "pathwm/models/modalities.py#AudioDecoder",
+        "pathwm/models/modalities.py#TextDecoder",
+        "pathwm/models/agent.py#decode_video",
+        "pathwm/models/tasks.py#GeneratedOutput"
+      ]
     },
     {
       "id": "08-photo-path",
-      "feedback_edges": [["state", "update"]],
+      "feedback_edges": [
+        [
+          "state",
+          "update"
+        ]
+      ],
       "title": "8 · The current real-photo experiment",
       "subtitle": "MemoryOutput · Gaussian reference configuration, not BeliefAgent",
       "direction": "TB",
       "nodes": [
-        ["photos", "Real photo history\nRGB64 observations then a blank view", "external"],
-        ["encoder", "Frozen image hierarchy\n4×4 RGB patch: 48 values → 32\n16² + 8² + 4² = 336 tokens × 32", "learned"],
-        ["update", "ObservationUpdate\nState queries attend features + action/time token\nResidual MLP + Gaussian scale head", "learned"],
-        ["state", "Gaussian LatentState\n30 tokens × 32 + log_scale\n16 sensory / 4 entities / 2 context / 4 working / 4 reasoning", "store"],
-        ["bank", "Episodic snapshot bank\nDetached copy of all 30 tokens\nCapacity4; read top2 by pooled-key cosine", "store"],
-        ["start", "Query starting state\nFinal state, or fresh blank state with bank restored", "store"],
-        ["think", "Native recall / Thinker ×2\nRead bank + current state; update 8 workspace tokens", "learned"],
-        ["working", "Output context\n4 working + 4 reasoning tokens × 32\nFixed trained-channel normalization", "store"],
-        ["generator", "Conditional feature generator → §9\nNoise + workspace → all codec feature maps", "learned"],
-        ["head", "Frozen PatchDetailHead\nPredicted patch means + predicted within-patch detail", "learned"],
-        ["image", "Generated 64×64 RGB image", "external"],
-        ["facts", "Parallel factual head\nControlled entity / attribute outputs", "optional"],
-        ["teacher", "Direct codec control / training teacher\nOriginal RGB → hierarchy + raw patch residual", "training"]
+        [
+          "photos",
+          "Real photo history\nRGB64 observations then a blank view",
+          "external"
+        ],
+        [
+          "encoder",
+          "Frozen image hierarchy\n4×4 RGB patch: 48 values → 32\n16² + 8² + 4² = 336 tokens × 32",
+          "learned"
+        ],
+        [
+          "update",
+          "ObservationUpdate\nState queries attend features + action/time token\nResidual MLP + Gaussian scale head",
+          "learned"
+        ],
+        [
+          "state",
+          "Gaussian LatentState\n30 tokens × 32 + log_scale\n16 sensory / 4 entities / 2 context / 4 working / 4 reasoning",
+          "store"
+        ],
+        [
+          "bank",
+          "Episodic snapshot bank\nDetached copy of all 30 tokens\nCapacity4; read top2 by pooled-key cosine",
+          "store"
+        ],
+        [
+          "start",
+          "Query starting state\nFinal state, or fresh blank state with bank restored",
+          "store"
+        ],
+        [
+          "think",
+          "Native recall / Thinker ×2\nRead bank + current state; update 8 workspace tokens",
+          "learned"
+        ],
+        [
+          "working",
+          "Output context\n4 working + 4 reasoning tokens × 32\nFixed trained-channel normalization",
+          "store"
+        ],
+        [
+          "generator",
+          "Conditional feature generator → §9\nNoise + workspace → all codec feature maps",
+          "learned"
+        ],
+        [
+          "head",
+          "Frozen PatchDetailHead\nPredicted patch means + predicted within-patch detail",
+          "learned"
+        ],
+        [
+          "image",
+          "Generated 64×64 RGB image",
+          "external"
+        ],
+        [
+          "facts",
+          "Parallel factual head\nControlled entity / attribute outputs",
+          "optional"
+        ],
+        [
+          "teacher",
+          "Direct codec control / training teacher\nOriginal RGB → hierarchy + raw patch residual",
+          "training"
+        ]
       ],
       "edges": [
-        ["photos", "encoder", "real observation input"],
-        ["encoder", "update", "336 spatial tokens"],
-        ["update", "state", "first major measured access drop"],
-        ["state", "update", "previous state; next observation"],
-        ["state", "bank", "explicit remember; exact copies"],
-        ["state", "start", "ordinary query mode"],
-        ["start", "think", "live or reset state"],
-        ["bank", "think", "retrieved snapshots + relative time"],
-        ["think", "working", "native working/reasoning readout"],
-        ["working", "generator", "only image-dependent generation context"],
-        ["generator", "head", "three scales + detail map"],
-        ["head", "image", "pixels"],
-        ["working", "facts", "separate readout"],
-        ["photos", "teacher", "original image, training/control only", "training"],
-        ["teacher", "generator", "detached feature targets for losses", "training"]
+        [
+          "photos",
+          "encoder",
+          "real observation input"
+        ],
+        [
+          "encoder",
+          "update",
+          "336 spatial tokens"
+        ],
+        [
+          "update",
+          "state",
+          "first major measured access drop"
+        ],
+        [
+          "state",
+          "update",
+          "previous state; next observation"
+        ],
+        [
+          "state",
+          "bank",
+          "explicit remember; exact copies"
+        ],
+        [
+          "state",
+          "start",
+          "ordinary query mode"
+        ],
+        [
+          "start",
+          "think",
+          "live or reset state"
+        ],
+        [
+          "bank",
+          "think",
+          "retrieved snapshots + relative time"
+        ],
+        [
+          "think",
+          "working",
+          "native working/reasoning readout"
+        ],
+        [
+          "working",
+          "generator",
+          "only image-dependent generation context"
+        ],
+        [
+          "generator",
+          "head",
+          "three scales + detail map"
+        ],
+        [
+          "head",
+          "image",
+          "pixels"
+        ],
+        [
+          "working",
+          "facts",
+          "separate readout"
+        ],
+        [
+          "photos",
+          "teacher",
+          "original image, training/control only",
+          "training"
+        ],
+        [
+          "teacher",
+          "generator",
+          "detached feature targets for losses",
+          "training"
+        ]
       ],
       "notes": [
         "Checkpoint: runs/real_photo_v1/training/weights.pt. This model has image input/output only. A new session starts from learned initial tokens; each observation updates the preceding state. Group names such as entities are token-slice labels, not an explicit knowledge graph or verified object slots.",
@@ -499,90 +1477,342 @@
         "The frozen diagnostic found the largest spatial-accessibility drop at encoder → first state, with another drop on recall. Memory writes themselves are exact. A failed readout does not prove all information is absent.",
         "The direct codec sees extra within-patch residual detail. Its good reconstruction is not evidence that this smaller state/memory path retains those pixels. General photographic generation remains open."
       ],
-      "sources": ["pathwm/models/memory_output.py#build_model", "pathwm/models/memory_output.py#MemoryOutput", "pathwm/models/agent.py#ObservationUpdate", "pathwm/models/agent_state.py#EpisodicMemory", "docs/real-photo-plan.md", "docs/photo-detail-plan.md"]
+      "sources": [
+        "pathwm/models/memory_output.py#build_model",
+        "pathwm/models/memory_output.py#MemoryOutput",
+        "pathwm/models/agent.py#ObservationUpdate",
+        "pathwm/models/agent_state.py#EpisodicMemory",
+        "docs/real-photo-plan.md",
+        "docs/photo-detail-plan.md"
+      ]
     },
     {
       "id": "09-image-generator",
-      "feedback_edges": [["integrate", "input"]],
+      "feedback_edges": [
+        [
+          "integrate",
+          "input"
+        ]
+      ],
       "title": "9 · Latent-guided image production",
       "subtitle": "ConditionalFeatureGenerator · current flow configuration uses 8 Euler steps",
       "direction": "TB",
       "nodes": [
-        ["context", "Workspace context\n8 tokens × 32", "store"],
-        ["project", "Normalize + project context\n32 → hidden width64", "learned"],
-        ["noise", "Seeded noise feature maps\nSame layouts as every required codec feature", "external"],
-        ["progress", "Generation progress τ\n0 → 1; separate from world time", "store"],
-        ["input", "Per-scale input projection\nFeature channels → 64 + position + progress embedding", "learned"],
-        ["block", "Per-scale OutputBlock\nResidual self-attention\nResidual workspace cross-attention\nResidual MLP", "learned"],
-        ["fusion", "Joint-scale OutputBlock\nConcatenate scales → shared processing → split", "learned"],
-        ["velocity", "Per-scale output projection\nPredict velocity in standardized feature space", "learned"],
-        ["integrate", "Euler sampler\nx ← x + velocity / 8\nRepeat at the next τ", "store"],
-        ["features", "Final feature maps; unstandardize\n32×16×16 / 32×8×8 / 32×4×4\nDetail: 48×16×16", "store"],
-        ["base", "DenseHead\nProject / align / concatenate scales\nResidual CNN + upsampling → patch means", "learned"],
-        ["detail", "Detail head\n1×1 projection → pixel shuffle\nRemove within-patch mean", "learned"],
-        ["rgb", "Combine patch means + residual detail\nClamp to [0,1] → RGB64", "store"]
+        [
+          "context",
+          "Workspace context\n8 tokens × 32",
+          "store"
+        ],
+        [
+          "project",
+          "Normalize + project context\n32 → hidden width64",
+          "learned"
+        ],
+        [
+          "noise",
+          "Seeded noise feature maps\nSame layouts as every required codec feature",
+          "external"
+        ],
+        [
+          "progress",
+          "Generation progress τ\n0 → 1; separate from world time",
+          "store"
+        ],
+        [
+          "input",
+          "Per-scale input projection\nFeature channels → 64 + position + progress embedding",
+          "learned"
+        ],
+        [
+          "block",
+          "Per-scale OutputBlock\nResidual self-attention\nResidual workspace cross-attention\nResidual MLP",
+          "learned"
+        ],
+        [
+          "fusion",
+          "Joint-scale OutputBlock\nConcatenate scales → shared processing → split",
+          "learned"
+        ],
+        [
+          "velocity",
+          "Per-scale output projection\nPredict velocity in standardized feature space",
+          "learned"
+        ],
+        [
+          "integrate",
+          "Euler sampler\nx ← x + velocity / 8\nRepeat at the next τ",
+          "store"
+        ],
+        [
+          "features",
+          "Final feature maps; unstandardize\n32×16×16 / 32×8×8 / 32×4×4\nDetail: 48×16×16",
+          "store"
+        ],
+        [
+          "base",
+          "DenseHead\nProject / align / concatenate scales\nResidual CNN + upsampling → patch means",
+          "learned"
+        ],
+        [
+          "detail",
+          "Detail head\n1×1 projection → pixel shuffle\nRemove within-patch mean",
+          "learned"
+        ],
+        [
+          "rgb",
+          "Combine patch means + residual detail\nClamp to [0,1] → RGB64",
+          "store"
+        ]
       ],
       "edges": [
-        ["context", "project", "conditioning"],
-        ["noise", "input", "initial x"],
-        ["progress", "input", "progress embedding"],
-        ["input", "block", "spatial feature tokens"],
-        ["project", "block", "cross-attention context"],
-        ["block", "fusion", "all scale tokens"],
-        ["project", "fusion", "cross-attention context"],
-        ["fusion", "velocity", "split hidden features"],
-        ["velocity", "integrate", "field value"],
-        ["integrate", "input", "next x; repeat"],
-        ["integrate", "features", "after final step"],
-        ["features", "base", "three spatial scales"],
-        ["features", "detail", "predicted detail map"],
-        ["base", "rgb", "base patch means"],
-        ["detail", "rgb", "within-patch residual"]
+        [
+          "context",
+          "project",
+          "conditioning"
+        ],
+        [
+          "noise",
+          "input",
+          "initial x"
+        ],
+        [
+          "progress",
+          "input",
+          "progress embedding"
+        ],
+        [
+          "input",
+          "block",
+          "spatial feature tokens"
+        ],
+        [
+          "project",
+          "block",
+          "cross-attention context"
+        ],
+        [
+          "block",
+          "fusion",
+          "all scale tokens"
+        ],
+        [
+          "project",
+          "fusion",
+          "cross-attention context"
+        ],
+        [
+          "fusion",
+          "velocity",
+          "split hidden features"
+        ],
+        [
+          "velocity",
+          "integrate",
+          "field value"
+        ],
+        [
+          "integrate",
+          "input",
+          "next x; repeat"
+        ],
+        [
+          "integrate",
+          "features",
+          "after final step"
+        ],
+        [
+          "features",
+          "base",
+          "three spatial scales"
+        ],
+        [
+          "features",
+          "detail",
+          "predicted detail map"
+        ],
+        [
+          "base",
+          "rgb",
+          "base patch means"
+        ],
+        [
+          "detail",
+          "rgb",
+          "within-patch residual"
+        ]
       ],
       "notes": [
         "Every decoder feature, including fine detail, is produced from workspace and noise at inference. Noise allows sampling; it does not supply missing facts about a particular remembered image.",
         "The head owns no encoder or raw-image input. A direct regression variant also exists; older exports instead use StateFeatureDecoder: spatial queries attend state → project each scale → the same head.",
         "The current image experiment uses a fixed selected-object/recall request. The architecture is conditional, but arbitrary language-to-image control has not been established. Replacing a producer later is possible if the feature interface and conditioning contract are kept compatible."
       ],
-      "sources": ["pathwm/models/conditional_image.py#ConditionalFeatureGenerator", "pathwm/models/conditional_image.py#OutputBlock", "pathwm/models/conditional_image.py#integrate", "pathwm/models/decoders.py#PatchDetailHead", "pathwm/models/decoders.py#DenseHead", "pathwm/models/decoders.py#StateFeatureDecoder"]
+      "sources": [
+        "pathwm/models/conditional_image.py#ConditionalFeatureGenerator",
+        "pathwm/models/conditional_image.py#OutputBlock",
+        "pathwm/models/conditional_image.py#integrate",
+        "pathwm/models/decoders.py#PatchDetailHead",
+        "pathwm/models/decoders.py#DenseHead",
+        "pathwm/models/decoders.py#StateFeatureDecoder"
+      ]
     },
     {
       "id": "10-entities",
-      "feedback_edges": [["records", "matcher"], ["commit", "latent"]],
+      "feedback_edges": [
+        [
+          "records",
+          "matcher"
+        ],
+        [
+          "commit",
+          "latent"
+        ]
+      ],
       "title": "10 · Entity identity, state and relations",
       "subtitle": "Implemented controlled experiments · supplied descriptors and relation semantics",
       "direction": "TB",
       "nodes": [
-        ["observation", "Entity observation\nSupplied unit descriptor: 8 values\nState features: 4 values + event/time", "external"],
-        ["matcher", "Learned entity matcher\nSquared descriptor differences → MLP scores\nCompete with learned new-entity score", "learned"],
-        ["records", "Bounded EntityMemory\nStable local integer ID + descriptor\nFirst/last seen + count + retry receipts", "store"],
-        ["decision", "Confidence / capacity rule\nMatch · create · uncertain · full", "store"],
-        ["latent", "Per-entity latent state\nRead the matched record's previous value", "store"],
-        ["cell", "EntityStateCell\nGRUCell(4 → 16) updates state\nOptional exact no-information preservation", "learned"],
-        ["commit", "Atomic state update\nNew latent + identity/event receipt", "store"],
-        ["query", "Relation source cue + destination cue\nOptional active/cue contexts", "external"],
-        ["relation", "Relation key + optional write gate\nEncode cue to latent key; context comparison", "learned"],
-        ["edge", "Per-destination relation slot\nOne supplied directed relation type\nStored latent key resolves a source by matching", "store"],
-        ["interact", "EntityInteractionCell\nConcatenate destination/source latents → MLP\nUpdate destination state", "learned"],
-        ["read", "Readout / task adapter\nState logits, or project entity latent into workspace", "learned"]
+        [
+          "observation",
+          "Entity observation\nSupplied unit descriptor: 8 values\nState features: 4 values + event/time",
+          "external"
+        ],
+        [
+          "matcher",
+          "Learned entity matcher\nSquared descriptor differences → MLP scores\nCompete with learned new-entity score",
+          "learned"
+        ],
+        [
+          "records",
+          "Bounded EntityMemory\nStable local integer ID + descriptor\nFirst/last seen + count + retry receipts",
+          "store"
+        ],
+        [
+          "decision",
+          "Confidence / capacity rule\nMatch · create · uncertain · full",
+          "store"
+        ],
+        [
+          "latent",
+          "Per-entity latent state\nRead the matched record's previous value",
+          "store"
+        ],
+        [
+          "cell",
+          "EntityStateCell\nGRUCell(4 → 16) updates state\nOptional exact no-information preservation",
+          "learned"
+        ],
+        [
+          "commit",
+          "Atomic state update\nNew latent + identity/event receipt",
+          "store"
+        ],
+        [
+          "query",
+          "Relation source cue + destination cue\nOptional active/cue contexts",
+          "external"
+        ],
+        [
+          "relation",
+          "Relation key + optional write gate\nEncode cue to latent key; context comparison",
+          "learned"
+        ],
+        [
+          "edge",
+          "Per-destination relation slot\nOne supplied directed relation type\nStored latent key resolves a source by matching",
+          "store"
+        ],
+        [
+          "interact",
+          "EntityInteractionCell\nConcatenate destination/source latents → MLP\nUpdate destination state",
+          "learned"
+        ],
+        [
+          "read",
+          "Readout / task adapter\nState logits, or project entity latent into workspace",
+          "learned"
+        ]
       ],
       "edges": [
-        ["observation", "matcher", "recognition descriptor"],
-        ["records", "matcher", "stored candidate descriptors"],
-        ["matcher", "decision", "candidate / new probabilities"],
-        ["decision", "records", "admit known or new entity"],
-        ["decision", "latent", "resolved storage ID"],
-        ["latent", "cell", "previous latent"],
-        ["observation", "cell", "state features"],
-        ["cell", "commit", "updated latent"],
-        ["commit", "latent", "persist value"],
-        ["query", "relation", "relation cues"],
-        ["relation", "edge", "accepted key update"],
-        ["records", "edge", "endpoint resolution"],
-        ["edge", "interact", "resolved directed binding"],
-        ["latent", "interact", "source + destination states"],
-        ["interact", "commit", "destination update"],
-        ["latent", "read", "stored entity belief"]
+        [
+          "observation",
+          "matcher",
+          "recognition descriptor"
+        ],
+        [
+          "records",
+          "matcher",
+          "stored candidate descriptors"
+        ],
+        [
+          "matcher",
+          "decision",
+          "candidate / new probabilities"
+        ],
+        [
+          "decision",
+          "records",
+          "admit known or new entity"
+        ],
+        [
+          "decision",
+          "latent",
+          "resolved storage ID"
+        ],
+        [
+          "latent",
+          "cell",
+          "previous latent"
+        ],
+        [
+          "observation",
+          "cell",
+          "state features"
+        ],
+        [
+          "cell",
+          "commit",
+          "updated latent"
+        ],
+        [
+          "commit",
+          "latent",
+          "persist value"
+        ],
+        [
+          "query",
+          "relation",
+          "relation cues"
+        ],
+        [
+          "relation",
+          "edge",
+          "accepted key update"
+        ],
+        [
+          "records",
+          "edge",
+          "endpoint resolution"
+        ],
+        [
+          "edge",
+          "interact",
+          "resolved directed binding"
+        ],
+        [
+          "latent",
+          "interact",
+          "source + destination states"
+        ],
+        [
+          "interact",
+          "commit",
+          "destination update"
+        ],
+        [
+          "latent",
+          "read",
+          "stored entity belief"
+        ]
       ],
       "notes": [
         "The model does not predict an arbitrary universal integer. Learned matching selects a record; the integer is the store's address. Uncertain matches can remain unresolved. Unique record IDs do not prevent mistaken identity merges.",
@@ -590,41 +1820,156 @@
         "EntityRelationMemory has one supplied relation type and one slot per destination. This is not yet learned open-ended graph structure or a general concept/instance taxonomy. The broader proposed graph appears in §13.",
         "The key-box experiment actually connects an entity latent through projection and two Thinker steps to the general belief workspace, then a readout feeds a supplied planner. This remains a distinct experimental configuration."
       ],
-      "sources": ["pathwm/models/entities.py#EntityMatchReader", "pathwm/models/entity_memory.py#EntityMemory", "pathwm/models/entity_state.py#EntityStateCell", "pathwm/models/entity_state.py#EntityInteractionCell", "pathwm/models/entity_relations.py#EntityRelationMemory", "pathwm/models/key_box.py#KeyBoxReader"]
+      "sources": [
+        "pathwm/models/entities.py#EntityMatchReader",
+        "pathwm/models/entity_memory.py#EntityMemory",
+        "pathwm/models/entity_state.py#EntityStateCell",
+        "pathwm/models/entity_state.py#EntityInteractionCell",
+        "pathwm/models/entity_relations.py#EntityRelationMemory",
+        "pathwm/models/key_box.py#KeyBoxReader"
+      ]
     },
     {
       "id": "11-planning",
-      "feedback_edges": [["correct", "live"], ["search", "dag"]],
+      "feedback_edges": [
+        [
+          "correct",
+          "live"
+        ],
+        [
+          "search",
+          "dag"
+        ]
+      ],
       "title": "11 · Planning and the proposed action DAG",
       "subtitle": "Existing finite candidate rollouts; broader DAG search remains a target",
       "direction": "TB",
       "nodes": [
-        ["live", "Current live belief", "store"],
-        ["candidates", "Recipe / caller\nCandidate action sequences + bounds\nGoal cost + horizon + duration", "external"],
-        ["branches", "Temporary starting branches\nCategorical draws, default4; memory shared", "store"],
-        ["rollout", "Learned dynamics rollout\nState + action → imagined next state\nRepeat for the candidate sequence", "learned"],
-        ["score", "Evaluate predicted states\nDiscounted cost; average over samples", "store"],
-        ["choose", "Choose lowest-scoring sequence\nReturn full plan and first action", "store"],
-        ["execute", "Caller executes one action\nCollect actual new observations", "external"],
-        ["correct", "Correct live belief and replan\nPredicted success needs external verification", "store"],
-        ["keybox", "Separate key-box planner\nInspect / open / retrieve / stop\nExpectimax, supplied dynamics, horizon ≤4", "optional"],
-        ["dag", "PROPOSED · Reusable action DAG\nNodes: predicted belief states\nEdges: external / internal actions and outcomes", "proposal"],
-        ["search", "PROPOSED · General graph search\nExpansion / merging / subgoals / contingent branches\nUnreachable or uncertain goal handling", "proposal"]
+        [
+          "live",
+          "Current live belief",
+          "store"
+        ],
+        [
+          "candidates",
+          "Recipe / caller\nCandidate action sequences + bounds\nGoal cost + horizon + duration",
+          "external"
+        ],
+        [
+          "branches",
+          "Temporary starting branches\nCategorical draws, default4; memory shared",
+          "store"
+        ],
+        [
+          "rollout",
+          "Learned dynamics rollout\nState + action → imagined next state\nRepeat for the candidate sequence",
+          "learned"
+        ],
+        [
+          "score",
+          "Evaluate predicted states\nDiscounted cost; average over samples",
+          "store"
+        ],
+        [
+          "choose",
+          "Choose lowest-scoring sequence\nReturn full plan and first action",
+          "store"
+        ],
+        [
+          "execute",
+          "Caller executes one action\nCollect actual new observations",
+          "external"
+        ],
+        [
+          "correct",
+          "Correct live belief and replan\nPredicted success needs external verification",
+          "store"
+        ],
+        [
+          "keybox",
+          "Separate key-box planner\nInspect / open / retrieve / stop\nExpectimax, supplied dynamics, horizon ≤4",
+          "optional"
+        ],
+        [
+          "dag",
+          "PROPOSED · Reusable action DAG\nNodes: predicted belief states\nEdges: external / internal actions and outcomes",
+          "proposal"
+        ],
+        [
+          "search",
+          "PROPOSED · General graph search\nExpansion / merging / subgoals / contingent branches\nUnreachable or uncertain goal handling",
+          "proposal"
+        ]
       ],
       "edges": [
-        ["live", "branches", "starting belief"],
-        ["branches", "rollout", "scratch state"],
-        ["candidates", "rollout", "candidate sequence"],
-        ["rollout", "score", "imagined trajectory"],
-        ["candidates", "score", "declared cost"],
-        ["score", "choose", "candidate scores"],
-        ["choose", "execute", "first action"],
-        ["execute", "correct", "real event"],
-        ["correct", "live", "next live state"],
-        ["keybox", "execute", "separate controlled harness"],
-        ["live", "dag", "proposed starting node", "proposal"],
-        ["dag", "search", "proposed graph frontier", "proposal"],
-        ["search", "dag", "expand", "proposal"]
+        [
+          "live",
+          "branches",
+          "starting belief"
+        ],
+        [
+          "branches",
+          "rollout",
+          "scratch state"
+        ],
+        [
+          "candidates",
+          "rollout",
+          "candidate sequence"
+        ],
+        [
+          "rollout",
+          "score",
+          "imagined trajectory"
+        ],
+        [
+          "candidates",
+          "score",
+          "declared cost"
+        ],
+        [
+          "score",
+          "choose",
+          "candidate scores"
+        ],
+        [
+          "choose",
+          "execute",
+          "first action"
+        ],
+        [
+          "execute",
+          "correct",
+          "real event"
+        ],
+        [
+          "correct",
+          "live",
+          "next live state"
+        ],
+        [
+          "keybox",
+          "execute",
+          "separate controlled harness"
+        ],
+        [
+          "live",
+          "dag",
+          "proposed starting node",
+          "proposal"
+        ],
+        [
+          "dag",
+          "search",
+          "proposed graph frontier",
+          "proposal"
+        ],
+        [
+          "search",
+          "dag",
+          "expand",
+          "proposal"
+        ]
       ],
       "notes": [
         "The general planner scores caller-provided sequences; it does not currently construct a persistent, general action DAG. Candidate generation, action units and goal cost are recipe-owned. There is no guarantee that the supplied candidates can reach a goal.",
@@ -632,7 +1977,13 @@
         "The task dispatcher already distinguishes internal think/recall/imagine from external act/ask/emit. General learned task decomposition, automatic state equivalence/graph merging, a universal success verifier and broad software-tool skills remain open.",
         "Prediction quality, goal readout quality and search coverage all constrain planning. A low imagined cost is not proof of realized success."
       ],
-      "sources": ["pathwm/evaluation/agent.py#plan", "pathwm/models/belief.py#imagine", "pathwm/models/agent.py#step_task", "pathwm/models/key_box.py#plan_key", "docs/decision-design.md"]
+      "sources": [
+        "pathwm/evaluation/agent.py#plan",
+        "pathwm/models/belief.py#imagine",
+        "pathwm/models/agent.py#step_task",
+        "pathwm/models/key_box.py#plan_key",
+        "docs/decision-design.md"
+      ]
     },
     {
       "id": "12-learning",
@@ -640,33 +1991,142 @@
       "subtitle": "Recipe-selected objectives; no single checkpoint currently proves all capabilities",
       "direction": "TB",
       "nodes": [
-        ["data", "Training data\nCausal observations + recorded actions\nTargets / task labels from the training harness", "external"],
-        ["encode", "Encoders + observation correction\nPosterior state", "learned"],
-        ["prior", "Action-conditioned dynamics\nPrior / future states", "learned"],
-        ["decode", "Modality decoders\nObserved reconstruction + prior prediction", "learned"],
-        ["worldloss", "World objectives\nImage/audio likelihood + byte likelihood\nSplit prior/posterior KL", "training"],
-        ["teacher", "Optional partial-view teacher\nEMA full current view + causal prefix\nDetached distribution targets", "training"],
-        ["memory", "Memory replay / compression / marking\nDetached stored envelopes; bounded recomputation", "learned"],
-        ["memoryloss", "Memory / task objectives\nRecall outcomes · compression auxiliary\nMark utility · task policy supervision", "training"],
-        ["optimizer", "Optimizer\nUpdate only recipe-declared trainable parameters", "store"],
-        ["evaluation", "Held-out evaluation and controls\nReload / causality / wrong-memory / ablations\nQuality, identity, calibration and planning metrics", "store"]
+        [
+          "data",
+          "Training data\nCausal observations + recorded actions\nTargets / task labels from the training harness",
+          "external"
+        ],
+        [
+          "encode",
+          "Encoders + observation correction\nPosterior state",
+          "learned"
+        ],
+        [
+          "prior",
+          "Action-conditioned dynamics\nPrior / future states",
+          "learned"
+        ],
+        [
+          "decode",
+          "Modality decoders\nObserved reconstruction + prior prediction",
+          "learned"
+        ],
+        [
+          "worldloss",
+          "World objectives\nImage/audio likelihood + byte likelihood\nSplit prior/posterior KL",
+          "training"
+        ],
+        [
+          "teacher",
+          "Optional partial-view teacher\nEMA full current view + causal prefix\nDetached distribution targets",
+          "training"
+        ],
+        [
+          "memory",
+          "Memory replay / compression / marking\nDetached stored envelopes; bounded recomputation",
+          "learned"
+        ],
+        [
+          "memoryloss",
+          "Memory / task objectives\nRecall outcomes · compression auxiliary\nMark utility · task policy supervision",
+          "training"
+        ],
+        [
+          "optimizer",
+          "Optimizer\nUpdate only recipe-declared trainable parameters",
+          "store"
+        ],
+        [
+          "evaluation",
+          "Held-out evaluation and controls\nReload / causality / wrong-memory / ablations\nQuality, identity, calibration and planning metrics",
+          "store"
+        ]
       ],
       "edges": [
-        ["data", "encode", "available input only"],
-        ["data", "teacher", "optional full-view teacher input", "training"],
-        ["encode", "prior", "previous belief + actions"],
-        ["encode", "decode", "posterior context"],
-        ["prior", "decode", "imagined context"],
-        ["decode", "worldloss", "predictions", "training"],
-        ["data", "worldloss", "supervision targets", "training"],
-        ["prior", "worldloss", "prior distribution", "training"],
-        ["encode", "worldloss", "posterior distribution", "training"],
-        ["teacher", "worldloss", "optional partial-view objective", "training"],
-        ["encode", "memory", "observed event envelopes"],
-        ["memory", "memoryloss", "readouts / compression / utility", "training"],
-        ["worldloss", "optimizer", "world gradients", "training"],
-        ["memoryloss", "optimizer", "memory/task gradients", "training"],
-        ["optimizer", "evaluation", "checkpoint under test"]
+        [
+          "data",
+          "encode",
+          "available input only"
+        ],
+        [
+          "data",
+          "teacher",
+          "optional full-view teacher input",
+          "training"
+        ],
+        [
+          "encode",
+          "prior",
+          "previous belief + actions"
+        ],
+        [
+          "encode",
+          "decode",
+          "posterior context"
+        ],
+        [
+          "prior",
+          "decode",
+          "imagined context"
+        ],
+        [
+          "decode",
+          "worldloss",
+          "predictions",
+          "training"
+        ],
+        [
+          "data",
+          "worldloss",
+          "supervision targets",
+          "training"
+        ],
+        [
+          "prior",
+          "worldloss",
+          "prior distribution",
+          "training"
+        ],
+        [
+          "encode",
+          "worldloss",
+          "posterior distribution",
+          "training"
+        ],
+        [
+          "teacher",
+          "worldloss",
+          "optional partial-view objective",
+          "training"
+        ],
+        [
+          "encode",
+          "memory",
+          "observed event envelopes"
+        ],
+        [
+          "memory",
+          "memoryloss",
+          "readouts / compression / utility",
+          "training"
+        ],
+        [
+          "worldloss",
+          "optimizer",
+          "world gradients",
+          "training"
+        ],
+        [
+          "memoryloss",
+          "optimizer",
+          "memory/task gradients",
+          "training"
+        ],
+        [
+          "optimizer",
+          "evaluation",
+          "checkpoint under test"
+        ]
       ],
       "notes": [
         "This is a map of available learning paths, not a claim that every loss runs in every recipe. Runtime memory writes detach; training deliberately recomputes bounded windows where needed.",
@@ -674,48 +2134,174 @@
         "Offline probes measure what a different reader can recover at each stage. They do not become inference shortcuts. Longer training, larger width, data coverage and architecture changes need separate controlled comparisons.",
         "The next proposed photo repair is intermediate spatial supervision of observation/state updates and recall. It is not implemented by this diagram work."
       ],
-      "sources": ["pathwm/training/belief.py", "experiments/multimodal.py", "experiments/real_photo.py", "pathwm/models/conditional_image.py", "pathwm/evaluation/photo_detail.py", "docs/photo-detail-plan.md"]
+      "sources": [
+        "pathwm/training/belief.py",
+        "experiments/multimodal.py",
+        "experiments/real_photo.py",
+        "pathwm/models/conditional_image.py",
+        "pathwm/evaluation/photo_detail.py",
+        "docs/photo-detail-plan.md"
+      ]
     },
     {
       "id": "13-target-graph",
-      "feedback_edges": [["operations", "instance"]],
+      "feedback_edges": [
+        [
+          "operations",
+          "instance"
+        ]
+      ],
       "title": "13 · The broader entity graph we discussed",
       "subtitle": "Proposed organization · beyond the implemented controlled entity store",
       "direction": "TB",
       "nodes": [
-        ["concept", "General concept\nLearned subgraph for shared structure\nExample interpretation: bicycle", "proposal"],
-        ["instance", "Concrete entity instance\nStable storage ID + learned matching keys\nExample interpretation: this bicycle", "proposal"],
-        ["recognition", "Recognition representations\nAppearance / identity across observations", "proposal"],
-        ["evidence", "History and evidence\nObserved events + source/time attribution\nSelective raw media or versioned encodings", "proposal"],
-        ["belief", "Current latent belief\nLearned properties / state / uncertainty", "proposal"],
-        ["relations", "Context and relationships\nOther entities · places · people · events", "proposal"],
-        ["skills", "Interactions and skills\nAction models / preconditions / outcomes", "proposal"],
-        ["focus", "Focus / task workspace\nRetrieve selected nodes, values and relations", "proposal"],
-        ["operations", "Graph operation interface\nPropose · match · create · link · update · retrieve\nBounded storage, versions and uncertainty rules", "proposal"],
-        ["inspect", "Inspection layer\nAliases + supporting examples + probes\nTrained reconstructions where supported", "proposal"]
+        [
+          "concept",
+          "General concept\nLearned subgraph for shared structure\nExample interpretation: bicycle",
+          "proposal"
+        ],
+        [
+          "instance",
+          "Concrete entity instance\nStable storage ID + learned matching keys\nExample interpretation: this bicycle",
+          "proposal"
+        ],
+        [
+          "recognition",
+          "Recognition representations\nAppearance / identity across observations",
+          "proposal"
+        ],
+        [
+          "evidence",
+          "History and evidence\nObserved events + source/time attribution\nSelective raw media or versioned encodings",
+          "proposal"
+        ],
+        [
+          "belief",
+          "Current latent belief\nLearned properties / state / uncertainty",
+          "proposal"
+        ],
+        [
+          "relations",
+          "Context and relationships\nOther entities · places · people · events",
+          "proposal"
+        ],
+        [
+          "skills",
+          "Interactions and skills\nAction models / preconditions / outcomes",
+          "proposal"
+        ],
+        [
+          "focus",
+          "Focus / task workspace\nRetrieve selected nodes, values and relations",
+          "proposal"
+        ],
+        [
+          "operations",
+          "Graph operation interface\nPropose · match · create · link · update · retrieve\nBounded storage, versions and uncertainty rules",
+          "proposal"
+        ],
+        [
+          "inspect",
+          "Inspection layer\nAliases + supporting examples + probes\nTrained reconstructions where supported",
+          "proposal"
+        ]
       ],
       "edges": [
-        ["instance", "concept", "learned concept membership", "proposal"],
-        ["instance", "recognition", "identity support", "proposal"],
-        ["instance", "evidence", "observed history", "proposal"],
-        ["evidence", "belief", "evidence for updates", "proposal"],
-        ["instance", "belief", "current belief belongs to entity", "proposal"],
-        ["instance", "relations", "learned links", "proposal"],
-        ["concept", "skills", "shared interactions", "proposal"],
-        ["belief", "focus", "retrieved state", "proposal"],
-        ["relations", "focus", "relevant context", "proposal"],
-        ["skills", "focus", "possible actions", "proposal"],
-        ["focus", "operations", "learned proposals", "proposal"],
-        ["operations", "instance", "accepted updates", "proposal"],
-        ["instance", "inspect", "structure and values", "proposal"],
-        ["evidence", "inspect", "ground interpretations", "proposal"]
+        [
+          "instance",
+          "concept",
+          "learned concept membership",
+          "proposal"
+        ],
+        [
+          "instance",
+          "recognition",
+          "identity support",
+          "proposal"
+        ],
+        [
+          "instance",
+          "evidence",
+          "observed history",
+          "proposal"
+        ],
+        [
+          "evidence",
+          "belief",
+          "evidence for updates",
+          "proposal"
+        ],
+        [
+          "instance",
+          "belief",
+          "current belief belongs to entity",
+          "proposal"
+        ],
+        [
+          "instance",
+          "relations",
+          "learned links",
+          "proposal"
+        ],
+        [
+          "concept",
+          "skills",
+          "shared interactions",
+          "proposal"
+        ],
+        [
+          "belief",
+          "focus",
+          "retrieved state",
+          "proposal"
+        ],
+        [
+          "relations",
+          "focus",
+          "relevant context",
+          "proposal"
+        ],
+        [
+          "skills",
+          "focus",
+          "possible actions",
+          "proposal"
+        ],
+        [
+          "focus",
+          "operations",
+          "learned proposals",
+          "proposal"
+        ],
+        [
+          "operations",
+          "instance",
+          "accepted updates",
+          "proposal"
+        ],
+        [
+          "instance",
+          "inspect",
+          "structure and values",
+          "proposal"
+        ],
+        [
+          "evidence",
+          "inspect",
+          "ground interpretations",
+          "proposal"
+        ]
       ],
       "notes": [
         "The intended agent learns representations and which connections are useful. Stable IDs are bookkeeping; readable labels are revisable interpretations. These boxes are conceptual distinctions, not mandatory database fields or one vector each.",
         "Only bounded matching, per-entity state, a supplied relation slot and a controlled workspace connection exist today (§10). Open-ended concept discovery, learned graph topology, scalable indexing and general skill links remain to be specified and trained.",
         "A recognition latent cannot automatically be decoded into a faithful face or image. That requires a compatible trained decoder and retained information; a reconstruction is evidence about a readout, not a literal picture of all the agent's beliefs."
       ],
-      "sources": ["docs/entity-memory-design.md", "docs/entity-learning-task.md", "pathwm/models/entity_relations.py#EntityRelationMemory"]
+      "sources": [
+        "docs/entity-memory-design.md",
+        "docs/entity-learning-task.md",
+        "pathwm/models/entity_relations.py#EntityRelationMemory"
+      ]
     }
   ]
 }

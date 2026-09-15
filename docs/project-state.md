@@ -1,5 +1,17 @@
 # Current work
 
+**Efficient sampled-color repair, 15 September:** [protocol/results](spatial-vae-repair-plan.md),
+[report](../runs/spatial_vae_repair_v1/report.html). Training-only color supervision
+on the same model reduces sampled global color error81–83% and raw RGB error26–27%
+in two seeds. No added inference work or parameters; training8–10% slower. KL rate
+rises37–41% and grids remain, so full repair/rate screens fail. Phase residual loss
+adds no consistent benefit. Color-only weights are a diagnostic candidate; original
+weights retained. KL evaluated once instead of four times; shared report/color code
+and cached extra draws reduce duplication. CPU loss26% faster; AOT capture/compile
+microbenchmark10% shorter, not a whole-model speedup.50 tests and independent audit
+pass. Next: decoder phase repair and matched achieved-rate tests; high-level codec
+quality and agent integration remain open.
+
 **VAE color/grid diagnosis, 15 September:** [results and controls](spatial-vae-color-plan.md),
 [report](../runs/spatial_vae_color_v1/report.html). Constant latent fields generate
 a 2/4-pixel grid at decoder shuffles, even without noise; learned phase channels
