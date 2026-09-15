@@ -489,3 +489,35 @@ negative cosines cannot establish causation. Soft evaluation of a hard-trained
 reader is a distribution shift; failure would not prove upstream information loss.
 Claude acknowledged these corrections. Use fresh independent probes/controls for
 localization; keep the persistent hard-state contract unchanged in this slice.
+
+### Iteration 2 — registered after the four hard-read fits
+
+All four first-round task screens fail. Direction-only known accuracy averaged over
+six modes is52.43% /62.15%; the second seed reaches100% only for complementary
+inputs. Joint known direction is51.04% /59.38%. This does not establish task
+competition as the sufficient explanation. Proceed with four additional CPU fits,
+same seeds7201/7202,1152 updates, optimizer, data order, frozen source encoders,
+initialization and two objectives. The sole change is **continuous working readout**:
+project posterior probabilities through the existing readout matrix into temporary
+world-context tokens before Thinker, instead of projecting the sampled one-hot.
+Continue to draw and retain native categorical state/IDs; no new parameters, permanent
+soft-state substitution, memory-write change or encoder training. The ordinary
+sampled readout remains default. This is a separately trained continuous control,
+not a soft-only evaluation of a hard-trained model.
+
+Same90%-in-every-known-input-cell gates, scored explicitly as continuous access;
+all-factor gate also requires color/position. Primary matched benefit: direction
+accuracy increases by at least10 percentage points averaged across the six modes
+in both seeds (report per objective). Stronger capability gate remains separate.
+Held-out combinations are exploratory reused combinations. If continuous access
+passes or materially improves, evaluate10 independent categorical draws per test
+cell plus a clearly labelled hard-read counterfactual using the continuous-trained
+weights. This is not proof of recovery from stored hard codes or universal modality
+competence. A pass warrants subsequent persistence/closed-loop/output tests before
+any default adoption. If it fails, stop this budget and document the failed control.
+
+Claude's generic follow-up recommends preserving initialization/RNG, keeping the
+stored hard-state contract explicit, and withholding default adoption. Interpretation
+is ours: a continuous benefit does not distinguish representation detail, estimator
+bias/variance and optimization without further controlled tests. Two meaningful
+checks protect identical sampled state/RNG and differentiable continuous access.

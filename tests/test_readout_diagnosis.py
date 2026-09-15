@@ -182,3 +182,29 @@ def test_factor_audit_does_not_change_training_and_keeps_direction_coefficient()
     assert len(audit) == 6 and all(np.isfinite(v) for v in audit.values())
     for name, value in audit.items():
         assert -1.00001 <= value <= 1.00001 if "cosine" in name else value >= 0
+
+
+def test_continuous_working_readout_preserves_stored_state_and_sampling_rng():
+    from experiments.modality_readout import Core
+    from pathwm.data.modality_readout import dataset, observations
+
+    torch.manual_seed(83)
+    hard = Core(belief_readout="sampled")
+    soft = copy.deepcopy(hard)
+    soft.belief_readout = "probabilities"
+    inputs = observations(dataset("train"), "all", [0, 12, 24])
+    rng = torch.get_rng_state().clone()
+    hard_tokens, hard_state = hard(inputs, return_state=True)
+    after = torch.get_rng_state().clone()
+    torch.set_rng_state(rng)
+    soft_tokens, soft_state = soft(inputs, return_state=True)
+    assert torch.equal(after, torch.get_rng_state())
+    for name in ("logits", "z", "stochastic", "h", "tokens", "evidence"):
+        assert torch.equal(getattr(hard_state, name), getattr(soft_state, name))
+    assert torch.equal(soft_state.stochastic, torch.nn.functional.one_hot(soft_state.z, 8).float())
+    soft.agent.validate_state(soft_state)
+    assert not torch.equal(hard_tokens, soft_tokens)
+    soft_tokens.square().mean().backward()
+    assert soft.agent.updater.head.weight.grad.abs().sum() > 0
+    assert all(torch.isfinite(p.grad).all() for p in soft.parameters() if p.grad is not None)
+    assert sum(p.numel() for p in hard.parameters()) == sum(p.numel() for p in soft.parameters())
