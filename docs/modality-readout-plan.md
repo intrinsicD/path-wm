@@ -85,3 +85,14 @@ results and generation metrics. A frozen-state gain establishes improved access
 under that training setup, not a unique mechanism independent of extra capacity.
 Semantic combination holdout and missing-source tests are distinct from an unseen
 modality-pair benchmark; this study does not conflate them.
+
+## Preflight before the formal comparison
+
+62 focused tests pass, including joint gradients to all input/output branches,
+template metric references, source complementarity and identical native decoder
+initialization. Two-update CPU core/joint runs render complete reports. GPU8-update
+full versus4+4 resume matches the complete checkpoint exactly. The tiny joint graph
+costs about0.23s/update on GPU in this preflight versus0.09s/update on CPU; select CPU
+for the formal study to avoid launch overhead. This changes the preferred device
+before measured comparisons, not data/model/budget. GPU mechanics are tested;
+formal resource reporting therefore has no GPU allocation peak.
