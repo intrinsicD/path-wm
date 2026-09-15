@@ -8,7 +8,7 @@ experiments. [Implementation protocol](world-state-foundation-plan.md).
 
 ```mermaid
 flowchart TD
-  Input[Image / text / other observation] --> Encoder[Existing modality encoder]
+  Input[Image / video / audio / text observation] --> Encoder[Existing modality encoder]
   Encoder --> Proposals[Supplied regions or mentions]
   Proposals --> Features[CandidateEncoder: replaceable features, keys, values]
   Store[WorldStore: entities, components, relations, evidence, event operations] --> RetrieveBind[ExactRetriever: identity candidates]
@@ -105,9 +105,21 @@ merge/split *decision learning* remain separate experiments.
 ## Neural and persistence boundaries
 
 CandidateEncoder takes supplied region/mention features `[N,input_width]` and
-returns keys `[N,key_width]` and values `[N,value_width]`. This is not an object
-proposal detector. Existing image/text encoders can produce those input features;
-the test suite also exercises an actual image packet alongside a candidate.
+returns keys `[N,key_width]` and values `[N,value_width]`. Alternatively,
+`candidate_encoder.pool(encoded, selection)` takes a `TokenBatch` or
+`FeaturePyramid` and boolean membership `[B,K,N]`, returning keys `[B,K,key_width]`
+and values `[B,K,value_width]`. It intersects membership with token validity and
+excludes masked values before pooling, including masked NaNs. Omitting membership
+means one whole-window candidate per batch item; empty candidates are rejected.
+Pooling is a lossy baseline, not object/mention discovery. Image/video/audio/text
+packets now each have an isolated store/think/restart test and a mixed-packet test.
+
+Keep the original `Observation` in `Candidate.provenance` when a candidate derives
+from a packet. The session rejects marked recalled/generated candidates as new
+source evidence. This is an accidental-misrouting guard: ancestry cannot be inferred
+from a bare feature vector after a caller strips its provenance. Use separately
+versioned representation spaces until cross-modal matching is actually trained;
+equal widths and a shared entity store do not align their semantics.
 
 A scorer takes `[Q,D]` queries and `[M,D]` keys. AssociationBinder groups scores by
 accepted identity aliases and returns matched/new/unresolved. It requires a margin,
@@ -168,6 +180,14 @@ training budget. A different model/recipe/objective requires a new output direct
 The result gate is fixed before the run: training loss falls at least 10%, store
 restore agrees and the actual reasoner replay is exact. Other diagnostics remain
 visible separately; neither a prototype nor an action proposal is a learned skill.
+
+For isolated text/audio/video codec checks and real audiovisual transport, use
+`.venv/bin/python -m experiments.modality_audit --check --output runs/my_modality_check`.
+[Protocol, full-fit commands and measured limits](modality-foundation-plan.md).
+FoundationModel now registers all four inputs and native image/text/audio outputs;
+video output decodes an ordered state trajectory. The modality audit trains direct
+codecs, while its state-to-output path remains untrained. Shared tensor widths do
+not make those two paths semantically interchangeable.
 
 Run artifacts:
 

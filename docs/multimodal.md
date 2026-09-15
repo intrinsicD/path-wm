@@ -10,6 +10,13 @@ constructs one `MultimodalAgent`; `objective` says exactly what it learns. The
 359,188-parameter default is freshly initialized. The implementation is functional;
 these development weights do not have general language, audio or physics abilities.
 
+The [non-image modality audit](modality-foundation-plan.md) now tests text, audio and
+video independently, plus actual World State and real audiovisual transport.
+Concrete mask, memory-width and diagnostic-path bugs are repaired. Four-word and
+four-tone fitting works; the video objective repair fails total RGB quality.
+General language, speech, forecasting and trained state-to-output adapters remain
+open. Its small codec fits are separate from this general multimodal recipe.
+
 Instructions now have a task-token interpreter and learned operation/output heads.
 [Output controls, requester/producer attribution and generated feedback](tasks.md)
 describe the concrete interfaces, enforcement rules and synthetic training path.
@@ -313,6 +320,14 @@ Encoders return `TokenBatch(values,times,valid)` at a shared width. Decoders con
 dynamics, memory, action head and monitor are directly supplied modules. Edit their
 constructors in `build_model`; changing a width/layout generally needs retraining
 or explicit weight conversion. Checkpoints are never silently resized.
+
+Native image/audio/text decoders also accept boolean context `valid=[B,N]`.
+Text `prefix_valid` is separate and describes its right-padded causal prefix.
+Masked context values are removed before projection, so invalid NaNs have neither
+forward influence nor gradients. Attention recording in Attend and multiscale
+ConditionedBlock uses a shared detached probability helper; enabling it preserves
+native outputs, gradients and RNG in train/eval for all four tested encoders.
+Diagnostic probabilities describe attention before dropout.
 
 Input cross-attention scales with input length times latent count; latent attention
 grows quadratically with token count. Current memory is bounded and planning serial.

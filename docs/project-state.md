@@ -1,9 +1,25 @@
 # Current work
 
-**Non-image modality check in progress, 15 September:** user requests audio, text,
-video and other existing interfaces work too. [Plan](modality-foundation-plan.md).
-Inspect isolated encoder/decoder learning, add missing World State adapters and
-retain the distinction between mechanics, controlled fitting and real capability.
+**Non-image modality interfaces repaired and measured, 15 September:**
+[protocol/results](modality-foundation-plan.md),
+[four-modality report](../runs/modality_foundation_v1/direct/report.html),
+[video comparison](../runs/modality_foundation_v1/video_weighted/report.html).
+Foundation now connects image/video/audio/text with masked candidate pooling,
+source attribution and the actual memory/thinker. Fixed a four-code/eight-code
+memory mismatch, decoder masked-NaN handling, invalid video-state acceptance and
+multiscale tracing that changed the numerical attention path. Shared diagnostics
+now preserve outputs, gradients and RNG exactly in all four encoders.
+112 scoped tests and 6075 independent artifact checks pass; full checkpoint matches
+64+64 resume exactly. Four-example direct fitting learns four words and four tones.
+Video ordinary continuation gets 3/4 motion directions; object weighting gets 4/4
+but worsens total RGB/background and fails the registered repair screen. Weight1
+remains default. Real local audiovisual/UTF-8 inputs pass the storage/retrieval
+path after documented resizing/resampling; no real-media capability training.
+State-to-output adapters remain untrained in this audit; language understanding,
+speech, video forecasting, cross-modal identity and live hardware remain open.
+Static figures and embedded report media checked; browser QA unavailable under the
+existing policy. Next: train/test state-conditioned outputs separately, then held-out
+real-modality tasks. Earlier VAE quality/rate and entity-calibration work stays open.
 
 **World State foundation implemented, 15 September:** [guide/API](world-state.md),
 [protocol/results](world-state-foundation-plan.md),

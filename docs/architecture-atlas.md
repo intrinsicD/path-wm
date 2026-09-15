@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-15, repository snapshot `54825d2`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-15, repository snapshot `8937b15`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
@@ -156,7 +156,9 @@ Masks prevent reading later support. The categorical source-evidence path uses n
 
 Example for the photo configuration: RGB64 → 16×16 → 8×8 → 4×4, all width32; k=2 and f=2. The hierarchy emits 336 tokens.
 
-Source: [pathwm/models/multiscale.py · FeatureHierarchy:207](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleImageEncoder:330](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleAudioEncoder:375](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleTextEncoder:436](../pathwm/models/multiscale.py), [pathwm/models/belief.py · _features:253](../pathwm/models/belief.py).
+Image/video/audio/text encoders now share output-neutral attention diagnostics: traced and ordinary outputs, gradients and RNG agree exactly in train/eval checks. Masks exclude invalid values before learned operations. The isolated modality audit fits tiny examples; real AV/text is a resampled transport check, not learned understanding.
+
+Source: [pathwm/models/multiscale.py · FeatureHierarchy:209](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleImageEncoder:332](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleAudioEncoder:377](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleTextEncoder:438](../pathwm/models/multiscale.py), [pathwm/models/belief.py · _features:259](../pathwm/models/belief.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md).
 
 <a id="03-attention"></a>
 
@@ -214,7 +216,9 @@ Q/K/V projection weights are learned parameters. Their per-input activations per
 
 ConditionedBlock adds bounded scale/shift on query and MLP normalization; code zero is neutral. Its time/support masks are richer than the simpler Attend block. OutputBlock (§9) adds separate self-attention and context-attention residuals.
 
-Source: [pathwm/models/modalities.py · Attend:76](../pathwm/models/modalities.py), [pathwm/models/multiscale.py · ConditionedBlock:88](../pathwm/models/multiscale.py), [pathwm/models/conditional_image.py · OutputBlock:47](../pathwm/models/conditional_image.py).
+Attend and ConditionedBlock use one detached attention_probabilities helper for pre-dropout inspection. Native attention keeps need_weights=False even when recording; diagnostic weights do not switch the output kernel. Invalid decoder context is zeroed before normalization/projection. Tests cover exact output, gradient and RNG neutrality for all four multiscale encoders.
+
+Source: [pathwm/models/modalities.py · Attend:111](../pathwm/models/modalities.py), [pathwm/models/multiscale.py · ConditionedBlock:89](../pathwm/models/multiscale.py), [pathwm/models/conditional_image.py · OutputBlock:47](../pathwm/models/conditional_image.py), [pathwm/models/modalities.py · attention_probabilities:77](../pathwm/models/modalities.py).
 
 <a id="04-belief"></a>
 
@@ -283,7 +287,7 @@ Events are caller-owned transactions with ordered IDs. Partial packet arrivals a
 
 Categorical entropy is a diagnostic; it is not established calibrated confidence or model-parameter uncertainty. The Gaussian log_scale inherited for compatibility is zero here, not the belief uncertainty.
 
-Source: [pathwm/models/belief.py · BeliefDynamics:33](../pathwm/models/belief.py), [pathwm/models/belief.py · BeliefCorrection:74](../pathwm/models/belief.py), [pathwm/models/belief.py · correct_packets:352](../pathwm/models/belief.py), [pathwm/models/belief.py · _readout:190](../pathwm/models/belief.py), [pathwm/models/belief_state.py · BeliefState:91](../pathwm/models/belief_state.py).
+Source: [pathwm/models/belief.py · BeliefDynamics:33](../pathwm/models/belief.py), [pathwm/models/belief.py · BeliefCorrection:74](../pathwm/models/belief.py), [pathwm/models/belief.py · correct_packets:358](../pathwm/models/belief.py), [pathwm/models/belief.py · _readout:196](../pathwm/models/belief.py), [pathwm/models/belief_state.py · BeliefState:91](../pathwm/models/belief_state.py).
 
 <a id="05-memory"></a>
 
@@ -496,7 +500,9 @@ The text path is a byte autoregressor, not a pretrained language model. The wave
 
 Image resolution and audio length are constructor settings. Output size alone does not establish reconstructed detail. The stronger conditional image producer is an optional controlled experiment, not a common generator already implemented for every modality.
 
-Source: [pathwm/models/modalities.py · ImageDecoder:254](../pathwm/models/modalities.py), [pathwm/models/modalities.py · AudioDecoder:279](../pathwm/models/modalities.py), [pathwm/models/modalities.py · TextDecoder:297](../pathwm/models/modalities.py), [pathwm/models/agent.py · decode_video:795](../pathwm/models/agent.py), [pathwm/models/tasks.py · GeneratedOutput:155](../pathwm/models/tasks.py).
+Native image/audio/text decoders accept context validity; text keeps a separate causal prefix mask. Video validates every state, including singleton trajectories. The independent codec audit learns four words and four tones; weighted video reconstruction improves object/motion but degrades total RGB. Its state-to-output path is untrained and measured only on the first example; no bottleneck-location or general generation claim.
+
+Source: [pathwm/models/modalities.py · ImageDecoder:282](../pathwm/models/modalities.py), [pathwm/models/modalities.py · AudioDecoder:308](../pathwm/models/modalities.py), [pathwm/models/modalities.py · TextDecoder:327](../pathwm/models/modalities.py), [pathwm/models/agent.py · decode_video:795](../pathwm/models/agent.py), [pathwm/models/tasks.py · GeneratedOutput:155](../pathwm/models/tasks.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md).
 
 <a id="08-photo-path"></a>
 
@@ -763,7 +769,7 @@ The task dispatcher already distinguishes internal think/recall/imagine from ext
 
 Prediction quality, goal readout quality and search coverage all constrain planning. A low imagined cost is not proof of realized success.
 
-Source: [pathwm/evaluation/agent.py · plan:23](../pathwm/evaluation/agent.py), [pathwm/models/belief.py · imagine:495](../pathwm/models/belief.py), [pathwm/models/agent.py · step_task:637](../pathwm/models/agent.py), [pathwm/models/key_box.py · plan_key:59](../pathwm/models/key_box.py), [docs/decision-design.md](../docs/decision-design.md).
+Source: [pathwm/evaluation/agent.py · plan:23](../pathwm/evaluation/agent.py), [pathwm/models/belief.py · imagine:501](../pathwm/models/belief.py), [pathwm/models/agent.py · step_task:637](../pathwm/models/agent.py), [pathwm/models/key_box.py · plan_key:59](../pathwm/models/key_box.py), [docs/decision-design.md](../docs/decision-design.md).
 
 <a id="12-learning"></a>
 
@@ -888,4 +894,6 @@ The opt-in pathwm.world_state package implements the store, binding, recurrent u
 
 A recognition latent cannot automatically be decoded into a faithful face or image. That requires a compatible trained decoder and retained information; a reconstruction is evidence about a readout, not a literal picture of all the agent's beliefs.
 
-Source: [pathwm/world_state/store.py · WorldStore:175](../pathwm/world_state/store.py), [pathwm/world_state/session.py · WorldSession:75](../pathwm/world_state/session.py), [pathwm/world_state/modules.py · ContextEncoder:298](../pathwm/world_state/modules.py), [pathwm/world_state/inspection.py · WorldTrace:37](../pathwm/world_state/inspection.py), [docs/world-state.md](../docs/world-state.md), [docs/world-state-foundation-plan.md](../docs/world-state-foundation-plan.md).
+The foundation now connects audio/video/text/image packets with masked CandidateEncoder.pool over supplied regions/spans. Whole-window pooling is a lossy baseline, not discovery. Candidate provenance must retain source ancestry; generated/recalled candidates cannot become new evidence. Modality representation spaces remain separately versioned until alignment is trained. 112 scoped tests and actual real audiovisual/UTF-8 transport pass; general identity and state-to-output learning remain open.
+
+Source: [pathwm/world_state/store.py · WorldStore:175](../pathwm/world_state/store.py), [pathwm/world_state/session.py · WorldSession:77](../pathwm/world_state/session.py), [pathwm/world_state/modules.py · ContextEncoder:346](../pathwm/world_state/modules.py), [pathwm/world_state/inspection.py · WorldTrace:37](../pathwm/world_state/inspection.py), [docs/world-state.md](../docs/world-state.md), [docs/world-state-foundation-plan.md](../docs/world-state-foundation-plan.md), [pathwm/world_state/modules.py · CandidateEncoder:30](../pathwm/world_state/modules.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md).

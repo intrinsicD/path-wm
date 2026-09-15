@@ -7,6 +7,18 @@ For the new persistent World State foundation, use
 This is a small CPU supplied-candidate exercise with exact resume, not a real-image
 recognition benchmark. The broader multimodal recipe remains independent.
 
+For independent text/audio/video codec fitting and real audiovisual World State
+transport, use `experiments/modality_audit.py`:
+
+```bash
+.venv/bin/python -m experiments.modality_audit --check --output runs/my_modality_check
+.venv/bin/python -m experiments.modality_audit --output runs/my_modality_fit
+```
+
+[Results, controls, video failure and continuation commands](modality-foundation-plan.md).
+This is a CPU four-example diagnostic; its state-to-output path is untrained and
+real media test transport only. It does not establish speech/language or forecasting.
+
 The current starting point is `experiments/multimodal.py`; see the
 [multimodal architecture and training guide](multimodal.md). Run
 `python experiments/multimodal.py --check`, then use a fresh `--output` directory.

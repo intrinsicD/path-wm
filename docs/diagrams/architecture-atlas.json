@@ -1,7 +1,7 @@
 {
   "title": "PATH-WM · Architecture atlas",
   "date": "2026-09-15",
-  "source_commit": "54825d2",
+  "source_commit": "8937b15",
   "intro": "A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.",
   "graphs": [
     {
@@ -41,7 +41,7 @@
           "encode": {
             "status": "discussed",
             "basis": "Discussed modality stems, residual transformer blocks per scale, hierarchy merges, fusion, temporal handling and reconstruction probes. On 14 September, the user asked whether architectural structure and a small parameter count can reduce visual training-data requirements. On 15 September, the user specified a spatial VAE with separate lossless rearrangement, residual processing and channel projection; Claude review was reconciled.",
-            "next": "Opt-in spatial VAE v2 now implements the R/P/M/C stem, coarsest self-attention/shared loop and detached stage probes. Mechanics, exact GPU resume and ten real-photo learning sanity gates pass; all photo-quality screens fail. See docs/spatial-vae-v2-plan.md and runs/spatial_vae_v2/verification.json. Color diagnosis now finds reduced readout access at the final posterior projection and sampling; see docs/spatial-vae-color-plan.md. Current agent integration, semantic retention, fine detail and matched-resource/data-efficiency studies remain open; the high-level encoder stays blue. Two-seed sampled-color supervision now improves global chroma error81–83% without new parameters/inference work; achieved KL rises37–41% and grids remain. See docs/spatial-vae-repair-plan.md. Color-only is a diagnostic candidate, not a full repair; high-level status stays blue."
+            "next": "Opt-in spatial VAE v2 now implements the R/P/M/C stem, coarsest self-attention/shared loop and detached stage probes. Mechanics, exact GPU resume and ten real-photo learning sanity gates pass; all photo-quality screens fail. See docs/spatial-vae-v2-plan.md and runs/spatial_vae_v2/verification.json. Color diagnosis now finds reduced readout access at the final posterior projection and sampling; see docs/spatial-vae-color-plan.md. Current agent integration, semantic retention, fine detail and matched-resource/data-efficiency studies remain open; the high-level encoder stays blue. Two-seed sampled-color supervision now improves global chroma error81–83% without new parameters/inference work; achieved KL rises37–41% and grids remain. See docs/spatial-vae-repair-plan.md. Color-only is a diagnostic candidate, not a full repair; high-level status stays blue. All four modality interfaces now have isolated and mixed packet/mask/gradient/restart checks. Four-word and four-tone direct fitting pass; a video foreground repair fails total RGB quality. State-conditioned adapters and general multimodal semantics remain untrained in this audit. See docs/modality-foundation-plan.md; high-level status stays blue."
           },
           "belief": {
             "status": "needs_discussion",
@@ -54,8 +54,8 @@
             "next": "The requested modular foundation is now implemented with versioned components, provenance, atomic session commits, revocable aliases, dependent-state invalidation/replay and bounded retrieval. See docs/world-state.md. Next: real candidate/identity/state tests, learned retrieval, abstention calibration and controlled comparisons. General concept induction remains a separate capability milestone.",
             "validation": {
               "label": "Storage / causal reads",
-              "scope": "Exact recent envelopes, bounded hierarchy, source/belief separation and causal reads. The optional World State adds tested transactional identity/provenance/correction mechanics, pinned historical retrieval and exact session/training restart on the supplied-descriptor development task.",
-              "limits": "This validates storage and replay mechanics, not general entity recognition, concept induction, calibrated uncertainty, useful learned retrieval or long-horizon recall. The photo recall path still loses accessible detail. Full-agent historical evaluation must restore the corresponding neural session, not just query an old store revision.",
+              "scope": "Exact recent envelopes, bounded hierarchy, source/belief separation and causal reads. The optional World State adds tested transactional identity/provenance/correction mechanics, pinned historical retrieval and exact session/training restart on the supplied-descriptor development task. Audio/video/text and image packets now pass separate and mixed actual WorldSession/thinker paths after correcting a four-versus-eight categorical-code memory mismatch.",
+              "limits": "This validates storage and replay mechanics, not general entity recognition, concept induction, calibrated uncertainty, useful learned retrieval or long-horizon recall. The photo recall path still loses accessible detail. Full-agent historical evaluation must restore the corresponding neural session, not just query an old store revision. Real media transport and tiny direct codec fitting do not establish state-conditioned output quality or cross-modal identity.",
               "evidence": [
                 {
                   "path": "runs/belief_v1/verification.json",
@@ -80,6 +80,14 @@
                 {
                   "path": "docs/world-state-foundation-plan.md",
                   "label": "Foundation protocol, failures, repairs and limits"
+                },
+                {
+                  "path": "runs/modality_foundation_v1/verification.json",
+                  "label": "Non-image modality audit: 6075 artifact checks; repair gate failed"
+                },
+                {
+                  "path": "runs/modality_foundation_v1/final-tests.xml",
+                  "label": "112 scoped modality, World State and regression tests"
                 }
               ]
             }
@@ -121,7 +129,7 @@
           "emit": {
             "status": "discussed",
             "basis": "Discussed every encoder/decoder pair, state-conditioned outputs, image detail, conditional generation and replacement interfaces. On 15 September, discussed a mirrored PixelShuffle VAE decoder, Gaussian loss/KL units and a future state-conditioned spatial-latent producer.",
-            "next": "Separate v1/v2 VAE decoders support exact saved-latent replay and variable geometry; v2 has a latent-only convolution/PixelShuffle decoder with final RGB projection. Ten photo fits still fail the quality screen; rates and common-target stage probes are measured in docs/spatial-vae-v2-plan.md. Constant latent controls locate decoder grids at learned subpixel phase channels; mean-only decoder fitting improves color but fails sampled-output reliability. See docs/spatial-vae-color-plan.md. State-conditioned generation, fine detail and other modalities remain open; this high-level output node stays blue. Two-seed sampled-color supervision now improves global chroma error81–83% without new parameters/inference work; achieved KL rises37–41% and grids remain. See docs/spatial-vae-repair-plan.md. Color-only is a diagnostic candidate, not a full repair; high-level status stays blue."
+            "next": "Separate v1/v2 VAE decoders support exact saved-latent replay and variable geometry; v2 has a latent-only convolution/PixelShuffle decoder with final RGB projection. Ten photo fits still fail the quality screen; rates and common-target stage probes are measured in docs/spatial-vae-v2-plan.md. Constant latent controls locate decoder grids at learned subpixel phase channels; mean-only decoder fitting improves color but fails sampled-output reliability. See docs/spatial-vae-color-plan.md. State-conditioned generation, fine detail and other modalities remain open; this high-level output node stays blue. Two-seed sampled-color supervision now improves global chroma error81–83% without new parameters/inference work; achieved KL rises37–41% and grids remain. See docs/spatial-vae-repair-plan.md. Color-only is a diagnostic candidate, not a full repair; high-level status stays blue. All four modality interfaces now have isolated and mixed packet/mask/gradient/restart checks. Four-word and four-tone direct fitting pass; a video foreground repair fails total RGB quality. State-conditioned adapters and general multimodal semantics remain untrained in this audit. See docs/modality-foundation-plan.md; high-level status stays blue."
           },
           "act": {
             "status": "needs_discussion",
@@ -235,9 +243,10 @@
         "Each later scale consumes the fully processed previous scale. The final fusion is optional: f=0 in the general defaults, f=2 in the current photo checkpoint. k and scale count are recipe choices.",
         "Image merging pools 2×2 spatial patches. Video also pools adjacent frames; audio and text pool adjacent sequence positions. Video has causal temporal attention and pooling within the supplied window, not a separate persistent recurrent video cell.",
         "Masks prevent reading later support. The categorical source-evidence path uses no task, belief or feature-controller conditioning. Optional controls apply on permitted task/reflection paths.",
-        "Example for the photo configuration: RGB64 → 16×16 → 8×8 → 4×4, all width32; k=2 and f=2. The hierarchy emits 336 tokens."
+        "Example for the photo configuration: RGB64 → 16×16 → 8×8 → 4×4, all width32; k=2 and f=2. The hierarchy emits 336 tokens.",
+        "Image/video/audio/text encoders now share output-neutral attention diagnostics: traced and ordinary outputs, gradients and RNG agree exactly in train/eval checks. Masks exclude invalid values before learned operations. The isolated modality audit fits tiny examples; real AV/text is a resampled transport check, not learned understanding."
       ],
-      "sources": ["pathwm/models/multiscale.py#FeatureHierarchy", "pathwm/models/multiscale.py#MultiScaleImageEncoder", "pathwm/models/multiscale.py#MultiScaleAudioEncoder", "pathwm/models/multiscale.py#MultiScaleTextEncoder", "pathwm/models/belief.py#_features"]
+      "sources": ["pathwm/models/multiscale.py#FeatureHierarchy", "pathwm/models/multiscale.py#MultiScaleImageEncoder", "pathwm/models/multiscale.py#MultiScaleAudioEncoder", "pathwm/models/multiscale.py#MultiScaleTextEncoder", "pathwm/models/belief.py#_features", "docs/modality-foundation-plan.md"]
     },
     {
       "id": "03-attention",
@@ -273,9 +282,10 @@
       "notes": [
         "Self-attention uses the same token set as query and context; cross-attention uses distinct sets. Attend uses four heads by default. Learned query tokens acquire roles through their consumer and training targets.",
         "Q/K/V projection weights are learned parameters. Their per-input activations perform a read; memory records are stored separately. Neither attention weights nor readable slot names guarantee a semantic interpretation.",
-        "ConditionedBlock adds bounded scale/shift on query and MLP normalization; code zero is neutral. Its time/support masks are richer than the simpler Attend block. OutputBlock (§9) adds separate self-attention and context-attention residuals."
+        "ConditionedBlock adds bounded scale/shift on query and MLP normalization; code zero is neutral. Its time/support masks are richer than the simpler Attend block. OutputBlock (§9) adds separate self-attention and context-attention residuals.",
+        "Attend and ConditionedBlock use one detached attention_probabilities helper for pre-dropout inspection. Native attention keeps need_weights=False even when recording; diagnostic weights do not switch the output kernel. Invalid decoder context is zeroed before normalization/projection. Tests cover exact output, gradient and RNG neutrality for all four multiscale encoders."
       ],
-      "sources": ["pathwm/models/modalities.py#Attend", "pathwm/models/multiscale.py#ConditionedBlock", "pathwm/models/conditional_image.py#OutputBlock"]
+      "sources": ["pathwm/models/modalities.py#Attend", "pathwm/models/multiscale.py#ConditionedBlock", "pathwm/models/conditional_image.py#OutputBlock", "pathwm/models/modalities.py#attention_probabilities"]
     },
     {
       "id": "04-belief",
@@ -463,9 +473,10 @@
       "notes": [
         "An output does not require an input of the same modality: decoder inputs are internal state. Whether useful content is present depends on learned representations, memory, objectives and training data.",
         "The text path is a byte autoregressor, not a pretrained language model. The waveform path is not established general speech synthesis. Video currently decodes a supplied state trajectory; there is no general video diffusion generator in this recipe.",
-        "Image resolution and audio length are constructor settings. Output size alone does not establish reconstructed detail. The stronger conditional image producer is an optional controlled experiment, not a common generator already implemented for every modality."
+        "Image resolution and audio length are constructor settings. Output size alone does not establish reconstructed detail. The stronger conditional image producer is an optional controlled experiment, not a common generator already implemented for every modality.",
+        "Native image/audio/text decoders accept context validity; text keeps a separate causal prefix mask. Video validates every state, including singleton trajectories. The independent codec audit learns four words and four tones; weighted video reconstruction improves object/motion but degrades total RGB. Its state-to-output path is untrained and measured only on the first example; no bottleneck-location or general generation claim."
       ],
-      "sources": ["pathwm/models/modalities.py#ImageDecoder", "pathwm/models/modalities.py#AudioDecoder", "pathwm/models/modalities.py#TextDecoder", "pathwm/models/agent.py#decode_video", "pathwm/models/tasks.py#GeneratedOutput"]
+      "sources": ["pathwm/models/modalities.py#ImageDecoder", "pathwm/models/modalities.py#AudioDecoder", "pathwm/models/modalities.py#TextDecoder", "pathwm/models/agent.py#decode_video", "pathwm/models/tasks.py#GeneratedOutput", "docs/modality-foundation-plan.md"]
     },
     {
       "id": "08-photo-path",
@@ -726,9 +737,10 @@
         "The intended agent learns representations and which connections are useful. Stable IDs are bookkeeping; readable labels are revisable interpretations. These boxes are conceptual distinctions, not mandatory database fields or one vector each.",
         "The opt-in pathwm.world_state package implements the store, binding, recurrent update, bounded retrieval, context projections and actual thinker connection. Optional prototype, self/control, feedback, prediction and modulation clients have concrete tensor/record APIs; their useful learned behavior is not established. Discrete storage is outside autograd; neural forwards remain trainable. Action authority belongs to the harness.",
         "81 scoped tests and 3293 independent checks pass; a 96-update CPU task using supplied descriptors preserves two identities and answers paired histories. Complete checkpoints match a 48+48 resumed run exactly. This is development evidence, not real-image recognition or sample-efficiency proof. General concept discovery, learned graph topology, retrieval calibration, scalable indexing and skill acquisition remain open. Structural report QA passes; browser interaction QA is unavailable under the existing local-file policy.",
-        "A recognition latent cannot automatically be decoded into a faithful face or image. That requires a compatible trained decoder and retained information; a reconstruction is evidence about a readout, not a literal picture of all the agent's beliefs."
+        "A recognition latent cannot automatically be decoded into a faithful face or image. That requires a compatible trained decoder and retained information; a reconstruction is evidence about a readout, not a literal picture of all the agent's beliefs.",
+        "The foundation now connects audio/video/text/image packets with masked CandidateEncoder.pool over supplied regions/spans. Whole-window pooling is a lossy baseline, not discovery. Candidate provenance must retain source ancestry; generated/recalled candidates cannot become new evidence. Modality representation spaces remain separately versioned until alignment is trained. 112 scoped tests and actual real audiovisual/UTF-8 transport pass; general identity and state-to-output learning remain open."
       ],
-      "sources": ["pathwm/world_state/store.py#WorldStore", "pathwm/world_state/session.py#WorldSession", "pathwm/world_state/modules.py#ContextEncoder", "pathwm/world_state/inspection.py#WorldTrace", "docs/world-state.md", "docs/world-state-foundation-plan.md"]
+      "sources": ["pathwm/world_state/store.py#WorldStore", "pathwm/world_state/session.py#WorldSession", "pathwm/world_state/modules.py#ContextEncoder", "pathwm/world_state/inspection.py#WorldTrace", "docs/world-state.md", "docs/world-state-foundation-plan.md", "pathwm/world_state/modules.py#CandidateEncoder", "docs/modality-foundation-plan.md"]
     }
   ]
 }
