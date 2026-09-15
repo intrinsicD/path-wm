@@ -290,10 +290,25 @@ class ImageDecoder(nn.Module):
         self.read = Attend(width)
         self.output = nn.Linear(width, 3 * patch_size * patch_size)
 
-    def forward(self, tokens, trace=None, *, valid=None):
+    def forward(self, tokens, trace=None, *, valid=None, query_offset=None):
         b, p, side = len(tokens), self.patch_size, self.image_size // self.patch_size
+        queries = self.queries.expand(b, -1, -1)
+        if query_offset is not None:
+            if (
+                query_offset.ndim != 3
+                or query_offset.shape[0] not in (1, b)
+                or query_offset.shape[1] not in (1, side * side)
+                or query_offset.shape[2] != queries.shape[2]
+                or query_offset.device != queries.device
+                or query_offset.dtype != queries.dtype
+                or not torch.isfinite(query_offset).all()
+            ):
+                raise ValueError(
+                    "Image query offset must broadcast to [B,patches,width]"
+                )
+            queries = queries + query_offset
         x = self.read(
-            self.queries.expand(b, -1, -1),
+            queries,
             tokens,
             valid=valid,
             trace=trace,

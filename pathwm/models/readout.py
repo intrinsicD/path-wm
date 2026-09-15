@@ -77,11 +77,22 @@ class TemporalImageDecoder(nn.Module):
     output coordinates, not fresh observation events.
     """
 
-    def __init__(self, width, image_size=16):
+    def __init__(self, width, image_size=16, *, time_conditioning="context"):
         super().__init__()
         self.width = width
+        self.time_conditioning = time_conditioning
         self.time_projection = nn.Linear(width, width)
         self.image = ImageDecoder(width, image_size)
+
+    @property
+    def time_conditioning(self):
+        return self._time_conditioning
+
+    @time_conditioning.setter
+    def time_conditioning(self, value):
+        if value not in ("context", "query"):
+            raise ValueError("Unknown video time conditioning")
+        self._time_conditioning = value
 
     def forward(self, context, times, *, valid=None):
         if (
@@ -97,13 +108,27 @@ class TemporalImageDecoder(nn.Module):
             )
         b, n, width = context.shape
         code = self.time_projection(position(times.to(context.dtype), self.width))
-        values = (context[:, None] + code[None, :, None]).reshape(
-            b * len(times), n, width
-        )
+        if self.time_conditioning == "context":
+            # Preserve the original numerical path and checkpoint parameters.
+            values = (context[:, None] + code[None, :, None]).reshape(
+                b * len(times), n, width
+            )
+            offset = None
+        else:
+            values = (
+                context[:, None]
+                .expand(-1, len(times), -1, -1)
+                .reshape(b * len(times), n, width)
+            )
+            offset = (
+                code[None, :, None]
+                .expand(b, -1, -1, -1)
+                .reshape(b * len(times), 1, width)
+            )
         mask = (
             None
             if valid is None
             else valid[:, None].expand(-1, len(times), -1).reshape(b * len(times), n)
         )
-        decoded = self.image(values, valid=mask)
+        decoded = self.image(values, valid=mask, query_offset=offset)
         return decoded.reshape(b, len(times), *decoded.shape[1:])

@@ -132,7 +132,7 @@ class Core(nn.Module):
 
 
 class Outputs(nn.Module):
-    def __init__(self, variant, width=24):
+    def __init__(self, variant, width=24, *, video_conditioning="context"):
         super().__init__()
         self.variant = variant
         self.decoders = nn.ModuleDict(
@@ -140,7 +140,9 @@ class Outputs(nn.Module):
                 "text": TextDecoder(width),
                 "image": ImageDecoder(width, 16),
                 "audio": AudioDecoder(width, 192),
-                "video": TemporalImageDecoder(width, 16),
+                "video": TemporalImageDecoder(
+                    width, 16, time_conditioning=video_conditioning
+                ),
             }
         )
         # Decoder initialization and caller RNG stay identical across variants.
@@ -172,9 +174,12 @@ class Outputs(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, variant, *, posterior_aux=False):
+    def __init__(self, variant, *, posterior_aux=False, video_conditioning="context"):
         super().__init__()
-        self.core, self.outputs = Core(), Outputs(variant)
+        self.core, self.outputs = (
+            Core(),
+            Outputs(variant, video_conditioning=video_conditioning),
+        )
         # Diagnostic supervision only; no inference read or RNG/init change.
         with torch.random.fork_rng():
             self.posterior_head = nn.Linear(32, 8) if posterior_aux else None
@@ -190,6 +195,12 @@ def load_initial(model, directory, device):
             f"Incompatible initialization: missing={missing}, unexpected={unexpected}"
         )
     model.core.belief_readout = source_readout(checkpoint_path.parent)
+    settings = json.loads((checkpoint_path.parent / "run.json").read_text())[
+        "identity"
+    ]["settings"]
+    model.outputs.decoders["video"].time_conditioning = settings.get(
+        "video_conditioning", "context"
+    )
     return file_hash(checkpoint_path)
 
 
@@ -546,6 +557,8 @@ def perform(args):
     initial_source = (
         None if args.initial is None else load_initial(model, args.initial, device)
     )
+    if getattr(args, "video_conditioning", None) is not None:
+        model.outputs.decoders["video"].time_conditioning = args.video_conditioning
     encoder_source = (
         None
         if args.encoder_source is None
@@ -595,6 +608,7 @@ def perform(args):
         stage=args.stage,
         variant=args.variant,
         modality=args.modality,
+        video_conditioning=model.outputs.decoders["video"].time_conditioning,
         steps=args.steps,
         batch=24,
         width=24,
@@ -972,9 +986,22 @@ def main():
     parser.add_argument("--steps", type=int)
     parser.add_argument("--stop-after", type=int)
     parser.add_argument("--resume", action="store_true")
+    parser.add_argument(
+        "--video-conditioning",
+        choices=("context", "query"),
+        help="Place requested time in context or queries; default restores source metadata or context",
+    )
     args = parser.parse_args()
-    if args.input_mode != "rotating" and args.stage != "core":
-        parser.error("Input selection is supported for core training only")
+    if args.input_mode != "rotating" and args.stage not in ("core", "frozen"):
+        parser.error(
+            "Input selection is supported for core or frozen-output training only"
+        )
+    if args.video_conditioning is not None and args.stage not in (
+        "oracle",
+        "frozen",
+        "joint",
+    ):
+        parser.error("Video conditioning is supported for output training only")
     if args.belief_readout != "sampled" and (
         args.stage != "core" or args.encoder_source is None or args.initial
     ):

@@ -1,5 +1,11 @@
 # Current work
 
+**Video comparison in progress, 16 September:** user requests video before the
+remaining direction work. [Active protocol](video-readout-plan.md): distinguish
+output conditioning from upstream temporal access; compare the same decoder with
+requested time in context versus queries, oracle and frozen video-only states.
+No additional model parameters; direction rotation/dropout remains pending.
+
 **Direction input isolation and curriculum completed, 16 September:**
 [Protocol/results](modality-readout-plan.md#input-isolation-and-curriculum-result-16-september),
 [comparison](../runs/direction_inputs_v1/report.html),

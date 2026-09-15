@@ -184,6 +184,55 @@ def text_factors(ids):
     return torch.tensor(result, device=ids.device)
 
 
+@torch.no_grad()
+def video_motion_metrics(output, target, *, background=0.04):
+    """Small bright-object diagnostic, not general optical flow or tracking.
+
+    Foreground mass is RGB maximum above the known synthetic background. Motion
+    requires nonempty predicted endpoint frames and >=0.5px displacement; static
+    or blank clips cannot pass because a sign comparison happened to match.
+    """
+    if output.shape != target.shape or output.ndim != 5 or output.shape[1] < 2:
+        raise ValueError("Motion metrics need matched [B,T,C,H,W] clips with T>=2")
+    h, w = output.shape[-2:]
+    y, x = torch.meshgrid(
+        torch.arange(h, device=output.device, dtype=output.dtype),
+        torch.arange(w, device=output.device, dtype=output.dtype),
+        indexing="ij",
+    )
+
+    def centroids(video):
+        mass = (video.amax(2) - background).clamp_min(0)
+        total = mass.sum((-2, -1))
+        center = torch.stack(
+            [(mass * axis).sum((-2, -1)) / total.clamp_min(1e-8) for axis in (x, y)], -1
+        )
+        return center, total
+
+    pred, mass = centroids(output)
+    truth, _ = centroids(target)
+    error = (pred - truth).norm(dim=-1)
+    displacement = pred[:, -1, 0] - pred[:, 0, 0]
+    expected = truth[:, -1, 0] - truth[:, 0, 0]
+    moving = expected.abs() >= 1
+    correct = (
+        (displacement.sign() == expected.sign())
+        & (displacement.abs() >= 0.5)
+        & (mass[:, 0] > 1e-8)
+        & (mass[:, -1] > 1e-8)
+        & moving
+    )
+    return dict(
+        centroid_error_pixels=float(error.mean()),
+        displacement_mae_pixels=float((displacement - expected).abs().mean()),
+        motion_direction_accuracy=float(
+            correct.float().sum() / moving.sum().clamp_min(1)
+        ),
+        moving_clips=int(moving.sum()),
+        per_frame_mse=(output - target).square().mean((0, 2, 3, 4)).tolist(),
+    )
+
+
 def scores(kind, output, target, templates, normalizer=None, generated=None):
     if kind == "text":
         loss = float(
@@ -214,6 +263,8 @@ def scores(kind, output, target, templates, normalizer=None, generated=None):
             fg = (target[kind].amax(axis, keepdim=True) > 0.1).expand_as(error)
             result["foreground_mse"] = float(error[fg].mean())
             result["background_mse"] = float(error[~fg].mean())
+        if kind == "video":
+            result.update(video_motion_metrics(output, target[kind]))
     correct = pred == target["factors"]
     result["factor_accuracy"] = correct.float().mean(0).tolist()
     result["all_accuracy"] = float(correct.all(1).float().mean())
@@ -259,6 +310,19 @@ def evaluate_outputs(outputs, cache, populations, kinds, normalizers, device):
                 result, pred = scores(
                     kind, output, target, templates, normalizers.get(kind), generated
                 )
+                if kind == "video":
+                    # These are interventions on the prediction, not replacement
+                    # targets or new decoder inputs. Save arrays for independent QA.
+                    result["temporal_controls"] = {}
+                    for name, changed in (
+                        ("static_first", output[:, :1].expand_as(output)),
+                        ("reversed", output.flip(1)),
+                    ):
+                        measured, _ = scores(
+                            kind, changed, target, templates, normalizers[kind]
+                        )
+                        result["temporal_controls"][name] = measured
+                        arrays[key + f".{name}_output"] = changed.cpu().numpy()
                 arrays[key + ".output"] = output.cpu().numpy()
                 arrays[key + ".factors"] = pred.cpu().numpy()
                 if generated is not None:
