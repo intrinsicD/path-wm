@@ -494,7 +494,19 @@ def readout_inspection(directory):
             )
         if data.get("core_scores") is not None:
             parts.append(
-                "<h3>Auxiliary core-factor readout</h3><pre>"
+                "<p>Training objective: "
+                + escape(data.get("factor_task", "all"))
+                + ". Working-context read: "
+                + escape(data.get("belief_readout", "sampled"))
+                + ". Continuous access is not recovery from sampled codes. "
+                + "The task screen requires90% in each known input mode, including complementary inputs: "
+                + escape(
+                    str(data.get("task_gate", "not recorded for this historical run"))
+                )
+                + ".</p>"
+            )
+            parts.append(
+                "<h3>Core factor readout</h3><pre>"
                 + escape(json.dumps(data["core_scores"], indent=2))
                 + "</pre>"
             )

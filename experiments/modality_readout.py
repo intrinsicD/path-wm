@@ -5,6 +5,7 @@ The suite owns core, frozen-output and joint runs; no general modality claims.
 """
 
 import argparse
+from dataclasses import replace
 from pathlib import Path
 import copy
 import json
@@ -53,8 +54,11 @@ VARIANTS = ("native", "adapter1", "adapter2", "adapter4")
 
 
 class Core(nn.Module):
-    def __init__(self, width=24):
+    def __init__(self, width=24, *, belief_readout="sampled"):
         super().__init__()
+        if belief_readout not in ("sampled", "probabilities"):
+            raise ValueError("Unknown working belief readout")
+        self.belief_readout = belief_readout
         encoders = {
             "text": MultiScaleTextEncoder(width, code_width=8, levels=3),
             "image": MultiScaleImageEncoder(width, code_width=8, levels=3),
@@ -106,7 +110,21 @@ class Core(nn.Module):
         finally:
             if hook is not None:
                 hook.remove()
-        tokens = self.agent.think(state, steps=2, trace=trace).tokens
+        workspace = state
+        if self.belief_readout == "probabilities":
+            # Experimental working context only. The returned/stored categorical
+            # state and its sampling RNG remain exactly native; no soft IDs.
+            world = (
+                state.h
+                + self.agent.readout(state.logits.softmax(-1).flatten(1))[:, None]
+            )
+            workspace = replace(
+                state,
+                tokens=torch.cat(
+                    (world, state.tokens[:, self.agent.groups["world"] :]), 1
+                ),
+            )
+        tokens = self.agent.think(workspace, steps=2, trace=trace).tokens
         return (tokens, state) if return_state else tokens
 
     def factors(self, tokens):
@@ -172,7 +190,17 @@ def load_initial(model, directory, device):
         raise ValueError(
             f"Incompatible initialization: missing={missing}, unexpected={unexpected}"
         )
+    model.core.belief_readout = source_readout(directory)
     return file_hash(directory / "last.pt")
+
+
+def source_readout(directory):
+    """Old run records predate the optional continuous working readout."""
+    settings = json.loads((directory / "run.json").read_text())["identity"]["settings"]
+    mode = settings.get("belief_readout", "sampled")
+    if mode not in ("sampled", "probabilities"):
+        raise ValueError("Unknown saved working belief readout")
+    return mode
 
 
 def target_batch(data, indices, device):
@@ -487,6 +515,7 @@ def perform(args):
     model = Model(
         args.variant, posterior_aux=args.initial is not None and args.stage == "core"
     ).to(device)
+    model.core.belief_readout = args.belief_readout
     initial_decoders = state_hash(model.outputs.decoders)
     initial_source = (
         None if args.initial is None else load_initial(model, args.initial, device)
@@ -512,6 +541,7 @@ def perform(args):
                 if k.startswith("core.")
             }
         )
+        model.core.belief_readout = source_readout(args.core)
         cache = torch.load(args.core / "states.pt", weights_only=True)
         if args.stage == "oracle":
             cache = oracle_states(populations)
@@ -546,11 +576,18 @@ def perform(args):
         initialization_checkpoint_sha256=initial_source,
         encoder_source_sha256=encoder_source,
         factor_task=args.factor_task,
+        belief_readout=model.core.belief_readout,
         gradient_audit_every=args.gradient_audit_every,
         factor_coefficients=[1 / 3, 1 / 3, 1 / 3]
         if args.factor_task == "all"
         else [0, 0, 1 / 3],
-        initialization_optimizer="fresh Adam" if initial_source else "fresh model/Adam",
+        initialization_optimizer="fresh Adam"
+        if initial_source
+        else (
+            "pretrained frozen encoders; fresh updater/readout/Adam"
+            if encoder_source
+            else "fresh model/Adam"
+        ),
         posterior_aux_weight=args.posterior_aux,
         posterior_aux_source=args.posterior_source,
         temperature_warmup=args.temperature_warmup,
@@ -790,6 +827,7 @@ def perform(args):
                 core_scores=core_scores,
                 core_gate=core_gate,
                 factor_task=args.factor_task,
+                belief_readout=model.core.belief_readout,
                 task_gate=None
                 if core_scores is None
                 else all(
@@ -854,6 +892,12 @@ def main():
     parser.add_argument("--modality", choices=KINDS, default="text")
     parser.add_argument("--core", type=Path)
     parser.add_argument(
+        "--belief-readout",
+        choices=("sampled", "probabilities"),
+        default="sampled",
+        help="Experimental working-context source; persistent categorical state stays hard",
+    )
+    parser.add_argument(
         "--encoder-source",
         type=Path,
         help="Load and freeze ONLY these core encoders; fresh remaining core/Adam",
@@ -895,6 +939,12 @@ def main():
     parser.add_argument("--stop-after", type=int)
     parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
+    if args.belief_readout != "sampled" and (
+        args.stage != "core" or args.encoder_source is None or args.initial
+    ):
+        parser.error(
+            "Continuous working control requires fresh core with frozen --encoder-source"
+        )
     if args.gradient_audit_every < 0:
         parser.error("Gradient audit interval must be nonnegative")
     if args.encoder_source or args.factor_task != "all" or args.gradient_audit_every:

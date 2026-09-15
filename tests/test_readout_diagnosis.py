@@ -201,10 +201,34 @@ def test_continuous_working_readout_preserves_stored_state_and_sampling_rng():
     assert torch.equal(after, torch.get_rng_state())
     for name in ("logits", "z", "stochastic", "h", "tokens", "evidence"):
         assert torch.equal(getattr(hard_state, name), getattr(soft_state, name))
-    assert torch.equal(soft_state.stochastic, torch.nn.functional.one_hot(soft_state.z, 8).float())
+    assert torch.equal(
+        soft_state.stochastic, torch.nn.functional.one_hot(soft_state.z, 8).float()
+    )
     soft.agent.validate_state(soft_state)
     assert not torch.equal(hard_tokens, soft_tokens)
     soft_tokens.square().mean().backward()
     assert soft.agent.updater.head.weight.grad.abs().sum() > 0
-    assert all(torch.isfinite(p.grad).all() for p in soft.parameters() if p.grad is not None)
-    assert sum(p.numel() for p in hard.parameters()) == sum(p.numel() for p in soft.parameters())
+    assert all(
+        torch.isfinite(p.grad).all() for p in soft.parameters() if p.grad is not None
+    )
+    assert sum(p.numel() for p in hard.parameters()) == sum(
+        p.numel() for p in soft.parameters()
+    )
+
+
+def test_checkpoint_initialization_restores_continuous_read_path(tmp_path):
+    import json
+    from experiments.modality_readout import Model, load_initial
+
+    source = Model("native")
+    source.core.belief_readout = "probabilities"
+    torch.save({"model": source.state_dict()}, tmp_path / "last.pt")
+    (tmp_path / "run.json").write_text(
+        json.dumps({"identity": {"settings": {"belief_readout": "probabilities"}}})
+    )
+    target = Model("native")
+    load_initial(target, tmp_path, torch.device("cpu"))
+    assert target.core.belief_readout == "probabilities"
+    assert all(
+        torch.equal(v, target.state_dict()[k]) for k, v in source.state_dict().items()
+    )
