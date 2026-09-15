@@ -160,8 +160,8 @@ sessions:
   open_threads: 14
 - id: 2026-09-15_001
   date: '2026-09-15'
-  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training. Latent-core drawings separate existing loop from proposed workspace answer plan; implementation unchanged. User clarifies shared multimodal thought with decoder-specific optional recurrent readouts; architecture sketch updated, no model change. Separate/joint readout study:42 runs,8 oracle fits and2 probes; all held-out all-four outputs fail. Optional loops implemented, not adopted as repair.72 tests and exact resume pass; oracle audio works, other output/compositional targets remain open."
-  turn_count: 15
-  events_count: 72
+  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training. Latent-core drawings separate existing loop from proposed workspace answer plan; implementation unchanged. User clarifies shared multimodal thought with decoder-specific optional recurrent readouts; architecture sketch updated, no model change. Separate/joint readout study:42 runs,8 oracle fits and2 probes; all held-out all-four outputs fail. Optional loops implemented, not adopted as repair.72 tests and exact resume pass; oracle audio works, other output/compositional targets remain open. Bounded follow-up:16 fits improve known oracle outputs and core position, not direction/composition. Fresh direction probes and code collisions recorded; no default adoption."
+  turn_count: 16
+  events_count: 77
   claims_touched: []
-  open_threads: 24
+  open_threads: 25

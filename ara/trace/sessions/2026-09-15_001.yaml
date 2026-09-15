@@ -2,9 +2,9 @@ session:
   id: 2026-09-15_001
   date: '2026-09-15'
   started: 2026-09-15T00:47+02:00
-  last_turn: 2026-09-15T22:49+02:00
-  turn_count: 15
-  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training. Latent-core drawings separate existing loop from proposed workspace answer plan; implementation unchanged. User clarifies shared multimodal thought with decoder-specific optional recurrent readouts; architecture sketch updated, no model change. Separate/joint readout study:42 runs,8 oracle fits and2 probes; all held-out all-four outputs fail. Optional loops implemented, not adopted as repair.72 tests and exact resume pass; oracle audio works, other output/compositional targets remain open."
+  last_turn: 2026-09-15T23:32+02:00
+  turn_count: 16
+  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training. Latent-core drawings separate existing loop from proposed workspace answer plan; implementation unchanged. User clarifies shared multimodal thought with decoder-specific optional recurrent readouts; architecture sketch updated, no model change. Separate/joint readout study:42 runs,8 oracle fits and2 probes; all held-out all-four outputs fail. Optional loops implemented, not adopted as repair.72 tests and exact resume pass; oracle audio works, other output/compositional targets remain open. Bounded follow-up:16 fits improve known oracle outputs and core position, not direction/composition. Fresh direction probes and code collisions recorded; no default adoption."
 events_logged:
 - turn: 1
   type: question
@@ -528,6 +528,44 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O261 committed operational subset only; efficacy and broader loops remain open.
+- turn: 16
+  type: experiment
+  id: N387
+  routing: direct
+  provenance: ai-executed
+  summary: Stage diagnosis and sixteen bounded continuations yield partial multimodal repair
+- turn: 16
+  type: question
+  id: N388
+  routing: direct
+  provenance: user
+  summary: Why is direction difficult and what is needed to solve it?
+- turn: 16
+  type: experiment
+  id: N389
+  routing: direct
+  provenance: ai-executed
+  summary: Frozen updater readers and direction-code collisions narrow the remaining failure
+- turn: 16
+  type: observation
+  id: O264
+  routing: staged
+  provenance: ai-suggested
+  summary: Longer decoder training explains part of known-example failure but not new-combination generation.
+    Raw-logit supervision repairs much of known position only. Direction is not stably represented in selected
+    codes, yet trained pre-sampling heads also fail; a unique sampling, averaging, capacity or decoder explanation
+    is unproven. Original encoder accessibility and frozen repaired-model readers are different checkpoint
+    comparisons.
+- turn: 16
+  type: observation
+  id: O265
+  routing: staged
+  provenance: ai-suggested
+  summary: Next freeze an encoder with verified direction access and train updater/readout from initialization
+    on opposite-direction pairs. Require direction from the sampled deployed state, then color/place retention
+    and held-out separate/complementary modalities. If needed compare early query averaging against retaining
+    query-specific information. Preserve shared multimodal thought; no mandatory direction slot or language-only
+    core and no proven need for scaling.
 ai_actions:
 - turn: 1
   action: Saved independent analysis and a bounded brief based on the user-supplied architecture;
@@ -708,6 +746,35 @@ ai_actions:
   - pathwm/evaluation/modality_readout.py
   - pathwm/data/modality_readout.py
   - ara/evidence/tables/modality_readout_2026-09-15.json
+- turn: 16
+  action: Extended existing recipe with detached stage probes, optional training-only posterior/raw supervision
+    and temperature curriculum; completed16 training fits, frozen localization, tests, exact resume and independent
+    reports. Four actual Claude public-only reviews reconciled. Local commits through7cb561f; no push. Atlas
+    keeps prior validation colors and limits.
+  provenance: ai-executed
+  files_changed:
+  - runs/modality_repair_v1/repair.json
+  - runs/modality_repair_v1/report.html
+  - runs/modality_repair_v1/verification.json
+  - runs/modality_repair_v1/stage-verification.json
+  - runs/modality_repair_v1/resume-verification.json
+  - runs/modality_repair_v1/warmup-resume-verification.json
+  - runs/modality_repair_v1/summary-verification.json
+  - runs/modality_repair_v1/final-tests.xml
+  - runs/modality_repair_v1/direction_check.json
+  - runs/modality_repair_v1/direction_localization/results.json
+  - runs/modality_repair_v1/direction_localization/verification.json
+  - runs/modality_repair_v1/direction_localization/report.html
+  - runs/modality_repair_v1/atlas-verification.json
+  - docs/modality-readout-plan.md
+  - experiments/modality_readout.py
+  - pathwm/evaluation/modality_readout.py
+  - tests/test_readout_diagnosis.py
+  - runs/reviews/modality_repair_v1/final-method-receipt.json
+  - runs/reviews/modality_repair_v1/receipt.json
+  - runs/reviews/modality_repair_v1/reconcile-receipt.json
+  - runs/reviews/modality_repair_v1/saturation-receipt.json
+  - ara/evidence/tables/modality_repair_2026-09-15.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -754,6 +821,9 @@ key_context:
 - turn: 15
   excerpt: Ja, bitte teste jede Modalität. Getrennt und gemeinsam. Authorizes comparison, not proven capability
     or new defaults.
+- turn: 16
+  excerpt: 'User authorizes Claude-assisted plan/implement/review/test/fix iteration; during work asks: Warum
+    sind Richtungen so schwierig? Was wird benötigt um das Problem hier zu lösen?'
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current
   rate; image/full retention remains 10/12. Next lower-rate comparison from preserved source
@@ -813,6 +883,9 @@ open_threads:
 - "N383: decoder readout sufficiency, optional nested loops and budgeted held-out comparisons remain open."
 - 'N384-N386/O262-O263: combined compositional output fails; localize state access and decoder recombination.
   Prior real-data/VAE/identity and broader recurrent-efficiency questions remain open.'
+- 'N387-N389/O264/O265: known position and oracle fitting improve, direction/composition remain open; next
+  paired updater learning with frozen verified encoder is proposed. Code collisions do not prove a sole mechanism;
+  preserve real-data and capacity questions.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await
   researcher response.'
@@ -944,3 +1017,5 @@ ai_suggestions_pending:
   proven.'
 - 'O263: upstream stage probes and output oracle conditioning/recombination with matched training controls
   proposed, not run.'
+- 'O264/O265: scoped partial-repair interpretation and paired-direction next test remain staged; no broad efficacy
+  or architectural necessity affirmed.'

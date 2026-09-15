@@ -6431,3 +6431,55 @@ tree:
   - ara/evidence/tables/modality_readout_2026-09-15.json
   - runs/modality_readout_v1/controls-verification.json
   status: resolved
+- id: N387
+  type: experiment
+  title: Stage diagnosis and sixteen bounded continuations yield partial multimodal repair
+  provenance: ai-executed
+  timestamp: 2026-09-15T23:32+02:00
+  result: 'Two frozen stage diagnostics: original combined/complementary encoder held-out factors100%; posterior
+    position0%. Eight oracle1024 fits pass known-output gates, text/image new combinations and video quality
+    fail. Eight768-update core continuations: only normalized raw-logit auxiliary passes known-factor benefit,
+    position97-100%, direction about50%, held-out color regresses. Probability auxiliary and temperature warmup
+    fail benefit. All8 core screens fail.77 tests,2648 stage and10273 raw audits, exact CPU auxiliary/warmup
+    resume pass. Two failed diagnostic layouts preserved; per-scale padding repaired. No default adoption.'
+  also_depends_on:
+  - N385
+  - N386
+  tests_observations:
+  - O262
+  - O263
+  evidence:
+  - ara/evidence/tables/modality_repair_2026-09-15.json
+  - runs/modality_repair_v1/report.html
+  status: resolved
+- id: N388
+  type: question
+  title: Why is direction difficult and what is needed to solve it?
+  provenance: user
+  timestamp: 2026-09-15T23:32+02:00
+  description: User asks for the reason direction still fails during the authorized Claude-assisted implementation/review/test
+    iteration. Need distinguish task ambiguity, updater learning, compression and readout rather than assume
+    model size or decoder duration.
+  also_depends_on:
+  - N387
+  evidence:
+  - ara/evidence/tables/modality_repair_2026-09-15.json
+  status: open
+- id: N389
+  type: experiment
+  title: Frozen updater readers and direction-code collisions narrow the remaining failure
+  provenance: ai-executed
+  timestamp: 2026-09-15T23:32+02:00
+  result: 'Saved raw-aux models, all complete inputs, known48 examples/seed: trained pre-sampling auxiliary
+    direction50% both. Fresh train/validation-only linear probability reader68.8/89.6%, sampled-code reader54.2/50%.
+    Seed7201 six dominant code tuples each contain balanced opposite directions. Optimistic lookup on actual
+    saved sampled tuples58.3/50%, not generalization/full-state bound. Query/raw reader results vary across
+    seeds and nonlinear probabilities can improve linear access.206 independent NumPy fit/selection/prediction/hash/media
+    checks pass. No new model training.'
+  also_depends_on:
+  - N387
+  - N388
+  evidence:
+  - ara/evidence/tables/modality_repair_2026-09-15.json
+  - runs/modality_repair_v1/direction_localization/report.html
+  status: resolved

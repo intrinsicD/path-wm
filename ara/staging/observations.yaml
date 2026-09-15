@@ -4646,3 +4646,39 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O264
+  timestamp: 2026-09-15T23:32+02:00
+  provenance: ai-suggested
+  content: Longer decoder training explains part of known-example failure but not new-combination generation.
+    Raw-logit supervision repairs much of known position only. Direction is not stably represented in selected
+    codes, yet trained pre-sampling heads also fail; a unique sampling, averaging, capacity or decoder explanation
+    is unproven. Original encoder accessibility and frozen repaired-model readers are different checkpoint
+    comparisons.
+  context: Scoped interpretation after bounded continuations and user-directed frozen direction localization;
+    not an adopted general repair.
+  potential_type: claim
+  bound_to:
+  - N387
+  - N389
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O265
+  timestamp: 2026-09-15T23:32+02:00
+  provenance: ai-suggested
+  content: Next freeze an encoder with verified direction access and train updater/readout from initialization
+    on opposite-direction pairs. Require direction from the sampled deployed state, then color/place retention
+    and held-out separate/complementary modalities. If needed compare early query averaging against retaining
+    query-specific information. Preserve shared multimodal thought; no mandatory direction slot or language-only
+    core and no proven need for scaling.
+  context: Proposed next bounded test in response to why direction fails; no further training authorized by
+    an inferred result and none launched in this completed slice.
+  potential_type: heuristic
+  bound_to:
+  - N388
+  - N389
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
