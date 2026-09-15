@@ -499,7 +499,9 @@ def readout_inspection(directory):
                 + ". Working-context read: "
                 + escape(data.get("belief_readout", "sampled"))
                 + ". Continuous access is not recovery from sampled codes. "
-                + "The task screen requires90% in each known input mode, including complementary inputs: "
+                + "The task screen requires90% in each registered known input condition ("
+                + escape(", ".join(data.get("task_input_modes", MODES)))
+                + "); other conditions are transfer diagnostics. Passed: "
                 + escape(
                     str(data.get("task_gate", "not recorded for this historical run"))
                 )

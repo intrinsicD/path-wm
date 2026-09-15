@@ -249,7 +249,14 @@ def test_training_input_selection_is_explicit_and_screen_is_not_vacuous():
         assert actual.keys() == expected.keys()
         for k in actual:
             assert torch.equal(actual[k].values, expected[k].values)
-    rows = [dict(split="seen", input_mode=m, factor_accuracy=[0.0, 0.0, 1.0 if m == "audio" else 0.5]) for m in MODES]
+    rows = [
+        dict(
+            split="seen",
+            input_mode=m,
+            factor_accuracy=[0.0, 0.0, 1.0 if m == "audio" else 0.5],
+        )
+        for m in MODES
+    ]
     assert factor_task_screen(rows, "direction", "audio")
     assert not factor_task_screen(rows, "all", "audio")
     assert not factor_task_screen(rows, "direction", "rotating")

@@ -231,6 +231,30 @@ def factor_objective(predictions, targets, task):
     return (sum(terms) / 3 if task == "all" else terms[2] / 3), terms
 
 
+def training_input_mode(step, selection):
+    if selection not in ("rotating", *MODES):
+        raise ValueError("Unknown training input selection")
+    return MODES[step % len(MODES)] if selection == "rotating" else selection
+
+
+def factor_task_screen(scores, task, selection):
+    """Require every registered cell; transfer cells never change a local screen."""
+    training_input_mode(0, selection)
+    required = MODES if selection == "rotating" else (selection,)
+    selected = [
+        r for r in scores if r["split"] == "seen" and r["input_mode"] in required
+    ]
+    if len(selected) != len(required) or {r["input_mode"] for r in selected} != set(
+        required
+    ):
+        return False
+    return all(
+        (r["factor_accuracy"][2] if task == "direction" else min(r["factor_accuracy"]))
+        >= 0.9
+        for r in selected
+    )
+
+
 def factor_gradient_audit(terms, parameters):
     """Unweighted per-task derivatives; no .grad, RNG or optimizer mutation."""
     gradients = []
@@ -576,6 +600,7 @@ def perform(args):
         initialization_checkpoint_sha256=initial_source,
         encoder_source_sha256=encoder_source,
         factor_task=args.factor_task,
+        input_mode=args.input_mode,
         belief_readout=model.core.belief_readout,
         gradient_audit_every=args.gradient_audit_every,
         factor_coefficients=[1 / 3, 1 / 3, 1 / 3]
@@ -647,7 +672,11 @@ def perform(args):
     training_mode(model)
     try:
         while run.step < end:
-            mode = "all" if args.stage == "oracle" else MODES[run.step % len(MODES)]
+            mode = (
+                "all"
+                if args.stage == "oracle"
+                else training_input_mode(run.step, args.input_mode)
+            )
             indices = run.sample(len(data["ids"]), 24)
             wanted = target_batch(data, indices, device)
             optimizer.zero_grad(set_to_none=True)
@@ -827,19 +856,13 @@ def perform(args):
                 core_scores=core_scores,
                 core_gate=core_gate,
                 factor_task=args.factor_task,
+                task_input_modes=list(MODES)
+                if args.input_mode == "rotating"
+                else [args.input_mode],
                 belief_readout=model.core.belief_readout,
                 task_gate=None
                 if core_scores is None
-                else all(
-                    (
-                        r["factor_accuracy"][2]
-                        if args.factor_task == "direction"
-                        else min(r["factor_accuracy"])
-                    )
-                    >= 0.9
-                    for r in core_scores
-                    if r["split"] == "seen"
-                ),
+                else factor_task_screen(core_scores, args.factor_task, args.input_mode),
                 resources=resource,
                 normalizers=normalizers,
                 partial=False,
@@ -904,6 +927,12 @@ def main():
     )
     parser.add_argument("--factor-task", choices=("all", "direction"), default="all")
     parser.add_argument(
+        "--input-mode",
+        choices=("rotating", *MODES),
+        default="rotating",
+        help="Core training inputs; other evaluated modes are transfer diagnostics",
+    )
+    parser.add_argument(
         "--gradient-audit-every",
         type=int,
         default=0,
@@ -939,6 +968,8 @@ def main():
     parser.add_argument("--stop-after", type=int)
     parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
+    if args.input_mode != "rotating" and args.stage != "core":
+        parser.error("Input selection is supported for core training only")
     if args.belief_readout != "sampled" and (
         args.stage != "core" or args.encoder_source is None or args.initial
     ):

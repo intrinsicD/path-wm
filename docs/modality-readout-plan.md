@@ -646,3 +646,10 @@ use at most four additional1152-update fits, with a separately recorded preregis
 If isolated inputs fail, first inspect frozen direct/mean/query accessibility before
 altering projection or gradients. No immediate model scaling, text-only thinking,
 default architecture adoption or output decoder claim.
+
+Before running, source-matched existing encoder probes confirm audio direction100%
+on known/held-out in both seeds; text known100%/97.9%, held-out89.6%/75.0%. Therefore
+text held-out failure cannot be assigned solely to the updater. Claude's public-only
+review and reconciliation retain exposure/trajectory/two-seed caveats: a projection
+change also alters optimization and possibly capacity; neither its success nor failure
+uniquely localizes information loss. No separate modality subspace is mandated.
