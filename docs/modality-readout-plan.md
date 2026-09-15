@@ -270,3 +270,33 @@ Core intervention benefit is measured on fresh known combinations, averaged over
 all six input modes and the location/direction factors; held-out results remain a
 separate mandatory report. Both branches use fresh optimizer state. No claim of
 unique mechanism or calibration follows from auxiliary-loss improvement.
+
+## Second bounded iteration, registered after first measurements
+
+Both probability-auxiliary continuations fail the registered benefit screen. On the
+original first-seed all-input training batch, the updater-head gradient norm from
+this auxiliary loss is0.00798; normalized raw logits give0.48087 using the identical
+auxiliary head/batch. This is a local gradient diagnostic, not proof of repair.
+Original posteriors have mean maximum probabilities around0.99 in most groups.
+
+Add exactly two separate training interventions, two seeds each, from the SAME
+original checkpoint with768 extra updates, same fresh Adam/batches, same registered
+auxiliary head and factor task:
+
+- `raw_aux`: weight1 auxiliary factor CE on the final correction head's raw logits,
+  normalized per sample over32 channels with non-affine LayerNorm. Captured inside
+  this forward only. No raw-logit or auxiliary output supplied at inference.
+- `warmup`: ordinary downstream factor CE, no auxiliary loss; divide correction
+  logits by a training temperature decreasing linearly from10 to1 over the first
+  512 updates, then256 ordinary updates. Every step still samples categorical codes.
+  Evaluation ALWAYS temperature1. This tests a training curriculum, not a new
+  decoder, deterministic probability-state bypass or permanent temperature change.
+
+Reuse prior benefit/core gates and report all conditions, not just the winner.
+Equal updates are not exact compute/gradient-norm matching. The previously examined
+held-out split is an exploratory development holdout; new independent tasks/splits
+are needed before a generalization claim beyond it. No further search in this slice.
+Claude's generic saturation critique motivates checking the sampled downstream path;
+normalization is a deterministic transformation, not an extra information source.
+Probability and raw-logit auxiliary objectives both intentionally bypass sampling
+for that TRAINING loss, while deployment continues to use the native state path.
