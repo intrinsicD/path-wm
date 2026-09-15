@@ -209,3 +209,50 @@ Individual child runs accept `--stage core|frozen|joint|oracle`, `--variant`,
 `--modality`, `--core`, `--seed`, `--steps` and `--output`. Resume a specific child
 with the same arguments plus `--resume`; `--stop-after` pauses without changing
 its declared final step count. Oracle is explicitly a ground-truth control.
+
+## Follow-up registered 15 September, before new results
+
+User authorizes implementation/review/test/repair of the failed controlled task.
+Preserve all v1 weights and populations. Reuse this recipe and report pipeline;
+no new general trainer, decoder default, text-only thinking or soft-state bypass.
+
+1. Frozen stage diagnosis on both original core checkpoints: per-modality encoder
+   features (all scale tokens), final posterior probabilities, sampled codes,
+   post-observation tokens, final Thinker tokens. Per-input-mode linear readers,
+   train-only normalization/centering and validation-only ridge choice from
+   .01/.1/1/10/100. Shuffled training labels and explicit factor controls. Save
+   inputs, coefficients, predictions, distributions and stage dimensions.
+   Unequal reader dimension and lack of nonlinear probes prevent exact loss-location
+   claims. Posterior-probe accuracy is a comparison, not an upper bound.
+2. Native oracle outputs: repeat each of four modalities with the same initial
+   native weights and1024 updates (v1 used256), both seeds7201/7202. Identical
+   splits/loss/optimizer/inputs. Final fixed update only. Reuse v1 semantic and
+   signal-quality gates. This tests training duration without architecture change.
+3. Bounded training-only repair: continue each original core with fresh Adam for
+  768 extra updates, either ordinary factor loss or the same plus weight1 factor
+   CE on posterior probabilities through a small linear auxiliary head. Both
+   branches register identical extra head parameters, initialized without changing
+   original core/output RNG. Same sampled minibatches and stochastic-state path.
+   The extra head is unused at inference. Report both known and held-out factors
+   across all six modes and source omissions; retain>=90% per-factor known screen.
+   Repair benefit requires>=5pp mean location/direction accuracy gain over matched
+   continuation in both seeds, with no>5pp color loss; capability still requires
+   all original core gates. No unique regularization mechanism or sampling-loss
+   cause claim: shuffled/norm-matched auxiliary interventions are deferred unless
+   that stronger attribution is needed.
+4. Verify capture leaves tensors/gradients/RNG unchanged, probes never update source
+   parameters or use test normalization/selection, new head only affects training,
+   initialization remains paired, and full checkpoint resume is exact. Independent
+   raw-artifact checks, standalone reports and static visual QA. Browser QA remains
+   unavailable under the existing policy; do not bypass it.
+
+Budget:2 diagnostic runs,8 longer oracle fits,4 core continuation fits, one tiny
+preflight/resume check. CPU chosen from prior measured small-model preflight. Keep
+finite fixed budgets; additional architecture interventions require a separately
+recorded, evidence-motivated amendment before execution. Do not select a default
+from test outcomes. This scope tests three symbolic factors, not natural language,
+speech, photos, general video or concept discovery.
+
+Actual Claude public-only review: `runs/reviews/modality_repair_v1/`. Adopted reader
+limits and separation of regularization efficacy from unique mechanism. Independent
+code review/tests remain local; no code, data or measurements exported.
