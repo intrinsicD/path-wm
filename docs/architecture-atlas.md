@@ -21,6 +21,8 @@ Detail diagrams (2–13): blue = learned modules; gray = state/mechanics; green 
 - [11 · Planning and the proposed action DAG](#11-planning)
 - [12 · Training signals and gradient routes](#12-learning)
 - [13 · Persistent World State foundation](#13-target-graph)
+- [14 · Inside the latent core](#14-latent-core)
+- [15 · Proposed answer-plan boundary](#15-output-plan)
 
 <a id="01-overview"></a>
 
@@ -435,6 +437,8 @@ The feature controller can propose a bounded feature code for supported reads. I
 
 finish is a policy/session operation, not independent proof of task success. The historical-recall experiment has an external verifier based on the delivered event log. General tool execution, open-ended decomposition and calibrated stopping remain incomplete.
 
+The current Thinker already repeats the same Attend parameters; only working/reasoning tokens change. General answer planning is not established by these named token slices. Atlas14-15 and docs/latent-core.md separate this mechanism from a proposed trained answer-plan interface.
+
 Source: [pathwm/models/tasks.py · TaskInterpreter:419](../pathwm/models/tasks.py), [pathwm/models/tasks.py · TaskPolicy:442](../pathwm/models/tasks.py), [pathwm/models/tasks.py · MetadataEncoder:397](../pathwm/models/tasks.py), [pathwm/models/agent.py · think:709](../pathwm/models/agent.py), [pathwm/models/agent.py · emit:508](../pathwm/models/agent.py), [pathwm/models/agent.py · reflect:404](../pathwm/models/agent.py), [pathwm/models/recall.py · verify_recall:144](../pathwm/models/recall.py).
 
 <a id="07-decoders"></a>
@@ -501,6 +505,8 @@ The text path is a byte autoregressor, not a pretrained language model. The wave
 Image resolution and audio length are constructor settings. Output size alone does not establish reconstructed detail. The stronger conditional image producer is an optional controlled experiment, not a common generator already implemented for every modality.
 
 Native image/audio/text decoders accept context validity; text keeps a separate causal prefix mask. Video validates every state, including singleton trajectories. The independent codec audit learns four words and four tones; weighted video reconstruction improves object/motion but degrades total RGB. Its state-to-output path is untrained and measured only on the first example; no bottleneck-location or general generation claim.
+
+Native text decoding currently reads the entire state token set. A proposed smaller verbalizer could read only a prepared latent answer plan; first compare the existing workspace as that plan before adding modules. The user intends the core to do content reasoning. No decoder-size minimum or capacity-saving result follows yet.
 
 Source: [pathwm/models/modalities.py · ImageDecoder:282](../pathwm/models/modalities.py), [pathwm/models/modalities.py · AudioDecoder:308](../pathwm/models/modalities.py), [pathwm/models/modalities.py · TextDecoder:327](../pathwm/models/modalities.py), [pathwm/models/agent.py · decode_video:795](../pathwm/models/agent.py), [pathwm/models/tasks.py · GeneratedOutput:155](../pathwm/models/tasks.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md).
 
@@ -897,3 +903,129 @@ A recognition latent cannot automatically be decoded into a faithful face or ima
 The foundation now connects audio/video/text/image packets with masked CandidateEncoder.pool over supplied regions/spans. Whole-window pooling is a lossy baseline, not discovery. Candidate provenance must retain source ancestry; generated/recalled candidates cannot become new evidence. Modality representation spaces remain separately versioned until alignment is trained. 112 scoped tests and actual real audiovisual/UTF-8 transport pass; general identity and state-to-output learning remain open.
 
 Source: [pathwm/world_state/store.py · WorldStore:175](../pathwm/world_state/store.py), [pathwm/world_state/session.py · WorldSession:77](../pathwm/world_state/session.py), [pathwm/world_state/modules.py · ContextEncoder:346](../pathwm/world_state/modules.py), [pathwm/world_state/inspection.py · WorldTrace:37](../pathwm/world_state/inspection.py), [docs/world-state.md](../docs/world-state.md), [docs/world-state-foundation-plan.md](../docs/world-state-foundation-plan.md), [pathwm/world_state/modules.py · CandidateEncoder:30](../pathwm/world_state/modules.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md).
+
+<a id="14-latent-core"></a>
+
+## 14 · Inside the latent core
+
+Current categorical agent plus opt-in WorldSession · named roles are not guaranteed learned semantics
+
+```mermaid
+flowchart TB
+    input["Encoded source features<br/>Image / audio / video / text"]
+    class input external;
+    previous["Previous h and sampled categorical code<br/>Recorded action / elapsed time"]
+    class previous store;
+    dynamics["BeliefDynamics<br/>Shared attention transition -&gt; new h<br/>Prior categorical distribution"]
+    class dynamics learned;
+    correct["BeliefCorrection<br/>Observation attention + memory + refine<br/>Correct categorical logits"]
+    class correct learned;
+    world["World readout<br/>h + projection of categorical code<br/>Default16 tokens x width32"]
+    class world store;
+    memory["HybridMemory<br/>Bounded source and belief history<br/>Perception / prediction / thinking reads"]
+    class memory store;
+    graph["Optional WorldStore<br/>Versioned entities / relations / evidence"]
+    class graph optional;
+    retrieve["Retriever + ContextEncoder<br/>Selected graph records -&gt; latent context"]
+    class retrieve learned;
+    goal["Task / question / goal context<br/>Detached error / entropy / step feedback"]
+    class goal external;
+    work["Working and reasoning tokens<br/>Default4 + 4 tokens x width32"]
+    class work store;
+    think["Thinker: one shared Attend block<br/>Normalize -&gt; attention -&gt; residual<br/>Normalize -&gt; MLP -&gt; residual"]
+    class think learned;
+    next["Updated working / reasoning tokens<br/>Repeat with same weights for k steps"]
+    class next store;
+    decode["Current native decoders<br/>Read world + working + reasoning tokens"]
+    class decode learned;
+    previous -->|"advance event or imagined branch"| dynamics
+    dynamics -->|"prior h and logits"| correct
+    input -->|"valid available features"| correct
+    memory -->|"prediction read"| dynamics
+    memory -->|"perception read"| correct
+    correct -->|"posterior code; h from prior"| world
+    dynamics -->|"prior-only hypothetical branch"| world
+    memory -->|"thinking read"| think
+    graph -->|"pinned bounded query"| retrieve
+    retrieve -->|"optional goal-context tokens"| think
+    goal -->|"task and diagnostic context"| think
+    world -->|"world tokens"| think
+    work -->|"query and context"| think
+    think -->|"workspace update"| next
+    next -->|"next internal iteration"| work
+    world -->|"unchanged during thinking"| decode
+    next -->|"refined workspace"| decode
+    classDef learned fill:#e6eef8,stroke:#7696bc,color:#202a36;
+    classDef store fill:#f3f4f6,stroke:#9098a4,color:#202a36;
+    classDef external fill:#e7f1eb,stroke:#789887,color:#202a36;
+    classDef optional fill:#efeafa,stroke:#9c87b5,color:#202a36;
+    classDef training fill:#fff0db,stroke:#bd934d,color:#202a36;
+    classDef proposal fill:#fafafa,stroke:#9b9b9b,color:#202a36,stroke-dasharray:5 4;
+```
+
+[Full-size SVG](diagrams/atlas/14-latent-core.svg)
+
+The diagram omits storage writes; observed events commit source/belief envelopes, while WorldSession separately stages entity/graph updates. Thinking never writes new observations. HybridMemory and the optional persistent graph are distinct stores.
+
+Default shapes describe build_model(state_model="belief", width=32), not the Gaussian agent or the width16 modality audit. h is16x32; categorical logits are8 groups x8 codes; the derived world readout is16x32, and workspace is8x32. Code IDs are not predefined entity or word IDs.
+
+BeliefCorrection returns posterior logits; the recurrent h was produced by dynamics. think() changes only working/reasoning tokens, not h/logits, live event time or source memory. A reasoned graph belief revision would need a distinct inferred transaction, not an observational write.
+
+Thinker parameters are shared across the caller-specified step count. More iterations are not proven to improve quality. An optional TaskPolicy already proposes think/recall/imagine/emit/act/finish, but general answer readiness and truth checking are unvalidated.
+
+Imagination uses the existing dynamics on a separate hypothetical state. Automatic search and integration of branch results into general answer planning remain outside this small loop. No model or training change accompanies this drawing.
+
+Source: [pathwm/models/belief.py · BeliefDynamics:33](../pathwm/models/belief.py), [pathwm/models/belief.py · BeliefCorrection:74](../pathwm/models/belief.py), [pathwm/models/belief.py · _readout:196](../pathwm/models/belief.py), [pathwm/models/agent.py · Thinker:105](../pathwm/models/agent.py), [pathwm/models/agent.py · think:709](../pathwm/models/agent.py), [pathwm/models/agent.py · decode:779](../pathwm/models/agent.py), [pathwm/world_state/session.py · think:425](../pathwm/world_state/session.py), [docs/latent-core.md](../docs/latent-core.md).
+
+<a id="15-output-plan"></a>
+
+## 15 · Proposed answer-plan boundary
+
+Discussion proposal · test existing workspace first, add separate tokens only when justified
+
+```mermaid
+flowchart TB
+    context["Retrieved evidence + question + intent<br/>Existing context/task interfaces"]
+    class context store;
+    work["Existing latent Thinker / workspace<br/>Content selection and reasoning to train"]
+    class work learned;
+    plan["Proposed latent answer plan<br/>First: existing workspace slice<br/>Later comparison: dedicated plan tokens"]
+    class plan proposal;
+    decoder["Modality output adapter<br/>Text: realize content and grammar<br/>Consumes plan + own output prefix"]
+    class decoder proposal;
+    output["Generated answer"]
+    class output external;
+    check["Proposed grounding / coverage check<br/>Evidence references + answer + task<br/>Revise / retrieve / ask when needed"]
+    class check proposal;
+    training["Required comparison<br/>Full-state vs workspace-only vs own plan<br/>Grounding / language / held-out combinations<br/>Total parameters / memory / compute"]
+    class training training;
+    context -->|"available context"| work
+    work -.->|"learn prepared content"| plan
+    plan -.->|"plan-only conditioning"| decoder
+    decoder -.->|"generated sequence"| output
+    output -.->|"candidate answer"| check
+    context -.->|"retained evidence"| check
+    check -.->|"revision decision"| work
+    training -.->|"explicit task losses and probes"| plan
+    training -.->|"generation losses and controls"| decoder
+    classDef learned fill:#e6eef8,stroke:#7696bc,color:#202a36;
+    classDef store fill:#f3f4f6,stroke:#9098a4,color:#202a36;
+    classDef external fill:#e7f1eb,stroke:#789887,color:#202a36;
+    classDef optional fill:#efeafa,stroke:#9c87b5,color:#202a36;
+    classDef training fill:#fff0db,stroke:#bd934d,color:#202a36;
+    classDef proposal fill:#fafafa,stroke:#9b9b9b,color:#202a36,stroke-dasharray:5 4;
+```
+
+[Full-size SVG](diagrams/atlas/15-output-plan.svg)
+
+This is an alternative under discussion, not an implemented replacement or demonstrated minimum decoder. Existing TaskPolicy and output request/provenance contracts should be reused; a general grounding checker is not already supplied by them.
+
+A separate large planning Transformer is not a prerequisite. First train the existing working/reasoning slice as the decoder context and compare against the full-state reference. Add a small dedicated plan producer only if the comparison motivates it.
+
+Contents, relationships, uncertainty and communicative intent may remain learned representations. Preserve explicit evidence references for correction and inspection. Attention is not a proof of faithful attribution.
+
+A smaller output decoder may shift language/content work into the core; total system capacity, memory and computation must be measured. Standard language models already use latent activations; omitting intermediate text is a different design choice.
+
+Generated text must not be written back as independent source evidence. Actual multi-turn conversation, sufficient latent plan capacity, trained readiness/coverage and general language quality remain open.
+
+Source: [pathwm/models/agent.py · Thinker:105](../pathwm/models/agent.py), [pathwm/models/agent.py · step_task:637](../pathwm/models/agent.py), [pathwm/models/agent.py · emit:508](../pathwm/models/agent.py), [pathwm/models/modalities.py · TextDecoder:327](../pathwm/models/modalities.py), [docs/latent-core.md](../docs/latent-core.md).

@@ -22,7 +22,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.</p><p>Open a level below to inspect its inputs, outputs and inner workings. Sources and limitations accompany every drawing.</p></header>
 <p><strong>Overview: Red: to discuss. Blue: discussed. Green: validated within the labelled scope.</strong> Colors change with discussion and validation evidence. <a href="architecture-discussion.md">See coverage and evidence</a>.</p>
 <div class="legend" aria-label="Role legend for detail diagrams 2 through 13">Detail diagrams (2–13): <span><i style="background:#e6eef8;border-color:#7696bc"></i>Learned module</span><span><i style="background:#f3f4f6;border-color:#9098a4"></i>Explicit state / mechanics</span><span><i style="background:#e7f1eb;border-color:#789887"></i>External input / output</span><span><i style="background:#efeafa;border-color:#9c87b5"></i>Optional experiment / path</span><span><i style="background:#fff0db;border-color:#bd934d"></i>Training / diagnostic only</span><span><i style="background:#fafafa;border-color:#9b9b9b"></i>Proposed extension (dashed)</span></div>
-<nav aria-label="Architecture levels"><a href="#01-overview">1 · The agent loop</a><a href="#02-encoders">2 · Modality encoders and feature hierarchy</a><a href="#03-attention">3 · Inside a residual attention block</a><a href="#04-belief">4 · Predict, correct and expose world state</a><a href="#05-memory">5 · Short and long session memory</a><a href="#06-workspace">6 · Tasks, focus, thinking and output control</a><a href="#07-decoders">7 · How state reaches each output modality</a><a href="#08-photo-path">8 · The current real-photo experiment</a><a href="#09-image-generator">9 · Latent-guided image production</a><a href="#10-entities">10 · Entity identity, state and relations</a><a href="#11-planning">11 · Planning and the proposed action DAG</a><a href="#12-learning">12 · Training signals and gradient routes</a><a href="#13-target-graph">13 · Persistent World State foundation</a></nav>
+<nav aria-label="Architecture levels"><a href="#01-overview">1 · The agent loop</a><a href="#02-encoders">2 · Modality encoders and feature hierarchy</a><a href="#03-attention">3 · Inside a residual attention block</a><a href="#04-belief">4 · Predict, correct and expose world state</a><a href="#05-memory">5 · Short and long session memory</a><a href="#06-workspace">6 · Tasks, focus, thinking and output control</a><a href="#07-decoders">7 · How state reaches each output modality</a><a href="#08-photo-path">8 · The current real-photo experiment</a><a href="#09-image-generator">9 · Latent-guided image production</a><a href="#10-entities">10 · Entity identity, state and relations</a><a href="#11-planning">11 · Planning and the proposed action DAG</a><a href="#12-learning">12 · Training signals and gradient routes</a><a href="#13-target-graph">13 · Persistent World State foundation</a><a href="#14-latent-core">14 · Inside the latent core</a><a href="#15-output-plan">15 · Proposed answer-plan boundary</a></nav>
 <div class="controls"><button type="button" id="expand">Expand all diagrams</button><button type="button" id="collapse">Collapse details</button></div>
 <details id="01-overview" open>
 <summary><span>1 · The agent loop</span><small>General categorical agent · runtime data and control flow</small></summary>
@@ -1364,6 +1364,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>In emit, task tokens first condition a thinking step, then modality decoders consume the conditioned state. General decoders see all state tokens; the photo wrapper intentionally exposes only its working/reasoning tokens.</p>
 <p>The feature controller can propose a bounded feature code for supported reads. It is excluded from categorical source encoding. Reflection uses shared encoder weights but preserves generated ancestry; it is not a new camera event.</p>
 <p>finish is a policy/session operation, not independent proof of task success. The historical-recall experiment has an external verifier based on the delivered event log. General tool execution, open-ended decomposition and calibrated stopping remain incomplete.</p>
+<p>The current Thinker already repeats the same Attend parameters; only working/reasoning tokens change. General answer planning is not established by these named token slices. Atlas14-15 and docs/latent-core.md separate this mechanism from a proposed trained answer-plan interface.</p>
 <details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/tasks.py">pathwm/models/tasks.py · TaskInterpreter:419</a></li><li><a href="../pathwm/models/tasks.py">pathwm/models/tasks.py · TaskPolicy:442</a></li><li><a href="../pathwm/models/tasks.py">pathwm/models/tasks.py · MetadataEncoder:397</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · think:709</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · emit:508</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · reflect:404</a></li><li><a href="../pathwm/models/recall.py">pathwm/models/recall.py · verify_recall:144</a></li></ul></details>
 </div></details>
 <details id="07-decoders">
@@ -1574,6 +1575,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>The text path is a byte autoregressor, not a pretrained language model. The waveform path is not established general speech synthesis. Video currently decodes a supplied state trajectory; there is no general video diffusion generator in this recipe.</p>
 <p>Image resolution and audio length are constructor settings. Output size alone does not establish reconstructed detail. The stronger conditional image producer is an optional controlled experiment, not a common generator already implemented for every modality.</p>
 <p>Native image/audio/text decoders accept context validity; text keeps a separate causal prefix mask. Video validates every state, including singleton trajectories. The independent codec audit learns four words and four tones; weighted video reconstruction improves object/motion but degrades total RGB. Its state-to-output path is untrained and measured only on the first example; no bottleneck-location or general generation claim.</p>
+<p>Native text decoding currently reads the entire state token set. A proposed smaller verbalizer could read only a prepared latent answer plan; first compare the existing workspace as that plan before adding modules. The user intends the core to do content reasoning. No decoder-size minimum or capacity-saving result follows yet.</p>
 <details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/modalities.py">pathwm/models/modalities.py · ImageDecoder:282</a></li><li><a href="../pathwm/models/modalities.py">pathwm/models/modalities.py · AudioDecoder:308</a></li><li><a href="../pathwm/models/modalities.py">pathwm/models/modalities.py · TextDecoder:327</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · decode_video:795</a></li><li><a href="../pathwm/models/tasks.py">pathwm/models/tasks.py · GeneratedOutput:155</a></li><li><a href="../docs/modality-foundation-plan.md">docs/modality-foundation-plan.md</a></li></ul></details>
 </div></details>
 <details id="08-photo-path">
@@ -2838,6 +2840,375 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>A recognition latent cannot automatically be decoded into a faithful face or image. That requires a compatible trained decoder and retained information; a reconstruction is evidence about a readout, not a literal picture of all the agent's beliefs.</p>
 <p>The foundation now connects audio/video/text/image packets with masked CandidateEncoder.pool over supplied regions/spans. Whole-window pooling is a lossy baseline, not discovery. Candidate provenance must retain source ancestry; generated/recalled candidates cannot become new evidence. Modality representation spaces remain separately versioned until alignment is trained. 112 scoped tests and actual real audiovisual/UTF-8 transport pass; general identity and state-to-output learning remain open.</p>
 <details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/world_state/store.py">pathwm/world_state/store.py · WorldStore:175</a></li><li><a href="../pathwm/world_state/session.py">pathwm/world_state/session.py · WorldSession:77</a></li><li><a href="../pathwm/world_state/modules.py">pathwm/world_state/modules.py · ContextEncoder:346</a></li><li><a href="../pathwm/world_state/inspection.py">pathwm/world_state/inspection.py · WorldTrace:37</a></li><li><a href="../docs/world-state.md">docs/world-state.md</a></li><li><a href="../docs/world-state-foundation-plan.md">docs/world-state-foundation-plan.md</a></li><li><a href="../pathwm/world_state/modules.py">pathwm/world_state/modules.py · CandidateEncoder:30</a></li><li><a href="../docs/modality-foundation-plan.md">docs/modality-foundation-plan.md</a></li></ul></details>
+</div></details>
+<details id="14-latent-core">
+<summary><span>14 · Inside the latent core</span><small>Current categorical agent plus opt-in WorldSession · named roles are not guaranteed learned semantics</small></summary>
+<div class="section-body"><div class="diagram" role="img" aria-label="14 · Inside the latent core. Current categorical agent plus opt-in WorldSession · named roles are not guaranteed learned semantics"><svg style="min-width:1328px" width="1660pt" height="798pt"
+ viewBox="0.00 0.00 1660.00 798.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="14-latent-core-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 783.84)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-783.84 1645.8,-783.84 1645.8,14.4 -14.4,14.4"/>
+<!-- input&#45;&gt;correct -->
+<g id="14-latent-core-edge3" class="edge">
+<title>input&#45;&gt;correct</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M427.42,-585.94C428.36,-567.11 429.47,-544.8 429.47,-544.8 429.47,-544.8 436.68,-538.74 446.25,-530.69"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="447.77,-532.61 451.55,-526.23 444.61,-528.86 447.77,-532.61"/>
+<text xml:space="preserve" text-anchor="middle" x="493.81" y="-548.1" font-family="DejaVu Sans" font-size="11.00" fill="#374151">valid available features</text>
+</g>
+<!-- previous&#45;&gt;dynamics -->
+<g id="14-latent-core-edge1" class="edge">
+<title>previous&#45;&gt;dynamics</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M157.15,-708.36C157.15,-693.07 157.15,-673.24 157.15,-655.68"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="159.6,-655.93 157.15,-648.93 154.7,-655.93 159.6,-655.93"/>
+<text xml:space="preserve" text-anchor="middle" x="253.57" y="-670.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">advance event or imagined branch</text>
+</g>
+<!-- dynamics&#45;&gt;correct -->
+<g id="14-latent-core-edge2" class="edge">
+<title>dynamics&#45;&gt;correct</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M245.5,-577.5C288.19,-561.04 330.31,-544.8 330.31,-544.8 330.31,-544.8 352.98,-537.34 381.4,-527.99"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="382.09,-530.35 387.98,-525.83 380.56,-525.69 382.09,-530.35"/>
+<text xml:space="preserve" text-anchor="middle" x="377.23" y="-548.1" font-family="DejaVu Sans" font-size="11.00" fill="#374151">prior h and logits</text>
+</g>
+<!-- dynamics&#45;&gt;world -->
+<g id="14-latent-core-edge7" class="edge">
+<title>dynamics&#45;&gt;world</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M156.86,-577.77C156.65,-553.41 156.41,-524.8 156.41,-524.8 156.41,-524.8 156.41,-455.68 156.41,-455.68 156.41,-455.68 282.33,-426.29 387.59,-401.72"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="387.9,-404.17 394.16,-400.19 386.78,-399.4 387.9,-404.17"/>
+<text xml:space="preserve" text-anchor="middle" x="239.78" y="-486.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">prior&#45;only hypothetical branch</text>
+</g>
+<!-- correct&#45;&gt;world -->
+<g id="14-latent-core-edge6" class="edge">
+<title>correct&#45;&gt;world</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M502.99,-455.4C506.98,-441.69 511.63,-425.71 515.84,-411.24"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="518.19,-411.92 517.79,-404.52 513.48,-410.55 518.19,-411.92"/>
+<text xml:space="preserve" text-anchor="middle" x="587.8" y="-425.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">posterior code; h from prior</text>
+</g>
+<!-- world&#45;&gt;think -->
+<g id="14-latent-core-edge12" class="edge">
+<title>world&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M567.77,-333.15C587.2,-316.59 606.48,-300.16 606.48,-300.16 606.48,-300.16 634.66,-292.45 669.63,-282.87"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="669.96,-285.32 676.07,-281.11 668.67,-280.6 669.96,-285.32"/>
+<text xml:space="preserve" text-anchor="middle" x="641.81" y="-303.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">world tokens</text>
+</g>
+<!-- world&#45;&gt;decode -->
+<g id="14-latent-core-edge16" class="edge">
+<title>world&#45;&gt;decode</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M531.13,-333.1C536.88,-268.04 549.41,-126.15 555.16,-61.05"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="557.57,-61.6 555.74,-54.41 552.68,-61.17 557.57,-61.6"/>
+<text xml:space="preserve" text-anchor="middle" x="618.82" y="-181.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">unchanged during thinking</text>
+</g>
+<!-- memory&#45;&gt;dynamics -->
+<g id="14-latent-core-edge4" class="edge">
+<title>memory&#45;&gt;dynamics</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M462.4,-699.82C408.41,-683.36 355.15,-667.12 355.15,-667.12 355.15,-667.12 326.63,-659.41 291.24,-649.83"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="292.11,-647.53 284.71,-648.07 290.83,-652.26 292.11,-647.53"/>
+<text xml:space="preserve" text-anchor="middle" x="439.01" y="-670.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">prediction read</text>
+</g>
+<!-- memory&#45;&gt;correct -->
+<g id="14-latent-core-edge5" class="edge">
+<title>memory&#45;&gt;correct</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M571.47,-700.08C567.15,-645.69 559.15,-544.8 559.15,-544.8 559.15,-544.8 551.53,-538.62 541.48,-530.46"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="543.22,-528.72 536.24,-526.21 540.13,-532.52 543.22,-528.72"/>
+<text xml:space="preserve" text-anchor="middle" x="610.97" y="-609.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">perception read</text>
+</g>
+<!-- memory&#45;&gt;think -->
+<g id="14-latent-core-edge8" class="edge">
+<title>memory&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M607.64,-700.09C631.79,-675.73 660.15,-647.12 660.15,-647.12 660.15,-647.12 693.15,-613.56 693.15,-613.56 693.15,-613.56 693.15,-613.56 693.15,-366.92 693.15,-366.92 714.15,-333.36 714.15,-333.36 714.15,-333.36 738.43,-309.42 761.49,-286.69"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="763.17,-288.47 766.43,-281.81 759.73,-284.98 763.17,-288.47"/>
+<text xml:space="preserve" text-anchor="middle" x="729.75" y="-486.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">thinking read</text>
+</g>
+<!-- graph&#45;&gt;retrieve -->
+<g id="14-latent-core-edge9" class="edge">
+<title>graph&#45;&gt;retrieve</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M926.06,-463.72C917.56,-445.78 906.1,-421.59 896.89,-402.14"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="899.14,-401.18 893.93,-395.9 894.71,-403.28 899.14,-401.18"/>
+<text xml:space="preserve" text-anchor="middle" x="973.79" y="-425.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">pinned bounded query</text>
+</g>
+<!-- retrieve&#45;&gt;think -->
+<g id="14-latent-core-edge10" class="edge">
+<title>retrieve&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M864.39,-341.4C854.08,-325.69 840.62,-305.2 828.86,-287.29"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="831.08,-286.2 825.19,-281.7 826.99,-288.89 831.08,-286.2"/>
+<text xml:space="preserve" text-anchor="middle" x="922.81" y="-303.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">optional goal&#45;context tokens</text>
+</g>
+<!-- goal&#45;&gt;think -->
+<g id="14-latent-core-edge11" class="edge">
+<title>goal&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1134.32,-341.3C1075.67,-322.47 1006.15,-300.16 1006.15,-300.16 1006.15,-300.16 976.52,-292.38 939.85,-282.75"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="940.92,-280.5 933.53,-281.09 939.68,-285.24 940.92,-280.5"/>
+<text xml:space="preserve" text-anchor="middle" x="1122.24" y="-303.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">task and diagnostic context</text>
+</g>
+<!-- work&#45;&gt;think -->
+<g id="14-latent-core-edge13" class="edge">
+<title>work&#45;&gt;think</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M1411.63,-341.23C1394,-336.68 1381.15,-333.36 1381.15,-333.36 1381.15,-333.36 1203.15,-300.16 1203.15,-300.16 1203.15,-300.16 1060,-281.04 944.76,-265.65"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="945.42,-263.27 938.16,-264.77 944.77,-268.12 945.42,-263.27"/>
+<text xml:space="preserve" text-anchor="middle" x="1321.52" y="-303.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">query and context</text>
+</g>
+<!-- think&#45;&gt;next -->
+<g id="14-latent-core-edge14" class="edge">
+<title>think&#45;&gt;next</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M780.05,-210.72C770.68,-196.36 759.82,-179.7 750.53,-165.47"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="752.62,-164.19 746.75,-159.66 748.52,-166.87 752.62,-164.19"/>
+<text xml:space="preserve" text-anchor="middle" x="816.22" y="-181.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">workspace update</text>
+</g>
+<!-- next&#45;&gt;work -->
+<g id="14-latent-core-edge15" class="edge">
+<title>next&#45;&gt;work</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M828.27,-158.3C1009.79,-205.22 1377.15,-300.16 1377.15,-300.16 1377.15,-300.16 1416.18,-319.61 1452.12,-337.51"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="1450.87,-339.63 1458.23,-340.56 1453.06,-335.24 1450.87,-339.63"/>
+<text xml:space="preserve" text-anchor="middle" x="1355.58" y="-242.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">next internal iteration</text>
+</g>
+<!-- next&#45;&gt;decode -->
+<g id="14-latent-core-edge17" class="edge">
+<title>next&#45;&gt;decode</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M686.88,-105.09C662.93,-90.6 632.85,-72.38 607.79,-57.21"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="609.2,-55.21 601.95,-53.68 606.67,-59.4 609.2,-55.21"/>
+<text xml:space="preserve" text-anchor="middle" x="704.55" y="-75.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">refined workspace</text>
+</g>
+<!-- input -->
+<g id="14-latent-core-node1" class="node">
+<title>input</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M521.91,-638.72C521.91,-638.72 330.38,-638.72 330.38,-638.72 324.38,-638.72 318.38,-632.72 318.38,-626.72 318.38,-626.72 318.38,-598.4 318.38,-598.4 318.38,-592.4 324.38,-586.4 330.38,-586.4 330.38,-586.4 521.91,-586.4 521.91,-586.4 527.91,-586.4 533.91,-592.4 533.91,-598.4 533.91,-598.4 533.91,-626.72 533.91,-626.72 533.91,-632.72 527.91,-638.72 521.91,-638.72"/>
+<text xml:space="preserve" text-anchor="middle" x="426.15" y="-616.76" font-family="DejaVu Sans" font-size="14.00">Encoded source features</text>
+<text xml:space="preserve" text-anchor="middle" x="426.15" y="-599.96" font-family="DejaVu Sans" font-size="14.00">Image / audio / video / text</text>
+</g>
+<!-- previous -->
+<g id="14-latent-core-node2" class="node">
+<title>previous</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M302.29,-761.04C302.29,-761.04 12,-761.04 12,-761.04 6,-761.04 0,-755.04 0,-749.04 0,-749.04 0,-720.72 0,-720.72 0,-714.72 6,-708.72 12,-708.72 12,-708.72 302.29,-708.72 302.29,-708.72 308.29,-708.72 314.29,-714.72 314.29,-720.72 314.29,-720.72 314.29,-749.04 314.29,-749.04 314.29,-755.04 308.29,-761.04 302.29,-761.04"/>
+<text xml:space="preserve" text-anchor="middle" x="157.15" y="-739.08" font-family="DejaVu Sans" font-size="14.00">Previous h and sampled categorical code</text>
+<text xml:space="preserve" text-anchor="middle" x="157.15" y="-722.28" font-family="DejaVu Sans" font-size="14.00">Recorded action / elapsed time</text>
+</g>
+<!-- dynamics -->
+<g id="14-latent-core-node3" class="node">
+<title>dynamics</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M286.61,-647.12C286.61,-647.12 27.69,-647.12 27.69,-647.12 21.69,-647.12 15.69,-641.12 15.69,-635.12 15.69,-635.12 15.69,-590 15.69,-590 15.69,-584 21.69,-578 27.69,-578 27.69,-578 286.61,-578 286.61,-578 292.61,-578 298.61,-584 298.61,-590 298.61,-590 298.61,-635.12 298.61,-635.12 298.61,-641.12 292.61,-647.12 286.61,-647.12"/>
+<text xml:space="preserve" text-anchor="middle" x="157.15" y="-625.16" font-family="DejaVu Sans" font-size="14.00">BeliefDynamics</text>
+<text xml:space="preserve" text-anchor="middle" x="157.15" y="-608.36" font-family="DejaVu Sans" font-size="14.00">Shared attention transition &#45;&gt; new h</text>
+<text xml:space="preserve" text-anchor="middle" x="157.15" y="-591.56" font-family="DejaVu Sans" font-size="14.00">Prior categorical distribution</text>
+</g>
+<!-- correct -->
+<g id="14-latent-core-node4" class="node">
+<title>correct</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M641.1,-524.8C641.1,-524.8 345.19,-524.8 345.19,-524.8 339.19,-524.8 333.19,-518.8 333.19,-512.8 333.19,-512.8 333.19,-467.68 333.19,-467.68 333.19,-461.68 339.19,-455.68 345.19,-455.68 345.19,-455.68 641.1,-455.68 641.1,-455.68 647.1,-455.68 653.1,-461.68 653.1,-467.68 653.1,-467.68 653.1,-512.8 653.1,-512.8 653.1,-518.8 647.1,-524.8 641.1,-524.8"/>
+<text xml:space="preserve" text-anchor="middle" x="493.15" y="-502.84" font-family="DejaVu Sans" font-size="14.00">BeliefCorrection</text>
+<text xml:space="preserve" text-anchor="middle" x="493.15" y="-486.04" font-family="DejaVu Sans" font-size="14.00">Observation attention + memory + refine</text>
+<text xml:space="preserve" text-anchor="middle" x="493.15" y="-469.24" font-family="DejaVu Sans" font-size="14.00">Correct categorical logits</text>
+</g>
+<!-- world -->
+<g id="14-latent-core-node5" class="node">
+<title>world</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M648.1,-402.48C648.1,-402.48 408.2,-402.48 408.2,-402.48 402.2,-402.48 396.2,-396.48 396.2,-390.48 396.2,-390.48 396.2,-345.36 396.2,-345.36 396.2,-339.36 402.2,-333.36 408.2,-333.36 408.2,-333.36 648.1,-333.36 648.1,-333.36 654.1,-333.36 660.1,-339.36 660.1,-345.36 660.1,-345.36 660.1,-390.48 660.1,-390.48 660.1,-396.48 654.1,-402.48 648.1,-402.48"/>
+<text xml:space="preserve" text-anchor="middle" x="528.15" y="-380.52" font-family="DejaVu Sans" font-size="14.00">World readout</text>
+<text xml:space="preserve" text-anchor="middle" x="528.15" y="-363.72" font-family="DejaVu Sans" font-size="14.00">h + projection of categorical code</text>
+<text xml:space="preserve" text-anchor="middle" x="528.15" y="-346.92" font-family="DejaVu Sans" font-size="14.00">Default16 tokens x width32</text>
+</g>
+<!-- memory -->
+<g id="14-latent-core-node6" class="node">
+<title>memory</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M711.64,-769.44C711.64,-769.44 436.65,-769.44 436.65,-769.44 430.65,-769.44 424.65,-763.44 424.65,-757.44 424.65,-757.44 424.65,-712.32 424.65,-712.32 424.65,-706.32 430.65,-700.32 436.65,-700.32 436.65,-700.32 711.64,-700.32 711.64,-700.32 717.64,-700.32 723.64,-706.32 723.64,-712.32 723.64,-712.32 723.64,-757.44 723.64,-757.44 723.64,-763.44 717.64,-769.44 711.64,-769.44"/>
+<text xml:space="preserve" text-anchor="middle" x="574.15" y="-747.48" font-family="DejaVu Sans" font-size="14.00">HybridMemory</text>
+<text xml:space="preserve" text-anchor="middle" x="574.15" y="-730.68" font-family="DejaVu Sans" font-size="14.00">Bounded source and belief history</text>
+<text xml:space="preserve" text-anchor="middle" x="574.15" y="-713.88" font-family="DejaVu Sans" font-size="14.00">Perception / prediction / thinking reads</text>
+</g>
+<!-- graph -->
+<g id="14-latent-core-node7" class="node">
+<title>graph</title>
+<path fill="#efeafa" stroke="#9c87b5" stroke-width="1.1" d="M1078.27,-516.4C1078.27,-516.4 798.02,-516.4 798.02,-516.4 792.02,-516.4 786.02,-510.4 786.02,-504.4 786.02,-504.4 786.02,-476.08 786.02,-476.08 786.02,-470.08 792.02,-464.08 798.02,-464.08 798.02,-464.08 1078.27,-464.08 1078.27,-464.08 1084.27,-464.08 1090.27,-470.08 1090.27,-476.08 1090.27,-476.08 1090.27,-504.4 1090.27,-504.4 1090.27,-510.4 1084.27,-516.4 1078.27,-516.4"/>
+<text xml:space="preserve" text-anchor="middle" x="938.15" y="-494.44" font-family="DejaVu Sans" font-size="14.00">Optional WorldStore</text>
+<text xml:space="preserve" text-anchor="middle" x="938.15" y="-477.64" font-family="DejaVu Sans" font-size="14.00">Versioned entities / relations / evidence</text>
+</g>
+<!-- retrieve -->
+<g id="14-latent-core-node8" class="node">
+<title>retrieve</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M1025.72,-394.08C1025.72,-394.08 736.58,-394.08 736.58,-394.08 730.58,-394.08 724.58,-388.08 724.58,-382.08 724.58,-382.08 724.58,-353.76 724.58,-353.76 724.58,-347.76 730.58,-341.76 736.58,-341.76 736.58,-341.76 1025.72,-341.76 1025.72,-341.76 1031.72,-341.76 1037.72,-347.76 1037.72,-353.76 1037.72,-353.76 1037.72,-382.08 1037.72,-382.08 1037.72,-388.08 1031.72,-394.08 1025.72,-394.08"/>
+<text xml:space="preserve" text-anchor="middle" x="881.15" y="-372.12" font-family="DejaVu Sans" font-size="14.00">Retriever + ContextEncoder</text>
+<text xml:space="preserve" text-anchor="middle" x="881.15" y="-355.32" font-family="DejaVu Sans" font-size="14.00">Selected graph records &#45;&gt; latent context</text>
+</g>
+<!-- goal -->
+<g id="14-latent-core-node9" class="node">
+<title>goal</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M1358.7,-394.08C1358.7,-394.08 1069.6,-394.08 1069.6,-394.08 1063.6,-394.08 1057.6,-388.08 1057.6,-382.08 1057.6,-382.08 1057.6,-353.76 1057.6,-353.76 1057.6,-347.76 1063.6,-341.76 1069.6,-341.76 1069.6,-341.76 1358.7,-341.76 1358.7,-341.76 1364.7,-341.76 1370.7,-347.76 1370.7,-353.76 1370.7,-353.76 1370.7,-382.08 1370.7,-382.08 1370.7,-388.08 1364.7,-394.08 1358.7,-394.08"/>
+<text xml:space="preserve" text-anchor="middle" x="1214.15" y="-372.12" font-family="DejaVu Sans" font-size="14.00">Task / question / goal context</text>
+<text xml:space="preserve" text-anchor="middle" x="1214.15" y="-355.32" font-family="DejaVu Sans" font-size="14.00">Detached error / entropy / step feedback</text>
+</g>
+<!-- work -->
+<g id="14-latent-core-node10" class="node">
+<title>work</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M1619.4,-394.08C1619.4,-394.08 1402.9,-394.08 1402.9,-394.08 1396.9,-394.08 1390.9,-388.08 1390.9,-382.08 1390.9,-382.08 1390.9,-353.76 1390.9,-353.76 1390.9,-347.76 1396.9,-341.76 1402.9,-341.76 1402.9,-341.76 1619.4,-341.76 1619.4,-341.76 1625.4,-341.76 1631.4,-347.76 1631.4,-353.76 1631.4,-353.76 1631.4,-382.08 1631.4,-382.08 1631.4,-388.08 1625.4,-394.08 1619.4,-394.08"/>
+<text xml:space="preserve" text-anchor="middle" x="1511.15" y="-372.12" font-family="DejaVu Sans" font-size="14.00">Working and reasoning tokens</text>
+<text xml:space="preserve" text-anchor="middle" x="1511.15" y="-355.32" font-family="DejaVu Sans" font-size="14.00">Default4 + 4 tokens x width32</text>
+</g>
+<!-- think -->
+<g id="14-latent-core-node11" class="node">
+<title>think</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M923.99,-280.16C923.99,-280.16 680.31,-280.16 680.31,-280.16 674.31,-280.16 668.31,-274.16 668.31,-268.16 668.31,-268.16 668.31,-223.04 668.31,-223.04 668.31,-217.04 674.31,-211.04 680.31,-211.04 680.31,-211.04 923.99,-211.04 923.99,-211.04 929.99,-211.04 935.99,-217.04 935.99,-223.04 935.99,-223.04 935.99,-268.16 935.99,-268.16 935.99,-274.16 929.99,-280.16 923.99,-280.16"/>
+<text xml:space="preserve" text-anchor="middle" x="802.15" y="-258.2" font-family="DejaVu Sans" font-size="14.00">Thinker: one shared Attend block</text>
+<text xml:space="preserve" text-anchor="middle" x="802.15" y="-241.4" font-family="DejaVu Sans" font-size="14.00">Normalize &#45;&gt; attention &#45;&gt; residual</text>
+<text xml:space="preserve" text-anchor="middle" x="802.15" y="-224.6" font-family="DejaVu Sans" font-size="14.00">Normalize &#45;&gt; MLP &#45;&gt; residual</text>
+</g>
+<!-- next -->
+<g id="14-latent-core-node12" class="node">
+<title>next</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M862.04,-157.84C862.04,-157.84 596.25,-157.84 596.25,-157.84 590.25,-157.84 584.25,-151.84 584.25,-145.84 584.25,-145.84 584.25,-117.52 584.25,-117.52 584.25,-111.52 590.25,-105.52 596.25,-105.52 596.25,-105.52 862.04,-105.52 862.04,-105.52 868.04,-105.52 874.04,-111.52 874.04,-117.52 874.04,-117.52 874.04,-145.84 874.04,-145.84 874.04,-151.84 868.04,-157.84 862.04,-157.84"/>
+<text xml:space="preserve" text-anchor="middle" x="729.15" y="-135.88" font-family="DejaVu Sans" font-size="14.00">Updated working / reasoning tokens</text>
+<text xml:space="preserve" text-anchor="middle" x="729.15" y="-119.08" font-family="DejaVu Sans" font-size="14.00">Repeat with same weights for k steps</text>
+</g>
+<!-- decode -->
+<g id="14-latent-core-node13" class="node">
+<title>decode</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M707.27,-52.32C707.27,-52.32 409.03,-52.32 409.03,-52.32 403.03,-52.32 397.03,-46.32 397.03,-40.32 397.03,-40.32 397.03,-12 397.03,-12 397.03,-6 403.03,0 409.03,0 409.03,0 707.27,0 707.27,0 713.27,0 719.27,-6 719.27,-12 719.27,-12 719.27,-40.32 719.27,-40.32 719.27,-46.32 713.27,-52.32 707.27,-52.32"/>
+<text xml:space="preserve" text-anchor="middle" x="558.15" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Current native decoders</text>
+<text xml:space="preserve" text-anchor="middle" x="558.15" y="-13.56" font-family="DejaVu Sans" font-size="14.00">Read world + working + reasoning tokens</text>
+</g>
+</g>
+</svg>
+</div>
+
+<p class="links"><a href="diagrams/atlas/14-latent-core.svg">Open full-size drawing</a> · <a href="#top">Back to map</a></p>
+<p>The diagram omits storage writes; observed events commit source/belief envelopes, while WorldSession separately stages entity/graph updates. Thinking never writes new observations. HybridMemory and the optional persistent graph are distinct stores.</p>
+<p>Default shapes describe build_model(state_model=&quot;belief&quot;, width=32), not the Gaussian agent or the width16 modality audit. h is16x32; categorical logits are8 groups x8 codes; the derived world readout is16x32, and workspace is8x32. Code IDs are not predefined entity or word IDs.</p>
+<p>BeliefCorrection returns posterior logits; the recurrent h was produced by dynamics. think() changes only working/reasoning tokens, not h/logits, live event time or source memory. A reasoned graph belief revision would need a distinct inferred transaction, not an observational write.</p>
+<p>Thinker parameters are shared across the caller-specified step count. More iterations are not proven to improve quality. An optional TaskPolicy already proposes think/recall/imagine/emit/act/finish, but general answer readiness and truth checking are unvalidated.</p>
+<p>Imagination uses the existing dynamics on a separate hypothetical state. Automatic search and integration of branch results into general answer planning remain outside this small loop. No model or training change accompanies this drawing.</p>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefDynamics:33</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefCorrection:74</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · _readout:196</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · Thinker:105</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · think:709</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · decode:779</a></li><li><a href="../pathwm/world_state/session.py">pathwm/world_state/session.py · think:425</a></li><li><a href="../docs/latent-core.md">docs/latent-core.md</a></li></ul></details>
+</div></details>
+<details id="15-output-plan">
+<summary><span>15 · Proposed answer-plan boundary</span><small>Discussion proposal · test existing workspace first, add separate tokens only when justified</small></summary>
+<div class="section-body"><div class="diagram" role="img" aria-label="15 · Proposed answer-plan boundary. Discussion proposal · test existing workspace first, add separate tokens only when justified"><svg style="min-width:699px" width="873pt" height="676pt"
+ viewBox="0.00 0.00 873.00 676.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="15-output-plan-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 662)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-662 858.1,-662 858.1,14.4 -14.4,14.4"/>
+<!-- context&#45;&gt;work -->
+<g id="15-output-plan-edge1" class="edge">
+<title>context&#45;&gt;work</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M187.97,-594.92C214.17,-576.16 249.88,-550.59 277.61,-530.73"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="278.86,-532.84 283.12,-526.78 276.01,-528.86 278.86,-532.84"/>
+<text xml:space="preserve" text-anchor="middle" x="278.71" y="-565.38" font-family="DejaVu Sans" font-size="11.00" fill="#374151">available context</text>
+</g>
+<!-- context&#45;&gt;check -->
+<g id="15-output-plan-edge6" class="edge">
+<title>context&#45;&gt;check</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M148.53,-594.92C143.24,-559.6 134.34,-500.12 134.34,-500.12 134.34,-500.12 134.34,-500.12 134.34,-139.32 134.34,-139.32 138.45,-106.58 142.04,-77.88"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="144.44,-78.44 142.88,-71.19 139.58,-77.83 144.44,-78.44"/>
+<text xml:space="preserve" text-anchor="middle" x="184.09" y="-303.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">retained evidence</text>
+</g>
+<!-- work&#45;&gt;plan -->
+<g id="15-output-plan-edge2" class="edge">
+<title>work&#45;&gt;plan</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M322.57,-472.67C324.47,-450.87 326.91,-422.96 326.91,-422.96 326.91,-422.96 344.86,-415.76 367.59,-406.63"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="368.33,-408.97 373.92,-404.09 366.51,-404.43 368.33,-408.97"/>
+<text xml:space="preserve" text-anchor="middle" x="390.63" y="-426.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">learn prepared content</text>
+</g>
+<!-- plan&#45;&gt;decoder -->
+<g id="15-output-plan-edge3" class="edge">
+<title>plan&#45;&gt;decoder</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M460.34,-333.56C460.34,-319.85 460.34,-303.87 460.34,-289.4"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="462.79,-289.74 460.34,-282.74 457.89,-289.74 462.79,-289.74"/>
+<text xml:space="preserve" text-anchor="middle" x="521.52" y="-303.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">plan&#45;only conditioning</text>
+</g>
+<!-- decoder&#45;&gt;output -->
+<g id="15-output-plan-edge4" class="edge">
+<title>decoder&#45;&gt;output</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M434.15,-211.11C422.66,-196.21 409.45,-179.06 398.99,-165.5"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="401.02,-164.13 394.81,-160.08 397.14,-167.12 401.02,-164.13"/>
+<text xml:space="preserve" text-anchor="middle" x="474.61" y="-181.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">generated sequence</text>
+</g>
+<!-- output&#45;&gt;check -->
+<g id="15-output-plan-edge5" class="edge">
+<title>output&#45;&gt;check</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M341.08,-121.84C311.18,-108.52 268.91,-89.7 231.48,-73.03"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="232.49,-70.79 225.1,-70.18 230.49,-75.27 232.49,-70.79"/>
+<text xml:space="preserve" text-anchor="middle" x="340.48" y="-92.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">candidate answer</text>
+</g>
+<!-- check&#45;&gt;work -->
+<g id="15-output-plan-edge7" class="edge">
+<title>check&#45;&gt;work</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" stroke-dasharray="5,2" d="M157.33,-69.64C177.06,-136.98 219.16,-280.64 219.16,-280.64 219.16,-280.64 238.34,-300.64 238.34,-300.64 238.34,-300.64 283.13,-408.5 306.51,-464.79"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="304.21,-465.64 309.15,-471.17 308.73,-463.77 304.21,-465.64"/>
+<text xml:space="preserve" text-anchor="middle" x="265.25" y="-242.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">revision decision</text>
+</g>
+<!-- training&#45;&gt;plan -->
+<g id="15-output-plan-edge8" class="edge">
+<title>training&#45;&gt;plan</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M541.2,-455.68C508.43,-444.83 482.26,-436.16 482.26,-436.16 482.26,-436.16 478.49,-424.68 474.08,-411.24"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="476.46,-410.64 471.95,-404.75 471.8,-412.17 476.46,-410.64"/>
+<text xml:space="preserve" text-anchor="middle" x="566.8" y="-426.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">explicit task losses and probes</text>
+</g>
+<!-- training&#45;&gt;decoder -->
+<g id="15-output-plan-edge9" class="edge">
+<title>training&#45;&gt;decoder</title>
+<path fill="none" stroke="#b88a3e" stroke-width="1.1" stroke-dasharray="5,2" d="M659.75,-455.71C655.9,-438.66 652.34,-422.96 652.34,-422.96 652.34,-422.96 627.34,-333.84 627.34,-333.84 627.34,-333.84 587.34,-300.64 587.34,-300.64 587.34,-300.64 570.41,-293.5 548.91,-284.43"/>
+<polygon fill="#b88a3e" stroke="#b88a3e" stroke-width="1.1" points="550.07,-282.26 542.67,-281.8 548.17,-286.78 550.07,-282.26"/>
+<text xml:space="preserve" text-anchor="middle" x="731.02" y="-365.1" font-family="DejaVu Sans" font-size="11.00" fill="#374151">generation losses and controls</text>
+</g>
+<!-- context -->
+<g id="15-output-plan-node1" class="node">
+<title>context</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M292.69,-647.6C292.69,-647.6 12,-647.6 12,-647.6 6,-647.6 0,-641.6 0,-635.6 0,-635.6 0,-607.28 0,-607.28 0,-601.28 6,-595.28 12,-595.28 12,-595.28 292.69,-595.28 292.69,-595.28 298.69,-595.28 304.69,-601.28 304.69,-607.28 304.69,-607.28 304.69,-635.6 304.69,-635.6 304.69,-641.6 298.69,-647.6 292.69,-647.6"/>
+<text xml:space="preserve" text-anchor="middle" x="152.34" y="-625.64" font-family="DejaVu Sans" font-size="14.00">Retrieved evidence + question + intent</text>
+<text xml:space="preserve" text-anchor="middle" x="152.34" y="-608.84" font-family="DejaVu Sans" font-size="14.00">Existing context/task interfaces</text>
+</g>
+<!-- work -->
+<g id="15-output-plan-node2" class="node">
+<title>work</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M462.89,-525.28C462.89,-525.28 177.8,-525.28 177.8,-525.28 171.8,-525.28 165.8,-519.28 165.8,-513.28 165.8,-513.28 165.8,-484.96 165.8,-484.96 165.8,-478.96 171.8,-472.96 177.8,-472.96 177.8,-472.96 462.89,-472.96 462.89,-472.96 468.89,-472.96 474.89,-478.96 474.89,-484.96 474.89,-484.96 474.89,-513.28 474.89,-513.28 474.89,-519.28 468.89,-525.28 462.89,-525.28"/>
+<text xml:space="preserve" text-anchor="middle" x="320.34" y="-503.32" font-family="DejaVu Sans" font-size="14.00">Existing latent Thinker / workspace</text>
+<text xml:space="preserve" text-anchor="middle" x="320.34" y="-486.52" font-family="DejaVu Sans" font-size="14.00">Content selection and reasoning to train</text>
+</g>
+<!-- plan -->
+<g id="15-output-plan-node3" class="node">
+<title>plan</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M604.91,-402.96C604.91,-402.96 315.78,-402.96 315.78,-402.96 309.78,-402.96 303.78,-396.96 303.78,-390.96 303.78,-390.96 303.78,-345.84 303.78,-345.84 303.78,-339.84 309.78,-333.84 315.78,-333.84 315.78,-333.84 604.91,-333.84 604.91,-333.84 610.91,-333.84 616.91,-339.84 616.91,-345.84 616.91,-345.84 616.91,-390.96 616.91,-390.96 616.91,-396.96 610.91,-402.96 604.91,-402.96"/>
+<text xml:space="preserve" text-anchor="middle" x="460.34" y="-381" font-family="DejaVu Sans" font-size="14.00">Proposed latent answer plan</text>
+<text xml:space="preserve" text-anchor="middle" x="460.34" y="-364.2" font-family="DejaVu Sans" font-size="14.00">First: existing workspace slice</text>
+<text xml:space="preserve" text-anchor="middle" x="460.34" y="-347.4" font-family="DejaVu Sans" font-size="14.00">Later comparison: dedicated plan tokens</text>
+</g>
+<!-- decoder -->
+<g id="15-output-plan-node4" class="node">
+<title>decoder</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M587.59,-280.64C587.59,-280.64 333.1,-280.64 333.1,-280.64 327.1,-280.64 321.1,-274.64 321.1,-268.64 321.1,-268.64 321.1,-223.52 321.1,-223.52 321.1,-217.52 327.1,-211.52 333.1,-211.52 333.1,-211.52 587.59,-211.52 587.59,-211.52 593.59,-211.52 599.59,-217.52 599.59,-223.52 599.59,-223.52 599.59,-268.64 599.59,-268.64 599.59,-274.64 593.59,-280.64 587.59,-280.64"/>
+<text xml:space="preserve" text-anchor="middle" x="460.34" y="-258.68" font-family="DejaVu Sans" font-size="14.00">Modality output adapter</text>
+<text xml:space="preserve" text-anchor="middle" x="460.34" y="-241.88" font-family="DejaVu Sans" font-size="14.00">Text: realize content and grammar</text>
+<text xml:space="preserve" text-anchor="middle" x="460.34" y="-225.08" font-family="DejaVu Sans" font-size="14.00">Consumes plan + own output prefix</text>
+</g>
+<!-- output -->
+<g id="15-output-plan-node5" class="node">
+<title>output</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M445.95,-158.32C445.95,-158.32 314.74,-158.32 314.74,-158.32 308.74,-158.32 302.74,-152.32 302.74,-146.32 302.74,-146.32 302.74,-134.32 302.74,-134.32 302.74,-128.32 308.74,-122.32 314.74,-122.32 314.74,-122.32 445.95,-122.32 445.95,-122.32 451.95,-122.32 457.95,-128.32 457.95,-134.32 457.95,-134.32 457.95,-146.32 457.95,-146.32 457.95,-152.32 451.95,-158.32 445.95,-158.32"/>
+<text xml:space="preserve" text-anchor="middle" x="380.34" y="-136.12" font-family="DejaVu Sans" font-size="14.00">Generated answer</text>
+</g>
+<!-- check -->
+<g id="15-output-plan-node6" class="node">
+<title>check</title>
+<path fill="#fafafa" stroke="#9b9b9b" stroke-width="1.1" stroke-dasharray="5,2" d="M280.81,-69.12C280.81,-69.12 13.88,-69.12 13.88,-69.12 7.88,-69.12 1.88,-63.12 1.88,-57.12 1.88,-57.12 1.88,-12 1.88,-12 1.88,-6 7.88,0 13.88,0 13.88,0 280.81,0 280.81,0 286.81,0 292.81,-6 292.81,-12 292.81,-12 292.81,-57.12 292.81,-57.12 292.81,-63.12 286.81,-69.12 280.81,-69.12"/>
+<text xml:space="preserve" text-anchor="middle" x="147.34" y="-47.16" font-family="DejaVu Sans" font-size="14.00">Proposed grounding / coverage check</text>
+<text xml:space="preserve" text-anchor="middle" x="147.34" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Evidence references + answer + task</text>
+<text xml:space="preserve" text-anchor="middle" x="147.34" y="-13.56" font-family="DejaVu Sans" font-size="14.00">Revise / retrieve / ask when needed</text>
+</g>
+<!-- training -->
+<g id="15-output-plan-node7" class="node">
+<title>training</title>
+<path fill="#fff0db" stroke="#bd934d" stroke-width="1.1" d="M831.7,-542.08C831.7,-542.08 506.98,-542.08 506.98,-542.08 500.98,-542.08 494.98,-536.08 494.98,-530.08 494.98,-530.08 494.98,-468.16 494.98,-468.16 494.98,-462.16 500.98,-456.16 506.98,-456.16 506.98,-456.16 831.7,-456.16 831.7,-456.16 837.7,-456.16 843.7,-462.16 843.7,-468.16 843.7,-468.16 843.7,-530.08 843.7,-530.08 843.7,-536.08 837.7,-542.08 831.7,-542.08"/>
+<text xml:space="preserve" text-anchor="middle" x="669.34" y="-520.12" font-family="DejaVu Sans" font-size="14.00">Required comparison</text>
+<text xml:space="preserve" text-anchor="middle" x="669.34" y="-503.32" font-family="DejaVu Sans" font-size="14.00">Full&#45;state vs workspace&#45;only vs own plan</text>
+<text xml:space="preserve" text-anchor="middle" x="669.34" y="-486.52" font-family="DejaVu Sans" font-size="14.00">Grounding / language / held&#45;out combinations</text>
+<text xml:space="preserve" text-anchor="middle" x="669.34" y="-469.72" font-family="DejaVu Sans" font-size="14.00">Total parameters / memory / compute</text>
+</g>
+</g>
+</svg>
+</div>
+
+<p class="links"><a href="diagrams/atlas/15-output-plan.svg">Open full-size drawing</a> · <a href="#top">Back to map</a></p>
+<p>This is an alternative under discussion, not an implemented replacement or demonstrated minimum decoder. Existing TaskPolicy and output request/provenance contracts should be reused; a general grounding checker is not already supplied by them.</p>
+<p>A separate large planning Transformer is not a prerequisite. First train the existing working/reasoning slice as the decoder context and compare against the full-state reference. Add a small dedicated plan producer only if the comparison motivates it.</p>
+<p>Contents, relationships, uncertainty and communicative intent may remain learned representations. Preserve explicit evidence references for correction and inspection. Attention is not a proof of faithful attribution.</p>
+<p>A smaller output decoder may shift language/content work into the core; total system capacity, memory and computation must be measured. Standard language models already use latent activations; omitting intermediate text is a different design choice.</p>
+<p>Generated text must not be written back as independent source evidence. Actual multi-turn conversation, sufficient latent plan capacity, trained readiness/coverage and general language quality remain open.</p>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · Thinker:105</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · step_task:637</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · emit:508</a></li><li><a href="../pathwm/models/modalities.py">pathwm/models/modalities.py · TextDecoder:327</a></li><li><a href="../docs/latent-core.md">docs/latent-core.md</a></li></ul></details>
 </div></details>
 <footer>Grounded in repository snapshot 8937b15. Static diagrams are manually audited descriptions, not execution traces. Rendering this atlas does not execute or modify the model. <a href="architecture-atlas.md">Mermaid source and notes</a>.</footer>
 </main><script>

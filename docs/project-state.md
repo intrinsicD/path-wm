@@ -1,5 +1,13 @@
 # Current work
 
+**Latent-core visualization, 15 September:** [source-grounded walkthrough](latent-core.md)
+and atlas §14–15 distinguish world belief, recurrent workspace, session memory and
+optional graph context. Thinker already repeats shared attention/MLP; only workspace
+changes. Native decoders read all state tokens. Proposed next comparison: train
+existing workspace as answer plan before adding dedicated plan tokens; preserve
+evidence and evaluate language/grounding plus total resources. No model change,
+training or new capability validation; discussion/green scopes are preserved.
+
 **Non-image modality interfaces repaired and measured, 15 September:**
 [protocol/results](modality-foundation-plan.md),
 [four-modality report](../runs/modality_foundation_v1/direct/report.html),
