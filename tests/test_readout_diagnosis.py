@@ -121,3 +121,50 @@ def test_raw_capture_and_unit_temperature_preserve_native_path():
     assert not torch.equal(state.logits, softened.logits)
     assert torch.all((softened.stochastic == 0) | (softened.stochastic == 1))
     assert not core.agent.updater.head._forward_hooks
+
+
+def test_encoder_only_initialization_preserves_fresh_core_and_freezes(tmp_path):
+    from experiments.modality_readout import Model, load_encoders
+
+    torch.manual_seed(77)
+    source = Model("native")
+    torch.save({"model": source.state_dict()}, tmp_path / "last.pt")
+    torch.manual_seed(78)
+    fresh = Model("native")
+    before = {k: v.clone() for k, v in fresh.state_dict().items()}
+    rng = torch.get_rng_state().clone()
+    load_encoders(fresh, tmp_path, torch.device("cpu"))
+    assert torch.equal(rng, torch.get_rng_state())
+    for k, value in fresh.state_dict().items():
+        expected = source.state_dict()[k] if k.startswith("core.agent.encoders.") else before[k]
+        assert torch.equal(value, expected)
+    assert all(not p.requires_grad for p in fresh.core.agent.encoders.parameters())
+
+
+def test_factor_audit_does_not_change_training_and_keeps_direction_coefficient():
+    from experiments.modality_readout import Core, factor_objective, factor_gradient_audit
+    from pathwm.data.modality_readout import dataset, observations
+
+    torch.manual_seed(81)
+    core = Core()
+    data = dataset("train")
+    inputs = observations(data, "all", [0, 12, 24])
+    wanted = data["targets"]["factors"][[0, 12, 24]]
+    tokens = core(inputs)
+    predictions = core.factors(tokens)
+    loss, terms = factor_objective(predictions, wanted, "all")
+    direction, _ = factor_objective(predictions, wanted, "direction")
+    assert torch.equal(direction, terms[2] / 3)
+    expected = sum(torch.nn.functional.cross_entropy(p, wanted[:, i]) for i, p in enumerate(predictions)) / 3
+    assert torch.equal(loss, expected)
+    params = list(core.agent.updater.parameters())
+    expected_grad = torch.autograd.grad(loss, params, retain_graph=True)
+    rng = torch.get_rng_state().clone()
+    audit = factor_gradient_audit(terms, params)
+    assert torch.equal(rng, torch.get_rng_state())
+    assert all(p.grad is None for p in core.parameters())
+    actual_grad = torch.autograd.grad(loss, params)
+    assert all(torch.equal(a, b) for a, b in zip(expected_grad, actual_grad))
+    assert len(audit) == 6 and all(np.isfinite(v) for v in audit.values())
+    for name, value in audit.items():
+        assert -1.00001 <= value <= 1.00001 if "cosine" in name else value >= 0

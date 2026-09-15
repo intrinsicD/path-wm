@@ -445,3 +445,39 @@ Direction-only versus all-factor learning from fresh updater initialization rema
 the first proposed test. Continuous/hard controls and measured gradient/query repairs
 are subsequent alternatives, not a bundled default rewrite. Budgets/gates for a new
 training study must be declared before running it.
+
+## Fresh updater learning, 16 September — preregistered
+
+First isolate task competition from the previous joint encoder training. Four CPU
+runs: seeds7201/7202, paired direction-only and all-factor objectives,1152 updates,
+batch24, Adam0.003, clipping5, rotating the existing six input modes. Load only
+encoders from each original `modality_readout_v1/formal/seed*/core` checkpoint and
+freeze them (parameters and buffers); initialize every other component afresh with
+the paired seed. All-factor CE is the existing mean of three terms; direction-only
+is direction CE/3 so its coefficient is unchanged. Fresh Adam, no auxiliary head,
+no temperature change. The original encoder probes validate accessibility on these
+populations; new updater runs do not establish unseen-dataset generalization.
+
+Primary endpoint: actual hard-sampled post-think direction accuracy >=90% in EACH
+of text/image/audio/video/all/complementary known-combination test cells, in BOTH
+seeds. Report each factor and held-out combination separately, without selecting on
+them. All-factor complete gate additionally requires every factor >=90% in all six
+known cells. Save predictions/cache, hashes, raw per-step losses and standalone reports.
+
+At updates0,127,254,... record separate unweighted factor gradients on the shared
+updater: norms and pairwise cosines. Step127 rotates modes rather than repeatedly
+sampling the same input type. This is observational: sign conflict alone does not
+prove harmful task interference. A direction-only advantage warrants a controlled
+repair comparison, not a causal conclusion or immediate PCGrad adoption. Both
+failing warrants a readout/continuous-path diagnostic before adding task weighting.
+A follow-up may use at most four matched1152-update fits, preregistered separately
+once this first comparison chooses the question. No full output sweep yet; the
+encoder/updater retention test is distinct from output decoder generation.
+
+Implementation stays in the existing recipe: optional encoder-only initialization,
+objective selection and observational gradient audit. Tests must show preserved
+fresh nonencoder initialization, frozen encoders, exact unchanged native loss, and
+identical gradients/RNG with and without the audit. Verify short exact resume before
+formal runs. Claude reviews generic public methodology only; local code/evidence
+review remains ours. Browser QA remains unavailable; inspect static report assets
+and structurally verify reports without bypassing the prior local-file restriction.
