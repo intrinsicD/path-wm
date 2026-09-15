@@ -1,0 +1,66 @@
+# R/P/M/C VAE implementation and sanity protocol
+
+15 September 2026. Alex authorized implementation with Claude after the
+[specification refinement](spatial-vae-refinement.md). Preserve v1 exports and
+the agent; add a versioned codec using the existing recipe, Run and renderer.
+
+## Plan and fixed acceptance criteria
+
+1. RED contracts: geometry, active gradients, exact rearrangement and stride2
+   equivalence, shared attention/positions/token cap, legacy export, detached probes.
+2. Implement the new stem/local blocks, configurable stages, convolutional decoder,
+   coarsest attention loop and opt-in detached instrumentation. Reuse posterior,
+   TransformerBlock, objective, RidgeReader and strict Run resume.
+3. Real-photo development and exact CPU/GPU resume; then commit working slice.
+4. Train A_local and C sanity controls first. Run B/C_after/D/E and three beta
+   values only after mechanics pass. Record all outcomes, including failures.
+
+Small configuration: stem8, stages[16,24], latent4, one post block, no pre blocks;
+decoder one pre/post local block per stage for every arm. Residual final1x1 starts
+at zero. C processes at widths32/64 before compression; C_after at16/24 after it.
+D uses one pre-compression Transformer64, four heads; E reuses it twice. Same-width
+untied depth2 is available for later sharing-specific claims. Token cap1024;
+convolutional variants have no attention cap. Batch8, float32 deterministic math,
+AdamW3e-4, weight_decay1e-4, clip1, seed57101. All common tensors initialized from
+the same reference. No copied historical trained weights.
+
+Populations: use the existing globally group-disjoint COCO splits. Seed56001
+selects the prior ordered population; reserve its first1040 training,144 validation
+and192 test groups from this experiment. Select the next512 train,64 validation,
+96 test groups (plus16 train/16 val development groups). Record row/hash lists.
+No test groups choose configuration, stopping, probe capacity or beta.
+
+Sanity fits:512 updates per arm, beta1, Gaussian variance0.5. Acceptance: finite
+objective/rate, completed updates, validation raw mean MSE improves >=20% from
+initialization and beats the train-mean image by >=10%; positive KL and >=1 active
+channel. Quality is a distinct screen: mean AND sampled MSE<=0.01; failure stays
+visible. Native crops96x128 and65x79 (16 heldout images each) and32 fine-pattern
+controls test geometry/detail; no resolution-quality superiority inferred.
+
+If sanity mechanics succeed: six arms A_local/B/C/C_after/D/E at beta1; additionally
+A_local/C at beta0.1 and0.01, always512 updates and same initialization/data/noise.
+This is ten total formal fits. Three fixed beta points per A_local/C are descriptive
+rate-distortion points. Equal beta is NOT equal rate. Report parameters, approximate
+forward MACs (multiply-add=one MAC, FLOPs=2MAC; exclude normalization/activations),
+measured latency, training time, allocated/reserved GPU peak and sample counts.
+No claim of superiority or sample efficiency from this one-seed screen. A future
+claim needs rate overlap, matched compute/parameters and seed replication.
+
+Per fit:<=120s training, <=2GiB GPU reserve, >=1GiB GPU free; experiment total
+<=20min and<=900MiB new artifacts, retain >=3GiB free disk. Do not delete old runs.
+Pause/report when a cap fails; do not silently reduce resolution/width.
+
+Frozen probes:64 train images x4 spatial cells=256 training points per stage,
+16 validation and16 test images x4 cells. Fit linear and RBF ridge1e-3, RBF
+bandwidth1.0; fixed choices, no tuning. RGB target is the corresponding nonoverlapping
+original pixel patch, same before/after each C (not a different feature target).
+Report after->before feature MSE / train target variance, raw MSE/variance, train-mean,
+shuffled test inputs, and identity control; epsilon1e-8, variance<=epsilon degenerate.
+Common RGB readouts before/after also have identical samples/targets. Heldout readout
+error indicates accessibility to these readers, never certified information loss.
+
+Save source/mean/sample/common-scale absolute RGB-error panels, raw per-image
+metrics, stage geometry/probe results, rate plot and standalone verified HTML.
+Existing renderer only: structural QA plus PNG inspection; prior browser local-file
+policy restriction remains disclosed. Actual Claude reviews receive public conceptual
+briefs only; preserve receipts and reconcile mistakes independently.
