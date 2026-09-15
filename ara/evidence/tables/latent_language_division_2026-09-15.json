@@ -1,0 +1,8 @@
+{
+  "provenance": "ai-executed",
+  "checked_at": "2026-09-15T20:45+02:00",
+  "primary_source": "https://arxiv.org/abs/2412.06769",
+  "title": "Training Large Language Models to Reason in a Continuous Latent Space",
+  "supported_scope": "Coconut feeds hidden representations back as continuous input embeddings instead of decoding intermediate reasoning into text; reports benefits on selected reasoning tasks.",
+  "limits": "Does not establish a tiny PATH-WM decoder, a minimum parameter count, or reduced total parameter memory in our proposed architecture. No local model, training or benchmark changed."
+}

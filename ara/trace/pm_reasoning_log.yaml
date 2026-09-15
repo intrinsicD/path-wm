@@ -2008,3 +2008,9 @@ entries:
     decoder size or existing latent compatibility. Actual8GiB hardware read only; no memory-fit guarantee.
   - N380 remains open. No affirmation of prior proposals; no training, downloads, architecture adoption or promotion.
     Existing open capability topics retained.
+- turn: 2026-09-15_001#12
+  notes:
+  - N381 direct question, O257 staged architecture clarification. Prior O256 explicitly gave tentative ranges, so
+    this refines task allocation without a contradictory proven minimum; neither promoted.
+  - Coconut selected-task evidence does not validate own latent planner or total memory reduction. Simple preceding
+    weight-storage arithmetic was not a research event. Earlier capability and calibration topics stay live.

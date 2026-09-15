@@ -160,3 +160,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [Tiny text capacity](tables/text_capacity_2026-09-15.json): N380;18,048 encoder +13,059 decoder parameters measured from current constructor; no capability/scaling experiment.
 
 - [Text decoder sizing references](tables/text_decoder_sizing_2026-09-15.json): O256/N380; official1.7B/3B model cards and local8GiB GPU check; no minimum-size or runtime benchmark.
+
+- [Latent reasoning and text division](tables/latent_language_division_2026-09-15.json): N381/O257; scoped Coconut primary-source precedent; no local capacity-saving experiment.

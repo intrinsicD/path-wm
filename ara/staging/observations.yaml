@@ -4528,3 +4528,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O257
+  timestamp: 2026-09-15T20:45+02:00
+  provenance: ai-suggested
+  content: 'A learned latent reasoning and answer-planning core can in principle expose a language-ready representation
+    to a smaller text readout. This shifts responsibilities rather than proving lower total capacity: latent state
+    is current content, weights implement learned transformations. Standard language networks already operate on
+    hidden vectors; omitting intermediate text is a distinct design choice. Train and compare total core-plus-decoder
+    quality, memory and compute before claiming savings; prior1-3B suggestion is not a required decoder floor.'
+  context: Clarification prompted by user latent-space proposal; Coconut primary abstract checked for scoped precedent.
+    No architecture adoption or parameter-minimum result.
+  potential_type: architecture
+  bound_to:
+  - N381
+  - N380
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

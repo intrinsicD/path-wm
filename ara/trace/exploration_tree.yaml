@@ -6336,3 +6336,15 @@ tree:
   also_depends_on:
   - N377
   status: open
+- id: N381
+  type: question
+  title: Move answer reasoning into latent World Model and reduce text-decoder work
+  provenance: user
+  timestamp: 2026-09-15T20:45+02:00
+  description: User asks why a large decoder is necessary and whether the work can happen in latent space inside
+    the existing core. Prior1-3B ranges were reference sizes, not a requirement.
+  also_depends_on:
+  - N380
+  evidence:
+  - ara/evidence/tables/latent_language_division_2026-09-15.json
+  status: open

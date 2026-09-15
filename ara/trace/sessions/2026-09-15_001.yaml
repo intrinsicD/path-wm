@@ -2,8 +2,8 @@ session:
   id: 2026-09-15_001
   date: '2026-09-15'
   started: 2026-09-15T00:47+02:00
-  last_turn: 2026-09-15T20:41+02:00
-  turn_count: 11
+  last_turn: 2026-09-15T20:45+02:00
+  turn_count: 12
   summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training."
 events_logged:
 - turn: 1
@@ -428,6 +428,22 @@ events_logged:
     comparison; neither is a proven minimum or guarantee. Keep a trainable latent-to-text interface and test factual
     grounding. Existing small conversational model performance includes substantial pretraining; own scratch learning
     is a distinct budget.8GiB local VRAM motivates bounded contexts/quantized inference and measured combined memory.
+- turn: 12
+  type: question
+  id: N381
+  routing: direct
+  provenance: user
+  summary: Move answer reasoning into latent World Model and reduce text-decoder work
+- turn: 12
+  type: observation
+  id: O257
+  routing: staged
+  provenance: ai-suggested
+  summary: 'A learned latent reasoning and answer-planning core can in principle expose a language-ready representation
+    to a smaller text readout. This shifts responsibilities rather than proving lower total capacity: latent state
+    is current content, weights implement learned transformations. Standard language networks already operate on
+    hidden vectors; omitting intermediate text is a distinct design choice. Train and compare total core-plus-decoder
+    quality, memory and compute before claiming savings; prior1-3B suggestion is not a required decoder floor.'
 ai_actions:
 - turn: 1
   action: Saved independent analysis and a bounded brief based on the user-supplied architecture;
@@ -561,6 +577,12 @@ ai_actions:
   provenance: ai-executed
   files_changed:
   - ara/evidence/tables/text_decoder_sizing_2026-09-15.json
+- turn: 12
+  action: Checked primary Coconut abstract; explained latent core versus language readout and corrected possible
+    interpretation of prior size ranges as necessary minima. No implementation or training.
+  provenance: ai-executed
+  files_changed:
+  - ara/evidence/tables/latent_language_division_2026-09-15.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -595,6 +617,8 @@ key_context:
 - turn: 11
   excerpt: Wie groß müsste das denn sein, um für gute Gespräche ... der World State stellt den Latent State bereit
     und der Textdecoder soll das dekodieren.
+- turn: 12
+  excerpt: Warum muss das so groß sein? Kann man das nicht im latenten Raum selber machen?
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current
   rate; image/full retention remains 10/12. Next lower-rate comparison from preserved source
@@ -647,6 +671,8 @@ open_threads:
   is not learned identity; preserve VAE and calibration studies.'
 - 'N380/O255: tiny-text general-language feasibility and task-appropriate capacity remain untested; no fallback
   backend selected.'
+- 'N381/O257: latent answer planning versus decoder realization; total parameter/memory savings and grounded language
+  quality need experiments.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await
   researcher response.'
@@ -769,3 +795,5 @@ ai_suggestions_pending:
   a measured capability limit.'
 - 'O256: decoder sizing ranges conditional on content planning and pretraining are hypotheses, not adopted architecture
   or established minima.'
+- 'O257: latent language division remains proposed; no evidence that latent computation removes required learned
+  capacity.'
