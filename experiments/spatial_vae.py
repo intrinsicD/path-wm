@@ -397,6 +397,7 @@ def train(
     stop_after=None,
     source=None,
     deterministic=False,
+    trainable="all",
 ):
     seed_everything(config["seed"])
     output = Path(output)
@@ -412,6 +413,12 @@ def train(
     )
     if model.config.get("variant", model.config.get("ablation")) != config["variant"]:
         raise ValueError("Continuation variant must match the saved architecture")
+    if trainable not in ("all", "encoder", "decoder"):
+        raise ValueError("Choose all, encoder or decoder trainable parameters")
+    if trainable != "all":
+        for name, parameter in model.named_parameters():
+            parameter.requires_grad_(name.startswith(trainable + "."))
+        config = dict(config, trainable_parts=trainable)
     # Initialization/load must not alter the matched training-noise stream.
     seed_everything(config["seed"])
     config = dict(
@@ -1209,6 +1216,231 @@ def hierarchy_study(output, root, device):
     return records
 
 
+def color_diagnosis(output, weights, root, device):
+    from pathwm.evaluation.spatial_vae import (
+        color_grid_metrics,
+        color_readouts,
+        constant_decoder_diagnostic,
+    )
+
+    output = Path(output)
+    if output.exists():
+        raise FileExistsError(f"Preserve existing diagnosis {output}")
+    output.mkdir(parents=True)
+    config = dict(
+        hierarchy_settings("C", 0.1),
+        seed=57201,
+        purpose="Frozen color/grid attribution and fixed-budget component reparability",
+    )
+    data = hierarchy_data(root, config)
+    tensors = {s: d.batch(range(len(d)))["rgb"] for s, d in data.items()}
+    model = SpatialVAE.load(weights, device)
+    if model.config.get("ablation") != "C":
+        raise ValueError("This protocol uses the C reference")
+    frozen = {k: v.cpu().clone() for k, v in model.state_dict().items()}
+    rows, _, _ = evaluate_images(model, tensors["test"], device)
+    constants, pictures = constant_decoder_diagnostic(model, device)
+    readouts = color_readouts(
+        model, tensors["train"][:256], tensors["validation"], tensors["test"], device
+    )
+    metrics = {
+        key: color_grid_metrics(rows[key], rows["target"])
+        for key in ["mean", "sampled"]
+    }
+    native, identity = native_crops(root, data["test"], (96, 128), 16)
+    native_rows, _, _ = evaluate_images(model, native, device)
+    metrics["native_mean"] = color_grid_metrics(native_rows["mean"], native)
+    metrics["constants"] = constants
+    metrics["color_readouts"] = readouts
+    report_evaluation(
+        output / "reference",
+        config,
+        data["test"].identity,
+        model,
+        metrics,
+        rows,
+        device,
+        "Diagnostic re-use of previously evaluated test groups; color and grid measurements, no pristine selection claim.",
+    )
+    report_evaluation(
+        output / "reference/native",
+        config,
+        identity,
+        model,
+        metrics["native_mean"],
+        native_rows,
+        device,
+        "Saved model native-pixel crop diagnostics, fixed first16 eligible test sources.",
+    )
+    np.savez_compressed(
+        output / "reference/predictions.npz", **{k: v.numpy() for k, v in rows.items()}
+    )
+    np.savez_compressed(
+        output / "reference/constants.npz",
+        **{k: v.numpy() for k, v in pictures.items()},
+    )
+    selections = [0, 4, 8, 13, 18, 22, 26]
+    example_panel(
+        output / "reference/palette.png",
+        dict(
+            original=pictures["palette_input"][selections],
+            mean=pictures["palette_output"][selections],
+        ),
+        dict(original="Constant RGB input", mean="Posterior-mean output"),
+        count=7,
+    )
+    atomic_json(
+        output / "reference/frozen.json",
+        dict(
+            passed=all(
+                torch.equal(v, model.state_dict()[k].cpu()) for k, v in frozen.items()
+            )
+        ),
+    )
+    print(
+        "REFERENCE",
+        json.dumps(
+            {
+                k: metrics["mean"][k]
+                for k in ["raw_mse", "global_chroma_mse", "chroma_gain"]
+            }
+        ),
+        flush=True,
+    )
+    print("CONSTANT TRACE", json.dumps(constants["trace"]), flush=True)
+    print(
+        "READOUTS",
+        json.dumps({k: v["test"]["linear"]["mse"] for k, v in readouts.items()}),
+        flush=True,
+    )
+    del model
+    records = {}
+    comparisons = dict(original=rows["target"], reference=rows["mean"])
+    for part in ["decoder", "encoder", "all"]:
+        path = output / part
+        run = train(
+            path / "training",
+            data["train"],
+            data["validation"],
+            config,
+            device,
+            source=weights,
+            trainable=part,
+        )
+        if run.step != config["steps"]:
+            raise RuntimeError("Component continuation did not finish")
+        model = SpatialVAE.load(path / "training/weights.pt", device)
+        result = json.loads((path / "training/result.json").read_text())
+        state = model.state_dict()
+        intact = all(
+            torch.equal(v, state[k].cpu())
+            for k, v in frozen.items()
+            if part != "all" and not k.startswith(part + ".")
+        )
+        if not intact:
+            raise RuntimeError("Frozen component changed")
+        after, _, _ = evaluate_images(model, tensors["test"], device)
+        color = {
+            key: color_grid_metrics(after[key], after["target"])
+            for key in ["mean", "sampled"]
+        }
+        current_const, _ = constant_decoder_diagnostic(model, device)
+        color["constant_output_rms"] = current_const["output_rms"]
+        nrows, _, _ = evaluate_images(model, native, device)
+        color["native_mean"] = color_grid_metrics(nrows["mean"], native)
+        base, now = metrics["mean"], color["mean"]
+        guards = dict(
+            rgb_nonregression=now["raw_mse"] <= 1.05 * base["raw_mse"],
+            color_improvement=now["global_chroma_mse"]
+            <= 0.8 * base["global_chroma_mse"],
+            grid_improvement=now["period4"]["residual_rms"]
+            <= 0.5 * base["period4"]["residual_rms"],
+        )
+        color.update(
+            guards=guards,
+            frozen_component_unchanged=intact,
+            trainable=part,
+            reference_sha256=file_hash(weights),
+            weights_sha256=file_hash(path / "training/weights.pt"),
+            training_seconds=result["training_seconds"],
+        )
+        report_evaluation(
+            path / "evaluation",
+            config,
+            data["test"].identity,
+            model,
+            color,
+            after,
+            device,
+            "Fixed512-update diagnostic from reference weights; fresh optimizer. Frozen-component outcome is local reparability evidence.",
+        )
+        report_evaluation(
+            path / "native",
+            config,
+            identity,
+            model,
+            color["native_mean"],
+            nrows,
+            device,
+            "Native color/grid diagnostic after the same continuation.",
+        )
+        np.savez_compressed(
+            path / "evaluation/predictions.npz",
+            **{k: v.numpy() for k, v in after.items()},
+        )
+        records[part] = color
+        comparisons[part] = after["mean"]
+        atomic_json(output / "progress.json", records)
+        print(
+            part,
+            json.dumps(
+                {k: now[k] for k in ["raw_mse", "global_chroma_mse", "chroma_gain"]}
+            ),
+            flush=True,
+        )
+        del model, run
+    atomic_json(
+        output / "run.json",
+        dict(
+            identity=dict(
+                settings=config, data={k: v.identity for k, v in data.items()}
+            ),
+            source=source_record(__file__, torch.nn.Identity()),
+        ),
+    )
+    atomic_json(
+        output / "result.json",
+        dict(
+            completed=True,
+            metrics=dict(reference=metrics, continuations=records),
+            evaluation_scope="Controlled diagnosis: known test population, one seed, brief fresh-optimizer continuation; no general quality or unique asymptotic cause claim.",
+        ),
+    )
+    atomic_json(
+        output / "status.json",
+        dict(result="completed", report="pending", step=512, error=None),
+    )
+    (output / "metrics.jsonl").write_text("")
+    example_panel(
+        output / "comparison.png",
+        comparisons,
+        dict(
+            original="Original",
+            reference="Reference",
+            decoder="Decoder trained",
+            encoder="Encoder trained",
+            all="Both trained",
+        ),
+        count=6,
+    )
+    write_report(
+        output,
+        batch={"rgb": rows["target"][:6]},
+        outputs={k: v[:6] for k, v in comparisons.items() if k != "original"},
+    )
+    return records
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument(
@@ -1238,6 +1470,7 @@ def main():
     p.add_argument("--evaluate-only", action="store_true")
     p.add_argument("--low-kl", action="store_true")
     p.add_argument("--hierarchy-study", action="store_true")
+    p.add_argument("--color-diagnosis", action="store_true")
     args = p.parse_args()
     if args.stop_after is not None and args.stop_after <= 0:
         p.error("--stop-after must be positive")
@@ -1245,6 +1478,11 @@ def main():
         p.error("--low-kl requires the corresponding beta-one --weights")
     if sum([args.development, args.overfit, args.low_kl]) > 1:
         p.error("Development, overfit and low-KL modes are separate protocols")
+    if args.color_diagnosis:
+        if not args.weights:
+            p.error("--color-diagnosis requires reference --weights")
+        color_diagnosis(args.output, args.weights, args.data_root, args.device)
+        return
     if args.hierarchy_study:
         hierarchy_study(args.output, args.data_root, args.device)
         return

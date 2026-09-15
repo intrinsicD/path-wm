@@ -173,3 +173,185 @@ def profile_codec(model, x, repeats=5):
         inference_seconds_per_batch=seconds,
         convention="One multiply-add=one MAC; FLOPs=2MAC. Conv/Linear/QK/AV only; norms, activation, softmax, shuffle and backward excluded.",
     )
+
+
+def phase_statistics(x, period=4, border=8):
+    """Position-mod-period variation, excluding per-image channel DC offsets."""
+    if x.ndim != 4 or min(x.shape[-2:]) <= 2 * border + period:
+        raise ValueError("Phase statistic needs a nonempty interior BCHW grid")
+    x = x[..., border:-border, border:-border] if border else x
+    h, w = (x.shape[-2] // period) * period, (x.shape[-1] // period) * period
+    x = x[..., :h, :w].float()
+    phases = x.reshape(*x.shape[:2], h // period, period, w // period, period).mean(
+        (2, 4)
+    )
+    phases = phases - phases.mean((-2, -1), keepdim=True)
+    # Cell-wise random phase permutation: preserve each local cell's values,
+    # disrupt a shared phase. Descriptive null, not a significance test.
+    cells = (
+        x.reshape(*x.shape[:2], h // period, period, w // period, period)
+        .permute(0, 1, 2, 4, 3, 5)
+        .flatten(-2)
+    )
+    generator = torch.Generator(device=x.device).manual_seed(57211)
+    order = torch.rand(cells.shape, device=x.device, generator=generator).argsort(-1)
+    null = cells.gather(-1, order).mean((2, 3))
+    null = null - null.mean(-1, keepdim=True)
+    return dict(
+        rms=float(phases.square().mean().sqrt()),
+        coherent_rms=float(phases.mean(0).square().mean().sqrt()),
+        cell_permutation_rms=float(null.square().mean().sqrt()),
+        mean_phase_map=phases.mean(0).tolist(),
+        period=period,
+        border=border,
+    )
+
+
+def color_grid_metrics(prediction, target):
+    if prediction.shape != target.shape:
+        raise ValueError("Color diagnostics require aligned RGB arrays")
+    p, t = prediction.detach().cpu().float(), target.detach().cpu().float()
+    # Orthonormal opponent axes; these are RGB error coordinates, not perceptual DeltaE.
+    basis = torch.tensor([[1.0, -1.0, 0.0], [1.0, 1.0, -2.0]]) / torch.tensor(
+        [[2.0**0.5], [6.0**0.5]]
+    )
+    pc, tc = (
+        torch.einsum("oc,bchw->bohw", basis, p),
+        torch.einsum("oc,bchw->bohw", basis, t),
+    )
+    error = p - t
+    interior = error[..., 8:-8, 8:-8]
+    border_sum = error.square().sum() - interior.square().sum()
+    scores = dict(
+        raw_mse=float(error.square().mean()),
+        clipped_mse=float((p.clamp(0, 1) - t).square().mean()),
+        clipped_fraction=float(((p < 0) | (p > 1)).float().mean()),
+        global_rgb_mse=float(error.mean((2, 3)).square().mean()),
+        global_chroma_mse=float((pc.mean((2, 3)) - tc.mean((2, 3))).square().mean()),
+        pixel_chroma_mse=float((pc - tc).square().mean()),
+        chroma_gain=float((pc * tc).sum() / tc.square().sum().clamp_min(1e-12)),
+        rgb_bias=error.mean((0, 2, 3)).tolist(),
+        interior_mse=float(interior.square().mean()),
+        border_mse=float(border_sum / (error.numel() - interior.numel())),
+    )
+    for period in [2, 4]:
+        residual = phase_statistics(error, period)
+        scores[f"period{period}"] = dict(
+            residual_rms=residual["rms"],
+            coherent_rms=residual["coherent_rms"],
+            null_rms=residual["cell_permutation_rms"],
+            mean_phase_map=residual["mean_phase_map"],
+            target_rms=phase_statistics(t, period)["rms"],
+        )
+    return scores
+
+
+@torch.no_grad()
+def color_features(model, rgb, device="cpu"):
+    """Global image-level mean feature readouts, same RGB target at every boundary."""
+    features = {}
+
+    def add(key, value):
+        features.setdefault(key, []).append(value.mean((2, 3)).detach().cpu())
+
+    with evaluation_mode(model):
+        for x in rgb.split(8):
+            x = x.to(device)
+            p, trace = model.inspect(x)
+            add("input", x)
+            for key, value in trace.items():
+                if (
+                    key == "stem.output"
+                    or key.endswith("compression")
+                    or key in ["posterior.mu", "posterior.input"]
+                ):
+                    add(key, value)
+            decoded = model.decoder.input(p.mu)
+            add("decoder.input", decoded)
+            for i, stage in enumerate(model.decoder.stages):
+                decoded = stage(decoded)
+                add(f"decoder.stage_{i}", decoded)
+            add(
+                "decoder.rgb",
+                model.decoder.output(decoded)[..., : x.shape[-2], : x.shape[-1]],
+            )
+    return {key: torch.cat(values) for key, values in features.items()}
+
+
+def color_readouts(model, training, validation, test, device="cpu"):
+    sets = {
+        name: color_features(model, images, device)
+        for name, images in [
+            ("train", training),
+            ("validation", validation),
+            ("test", test),
+        ]
+    }
+    return {
+        key: dict(
+            width=x.shape[-1],
+            **{
+                split: probe_readout(
+                    x, sets["train"]["input"], features[key], features["input"]
+                )
+                for split, features in sets.items()
+                if split != "train"
+            },
+        )
+        for key, x in sets["train"].items()
+    }
+
+
+@torch.no_grad()
+def constant_decoder_diagnostic(model, device="cpu"):
+    colors = torch.cartesian_prod(*[torch.tensor([0.15, 0.5, 0.85])] * 3)
+    images = colors[:, :, None, None].expand(-1, -1, 64, 64).to(device)
+    with evaluation_mode(model):
+        posterior = model.encode(images)
+        # Different constants at realistic learned magnitudes plus zero; no noise or encoder skip.
+        fields = torch.cat(
+            [
+                torch.zeros_like(posterior.mu[:1, :, :1, :1]),
+                posterior.mu.mean((2, 3), keepdim=True),
+            ],
+            0,
+        )
+        fields = fields.expand(-1, -1, 32, 32).contiguous()
+        trace = {}
+
+        def hook(name):
+            def capture(module, args, out):
+                # Central half avoids the finite local-convolution boundary support.
+                border = min(out.shape[-2:]) // 4
+                values = phase_statistics(out.cpu(), period=4, border=border)
+                trace[name] = dict(
+                    shape=list(out.shape),
+                    rms=values["rms"],
+                    null_rms=values["cell_permutation_rms"],
+                )
+
+            return capture
+
+        selected = {
+            "decoder.input": model.decoder.input,
+            "decoder.output": model.decoder.output,
+        }
+        for i, stage in enumerate(model.decoder.stages):
+            for key in ["expansion", "processing", "upsample", "post_process"]:
+                selected[f"decoder.stage_{i}.{key}"] = getattr(stage, key)
+        handles = [
+            module.register_forward_hook(hook(key)) for key, module in selected.items()
+        ]
+        try:
+            decoded = model.decode(fields, (128, 128)).cpu()
+        finally:
+            for handle in handles:
+                handle.remove()
+        rec = model.decode(posterior.mu, (64, 64)).cpu()
+    return dict(
+        trace=trace,
+        output_rms=phase_statistics(decoded, 4, 16)["rms"],
+        constants=fields[:, :, 0, 0].cpu().tolist(),
+        palette_metrics=color_grid_metrics(rec, images.cpu()),
+        scope="Constant latent fields, deterministic decoder, central interiors; no claim of the unique training cause",
+    ), dict(palette_input=images.cpu(), palette_output=rec, constant_output=decoded)
