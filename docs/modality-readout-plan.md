@@ -300,3 +300,134 @@ Claude's generic saturation critique motivates checking the sampled downstream p
 normalization is a deterministic transformation, not an extra information source.
 Probability and raw-logit auxiliary objectives both intentionally bypass sampling
 for that TRAINING loss, while deployment continues to use the native state path.
+
+## Follow-up result, 15 September
+
+[Combined repair report](../runs/modality_repair_v1/report.html) and each linked child
+retain the source checkpoints, scalar metrics and examples. Actual Claude reviewed
+and reconciled public-only methodology in four short replies; it did not inspect
+private code or results. Two failed diagnostic attempts remain visible alongside
+the corrected reports; no trained model was changed by that padding repair.
+
+**Frozen diagnosis:** all-input and complementary encoder features permit100%
+linear recovery of all three held-out factors in both seeds. Held-out position
+from their posterior probabilities is0%. Isolated audio encoder features also give
+100% held-out recovery, whereas image/text/video are less consistent. Known encoder
+factors are98–100%; location/direction become harder at posterior and sampled-code
+readouts. Feature dimensions differ and only linear readers were fitted, so this
+localizes measured accessibility failures, not mathematically irreversible loss.
+
+**Decoder duration control:**1024 native updates instead of256, with the entire
+first256 training rows independently verified identical. All8 known-combination
+oracle output/quality screens pass (4 modalities,2 seeds). Known text/audio remain
+100%; image rises50→100%, video25→100%. On held-out combinations, text/image remain
+0%, audio remains100% with good waveform quality. Video nearest-template correctness
+rises to83%/33% but foreground MSE0.109/0.180 fails quality. This demonstrates that
+training duration explained part of the known-example failure; it does not establish
+compositional generation, realistic media or a need for a bigger decoder.
+
+**Core continuation:** all8 full known-factor core screens still fail. Mean over the
+six input modes, reported separately per seed:
+
+| Intervention | Known position | Known direction | Held-out color | Held-out position |
+|---|---|---|---|---|
+| Ordinary continuation |72.6% /71.2% |50.3% /48.6% |97.6% /76.7% |0.0% /11.8% |
+| Probability auxiliary |60.8% /72.6% |50.0% /51.7% |94.4% /83.3% |0.3% /11.1% |
+| Normalized raw-logit auxiliary |100% /97.2% |49.7% /50.0% |78.8% /69.1% |14.2% /12.2% |
+| Temperature warmup |77.4% /66.3% |51.4% /52.1% |76.7% /95.5% |3.5% /2.8% |
+
+Only raw-logit supervision passes the declared **known-factor benefit** comparison:
+mean position/direction gain13.4/13.7 percentage points without known-color loss.
+This is almost entirely position improvement, not direction recovery. Held-out
+color degrades versus ordinary continuation. Neither it nor temperature/probability
+variants is adopted as the default. No inference parameters, extra thought loops,
+soft-state shortcut or raw-logit decoder input are required by these training options.
+The training-only head contains264 parameters; separate output weights stay frozen.
+
+**Checks:**77 scoped tests pass. Independent NumPy audits pass2648 checks for frozen
+stage coefficients/predictions and10273 checks for raw targets/metrics, output gates,
+unchanged frozen weights, exact initial oracle training rows and embedded reports.
+Full8-update versus4+4 checkpoints match exactly for probability auxiliary (4502
+recursive checks) and temperature curriculum (4492). These counts are integrity
+checks, not capability successes. The16 formal training runs take about451 CPU
+seconds, excluding diagnostics/evaluation/reporting. Static score/error/learning
+figures were inspected; browser interaction QA remains unavailable. Final summary
+verification binds the report hash and checks all18 child links and summary means.
+
+No additional full output sweep was launched: sampled direction remains near50%
+and oracle text/image still fail new combinations. The next bounded question is
+whether training retention/composition **from initialization**, before the categorical
+posterior becomes strongly saturated, can learn direction and generalize; this is
+proposed, not run. A separate output-side composition test remains necessary. The
+reused held-out combinations are exploratory; confirm on a new split/task before a
+broader claim. The user's shared multimodal latent design is preserved.
+
+Example commands (fresh output directories required):
+
+```bash
+.venv/bin/python experiments/modality_readout.py --stage diagnose --core runs/modality_readout_v1/formal/seed7201/core --seed 7201 --output runs/stage_diagnostic_new --device cpu
+.venv/bin/python experiments/modality_readout.py --stage core --initial runs/modality_readout_v1/formal/seed7201/core --posterior-aux 1 --posterior-source raw --steps 768 --output runs/raw_aux_new --device cpu
+.venv/bin/python experiments/modality_readout.py --stage repair-report --reference runs/modality_readout_v1 --output runs/modality_repair_v1
+```
+
+The diagnostic head/curriculum are optional recipe choices. Ordinary interfaces and
+old completed runs remain valid. Core/oracle initialization resets Adam explicitly;
+`--resume` instead restores the complete compatible run including optimizer and RNG.
+
+## Direction follow-up: what is actually failing?
+
+Alex asks why direction is difficult and what is needed to solve it. A read-only
+follow-up uses the two saved `raw_aux` checkpoints, without further model training:
+[updater localization report](../runs/modality_repair_v1/direction_localization/report.html),
+[independent verification](../runs/modality_repair_v1/direction_localization/verification.json).
+Both directions are represented in every known color/location pair. Complete inputs
+include explicit direction words and symbolic tones as well as arrows/motion; this
+task does not require discovering physical motion from ambiguous real video.
+
+The trained auxiliary head itself reaches only50% known-direction accuracy with all
+inputs, before sampling, in both seeds (`direction_check.json`). Thus sampling alone
+does not explain the failure of that trained readout. Fresh train/validation-only
+linear readers on the same frozen models find:
+
+| Stage, complete inputs / known combinations | Seed7201 | Seed7202 |
+|---|---:|---:|
+| Updater query tokens, before mean |87.5% |54.2% |
+| Mean query |75.0% |56.3% |
+| Raw categorical logits |77.1% |56.3% |
+| Normalized raw logits |75.0% |58.3% |
+| Posterior probabilities |68.8% |89.6% |
+| Sampled categorical codes |54.2% |50.0% |
+
+Color and position reach100% in all these known-combination cells. New combinations
+remain weak. Linear accessibility is not monotonic: the nonlinear probability
+transform can make a factor easier for a linear reader without adding information.
+Different reader dimensions/regularization and48 examples per test cell prevent
+attributing each percentage drop uniquely to its preceding operation.
+
+There is also a concrete code collision: in seed7201, the48 known test examples have
+six distinct argmax code tuples, and every tuple occurs equally with both directions.
+For the actual saved sampled tuples, the optimistic best direction lookup on those
+same samples is58.3% /50.0% in the two seeds. These are finite-population diagnostics
+of the code tuple alone, not generalization estimates or bounds on the full state.
+The continuous posterior can carry distinctions that do not reliably survive as
+distinct sampled codes. The first-stage reads/trained heads also need better learning;
+neither “only the decoder” nor “only sampling” is established as the sole cause.
+
+The model has4 groups of8 codes, nominally4096 tuples for18 task combinations. This
+does not prove adequate effective capacity, but does not suggest a simple shortage
+of addressable codes. Early averaging may hinder retaining separate relationships;
+the unequal seed results do not prove that replacing it will repair direction.
+
+**Next bounded test, proposed rather than run:** freeze an encoder with verified
+direction access and train the updater/readout from initialization on paired inputs
+whose only change is direction. Require correct direction from the actual sampled
+state, then jointly require color/position retention, held-out combinations, each
+modality and complementary inputs. Compare ordinary query averaging against retaining
+query-specific information before the categorical projection only if the controlled
+learning test still fails. Keep the latent multimodal core; no language-only reasoning
+or mandatory direction-specific permanent storage field is implied. A larger model
+or more loops has not been shown necessary by these results.
+
+The new audit independently recomputes reader fits, validation selection, predictions,
+metrics, checkpoint hashes and embedded image in206 checks. Static heatmap inspected;
+browser interaction remains unavailable. This follow-up changes no deployed weights.

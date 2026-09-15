@@ -46,6 +46,7 @@ from pathwm.evaluation.modality_readout import (
     fit_factor_probe,
     predict_factor_probe,
     save_stage_panel,
+    summarize_repair,
 )
 
 VARIANTS = ("native", "adapter1", "adapter2", "adapter4")
@@ -738,7 +739,15 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--stage",
-        choices=("core", "frozen", "joint", "oracle", "suite", "diagnose"),
+        choices=(
+            "core",
+            "frozen",
+            "joint",
+            "oracle",
+            "suite",
+            "diagnose",
+            "repair-report",
+        ),
         default="suite",
     )
     parser.add_argument("--output", type=Path, required=True)
@@ -746,6 +755,9 @@ def main():
     parser.add_argument("--variant", choices=VARIANTS, default="native")
     parser.add_argument("--modality", choices=KINDS, default="text")
     parser.add_argument("--core", type=Path)
+    parser.add_argument(
+        "--reference", type=Path, help="Original study root for repair-report only"
+    )
     parser.add_argument(
         "--posterior-source", choices=("probabilities", "raw"), default="probabilities"
     )
@@ -773,6 +785,11 @@ def main():
     parser.add_argument("--stop-after", type=int)
     parser.add_argument("--resume", action="store_true")
     args = parser.parse_args()
+    if args.stage == "repair-report":
+        if args.reference is None:
+            parser.error("Repair report needs --reference")
+        print(summarize_repair(args.output, args.reference))
+        return
     if args.posterior_aux < 0 or not np.isfinite(args.posterior_aux):
         parser.error("Posterior auxiliary weight must be finite and nonnegative")
     if args.posterior_aux and (args.stage != "core" or args.initial is None):

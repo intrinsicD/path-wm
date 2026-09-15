@@ -214,3 +214,6 @@ stehen im [Bericht](../runs/modality_readout_v1/formal/report.html).
 - [Optionaler Graph-Kontext in WorldSession.think](../pathwm/world_state/session.py)
 - [Gemessene Modalitätsfähigkeiten und Grenzen](modality-foundation-plan.md)
 - [Detaillierte Zeichnungen im Atlas](architecture-atlas.html#14-latent-core)
+
+
+The follow-up [stage diagnosis and repair study](modality-readout-plan.md#follow-up-result-15-september) now separates encoder features, posterior probabilities, sampled codes and pre/post-Thinker states. Training-only raw-logit supervision improves known-position accuracy, but direction and new combinations remain weak. Temperature annealing and probability supervision do not yield a reliable repair. These options do not supply extra inference inputs or turn shared thinking into text. The default architecture remains unchanged.

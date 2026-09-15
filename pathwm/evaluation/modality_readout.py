@@ -379,6 +379,29 @@ def save_panels(directory, arrays, rows):
 
 
 def readout_inspection(directory):
+    repair = directory / "repair.json"
+    if repair.exists():
+        data = json.loads(repair.read_text())
+        parts = [
+            "<section><h2>Separate diagnoses and controlled repairs</h2><p>Core factor accuracy averages six input modes. Oracle decoder controls receive explicit true facts and are not agent performance. See child reports for full cells, quality gates, omission controls and raw outputs.</p>"
+        ]
+        for name in ("repair_scores.png", "repair_learning.png"):
+            url = (
+                "data:image/png;base64,"
+                + base64.b64encode((directory / name).read_bytes()).decode()
+            )
+            parts.append(f'<img class="chart" alt="{escape(name)}" src="{url}">')
+        parts.append("<h3>Individual reports</h3><ul>")
+        for path in data["reports"]:
+            parts.append(
+                f'<li><a href="{escape(path)}/report.html">{escape(path)}</a></li>'
+            )
+        parts.append(
+            "</ul><details><summary>Exact comparison data</summary><pre>"
+            + escape(json.dumps(data, indent=2))
+            + "</pre></details></section>"
+        )
+        return parts
     diagnostic = directory / "stage_probe.json"
     if diagnostic.exists():
         data = json.loads(diagnostic.read_text())
@@ -748,3 +771,305 @@ def aggregate(root, *, oracle_root=None, probe_root=None):
 
     write_report(root)
     return data
+
+
+def summarize_repair(root, reference):
+    """Rebuild a read-only comparison from completed, source-bound child runs."""
+    from pathwm.evaluation.report import write_report
+    from matplotlib.figure import Figure
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+
+    root, reference = Path(root), Path(reference)
+    variants = ("original", "continued", "posterior_aux", "raw_aux", "warmup")
+    core, oracle, sources, reports, learning = [], [], [], [], {}
+    for seed in (7201, 7202):
+        for variant in variants:
+            p = (
+                reference / "formal" / f"seed{seed}" / "core"
+                if variant == "original"
+                else root / "core" / f"seed{seed}" / variant
+            )
+            d = json.loads((p / "readout.json").read_text())
+            if json.loads((p / "status.json").read_text())["result"] != "complete":
+                raise ValueError(f"Incomplete comparison source: {p}")
+            sources.append(
+                dict(
+                    path=str(p),
+                    scores_sha256=file_hash(p / "readout.json"),
+                    checkpoint_sha256=file_hash(p / "last.pt"),
+                )
+            )
+            if variant != "original":
+                reports.append(str(p.relative_to(root)))
+                learning[(seed, variant)] = [
+                    json.loads(line)["factor_loss"]
+                    for line in (p / "metrics.jsonl").read_text().splitlines()
+                ]
+            for split in ("seen", "heldout"):
+                rows = [r for r in d["core_scores"] if r["split"] == split]
+                core.append(
+                    dict(
+                        seed=seed,
+                        variant=variant,
+                        split=split,
+                        factor_accuracy=np.mean(
+                            [r["factor_accuracy"] for r in rows], 0
+                        ).tolist(),
+                        all_correct=float(np.mean([r["all_correct"] for r in rows])),
+                        core_gate=d["core_gate"],
+                        resources=d["resources"],
+                    )
+                )
+        for steps, base in ((256, reference / "oracle"), (1024, root / "oracle_long")):
+            for kind in KINDS:
+                p = base / f"seed{seed}" / kind
+                d = json.loads((p / "readout.json").read_text())
+                if json.loads((p / "status.json").read_text())["result"] != "complete":
+                    raise ValueError(f"Incomplete comparison source: {p}")
+                sources.append(
+                    dict(
+                        path=str(p),
+                        scores_sha256=file_hash(p / "readout.json"),
+                        checkpoint_sha256=file_hash(p / "last.pt"),
+                    )
+                )
+                if steps == 1024:
+                    reports.append(str(p.relative_to(root)))
+                for row in d["metrics"]:
+                    oracle.append(dict(seed=seed, steps=steps, **row))
+    benefits = []
+    for variant in variants[2:]:
+        per_seed = []
+        for seed in (7201, 7202):
+
+            def select(name):
+                return next(
+                    r
+                    for r in core
+                    if r["seed"] == seed
+                    and r["variant"] == name
+                    and r["split"] == "seen"
+                )
+
+            delta = (
+                np.array(select(variant)["factor_accuracy"])
+                - select("continued")["factor_accuracy"]
+            )
+            per_seed.append(
+                dict(
+                    seed=seed,
+                    location_direction_gain=float(delta[1:].mean()),
+                    color_delta=float(delta[0]),
+                    gate=bool(delta[1:].mean() >= 0.05 and delta[0] >= -0.05),
+                )
+            )
+        benefits.append(
+            dict(variant=variant, seeds=per_seed, gate=all(r["gate"] for r in per_seed))
+        )
+    reports += [
+        str(p.relative_to(root))
+        for p in sorted((root / "diagnosis_fixed").glob("seed*"))
+    ]
+    payload = dict(
+        core=core,
+        oracle=oracle,
+        benefits=benefits,
+        reports=reports,
+        sources=sources,
+        scope="Exploratory controlled combinations; means across six modes and two seeds are not independent trials. No general language/media claim. Browser interaction unavailable.",
+    )
+    atomic_json(root / "repair.json", payload)
+    atomic_json(
+        root / "run.json",
+        dict(
+            identity=dict(
+                settings=dict(
+                    purpose="diagnostic",
+                    source=str(reference.resolve()),
+                    renderer_sha256=file_hash(__file__),
+                    comparison="Stage diagnosis, duration control and three training-only interventions",
+                )
+            )
+        ),
+    )
+    atomic_json(
+        root / "result.json",
+        dict(
+            evaluation_scope="Kontrollierte kurze Texte, Pfeilbilder/-videos und symbolische Töne. Die Auswertung trennt Verbesserungen einzelner Merkmale vom vollständigen Lernziel und Oracle-Ausgaben von gelerntem Agentenverhalten. Ein positives Teilergebnis ist keine vollständige Reparatur.",
+            metrics={
+                "Paired known-factor benefit screens passed": [
+                    r["variant"] for r in benefits if r["gate"]
+                ],
+                "Core capability screens passed": sum(
+                    r["core_gate"]
+                    for r in core
+                    if r["split"] == "seen" and r["variant"] != "original"
+                ),
+                "Oracle1024 known-output screens passed": sum(
+                    r["gate"]
+                    for r in oracle
+                    if r["steps"] == 1024 and r["split"] == "seen"
+                ),
+                "Oracle1024 new-output screens passed": sum(
+                    r["gate"]
+                    for r in oracle
+                    if r["steps"] == 1024 and r["split"] == "heldout"
+                ),
+            },
+            limitations=payload["scope"],
+        ),
+    )
+    (root / "metrics.jsonl").write_text(
+        "".join(
+            json.dumps(
+                dict(
+                    step=1,
+                    split="diagnostic",
+                    **{k: v for k, v in r.items() if k not in ("split", "resources")},
+                    population=r["split"],
+                )
+            )
+            + "\n"
+            for r in core
+        )
+    )
+    atomic_json(
+        root / "status.json",
+        dict(result="complete", report="pending", step=1, error=None),
+    )
+
+    fig = Figure(figsize=(12, 9), layout="constrained")
+    FigureCanvasAgg(fig)
+    axes = fig.subplots(2, 2)
+    for j, split in enumerate(("seen", "heldout")):
+        values = np.array(
+            [
+                np.mean(
+                    [
+                        r["factor_accuracy"]
+                        for r in core
+                        if r["variant"] == v and r["split"] == split
+                    ],
+                    0,
+                )
+                for v in variants
+            ]
+        )
+        ax = axes[0, j]
+        ax.imshow(values, vmin=0, vmax=1, cmap="viridis", aspect="auto")
+        ax.set_yticks(range(5), variants)
+        ax.set_xticks(range(3), ["color", "location", "direction"])
+        ax.set_title("Core / " + split + " combinations")
+        for i in range(5):
+            for k in range(3):
+                ax.text(
+                    k,
+                    i,
+                    f"{values[i, k]:.0%}",
+                    ha="center",
+                    va="center",
+                    color="white" if values[i, k] < 0.5 else "black",
+                )
+        values = np.array(
+            [
+                [
+                    np.mean(
+                        [
+                            r["all_accuracy"]
+                            for r in oracle
+                            if r["steps"] == steps
+                            and r["output"] == kind
+                            and r["split"] == split
+                        ]
+                    )
+                    for steps in (256, 1024)
+                ]
+                for kind in KINDS
+            ]
+        )
+        ax = axes[1, j]
+        ax.imshow(values, vmin=0, vmax=1, cmap="viridis", aspect="auto")
+        ax.set_yticks(range(4), KINDS)
+        ax.set_xticks(range(2), ["256 updates", "1024 updates"])
+        ax.set_title("Oracle complete-fact accuracy / " + split)
+        for i in range(4):
+            for k in range(2):
+                ax.text(
+                    k,
+                    i,
+                    f"{values[i, k]:.0%}",
+                    ha="center",
+                    va="center",
+                    color="white" if values[i, k] < 0.5 else "black",
+                )
+    fig.suptitle(
+        "Two seeds · oracle gives true facts, not learned agent state · output quality is scored separately"
+    )
+    fig.savefig(root / "repair_scores.png", dpi=140)
+    fig = Figure(figsize=(12, 4), layout="constrained")
+    FigureCanvasAgg(fig)
+    axes = fig.subplots(1, 2)
+    for variant in variants[1:]:
+        v = np.mean([learning[(s, variant)] for s in (7201, 7202)], 0)
+        axes[0].plot(
+            np.arange(32, len(v) + 1),
+            np.convolve(v, np.ones(32) / 32, mode="valid"),
+            label=variant,
+        )
+    axes[0].set(
+        title="Core downstream factor CE (auxiliary loss excluded)",
+        xlabel="Additional updates",
+        ylabel="32-update moving mean",
+    )
+    axes[0].legend(fontsize=8)
+    for kind in KINDS:
+        curves = []
+        for seed in (7201, 7202):
+            p = root / "oracle_long" / f"seed{seed}" / kind / "metrics.jsonl"
+            curves.append(
+                [json.loads(line)["loss"] for line in p.read_text().splitlines()]
+            )
+        v = np.mean(curves, 0)
+        axes[1].plot(
+            np.arange(32, len(v) + 1),
+            np.convolve(v, np.ones(32) / 32, mode="valid"),
+            label=kind,
+        )
+    axes[1].axvline(256, color="black", linestyle="--", linewidth=1)
+    axes[1].set(
+        title="Oracle decoder training (normalized per modality)",
+        xlabel="Updates",
+        ylabel="32-update moving mean",
+    )
+    axes[1].legend(fontsize=8)
+    fig.savefig(root / "repair_learning.png", dpi=140)
+    # Representative first-seed image errors, same six held-out tuples as v1.
+    old = np.load(reference / "oracle/seed7201/image/outputs.npz")
+    new = np.load(root / "oracle_long/seed7201/image/outputs.npz")
+    select = np.arange(0, 48, 8)
+    fig = Figure(figsize=(11, 7), layout="constrained")
+    FigureCanvasAgg(fig)
+    axes = fig.subplots(4, 6)
+    target = new["heldout.target.image"][select]
+    output = new["heldout.all.image.output"][select]
+    for row, (label, images) in enumerate(
+        (
+            ("Target", target),
+            ("Oracle256", old["heldout.all.image.output"][select]),
+            ("Oracle1024", output),
+            ("Absolute error", np.abs(output - target)),
+        )
+    ):
+        for col, image in enumerate(images):
+            axes[row, col].imshow(
+                image.transpose(1, 2, 0).clip(0, 1), interpolation="nearest"
+            )
+            axes[row, col].set_xticks([])
+            axes[row, col].set_yticks([])
+            if col == 0:
+                axes[row, col].set_ylabel(label)
+    fig.suptitle(
+        "Held-out combinations · supplied oracle facts · targets and reconstruction errors"
+    )
+    fig.savefig(root / "comparison.png", dpi=140)
+    return write_report(root)

@@ -1,5 +1,23 @@
 # Current work
 
+**Multimodal diagnosis and bounded repairs completed, 15 September:**
+[Protocol/results](modality-readout-plan.md#follow-up-result-15-september),
+[repair report](../runs/modality_repair_v1/report.html). Frozen stage probes show
+that combined-input encoder features support held-out factors much better than the
+posterior/sampled state. All8 longer native oracle fits pass known-output screens;
+held-out text/image and video quality still fail. Raw-logit training supervision
+improves known position from71–73% to97–100%, but direction stays near50% and held-out
+color worsens. All8 complete core screens fail; no default replacement. Probability
+auxiliary and temperature curriculum fail paired benefit.77 scoped tests, independent
+raw audits and exact auxiliary/curriculum resume pass. A read-only
+[direction follow-up](../runs/modality_repair_v1/direction_localization/report.html)
+finds69–90% known-direction access in posterior probabilities but50–54% in sampled
+codes, with measured code collisions. Trained pre-sampling auxiliary heads also
+fail direction; this is not exclusively a sampling explanation. Next: paired
+direction-only updater learning from initialization with a frozen verified encoder,
+then joint retention/composition and decoder recombination; not yet run.
+
+
 **Multimodal readout comparison completed, 15 September:**
 [protocol/results](modality-readout-plan.md),
 [combined report](../runs/modality_readout_v1/formal/report.html). Two seeds,
