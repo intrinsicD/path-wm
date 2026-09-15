@@ -431,3 +431,17 @@ or more loops has not been shown necessary by these results.
 The new audit independently recomputes reader fits, validation selection, predictions,
 metrics, checkpoint hashes and embedded image in206 checks. Static heatmap inspected;
 browser interaction remains unavailable. This follow-up changes no deployed weights.
+
+## Literature follow-up, 15 September
+
+[Twelve primary works and their transfer limits](direction-literature-review.md)
+cover categorical gradient estimators, VQ dimensional collapse, shared-objective
+optimization, paired observations, attention pooling and object dynamics. This is
+literature review, not new training or proof of our failure mechanism. In particular,
+the current factor objective has no KL term; VQ commitment/codebook results are not
+direct categorical-sampler results; hard-temperature warmup did not test an unquantized
+start. Claude's public-only critique was reconciled against the original papers.
+Direction-only versus all-factor learning from fresh updater initialization remains
+the first proposed test. Continuous/hard controls and measured gradient/query repairs
+are subsequent alternatives, not a bundled default rewrite. Budgets/gates for a new
+training study must be declared before running it.

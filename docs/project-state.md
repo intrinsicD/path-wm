@@ -1,5 +1,15 @@
 # Current work
 
+**Direction literature review, 15 September:**
+[Primary-source review and proposed comparisons](direction-literature-review.md).
+Categorical estimators, multi-task interference, paired-factor supervision and
+attention pooling provide relevant candidates. A May2026 VQ warm-up preprint is an
+analogy, not a theorem for our sampler. Current core classification has no KL loss;
+standard KL-collapse fixes do not directly apply. Proposed: isolate direction learning,
+then compare continuous/hard training and targeted gradient/query changes with matched
+controls. Two public-only Claude methodology exchanges reconciled. No new model runs,
+architecture adoption or green capability promotion.
+
 **Multimodal diagnosis and bounded repairs completed, 15 September:**
 [Protocol/results](modality-readout-plan.md#follow-up-result-15-september),
 [repair report](../runs/modality_repair_v1/report.html). Frozen stage probes show
