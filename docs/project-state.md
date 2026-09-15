@@ -1,5 +1,10 @@
 # Current work
 
+**World State foundation in progress, 15 September:** user authorizes modular base
+implementation and training/inference inspection. [Plan and contracts](world-state-foundation-plan.md).
+Reuse the current neural core and Run/report infrastructure; core store, correction,
+retrieval and a working adapter precede learned-capability claims.
+
 **Persistent multimodal World State review, 15 September:**
 [assessment and proposed milestones](world-state-proposal-review.md). Two actual
 Claude review rounds support the hybrid entity/component/relation/evidence design.
