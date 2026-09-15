@@ -1175,7 +1175,7 @@ def render_report(directory):
         for s in (directory / "metrics.jsonl").read_text().splitlines()
         if s
     ]
-    if rows and not any(
+    show_objective_curve = bool(rows) and not any(
         (directory / name).exists()
         for name in (
             "modality_audit.json",
@@ -1190,7 +1190,8 @@ def render_report(directory):
             "entity_source_diagnosis.json",
             "entity_source_drift.json",
         )
-    ):
+    )
+    if show_objective_curve:
         curve_path = directory / "learning_curve.png"
         curves(rows, curve_path)
         mobile_curve = directory / "learning_curve_mobile.png"
@@ -1292,21 +1293,7 @@ def render_report(directory):
         parts.append(
             f'<section><h2>Examples in context</h2><img class="chart" alt="Labeled observation, target and output comparison" src="{panel}"></section>'
         )
-    if rows and not any(
-        (directory / name).exists()
-        for name in (
-            "capabilities.json",
-            "visual_memory.json",
-            "entity_growth.json",
-            "entity_temporal.json",
-            "entity_source.json",
-            "entity_gate_shift.json",
-            "entity_evidence_sources.json",
-            "entity_source_choice.json",
-            "entity_source_diagnosis.json",
-            "entity_source_drift.json",
-        )
-    ):
+    if show_objective_curve:
         parts.append(
             f'<section><picture><source media="(max-width: 600px)" srcset="{mobile_picture}"><img class="chart" alt="Training and validation objective by optimizer update" src="{picture}"></picture><p>Source: metrics.jsonl. Validation population and weighted loss terms are fixed by this run’s recipe.</p></section>'
         )
