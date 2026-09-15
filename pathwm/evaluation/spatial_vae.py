@@ -355,3 +355,47 @@ def constant_decoder_diagnostic(model, device="cpu"):
         palette_metrics=color_grid_metrics(rec, images.cpu()),
         scope="Constant latent fields, deterministic decoder, central interiors; no claim of the unique training cause",
     ), dict(palette_input=images.cpu(), palette_output=rec, constant_output=decoded)
+
+
+@torch.no_grad()
+def local_color_readouts(model, training, validation, test, device="cpu"):
+    sets = {}
+    with evaluation_mode(model):
+        for split, images, seed in [
+            ("train", training, 57215),
+            ("validation", validation, 57216),
+            ("test", test, 57217),
+        ]:
+            matrices = {}
+            rng = torch.Generator().manual_seed(seed)
+            noise = torch.Generator(device=device).manual_seed(seed + 100)
+            for x in images.split(1):
+                p, trace = model.inspect(x.to(device))
+                factor = model.encoder.factor
+                targets = F.avg_pool2d(trace["input.padded"], factor, factor)
+                count = p.mu.shape[-2] * p.mu.shape[-1]
+                ids = torch.randperm(count, generator=rng)[:4]
+                for key, value in [
+                    ("target", targets),
+                    ("before_posterior", trace["posterior.input"]),
+                    ("mu", p.mu),
+                    ("sampled_z", p.sample(noise)),
+                ]:
+                    matrices.setdefault(key, []).append(
+                        value.flatten(2).transpose(1, 2)[0, ids].cpu()
+                    )
+            sets[split] = {k: torch.cat(v) for k, v in matrices.items()}
+    source = sets["train"]
+    return {
+        key: dict(
+            width=source[key].shape[1],
+            **{
+                split: probe_readout(
+                    source[key], source["target"], rows[key], rows["target"]
+                )
+                for split, rows in sets.items()
+                if split != "train"
+            },
+        )
+        for key in ["before_posterior", "mu", "sampled_z"]
+    }

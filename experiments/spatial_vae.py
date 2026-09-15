@@ -517,7 +517,7 @@ def train(
                     final=final_train,
                     passed=final_train["mean"]["raw_mse"]
                     <= 0.25 * initial_train["mean"]["raw_mse"],
-                    scope="Eight training photos, deterministic mean decoding, beta zero; not a VAE or generalization claim.",
+                    scope=f"Deterministic mean decoding on {len(training)} training photos, beta={config['beta']}; training-set diagnostic, not sampled-VAE or generalization validation.",
                 ),
             )
         state = (
@@ -1216,6 +1216,43 @@ def hierarchy_study(output, root, device):
     return records
 
 
+def constant_control_report(output, source_directory):
+    output, source = Path(output), Path(source_directory)
+    if output.exists():
+        raise FileExistsError("Preserve constant control report")
+    output.mkdir(parents=True)
+    arrays = np.load(source / "constants.npz")
+    original = json.loads((source / "result.json").read_text())["metrics"]["constants"]
+    decoded = arrays["constant_output"][[0, 1, 5, 9, 14, 23], :, 48:80, 48:80]
+    flat = np.broadcast_to(decoded.mean((2, 3), keepdims=True), decoded.shape)
+    example_panel(
+        output / "comparison.png",
+        dict(flat=flat, decoded=decoded, error=0.5 + 10 * (decoded - flat)),
+        dict(
+            flat="Flat diagnostic reference",
+            decoded="Constant latent: center crop",
+            error="Difference x10, gray = zero",
+        ),
+        count=6,
+    )
+    atomic_json(output / "run.json", json.loads((source / "run.json").read_text()))
+    atomic_json(
+        output / "result.json",
+        dict(
+            completed=True,
+            metrics=original,
+            evaluation_scope="Spatially constant latent with zero sampling noise. Flat display reference is derived from decoded mean, not a reconstruction target. Fixed10x signed differences around gray; central32x32 crops.",
+        ),
+    )
+    atomic_json(
+        output / "status.json",
+        dict(result="completed", report="pending", step=0, error=None),
+    )
+    (output / "metrics.jsonl").write_text("")
+    write_report(output)
+    arrays.close()
+
+
 def color_diagnosis(output, weights, root, device):
     from pathwm.evaluation.spatial_vae import (
         color_grid_metrics,
@@ -1232,6 +1269,7 @@ def color_diagnosis(output, weights, root, device):
         seed=57201,
         purpose="Frozen color/grid attribution and fixed-budget component reparability",
     )
+    seed_everything(config["seed"])
     data = hierarchy_data(root, config)
     tensors = {s: d.batch(range(len(d)))["rgb"] for s, d in data.items()}
     model = SpatialVAE.load(weights, device)
@@ -1279,6 +1317,7 @@ def color_diagnosis(output, weights, root, device):
         output / "reference/constants.npz",
         **{k: v.numpy() for k, v in pictures.items()},
     )
+    constant_control_report(output / "constant_control", output / "reference")
     selections = [0, 4, 8, 13, 18, 22, 26]
     example_panel(
         output / "reference/palette.png",
@@ -1441,6 +1480,110 @@ def color_diagnosis(output, weights, root, device):
     return records
 
 
+def color_sampling_followup(output, weights, root, device):
+    from pathwm.evaluation.spatial_vae import color_grid_metrics, local_color_readouts
+
+    output = Path(output)
+    config = dict(
+        hierarchy_settings("C", 0.1),
+        seed=57201,
+        purpose="Matched deterministic-mu decoder-only diagnostic; encoder frozen",
+    )
+    seed_everything(config["seed"])
+    data = hierarchy_data(root, config)
+    tensor = {s: d.batch(range(len(d)))["rgb"] for s, d in data.items()}
+    fit = output / "decoder_mean/training"
+    if not (fit / "weights.pt").exists():
+        train(
+            fit,
+            data["train"],
+            data["validation"],
+            config,
+            device,
+            source=weights,
+            trainable="decoder",
+            deterministic=True,
+        )
+    if (output / "decoder_mean/evaluation").exists():
+        raise FileExistsError("Preserve existing follow-up evaluation")
+    baseline = SpatialVAE.load(weights, device)
+    model = SpatialVAE.load(fit / "weights.pt", device)
+    assert all(
+        torch.equal(v, model.encoder.state_dict()[k])
+        for k, v in baseline.encoder.state_dict().items()
+    )
+    local = local_color_readouts(
+        baseline,
+        tensor["train"][:64],
+        tensor["validation"][:16],
+        tensor["test"][:16],
+        device,
+    )
+    rows, _, _ = evaluate_images(model, tensor["test"], device)
+    metrics = {
+        key: color_grid_metrics(rows[key], rows["target"])
+        for key in ["mean", "sampled"]
+    }
+    metrics["local_readouts_of_reference"] = local
+    metrics["frozen_encoder_unchanged"] = True
+    metrics["scope"] = (
+        "Decoder trained on deterministic mu; diagnostic, not adopted replacement for stochastic VAE objective."
+    )
+    report_evaluation(
+        output / "decoder_mean/evaluation",
+        config,
+        data["test"].identity,
+        model,
+        metrics,
+        rows,
+        device,
+        metrics["scope"],
+    )
+    np.savez_compressed(
+        output / "decoder_mean/evaluation/predictions.npz",
+        **{k: v.numpy() for k, v in rows.items()},
+    )
+    previous = json.loads((output / "result.json").read_text())
+    previous["metrics"]["deterministic_decoder_followup"] = metrics
+    atomic_json(output / "result.json", previous)
+    # A compact common-panel comparison makes the sampling intervention inspectable.
+    before = np.load(output / "reference/predictions.npz")
+    sampled = np.load(output / "decoder/evaluation/predictions.npz")
+    example_panel(
+        output / "comparison.png",
+        dict(
+            original=rows["target"],
+            reference=before["mean"],
+            sampled_training=sampled["mean"],
+            mean_training=rows["mean"],
+            mean_trained_sample=rows["sampled"],
+        ),
+        dict(
+            original="Original",
+            reference="Reference",
+            sampled_training="Decoder: sampled training",
+            mean_training="Decoder: mean-only training",
+            mean_trained_sample="Mean-trained: sampled output",
+        ),
+        count=6,
+    )
+    write_report(output)
+    print("MEAN-TRAINED DECODER", json.dumps(metrics["mean"]), flush=True)
+    print(
+        "LOCAL READOUTS",
+        json.dumps(
+            {
+                k: {reader: v["test"][reader]["mse"] for reader in ["linear", "rbf"]}
+                for k, v in local.items()
+            }
+        ),
+        flush=True,
+    )
+    before.close()
+    sampled.close()
+    return metrics
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument(
@@ -1471,6 +1614,7 @@ def main():
     p.add_argument("--low-kl", action="store_true")
     p.add_argument("--hierarchy-study", action="store_true")
     p.add_argument("--color-diagnosis", action="store_true")
+    p.add_argument("--color-followup", action="store_true")
     args = p.parse_args()
     if args.stop_after is not None and args.stop_after <= 0:
         p.error("--stop-after must be positive")
@@ -1478,6 +1622,11 @@ def main():
         p.error("--low-kl requires the corresponding beta-one --weights")
     if sum([args.development, args.overfit, args.low_kl]) > 1:
         p.error("Development, overfit and low-KL modes are separate protocols")
+    if args.color_followup:
+        if not args.weights:
+            p.error("--color-followup requires reference --weights")
+        color_sampling_followup(args.output, args.weights, args.data_root, args.device)
+        return
     if args.color_diagnosis:
         if not args.weights:
             p.error("--color-diagnosis requires reference --weights")

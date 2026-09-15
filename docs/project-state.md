@@ -1,5 +1,17 @@
 # Current work
 
+**VAE color/grid diagnosis, 15 September:** [results and controls](spatial-vae-color-plan.md),
+[report](../runs/spatial_vae_color_v1/report.html). Constant latent fields generate
+a 2/4-pixel grid at decoder shuffles, even without noise; learned phase channels
+are unequal. Color accessibility drops strongly at24->4 posterior projection and
+again at sampling. Extra512-update encoder-only/decoder-only/joint sampled training
+changes global color error by only0.5–3.5%. Mean-only decoder training improves it
+37.6% with encoder fixed, but sampled RGB error worsens to0.09944; diagnostic only,
+not adopted. Grid remains.45 tests and independent data/weight/metric/replay audit
+pass. Default-vs-IEEE evaluation mismatch repaired without changing four trained
+weights; use reference_fp32/follow-up evaluation_fp32. Next: phase-consistent decoder
+initialization and color/rate/noise interventions with real sampled-output checks.
+
 **R/P/M/C VAE v2 implemented and tested, 15 September:**
 [Protocol, commands and results](spatial-vae-v2-plan.md),
 [comparison report](../runs/spatial_vae_v2/formal/report.html). Overlapping stem,
