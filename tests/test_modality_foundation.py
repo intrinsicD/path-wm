@@ -6,7 +6,12 @@ import torch
 from experiments.world_state import FoundationModel
 from pathwm.models.belief_state import Packet
 from pathwm.models.modalities import (
-    AudioDecoder, ImageDecoder, TextDecoder, Observation, TokenBatch, bytes_batch,
+    AudioDecoder,
+    ImageDecoder,
+    TextDecoder,
+    Observation,
+    TokenBatch,
+    bytes_batch,
 )
 from pathwm.models.tasks import Actor, OutputRequest, Provenance
 from pathwm.world_state.modules import Candidate, CandidateEncoder
@@ -17,8 +22,7 @@ def observation(kind):
     if kind == "text":
         values, valid = bytes_batch(["Tür öffnen"])
         return Observation(values, torch.ones_like(values, dtype=torch.float64), valid)
-    values = (torch.randn(1, 2, 32) if kind == "audio"
-              else torch.rand(1, 2, 3, 16, 16))
+    values = torch.randn(1, 2, 32) if kind == "audio" else torch.rand(1, 2, 3, 16, 16)
     return Observation(values, torch.tensor([[0.5, 1.0]], dtype=torch.float64))
 
 
@@ -32,8 +36,13 @@ def test_foundation_each_source_reaches_store_reasoner_and_outputs(kind):
     keys, values = projection.pool(encoded)
     candidate = Candidate("window", kind, kind, keys[0, 0], values[0, 0], kind, "v1")
     session = model.session()
-    response = session.observe(kind, occurred_at=1, available_at=1,
-                               candidates=(candidate,), packets=(Packet(kind, kind, obs),))
+    response = session.observe(
+        kind,
+        occurred_at=1,
+        available_at=1,
+        candidates=(candidate,),
+        packets=(Packet(kind, kind, obs),),
+    )
     assert response["bindings"][0]["status"] == "new"
     assert session.state.observation_count == 1
     snapshot = session.snapshot()
@@ -58,7 +67,9 @@ def test_candidate_pool_excludes_invalid_and_unselected_values_and_gradients():
     valid = torch.tensor([[True, True, False, False, False]]).expand(2, -1)
     selection = torch.zeros(2, 1, 5, dtype=torch.bool)
     selection[:, :, 0] = True
-    batch = TokenBatch(x.masked_fill(~valid[..., None], float("nan")), torch.zeros(2, 5), valid)
+    batch = TokenBatch(
+        x.masked_fill(~valid[..., None], float("nan")), torch.zeros(2, 5), valid
+    )
     keys, values = projection.pool(batch, selection)
     assert keys.shape == (2, 1, 4) and values.shape == (2, 1, 2)
     values.sum().backward()
@@ -71,7 +82,9 @@ def test_candidate_pool_excludes_invalid_and_unselected_values_and_gradients():
 @pytest.mark.parametrize("kind", ["text", "audio", "image"])
 def test_output_context_masks_exclude_nans_and_gradients(kind):
     torch.manual_seed(4)
-    module = {"text": TextDecoder, "audio": AudioDecoder, "image": ImageDecoder}[kind](16)
+    module = {"text": TextDecoder, "audio": AudioDecoder, "image": ImageDecoder}[kind](
+        16
+    )
     tokens = torch.randn(2, 3, 16, requires_grad=True)
     valid = torch.tensor([[True, True, False]]).expand(2, -1)
     changed = tokens.masked_fill(~valid[..., None], float("nan"))
@@ -86,9 +99,20 @@ def test_output_context_masks_exclude_nans_and_gradients(kind):
 
 def test_generated_candidate_cannot_be_written_as_source():
     model = FoundationModel().eval()
-    provenance = Provenance(OutputRequest("out", "text", Actor("user", "user"), "request"), Actor("agent", "model"))
-    c = Candidate("c", "decoder", "text", torch.ones(4), torch.ones(4), "text", "1",
-                  provenance=provenance)
+    provenance = Provenance(
+        OutputRequest("out", "text", Actor("user", "user"), "request"),
+        Actor("agent", "model"),
+    )
+    c = Candidate(
+        "c",
+        "decoder",
+        "text",
+        torch.ones(4),
+        torch.ones(4),
+        "text",
+        "1",
+        provenance=provenance,
+    )
     session = model.session()
     before = session.snapshot()
     with pytest.raises(ValueError, match="source"):
@@ -102,3 +126,42 @@ def test_video_decode_rejects_invalid_state():
     bad = replace(state, time=torch.full_like(state.time, float("nan")))
     with pytest.raises(ValueError, match="finite"):
         model.decode_video([bad])
+
+
+def test_mixed_modalities_commit_once_and_retry():
+    model = FoundationModel().eval()
+    session = model.session()
+    packets = tuple(
+        Packet(kind, kind, observation(kind))
+        for kind in ("image", "text", "audio", "video")
+    )
+    first = session.observe("mixed", occurred_at=1, available_at=1, packets=packets)
+    before = session.snapshot()
+    assert (
+        session.observe("mixed", occurred_at=1, available_at=1, packets=packets)
+        == first
+    )
+    assert session.store.snapshot() == before["world"]
+    assert session.state.observation_count == 1
+    assert len(session.state.memory.recent[0].sources) == 4
+    session.think(Query())
+
+
+def test_mismatched_memory_codes_rejected_at_construction():
+    from pathwm.models.belief import BeliefAgent
+    from pathwm.models.hybrid_memory import HybridMemory
+
+    base = FoundationModel().agent
+    with pytest.raises(ValueError, match="latent_codes"):
+        BeliefAgent(
+            width=16,
+            latent_codes=4,
+            encoders=base.encoders,
+            decoders=base.decoders,
+            updater=base.updater,
+            dynamics=base.dynamics,
+            thinker=base.thinker,
+            memory=HybridMemory(16, latent_codes=8),
+            action_head=base.action_head,
+            monitor=base.monitor,
+        )

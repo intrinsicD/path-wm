@@ -94,8 +94,20 @@ class Attend(nn.Module):
     def forward(
         self, query, context, valid=None, causal=False, trace=None, name="attention"
     ):
-        if valid is not None and not valid.any(1).all():
-            raise ValueError("Attention needs at least one valid key per sample")
+        if valid is not None:
+            if (
+                valid.shape != context.shape[:2]
+                or valid.dtype != torch.bool
+                or valid.device != context.device
+            ):
+                raise ValueError(
+                    "Attention validity must be boolean [B,N] on the context device"
+                )
+            if not valid.any(1).all():
+                raise ValueError("Attention needs at least one valid key per sample")
+            # A key-padding mask alone cannot stop NaNs from entering projections
+            # or gradients. Remove invalid payload before normalization/mixing.
+            context = context.masked_fill(~valid[..., None], 0)
         mask = None
         if causal:
             mask = torch.ones(
@@ -262,11 +274,12 @@ class ImageDecoder(nn.Module):
         self.read = Attend(width)
         self.output = nn.Linear(width, 3 * patch_size * patch_size)
 
-    def forward(self, tokens, trace=None):
+    def forward(self, tokens, trace=None, *, valid=None):
         b, p, side = len(tokens), self.patch_size, self.image_size // self.patch_size
         x = self.read(
             self.queries.expand(b, -1, -1),
             tokens,
+            valid=valid,
             trace=trace,
             name="decode.image.attention",
         )
@@ -284,10 +297,11 @@ class AudioDecoder(nn.Module):
         self.read = Attend(width)
         self.output = nn.Linear(4 * width, samples)
 
-    def forward(self, tokens, trace=None):
+    def forward(self, tokens, trace=None, *, valid=None):
         x = self.read(
             self.queries.expand(len(tokens), -1, -1),
             tokens,
+            valid=valid,
             trace=trace,
             name="decode.audio.attention",
         )
@@ -302,7 +316,7 @@ class TextDecoder(nn.Module):
         self.self_attention, self.read = Attend(width), Attend(width)
         self.output = nn.Linear(width, vocabulary)
 
-    def forward(self, tokens, prefix, trace=None):
+    def forward(self, tokens, prefix, trace=None, *, valid=None):
         if prefix.ndim != 2 or len(prefix) != len(tokens) or prefix.shape[1] < 1:
             raise ValueError("Text prefix must be nonempty [B,L]")
         if (
@@ -310,8 +324,11 @@ class TextDecoder(nn.Module):
             or ((prefix < 0) | (prefix >= self.vocabulary)).any()
         ):
             raise ValueError("Text prefix contains invalid vocabulary IDs")
-        valid = prefix != 0
-        if not valid[:, 0].all() or ((~valid[:, :-1]) & valid[:, 1:]).any():
+        prefix_valid = prefix != 0
+        if (
+            not prefix_valid[:, 0].all()
+            or ((~prefix_valid[:, :-1]) & prefix_valid[:, 1:]).any()
+        ):
             raise ValueError("Text prefixes must be nonempty and right padded")
         x = self.embedding(prefix) + position(
             torch.arange(prefix.shape[1], device=tokens.device, dtype=tokens.dtype),
@@ -320,22 +337,24 @@ class TextDecoder(nn.Module):
         x = self.self_attention(
             x,
             x,
-            valid=valid,
+            valid=prefix_valid,
             causal=True,
             trace=trace,
             name="decode.text.causal_attention",
         )
-        x = self.read(x, tokens, trace=trace, name="decode.text.state_attention")
+        x = self.read(
+            x, tokens, valid=valid, trace=trace, name="decode.text.state_attention"
+        )
         return self.output(x)
 
     @torch.no_grad()
-    def generate(self, tokens, max_tokens=32):
+    def generate(self, tokens, max_tokens=32, *, valid=None):
         if max_tokens < 1:
             raise ValueError("Text generation budget must be positive")
         prefix = torch.ones(len(tokens), 1, dtype=torch.long, device=tokens.device)
         ended = torch.zeros(len(tokens), dtype=torch.bool, device=tokens.device)
         for _ in range(max_tokens):
-            logits = self(tokens, prefix)[:, -1].clone()
+            logits = self(tokens, prefix, valid=valid)[:, -1].clone()
             logits[:, :2] = -torch.inf  # PAD/BOS are not generated as content.
             next_id = logits.argmax(-1).masked_fill(ended, 2)
             prefix = torch.cat((prefix, next_id[:, None]), 1)

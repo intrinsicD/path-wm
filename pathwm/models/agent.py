@@ -795,6 +795,8 @@ class MultimodalAgent(nn.Module):
     def decode_video(self, states, trace=None):
         if not states:
             raise ValueError("Video needs a nonempty latent trajectory")
+        for state in states:
+            self.validate_state(state)
         for a, b in zip(states, states[1:]):
             if (b.time <= a.time).any():
                 raise ValueError("Video states must advance time")

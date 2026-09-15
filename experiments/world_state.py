@@ -15,7 +15,14 @@ from torch.nn import functional as F
 from pathwm.models.agent import Thinker, ActionHead, ErrorMonitor
 from pathwm.models.belief import BeliefAgent, BeliefCorrection, BeliefDynamics
 from pathwm.models.hybrid_memory import HybridMemory
-from pathwm.models.modalities import ImageEncoder, TextEncoder, ImageDecoder
+from pathwm.models.modalities import (
+    ImageEncoder,
+    TextEncoder,
+    ImageDecoder,
+    AudioDecoder,
+    TextDecoder,
+)
+from pathwm.models.multiscale import MultiScaleAudioEncoder, MultiScaleImageEncoder
 from pathwm.world_state.modules import (
     Candidate,
     CandidateEncoder,
@@ -73,10 +80,15 @@ class FoundationModel(nn.Module):
             updater=BeliefCorrection(width, 4, 4, 2),
             dynamics=BeliefDynamics(width, 4, 4, 2),
             thinker=Thinker(width),
-            memory=HybridMemory(width, recent=2, block=2, blocks=1),
+            memory=HybridMemory(width, recent=2, block=2, blocks=1, latent_codes=4),
             action_head=ActionHead(width),
             monitor=ErrorMonitor(width),
         )
+        # Complete modality interface; specialist training remains explicit.
+        self.agent.encoders["audio"] = MultiScaleAudioEncoder(32, width)
+        self.agent.encoders["video"] = MultiScaleImageEncoder(width, video=True)
+        self.agent.decoders["audio"] = AudioDecoder(width, 32)
+        self.agent.decoders["text"] = TextDecoder(width)
         self.agent.requires_grad_(False)
         self.agent.thinker.requires_grad_(True)
 

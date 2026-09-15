@@ -1384,6 +1384,9 @@ def render_report(directory):
     from pathwm.evaluation.world_state import world_state_inspection
 
     parts.extend(world_state_inspection(directory))
+    from pathwm.evaluation.modality_audit import modality_inspection
+
+    parts.extend(modality_inspection(directory))
     for title, data in [
         ("Resolved settings and source identities", record),
         ("Exact metric rows", rows),

@@ -21,6 +21,8 @@ from .store import WorldStore, primitive
 
 
 def candidate_record(c):
+    if c.provenance is not None:
+        raise ValueError("Generated/recalled candidate is not source observation")
     for value in (c.id, c.source, c.modality, c.space, c.model_version):
         identifier(value)
     for value in (c.key, c.value):

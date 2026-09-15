@@ -22,6 +22,9 @@ class Candidate:
     model_version: str
     content_ref: str = ""
     exclusive_group: str | None = None
+    provenance: object | None = (
+        None  # retain generated ancestry from the source Observation
+    )
 
 
 class CandidateEncoder(nn.Module):
@@ -36,6 +39,51 @@ class CandidateEncoder(nn.Module):
     def forward(self, features):
         hidden = self.backbone(features)
         return F.normalize(self.key(hidden), dim=-1), self.value(hidden)
+
+    def pool(self, encoded, selection=None):
+        """Masked supplied spans/regions [B,K,N] -> keys/values [B,K,D].
+
+        Defaults to one whole-window candidate per sample. This is a lossy adapter,
+        not discovery. Keep modality/version/provenance when making Candidate records.
+        """
+        tokens = encoded.as_tokens() if hasattr(encoded, "as_tokens") else encoded
+        x, valid = tokens.values, tokens.valid
+        if x.ndim != 3 or valid.shape != x.shape[:2] or valid.dtype != torch.bool:
+            raise ValueError(
+                "Candidate pooling requires values [B,N,D] and boolean validity"
+            )
+        if selection is None:
+            selection = torch.ones(
+                len(x), 1, x.shape[1], device=x.device, dtype=torch.bool
+            )
+        if (
+            selection.ndim != 3
+            or selection.shape[0] != len(x)
+            or selection.shape[2] != x.shape[1]
+            or selection.shape[1] < 1
+            or selection.dtype != torch.bool
+            or selection.device != x.device
+        ):
+            raise ValueError(
+                "Candidate selections must be boolean [B,K,N] on the feature device"
+            )
+        mask = selection & valid[:, None]
+        if not mask.any(-1).all():
+            raise ValueError(
+                "Each supplied candidate requires at least one valid token"
+            )
+        safe = (
+            x[:, None]
+            .expand(-1, selection.shape[1], -1, -1)
+            .masked_fill(~mask[..., None], 0)
+        )
+        if not torch.isfinite(safe).all():
+            raise ValueError("Selected candidate features must be finite")
+        pooled = safe.sum(2) / mask.sum(-1, keepdim=True)
+        keys, values = self(pooled.flatten(0, 1))
+        return keys.reshape(*pooled.shape[:2], -1), values.reshape(
+            *pooled.shape[:2], -1
+        )
 
 
 class CosineScorer(nn.Module):

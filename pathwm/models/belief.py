@@ -123,6 +123,12 @@ class BeliefAgent(MultimodalAgent):
             **components,
         )
         self.latent_groups, self.latent_codes = latent_groups, latent_codes
+        memory_projection = getattr(self.memory, "distribution", None)
+        if (
+            isinstance(memory_projection, nn.Linear)
+            and memory_projection.in_features != latent_codes
+        ):
+            raise ValueError("Memory latent_codes must match the agent's latent_codes")
         self.evidence_tokens, self.time_unit = evidence_tokens, time_unit
         self.evidence_queries = nn.Parameter(torch.randn(evidence_tokens, width) * 0.02)
         self.evidence_encoder = Attend(width)
