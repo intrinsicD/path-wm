@@ -51,6 +51,23 @@ Current joint tests demonstrate gradients/shapes, not isolated modality learning
 
 ## Progress and results
 
-Pending implementation and measured checks. Actual Claude conceptual review will
-challenge modality isolation, shortcut controls and interpretation boundaries;
-private repository/data/results remain local.
+Initial direct fit (128 updates each) passes loss-reduction checks. Text freely
+reproduces four words; audio MSE is 0.00001265 versus silence 0.1800. Video MSE is
+0.014726, worse than the mean-output control (0.011801), with almost no order
+sensitivity. Image control also remains weak. These are tiny fitting diagnostics.
+
+One bounded video repair comparison is now specified before execution: from the
+same direct checkpoint, 128 further video-only updates with ordinary MSE versus
+normalized foreground-weighted MSE (weight12 on the known synthetic object mask).
+Same data, optimizer, parameters and CPU budget. Evaluate unweighted RGB, foreground
+and background MSE, wrong-context sensitivity, centroid motion and reversed input.
+Repair screen: RGB beats mean output; foreground error improves at least20% against
+equal-duration continuation; motion direction correct in at least3/4 development
+clips with displacement above1 pixel. This is not a real-video quality standard.
+One split-run replica checks exact resume; other modalities' weights must stay fixed.
+
+Actual Claude two-round conceptual review accepts isolation/provenance/null-context
+controls. Its fixed shuffled-target-training suggestion was corrected: four fixed
+permuted pairs can also be memorized. Evaluation uses wrong-example/zero context and
+a unigram comparator instead. Sample-size limits remain explicit; no discovery or
+alignment claim. No private source/data/results exported.

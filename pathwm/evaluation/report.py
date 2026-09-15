@@ -1178,6 +1178,7 @@ def render_report(directory):
     if rows and not any(
         (directory / name).exists()
         for name in (
+            "modality_audit.json",
             "capabilities.json",
             "visual_memory.json",
             "entity_growth.json",

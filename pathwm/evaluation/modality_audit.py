@@ -10,6 +10,39 @@ def modality_inspection(directory):
     if not path.exists():
         return []
     data = json.loads(path.read_text())
+    # Separate curves: text CE and waveform/pixel MSE must not form one zigzag line.
+    from matplotlib.figure import Figure
+    from matplotlib.backends.backend_agg import FigureCanvasAgg
+
+    rows = [
+        json.loads(line)
+        for line in (directory / "metrics.jsonl").read_text().splitlines()
+    ]
+    fig = Figure(figsize=(9, 5), layout="constrained")
+    FigureCanvasAgg(fig)
+    for ax, kind in zip(fig.subplots(2, 2).flat, ("text", "audio", "video", "image")):
+        selected = [r for r in rows if r.get("modality") == kind]
+        if selected:
+            ax.plot(
+                range(1, len(selected) + 1),
+                [r["loss"] for r in selected],
+                color="#2763a4",
+            )
+        else:
+            ax.text(
+                0.5,
+                0.5,
+                "Frozen in this continuation",
+                ha="center",
+                transform=ax.transAxes,
+            )
+        ax.set(title=kind, xlabel="Updates to this branch", ylabel="Training objective")
+        ax.grid(alpha=0.2)
+    fig.savefig(directory / "modality_curves.png", dpi=130)
+    chart = (
+        "data:image/png;base64,"
+        + base64.b64encode((directory / "modality_curves.png").read_bytes()).decode()
+    )
     parts = [
         "<section><h2>Each modality tested independently</h2>",
         "<p>Four fixed examples per branch. Direct codec fitting is separate from the untrained persistent state path. These are not held-out speech, language or video capability tests.</p>",
@@ -37,6 +70,9 @@ def modality_inspection(directory):
         )
     parts.append(
         "</table></div><p>Text loss is cross-entropy; other losses are normalized pixel/sample MSE. Absolute values across modalities are not comparable. Video reconstructs observed frames; its state-path score uses the last observed frame.</p>"
+    )
+    parts.append(
+        f'<img class="chart" alt="Separate training curves for each modality" src="{chart}">'
     )
     text = data["metrics"]["text"]
     parts.append(

@@ -319,6 +319,22 @@ def evaluate(model, data, runner, trace, source):
                         runner.path / "audio_output.wav", output.flatten().numpy()
                     )
                 if kind == "video":
+                    foreground = (wanted - 0.05).abs().amax(2) > 0.01
+                    pixel_error = (output - wanted).square().mean(2)
+                    score["foreground_mse"] = float(pixel_error[foreground].mean())
+                    score["background_mse"] = float(pixel_error[~foreground].mean())
+                    mass = (output - 0.05).clamp_min(0).mean(2)
+                    x = torch.arange(output.shape[-1], dtype=output.dtype)
+                    centroid = (mass * x).sum((-1, -2)) / mass.sum((-1, -2)).clamp_min(
+                        1e-8
+                    )
+                    displacement = centroid[:, -1] - centroid[:, 0]
+                    score["horizontal_displacement"] = displacement.tolist()
+                    score["motion_direction_fraction"] = float(
+                        (displacement * torch.tensor([1.0, -1.0, 1.0, -1.0]) > 1)
+                        .float()
+                        .mean()
+                    )
                     reversed_obs = replace(obs, values=obs.values.flip(1))
                     reversed_output, _ = codec(reversed_obs)
                     score["reversed_input_output_change"] = float(
@@ -447,6 +463,14 @@ def run(args):
     seed_everything(args.seed)
     torch.set_num_threads(2)
     model = Study()
+    initialization = None
+    if args.initialize is not None:
+        initialization = dict(
+            path=str(args.initialize.resolve()), sha256=file_hash(args.initialize)
+        )
+        model.load_state_dict(
+            torch.load(args.initialize, weights_only=True, map_location="cpu")["model"]
+        )
     data = examples()
     optimizer = torch.optim.Adam(
         [p for p in model.parameters() if p.requires_grad], lr=0.003
@@ -457,14 +481,20 @@ def run(args):
         per_modality_updates=args.steps,
         learning_rate=0.003,
         purpose="development",
-        modalities=list(KINDS),
+        modalities=args.modalities,
+        initialize=None if args.initialize is None else str(args.initialize.resolve()),
+        video_foreground_weight=args.video_foreground_weight,
         source=str(args.source.resolve()),
         scope="four fixed examples per branch; isolated codec learning and separate untrained persistent adapter",
     )
     runner = Run(
         args.resume or args.output,
         settings=settings,
-        data={"kind": "modality-audit-v1", "source_sha256": file_hash(args.source)},
+        data={
+            "kind": "modality-audit-v1",
+            "source_sha256": file_hash(args.source),
+            "initialization": initialization,
+        },
         recipe=__file__,
         model=model,
         optimizer=optimizer,
@@ -473,10 +503,10 @@ def run(args):
     )
     trace = WorldTrace(max_records=500, tensor_values=8192)
     try:
-        while runner.step < args.steps * len(KINDS):
+        while runner.step < args.steps * len(args.modalities):
             if args.stop_after is not None and runner.step >= args.stop_after:
                 break
-            kind = KINDS[runner.step % len(KINDS)]
+            kind = args.modalities[runner.step % len(args.modalities)]
             model.train()
             optimizer.zero_grad(set_to_none=True)
             codec = model.codecs[kind]
@@ -486,7 +516,15 @@ def run(args):
                 else nullcontext()
             ):
                 output, _ = codec(data[kind])
-                loss = objective(kind, output, data[kind])
+                reconstruction = objective(kind, output, data[kind])
+                loss = reconstruction
+                if kind == "video" and args.video_foreground_weight != 1:
+                    wanted = target(kind, data[kind])
+                    foreground = (wanted - 0.05).abs().amax(2) > 0.01
+                    weights = torch.where(foreground, args.video_foreground_weight, 1.0)
+                    loss = (
+                        (output - wanted).square().mean(2) * weights
+                    ).sum() / weights.sum()
                 loss.backward()
             if not all(
                 p.grad is None or torch.isfinite(p.grad).all()
@@ -501,6 +539,7 @@ def run(args):
                     split="train",
                     modality=kind,
                     loss=float(loss.detach()),
+                    reconstruction=float(reconstruction.detach()),
                 )
             )
         runner.save()
@@ -510,8 +549,8 @@ def run(args):
             rows = [r for r in runner.rows if r["modality"] == kind]
             if not rows:
                 continue
-            score["initial_loss"] = rows[0]["loss"]
-            score["loss_ratio"] = score["loss"] / rows[0]["loss"]
+            score["initial_loss"] = rows[0].get("reconstruction", rows[0]["loss"])
+            score["loss_ratio"] = score["loss"] / score["initial_loss"]
             score["learning_gate"] = score["loss_ratio"] <= 0.8
         atomic_json(
             runner.path / "result.json",
@@ -520,7 +559,8 @@ def run(args):
                 real_transport=transport,
                 gate=all(
                     x.get("learning_gate", False) and x["exact_session_replay"]
-                    for x in metrics.values()
+                    for k, x in metrics.items()
+                    if k in args.modalities
                 ),
                 scope=settings["scope"],
                 source_sha256=file_hash(args.source),
@@ -545,7 +585,7 @@ def run(args):
                 ],
             ),
         )
-        complete = runner.step == args.steps * len(KINDS)
+        complete = runner.step == args.steps * len(args.modalities)
         runner.status("completed" if complete else "paused", "pending")
         write_report(runner.path)
         print(
@@ -557,7 +597,9 @@ def run(args):
     except Exception as error:
         # Preserve completed training when only final evaluation/reporting failed.
         runner.status(
-            "completed" if runner.step == args.steps * len(KINDS) else "failed",
+            "completed"
+            if runner.step == args.steps * len(args.modalities)
+            else "failed",
             "failed",
             str(error),
         )
@@ -571,6 +613,9 @@ def main():
     )
     parser.add_argument("--resume", type=Path)
     parser.add_argument("--steps", type=int, default=128)
+    parser.add_argument("--modalities", choices=KINDS, nargs="+", default=list(KINDS))
+    parser.add_argument("--initialize", type=Path)
+    parser.add_argument("--video-foreground-weight", type=float, default=1.0)
     parser.add_argument("--seed", type=int, default=61301)
     parser.add_argument(
         "--source",
@@ -584,6 +629,12 @@ def main():
         args.stop_after = 4
     if args.steps < 1 or (args.stop_after is not None and args.stop_after < 1):
         parser.error("positive updates required")
+    if (
+        not np.isfinite(args.video_foreground_weight)
+        or args.video_foreground_weight < 1
+        or len(set(args.modalities)) != len(args.modalities)
+    ):
+        parser.error("unique modalities and finite foreground weight >= 1 required")
     run(args)
 
 
