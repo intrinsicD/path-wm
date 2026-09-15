@@ -137,9 +137,11 @@ class Study(nn.Module):
         self.codecs.requires_grad_(True)
 
     def session(self, snapshot=None):
+        binder = AssociationBinder()
+        binder.scorer.eval()
         modules = dict(
             agent=self.agent,
-            binder=AssociationBinder(),
+            binder=binder,
             updater=self.updater,
             context_encoder=self.context,
         )
