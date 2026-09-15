@@ -160,8 +160,8 @@ sessions:
   open_threads: 14
 - id: 2026-09-15_001
   date: '2026-09-15'
-  summary: "Color/grid diagnosis isolates learned decoder phase artifacts and fragile posterior color access. Four controlled fits,45 tests and813 checks; deterministic color improves but sampling fails. No replacement adopted."
-  turn_count: 5
-  events_count: 30
+  summary: "Efficient sampled-color objective improves colors in two seeds without extra inference work; KL rises and grids persist. KL/report deduplication and loss-only compiler benchmark verified;50 tests,5503 checks. No full repair or model replacement."
+  turn_count: 6
+  events_count: 36
   claims_touched: []
   open_threads: 17

@@ -6105,3 +6105,63 @@ tree:
   also_depends_on:
   - N364
   status: resolved
+- id: N366
+  type: decision
+  title: Prefer an efficient sampled-color repair and code cleanup
+  provenance: user
+  timestamp: 2026-09-15T13:36+02:00
+  choice: User prefers the more efficient solution and explicitly requests continued actual Claude collaboration,
+    implementation, review, tests/fixes, duplicate-code reduction and compilation-time work. Current VAE uses
+    eager execution; optional compilation clarification unanswered, so scoped runtime and loss-compiler measurements
+    proceed.
+  evidence:
+  - ara/evidence/tables/spatial_vae_repair_2026-09-15.json
+  also_depends_on:
+  - N361
+  - N364
+  status: resolved
+- id: N367
+  type: experiment
+  title: Deduplicated KL/report paths preserve behavior and reduce loss overhead
+  provenance: ai-executed
+  timestamp: 2026-09-15T13:36+02:00
+  result: Hoisted four KL computations into one, shared RGB report/opponent helpers, reused posterior tensors
+    for extra draws. Default loss and gradients preserved; sampled objectives optional. CPU eager loss median0.440->0.325ms;
+    captured nodes64->32, exp4->1; median first AOT-eager call0.910->0.822s after graph inspection/reset. Six
+    isolated-process measurements; not whole-model/Inductor compilation, default stays eager.
+  evidence:
+  - ara/evidence/tables/spatial_vae_repair_2026-09-15.json
+  also_depends_on:
+  - N366
+  status: resolved
+- id: N368
+  type: experiment
+  title: Two-seed sampled-color objective improves colors but fails grid-rate composite
+  provenance: ai-executed
+  timestamp: 2026-09-15T13:36+02:00
+  result: 'Eight fixed512-update continuations: standard/color6/phase20/both across57301/57302, same reference
+    geometry and actual sampling. Color-only lowers sampled global chroma error81.5-83.2%, pixel chroma55.7-58.9%,
+    raw RGB25.7-27.1%; inference parameter count122979 unchanged. Training8.2-9.7% longer; achieved KL36.9-40.7%
+    higher fails25% rate guard. Grid50% reduction never passes both seeds; phase term adds no consistent benefit.
+    All composite screens fail; source retained.'
+  evidence:
+  - ara/evidence/tables/spatial_vae_repair_2026-09-15.json
+  also_depends_on:
+  - N366
+  - N367
+  status: resolved
+- id: N369
+  type: experiment
+  title: Repair receipts and exact outputs independently verified
+  provenance: ai-executed
+  timestamp: 2026-09-15T13:36+02:00
+  result: 50 tests;5503 independent checks include eight exports, code snapshots, all logged objectives, matched
+    samplers/CUDA noise, NumPy metrics/rate/gates and exact GPU mean/three-draw replay.18 reports structurally
+    checked and example PNG inspected; browser unavailable. Audit CPU/CUDA loader mistake corrected without
+    result changes. Actual Claude two conceptual reviews reconciled; erroneous self-attributions and zero-weight
+    rate wording rejected.62.38s training,254MiB maximum reserved GPU,about300MiB artifacts.
+  evidence:
+  - ara/evidence/tables/spatial_vae_repair_2026-09-15.json
+  also_depends_on:
+  - N368
+  status: resolved

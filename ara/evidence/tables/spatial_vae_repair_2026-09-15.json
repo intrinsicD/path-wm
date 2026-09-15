@@ -1,0 +1,260 @@
+{
+  "provenance": "ai-executed",
+  "timestamp": "2026-09-15T13:36+02:00",
+  "commits": [
+    "eee720b",
+    "3451003",
+    "c4886a5",
+    "3e1be4a"
+  ],
+  "records": [
+    {
+      "seed": 57301,
+      "arm": "standard",
+      "sampled_average": {
+        "global_chroma_mse": 0.005048094782978296,
+        "pixel_chroma_mse": 0.012762927450239658,
+        "raw_mse": 0.01751188561320305
+      },
+      "fixed_constant_output_rms": 0.004720212891697884,
+      "pattern_raw_edge_mse": 0.05373372510075569,
+      "parameters": 122979,
+      "training_seconds": 7.36583257606253,
+      "weights_sha256": "3cc9e44a026452126ac9248574e5f1a34c4bd4fa689df73d5f13189eeef08c39",
+      "mean_raw_mse": 0.01638849638402462,
+      "kl_bits_per_pixel": 0.13811901211738586,
+      "screens": null
+    },
+    {
+      "seed": 57301,
+      "arm": "color",
+      "sampled_average": {
+        "global_chroma_mse": 0.000850274790233622,
+        "pixel_chroma_mse": 0.005251324890802304,
+        "raw_mse": 0.01276708859950304
+      },
+      "fixed_constant_output_rms": 0.004372539464384317,
+      "pattern_raw_edge_mse": 0.054410967975854874,
+      "parameters": 122979,
+      "training_seconds": 7.972609397955239,
+      "weights_sha256": "0f28b7b1a017fa97cb2003e5d43ec4cbedfa2615ab7de863fb50f2a050a40f66",
+      "mean_raw_mse": 0.011400842107832432,
+      "kl_bits_per_pixel": 0.19439777731895447,
+      "screens": {
+        "constant_grid": false,
+        "mean_rgb": true,
+        "pattern_edges": true,
+        "rate": false,
+        "sampled_color": true,
+        "sampled_rgb": true,
+        "train_time": true
+      }
+    },
+    {
+      "seed": 57301,
+      "arm": "phase",
+      "sampled_average": {
+        "global_chroma_mse": 0.005063129744182031,
+        "pixel_chroma_mse": 0.012796523359914621,
+        "raw_mse": 0.017574104170004528
+      },
+      "fixed_constant_output_rms": 0.0038270873483270407,
+      "pattern_raw_edge_mse": 0.053537871688604355,
+      "parameters": 122979,
+      "training_seconds": 8.01392452896107,
+      "weights_sha256": "a266caab3fc7dc70c88cb835e25a7753be4b21ee5ad5fff67fbd17db1e944977",
+      "mean_raw_mse": 0.016441132873296738,
+      "kl_bits_per_pixel": 0.13831783831119537,
+      "screens": {
+        "constant_grid": false,
+        "mean_rgb": true,
+        "pattern_edges": true,
+        "rate": true,
+        "sampled_color": false,
+        "sampled_rgb": true,
+        "train_time": true
+      }
+    },
+    {
+      "seed": 57301,
+      "arm": "both",
+      "sampled_average": {
+        "global_chroma_mse": 0.0008535491845880946,
+        "pixel_chroma_mse": 0.005241285388668378,
+        "raw_mse": 0.012827631396551928
+      },
+      "fixed_constant_output_rms": 0.004465420730412006,
+      "pattern_raw_edge_mse": 0.05394001677632332,
+      "parameters": 122979,
+      "training_seconds": 7.930090134963393,
+      "weights_sha256": "95e6edaabe1ccee3959dc12b2e7d8d88cd4d617f792c21d09efc4cb86e63d74d",
+      "mean_raw_mse": 0.011472339741885662,
+      "kl_bits_per_pixel": 0.19482098519802094,
+      "screens": {
+        "constant_grid": false,
+        "mean_rgb": true,
+        "pattern_edges": true,
+        "rate": false,
+        "sampled_color": true,
+        "sampled_rgb": true,
+        "train_time": true
+      }
+    },
+    {
+      "seed": 57302,
+      "arm": "standard",
+      "sampled_average": {
+        "global_chroma_mse": 0.004617150407284498,
+        "pixel_chroma_mse": 0.012115918099880219,
+        "raw_mse": 0.0172030267616113
+      },
+      "fixed_constant_output_rms": 0.006006982643157244,
+      "pattern_raw_edge_mse": 0.053642094135284424,
+      "parameters": 122979,
+      "training_seconds": 7.255577434087172,
+      "weights_sha256": "ec192d9984747e5235cc970c4d42c02eeb23c74673b2df6ce6004edf9d272b53",
+      "mean_raw_mse": 0.01609266735613346,
+      "kl_bits_per_pixel": 0.14085343480110168,
+      "screens": null
+    },
+    {
+      "seed": 57302,
+      "arm": "color",
+      "sampled_average": {
+        "global_chroma_mse": 0.0008560485439375043,
+        "pixel_chroma_mse": 0.00536499156927069,
+        "raw_mse": 0.012773782014846802
+      },
+      "fixed_constant_output_rms": 0.006034643854945898,
+      "pattern_raw_edge_mse": 0.054514676332473755,
+      "parameters": 122979,
+      "training_seconds": 7.955710880924016,
+      "weights_sha256": "a26d91044884568edaae458c19c4c8b71a7a94f66e3526bd0b18295e4b4de6d8",
+      "mean_raw_mse": 0.011437596753239632,
+      "kl_bits_per_pixel": 0.19305214285850525,
+      "screens": {
+        "constant_grid": false,
+        "mean_rgb": true,
+        "pattern_edges": true,
+        "rate": false,
+        "sampled_color": true,
+        "sampled_rgb": true,
+        "train_time": true
+      }
+    },
+    {
+      "seed": 57302,
+      "arm": "phase",
+      "sampled_average": {
+        "global_chroma_mse": 0.004733139804253976,
+        "pixel_chroma_mse": 0.012312416918575764,
+        "raw_mse": 0.01730684998134772
+      },
+      "fixed_constant_output_rms": 0.004954405128955841,
+      "pattern_raw_edge_mse": 0.05358168110251427,
+      "parameters": 122979,
+      "training_seconds": 7.9532652869820595,
+      "weights_sha256": "65c7cd1eb9d0ed25a747f83ad4d0c352ebcfcf88a286b44662be28b0cc983a85",
+      "mean_raw_mse": 0.01620389334857464,
+      "kl_bits_per_pixel": 0.13955038785934448,
+      "screens": {
+        "constant_grid": false,
+        "mean_rgb": true,
+        "pattern_edges": true,
+        "rate": true,
+        "sampled_color": false,
+        "sampled_rgb": true,
+        "train_time": true
+      }
+    },
+    {
+      "seed": 57302,
+      "arm": "both",
+      "sampled_average": {
+        "global_chroma_mse": 0.0008890765796725949,
+        "pixel_chroma_mse": 0.005379564904918273,
+        "raw_mse": 0.01278288351992766
+      },
+      "fixed_constant_output_rms": 0.0036466913297772408,
+      "pattern_raw_edge_mse": 0.053700171411037445,
+      "parameters": 122979,
+      "training_seconds": 7.928402713965625,
+      "weights_sha256": "66dcea2c5c4d4bd21991e67c44d75dbc2ee8eb5df85a192c356f4915d697f063",
+      "mean_raw_mse": 0.01146028097718954,
+      "kl_bits_per_pixel": 0.1940019577741623,
+      "screens": {
+        "constant_grid": false,
+        "mean_rgb": true,
+        "pattern_edges": true,
+        "rate": false,
+        "sampled_color": true,
+        "sampled_rgb": true,
+        "train_time": true
+      }
+    }
+  ],
+  "performance": {
+    "KL_exp_calls": {
+      "new": 1,
+      "old": 4
+    },
+    "cold_aot_seconds": {
+      "new_median": 0.8220104390056804,
+      "old_median": 0.9100911089917645,
+      "relative_reduction": 0.09678225522240669
+    },
+    "eager_seconds": {
+      "new_median": 0.00032492426689714196,
+      "old_median": 0.000439741233518968,
+      "relative_reduction": 0.2611012065050604
+    },
+    "graph_nodes": {
+      "new": 32,
+      "old": 64
+    },
+    "scope": "CPU loss-only microbenchmark; three fresh processes per variant, identical tensors, first AOT eager invocation after graph inspection/reset, compile cost excludes Python/PyTorch import. Not Inductor or whole-model compilation. Default execution stays eager.",
+    "warm_aot_seconds": {
+      "new_median": 0.0009747088692771892,
+      "old_median": 0.001318770934206744,
+      "relative_reduction": 0.260896002486218
+    }
+  },
+  "verification": {
+    "checks": 5503,
+    "passed": true,
+    "reports": 18,
+    "scope": "Preserved source and code snapshots, eight exports, matched sampler/noise, independent metrics/rate/screens, exact GPU replay, report structure/hashes; browser unavailable.",
+    "tests": 50
+  },
+  "scope": "Two continuation seeds, eight512-update fits, reused diagnostic heldout groups; no rate-matched or full-quality superiority. No model replacement.",
+  "sources": [
+    {
+      "path": "runs/spatial_vae_repair_v1/formal/result.json",
+      "sha256": "b3004748ec456715b2bbc8a5971ccf9418c038e7b94b5f486eb981d100e7c33e"
+    },
+    {
+      "path": "runs/spatial_vae_repair_v1/verification.json",
+      "sha256": "cf9685c1e56a55accc4cbb4a18a88983d4cbba538a07f8173e46be884652b2c6"
+    },
+    {
+      "path": "runs/spatial_vae_repair_v1/performance.json",
+      "sha256": "86c10e90992eb36cb7ff6207df50977496a886a6b5d2220d6612861b7fccc99d"
+    },
+    {
+      "path": "runs/spatial_vae_repair_v1/performance_summary.json",
+      "sha256": "3efb9b8fc9eaec35ae4842e6369dce4cace59302e10be55220d6879a5bd75293"
+    },
+    {
+      "path": "runs/reviews/spatial_vae_repair_v1/reconciliation.md",
+      "sha256": "4b536d86eabacae01cf1831cc0fcaab0080db67a2b2213f354e4c4d72f8c546f"
+    },
+    {
+      "path": "docs/spatial-vae-repair-plan.md",
+      "sha256": "a523eb67ba91d690e47d2b5c95d9d4e27f82382af4e6c40b2c0d7a52488dfe37"
+    },
+    {
+      "path": "runs/spatial_vae_v2/formal/C_beta0.1/training/weights.pt",
+      "sha256": "3f243ab1132e0e272544fda4f65f3cfefdca54bae7e3013a9f89cccf97c3b32a"
+    }
+  ]
+}

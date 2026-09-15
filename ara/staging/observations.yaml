@@ -4335,3 +4335,37 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O246
+  timestamp: 2026-09-15T13:36+02:00
+  provenance: ai-suggested
+  content: Targeted sampled-color supervision shows this fixed small architecture can learn substantially better
+    color without extra inference work, but uses more KL rate and retains weak detail/grids. It does not prove
+    rate-distortion superiority, a unique cause, complete latent information or general reconstruction quality.
+    Loss-only compilation gains do not establish whole-model startup/compile gains.
+  context: Interpretation/proposal after this turn; researcher has not responded to new measurements.
+  potential_type: claim
+  bound_to:
+  - N367
+  - N368
+  - N369
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O247
+  timestamp: 2026-09-15T13:36+02:00
+  provenance: ai-suggested
+  content: Retain color-only as the simple diagnostic candidate, since the phase-residual term adds no consistent
+    benefit. Next isolate decoder phase repair while preserving sampled-color gains and compare achieved-rate
+    overlap. Original weights stay available; do not substitute a deterministic decoder, change global defaults
+    or tune the same tests as if fresh.
+  context: Interpretation/proposal after this turn; researcher has not responded to new measurements.
+  potential_type: heuristic
+  bound_to:
+  - N367
+  - N368
+  - N369
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

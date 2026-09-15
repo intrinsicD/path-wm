@@ -148,3 +148,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 - [R/P/M/C VAE v2](tables/spatial_vae_v2_2026-09-15.json): N357-N360; ten real-photo fits pass sanity and fail quality,42 tests, exact367-tensor GPU resume,2203 independent checks,58 reports; unequal-resource/rate one-seed limits retained.
 
 - [VAE color and grid diagnosis](tables/spatial_vae_color_2026-09-15.json): N361-N365; constant-latent phase traces, frozen color probes, four controlled fits; deterministic color improves but sampling fails.45 tests and813 audit checks; original weights preserved.
+
+- [Sampled-color repair and loss efficiency](tables/spatial_vae_repair_2026-09-15.json): N366-N369; two-seed color gains at higher KL, grids persist; loss/report deduplication,50 tests,5503 audit checks and scoped compiler microbenchmarks.
