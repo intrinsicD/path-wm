@@ -3,10 +3,15 @@
 **Latent-core visualization, 15 September:** [source-grounded walkthrough](latent-core.md)
 and atlas §14–15 distinguish world belief, recurrent workspace, session memory and
 optional graph context. Thinker already repeats shared attention/MLP; only workspace
-changes. Native decoders read all state tokens. Proposed next comparison: train
-existing workspace as answer plan before adding dedicated plan tokens; preserve
-evidence and evaluate language/grounding plus total resources. No model change,
-training or new capability validation; discussion/green scopes are preserved.
+changes. Native decoders read all state tokens through modality-specific attention.
+Alex clarifies that shared thinking must remain multimodal; output branches should
+learn to extract what they need, optionally with their own adapter. No mandatory
+shared text/answer-plan bottleneck. Compare existing decoder reads against a small
+adapter before adding one; preserve evidence and evaluate output/grounding plus
+total resources. No model change, training or new capability validation;
+discussion/green scopes are preserved. Nested shared-weight Transformer loops are
+an allowed adapter variant: existing outer Thinker, optional inner modality readout
+refinement with fixed budgets first. No nested loop or adaptive stopping added.
 
 **Non-image modality interfaces repaired and measured, 15 September:**
 [protocol/results](modality-foundation-plan.md),

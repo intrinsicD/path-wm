@@ -22,7 +22,7 @@ Detail diagrams (2–13): blue = learned modules; gray = state/mechanics; green 
 - [12 · Training signals and gradient routes](#12-learning)
 - [13 · Persistent World State foundation](#13-target-graph)
 - [14 · Inside the latent core](#14-latent-core)
-- [15 · Proposed answer-plan boundary](#15-output-plan)
+- [15 · Shared latent thought, modality-specific readout](#15-output-plan)
 
 <a id="01-overview"></a>
 
@@ -437,7 +437,7 @@ The feature controller can propose a bounded feature code for supported reads. I
 
 finish is a policy/session operation, not independent proof of task success. The historical-recall experiment has an external verifier based on the delivered event log. General tool execution, open-ended decomposition and calibrated stopping remain incomplete.
 
-The current Thinker already repeats the same Attend parameters; only working/reasoning tokens change. General answer planning is not established by these named token slices. Atlas14-15 and docs/latent-core.md separate this mechanism from a proposed trained answer-plan interface.
+The current Thinker already repeats the same Attend parameters; only working/reasoning tokens change. General answer planning is not established by these named token slices. Atlas14-15 and docs/latent-core.md separate this shared multimodal mechanism from optional modality-specific readout adapters.
 
 Source: [pathwm/models/tasks.py · TaskInterpreter:419](../pathwm/models/tasks.py), [pathwm/models/tasks.py · TaskPolicy:442](../pathwm/models/tasks.py), [pathwm/models/tasks.py · MetadataEncoder:397](../pathwm/models/tasks.py), [pathwm/models/agent.py · think:709](../pathwm/models/agent.py), [pathwm/models/agent.py · emit:508](../pathwm/models/agent.py), [pathwm/models/agent.py · reflect:404](../pathwm/models/agent.py), [pathwm/models/recall.py · verify_recall:144](../pathwm/models/recall.py).
 
@@ -506,7 +506,7 @@ Image resolution and audio length are constructor settings. Output size alone do
 
 Native image/audio/text decoders accept context validity; text keeps a separate causal prefix mask. Video validates every state, including singleton trajectories. The independent codec audit learns four words and four tones; weighted video reconstruction improves object/motion but degrades total RGB. Its state-to-output path is untrained and measured only on the first example; no bottleneck-location or general generation claim.
 
-Native text decoding currently reads the entire state token set. A proposed smaller verbalizer could read only a prepared latent answer plan; first compare the existing workspace as that plan before adding modules. The user intends the core to do content reasoning. No decoder-size minimum or capacity-saving result follows yet.
+Native text decoding reads the entire state through prefix-conditioned cross-attention; image/audio use learned queries. Alex wants the core to remain multimodal. Extend each output readout only as needed, preserving the current path as the reference. A common text plan is not required; no decoder-size minimum or capacity-saving result follows yet.
 
 Source: [pathwm/models/modalities.py · ImageDecoder:282](../pathwm/models/modalities.py), [pathwm/models/modalities.py · AudioDecoder:308](../pathwm/models/modalities.py), [pathwm/models/modalities.py · TextDecoder:327](../pathwm/models/modalities.py), [pathwm/models/agent.py · decode_video:795](../pathwm/models/agent.py), [pathwm/models/tasks.py · GeneratedOutput:155](../pathwm/models/tasks.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md).
 
@@ -979,35 +979,43 @@ Source: [pathwm/models/belief.py · BeliefDynamics:33](../pathwm/models/belief.p
 
 <a id="15-output-plan"></a>
 
-## 15 · Proposed answer-plan boundary
+## 15 · Shared latent thought, modality-specific readout
 
-Discussion proposal · test existing workspace first, add separate tokens only when justified
+User clarification · existing decoder attention first; optional adapters need comparison
 
 ```mermaid
 flowchart TB
-    context["Retrieved evidence + question + intent<br/>Existing context/task interfaces"]
+    context["Observation / task / retrieved context<br/>Preserve source, time and validity"]
     class context store;
-    work["Existing latent Thinker / workspace<br/>Content selection and reasoning to train"]
+    work["Shared multimodal latent state<br/>World tokens + Thinker workspace<br/>No required text-shaped plan"]
     class work learned;
-    plan["Proposed latent answer plan<br/>First: existing workspace slice<br/>Later comparison: dedicated plan tokens"]
-    class plan proposal;
-    decoder["Modality output adapter<br/>Text: realize content and grammar<br/>Consumes plan + own output prefix"]
-    class decoder proposal;
-    output["Generated answer"]
-    class output external;
-    check["Proposed grounding / coverage check<br/>Evidence references + answer + task<br/>Revise / retrieve / ask when needed"]
-    class check proposal;
-    training["Required comparison<br/>Full-state vs workspace-only vs own plan<br/>Grounding / language / held-out combinations<br/>Total parameters / memory / compute"]
-    class training training;
-    context -->|"available context"| work
-    work -.->|"learn prepared content"| plan
-    plan -.->|"plan-only conditioning"| decoder
-    decoder -.->|"generated sequence"| output
-    output -.->|"candidate answer"| check
-    context -.->|"retained evidence"| check
-    check -.->|"revision decision"| work
-    training -.->|"explicit task losses and probes"| plan
-    training -.->|"generation losses and controls"| decoder
+    text["Text readout<br/>Existing prefix-conditioned attention<br/>Optional learned adapter"]
+    class text learned;
+    image["Image readout<br/>Existing spatial query attention<br/>Optional codec conditioning"]
+    class image learned;
+    audio["Audio readout<br/>Existing learned query attention<br/>Optional timed conditioning"]
+    class audio learned;
+    video["Video extension<br/>Temporal conditioning / generator<br/>Current path decodes state trajectory"]
+    class video proposal;
+    outputs["Text / image / audio / video outputs<br/>Modality-specific generation<br/>Agreement and timing require tests"]
+    class outputs external;
+    test["Proposed comparison<br/>Native readout vs small adapter<br/>Held-out tasks + wrong/empty context<br/>Grounding, quality, total resources"]
+    class test training;
+    context -->|"current context interfaces"| work
+    work -->|"state tokens"| text
+    work -->|"state tokens"| image
+    work -->|"state tokens"| audio
+    work -.->|"state / trajectory"| video
+    text -->|"causal text generation"| outputs
+    image -->|"RGB / codec features"| outputs
+    audio -->|"waveform / timed features"| outputs
+    video -.->|"temporal generation"| outputs
+    test -.->|"measure each branch and consistency"| outputs
+    work -->|"existing Thinker repeats"| work
+    text -.->|"optional shared loop"| text
+    image -.->|"optional shared loop"| image
+    audio -.->|"optional shared loop"| audio
+    video -.->|"optional shared loop"| video
     classDef learned fill:#e6eef8,stroke:#7696bc,color:#202a36;
     classDef store fill:#f3f4f6,stroke:#9098a4,color:#202a36;
     classDef external fill:#e7f1eb,stroke:#789887,color:#202a36;
@@ -1018,14 +1026,18 @@ flowchart TB
 
 [Full-size SVG](diagrams/atlas/15-output-plan.svg)
 
-This is an alternative under discussion, not an implemented replacement or demonstrated minimum decoder. Existing TaskPolicy and output request/provenance contracts should be reused; a general grounding checker is not already supplied by them.
+The common latent core stays multimodal. The user proposes optional modality-specific extraction before decoding, not a compulsory common answer plan or a new adapter implementation.
 
-A separate large planning Transformer is not a prerequisite. First train the existing working/reasoning slice as the decoder context and compare against the full-state reference. Add a small dedicated plan producer only if the comparison motivates it.
+Native text/image/audio decoders already learn cross-attention reads. Text queries depend on the generated prefix; image/audio queries are learned parameters. Extra adapters must add a measured benefit rather than duplicate that readout.
 
-Contents, relationships, uncertainty and communicative intent may remain learned representations. Preserve explicit evidence references for correction and inspection. Attention is not a proof of faithful attribution.
+The separate ConditionalFeatureGenerator already illustrates context-to-image-codec features. Current video uses ordered state-to-image decoding, not a validated general temporal generator. Common shape is not common semantics.
 
-A smaller output decoder may shift language/content work into the core; total system capacity, memory and computation must be measured. Standard language models already use latent activations; omitting intermediate text is a different design choice.
+Compare existing reads with a small adapter on fixed core states first; then consider joint training. Output losses must test task content and held-out combinations, including empty/swapped contexts. Track total resources and separate core retention, readout access and generation quality.
 
-Generated text must not be written back as independent source evidence. Actual multi-turn conversation, sufficient latent plan capacity, trained readiness/coverage and general language quality remain open.
+Extraction cannot recover unretained evidence. A generator can fill unspecified details using learned priors; this does not recover the original missing details. Preserve evidence metadata and test disagreement across simultaneous modalities.
 
-Source: [pathwm/models/agent.py · Thinker:105](../pathwm/models/agent.py), [pathwm/models/agent.py · step_task:637](../pathwm/models/agent.py), [pathwm/models/agent.py · emit:508](../pathwm/models/agent.py), [pathwm/models/modalities.py · TextDecoder:327](../pathwm/models/modalities.py), [docs/latent-core.md](../docs/latent-core.md).
+The earlier workspace-only answer-plan proposal remains an optional ablation, not adopted architecture. No model changes, training or new validation accompany this clarification.
+
+User-proposed nested loops: an outer shared Thinker and inner modality-specific token refinement can reuse weights within each loop. Do not require the same weights across modalities. Begin with fixed budgets; repetitions add compute and potentially training activation memory. Autoregressive steps multiplied by inner/outer loops can become expensive. Local refinement does not mutate world evidence or trigger outer thinking automatically.
+
+Source: [pathwm/models/agent.py · Thinker:105](../pathwm/models/agent.py), [pathwm/models/agent.py · emit:508](../pathwm/models/agent.py), [pathwm/models/modalities.py · TextDecoder:327](../pathwm/models/modalities.py), [pathwm/models/modalities.py · ImageDecoder:282](../pathwm/models/modalities.py), [pathwm/models/modalities.py · AudioDecoder:308](../pathwm/models/modalities.py), [pathwm/models/conditional_image.py · ConditionalFeatureGenerator:73](../pathwm/models/conditional_image.py), [docs/multimodal.md](../docs/multimodal.md), [docs/latent-core.md](../docs/latent-core.md).

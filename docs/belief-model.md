@@ -1,7 +1,7 @@
 # Categorical belief and bounded session memory
 
-[German visual walkthrough: latent core, existing thinking loop and proposed
-answer-plan boundary](latent-core.md).
+[German visual walkthrough: latent core, existing thinking loop and
+modality-specific output readout](latent-core.md).
 
 The multimodal CLI now defaults to `--state-model belief`. The existing Gaussian
 model remains available with `--state-model gaussian`; Python `build_model()` keeps

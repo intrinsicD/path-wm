@@ -35,6 +35,16 @@ may require adapter retraining and codec-version migration. Matching tensor shap
 does not establish semantic compatibility. Separate pretraining and staged adapter
 training are allowed; useful conditioning must be evaluated early.
 
+On15 September Alex clarified that the common thinking space must remain
+multimodal. Each decoder learns its own readout, optionally extended with a small
+adapter; a shared text-shaped answer plan is not required. Native text/image/audio
+decoders already read state with cross-attention. The adapter is an extension point,
+not a compulsory duplicate layer. See the [latent-core walkthrough](latent-core.md)
+for current mechanics, the proposed comparison and unresolved information capacity.
+Nested Transformer loops are an allowed readout variant: shared latent thinking
+outside, local modality refinement inside, with weight sharing within each loop
+and explicit compute budgets. The inner loops remain proposed, not implemented.
+
 | Modality | Intended output production |
 | --- | --- |
 | Text | Generate a token sequence; generator and decoder may be the same autoregressive network. |
