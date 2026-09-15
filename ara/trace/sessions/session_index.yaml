@@ -162,8 +162,9 @@ sessions:
   date: '2026-09-15'
   summary: 'Spatial VAE implemented and compared on real photos: base/attention/reversible all fail
     quality gates; reversible4.79% improvement misses5% benefit. Mechanics/replay verified;38 reports
-    repaired and inspected. Fine detail and state integration remain open.'
-  turn_count: 2
-  events_count: 12
+    repaired and inspected. Fine detail and state integration remain open. Expanded R/P/M/C specification
+    refined only; new attention/loop/probe work remains proposed.'
+  turn_count: 3
+  events_count: 15
   claims_touched: []
-  open_threads: 15
+  open_threads: 16

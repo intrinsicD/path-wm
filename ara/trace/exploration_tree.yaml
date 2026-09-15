@@ -5949,3 +5949,21 @@ tree:
   also_depends_on:
   - N354
   status: resolved
+- id: N356
+  type: decision
+  title: Refine the expanded spatial VAE specification before implementation
+  provenance: user
+  timestamp: 2026-09-15T09:50+02:00
+  choice: User asks whether the expanded R/P/M/C design makes sense, then explicitly selects specification
+    refinement only. Inspect existing repository, clarify guarantees, lowest-grid self-attention/shared
+    loops, stage probes and meaningful ablations; no model implementation or new experiment budget.
+  alternatives:
+  - Implement and test the extensions immediately
+  evidence:
+  - 'User clarification: Zunächst präzisieren'
+  - docs/spatial-vae-refinement.md
+  - runs/reviews/spatial_vae_refinement_v2/review_status.json
+  also_depends_on:
+  - N352
+  - N354
+  status: resolved

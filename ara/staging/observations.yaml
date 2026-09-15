@@ -4233,3 +4233,39 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O240
+  timestamp: 2026-09-15T09:50+02:00
+  provenance: user
+  content: Proposed next VAE separates representation changes, local processing, spatial communication
+    and explicit compression; adds overlapping stem, residual channel/local blocks, coarsest self-attention,
+    optional shared iterations, stage probes and rate/compute comparisons. Adaptive budgets and complex
+    generators remain deferred.
+  context: User supplied a detailed expanded specification and explicitly requested clarification
+    before implementing it. Existing A08/A09 implementation remains unchanged.
+  potential_type: architecture
+  bound_to:
+  - N356
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O241
+  timestamp: 2026-09-15T09:50+02:00
+  provenance: ai-suggested
+  content: Only rearrangement is guaranteed reversible; P already mixes local space and C is not
+    the only potential loss site. Kernel2/stride2 equals immediate unshuffle/projection under matched
+    geometry; add process-after-compression and resource-aware untied-depth controls. Detached normalized
+    held-out probes need variance/collapse and common-image targets. KL in bits is a rate proxy;
+    shape flexibility and weight sharing do not guarantee constant compute, memory or iterative quality.
+    Preserve simple phased baseline and current infrastructure.
+  context: Two actual Claude conceptual reviews reconciled five errors; primary VAE, rate-distortion,
+    probe and shared-transformer sources checked. docs/spatial-vae-refinement.md is a reviewed proposal,
+    not implemented configuration or efficacy evidence.
+  potential_type: architecture
+  bound_to:
+  - N356
+  - N354
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

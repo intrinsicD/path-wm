@@ -1923,3 +1923,14 @@ entries:
     adoption, full-agent green status or general generation claim. Review and visualization defects
     fixed with receipts; browser policy denial respected. Current session carries forward open topics
     and pending interpretations; no inferred abandonment or bulk promotion.
+- turn: 2026-09-15_001#3
+  notes:
+  - User clarification restricts this turn to refining the specification; N356 is a scope decision,
+    not adoption of O240/O241 or an implementation plan. Staged both architecture descriptions without
+    promotion.
+  - The reviewed document is not a downstream executable commitment. O238 interpretation and O239
+    duration/KL/capacity proposal remain unresolved; the new design is not a researcher endorsement
+    of their efficacy. Existing broad topics remain live; no abandonment inferred.
+  - Actual Claude errors were corrected and acknowledged, not imported as knowledge. No new experimental
+    evidence, model parameters, benchmark outcomes or green architecture scopes. Source review and
+    useful ablation design do not validate the proposed extensions.
