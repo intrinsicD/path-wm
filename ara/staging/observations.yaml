@@ -5153,3 +5153,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O295
+  timestamp: 2026-09-16T13:02+02:00
+  provenance: ai-suggested
+  content: 'Individual video experiments had hypotheses and fixed local budgets, but repeated repairs
+    have overemphasized a narrow horizontal-pan probe relative to the end-to-end agent goal. Propose an
+    overall milestone/stop-rule review before more readout tuning: preserve accessible-feature and fixed-matching
+    evidence, then test useful temporal state on actual video with explicit integration criteria. This
+    is a process recommendation, not a user-adopted architecture change or abandonment of O294.'
+  context: User challenges the red thread and whether iterative testing is becoming ad hoc.
+  potential_type: heuristic
+  bound_to:
+  - N437
+  - N435
+  - N436
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

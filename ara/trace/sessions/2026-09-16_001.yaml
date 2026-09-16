@@ -2,8 +2,8 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T12:52+02:00
-  turn_count: 13
+  last_turn: 2026-09-16T13:02+02:00
+  turn_count: 14
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not
     adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59
     scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
@@ -31,7 +31,8 @@ session:
     trained/preservation gates fail.85 tests,8661 restart,92229 audits,17 reports; no default change.
     Structured evidence:4 fits,81 vs1630 parameters,fresh99.69–100% and fixed rule pass. Learned-vs-fixed
     gain0.0366pp/old-source-14.71pp fails adoption; near-offset reassignment recorded.89 tests,10239 restart,42682
-    audits,8 reports.'
+    audits,8 reports. User challenges overall research coherence; milestone/stop-rule review proposed
+    before more probe optimization.'
 events_logged:
 - turn: 1
   type: decision
@@ -587,6 +588,22 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O292 experimental method committed through N434; retain provenance and failed preservation.
+- turn: 14
+  type: question
+  id: N437
+  routing: direct
+  provenance: user
+  summary: Are the successive video tests still following an explicit overall research objective?
+- turn: 14
+  type: observation
+  id: O295
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Individual video experiments had hypotheses and fixed local budgets, but repeated repairs
+    have overemphasized a narrow horizontal-pan probe relative to the end-to-end agent goal. Propose an
+    overall milestone/stop-rule review before more readout tuning: preserve accessible-feature and fixed-matching
+    evidence, then test useful temporal state on actual video with explicit integration criteria. This
+    is a process recommendation, not a user-adopted architecture change or abandonment of O294.'
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -769,6 +786,13 @@ ai_actions:
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
   - ara/evidence/tables/video_evidence_2026-09-16.json
+- turn: 14
+  action: Reviewed saved progression/results and explained local hypothesis chain versus missing end-to-end
+    video validation. No code, training, new Claude call, gate or roadmap adoption.
+  provenance: ai-executed
+  files_changed:
+  - ara/trace/exploration_tree.yaml
+  - ara/staging/observations.yaml
 claims_touched: []
 key_context:
 - turn: 1
@@ -824,6 +848,10 @@ key_context:
   excerpt: 'User clarified: Zuerst den strukturierten Richtungsleser weiterentwickeln, before duplication/compilation
     cleanup. Implement/review/test with Claude. Fresh structured100% at larger shifts also held by fixed
     cosine; old-source learned deterioration remains.'
+- turn: 14
+  excerpt: User asks whether we still follow a red thread rather than try something, notice something
+    and test another thing. Assistant acknowledges overfocus on the narrow direction diagnostic while
+    separating its useful evidence from general video capability.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -913,6 +941,8 @@ open_threads:
 - 'O294: separate decision-preserving calibration from offset-dependent refinement and retain old-source
   gates. Natural motion/static/unknown/tracking remain open; user prioritizes direction before deferred
   duplicate-code/compilation cleanup.'
+- 'N437/O295: review whole-task milestones and stopping criteria before further direction-probe refinements;
+  actual video/world-state usefulness unvalidated.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
@@ -1068,3 +1098,5 @@ ai_suggestions_pending:
   structured-readout proposal staged; no high-level motion claim promoted.
 - O292→H77 is committed structured-readout methodology, not a successful learned repair. O293 interpretation/O294
   calibration-vs-ranking proposal staged; no global video claim promoted.
+- O295 overall milestone review proposed only. No adoption/abandonment of O294 inferred; older video and
+  agent topics remain active.

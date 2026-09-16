@@ -7305,3 +7305,15 @@ tree:
   - runs/video_evidence_v1/failure-diagnosis.json
   - runs/video_evidence_v1/decision-changes.json
   status: resolved
+- id: N437
+  type: question
+  title: Are the successive video tests still following an explicit overall research objective?
+  provenance: user
+  timestamp: 2026-09-16T13:02+02:00
+  description: User asks whether experiments follow a coherent thread or merely react to each new finding
+    with another test. Requires explanation of progress toward usable video/world-state capability versus
+    repeated optimization of a controlled direction probe.
+  evidence:
+  - docs/video-evidence-plan.md
+  - docs/project-state.md
+  status: open
