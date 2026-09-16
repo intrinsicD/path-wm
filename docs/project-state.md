@@ -1,10 +1,21 @@
 # Current work
 
-**In progress: explicit request-path comparison,16 September:**
-[Protocol](request-readout-plan.md). Reuse the existing task interpreter to condition
-shared thinking; compare real versus constant requests with identical added modules,
-two sources, paired output-format requests and full quick-suite regressions.
-No new efficacy or default replacement claimed.
+**Suite-directed request-path comparison completed,16 September:**
+[Protocol/results](request-readout-plan.md),[report](../runs/request_readout_v1/report.html).
+Actual Claude critique/reconciliation; reuse TaskInterpreter/MetadataEncoder in the
+shared thinker. Four fixed768-update fits, same added capacity/starting weights;
+constant vs actual request, paired answer formats, novel/equal-length phrasing and
+routing/omission controls. Source7202 known-format joint exact improves0→93.75%,
+but novel joint exact stays0 in both sources/arms. Source7202 choice/pair scores
+remain93.75%/87.5% (1/25 quick tasks),7201 stays50% (0/25). Old-output failing cells
+16/22 and7/5; instruction7202 also regresses five broader quick tasks. No adoption.
+Novel answers follow wording-family/length patterns despite mostly correct first
+words. Next isolate request interpretation on balanced unseen paraphrases before
+more core fitting; weak-source content access and preservation stay open.566 full
+software tests and76 focused checks pass; exact1316-tensor restart and624 unchanged
+historical reference arrays.
+433.02 s training,90.71 MiB peak PyTorch training allocation. Structural/media QA;
+interactive browser QA unavailable. Existing defaults and broad colors preserved.
 
 **Suite-directed retention comparison completed,16 September:**
 [Protocol/results](grounded-retention-plan.md),

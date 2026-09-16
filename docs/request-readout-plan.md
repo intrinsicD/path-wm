@@ -77,3 +77,93 @@ byte tokenizer/length assertions, automated exact-string+EOS grading and tensor
 equality of physical logits/tokens under request changes. The other ablations are
 diagnostics; they cannot be selected as substitute primary outcomes. No subjective
 rater or inference of general instruction understanding is used.
+
+## Implementation verification
+
+Existing TaskInterpreter and MetadataEncoder are attached only for the opt-in
+recipe variant. Direct requests condition `think` through `task_tokens`; physical
+posterior/tokens remain unchanged when only the direct request changes. The
+observation question is still part of the normal observation path. Default `none`
+adds no parameters; a missing request retains the previous inference path.
+Encoder-stage diagnostics preserve the observation pass when the same text encoder
+is called again for requests. Source restoration reads the saved module topology
+before strict checkpoint loading.
+
+76 relevant software tests pass. CUDA smoke/restart compares four uninterrupted
+updates against two plus two: all1316 training-state tensor checks are exact.
+Both completed smoke reports pass structural checks. These are engineering
+checks, not quality evidence. Four formal fits follow the preregistered protocol;
+source code is frozen while they run.
+
+## Result — 16 September
+
+[Comparison report](../runs/request_readout_v1/report.html),
+[raw comparison](../runs/request_readout_v1/comparison.json),
+[verification](../runs/request_readout_v1/verification.json).
+All four fixed768-update fits and12 reference/evaluation runs completed. No default
+or broad capability promotion. Actual Claude method critique/reconciliation is
+saved in `runs/reviews/request_readout_v1/`; local code and result audits remain ours.
+
+| Source / request route | Known requests: both formats exact | New requests: both formats exact | VID.order choice / pairs | Old-output failing cells /72 |
+|---|---:|---:|---:|---:|
+|7201 / constant|0%|0%|50% /0%|16|
+|7201 / instruction|50%|0%|50% /0%|22|
+|7202 / constant|0%|0%|93.75% /87.5%|7|
+|7202 / instruction|93.75%|0%|93.75% /87.5%|5|
+
+Values are worst of three paired draws. The generated joint criterion requires
+both answers for the same clip and wording:32 clip/wording groups on16 test clips.
+These are not32 independent clips. Both7202 variants pass the original target in
+quick and larger profiles; each passes1/25 quick cases. Neither7201 variant passes
+any quick case. Both sources fail adoption, including the novel joint benefit gate.
+Instruction7202 also regresses five non-target quick cases (real-image scene and
+four image-containing cross-modal agreement subsets); fewer failing old-output
+cells do not establish overall preservation.
+
+The extra route does help the stronger source follow **known** answer formats,
+where the constant route always emits a single color. It does not generalize that
+control to the declared novel requests. In7202 instruction, the two equal-length
+novel questions starting with `Welche` both yield one color, and the two starting
+with `Gib` both yield two. One of each pair asks for the opposite format. First-word
+accuracy remains97.92% for single-color requests and93.75% for sequence requests
+(averages over both wordings and three draws), while full exact falls to47.92% and
+45.83%. All these answers terminate with EOS; this is not a generation-budget cutoff.
+A wording-family/length shortcut is compatible with this pattern; the experiment
+does not isolate which one caused it. Do not call it general language understanding.
+The corruption control makes the limit sharper: with only the direct request path,
+7202 instruction gets0% joint exact for the intact equal-length novel pair but
+93.75% worst-draw joint after reversing both strings. This is a diagnostic on that
+two-question subset, not a substitute task success or evidence of a useful reversed
+interface. It shows fragile input-pattern dependence; do not infer semantic
+instruction following from the familiar-wording gain. Omitted-video and last-frame
+controls stay50% for first-color and0% for ordered-pair answers in this source.
+Source7201 also retains a content problem. Stage readers still access100% at the
+video-order encoder, but only50–56.25% at final working tokens. Probe failure does
+not prove information destruction or uniquely identify a broken layer.
+
+The arms share initialization, teacher, calibration records, sampler end state,
+parameter count and update budget. Frozen weights/source files are unchanged; all
+624 fresh reference arrays equal historical references. Parameters rise297013 to
+316765 (19752 added);153648 train. Measured training totals 433.02 seconds,
+with 90.71 MiB peak PyTorch training allocation; this excludes CUDA runtime
+reservation. Full formal execution including diagnosis/evaluation takes1244.66s.
+Every fit/evaluation stays below600s and measured allocation below6GiB. Reports and
+embedded media are structurally decoded/verified; the comparison plot is visually
+inspected. Interactive browser QA remains unavailable under the existing URL policy.
+
+## Next bounded question
+
+First isolate request interpretation with balanced paraphrase families: cross
+first-color versus ordered-pair meaning with wording prefix and byte length, and
+hold out entire wording families. Separate content correctness, request-format
+correctness and EOS; retain same-evidence/opposite-request pairs. Test accessibility
+in the frozen text features and after TaskInterpreter before a further whole-core
+fit. This is a proposal requiring its own fixed protocol, not an extra search in
+this comparison. The working route remains reusable; do not enlarge visual
+encoders or replace the shared latent thinker based on these results. Stable
+content access in7201 and preservation of old outputs remain separate open issues.
+
+Final software verification:566 tests pass in475.89s, including the76 focused
+checks run before fitting.15838 raw/reference/media checks pass,19 reports including
+the two smoke runs and aggregate are structurally verified. The plan/red checks
+and working implementation were committed separately before formal fitting.

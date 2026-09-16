@@ -3,6 +3,10 @@
 For a suite-directed QA continuation through the **existing shared latent core**:
 
 ```bash
+.venv/bin/python -m experiments.modality_readout --stage understanding \
+  --core runs/modality_readout_v1/formal/seed7201/joint_native \
+  --understanding-suite data/understanding_v1/quick --seed 9401 --device cuda \
+  --output runs/my_grounded_reference
 .venv/bin/python -m experiments.modality_readout --stage grounded \
   --core runs/modality_readout_v1/formal/seed7201/joint_native \
   --understanding-suite data/understanding_v1/full --grounded-case VID.order \
@@ -10,7 +14,7 @@ For a suite-directed QA continuation through the **existing shared latent core**
   --output runs/my_grounded_decoder
 .venv/bin/python -m experiments.modality_readout --stage understanding \
   --core runs/my_grounded_decoder --understanding-suite data/understanding_v1/quick \
-  --seed 9401 --reference runs/understanding_suite_v1/final_baseline \
+  --seed 9401 --device cuda --reference runs/my_grounded_reference \
   --output runs/my_grounded_decoder/quick
 ```
 
@@ -22,6 +26,20 @@ replay. Evaluation is explicit after training, never automatic on a paused run.
 `--understanding-cases VID.order` selects that task for a larger evaluation; its
 contract cannot compare against a complete-suite reference. A selected report is
 not the full battery. [Fixed comparison, acceptance and limits](grounded-readout-plan.md).
+
+The experimental request path is enabled during `--stage grounded` with
+`--grounded-scope core --retention-weight 10 --request-readout instruction
+--request-contrasts`. Run the matched control separately with
+`--request-readout constant`, from the same source and seed. The existing task
+interpreter reads the real question or a constant; both arms still observe the
+question normally. `--request-contrasts` trains first-color and ordered-pair
+answers only on calibration clips. It saves generated-answer diagnostics for
+familiar and novel requests, routing controls and EOS completion in
+`request_contrasts.json`. Evaluation restores the saved route automatically.
+Omitting the options retains the original path. [Fixed protocol and
+results](request-readout-plan.md) define the scope and adoption gates.
+References must use the same evaluator code, fixtures and protocol; regenerate a
+source reference after an evaluator change instead of bypassing its contract check.
 
 The [optional depth-readout comparison](layer-readout-plan.md) adds
 `--encoder-readout layers` to core training. It learns per-scale mixtures of
