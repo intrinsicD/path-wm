@@ -74,3 +74,19 @@ common crop/parameter/masking contracts, input isolation, invalid radius combina
 Run existing video/image/modality regressions and real exact restart; independent raw
 metric/gate/exposure/source audits. Claude reviews public hypothetical methods only;
 review receipts under runs/reviews/video_matching_v1, no private exports.
+
+## Independent methodology review
+
+Actual Claude CLI review and two concise reconciliation replies are retained under
+runs/reviews/video_matching_v1 (public hypothetical methodology only). Accepted:
+nominal parameter count is not equal effective capacity; disabled head-column data
+gradients must be zero, although weight decay can still act. Auxiliary centering reads
+only final logits after masking and gives no hidden wide-correlation route. Claude
+withdrew the incorrect claim that10/11px exceeds radius3 at stride4. We retain the
+important fractional-grid/nonlinear-encoder caveat and mandatory frozen cosine diagnostic.
+We do not adopt its proposed conditional exclusion gate: a failed simple cosine reader
+cannot prove unrecoverability, and excluding difficult cases would weaken this evaluation.
+Means, per-source/magnitude breakdowns, thresholds and diagnostic aggregation were fixed
+above. Remaining concern about overinterpreting aggregates is addressed through scope:
+a trained classifier with a frozen image encoder on finite constructed pans, not a
+frozen classifier, universal equivariance or natural video understanding.

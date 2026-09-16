@@ -52,17 +52,27 @@ class OrderReadout(nn.Module):
     """Diagnostic consumer of spatial AND separate temporal features.
 
     The image decoder continues to consume the untouched spatial code. All modes
-    reserve the same five correlation channels, zero when disabled.
+    reserve the same 2*radius+1 correlation channels, zero when disabled. A common
+    radius fixes the crop and head size; active_radius masks only matching support.
     """
 
-    def __init__(self, channels, mode):
+    def __init__(self, channels, mode, *, correlation_radius=2, active_radius=None):
         super().__init__()
         if mode not in MODES:
             raise ValueError("Unknown direction arm")
+        active_radius = correlation_radius if active_radius is None else active_radius
+        if (
+            type(correlation_radius) is not int
+            or type(active_radius) is not int
+            or not 1 <= active_radius <= correlation_radius
+        ):
+            raise ValueError("Require integer radii with 1 <= active <= correlation")
+        self.correlation_radius = correlation_radius
+        self.active_radius = active_radius
         self.mode = mode
         self.temporal = CausalLatentMixer(channels)
         self.head = nn.Sequential(
-            nn.Conv2d(2 * channels + 5, 16, 1),
+            nn.Conv2d(2 * channels + 2 * correlation_radius + 1, 16, 1),
             nn.SiLU(),
             nn.AdaptiveAvgPool2d(1),
             nn.Flatten(),
@@ -83,8 +93,16 @@ class OrderReadout(nn.Module):
         valid = torch.ones_like(times, dtype=torch.bool)
         temporal = self.temporal.features(x, times, valid)[:, -1]
         appearance = x[:, -1]
-        correlation = local_correlation(x[:, -2], x[:, -1])
-        learned = torch.cat((appearance, temporal), 1)[..., 2:-2, 2:-2]
+        radius = self.correlation_radius
+        correlation = local_correlation(x[:, -2], x[:, -1], radius=radius)
+        if self.active_radius < radius:
+            offsets = torch.arange(-radius, radius + 1, device=x.device)
+            correlation = (
+                correlation * (offsets.abs() <= self.active_radius)[None, :, None, None]
+            )
+        learned = torch.cat((appearance, temporal), 1)[
+            ..., radius:-radius, radius:-radius
+        ]
         if self.mode == "correlation_only":
             learned = torch.zeros_like(learned)
         if self.mode not in ("correlation", "correlation_only"):
@@ -603,7 +621,12 @@ def train(args, prepared=None):
     if reflect and "reflected_features" not in sets["train"]:
         raise ValueError("Missing reflected RGB encoding for training")
     seed_everything(head_seed)
-    model = OrderReadout(sets["train"]["features"].shape[3], args.mode)
+    model = OrderReadout(
+        sets["train"]["features"].shape[3],
+        args.mode,
+        correlation_radius=getattr(args, "correlation_radius", 2),
+        active_radius=getattr(args, "active_radius", None),
+    )
     source = torch.load(args.temporal_source, map_location="cpu", weights_only=True)
     model.temporal.load_state_dict(source["model"], strict=True)
     cfg = dict(
@@ -635,7 +658,8 @@ def train(args, prepared=None):
         temporal_sha256=file_hash(args.temporal_source),
         purpose="paired last-step direction on constructed pans of real image contents",
         objective="single-sequence direction CE + pair_center_weight * mean per-pair SmoothL1 common class-score offset; frozen spatial codec. Training curve is total loss, validation is CE",
-        radius=2,
+        radius=model.correlation_radius,
+        active_radius=model.active_radius,
         example_labels={
             "input": "Pair members: all three frames, shared current frame"
         },
@@ -841,7 +865,12 @@ def challenge(args):
                 for a, b in zip(old_sources, new_sources)
                 for k in ("path", "sha256", "decoded_sha256")
             )
-            model = OrderReadout(sets["known"]["features"].shape[3], mode)
+            model = OrderReadout(
+                sets["known"]["features"].shape[3],
+                mode,
+                correlation_radius=cfg.get("radius", 2),
+                active_radius=cfg.get("active_radius"),
+            )
             state = torch.load(path / "last.pt", map_location="cpu", weights_only=True)
             model.load_state_dict(state["model"], strict=True)
             model.requires_grad_(False).eval()
@@ -958,6 +987,12 @@ if __name__ == "__main__":
         help="Optional explicit video paths, subjects and frame counts by split",
     )
     parser.add_argument("--mode", choices=MODES, default="train")
+    parser.add_argument("--correlation-radius", type=int, default=2)
+    parser.add_argument(
+        "--active-radius",
+        type=int,
+        help="Exposed matching radius within the common correlation crop/head width",
+    )
     parser.add_argument(
         "--pair-center-weight",
         type=float,

@@ -1,5 +1,9 @@
 # Current work
 
+**Active: explicit correspondence range:** [protocol](video-matching-plan.md).
+Matched radius3 crop/head with no, local2 or wide3 exposed matching channels.
+Frozen image codec; four temporal/head cells; twelve bounded fits plus exact restart.
+
 **Pair-centered objective comparison completed,16 September:**
 [Protocol/results](video-pair-center-plan.md),[report](../runs/video_pair_center_v1/report.html).
 Eight fixed512-update fits compare CE versus CE+0.1 per-pair common-offset SmoothL1,
