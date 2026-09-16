@@ -74,3 +74,27 @@ depth mixing is a low-capacity hypothesis; additional parameters/compute explici
 counted; no inference that a failure rejects general aggregation. Native is the
 last-only control. Rich attention-weighted alternatives are deferred to avoid
 adding several new factors. A fresh core is paired across arms, not a frozen core.
+
+## Implementation checks before comparison
+
+The pre-change suite passed542 tests in496.32s. Initial new checks failed as
+expected without the implementation. After implementation, three new fixtures
+were corrected to include the required observation time axis; legacy encoder-only
+checkpoints now retain strict loading without requiring a manifest. Adapter
+checkpoints still require their architecture metadata.41 initial focused tests then
+passed; adding the strict checkpoint/init check and broader regressions gives
+69 passing tests in18.65s.
+
+Six GPU smoke updates exercise each input mode, with all12 gates changing and
+original frozen parameters preserved. An uninterrupted run and3+3 explicit resume
+match exactly across2749 checkpoint leaves, including optimizer, sampler, CUDA
+RNG and training rows. Source checkpoint hash is unchanged. The initial isolated
+worktree CLI import selected the installed main checkout; setting PYTHONPATH=.
+fixed it before training. Two test invocations named nonexistent files and ran
+no tests; corrected regression output is retained. No fits were selected or
+repeated based on quality.
+
+Old completed runs keep their saved executable source. Exact resume under edited
+source remains intentionally refused; new layer/native runs resume under their
+own recorded source and settings. Existing checkpoint initialization remains
+supported.

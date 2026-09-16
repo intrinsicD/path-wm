@@ -24,6 +24,7 @@ from pathwm.models.multiscale import (
     MultiScaleImageEncoder,
     MultiScaleAudioEncoder,
     MultiScaleTextEncoder,
+    LayerReadout,
 )
 from pathwm.models.modalities import ImageDecoder, AudioDecoder, TextDecoder
 from pathwm.models.readout import RecurrentOutputAdapter, TemporalImageDecoder
@@ -206,8 +207,35 @@ class Model(nn.Module):
             self.posterior_head = nn.Linear(32, 8) if posterior_aux else None
 
 
+def configure_encoder_readout(model, mode):
+    """Attach a tiny optional readout without reinitializing existing weights."""
+    if mode not in ("native", "layers"):
+        raise ValueError("Unknown encoder readout")
+    for encoder in model.core.agent.encoders.values():
+        if mode == "native":
+            encoder.pyramid.layer_readout = None
+        elif encoder.pyramid.layer_readout is None:
+            parameter = next(encoder.parameters())
+            encoder.pyramid.layer_readout = LayerReadout(
+                len(encoder.pyramid.stages)
+            ).to(device=parameter.device, dtype=parameter.dtype)
+    return mode
+
+
+def source_encoder_readout(directory):
+    manifest = directory / "run.json"
+    if not manifest.exists():
+        # Legacy encoder-only checkpoints need no manifest. Strict state loading
+        # still rejects adapter weights without their architecture metadata.
+        return "native"
+    return json.loads(manifest.read_text())["identity"]["settings"].get(
+        "encoder_readout", "native"
+    )
+
+
 def load_initial(model, directory, device):
     checkpoint_path = directory / "last.pt" if directory.is_dir() else directory
+    configure_encoder_readout(model, source_encoder_readout(checkpoint_path.parent))
     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=True)
     missing, unexpected = model.load_state_dict(checkpoint["model"], strict=False)
     allowed = {"posterior_head.weight", "posterior_head.bias"}
@@ -244,6 +272,7 @@ def load_encoders(model, directory, device):
         directory / "last.pt", map_location=device, weights_only=True
     )
     prefix = "core.agent.encoders."
+    configure_encoder_readout(model, source_encoder_readout(directory))
     model.core.agent.encoders.load_state_dict(
         {
             k.removeprefix(prefix): v
@@ -668,6 +697,7 @@ def perform(args):
         if args.core is None:
             raise ValueError("Output training needs a factor-trained --core run")
         core_source = file_hash(args.core / "last.pt")
+        configure_encoder_readout(model, source_encoder_readout(args.core))
         checkpoint = torch.load(
             args.core / "last.pt", map_location=device, weights_only=True
         )
@@ -682,6 +712,11 @@ def perform(args):
         cache = torch.load(args.core / "states.pt", weights_only=True)
         if args.stage == "oracle":
             cache = oracle_states(populations)
+    first_encoder = next(iter(model.core.agent.encoders.values()))
+    encoder_readout = getattr(args, "encoder_readout", None) or (
+        "layers" if first_encoder.pyramid.layer_readout is not None else "native"
+    )
+    configure_encoder_readout(model, encoder_readout)
     model.requires_grad_(False)
     kinds = KINDS if args.stage == "joint" else (args.modality,)
     if args.stage in ("core", "joint"):
@@ -690,6 +725,9 @@ def perform(args):
         model.core.agent.monitor.requires_grad_(False)
     if encoder_source:
         model.core.agent.encoders.requires_grad_(False)
+        if encoder_readout == "layers":
+            for encoder in model.core.agent.encoders.values():
+                encoder.pyramid.layer_readout.requires_grad_(True)
     if args.posterior_aux:
         model.posterior_head.requires_grad_(True)
     if args.stage == "joint":
@@ -720,6 +758,7 @@ def perform(args):
         factor_task=args.factor_task,
         input_mode=args.input_mode,
         belief_readout=model.core.belief_readout,
+        encoder_readout=encoder_readout,
         gradient_audit_every=args.gradient_audit_every,
         factor_coefficients=[1 / 3, 1 / 3, 1 / 3]
         if args.factor_task == "all"
@@ -892,7 +931,7 @@ def perform(args):
                 raise AssertionError(f"Frozen parameter changed: {n}")
         if args.stage in ("frozen", "oracle"):
             assert state_hash(model.core) == before_core
-        if encoder_source:
+        if encoder_source and encoder_readout == "native":
             assert state_hash(model.core.agent.encoders) == before_encoders
         resource = dict(
             training_seconds_this_invocation=elapsed,
@@ -914,6 +953,17 @@ def perform(args):
             else 2 * int(args.variant[-1]),
             core_sha256=state_hash(model.core),
             encoder_sha256=state_hash(model.core.agent.encoders),
+            encoder_readout=encoder_readout,
+            encoder_readout_parameters=sum(
+                p.numel()
+                for n, p in model.core.agent.encoders.named_parameters()
+                if ".layer_readout." in n
+            ),
+            encoder_readout_gates={
+                k: e.pyramid.layer_readout.gates.detach().cpu().tolist()
+                for k, e in model.core.agent.encoders.items()
+                if e.pyramid.layer_readout is not None
+            },
             frozen_preserved=True,
             core_parameters=sum(p.numel() for p in model.core.parameters()),
             decoder_parameters={
@@ -1031,6 +1081,11 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--seed", type=int, default=7201)
     parser.add_argument("--variant", choices=VARIANTS, default="native")
+    parser.add_argument(
+        "--encoder-readout",
+        choices=("native", "layers"),
+        help="Optional same-scale depth readout; omitted restores source architecture",
+    )
     parser.add_argument("--modality", choices=KINDS, default="text")
     parser.add_argument("--core", type=Path)
     parser.add_argument(
@@ -1099,6 +1154,10 @@ def main():
         help="Optional learned untimed palette; requires query timing",
     )
     args = parser.parse_args()
+    if args.encoder_readout is not None and args.stage != "core":
+        parser.error(
+            "Encoder readout selection is for core training; evaluation restores its source"
+        )
     if args.video_palette and args.video_conditioning != "query":
         parser.error("Video palette requires explicit --video-conditioning query")
     if args.input_mode != "rotating" and args.stage not in ("core", "frozen"):

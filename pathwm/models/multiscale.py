@@ -162,6 +162,26 @@ class ConditionedBlock(nn.Module):
         return replace(query, values=x)
 
 
+class LayerReadout(nn.Module):
+    """Optional same-grid depth readout; never changes hierarchy propagation.
+
+    A zero gate is exactly native. Earlier entries are processing depth states,
+    not earlier/later frames. Signed gates allow both interpolation and contrast.
+    """
+
+    def __init__(self, levels):
+        super().__init__()
+        if levels < 1:
+            raise ValueError("Layer readout needs at least one scale")
+        self.gates = nn.Parameter(torch.zeros(levels))
+
+    def forward(self, final, earlier, level):
+        if not earlier or any(v.shape != final.shape for v in earlier):
+            raise ValueError("Layer readout needs same-grid earlier depth states")
+        mean = torch.stack(earlier).mean(0)
+        return final + self.gates[level].tanh() * (mean - final)
+
+
 class ScaleProcessor(nn.Module):
     def __init__(self, width, code_width, depth=1):
         super().__init__()
@@ -172,15 +192,19 @@ class ScaleProcessor(nn.Module):
             [ConditionedBlock(width, code_width) for _ in range(depth)]
         )
 
-    def forward(self, scale, condition, *, trace=None, name="scale"):
+    def forward(self, scale, condition, *, trace=None, name="scale", history=None):
         scale = replace(
             scale,
             values=(scale.values + self.identity).masked_fill(
                 ~scale.valid[..., None], 0
             ),
         )
+        if history is not None:
+            history.append(scale.values)
         for i, block in enumerate(self.blocks):
             scale = block(scale, condition, trace=trace, name=f"{name}.attention.{i}")
+            if history is not None:
+                history.append(scale.values)
         return scale
 
 
@@ -235,17 +259,32 @@ class FeatureHierarchy(nn.Module):
         self.fusion = nn.ModuleList(
             [ConditionedBlock(width, code_width) for _ in range(fusion_depth)]
         )
+        self.layer_readout = None
 
     def forward(self, fine, condition, *, condition_time=None, trace=None):
-        scales = []
+        scales, emitted = [], []
         for i, stage in enumerate(self.stages):
             if i:
                 fine = self.merges[i - 1](
                     scales[-1], condition, trace=trace, name=f"merge.{i - 1}"
                 )
             # Later levels consume the fully processed preceding scale.
-            finished = stage(fine, condition, trace=trace, name=f"scale.{i}")
+            history = [] if self.layer_readout is not None else None
+            finished = stage(
+                fine, condition, trace=trace, name=f"scale.{i}", history=history
+            )
             scales.append(finished)
+            emitted.append(
+                finished
+                if self.layer_readout is None
+                else replace(
+                    finished,
+                    values=self.layer_readout(finished.values, history[:-1], i),
+                )
+            )
+        # Merges above consume native finished states. Only outgoing readouts
+        # (and optional final fusion) see the depth mixture.
+        scales = emitted
         if self.fusion:
             sizes = [s.values.shape[1] for s in scales]
             combined = FeatureScale(

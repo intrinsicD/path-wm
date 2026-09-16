@@ -29,7 +29,7 @@ def test_zero_gate_preserves_native_outputs_rng_and_existing_weights():
     for key, value in native.state_dict().items():
         assert torch.equal(value, variant.state_dict()[key])
     for h, w in ((16, 16), (24, 20)):
-        x = Observation(torch.randn(2, 3, h, w), torch.zeros(2, 1))
+        x = Observation(torch.randn(2, 1, 3, h, w), torch.zeros(2, 1))
         a, b = native(x), variant(x)
         for left, right in zip(a.scales, b.scales):
             assert torch.equal(left.values, right.values)
@@ -45,7 +45,7 @@ def test_nonzero_gate_changes_only_emitted_scale_not_coarser_propagation():
     enable(variant)
     with torch.no_grad():
         variant.pyramid.layer_readout.gates[0] = 1
-    x = Observation(torch.randn(2, 3, 16, 16), torch.zeros(2, 1))
+    x = Observation(torch.randn(2, 1, 3, 16, 16), torch.zeros(2, 1))
     a, b = native(x), variant(x)
     assert not torch.equal(a.scales[0].values, b.scales[0].values)
     for left, right in zip(a.scales[1:], b.scales[1:]):
@@ -57,7 +57,7 @@ def test_gates_have_gradients_while_frozen_encoder_does_not():
 
     encoder = image_encoder().requires_grad_(False)
     enable(encoder)
-    x = Observation(torch.randn(2, 3, 16, 16), torch.zeros(2, 1))
+    x = Observation(torch.randn(2, 1, 3, 16, 16), torch.zeros(2, 1))
     y = encoder(x)
     sum(s.values.square().mean() for s in y.scales).backward()
     assert (encoder.pyramid.layer_readout.gates.grad.abs() > 0).all()
@@ -108,3 +108,21 @@ def test_recipe_reload_retains_layer_variant_and_legacy_default(tmp_path):
     assert all(e.pyramid.layer_readout is None for e in old.core.agent.encoders.values())
     with pytest.raises(ValueError):
         configure_encoder_readout(old, 'unknown')
+
+
+def test_layer_checkpoint_requires_metadata_and_native_loading_stays_strict(tmp_path):
+    from experiments.modality_readout import Model, configure_encoder_readout, load_encoders
+
+    model = Model("native")
+    before = {name: value.clone() for name, value in model.state_dict().items()}
+    rng = torch.get_rng_state().clone()
+    configure_encoder_readout(model, "layers")
+    assert torch.equal(rng, torch.get_rng_state())
+    for name, value in before.items():
+        assert torch.equal(value, model.state_dict()[name])
+    additions = set(model.state_dict()) - set(before)
+    assert len(additions) == 4
+    assert sum(model.state_dict()[name].numel() for name in additions) == 12
+    torch.save({"model": model.state_dict()}, tmp_path / "last.pt")
+    with pytest.raises(RuntimeError, match="Unexpected key"):
+        load_encoders(Model("native"), tmp_path, torch.device("cpu"))
