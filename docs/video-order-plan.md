@@ -134,3 +134,30 @@ Max120s challenge evaluation; use shared cached phase features, one compact repo
 with logits/source/model hashes. Artifact allowance increases to<=28MiB to preserve
 the original14 run reports plus this newly motivated diagnostic; no old run removed.
 This change precedes challenge outputs. Preserve >=300MiB free disk.
+
+## Separate data-training repair, before its fits
+
+The frozen-model balanced challenge completes without new fitting. All single-frame
+controls become exactly50%. Direction-trained arms score84.38–86.20%; correlation
+augmentation88.15–94.40%, but every predeclared full gate still fails (including
+prefix-flip consistency). Preserve these negative gates and all original models.
+
+Authorize a separate, bounded four-fit experiment under the user's requested
+iteration: train the `train` and `correlation` arms from the SAME original
+reconstruction-trained initialization on exhaustive-phase balanced training data.
+Keep seeds7501/7502,512 updates,8 pairs, AdamW0.003, head size, losses and45s/fit
+budget unchanged. Only the pan population changes. Each of the16 training images
+contributes48 phases x2 displacements:1536 pairs; validation/known/wide each384
+pairs from four source images. Same source splits; no training on reserved source.
+This changes sample coverage as well as crop/wrap distribution; it is not a pure
+inductive-bias comparison or a continuation from the successful crop-trained head.
+
+Evaluate with the balanced challenge criteria already declared above. Both modes
+receive identical pairs/sampling per seed; dormant versus active matching features
+remain their only architectural difference. No model/threshold/budget selection.
+Also report paired swap, all input controls, raw oracle, per-displacement metrics
+and training/validation accuracy. This is one new four-fit round, not extension of
+the original registered12 fits. Stop this round after four fits regardless of
+outcome; further generalization needs a separately specified experiment.
+Total artifact allowance<=38MiB preserves both prior studies and these four reports;
+disk reserve remains300MiB. No original gate is overwritten or reinterpreted as pass.

@@ -282,7 +282,9 @@ def train(args, prepared=None):
     output.parent.mkdir(parents=True, exist_ok=True)
     if shutil.disk_usage(output.parent).free < 302 * 1024**2:
         raise RuntimeError("Preserve300MiB disk reserve")
-    sets, identity = prepare(args) if prepared is None else prepared
+    balanced = getattr(args, "balanced_training", False)
+    sets, identity = prepare(args, balanced=balanced) if prepared is None else prepared
+    assert identity["train"]["construction"].startswith("all48") == balanced
     seed_everything(args.seed)
     model = OrderReadout(sets["train"]["features"].shape[3], args.mode)
     source = torch.load(args.temporal_source, map_location="cpu", weights_only=True)
@@ -290,6 +292,7 @@ def train(args, prepared=None):
     cfg = dict(
         seed=args.seed,
         mode=args.mode,
+        balanced_training=balanced,
         steps=args.steps,
         batch_pairs=8,
         lr=0.003,
@@ -571,6 +574,11 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=7501)
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--stop-after", type=int)
+    parser.add_argument(
+        "--balanced-training",
+        action="store_true",
+        help="Use exhaustive circular phases for all training/evaluation populations",
+    )
     parser.add_argument(
         "--challenge-models",
         type=Path,
