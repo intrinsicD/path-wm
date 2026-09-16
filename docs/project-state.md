@@ -1,10 +1,19 @@
 # Current work
 
-**In progress: suite-directed retention comparison,16 September:**
-[Fixed protocol](grounded-retention-plan.md). Compare existing grounded QA/replay
-against a training-only frozen-source output anchor; same architecture and four
-fresh matched fits across two sources. Measure new-task learning and old-output
-preservation together. No result or default replacement claimed yet.
+**Suite-directed retention comparison completed,16 September:**
+[Protocol/results](grounded-retention-plan.md),
+[report](../runs/grounded_retention_v1/report.html). Actual Claude critique and
+reconciliation; four fresh768-update fits, fixed source-output distillation weight10.
+Old-output failing cells fall32→20 and23→6, but preservation still fails.
+Source7202 keeps the scoped VID.order pass (93.75% answers/87.5% pairs, worst draw);
+source7201 stays50%. Free exact generation falls14/16→6/16 in7202 although14/16
+first words remain correct: old sentence continuations expose a task/format issue.
+Four real agreement cases also regress. No default or broad green promotion.
+Next audit the existing task/request path with same-scene/different-request
+contrasts; this small recipe does not instantiate TaskInterpreter. Stable temporal
+access in the weaker core remains open.64 focused checks, exact1180-tensor restart,
+identical historical controls,329.27s training,89.79MiB peak allocation. Reports
+structurally/media verified; browser QA remains unavailable.
 
 **Suite-directed grounded readout comparison completed,16 September:**
 [Protocol/results](grounded-readout-plan.md),
