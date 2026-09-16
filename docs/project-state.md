@@ -1,10 +1,22 @@
 # Current work
 
-**Video comparison in progress, 16 September:** user requests video before the
-remaining direction work. [Active protocol](video-readout-plan.md): distinguish
-output conditioning from upstream temporal access; compare the same decoder with
-requested time in context versus queries, oracle and frozen video-only states.
-No additional model parameters; direction rotation/dropout remains pending.
+**Video diagnosis and two bounded repairs completed, 16 September:**
+[Protocol/results](video-readout-plan.md#result-16-september),
+[full sequences](../runs/video_readout_v1/report.html).
+Twelve1024-update fits,65.75s CPU training. Query-side timing keeps7104 decoder
+parameters; oracle motion improves but paired foreground-quality benefit fails.
+An optional7804-parameter palette/mixture decoder collapses to nearly constant
+frames, so neither candidate is adopted. Correct-factor controls can render motion,
+but withheld color/shape quality fails; real sampled video states additionally fail
+motion. Frozen symmetric reverse-pair probes avoid single-frame direction cues:
+encoder69–78%, final state28–39% on new positions; raw linear83–89%, geometric
+reference100%, middle/mean-frame controls50%. No unique loss mechanism or natural
+video/forecasting claim.58 scoped tests, exact query/palette resume and raw audits.
+Video uses its own framewise image patch encoder plus causal temporal hierarchy;
+it does not share image-branch weights or automatically use the separate image VAE.
+Next return to state direction/temporal retention; preserve the source-rotation
+proposal and keep output composition separate. Three Claude public-method reviews.
+Static/structural report verification; browser interaction unavailable.
 
 **Direction input isolation and curriculum completed, 16 September:**
 [Protocol/results](modality-readout-plan.md#input-isolation-and-curriculum-result-16-september),

@@ -83,3 +83,96 @@ necessarily differ. Require the same >=20% held-out oracle foreground benefit an
 <=0.005 known foreground regression in both seeds; original quality/motion capability
 gates remain. Record palette/mixture collapse and context controls. Stop model
 training after these four fits. No automatic default adoption.
+
+## Result, 16 September
+
+[Complete sequences and metrics](../runs/video_readout_v1/report.html) ·
+[frozen temporal-access challenge](../runs/video_readout_v1/temporal_access/report.html).
+All12 registered1024-update fits finished,65.75 seconds measured CPU training,
+excluding checks/reporting. Native/context and query/direct-RGB decoders both have
+7104 parameters; palette4 has7804. No core/encoder/non-video weights changed.
+The fresh native oracle runs reproduce the earlier1024-step weights and complete
+training rows exactly. Neither experimental branch becomes the default.
+
+Held-out oracle results (correct factors supplied; not agent performance):
+
+| Decoder | Foreground MSE, seed7201 /7202 | Motion direction, seed7201 /7202 |
+|---|---|---|
+| Time in source context |0.10885 /0.18017 |83.3% /100% |
+| Time in query |0.10895 /0.12376 |100% /100% |
+| Query + learned palette |0.22998 /0.22553 |0% /0% |
+
+Query timing improves foreground error31.3% in one seed and worsens it0.1% in the
+other, failing the paired20% benefit screen. Known oracle quality passes for both
+direct-RGB variants, but withheld quality/composition still fails. All six combined
+quality/motion capability screens (three variants × oracle/frozen) fail. With actual
+video-only states, context/query achieve only0% all-factor correctness on withheld
+combinations and18.75–33.33% motion accuracy. Moving time cannot repair that upstream
+state limitation on its own.
+
+The palette branch collapses its spatial/time mixture fields. Palette entries are
+still distinct (mean pair distance about0.39–0.43), but most pixels in a clip select
+essentially one entry; known-frame spatial RGB standard deviation is at most1.1e-6.
+Thus a check of palette diversity alone would miss the failure. Raw colors, mixture
+fields, entropy, spatial/time variation and usage are retained in palette_inspection.*.
+Low entropy is not independently proof of a cause, especially with sparse foreground.
+The failure is consistent with a near-constant rendering solution under pixel loss;
+no alternative loss/initialization was tested after the registered budget ended.
+
+The new temporal challenge uses symmetric five-frame objects with exact reverse
+pairs, identical center frames and identical unordered frame sets. Train/validation
+use centers5/7/9; test uses6/8/10. Frozen readers are selected using validation only:
+
+| Test direction access | Seed7201 | Seed7202 |
+|---|---:|---:|
+| Geometric centroid displacement reference |100% |100% |
+| Ordered raw pixels, linear reader |83.3% |88.9% |
+| Single middle frame or mean frame, linear reader |50% |50% |
+| Video encoder features, linear reader |77.8% |69.4% |
+| Final thought tokens, linear reader |38.9% |27.8% |
+
+This separates temporal evidence from the arrow-orientation shortcut. It does not
+prove irreversible loss: even raw linear readers fail some new positions, reader
+dimensions differ, and the source model was not trained on this new challenge.
+Each test seed has18 base trajectories paired with reversals, not36 independent
+trajectories. The original oracle test has12 known and6 withheld target patterns
+with repeated views, not48 independent scenes.
+
+User architecture clarification: the general agent's video branch uses its own
+MultiScaleImageEncoder(video=True). A shared framewise ImageEncoder patch stem is
+followed by position/time features, causal attention and adjacent-frame pooling.
+Image and video branches share this architecture, not parameter objects. The
+experimental spatial image VAE is a separate path. No persistent recurrence across
+arbitrary video windows or natural-video codec integration was added here.
+
+Verification:58 scoped tests;2163 exact query-resume and2175 exact palette-resume
+checks;28502 independent metric/model checks;210 NumPy temporal-reader checks.
+The independent ridge solver records234 prediction differences only at numerical
+ties (maximum4.32e-11), all in the intentionally uninformative middle/mean-frame controls; saved score
+arithmetic and validation selection match. Raw observations, probe coefficients,
+predictions and original failed candidates are preserved. Static sequence panels
+inspected; report HTML/PNG/GIF checked. Browser interaction remains unavailable.
+Three actual-Claude public-methodology reviews; no private code/data/results sent.
+Claims that interpolation is trivial, that reverse pairs need identical encodings,
+or that entropy alone identifies a mechanism were not adopted.
+
+Next: return to shared-state direction/temporal learning using the symmetric
+sequence challenge, with direct-encoder versus state-mediated reads kept separate.
+Output composition/color remains an independent unresolved question. A spatial-VAE
+video codec should be a separately controlled integration experiment, not silently
+substituted into this categorical agent. No further training in this completed slice.
+
+Reproduction examples (fresh output directories):
+
+```bash
+.venv/bin/python experiments/modality_readout.py --stage oracle --core runs/modality_readout_v1/formal/seed7201/core --modality video --video-conditioning query --steps 1024 --seed 7201 --device cpu --output runs/new_video_oracle
+.venv/bin/python experiments/modality_readout.py --stage frozen --core runs/modality_readout_v1/formal/seed7201/core --modality video --input-mode video --video-conditioning query --video-palette 4 --steps 1024 --seed 7201 --device cpu --output runs/new_video_palette
+```
+
+The second command reproduces the failed experimental branch, not a recommended
+default. Omitting both video flags retains the original context-timed RGB decoder.
+
+Final artifact audit:170 structural/media/atlas checks across18 reports, six Claude
+receipt/hash checks. All embedded PNGs and GIF frames decode; existing discussion
+colors and validation scopes remain unchanged. The full-sequence summary panel was
+rearranged into two rows of three cases for legibility, with all cases retained.
