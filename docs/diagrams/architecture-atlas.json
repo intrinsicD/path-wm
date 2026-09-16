@@ -1,7 +1,7 @@
 {
   "title": "PATH-WM · Architecture atlas",
   "date": "2026-09-16",
-  "source_commit": "071a649",
+  "source_commit": "5fe9c75",
   "intro": "A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.",
   "graphs": [
     {
@@ -2748,6 +2748,16 @@
           "out",
           "Frame reconstructions / video sequence\nTwo reconstruction + KL objectives train shared weights",
           "external"
+        ],
+        [
+          "motion",
+          "Optional direction diagnostic\nOriginal image means + separate time features\nReadout; optional local correlation",
+          "optional"
+        ],
+        [
+          "direction",
+          "Controlled last-step direction\nNo automatic agent-core integration",
+          "external"
         ]
       ],
       "edges": [
@@ -2795,6 +2805,21 @@
           "decode",
           "out",
           "reshape and crop; invalid frames masked"
+        ],
+        [
+          "frame",
+          "motion",
+          "unchanged image means"
+        ],
+        [
+          "time",
+          "motion",
+          "residual features before addition"
+        ],
+        [
+          "motion",
+          "direction",
+          "learned task readout"
         ]
       ],
       "notes": [
@@ -2805,7 +2830,8 @@
         "Literature: docs/video-codec-literature.md distinguishes published image-weight reuse, temporal decoding and time compression. Local source-regression also confounds beta0.1→0.01 and color weight6→0; paired arms remain matched. No paper proves the local failure cause. User walked through actual late causal mean refinement before sampling and per-frame shared decoder.",
         "User proposes images as one-frame videos or repeated stills. Existing wrapper accepts both; a new gradient check confirms only repeated multi-frame examples train past-frame kernel taps. Current measured auxiliary image loss bypasses temporal processing. Mixed single-frame/real-video/repeated-still training remains proposed, with static-ratio and exposure controls; no efficacy claim.",
         "Discussed spatial receptive field versus temporal horizon: current3x3 operates on the latent grid, while current/two previous frames set history. Larger kernels, stacked/shared local blocks and coarser-scale context are proposed comparisons, not validated repairs. Global attention already has global spatial access. See docs/video-codec-literature.md; no architecture or validation-color change.",
-        "Frozen-codec context comparison implemented and measured: injected mixer supports spatial5x5 or repeated shared spatial-only3x3 refinement, preserving three-frame causality. Twelve256-update fits with per-architecture current-only controls:3x3 history helps47–57%, but larger candidates worsen masked MSE and correct-vs-different-clip history benefit stays below1.4%. No motion understanding or expanded-default adoption.68 scoped tests,1447 exact-resume and405 raw artifact checks; see docs/video-context-plan.md and runs/video_context_v1/report.html. Validation colors unchanged."
+        "Frozen-codec context comparison implemented and measured: injected mixer supports spatial5x5 or repeated shared spatial-only3x3 refinement, preserving three-frame causality. Twelve256-update fits with per-architecture current-only controls:3x3 history helps47–57%, but larger candidates worsen masked MSE and correct-vs-different-clip history benefit stays below1.4%. No motion understanding or expanded-default adoption.68 scoped tests,1447 exact-resume and405 raw artifact checks; see docs/video-context-plan.md and runs/video_context_v1/report.html. Validation colors unchanged.",
+        "Paired-order study: reconstruction-trained frozen temporal readouts stay near chance; direction training fits crop pans but a static cue fails the original gate. Exhaustive-phase periodic evaluation removes single-frame label cues. Four balanced-data fits reach79–99%, with only one passing seed per variant. Neither variant passes the two-seed gate. Separate temporal features and optional correlation are implemented, not general motion/forecasting or core integration. See docs/video-order-plan.md and runs/video_order_v1/balanced_training/report.html; validation colors unchanged."
       ],
       "sources": [
         "pathwm/models/video_vae.py#VideoVAE",
@@ -2813,7 +2839,11 @@
         "experiments/video_vae.py",
         "tests/test_video_vae.py",
         "docs/shared-video-vae-plan.md",
-        "docs/video-context-plan.md"
+        "docs/video-context-plan.md",
+        "pathwm/models/video_vae.py#local_correlation",
+        "pathwm/data/video_order.py#cyclic_pan_pairs",
+        "experiments/video_order.py#OrderReadout",
+        "docs/video-order-plan.md"
       ]
     }
   ]

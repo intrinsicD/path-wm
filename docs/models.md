@@ -105,6 +105,17 @@ loading `last.pt["model"]`; the ordinary Run handles exact training resume.
 encoder remains separate until its spatial-grid adapter is evaluated; codec tests
 alone do not establish world-state video understanding.
 
+`CausalLatentMixer.features(mu, times, valid)` exposes the causal residual separately;
+its existing `forward` still adds that residual to the image means. The experimental
+`OrderReadout` in `experiments/video_order.py` reads original spatial means plus these
+separate features. Its image encoder is frozen and the image decoder is untouched.
+Optional `local_correlation(previous, current, radius=2)` returns cosine-match maps
+at five horizontal offsets on a common valid interior, without wraparound in the
+matching operator. This is an explicit matching feature, not proof of optical flow.
+The [paired-order study](video-order-plan.md) distinguishes constructed crop pans,
+an exactly balanced periodic challenge, and balanced-data training. A few individual
+fits pass the scoped direction gate; robustness across both seeds remains open.
+
 ## Controlled visual memory output
 
 `ConditionalFeatureGenerator` is an optional replacement for the image producer,

@@ -2,9 +2,9 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: "2026-09-16T09:16+02:00"
-  turn_count: 6
-  summary: "Eight matched fresh-updater controls fail direction screens; continuous working access not adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58 tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights; four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain confound documented; agent integration remains open. Frozen-codec context:12 fits show history benefit but both spatial expansions fail; wrong-history discrimination remains weak.68 tests,1447 exact-resume checks,405 artifact audits,15 reports; defaults unchanged."
+  last_turn: "2026-09-16T10:12+02:00"
+  turn_count: 7
+  summary: "Eight matched fresh-updater controls fail direction screens; continuous working access not adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58 tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights; four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain confound documented; agent integration remains open. Frozen-codec context:12 fits show history benefit but both spatial expansions fail; wrong-history discrimination remains weak.68 tests,1447 exact-resume checks,405 artifact audits,15 reports; defaults unchanged. Paired order:12 crop fits fail static-control gate; separate exhaustive-phase challenge removes single-frame cues. Four balanced-data fits achieve79–99% but neither variant passes both seeds.69 tests, exact restart and6035 raw audits;21 reports, defaults unchanged."
 
 events_logged:
 - turn: 1
@@ -260,6 +260,47 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Paired motion-dependent history task proposed next.
+- turn: 7
+  type: decision
+  id: N414
+  routing: direct
+  provenance: ai-suggested
+  summary: Test paired temporal order with separate features and public Claude review
+- turn: 7
+  type: experiment
+  id: N415
+  routing: direct
+  provenance: ai-executed
+  summary: Crop-pan direction fits succeed but static-control gate fails
+- turn: 7
+  type: experiment
+  id: N416
+  routing: direct
+  provenance: ai-executed
+  summary: Exhaustive phase balance removes single-frame cues but frozen-model gate still fails
+- turn: 7
+  type: experiment
+  id: N417
+  routing: direct
+  provenance: ai-executed
+  summary: Four balanced-data fits show feasibility with unresolved seed instability
+- turn: 7
+  type: observation
+  id: O281
+  routing: staged
+  provenance: ai-suggested
+  summary: The frozen image features plus a small supervised temporal module can support the controlled direction
+    task in individual fits, but variable seeds prevent a reliable-learning claim. Correlation is not consistently
+    dominant. This does not establish natural-video motion, forecasting, encoder adequacy for other tasks, or the
+    unique cause of failure.
+- turn: 7
+  type: observation
+  id: O282
+  routing: staged
+  provenance: ai-suggested
+  summary: Next diagnose training fit, margins and initialization/optimization on the fixed balanced population
+    before increasing capacity or moving to natural motion. Keep existing task, gates and original failures; this
+    is a proposed new bounded experiment, not a launched run.
 
 ai_actions:
 - turn: 1
@@ -344,6 +385,23 @@ ai_actions:
   - docs/models.md
   - docs/diagrams/architecture-atlas.json
   - ara/evidence/tables/video_context_2026-09-16.json
+- turn: 7
+  action: Implemented separate temporal features, local feature correlation, paired crop and exhaustive-phase populations,
+    readable recipe, controls and raw/report audits. Three actual Claude public-only reviews; corrected static-cue
+    population and tested a separately registered four-fit repair. Original data/checkpoints and negative gates
+    retained. Architecture atlas documents optional diagnostic branch without capability promotion.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/video_vae.py
+  - pathwm/data/video_order.py
+  - experiments/video_order.py
+  - tests/test_video_order.py
+  - tests/test_video_order_balance.py
+  - docs/video-order-plan.md
+  - docs/project-state.md
+  - docs/models.md
+  - docs/diagrams/architecture-atlas.json
+  - ara/evidence/tables/video_order_2026-09-16.json
 
 claims_touched: []
 key_context:
@@ -373,6 +431,9 @@ key_context:
 - turn: 6
   excerpt: User asks “Und?” after neighborhood proposal; status clarified as unimplemented before continuing authorized
     collaboration/test cycle. No implicit endorsement of a specific convolution-versus-attention choice.
+- turn: 7
+  excerpt: Arbeite daran zusammen mit Claude. Plane, implementiere, überprüfe, teste und repariere. Iteriere dies.
+    Continued with fixed budgets; supervised direction feasibility is distinct from robust motion capability.
 
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
@@ -442,6 +503,9 @@ open_threads:
   proposals preserved.'
 - Paired same-appearance/different-motion histories needed; enlarged kernels/loops fail current fixed-mask screen.
   Current mixer still separate from agent core.
+- 'N414-N417/O281-O282: paired direction and phase-balanced populations now implemented; task/control diagnostics
+  complete but two-seed learning gate still fails. Diagnose optimization/initialization on fixed balanced task;
+  natural motion, speed estimation, forecasting and agent integration remain open.'
 
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
@@ -584,3 +648,5 @@ ai_suggestions_pending:
 - 'O278: spatial-neighborhood/coarse-context comparison untested; existing loss/history controls still apply.'
 - 'O279/O280: appearance-reuse interpretation and stronger paired-history task remain tentative; no unregistered
   efficacy fits.'
+- O280 partially executed through paired direction and source-order controls; speed estimation remains untested.
+  O281/O282 interpretation and fixed-task seed-stability proposal await researcher response. No broad efficacy crystallization.

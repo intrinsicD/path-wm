@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-16, repository snapshot `071a649`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-16, repository snapshot `5fe9c75`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
@@ -1093,6 +1093,10 @@ flowchart TB
     class decode learned;
     out["Frame reconstructions / video sequence<br/>Two reconstruction + KL objectives train shared weights"]
     class out external;
+    motion["Optional direction diagnostic<br/>Original image means + separate time features<br/>Readout; optional local correlation"]
+    class motion optional;
+    direction["Controlled last-step direction<br/>No automatic agent-core integration"]
+    class direction external;
     still -->|"image batch"| encode
     clip -->|"flatten B*T; preserve time order"| encode
     encode -->|"spatial posterior"| frame
@@ -1102,6 +1106,9 @@ flowchart TB
     sample -->|"video z; decoder reused per frame"| decode
     sample_i -->|"image z"| decode
     decode -->|"reshape and crop; invalid frames masked"| out
+    frame -->|"unchanged image means"| motion
+    time -->|"residual features before addition"| motion
+    motion -->|"learned task readout"| direction
     classDef learned fill:#e6eef8,stroke:#7696bc,color:#202a36;
     classDef store fill:#f3f4f6,stroke:#9098a4,color:#202a36;
     classDef external fill:#e7f1eb,stroke:#789887,color:#202a36;
@@ -1128,4 +1135,6 @@ Discussed spatial receptive field versus temporal horizon: current3x3 operates o
 
 Frozen-codec context comparison implemented and measured: injected mixer supports spatial5x5 or repeated shared spatial-only3x3 refinement, preserving three-frame causality. Twelve256-update fits with per-architecture current-only controls:3x3 history helps47–57%, but larger candidates worsen masked MSE and correct-vs-different-clip history benefit stays below1.4%. No motion understanding or expanded-default adoption.68 scoped tests,1447 exact-resume and405 raw artifact checks; see docs/video-context-plan.md and runs/video_context_v1/report.html. Validation colors unchanged.
 
-Source: [pathwm/models/video_vae.py · VideoVAE:66](../pathwm/models/video_vae.py), [pathwm/models/video_vae.py · CausalLatentMixer:19](../pathwm/models/video_vae.py), [experiments/video_vae.py](../experiments/video_vae.py), [tests/test_video_vae.py](../tests/test_video_vae.py), [docs/shared-video-vae-plan.md](../docs/shared-video-vae-plan.md), [docs/video-context-plan.md](../docs/video-context-plan.md).
+Paired-order study: reconstruction-trained frozen temporal readouts stay near chance; direction training fits crop pans but a static cue fails the original gate. Exhaustive-phase periodic evaluation removes single-frame label cues. Four balanced-data fits reach79–99%, with only one passing seed per variant. Neither variant passes the two-seed gate. Separate temporal features and optional correlation are implemented, not general motion/forecasting or core integration. See docs/video-order-plan.md and runs/video_order_v1/balanced_training/report.html; validation colors unchanged.
+
+Source: [pathwm/models/video_vae.py · VideoVAE:96](../pathwm/models/video_vae.py), [pathwm/models/video_vae.py · CausalLatentMixer:19](../pathwm/models/video_vae.py), [experiments/video_vae.py](../experiments/video_vae.py), [tests/test_video_vae.py](../tests/test_video_vae.py), [docs/shared-video-vae-plan.md](../docs/shared-video-vae-plan.md), [docs/video-context-plan.md](../docs/video-context-plan.md), [pathwm/models/video_vae.py · local_correlation:71](../pathwm/models/video_vae.py), [pathwm/data/video_order.py · cyclic_pan_pairs:45](../pathwm/data/video_order.py), [experiments/video_order.py · OrderReadout:49](../experiments/video_order.py), [docs/video-order-plan.md](../docs/video-order-plan.md).

@@ -1,134 +1,171 @@
-<svg width="624pt" height="781pt"
- viewBox="0.00 0.00 624.00 781.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<g id="16-shared-video-codec-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 766.32)">
+<svg width="908pt" height="798pt"
+ viewBox="0.00 0.00 908.00 798.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="16-shared-video-codec-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 783.12)">
 <title>G</title>
-<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-766.32 609.85,-766.32 609.85,14.4 -14.4,14.4"/>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-783.12 893.21,-783.12 893.21,14.4 -14.4,14.4"/>
 <!-- still&#45;&gt;encode -->
 <g id="16-shared-video-codec-edge1" class="edge">
 <title>still&#45;&gt;encode</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M169.44,-715.43C190.79,-702.12 220.71,-683.47 245.91,-667.77"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="247.16,-669.87 251.81,-664.09 244.57,-665.71 247.16,-669.87"/>
-<text xml:space="preserve" text-anchor="middle" x="252.28" y="-686.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">image batch</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M321.21,-732.23C342.57,-718.92 372.48,-700.27 397.68,-684.57"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="398.94,-686.67 403.58,-680.89 396.35,-682.51 398.94,-686.67"/>
+<text xml:space="preserve" text-anchor="middle" x="404.05" y="-702.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">image batch</text>
 </g>
 <!-- clip&#45;&gt;encode -->
 <g id="16-shared-video-codec-edge2" class="edge">
 <title>clip&#45;&gt;encode</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M419.31,-715.43C397.95,-702.12 368.04,-683.47 342.84,-667.77"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="344.18,-665.71 336.94,-664.09 341.58,-669.87 344.18,-665.71"/>
-<text xml:space="preserve" text-anchor="middle" x="472.8" y="-686.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">flatten B*T; preserve time order</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M571.08,-732.23C549.73,-718.92 519.81,-700.27 494.61,-684.57"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="495.95,-682.51 488.71,-680.89 493.36,-686.67 495.95,-682.51"/>
+<text xml:space="preserve" text-anchor="middle" x="624.57" y="-702.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">flatten B*T; preserve time order</text>
 </g>
 <!-- encode&#45;&gt;frame -->
 <g id="16-shared-video-codec-edge3" class="edge">
 <title>encode&#45;&gt;frame</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M294.37,-609.97C294.37,-596.78 294.37,-580.52 294.37,-566.26"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="296.82,-566.36 294.37,-559.36 291.92,-566.36 296.82,-566.36"/>
-<text xml:space="preserve" text-anchor="middle" x="339.11" y="-580.5" font-family="DejaVu Sans" font-size="11.00" fill="#374151">spatial posterior</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M446.15,-626.77C446.15,-613.58 446.15,-597.32 446.15,-583.06"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="448.6,-583.16 446.15,-576.16 443.7,-583.16 448.6,-583.16"/>
+<text xml:space="preserve" text-anchor="middle" x="490.88" y="-597.3" font-family="DejaVu Sans" font-size="11.00" fill="#374151">spatial posterior</text>
 </g>
 <!-- frame&#45;&gt;time -->
 <g id="16-shared-video-codec-edge4" class="edge">
 <title>frame&#45;&gt;time</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M267.53,-504.36C253.11,-490.57 235.02,-473.26 218.83,-457.78"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="220.92,-456.38 214.17,-453.32 217.53,-459.93 220.92,-456.38"/>
-<text xml:space="preserve" text-anchor="middle" x="282.24" y="-474.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">video branch</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M446.15,-521.16C446.15,-508.22 446.15,-492.17 446.15,-477.45"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="448.6,-477.63 446.15,-470.63 443.7,-477.63 448.6,-477.63"/>
+<text xml:space="preserve" text-anchor="middle" x="482.04" y="-491.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">video branch</text>
 </g>
 <!-- frame&#45;&gt;sample_i -->
 <g id="16-shared-video-codec-edge6" class="edge">
 <title>frame&#45;&gt;sample_i</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M317.3,-504.38C337.71,-481.53 364.37,-451.68 364.37,-451.68 364.37,-451.68 400.08,-401.16 422.22,-369.83"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="423.99,-371.57 426.03,-364.44 419.99,-368.75 423.99,-371.57"/>
-<text xml:space="preserve" text-anchor="middle" x="419.84" y="-474.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">independent image branch</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M358.78,-521.23C324.02,-511.03 292.12,-501.68 292.12,-501.68 292.12,-501.68 209.17,-425.13 166.24,-385.52"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="167.99,-383.8 161.19,-380.85 164.67,-387.4 167.99,-383.8"/>
+<text xml:space="preserve" text-anchor="middle" x="366.63" y="-491.78" font-family="DejaVu Sans" font-size="11.00" fill="#374151">independent image branch</text>
+</g>
+<!-- frame&#45;&gt;motion -->
+<g id="16-shared-video-codec-edge10" class="edge">
+<title>frame&#45;&gt;motion</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M507.38,-521.18C561.92,-498.33 633.15,-468.48 633.15,-468.48 633.15,-468.48 680.15,-379.36 680.15,-379.36 680.15,-379.36 684.98,-355.29 689.64,-332.11"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="692.04,-332.64 691.01,-325.29 687.23,-331.67 692.04,-332.64"/>
+<text xml:space="preserve" text-anchor="middle" x="739.13" y="-430.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">unchanged image means</text>
 </g>
 <!-- time&#45;&gt;sample -->
 <g id="16-shared-video-codec-edge5" class="edge">
 <title>time&#45;&gt;sample</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M140.55,-382.2C129.01,-371.57 119.22,-362.56 119.22,-362.56 119.22,-362.56 119.22,-326.56 119.22,-326.56 119.22,-326.56 127.84,-320.09 138.55,-312.05"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="139.97,-314.05 144.1,-307.88 137.03,-310.13 139.97,-314.05"/>
-<text xml:space="preserve" text-anchor="middle" x="203.8" y="-341.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">causal mean; original variance</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M383.71,-398.85C364.35,-388.28 348,-379.36 348,-379.36 348,-379.36 343.3,-348.96 339.37,-323.59"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="341.82,-323.41 338.33,-316.87 336.98,-324.16 341.82,-323.41"/>
+<text xml:space="preserve" text-anchor="middle" x="432.57" y="-358.06" font-family="DejaVu Sans" font-size="11.00" fill="#374151">causal mean; original variance</text>
+</g>
+<!-- time&#45;&gt;motion -->
+<g id="16-shared-video-codec-edge11" class="edge">
+<title>time&#45;&gt;motion</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M491.75,-399C506.04,-388.37 518.15,-379.36 518.15,-379.36 518.15,-379.36 547,-343.36 547,-343.36 547,-343.36 567.86,-335.97 594.09,-326.67"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="594.64,-329.08 600.42,-324.43 593.01,-324.46 594.64,-329.08"/>
+<text xml:space="preserve" text-anchor="middle" x="613.07" y="-364.66" font-family="DejaVu Sans" font-size="11.00" fill="#374151">residual features before</text>
+<text xml:space="preserve" text-anchor="middle" x="613.07" y="-351.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">addition</text>
 </g>
 <!-- sample&#45;&gt;decode -->
 <g id="16-shared-video-codec-edge7" class="edge">
 <title>sample&#45;&gt;decode</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M201.29,-253.97C219.02,-233.4 241.05,-207.84 241.05,-207.84 241.05,-207.84 251.21,-201.12 263.69,-192.87"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="264.94,-194.99 269.43,-189.08 262.24,-190.9 264.94,-194.99"/>
-<text xml:space="preserve" text-anchor="middle" x="318.21" y="-224.34" font-family="DejaVu Sans" font-size="11.00" fill="#374151">video z; decoder reused per</text>
-<text xml:space="preserve" text-anchor="middle" x="318.21" y="-211.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">frame</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M301.18,-262.18C275.57,-242.27 239.95,-214.6 212.79,-193.48"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="214.42,-191.65 207.39,-189.29 211.41,-195.52 214.42,-191.65"/>
+<text xml:space="preserve" text-anchor="middle" x="340.45" y="-224.34" font-family="DejaVu Sans" font-size="11.00" fill="#374151">video z; decoder reused per</text>
+<text xml:space="preserve" text-anchor="middle" x="340.45" y="-211.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">frame</text>
 </g>
 <!-- sample_i&#45;&gt;decode -->
 <g id="16-shared-video-codec-edge8" class="edge">
 <title>sample_i&#45;&gt;decode</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M433.84,-326.09C422.23,-289.44 396.37,-207.84 396.37,-207.84 396.37,-207.84 382.58,-200.68 365.98,-192.06"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="367.54,-190.11 360.2,-189.06 365.28,-194.46 367.54,-190.11"/>
-<text xml:space="preserve" text-anchor="middle" x="448.6" y="-277.1" font-family="DejaVu Sans" font-size="11.00" fill="#374151">image z</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M129.74,-343.16C123.34,-333.5 116.61,-323.36 116.61,-323.36 116.61,-323.36 116.61,-254.24 116.61,-254.24 116.61,-254.24 136.72,-221.69 152.94,-195.4"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="154.93,-196.84 156.53,-189.6 150.76,-194.27 154.93,-196.84"/>
+<text xml:space="preserve" text-anchor="middle" x="138.38" y="-285.5" font-family="DejaVu Sans" font-size="11.00" fill="#374151">image z</text>
 </g>
 <!-- decode&#45;&gt;out -->
 <g id="16-shared-video-codec-edge9" class="edge">
 <title>decode&#45;&gt;out</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M309.37,-135.06C309.37,-118.57 309.37,-96.74 309.37,-77.73"/>
-<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="311.82,-77.89 309.37,-70.89 306.92,-77.89 311.82,-77.89"/>
-<text xml:space="preserve" text-anchor="middle" x="400.31" y="-105.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">reshape and crop; invalid frames</text>
-<text xml:space="preserve" text-anchor="middle" x="400.31" y="-92.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">masked</text>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M173.15,-135.06C173.15,-118.57 173.15,-96.74 173.15,-77.73"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="175.6,-77.89 173.15,-70.89 170.7,-77.89 175.6,-77.89"/>
+<text xml:space="preserve" text-anchor="middle" x="264.09" y="-105.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">reshape and crop; invalid frames</text>
+<text xml:space="preserve" text-anchor="middle" x="264.09" y="-92.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">masked</text>
+</g>
+<!-- motion&#45;&gt;direction -->
+<g id="16-shared-video-codec-edge12" class="edge">
+<title>motion&#45;&gt;direction</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M698.15,-253.94C698.15,-236.15 698.15,-214.41 698.15,-196.61"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="700.6,-196.89 698.15,-189.89 695.7,-196.89 700.6,-196.89"/>
+<text xml:space="preserve" text-anchor="middle" x="755.64" y="-217.74" font-family="DejaVu Sans" font-size="11.00" fill="#374151">learned task readout</text>
 </g>
 <!-- still -->
 <g id="16-shared-video-codec-node1" class="node">
 <title>still</title>
-<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M267.36,-751.92C267.36,-751.92 15.39,-751.92 15.39,-751.92 9.39,-751.92 3.39,-745.92 3.39,-739.92 3.39,-739.92 3.39,-727.92 3.39,-727.92 3.39,-721.92 9.39,-715.92 15.39,-715.92 15.39,-715.92 267.36,-715.92 267.36,-715.92 273.36,-715.92 279.36,-721.92 279.36,-727.92 279.36,-727.92 279.36,-739.92 279.36,-739.92 279.36,-745.92 273.36,-751.92 267.36,-751.92"/>
-<text xml:space="preserve" text-anchor="middle" x="141.37" y="-729.72" font-family="DejaVu Sans" font-size="14.00">Still images / selected video frames</text>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M419.14,-768.72C419.14,-768.72 167.16,-768.72 167.16,-768.72 161.16,-768.72 155.16,-762.72 155.16,-756.72 155.16,-756.72 155.16,-744.72 155.16,-744.72 155.16,-738.72 161.16,-732.72 167.16,-732.72 167.16,-732.72 419.14,-732.72 419.14,-732.72 425.14,-732.72 431.14,-738.72 431.14,-744.72 431.14,-744.72 431.14,-756.72 431.14,-756.72 431.14,-762.72 425.14,-768.72 419.14,-768.72"/>
+<text xml:space="preserve" text-anchor="middle" x="293.15" y="-746.52" font-family="DejaVu Sans" font-size="14.00">Still images / selected video frames</text>
 </g>
 <!-- clip -->
 <g id="16-shared-video-codec-node2" class="node">
 <title>clip</title>
-<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M583.45,-751.92C583.45,-751.92 311.3,-751.92 311.3,-751.92 305.3,-751.92 299.3,-745.92 299.3,-739.92 299.3,-739.92 299.3,-727.92 299.3,-727.92 299.3,-721.92 305.3,-715.92 311.3,-715.92 311.3,-715.92 583.45,-715.92 583.45,-715.92 589.45,-715.92 595.45,-721.92 595.45,-727.92 595.45,-727.92 595.45,-739.92 595.45,-739.92 595.45,-745.92 589.45,-751.92 583.45,-751.92"/>
-<text xml:space="preserve" text-anchor="middle" x="447.37" y="-729.72" font-family="DejaVu Sans" font-size="14.00">Observed video clip + times + validity</text>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M735.23,-768.72C735.23,-768.72 463.07,-768.72 463.07,-768.72 457.07,-768.72 451.07,-762.72 451.07,-756.72 451.07,-756.72 451.07,-744.72 451.07,-744.72 451.07,-738.72 457.07,-732.72 463.07,-732.72 463.07,-732.72 735.23,-732.72 735.23,-732.72 741.23,-732.72 747.23,-738.72 747.23,-744.72 747.23,-744.72 747.23,-756.72 747.23,-756.72 747.23,-762.72 741.23,-768.72 735.23,-768.72"/>
+<text xml:space="preserve" text-anchor="middle" x="599.15" y="-746.52" font-family="DejaVu Sans" font-size="14.00">Observed video clip + times + validity</text>
 </g>
 <!-- encode -->
 <g id="16-shared-video-codec-node3" class="node">
 <title>encode</title>
-<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M428.77,-662.72C428.77,-662.72 159.98,-662.72 159.98,-662.72 153.98,-662.72 147.98,-656.72 147.98,-650.72 147.98,-650.72 147.98,-622.4 147.98,-622.4 147.98,-616.4 153.98,-610.4 159.98,-610.4 159.98,-610.4 428.77,-610.4 428.77,-610.4 434.77,-610.4 440.77,-616.4 440.77,-622.4 440.77,-622.4 440.77,-650.72 440.77,-650.72 440.77,-656.72 434.77,-662.72 428.77,-662.72"/>
-<text xml:space="preserve" text-anchor="middle" x="294.37" y="-640.76" font-family="DejaVu Sans" font-size="14.00">One shared R/P/M/C image encoder</text>
-<text xml:space="preserve" text-anchor="middle" x="294.37" y="-623.96" font-family="DejaVu Sans" font-size="14.00">Same trained weights for every frame</text>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M580.54,-679.52C580.54,-679.52 311.75,-679.52 311.75,-679.52 305.75,-679.52 299.75,-673.52 299.75,-667.52 299.75,-667.52 299.75,-639.2 299.75,-639.2 299.75,-633.2 305.75,-627.2 311.75,-627.2 311.75,-627.2 580.54,-627.2 580.54,-627.2 586.54,-627.2 592.54,-633.2 592.54,-639.2 592.54,-639.2 592.54,-667.52 592.54,-667.52 592.54,-673.52 586.54,-679.52 580.54,-679.52"/>
+<text xml:space="preserve" text-anchor="middle" x="446.15" y="-657.56" font-family="DejaVu Sans" font-size="14.00">One shared R/P/M/C image encoder</text>
+<text xml:space="preserve" text-anchor="middle" x="446.15" y="-640.76" font-family="DejaVu Sans" font-size="14.00">Same trained weights for every frame</text>
 </g>
 <!-- frame -->
 <g id="16-shared-video-codec-node4" class="node">
 <title>frame</title>
-<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M397.9,-557.2C397.9,-557.2 190.85,-557.2 190.85,-557.2 184.85,-557.2 178.85,-551.2 178.85,-545.2 178.85,-545.2 178.85,-516.88 178.85,-516.88 178.85,-510.88 184.85,-504.88 190.85,-504.88 190.85,-504.88 397.9,-504.88 397.9,-504.88 403.9,-504.88 409.9,-510.88 409.9,-516.88 409.9,-516.88 409.9,-545.2 409.9,-545.2 409.9,-551.2 403.9,-557.2 397.9,-557.2"/>
-<text xml:space="preserve" text-anchor="middle" x="294.37" y="-535.24" font-family="DejaVu Sans" font-size="14.00">Spatial frame posterior</text>
-<text xml:space="preserve" text-anchor="middle" x="294.37" y="-518.44" font-family="DejaVu Sans" font-size="14.00">mu, logvar; no global pooling</text>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M549.67,-574C549.67,-574 342.62,-574 342.62,-574 336.62,-574 330.62,-568 330.62,-562 330.62,-562 330.62,-533.68 330.62,-533.68 330.62,-527.68 336.62,-521.68 342.62,-521.68 342.62,-521.68 549.67,-521.68 549.67,-521.68 555.67,-521.68 561.67,-527.68 561.67,-533.68 561.67,-533.68 561.67,-562 561.67,-562 561.67,-568 555.67,-574 549.67,-574"/>
+<text xml:space="preserve" text-anchor="middle" x="446.15" y="-552.04" font-family="DejaVu Sans" font-size="14.00">Spatial frame posterior</text>
+<text xml:space="preserve" text-anchor="middle" x="446.15" y="-535.24" font-family="DejaVu Sans" font-size="14.00">mu, logvar; no global pooling</text>
 </g>
 <!-- time -->
 <g id="16-shared-video-codec-node5" class="node">
 <title>time</title>
-<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M342.75,-451.68C342.75,-451.68 12,-451.68 12,-451.68 6,-451.68 0,-445.68 0,-439.68 0,-439.68 0,-394.56 0,-394.56 0,-388.56 6,-382.56 12,-382.56 12,-382.56 342.75,-382.56 342.75,-382.56 348.75,-382.56 354.75,-388.56 354.75,-394.56 354.75,-394.56 354.75,-439.68 354.75,-439.68 354.75,-445.68 348.75,-451.68 342.75,-451.68"/>
-<text xml:space="preserve" text-anchor="middle" x="177.37" y="-429.72" font-family="DejaVu Sans" font-size="14.00">Optional causal residual mixer</text>
-<text xml:space="preserve" text-anchor="middle" x="177.37" y="-412.92" font-family="DejaVu Sans" font-size="14.00">Current + two past grids / elapsed time / mask</text>
-<text xml:space="preserve" text-anchor="middle" x="177.37" y="-396.12" font-family="DejaVu Sans" font-size="14.00">Zero output at initialization</text>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M611.52,-468.48C611.52,-468.48 280.77,-468.48 280.77,-468.48 274.77,-468.48 268.77,-462.48 268.77,-456.48 268.77,-456.48 268.77,-411.36 268.77,-411.36 268.77,-405.36 274.77,-399.36 280.77,-399.36 280.77,-399.36 611.52,-399.36 611.52,-399.36 617.52,-399.36 623.52,-405.36 623.52,-411.36 623.52,-411.36 623.52,-456.48 623.52,-456.48 623.52,-462.48 617.52,-468.48 611.52,-468.48"/>
+<text xml:space="preserve" text-anchor="middle" x="446.15" y="-446.52" font-family="DejaVu Sans" font-size="14.00">Optional causal residual mixer</text>
+<text xml:space="preserve" text-anchor="middle" x="446.15" y="-429.72" font-family="DejaVu Sans" font-size="14.00">Current + two past grids / elapsed time / mask</text>
+<text xml:space="preserve" text-anchor="middle" x="446.15" y="-412.92" font-family="DejaVu Sans" font-size="14.00">Zero output at initialization</text>
 </g>
 <!-- sample -->
 <g id="16-shared-video-codec-node6" class="node">
 <title>sample</title>
-<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M331.11,-306.56C331.11,-306.56 27.64,-306.56 27.64,-306.56 21.64,-306.56 15.64,-300.56 15.64,-294.56 15.64,-294.56 15.64,-266.24 15.64,-266.24 15.64,-260.24 21.64,-254.24 27.64,-254.24 27.64,-254.24 331.11,-254.24 331.11,-254.24 337.11,-254.24 343.11,-260.24 343.11,-266.24 343.11,-266.24 343.11,-294.56 343.11,-294.56 343.11,-300.56 337.11,-306.56 331.11,-306.56"/>
-<text xml:space="preserve" text-anchor="middle" x="179.37" y="-284.6" font-family="DejaVu Sans" font-size="14.00">Video Gaussian posterior</text>
-<text xml:space="preserve" text-anchor="middle" x="179.37" y="-267.8" font-family="DejaVu Sans" font-size="14.00">Adjusted mu, frame&#45;local logvar &#45;&gt; sample</text>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M485.88,-314.96C485.88,-314.96 182.41,-314.96 182.41,-314.96 176.41,-314.96 170.41,-308.96 170.41,-302.96 170.41,-302.96 170.41,-274.64 170.41,-274.64 170.41,-268.64 176.41,-262.64 182.41,-262.64 182.41,-262.64 485.88,-262.64 485.88,-262.64 491.88,-262.64 497.88,-268.64 497.88,-274.64 497.88,-274.64 497.88,-302.96 497.88,-302.96 497.88,-308.96 491.88,-314.96 485.88,-314.96"/>
+<text xml:space="preserve" text-anchor="middle" x="334.15" y="-293" font-family="DejaVu Sans" font-size="14.00">Video Gaussian posterior</text>
+<text xml:space="preserve" text-anchor="middle" x="334.15" y="-276.2" font-family="DejaVu Sans" font-size="14.00">Adjusted mu, frame&#45;local logvar &#45;&gt; sample</text>
 </g>
 <!-- sample_i -->
 <g id="16-shared-video-codec-node7" class="node">
 <title>sample_i</title>
-<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M568.52,-362.56C568.52,-362.56 310.23,-362.56 310.23,-362.56 304.23,-362.56 298.23,-356.56 298.23,-350.56 298.23,-350.56 298.23,-338.56 298.23,-338.56 298.23,-332.56 304.23,-326.56 310.23,-326.56 310.23,-326.56 568.52,-326.56 568.52,-326.56 574.52,-326.56 580.52,-332.56 580.52,-338.56 580.52,-338.56 580.52,-350.56 580.52,-350.56 580.52,-356.56 574.52,-362.56 568.52,-362.56"/>
-<text xml:space="preserve" text-anchor="middle" x="439.37" y="-340.36" font-family="DejaVu Sans" font-size="14.00">Image Gaussian posterior &#45;&gt; sample</text>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M270.3,-379.36C270.3,-379.36 12,-379.36 12,-379.36 6,-379.36 0,-373.36 0,-367.36 0,-367.36 0,-355.36 0,-355.36 0,-349.36 6,-343.36 12,-343.36 12,-343.36 270.3,-343.36 270.3,-343.36 276.3,-343.36 282.3,-349.36 282.3,-355.36 282.3,-355.36 282.3,-367.36 282.3,-367.36 282.3,-373.36 276.3,-379.36 270.3,-379.36"/>
+<text xml:space="preserve" text-anchor="middle" x="141.15" y="-357.16" font-family="DejaVu Sans" font-size="14.00">Image Gaussian posterior &#45;&gt; sample</text>
 </g>
 <!-- decode -->
 <g id="16-shared-video-codec-node8" class="node">
 <title>decode</title>
-<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M445.86,-187.84C445.86,-187.84 172.89,-187.84 172.89,-187.84 166.89,-187.84 160.89,-181.84 160.89,-175.84 160.89,-175.84 160.89,-147.52 160.89,-147.52 160.89,-141.52 166.89,-135.52 172.89,-135.52 172.89,-135.52 445.86,-135.52 445.86,-135.52 451.86,-135.52 457.86,-141.52 457.86,-147.52 457.86,-147.52 457.86,-175.84 457.86,-175.84 457.86,-181.84 451.86,-187.84 445.86,-187.84"/>
-<text xml:space="preserve" text-anchor="middle" x="309.37" y="-165.88" font-family="DejaVu Sans" font-size="14.00">One shared spatial image decoder</text>
-<text xml:space="preserve" text-anchor="middle" x="309.37" y="-149.08" font-family="DejaVu Sans" font-size="14.00">Latent&#45;only input + output dimensions</text>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M309.63,-187.84C309.63,-187.84 36.67,-187.84 36.67,-187.84 30.67,-187.84 24.67,-181.84 24.67,-175.84 24.67,-175.84 24.67,-147.52 24.67,-147.52 24.67,-141.52 30.67,-135.52 36.67,-135.52 36.67,-135.52 309.63,-135.52 309.63,-135.52 315.63,-135.52 321.63,-141.52 321.63,-147.52 321.63,-147.52 321.63,-175.84 321.63,-175.84 321.63,-181.84 315.63,-187.84 309.63,-187.84"/>
+<text xml:space="preserve" text-anchor="middle" x="173.15" y="-165.88" font-family="DejaVu Sans" font-size="14.00">One shared spatial image decoder</text>
+<text xml:space="preserve" text-anchor="middle" x="173.15" y="-149.08" font-family="DejaVu Sans" font-size="14.00">Latent&#45;only input + output dimensions</text>
 </g>
 <!-- out -->
 <g id="16-shared-video-codec-node9" class="node">
 <title>out</title>
-<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M452.72,-69.12C452.72,-69.12 166.03,-69.12 166.03,-69.12 160.03,-69.12 154.03,-63.12 154.03,-57.12 154.03,-57.12 154.03,-12 154.03,-12 154.03,-6 160.03,0 166.03,0 166.03,0 452.72,0 452.72,0 458.72,0 464.72,-6 464.72,-12 464.72,-12 464.72,-57.12 464.72,-57.12 464.72,-63.12 458.72,-69.12 452.72,-69.12"/>
-<text xml:space="preserve" text-anchor="middle" x="309.37" y="-47.16" font-family="DejaVu Sans" font-size="14.00">Frame reconstructions / video sequence</text>
-<text xml:space="preserve" text-anchor="middle" x="309.37" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Two reconstruction + KL objectives train</text>
-<text xml:space="preserve" text-anchor="middle" x="309.37" y="-13.56" font-family="DejaVu Sans" font-size="14.00">shared weights</text>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M316.49,-69.12C316.49,-69.12 29.8,-69.12 29.8,-69.12 23.8,-69.12 17.8,-63.12 17.8,-57.12 17.8,-57.12 17.8,-12 17.8,-12 17.8,-6 23.8,0 29.8,0 29.8,0 316.49,0 316.49,0 322.49,0 328.49,-6 328.49,-12 328.49,-12 328.49,-57.12 328.49,-57.12 328.49,-63.12 322.49,-69.12 316.49,-69.12"/>
+<text xml:space="preserve" text-anchor="middle" x="173.15" y="-47.16" font-family="DejaVu Sans" font-size="14.00">Frame reconstructions / video sequence</text>
+<text xml:space="preserve" text-anchor="middle" x="173.15" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Two reconstruction + KL objectives train</text>
+<text xml:space="preserve" text-anchor="middle" x="173.15" y="-13.56" font-family="DejaVu Sans" font-size="14.00">shared weights</text>
+</g>
+<!-- motion -->
+<g id="16-shared-video-codec-node10" class="node">
+<title>motion</title>
+<path fill="#efeafa" stroke="#9c87b5" stroke-width="1.1" d="M866.81,-323.36C866.81,-323.36 529.48,-323.36 529.48,-323.36 523.48,-323.36 517.48,-317.36 517.48,-311.36 517.48,-311.36 517.48,-266.24 517.48,-266.24 517.48,-260.24 523.48,-254.24 529.48,-254.24 529.48,-254.24 866.81,-254.24 866.81,-254.24 872.81,-254.24 878.81,-260.24 878.81,-266.24 878.81,-266.24 878.81,-311.36 878.81,-311.36 878.81,-317.36 872.81,-323.36 866.81,-323.36"/>
+<text xml:space="preserve" text-anchor="middle" x="698.15" y="-301.4" font-family="DejaVu Sans" font-size="14.00">Optional direction diagnostic</text>
+<text xml:space="preserve" text-anchor="middle" x="698.15" y="-284.6" font-family="DejaVu Sans" font-size="14.00">Original image means + separate time features</text>
+<text xml:space="preserve" text-anchor="middle" x="698.15" y="-267.8" font-family="DejaVu Sans" font-size="14.00">Readout; optional local correlation</text>
+</g>
+<!-- direction -->
+<g id="16-shared-video-codec-node11" class="node">
+<title>direction</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M827.22,-187.84C827.22,-187.84 569.08,-187.84 569.08,-187.84 563.08,-187.84 557.08,-181.84 557.08,-175.84 557.08,-175.84 557.08,-147.52 557.08,-147.52 557.08,-141.52 563.08,-135.52 569.08,-135.52 569.08,-135.52 827.22,-135.52 827.22,-135.52 833.22,-135.52 839.22,-141.52 839.22,-147.52 839.22,-147.52 839.22,-175.84 839.22,-175.84 839.22,-181.84 833.22,-187.84 827.22,-187.84"/>
+<text xml:space="preserve" text-anchor="middle" x="698.15" y="-165.88" font-family="DejaVu Sans" font-size="14.00">Controlled last&#45;step direction</text>
+<text xml:space="preserve" text-anchor="middle" x="698.15" y="-149.08" font-family="DejaVu Sans" font-size="14.00">No automatic agent&#45;core integration</text>
 </g>
 </g>
 </svg>

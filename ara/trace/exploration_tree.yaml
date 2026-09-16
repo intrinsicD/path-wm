@@ -6897,3 +6897,68 @@ tree:
   - ara/evidence/tables/video_context_2026-09-16.json
   - runs/video_context_v1/report.html
   status: resolved
+- id: N414
+  type: decision
+  title: Test paired temporal order with separate features and public Claude review
+  provenance: ai-suggested
+  timestamp: 2026-09-16T10:12+02:00
+  choice: 'Under explicit user continuation, implement same-current/same-unordered-frame-set opposite-direction
+    pairs, frozen image means, separate learned temporal features and matched single-frame controls. Preregister
+    12-fit conditional matching comparison; Claude adds previous-only and matching-only controls. Correct reviewer
+    causality claim: only strictly future changes must leave an earlier output unchanged.'
+  alternatives:
+  - Increase spatial neighborhood before testing motion reliance
+  - Infer motion understanding from reconstruction alone
+  also_depends_on:
+  - N413
+  evidence:
+  - docs/video-order-plan.md
+  - runs/reviews/video_order_v1/receipt.json
+  - runs/reviews/video_order_v1/reconcile-receipt.json
+  status: resolved
+- id: N415
+  type: experiment
+  title: Crop-pan direction fits succeed but static-control gate fails
+  provenance: ai-executed
+  timestamp: 2026-09-16T10:12+02:00
+  result: 12 fixed512-update fits,15.635s CPU training. Direction-trained and matching-augmented models reach100%
+    known/wide; previous-only seed7501 reaches60.94% known, violating55% screen. Original overall gates fail and
+    remain preserved; image weights frozen. Matching-only reaches60.94–76.56%.
+  also_depends_on:
+  - N414
+  evidence:
+  - ara/evidence/tables/video_order_2026-09-16.json
+  - runs/video_order_v1/report.html
+  status: resolved
+- id: N416
+  type: experiment
+  title: Exhaustive phase balance removes single-frame cues but frozen-model gate still fails
+  provenance: ai-executed
+  timestamp: 2026-09-16T10:12+02:00
+  result: Separately registered evaluation-only periodic challenge,48 phases and384 pairs/group,96 exact RGB/latent
+    class-marginal count checks. Current/previous/unordered accuracy50%; trained temporal84.38–86.20%, augmented88.15–94.40%.
+    Full two-seed gates fail. Previous-only pair correctness can exceed0 despite balanced marginal accuracy; criterion
+    corrected before challenge, not after results. Actual third Claude public review confirms marginal-balance construction.
+  also_depends_on:
+  - N415
+  evidence:
+  - ara/evidence/tables/video_order_2026-09-16.json
+  - runs/video_order_v1/balanced/report.html
+  - runs/reviews/video_order_v1/balance-receipt.json
+  status: resolved
+- id: N417
+  type: experiment
+  title: Four balanced-data fits show feasibility with unresolved seed instability
+  provenance: ai-executed
+  timestamp: 2026-09-16T10:12+02:00
+  result: 'Separate preregistered four-fit512-update repair,6.260s CPU training, identical original initializations
+    and optimizer budget; only data population/coverage changes. Plain seeds: known/wide96.22/96.61% and79.30/80.60%;
+    matching augmentation86.07/98.83% and96.88/98.31%. One seed per candidate passes, neither candidate passes both.
+    Static controls50%; no default adoption. Total16 formal fits21.895s training,69 unique tests,1894 original-path
+    exact-restart checks,6035 independent artifact audits,21 structurally checked reports.'
+  also_depends_on:
+  - N416
+  evidence:
+  - ara/evidence/tables/video_order_2026-09-16.json
+  - runs/video_order_v1/balanced_training/report.html
+  status: resolved

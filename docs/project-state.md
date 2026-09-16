@@ -1,11 +1,19 @@
 # Current work
 
-**Active: paired temporal-order diagnosis,16 September:**
-[Protocol](video-order-plan.md). Identical final frames and unordered frame sets,
-opposite last-step direction. Freeze the spatial image VAE; compare frozen versus
-direction-trained temporal features with current/previous-only controls. Conditional
-local-correlation repair includes its own attribution control. Real image contents,
-constructed pans; no natural-motion result yet. Fixed budgets and gates precede runs.
+**Paired temporal-order diagnosis and two repairs completed,16 September:**
+[Protocol/results](video-order-plan.md),[latest comparison](../runs/video_order_v1/balanced_training/report.html).
+Temporal residual features can now be read separately without modifying image means;
+optional local feature correlation is an explicit matching primitive.12 crop-pan fits
+reach100% when direction-trained, but a60.94% previous-only control fails the gate.
+A separate frozen-model challenge enumerates all48 circular phases, proving equal
+single-frame class marginals on RGB AND encoded grids: controls50%, trained temporal
+features84–86%, correlation-augmented88–94%, full gates fail. Four additional fits on
+balanced training data give79–97% plain and86–99% augmented; one seed per variant
+passes, neither passes BOTH seeds.16 fits total,21.89s CPU training, no default change.
+69 scoped tests,1894 exact-restart and6035 independent artifact checks pass;21 reports
+structurally checked, plot inspected, browser interaction not validated. Next isolate
+optimization/seed variability with a fixed balanced task before broadening to natural
+video, object motion or agent integration. Original failed gates remain visible.
 
 **Frozen-codec temporal-context comparison completed,16 September:**
 [Protocol/results](video-context-plan.md),[report](../runs/video_context_v1/report.html).

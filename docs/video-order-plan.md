@@ -161,3 +161,81 @@ the original registered12 fits. Stop this round after four fits regardless of
 outcome; further generalization needs a separately specified experiment.
 Total artifact allowance<=38MiB preserves both prior studies and these four reports;
 disk reserve remains300MiB. No original gate is overwritten or reinterpreted as pass.
+
+## Results and limits
+
+Implemented `pan_pairs` and `cyclic_pan_pairs`, separate temporal-feature readout,
+bounded local correlation and `experiments.video_order` using existing Run/report
+infrastructure. Default VideoVAE reconstruction and checkpoint keys remain intact.
+The image encoder/decoder source and all six source media hashes are unchanged.
+
+**Original crop experiment:**12 fixed512-update fits,15.635s CPU training. Frozen
+reconstruction-trained temporal features with a learned head give43.75–50% on the
+reserved source. Direction-trained and correlation-augmented arms give100% known
+and wide, but previous-only7501 reaches60.94% known: original gates FAIL. Current-only
+is50%. Correlation-only gives60.94–76.56%; do not attribute augmented success to the
+matching primitive alone. [Original report](../runs/video_order_v1/report.html).
+
+**Evaluation-only balance repair:** all48 phases, four source images,384 pairs per
+displacement group.96 RGB/feature marginal-count checks across known/wide establish
+exact single-frame balance. All static controls become50%, without retraining. The
+plain direction-trained arms give84.38–86.20%; augmented88.15–94.40%; frozen50–55.86%;
+correlation-only63.41–79.04%. Both-seed full gates FAIL, particularly paired flip
+consistency. This is distribution-shift evaluation on periodic pans, not a
+retroactive replacement of the original gate. [Challenge](../runs/video_order_v1/balanced/report.html).
+
+**Separate balanced-training repair:** four fixed512-update fits,6.260s CPU training.
+Identical initial model weights to corresponding original arms, matched pair sampling
+within each population; data distribution/coverage changes explicitly.
+
+| Seed | Arm | Known2/4px accuracy | Wide6/8px accuracy | Known / wide both-members accuracy | Per-seed gate |
+|---|---|---:|---:|---:|---|
+|7501|learned temporal|96.22%|96.61%|92.45% /93.23%|pass|
+|7502|learned temporal|79.30%|80.60%|58.59% /61.20%|fail|
+|7501|+ local correlation|86.07%|98.83%|72.14% /97.66%|fail|
+|7502|+ local correlation|96.88%|98.31%|93.75% /96.61%|pass|
+
+Current/previous/unordered single-frame controls remain exactly50%. Neither variant
+passes BOTH seeds, so overall gates FAIL; no default adoption. Successful individual
+fits establish feasibility on this controlled task, not reliable optimization or
+natural motion understanding. Correlation has no consistent across-seed dominance.
+[Balanced training report](../runs/video_order_v1/balanced_training/report.html).
+
+All16 formal fits total21.895s CPU training; preprocessing, evaluation and rendering
+are additional.69 unique scoped tests pass, including exact label/marginal identities,
+causality, unchanged image features, matching orientation and degenerate-image
+ambiguity handling. The original8 vs4+4 restart check gives1894 exact comparisons;
+it precedes the balanced-data extension, whose complete-data identities are checked
+separately.6035 independent audits recompute marginal/pair/flip accuracies, confusion
+matrices, cross entropy and displacement metrics, verify source/model identities,
+initialization and paired sampling, and check three actual-Claude receipts. Raw-pixel
+alignment oracle is100% with no ambiguous samples on these measured populations;
+uniform-image unit fixtures correctly remain ambiguous rather than being filtered.
+
+All21 reports are structurally verified and the comparison plot inspected visually;
+browser interaction is not validated. Debug artifacts include logits/labels/pair
+metadata, appearance/temporal/correlation maps and PCA inspection. Source code snapshots
+and original failed results are preserved. No images/measurements sent to Claude.
+
+Next proposed bounded question: why do matched512-update fits vary across seeds on
+the fixed balanced population? Diagnose training fit, margins and initialization or
+optimization before increasing model size, adding larger kernels, or claiming
+long-range/natural-video motion. This is a proposal, not an additional run in this turn.
+
+### Commands
+
+```bash
+# Fresh supervised temporal-feature fit; supply seed/source explicitly when pairing.
+.venv/bin/python -m experiments.video_order --mode train --balanced-training \
+  --seed 7501 --steps 512 --output runs/my_balanced_order
+
+# Opt-in matching-feature comparison uses --mode correlation.
+# Separate frozen-model challenge expects the12 original arm directories.
+.venv/bin/python -m experiments.video_order --challenge-models runs/video_order_v1 \
+  --output runs/my_order_challenge
+```
+
+The source image and reconstruction-trained temporal checkpoint are explicit inputs
+(`--source`, `--temporal-source`). For7502, use the corresponding7402 temporal source.
+Reports and checkpoints record both hashes. Exact Run resume requires unchanged
+code/data/settings; original run snapshots preserve the earlier recipe versions.

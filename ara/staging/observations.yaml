@@ -4927,3 +4927,34 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O281
+  timestamp: 2026-09-16T10:12+02:00
+  provenance: ai-suggested
+  content: The frozen image features plus a small supervised temporal module can support the controlled direction
+    task in individual fits, but variable seeds prevent a reliable-learning claim. Correlation is not consistently
+    dominant. This does not establish natural-video motion, forecasting, encoder adequacy for other tasks, or the
+    unique cause of failure.
+  context: User requested implement/review/test/fix iteration with Claude on temporal video features.
+  potential_type: claim
+  bound_to:
+  - N415
+  - N416
+  - N417
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O282
+  timestamp: 2026-09-16T10:12+02:00
+  provenance: ai-suggested
+  content: Next diagnose training fit, margins and initialization/optimization on the fixed balanced population
+    before increasing capacity or moving to natural motion. Keep existing task, gates and original failures; this
+    is a proposed new bounded experiment, not a launched run.
+  context: User requested implement/review/test/fix iteration with Claude on temporal video features.
+  potential_type: heuristic
+  bound_to:
+  - N417
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
