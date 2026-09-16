@@ -749,3 +749,14 @@
 - **Code ref**: [direction loss and diagnostics](../../../experiments/video_order.py), [penalty/gradient and inference tests](../../../tests/test_video_pair_center.py).
 - **Evidence**: N427–N429; [fixed comparison](../../evidence/tables/video_pair_center_2026-09-16.json).
 - **Scope**: Implemented experimental method; full capability and preservation gates failed, no default adoption.
+
+## H76: Isolate exposed matching support and compare a fixed evidence reader
+
+- **Rationale**: Reserve common correlation slots and spatial crop, mask support before the learned head, and compare against a predeclared no-fit signed-cosine direction rule on the same frozen features. Distinguish nominal parameters/compute from useful input channels and effective gradients.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O290
+- **Sensitivity**: High. Fixed cosine is a designed task-specific rule, not an optimal probe or learned dynamics. Radius3 at stride4 nominally covers10/11px without guaranteeing nonlinear/fractional equivariance. Preserve every case and source-level results.
+- **Code ref**: [configurable readout](../../../experiments/video_order.py), [matching/gradient/isolation tests](../../../tests/test_video_matching.py), [correlation primitive](../../../pathwm/models/video_vae.py).
+- **Evidence**: N430–N432; [fixed comparison](../../evidence/tables/video_matching_2026-09-16.json).
+- **Scope**: Implemented diagnostic procedure. All trained full/preservation gates fail; no default adoption.

@@ -7175,3 +7175,60 @@ tree:
   - docs/video-pair-center-plan.md
   - runs/video_pair_center_v1/diagnostic-summary.json
   status: resolved
+- id: N430
+  type: decision
+  title: Compare exposed correspondence range at a fixed crop and nominal head shape
+  provenance: ai-executed
+  timestamp: 2026-09-16T12:30+02:00
+  choice: 'Implement O290 method: common radius3 cosine computation and6x6 interior,1630 parameters; NONE
+    zeros7, LOCAL zeros2, WIDE exposes7 slots. Fixed0.1 pair-offset objective, identical16x4 frames and4096
+    draws,4 crossed cells per arm. Nominal compute/parameter count matched, effective input capacity differs.13
+    inspected development sources;4 fresh unique subjects excluding30 old clips. Mandatory untrained cosine
+    diagnostic and per-inspected-source preservation. Actual Claude public methodology review and two
+    reconciliations; no private export.'
+  alternatives:
+  - Increase all temporal kernels
+  - Retrain the image codec
+  - Compare unmatched crops/head widths
+  evidence:
+  - O290
+  - ara/evidence/tables/video_matching_2026-09-16.json
+  - docs/video-matching-plan.md
+  - experiments/video_order.py
+  status: resolved
+- id: N431
+  type: experiment
+  title: Twelve correspondence fits improve large-shift means but fail preservation
+  provenance: ai-executed
+  timestamp: 2026-09-16T12:30+02:00
+  result: Twelve512-update fits22.144s CPU. Fresh large10/11px accuracy NONE78.75/LOCAL86.77/WIDE90.07%;
+    all trained full gates fail. WIDE-vs-NONE transfer+5.758pp, worst fresh-2.73pp/inspected-28.26pp.
+    WIDE-vs-LOCAL+1.685pp,worst fresh-3.91pp/inspected-26.82pp. Both benefit gates fail; no default change.85
+    tests,8661 exact objective-corrected restart,92229 independent audits,5256 marginals,34 source hashes,17
+    structural reports; panel inspected, no browser claim. Pre-fit helper failure and extra mechanics
+    retained.
+  also_depends_on:
+  - N430
+  evidence:
+  - ara/evidence/tables/video_matching_2026-09-16.json
+  - docs/video-matching-plan.md
+  - runs/video_matching_v1/report.html
+  status: resolved
+- id: N432
+  type: experiment
+  title: Fixed cosine direction rule recovers large-shift evidence from frozen image features
+  provenance: ai-executed
+  timestamp: 2026-09-16T12:30+02:00
+  result: 'Mandatory no-fit signed best-negative-versus-positive cosine on common margin3: fresh10/11px94.69%
+    at radius2,99.93% at radius3 (minimum source99.74%). Radius3 inspected13-source macro99.82%,minimum97.66%,legacy1KKYX100%.
+    Fresh known2/4px96.71%,wide6/8px99.25%,intermediate99.93%. Raw pixel reference100%,no ambiguous fresh
+    cases removed. Same frozen image features and one-sequence input, no teacher-forced displacement or
+    trained diagnostic; not a natural-video or optimality claim.'
+  also_depends_on:
+  - N431
+  evidence:
+  - ara/evidence/tables/video_matching_2026-09-16.json
+  - docs/video-matching-plan.md
+  - runs/video_matching_v1/alignment.json
+  - runs/video_matching_v1/alignment.npz
+  status: resolved

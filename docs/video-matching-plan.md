@@ -90,3 +90,85 @@ Means, per-source/magnitude breakdowns, thresholds and diagnostic aggregation we
 above. Remaining concern about overinterpreting aggregates is addressed through scope:
 a trained classifier with a frozen image encoder on finite constructed pans, not a
 frozen classifier, universal equivariance or natural video understanding.
+
+## Execution notes before formal fits
+
+85 scoped video/image/modality tests and Ruff pass. Real8 versus4+4 restart passes
+8661 exact checks at the specified0.1 objective, including model/optimizer/RNG, sampler,
+raw predictions and exposure. The ignored orchestration helper initially duplicated
+mode kwargs and failed after preparation, before ANY formal fit. Inspection also found
+the first smoke had inadvertently used default CE; it is preserved separately under
+check-pre-objective-fix. Fixed the helper and repeated the same8 versus4+4 mechanics
+with0.1. This adds16 smoke updates beyond the original mechanics budget, not another
+scientific fit or coefficient search. Both logs remain. The12 formal fits are unchanged.
+Per-run automatic evaluation writes fresh scores to artifacts; they are not inspected
+until all12 fixed fits finish (no score-dependent stopping/selection). Preparation and
+scoring/reporting are timed separately from the per-fit45s training cap.
+
+## Result (16 September)
+
+Twelve512-update fits completed:22.144s CPU training,21.786s preparation,
+243.564s through preparation/training/evaluation/reports; mandatory alignment diagnostic
+2.066s separately. Same1630 nominal parameters and4096 sampled pairs per fit.
+Frozen-cache, initialization, sample/exposure and raw metric checks pass.
+
+Four fresh sources, source-macro accuracy averaged over the four temporal/head cells:
+
+| Displacement | NONE | LOCAL +/-2 | WIDE +/-3 | Fixed cosine +/-3 |
+|---|---:|---:|---:|---:|
+| trained2/4px | 98.00% | 95.22% | 96.62% | 96.71% |
+| trained6/8px | 94.57% | 97.40% | 95.78% | 99.25% |
+| untrained3/5/7px | 97.44% | 97.57% | 97.64% | 99.93% |
+| untrained10/11px | 78.75% | 86.77% | 90.07% | 99.93% |
+
+The fixed cosine column is an untrained, explicitly designed direction rule on the SAME
+frozen grids; it is not another fit, learned dynamics, or universal video capability.
+Radius2 fixed cosine reaches94.69% on10/11px versus99.93% at radius3. Raw pixel reference
+is100% on all fresh groups, with no ambiguous examples removed. Fresh radius3 large-shift
+accuracy per source is at least99.74%; the thirteen inspected sources average99.82%, with
+minimum97.66%. The old1KKYX source is100% for this rule at10/11px. At least this task's
+useful directional evidence remains accessible in the frozen encoder output. A failed
+learned readout is therefore not evidence that the encoder destroyed all motion cues.
+This does not localize every individual mistake or establish arbitrary feature equivariance.
+
+ALL trained-arm full capability gates fail. WIDE minus NONE mean intermediate/large
+transfer gain is5.758pp, but worst fresh cell/group-2.73pp and worst inspected source
+-28.26pp fail preservation. WIDE minus LOCAL transfer gain1.685pp, worst fresh-3.91pp
+and inspected-26.82pp also fails. A bigger explicit search window helps large shifts
+on average here, but concatenation into the generic learned head is not a reliable fix.
+No default promotion, decoder changes, coefficient search or extra scientific fits.
+
+85 tests,8661 exact restart checks at the specified objective,92229 independent raw
+checks,5256 frame-marginal comparisons and34 source-file hashes pass.17 reports are
+structurally verified (includes preserved pre-fix mechanics); comparison panel inspected.
+Browser interactions were not validated; renderer unchanged. Artifacts ~72.6MB within
+120MiB cap. Reports and weights remain under runs/video_matching_v1, including failed
+setup and pre-objective smoke. Main outputs: report.html,result.json,comparison.json,
+alignment.npz/alignment.json,verification.json and the twelve per-fit reports/checkpoints.
+
+Next proposed experiment: a structured, learnable direction readout that explicitly
+compares opposite-offset matching evidence before combining appearance/context. Compare
+against this generic head AND the fixed cosine rule; test small displacements as well
+as large ones. Keep single-sequence inference, no forced partner at inference, fresh
+confirmation and source-level preservation. Do not simply enlarge convolution kernels
+or retrain the image codec from these results. Natural motion, object tracking, temporal
+forecasting, streaming and integration into the agent core remain separate open tests.
+
+## Reproduce one arm
+
+```bash
+.venv/bin/python -m experiments.video_order \
+  --output runs/my_matching_wide \
+  --source-manifest data/motion_matching_v1/sources.json \
+  --displacement-spec data/motion_matching_v1/expanded.json \
+  --temporal-source runs/video_context_v1/seed7401/k3/history/last.pt \
+  --balanced-training --matched-phase-sampling \
+  --mode correlation --correlation-radius 3 --active-radius 3 \
+  --pair-center-weight 0.1 --head-seed 7501 --seed 7600 --steps 512
+```
+
+Use active-radius2 for LOCAL, or mode train for NONE while keeping radius3.
+The ignored execute.py/analyze.py record this exact bounded orchestration and audit;
+the supported user entry point remains the existing recipe. Defaults remain radius2
+and no paired auxiliary loss. Model loading uses saved radius/active radius; old
+checkpoints default to radius2. Resume validates objective and radius settings.

@@ -5081,6 +5081,39 @@ observations:
   bound_to:
   - N428
   - N429
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H76
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O291
+  timestamp: 2026-09-16T12:30+02:00
+  provenance: ai-suggested
+  content: 'Large-shift directional evidence is accessible in the frozen image features for these controlled
+    pans: fixed radius3 cosine99.93% exceeds learned WIDE90.07%. Generic appearance/temporal/correlation
+    concatenation underuses available evidence here. This does not identify every error, guarantee feature
+    equivariance, prove arbitrary motion understanding or require enlarging the encoder.'
+  context: Fixed-budget matching-range comparison and mandatory untrained readout diagnosis.
+  potential_type: claim
+  bound_to:
+  - N431
+  - N432
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O292
+  timestamp: 2026-09-16T12:30+02:00
+  provenance: ai-suggested
+  content: Next test a structured learnable direction readout comparing opposite-offset evidence before
+    mixing appearance/context, against both generic head and fixed cosine rule. Preserve small-shift performance,
+    one-sequence inference, fresh confirmation and individual inspected-source gates; do not force artificial
+    partner access or expand all kernels. No structured readout fit executed.
+  context: Wider matching helps mean large-shift accuracy but learned readout still trails fixed evidence
+    rule; new sources now inspected.
+  potential_type: heuristic
+  bound_to:
+  - N431
+  - N432
   promoted: false
   promoted_to: null
   crystallized_via: null

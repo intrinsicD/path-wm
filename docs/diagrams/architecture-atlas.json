@@ -1,7 +1,7 @@
 {
   "title": "PATH-WM · Architecture atlas",
   "date": "2026-09-16",
-  "source_commit": "3c7d9cf",
+  "source_commit": "9866fba",
   "intro": "A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.",
   "graphs": [
     {
@@ -2835,7 +2835,8 @@
         "Initialization/transfer comparison: optional RGB reflection before encoding and independent head/sampler seeds in the direction recipe. Eight fixed fits all reach100% train accuracy, but only one of four cells passes per arm; reflection mean+1.37pp and worst-5.60pp fails repair criteria. Both temporal/head initializations affect observed transfer under identical sampling. No architecture/default or green promotion.72 tests,2211 exact restart and7828 raw audits; see docs/video-stability-plan.md and runs/video_stability_v1/report.html.",
         "Source-diversity comparison changes data only:4x4 versus4x16 versus16x4 clips/frames,12 fixed fits. Fresh four-subject confirmation at trained2/4px improves98.23→99.93%, but untrained6/8px is83.61/83.16/77.51%. Full capability and diversity-benefit gates fail; no default or green promotion. Optional source manifests, source-macro metrics and sampled exposure are inspectable.74 tests,3571 exact restart and14771 raw audits; see docs/video-diversity-plan.md. Next displacement coverage is proposed, not implemented.",
         "16 September displacement coverage: eight matched512-update fits compare2/4 versus2/4/6/8px support on identical16x4 frames and image/phase draws. Fresh sources: intermediate92.73→97.65%, extrapolated10/11px58.89→85.03%; known99.64→97.05% with worst9.64pp regression. Full capability and preservation gates fail; no default promotion.77 tests,3397 exact restart,19873 raw checks,4560 marginal identities. Post-hoc reversed-partner score ordering reveals a common class offset, not a validated single-clip repair; next compare paired training objectives with explicit inference contract. Natural video and streaming remain open.",
-        "16 September paired-objective comparison:8 fixed fits keep inference one sequence/model unchanged and add training-only0.1 SmoothL1 common class-score offset. Fresh source accuracy known95.90→98.59%,wide89.62→92.92%,intermediate93.67→96.84%,extrapolation69.54→72.42%. Absolute/relative class preference decreases, but large-shift ordering remains weak. Full capability/preservation gates fail; no default promotion.81 tests,7061 restart,52913 raw audits and72 exact prior-baseline checks;11 structural reports, plot inspected. Explicit two-frame correspondence is proposed next; no natural-video or core-integration claim."
+        "16 September paired-objective comparison:8 fixed fits keep inference one sequence/model unchanged and add training-only0.1 SmoothL1 common class-score offset. Fresh source accuracy known95.90→98.59%,wide89.62→92.92%,intermediate93.67→96.84%,extrapolation69.54→72.42%. Absolute/relative class preference decreases, but large-shift ordering remains weak. Full capability/preservation gates fail; no default promotion.81 tests,7061 restart,52913 raw audits and72 exact prior-baseline checks;11 structural reports, plot inspected. Explicit two-frame correspondence is proposed next; no natural-video or core-integration claim.",
+        "16 September explicit correspondence support:12 fixed fits share radius3 crop/head/1630 nominal parameters and expose no/local2/wide3 matching. Fresh10/11px accuracy78.75/86.77/90.07%, while a mandatory fixed cosine rule on the SAME frozen grids reaches99.93%. Direction evidence is accessible for these constructed pans; generic learned readout remains unreliable. All trained full/preservation gates fail, no default/color promotion.85 tests,8661 restart,92229 raw checks,5256 marginal identities,17 structural reports; plot inspected. Next structured opposite-offset readout is proposed, not implemented. See docs/video-matching-plan.md and runs/video_matching_v1/report.html."
       ],
       "sources": [
         "pathwm/models/video_vae.py#VideoVAE",
@@ -2851,7 +2852,8 @@
         "docs/video-stability-plan.md",
         "docs/video-diversity-plan.md",
         "docs/video-displacement-plan.md",
-        "docs/video-pair-center-plan.md"
+        "docs/video-pair-center-plan.md",
+        "docs/video-matching-plan.md"
       ]
     }
   ]

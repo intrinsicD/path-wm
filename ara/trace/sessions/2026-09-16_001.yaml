@@ -2,8 +2,8 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T12:06+02:00
-  turn_count: 11
+  last_turn: 2026-09-16T12:30+02:00
+  turn_count: 12
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not
     adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59
     scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
@@ -26,7 +26,9 @@ session:
     worst regression9.64pp fails preservation.77 tests,3397 restart,19873 audits,11 reports; paired score
     offsets motivate a proposed readout-objective repair, defaults unchanged. Pair-centered objective:8
     fixed fits reduce relative bias and improve fresh means, but extrapolation72.42% and source regressions
-    fail repair.81 tests,7061 restart,52913 audits,72 prior-baseline checks,11 reports; no default change.'
+    fail repair.81 tests,7061 restart,52913 audits,72 prior-baseline checks,11 reports; no default change.
+    Matching support:12 fits,large-shift78.75/86.77/90.07%;fixed cosine99.93% on same frozen grids. All
+    trained/preservation gates fail.85 tests,8661 restart,92229 audits,17 reports; no default change.'
 events_logged:
 - turn: 1
   type: decision
@@ -489,6 +491,48 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O288 procedure committed through N427; no efficacy affirmation inferred.
+- turn: 12
+  type: decision
+  id: N430
+  routing: direct
+  provenance: ai-executed
+  summary: Compare exposed correspondence range at a fixed crop and nominal head shape
+- turn: 12
+  type: experiment
+  id: N431
+  routing: direct
+  provenance: ai-executed
+  summary: Twelve correspondence fits improve large-shift means but fail preservation
+- turn: 12
+  type: experiment
+  id: N432
+  routing: direct
+  provenance: ai-executed
+  summary: Fixed cosine direction rule recovers large-shift evidence from frozen image features
+- turn: 12
+  type: observation
+  id: O291
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Large-shift directional evidence is accessible in the frozen image features for these controlled
+    pans: fixed radius3 cosine99.93% exceeds learned WIDE90.07%. Generic appearance/temporal/correlation
+    concatenation underuses available evidence here. This does not identify every error, guarantee feature
+    equivariance, prove arbitrary motion understanding or require enlarging the encoder.'
+- turn: 12
+  type: observation
+  id: O292
+  routing: staged
+  provenance: ai-suggested
+  summary: Next test a structured learnable direction readout comparing opposite-offset evidence before
+    mixing appearance/context, against both generic head and fixed cosine rule. Preserve small-shift performance,
+    one-sequence inference, fresh confirmation and individual inspected-source gates; do not force artificial
+    partner access or expand all kernels. No structured readout fit executed.
+- turn: 12
+  type: heuristic
+  id: H76
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O290 method committed through N430; no successful-repair claim.
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -643,6 +687,19 @@ ai_actions:
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
   - ara/evidence/tables/video_pair_center_2026-09-16.json
+- turn: 12
+  action: Implemented explicit common/active correspondence radii in existing recipe with legacy defaults.85
+    tests, objective-corrected exact restart,12 matched fits, mandatory frozen cosine diagnostic and raw/gate/source
+    audits. Three actual-Claude public review receipts. Retained setup failure and first smoke; no private
+    export or default change.
+  provenance: ai-executed
+  files_changed:
+  - experiments/video_order.py
+  - tests/test_video_matching.py
+  - docs/video-matching-plan.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - ara/evidence/tables/video_matching_2026-09-16.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -690,6 +747,10 @@ key_context:
   excerpt: Continue together with Claude. Work on this. Plan, implement, review, test and fix. Iterate.
     Tested one training-only objective intervention at unchanged single-sequence inference; mean gains
     do not pass preservation/full gates.
+- turn: 12
+  excerpt: Continue together with Claude. Work on this. Plan, implement, review, test and fix. Iterate.
+    Same frozen features yield99.93% fixed-rule large-shift accuracy versus90.07% learned wide reader;
+    full trained gates still fail.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -773,6 +834,9 @@ open_threads:
   no extra fit.'
 - 'O290: explicit two-frame correspondence/readout comparison at controlled support/capacity/compute;
   preserve single-sequence inference and fresh confirmation. Natural motion/core integration remain separate.'
+- 'O292: structured opposite-offset evidence readout against generic head AND fixed cosine, keep small
+  shifts and source-preservation; one-sequence input/fresh confirmation. No new fit; natural motion/core
+  integration remain open.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
@@ -924,3 +988,5 @@ ai_suggestions_pending:
   repair remain staged; no default, natural-video or general-capability promotion.
 - O288→H75 is implemented training-only comparison procedure, not adopted repair. O289 interpretation/O290
   matching proposal remain staged; no extra fit or global capability promotion.
+- O290→H76 implements the matched correspondence-range diagnostic only. O291 accessible-evidence interpretation/O292
+  structured-readout proposal staged; no high-level motion claim promoted.

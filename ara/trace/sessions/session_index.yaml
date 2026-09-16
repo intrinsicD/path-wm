@@ -189,8 +189,10 @@ sessions:
     worst regression9.64pp fails preservation.77 tests,3397 restart,19873 audits,11 reports; paired score
     offsets motivate a proposed readout-objective repair, defaults unchanged. Pair-centered objective:8
     fixed fits reduce relative bias and improve fresh means, but extrapolation72.42% and source regressions
-    fail repair.81 tests,7061 restart,52913 audits,72 prior-baseline checks,11 reports; no default change.'
-  turn_count: 11
-  events_count: 67
+    fail repair.81 tests,7061 restart,52913 audits,72 prior-baseline checks,11 reports; no default change.
+    Matching support:12 fits,large-shift78.75/86.77/90.07%;fixed cosine99.93% on same frozen grids. All
+    trained/preservation gates fail.85 tests,8661 restart,92229 audits,17 reports; no default change.'
+  turn_count: 12
+  events_count: 73
   claims_touched: []
-  open_threads: 32
+  open_threads: 33

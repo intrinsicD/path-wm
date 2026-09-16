@@ -1,8 +1,16 @@
 # Current work
 
-**Active: explicit correspondence range:** [protocol](video-matching-plan.md).
-Matched radius3 crop/head with no, local2 or wide3 exposed matching channels.
-Frozen image codec; four temporal/head cells; twelve bounded fits plus exact restart.
+**Explicit correspondence-range comparison completed,16 September:**
+[Protocol/results](video-matching-plan.md),[report](../runs/video_matching_v1/report.html).
+Twelve512-update fits expose no/local2/wide3 matching at the SAME crop/head and1630
+nominal parameters. Fresh large-shift accuracy78.75/86.77/90.07%; fixed untrained cosine
+on the SAME frozen features99.93% (raw pixel100%). Direction evidence is accessible;
+the generic learned reader uses it unreliably. All trained full gates and both benefit
+screens fail preservation; no default promotion.85 tests,8661 exact restart,92229 raw
+checks,5256 marginal comparisons,17 structural reports; plot inspected. One helper
+setup failure before fits and repeated objective-corrected smoke retained/disclosed.
+Next propose structured opposite-offset evidence readout with fixed-cosine baseline;
+natural motion, streaming, forecasting and core integration remain open.
 
 **Pair-centered objective comparison completed,16 September:**
 [Protocol/results](video-pair-center-plan.md),[report](../runs/video_pair_center_v1/report.html).
