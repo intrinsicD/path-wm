@@ -1,5 +1,12 @@
 # Current work
 
+**Active: frozen-codec temporal-context comparison,16 September:**
+[Plan](video-context-plan.md). Missing current-frame RGB region makes historical
+context potentially useful. Compare3x3,5x5 and shared spatial refinement with a
+trained current-only control; freeze both image encoder and decoder. Equal frame
+exposure, explicit unequal compute, two seeds, small disk/training budgets. No
+new motion or quality result yet; prior negative evidence remains unchanged.
+
 **Shared image/video codec implemented and measured, 16 September:**
 [Protocol/results](shared-video-vae-plan.md#result-16-september),
 [real-video comparison](../runs/shared_video_vae_v1/report.html).

@@ -7,6 +7,56 @@ from pathwm.models.spatial_vae_v2 import HierarchicalVAE
 from pathwm.models.video_vae import VideoVAE
 
 
+def test_configurable_mixer_spatial_reach_preserves_temporal_horizon():
+    from pathwm.models.video_vae import CausalLatentMixer
+
+    torch.manual_seed(97)
+    for kernel, loops, radius in [(3, 0, 1), (5, 0, 2), (3, 2, 3)]:
+        mixer = CausalLatentMixer(2, spatial_kernel=kernel, spatial_iterations=loops)
+        torch.nn.init.normal_(mixer.output.weight, std=0.2)
+        x = torch.randn(1, 5, 2, 11, 11, requires_grad=True)
+        times = torch.arange(5, dtype=torch.float64)[None]
+        valid = torch.ones(1, 5, dtype=torch.bool)
+        out = mixer(x, times, valid)
+        grad = torch.autograd.grad(out[0, 3, :, 5, 5].sum(), x)[0]
+        assert torch.count_nonzero(grad[:, 0]) == 0
+        assert torch.count_nonzero(grad[:, 4]) == 0
+        support = grad[:, 1:4].abs().sum((0, 1, 2))
+        assert support[5, 5 + radius] > 0
+        assert support[5, 6 + radius] == 0
+        invalid = valid.clone()
+        invalid[:, 2] = False
+        dirty = x.detach().clone()
+        dirty[:, 2] = float('nan')
+        torch.testing.assert_close(
+            mixer(dirty, times, invalid), mixer(x.detach(), times, invalid),
+            rtol=0, atol=0,
+        )
+
+
+def test_injected_shared_spatial_loop_keeps_image_identity_and_checkpoint():
+    from pathwm.models.video_vae import CausalLatentMixer
+
+    first = CausalLatentMixer(2, spatial_iterations=1)
+    second = CausalLatentMixer(2, spatial_iterations=2)
+    assert sum(p.numel() for p in first.parameters()) == sum(
+        p.numel() for p in second.parameters()
+    )
+    second.load_state_dict(first.state_dict(), strict=True)
+    image = codec()
+    model = VideoVAE(image, temporal=second)
+    assert model.temporal is second
+    x = observation(torch.rand(1, 3, 3, 11, 9))
+    y, _ = model(x, sample=False)
+    baseline, _ = image(x.values.flatten(0, 1), sample=False)
+    torch.testing.assert_close(y.flatten(0, 1), baseline, rtol=0, atol=0)
+    torch.nn.init.normal_(first.output.weight, std=0.2)
+    second.load_state_dict(first.state_dict())
+    values = torch.rand(1, 3, 2, 5, 7)
+    mask = torch.ones(1, 3, dtype=torch.bool)
+    assert not torch.equal(first(values, x.times, mask), second(values, x.times, mask))
+
+
 def codec():
     return HierarchicalVAE(stem_channels=4, channels=(8,), latent_channels=2)
 
