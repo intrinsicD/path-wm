@@ -664,6 +664,53 @@ def diagnose(args):
         raise
 
 
+def understanding(args):
+    """Run a prepared regression battery against an unchanged full checkpoint."""
+    from pathwm.data.understanding import UnderstandingData
+    from pathwm.evaluation.understanding import evaluate_understanding
+
+    data = UnderstandingData(args.understanding_suite)
+    settings = json.loads((args.core / "run.json").read_text())["identity"]["settings"]
+    checkpoint = torch.load(
+        args.core / "last.pt", map_location="cpu", weights_only=True
+    )
+    seed_everything(args.seed)
+    model = Model(
+        settings["variant"],
+        posterior_aux="posterior_head.weight" in checkpoint["model"],
+        video_conditioning=settings.get("video_conditioning", "context"),
+        video_palette=settings.get("video_palette", 0),
+    )
+    source_hash = load_initial(model, args.core, args.device)
+    model.requires_grad_(False)
+    source = dict(
+        path=str(args.core.resolve()),
+        sha256=source_hash,
+        settings=settings,
+        output_training_scope=(
+            "joint multimodal symbolic outputs"
+            if settings["stage"] == "joint"
+            else "Check source settings: decoder may be untrained for this endpoint"
+        ),
+    )
+    result = evaluate_understanding(
+        model,
+        data,
+        args.output,
+        source=source,
+        seed=args.seed,
+        device=args.device,
+        recipe=__file__,
+        reference=args.reference,
+    )
+    if file_hash(args.core / "last.pt") != source_hash:
+        raise AssertionError("Source checkpoint changed during evaluation")
+    print(
+        json.dumps(dict(path=str(args.output), coverage=result["coverage"])), flush=True
+    )
+    return args.output
+
+
 def perform(args):
     seed_everything(args.seed)
     device = torch.device(args.device)
@@ -1051,7 +1098,6 @@ def perform(args):
             ),
             flush=True,
         )
-        return run.path
     except BaseException as exc:
         prior = json.loads((run.path / "status.json").read_text())
         run.status(
@@ -1060,6 +1106,18 @@ def perform(args):
             str(exc),
         )
         raise
+
+    # A failed child evaluation must not mark the completed training report failed.
+    if (
+        getattr(args, "understanding_suite", None) is not None
+        and args.stage in ("core", "joint")
+        and run.step == args.steps
+    ):
+        evaluation_args = copy.copy(args)
+        evaluation_args.core = run.path
+        evaluation_args.output = run.path / "understanding"
+        understanding(evaluation_args)
+    return run.path
 
 
 def main():
@@ -1074,6 +1132,8 @@ def main():
             "suite",
             "diagnose",
             "capabilities",
+            "understanding-prepare",
+            "understanding",
             "repair-report",
         ),
         default="suite",
@@ -1088,6 +1148,15 @@ def main():
     )
     parser.add_argument("--modality", choices=KINDS, default="text")
     parser.add_argument("--core", type=Path)
+    parser.add_argument(
+        "--understanding-suite",
+        type=Path,
+        help="Prepared fixtures; optionally evaluate after completed core/joint training",
+    )
+    parser.add_argument(
+        "--real-root", type=Path, default=Path("data/tau_urban_av_2021")
+    )
+    parser.add_argument("--profile", choices=("quick", "full"), default="quick")
     parser.add_argument(
         "--belief-readout",
         choices=("sampled", "probabilities"),
@@ -1113,7 +1182,9 @@ def main():
         help="Observational shared-updater task gradients;0 disables",
     )
     parser.add_argument(
-        "--reference", type=Path, help="Original study root for repair-report only"
+        "--reference",
+        type=Path,
+        help="Repair study root or matching understanding baseline run",
     )
     parser.add_argument(
         "--posterior-source", choices=("probabilities", "raw"), default="probabilities"
@@ -1154,6 +1225,32 @@ def main():
         help="Optional learned untimed palette; requires query timing",
     )
     args = parser.parse_args()
+    if args.stage == "understanding-prepare":
+        from pathwm.data.understanding import prepare_understanding
+
+        print(prepare_understanding(args.output, args.real_root, args.profile))
+        return
+    if args.stage == "understanding":
+        if (
+            args.core is None
+            or args.understanding_suite is None
+            or args.resume
+            or args.stop_after
+            or args.steps
+        ):
+            parser.error(
+                "Understanding evaluation needs --core and --understanding-suite, without training/resume"
+            )
+        understanding(args)
+        return
+    if args.understanding_suite is not None and args.stage not in (
+        "core",
+        "joint",
+        "suite",
+    ):
+        parser.error(
+            "Automatic understanding evaluation is supported after core/joint training"
+        )
     if args.encoder_readout is not None and args.stage != "core":
         parser.error(
             "Encoder readout selection is for core training; evaluation restores its source"

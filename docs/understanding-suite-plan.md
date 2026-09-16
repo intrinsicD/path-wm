@@ -34,6 +34,7 @@ understanding. Preserve the older factor/codec tests as distinct endpoints.
    all evidence omitted. Same pair/condition sampling randomness. Primary per task:
    minimum-draw accuracy and (for contrast tasks) both-partners-correct rate. Gates
    >=0.80 each, full-minus-required-omitted accuracy>=0.15, omitted accuracy<=chance+0.10.
+   Full-minus-all-evidence-omitted accuracy must also be>=0.15 on every draw.
    These are preregistered engineering acceptance targets, not empirical constants.
    No omnibus understanding score. Report coverage and all missing capabilities.
 6. Detached encoder/posterior/working-state probes use fixed16 bins/scale for encoder,
@@ -72,3 +73,9 @@ not an ambiguous deletion of just duration. Retain raw deployed predictions rath
 than silently replacing inference with prior-subtracted likelihood. Fixed acceptance
 targets need not be derived from a weak baseline. Repeated test feedback is development,
 not untouched confirmation. No claim that remaining nuisance confounds are eliminated.
+The same location partition is used across every modality, task and omission condition.
+Uncontrolled device/time confounds block broad generalization claims. Paired correctness
+means BOTH opposite-answer items are correct for the same checkpoint and matched draw;
+it is not an aggregate cohort comparison or a claim of statistical significance.
+Controlled cohorts vary neutral text context, visual nuisance and tone phase/frequency;
+they do not claim natural-language, natural-object or speech generalization.

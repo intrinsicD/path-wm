@@ -1385,6 +1385,9 @@ def render_report(directory):
     from pathwm.evaluation.modality_readout import readout_inspection
 
     parts.extend(readout_inspection(directory))
+    from pathwm.evaluation.understanding import understanding_inspection
+
+    parts.extend(understanding_inspection(directory))
     for title, data in [
         ("Resolved settings and source identities", record),
         ("Exact metric rows", rows),

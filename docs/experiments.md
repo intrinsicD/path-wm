@@ -542,3 +542,55 @@ The [R/P/M/C spatial VAE v2](spatial-vae-v2-plan.md) uses the same
 opt-in hierarchy, --development runs the reserved real-photo smoke path, and
 --hierarchy-study runs the fixed ten-fit sanity/beta comparison in a new directory.
 Its default small weights preserve old codec exports and do not replace agent modules.
+
+## Recurring understanding checks
+
+The existing readout recipe now runs a versioned task battery against a saved full
+checkpoint. It does **not** train the agent. Prepare local TAU audiovisual fixtures
+once (requires `ffmpeg` and the existing labelled raw dataset):
+
+```bash
+.venv/bin/python -m experiments.modality_readout --stage understanding-prepare \
+  --real-root data/tau_urban_av_2021 --profile quick \
+  --output data/understanding_v1/quick
+```
+
+Run and compare checkpoints with the same fixtures and evaluation seed:
+
+```bash
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 .venv/bin/python -m experiments.modality_readout \
+  --stage understanding --core runs/modality_readout_v1/formal/seed7201/joint_native \
+  --understanding-suite data/understanding_v1/quick --seed 9401 \
+  --output runs/my_understanding_baseline
+
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 .venv/bin/python -m experiments.modality_readout \
+  --stage understanding --core runs/my_new_checkpoint \
+  --understanding-suite data/understanding_v1/quick --seed 9401 \
+  --reference runs/my_understanding_baseline --output runs/my_understanding_comparison
+```
+
+Each output owns `report.html`, answer/control scores, encoder/posterior/working
+features, detached probe predictions, examples, source lineage and an unchanged
+model checkpoint. The report shows per-task changes; it never averages everything
+into one understanding score. Three draws share randomness across opposite-answer
+pairs and omission controls. Probe fitting is diagnostic and cannot pass a task.
+Comparisons reject different fixtures, profiles, sampling seeds or scorer/input
+contracts. Rebuild reference results after changing an evaluation contract.
+
+For automatic checks, append `--understanding-suite data/understanding_v1/quick`
+to `--stage core` or `--stage joint` training. A completed run creates its own
+`understanding/` child; a paused partial run does not. An optional `--reference`
+selects a compatible saved understanding result. In this mode the training seed is
+also the evaluation seed; use the standalone command for a fixed evaluation seed
+across different training seeds. Child failure preserves the parent's completed
+training report. Automatic checks are opt-in and run after training, not every batch.
+
+Both quick/full profiles cover25 families:10 controlled semantic/temporal tasks,
+4 single-source scene tasks and all11 multi-source combinations. Full increases
+examples using the same prepared-data interface; no small-sample significance claim.
+Real mixed positives use separate recordings of the same scene **category**;
+this is not an audiovisual synchronization test. Current tasks answer through the
+actual byte-text decoder, including image/audio/video questions. Its training and
+language/interface limitations remain visible. Existing factor and generated-output
+quality suites remain separate; neither is replaced by these question-answer tasks.
+See [protocol, scope and missing domains](understanding-suite-plan.md).
