@@ -7385,3 +7385,29 @@ tree:
   - docs/modality-suites-plan.md
   - runs/modality_suites_v1/verification.json
   status: resolved
+- id: N443
+  type: question
+  title: Which public multimodal techniques support an extensible locally trainable latent world model?
+  provenance: user
+  timestamp: 2026-09-16T14:33+02:00
+  description: User requests AI Search video-description references, original technique explanations,
+    Claude planning, retain/replace comparison with current modules, small modality branches and scaling
+    on their own GPU. Research/planning request, not blanket architecture adoption.
+  evidence:
+  - docs/multimodal-reference-design.md
+  - docs/multimodal-channel-selection.md
+  status: resolved
+- id: N444
+  type: decision
+  title: Separate public reference plan from model changes and measured GPU fit
+  provenance: ai-executed
+  timestamp: 2026-09-16T14:33+02:00
+  choice: Screen420 directly retrieved channel entries; inspect30 chosen descriptions and trace selected
+    techniques to primary papers/repos. Two actual isolated Claude reviews reconciled. Preserve model
+    code and validation scopes; write module/interface plan and hardware profiling gate. No new neural
+    fit or weight download.
+  evidence:
+  - docs/multimodal-reference-design.md
+  - ara/evidence/tables/architecture_reference_2026-09-16.json
+  - runs/reviews/architecture_reference_v1/verification.json
+  status: resolved

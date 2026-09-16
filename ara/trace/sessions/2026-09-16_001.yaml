@@ -2,8 +2,8 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T14:02+02:00
-  turn_count: 17
+  last_turn: 2026-09-16T14:33+02:00
+  turn_count: 18
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not
     adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59
     scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
@@ -35,7 +35,9 @@ session:
     before more probe optimization. User requests video then all-modality capability/diagnostic suites;
     scope maps documented, no implementation or new validation. First executable suite:33 cases,15 run
     per original baseline with1 pass/14 failures;14 unimplemented/4 unrun.80 tests and exact frozen replay
-    pass; missing-score bug fixed; browser QA blocked.'
+    pass; missing-score bug fixed; browser QA blocked. Public-reference plan:420 channel entries,30 descriptions,
+    primary papers and2 Claude reviews. Preserve shared latent core/store; propose measured detail/semantic
+    adapters. RTX3050 8GiB confirmed, new training fit unmeasured; no model change.'
 events_logged:
 - turn: 1
   type: decision
@@ -672,6 +674,37 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O297 implemented-method slice crystallized by artifact commitment; no efficacy claim.
+- turn: 18
+  type: question
+  id: N443
+  routing: direct
+  provenance: user
+  summary: Which public multimodal techniques support an extensible locally trainable latent world model?
+- turn: 18
+  type: decision
+  id: N444
+  routing: direct
+  provenance: ai-executed
+  summary: Separate public reference plan from model changes and measured GPU fit
+- turn: 18
+  type: observation
+  id: O299
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose preserving shared latent reasoning and explicit versioned entity/evidence memory while
+    distinguishing local detail, semantic readouts and core state; align adapters with paired/task/prediction
+    objectives and separate generation priors from codec decoding. Janus/Perceiver/ImageBind/DC-AE/Mimi
+    provide scoped reference mechanisms, not proof of this combined small model. First diagnose feature-to-core
+    access, then real temporal/memory/output tasks.
+- turn: 18
+  type: observation
+  id: O300
+  routing: staged
+  provenance: ai-suggested
+  summary: RTX3050 with8192MiB confirmed. Proposed50-100M trainable learner and6GiB process ceiling are
+    profiling candidates, not validated fit or sufficient capacity for general understanding. Small codecs/adapters
+    do not imply small generative priors or low pretraining cost. Frozen decoders still compute and can
+    reason; successful conditioning is not reasoning localization.
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -893,6 +926,16 @@ ai_actions:
   - docs/project-state.md
   - docs/experiments.md
   - docs/diagrams/architecture-atlas.json
+- turn: 18
+  action: Inspected current contracts and GPU, read selected YouTube descriptions and original sources,
+    reconciled2 public-only Claude reviews, wrote German reference/interface/scaling plan and30-video
+    catalog; verified receipt hashes/local links/16 unchanged graph topologies and colors.
+  provenance: ai-executed
+  files_changed:
+  - docs/multimodal-reference-design.md
+  - docs/multimodal-channel-selection.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -963,6 +1006,10 @@ key_context:
   excerpt: User requests continued plan/implementation/review/test/fix with Claude. Delivered executable
     first suite through existing recipe, retaining natural capability gaps and limited source model scope;
     source-use balancing fixes dependent-combination omission pitfall.
+- turn: 18
+  excerpt: User wants genuine multimodal understanding and interaction, small modality branches where
+    possible, local GPU train/inference and scalable latent-adapter extensibility; asks for reference-grounded
+    plan with Claude.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -1058,6 +1105,8 @@ open_threads:
   milestones; specifications are not a completed test runner.'
 - 'N442/O298: apply fixed suite to explicitly chosen newer checkpoints, add selected natural-input tasks,
   and isolate a shared-core failure with matched controls; interactive report QA remains blocked.'
+- 'O299/O300: reference-driven interface/generation/scaling proposal and GPU envelope await implementation
+  protocol and profiling; no whole-architecture efficacy or general understanding established.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
@@ -1219,3 +1268,5 @@ ai_suggestions_pending:
   direction, not particular thresholds or abandonment of current video work.
 - O298 baseline-to-current extrapolation and unique failure attribution remain unadopted. No new training
   or architecture decision follows automatically from this suite.
+- Profile a complete training update and audit one real temporal dataset before feature-to-core comparison;
+  no new fit budget or replacement architecture adopted.

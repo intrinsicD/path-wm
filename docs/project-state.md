@@ -1,5 +1,17 @@
 # Current work
 
+**Public-reference architecture plan, 16 September:**
+[German design and module-by-module changes](multimodal-reference-design.md),
+[30 inspected AI Search descriptions](multimodal-channel-selection.md).
+420 channel entries screened; selected descriptions traced to primary sources,
+plus explicitly labelled complementary papers. Two isolated Claude reviews reconciled.
+Keep shared latent reasoning and versioned entity/evidence memory; propose explicit
+detail/semantic/core interfaces, measured adapters and separate output generation.
+RTX3050 8GiB confirmed; proposed 6GiB process budget is NOT a measured training fit.
+First close the direct-feature-to-core diagnosis, then audit a real temporal task
+and profile a complete update. No model/default change, fit, download of weights,
+or new capability/color promotion. This is a proposal, not an adopted fit protocol.
+
 **Executable modality capability suites completed,16 September:**
 [Protocol/results](modality-suites-plan.md),
 [baseline7201 report](../runs/modality_suites_v1/seed7201/report.html),

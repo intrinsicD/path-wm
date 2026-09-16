@@ -1,8 +1,8 @@
 sessions:
 - id: 2026-09-05_001
   date: '2026-09-05'
-  summary: Harness recovered from Git and separated from live goals; 22 CPU tests and HTML structure pass; browser
-    QA pending. Approved diagnostics preserved, no new experiment run.
+  summary: Harness recovered from Git and separated from live goals; 22 CPU tests and HTML structure pass;
+    browser QA pending. Approved diagnostics preserved, no new experiment run.
   turn_count: 8
   events_count: 43
   claims_touched:
@@ -11,8 +11,8 @@ sessions:
 - id: 2026-09-06_001
   date: '2026-09-06'
   summary: 'Sample-efficiency research with Claude: batches already diverse; same-frame processing repeats;4096
-    SIGReg directions reduce fixed-data gradient variance about4-fold. No training updates; learning-curve gains
-    untested.84 tests and canonical browser QA pass.'
+    SIGReg directions reduce fixed-data gradient variance about4-fold. No training updates; learning-curve
+    gains untested.84 tests and canonical browser QA pass.'
   turn_count: 7
   events_count: 64
   claims_touched:
@@ -21,44 +21,49 @@ sessions:
   open_threads: 5
 - id: 2026-09-07_001
   date: '2026-09-07'
-  summary: "Completed Claude co-work:12 paired1500-update runs,48 controls; final calibrated4096 gains+2pp on both datasets. EarlyTwoRoom buffer intervention adds13\u201333/50. Exact exposure/integrity audit,103 tests and canonical/visual QA pass; no next experiment queued. Home curriculum proposed after local metadata audit and generic Claude discussion; no new training; detailed review approval pending."
+  summary: Completed Claude co-work:12 paired1500-update runs,48 controls; final calibrated4096 gains+2pp
+    on both datasets. EarlyTwoRoom buffer intervention adds13–33/50. Exact exposure/integrity audit,103
+    tests and canonical/visual QA pass; no next experiment queued. Home curriculum proposed after local
+    metadata audit and generic Claude discussion; no new training; detailed review approval pending.
   turn_count: 2
   events_count: 17
   claims_touched: []
   open_threads: 6
-
 - id: 2026-09-08_001
   date: '2026-09-08'
-  summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500 ordinary
-    and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets COCO forgetting; proposed
-    controls/routes remain untested. Turn3 discusses conditional decoder/head refitting. Turn4 opens task conditioning.
-    Turn5 completes three decoder recovery arms, full evaluation and Claude literature review; 359 tests and browser
-    QA pass. Turn6 executes only the narrowed PushT pose-head comparison; spatial orientation improves with object-position
-    tradeoff, all readiness gates fail; 362 tests and final browser QA pass. Turn7 traces pose provenance; turn8 researches
-    general representations and records a modular perception proposal without new training. Turn9 traces cross-scale
-    evidence and documents a general-agent loop for software, generated actions, internal computation and driving;
-    no new runs. Turn10 completes depth/scale research and three Claude exchanges; agreed diagnostic/reference then
-    depth-by-exchange proposal, no new model runs. Turn11 adopts the Claude workflow and executes A/B:33formalruns,
-    depth+exchange geometry gains across3seeds but all12readinessgates fail; RGB/foreground divergence,379tests and
-    final browser QA verified. Turn12 audits PCA and per-head attention with zero updates; maps verified,
-    coarse broadcast interpretation and hybrid proposal staged,17 targeted tests and compact browser QA pass.
-    Turn13 reviews asymmetric architectures from downstream requirements with two public-only Claude exchanges;
-    bounded native-feature comparison proposed, no new model runs. Turn14 confirms existing fine/coarse decoding
-    and indirect memory path; proposes typed or conditioned readouts with belief supervision and causal timing,
-    two Claude exchanges reconciled; no model runs. Turn15 assesses encoder conditioning with verified RT-1/FiLM/VPT
-    precedents and two Claude exchanges; context timing, retention and late-versus-earlier comparison proposed,
-    no new implementation or runs. Turn16 consolidates the full encoder/decoder and conditional experiment proposal,
-    reconciles two public-only Claude reviews and delivers verified printable HTML plus a non-runnable manifest;
-    no new model work or training authorization. Turn17 audits local dataset readiness and completes two further
-    Claude exchanges; no immediate download needed for the first slice, semantic transfer and targeted future
-    data proposed. Six notebook cells reproduce metadata checks; updated printable HTML passes browser QA.
-    Turn18 clarifies multiscale routing, depth and task queries with code/primary sources and two corrected Claude
-    replies; albedo requires a separate target/data contract. Proposal HTML passes browser QA; no new model work.'
+  summary: 'Accepted curriculum completed: negative one-seed PushT warmup screen; Paddle full control345/500
+    ordinary and115/200paired, improved but below90%; all355tests and browser QA pass. Turn2 interprets
+    COCO forgetting; proposed controls/routes remain untested. Turn3 discusses conditional decoder/head
+    refitting. Turn4 opens task conditioning. Turn5 completes three decoder recovery arms, full evaluation
+    and Claude literature review; 359 tests and browser QA pass. Turn6 executes only the narrowed PushT
+    pose-head comparison; spatial orientation improves with object-position tradeoff, all readiness gates
+    fail; 362 tests and final browser QA pass. Turn7 traces pose provenance; turn8 researches general
+    representations and records a modular perception proposal without new training. Turn9 traces cross-scale
+    evidence and documents a general-agent loop for software, generated actions, internal computation
+    and driving; no new runs. Turn10 completes depth/scale research and three Claude exchanges; agreed
+    diagnostic/reference then depth-by-exchange proposal, no new model runs. Turn11 adopts the Claude
+    workflow and executes A/B:33formalruns, depth+exchange geometry gains across3seeds but all12readinessgates
+    fail; RGB/foreground divergence,379tests and final browser QA verified. Turn12 audits PCA and per-head
+    attention with zero updates; maps verified, coarse broadcast interpretation and hybrid proposal staged,17
+    targeted tests and compact browser QA pass. Turn13 reviews asymmetric architectures from downstream
+    requirements with two public-only Claude exchanges; bounded native-feature comparison proposed, no
+    new model runs. Turn14 confirms existing fine/coarse decoding and indirect memory path; proposes typed
+    or conditioned readouts with belief supervision and causal timing, two Claude exchanges reconciled;
+    no model runs. Turn15 assesses encoder conditioning with verified RT-1/FiLM/VPT precedents and two
+    Claude exchanges; context timing, retention and late-versus-earlier comparison proposed, no new implementation
+    or runs. Turn16 consolidates the full encoder/decoder and conditional experiment proposal, reconciles
+    two public-only Claude reviews and delivers verified printable HTML plus a non-runnable manifest;
+    no new model work or training authorization. Turn17 audits local dataset readiness and completes two
+    further Claude exchanges; no immediate download needed for the first slice, semantic transfer and
+    targeted future data proposed. Six notebook cells reproduce metadata checks; updated printable HTML
+    passes browser QA. Turn18 clarifies multiscale routing, depth and task queries with code/primary sources
+    and two corrected Claude replies; albedo requires a separate target/data contract. Proposal HTML passes
+    browser QA; no new model work.'
   turn_count: 18
   events_count: 71
-  claims_touched: [C04]
+  claims_touched:
+  - C04
   open_threads: 14
-
 - id: 2026-09-09_001
   date: '2026-09-09'
   summary: 'Completed 36 vision/geometry fits and 15 category probes with ten public-only Claude exchanges.
@@ -116,51 +121,58 @@ sessions:
   events_count: 26
   claims_touched: []
   open_threads: 7
-
 - id: 2026-09-11_001
   date: '2026-09-11'
-  summary: "Prepared85 specification questions across14 areas; explicit scope/deferral and interface/learning/evaluation sheets; answers pending."
+  summary: Prepared85 specification questions across14 areas; explicit scope/deferral and interface/learning/evaluation
+    sheets; answers pending.
   turn_count: 58
   events_count: 166
   claims_touched: []
   open_threads: 17
-
 - id: 2026-09-12_001
   date: '2026-09-12'
-  summary: Handwritten initialization trained after decoder-rate repair; joint reconstruction
-    improves10% across two seeds. Input ambiguity and decoder sensitivity isolated;
-    original ordinary models remain better, one extra control budget-stopped. New detail
-    transport and state-only four-prompt fit pass; public-only Claude critique completed.
-    Shared replaceable modality-output design adopted.
+  summary: Handwritten initialization trained after decoder-rate repair; joint reconstruction improves10%
+    across two seeds. Input ambiguity and decoder sensitivity isolated; original ordinary models remain
+    better, one extra control budget-stopped. New detail transport and state-only four-prompt fit pass;
+    public-only Claude critique completed. Shared replaceable modality-output design adopted.
   turn_count: 19
   events_count: 46
   claims_touched: []
   open_threads: 12
-
 - id: 2026-09-13_001
   date: '2026-09-13'
-  summary: User wants to preserve the agent design. Proposed an optional own conditional multiscale
-    feature generator, with codec/state separation and grounding controls; no model implementation
-    or training. Prior factual-readout repair remains open.
+  summary: User wants to preserve the agent design. Proposed an optional own conditional multiscale feature
+    generator, with codec/state separation and grounding controls; no model implementation or training.
+    Prior factual-readout repair remains open.
   turn_count: 23
   events_count: 122
   claims_touched: []
   open_threads: 12
 - id: 2026-09-14_001
   date: '2026-09-14'
-  summary: Frozen photo readers locate the main spatial-access drop at first observation update
-    and a further reset/recall drop. Memory copy is exact; fine texture has a separate patch/raw-detail-interface
-    constraint. Agent unchanged; train state/recall proposed, size/duration unresolved. Architecture
-    atlas documents current configurations and proposed extensions; no new model changes.
-    Overview tracks discussion coverage and scoped validation evidence. Visual sample-efficiency
-    question opened; architecture/data/capacity comparisons proposed.
+  summary: Frozen photo readers locate the main spatial-access drop at first observation update and a
+    further reset/recall drop. Memory copy is exact; fine texture has a separate patch/raw-detail-interface
+    constraint. Agent unchanged; train state/recall proposed, size/duration unresolved. Architecture atlas
+    documents current configurations and proposed extensions; no new model changes. Overview tracks discussion
+    coverage and scoped validation evidence. Visual sample-efficiency question opened; architecture/data/capacity
+    comparisons proposed.
   turn_count: 8
   events_count: 34
   claims_touched: []
   open_threads: 14
 - id: 2026-09-15_001
   date: '2026-09-15'
-  summary: "Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass. Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open; measured31,107 parameters, no new training. Latent-core drawings separate existing loop from proposed workspace answer plan; implementation unchanged. User clarifies shared multimodal thought with decoder-specific optional recurrent readouts; architecture sketch updated, no model change. Separate/joint readout study:42 runs,8 oracle fits and2 probes; all held-out all-four outputs fail. Optional loops implemented, not adopted as repair.72 tests and exact resume pass; oracle audio works, other output/compositional targets remain open. Bounded follow-up:16 fits improve known oracle outputs and core position, not direction/composition. Fresh direction probes and code collisions recorded; no default adoption. Twelve-paper direction literature review adds scoped candidates and counter-evidence; no new model runs or adoption."
+  summary: 'Non-image integration repaired: 112 scoped tests, 6075 artifact checks and exact resume pass.
+    Four words/tones fit; weighted video repair fails total RGB. Real AV/text transport works, state-conditioned/general
+    modalities remain open alongside VAE and entity-calibration work. Tiny-text feasibility remains open;
+    measured31,107 parameters, no new training. Latent-core drawings separate existing loop from proposed
+    workspace answer plan; implementation unchanged. User clarifies shared multimodal thought with decoder-specific
+    optional recurrent readouts; architecture sketch updated, no model change. Separate/joint readout
+    study:42 runs,8 oracle fits and2 probes; all held-out all-four outputs fail. Optional loops implemented,
+    not adopted as repair.72 tests and exact resume pass; oracle audio works, other output/compositional
+    targets remain open. Bounded follow-up:16 fits improve known oracle outputs and core position, not
+    direction/composition. Fresh direction probes and code collisions recorded; no default adoption. Twelve-paper
+    direction literature review adds scoped candidates and counter-evidence; no new model runs or adoption.'
   turn_count: 17
   events_count: 79
   claims_touched: []
@@ -198,8 +210,10 @@ sessions:
     before more probe optimization. User requests video then all-modality capability/diagnostic suites;
     scope maps documented, no implementation or new validation. First executable suite:33 cases,15 run
     per original baseline with1 pass/14 failures;14 unimplemented/4 unrun.80 tests and exact frozen replay
-    pass; missing-score bug fixed; browser QA blocked.'
-  turn_count: 17
-  events_count: 91
+    pass; missing-score bug fixed; browser QA blocked. Public-reference plan:420 channel entries,30 descriptions,
+    primary papers and2 Claude reviews. Preserve shared latent core/store; propose measured detail/semantic
+    adapters. RTX3050 8GiB confirmed, new training fit unmeasured; no model change.'
+  turn_count: 18
+  events_count: 95
   claims_touched: []
-  open_threads: 37
+  open_threads: 38

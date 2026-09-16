@@ -1,0 +1,32 @@
+{
+  "public": {
+    "returncode": 0,
+    "hashes_verified": true,
+    "elapsed_seconds": 27.282873893971555
+  },
+  "reconcile": {
+    "returncode": 0,
+    "hashes_verified": true,
+    "elapsed_seconds": 15.812524151057005
+  },
+  "date": "2026-09-16",
+  "channel_entries": 420,
+  "descriptions": 30,
+  "channel_id": "UCIgnGlGkVRhd4qNFcEwLL4A",
+  "neural_training": false,
+  "weights_downloaded": false,
+  "gpu": "NVIDIA GeForce RTX 3050",
+  "gpu_total_mib": 8192,
+  "gpu_free_mib_at_check": 6812,
+  "proposed_budget_not_profiled": true,
+  "atlas_graphs_and_colors_unchanged": 16,
+  "local_document_links_verified": 4,
+  "atlas_svg_count": 16,
+  "browser_qa": "not rerun; notes/source links only, renderer/topology unchanged; prior file URL policy block remains",
+  "architecture_files_modified": false,
+  "sources": [
+    "docs/multimodal-reference-design.md",
+    "docs/multimodal-channel-selection.md"
+  ],
+  "scope": "Literature/channel metadata and review receipts; not a model capability or training-memory measurement"
+}

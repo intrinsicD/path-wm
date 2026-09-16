@@ -5225,3 +5225,37 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O299
+  timestamp: 2026-09-16T14:33+02:00
+  provenance: ai-suggested
+  content: Propose preserving shared latent reasoning and explicit versioned entity/evidence memory while
+    distinguishing local detail, semantic readouts and core state; align adapters with paired/task/prediction
+    objectives and separate generation priors from codec decoding. Janus/Perceiver/ImageBind/DC-AE/Mimi
+    provide scoped reference mechanisms, not proof of this combined small model. First diagnose feature-to-core
+    access, then real temporal/memory/output tasks.
+  context: AI Search30-description audit and two Claude reviews; module-by-module planning artifact only.
+  potential_type: architecture
+  bound_to:
+  - N443
+  - N444
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O300
+  timestamp: 2026-09-16T14:33+02:00
+  provenance: ai-suggested
+  content: RTX3050 with8192MiB confirmed. Proposed50-100M trainable learner and6GiB process ceiling are
+    profiling candidates, not validated fit or sufficient capacity for general understanding. Small codecs/adapters
+    do not imply small generative priors or low pretraining cost. Frozen decoders still compute and can
+    reason; successful conditioning is not reasoning localization.
+  context: User favors small input/output branches and local train/inference; literature and Claude critique
+    refine budget and scientific limits.
+  potential_type: constraint
+  bound_to:
+  - N443
+  - N444
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
