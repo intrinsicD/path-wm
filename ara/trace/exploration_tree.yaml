@@ -7497,3 +7497,44 @@ tree:
   - docs/understanding-suite-plan.md
   - a5404e1
   status: resolved
+- id: N451
+  type: decision
+  title: Choose improvements from the recurring suite with Claude
+  provenance: user
+  timestamp: 2026-09-16T17:54+02:00
+  choice: Continue implementation/review/testing iteratively, using suite failures to select the next bounded
+    improvement.
+  evidence:
+  - docs/grounded-readout-plan.md
+  status: resolved
+- id: N452
+  type: experiment
+  title: Actual grounded video-order QA learns for one source; replication and preservation fail
+  provenance: ai-executed
+  timestamp: 2026-09-16T17:54+02:00
+  result: Four768-update fits, frozen encoders,16 calibration examples and equal symbolic replay. Decoder/core
+    accuracy minima50/50% for7201;81.25/100% for7202. Core7202 passes target quick/full and1/25 quick tasks;
+    pair100%,omission50%,free text14/16. All arms regress old outputs; first seed never learns.561 tests,1180
+    restart tensors,4097 raw/media checks,224.34s training,17 structurally verified reports. Two actual public-only
+    Claude exchanges. Normalization probes show no systematic signal loss.
+  evidence:
+  - ara/evidence/tables/grounded_readout_2026-09-16.json
+  - runs/grounded_readout_v1/comparison.json
+  - runs/grounded_readout_v1/decoder_diagnostic.json
+  - docs/grounded-readout-plan.md
+  - a167071
+  status: resolved
+- id: N453
+  type: decision
+  title: Retain trained candidates without replacing the default
+  provenance: ai-executed
+  timestamp: 2026-09-16T17:54+02:00
+  choice: Apply preregistered both-source and old-task preservation gates. Keep successful scoped candidate
+    for inspection; no default or broad green promotion, no larger encoder or normalization removal.
+  alternatives:
+  - Adopt on a single passing task/source
+  - Interpret probe failure as definitive information loss
+  evidence:
+  - N452
+  - ara/evidence/tables/grounded_readout_2026-09-16.json
+  status: resolved

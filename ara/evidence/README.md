@@ -192,3 +192,5 @@ Source diversity versus frame density: [source-bound evidence](tables/video_dive
 - [Shared evidence direction reader,16 September](tables/video_evidence_2026-09-16.json):4 fixed fits plus no-fit baseline,89 tests; fresh99.69–100% passes but learned-gain/old-source preservation fails. Candidate reassignment and exact replay retained.
 
 - [Recurring multimodal understanding regression,16 September](tables/understanding_suite_2026-09-16.json):25 families; both sources0/25 quick,first0/25 full;555 full/70 post-repair software tests,6448 audits; no model training/promotion.
+
+- [Grounded video-order readout continuation,16 September](tables/grounded_readout_2026-09-16.json): four fixed fits; one source/core variant passes target, other source fails and all regress old outputs.561 tests,1180 restart tensors,4097 audits; no default replacement.

@@ -1,0 +1,270 @@
+{
+  "artifacts": {
+    "runs/grounded_readout_v1/comparison.json": "a76b66dcb51f17c725ea07796cb438399728074ffd78f1eb248e6d13a7c84377",
+    "runs/grounded_readout_v1/decoder_diagnostic.json": "765af6a6b65dfd944449006b8fd2ef747b067706abf4815c101bd943ab53894d",
+    "runs/grounded_readout_v1/execution.json": "1d920c5f5e810268ddb5879c537351e17054a7d258a3a3c11f75d874feec633f",
+    "runs/grounded_readout_v1/verification.json": "6da2fdf717770e952b1256d266bb8156390e50425ba02edfa483731015b06439"
+  },
+  "limits": [
+    "Agent training and diagnostic probes share calibration labels on the target.",
+    "Mean byte likelihood has answer-length biases; free generation and per-class diagnostics are separate.",
+    "Browser navigation previously denied; structural/media QA only."
+  ],
+  "protocol": "docs/grounded-readout-plan.md",
+  "provenance": "ai-executed",
+  "reviews": {
+    "runs/reviews/grounded_readout_v1/public-receipt.json": "39589008e8285df8484b1d8ce5604c35e01f4236b1315309f1b74619055e1933",
+    "runs/reviews/grounded_readout_v1/reconcile-receipt.json": "ab1bf3059d2806844c8017d1e84b2f78ec54794924b6dbbfaffb16a99fee09ed"
+  },
+  "rows": [
+    {
+      "adopted": false,
+      "free_exact": 0.5,
+      "original_preservation_failed_cells": 17,
+      "quick_coverage": {
+        "executed": 25,
+        "failed": 25,
+        "passed": 0,
+        "unimplemented_domains": 7
+      },
+      "resources": {
+        "frozen_preserved": true,
+        "parameters": 297013,
+        "peak_allocated_bytes": 91352576,
+        "trainable_parameters": 22531,
+        "training_seconds_this_invocation": 45.40145012293942
+      },
+      "scope": "decoder",
+      "seed": 7201,
+      "target_metrics": {
+        "accuracy_by_draw": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "accuracy_mean": 0.5,
+        "accuracy_min": 0.5,
+        "chance": 0.5,
+        "empty_by_draw": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "examples": 16,
+        "gates": {
+          "accuracy": false,
+          "context_gain": false,
+          "no_evidence_gain": false,
+          "omission": true,
+          "paired": false
+        },
+        "omitted_by_draw": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "paired_by_draw": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paired_min": 0.0,
+        "pairs": 8,
+        "passed": false,
+        "source_gain_min": 0.0
+      },
+      "worst_original_accuracy_delta": -0.3541666865348816,
+      "worst_original_error_ratio": 1.7173291141946934
+    },
+    {
+      "adopted": false,
+      "free_exact": 0.5,
+      "original_preservation_failed_cells": 32,
+      "quick_coverage": {
+        "executed": 25,
+        "failed": 25,
+        "passed": 0,
+        "unimplemented_domains": 7
+      },
+      "resources": {
+        "frozen_preserved": true,
+        "parameters": 297013,
+        "peak_allocated_bytes": 92334080,
+        "trainable_parameters": 133896,
+        "training_seconds_this_invocation": 68.67571513308212
+      },
+      "scope": "core",
+      "seed": 7201,
+      "target_metrics": {
+        "accuracy_by_draw": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "accuracy_mean": 0.5,
+        "accuracy_min": 0.5,
+        "chance": 0.5,
+        "empty_by_draw": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "examples": 16,
+        "gates": {
+          "accuracy": false,
+          "context_gain": false,
+          "no_evidence_gain": false,
+          "omission": true,
+          "paired": false
+        },
+        "omitted_by_draw": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "paired_by_draw": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paired_min": 0.0,
+        "pairs": 8,
+        "passed": false,
+        "source_gain_min": 0.0
+      },
+      "worst_original_accuracy_delta": -0.4791666865348816,
+      "worst_original_error_ratio": 1.6863301708281544
+    },
+    {
+      "adopted": false,
+      "free_exact": 0.875,
+      "original_preservation_failed_cells": 18,
+      "quick_coverage": {
+        "executed": 25,
+        "failed": 25,
+        "passed": 0,
+        "unimplemented_domains": 7
+      },
+      "resources": {
+        "frozen_preserved": true,
+        "parameters": 297013,
+        "peak_allocated_bytes": 91352576,
+        "trainable_parameters": 22531,
+        "training_seconds_this_invocation": 48.85447679797653
+      },
+      "scope": "decoder",
+      "seed": 7202,
+      "target_metrics": {
+        "accuracy_by_draw": [
+          0.875,
+          0.8125,
+          0.875
+        ],
+        "accuracy_mean": 0.8541666666666666,
+        "accuracy_min": 0.8125,
+        "chance": 0.5,
+        "empty_by_draw": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "examples": 16,
+        "gates": {
+          "accuracy": true,
+          "context_gain": true,
+          "no_evidence_gain": true,
+          "omission": true,
+          "paired": false
+        },
+        "omitted_by_draw": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "paired_by_draw": [
+          0.75,
+          0.625,
+          0.75
+        ],
+        "paired_min": 0.625,
+        "pairs": 8,
+        "passed": false,
+        "source_gain_min": 0.3125
+      },
+      "worst_original_accuracy_delta": -0.6458333730697632,
+      "worst_original_error_ratio": 1.7310728753096853
+    },
+    {
+      "adopted": false,
+      "free_exact": 0.875,
+      "original_preservation_failed_cells": 23,
+      "quick_coverage": {
+        "executed": 25,
+        "failed": 24,
+        "passed": 1,
+        "unimplemented_domains": 7
+      },
+      "resources": {
+        "frozen_preserved": true,
+        "parameters": 297013,
+        "peak_allocated_bytes": 92334080,
+        "trainable_parameters": 133896,
+        "training_seconds_this_invocation": 61.40957908204291
+      },
+      "scope": "core",
+      "seed": 7202,
+      "target_metrics": {
+        "accuracy_by_draw": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "accuracy_mean": 1.0,
+        "accuracy_min": 1.0,
+        "chance": 0.5,
+        "empty_by_draw": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "examples": 16,
+        "gates": {
+          "accuracy": true,
+          "context_gain": true,
+          "no_evidence_gain": true,
+          "omission": true,
+          "paired": true
+        },
+        "omitted_by_draw": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "paired_by_draw": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "paired_min": 1.0,
+        "pairs": 8,
+        "passed": true,
+        "source_gain_min": 0.5
+      },
+      "worst_original_accuracy_delta": -0.6666666567325592,
+      "worst_original_error_ratio": 2.242218864347312
+    }
+  ],
+  "software_tests": 561,
+  "source_commit": "a167071",
+  "timestamp": "2026-09-16T17:54+02:00",
+  "verification": {
+    "checks": 4097,
+    "reports": "structural/media_verified",
+    "restart": {
+      "all_training_state_identical": true,
+      "exact_tensor_checks": 1180,
+      "steps": 4
+    },
+    "source_weights_preserved": true
+  }
+}

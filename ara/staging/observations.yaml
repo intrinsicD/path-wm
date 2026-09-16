@@ -5326,3 +5326,34 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O305
+  timestamp: 2026-09-16T17:54+02:00
+  provenance: ai-suggested
+  content: Actual text decoding can learn temporal order from the shared latent core in the successful source,
+    while both-source stability and old-task retention remain unsolved. Encoder probes100% in both sources
+    do not identify one irreversible loss point; normalization/value projections do not support deleting normalization.
+  context: One of four scoped continuations passes candidate-choice target gates; all violate preservation,
+    free generation14/16.
+  potential_type: claim
+  bound_to:
+  - N452
+  - N453
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O306
+  timestamp: 2026-09-16T17:54+02:00
+  provenance: ai-suggested
+  content: Next compare a training-only paired semantic objective at the working state, with unchanged inference
+    and explicit old-task preservation, to stabilize temporal information and requested output behavior. No
+    new fit or efficacy result yet.
+  context: Suite-directed continuation finds source-dependent learning and forgetting despite fixed replay.
+  potential_type: architecture
+  bound_to:
+  - N452
+  - N453
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
