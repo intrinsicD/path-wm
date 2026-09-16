@@ -50,3 +50,16 @@ flow, future prediction or shared-core direction repair is claimed by this slice
 Task completion means usable shared codec + validated training path, not solved
 video generation or temporal understanding. Future agent integration requires a
 separately evaluated spatial-grid-to-core interface; native agent remains intact.
+
+## Review and interface verification
+
+Actual Claude review and one reconciliation are saved under
+`runs/reviews/shared_video_vae_v1/` (public conceptual briefs only). Adopt separate
+image/video loss logs, checkpoint ownership checks and future RGB/time/validity
+perturbations plus a zero future-gradient check. Claude initially disputed the KL
+interpretation incorrectly; corrected explicitly and acknowledged: independent
+posterior noise conditional on the observed clip and an iid standard-normal prior
+make per-frame KL summation exact. Dataset aggregate correlation is separate.
+The additional image loss is an auxiliary objective, not a single joint-video ELBO.
+No learned temporal prior or natural-video generation follows from this experiment.
+Seven new contract tests and54 relevant regression tests pass (61 total).
