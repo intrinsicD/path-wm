@@ -1,10 +1,19 @@
 # Current work
 
-**Active: balanced request-meaning diagnosis,16 September.**
-[Fixed protocol](request-meaning-plan.md). The recurring suite selects request
-interpretation before another whole-core fit. Paired length/prefix controls and
-stage readers first; interpreter-only comparison is conditional on encoder access.
-No general language claim or default change; preserve broad regressions.
+**Balanced request-meaning comparison completed,16 September.**
+[Protocol/results](request-meaning-plan.md),[report](../runs/request_meaning_v1/report.html).
+Actual Claude methodology review/reconciliation; suite-directed balanced prefix/
+length controls. Frozen encoder intent probes pass93.75%/100%; later access weaker.
+Four512-update interpreter-only fits,9,936 existing trainable parameters. Balanced
+wording improves novel joint exact0→35.94%/46.88%; both miss80%. First words unchanged
+in3,072 comparisons: response form improves, video-content accuracy does not.
+Broad suite stays0/25 and1/25;7201 image-question regression persists. All2,208 legacy
+output arrays and non-interpreter tensors exact;600 fresh reference arrays match.
+579 full tests before final sampled-source guard,41 focused after;848 exact restart
+checks,43,635 raw audits,19 structural reports.174.22s fitting,87.4MiB peak allocation;
+no default or color promotion. Next isolate request/evidence routing on fixed
+weights before further fits; content, compositional semantics and preservation stay
+open. Post-fit stage probes are exploratory and do not change acceptance.
 
 **Replay-guided exploration demonstration completed,16 September:**
 [Protocol/results](replay-exploration-plan.md),[report](../runs/replay_exploration_v1/report.html).

@@ -25,8 +25,12 @@ def capture_request_stages(model, state, question):
         captured["instruction"] = output.detach().cpu().flatten(1)
 
     agent = model.core.agent
-    if agent.task_interpreter is None or model.core.request_readout != "instruction":
-        raise ValueError("Request diagnosis requires an instruction source")
+    if (
+        agent.task_interpreter is None
+        or model.core.request_readout != "instruction"
+        or model.core.belief_readout != "sampled"
+    ):
+        raise ValueError("Request diagnosis requires a sampled instruction source")
     caller = Actor("user", "caller")
     task = TaskSession(
         TaskRequest(

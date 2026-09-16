@@ -1,5 +1,39 @@
 # Running and editing experiments
 
+For **request-meaning diagnostics**, inspect a saved sampled-belief instruction-route checkpoint:
+
+```bash
+.venv/bin/python -m experiments.modality_readout --stage request-diagnose \
+  --core runs/request_readout_v1/seed7202/instruction \
+  --understanding-suite data/understanding_v1/full --seed 9701 --device cuda \
+  --output runs/my_request_diagnosis
+```
+
+The authored corpus lives in `pathwm/data/request_meaning.py`. The report separates
+frozen stage-probe accessibility from actual generated answers; raw features,
+fitted ridge weights, regularization paths and examples remain inspectable.
+Length/prefix controls are balanced. Shared vocabulary limits the semantic claim.
+`--stage request-evaluate` with the same arguments evaluates actual answers on all
+reserved clips, including omission, last-frame and constant-request controls.
+
+For the conditional **interpreter-only repair**, the existing grounded recipe adds
+`--grounded-scope interpreter --request-contrasts --request-profile balanced`:
+
+```bash
+.venv/bin/python -m experiments.modality_readout --stage grounded \
+  --core runs/request_readout_v1/seed7202/instruction \
+  --understanding-suite data/understanding_v1/full --grounded-scope interpreter \
+  --request-contrasts --request-profile balanced --steps 512 --seed 7202 \
+  --device cuda --output runs/my_request_repair
+```
+
+Only the existing TaskInterpreter trains. The encoder, thinker, world state model,
+metadata encoder and all decoders stay frozen. `narrow` supplies the old four
+questions for an equal-update control; both arms share the clip-index stream.
+Request-free outputs and the broader understanding suite still need verification.
+No diagnostic label or probe output becomes an inference input. See the
+[fixed protocol and results](request-meaning-plan.md).
+
 For the optional **replay-guided experiment search**, reuse the same recipe:
 
 ```bash

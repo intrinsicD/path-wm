@@ -97,3 +97,80 @@ individually seeded core call. All208 saved diagnostic answers/EOS match scalar
 decoding. This inference batching is fixed before formal fits; no model math,
 threshold or sample population changed. Training smoke precedes this decode-only
 optimization. Fresh reference suite runs will verify historical raw arrays as well.
+
+Post-comparison diagnostic declaration: both balanced fits improve joint answers
+but remain below80% (35.9375%/46.875%). Re-run the SAME frozen request diagnostic on
+the two balanced checkpoints to describe how stage accessibility changed. These
+are two additional short, exploratory evaluations after seeing the primary result;
+they do not select weights, alter gates, or constitute independent confirmation.
+The fixed initial gate and four-fit comparison remain unchanged. Charge the added
+cost separately and retain calibration-overlap/shared-vocabulary limitations.
+
+## Result — 16 September
+
+[Report](../runs/request_meaning_v1/report.html),
+[raw comparison](../runs/request_meaning_v1/comparison.json),
+[verification](../runs/request_meaning_v1/verification.json).
+Four512-update fits completed. No default or broad capability promotion.
+Only9,936 existing interpreter parameters train out of316,765 total; encoders,
+metadata encoder, world-state core, thinker and every decoder remain unchanged.
+
+| Source / fit | First-color exact | Sequence exact | Both requests exact | Broad quick passes |
+| --- | ---: | ---: | ---: | ---: |
+|7201 / narrow|14.06%|25.00%|0%|0/25|
+|7201 / balanced|46.88%|42.19%|35.94%|0/25|
+|7202 / narrow|34.38%|37.50%|0%|1/25|
+|7202 / balanced|84.38%|46.88%|46.88%|1/25|
+
+These are worst-of-three-draw values on16 reserved clips, eight wording pairs
+per clip. Wordings/draws are repeated measurements, not independent clips. The
+unchanged sources also have0% joint exact. Both balanced fits exceed the narrow
+control by10pp, but neither reaches the80% primary gate. Source7201 loses33.33pp
+on REAL.scene.image in both fits;7202 preserves the declared broader gates.
+Video omission/last-frame controls meet their limits; constant requests yield0%
+joint accuracy. Phrase-order stress yields0% joint for both balanced fits.
+
+Every full-condition generated first word is unchanged relative to its source:
+3,072 exact first-word comparisons across the four fits. Mean first-color content
+accuracy remains54.69%/85.42% in7201/7202. Balanced fitting raises requested word-count
+accuracy35.94→85.03% and43.75→74.87%, respectively. This is partial repair of response
+form, not improved video content or general instruction semantics. Word-count
+correctness alone is not a successful answer and does not replace exact/EOS gates.
+
+The exploratory post-fit probes leave encoder features bit-identical. Working-token
+intent accuracy rises68.75→81.25% and71.875→75%; earlier-stage probes vary
+non-monotonically. Different pooled feature dimensions and a limited linear reader
+prevent a unique information-loss attribution. The input byte-histogram control is
+already perfect on direct requests, so this corpus cannot establish word-order
+understanding. Do not promote a probe gain to a deployed capability.
+
+All2,208 legacy request-free output arrays are exactly unchanged across four fits;
+all non-interpreter tensors and both source checkpoint files are unchanged. The
+fresh suite references reproduce600 historical arrays. Clip sampler states match
+across paired arms. Every run owns its checkpoint, source snapshot, raw metrics and
+standalone report.19 reports and403 embedded media checks pass;43,635 raw checks
+pass. The chart is visually inspected; interactive browser QA remains unavailable.
+
+Training takes174.22s total, peak PyTorch training allocation87.4MiB (excludes CUDA
+runtime/reservation). The12 formal fit/evaluation processes total1,209.86s; initial
+stage diagnostics14.26s and exploratory post-fit diagnostics12.70s are separate.
+Software verification579 tests passes in approximately520.15s, overlapping GPU
+runs; durations are not summed as overall elapsed time. Review and smoke costs
+remain separately recorded. No resource or artifact budget was exceeded.
+
+Formal results/full579-test check use commit `0bdbbee`; saved source snapshots
+retain that implementation. Final review then rejects unsupported continuous
+working-belief sources in the sampled-state diagnostic, before any output is
+written. Actual model execution still supports that variant. The measured sampled
+sources are unaffected;41 focused checks pass after the guard, including its
+negative case. The full suite was not repeated for this guard-only change.
+
+## Next bounded question
+
+Stop further repetitions of the four familiar requests. On the preserved balanced
+models, next compare the same reserved video evidence with requests entering only
+the task path versus both the observation and task paths. Hold physical evidence
+and random draws fixed, separate first-word content, complete response form and
+EOS, and make no new fit initially. This can test request/evidence interference
+before another architecture change. The weaker-source content failure, compositional
+request semantics and image-question preservation remain separate open issues.

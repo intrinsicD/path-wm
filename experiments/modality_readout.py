@@ -1170,8 +1170,11 @@ def request_diagnose(args):
 
     device = torch.device(args.device)
     model, settings, source_hash = restore_readout(args.core, args.seed, device)
-    if model.core.request_readout != "instruction":
-        raise ValueError("Use a saved instruction-route source for request diagnosis")
+    if (
+        model.core.request_readout != "instruction"
+        or model.core.belief_readout != "sampled"
+    ):
+        raise ValueError("Use a sampled instruction-route source for request diagnosis")
     model.requires_grad_(False).eval()
     data = UnderstandingData(args.understanding_suite)
     contexts = [

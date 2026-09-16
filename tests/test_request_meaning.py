@@ -121,3 +121,23 @@ def test_interpreter_only_fit_keeps_request_free_outputs_and_all_other_state_exa
         torch.manual_seed(32)
         new = model.outputs("text", model.core(inputs), targets[:, :-1])
     assert torch.equal(old, new)
+
+
+def test_continuous_working_source_is_rejected_before_diagnostic_writes(
+    tmp_path, monkeypatch
+):
+    import pytest
+    from types import SimpleNamespace
+
+    model = recipe.Model("native")
+    recipe.configure_request_readout(model, "instruction")
+    model.core.belief_readout = "probabilities"
+    with pytest.raises(ValueError, match="sampled"):
+        capture_request_stages(model, None, "Nenne die erste Farbe.")
+    monkeypatch.setattr(recipe, "restore_readout", lambda *a: (model, {}, "unit"))
+    output = tmp_path / "not_created"
+    with pytest.raises(ValueError, match="sampled"):
+        recipe.request_diagnose(
+            SimpleNamespace(device="cpu", core=tmp_path, seed=42, output=output)
+        )
+    assert not output.exists()
