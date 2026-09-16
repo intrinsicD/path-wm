@@ -41,6 +41,11 @@ class CausalLatentMixer(nn.Module):
         nn.init.zeros_(self.output.bias)
 
     def forward(self, mu, times, valid):
+        residual = self.features(mu, times, valid)
+        return (mu + residual).masked_fill(~valid[:, :, None, None, None], 0)
+
+    def features(self, mu, times, valid):
+        """Separate causal features, without overwriting the spatial image code."""
         # mu [B,T,Z,H,W]. Time delta is measured since the last valid frame,
         # including across gaps. First valid frame has delta=0. No future scan.
         previous = torch.zeros_like(times[:, 0])
@@ -60,7 +65,32 @@ class CausalLatentMixer(nn.Module):
         for _ in range(self.spatial_iterations):
             hidden = hidden + 0.1 * F.silu(self.spatial(hidden))
         residual = self.output(hidden).transpose(1, 2)
-        return (mu + residual).masked_fill(~mask, 0)
+        return residual.masked_fill(~mask, 0)
+
+
+def local_correlation(previous, current, *, radius=2):
+    """Horizontal cosine matches on a common valid interior, without wrap/pad.
+
+    Output[B,2*radius+1,H-2*radius,W-2*radius]; channel i matches current(x)
+    to previous(x+i-radius). A negative matching offset indicates rightward motion.
+    This is an explicit matching primitive, not learned motion understanding.
+    """
+    if previous.shape != current.shape or current.ndim != 4:
+        raise ValueError("Matching BCHW feature grids required")
+    if type(radius) is not int or radius < 1 or min(current.shape[-2:]) <= 2 * radius:
+        raise ValueError("Positive radius and nonempty valid interior required")
+    previous = F.normalize(previous, dim=1, eps=1e-6)
+    current = F.normalize(current, dim=1, eps=1e-6)
+    h, w = current.shape[-2:]
+    r = radius
+    target = current[..., r : h - r, r : w - r]
+    return torch.stack(
+        [
+            (previous[..., r : h - r, r + s : w - r + s] * target).sum(1)
+            for s in range(-r, r + 1)
+        ],
+        1,
+    )
 
 
 class VideoVAE(nn.Module):

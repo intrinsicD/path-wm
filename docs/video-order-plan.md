@@ -86,3 +86,19 @@ raw results/checkpoint and a self-contained report; no report-renderer changes.
 3. Exact restart, eight fixed baseline fits, then conditional four-fit repair.
 4. Recompute metrics independently, inspect sequence/feature panels, record negatives
    and limitations, update architecture/state/research log and commit.
+
+## Pre-run review and checks
+
+Actual Claude reviewed the public protocol twice. It explicitly withdrew the
+incorrect suggestion to demand invariance to the last observed frame and accepted
+strict-future invariance plus a positive current-frame influence check. Previous-only
+and correlation-only controls were added before fits. No private code/data/results
+were exported. Receipts: runs/reviews/video_order_v1/.
+
+68 scoped tests pass:5 new order/data/matching checks,12 video-VAE contracts and51
+spatial/modality regressions. The initial3 new checks failed on missing APIs before
+implementation.8 versus4+4 direction-repair smoke has1894 exact model/optimizer/RNG,
+train-row/metric/array checks. Timing and extra intermediate validation rows excluded.
+Source decoder is not in the diagnostic model, and encoded spatial tensors are
+detached/immutable. Only obsolete generated pytest scratch was cleaned, not source
+data or project run history. Formal gates/budgets remain unchanged.
