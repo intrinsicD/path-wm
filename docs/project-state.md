@@ -1,5 +1,11 @@
 # Current work
 
+**In progress: explicit request-path comparison,16 September:**
+[Protocol](request-readout-plan.md). Reuse the existing task interpreter to condition
+shared thinking; compare real versus constant requests with identical added modules,
+two sources, paired output-format requests and full quick-suite regressions.
+No new efficacy or default replacement claimed.
+
 **Suite-directed retention comparison completed,16 September:**
 [Protocol/results](grounded-retention-plan.md),
 [report](../runs/grounded_retention_v1/report.html). Actual Claude critique and
