@@ -2109,3 +2109,9 @@ entries:
     artifact affected.
   - Further streamed questions added N408/N409 and staged O277 to the same active turn. Singleton/repeated-frame mechanics checked, training mixture not adopted. No extra model fits.
   - N410 captures final parameter-versus-feature clarification. Feature augmentation remains a proposed variant under O276/O277; no new implemented split or retraining fabricated.
+- turn: 2026-09-16_001#5
+  notes:
+  - N411 answered architecture question; O278 tentative. Documentation does not establish adoption or efficacy.
+    Existing open threads retained; no closure or new stale flags.
+  - Model unchanged; atlas regenerated with unchanged validation colors. Failed initial append was caught before
+    writing; subsequent entries preserve existing section indentation.

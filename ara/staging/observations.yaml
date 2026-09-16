@@ -4885,3 +4885,17 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O278
+  timestamp: 2026-09-16T08:42+02:00
+  provenance: ai-suggested
+  content: Compare stacked/shared3x3 local processing and coarse context or modest5x5 kernels before a bank of all
+    sizes. Vary displacement/cadence/occlusion with history-required tasks and resource controls. Wider spatial
+    reach does not provide longer history or learned forecasting.
+  context: User asks3x3/5x5/7x7/9x9; initial convolution-versus-attention preference wording ambiguous.
+  potential_type: heuristic
+  bound_to:
+  - N411
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

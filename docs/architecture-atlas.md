@@ -1124,4 +1124,6 @@ Literature: docs/video-codec-literature.md distinguishes published image-weight 
 
 User proposes images as one-frame videos or repeated stills. Existing wrapper accepts both; a new gradient check confirms only repeated multi-frame examples train past-frame kernel taps. Current measured auxiliary image loss bypasses temporal processing. Mixed single-frame/real-video/repeated-still training remains proposed, with static-ratio and exposure controls; no efficacy claim.
 
+Discussed spatial receptive field versus temporal horizon: current3x3 operates on the latent grid, while current/two previous frames set history. Larger kernels, stacked/shared local blocks and coarser-scale context are proposed comparisons, not validated repairs. Global attention already has global spatial access. See docs/video-codec-literature.md; no architecture or validation-color change.
+
 Source: [pathwm/models/video_vae.py · VideoVAE:49](../pathwm/models/video_vae.py), [pathwm/models/video_vae.py · CausalLatentMixer:19](../pathwm/models/video_vae.py), [experiments/video_vae.py](../experiments/video_vae.py), [tests/test_video_vae.py](../tests/test_video_vae.py), [docs/shared-video-vae-plan.md](../docs/shared-video-vae-plan.md).

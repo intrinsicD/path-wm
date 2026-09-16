@@ -176,7 +176,7 @@ sessions:
     tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights;
     four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature
     and loss/domain confound documented; agent integration remains open.'
-  turn_count: 4
-  events_count: 31
+  turn_count: 5
+  events_count: 33
   claims_touched: []
   open_threads: 26

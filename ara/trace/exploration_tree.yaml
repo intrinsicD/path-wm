@@ -6848,3 +6848,18 @@ tree:
   - docs/video-codec-literature.md
   - pathwm/models/video_vae.py
   status: resolved
+- id: N411
+  type: question
+  title: How does temporal-module neighborhood affect motion access?
+  provenance: user
+  timestamp: 2026-09-16T08:42+02:00
+  description: Explained feature-grid spatial receptive field versus temporal history. Larger kernels, stacked/shared
+    local blocks and coarse-scale context remain candidate comparisons. No hard motion-speed limit or generation
+    capability inferred; no model change.
+  also_depends_on:
+  - N410
+  evidence:
+  - docs/video-codec-literature.md
+  - pathwm/models/video_vae.py
+  - https://arxiv.org/html/2411.06449v1
+  status: resolved

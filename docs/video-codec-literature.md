@@ -109,3 +109,33 @@ not implemented. Freeze the shared image codec first to isolate temporal learnin
 if its compressed features lack useful detail, compare earlier-scale features and
 then cautious joint fine-tuning. No architectural requirement forces training from
 scratch. Equal feature dimensions alone do not guarantee useful motion semantics.
+
+## User follow-up: spatial neighborhood versus temporal horizon
+
+The current mixer has one3x3x3 convolution (time, height, width), followed by
+a1x1x1 output projection. It reads current/two previous feature grids. At the
+experiment's4fps, these three slots span0.5seconds, with no state across calls.
+Its3x3 spatial neighborhood is on the latent grid: the current48x48 inputs become
+12x12 grids. One grid step corresponds to four input-pixel steps, but each feature
+already has a larger overlapping encoder receptive field. Therefore3x3 is neither
+a3x3 pixel neighborhood nor a strict maximum speed that can be represented.
+
+Large inter-frame displacement makes direct local feature correspondence harder.
+Wider spatial communication or coarser grids can help; a wider spatial kernel alone
+does not increase the temporal horizon. Three stride-one, undilated3x3 layers have
+a theoretical7x7 spatial receptive field, including when weights are shared across
+iterations, but are not equivalent to a single7x7 filter. Extra iterations still
+cost computation. Global attention already has global spatial access; repeating it
+refines processing rather than enlarging that access. Equal-channel9x9 convolution
+has nine times the spatial kernel taps of3x3, not nine times the whole model cost.
+
+Proposed small comparison: local3x3 processing with additional depth/shared
+iterations, then coarse-scale context or a modest5x5 alternative. Do not add all
+kernel sizes by default. Vary displacement, cadence and occlusion with tasks that
+require history; compare resources and appearance retention. No variant is adopted
+or measured here. Forecasting/generation additionally needs an appropriate learned
+transition/prior, conditioning and objective; a larger encoder neighborhood alone
+does not provide it. IV-VAE section3.4 motivates enlarging receptive fields as
+resolution increases and uses parallel dilated convolutions plus compressed-space
+attention. That precedent does not identify our local failure cause.
+[Primary paper](https://arxiv.org/html/2411.06449v1).

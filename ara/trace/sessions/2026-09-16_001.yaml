@@ -2,8 +2,8 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T08:28+02:00
-  turn_count: 4
+  last_turn: "2026-09-16T08:42+02:00"
+  turn_count: 5
   summary: "Eight matched fresh-updater controls fail direction screens; continuous working access not adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58 tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights; four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain confound documented; agent integration remains open."
 
 events_logged:
@@ -224,6 +224,19 @@ events_logged:
   routing: direct
   provenance: user
   summary: Do video features require different spatial weights or pixel-level retraining?
+- turn: 5
+  type: question
+  id: N411
+  routing: direct
+  provenance: user
+  summary: Spatial receptive field and temporal horizon explained.
+- turn: 5
+  type: observation
+  id: O278
+  routing: staged
+  provenance: ai-suggested
+  summary: Neighborhood/coarse-context comparison proposed, not adopted.
+
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -284,6 +297,16 @@ ai_actions:
   files_changed:
   - tests/test_video_vae.py
   - docs/video-codec-literature.md
+- turn: 5
+  action: Checked mixer code and IV-VAE primary receptive-field discussion; documented explanation and regenerated
+    atlas. No model edits or training.
+  provenance: ai-executed
+  files_changed:
+  - docs/video-codec-literature.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -306,6 +329,10 @@ key_context:
   excerpt: Different context-dependent features need not mean separate image weights. User asks about
     feature-space temporal additions versus pixel-level retraining; no new training authorized by this
     conceptual question.
+- turn: 5
+  excerpt: User asks whether larger neighborhoods help recognize or generate dynamics; no unambiguous adoption of
+    convolution versus attention.
+
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -510,3 +537,4 @@ ai_suggestions_pending:
   repair remains pending.'
 - 'O277: singleton/real-video/repeated-still mixture remains proposed; gradient mechanics do not validate
   temporal efficacy.'
+- 'O278: spatial-neighborhood/coarse-context comparison untested; existing loss/history controls still apply.'
