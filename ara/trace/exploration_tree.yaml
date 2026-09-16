@@ -6736,3 +6736,67 @@ tree:
   - ara/evidence/tables/video_readout_2026-09-16.json
   - runs/video_readout_v1/temporal_access/report.html
   status: resolved
+- id: N404
+  type: decision
+  title: Reuse the actual image encoder for video and add temporal processing
+  provenance: user
+  timestamp: 2026-09-16T08:25+02:00
+  choice: User requests actual shared image weights rather than only matching encoder architecture; video
+    frames may also train image reconstruction.
+  alternatives:
+  - Keep independent image/video weights
+  also_depends_on:
+  - N400
+  evidence:
+  - ara/evidence/tables/shared_video_vae_2026-09-16.json
+  status: resolved
+- id: N405
+  type: experiment
+  title: Shared spatial VAE works mechanically; small causal residual misses paired benefit
+  provenance: ai-executed
+  timestamp: 2026-09-16T08:25+02:00
+  result: Four128-update real-video development fits,24.80s CPU. Shared122979-parameter image VAE; optional1340-parameter
+    temporal mean residual. Frame-difference error reduction0.2174/0.1429% fails5% gate; RGB/color/image-retention
+    regression limits pass. Both continued arms worsen reserved RGB vs frozen source.61 tests,1724 exact-resume
+    checks,777 artifact checks. Native agent unchanged; temporal remains opt-in.
+  also_depends_on:
+  - N404
+  tests_observations:
+  - O274
+  - O275
+  evidence:
+  - ara/evidence/tables/shared_video_vae_2026-09-16.json
+  - runs/shared_video_vae_v1/report.html
+  status: resolved
+- id: N406
+  type: question
+  title: Were video frames already image-training data and how did the old encoders differ?
+  provenance: user
+  timestamp: 2026-09-16T08:25+02:00
+  description: 'Answered from source: previous tiny audit used the first synthetic video frame in a separate
+    image branch; branches did not share weights. Old agent video used patch encoding plus causal temporal
+    hierarchy, unlike the separate trained R/P/M/C spatial VAE now wrapped for video.'
+  also_depends_on:
+  - N400
+  - N404
+  evidence:
+  - experiments/modality_audit.py
+  - docs/models.md
+  - ara/evidence/tables/shared_video_vae_2026-09-16.json
+  status: resolved
+- id: N407
+  type: question
+  title: Why little temporal benefit, is there literature/weights, and where is temporal processing wired?
+  provenance: user
+  timestamp: 2026-09-16T08:25+02:00
+  description: Primary SVD/IV-VAE/CogVideoX/Hunyuan sources and MSE-prediction precedent checked; released
+    codec weights exist, none downloaded. Actual new temporal path refines per-frame posterior means causally
+    over current/two prior spatial grids before independent sampling; decoder stays per-frame. Source
+    audit finds beta0.1→0.01 and color loss6→0 plus changed domain; no unique explanation of frozen-source
+    regression.
+  also_depends_on:
+  - N405
+  evidence:
+  - ara/evidence/tables/shared_video_vae_2026-09-16.json
+  - docs/video-codec-literature.md
+  status: resolved

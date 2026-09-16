@@ -1,0 +1,173 @@
+{
+  "timestamp": "2026-09-16T08:25+02:00",
+  "provenance": "ai-executed",
+  "commits": [
+    "b53e9ba",
+    "65a354f",
+    "4641455",
+    "9bc8ea5"
+  ],
+  "sources": [
+    {
+      "path": "runs/shared_video_vae_v1/result.json",
+      "sha256": "160d395e8fc851d775052760a287dc0d467850d02d9392b4fbe53eb27eaecd72"
+    },
+    {
+      "path": "runs/shared_video_vae_v1/verification.json",
+      "sha256": "0af29bd9c6bf0c64bf31266bd188c4f8272d474d1feafb26ac614618648e2618"
+    },
+    {
+      "path": "runs/shared_video_vae_v1/smoke/verification.json",
+      "sha256": "5249e0897200f0811a52d8de9b5a8fa8c4bf71577aa9b336ce2c607a1cfea1b8"
+    },
+    {
+      "path": "runs/reviews/shared_video_vae_v1/receipt.json",
+      "sha256": "d311e436eff354112106646737c5b485a32727687b6764597da1c75ff453c8f3"
+    },
+    {
+      "path": "runs/reviews/shared_video_vae_v1/reconcile-receipt.json",
+      "sha256": "025e90faea4a87a359bb2a18d7c4972a3df5c1db5c14e24c293308dd61273415"
+    },
+    {
+      "path": "runs/spatial_vae_repair_v1/formal/seed57301/color/training/run.json",
+      "sha256": "d12e824eb7d05e1820de99e58c8c94e5b18c131517389dd461d9bee43a350ecf"
+    },
+    {
+      "path": "docs/video-codec-literature.md",
+      "sha256": "08490a57c413af2fccb58bfac5c545ffb76bc4d99c92428c4d189b5b4479de39"
+    },
+    {
+      "path": "pathwm/models/video_vae.py",
+      "sha256": "2eec29917b397cc5f4bcfa8bca95feefb7d8a94105c8e31311960fa4ae0b2912"
+    },
+    {
+      "path": "experiments/video_vae.py",
+      "sha256": "aa62b3503f7296699f9996176236a4681b85bd29072bda4bd05b2502fcd58141"
+    }
+  ],
+  "comparison": {
+    "completed": true,
+    "evaluation_scope": "Four fixed 128-update development runs, two seeds, source-disjoint clips from six previously inspected local real videos at48x48/4fps. Single reserved evaluation source; not independent generalization. Frame/image weights genuinely shared. Temporal extension works mechanically but fails the predeclared >=5% frame-difference benefit. Both trained arms worsen reserved RGB versus the frozen pretrained source. No default adoption, forecasting or BeliefAgent integration. Reports verified statically/structurally; browser interaction unavailable.",
+    "gate": false,
+    "metrics": {
+      "7301_frame": {
+        "color_mse": 0.0019949476700276136,
+        "edge_mse": 0.0032044528052210808,
+        "frame_difference_mse": 0.004990243818610907,
+        "frozen_source_rgb_mse": 0.007944733835756779,
+        "history_output_change": 0.0,
+        "image_retention_mse": 0.010075469501316547,
+        "kl_bits_per_frame": 1381.345947265625,
+        "mse": 0.00829245988279581,
+        "parameters": 122979,
+        "raw_mse": 0.008513199165463448,
+        "training_seconds": 6.034608421032317
+      },
+      "7301_temporal": {
+        "color_mse": 0.0019715328235179186,
+        "edge_mse": 0.0031948548275977373,
+        "frame_difference_mse": 0.004979393444955349,
+        "frozen_source_rgb_mse": 0.007944733835756779,
+        "history_output_change": 0.00035417513572610915,
+        "image_retention_mse": 0.010066389106214046,
+        "kl_bits_per_frame": 1350.979248046875,
+        "mse": 0.008201230317354202,
+        "parameters": 124319,
+        "raw_mse": 0.008406250737607479,
+        "training_seconds": 6.274344794917852
+      },
+      "7302_frame": {
+        "color_mse": 0.0029700149316340685,
+        "edge_mse": 0.003268206724897027,
+        "frame_difference_mse": 0.0050217038951814175,
+        "frozen_source_rgb_mse": 0.007944733835756779,
+        "history_output_change": 0.0,
+        "image_retention_mse": 0.009877052158117294,
+        "kl_bits_per_frame": 1348.487060546875,
+        "mse": 0.009463370777666569,
+        "parameters": 122979,
+        "raw_mse": 0.009664316661655903,
+        "training_seconds": 6.079881286015734
+      },
+      "7302_temporal": {
+        "color_mse": 0.0029613198712468147,
+        "edge_mse": 0.0032581319101154804,
+        "frame_difference_mse": 0.0050145299173891544,
+        "frozen_source_rgb_mse": 0.007944733835756779,
+        "history_output_change": 0.00024462403962388635,
+        "image_retention_mse": 0.009879214689135551,
+        "kl_bits_per_frame": 1308.0948486328125,
+        "mse": 0.009404929354786873,
+        "parameters": 124319,
+        "raw_mse": 0.009587477892637253,
+        "training_seconds": 6.414888299070299
+      },
+      "paired_screen": {
+        "7301": {
+          "frame_difference_reduction_fraction": 0.002174317337980902,
+          "gates": {
+            "color": true,
+            "finite_rate": true,
+            "image_retention": true,
+            "rgb": true,
+            "temporal_difference": false
+          },
+          "passed": false,
+          "rgb_reduction_fraction": 0.011001508205168431
+        },
+        "7302": {
+          "frame_difference_reduction_fraction": 0.001428594346063905,
+          "gates": {
+            "color": true,
+            "finite_rate": true,
+            "image_retention": true,
+            "rgb": true,
+            "temporal_difference": false
+          },
+          "passed": false,
+          "rgb_reduction_fraction": 0.006175539800006291
+        }
+      }
+    },
+    "training_seconds": 24.8037228010362
+  },
+  "verification": {
+    "browser_checked": false,
+    "checks": 777,
+    "claude_exchanges": 2,
+    "resume": {
+      "checks": 1724,
+      "exact_resume": true,
+      "scope": "CPU FP32 same software and source, 8 vs 4+4 updates; train rows/model/optimizer/RNG/evaluation; timing and extra validation rows excluded"
+    },
+    "scope": "Independent NumPy RGB/color/edge/frame-difference/KL/retention checks; loss-ledger arithmetic; immutable source hashes; exact paired initialization; all report embedded images/receipt hashes.",
+    "scoped_tests": 61
+  },
+  "literature": [
+    {
+      "url": "https://huggingface.co/stabilityai/stable-video-diffusion-img2vid-xt",
+      "accessed": "2026-09-16"
+    },
+    {
+      "url": "https://arxiv.org/html/2411.06449v1",
+      "accessed": "2026-09-16"
+    },
+    {
+      "url": "https://github.com/ali-vilab/iv-vae",
+      "accessed": "2026-09-16"
+    },
+    {
+      "url": "https://arxiv.org/html/2408.06072v3",
+      "accessed": "2026-09-16"
+    },
+    {
+      "url": "https://arxiv.org/html/2412.03603v1",
+      "accessed": "2026-09-16"
+    },
+    {
+      "url": "https://arxiv.org/abs/1511.05440",
+      "accessed": "2026-09-16"
+    }
+  ],
+  "limits": "Codec integration only; agent patch encoder unchanged. Both continued arms regress reserved RGB vs frozen source, which also changes beta/color objective and domain. No pretrained download, unique causal diagnosis, general video or forecast claim."
+}

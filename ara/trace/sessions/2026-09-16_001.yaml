@@ -2,15 +2,10 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T02:12+02:00
-  turn_count: 3
-  summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not adopted.
-    Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped
-    tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
-    in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text
-    reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail
-    both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58
-    tests,18 reports verified, defaults unchanged.'
+  last_turn: 2026-09-16T08:25+02:00
+  turn_count: 4
+  summary: "Eight matched fresh-updater controls fail direction screens; continuous working access not adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58 tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights; four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain confound documented; agent integration remains open."
+
 events_logged:
 - turn: 1
   type: decision
@@ -152,6 +147,56 @@ events_logged:
     versus state-mediated reads. Preserve output color/composition as a separate target. A higher-quality
     spatial-VAE video path needs a separate controlled integration experiment; do not silently swap it
     into the existing agent.
+- turn: 4
+  type: decision
+  id: N404
+  routing: direct
+  provenance: user
+  summary: Reuse the actual image encoder for video and add temporal processing
+- turn: 4
+  type: experiment
+  id: N405
+  routing: direct
+  provenance: ai-executed
+  summary: Shared spatial VAE works mechanically; small causal residual misses paired benefit
+- turn: 4
+  type: question
+  id: N406
+  routing: direct
+  provenance: user
+  summary: Were video frames already image-training data and how did the old encoders differ?
+- turn: 4
+  type: question
+  id: N407
+  routing: direct
+  provenance: user
+  summary: Why little temporal benefit, is there literature/weights, and where is temporal processing
+    wired?
+- turn: 4
+  type: observation
+  id: O274
+  routing: crystallized
+  provenance: ai-suggested
+  summary: One VideoVAE owns a shared pretrained spatial image encoder/decoder with optional neutral-initialized
+    causal mean refinement. Image/video losses update identical weights, independent posterior sampling
+    follows mean refinement, and checkpoints avoid aliases. Existing agent token pathway is separate.
+- turn: 4
+  type: observation
+  id: O275
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Little benefit does not establish temporal architecture failure: current frames are fully
+    observed, temporal history influence is tiny, training sources are few, and frozen-source comparison
+    changes domain plus KL/color objective. The matched temporal-versus-frame candidate fails its bounded
+    gate; no unique causal diagnosis.'
+- turn: 4
+  type: observation
+  id: O276
+  routing: staged
+  provenance: ai-suggested
+  summary: Before larger temporal layers, test original image objective preservation, frozen shared-codec
+    adaptation, and missing/occluded-frame tasks that require history. Temporal decoder and keyframe/temporal
+    capacity separation are literature-motivated later ablations, not adopted replacements.
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -192,6 +237,19 @@ ai_actions:
   - docs/video-readout-plan.md
   - ara/evidence/tables/video_readout_2026-09-16.json
 claims_touched: []
+- turn: 4
+  action: Implement shared codec + recipe; actual Claude generic review and mathematical reconciliation;
+    red/green tests, exact replay, four real-video fits and raw/report audits; primary-source literature
+    and objective-confound inspection; atlas16 and reports. No new training after registered budget or
+    external weights download.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/video_vae.py
+  - experiments/video_vae.py
+  - tests/test_video_vae.py
+  - docs/shared-video-vae-plan.md
+  - docs/video-codec-literature.md
+  - ara/evidence/tables/shared_video_vae_2026-09-16.json
 key_context:
 - turn: 1
   excerpt: 'User: Arbeite daran zusammen mit Claude. Plane, implementiere, überprüfe, teste und repariere.
@@ -202,6 +260,10 @@ key_context:
   excerpt: User requests video first, then asks whether it uses image encoding per frame plus temporal
     additions. Answer distinguishes shared architecture, independent branch weights and separate experimental
     image VAE.
+- turn: 4
+  excerpt: User asks to reuse image encoder for video, add needed temporal processing, reuse frames for
+    image reconstruction; then asks old-path difference, relevant literature/trained weights and exact
+    temporal wiring.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -265,6 +327,9 @@ open_threads:
   Next shared-state direction/temporal learning with symmetric clips, retaining planned source rotation/dropout.
   Output color/composition, real-video spatial-VAE integration and persistent cross-window memory remain
   open.'
+- 'N404-N407/O275-O276: shared-codec mechanics complete; task-required temporal learning, objective-matched/frozen-codec
+  controls, spatial-grid-to-agent integration and persistent video context remain open. Existing source-rotation/direction
+  proposals preserved.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
@@ -398,3 +463,6 @@ ai_suggestions_pending:
   palette rejection.'
 - 'O273: temporal-state/encoder comparison and separate spatial-VAE integration proposed; no new training
   launched.'
+- 'O275/O276: no unique cause of small temporal benefit or source regression. Original-loss/frozen-codec
+  and occlusion controls proposed, not run. O273 partial codec reuse executed; broader temporal-state
+  repair remains pending.'

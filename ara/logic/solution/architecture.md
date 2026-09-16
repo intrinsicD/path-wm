@@ -152,3 +152,13 @@
 - **Implementation**:0d31fd6/49478f5; [recipe](../../../experiments/modality_readout.py), [tests](../../../tests/test_readout_diagnosis.py), [protocol](../../../docs/modality-readout-plan.md).
 - **Verification**: [Evidence](../../evidence/tables/direction_learning_2026-09-16.json);59 scoped tests and exact hard/continuous8 versus4+4 replay. Core parameter count unchanged237234.
 - **Limits**: Experimental control only, not a default repair or a fully unquantized world model. All eight task screens and both paired continuous-benefit comparisons fail. No persistent-memory, output quality, general direction or other-modality capability is promoted.
+
+## A16: Shared spatial image codec with optional causal video posterior refinement
+
+- **Design**: One injected SpatialVAE/HierarchicalVAE owns image encoder and decoder weights for both still images and video frames. Optional causal3D residual refines posterior means using current/two past spatial grids, elapsed time and validity; variance remains local, sampling follows refinement. Zero initial output preserves the original image mapping. Joint video/frame objectives train the same weights; unique checkpoint ownership and detached diagnostics.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O274
+- **Implementation**:65a354f; [module](../../../pathwm/models/video_vae.py), [recipe](../../../experiments/video_vae.py), [tests](../../../tests/test_video_vae.py).
+- **Verification**: [Evidence](../../evidence/tables/shared_video_vae_2026-09-16.json);61 tests, exact8 versus4+4 resume, four measured128-update development fits.
+- **Limits**: Optional codec path, not a replacement of the categorical agent encoder. Paired temporal benefit fails; no default adoption, learned temporal prior, persistent streaming cache, forecast or general video-quality validation. Existing pretrained source weights preserved.

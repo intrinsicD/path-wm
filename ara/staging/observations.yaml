@@ -4823,3 +4823,48 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O274
+  timestamp: 2026-09-16T08:25+02:00
+  provenance: ai-suggested
+  content: One VideoVAE owns a shared pretrained spatial image encoder/decoder with optional neutral-initialized
+    causal mean refinement. Image/video losses update identical weights, independent posterior sampling
+    follows mean refinement, and checkpoints avoid aliases. Existing agent token pathway is separate.
+  context: Shared-codec implementation followed by user literature and wiring questions.
+  potential_type: architecture
+  bound_to:
+  - N404
+  - N405
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A16
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O275
+  timestamp: 2026-09-16T08:25+02:00
+  provenance: ai-suggested
+  content: 'Little benefit does not establish temporal architecture failure: current frames are fully
+    observed, temporal history influence is tiny, training sources are few, and frozen-source comparison
+    changes domain plus KL/color objective. The matched temporal-versus-frame candidate fails its bounded
+    gate; no unique causal diagnosis.'
+  context: Shared-codec implementation followed by user literature and wiring questions.
+  potential_type: claim
+  bound_to:
+  - N405
+  - N407
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O276
+  timestamp: 2026-09-16T08:25+02:00
+  provenance: ai-suggested
+  content: Before larger temporal layers, test original image objective preservation, frozen shared-codec
+    adaptation, and missing/occluded-frame tasks that require history. Temporal decoder and keyframe/temporal
+    capacity separation are literature-motivated later ablations, not adopted replacements.
+  context: Shared-codec implementation followed by user literature and wiring questions.
+  potential_type: heuristic
+  bound_to:
+  - N407
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
