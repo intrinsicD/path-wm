@@ -2312,3 +2312,17 @@ entries:
   - Normalized-state probes do not support removing normalization. Decoder-only nontext outputs exactly retained;
     all arms lose old text/output behavior. No default, encoder expansion or broad validation promotion. Local
     browser block not bypassed; representative saved image inspected.
+- turn: 2026-09-16_001#23
+  notes:
+  - N454 protocol decision,N455 measured comparison,N456 no-adoption direct; O307 attribution and O308 request-path
+    proposal staged. No researcher response to new results or committed efficacy claim; no crystallization.
+    C01-C04 unchanged.
+  - O306 specifies paired semantic supervision, not this output anchor; do not promote it on unrelated code
+    commitment. O304/O305 remain broader interpretations, with core and natural-modal topics still open. No
+    abandonment or new same-day stale flags; prior stale entries retained.
+  - Actual Claude withdrew hard teacher-accuracy ceiling and distinguished common noise from equal categorical
+    samples. No unique soft-target/compute superiority claim; fixed10 choice and extra cost disclosed. Four
+    real agreement regressions prevent claiming overall benefit.
+  - Answer continuation accounts for eight lost exact7202 responses with correct first words; weaker7201 still
+    has content failure. Content/EOS decomposition verified against saved scores; no altered gates or output
+    truncation. Source weights/defaults/colors unchanged. Structural/media QA only, browser block not bypassed.

@@ -2,8 +2,8 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T17:54+02:00
-  turn_count: 22
+  last_turn: 2026-09-16T19:03+02:00
+  turn_count: 23
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not adopted.
     Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped
     tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in
@@ -43,7 +43,9 @@ session:
     understanding battery:25 tasks,all evidence subsets,0/25 passes for both existing sources;555 full/70 post-repair
     tests and6448 audits. No neural training or capability promotion. Grounded QA: four fixed fits;7202 core+decoder
     passes video order100%/1 of25 tasks,7201 stays50%; all forget prior outputs.561 tests,1180 restart,4097
-    audits,17 reports; retain variants, no default change.'
+    audits,17 reports; retain variants, no default change. Source-output anchoring partially reduces forgetting32→20/23→6
+    failing cells, but7201 still fails and7202 exact text falls14/16→6/16.64 checks,1180 restart,4951 audits;
+    no adoption; task/format path next.'
 
 events_logged:
 - turn: 1
@@ -814,6 +816,43 @@ events_logged:
   summary: Next compare a training-only paired semantic objective at the working state, with unchanged inference
     and explicit old-task preservation, to stabilize temporal information and requested output behavior. No
     new fit or efficacy result yet.
+- turn: 23
+  type: decision
+  id: N454
+  routing: direct
+  provenance: ai-executed
+  summary: Address measured forgetting with a fixed training-only source-output anchor
+- turn: 23
+  type: experiment
+  id: N455
+  routing: direct
+  provenance: ai-executed
+  summary: Output anchoring reduces forgetting but free answers and replication still fail
+- turn: 23
+  type: decision
+  id: N456
+  routing: direct
+  provenance: ai-executed
+  summary: Preserve optional retention variant without default replacement
+- turn: 23
+  type: observation
+  id: O307
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Fixed source-output regularization partially protects old outputs at unchanged inference size,
+    but reinforces a competing response format in the successful source: content-first-word14/16 remains while
+    complete answers fall to6/16. This does not isolate decoder versus task-conditioned core responsibility,
+    and the weaker core still fails content access.'
+- turn: 23
+  type: observation
+  id: O308
+  routing: staged
+  provenance: ai-suggested
+  summary: Next audit the existing TaskInterpreter/request path using same-scene/different-request contrasts,
+    preserving symbolic and broad-suite regressions. The small readout recipe currently sends questions as
+    observations, calls think without a task goal and does not instantiate the optional interpreter/metadata
+    encoder. Wiring/training that path is a candidate, not a proven solution; stable temporal access remains
+    separately open.
 
 ai_actions:
 - turn: 1
@@ -1094,6 +1133,16 @@ ai_actions:
   - pathwm/evaluation/modality_readout.py
   - tests/test_grounded_readout.py
   - docs/grounded-readout-plan.md
+- turn: 23
+  action: Implemented optional replay-only frozen-source distillation with EOS masking/common random noise;
+    actual Claude critique reconciled; four matched fits,all25 quick tasks/full target,answer-format decomposition
+    and per-example regression audits; updated scope documentation/atlas.
+  provenance: ai-executed
+  files_changed:
+  - experiments/modality_readout.py
+  - tests/test_retention_readout.py
+  - docs/grounded-retention-plan.md
+  - docs/diagrams/architecture-atlas.json
 
 claims_touched: []
 key_context:
@@ -1179,6 +1228,9 @@ key_context:
   excerpt: User wants actual understanding across all modalities/combinations checked repeatedly, with improvements
     directly visible.
 - turn: 22
+  excerpt: Continue together with Claude. Use the testsuite to pick what to work on/improve. Plan, implement,
+    review, test and fix. Iterate
+- turn: 23
   excerpt: Continue together with Claude. Use the testsuite to pick what to work on/improve. Plan, implement,
     review, test and fix. Iterate
 
@@ -1287,6 +1339,9 @@ open_threads:
   persistent memory/tools and generation remain uncovered.'
 - 'N452/O305/O306: stable temporal core access and output-task preservation; scoped7202 success does not replicate
   in7201. Keep natural video/speech/dialogue/memory/tool milestones open.'
+- 'N455/O307/O308: task-dependent answer content/format and stable temporal access; partial retention is not
+  adoption. Existing recipe omits optional task interpreter; evaluate explicit request contrasts next. Broad
+  natural-modal/memory/tool milestones remain open.'
 
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
@@ -1456,3 +1511,5 @@ ai_suggestions_pending:
 - 'O304: Stage accessibility motivates targeted core/readout learning, not a unique bottleneck claim or automatic
   architecture replacement.'
 - 'O306: paired semantic working-state supervision proposed; no neural fit or adoption yet.'
+- 'O308: audit/train existing task/request integration before a new encoder change; proposed only. O306 paired
+  semantic supervision remains unimplemented; retention-first sequencing does not abandon it.'

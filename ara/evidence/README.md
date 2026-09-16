@@ -194,3 +194,5 @@ Source diversity versus frame density: [source-bound evidence](tables/video_dive
 - [Recurring multimodal understanding regression,16 September](tables/understanding_suite_2026-09-16.json):25 families; both sources0/25 quick,first0/25 full;555 full/70 post-repair software tests,6448 audits; no model training/promotion.
 
 - [Grounded video-order readout continuation,16 September](tables/grounded_readout_2026-09-16.json): four fixed fits; one source/core variant passes target, other source fails and all regress old outputs.561 tests,1180 restart tensors,4097 audits; no default replacement.
+
+- [Grounded retention comparison,16 September](tables/grounded_retention_2026-09-16.json): four fixed fits; old-output forgetting reduced, task replication/free answer form/broader regressions still fail.64 focused tests,1180 restart tensors,4951 audits; no default replacement.

@@ -7538,3 +7538,49 @@ tree:
   - N452
   - ara/evidence/tables/grounded_readout_2026-09-16.json
   status: resolved
+- id: N454
+  type: decision
+  title: Address measured forgetting with a fixed training-only source-output anchor
+  provenance: ai-executed
+  timestamp: 2026-09-16T19:03+02:00
+  choice: Under the user suite-directed continuation, compare fresh unanchored and anchored core+decoder fits
+    across two sources; weight10 fixed before fits, no inference change. Actual Claude public-method critique/reconciliation;
+    no private export.
+  alternatives:
+  - Enlarge modality encoders
+  - Sweep coefficients or add task-ID routing
+  evidence:
+  - N452
+  - N453
+  - docs/grounded-retention-plan.md
+  status: resolved
+- id: N455
+  type: experiment
+  title: Output anchoring reduces forgetting but free answers and replication still fail
+  provenance: ai-executed
+  timestamp: 2026-09-16T19:03+02:00
+  result: Four768-update fits. Historical controls exact. Old-output failing cells32→20 and23→6. Source7202
+    retention passes video order93.75% answers/87.5% pairs,omission/lastframe50%; source7201 stays50%. Free
+    exact7202 drops14/16→6/16 while first words remain14/16; eight answers append old sentence content. Four
+    real agreement families regress.64 software checks,1180 restart tensors,4951 artifact checks,15 structural
+    reports,329.27s training,89.79MiB peak allocation; identical-weight GPU KL approximately zero.
+  evidence:
+  - ara/evidence/tables/grounded_retention_2026-09-16.json
+  - runs/grounded_retention_v1/comparison.json
+  - runs/grounded_retention_v1/answer_format_diagnostic.json
+  - 34f0727
+  status: resolved
+- id: N456
+  type: decision
+  title: Preserve optional retention variant without default replacement
+  provenance: ai-executed
+  timestamp: 2026-09-16T19:03+02:00
+  choice: Apply original both-source/old-output/other-task gates; retain negative and partial results. No adoption
+    or broad green promotion. Diagnostic first-word/content-only scores do not alter acceptance.
+  alternatives:
+  - Promote from fewer failing cells alone
+  - Treat the correct first word as a complete answer
+  evidence:
+  - N455
+  - ara/evidence/tables/grounded_retention_2026-09-16.json
+  status: resolved

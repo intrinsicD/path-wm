@@ -206,8 +206,10 @@ sessions:
     understanding battery:25 tasks,all evidence subsets,0/25 passes for both existing sources;555 full/70 post-repair
     tests and6448 audits. No neural training or capability promotion. Grounded QA: four fixed fits;7202 core+decoder
     passes video order100%/1 of25 tasks,7201 stays50%; all forget prior outputs.561 tests,1180 restart,4097
-    audits,17 reports; retain variants, no default change.'
-  turn_count: 22
-  events_count: 110
+    audits,17 reports; retain variants, no default change. Source-output anchoring partially reduces forgetting32→20/23→6
+    failing cells, but7201 still fails and7202 exact text falls14/16→6/16.64 checks,1180 restart,4951 audits;
+    no adoption; task/format path next.'
+  turn_count: 23
+  events_count: 115
   claims_touched: []
-  open_threads: 42
+  open_threads: 43

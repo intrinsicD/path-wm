@@ -1,0 +1,314 @@
+{
+  "answer_format": [
+    {
+      "arm": "control",
+      "content_only_accuracy_by_draw": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "first_generated_word_accuracy": 0.5,
+      "free_exact": 0.5,
+      "seed": 7201
+    },
+    {
+      "arm": "retention",
+      "content_only_accuracy_by_draw": [
+        0.5,
+        0.5,
+        0.5
+      ],
+      "first_generated_word_accuracy": 0.5,
+      "free_exact": 0.0,
+      "seed": 7201
+    },
+    {
+      "arm": "control",
+      "content_only_accuracy_by_draw": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "first_generated_word_accuracy": 0.875,
+      "free_exact": 0.875,
+      "seed": 7202
+    },
+    {
+      "arm": "retention",
+      "content_only_accuracy_by_draw": [
+        0.9375,
+        1.0,
+        1.0
+      ],
+      "first_generated_word_accuracy": 0.875,
+      "free_exact": 0.375,
+      "seed": 7202
+    }
+  ],
+  "artifacts": {
+    "runs/grounded_retention_v1/answer_format_diagnostic.json": "02032f6ffe28b6efc15e32c2e312573e2cd692948aa027a01c03b18f1ea064a9",
+    "runs/grounded_retention_v1/comparison.json": "1c0f2033b9d2907acd1ed8a766334ad67bdf6c4dfaf51c419eac3a2af0eede21",
+    "runs/grounded_retention_v1/execution.json": "279d5783283a78271b7556244235ecacdf6890c08f59e55294d5d26527939f78",
+    "runs/grounded_retention_v1/per_example_changes.json": "2da36232e5317d9dda6457655e517069e58367bb17853647caa20c91b7fce489",
+    "runs/grounded_retention_v1/report.html": "f0c78683e787edc76541cf199aee47864f839ae536fb7a234b0577ad3e39e3fd",
+    "runs/grounded_retention_v1/verification.json": "17ce81fa4c32d9375943fa05a6753a999990d836403f0b26bd3626224179c8e3"
+  },
+  "limits": [
+    "Agent training and diagnostic probes share calibration labels on the target.",
+    "Mean byte likelihood has answer-length biases; free generation and per-class diagnostics are separate.",
+    "Browser navigation previously denied; structural/media QA only.",
+    "Fixed coefficient10, two sources; no compute-matched stronger-replay control.",
+    "Partial retention gain is not overall repair; correct first word is not correct free answer."
+  ],
+  "protocol": "docs/grounded-retention-plan.md",
+  "provenance": "ai-executed",
+  "result_commit": "8b05328",
+  "reviews": {
+    "runs/reviews/grounded_retention_v1/public-receipt.json": "28bc285b2555530907631c8f3367ab00cf1bc3b32e072cd857089c08ce766472",
+    "runs/reviews/grounded_retention_v1/reconcile-receipt.json": "61d0e8aedd347bc6f451bf93e66be6ed710d7718636011ba6edf3e09837046af"
+  },
+  "rows": [
+    {
+      "adopted": false,
+      "arm": "control",
+      "broader_regressed_cases": [],
+      "failures_by_output": {
+        "audio": {
+          "failed_cells": 4,
+          "worst_accuracy_delta": -0.14583337306976318,
+          "worst_error_ratio": 1.123718895462692
+        },
+        "image": {
+          "failed_cells": 6,
+          "worst_accuracy_delta": -0.1458333134651184,
+          "worst_error_ratio": 1.1018511981831554
+        },
+        "text": {
+          "failed_cells": 17,
+          "worst_accuracy_delta": -0.4791666865348816,
+          "worst_error_ratio": 1.6863301708281544
+        },
+        "video": {
+          "failed_cells": 5,
+          "worst_accuracy_delta": -0.1458333134651184,
+          "worst_error_ratio": 1.0420692812891093
+        }
+      },
+      "free_exact": 0.5,
+      "preservation_failed_cells": 32,
+      "quick_coverage": {
+        "executed": 25,
+        "failed": 25,
+        "passed": 0,
+        "unimplemented_domains": 7
+      },
+      "resources": {
+        "frozen_preserved": true,
+        "parameters": 297013,
+        "peak_allocated_bytes": 92334080,
+        "teacher_preserved": false,
+        "trainable_parameters": 133896,
+        "training_seconds_this_invocation": 57.098411957966164
+      },
+      "seed": 7201,
+      "target_accuracy_min": 0.5,
+      "target_pair_min": 0.0,
+      "target_probes": {
+        "encoder": 1.0,
+        "posterior": 0.75,
+        "working": 0.5
+      }
+    },
+    {
+      "adopted": false,
+      "arm": "retention",
+      "broader_regressed_cases": [],
+      "failures_by_output": {
+        "audio": {
+          "failed_cells": 2,
+          "worst_accuracy_delta": -0.1458333134651184,
+          "worst_error_ratio": 1.033067158358532
+        },
+        "image": {
+          "failed_cells": 3,
+          "worst_accuracy_delta": -0.125,
+          "worst_error_ratio": 1.0042525436145329
+        },
+        "text": {
+          "failed_cells": 12,
+          "worst_accuracy_delta": -0.1666666567325592,
+          "worst_error_ratio": 1.2183624317214041
+        },
+        "video": {
+          "failed_cells": 3,
+          "worst_accuracy_delta": -0.125,
+          "worst_error_ratio": 0.999055887103714
+        }
+      },
+      "free_exact": 0.0,
+      "preservation_failed_cells": 20,
+      "quick_coverage": {
+        "executed": 25,
+        "failed": 25,
+        "passed": 0,
+        "unimplemented_domains": 7
+      },
+      "resources": {
+        "frozen_preserved": true,
+        "parameters": 297013,
+        "peak_allocated_bytes": 94153728,
+        "teacher_preserved": true,
+        "trainable_parameters": 133896,
+        "training_seconds_this_invocation": 99.2053906340152
+      },
+      "seed": 7201,
+      "target_accuracy_min": 0.5,
+      "target_pair_min": 0.0,
+      "target_probes": {
+        "encoder": 1.0,
+        "posterior": 0.6875,
+        "working": 0.5625
+      }
+    },
+    {
+      "adopted": false,
+      "arm": "control",
+      "broader_regressed_cases": [
+        "REAL.scene.text",
+        "REAL.scene.image",
+        "REAL.scene.audio",
+        "REAL.scene.video"
+      ],
+      "failures_by_output": {
+        "audio": {
+          "failed_cells": 6,
+          "worst_accuracy_delta": -0.3333333134651184,
+          "worst_error_ratio": 1.1918040486928718
+        },
+        "image": {
+          "failed_cells": 2,
+          "worst_accuracy_delta": -0.1666666865348816,
+          "worst_error_ratio": 1.0187677730027556
+        },
+        "text": {
+          "failed_cells": 6,
+          "worst_accuracy_delta": -0.6666666567325592,
+          "worst_error_ratio": 2.242218864347312
+        },
+        "video": {
+          "failed_cells": 9,
+          "worst_accuracy_delta": -0.500000037252903,
+          "worst_error_ratio": 1.0445139154247542
+        }
+      },
+      "free_exact": 0.875,
+      "preservation_failed_cells": 23,
+      "quick_coverage": {
+        "executed": 25,
+        "failed": 24,
+        "passed": 1,
+        "unimplemented_domains": 7
+      },
+      "resources": {
+        "frozen_preserved": true,
+        "parameters": 297013,
+        "peak_allocated_bytes": 92334080,
+        "teacher_preserved": false,
+        "trainable_parameters": 133896,
+        "training_seconds_this_invocation": 74.90133320505265
+      },
+      "seed": 7202,
+      "target_accuracy_min": 1.0,
+      "target_pair_min": 1.0,
+      "target_probes": {
+        "encoder": 1.0,
+        "posterior": 1.0,
+        "working": 1.0
+      }
+    },
+    {
+      "adopted": false,
+      "arm": "retention",
+      "broader_regressed_cases": [
+        "MIX.agreement.text+image",
+        "MIX.agreement.text+image+audio",
+        "MIX.agreement.text+image+video",
+        "MIX.agreement.text+image+audio+video"
+      ],
+      "failures_by_output": {
+        "audio": {
+          "failed_cells": 0,
+          "worst_accuracy_delta": 0,
+          "worst_error_ratio": 1
+        },
+        "image": {
+          "failed_cells": 0,
+          "worst_accuracy_delta": 0,
+          "worst_error_ratio": 1
+        },
+        "text": {
+          "failed_cells": 3,
+          "worst_accuracy_delta": -0.2500000298023224,
+          "worst_error_ratio": 1.1458960261652464
+        },
+        "video": {
+          "failed_cells": 3,
+          "worst_accuracy_delta": -0.1458333134651184,
+          "worst_error_ratio": 0.9993687754875683
+        }
+      },
+      "free_exact": 0.375,
+      "preservation_failed_cells": 6,
+      "quick_coverage": {
+        "executed": 25,
+        "failed": 24,
+        "passed": 1,
+        "unimplemented_domains": 7
+      },
+      "resources": {
+        "frozen_preserved": true,
+        "parameters": 297013,
+        "peak_allocated_bytes": 94145024,
+        "teacher_preserved": true,
+        "trainable_parameters": 133896,
+        "training_seconds_this_invocation": 98.06582094193436
+      },
+      "seed": 7202,
+      "target_accuracy_min": 0.9375,
+      "target_pair_min": 0.875,
+      "target_probes": {
+        "encoder": 1.0,
+        "posterior": 1.0,
+        "working": 0.9375
+      }
+    }
+  ],
+  "source_commit": "34f0727",
+  "timestamp": "2026-09-16T19:03+02:00",
+  "verification": {
+    "artifact_bytes_at_audit": 334131731,
+    "checks": 4951,
+    "cuda_identity": {
+      "cuda_rng_unchanged": true,
+      "identical_weight_discrepancy": -1.2002522586929132e-10,
+      "terms": {
+        "audio": 7.721674319914607e-15,
+        "image": 3.289078062099389e-14,
+        "text_greedy": 6.824396603377636e-10,
+        "text_target": -9.226154285002508e-10,
+        "video": 2.2039321255040538e-14
+      }
+    },
+    "focused_software_tests": 64,
+    "formal_commands": 12,
+    "formal_wall_seconds": 716.8456107248785,
+    "report_count": 15,
+    "reports": "structural/media_verified",
+    "restart": {
+      "all_training_state_identical": true,
+      "exact_tensor_checks": 1180,
+      "steps": 4
+    },
+    "source_weights_preserved": true
+  }
+}

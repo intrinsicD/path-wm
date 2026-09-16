@@ -5357,3 +5357,39 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O307
+  timestamp: 2026-09-16T19:03+02:00
+  provenance: ai-suggested
+  content: 'Fixed source-output regularization partially protects old outputs at unchanged inference size,
+    but reinforces a competing response format in the successful source: content-first-word14/16 remains while
+    complete answers fall to6/16. This does not isolate decoder versus task-conditioned core responsibility,
+    and the weaker core still fails content access.'
+  context: Two-source fixed-coefficient retention study; interpretation of raw answer continuations and scoped
+    diagnostics, no researcher response yet.
+  potential_type: claim
+  bound_to:
+  - N454
+  - N455
+  - N456
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O308
+  timestamp: 2026-09-16T19:03+02:00
+  provenance: ai-suggested
+  content: Next audit the existing TaskInterpreter/request path using same-scene/different-request contrasts,
+    preserving symbolic and broad-suite regressions. The small readout recipe currently sends questions as
+    observations, calls think without a task goal and does not instantiate the optional interpreter/metadata
+    encoder. Wiring/training that path is a candidate, not a proven solution; stable temporal access remains
+    separately open.
+  context: Retained optional anchor helps old outputs but not whole-task adoption. No new encoder expansion,
+    task-ID gate or subsequent fit.
+  potential_type: architecture
+  bound_to:
+  - N455
+  - N456
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
