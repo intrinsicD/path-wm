@@ -210,8 +210,8 @@ sessions:
     failing cells, but7201 still fails and7202 exact text falls14/16→6/16.64 checks,1180 restart,4951 audits;
     no adoption; task/format path next. Request-path comparison: stronger source familiar-format joint0→93.75%,
     novel joint0 in all arms; old-output/broad regressions fail.566 tests,1316 restart,15838 audits; optional
-    connection committed, no default promotion. Dream-RSI review proposes bounded replay scheduling; no neural change or validated saving.'
-  turn_count: 25
-  events_count: 123
+    connection committed, no default promotion. Dream-RSI review proposes bounded replay scheduling; no neural change or validated saving. Bounded Dream-RSI replay now selects8 vs12 blocks with identical selected weights in two fresh worlds;33.3% fewer updates and~21% less search time,0/25 capability passes.571 full tests before guard,33 focused after; optional only, pilot net cost exceeds savings.'
+  turn_count: 26
+  events_count: 128
   claims_touched: []
-  open_threads: 45
+  open_threads: 46

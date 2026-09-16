@@ -7649,3 +7649,69 @@ tree:
   - docs/dream-rsi-review.md
   - ara/evidence/tables/dream_rsi_review_2026-09-16.json
   status: resolved
+- id: N461
+  type: decision
+  title: User clarifies Dream-RSI experimental replay rather than suite screening
+  provenance: user-revised
+  choice: Continue bounded experimental efficiency from the paper proposal. Supersede initial unimplemented
+    fast-rejection draft; preserve its review cost.
+  alternatives:
+  - Faster suite rejection only
+  evidence:
+  - N460
+  - docs/replay-exploration-plan.md
+  timestamp: 2026-09-16T20:45+02:00
+  status: resolved
+- id: N462
+  type: decision
+  title: Fix prefix replay protocol on existing decoder continuations
+  provenance: ai-executed
+  choice: Two complete development histories, five fixed scheduling policies, six fresh executions on
+    two new sampling seeds. Frozen core, four optimizer branches, exact branch-local optimizer/RNG. Actual
+    Claude public-only critique reconciled; two worlds are an engineering demonstration, not reliable
+    transfer.
+  alternatives:
+  - Unrestricted policy rewriting
+  - Unseen architecture outcomes inferred from histories
+  - Replace existing training infrastructure
+  evidence:
+  - N461
+  - docs/replay-exploration-plan.md
+  - b55737d
+  - b0c617b
+  timestamp: 2026-09-16T20:45+02:00
+  status: resolved
+- id: N463
+  type: experiment
+  title: Replay selects eight blocks with identical fresh selected checkpoints
+  provenance: ai-executed
+  result: round_robin8 beats fixed adaptive candidates in development utility. Fresh9611/9612 use512 versus768
+    updates and12.439/12.289 versus15.695/15.646 process seconds; selected weights exactly equal within
+    each seed. 33.3% fewer updates,20.75/21.45% search savings. Both models still pass0/25 quick tasks.
+    History35.368s,all fresh80.697s,final suites137.254s; pilot costs more than savings. 571 full tests
+    before final source guard,33 focused afterward. Exact39414 tensor,80544 primitive,4158 frozen-state
+    checks;52 structural reports. Full suite reused only for identical checkpoint/inference identities.
+  evidence:
+  - N462
+  - ara/evidence/tables/replay_exploration_2026-09-16.json
+  - runs/replay_exploration_v1/comparison.json
+  - 373882a
+  timestamp: 2026-09-16T20:45+02:00
+  status: resolved
+- id: N464
+  type: decision
+  title: Keep simple shorter scheduler optional without model promotion
+  provenance: ai-executed
+  choice: Apply preregistered gates; retain simple eight-block schedule as scoped opt-in demonstration.
+    No adaptive-policy advantage, broad understanding repair, runtime planner change or green promotion.
+    Preserve incompatible-source rejection and strict source-hash contracts; larger independent task/seed
+    validation remains open.
+  alternatives:
+  - Promote adaptive scheduler without advantage
+  - Claim21% end-to-end savings including full evaluation
+  - Declare pilot net compute saving
+  evidence:
+  - N463
+  - ara/evidence/tables/replay_exploration_2026-09-16.json
+  timestamp: 2026-09-16T20:45+02:00
+  status: resolved

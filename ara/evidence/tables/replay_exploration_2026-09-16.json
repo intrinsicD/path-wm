@@ -1,0 +1,469 @@
+{
+  "kind": "bounded_replay_search_engineering_demonstration",
+  "timestamp": "2026-09-16T20:45+02:00",
+  "source_commit": "373882a727daa0230ceae98adac2016816993283",
+  "measured_source_commit": "79086d2",
+  "claude_public_only": true,
+  "core_source_unchanged": true,
+  "neural_default_changed": false,
+  "validation_promoted": false,
+  "result": {
+    "core_source_unchanged": true,
+    "costs": {
+      "claude_process_seconds": 31.42192227789201,
+      "claude_reviews": [
+        {
+          "receipt": "runs/reviews/efficiency_screen_v1/public-receipt.json",
+          "scope": "superseded method",
+          "seconds": 12.075693082995713,
+          "usage": {
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 1258,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "cache_creation_input_tokens": 1258,
+            "cache_read_input_tokens": 0,
+            "inference_geo": "not_available",
+            "input_tokens": 2,
+            "iterations": [
+              {
+                "cache_creation": {
+                  "ephemeral_1h_input_tokens": 1258,
+                  "ephemeral_5m_input_tokens": 0
+                },
+                "cache_creation_input_tokens": 1258,
+                "cache_read_input_tokens": 0,
+                "input_tokens": 2,
+                "output_tokens": 669,
+                "type": "message"
+              }
+            ],
+            "output_tokens": 669,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_fetch_requests": 0,
+              "web_search_requests": 0
+            },
+            "service_tier": "standard",
+            "speed": "standard"
+          }
+        },
+        {
+          "receipt": "runs/reviews/efficiency_screen_v1/reconcile-receipt.json",
+          "scope": "superseded method",
+          "seconds": 6.4142797199310735,
+          "usage": {
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "inference_geo": "not_available",
+            "input_tokens": 912,
+            "iterations": [
+              {
+                "cache_creation": {
+                  "ephemeral_1h_input_tokens": 0,
+                  "ephemeral_5m_input_tokens": 0
+                },
+                "cache_creation_input_tokens": 0,
+                "cache_read_input_tokens": 0,
+                "input_tokens": 912,
+                "output_tokens": 315,
+                "type": "message"
+              }
+            ],
+            "output_tokens": 315,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_fetch_requests": 0,
+              "web_search_requests": 0
+            },
+            "service_tier": "standard",
+            "speed": "standard"
+          }
+        },
+        {
+          "receipt": "runs/reviews/replay_exploration_v1/public-receipt.json",
+          "scope": "adopted method",
+          "seconds": 8.892283644992858,
+          "usage": {
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 1356,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "cache_creation_input_tokens": 1356,
+            "cache_read_input_tokens": 0,
+            "inference_geo": "not_available",
+            "input_tokens": 2,
+            "iterations": [
+              {
+                "cache_creation": {
+                  "ephemeral_1h_input_tokens": 1356,
+                  "ephemeral_5m_input_tokens": 0
+                },
+                "cache_creation_input_tokens": 1356,
+                "cache_read_input_tokens": 0,
+                "input_tokens": 2,
+                "output_tokens": 605,
+                "type": "message"
+              }
+            ],
+            "output_tokens": 605,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_fetch_requests": 0,
+              "web_search_requests": 0
+            },
+            "service_tier": "standard",
+            "speed": "standard"
+          }
+        },
+        {
+          "receipt": "runs/reviews/replay_exploration_v1/reconcile-receipt.json",
+          "scope": "adopted method",
+          "seconds": 4.039665829972364,
+          "usage": {
+            "cache_creation": {
+              "ephemeral_1h_input_tokens": 0,
+              "ephemeral_5m_input_tokens": 0
+            },
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "inference_geo": "not_available",
+            "input_tokens": 682,
+            "iterations": [
+              {
+                "cache_creation": {
+                  "ephemeral_1h_input_tokens": 0,
+                  "ephemeral_5m_input_tokens": 0
+                },
+                "cache_creation_input_tokens": 0,
+                "cache_read_input_tokens": 0,
+                "input_tokens": 682,
+                "output_tokens": 180,
+                "type": "message"
+              }
+            ],
+            "output_tokens": 180,
+            "output_tokens_details": {
+              "thinking_tokens": 0
+            },
+            "server_tool_use": {
+              "web_fetch_requests": 0,
+              "web_search_requests": 0
+            },
+            "service_tier": "standard",
+            "speed": "standard"
+          }
+        }
+      ],
+      "duplicate_suite_runs_avoided": 4,
+      "final_unique_suite_seconds": 137.2541134681087,
+      "fresh_execution_seconds": 80.69673367612995,
+      "fresh_execution_updates": 3584,
+      "history_collection_seconds": 35.36797700601164,
+      "history_collection_updates": 2048,
+      "history_only_break_even_scope": "Illustrative same-task recurring saving; excludes review, implementation, verification and drift. Pilot costs more overall.",
+      "history_only_break_even_searches": 11,
+      "limits": [
+        "Component durations may overlap; their sum is not elapsed wall time or GPU utilization.",
+        "Collection timing excludes interpreter startup; Codex/implementation cost is not instrumented.",
+        "All fresh runs include CLI startup, caching, training, snapshotting and reports. Final suite timing is separate."
+      ],
+      "offline_selection_seconds": 0.0008938879473134875,
+      "software_verification": {
+        "timing_method": "process start ticks to disappearance, <=0.5 s polling uncertainty; concurrent final suites",
+        "wall_seconds_approx": 482.65684048691764
+      },
+      "unique_suite_runs": 2
+    },
+    "efficiency_screen_passed": true,
+    "neural_model_adopted": false,
+    "rows": [
+      {
+        "blocks": 12,
+        "cached_omission_accuracy": 0.5,
+        "cached_test_accuracy": 0.875,
+        "efficiency_pass": false,
+        "gates": {
+          "quick_preservation_by_exact_identity": true,
+          "test": true,
+          "update_saving": false,
+          "validation": true,
+          "wall_saving": false
+        },
+        "policy": "incumbent",
+        "quick_passes": 0,
+        "quick_target_accuracy_min": 0.75,
+        "quick_total": 25,
+        "same_selected_weights": true,
+        "seconds": 15.694658056017943,
+        "seed": 9611,
+        "selected_model_sha256": "f4f617f90872c7fe7ada2fa4c6834f51aa02ee70c6adfd535af50a9bff4fd625",
+        "updates": 768,
+        "validation_ce": 0.012500506825745106,
+        "wall_saving_fraction": 0.0
+      },
+      {
+        "blocks": 8,
+        "cached_omission_accuracy": 0.5,
+        "cached_test_accuracy": 0.875,
+        "efficiency_pass": true,
+        "gates": {
+          "quick_preservation_by_exact_identity": true,
+          "test": true,
+          "update_saving": true,
+          "validation": true,
+          "wall_saving": true
+        },
+        "policy": "short",
+        "quick_passes": 0,
+        "quick_target_accuracy_min": 0.75,
+        "quick_total": 25,
+        "same_selected_weights": true,
+        "seconds": 12.28840110800229,
+        "seed": 9611,
+        "selected_model_sha256": "f4f617f90872c7fe7ada2fa4c6834f51aa02ee70c6adfd535af50a9bff4fd625",
+        "updates": 512,
+        "validation_ce": 0.012500506825745106,
+        "wall_saving_fraction": 0.21703288697707956
+      },
+      {
+        "blocks": 8,
+        "cached_omission_accuracy": 0.5,
+        "cached_test_accuracy": 0.875,
+        "efficiency_pass": true,
+        "gates": {
+          "quick_preservation_by_exact_identity": true,
+          "test": true,
+          "update_saving": true,
+          "validation": true,
+          "wall_saving": true
+        },
+        "policy": "selected",
+        "quick_passes": 0,
+        "quick_target_accuracy_min": 0.75,
+        "quick_total": 25,
+        "same_selected_weights": true,
+        "seconds": 12.438756774994545,
+        "seed": 9611,
+        "selected_model_sha256": "f4f617f90872c7fe7ada2fa4c6834f51aa02ee70c6adfd535af50a9bff4fd625",
+        "updates": 512,
+        "validation_ce": 0.012500506825745106,
+        "wall_saving_fraction": 0.20745283327628528
+      },
+      {
+        "blocks": 12,
+        "cached_omission_accuracy": 0.5,
+        "cached_test_accuracy": 0.875,
+        "efficiency_pass": false,
+        "gates": {
+          "quick_preservation_by_exact_identity": true,
+          "test": true,
+          "update_saving": false,
+          "validation": true,
+          "wall_saving": false
+        },
+        "policy": "incumbent",
+        "quick_passes": 0,
+        "quick_target_accuracy_min": 0.75,
+        "quick_total": 25,
+        "same_selected_weights": true,
+        "seconds": 15.645972228026949,
+        "seed": 9612,
+        "selected_model_sha256": "d09a38b5f0c81e3d8e3598348de16f7fb2367ea3f2f8c50a4a10c623750b25cb",
+        "updates": 768,
+        "validation_ce": 0.0014108968898653984,
+        "wall_saving_fraction": 0.0
+      },
+      {
+        "blocks": 8,
+        "cached_omission_accuracy": 0.5,
+        "cached_test_accuracy": 0.875,
+        "efficiency_pass": true,
+        "gates": {
+          "quick_preservation_by_exact_identity": true,
+          "test": true,
+          "update_saving": true,
+          "validation": true,
+          "wall_saving": true
+        },
+        "policy": "short",
+        "quick_passes": 0,
+        "quick_target_accuracy_min": 0.75,
+        "quick_total": 25,
+        "same_selected_weights": true,
+        "seconds": 12.339556343038566,
+        "seed": 9612,
+        "selected_model_sha256": "d09a38b5f0c81e3d8e3598348de16f7fb2367ea3f2f8c50a4a10c623750b25cb",
+        "updates": 512,
+        "validation_ce": 0.0014108968898653984,
+        "wall_saving_fraction": 0.21132696880706026
+      },
+      {
+        "blocks": 8,
+        "cached_omission_accuracy": 0.5,
+        "cached_test_accuracy": 0.875,
+        "efficiency_pass": true,
+        "gates": {
+          "quick_preservation_by_exact_identity": true,
+          "test": true,
+          "update_saving": true,
+          "validation": true,
+          "wall_saving": true
+        },
+        "policy": "selected",
+        "quick_passes": 0,
+        "quick_target_accuracy_min": 0.75,
+        "quick_total": 25,
+        "same_selected_weights": true,
+        "seconds": 12.28938916604966,
+        "seed": 9612,
+        "selected_model_sha256": "d09a38b5f0c81e3d8e3598348de16f7fb2367ea3f2f8c50a4a10c623750b25cb",
+        "updates": 512,
+        "validation_ce": 0.0014108968898653984,
+        "wall_saving_fraction": 0.21453336443769044
+      }
+    ],
+    "scope": "Two fresh sampling-seed worlds on one cached-state decoder task; optional engineering demonstration, no general model improvement.",
+    "selected": "round_robin8"
+  },
+  "verification": {
+    "software_tests": 571,
+    "software_exit_code": 0,
+    "software_source_commit": "79086d2",
+    "software_scope": "Before final unsupported-source guard",
+    "focused_checks": 33,
+    "focused_scope": "After final guard, includes four unsupported-source configurations",
+    "structural_reports": 52,
+    "artifact_checks": 201,
+    "media_checks": 221,
+    "artifact_bytes": 290774407,
+    "state_audit": {
+      "tensor_equal": 39414,
+      "value_equal": 80544,
+      "frozen_tensors": 4158,
+      "nodes": 56
+    },
+    "browser_qa": false,
+    "plot_visually_inspected": true,
+    "limits": [
+      "Two fresh seeds, one task; no reliability or capability promotion.",
+      "Full-suite reuse only for exactly identical checkpoints and inference contracts."
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "docs/replay-exploration-plan.md",
+      "sha256": "9bb0c750481de1a79b6ff1951c71700d9a10168d56bd4416e31cec721e7209bb"
+    },
+    {
+      "path": "pathwm/evaluation/search.py",
+      "sha256": "0edddf2896f8fd734f6ad233ed03be20a5312a115b2c47bf5a7841c2f0433225"
+    },
+    {
+      "path": "experiments/modality_readout.py",
+      "sha256": "8aad73842b4da9e12fa85567d2afb96e4e3636723ec787b06e8f17fe021fae77"
+    },
+    {
+      "path": "tests/test_replay_search.py",
+      "sha256": "05c39a19f208bb1b373125ed6cd11f8b95346dd0a39421c742cb03d49a64868d"
+    },
+    {
+      "path": "runs/replay_exploration_v1/comparison.json",
+      "sha256": "51609459d94d2a410e45755925e3819d4371ec10de91c3eb6f66e6daaab23b47"
+    },
+    {
+      "path": "runs/replay_exploration_v1/verification.json",
+      "sha256": "b237be1584e040798624ed223814440348149354a8c9452bab888c983c848cb4"
+    },
+    {
+      "path": "runs/replay_exploration_v1/state-verification.json",
+      "sha256": "c3316a6ef9e0692a862731856de257b79ff7f381151c8f4913fd3ad752753542"
+    },
+    {
+      "path": "runs/replay_exploration_v1/fresh-execution.json",
+      "sha256": "0f3a5538f7cc279cd305f48515411c8c040e8a2ffce2bb051caf167a14f825f5"
+    },
+    {
+      "path": "runs/replay_exploration_v1/suite-execution.json",
+      "sha256": "fa7a1047170f8a33de64aabcbfd6b1d1824a206b019395f96359865f23bd72a8"
+    },
+    {
+      "path": "runs/replay_exploration_v1/software-tests.txt",
+      "sha256": "a7669fc1dd2b80f12e9bf7877a24ef460f48dcd0734cc39b4e6b3425a562f6ca"
+    },
+    {
+      "path": "runs/replay_exploration_v1/test-collection.txt",
+      "sha256": "3400a3ee06719344889e1ec3cbbcf949344ecd84f535995cd2028350c07ce728"
+    },
+    {
+      "path": "runs/replay_exploration_v1/final-focused-tests.txt",
+      "sha256": "cb27fd7f42b6d224dfa05db3fc71777af0a383bcb32d6cfe1be44ebfcab22739"
+    },
+    {
+      "path": "runs/replay_exploration_v1/selection/selection.json",
+      "sha256": "b427e1fe07a71caf4578cd8062c7b200b20179eaae549dc9b93eea9a178ae3d8"
+    },
+    {
+      "path": "runs/replay_exploration_v1/report.html",
+      "sha256": "2ba87d09513e4ffec61f0f2c899b9704c2ac85a9e97b5e3f9febb162c6688f35"
+    },
+    {
+      "path": "runs/reviews/replay_exploration_v1/public-receipt.json",
+      "sha256": "4c2c986f655ad3e0ff53135cd499417869338702132db8725a318a3c1271d088"
+    },
+    {
+      "path": "runs/reviews/replay_exploration_v1/reconcile-receipt.json",
+      "sha256": "9d609dc2a16531b108a43c3cb6bb06ed3300440d7d2d90b2db92a2dbd43c9bae"
+    },
+    {
+      "path": "runs/reviews/replay_exploration_v1/public-brief.txt",
+      "sha256": "a6dde3a2e851f91414f1afccf5f6a028fe7e1a051697636d101f4fc1f0c4b130"
+    },
+    {
+      "path": "runs/reviews/replay_exploration_v1/reconcile-brief.txt",
+      "sha256": "b26b8f55f5fae3d409c2d7f91e7d455477a421497d13d5cc9c2ea1e9136ca8ce"
+    },
+    {
+      "path": "runs/reviews/replay_exploration_v1/public-response.json",
+      "sha256": "71f2d7542a51f988ee2ad1f5a6614702203f11a1eeef5fd182b9166f7f77e82f"
+    },
+    {
+      "path": "runs/reviews/replay_exploration_v1/reconcile-response.json",
+      "sha256": "358c335d87c35955afb87be40930a3a83b324b2a65c1570005956eed0cae7777"
+    },
+    {
+      "path": "runs/reviews/efficiency_screen_v1/public-receipt.json",
+      "sha256": "b9c5aa14839def57cdf590a73acb595bde59f97349f09c8b71037a064f486a23"
+    },
+    {
+      "path": "runs/reviews/efficiency_screen_v1/reconcile-receipt.json",
+      "sha256": "0d213704fae641446082b2e06a4c6fdb61c984191d7adef8bb37f02e8f0aabea"
+    },
+    {
+      "path": "runs/reviews/efficiency_screen_v1/public-brief.txt",
+      "sha256": "517781f24e39c8bfa787145b24b3f1f6a08f05eeda0f0fb473d54bc144725179"
+    },
+    {
+      "path": "runs/reviews/efficiency_screen_v1/reconcile-brief.txt",
+      "sha256": "5af31391d463ba1cb80ae5938a8231cd60b423cb95f8a1d967d227026c420cf2"
+    },
+    {
+      "path": "runs/reviews/efficiency_screen_v1/public-response.json",
+      "sha256": "a8b32e3e763c5ed52d64be1593c27d5b104779e8d89d496ce93e80432d993396"
+    },
+    {
+      "path": "runs/reviews/efficiency_screen_v1/reconcile-response.json",
+      "sha256": "f6a14c31e2145d595bd5b068c54d6caea0bb58222ea3d5a3481d07d2ea99c92f"
+    }
+  ]
+}

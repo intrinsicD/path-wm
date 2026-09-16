@@ -2,8 +2,8 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T20:04+02:00
-  turn_count: 25
+  last_turn: 2026-09-16T20:45+02:00
+  turn_count: 26
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not adopted.
     Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped
     tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in
@@ -47,7 +47,7 @@ session:
     failing cells, but7201 still fails and7202 exact text falls14/16→6/16.64 checks,1180 restart,4951 audits;
     no adoption; task/format path next. Request-path comparison: stronger source familiar-format joint0→93.75%,
     novel joint0 in all arms; old-output/broad regressions fail.566 tests,1316 restart,15838 audits; optional
-    connection committed, no default promotion. Dream-RSI review proposes bounded replay scheduling; no neural change or validated saving.'
+    connection committed, no default promotion. Dream-RSI review proposes bounded replay scheduling; no neural change or validated saving. Bounded Dream-RSI replay now selects8 vs12 blocks with identical selected weights in two fresh worlds;33.3% fewer updates and~21% less search time,0/25 capability passes.571 full tests before guard,33 focused after; optional only, pilot net cost exceeds savings.'
 
 events_logged:
 - turn: 1
@@ -913,6 +913,38 @@ events_logged:
   provenance: ai-suggested
   summary: Fixed-interface replay scheduling proposed; general action transfer and local savings unvalidated,
     no neural/default changes.
+- turn: 26
+  type: decision
+  id: N461
+  routing: direct
+  provenance: user-revised
+  summary: User clarifies Dream-RSI experimental replay rather than suite screening
+- turn: 26
+  type: decision
+  id: N462
+  routing: direct
+  provenance: ai-executed
+  summary: Fix prefix replay protocol on existing decoder continuations
+- turn: 26
+  type: experiment
+  id: N463
+  routing: direct
+  provenance: ai-executed
+  summary: Replay selects eight blocks with identical fresh selected checkpoints
+- turn: 26
+  type: decision
+  id: N464
+  routing: direct
+  provenance: ai-executed
+  summary: Keep simple shorter scheduler optional without model promotion
+- turn: 26
+  type: observation
+  id: O312
+  routing: staged
+  provenance: ai-suggested
+  summary: Scoped simpler-budget saving does not establish adaptive or general transfer; costs and capability
+    failures retained.
+
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -1224,6 +1256,18 @@ ai_actions:
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
   - docs/architecture-discussion.md
+- turn: 26
+  action: Implemented prefix-only scheduler and existing-recipe branch fitting, reviewed with actual Claude,
+    ran fixed histories/fresh comparisons/full suite, audited exact state and reports, repaired unsupported-source
+    guard, committed scope/results.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/evaluation/search.py
+  - experiments/modality_readout.py
+  - tests/test_replay_search.py
+  - docs/replay-exploration-plan.md
+  - docs/project-state.md
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -1319,6 +1363,9 @@ key_context:
 
 - turn: 25
   excerpt: Does this contain helpful ideas for any part of our system or as a whole? https://arxiv.org/pdf/2609.14858
+- turn: 26
+  excerpt: I meant what you proposed from reading the dream-rsi paper
+
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -1434,6 +1481,10 @@ open_threads:
 - 'N460/O311: replay scheduling proposal needs compatible prefix-visible histories, fixed protocols/simple
   baselines and fresh-execution validation; no controller implementation or new fit authorized by this
   assessment.'
+- 'N463/O312: verify replay-selected policies on independent tasks/seeds and net recurring cost before
+  broad adoption. Optional experiment ledger is not WorldStore/runtime planning. Continue O310 balanced
+  request diagnosis.'
+
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
@@ -1608,3 +1659,5 @@ ai_suggestions_pending:
   staged. O306 paired semantic supervision remains unimplemented and is not abandoned.
 - O311 remains a hypothetical scheduling/memory extension; retain O310 balanced request interpretation
   as current neural diagnosis.
+- O311 scheduling subset now implemented; broader episodic/runtime integration remains proposed. O312
+  scoped efficiency interpretation awaits response; no efficacy claim crystallized.

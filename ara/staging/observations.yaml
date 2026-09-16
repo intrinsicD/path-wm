@@ -5446,3 +5446,23 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O312
+  timestamp: 2026-09-16T20:45+02:00
+  provenance: ai-suggested
+  content: Prefix replay can select a cheaper fixed budget for this cached decoder fit, but the observed
+    win is reproduced by a simple eight-block schedule; adaptive policies add no observed advantage. Two
+    sampling seeds do not establish reliable task transfer. History collection makes this pilot net more
+    costly; full evaluation reduces recurring end-to-end benefit to roughly4%. Runtime memory/reasoning
+    integration remains unimplemented.
+  context: Completed bounded transfer experiment under user clarification. No researcher response to new
+    findings; broader O311 proposal only partially implemented.
+  potential_type: claim
+  bound_to:
+  - N461
+  - N462
+  - N463
+  - N464
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
