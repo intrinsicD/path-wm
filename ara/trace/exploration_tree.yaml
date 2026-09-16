@@ -7584,3 +7584,56 @@ tree:
   - N455
   - ara/evidence/tables/grounded_retention_2026-09-16.json
   status: resolved
+- id: N457
+  type: decision
+  title: Test existing task conditioning with matched constant and real-request routes
+  provenance: ai-executed
+  timestamp: 2026-09-16T19:55+02:00
+  choice: Under continued suite-directed work, reuse TaskInterpreter/MetadataEncoder in shared thinking, retaining
+    question observations. Same added modules, initial weights, replay/anchor10; paired answer formats and
+    novel/equal-length phrasing. Actual Claude public-only critique/reconciliation; four fits fixed before
+    execution.
+  alternatives:
+  - Enlarge text or video encoders immediately
+  - Treat first-word success as complete answer
+  - Add new trainer or inference task-ID routing
+  evidence:
+  - N455
+  - N456
+  - docs/request-readout-plan.md
+  - 37f9614
+  status: resolved
+- id: N458
+  type: experiment
+  title: Request conditioning learns familiar formats but fails novel paired instructions
+  provenance: ai-executed
+  timestamp: 2026-09-16T19:55+02:00
+  result: Four768-update fits plus12 reference/evaluation runs. Source7202 known-format joint exact0→93.75%,
+    new-format joint0 in every arm;7201 known0→50% but video choice remains50%. Source7202 video choices93.75%/pairs87.5%
+    in both arms (1/25 quick tasks);7201 passes0/25. Old-output failed cells16/22 and7/5; actual-request7202
+    regresses five other quick cases. All recorded novel outputs end with EOS. Reversed-string request-only
+    control beats intact0% with93.75% joint on the two-question subset.566 full/76 focused tests,1316 exact
+    restart,624 old-reference arrays exact,15838 raw/media checks,19 structural reports.433.02s training,90.71MiB
+    peak training allocation,1244.66s formal execution.
+  evidence:
+  - ara/evidence/tables/request_readout_2026-09-16.json
+  - runs/request_readout_v1/comparison.json
+  - runs/request_readout_v1/verification.json
+  - 6ec41a8
+  status: resolved
+- id: N459
+  type: decision
+  title: Keep request connection experimental; preserve failures and original defaults
+  provenance: ai-executed
+  timestamp: 2026-09-16T19:55+02:00
+  choice: Apply predeclared novel joint, benefit, content and preservation gates. No adoption or broad green
+    promotion. Preserve usable optional route and known-wording gain, but do not select reversed-string control
+    or first-word scores as substitute success.
+  alternatives:
+  - Promote stronger-source familiar score
+  - Declare general instruction semantics from changed outputs
+  - Choose the corrupted request control after seeing results
+  evidence:
+  - N458
+  - ara/evidence/tables/request_readout_2026-09-16.json
+  status: resolved

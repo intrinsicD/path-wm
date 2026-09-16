@@ -2,8 +2,8 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T19:03+02:00
-  turn_count: 23
+  last_turn: 2026-09-16T19:55+02:00
+  turn_count: 24
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not adopted.
     Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped
     tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in
@@ -45,7 +45,9 @@ session:
     passes video order100%/1 of25 tasks,7201 stays50%; all forget prior outputs.561 tests,1180 restart,4097
     audits,17 reports; retain variants, no default change. Source-output anchoring partially reduces forgetting32→20/23→6
     failing cells, but7201 still fails and7202 exact text falls14/16→6/16.64 checks,1180 restart,4951 audits;
-    no adoption; task/format path next.'
+    no adoption; task/format path next. Request-path comparison: stronger source familiar-format joint0→93.75%,
+    novel joint0 in all arms; old-output/broad regressions fail.566 tests,1316 restart,15838 audits; optional
+    connection committed, no default promotion.'
 
 events_logged:
 - turn: 1
@@ -853,6 +855,49 @@ events_logged:
     observations, calls think without a task goal and does not instantiate the optional interpreter/metadata
     encoder. Wiring/training that path is a candidate, not a proven solution; stable temporal access remains
     separately open.
+- turn: 24
+  type: decision
+  id: N457
+  routing: direct
+  provenance: ai-executed
+  summary: Test existing task conditioning with matched constant and real-request routes
+- turn: 24
+  type: experiment
+  id: N458
+  routing: direct
+  provenance: ai-executed
+  summary: Request conditioning learns familiar formats but fails novel paired instructions
+- turn: 24
+  type: decision
+  id: N459
+  routing: direct
+  provenance: ai-executed
+  summary: Keep request connection experimental; preserve failures and original defaults
+- turn: 24
+  type: observation
+  id: O309
+  routing: staged
+  provenance: ai-suggested
+  summary: Additional task conditioning permits familiar output-format control in the stronger source but not
+    reliable transfer of request meaning. Both equal-length Welche questions yield one color and both Gib questions
+    yield two despite opposite requested formats; first-word correctness stays high. Better corrupted-string
+    control suggests fragile input-pattern dependence, not uniquely a length or lexical mechanism. Weaker-source
+    temporal content and old-output preservation remain distinct failures.
+- turn: 24
+  type: observation
+  id: O310
+  routing: staged
+  provenance: ai-suggested
+  summary: Next isolate request interpretation with first-color/ordered-pair meaning crossed against prefix
+    and byte length, hold out wording families, and inspect frozen text features versus TaskInterpreter before
+    more whole-core fitting. Keep same-evidence/opposite-request tests, original-output preservation and the
+    weaker-source content problem separate. No new fit protocol or efficacy result yet.
+- turn: 24
+  type: architecture
+  id: A17
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O308 committed optional task/request integration; implementation only, failed efficacy gates retained.
 
 ai_actions:
 - turn: 1
@@ -1143,6 +1188,17 @@ ai_actions:
   - tests/test_retention_readout.py
   - docs/grounded-retention-plan.md
   - docs/diagrams/architecture-atlas.json
+- turn: 24
+  action: Reused existing task modules, added matched request contrasts and raw generated/routing diagnostics,
+    repaired observation probe capture; actual Claude method review reconciled. Four fits, full quick/selected
+    suites, complete software/restart/raw/media verification; scope docs/atlas updated, source defaults preserved.
+  provenance: ai-executed
+  files_changed:
+  - experiments/modality_readout.py
+  - pathwm/evaluation/understanding.py
+  - tests/test_request_readout.py
+  - docs/request-readout-plan.md
+  - docs/diagrams/architecture-atlas.json
 
 claims_touched: []
 key_context:
@@ -1231,6 +1287,9 @@ key_context:
   excerpt: Continue together with Claude. Use the testsuite to pick what to work on/improve. Plan, implement,
     review, test and fix. Iterate
 - turn: 23
+  excerpt: Continue together with Claude. Use the testsuite to pick what to work on/improve. Plan, implement,
+    review, test and fix. Iterate
+- turn: 24
   excerpt: Continue together with Claude. Use the testsuite to pick what to work on/improve. Plan, implement,
     review, test and fix. Iterate
 
@@ -1342,6 +1401,9 @@ open_threads:
 - 'N455/O307/O308: task-dependent answer content/format and stable temporal access; partial retention is not
   adoption. Existing recipe omits optional task interpreter; evaluate explicit request contrasts next. Broad
   natural-modal/memory/tool milestones remain open.'
+- 'N458/O309/O310: novel request interpretation versus content access; familiar response-form gain is not semantic
+  transfer. Balance wording/length contrasts before more whole-core fitting. Weak-source temporal access, original
+  outputs and broader real-modal/memory/tool tasks remain open.'
 
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
@@ -1513,3 +1575,5 @@ ai_suggestions_pending:
 - 'O306: paired semantic working-state supervision proposed; no neural fit or adoption yet.'
 - 'O308: audit/train existing task/request integration before a new encoder change; proposed only. O306 paired
   semantic supervision remains unimplemented; retention-first sequencing does not abandon it.'
+- O308→A17 captures implemented optional route only; O309 mechanism and O310 balanced request diagnostic remain
+  staged. O306 paired semantic supervision remains unimplemented and is not abandoned.

@@ -5389,6 +5389,42 @@ observations:
   bound_to:
   - N455
   - N456
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A17
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O309
+  timestamp: 2026-09-16T19:55+02:00
+  provenance: ai-suggested
+  content: Additional task conditioning permits familiar output-format control in the stronger source but not
+    reliable transfer of request meaning. Both equal-length Welche questions yield one color and both Gib questions
+    yield two despite opposite requested formats; first-word correctness stays high. Better corrupted-string
+    control suggests fragile input-pattern dependence, not uniquely a length or lexical mechanism. Weaker-source
+    temporal content and old-output preservation remain distinct failures.
+  context: Four fixed two-source fits, novel/routing controls, unchanged defaults; researcher has not responded
+    to the new findings.
+  potential_type: claim
+  bound_to:
+  - N457
+  - N458
+  - N459
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O310
+  timestamp: 2026-09-16T19:55+02:00
+  provenance: ai-suggested
+  content: Next isolate request interpretation with first-color/ordered-pair meaning crossed against prefix
+    and byte length, hold out wording families, and inspect frozen text features versus TaskInterpreter before
+    more whole-core fitting. Keep same-evidence/opposite-request tests, original-output preservation and the
+    weaker-source content problem separate. No new fit protocol or efficacy result yet.
+  context: Novel answer-form failure despite mostly correct content in7202; proposed suite-directed next diagnostic,
+    not a larger-encoder or text-only thinking decision.
+  potential_type: architecture
+  bound_to:
+  - N458
+  - N459
   promoted: false
   promoted_to: null
   crystallized_via: null

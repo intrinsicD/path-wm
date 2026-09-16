@@ -162,3 +162,13 @@
 - **Implementation**:65a354f; [module](../../../pathwm/models/video_vae.py), [recipe](../../../experiments/video_vae.py), [tests](../../../tests/test_video_vae.py).
 - **Verification**: [Evidence](../../evidence/tables/shared_video_vae_2026-09-16.json);61 tests, exact8 versus4+4 resume, four measured128-update development fits.
 - **Limits**: Optional codec path, not a replacement of the categorical agent encoder. Paired temporal benefit fails; no default adoption, learned temporal prior, persistent streaming cache, forecast or general video-quality validation. Existing pretrained source weights preserved.
+
+## A17: Optional explicit request conditioning in the shared latent readout recipe
+
+- **Design**: Reuse TaskInterpreter and MetadataEncoder to encode a request through the existing text encoder, combine it with current workspace context and supply goal tokens to the shared Thinker. Questions remain in observation inputs for this matched comparison. Constant-request and actual-request arms have identical added modules; no-request/default-none inference retains the previous route. Direct request changes do not mutate the returned physical posterior/tokens. Observation probes retain their first encoding pass.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O308
+- **Implementation**: 6ec41a8 after plan/red checks37f9614; results9bd8a7a. [Recipe](../../../experiments/modality_readout.py), [existing task modules](../../../pathwm/models/tasks.py), [checks](../../../tests/test_request_readout.py), [protocol/results](../../../docs/request-readout-plan.md).
+- **Verification**: [Bound evidence](../../evidence/tables/request_readout_2026-09-16.json);566 software tests, exact1316-tensor restart, unchanged frozen sources and matched initializations.
+- **Limits**: Implemented experimental connection only, not a default repair, semantic instruction validation or new text-shaped thinking core. All novel joint/adoption gates fail; stronger-source familiar-wording gain does not transfer. Stable weaker-source temporal access, general language and old-output preservation remain open. O308's efficacy is not promoted as a claim.

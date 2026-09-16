@@ -1,0 +1,1710 @@
+{
+  "artifacts": {
+    "runs/request_readout_v1/comparison.json": "5d847bc422b264b392c5a797ae581b75b74bc0763cecf3165abc26a5b6af1a73",
+    "runs/request_readout_v1/execution.json": "df2a102c382c0999e7aaa6f2e56ee24bbfcdc9d2795ba9987f505d9bc08e1dfb",
+    "runs/request_readout_v1/full-software-tests.txt": "6bdf5ac15b70e03979affeb28a1b768531bbaccc0f2d8ce48008caa9c30de9ed",
+    "runs/request_readout_v1/per_example_changes.json": "abfa17d46eae8068e660f88413614aafa99b2012d737965914e269a64e3737b9",
+    "runs/request_readout_v1/report.html": "58f4e6a30f693f56dea7cfa8909581bccf6ed4d4bd3fafafefd0dd03d13c2a23",
+    "runs/request_readout_v1/verification.json": "3e5ceaf35c8fea8939216c09cbc8aa0dc0a2396d0e925c6e559385cfc0c1f79d"
+  },
+  "limits": [
+    "The actual question remains in observations in both arms; no unique semantic mechanism can be inferred.",
+    "Novel wordings are a small fixed language set, not dialogue or general understanding.",
+    "Choice and first-word scores cannot substitute for exact generated answers including EOS.",
+    "Calibration labels train both the QA task and diagnostic probes.",
+    "Browser navigation previously denied; structural/media QA only.",
+    "Known-wording gain does not transfer to novel task meaning; corrupted-string control can perform better on the two-question subset.",
+    "No default replacement, broad validation color change or further fit."
+  ],
+  "plan_commit": "37f9614",
+  "protocol": "docs/request-readout-plan.md",
+  "provenance": "ai-executed",
+  "result_commit": "9bd8a7a",
+  "reviews": {
+    "runs/reviews/request_readout_v1/public-receipt.json": "18ff62ae52ef8af2e054051cb2dff4e10739d2a2187af2cb54a23ba7c0358249",
+    "runs/reviews/request_readout_v1/reconcile-receipt.json": "6e9b404e91eebedf8266c7d60d9f599f99dc878857ba861bc3ff1dd894b240f1"
+  },
+  "rows": [
+    {
+      "adopted": false,
+      "arm": "constant",
+      "broader_regressed_cases": [
+        "REAL.scene.image",
+        "MIX.agreement.text+image+audio",
+        "MIX.agreement.text+image+audio+video"
+      ],
+      "failures_by_output": {
+        "audio": {
+          "failed_cells": 1,
+          "worst_accuracy_delta": -0.1458333134651184,
+          "worst_error_ratio": 1.0257879799690819
+        },
+        "image": {
+          "failed_cells": 6,
+          "worst_accuracy_delta": -0.125,
+          "worst_error_ratio": 1.0158860597785975
+        },
+        "text": {
+          "failed_cells": 7,
+          "worst_accuracy_delta": -0.1666666567325592,
+          "worst_error_ratio": 1.221762264205422
+        },
+        "video": {
+          "failed_cells": 2,
+          "worst_accuracy_delta": -0.125,
+          "worst_error_ratio": 0.9930823155007157
+        }
+      },
+      "format_diagnostics": [
+        {
+          "correct_word_count": 0.0,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.0,
+          "first_word": 0.5625,
+          "format": "first",
+          "novel": false
+        },
+        {
+          "correct_word_count": 0.9375,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.5,
+          "first_word": 0.5625,
+          "format": "sequence",
+          "novel": false
+        },
+        {
+          "correct_word_count": 0.0,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.0,
+          "first_word": 0.5625,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "correct_word_count": 0.9375,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.5,
+          "first_word": 0.5625,
+          "format": "sequence",
+          "novel": true
+        }
+      ],
+      "preservation_failed_cells": 16,
+      "quick_coverage": {
+        "executed": 25,
+        "failed": 25,
+        "passed": 0,
+        "unimplemented_domains": 7
+      },
+      "requests": [
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "first",
+          "novel": false
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "sequence",
+          "novel": false
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": false
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "omitted",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "omitted",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "omitted",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "last_frame",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "last_frame",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "last_frame",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "observation_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "observation_only",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "observation_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "request_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "request_only",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "request_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "scrambled_request_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "scrambled_request_only",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "scrambled_request_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        }
+      ],
+      "resources": {
+        "frozen_preserved": true,
+        "parameters": 316765,
+        "peak_allocated_bytes": 95113216,
+        "teacher_preserved": true,
+        "trainable_parameters": 153648,
+        "training_seconds_this_invocation": 103.23022462998051
+      },
+      "seed": 7201,
+      "target_accuracy_min": 0.5,
+      "target_pair_min": 0.0,
+      "target_probes": {
+        "encoder": 1.0,
+        "posterior": 0.875,
+        "working": 0.5
+      },
+      "wording_diagnostics": [
+        {
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "format": "first",
+          "novel": false,
+          "question": "Welche Farbe erscheint zuerst?",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "format": "sequence",
+          "novel": false,
+          "question": "Nenne beide Farben in ihrer zeitlichen Reihenfolge.",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "format": "first",
+          "novel": false,
+          "question": "Erste Farbe?",
+          "wording": 1
+        },
+        {
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "format": "sequence",
+          "novel": false,
+          "question": "Beide Farben",
+          "wording": 1
+        },
+        {
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "format": "first",
+          "novel": true,
+          "question": "Welche Farbe kam zuerst?",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "format": "sequence",
+          "novel": true,
+          "question": "Welche Farben der Reihe?",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "format": "first",
+          "novel": true,
+          "question": "Gib nur die erste Farbe an.",
+          "wording": 1
+        },
+        {
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "format": "sequence",
+          "novel": true,
+          "question": "Gib beide Farben der Reihe.",
+          "wording": 1
+        }
+      ]
+    },
+    {
+      "adopted": false,
+      "arm": "instruction",
+      "broader_regressed_cases": [],
+      "failures_by_output": {
+        "audio": {
+          "failed_cells": 3,
+          "worst_accuracy_delta": -0.1041666716337204,
+          "worst_error_ratio": 1.1082476488825248
+        },
+        "image": {
+          "failed_cells": 6,
+          "worst_accuracy_delta": -0.1875,
+          "worst_error_ratio": 1.0758506190748622
+        },
+        "text": {
+          "failed_cells": 10,
+          "worst_accuracy_delta": -0.1666666567325592,
+          "worst_error_ratio": 1.3118874619190892
+        },
+        "video": {
+          "failed_cells": 3,
+          "worst_accuracy_delta": -0.10416662693023682,
+          "worst_error_ratio": 1.030481969216121
+        }
+      },
+      "format_diagnostics": [
+        {
+          "correct_word_count": 1.0,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.5625,
+          "first_word": 0.5625,
+          "format": "first",
+          "novel": false
+        },
+        {
+          "correct_word_count": 0.9375,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.5,
+          "first_word": 0.5625,
+          "format": "sequence",
+          "novel": false
+        },
+        {
+          "correct_word_count": 0.5,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.25,
+          "first_word": 0.5625,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "correct_word_count": 0.4375,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.25,
+          "first_word": 0.5625,
+          "format": "sequence",
+          "novel": true
+        }
+      ],
+      "preservation_failed_cells": 22,
+      "quick_coverage": {
+        "executed": 25,
+        "failed": 25,
+        "passed": 0,
+        "unimplemented_domains": 7
+      },
+      "requests": [
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.5625,
+            0.5625,
+            0.5625
+          ],
+          "exact_min": 0.5625,
+          "format": "first",
+          "novel": false
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "sequence",
+          "novel": false
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "both",
+          "novel": false
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "exact_min": 0.25,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.25,
+            0.25,
+            0.25
+          ],
+          "exact_min": 0.25,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "omitted",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "omitted",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "omitted",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "last_frame",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "last_frame",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "last_frame",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "observation_only",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "observation_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "observation_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "request_only",
+          "exact_by_draw": [
+            0.625,
+            0.625,
+            0.625
+          ],
+          "exact_min": 0.625,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "request_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "request_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "scrambled_request_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "scrambled_request_only",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "scrambled_request_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        }
+      ],
+      "resources": {
+        "frozen_preserved": true,
+        "parameters": 316765,
+        "peak_allocated_bytes": 95113216,
+        "teacher_preserved": true,
+        "trainable_parameters": 153648,
+        "training_seconds_this_invocation": 102.17598085396457
+      },
+      "seed": 7201,
+      "target_accuracy_min": 0.5,
+      "target_pair_min": 0.0,
+      "target_probes": {
+        "encoder": 1.0,
+        "posterior": 0.75,
+        "working": 0.5625
+      },
+      "wording_diagnostics": [
+        {
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "format": "first",
+          "novel": false,
+          "question": "Welche Farbe erscheint zuerst?",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "format": "sequence",
+          "novel": false,
+          "question": "Nenne beide Farben in ihrer zeitlichen Reihenfolge.",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            0.625,
+            0.625,
+            0.625
+          ],
+          "format": "first",
+          "novel": false,
+          "question": "Erste Farbe?",
+          "wording": 1
+        },
+        {
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "format": "sequence",
+          "novel": false,
+          "question": "Beide Farben",
+          "wording": 1
+        },
+        {
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "format": "first",
+          "novel": true,
+          "question": "Welche Farbe kam zuerst?",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "format": "sequence",
+          "novel": true,
+          "question": "Welche Farben der Reihe?",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "format": "first",
+          "novel": true,
+          "question": "Gib nur die erste Farbe an.",
+          "wording": 1
+        },
+        {
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "format": "sequence",
+          "novel": true,
+          "question": "Gib beide Farben der Reihe.",
+          "wording": 1
+        }
+      ]
+    },
+    {
+      "adopted": false,
+      "arm": "constant",
+      "broader_regressed_cases": [],
+      "failures_by_output": {
+        "audio": {
+          "failed_cells": 0,
+          "worst_accuracy_delta": 0,
+          "worst_error_ratio": 1
+        },
+        "image": {
+          "failed_cells": 1,
+          "worst_accuracy_delta": -0.1458333432674408,
+          "worst_error_ratio": 0.9858708642561858
+        },
+        "text": {
+          "failed_cells": 4,
+          "worst_accuracy_delta": -0.0625,
+          "worst_error_ratio": 1.0024606774060811
+        },
+        "video": {
+          "failed_cells": 2,
+          "worst_accuracy_delta": -0.1250000298023224,
+          "worst_error_ratio": 1.0025104099273394
+        }
+      },
+      "format_diagnostics": [
+        {
+          "correct_word_count": 1.0,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.9895833333333334,
+          "first_word": 0.9895833333333334,
+          "format": "first",
+          "novel": false
+        },
+        {
+          "correct_word_count": 0.0,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.0,
+          "first_word": 1.0,
+          "format": "sequence",
+          "novel": false
+        },
+        {
+          "correct_word_count": 1.0,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.9895833333333334,
+          "first_word": 0.9895833333333334,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "correct_word_count": 0.0,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.0,
+          "first_word": 0.8958333333333334,
+          "format": "sequence",
+          "novel": true
+        }
+      ],
+      "preservation_failed_cells": 7,
+      "quick_coverage": {
+        "executed": 25,
+        "failed": 24,
+        "passed": 1,
+        "unimplemented_domains": 7
+      },
+      "requests": [
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.96875,
+            1.0,
+            1.0
+          ],
+          "exact_min": 0.96875,
+          "format": "first",
+          "novel": false
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "sequence",
+          "novel": false
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": false
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.96875,
+            1.0,
+            1.0
+          ],
+          "exact_min": 0.96875,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "omitted",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "omitted",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "omitted",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "last_frame",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "last_frame",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "last_frame",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "observation_only",
+          "exact_by_draw": [
+            0.9375,
+            1.0,
+            1.0
+          ],
+          "exact_min": 0.9375,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "observation_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "observation_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "request_only",
+          "exact_by_draw": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "exact_min": 1.0,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "request_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "request_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "scrambled_request_only",
+          "exact_by_draw": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "exact_min": 1.0,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "scrambled_request_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "scrambled_request_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        }
+      ],
+      "resources": {
+        "frozen_preserved": true,
+        "parameters": 316765,
+        "peak_allocated_bytes": 95104512,
+        "teacher_preserved": true,
+        "trainable_parameters": 153648,
+        "training_seconds_this_invocation": 121.85013890196569
+      },
+      "seed": 7202,
+      "target_accuracy_min": 0.9375,
+      "target_pair_min": 0.875,
+      "target_probes": {
+        "encoder": 1.0,
+        "posterior": 1.0,
+        "working": 0.9375
+      },
+      "wording_diagnostics": [
+        {
+          "exact_by_draw": [
+            0.9375,
+            1.0,
+            1.0
+          ],
+          "format": "first",
+          "novel": false,
+          "question": "Welche Farbe erscheint zuerst?",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "format": "sequence",
+          "novel": false,
+          "question": "Nenne beide Farben in ihrer zeitlichen Reihenfolge.",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "format": "first",
+          "novel": false,
+          "question": "Erste Farbe?",
+          "wording": 1
+        },
+        {
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "format": "sequence",
+          "novel": false,
+          "question": "Beide Farben",
+          "wording": 1
+        },
+        {
+          "exact_by_draw": [
+            0.9375,
+            1.0,
+            1.0
+          ],
+          "format": "first",
+          "novel": true,
+          "question": "Welche Farbe kam zuerst?",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "format": "sequence",
+          "novel": true,
+          "question": "Welche Farben der Reihe?",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "format": "first",
+          "novel": true,
+          "question": "Gib nur die erste Farbe an.",
+          "wording": 1
+        },
+        {
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "format": "sequence",
+          "novel": true,
+          "question": "Gib beide Farben der Reihe.",
+          "wording": 1
+        }
+      ]
+    },
+    {
+      "adopted": false,
+      "arm": "instruction",
+      "broader_regressed_cases": [
+        "REAL.scene.image",
+        "MIX.agreement.text+image",
+        "MIX.agreement.text+image+audio",
+        "MIX.agreement.text+image+video",
+        "MIX.agreement.text+image+audio+video"
+      ],
+      "failures_by_output": {
+        "audio": {
+          "failed_cells": 0,
+          "worst_accuracy_delta": 0,
+          "worst_error_ratio": 1
+        },
+        "image": {
+          "failed_cells": 0,
+          "worst_accuracy_delta": 0,
+          "worst_error_ratio": 1
+        },
+        "text": {
+          "failed_cells": 3,
+          "worst_accuracy_delta": -0.10416668653488159,
+          "worst_error_ratio": 1.0086680377425126
+        },
+        "video": {
+          "failed_cells": 2,
+          "worst_accuracy_delta": -0.125,
+          "worst_error_ratio": 1.000289080564382
+        }
+      },
+      "format_diagnostics": [
+        {
+          "correct_word_count": 1.0,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.96875,
+          "first_word": 0.96875,
+          "format": "first",
+          "novel": false
+        },
+        {
+          "correct_word_count": 1.0,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 1.0,
+          "first_word": 1.0,
+          "format": "sequence",
+          "novel": false
+        },
+        {
+          "correct_word_count": 0.5,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.4791666666666667,
+          "first_word": 0.9791666666666666,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "correct_word_count": 0.5,
+          "count": 96,
+          "ended": 1.0,
+          "exact": 0.4583333333333333,
+          "first_word": 0.9375,
+          "format": "sequence",
+          "novel": true
+        }
+      ],
+      "preservation_failed_cells": 5,
+      "quick_coverage": {
+        "executed": 25,
+        "failed": 24,
+        "passed": 1,
+        "unimplemented_domains": 7
+      },
+      "requests": [
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.96875,
+            0.9375,
+            1.0
+          ],
+          "exact_min": 0.9375,
+          "format": "first",
+          "novel": false
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "exact_min": 1.0,
+          "format": "sequence",
+          "novel": false
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.96875,
+            0.9375,
+            1.0
+          ],
+          "exact_min": 0.9375,
+          "format": "both",
+          "novel": false
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.46875,
+            0.46875,
+            0.5
+          ],
+          "exact_min": 0.46875,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.46875,
+            0.46875,
+            0.4375
+          ],
+          "exact_min": 0.4375,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "full",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "omitted",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "omitted",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "omitted",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "last_frame",
+          "exact_by_draw": [
+            0.5,
+            0.5,
+            0.5
+          ],
+          "exact_min": 0.5,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "last_frame",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "last_frame",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "observation_only",
+          "exact_by_draw": [
+            0.625,
+            0.75,
+            0.8125
+          ],
+          "exact_min": 0.625,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "observation_only",
+          "exact_by_draw": [
+            0.3125,
+            0.25,
+            0.1875
+          ],
+          "exact_min": 0.1875,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "observation_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "request_only",
+          "exact_by_draw": [
+            1.0,
+            0.9375,
+            1.0
+          ],
+          "exact_min": 0.9375,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "request_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "request_only",
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "exact_min": 0.0,
+          "format": "both",
+          "novel": true
+        },
+        {
+          "condition": "scrambled_request_only",
+          "exact_by_draw": [
+            1.0,
+            0.9375,
+            1.0
+          ],
+          "exact_min": 0.9375,
+          "format": "first",
+          "novel": true
+        },
+        {
+          "condition": "scrambled_request_only",
+          "exact_by_draw": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "exact_min": 1.0,
+          "format": "sequence",
+          "novel": true
+        },
+        {
+          "condition": "scrambled_request_only",
+          "exact_by_draw": [
+            1.0,
+            0.9375,
+            1.0
+          ],
+          "exact_min": 0.9375,
+          "format": "both",
+          "novel": true
+        }
+      ],
+      "resources": {
+        "frozen_preserved": true,
+        "parameters": 316765,
+        "peak_allocated_bytes": 95104512,
+        "teacher_preserved": true,
+        "trainable_parameters": 153648,
+        "training_seconds_this_invocation": 105.7686125539476
+      },
+      "seed": 7202,
+      "target_accuracy_min": 0.9375,
+      "target_pair_min": 0.875,
+      "target_probes": {
+        "encoder": 1.0,
+        "posterior": 1.0,
+        "working": 0.9375
+      },
+      "wording_diagnostics": [
+        {
+          "exact_by_draw": [
+            0.9375,
+            0.9375,
+            1.0
+          ],
+          "format": "first",
+          "novel": false,
+          "question": "Welche Farbe erscheint zuerst?",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "format": "sequence",
+          "novel": false,
+          "question": "Nenne beide Farben in ihrer zeitlichen Reihenfolge.",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            1.0,
+            0.9375,
+            1.0
+          ],
+          "format": "first",
+          "novel": false,
+          "question": "Erste Farbe?",
+          "wording": 1
+        },
+        {
+          "exact_by_draw": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "format": "sequence",
+          "novel": false,
+          "question": "Beide Farben",
+          "wording": 1
+        },
+        {
+          "exact_by_draw": [
+            0.9375,
+            0.9375,
+            1.0
+          ],
+          "format": "first",
+          "novel": true,
+          "question": "Welche Farbe kam zuerst?",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "format": "sequence",
+          "novel": true,
+          "question": "Welche Farben der Reihe?",
+          "wording": 0
+        },
+        {
+          "exact_by_draw": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "format": "first",
+          "novel": true,
+          "question": "Gib nur die erste Farbe an.",
+          "wording": 1
+        },
+        {
+          "exact_by_draw": [
+            0.9375,
+            0.9375,
+            0.875
+          ],
+          "format": "sequence",
+          "novel": true,
+          "question": "Gib beide Farben der Reihe.",
+          "wording": 1
+        }
+      ]
+    }
+  ],
+  "source_commit": "6ec41a8",
+  "timestamp": "2026-09-16T19:55+02:00",
+  "verification": {
+    "artifact_bytes_at_audit": 496150262,
+    "checks": 15838,
+    "cuda_identity": {
+      "cuda": "12.8",
+      "name": "NVIDIA GeForce RTX 3050",
+      "torch": "2.9.0+cu128",
+      "total_memory": 8199143424
+    },
+    "focused_software_tests": 76,
+    "formal_commands": 16,
+    "formal_wall_seconds": 1244.6572781020077,
+    "full_software_seconds": 475.89,
+    "full_software_tests": 566,
+    "historical_reference_arrays_exact": true,
+    "matched_initialization": true,
+    "report_count": 19,
+    "reports": "structural/media_verified",
+    "restart": {
+      "all_training_state_identical": true,
+      "exact_tensor_checks": 1316,
+      "steps": 4
+    },
+    "source_weights_preserved": true
+  }
+}

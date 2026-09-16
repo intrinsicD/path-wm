@@ -208,8 +208,10 @@ sessions:
     passes video order100%/1 of25 tasks,7201 stays50%; all forget prior outputs.561 tests,1180 restart,4097
     audits,17 reports; retain variants, no default change. Source-output anchoring partially reduces forgetting32→20/23→6
     failing cells, but7201 still fails and7202 exact text falls14/16→6/16.64 checks,1180 restart,4951 audits;
-    no adoption; task/format path next.'
-  turn_count: 23
-  events_count: 115
+    no adoption; task/format path next. Request-path comparison: stronger source familiar-format joint0→93.75%,
+    novel joint0 in all arms; old-output/broad regressions fail.566 tests,1316 restart,15838 audits; optional
+    connection committed, no default promotion.'
+  turn_count: 24
+  events_count: 121
   claims_touched: []
-  open_threads: 43
+  open_threads: 44
