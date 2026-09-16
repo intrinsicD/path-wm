@@ -995,6 +995,192 @@ def evaluate_request_contrasts(model, data, path, device):
     return result
 
 
+def request_diagnose(args):
+    """Audit balanced instruction meaning on the actual frozen request path."""
+    from pathwm.data.understanding import UnderstandingData
+    from pathwm.data.request_meaning import request_corpus
+    from pathwm.evaluation.request_meaning import capture_request_stages, request_probe
+    from pathwm.models.modalities import bytes_text
+
+    device = torch.device(args.device)
+    model, settings, source_hash = restore_readout(args.core, args.seed, device)
+    if model.core.request_readout != "instruction":
+        raise ValueError("Use a saved instruction-route source for request diagnosis")
+    model.requires_grad_(False).eval()
+    data = UnderstandingData(args.understanding_suite)
+    contexts = [
+        r
+        for r in data.records
+        if r["case"] == "VID.order" and r["split"] == "calibration"
+    ][:2]
+    if len(contexts) != 2 or {r["answer"] for r in contexts} != {0, 1}:
+        raise ValueError("Need two opposite calibration contexts")
+    corpus = request_corpus()
+    run = Run(
+        args.output,
+        settings=dict(
+            seed=args.seed,
+            purpose="diagnostic",
+            source=str(args.core.resolve()),
+            source_sha256=source_hash,
+            protocol="balanced-request-meaning-v1",
+            encoder_bins=16,
+            scope="Frozen controlled request accessibility, not general language",
+        ),
+        data=dict(fixtures=data.identity, requests=corpus, contexts=contexts),
+        recipe=__file__,
+        model=model,
+        optimizer=torch.optim.Adam([next(model.parameters())], lr=0.001),
+        device=device,
+    )
+    start = time.perf_counter()
+    before = state_hash(model)
+    if device.type == "cuda":
+        torch.cuda.reset_peak_memory_stats(device)
+    rows, features, outputs = [], {}, []
+    try:
+        with evaluation_mode(model), torch.no_grad():
+            for context, base in enumerate(contexts):
+                torch.manual_seed(args.seed)
+                _, state = model.core(
+                    data.inputs(base | dict(question="."), device=device),
+                    return_state=True,
+                )
+                physical = state.tokens.clone(), state.logits.clone()
+                for request in corpus:
+                    values, tokens = capture_request_stages(
+                        model, state, request["question"]
+                    )
+                    row = request | dict(context=context)
+                    rows.append(row)
+                    for key, value in values.items():
+                        features.setdefault(key, []).append(value[0])
+                    ids = model.outputs.generate(tokens, 16)[0]
+                    expected = base["choices"][base["answer"]]
+                    if request["label"]:
+                        expected += " " + base["choices"][1 - base["answer"]]
+                    answer = bytes_text(ids)
+                    outputs.append(
+                        row
+                        | dict(
+                            generated=answer,
+                            expected=expected,
+                            ended=bool((ids == 2).any()),
+                            exact=answer == expected and bool((ids == 2).any()),
+                            first_word=answer.split()[:1] == expected.split()[:1],
+                            format_correct=len(answer.split()) == 1 + request["label"],
+                        )
+                    )
+                if not torch.equal(state.tokens, physical[0]) or not torch.equal(
+                    state.logits, physical[1]
+                ):
+                    raise AssertionError("Request path mutated physical state")
+        features = {k: torch.stack(v) for k, v in features.items()}
+        families = list(dict.fromkeys(r["family"] for r in rows))
+        features["length"] = torch.tensor([[len(r["question"].encode())] for r in rows])
+        features["prefix"] = torch.tensor(
+            [[float(r["family"] == f) for f in families] for r in rows]
+        )
+        features["byte_histogram"] = torch.stack(
+            [
+                torch.bincount(
+                    torch.tensor(list(r["question"].encode())), minlength=256
+                )
+                for r in rows
+            ]
+        )
+        direct = [i for i, r in enumerate(rows) if r["style"] == "direct"]
+        stress = [i for i, r in enumerate(rows) if r["style"] == "order"]
+        direct_rows = [rows[i] for i in direct]
+        results, fitted = {}, {}
+        for stage, x in features.items():
+            for null in (
+                (None, 9711, 9712, 9713)
+                if stage in ("encoder", "instruction", "task", "working")
+                else (None,)
+            ):
+                key = stage if null is None else f"{stage}/family_flip{null}"
+                value, weights = request_probe(
+                    x[direct], direct_rows, family_flip_seed=null
+                )
+                z = x[stress].double()
+                pred = (
+                    ((z - weights["mean"]) / weights["std"]) @ weights["weights"]
+                    + weights["target_mean"]
+                ).argmax(-1)
+                value["order_stress"] = dict(
+                    predictions=pred.tolist(),
+                    accuracy=float(
+                        (pred == torch.tensor([rows[i]["label"] for i in stress]))
+                        .double()
+                        .mean()
+                    ),
+                )
+                results[key], fitted[key] = value, weights
+                run.log(
+                    dict(
+                        step=len(results),
+                        split="diagnostic",
+                        stage=key,
+                        accuracy=value["metrics"]["test"]["accuracy"],
+                        paired=value["metrics"]["test"]["paired"],
+                    )
+                )
+        if (
+            state_hash(model) != before
+            or file_hash(args.core / "last.pt") != source_hash
+        ):
+            raise AssertionError("Frozen source changed")
+        resources = dict(
+            seconds=time.perf_counter() - start,
+            parameters=sum(p.numel() for p in model.parameters()),
+            peak_allocated_bytes=torch.cuda.max_memory_allocated(device)
+            if device.type == "cuda"
+            else None,
+        )
+        atomic_torch(run.path / "request_features.pt", features)
+        atomic_torch(run.path / "request_probes.pt", fitted)
+        atomic_json(run.path / "request_examples.json", outputs)
+        atomic_json(
+            run.path / "request_diagnosis.json",
+            dict(
+                rows=rows,
+                results=results,
+                resources=resources,
+                encoder_feasible=all(
+                    results["encoder"]["metrics"]["test"][k] >= 0.8
+                    for k in ("accuracy", "paired")
+                ),
+                frozen_preserved=True,
+            ),
+        )
+        atomic_json(
+            run.path / "result.json",
+            dict(
+                evaluation_scope="Controlled request composition; probes are separate from generated answers",
+                metrics={k: v["metrics"] for k, v in results.items()},
+                resources=resources,
+                limits=[
+                    "Byte-length and prefix are paired nuisance controls; vocabulary is deliberately shared.",
+                    "Two fixed contexts are not independent natural-language samples. Order stress is separate.",
+                    "Probe accessibility does not prove deployed use. Failures do not establish information loss.",
+                ],
+            ),
+        )
+        run.save()
+        run.status("complete", "pending")
+        write_report(run.path)
+    except BaseException as exc:
+        prior = json.loads((run.path / "status.json").read_text())
+        run.status(
+            prior["result"] if prior["result"] == "complete" else "failed",
+            "failed",
+            str(exc),
+        )
+        raise
+    print(json.dumps(dict(path=str(run.path), resources=resources)), flush=True)
+
+
 def grounded(args):
     """Small matched continuation through the existing core and output decoder."""
     from pathwm.data.understanding import UnderstandingData
@@ -2233,6 +2419,7 @@ def main():
             "grounded",
             "repair-report",
             "exploration",
+            "request-diagnose",
         ),
         default="suite",
     )
@@ -2362,6 +2549,19 @@ def main():
         help="Optional learned untimed palette; requires query timing",
     )
     args = parser.parse_args()
+    if args.stage == "request-diagnose":
+        if (
+            args.core is None
+            or args.understanding_suite is None
+            or args.steps
+            or args.resume
+            or args.stop_after
+        ):
+            parser.error(
+                "Request diagnosis needs source and fixtures without training/resume"
+            )
+        request_diagnose(args)
+        return
     if args.stage == "exploration":
         if args.resume or args.stop_after or args.steps:
             parser.error(
