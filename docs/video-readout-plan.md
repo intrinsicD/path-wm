@@ -60,3 +60,26 @@ cutoff. Oracle output success and frozen linear accessibility are scoped evidenc
 not proof of general temporal understanding. Browser QA remains unavailable under
 the earlier local-file restriction; use existing renderer, structural/media checks
 and static visual inspection, without alternate transport.
+
+## Iteration 2, registered after the first eight fits
+
+Query-side timing fails the paired foreground benefit: seed7201 held-out MSE is
+0.10895 versus0.10885; seed7202 improves0.18017→0.12376. Oracle motion direction
+reaches100% with query timing, but quality/composition gates remain failed. Actual
+video-state decoding remains poor. Preserve all results and the context default.
+
+One output-side follow-up: an optional learned four-entry RGB palette from the
+untimed latent context; the existing patch-query attention predicts spatial/time
+mixture weights. No explicit color labels, masks, position formulas or true factors
+are read by this module. Training remains ordinary normalized pixel MSE. This biases
+appearance sharing across positions/times; it is not a universal natural-video
+representation. It adds parameters and changes factorization, so improvement cannot
+uniquely establish a mechanism or an equal-compute advantage.
+
+Four additional1024-update fits: both seeds, oracle and frozen video-only context,
+query timing plus palette4, compared to the saved query/direct-RGB controls. Same
+initial attention trunk, optimizer, batches and populations; new output projections
+necessarily differ. Require the same >=20% held-out oracle foreground benefit and
+<=0.005 known foreground regression in both seeds; original quality/motion capability
+gates remain. Record palette/mixture collapse and context controls. Stop model
+training after these four fits. No automatic default adoption.

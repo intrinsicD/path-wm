@@ -88,3 +88,42 @@ def test_initialization_restores_saved_video_conditioning(tmp_path):
     target = Model("native")
     load_initial(target, tmp_path, "cpu")
     assert target.outputs.decoders["video"].time_conditioning == "query"
+
+
+def test_palette_video_masks_gradients_and_untimed_appearance():
+    torch.manual_seed(33)
+    plain = TemporalImageDecoder(16, time_conditioning="query")
+    torch.manual_seed(33)
+    palette = TemporalImageDecoder(16, time_conditioning="query", palette_size=4)
+    assert torch.equal(plain.image.queries, palette.image.queries)
+    assert all(
+        torch.equal(v, palette.image.read.state_dict()[k])
+        for k, v in plain.image.read.state_dict().items()
+    )
+    context = torch.randn(2, 5, 16, requires_grad=True)
+    valid = torch.tensor([[True, True, False, False, False]]).expand(2, -1)
+    colors = []
+    hook = palette.image.palette.register_forward_hook(lambda m, a, o: colors.append(o))
+    output = palette(
+        context.masked_fill(~valid[..., None], float("nan")),
+        torch.tensor([0.0, 1.0, 3.0]),
+        valid=valid,
+    )
+    hook.remove()
+    expected = palette(context[:, :2], torch.tensor([0.0, 1.0, 3.0]))
+    torch.testing.assert_close(output, expected)
+    color = colors[0].reshape(2, 3, -1)
+    assert torch.equal(color[:, 0], color[:, 1]) and torch.equal(
+        color[:, 1], color[:, 2]
+    )
+    assert output.min() >= 0 and output.max() <= 1
+    output.square().mean().backward()
+    assert (
+        context.grad[:, :2].abs().sum() > 0 and context.grad[:, 2:].count_nonzero() == 0
+    )
+    assert all(
+        p.grad is not None and torch.isfinite(p.grad).all()
+        for p in palette.parameters()
+    )
+    with pytest.raises(ValueError, match="query"):
+        TemporalImageDecoder(16, palette_size=4)
