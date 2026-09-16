@@ -10,6 +10,17 @@ from pathwm.models.tasks import Actor, OutputControl, TaskRequest, TaskSession
 from pathwm.models.photo_probe import RidgeReader
 
 
+def validate_request_route(model, question_mode):
+    """Removing observed questions requires the real request in the task path."""
+    if question_mode not in ("full", "neutral", "masked"):
+        raise ValueError("Unknown observation question mode")
+    if question_mode != "full" and (
+        getattr(model.core, "request_readout", "none") != "instruction"
+        or model.core.agent.task_interpreter is None
+    ):
+        raise ValueError("Question routing controls require an instruction source")
+
+
 def capture_request_stages(model, state, question):
     """Use the deployed task path with a fixed physical context and constant metadata."""
     captured, hooks = {}, []

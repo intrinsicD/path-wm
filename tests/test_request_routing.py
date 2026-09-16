@@ -22,21 +22,37 @@ def fixtures():
 def test_question_routes_preserve_evidence_and_token_length_without_label_leakage():
     data = fixtures()
     base = next(r for r in data.records if r["case"] == "VID.order")
-    row = base | dict(question="Beide Farbtöne?", evidence=base["evidence"] | {"text": "Zeuge sagt: grün."})
+    row = base | dict(
+        question="Beide Farbtöne?",
+        evidence=base["evidence"] | {"text": "Zeuge sagt: grün."},
+    )
     old = copy.deepcopy(row)
     full = data.inputs(row)
     for mode in ("full", "neutral", "masked"):
         inputs = data.inputs(row, question_mode=mode)
-        q = row["question"] if mode == "full" else "." if mode == "neutral" else "." * len(row["question"].encode())
+        q = (
+            row["question"]
+            if mode == "full"
+            else "."
+            if mode == "neutral"
+            else "." * len(row["question"].encode())
+        )
         assert bytes_text(inputs["text"].values[0]) == "Zeuge sagt: grün.\nFrage: " + q
         for key in ("values", "times"):
-            assert torch.equal(getattr(inputs["video"], key), getattr(full["video"], key))
+            assert torch.equal(
+                getattr(inputs["video"], key), getattr(full["video"], key)
+            )
         if mode != "neutral":
             assert inputs["text"].values.shape == full["text"].values.shape
             assert torch.equal(inputs["text"].valid, full["text"].valid)
             assert torch.equal(inputs["text"].times, full["text"].times)
-        changed = row | dict(id="arbitrary", answer=1-row["answer"], choices=["invalid", "labels"])
-        assert torch.equal(inputs["text"].values, data.inputs(changed, question_mode=mode)["text"].values)
+        changed = row | dict(
+            id="arbitrary", answer=1 - row["answer"], choices=["invalid", "labels"]
+        )
+        assert torch.equal(
+            inputs["text"].values,
+            data.inputs(changed, question_mode=mode)["text"].values,
+        )
     assert row == old
     with pytest.raises(ValueError, match="question"):
         data.inputs(row, question_mode="typo")
@@ -57,7 +73,11 @@ def test_neutral_and_masked_routes_keep_physical_state_but_allow_task_difference
             row = apply_request(base, request)
             torch.manual_seed(981)
             with torch.no_grad():
-                tokens, state = model.core(data.inputs(row, question_mode=mode), requests=[row["question"]], return_state=True)
+                tokens, state = model.core(
+                    data.inputs(row, question_mode=mode),
+                    requests=[row["question"]],
+                    return_state=True,
+                )
             states.append(state)
             working.append(tokens)
         assert torch.equal(states[0].tokens, states[1].tokens)
@@ -68,13 +88,71 @@ def test_neutral_and_masked_routes_keep_physical_state_but_allow_task_difference
 
 def test_non_instruction_route_fails_before_any_evaluation_files(tmp_path, monkeypatch):
     from pathwm.evaluation.understanding import evaluate_understanding
+
     model = recipe.Model("native")
     monkeypatch.setattr(recipe, "restore_readout", lambda *a: (model, {}, "fixture"))
     for stage in ("request", "understanding"):
         output = tmp_path / stage
         with pytest.raises(ValueError, match="instruction"):
             if stage == "request":
-                recipe.request_evaluate(SimpleNamespace(core=tmp_path, seed=7, device="cpu", output=output, observation_question="neutral"))
+                recipe.request_evaluate(
+                    SimpleNamespace(
+                        core=tmp_path,
+                        seed=7,
+                        device="cpu",
+                        output=output,
+                        observation_question="neutral",
+                    )
+                )
             else:
-                evaluate_understanding(model, fixtures(), output, source={}, seed=7, device="cpu", recipe=Path(__file__), question_mode="neutral")
+                evaluate_understanding(
+                    model,
+                    fixtures(),
+                    output,
+                    source={},
+                    seed=7,
+                    device="cpu",
+                    recipe=Path(__file__),
+                    question_mode="neutral",
+                )
         assert not output.exists()
+
+
+def test_suite_routes_observation_question_but_passes_actual_task_request(
+    tmp_path, monkeypatch
+):
+    from pathwm.evaluation.understanding import evaluate_understanding
+
+    torch.set_num_threads(2)
+    data = fixtures()
+    data.records = [r for r in data.records if r["case"] == "TXT.roles"]
+    data.cases = [c for c in data.cases if c["id"] == "TXT.roles"]
+    model = recipe.Model("native")
+    recipe.configure_request_readout(model, "instruction")
+    source_inputs, source_forward = data.inputs, model.core.forward
+    observed, requested = [], []
+
+    def inputs(row, **kwargs):
+        assert kwargs["question_mode"] == "neutral"
+        observed.append(row["question"])
+        return source_inputs(row, **kwargs)
+
+    def forward(values, **kwargs):
+        requested.extend(kwargs["requests"])
+        return source_forward(values, **kwargs)
+
+    monkeypatch.setattr(data, "inputs", inputs)
+    monkeypatch.setattr(model.core, "forward", forward)
+    result = evaluate_understanding(
+        model,
+        data,
+        tmp_path / "evaluation",
+        source={"scope": "unit"},
+        seed=12,
+        device="cpu",
+        recipe=Path(__file__),
+        question_mode="neutral",
+    )
+    assert observed and observed == requested
+    assert result["observation_question"] == "neutral"
+    assert result["model_unchanged"]

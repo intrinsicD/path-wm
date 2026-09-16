@@ -81,3 +81,10 @@ implementation/nondeterminism debugging, never a relaxed tolerance. All effect
 gates apply in each of three draws and both sources. Reused fixtures remain
 exploratory development evidence. No unique causal attribution or confirmation
 claim. Exact briefs, criticisms and reconciliation receipts are retained.
+
+Implementation checks:21 focused tests pass. A GPU smoke check on both fixed
+sources confirms64 exact comparisons: capturing state leaves working tokens
+unchanged; neutral/masked physical pairs are bitwise equal on all three draws;
+model/source hashes stay exact. Same hardware/environment and scalar core-call
+batching as the reference, no tolerance relaxation. Claude acknowledged the
+remaining equality/draw clarifications; actual CUDA equality remains measured.

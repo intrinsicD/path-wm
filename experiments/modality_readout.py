@@ -1020,12 +1020,17 @@ def evaluate_request_contrasts(model, data, path, device):
     return result
 
 
-def evaluate_request_meanings(model, data, path, device):
+def evaluate_request_meanings(
+    model, data, path, device, *, question_mode="full", capture_states=False
+):
     """New prefix templates, actual generated answers and necessity controls."""
     from pathwm.data.request_meaning import request_corpus, apply_request
     from pathwm.models.modalities import bytes_text
+    from pathwm.evaluation.request_meaning import validate_request_route
 
+    validate_request_route(model, question_mode)
     results, working = [], []
+    states = {k: [] for k in ("posterior", "physical")}
     requests = [r for r in request_corpus() if r["split"] == "test"]
     records = [
         r for r in data.records if r["case"] == "VID.order" and r["split"] == "test"
@@ -1056,6 +1061,7 @@ def evaluate_request_meanings(model, data, path, device):
                             observed,
                             omit=("video",) if condition == "omitted" else (),
                             device=device,
+                            question_mode=question_mode,
                         )
                         if condition == "last_frame":
                             video = inputs["video"]
@@ -1064,14 +1070,21 @@ def evaluate_request_meanings(model, data, path, device):
                                 values=video.values[:, -1:],
                                 times=video.times[:, -1:],
                             )
-                        tokens = model.core(
+                        output = model.core(
                             inputs,
+                            return_state=capture_states,
                             requests=[
                                 "."
                                 if condition == "constant_request"
                                 else row["question"]
                             ],
                         )
+                        if capture_states:
+                            tokens, state = output
+                            states["posterior"].append(state.logits.detach().cpu())
+                            states["physical"].append(state.tokens.detach().cpu())
+                        else:
+                            tokens = output
                         working.append(tokens.detach().cpu())
                         expected = row["choices"][row["answer"]]
                         results.append(
@@ -1085,6 +1098,11 @@ def evaluate_request_meanings(model, data, path, device):
                                 condition=condition,
                                 question=row["question"],
                                 expected=expected,
+                                task_request="."
+                                if condition == "constant_request"
+                                else row["question"],
+                                observation_text=bytes_text(inputs["text"].values[0]),
+                                observation_tokens=int(inputs["text"].valid.sum()),
                             )
                         )
         # Preserve every individually seeded core call; batch only deterministic decoding.
@@ -1103,19 +1121,29 @@ def evaluate_request_meanings(model, data, path, device):
                     == (1 if row["format"] == "first" else 2),
                 )
     result = dict(
+        observation_question=question_mode,
         metrics=summarize_request_answers(results),
         examples=results,
         seconds=time.perf_counter() - start,
         scope="Held-out prefix composition and separate phrase-order stress; source controls on first held-out prefix only.",
     )
+    if capture_states:
+        np.savez_compressed(
+            path / "request_states.npz",
+            working=torch.cat(working).numpy(),
+            **{k: torch.cat(v).numpy() for k, v in states.items()},
+        )
     atomic_json(path / "request_meanings.json", result)
     return result
 
 
 def request_evaluate(args):
     from pathwm.data.understanding import UnderstandingData
+    from pathwm.evaluation.request_meaning import validate_request_route
 
     model, settings, source_hash = restore_readout(args.core, args.seed, args.device)
+    question_mode = getattr(args, "observation_question", "full")
+    validate_request_route(model, question_mode)
     model.requires_grad_(False).eval()
     data = UnderstandingData(args.understanding_suite)
     run = Run(
@@ -1125,6 +1153,7 @@ def request_evaluate(args):
             purpose="diagnostic",
             source=str(args.core.resolve()),
             source_sha256=source_hash,
+            observation_question=question_mode,
         ),
         data=dict(fixtures=data.identity),
         recipe=__file__,
@@ -1133,8 +1162,18 @@ def request_evaluate(args):
         device=args.device,
     )
     before = state_hash(model)
+    device = torch.device(args.device)
+    if device.type == "cuda":
+        torch.cuda.reset_peak_memory_stats(device)
     try:
-        result = evaluate_request_meanings(model, data, run.path, args.device)
+        result = evaluate_request_meanings(
+            model,
+            data,
+            run.path,
+            args.device,
+            question_mode=question_mode,
+            capture_states=True,
+        )
         if before != state_hash(model) or source_hash != file_hash(
             args.core / "last.pt"
         ):
@@ -1143,6 +1182,14 @@ def request_evaluate(args):
             run.path / "result.json",
             dict(
                 evaluation_scope=result["scope"],
+                observation_question=question_mode,
+                resources=dict(
+                    seconds=result["seconds"],
+                    neural_updates=0,
+                    peak_allocated_bytes=torch.cuda.max_memory_allocated(device)
+                    if device.type == "cuda"
+                    else None,
+                ),
                 metrics={
                     f"{r['condition']}/{r['format']}": r for r in result["metrics"]
                 },
@@ -1732,6 +1779,7 @@ def understanding(args):
         device=args.device,
         recipe=__file__,
         reference=args.reference,
+        question_mode=getattr(args, "observation_question", "full"),
     )
     if file_hash(args.core / "last.pt") != source_hash:
         raise AssertionError("Source checkpoint changed during evaluation")
@@ -2658,6 +2706,12 @@ def main():
         "--request-profile", choices=("narrow", "balanced"), default="narrow"
     )
     parser.add_argument(
+        "--observation-question",
+        choices=("full", "neutral", "masked"),
+        default="full",
+        help="Evaluation-only question routing; actual task request and evidence stay intact",
+    )
+    parser.add_argument(
         "--request-readout",
         choices=("none", "constant", "instruction"),
         help="Grounded task route; omitted restores the source mode",
@@ -2750,6 +2804,11 @@ def main():
         help="Optional learned untimed palette; requires query timing",
     )
     args = parser.parse_args()
+    if args.observation_question != "full" and args.stage not in (
+        "request-evaluate",
+        "understanding",
+    ):
+        parser.error("Observation question routing is evaluation-only")
     if args.stage in ("request-diagnose", "request-evaluate"):
         if (
             args.core is None

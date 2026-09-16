@@ -242,9 +242,13 @@ def evaluate_understanding(
     reference=None,
     score_answers=choice_scores,
     readout_contract=None,
+    question_mode="full",
 ):
     """Evaluate fixed tasks; source is explicit checkpoint/training lineage metadata."""
     device = torch.device(device)
+    from pathwm.evaluation.request_meaning import validate_request_route
+
+    validate_request_route(model, question_mode)
     model.to(device)
     if score_answers is not choice_scores and not readout_contract:
         raise ValueError(
@@ -276,7 +280,11 @@ def evaluate_understanding(
     run = Run(
         output,
         settings=dict(
-            seed=seed, purpose="diagnostic", contract=contract, source=source
+            seed=seed,
+            purpose="diagnostic",
+            contract=contract,
+            source=source,
+            observation_question=question_mode,
         ),
         data=data.manifest | dict(records_sha256=digest(data.records)),
         recipe=recipe,
@@ -325,7 +333,9 @@ def evaluate_understanding(
                                 else tuple(r["evidence"])
                             )
                             torch.manual_seed(rng_seed)
-                            inputs = data.inputs(r, omit=omit, device=device)
+                            inputs = data.inputs(
+                                r, omit=omit, device=device, question_mode=question_mode
+                            )
                             request_args = (
                                 dict(requests=[r["question"]])
                                 if getattr(model.core, "request_readout", "none")
@@ -448,6 +458,7 @@ def evaluate_understanding(
         atomic_json(run.path / "understanding_examples.json", examples)
         payload = dict(
             contract=contract,
+            observation_question=question_mode,
             source=source,
             seed=seed,
             cases=cases,
@@ -488,6 +499,7 @@ def evaluate_understanding(
             run.path / "result.json",
             dict(
                 evaluation_scope="Controlled semantic contrast tasks and real coarse scene tasks; recurring development regression.",
+                observation_question=question_mode,
                 metrics=payload["coverage"],
                 limitations=payload["limits"],
             ),

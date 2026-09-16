@@ -501,9 +501,17 @@ class UnderstandingData:
         validate_records(self.records, self.arrays)
         self.identity = digest(self.manifest)
 
-    def inputs(self, record, *, omit=(), device="cpu"):
+    def inputs(self, record, *, omit=(), device="cpu", question_mode="full"):
+        """Keep evidence intact; optional controls replace only the question bytes."""
+        if question_mode not in ("full", "neutral", "masked"):
+            raise ValueError("Unknown observation question mode")
         evidence = {k: v for k, v in record["evidence"].items() if k not in omit}
-        text = (evidence.get("text", "") + "\nFrage: " + record["question"]).strip()
+        question = record["question"]
+        if question_mode != "full":
+            question = "." * (
+                len(question.encode("utf-8")) if question_mode == "masked" else 1
+            )
+        text = (evidence.get("text", "") + "\nFrage: " + question).strip()
         tokens, mask = bytes_batch([text], device=device)
         inputs = {
             "text": Observation(
