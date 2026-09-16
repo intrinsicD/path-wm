@@ -1,5 +1,10 @@
 # Current work
 
+**In progress, 16 September:** [shared image/video codec](shared-video-vae-plan.md).
+Reuse the actual spatial image VAE for every frame, add optional causal latent
+processing, and train the same image weights on video frames. Existing agent-token
+path remains until a separately tested integration; no quality claim yet.
+
 **Video diagnosis and two bounded repairs completed, 16 September:**
 [Protocol/results](video-readout-plan.md#result-16-september),
 [full sequences](../runs/video_readout_v1/report.html).
