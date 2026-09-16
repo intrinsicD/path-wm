@@ -103,3 +103,63 @@ already restores Python/NumPy/Torch RNG, module modes and buffers. Reuse that gu
 no duplicate RNG wrapper was retained. Comparison status now includes lost/gained
 gates and task pass changes.70 focused software checks pass after this repair;
 555 whole-repository checks passed before this final comparison-only repair.
+
+## Results and what this does / does not establish
+
+- **Quick:**334 records (118 calibration,98 validation,118 test),27 real recording
+  locations,25 task families. **Full:**1336 records (472/392/472),36 locations,
+  the same25 families. Real positives combine distinct locations of the same scene
+  category; neither identity nor audiovisual synchronization is claimed.
+- Both existing384-update joint-native sources (training seeds7201/7202) pass
+  **0/25** quick task gates. The first source also passes **0/25** full gates.
+  All21 quick paired families have minimum paired success0. Full has20 at0 and
+  audio+video scene agreement at0.167, still failing. Two quick headline
+  scores differ between checkpoints, but neither reaches acceptance; these are
+  descriptive seed differences, not evidence of an architectural improvement.
+- On full, eight of ten controlled tasks have encoder-probe accuracy>=0.80
+  (count0.9375; the other seven1.0); audio order/duration do not. Actual answers
+  still fail. This motivates testing core retention and output conditioning,
+  without diagnosing one uniquely destructive layer. Small supervised probes,
+  spatial pooling and a linear reader especially limit cross-modal attribution.
+- The answer interface is a **specific byte-decoder choice scorer**. These source
+  decoders learned short symbolic reconstructions, not German question answering.
+  A failure therefore combines grounding, task learning and readout limitations.
+  This battery is not an instruction-tuned general-model benchmark and not a claim
+  that every latent representation lacks the information.
+- Quick execution is about one minute; full254.79s. Peak PyTorch allocated memory
+  is269.10MiB (not total device/process peak). No agent weights were trained or
+  changed. Ridge readers fit only calibration examples with validation-selected
+  regularization. Three categorical draws are not three independent training seeds.
+
+The final quick [baseline](../runs/understanding_suite_v1/final_baseline/report.html)
+and [comparison](../runs/understanding_suite_v1/final_comparison/report.html) are the
+reusable reference reports. The larger [full-profile report](../runs/understanding_suite_v1/full/report.html)
+was generated before the comparison-display repair; it has no reference comparison,
+and its scoring/inference is unchanged. Strict code contracts deliberately require
+rerunning it before using it as a reference under the repaired evaluator.
+
+The recurring checks are opt-in after completed core/joint training, with standalone
+prepare/evaluate commands documented in [experiments](experiments.md#recurring-understanding-checks).
+Keep the original factor/codec tests too. This extension measures grounded semantic
+contrasts and coarse real scene agreement. Speech/dialogue/music, natural tracking
+and action consequences, long-lived memory/tools, fine visual recognition/OCR,
+open-ended generation and fresh-confound-controlled confirmation remain explicit
+unimplemented domains. No general understanding or high-level green promotion.
+
+Report rendering was structurally verified and every embedded image/audio decoded.
+Representative real frame strips were inspected. Browser URL policy blocked local
+file navigation; no workaround was used and interactive browser QA remains unavailable.
+
+Final verification:6448 independent raw/omission/probe-score/source-hash/media checks
+across8 saved evaluations. Final quick baseline/comparison/repeat preserve every
+saved score and feature from their pre-repair counterparts. Repeat reports25
+unchanged tasks with exactly zero metric deltas and no lost/gained gates. Every
+run is result-complete/report-structural-verified; no report failures or stopped
+fits. One intentionally failing gate-regression test is preserved with its repair;
+RNG protection was already provided by the existing context manager. Total new run
+artifacts60MiB and fixtures5.3MiB; no downloads or agent fitting.
+
+[Audit receipt](../runs/understanding_suite_v1/verification.json),
+[full software checks](../runs/understanding_suite_v1/full-tests.txt),
+[post-repair focused checks](../runs/understanding_suite_v1/final-focused-tests.txt),
+[exact replay](../runs/understanding_suite_v1/final_repeat/report.html).

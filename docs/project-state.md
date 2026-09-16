@@ -1,5 +1,22 @@
 # Current work
 
+**Recurring understanding suite completed,16 September:**
+[Protocol/results and usage](understanding-suite-plan.md),
+[comparison report](../runs/understanding_suite_v1/final_comparison/report.html).
+Actual Claude method review reconciled. Added10 controlled tasks and15 real-scene
+subsets covering text/image/audio/video separately and all combinations, paired
+and source-omission controls, separate encoder/posterior/working probes and strict
+saved-reference deltas. Opt-in evaluation follows completed core/joint training.
+Quick334 records/27 locations; full1336/36. Both existing joint-native checkpoints
+fail25/25 quick acceptance screens; first also fails25/25 full. These text decoders
+were trained for short symbolic outputs, not German QA. Full encoder probes access
+8/10 controlled targets>=0.80; actual answers fail. No unique loss diagnosis,
+new weights/defaults or green capability promotion. Quick about63s, full254.79s,
+269.10MiB peak PyTorch allocation.555 whole-repository tests,70 focused after
+comparison repair;6448 raw/media checks and exact repeats. Missing speech,
+natural tracking/actions, persistent memory/tools and generation remain explicit.
+Structural/media report QA passes; browser URL policy blocks interactive checking.
+
 **Optional layer-readout comparison completed,16 September:**
 [Protocol/results and commands](layer-readout-plan.md),
 [comparison](../runs/layer_readout_v1/report.html).

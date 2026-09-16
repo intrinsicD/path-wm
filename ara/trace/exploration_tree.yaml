@@ -7471,3 +7471,29 @@ tree:
   - N447
   - docs/layer-readout-plan.md
   status: resolved
+- id: N449
+  type: decision
+  title: Require recurring understanding tasks across modalities and combinations
+  provenance: user
+  timestamp: 2026-09-16T16:13+02:00
+  choice: Expand the narrow attribute screens into repeatable actual task tests with diagnostics and visible
+    checkpoint improvements/regressions.
+  evidence:
+  - docs/understanding-suite-plan.md
+  status: resolved
+- id: N450
+  type: experiment
+  title: Grounded contrast and real-scene regression implemented; both sources fail task screens
+  provenance: ai-executed
+  timestamp: 2026-09-16T16:13+02:00
+  result: 25 families; quick334 records/27 locations, full1336/36. Both existing joint checkpoints0/25 quick;
+    first0/25 full. Eight of10 controlled full encoder probes>=0.8, actual answers fail. No neural updates.
+    Quick about63s/full254.79s,269.10MiB PyTorch allocation.555 full tests,70 after gate-regression fix,6448
+    raw/media checks, exact repeat and frozen source weights. Eight structural reports; browser blocked. Two
+    actual public-only Claude exchanges reconciled.
+  evidence:
+  - ara/evidence/tables/understanding_suite_2026-09-16.json
+  - runs/understanding_suite_v1/verification.json
+  - docs/understanding-suite-plan.md
+  - a5404e1
+  status: resolved
