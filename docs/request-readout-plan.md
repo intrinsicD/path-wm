@@ -37,6 +37,8 @@ encoders. This is an experimental connection, not a promised general remedy.
   All retain identical fixed metadata and paired random noise. These ablations
   localize routing/length dependence, not general natural-language understanding.
   Constant control still sees the real question through observations.
+  Full answers cover both phrasings; the five non-full controls use the equal-length
+  novel wording pair only, limiting duplicate diagnostic generation before fitting.
 - Run the unchanged25-family quick task battery plus the larger VID.order choice
   task. Evaluation implementation changes require fresh original-source reference
   evaluations; verify their raw predictions match the historical references.
@@ -66,3 +68,12 @@ Claude's public-only critique requested equal-capacity control, unseen/equal-len
 wordings, channel ablations and a narrow claim about an additional route. These
 are included. Original suite use is explicitly development, not locked final
 confirmation; even passing this comparison would need fresh natural-task evidence.
+
+Reconciliation: Claude accepts the internal validity of the redundant-route
+ablation under this scope; no unique semantic/reasoning mechanism is claimed.
+Its remaining reproducibility questions are resolved by the already fixed80%
+exact/EOS gates (all required gates must pass, no significance testing), raw UTF-8
+byte tokenizer/length assertions, automated exact-string+EOS grading and tensor
+equality of physical logits/tokens under request changes. The other ablations are
+diagnostics; they cannot be selected as substitute primary outcomes. No subjective
+rater or inference of general instruction understanding is used.

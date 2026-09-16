@@ -46,22 +46,32 @@ def test_request_changes_thinking_not_belief_and_metadata_has_no_question_or_ids
     for question in ("Erste Farbe?", "Beide Farben"):
         trace = {}
         torch.manual_seed(72)
-        out, state = model.core(inputs, requests=[question], trace=trace, return_state=True)
-        tokens.append(out); beliefs.append(state); traces.append(trace)
+        out, state = model.core(
+            inputs, requests=[question], trace=trace, return_state=True
+        )
+        tokens.append(out)
+        beliefs.append(state)
+        traces.append(trace)
     assert not torch.equal(tokens[0], tokens[1])
     assert torch.equal(beliefs[0].logits, beliefs[1].logits)
     assert torch.equal(beliefs[0].tokens, beliefs[1].tokens)
     assert torch.equal(traces[0]["task.metadata"], traces[1]["task.metadata"])
-    assert traces[0]["task.requests"][0]["task_id"] == traces[1]["task.requests"][0]["task_id"]
+    assert (
+        traces[0]["task.requests"][0]["task_id"]
+        == traces[1]["task.requests"][0]["task_id"]
+    )
     tokens[0].square().mean().backward()
-    assert any(p.grad is not None and p.grad.abs().sum() > 0 for p in model.core.agent.task_interpreter.parameters())
+    assert any(
+        p.grad is not None and p.grad.abs().sum() > 0
+        for p in model.core.agent.task_interpreter.parameters()
+    )
     assert all(p.grad is None for p in model.core.agent.encoders.parameters())
     # A second text-encoder call for instructions must not overwrite observation probes.
     torch.manual_seed(72)
     _, a = capture_stages(model.core, inputs, requests=["Erste Farbe?"])
     torch.manual_seed(72)
     _, b = capture_stages(model.core, inputs, requests=["Beide Farben"])
-    assert torch.equal(torch.from_numpy(a["encoder"]),torch.from_numpy(b["encoder"])) if not isinstance(a["encoder"],torch.Tensor) else torch.equal(a["encoder"],b["encoder"])
+    assert torch.equal(a["encoder"], b["encoder"])
 
 
 def test_order_requests_preserve_evidence_splits_and_balance_answer_length():
@@ -74,7 +84,9 @@ def test_order_requests_preserve_evidence_splits_and_balance_answer_length():
     variants = recipe.order_requests(base, novel=False)
     assert len(variants) == 4
     assert all(r["evidence"] == base["evidence"] for r in variants)
-    assert len({len(r["question"].encode()) for r in variants if r["wording"] == 1}) == 1
+    assert (
+        len({len(r["question"].encode()) for r in variants if r["wording"] == 1}) == 1
+    )
     assert {r["format"] for r in variants} == {"first", "sequence"}
     for row in variants:
         value = row["choices"][row["answer"]]

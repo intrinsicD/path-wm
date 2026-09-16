@@ -28,6 +28,14 @@ from pathwm.models.multiscale import (
 )
 from pathwm.models.modalities import ImageDecoder, AudioDecoder, TextDecoder
 from pathwm.models.readout import RecurrentOutputAdapter, TemporalImageDecoder
+from pathwm.models.tasks import (
+    Actor,
+    OutputControl,
+    TaskRequest,
+    TaskSession,
+    TaskInterpreter,
+    MetadataEncoder,
+)
 from pathwm.io import (
     Run,
     seed_everything,
@@ -65,6 +73,7 @@ class Core(nn.Module):
         if belief_readout not in ("sampled", "probabilities"):
             raise ValueError("Unknown working belief readout")
         self.belief_readout = belief_readout
+        self.request_readout = "none"
         encoders = {
             "text": MultiScaleTextEncoder(width, code_width=8, levels=3),
             "image": MultiScaleImageEncoder(width, code_width=8, levels=3),
@@ -97,6 +106,7 @@ class Core(nn.Module):
         return_state=False,
         posterior_features=None,
         temperature=1.0,
+        requests=None,
     ):
         if not np.isfinite(temperature) or temperature <= 0:
             raise ValueError("Posterior temperature must be finite and positive")
@@ -130,7 +140,24 @@ class Core(nn.Module):
                     (world, state.tokens[:, self.agent.groups["world"] :]), 1
                 ),
             )
-        tokens = self.agent.think(workspace, steps=2, trace=trace).tokens
+        goal = None
+        if requests is not None and self.request_readout != "none":
+            if len(requests) != batch:
+                raise ValueError("One request per batch member is required")
+            caller = Actor("user", "caller")
+            sessions = [
+                TaskSession(
+                    TaskRequest(
+                        "readout-request",
+                        question if self.request_readout == "instruction" else ".",
+                        caller,
+                        (OutputControl("text", "required", caller),),
+                    )
+                )
+                for question in requests
+            ]
+            goal = self.agent.task_tokens(workspace, sessions, trace=trace)
+        tokens = self.agent.think(workspace, steps=2, goal=goal, trace=trace).tokens
         return (tokens, state) if return_state else tokens
 
     def factors(self, tokens):
@@ -233,9 +260,28 @@ def source_encoder_readout(directory):
     )
 
 
+def configure_request_readout(model, mode):
+    """Reuse the agent task path, preserving source weights and caller RNG."""
+    if mode not in ("none", "constant", "instruction"):
+        raise ValueError("Unknown request readout")
+    agent = model.core.agent
+    if mode == "none":
+        agent.task_interpreter = agent.metadata_encoder = None
+    elif agent.task_interpreter is None:
+        device = next(model.parameters()).device
+        with torch.random.fork_rng():
+            agent.task_interpreter = TaskInterpreter(agent.width).to(device)
+            agent.metadata_encoder = MetadataEncoder(agent.width).to(device)
+    model.core.request_readout = mode
+
+
 def load_initial(model, directory, device):
     checkpoint_path = directory / "last.pt" if directory.is_dir() else directory
     configure_encoder_readout(model, source_encoder_readout(checkpoint_path.parent))
+    settings = json.loads((checkpoint_path.parent / "run.json").read_text())[
+        "identity"
+    ]["settings"]
+    configure_request_readout(model, settings.get("request_readout", "none"))
     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=True)
     missing, unexpected = model.load_state_dict(checkpoint["model"], strict=False)
     allowed = {"posterior_head.weight", "posterior_head.bias"}
@@ -244,9 +290,6 @@ def load_initial(model, directory, device):
             f"Incompatible initialization: missing={missing}, unexpected={unexpected}"
         )
     model.core.belief_readout = source_readout(checkpoint_path.parent)
-    settings = json.loads((checkpoint_path.parent / "run.json").read_text())[
-        "identity"
-    ]["settings"]
     model.outputs.decoders["video"].time_conditioning = settings.get(
         "video_conditioning", "context"
     )
@@ -681,7 +724,46 @@ def restore_readout(directory, seed, device):
     return model.to(device), settings, source_hash
 
 
-def grounded_records(data, case):
+def order_requests(record, *, novel=False):
+    """Same evidence, different visible requests; no new clips or hidden task IDs."""
+    if record["case"] != "VID.order":
+        raise ValueError("Request contrasts currently require VID.order")
+    questions = (
+        {
+            "first": ("Welche Farbe kam zuerst?", "Gib nur die erste Farbe an."),
+            "sequence": ("Welche Farben der Reihe?", "Gib beide Farben der Reihe."),
+        }
+        if novel
+        else {
+            "first": (record["question"], "Erste Farbe?"),
+            "sequence": (
+                "Nenne beide Farben in ihrer zeitlichen Reihenfolge.",
+                "Beide Farben",
+            ),
+        }
+    )
+    return [
+        record
+        | dict(
+            id=f"{record['id']}/{novel}/{form}/{i}",
+            pair=f"{record['pair']}/{novel}/{form}/{i}",
+            question=question,
+            format=form,
+            wording=i,
+            novel=novel,
+            choices=record["choices"]
+            if form == "first"
+            else [
+                " ".join((record["choices"][j], record["choices"][1 - j]))
+                for j in range(2)
+            ],
+        )
+        for form, values in questions.items()
+        for i, question in enumerate(values)
+    ]
+
+
+def grounded_records(data, case, *, request_contrasts=False):
     """An explicit supervised calibration population; never train on scored cohorts."""
     if not any(
         c["id"] == case and c["domain"] == "controlled contrast" for c in data.cases
@@ -692,7 +774,7 @@ def grounded_records(data, case):
     ]
     if not rows:
         raise ValueError("No calibration training examples")
-    return rows
+    return [v for r in rows for v in order_requests(r)] if request_contrasts else rows
 
 
 def grounded_batch(data, rows, indices, device):
@@ -801,6 +883,118 @@ def objective_gradient_norm(loss, parameters):
     return float(sum(g.square().sum() for g in gradients if g is not None).sqrt())
 
 
+def evaluate_request_contrasts(model, data, path, device):
+    """Free answers and routing ablations; labels never enter model inputs."""
+    from pathwm.models.modalities import bytes_text
+
+    rows = [r for r in data.records if r["case"] == "VID.order"]
+    pair_rng = {
+        p: 19401 + i * 10 for i, p in enumerate(dict.fromkeys(r["pair"] for r in rows))
+    }
+    results = []
+    start = time.perf_counter()
+    with evaluation_mode(model), torch.no_grad():
+        for base in (r for r in rows if r["split"] == "test"):
+            for novel in (False, True):
+                for row in order_requests(base, novel=novel):
+                    conditions = ["full"]
+                    if novel and row["wording"] == 0:
+                        conditions += [
+                            "omitted",
+                            "last_frame",
+                            "observation_only",
+                            "request_only",
+                            "scrambled_request_only",
+                        ]
+                    for draw in range(3):
+                        for condition in conditions:
+                            torch.manual_seed(pair_rng[base["pair"]] + draw)
+                            request = row["question"]
+                            observed = row
+                            if condition in ("request_only", "scrambled_request_only"):
+                                observed = row | dict(question=".")
+                            if condition == "observation_only":
+                                request = "."
+                            elif condition == "scrambled_request_only":
+                                request = request[::-1]
+                            inputs = data.inputs(
+                                observed,
+                                omit=("video",) if condition == "omitted" else (),
+                                device=device,
+                            )
+                            if condition == "last_frame":
+                                video = inputs["video"]
+                                inputs["video"] = replace(
+                                    video,
+                                    values=video.values[:, -1:],
+                                    times=video.times[:, -1:],
+                                )
+                            tokens = model.core(inputs, requests=[request])
+                            ids = model.outputs.generate(tokens, 16)[0]
+                            generated = bytes_text(ids)
+                            expected = row["choices"][row["answer"]]
+                            ended = bool((ids == 2).any())
+                            results.append(
+                                dict(
+                                    clip=base["id"],
+                                    pair=base["pair"],
+                                    novel=novel,
+                                    format=row["format"],
+                                    wording=row["wording"],
+                                    draw=draw,
+                                    condition=condition,
+                                    question=row["question"],
+                                    generated=generated,
+                                    expected=expected,
+                                    ended=ended,
+                                    exact=ended and generated == expected,
+                                    first_word=(generated.split() or [""])[0]
+                                    == expected.split()[0],
+                                )
+                            )
+    metrics = []
+    for novel in (False, True):
+        for condition in dict.fromkeys(
+            r["condition"] for r in results if r["novel"] == novel
+        ):
+            group = [
+                r
+                for r in results
+                if r["novel"] == novel and r["condition"] == condition
+            ]
+            for form in ("first", "sequence", "both"):
+                by_draw = []
+                for draw in range(3):
+                    selected = [r for r in group if r["draw"] == draw]
+                    if form == "both":
+                        paired = {}
+                        for r in selected:
+                            paired.setdefault((r["clip"], r["wording"]), []).append(
+                                r["exact"]
+                            )
+                        values = [all(v) for v in paired.values()]
+                    else:
+                        values = [r["exact"] for r in selected if r["format"] == form]
+                    by_draw.append(float(np.mean(values)))
+                metrics.append(
+                    dict(
+                        novel=novel,
+                        condition=condition,
+                        format=form,
+                        exact_by_draw=by_draw,
+                        exact_min=min(by_draw),
+                    )
+                )
+    result = dict(
+        metrics=metrics,
+        examples=results,
+        seconds=time.perf_counter() - start,
+        scope="Full answers: familiar and two novel wordings per format. Routing/omission controls: only the equal-length novel wording pair. Repeated development clips; no general-language claim.",
+    )
+    atomic_json(path / "request_contrasts.json", result)
+    return result
+
+
 def grounded(args):
     """Small matched continuation through the existing core and output decoder."""
     from pathwm.data.understanding import UnderstandingData
@@ -808,9 +1002,15 @@ def grounded(args):
     from pathwm.models.modalities import bytes_text
 
     data = UnderstandingData(args.understanding_suite)
-    rows = grounded_records(data, args.grounded_case)
+    contrasts = getattr(args, "request_contrasts", False)
+    rows = grounded_records(data, args.grounded_case, request_contrasts=contrasts)
     device = torch.device(args.device)
     model, source_settings, source_hash = restore_readout(args.core, args.seed, device)
+    configure_request_readout(
+        model,
+        getattr(args, "request_readout", None)
+        or source_settings.get("request_readout", "none"),
+    )
     configure_grounded_training(model, args.grounded_scope)
     retention_weight = getattr(args, "retention_weight", 0.0)
     if not np.isfinite(retention_weight) or retention_weight < 0:
@@ -840,6 +1040,8 @@ def grounded(args):
         batch=8,
         learning_rate=0.001,
         case=args.grounded_case,
+        request_readout=model.core.request_readout,
+        request_contrasts=contrasts,
         scope=args.grounded_scope,
         calibration_training_ids=[r["id"] for r in rows],
         replay_seed=original_seed,
@@ -865,6 +1067,7 @@ def grounded(args):
             fixtures=data.identity,
             replay_seed=original_seed,
             replay_ids=digest(populations["train"]["ids"]),
+            grounded_records_sha256=digest(rows),
         ),
         recipe=__file__,
         model=model,
@@ -883,6 +1086,7 @@ def grounded(args):
     try:
         baseline_path = run.path / "symbolic_before.json"
         if not args.resume:
+            atomic_json(run.path / "grounded_training_examples.json", rows)
             before, _ = symbolic()
             atomic_json(baseline_path, before)
         else:
@@ -896,10 +1100,12 @@ def grounded(args):
             optimizer.zero_grad(set_to_none=True)
             diagnostics = {}
             if run.step % 2 == 0:
-                inputs, target = grounded_batch(
-                    data, rows, run.sample(len(rows), 8), device
+                indices = run.sample(len(rows), 8)
+                inputs, target = grounded_batch(data, rows, indices, device)
+                requests = [rows[int(i)]["question"] for i in indices]
+                loss = grounded_objective(
+                    model, model.core(inputs, requests=requests), target
                 )
-                loss = grounded_objective(model, model.core(inputs), target)
                 objective = "qa"
             else:
                 replay = populations["train"]
@@ -1004,7 +1210,7 @@ def grounded(args):
                                 values=video.values[:, -1:],
                                 times=video.times[:, -1:],
                             )
-                            tokens = model.core(inputs)
+                            tokens = model.core(inputs, requests=[r["question"]])
                             scores = choice_scores(model.outputs, tokens, r["choices"])
                             controls.append(
                                 dict(
@@ -1022,7 +1228,9 @@ def grounded(args):
                         if r["case"] == args.grounded_case and r["split"] == "test"
                     ]:
                         torch.manual_seed(9401)
-                        tokens = model.core(data.inputs(r, device=device))
+                        tokens = model.core(
+                            data.inputs(r, device=device), requests=[r["question"]]
+                        )
                         generated.append(
                             dict(
                                 id=r["id"],
@@ -1033,6 +1241,24 @@ def grounded(args):
                             )
                         )
                 atomic_json(run.path / "grounded_examples.json", generated)
+            if contrasts:
+                request_result = evaluate_request_contrasts(
+                    model, data, run.path, device
+                )
+                atomic_json(
+                    run.path / "result.json",
+                    dict(
+                        evaluation_scope=request_result["scope"],
+                        metrics={
+                            f"{'novel' if r['novel'] else 'familiar'}/{r['condition']}/{r['format']}": r
+                            for r in request_result["metrics"]
+                        },
+                        limits=[
+                            "Raw questions, outputs, EOS and first-word diagnostics are in request_contrasts.json.",
+                            "Per-fit format success is not overall adoption; compare both sources and regression gates.",
+                        ],
+                    ),
+                )
         atomic_json(
             run.path / "grounded.json",
             dict(
@@ -1584,6 +1810,16 @@ def main():
     )
     parser.add_argument(
         "--grounded-scope", choices=("decoder", "core"), default="decoder"
+    )
+    parser.add_argument(
+        "--request-readout",
+        choices=("none", "constant", "instruction"),
+        help="Grounded task route; omitted restores the source mode",
+    )
+    parser.add_argument(
+        "--request-contrasts",
+        action="store_true",
+        help="Grounded VID.order training with paired short/sequence requests",
     )
     parser.add_argument(
         "--retention-weight",

@@ -44,12 +44,14 @@ def choice_scores(outputs, tokens, choices):
     return (logp * mask).sum(-1) / mask.sum(-1)
 
 
-def capture_stages(core, inputs):
+def capture_stages(core, inputs, *, requests=None):
     """Bounded detached encoder summaries from the same actual forward pass."""
     encoders, hooks = {}, []
 
     def capture(kind):
         def hook(module, arguments, pyramid):
+            if kind in encoders:
+                return  # Later request re-encoding is not the observation probe.
             values = []
             for scale in pyramid.scales:
                 x = scale.values.masked_fill(~scale.valid[..., None], 0)
@@ -65,7 +67,8 @@ def capture_stages(core, inputs):
     try:
         for kind in inputs:
             hooks.append(core.agent.encoders[kind].register_forward_hook(capture(kind)))
-        tokens, state = core(inputs, return_state=True)
+        kwargs = {} if requests is None else dict(requests=requests)
+        tokens, state = core(inputs, return_state=True, **kwargs)
     finally:
         for h in hooks:
             h.remove()
@@ -323,12 +326,20 @@ def evaluate_understanding(
                             )
                             torch.manual_seed(rng_seed)
                             inputs = data.inputs(r, omit=omit, device=device)
+                            request_args = (
+                                dict(requests=[r["question"]])
+                                if getattr(model.core, "request_readout", "none")
+                                != "none"
+                                else {}
+                            )
                             if draw == 0 and condition == "full":
-                                tokens, stages = capture_stages(model.core, inputs)
+                                tokens, stages = capture_stages(
+                                    model.core, inputs, **request_args
+                                )
                                 for k, v in stages.items():
                                     features[k].append(v.numpy()[0])
                             else:
-                                tokens = model.core(inputs)
+                                tokens = model.core(inputs, **request_args)
                             values = (
                                 score_answers(model.outputs, tokens, r["choices"])
                                 .detach()
