@@ -1,5 +1,17 @@
 # Current work
 
+**Cross-modal capability/diagnostic specification,16 September:**
+[Suite scope and diagnostic contract](modality-understanding-test-map.md) extends
+the requested video map to text, image, audio, structured inputs/actions and the
+shared core. Reuses existing recipes, stage probes and reports; no new runner,
+training, thresholds or capability passes. Execution order remains to be scoped.
+
+**Proposed overall video evaluation map,16 September:**
+[Capability tests and milestone sequence](video-understanding-test-map.md) connect
+motion, tracking, entity/state memory and prediction to the shared core. This is a
+requested scope overview, not an adopted experiment protocol or new validation.
+Further fits require preregistered endpoints, budgets and stopping criteria.
+
 **Structured direction-reader comparison completed,16 September:**
 [Protocol/results](video-evidence-plan.md),[report](../runs/video_evidence_v1/report.html).
 Four512-update fits: pooled1630 vs shared evidence81 parameters. Fresh groups achieve

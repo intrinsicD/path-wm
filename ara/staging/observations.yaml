@@ -5187,3 +5187,23 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O297
+  timestamp: 2026-09-16T13:21+02:00
+  provenance: ai-suggested
+  content: Proposed common suites separate mechanics, held-out capability and actual shared-core/memory/output
+    use across text, image, audio, video and structured/action interfaces. Reports retain not-implemented/not-run/unsupported
+    states, scoped gates, per-source failures, matched stage probes, context controls and bounded interventions.
+    A stage probe localizes accessibility under its reader, not irreversible loss or a unique cause. Run
+    quick regression subsets routinely and expensive probes at scoped milestones.
+  context: User expands the video test-map request to every modality with diagnostic output. Existing
+    recipe/probe/report code inspected; two scope documents written and linked. No new runner, fits, measurements
+    or default changes.
+  potential_type: heuristic
+  bound_to:
+  - N438
+  - N439
+  - N437
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

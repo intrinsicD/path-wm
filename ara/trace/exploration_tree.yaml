@@ -7317,3 +7317,25 @@ tree:
   - docs/video-evidence-plan.md
   - docs/project-state.md
   status: open
+- id: N438
+  type: question
+  title: Which capabilities must be tested for video understanding in PATH-WM?
+  provenance: user
+  timestamp: 2026-09-16T13:21+02:00
+  description: User requests an overall capability map after clarifying direction is a genuine video subskill.
+    Delivered proposed motion/tracking/state/history/prediction/core-use matrix with controls and milestone
+    stopping discipline, not a runnable protocol.
+  evidence:
+  - docs/video-understanding-test-map.md
+  status: resolved
+- id: N439
+  type: decision
+  title: Extend the capability and diagnostic test structure across modalities and the shared core
+  provenance: user
+  timestamp: 2026-09-16T13:21+02:00
+  choice: User requests the analogous scope for other modalities and asks for suites that expose what
+    fails where. Record the desired common evaluation approach; detailed cases, gates, budgets and implementation
+    are still to be scoped.
+  evidence:
+  - docs/modality-understanding-test-map.md
+  status: resolved

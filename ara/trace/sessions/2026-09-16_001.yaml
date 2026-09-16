@@ -2,8 +2,8 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T13:06+02:00
-  turn_count: 15
+  last_turn: 2026-09-16T13:21+02:00
+  turn_count: 16
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not
     adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59
     scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
@@ -32,7 +32,8 @@ session:
     Structured evidence:4 fits,81 vs1630 parameters,fresh99.69–100% and fixed rule pass. Learned-vs-fixed
     gain0.0366pp/old-source-14.71pp fails adoption; near-offset reassignment recorded.89 tests,10239 restart,42682
     audits,8 reports. User challenges overall research coherence; milestone/stop-rule review proposed
-    before more probe optimization.'
+    before more probe optimization. User requests video then all-modality capability/diagnostic suites;
+    scope maps documented, no implementation or new validation.'
 events_logged:
 - turn: 1
   type: decision
@@ -613,6 +614,28 @@ events_logged:
     Assistant accepts the distinction: the current controlled-pan diagnostic has limited coverage, but
     its target ability remains relevant. This does not endorse abandoning direction work, adopt O295,
     or establish general video capability.'
+- turn: 16
+  type: question
+  id: N438
+  routing: direct
+  provenance: user
+  summary: Which capabilities must be tested for video understanding in PATH-WM?
+- turn: 16
+  type: decision
+  id: N439
+  routing: direct
+  provenance: user
+  summary: Extend the capability and diagnostic test structure across modalities and the shared core
+- turn: 16
+  type: observation
+  id: O297
+  routing: staged
+  provenance: ai-suggested
+  summary: Proposed common suites separate mechanics, held-out capability and actual shared-core/memory/output
+    use across text, image, audio, video and structured/action interfaces. Reports retain not-implemented/not-run/unsupported
+    states, scoped gates, per-source failures, matched stage probes, context controls and bounded interventions.
+    A stage probe localizes accessibility under its reader, not irreversible loss or a unique cause. Run
+    quick regression subsets routinely and expensive probes at scoped milestones.
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -808,6 +831,15 @@ ai_actions:
   provenance: ai-executed
   files_changed:
   - ara/staging/observations.yaml
+- turn: 16
+  action: Inspected existing modality/video recipes, probes and reports; consulted primary TAP-Vid, Something-Something
+    and V-JEPA 2 sources. Added proposed video and cross-modal capability/diagnostic maps, verified local
+    links and diff formatting. No training, model tests or Claude export.
+  provenance: ai-executed
+  files_changed:
+  - docs/video-understanding-test-map.md
+  - docs/modality-understanding-test-map.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -870,6 +902,10 @@ key_context:
 - turn: 15
   excerpt: 'User: Das ist ein Teil von echtem Videoverständnis. Assistant accepts relevance of direction
     as a subskill and limits only the current evidence scope.'
+- turn: 16
+  excerpt: 'User: what must we test for real video understanding? Follow-up: exactly the same for the
+    other modalities; should complete suites emit diagnostics showing what fails where? Assistant specifies
+    scoped common capability tests and causal-attribution limits.'
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -961,6 +997,8 @@ open_threads:
   duplicate-code/compilation cleanup.'
 - 'N437/O295: review whole-task milestones and stopping criteria before further direction-probe refinements;
   actual video/world-state usefulness unvalidated.'
+- 'N438/N439/O297: map existing evidence to capability cases and select bounded executable modality/core
+  milestones; specifications are not a completed test runner.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
@@ -1118,3 +1156,5 @@ ai_suggestions_pending:
   calibration-vs-ranking proposal staged; no global video claim promoted.
 - O295 overall milestone review proposed only. No adoption/abandonment of O294 inferred; older video and
   agent topics remain active.
+- O297 detailed suite/gate/report proposal remains staged; user endorsed the general cross-modal diagnostic
+  direction, not particular thresholds or abandonment of current video work.
