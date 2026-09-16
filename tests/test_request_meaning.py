@@ -76,3 +76,32 @@ def test_captured_request_stages_are_actual_path_and_preserve_physical_state():
     assert not torch.equal(captured[0][0]["task"], captured[1][0]["task"])
     # Diagnostic stores detached representations, never feeds labels/heads to generation.
     assert all(not x.requires_grad for x in captured[0][0].values())
+
+
+def test_interpreter_only_fit_keeps_request_free_outputs_and_all_other_state_exact():
+    torch.set_num_threads(2)
+    torch.manual_seed(781)
+    model=recipe.Model('native')
+    recipe.configure_request_readout(model,'instruction')
+    recipe.configure_grounded_training(model,'interpreter')
+    assert all(n.startswith('core.agent.task_interpreter.') for n,p in model.named_parameters() if p.requires_grad)
+    data=UnderstandingData.__new__(UnderstandingData)
+    data.records,data.arrays,data.cases=synthetic_records('full')
+    rows=recipe.grounded_records(data,'VID.order',request_contrasts=True,request_profile='balanced')
+    assert len(rows)==16*24 and all(r['split']=='calibration' for r in rows)
+    inputs,targets=recipe.grounded_batch(data,rows,[0,1],'cpu')
+    before={n:v.clone() for n,v in model.state_dict().items()}
+    with torch.no_grad():
+        torch.manual_seed(32)
+        old=model.outputs('text',model.core(inputs),targets[:,:-1]).clone()
+    optimizer=torch.optim.Adam([p for p in model.parameters() if p.requires_grad],lr=.001)
+    loss=recipe.grounded_objective(model,model.core(inputs,requests=[rows[i]['question'] for i in (0,1)]),targets)
+    loss.backward()
+    assert any(p.grad is not None and p.grad.abs().sum()>0 for p in model.core.agent.task_interpreter.parameters())
+    optimizer.step()
+    for n,v in model.state_dict().items():
+        if not n.startswith('core.agent.task_interpreter.'):assert torch.equal(v,before[n])
+    with torch.no_grad():
+        torch.manual_seed(32)
+        new=model.outputs('text',model.core(inputs),targets[:,:-1])
+    assert torch.equal(old,new)
