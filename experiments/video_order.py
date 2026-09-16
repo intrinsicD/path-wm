@@ -166,12 +166,17 @@ def load_sources(manifest, directory):
         raise ValueError(
             "Expected train, validation, evaluation and optional confirmation"
         )
-    seen, result = {}, {}
+    seen, seen_ids, result = {}, set(), {}
     for split, records in groups.items():
         if not records:
             raise ValueError("Empty source split")
         result[split] = []
         for record in records:
+            if not isinstance(record.get("id"), str) or not record["id"]:
+                raise ValueError("Nonempty source id required")
+            if record["id"] in seen_ids:
+                raise ValueError("Exact duplicate source id in manifest")
+            seen_ids.add(record["id"])
             if type(record["frames"]) is not int or record["frames"] < 1:
                 raise ValueError("frames must be a positive integer")
             path = Path(record["path"])
@@ -195,6 +200,7 @@ def load_sources(manifest, directory):
         }
         if (
             not all(subjects)
+            or not all(others)
             or len(set(subjects)) != len(subjects)
             or set(subjects) & others
         ):

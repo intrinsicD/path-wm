@@ -21,6 +21,14 @@ def test_manifest_rejects_confirmation_subject_and_file_leakage(tmp_path):
     data = load()
     assert data["train"][0]["frames"] == 4
     assert data["confirmation"][0]["subject"] == "3"
+    groups["train"][0]["subject"] = None
+    with pytest.raises(ValueError, match="subject"):
+        load()
+    groups["train"][0]["subject"] = "0"
+    groups["confirmation"][0]["id"] = "train"
+    with pytest.raises(ValueError, match="duplicate"):
+        load()
+    groups["confirmation"][0]["id"] = "confirmation"
     groups["confirmation"][0]["subject"] = "0"
     with pytest.raises(ValueError, match="subject"):
         load()
