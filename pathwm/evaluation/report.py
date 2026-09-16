@@ -1371,6 +1371,9 @@ def render_report(directory):
     parts.extend(entity_inspection(directory))
     parts.extend(fact_inspection(directory))
     parts.extend(capability_inspection(directory))
+    from pathwm.evaluation.modality_suite import suite_inspection
+
+    parts.extend(suite_inspection(directory))
     parts.extend(visual_memory_inspection(directory))
     parts.extend(model_inspection(directory))
     from pathwm.evaluation.world_state import world_state_inspection

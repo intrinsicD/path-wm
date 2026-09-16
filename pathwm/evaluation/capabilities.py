@@ -131,6 +131,8 @@ def case_record(name, checkpoint, inputs, metrics, gates, scope, raw_file):
         status=(
             "fail"
             if any(g["status"] == "fail" for g in gates.values())
+            else "not_measured"
+            if any(g["status"] != "pass" for g in gates.values())
             else "pass"
             if gates
             else "measured"

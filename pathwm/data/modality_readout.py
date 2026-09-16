@@ -50,19 +50,20 @@ def canonical(factors):
 
 
 def dataset(split, seed=7201):
-    if split not in ("train", "validation", "seen", "heldout"):
+    splits = ("train", "validation", "seen", "heldout", "intervention")
+    if split not in splits:
         raise ValueError("Unknown split")
     combinations = [
         x
         for x in itertools.product(range(3), range(3), range(2))
-        if (((x[0] + x[1]) % 3 == 0) == (split == "heldout"))
+        if split == "intervention" or (((x[0] + x[1]) % 3 == 0) == (split == "heldout"))
     ]
-    views = {"train": 12, "validation": 4, "seen": 4, "heldout": 8}[split]
+    views = {"train": 12, "validation": 4, "seen": 4, "heldout": 8, "intervention": 4}[
+        split
+    ]
     factors = torch.tensor([x for x in combinations for _ in range(views)])
     targets = canonical(factors)
-    g = torch.Generator().manual_seed(
-        seed + 10000 * ("train", "validation", "seen", "heldout").index(split)
-    )
+    g = torch.Generator().manual_seed(seed + 10000 * splits.index(split))
     b = len(factors)
     # Small independent observation noise; canonical targets remain unchanged.
     image = (

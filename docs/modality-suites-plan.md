@@ -63,3 +63,25 @@ Its suggestion to defer observing other modalities until one passes is not adopt
 this suite must expose failures in all requested branches. The dependent-combination
 omission pitfall is addressed with the separate Cartesian intervention population.
 Reconciliation and remaining issues are recorded after its response.
+
+Reconciliation received: Claude accepts evaluating all branches while retaining
+their separate failures. Exact Cartesian enumeration and conditional-count tests
+establish the control balance. Missing versus unrun states are fixed by the catalog,
+not decided after scores. No split-resampling uncertainty is claimed. Its claim
+that accessibility is wholly uninterpretable without a random encoder is too
+strong: recoverability under this reader is measured, while learning benefit is
+not identified. No private material was exported; two compact CLI receipts retained.
+
+## Implementation preflight
+
+Seven new checks plus26 existing capability/readout checks pass. The red test found
+an existing bug: `case_record` could pass a nonempty gate set containing an unmeasured
+required value. It now reports `not_measured` unless an actual failure takes priority.
+The real frozen two-update source smoke completed in4.82s diagnostic compute;
+all15 scoped screens failed,14 broader tests are unimplemented and4 output tests
+unrun, as appropriate for this source. Positive probe control100%, source unchanged.
+
+Browser QA was attempted through the supported browser interface. Its URL policy
+blocked the local report and explicitly forbade workarounds. Preserve structural
+report validation and inspect saved plots; browser-interaction verification remains
+blocked, not passed. This does not block local model evaluation.

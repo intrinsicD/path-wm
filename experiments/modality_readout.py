@@ -49,6 +49,11 @@ from pathwm.evaluation.modality_readout import (
     save_stage_panel,
     summarize_repair,
 )
+from pathwm.evaluation.modality_suite import (
+    PROTOCOL as CAPABILITY_PROTOCOL,
+    build_suite,
+    measure_factors,
+)
 
 VARIANTS = ("native", "adapter1", "adapter2", "adapter4")
 
@@ -406,6 +411,7 @@ def diagnose(args):
     populations = {
         s: dataset(s, args.seed) for s in ("train", "validation", "seen", "heldout")
     }
+    capability = args.stage == "capabilities"
     run = Run(
         args.output,
         settings=dict(
@@ -415,6 +421,7 @@ def diagnose(args):
             core=str(args.core.resolve()),
             method="Frozen stage ridge; train-only scaling and validation-only choice",
             encoder_token_cap_per_scale=64,
+            **(dict(capability_protocol=CAPABILITY_PROTOCOL) if capability else {}),
         ),
         data=dict(
             generator=file_hash("pathwm/data/modality_readout.py"), seed=args.seed
@@ -425,6 +432,7 @@ def diagnose(args):
         device=device,
     )
     before = state_hash(model)
+    started = time.perf_counter()
     cache, arrays, rows, choices = {}, {}, [], []
     try:
         with evaluation_mode(model), torch.no_grad():
@@ -530,6 +538,78 @@ def diagnose(args):
             scope="Linear accessibility under unequal feature dimensions; not a bound on nonlinear recovery or a proof of information loss.",
         )
         atomic_json(run.path / "stage_probe.json", payload)
+        if capability:
+            # Separate full Cartesian population, never used for probe fitting or selection.
+            populations["intervention"] = dataset("intervention", args.seed)
+            measured, predictions, draw_seeds = measure_factors(
+                model.core, populations, seed=args.seed, device=device
+            )
+            np.savez_compressed(run.path / "capability_predictions.npz", **predictions)
+            export_data(run.path / "capability_inputs.npz", populations)
+            source = dict(
+                checkpoint=str((args.core / "last.pt").resolve()),
+                checkpoint_sha256=source_hash,
+                settings=json.loads((args.core / "run.json").read_text())["identity"][
+                    "settings"
+                ],
+            )
+            suite = build_suite(measured, rows, source=source, seed=args.seed)
+            suite["draw_seeds"] = draw_seeds
+            suite["model_unchanged"] = state_hash(model) == before
+            suite["resources"] = dict(
+                seconds=time.perf_counter() - started,
+                parameters=sum(p.numel() for p in model.parameters()),
+                neural_updates=0,
+                ridge_readers=len(choices) * 2 + 1,
+                ridge_solutions=sum(len(c["validation"]) + 1 for c in choices) + 5,
+                peak_memory="not measured",
+            )
+            if (
+                not suite["model_unchanged"]
+                or file_hash(args.core / "last.pt") != source_hash
+            ):
+                raise AssertionError(
+                    "Capability evaluation mutated frozen model/source"
+                )
+            atomic_json(run.path / "capability_suite.json", suite)
+            atomic_json(
+                run.path / "result.json",
+                dict(
+                    evaluation_scope=CAPABILITY_PROTOCOL["scope"],
+                    metrics=suite["coverage"],
+                    protocol_sha256=suite["protocol_sha256"],
+                    broad_capability="not established",
+                ),
+            )
+            examples = []
+            for mode in MODES:
+                failures = measured[f"heldout.{mode}"]["failures"]
+                i = failures[0]["index"] if failures else 0
+                d = populations["heldout"]
+                entry = dict(
+                    mode=mode,
+                    id=d["ids"][i],
+                    expected=d["targets"]["factors"][i].tolist(),
+                    predicted_by_draw=predictions[f"heldout.{mode}.predictions"][
+                        :, i
+                    ].tolist(),
+                )
+                for kind, obs in observations(d, mode, [i]).items():
+                    if kind == "text":
+                        from pathwm.models.modalities import bytes_text
+
+                        entry[kind] = bytes_text(obs.values[0])
+                    else:
+                        values = obs.values[0]
+                        entry[kind] = (
+                            values[0] if kind == "image" else values
+                        ).tolist()
+                    entry[kind + "_times"] = obs.times[0].tolist()
+                    entry[kind + "_valid"] = (
+                        None if obs.valid is None else obs.valid[0].tolist()
+                    )
+                examples.append(entry)
+            atomic_json(run.path / "capability_examples.json", examples)
         run.step = 1
         run.save()
         run.status("complete", "pending")
@@ -943,6 +1023,7 @@ def main():
             "oracle",
             "suite",
             "diagnose",
+            "capabilities",
             "repair-report",
         ),
         default="suite",
@@ -1069,7 +1150,7 @@ def main():
         parser.error("Temperature warmup requires core continuation with --initial")
     if args.initial and args.stage not in ("core", "oracle"):
         parser.error("Weight initialization supported for core/oracle only")
-    if args.stage == "diagnose":
+    if args.stage in ("diagnose", "capabilities"):
         if args.core is None or args.resume or args.stop_after or args.steps:
             parser.error("Diagnosis needs --core and does not train or resume")
         diagnose(args)
