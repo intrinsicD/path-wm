@@ -727,3 +727,14 @@
 - **Code ref**: [source manifests and exposure recipe](../../../experiments/video_order.py), [source/macro checks](../../../tests/test_video_diversity.py).
 - **Evidence**: N421–N423; [source-bound results](../../evidence/tables/video_diversity_2026-09-16.json).
 - **Scope**: Committed comparison method, not a claim that source breadth repairs motion extrapolation.
+
+## H74: Match content draws when comparing displacement support at fixed compute
+
+- **Rationale**: Draw source image/phase first and magnitude second, matching content across training supports with different cardinality. Report realized per-magnitude exposure, and separate covered, intermediate and extrapolated evaluation groups on fresh sources.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O286
+- **Sensitivity**: High. Equal total updates deliberately dilute per-magnitude exposure as support expands. One sampler and four sources allow descriptive finite comparisons; periodic direction is not natural motion or speed.
+- **Code ref**: [displacement recipe and sampler](../../../experiments/video_order.py), [oracle/sampler checks](../../../tests/test_video_displacement.py).
+- **Evidence**: N424–N426; [source-bound results](../../evidence/tables/video_displacement_2026-09-16.json).
+- **Scope**: Implemented comparison procedure, not successful repair or validated deployment.

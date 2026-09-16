@@ -1,5 +1,19 @@
 # Current work
 
+**Displacement-coverage comparison completed,16 September:**
+[Protocol/results](video-displacement-plan.md),[report](../runs/video_displacement_v1/report.html).
+Eight512-update fits keep16x4 source frames, model and image/phase draws fixed; train2/4
+versus2/4/6/8px. Four fresh subject-disjoint sources: known99.64→97.05%, newly covered
+80.49→96.90%, unseen intermediate92.73→97.65%, extrapolated10/11px58.89→85.03%.
+Both full capability gates fail. Transfer gain15.53pp is positive, but known worst
+regression9.64pp fails preservation; no default adoption. One cell is50% on the old
+evaluation source despite99.74% training; not training collapse. Post-hoc partner
+comparison reveals a common class offset masking useful relative direction scores;
+this is not a validated single-clip repair.77 tests,3397 exact restart,19873 raw checks,
+4560 marginal comparisons,11 structural reports; plot inspected. Next propose a matched
+paired-objective/readout repair with explicit inference contract, before larger kernels.
+Natural video, streaming and agent integration remain open.
+
 **Source-diversity comparison completed,16 September:**
 [Protocol/results](video-diversity-plan.md),[report](../runs/video_diversity_v1/report.html).
 Twelve512-update fits compare4x4,4x16 and16x4 clip/frame populations at identical model

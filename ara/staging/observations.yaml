@@ -5016,6 +5016,38 @@ observations:
   bound_to:
   - N422
   - N423
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H74
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O287
+  timestamp: 2026-09-16T11:49+02:00
+  provenance: ai-suggested
+  content: Expanding displacement coverage at fixed content/compute improves average unseen intermediate
+    and extrapolated direction accuracy on these four new sources, but known-source regressions remain.
+    Paired ranking exposes accessible comparative information and a shared output offset; this does not
+    identify an appearance-only cause or validate single-observation readout repair.
+  context: User continuation with Claude on video motion transfer; all full gates fail.
+  potential_type: claim
+  bound_to:
+  - N425
+  - N426
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O288
+  timestamp: 2026-09-16T11:49+02:00
+  provenance: ai-suggested
+  content: Next compare current readout/objective against paired-direction training reducing a common
+    class preference, with fixed support/content/compute and a declared inference contract. Needing both
+    constructed partners is not a single-clip capability. Keep inspected sources as development and reserve
+    fresh confirmation; no additional training executed.
+  context: Post-hoc score decomposition after completed fixed-budget comparison.
+  potential_type: heuristic
+  bound_to:
+  - N425
+  - N426
   promoted: false
   promoted_to: null
   crystallized_via: null

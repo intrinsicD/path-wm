@@ -86,3 +86,89 @@ raw logits and displacement exposure replay exactly (timing/extra validation exc
 Initial script launch failed before preparation because PYTHONPATH was absent; log
 preserved, invocation fixed. No scientific result or fit was replaced.
 Frozen image encoding reuses the phase bank across evaluation displacement groups.
+
+## Post-fit diagnostic, before calculating it
+
+Eight registered fits are complete. No additional fitting or changed gates. Inspect
+saved logits to distinguish wrong relative direction ordering from a shared class
+preference. For reversed-prefix partners define s0=logit0-logit1 of member0 and
+s1 likewise of member1; a=(s0-s1)/2, b=(s0+s1)/2. Here labels are[0,1]. a>0 means
+the pair is correctly ordered even when a common bias b prevents one member from
+being classified correctly. Report ordering accuracy, mean absolute a/b and fraction
+correctly ordered but not jointly classified. This uses BOTH constructed partners;
+it is post-hoc diagnostic access, not a deployable single-observation result or
+validated natural-video reversal rule. Retain all original metrics/gates unchanged.
+
+## Results
+
+All eight registered fits completed:12.580s CPU training,17.516s preparation;
+72.828s preparation/training/evaluation/report orchestration before aggregate analysis.
+No tuning, selected checkpoint, continuation or extra fit. Same4096 paired exposures
+per cell: narrow2/4 gets2046/2050; expanded2/4/6/8 gets1026/1021/1020/1029.
+Image/phase sequences, image/source exposure and initial states match across arms.
+
+Mean source-macro accuracy across four crossed cells on four fresh sources:
+
+| Group | Narrow2/4 | Expanded2/4/6/8 | Expanded cell range |
+|---|---:|---:|---:|
+|known2/4|99.64%|97.05%|90.36–100%|
+|wide6/8|80.49%|96.90%|92.68–100%|
+|intermediate3/5/7|92.73%|97.65%|93.10–100%|
+|extrapolation10/11|58.89%|85.03%|77.96–88.96%|
+
+Both full capability gates FAIL; all eight individual full gates fail. Every expanded
+cell falls below90% extrapolation accuracy. Transfer mean gain15.534pp passes3pp and
+worst intermediate/extrapolation change-0.022pp passes the2pp limit, but known-group
+worst change-9.635pp fails preservation. Covered-wide mean gain16.414pp is separate.
+Thus the full benefit gate FAILS and no default/capability promotion occurs.
+
+Training accuracy98.40–100%; expanded T7402/H7501 fits99.74% of training but predicts
+one class on all historical evaluation examples (50% accuracy), while its fresh
+confirmation groups reach90.36/92.68/93.10/84.90%. This is source-dependent transfer
+failure, not training collapse. All current/previous/unordered controls remain50%.
+Raw oracle100% on all fresh groups, no ambiguous cases. No unique encoder, capacity
+or optimization cause established. Near-perfect training does not rule out the effect
+of changed exposure or different learned decision boundaries.
+
+Post-hoc paired diagnostic: fresh2/4 relative ordering is100% for every cell/arm,
+even when independent predictions fail. Historical T7402/H7501 expanded has89.32%
+correct pair ordering but0% jointly classified pairs; mean absolute common class
+offset19.107 versus direction-difference magnitude5.336, always predicts class1.
+For expanded fresh10/11, pair ordering85.55–97.01% still falls short of perfection.
+This shows accessible comparative evidence plus a shared score offset in this finite
+construction; it does NOT validate a single-clip repair, an appearance-only cause or
+natural-video reversal semantics. No post-hoc scores replace registered gates.
+
+Verification:77 scoped tests,3397 exact restart checks,19873 independent raw-metric,
+exposure, hash and report checks;4560 exact RGB/latent marginal comparisons;22 source
+hashes and80 cached tensors unchanged.11 standalone reports structurally verified,
+comparison plot visually inspected; browser interaction not checked. About26MB saved
+artifacts within60MiB budget. Actual Claude public review and reconciliation receipts
+verified; private code, media and measured results stayed local.
+
+[Comparison report](../runs/video_displacement_v1/report.html),
+[raw verification](../runs/video_displacement_v1/verification.json),
+[paired diagnosis](../runs/video_displacement_v1/paired-diagnostic.json).
+
+Next proposed bounded repair: compare the current classification objective/readout
+against explicit paired-direction training that penalizes a shared class preference,
+keeping content, supports, initialization and compute matched. Register the inference
+contract first: needing both constructed partner clips is not single-clip capability.
+Retain old and newly inspected sources as development, reserve fresh confirmation,
+and report per-source regressions plus extrapolation. This is proposed, not implemented
+or fitted here. Broader natural motion/streaming and agent integration remain open.
+
+## Run a configured comparison arm
+
+```bash
+.venv/bin/python -m experiments.video_order --output runs/my_displacement \
+  --source-manifest data/motion_displacement_v1/sources.json \
+  --displacement-spec data/motion_displacement_v1/expanded.json \
+  --balanced-training --matched-phase-sampling --seed 7600 --head-seed 7501 \
+  --steps 512 --temporal-source runs/video_context_v1/seed7401/k3/history/last.pt
+```
+
+Source and displacement specifications are recorded by hash. A changed specification
+cannot silently resume an existing run. Omit the two new flags/spec to retain the old
+pair-index sampling and2/4 training support. Exact historical replay requires the saved
+code snapshot; no current image/video architecture or checkpoint was overwritten.

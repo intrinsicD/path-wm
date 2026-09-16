@@ -182,3 +182,5 @@ Paired temporal-order diagnostics: [source-bound evidence](tables/video_order_20
 Temporal initialization and reflection: [source-bound evidence](tables/video_stability_2026-09-16.json). Eight fixed fits all learn training data; crossed initializations differ at common batch order. Reflection fails robust capability and benefit screens.72 tests,2211 exact restart,7828 audits and11 reports; no default adoption.
 
 Source diversity versus frame density: [source-bound evidence](tables/video_diversity_2026-09-16.json). Twelve fixed fits reach99.93% new-source familiar-shift accuracy in the broad arm, but unseen-shift77.51% fails full repair.74 tests,3571 exact restart,14771 audits and15 reports; source/exposure guards repaired, defaults unchanged.
+
+- [Displacement coverage and paired score diagnostic,16 September](tables/video_displacement_2026-09-16.json):8 fixed fits,77 tests; transfer improves but full/preservation gates fail; no default adoption.

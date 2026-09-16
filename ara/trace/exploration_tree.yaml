@@ -7069,3 +7069,56 @@ tree:
   - runs/video_diversity_v1/exposure.json
   - runs/video_diversity_v1/source-guard-repair.json
   status: resolved
+- id: N424
+  type: decision
+  title: Fix image-phase exposure while expanding displacement support
+  provenance: ai-executed
+  timestamp: 2026-09-16T11:49+02:00
+  choice: Implement optional displacement specifications, signed pixel oracle and two-draw image/phase
+    sampler. Narrow2/4 versus expanded2/4/6/8;16x4 unchanged frames;four crossed temporal/head initializations,512
+    updates,one sampler. Fresh4 sources exclude all22 previous source subjects; comparison fixed before
+    fits. Claude acknowledges2x exposure correction and fixed-compute estimand. O286 procedure committed
+    without efficacy adoption.
+  alternatives:
+  - Increase model size
+  - Increase total updates
+  - Reuse inspected confirmation as fresh
+  evidence:
+  - O286
+  - ara/evidence/tables/video_displacement_2026-09-16.json
+  - docs/video-displacement-plan.md
+  - experiments/video_order.py
+  status: resolved
+- id: N425
+  type: experiment
+  title: Eight support-coverage fits improve extrapolation but fail preservation and full gates
+  provenance: ai-executed
+  timestamp: 2026-09-16T11:49+02:00
+  result: Eight fixed fits12.580s CPU; fresh source-macro known99.64→97.05%,covered6/8px80.49→96.90%,intermediate92.73→97.65%,extrapolated10/11px58.89→85.03%.
+    Both full gates fail. Transfer mean+15.534pp but known worst-9.635pp fails benefit gate. Training98.40–100%;
+    one old-source score50% despite99.74% train, not training collapse.77 tests,3397 exact restart,19873
+    audits,4560 marginal checks,11 structural reports;22 source hashes80 cached tensors unchanged. No
+    defaults changed.
+  also_depends_on:
+  - N424
+  evidence:
+  - ara/evidence/tables/video_displacement_2026-09-16.json
+  - docs/video-displacement-plan.md
+  - runs/video_displacement_v1/report.html
+  status: resolved
+- id: N426
+  type: experiment
+  title: Paired score decomposition exposes offset masking comparative direction
+  provenance: ai-executed
+  timestamp: 2026-09-16T11:49+02:00
+  result: 'Post-hoc saved logits only: a=(s0-s1)/2,b=(s0+s1)/2 with s=logit0-logit1. Fresh2/4 pair ordering100%
+    all cells/arms. Old-source expandedT7402/H7501 ordering89.32% but joint pair classification0%; mean|b|19.107
+    versus mean|a|5.336. Expanded fresh10/11 ordering85.55–97.01%, still imperfect. Both constructed partners
+    required; no single-clip or natural-video repair established, no refit or gate changes.'
+  also_depends_on:
+  - N425
+  evidence:
+  - ara/evidence/tables/video_displacement_2026-09-16.json
+  - docs/video-displacement-plan.md
+  - runs/video_displacement_v1/paired-diagnostic.json
+  status: resolved
