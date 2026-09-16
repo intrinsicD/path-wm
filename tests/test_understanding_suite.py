@@ -187,3 +187,18 @@ def test_diagnostic_capture_is_observational_and_choice_scoring_uses_actual_deco
             .mean()
         )
         torch.testing.assert_close(actual[i], expected_score)
+
+
+def test_comparison_reports_a_lost_gate_even_when_headline_accuracy_is_unchanged():
+    from pathwm.evaluation.understanding import compare_understanding
+
+    before = {'contract': {'version': 'fixed'}, 'cases': [{
+        'id': 'paired', 'passed': True,
+        'metrics': {'accuracy_min': 1., 'paired_min': 1., 'source_gain_min': .5,
+                    'gates': {'accuracy': True, 'no_evidence_gain': True}}}]}
+    after = copy.deepcopy(before)
+    after['cases'][0]['passed'] = False
+    after['cases'][0]['metrics']['gates']['no_evidence_gain'] = False
+    row = compare_understanding(before, after)[0]
+    assert row['status'] == 'regressed'
+    assert row['lost_gates'] == ['no_evidence_gain']

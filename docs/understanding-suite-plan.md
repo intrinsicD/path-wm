@@ -79,3 +79,21 @@ means BOTH opposite-answer items are correct for the same checkpoint and matched
 it is not an aggregate cohort comparison or a claim of statistical significance.
 Controlled cohorts vary neutral text context, visual nuisance and tone phase/frequency;
 they do not claim natural-language, natural-object or speech generalization.
+
+## Execution extension before the larger profile
+
+After the quick integration run completed, add one **full-profile workflow check**
+on the same first checkpoint, with the predefined full counts, identical thresholds
+and no retraining/tuning. It verifies the larger data path; it is not independent
+confirmation, since it reuses cities/source families and inspected tasks. Cap this
+run at600s and6GiB; retain the same total500MiB artifact budget. Compare checkpoints
+and exact repetition on quick only. A full result must never be numerically compared
+against quick through the regression comparator.
+
+## Review repair
+
+An added adversarial comparison check found that unchanged headline metrics could
+hide a newly failed no-evidence gate. Repair comparison status to include lost/gained
+gates and overall task pass, then rerun the focused checks and quick comparison/replay
+under the final scorer contract. No thresholds, source fixtures, weights or answer
+inference change. Retain the initial reports as development evidence.
