@@ -198,3 +198,5 @@ Source diversity versus frame density: [source-bound evidence](tables/video_dive
 - [Grounded retention comparison,16 September](tables/grounded_retention_2026-09-16.json): four fixed fits; old-output forgetting reduced, task replication/free answer form/broader regressions still fail.64 focused tests,1180 restart tensors,4951 audits; no default replacement.
 
 - [Request-conditioning comparison,16 September](tables/request_readout_2026-09-16.json): four fixed fits; stronger-source familiar joint0→93.75%, novel joint0 throughout, preservation regressions remain.566 software tests,1316 restart,15838 audits; optional route only, no default replacement.
+
+- [Dream-RSI paper assessment,16 September](tables/dream_rsi_review_2026-09-16.json): source hashes and public-only Claude receipts; proposed scheduling transfer, no local experiment or efficacy claim.

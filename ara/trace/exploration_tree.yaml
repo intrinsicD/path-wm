@@ -7637,3 +7637,15 @@ tree:
   - N458
   - ara/evidence/tables/request_readout_2026-09-16.json
   status: resolved
+- id: N460
+  type: question
+  title: Assess Dream-RSI for the existing multimodal system
+  provenance: user
+  timestamp: 2026-09-16T20:04+02:00
+  description: User asks whether arXiv2609.14858 contains useful ideas for any module or the system as
+    a whole. Assessment completed against the paper, public author material and local code/results; hypothetical
+    scheduling transfer remains untested.
+  evidence:
+  - docs/dream-rsi-review.md
+  - ara/evidence/tables/dream_rsi_review_2026-09-16.json
+  status: resolved

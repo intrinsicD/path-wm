@@ -2,8 +2,8 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T19:55+02:00
-  turn_count: 24
+  last_turn: 2026-09-16T20:04+02:00
+  turn_count: 25
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not adopted.
     Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped
     tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in
@@ -47,7 +47,7 @@ session:
     failing cells, but7201 still fails and7202 exact text falls14/16→6/16.64 checks,1180 restart,4951 audits;
     no adoption; task/format path next. Request-path comparison: stronger source familiar-format joint0→93.75%,
     novel joint0 in all arms; old-output/broad regressions fail.566 tests,1316 restart,15838 audits; optional
-    connection committed, no default promotion.'
+    connection committed, no default promotion. Dream-RSI review proposes bounded replay scheduling; no neural change or validated saving.'
 
 events_logged:
 - turn: 1
@@ -899,6 +899,20 @@ events_logged:
   provenance: ai-suggested
   summary: O308 committed optional task/request integration; implementation only, failed efficacy gates retained.
 
+- turn: 25
+  type: question
+  id: N460
+  routing: direct
+  provenance: user
+  summary: Requested Dream-RSI relevance assessment; primary sources and current code inspected, actual
+    Claude review reconciled.
+- turn: 25
+  type: observation
+  id: O311
+  routing: staged
+  provenance: ai-suggested
+  summary: Fixed-interface replay scheduling proposed; general action transfer and local savings unvalidated,
+    no neural/default changes.
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -1200,6 +1214,16 @@ ai_actions:
   - docs/request-readout-plan.md
   - docs/diagrams/architecture-atlas.json
 
+- turn: 25
+  action: Read public Dream-RSI paper/authors sources, inspected local task/planning/history interfaces,
+    reconciled two actual public-only Claude reviews, saved assessment and atlas follow-ups without changing
+    validation scopes.
+  provenance: ai-executed
+  files_changed:
+  - docs/dream-rsi-review.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -1293,6 +1317,8 @@ key_context:
   excerpt: Continue together with Claude. Use the testsuite to pick what to work on/improve. Plan, implement,
     review, test and fix. Iterate
 
+- turn: 25
+  excerpt: Does this contain helpful ideas for any part of our system or as a whole? https://arxiv.org/pdf/2609.14858
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -1405,6 +1431,9 @@ open_threads:
   transfer. Balance wording/length contrasts before more whole-core fitting. Weak-source temporal access, original
   outputs and broader real-modal/memory/tool tasks remain open.'
 
+- 'N460/O311: replay scheduling proposal needs compatible prefix-visible histories, fixed protocols/simple
+  baselines and fresh-execution validation; no controller implementation or new fit authorized by this
+  assessment.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
@@ -1577,3 +1606,5 @@ ai_suggestions_pending:
   semantic supervision remains unimplemented; retention-first sequencing does not abandon it.'
 - O308→A17 captures implemented optional route only; O309 mechanism and O310 balanced request diagnostic remain
   staged. O306 paired semantic supervision remains unimplemented and is not abandoned.
+- O311 remains a hypothetical scheduling/memory extension; retain O310 balanced request interpretation
+  as current neural diagnosis.

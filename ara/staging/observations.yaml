@@ -5429,3 +5429,20 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O311
+  timestamp: 2026-09-16T20:04+02:00
+  provenance: ai-suggested
+  content: Dream-RSI is a candidate for fixed-interface experiment/branch scheduling and an evidence-aware
+    episodic replay view. It does not establish new neural codecs, learned latent dynamics or general
+    think/recall/tool selection. First audit compatible histories, compare simple stopping/allocation
+    rules and require fresh execution with full costs and unchanged modality gates. Request-interpretation
+    diagnosis remains active; no implementation or improvement is established.
+  context: Public paper assessment with actual isolated Claude critique and reconciliation; paper runs
+    and local model results remain separate.
+  potential_type: architecture
+  bound_to:
+  - N460
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

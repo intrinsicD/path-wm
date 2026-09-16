@@ -64,7 +64,7 @@
           "memory": {
             "status": "discussed",
             "basis": "Discussed recent inputs, hierarchical history, external entity storage, retrieval, latent versus raw evidence and provenance. On 15 September, reviewed the user-proposed multimodal World State: stable IDs, learned components/relations, evidence, reversible attribution and optional spatial representations. See docs/world-state-proposal-review.md.",
-            "next": "The requested modular foundation is now implemented with versioned components, provenance, atomic session commits, revocable aliases, dependent-state invalidation/replay and bounded retrieval. See docs/world-state.md. Next: real candidate/identity/state tests, learned retrieval, abstention calibration and controlled comparisons. General concept induction remains a separate capability milestone.",
+            "next": "The requested modular foundation is now implemented with versioned components, provenance, atomic session commits, revocable aliases, dependent-state invalidation/replay and bounded retrieval. See docs/world-state.md. Next: real candidate/identity/state tests, learned retrieval, abstention calibration and controlled comparisons. General concept induction remains a separate capability milestone. Dream-RSI review proposes an evidence-aware replay view over compatible recorded action/outcome histories; it is not a learned world simulator or new memory validation. See docs/dream-rsi-review.md.",
             "validation": {
               "label": "Storage / causal reads",
               "scope": "Exact recent envelopes, bounded hierarchy, source/belief separation and causal reads. The optional World State adds tested transactional identity/provenance/correction mechanics, pinned historical retrieval and exact session/training restart on the supplied-descriptor development task. Audio/video/text and image packets now pass separate and mixed actual WorldSession/thinker paths after correcting a four-versus-eight categorical-code memory mismatch.",
@@ -118,7 +118,7 @@
           "plan": {
             "status": "discussed",
             "basis": "Discussed action DAGs, predicted states, goal reachability, subgoals, new observations and replanning.",
-            "next": "General DAG construction and learned search remain proposed, even though the topic has been discussed.",
+            "next": "General DAG construction and learned search remain proposed, even though the topic has been discussed. Dream-RSI provides a candidate scheduling/stopping idea; general think/recall/tool selection remains an untested transfer. Preserve existing planner scope and first compare simple policies with fresh-execution checks. See docs/dream-rsi-review.md.",
             "validation": {
               "label": "Bounded search mechanics",
               "scope": "Fixed-horizon candidate evaluation, common sampling, caller-state preservation and RNG restoration; supplied key-box search has independent replay.",

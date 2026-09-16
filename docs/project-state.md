@@ -1,5 +1,15 @@
 # Current work
 
+**Dream-RSI paper assessment completed,16 September:**
+[Assessment and bounded transfer proposal](dream-rsi-review.md). Actual public-only
+Claude critique/reconciliation. Useful candidate for experiment scheduling,
+episodic replay and later bounded planning; no evidence for replacing neural
+encoders/decoders or latent dynamics. Recorded continuations cannot answer unseen
+architecture/action outcomes. Require compatible histories, simple controls,
+complete cost accounting and fresh online validation before adoption. No model
+change, fit or validation/color promotion. Request interpretation below remains
+the active model diagnosis; replay assessment is a separate proposal.
+
 **Suite-directed request-path comparison completed,16 September:**
 [Protocol/results](request-readout-plan.md),[report](../runs/request_readout_v1/report.html).
 Actual Claude critique/reconciliation; reuse TaskInterpreter/MetadataEncoder in the

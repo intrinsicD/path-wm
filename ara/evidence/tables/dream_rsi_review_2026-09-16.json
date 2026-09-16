@@ -1,0 +1,64 @@
+{
+  "kind": "literature_assessment_not_local_experiment",
+  "timestamp": "2026-09-16T20:04+02:00",
+  "source_commit": "7184c3d38d00763d701bfc60f3eb0aac5745ba3b",
+  "paper": "https://arxiv.org/pdf/2609.14858",
+  "claude_public_only": true,
+  "model_changes": false,
+  "training": false,
+  "validation_promoted": false,
+  "artifacts": [
+    {
+      "path": "docs/dream-rsi-review.md",
+      "sha256": "a937fdb5fbaa865b5c26bebb3a56c8067e7dcdabbeddb941868cb8c1a1efa4de"
+    },
+    {
+      "path": "runs/literature/dream_rsi_v1/paper.pdf",
+      "sha256": "b2d13d5944d052c2b63d40e65dce116ebcc606e3b756f6acfc938afe21fe2db9"
+    },
+    {
+      "path": "runs/literature/dream_rsi_v1/sources.json",
+      "sha256": "3e4c24665ec3106f367e6d957763a4340a26427a4460faaffcc0c920922f2d0a"
+    },
+    {
+      "path": "runs/reviews/dream_rsi_v1/reconcile-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "runs/reviews/dream_rsi_v1/run_review.py",
+      "sha256": "7936cf7ef630236ae3b1161ab6aa5668f3d507ff1fd65dd448210fd2967d6e2d"
+    },
+    {
+      "path": "runs/reviews/dream_rsi_v1/public-receipt.json",
+      "sha256": "439ac88845391658f621730e86b68bee8f98b6b0dbe450375b452f67a510f9d4"
+    },
+    {
+      "path": "runs/reviews/dream_rsi_v1/reconciliation.md",
+      "sha256": "2d65461e85b07dc4de3e2caa4f25edab672b6ea1a36530572d89ebc7a3e55787"
+    },
+    {
+      "path": "runs/reviews/dream_rsi_v1/public-brief.txt",
+      "sha256": "7c8872dc2bc9f7e3c397be5fcbe154da31b1cef7e51da2175c7b8584b19bc8f1"
+    },
+    {
+      "path": "runs/reviews/dream_rsi_v1/public-response.json",
+      "sha256": "1596e1917d59d16187b85a3ad8d9be962426b76c39003eb93b6d87778ee2018f"
+    },
+    {
+      "path": "runs/reviews/dream_rsi_v1/reconcile-response.json",
+      "sha256": "dcbf033fc41118da63a55818f9a83e8f76bed785fa8b08f4291e1d3b665b2421"
+    },
+    {
+      "path": "runs/reviews/dream_rsi_v1/reconcile-receipt.json",
+      "sha256": "ddcdb216d93dcfc7800fc22e74224f54510e8829e7bc06aac7ea56d0728f0311"
+    },
+    {
+      "path": "runs/reviews/dream_rsi_v1/reconcile-brief.txt",
+      "sha256": "843ef0e3c222e1e8346cc85fd08e38c4dccaabe96a2f8a90476846b6924f3209"
+    },
+    {
+      "path": "runs/reviews/dream_rsi_v1/public-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}
