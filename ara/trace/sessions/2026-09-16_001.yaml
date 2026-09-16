@@ -2,44 +2,45 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T14:54+02:00
-  turn_count: 19
-  summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not
-    adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59
-    scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
-    in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes
-    text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits
-    fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58
-    tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights;
-    four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature
-    and loss/domain confound documented; agent integration remains open. Frozen-codec context:12 fits
-    show history benefit but both spatial expansions fail; wrong-history discrimination remains weak.68
-    tests,1447 exact-resume checks,405 artifact audits,15 reports; defaults unchanged. Paired order:12
-    crop fits fail static-control gate; separate exhaustive-phase challenge removes single-frame cues.
-    Four balanced-data fits achieve79–99% but neither variant passes both seeds.69 tests, exact restart
-    and6035 raw audits;21 reports, defaults unchanged. Crossed temporal/head study:8 fits all learn training
-    data; reflection mean+1.37pp with-5.60pp worst regression fails repair. Initialization dependence
-    persists at fixed batches.72 tests,2211 exact restart,7828 audits and11 reports; defaults unchanged.
-    Source diversity:12 fixed fits improve new-source trained-shift accuracy to99.93%, but broad unseen-shift
-    accuracy77.51% fails repair.74 tests,3571 exact restart,14771 audits and15 reports; fixed input guards,
-    defaults unchanged. Displacement coverage:8 fixed fits raise fresh extrapolation58.89→85.03% but known
-    worst regression9.64pp fails preservation.77 tests,3397 restart,19873 audits,11 reports; paired score
-    offsets motivate a proposed readout-objective repair, defaults unchanged. Pair-centered objective:8
+  last_turn: 2026-09-16T15:24+02:00
+  turn_count: 20
+  summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not adopted.
+    Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped
+    tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in
+    both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance;
+    multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail both decoder
+    repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58 tests,18 reports
+    verified, defaults unchanged. Shared spatial codec now reuses actual image weights; four real-video fits
+    fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain
+    confound documented; agent integration remains open. Frozen-codec context:12 fits show history benefit
+    but both spatial expansions fail; wrong-history discrimination remains weak.68 tests,1447 exact-resume
+    checks,405 artifact audits,15 reports; defaults unchanged. Paired order:12 crop fits fail static-control
+    gate; separate exhaustive-phase challenge removes single-frame cues. Four balanced-data fits achieve79–99%
+    but neither variant passes both seeds.69 tests, exact restart and6035 raw audits;21 reports, defaults unchanged.
+    Crossed temporal/head study:8 fits all learn training data; reflection mean+1.37pp with-5.60pp worst regression
+    fails repair. Initialization dependence persists at fixed batches.72 tests,2211 exact restart,7828 audits
+    and11 reports; defaults unchanged. Source diversity:12 fixed fits improve new-source trained-shift accuracy
+    to99.93%, but broad unseen-shift accuracy77.51% fails repair.74 tests,3571 exact restart,14771 audits and15
+    reports; fixed input guards, defaults unchanged. Displacement coverage:8 fixed fits raise fresh extrapolation58.89→85.03%
+    but known worst regression9.64pp fails preservation.77 tests,3397 restart,19873 audits,11 reports; paired
+    score offsets motivate a proposed readout-objective repair, defaults unchanged. Pair-centered objective:8
     fixed fits reduce relative bias and improve fresh means, but extrapolation72.42% and source regressions
     fail repair.81 tests,7061 restart,52913 audits,72 prior-baseline checks,11 reports; no default change.
-    Matching support:12 fits,large-shift78.75/86.77/90.07%;fixed cosine99.93% on same frozen grids. All
-    trained/preservation gates fail.85 tests,8661 restart,92229 audits,17 reports; no default change.
-    Structured evidence:4 fits,81 vs1630 parameters,fresh99.69–100% and fixed rule pass. Learned-vs-fixed
-    gain0.0366pp/old-source-14.71pp fails adoption; near-offset reassignment recorded.89 tests,10239 restart,42682
-    audits,8 reports. User challenges overall research coherence; milestone/stop-rule review proposed
-    before more probe optimization. User requests video then all-modality capability/diagnostic suites;
-    scope maps documented, no implementation or new validation. First executable suite:33 cases,15 run
-    per original baseline with1 pass/14 failures;14 unimplemented/4 unrun.80 tests and exact frozen replay
-    pass; missing-score bug fixed; browser QA blocked. Public-reference plan:420 channel entries,30 descriptions,
-    primary papers and2 Claude reviews. Preserve shared latent core/store; propose measured detail/semantic
-    adapters. RTX3050 8GiB confirmed, new training fit unmeasured; no model change. Extended primary-source/Claude
-    review prioritizes layer access and action-labelled latent prediction; hardware/protocol/streaming
-    counter-evidence narrows candidates. No model replacement or local superiority claimed.'
+    Matching support:12 fits,large-shift78.75/86.77/90.07%;fixed cosine99.93% on same frozen grids. All trained/preservation
+    gates fail.85 tests,8661 restart,92229 audits,17 reports; no default change. Structured evidence:4 fits,81
+    vs1630 parameters,fresh99.69–100% and fixed rule pass. Learned-vs-fixed gain0.0366pp/old-source-14.71pp
+    fails adoption; near-offset reassignment recorded.89 tests,10239 restart,42682 audits,8 reports. User challenges
+    overall research coherence; milestone/stop-rule review proposed before more probe optimization. User requests
+    video then all-modality capability/diagnostic suites; scope maps documented, no implementation or new validation.
+    First executable suite:33 cases,15 run per original baseline with1 pass/14 failures;14 unimplemented/4
+    unrun.80 tests and exact frozen replay pass; missing-score bug fixed; browser QA blocked. Public-reference
+    plan:420 channel entries,30 descriptions, primary papers and2 Claude reviews. Preserve shared latent core/store;
+    propose measured detail/semantic adapters. RTX3050 8GiB confirmed, new training fit unmeasured; no model
+    change. Extended primary-source/Claude review prioritizes layer access and action-labelled latent prediction;
+    hardware/protocol/streaming counter-evidence narrows candidates. No model replacement or local superiority
+    claimed. Reversible layer variant:6 paired512-update fits show no held-out joint gain and-25pp worst factor
+    regression; all checkpoints1/15 screens.69 regressions/exact resume pass, defaults retained.'
+
 events_logged:
 - turn: 1
   type: decision
@@ -732,6 +733,31 @@ events_logged:
     path is unsuitable as an immediate causal streaming default. MobileCLIP2 student sizes conceal substantial
     pretraining; SONAR sentence decoding does not prove universal lossless fact preservation. Pre-register
     regression/multiplicity and stopping rules before trials.'
+- turn: 20
+  type: decision
+  id: N446
+  routing: direct
+  provenance: user
+  summary: Implement literature candidates as reversible variants with trained comparisons
+- turn: 20
+  type: experiment
+  id: N447
+  routing: direct
+  provenance: ai-executed
+  summary: Six trained depth-readout comparisons fail symbolic benefit and preservation gates
+- turn: 20
+  type: decision
+  id: N448
+  routing: direct
+  provenance: ai-executed
+  summary: Retain native default after failed scalar depth-readout screen
+- turn: 20
+  type: observation
+  id: O303
+  routing: staged
+  provenance: ai-suggested
+  summary: Accessible audio inputs but weak core retention motivate bounded transition diagnosis; no unique
+    cause.
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -977,6 +1003,20 @@ ai_actions:
   - docs/architecture-atlas.md
   - docs/architecture-atlas.html
   - ara/evidence/tables/architecture_extension_2026-09-16.json
+- turn: 20
+  action: Inspected hierarchy, obtained two actual Claude method reviews, committed red checks, implemented
+    opt-in depth gate and strict metadata loading. Corrected observation fixtures/legacy checkpoint regression,
+    tested exact GPU restart, ran six fits/six capability evaluations, audited raw scores/frozen weights and
+    updated atlas. Default preserved; no push.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/multiscale.py
+  - experiments/modality_readout.py
+  - tests/test_layer_readout.py
+  - docs/layer-readout-plan.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - ara/evidence/tables/layer_readout_2026-09-16.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -1054,6 +1094,9 @@ key_context:
 - turn: 19
   excerpt: 'User: Kannst du bitte mit Claude zusammen aus weitern Quellen im netz nach solchen Ideen suchen
     und nur diese ersetzen die klar besser sind?'
+- turn: 20
+  excerpt: 'User: Ja, halt so als Variante, dass wir auch zurückgehen können, wenn sich rausstellt, dass die
+    nicht besser sind. Follow-up: Ist die neue Variante nicht auch erst noch trainiert werden?'
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -1153,6 +1196,8 @@ open_threads:
   protocol and profiling; no whole-architecture efficacy or general understanding established.'
 - 'N445/O301/O302: choose and preregister one local comparison after feature-to-core diagnosis; literature
   candidates are not adopted defaults; thresholds/resources/teacher costs remain to be fixed.'
+- 'N447/O303: failed scalar depth-readout variant is optional; prioritize feature-to-core retention with matched
+  readers, retain broader natural-input/output/prediction milestones.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased

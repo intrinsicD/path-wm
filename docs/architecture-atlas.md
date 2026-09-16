@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-16, repository snapshot `64ad8f3`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-16, repository snapshot `2af7d95`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
@@ -124,6 +124,8 @@ flowchart TB
     class merge2 learned;
     coarse["Final scale<br/>Fully processed coarse features"]
     class coarse learned;
+    depth_readout["Optional per-scale depth readout<br/>Entry / intermediate + final; zero gate = native"]
+    class depth_readout optional;
     fusion["Optional all-scale fusion<br/>Concatenate → f transformer blocks → split"]
     class fusion learned;
     out["FeaturePyramid<br/>Per-scale tokens + grid + time + validity + support"]
@@ -140,11 +142,12 @@ flowchart TB
     merge1 -->|"coarser queries"| mid
     mid -->|"processed next scale"| merge2
     merge2 -->|"coarse features"| coarse
-    fine -->|"retain fine tokens"| fusion
-    mid -->|"retain middle tokens"| fusion
-    coarse -->|"retain coarse tokens"| fusion
     fusion -->|"same output layouts"| out
     out -->|"all scales or selected named grids"| consumer
+    fine -->|"same-scale depth states"| depth_readout
+    mid -->|"same-scale depth states"| depth_readout
+    coarse -->|"same-scale depth states"| depth_readout
+    depth_readout -->|"native bypass or learned mixture; same token counts"| fusion
     classDef learned fill:#e6eef8,stroke:#7696bc,color:#202a36;
     classDef store fill:#f3f4f6,stroke:#9098a4,color:#202a36;
     classDef external fill:#e7f1eb,stroke:#789887,color:#202a36;
@@ -169,7 +172,9 @@ Image/video/audio/text encoders now share output-neutral attention diagnostics: 
 
 16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open.
 
-Source: [pathwm/models/multiscale.py · FeatureHierarchy:209](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleImageEncoder:332](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleAudioEncoder:377](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleTextEncoder:438](../pathwm/models/multiscale.py), [pathwm/models/belief.py · _features:259](../pathwm/models/belief.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md).
+16 September: optional per-scale depth readout mixes entry/intermediate and final processing states with12 learned scalars across the four3-scale encoders. All-scale core access already existed. Original hierarchy propagation is unchanged; zero gates recover native outputs. Six paired512-update GPU fits do not improve held-out joint accuracy; both arms pass1/15 symbolic screens. No default or green capability promotion. See docs/layer-readout-plan.md and runs/layer_readout_v1/report.html.
+
+Source: [pathwm/models/multiscale.py · FeatureHierarchy:233](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleImageEncoder:371](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleAudioEncoder:416](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleTextEncoder:477](../pathwm/models/multiscale.py), [pathwm/models/belief.py · _features:259](../pathwm/models/belief.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md), [pathwm/models/multiscale.py · LayerReadout:165](../pathwm/models/multiscale.py), [docs/layer-readout-plan.md](../docs/layer-readout-plan.md).
 
 <a id="03-attention"></a>
 

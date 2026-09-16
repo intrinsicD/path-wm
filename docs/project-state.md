@@ -1,5 +1,20 @@
 # Current work
 
+**Optional layer-readout comparison completed,16 September:**
+[Protocol/results and commands](layer-readout-plan.md),
+[comparison](../runs/layer_readout_v1/report.html).
+User-approved reversible variant reads earlier processing depth within each scale;
+all-scale access already existed.12 zero-initialized gates; native propagation and
+defaults preserved. Six paired512-update GPU fits,236.53s training,318MiB sampled
+process peak. Held-out joint accuracy0/0/0.139% native versus0/0/0% layers; both arms
+pass1/15 screens in every seed. Median gain0 pp and worst factor regression-25 pp
+fail adoption.14 broader capabilities unimplemented,4 decoder tests unrun.
+Audio encoder probes retain100% factor access; core access remains weak. No general
+capability/color promotion.542 original tests,69 variant regressions,2749 exact
+restart and55080 artifact checks;15 structural reports, plot inspected, browser
+interaction unavailable. Actual Claude method review reconciled. Next address the
+existing feature→core learning diagnosis; do not enlarge encoders on this evidence.
+
 **Additional primary-source review,16 September:**
 [German extension and replacement criteria](multimodal-reference-extension.md).
 Two further actual Claude reviews reconciled. Prioritize the existing feature→core

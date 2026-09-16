@@ -98,3 +98,77 @@ Old completed runs keep their saved executable source. Exact resume under edited
 source remains intentionally refused; new layer/native runs resume under their
 own recorded source and settings. Existing checkpoint initialization remains
 supported.
+
+## Ergebnis / Result — 16 September
+
+[Comparison report](../runs/layer_readout_v1/report.html),
+[raw comparison](../runs/layer_readout_v1/comparison.json),
+[verification](../runs/layer_readout_v1/verification.json).
+The6 preregistered GPU fits and6 existing capability evaluations completed. No
+budgets exceeded, no fit rejected/repeated based on quality, no default changed.
+The scalar variant is available independently via `--encoder-readout layers`.
+It is inspired by [RAEv2](https://arxiv.org/abs/2605.18324), not a reproduction of
+its multi-layer feature aggregation or published performance.
+
+| Seed | Native held-out joint | Layer readout held-out joint | Difference |
+|---|---:|---:|---:|
+|7201|0%|0%|0 pp|
+|7202|0%|0%|0 pp|
+|7203|0.139%|0%|-0.139 pp|
+
+Joint means all three factors correct on one example; each entry averages five
+input modes and three categorical draws. Every checkpoint passes1/15 implemented
+screens (image-source color dependence), fails14;14 broader cases remain
+unimplemented and4 decoder cases unrun. Median gain0 pp fails the+5 pp criterion.
+Worst min-draw factor regression is-25 pp for held-out text color, seed7202,
+failing the2 pp limit. All three comparison gates fail. This rejects this
+particular scalar, entry-versus-final, frozen-encoder variant at512 updates as a
+repair; it does not reject richer layer aggregation or longer/different training.
+
+The trained mixture gates are nonzero for all12 scales in every candidate.
+Original source encoder tensors and all frozen output tensors match exactly;
+sampling streams, data and first training losses match across paired arms.
+The original source checkpoint is unchanged. Thus failure is not simply the
+absence of training of the new parameters.
+
+Diagnostic clue: held-out audio has100% linear access to all three factors at
+the encoder in every arm/seed. Location access is0–27.08% at the posterior and
+0–14.58% at the final working-state probe. These are reader-specific accessibility
+measurements with different feature dimensions, not proof of destroyed information
+or a uniquely localized cause. Prioritize the existing feature-to-core learning
+problem; enlarging the encoder is not supported by this comparison. Do not infer
+an improvement in reconstruction, natural video, speech or dialogue.
+
+Resources:297013 versus297025 total parameters;113677 versus113689 trainable.
+Training takes38.88–39.92s per arm,236.53s total. CUDA allocator peak is86.04 versus
+86.92MiB; reserved110 versus112MiB. Independently sampled process VRAM peaks at
+318MiB (one-second sampling can miss transient peaks). This is a measured fit for
+this tiny symbolic experiment, not the complete agent at real-media resolution.
+New artifacts occupy about247MiB, below500MiB; all180s invocation caps respected.
+
+Verification:542 pre-change tests,69 focused variant/regression tests,2749 exact
+restart checks and55080 artifact checks.15 standalone reports use the unchanged
+renderer; structure, embedded images and the plotted comparison were inspected.
+Interactive browser QA remains unavailable. Two actual public-only Claude review
+receipts were verified; Claude reviewed the methodology, not private code/results.
+
+## Run or restore the variant
+
+Use a NEW output directory each time. Native and layers remain separate choices:
+
+```bash
+.venv/bin/python -m experiments.modality_readout --stage core \
+  --encoder-readout layers --device cuda --seed 7201 --steps 512 \
+  --encoder-source runs/modality_readout_v1/formal/seed7201/core \
+  --output runs/my_layer_comparison/layers
+
+.venv/bin/python -m experiments.modality_readout --stage capabilities \
+  --core runs/my_layer_comparison/layers --seed 7201 --device cpu \
+  --output runs/my_layer_comparison/layers_capabilities
+```
+
+Repeat the first command with `--encoder-readout native` and another output
+folder for the paired reference. Checkpoint evaluation restores the architecture
+from metadata; adapters cannot silently disappear. Explicit resume requires the
+same training arguments (including layers), source and environment plus `--resume`.
+The exact finite comparison calls and audit are retained under the run directory.

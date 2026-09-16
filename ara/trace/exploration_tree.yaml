@@ -7426,3 +7426,48 @@ tree:
   - docs/multimodal-reference-extension.md
   - ara/evidence/tables/architecture_extension_2026-09-16.json
   status: resolved
+- id: N446
+  type: decision
+  title: Implement literature candidates as reversible variants with trained comparisons
+  provenance: user
+  timestamp: 2026-09-16T15:24+02:00
+  choice: User explicitly confirms separate selectable variants so baseline can be restored. Questions existing
+    scale access, paper source and need to train; clarify same-scale depth is new, all-scale access already
+    exists, and both downstream cores must train.
+  alternatives:
+  - Replace baseline before measured comparison
+  evidence:
+  - docs/layer-readout-plan.md
+  - tests/test_layer_readout.py
+  status: resolved
+- id: N447
+  type: experiment
+  title: Six trained depth-readout comparisons fail symbolic benefit and preservation gates
+  provenance: ai-executed
+  timestamp: 2026-09-16T15:24+02:00
+  result: Three paired512-update GPU fits per arm. Native held-out joint0/0/0.139%, layers0/0/0%; each checkpoint
+    passes1/15 screens. Median0pp; worst text-color min-draw regression-25pp. All12 gates learn, original encoders
+    and outputs remain exactly frozen.236.53s total training,318MiB sampled process peak.542 baseline tests,69
+    variant regressions,2749 exact resume,55080 artifact checks,15 structural reports; plot and diagram inspected.14
+    broad tasks unimplemented,4 decoder tests unrun; no natural modality or output gain.
+  evidence:
+  - ara/evidence/tables/layer_readout_2026-09-16.json
+  - runs/layer_readout_v1/comparison.json
+  - runs/layer_readout_v1/verification.json
+  - 2af7d95
+  status: resolved
+- id: N448
+  type: decision
+  title: Retain native default after failed scalar depth-readout screen
+  provenance: ai-executed
+  timestamp: 2026-09-16T15:24+02:00
+  choice: 'Apply preregistered gate: preserve optional variant for inspection, no default replacement or broad
+    capability/color promotion. Failure scoped to frozen-encoder scalar entry/final mixture and512-update budget.
+    No general refutation of multi-layer aggregation.'
+  alternatives:
+  - Promote on learned nonzero gates alone
+  - Infer all aggregation methods fail
+  evidence:
+  - N447
+  - docs/layer-readout-plan.md
+  status: resolved

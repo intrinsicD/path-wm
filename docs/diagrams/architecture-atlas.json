@@ -1,7 +1,7 @@
 {
   "title": "PATH-WM · Architecture atlas",
   "date": "2026-09-16",
-  "source_commit": "64ad8f3",
+  "source_commit": "2af7d95",
   "intro": "A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.",
   "graphs": [
     {
@@ -54,7 +54,7 @@
           "encode": {
             "status": "discussed",
             "basis": "Discussed modality stems, residual transformer blocks per scale, hierarchy merges, fusion, temporal handling and reconstruction probes. On 14 September, the user asked whether architectural structure and a small parameter count can reduce visual training-data requirements. On 15 September, the user specified a spatial VAE with separate lossless rearrangement, residual processing and channel projection; Claude review was reconciled. Discussed the difference between shared architecture, shared weights and the separate spatial image VAE, including image training from video frames.",
-            "next": "Opt-in spatial VAE v2 now implements the R/P/M/C stem, coarsest self-attention/shared loop and detached stage probes. Mechanics, exact GPU resume and ten real-photo learning sanity gates pass; all photo-quality screens fail. See docs/spatial-vae-v2-plan.md and runs/spatial_vae_v2/verification.json. Color diagnosis now finds reduced readout access at the final posterior projection and sampling; see docs/spatial-vae-color-plan.md. Current agent integration, semantic retention, fine detail and matched-resource/data-efficiency studies remain open; the high-level encoder stays blue. Two-seed sampled-color supervision now improves global chroma error81–83% without new parameters/inference work; achieved KL rises37–41% and grids remain. See docs/spatial-vae-repair-plan.md. Color-only is a diagnostic candidate, not a full repair; high-level status stays blue. All four modality interfaces now have isolated and mixed packet/mask/gradient/restart checks. Four-word and four-tone direct fitting pass; a video foreground repair fails total RGB quality. State-conditioned adapters and general multimodal semantics remain untrained in this audit. See docs/modality-foundation-plan.md; high-level status stays blue. 16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open. Four128-update real-video development fits (two seeds) complete in24.80s CPU. Temporal frame-difference benefit0.22%/0.14% fails5% screen. Both trained arms worsen reserved-source RGB vs untouched image weights.61 tests plus exact resume and raw audits validate mechanics only. Temporal remains opt-in; no general-quality or high-level green promotion. See runs/shared_video_vae_v1/report.html."
+            "next": "Opt-in spatial VAE v2 now implements the R/P/M/C stem, coarsest self-attention/shared loop and detached stage probes. Mechanics, exact GPU resume and ten real-photo learning sanity gates pass; all photo-quality screens fail. See docs/spatial-vae-v2-plan.md and runs/spatial_vae_v2/verification.json. Color diagnosis now finds reduced readout access at the final posterior projection and sampling; see docs/spatial-vae-color-plan.md. Current agent integration, semantic retention, fine detail and matched-resource/data-efficiency studies remain open; the high-level encoder stays blue. Two-seed sampled-color supervision now improves global chroma error81–83% without new parameters/inference work; achieved KL rises37–41% and grids remain. See docs/spatial-vae-repair-plan.md. Color-only is a diagnostic candidate, not a full repair; high-level status stays blue. All four modality interfaces now have isolated and mixed packet/mask/gradient/restart checks. Four-word and four-tone direct fitting pass; a video foreground repair fails total RGB quality. State-conditioned adapters and general multimodal semantics remain untrained in this audit. See docs/modality-foundation-plan.md; high-level status stays blue. 16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open. Four128-update real-video development fits (two seeds) complete in24.80s CPU. Temporal frame-difference benefit0.22%/0.14% fails5% screen. Both trained arms worsen reserved-source RGB vs untouched image weights.61 tests plus exact resume and raw audits validate mechanics only. Temporal remains opt-in; no general-quality or high-level green promotion. See runs/shared_video_vae_v1/report.html. 16 September: optional per-scale depth readout mixes entry/intermediate and final processing states with12 learned scalars across the four3-scale encoders. All-scale core access already existed. Original hierarchy propagation is unchanged; zero gates recover native outputs. Six paired512-update GPU fits do not improve held-out joint accuracy; both arms pass1/15 symbolic screens. No default or green capability promotion. See docs/layer-readout-plan.md and runs/layer_readout_v1/report.html."
           },
           "belief": {
             "status": "needs_discussion",
@@ -392,6 +392,11 @@
           "learned"
         ],
         [
+          "depth_readout",
+          "Optional per-scale depth readout\nEntry / intermediate + final; zero gate = native",
+          "optional"
+        ],
+        [
           "fusion",
           "Optional all-scale fusion\nConcatenate → f transformer blocks → split",
           "learned"
@@ -459,21 +464,6 @@
           "coarse features"
         ],
         [
-          "fine",
-          "fusion",
-          "retain fine tokens"
-        ],
-        [
-          "mid",
-          "fusion",
-          "retain middle tokens"
-        ],
-        [
-          "coarse",
-          "fusion",
-          "retain coarse tokens"
-        ],
-        [
           "fusion",
           "out",
           "same output layouts"
@@ -482,6 +472,26 @@
           "out",
           "consumer",
           "all scales or selected named grids"
+        ],
+        [
+          "fine",
+          "depth_readout",
+          "same-scale depth states"
+        ],
+        [
+          "mid",
+          "depth_readout",
+          "same-scale depth states"
+        ],
+        [
+          "coarse",
+          "depth_readout",
+          "same-scale depth states"
+        ],
+        [
+          "depth_readout",
+          "fusion",
+          "native bypass or learned mixture; same token counts"
         ]
       ],
       "notes": [
@@ -491,7 +501,8 @@
         "Example for the photo configuration: RGB64 → 16×16 → 8×8 → 4×4, all width32; k=2 and f=2. The hierarchy emits 336 tokens.",
         "Image/video/audio/text encoders now share output-neutral attention diagnostics: traced and ordinary outputs, gradients and RNG agree exactly in train/eval checks. Masks exclude invalid values before learned operations. The isolated modality audit fits tiny examples; real AV/text is a resampled transport check, not learned understanding.",
         "16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation.",
-        "16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open."
+        "16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open.",
+        "16 September: optional per-scale depth readout mixes entry/intermediate and final processing states with12 learned scalars across the four3-scale encoders. All-scale core access already existed. Original hierarchy propagation is unchanged; zero gates recover native outputs. Six paired512-update GPU fits do not improve held-out joint accuracy; both arms pass1/15 symbolic screens. No default or green capability promotion. See docs/layer-readout-plan.md and runs/layer_readout_v1/report.html."
       ],
       "sources": [
         "pathwm/models/multiscale.py#FeatureHierarchy",
@@ -499,7 +510,9 @@
         "pathwm/models/multiscale.py#MultiScaleAudioEncoder",
         "pathwm/models/multiscale.py#MultiScaleTextEncoder",
         "pathwm/models/belief.py#_features",
-        "docs/modality-foundation-plan.md"
+        "docs/modality-foundation-plan.md",
+        "pathwm/models/multiscale.py#LayerReadout",
+        "docs/layer-readout-plan.md"
       ]
     },
     {

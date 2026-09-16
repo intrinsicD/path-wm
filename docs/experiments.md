@@ -1,5 +1,12 @@
 # Running and editing experiments
 
+The [optional depth-readout comparison](layer-readout-plan.md) adds
+`--encoder-readout layers` to core training. It learns per-scale mixtures of
+intermediate and final features with frozen source encoders; `native` preserves
+the existing path. Evaluation restores the saved variant automatically. The
+three-seed comparison did not improve held-out factor combinations; defaults
+remain unchanged. See the linked plan for paired train/evaluate commands.
+
 For the executable text/image/audio/video capability and stage-diagnostic baseline:
 
 ```bash

@@ -1,0 +1,189 @@
+{
+  "protocol": {
+    "arms": [
+      "native",
+      "layers"
+    ],
+    "artifact_limit_mib": 500,
+    "batch": 24,
+    "clip": 5,
+    "code_commit": "2af7d95964a0a4f957db8bade3b5a125067df5de",
+    "encoder_source": "runs/modality_readout_v1/formal/seed7201/core",
+    "free_disk_min_mib": 500,
+    "input_mode": "rotating",
+    "lr": 0.003,
+    "median_gain_min": 0.05,
+    "min_draw_factor_regression_max": 0.02,
+    "objective": "factor-CE",
+    "plan_sha256": "742a4c8fe2469b82210648da43957869c41d41b3270a0231205a09a51b144dd8",
+    "primary": "heldout joint mean over text/image/audio/video/all and 3 fixed draws",
+    "process_vram_limit_mib": 6144,
+    "required_screens_per_seed": 15,
+    "run_timeout_seconds": 180,
+    "scope": "symbolic development only; no default promotion",
+    "seeds": [
+      7201,
+      7202,
+      7203
+    ],
+    "steps": 512
+  },
+  "paired": [
+    {
+      "gain": 0.0,
+      "layers": 0.0,
+      "native": 0.0,
+      "seed": 7201
+    },
+    {
+      "gain": 0.0,
+      "layers": 0.0,
+      "native": 0.0,
+      "seed": 7202
+    },
+    {
+      "gain": -0.0013888888888888887,
+      "layers": 0.0,
+      "native": 0.0013888888888888887,
+      "seed": 7203
+    }
+  ],
+  "gates": {
+    "all_screens": false,
+    "median_gain": false,
+    "preservation": false
+  },
+  "worst": {
+    "condition": "heldout.text",
+    "delta": -0.25,
+    "factor": "color",
+    "seed": 7202
+  },
+  "runs": [
+    {
+      "seed": 7201,
+      "arm": "native",
+      "coverage": {
+        "failed": 14,
+        "not_implemented": 14,
+        "not_run": 4,
+        "passed": 1,
+        "total": 33
+      },
+      "parameters": 297013,
+      "training_seconds": 39.17147890094202,
+      "checkpoint_sha256": "612d6ad173f028eb9a540b118646b236f5d73534153830bc12eac67df1449715"
+    },
+    {
+      "seed": 7201,
+      "arm": "layers",
+      "coverage": {
+        "failed": 14,
+        "not_implemented": 14,
+        "not_run": 4,
+        "passed": 1,
+        "total": 33
+      },
+      "parameters": 297025,
+      "training_seconds": 39.56024338398129,
+      "checkpoint_sha256": "85e222fb08a81617a27905609968e9a778e948acc75204e5f81adaf71fcc6879"
+    },
+    {
+      "seed": 7202,
+      "arm": "native",
+      "coverage": {
+        "failed": 14,
+        "not_implemented": 14,
+        "not_run": 4,
+        "passed": 1,
+        "total": 33
+      },
+      "parameters": 297013,
+      "training_seconds": 39.199753661989234,
+      "checkpoint_sha256": "c9745e4ef4a38303097ca14a48e4f89547d5282f2e8ece3eb756905f1145405a"
+    },
+    {
+      "seed": 7202,
+      "arm": "layers",
+      "coverage": {
+        "failed": 14,
+        "not_implemented": 14,
+        "not_run": 4,
+        "passed": 1,
+        "total": 33
+      },
+      "parameters": 297025,
+      "training_seconds": 39.79780680697877,
+      "checkpoint_sha256": "18643302e66d7e94badfff7affc354fc22285ad72022f898c266249406971db1"
+    },
+    {
+      "seed": 7203,
+      "arm": "native",
+      "coverage": {
+        "failed": 14,
+        "not_implemented": 14,
+        "not_run": 4,
+        "passed": 1,
+        "total": 33
+      },
+      "parameters": 297013,
+      "training_seconds": 38.87655538506806,
+      "checkpoint_sha256": "190d37a2beb51c9badb561c5e7e75f33b0982d2ac1d88374d74989084cf74cc0"
+    },
+    {
+      "seed": 7203,
+      "arm": "layers",
+      "coverage": {
+        "failed": 14,
+        "not_implemented": 14,
+        "not_run": 4,
+        "passed": 1,
+        "total": 33
+      },
+      "parameters": 297025,
+      "training_seconds": 39.92460690799635,
+      "checkpoint_sha256": "77f087e159dea74e4bcbfb642ab7cf2c8cfb6c5293aad6c7453d3c45474b1cda"
+    }
+  ],
+  "verification": {
+    "artifact_bytes": 258573034,
+    "baseline_tests": 542,
+    "browser_qa": "unavailable; unchanged renderer; structural checks only",
+    "claude_receipts_verified": 2,
+    "exact_restart": {
+      "exact_restart_checks": 2749,
+      "fields": [
+        "schema",
+        "identity_sha256",
+        "step",
+        "rows",
+        "model",
+        "optimizer",
+        "scheduler",
+        "random",
+        "numpy",
+        "torch",
+        "cuda",
+        "sampler"
+      ],
+      "source_checkpoint_sha256": "bc1a93ab53b9b9b6cf54f5226e393cc010d4630e988b9d1f78e0a8f80346c70d",
+      "source_checkpoint_unchanged": true
+    },
+    "process_peak_mib": 318,
+    "raw_checks": 55080,
+    "source_preserved": true,
+    "structural_reports": 15,
+    "training_seconds": 236.53044504695572,
+    "variant_tests": 69,
+    "comparison_plot_visually_checked": true,
+    "atlas_rendered": true,
+    "encoder_diagram_visually_checked": true
+  },
+  "source": "bc1a93ab53b9b9b6cf54f5226e393cc010d4630e988b9d1f78e0a8f80346c70d",
+  "paths": [
+    "docs/layer-readout-plan.md",
+    "runs/layer_readout_v1/comparison.json",
+    "runs/layer_readout_v1/verification.json",
+    "runs/reviews/layer_readout_v1/"
+  ]
+}
