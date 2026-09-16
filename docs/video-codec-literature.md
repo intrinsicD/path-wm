@@ -72,3 +72,40 @@ use a task with missing/occluded current-frame content where history can actuall
 help. Randomized/wrong history and exact no-future checks remain essential.
 These are proposed next comparisons; thresholds/data/budgets still need registration.
 A temporal decoder is a reasonable later ablation, motivated by SVD, not yet adopted.
+
+## User follow-up: images as single-frame or repeated-still videos
+
+Both fit the existing VideoVAE interface. A single-frame example includes the temporal
+module's current-frame branch but cannot train its past-frame kernel taps: their
+inputs are zero. Repeating a still at successive times also trains past-frame taps
+and provides a constructed constant-scene target. It does not reveal actual motion
+or establish that the photographed real scene stayed stationary. A new gradient
+contract test confirms this difference with an active residual at1 vs4frames.
+Eight video-wrapper tests pass; together with the prior54 regressions this is62
+unique scoped tests. No new training or efficacy measurement was performed.
+
+Proposal: mix single-frame images, real moving clips and a small declared share of
+synthetic repeated-still clips, matching frame exposure/loss normalization. Excess
+static examples might favor weak motion response; measure that rather than assuming
+an optimal mixture. The implemented recipe's auxiliary image loss currently bypasses
+the temporal module, so this common-path training would be a new comparison, not
+something already measured. CogVideoX section3 explicitly treats images as one-frame
+videos; HunyuanVideo section4.1.1 gives a separate joint image/video VAE precedent.
+Neither source validates a particular repeated-still ratio for our small model.
+
+The follow-up feature-space distinction: before temporal mixing, identical frames
+use identical image weights and deterministic spatial features. After mixing, the
+same current image can have different codes depending on its history. Geometry
+and decoder remain shared; there are no explicitly reserved appearance/motion
+channels. Useful direction retention and preserved appearance do not follow from
+matching shapes alone. This is consistent with the current residual design, not
+an adoption of separate image/video semantic spaces.
+
+The user additionally asks whether different image/video features require different
+image weights or pixel-level video retraining. They do not: a shared frame encoder
+can feed a learned temporal feature module. An alternative to modifying mu in place
+is to retain spatial features and append temporal features/tokens. This is proposed,
+not implemented. Freeze the shared image codec first to isolate temporal learning;
+if its compressed features lack useful detail, compare earlier-scale features and
+then cautious joint fine-tuning. No architectural requirement forces training from
+scratch. Equal feature dimensions alone do not guarantee useful motion semantics.

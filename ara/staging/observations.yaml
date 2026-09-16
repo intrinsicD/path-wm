@@ -4868,3 +4868,20 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O277
+  timestamp: 2026-09-16T08:28+02:00
+  provenance: ai-suggested
+  content: A common-path mixture of singleton images, real moving clips and a small declared repeated-still
+    fraction could train image retention and temporal stability together. Match frame exposure and loss
+    normalization; measure motion reliance rather than assuming an optimal static ratio. No training/adoption
+    yet.
+  context: User proposes images as one-frame videos or one-second static clips, then asks feature-space
+    relationship.
+  potential_type: heuristic
+  bound_to:
+  - N408
+  - N409
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

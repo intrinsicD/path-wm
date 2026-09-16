@@ -169,5 +169,16 @@
       "accessed": "2026-09-16"
     }
   ],
-  "limits": "Codec integration only; agent patch encoder unchanged. Both continued arms regress reserved RGB vs frozen source, which also changes beta/color objective and domain. No pretrained download, unique causal diagnosis, general video or forecast claim."
+  "limits": "Codec integration only; agent patch encoder unchanged. Both continued arms regress reserved RGB vs frozen source, which also changes beta/color objective and domain. No pretrained download, unique causal diagnosis, general video or forecast claim.",
+  "followup": {
+    "single_frame_check": {
+      "wrapper_tests": 8,
+      "total_unique_scoped_tests": 62,
+      "scope": "Additional1/4frame gradient-support contract; no new training",
+      "recipe_auxiliary": "direct image path bypasses temporal module"
+    },
+    "literature_latest_sha256": "2b5ddd7e09032dcd78ffd383b23035eb52272875a0bda71b3e69bae2cc007126",
+    "test_latest_sha256": "f76d0a8ce9b2ff400d533fcf5154aa42908b3a63d612d7c784198ddc030e9003",
+    "scope": "Streaming conceptual follow-ups, same active turn; no new fits. Original recorded source hashes retain their historical committed identity."
+  }
 }

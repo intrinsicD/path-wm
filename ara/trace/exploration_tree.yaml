@@ -6800,3 +6800,51 @@ tree:
   - ara/evidence/tables/shared_video_vae_2026-09-16.json
   - docs/video-codec-literature.md
   status: resolved
+- id: N408
+  type: question
+  title: Train images as single-frame videos or repeated still clips?
+  provenance: user
+  timestamp: 2026-09-16T08:28+02:00
+  description: 'User proposes common video path for images and repeated one-second stills. Explained singleton
+    has no observed motion; repeats supervise a constructed static sequence. Existing wrapper supports
+    both. New active-residual gradient test: single-frame gives zero past-tap gradients; repeated frames
+    activate past taps. Current recipe image auxiliary bypasses temporal module; mixed-path training proposed,
+    not run.'
+  also_depends_on:
+  - N404
+  - N407
+  evidence:
+  - tests/test_video_vae.py
+  - runs/shared_video_vae_v1/single-frame-check.json
+  - docs/video-codec-literature.md
+  status: resolved
+- id: N409
+  type: question
+  title: Are image and video features different after sharing the encoder?
+  provenance: user
+  timestamp: 2026-09-16T08:28+02:00
+  description: Identical frames have identical spatial image features before the temporal module. History
+    may alter posterior means afterward despite shared shape/decoder. Appearance/motion channels are not
+    explicitly separated; meaningful motion retention is not guaranteed or validated by shape sharing.
+  also_depends_on:
+  - N408
+  evidence:
+  - pathwm/models/video_vae.py
+  - docs/video-codec-literature.md
+  status: resolved
+- id: N410
+  type: question
+  title: Do video features require different spatial weights or pixel-level retraining?
+  provenance: user
+  timestamp: 2026-09-16T08:29+02:00
+  description: Clarified shared image weights can supply frame features to a separate temporal module;
+    different activations do not require separate spatial parameters. Appending temporal features while
+    retaining image features is an alternative to current mean correction. Frozen-image temporal training
+    first, earlier-scale features or joint fine-tuning only if needed; no from-scratch requirement. Proposed
+    alternatives not implemented.
+  also_depends_on:
+  - N409
+  evidence:
+  - docs/video-codec-literature.md
+  - pathwm/models/video_vae.py
+  status: resolved

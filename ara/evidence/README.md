@@ -174,3 +174,5 @@ First learned-entity task definition: [finite contract and review evidence](tabl
 Direction input isolation and matched curriculum: [source-bound evidence](tables/direction_inputs_2026-09-16.json). Six fits plus four continuations; text-only known accuracy100% in both seeds, full-input curriculum benefits but depends on text. Frozen pooling probes, repeated source-removal results,61 tests and24 verified reports. No general capability/default adoption.
 
 Video timing/palette comparison and symmetric temporal-access test: [source-bound evidence](tables/video_readout_2026-09-16.json). Twelve bounded fits; neither repair adopted, palette fields collapse, final-state temporal generalization remains weak.58 tests, exact resumes,18 verified reports; image/video architecture and separate VAE path clarified.
+
+Shared spatial image/video codec: [source-bound evidence](tables/shared_video_vae_2026-09-16.json). Actual weights shared; four real-video fits fail paired temporal benefit; source-loss/domain confound recorded.61 tests, exact resume,777 artifact checks. Primary-source literature/weight availability reviewed; no download or general capability claim.

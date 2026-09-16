@@ -167,3 +167,24 @@ def test_legacy_spatial_vae_and_invalid_inputs():
         sample=False,
     )
     assert not torch.count_nonzero(y) and not torch.count_nonzero(p.kl_per_image())
+
+
+def test_single_frame_and_repeated_still_have_different_temporal_gradient_support():
+    torch.manual_seed(92)
+    model = VideoVAE(codec(), temporal=True)
+    # Activate the residual to inspect its input kernel, beyond neutral startup.
+    torch.nn.init.normal_(model.temporal.output.weight, std=0.2)
+    still = torch.rand(2, 1, 3, 9, 11)
+    for frames in [1, 4]:
+        x = still.expand(-1, frames, -1, -1, -1).clone()
+        y, p = model(observation(x), sample=False)
+        assert y.shape == x.shape
+        p.mu.square().mean().backward()
+        grad = model.temporal.input.weight.grad
+        # One-frame images train current-frame processing, not past-frame taps.
+        assert grad[:, :, 2].abs().sum() > 0
+        if frames == 1:
+            assert torch.count_nonzero(grad[:, :, :2]) == 0
+        else:
+            assert grad[:, :, :2].abs().sum() > 0
+        model.zero_grad(set_to_none=True)

@@ -173,8 +173,10 @@ sessions:
     in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes
     text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits
     fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58
-    tests,18 reports verified, defaults unchanged.'
-  turn_count: 3
-  events_count: 20
+    tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights;
+    four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature
+    and loss/domain confound documented; agent integration remains open.'
+  turn_count: 4
+  events_count: 31
   claims_touched: []
-  open_threads: 25
+  open_threads: 26

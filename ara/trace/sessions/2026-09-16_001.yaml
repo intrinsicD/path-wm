@@ -2,7 +2,7 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T08:25+02:00
+  last_turn: 2026-09-16T08:28+02:00
   turn_count: 4
   summary: "Eight matched fresh-updater controls fail direction screens; continuous working access not adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58 tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights; four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain confound documented; agent integration remains open."
 
@@ -197,6 +197,33 @@ events_logged:
   summary: Before larger temporal layers, test original image objective preservation, frozen shared-codec
     adaptation, and missing/occluded-frame tasks that require history. Temporal decoder and keyframe/temporal
     capacity separation are literature-motivated later ablations, not adopted replacements.
+- turn: 4
+  type: question
+  id: N408
+  routing: direct
+  provenance: user
+  summary: Train images as single-frame videos or repeated still clips?
+- turn: 4
+  type: question
+  id: N409
+  routing: direct
+  provenance: user
+  summary: Are image and video features different after sharing the encoder?
+- turn: 4
+  type: observation
+  id: O277
+  routing: staged
+  provenance: ai-suggested
+  summary: A common-path mixture of singleton images, real moving clips and a small declared repeated-still
+    fraction could train image retention and temporal stability together. Match frame exposure and loss
+    normalization; measure motion reliance rather than assuming an optimal static ratio. No training/adoption
+    yet.
+- turn: 4
+  type: question
+  id: N410
+  routing: direct
+  provenance: user
+  summary: Do video features require different spatial weights or pixel-level retraining?
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -236,7 +263,6 @@ ai_actions:
   - tests/test_video_readout.py
   - docs/video-readout-plan.md
   - ara/evidence/tables/video_readout_2026-09-16.json
-claims_touched: []
 - turn: 4
   action: Implement shared codec + recipe; actual Claude generic review and mathematical reconciliation;
     red/green tests, exact replay, four real-video fits and raw/report audits; primary-source literature
@@ -250,6 +276,15 @@ claims_touched: []
   - docs/shared-video-vae-plan.md
   - docs/video-codec-literature.md
   - ara/evidence/tables/shared_video_vae_2026-09-16.json
+- turn: 4
+  action: Added single-frame/repeated-still temporal-gradient contract test;8 wrapper tests pass,62 unique
+    scoped tests including prior54 regressions. No new training. Recorded common-path training as proposed
+    and clarified features before/after temporal refinement.
+  provenance: ai-executed
+  files_changed:
+  - tests/test_video_vae.py
+  - docs/video-codec-literature.md
+claims_touched: []
 key_context:
 - turn: 1
   excerpt: 'User: Arbeite daran zusammen mit Claude. Plane, implementiere, überprüfe, teste und repariere.
@@ -264,6 +299,13 @@ key_context:
   excerpt: User asks to reuse image encoder for video, add needed temporal processing, reuse frames for
     image reconstruction; then asks old-path difference, relevant literature/trained weights and exact
     temporal wiring.
+- turn: 4
+  excerpt: 'User: treat an image as a one-frame video or repeat it for a second; then asks whether image/video
+    features differ. No explicit adoption of a mixing ratio or further trained architecture.'
+- turn: 4
+  excerpt: Different context-dependent features need not mean separate image weights. User asks about
+    feature-space temporal additions versus pixel-level retraining; no new training authorized by this
+    conceptual question.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -466,3 +508,5 @@ ai_suggestions_pending:
 - 'O275/O276: no unique cause of small temporal benefit or source regression. Original-loss/frozen-codec
   and occlusion controls proposed, not run. O273 partial codec reuse executed; broader temporal-state
   repair remains pending.'
+- 'O277: singleton/real-video/repeated-still mixture remains proposed; gradient mechanics do not validate
+  temporal efficacy.'

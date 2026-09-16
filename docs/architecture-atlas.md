@@ -1122,4 +1122,6 @@ Four128-update real-video development fits (two seeds) complete in24.80s CPU. Te
 
 Literature: docs/video-codec-literature.md distinguishes published image-weight reuse, temporal decoding and time compression. Local source-regression also confounds beta0.1→0.01 and color weight6→0; paired arms remain matched. No paper proves the local failure cause. User walked through actual late causal mean refinement before sampling and per-frame shared decoder.
 
+User proposes images as one-frame videos or repeated stills. Existing wrapper accepts both; a new gradient check confirms only repeated multi-frame examples train past-frame kernel taps. Current measured auxiliary image loss bypasses temporal processing. Mixed single-frame/real-video/repeated-still training remains proposed, with static-ratio and exposure controls; no efficacy claim.
+
 Source: [pathwm/models/video_vae.py · VideoVAE:49](../pathwm/models/video_vae.py), [pathwm/models/video_vae.py · CausalLatentMixer:19](../pathwm/models/video_vae.py), [experiments/video_vae.py](../experiments/video_vae.py), [tests/test_video_vae.py](../tests/test_video_vae.py), [docs/shared-video-vae-plan.md](../docs/shared-video-vae-plan.md).
