@@ -5171,3 +5171,19 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O296
+  timestamp: 2026-09-16T13:06+02:00
+  provenance: user-revised
+  content: 'User clarifies that motion/direction understanding is itself a part of genuine video understanding.
+    Assistant accepts the distinction: the current controlled-pan diagnostic has limited coverage, but
+    its target ability remains relevant. This does not endorse abandoning direction work, adopt O295,
+    or establish general video capability.'
+  context: Correction to previous contrast between narrow direction tests and general video understanding.
+  potential_type: concept
+  bound_to:
+  - N437
+  - N435
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

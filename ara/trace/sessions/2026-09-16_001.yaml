@@ -2,8 +2,8 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T13:02+02:00
-  turn_count: 14
+  last_turn: 2026-09-16T13:06+02:00
+  turn_count: 15
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not
     adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59
     scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
@@ -604,6 +604,15 @@ events_logged:
     overall milestone/stop-rule review before more readout tuning: preserve accessible-feature and fixed-matching
     evidence, then test useful temporal state on actual video with explicit integration criteria. This
     is a process recommendation, not a user-adopted architecture change or abandonment of O294.'
+- turn: 15
+  type: observation
+  id: O296
+  routing: staged
+  provenance: user-revised
+  summary: 'User clarifies that motion/direction understanding is itself a part of genuine video understanding.
+    Assistant accepts the distinction: the current controlled-pan diagnostic has limited coverage, but
+    its target ability remains relevant. This does not endorse abandoning direction work, adopt O295,
+    or establish general video capability.'
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -793,6 +802,12 @@ ai_actions:
   files_changed:
   - ara/trace/exploration_tree.yaml
   - ara/staging/observations.yaml
+- turn: 15
+  action: Clarified that motion direction is a component of video understanding while controlled-pan validation
+    is limited; no experiment, model change or roadmap adoption.
+  provenance: ai-executed
+  files_changed:
+  - ara/staging/observations.yaml
 claims_touched: []
 key_context:
 - turn: 1
@@ -852,6 +867,9 @@ key_context:
   excerpt: User asks whether we still follow a red thread rather than try something, notice something
     and test another thing. Assistant acknowledges overfocus on the narrow direction diagnostic while
     separating its useful evidence from general video capability.
+- turn: 15
+  excerpt: 'User: Das ist ein Teil von echtem Videoverständnis. Assistant accepts relevance of direction
+    as a subskill and limits only the current evidence scope.'
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
