@@ -1,5 +1,11 @@
 # Current work
 
+**In progress: suite-directed retention comparison,16 September:**
+[Fixed protocol](grounded-retention-plan.md). Compare existing grounded QA/replay
+against a training-only frozen-source output anchor; same architecture and four
+fresh matched fits across two sources. Measure new-task learning and old-output
+preservation together. No result or default replacement claimed yet.
+
 **Suite-directed grounded readout comparison completed,16 September:**
 [Protocol/results](grounded-readout-plan.md),
 [comparison](../runs/grounded_readout_v1/report.html).
