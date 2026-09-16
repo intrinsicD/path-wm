@@ -4786,3 +4786,40 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O272
+  timestamp: 2026-09-16T02:12+02:00
+  provenance: ai-suggested
+  content: The current video failure combines output-side color/shape recombination errors with weak temporal
+    generalization through the state-mediated path. Query-side timing alone is insufficient; palette field
+    collapse is a bounded optimization failure, not evidence that learned appearance/motion separation
+    is universally wrong. Frozen-probe gaps do not prove a unique irreversible loss.
+  context: Twelve registered fits plus order-controlled frozen diagnostics; researcher asks about architecture
+    but has not endorsed this interpretation.
+  potential_type: claim
+  bound_to:
+  - N401
+  - N402
+  - N403
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O273
+  timestamp: 2026-09-16T02:12+02:00
+  provenance: ai-suggested
+  content: Return to shared-state temporal/direction learning with symmetric sequence tests and direct-encoder
+    versus state-mediated reads. Preserve output color/composition as a separate target. A higher-quality
+    spatial-VAE video path needs a separate controlled integration experiment; do not silently swap it
+    into the existing agent.
+  context: Proposed continuation after fixed video budget; direction source-rotation proposal remains
+    pending.
+  potential_type: heuristic
+  bound_to:
+  - N399
+  - N400
+  - N401
+  - N403
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

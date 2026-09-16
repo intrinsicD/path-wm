@@ -2,13 +2,15 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T01:34+02:00
-  turn_count: 2
+  last_turn: 2026-09-16T02:12+02:00
+  turn_count: 3
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not adopted.
     Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped
     tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
     in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text
-    reliance; multimodal transfer stays open.61 tests and24 reports checked.'
+    reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail
+    both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58
+    tests,18 reports verified, defaults unchanged.'
 events_logged:
 - turn: 1
   type: decision
@@ -102,6 +104,54 @@ events_logged:
     requiring direction from every informative modality and source-removal robustness. Match restart/exposure
     where possible; do not bundle projection, loss weighting, extra loops or scaling. Preserve shared
     multimodal reasoning.
+- turn: 3
+  type: decision
+  id: N399
+  routing: direct
+  provenance: user
+  summary: Prioritize video diagnosis and bounded repairs before returning to direction
+- turn: 3
+  type: question
+  id: N400
+  routing: direct
+  provenance: user
+  summary: Does the video path reuse per-frame image encoding?
+- turn: 3
+  type: experiment
+  id: N401
+  routing: direct
+  provenance: ai-executed
+  summary: Moving requested video time to queries fails paired foreground-quality benefit
+- turn: 3
+  type: dead_end
+  id: N402
+  routing: direct
+  provenance: ai-executed
+  summary: Learned palette mixture fields collapse in the bounded video follow-up
+- turn: 3
+  type: experiment
+  id: N403
+  routing: direct
+  provenance: ai-executed
+  summary: Symmetric reverse-pair clips expose weak temporal generalization through the frozen state
+- turn: 3
+  type: observation
+  id: O272
+  routing: staged
+  provenance: ai-suggested
+  summary: The current video failure combines output-side color/shape recombination errors with weak temporal
+    generalization through the state-mediated path. Query-side timing alone is insufficient; palette field
+    collapse is a bounded optimization failure, not evidence that learned appearance/motion separation
+    is universally wrong. Frozen-probe gaps do not prove a unique irreversible loss.
+- turn: 3
+  type: observation
+  id: O273
+  routing: staged
+  provenance: ai-suggested
+  summary: Return to shared-state temporal/direction learning with symmetric sequence tests and direct-encoder
+    versus state-mediated reads. Preserve output color/composition as a separate target. A higher-quality
+    spatial-VAE video path needs a separate controlled integration experiment; do not silently swap it
+    into the existing agent.
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -128,6 +178,19 @@ ai_actions:
   - docs/modality-readout-plan.md
   - docs/project-state.md
   - ara/evidence/tables/direction_inputs_2026-09-16.json
+- turn: 3
+  action: Implemented optional video query timing, shared learned palette/field output and motion diagnostics.
+    Ran12 registered fits, symmetric frozen probes, exact query/palette resume and raw/media verification.
+    Three actual-Claude public-only reviews, code/docs committed; no default or green promotion.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/modalities.py
+  - pathwm/models/readout.py
+  - experiments/modality_readout.py
+  - pathwm/evaluation/modality_readout.py
+  - tests/test_video_readout.py
+  - docs/video-readout-plan.md
+  - ara/evidence/tables/video_readout_2026-09-16.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -135,6 +198,10 @@ key_context:
     Iteriere dies.'
 - turn: 2
   excerpt: 'User: Achso entschuldige. Dann doch erst bei Richtung weiter machen.'
+- turn: 3
+  excerpt: User requests video first, then asks whether it uses image encoding per frame plus temporal
+    additions. Answer distinguishes shared architecture, independent branch weights and separate experimental
+    image VAE.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -193,10 +260,11 @@ open_threads:
 - 'N383: decoder readout sufficiency, optional nested loops and budgeted held-out comparisons remain open.'
 - 'N384-N386/O262-O263: combined compositional output fails; localize state access and decoder recombination.
   Prior real-data/VAE/identity and broader recurrent-efficiency questions remain open.'
-- 'N388/N395-N398/O264-O271: direction/composition remain open. Isolated text succeeds on known inputs;
-  text-prefix curriculum improves all-input accuracy but relies on text. Next gradual source rotation/dropout
-  with matched restart/exposure controls, not yet executed. Video deferred; unique loss mechanism, output
-  composition and persistent memory remain open.'
+- 'N388/N395-N403/O264-O273: direction/composition remain open. Video timing and palette repairs tested
+  but not adopted; frozen temporal encoder access exceeds final-state access without unique loss proof.
+  Next shared-state direction/temporal learning with symmetric clips, retaining planned source rotation/dropout.
+  Output color/composition, real-video spatial-VAE integration and persistent cross-window memory remain
+  open.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
@@ -326,3 +394,7 @@ ai_suggestions_pending:
   general transfer claim.'
 - 'O271: gradual source rotation/dropout proposed; matched continuation comparison not yet registered
   or run.'
+- 'O272: video two-path failure interpretation awaits researcher assessment; no unique bottleneck or universal
+  palette rejection.'
+- 'O273: temporal-state/encoder comparison and separate spatial-VAE integration proposed; no new training
+  launched.'

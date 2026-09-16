@@ -6644,3 +6644,95 @@ tree:
   - ara/evidence/tables/direction_inputs_2026-09-16.json
   - runs/direction_inputs_v1/audio_pooling/report.html
   status: resolved
+- id: N399
+  type: decision
+  title: Prioritize video diagnosis and bounded repairs before returning to direction
+  provenance: user
+  timestamp: 2026-09-16T02:12+02:00
+  choice: User explicitly requests video first because quality remains poor, with actual Claude collaboration,
+    implementation, tests and repair iteration. Preserve direction source-rotation work for afterward.
+  alternatives:
+  - Continue direction before video
+  also_depends_on:
+  - N395
+  - N397
+  evidence:
+  - ara/evidence/tables/video_readout_2026-09-16.json
+  status: resolved
+- id: N400
+  type: question
+  title: Does the video path reuse per-frame image encoding?
+  provenance: user
+  timestamp: 2026-09-16T02:12+02:00
+  description: 'Answered from current source: video has its own MultiScaleImageEncoder(video=True), framewise
+    shared patch projection, spatial/time features, causal attention and adjacent-frame pooling. Image
+    and video branches share architecture but not weights. The experimental spatial image VAE remains
+    a separate path; no cross-window recurrent video codec is implied.'
+  also_depends_on:
+  - N399
+  evidence:
+  - pathwm/models/modalities.py
+  - pathwm/models/multiscale.py
+  - experiments/modality_readout.py
+  - docs/video-readout-plan.md
+  status: resolved
+- id: N401
+  type: experiment
+  title: Moving requested video time to queries fails paired foreground-quality benefit
+  provenance: ai-executed
+  timestamp: 2026-09-16T02:12+02:00
+  result: 'Eight1024-step fits: two seeds, source/query timing, oracle/frozen video-only states.7104 parameters
+    both routes. Oracle held-out foreground MSE0.10885/0.18017→0.10895/0.12376; query motion100% but full
+    quality remains failed. Frozen held-out all-factor correctness0%; motion18.75-33.33%. Native oracle
+    weights/training exactly reproduce previous controls. Core/encoders/non-video outputs unchanged.'
+  also_depends_on:
+  - N399
+  tests_observations:
+  - O263
+  - O264
+  evidence:
+  - ara/evidence/tables/video_readout_2026-09-16.json
+  - runs/video_readout_v1/report.html
+  status: resolved
+- id: N402
+  type: dead_end
+  title: Learned palette mixture fields collapse in the bounded video follow-up
+  provenance: ai-executed
+  timestamp: 2026-09-16T02:12+02:00
+  hypothesis: An untimed learned four-color palette plus query-conditioned mixture fields improves held-out
+    foreground MSE by20% in both seeds without known regression.
+  failure_mode: 'Four1024-step oracle/frozen follow-ups,7804 decoder parameters: oracle held-out foreground0.22998/0.22553
+    and motion0%. Palette entries remain distinct but spatial fields select almost one color per clip;
+    known spatial RGB std<=1.1e-6. Both registered repairs and all combined quality/motion capability
+    screens fail. No default adoption.'
+  lesson: Inspect both palette diversity and spatial/time usage; entropy alone cannot identify a unique
+    mechanism. Preserve the negative branch; no universal rejection of appearance factorization or additional
+    training beyond this budget.
+  also_depends_on:
+  - N401
+  evidence:
+  - ara/evidence/tables/video_readout_2026-09-16.json
+  - runs/video_readout_v1/palette_inspection.json
+  status: resolved
+- id: N403
+  type: experiment
+  title: Symmetric reverse-pair clips expose weak temporal generalization through the frozen state
+  provenance: ai-executed
+  timestamp: 2026-09-16T02:12+02:00
+  result: Frozen pretrained sources; exact reverse pairs share middle frame and unordered frame set. Test
+    centers differ. Geometric centroid control100%; raw ordered linear83.3/88.9%; middle/mean50%; encoder77.8/69.4%;
+    final thought38.9/27.8%. Different probe sizes and distribution shift prevent unique information-loss
+    attribution.210 NumPy checks;234 numerical ties only in uninformative controls, max4.32e-11. Total12
+    fits65.75s CPU,58 scoped tests,2163/2175 exact resume checks,28502 raw-model checks and170 report/atlas
+    checks across18 reports.
+  also_depends_on:
+  - N399
+  - N388
+  - N401
+  tests_observations:
+  - O264
+  - O270
+  evidence:
+  - ara/evidence/tables/video_readout_2026-09-16.json
+  - runs/video_readout_v1/temporal_access/report.html
+  status: resolved
