@@ -202,3 +202,28 @@ def test_comparison_reports_a_lost_gate_even_when_headline_accuracy_is_unchanged
     row = compare_understanding(before, after)[0]
     assert row['status'] == 'regressed'
     assert row['lost_gates'] == ['no_evidence_gain']
+
+
+def test_evaluation_keeps_caller_rng_weights_and_training_mode(tmp_path):
+    from pathlib import Path
+    from experiments.modality_readout import Model
+    from pathwm.data.understanding import UnderstandingData, synthetic_records
+    from pathwm.evaluation.understanding import evaluate_understanding
+    from pathwm.io import state_hash
+
+    data = UnderstandingData.__new__(UnderstandingData)
+    records, data.arrays, cases = synthetic_records('quick')
+    data.records = [r for r in records if r['case'] == 'TXT.roles']
+    data.cases = cases[:1]
+    data.identity = 'unit-small-data'
+    data.manifest = dict(profile='unit', gaps=[], limits=['One-case software fixture.'])
+    model = Model('native').train()
+    before = state_hash(model)
+    rng = torch.get_rng_state().clone()
+    result = evaluate_understanding(model, data, tmp_path/'evaluation',
+                                   source={'scope': 'unit'}, seed=12, device='cpu',
+                                   recipe=Path(__file__))
+    assert torch.equal(torch.get_rng_state(), rng)
+    assert model.training and state_hash(model) == before
+    assert result['coverage']['executed'] == 1
+    assert (tmp_path/'evaluation/report.html').is_file()
