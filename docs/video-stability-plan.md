@@ -67,3 +67,80 @@ chance: distinct images may support memorization. Also correct the claim that
 equal-budget augmentation can rule out optimizer implicit bias. Claude acknowledged all three corrections in a second public-only exchange.
 Remaining limitation agreed: these four fixed cells do not estimate a population
 variance; report descriptive differences only. No private code, datasets or measurements sent externally.
+
+
+## Results and review
+
+Eight fixed fits complete in13.630s CPU training (data preparation, evaluation and
+reports additional). All eight reach100% original AND reflected training accuracy;
+validation original98.83–100%. There is no incomplete empirical training fit here.
+The previously inspected held-out source still distinguishes the learned solutions.
+
+| Temporal init | Head init | Original known / wide | Reflection training known / wide |
+|---|---|---:|---:|
+|7401|7501|96.35 /96.09%|98.31 /98.83%|
+|7401|7502|85.16 /87.76%|85.81 /89.19%|
+|7402|7501|85.03 /86.85%|79.95 /81.25%|
+|7402|7502|82.03 /83.20%|86.85 /93.23%|
+
+Only7401/7501 passes the existing full per-cell capability screen, in both arms.
+Both four-cell capability gates FAIL. Reflection's mean gain1.367pp is below3pp;
+worst regression5.599pp exceeds2pp. Repair-benefit gate FAILS; no default adoption.
+Input controls stay exactly50%; current/unordered pair scores0. Reflection also
+improves some mirrored evaluation inputs and worsens others; every result is saved.
+
+With original training, descriptive temporal7402-minus7401 contrast is-7.064pp,
+head7502-minus7501 is-6.543pp and interaction6.445pp (mean across known/wide).
+With reflection these are-7.715pp,-0.814pp and20.508pp. These are four-cell contrasts
+at one fixed batch sampler, not population effect estimates. Both factors affect
+this measured solution; batch order alone cannot explain differences within this
+comparison. No unique causal attribution to data shortage, encoder limits, model
+size or optimizer implicit bias. More updates are not motivated by lack of train fit.
+
+Implemented: separate `--head-seed`, exact RGB reflection with inverted labels,
+absolute-step augmentation schedule, original/reflected evaluation and logit-margin
+and high-confidence-error metrics. Refactored exact marginal checking into one helper.
+The frozen encoder is called on mirrored RGB; it is not assumed reflection-equivariant.
+Measured reflected-encoding versus flipped-latent MSE is0.0052–0.0111 across populations.
+No inference architecture, latent dimensionality, decoder or source weight changes.
+
+Validation:72 unique scoped tests,2211 exact8 versus4+4 restart checks on this balanced
+reflection path,7828 independent raw/artifact checks,672 exact RGB/latent marginal
+count identities. Frozen cached features/labels unchanged; source media and original
+weight hashes checked. All11 reports structurally verified, comparison panel visually
+inspected; browser interaction not checked.16.2MB artifacts before final documentation.
+The ignored execution script initially needed `PYTHONPATH=.`; no run had started.
+Aggregate report generation then rejected a NumPy boolean; explicitly converting it
+to builtin bool repaired serialization without any retraining or changed raw results.
+The report-repair receipt is retained.
+
+Two actual-Claude public-only reviews completed. The reviewer withdrew claims that
+unchanged mirrored labels must force chance, that alternating orientations doubles
+exposure, and that augmentation could rule out optimizer implicit bias. Its limitation
+on four fixed cells is retained; no extra seeds, tuning or gates added after results.
+
+[Comparison report](../runs/video_stability_v1/report.html),
+[raw audit](../runs/video_stability_v1/verification.json),
+[initial fit/margin audit](../runs/video_stability_v1/prior-fit-diagnostics.json).
+
+Next proposed experiment: broaden independent image-content coverage at unchanged
+architecture/task, matched update/exposure budgets and these crossed initializations.
+The current16 training images come from four short clips; independent source breadth
+should be varied explicitly, not equated with more highly correlated frames. Use a
+fresh source-disjoint confirmation set with criteria fixed in advance. This proposal
+is not run or claimed to be the unique repair; general motion and core integration
+remain open.
+
+### One-cell command
+
+```bash
+.venv/bin/python -m experiments.video_order --output runs/my_motion_reflection \
+  --balanced-training --reflect-training --seed 7600 --head-seed 7501 \
+  --temporal-source runs/video_context_v1/seed7401/k3/history/last.pt --steps 512
+```
+
+Omit `--reflect-training` for original-only training. `--seed` fixes batch sampling;
+`--head-seed` sets fresh head initialization independently of the supplied temporal
+checkpoint. The saved eight-cell orchestration additionally evaluates mirrored inputs
+for every baseline using the identical prepared data identities. Exact resume requires
+unchanged code/settings/data; previous recipe versions remain in run source snapshots.

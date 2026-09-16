@@ -2,9 +2,9 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: "2026-09-16T10:12+02:00"
-  turn_count: 7
-  summary: "Eight matched fresh-updater controls fail direction screens; continuous working access not adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58 tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights; four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain confound documented; agent integration remains open. Frozen-codec context:12 fits show history benefit but both spatial expansions fail; wrong-history discrimination remains weak.68 tests,1447 exact-resume checks,405 artifact audits,15 reports; defaults unchanged. Paired order:12 crop fits fail static-control gate; separate exhaustive-phase challenge removes single-frame cues. Four balanced-data fits achieve79–99% but neither variant passes both seeds.69 tests, exact restart and6035 raw audits;21 reports, defaults unchanged."
+  last_turn: "2026-09-16T10:57+02:00"
+  turn_count: 8
+  summary: "Eight matched fresh-updater controls fail direction screens; continuous working access not adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58 tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights; four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain confound documented; agent integration remains open. Frozen-codec context:12 fits show history benefit but both spatial expansions fail; wrong-history discrimination remains weak.68 tests,1447 exact-resume checks,405 artifact audits,15 reports; defaults unchanged. Paired order:12 crop fits fail static-control gate; separate exhaustive-phase challenge removes single-frame cues. Four balanced-data fits achieve79–99% but neither variant passes both seeds.69 tests, exact restart and6035 raw audits;21 reports, defaults unchanged. Crossed temporal/head study:8 fits all learn training data; reflection mean+1.37pp with-5.60pp worst regression fails repair. Initialization dependence persists at fixed batches.72 tests,2211 exact restart,7828 audits and11 reports; defaults unchanged."
 
 events_logged:
 - turn: 1
@@ -301,6 +301,47 @@ events_logged:
   summary: Next diagnose training fit, margins and initialization/optimization on the fixed balanced population
     before increasing capacity or moving to natural motion. Keep existing task, gates and original failures; this
     is a proposed new bounded experiment, not a launched run.
+- turn: 8
+  type: experiment
+  id: N418
+  routing: direct
+  provenance: ai-executed
+  summary: Saved fit and margin audit shows transfer gap despite complete training fit
+- turn: 8
+  type: decision
+  id: N419
+  routing: direct
+  provenance: ai-suggested
+  summary: Cross temporal/head initialization with fixed samples and one RGB reflection repair
+- turn: 8
+  type: experiment
+  id: N420
+  routing: direct
+  provenance: ai-executed
+  summary: Crossed fits identify initialization dependence but reflection repair fails
+- turn: 8
+  type: observation
+  id: O283
+  routing: staged
+  provenance: ai-suggested
+  summary: Under fixed batches and complete empirical training fit, both temporal and head initializations alter
+    measured transfer; batch-order randomness alone cannot explain differences within this grid. Reflection has
+    no consistent repair benefit. Four cells cannot identify a general seed effect or isolate data, representation
+    and optimizer implicit bias.
+- turn: 8
+  type: observation
+  id: O284
+  routing: staged
+  provenance: ai-suggested
+  summary: Next vary independent source-content breadth at fixed architecture/task and matched updates/exposure,
+    then use fresh source-disjoint confirmation with preset criteria. Correlated frames are not independent scenes.
+    This is a proposed comparison, not proof that additional data is the unique missing ingredient.
+- turn: 8
+  type: heuristic
+  id: H72
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O282 diagnostic procedure committed through N419 and implemented comparison; no efficacy promotion.
 
 ai_actions:
 - turn: 1
@@ -402,6 +443,20 @@ ai_actions:
   - docs/models.md
   - docs/diagrams/architecture-atlas.json
   - ara/evidence/tables/video_order_2026-09-16.json
+- turn: 8
+  action: Added independent head seed, pre-encoder exact RGB reflection, absolute-step orientation schedule and
+    margin diagnostics; refactored marginal checks. Ran eight fixed fits and exact restart, audited raw results,
+    fixed aggregate NumPy-boolean serialization without retraining. Two actual-Claude public-only exchanges. Preserved
+    original data/checkpoints and failed gates.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/data/video_order.py
+  - experiments/video_order.py
+  - tests/test_video_stability.py
+  - docs/video-stability-plan.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - ara/evidence/tables/video_stability_2026-09-16.json
 
 claims_touched: []
 key_context:
@@ -434,6 +489,9 @@ key_context:
 - turn: 7
   excerpt: Arbeite daran zusammen mit Claude. Plane, implementiere, überprüfe, teste und repariere. Iteriere dies.
     Continued with fixed budgets; supervised direction feasibility is distinct from robust motion capability.
+- turn: 8
+  excerpt: Continue together with Claude. Work on this. Plan, implement, review, test and fix. Iterate. Training
+    fit audit showed complete empirical fit; bounded reflection comparison failed predeclared repair gates.
 
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
@@ -506,6 +564,9 @@ open_threads:
 - 'N414-N417/O281-O282: paired direction and phase-balanced populations now implemented; task/control diagnostics
   complete but two-seed learning gate still fails. Diagnose optimization/initialization on fixed balanced task;
   natural motion, speed estimation, forecasting and agent integration remain open.'
+- 'N418-N420/O283-O284: empirical training fit complete; fixed-sampler crossed initializations remain transfer-sensitive.
+  Reflection is optional but fails robust repair gate. Next independent source-content diversity at matched task/compute
+  plus fresh confirmation; optimization mechanisms, natural video and core integration unresolved.'
 
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
@@ -650,3 +711,5 @@ ai_suggestions_pending:
   efficacy fits.'
 - O280 partially executed through paired direction and source-order controls; speed estimation remains untested.
   O281/O282 interpretation and fixed-task seed-stability proposal await researcher response. No broad efficacy crystallization.
+- H72 records executed diagnosis from O282, not efficacy. O283 interpretation and O284 independent-source comparison
+  remain staged; no unique data/capacity/optimizer cause or new run authorized beyond completed fixed budget.

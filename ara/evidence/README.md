@@ -178,3 +178,5 @@ Video timing/palette comparison and symmetric temporal-access test: [source-boun
 Shared spatial image/video codec: [source-bound evidence](tables/shared_video_vae_2026-09-16.json). Actual weights shared; four real-video fits fail paired temporal benefit; source-loss/domain confound recorded.61 tests, exact resume,777 artifact checks. Primary-source literature/weight availability reviewed; no download or general capability claim.
 
 Paired temporal-order diagnostics: [source-bound evidence](tables/video_order_2026-09-16.json). Twelve original fits expose a single-frame cue; exhaustive-phase challenge repairs evaluation balance. Four separately registered balanced-data fits reach79–99% but neither candidate passes both seeds.69 tests, exact restart and6035 audits;21 structurally checked reports, no default adoption.
+
+Temporal initialization and reflection: [source-bound evidence](tables/video_stability_2026-09-16.json). Eight fixed fits all learn training data; crossed initializations differ at common batch order. Reflection fails robust capability and benefit screens.72 tests,2211 exact restart,7828 audits and11 reports; no default adoption.

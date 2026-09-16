@@ -705,3 +705,14 @@
 - **Code ref**: [recipe](../../../experiments/photo_detail.py), [readers](../../../pathwm/models/photo_probe.py), [stage and patch checks](../../../pathwm/evaluation/photo_detail.py).
 - **Evidence**: N343 adoption; N344-N346 execution; [source-bound evidence](../../evidence/tables/photo_detail_2026-09-14.json).
 - **Scope**: Only the diagnostic portion of O230 was explicitly adopted here. The subsequent state/recall repair remains proposed as O233.
+
+## H72: Separate empirical training fit and initialization factors before scaling
+
+- **Rationale**: Inspect complete-data fit and logit margins, then cross temporal/head initialization with common sampled examples before attributing held-out failure to insufficient updates or capacity. Preserve task, thresholds, original failures and matched budgets.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O282
+- **Sensitivity**: High. Four fixed initializations do not estimate population variance; zero empirical error leaves optimizer implicit bias and data/representation effects unresolved. Augmentation alters the learning path as well as the input distribution.
+- **Code ref**: [direction recipe](../../../experiments/video_order.py), [reflection and batch checks](../../../tests/test_video_stability.py).
+- **Evidence**: N418–N420; [source-bound comparison](../../evidence/tables/video_stability_2026-09-16.json).
+- **Scope**: Committed diagnostic procedure, not a claim of successful repair or general motion capability.

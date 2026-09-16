@@ -6962,3 +6962,54 @@ tree:
   - ara/evidence/tables/video_order_2026-09-16.json
   - runs/video_order_v1/balanced_training/report.html
   status: resolved
+- id: N418
+  type: experiment
+  title: Saved fit and margin audit shows transfer gap despite complete training fit
+  provenance: ai-executed
+  timestamp: 2026-09-16T10:57+02:00
+  result: Four previous balanced-data fits all score100% training; validation95.05–100%. Weakest held-out model
+    makes confident wrong predictions although training cross entropy0.00057. Read-only audit redirects diagnosis
+    from incomplete empirical fit to transfer/initialization; implicit-bias mechanism unresolved.
+  also_depends_on:
+  - N417
+  evidence:
+  - ara/evidence/tables/video_stability_2026-09-16.json
+  - runs/video_stability_v1/prior-fit-diagnostics.json
+  status: resolved
+- id: N419
+  type: decision
+  title: Cross temporal/head initialization with fixed samples and one RGB reflection repair
+  provenance: ai-suggested
+  timestamp: 2026-09-16T10:57+02:00
+  choice: 'User requests continued Claude implement/review/test/fix. Preregister eight512-update fits: temporal7401/7402
+    x head7501/7502 x original/reflected training; sampling seed7600 fixed. Exact raw RGB reflection before frozen
+    encoding, inverted directions, alternate absolute steps, unchanged compute/architecture. Capability across all
+    four cells plus mean>=3pp benefit and no>2pp regression. Two actual-Claude public-only reviews; correct forced-chance,
+    double-exposure and optimizer-exclusion claims.'
+  alternatives:
+  - Increase duration because held-out score is low
+  - Increase temporal capacity before checking empirical fit
+  also_depends_on:
+  - N418
+  evidence:
+  - docs/video-stability-plan.md
+  - O282
+  - runs/reviews/video_stability_v1/receipt.json
+  - runs/reviews/video_stability_v1/reconcile-receipt.json
+  status: resolved
+- id: N420
+  type: experiment
+  title: Crossed fits identify initialization dependence but reflection repair fails
+  provenance: ai-executed
+  timestamp: 2026-09-16T10:57+02:00
+  result: Eight512-update fits13.630s CPU training. All original/reflected train scores100%; only7401/7501 passes
+    full capability per arm. Both four-cell gates fail. Reflection mean+1.367pp, worst-5.599pp fails both benefit
+    criteria. Original temporal/head descriptive contrasts-7.064/-6.543pp, interaction6.445pp.72 unique scoped tests,2211
+    exact reflected-path restart checks,7828 raw audits and672 RGB/latent marginal identities;11 structurally verified
+    reports. No default/green change or natural motion claim.
+  also_depends_on:
+  - N419
+  evidence:
+  - ara/evidence/tables/video_stability_2026-09-16.json
+  - runs/video_stability_v1/report.html
+  status: resolved

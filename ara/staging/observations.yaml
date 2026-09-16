@@ -4954,6 +4954,37 @@ observations:
   potential_type: heuristic
   bound_to:
   - N417
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H72
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O283
+  timestamp: 2026-09-16T10:57+02:00
+  provenance: ai-suggested
+  content: Under fixed batches and complete empirical training fit, both temporal and head initializations alter
+    measured transfer; batch-order randomness alone cannot explain differences within this grid. Reflection has
+    no consistent repair benefit. Four cells cannot identify a general seed effect or isolate data, representation
+    and optimizer implicit bias.
+  context: User continuation with Claude on temporal direction instability.
+  potential_type: claim
+  bound_to:
+  - N418
+  - N420
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O284
+  timestamp: 2026-09-16T10:57+02:00
+  provenance: ai-suggested
+  content: Next vary independent source-content breadth at fixed architecture/task and matched updates/exposure,
+    then use fresh source-disjoint confirmation with preset criteria. Correlated frames are not independent scenes.
+    This is a proposed comparison, not proof that additional data is the unique missing ingredient.
+  context: User continuation with Claude on temporal direction instability.
+  potential_type: heuristic
+  bound_to:
+  - N418
+  - N420
   promoted: false
   promoted_to: null
   crystallized_via: null

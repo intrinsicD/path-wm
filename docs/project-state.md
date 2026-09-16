@@ -1,9 +1,16 @@
 # Current work
 
-**Active: temporal initialization/transfer comparison:**
-[Fixed eight-fit protocol](video-stability-plan.md). Training fit is already100%;
-cross temporal/head initialization with common sampling and test one reflection
-augmentation repair at unchanged compute. Prior gates/results remain preserved.
+**Temporal initialization/transfer comparison completed,16 September:**
+[Protocol/results](video-stability-plan.md),[report](../runs/video_stability_v1/report.html).
+Eight512-update fits cross two temporal and two head initializations with identical
+batch sampling, plus matched true-RGB reflection augmentation. All train accuracies
+100%; held-out original82–96%, augmented80–99%. Only one cell passes per arm; both
+four-cell capability gates fail. Reflection mean+1.37pp, worst-5.60pp fails repair
+screen. Both initializations affect measured transfer; sampler alone is insufficient.
+No default or decoder changes.72 scoped tests,2211 exact restart and7828 raw checks,
+11 static reports, panel inspected. Next propose independent source-content diversity
+at fixed task/architecture with fresh confirmation; not simply longer fit. General
+motion, streaming and core integration remain open.
 
 **Paired temporal-order diagnosis and two repairs completed,16 September:**
 [Protocol/results](video-order-plan.md),[latest comparison](../runs/video_order_v1/balanced_training/report.html).
