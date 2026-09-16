@@ -164,7 +164,14 @@ def compare_understanding(before, after):
                 if not np.isfinite([old, new]).all():
                     raise ValueError("Nonfinite comparison metric")
                 deltas[metric] = new - old
-        values = list(deltas.values())
+        old_gates = x["metrics"].get("gates", {})
+        new_gates = y["metrics"].get("gates", {})
+        if old_gates.keys() != new_gates.keys():
+            raise ValueError("Acceptance gate contract differs")
+        lost = sorted(k for k in old_gates if old_gates[k] and not new_gates[k])
+        gained = sorted(k for k in old_gates if not old_gates[k] and new_gates[k])
+        values = list(deltas.values()) + [-1] * len(lost) + [1] * len(gained)
+        values.append(int(y["passed"]) - int(x["passed"]))
         status = (
             "unchanged"
             if all(v == 0 for v in values)
@@ -181,6 +188,8 @@ def compare_understanding(before, after):
                 delta=deltas,
                 before_passed=x["passed"],
                 after_passed=y["passed"],
+                lost_gates=lost,
+                gained_gates=gained,
             )
         )
     return rows
@@ -508,6 +517,8 @@ def understanding_inspection(directory):
         pair = "n/a" if m["paired_min"] is None else f"{m['paired_min']:.1%}"
         delta = comparison.get(c["id"])
         change = "" if delta is None else f"{delta['status']}: {delta['delta']}"
+        if delta is not None:
+            change += f"; lost gates: {delta.get('lost_gates', [])}; gained: {delta.get('gained_gates', [])}"
         parts.append(
             f"<tr><td>{escape(c['id'])}<br>{escape(c['domain'])}; {m['examples']} examples / {c['sources']} groups</td><td>{m['accuracy_min']:.1%} / {pair}</td><td>{m['source_gain_min']:+.1%}</td><td>{'pass' if c['passed'] else 'fail'}<br>{escape(change)}</td></tr>"
         )

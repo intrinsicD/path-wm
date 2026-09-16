@@ -97,3 +97,9 @@ hide a newly failed no-evidence gate. Repair comparison status to include lost/g
 gates and overall task pass, then rerun the focused checks and quick comparison/replay
 under the final scorer contract. No thresholds, source fixtures, weights or answer
 inference change. Retain the initial reports as development evidence.
+
+The RNG integration check passed before a change: the existing `evaluation_mode`
+already restores Python/NumPy/Torch RNG, module modes and buffers. Reuse that guard;
+no duplicate RNG wrapper was retained. Comparison status now includes lost/gained
+gates and task pass changes.70 focused software checks pass after this repair;
+555 whole-repository checks passed before this final comparison-only repair.
