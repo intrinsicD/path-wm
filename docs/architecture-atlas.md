@@ -1120,4 +1120,6 @@ Seven contract tests cover sharing, exact neutral initialization, causality, gra
 
 Four128-update real-video development fits (two seeds) complete in24.80s CPU. Temporal frame-difference benefit0.22%/0.14% fails5% screen. Both trained arms worsen reserved-source RGB vs untouched image weights.61 tests plus exact resume and raw audits validate mechanics only. Temporal remains opt-in; no general-quality or high-level green promotion. See runs/shared_video_vae_v1/report.html.
 
+Literature: docs/video-codec-literature.md distinguishes published image-weight reuse, temporal decoding and time compression. Local source-regression also confounds beta0.1→0.01 and color weight6→0; paired arms remain matched. No paper proves the local failure cause. User walked through actual late causal mean refinement before sampling and per-frame shared decoder.
+
 Source: [pathwm/models/video_vae.py · VideoVAE:49](../pathwm/models/video_vae.py), [pathwm/models/video_vae.py · CausalLatentMixer:19](../pathwm/models/video_vae.py), [experiments/video_vae.py](../experiments/video_vae.py), [tests/test_video_vae.py](../tests/test_video_vae.py), [docs/shared-video-vae-plan.md](../docs/shared-video-vae-plan.md).

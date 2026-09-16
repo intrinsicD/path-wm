@@ -14,6 +14,10 @@ browser interaction unavailable. Atlas16 separates this codec from the unchanged
 categorical agent patch/token encoder. Next: a masked/occluded-frame task that
 requires history, then separately test the spatial-grid-to-core adapter. General
 video generation, streaming state and earlier direction retention remain open.
+[Follow-up literature/source audit](video-codec-literature.md): published codec
+weights exist; no download. Frozen-source regression also changes beta/color loss
+and data domain, so no isolated temporal-cause conclusion.
+
 
 **Video diagnosis and two bounded repairs completed, 16 September:**
 [Protocol/results](video-readout-plan.md#result-16-september),

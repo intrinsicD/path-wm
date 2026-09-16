@@ -111,3 +111,18 @@ This completes the codec reuse slice. It does **not** replace the categorical
 agent's old patch encoder. Spatial-grid-to-agent integration, longer temporal
 memory, direction retention and learned future-video generation remain explicit
 next tasks. Atlas diagram16 shows this boundary; no capability color promoted.
+
+### Follow-up explanation and source audit
+
+[Primary-source literature](video-codec-literature.md) covers SVD,IV-VAE,CogVideoX,
+HunyuanVideo and the narrower MSE-prediction precedent. Published weights exist;
+none downloaded. IV-VAE's temporal-compression failure mechanism is not established
+here because our latent retains all frame positions. Our temporal residual is
+currently after the image posterior projection and before sampling, with a per-frame
+decoder; early feature scales remain independent.
+
+The untouched source was trained with beta0.1,color_weight6, whereas both new arms
+use the preregistered simple beta0.01,color_weight0 objective. Their paired comparison
+remains matched, but the frozen-source regression also confounds domain and loss
+changes. Preserve original-loss and frozen-codec continuation controls before
+attributing that regression to temporal processing. These follow-ups are proposals.
