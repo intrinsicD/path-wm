@@ -79,3 +79,21 @@ Remaining caveats are retained: this gate has no proven search-efficiency benefi
 equal budget means equal512 updates/batch/clip stream, with actual time recorded;
 ridge selection is validation-only and every regularizer is reported. No test-based
 choice or mechanism claim. Initial checks fail on missing diagnostic modules.
+
+## Diagnostic outcome and repair execution boundary
+
+Both fixed encoder gates pass:7201 accuracy93.75%/pairs87.5%;7202 both100%.
+Instruction-attention accuracy68.75%/75%, task-token81.25%/75%, working68.75%/
+71.875%. Unequal feature/probe dimensions prevent a unique loss attribution.
+Length/prefix controls50%/0% pairs; byte histograms100% confirm the deliberately
+shared-vocabulary scope. Phrase-order stress remains poor. Actual fixed-context
+answers18.75%/43.75% exact, first-word50%/100%. These two contexts are diagnostic,
+not the16-clip repair endpoint. Family-flip results and all regularizers are saved.
+
+Conditional repair now proceeds exactly as above.40 software checks pass; four
+uninterrupted versus two+two smoke updates give848 exact saved-state tensor checks.
+The request decoder now batches64 cached working states while preserving each
+individually seeded core call. All208 saved diagnostic answers/EOS match scalar
+decoding. This inference batching is fixed before formal fits; no model math,
+threshold or sample population changed. Training smoke precedes this decode-only
+optimization. Fresh reference suite runs will verify historical raw arrays as well.

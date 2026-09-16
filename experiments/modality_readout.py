@@ -763,7 +763,7 @@ def order_requests(record, *, novel=False):
     ]
 
 
-def grounded_records(data, case, *, request_contrasts=False):
+def grounded_records(data, case, *, request_contrasts=False, request_profile="narrow"):
     """An explicit supervised calibration population; never train on scored cohorts."""
     if not any(
         c["id"] == case and c["domain"] == "controlled contrast" for c in data.cases
@@ -774,6 +774,15 @@ def grounded_records(data, case, *, request_contrasts=False):
     ]
     if not rows:
         raise ValueError("No calibration training examples")
+    if request_profile not in ("narrow", "balanced"):
+        raise ValueError("Unknown request profile")
+    if request_profile == "balanced":
+        if not request_contrasts:
+            raise ValueError("Balanced requests need contrasts")
+        from pathwm.data.request_meaning import request_corpus, apply_request
+
+        requests = [r for r in request_corpus() if r["split"] == "calibration"]
+        return [apply_request(r, q) for r in rows for q in requests]
     return [v for r in rows for v in order_requests(r)] if request_contrasts else rows
 
 
@@ -810,9 +819,18 @@ def grounded_batch(data, rows, indices, device):
 
 
 def configure_grounded_training(model, scope):
-    if scope not in ("decoder", "core"):
-        raise ValueError("Grounded scope must be decoder or core")
+    if scope not in ("decoder", "core", "interpreter"):
+        raise ValueError("Grounded scope must be decoder, core or interpreter")
     model.requires_grad_(False)
+    if scope == "interpreter":
+        if (
+            model.core.request_readout != "instruction"
+            or model.core.agent.task_interpreter is None
+        ):
+            raise ValueError("Interpreter fitting requires an instruction source")
+        model.core.agent.task_interpreter.requires_grad_(True)
+        training_mode(model)
+        return
     if scope == "core":
         model.core.requires_grad_(True)
         for module in (
@@ -881,6 +899,45 @@ def objective_gradient_norm(loss, parameters):
         loss, parameters, retain_graph=True, allow_unused=True
     )
     return float(sum(g.square().sum() for g in gradients if g is not None).sqrt())
+
+
+def summarize_request_answers(results):
+    metrics = []
+    for novel in dict.fromkeys(r["novel"] for r in results):
+        for condition in dict.fromkeys(
+            r["condition"] for r in results if r["novel"] == novel
+        ):
+            group = [
+                r
+                for r in results
+                if r["novel"] == novel and r["condition"] == condition
+            ]
+            for form in ("first", "sequence", "both"):
+                by_draw = []
+                for draw in range(3):
+                    selected = [r for r in group if r["draw"] == draw]
+                    if form == "both":
+                        paired = {}
+                        for r in selected:
+                            paired.setdefault((r["clip"], r["wording"]), []).append(
+                                r["exact"]
+                            )
+                        if not paired or any(len(v) != 2 for v in paired.values()):
+                            raise ValueError("Incomplete opposite-request answer pair")
+                        values = [all(v) for v in paired.values()]
+                    else:
+                        values = [r["exact"] for r in selected if r["format"] == form]
+                    by_draw.append(float(np.mean(values)))
+                metrics.append(
+                    dict(
+                        novel=novel,
+                        condition=condition,
+                        format=form,
+                        exact_by_draw=by_draw,
+                        exact_min=min(by_draw),
+                    )
+                )
+    return metrics
 
 
 def evaluate_request_contrasts(model, data, path, device):
@@ -952,39 +1009,7 @@ def evaluate_request_contrasts(model, data, path, device):
                                     == expected.split()[0],
                                 )
                             )
-    metrics = []
-    for novel in (False, True):
-        for condition in dict.fromkeys(
-            r["condition"] for r in results if r["novel"] == novel
-        ):
-            group = [
-                r
-                for r in results
-                if r["novel"] == novel and r["condition"] == condition
-            ]
-            for form in ("first", "sequence", "both"):
-                by_draw = []
-                for draw in range(3):
-                    selected = [r for r in group if r["draw"] == draw]
-                    if form == "both":
-                        paired = {}
-                        for r in selected:
-                            paired.setdefault((r["clip"], r["wording"]), []).append(
-                                r["exact"]
-                            )
-                        values = [all(v) for v in paired.values()]
-                    else:
-                        values = [r["exact"] for r in selected if r["format"] == form]
-                    by_draw.append(float(np.mean(values)))
-                metrics.append(
-                    dict(
-                        novel=novel,
-                        condition=condition,
-                        format=form,
-                        exact_by_draw=by_draw,
-                        exact_min=min(by_draw),
-                    )
-                )
+    metrics = summarize_request_answers(results)
     result = dict(
         metrics=metrics,
         examples=results,
@@ -993,6 +1018,147 @@ def evaluate_request_contrasts(model, data, path, device):
     )
     atomic_json(path / "request_contrasts.json", result)
     return result
+
+
+def evaluate_request_meanings(model, data, path, device):
+    """New prefix templates, actual generated answers and necessity controls."""
+    from pathwm.data.request_meaning import request_corpus, apply_request
+    from pathwm.models.modalities import bytes_text
+
+    results, working = [], []
+    requests = [r for r in request_corpus() if r["split"] == "test"]
+    records = [
+        r for r in data.records if r["case"] == "VID.order" and r["split"] == "test"
+    ]
+    pair_rng = {
+        p: 19701 + i * 10
+        for i, p in enumerate(dict.fromkeys(r["pair"] for r in records))
+    }
+    start = time.perf_counter()
+    with evaluation_mode(model), torch.no_grad():
+        for base in records:
+            for request in requests:
+                row = apply_request(base, request)
+                conditions = (
+                    ["full"] if request["style"] == "direct" else ["order_stress"]
+                )
+                if request["family"] == "test/0":
+                    conditions += ["omitted", "last_frame", "constant_request"]
+                for draw in range(3):
+                    for condition in conditions:
+                        torch.manual_seed(pair_rng[base["pair"]] + draw)
+                        observed = (
+                            row
+                            if condition != "constant_request"
+                            else row | dict(question=".")
+                        )
+                        inputs = data.inputs(
+                            observed,
+                            omit=("video",) if condition == "omitted" else (),
+                            device=device,
+                        )
+                        if condition == "last_frame":
+                            video = inputs["video"]
+                            inputs["video"] = replace(
+                                video,
+                                values=video.values[:, -1:],
+                                times=video.times[:, -1:],
+                            )
+                        tokens = model.core(
+                            inputs,
+                            requests=[
+                                "."
+                                if condition == "constant_request"
+                                else row["question"]
+                            ],
+                        )
+                        working.append(tokens.detach().cpu())
+                        expected = row["choices"][row["answer"]]
+                        results.append(
+                            dict(
+                                clip=base["id"],
+                                pair=base["pair"],
+                                novel=True,
+                                format=row["format"],
+                                wording=request["pair"],
+                                draw=draw,
+                                condition=condition,
+                                question=row["question"],
+                                expected=expected,
+                            )
+                        )
+        # Preserve every individually seeded core call; batch only deterministic decoding.
+        for start_index in range(0, len(working), 64):
+            tokens = torch.cat(working[start_index : start_index + 64]).to(device)
+            generated_ids = model.outputs.generate(tokens, 16)
+            for row, ids in zip(results[start_index : start_index + 64], generated_ids):
+                generated = bytes_text(ids)
+                ended = bool((ids == 2).any())
+                row.update(
+                    generated=generated,
+                    ended=ended,
+                    exact=ended and generated == row["expected"],
+                    first_word=generated.split()[:1] == row["expected"].split()[:1],
+                    format_correct=len(generated.split())
+                    == (1 if row["format"] == "first" else 2),
+                )
+    result = dict(
+        metrics=summarize_request_answers(results),
+        examples=results,
+        seconds=time.perf_counter() - start,
+        scope="Held-out prefix composition and separate phrase-order stress; source controls on first held-out prefix only.",
+    )
+    atomic_json(path / "request_meanings.json", result)
+    return result
+
+
+def request_evaluate(args):
+    from pathwm.data.understanding import UnderstandingData
+
+    model, settings, source_hash = restore_readout(args.core, args.seed, args.device)
+    model.requires_grad_(False).eval()
+    data = UnderstandingData(args.understanding_suite)
+    run = Run(
+        args.output,
+        settings=dict(
+            seed=args.seed,
+            purpose="diagnostic",
+            source=str(args.core.resolve()),
+            source_sha256=source_hash,
+        ),
+        data=dict(fixtures=data.identity),
+        recipe=__file__,
+        model=model,
+        optimizer=torch.optim.Adam([next(model.parameters())], lr=0.001),
+        device=args.device,
+    )
+    before = state_hash(model)
+    try:
+        result = evaluate_request_meanings(model, data, run.path, args.device)
+        if before != state_hash(model) or source_hash != file_hash(
+            args.core / "last.pt"
+        ):
+            raise AssertionError("Evaluation changed source")
+        atomic_json(
+            run.path / "result.json",
+            dict(
+                evaluation_scope=result["scope"],
+                metrics={
+                    f"{r['condition']}/{r['format']}": r for r in result["metrics"]
+                },
+            ),
+        )
+        run.save()
+        run.status("complete", "pending")
+        write_report(run.path)
+    except BaseException as exc:
+        prior = json.loads((run.path / "status.json").read_text())
+        run.status(
+            prior["result"] if prior["result"] == "complete" else "failed",
+            "failed",
+            str(exc),
+        )
+        raise
 
 
 def request_diagnose(args):
@@ -1189,7 +1355,16 @@ def grounded(args):
 
     data = UnderstandingData(args.understanding_suite)
     contrasts = getattr(args, "request_contrasts", False)
-    rows = grounded_records(data, args.grounded_case, request_contrasts=contrasts)
+    profile = getattr(args, "request_profile", "narrow")
+    interpreter_only = args.grounded_scope == "interpreter"
+    if interpreter_only and (not contrasts or getattr(args, "retention_weight", 0)):
+        raise ValueError(
+            "Interpreter-only fitting needs contrasts and no retention loss"
+        )
+    rows = grounded_records(
+        data, args.grounded_case, request_contrasts=contrasts, request_profile=profile
+    )
+    request_count = len(rows) // len(grounded_records(data, args.grounded_case))
     device = torch.device(args.device)
     model, source_settings, source_hash = restore_readout(args.core, args.seed, device)
     configure_request_readout(
@@ -1228,10 +1403,13 @@ def grounded(args):
         case=args.grounded_case,
         request_readout=model.core.request_readout,
         request_contrasts=contrasts,
+        request_profile=profile,
         scope=args.grounded_scope,
         calibration_training_ids=[r["id"] for r in rows],
         replay_seed=original_seed,
-        replay="alternate original multimodal replay and QA updates",
+        replay="none; interpreter-only"
+        if interpreter_only
+        else "alternate original multimodal replay and QA updates",
         objective="QA byte CE/log259; replay sum normalized per-output losses",
         initialization_checkpoint_sha256=source_hash,
         initialization_checkpoint=str(args.core.resolve()),
@@ -1285,8 +1463,19 @@ def grounded(args):
         while run.step < end:
             optimizer.zero_grad(set_to_none=True)
             diagnostics = {}
-            if run.step % 2 == 0:
-                indices = run.sample(len(rows), 8)
+            if interpreter_only or run.step % 2 == 0:
+                if interpreter_only:
+                    choices = request_count
+                    clip_indices = run.sample(len(rows) // choices, 8)
+                    request_rng = torch.Generator().manual_seed(
+                        args.seed + 1777 + run.step
+                    )
+                    request_indices = torch.randint(
+                        choices, (8,), generator=request_rng
+                    ).numpy()
+                    indices = clip_indices * choices + request_indices
+                else:
+                    indices = run.sample(len(rows), 8)
                 inputs, target = grounded_batch(data, rows, indices, device)
                 requests = [rows[int(i)]["question"] for i in indices]
                 loss = grounded_objective(
@@ -1382,7 +1571,7 @@ def grounded(args):
             metrics, arrays = symbolic()
             np.savez_compressed(run.path / "outputs.npz", **arrays)
             save_panels(run.path, arrays, metrics)
-            if args.grounded_case.startswith("VID."):
+            if args.grounded_case.startswith("VID.") and not interpreter_only:
                 with evaluation_mode(model), torch.no_grad():
                     for r in data.records:
                         if r["case"] != args.grounded_case or r["split"] != "test":
@@ -1428,9 +1617,12 @@ def grounded(args):
                         )
                 atomic_json(run.path / "grounded_examples.json", generated)
             if contrasts:
-                request_result = evaluate_request_contrasts(
-                    model, data, run.path, device
+                evaluator = (
+                    evaluate_request_meanings
+                    if interpreter_only
+                    else evaluate_request_contrasts
                 )
+                request_result = evaluator(model, data, run.path, device)
                 atomic_json(
                     run.path / "result.json",
                     dict(
@@ -1440,7 +1632,7 @@ def grounded(args):
                             for r in request_result["metrics"]
                         },
                         limits=[
-                            "Raw questions, outputs, EOS and first-word diagnostics are in request_contrasts.json.",
+                            "Raw questions, outputs, EOS and first-word diagnostics are in request_meanings.json or request_contrasts.json.",
                             "Per-fit format success is not overall adoption; compare both sources and regression gates.",
                         ],
                     ),
@@ -2420,6 +2612,7 @@ def main():
             "repair-report",
             "exploration",
             "request-diagnose",
+            "request-evaluate",
         ),
         default="suite",
     )
@@ -2454,7 +2647,12 @@ def main():
         help="Controlled calibration task to supervise",
     )
     parser.add_argument(
-        "--grounded-scope", choices=("decoder", "core"), default="decoder"
+        "--grounded-scope",
+        choices=("decoder", "core", "interpreter"),
+        default="decoder",
+    )
+    parser.add_argument(
+        "--request-profile", choices=("narrow", "balanced"), default="narrow"
     )
     parser.add_argument(
         "--request-readout",
@@ -2549,7 +2747,7 @@ def main():
         help="Optional learned untimed palette; requires query timing",
     )
     args = parser.parse_args()
-    if args.stage == "request-diagnose":
+    if args.stage in ("request-diagnose", "request-evaluate"):
         if (
             args.core is None
             or args.understanding_suite is None
@@ -2560,7 +2758,9 @@ def main():
             parser.error(
                 "Request diagnosis needs source and fixtures without training/resume"
             )
-        request_diagnose(args)
+        (request_diagnose if args.stage == "request-diagnose" else request_evaluate)(
+            args
+        )
         return
     if args.stage == "exploration":
         if args.resume or args.stop_after or args.steps:
