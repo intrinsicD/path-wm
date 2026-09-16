@@ -1,5 +1,9 @@
 # Current work
 
+**Active: structured direction reader:** [protocol](video-evidence-plan.md).
+Shared residual scoring of opposite-offset correspondences; compare pooled, learned
+evidence and fixed cosine.89 tests and10239 exact restart checks pass; four fixed fits next.
+
 **Explicit correspondence-range comparison completed,16 September:**
 [Protocol/results](video-matching-plan.md),[report](../runs/video_matching_v1/report.html).
 Twelve512-update fits expose no/local2/wide3 matching at the SAME crop/head and1630

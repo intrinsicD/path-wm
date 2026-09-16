@@ -93,6 +93,59 @@ def local_correlation(previous, current, *, radius=2):
     )
 
 
+class CorrespondenceDirectionHead(nn.Module):
+    """Shared signed-offset evidence reader, initially the fixed cosine rule.
+
+    Input is a horizontal correlation volume [B,2*radius+1,H,W]. Geometry defines
+    the two sides; learning only refines candidate scores and positive logit scale.
+    Channel reversal swaps logits. Arbitrary video reversal need not do so.
+    """
+
+    def __init__(self, radius=3):
+        super().__init__()
+        if type(radius) is not int or radius < 1:
+            raise ValueError("Positive integer radius required")
+        self.radius = radius
+        self.register_buffer(
+            "distances",
+            torch.arange(-radius, radius + 1).abs().float() / radius,
+            persistent=False,
+        )
+        self.residual = nn.Sequential(
+            nn.Linear(3, 16), nn.SiLU(), nn.Linear(16, 1, bias=False)
+        )
+        nn.init.zeros_(self.residual[-1].weight)
+        self.log_scale = nn.Parameter(torch.zeros(()))
+
+    def forward(self, correlation, *, trace=None):
+        r = self.radius
+        if (
+            correlation.ndim != 4
+            or correlation.shape[1] != 2 * r + 1
+            or min(correlation.shape) < 1
+        ):
+            raise ValueError("Expected nonempty [B,2*radius+1,H,W] correlation")
+        cosine = correlation.mean((-1, -2))
+        inputs = torch.stack(
+            (
+                cosine,
+                self.distances.to(cosine).expand_as(cosine),
+                cosine[:, r : r + 1].expand_as(cosine),
+            ),
+            -1,
+        )
+        residual = self.residual(inputs).squeeze(-1)
+        scores = cosine + residual
+        scale = self.log_scale.clamp(-4, 6).exp()
+        difference = scale * (scores[:, :r].amax(1) - scores[:, r + 1 :].amax(1))
+        if trace is not None:
+            for name, value in dict(
+                cosine=cosine, residual=residual, candidate_scores=scores, scale=scale
+            ).items():
+                trace[name] = value.detach().cpu().clone()
+        return torch.stack((-difference / 2, difference / 2), -1)
+
+
 class VideoVAE(nn.Module):
     """One owner for image weights; `model.image(rgb)` remains the image path.
 

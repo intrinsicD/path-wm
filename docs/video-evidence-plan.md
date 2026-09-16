@@ -91,3 +91,10 @@ seed values/ranges, and explicitly exclude temporal corruption, natural motion a
 tracking capability claims. Scale is bounded by the declared log clamp; static confidence
 remains diagnostic. Receipts/briefs under runs/reviews/video_evidence_v1. No private code,
 media or measured results were exported. These limits do not warrant extra tuning/fits.
+
+## Mechanics before formal fits
+
+89 scoped tests and Ruff pass. Real8 versus4+4 evidence-readout training passes10239
+exact checks (model,optimizer,RNG,sampler,training rows,raw predictions/exposure and
+non-confirmation scores). Reports structurally verified; no renderer changes.
+The two readout architectures differ intentionally; generic default remains intact.

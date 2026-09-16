@@ -22,7 +22,11 @@ from torch.nn import functional as F
 
 from pathwm.data.video_order import pan_pairs, cyclic_pan_pairs, reflect_pairs
 from pathwm.models.spatial_vae import SpatialVAE
-from pathwm.models.video_vae import CausalLatentMixer, local_correlation
+from pathwm.models.video_vae import (
+    CausalLatentMixer,
+    CorrespondenceDirectionHead,
+    local_correlation,
+)
 from pathwm.io import Run, atomic_json, file_hash, seed_everything, evaluation_mode
 from pathwm.evaluation.report import write_report
 
@@ -56,7 +60,15 @@ class OrderReadout(nn.Module):
     radius fixes the crop and head size; active_radius masks only matching support.
     """
 
-    def __init__(self, channels, mode, *, correlation_radius=2, active_radius=None):
+    def __init__(
+        self,
+        channels,
+        mode,
+        *,
+        correlation_radius=2,
+        active_radius=None,
+        readout="pooled",
+    ):
         super().__init__()
         if mode not in MODES:
             raise ValueError("Unknown direction arm")
@@ -70,6 +82,17 @@ class OrderReadout(nn.Module):
         self.correlation_radius = correlation_radius
         self.active_radius = active_radius
         self.mode = mode
+        self.readout = readout
+        if readout not in ("pooled", "evidence"):
+            raise ValueError("Unknown direction readout")
+        if readout == "evidence":
+            if mode != "correlation" or active_radius != correlation_radius:
+                raise ValueError(
+                    "Evidence readout requires full active correlation mode"
+                )
+            self.temporal = None
+            self.head = CorrespondenceDirectionHead(correlation_radius)
+            return
         self.temporal = CausalLatentMixer(channels)
         self.head = nn.Sequential(
             nn.Conv2d(2 * channels + 2 * correlation_radius + 1, 16, 1),
@@ -84,6 +107,12 @@ class OrderReadout(nn.Module):
     def forward(self, x, *, trace=None):
         if self.mode in ("current", "previous"):
             x = input_control(x, self.mode)
+        radius = self.correlation_radius
+        correlation = local_correlation(x[:, -2], x[:, -1], radius=radius)
+        if self.readout == "evidence":
+            if trace is not None:
+                trace["correlation"] = correlation.detach().cpu().clone()
+            return self.head(correlation, trace=trace)
         times = (
             torch.arange(x.shape[1], dtype=torch.float64, device=x.device)[None].expand(
                 len(x), -1
@@ -93,8 +122,6 @@ class OrderReadout(nn.Module):
         valid = torch.ones_like(times, dtype=torch.bool)
         temporal = self.temporal.features(x, times, valid)[:, -1]
         appearance = x[:, -1]
-        radius = self.correlation_radius
-        correlation = local_correlation(x[:, -2], x[:, -1], radius=radius)
         if self.active_radius < radius:
             offsets = torch.arange(-radius, radius + 1, device=x.device)
             correlation = (
@@ -626,14 +653,22 @@ def train(args, prepared=None):
         args.mode,
         correlation_radius=getattr(args, "correlation_radius", 2),
         active_radius=getattr(args, "active_radius", None),
+        readout=getattr(args, "readout", "pooled"),
     )
-    source = torch.load(args.temporal_source, map_location="cpu", weights_only=True)
-    model.temporal.load_state_dict(source["model"], strict=True)
+    if model.temporal is not None:
+        source = torch.load(args.temporal_source, map_location="cpu", weights_only=True)
+        model.temporal.load_state_dict(source["model"], strict=True)
     cfg = dict(
         seed=args.seed,
         head_seed=head_seed,
+        readout=model.readout,
         pair_center_weight=center_weight,
-        inference_contract="One three-frame sequence per prediction; no partner, labels or calibration at inference",
+        inference_contract=(
+            "One three-frame sequence per prediction; only previous/current frames used; "
+            "no partner, labels or calibration at inference"
+            if model.readout == "evidence"
+            else "One three-frame sequence per prediction; no partner, labels or calibration at inference"
+        ),
         matched_phase_sampling=matched_phases,
         displacement_spec_sha256=file_hash(args.displacement_spec)
         if getattr(args, "displacement_spec", None)
@@ -654,8 +689,12 @@ def train(args, prepared=None):
         wall_seconds=45,
         source=str(args.source.resolve()),
         source_sha256=file_hash(args.source),
-        temporal_source=str(args.temporal_source.resolve()),
-        temporal_sha256=file_hash(args.temporal_source),
+        temporal_source=str(args.temporal_source.resolve())
+        if model.temporal is not None
+        else None,
+        temporal_sha256=file_hash(args.temporal_source)
+        if model.temporal is not None
+        else None,
         purpose="paired last-step direction on constructed pans of real image contents",
         objective="single-sequence direction CE + pair_center_weight * mean per-pair SmoothL1 common class-score offset; frozen spatial codec. Training curve is total loss, validation is CE",
         radius=model.correlation_radius,
@@ -679,9 +718,11 @@ def train(args, prepared=None):
         device="cpu",
         resume=args.resume,
     )
-    initial_temporal = {
-        k: v.detach().clone() for k, v in model.temporal.state_dict().items()
-    }
+    initial_temporal = (
+        {k: v.detach().clone() for k, v in model.temporal.state_dict().items()}
+        if model.temporal is not None
+        else {}
+    )
     if not args.resume:
         atomic_json(
             output / "initial.json",
@@ -822,7 +863,7 @@ def train(args, prepared=None):
                     for r in run.rows
                     if r["split"] == "timing"
                 ),
-                evaluation_scope="Controlled crop-pan directions from real image contents. Same current frame and unordered multiset per pair; source-disjoint clips, with optional reserved confirmation sources listed in data identity. Not natural motion, forecasting, speed estimation, or agent integration. Correlation is an explicit matching primitive; readout learned.",
+                evaluation_scope="Controlled crop-pan directions from real image contents. Same current frame and unordered multiset per pair; source-disjoint clips, with optional reserved confirmation sources listed in data identity. Not natural motion, forecasting, speed estimation, or agent integration. Correlation is an explicit matching primitive. Readout type and update count in settings distinguish learned models from zero-step controls.",
             ),
         )
         run.status(state, "pending")
@@ -870,6 +911,7 @@ def challenge(args):
                 mode,
                 correlation_radius=cfg.get("radius", 2),
                 active_radius=cfg.get("active_radius"),
+                readout=cfg.get("readout", "pooled"),
             )
             state = torch.load(path / "last.pt", map_location="cpu", weights_only=True)
             model.load_state_dict(state["model"], strict=True)
@@ -987,6 +1029,7 @@ if __name__ == "__main__":
         help="Optional explicit video paths, subjects and frame counts by split",
     )
     parser.add_argument("--mode", choices=MODES, default="train")
+    parser.add_argument("--readout", choices=("pooled", "evidence"), default="pooled")
     parser.add_argument("--correlation-radius", type=int, default=2)
     parser.add_argument(
         "--active-radius",
