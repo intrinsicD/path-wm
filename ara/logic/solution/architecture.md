@@ -172,3 +172,13 @@
 - **Implementation**: 6ec41a8 after plan/red checks37f9614; results9bd8a7a. [Recipe](../../../experiments/modality_readout.py), [existing task modules](../../../pathwm/models/tasks.py), [checks](../../../tests/test_request_readout.py), [protocol/results](../../../docs/request-readout-plan.md).
 - **Verification**: [Bound evidence](../../evidence/tables/request_readout_2026-09-16.json);566 software tests, exact1316-tensor restart, unchanged frozen sources and matched initializations.
 - **Limits**: Implemented experimental connection only, not a default repair, semantic instruction validation or new text-shaped thinking core. All novel joint/adoption gates fail; stronger-source familiar-wording gain does not transfer. Stable weaker-source temporal access, general language and old-output preservation remain open. O308's efficacy is not promoted as a claim.
+
+## A18: Balanced request-stage diagnostics with optional interpreter-only adaptation
+
+- **Design**: Cross equal-length first-color/ordered-pair requests with held-out wording prefixes. Freeze source models and inspect actual encoder, instruction-attention, task-token and working-token states using validation-selected diagnostic readers. If the encoder feasibility screen passes, compare narrow versus balanced wording while training only the existing TaskInterpreter; retain request-free outputs and evaluate novel paired answers and broader tasks independently. Reuse the shared latent core, existing recipe, data/report/checkpoint infrastructure.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O310
+- **Implementation**: measured0bdbbee; final sampled-source diagnostic guard/results afa7659. [Corpus](../../../pathwm/data/request_meaning.py), [diagnostics](../../../pathwm/evaluation/request_meaning.py), [recipe](../../../experiments/modality_readout.py), [tests](../../../tests/test_request_meaning.py), [protocol/results](../../../docs/request-meaning-plan.md).
+- **Verification**: [Evidence](../../evidence/tables/request_meaning_2026-09-16.json);579 full checks before final guard,41 focused after;848 exact restart tensors,2208 preserved request-free output arrays.
+- **Limits**: Implemented diagnostic/adaptation method only. Both primary/adoption gates fail; no default, general-language, video-understanding or causal-localization claim. Final diagnostics explicitly require sampled working-state sources. Post-fit probes remain exploratory.

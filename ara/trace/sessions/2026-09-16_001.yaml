@@ -2,52 +2,57 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T20:45+02:00
-  turn_count: 26
+  last_turn: 2026-09-16T21:37+02:00
+  turn_count: 27
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not adopted.
     Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped
-    tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in
-    both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance;
+    tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in both
+    seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance;
     multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail both decoder
     repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58 tests,18 reports
     verified, defaults unchanged. Shared spatial codec now reuses actual image weights; four real-video fits
-    fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain
-    confound documented; agent integration remains open. Frozen-codec context:12 fits show history benefit
-    but both spatial expansions fail; wrong-history discrimination remains weak.68 tests,1447 exact-resume
-    checks,405 artifact audits,15 reports; defaults unchanged. Paired order:12 crop fits fail static-control
-    gate; separate exhaustive-phase challenge removes single-frame cues. Four balanced-data fits achieve79–99%
-    but neither variant passes both seeds.69 tests, exact restart and6035 raw audits;21 reports, defaults unchanged.
-    Crossed temporal/head study:8 fits all learn training data; reflection mean+1.37pp with-5.60pp worst regression
-    fails repair. Initialization dependence persists at fixed batches.72 tests,2211 exact restart,7828 audits
-    and11 reports; defaults unchanged. Source diversity:12 fixed fits improve new-source trained-shift accuracy
-    to99.93%, but broad unseen-shift accuracy77.51% fails repair.74 tests,3571 exact restart,14771 audits and15
-    reports; fixed input guards, defaults unchanged. Displacement coverage:8 fixed fits raise fresh extrapolation58.89→85.03%
-    but known worst regression9.64pp fails preservation.77 tests,3397 restart,19873 audits,11 reports; paired
-    score offsets motivate a proposed readout-objective repair, defaults unchanged. Pair-centered objective:8
-    fixed fits reduce relative bias and improve fresh means, but extrapolation72.42% and source regressions
-    fail repair.81 tests,7061 restart,52913 audits,72 prior-baseline checks,11 reports; no default change.
-    Matching support:12 fits,large-shift78.75/86.77/90.07%;fixed cosine99.93% on same frozen grids. All trained/preservation
-    gates fail.85 tests,8661 restart,92229 audits,17 reports; no default change. Structured evidence:4 fits,81
-    vs1630 parameters,fresh99.69–100% and fixed rule pass. Learned-vs-fixed gain0.0366pp/old-source-14.71pp
-    fails adoption; near-offset reassignment recorded.89 tests,10239 restart,42682 audits,8 reports. User challenges
-    overall research coherence; milestone/stop-rule review proposed before more probe optimization. User requests
-    video then all-modality capability/diagnostic suites; scope maps documented, no implementation or new validation.
-    First executable suite:33 cases,15 run per original baseline with1 pass/14 failures;14 unimplemented/4
-    unrun.80 tests and exact frozen replay pass; missing-score bug fixed; browser QA blocked. Public-reference
-    plan:420 channel entries,30 descriptions, primary papers and2 Claude reviews. Preserve shared latent core/store;
-    propose measured detail/semantic adapters. RTX3050 8GiB confirmed, new training fit unmeasured; no model
-    change. Extended primary-source/Claude review prioritizes layer access and action-labelled latent prediction;
-    hardware/protocol/streaming counter-evidence narrows candidates. No model replacement or local superiority
-    claimed. Reversible layer variant:6 paired512-update fits show no held-out joint gain and-25pp worst factor
-    regression; all checkpoints1/15 screens.69 regressions/exact resume pass, defaults retained. Recurring
-    understanding battery:25 tasks,all evidence subsets,0/25 passes for both existing sources;555 full/70 post-repair
-    tests and6448 audits. No neural training or capability promotion. Grounded QA: four fixed fits;7202 core+decoder
-    passes video order100%/1 of25 tasks,7201 stays50%; all forget prior outputs.561 tests,1180 restart,4097
-    audits,17 reports; retain variants, no default change. Source-output anchoring partially reduces forgetting32→20/23→6
-    failing cells, but7201 still fails and7202 exact text falls14/16→6/16.64 checks,1180 restart,4951 audits;
-    no adoption; task/format path next. Request-path comparison: stronger source familiar-format joint0→93.75%,
-    novel joint0 in all arms; old-output/broad regressions fail.566 tests,1316 restart,15838 audits; optional
-    connection committed, no default promotion. Dream-RSI review proposes bounded replay scheduling; no neural change or validated saving. Bounded Dream-RSI replay now selects8 vs12 blocks with identical selected weights in two fresh worlds;33.3% fewer updates and~21% less search time,0/25 capability passes.571 full tests before guard,33 focused after; optional only, pilot net cost exceeds savings.'
+    fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain confound
+    documented; agent integration remains open. Frozen-codec context:12 fits show history benefit but both spatial
+    expansions fail; wrong-history discrimination remains weak.68 tests,1447 exact-resume checks,405 artifact
+    audits,15 reports; defaults unchanged. Paired order:12 crop fits fail static-control gate; separate exhaustive-phase
+    challenge removes single-frame cues. Four balanced-data fits achieve79–99% but neither variant passes both
+    seeds.69 tests, exact restart and6035 raw audits;21 reports, defaults unchanged. Crossed temporal/head study:8
+    fits all learn training data; reflection mean+1.37pp with-5.60pp worst regression fails repair. Initialization
+    dependence persists at fixed batches.72 tests,2211 exact restart,7828 audits and11 reports; defaults unchanged.
+    Source diversity:12 fixed fits improve new-source trained-shift accuracy to99.93%, but broad unseen-shift
+    accuracy77.51% fails repair.74 tests,3571 exact restart,14771 audits and15 reports; fixed input guards,
+    defaults unchanged. Displacement coverage:8 fixed fits raise fresh extrapolation58.89→85.03% but known worst
+    regression9.64pp fails preservation.77 tests,3397 restart,19873 audits,11 reports; paired score offsets
+    motivate a proposed readout-objective repair, defaults unchanged. Pair-centered objective:8 fixed fits reduce
+    relative bias and improve fresh means, but extrapolation72.42% and source regressions fail repair.81 tests,7061
+    restart,52913 audits,72 prior-baseline checks,11 reports; no default change. Matching support:12 fits,large-shift78.75/86.77/90.07%;fixed
+    cosine99.93% on same frozen grids. All trained/preservation gates fail.85 tests,8661 restart,92229 audits,17
+    reports; no default change. Structured evidence:4 fits,81 vs1630 parameters,fresh99.69–100% and fixed rule
+    pass. Learned-vs-fixed gain0.0366pp/old-source-14.71pp fails adoption; near-offset reassignment recorded.89
+    tests,10239 restart,42682 audits,8 reports. User challenges overall research coherence; milestone/stop-rule
+    review proposed before more probe optimization. User requests video then all-modality capability/diagnostic
+    suites; scope maps documented, no implementation or new validation. First executable suite:33 cases,15 run
+    per original baseline with1 pass/14 failures;14 unimplemented/4 unrun.80 tests and exact frozen replay pass;
+    missing-score bug fixed; browser QA blocked. Public-reference plan:420 channel entries,30 descriptions,
+    primary papers and2 Claude reviews. Preserve shared latent core/store; propose measured detail/semantic
+    adapters. RTX3050 8GiB confirmed, new training fit unmeasured; no model change. Extended primary-source/Claude
+    review prioritizes layer access and action-labelled latent prediction; hardware/protocol/streaming counter-evidence
+    narrows candidates. No model replacement or local superiority claimed. Reversible layer variant:6 paired512-update
+    fits show no held-out joint gain and-25pp worst factor regression; all checkpoints1/15 screens.69 regressions/exact
+    resume pass, defaults retained. Recurring understanding battery:25 tasks,all evidence subsets,0/25 passes
+    for both existing sources;555 full/70 post-repair tests and6448 audits. No neural training or capability
+    promotion. Grounded QA: four fixed fits;7202 core+decoder passes video order100%/1 of25 tasks,7201 stays50%;
+    all forget prior outputs.561 tests,1180 restart,4097 audits,17 reports; retain variants, no default change.
+    Source-output anchoring partially reduces forgetting32→20/23→6 failing cells, but7201 still fails and7202
+    exact text falls14/16→6/16.64 checks,1180 restart,4951 audits; no adoption; task/format path next. Request-path
+    comparison: stronger source familiar-format joint0→93.75%, novel joint0 in all arms; old-output/broad regressions
+    fail.566 tests,1316 restart,15838 audits; optional connection committed, no default promotion. Dream-RSI
+    review proposes bounded replay scheduling; no neural change or validated saving. Bounded Dream-RSI replay
+    now selects8 vs12 blocks with identical selected weights in two fresh worlds;33.3% fewer updates and~21%
+    less search time,0/25 capability passes.571 full tests before guard,33 focused after; optional only, pilot
+    net cost exceeds savings. Balanced request diagnosis: four interpreter-only fits raise novel joint exact0→35.94/46.88%,
+    below80%; first-word content unchanged, broad0/25 and1/25.579 full checks before guard,41 focused after;
+    old outputs exact, defaults unchanged.'
 
 events_logged:
 - turn: 1
@@ -945,6 +950,49 @@ events_logged:
   summary: Scoped simpler-budget saving does not establish adaptive or general transfer; costs and capability
     failures retained.
 
+- turn: 27
+  type: decision
+  id: N465
+  routing: direct
+  provenance: ai-executed
+  summary: Diagnose request interpretation with balanced wording before a small repair
+- turn: 27
+  type: experiment
+  id: N466
+  routing: direct
+  provenance: ai-executed
+  summary: Balanced interpreter-only comparison improves response form but fails adoption
+- turn: 27
+  type: decision
+  id: N467
+  routing: direct
+  provenance: ai-executed
+  summary: Keep request variant optional and preserve strict capability gates
+- turn: 27
+  type: observation
+  id: O313
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Balanced interpreter-only training appears to improve output form/completion on held-out prefixes:
+    exact first words remain unchanged in all3072 comparisons. Shared lexical vocabulary and byte-histogram
+    intent success limit semantic interpretation; order-stress joint success remains0. Probes do not uniquely
+    localize inaccessible information. Two sources and repeated wording/draws do not establish broad transfer.'
+- turn: 27
+  type: observation
+  id: O314
+  routing: staged
+  provenance: ai-suggested
+  summary: Next compare request-only task conditioning against duplicated observation-plus-task conditioning
+    on fixed weights and reserved videos. Report content, output form and EOS separately before more training;
+    retain broader QA and old-output gates. No new experiment protocol or result yet.
+- turn: 27
+  type: architecture
+  id: A18
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O310 implemented diagnostic/adaptation method crystallizes via artifact commitment; efficacy remains
+    staged.
+
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -1268,6 +1316,19 @@ ai_actions:
   - docs/replay-exploration-plan.md
   - docs/project-state.md
 
+- turn: 27
+  action: Implemented balanced corpus/stage probes, reviewed with actual Claude, ran four interpreter-only
+    comparisons and baseline/post-fit diagnostics, full suite and exact-resume/audit checks, repaired unsupported-source
+    guard, retained negative results and committed method/results.
+  provenance: ai-executed
+  files_changed:
+  - docs/request-meaning-plan.md
+  - pathwm/data/request_meaning.py
+  - pathwm/evaluation/request_meaning.py
+  - experiments/modality_readout.py
+  - tests/test_request_meaning.py
+  - docs/project-state.md
+
 claims_touched: []
 key_context:
 - turn: 1
@@ -1365,6 +1426,10 @@ key_context:
   excerpt: Does this contain helpful ideas for any part of our system or as a whole? https://arxiv.org/pdf/2609.14858
 - turn: 26
   excerpt: I meant what you proposed from reading the dream-rsi paper
+
+- turn: 27
+  excerpt: Continue together with Claude. Use the testsuite to pick what to work on/improve. Plan, implement,
+    review, test and fix. Iterate
 
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
@@ -1484,6 +1549,9 @@ open_threads:
 - 'N463/O312: verify replay-selected policies on independent tasks/seeds and net recurring cost before
   broad adoption. Optional experiment ledger is not WorldStore/runtime planning. Continue O310 balanced
   request diagnosis.'
+
+- 'N466/O313/O314: balanced request-form gain remains below gates; isolate fixed-weight request/evidence routing,
+  content versus output form, compositional order, and broader QA regression before more fitting.'
 
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
@@ -1661,3 +1729,6 @@ ai_suggestions_pending:
   as current neural diagnosis.
 - O311 scheduling subset now implemented; broader episodic/runtime integration remains proposed. O312
   scoped efficiency interpretation awaits response; no efficacy claim crystallized.
+- O310→A18 commits only the implemented diagnostic/optional interpreter adaptation. O313 mechanism and O314
+  routing proposal remain tentative; O311 wider memory/runtime work and O312 scheduler-transfer interpretation
+  remain open.

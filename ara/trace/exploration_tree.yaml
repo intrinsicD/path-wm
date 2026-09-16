@@ -7715,3 +7715,58 @@ tree:
   - ara/evidence/tables/replay_exploration_2026-09-16.json
   timestamp: 2026-09-16T20:45+02:00
   status: resolved
+- id: N465
+  type: decision
+  title: Diagnose request interpretation with balanced wording before a small repair
+  provenance: ai-executed
+  choice: Follow suite failures and O310. Freeze text features; cross first-color/ordered-pair requests against
+    equal byte length and held-out prefixes, inspect actual encoder/instruction/task/working stages, and require
+    encoder feasibility before four matched interpreter-only fits. Actual Claude reviewed only public hypothetical
+    methodology; reconcile gate as feasibility rather than unique causal localization.
+  alternatives:
+  - More whole-core fitting
+  - A larger encoder or decoder
+  - Treat successful probes as downstream understanding
+  evidence:
+  - O310
+  - docs/request-meaning-plan.md
+  - runs/reviews/request_meaning_v1/final-response.json
+  status: resolved
+  timestamp: 2026-09-16T21:37+02:00
+- id: N466
+  type: experiment
+  title: Balanced interpreter-only comparison improves response form but fails adoption
+  provenance: ai-executed
+  result: 'Four512-update fits;9936 existing TaskInterpreter parameters trained, all other weights frozen.
+    Novel joint exact: narrow0/0%, balanced35.9375/46.875%, below80% gate. Broad quick suite remains0/25 and1/25;7201
+    image-question accuracy regresses33.33pp. All3072 first-word comparisons unchanged,2208 old output arrays
+    exact,600 reference arrays reproduced.579 full tests at0bdbbee;41 focused after final diagnostic guard.848
+    exact restart tensors,43635 raw audit checks,19 structural reports,403 media checks. Training174.22s,87.4MiB
+    peak allocated GPU memory excluding runtime/reservation. Exploratory post-fit stage probes logged separately;
+    encoder features exact. Browser QA unavailable, plot inspected.'
+  evidence:
+  - ara/evidence/tables/request_meaning_2026-09-16.json
+  - runs/request_meaning_v1/report.html
+  - runs/request_meaning_v1/verification.json
+  also_depends_on:
+  - N465
+  status: resolved
+  timestamp: 2026-09-16T21:37+02:00
+- id: N467
+  type: decision
+  title: Keep request variant optional and preserve strict capability gates
+  provenance: ai-executed
+  choice: 'Do not promote defaults or broad validation colors: both primary and adoption gates fail. Preserve
+    exact request-free behavior, narrower sampled-source diagnostics and raw failure evidence. Further fixed-weight
+    request/evidence routing is proposed, not executed. Balanced phrase improvement does not establish compositional
+    instruction or improved video understanding.'
+  alternatives:
+  - Relax80% gate
+  - Adopt on probe or response-format improvement alone
+  - Attribute every failure to an encoder bottleneck
+  evidence:
+  - N466
+  - ara/evidence/tables/request_meaning_2026-09-16.json
+  - docs/request-meaning-plan.md
+  status: resolved
+  timestamp: 2026-09-16T21:37+02:00

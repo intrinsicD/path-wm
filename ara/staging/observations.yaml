@@ -5425,9 +5425,9 @@ observations:
   bound_to:
   - N458
   - N459
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A18
+  crystallized_via: artifact-commitment
   stale: false
 - id: O311
   timestamp: 2026-09-16T20:04+02:00
@@ -5462,6 +5462,39 @@ observations:
   - N462
   - N463
   - N464
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O313
+  timestamp: 2026-09-16T21:37+02:00
+  provenance: ai-suggested
+  content: 'Balanced interpreter-only training appears to improve output form/completion on held-out prefixes:
+    exact first words remain unchanged in all3072 comparisons. Shared lexical vocabulary and byte-histogram
+    intent success limit semantic interpretation; order-stress joint success remains0. Probes do not uniquely
+    localize inaccessible information. Two sources and repeated wording/draws do not establish broad transfer.'
+  context: Completed matched comparison with frozen codecs/core and exploratory post-fit diagnosis; no user
+    response to new results yet.
+  potential_type: claim
+  bound_to:
+  - N466
+  - N467
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O314
+  timestamp: 2026-09-16T21:37+02:00
+  provenance: ai-suggested
+  content: Next compare request-only task conditioning against duplicated observation-plus-task conditioning
+    on fixed weights and reserved videos. Report content, output form and EOS separately before more training;
+    retain broader QA and old-output gates. No new experiment protocol or result yet.
+  context: Conditional next proposal after balanced request repair fails adoption; shared latent architecture
+    and modality work remain active.
+  potential_type: architecture
+  bound_to:
+  - N466
+  - N467
   promoted: false
   promoted_to: null
   crystallized_via: null
