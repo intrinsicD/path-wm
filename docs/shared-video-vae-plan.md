@@ -63,3 +63,51 @@ make per-frame KL summation exact. Dataset aggregate correlation is separate.
 The additional image loss is an auxiliary objective, not a single joint-video ELBO.
 No learned temporal prior or natural-video generation follows from this experiment.
 Seven new contract tests and54 relevant regression tests pass (61 total).
+
+## Result, 16 September
+
+Implemented the reusable `VideoVAE` in `pathwm/models/video_vae.py` and a small
+`experiments.video_vae` recipe. Both image and video objectives train the **same**
+pretrained spatial image encoder and decoder. No duplicated branch/checkpoint
+weights. Optional causal residual mixing adds1340 parameters to122979 image
+parameters; mean refinement reads current/two previous latent grids and elapsed
+seconds/validity. Variance stays per-frame, no persistent streaming state.
+
+Four preregistered128-update real-video development fits completed in24.80s CPU
+training (including periodic evaluation), two seeds and two arms. All source clips
+stay in their split. Source weights and media hashes are unchanged. The reports are
+[comparison](../runs/shared_video_vae_v1/report.html) and each seed/arm child report.
+
+| Seed | Frame RGB MSE | Temporal RGB MSE | Frame-difference reduction | Image-retention MSE, frame → temporal | Benefit gate |
+|---|---:|---:|---:|---:|---|
+|7301|0.00829246|0.00820123|0.2174%|0.01007547 →0.01006639|fail|
+|7302|0.00946337|0.00940493|0.1429%|0.00987705 →0.00987921|fail|
+
+The predeclared5% frame-difference benefit fails in both seeds; RGB/color/retention
+regression limits pass. Wrong-past perturbation changes final output only by mean
+absolute0.000354/0.000245, demonstrating a small history dependence, not useful
+motion understanding. KL is measured rather than assumed matched: frame1381/1348
+versus temporal1351/1308 bits/frame. The achieved rates differ slightly; this is
+not an equal-rate or equal-compute superiority test.
+
+Both continued arms worsen reserved-source RGB versus the untouched pretrained
+codec (0.00794473). Validation RGB improves, and eight previously inspected image
+retention examples improve slightly against their frozen reference. Do not select
+new weights as a general image/video repair. Original weights are preserved;
+`temporal=False` remains the default. Current fully observed reconstruction does
+not require temporal inference; next design a separate masked/occluded-frame test
+with matched current-frame information before adding a larger temporal module.
+Do not interpret this tiny six-source development study as natural-video evaluation.
+
+Verification:61 scoped tests;1724 exact-resume checks (8 vs4+4 CPU updates);
+777 independent metric/source/report/Claude-receipt checks. Training loss components,
+source-disjoint identities, identical initialization, masks/future gradients and
+actual shared weights are checked. All seven reports have embedded-media and HTML
+structural QA; full-sequence PNGs inspected. Browser interaction unavailable.
+The recipe exports updated image weights and full video/optimizer/RNG Run state.
+New artifacts use50MiB; no source or historical run deleted.
+
+This completes the codec reuse slice. It does **not** replace the categorical
+agent's old patch encoder. Spatial-grid-to-agent integration, longer temporal
+memory, direction retention and learned future-video generation remain explicit
+next tasks. Atlas diagram16 shows this boundary; no capability color promoted.

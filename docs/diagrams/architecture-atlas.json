@@ -1,7 +1,7 @@
 {
   "title": "PATH-WM · Architecture atlas",
   "date": "2026-09-16",
-  "source_commit": "dd2c967",
+  "source_commit": "65a354f",
   "intro": "A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.",
   "graphs": [
     {
@@ -53,8 +53,8 @@
           },
           "encode": {
             "status": "discussed",
-            "basis": "Discussed modality stems, residual transformer blocks per scale, hierarchy merges, fusion, temporal handling and reconstruction probes. On 14 September, the user asked whether architectural structure and a small parameter count can reduce visual training-data requirements. On 15 September, the user specified a spatial VAE with separate lossless rearrangement, residual processing and channel projection; Claude review was reconciled.",
-            "next": "Opt-in spatial VAE v2 now implements the R/P/M/C stem, coarsest self-attention/shared loop and detached stage probes. Mechanics, exact GPU resume and ten real-photo learning sanity gates pass; all photo-quality screens fail. See docs/spatial-vae-v2-plan.md and runs/spatial_vae_v2/verification.json. Color diagnosis now finds reduced readout access at the final posterior projection and sampling; see docs/spatial-vae-color-plan.md. Current agent integration, semantic retention, fine detail and matched-resource/data-efficiency studies remain open; the high-level encoder stays blue. Two-seed sampled-color supervision now improves global chroma error81–83% without new parameters/inference work; achieved KL rises37–41% and grids remain. See docs/spatial-vae-repair-plan.md. Color-only is a diagnostic candidate, not a full repair; high-level status stays blue. All four modality interfaces now have isolated and mixed packet/mask/gradient/restart checks. Four-word and four-tone direct fitting pass; a video foreground repair fails total RGB quality. State-conditioned adapters and general multimodal semantics remain untrained in this audit. See docs/modality-foundation-plan.md; high-level status stays blue."
+            "basis": "Discussed modality stems, residual transformer blocks per scale, hierarchy merges, fusion, temporal handling and reconstruction probes. On 14 September, the user asked whether architectural structure and a small parameter count can reduce visual training-data requirements. On 15 September, the user specified a spatial VAE with separate lossless rearrangement, residual processing and channel projection; Claude review was reconciled. Discussed the difference between shared architecture, shared weights and the separate spatial image VAE, including image training from video frames.",
+            "next": "Opt-in spatial VAE v2 now implements the R/P/M/C stem, coarsest self-attention/shared loop and detached stage probes. Mechanics, exact GPU resume and ten real-photo learning sanity gates pass; all photo-quality screens fail. See docs/spatial-vae-v2-plan.md and runs/spatial_vae_v2/verification.json. Color diagnosis now finds reduced readout access at the final posterior projection and sampling; see docs/spatial-vae-color-plan.md. Current agent integration, semantic retention, fine detail and matched-resource/data-efficiency studies remain open; the high-level encoder stays blue. Two-seed sampled-color supervision now improves global chroma error81–83% without new parameters/inference work; achieved KL rises37–41% and grids remain. See docs/spatial-vae-repair-plan.md. Color-only is a diagnostic candidate, not a full repair; high-level status stays blue. All four modality interfaces now have isolated and mixed packet/mask/gradient/restart checks. Four-word and four-tone direct fitting pass; a video foreground repair fails total RGB quality. State-conditioned adapters and general multimodal semantics remain untrained in this audit. See docs/modality-foundation-plan.md; high-level status stays blue. 16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open. Four128-update real-video development fits (two seeds) complete in24.80s CPU. Temporal frame-difference benefit0.22%/0.14% fails5% screen. Both trained arms worsen reserved-source RGB vs untouched image weights.61 tests plus exact resume and raw audits validate mechanics only. Temporal remains opt-in; no general-quality or high-level green promotion. See runs/shared_video_vae_v1/report.html."
           },
           "belief": {
             "status": "needs_discussion",
@@ -486,7 +486,8 @@
         "Masks prevent reading later support. The categorical source-evidence path uses no task, belief or feature-controller conditioning. Optional controls apply on permitted task/reflection paths.",
         "Example for the photo configuration: RGB64 → 16×16 → 8×8 → 4×4, all width32; k=2 and f=2. The hierarchy emits 336 tokens.",
         "Image/video/audio/text encoders now share output-neutral attention diagnostics: traced and ordinary outputs, gradients and RNG agree exactly in train/eval checks. Masks exclude invalid values before learned operations. The isolated modality audit fits tiny examples; real AV/text is a resampled transport check, not learned understanding.",
-        "16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation."
+        "16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation.",
+        "16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open."
       ],
       "sources": [
         "pathwm/models/multiscale.py#FeatureHierarchy",
@@ -1333,7 +1334,8 @@
         "Image resolution and audio length are constructor settings. Output size alone does not establish reconstructed detail. The stronger conditional image producer is an optional controlled experiment, not a common generator already implemented for every modality.",
         "Native image/audio/text decoders accept context validity; text keeps a separate causal prefix mask. Video validates every state, including singleton trajectories. The independent codec audit learns four words and four tones; weighted video reconstruction improves object/motion but degrades total RGB. Its state-to-output path is untrained and measured only on the first example; no bottleneck-location or general generation claim.",
         "Native text decoding reads the entire state through prefix-conditioned cross-attention; image/audio use learned queries. Alex wants the core to remain multimodal. Extend each output readout only as needed, preserving the current path as the reference. A common text plan is not required; no decoder-size minimum or capacity-saving result follows yet.",
-        "16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation."
+        "16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation.",
+        "16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open."
       ],
       "sources": [
         "pathwm/models/modalities.py#ImageDecoder",
@@ -2679,7 +2681,8 @@
         "Evidence: runs/modality_readout_v1/verification.json and controls-verification.json; docs/modality-readout-plan.md.42 primary runs plus8 explicit-factor controls. Held-out all-four-correct remains0% for every variant. Iterative adapters run after two fixed outer Thinker steps; adaptive inner-to-outer feedback is not implemented. Mechanical passing tests do not validate content learning. Follow-up: eight longer native oracle fits now pass known-output gates, but new text/image combinations and video quality still fail. Training-only raw-logit supervision improves known position to97–100%, not direction; full core gates fail. Frozen probability-to-code probes and measured direction collisions motivate paired updater learning. See docs/modality-readout-plan.md and runs/modality_repair_v1/report.html. No default or green capability promotion. This follow-up does not rerun the complete combined-output sweep. Direction localization is a linear accessibility diagnostic on saved checkpoints, not an irreversible information-loss proof.",
         "16 September: eight fresh-updater controls (direction-only/joint, sampled/continuous working readout) all fail the task screens. Frozen encoders retain100% known/held-out factor access, but updater query direction access is60–75%. No unique causal loss layer or default repair established. Next isolate one input modality before mixing modes. See docs/modality-readout-plan.md and runs/direction_learning_v1/report.html. Colors and general capability scopes stay unchanged.",
         "16 September follow-up: six isolated-input fits and four matched checkpoint continuations preserve the shared latent architecture. Text-only known direction is100% in both seeds; audio46%/100%, simultaneous-all48%/60%. Text warm-up improves complete-input scores, but repeated-draw means100%/74% fall to50%/51% without text. Narrow text access works; multimodal transfer remains open. Frozen audio grids AND their means permit100% known-direction access, while learned first queries give40%/98%. No unique loss layer, new default or general capability promotion. Next test gradual source rotation/dropout with matched controls. See runs/direction_inputs_v1/report.html and docs/modality-readout-plan.md.",
-        "16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation."
+        "16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation.",
+        "16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open."
       ],
       "sources": [
         "pathwm/models/agent.py#Thinker",
@@ -2693,6 +2696,119 @@
         "pathwm/models/readout.py#RecurrentOutputAdapter",
         "pathwm/models/readout.py#TemporalImageDecoder",
         "docs/modality-readout-plan.md"
+      ]
+    },
+    {
+      "id": "16-shared-video-codec",
+      "title": "16 · Shared image codec and causal video extension",
+      "subtitle": "Experimental spatial VAE path; existing agent token encoder remains separate",
+      "direction": "TB",
+      "nodes": [
+        [
+          "still",
+          "Still images / selected video frames",
+          "external"
+        ],
+        [
+          "clip",
+          "Observed video clip + times + validity",
+          "external"
+        ],
+        [
+          "encode",
+          "One shared R/P/M/C image encoder\nSame trained weights for every frame",
+          "learned"
+        ],
+        [
+          "frame",
+          "Spatial frame posterior\nmu, logvar; no global pooling",
+          "store"
+        ],
+        [
+          "time",
+          "Optional causal residual mixer\nCurrent + two past grids / elapsed time / mask\nZero output at initialization",
+          "learned"
+        ],
+        [
+          "sample",
+          "Video Gaussian posterior\nAdjusted mu, frame-local logvar → sample",
+          "learned"
+        ],
+        [
+          "sample_i",
+          "Image Gaussian posterior → sample",
+          "learned"
+        ],
+        [
+          "decode",
+          "One shared spatial image decoder\nLatent-only input + output dimensions",
+          "learned"
+        ],
+        [
+          "out",
+          "Frame reconstructions / video sequence\nTwo reconstruction + KL objectives train shared weights",
+          "external"
+        ]
+      ],
+      "edges": [
+        [
+          "still",
+          "encode",
+          "image batch"
+        ],
+        [
+          "clip",
+          "encode",
+          "flatten B*T; preserve time order"
+        ],
+        [
+          "encode",
+          "frame",
+          "spatial posterior"
+        ],
+        [
+          "frame",
+          "time",
+          "video branch"
+        ],
+        [
+          "time",
+          "sample",
+          "causal mean; original variance"
+        ],
+        [
+          "frame",
+          "sample_i",
+          "independent image branch"
+        ],
+        [
+          "sample",
+          "decode",
+          "video z; decoder reused per frame"
+        ],
+        [
+          "sample_i",
+          "decode",
+          "image z"
+        ],
+        [
+          "decode",
+          "out",
+          "reshape and crop; invalid frames masked"
+        ]
+      ],
+      "notes": [
+        "An encoder-decoder codec, not the complete agent. No target RGB skip, future access, learned temporal prior or persistent streaming state.",
+        "The image-only path and video path have one owner/checkpoint for the actual image weights. Optional temporal processing adds parameters; its benefit must be measured separately.",
+        "Seven contract tests cover sharing, exact neutral initialization, causality, gradients, invalid frames, variable sizes and checkpoint restoration. Quality evidence is in the bounded real-video comparison; no high-level capability promotion.",
+        "Four128-update real-video development fits (two seeds) complete in24.80s CPU. Temporal frame-difference benefit0.22%/0.14% fails5% screen. Both trained arms worsen reserved-source RGB vs untouched image weights.61 tests plus exact resume and raw audits validate mechanics only. Temporal remains opt-in; no general-quality or high-level green promotion. See runs/shared_video_vae_v1/report.html."
+      ],
+      "sources": [
+        "pathwm/models/video_vae.py#VideoVAE",
+        "pathwm/models/video_vae.py#CausalLatentMixer",
+        "experiments/video_vae.py",
+        "tests/test_video_vae.py",
+        "docs/shared-video-vae-plan.md"
       ]
     }
   ]

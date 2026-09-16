@@ -5,7 +5,7 @@ bounded retrieval, context/relation tokens and BeliefAgent session adapter. Incl
 training/inference inspection and concrete optional concept/self/feedback clients;
 module availability does not establish general learned capability.
 
-[Architecture atlas](architecture-atlas.html): thirteen drawings from the complete
+[Architecture atlas](architecture-atlas.html): sixteen drawings from the complete
 agent loop down to attention, belief correction, memory readers and modality
 outputs. It separates the general categorical agent, the current Gaussian photo
 experiment and proposed entity-graph/DAG extensions. [Mermaid and source links](architecture-atlas.md).
@@ -71,6 +71,32 @@ training-only coordinate statistics and float64 solves; it is an offline diagnos
 `stage_values` exposes the real encoder, observed/stored states and recalled workspace,
 and verifies memory writes are exact copies. Its RGB16 targets test spatial layout;
 the codec's raw-detail branch is a separate full-image control.
+
+## Shared spatial image codec for video
+
+`pathwm.models.video_vae.VideoVAE(image, temporal=False)` takes the actual existing
+`SpatialVAE` or `HierarchicalVAE` object; it does not copy its weights. The same
+`model.image` handles still images and every video frame. `encode(Observation)`
+returns a flattened B*T spatial Gaussian posterior; `forward` reconstructs
+B*T*3*H*W with masks and original image geometry. Losses must exclude invalid frames.
+There is a single `image.*` checkpoint path, avoiding ambiguous aliased loads.
+
+Optional `temporal=True` adds `CausalLatentMixer`: a residual3D convolution reads
+current/two preceding latent grids plus elapsed-time and validity channels.
+It adjusts posterior means before sampling; log variance stays frame-local. Its
+output starts at zero, exactly preserving independent-frame reconstruction. Traces
+expose detached before/after means. No RGB features bypass the latent bottleneck.
+No hidden state persists between calls. This is observed-clip reconstruction;
+there is no learned temporal prior, streaming cache or future-frame prediction.
+
+The [recipe](../experiments/video_vae.py) loads trained image weights explicitly,
+trains the shared encoder/decoder with video and direct-frame reconstruction losses,
+and exports the updated image codec alongside the full video Run checkpoint.
+Reconstruct the wrapper with the saved image configuration and temporal flag before
+loading `last.pt["model"]`; the ordinary Run handles exact training resume.
+[Protocol and results](shared-video-vae-plan.md). The existing BeliefAgent patch/token
+encoder remains separate until its spatial-grid adapter is evaluated; codec tests
+alone do not establish world-state video understanding.
 
 ## Controlled visual memory output
 

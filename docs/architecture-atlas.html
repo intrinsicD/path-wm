@@ -22,7 +22,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.</p><p>Open a level below to inspect its inputs, outputs and inner workings. Sources and limitations accompany every drawing.</p></header>
 <p><strong>Overview: Red: to discuss. Blue: discussed. Green: validated within the labelled scope.</strong> Colors change with discussion and validation evidence. <a href="architecture-discussion.md">See coverage and evidence</a>.</p>
 <div class="legend" aria-label="Role legend for detail diagrams 2 through 13">Detail diagrams (2–13): <span><i style="background:#e6eef8;border-color:#7696bc"></i>Learned module</span><span><i style="background:#f3f4f6;border-color:#9098a4"></i>Explicit state / mechanics</span><span><i style="background:#e7f1eb;border-color:#789887"></i>External input / output</span><span><i style="background:#efeafa;border-color:#9c87b5"></i>Optional experiment / path</span><span><i style="background:#fff0db;border-color:#bd934d"></i>Training / diagnostic only</span><span><i style="background:#fafafa;border-color:#9b9b9b"></i>Proposed extension (dashed)</span></div>
-<nav aria-label="Architecture levels"><a href="#01-overview">1 · The agent loop</a><a href="#02-encoders">2 · Modality encoders and feature hierarchy</a><a href="#03-attention">3 · Inside a residual attention block</a><a href="#04-belief">4 · Predict, correct and expose world state</a><a href="#05-memory">5 · Short and long session memory</a><a href="#06-workspace">6 · Tasks, focus, thinking and output control</a><a href="#07-decoders">7 · How state reaches each output modality</a><a href="#08-photo-path">8 · The current real-photo experiment</a><a href="#09-image-generator">9 · Latent-guided image production</a><a href="#10-entities">10 · Entity identity, state and relations</a><a href="#11-planning">11 · Planning and the proposed action DAG</a><a href="#12-learning">12 · Training signals and gradient routes</a><a href="#13-target-graph">13 · Persistent World State foundation</a><a href="#14-latent-core">14 · Inside the latent core</a><a href="#15-output-plan">15 · Shared latent thought, modality-specific readout</a></nav>
+<nav aria-label="Architecture levels"><a href="#01-overview">1 · The agent loop</a><a href="#02-encoders">2 · Modality encoders and feature hierarchy</a><a href="#03-attention">3 · Inside a residual attention block</a><a href="#04-belief">4 · Predict, correct and expose world state</a><a href="#05-memory">5 · Short and long session memory</a><a href="#06-workspace">6 · Tasks, focus, thinking and output control</a><a href="#07-decoders">7 · How state reaches each output modality</a><a href="#08-photo-path">8 · The current real-photo experiment</a><a href="#09-image-generator">9 · Latent-guided image production</a><a href="#10-entities">10 · Entity identity, state and relations</a><a href="#11-planning">11 · Planning and the proposed action DAG</a><a href="#12-learning">12 · Training signals and gradient routes</a><a href="#13-target-graph">13 · Persistent World State foundation</a><a href="#14-latent-core">14 · Inside the latent core</a><a href="#15-output-plan">15 · Shared latent thought, modality-specific readout</a><a href="#16-shared-video-codec">16 · Shared image codec and causal video extension</a></nav>
 <div class="controls"><button type="button" id="expand">Expand all diagrams</button><button type="button" id="collapse">Collapse details</button></div>
 <details id="01-overview" open>
 <summary><span>1 · The agent loop</span><small>General categorical agent · runtime data and control flow</small></summary>
@@ -465,6 +465,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>Example for the photo configuration: RGB64 → 16×16 → 8×8 → 4×4, all width32; k=2 and f=2. The hierarchy emits 336 tokens.</p>
 <p>Image/video/audio/text encoders now share output-neutral attention diagnostics: traced and ordinary outputs, gradients and RNG agree exactly in train/eval checks. Masks exclude invalid values before learned operations. The isolated modality audit fits tiny examples; real AV/text is a resampled transport check, not learned understanding.</p>
 <p>16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation.</p>
+<p>16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open.</p>
 <details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · FeatureHierarchy:209</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · MultiScaleImageEncoder:332</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · MultiScaleAudioEncoder:377</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · MultiScaleTextEncoder:438</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · _features:259</a></li><li><a href="../docs/modality-foundation-plan.md">docs/modality-foundation-plan.md</a></li></ul></details>
 </div></details>
 <details id="03-attention">
@@ -1578,6 +1579,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>Native image/audio/text decoders accept context validity; text keeps a separate causal prefix mask. Video validates every state, including singleton trajectories. The independent codec audit learns four words and four tones; weighted video reconstruction improves object/motion but degrades total RGB. Its state-to-output path is untrained and measured only on the first example; no bottleneck-location or general generation claim.</p>
 <p>Native text decoding reads the entire state through prefix-conditioned cross-attention; image/audio use learned queries. Alex wants the core to remain multimodal. Extend each output readout only as needed, preserving the current path as the reference. A common text plan is not required; no decoder-size minimum or capacity-saving result follows yet.</p>
 <p>16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation.</p>
+<p>16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open.</p>
 <details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/modalities.py">pathwm/models/modalities.py · ImageDecoder:282</a></li><li><a href="../pathwm/models/modalities.py">pathwm/models/modalities.py · AudioDecoder:347</a></li><li><a href="../pathwm/models/modalities.py">pathwm/models/modalities.py · TextDecoder:366</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · decode_video:795</a></li><li><a href="../pathwm/models/tasks.py">pathwm/models/tasks.py · GeneratedOutput:155</a></li><li><a href="../docs/modality-foundation-plan.md">docs/modality-foundation-plan.md</a></li></ul></details>
 </div></details>
 <details id="08-photo-path">
@@ -3273,9 +3275,155 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>16 September: eight fresh-updater controls (direction-only/joint, sampled/continuous working readout) all fail the task screens. Frozen encoders retain100% known/held-out factor access, but updater query direction access is60–75%. No unique causal loss layer or default repair established. Next isolate one input modality before mixing modes. See docs/modality-readout-plan.md and runs/direction_learning_v1/report.html. Colors and general capability scopes stay unchanged.</p>
 <p>16 September follow-up: six isolated-input fits and four matched checkpoint continuations preserve the shared latent architecture. Text-only known direction is100% in both seeds; audio46%/100%, simultaneous-all48%/60%. Text warm-up improves complete-input scores, but repeated-draw means100%/74% fall to50%/51% without text. Narrow text access works; multimodal transfer remains open. Frozen audio grids AND their means permit100% known-direction access, while learned first queries give40%/98%. No unique loss layer, new default or general capability promotion. Next test gradual source rotation/dropout with matched controls. See runs/direction_inputs_v1/report.html and docs/modality-readout-plan.md.</p>
 <p>16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation.</p>
+<p>16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open.</p>
 <details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · Thinker:105</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · emit:508</a></li><li><a href="../pathwm/models/modalities.py">pathwm/models/modalities.py · TextDecoder:366</a></li><li><a href="../pathwm/models/modalities.py">pathwm/models/modalities.py · ImageDecoder:282</a></li><li><a href="../pathwm/models/modalities.py">pathwm/models/modalities.py · AudioDecoder:347</a></li><li><a href="../pathwm/models/conditional_image.py">pathwm/models/conditional_image.py · ConditionalFeatureGenerator:73</a></li><li><a href="../docs/multimodal.md">docs/multimodal.md</a></li><li><a href="../docs/latent-core.md">docs/latent-core.md</a></li><li><a href="../pathwm/models/readout.py">pathwm/models/readout.py · RecurrentOutputAdapter:9</a></li><li><a href="../pathwm/models/readout.py">pathwm/models/readout.py · TemporalImageDecoder:72</a></li><li><a href="../docs/modality-readout-plan.md">docs/modality-readout-plan.md</a></li></ul></details>
 </div></details>
-<footer>Grounded in repository snapshot dd2c967. Static diagrams are manually audited descriptions, not execution traces. Rendering this atlas does not execute or modify the model. <a href="architecture-atlas.md">Mermaid source and notes</a>.</footer>
+<details id="16-shared-video-codec">
+<summary><span>16 · Shared image codec and causal video extension</span><small>Experimental spatial VAE path; existing agent token encoder remains separate</small></summary>
+<div class="section-body"><div class="diagram" role="img" aria-label="16 · Shared image codec and causal video extension. Experimental spatial VAE path; existing agent token encoder remains separate"><svg style="min-width:500px" width="624pt" height="781pt"
+ viewBox="0.00 0.00 624.00 781.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="16-shared-video-codec-graph0" class="graph" transform="scale(1 1) rotate(0) translate(14.4 766.32)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-14.4,14.4 -14.4,-766.32 609.85,-766.32 609.85,14.4 -14.4,14.4"/>
+<!-- still&#45;&gt;encode -->
+<g id="16-shared-video-codec-edge1" class="edge">
+<title>still&#45;&gt;encode</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M169.44,-715.43C190.79,-702.12 220.71,-683.47 245.91,-667.77"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="247.16,-669.87 251.81,-664.09 244.57,-665.71 247.16,-669.87"/>
+<text xml:space="preserve" text-anchor="middle" x="252.28" y="-686.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">image batch</text>
+</g>
+<!-- clip&#45;&gt;encode -->
+<g id="16-shared-video-codec-edge2" class="edge">
+<title>clip&#45;&gt;encode</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M419.31,-715.43C397.95,-702.12 368.04,-683.47 342.84,-667.77"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="344.18,-665.71 336.94,-664.09 341.58,-669.87 344.18,-665.71"/>
+<text xml:space="preserve" text-anchor="middle" x="472.8" y="-686.02" font-family="DejaVu Sans" font-size="11.00" fill="#374151">flatten B*T; preserve time order</text>
+</g>
+<!-- encode&#45;&gt;frame -->
+<g id="16-shared-video-codec-edge3" class="edge">
+<title>encode&#45;&gt;frame</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M294.37,-609.97C294.37,-596.78 294.37,-580.52 294.37,-566.26"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="296.82,-566.36 294.37,-559.36 291.92,-566.36 296.82,-566.36"/>
+<text xml:space="preserve" text-anchor="middle" x="339.11" y="-580.5" font-family="DejaVu Sans" font-size="11.00" fill="#374151">spatial posterior</text>
+</g>
+<!-- frame&#45;&gt;time -->
+<g id="16-shared-video-codec-edge4" class="edge">
+<title>frame&#45;&gt;time</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M267.53,-504.36C253.11,-490.57 235.02,-473.26 218.83,-457.78"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="220.92,-456.38 214.17,-453.32 217.53,-459.93 220.92,-456.38"/>
+<text xml:space="preserve" text-anchor="middle" x="282.24" y="-474.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">video branch</text>
+</g>
+<!-- frame&#45;&gt;sample_i -->
+<g id="16-shared-video-codec-edge6" class="edge">
+<title>frame&#45;&gt;sample_i</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M317.3,-504.38C337.71,-481.53 364.37,-451.68 364.37,-451.68 364.37,-451.68 400.08,-401.16 422.22,-369.83"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="423.99,-371.57 426.03,-364.44 419.99,-368.75 423.99,-371.57"/>
+<text xml:space="preserve" text-anchor="middle" x="419.84" y="-474.98" font-family="DejaVu Sans" font-size="11.00" fill="#374151">independent image branch</text>
+</g>
+<!-- time&#45;&gt;sample -->
+<g id="16-shared-video-codec-edge5" class="edge">
+<title>time&#45;&gt;sample</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M140.55,-382.2C129.01,-371.57 119.22,-362.56 119.22,-362.56 119.22,-362.56 119.22,-326.56 119.22,-326.56 119.22,-326.56 127.84,-320.09 138.55,-312.05"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="139.97,-314.05 144.1,-307.88 137.03,-310.13 139.97,-314.05"/>
+<text xml:space="preserve" text-anchor="middle" x="203.8" y="-341.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">causal mean; original variance</text>
+</g>
+<!-- sample&#45;&gt;decode -->
+<g id="16-shared-video-codec-edge7" class="edge">
+<title>sample&#45;&gt;decode</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M201.29,-253.97C219.02,-233.4 241.05,-207.84 241.05,-207.84 241.05,-207.84 251.21,-201.12 263.69,-192.87"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="264.94,-194.99 269.43,-189.08 262.24,-190.9 264.94,-194.99"/>
+<text xml:space="preserve" text-anchor="middle" x="318.21" y="-224.34" font-family="DejaVu Sans" font-size="11.00" fill="#374151">video z; decoder reused per</text>
+<text xml:space="preserve" text-anchor="middle" x="318.21" y="-211.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">frame</text>
+</g>
+<!-- sample_i&#45;&gt;decode -->
+<g id="16-shared-video-codec-edge8" class="edge">
+<title>sample_i&#45;&gt;decode</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M433.84,-326.09C422.23,-289.44 396.37,-207.84 396.37,-207.84 396.37,-207.84 382.58,-200.68 365.98,-192.06"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="367.54,-190.11 360.2,-189.06 365.28,-194.46 367.54,-190.11"/>
+<text xml:space="preserve" text-anchor="middle" x="448.6" y="-277.1" font-family="DejaVu Sans" font-size="11.00" fill="#374151">image z</text>
+</g>
+<!-- decode&#45;&gt;out -->
+<g id="16-shared-video-codec-edge9" class="edge">
+<title>decode&#45;&gt;out</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M309.37,-135.06C309.37,-118.57 309.37,-96.74 309.37,-77.73"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="311.82,-77.89 309.37,-70.89 306.92,-77.89 311.82,-77.89"/>
+<text xml:space="preserve" text-anchor="middle" x="400.31" y="-105.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">reshape and crop; invalid frames</text>
+<text xml:space="preserve" text-anchor="middle" x="400.31" y="-92.42" font-family="DejaVu Sans" font-size="11.00" fill="#374151">masked</text>
+</g>
+<!-- still -->
+<g id="16-shared-video-codec-node1" class="node">
+<title>still</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M267.36,-751.92C267.36,-751.92 15.39,-751.92 15.39,-751.92 9.39,-751.92 3.39,-745.92 3.39,-739.92 3.39,-739.92 3.39,-727.92 3.39,-727.92 3.39,-721.92 9.39,-715.92 15.39,-715.92 15.39,-715.92 267.36,-715.92 267.36,-715.92 273.36,-715.92 279.36,-721.92 279.36,-727.92 279.36,-727.92 279.36,-739.92 279.36,-739.92 279.36,-745.92 273.36,-751.92 267.36,-751.92"/>
+<text xml:space="preserve" text-anchor="middle" x="141.37" y="-729.72" font-family="DejaVu Sans" font-size="14.00">Still images / selected video frames</text>
+</g>
+<!-- clip -->
+<g id="16-shared-video-codec-node2" class="node">
+<title>clip</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M583.45,-751.92C583.45,-751.92 311.3,-751.92 311.3,-751.92 305.3,-751.92 299.3,-745.92 299.3,-739.92 299.3,-739.92 299.3,-727.92 299.3,-727.92 299.3,-721.92 305.3,-715.92 311.3,-715.92 311.3,-715.92 583.45,-715.92 583.45,-715.92 589.45,-715.92 595.45,-721.92 595.45,-727.92 595.45,-727.92 595.45,-739.92 595.45,-739.92 595.45,-745.92 589.45,-751.92 583.45,-751.92"/>
+<text xml:space="preserve" text-anchor="middle" x="447.37" y="-729.72" font-family="DejaVu Sans" font-size="14.00">Observed video clip + times + validity</text>
+</g>
+<!-- encode -->
+<g id="16-shared-video-codec-node3" class="node">
+<title>encode</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M428.77,-662.72C428.77,-662.72 159.98,-662.72 159.98,-662.72 153.98,-662.72 147.98,-656.72 147.98,-650.72 147.98,-650.72 147.98,-622.4 147.98,-622.4 147.98,-616.4 153.98,-610.4 159.98,-610.4 159.98,-610.4 428.77,-610.4 428.77,-610.4 434.77,-610.4 440.77,-616.4 440.77,-622.4 440.77,-622.4 440.77,-650.72 440.77,-650.72 440.77,-656.72 434.77,-662.72 428.77,-662.72"/>
+<text xml:space="preserve" text-anchor="middle" x="294.37" y="-640.76" font-family="DejaVu Sans" font-size="14.00">One shared R/P/M/C image encoder</text>
+<text xml:space="preserve" text-anchor="middle" x="294.37" y="-623.96" font-family="DejaVu Sans" font-size="14.00">Same trained weights for every frame</text>
+</g>
+<!-- frame -->
+<g id="16-shared-video-codec-node4" class="node">
+<title>frame</title>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M397.9,-557.2C397.9,-557.2 190.85,-557.2 190.85,-557.2 184.85,-557.2 178.85,-551.2 178.85,-545.2 178.85,-545.2 178.85,-516.88 178.85,-516.88 178.85,-510.88 184.85,-504.88 190.85,-504.88 190.85,-504.88 397.9,-504.88 397.9,-504.88 403.9,-504.88 409.9,-510.88 409.9,-516.88 409.9,-516.88 409.9,-545.2 409.9,-545.2 409.9,-551.2 403.9,-557.2 397.9,-557.2"/>
+<text xml:space="preserve" text-anchor="middle" x="294.37" y="-535.24" font-family="DejaVu Sans" font-size="14.00">Spatial frame posterior</text>
+<text xml:space="preserve" text-anchor="middle" x="294.37" y="-518.44" font-family="DejaVu Sans" font-size="14.00">mu, logvar; no global pooling</text>
+</g>
+<!-- time -->
+<g id="16-shared-video-codec-node5" class="node">
+<title>time</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M342.75,-451.68C342.75,-451.68 12,-451.68 12,-451.68 6,-451.68 0,-445.68 0,-439.68 0,-439.68 0,-394.56 0,-394.56 0,-388.56 6,-382.56 12,-382.56 12,-382.56 342.75,-382.56 342.75,-382.56 348.75,-382.56 354.75,-388.56 354.75,-394.56 354.75,-394.56 354.75,-439.68 354.75,-439.68 354.75,-445.68 348.75,-451.68 342.75,-451.68"/>
+<text xml:space="preserve" text-anchor="middle" x="177.37" y="-429.72" font-family="DejaVu Sans" font-size="14.00">Optional causal residual mixer</text>
+<text xml:space="preserve" text-anchor="middle" x="177.37" y="-412.92" font-family="DejaVu Sans" font-size="14.00">Current + two past grids / elapsed time / mask</text>
+<text xml:space="preserve" text-anchor="middle" x="177.37" y="-396.12" font-family="DejaVu Sans" font-size="14.00">Zero output at initialization</text>
+</g>
+<!-- sample -->
+<g id="16-shared-video-codec-node6" class="node">
+<title>sample</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M331.11,-306.56C331.11,-306.56 27.64,-306.56 27.64,-306.56 21.64,-306.56 15.64,-300.56 15.64,-294.56 15.64,-294.56 15.64,-266.24 15.64,-266.24 15.64,-260.24 21.64,-254.24 27.64,-254.24 27.64,-254.24 331.11,-254.24 331.11,-254.24 337.11,-254.24 343.11,-260.24 343.11,-266.24 343.11,-266.24 343.11,-294.56 343.11,-294.56 343.11,-300.56 337.11,-306.56 331.11,-306.56"/>
+<text xml:space="preserve" text-anchor="middle" x="179.37" y="-284.6" font-family="DejaVu Sans" font-size="14.00">Video Gaussian posterior</text>
+<text xml:space="preserve" text-anchor="middle" x="179.37" y="-267.8" font-family="DejaVu Sans" font-size="14.00">Adjusted mu, frame&#45;local logvar &#45;&gt; sample</text>
+</g>
+<!-- sample_i -->
+<g id="16-shared-video-codec-node7" class="node">
+<title>sample_i</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M568.52,-362.56C568.52,-362.56 310.23,-362.56 310.23,-362.56 304.23,-362.56 298.23,-356.56 298.23,-350.56 298.23,-350.56 298.23,-338.56 298.23,-338.56 298.23,-332.56 304.23,-326.56 310.23,-326.56 310.23,-326.56 568.52,-326.56 568.52,-326.56 574.52,-326.56 580.52,-332.56 580.52,-338.56 580.52,-338.56 580.52,-350.56 580.52,-350.56 580.52,-356.56 574.52,-362.56 568.52,-362.56"/>
+<text xml:space="preserve" text-anchor="middle" x="439.37" y="-340.36" font-family="DejaVu Sans" font-size="14.00">Image Gaussian posterior &#45;&gt; sample</text>
+</g>
+<!-- decode -->
+<g id="16-shared-video-codec-node8" class="node">
+<title>decode</title>
+<path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M445.86,-187.84C445.86,-187.84 172.89,-187.84 172.89,-187.84 166.89,-187.84 160.89,-181.84 160.89,-175.84 160.89,-175.84 160.89,-147.52 160.89,-147.52 160.89,-141.52 166.89,-135.52 172.89,-135.52 172.89,-135.52 445.86,-135.52 445.86,-135.52 451.86,-135.52 457.86,-141.52 457.86,-147.52 457.86,-147.52 457.86,-175.84 457.86,-175.84 457.86,-181.84 451.86,-187.84 445.86,-187.84"/>
+<text xml:space="preserve" text-anchor="middle" x="309.37" y="-165.88" font-family="DejaVu Sans" font-size="14.00">One shared spatial image decoder</text>
+<text xml:space="preserve" text-anchor="middle" x="309.37" y="-149.08" font-family="DejaVu Sans" font-size="14.00">Latent&#45;only input + output dimensions</text>
+</g>
+<!-- out -->
+<g id="16-shared-video-codec-node9" class="node">
+<title>out</title>
+<path fill="#e7f1eb" stroke="#789887" stroke-width="1.1" d="M452.72,-69.12C452.72,-69.12 166.03,-69.12 166.03,-69.12 160.03,-69.12 154.03,-63.12 154.03,-57.12 154.03,-57.12 154.03,-12 154.03,-12 154.03,-6 160.03,0 166.03,0 166.03,0 452.72,0 452.72,0 458.72,0 464.72,-6 464.72,-12 464.72,-12 464.72,-57.12 464.72,-57.12 464.72,-63.12 458.72,-69.12 452.72,-69.12"/>
+<text xml:space="preserve" text-anchor="middle" x="309.37" y="-47.16" font-family="DejaVu Sans" font-size="14.00">Frame reconstructions / video sequence</text>
+<text xml:space="preserve" text-anchor="middle" x="309.37" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Two reconstruction + KL objectives train</text>
+<text xml:space="preserve" text-anchor="middle" x="309.37" y="-13.56" font-family="DejaVu Sans" font-size="14.00">shared weights</text>
+</g>
+</g>
+</svg>
+</div>
+
+<p class="links"><a href="diagrams/atlas/16-shared-video-codec.svg">Open full-size drawing</a> · <a href="#top">Back to map</a></p>
+<p>An encoder-decoder codec, not the complete agent. No target RGB skip, future access, learned temporal prior or persistent streaming state.</p>
+<p>The image-only path and video path have one owner/checkpoint for the actual image weights. Optional temporal processing adds parameters; its benefit must be measured separately.</p>
+<p>Seven contract tests cover sharing, exact neutral initialization, causality, gradients, invalid frames, variable sizes and checkpoint restoration. Quality evidence is in the bounded real-video comparison; no high-level capability promotion.</p>
+<p>Four128-update real-video development fits (two seeds) complete in24.80s CPU. Temporal frame-difference benefit0.22%/0.14% fails5% screen. Both trained arms worsen reserved-source RGB vs untouched image weights.61 tests plus exact resume and raw audits validate mechanics only. Temporal remains opt-in; no general-quality or high-level green promotion. See runs/shared_video_vae_v1/report.html.</p>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/video_vae.py">pathwm/models/video_vae.py · VideoVAE:49</a></li><li><a href="../pathwm/models/video_vae.py">pathwm/models/video_vae.py · CausalLatentMixer:19</a></li><li><a href="../experiments/video_vae.py">experiments/video_vae.py</a></li><li><a href="../tests/test_video_vae.py">tests/test_video_vae.py</a></li><li><a href="../docs/shared-video-vae-plan.md">docs/shared-video-vae-plan.md</a></li></ul></details>
+</div></details>
+<footer>Grounded in repository snapshot 65a354f. Static diagrams are manually audited descriptions, not execution traces. Rendering this atlas does not execute or modify the model. <a href="architecture-atlas.md">Mermaid source and notes</a>.</footer>
 </main><script>
 const panels = [...document.querySelectorAll('main > details')];
 document.getElementById('expand').addEventListener('click', () => panels.forEach(p => p.open = true));

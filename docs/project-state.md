@@ -1,9 +1,19 @@
 # Current work
 
-**In progress, 16 September:** [shared image/video codec](shared-video-vae-plan.md).
-Reuse the actual spatial image VAE for every frame, add optional causal latent
-processing, and train the same image weights on video frames. Existing agent-token
-path remains until a separately tested integration; no quality claim yet.
+**Shared image/video codec implemented and measured, 16 September:**
+[Protocol/results](shared-video-vae-plan.md#result-16-september),
+[real-video comparison](../runs/shared_video_vae_v1/report.html).
+`VideoVAE` reuses the actual trained spatial image encoder AND decoder, with a
+single checkpoint owner; video and direct-frame reconstruction train the same
+weights. Optional causal posterior-mean refinement adds1340 parameters. Four
+128-update fits on six previously inspected local real-video sources,24.80s CPU.
+Frame-difference benefit0.22%/0.14% fails the5% screen; no temporal default adoption.
+Both continued arms worsen reserved-source RGB versus frozen source weights, which
+are preserved.61 tests,1724 exact-resume and777 artifact checks; static reports,
+browser interaction unavailable. Atlas16 separates this codec from the unchanged
+categorical agent patch/token encoder. Next: a masked/occluded-frame task that
+requires history, then separately test the spatial-grid-to-core adapter. General
+video generation, streaming state and earlier direction retention remain open.
 
 **Video diagnosis and two bounded repairs completed, 16 September:**
 [Protocol/results](video-readout-plan.md#result-16-september),
