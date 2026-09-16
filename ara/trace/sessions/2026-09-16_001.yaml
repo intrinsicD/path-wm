@@ -2,8 +2,8 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T14:33+02:00
-  turn_count: 18
+  last_turn: 2026-09-16T14:54+02:00
+  turn_count: 19
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not
     adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59
     scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
@@ -37,7 +37,9 @@ session:
     per original baseline with1 pass/14 failures;14 unimplemented/4 unrun.80 tests and exact frozen replay
     pass; missing-score bug fixed; browser QA blocked. Public-reference plan:420 channel entries,30 descriptions,
     primary papers and2 Claude reviews. Preserve shared latent core/store; propose measured detail/semantic
-    adapters. RTX3050 8GiB confirmed, new training fit unmeasured; no model change.'
+    adapters. RTX3050 8GiB confirmed, new training fit unmeasured; no model change. Extended primary-source/Claude
+    review prioritizes layer access and action-labelled latent prediction; hardware/protocol/streaming
+    counter-evidence narrows candidates. No model replacement or local superiority claimed.'
 events_logged:
 - turn: 1
   type: decision
@@ -705,6 +707,31 @@ events_logged:
     profiling candidates, not validated fit or sufficient capacity for general understanding. Small codecs/adapters
     do not imply small generative priors or low pretraining cost. Frozen decoders still compute and can
     reason; successful conditioning is not reasoning localization.
+- turn: 19
+  type: decision
+  id: N445
+  routing: direct
+  provenance: user
+  summary: Broaden primary-source search with Claude; replace only clearly better alternatives
+- turn: 19
+  type: observation
+  id: O301
+  routing: staged
+  provenance: ai-suggested
+  summary: Prioritize existing feature-to-core diagnosis then a budgeted final-vs-multi-layer readout
+    comparison inspired by RAEv2; next test latent prediction separately with frozen targets or a LeWM-inspired
+    end-to-end objective. Retain common latent thinker/codecs/versioned store until matched local task/resource/regression
+    evidence supports replacement. Literature transfer and Claude agreement are not implementation validation.
+- turn: 19
+  type: observation
+  id: O302
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Small-model reference boundaries: LeWM original L40S/batch128 is not8GiB fit; one-seed TwoRoom
+    replication exposes protocol dependence rather than robust superiority. SemantiCodec10.24s bidirectional
+    path is unsuitable as an immediate causal streaming default. MobileCLIP2 student sizes conceal substantial
+    pretraining; SONAR sentence decoding does not prove universal lossless fact preservation. Pre-register
+    regression/multiplicity and stopping rules before trials.'
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -936,6 +963,20 @@ ai_actions:
   - docs/multimodal-channel-selection.md
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
+- turn: 19
+  action: Searched and inspected additional original papers/repos, including methods/hardware and independent
+    replication. Two isolated Claude reviews returned0 with verified brief/response hashes. Wrote German
+    comparison/adoption plan; notes-only atlas regeneration verified16 unchanged graphs/statuses. No training
+    or weight downloads.
+  provenance: ai-executed
+  files_changed:
+  - docs/multimodal-reference-extension.md
+  - docs/multimodal-reference-design.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.md
+  - docs/architecture-atlas.html
+  - ara/evidence/tables/architecture_extension_2026-09-16.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -1010,6 +1051,9 @@ key_context:
   excerpt: User wants genuine multimodal understanding and interaction, small modality branches where
     possible, local GPU train/inference and scalable latent-adapter extensibility; asks for reference-grounded
     plan with Claude.
+- turn: 19
+  excerpt: 'User: Kannst du bitte mit Claude zusammen aus weitern Quellen im netz nach solchen Ideen suchen
+    und nur diese ersetzen die klar besser sind?'
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -1107,6 +1151,8 @@ open_threads:
   and isolate a shared-core failure with matched controls; interactive report QA remains blocked.'
 - 'O299/O300: reference-driven interface/generation/scaling proposal and GPU envelope await implementation
   protocol and profiling; no whole-architecture efficacy or general understanding established.'
+- 'N445/O301/O302: choose and preregister one local comparison after feature-to-core diagnosis; literature
+  candidates are not adopted defaults; thresholds/resources/teacher costs remain to be fixed.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
@@ -1270,3 +1316,5 @@ ai_suggestions_pending:
   or architecture decision follows automatically from this suite.
 - Profile a complete training update and audit one real temporal dataset before feature-to-core comparison;
   no new fit budget or replacement architecture adopted.
+- Multi-layer readout and LeWM-inspired predictive learning await a concrete protocol; do not infer8GiB
+  fit, cross-modal reasoning or a universal replacement from public benchmarks.

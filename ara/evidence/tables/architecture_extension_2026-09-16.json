@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-09-16T14:54+02:00",
+  "scope": "Public literature and Claude critique; not local model evidence",
+  "reviews": {
+    "public": {
+      "returncode": 0,
+      "elapsed_seconds": 27.5996346619213,
+      "brief_sha256": "4a20d5a4d1d752ef7ad2a2bf2726476ed180053150fbd386c789581202525757",
+      "response_sha256": "d641a8a83162e4ac04ab163022f3a762168e41575f3f27c50ba0598b509b4283",
+      "hashes_verified": true
+    },
+    "reconcile": {
+      "returncode": 0,
+      "elapsed_seconds": 16.806823533959687,
+      "brief_sha256": "65044bfafe201829ac7229c2b5090171ed678e572b6563ba5dfb1d281727027d",
+      "response_sha256": "236a40d4530249f09cde2e886025e7b0a05ebe1734b2e5dc118a2ea3b48c1146",
+      "hashes_verified": true
+    }
+  },
+  "neural_training": false,
+  "weights_downloaded": false,
+  "model_code_changed": false,
+  "atlas_graphs_status_and_topology_unchanged": 16,
+  "atlas_svg_count": 16,
+  "browser_qa": "Not rerun: notes/links only, renderer unchanged; previous file URL policy block remains.",
+  "plan": "docs/multimodal-reference-extension.md",
+  "source_manifest": "runs/reviews/architecture_extension_v1/sources/manifest.json",
+  "new_defaults": false,
+  "concrete_fit_protocol_complete": false,
+  "primary_references": [
+    "https://arxiv.org/abs/2605.18324",
+    "https://arxiv.org/abs/2410.06940",
+    "https://arxiv.org/abs/2508.20691",
+    "https://arxiv.org/abs/2603.19312",
+    "https://arxiv.org/abs/2608.10145",
+    "https://arxiv.org/abs/2605.09241",
+    "https://arxiv.org/abs/2411.04983",
+    "https://arxiv.org/abs/2310.16828",
+    "https://arxiv.org/abs/2308.11466",
+    "https://arxiv.org/abs/1807.03819",
+    "https://arxiv.org/abs/2412.06464",
+    "https://arxiv.org/abs/2405.00233",
+    "https://arxiv.org/abs/2306.06546",
+    "https://arxiv.org/abs/2206.07764",
+    "https://arxiv.org/abs/2502.14802"
+  ]
+}

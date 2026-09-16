@@ -7411,3 +7411,18 @@ tree:
   - ara/evidence/tables/architecture_reference_2026-09-16.json
   - runs/reviews/architecture_reference_v1/verification.json
   status: resolved
+- id: N445
+  type: decision
+  title: Broaden primary-source search with Claude; replace only clearly better alternatives
+  provenance: user
+  timestamp: 2026-09-16T14:54+02:00
+  choice: Seek additional online reference ideas beyond the prior channel review while retaining existing
+    ideas unless a replacement is clearly better. Current research delivers candidates and adoption gates;
+    no architecture adoption inferred.
+  alternatives:
+  - Replace modules based on publication rankings alone
+  - Retain all modules without comparison
+  evidence:
+  - docs/multimodal-reference-extension.md
+  - ara/evidence/tables/architecture_extension_2026-09-16.json
+  status: resolved

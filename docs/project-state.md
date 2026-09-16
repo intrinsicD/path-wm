@@ -1,5 +1,16 @@
 # Current work
 
+**Additional primary-source review,16 September:**
+[German extension and replacement criteria](multimodal-reference-extension.md).
+Two further actual Claude reviews reconciled. Prioritize the existing feature→core
+diagnosis, then a budgeted multi-layer readout comparison and action-labelled latent
+prediction. LeWM's L40S experiment is not an8GiB fit; its independent TwoRoom
+reproduction is single-seed and exposes protocol sensitivity. SemantiCodec's long,
+bidirectional path is not adopted for streaming. Retain core/graph/codec defaults;
+public benchmark wins do not qualify as local replacements. No training, weight
+download, source-code change or validation/color promotion. Concrete task thresholds
+and budgets remain to be preregistered before a new fit.
+
 **Public-reference architecture plan, 16 September:**
 [German design and module-by-module changes](multimodal-reference-design.md),
 [30 inspected AI Search descriptions](multimodal-channel-selection.md).

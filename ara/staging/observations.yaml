@@ -5259,3 +5259,36 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O301
+  timestamp: 2026-09-16T14:54+02:00
+  provenance: ai-suggested
+  content: Prioritize existing feature-to-core diagnosis then a budgeted final-vs-multi-layer readout
+    comparison inspired by RAEv2; next test latent prediction separately with frozen targets or a LeWM-inspired
+    end-to-end objective. Retain common latent thinker/codecs/versioned store until matched local task/resource/regression
+    evidence supports replacement. Literature transfer and Claude agreement are not implementation validation.
+  context: Additional primary-source survey; two actual public-only Claude reviews with seven corrections;
+    no model runs.
+  potential_type: architecture
+  bound_to:
+  - N445
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O302
+  timestamp: 2026-09-16T14:54+02:00
+  provenance: ai-suggested
+  content: 'Small-model reference boundaries: LeWM original L40S/batch128 is not8GiB fit; one-seed TwoRoom
+    replication exposes protocol dependence rather than robust superiority. SemantiCodec10.24s bidirectional
+    path is unsuitable as an immediate causal streaming default. MobileCLIP2 student sizes conceal substantial
+    pretraining; SONAR sentence decoding does not prove universal lossless fact preservation. Pre-register
+    regression/multiplicity and stopping rules before trials.'
+  context: Additional primary-source survey; two actual public-only Claude reviews with seven corrections;
+    no model runs.
+  potential_type: constraint
+  bound_to:
+  - N445
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

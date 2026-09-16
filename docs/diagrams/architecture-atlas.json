@@ -319,13 +319,15 @@
         "The caller owns state, event transactions, action execution and task lifetime. The model returns proposals and tensors; it does not execute arbitrary software tools itself.",
         "Imagination uses the dynamics without future observations. Reflection and thinking leave the live world clock unchanged. Generated content is kept out of source-evidence writes.",
         "The categorical recipe is the CLI default. The recent photo model uses the separate Gaussian configuration in §8. Entity experiments in §10–11 and the modular persistent World State in §13 are opt-in paths. WorldSession connects the latter to the actual BeliefAgent; it is not an invisible extra store in every agent.",
-        "16 September public-reference design: preserve the shared latent core and versioned evidence/entity memory; propose measured detail/semantic adapters, causal temporal features and modality-specific generation. Literature/Claude review is not capability validation. RTX3050 8GiB confirmed; new training fit unmeasured. See docs/multimodal-reference-design.md. No implemented topology or discussion/validation color changes."
+        "16 September public-reference design: preserve the shared latent core and versioned evidence/entity memory; propose measured detail/semantic adapters, causal temporal features and modality-specific generation. Literature/Claude review is not capability validation. RTX3050 8GiB confirmed; new training fit unmeasured. See docs/multimodal-reference-design.md. No implemented topology or discussion/validation color changes.",
+        "16 September extended primary-source/Claude review: multi-layer access and action-labelled latent prediction are comparison candidates. LeWM was trained on L40S; RAEv2 layer aggregation is not inherently cross-scale; SemantiCodec long bidirectional chunks do not supply causal streaming. Preserve the shared latent core, codecs and evidence graph until a local resource/quality comparison passes. No capability or discussion-status promotion."
       ],
       "sources": [
         "experiments/multimodal.py#build_model",
         "pathwm/models/belief.py#BeliefAgent",
         "pathwm/models/agent.py#step_task",
-        "docs/multimodal-reference-design.md"
+        "docs/multimodal-reference-design.md",
+        "docs/multimodal-reference-extension.md"
       ]
     },
     {
@@ -2508,7 +2510,8 @@
         "16 September follow-up: six isolated-input fits and four matched checkpoint continuations preserve the shared latent architecture. Text-only known direction is100% in both seeds; audio46%/100%, simultaneous-all48%/60%. Text warm-up improves complete-input scores, but repeated-draw means100%/74% fall to50%/51% without text. Narrow text access works; multimodal transfer remains open. Frozen audio grids AND their means permit100% known-direction access, while learned first queries give40%/98%. No unique loss layer, new default or general capability promotion. Next test gradual source rotation/dropout with matched controls. See runs/direction_inputs_v1/report.html and docs/modality-readout-plan.md.",
         "16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation.",
         "16 September: executable capability diagnostics evaluate the original two native core checkpoints, each input modality and shared/complementary inputs. One of15 scoped screens passes per source;14 fail.14 broader tasks unimplemented and4 output cases unrun. Audio encoder probes recover all factors, but core/working-state access is weak. No unique loss attribution, model promotion or general capability claim. See docs/modality-suites-plan.md.",
-        "16 September public-reference design: preserve the shared latent core and versioned evidence/entity memory; propose measured detail/semantic adapters, causal temporal features and modality-specific generation. Literature/Claude review is not capability validation. RTX3050 8GiB confirmed; new training fit unmeasured. See docs/multimodal-reference-design.md. No implemented topology or discussion/validation color changes."
+        "16 September public-reference design: preserve the shared latent core and versioned evidence/entity memory; propose measured detail/semantic adapters, causal temporal features and modality-specific generation. Literature/Claude review is not capability validation. RTX3050 8GiB confirmed; new training fit unmeasured. See docs/multimodal-reference-design.md. No implemented topology or discussion/validation color changes.",
+        "16 September extended primary-source/Claude review: multi-layer access and action-labelled latent prediction are comparison candidates. LeWM was trained on L40S; RAEv2 layer aggregation is not inherently cross-scale; SemantiCodec long bidirectional chunks do not supply causal streaming. Preserve the shared latent core, codecs and evidence graph until a local resource/quality comparison passes. No capability or discussion-status promotion."
       ],
       "sources": [
         "pathwm/models/belief.py#BeliefDynamics",
@@ -2521,7 +2524,8 @@
         "docs/latent-core.md",
         "pathwm/evaluation/modality_suite.py",
         "docs/modality-suites-plan.md",
-        "docs/multimodal-reference-design.md"
+        "docs/multimodal-reference-design.md",
+        "docs/multimodal-reference-extension.md"
       ]
     },
     {
@@ -2691,7 +2695,8 @@
         "16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation.",
         "16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open.",
         "16 September: executable capability diagnostics evaluate the original two native core checkpoints, each input modality and shared/complementary inputs. One of15 scoped screens passes per source;14 fail.14 broader tasks unimplemented and4 output cases unrun. Audio encoder probes recover all factors, but core/working-state access is weak. No unique loss attribution, model promotion or general capability claim. See docs/modality-suites-plan.md.",
-        "16 September public-reference design: preserve the shared latent core and versioned evidence/entity memory; propose measured detail/semantic adapters, causal temporal features and modality-specific generation. Literature/Claude review is not capability validation. RTX3050 8GiB confirmed; new training fit unmeasured. See docs/multimodal-reference-design.md. No implemented topology or discussion/validation color changes."
+        "16 September public-reference design: preserve the shared latent core and versioned evidence/entity memory; propose measured detail/semantic adapters, causal temporal features and modality-specific generation. Literature/Claude review is not capability validation. RTX3050 8GiB confirmed; new training fit unmeasured. See docs/multimodal-reference-design.md. No implemented topology or discussion/validation color changes.",
+        "16 September extended primary-source/Claude review: multi-layer access and action-labelled latent prediction are comparison candidates. LeWM was trained on L40S; RAEv2 layer aggregation is not inherently cross-scale; SemantiCodec long bidirectional chunks do not supply causal streaming. Preserve the shared latent core, codecs and evidence graph until a local resource/quality comparison passes. No capability or discussion-status promotion."
       ],
       "sources": [
         "pathwm/models/agent.py#Thinker",
@@ -2707,7 +2712,8 @@
         "docs/modality-readout-plan.md",
         "pathwm/evaluation/modality_suite.py",
         "docs/modality-suites-plan.md",
-        "docs/multimodal-reference-design.md"
+        "docs/multimodal-reference-design.md",
+        "docs/multimodal-reference-extension.md"
       ]
     },
     {
@@ -2850,7 +2856,8 @@
         "16 September paired-objective comparison:8 fixed fits keep inference one sequence/model unchanged and add training-only0.1 SmoothL1 common class-score offset. Fresh source accuracy known95.90→98.59%,wide89.62→92.92%,intermediate93.67→96.84%,extrapolation69.54→72.42%. Absolute/relative class preference decreases, but large-shift ordering remains weak. Full capability/preservation gates fail; no default promotion.81 tests,7061 restart,52913 raw audits and72 exact prior-baseline checks;11 structural reports, plot inspected. Explicit two-frame correspondence is proposed next; no natural-video or core-integration claim.",
         "16 September explicit correspondence support:12 fixed fits share radius3 crop/head/1630 nominal parameters and expose no/local2/wide3 matching. Fresh10/11px accuracy78.75/86.77/90.07%, while a mandatory fixed cosine rule on the SAME frozen grids reaches99.93%. Direction evidence is accessible for these constructed pans; generic learned readout remains unreliable. All trained full/preservation gates fail, no default/color promotion.85 tests,8661 restart,92229 raw checks,5256 marginal identities,17 structural reports; plot inspected. Next structured opposite-offset readout is proposed, not implemented. See docs/video-matching-plan.md and runs/video_matching_v1/report.html.",
         "16 September structured direction readout: shared81-parameter cosine/absolute-offset/zero-match residual scorer compares signed-side maxima, with no temporal/appearance inputs. Four512-step fits: fresh99.69–100% and both-seed capability passes, fixed cosine also passes. Learned-vs-fixed gain0.0366pp and inspected-source regression14.71pp fail adoption; wider correct matches are often replaced by offset1. No default or high-level green promotion.89 tests,10239 restart,42682 raw audits,36 exact old pooled checks,8 structural reports/inspected panel. See docs/video-evidence-plan.md; not natural motion or core integration.",
-        "16 September public-reference design: preserve the shared latent core and versioned evidence/entity memory; propose measured detail/semantic adapters, causal temporal features and modality-specific generation. Literature/Claude review is not capability validation. RTX3050 8GiB confirmed; new training fit unmeasured. See docs/multimodal-reference-design.md. No implemented topology or discussion/validation color changes."
+        "16 September public-reference design: preserve the shared latent core and versioned evidence/entity memory; propose measured detail/semantic adapters, causal temporal features and modality-specific generation. Literature/Claude review is not capability validation. RTX3050 8GiB confirmed; new training fit unmeasured. See docs/multimodal-reference-design.md. No implemented topology or discussion/validation color changes.",
+        "16 September extended primary-source/Claude review: multi-layer access and action-labelled latent prediction are comparison candidates. LeWM was trained on L40S; RAEv2 layer aggregation is not inherently cross-scale; SemantiCodec long bidirectional chunks do not supply causal streaming. Preserve the shared latent core, codecs and evidence graph until a local resource/quality comparison passes. No capability or discussion-status promotion."
       ],
       "sources": [
         "pathwm/models/video_vae.py#VideoVAE",
@@ -2871,7 +2878,8 @@
         "pathwm/models/video_vae.py#CorrespondenceDirectionHead",
         "tests/test_video_evidence.py",
         "docs/video-evidence-plan.md",
-        "docs/multimodal-reference-design.md"
+        "docs/multimodal-reference-design.md",
+        "docs/multimodal-reference-extension.md"
       ]
     }
   ]

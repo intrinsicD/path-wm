@@ -4,6 +4,11 @@ Stand: 16. September 2026. **Recherche und Vorschlag, keine neue implementierte
 Architektur und kein Fähigkeitsnachweis.** Gegen den aktuellen Code `64ad8f3`
 abgeglichen, in zwei Runden mit Claude Sonnet kritisch diskutiert.
 
+Die [erweiterte Primärquellenprüfung](multimodal-reference-extension.md) ergänzt
+RAEv2, LeWorldModel samt Reproduktion, MobileCLIP2, SONAR und weitere Audio-/Memory-
+Referenzen. Sie präzisiert die Vergleichsreihenfolge und die Bedingungen für einen
+Austausch; kein neuer Modellstandard wurde allein aus Literaturergebnissen abgeleitet.
+
 ## Entscheidung
 
 Wir behalten den gemeinsamen latenten Denkraum, austauschbare Modalitätsmodule,
