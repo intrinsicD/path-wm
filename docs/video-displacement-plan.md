@@ -73,3 +73,16 @@ The oracle measures the final interval d, not the first2d interval. No extra-bud
 control is added: this experiment cannot identify compute-unconstrained capacity or
 population-wide robustness, and does not claim it. Corrections sent for reconciliation.
 Essential new tests initially fail on missing spec/sampler and oracle argument, as expected.
+
+## Working slice
+
+Fresh clips fixed before fitting:34DKM(G6WD),X1EZQ(ZAWX),N588B(WQ8Z),AHL6X(C7O9).
+Saved data/motion_displacement_v1/sources.json and narrow/expanded.json; no files copied.
+Claude acknowledged the factor2 correction, numeric alias bound and fixed-compute
+estimand. Single-sampler/finite-source limits remain; no broader claim authorized.
+77 scoped tests pass. Real-data8 versus4+4 restart passes3397 exact recursive checks;
+confirmation predictions excluded from mechanics. Model/optimizer/RNG, matched sampler,
+raw logits and displacement exposure replay exactly (timing/extra validation excluded).
+Initial script launch failed before preparation because PYTHONPATH was absent; log
+preserved, invocation fixed. No scientific result or fit was replaced.
+Frozen image encoding reuses the phase bank across evaluation displacement groups.

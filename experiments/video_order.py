@@ -8,6 +8,7 @@ import argparse
 from collections import Counter
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -100,14 +101,32 @@ def tensor_hash(x):
 
 
 @torch.no_grad()
-def pixel_oracle(frames):
+def pixel_oracle(frames, *, shifts=(2, 4, 6, 8)):
+    """Exhaustive signed alignment on a common valid interior; no wrap shortcut."""
     x = frames.flatten(0, 1)
     previous, current = x[:, -2], x[:, -1]
-    shifts = [-8, -6, -4, -2, 2, 4, 6, 8]
+    magnitudes = sorted(set(shifts))
+    width, height = x.shape[-1], x.shape[-2]
+    if not magnitudes or any(
+        type(d) is not int or not 0 < d < width / 2 for d in magnitudes
+    ):
+        raise ValueError("Oracle shifts must be positive integers below half the width")
+    margin = max(magnitudes)
+    vertical = min(margin, (height - 1) // 2)
+    shifts = [-d for d in reversed(magnitudes)] + magnitudes
     errors = torch.stack(
         [
             (
-                (previous[..., 8:-8, 8 + s : 48 - 8 + s] - current[..., 8:-8, 8:-8])
+                (
+                    previous[
+                        ...,
+                        vertical : height - vertical,
+                        margin + s : width - margin + s,
+                    ]
+                    - current[
+                        ..., vertical : height - vertical, margin : width - margin
+                    ]
+                )
                 ** 2
             ).mean((1, 2, 3))
             for s in shifts
@@ -117,8 +136,64 @@ def pixel_oracle(frames):
     best = errors.argmin(1)
     pred = torch.tensor(shifts)[best] < 0
     tied = errors <= errors.min(1, keepdim=True).values + 1e-10
-    ambiguous = tied[:, :4].any(1) & tied[:, 4:].any(1)
+    ambiguous = tied[:, : len(magnitudes)].any(1) & tied[:, len(magnitudes) :].any(1)
     return pred.long().reshape(frames.shape[:2]), ambiguous.reshape(frames.shape[:2])
+
+
+def load_displacements(path=None):
+    """Optional periodic-task support, separate from source content and labels."""
+    spec = (
+        dict(schema=1, train=[2, 4], evaluation=dict(known=[2, 4], wide=[6, 8]))
+        if path is None
+        else json.loads(Path(path).read_text())
+    )
+    if set(spec) != {"schema", "train", "evaluation"} or spec["schema"] != 1:
+        raise ValueError("Expected schema, train and evaluation displacement fields")
+    groups = spec["evaluation"]
+    if not isinstance(groups, dict) or not {"known", "wide"} <= groups.keys():
+        raise ValueError("Evaluation requires known and wide groups")
+    if any(
+        not re.fullmatch(r"[a-z][a-z_]*", name)
+        or name in ("train", "validation")
+        or name.startswith("confirm_")
+        for name in groups
+    ):
+        raise ValueError("Invalid/reserved displacement group name")
+    for shifts in [spec["train"], *groups.values()]:
+        if (
+            not isinstance(shifts, list)
+            or not shifts
+            or any(type(d) is not int or not 0 < d < 24 for d in shifts)
+            or shifts != sorted(set(shifts))
+        ):
+            raise ValueError("Displacements must be sorted unique integers in [1,23]")
+    return spec
+
+
+def phase_pair_groups(metadata):
+    """Index complete image/phase groups; all groups have identical shift slots."""
+    if metadata.ndim != 2 or metadata.shape[1] != 3 or not len(metadata):
+        raise ValueError("Expected periodic image, phase, displacement metadata")
+    shifts = metadata[:, -1].unique(sorted=True)
+    if len(metadata) % len(shifts):
+        raise ValueError("Incomplete phase groups")
+    grouped = metadata.reshape(-1, len(shifts), 3)
+    if (
+        not torch.equal(
+            grouped[:, :, :2], grouped[:, :1, :2].expand(-1, len(shifts), -1)
+        )
+        or not torch.equal(grouped[:, :, -1], shifts.expand(len(grouped), -1))
+        or len(grouped[:, 0, :2].unique(dim=0)) != len(grouped)
+    ):
+        raise ValueError("Phase groups require consistent unique displacement slots")
+    return torch.arange(len(metadata)).reshape(-1, len(shifts))
+
+
+def sample_phase_pairs(sample, groups, count):
+    # The same two RNG draws per update preserve matched content across supports.
+    rows = sample(len(groups), count)
+    columns = sample(groups.shape[1], count)
+    return groups[rows, columns]
 
 
 def verify_marginals(data, features, shifts):
@@ -210,6 +285,21 @@ def load_sources(manifest, directory):
 
 @torch.no_grad()
 def prepare(args, *, balanced=False, evaluation_only=False, include_reflection=False):
+    displacement_path = getattr(args, "displacement_spec", None)
+    displacements = load_displacements(displacement_path)
+    if displacement_path is not None and not balanced:
+        raise ValueError("Custom displacements require balanced periodic phases")
+    oracle_shifts = sorted(
+        {2, 4}
+        | {
+            d
+            for values in [
+                displacements["train"],
+                *displacements["evaluation"].values(),
+            ]
+            for d in values
+        }
+    )
     seed_everything(7500)
     image = SpatialVAE.load(args.source).requires_grad_(False).eval()
     sets, identity = {}, {}
@@ -262,15 +352,19 @@ def prepare(args, *, balanced=False, evaluation_only=False, include_reflection=F
                 )
             )
         images = torch.cat(images)
-        populations = [(split if split != "evaluation" else "known", (2, 4))]
-        if split == "evaluation":
-            populations.append(("wide", (6, 8)))
-        if split == "confirmation":
-            populations = [("confirm_known", (2, 4)), ("confirm_wide", (6, 8))]
+        populations = [(split, displacements["train"] if split == "train" else [2, 4])]
+        if split in ("evaluation", "confirmation"):
+            prefix = "confirm_" if split == "confirmation" else ""
+            populations = [
+                (prefix + name, shifts)
+                for name, shifts in displacements["evaluation"].items()
+            ]
+        bank = None
         for name, shifts in populations:
             if balanced:
                 d = cyclic_pan_pairs(images[..., 4:52, 12:60], shifts=shifts)
-                bank = torch.cat([image.encode(v).mu for v in d["views"].split(32)])
+                if bank is None:
+                    bank = torch.cat([image.encode(v).mu for v in d["views"].split(32)])
                 mu = bank[d["indices"]]
             else:
                 d = pan_pairs(images, shifts=shifts)
@@ -279,7 +373,7 @@ def prepare(args, *, balanced=False, evaluation_only=False, include_reflection=F
                 mu = mu.reshape(*d["frames"].shape[:3], *mu.shape[1:])
             assert torch.equal(mu[:, 0, -1], mu[:, 1, -1])
             assert torch.equal(mu[:, 0, :2], mu[:, 1, :2].flip(1))
-            oracle, ambiguous = pixel_oracle(d["frames"])
+            oracle, ambiguous = pixel_oracle(d["frames"], shifts=oracle_shifts)
             balance_checks = verify_marginals(d, mu, shifts) if balanced else 0
             sets[name] = dict(
                 features=mu,
@@ -305,17 +399,18 @@ def prepare(args, *, balanced=False, evaluation_only=False, include_reflection=F
                     else "paired crops(-d,+d,0)/(+d,-d,0), no wrapping"
                 ),
                 exact_marginal_balance_checks=balance_checks,
+                oracle_shifts=oracle_shifts,
             )
             if include_reflection:
                 if not balanced:
                     raise ValueError("Reflection comparison requires balanced phases")
                 reflected = reflect_pairs(d)
-                bank = torch.cat(
+                reflected_bank = torch.cat(
                     [image.encode(v).mu for v in reflected["views"].split(32)]
                 )
-                reflected_mu = bank[reflected["indices"]]
+                reflected_mu = reflected_bank[reflected["indices"]]
                 reflected_oracle, reflected_ambiguous = pixel_oracle(
-                    reflected["frames"]
+                    reflected["frames"], shifts=oracle_shifts
                 )
                 reflection_checks = verify_marginals(reflected, reflected_mu, shifts)
                 sets[name].update(
@@ -443,6 +538,9 @@ def train(args, prepared=None):
     if shutil.disk_usage(output.parent).free < 302 * 1024**2:
         raise RuntimeError("Preserve300MiB disk reserve")
     balanced = getattr(args, "balanced_training", False)
+    matched_phases = getattr(args, "matched_phase_sampling", False)
+    if matched_phases and not balanced:
+        raise ValueError("Matched phase sampling requires balanced periodic data")
     reflect = getattr(args, "reflect_training", False)
     head_seed = getattr(args, "head_seed", None)
     head_seed = args.seed if head_seed is None else head_seed
@@ -452,6 +550,9 @@ def train(args, prepared=None):
         else prepared
     )
     assert identity["train"]["construction"].startswith("all48") == balanced
+    phase_groups = (
+        phase_pair_groups(sets["train"]["metadata"]) if matched_phases else None
+    )
     if reflect and "reflected_features" not in sets["train"]:
         raise ValueError("Missing reflected RGB encoding for training")
     seed_everything(head_seed)
@@ -461,6 +562,10 @@ def train(args, prepared=None):
     cfg = dict(
         seed=args.seed,
         head_seed=head_seed,
+        matched_phase_sampling=matched_phases,
+        displacement_spec_sha256=file_hash(args.displacement_spec)
+        if getattr(args, "displacement_spec", None)
+        else None,
         source_manifest_sha256=file_hash(args.source_manifest)
         if getattr(args, "source_manifest", None)
         else None,
@@ -519,7 +624,11 @@ def train(args, prepared=None):
         for step in range(run.step + 1, end + 1):
             if prior + perf_counter() - start > cfg["wall_seconds"]:
                 break
-            index = run.sample(len(sets["train"]["labels"]), cfg["batch_pairs"])
+            index = (
+                sample_phase_pairs(run.sample, phase_groups, cfg["batch_pairs"])
+                if matched_phases
+                else run.sample(len(sets["train"]["labels"]), cfg["batch_pairs"])
+            )
             x, y = training_batch(sets["train"], index, step, reflect)
             optimizer.zero_grad(set_to_none=True)
             logits = model(x)
@@ -572,12 +681,20 @@ def train(args, prepared=None):
         source_counts = np.bincount(
             sets["train"]["source_index"].numpy(), weights=pair_counts
         ).astype(np.int64)
+        magnitudes, displacement_indices = np.unique(
+            sets["train"]["metadata"][:, -1].numpy(), return_inverse=True
+        )
+        displacement_counts = np.bincount(
+            displacement_indices, weights=pair_counts
+        ).astype(np.int64)
         np.savez_compressed(
             output / "exposure.npz",
             sampled_pairs=sampled,
             pair_counts=pair_counts,
             image_counts=image_counts,
             source_counts=source_counts,
+            displacements=magnitudes,
+            displacement_counts=displacement_counts,
         )
         exposure = dict(
             sampled_pairs=int(len(sampled)),
@@ -586,6 +703,9 @@ def train(args, prepared=None):
             source_ids=sets["train"]["source_ids"],
             source_counts=source_counts.tolist(),
             image_counts=image_counts.tolist(),
+            displacement_counts=dict(
+                zip(map(str, magnitudes), map(int, displacement_counts))
+            ),
             unit="paired examples; each has two labeled clips",
         )
         scores, arrays = evaluate(model, sets)
@@ -786,6 +906,16 @@ if __name__ == "__main__":
         help="Optional explicit video paths, subjects and frame counts by split",
     )
     parser.add_argument("--mode", choices=MODES, default="train")
+    parser.add_argument(
+        "--displacement-spec",
+        type=Path,
+        help="Optional JSON train/evaluation magnitudes; balanced phases only",
+    )
+    parser.add_argument(
+        "--matched-phase-sampling",
+        action="store_true",
+        help="Sample image/phase then displacement to match content across supports",
+    )
     parser.add_argument("--steps", type=int, default=512)
     parser.add_argument("--seed", type=int, default=7501)
     parser.add_argument(
