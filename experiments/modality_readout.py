@@ -132,7 +132,9 @@ class Core(nn.Module):
 
 
 class Outputs(nn.Module):
-    def __init__(self, variant, width=24, *, video_conditioning="context"):
+    def __init__(
+        self, variant, width=24, *, video_conditioning="context", video_palette=0
+    ):
         super().__init__()
         self.variant = variant
         self.decoders = nn.ModuleDict(
@@ -141,7 +143,10 @@ class Outputs(nn.Module):
                 "image": ImageDecoder(width, 16),
                 "audio": AudioDecoder(width, 192),
                 "video": TemporalImageDecoder(
-                    width, 16, time_conditioning=video_conditioning
+                    width,
+                    16,
+                    time_conditioning=video_conditioning,
+                    palette_size=video_palette,
                 ),
             }
         )
@@ -174,11 +179,22 @@ class Outputs(nn.Module):
 
 
 class Model(nn.Module):
-    def __init__(self, variant, *, posterior_aux=False, video_conditioning="context"):
+    def __init__(
+        self,
+        variant,
+        *,
+        posterior_aux=False,
+        video_conditioning="context",
+        video_palette=0,
+    ):
         super().__init__()
         self.core, self.outputs = (
             Core(),
-            Outputs(variant, video_conditioning=video_conditioning),
+            Outputs(
+                variant,
+                video_conditioning=video_conditioning,
+                video_palette=video_palette,
+            ),
         )
         # Diagnostic supervision only; no inference read or RNG/init change.
         with torch.random.fork_rng():
@@ -551,6 +567,8 @@ def perform(args):
         posterior_aux=args.initial is not None
         and args.stage == "core"
         and args.encoder_source is None,
+        video_conditioning=getattr(args, "video_conditioning", None) or "context",
+        video_palette=getattr(args, "video_palette", 0),
     ).to(device)
     model.core.belief_readout = args.belief_readout
     initial_decoders = state_hash(model.outputs.decoders)
@@ -609,6 +627,7 @@ def perform(args):
         variant=args.variant,
         modality=args.modality,
         video_conditioning=model.outputs.decoders["video"].time_conditioning,
+        video_palette=model.outputs.decoders["video"].palette_size,
         steps=args.steps,
         batch=24,
         width=24,
@@ -991,7 +1010,16 @@ def main():
         choices=("context", "query"),
         help="Place requested time in context or queries; default restores source metadata or context",
     )
+    parser.add_argument(
+        "--video-palette",
+        type=int,
+        choices=(0, 4),
+        default=0,
+        help="Optional learned untimed palette; requires query timing",
+    )
     args = parser.parse_args()
+    if args.video_palette and args.video_conditioning != "query":
+        parser.error("Video palette requires explicit --video-conditioning query")
     if args.input_mode != "rotating" and args.stage not in ("core", "frozen"):
         parser.error(
             "Input selection is supported for core or frozen-output training only"

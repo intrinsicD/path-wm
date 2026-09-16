@@ -280,15 +280,19 @@ def bytes_text(ids):
 
 
 class ImageDecoder(nn.Module):
-    def __init__(self, width, image_size=16, patch_size=4):
+    def __init__(self, width, image_size=16, patch_size=4, *, palette_size=0):
         super().__init__()
+        if type(palette_size) is not int or palette_size < 0 or palette_size == 1:
+            raise ValueError("Palette size must be zero or at least two")
         if image_size % patch_size:
             raise ValueError("Output image size must divide into patches")
         self.image_size, self.patch_size = image_size, patch_size
         side = image_size // patch_size
         self.queries = nn.Parameter(torch.randn(side * side, width) * 0.02)
         self.read = Attend(width)
-        self.output = nn.Linear(width, 3 * patch_size * patch_size)
+        self.output = nn.Linear(width, (palette_size or 3) * patch_size * patch_size)
+        self.palette_size = palette_size
+        self.palette = nn.Linear(width, 3 * palette_size) if palette_size else None
 
     def forward(self, tokens, trace=None, *, valid=None, query_offset=None):
         b, p, side = len(tokens), self.patch_size, self.image_size // self.patch_size
@@ -314,10 +318,30 @@ class ImageDecoder(nn.Module):
             trace=trace,
             name="decode.image.attention",
         )
-        patches = self.output(x).sigmoid().reshape(b, side, side, 3, p, p)
-        return patches.permute(0, 3, 1, 4, 2, 5).reshape(
-            b, 3, self.image_size, self.image_size
+        channels = self.palette_size or 3
+        logits = self.output(x)
+        patches = (logits if self.palette_size else logits.sigmoid()).reshape(
+            b, side, side, channels, p, p
         )
+        field = patches.permute(0, 3, 1, 4, 2, 5).reshape(
+            b, channels, self.image_size, self.image_size
+        )
+        if not self.palette_size:
+            return field
+        # Appearance reads the same latent content, without target labels or
+        # spatial coordinates. Video uses this only with query-side time.
+        source = tokens if valid is None else tokens.masked_fill(~valid[..., None], 0)
+        pooled = (
+            source.mean(1)
+            if valid is None
+            else source.sum(1) / valid.sum(1, keepdim=True)
+        )
+        palette = self.palette(pooled).sigmoid().reshape(b, self.palette_size, 3)
+        mixture = field.softmax(1)
+        if trace is not None:
+            trace["decode.image.palette"] = palette.detach().cpu().clone()
+            trace["decode.image.mixture"] = mixture.detach().cpu().clone()
+        return torch.einsum("bkhw,bkc->bchw", mixture, palette)
 
 
 class AudioDecoder(nn.Module):

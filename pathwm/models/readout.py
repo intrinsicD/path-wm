@@ -77,12 +77,15 @@ class TemporalImageDecoder(nn.Module):
     output coordinates, not fresh observation events.
     """
 
-    def __init__(self, width, image_size=16, *, time_conditioning="context"):
+    def __init__(
+        self, width, image_size=16, *, time_conditioning="context", palette_size=0
+    ):
         super().__init__()
         self.width = width
+        self.palette_size = palette_size
         self.time_conditioning = time_conditioning
         self.time_projection = nn.Linear(width, width)
-        self.image = ImageDecoder(width, image_size)
+        self.image = ImageDecoder(width, image_size, palette_size=palette_size)
 
     @property
     def time_conditioning(self):
@@ -92,9 +95,11 @@ class TemporalImageDecoder(nn.Module):
     def time_conditioning(self, value):
         if value not in ("context", "query"):
             raise ValueError("Unknown video time conditioning")
+        if self.palette_size and value != "query":
+            raise ValueError("Video palette requires query-side time")
         self._time_conditioning = value
 
-    def forward(self, context, times, *, valid=None):
+    def forward(self, context, times, *, valid=None, trace=None):
         if (
             times.ndim != 1
             or times.numel() < 1
@@ -130,5 +135,5 @@ class TemporalImageDecoder(nn.Module):
             if valid is None
             else valid[:, None].expand(-1, len(times), -1).reshape(b * len(times), n)
         )
-        decoded = self.image(values, valid=mask, query_offset=offset)
+        decoded = self.image(values, trace=trace, valid=mask, query_offset=offset)
         return decoded.reshape(b, len(times), *decoded.shape[1:])
