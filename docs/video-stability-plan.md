@@ -64,5 +64,6 @@ generalizing solutions; more training is not justified by the observed gap alone
 Claude public-only review requests exact sequence reflection and label checks.
 Reject its suggestion that unchanged labels under reflection necessarily force
 chance: distinct images may support memorization. Also correct the claim that
-equal-budget augmentation can rule out optimizer implicit bias. Await/record its
-acknowledgment. No private code, datasets or measurements sent externally.
+equal-budget augmentation can rule out optimizer implicit bias. Claude acknowledged all three corrections in a second public-only exchange.
+Remaining limitation agreed: these four fixed cells do not estimate a population
+variance; report descriptive differences only. No private code, datasets or measurements sent externally.

@@ -3,6 +3,20 @@
 import torch
 
 
+def reflect_pairs(data):
+    """Mirror exact RGB sequences, preserving source-pair indices and time order.
+
+    Metadata phase remains the original source-pair index. Reflection reverses
+    horizontal direction, so targets invert. Apply BEFORE image encoding.
+    """
+    result = dict(data)
+    result["frames"] = data["frames"].flip(-1)
+    result["labels"] = 1 - data["labels"]
+    if "views" in data:
+        result["views"] = data["views"].flip(-1)
+    return result
+
+
 def pan_pairs(
     images, *, shifts=(2, 4), size=48, anchors=((4, 12), (4, 20), (12, 12), (12, 20))
 ):

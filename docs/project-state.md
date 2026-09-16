@@ -1,5 +1,10 @@
 # Current work
 
+**Active: temporal initialization/transfer comparison:**
+[Fixed eight-fit protocol](video-stability-plan.md). Training fit is already100%;
+cross temporal/head initialization with common sampling and test one reflection
+augmentation repair at unchanged compute. Prior gates/results remain preserved.
+
 **Paired temporal-order diagnosis and two repairs completed,16 September:**
 [Protocol/results](video-order-plan.md),[latest comparison](../runs/video_order_v1/balanced_training/report.html).
 Temporal residual features can now be read separately without modifying image means;

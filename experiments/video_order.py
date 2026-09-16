@@ -18,7 +18,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from pathwm.data.video_order import pan_pairs, cyclic_pan_pairs
+from pathwm.data.video_order import pan_pairs, cyclic_pan_pairs, reflect_pairs
 from pathwm.models.spatial_vae import SpatialVAE
 from pathwm.models.video_vae import CausalLatentMixer, local_correlation
 from pathwm.io import Run, atomic_json, file_hash, seed_everything, evaluation_mode
@@ -121,8 +121,28 @@ def pixel_oracle(frames):
     return pred.long().reshape(frames.shape[:2]), ambiguous.reshape(frames.shape[:2])
 
 
+def verify_marginals(data, features, shifts):
+    """Exact class-conditional counts per source image, displacement and time."""
+    checks = 0
+    for image_id in data["metadata"][:, 0].unique():
+        for displacement in shifts:
+            chosen = (data["metadata"][:, 0] == image_id) & (
+                data["metadata"][:, -1] == displacement
+            )
+            assert int(chosen.sum()) == data["frames"].shape[-1]
+            labels = data["labels"][chosen].flatten()
+            for values in (data["frames"][chosen], features[chosen]):
+                flat = values.flatten(0, 1)
+                for t in range(3):
+                    assert Counter(
+                        tensor_hash(v) for v in flat[labels == 0, t]
+                    ) == Counter(tensor_hash(v) for v in flat[labels == 1, t])
+                    checks += 1
+    return checks
+
+
 @torch.no_grad()
-def prepare(args, *, balanced=False, evaluation_only=False):
+def prepare(args, *, balanced=False, evaluation_only=False, include_reflection=False):
     seed_everything(7500)
     image = SpatialVAE.load(args.source).requires_grad_(False).eval()
     sets, identity = {}, {}
@@ -179,26 +199,7 @@ def prepare(args, *, balanced=False, evaluation_only=False):
             assert torch.equal(mu[:, 0, -1], mu[:, 1, -1])
             assert torch.equal(mu[:, 0, :2], mu[:, 1, :2].flip(1))
             oracle, ambiguous = pixel_oracle(d["frames"])
-            balance_checks = 0
-            if balanced:
-                for i in d["metadata"][:, 0].unique():
-                    for displacement in shifts:
-                        chosen = (d["metadata"][:, 0] == i) & (
-                            d["metadata"][:, -1] == displacement
-                        )
-                        assert int(chosen.sum()) == 48
-                        for values in (d["frames"][chosen], mu[chosen]):
-                            flat = values.flatten(0, 1)
-                            labels = d["labels"][chosen].flatten()
-                            for t in range(3):
-                                a = Counter(
-                                    tensor_hash(v) for v in flat[labels == 0, t]
-                                )
-                                b = Counter(
-                                    tensor_hash(v) for v in flat[labels == 1, t]
-                                )
-                                assert a == b
-                                balance_checks += 1
+            balance_checks = verify_marginals(d, mu, shifts) if balanced else 0
             sets[name] = dict(
                 features=mu,
                 labels=d["labels"],
@@ -221,6 +222,36 @@ def prepare(args, *, balanced=False, evaluation_only=False):
                 ),
                 exact_marginal_balance_checks=balance_checks,
             )
+            if include_reflection:
+                if not balanced:
+                    raise ValueError("Reflection comparison requires balanced phases")
+                reflected = reflect_pairs(d)
+                bank = torch.cat(
+                    [image.encode(v).mu for v in reflected["views"].split(32)]
+                )
+                reflected_mu = bank[reflected["indices"]]
+                reflected_oracle, reflected_ambiguous = pixel_oracle(
+                    reflected["frames"]
+                )
+                reflection_checks = verify_marginals(reflected, reflected_mu, shifts)
+                sets[name].update(
+                    reflected_features=reflected_mu,
+                    reflected_labels=reflected["labels"],
+                )
+                identity[name]["reflection"] = dict(
+                    feature_sha256=tensor_hash(reflected_mu),
+                    labels_sha256=tensor_hash(reflected["labels"]),
+                    rgb_sha256=tensor_hash(reflected["views"]),
+                    marginal_checks=reflection_checks,
+                    encoded_vs_latent_flip_mse=float(
+                        (reflected_mu - mu.flip(-1)).square().mean()
+                    ),
+                    pixel_oracle_accuracy=float(
+                        (reflected_oracle == reflected["labels"]).float().mean()
+                    ),
+                    pixel_oracle_ambiguous=int(reflected_ambiguous.sum()),
+                    method="exact RGB horizontal reflection before frozen encoding; original pair indices",
+                )
     return sets, identity
 
 
@@ -228,6 +259,10 @@ def metrics(logits, labels):
     pred = logits.argmax(-1)
     correct = pred == labels
     matrix = torch.bincount((2 * labels + pred).flatten(), minlength=4).reshape(2, 2)
+    margin = (
+        logits.gather(-1, labels[..., None])
+        - logits.gather(-1, (1 - labels)[..., None])
+    ).squeeze(-1)
     return dict(
         accuracy=float(correct.float().mean()),
         pair_accuracy=float(correct.all(1).float().mean()),
@@ -235,6 +270,11 @@ def metrics(logits, labels):
         confusion=matrix.tolist(),
         pairs=len(labels),
         cross_entropy=float(F.cross_entropy(logits.flatten(0, 1), labels.flatten())),
+        margin_mean=float(margin.mean()),
+        margin_p10=float(torch.quantile(margin.flatten(), 0.1)),
+        confident_wrong_fraction=float(
+            ((~correct) & (logits.softmax(-1).amax(-1) >= 0.95)).float().mean()
+        ),
     )
 
 
@@ -250,14 +290,21 @@ def evaluate(model, sets):
                 if split in ("train", "validation")
                 else ["normal", "current", "previous", "unordered", "swap"]
             )
+            if "reflected_features" in data:
+                controls = [*controls, "reflection"]
             for control in controls:
+                values = data["reflected_features"] if control == "reflection" else x
                 logits = torch.cat(
                     [
-                        model(input_control(chunk, control))
-                        for chunk in x.flatten(0, 1).split(64)
+                        model(
+                            input_control(
+                                chunk, "normal" if control == "reflection" else control
+                            )
+                        )
+                        for chunk in values.flatten(0, 1).split(64)
                     ]
                 ).reshape(*labels.shape, 2)
-                truth = 1 - labels if control == "swap" else labels
+                truth = 1 - labels if control in ("swap", "reflection") else labels
                 score = metrics(logits, truth)
                 score["by_displacement"] = {
                     str(int(d)): metrics(
@@ -277,20 +324,42 @@ def evaluate(model, sets):
     return scores, arrays
 
 
+def training_batch(data, index, step, reflect=False):
+    """Select one orientation per update without changing sampled source pairs."""
+    prefix = "reflected_" if reflect and step % 2 else ""
+    return data[prefix + "features"][index].flatten(0, 1), data[prefix + "labels"][
+        index
+    ].flatten()
+
+
 def train(args, prepared=None):
     output = args.output
     output.parent.mkdir(parents=True, exist_ok=True)
     if shutil.disk_usage(output.parent).free < 302 * 1024**2:
         raise RuntimeError("Preserve300MiB disk reserve")
     balanced = getattr(args, "balanced_training", False)
-    sets, identity = prepare(args, balanced=balanced) if prepared is None else prepared
+    reflect = getattr(args, "reflect_training", False)
+    head_seed = getattr(args, "head_seed", None)
+    head_seed = args.seed if head_seed is None else head_seed
+    sets, identity = (
+        prepare(args, balanced=balanced, include_reflection=reflect)
+        if prepared is None
+        else prepared
+    )
     assert identity["train"]["construction"].startswith("all48") == balanced
-    seed_everything(args.seed)
+    if reflect and "reflected_features" not in sets["train"]:
+        raise ValueError("Missing reflected RGB encoding for training")
+    seed_everything(head_seed)
     model = OrderReadout(sets["train"]["features"].shape[3], args.mode)
     source = torch.load(args.temporal_source, map_location="cpu", weights_only=True)
     model.temporal.load_state_dict(source["model"], strict=True)
     cfg = dict(
         seed=args.seed,
+        head_seed=head_seed,
+        reflect_training=reflect,
+        reflection_schedule="odd absolute steps mirrored, even original"
+        if reflect
+        else "original only",
         mode=args.mode,
         balanced_training=balanced,
         steps=args.steps,
@@ -343,8 +412,7 @@ def train(args, prepared=None):
             if prior + perf_counter() - start > cfg["wall_seconds"]:
                 break
             index = run.sample(len(sets["train"]["labels"]), cfg["batch_pairs"])
-            x = sets["train"]["features"][index].flatten(0, 1)
-            y = sets["train"]["labels"][index].flatten()
+            x, y = training_batch(sets["train"], index, step, reflect)
             optimizer.zero_grad(set_to_none=True)
             logits = model(x)
             loss = F.cross_entropy(logits, y)
@@ -361,6 +429,7 @@ def train(args, prepared=None):
                     loss=float(loss.detach()),
                     accuracy=float((logits.argmax(1) == y).float().mean()),
                     gradient=float(grad),
+                    reflected=bool(reflect and step % 2),
                 )
             )
             if step % 128 == 0 or step == end:
@@ -572,6 +641,16 @@ if __name__ == "__main__":
     parser.add_argument("--mode", choices=MODES, default="train")
     parser.add_argument("--steps", type=int, default=512)
     parser.add_argument("--seed", type=int, default=7501)
+    parser.add_argument(
+        "--head-seed",
+        type=int,
+        help="Independent model/head initialization; --seed controls batch order",
+    )
+    parser.add_argument(
+        "--reflect-training",
+        action="store_true",
+        help="Alternate exact RGB reflections with inverted directions; requires --balanced-training",
+    )
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--stop-after", type=int)
     parser.add_argument(
