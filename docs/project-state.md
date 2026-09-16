@@ -1,5 +1,12 @@
 # Current work
 
+**Active: paired temporal-order diagnosis,16 September:**
+[Protocol](video-order-plan.md). Identical final frames and unordered frame sets,
+opposite last-step direction. Freeze the spatial image VAE; compare frozen versus
+direction-trained temporal features with current/previous-only controls. Conditional
+local-correlation repair includes its own attribution control. Real image contents,
+constructed pans; no natural-motion result yet. Fixed budgets and gates precede runs.
+
 **Frozen-codec temporal-context comparison completed,16 September:**
 [Protocol/results](video-context-plan.md),[report](../runs/video_context_v1/report.html).
 Twelve256-update fits,84.14s CPU training:3x3,5x5 and shared spatial-loop refinement,
