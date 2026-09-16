@@ -196,8 +196,10 @@ sessions:
     gain0.0366pp/old-source-14.71pp fails adoption; near-offset reassignment recorded.89 tests,10239 restart,42682
     audits,8 reports. User challenges overall research coherence; milestone/stop-rule review proposed
     before more probe optimization. User requests video then all-modality capability/diagnostic suites;
-    scope maps documented, no implementation or new validation.'
-  turn_count: 16
-  events_count: 86
+    scope maps documented, no implementation or new validation. First executable suite:33 cases,15 run
+    per original baseline with1 pass/14 failures;14 unimplemented/4 unrun.80 tests and exact frozen replay
+    pass; missing-score bug fixed; browser QA blocked.'
+  turn_count: 17
+  events_count: 91
   claims_touched: []
-  open_threads: 36
+  open_threads: 37

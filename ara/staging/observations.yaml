@@ -5203,6 +5203,24 @@ observations:
   - N438
   - N439
   - N437
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H78
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O298
+  timestamp: 2026-09-16T14:02+02:00
+  provenance: ai-suggested
+  content: The fixed suite makes the old baselines' symbolic failures and coverage gaps reproducible.
+    Strong audio encoder factor accessibility with weak posterior/working-state access prioritizes shared-core
+    transition diagnosis for these sources, without proving irreversible loss or a unique culprit. Different
+    probe widths and single probe-capture RNG versus3 deployed draws remain confounds; evaluate selected
+    later checkpoints before treating old reference results as the present best model.
+  context: Two prescribed original baseline evaluations plus exact repeat, no new neural training; independent
+    raw audit and frozen-weight equality.
+  potential_type: claim
+  bound_to:
+  - N440
+  - N442
   promoted: false
   promoted_to: null
   crystallized_via: null

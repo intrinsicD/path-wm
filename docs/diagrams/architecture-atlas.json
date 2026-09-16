@@ -1,7 +1,7 @@
 {
   "title": "PATH-WM · Architecture atlas",
   "date": "2026-09-16",
-  "source_commit": "4b27b0d",
+  "source_commit": "fd70dc7",
   "intro": "A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.",
   "graphs": [
     {
@@ -2504,7 +2504,8 @@
         "Imagination uses the existing dynamics on a separate hypothetical state. Automatic search and integration of branch results into general answer planning remain outside this small loop. No model or training change accompanies this drawing.",
         "16 September: eight fresh-updater controls (direction-only/joint, sampled/continuous working readout) all fail the task screens. Frozen encoders retain100% known/held-out factor access, but updater query direction access is60–75%. No unique causal loss layer or default repair established. Next isolate one input modality before mixing modes. See docs/modality-readout-plan.md and runs/direction_learning_v1/report.html. Colors and general capability scopes stay unchanged.",
         "16 September follow-up: six isolated-input fits and four matched checkpoint continuations preserve the shared latent architecture. Text-only known direction is100% in both seeds; audio46%/100%, simultaneous-all48%/60%. Text warm-up improves complete-input scores, but repeated-draw means100%/74% fall to50%/51% without text. Narrow text access works; multimodal transfer remains open. Frozen audio grids AND their means permit100% known-direction access, while learned first queries give40%/98%. No unique loss layer, new default or general capability promotion. Next test gradual source rotation/dropout with matched controls. See runs/direction_inputs_v1/report.html and docs/modality-readout-plan.md.",
-        "16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation."
+        "16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation.",
+        "16 September: executable capability diagnostics evaluate the original two native core checkpoints, each input modality and shared/complementary inputs. One of15 scoped screens passes per source;14 fail.14 broader tasks unimplemented and4 output cases unrun. Audio encoder probes recover all factors, but core/working-state access is weak. No unique loss attribution, model promotion or general capability claim. See docs/modality-suites-plan.md."
       ],
       "sources": [
         "pathwm/models/belief.py#BeliefDynamics",
@@ -2514,7 +2515,9 @@
         "pathwm/models/agent.py#think",
         "pathwm/models/agent.py#decode",
         "pathwm/world_state/session.py#think",
-        "docs/latent-core.md"
+        "docs/latent-core.md",
+        "pathwm/evaluation/modality_suite.py",
+        "docs/modality-suites-plan.md"
       ]
     },
     {
@@ -2682,7 +2685,8 @@
         "16 September: eight fresh-updater controls (direction-only/joint, sampled/continuous working readout) all fail the task screens. Frozen encoders retain100% known/held-out factor access, but updater query direction access is60–75%. No unique causal loss layer or default repair established. Next isolate one input modality before mixing modes. See docs/modality-readout-plan.md and runs/direction_learning_v1/report.html. Colors and general capability scopes stay unchanged.",
         "16 September follow-up: six isolated-input fits and four matched checkpoint continuations preserve the shared latent architecture. Text-only known direction is100% in both seeds; audio46%/100%, simultaneous-all48%/60%. Text warm-up improves complete-input scores, but repeated-draw means100%/74% fall to50%/51% without text. Narrow text access works; multimodal transfer remains open. Frozen audio grids AND their means permit100% known-direction access, while learned first queries give40%/98%. No unique loss layer, new default or general capability promotion. Next test gradual source rotation/dropout with matched controls. See runs/direction_inputs_v1/report.html and docs/modality-readout-plan.md.",
         "16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation.",
-        "16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open."
+        "16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open.",
+        "16 September: executable capability diagnostics evaluate the original two native core checkpoints, each input modality and shared/complementary inputs. One of15 scoped screens passes per source;14 fail.14 broader tasks unimplemented and4 output cases unrun. Audio encoder probes recover all factors, but core/working-state access is weak. No unique loss attribution, model promotion or general capability claim. See docs/modality-suites-plan.md."
       ],
       "sources": [
         "pathwm/models/agent.py#Thinker",
@@ -2695,7 +2699,9 @@
         "docs/latent-core.md",
         "pathwm/models/readout.py#RecurrentOutputAdapter",
         "pathwm/models/readout.py#TemporalImageDecoder",
-        "docs/modality-readout-plan.md"
+        "docs/modality-readout-plan.md",
+        "pathwm/evaluation/modality_suite.py",
+        "docs/modality-suites-plan.md"
       ]
     },
     {

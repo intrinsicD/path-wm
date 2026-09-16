@@ -1,5 +1,19 @@
 # Running and editing experiments
 
+For the executable text/image/audio/video capability and stage-diagnostic baseline:
+
+```bash
+.venv/bin/python -m experiments.modality_readout --stage capabilities --device cpu \
+  --core runs/modality_readout_v1/formal/seed7201/core --seed 7201 \
+  --output runs/my_modality_capabilities
+```
+
+This evaluates a compatible saved native core on controlled symbolic tasks, fits
+diagnostic ridge readers and writes a standalone report with visible coverage gaps.
+It does not train neural weights or establish natural language/speech/video ability.
+[Scope, results, artifacts and limits](modality-suites-plan.md). Use fresh outputs;
+`--stage suite` is the separate, older output-adapter training comparison.
+
 For the new persistent World State foundation, use
 `.venv/bin/python -m experiments.world_state --check --output runs/my_world_check`.
 [Guide, modular interfaces and debug artifacts](world-state.md),

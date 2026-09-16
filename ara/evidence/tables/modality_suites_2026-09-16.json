@@ -1,0 +1,78 @@
+{
+  "date": "2026-09-16",
+  "implementation_commit": "fd70dc7",
+  "protocol": "symbolic-modality-capabilities-v1",
+  "sources": "Original native cores in runs/modality_readout_v1/formal/seed7201/core and seed7202/core; not all subsequent repairs.",
+  "coverage": {
+    "seed7201": {
+      "failed": 14,
+      "not_implemented": 14,
+      "not_run": 4,
+      "passed": 1,
+      "total": 33
+    },
+    "seed7202": {
+      "failed": 14,
+      "not_implemented": 14,
+      "not_run": 4,
+      "passed": 1,
+      "total": 33
+    }
+  },
+  "validation": {
+    "checks": 27583,
+    "repeat_checks": 15005,
+    "legacy_data_checks": 124,
+    "claude_reviews_verified": 2,
+    "tests": {
+      "tests": "80",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "11.469"
+    },
+    "browser": "blocked by local URL policy; no workaround"
+  },
+  "resources": {
+    "smoke": {
+      "neural_updates": 0,
+      "parameters": 297013,
+      "peak_memory": "not measured",
+      "ridge_readers": 61,
+      "ridge_solutions": 185,
+      "seconds": 4.817156775039621
+    },
+    "seed7201": {
+      "neural_updates": 0,
+      "parameters": 297013,
+      "peak_memory": "not measured",
+      "ridge_readers": 61,
+      "ridge_solutions": 185,
+      "seconds": 4.777763543999754
+    },
+    "seed7202": {
+      "neural_updates": 0,
+      "parameters": 297013,
+      "peak_memory": "not measured",
+      "ridge_readers": 61,
+      "ridge_solutions": 185,
+      "seconds": 4.809441659017466
+    },
+    "repeat7201": {
+      "neural_updates": 0,
+      "parameters": 297013,
+      "peak_memory": "not measured",
+      "ridge_readers": 61,
+      "ridge_solutions": 185,
+      "seconds": 4.999884339980781
+    }
+  },
+  "bytes": 116724856,
+  "artifacts": [
+    "runs/modality_suites_v1/verification.json",
+    "runs/modality_suites_v1/data_regression.json",
+    "runs/modality_suites_v1/seed7201/report.html",
+    "runs/modality_suites_v1/seed7202/report.html"
+  ],
+  "scope": "Symbolic factors and Cartesian source-dependence screens only; neural weights frozen; no natural modality validation or decoder scoring."
+}

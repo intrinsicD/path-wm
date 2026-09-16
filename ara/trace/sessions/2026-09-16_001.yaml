@@ -2,8 +2,8 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T13:21+02:00
-  turn_count: 16
+  last_turn: 2026-09-16T14:02+02:00
+  turn_count: 17
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not
     adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59
     scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
@@ -33,7 +33,9 @@ session:
     gain0.0366pp/old-source-14.71pp fails adoption; near-offset reassignment recorded.89 tests,10239 restart,42682
     audits,8 reports. User challenges overall research coherence; milestone/stop-rule review proposed
     before more probe optimization. User requests video then all-modality capability/diagnostic suites;
-    scope maps documented, no implementation or new validation.'
+    scope maps documented, no implementation or new validation. First executable suite:33 cases,15 run
+    per original baseline with1 pass/14 failures;14 unimplemented/4 unrun.80 tests and exact frozen replay
+    pass; missing-score bug fixed; browser QA blocked.'
 events_logged:
 - turn: 1
   type: decision
@@ -636,6 +638,40 @@ events_logged:
     states, scoped gates, per-source failures, matched stage probes, context controls and bounded interventions.
     A stage probe localizes accessibility under its reader, not irreversible loss or a unique cause. Run
     quick regression subsets routinely and expensive probes at scoped milestones.
+- turn: 17
+  type: decision
+  id: N440
+  routing: direct
+  provenance: ai-executed
+  summary: Implement scoped modality suites through the existing readout recipe
+- turn: 17
+  type: experiment
+  id: N441
+  routing: direct
+  provenance: ai-executed
+  summary: Red tests expose missing-score false pass; repair preserves previous populations
+- turn: 17
+  type: experiment
+  id: N442
+  routing: direct
+  provenance: ai-executed
+  summary: Two original core baselines each fail14 of15 executable symbolic capability screens
+- turn: 17
+  type: observation
+  id: O298
+  routing: staged
+  provenance: ai-suggested
+  summary: The fixed suite makes the old baselines' symbolic failures and coverage gaps reproducible.
+    Strong audio encoder factor accessibility with weak posterior/working-state access prioritizes shared-core
+    transition diagnosis for these sources, without proving irreversible loss or a unique culprit. Different
+    probe widths and single probe-capture RNG versus3 deployed draws remain confounds; evaluate selected
+    later checkpoints before treating old reference results as the present best model.
+- turn: 17
+  type: heuristic
+  id: H78
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O297 implemented-method slice crystallized by artifact commitment; no efficacy claim.
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -840,6 +876,23 @@ ai_actions:
   - docs/video-understanding-test-map.md
   - docs/modality-understanding-test-map.md
   - docs/project-state.md
+- turn: 17
+  action: Actual Claude public-only method review and reconciliation; red tests, scoped suite/recipe/report
+    implementation, smoke,two frozen baselines,exact repeat,80 tests,raw/source/data/report audits. Fixed
+    missing-score nonpromotion. Updated usage,scope/results and atlas notes with no color promotion. Browser
+    local URL refused; no workaround.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/evaluation/modality_suite.py
+  - pathwm/evaluation/capabilities.py
+  - pathwm/evaluation/report.py
+  - pathwm/data/modality_readout.py
+  - experiments/modality_readout.py
+  - tests/test_modality_suites.py
+  - docs/modality-suites-plan.md
+  - docs/project-state.md
+  - docs/experiments.md
+  - docs/diagrams/architecture-atlas.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -906,6 +959,10 @@ key_context:
   excerpt: 'User: what must we test for real video understanding? Follow-up: exactly the same for the
     other modalities; should complete suites emit diagnostics showing what fails where? Assistant specifies
     scoped common capability tests and causal-attribution limits.'
+- turn: 17
+  excerpt: User requests continued plan/implementation/review/test/fix with Claude. Delivered executable
+    first suite through existing recipe, retaining natural capability gaps and limited source model scope;
+    source-use balancing fixes dependent-combination omission pitfall.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -999,6 +1056,8 @@ open_threads:
   actual video/world-state usefulness unvalidated.'
 - 'N438/N439/O297: map existing evidence to capability cases and select bounded executable modality/core
   milestones; specifications are not a completed test runner.'
+- 'N442/O298: apply fixed suite to explicitly chosen newer checkpoints, add selected natural-input tasks,
+  and isolate a shared-core failure with matched controls; interactive report QA remains blocked.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
@@ -1158,3 +1217,5 @@ ai_suggestions_pending:
   agent topics remain active.
 - O297 detailed suite/gate/report proposal remains staged; user endorsed the general cross-modal diagnostic
   direction, not particular thresholds or abandonment of current video work.
+- O298 baseline-to-current extrapolation and unique failure attribution remain unadopted. No new training
+  or architecture decision follows automatically from this suite.

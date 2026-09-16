@@ -7339,3 +7339,49 @@ tree:
   evidence:
   - docs/modality-understanding-test-map.md
   status: resolved
+- id: N440
+  type: decision
+  title: Implement scoped modality suites through the existing readout recipe
+  provenance: ai-executed
+  timestamp: 2026-09-16T14:02+02:00
+  choice: User-authorized implementation uses --stage capabilities, existing frozen stage probes/reports
+    and actual core factor head. Fixed33-case catalog separates15 executable symbolic screens,14 unimplemented
+    broader tasks and4 unrun output cases. Add balanced18-combination intervention population for source
+    omission; no second trainer or model architecture.
+  evidence:
+  - O297
+  - docs/modality-suites-plan.md
+  - pathwm/evaluation/modality_suite.py
+  - experiments/modality_readout.py
+  status: resolved
+- id: N441
+  type: experiment
+  title: Red tests expose missing-score false pass; repair preserves previous populations
+  provenance: ai-executed
+  timestamp: 2026-09-16T14:02+02:00
+  result: Initial5 tests fail informatively, including existing case_record marking a partial gate set
+    pass. Repair returns not_measured unless a measured failure takes priority.7 new meaningful tests
+    plus regressions:80 passed.124 old-data tensor/identity comparisons confirm original4 populations
+    unchanged.
+  evidence:
+  - tests/test_modality_suites.py
+  - pathwm/evaluation/capabilities.py
+  - runs/modality_suites_v1/tests.xml
+  - runs/modality_suites_v1/data_regression.json
+  status: resolved
+- id: N442
+  type: experiment
+  title: Two original core baselines each fail14 of15 executable symbolic capability screens
+  provenance: ai-executed
+  timestamp: 2026-09-16T14:02+02:00
+  result: Each baseline passes image-source color dependence only; all12 factor/joint cases and audio/video
+    source controls fail.14 broader tasks remain unimplemented,4 output cases unrun. Audio encoder probes100%
+    on withheld factors; working-state location0% and direction45.83/52.08%. Source weights unchanged;
+    no neural updates. Smoke4.82s,formal4.78/4.81s,repeat5.00s;61 ridge readers185 alpha solves per run.27583
+    raw checks including15005 exact-repeat checks.111.4MiB. Four structural reports,plot inspected; browser
+    URL policy blocks interaction.
+  evidence:
+  - ara/evidence/tables/modality_suites_2026-09-16.json
+  - docs/modality-suites-plan.md
+  - runs/modality_suites_v1/verification.json
+  status: resolved

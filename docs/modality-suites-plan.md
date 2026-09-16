@@ -85,3 +85,60 @@ Browser QA was attempted through the supported browser interface. Its URL policy
 blocked the local report and explicitly forbade workarounds. Preserve structural
 report validation and inspect saved plots; browser-interaction verification remains
 blocked, not passed. This does not block local model evaluation.
+
+## Completed baseline evaluations
+
+Both prescribed original native core checkpoints completed; seed7201 was repeated
+exactly. Each report has33 catalog entries:1 passing scoped case,14 measured failed
+cases,14 broader tests not implemented and4 decoder cases not run on these sources.
+The passing case is image-source color dependence on the Cartesian intervention
+population. All12 complete factor/joint screens and both other source controls fail.
+These are the original saved reference models, not a claim to have re-evaluated
+every later repair or found the best current checkpoint.
+
+Five-stage diagnosis makes the failure actionable without over-attribution. For
+held-out audio inputs, all three factors are100% readable from encoder features in
+both source models. At the posterior, location becomes0%/8.33% and direction
+62.5%/43.75%; working-state probes give location0% in both and direction45.83%/52.08%.
+The primary head also fails these tasks. Shared-core paths need investigation;
+this does not identify an irreversible loss or justify replacing the encoder.
+Probe dimensions differ, and their one fixed capture uses different categorical
+RNG draws from the three-draw deployed-head screen. Sampling and probe fit therefore
+remain possible contributors to discrepancies; matched interventions are required.
+
+Formal diagnostic times4.78s/4.81s, repeat5.00s; smoke4.82s. No neural weight updates.
+Each run fits61 ridge readers with185 alpha solves, using training/validation only.
+Saved source/model weights match exactly. Full run/probe/output/data replay passes
+15005 checks; total independent raw audit27583 checks.124 comparisons confirm the
+original four datasets did not change when the intervention split was added.
+80 focused tests pass. Four standalone reports structurally verified; saved stage
+plots visually inspected. Browser interaction remains blocked. Artifacts111.4MiB,
+below the200MiB budget; no historical data removed.
+
+CLI (use a new output directory):
+
+```bash
+.venv/bin/python -m experiments.modality_readout \
+  --stage capabilities --device cpu --seed 7201 \
+  --core runs/modality_readout_v1/formal/seed7201/core \
+  --output runs/my_modality_capabilities
+```
+
+This stage performs evaluation and diagnostic fitting, not neural training. The
+older `--stage suite` still runs the distinct output-adapter training comparison;
+it is not the new capability command. Evaluation does not support resume: exact
+repetition uses a fresh output. Source compatibility is checked by strict loading.
+
+Artifacts: `capability_suite.json` contains cases/scopes/gates/coverage and diagnostic
+hints; `capability_predictions.npz` contains all actual logits, targets, IDs and
+draws; `stage_probes.npz` stores stage features and fitted readers;
+`capability_inputs.npz` and `capability_examples.json` preserve input/failed examples;
+`stage_probe.json` stores selection/shuffled/positive controls. Ordinary Run records,
+source snapshots, checkpoint and `report.html` retain provenance. Independent
+verification: `runs/modality_suites_v1/verification.json` and `data_regression.json`.
+
+Next work is to add selected real-input capability cases and evaluate later chosen
+checkpoints with this fixed contract, then isolate one failing shared-core transition
+with matched controls. Do not silently convert the catalog's unimplemented natural
+tasks into passes from these symbolic measurements. The current natural-video goal
+and earlier codec tasks remain open.

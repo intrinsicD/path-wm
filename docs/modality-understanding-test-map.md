@@ -42,6 +42,11 @@ their own declared data/interfaces before they can be scored. Unsupported items
 remain explicitly unsupported rather than silently omitted or counted as failures
 of a different capability. No speech or music claim follows from tone fitting.
 
+The [first executable slice](modality-suites-plan.md) now implements symbolic factor
+and source-use cases with five-stage diagnostics in the existing readout recipe.
+Its broader catalog entries remain explicitly unimplemented; this does not complete
+the full matrix above.
+
 ## Shared-core and multimodal cases
 
 Use the same underlying task facts across input variants where appropriate:

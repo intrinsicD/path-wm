@@ -1,5 +1,21 @@
 # Current work
 
+**Executable modality capability suites completed,16 September:**
+[Protocol/results](modality-suites-plan.md),
+[baseline7201 report](../runs/modality_suites_v1/seed7201/report.html),
+[baseline7202 report](../runs/modality_suites_v1/seed7202/report.html).
+The existing readout recipe now offers `--stage capabilities`: each symbolic input,
+all/complementary inputs, Cartesian source-omission controls, five-stage probes and
+failure examples. Both ORIGINAL native baseline checkpoints pass only1/15 screens
+(image-source color dependence);14 fail,14 broader tests remain unimplemented and4
+output tests unrun. This is not an evaluation of every later repaired checkpoint.
+Audio factor access is100% at the encoder but location0% and direction46–52% at the
+working-state probe on withheld combinations. No unique causal layer inferred.
+Missing required metrics no longer count as a pass.80 tests,27583 audit checks
+(15005 exact-repeat checks),124 unchanged-old-data checks; source weights unchanged.
+Structural reports and saved plots verified; browser URL policy blocks interactive
+QA. No neural training, new default or broad green capability promotion.
+
 **Cross-modal capability/diagnostic specification,16 September:**
 [Suite scope and diagnostic contract](modality-understanding-test-map.md) extends
 the requested video map to text, image, audio, structured inputs/actions and the

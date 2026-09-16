@@ -2244,3 +2244,13 @@ entries:
   - 'No promotion: documents specify future scope and link existing evidence; no new code, experiment
     or downstream artifact depends on an efficacy claim. O293-O296 stay active; no abandonment inferred.
     Existing scopes/colors remain unchanged. Primary-source links ground reference task descriptions only.'
+- turn: 2026-09-16_001#17
+  notes:
+  - N440 implementation decision,N441 red/repair,N442 frozen results direct. O297→H78 artifact commitment
+    limited to methodology first slice; O298 interpretation remains staged, no claims promoted.
+  - Claude generic-method review only; accepted explicit missingness and factorial control, rejected gating
+    all observations on first branch success and overstrong claim that accessibility is uninterpretable
+    without random baseline. No private export.
+  - Old native source checkpoints explicitly labelled. No natural-video/language/speech proof, no entire-pipeline
+    pass. Four output tests unrun,14 broad cases unimplemented. Probe widths/draws confound unique attribution.
+    Browser URL rejection reported and not circumvented. No abandoned older task inferred.

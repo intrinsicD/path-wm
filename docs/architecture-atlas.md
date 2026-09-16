@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-16, repository snapshot `4b27b0d`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-16, repository snapshot `fd70dc7`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
@@ -990,7 +990,9 @@ Imagination uses the existing dynamics on a separate hypothetical state. Automat
 
 16 September video follow-up:12 controlled fits compare requested time in source/query and an optional learned palette. Paired video-quality benefit fails; palette mixture fields become nearly constant. Defaults unchanged. Oracle motion works better than actual video-state output; symmetric reverse-pair probes give69-78% direction at encoder and28-39% at final state on new positions, not a unique loss proof. See docs/video-readout-plan.md and runs/video_readout_v1/report.html. The video branch uses its own framewise image patch weights, time features, causal attention and adjacent-frame pooling; no weight sharing with image input and no automatic spatial-VAE integration. No natural-video or forecast validation.
 
-Source: [pathwm/models/belief.py · BeliefDynamics:33](../pathwm/models/belief.py), [pathwm/models/belief.py · BeliefCorrection:74](../pathwm/models/belief.py), [pathwm/models/belief.py · _readout:196](../pathwm/models/belief.py), [pathwm/models/agent.py · Thinker:105](../pathwm/models/agent.py), [pathwm/models/agent.py · think:709](../pathwm/models/agent.py), [pathwm/models/agent.py · decode:779](../pathwm/models/agent.py), [pathwm/world_state/session.py · think:425](../pathwm/world_state/session.py), [docs/latent-core.md](../docs/latent-core.md).
+16 September: executable capability diagnostics evaluate the original two native core checkpoints, each input modality and shared/complementary inputs. One of15 scoped screens passes per source;14 fail.14 broader tasks unimplemented and4 output cases unrun. Audio encoder probes recover all factors, but core/working-state access is weak. No unique loss attribution, model promotion or general capability claim. See docs/modality-suites-plan.md.
+
+Source: [pathwm/models/belief.py · BeliefDynamics:33](../pathwm/models/belief.py), [pathwm/models/belief.py · BeliefCorrection:74](../pathwm/models/belief.py), [pathwm/models/belief.py · _readout:196](../pathwm/models/belief.py), [pathwm/models/agent.py · Thinker:105](../pathwm/models/agent.py), [pathwm/models/agent.py · think:709](../pathwm/models/agent.py), [pathwm/models/agent.py · decode:779](../pathwm/models/agent.py), [pathwm/world_state/session.py · think:425](../pathwm/world_state/session.py), [docs/latent-core.md](../docs/latent-core.md), [pathwm/evaluation/modality_suite.py](../pathwm/evaluation/modality_suite.py), [docs/modality-suites-plan.md](../docs/modality-suites-plan.md).
 
 <a id="15-output-plan"></a>
 
@@ -1065,7 +1067,9 @@ Evidence: runs/modality_readout_v1/verification.json and controls-verification.j
 
 16 September: user requests actual trained image-encoder reuse for video and frame reconstruction training. The new optional VideoVAE owns one existing spatial image VAE, shared encoder AND decoder, plus causal posterior-mean refinement. This is a separate measured codec path, not an implicit replacement of the categorical agent patch encoder. See diagram16 and docs/shared-video-vae-plan.md. General video capability remains open.
 
-Source: [pathwm/models/agent.py · Thinker:105](../pathwm/models/agent.py), [pathwm/models/agent.py · emit:508](../pathwm/models/agent.py), [pathwm/models/modalities.py · TextDecoder:366](../pathwm/models/modalities.py), [pathwm/models/modalities.py · ImageDecoder:282](../pathwm/models/modalities.py), [pathwm/models/modalities.py · AudioDecoder:347](../pathwm/models/modalities.py), [pathwm/models/conditional_image.py · ConditionalFeatureGenerator:73](../pathwm/models/conditional_image.py), [docs/multimodal.md](../docs/multimodal.md), [docs/latent-core.md](../docs/latent-core.md), [pathwm/models/readout.py · RecurrentOutputAdapter:9](../pathwm/models/readout.py), [pathwm/models/readout.py · TemporalImageDecoder:72](../pathwm/models/readout.py), [docs/modality-readout-plan.md](../docs/modality-readout-plan.md).
+16 September: executable capability diagnostics evaluate the original two native core checkpoints, each input modality and shared/complementary inputs. One of15 scoped screens passes per source;14 fail.14 broader tasks unimplemented and4 output cases unrun. Audio encoder probes recover all factors, but core/working-state access is weak. No unique loss attribution, model promotion or general capability claim. See docs/modality-suites-plan.md.
+
+Source: [pathwm/models/agent.py · Thinker:105](../pathwm/models/agent.py), [pathwm/models/agent.py · emit:508](../pathwm/models/agent.py), [pathwm/models/modalities.py · TextDecoder:366](../pathwm/models/modalities.py), [pathwm/models/modalities.py · ImageDecoder:282](../pathwm/models/modalities.py), [pathwm/models/modalities.py · AudioDecoder:347](../pathwm/models/modalities.py), [pathwm/models/conditional_image.py · ConditionalFeatureGenerator:73](../pathwm/models/conditional_image.py), [docs/multimodal.md](../docs/multimodal.md), [docs/latent-core.md](../docs/latent-core.md), [pathwm/models/readout.py · RecurrentOutputAdapter:9](../pathwm/models/readout.py), [pathwm/models/readout.py · TemporalImageDecoder:72](../pathwm/models/readout.py), [docs/modality-readout-plan.md](../docs/modality-readout-plan.md), [pathwm/evaluation/modality_suite.py](../pathwm/evaluation/modality_suite.py), [docs/modality-suites-plan.md](../docs/modality-suites-plan.md).
 
 <a id="16-shared-video-codec"></a>
 

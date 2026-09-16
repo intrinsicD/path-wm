@@ -771,3 +771,14 @@
 - **Code ref**: [shared correspondence head](../../../pathwm/models/video_vae.py), [optional readout recipe](../../../experiments/video_order.py), [initialization/symmetry/gradient tests](../../../tests/test_video_evidence.py).
 - **Evidence**: N434–N436; [comparison and candidate diagnosis](../../evidence/tables/video_evidence_2026-09-16.json).
 - **Scope**: Implemented method. Fresh direction gates pass, but learned-gain/preservation gates fail; no default adoption.
+
+## H78: Keep scoped capability failures, missing coverage and stage diagnostics separate
+
+- **Rationale**: Evaluate supported branches independently, preserve explicit unimplemented/unrun cases and predeclared per-factor gates, then use frozen stage readers and matched context controls to identify bounded follow-up checks. An absent required measurement cannot pass. Independent branch success does not establish an entire pipeline.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O297
+- **Sensitivity**: High. Dataset correlations can invalidate omission tests; enumerate a separate Cartesian control and verify conditional balance. Unequal probes and categorical sampling limit causal attribution. Broad modalities remain outside symbolic scope.
+- **Code ref**: [suite functions](../../../pathwm/evaluation/modality_suite.py), [recipe](../../../experiments/modality_readout.py), [checks](../../../tests/test_modality_suites.py).
+- **Evidence**: N440–N442; [fixed baseline audit](../../evidence/tables/modality_suites_2026-09-16.json).
+- **Scope**: First executable diagnostic slice, not a completed natural-modality suite or learned-capability repair.14 broad tasks remain unimplemented; output paths unscored in this slice.
