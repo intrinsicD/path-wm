@@ -102,3 +102,32 @@ train-row/metric/array checks. Timing and extra intermediate validation rows exc
 Source decoder is not in the diagnostic model, and encoded spatial tensors are
 detached/immutable. Only obsolete generated pytest scratch was cleaned, not source
 data or project run history. Formal gates/budgets remain unchanged.
+
+## Control failure and separate balance repair, before its evaluation
+
+All12 registered fits completed. Direction-trained arms reach100% known/wide in
+both seeds, but the7501 previous-only known control reaches60.9375%, above55%.
+Original gate therefore FAILS and is not revised. The conditional correlation round
+was executed under the registered rule; it cannot repair this dataset-control issue.
+
+Next, a separate evaluation-only challenge repairs single-frame marginal balance:
+take one48x48 patch per each of the four evaluation-source images, at anchor(4,12),
+and enumerate ALL48 circular horizontal phases. For each phase p and d in(2,4) or
+(6,8), use frames(p-d,p+d,p) paired with(p+d,p-d,p). Final image and unordered set
+match within each pair; each exact image appears equally under each direction label
+at every time position across the complete phase population. A deterministic
+single-frame classifier therefore scores exactly50%, even if it memorizes images.
+Do not subsample phases or remove ambiguous examples. Verify these count identities
+on the pixels AND deterministic encoded grids; report per-displacement metrics.
+
+This is periodic/wrapped synthetic motion of real RGB contents, not natural camera
+motion. Freeze ALL twelve saved models; no new fitting, tuning or model selection.
+Separate challenge gate, fixed before evaluation: direction-trained candidate must
+reach>=90% marginal,>=80% pair and>=90% prefix-flip on BOTH displacement groups and
+BOTH seeds; all single-frame/current/previous and unordered controls must be50%/0%
+pair. Original gate stays failed irrespective of the new outcome. Also report the
+frozen/correlation-only comparators rather than selecting the best after evaluation.
+Max120s challenge evaluation; use shared cached phase features, one compact report
+with logits/source/model hashes. Artifact allowance increases to<=28MiB to preserve
+the original14 run reports plus this newly motivated diagnostic; no old run removed.
+This change precedes challenge outputs. Preserve >=300MiB free disk.
