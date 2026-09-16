@@ -1360,6 +1360,440 @@ def understanding(args):
     return args.output
 
 
+def exploration_cache(model, data, case, seed, device):
+    """One frozen, versioned latent draw per example; labels never enter the core."""
+    from pathwm.models.modalities import bytes_batch
+
+    cache = {}
+    with evaluation_mode(model), torch.no_grad():
+        for split in ("calibration", "validation", "test"):
+            rows = [
+                r for r in data.records if r["case"] == case and r["split"] == split
+            ]
+            if not rows:
+                raise ValueError(
+                    "Exploration needs separate calibration/validation/test"
+                )
+            tokens = {}
+            for condition in ("full", "omitted"):
+                values = []
+                for i, row in enumerate(rows):
+                    torch.manual_seed(
+                        seed
+                        + 10000
+                        * (1 + ("calibration", "validation", "test").index(split))
+                        + i
+                    )
+                    inputs = data.inputs(
+                        row,
+                        omit=() if condition == "full" else row["required"],
+                        device=device,
+                    )
+                    values.append(
+                        model.core(inputs, requests=[row["question"]]).detach().cpu()
+                    )
+                tokens[condition] = torch.cat(values)
+            target, _ = bytes_batch([r["choices"][r["answer"]] for r in rows])
+            cache[split] = dict(tokens=tokens, targets=target, rows=rows)
+    return cache
+
+
+def exploration_scores(model, cache, split, device):
+    from pathwm.evaluation.understanding import choice_scores
+
+    item = cache[split]
+    with evaluation_mode(model), torch.no_grad():
+        tokens = item["tokens"]["full"].to(device)
+        ce = float(grounded_objective(model, tokens, item["targets"].to(device)))
+        predictions = {}
+        for condition, values in item["tokens"].items():
+            predictions[condition] = [
+                int(
+                    choice_scores(
+                        model.outputs, t[None].to(device), row["choices"]
+                    ).argmax()
+                )
+                for t, row in zip(values, item["rows"])
+            ]
+        labels = [r["answer"] for r in item["rows"]]
+    return dict(
+        ce=ce,
+        predictions=predictions,
+        labels=labels,
+        accuracy=float(np.mean(np.array(predictions["full"]) == labels)),
+        omitted_accuracy=float(np.mean(np.array(predictions["omitted"]) == labels)),
+    )
+
+
+def exploration_advance(
+    base, cache, directory, branch, depth, *, seed, contract, device
+):
+    """One exact existing decoder-training continuation, restored on every call."""
+    import shutil
+    import hashlib
+
+    start = time.perf_counter()
+    if not 0 <= branch < contract["branches"] or not 1 <= depth <= contract["depth"]:
+        raise ValueError("Search action outside declared horizon")
+    path = Path(directory) / f"branch{branch}"
+    checkpoint = path / "last.pt"
+    if (depth == 1) == checkpoint.exists():
+        raise ValueError("Search action does not match branch frontier")
+    if (
+        depth > 1
+        and torch.load(checkpoint, map_location="cpu", weights_only=True)["step"]
+        != (depth - 1) * contract["block_updates"]
+    ):
+        raise ValueError("Search continuation skipped or repeated a block")
+    seed_everything(seed)
+    model = copy.deepcopy(base)
+    configure_grounded_training(model, "decoder")
+    optimizer = torch.optim.Adam(
+        [p for p in model.parameters() if p.requires_grad],
+        lr=contract["learning_rates"][branch],
+    )
+    settings = dict(
+        seed=seed,
+        stage="grounded",
+        variant="native",
+        case="VID.order",
+        scope="decoder",
+        steps=contract["block_updates"] * contract["depth"],
+        search_contract=contract,
+        branch=branch,
+    )
+    cache_identity = digest(
+        {
+            split: dict(
+                rows=digest(item["rows"]),
+                tensors=[
+                    hashlib.sha256(t.contiguous().numpy().tobytes()).hexdigest()
+                    for t in (item["targets"], *item["tokens"].values())
+                ],
+            )
+            for split, item in cache.items()
+        }
+    )
+    run = Run(
+        path,
+        settings=settings,
+        data=dict(
+            cache_contract=contract["fixtures"], seed=seed, cache_sha256=cache_identity
+        ),
+        recipe=__file__,
+        model=model,
+        optimizer=optimizer,
+        device=device,
+        resume=depth > 1,
+    )
+    if run.step != (depth - 1) * contract["block_updates"]:
+        raise ValueError("Search continuation skipped or repeated a block")
+    parent = None if depth == 1 else file_hash(checkpoint)
+    train = cache["calibration"]
+    training_mode(model)
+    while run.step < depth * contract["block_updates"]:
+        indices = run.sample(len(train["rows"]), 8)
+        optimizer.zero_grad(set_to_none=True)
+        loss = grounded_objective(
+            model,
+            train["tokens"]["full"][indices].to(device),
+            train["targets"][indices].to(device),
+        )
+        if not torch.isfinite(loss):
+            raise ValueError("Nonfinite exploration training loss")
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(
+            [p for p in model.parameters() if p.requires_grad],
+            5,
+            error_if_nonfinite=True,
+        )
+        optimizer.step()
+        run.step += 1
+        run.log(dict(step=run.step, split="train", loss=float(loss.detach())))
+    validation = exploration_scores(model, cache, "validation", device)
+    run.log(
+        dict(
+            step=run.step,
+            split="validation",
+            loss=validation["ce"],
+            accuracy=validation["accuracy"],
+        )
+    )
+    run.save()
+    snapshot = path / f"block{depth}.pt"
+    shutil.copyfile(checkpoint, snapshot)
+    node = dict(
+        branch=branch,
+        depth=depth,
+        score=-validation["ce"],
+        seconds=time.perf_counter() - start,
+        parent=parent,
+        checkpoint=str(snapshot.resolve()),
+        sha256=file_hash(snapshot),
+        validation=validation,
+        model_sha256=state_hash(model),
+    )
+    atomic_json(path / f"block{depth}.json", node)
+    run.status("complete" if run.step == settings["steps"] else "paused", "pending")
+    atomic_json(
+        path / "result.json",
+        dict(
+            evaluation_scope="Partial decoder-training branch; validation only, no capability claim",
+            metrics=validation,
+            limitations=["Search may stop before its maximum depth."],
+        ),
+    )
+    write_report(path)
+    node["seconds"] = time.perf_counter() - start
+    atomic_json(path / f"block{depth}.json", node)
+    return node
+
+
+def exploration(args):
+    """Small real branch search and offline policy selection; no new training engine."""
+    import shutil
+    from pathwm.data.understanding import UnderstandingData
+    from pathwm.evaluation.search import run_search, select_policy
+    from pathwm.io import environment
+
+    if args.search_mode == "select":
+        if not args.search_histories:
+            raise ValueError("Policy selection needs completed development histories")
+        histories = [
+            json.loads((p / "tree.json").read_text()) for p in args.search_histories
+        ]
+        started = time.perf_counter()
+        result = select_policy(histories)
+        args.output.mkdir(parents=True, exist_ok=False)
+        result["seconds"] = time.perf_counter() - started
+        atomic_json(args.output / "selection.json", result)
+        for name in ("run.json", "recipe.py", "environment.txt"):
+            shutil.copyfile(args.search_histories[0] / name, args.output / name)
+        (args.output / "metrics.jsonl").write_text(
+            "".join(
+                json.dumps(
+                    dict(
+                        step=i + 1,
+                        split="replay",
+                        loss=-row["mean_utility"],
+                        policy=row["policy"],
+                    )
+                )
+                + "\n"
+                for i, row in enumerate(result["candidates"])
+            )
+        )
+        atomic_json(
+            args.output / "result.json",
+            dict(
+                evaluation_scope="Offline policy selection over two recorded development worlds",
+                metrics=result,
+                limitations=[
+                    "Historical utility only; no new training or reliable-transfer evidence."
+                ],
+            ),
+        )
+        atomic_json(
+            args.output / "status.json",
+            dict(result="complete", report="pending", step=0, error=None),
+        )
+        write_report(args.output)
+        print(
+            json.dumps(
+                dict(selected=result["selected"], mean_utility=result["mean_utility"])
+            ),
+            flush=True,
+        )
+        return args.output
+    if args.core is None or args.understanding_suite is None:
+        raise ValueError("Exploration needs --core and --understanding-suite")
+    start = time.perf_counter()
+    base, original, source_hash = restore_readout(args.core, args.seed, args.device)
+    if original["variant"] != "native" or base.core.request_readout != "none":
+        raise ValueError(
+            "First replay experiment uses the native source without request adaptation"
+        )
+    base.requires_grad_(False).eval()
+    data = UnderstandingData(args.understanding_suite)
+    args.output.mkdir(parents=True, exist_ok=False)
+    atomic_json(
+        args.output / "status.json",
+        dict(result="running", report="pending", step=0, error=None),
+    )
+    if torch.device(args.device).type == "cuda":
+        torch.cuda.reset_peak_memory_stats()
+    cache = exploration_cache(base, data, "VID.order", args.seed, args.device)
+    atomic_torch(args.output / "cache.pt", cache)
+    contract = dict(
+        branches=4,
+        depth=4,
+        block_updates=64,
+        learning_rates=[0.0003, 0.001, 0.003, 0.01],
+        fixtures=data.identity,
+        source_sha256=source_hash,
+        environment=environment(args.device),
+        recipe_sha256=file_hash(__file__),
+        library_sha256=digest(
+            {str(p): file_hash(p) for p in Path("pathwm").rglob("*.py")}
+        ),
+        objective="existing grounded byte CE/log259; calibration only; frozen single-draw cache",
+    )
+    if args.search_selection is not None:
+        selection = json.loads(args.search_selection.read_text())
+        if selection["contract"] != contract or str(args.seed) in selection["worlds"]:
+            raise ValueError(
+                "Policy selection contract/world differs or reuses a development world"
+            )
+        policy = selection["selected"]
+    else:
+        policy = args.search_policy
+    nodes = []
+
+    def execute(branch, depth):
+        if (
+            time.perf_counter() - start > 300
+            or shutil.disk_usage(args.output).free < 500 * 2**20
+        ):
+            raise RuntimeError("Exploration time/disk budget exceeded")
+        node = exploration_advance(
+            base,
+            cache,
+            args.output,
+            branch,
+            depth,
+            seed=args.seed,
+            contract=contract,
+            device=args.device,
+        )
+        nodes.append(node)
+        atomic_json(
+            args.output / "partial_tree.json",
+            dict(world=str(args.seed), contract=contract, nodes=nodes),
+        )
+        print(
+            json.dumps({k: node[k] for k in ("branch", "depth", "score", "seconds")}),
+            flush=True,
+        )
+        return node
+
+    try:
+        if args.search_mode == "collect":
+            for depth in range(1, 5):
+                for branch in range(4):
+                    execute(branch, depth)
+            search = dict(
+                policy="exhaustive_history", status="complete", steps=len(nodes)
+            )
+        else:
+            search = run_search(policy, execute)
+        chosen = max(nodes, key=lambda n: n["score"])
+        state = torch.load(
+            chosen["checkpoint"], map_location=args.device, weights_only=True
+        )
+        base.load_state_dict(state["model"], strict=True)
+        selected = args.output / "selected"
+        selected.mkdir()
+        source = Path(chosen["checkpoint"]).parent
+        for name in ("run.json", "recipe.py", "source_index.json", "environment.txt"):
+            shutil.copyfile(source / name, selected / name)
+        shutil.copytree(source / "source", selected / "source")
+        shutil.copyfile(chosen["checkpoint"], selected / "last.pt")
+        (selected / "metrics.jsonl").write_text(
+            "".join(json.dumps(row) + "\n" for row in state["rows"])
+        )
+        # Reserved test is read only AFTER this episode's policy has stopped and selected its best node.
+        test = (
+            None
+            if args.search_mode == "collect"
+            else exploration_scores(base, cache, "test", args.device)
+        )
+        result = dict(
+            world=str(args.seed),
+            contract=contract,
+            nodes=nodes,
+            search=search,
+            policy_selection_sha256=None
+            if args.search_selection is None
+            else file_hash(args.search_selection),
+            selected=chosen,
+            test=test,
+            cache_sha256=file_hash(args.output / "cache.pt"),
+            resources=dict(
+                seconds=time.perf_counter() - start,
+                updates=sum(contract["block_updates"] for _ in nodes),
+                peak_allocated_bytes=torch.cuda.max_memory_allocated()
+                if torch.device(args.device).type == "cuda"
+                else None,
+            ),
+        )
+        if file_hash(args.core / "last.pt") != source_hash:
+            raise AssertionError("Exploration changed the source checkpoint")
+        atomic_json(args.output / "tree.json", result)
+        atomic_json(
+            selected / "result.json",
+            dict(
+                evaluation_scope="Validation-selected decoder in bounded search; no model adoption",
+                metrics=dict(validation_ce=-chosen["score"], test=test),
+                limitations=[
+                    "One cached draw; development task, not general understanding."
+                ],
+            ),
+        )
+        atomic_json(
+            selected / "status.json",
+            dict(result="complete", report="pending", step=state["step"], error=None),
+        )
+        write_report(selected)
+        # Reuse the existing standalone report machinery for the complete search ledger.
+        for name in ("run.json", "recipe.py", "environment.txt"):
+            shutil.copyfile(selected / name, args.output / name)
+        (args.output / "metrics.jsonl").write_text(
+            "".join(
+                json.dumps(
+                    dict(
+                        step=i + 1,
+                        split="validation",
+                        loss=-n["score"],
+                        branch=n["branch"],
+                    )
+                )
+                + "\n"
+                for i, n in enumerate(nodes)
+            )
+        )
+        atomic_json(
+            args.output / "result.json",
+            dict(
+                evaluation_scope="Recorded branch exploration; no unobserved outcomes simulated",
+                metrics=dict(
+                    policy=search["policy"],
+                    blocks=len(nodes),
+                    validation_ce=-chosen["score"],
+                    test=test,
+                ),
+                limitations=[
+                    "Two-world engineering pilot; no reliable-transfer claim.",
+                    "Collection, policy development and final audits are additional cost.",
+                ],
+            ),
+        )
+        atomic_json(
+            args.output / "status.json",
+            dict(result="complete", report="pending", step=len(nodes), error=None),
+        )
+        write_report(args.output)
+        result["resources"]["end_to_end_seconds"] = time.perf_counter() - start
+        atomic_json(args.output / "tree.json", result)
+    except BaseException as exc:
+        prior = json.loads((args.output / "status.json").read_text())
+        atomic_json(
+            args.output / "status.json",
+            prior | dict(result="failed", report="failed", error=str(exc)),
+        )
+        raise
+    return args.output
+
+
 def perform(args):
     seed_everything(args.seed)
     device = torch.device(args.device)
@@ -1785,6 +2219,7 @@ def main():
             "understanding",
             "grounded",
             "repair-report",
+            "exploration",
         ),
         default="suite",
     )
@@ -1798,6 +2233,16 @@ def main():
     )
     parser.add_argument("--modality", choices=KINDS, default="text")
     parser.add_argument("--core", type=Path)
+    parser.add_argument(
+        "--search-mode", choices=("collect", "select", "execute"), default="execute"
+    )
+    parser.add_argument(
+        "--search-policy",
+        choices=("round_robin12", "round_robin8", "greedy", "plateau1", "plateau2"),
+        default="round_robin12",
+    )
+    parser.add_argument("--search-histories", type=Path, nargs="+")
+    parser.add_argument("--search-selection", type=Path)
     parser.add_argument(
         "--understanding-cases",
         nargs="+",
@@ -1904,6 +2349,13 @@ def main():
         help="Optional learned untimed palette; requires query timing",
     )
     args = parser.parse_args()
+    if args.stage == "exploration":
+        if args.resume or args.stop_after or args.steps:
+            parser.error(
+                "Exploration uses the fixed block protocol and fresh output directories"
+            )
+        exploration(args)
+        return
     if args.stage == "grounded":
         if args.core is None or args.understanding_suite is None:
             parser.error("Grounded training needs --core and --understanding-suite")

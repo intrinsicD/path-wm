@@ -78,3 +78,7 @@ no new trainer framework. Defaults and existing suite execution remain unchanged
 
 Actual Claude public-only methodology review is recorded under
 `runs/reviews/replay_exploration_v1/`. Agreement is not empirical validation.
+Reconciliation explicitly labels the two fresh worlds an engineering demonstration,
+not a statistical or reliable-transfer claim. Larger independent tasks/seeds are
+required for general adoption; a passing policy remains opt-in. No history results
+existed when these candidates/thresholds were fixed.
