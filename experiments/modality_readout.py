@@ -980,12 +980,36 @@ def grounded(args):
     return run.path
 
 
+def select_understanding(data, cases):
+    """An explicit subset is a different evaluation contract, never hidden coverage."""
+    if not cases:
+        return data
+    selected = sorted(set(cases))
+    if set(selected) - {c["id"] for c in data.cases}:
+        raise ValueError("Unknown understanding case selection")
+    subset = copy.copy(data)
+    subset.records = [r for r in data.records if r["case"] in selected]
+    subset.cases = [c for c in data.cases if c["id"] in selected]
+    subset.identity = digest(dict(parent=data.identity, cases=selected))
+    subset.manifest = data.manifest | dict(
+        profile=data.manifest["profile"] + "/selected:" + ",".join(selected),
+        records=subset.records,
+        cases=subset.cases,
+        limits=data.manifest["limits"]
+        + ["Explicit task subset; not the complete regression battery."],
+    )
+    return subset
+
+
 def understanding(args):
     """Run a prepared regression battery against an unchanged full checkpoint."""
     from pathwm.data.understanding import UnderstandingData
     from pathwm.evaluation.understanding import evaluate_understanding
 
-    data = UnderstandingData(args.understanding_suite)
+    data = select_understanding(
+        UnderstandingData(args.understanding_suite),
+        getattr(args, "understanding_cases", None),
+    )
     model, settings, source_hash = restore_readout(args.core, args.seed, args.device)
     model.requires_grad_(False)
     source = dict(
@@ -1456,6 +1480,11 @@ def main():
     )
     parser.add_argument("--modality", choices=KINDS, default="text")
     parser.add_argument("--core", type=Path)
+    parser.add_argument(
+        "--understanding-cases",
+        nargs="+",
+        help="Explicit evaluation subset with a separate comparison contract",
+    )
     parser.add_argument(
         "--grounded-case",
         default="VID.order",
