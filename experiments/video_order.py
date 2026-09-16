@@ -5,6 +5,7 @@ Use existing Run/report infrastructure; no natural-motion or agent capability cl
 """
 
 import argparse
+from collections import Counter
 import hashlib
 import json
 import shutil
@@ -17,7 +18,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from pathwm.data.video_order import pan_pairs
+from pathwm.data.video_order import pan_pairs, cyclic_pan_pairs
 from pathwm.models.spatial_vae import SpatialVAE
 from pathwm.models.video_vae import CausalLatentMixer, local_correlation
 from pathwm.io import Run, atomic_json, file_hash, seed_everything, evaluation_mode
@@ -121,11 +122,13 @@ def pixel_oracle(frames):
 
 
 @torch.no_grad()
-def prepare(args):
+def prepare(args, *, balanced=False, evaluation_only=False):
     seed_everything(7500)
     image = SpatialVAE.load(args.source).requires_grad_(False).eval()
     sets, identity = {}, {}
     for split, names in SOURCES.items():
+        if evaluation_only and split != "evaluation":
+            continue
         images, records = [], []
         for name in names:
             path = args.data / name / "video.mp4"
@@ -164,13 +167,38 @@ def prepare(args):
         if split == "evaluation":
             populations.append(("wide", (6, 8)))
         for name, shifts in populations:
-            d = pan_pairs(images, shifts=shifts)
-            flat = d["frames"].flatten(0, 2)
-            mu = torch.cat([image.encode(v).mu for v in flat.split(32)])
-            mu = mu.reshape(*d["frames"].shape[:3], *mu.shape[1:])
+            if balanced:
+                d = cyclic_pan_pairs(images[..., 4:52, 12:60], shifts=shifts)
+                bank = torch.cat([image.encode(v).mu for v in d["views"].split(32)])
+                mu = bank[d["indices"]]
+            else:
+                d = pan_pairs(images, shifts=shifts)
+                flat = d["frames"].flatten(0, 2)
+                mu = torch.cat([image.encode(v).mu for v in flat.split(32)])
+                mu = mu.reshape(*d["frames"].shape[:3], *mu.shape[1:])
             assert torch.equal(mu[:, 0, -1], mu[:, 1, -1])
             assert torch.equal(mu[:, 0, :2], mu[:, 1, :2].flip(1))
             oracle, ambiguous = pixel_oracle(d["frames"])
+            balance_checks = 0
+            if balanced:
+                for i in d["metadata"][:, 0].unique():
+                    for displacement in shifts:
+                        chosen = (d["metadata"][:, 0] == i) & (
+                            d["metadata"][:, -1] == displacement
+                        )
+                        assert int(chosen.sum()) == 48
+                        for values in (d["frames"][chosen], mu[chosen]):
+                            flat = values.flatten(0, 1)
+                            labels = d["labels"][chosen].flatten()
+                            for t in range(3):
+                                a = Counter(
+                                    tensor_hash(v) for v in flat[labels == 0, t]
+                                )
+                                b = Counter(
+                                    tensor_hash(v) for v in flat[labels == 1, t]
+                                )
+                                assert a == b
+                                balance_checks += 1
             sets[name] = dict(
                 features=mu,
                 labels=d["labels"],
@@ -186,7 +214,12 @@ def prepare(args):
                 feature_sha256=tensor_hash(mu),
                 labels_sha256=tensor_hash(d["labels"]),
                 metadata_sha256=tensor_hash(d["metadata"]),
-                construction="paired crops(-d,+d,0)/(+d,-d,0), no wrapping",
+                construction=(
+                    "all48 circular phases, paired(p-d,p+d,p)/(p+d,p-d,p)"
+                    if balanced
+                    else "paired crops(-d,+d,0)/(+d,-d,0), no wrapping"
+                ),
+                exact_marginal_balance_checks=balance_checks,
             )
     return sets, identity
 
@@ -404,6 +437,117 @@ def train(args, prepared=None):
     return scores
 
 
+def challenge(args):
+    """Evaluation only on all circular phases; preserve original failed gates."""
+    start = perf_counter()
+    sets, identity = prepare(args, balanced=True, evaluation_only=True)
+    args.output.mkdir(parents=True, exist_ok=False)
+    model_records, results, arrays = {}, {}, {}
+    for seed in (7501, 7502):
+        for mode in MODES:
+            if perf_counter() - start > 120:
+                raise RuntimeError("Balanced challenge evaluation budget exceeded")
+            path = args.challenge_models / f"seed{seed}" / mode
+            record = json.loads((path / "run.json").read_text())
+            cfg = record["identity"]["settings"]
+            assert file_hash(args.source) == cfg["source_sha256"]
+            assert (
+                identity["known"]["sources"]
+                == record["identity"]["data"]["known"]["sources"]
+            )
+            model = OrderReadout(sets["known"]["features"].shape[3], mode)
+            state = torch.load(path / "last.pt", map_location="cpu", weights_only=True)
+            model.load_state_dict(state["model"], strict=True)
+            model.requires_grad_(False).eval()
+            scores, values = evaluate(model, sets)
+            name = f"{seed}_{mode}"
+            results[name] = scores
+            arrays.update({name + "__" + k: v for k, v in values.items()})
+            model_records[name] = dict(
+                path=str((path / "last.pt").resolve()),
+                sha256=file_hash(path / "last.pt"),
+                training_recipe_sha256=record["source"]["files"][
+                    record["source"]["recipe"]
+                ],
+            )
+    gates = {}
+    for mode in ("train", "correlation", "correlation_only"):
+        criteria = {}
+        for seed in (7501, 7502):
+            for split in ("known", "wide"):
+                row = results[f"{seed}_{mode}"][split]
+                a = row["normal"]
+                criteria[f"{seed}_{split}"] = dict(
+                    accuracy=a["accuracy"] >= 0.9,
+                    pair=a["pair_accuracy"] >= 0.8,
+                    flip=a["flip_rate"] >= 0.9,
+                    current=row["current"]["accuracy"] == 0.5
+                    and row["current"]["pair_accuracy"] == 0,
+                    previous=row["previous"]["accuracy"] == 0.5,
+                    unordered=row["unordered"]["accuracy"] == 0.5
+                    and row["unordered"]["pair_accuracy"] == 0,
+                )
+        gates[mode] = dict(
+            passed=all(all(v.values()) for v in criteria.values()), criteria=criteria
+        )
+    for mode in ("current", "previous"):
+        assert all(
+            results[f"{seed}_{mode}"][s]["normal"]["accuracy"] == 0.5
+            for seed in (7501, 7502)
+            for s in ("known", "wide")
+        )
+    np.savez_compressed(args.output / "evaluation.npz", **arrays)
+    atomic_json(
+        args.output / "run.json",
+        dict(
+            schema="pathwm-evaluation-v1",
+            identity=dict(
+                settings=dict(
+                    purpose="frozen-model balanced periodic-motion challenge",
+                    new_training_steps=0,
+                    original_gate_preserved="failed: previous-only static cue",
+                    example_labels={
+                        "input": "Paired periodic pans: first three frames, then reverse-prefix partner"
+                    },
+                ),
+                data=identity,
+                models=model_records,
+            ),
+            source=dict(recipe=__file__, sha256=file_hash(__file__)),
+        ),
+    )
+    atomic_json(
+        args.output / "result.json",
+        dict(
+            completed=True,
+            gate=gates["train"]["passed"],
+            candidate_gates=gates,
+            scores=results,
+            metrics={
+                f"{name}_{split}": rows[split]["normal"]
+                for name, rows in results.items()
+                for split in ("known", "wide")
+            },
+            evaluation_seconds=perf_counter() - start,
+            training_steps=0,
+            evaluation_scope="Separate evaluation-only challenge; original crop-control gate remains failed. Exhaustive48 circular phases, real-image contents with periodic synthetic shifts, four images from one previously inspected reserved source. Exact single-frame label marginals verified on RGB and frozen encoded grids. No new fitting, natural-motion, forecasting or agent-integration claim.",
+        ),
+    )
+    atomic_json(
+        args.output / "status.json",
+        dict(result="completed", report="pending", step=0, error=None),
+    )
+    (args.output / "metrics.jsonl").write_text("")
+    write_report(
+        args.output, batch={"rgb": sets["known"]["examples"][:1].flatten(0, 2)}
+    )
+    print(
+        json.dumps(dict(gates=gates, seconds=perf_counter() - start), indent=2),
+        flush=True,
+    )
+    return results
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, required=True)
@@ -427,7 +571,12 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=7501)
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--stop-after", type=int)
+    parser.add_argument(
+        "--challenge-models",
+        type=Path,
+        help="Evaluation only: root containing the12 fixed comparison arms",
+    )
     args = parser.parse_args()
     if args.steps < 1 or (args.stop_after is not None and args.stop_after < 1):
         parser.error("Positive step budgets required")
-    train(args)
+    (challenge if args.challenge_models else train)(args)

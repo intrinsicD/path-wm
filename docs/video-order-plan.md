@@ -124,8 +124,11 @@ This is periodic/wrapped synthetic motion of real RGB contents, not natural came
 motion. Freeze ALL twelve saved models; no new fitting, tuning or model selection.
 Separate challenge gate, fixed before evaluation: direction-trained candidate must
 reach>=90% marginal,>=80% pair and>=90% prefix-flip on BOTH displacement groups and
-BOTH seeds; all single-frame/current/previous and unordered controls must be50%/0%
-pair. Original gate stays failed irrespective of the new outcome. Also report the
+BOTH seeds; all single-frame/current/previous and unordered controls must be50%
+marginal. Current-only and unordered pairs must score0%; previous-only pair accuracy
+is reported, not forced to0%, since its two inputs differ within a pair. This
+mathematical correction precedes challenge evaluation. Original gate stays failed
+irrespective of the new outcome. Also report the
 frozen/correlation-only comparators rather than selecting the best after evaluation.
 Max120s challenge evaluation; use shared cached phase features, one compact report
 with logits/source/model hashes. Artifact allowance increases to<=28MiB to preserve

@@ -40,3 +40,36 @@ def pan_pairs(
         labels=torch.tensor([1, 0]).expand(len(pairs), -1).clone(),
         metadata=torch.tensor(metadata),
     )
+
+
+def cyclic_pan_pairs(images, *, shifts=(2, 4)):
+    """Exhaustive periodic phases: each single-frame label marginal is identical.
+
+    Wrapped, constructed motion. Return unique views and indices as well as RGB
+    pairs, so deterministic image features can be computed once per exact view.
+    """
+    if images.ndim != 4 or images.shape[1] != 3 or not len(images):
+        raise ValueError("Expected nonempty RGB images")
+    width = images.shape[-1]
+    if not shifts or any(type(d) is not int or not 0 < d < width / 2 for d in shifts):
+        raise ValueError(
+            "Displacement must be positive and smaller than half the period"
+        )
+    views = torch.stack(
+        [torch.roll(im, p, dims=-1) for im in images for p in range(width)]
+    )
+    indices, metadata = [], []
+    for i in range(len(images)):
+        for p in range(width):
+            for d in shifts:
+                sequence = [i * width + (p + s) % width for s in (-d, d, 0)]
+                indices.append([sequence, [sequence[1], sequence[0], sequence[2]]])
+                metadata.append((i, p, d))
+    indices = torch.tensor(indices)
+    return dict(
+        frames=views[indices],
+        views=views,
+        indices=indices,
+        labels=torch.tensor([0, 1]).expand(len(indices), -1).clone(),
+        metadata=torch.tensor(metadata),
+    )
