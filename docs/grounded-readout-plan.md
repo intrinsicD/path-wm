@@ -25,11 +25,11 @@ learnable temporal-order task, not natural video understanding.
   decoder weights stay frozen. More trainable parameters in core is a disclosed
   confound: superiority does not prove core adaptation is uniquely necessary.
 - Evaluate fixed final checkpoints only. Both source seeds, all25 quick tasks,
-  then full profile for target confirmation and regression scope. Evaluation seed
+  then the full-profile **target task only** for the larger cohort check. Evaluation seed
   9401, same scorer/data contracts and three paired categorical draws. No fitting
   on validation/test, no learning-rate search, no winner checkpoint selection.
 - Engineering adoption requires target pass in both seeds on quick and full;
-  no lost task passes, no accuracy/paired/source-gain loss>0.10 on other full tasks;
+  no lost task passes, no accuracy/paired/source-gain loss>0.10 on other quick tasks;
   original symbolic seen/heldout per-input/output accuracy loss<=0.05 and raw
   reconstruction CE/MSE increase<=10%. Compare to each source, never across seeds.
   Original symbolic evaluation uses the same recipe/data seeds before and after.
@@ -68,4 +68,13 @@ accepted the scoped comparison. Its remaining requests for tolerances and prior
 last-frame registration are already covered above. Two seeds are an engineering
 replication, not a powered statistical effect estimate. Keep byte-length scores
 inspectable, and report free generation as a separate diagnostic so a choice-score
-improvement cannot silently stand in for successful text emission.
+  improvement cannot silently stand in for successful text emission.
+
+Pre-fit efficiency refinement: full-profile expansion is restricted to the
+preregistered target, while the recurring quick battery still evaluates all25
+families. This avoids six redundant full real-scene passes for a small readout
+study. Selected fixtures receive a distinct comparison identity/profile; they
+cannot silently compare to complete-suite reports. No formal fits/results preceded
+this refinement; the4-update workflow check is not a quality comparison. The quick
+preservation screen is correspondingly low-powered and is explicitly not a full
+real-data preservation certificate.

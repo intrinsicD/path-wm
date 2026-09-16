@@ -14,6 +14,20 @@ def fixtures():
     return data
 
 
+def test_selected_evaluation_has_its_own_contract_and_preserves_source():
+    data = fixtures()
+    data.identity = "original-full-fixtures"
+    data.manifest = dict(profile="full", limits=[])
+    selected = recipe.select_understanding(data, ["VID.order"])
+    assert len(selected.cases) == 1 and len(data.cases) == 10
+    assert {r["case"] for r in selected.records} == {"VID.order"}
+    assert selected.identity != data.identity
+    assert selected.identity == recipe.select_understanding(data, ["VID.order"]).identity
+    assert selected.manifest["profile"] != data.manifest["profile"]
+    with pytest.raises(ValueError, match="Unknown"):
+        recipe.select_understanding(data, ["missing"])
+
+
 def test_grounded_training_never_uses_validation_or_answers_as_inputs():
     data = fixtures()
     rows = recipe.grounded_records(data, "VID.order")
