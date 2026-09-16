@@ -1,5 +1,28 @@
 # Running and editing experiments
 
+For a suite-directed QA continuation through the **existing shared latent core**:
+
+```bash
+.venv/bin/python -m experiments.modality_readout --stage grounded \
+  --core runs/modality_readout_v1/formal/seed7201/joint_native \
+  --understanding-suite data/understanding_v1/full --grounded-case VID.order \
+  --grounded-scope decoder --steps 768 --seed 7201 --device cuda \
+  --output runs/my_grounded_decoder
+.venv/bin/python -m experiments.modality_readout --stage understanding \
+  --core runs/my_grounded_decoder --understanding-suite data/understanding_v1/quick \
+  --seed 9401 --reference runs/understanding_suite_v1/final_baseline \
+  --output runs/my_grounded_decoder/quick
+```
+
+Use `--grounded-scope core` in a separate run for decoder plus core adaptation;
+both keep the existing encoders and other decoders frozen. Training uses only the
+selected controlled task's calibration cohort and alternates original symbolic
+replay. Evaluation is explicit after training, never automatic on a paused run.
+`--stop-after N` / identical arguments plus `--resume` preserve the exact run.
+`--understanding-cases VID.order` selects that task for a larger evaluation; its
+contract cannot compare against a complete-suite reference. A selected report is
+not the full battery. [Fixed comparison, acceptance and limits](grounded-readout-plan.md).
+
 The [optional depth-readout comparison](layer-readout-plan.md) adds
 `--encoder-readout layers` to core training. It learns per-scale mixtures of
 intermediate and final features with frozen source encoders; `native` preserves

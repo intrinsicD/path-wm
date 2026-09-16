@@ -1,5 +1,21 @@
 # Current work
 
+**Suite-directed grounded readout comparison completed,16 September:**
+[Protocol/results](grounded-readout-plan.md),
+[comparison](../runs/grounded_readout_v1/report.html).
+Actual Claude method critique/reconciliation; reuse the existing core/text decoder
+with frozen encoders. Four768-update fits (decoder-only vs core+decoder, two sources),
+16 calibration examples of video color order and alternating original-task replay.
+Source7202 reaches81.25% worst-draw answers with decoder-only and100% answers/pairs
+with core+decoder; the latter passes1/25 quick tasks and the larger target cohort.
+Omission/last-frame controls stay50%; free generation14/16. Source7201 remains50%.
+All variants regress previous outputs; retain them as experiments, no default or
+broad green promotion. Decoder normalization probes show no systematic signal loss.
+Next: stabilize useful temporal information in the core while preserving task/output
+behavior, not enlarge encoders.561 tests, exact restart1180 tensors,224.34s training,
+88.06MiB peak training allocation. Reports structurally/media verified; interactive
+browser QA blocked by local-file URL policy. No new general video/dialogue claim.
+
 **Recurring understanding suite completed,16 September:**
 [Protocol/results and usage](understanding-suite-plan.md),
 [comparison report](../runs/understanding_suite_v1/final_comparison/report.html).
