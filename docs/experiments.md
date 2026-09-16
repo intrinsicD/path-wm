@@ -1,5 +1,36 @@
 # Running and editing experiments
 
+For the optional **replay-guided experiment search**, reuse the same recipe:
+
+```bash
+.venv/bin/python -m experiments.modality_readout --stage exploration \
+  --search-mode collect --core runs/modality_readout_v1/formal/seed7202/joint_native \
+  --understanding-suite data/understanding_v1/full --seed 9601 --device cuda \
+  --output runs/my_search_history_1
+# Repeat collection with a different seed and a fresh output directory.
+.venv/bin/python -m experiments.modality_readout --stage exploration \
+  --search-mode select --search-histories runs/my_search_history_1 runs/my_search_history_2 \
+  --output runs/my_search_policy
+.venv/bin/python -m experiments.modality_readout --stage exploration \
+  --search-mode execute --search-selection runs/my_search_policy/selection.json \
+  --core runs/modality_readout_v1/formal/seed7202/joint_native \
+  --understanding-suite data/understanding_v1/full --seed 9611 --device cuda \
+  --output runs/my_search_validation
+```
+
+This bounded first comparison trains the existing text decoder on frozen video-order
+states. Each branch has a fixed optimizer setting; a controller decides which
+branch to continue or when to stop. `tree.json` owns actual outcomes and snapshots;
+`selection.json` owns offline replay prefixes and policy selection. Replay cannot
+invent unrecorded outcomes. `selected/` is a normal loadable checkpoint with its
+own report; evaluate it using `--stage understanding` below. A world is a fresh
+output directory, not a general resumable search service. Branch snapshots include
+optimizer/RNG state and interleaving is verified. Reference code/data/device must
+match the saved policy contract; recollect after source changes. This first recipe
+accepts native sampled/context sources without layer aggregation, a video palette
+or request adaptation. Normal model training and evaluation defaults do
+not change. [Protocol, costs and limits](replay-exploration-plan.md).
+
 For a suite-directed QA continuation through the **existing shared latent core**:
 
 ```bash

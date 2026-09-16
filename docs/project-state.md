@@ -1,5 +1,22 @@
 # Current work
 
+**Replay-guided exploration demonstration completed,16 September:**
+[Protocol/results](replay-exploration-plan.md),[report](../runs/replay_exploration_v1/report.html).
+User clarified experimental branch selection, not faster suite rejection. Actual
+Claude critique/reconciliation; existing frozen-core decoder fitting supplies
+recorded continuations. Two complete histories, five fixed replay policies, six
+fresh executions on two new sampling seeds. Replay selects the simple8-block
+budget over12:33.3% fewer updates,20.75–21.45% less search-process time, identical
+selected checkpoints. No adaptive-policy advantage. All broad quick task gates
+still fail (0/25); no model/default/color promotion.571 software tests pass before
+the final unsupported-source guard;33 focused checks pass after that guard;
+39,414 exact tensor and80,544 primitive comparisons plus4,158 frozen-state checks.
+52 structural reports; two unique full suite evaluations cover six identical
+selections via hashed mappings. Plot inspected; interactive browser QA unavailable.
+History collection35.37s costs more than this pilot saves; larger task/seed
+confirmation required. Optional research scheduler is separate from agent runtime.
+The request-meaning diagnosis remains the next neural-model task.
+
 **Dream-RSI paper assessment completed,16 September:**
 [Assessment and bounded transfer proposal](dream-rsi-review.md). Actual public-only
 Claude critique/reconciliation. Useful candidate for experiment scheduling,

@@ -161,3 +161,34 @@ def test_real_branch_restart_interleaving_and_frozen_core(tmp_path):
     # Reusing a completed first action must never reset the branch silently.
     with pytest.raises(ValueError, match="frontier"):
         advance(tmp_path / "interleaved", 0, 1)
+
+
+@pytest.mark.parametrize("variant", ["probabilities", "layers", "query", "palette"])
+def test_unsupported_source_is_rejected_before_writing(tmp_path, monkeypatch, variant):
+    from types import SimpleNamespace
+    from experiments import modality_readout as recipe
+
+    model = recipe.Model("native")
+    if variant == "probabilities":
+        model.core.belief_readout = variant
+    elif variant == "layers":
+        recipe.configure_encoder_readout(model, variant)
+    elif variant == "query":
+        model.outputs.decoders["video"].time_conditioning = variant
+    else:
+        model.outputs.decoders["video"].palette_size = 4
+    monkeypatch.setattr(
+        recipe, "restore_readout", lambda *a: (model, {"variant": "native"}, "unit")
+    )
+    output = tmp_path / "must_not_exist"
+    args = SimpleNamespace(
+        search_mode="execute",
+        core=tmp_path,
+        understanding_suite=tmp_path,
+        seed=12,
+        device="cpu",
+        output=output,
+    )
+    with pytest.raises(ValueError, match="requires native"):
+        recipe.exploration(args)
+    assert not output.exists()

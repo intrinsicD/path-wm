@@ -1609,9 +1609,17 @@ def exploration(args):
         raise ValueError("Exploration needs --core and --understanding-suite")
     start = time.perf_counter()
     base, original, source_hash = restore_readout(args.core, args.seed, args.device)
-    if original["variant"] != "native" or base.core.request_readout != "none":
+    first_encoder = next(iter(base.core.agent.encoders.values()))
+    if (
+        original["variant"] != "native"
+        or base.core.request_readout != "none"
+        or base.core.belief_readout != "sampled"
+        or first_encoder.pyramid.layer_readout is not None
+        or base.outputs.decoders["video"].time_conditioning != "context"
+        or base.outputs.decoders["video"].palette_size != 0
+    ):
         raise ValueError(
-            "First replay experiment uses the native source without request adaptation"
+            "First replay experiment requires native sampled/context readout without layers, palette or request adaptation"
         )
     base.requires_grad_(False).eval()
     data = UnderstandingData(args.understanding_suite)
