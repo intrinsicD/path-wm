@@ -89,6 +89,13 @@ expose detached before/after means. No RGB features bypass the latent bottleneck
 No hidden state persists between calls. This is observed-clip reconstruction;
 there is no learned temporal prior, streaming cache or future-frame prediction.
 
+Alternatively inject `temporal=CausalLatentMixer(Z, spatial_kernel=5)` or set
+`spatial_iterations=2` on its default3x3 input block. The repeated spatial-only3x3
+block shares weights and does not extend the three-frame temporal horizon. The
+default has no extra spatial-block parameters and loads old temporal checkpoints.
+These are experimental options: the [frozen-codec comparison](video-context-plan.md)
+does not support adopting a larger neighborhood or shared spatial loop by default.
+
 The [recipe](../experiments/video_vae.py) loads trained image weights explicitly,
 trains the shared encoder/decoder with video and direct-frame reconstruction losses,
 and exports the updated image codec alongside the full video Run checkpoint.

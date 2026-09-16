@@ -1,0 +1,212 @@
+{
+  "provenance": "ai-executed",
+  "timestamp": "2026-09-16T09:16+02:00",
+  "implementation_commit": "babf811",
+  "protocol": "docs/video-context-plan.md",
+  "results": {
+    "candidate_gates": {
+      "k5": false,
+      "loop2": false
+    },
+    "completed": true,
+    "criteria": {
+      "7401_k3": {
+        "criteria": {
+          "benefit_vs_k3": false,
+          "benefit_vs_own_current": true,
+          "benefit_vs_wrong": false,
+          "benefit_vs_zero": true,
+          "clean_retention": true,
+          "outside_retention": true
+        },
+        "passed": false
+      },
+      "7401_k5": {
+        "criteria": {
+          "benefit_vs_k3": false,
+          "benefit_vs_own_current": true,
+          "benefit_vs_wrong": false,
+          "benefit_vs_zero": true,
+          "clean_retention": false,
+          "outside_retention": false
+        },
+        "passed": false
+      },
+      "7401_loop2": {
+        "criteria": {
+          "benefit_vs_k3": false,
+          "benefit_vs_own_current": true,
+          "benefit_vs_wrong": false,
+          "benefit_vs_zero": true,
+          "clean_retention": true,
+          "outside_retention": false
+        },
+        "passed": false
+      },
+      "7402_k3": {
+        "criteria": {
+          "benefit_vs_k3": false,
+          "benefit_vs_own_current": true,
+          "benefit_vs_wrong": false,
+          "benefit_vs_zero": true,
+          "clean_retention": true,
+          "outside_retention": true
+        },
+        "passed": false
+      },
+      "7402_k5": {
+        "criteria": {
+          "benefit_vs_k3": false,
+          "benefit_vs_own_current": true,
+          "benefit_vs_wrong": false,
+          "benefit_vs_zero": true,
+          "clean_retention": true,
+          "outside_retention": true
+        },
+        "passed": false
+      },
+      "7402_loop2": {
+        "criteria": {
+          "benefit_vs_k3": false,
+          "benefit_vs_own_current": true,
+          "benefit_vs_wrong": false,
+          "benefit_vs_zero": true,
+          "clean_retention": true,
+          "outside_retention": true
+        },
+        "passed": false
+      }
+    },
+    "evaluation_scope": "Twelve fixed256-update fits, two seeds, three spatial architectures each with matched current-only training. Shared image encoder AND decoder frozen. Fixed16x16 central RGB mask on48x48 real-video development frames. One reserved previously inspected source, four clips. Useful temporal reconstruction is distinct from motion semantics, forecasting or generalization. Candidates must pass every predefined criterion in both seeds; no default adoption. Conv MACs are a partial compute estimate, wall time separate. Static/structural reports; no browser interaction validation.",
+    "gate": false,
+    "metrics": {
+      "7401_k3": {
+        "benefit_vs_k3": 0.0,
+        "benefit_vs_own_current": 0.5670949508807512,
+        "benefit_vs_wrong_history": 0.013181322134646511,
+        "benefit_vs_zero_history": 0.3605052313536473,
+        "clean_mse": 0.007195206359028816,
+        "clean_relative_to_k3": 0.0,
+        "conv_macs_per_batch": 264628224,
+        "current_only_masked_mse": 0.0947544202208519,
+        "current_training_seconds": 6.901718755951151,
+        "frozen_clean_mse": 0.007812868803739548,
+        "frozen_masked_mse": 0.10165562480688095,
+        "history_training_seconds": 6.864260422065854,
+        "masked_mse": 0.04101966693997383,
+        "outside_relative_to_k3": 0.0,
+        "temporal_parameters": 1340
+      },
+      "7401_k5": {
+        "benefit_vs_k3": -0.1999765146783714,
+        "benefit_vs_own_current": 0.41188096415710496,
+        "benefit_vs_wrong_history": 0.004781651305663326,
+        "benefit_vs_zero_history": 0.1490362182693501,
+        "clean_mse": 0.007481250446289778,
+        "clean_relative_to_k3": 0.039754813550555435,
+        "conv_macs_per_batch": 267282432,
+        "current_only_masked_mse": 0.08369502425193787,
+        "current_training_seconds": 6.916136555955745,
+        "frozen_clean_mse": 0.007812868803739548,
+        "frozen_masked_mse": 0.10165562480688095,
+        "history_training_seconds": 7.100000220001675,
+        "masked_mse": 0.049222636967897415,
+        "outside_relative_to_k3": 0.06251458548881517,
+        "temporal_parameters": 3644
+      },
+      "7401_loop2": {
+        "benefit_vs_k3": -0.035315166931504605,
+        "benefit_vs_own_current": 0.5397709220469161,
+        "benefit_vs_wrong_history": 0.011264136871656838,
+        "benefit_vs_zero_history": 0.382072067569702,
+        "clean_mse": 0.007083578035235405,
+        "clean_relative_to_k3": -0.01551426300002301,
+        "conv_macs_per_batch": 265955328,
+        "current_only_masked_mse": 0.09227640181779861,
+        "current_training_seconds": 7.149138577049598,
+        "frozen_clean_mse": 0.007812868803739548,
+        "frozen_masked_mse": 0.10165562480688095,
+        "history_training_seconds": 7.140707059996203,
+        "masked_mse": 0.04246828332543373,
+        "outside_relative_to_k3": 0.021301080971976027,
+        "temporal_parameters": 1924
+      },
+      "7402_k3": {
+        "benefit_vs_k3": 0.0,
+        "benefit_vs_own_current": 0.473482885925941,
+        "benefit_vs_wrong_history": 0.00862630297495337,
+        "benefit_vs_zero_history": 0.19743492464639312,
+        "clean_mse": 0.007546498905867338,
+        "clean_relative_to_k3": 0.0,
+        "conv_macs_per_batch": 264628224,
+        "current_only_masked_mse": 0.0934709906578064,
+        "current_training_seconds": 6.908624273026362,
+        "frozen_clean_mse": 0.007812868803739548,
+        "frozen_masked_mse": 0.10165562480688095,
+        "history_training_seconds": 6.905167403048836,
+        "masked_mse": 0.04921407625079155,
+        "outside_relative_to_k3": 0.0,
+        "temporal_parameters": 1340
+      },
+      "7402_k5": {
+        "benefit_vs_k3": -0.06174098576748133,
+        "benefit_vs_own_current": 0.3007841872438344,
+        "benefit_vs_wrong_history": 0.005342090050450388,
+        "benefit_vs_zero_history": 0.20588323880971693,
+        "clean_mse": 0.007357694674283266,
+        "clean_relative_to_k3": -0.02501878472907193,
+        "conv_macs_per_batch": 267282432,
+        "current_only_masked_mse": 0.0747302919626236,
+        "current_training_seconds": 7.020827354979701,
+        "frozen_clean_mse": 0.007812868803739548,
+        "frozen_masked_mse": 0.10165562480688095,
+        "history_training_seconds": 6.899921432021074,
+        "masked_mse": 0.05225260183215141,
+        "outside_relative_to_k3": -0.022952697466860572,
+        "temporal_parameters": 3644
+      },
+      "7402_loop2": {
+        "benefit_vs_k3": -0.11688570331417392,
+        "benefit_vs_own_current": 0.39586643691918255,
+        "benefit_vs_wrong_history": 0.004958027719232372,
+        "benefit_vs_zero_history": 0.13014808807702216,
+        "clean_mse": 0.007431318983435631,
+        "clean_relative_to_k3": -0.015262696499187989,
+        "conv_macs_per_batch": 265955328,
+        "current_only_masked_mse": 0.09098401665687561,
+        "current_training_seconds": 7.072414034977555,
+        "frozen_clean_mse": 0.007812868803739548,
+        "frozen_masked_mse": 0.10165562480688095,
+        "history_training_seconds": 7.26184935006313,
+        "masked_mse": 0.05496649816632271,
+        "outside_relative_to_k3": 0.005276397902209906,
+        "temporal_parameters": 1924
+      }
+    },
+    "training_seconds": 84.14076543913689
+  },
+  "verification": {
+    "browser_checked": false,
+    "checks": 405,
+    "claude_receipts_checked": true,
+    "exact_resume_checks": 1447,
+    "paired_macs_and_initialization": true,
+    "raw_metrics_recomputed": true,
+    "sampler_exposure_matched": true,
+    "source_weights_unchanged": true,
+    "tests": 68,
+    "reports_checked": 15,
+    "source_media_unchanged": true,
+    "panel_visually_inspected": true,
+    "artifact_bytes": 31188939,
+    "free_bytes": 327008256
+  },
+  "hashes": {
+    "runs/video_context_v1/result.json": "493debd7b69c160fcb2d237b760f88fde9431e9200607feeb51874fd9d31cf78",
+    "runs/video_context_v1/verification.json": "413ed09318c0b6b59fae48307365ea29f454efd7786fe0ec794a3a3bbd9f1e7b",
+    "runs/video_context_v1/report.html": "9b5ac49e79c75f404dc2d01fdf12bd94c18540908505319cfd4a656ff5af10ea",
+    "runs/video_context_v1/check/verification.json": "6f01990d77ed31bc971d027a7cb18bfa074983670456eacd86311ba6ac847cc8",
+    "pathwm/models/video_vae.py": "64a5ef3387546eafa389e05876e1627a2e57579d1aa42c301827c772d29d945d",
+    "experiments/video_vae.py": "9fe7a63ca1045eac91246287de7a6a216195cabfbff28e665ca64844616290ee"
+  }
+}

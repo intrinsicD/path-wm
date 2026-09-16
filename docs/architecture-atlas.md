@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-16, repository snapshot `65a354f`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-16, repository snapshot `071a649`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
@@ -1126,4 +1126,6 @@ User proposes images as one-frame videos or repeated stills. Existing wrapper ac
 
 Discussed spatial receptive field versus temporal horizon: current3x3 operates on the latent grid, while current/two previous frames set history. Larger kernels, stacked/shared local blocks and coarser-scale context are proposed comparisons, not validated repairs. Global attention already has global spatial access. See docs/video-codec-literature.md; no architecture or validation-color change.
 
-Source: [pathwm/models/video_vae.py · VideoVAE:49](../pathwm/models/video_vae.py), [pathwm/models/video_vae.py · CausalLatentMixer:19](../pathwm/models/video_vae.py), [experiments/video_vae.py](../experiments/video_vae.py), [tests/test_video_vae.py](../tests/test_video_vae.py), [docs/shared-video-vae-plan.md](../docs/shared-video-vae-plan.md).
+Frozen-codec context comparison implemented and measured: injected mixer supports spatial5x5 or repeated shared spatial-only3x3 refinement, preserving three-frame causality. Twelve256-update fits with per-architecture current-only controls:3x3 history helps47–57%, but larger candidates worsen masked MSE and correct-vs-different-clip history benefit stays below1.4%. No motion understanding or expanded-default adoption.68 scoped tests,1447 exact-resume and405 raw artifact checks; see docs/video-context-plan.md and runs/video_context_v1/report.html. Validation colors unchanged.
+
+Source: [pathwm/models/video_vae.py · VideoVAE:66](../pathwm/models/video_vae.py), [pathwm/models/video_vae.py · CausalLatentMixer:19](../pathwm/models/video_vae.py), [experiments/video_vae.py](../experiments/video_vae.py), [tests/test_video_vae.py](../tests/test_video_vae.py), [docs/shared-video-vae-plan.md](../docs/shared-video-vae-plan.md), [docs/video-context-plan.md](../docs/video-context-plan.md).

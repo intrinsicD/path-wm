@@ -2,9 +2,9 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: "2026-09-16T08:42+02:00"
-  turn_count: 5
-  summary: "Eight matched fresh-updater controls fail direction screens; continuous working access not adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58 tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights; four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain confound documented; agent integration remains open."
+  last_turn: "2026-09-16T09:16+02:00"
+  turn_count: 6
+  summary: "Eight matched fresh-updater controls fail direction screens; continuous working access not adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58 tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights; four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain confound documented; agent integration remains open. Frozen-codec context:12 fits show history benefit but both spatial expansions fail; wrong-history discrimination remains weak.68 tests,1447 exact-resume checks,405 artifact audits,15 reports; defaults unchanged."
 
 events_logged:
 - turn: 1
@@ -236,6 +236,30 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Neighborhood/coarse-context comparison proposed, not adopted.
+- turn: 6
+  type: decision
+  id: N412
+  routing: direct
+  provenance: ai-suggested
+  summary: Freeze image codec; add matched current-only controls per spatial architecture.
+- turn: 6
+  type: experiment
+  id: N413
+  routing: direct
+  provenance: ai-executed
+  summary: History helps masked reconstruction; larger candidates and correct-history gate fail.
+- turn: 6
+  type: observation
+  id: O279
+  routing: staged
+  provenance: ai-suggested
+  summary: Scene-appearance reuse plausible, not identified mechanism.
+- turn: 6
+  type: observation
+  id: O280
+  routing: staged
+  provenance: ai-suggested
+  summary: Paired motion-dependent history task proposed next.
 
 ai_actions:
 - turn: 1
@@ -306,6 +330,20 @@ ai_actions:
   - docs/diagrams/architecture-atlas.json
   - docs/architecture-atlas.html
   - docs/architecture-atlas.md
+- turn: 6
+  action: Implemented configurable/injectable causal mixer and frozen-codec inpaint task in existing recipe; reviewed
+    with actual Claude twice, ran12 fixed fits, exact restart and raw audits, inspected panel, updated docs/atlas.
+    Report opening queued. No private project material exported.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/video_vae.py
+  - experiments/video_vae.py
+  - tests/test_video_vae.py
+  - docs/video-context-plan.md
+  - docs/project-state.md
+  - docs/models.md
+  - docs/diagrams/architecture-atlas.json
+  - ara/evidence/tables/video_context_2026-09-16.json
 
 claims_touched: []
 key_context:
@@ -332,6 +370,9 @@ key_context:
 - turn: 5
   excerpt: User asks whether larger neighborhoods help recognize or generate dynamics; no unambiguous adoption of
     convolution versus attention.
+- turn: 6
+  excerpt: User asks “Und?” after neighborhood proposal; status clarified as unimplemented before continuing authorized
+    collaboration/test cycle. No implicit endorsement of a specific convolution-versus-attention choice.
 
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
@@ -399,6 +440,9 @@ open_threads:
 - 'N404-N407/O275-O276: shared-codec mechanics complete; task-required temporal learning, objective-matched/frozen-codec
   controls, spatial-grid-to-agent integration and persistent video context remain open. Existing source-rotation/direction
   proposals preserved.'
+- Paired same-appearance/different-motion histories needed; enlarged kernels/loops fail current fixed-mask screen.
+  Current mixer still separate from agent core.
+
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
@@ -538,3 +582,5 @@ ai_suggestions_pending:
 - 'O277: singleton/real-video/repeated-still mixture remains proposed; gradient mechanics do not validate
   temporal efficacy.'
 - 'O278: spatial-neighborhood/coarse-context comparison untested; existing loss/history controls still apply.'
+- 'O279/O280: appearance-reuse interpretation and stronger paired-history task remain tentative; no unregistered
+  efficacy fits.'

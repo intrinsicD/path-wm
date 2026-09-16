@@ -4899,3 +4899,31 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O279
+  timestamp: 2026-09-16T09:16+02:00
+  provenance: ai-suggested
+  content: Large history-versus-current-only gain but small correct-versus-different-clip gain is compatible with
+    reuse of general scene appearance. It does not prove detailed temporal matching or identify the failure cause.
+    One reserved source and fixed mask limit the conclusion.
+  context: Bounded frozen-codec context comparison after user asks progress.
+  potential_type: claim
+  bound_to:
+  - N413
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O280
+  timestamp: 2026-09-16T09:16+02:00
+  provenance: ai-suggested
+  content: Next compare paired histories with matched scene appearance and identical current observations but different
+    motion-dependent targets, including source-order controls. Test direction/speed sensitivity before further increasing
+    spatial capacity; not implemented or run.
+  context: Bounded frozen-codec context comparison after user asks progress.
+  potential_type: heuristic
+  bound_to:
+  - N413
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -72,3 +72,65 @@ on absent configuration arguments. An8-step versus4+4 shared-refinement run pass
 1447 exact checkpoint/optimizer/RNG/train-row/evaluation checks. Timing and extra
 intermediate validation rows are excluded. Only this turn's completed pytest temp
 directory was removed to recover its120MiB; historical runs and data are preserved.
+
+## Result,16 September
+
+All twelve fixed256-update fits completed in84.1408s CPU training including periodic
+validation (120.16s full orchestration). Source image weights and their loaded state
+hash are unchanged. The opt-in module accepts spatial kernel and shared spatial-only
+iterations; default3x3/zero iterations preserves legacy weights and behavior.
+
+| Seed | Architecture | Masked MSE, history | Matched current-only | History benefit vs current-only | Change vs3x3 history |
+|---|---|---:|---:|---:|---:|
+|7401|3x3|0.041020|0.094754|56.71%|reference|
+|7401|5x5|0.049223|0.083695|41.19%|20.00% worse|
+|7401|3x3 + shared loop2|0.042468|0.092276|53.98%|3.53% worse|
+|7402|3x3|0.049214|0.093471|47.35%|reference|
+|7402|5x5|0.052253|0.074730|30.08%|6.17% worse|
+|7402|3x3 + shared loop2|0.054966|0.090984|39.59%|11.69% worse|
+
+Both expanded candidates fail the registered gate.3x3 uses1340 temporal parameters,
+5x5 uses3644, shared loop2 uses1924. Measured dense convolution MACs per batch are
+264.63M,267.28M,265.96M respectively including the shared image codec; each has exactly
+the same MAC count as its own current-only control. Other operations/backward are
+excluded. This is not a matched-resource comparison between different architectures.
+
+Correct history gives only0.48–1.32% less masked error than different-clip history,
+below the5% screen for all variants/seeds.3x3 specifically gives1.32%/0.86% benefit.
+Consequently the much larger improvement versus blank-history training does not
+demonstrate detailed temporal matching or motion understanding. Other clips from the
+same reserved video share scene content; generic appearance reuse is a plausible,
+untested explanation. Correct-history benefit over black-history evaluation is
+13–38%, which still does not establish sensitivity to the correct sequence.
+
+Current-only counterparts are matched architecture controls, not newly weakened
+models. All masks are applied to RGB before encoding, with clean targets used only
+in losses/metrics. Frozen image components carry no gradients and their state hashes
+match the source. The clean direct image path is unchanged. Video clean-input errors
+are reported separately; no blanket image/video-quality improvement is claimed.
+
+[Standalone comparison](../runs/video_context_v1/report.html), all12 child reports
+and two restart-check reports are structurally verified; the reconstruction/error
+panel was inspected visually. Browser interaction was not validated.405 independent
+artifact checks include NumPy error recomputation, source/checkpoint identities,
+matched MACs/initialization/sampling and both actual-Claude response receipts.
+68 scoped tests and1447 exact restart checks pass. No extra efficacy fits followed
+the results. New artifacts fit36MiB, disk stays above300MiB reserve.
+
+The codec extension is available for experiments, not adopted as a quality repair.
+Next proposed task: same current observation and similar scene appearance, but paired
+histories that require different motion-dependent answers. Include direction/speed
+and source-order controls before expanding kernels further. This is not implemented
+or validated by this fixed-mask reconstruction comparison.
+
+Run a new comparison arm with the existing recipe (use a fresh output directory):
+
+```bash
+.venv/bin/python -m experiments.video_vae --task inpaint --steps 256 \
+  --seed 7401 --spatial-kernel 5 --output runs/my_video_context
+```
+
+Add `--current-only` for its matched no-history training control, or choose
+`--spatial-kernel 3 --spatial-iterations 2` for shared spatial refinement.
+Explicit `--resume` requires the same task/configuration; the image source is checked
+by SHA256 and the Run checkpoint restores temporal weights, optimizer and RNG.

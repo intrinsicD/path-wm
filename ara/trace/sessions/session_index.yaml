@@ -167,16 +167,8 @@ sessions:
   open_threads: 25
 - id: 2026-09-16_001
   date: '2026-09-16'
-  summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not
-    adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59
-    scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
-    in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes
-    text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits
-    fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58
-    tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights;
-    four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature
-    and loss/domain confound documented; agent integration remains open.'
-  turn_count: 5
-  events_count: 33
+  summary: "Eight matched fresh-updater controls fail direction screens; continuous working access not adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58 tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights; four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain confound documented; agent integration remains open. Frozen-codec context:12 fits show history benefit but both spatial expansions fail; wrong-history discrimination remains weak.68 tests,1447 exact-resume checks,405 artifact audits,15 reports; defaults unchanged."
+  turn_count: 6
+  events_count: 37
   claims_touched: []
-  open_threads: 26
+  open_threads: 27

@@ -1,11 +1,17 @@
 # Current work
 
-**Active: frozen-codec temporal-context comparison,16 September:**
-[Plan](video-context-plan.md). Missing current-frame RGB region makes historical
-context potentially useful. Compare3x3,5x5 and shared spatial refinement with a
-trained current-only control; freeze both image encoder and decoder. Equal frame
-exposure, explicit unequal compute, two seeds, small disk/training budgets. No
-new motion or quality result yet; prior negative evidence remains unchanged.
+**Frozen-codec temporal-context comparison completed,16 September:**
+[Protocol/results](video-context-plan.md),[report](../runs/video_context_v1/report.html).
+Twelve256-update fits,84.14s CPU training:3x3,5x5 and shared spatial-loop refinement,
+each with its own trained current-only control, two seeds. Frozen image encoder AND
+decoder;16x16 current RGB patch hidden before encoding.3x3 history reduces masked
+MSE47–57% versus current-only, but correct history beats different-clip history by
+only0.86–1.32%.5x5 is6–20% worse than3x3; loops3.5–11.7% worse. Both expansion gates
+fail; no default or general motion capability promotion.68 scoped tests,1447 exact
+resume checks and405 artifact audits pass.15 reports structurally checked; panel
+inspected, browser interaction not validated. Next: paired histories with matched
+scene appearance and different required motion outcomes, before increasing capacity.
+Current mixer remains optional; real streaming/agent integration remain open.
 
 **Shared image/video codec implemented and measured, 16 September:**
 [Protocol/results](shared-video-vae-plan.md#result-16-september),

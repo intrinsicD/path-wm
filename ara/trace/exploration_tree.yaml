@@ -6863,3 +6863,37 @@ tree:
   - pathwm/models/video_vae.py
   - https://arxiv.org/html/2411.06449v1
   status: resolved
+- id: N412
+  type: decision
+  title: Implement a bounded frozen-codec context comparison with matched spatial controls
+  provenance: ai-suggested
+  timestamp: 2026-09-16T09:16+02:00
+  choice: After user asks progress, continue previously authorized implement/review/test cycle. Compare3x3,5x5 and
+    shared spatial-only loop2 on masked-current-frame repair. Actual Claude review adds a trained current-only counterpart
+    for every architecture. Freeze image encoder and decoder; source-disjoint development clips; fixed two-seed
+    budget.
+  alternatives:
+  - Increase every kernel size without controls
+  - Continue fully observed reconstruction only
+  also_depends_on:
+  - N411
+  evidence:
+  - docs/video-context-plan.md
+  - runs/reviews/video_context_v1/receipt.json
+  - runs/reviews/video_context_v1/reconcile-receipt.json
+  status: resolved
+- id: N413
+  type: experiment
+  title: Twelve frozen-codec fits find history benefit but no larger-context benefit
+  provenance: ai-executed
+  timestamp: 2026-09-16T09:16+02:00
+  result: Twelve256-update fits,84.1408s CPU training.3x3 history lowers masked MSE47.35–56.71% vs matched current-only.5x5
+    is6.17–20.00% worse than3x3; loop2 is3.53–11.69% worse. Correct-vs-different-clip history benefit0.48–1.32%
+    across all arms/seeds, below5% gate. Both expansion gates fail.68 scoped tests,1447 exact-resume and405 artifact
+    checks;15 standalone reports structurally verified. No default change or general motion claim.
+  also_depends_on:
+  - N412
+  evidence:
+  - ara/evidence/tables/video_context_2026-09-16.json
+  - runs/video_context_v1/report.html
+  status: resolved
