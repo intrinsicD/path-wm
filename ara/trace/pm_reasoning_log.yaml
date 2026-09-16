@@ -2152,3 +2152,17 @@ entries:
     Initial orchestration import path fixed before runs; summary serialization fixed afterward without retraining.
   - 72 unique tests,2211 exact restart and7828 independent audits. Renderer unchanged; structural reports plus plot
     inspection, no browser QA claim.
+- turn: 2026-09-16_001#9
+  notes:
+  - N421 decision, N422 fit results and N423 raw diagnostics direct. O285/O286 interpretations and next comparison
+    staged. H73 crystallizes O284 via committed comparison design/code, not efficacy.
+  - Two Claude public-only reviews acknowledge exposure/unit corrections. Unknown-codec concern resolved by local
+    COCO-only source-hash chain, no private export. Fresh is task-scoped; historical shared-subject validation explicitly
+    monitoring only.
+  - 'No default/green promotion: all full capability and diversity gates fail despite near-perfect trained-shift
+    source transfer. Fixed12-fit cap respected; no post-outcome architecture/threshold changes.'
+  - Post-run reader defect tightened with failing regression and210 input-field equivalence checks; no training
+    rerun or affected data. Exact replay evidence refers to pre-guard snapshot.
+  - 74 tests,3571 replay and14771 raw audits;3312 exact marginals and16 prior normal-logit arrays agree. Unchanged
+    renderer structural QA plus plot inspection, no browser claim. Broader active topics remain open; no blanket
+    stale/abandonment promotion.

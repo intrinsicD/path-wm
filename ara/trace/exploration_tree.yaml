@@ -7013,3 +7013,59 @@ tree:
   - ara/evidence/tables/video_stability_2026-09-16.json
   - runs/video_stability_v1/report.html
   status: resolved
+- id: N421
+  type: decision
+  title: Compare independent source breadth against matched correlated-frame count
+  provenance: ai-suggested
+  timestamp: 2026-09-16T11:27+02:00
+  choice: Under user continuation with Claude, preregister12 fixed fits:4clipsx4frames,4x16 and16x4, crossed temporal/head
+    initializations,512 updates and common sampler. Select12 added train and4 subject-disjoint confirmation clips
+    deterministically before evaluation. Historical validation shares a subject and remains monitoring only. Two
+    public-only Claude reviews; correct per-image/per-source exposure and four-cell inference; audit COCO-only codec
+    lineage locally.
+  alternatives:
+  - Increase image count without controlling source count
+  - Treat historical inspected source as fresh confirmation
+  also_depends_on:
+  - N420
+  evidence:
+  - docs/video-diversity-plan.md
+  - O284
+  - runs/reviews/video_diversity_v1/receipt.json
+  - runs/reviews/video_diversity_v1/reconcile-receipt.json
+  - runs/video_diversity_v1/codec-provenance.json
+  status: resolved
+- id: N422
+  type: experiment
+  title: Twelve matched diversity fits improve familiar motion but fail full confirmation
+  provenance: ai-executed
+  timestamp: 2026-09-16T11:27+02:00
+  result: 12 fixed512-update fits19.947s CPU. Fresh confirmation familiar2/4px mean98.23/99.28/99.93% for small/dense/broad;
+    unseen6/8px83.61/83.16/77.51%. All full gates fail; broad-minus-dense mean-2.502pp and worst-16.439pp fails
+    benefit. Every train100% except one dense99.927%.74 tests,3571 exact restart,14771 raw checks,3312 marginal
+    identities,15 structural reports;22 source hashes and72 cached tensors unchanged.16 prior-baseline logit arrays
+    reproduced exactly.
+  also_depends_on:
+  - N421
+  evidence:
+  - ara/evidence/tables/video_diversity_2026-09-16.json
+  - runs/video_diversity_v1/report.html
+  status: resolved
+- id: N423
+  type: experiment
+  title: Displacement and exposure audits isolate an untrained-magnitude weakness
+  provenance: ai-executed
+  timestamp: 2026-09-16T11:27+02:00
+  result: Broad mean confirmation accuracy at2/4/6/8px is99.85/100/86.30/68.72%. Raw RGB oracle100%, no ambiguous
+    confirmation cases. Dense/broad match sampled integer sequences and64 image exposures; clip exposure differs
+    intentionally. Small visits16images1433pairs; dense/broad64images2966pairs from4096 draws. Post-run missing-subject/repeated-ID
+    guard defect reproduced and fixed;23 affected tests and210 manifest-field checks pass, no changed experimental
+    data or retraining.
+  also_depends_on:
+  - N422
+  evidence:
+  - ara/evidence/tables/video_diversity_2026-09-16.json
+  - runs/video_diversity_v1/displacement-diagnostics.json
+  - runs/video_diversity_v1/exposure.json
+  - runs/video_diversity_v1/source-guard-repair.json
+  status: resolved

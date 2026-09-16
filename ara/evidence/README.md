@@ -180,3 +180,5 @@ Shared spatial image/video codec: [source-bound evidence](tables/shared_video_va
 Paired temporal-order diagnostics: [source-bound evidence](tables/video_order_2026-09-16.json). Twelve original fits expose a single-frame cue; exhaustive-phase challenge repairs evaluation balance. Four separately registered balanced-data fits reach79–99% but neither candidate passes both seeds.69 tests, exact restart and6035 audits;21 structurally checked reports, no default adoption.
 
 Temporal initialization and reflection: [source-bound evidence](tables/video_stability_2026-09-16.json). Eight fixed fits all learn training data; crossed initializations differ at common batch order. Reflection fails robust capability and benefit screens.72 tests,2211 exact restart,7828 audits and11 reports; no default adoption.
+
+Source diversity versus frame density: [source-bound evidence](tables/video_diversity_2026-09-16.json). Twelve fixed fits reach99.93% new-source familiar-shift accuracy in the broad arm, but unseen-shift77.51% fails full repair.74 tests,3571 exact restart,14771 audits and15 reports; source/exposure guards repaired, defaults unchanged.

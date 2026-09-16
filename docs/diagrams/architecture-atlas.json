@@ -1,7 +1,7 @@
 {
   "title": "PATH-WM · Architecture atlas",
   "date": "2026-09-16",
-  "source_commit": "9ddb1c5",
+  "source_commit": "8de7bd7",
   "intro": "A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.",
   "graphs": [
     {
@@ -2832,7 +2832,8 @@
         "Discussed spatial receptive field versus temporal horizon: current3x3 operates on the latent grid, while current/two previous frames set history. Larger kernels, stacked/shared local blocks and coarser-scale context are proposed comparisons, not validated repairs. Global attention already has global spatial access. See docs/video-codec-literature.md; no architecture or validation-color change.",
         "Frozen-codec context comparison implemented and measured: injected mixer supports spatial5x5 or repeated shared spatial-only3x3 refinement, preserving three-frame causality. Twelve256-update fits with per-architecture current-only controls:3x3 history helps47–57%, but larger candidates worsen masked MSE and correct-vs-different-clip history benefit stays below1.4%. No motion understanding or expanded-default adoption.68 scoped tests,1447 exact-resume and405 raw artifact checks; see docs/video-context-plan.md and runs/video_context_v1/report.html. Validation colors unchanged.",
         "Paired-order study: reconstruction-trained frozen temporal readouts stay near chance; direction training fits crop pans but a static cue fails the original gate. Exhaustive-phase periodic evaluation removes single-frame label cues. Four balanced-data fits reach79–99%, with only one passing seed per variant. Neither variant passes the two-seed gate. Separate temporal features and optional correlation are implemented, not general motion/forecasting or core integration. See docs/video-order-plan.md and runs/video_order_v1/balanced_training/report.html; validation colors unchanged.",
-        "Initialization/transfer comparison: optional RGB reflection before encoding and independent head/sampler seeds in the direction recipe. Eight fixed fits all reach100% train accuracy, but only one of four cells passes per arm; reflection mean+1.37pp and worst-5.60pp fails repair criteria. Both temporal/head initializations affect observed transfer under identical sampling. No architecture/default or green promotion.72 tests,2211 exact restart and7828 raw audits; see docs/video-stability-plan.md and runs/video_stability_v1/report.html."
+        "Initialization/transfer comparison: optional RGB reflection before encoding and independent head/sampler seeds in the direction recipe. Eight fixed fits all reach100% train accuracy, but only one of four cells passes per arm; reflection mean+1.37pp and worst-5.60pp fails repair criteria. Both temporal/head initializations affect observed transfer under identical sampling. No architecture/default or green promotion.72 tests,2211 exact restart and7828 raw audits; see docs/video-stability-plan.md and runs/video_stability_v1/report.html.",
+        "Source-diversity comparison changes data only:4x4 versus4x16 versus16x4 clips/frames,12 fixed fits. Fresh four-subject confirmation at trained2/4px improves98.23→99.93%, but untrained6/8px is83.61/83.16/77.51%. Full capability and diversity-benefit gates fail; no default or green promotion. Optional source manifests, source-macro metrics and sampled exposure are inspectable.74 tests,3571 exact restart and14771 raw audits; see docs/video-diversity-plan.md. Next displacement coverage is proposed, not implemented."
       ],
       "sources": [
         "pathwm/models/video_vae.py#VideoVAE",
@@ -2845,7 +2846,8 @@
         "pathwm/data/video_order.py#cyclic_pan_pairs",
         "experiments/video_order.py#OrderReadout",
         "docs/video-order-plan.md",
-        "docs/video-stability-plan.md"
+        "docs/video-stability-plan.md",
+        "docs/video-diversity-plan.md"
       ]
     }
   ]

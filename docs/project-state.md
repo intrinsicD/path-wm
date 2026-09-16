@@ -1,9 +1,17 @@
 # Current work
 
-**Active: independent-source diversity comparison:**
-[Fixed12-fit protocol](video-diversity-plan.md). Compare4x4,4x16 and16x4 source/frame
-populations with frozen codec, matched optimization and four fresh subject-disjoint
-confirmation clips. Source/exposure validation and per-source reporting added.
+**Source-diversity comparison completed,16 September:**
+[Protocol/results](video-diversity-plan.md),[report](../runs/video_diversity_v1/report.html).
+Twelve512-update fits compare4x4,4x16 and16x4 clip/frame populations at identical model
+and update budget. Four fresh subject-disjoint confirmation clips: mean accuracy at
+trained2/4px shifts98.23/99.28/99.93%; untrained6/8px83.61/83.16/77.51%. All full gates
+fail; broad-minus-dense mean-2.50pp, worst-16.44pp fails diversity benefit. Nearly perfect
+train fit; larger displacements are a distinct transfer weakness. No default change.
+74 tests,3571 exact restart,14771 raw audits and15 structural reports; panel inspected.
+Manifest reader, per-source metrics, exposure counts and stricter leakage guards added.
+Historical validation subject overlap disclosed; COCO-only codec lineage verified.
+Next propose fixed-content displacement-coverage comparison and new confirmation;
+constructed pans do not yet establish natural video or agent integration.
 
 **Temporal initialization/transfer comparison completed,16 September:**
 [Protocol/results](video-stability-plan.md),[report](../runs/video_stability_v1/report.html).

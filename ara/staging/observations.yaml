@@ -4985,6 +4985,37 @@ observations:
   bound_to:
   - N418
   - N420
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H73
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O285
+  timestamp: 2026-09-16T11:27+02:00
+  provenance: ai-suggested
+  content: On these new source contents, trained displacement magnitudes transfer almost perfectly while untrained
+    larger magnitudes remain initialization-sensitive. More independent contents at fixed updates do not repair
+    the latter. This does not establish that diversity is generally harmful or uniquely implicate representation,
+    encoder receptive field or optimization.
+  context: User asks continued Claude implementation/review/test/fix on motion transfer.
+  potential_type: claim
+  bound_to:
+  - N422
+  - N423
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O286
+  timestamp: 2026-09-16T11:27+02:00
+  provenance: ai-suggested
+  content: Next vary training displacement coverage at fixed contents, architecture and compute, separating trained,
+    unseen intermediate and extrapolated magnitudes. Keep current confirmation as now-inspected development and
+    reserve new sources. Magnitude is not speed without varying elapsed time; comparison proposed, not run.
+  context: User asks continued Claude implementation/review/test/fix on motion transfer.
+  potential_type: heuristic
+  bound_to:
+  - N422
+  - N423
   promoted: false
   promoted_to: null
   crystallized_via: null

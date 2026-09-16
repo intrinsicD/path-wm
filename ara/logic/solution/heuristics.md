@@ -716,3 +716,14 @@
 - **Code ref**: [direction recipe](../../../experiments/video_order.py), [reflection and batch checks](../../../tests/test_video_stability.py).
 - **Evidence**: N418–N420; [source-bound comparison](../../evidence/tables/video_stability_2026-09-16.json).
 - **Scope**: Committed diagnostic procedure, not a claim of successful repair or general motion capability.
+
+## H73: Separate source breadth from correlated image count
+
+- **Rationale**: Compare more frames of the same clips against more source clips at matched image count, architecture and sampled-update budget. Record realized per-image/per-source exposure and use source-disjoint confirmation with criteria fixed before evaluation.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O284
+- **Sensitivity**: High. Correlated frames, source selection, temporal coverage and only four confirmation clips limit inference. Subject IDs and hashes do not certify household/near-duplicate independence. Equal update counts do not mean equal epochs when population size changes.
+- **Code ref**: [source manifests and exposure recipe](../../../experiments/video_order.py), [source/macro checks](../../../tests/test_video_diversity.py).
+- **Evidence**: N421–N423; [source-bound results](../../evidence/tables/video_diversity_2026-09-16.json).
+- **Scope**: Committed comparison method, not a claim that source breadth repairs motion extrapolation.

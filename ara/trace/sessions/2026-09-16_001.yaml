@@ -2,9 +2,9 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: "2026-09-16T10:57+02:00"
-  turn_count: 8
-  summary: "Eight matched fresh-updater controls fail direction screens; continuous working access not adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58 tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights; four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain confound documented; agent integration remains open. Frozen-codec context:12 fits show history benefit but both spatial expansions fail; wrong-history discrimination remains weak.68 tests,1447 exact-resume checks,405 artifact audits,15 reports; defaults unchanged. Paired order:12 crop fits fail static-control gate; separate exhaustive-phase challenge removes single-frame cues. Four balanced-data fits achieve79–99% but neither variant passes both seeds.69 tests, exact restart and6035 raw audits;21 reports, defaults unchanged. Crossed temporal/head study:8 fits all learn training data; reflection mean+1.37pp with-5.60pp worst regression fails repair. Initialization dependence persists at fixed batches.72 tests,2211 exact restart,7828 audits and11 reports; defaults unchanged."
+  last_turn: "2026-09-16T11:27+02:00"
+  turn_count: 9
+  summary: "Eight matched fresh-updater controls fail direction screens; continuous working access not adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59 scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100% in both seeds. Text-prefix curriculum improves complete-input learning but source removal exposes text reliance; multimodal transfer stays open.61 tests and24 reports checked. Video follow-up:12 fits fail both decoder repairs; symmetric sequence access weakens through frozen state. Architecture clarified;58 tests,18 reports verified, defaults unchanged. Shared spatial codec now reuses actual image weights; four real-video fits fail temporal benefit, source RGB regresses.61 tests and exact resume pass. Literature and loss/domain confound documented; agent integration remains open. Frozen-codec context:12 fits show history benefit but both spatial expansions fail; wrong-history discrimination remains weak.68 tests,1447 exact-resume checks,405 artifact audits,15 reports; defaults unchanged. Paired order:12 crop fits fail static-control gate; separate exhaustive-phase challenge removes single-frame cues. Four balanced-data fits achieve79–99% but neither variant passes both seeds.69 tests, exact restart and6035 raw audits;21 reports, defaults unchanged. Crossed temporal/head study:8 fits all learn training data; reflection mean+1.37pp with-5.60pp worst regression fails repair. Initialization dependence persists at fixed batches.72 tests,2211 exact restart,7828 audits and11 reports; defaults unchanged. Source diversity:12 fixed fits improve new-source trained-shift accuracy to99.93%, but broad unseen-shift accuracy77.51% fails repair.74 tests,3571 exact restart,14771 audits and15 reports; fixed input guards, defaults unchanged."
 
 events_logged:
 - turn: 1
@@ -342,6 +342,47 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O282 diagnostic procedure committed through N419 and implemented comparison; no efficacy promotion.
+- turn: 9
+  type: decision
+  id: N421
+  routing: direct
+  provenance: ai-suggested
+  summary: Compare independent source breadth against matched correlated-frame count
+- turn: 9
+  type: experiment
+  id: N422
+  routing: direct
+  provenance: ai-executed
+  summary: Twelve matched diversity fits improve familiar motion but fail full confirmation
+- turn: 9
+  type: experiment
+  id: N423
+  routing: direct
+  provenance: ai-executed
+  summary: Displacement and exposure audits isolate an untrained-magnitude weakness
+- turn: 9
+  type: observation
+  id: O285
+  routing: staged
+  provenance: ai-suggested
+  summary: On these new source contents, trained displacement magnitudes transfer almost perfectly while untrained
+    larger magnitudes remain initialization-sensitive. More independent contents at fixed updates do not repair
+    the latter. This does not establish that diversity is generally harmful or uniquely implicate representation,
+    encoder receptive field or optimization.
+- turn: 9
+  type: observation
+  id: O286
+  routing: staged
+  provenance: ai-suggested
+  summary: Next vary training displacement coverage at fixed contents, architecture and compute, separating trained,
+    unseen intermediate and extrapolated magnitudes. Keep current confirmation as now-inspected development and
+    reserve new sources. Magnitude is not speed without varying elapsed time; comparison proposed, not run.
+- turn: 9
+  type: heuristic
+  id: H73
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O284 comparison procedure committed through N421; no broad efficacy promotion.
 
 ai_actions:
 - turn: 1
@@ -457,6 +498,19 @@ ai_actions:
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
   - ara/evidence/tables/video_stability_2026-09-16.json
+- turn: 9
+  action: Implemented explicit source manifests, file/crop/subject leakage checks, per-source macro scores and sampled
+    exposure. Selected fixed local clips; ran12 fits, exact restart and independent raw audits. Fixed post-run missing-subject/repeated-ID
+    guards after failing test, verified210 unchanged input fields. Two actual-Claude public methodology reviews.
+    Preserved original data/checkpoints and negative gates.
+  provenance: ai-executed
+  files_changed:
+  - experiments/video_order.py
+  - tests/test_video_diversity.py
+  - docs/video-diversity-plan.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - ara/evidence/tables/video_diversity_2026-09-16.json
 
 claims_touched: []
 key_context:
@@ -492,6 +546,10 @@ key_context:
 - turn: 8
   excerpt: Continue together with Claude. Work on this. Plan, implement, review, test and fix. Iterate. Training
     fit audit showed complete empirical fit; bounded reflection comparison failed predeclared repair gates.
+- turn: 9
+  excerpt: Continue together with Claude. Work on this. Plan, implement, review, test and fix. Iterate. Compared
+    source diversity against frame density at fixed compute; familiar motion generalizes, untrained larger displacements
+    remain weak.
 
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
@@ -567,6 +625,9 @@ open_threads:
 - 'N418-N420/O283-O284: empirical training fit complete; fixed-sampler crossed initializations remain transfer-sensitive.
   Reflection is optional but fails robust repair gate. Next independent source-content diversity at matched task/compute
   plus fresh confirmation; optimization mechanisms, natural video and core integration unresolved.'
+- 'N421-N423/O285-O286: matched source-diversity comparison fails full motion repair. Distinguish displacement coverage/interpolation/extrapolation
+  at fixed content before capacity changes; need fresh confirmation beyond now-inspected four clips. General natural-video/streaming/core
+  integration remains open.'
 
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
@@ -713,3 +774,5 @@ ai_suggestions_pending:
   O281/O282 interpretation and fixed-task seed-stability proposal await researcher response. No broad efficacy crystallization.
 - H72 records executed diagnosis from O282, not efficacy. O283 interpretation and O284 independent-source comparison
   remain staged; no unique data/capacity/optimizer cause or new run authorized beyond completed fixed budget.
+- O284→H73 records executed comparison procedure only. O285 interpretation and O286 displacement-coverage study
+  remain staged; no unique cause, adopted wider data policy or unregistered new fit.

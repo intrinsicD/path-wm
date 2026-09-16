@@ -26,8 +26,7 @@ expected per-image exposure in dense/broad, but4x per-clip exposure in dense.
 Record realized source/image/pair exposure. Epoch counts differ for small.
 
 Selection uses existing local Charades official-train metadata, raw video files;
-no download/copy or selection by model score. Exclude all six historical subject
-groups, require metadata duration>=8s and an existing file. Sort IDs by SHA256 of
+no download/copy or selection by model score. Exclude subjects of all six historical clips (five distinct groups), require metadata duration>=8s and an existing file. Sort IDs by SHA256 of
 `pathwm-motion-diversity-v1:` + ID; take one clip per previously unseen subject.
 First12 expand training: TIGIP,TYHA8,AXJUB,DPCGS,SG8ZR,R979C,CAND1,QO7SM,S3FY2,
 CF92N,A2771,FNM0L. Next4 confirmation:0XP8L,7YV59,L8HMR,DPKMU;4 frames each.
@@ -81,3 +80,85 @@ no pretrained source and seeded initialization. Both run manifests record COCO-o
 image training, not Charades. Keep the weaker fresh-motion-task scope; this is not
 universal duplicate detection. See runs/video_diversity_v1/codec-provenance.json.
 The reviewer confirms per-image versus per-clip exposure and four-cell limitations.
+
+
+## Results
+
+All12 fixed fits complete:19.947s CPU training; preparation, evaluation and reports
+additional. No changes to optimization, architecture or source selection after results.
+The confirmation metrics below average sources equally, then the four crossed cells.
+
+| Arm | Confirm2/4px accuracy | Confirm6/8px accuracy | Confirm6/8px range across cells |
+|---|---:|---:|---:|
+|small4x4|98.23%|83.61%|69.37–93.98%|
+|dense4x16|99.28%|83.16%|68.52–96.52%|
+|broad16x4|99.93%|77.51%|63.35–94.56%|
+
+All three full four-cell capability gates FAIL. BROAD-minus-DENSE averages-2.502pp
+across both displacement groups; worst cell/group-16.439pp, so the diversity-benefit
+gate FAILS. One cell passes the complete gate in SMALL and DENSE; none in BROAD.
+Higher familiar-displacement accuracy is not a full repair. All train scores100%
+except one DENSE99.927%; all static controls50%. Raw alignment oracle100%, no ambiguous
+confirmation cases, so these measured direction targets are recoverable from RGB.
+
+The displacement breakdown sharpens the next question: BROAD averages99.85% at2px,
+100% at4px,86.30% at6px and68.72% at8px. Wider content coverage transfers well at
+trained displacement magnitudes on these new sources, but does not solve untrained
+magnitudes; it worsens their mean in this comparison. This is not proof that data
+breadth is harmful in general, or that architecture, encoder access or optimizer
+implicit bias is the unique cause. Four clips/cells are descriptive evidence only.
+Historical monitored-source performance differs substantially, so preserve those
+results rather than replacing them with the easier fresh familiar-displacement group.
+
+Each fit samples4096 pairs. SMALL visits16 images/1433 distinct pairs; DENSE/BROAD
+visit64 images/2966 distinct pairs. DENSE and BROAD have exactly identical sampled
+integer pair sequences and per-image counts, with different content/source grouping.
+Their per-clip counts differ intentionally. All four initialization cells share these
+sampling patterns; model initial states match across arms within each cell.
+
+Validation:74 unique scoped tests;3571 exact8 versus4+4 restart comparisons including
+source attribution and exposure;14771 independent metric/artifact checks;3312 exact
+RGB/feature marginal identities across prepared populations.22 source-file hashes
+and72 cached tensors unchanged. All16 baseline normal-logit arrays (four cells x four
+legacy populations) exactly reproduce the previous comparison.15 reports structurally
+verified; comparison panel inspected, browser interaction not checked. About29.1MB
+artifacts; no images/videos copied and no new model downloads.
+
+Post-run code review caught a guard gap: confirmation could be accepted when another
+split's subject was missing, or a source ID was reused for a different file. Added a
+failing regression case, fixed both guards and reran23 affected tests.210 field checks
+show the stricter reader returns the same valid experimental records. It changes no
+fitted data/model or outcomes. Exact replay is recorded for the experiment snapshot
+before this input-only guard fix; original snapshots remain available.
+
+Two actual-Claude public reviews were reconciled. The remaining unknown-codec concern
+was resolved locally through the recorded COCO-only initialization/continuation chain.
+No private code, images or measurements were sent; metadata/hash grouping still does
+not guarantee universal scene/near-duplicate independence.
+
+[Comparison report](../runs/video_diversity_v1/report.html),
+[verification](../runs/video_diversity_v1/verification.json),
+[per-displacement/source diagnostics](../runs/video_diversity_v1/displacement-diagnostics.json),
+[exposure counts](../runs/video_diversity_v1/exposure.json).
+
+Next proposed bounded comparison: vary displacement coverage during training while
+holding source content and model size fixed. Distinguish trained magnitudes, unseen
+intermediate magnitudes and extrapolation; retain this now-inspected confirmation
+set as development evidence and reserve new sources for a further confirmation.
+Do not call displacement magnitude speed without varying time intervals. This is a
+proposal, not an extra unregistered run or a guarantee of repair.
+
+### Running a configured population
+
+```bash
+.venv/bin/python -m experiments.video_order --output runs/my_motion_diversity \
+  --source-manifest data/motion_diversity_v1/broad.json --balanced-training \
+  --seed 7600 --head-seed 7501 --steps 512 \
+  --temporal-source runs/video_context_v1/seed7401/k3/history/last.pt
+```
+
+The manifest lists explicit paths, file hashes, subjects and frame counts under train,
+validation,evaluation,confirmation. Source IDs/subject labels stay out of model inputs.
+Prepared data identities, per-source metrics and `exposure.npz` make the actual images
+and sampled pairs inspectable. Omitting the manifest retains the original six-source
+recipe. Earlier runs require their saved code snapshots for exact resume.
