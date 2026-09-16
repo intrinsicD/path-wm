@@ -752,6 +752,55 @@ def grounded_objective(model, tokens, targets):
     ) / np.log(259)
 
 
+def retention_kl(student, teacher, labels):
+    """Next-byte KL: include first EOS, never padding or finished continuations."""
+    eos = labels == 2
+    valid = (labels != 0) & ((eos.cumsum(1) - eos.long()) == 0)
+    divergence = F.kl_div(
+        student.log_softmax(-1), teacher.softmax(-1), reduction="none"
+    ).sum(-1)
+    return divergence[valid].mean() / np.log(student.shape[-1])
+
+
+def retention_targets(teacher, inputs, targets):
+    """Replay source outputs without advancing the student's random stream."""
+    with evaluation_mode(teacher), torch.no_grad():
+        tokens = teacher.core(inputs)
+        prefixes = teacher.outputs.generate(tokens, 28)
+        return dict(
+            text_target=teacher.outputs("text", tokens, targets["text"][:, :-1]),
+            text_greedy=teacher.outputs("text", tokens, prefixes[:, :-1]),
+            prefixes=prefixes,
+            **{k: teacher.outputs(k, tokens) for k in KINDS if k != "text"},
+        )
+
+
+def retention_objective(model, tokens, targets, reference, normalizers):
+    losses = {}
+    for name, sequence in (
+        ("text_target", targets["text"]),
+        ("text_greedy", reference["prefixes"]),
+    ):
+        logits = model.outputs("text", tokens, sequence[:, :-1])
+        losses[name] = retention_kl(logits, reference[name], sequence[:, 1:])
+    for kind in KINDS:
+        if kind != "text":
+            losses[kind] = (
+                F.mse_loss(model.outputs(kind, tokens), reference[kind])
+                / normalizers[kind]
+            )
+    total = 0.5 * (losses["text_target"] + losses["text_greedy"])
+    total = total + sum(losses[k] for k in KINDS if k != "text")
+    return total, {k: float(v.detach()) for k, v in losses.items()}
+
+
+def objective_gradient_norm(loss, parameters):
+    gradients = torch.autograd.grad(
+        loss, parameters, retain_graph=True, allow_unused=True
+    )
+    return float(sum(g.square().sum() for g in gradients if g is not None).sqrt())
+
+
 def grounded(args):
     """Small matched continuation through the existing core and output decoder."""
     from pathwm.data.understanding import UnderstandingData
@@ -763,6 +812,14 @@ def grounded(args):
     device = torch.device(args.device)
     model, source_settings, source_hash = restore_readout(args.core, args.seed, device)
     configure_grounded_training(model, args.grounded_scope)
+    retention_weight = getattr(args, "retention_weight", 0.0)
+    if not np.isfinite(retention_weight) or retention_weight < 0:
+        raise ValueError("Retention weight must be finite and nonnegative")
+    # Construct from the SOURCE before Run restores any resumed student weights.
+    teacher = (
+        copy.deepcopy(model).requires_grad_(False).eval() if retention_weight else None
+    )
+    teacher_hash = state_hash(teacher) if teacher is not None else None
     frozen = {
         n: p.detach().clone()
         for n, p in model.named_parameters()
@@ -773,9 +830,8 @@ def grounded(args):
         s: dataset(s, original_seed) for s in ("train", "validation", "seen", "heldout")
     }
     normalizers = scales(populations["train"])
-    optimizer = torch.optim.Adam(
-        [p for p in model.parameters() if p.requires_grad], lr=0.001
-    )
+    trainable = [p for p in model.parameters() if p.requires_grad]
+    optimizer = torch.optim.Adam(trainable, lr=0.001)
     settings = dict(
         seed=args.seed,
         stage="grounded",
@@ -796,6 +852,11 @@ def grounded(args):
         video_conditioning=model.outputs.decoders["video"].time_conditioning,
         video_palette=model.outputs.decoders["video"].palette_size,
         diagnostic_calibration_overlap=args.grounded_case,
+        retention_weight=retention_weight,
+        retention_teacher_sha256=teacher_hash,
+        retention="Replay-only source KL (target + greedy prefixes)/2 + normalized image/audio/video MSE; paired underlying noise"
+        if teacher is not None
+        else None,
     )
     run = Run(
         args.output,
@@ -833,6 +894,7 @@ def grounded(args):
         training_mode(model)
         while run.step < end:
             optimizer.zero_grad(set_to_none=True)
+            diagnostics = {}
             if run.step % 2 == 0:
                 inputs, target = grounded_batch(
                     data, rows, run.sample(len(rows), 8), device
@@ -843,20 +905,46 @@ def grounded(args):
                 replay = populations["train"]
                 indices = run.sample(len(replay["ids"]), 8)
                 mode = MODES[(run.step // 2) % len(MODES)]
-                tokens = model.core(observations(replay, mode, indices, device))
+                inputs = observations(replay, mode, indices, device)
+                target = target_batch(replay, indices, device)
+                reference = (
+                    retention_targets(teacher, inputs, target)
+                    if teacher is not None
+                    else None
+                )
+                tokens = model.core(inputs)
                 loss, _ = output_objective(
                     model,
                     tokens,
-                    target_batch(replay, indices, device),
+                    target,
                     KINDS,
                     normalizers,
                 )
+                if reference is not None:
+                    anchor, components = retention_objective(
+                        model, tokens, target, reference, normalizers
+                    )
+                    diagnostics = dict(
+                        replay_loss=float(loss.detach()),
+                        anchor_loss=float(anchor.detach()),
+                        **components,
+                    )
+                    if run.step == 1 or run.step % 128 == 127:
+                        diagnostics["replay_gradient_norm"] = objective_gradient_norm(
+                            loss, trainable
+                        )
+                        diagnostics["weighted_anchor_gradient_norm"] = (
+                            objective_gradient_norm(
+                                retention_weight * anchor, trainable
+                            )
+                        )
+                    loss = loss + retention_weight * anchor
                 objective = "replay"
             if not torch.isfinite(loss):
                 raise ValueError("Nonfinite grounded objective")
             loss.backward()
             torch.nn.utils.clip_grad_norm_(
-                [p for p in model.parameters() if p.requires_grad],
+                trainable,
                 5.0,
                 error_if_nonfinite=True,
             )
@@ -868,6 +956,7 @@ def grounded(args):
                     split="train",
                     loss=float(loss.detach()),
                     objective=objective,
+                    **diagnostics,
                 )
             )
             if run.step % 128 == 0:
@@ -882,6 +971,8 @@ def grounded(args):
                 raise AssertionError(f"Frozen parameter changed: {name}")
         if file_hash(args.core / "last.pt") != source_hash:
             raise AssertionError("Source checkpoint changed")
+        if teacher is not None and state_hash(teacher) != teacher_hash:
+            raise AssertionError("Frozen retention teacher changed")
         resources = dict(
             training_seconds_this_invocation=elapsed,
             parameters=sum(p.numel() for p in model.parameters()),
@@ -889,6 +980,7 @@ def grounded(args):
                 p.numel() for p in model.parameters() if p.requires_grad
             ),
             frozen_preserved=True,
+            teacher_preserved=teacher is not None,
             peak_allocated_bytes=torch.cuda.max_memory_allocated(device)
             if device.type == "cuda"
             else None,
@@ -1492,6 +1584,12 @@ def main():
     )
     parser.add_argument(
         "--grounded-scope", choices=("decoder", "core"), default="decoder"
+    )
+    parser.add_argument(
+        "--retention-weight",
+        type=float,
+        default=0.0,
+        help="Grounded replay-only frozen-source output distillation;0 disables",
     )
     parser.add_argument(
         "--understanding-suite",

@@ -15,7 +15,7 @@ def test_retention_kl_includes_first_eos_but_not_padding_or_continuation():
     mask = torch.tensor([[1, 1, 0, 0, 0], [1, 1, 1, 1, 0]], dtype=torch.bool)
     loss = recipe.retention_kl(student, teacher, labels)
     q = teacher.softmax(-1)
-    reference = (q * (teacher.log_softmax(-1) - student.log_softmax(-1)))
+    reference = q * (teacher.log_softmax(-1) - student.log_softmax(-1))
     reference = reference.sum(-1)[mask].mean() / np.log(7)
     torch.testing.assert_close(loss, reference)
     loss.backward()
@@ -46,20 +46,22 @@ def test_retention_teacher_preserves_rng_and_identity_then_only_student_learns()
     assert set(terms) == {"text_target", "text_greedy", "image", "audio", "video"}
     assert all(not v.requires_grad for v in reference.values())
     # Perturb the shared state, so every output can supply a corrective gradient.
-    changed = (tokens.detach() + .1 * torch.randn_like(tokens)).requires_grad_()
+    changed = (tokens.detach() + 0.1 * torch.randn_like(tokens)).requires_grad_()
     loss, terms = recipe.retention_objective(
         model, changed, targets, reference, normalizers
     )
     assert loss > 0
     loss.backward()
     assert changed.grad.abs().sum() > 0
-    assert any(p.grad is not None and p.grad.abs().sum() > 0
-               for p in model.outputs.decoders["text"].parameters())
+    assert any(
+        p.grad is not None and p.grad.abs().sum() > 0
+        for p in model.outputs.decoders["text"].parameters()
+    )
     assert all(p.grad is None for p in teacher.parameters())
     assert all(p.grad is None for p in model.core.agent.encoders.parameters())
     assert recipe.state_hash(teacher) == teacher_hash
     # Numeric modality reference; the average prefix terms must not double text.
-    expected = .5 * (terms["text_target"] + terms["text_greedy"])
+    expected = 0.5 * (terms["text_target"] + terms["text_greedy"])
     for kind in ("image", "audio", "video"):
         numeric = F.mse_loss(model.outputs(kind, changed), reference[kind])
         numeric = numeric / normalizers[kind]

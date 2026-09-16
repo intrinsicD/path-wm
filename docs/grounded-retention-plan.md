@@ -63,3 +63,12 @@ Actual Claude critique/reconciliation is stored in
 data or measured results exported. Its requests for separate prefix losses,
 gradient diagnostics and per-example regressions are included. Its proposed
 compute-matched replay control is deferred with the narrower claim above.
+
+Claude explicitly accepted both corrections (same noise is not same category;
+finite distillation imposes no hard accuracy ceiling), confirmed no methodological
+blocker for this scope, and requested symmetric reporting of failed/positive
+results and actual overhead. Both are included. Local numeric/gradient checks
+and the focused regression set pass. A4-update GPU continuous run and2+2 resume
+match exactly across1180 tensor checks, including optimizer/RNG/sampler, with
+identical logged loss rows. The teacher is reconstructed from the original source
+before loading resumed student weights. Smoke reports are structurally verified.
