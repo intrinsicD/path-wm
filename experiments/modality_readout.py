@@ -1788,7 +1788,12 @@ def exploration(args):
         prior = json.loads((args.output / "status.json").read_text())
         atomic_json(
             args.output / "status.json",
-            prior | dict(result="failed", report="failed", error=str(exc)),
+            prior
+            | dict(
+                result=prior["result"] if prior["result"] == "complete" else "failed",
+                report="failed",
+                error=str(exc),
+            ),
         )
         raise
     return args.output
