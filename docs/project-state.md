@@ -1,5 +1,11 @@
 # Current work
 
+**Active: balanced request-meaning diagnosis,16 September.**
+[Fixed protocol](request-meaning-plan.md). The recurring suite selects request
+interpretation before another whole-core fit. Paired length/prefix controls and
+stage readers first; interpreter-only comparison is conditional on encoder access.
+No general language claim or default change; preserve broad regressions.
+
 **Replay-guided exploration demonstration completed,16 September:**
 [Protocol/results](replay-exploration-plan.md),[report](../runs/replay_exploration_v1/report.html).
 User clarified experimental branch selection, not faster suite rejection. Actual
