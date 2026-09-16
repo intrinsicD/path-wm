@@ -1,0 +1,615 @@
+{
+  "timestamp": "2026-09-16T12:06+02:00",
+  "provenance": "ai-executed",
+  "plan_commit": "1cb637f",
+  "experiment_code_commit": "3c7d9cf",
+  "summary": {
+    "baseline": {
+      "confirm_extrapolation": {
+        "maximum": 0.7513020783662796,
+        "mean": 0.6953938752412796,
+        "minimum": 0.6188150942325592,
+        "scope": "four crossed cells, one sampler; descriptive only"
+      },
+      "confirm_intermediate": {
+        "maximum": 0.9913194477558136,
+        "mean": 0.9366861954331398,
+        "minimum": 0.7934027761220932,
+        "scope": "four crossed cells, one sampler; descriptive only"
+      },
+      "confirm_known": {
+        "maximum": 1.0,
+        "mean": 0.958984375,
+        "minimum": 0.8570963591337204,
+        "scope": "four crossed cells, one sampler; descriptive only"
+      },
+      "confirm_wide": {
+        "maximum": 0.9664713591337204,
+        "mean": 0.896240234375,
+        "minimum": 0.7369791567325592,
+        "scope": "four crossed cells, one sampler; descriptive only"
+      }
+    },
+    "centered": {
+      "confirm_extrapolation": {
+        "maximum": 0.7747395783662796,
+        "mean": 0.724202474579215,
+        "minimum": 0.6998697966337204,
+        "scope": "four crossed cells, one sampler; descriptive only"
+      },
+      "confirm_intermediate": {
+        "maximum": 0.9971788227558136,
+        "mean": 0.968370221555233,
+        "minimum": 0.9003906100988388,
+        "scope": "four crossed cells, one sampler; descriptive only"
+      },
+      "confirm_known": {
+        "maximum": 1.0,
+        "mean": 0.9859212227165699,
+        "minimum": 0.9436848908662796,
+        "scope": "four crossed cells, one sampler; descriptive only"
+      },
+      "confirm_wide": {
+        "maximum": 0.9742838591337204,
+        "mean": 0.9291992224752903,
+        "minimum": 0.8548177033662796,
+        "scope": "four crossed cells, one sampler; descriptive only"
+      }
+    }
+  },
+  "capability_gates": {
+    "baseline": false,
+    "centered": false
+  },
+  "regularizer_benefit": {
+    "development_preservation": true,
+    "fresh_preservation": false,
+    "historical_source_preservation": false,
+    "mean_gain_at_least3pp": true,
+    "mean_transfer_gain_pp": 3.0246312730014324,
+    "minimum_development_gain_pp": -0.868055555555558,
+    "minimum_fresh_gain_pp": -4.3294258415699005,
+    "minimum_historical_source_gain_pp": -7.899308204650879,
+    "passed": false
+  },
+  "cell_gates": {
+    "temporal7401_head7501_baseline": {
+      "criteria": {
+        "confirm_extrapolation": {
+          "accuracy": false,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": false,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_intermediate": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_known": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_wide": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        }
+      },
+      "passed": false
+    },
+    "temporal7401_head7501_centered": {
+      "criteria": {
+        "confirm_extrapolation": {
+          "accuracy": false,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": false,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_intermediate": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_known": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_wide": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        }
+      },
+      "passed": false
+    },
+    "temporal7401_head7502_baseline": {
+      "criteria": {
+        "confirm_extrapolation": {
+          "accuracy": false,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": false,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_intermediate": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_known": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_wide": {
+          "accuracy": true,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        }
+      },
+      "passed": false
+    },
+    "temporal7401_head7502_centered": {
+      "criteria": {
+        "confirm_extrapolation": {
+          "accuracy": false,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": false,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_intermediate": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_known": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_wide": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        }
+      },
+      "passed": false
+    },
+    "temporal7402_head7501_baseline": {
+      "criteria": {
+        "confirm_extrapolation": {
+          "accuracy": false,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": false,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_intermediate": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_known": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_wide": {
+          "accuracy": true,
+          "current": true,
+          "each_source": false,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        }
+      },
+      "passed": false
+    },
+    "temporal7402_head7501_centered": {
+      "criteria": {
+        "confirm_extrapolation": {
+          "accuracy": false,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": false,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_intermediate": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_known": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_wide": {
+          "accuracy": true,
+          "current": true,
+          "each_source": false,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        }
+      },
+      "passed": false
+    },
+    "temporal7402_head7502_baseline": {
+      "criteria": {
+        "confirm_extrapolation": {
+          "accuracy": false,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": false,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_intermediate": {
+          "accuracy": false,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": false,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_known": {
+          "accuracy": false,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": false,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_wide": {
+          "accuracy": false,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": false,
+          "previous": true,
+          "unordered": true
+        }
+      },
+      "passed": false
+    },
+    "temporal7402_head7502_centered": {
+      "criteria": {
+        "confirm_extrapolation": {
+          "accuracy": false,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": false,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_intermediate": {
+          "accuracy": true,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_known": {
+          "accuracy": true,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_wide": {
+          "accuracy": false,
+          "current": true,
+          "each_source": false,
+          "flip": false,
+          "pair": false,
+          "previous": true,
+          "unordered": true
+        }
+      },
+      "passed": false
+    }
+  },
+  "bias_diagnostics": {
+    "baseline": {
+      "confirm_extrapolation": {
+        "cross_entropy": 0.9168032705783844,
+        "pair_bias_fraction": 0.4559759125113487,
+        "pair_offset_mean_abs": 3.2714646458625793,
+        "pair_ordering_accuracy": 0.7351887971162796,
+        "pair_signal_mean_abs": 4.838895857334137,
+        "source_macro_pair_accuracy": 0.5017903675325215
+      },
+      "confirm_intermediate": {
+        "cross_entropy": 0.20657370099797845,
+        "pair_bias_fraction": 0.24186670035123825,
+        "pair_offset_mean_abs": 3.191272020339966,
+        "pair_ordering_accuracy": 0.9977213591337204,
+        "pair_signal_mean_abs": 10.622477650642395,
+        "source_macro_pair_accuracy": 0.8739149291068316
+      },
+      "confirm_known": {
+        "cross_entropy": 0.12967745249625295,
+        "pair_bias_fraction": 0.2222287766635418,
+        "pair_offset_mean_abs": 2.8640831410884857,
+        "pair_ordering_accuracy": 1.0,
+        "pair_signal_mean_abs": 10.199772715568542,
+        "source_macro_pair_accuracy": 0.9179687481373549
+      },
+      "confirm_wide": {
+        "cross_entropy": 0.3497855234891176,
+        "pair_bias_fraction": 0.28985515981912613,
+        "pair_offset_mean_abs": 3.350178062915802,
+        "pair_ordering_accuracy": 0.9783528596162796,
+        "pair_signal_mean_abs": 9.381199479103088,
+        "source_macro_pair_accuracy": 0.8020833348855376
+      }
+    },
+    "centered": {
+      "confirm_extrapolation": {
+        "cross_entropy": 0.547295019030571,
+        "pair_bias_fraction": 0.30475860834121704,
+        "pair_offset_mean_abs": 0.5618462562561035,
+        "pair_ordering_accuracy": 0.7433268129825592,
+        "pair_signal_mean_abs": 2.3290129601955414,
+        "source_macro_pair_accuracy": 0.6140950508415699
+      },
+      "confirm_intermediate": {
+        "cross_entropy": 0.08307136036455631,
+        "pair_bias_fraction": 0.13724423199892044,
+        "pair_offset_mean_abs": 0.6304435357451439,
+        "pair_ordering_accuracy": 0.993381068110466,
+        "pair_signal_mean_abs": 5.152356386184692,
+        "source_macro_pair_accuracy": 0.9412977434694767
+      },
+      "confirm_known": {
+        "cross_entropy": 0.0585101549513638,
+        "pair_bias_fraction": 0.11895456817001104,
+        "pair_offset_mean_abs": 0.5700012743473053,
+        "pair_ordering_accuracy": 1.0,
+        "pair_signal_mean_abs": 4.941222667694092,
+        "source_macro_pair_accuracy": 0.9718424491584301
+      },
+      "confirm_wide": {
+        "cross_entropy": 0.17356674373149872,
+        "pair_bias_fraction": 0.17737413942813873,
+        "pair_offset_mean_abs": 0.6339051201939583,
+        "pair_ordering_accuracy": 0.9619140625,
+        "pair_signal_mean_abs": 4.4903563261032104,
+        "source_macro_pair_accuracy": 0.8847656240686774
+      }
+    }
+  },
+  "training_seconds": 13.290663887979463,
+  "verification": {
+    "artifact_bytes": 39351736,
+    "browser_checked": false,
+    "checks": 52913,
+    "claude_receipts": 2,
+    "comparison_panel_visually_inspected": true,
+    "exact_frame_marginal_checks": 4392,
+    "exact_resume_checks": 7061,
+    "frozen_tensor_checks": 40,
+    "initializations_matched": true,
+    "previous_baseline_exact_checks": 72,
+    "reports_checked": 11,
+    "sampled_pairs_matched": true,
+    "source_file_hash_checks": 30,
+    "tests": 81
+  },
+  "source_selection": {
+    "excluded_ids": [
+      "0EJAG",
+      "0GFE8",
+      "0JQ26",
+      "0LDP7",
+      "0XP8L",
+      "12VVC",
+      "1KKYX",
+      "34DKM",
+      "7YV59",
+      "A2771",
+      "AHL6X",
+      "AXJUB",
+      "CAND1",
+      "CF92N",
+      "DPCGS",
+      "DPKMU",
+      "FNM0L",
+      "L8HMR",
+      "N588B",
+      "QO7SM",
+      "R979C",
+      "S3FY2",
+      "SG8ZR",
+      "TIGIP",
+      "TYHA8",
+      "X1EZQ"
+    ],
+    "excluded_subjects": [
+      "0KZ7",
+      "2Q9D",
+      "2RTW",
+      "3531",
+      "3H6W",
+      "4YWP",
+      "5LWB",
+      "C7O9",
+      "CCI9",
+      "D0RU",
+      "DJ17",
+      "G6WD",
+      "HJZQ",
+      "HR43",
+      "JVLO",
+      "KFGP",
+      "KQI6",
+      "L4ZP",
+      "MR42",
+      "P6LJ",
+      "PKND",
+      "UTMU",
+      "WQ8Z",
+      "YMXV",
+      "ZAWX"
+    ],
+    "metadata_sha256": "59273c6dc2139ec7eb95b980fd26bc8529774b1ede0602f6ca90b546ed12f0fc",
+    "previous_manifest_sha256": {
+      "data/motion_displacement_v1/sources.json": "032258c9649286ae2a64b79b830f4921b7de18285db696f97c94eac8f339c228",
+      "data/motion_diversity_v1/broad.json": "54dc6dafc33cd4a272d22c3fc6d3a65710bad5269034151c4351ee8368f85e26"
+    },
+    "selected": [
+      {
+        "frames": 4,
+        "id": "7H7PN",
+        "path": "/home/alex/Documents/path-wm/data/charades/raw/Charades_v1_480/7H7PN.mp4",
+        "scene": "Living room",
+        "sha256": "781bf646d931d5efedb930eac12878bb812c4364f4c5f6a00ab48271f5730fb1",
+        "subject": "6PZN"
+      },
+      {
+        "frames": 4,
+        "id": "A8LZE",
+        "path": "/home/alex/Documents/path-wm/data/charades/raw/Charades_v1_480/A8LZE.mp4",
+        "scene": "Entryway (A hall that is generally located at the entrance of a house)",
+        "sha256": "bcfbb5f3d096147fccea2464d2477938ec0471a379474e7f09319f16fd4cd41c",
+        "subject": "8718"
+      },
+      {
+        "frames": 4,
+        "id": "V149B",
+        "path": "/home/alex/Documents/path-wm/data/charades/raw/Charades_v1_480/V149B.mp4",
+        "scene": "Entryway (A hall that is generally located at the entrance of a house)",
+        "sha256": "2d5d65e0e84f92ad59b32aa2d655ffc896bf876b324dd471d858b5e11e38c26f",
+        "subject": "DXDI"
+      },
+      {
+        "frames": 4,
+        "id": "IKZJE",
+        "path": "/home/alex/Documents/path-wm/data/charades/raw/Charades_v1_480/IKZJE.mp4",
+        "scene": "Hallway",
+        "sha256": "ed6a92c9a21413cd442831d52e2c0f774656e882f6ee789c1e28ec535b575046",
+        "subject": "EXQX"
+      }
+    ]
+  },
+  "limits": "Eight fixed512-update fits. Identical model, initialization and4096 sampled pairs; frozen image codec. CE versus CE+0.1 mean per-pair SmoothL1((s0+s1)/2), s=logit0-logit1. Single three-frame sequence inference unchanged, no partner or test-time calibration. Train2/4/6/8px; confirm2/4,6/8,3/5/7,10/11. Four fresh subject-disjoint clips; nine earlier sources retained as development, original source separately gated. Historical validation subject overlaps train; monitoring only. Finite one-sampler comparison, not inference about seed populations or coefficient sweeps. Constructed48-phase pans, not natural motion, streaming, forecasting, speed or agent capability.",
+  "sha256": {
+    "runs/video_pair_center_v1/result.json": "ecf1731a6f29295e75af537ef33eeafb41baa713641ab289cb908b07b2c9d72f",
+    "runs/video_pair_center_v1/verification.json": "d6e9c8e949acb5a077c88a93d2e9adb65157266871d1540cd5727d2040a0b117",
+    "runs/video_pair_center_v1/diagnostic-summary.json": "8e9bd613564695cf868c0cc1660aef5fb6ceb5bddb79b2f8c03f4da72344681f",
+    "runs/video_pair_center_v1/exposure.json": "762e4bac344b1e26301674646a23717f7ed5e62b35659820c35d87e10ddbf182",
+    "runs/video_pair_center_v1/report.html": "ab7d12aaa1ff12125f921784049d5b81851e2b4652418cce94ee51996c8e4f34",
+    "runs/video_pair_center_v1/cache-check.json": "1023d5a0a4675c9d4dd725b5389ba151e3f266480c69288d94b6389fc652b8be",
+    "runs/video_pair_center_v1/check/verification.json": "8354840bcecae1115af05190ec1491cf540b96c76276faa973d464c21ec910f1",
+    "runs/video_pair_center_v1/temporal7401/head7502/baseline/last.pt": "00e8ce1e8058b727cc35207787f369a74ce0027805b0756b22f50a8423c38372",
+    "runs/video_pair_center_v1/temporal7401/head7502/centered/last.pt": "20be37ded283828081fe8714911e45157760ae51c4a74810978abb34b25da609",
+    "runs/video_pair_center_v1/temporal7401/head7501/baseline/last.pt": "3259e96df23be608cd0e4846d7d60fbfe28201d0b87e4f4ade0e278a644d7749",
+    "runs/video_pair_center_v1/temporal7401/head7501/centered/last.pt": "c927c724533975910052132b77438e47425296104ba0e2416b6d7eb8d966aced",
+    "runs/video_pair_center_v1/temporal7402/head7502/baseline/last.pt": "802e00f4f8ef6ab7edb201985ecba50d48f090c7e3b0fb3afd8fe135cc45a6a6",
+    "runs/video_pair_center_v1/temporal7402/head7502/centered/last.pt": "ff37de6645790bca84d3ab594bb95747c0cf1183d99de22cf8d97c89611ec530",
+    "runs/video_pair_center_v1/temporal7402/head7501/baseline/last.pt": "be2fd7c4e20e690c5f2ff8dcda08fd1212224f9a815c9a55ec5131f4933a8240",
+    "runs/video_pair_center_v1/temporal7402/head7501/centered/last.pt": "07247fa9ea70840ac9656e061aa6b0ca105134554b6b0a132a49f14523c87ab5",
+    "data/motion_pair_center_v1/expanded.json": "cb88393d93434c36c436ea9ff81471a01d9b0350050eba1dee17a99ae3d76d99",
+    "data/motion_pair_center_v1/selection.json": "aa9a30c7cbcf0e70713f205e70e34c8cea308bbd058394b28eb7dce0fcf915a3",
+    "data/motion_pair_center_v1/sources.json": "cd0833ad89f4c04e8d4cf0c6d5989d2257691bdcd5a00b754c4db9f3e39f323d",
+    "runs/reviews/video_pair_center_v1/public-receipt.json": "c2b982614d1e86a5557ce59ae0b267841a29049d7aa71b59759794f0466b6592",
+    "runs/reviews/video_pair_center_v1/reconcile-receipt.json": "815753711a4100b8ba872ba96e9cb1437907c5fcb3834540e8c4c9f7145f779c",
+    "runs/reviews/video_pair_center_v1/public-brief.txt": "be8c2ac2d977ce84d699a54e2a2d7e509a76be48856596d75107ccb75b9f7894",
+    "runs/reviews/video_pair_center_v1/reconcile-brief.txt": "5004419a360937e048742c7d29d967dbcc4645ad59ebfa632c478c3fab226346",
+    "runs/reviews/video_pair_center_v1/public-response.json": "37489d62072016d8c2dbab32aa4bfc159b5129dfcdc3e05d85d5a916a242ef9d",
+    "runs/reviews/video_pair_center_v1/reconcile-response.json": "37f0bf797b4a38abba8270cf9acc5c2d8042650c2a5f5292733e417ab0c9fcfa"
+  }
+}

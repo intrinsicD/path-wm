@@ -7122,3 +7122,56 @@ tree:
   - docs/video-displacement-plan.md
   - runs/video_displacement_v1/paired-diagnostic.json
   status: resolved
+- id: N427
+  type: decision
+  title: Test training-only per-pair centering with unchanged single-sequence inference
+  provenance: ai-executed
+  timestamp: 2026-09-16T12:06+02:00
+  choice: Fix CE versus CE+0.1 mean per-pair SmoothL1 common class score. Same model,16x4 frames,2/4/6/8
+    support,4096 paired draws,4 crossed cells per objective. Nine inspected development sources and4 fresh
+    sources excluding26 old clip subjects. O288 procedure implemented; no partner or calibration at inference.
+    Two public Claude reviews, fixed finite screens, no initialization ranking.
+  alternatives:
+  - Pure ranking objective without a decision threshold
+  - Pair-dependent inference
+  - Architecture expansion
+  evidence:
+  - O288
+  - ara/evidence/tables/video_pair_center_2026-09-16.json
+  - docs/video-pair-center-plan.md
+  - experiments/video_order.py
+  status: resolved
+- id: N428
+  type: experiment
+  title: Eight paired-objective fits improve means but fail preservation and capability gates
+  provenance: ai-executed
+  timestamp: 2026-09-16T12:06+02:00
+  result: Eight512-update fits13.291s CPU. Fresh means known95.90→98.59%,wide89.62→92.92%,intermediate93.67→96.84%,extrapolation69.54→72.42%.
+    Both full gates/all per-cell full gates fail. Transfer mean+3.025pp passes improvement screen, worst
+    fresh-4.329pp/historical-7.899pp fails preservation.81 tests,7061 exact restart,52913 raw audits,72
+    exact previous model/logit checks,4392 marginal identities,11 structural reports and inspected plot.30
+    source hashes40 cached tensors unchanged; no default promotion.
+  also_depends_on:
+  - N427
+  evidence:
+  - ara/evidence/tables/video_pair_center_2026-09-16.json
+  - docs/video-pair-center-plan.md
+  - runs/video_pair_center_v1/report.html
+  status: resolved
+- id: N429
+  type: experiment
+  title: Offset decreases but extrapolated comparative ordering remains weak
+  provenance: ai-executed
+  timestamp: 2026-09-16T12:06+02:00
+  result: Fresh extrapolated mean|b|3.271→0.562,mean|a|4.839→2.329,bias fraction0.456→0.305. Ordinary
+    accuracy69.54→72.42%,joint pair accuracy50.18→61.41%,ordering73.52→74.33%. Fresh known ordering100%
+    both,ordinary95.90→98.59%. Raw oracle100%,no ambiguous confirmation cases. Absolute score shrinkage
+    does not alone explain changed decisions; no unique representation/readout cause established and no
+    other coefficient tested.
+  also_depends_on:
+  - N428
+  evidence:
+  - ara/evidence/tables/video_pair_center_2026-09-16.json
+  - docs/video-pair-center-plan.md
+  - runs/video_pair_center_v1/diagnostic-summary.json
+  status: resolved

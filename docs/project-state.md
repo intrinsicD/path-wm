@@ -1,5 +1,17 @@
 # Current work
 
+**Pair-centered objective comparison completed,16 September:**
+[Protocol/results](video-pair-center-plan.md),[report](../runs/video_pair_center_v1/report.html).
+Eight fixed512-update fits compare CE versus CE+0.1 per-pair common-offset SmoothL1,
+with unchanged single-sequence inference/model and identical samples. Four fresh sources:
+known95.90→98.59%,wide89.62→92.92%,intermediate93.67→96.84%,extrapolation69.54→72.42%.
+Both full gates fail; transfer mean+3.025pp but worst fresh-4.33pp/historical-7.90pp
+fails preservation. Absolute AND relative class preference decrease; large-shift pair
+ordering remains weak73.52→74.33%.81 tests,7061 exact restart,52913 raw audits;72 exact
+prior-baseline model/logit checks.11 structural reports, plot inspected; no default
+promotion. Next propose explicit two-frame correspondence/readout at controlled support
+and capacity; natural motion, streaming and core integration remain open.
+
 **Displacement-coverage comparison completed,16 September:**
 [Protocol/results](video-displacement-plan.md),[report](../runs/video_displacement_v1/report.html).
 Eight512-update fits keep16x4 source frames, model and image/phase draws fixed; train2/4

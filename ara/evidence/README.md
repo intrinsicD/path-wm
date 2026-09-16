@@ -184,3 +184,5 @@ Temporal initialization and reflection: [source-bound evidence](tables/video_sta
 Source diversity versus frame density: [source-bound evidence](tables/video_diversity_2026-09-16.json). Twelve fixed fits reach99.93% new-source familiar-shift accuracy in the broad arm, but unseen-shift77.51% fails full repair.74 tests,3571 exact restart,14771 audits and15 reports; source/exposure guards repaired, defaults unchanged.
 
 - [Displacement coverage and paired score diagnostic,16 September](tables/video_displacement_2026-09-16.json):8 fixed fits,77 tests; transfer improves but full/preservation gates fail; no default adoption.
+
+- [Pair-centered training comparison,16 September](tables/video_pair_center_2026-09-16.json):8 fixed fits,81 tests; absolute/relative bias and mean accuracy improve, preservation/full gates fail; unchanged single-sequence inference.

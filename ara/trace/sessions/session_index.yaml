@@ -187,8 +187,10 @@ sessions:
     accuracy77.51% fails repair.74 tests,3571 exact restart,14771 audits and15 reports; fixed input guards,
     defaults unchanged. Displacement coverage:8 fixed fits raise fresh extrapolation58.89→85.03% but known
     worst regression9.64pp fails preservation.77 tests,3397 restart,19873 audits,11 reports; paired score
-    offsets motivate a proposed readout-objective repair, defaults unchanged.'
-  turn_count: 10
-  events_count: 61
+    offsets motivate a proposed readout-objective repair, defaults unchanged. Pair-centered objective:8
+    fixed fits reduce relative bias and improve fresh means, but extrapolation72.42% and source regressions
+    fail repair.81 tests,7061 restart,52913 audits,72 prior-baseline checks,11 reports; no default change.'
+  turn_count: 11
+  events_count: 67
   claims_touched: []
-  open_threads: 31
+  open_threads: 32

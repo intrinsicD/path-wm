@@ -2179,3 +2179,17 @@ entries:
   - 77 tests,3397 exact restart,19873 raw audits,4560 marginals,11 structural reports plus inspected plot.
     No browser interaction claim. Existing interpretations remain open; no abandonment or general claims
     promoted.
+- turn: 2026-09-16_001#11
+  notes:
+  - N427 fixed objective/inference decision, N428 eight fits and N429 score diagnosis direct. O289/O290
+    interpretations and next correspondence comparison staged. O288→H75 by artifact commitment, ai-suggested
+    provenance retained.
+  - Actual-Claude review misread mean per-pair penalty and seed cell count; corrections sent, finite scope
+    accepted. Remaining caution about ranking initialization seeds is outside the objective-within-matched-cell
+    estimand; no seed-population claim or winner ranking.
+  - Both full capability and benefit gates fail despite mean gains. Development macro would mask original-source7.90pp
+    regression, so separate preservation gate retained. Absolute/relative bias improves but untrained-magnitude
+    ordering remains weak; no unique encoder-loss or appearance-only conclusion.
+  - 81 tests,7061 exact restart,52913 audits,72 exact previous-baseline checks,4392 marginals;11 structural
+    reports plus inspected plot, no browser claim. No additional fits, coefficient sweep, default adoption
+    or broad claim crystallized.

@@ -5048,6 +5048,39 @@ observations:
   bound_to:
   - N425
   - N426
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H75
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O289
+  timestamp: 2026-09-16T12:06+02:00
+  provenance: ai-suggested
+  content: Training-only common-pair-offset regularization reduces absolute and relative bias and improves
+    average ordinary direction accuracy on these fresh sources, but not consistently across cells/sources.
+    Weak comparative ordering at larger unseen magnitudes remains after centering; this does not uniquely
+    prove encoder loss or absence of other accessible information.
+  context: Continued Claude collaboration on optional direction readout repair; finite one-coefficient
+    comparison.
+  potential_type: claim
+  bound_to:
+  - N428
+  - N429
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O290
+  timestamp: 2026-09-16T12:06+02:00
+  provenance: ai-suggested
+  content: Next compare explicit two-frame correspondence/readout using existing matching primitives with
+    pooled temporal features, controlling support/capacity/compute and retaining single-sequence inference.
+    A natural two-frame reversal property differs from artificial reversed-prefix labels. Keep inspected
+    sources as development and reserve fresh confirmation; no new matching architecture/fits executed.
+  context: Residual large-displacement ordering weakness after completed fixed pair-centering comparison.
+  potential_type: heuristic
+  bound_to:
+  - N428
+  - N429
   promoted: false
   promoted_to: null
   crystallized_via: null

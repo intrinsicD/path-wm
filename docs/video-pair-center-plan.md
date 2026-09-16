@@ -91,3 +91,81 @@ Its remaining caution about comparing initialization seeds does not describe the
 registered estimand: compare objectives WITHIN matched fixed initialization cells,
 not rank initializations or estimate seed-population effects. This distinction and the
 single-sampler/one-coefficient limits remain explicit. No private results exported.
+
+## Results
+
+Eight fixed fits complete:13.291s CPU training,15.592s feature preparation;
+124.664s complete preparation/training/evaluation/report orchestration before aggregate
+analysis. No tuning, changed coefficient, checkpoint selection, extra fit or default
+promotion. About39.4MB artifacts within90MiB. Model parameters/inference path unchanged.
+Each run draws the same4096 pairs: magnitudes2/4/6/8 occur1026/1021/1020/1029 times.
+
+New confirmation source-macro accuracy, mean over four crossed initialization cells:
+
+| Group | Baseline CE | CE+0.1 pair centering | Centered range |
+|---|---:|---:|---:|
+|known2/4|95.90%|98.59%|94.37–100%|
+|wide6/8|89.62%|92.92%|85.48–97.43%|
+|intermediate3/5/7|93.67%|96.84%|90.04–99.72%|
+|extrapolation10/11|69.54%|72.42%|69.99–77.47%|
+
+These are four NEW sources, so absolute values cannot be compared to earlier study
+means as if the test population were unchanged. Both full capability gates fail;
+all eight per-cell full gates fail. Mean intermediate/extrapolation gain3.025pp meets
+the3pp screen, but worst fresh cell/group-4.329pp and original historical-source
+worst-7.899pp fail preservation. Nine-source development macro worst-0.868pp would
+hide that historical regression if reported alone. The complete benefit gate fails.
+
+The intervention reduces absolute common offsets markedly but also score scale.
+On fresh extrapolation, mean|b|3.271→0.562 and mean|a|4.839→2.329; relative bias
+fraction0.456→0.305. Single-sequence accuracy69.54→72.42% and joint pair accuracy
+50.18→61.41% improve, so changes are not ONLY harmless uniform logit scaling.
+Comparative pair ordering73.52→74.33% is still weak for untrained large magnitudes;
+centering does not create all missing directional evidence. Fresh known pair ordering
+stays100% while ordinary accuracy95.90→98.59%; there centering closes part of the gap.
+Averages do not establish that b is purely an appearance effect or that the latent
+contains no further accessible evidence. Failed coefficient/budget is not rejection
+of every paired objective.
+
+Training accuracy:baseline98.40–100%,centered99.58–99.98%. The formerly50% historical
+cell becomes55.99/60.68/60.07/52.34% across groups, still poor. Another cell loses
+7.90pp on historical intermediate displacements; no hidden removal of that source.
+All current/previous/unordered controls50%; fresh raw RGB oracle100%, no ambiguities.
+
+81 scoped tests pass;7061 exact8 versus4+4 restart comparisons;52913 independent raw
+metric/loss-accounting/exposure/hash/report checks.72 exact previous-baseline checks
+match all four prior model states and unchanged train/validation/historical/previous
+confirmation logits.4392 exact RGB/latent marginal comparisons,30 unchanged source
+hashes and40 frozen cached tensors.11 standalone reports structurally verified;
+comparison plot visually inspected, browser interaction not checked. Two actual-Claude
+public reviews retained; no private code/media/measurements sent.
+
+[Comparison report](../runs/video_pair_center_v1/report.html),
+[verification](../runs/video_pair_center_v1/verification.json),
+[score diagnostics](../runs/video_pair_center_v1/diagnostic-summary.json).
+
+## Next proposed comparison
+
+Keep this partial objective repair opt-in. Before another broadening of training data,
+test whether an explicit two-frame correspondence/readout mechanism gives better
+large-displacement direction evidence than the current pooled temporal features.
+Use existing matching primitives where possible and compare receptive-field support
+at controlled capacity/compute. Preserve single-sequence inference, distinguish a
+reversal property valid for two frames from the artificial reversed-prefix rule, and
+retain inspected sources as development with new confirmation. Proposal only: no new
+matching architecture or extra fit in this study. Natural video/streaming/core integration
+remain separate open requirements.
+
+## Run
+
+```bash
+.venv/bin/python -m experiments.video_order --output runs/my_pair_center \
+  --source-manifest data/motion_pair_center_v1/sources.json \
+  --displacement-spec data/motion_pair_center_v1/expanded.json \
+  --balanced-training --matched-phase-sampling --pair-center-weight 0.1 \
+  --seed 7600 --head-seed 7501 --steps 512 \
+  --temporal-source runs/video_context_v1/seed7401/k3/history/last.pt
+```
+
+Use weight0 for the CE baseline. The coefficient is included in checkpoint compatibility;
+changing it requires a fresh run. The existing single-sequence model.forward is unchanged.

@@ -738,3 +738,14 @@
 - **Code ref**: [displacement recipe and sampler](../../../experiments/video_order.py), [oracle/sampler checks](../../../tests/test_video_displacement.py).
 - **Evidence**: N424–N426; [source-bound results](../../evidence/tables/video_displacement_2026-09-16.json).
 - **Scope**: Implemented comparison procedure, not successful repair or validated deployment.
+
+## H75: Test pair supervision without changing the inference contract
+
+- **Rationale**: Penalize a common class-score offset per opposite-label training pair, then average penalties; retain CE to identify the ordinary single-sequence threshold. Evaluate original predictions, relative score diagnostics and old-source preservation, not merely smaller logits.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O288
+- **Sensitivity**: High. One fixed0.1 coefficient and four crossed cells are a bounded preliminary comparison. Pair semantics are supplied by the constructed task; no arbitrary-video reversal guarantee. Ranking alone is not calibrated single-clip classification.
+- **Code ref**: [direction loss and diagnostics](../../../experiments/video_order.py), [penalty/gradient and inference tests](../../../tests/test_video_pair_center.py).
+- **Evidence**: N427–N429; [fixed comparison](../../evidence/tables/video_pair_center_2026-09-16.json).
+- **Scope**: Implemented experimental method; full capability and preservation gates failed, no default adoption.

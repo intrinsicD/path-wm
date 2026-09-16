@@ -2,8 +2,8 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T11:49+02:00
-  turn_count: 10
+  last_turn: 2026-09-16T12:06+02:00
+  turn_count: 11
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not
     adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59
     scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
@@ -24,7 +24,9 @@ session:
     accuracy77.51% fails repair.74 tests,3571 exact restart,14771 audits and15 reports; fixed input guards,
     defaults unchanged. Displacement coverage:8 fixed fits raise fresh extrapolation58.89→85.03% but known
     worst regression9.64pp fails preservation.77 tests,3397 restart,19873 audits,11 reports; paired score
-    offsets motivate a proposed readout-objective repair, defaults unchanged.'
+    offsets motivate a proposed readout-objective repair, defaults unchanged. Pair-centered objective:8
+    fixed fits reduce relative bias and improve fresh means, but extrapolation72.42% and source regressions
+    fail repair.81 tests,7061 restart,52913 audits,72 prior-baseline checks,11 reports; no default change.'
 events_logged:
 - turn: 1
   type: decision
@@ -445,6 +447,48 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O286 comparison procedure committed through N424; no efficacy claim.
+- turn: 11
+  type: decision
+  id: N427
+  routing: direct
+  provenance: ai-executed
+  summary: Test training-only per-pair centering with unchanged single-sequence inference
+- turn: 11
+  type: experiment
+  id: N428
+  routing: direct
+  provenance: ai-executed
+  summary: Eight paired-objective fits improve means but fail preservation and capability gates
+- turn: 11
+  type: experiment
+  id: N429
+  routing: direct
+  provenance: ai-executed
+  summary: Offset decreases but extrapolated comparative ordering remains weak
+- turn: 11
+  type: observation
+  id: O289
+  routing: staged
+  provenance: ai-suggested
+  summary: Training-only common-pair-offset regularization reduces absolute and relative bias and improves
+    average ordinary direction accuracy on these fresh sources, but not consistently across cells/sources.
+    Weak comparative ordering at larger unseen magnitudes remains after centering; this does not uniquely
+    prove encoder loss or absence of other accessible information.
+- turn: 11
+  type: observation
+  id: O290
+  routing: staged
+  provenance: ai-suggested
+  summary: Next compare explicit two-frame correspondence/readout using existing matching primitives with
+    pooled temporal features, controlling support/capacity/compute and retaining single-sequence inference.
+    A natural two-frame reversal property differs from artificial reversed-prefix labels. Keep inspected
+    sources as development and reserve fresh confirmation; no new matching architecture/fits executed.
+- turn: 11
+  type: heuristic
+  id: H75
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O288 procedure committed through N427; no efficacy affirmation inferred.
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -586,6 +630,19 @@ ai_actions:
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
   - ara/evidence/tables/video_displacement_2026-09-16.json
+- turn: 11
+  action: Implemented optional per-pair SmoothL1 common-offset penalty, exact zero-weight CE path, separate
+    loss components and score diagnostics. Ran81 tests, exact restart,8 fixed fits and independent raw/replay
+    audits. Actual-Claude public review/reconciliation. Preserved all prior weights/data and negative
+    gates; no inference architecture change.
+  provenance: ai-executed
+  files_changed:
+  - experiments/video_order.py
+  - tests/test_video_pair_center.py
+  - docs/video-pair-center-plan.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - ara/evidence/tables/video_pair_center_2026-09-16.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -629,6 +686,10 @@ key_context:
   excerpt: Continue together with Claude. Work on this. Plan, implement, review, test and fix. Iterate.
     Fixed-compute displacement coverage improves finite extrapolation, but preservation/full gates still
     fail.
+- turn: 11
+  excerpt: Continue together with Claude. Work on this. Plan, implement, review, test and fix. Iterate.
+    Tested one training-only objective intervention at unchanged single-sequence inference; mean gains
+    do not pass preservation/full gates.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -710,6 +771,8 @@ open_threads:
 - 'Video paired-objective/readout repair: reduce common class preference with a declared single-clip versus
   constructed-pair inference contract; retain source regressions, use fresh confirmation. O288 proposed,
   no extra fit.'
+- 'O290: explicit two-frame correspondence/readout comparison at controlled support/capacity/compute;
+  preserve single-sequence inference and fresh confirmation. Natural motion/core integration remain separate.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
@@ -859,3 +922,5 @@ ai_suggestions_pending:
   remain staged; no unique cause, adopted wider data policy or unregistered new fit.
 - O286→H74 records implemented fixed-compute comparison only. O287 interpretation and O288 readout/objective
   repair remain staged; no default, natural-video or general-capability promotion.
+- O288→H75 is implemented training-only comparison procedure, not adopted repair. O289 interpretation/O290
+  matching proposal remain staged; no extra fit or global capability promotion.
