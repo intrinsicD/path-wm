@@ -8,6 +8,7 @@ import argparse
 from collections import Counter
 import hashlib
 import json
+import math
 import re
 import shutil
 import subprocess
@@ -434,6 +435,38 @@ def prepare(args, *, balanced=False, evaluation_only=False, include_reflection=F
     return sets, identity
 
 
+def direction_loss(logits, labels, *, pair_center_weight=0.0):
+    """Single-sequence CE plus an optional training-only common-pair-offset penalty.
+
+    Adjacent members must form opposite-label pairs. Penalize each pair before
+    averaging, so offsets of opposite signs in different pairs cannot cancel.
+    The model forward and the inference decision threshold remain unchanged.
+    """
+    if not math.isfinite(pair_center_weight) or pair_center_weight < 0:
+        raise ValueError("pair_center_weight must be finite and nonnegative")
+    if (
+        logits.ndim != 2
+        or logits.shape[1] != 2
+        or not len(logits)
+        or len(logits) % 2
+        or labels.shape != logits.shape[:1]
+        or not ((labels == 0) | (labels == 1)).all()
+        or not (labels.reshape(-1, 2).sum(1) == 1).all()
+    ):
+        raise ValueError("Expected adjacent opposite-label binary pairs")
+    ce = F.cross_entropy(logits, labels)
+    scores = (logits[:, 0] - logits[:, 1]).reshape(-1, 2)
+    offset = scores.mean(1)
+    penalty = F.smooth_l1_loss(offset, torch.zeros_like(offset), beta=1)
+    # Keep the historical CE calculation/gradient exactly intact at weight zero.
+    loss = ce if pair_center_weight == 0 else ce + pair_center_weight * penalty
+    return loss, dict(
+        cross_entropy=ce.detach(),
+        pair_center_penalty=penalty.detach(),
+        pair_offset_mean_abs=offset.detach().abs().mean(),
+    )
+
+
 def metrics(logits, labels):
     pred = logits.argmax(-1)
     correct = pred == labels
@@ -442,6 +475,9 @@ def metrics(logits, labels):
         logits.gather(-1, labels[..., None])
         - logits.gather(-1, (1 - labels)[..., None])
     ).squeeze(-1)
+    scores = logits[..., 0] - logits[..., 1]
+    offset = scores.mean(1)
+    signal = (scores[:, 0] - scores[:, 1]) / 2
     return dict(
         accuracy=float(correct.float().mean()),
         pair_accuracy=float(correct.all(1).float().mean()),
@@ -453,6 +489,14 @@ def metrics(logits, labels):
         margin_p10=float(torch.quantile(margin.flatten(), 0.1)),
         confident_wrong_fraction=float(
             ((~correct) & (logits.softmax(-1).amax(-1) >= 0.95)).float().mean()
+        ),
+        pair_offset_mean_abs=float(offset.abs().mean()),
+        pair_signal_mean_abs=float(signal.abs().mean()),
+        pair_bias_fraction=float(
+            (offset.abs() / (signal.abs() + offset.abs() + 1e-8)).mean()
+        ),
+        pair_ordering_accuracy=float(
+            ((1 - 2 * labels[:, 0]) * signal > 0).float().mean()
         ),
     )
 
@@ -533,6 +577,9 @@ def training_batch(data, index, step, reflect=False):
 
 
 def train(args, prepared=None):
+    center_weight = getattr(args, "pair_center_weight", 0.0)
+    if not math.isfinite(center_weight) or center_weight < 0:
+        raise ValueError("pair_center_weight must be finite and nonnegative")
     output = args.output
     output.parent.mkdir(parents=True, exist_ok=True)
     if shutil.disk_usage(output.parent).free < 302 * 1024**2:
@@ -562,6 +609,8 @@ def train(args, prepared=None):
     cfg = dict(
         seed=args.seed,
         head_seed=head_seed,
+        pair_center_weight=center_weight,
+        inference_contract="One three-frame sequence per prediction; no partner, labels or calibration at inference",
         matched_phase_sampling=matched_phases,
         displacement_spec_sha256=file_hash(args.displacement_spec)
         if getattr(args, "displacement_spec", None)
@@ -585,7 +634,7 @@ def train(args, prepared=None):
         temporal_source=str(args.temporal_source.resolve()),
         temporal_sha256=file_hash(args.temporal_source),
         purpose="paired last-step direction on constructed pans of real image contents",
-        objective="balanced-pair direction cross entropy; frozen spatial encoder and unchanged image decoder",
+        objective="single-sequence direction CE + pair_center_weight * mean per-pair SmoothL1 common class-score offset; frozen spatial codec. Training curve is total loss, validation is CE",
         radius=2,
         example_labels={
             "input": "Pair members: all three frames, shared current frame"
@@ -632,7 +681,9 @@ def train(args, prepared=None):
             x, y = training_batch(sets["train"], index, step, reflect)
             optimizer.zero_grad(set_to_none=True)
             logits = model(x)
-            loss = F.cross_entropy(logits, y)
+            loss, loss_parts = direction_loss(
+                logits, y, pair_center_weight=center_weight
+            )
             loss.backward()
             grad = torch.nn.utils.clip_grad_norm_(
                 model.parameters(), 1, error_if_nonfinite=True
@@ -648,6 +699,7 @@ def train(args, prepared=None):
                     gradient=float(grad),
                     reflected=bool(reflect and step % 2),
                     pair_indices=index.tolist(),
+                    **{k: float(v) for k, v in loss_parts.items()},
                 )
             )
             if step % 128 == 0 or step == end:
@@ -906,6 +958,12 @@ if __name__ == "__main__":
         help="Optional explicit video paths, subjects and frame counts by split",
     )
     parser.add_argument("--mode", choices=MODES, default="train")
+    parser.add_argument(
+        "--pair-center-weight",
+        type=float,
+        default=0.0,
+        help="Training-only per-pair class-offset SmoothL1 weight; inference unchanged",
+    )
     parser.add_argument(
         "--displacement-spec",
         type=Path,

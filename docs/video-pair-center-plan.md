@@ -76,3 +76,18 @@ scope; both are explicit limits. Corrected its mistaken two-seeds-per-cell readi
 (four total cells) and batch-mean penalty reading (mean of per-pair penalties, so
 opposite offsets cannot cancel). Historical regression gates block benefit, not merely
 advise. Corrections sent; no extra fits or broad significance claim introduced.
+
+## Working slice
+
+Fresh confirmation fixed before training:7H7PN(6PZN),A8LZE(8718),V149B(DXDI),
+IKZJE(EXQX). Development source order:1KKYX,0XP8L,7YV59,L8HMR,DPKMU,34DKM,X1EZQ,
+N588B,AHL6X. Manifest at data/motion_pair_center_v1/sources.json;26 old IDs excluded.
+81 scoped tests pass; new per-pair non-cancellation assertion also passes. Real-data
+8 versus4+4 exact restart passes7061 recursive checks including objective components,
+model/optimizer/RNG, exposure and development logits. Fresh confirmation predictions
+excluded from mechanics. No training data/model changed between objectives.
+Claude acknowledged finite screens, per-pair penalty and synthetic-domain scope.
+Its remaining caution about comparing initialization seeds does not describe the
+registered estimand: compare objectives WITHIN matched fixed initialization cells,
+not rank initializations or estimate seed-population effects. This distinction and the
+single-sampler/one-coefficient limits remain explicit. No private results exported.
