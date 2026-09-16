@@ -5114,6 +5114,41 @@ observations:
   bound_to:
   - N431
   - N432
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H77
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O293
+  timestamp: 2026-09-16T12:52+02:00
+  provenance: ai-suggested
+  content: For controlled horizontal pans, shared geometric evidence comparison preserves a strong hand-designed
+    initial rule and outperforms generic learned pooling on fresh large shifts. Additional residual learning
+    gives negligible fresh accuracy gain and can select incorrect nearer offsets on an inspected source.
+    This is a learned-preservation limitation, not evidence of missing encoder information or general
+    video understanding.
+  context: Four fixed fits plus independent fixed-rule baseline and saved candidate-score diagnosis.
+  potential_type: claim
+  bound_to:
+  - N435
+  - N436
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O294
+  timestamp: 2026-09-16T12:52+02:00
+  provenance: ai-suggested
+  content: Next separate decision-preserving evidence calibration from rank-changing offset-dependent
+    correction, retain fixed geometry as an explicit baseline and require individual inspected-source
+    preservation before enabling refinements. Do not just add layers/retrain the image encoder. No new
+    calibration or bounded-residual fit executed; static/unknown motion and natural video remain separate
+    open tasks.
+  context: Excellent fresh capability masks14.71pp old-source deterioration; calibration/decision-change
+    roles should be separated.
+  potential_type: heuristic
+  bound_to:
+  - N435
+  - N436
   promoted: false
   promoted_to: null
   crystallized_via: null

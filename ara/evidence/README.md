@@ -188,3 +188,5 @@ Source diversity versus frame density: [source-bound evidence](tables/video_dive
 - [Pair-centered training comparison,16 September](tables/video_pair_center_2026-09-16.json):8 fixed fits,81 tests; absolute/relative bias and mean accuracy improve, preservation/full gates fail; unchanged single-sequence inference.
 
 - [Explicit correspondence support,16 September](tables/video_matching_2026-09-16.json):12 fixed fits,85 tests; fresh large-shift78.75/86.77/90.07%,fixed cosine99.93% on same frozen grids. Trained full/preservation gates fail; no default promotion.
+
+- [Shared evidence direction reader,16 September](tables/video_evidence_2026-09-16.json):4 fixed fits plus no-fit baseline,89 tests; fresh99.69–100% passes but learned-gain/old-source preservation fails. Candidate reassignment and exact replay retained.

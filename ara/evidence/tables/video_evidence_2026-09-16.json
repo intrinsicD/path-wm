@@ -1,0 +1,1207 @@
+{
+  "timestamp": "2026-09-16T12:52+02:00",
+  "provenance": "ai-executed",
+  "plan_commit": "d57a9ea",
+  "experiment_code_commit": "4b27b0d",
+  "summary": {
+    "evidence": {
+      "confirm_extrapolation": {
+        "maximum": 1.0,
+        "mean": 1.0,
+        "minimum": 1.0,
+        "scope": "two head seeds, one temporal initialization and sampler; descriptive only"
+      },
+      "confirm_intermediate": {
+        "maximum": 1.0,
+        "mean": 1.0,
+        "minimum": 1.0,
+        "scope": "two head seeds, one temporal initialization and sampler; descriptive only"
+      },
+      "confirm_known": {
+        "maximum": 0.9970703125,
+        "mean": 0.9969075545668602,
+        "minimum": 0.9967447966337204,
+        "scope": "two head seeds, one temporal initialization and sampler; descriptive only"
+      },
+      "confirm_wide": {
+        "maximum": 1.0,
+        "mean": 1.0,
+        "minimum": 1.0,
+        "scope": "two head seeds, one temporal initialization and sampler; descriptive only"
+      }
+    },
+    "fixed": {
+      "confirm_extrapolation": {
+        "maximum": 1.0,
+        "mean": 1.0,
+        "minimum": 1.0,
+        "scope": "fixed no-fit rule"
+      },
+      "confirm_intermediate": {
+        "maximum": 1.0,
+        "mean": 1.0,
+        "minimum": 1.0,
+        "scope": "fixed no-fit rule"
+      },
+      "confirm_known": {
+        "maximum": 0.9954427182674408,
+        "mean": 0.9954427182674408,
+        "minimum": 0.9954427182674408,
+        "scope": "fixed no-fit rule"
+      },
+      "confirm_wide": {
+        "maximum": 1.0,
+        "mean": 1.0,
+        "minimum": 1.0,
+        "scope": "fixed no-fit rule"
+      }
+    },
+    "pooled": {
+      "confirm_extrapolation": {
+        "maximum": 0.9306640625,
+        "mean": 0.9252929612994194,
+        "minimum": 0.9199218600988388,
+        "scope": "two head seeds, one temporal initialization and sampler; descriptive only"
+      },
+      "confirm_intermediate": {
+        "maximum": 1.0,
+        "mean": 0.9998914897441864,
+        "minimum": 0.9997829794883728,
+        "scope": "two head seeds, one temporal initialization and sampler; descriptive only"
+      },
+      "confirm_known": {
+        "maximum": 0.9957682341337204,
+        "mean": 0.9944661483168602,
+        "minimum": 0.9931640625,
+        "scope": "two head seeds, one temporal initialization and sampler; descriptive only"
+      },
+      "confirm_wide": {
+        "maximum": 0.9957682192325592,
+        "mean": 0.9944661408662796,
+        "minimum": 0.9931640625,
+        "scope": "two head seeds, one temporal initialization and sampler; descriptive only"
+      }
+    }
+  },
+  "capability_gates": {
+    "evidence": true,
+    "fixed": true,
+    "pooled": false
+  },
+  "benefits": {
+    "evidence_vs_fixed": {
+      "fresh_preservation": true,
+      "inspected_preservation": false,
+      "mean_gain_pass": false,
+      "mean_gain_pp": 0.03662090748548508,
+      "minimum_fresh_gain_pp": 0.0,
+      "minimum_inspected_gain_pp": -14.71354365348816,
+      "passed": false,
+      "scope": "all four groups",
+      "worst_inspected": {
+        "gain_pp": -14.71354365348816,
+        "group": "extrapolation",
+        "head": "head7501",
+        "source": "6RQHT"
+      }
+    },
+    "evidence_vs_pooled": {
+      "fresh_preservation": true,
+      "inspected_preservation": false,
+      "mean_gain_pass": true,
+      "mean_gain_pp": 3.7407774478197098,
+      "minimum_fresh_gain_pp": 0.0,
+      "minimum_inspected_gain_pp": -5.208331346511841,
+      "passed": false,
+      "scope": "intermediate and extrapolation",
+      "worst_inspected": {
+        "gain_pp": -5.208331346511841,
+        "group": "known",
+        "head": "head7502",
+        "source": "A8LZE"
+      }
+    }
+  },
+  "cell_gates": {
+    "fixed_fixed": {
+      "criteria": {
+        "confirm_extrapolation": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_intermediate": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_known": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_wide": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        }
+      },
+      "passed": true
+    },
+    "head7501_evidence": {
+      "criteria": {
+        "confirm_extrapolation": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_intermediate": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_known": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_wide": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        }
+      },
+      "passed": true
+    },
+    "head7501_pooled": {
+      "criteria": {
+        "confirm_extrapolation": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_intermediate": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_known": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_wide": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        }
+      },
+      "passed": true
+    },
+    "head7502_evidence": {
+      "criteria": {
+        "confirm_extrapolation": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_intermediate": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_known": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_wide": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        }
+      },
+      "passed": true
+    },
+    "head7502_pooled": {
+      "criteria": {
+        "confirm_extrapolation": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": false,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_intermediate": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_known": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        },
+        "confirm_wide": {
+          "accuracy": true,
+          "current": true,
+          "each_source": true,
+          "flip": true,
+          "pair": true,
+          "previous": true,
+          "unordered": true
+        }
+      },
+      "passed": false
+    }
+  },
+  "structured_diagnostics": {
+    "scope": "No additional fits; channel reversal, not arbitrary video reversal",
+    "seconds": 8.813779788906686,
+    "values": {
+      "fixed": {
+        "max_residual": 0.0,
+        "reversal_max_abs_error": 0.0,
+        "scale": 1.0
+      },
+      "head7501": {
+        "max_residual": 5.904900550842285,
+        "reversal_max_abs_error": 0.0,
+        "scale": 1.678600788116455
+      },
+      "head7502": {
+        "max_residual": 5.113776206970215,
+        "reversal_max_abs_error": 0.0,
+        "scale": 1.6617705821990967
+      }
+    }
+  },
+  "failure_diagnosis": {
+    "head7501": {
+      "extrapolation_6RQHT": {
+        "source": "6RQHT",
+        "group": "extrapolation",
+        "sequences": 768,
+        "fixed_accuracy": 1.0,
+        "learned_accuracy": 0.8528645833333334,
+        "corrected": 0,
+        "corrupted": 113,
+        "corrupted_base_best_abs_offset": {
+          "1": 0,
+          "2": 24,
+          "3": 89
+        },
+        "corrupted_learned_best_abs_offset": {
+          "1": 112,
+          "2": 1,
+          "3": 0
+        },
+        "centered_residual_mean_abs": 0.2546912729740143,
+        "examples": [
+          {
+            "pair_index": 5030,
+            "member": 1,
+            "metadata": [
+              52,
+              19,
+              10
+            ],
+            "label": 1,
+            "cosine": [
+              0.9606883525848389,
+              0.9055662155151367,
+              0.915503740310669,
+              0.9321938753128052,
+              0.9216897487640381,
+              0.9154970645904541,
+              0.8971723914146423
+            ],
+            "final_scores": [
+              4.246753692626953,
+              4.178097248077393,
+              4.5732102394104,
+              4.980710029602051,
+              4.618599891662598,
+              4.252270698547363,
+              3.7654576301574707
+            ],
+            "residual": [
+              3.2860655784606934,
+              3.272531032562256,
+              3.6577064990997314,
+              4.048516273498535,
+              3.6969099044799805,
+              3.3367738723754883,
+              2.8682851791381836
+            ]
+          },
+          {
+            "pair_index": 5032,
+            "member": 1,
+            "metadata": [
+              52,
+              20,
+              10
+            ],
+            "label": 1,
+            "cosine": [
+              0.9097058176994324,
+              0.9634538292884827,
+              0.8776633739471436,
+              0.9344978332519531,
+              0.9223527908325195,
+              0.9192163944244385,
+              0.9007670283317566
+            ],
+            "final_scores": [
+              3.861748218536377,
+              4.612582206726074,
+              4.297636985778809,
+              4.999612808227539,
+              4.625453948974609,
+              4.281739234924316,
+              3.7940542697906494
+            ],
+            "residual": [
+              2.9520423412323,
+              3.6491284370422363,
+              3.419973850250244,
+              4.065114974975586,
+              3.70310115814209,
+              3.362522602081299,
+              2.893287181854248
+            ]
+          },
+          {
+            "pair_index": 5035,
+            "member": 1,
+            "metadata": [
+              52,
+              21,
+              11
+            ],
+            "label": 1,
+            "cosine": [
+              0.9495503902435303,
+              0.9371927976608276,
+              0.8854262828826904,
+              0.9298680424690247,
+              0.9172381162643433,
+              0.9131087064743042,
+              0.8972904682159424
+            ],
+            "final_scores": [
+              4.160763740539551,
+              4.412660121917725,
+              4.350738525390625,
+              4.961638927459717,
+              4.583937644958496,
+              4.2327446937561035,
+              3.7649545669555664
+            ],
+            "residual": [
+              3.2112131118774414,
+              3.4754672050476074,
+              3.4653124809265137,
+              4.031770706176758,
+              3.6666994094848633,
+              3.319636106491089,
+              2.867664098739624
+            ]
+          },
+          {
+            "pair_index": 5036,
+            "member": 1,
+            "metadata": [
+              52,
+              22,
+              10
+            ],
+            "label": 1,
+            "cosine": [
+              0.9536176323890686,
+              0.9130272269248962,
+              0.8551914095878601,
+              0.9185019731521606,
+              0.8978414535522461,
+              0.8909603953361511,
+              0.8792302012443542
+            ],
+            "final_scores": [
+              4.184134006500244,
+              4.223874092102051,
+              4.120365619659424,
+              4.8685994148254395,
+              4.432172775268555,
+              4.059427261352539,
+              3.6217195987701416
+            ],
+            "residual": [
+              3.2305164337158203,
+              3.3108468055725098,
+              3.265174388885498,
+              3.9500975608825684,
+              3.5343315601348877,
+              3.1684670448303223,
+              2.7424893379211426
+            ]
+          }
+        ]
+      },
+      "known_A8LZE": {
+        "source": "A8LZE",
+        "group": "known",
+        "sequences": 768,
+        "fixed_accuracy": 0.9010416666666666,
+        "learned_accuracy": 0.9166666666666666,
+        "corrected": 21,
+        "corrupted": 9,
+        "corrupted_base_best_abs_offset": {
+          "1": 0,
+          "2": 0,
+          "3": 9
+        },
+        "corrupted_learned_best_abs_offset": {
+          "1": 0,
+          "2": 9,
+          "3": 0
+        },
+        "centered_residual_mean_abs": 0.7385510802268982,
+        "examples": [
+          {
+            "pair_index": 3886,
+            "member": 0,
+            "metadata": [
+              40,
+              23,
+              2
+            ],
+            "label": 0,
+            "cosine": [
+              0.5171472430229187,
+              0.7105157375335693,
+              0.345359206199646,
+              0.7433634996414185,
+              0.6100072860717773,
+              0.5466594099998474,
+              0.7166965007781982
+            ],
+            "final_scores": [
+              0.8897373080253601,
+              2.630250930786133,
+              0.44745415449142456,
+              3.474285125732422,
+              2.253659963607788,
+              1.467490315437317,
+              2.325577735900879
+            ],
+            "residual": [
+              0.3725900650024414,
+              1.919735074043274,
+              0.10209493339061737,
+              2.730921506881714,
+              1.6436526775360107,
+              0.9208309054374695,
+              1.6088812351226807
+            ]
+          },
+          {
+            "pair_index": 3888,
+            "member": 0,
+            "metadata": [
+              40,
+              24,
+              2
+            ],
+            "label": 0,
+            "cosine": [
+              0.43788307905197144,
+              0.6541950702667236,
+              0.24683141708374023,
+              0.8179870843887329,
+              0.5251138210296631,
+              0.5592439770698547,
+              0.6699011325836182
+            ],
+            "final_scores": [
+              0.33533933758735657,
+              2.2623586654663086,
+              -0.20781680941581726,
+              4.058545112609863,
+              1.6964244842529297,
+              1.5805931091308594,
+              2.0140204429626465
+            ],
+            "residual": [
+              -0.10254374146461487,
+              1.608163595199585,
+              -0.4546482264995575,
+              3.24055814743042,
+              1.1713106632232666,
+              1.0213491916656494,
+              1.3441194295883179
+            ]
+          },
+          {
+            "pair_index": 3898,
+            "member": 1,
+            "metadata": [
+              40,
+              29,
+              2
+            ],
+            "label": 1,
+            "cosine": [
+              0.736632764339447,
+              0.4434327483177185,
+              0.608353316783905,
+              0.7462844848632812,
+              0.345359206199646,
+              0.7119467258453369,
+              0.4252711534500122
+            ],
+            "final_scores": [
+              2.4720144271850586,
+              0.7472848892211914,
+              2.24368953704834,
+              3.4968442916870117,
+              0.44780004024505615,
+              2.642061710357666,
+              0.24103587865829468
+            ],
+            "residual": [
+              1.7353817224502563,
+              0.3038521409034729,
+              1.6353362798690796,
+              2.7505598068237305,
+              0.10244084894657135,
+              1.9301148653030396,
+              -0.18423527479171753
+            ]
+          },
+          {
+            "pair_index": 3914,
+            "member": 0,
+            "metadata": [
+              40,
+              37,
+              2
+            ],
+            "label": 0,
+            "cosine": [
+              0.7150649428367615,
+              0.8174976110458374,
+              0.6347230672836304,
+              0.8467998504638672,
+              0.7650925517082214,
+              0.45592200756073,
+              0.8195694088935852
+            ],
+            "final_scores": [
+              2.3580379486083984,
+              3.467477321624756,
+              2.482123851776123,
+              4.288248062133789,
+              3.4136815071105957,
+              0.8529585003852844,
+              3.133789300918579
+            ],
+            "residual": [
+              1.6429730653762817,
+              2.649979591369629,
+              1.8474006652832031,
+              3.441448211669922,
+              2.6485888957977295,
+              0.39703649282455444,
+              2.3142199516296387
+            ]
+          }
+        ]
+      }
+    },
+    "head7502": {
+      "extrapolation_6RQHT": {
+        "source": "6RQHT",
+        "group": "extrapolation",
+        "sequences": 768,
+        "fixed_accuracy": 1.0,
+        "learned_accuracy": 0.85546875,
+        "corrected": 0,
+        "corrupted": 111,
+        "corrupted_base_best_abs_offset": {
+          "1": 0,
+          "2": 23,
+          "3": 88
+        },
+        "corrupted_learned_best_abs_offset": {
+          "1": 110,
+          "2": 1,
+          "3": 0
+        },
+        "centered_residual_mean_abs": 0.2395748496055603,
+        "examples": [
+          {
+            "pair_index": 5030,
+            "member": 1,
+            "metadata": [
+              52,
+              19,
+              10
+            ],
+            "label": 1,
+            "cosine": [
+              0.9606883525848389,
+              0.9055662155151367,
+              0.915503740310669,
+              0.9321938753128052,
+              0.9216897487640381,
+              0.9154970645904541,
+              0.8971723914146423
+            ],
+            "final_scores": [
+              4.923761367797852,
+              4.836989402770996,
+              5.207647323608398,
+              5.597467422485352,
+              5.252375602722168,
+              4.909698486328125,
+              4.453941822052002
+            ],
+            "residual": [
+              3.9630727767944336,
+              3.9314231872558594,
+              4.292143821716309,
+              4.665273666381836,
+              4.330685615539551,
+              3.994201183319092,
+              3.556769609451294
+            ]
+          },
+          {
+            "pair_index": 5035,
+            "member": 1,
+            "metadata": [
+              52,
+              21,
+              11
+            ],
+            "label": 1,
+            "cosine": [
+              0.9495503902435303,
+              0.9371927976608276,
+              0.8854262828826904,
+              0.9298680424690247,
+              0.9172381162643433,
+              0.9131087064743042,
+              0.8972904682159424
+            ],
+            "final_scores": [
+              4.841188430786133,
+              5.068328380584717,
+              4.989850044250488,
+              5.580142974853516,
+              5.219698429107666,
+              4.891956329345703,
+              4.4547834396362305
+            ],
+            "residual": [
+              3.8916380405426025,
+              4.1311354637146,
+              4.104423522949219,
+              4.650274753570557,
+              4.302460193634033,
+              3.9788477420806885,
+              3.557493209838867
+            ]
+          },
+          {
+            "pair_index": 5036,
+            "member": 1,
+            "metadata": [
+              52,
+              22,
+              10
+            ],
+            "label": 1,
+            "cosine": [
+              0.9536176323890686,
+              0.9130272269248962,
+              0.8551914095878601,
+              0.9185019731521606,
+              0.8978414535522461,
+              0.8909603953361511,
+              0.8792302012443542
+            ],
+            "final_scores": [
+              4.870687007904053,
+              4.890090465545654,
+              4.769737720489502,
+              5.4955735206604,
+              5.077274322509766,
+              4.728794574737549,
+              4.321398735046387
+            ],
+            "residual": [
+              3.91706919670105,
+              3.9770631790161133,
+              3.914546489715576,
+              4.577071666717529,
+              4.1794328689575195,
+              3.837834119796753,
+              3.442168712615967
+            ]
+          },
+          {
+            "pair_index": 5037,
+            "member": 1,
+            "metadata": [
+              52,
+              22,
+              11
+            ],
+            "label": 1,
+            "cosine": [
+              0.9737821221351624,
+              0.8885964155197144,
+              0.8636423349380493,
+              0.9123045802116394,
+              0.8961930871009827,
+              0.8907628655433655,
+              0.8792824149131775
+            ],
+            "final_scores": [
+              5.0194010734558105,
+              4.7109198570251465,
+              4.829553127288818,
+              5.449529647827148,
+              5.064133167266846,
+              4.726738929748535,
+              4.321748733520508
+            ],
+            "residual": [
+              4.045619010925293,
+              3.8223233222961426,
+              3.9659109115600586,
+              4.537225246429443,
+              4.167940139770508,
+              3.8359758853912354,
+              3.4424664974212646
+            ]
+          }
+        ]
+      },
+      "known_A8LZE": {
+        "source": "A8LZE",
+        "group": "known",
+        "sequences": 768,
+        "fixed_accuracy": 0.9010416666666666,
+        "learned_accuracy": 0.9140625,
+        "corrected": 19,
+        "corrupted": 9,
+        "corrupted_base_best_abs_offset": {
+          "1": 0,
+          "2": 0,
+          "3": 9
+        },
+        "corrupted_learned_best_abs_offset": {
+          "1": 0,
+          "2": 9,
+          "3": 0
+        },
+        "centered_residual_mean_abs": 0.7249962091445923,
+        "examples": [
+          {
+            "pair_index": 3886,
+            "member": 0,
+            "metadata": [
+              40,
+              23,
+              2
+            ],
+            "label": 0,
+            "cosine": [
+              0.5171472430229187,
+              0.7105157375335693,
+              0.345359206199646,
+              0.7433634996414185,
+              0.6100072860717773,
+              0.5466594099998474,
+              0.7166965007781982
+            ],
+            "final_scores": [
+              1.7291245460510254,
+              3.418562173843384,
+              1.2085559368133545,
+              4.216274261474609,
+              3.0164904594421387,
+              2.2655863761901855,
+              3.1447322368621826
+            ],
+            "residual": [
+              1.211977243423462,
+              2.7080464363098145,
+              0.8631966710090637,
+              3.4729108810424805,
+              2.4064831733703613,
+              1.7189269065856934,
+              2.4280357360839844
+            ]
+          },
+          {
+            "pair_index": 3888,
+            "member": 0,
+            "metadata": [
+              40,
+              24,
+              2
+            ],
+            "label": 0,
+            "cosine": [
+              0.43788307905197144,
+              0.6541950702667236,
+              0.24683141708374023,
+              0.8179870843887329,
+              0.5251138210296631,
+              0.5592439770698547,
+              0.6699011325836182
+            ],
+            "final_scores": [
+              1.151418685913086,
+              3.0164458751678467,
+              0.5252680778503418,
+              4.755355358123779,
+              2.4241838455200195,
+              2.343108892440796,
+              2.8010365962982178
+            ],
+            "residual": [
+              0.7135356664657593,
+              2.362250804901123,
+              0.2784366309642792,
+              3.937368392944336,
+              1.8990700244903564,
+              1.783864974975586,
+              2.1311354637145996
+            ]
+          },
+          {
+            "pair_index": 3898,
+            "member": 1,
+            "metadata": [
+              40,
+              29,
+              2
+            ],
+            "label": 1,
+            "cosine": [
+              0.736632764339447,
+              0.4434327483177185,
+              0.608353316783905,
+              0.7462844848632812,
+              0.345359206199646,
+              0.7119467258453369,
+              0.4252711534500122
+            ],
+            "final_scores": [
+              3.2874679565429688,
+              1.549006700515747,
+              3.0050575733184814,
+              4.237183570861816,
+              1.2077901363372803,
+              3.4287421703338623,
+              1.0874347686767578
+            ],
+            "residual": [
+              2.550835132598877,
+              1.1055738925933838,
+              2.3967041969299316,
+              3.4908993244171143,
+              0.862430989742279,
+              2.7167954444885254,
+              0.6621636152267456
+            ]
+          },
+          {
+            "pair_index": 3914,
+            "member": 0,
+            "metadata": [
+              40,
+              37,
+              2
+            ],
+            "label": 0,
+            "cosine": [
+              0.7150649428367615,
+              0.8174976110458374,
+              0.6347230672836304,
+              0.8467998504638672,
+              0.7650925517082214,
+              0.45592200756073,
+              0.8195694088935852
+            ],
+            "final_scores": [
+              3.1239442825317383,
+              4.188858509063721,
+              3.1904168128967285,
+              4.966025352478027,
+              4.1140360832214355,
+              1.6112688779830933,
+              3.8841307163238525
+            ],
+            "residual": [
+              2.408879280090332,
+              3.3713607788085938,
+              2.5556938648223877,
+              4.11922550201416,
+              3.3489437103271484,
+              1.1553468704223633,
+              3.064561367034912
+            ]
+          }
+        ]
+      }
+    },
+    "scope": "Post-result diagnosis of the two predeclared preservation failures; no extra fit, changed gate or selection. Candidate-offset reassignment is observed behavior, not proof of a unique optimization cause. Residuals are centered over six scored offsets to remove irrelevant common score shifts."
+  },
+  "training_seconds": 5.2264943399932235,
+  "verification": {
+    "artifact_bytes": 48631808,
+    "browser_checked": false,
+    "checks": 42682,
+    "claude_receipts": 2,
+    "comparison_panel_visually_inspected": true,
+    "exact_frame_marginal_checks": 6120,
+    "exact_resume_checks": 10239,
+    "frozen_tensor_checks": 40,
+    "matched_exposure": true,
+    "prior_pooled_exact_checks": 36,
+    "reports_checked": 8,
+    "source_hashes": 38,
+    "tests": 89,
+    "comparison_panel_sha256": "e1129676f4c9ce8c8076d96f10878785c92fa36c0c8b58cf8813d3a4f4096026"
+  },
+  "source_selection": {
+    "excluded_ids": [
+      "0EJAG",
+      "0GFE8",
+      "0JQ26",
+      "0LDP7",
+      "0XP8L",
+      "12VVC",
+      "1KJI0",
+      "1KKYX",
+      "34DKM",
+      "6RQHT",
+      "7H7PN",
+      "7YV59",
+      "A2771",
+      "A8LZE",
+      "AHL6X",
+      "AXJUB",
+      "C3JAS",
+      "CAND1",
+      "CF92N",
+      "DPCGS",
+      "DPKMU",
+      "FNM0L",
+      "IKZJE",
+      "L8HMR",
+      "N588B",
+      "QO7SM",
+      "R979C",
+      "S3FY2",
+      "SG8ZR",
+      "TIGIP",
+      "TYHA8",
+      "U896B",
+      "V149B",
+      "X1EZQ"
+    ],
+    "excluded_subjects": [
+      "0KZ7",
+      "1OHU",
+      "2Q9D",
+      "2RTW",
+      "3531",
+      "3H6W",
+      "4YWP",
+      "5LWB",
+      "6PZN",
+      "8718",
+      "C7O9",
+      "CCI9",
+      "D0RU",
+      "DJ17",
+      "DXDI",
+      "ENC8",
+      "EXQX",
+      "G6WD",
+      "HJJ4",
+      "HJZQ",
+      "HR43",
+      "JVLO",
+      "KFGP",
+      "KQI6",
+      "L4ZP",
+      "MR42",
+      "P6LJ",
+      "PKND",
+      "UD06",
+      "UTMU",
+      "WQ8Z",
+      "YMXV",
+      "ZAWX"
+    ],
+    "metadata_sha256": "59273c6dc2139ec7eb95b980fd26bc8529774b1ede0602f6ca90b546ed12f0fc",
+    "previous_manifest_sha256": {
+      "data/motion_matching_v1/sources.json": "1de03efe889fa66050a2aa0e5c46d42d3f09e3cc7967f464ad67ae3c5d404835"
+    },
+    "selected": [
+      {
+        "frames": 4,
+        "id": "X9Q1A",
+        "path": "/home/alex/Documents/path-wm/data/charades/raw/Charades_v1_480/X9Q1A.mp4",
+        "scene": "Basement (A room below the ground floor)",
+        "sha256": "855181ebbdbafda02ec55e8ba7045e4df736dbd45ff4c77712f153292af80882",
+        "subject": "1TZV"
+      },
+      {
+        "frames": 4,
+        "id": "O7NI6",
+        "path": "/home/alex/Documents/path-wm/data/charades/raw/Charades_v1_480/O7NI6.mp4",
+        "scene": "Living room",
+        "sha256": "e304f44fd374f621c39ab9a57543a113ed9ed5d8c7d52be384fdad90170333aa",
+        "subject": "Q4IF"
+      },
+      {
+        "frames": 4,
+        "id": "TKRIZ",
+        "path": "/home/alex/Documents/path-wm/data/charades/raw/Charades_v1_480/TKRIZ.mp4",
+        "scene": "Hallway",
+        "sha256": "3b3f1239a456af8adc58ef5920ea56ff12dc030460a382d94650fdd7c1266dcd",
+        "subject": "8IOD"
+      },
+      {
+        "frames": 4,
+        "id": "9VBJ5",
+        "path": "/home/alex/Documents/path-wm/data/charades/raw/Charades_v1_480/9VBJ5.mp4",
+        "scene": "Kitchen",
+        "sha256": "ac1f4b9c71266d57ee9c56a244a4e275410fb45d3ea7f2f64b1301620c596f61",
+        "subject": "V8LI"
+      }
+    ]
+  },
+  "limits": "Four fixed512-update fits and one zero-update cosine reference. Frozen image features/data and4096 sampled pairs per fit identical; models/initial weights differ: pooled1630 vs evidence81 parameters, not equal compute. Evidence uses only last2 observed grids, signed-side max comparison with shared residual scorer on cosine/absolute offset/zero match; no appearance/temporal input, free class bias, partner or labels at inference. Strong designed geometry prior; useful initial decisions do not count as learned gains. Two head seeds, temporal7401 only for pooled, one sampler; descriptive finite screens. Train2/4/6/8px, fresh4 source groups2/4,6/8,3/5/7,10/11;17 inspected sources individually gated. Static confidence descriptive, not calibration. Constructed periodic pans only, no natural motion, temporal corruption, tracking, streaming, forecasting or agent claim. No decoder changes.",
+  "sha256": {
+    "runs/video_evidence_v1/result.json": "444ca34c2617e43348f587ff91493a8ef492283df0a431d8d9bd82c9bf14d13f",
+    "runs/video_evidence_v1/verification.json": "1183367ce225848081deb89e0a88b093939812717ce32a563f1892e732abf3da",
+    "runs/video_evidence_v1/diagnostics.json": "e01fd27553fd0786d62f1672c6b3ac7100706b8df53b444c30029e261f8fdad0",
+    "runs/video_evidence_v1/decision-changes.json": "98dd1028e1d7039cad8201a4fb267a68e5703f866b147b93508c1efdf3e7e3e0",
+    "runs/video_evidence_v1/static-confidence.json": "41485cb8ed29685e730560d4a7dba2b40b4da64cd8c3602b2511fd1671a4b2bb",
+    "runs/video_evidence_v1/failure-diagnosis.json": "1081d73ea215bd4c2c661c15f9fd6ff68d2490ea41338507a0335bf1792bf3f4",
+    "runs/video_evidence_v1/report.html": "a0099bc1c0561eb1e4c03c21110be5d255549f2bc9d7291b86dbb39c5a21255b",
+    "runs/video_evidence_v1/cache-check.json": "b8d4c51aee210505b9d98ecc2c3950a272f8225411f459e6d26bb9ea0f5ac6bd",
+    "runs/video_evidence_v1/check/verification.json": "79429f4b4b352308201eaaabbfe8dc123c705cf7bf584945a7cbfb529dfb507f",
+    "runs/video_evidence_v1/execute.py": "3481039628da51e3a95a6ebc60fe1c7a1ce9a312203001c8c6f529701a124b24",
+    "runs/video_evidence_v1/analyze.py": "1efb72fb839bc2920a693bd0bab3fc4f28e357224f42b4a3a39348332fce17f1",
+    "runs/video_evidence_v1/tests.log": "6692934017b7c49d882f90bacacdf46a1fb73798aa5057b4c7edfb9fb4d213af",
+    "runs/video_evidence_v1/head7502/evidence/last.pt": "1565cddadf3422fef963b1e13f9891ebcd64f2dbdbf872d6e2690f700517c1ed",
+    "runs/video_evidence_v1/head7502/pooled/last.pt": "6681efaa9a3764eedf681bef0f40618d9cc825a511d0269dbcafa34134a99e2b",
+    "runs/video_evidence_v1/head7501/evidence/last.pt": "d526dc675bb9af3cb3cdf51908bb741e208b2fcb9ae50d81a1b394707db6acfe",
+    "runs/video_evidence_v1/head7501/pooled/last.pt": "91c2bd63a51d0551607e742000712185e6d327c2d0db61dbe25fdb47624c9e9b",
+    "runs/video_evidence_v1/head7502/evidence/evaluation.npz": "a90d0b266472adcf31605a31f913d9c2059d54311ee64aafaf7715f63eabe1bb",
+    "runs/video_evidence_v1/head7502/pooled/evaluation.npz": "9c93a95d05b27b4b107d44fcedc5425b521166190ae4cc2fb6db601a3d7dee7d",
+    "runs/video_evidence_v1/head7501/evidence/evaluation.npz": "093a731a0646d6fc9e7798083ccfafc264fb9b6d1dbd02f49dae06dced1994f6",
+    "runs/video_evidence_v1/head7501/pooled/evaluation.npz": "4544449591ec07c4c9696099f81b87d17595f74e33c6fd6fff7613296b5302e9",
+    "runs/video_evidence_v1/head7502/evidence/evidence.npz": "50c60d3f6dec2c2dcacc3bb9a81ae66f40115f48ceeb74f4a2aa715524033d0a",
+    "runs/video_evidence_v1/head7501/evidence/evidence.npz": "c9a0dfd7457355b6e0dcdd65ccba18692a687d8ace646654f2459854e3b6cc14",
+    "runs/video_evidence_v1/fixed/evidence.npz": "0790962769690b8a98ba0d7a81cf227255214edece7b60758265a9ab841909c4",
+    "runs/video_evidence_v1/fixed/exposure.npz": "e3d4950f39bf6ed2c77c84991605c4fcfe1df5e9f5b1060f4fd9293bc4316dd9",
+    "runs/video_evidence_v1/fixed/examples.npz": "800f33c919204ad5afdad3d557463386049315a6b2536f1bac6cdde3c7b073a7",
+    "runs/video_evidence_v1/fixed/evaluation.npz": "5a9c9d5c89096d7973398b66a71df015a62cec17e6cdbdcb12c5cd6a61de3375",
+    "runs/video_evidence_v1/fixed/last.pt": "9c04ec81c36c37f25fa531b3e86dad32459839e5340633a58a24dfb218e6c8ee",
+    "data/motion_evidence_v1/expanded.json": "cb88393d93434c36c436ea9ff81471a01d9b0350050eba1dee17a99ae3d76d99",
+    "data/motion_evidence_v1/selection.json": "6bfa55db7d0e1cb1572724ab79f13a0c397fb3f09ced76a639ff9c7d1b36fb09",
+    "data/motion_evidence_v1/sources.json": "0c05f7d1a010adb089cab4e982d62bff970b54cddeb030137b20cea45368dfcb",
+    "runs/reviews/video_evidence_v1/public-receipt.json": "b019bf2e339ec437d867e7b7a1bc71aae5a5b615eb6c4faa4f7a5d980745a512",
+    "runs/reviews/video_evidence_v1/reconcile-receipt.json": "379b9d2957f8bb52002cf1b25b2b5c323551bc2feeb6e69db45d92fdd96cc44e",
+    "runs/reviews/video_evidence_v1/public-brief.txt": "a8a6dea42080157581ab937f9a901bb545176e23516f82a3a3519510049491ee",
+    "runs/reviews/video_evidence_v1/reconcile-brief.txt": "ed0a86ce56f5cf9bd90deaa65734bb76fe8b7b78f5a239a93b9e747a9e6f824f",
+    "runs/reviews/video_evidence_v1/public-response.json": "c0c4227622f6fe60f838f9e3793137b08a3fe5c3aac798658d53fbfbdef1988e",
+    "runs/reviews/video_evidence_v1/reconcile-response.json": "65d2c51fd174a83e3d6b7c2b8ae043f22f4f07fcaa8663a3785dea8e54a0627a"
+  }
+}

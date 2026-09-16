@@ -760,3 +760,14 @@
 - **Code ref**: [configurable readout](../../../experiments/video_order.py), [matching/gradient/isolation tests](../../../tests/test_video_matching.py), [correlation primitive](../../../pathwm/models/video_vae.py).
 - **Evidence**: N430–N432; [fixed comparison](../../evidence/tables/video_matching_2026-09-16.json).
 - **Scope**: Implemented diagnostic procedure. All trained full/preservation gates fail; no default adoption.
+
+## H77: Measure learned refinement against the geometric rule it starts from
+
+- **Rationale**: Share candidate scoring across signed offsets, supply only sign-neutral inputs and compare opposite-side maxima. Zero-initialize residual output and retain a no-fit reference; report corrected versus corrupted decisions rather than treating strong initial accuracy as learned gain.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O292
+- **Sensitivity**: High. Sign symmetry does not prevent offset/source overfitting. Channel reversal is not arbitrary time reversal. Two head seeds and unequal parameter/compute budgets support a finite architectural comparison only.
+- **Code ref**: [shared correspondence head](../../../pathwm/models/video_vae.py), [optional readout recipe](../../../experiments/video_order.py), [initialization/symmetry/gradient tests](../../../tests/test_video_evidence.py).
+- **Evidence**: N434–N436; [comparison and candidate diagnosis](../../evidence/tables/video_evidence_2026-09-16.json).
+- **Scope**: Implemented method. Fresh direction gates pass, but learned-gain/preservation gates fail; no default adoption.

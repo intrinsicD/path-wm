@@ -1,8 +1,16 @@
 # Current work
 
-**Active: structured direction reader:** [protocol](video-evidence-plan.md).
-Shared residual scoring of opposite-offset correspondences; compare pooled, learned
-evidence and fixed cosine.89 tests and10239 exact restart checks pass; four fixed fits next.
+**Structured direction-reader comparison completed,16 September:**
+[Protocol/results](video-evidence-plan.md),[report](../runs/video_evidence_v1/report.html).
+Four512-update fits: pooled1630 vs shared evidence81 parameters. Fresh groups achieve
+99.69–100% for evidence; both head seeds and fixed cosine pass the fresh full screen,
+pooled fails (large-shift92.53%). But learned-vs-fixed fresh gain only0.0366pp and
+worst inspected-source regression14.71pp fail adoption.113/111 formerly correct large
+shifts on6RQHT become wrong, almost all after selecting offset1 instead of wider matches.
+No default promotion.89 tests,10239 exact restart,42682 raw audits,36 exact old pooled
+checks,6120 marginals;8 structural reports, panel inspected. Next separate preservation
+of reliable matching decisions from rank-changing learned corrections; natural motion,
+tracking/static/unknown cases and core integration remain open.
 
 **Explicit correspondence-range comparison completed,16 September:**
 [Protocol/results](video-matching-plan.md),[report](../runs/video_matching_v1/report.html).

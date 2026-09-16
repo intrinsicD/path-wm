@@ -98,3 +98,78 @@ media or measured results were exported. These limits do not warrant extra tunin
 exact checks (model,optimizer,RNG,sampler,training rows,raw predictions/exposure and
 non-confirmation scores). Reports structurally verified; no renderer changes.
 The two readout architectures differ intentionally; generic default remains intact.
+
+## Results (16 September)
+
+Four512-update fits complete in5.226s measured CPU training;21.068s preparation and
+85.282s through formal preparation/training/evaluation/reporting. Zero-step fixed-rule
+report and8.814s candidate diagnostics follow. Same4096 sampled pairs per trained fit;
+POOLED1630 versus EVIDENCE81 parameters. No encoder/decoder update or default promotion.
+
+Fresh source-macro accuracy, mean and range across the TWO head seeds:
+
+| Group | POOLED | EVIDENCE | Fixed cosine, no fit |
+|---|---:|---:|---:|
+| trained2/4px |99.45% (99.32–99.58)|99.69% (99.67–99.71)|99.54%|
+| trained6/8px |99.45% (99.32–99.58)|100% (both)|100%|
+| unseen3/5/7px |99.99% (99.98–100)|100% (both)|100%|
+| unseen10/11px |92.53% (91.99–93.07)|100% (both)|100%|
+
+EVIDENCE and FIXED pass the full fresh capability screen; POOLED fails. Neither benefit
+screen passes, so the composite adoption gate fails. EVIDENCE-vs-POOLED transfer mean
++3.741pp and fresh nonregression pass, but worst inspected source/group regresses5.21pp
+(A8LZE,2/4px,head7502). EVIDENCE-vs-FIXED gains only0.0366pp averaged across4 fresh groups
+and has a worst inspected regression14.714pp (6RQHT,10/11px,head7501). This is a source
+preservation failure, despite excellent new-source accuracy. No trained-motion learning
+claim is inferred from initial hand-designed geometry or near-ceiling fresh performance.
+
+Learning really changes the scoring function: final residual maxima5.90/5.11 and
+positive scales1.679/1.662; channel-reversal error stays exactly0. On fresh sources,
+only2/4px decisions change: seed7501 corrects6 and corrupts1 of3072 clips; seed7502
+corrects5 and corrupts1. Other fresh groups make exactly the fixed rule's decisions.
+Static controls have50% accuracy as required, but1.69–1.82% of current/previous-only
+examples receive>=95% confidence after learning, versus0 for unscaled fixed cosine.
+This flags a limitation, not a calibrated probability comparison across scales.
+
+Post-result diagnosis (no extra fit or gate change): on6RQHT at10/11px, fixed accuracy
+100% becomes85.29/85.55%; the learned residual corrupts113/111 of768 decisions and
+corrects none. Among those corruptions,112/110 winning candidates move to absolute
+offset1, one to2, none remain at3. Original winners were mostly3 (89/88) or2 (24/23).
+Thus offset-dependent refinement can override useful wider matches in these cases.
+The stored centered residuals remove irrelevant common shifts; a large raw residual
+alone is not the diagnosis. This does not prove a unique optimizer or generalization
+cause. See failure-diagnosis.json for exact candidate vectors and indices.
+
+89 tests,10239 exact restart checks,42682 independent raw/gate/exposure checks,
+36 exact prior-POOLED model/prediction comparisons,6120 RGB/encoded marginal checks,
+38 source-file hashes and40 immutable cached tensors pass.8 reports structurally
+verified, panel inspected; no browser-interaction claim. Artifacts ~48.6MB (<80MiB).
+Actual-Claude public review/reconciliation receipts retained; no private export.
+
+The optional structured head is implemented and usable. For this task the fixed rule
+remains a strong reference; extra learning has not earned replacement. Next proposed
+bounded question: separate decision-preserving evidence calibration from unconstrained
+offset-dependent corrections, and require inspected-source preservation before enabling
+rank-changing refinements. Do not respond by simply enlarging the encoder or stacking
+more layers. Natural motion, temporal corruption, tracking, stationary/unknown classes,
+streaming and agent integration remain open, separate from this two-direction probe.
+
+## User path
+
+```bash
+.venv/bin/python -m experiments.video_order \
+  --output runs/my_direction_evidence \
+  --source-manifest data/motion_evidence_v1/sources.json \
+  --displacement-spec data/motion_evidence_v1/expanded.json \
+  --balanced-training --matched-phase-sampling --mode correlation \
+  --correlation-radius 3 --active-radius 3 --readout evidence \
+  --pair-center-weight 0.1 --head-seed 7501 --seed 7600 --steps 512
+```
+
+Use --readout pooled for the existing head; supply temporal-source for its saved
+initialization. Evidence does not allocate/use temporal weights. --steps0 evaluates
+the initial fixed cosine decision rule without fitting; its seed initializes dormant
+residual weights but does not change initial outputs. Run resume checks readout/radii,
+objective, source/config/code/environment. Main artifacts: report.html,result.json,
+comparison.json,decision-changes.json,static-confidence.json,failure-diagnosis.json,
+verification.json and each model's evaluation.npz/evidence.npz/checkpoint/report.

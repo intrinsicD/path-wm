@@ -2,8 +2,8 @@ session:
   id: 2026-09-16_001
   date: '2026-09-16'
   started: 2026-09-16T00:28+02:00
-  last_turn: 2026-09-16T12:30+02:00
-  turn_count: 12
+  last_turn: 2026-09-16T12:52+02:00
+  turn_count: 13
   summary: 'Eight matched fresh-updater controls fail direction screens; continuous working access not
     adopted. Encoder probes100%, updater queries60-75%; single-modality learning is next proposed isolation.59
     scoped tests, exact replay and raw/report audits pass. Follow-up: isolated text learns known direction100%
@@ -28,7 +28,10 @@ session:
     fixed fits reduce relative bias and improve fresh means, but extrapolation72.42% and source regressions
     fail repair.81 tests,7061 restart,52913 audits,72 prior-baseline checks,11 reports; no default change.
     Matching support:12 fits,large-shift78.75/86.77/90.07%;fixed cosine99.93% on same frozen grids. All
-    trained/preservation gates fail.85 tests,8661 restart,92229 audits,17 reports; no default change.'
+    trained/preservation gates fail.85 tests,8661 restart,92229 audits,17 reports; no default change.
+    Structured evidence:4 fits,81 vs1630 parameters,fresh99.69–100% and fixed rule pass. Learned-vs-fixed
+    gain0.0366pp/old-source-14.71pp fails adoption; near-offset reassignment recorded.89 tests,10239 restart,42682
+    audits,8 reports.'
 events_logged:
 - turn: 1
   type: decision
@@ -533,6 +536,57 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O290 method committed through N430; no successful-repair claim.
+- turn: 13
+  type: decision
+  id: N433
+  routing: direct
+  provenance: user
+  summary: Prioritize structured direction reader before duplicate-code and compilation cleanup
+- turn: 13
+  type: decision
+  id: N434
+  routing: direct
+  provenance: ai-executed
+  summary: Test shared opposite-offset evidence scoring against its own fixed initialization
+- turn: 13
+  type: experiment
+  id: N435
+  routing: direct
+  provenance: ai-executed
+  summary: Structured and fixed readers pass fresh gates while learned preservation fails
+- turn: 13
+  type: experiment
+  id: N436
+  routing: direct
+  provenance: ai-executed
+  summary: Learned offset scoring replaces reliable wider matches with near candidates on an inspected
+    source
+- turn: 13
+  type: observation
+  id: O293
+  routing: staged
+  provenance: ai-suggested
+  summary: For controlled horizontal pans, shared geometric evidence comparison preserves a strong hand-designed
+    initial rule and outperforms generic learned pooling on fresh large shifts. Additional residual learning
+    gives negligible fresh accuracy gain and can select incorrect nearer offsets on an inspected source.
+    This is a learned-preservation limitation, not evidence of missing encoder information or general
+    video understanding.
+- turn: 13
+  type: observation
+  id: O294
+  routing: staged
+  provenance: ai-suggested
+  summary: Next separate decision-preserving evidence calibration from rank-changing offset-dependent
+    correction, retain fixed geometry as an explicit baseline and require individual inspected-source
+    preservation before enabling refinements. Do not just add layers/retrain the image encoder. No new
+    calibration or bounded-residual fit executed; static/unknown motion and natural video remain separate
+    open tasks.
+- turn: 13
+  type: heuristic
+  id: H77
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O292 experimental method committed through N434; retain provenance and failed preservation.
 ai_actions:
 - turn: 1
   action: Implemented optional controls, ran8 preregistered fits and4 frozen stage localizations, reconciled4
@@ -700,6 +754,21 @@ ai_actions:
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
   - ara/evidence/tables/video_matching_2026-09-16.json
+- turn: 13
+  action: Implemented small shared evidence head and optional recipe/CLI/checkpoint/trace path without
+    unused temporal weights. Ran89 tests, exact8 vs4+4 restart,4 matched-data fits and no-fit cosine control.
+    Independently audited raw metrics, old-weight replay, changed decisions and failing candidate reassignments.
+    Actual-Claude public review/reconciliation. Docs/atlas updated, no default promotion.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/video_vae.py
+  - experiments/video_order.py
+  - tests/test_video_evidence.py
+  - docs/video-evidence-plan.md
+  - docs/models.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - ara/evidence/tables/video_evidence_2026-09-16.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -751,6 +820,10 @@ key_context:
   excerpt: Continue together with Claude. Work on this. Plan, implement, review, test and fix. Iterate.
     Same frozen features yield99.93% fixed-rule large-shift accuracy versus90.07% learned wide reader;
     full trained gates still fail.
+- turn: 13
+  excerpt: 'User clarified: Zuerst den strukturierten Richtungsleser weiterentwickeln, before duplication/compilation
+    cleanup. Implement/review/test with Claude. Fresh structured100% at larger shifts also held by fixed
+    cosine; old-source learned deterioration remains.'
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -837,6 +910,9 @@ open_threads:
 - 'O292: structured opposite-offset evidence readout against generic head AND fixed cosine, keep small
   shifts and source-preservation; one-sequence input/fresh confirmation. No new fit; natural motion/core
   integration remain open.'
+- 'O294: separate decision-preserving calibration from offset-dependent refinement and retain old-source
+  gates. Natural motion/static/unknown/tracking remain open; user prioritizes direction before deferred
+  duplicate-code/compilation cleanup.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher response.'
 - 'O182: balanced training failure narrows the state/update/readout learning question without proving erased
@@ -990,3 +1066,5 @@ ai_suggestions_pending:
   matching proposal remain staged; no extra fit or global capability promotion.
 - O290→H76 implements the matched correspondence-range diagnostic only. O291 accessible-evidence interpretation/O292
   structured-readout proposal staged; no high-level motion claim promoted.
+- O292→H77 is committed structured-readout methodology, not a successful learned repair. O293 interpretation/O294
+  calibration-vs-ranking proposal staged; no global video claim promoted.

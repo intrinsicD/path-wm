@@ -116,6 +116,17 @@ The [paired-order study](video-order-plan.md) distinguishes constructed crop pan
 an exactly balanced periodic challenge, and balanced-data training. A few individual
 fits pass the scoped direction gate; robustness across both seeds remains open.
 
+`CorrespondenceDirectionHead(radius)` consumes a horizontal cosine volume
+`[B,2*radius+1,H,W]`. It pools spatially, scores each offset with one shared residual
+MLP on cosine/absolute distance/zero-offset cosine, then compares opposite-side maxima.
+It starts at the fixed cosine rule and has81 parameters; positive scale is learned.
+`OrderReadout(..., readout="evidence", mode="correlation")` selects this two-frame path
+without allocating a temporal mixer; full active radius is required. Defaults retain
+the pooled reader. Traces expose cosine, residual, candidate scores and scale.
+Channel reversal swaps logits; this does not guarantee arbitrary video reversal.
+The [structured-reader comparison](video-evidence-plan.md) passes its fresh direction
+screen but fails old-source preservation; learned refinements remain experimental.
+
 ## Controlled visual memory output
 
 `ConditionalFeatureGenerator` is an optional replacement for the image producer,

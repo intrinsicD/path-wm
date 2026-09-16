@@ -7232,3 +7232,76 @@ tree:
   - runs/video_matching_v1/alignment.json
   - runs/video_matching_v1/alignment.npz
   status: resolved
+- id: N433
+  type: decision
+  title: Prioritize structured direction reader before duplicate-code and compilation cleanup
+  provenance: user
+  timestamp: 2026-09-16T12:52+02:00
+  choice: 'User clarification: Zuerst den strukturierten Richtungsleser weiterentwickeln. Continue implementation/review/tests
+    with Claude on the preceding direction task.'
+  alternatives:
+  - First reduce duplicated code and compilation/runtime costs
+  evidence:
+  - Current-turn explicit option reply
+  - O292
+  status: resolved
+- id: N434
+  type: decision
+  title: Test shared opposite-offset evidence scoring against its own fixed initialization
+  provenance: ai-executed
+  timestamp: 2026-09-16T12:52+02:00
+  choice: Implement O292 as81-parameter shared residual scorer on cosine,absolute offset and zero match,
+    with no appearance/temporal inputs. Zero final projection preserves fixed cosine decisions; shared
+    signed-side maxima and bounded positive scale. Existing pooled1630-parameter arm, two head seeds,
+    one temporal initialization, same4096 draws/512updates and frozen encoder. Four fresh subjects exclude34
+    old sources; all17 inspected sources preservation-gated. Fixed no-fit rule separates prior from learned
+    gains; nominal parameters/compute unequal.
+  alternatives:
+  - Add content-dependent temporal context immediately
+  - Increase encoder or temporal kernel
+  - Count duplicate temporal seeds for a head without temporal weights
+  evidence:
+  - O292
+  - ara/evidence/tables/video_evidence_2026-09-16.json
+  - docs/video-evidence-plan.md
+  - pathwm/models/video_vae.py#CorrespondenceDirectionHead
+  also_depends_on:
+  - N433
+  status: resolved
+- id: N435
+  type: experiment
+  title: Structured and fixed readers pass fresh gates while learned preservation fails
+  provenance: ai-executed
+  timestamp: 2026-09-16T12:52+02:00
+  result: Four512-update fits5.226s CPU. Fresh evidence99.69% known,100% wide/intermediate/extrapolation;
+    fixed99.54/100/100/100%; pooled99.45/99.45/99.99/92.53%. Evidence/fixed fresh capability pass, pooled
+    fails. Learned-vs-fixed gain0.0366pp and worst inspected-14.71pp fail adoption. Evidence-vs-pooled
+    transfer+3.741pp but inspected-5.21pp fails preservation.89 tests,10239 exact restart,42682 raw audits,36
+    exact prior pooled model/prediction checks,6120 marginals,38 source hashes,8 structural reports and
+    inspected panel; no default change.
+  also_depends_on:
+  - N434
+  evidence:
+  - ara/evidence/tables/video_evidence_2026-09-16.json
+  - docs/video-evidence-plan.md
+  - runs/video_evidence_v1/report.html
+  status: resolved
+- id: N436
+  type: experiment
+  title: Learned offset scoring replaces reliable wider matches with near candidates on an inspected source
+  provenance: ai-executed
+  timestamp: 2026-09-16T12:52+02:00
+  result: 'Post-result diagnosis, no extra fit: on6RQHT at10/11px, fixed100% becomes85.29/85.55%.113/111
+    of768 decisions corrupted,none corrected;112/110 choose absolute offset1 afterward (one2,none3), whereas
+    fixed winners were89/88 at3 and24/23 at2. Fresh known2/4px corrects6/5 and corrupts1 per seed; other
+    fresh groups retain fixed decisions. Scale1.679/1.662, channel-reversal error0. Static>=95% confidence1.69–1.82%
+    after learning, descriptive only. Centered residuals and exact candidate vectors retained; no unique
+    optimization cause asserted.'
+  also_depends_on:
+  - N435
+  evidence:
+  - ara/evidence/tables/video_evidence_2026-09-16.json
+  - docs/video-evidence-plan.md
+  - runs/video_evidence_v1/failure-diagnosis.json
+  - runs/video_evidence_v1/decision-changes.json
+  status: resolved

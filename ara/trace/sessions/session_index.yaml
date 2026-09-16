@@ -191,8 +191,11 @@ sessions:
     fixed fits reduce relative bias and improve fresh means, but extrapolation72.42% and source regressions
     fail repair.81 tests,7061 restart,52913 audits,72 prior-baseline checks,11 reports; no default change.
     Matching support:12 fits,large-shift78.75/86.77/90.07%;fixed cosine99.93% on same frozen grids. All
-    trained/preservation gates fail.85 tests,8661 restart,92229 audits,17 reports; no default change.'
-  turn_count: 12
-  events_count: 73
+    trained/preservation gates fail.85 tests,8661 restart,92229 audits,17 reports; no default change.
+    Structured evidence:4 fits,81 vs1630 parameters,fresh99.69–100% and fixed rule pass. Learned-vs-fixed
+    gain0.0366pp/old-source-14.71pp fails adoption; near-offset reassignment recorded.89 tests,10239 restart,42682
+    audits,8 reports.'
+  turn_count: 13
+  events_count: 80
   claims_touched: []
-  open_threads: 33
+  open_threads: 34
