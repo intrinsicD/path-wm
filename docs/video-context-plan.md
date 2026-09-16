@@ -38,7 +38,10 @@ Run/checkpoint/report infrastructure and original image checkpoint.
   claim. Preserve all failed results; default unchanged unless separately adopted.
 - Budget: twelve fits, <=60s each, <=720s total formal training; one <=8-update
   smoke/resume check per necessary path, no extra efficacy fits. <=30MiB new
-  artifacts and >=300MiB free disk; stop explicitly if that reserve cannot hold.
+  artifacts initially estimated; after the completed8-step report/checkpoint smoke,
+  allow <=36MiB new artifacts including both restart-check reports, while retaining
+  >=300MiB free disk. This budget refinement precedes formal runs; no efficacy
+  settings change. Stop explicitly if that reserve cannot hold.
 - Record protocol/source identities, raw metrics, small reconstruction/error
   examples, standalone reports and exact restart check. No report-renderer change.
   Compare source weights before/after. Actual Claude reviews a public generic
@@ -62,3 +65,10 @@ recorded MACs within each pair. Report excludes normalization/activation/backwar
 so it is an approximate compute measure, not total FLOPs. No remaining design
 disagreement. To fit disk budget, checkpoints store trainable temporal weights plus
 optimizer/RNG; the frozen image checkpoint is referenced by path and SHA256.
+
+Before formal runs:68 scoped tests pass (12 video wrapper/task checks plus56 spatial
+VAE/modality regressions). The two new interface tests first failed informatively
+on absent configuration arguments. An8-step versus4+4 shared-refinement run passes
+1447 exact checkpoint/optimizer/RNG/train-row/evaluation checks. Timing and extra
+intermediate validation rows are excluded. Only this turn's completed pytest temp
+directory was removed to recover its120MiB; historical runs and data are preserved.
