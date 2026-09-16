@@ -481,6 +481,26 @@ def readout_inspection(directory):
     parts = [
         "<section><h2>Multimodal latent readout</h2><p>Controlled arrows, symbolic tones and short descriptions. Audio is not speech; video is observed-clip reconstruction, not a dynamics forecast. Frozen readout and joint core training are different interventions. Latent factor supervision is supplied, not discovered.</p>"
     ]
+    grounded = directory / "grounded.json"
+    if grounded.exists():
+        qa = json.loads(grounded.read_text())
+        details = {
+            k: v
+            for k, v in qa.items()
+            if k not in ("symbolic_before", "symbolic_after", "last_frame_controls")
+        }
+        parts.append(
+            "<h3>Grounded QA continuation</h3><p>Curves alternate QA and symbolic replay objectives with different scales. The table checks previous outputs. The separate understanding suite measures task success. No general video-understanding claim.</p><pre>"
+            + escape(json.dumps(details, indent=2))
+            + "</pre>"
+        )
+        examples = directory / "grounded_examples.json"
+        if examples.exists():
+            parts.append(
+                "<h3>Free text answers · full test cohort</h3><pre>"
+                + escape(examples.read_text())
+                + "</pre>"
+            )
     if data.get("aggregate"):
         parts.append(
             f"<p><strong>Registered joint screens passed: {sum(r['gate'] for r in data['summary'])}/{len(data['summary'])}.</strong> These screens require both factual correctness and output quality.</p>"

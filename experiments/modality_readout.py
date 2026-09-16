@@ -664,31 +664,338 @@ def diagnose(args):
         raise
 
 
-def understanding(args):
-    """Run a prepared regression battery against an unchanged full checkpoint."""
-    from pathwm.data.understanding import UnderstandingData
-    from pathwm.evaluation.understanding import evaluate_understanding
-
-    data = UnderstandingData(args.understanding_suite)
-    settings = json.loads((args.core / "run.json").read_text())["identity"]["settings"]
+def restore_readout(directory, seed, device):
+    """Restore the complete saved architecture, including optional diagnostic heads."""
+    settings = json.loads((directory / "run.json").read_text())["identity"]["settings"]
     checkpoint = torch.load(
-        args.core / "last.pt", map_location="cpu", weights_only=True
+        directory / "last.pt", map_location="cpu", weights_only=True
     )
-    seed_everything(args.seed)
+    seed_everything(seed)
     model = Model(
         settings["variant"],
         posterior_aux="posterior_head.weight" in checkpoint["model"],
         video_conditioning=settings.get("video_conditioning", "context"),
         video_palette=settings.get("video_palette", 0),
     )
-    source_hash = load_initial(model, args.core, args.device)
+    source_hash = load_initial(model, directory, device)
+    return model.to(device), settings, source_hash
+
+
+def grounded_records(data, case):
+    """An explicit supervised calibration population; never train on scored cohorts."""
+    if not any(
+        c["id"] == case and c["domain"] == "controlled contrast" for c in data.cases
+    ):
+        raise ValueError("Grounded training requires a controlled contrast case")
+    rows = [
+        r for r in data.records if r["case"] == case and r["split"] == "calibration"
+    ]
+    if not rows:
+        raise ValueError("No calibration training examples")
+    return rows
+
+
+def grounded_batch(data, rows, indices, device):
+    from torch.nn.utils.rnn import pad_sequence
+    from pathwm.models.modalities import Observation, bytes_batch
+
+    if any(r["split"] != "calibration" for r in rows):
+        raise ValueError("Only calibration examples may enter grounded training")
+    selected = [rows[int(i)] for i in indices]
+    items = [data.inputs(r, device=device) for r in selected]
+    if any(item.keys() != items[0].keys() for item in items):
+        raise ValueError("Batch one task with the same evidence modalities")
+    inputs = {}
+    for kind in items[0]:
+        observations_ = [item[kind] for item in items]
+        inputs[kind] = Observation(
+            pad_sequence([o.values[0] for o in observations_], batch_first=True),
+            pad_sequence([o.times[0] for o in observations_], batch_first=True),
+            pad_sequence(
+                [
+                    torch.ones_like(o.times[0], dtype=torch.bool)
+                    if o.valid is None
+                    else o.valid[0]
+                    for o in observations_
+                ],
+                batch_first=True,
+            ),
+        )
+    targets, _ = bytes_batch(
+        [r["choices"][r["answer"]] for r in selected], device=device
+    )
+    return inputs, targets
+
+
+def configure_grounded_training(model, scope):
+    if scope not in ("decoder", "core"):
+        raise ValueError("Grounded scope must be decoder or core")
+    model.requires_grad_(False)
+    if scope == "core":
+        model.core.requires_grad_(True)
+        for module in (
+            model.core.agent.encoders,
+            model.core.factor_head,
+            model.core.agent.action_head,
+            model.core.agent.monitor,
+        ):
+            module.requires_grad_(False)
+    model.outputs.decoders["text"].requires_grad_(True)
+    model.outputs.adapters["text"].requires_grad_(True)
+    training_mode(model)
+
+
+def grounded_objective(model, tokens, targets):
+    out = model.outputs("text", tokens, targets[:, :-1])
+    return F.cross_entropy(
+        out.flatten(0, 1), targets[:, 1:].flatten(), ignore_index=0
+    ) / np.log(259)
+
+
+def grounded(args):
+    """Small matched continuation through the existing core and output decoder."""
+    from pathwm.data.understanding import UnderstandingData
+    from pathwm.evaluation.understanding import choice_scores
+    from pathwm.models.modalities import bytes_text
+
+    data = UnderstandingData(args.understanding_suite)
+    rows = grounded_records(data, args.grounded_case)
+    device = torch.device(args.device)
+    model, source_settings, source_hash = restore_readout(args.core, args.seed, device)
+    configure_grounded_training(model, args.grounded_scope)
+    frozen = {
+        n: p.detach().clone()
+        for n, p in model.named_parameters()
+        if not p.requires_grad
+    }
+    original_seed = source_settings.get("replay_seed", source_settings["seed"])
+    populations = {
+        s: dataset(s, original_seed) for s in ("train", "validation", "seen", "heldout")
+    }
+    normalizers = scales(populations["train"])
+    optimizer = torch.optim.Adam(
+        [p for p in model.parameters() if p.requires_grad], lr=0.001
+    )
+    settings = dict(
+        seed=args.seed,
+        stage="grounded",
+        variant=source_settings["variant"],
+        steps=args.steps,
+        batch=8,
+        learning_rate=0.001,
+        case=args.grounded_case,
+        scope=args.grounded_scope,
+        calibration_training_ids=[r["id"] for r in rows],
+        replay_seed=original_seed,
+        replay="alternate original multimodal replay and QA updates",
+        objective="QA byte CE/log259; replay sum normalized per-output losses",
+        initialization_checkpoint_sha256=source_hash,
+        initialization_checkpoint=str(args.core.resolve()),
+        belief_readout=model.core.belief_readout,
+        encoder_readout=source_encoder_readout(args.core),
+        video_conditioning=model.outputs.decoders["video"].time_conditioning,
+        video_palette=model.outputs.decoders["video"].palette_size,
+        diagnostic_calibration_overlap=args.grounded_case,
+    )
+    run = Run(
+        args.output,
+        settings=settings,
+        data=dict(
+            fixtures=data.identity,
+            replay_seed=original_seed,
+            replay_ids=digest(populations["train"]["ids"]),
+        ),
+        recipe=__file__,
+        model=model,
+        optimizer=optimizer,
+        device=device,
+        resume=args.resume,
+    )
+
+    def symbolic():
+        with evaluation_mode(model), torch.no_grad():
+            cached, _ = cache_states(model, populations, original_seed, device)
+            return evaluate_outputs(
+                model.outputs, cached, populations, KINDS, normalizers, device
+            )
+
+    try:
+        baseline_path = run.path / "symbolic_before.json"
+        if not args.resume:
+            before, _ = symbolic()
+            atomic_json(baseline_path, before)
+        else:
+            before = json.loads(baseline_path.read_text())
+        if device.type == "cuda":
+            torch.cuda.reset_peak_memory_stats(device)
+        start = time.perf_counter()
+        end = min(args.steps, args.stop_after or args.steps)
+        training_mode(model)
+        while run.step < end:
+            optimizer.zero_grad(set_to_none=True)
+            if run.step % 2 == 0:
+                inputs, target = grounded_batch(
+                    data, rows, run.sample(len(rows), 8), device
+                )
+                loss = grounded_objective(model, model.core(inputs), target)
+                objective = "qa"
+            else:
+                replay = populations["train"]
+                indices = run.sample(len(replay["ids"]), 8)
+                mode = MODES[(run.step // 2) % len(MODES)]
+                tokens = model.core(observations(replay, mode, indices, device))
+                loss, _ = output_objective(
+                    model,
+                    tokens,
+                    target_batch(replay, indices, device),
+                    KINDS,
+                    normalizers,
+                )
+                objective = "replay"
+            if not torch.isfinite(loss):
+                raise ValueError("Nonfinite grounded objective")
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(
+                [p for p in model.parameters() if p.requires_grad],
+                5.0,
+                error_if_nonfinite=True,
+            )
+            optimizer.step()
+            run.step += 1
+            run.log(
+                dict(
+                    step=run.step,
+                    split="train",
+                    loss=float(loss.detach()),
+                    objective=objective,
+                )
+            )
+            if run.step % 128 == 0:
+                run.save()
+                print(json.dumps(run.rows[-1]), flush=True)
+        if device.type == "cuda":
+            torch.cuda.synchronize(device)
+        elapsed = time.perf_counter() - start
+        run.save()
+        for name, parameter in model.named_parameters():
+            if name in frozen and not torch.equal(parameter, frozen[name]):
+                raise AssertionError(f"Frozen parameter changed: {name}")
+        if file_hash(args.core / "last.pt") != source_hash:
+            raise AssertionError("Source checkpoint changed")
+        resources = dict(
+            training_seconds_this_invocation=elapsed,
+            parameters=sum(p.numel() for p in model.parameters()),
+            trainable_parameters=sum(
+                p.numel() for p in model.parameters() if p.requires_grad
+            ),
+            frozen_preserved=True,
+            peak_allocated_bytes=torch.cuda.max_memory_allocated(device)
+            if device.type == "cuda"
+            else None,
+        )
+        metrics, arrays, controls = [], {}, []
+        if end == args.steps:
+            metrics, arrays = symbolic()
+            np.savez_compressed(run.path / "outputs.npz", **arrays)
+            save_panels(run.path, arrays, metrics)
+            if args.grounded_case.startswith("VID."):
+                with evaluation_mode(model), torch.no_grad():
+                    for r in data.records:
+                        if r["case"] != args.grounded_case or r["split"] != "test":
+                            continue
+                        for draw in range(3):
+                            torch.manual_seed(9401 + draw)
+                            inputs = data.inputs(r, device=device)
+                            video = inputs["video"]
+                            inputs["video"] = replace(
+                                video,
+                                values=video.values[:, -1:],
+                                times=video.times[:, -1:],
+                            )
+                            tokens = model.core(inputs)
+                            scores = choice_scores(model.outputs, tokens, r["choices"])
+                            controls.append(
+                                dict(
+                                    id=r["id"],
+                                    draw=draw,
+                                    answer=r["answer"],
+                                    predicted=int(scores.argmax()),
+                                    scores=scores.cpu().tolist(),
+                                )
+                            )
+                    generated = []
+                    for r in [
+                        r
+                        for r in data.records
+                        if r["case"] == args.grounded_case and r["split"] == "test"
+                    ]:
+                        torch.manual_seed(9401)
+                        tokens = model.core(data.inputs(r, device=device))
+                        generated.append(
+                            dict(
+                                id=r["id"],
+                                expected=r["choices"][r["answer"]],
+                                generated=bytes_text(
+                                    model.outputs.generate(tokens, 12)[0]
+                                ),
+                            )
+                        )
+                atomic_json(run.path / "grounded_examples.json", generated)
+        atomic_json(
+            run.path / "grounded.json",
+            dict(
+                settings=settings,
+                resources=resources,
+                symbolic_before=before,
+                symbolic_after=metrics,
+                last_frame_controls=controls,
+                last_frame_accuracy=None
+                if not controls
+                else float(np.mean([r["answer"] == r["predicted"] for r in controls])),
+                diagnostic_note="This task's calibration cohort trained the agent; its later calibration probes are not independent.",
+            ),
+        )
+        atomic_json(
+            run.path / "readout.json",
+            dict(
+                stage="grounded",
+                variant=settings["variant"],
+                modality="text",
+                metrics=metrics,
+                resources=resources,
+                partial=end < args.steps,
+            ),
+        )
+        run.status("complete" if end == args.steps else "paused", "pending")
+        write_report(run.path)
+    except BaseException as exc:
+        prior = json.loads((run.path / "status.json").read_text())
+        run.status(
+            prior["result"] if prior["result"] in ("complete", "paused") else "failed",
+            "failed",
+            str(exc),
+        )
+        raise
+    print(json.dumps(dict(path=str(run.path), resources=resources)), flush=True)
+    return run.path
+
+
+def understanding(args):
+    """Run a prepared regression battery against an unchanged full checkpoint."""
+    from pathwm.data.understanding import UnderstandingData
+    from pathwm.evaluation.understanding import evaluate_understanding
+
+    data = UnderstandingData(args.understanding_suite)
+    model, settings, source_hash = restore_readout(args.core, args.seed, args.device)
     model.requires_grad_(False)
     source = dict(
         path=str(args.core.resolve()),
         sha256=source_hash,
         settings=settings,
         output_training_scope=(
-            "joint multimodal symbolic outputs"
+            f"Grounded QA: {settings.get('case')}; calibration cohort also trained the agent, so probes are not independent"
+            if settings["stage"] == "grounded"
+            else "joint multimodal symbolic outputs"
             if settings["stage"] == "joint"
             else "Check source settings: decoder may be untrained for this endpoint"
         ),
@@ -1134,6 +1441,7 @@ def main():
             "capabilities",
             "understanding-prepare",
             "understanding",
+            "grounded",
             "repair-report",
         ),
         default="suite",
@@ -1148,6 +1456,14 @@ def main():
     )
     parser.add_argument("--modality", choices=KINDS, default="text")
     parser.add_argument("--core", type=Path)
+    parser.add_argument(
+        "--grounded-case",
+        default="VID.order",
+        help="Controlled calibration task to supervise",
+    )
+    parser.add_argument(
+        "--grounded-scope", choices=("decoder", "core"), default="decoder"
+    )
     parser.add_argument(
         "--understanding-suite",
         type=Path,
@@ -1225,6 +1541,14 @@ def main():
         help="Optional learned untimed palette; requires query timing",
     )
     args = parser.parse_args()
+    if args.stage == "grounded":
+        if args.core is None or args.understanding_suite is None:
+            parser.error("Grounded training needs --core and --understanding-suite")
+        args.steps = args.steps or 768
+        if args.steps < 1 or (args.stop_after is not None and args.stop_after < 1):
+            parser.error("Training lengths must be positive")
+        grounded(args)
+        return
     if args.stage == "understanding-prepare":
         from pathwm.data.understanding import prepare_understanding
 

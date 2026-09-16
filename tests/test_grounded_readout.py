@@ -32,7 +32,9 @@ def test_grounded_training_never_uses_validation_or_answers_as_inputs():
         assert torch.equal(inputs[kind].times, other[kind].times)
         assert inputs[kind].provenance is None
     assert torch.equal(inputs["video"].values[0, -1], inputs["video"].values[1, -1])
-    leaked = [r for r in data.records if r["case"] == "VID.order" and r["split"] == "test"]
+    leaked = [
+        r for r in data.records if r["case"] == "VID.order" and r["split"] == "test"
+    ]
     with pytest.raises(ValueError, match="calibration"):
         recipe.grounded_batch(data, leaked, [0], "cpu")
     with pytest.raises(ValueError, match="controlled"):
@@ -49,7 +51,9 @@ def test_grounded_loss_respects_frozen_boundaries(scope):
     model = recipe.Model("native")
     recipe.configure_grounded_training(model, scope)
     frozen = {n: p.clone() for n, p in model.named_parameters() if not p.requires_grad}
-    optimizer = torch.optim.Adam([p for p in model.parameters() if p.requires_grad], lr=.001)
+    optimizer = torch.optim.Adam(
+        [p for p in model.parameters() if p.requires_grad], lr=0.001
+    )
     tokens = model.core(inputs)
     loss = recipe.grounded_objective(model, tokens, targets)
     logits = model.outputs("text", tokens, targets[:, :-1])
@@ -58,8 +62,13 @@ def test_grounded_loss_respects_frozen_boundaries(scope):
     ) / np.log(259)
     torch.testing.assert_close(loss, reference)
     loss.backward()
-    assert any(p.grad is not None and p.grad.abs().sum() > 0 for p in model.outputs.decoders["text"].parameters())
-    core_grad = any(p.grad is not None and p.grad.abs().sum() > 0 for p in model.core.parameters())
+    assert any(
+        p.grad is not None and p.grad.abs().sum() > 0
+        for p in model.outputs.decoders["text"].parameters()
+    )
+    core_grad = any(
+        p.grad is not None and p.grad.abs().sum() > 0 for p in model.core.parameters()
+    )
     assert core_grad == (scope == "core")
     assert all(p.grad is None for p in model.core.agent.encoders.parameters())
     optimizer.step()

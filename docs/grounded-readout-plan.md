@@ -62,3 +62,10 @@ information. Do not adopt its wording that a nonlinear decoder fit measures
 linear accessibility. Keep symbolic preservation at the same final checkpoint.
 Replay ratio is fixed above before results. Last-frame controls are explicit.
 No capacity-matched extra adapter is added: that would test a different hypothesis.
+
+Reconciliation: Claude explicitly withdrew the linear-accessibility wording and
+accepted the scoped comparison. Its remaining requests for tolerances and prior
+last-frame registration are already covered above. Two seeds are an engineering
+replication, not a powered statistical effect estimate. Keep byte-length scores
+inspectable, and report free generation as a separate diagnostic so a choice-score
+improvement cannot silently stand in for successful text emission.
