@@ -14,10 +14,17 @@ from time import perf_counter
 import numpy as np
 import torch
 
-from pathwm.io import Run, atomic_json, file_hash, seed_everything, evaluation_mode
+from pathwm.io import (
+    Run,
+    atomic_json,
+    file_hash,
+    seed_everything,
+    evaluation_mode,
+    state_hash,
+)
 from pathwm.models.modalities import Observation
 from pathwm.models.spatial_vae import SpatialVAE, vae_loss
-from pathwm.models.video_vae import VideoVAE
+from pathwm.models.video_vae import VideoVAE, CausalLatentMixer
 from pathwm.evaluation.report import write_report
 
 
@@ -209,6 +216,268 @@ def panel(arrays, path):
     fig.savefig(path, dpi=110)
 
 
+def inpaint_input(x, *, current_only=False, clean=False):
+    """Mask RGB before encoding. Return a fresh input, never alter the target."""
+    values = x.clone()
+    region = torch.zeros_like(x[:, -1, :1])
+    h, w = x.shape[-2:]
+    if min(h, w) < 16:
+        raise ValueError("The registered mask needs at least16x16 pixels")
+    region[..., h // 2 - 8 : h // 2 + 8, w // 2 - 8 : w // 2 + 8] = 1
+    if not clean:
+        values[:, -1] = values[:, -1] * (1 - region) + 0.5 * region
+    if current_only:
+        values[:, :-1] = 0
+    return values, region
+
+
+def region_metrics(y, target, region):
+    error = (y.clamp(0, 1) - target).square()
+    mask = region.expand_as(error)
+    return dict(
+        mse=float(error.mean()),
+        masked_mse=float((error * mask).sum() / mask.sum()),
+        outside_mse=float((error * (1 - mask)).sum() / (1 - mask).sum()),
+        raw_mse=float((y - target).square().mean()),
+    )
+
+
+@torch.no_grad()
+def evaluate_inpaint(model, sets, current_only):
+    scores, arrays = {}, {}
+    with evaluation_mode(model):
+        for split in ("validation", "evaluation"):
+            x = sets[split]
+            masked, region = inpaint_input(x, current_only=current_only)
+            clean, _ = inpaint_input(x, current_only=current_only, clean=True)
+            wrong = masked.clone()
+            wrong[:, :-1] = masked.roll(1, 0)[:, :-1]
+            zero = masked.clone()
+            zero[:, :-1] = 0
+            predictions = {
+                "masked": model(observation(masked), sample=False)[0][:, -1],
+                "clean": model(observation(clean), sample=False)[0][:, -1],
+                "wrong_history": model(observation(wrong), sample=False)[0][:, -1],
+                "zero_history": model(observation(zero), sample=False)[0][:, -1],
+                "frozen_masked": model.image(masked[:, -1], sample=False)[0],
+                "frozen_clean": model.image(x[:, -1], sample=False)[0],
+            }
+            scores[split] = {
+                name: region_metrics(y, x[:, -1], region)
+                for name, y in predictions.items()
+            }
+            if split == "evaluation":
+                arrays = {name: y.cpu().numpy() for name, y in predictions.items()}
+                arrays.update(
+                    target=x[:, -1].cpu().numpy(),
+                    input=masked[:, -1].cpu().numpy(),
+                    region=region.cpu().numpy(),
+                )
+        retained = model.image(sets["retention"], sample=False)[0]
+        scores["image_retention_mse"] = float(
+            (retained.clamp(0, 1) - sets["retention"]).square().mean()
+        )
+    return scores, arrays
+
+
+def train_inpaint(args):
+    """Conditional repair of frozen-codec latents; only temporal weights train."""
+    output = Path(args.output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    if shutil.disk_usage(output.parent).free < 304 * 1024**2:
+        raise RuntimeError("Need room for artifacts above300MiB reserve")
+    seed_everything(args.seed)
+    image = SpatialVAE.load(args.source).requires_grad_(False).eval()
+    frozen_hash = state_hash(image)
+    model = VideoVAE(
+        image,
+        temporal=CausalLatentMixer(
+            image.config["latent_channels"],
+            spatial_kernel=args.spatial_kernel,
+            spatial_iterations=args.spatial_iterations,
+        ),
+    )
+    sets, identity = data(args.data, args.source.parent / "examples.npz")
+    cfg = dict(
+        seed=args.seed,
+        steps=args.steps,
+        task="inpaint",
+        batch_size=2,
+        lr=0.001,
+        spatial_kernel=args.spatial_kernel,
+        spatial_iterations=args.spatial_iterations,
+        current_only=args.current_only,
+        wall_seconds=60,
+        source=str(args.source.resolve()),
+        source_sha256=file_hash(args.source),
+        frozen_image_state_sha256=frozen_hash,
+        architecture=image.config,
+        objective="0.5*(4x masked/1x outside weighted RGB MSE + clean RGB MSE); mean latent; no KL",
+        mask="center16x16 RGB set0.5 before frame-independent encoding",
+        zero_history="Black RGB past frames; original timestamps and validity",
+        checkpoint="Trainable temporal module only; frozen image requires recorded source hash",
+        example_labels={
+            "input": "Unmasked current-frame target",
+            "rgb": "Repaired masked frame",
+            "sampled": "Frozen image codec on masked input",
+        },
+    )
+    optimizer = torch.optim.AdamW(
+        model.temporal.parameters(), lr=cfg["lr"], weight_decay=1e-4
+    )
+    seed_everything(args.seed)
+    run = Run(
+        output,
+        settings=cfg,
+        data=identity,
+        recipe=__file__,
+        model=model.temporal,
+        optimizer=optimizer,
+        device="cpu",
+        resume=args.resume,
+    )
+    # Dense convolution MACs for ONE video forward of batch2x4frames. Equal
+    # tensor shapes imply equal MACs for correct/blank history; time is separate.
+    macs = []
+    handles = []
+
+    def count_macs(module, inputs, out):
+        kernel = int(np.prod(module.kernel_size))
+        macs.append(out.numel() * module.in_channels // module.groups * kernel)
+
+    for module in model.modules():
+        if isinstance(module, (torch.nn.Conv2d, torch.nn.Conv3d)):
+            handles.append(module.register_forward_hook(count_macs))
+    with torch.no_grad():
+        model(
+            observation(
+                inpaint_input(sets["train"][:2], current_only=args.current_only)[0]
+            ),
+            sample=False,
+        )
+    for handle in handles:
+        handle.remove()
+    if not args.resume:
+        initial, _ = evaluate_inpaint(model, sets, args.current_only)
+        atomic_json(output / "initial.json", initial)
+    start = perf_counter()
+    prior = sum(r.get("elapsed_seconds", 0) for r in run.rows if r["split"] == "timing")
+    end = min(args.steps, run.step + args.stop_after) if args.stop_after else args.steps
+    try:
+        for step in range(run.step + 1, end + 1):
+            if prior + perf_counter() - start > cfg["wall_seconds"]:
+                break
+            if step % 32 == 1 and shutil.disk_usage(output.parent).free < 302 * 1024**2:
+                raise RuntimeError("Preserve300MiB disk reserve")
+            x = sets["train"][run.sample(len(sets["train"]), cfg["batch_size"])]
+            masked, region = inpaint_input(x, current_only=args.current_only)
+            clean, _ = inpaint_input(x, current_only=args.current_only, clean=True)
+            optimizer.zero_grad(set_to_none=True)
+            y = model(observation(masked), sample=False)[0][:, -1]
+            yc = model(observation(clean), sample=False)[0][:, -1]
+            weight = (1 + 3 * region).expand_as(y)
+            damaged_loss = ((y - x[:, -1]).square() * weight).sum() / weight.sum()
+            clean_loss = (yc - x[:, -1]).square().mean()
+            loss = 0.5 * (damaged_loss + clean_loss)
+            loss.backward()
+            grad = torch.nn.utils.clip_grad_norm_(
+                model.temporal.parameters(), 1, error_if_nonfinite=True
+            )
+            optimizer.step()
+            run.step = step
+            run.log(
+                dict(
+                    step=step,
+                    split="train",
+                    loss=float(loss.detach()),
+                    masked_objective=float(damaged_loss.detach()),
+                    clean_objective=float(clean_loss.detach()),
+                    gradient=float(grad),
+                )
+            )
+            if step % 64 == 0 or step == end:
+                scores, _ = evaluate_inpaint(
+                    model,
+                    {
+                        "validation": sets["validation"],
+                        "evaluation": sets["validation"],
+                        "retention": sets["retention"],
+                    },
+                    args.current_only,
+                )
+                run.log(
+                    dict(
+                        step=step,
+                        split="validation",
+                        loss=scores["validation"]["masked"]["masked_mse"],
+                    )
+                )
+                run.save()
+        run.log(
+            dict(step=run.step, split="timing", elapsed_seconds=perf_counter() - start)
+        )
+        run.save()
+        assert state_hash(image) == frozen_hash
+        assert all(p.grad is None for p in image.parameters())
+        scores, arrays = evaluate_inpaint(model, sets, args.current_only)
+        np.savez_compressed(output / "evaluation.npz", **arrays)
+        state = (
+            "completed"
+            if run.step == args.steps
+            else "paused"
+            if run.step == end
+            else "budget-stopped"
+        )
+        atomic_json(
+            output / "result.json",
+            dict(
+                completed=state == "completed",
+                step=run.step,
+                scores=scores,
+                metrics={
+                    f"{kind}_{metric}": value
+                    for kind, row in scores["evaluation"].items()
+                    for metric, value in row.items()
+                },
+                temporal_parameters=sum(p.numel() for p in model.temporal.parameters()),
+                parameters=sum(p.numel() for p in model.parameters()),
+                conv_macs_per_batch=sum(macs),
+                compute_scope="Conv2d/Conv3d multiply-accumulates, one batch2x4 video forward; excludes normalization, activation and backward; dense shapes identical for history/current-only",
+                training_seconds=sum(
+                    r.get("elapsed_seconds", 0)
+                    for r in run.rows
+                    if r["split"] == "timing"
+                ),
+                frozen_image_state_sha256=state_hash(image),
+                peak_gpu_memory_mib=None,
+                evaluation_scope="Fixed central RGB occlusion on previously inspected real-video development sources; not motion semantics or generation. Frozen image encoder and decoder; source checkpoint required.",
+            ),
+        )
+        run.status(state, "pending")
+        write_report(
+            output,
+            batch={"rgb": torch.from_numpy(arrays["target"][:2])},
+            outputs={
+                "rgb": torch.from_numpy(arrays["masked"][:2]),
+                "sampled": torch.from_numpy(arrays["frozen_masked"][:2]),
+            },
+        )
+    except BaseException as error:
+        run.save()
+        result_state = json.loads((output / "status.json").read_text())["result"]
+        run.status(
+            result_state if (output / "result.json").exists() else "failed",
+            "failed",
+            str(error),
+        )
+        raise
+    print(
+        f"{output}: {state}, masked MSE={scores['evaluation']['masked']['masked_mse']:.6f}",
+        flush=True,
+    )
+    return scores
+
+
 def train(args):
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -377,9 +646,19 @@ if __name__ == "__main__":
     parser.add_argument("--seed", type=int, default=7301)
     parser.add_argument("--steps", type=int, default=128)
     parser.add_argument("--temporal", action="store_true")
+    parser.add_argument(
+        "--task", choices=("reconstruct", "inpaint"), default="reconstruct"
+    )
+    parser.add_argument("--spatial-kernel", type=int, default=3)
+    parser.add_argument("--spatial-iterations", type=int, default=0)
+    parser.add_argument("--current-only", action="store_true")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--stop-after", type=int)
     args = parser.parse_args()
     if args.steps < 1 or (args.stop_after is not None and args.stop_after < 1):
         parser.error("positive step budgets required")
-    train(args)
+    if args.task == "reconstruct" and (
+        args.spatial_kernel != 3 or args.spatial_iterations or args.current_only
+    ):
+        parser.error("Spatial context comparison flags require --task inpaint")
+    (train_inpaint if args.task == "inpaint" else train)(args)

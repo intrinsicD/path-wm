@@ -27,10 +27,12 @@ def test_configurable_mixer_spatial_reach_preserves_temporal_horizon():
         invalid = valid.clone()
         invalid[:, 2] = False
         dirty = x.detach().clone()
-        dirty[:, 2] = float('nan')
+        dirty[:, 2] = float("nan")
         torch.testing.assert_close(
-            mixer(dirty, times, invalid), mixer(x.detach(), times, invalid),
-            rtol=0, atol=0,
+            mixer(dirty, times, invalid),
+            mixer(x.detach(), times, invalid),
+            rtol=0,
+            atol=0,
         )
 
 
@@ -55,6 +57,44 @@ def test_injected_shared_spatial_loop_keeps_image_identity_and_checkpoint():
     values = torch.rand(1, 3, 2, 5, 7)
     mask = torch.ones(1, 3, dtype=torch.bool)
     assert not torch.equal(first(values, x.times, mask), second(values, x.times, mask))
+
+
+def test_inpaint_input_removes_hidden_target_and_preserves_history_and_target():
+    from experiments.video_vae import inpaint_input
+
+    original = torch.rand(2, 4, 3, 24, 28)
+    saved = original.clone()
+    masked, region = inpaint_input(original)
+    changed = original.clone()
+    changed[:, -1] += 7 * region
+    torch.testing.assert_close(inpaint_input(changed)[0], masked, rtol=0, atol=0)
+    torch.testing.assert_close(original, saved, rtol=0, atol=0)
+    torch.testing.assert_close(masked[:, :-1], original[:, :-1], rtol=0, atol=0)
+    assert (
+        torch.count_nonzero(inpaint_input(original, current_only=True)[0][:, :-1]) == 0
+    )
+
+
+def test_frozen_codec_transmits_training_gradient_only_to_temporal_module():
+    from experiments.video_vae import inpaint_input
+    from pathwm.io import state_hash
+    from pathwm.models.video_vae import CausalLatentMixer
+
+    image = codec().requires_grad_(False).eval()
+    before = state_hash(image)
+    model = VideoVAE(image, temporal=CausalLatentMixer(2, spatial_iterations=2))
+    x = torch.rand(1, 3, 3, 24, 24)
+    optimizer = torch.optim.AdamW(model.temporal.parameters(), lr=0.01)
+    initial = state_hash(model.temporal)
+    for _ in range(2):
+        optimizer.zero_grad(set_to_none=True)
+        y = model(observation(inpaint_input(x)[0]), sample=False)[0][:, -1]
+        (y - x[:, -1]).square().mean().backward()
+        assert all(p.grad is None for p in image.parameters())
+        optimizer.step()
+    assert state_hash(image) == before
+    assert state_hash(model.temporal) != initial
+    assert model.temporal.spatial.weight.grad.abs().sum() > 0
 
 
 def codec():

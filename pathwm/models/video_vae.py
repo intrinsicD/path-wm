@@ -19,10 +19,24 @@ from .spatial_vae import SpatialVAE
 class CausalLatentMixer(nn.Module):
     """Current and two previous latent grids; no state retained across calls."""
 
-    def __init__(self, channels):
+    def __init__(self, channels, *, spatial_kernel=3, spatial_iterations=0):
         super().__init__()
-        self.input = nn.Conv3d(channels + 2, 2 * channels, (3, 3, 3))
+        if spatial_kernel < 1 or spatial_kernel % 2 != 1 or spatial_iterations < 0:
+            raise ValueError(
+                "Positive odd spatial kernel and nonnegative iterations required"
+            )
+        self.spatial_radius = spatial_kernel // 2
+        self.spatial_iterations = spatial_iterations
+        self.input = nn.Conv3d(
+            channels + 2, 2 * channels, (3, spatial_kernel, spatial_kernel)
+        )
         self.output = nn.Conv3d(2 * channels, channels, 1)
+        # Shared spatial-only refinement never extends the temporal horizon.
+        self.spatial = (
+            nn.Conv3d(2 * channels, 2 * channels, (1, 3, 3), padding=(0, 1, 1))
+            if spatial_iterations
+            else nn.Identity()
+        )
         nn.init.zeros_(self.output.weight)
         nn.init.zeros_(self.output.bias)
 
@@ -41,8 +55,11 @@ class CausalLatentMixer(nn.Module):
         mask = valid[:, :, None, None, None]
         features = torch.cat((mu.masked_fill(~mask, 0), dt, mask.expand_as(dt)), 2)
         # Explicit left-only time padding. Spatial padding is symmetric.
-        hidden = self.input(F.pad(features.transpose(1, 2), (1, 1, 1, 1, 2, 0)))
-        residual = self.output(F.silu(hidden)).transpose(1, 2)
+        r = self.spatial_radius
+        hidden = F.silu(self.input(F.pad(features.transpose(1, 2), (r, r, r, r, 2, 0))))
+        for _ in range(self.spatial_iterations):
+            hidden = hidden + 0.1 * F.silu(self.spatial(hidden))
+        residual = self.output(hidden).transpose(1, 2)
         return (mu + residual).masked_fill(~mask, 0)
 
 
@@ -61,9 +78,13 @@ class VideoVAE(nn.Module):
             raise TypeError("Inject an existing SpatialVAE (including HierarchicalVAE)")
         self.image = image
         self.temporal = (
-            CausalLatentMixer(image.config["latent_channels"])
-            if temporal
-            else nn.Identity()
+            temporal
+            if isinstance(temporal, nn.Module)
+            else (
+                CausalLatentMixer(image.config["latent_channels"])
+                if temporal
+                else nn.Identity()
+            )
         )
 
     def encode(self, observation, *, trace=None):
