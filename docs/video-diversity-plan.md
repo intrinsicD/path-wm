@@ -69,7 +69,15 @@ Run paired-direction, video-codec and image-codec regressions plus exact restart
 
 Claude reviewed a public-only hypothetical protocol; no code, photos or measured
 results exported. Its mistaken per-frame4x repetition and four-seeds-per-cell claims
-are being corrected: dense/broad have equal64 image indices; there are four crossed
+were corrected and acknowledged: dense/broad have equal64 image indices; there are four crossed
 initializations total per arm. Static RGB/latent marginal checks already guard
 single-frame artifacts; low-level temporal matching is valid for this narrow task.
 Review receipts live in runs/reviews/video_diversity_v1/.
+
+
+Pre-fit local lineage audit resolves Claude's remaining unknown-codec concern:
+`spatial_vae_repair_v1` uses the exact hashed `C_beta0.1` export; that base declares
+no pretrained source and seeded initialization. Both run manifests record COCO-only
+image training, not Charades. Keep the weaker fresh-motion-task scope; this is not
+universal duplicate detection. See runs/video_diversity_v1/codec-provenance.json.
+The reviewer confirms per-image versus per-clip exposure and four-cell limitations.

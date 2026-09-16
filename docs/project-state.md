@@ -1,5 +1,10 @@
 # Current work
 
+**Active: independent-source diversity comparison:**
+[Fixed12-fit protocol](video-diversity-plan.md). Compare4x4,4x16 and16x4 source/frame
+populations with frozen codec, matched optimization and four fresh subject-disjoint
+confirmation clips. Source/exposure validation and per-source reporting added.
+
 **Temporal initialization/transfer comparison completed,16 September:**
 [Protocol/results](video-stability-plan.md),[report](../runs/video_stability_v1/report.html).
 Eight512-update fits cross two temporal and two head initializations with identical

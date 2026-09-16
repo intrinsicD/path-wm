@@ -141,17 +141,81 @@ def verify_marginals(data, features, shifts):
     return checks
 
 
+def load_sources(manifest, directory):
+    """Resolve a small source list and reject exact-file/confirmation-subject leaks."""
+    if manifest is None:
+        groups = {
+            split: [
+                dict(
+                    id=name,
+                    subject=None,
+                    path=str(directory / name / "video.mp4"),
+                    frames=4,
+                )
+                for name in names
+            ]
+            for split, names in SOURCES.items()
+        }
+    else:
+        record = json.loads(Path(manifest).read_text())
+        if record.get("schema") != 1:
+            raise ValueError("Unsupported video source manifest")
+        groups = record["splits"]
+    required = {"train", "validation", "evaluation"}
+    if not required <= groups.keys() or groups.keys() - (required | {"confirmation"}):
+        raise ValueError(
+            "Expected train, validation, evaluation and optional confirmation"
+        )
+    seen, result = {}, {}
+    for split, records in groups.items():
+        if not records:
+            raise ValueError("Empty source split")
+        result[split] = []
+        for record in records:
+            if type(record["frames"]) is not int or record["frames"] < 1:
+                raise ValueError("frames must be a positive integer")
+            path = Path(record["path"])
+            if manifest is not None and not path.is_absolute():
+                path = Path(manifest).parent / path
+            path = path.resolve()
+            digest = file_hash(path)
+            if digest in seen:
+                raise ValueError("Exact duplicate video in source manifest")
+            if record.get("sha256", digest) != digest:
+                raise ValueError("Source hash changed")
+            seen[digest] = split
+            result[split].append(dict(record, path=str(path), sha256=digest))
+    if "confirmation" in result:
+        subjects = [r.get("subject") for r in result["confirmation"]]
+        others = {
+            r.get("subject")
+            for split, records in result.items()
+            if split != "confirmation"
+            for r in records
+        }
+        if (
+            not all(subjects)
+            or len(set(subjects)) != len(subjects)
+            or set(subjects) & others
+        ):
+            raise ValueError("Confirmation subject overlap or missing subject")
+    return result
+
+
 @torch.no_grad()
 def prepare(args, *, balanced=False, evaluation_only=False, include_reflection=False):
     seed_everything(7500)
     image = SpatialVAE.load(args.source).requires_grad_(False).eval()
     sets, identity = {}, {}
-    for split, names in SOURCES.items():
+    groups = load_sources(getattr(args, "source_manifest", None), args.data)
+    crop_owners = {}
+    for split, specifications in groups.items():
         if evaluation_only and split != "evaluation":
             continue
-        images, records = [], []
-        for name in names:
-            path = args.data / name / "video.mp4"
+        images, records, image_sources = [], [], []
+        for source_number, specification in enumerate(specifications):
+            path = Path(specification["path"])
+            frame_count = specification["frames"]
             command = [
                 "ffmpeg",
                 "-v",
@@ -159,7 +223,7 @@ def prepare(args, *, balanced=False, evaluation_only=False, include_reflection=F
                 "-i",
                 str(path),
                 "-t",
-                "2",
+                str(frame_count / 2),
                 "-an",
                 "-vf",
                 "fps=2,scale=80:64",
@@ -171,13 +235,22 @@ def prepare(args, *, balanced=False, evaluation_only=False, include_reflection=F
             ]
             raw = subprocess.run(command, check=True, capture_output=True).stdout
             decoded = np.frombuffer(raw, dtype=np.uint8).copy().reshape(-1, 64, 80, 3)
-            if len(decoded) != 4:
-                raise ValueError("Expected four decoded source frames")
+            if len(decoded) != frame_count:
+                raise ValueError("Decoded frame count differs from source manifest")
+            for crop in decoded[:, 4:52, 12:60]:
+                digest = hashlib.sha256(crop.tobytes()).hexdigest()
+                if digest in crop_owners and crop_owners[digest] != split:
+                    raise ValueError("Exact duplicate RGB crop across source splits")
+                crop_owners[digest] = split
+            image_sources.extend([source_number] * frame_count)
             images.append(torch.from_numpy(decoded).permute(0, 3, 1, 2).float() / 255)
             records.append(
                 dict(
+                    id=specification["id"],
+                    subject=specification.get("subject"),
+                    frames=frame_count,
                     path=str(path.resolve()),
-                    sha256=file_hash(path),
+                    sha256=specification["sha256"],
                     decoded_sha256=hashlib.sha256(raw).hexdigest(),
                     command=command,
                 )
@@ -186,6 +259,8 @@ def prepare(args, *, balanced=False, evaluation_only=False, include_reflection=F
         populations = [(split if split != "evaluation" else "known", (2, 4))]
         if split == "evaluation":
             populations.append(("wide", (6, 8)))
+        if split == "confirmation":
+            populations = [("confirm_known", (2, 4)), ("confirm_wide", (6, 8))]
         for name, shifts in populations:
             if balanced:
                 d = cyclic_pan_pairs(images[..., 4:52, 12:60], shifts=shifts)
@@ -207,9 +282,12 @@ def prepare(args, *, balanced=False, evaluation_only=False, include_reflection=F
                 examples=d["frames"][:2].clone(),
                 oracle=oracle,
                 ambiguous=ambiguous,
+                source_index=torch.tensor(image_sources)[d["metadata"][:, 0]],
+                source_ids=[r["id"] for r in records],
             )
             identity[name] = dict(
                 sources=records,
+                image_sources=image_sources,
                 pairs=len(mu),
                 shifts=list(shifts),
                 feature_sha256=tensor_hash(mu),
@@ -278,6 +356,23 @@ def metrics(logits, labels):
     )
 
 
+def source_metrics(logits, labels, data):
+    """Weight source clips equally, independently of their frame/pair counts."""
+    rows = {
+        name: metrics(
+            logits[data["source_index"] == i], labels[data["source_index"] == i]
+        )
+        for i, name in enumerate(data["source_ids"])
+    }
+    return dict(
+        by_source=rows,
+        **{
+            "source_macro_" + key: sum(row[key] for row in rows.values()) / len(rows)
+            for key in ("accuracy", "pair_accuracy", "flip_rate")
+        },
+    )
+
+
 @torch.no_grad()
 def evaluate(model, sets):
     scores, arrays = {}, {}
@@ -313,10 +408,14 @@ def evaluate(model, sets):
                     )
                     for d in data["metadata"][:, -1].unique()
                 }
+                if "source_index" in data:
+                    score.update(source_metrics(logits, truth, data))
                 scores[split][control] = score
                 arrays[f"{split}_{control}_logits"] = logits.cpu().numpy()
             arrays[f"{split}_labels"] = labels.numpy()
             arrays[f"{split}_metadata"] = data["metadata"].numpy()
+            if "source_index" in data:
+                arrays[f"{split}_source_index"] = data["source_index"].numpy()
             scores[split]["pixel_oracle_accuracy"] = float(
                 (data["oracle"] == labels).float().mean()
             )
@@ -356,6 +455,9 @@ def train(args, prepared=None):
     cfg = dict(
         seed=args.seed,
         head_seed=head_seed,
+        source_manifest_sha256=file_hash(args.source_manifest)
+        if getattr(args, "source_manifest", None)
+        else None,
         reflect_training=reflect,
         reflection_schedule="odd absolute steps mirrored, even original"
         if reflect
@@ -430,6 +532,7 @@ def train(args, prepared=None):
                     accuracy=float((logits.argmax(1) == y).float().mean()),
                     gradient=float(grad),
                     reflected=bool(reflect and step % 2),
+                    pair_indices=index.tolist(),
                 )
             )
             if step % 128 == 0 or step == end:
@@ -453,6 +556,32 @@ def train(args, prepared=None):
                 for k, v in model.temporal.state_dict().items()
             )
         assert all(not d["features"].requires_grad for d in sets.values())
+        sampled = np.array(
+            [row["pair_indices"] for row in run.rows if row["split"] == "train"],
+            dtype=np.int64,
+        ).ravel()
+        pair_counts = np.bincount(sampled, minlength=len(sets["train"]["labels"]))
+        image_indices = sets["train"]["metadata"][:, 0].numpy()
+        image_counts = np.bincount(image_indices, weights=pair_counts).astype(np.int64)
+        source_counts = np.bincount(
+            sets["train"]["source_index"].numpy(), weights=pair_counts
+        ).astype(np.int64)
+        np.savez_compressed(
+            output / "exposure.npz",
+            sampled_pairs=sampled,
+            pair_counts=pair_counts,
+            image_counts=image_counts,
+            source_counts=source_counts,
+        )
+        exposure = dict(
+            sampled_pairs=int(len(sampled)),
+            unique_pairs=int((pair_counts > 0).sum()),
+            unique_images=int((image_counts > 0).sum()),
+            source_ids=sets["train"]["source_ids"],
+            source_counts=source_counts.tolist(),
+            image_counts=image_counts.tolist(),
+            unit="paired examples; each has two labeled clips",
+        )
         scores, arrays = evaluate(model, sets)
         trace = {}
         model(sets["known"]["features"][:2].flatten(0, 1), trace=trace)
@@ -471,9 +600,12 @@ def train(args, prepared=None):
                 completed=state == "completed",
                 step=run.step,
                 scores=scores,
+                exposure=exposure,
                 metrics={
                     f"{split}_{control}": {
-                        k: v for k, v in row.items() if k != "by_displacement"
+                        k: v
+                        for k, v in row.items()
+                        if k not in ("by_displacement", "by_source")
                     }
                     for split, items in scores.items()
                     for control, row in items.items()
@@ -488,7 +620,7 @@ def train(args, prepared=None):
                     for r in run.rows
                     if r["split"] == "timing"
                 ),
-                evaluation_scope="Controlled crop-pan directions from real image contents. Same current frame and unordered multiset per pair; source-disjoint previously inspected development clips. Not natural motion, forecasting, speed estimation, or agent integration. Correlation is an explicit matching primitive; readout learned.",
+                evaluation_scope="Controlled crop-pan directions from real image contents. Same current frame and unordered multiset per pair; source-disjoint clips, with optional reserved confirmation sources listed in data identity. Not natural motion, forecasting, speed estimation, or agent integration. Correlation is an explicit matching primitive; readout learned.",
             ),
         )
         run.status(state, "pending")
@@ -523,9 +655,13 @@ def challenge(args):
             record = json.loads((path / "run.json").read_text())
             cfg = record["identity"]["settings"]
             assert file_hash(args.source) == cfg["source_sha256"]
-            assert (
-                identity["known"]["sources"]
-                == record["identity"]["data"]["known"]["sources"]
+            old_sources = record["identity"]["data"]["known"]["sources"]
+            new_sources = identity["known"]["sources"]
+            assert len(old_sources) == len(new_sources)
+            assert all(
+                a[k] == b[k]
+                for a, b in zip(old_sources, new_sources)
+                for k in ("path", "sha256", "decoded_sha256")
             )
             model = OrderReadout(sets["known"]["features"].shape[3], mode)
             state = torch.load(path / "last.pt", map_location="cpu", weights_only=True)
@@ -637,6 +773,11 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--data", type=Path, default=Path("data/memory_media_v1/episodes")
+    )
+    parser.add_argument(
+        "--source-manifest",
+        type=Path,
+        help="Optional explicit video paths, subjects and frame counts by split",
     )
     parser.add_argument("--mode", choices=MODES, default="train")
     parser.add_argument("--steps", type=int, default=512)
