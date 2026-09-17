@@ -774,9 +774,9 @@ def grounded_records(data, case, *, request_contrasts=False, request_profile="na
     ]
     if not rows:
         raise ValueError("No calibration training examples")
-    if request_profile not in ("narrow", "balanced"):
+    if request_profile not in ("narrow", "balanced", "paired"):
         raise ValueError("Unknown request profile")
-    if request_profile == "balanced":
+    if request_profile in ("balanced", "paired"):
         if not request_contrasts:
             raise ValueError("Balanced requests need contrasts")
         from pathwm.data.request_meaning import request_corpus, apply_request
@@ -786,14 +786,16 @@ def grounded_records(data, case, *, request_contrasts=False, request_profile="na
     return [v for r in rows for v in order_requests(r)] if request_contrasts else rows
 
 
-def grounded_batch(data, rows, indices, device):
+def grounded_batch(data, rows, indices, device, *, question_mode="full"):
     from torch.nn.utils.rnn import pad_sequence
     from pathwm.models.modalities import Observation, bytes_batch
 
     if any(r["split"] != "calibration" for r in rows):
         raise ValueError("Only calibration examples may enter grounded training")
     selected = [rows[int(i)] for i in indices]
-    items = [data.inputs(r, device=device) for r in selected]
+    items = [
+        data.inputs(r, device=device, question_mode=question_mode) for r in selected
+    ]
     if any(item.keys() != items[0].keys() for item in items):
         raise ValueError("Batch one task with the same evidence modalities")
     inputs = {}
@@ -845,11 +847,31 @@ def configure_grounded_training(model, scope):
     training_mode(model)
 
 
-def grounded_objective(model, tokens, targets):
+def grounded_objective(model, tokens, targets, *, boundary_weight=0.0):
+    if not np.isfinite(boundary_weight) or boundary_weight < 0:
+        raise ValueError("Boundary weight must be finite and nonnegative")
     out = model.outputs("text", tokens, targets[:, :-1])
-    return F.cross_entropy(
+    loss = F.cross_entropy(
         out.flatten(0, 1), targets[:, 1:].flatten(), ignore_index=0
     ) / np.log(259)
+    if boundary_weight:
+        labels = targets[:, 1:]
+        # Predictions at byte position len(first_word) choose EOS or space.
+        boundaries = (labels == 2) | (labels == 35)
+        positions = boundaries.long().argmax(1)
+        if (
+            not boundaries.any(1).all()
+            or (positions == 0).any()
+            or not ((labels == 2).sum(1) == 1).all()
+        ):
+            raise ValueError(
+                "Boundary targets require a nonempty first word and one EOS"
+            )
+        batch = torch.arange(len(targets), device=targets.device)
+        loss = loss + boundary_weight * F.cross_entropy(
+            out[batch, positions], labels[batch, positions]
+        ) / np.log(259)
+    return loss
 
 
 def retention_kl(student, teacher, labels):
@@ -1021,7 +1043,14 @@ def evaluate_request_contrasts(model, data, path, device):
 
 
 def evaluate_request_meanings(
-    model, data, path, device, *, question_mode="full", capture_states=False
+    model,
+    data,
+    path,
+    device,
+    *,
+    question_mode="full",
+    capture_states=False,
+    fresh=False,
 ):
     """New prefix templates, actual generated answers and necessity controls."""
     from pathwm.data.request_meaning import request_corpus, apply_request
@@ -1031,7 +1060,8 @@ def evaluate_request_meanings(
     validate_request_route(model, question_mode)
     results, working = [], []
     states = {k: [] for k in ("posterior", "physical")}
-    requests = [r for r in request_corpus() if r["split"] == "test"]
+    requests = [r for r in request_corpus(fresh=fresh) if r["split"] == "test"]
+    control_family = requests[0]["family"]
     records = [
         r for r in data.records if r["case"] == "VID.order" and r["split"] == "test"
     ]
@@ -1047,7 +1077,7 @@ def evaluate_request_meanings(
                 conditions = (
                     ["full"] if request["style"] == "direct" else ["order_stress"]
                 )
-                if request["family"] == "test/0":
+                if request["family"] == control_family:
                     conditions += ["omitted", "last_frame", "constant_request"]
                 for draw in range(3):
                     for condition in conditions:
@@ -1122,10 +1152,13 @@ def evaluate_request_meanings(
                 )
     result = dict(
         observation_question=question_mode,
+        request_evaluation="fresh" if fresh else "legacy",
         metrics=summarize_request_answers(results),
         examples=results,
         seconds=time.perf_counter() - start,
-        scope="Held-out prefix composition and separate phrase-order stress; source controls on first held-out prefix only.",
+        scope="Fresh known-lexicon prefix composition; historical phrase-order stress; source controls on first fresh family."
+        if fresh
+        else "Held-out prefix composition and separate phrase-order stress; source controls on first held-out prefix only.",
     )
     if capture_states:
         np.savez_compressed(
@@ -1140,9 +1173,11 @@ def evaluate_request_meanings(
 def request_evaluate(args):
     from pathwm.data.understanding import UnderstandingData
     from pathwm.evaluation.request_meaning import validate_request_route
+    from pathwm.data.request_meaning import request_corpus
 
     model, settings, source_hash = restore_readout(args.core, args.seed, args.device)
     question_mode = getattr(args, "observation_question", "full")
+    fresh = getattr(args, "request_evaluation", "legacy") == "fresh"
     validate_request_route(model, question_mode)
     model.requires_grad_(False).eval()
     data = UnderstandingData(args.understanding_suite)
@@ -1154,8 +1189,12 @@ def request_evaluate(args):
             source=str(args.core.resolve()),
             source_sha256=source_hash,
             observation_question=question_mode,
+            request_evaluation="fresh" if fresh else "legacy",
         ),
-        data=dict(fixtures=data.identity),
+        data=dict(
+            fixtures=data.identity,
+            request_corpus_sha256=digest(request_corpus(fresh=fresh)),
+        ),
         recipe=__file__,
         model=model,
         optimizer=torch.optim.Adam([next(model.parameters())], lr=0.001),
@@ -1173,6 +1212,7 @@ def request_evaluate(args):
             args.device,
             question_mode=question_mode,
             capture_states=True,
+            fresh=fresh,
         )
         if before != state_hash(model) or source_hash != file_hash(
             args.core / "last.pt"
@@ -1591,11 +1631,22 @@ def grounded(args):
     from pathwm.data.understanding import UnderstandingData
     from pathwm.evaluation.understanding import choice_scores
     from pathwm.models.modalities import bytes_text
+    from pathwm.data.request_meaning import request_corpus
+    from pathwm.evaluation.request_meaning import validate_request_route
 
     data = UnderstandingData(args.understanding_suite)
     contrasts = getattr(args, "request_contrasts", False)
     profile = getattr(args, "request_profile", "narrow")
     interpreter_only = args.grounded_scope == "interpreter"
+    boundary_weight = getattr(args, "boundary_weight", 0.0)
+    question_mode = getattr(args, "observation_question", "full")
+    fresh = getattr(args, "request_evaluation", "legacy") == "fresh"
+    if not np.isfinite(boundary_weight) or boundary_weight < 0:
+        raise ValueError("Boundary weight must be finite and nonnegative")
+    if (boundary_weight or profile == "paired") and (
+        not interpreter_only or profile != "paired"
+    ):
+        raise ValueError("Boundary/paired fitting requires paired interpreter requests")
     if interpreter_only and (not contrasts or getattr(args, "retention_weight", 0)):
         raise ValueError(
             "Interpreter-only fitting needs contrasts and no retention loss"
@@ -1612,6 +1663,7 @@ def grounded(args):
         or source_settings.get("request_readout", "none"),
     )
     configure_grounded_training(model, args.grounded_scope)
+    validate_request_route(model, question_mode)
     retention_weight = getattr(args, "retention_weight", 0.0)
     if not np.isfinite(retention_weight) or retention_weight < 0:
         raise ValueError("Retention weight must be finite and nonnegative")
@@ -1643,13 +1695,16 @@ def grounded(args):
         request_readout=model.core.request_readout,
         request_contrasts=contrasts,
         request_profile=profile,
+        observation_question=question_mode,
+        request_evaluation="fresh" if fresh else "legacy",
+        boundary_weight=boundary_weight,
         scope=args.grounded_scope,
         calibration_training_ids=[r["id"] for r in rows],
         replay_seed=original_seed,
         replay="none; interpreter-only"
         if interpreter_only
         else "alternate original multimodal replay and QA updates",
-        objective="QA byte CE/log259; replay sum normalized per-output losses",
+        objective="QA byte CE/log259 plus boundary_weight * first-word boundary CE/log259; replay sum normalized per-output losses",
         initialization_checkpoint_sha256=source_hash,
         initialization_checkpoint=str(args.core.resolve()),
         belief_readout=model.core.belief_readout,
@@ -1671,6 +1726,7 @@ def grounded(args):
             replay_seed=original_seed,
             replay_ids=digest(populations["train"]["ids"]),
             grounded_records_sha256=digest(rows),
+            request_corpus_sha256=digest(request_corpus(fresh=fresh)),
         ),
         recipe=__file__,
         model=model,
@@ -1705,20 +1761,32 @@ def grounded(args):
             if interpreter_only or run.step % 2 == 0:
                 if interpreter_only:
                     choices = request_count
-                    clip_indices = run.sample(len(rows) // choices, 8)
+                    count = 4 if profile == "paired" else 8
+                    clip_indices = run.sample(len(rows) // choices, count)
                     request_rng = torch.Generator().manual_seed(
                         args.seed + 1777 + run.step
                     )
                     request_indices = torch.randint(
-                        choices, (8,), generator=request_rng
+                        choices // 2 if profile == "paired" else choices,
+                        (count,),
+                        generator=request_rng,
                     ).numpy()
-                    indices = clip_indices * choices + request_indices
+                    if profile == "paired":
+                        first = clip_indices * choices + request_indices * 2
+                        indices = np.stack((first, first + 1), axis=1).reshape(-1)
+                    else:
+                        indices = clip_indices * choices + request_indices
                 else:
                     indices = run.sample(len(rows), 8)
-                inputs, target = grounded_batch(data, rows, indices, device)
+                inputs, target = grounded_batch(
+                    data, rows, indices, device, question_mode=question_mode
+                )
                 requests = [rows[int(i)]["question"] for i in indices]
                 loss = grounded_objective(
-                    model, model.core(inputs, requests=requests), target
+                    model,
+                    model.core(inputs, requests=requests),
+                    target,
+                    boundary_weight=boundary_weight,
                 )
                 objective = "qa"
             else:
@@ -1861,7 +1929,17 @@ def grounded(args):
                     if interpreter_only
                     else evaluate_request_contrasts
                 )
-                request_result = evaluator(model, data, run.path, device)
+                request_result = evaluator(
+                    model,
+                    data,
+                    run.path,
+                    device,
+                    **dict(
+                        question_mode=question_mode, fresh=fresh, capture_states=fresh
+                    )
+                    if interpreter_only
+                    else {},
+                )
                 atomic_json(
                     run.path / "result.json",
                     dict(
@@ -2898,13 +2976,25 @@ def main():
         default="decoder",
     )
     parser.add_argument(
-        "--request-profile", choices=("narrow", "balanced"), default="narrow"
+        "--request-profile", choices=("narrow", "balanced", "paired"), default="narrow"
+    )
+    parser.add_argument(
+        "--boundary-weight",
+        type=float,
+        default=0.0,
+        help="Paired interpreter training: extra first-word boundary CE weight",
+    )
+    parser.add_argument(
+        "--request-evaluation",
+        choices=("legacy", "fresh"),
+        default="legacy",
+        help="Explicit request evaluation corpus; training wordings stay fixed",
     )
     parser.add_argument(
         "--observation-question",
         choices=("full", "neutral", "masked"),
         default="full",
-        help="Evaluation-only question routing; actual task request and evidence stay intact",
+        help="Grounded training/request evaluation question routing; actual task request and evidence stay intact",
     )
     parser.add_argument(
         "--request-readout",
@@ -3004,8 +3094,11 @@ def main():
     if args.observation_question != "full" and args.stage not in (
         "request-evaluate",
         "understanding",
+        "grounded",
     ):
-        parser.error("Observation question routing is evaluation-only")
+        parser.error("Observation question routing requires grounded training or evaluation")
+    if args.boundary_weight and args.stage != "grounded":
+        parser.error("Boundary supervision is only used by grounded training")
     if args.stage == "request-completion":
         if (
             args.core is None

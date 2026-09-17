@@ -24,18 +24,30 @@ TEMPLATES = {
 }
 
 
-def request_corpus():
+FRESH_TEMPLATES = (
+    "Antworte mit {}.",
+    "Gewünscht: {}.",
+    "Gib als Lösung {} an.",
+    "Teile mir {} mit.",
+    "Ich möchte {} erfahren.",
+    "Bitte liefere {}.",
+)
+
+
+def request_corpus(*, fresh=False):
     rows = []
-    for split, templates in TEMPLATES.items():
+    families = TEMPLATES | {"test": FRESH_TEMPLATES} if fresh else TEMPLATES
+    for split, templates in families.items():
         for family, template in enumerate(templates):
             for wording, payloads in enumerate(PAYLOADS):
-                pair = f"{split}/{family}/{wording}"
+                prefix = "fresh/" if fresh and split == "test" else ""
+                pair = f"{prefix}{split}/{family}/{wording}"
                 for label, payload in enumerate(payloads):
                     rows.append(
                         dict(
                             id=f"{pair}/{label}",
                             pair=pair,
-                            family=f"{split}/{family}",
+                            family=f"{prefix}{split}/{family}",
                             split=split,
                             style="direct",
                             question=template.format(payload),

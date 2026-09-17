@@ -80,3 +80,15 @@ Actual isolated Claude public-only methodology review/reconciliation under
 runs/reviews/request_boundary_v1. Its concerns distinguish common routing changes,
 known-lexicon composition, finite model/draw coverage and teacher-forced scores
 from a task-general repair. No private repository content/results exported.
+
+## Implementation checkpoint
+
+31 focused checks pass. Actual six-update CUDA pause/resume matches848 tensors
+and1,321 primitive fields, including model, Adam, CPU/CUDA RNG, sampler and loss
+rows;24.03s development process budget. Both paused development runs own reports.
+Claude acknowledges the conditional estimand and fixed coefficient; two sources
+and known-lexicon composition remain strict limits. Broader-suite sampling seed is
+fixed9901 for all six runs. The final frozen source snapshot will be used for
+formal execution and full tests while independent explorer work continues in the
+main checkout. Paired inputs share clips, not forcibly identical categorical draws
+within each training batch; draws are matched across treatment/control arms.
