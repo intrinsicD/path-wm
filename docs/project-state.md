@@ -14,6 +14,11 @@ No model/checkpoint/default or capability/color changes. The request-boundary st
 below remains independently completed; this design needs a bounded preregistered
 experiment before implementation/training claims.
 
+Follow-up proposal: per-application residual adapters with frozen versus trainable
+encoder controls, recorded in the same review. Shared joint training and separate
+fine-tuned reference copies are distinct; placement and dense-task efficacy remain
+open. No implementation, fit or capability promotion.
+
 **Learning iteration completed, 17 September:** [paired request-boundary study](request-boundary-plan.md),
 [report](../runs/request_boundary_v1/report.html). Actual Claude methodology review
 and reconciliation; four matched512-update interpreter-only fits. On fresh known-

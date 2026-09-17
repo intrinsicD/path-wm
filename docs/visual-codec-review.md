@@ -225,3 +225,50 @@ Both retained v1 (`spatial_vae.py`) and newer opt-in v2 (`spatial_vae_v2.py`) pr
 The repository’s required actual-Claude review was conducted with tools disabled and a generic public-only brief. Its useful additions were data-composition controls, fixed downstream capacity/horizons, intervention ground truth, explicit rate accounting and objective-conflict tests. In a second exchange the reviewer accepted corrections: FP16 tensor bytes are defined without entropy coding; deterministic AEs do not automatically win held-out distortion; training-time masking does not itself change deployed bitrate; weak weighted KL does not eliminate the need to inspect sampling; equivariance/detail and global-context/resolution are empirical tradeoffs rather than blanket incompatibilities. Reviewer agreement is not validation.
 
 The remaining deliberate choice is to start with continuous latents and add quantization only if the deployment requirement supports it. The immediate deliverable is this review and a concrete candidate family. No architecture was promoted, no large training run launched, and no claim of publication-quality image reconstruction was made from parameter counts alone.
+
+
+## Per-application residual adapters: proposed comparison, 17 September
+
+Alex proposes small residual layers for each application, compared with the shared
+encoder frozen and trainable. This is a research direction, not an implemented
+replacement or a claim of improved task quality.
+
+At the encoder output, the simple form is `z = E(x)`,
+`z_task = z + A_task(z)`, `output = H_task(z_task)`. Each application has its own
+adapter and head. The encoder output stays a common interface for the world model.
+A small bottleneck adapter can start with a zero-initialized final projection,
+so its initial correction is zero; do not initialize every layer to zero.
+
+[Residual adapters (2017)](https://arxiv.org/abs/1705.08045) and
+[series/parallel adapters (2018)](https://arxiv.org/abs/1803.10082) provide relevant
+multi-domain classification evidence. The latter also found benefits from adapting
+shallow as well as deep layers. This does not establish dense-task or world-model
+quality for our small codec. [Official implementation](https://github.com/srebuffi/residual_adapters).
+
+A matched 2x2 comparison separates encoder adaptation from added task capacity:
+
+| Encoder | No adapter | Residual adapter |
+| --- | --- | --- |
+| Frozen | Train task head only | Train adapter and task head |
+| Trainable | Train encoder and task head | Train encoder, adapter and task head |
+
+Use the same starting encoder, heads, data splits and seeds; declare training
+budgets and measure total parameters, compute and retention on other tasks.
+The trainable condition must explicitly distinguish one encoder jointly trained
+across applications from an independent encoder copy fine-tuned for each task.
+The latter is a specialization reference, not a deployed shared encoder.
+A frozen baseline also fixes running normalization statistics.
+
+Post-encoder adapters allow a single encoder pass to serve multiple applications.
+Adapters interleaved inside the encoder produce task-dependent intermediate
+activations; later computation generally has to run separately per task, even
+when base weights are shared. Compare these placements separately if final-only
+adaptation is inadequate. A final adapter cannot uniquely recover information
+already removed by compression; improvement after unfreezing alone does not
+identify irreversible information loss, since capacity and optimization also matter.
+
+For joint updates, track reconstruction, task performance and compatibility with
+the world-model latent consumer. The adapter/encoder division is not unique when
+both train, so residual magnitude is not a percentage of task-specific information.
+Teacher-free and teacher-assisted initial encoders remain separate comparisons.
+No new fit, parameter budget, threshold or production architecture is adopted here.

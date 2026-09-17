@@ -5686,3 +5686,36 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O326
+  timestamp: 2026-09-17T22:11+02:00
+  provenance: user
+  content: Per-application residual layers should learn the corrections each application needs; compare training
+    with the shared encoder frozen and unfrozen.
+  context: User proposes this specialization mechanism after cross-task feature-similarity discussion. It is
+    a hypothesis, not explicit authorization to run training or adopt a measured architecture.
+  potential_type: architecture
+  bound_to:
+  - N494
+  - N491
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O327
+  timestamp: 2026-09-17T22:11+02:00
+  provenance: ai-suggested
+  content: Compare a matched encoder frozen/trainable by adapter absent/present 2x2, with task heads always
+    trained. Keep shared joint updates distinct from separate fine-tuned copies, normalization state frozen
+    where required, and measure retention plus total cost. Final-only adapters reuse one encoder pass but cannot
+    restore discarded information; interleaved adapters change downstream per-task computation. Small residual
+    norm is not a measure of task-specific information.
+  context: Literature-supported proposed controls in docs/visual-codec-review.md; Rebuffi2017/2018 evidence
+    is multi-domain classification, not validated tiny-codec/world-model performance.
+  potential_type: heuristic
+  bound_to:
+  - N494
+  - N491
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
