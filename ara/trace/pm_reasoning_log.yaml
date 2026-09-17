@@ -2501,3 +2501,12 @@ entries:
     so no additional external review required.
   - Existing visual-codec hypotheses remain active, with no new contradiction, abandonment or stale transition.
     Atlas notes record discussion while all model graph/status fields stay unchanged.
+- turn: 2026-09-17_001#13
+  notes:
+  - N495 is the completed user document request. A proposed design is not user affirmation of efficacy, adopted
+    configuration or implementation; O325-O327 remain staged. No extra training authorized or run.
+  - Actual Claude review adds expanded-head capacity control, paired augmentation and explicit seed/tuning/selection
+    contracts. First unrelated peer-traffic response excluded; no external private brief sent. Reviewer retracts
+    broad initial objections; second-anchor necessity remains a named disagreement.
+  - No new contradiction with measured local results or abandoned topic. Formal run gates remain pending; no
+    claim, model graph, checkpoint/default, discussion coverage or validation promotion.

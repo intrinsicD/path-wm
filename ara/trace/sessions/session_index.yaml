@@ -245,8 +245,10 @@ sessions:
     features: Taskonomy/RSA/CKA literature reviewed; shared-stem and functional-transfer comparison remains
     proposed, without model changes or training. User proposes per-application residual adapters with frozen/unfrozen
     encoder comparisons; relevant adapter literature checked and controlled comparison documented, without
-    model changes or training.'
-  turn_count: 12
-  events_count: 43
+    model changes or training. Requested residual-adapter design and standalone handoff completed; actual public-only
+    Claude review/reconciliation, control refinements and one anchor-sensitivity disagreement recorded. Documents/atlas
+    linked and checked; no implementation, training or scientific promotion.'
+  turn_count: 13
+  events_count: 44
   claims_touched: []
   open_threads: 51

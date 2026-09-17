@@ -4,6 +4,18 @@ Updated 17 September 2026. Repository `/home/alex/Documents/path-wm`, branch `ma
 Read `CLAUDE.md`, `docs/experiment-workflow.md`, this handoff and the current plan.
 Preserve completed experiments; do not restart the research from scratch.
 
+## Latest requested continuation: visual residual adapters
+
+For the current design discussion, start with the focused
+[visual-adapter handoff](visual-adapter-handoff.md) and
+[design document](visual-adapter-design.md). Alex proposes per-application residual
+corrections around a shared image encoder, compared frozen and trainable, with
+teacher-free and teacher-assisted tracks. The next step is a source-checkpoint/
+label audit and a bounded four-arm protocol; the adapter has not been implemented
+or trained. Separate per-task fine-tuned reference copies from one jointly trained
+shared encoder. Preserve the completed learning work below; this new design does
+not supersede its unresolved findings or adopt a new model default.
+
 ## Objective and working agreement
 
 Build the modular multimodal world model for Alex's RTX3050 (8GiB). Preserve the

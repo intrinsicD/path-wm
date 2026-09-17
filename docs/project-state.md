@@ -1,5 +1,14 @@
 # Current work
 
+**Residual visual adapters: design and handoff, 17 September:**
+[design](visual-adapter-design.md) · [continue next session](visual-adapter-handoff.md).
+Alex proposes per-application residual corrections with frozen/unfrozen encoder
+comparisons. The design separates per-task adaptation references from joint shared
+training, specifies the latent/gradient contract and evaluation controls, and
+leaves checkpoint/data selection and formal run gates explicit. Start the next
+session with the source/label audit and a bounded Phase A protocol. Documentation
+only; no adapter implementation, training, checkpoint/default or validation change.
+
 **Visual-codec literature review, 17 September:** [survey and proposed architecture](visual-codec-review.md),
 [untrained parameter audit](visual-codec-parameter-audit.json). User requests a scalable,
 as-small-as-useful image/video codec with both teacher-free and teacher-assisted

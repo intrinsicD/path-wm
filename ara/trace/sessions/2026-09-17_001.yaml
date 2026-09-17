@@ -2,8 +2,8 @@ session:
   id: 2026-09-17_001
   date: '2026-09-17'
   started: 2026-09-17T10:43+02:00
-  last_turn: 2026-09-17T22:11+02:00
-  turn_count: 12
+  last_turn: 2026-09-17T23:10+02:00
+  turn_count: 13
   summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent termination
     in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests pass; 9216 answers
     and all weights preserved. No training or capability promotion. Current categorical architecture explorer
@@ -26,7 +26,9 @@ session:
     features: Taskonomy/RSA/CKA literature reviewed; shared-stem and functional-transfer comparison remains
     proposed, without model changes or training. User proposes per-application residual adapters with frozen/unfrozen
     encoder comparisons; relevant adapter literature checked and controlled comparison documented, without
-    model changes or training.'
+    model changes or training. Requested residual-adapter design and standalone handoff completed; actual public-only
+    Claude review/reconciliation, control refinements and one anchor-sensitivity disagreement recorded. Documents/atlas
+    linked and checked; no implementation, training or scientific promotion.'
 events_logged:
 - turn: 1
   type: decision
@@ -308,6 +310,12 @@ events_logged:
     where required, and measure retention plus total cost. Final-only adapters reuse one encoder pass but cannot
     restore discarded information; interleaved adapters change downstream per-task computation. Small residual
     norm is not a measure of task-specific information.
+- turn: 13
+  type: question
+  id: N495
+  routing: direct
+  provenance: user
+  summary: Create visual-adapter design and next-session handoff
 ai_actions:
 - turn: 1
   action: Implemented optional routing/state diagnostics with actual Claude public review, ran12 fixed evaluations
@@ -445,6 +453,22 @@ ai_actions:
   - docs/diagrams/architecture-atlas.json
   - docs/architecture-atlas.md
   - docs/architecture-atlas.html
+- turn: 13
+  action: 'Created design/handoff and continuation prompt, inspected real encoder/posterior/recipe interfaces,
+    linked current-state/general handoff/review, regenerated16 atlas graphs with unchanged structures/statuses.
+    Actual public-only Claude review: first unrelated response excluded; substantive retry plus reconciliation
+    used. Verified25 local links, Markdown fences and git diff whitespace; no model tests or training needed
+    for prose-only changes.'
+  provenance: ai-executed
+  files_changed:
+  - docs/visual-adapter-design.md
+  - docs/visual-adapter-handoff.md
+  - docs/project-state.md
+  - docs/session-handoff.md
+  - docs/visual-codec-review.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.md
+  - docs/architecture-atlas.html
 claims_touched: []
 key_context:
 - turn: 1
@@ -481,6 +505,8 @@ key_context:
 - turn: 12
   excerpt: I think adding per application residual layers which are then trained with and without frozen encoder
     to learn the corrections which each application/use case needs.
+- turn: 13
+  excerpt: Please create a design document and a handoff for this to continue in another session.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -801,3 +827,5 @@ ai_suggestions_pending:
   or adoption.'
 - 'O326/O327: per-application residual adaptation and frozen/trainable controls are proposed; placement, shared-training
   regime and efficacy remain open.'
+- N495 documents the proposal and continuation only; O325-O327 remain unvalidated. Next audit checkpoint/labels
+  and finalize Phase A run contract; anchor sensitivity scope remains explicit.

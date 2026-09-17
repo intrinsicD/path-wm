@@ -8240,3 +8240,17 @@ tree:
     choice and representation measurements remain open.
   evidence:
   - ara/evidence/tables/task_feature_similarity_sources_2026-09-17.json
+- id: N495
+  type: question
+  title: Create visual-adapter design and next-session handoff
+  provenance: user
+  timestamp: 2026-09-17T23:10+02:00
+  status: resolved
+  description: User explicitly requests a design document and a handoff for later continuation. Created the
+    scoped residual-adapter design, controlled phases, pending run contract and standalone handoff with a continuation
+    prompt; linked current-state/general handoff and regenerated atlas notes. This document request does not
+    select missing data, checkpoints, budgets or adopt a trained architecture.
+  evidence:
+  - docs/visual-adapter-design.md
+  - docs/visual-adapter-handoff.md
+  - runs/reviews/visual-adapter-design-20260917/summary.json

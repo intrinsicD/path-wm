@@ -229,6 +229,9 @@ The remaining deliberate choice is to start with continuous latents and add quan
 
 ## Per-application residual adapters: proposed comparison, 17 September
 
+The expanded [design](visual-adapter-design.md) and [session handoff](visual-adapter-handoff.md)
+are the current continuation documents for this proposal.
+
 Alex proposes small residual layers for each application, compared with the shared
 encoder frozen and trainable. This is a research direction, not an implemented
 replacement or a claim of improved task quality.
