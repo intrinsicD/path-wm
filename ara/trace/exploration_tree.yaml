@@ -7825,3 +7825,77 @@ tree:
   - docs/request-routing-plan.md
   status: resolved
   timestamp: 2026-09-17T10:43+02:00
+- id: N471
+  type: decision
+  title: Diagnose completion from cached states and preregister decoder cost trials
+  provenance: ai-executed
+  choice: Implement cached conditional next-byte scores without core resampling; verify source/cache/generation
+    identity, distinguish teacher-forced and reached prefixes. Fix normalization edge and retain exact
+    default behavior. Claude public-only critique/reconciliation; fixed nine paired repeats and 5% CUDA
+    gate.
+  alternatives:
+  - Repeat completed core evaluations
+  - Fit inspected failed wording immediately
+  - Adopt slicing from arithmetic savings alone
+  evidence:
+  - O317
+  - docs/request-completion-plan.md
+  - runs/reviews/request_completion_v1/final-response.json
+  status: resolved
+  timestamp: 2026-09-17T11:13+02:00
+- id: N472
+  type: experiment
+  title: Cached EOS diagnosis and whitespace repair preserve saved evidence
+  provenance: ai-executed
+  result: 'Six fixed evaluations,9216 rows,22.56s process time,zero core calls/updates. Stronger neutral/masked
+    source: four of eight sequence wording cells select EOS after correct first color for all clips/draws;
+    other four select space. Complete target prefixes select EOS. Weaker-source neutral first words62.5%,
+    sequence exact42.71% mean; unique neural attribution unproven. 605 full tests in594.83s;53 focused;296076
+    raw checks,5010 fixture routes,4548 unchanged tensors;7 structural reports and inspected figure, no
+    browser QA.'
+  evidence:
+  - ara/evidence/tables/request_completion_2026-09-17.json
+  - runs/request_completion_v1/report.html
+  - runs/request_completion_v1/verification.json
+  also_depends_on:
+  - N471
+  status: resolved
+  timestamp: 2026-09-17T11:13+02:00
+- id: N473
+  type: dead_end
+  title: Last-position slicing and validation consolidation miss primary CUDA gate
+  provenance: ai-executed
+  hypothesis: Less repeated cross-attention/projection or validation synchronization improves fixed CUDA
+    batch64 generation by at least5%.
+  failure_mode: 'Both exact-output candidates fail preregistered gate: paired median latency reductions
+    -3.67% and-1.94%. Secondary CPU reductions9.77%/9.14% cannot replace primary. All9216 token rows and
+    full training outputs/gradients match; no training-speed claim.'
+  lesson: Arithmetic savings need synchronized workload measurements. Preserve negative trials; do not
+    tune acceptance after timing. Retain full-prefix default and optional slicing only.
+  evidence:
+  - ara/evidence/tables/request_completion_2026-09-17.json
+  - runs/request_completion_v1/slice-only-verification.json
+  - runs/request_completion_v1/combined-verification.json
+  - runs/request_completion_v1/source-provenance.json
+  also_depends_on:
+  - N471
+  status: resolved
+  timestamp: 2026-09-17T11:13+02:00
+- id: N474
+  type: decision
+  title: Keep defaults and target paired request-form preservation next
+  provenance: ai-executed
+  choice: Restore original prefix validation/full generation defaults; retain explicit experimental last_only
+    path. Commit results and updated handoff/atlas without capability or discussion-color promotion. Next
+    paired request-form repair requires fresh controls; weaker-source content remains separate.
+  alternatives:
+  - Enable failed GPU optimization
+  - Train four inspected test templates and claim generalization
+  - Infer training-speed improvement from compatibility timing
+  evidence:
+  - N472
+  - N473
+  - docs/session-handoff.md
+  - docs/request-completion-plan.md
+  status: resolved
+  timestamp: 2026-09-17T11:13+02:00

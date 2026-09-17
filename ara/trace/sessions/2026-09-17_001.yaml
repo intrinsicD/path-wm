@@ -2,11 +2,11 @@ session:
   id: 2026-09-17_001
   date: '2026-09-17'
   started: 2026-09-17T10:43+02:00
-  last_turn: 2026-09-17T10:43+02:00
-  turn_count: 1
-  summary: Frozen routing comparison completed; first-color7202 reaches100%, joint50% fails,7201 stays35.94%.
-    Broad0/25 and1/25 with agreement regressions;584 tests and exact preservation pass. No defaults changed.
-    User requests new-session handoff; EOS diagnosis and whitespace edge remain open.
+  last_turn: 2026-09-17T11:13+02:00
+  turn_count: 2
+  summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent
+    termination in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests
+    pass; 9216 answers and all weights preserved. No training or capability promotion.'
 events_logged:
 - turn: 1
   type: decision
@@ -51,6 +51,63 @@ events_logged:
   routing: crystallized
   provenance: ai-suggested
   summary: O314→A19 via committed diagnostic method; efficacy remains unpromoted.
+- turn: 2
+  type: decision
+  id: N471
+  routing: direct
+  provenance: ai-executed
+  summary: Diagnose completion from cached states and preregister decoder cost trials
+- turn: 2
+  type: experiment
+  id: N472
+  routing: direct
+  provenance: ai-executed
+  summary: Cached EOS diagnosis and whitespace repair preserve saved evidence
+- turn: 2
+  type: dead_end
+  id: N473
+  routing: direct
+  provenance: ai-executed
+  summary: Last-position slicing and validation consolidation miss primary CUDA gate
+- turn: 2
+  type: decision
+  id: N474
+  routing: direct
+  provenance: ai-executed
+  summary: Keep defaults and target paired request-form preservation next
+- turn: 2
+  type: observation
+  id: O317
+  routing: staged
+  provenance: ai-suggested
+  summary: Reuse preserved working states for conditional next-byte EOS/space diagnosis; require matching
+    source tensors and saved generation before interpretation. Distinguish target prefixes, reached generated
+    prefixes and full-vocabulary probabilities versus legal greedy decisions. Existing recipe/report/checkpoint
+    infrastructure only.
+- turn: 2
+  type: observation
+  id: O318
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Stronger-source early EOS appears associated with specific request wording rather than observed
+    near-ties or color order: four sequence wordings stop on all clips/draws, four continue. This narrows
+    a request-form hypothesis but does not locate interpreter/state/decoder responsibility; weaker-source
+    content errors persist.'
+- turn: 2
+  type: observation
+  id: O319
+  routing: staged
+  provenance: ai-suggested
+  summary: Next preregister matched paired first-only/sequence continuation learning with fresh wording,
+    content and broader-task preservation. Do not fit the inspected failed templates and call it generalization;
+    diagnose weaker-source content separately. Training and speed gains remain unestablished.
+- turn: 2
+  type: architecture
+  id: A20
+  routing: crystallized
+  provenance: ai-suggested
+  summary: O317→A20 via committed cached-state method only; O315/O316 interpretations and attribution
+    remain open.
 ai_actions:
 - turn: 1
   action: Implemented optional routing/state diagnostics with actual Claude public review, ran12 fixed evaluations
@@ -67,11 +124,29 @@ ai_actions:
   - tests/test_request_routing.py
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
+- turn: 2
+  action: Implemented whitespace fix/cached completion/optional decoder slicing; ran actual Claude public
+    reviews, two rejected timing trials, six frozen evaluations,605 full tests and raw/report audits.
+    Committed code, results and regenerated atlas/handoff with defaults/colors preserved.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/data/understanding.py
+  - pathwm/models/modalities.py
+  - pathwm/evaluation/request_meaning.py
+  - experiments/modality_readout.py
+  - tests/test_request_completion.py
+  - tests/test_text_decoder.py
+  - tests/test_request_routing.py
+  - docs/request-completion-plan.md
+  - docs/session-handoff.md
 claims_touched: []
 key_context:
 - turn: 1
   excerpt: 'Continue together with Claude; use testsuite to pick improvements. Follow-up17 September: Continue.
     Then: please create a handoff document to start in a new session.'
+- turn: 2
+  excerpt: Continue together with Claude. Use the testsuite to pick what to work on/improve/reduce duplicated
+    code/improve training time/improve inference time. Plan, implement, review, test and fix. Iterate
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -189,8 +264,13 @@ open_threads:
   diagnosis.'
 - 'N466/O313/O314: balanced request-form gain remains below gates; isolate fixed-weight request/evidence routing,
   content versus output form, compositional order, and broader QA regression before more fitting.'
-- 'N469/O315/O316: routing candidate gates fail; next request-form/continuation/EOS diagnosis must preserve
-  content and broader agreement. Handoff also records untested trailing-whitespace mask-length edge.'
+- 'N469/O315/O316: routing gates still fail. Cached EOS diagnosis and whitespace repair completed in N472;
+  causal attribution, content and broader agreement remain open.'
+- 'N472/O318/O319: preregister paired request-form continuation repair with fresh wording and preservation
+  controls. Cached EOS diagnosis and whitespace edge are complete; unique module attribution and weaker-source
+  content remain open.'
+- 'N473: preserve rejected CUDA trials and unchanged defaults; new performance work needs a new fixed
+  profiling hypothesis, not repeated threshold hunting.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher
   response.'
@@ -374,3 +454,5 @@ ai_suggestions_pending:
   remain open.
 - O314 implemented asA19 only; O315 interpretation and O316 next diagnostic await closure. No neural efficacy
   promotion or new fit.
+- O317→A20 records committed diagnostic method only. O318 mechanism and O319 next repair remain staged;
+  no user empirical endorsement, GPU/training speed, capability or default promotion.

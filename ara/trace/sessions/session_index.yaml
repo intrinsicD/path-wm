@@ -223,10 +223,10 @@ sessions:
   open_threads: 47
 - id: 2026-09-17_001
   date: '2026-09-17'
-  summary: Frozen routing comparison completed; first-color7202 reaches100%, joint50% fails,7201 stays35.94%.
-    Broad0/25 and1/25 with agreement regressions;584 tests and exact preservation pass. No defaults changed.
-    User requests new-session handoff; EOS diagnosis and whitespace edge remain open.
-  turn_count: 1
-  events_count: 6
+  summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent
+    termination in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests
+    pass; 9216 answers and all weights preserved. No training or capability promotion.'
+  turn_count: 2
+  events_count: 14
   claims_touched: []
-  open_threads: 48
+  open_threads: 50

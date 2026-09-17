@@ -2387,3 +2387,16 @@ entries:
   - 'All584 full checks cover measured source0144cc9. No later code repair claimed: trailing-whitespace input
     edge documented, not fixed. Report and plot verified; browser QA not claimed. Handoff/results5751f79;
     no push or default/color promotion.'
+- turn: 2026-09-17_001#2
+  notes:
+  - N471 method, N472 measured diagnosis, N473 rejected performance hypotheses and N474 preservation direct.
+    O317 method staged then crystallized as A20 via committed code/N471. O318 interpretation/O319 next
+    proposal remain staged.
+  - O316 contains unimplemented unique module attribution, so do not promote its entire bundle. O315 remains
+    a hypothesis refined by O318. User continuation is authorization, not endorsement of new empirical
+    conclusions. C01-C04 unchanged.
+  - No older modality/memory/control topic abandoned. Same-day work adds no new date-stale entries; preserve
+    existing stale flags and open topics. No contradictory broad-efficacy claim introduced.
+  - Actual isolated Claude public-only reviews reconciled timing-rule criticism; no private code/results
+    exported. Formal source c959c63,605 tests and7 structural reports. Performance candidates rejected;
+    slice-only source reconstruction explicitly recorded; no browser or speed promotion.

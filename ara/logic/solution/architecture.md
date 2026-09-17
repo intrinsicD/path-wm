@@ -192,3 +192,13 @@
 - **Implementation**:0144cc9, protocolf171821, handoff/results5751f79. [Data](../../../pathwm/data/understanding.py), [guard](../../../pathwm/evaluation/request_meaning.py), [recipe](../../../experiments/modality_readout.py), [suite](../../../pathwm/evaluation/understanding.py), [tests](../../../tests/test_request_routing.py).
 - **Verification**: [Evidence](../../evidence/tables/request_routing_2026-09-17.json);584 full checks,64 GPU smoke comparisons; exact historical answer/array and source tensor reproduction.
 - **Limits**: Optional diagnostic methodology, no neural training or adopted repair. Both joint/adoption gates fail, stronger-source agreement regresses. Length matching verified on normalized prepared questions; trailing-whitespace API edge remains documented for next-session testing. No general semantic, video-understanding or unique interference mechanism claim.
+
+## A20: Cached-state request completion diagnosis
+
+- **Design**: Reuse saved working tokens without resampling the core. Require source/cache checkpoint identity and exact saved generation before scoring the next byte at target-first-word, reached generated-first-word and complete target prefixes. Preserve raw full-vocabulary EOS/space probabilities and distinct legal argmax. Reuse the existing experiment recipe and standalone report/checkpoint infrastructure.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O317
+- **Implementation**: c959c63; [helper](../../../pathwm/evaluation/request_meaning.py), [recipe](../../../experiments/modality_readout.py), [checks](../../../tests/test_request_completion.py), [protocol](../../../docs/request-completion-plan.md).
+- **Verification**: [Bound evidence](../../evidence/tables/request_completion_2026-09-17.json);605 full tests,53 focused,9216 saved rows,4548 unchanged checkpoint tensors. A19's trailing-whitespace edge is now repaired with5010 existing fixture route comparisons unchanged.
+- **Limits**: Implemented diagnostic method only; no neural efficacy, unique bottleneck, capability or training-speed claim. O316's broader causal attribution remains open. Two decoder-cost candidates fail the fixed CUDA gate; original generation defaults stay intact. No browser QA claim.

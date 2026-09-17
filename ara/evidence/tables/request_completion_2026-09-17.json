@@ -1,0 +1,848 @@
+{
+  "claude_reviews": [
+    {
+      "brief_sha256": "0b4be31593b3718b7173671d11d5cbe5e7606fa19c7c9030ce96e78e94adb456",
+      "elapsed_seconds": 15.567361185094342,
+      "name": "public-receipt.json",
+      "response_sha256": "3cb6ca574136e956dce47d67197a77550636479276137eaebb62f80a7cd88436",
+      "returncode": 0
+    },
+    {
+      "brief_sha256": "06320b010522c91e2064f2d0625c0b3f6173729c7297598f729251e66518fcd3",
+      "elapsed_seconds": 10.651907625840977,
+      "name": "reconcile-receipt.json",
+      "response_sha256": "1c458282be6a6a404afed1c348a293bb483e6467ea2a09a899ae2ea7bfebe99b",
+      "returncode": 0
+    },
+    {
+      "brief_sha256": "bd6811ffca41edde1ff70f0c085ebd9822ab963309c56dc341835138cdd4a099",
+      "elapsed_seconds": 11.874292319174856,
+      "name": "final-receipt.json",
+      "response_sha256": "12ce5757e013a23fdef9369c2b8de40ecea41764a1ef38d89cd971728a6db8ce",
+      "returncode": 0
+    }
+  ],
+  "decisions": [
+    "Whitespace edge fixed; all existing prepared fixture routes reproduce exactly.",
+    "Original validation and full-prefix generation remain default. Last-position generation is an opt-in experiment.",
+    "No GPU or training speed gain adopted; small CPU timing gains are descriptive only.",
+    "Next model target is paired request-form preservation and continuation, with weaker-source content treated separately."
+  ],
+  "diagnosis": {
+    "conclusion": "In the stronger task-only route, four of eight sequence wording variants choose EOS after the correct first word in every clip/draw. The other four choose space. Complete expected two-word answers choose EOS in all rows. These conditional scores do not locate the responsible neural module.",
+    "wording_cells": [
+      {
+        "eos_fraction": 1.0,
+        "format": "first",
+        "margin_max": -4.539132118225098,
+        "margin_mean": -5.476348668336868,
+        "margin_min": -6.574733257293701,
+        "question": "Schreibe mir nur die allererste Farbe auf.",
+        "rows": 48,
+        "wording": "test/0/0"
+      },
+      {
+        "eos_fraction": 1.0,
+        "format": "first",
+        "margin_max": -4.336492538452148,
+        "margin_mean": -5.452025731404622,
+        "margin_min": -6.663280963897705,
+        "question": "Schreibe mir den zuerst gezeigten Farbton auf.",
+        "rows": 48,
+        "wording": "test/0/1"
+      },
+      {
+        "eos_fraction": 1.0,
+        "format": "first",
+        "margin_max": -4.755226135253906,
+        "margin_mean": -5.777305503686269,
+        "margin_min": -6.882689476013184,
+        "question": "Bitte gib nur die allererste Farbe an.",
+        "rows": 48,
+        "wording": "test/1/0"
+      },
+      {
+        "eos_fraction": 1.0,
+        "format": "first",
+        "margin_max": -4.491119384765625,
+        "margin_mean": -5.520934383074443,
+        "margin_min": -6.678194522857666,
+        "question": "Bitte gib den zuerst gezeigten Farbton an.",
+        "rows": 48,
+        "wording": "test/1/1"
+      },
+      {
+        "eos_fraction": 1.0,
+        "format": "first",
+        "margin_max": -4.208507537841797,
+        "margin_mean": -4.9586906631787615,
+        "margin_min": -6.003644943237305,
+        "question": "Als Antwort zeige nur die allererste Farbe.",
+        "rows": 48,
+        "wording": "test/2/0"
+      },
+      {
+        "eos_fraction": 1.0,
+        "format": "first",
+        "margin_max": -4.8203325271606445,
+        "margin_mean": -5.851084808508555,
+        "margin_min": -6.989871501922607,
+        "question": "Als Antwort zeige den zuerst gezeigten Farbton.",
+        "rows": 48,
+        "wording": "test/2/1"
+      },
+      {
+        "eos_fraction": 1.0,
+        "format": "first",
+        "margin_max": -4.652022361755371,
+        "margin_mean": -5.605527142683665,
+        "margin_min": -6.686126232147217,
+        "question": "Nenne mir bitte nur die allererste Farbe.",
+        "rows": 48,
+        "wording": "test/3/0"
+      },
+      {
+        "eos_fraction": 1.0,
+        "format": "first",
+        "margin_max": -3.8649539947509766,
+        "margin_mean": -5.131042132774989,
+        "margin_min": -6.4507269859313965,
+        "question": "Nenne mir bitte den zuerst gezeigten Farbton.",
+        "rows": 48,
+        "wording": "test/3/1"
+      },
+      {
+        "eos_fraction": 1.0,
+        "format": "sequence",
+        "margin_max": -2.8223276138305664,
+        "margin_mean": -3.379897713661194,
+        "margin_min": -4.393263816833496,
+        "question": "Schreibe mir alle Farben nacheinander auf.",
+        "rows": 48,
+        "wording": "test/0/0"
+      },
+      {
+        "eos_fraction": 0.0,
+        "format": "sequence",
+        "margin_max": 6.580889701843262,
+        "margin_mean": 6.050298670927684,
+        "margin_min": 5.379730224609375,
+        "question": "Schreibe mir beide Farbtöne nacheinander auf.",
+        "rows": 48,
+        "wording": "test/0/1"
+      },
+      {
+        "eos_fraction": 1.0,
+        "format": "sequence",
+        "margin_max": -1.9452896118164062,
+        "margin_mean": -2.7148603598276773,
+        "margin_min": -3.807467460632324,
+        "question": "Bitte gib alle Farben nacheinander an.",
+        "rows": 48,
+        "wording": "test/1/0"
+      },
+      {
+        "eos_fraction": 0.0,
+        "format": "sequence",
+        "margin_max": 6.071398735046387,
+        "margin_mean": 5.623849272727966,
+        "margin_min": 4.771141052246094,
+        "question": "Bitte gib beide Farbtöne nacheinander an.",
+        "rows": 48,
+        "wording": "test/1/1"
+      },
+      {
+        "eos_fraction": 0.0,
+        "format": "sequence",
+        "margin_max": 2.2648048400878906,
+        "margin_mean": 1.5064995487531025,
+        "margin_min": 0.6781587600708008,
+        "question": "Als Antwort zeige alle Farben nacheinander.",
+        "rows": 48,
+        "wording": "test/2/0"
+      },
+      {
+        "eos_fraction": 0.0,
+        "format": "sequence",
+        "margin_max": 4.2466278076171875,
+        "margin_mean": 3.3975616693496704,
+        "margin_min": 2.6745424270629883,
+        "question": "Als Antwort zeige beide Farbtöne nacheinander.",
+        "rows": 48,
+        "wording": "test/2/1"
+      },
+      {
+        "eos_fraction": 1.0,
+        "format": "sequence",
+        "margin_max": -4.680307388305664,
+        "margin_mean": -5.58172670006752,
+        "margin_min": -6.632166862487793,
+        "question": "Nenne mir bitte alle Farben nacheinander.",
+        "rows": 48,
+        "wording": "test/3/0"
+      },
+      {
+        "eos_fraction": 1.0,
+        "format": "sequence",
+        "margin_max": -4.638119697570801,
+        "margin_mean": -5.564033875862758,
+        "margin_min": -6.632294178009033,
+        "question": "Nenne mir bitte beide Farbtöne nacheinander.",
+        "rows": 48,
+        "wording": "test/3/1"
+      }
+    ]
+  },
+  "evaluation_scope": "Frozen request completion diagnosis and two rejected inference cost candidates; no model training or capability promotion.",
+  "examples": [
+    {
+      "clip": "VID.order/test/0/0",
+      "condition": "full",
+      "continuation": {
+        "expected_complete": {
+          "eos_probability": 0.9907563328742981,
+          "prefix": "rot",
+          "prefix_tokens": 4,
+          "space_minus_eos_logit": -4.748693466186523,
+          "space_probability": 0.008582928217947483,
+          "top_legal_id": 2
+        },
+        "expected_first": {
+          "eos_probability": 0.9907563328742981,
+          "prefix": "rot",
+          "prefix_tokens": 4,
+          "space_minus_eos_logit": -4.748692512512207,
+          "space_probability": 0.008582936599850655,
+          "top_legal_id": 2
+        },
+        "generated_first": {
+          "eos_probability": 0.9907562136650085,
+          "prefix": "rot",
+          "prefix_tokens": 4,
+          "space_minus_eos_logit": -4.748691558837891,
+          "space_probability": 0.008582944050431252,
+          "top_legal_id": 2
+        }
+      },
+      "draw": 0,
+      "ended": true,
+      "exact": true,
+      "expected": "rot",
+      "first_word": true,
+      "format": "first",
+      "format_correct": true,
+      "generated": "rot",
+      "generated_first_reached": true,
+      "novel": true,
+      "observation_text": "Frage: .",
+      "observation_tokens": 10,
+      "pair": "VID.order/test/0",
+      "question": "Schreibe mir nur die allererste Farbe auf.",
+      "task_request": "Schreibe mir nur die allererste Farbe auf.",
+      "wording": "test/0/0"
+    },
+    {
+      "clip": "VID.order/test/0/0",
+      "condition": "full",
+      "continuation": {
+        "expected_complete": {
+          "eos_probability": 0.9959779977798462,
+          "prefix": "rot blau",
+          "prefix_tokens": 9,
+          "space_minus_eos_logit": -17.81638526916504,
+          "space_probability": 1.8226025133571966e-08,
+          "top_legal_id": 2
+        },
+        "expected_first": {
+          "eos_probability": 0.9506654143333435,
+          "prefix": "rot",
+          "prefix_tokens": 4,
+          "space_minus_eos_logit": -2.9843273162841797,
+          "space_probability": 0.04807848855853081,
+          "top_legal_id": 2
+        },
+        "generated_first": {
+          "eos_probability": 0.950665295124054,
+          "prefix": "rot",
+          "prefix_tokens": 4,
+          "space_minus_eos_logit": -2.984325408935547,
+          "space_probability": 0.04807857424020767,
+          "top_legal_id": 2
+        }
+      },
+      "draw": 0,
+      "ended": true,
+      "exact": false,
+      "expected": "rot blau",
+      "first_word": true,
+      "format": "sequence",
+      "format_correct": false,
+      "generated": "rot",
+      "generated_first_reached": true,
+      "novel": true,
+      "observation_text": "Frage: .",
+      "observation_tokens": 10,
+      "pair": "VID.order/test/0",
+      "question": "Schreibe mir alle Farben nacheinander auf.",
+      "task_request": "Schreibe mir alle Farben nacheinander auf.",
+      "wording": "test/0/0"
+    },
+    {
+      "clip": "VID.order/test/0/0",
+      "condition": "full",
+      "continuation": {
+        "expected_complete": {
+          "eos_probability": 0.9889858961105347,
+          "prefix": "rot",
+          "prefix_tokens": 4,
+          "space_minus_eos_logit": -4.560916900634766,
+          "space_probability": 0.010337346233427525,
+          "top_legal_id": 2
+        },
+        "expected_first": {
+          "eos_probability": 0.9889858961105347,
+          "prefix": "rot",
+          "prefix_tokens": 4,
+          "space_minus_eos_logit": -4.560919761657715,
+          "space_probability": 0.010337316431105137,
+          "top_legal_id": 2
+        },
+        "generated_first": {
+          "eos_probability": 0.9889858961105347,
+          "prefix": "rot",
+          "prefix_tokens": 4,
+          "space_minus_eos_logit": -4.560915946960449,
+          "space_probability": 0.01033735554665327,
+          "top_legal_id": 2
+        }
+      },
+      "draw": 0,
+      "ended": true,
+      "exact": true,
+      "expected": "rot",
+      "first_word": true,
+      "format": "first",
+      "format_correct": true,
+      "generated": "rot",
+      "generated_first_reached": true,
+      "novel": true,
+      "observation_text": "Frage: .",
+      "observation_tokens": 10,
+      "pair": "VID.order/test/0",
+      "question": "Schreibe mir den zuerst gezeigten Farbton auf.",
+      "task_request": "Schreibe mir den zuerst gezeigten Farbton auf.",
+      "wording": "test/0/1"
+    },
+    {
+      "clip": "VID.order/test/0/0",
+      "condition": "full",
+      "continuation": {
+        "expected_complete": {
+          "eos_probability": 0.9963645339012146,
+          "prefix": "rot blau",
+          "prefix_tokens": 9,
+          "space_minus_eos_logit": -11.698573112487793,
+          "space_probability": 8.275466825580224e-06,
+          "top_legal_id": 2
+        },
+        "expected_first": {
+          "eos_probability": 0.001657694112509489,
+          "prefix": "rot",
+          "prefix_tokens": 4,
+          "space_minus_eos_logit": 6.400361061096191,
+          "space_probability": 0.9980352520942688,
+          "top_legal_id": 35
+        },
+        "generated_first": {
+          "eos_probability": 0.001657694112509489,
+          "prefix": "rot",
+          "prefix_tokens": 4,
+          "space_minus_eos_logit": 6.400361061096191,
+          "space_probability": 0.9980352520942688,
+          "top_legal_id": 35
+        }
+      },
+      "draw": 0,
+      "ended": true,
+      "exact": true,
+      "expected": "rot blau",
+      "first_word": true,
+      "format": "sequence",
+      "format_correct": true,
+      "generated": "rot blau",
+      "generated_first_reached": true,
+      "novel": true,
+      "observation_text": "Frage: .",
+      "observation_tokens": 10,
+      "pair": "VID.order/test/0",
+      "question": "Schreibe mir beide Farbtöne nacheinander auf.",
+      "task_request": "Schreibe mir beide Farbtöne nacheinander auf.",
+      "wording": "test/0/1"
+    }
+  ],
+  "inference_trials": [
+    {
+      "exact_generated_rows": 9216,
+      "max_last_logit_abs_error": 7.62939453125e-06,
+      "name": "slice only",
+      "optimization_gate": false,
+      "timings": [
+        {
+          "batch": 64,
+          "device": "cuda:0",
+          "last_position_median": 0.018033113097772002,
+          "max_tokens": 16,
+          "original_median": 0.017118914984166622,
+          "paired_median_reduction": -0.036688430318746024,
+          "repeats": [
+            {
+              "last_position": 0.018549052998423576,
+              "original": 0.01834540511481464
+            },
+            {
+              "last_position": 0.01814364898018539,
+              "original": 0.01827774802222848
+            },
+            {
+              "last_position": 0.01698494888842106,
+              "original": 0.016708763083443046
+            },
+            {
+              "last_position": 0.018033113097772002,
+              "original": 0.01681778091005981
+            },
+            {
+              "last_position": 0.018809393048286438,
+              "original": 0.018143728142604232
+            },
+            {
+              "last_position": 0.01885047904215753,
+              "original": 0.016774007119238377
+            },
+            {
+              "last_position": 0.017828550888225436,
+              "original": 0.016652605030685663
+            },
+            {
+              "last_position": 0.0172621700912714,
+              "original": 0.018066402059048414
+            },
+            {
+              "last_position": 0.017947788117453456,
+              "original": 0.017118914984166622
+            }
+          ],
+          "warmups": 3
+        },
+        {
+          "batch": 1,
+          "device": "cuda:0",
+          "last_position_median": 0.007224651984870434,
+          "max_tokens": 16,
+          "original_median": 0.007606862112879753,
+          "paired_median_reduction": 0.05024543922811098,
+          "repeats": [
+            {
+              "last_position": 0.007224651984870434,
+              "original": 0.007606862112879753
+            },
+            {
+              "last_position": 0.007209242787212133,
+              "original": 0.007728147087618709
+            },
+            {
+              "last_position": 0.00809781113639474,
+              "original": 0.0072483099065721035
+            },
+            {
+              "last_position": 0.007023213896900415,
+              "original": 0.007968212943524122
+            },
+            {
+              "last_position": 0.008578642038628459,
+              "original": 0.007208826020359993
+            },
+            {
+              "last_position": 0.007215362973511219,
+              "original": 0.007919412106275558
+            },
+            {
+              "last_position": 0.007310778135433793,
+              "original": 0.007269971072673798
+            },
+            {
+              "last_position": 0.007900977041572332,
+              "original": 0.007342878030613065
+            },
+            {
+              "last_position": 0.007107543060556054,
+              "original": 0.007788429968059063
+            }
+          ],
+          "warmups": 3
+        },
+        {
+          "batch": 64,
+          "device": "cpu",
+          "last_position_median": 0.00905055901966989,
+          "max_tokens": 16,
+          "original_median": 0.010098292957991362,
+          "paired_median_reduction": 0.09768082540692546,
+          "repeats": [
+            {
+              "last_position": 0.009256726130843163,
+              "original": 0.010083670960739255
+            },
+            {
+              "last_position": 0.009365877136588097,
+              "original": 0.010618092957884073
+            },
+            {
+              "last_position": 0.00883100787177682,
+              "original": 0.010228221071884036
+            },
+            {
+              "last_position": 0.008915831102058291,
+              "original": 0.010178481927141547
+            },
+            {
+              "last_position": 0.009106884943321347,
+              "original": 0.010056440019980073
+            },
+            {
+              "last_position": 0.009691650047898293,
+              "original": 0.010101561900228262
+            },
+            {
+              "last_position": 0.00905055901966989,
+              "original": 0.01003032992593944
+            },
+            {
+              "last_position": 0.009043187135830522,
+              "original": 0.009928862797096372
+            },
+            {
+              "last_position": 0.008923067012801766,
+              "original": 0.010098292957991362
+            }
+          ],
+          "warmups": 3
+        }
+      ]
+    },
+    {
+      "exact_generated_rows": 9216,
+      "max_last_logit_abs_error": 7.62939453125e-06,
+      "name": "slice plus validation",
+      "optimization_gate": false,
+      "timings": [
+        {
+          "batch": 64,
+          "device": "cuda:0",
+          "last_position_median": 0.016822675010189414,
+          "max_tokens": 16,
+          "original_median": 0.016591756837442517,
+          "paired_median_reduction": -0.019361204625694795,
+          "repeats": [
+            {
+              "last_position": 0.01658769720233977,
+              "original": 0.016599735943600535
+            },
+            {
+              "last_position": 0.016822675010189414,
+              "original": 0.016503154067322612
+            },
+            {
+              "last_position": 0.016460510902106762,
+              "original": 0.016847471008077264
+            },
+            {
+              "last_position": 0.01701117306947708,
+              "original": 0.016591756837442517
+            },
+            {
+              "last_position": 0.016639600973576307,
+              "original": 0.016290928004309535
+            },
+            {
+              "last_position": 0.016879915026947856,
+              "original": 0.016878949012607336
+            },
+            {
+              "last_position": 0.016693121986463666,
+              "original": 0.016249211970716715
+            },
+            {
+              "last_position": 0.017047504195943475,
+              "original": 0.016392527148127556
+            },
+            {
+              "last_position": 0.016844739904627204,
+              "original": 0.016848719911649823
+            }
+          ],
+          "warmups": 3
+        },
+        {
+          "batch": 1,
+          "device": "cuda:0",
+          "last_position_median": 0.007343864068388939,
+          "max_tokens": 16,
+          "original_median": 0.007407444063574076,
+          "paired_median_reduction": 0.023574288942202593,
+          "repeats": [
+            {
+              "last_position": 0.007726386887952685,
+              "original": 0.007227141177281737
+            },
+            {
+              "last_position": 0.007282695034518838,
+              "original": 0.0075918869115412235
+            },
+            {
+              "last_position": 0.007159504108130932,
+              "original": 0.007385239005088806
+            },
+            {
+              "last_position": 0.007737871026620269,
+              "original": 0.007039315067231655
+            },
+            {
+              "last_position": 0.00728727993555367,
+              "original": 0.007463220041245222
+            },
+            {
+              "last_position": 0.0075609630439430475,
+              "original": 0.007407444063574076
+            },
+            {
+              "last_position": 0.007343864068388939,
+              "original": 0.007693785009905696
+            },
+            {
+              "last_position": 0.007113463943824172,
+              "original": 0.00805647298693657
+            },
+            {
+              "last_position": 0.00756429904140532,
+              "original": 0.007122739916667342
+            }
+          ],
+          "warmups": 3
+        },
+        {
+          "batch": 64,
+          "device": "cpu",
+          "last_position_median": 0.008989334106445312,
+          "max_tokens": 16,
+          "original_median": 0.009939860086888075,
+          "paired_median_reduction": 0.0914070055334717,
+          "repeats": [
+            {
+              "last_position": 0.008958815829828382,
+              "original": 0.010008587036281824
+            },
+            {
+              "last_position": 0.008910501142963767,
+              "original": 0.010015352861955762
+            },
+            {
+              "last_position": 0.009199675172567368,
+              "original": 0.009854628005996346
+            },
+            {
+              "last_position": 0.008796226000413299,
+              "original": 0.009939860086888075
+            },
+            {
+              "last_position": 0.008985381107777357,
+              "original": 0.01014389586634934
+            },
+            {
+              "last_position": 0.009007603861391544,
+              "original": 0.009761371882632375
+            },
+            {
+              "last_position": 0.009259390877559781,
+              "original": 0.010012114187702537
+            },
+            {
+              "last_position": 0.009011578978970647,
+              "original": 0.009918169118463993
+            },
+            {
+              "last_position": 0.008989334106445312,
+              "original": 0.009810271207243204
+            }
+          ],
+          "warmups": 3
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Means reuse the same 16 development clips and three draws; no independent confirmation, significance or general-language claim.",
+    "Teacher-forced prefixes are interventions, separate from actual free generation. Full-vocabulary EOS probabilities and PAD/BOS-masked decisions are distinct.",
+    "No core resampling, broad capability reevaluation, parameter fitting, checkpoint selection or change to scientific model defaults.",
+    "All six diagnostic runs use source commit c959c63 and own source snapshots/checkpoints/raw rows/reports.",
+    "Existing renderer structurally checked; interactive browser QA not performed."
+  ],
+  "metrics": {
+    "7201 / full / first": {
+      "clips": 16,
+      "exact_mean": 0.46875,
+      "expected_complete_eos_mean": 0.875,
+      "expected_first_eos_mean": 0.875,
+      "expected_first_margin_mean": -2.187737375497818,
+      "first_word_mean": 0.546875,
+      "pairs": 8,
+      "rows": 384
+    },
+    "7201 / full / sequence": {
+      "clips": 16,
+      "exact_mean": 0.4296875,
+      "expected_complete_eos_mean": 1.0,
+      "expected_first_eos_mean": 0.1953125,
+      "expected_first_margin_mean": 1.419610969722271,
+      "first_word_mean": 0.546875,
+      "pairs": 8,
+      "rows": 384
+    },
+    "7201 / masked / first": {
+      "clips": 16,
+      "exact_mean": 0.53125,
+      "expected_complete_eos_mean": 0.859375,
+      "expected_first_eos_mean": 0.859375,
+      "expected_first_margin_mean": -2.0975146467487016,
+      "first_word_mean": 0.625,
+      "pairs": 8,
+      "rows": 384
+    },
+    "7201 / masked / sequence": {
+      "clips": 16,
+      "exact_mean": 0.4140625,
+      "expected_complete_eos_mean": 1.0,
+      "expected_first_eos_mean": 0.1953125,
+      "expected_first_margin_mean": 1.5678051337599754,
+      "first_word_mean": 0.625,
+      "pairs": 8,
+      "rows": 384
+    },
+    "7201 / neutral / first": {
+      "clips": 16,
+      "exact_mean": 0.53125,
+      "expected_complete_eos_mean": 0.859375,
+      "expected_first_eos_mean": 0.859375,
+      "expected_first_margin_mean": -2.0761354565620422,
+      "first_word_mean": 0.625,
+      "pairs": 8,
+      "rows": 384
+    },
+    "7201 / neutral / sequence": {
+      "clips": 16,
+      "exact_mean": 0.4270833333333333,
+      "expected_complete_eos_mean": 1.0,
+      "expected_first_eos_mean": 0.18229166666666666,
+      "expected_first_margin_mean": 1.5854196076591809,
+      "first_word_mean": 0.625,
+      "pairs": 8,
+      "rows": 384
+    },
+    "7202 / full / first": {
+      "clips": 16,
+      "exact_mean": 0.8541666666666666,
+      "expected_complete_eos_mean": 1.0,
+      "expected_first_eos_mean": 1.0,
+      "expected_first_margin_mean": -5.519034878661235,
+      "first_word_mean": 0.8541666666666666,
+      "pairs": 8,
+      "rows": 384
+    },
+    "7202 / full / sequence": {
+      "clips": 16,
+      "exact_mean": 0.4791666666666667,
+      "expected_complete_eos_mean": 1.0,
+      "expected_first_eos_mean": 0.5,
+      "expected_first_margin_mean": -0.13637220735351244,
+      "first_word_mean": 0.8541666666666666,
+      "pairs": 8,
+      "rows": 384
+    },
+    "7202 / masked / first": {
+      "clips": 16,
+      "exact_mean": 1.0,
+      "expected_complete_eos_mean": 1.0,
+      "expected_first_eos_mean": 1.0,
+      "expected_first_margin_mean": -5.4808071454366045,
+      "first_word_mean": 1.0,
+      "pairs": 8,
+      "rows": 384
+    },
+    "7202 / masked / sequence": {
+      "clips": 16,
+      "exact_mean": 0.5,
+      "expected_complete_eos_mean": 1.0,
+      "expected_first_eos_mean": 0.5,
+      "expected_first_margin_mean": -0.09543610985080402,
+      "first_word_mean": 1.0,
+      "pairs": 8,
+      "rows": 384
+    },
+    "7202 / neutral / first": {
+      "clips": 16,
+      "exact_mean": 1.0,
+      "expected_complete_eos_mean": 1.0,
+      "expected_first_eos_mean": 1.0,
+      "expected_first_margin_mean": -5.471619879206021,
+      "first_word_mean": 1.0,
+      "pairs": 8,
+      "rows": 384
+    },
+    "7202 / neutral / sequence": {
+      "clips": 16,
+      "exact_mean": 0.5,
+      "expected_complete_eos_mean": 1.0,
+      "expected_first_eos_mean": 0.5,
+      "expected_first_margin_mean": -0.08278868595759074,
+      "first_word_mean": 1.0,
+      "pairs": 8,
+      "rows": 384
+    }
+  },
+  "resources": {
+    "decoder_trial_seconds": 31.611253866227344,
+    "diagnostic_process_seconds": 22.559233048930764,
+    "neural_updates": 0,
+    "peak_diagnostic_allocated_bytes": 37914112
+  },
+  "software": {
+    "returncode": 0,
+    "seconds": 596.3922583570238
+  },
+  "verification": {
+    "checks": 296076,
+    "existing_fixture_route_comparisons": 5010,
+    "raw_rows": 9216,
+    "reports": 6,
+    "scope": "Raw rows/identities, reached-prefix next tokens, fixture text routes and source tensors; not new capability evidence",
+    "unchanged_tensors": 4548
+  },
+  "provenance": "ai-executed",
+  "recorded_at": "2026-09-17T11:13+02:00",
+  "raw_files": {
+    "runs/request_completion_v1/result.json": "2d322c12244104ce24caa4cc64281aea6e6c888e8dc2670aac6ad5bb51289cd7",
+    "runs/request_completion_v1/verification.json": "0ab3099a1b745964da096cd65398fa854ccaac933de09a1ca152001385f15347",
+    "runs/request_completion_v1/report-verification.json": "591578750e9e56af3b0ccf309eb07613c1bd9865db1e6ca734ce39815a277975",
+    "runs/request_completion_v1/software-cost.json": "fc77bf8c097eef58bad60b870d4f57a2d3099c4d57c8473365f7fdc3b5aabb59",
+    "runs/request_completion_v1/full-software-tests.txt": "680e06a0811db8f3f685f4a38911de411ef6088edfc526e13893fd4acce76a7a",
+    "runs/request_completion_v1/slice-only-verification.json": "c92f46414bc59554b6f641ce27d98333fab300c53b63bbdf7be985a684ff4174",
+    "runs/request_completion_v1/combined-verification.json": "77bfaa1b1e8471741a0bafb11e433d3ffc77b1e34933bea217d5e55ddc187308",
+    "runs/request_completion_v1/source-provenance.json": "7da777387aa155b9f1ce166975ec67544769bd96d5a78d18ab0713fe3a754676"
+  },
+  "commits": [
+    "08cdaf0",
+    "1860144",
+    "c959c63",
+    "df3f278"
+  ]
+}

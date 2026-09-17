@@ -5533,3 +5533,54 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O317
+  timestamp: 2026-09-17T11:13+02:00
+  provenance: ai-suggested
+  content: Reuse preserved working states for conditional next-byte EOS/space diagnosis; require matching
+    source tensors and saved generation before interpretation. Distinguish target prefixes, reached generated
+    prefixes and full-vocabulary probabilities versus legal greedy decisions. Existing recipe/report/checkpoint
+    infrastructure only.
+  context: Method implemented at c959c63 and depended on by N471; this entry records the implemented subset
+    of O316, not unique module attribution or successful repair.
+  potential_type: architecture
+  bound_to:
+  - N471
+  - N472
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A20
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O318
+  timestamp: 2026-09-17T11:13+02:00
+  provenance: ai-suggested
+  content: 'Stronger-source early EOS appears associated with specific request wording rather than observed
+    near-ties or color order: four sequence wordings stop on all clips/draws, four continue. This narrows
+    a request-form hypothesis but does not locate interpreter/state/decoder responsibility; weaker-source
+    content errors persist.'
+  context: Fixed cached-state diagnosis on reused development fixtures, no researcher response to the
+    new finding.
+  potential_type: claim
+  bound_to:
+  - N472
+  - N474
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O319
+  timestamp: 2026-09-17T11:13+02:00
+  provenance: ai-suggested
+  content: Next preregister matched paired first-only/sequence continuation learning with fresh wording,
+    content and broader-task preservation. Do not fit the inspected failed templates and call it generalization;
+    diagnose weaker-source content separately. Training and speed gains remain unestablished.
+  context: Conditional follow-up after completed frozen diagnosis and two rejected GPU candidates; no
+    new fit launched.
+  potential_type: architecture
+  bound_to:
+  - N472
+  - N473
+  - N474
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
