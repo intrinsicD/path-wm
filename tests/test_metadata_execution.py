@@ -4,29 +4,39 @@ import pytest
 import torch
 
 from pathwm.models.tasks import MetadataEncoder
+from pathwm.models.modalities import bytes_batch
 
 
-def test_frozen_metadata_reuses_only_identical_batches_and_returns_owned_values():
+def reference_output(model, records):
+    # Independent unchanged expression retained after rejecting memoization.
+    import json
+
+    ids, valid = bytes_batch(
+        [json.dumps(r, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+         for r in records], model.embedding.weight.device,
+    )
+    values, _ = model.sequence(model.embedding(ids))
+    return ((values * valid[..., None]).sum(1) / valid.sum(1)[:, None])[:, None]
+
+
+def test_frozen_metadata_repeated_batches_return_owned_values():
     torch.manual_seed(87)
     model = MetadataEncoder(16).requires_grad_(False).eval()
     records = [{"caller": "Älice", "value": "same"}] * 8
-    with torch.autograd.profiler.profile() as profile:
-        first = model(records)
-        reference = first.clone()
-        first.zero_()
-        assert torch.equal(model(copy.deepcopy(records)), reference)
-        model(records[:1])
-        model(records)  # Exactly one cached batch, not an unbounded dictionary.
-        model.cache_frozen = False
-        model(records)
-    assert sum(e.count for e in profile.key_averages() if e.key == "aten::gru") == 4
+    first = model(records)
+    reference = first.clone()
+    first.zero_()
+    assert torch.equal(model(copy.deepcopy(records)), reference)
+    model(records[:1])
+    assert torch.equal(model(records), reference)
+
 
 
 @pytest.mark.parametrize(
     "change",
     ["parameter", "load", "trainable", "train_mode", "child_train_mode", "dtype"],
 )
-def test_frozen_cache_invalidates_and_keeps_uncached_reference(change):
+def test_frozen_metadata_changes_keep_independent_reference(change):
     torch.manual_seed(89)
     model = MetadataEncoder(16).requires_grad_(False).eval()
     records = [{"id": "one"}, {"id": "two"}]
@@ -45,8 +55,7 @@ def test_frozen_cache_invalidates_and_keeps_uncached_reference(change):
     else:
         model.double()
     reference = copy.deepcopy(model)
-    reference.cache_frozen = False
-    actual, expected = model(records), reference(records)
+    actual, expected = model(records), reference_output(reference, records)
     assert torch.equal(actual, expected)
     if change == "trainable":
         actual.square().sum().backward()
@@ -57,7 +66,7 @@ def test_frozen_cache_invalidates_and_keeps_uncached_reference(change):
         )
 
 
-def test_cache_is_not_checkpoint_state_and_frozen_calls_preserve_rng():
+def test_frozen_metadata_preserves_checkpoint_state_and_rng():
     model = MetadataEncoder(16).requires_grad_(False).eval()
     before = copy.deepcopy(model.state_dict())
     rng = torch.get_rng_state().clone()
@@ -68,7 +77,7 @@ def test_cache_is_not_checkpoint_state_and_frozen_calls_preserve_rng():
     assert torch.equal(rng, torch.get_rng_state())
 
 
-def test_hooks_are_not_skipped_after_warming_cache():
+def test_metadata_hooks_are_observed_after_repeated_inputs():
     model = MetadataEncoder(16).requires_grad_(False).eval()
     records = [{"text": "same"}]
     model(records)
@@ -80,7 +89,7 @@ def test_hooks_are_not_skipped_after_warming_cache():
     handle.remove()
 
 
-def test_inference_and_autocast_modes_do_not_leak_cached_tensor_semantics():
+def test_metadata_inference_and_autocast_tensor_semantics():
     model = MetadataEncoder(16).requires_grad_(False).eval()
     records = [{"text": "same"}]
     with torch.inference_mode():
@@ -91,9 +100,25 @@ def test_inference_and_autocast_modes_do_not_leak_cached_tensor_semantics():
     downstream(actual).sum().backward()
     assert downstream.weight.grad is not None and not actual.is_inference()
     reference = copy.deepcopy(model)
-    reference.cache_frozen = False
     with torch.autocast("cpu", dtype=torch.bfloat16):
-        assert torch.equal(model(records), reference(records))
+        assert torch.equal(model(records), reference_output(reference, records))
     with torch.inference_mode():
         created = MetadataEncoder(16).requires_grad_(False).eval()
         assert torch.equal(created(records), created(records))
+
+
+def test_frozen_metadata_after_cudnn_rnn_import():
+    # Importing this PyTorch submodule changes its parent attribute. Exercise the
+    # ordinary frozen path in a fresh interpreter, without precision setup.
+    import subprocess
+    import sys
+
+    subprocess.run(
+        [sys.executable, "-c", "import torch.backends.cudnn.rnn; "
+         "from pathwm.models.tasks import MetadataEncoder; "
+         "m = MetadataEncoder(8).requires_grad_(False).eval(); "
+         "assert m([{'text': 'same'}]).shape == (1, 1, 8)"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )

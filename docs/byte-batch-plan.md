@@ -105,3 +105,23 @@ test cache invalidation, caller mutation, frozen gradients, parameter loading,
 changing batch/metadata, opt-out and bounded single-entry behavior. Trainable
 metadata paths keep their original expression. No source edit during comparison.
 This is a new hypothesis, not repeated timing of the failed tokenizer candidate.
+
+
+## Final adoption decision
+
+Metadata reuse also misses the unchanged5% gate:7202 training/inference latency
+reductions -0.61%/+0.93%;7201 +1.36%/+1.67%. All31,266 pairwise exact checks pass.
+A separate four-call real training-path audit confirms one miss followed by three
+hits, so ineligibility is not the explanation. No general speedup claim is supported.
+The candidate additionally fails a fresh-interpreter cuDNN submodule import test:
+its precision-key guard assumes an attribute that can disappear after import.
+The formal timing setup seeded precision after model construction, masking this
+issue. Saved red receipt: `runs/metadata_cache_v1/import-order-red.txt`.
+
+Remove the unearned caching machinery and restore the original MetadataEncoder.
+Retain independent byte/metadata behavior, gradient, mutation, hook and inference
+mode checks; candidate-only reuse-count assertions move with the rejected source
+into the ignored experiment archive. This removes an abandoned feature, not a
+passing claim for its failing speed or import-order checks. No cache flag remains
+in the production API. Preserve both candidate sources, tests, raw results and
+Claude receipts. No model weights, objective, default, or capability changes.
