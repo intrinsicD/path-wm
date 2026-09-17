@@ -103,3 +103,28 @@ work. The final overview received another geometry/visual check; exact source,
 weight, loss and gradient audit passed after regeneration. Twelve exporter checks
 pass in 7.47s; JavaScript syntax and diff checks pass. The live preview regenerated
 during layout iteration. Numerical model code and training were unchanged.
+
+## System scope and teacher roles, 17 September
+
+User accepts a system-level view including World State and asks why agent/target
+are separate. Preserve the selected main learner snapshot and add the existing
+World State foundation as a separately labelled recipe configuration. Use its own
+constructor/objective and bounded synthetic runtime exercise; do not silently
+attach invented World State dimensions to the main agent. Show captured runtime
+component calls separately from neural tensor/autograd edges. Expose WorldStore
+entities, components, relations, evidence, events, exact stored values and current
+record schemas; source links/docstrings explain optional interfaces. Label the
+synthetic diagnostic store and fresh weights explicitly.
+
+Expose inference-agent versus frozen training-only EMA teacher roles, including
+source-backed update rule and stop-gradient behavior. Never imply an EMA update
+occurred in the no-optimizer capture. Module IDs and checkpoint formats stay exact.
+Keep recipe construction in recipes; companion export crosses a CLI boundary,
+not a shared-library import of experiment code. Include both recipe files in live
+source tracking. Fail visibly if the companion capture cannot be generated.
+
+Checks: meaningful failing coverage for real runtime component calls, full store
+records and sources, separate neural context/roles and source tracking; focused
+export/World State tests, isolated full software suite, browser system/store/neural
+navigation and offline payload verification. CPU only, no optimizer, each export
+under120s and100MiB; full tests capped1200s. No model or scientific capability change.
