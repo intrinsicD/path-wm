@@ -2,8 +2,8 @@ session:
   id: 2026-09-17_001
   date: '2026-09-17'
   started: 2026-09-17T10:43+02:00
-  last_turn: 2026-09-17T20:44+02:00
-  turn_count: 10
+  last_turn: 2026-09-17T22:05+02:00
+  turn_count: 11
   summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent termination
     in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests pass; 9216 answers
     and all weights preserved. No training or capability promotion. Current categorical architecture explorer
@@ -22,7 +22,9 @@ session:
     base codec checked. Spatial/perceptual/pretraining interpretation staged, no model change or reconstruction
     replication. Broad VAE literature review and exact Google searches completed; scalable size and both teacher
     tracks recorded. Public-only Claude critique reconciled.11 untrained parameter counts/22 shape checks;
-    candidate architecture remains staged, with no training/default/capability change.'
+    candidate architecture remains staged, with no training/default/capability change. Equal-architecture cross-task
+    features: Taskonomy/RSA/CKA literature reviewed; shared-stem and functional-transfer comparison remains
+    proposed, without model changes or training.'
 events_logged:
 - turn: 1
   type: decision
@@ -274,6 +276,19 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Local single-grid scalable visual codec with separate teacher tracks remains a proposal.
+- turn: 11
+  type: question
+  id: N494
+  routing: direct
+  provenance: user
+  summary: Compare task-specific representations in independently trained identical encoders
+- turn: 11
+  type: observation
+  id: O325
+  routing: staged
+  provenance: ai-suggested
+  summary: Task/seed-aware similarity plus functional transfer proposed for choosing shared versus specialized
+    encoder layers.
 ai_actions:
 - turn: 1
   action: Implemented optional routing/state diagnostics with actual Claude public review, ran12 fixed evaluations
@@ -394,6 +409,12 @@ ai_actions:
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
   - ara/evidence/tables/visual_codec_review_2026-09-17.json
+- turn: 11
+  action: Read primary-source cross-task feature and similarity-method literature; distinguished published
+    findings, metric limitations and proposed local comparison.
+  provenance: ai-executed
+  files_changed:
+  - ara/evidence/tables/task_feature_similarity_sources_2026-09-17.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -424,6 +445,9 @@ key_context:
 - turn: 10
   excerpt: as low as possible but as high as necessary; i prefer both... without and with teachers; also use
     a google search for "vae" and "vae improvements".
+- turn: 11
+  excerpt: 'Train an encoder per application with the same architecture and independent weights: how much do
+    the learned features differ?'
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -740,3 +764,5 @@ ai_suggestions_pending:
   interpretations remain open; no user empirical affirmation, general efficacy or speed promotion.
 - O323: source-based explanation of detailed SD/SRL reconstruction; no adoption or PATH-WM fidelity experiment.
 - O324: unadopted scalable visual-codec proposal; needs bounded experiment and task/quality validation.
+- 'O325: shared stem, later specialization and task/seed-aware comparison are proposals; no local feature measurements
+  or adoption.'

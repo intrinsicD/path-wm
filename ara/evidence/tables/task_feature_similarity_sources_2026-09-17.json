@@ -1,0 +1,35 @@
+{
+  "date": "2026-09-17",
+  "scope": "Literature lookup on equal-architecture encoders trained separately across visual applications.",
+  "sources": [
+    {
+      "title": "Taskonomy: Disentangling Task Transfer Learning",
+      "year": 2018,
+      "url": "https://arxiv.org/abs/1804.08328",
+      "implementation": "https://github.com/stanfordvl/taskonomy"
+    },
+    {
+      "title": "Representation Similarity Analysis for Efficient Task Taxonomy & Transfer Learning",
+      "year": 2019,
+      "url": "https://openaccess.thecvf.com/content_CVPR_2019/papers/Dwivedi_Representation_Similarity_Analysis_for_Efficient_Task_Taxonomy__Transfer_Learning_CVPR_2019_paper.pdf",
+      "location": "Section 6.1, Figures 4\u20136; primary indexed text read, direct PDF retrieval returned 403.",
+      "implementation": "https://github.com/kshitijd20/RSA-CVPR19-release"
+    },
+    {
+      "title": "Similarity of Neural Network Representations Revisited",
+      "year": 2019,
+      "url": "https://proceedings.mlr.press/v97/kornblith19a.html"
+    },
+    {
+      "title": "Grounding Representation Similarity Through Statistical Testing",
+      "year": 2021,
+      "url": "https://proceedings.neurips.cc/paper/2021/hash/0c0bf917c7942b5a08df71f9da626f97-Abstract.html"
+    }
+  ],
+  "limits": [
+    "External published results, not replicated locally.",
+    "No universal percentage of shared features; representation similarity differs from functional transfer.",
+    "A shared stem and task-specific branches are an unadopted comparison candidate.",
+    "No training, architecture edits, default changes or capability promotion."
+  ]
+}

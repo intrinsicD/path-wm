@@ -8228,3 +8228,15 @@ tree:
   evidence:
   - ara/evidence/tables/visual_codec_review_2026-09-17.json
   - docs/visual-codec-parameter-audit.json
+- id: N494
+  type: question
+  title: Compare task-specific representations in independently trained identical encoders
+  provenance: user
+  timestamp: 2026-09-17T22:05+02:00
+  status: resolved
+  description: User asks whether published results quantify differences between features learned for different
+    applications with the same encoder architecture and separate weights. Taskonomy, its RSA follow-up, CKA
+    and functional-similarity limitations located and explained. Literature question answered; local branch
+    choice and representation measurements remain open.
+  evidence:
+  - ara/evidence/tables/task_feature_similarity_sources_2026-09-17.json

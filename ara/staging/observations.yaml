@@ -5669,3 +5669,20 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O325
+  timestamp: 2026-09-17T22:05+02:00
+  provenance: ai-suggested
+  content: For the small visual codec, compare independent encoders against a shared early stem with task-specific
+    later branches. Select sharing using layerwise representation similarity, same-task different-seed controls
+    and frozen-encoder cross-task readouts, then validate actual multitask performance. Public task-family
+    clustering does not establish PATH-WM branch depth or equivalent utility.
+  context: Literature answer to a hypothetical same-architecture, separately trained task-encoder question;
+    no design adoption or experiment authorization inferred.
+  potential_type: heuristic
+  bound_to:
+  - N494
+  - N491
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

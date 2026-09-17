@@ -2482,3 +2482,13 @@ entries:
     Public-only reviewer agreement is not an empirical closure signal. Older staged scientific interpretations
     remain open; no new abandonment or stale flags.
   - No claim, architecture validation color, model defaults or checkpoint changes.
+- turn: 2026-09-17_001#11
+  notes:
+  - N494 records the user literature question, not a choice to train separate encoders. O325 stages the proposed
+    comparison.
+  - External RSA matrix correlations describe agreement between task relationships, not percentages of shared
+    features or local results.
+  - O324 remains active and unadopted; this question revisits visual-codec representation design. No closure,
+    contradiction or new abandonment inferred.
+  - No architecture walkthrough, graph coverage or scientific validation status changed; no consequential architecture
+    adoption requiring an external review.

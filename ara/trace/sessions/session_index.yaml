@@ -241,8 +241,10 @@ sessions:
     base codec checked. Spatial/perceptual/pretraining interpretation staged, no model change or reconstruction
     replication. Broad VAE literature review and exact Google searches completed; scalable size and both teacher
     tracks recorded. Public-only Claude critique reconciled.11 untrained parameter counts/22 shape checks;
-    candidate architecture remains staged, with no training/default/capability change.'
-  turn_count: 10
-  events_count: 39
+    candidate architecture remains staged, with no training/default/capability change. Equal-architecture cross-task
+    features: Taskonomy/RSA/CKA literature reviewed; shared-stem and functional-transfer comparison remains
+    proposed, without model changes or training.'
+  turn_count: 11
+  events_count: 41
   claims_touched: []
   open_threads: 51
