@@ -14,12 +14,22 @@ def original_forward(module, tokens, prefix, valid=None, trace=None):
         module.width,
     )
     x = module.self_attention(
-        x, x, valid=prefix != 0, causal=True, trace=trace,
+        x,
+        x,
+        valid=prefix != 0,
+        causal=True,
+        trace=trace,
         name="decode.text.causal_attention",
     )
-    return module.output(module.read(
-        x, tokens, valid=valid, trace=trace, name="decode.text.state_attention",
-    ))
+    return module.output(
+        module.read(
+            x,
+            tokens,
+            valid=valid,
+            trace=trace,
+            name="decode.text.state_attention",
+        )
+    )
 
 
 @pytest.mark.parametrize("length", [1, 7, 16])
@@ -80,14 +90,22 @@ def test_generation_keeps_mixed_eos_and_budget_contract(monkeypatch):
 
     monkeypatch.setattr(decoder, "forward", forward)
     tokens = torch.randn(2, 4, 16)
-    assert decoder.generate(tokens, 5).tolist() == [[1, 2, 2, 2], [1, 100, 100, 2]]
+    assert decoder.generate(tokens, 5, last_only=True).tolist() == [
+        [1, 2, 2, 2],
+        [1, 100, 100, 2],
+    ]
     assert all(seen)
+    seen.clear()
     assert decoder.generate(tokens, 2).tolist() == [[1, 2, 2], [1, 100, 100]]
+    assert not any(seen)
     with pytest.raises(ValueError, match="positive"):
         decoder.generate(tokens, 0)
 
 
-@pytest.mark.parametrize("prefix", [torch.tensor([[0, 5]]), torch.tensor([[1, 0, 8]]), torch.tensor([[1, 259]])])
+@pytest.mark.parametrize(
+    "prefix",
+    [torch.tensor([[0, 5]]), torch.tensor([[1, 0, 8]]), torch.tensor([[1, 259]])],
+)
 def test_last_logits_keep_prefix_validation(prefix):
     with pytest.raises(ValueError):
         TextDecoder(16)(torch.randn(1, 4, 16), prefix, last_only=True)

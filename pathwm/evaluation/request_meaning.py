@@ -10,6 +10,57 @@ from pathwm.models.tasks import Actor, OutputControl, TaskRequest, TaskSession
 from pathwm.models.photo_probe import RidgeReader
 
 
+def continuation_scores(decoder, tokens, prefixes):
+    """Score the next byte after each supplied string, without appending EOS.
+
+    These are conditional, teacher-forced distributions. Callers must separately
+    establish whether free generation reached a prefix. Probabilities cover the
+    full vocabulary; only the reported greedy argmax excludes PAD and BOS.
+    """
+    if not prefixes or len(prefixes) != len(tokens):
+        raise ValueError("One text prefix per state required")
+    sequences = [[1, *(b + 3 for b in text.encode("utf-8"))] for text in prefixes]
+    lengths = torch.tensor([len(s) for s in sequences], device=tokens.device)
+    prefix = torch.zeros(
+        len(sequences), int(lengths.max()), dtype=torch.long, device=tokens.device
+    )
+    for i, sequence in enumerate(sequences):
+        prefix[i, : len(sequence)] = torch.tensor(sequence, device=tokens.device)
+    with evaluation_mode(decoder), torch.no_grad():
+        logits = decoder(tokens, prefix)[
+            torch.arange(len(tokens), device=tokens.device), lengths - 1
+        ]
+        if not torch.isfinite(logits).all():
+            raise ValueError("Continuation logits must be finite")
+        probabilities = logits.softmax(-1)
+        best = logits[:, 2:].argmax(-1) + 2
+        values = (
+            torch.stack(
+                (
+                    probabilities[:, 2],
+                    probabilities[:, 35],
+                    logits[:, 35] - logits[:, 2],
+                ),
+                -1,
+            )
+            .cpu()
+            .tolist()
+        )
+    return [
+        dict(
+            prefix=text,
+            prefix_tokens=length,
+            eos_probability=eos,
+            space_probability=space,
+            space_minus_eos_logit=margin,
+            top_legal_id=top,
+        )
+        for text, length, (eos, space, margin), top in zip(
+            prefixes, lengths.cpu().tolist(), values, best.cpu().tolist()
+        )
+    ]
+
+
 def validate_request_route(model, question_mode):
     """Removing observed questions requires the real request in the task path."""
     if question_mode not in ("full", "neutral", "masked"):

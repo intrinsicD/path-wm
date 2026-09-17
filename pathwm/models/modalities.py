@@ -371,7 +371,14 @@ class TextDecoder(nn.Module):
         self.self_attention, self.read = Attend(width), Attend(width)
         self.output = nn.Linear(width, vocabulary)
 
-    def forward(self, tokens, prefix, trace=None, *, valid=None):
+    def forward(self, tokens, prefix, trace=None, *, valid=None, last_only=False):
+        """Predict all prefix positions, or only the final column for generation.
+
+        All causal keys remain available. State attention and vocabulary projection
+        are independent across query positions, so generation can skip past queries.
+        With last_only, state-attention traces also contain only the final query.
+        Right-padded callers needing each row's last valid position use full logits.
+        """
         if prefix.ndim != 2 or len(prefix) != len(tokens) or prefix.shape[1] < 1:
             raise ValueError("Text prefix must be nonempty [B,L]")
         if (
@@ -397,19 +404,28 @@ class TextDecoder(nn.Module):
             trace=trace,
             name="decode.text.causal_attention",
         )
+        if last_only:
+            x = x[:, -1:]
         x = self.read(
             x, tokens, valid=valid, trace=trace, name="decode.text.state_attention"
         )
         return self.output(x)
 
     @torch.no_grad()
-    def generate(self, tokens, max_tokens=32, *, valid=None):
+    def generate(self, tokens, max_tokens=32, *, valid=None, last_only=False):
+        """Greedy byte generation; last_only is an opt-in cost experiment.
+
+        The full-prefix default is preserved: slicing did not improve latency on
+        the primary measured CUDA workload. Other devices/shapes need measurement.
+        """
         if max_tokens < 1:
             raise ValueError("Text generation budget must be positive")
         prefix = torch.ones(len(tokens), 1, dtype=torch.long, device=tokens.device)
         ended = torch.zeros(len(tokens), dtype=torch.bool, device=tokens.device)
         for _ in range(max_tokens):
-            logits = self(tokens, prefix, valid=valid)[:, -1].clone()
+            logits = self(tokens, prefix, valid=valid, last_only=last_only)[
+                :, -1
+            ].clone()
             logits[:, :2] = -torch.inf  # PAD/BOS are not generated as content.
             next_id = logits.argmax(-1).masked_fill(ended, 2)
             prefix = torch.cat((prefix, next_id[:, None]), 1)

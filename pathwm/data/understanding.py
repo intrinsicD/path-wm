@@ -509,7 +509,11 @@ class UnderstandingData:
         question = record["question"]
         if question_mode != "full":
             question = "." * (
-                len(question.encode("utf-8")) if question_mode == "masked" else 1
+                # The assembled full observation strips trailing whitespace;
+                # leading/internal question whitespace remains after the wrapper.
+                len(question.rstrip().encode("utf-8"))
+                if question_mode == "masked"
+                else 1
             )
         text = (evidence.get("text", "") + "\nFrage: " + question).strip()
         tokens, mask = bytes_batch([text], device=device)

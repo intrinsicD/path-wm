@@ -63,5 +63,38 @@ briefs, tools/MCP disabled. Exact briefs, responses and receipts live under
 
 ## Progress
 
-Plan recorded; essential regressions and review precede implementation. Evidence
-and limits will be added here after the fixed checks complete.
+Essential red checks saved and committed before their implementations. The first
+52 focused checks pass. Claude acknowledged the architectural, probability,
+ground-truth and exact-token clarifications. After the final fixed repetition and
+effect-size clarification, it withdrew its decision-rule objection; uncertainty
+intervals remain a preference, not a blocker for this narrow engineering gate.
+All warmups are excluded; exactly 5% passes; same-protocol reruns use the same gate.
+
+**First performance iteration, not adopted:** last-position slicing alone passes
+all 9,216 saved answer reproductions, all exact greedy token comparisons and full
+training outputs/gradients. It FAILS the primary speed gate: paired median CUDA
+batch-64 reduction -3.67% (slower); batch-1 +5.02%, CPU batch-64 +9.77% cannot replace
+the primary. Raw maximum logit difference 7.63e-6 passes the fixed mixed absolute/
+relative tolerance. Receipts: `slice-only-verification.json`, `verify_slice_only.py`.
+
+**Second performance iteration, fixed before measurement:** keep the same
+population, budget, repetitions and adoption threshold. Combine vocabulary and
+right-padding validity flags into one device-to-host boolean check on the valid
+path, keeping the original specific errors on invalid inputs. Current forward
+validates separately with up to three host synchronizations per generated token.
+This consolidation preserves every numerical decoder operation and all forward
+hooks, and applies to both ordinary training and inference. No trusted-prefix
+bypass or mutable state. Compare the combined candidate with the ORIGINAL
+validation and full-prefix expression, not with an already modified baseline.
+Rerun token/logit/gradient checks and matched timings. Primary failure retains
+the original generation default; do not tune gates. No training-speed claim from
+the single compatibility timing. Diagnostics remain independent of this gate.
+
+**Second performance result, not adopted:** same9,216 exact token/answer checks,
+fixed logit tolerance and exact full training outputs/gradients pass. Primary
+paired median change -1.94%; secondary CUDA batch-1 +2.36%, CPU batch-64 +9.14%.
+Both candidates miss the declared primary gate. Restore original validation and
+full-prefix generation defaults. Retain `TextDecoder.generate(..., last_only=True)`
+as an explicit experimental path, not a promoted optimization. `combined-verification.json`
+and its exact candidate source preserve the failed comparison. No GPU or training
+speedup claim. The small CPU gain is descriptive and does not override the gate.

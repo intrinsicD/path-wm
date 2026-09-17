@@ -1208,6 +1208,195 @@ def request_evaluate(args):
         raise
 
 
+def request_completion(args):
+    """Inspect decoder termination on preserved request states, without core calls."""
+    from pathwm.evaluation.request_meaning import continuation_scores
+    from pathwm.models.modalities import bytes_text
+
+    cache = args.request_cache
+    source_record = json.loads((cache / "run.json").read_text())
+    cache_settings = source_record["identity"]["settings"]
+    source_hash = file_hash(args.core / "last.pt")
+    if cache_settings.get("source_sha256") != source_hash:
+        raise ValueError("Request cache and source checkpoint disagree")
+    if json.loads((cache / "status.json").read_text())["result"] != "complete":
+        raise ValueError("Request cache must be a completed run")
+    files = {
+        name: file_hash(cache / name)
+        for name in (
+            "run.json",
+            "request_meanings.json",
+            "request_states.npz",
+            "last.pt",
+        )
+    }
+    rows = json.loads((cache / "request_meanings.json").read_text())["examples"]
+    with np.load(cache / "request_states.npz", allow_pickle=False) as arrays:
+        working = torch.from_numpy(arrays["working"].copy())
+    if (
+        working.ndim != 3
+        or len(working) != len(rows)
+        or not torch.isfinite(working).all()
+    ):
+        raise ValueError("Request cache needs aligned finite working states")
+    model, _, loaded_hash = restore_readout(args.core, args.seed, args.device)
+    if loaded_hash != source_hash:
+        raise ValueError("Source checkpoint changed while loading")
+    model.requires_grad_(False).eval()
+    before = state_hash(model)
+    cached_model = torch.load(cache / "last.pt", map_location="cpu", weights_only=True)[
+        "model"
+    ]
+    if cached_model.keys() != model.state_dict().keys() or any(
+        not torch.equal(v.cpu(), cached_model[k]) for k, v in model.state_dict().items()
+    ):
+        raise ValueError("Request cache weights do not match source model")
+    run = Run(
+        args.output,
+        settings=dict(
+            seed=args.seed,
+            purpose="diagnostic",
+            source=str(args.core.resolve()),
+            source_sha256=source_hash,
+            cache=str(cache.resolve()),
+            observation_question=cache_settings["observation_question"],
+        ),
+        data=dict(cache_sha256=files),
+        recipe=__file__,
+        model=model,
+        optimizer=torch.optim.Adam([next(model.parameters())], lr=0.001),
+        device=args.device,
+    )
+    start, results = time.perf_counter(), []
+    device = torch.device(args.device)
+    if device.type == "cuda":
+        torch.cuda.reset_peak_memory_stats(device)
+    try:
+        with torch.no_grad():
+            for offset in range(0, len(rows), 64):
+                batch = rows[offset : offset + 64]
+                context = model.outputs.prepare(
+                    "text", working[offset : offset + 64].to(device)
+                )
+                ids = model.outputs.decoders["text"].generate(context, 16).cpu()
+                for row, generated in zip(batch, ids):
+                    if (
+                        bytes_text(generated) != row["generated"]
+                        or bool((generated == 2).any()) != row["ended"]
+                    ):
+                        raise AssertionError(
+                            "Cached generation differs from saved answer"
+                        )
+                expected_first = [r["expected"].split()[0] for r in batch]
+                generated_first = [(r["generated"].split() or [""])[0] for r in batch]
+                scores = {
+                    name: continuation_scores(
+                        model.outputs.decoders["text"], context, texts
+                    )
+                    for name, texts in (
+                        ("expected_first", expected_first),
+                        ("generated_first", generated_first),
+                        ("expected_complete", [r["expected"] for r in batch]),
+                    )
+                }
+                for i, row in enumerate(batch):
+                    prefix = [1, *(b + 3 for b in generated_first[i].encode("utf-8"))]
+                    reached = (
+                        bool(generated_first[i])
+                        and ids[i, : len(prefix)].tolist() == prefix
+                    )
+                    results.append(
+                        row
+                        | dict(
+                            generated_first_reached=reached,
+                            continuation={
+                                name: values[i] for name, values in scores.items()
+                            },
+                        )
+                    )
+        if (
+            before != state_hash(model)
+            or source_hash != file_hash(args.core / "last.pt")
+            or any(value != file_hash(cache / name) for name, value in files.items())
+        ):
+            raise AssertionError("Frozen diagnostic changed source or cache")
+        atomic_json(run.path / "continuations.json", dict(examples=results))
+        metrics = {}
+        # Preserve every wording/draw/condition cell; no iid uncertainty claims.
+        for key in dict.fromkeys(
+            (r["condition"], r["format"], r["wording"], r["draw"]) for r in results
+        ):
+            group = [
+                r
+                for r in results
+                if (r["condition"], r["format"], r["wording"], r["draw"]) == key
+            ]
+            metrics["/".join(map(str, key))] = dict(
+                rows=len(group),
+                clips=len({r["clip"] for r in group}),
+                pairs=len({r["pair"] for r in group}),
+                first_word_correct=float(np.mean([r["first_word"] for r in group])),
+                exact=float(np.mean([r["exact"] for r in group])),
+                expected_first_eos_greedy=float(
+                    np.mean(
+                        [
+                            r["continuation"]["expected_first"]["top_legal_id"] == 2
+                            for r in group
+                        ]
+                    )
+                ),
+                expected_first_space_minus_eos=float(
+                    np.mean(
+                        [
+                            r["continuation"]["expected_first"]["space_minus_eos_logit"]
+                            for r in group
+                        ]
+                    )
+                ),
+                expected_complete_eos_greedy=float(
+                    np.mean(
+                        [
+                            r["continuation"]["expected_complete"]["top_legal_id"] == 2
+                            for r in group
+                        ]
+                    )
+                ),
+            )
+        atomic_json(
+            run.path / "result.json",
+            dict(
+                evaluation_scope="Conditional EOS/continuation diagnosis on saved development states; no neural updates or capability promotion.",
+                metrics=metrics,
+                examples=results[:4],
+                model_unchanged=True,
+                resources=dict(
+                    seconds=time.perf_counter() - start,
+                    neural_updates=0,
+                    peak_allocated_bytes=torch.cuda.max_memory_allocated(device)
+                    if device.type == "cuda"
+                    else None,
+                ),
+                limits=[
+                    "Teacher-forced prefixes are interventions; generated prefixes count as on-policy only when actually reached.",
+                    "Raw probabilities include PAD/BOS; greedy argmax excludes them. Temperature one.",
+                    "Rows reuse clips, wordings and draws. No independent-sample inference or causal module attribution.",
+                    "Existing report renderer; structural QA only.",
+                ],
+            ),
+        )
+        run.save()
+        run.status("complete", "pending")
+        write_report(run.path)
+    except BaseException as exc:
+        prior = json.loads((run.path / "status.json").read_text())
+        run.status(
+            prior["result"] if prior["result"] == "complete" else "failed",
+            "failed",
+            str(exc),
+        )
+        raise
+
+
 def request_diagnose(args):
     """Audit balanced instruction meaning on the actual frozen request path."""
     from pathwm.data.understanding import UnderstandingData
@@ -2664,6 +2853,7 @@ def main():
             "exploration",
             "request-diagnose",
             "request-evaluate",
+            "request-completion",
         ),
         default="suite",
     )
@@ -2677,6 +2867,11 @@ def main():
     )
     parser.add_argument("--modality", choices=KINDS, default="text")
     parser.add_argument("--core", type=Path)
+    parser.add_argument(
+        "--request-cache",
+        type=Path,
+        help="Completed request evaluation with saved working states",
+    )
     parser.add_argument(
         "--search-mode", choices=("collect", "select", "execute"), default="execute"
     )
@@ -2804,11 +2999,26 @@ def main():
         help="Optional learned untimed palette; requires query timing",
     )
     args = parser.parse_args()
+    if args.request_cache is not None and args.stage != "request-completion":
+        parser.error("--request-cache is only used by request-completion")
     if args.observation_question != "full" and args.stage not in (
         "request-evaluate",
         "understanding",
     ):
         parser.error("Observation question routing is evaluation-only")
+    if args.stage == "request-completion":
+        if (
+            args.core is None
+            or args.request_cache is None
+            or args.steps is not None
+            or args.resume
+            or args.stop_after is not None
+        ):
+            parser.error(
+                "Request completion needs --core and --request-cache without training/resume"
+            )
+        request_completion(args)
+        return
     if args.stage in ("request-diagnose", "request-evaluate"):
         if (
             args.core is None
