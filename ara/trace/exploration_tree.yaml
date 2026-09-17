@@ -7899,3 +7899,39 @@ tree:
   - docs/request-completion-plan.md
   status: resolved
   timestamp: 2026-09-17T11:13+02:00
+- id: N475
+  type: decision
+  title: Inspect the complete current categorical agent through executable hierarchy
+  provenance: user
+  timestamp: 2026-09-17T12:03+02:00
+  choice: User selected path-wm and the complete categorical agent in experiments/multimodal.py. Requested
+    an HTML module hierarchy with real connections, data/gradient flow, click-to-descend through layers
+    to weights, parent navigation and current-source fidelity. Marigold How it works diagram supplied
+    as visual reference.
+  alternatives:
+  - Use a recent smaller experimental variant
+  - Use only a manually drawn static figure
+  evidence:
+  - docs/model-explorer-plan.md
+  - docs/model-explorer.md
+  status: resolved
+- id: N476
+  type: experiment
+  title: Executable explorer reproduces current weights, loss and gradients
+  provenance: ai-executed
+  timestamp: 2026-09-17T12:03+02:00
+  result: Fresh seed42, two synthetic episodes, history2/horizon1; no optimizer. Current learner1203 modules
+    including601 deployed modules/515553 deployed parameters. All1031106 learner parameter scalars and
+    every captured/absent gradient exactly match an independent uninstrumented run;747 tensors receive
+    gradients. Recorded29665 ATen operations and10795 autograd nodes. 632 tests passed in isolated full-suite
+    snapshot;16 final focused tests pass. Concurrent metadata-cache rollback occurred after suite snapshot
+    and before final current-source audit. Browser drill-down, scalar/gradient inspection, Back, operation
+    paging/filtering and provenance verified. Live rebuild/failure/recovery tested. No all-branches coverage,
+    trained-weight or scientific capability claim.
+  evidence:
+  - ara/evidence/tables/model_explorer_2026-09-17.json
+  - tests/test_model_explorer.py
+  - docs/model-explorer-plan.md
+  also_depends_on:
+  - N475
+  status: resolved

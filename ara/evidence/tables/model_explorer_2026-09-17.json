@@ -1,0 +1,50 @@
+{
+  "status": "passed",
+  "source_sha256": "e9ff12e9e0598af31abf470cbd180ea05b631963e3607d2417c018ca705b2945",
+  "html_sha256": "841c5b4d8a90621c79da9f909fbf560a00f2bb6e595a6fe9b39d56275fa91128",
+  "html_bytes": 19153660,
+  "modules": 1203,
+  "deployed_modules": 601,
+  "deployed_parameters": 515553,
+  "parameter_tensors": 1502,
+  "exact_parameter_scalars": 1031106,
+  "gradient_tensors": 747,
+  "checks": [
+    "every registered module matches current instantiated model",
+    "every parameter scalar and shape exact",
+    "uninstrumented default-model loss exact",
+    "every gradient scalar and absent gradient exact",
+    "all forward provenance edges causal",
+    "all backward endpoints resolve"
+  ],
+  "forward_operations": 29665,
+  "backward_nodes": 10795,
+  "weight_source": "Fresh initialization \u00b7 seed 42",
+  "software_tests": {
+    "isolated_full_suite": 632,
+    "final_focused_checks": 16,
+    "full_suite_exit_code": 0,
+    "final_focused_seconds": 7.7,
+    "scope_note": "Full suite ran in a frozen source copy. Subsequent explorer checkpoint/live-status changes received focused checks. A concurrent task rolled back metadata caching and replaced its tests after that snapshot. Exact current default-model audit ran after the rollback."
+  },
+  "browser_checks": [
+    "module/layer/direct parameter drill-down",
+    "exact scalar and gradient inspection",
+    "Back and breadcrumbs",
+    "backward/autograd navigation",
+    "operation pagination",
+    "operation name filtering with Enter",
+    "capture provenance and limits",
+    "final diagram visual inspection"
+  ],
+  "live_update_checks": [
+    "rebuild on source change",
+    "failure retains last snapshot and reports error",
+    "recovery after source repair"
+  ],
+  "limitations": [
+    "fresh initialization, seed 42; no trained checkpoint chosen",
+    "data and gradient edges cover the displayed representative execution, not every possible input",
+    "offline HTML is a snapshot; automatic refresh requires the loopback process and page to remain open"
+  ]
+}

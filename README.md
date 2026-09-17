@@ -50,6 +50,20 @@ Resume checks code, settings, data, modules, optimizer and runtime identity.
 
 ## Discuss or change a part
 
+Explore the **current complete categorical model** interactively:
+
+```bash
+python -m experiments.multimodal --explore
+# Optional: automatically regenerate when source/checkpoint files change.
+python -m experiments.multimodal --explore --explore-serve 8765
+```
+
+Open `docs/model-explorer.html` (or the printed local URL). Click through modules,
+observed operations and exact weights; switch to captured backward gradients.
+The default is explicitly labelled fresh initialization. Use
+`--explore-checkpoint /path/to/last.pt` for compatible weights.
+[Scope, navigation and freshness](docs/model-explorer.md).
+
 Generate diagrams of the Gaussian reference from a tiny recorded execution:
 
 ```bash

@@ -225,8 +225,10 @@ sessions:
   date: '2026-09-17'
   summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent
     termination in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests
-    pass; 9216 answers and all weights preserved. No training or capability promotion.'
-  turn_count: 2
-  events_count: 14
+    pass; 9216 answers and all weights preserved. No training or capability promotion. Current categorical
+    architecture explorer delivered with exact weight/loss/gradient audit and browser QA; no model training
+    or capability promotion.'
+  turn_count: 3
+  events_count: 16
   claims_touched: []
   open_threads: 50

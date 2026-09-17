@@ -44,4 +44,31 @@ Stop rather than silently truncate the operation graph or tensor values.
 
 ## Progress
 
-Plan and essential checks prepared. Implementation pending.
+Completed. `pathwm.evaluation.explorer` records the copied model, ATen tensor
+provenance (including in-place view writes), real autograd execution and complete
+weights/gradients. The recipe exposes snapshot, strict checkpoint and loopback
+live-rebuild options. The standalone viewer supports hierarchy navigation,
+pastel encoder/decoder blocks, exact operation pages and a scalar tensor microscope.
+See [usage and limits](model-explorer.md).
+
+Verification: all 632 software tests passed in an isolated source snapshot;
+16 focused explorer/diagram checks passed on the final Python implementation.
+The later focused checks cover strict checkpoint replay-buffer sizing and live
+source identity. Another concurrent task restored the previous metadata encoder
+implementation and replaced its tests after the full-suite snapshot; those source
+changes were not part of this explorer change. A separate default-model audit
+against current source checks every registered module, all 1,031,106 learner
+parameter scalars, the exact uninstrumented loss, every gradient (including absent
+gradients), forward provenance causality and backward endpoints.
+
+Browser checks covered module → layer → direct weight navigation, exact scalar
+selection, gradient heatmaps, Back/breadcrumbs, real backward operations, paging,
+operation filtering and capture provenance. The live-server test covers successful
+rebuild, failed rebuild retaining the last snapshot and recovery. Python lint and
+JavaScript syntax checks passed. A complete capture takes about 7 seconds and
+produces about 19 MB HTML, within the declared budget.
+
+The initial view contains 601 deployed modules and 515,553 parameters; the frozen
+teacher is a separate branch. Weights are fresh initialization, seed 42. The short
+synthetic execution does not establish coverage of every branch or scientific
+capability. No optimizer, training, model-default or validation-color changes.

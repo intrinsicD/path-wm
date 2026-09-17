@@ -1,0 +1,1823 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>PATH-WM · Model explorer</title>
+    <style>
+      :root {
+        --ink: #262b2b;
+        --muted: #68716e;
+        --line: #dedfd7;
+        --paper: #f8f8f3;
+        --panel: #fffef9;
+        --accent: #347c79;
+        --pink: #e7b9d5;
+        --cyan: #acd4df;
+        --lilac: #c7bde3;
+        --sage: #c9d7b7;
+        --yellow: #e5df97;
+        --mono: ui-monospace, SFMono-Regular, Consolas, monospace;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          14px/1.5 system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+      button,
+      select {
+        cursor: pointer;
+      }
+      button {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        border-radius: 7px;
+        padding: 7px 11px;
+        color: var(--ink);
+      }
+      button:hover {
+        border-color: var(--accent);
+        background: #edf4ef;
+      }
+      button:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      svg .node:focus-visible {
+        outline: 3px solid #348b86;
+        outline-offset: 3px;
+      }
+      header {
+        height: 76px;
+        padding: 15px 24px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--panel);
+        gap: 18px;
+      }
+      .brand {
+        font-size: 19px;
+        font-weight: 700;
+        letter-spacing: -0.7px;
+      }
+      .brand small {
+        font-weight: 400;
+        letter-spacing: 1.5px;
+        font-size: 11px;
+        display: block;
+        color: var(--muted);
+      }
+      .status {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+        font-size: 12px;
+      }
+      .status b {
+        font-weight: 600;
+        color: #805821;
+      }
+      .status small {
+        color: var(--muted);
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 225px minmax(0, 1fr);
+        height: calc(100vh - 76px);
+      }
+      nav {
+        padding: 21px 14px;
+        border-right: 1px solid var(--line);
+        overflow: auto;
+        background: #f3f4ee;
+      }
+      .eyebrow {
+        font-size: 10px;
+        font-weight: 750;
+        letter-spacing: 1.7px;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+      .search {
+        width: 100%;
+        border: 1px solid #d5d9d0;
+        background: var(--panel);
+        border-radius: 7px;
+        padding: 9px 10px;
+        margin: 12px 0 17px;
+      }
+      .tree {
+        font-size: 12px;
+      }
+      .tree details {
+        margin: 1px 0;
+      }
+      .tree summary {
+        list-style: none;
+        display: flex;
+        align-items: center;
+      }
+      .tree summary::-webkit-details-marker {
+        display: none;
+      }
+      .tree summary:before {
+        content: "›";
+        width: 13px;
+        color: #7b8481;
+        flex-shrink: 0;
+      }
+      .tree details[open] > summary:before {
+        transform: rotate(90deg);
+      }
+      .tree .children {
+        margin-left: 12px;
+        border-left: 1px solid #dfe2d9;
+        padding-left: 5px;
+      }
+      .tree button {
+        font-size: 12px;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        border: 0;
+        border-radius: 4px;
+        background: transparent;
+        padding: 5px 4px;
+        max-width: 100%;
+      }
+      .tree button.active {
+        background: #dcebe3;
+        color: #1d625e;
+        font-weight: 650;
+      }
+      .tree .leaf {
+        margin-left: 13px;
+      }
+      .nav-foot {
+        margin: 25px 5px 0;
+        border-top: 1px solid var(--line);
+        padding-top: 14px;
+        font-size: 11px;
+        color: var(--muted);
+      }
+      main {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .main-head {
+        padding: 20px 25px 12px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--line);
+      }
+      .crumbs {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        flex-wrap: wrap;
+        min-height: 31px;
+        margin-bottom: 12px;
+      }
+      .crumbs button {
+        font-size: 12px;
+        border: 0;
+        padding: 3px 5px;
+        background: transparent;
+        color: var(--muted);
+      }
+      .crumbs button:last-child {
+        color: var(--ink);
+        font-weight: 650;
+      }
+      .crumbs .back {
+        border: 1px solid var(--line);
+        background: var(--panel);
+        margin-right: 7px;
+        font-size: 16px;
+        padding: 0 10px;
+      }
+      .heading {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+      }
+      h1 {
+        font-size: 25px;
+        letter-spacing: -0.8px;
+        margin: 0;
+        line-height: 1.2;
+      }
+      .subheading {
+        font: 11px/1.6 var(--mono);
+        color: var(--muted);
+        margin-top: 6px;
+        overflow-wrap: anywhere;
+      }
+      .stats {
+        display: flex;
+        gap: 18px;
+        white-space: nowrap;
+      }
+      .stats b {
+        font-size: 17px;
+        display: block;
+        letter-spacing: -0.4px;
+      }
+      .stats span {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .tools {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+      }
+      .tools select {
+        border: 1px solid var(--line);
+        padding: 7px 9px;
+        border-radius: 7px;
+        background: var(--panel);
+      }
+      .tools label {
+        font-size: 11px;
+        display: flex;
+        gap: 4px;
+        align-items: center;
+      }
+      .tools .spacer {
+        flex: 1;
+      }
+      .canvas {
+        position: relative;
+        flex: 1;
+        min-height: 250px;
+        overflow: auto;
+        background: radial-gradient(#dfe3d9 0.7px, transparent 0.7px);
+        background-size: 20px 20px;
+      }
+      .canvas > svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        min-height: 280px;
+        touch-action: none;
+      }
+      .node {
+        cursor: pointer;
+      }
+      .node .body {
+        transition: filter 0.15s;
+        filter: drop-shadow(2px 4px 2px #373a3320);
+      }
+      .node:hover .body,
+      .node:focus .body {
+        filter: drop-shadow(0 2px 6px #36615b66);
+      }
+      .node text {
+        pointer-events: none;
+        fill: var(--ink);
+        font-family: system-ui, sans-serif;
+      }
+      .node .small {
+        font: 10px var(--mono);
+        fill: #4d5957;
+      }
+      .node .hint {
+        font-size: 10px;
+        fill: #54615b;
+      }
+      .edge {
+        fill: none;
+        stroke: #53655b;
+        stroke-width: 2;
+        opacity: 0.4;
+        cursor: pointer;
+      }
+      .edge:hover {
+        stroke: #182f2b;
+        stroke-width: 3;
+        opacity: 1;
+      }
+      .edge.gradient {
+        stroke: #916799;
+        stroke-dasharray: 6 4;
+      }
+      .flowing .edge {
+        stroke-dasharray: 7 5;
+        animation: flow 1.4s linear infinite;
+      }
+      @keyframes flow {
+        to {
+          stroke-dashoffset: -24;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .flowing .edge {
+          animation: none;
+        }
+        .scene {
+          animation: none !important;
+        }
+      }
+      .scene {
+        animation: arrive 0.22s ease-out;
+        transform-origin: center;
+      }
+      @keyframes arrive {
+        from {
+          opacity: 0.1;
+          transform: scale(0.96);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+      .legend {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        align-items: center;
+        border-top: 1px solid var(--line);
+        padding: 10px 23px;
+        font-size: 10px;
+        color: var(--muted);
+        background: var(--panel);
+      }
+      .legend i {
+        width: 9px;
+        height: 9px;
+        display: inline-block;
+        border-radius: 2px;
+        margin-right: 5px;
+      }
+      .caption {
+        font-size: 11px;
+        line-height: 1.6;
+        margin: 0;
+        padding: 10px 24px 13px;
+        color: var(--muted);
+        background: var(--panel);
+      }
+      .layout.show-inspector {
+        grid-template-columns: 225px minmax(0, 1fr) 285px;
+      }
+      .layout.show-inspector aside {
+        display: block;
+      }
+      aside {
+        display: none;
+        padding: 21px 19px;
+        border-left: 1px solid var(--line);
+        overflow: auto;
+        background: var(--panel);
+      }
+      aside h2 {
+        font-size: 17px;
+        margin: 11px 0 6px;
+        overflow-wrap: anywhere;
+      }
+      aside h3 {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 23px 0 8px;
+      }
+      aside p {
+        font-size: 12px;
+        color: var(--muted);
+        overflow-wrap: anywhere;
+      }
+      dl {
+        font-size: 11px;
+        display: grid;
+        grid-template-columns: minmax(75px, 1fr) minmax(0, 1.5fr);
+        gap: 6px 8px;
+      }
+      dt {
+        color: var(--muted);
+      }
+      dd {
+        margin: 0;
+        overflow-wrap: anywhere;
+        font-family: var(--mono);
+      }
+      pre {
+        font: 10px/1.6 var(--mono);
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        background: #f0f2eb;
+        border-radius: 6px;
+        padding: 10px;
+        max-height: 320px;
+        overflow: auto;
+      }
+      .tag {
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        display: inline-block;
+        padding: 2px 8px;
+        margin: 4px 4px 0 0;
+        font-size: 10px;
+      }
+      .fine {
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .notice {
+        padding: 10px 13px;
+        border: 1px solid #dbcba7;
+        background: #f6f0df;
+        border-radius: 7px;
+        font-size: 11px;
+        margin-top: 15px;
+      }
+      .weight-view {
+        padding: 23px 25px;
+        max-width: 1200px;
+      }
+      .weight-controls {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin: 15px 0;
+      }
+      .weight-controls label {
+        font-size: 11px;
+      }
+      .weight-controls input {
+        width: 67px;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        padding: 4px;
+        background: var(--panel);
+      }
+      .weight-controls select {
+        border: 1px solid var(--line);
+        padding: 5px;
+        background: var(--panel);
+      }
+      .heatmap {
+        image-rendering: pixelated;
+        border: 1px solid #cbd2c8;
+        background: white;
+        display: block;
+        max-width: 100%;
+        cursor: crosshair;
+      }
+      .value-readout {
+        padding: 12px 0;
+        font: 13px/1.8 var(--mono);
+        min-height: 60px;
+      }
+      .tensor-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 10px;
+        padding: 23px;
+      }
+      .tensor-card {
+        text-align: left;
+        padding: 14px 17px;
+        min-height: 91px;
+      }
+      .tensor-card b {
+        display: block;
+        font-size: 13px;
+        overflow-wrap: anywhere;
+      }
+      .tensor-card span {
+        font-size: 11px;
+        display: block;
+        margin-top: 4px;
+        font-family: var(--mono);
+        color: var(--muted);
+      }
+      .pager {
+        padding: 7px 23px;
+        background: var(--panel);
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        border-top: 1px solid var(--line);
+        font-size: 11px;
+      }
+      .pager input {
+        width: 190px;
+        padding: 5px;
+        border: 1px solid var(--line);
+        border-radius: 5px;
+      }
+      .loading {
+        padding: 60px;
+        font-size: 16px;
+      }
+      .mobile-nav {
+        display: none;
+      }
+      .empty {
+        padding: 35px;
+        color: var(--muted);
+      }
+      .source-button {
+        margin-top: 10px;
+        font-size: 11px;
+      }
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: #26302b77;
+        z-index: 9;
+        display: grid;
+        place-items: center;
+        padding: 30px;
+      }
+      .modal > div {
+        width: min(950px, 100%);
+        max-height: 90vh;
+        overflow: auto;
+        background: var(--panel);
+        padding: 25px;
+        border-radius: 12px;
+      }
+      .modal pre {
+        font-size: 12px;
+        max-height: none;
+      }
+      .modal h2 {
+        margin-top: 0;
+      }
+      .modal button {
+        float: right;
+      }
+      .badge-dot {
+        font-size: 15px;
+        color: #9b6542;
+      }
+      .micro {
+        font-size: 10px;
+        color: var(--muted);
+      }
+      @media (max-width: 1200px) {
+        .layout {
+          grid-template-columns: 195px minmax(0, 1fr);
+        }
+        .layout.show-inspector {
+          grid-template-columns: 195px minmax(0, 1fr) 235px;
+        }
+        aside {
+          padding: 18px 13px;
+        }
+        .stats {
+          gap: 12px;
+        }
+        .main-head {
+          padding: 17px;
+        }
+        .stats b {
+          font-size: 14px;
+        }
+        h1 {
+          font-size: 23px;
+        }
+      }
+      @media (max-width: 940px) {
+        .layout {
+          grid-template-columns: 185px minmax(0, 1fr);
+        }
+        .layout.show-inspector aside {
+          display: none;
+        }
+        .layout.show-inspector {
+          grid-template-columns: 185px minmax(0, 1fr);
+        }
+        .main-head {
+          padding: 17px;
+        }
+        .stats {
+          gap: 13px;
+        }
+        .brand {
+          font-size: 16px;
+        }
+      }
+      @media (max-width: 660px) {
+        header {
+          height: 72px;
+          padding: 12px;
+        }
+        .layout,
+        .layout.show-inspector {
+          height: calc(100vh - 72px);
+          grid-template-columns: 1fr;
+        }
+        nav {
+          display: none;
+        }
+        .layout.nav-open nav {
+          display: block;
+          position: absolute;
+          top: 72px;
+          bottom: 0;
+          left: 0;
+          width: 245px;
+          z-index: 5;
+          box-shadow: 8px 0 30px #0002;
+        }
+        .mobile-nav {
+          display: block;
+        }
+        .stats {
+          display: none;
+        }
+        .status {
+          font-size: 10px;
+        }
+        .tools {
+          gap: 5px;
+        }
+        .tools label {
+          font-size: 10px;
+        }
+        .main-head {
+          padding: 12px;
+        }
+        .legend {
+          gap: 9px;
+          padding: 8px 12px;
+        }
+        .caption {
+          padding: 7px 12px;
+        }
+        h1 {
+          font-size: 21px;
+        }
+        .weight-view {
+          padding: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="brand">PATH—WM <small>EXECUTABLE MODEL EXPLORER</small></div>
+      <div class="status">
+        <b id="freshness">Loading snapshot…</b><small id="identity"></small>
+      </div>
+    </header>
+    <div class="layout" id="layout">
+      <nav>
+        <div class="eyebrow">Module hierarchy</div>
+        <input
+          id="search"
+          class="search"
+          type="search"
+          aria-label="Find a module"
+          placeholder="Find a module or layer…"
+        />
+        <div id="tree" class="tree"></div>
+        <div class="nav-foot">
+          The tree is read from the instantiated model.<br /><br />Repeated
+          calls share one module. Unused modules remain visible. The frozen
+          target is the training teacher.<br /><br />Functional colors describe
+          roles. Discussion and validation status remain in the separate
+          architecture atlas.
+        </div>
+      </nav>
+      <main>
+        <div class="main-head">
+          <div class="crumbs" id="crumbs"></div>
+          <div class="heading">
+            <div>
+              <h1 id="title">Loading model</h1>
+              <div class="subheading" id="subtitle"></div>
+            </div>
+            <div class="stats" id="stats"></div>
+          </div>
+          <div class="tools">
+            <button class="mobile-nav" id="show-nav">Modules</button
+            ><select id="view-mode" aria-label="Graph view">
+              <option value="forward">Forward data flow</option>
+              <option value="backward">Backward gradients</option>
+              <option value="weights">Weights & buffers</option>
+              <option value="operations">Tensor operations</option>
+              <option value="autograd">Autograd operations</option></select
+            ><label
+              ><input type="checkbox" id="param-edges" />Parameter edges</label
+            ><label><input type="checkbox" id="animate" />Animate arrows</label
+            ><span class="spacer"></span
+            ><button id="show-details">Details</button
+            ><button id="about">Capture</button
+            ><button id="zoom-out" aria-label="Zoom out">−</button
+            ><button id="fit">Fit</button
+            ><button id="zoom-in" aria-label="Zoom in">+</button>
+          </div>
+        </div>
+        <div class="canvas" id="canvas">
+          <div class="loading">
+            Unpacking the model, execution graph and parameter tensors…
+          </div>
+        </div>
+        <div class="pager" id="pager" hidden></div>
+        <div class="legend">
+          <span><i style="background: var(--pink)"></i>Encoding</span
+          ><span><i style="background: var(--cyan)"></i>Processing</span
+          ><span><i style="background: var(--lilac)"></i>Decoding</span
+          ><span><i style="background: var(--sage)"></i>Memory</span
+          ><span
+            ><i style="background: var(--yellow)"></i>Objective / weights</span
+          ><span>◉ trainable · ▣ frozen</span>
+        </div>
+        <p class="caption" id="caption"></p>
+      </main>
+      <aside id="inspector"><div class="eyebrow">Inspector</div></aside>
+    </div>
+    <script id="snapshot" type="application/octet-stream">
+      __SNAPSHOT__
+    </script>
+    <script>
+      "use strict";
+      const $ = (id) => document.getElementById(id),
+        esc = (s) =>
+          String(s ?? "").replace(
+            /[&<>"']/g,
+            (c) =>
+              ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;",
+              })[c],
+          );
+      const fmt = (n) => Number(n || 0).toLocaleString("en-US"),
+        short = (n) =>
+          n >= 1e6
+            ? (n / 1e6).toFixed(2) + "M"
+            : n >= 1e3
+              ? (n / 1e3).toFixed(1) + "k"
+              : String(n),
+        within = (path, scope) =>
+          scope === "" || path === scope || path.startsWith(scope + ".");
+      const E = (tag, attrs = {}) => {
+        const e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+        for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+        return e;
+      };
+      let D,
+        M,
+        P,
+        O,
+        T,
+        B,
+        scope = "",
+        mode = "forward",
+        selectedTensor = null,
+        history = [],
+        page = 0,
+        opQuery = "",
+        camera = null,
+        fitBox = null,
+        svg = null,
+        liveVersion = null;
+      const pageSize = 72;
+      function role(path, type = "") {
+        const s = (path + " " + type).toLowerCase();
+        return /decoder/.test(s)
+          ? "decoder"
+          : /encoder/.test(s)
+            ? "encoder"
+            : /memory|reader/.test(s)
+              ? "memory"
+              : /objective|parameter|loss|weight/.test(s)
+                ? "weight"
+                : "process";
+      }
+      const colors = {
+        encoder: "#e7b9d5",
+        decoder: "#c7bde3",
+        memory: "#c9d7b7",
+        weight: "#e5df97",
+        process: "#acd4df",
+        boundary: "#e8e9df",
+        inactive: "#e9e9e2",
+      };
+      function state() {
+        return { scope, mode, selectedTensor, page, opQuery };
+      }
+      function go(next, remember = true) {
+        if (remember) history.push(state());
+        scope = next.scope ?? scope;
+        mode = next.mode ?? "forward";
+        selectedTensor = next.selectedTensor ?? null;
+        page = next.page ?? 0;
+        opQuery = next.opQuery ?? "";
+        render();
+        $("layout").classList.remove("nav-open");
+      }
+      function moduleGo(path) {
+        const m = M[path];
+        if (!m) return;
+        go({
+          scope: m.alias_of ?? path,
+          mode: ["backward", "autograd"].includes(mode)
+            ? "backward"
+            : "forward",
+        });
+      }
+      function back() {
+        const previous = history.pop();
+        if (previous) go(previous, false);
+        else if (
+          selectedTensor ||
+          ["operations", "autograd", "weights"].includes(mode)
+        )
+          go({ scope, mode: "forward" }, false);
+        else if (scope !== "") moduleGo(M[scope].parent);
+      }
+      function tree() {
+        const query = $("search").value.toLowerCase().trim();
+        const root = $("tree");
+        root.innerHTML = "";
+        const button = (path) => {
+          const b = document.createElement("button");
+          b.textContent = path === "" ? "Training model" : M[path].name;
+          b.title = (path || "root") + " · " + M[path].type;
+          b.className = path === scope ? "active" : "";
+          b.onclick = () => moduleGo(path);
+          return b;
+        };
+        if (query) {
+          for (const [path, m] of Object.entries(M)) {
+            if ((path + " " + m.type).toLowerCase().includes(query)) {
+              const row = document.createElement("div");
+              const b = button(path);
+              b.textContent = path || m.type;
+              row.append(b);
+              root.append(row);
+            }
+          }
+          return;
+        }
+        function branch(path, parent) {
+          const m = M[path];
+          if (m.children.length && !m.alias_of) {
+            const d = document.createElement("details");
+            d.open =
+              path === "" || path === scope || scope.startsWith(path + ".");
+            const s = document.createElement("summary");
+            s.append(button(path));
+            d.append(s);
+            const c = document.createElement("div");
+            c.className = "children";
+            m.children.forEach((p) => branch(p, c));
+            d.append(c);
+            parent.append(d);
+          } else {
+            const row = document.createElement("div");
+            row.className = "leaf";
+            row.append(button(path));
+            parent.append(row);
+          }
+        }
+        branch("", root);
+      }
+      function crumbs() {
+        const c = $("crumbs");
+        c.innerHTML = "";
+        const b = document.createElement("button");
+        b.textContent = "←";
+        b.className = "back";
+        b.title = "Go back (Alt + Left)";
+        b.setAttribute("aria-label", "Go back");
+        b.onclick = back;
+        b.disabled = !history.length && scope === "" && !selectedTensor;
+        c.append(b);
+        const parts = scope ? scope.split(".") : [];
+        ["", ...parts.map((_, i) => parts.slice(0, i + 1).join("."))].forEach(
+          (p, i) => {
+            if (i) {
+              const sep = document.createElement("span");
+              sep.textContent = " / ";
+              sep.className = "fine";
+              c.append(sep);
+            }
+            const x = document.createElement("button");
+            x.textContent = p === "" ? "Training model" : M[p].name;
+            x.onclick = () => moduleGo(p);
+            c.append(x);
+          },
+        );
+        if (selectedTensor) {
+          const x = document.createElement("span");
+          x.className = "fine";
+          x.textContent = " / " + selectedTensor.split(".").at(-1);
+          c.append(x);
+        }
+      }
+      function inspectModule(path) {
+        const m = M[path];
+        if (!m) return;
+        const params = [
+          ...new Set(
+            Object.values(P)
+              .filter((p) => within(p.scope, path))
+              .map((p) => p.name),
+          ),
+        ];
+        const reached = params.filter((n) => P[n].gradient !== null).length;
+        $("inspector").innerHTML =
+          `<div class="eyebrow">Module inspector</div><h2>${esc(m.name)}</h2><p>${esc(m.type)}</p><span class="tag">${m.trainable ? "◉ Trainable" : "▣ No trainable parameters"}</span><span class="tag">${m.calls ? "Observed" : "No direct call observed"}</span><dl><dt>Path</dt><dd>${esc(path || "(root)")}</dd><dt>Parameters</dt><dd>${fmt(m.parameters)}</dd><dt>Trainable</dt><dd>${fmt(m.trainable)}</dd><dt>Children</dt><dd>${m.children.length}</dd><dt>Method calls</dt><dd>${fmt(m.calls)}</dd><dt>Grad tensors</dt><dd>${reached} / ${params.length}</dd><dt>Mode</dt><dd>${m.training ? "train" : "eval"}</dd></dl>${m.config ? `<h3>Configuration</h3><pre>${esc(m.config)}</pre>` : ""}<h3>Observed methods</h3><pre>${esc(
+            Object.entries(m.methods)
+              .map(([k, v]) => `${k} × ${v}`)
+              .join("\n") ||
+              "No direct method calls in this execution. A container may still have active children.",
+          )}</pre>${m.source ? `<h3>Implementation</h3><p>${esc(m.source.path)}:${m.source.line}</p>${m.source.code ? '<button class="source-button" id="source">Read captured source</button>' : ""}` : ""}<div class="notice">${m.calls ? "Edges summarize this recorded batch across repeated calls. Click a connection for evidence." : "Unobserved does not mean disconnected or unnecessary. This execution may not use this branch."}</div>`;
+        if ($("source")) $("source").onclick = () => showSource(m);
+      }
+      function showSource(m) {
+        const modal = document.createElement("div");
+        modal.className = "modal";
+        modal.innerHTML = `<div role="dialog" aria-modal="true" aria-label="Captured module source"><button>Close</button><h2>${esc(m.type)}</h2><p class="fine">${esc(m.source.path)}:${m.source.line} · captured with this snapshot</p><pre>${esc(m.source.code)}</pre></div>`;
+        modal.querySelector("button").onclick = () => modal.remove();
+        modal.onclick = (e) => {
+          if (e.target === modal) modal.remove();
+        };
+        document.body.append(modal);
+        modal.querySelector("button").focus();
+      }
+      function scopeOf(path) {
+        if (path === scope) return "@ops";
+        if (scope === "" && path.startsWith("@")) return path;
+        if (within(path, scope) && !path.startsWith("@")) {
+          const rest = scope ? path.slice(scope.length + 1) : path;
+          return scope ? scope + "." + rest.split(".")[0] : rest.split(".")[0];
+        }
+        return null;
+      }
+      function moduleNode(path) {
+        const m = M[path];
+        return {
+          id: path,
+          label: m.name,
+          type: m.type,
+          detail: short(m.parameters) + " parameters",
+          hint: m.alias_of
+            ? "shared → " + m.alias_of
+            : path.startsWith("@")
+              ? "recorded runtime operations"
+              : "click to explore",
+          role: role(path, m.type),
+          active:
+            m.calls > 0 ||
+            Object.values(P).some(
+              (p) => within(p.scope, path) && p.gradient !== null,
+            ),
+          trainable: m.parameters ? m.trainable > 0 : undefined,
+          onClick: () => moduleGo(path),
+        };
+      }
+      function aggregate() {
+        const nodes = new Map(M[scope].children.map((p) => [p, moduleNode(p)])),
+          edges = new Map();
+        let own = 0;
+        const add = (a, b, sample) => {
+          if ((a === null && b === null) || a === b) return;
+          a ??= "@in";
+          b ??= "@out";
+          const key = a + "\0" + b;
+          if (!edges.has(key))
+            edges.set(key, { source: a, target: b, count: 0, samples: [] });
+          const e = edges.get(key);
+          e.count++;
+          if (e.samples.length < 10) e.samples.push(sample);
+        };
+        if (mode === "backward") {
+          for (const node of B.values())
+            if (scopeOf(node.scope) === "@ops") own++;
+          for (const e of D.backward.edges) {
+            const a = B.get(e.source),
+              b = B.get(e.target);
+            add(
+              scopeOf(a.scope),
+              scopeOf(b.scope),
+              `${a.name} → ${b.name}${b.parameter ? " · " + b.parameter : ""}`,
+            );
+          }
+        } else {
+          for (const op of O.values()) {
+            const target = scopeOf(op.scope);
+            if (target === "@ops") own++;
+            for (const tid of op.inputs) {
+              const tensor = T[tid];
+              if (tensor.producer) {
+                const producer = O.get(tensor.producer);
+                add(
+                  scopeOf(producer.scope),
+                  target,
+                  `${producer.name} → ${op.name} · [${tensor.shape.join(" × ")}]`,
+                );
+              } else if (tensor.parameter) {
+                if ($("param-edges").checked)
+                  add(
+                    scopeOf(P[tensor.parameter].scope),
+                    target,
+                    `${tensor.parameter} · [${tensor.shape.join(" × ")}]`,
+                  );
+              } else
+                add(
+                  null,
+                  target,
+                  `External tensor → ${op.name} · [${tensor.shape.join(" × ")}]`,
+                );
+            }
+          }
+        }
+        if (
+          own ||
+          [...edges.values()].some(
+            (e) => e.source === "@ops" || e.target === "@ops",
+          )
+        )
+          nodes.set("@ops", {
+            id: "@ops",
+            label: "Internal operations",
+            type:
+              mode === "backward" ? "Autograd nodes" : "ATen tensor operations",
+            detail: fmt(own) + " direct operations",
+            hint: "click to inspect exact calls",
+            role: "process",
+            active: true,
+            onClick: () =>
+              go({
+                scope,
+                mode: mode === "backward" ? "autograd" : "operations",
+              }),
+          });
+        for (const id of ["@in", "@out"])
+          if (
+            [...edges.values()].some((e) => e.source === id || e.target === id)
+          )
+            nodes.set(id, {
+              id,
+              label:
+                id === "@in"
+                  ? mode === "backward"
+                    ? "Gradient inputs"
+                    : "Inputs from outside"
+                  : mode === "backward"
+                    ? "Upstream gradients"
+                    : "Outputs to outside",
+              type: "Scope boundary",
+              detail: "Recorded connections",
+              hint: "select an arrow for evidence",
+              role: "boundary",
+              active: true,
+              onClick: () => inspectBoundary(id),
+            });
+        const valid = [...edges.values()].filter(
+          (e) => nodes.has(e.source) && nodes.has(e.target),
+        );
+        if (!M[scope].children.length && own <= 28 && mode === "forward")
+          return detailGraph();
+        return { nodes: [...nodes.values()], edges: valid };
+      }
+      function inspectBoundary(id) {
+        $("layout").classList.add("show-inspector");
+        $("inspector").innerHTML =
+          `<div class="eyebrow">Scope boundary</div><h2>${id === "@in" ? "Incoming" : "Outgoing"} connections</h2><p>These edges cross the selected module boundary in the recorded execution. They may include model inputs, caller operations, the frozen teacher or the loss. Explore the parent scope to see those modules.</p><p>Arrows do not assert that every possible branch was executed.</p>`;
+      }
+      function detailGraph() {
+        const backward = mode === "autograd" || mode === "backward",
+          all = [...(backward ? B : O).values()].filter(
+            (n) =>
+              n.scope === scope &&
+              (!opQuery ||
+                n.name.toLowerCase().includes(opQuery.toLowerCase())),
+          );
+        page = Math.min(
+          page,
+          Math.max(0, Math.ceil(all.length / pageSize) - 1),
+        );
+        const chosen = all.slice(page * pageSize, (page + 1) * pageSize),
+          ids = new Set(chosen.map((n) => n.id));
+        const nodes = chosen.map((n) => ({
+          id: n.id,
+          label: n.name.replace(/^aten\./, "").replace(/\.default$/, ""),
+          type: backward
+            ? n.executed
+              ? "Backward executed"
+              : "Not executed"
+            : n.method || "tensor operation",
+          detail: backward
+            ? n.parameter ||
+              n.gradient_shapes.map((s) => "[" + s.join("×") + "]").join(" ")
+            : n.outputs
+                .map((t) => "[" + T[t].shape.join("×") + "]")
+                .join(" ") || "scalar/control",
+          hint: n.id,
+          role: /detach/.test(n.name) ? "boundary" : "process",
+          active: true,
+          onClick: () => inspectOp(n, backward),
+        }));
+        if (!backward && !M[scope].children.length) {
+          for (const name of M[scope].direct_parameters) {
+            const parameter = P[name];
+            const id = "@param:" + name;
+            ids.add(id);
+            nodes.push({
+              id,
+              label: name.split(".").at(-1),
+              type: "Parameter tensor",
+              detail: "[" + parameter.shape.join(" × ") + "]",
+              hint: "click for individual weights",
+              role: "weight",
+              active: true,
+              trainable: parameter.trainable,
+              onClick: () => weightGo(name),
+            });
+          }
+        }
+        let before = false,
+          after = false;
+        const edges = [];
+        const add = (a, b, label) => {
+          if (!ids.has(a) && !ids.has(b)) return;
+          if (!ids.has(a)) {
+            a = "@in";
+            before = true;
+          }
+          if (!ids.has(b)) {
+            b = "@out";
+            after = true;
+          }
+          edges.push({ source: a, target: b, count: 1, samples: [label] });
+        };
+        if (backward) {
+          for (const e of D.backward.edges)
+            add(
+              e.source,
+              e.target,
+              `${B.get(e.source).name} → ${B.get(e.target).name}`,
+            );
+        } else {
+          for (const op of O.values()) {
+            if (
+              !ids.has(op.id) &&
+              !op.inputs.some((t) => ids.has(T[t].producer))
+            )
+              continue;
+            for (const tid of op.inputs) {
+              const t = T[tid];
+              add(
+                t.producer ??
+                  (ids.has("@param:" + t.parameter)
+                    ? "@param:" + t.parameter
+                    : "@in"),
+                op.id,
+                `${t.parameter ?? tid} · [${t.shape.join("×")}]`,
+              );
+            }
+          }
+        }
+        for (const [id, needed] of [
+          ["@in", before],
+          ["@out", after],
+        ])
+          if (needed)
+            nodes.push({
+              id,
+              label: id === "@in" ? "Earlier / outside" : "Later / outside",
+              type: "Page or scope boundary",
+              detail: "Connections remain recorded",
+              hint: "All operations retained",
+              role: "boundary",
+              active: true,
+              onClick: () => inspectBoundary(id),
+            });
+        if (["operations", "autograd"].includes(mode)) showPager(all.length);
+        return { nodes, edges };
+      }
+      function showPager(total) {
+        $("pager").hidden = false;
+        $("pager").innerHTML =
+          `<button id="prev-page" ${page === 0 ? "disabled" : ""}>← Previous</button><span>${total ? fmt(page * pageSize + 1) : 0}–${fmt(Math.min((page + 1) * pageSize, total))} of ${fmt(total)}</span><button id="next-page" ${(page + 1) * pageSize >= total ? "disabled" : ""}>Next →</button><input id="op-search" aria-label="Filter operations" placeholder="Filter operation name" value="${esc(opQuery)}">`;
+        $("prev-page").onclick = () => {
+          page--;
+          render();
+        };
+        $("next-page").onclick = () => {
+          page++;
+          render();
+        };
+        const applyFilter = (e) => {
+          opQuery = e.target.value;
+          page = 0;
+          render();
+        };
+        $("op-search").placeholder = "Filter name · press Enter";
+        $("op-search").onchange = applyFilter;
+        $("op-search").onkeydown = (e) => {
+          if (e.key === "Enter") applyFilter(e);
+        };
+      }
+      function inspectOp(op, backward) {
+        $("layout").classList.add("show-inspector");
+        $("inspector").innerHTML =
+          `<div class="eyebrow">${backward ? "Autograd" : "Tensor"} operation</div><h2>${esc(op.name)}</h2><dl><dt>ID</dt><dd>${op.id}</dd><dt>Module</dt><dd>${esc(op.scope)}</dd><dt>Method</dt><dd>${esc(op.method)}</dd>${backward ? `<dt>Executed</dt><dd>${op.executed}</dd>` : ""}</dl>${backward ? `<h3>Output gradients</h3><pre>${esc(JSON.stringify(op.gradient_shapes, null, 2))}</pre>${op.parameter ? `<button id="parameter-link">Inspect ${esc(op.parameter)}</button>` : ""}` : `<h3>Inputs</h3><pre>${esc(op.inputs.map((t) => tensorDescription(t)).join("\n\n"))}</pre><h3>Outputs</h3><pre>${esc(op.outputs.map((t) => tensorDescription(t)).join("\n\n"))}</pre>`}<p>${backward ? "Edges are the recorded autograd next-functions graph. Execution is checked with backward hooks." : "Edges come from tensor identity and operation results. In-place writes receive new tensor versions."}</p>`;
+        if ($("parameter-link"))
+          $("parameter-link").onclick = () => weightGo(op.parameter);
+      }
+      function tensorDescription(id) {
+        const t = T[id];
+        return `${id}: [${t.shape.join(" × ")}] ${t.dtype}\n${t.parameter ? "parameter " + t.parameter : "producer " + (t.producer ?? "external")}\nrequires_grad: ${t.requires_grad}`;
+      }
+      function positionNodes(nodes, edges) {
+        const next = new Map(nodes.map((n) => [n.id, []])),
+          indegree = new Map(nodes.map((n) => [n.id, 0]));
+        for (const e of edges)
+          if (e.source !== e.target) {
+            indegree.set(e.target, indegree.get(e.target) + 1);
+            next.get(e.source)?.push(e.target);
+          }
+        const queue = nodes
+            .filter((n) => indegree.get(n.id) === 0)
+            .map((n) => n.id),
+          levels = new Map(queue.map((id) => [id, 0]));
+        let done = 0;
+        while (queue.length) {
+          const id = queue.shift();
+          done++;
+          for (const v of next.get(id) || []) {
+            levels.set(
+              v,
+              Math.max(levels.get(v) || 0, (levels.get(id) || 0) + 1),
+            );
+            indegree.set(v, indegree.get(v) - 1);
+            if (indegree.get(v) === 0) queue.push(v);
+          }
+        }
+        const compact =
+          done < nodes.length ||
+          Math.max(0, ...levels.values()) > 8 ||
+          nodes.length > 24;
+        if (compact) {
+          const rank = (n) =>
+            n.id === "@in"
+              ? 0
+              : n.id === "@out"
+                ? 9
+                : n.role === "encoder"
+                  ? 1
+                  : n.role === "decoder"
+                    ? 8
+                    : n.role === "memory"
+                      ? 5
+                      : n.id === "@ops"
+                        ? 6
+                        : 3;
+          const ordered = [...nodes].sort((a, b) => rank(a) - rank(b)),
+            columns = Math.max(1, Math.ceil(Math.sqrt(nodes.length * 1.9))),
+            rows = Math.ceil(nodes.length / columns);
+          ordered.forEach((n, i) => {
+            n.x = 35 + Math.floor(i / rows) * 220;
+            n.y = 45 + (i % rows) * 143;
+            n.w = 190;
+            n.h = 112;
+          });
+          return {
+            width: columns * 220 + 35,
+            height: Math.max(320, rows * 143 + 65),
+          };
+        }
+        const cols = new Map();
+        for (const n of nodes) {
+          const col = levels.get(n.id) || 0;
+          if (!cols.has(col)) cols.set(col, []);
+          cols.get(col).push(n);
+        }
+        const sorted = [...cols.keys()].sort((a, b) => a - b),
+          maxRows = Math.max(1, ...[...cols.values()].map((v) => v.length));
+        sorted.forEach((c, j) =>
+          cols.get(c).forEach((n, i) => {
+            n.x = 35 + j * 235;
+            n.y = 45 + i * 143 + (maxRows - cols.get(c).length) * 65;
+            n.w = 190;
+            n.h = 112;
+          }),
+        );
+        return {
+          width: Math.max(480, sorted.length * 235 + 35),
+          height: Math.max(320, maxRows * 143 + 65),
+        };
+      }
+      function shapePath(n) {
+        const { w, h } = n;
+        if (n.role === "encoder")
+          return `M 8 0 Q 0 0 0 8 L 0 ${h - 8} Q 0 ${h} 8 ${h} L ${w - 8} ${h - 18} Q ${w} ${h - 19} ${w} ${h - 27} L ${w} 27 Q ${w} 19 ${w - 8} 18 Z`;
+        if (n.role === "decoder")
+          return `M 8 18 Q 0 19 0 27 L 0 ${h - 27} Q 0 ${h - 19} 8 ${h - 18} L ${w - 8} ${h} Q ${w} ${h} ${w} ${h - 8} L ${w} 8 Q ${w} 0 ${w - 8} 0 Z`;
+        if (n.id === "@ops" || /thinker|attention/.test(n.label.toLowerCase()))
+          return `M 12 0 Q 0 0 0 12 V ${h - 12} Q 0 ${h} 12 ${h} L ${w / 2} ${h - 12} L ${w - 12} ${h} Q ${w} ${h} ${w} ${h - 12} V 12 Q ${w} 0 ${w - 12} 0 L ${w / 2} 12 Z`;
+        return `M 12 0 H ${w - 12} Q ${w} 0 ${w} 12 V ${h - 12} Q ${w} ${h} ${w - 12} ${h} H 12 Q 0 ${h} 0 ${h - 12} V 12 Q 0 0 12 0 Z`;
+      }
+      function graph(data) {
+        const canvas = $("canvas");
+        canvas.innerHTML = "";
+        svg = E("svg", {
+          "aria-label": `${M[scope].type} ${mode} graph`,
+          role: "img",
+        });
+        const defs = E("defs");
+        const marker = E("marker", {
+          id: "arrow",
+          viewBox: "0 0 10 10",
+          refX: 9,
+          refY: 5,
+          markerWidth: 6,
+          markerHeight: 6,
+          orient: "auto-start-reverse",
+        });
+        marker.append(
+          E("path", {
+            d: "M 0 0 L 10 5 L 0 10 z",
+            fill:
+              mode === "backward" || mode === "autograd"
+                ? "#916799"
+                : "#62726a",
+          }),
+        );
+        defs.append(marker);
+        svg.append(defs);
+        const scene = E("g", { class: "scene" });
+        const size = positionNodes(data.nodes, data.edges),
+          lookup = new Map(data.nodes.map((n) => [n.id, n]));
+        for (const edge of data.edges) {
+          const a = lookup.get(edge.source),
+            b = lookup.get(edge.target);
+          if (!a || !b) continue;
+          const ax = a.x + a.w,
+            ay = a.y + a.h / 2,
+            bx = b.x,
+            by = b.y + b.h / 2;
+          const backwards = bx <= ax;
+          const bend = backwards ? 70 : Math.max(35, (bx - ax) * 0.48);
+          const d = backwards
+            ? `M ${ax} ${ay} C ${ax + bend} ${ay},${ax + bend} ${Math.min(a.y, b.y) - 25},${(ax + bx) / 2} ${Math.min(a.y, b.y) - 25} S ${bx - bend} ${by},${bx} ${by}`
+            : `M ${ax} ${ay} C ${ax + bend} ${ay},${bx - bend} ${by},${bx} ${by}`;
+          const p = E("path", {
+            d,
+            class:
+              "edge" +
+              (["backward", "autograd"].includes(mode) ? " gradient" : ""),
+            "marker-end": "url(#arrow)",
+            "data-from": edge.source,
+            "data-to": edge.target,
+          });
+          const title = E("title");
+          title.textContent = `${a.label} → ${b.label} · ${edge.count} recorded edges`;
+          p.append(title);
+          p.onclick = (e) => {
+            e.stopPropagation();
+            $("layout").classList.add("show-inspector");
+            $("inspector").innerHTML =
+              `<div class="eyebrow">Recorded connection</div><h2>${esc(a.label)} → ${esc(b.label)}</h2><p>${fmt(edge.count)} tensor/autograd edges represented by this arrow.</p><h3>Evidence examples</h3><pre>${esc(edge.samples.join("\n\n"))}</pre><p>${edge.count > edge.samples.length ? "Examples shown; the complete graph remains in Tensor operations / Autograd operations." : "Every represented edge is listed above."}</p>`;
+          };
+          scene.append(p);
+        }
+        for (const n of data.nodes) {
+          const g = E("g", {
+            transform: `translate(${n.x},${n.y})`,
+            class: "node",
+            tabindex: 0,
+            role: "button",
+            "aria-label": `${n.label}, ${n.type}. ${n.hint}`,
+          });
+          g.append(
+            E("path", {
+              d: shapePath(n),
+              fill: colors[n.active ? n.role : "inactive"],
+              stroke: n.active ? "#6d837440" : "#b7bdb4",
+              class: "body",
+              "stroke-dasharray": n.active ? "none" : "5 4",
+            }),
+          );
+          const addText = (s, y, cls = "", size = 13) => {
+            const t = E("text", {
+              x: n.w / 2,
+              y,
+              "text-anchor": "middle",
+              class: cls,
+              "font-size": size,
+            });
+            t.textContent = s.length > 29 ? s.slice(0, 27) + "…" : s;
+            g.append(t);
+          };
+          if (n.trainable !== undefined) {
+            const t = E("text", { x: 15, y: 24, "font-size": 15 });
+            t.textContent = n.trainable ? "◉" : "▣";
+            g.append(t);
+          }
+          addText(n.label, 43, "", 15);
+          addText(n.type, 63, "small");
+          addText(n.detail, 84, "small");
+          addText(n.hint, 102, "hint");
+          const title = E("title");
+          title.textContent = `${n.label}\n${n.type}\n${n.detail}${!n.active ? "\nNot directly executed in this capture" : ""}`;
+          g.append(title);
+          g.onpointerenter = () => {
+            for (const edgeElement of scene.querySelectorAll(".edge")) {
+              const match =
+                edgeElement.getAttribute("data-from") === n.id ||
+                edgeElement.getAttribute("data-to") === n.id;
+              edgeElement.style.opacity = match ? "1" : ".08";
+            }
+          };
+          g.onpointerleave = () => {
+            for (const edgeElement of scene.querySelectorAll(".edge"))
+              edgeElement.style.opacity = "";
+          };
+          g.onclick = n.onClick;
+          g.onkeydown = (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              n.onClick();
+            }
+          };
+          scene.append(g);
+        }
+        svg.append(scene);
+        canvas.append(svg);
+        fitBox = { x: -40, y: -20, w: size.width + 110, h: size.height + 30 };
+        camera = { ...fitBox };
+        setCamera();
+        svg.classList.toggle("flowing", $("animate").checked);
+        let drag = null;
+        svg.onpointerdown = (e) => {
+          if (e.target.closest(".node") || e.target.closest(".edge")) return;
+          drag = { x: e.clientX, y: e.clientY, c: { ...camera } };
+          svg.setPointerCapture(e.pointerId);
+        };
+        svg.onpointermove = (e) => {
+          if (!drag) return;
+          const rect = svg.getBoundingClientRect();
+          camera.x = drag.c.x - ((e.clientX - drag.x) * camera.w) / rect.width;
+          camera.y = drag.c.y - ((e.clientY - drag.y) * camera.h) / rect.height;
+          setCamera();
+        };
+        svg.onpointerup = () => (drag = null);
+        svg.onwheel = (e) => {
+          e.preventDefault();
+          zoom(e.deltaY > 0 ? 1.12 : 0.89);
+        };
+      }
+      function setCamera() {
+        if (svg && camera)
+          svg.setAttribute(
+            "viewBox",
+            `${camera.x} ${camera.y} ${camera.w} ${camera.h}`,
+          );
+      }
+      function zoom(factor) {
+        if (!camera) return;
+        const w = camera.w * factor,
+          h = camera.h * factor;
+        if (w < 120 || w > 30000) return;
+        camera.x += (camera.w - w) / 2;
+        camera.y += (camera.h - h) / 2;
+        camera.w = w;
+        camera.h = h;
+        setCamera();
+      }
+      function weightGo(name) {
+        go({ scope, mode: "weights", selectedTensor: name });
+      }
+      function listWeights() {
+        const list = Object.values(P).filter((p) => within(p.scope, scope));
+        const buffers = Object.values(D.buffers).filter((p) =>
+          within(p.scope, scope),
+        );
+        $("canvas").innerHTML =
+          '<div class="tensor-list" id="tensor-list"></div>';
+        for (const p of [...list, ...buffers]) {
+          const b = document.createElement("button");
+          b.className = "tensor-card";
+          b.innerHTML = `<b>${esc(p.name)}</b><span>[${p.shape.join(" × ")}] · ${esc(p.dtype.replace("torch.", ""))}</span><span>${p.trainable === undefined ? "Buffer" : p.trainable ? "◉ Trainable" : "▣ Frozen"} · ${p.gradient ? "gradient captured" : "no gradient captured"}</span>`;
+          b.onclick = () => weightGo(p.name);
+          $("tensor-list").append(b);
+        }
+        if (!list.length && !buffers.length)
+          $("canvas").innerHTML =
+            '<p class="empty">This module has no parameters or buffers.</p>';
+        $("caption").textContent =
+          "Every parameter value is stored in this file. Select a tensor to inspect slices, individual weights and captured gradients. Shared tensors are stored once, with aliases.";
+      }
+      function weightView() {
+        const p = P[selectedTensor] ?? D.buffers[selectedTensor];
+        if (!p) {
+          selectedTensor = null;
+          listWeights();
+          return;
+        }
+        const shape = p.shape,
+          rows = shape.length >= 2 ? shape.at(-2) : 1,
+          cols = shape.length ? shape.at(-1) : 1;
+        const leading = shape.slice(0, -2);
+        let axes = leading.map(() => 0),
+          r0 = 0,
+          c0 = 0,
+          gradient = false;
+        $("canvas").innerHTML =
+          `<div class="weight-view"><div class="eyebrow">${p.trainable === undefined ? "Registered buffer" : "Parameter tensor"}</div><h2 style="margin:8px 0;overflow-wrap:anywhere">${esc(p.name)}</h2><div class="fine">[${shape.join(" × ") || "scalar"}] · ${esc(p.dtype)} · ${fmt(p.values.length)} exact values</div><div class="weight-controls" id="weight-controls"><label>Values <select id="weight-kind"><option value="weights">Weights / values</option><option value="gradients" ${p.gradient ? "" : "disabled"}>Gradients</option></select></label>${leading.map((n, i) => `<label>Axis ${i} <input id="axis-${i}" aria-label="Axis ${i}" type="number" min="0" max="${n - 1}" value="0"></label>`).join("")}<label>Row <input id="row-start" type="number" min="0" max="${Math.max(0, rows - 1)}" value="0"></label><label>Column <input id="col-start" type="number" min="0" max="${Math.max(0, cols - 1)}" value="0"></label><button id="save-tensor">Export exact tensor JSON</button></div><canvas id="heatmap" class="heatmap" tabindex="0" aria-label="Tensor heatmap; click a cell to inspect its exact value"></canvas><div id="value-readout" class="value-readout">Click a cell to inspect its exact value and gradient.</div><div class="fine" id="heatmap-range"></div><div class="weight-controls"><label>Flat element index <input id="flat-index" type="number" min="0" max="${Math.max(0, p.values.length - 1)}" value="0" style="width:110px"></label><button id="inspect-index">Inspect value</button></div><p class="fine">Display colors use a symmetric scale around zero. Each cell is one actual scalar, without averaging. Large tensors are navigated through axis indices and row/column windows.</p></div>`;
+        const displayValue = (v) =>
+          typeof v === "number" ? String(v) : String(v ?? "not captured");
+        function inspect(index) {
+          index = Math.max(0, Math.min(p.values.length - 1, index));
+          $("flat-index").value = index;
+          let remainder = index;
+          const coordinates = [];
+          for (let i = shape.length - 1; i >= 0; i--) {
+            coordinates.unshift(remainder % shape[i]);
+            remainder = Math.floor(remainder / shape[i]);
+          }
+          $("value-readout").textContent =
+            `[${coordinates.join(", ")}]  value = ${displayValue(p.values[index])}\n∂loss/∂value = ${p.gradient ? displayValue(p.gradient[index]) : "not captured (not equivalent to zero)"}`;
+        }
+        function paint() {
+          gradient = $("weight-kind").value === "gradients";
+          const values = gradient ? p.gradient : p.values;
+          axes = leading.map((n, i) =>
+            Math.max(0, Math.min(n - 1, Number($("axis-" + i).value) || 0)),
+          );
+          r0 = Math.max(
+            0,
+            Math.min(rows - 1, Number($("row-start").value) || 0),
+          );
+          c0 = Math.max(
+            0,
+            Math.min(cols - 1, Number($("col-start").value) || 0),
+          );
+          const nr = Math.min(48, rows - r0),
+            nc = Math.min(64, cols - c0),
+            cell = Math.max(7, Math.min(24, Math.floor(760 / Math.max(1, nc))));
+          const heat = $("heatmap");
+          heat.width = Math.max(1, nc) * cell;
+          heat.height = Math.max(1, nr) * cell;
+          const ctx = heat.getContext("2d");
+          let offset = 0;
+          for (let i = 0; i < leading.length; i++)
+            offset =
+              (offset + axes[i]) *
+              (i + 1 < leading.length ? leading[i + 1] : rows * cols);
+          const stats = gradient ? p.gradient_stats : p.stats;
+          const max = Math.max(
+            Math.abs(stats?.min ?? 0),
+            Math.abs(stats?.max ?? 0),
+            1e-30,
+          );
+          for (let r = 0; r < nr; r++)
+            for (let c = 0; c < nc; c++) {
+              const v = Number(values[offset + (r + r0) * cols + c + c0]),
+                t = Math.min(1, Math.abs(v) / max);
+              const base = v >= 0 ? [44, 126, 132] : [181, 76, 132];
+              ctx.fillStyle = Number.isFinite(v)
+                ? `rgb(${base.map((b) => Math.round(249 + (b - 249) * t)).join(",")})`
+                : "#262b2b";
+              ctx.fillRect(c * cell, r * cell, cell, cell);
+              if (cell >= 10) {
+                ctx.strokeStyle = "#fff3";
+                ctx.strokeRect(c * cell, r * cell, cell, cell);
+              }
+            }
+          heat.onclick = (e) => {
+            const rect = heat.getBoundingClientRect();
+            const c = Math.min(
+                nc - 1,
+                Math.floor(((e.clientX - rect.left) / rect.width) * nc),
+              ),
+              r = Math.min(
+                nr - 1,
+                Math.floor(((e.clientY - rect.top) / rect.height) * nr),
+              );
+            inspect(offset + (r + r0) * cols + c + c0);
+          };
+          $("heatmap-range").textContent =
+            `Rows ${r0}–${r0 + nr - 1} / ${rows}, columns ${c0}–${c0 + nc - 1} / ${cols} · color range ±${max.toPrecision(5)}. ${gradient ? "Actual gradients from the recorded scalar loss." : "Values captured before execution."}`;
+        }
+        $("weight-controls").onchange = paint;
+        $("inspect-index").onclick = () =>
+          inspect(Number($("flat-index").value) || 0);
+        $("save-tensor").onclick = () => {
+          const blob = new Blob([JSON.stringify(p)], {
+              type: "application/json",
+            }),
+            a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = p.name + ".json";
+          a.click();
+          setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        };
+        paint();
+        inspect(0);
+        $("inspector").innerHTML =
+          `<div class="eyebrow">Tensor inspector</div><h2>${esc(p.name.split(".").at(-1))}</h2><dl><dt>Shape</dt><dd>[${shape.join(", ")}]</dd><dt>Scalars</dt><dd>${fmt(p.values.length)}</dd><dt>Dtype</dt><dd>${esc(p.dtype)}</dd><dt>Requires grad</dt><dd>${p.trainable ?? false}</dd></dl><h3>Value statistics</h3><pre>${esc(JSON.stringify(p.stats ?? {}, null, 2))}</pre><h3>Gradient statistics</h3><pre>${esc(p.gradient_stats ? JSON.stringify(p.gradient_stats, null, 2) : "No gradient captured. Frozen, unused or disconnected from this loss.")}</pre><h3>Shared names</h3><pre>${esc((p.aliases ?? [p.name]).join("\n"))}</pre>`;
+        $("caption").textContent =
+          "Lowest level: individual parameter values. Weight gradients are measured from this execution; absent gradients are never displayed as zeros.";
+      }
+      function render() {
+        try {
+          sessionStorage.setItem(
+            "pathwm-explorer-view",
+            JSON.stringify(state()),
+          );
+        } catch {}
+        svg = null;
+        camera = null;
+        tree();
+        crumbs();
+        $("view-mode").value = mode;
+        const m = M[scope];
+        $("title").textContent = selectedTensor ? "Tensor microscope" : m.type;
+        $("subtitle").textContent =
+          (scope || "(training root)") +
+          (m.config ? " · " + m.config.replace(/\n/g, " ") : "");
+        $("stats").innerHTML =
+          `<div><b>${fmt(m.parameters)}</b><span>PARAMETERS</span></div><div><b>${m.children.length}</b><span>MODULES</span></div>`;
+        $("pager").hidden = true;
+        $("pager").innerHTML = "";
+        inspectModule(scope);
+        if (mode === "weights") {
+          selectedTensor ? weightView() : listWeights();
+          return;
+        }
+        const data = ["operations", "autograd"].includes(mode)
+          ? detailGraph()
+          : aggregate();
+        graph(data);
+        $("caption").textContent = ["backward", "autograd"].includes(mode)
+          ? "Backward arrows come from the actual autograd graph for the captured loss. Unattributed internal backward operations appear outside the module scope; explore Autograd internals from the training root. Frozen and detached branches receive no parameter gradient."
+          : "Click a module to zoom into its internals. Arrows aggregate observed tensor dependencies across this execution, including repeated calls. Dashed blocks have no direct observed call; all registered modules remain accessible.";
+        if (!data.nodes.length)
+          $("canvas").innerHTML =
+            '<p class="empty">No operations were recorded directly in this scope. Explore its child modules or weights. Unexecuted branches remain in the hierarchy.</p>';
+      }
+      function showCapture() {
+        const modal = document.createElement("div");
+        modal.className = "modal";
+        modal.innerHTML = `<div role="dialog" aria-modal="true" aria-label="Capture identity and limits"><button>Close</button><h2>Execution & provenance</h2><p>${esc(D.metadata.execution ?? D.metadata.scope)}</p><p><b>${esc(D.metadata.weight_source ?? "Weight source unspecified")}</b></p><p class="fine">SHA-256: ${esc(D.metadata.source_sha256 ?? "not supplied")}<br>Captured ${esc(D.metadata.created)} · PyTorch ${esc(D.metadata.torch)}</p><h3>Loss terms</h3><pre>${esc(JSON.stringify(D.metadata.loss_terms ?? { loss: D.metadata.loss }, null, 2))}</pre><h3>Coverage limits</h3><ul>${(D.metadata.limits ?? [D.metadata.scope]).map((x) => "<li>" + esc(x) + "</li>").join("")}</ul><h3>Recorded input</h3><pre>${esc(JSON.stringify(D.metadata.input ?? {}, null, 2))}</pre><p>Saved HTML is a snapshot. While the local preview is running, it checks source and checkpoint hashes and rebuilds on changes.</p></div>`;
+        modal.querySelector("button").onclick = () => modal.remove();
+        modal.onclick = (e) => {
+          if (e.target === modal) modal.remove();
+        };
+        document.body.append(modal);
+        modal.querySelector("button").focus();
+      }
+      async function init() {
+        const encoded = $("snapshot").textContent.trim();
+        const bytes = Uint8Array.from(atob(encoded), (c) => c.charCodeAt(0));
+        const stream = new Blob([bytes])
+          .stream()
+          .pipeThrough(new DecompressionStream("deflate"));
+        D = JSON.parse(await new Response(stream).text());
+        M = structuredClone(D.modules);
+        for (const [key, label] of [
+          ["@objective", "Objective & caller"],
+          ["@autograd", "Autograd internals"],
+        ]) {
+          M[key] = {
+            path: key,
+            name: label,
+            type: "Recorded runtime scope",
+            parent: "",
+            children: [],
+            parameters: 0,
+            trainable: 0,
+            direct_parameters: [],
+            buffers: [],
+            alias_of: null,
+            training: false,
+            calls: 0,
+            methods: {},
+            config: "Not a registered neural module",
+            source: null,
+          };
+          M[""].children.push(key);
+        }
+        P = D.parameters;
+        T = D.tensors;
+        O = new Map(D.operations.map((o) => [o.id, o]));
+        B = new Map(D.backward.nodes.map((n) => [n.id, n]));
+        scope = D.metadata.initial_scope ?? "";
+        try {
+          const saved = JSON.parse(
+            sessionStorage.getItem("pathwm-explorer-view"),
+          );
+          if (saved && M[saved.scope]) {
+            scope = saved.scope;
+            mode = saved.mode;
+            selectedTensor = saved.selectedTensor;
+            page = saved.page;
+            opQuery = saved.opQuery;
+          }
+        } catch {}
+        document.title = D.metadata.title + " · Model explorer";
+        $("identity").textContent =
+          `${D.metadata.weight_source ?? "Weight source unspecified"} · ${D.metadata.source_sha256?.slice(0, 10) ?? ""} · ${new Date(D.metadata.created).toLocaleString()}`;
+        $("freshness").textContent = "Offline snapshot · regenerate to update";
+        $("about").onclick = showCapture;
+        $("show-details").onclick = () =>
+          $("layout").classList.toggle("show-inspector");
+        $("search").oninput = tree;
+        $("view-mode").onchange = (e) => go({ scope, mode: e.target.value });
+        $("param-edges").onchange = render;
+        $("animate").onchange = () =>
+          svg?.classList.toggle("flowing", $("animate").checked);
+        $("zoom-in").onclick = () => zoom(0.8);
+        $("zoom-out").onclick = () => zoom(1.25);
+        $("fit").onclick = () => {
+          camera = fitBox ? { ...fitBox } : null;
+          setCamera();
+        };
+        $("show-nav").onclick = () => $("layout").classList.toggle("nav-open");
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            document.querySelector(".modal")?.remove();
+          }
+          if (e.altKey && e.key === "ArrowLeft") {
+            e.preventDefault();
+            back();
+          }
+        });
+        render();
+        if (location.protocol.startsWith("http")) poll();
+      }
+      async function poll() {
+        try {
+          const response = await fetch("/__explorer_status", {
+            cache: "no-store",
+          });
+          if (response.ok) {
+            const s = await response.json();
+            $("freshness").textContent =
+              s.state === "current"
+                ? "Live · source and weights checked"
+                : s.state === "rebuilding"
+                  ? "Source changed · rebuilding snapshot"
+                  : s.state === "error"
+                    ? "Update failed · showing previous snapshot"
+                    : "Snapshot status unknown";
+            $("freshness").title = s.error ?? "";
+            if (s.state === "current") {
+              if (
+                s.source_sha256 &&
+                s.source_sha256 !== D.metadata.source_sha256
+              ) {
+                location.reload();
+                return;
+              }
+              if (liveVersion !== null && s.version !== liveVersion) {
+                location.reload();
+                return;
+              }
+              liveVersion = s.version;
+            }
+          }
+        } catch {
+          $("freshness").textContent =
+            "Live connection unavailable · saved snapshot";
+        }
+        setTimeout(poll, 4000);
+      }
+      init().catch((error) => {
+        $("canvas").innerHTML =
+          `<div class="loading">Unable to open this snapshot: ${esc(error.message)}<p class="fine">Use a current browser with DecompressionStream support.</p></div>`;
+        $("freshness").textContent = "Snapshot failed to load";
+      });
+    </script>
+  </body>
+</html>

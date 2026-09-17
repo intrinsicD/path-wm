@@ -2688,6 +2688,114 @@ def train(settings, output, *, resume=False, stop_after=None):
     return run.path
 
 
+def export_explorer(
+    output,
+    *,
+    width=32,
+    image_size=16,
+    audio_samples=32,
+    memory_recent=32,
+    memory_block=8,
+    memory_blocks=16,
+    seed=42,
+    checkpoint=None,
+):
+    """Inspect the complete current categorical agent using the real task objective.
+
+    Synthetic observations exercise all four modality adapters and task heads.
+    This is one diagnostic execution, without training or checkpoint selection.
+    """
+    from pathwm.evaluation.explorer import (
+        capture,
+        write_explorer,
+        fingerprint,
+        watched_sources,
+        load_explorer_weights,
+    )
+
+    root = Path(__file__).resolve().parents[1]
+    sources = watched_sources(root, checkpoint)
+    identity = fingerprint(sources)
+    seed_everything(seed)
+    data = InstructionEpisodes(
+        count=2,
+        image_size=image_size,
+        audio_samples=audio_samples,
+        history=2,
+        horizon=1,
+    )
+    learner = LearningState(
+        build_model(
+            width,
+            image_size,
+            audio_samples,
+            state_model="belief",
+            memory_recent=memory_recent,
+            memory_block=memory_block,
+            memory_blocks=memory_blocks,
+        ),
+        len(data),
+    )
+    loaded = load_explorer_weights(learner, checkpoint) if checkpoint else None
+    batch = data.batch([0, 1])
+    loss_values = {}
+
+    def execute(model):
+        losses, _, _ = objective(model, batch, history=2, horizon=1, dropout=0.0)
+        loss_values.update(
+            {name: float(loss.detach()) for name, loss in losses.items()}
+        )
+        return sum(losses.values())
+
+    snapshot = capture(
+        learner,
+        execute,
+        metadata=dict(
+            title="PATH-WM · Complete categorical agent",
+            initial_scope="agent",
+            recipe="experiments/multimodal.py:build_model + objective",
+            source_sha256=identity,
+            seed=seed,
+            weight_source=f"Checkpoint: {Path(checkpoint).name}"
+            if loaded
+            else f"Fresh initialization · seed {seed}",
+            checkpoint=loaded,
+            input=data.identity,
+            execution="Two synthetic instruction episodes, history=2, horizon=1, dropout=0; existing belief and task losses; no optimizer step.",
+            settings=dict(
+                width=width,
+                image_size=image_size,
+                audio_samples=audio_samples,
+                memory_recent=memory_recent,
+                memory_block=memory_block,
+                memory_blocks=memory_blocks,
+            ),
+            limits=[
+                "Not all possible input-dependent branches are exercised.",
+                "Long-horizon memory eviction/compression and optional external World State are not exercised by this short batch.",
+                "Only the main categorical recipe is instantiated; separate experimental codecs/readouts are not part of this agent.",
+                "Initial weights are not trained unless an explicit compatible checkpoint is loaded.",
+            ],
+        ),
+    )
+    snapshot["metadata"]["loss_terms"] = loss_values
+    if identity != fingerprint(watched_sources(root, checkpoint)):
+        raise RuntimeError(
+            "Source or checkpoint changed during capture; no new snapshot written"
+        )
+    write_explorer(snapshot, output)
+    return dict(
+        path=str(Path(output).resolve()),
+        parameters=snapshot["modules"]["agent"]["parameters"],
+        modules=len(snapshot["modules"]),
+        operations=len(snapshot["operations"]),
+        backward_nodes=len(snapshot["backward"]["nodes"]),
+        seconds=snapshot["metadata"]["seconds"],
+        weight_source=snapshot["metadata"]["weight_source"],
+        source_sha256=identity,
+    )
+
+
 def export_diagrams(
     output, *, depth=2, width=32, image_size=16, audio_samples=32, seed=42
 ):
@@ -5751,6 +5859,24 @@ def main():
         help="Export Gaussian reference diagrams to this directory (CPU, no training)",
     )
     parser.add_argument("--diagram-depth", type=int, default=2)
+    parser.add_argument(
+        "--explore",
+        type=Path,
+        nargs="?",
+        const=Path("docs/model-explorer.html"),
+        help="Export the complete categorical agent as a standalone interactive HTML snapshot",
+    )
+    parser.add_argument(
+        "--explore-checkpoint",
+        type=Path,
+        help="Strictly load a compatible complete learner or deployed-agent checkpoint",
+    )
+    parser.add_argument(
+        "--explore-serve",
+        type=int,
+        metavar="PORT",
+        help="Serve the explorer on loopback and regenerate after source/checkpoint changes",
+    )
     parser.add_argument("--output", default="runs/multimodal_first")
     parser.add_argument("--resume", type=Path)
     parser.add_argument("--stop-after", type=int)
@@ -5852,6 +5978,63 @@ def main():
     parser.add_argument("--ema-decay", type=float, default=0.99)
     parser.add_argument("--device", default="cpu")
     args = parser.parse_args()
+    if args.explore is not None:
+        if (
+            args.check
+            or args.resume
+            or args.stop_after is not None
+            or args.diagram is not None
+            or args.device != "cpu"
+            or args.dataset != "synthetic"
+            or args.state_model != "belief"
+        ):
+            parser.error(
+                "--explore is a separate CPU inspection of the complete categorical model; do not combine with training, resume, diagram or dataset options"
+            )
+        if (
+            args.width < 4
+            or args.width % 4
+            or args.image_size < 4
+            or args.image_size % 4
+            or args.audio_samples < 1
+        ):
+            parser.error(
+                "Explorer width and image size must be positive multiples of four"
+            )
+        explorer_info = export_explorer(
+            args.explore,
+            width=args.width,
+            image_size=args.image_size,
+            audio_samples=args.audio_samples,
+            memory_recent=args.memory_recent,
+            memory_block=args.memory_block,
+            memory_blocks=args.memory_blocks,
+            seed=args.seed,
+            checkpoint=args.explore_checkpoint,
+        )
+        print(json.dumps(explorer_info, indent=2), flush=True)
+        if args.explore_serve is not None:
+            import sys
+            from pathwm.evaluation.explorer import serve_explorer
+
+            command = [sys.executable, "-m", "experiments.multimodal"]
+            arguments = iter(sys.argv[1:])
+            for argument in arguments:
+                if argument == "--explore-serve":
+                    next(arguments, None)
+                elif not argument.startswith("--explore-serve="):
+                    command.append(argument)
+            serve_explorer(
+                args.explore,
+                root=Path(__file__).resolve().parents[1],
+                command=command,
+                checkpoint=args.explore_checkpoint,
+                port=args.explore_serve,
+                initial_fingerprint=explorer_info["source_sha256"],
+            )
+        return
+    if args.explore_checkpoint is not None or args.explore_serve is not None:
+        parser.error("Explorer checkpoint/serve options require --explore")
     if args.diagram is not None and (
         args.check
         or args.resume
@@ -6236,7 +6419,17 @@ def main():
         k: v
         for k, v in vars(args).items()
         if k
-        not in ("check", "output", "resume", "stop_after", "diagram", "diagram_depth")
+        not in (
+            "check",
+            "output",
+            "resume",
+            "stop_after",
+            "diagram",
+            "diagram_depth",
+            "explore",
+            "explore_checkpoint",
+            "explore_serve",
+        )
     }
     settings.update(
         purpose="development",

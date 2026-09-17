@@ -16,6 +16,9 @@ vision = ["torchvision>=0.20"]
 [tool.setuptools.packages.find]
 include = ["pathwm*"]
 
+[tool.setuptools.package-data]
+"pathwm.evaluation" = ["explorer.html"]
+
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
