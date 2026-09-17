@@ -6,15 +6,17 @@ Preserve completed experiments; do not restart the research from scratch.
 
 ## Latest requested continuation: visual residual adapters
 
-For the current design discussion, start with the focused
-[visual-adapter handoff](visual-adapter-handoff.md) and
-[design document](visual-adapter-design.md). Alex proposes per-application residual
-corrections around a shared image encoder, compared frozen and trainable, with
-teacher-free and teacher-assisted tracks. The next step is a source-checkpoint/
-label audit and a bounded four-arm protocol; the adapter has not been implemented
-or trained. Separate per-task fine-tuned reference copies from one jointly trained
-shared encoder. Preserve the completed learning work below; this new design does
-not supersede its unresolved findings or adopt a new model default.
+Start with the focused [visual-adapter handoff](visual-adapter-handoff.md) and
+[design](visual-adapter-design.md), continued from2beb97f. Alex now wants one shared
+trainable base plus per-application residuals trained jointly from the first update,
+with equal status for every task. Feature versus weight residuals at multiple scales
+is the open architecture question. Proposed first test: shared multiscale feature
+readouts with small private residuals and matched head controls. The old separate-
+task frozen/unfrozen Phase A is optional, not a prerequisite. RGB is equally weighted
+if selected; no additional frozen RGB anchor enters the joint objective. Actual
+Claude reviewed public methodology and acknowledged corrections; no training or
+implementation occurred. Next select real labels/data and fill the joint contract.
+Preserve completed learning work and its unresolved findings below.
 
 ## Objective and working agreement
 

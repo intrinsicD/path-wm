@@ -5719,3 +5719,53 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O328
+  timestamp: 2026-09-17T23:49+02:00
+  provenance: user
+  content: 'Hypothesis: jointly training one shared visual base and equal-status application residuals
+    will put common features in the base and each application missing parts in its branch. This is the
+    user hope to test, not an identified decomposition or measured result.'
+  context: Joint-training continuation from2beb97f; public-only actual-Claude review and acknowledged
+    corrections. No implementation or training.
+  potential_type: claim
+  bound_to:
+  - N496
+  - N497
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O329
+  timestamp: 2026-09-17T23:49+02:00
+  provenance: ai-suggested
+  content: First test small nonlinear residuals on shared fine/middle/coarse readouts with identical-tap
+    no-adapter and matched expanded-head controls. Compare selected interleaved feature/weight residuals
+    later. Same-linear-operator low-rank weight and feature branches can be equivalent; placement, nonlinearity
+    and spatial context matter. Shared parameters need not imply shared activation computation.
+  context: Joint-training continuation from2beb97f; public-only actual-Claude review and acknowledged
+    corrections. No implementation or training.
+  potential_type: architecture
+  bound_to:
+  - N496
+  - N497
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O330
+  timestamp: 2026-09-17T23:49+02:00
+  provenance: ai-suggested
+  content: 'Operational equal status: equal per-task exposures, fixed positive loss calibration, valid-label
+    denominators, one shared optimizer update and all-task final evaluation. RGB has no extra anchor.
+    Limited private capacity encourages but does not prove common/private semantics. Measure shared-base
+    gradient influence; pyramid task success does not certify compact-state/world-model utility.'
+  context: Joint-training continuation from2beb97f; public-only actual-Claude review and acknowledged
+    corrections. No implementation or training.
+  potential_type: heuristic
+  bound_to:
+  - N496
+  - N497
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

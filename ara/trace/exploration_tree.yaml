@@ -8254,3 +8254,35 @@ tree:
   - docs/visual-adapter-design.md
   - docs/visual-adapter-handoff.md
   - runs/reviews/visual-adapter-design-20260917/summary.json
+- id: N496
+  type: decision
+  title: Prioritize joint shared-base training with equal-status application residuals
+  provenance: user
+  timestamp: 2026-09-17T23:49+02:00
+  choice: User wants to try one shared trainable base plus per-application residuals, trained together
+    from the first update. This revises the earlier assistant phase ordering; separate-task frozen/unfrozen
+    Phase A is optional. Residual placement, tasks, initialization and run budget remain open.
+  alternatives:
+  - Require separate-task frozen/unfrozen adaptation before joint learning
+  - Privilege reconstruction through an extra joint RGB anchor
+  evidence:
+  - docs/visual-adapter-design.md
+  - docs/visual-adapter-handoff.md
+  - N495
+  status: resolved
+- id: N497
+  type: question
+  title: Which feature or weight residuals should each application learn at each scale?
+  provenance: user
+  timestamp: 2026-09-17T23:49+02:00
+  description: Discussed multiscale readout features, interleaved features, low-rank weight deltas and
+    hybrid alternatives with actual Claude public-only critique/reconciliation. First feature-readout
+    comparison is proposed, not a selected empirical winner. Placement relative to compression, common/private
+    identifiability and extra pyramid bandwidth remain scientific questions.
+  evidence:
+  - docs/visual-adapter-design.md
+  - runs/reviews/visual-residual-joint-20260917/summary.json
+  also_depends_on:
+  - N496
+  - N495
+  status: open

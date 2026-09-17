@@ -1,13 +1,18 @@
 # Current work
 
-**Residual visual adapters: design and handoff, 17 September:**
-[design](visual-adapter-design.md) · [continue next session](visual-adapter-handoff.md).
-Alex proposes per-application residual corrections with frozen/unfrozen encoder
-comparisons. The design separates per-task adaptation references from joint shared
-training, specifies the latent/gradient contract and evaluation controls, and
-leaves checkpoint/data selection and formal run gates explicit. Start the next
-session with the source/label audit and a bounded Phase A protocol. Documentation
-only; no adapter implementation, training, checkpoint/default or validation change.
+**Residual visual adapters: joint-training direction, 17 September:**
+[design](visual-adapter-design.md) · [handoff](visual-adapter-handoff.md).
+Continued from2beb97f with actual public-only Claude critique/reconciliation. Alex
+now prioritizes one shared trainable base and per-application residuals trained
+jointly from the first update, with equal task status. This supersedes the old
+Phase A prerequisite. Proposed first comparison: shared multiscale heads alone,
+feature residuals, and matched expanded heads with identical scale access; selected
+interleaved/weight residuals remain later hypotheses. Fixed loss normalization,
+equal task exposure and per-task outcomes do not guarantee equal gradient influence
+or a semantic common/private split. No extra RGB anchor in the joint objective.
+Task/data/initialization/budget selection remains open. Documentation only: no model,
+training, checkpoint/default or validation change. Review receipts are in
+`runs/reviews/visual-residual-joint-20260917/`.
 
 **Visual-codec literature review, 17 September:** [survey and proposed architecture](visual-codec-review.md),
 [untrained parameter audit](visual-codec-parameter-audit.json). User requests a scalable,

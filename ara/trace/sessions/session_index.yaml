@@ -223,32 +223,36 @@ sessions:
   open_threads: 47
 - id: 2026-09-17_001
   date: '2026-09-17'
-  summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent termination
-    in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests pass; 9216 answers
-    and all weights preserved. No training or capability promotion. Current categorical architecture explorer
-    delivered with exact weight/loss/gradient audit and browser QA; no model training or capability promotion.
-    Performance follow-up: byte batching and frozen metadata both fail fixed5% whole-workload gate; original
-    runtime restored. 17 contracts retained,634 full tests pass;6 saved training/5 inference pairs byte-exact,15
-    structural reports. Request-form repair remains open; no speed/capability promotion. Explorer layout refined
-    after user feedback: boundary columns, routed arrows and directional highlighting; all41 overview connections
-    retained. Paired boundary study: matched CE76.56% beats extra loss74.48% on stronger source; weak source37.5%,
-    preservation/adoption fail. Extra loss removed, paired/fresh tools retained;640 snapshot tests,30 final
-    focused,18 reports. Original cap failed; separate fixed-weight recovery completed. Explorer scope clarified:
-    external World State knowledge graph omitted; system-level extension proposed, not implemented. User accepted
-    system expansion: knowledge graph records and separately configured World State neural/runtime views delivered;
-    agent/EMA teacher roles explicit.643 frozen full tests,27 final focused, exact two-model audits and loopback
+  summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent
+    termination in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests
+    pass; 9216 answers and all weights preserved. No training or capability promotion. Current categorical
+    architecture explorer delivered with exact weight/loss/gradient audit and browser QA; no model training
+    or capability promotion. Performance follow-up: byte batching and frozen metadata both fail fixed5%
+    whole-workload gate; original runtime restored. 17 contracts retained,634 full tests pass;6 saved
+    training/5 inference pairs byte-exact,15 structural reports. Request-form repair remains open; no
+    speed/capability promotion. Explorer layout refined after user feedback: boundary columns, routed
+    arrows and directional highlighting; all41 overview connections retained. Paired boundary study: matched
+    CE76.56% beats extra loss74.48% on stronger source; weak source37.5%, preservation/adoption fail.
+    Extra loss removed, paired/fresh tools retained;640 snapshot tests,30 final focused,18 reports. Original
+    cap failed; separate fixed-weight recovery completed. Explorer scope clarified: external World State
+    knowledge graph omitted; system-level extension proposed, not implemented. User accepted system expansion:
+    knowledge graph records and separately configured World State neural/runtime views delivered; agent/EMA
+    teacher roles explicit.643 frozen full tests,27 final focused, exact two-model audits and loopback
     browser QA pass; no training/capability promotion. SRL-VAE figure identified; SD/LDM sources and83.65M-parameter
     base codec checked. Spatial/perceptual/pretraining interpretation staged, no model change or reconstruction
-    replication. Broad VAE literature review and exact Google searches completed; scalable size and both teacher
-    tracks recorded. Public-only Claude critique reconciled.11 untrained parameter counts/22 shape checks;
-    candidate architecture remains staged, with no training/default/capability change. Equal-architecture cross-task
-    features: Taskonomy/RSA/CKA literature reviewed; shared-stem and functional-transfer comparison remains
-    proposed, without model changes or training. User proposes per-application residual adapters with frozen/unfrozen
-    encoder comparisons; relevant adapter literature checked and controlled comparison documented, without
-    model changes or training. Requested residual-adapter design and standalone handoff completed; actual public-only
-    Claude review/reconciliation, control refinements and one anchor-sensitivity disagreement recorded. Documents/atlas
-    linked and checked; no implementation, training or scientific promotion.'
-  turn_count: 13
-  events_count: 44
+    replication. Broad VAE literature review and exact Google searches completed; scalable size and both
+    teacher tracks recorded. Public-only Claude critique reconciled.11 untrained parameter counts/22 shape
+    checks; candidate architecture remains staged, with no training/default/capability change. Equal-architecture
+    cross-task features: Taskonomy/RSA/CKA literature reviewed; shared-stem and functional-transfer comparison
+    remains proposed, without model changes or training. User proposes per-application residual adapters
+    with frozen/unfrozen encoder comparisons; relevant adapter literature checked and controlled comparison
+    documented, without model changes or training. Requested residual-adapter design and standalone handoff
+    completed; actual public-only Claude review/reconciliation, control refinements and one anchor-sensitivity
+    disagreement recorded. Documents/atlas linked and checked; no implementation, training or scientific
+    promotion. User now prioritizes joint training from the first update with equal task status; feature/weight
+    residual placement remains open. Actual Claude critique/corrections inform a proposed multiscale feature-readout
+    comparison; no model or training changes.'
+  turn_count: 14
+  events_count: 49
   claims_touched: []
-  open_threads: 51
+  open_threads: 52

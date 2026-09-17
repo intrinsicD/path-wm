@@ -1,114 +1,117 @@
-# Handoff: shared visual encoder and residual task adapters
+# Handoff: jointly trained visual base and per-application residuals
 
-Prepared 17 September 2026. Repository: `/home/alex/Documents/path-wm`, branch
-`main`. This is a documentation handoff; no new task/session or training job was
-created. The design is [visual-adapter-design.md](visual-adapter-design.md).
+Updated 17 September 2026 from commit `2beb97f` in `/home/alex/Documents/path-wm`,
+branch `main`. The repeated user hash `2beb97f2beb97f` resolved to that existing
+commit, which was HEAD on resume. This is a design discussion, not a training run.
+Main document: [visual-adapter-design.md](visual-adapter-design.md).
 
-## What Alex wants
+## Latest user direction — takes precedence over the old phase order
 
-A scalable, compact image codec for large/variable image sizes, useful world-model
-features and high-quality application/debugging outputs. Compare both training
-without pretrained teachers and training with them. There is no fixed parameter
-ceiling: as low as useful, as high as necessary.
+Alex wants to try **one shared trainable base plus residuals per application,
+trained jointly from the start, treating all applications equally**. The main
+open question is **feature residuals at each scale, weight residuals at each
+scale, or both**. The expectation that the base learns common features and the
+branches learn missing task-specific parts is a research hypothesis.
 
-The latest proposal is **one shared encoder plus small residual corrections per
-application**, compared with the encoder frozen and trainable. Alex asked for
-this design document and a handoff to continue in another session. No dataset,
-task pair, checkpoint, run budget or implementation has been selected by that
-request. Do not interpret the earlier “Ok” as empirical validation.
+The previous handoff required frozen/unfrozen separate-task Phase A before joint
+Phase B. That order is superseded. Phase A remains an optional diagnostic and its
+frozen RGB anchor is not an extra loss in the equal-status joint study.
 
-## Read first
+## Current recommendation and its limits
 
-1. [Repository instructions](../CLAUDE.md) and [experiment workflow](experiment-workflow.md).
-2. [Design](visual-adapter-design.md), especially phases A/B and the pending run contract.
-3. [Codec literature review](visual-codec-review.md), its application matrix and
-   [parameter audit](visual-codec-parameter-audit.json).
-4. [Current state](project-state.md), [v2 findings](spatial-vae-v2-plan.md) and
-   [video-codec findings](shared-video-vae-plan.md) for actual limitations.
-5. [Claude review rules](claude-collaboration-workflow.md) before final scientific choices.
+- First hypothesis: one shared feature pyramid, with small nonlinear feature
+  residuals at declared scales feeding each task head. The corrected features do
+  not feed the next shared encoder stage. All modules learn jointly. This permits
+  one base pass for multiple applications on the same input; it is an engineering
+  preference, not a measured winner or an additional user constraint.
+- Interleaved feature residuals and weight deltas (e.g. low rank) can alter later
+  processing, usually requiring task-specific downstream activations/compute.
+  Small private parameter storage does not imply one shared forward pass.
+- At one matched linear operator/input, `(W+UV)x = Wx+U(Vx)`. Nonlinearity, spatial
+  context, normalization and insertion before/after compression distinguish the
+  actual mechanisms. Neither residual type universally dominates the other.
+- Start without a hybrid. Compare J0 shared+heads, JF feature residuals+same heads,
+  and JH matched expanded heads with identical taps/strides. Then investigate
+  selected interleaved/weight changes and hybrids only for a concrete reason.
+- Fine/middle/coarse allocation depends on labels and failures. RGB detail and
+  small text motivate fine evidence; segmentation needs context and boundaries;
+  geometry needs local cues and suitable context. These are placement hypotheses.
+- A feature pyramid supplies more information than the compact final latent.
+  Count bytes, activations and head/projection capacity. Observed-image output
+  quality does not validate generation from a compact predicted world-model state.
 
-## What exists, and what does not
+## Equal-status training contract
 
-- Existing: `pathwm/models/spatial_vae.py`, `spatial_vae_v2.py`, `video_vae.py` and
-  the shared v1/v2 recipe `experiments/spatial_vae.py`.
-- Existing v2 C specimen: 122,979 encoder+decoder parameters, four latent channels,
-  stride four. Counts and small shape checks are not fidelity evidence.
-- Existing codec API: `encode(x)` → posterior with mean, variance and geometry;
-  `decode(z, output_size)` → image. V2 trace snapshots are detached diagnostics.
-- Proposed only: application residual adapter, task-head comparison recipe,
-  shared multi-task training and connection of this optional codec to the
-  categorical agent's current visual path. Future filenames in the design are
-  not runnable commands.
-- Existing video temporal refinement is a different adapter use case. Preserve
-  its recorded failures/limits; do not mix it into the initial image comparison.
+Each logical update averages an equal example budget of task-normalized losses,
+with fixed positive calibration scales and one optimizer step. Task-specific
+batches can accumulate at the same parameter snapshot. Aligned tasks can share an
+image forward pass; different images/corruptions cannot be assumed to do so.
+Missing labels use valid masks and declared denominators; no fabricated targets or
+silent weighting by label availability. RGB, if selected, is one equally weighted
+application with a trained head, not a privileged frozen-decoder anchor.
 
-Relevant discussion commits before this handoff: `c0b34bb` broad codec review,
-`4578f15` cross-task representation sources, `473b597` residual-adapter proposal.
-Inspect `git status` and recent commits at resume; the handoff/design commit will
-be later than those references.
+Keep shared normalization/buffers explicit. Log per-task raw/scaled loss and shared
+base gradient norms/conflict. Equal objective weight/exposure does not guarantee
+equal influence or outcome. Small private capacity encourages sharing but cannot
+identify common versus private semantics. Adapter-off is supplementary reliance
+evidence; frozen-feature probes test accessibility under their own capacity limit.
+Evaluate every task using the same final common checkpoint and all-task floors.
 
-## First work in the next session
+## Read first and local implementation boundary
 
-1. Check local changes and running work. Read the design before editing shared
-   code. Preserve current checkpoints, datasets and completed reports.
-2. Audit available aligned labels and source-disjoint splits. Choose two useful
-   tasks plus RGB retention only when real data supports them; label synthetic
-   mechanics evidence honestly. Identify and hash a viable source checkpoint.
-3. Fill the design's run contract: metric/gain and retention gates, head/adapter
-   capacity, exact seeds, optimizer/schedules, anchor and compute/memory/disk caps.
-   Keep missing decisions visible; a missing gate cannot pass. If baseline codec
-   learning is inadequate, make its repair a separate stage. Formal Phase A needs
-   at least three paired adaptation seeds; before a residual-placement claim,
-   include the matched-parameter expanded-head control. Use online paired
-   augmentations and the declared checkpoint-selection rule.
-4. Reconcile material changes with actual Claude using only a generic public
-   methods brief. Existing design-review receipts are in
-   `runs/reviews/visual-adapter-design-20260917/`. Do not export private code,
-   data, checkpoints, measurements or the full handoff. The remaining review
-   disagreement is whether the first diagnostic needs a second anchor strength;
-   resolve its budget/scope in the protocol. One-anchor results must remain
-   conditional; fixed-budget rankings also include convergence-rate differences.
-5. Implement one bounded Phase A path and essential failing contract checks,
-   reusing the library, existing recipe conventions and report helpers. Record
-   a short development run separately from a scientific comparison. Run the
-   finalized comparison only within its declared scope/budget.
-6. Preserve every arm's metrics/checkpoint/report. Move to the shared Phase B
-   only after evaluating Phase A; adapter benefit and multitask sharing benefit
-   are different questions.
+Read `CLAUDE.md`, [workflow](experiment-workflow.md), the [design](visual-adapter-design.md),
+[current state](project-state.md), and [Claude rules](claude-collaboration-workflow.md).
+The [codec review](visual-codec-review.md) and its parameter audit remain background;
+do not restart the broad literature review. Existing small-codec quality limits
+remain in [v2 findings](spatial-vae-v2-plan.md) and [video findings](shared-video-vae-plan.md).
 
-## Interpretation traps to preserve
+Existing code: `pathwm/models/spatial_vae.py`, `spatial_vae_v2.py`, `video_vae.py`,
+and the shared `experiments/spatial_vae.py` recipe. The v2 C specimen has122,979
+encoder+decoder parameters; this is a count, not fidelity evidence. Current
+`encode(x)` returns a posterior and geometry; v2 trace snapshots are detached.
+Joint multiscale branches need explicit differentiable taps, not those traces.
+The optional codec is not already the categorical agent's visual path.
 
-- Phase A's unfrozen per-task copies are specialization references, not a single
-  shared deployed encoder. Phase B must train/evaluate one common encoder across tasks.
-- Final-latent corrections permit one encoder pass; interleaved corrections
-  generally require separate downstream passes. Count actual deployment cost.
-- The initial mean-only diagnostic freezes the variance head/base RGB decoder;
-  feature updates can still affect variance outputs. It validates no sampled
-  posterior or KL claim. Keep later stochastic-codec tuning separate.
-- All four arms train identical task heads. Frozen means weights and buffers.
-  Preserve the declared common-latent reconstruction anchor and frozen-consumer
-  checks; head retraining can hide latent drift.
-- A final adapter cannot recover discarded evidence. Improvements from unfreezing
-  alone do not prove irreversible loss; optimization/capacity are alternatives.
-- Keep teacher tracks separate. Teacher agreement, residual norms, CKA and pretty
-  reconstructions do not certify geometry, semantics or causal world-model utility.
+No adapter module or joint comparison recipe exists yet. Future filenames in the
+design are proposals. Existing image/video runs, checkpoints and data are preserved.
+No training/evaluation process was running at the initial resume inspection.
 
-## Ready-to-paste continuation prompt
+## Next bounded implementation work
 
-> Continue the shared visual encoder / per-application residual adapter work in
-> `/home/alex/Documents/path-wm`. Read `CLAUDE.md`,
-> `docs/visual-adapter-handoff.md` and `docs/visual-adapter-design.md` first.
-> Start with a source-checkpoint and labeled-data audit, then make Phase A's
-> frozen/trainable × adapter/no-adapter comparison concrete. Preserve the existing
-> codec and distinguish separate task-specific fine-tuning from shared multitask
-> training. Keep teacher-free and teacher-assisted tracks separate. Follow the
-> repository's small-slice workflow and public-only Claude methodology review;
-> record metrics, thresholds, preservation checks and a bounded compute budget
-> before fitting. Do not restart the literature survey or treat proposed modules
-> and untrained parameter counts as existing validated capabilities.
+1. Inspect status/running work. Audit actual aligned labels and source-disjoint
+   splits; choose a small useful task set and random or named checkpoint start.
+   Do not invent depth/semantic labels from raw photos. Keep teacher tracks separate.
+2. Fill §7's joint run contract: exact taps/strides, private capacity/head controls,
+   losses/masks/calibration, seeds, task exposure, initialization, optimizer groups,
+   meaningful gains/all-task floors, and compute/memory/disk caps. Preserve the
+   distinction between equal exposure and equal compute. Three paired seeds before
+   confirmatory architecture claims; one tiny run proves mechanics only.
+3. Implement one readable recipe and small ordinary modules with essential checks:
+   one base instance/pass per same-image multihead call; correct private routing;
+   differentiable taps; zero correction and later learnability; geometry/masks;
+   correct averaging/optimizer step; reproducible checkpoint/resume.
+4. Preserve per-arm raw metrics, checkpoints and verified standalone reports. Use
+   the same final shared checkpoint for all tasks. Do not require the obsolete
+   separate-task Phase A before this joint path.
 
-## Completion at this handoff
+## Claude review record
 
-Design and continuation documents created; links and repository interfaces checked.
-Documentation/atlas notes only: no adapter implementation, model/default/checkpoint
-change or new training. Current scientific questions remain open.
+The earlier design review is in `runs/reviews/visual-adapter-design-20260917/`.
+This continuation used actual Claude with tools disabled and a generic public-only
+brief, followed by explicit corrections: `runs/reviews/visual-residual-joint-20260917/`.
+Private code/data/measurements and full documents were not exported. The reviewer
+withdrew several categorical claims; see §9 of the design for the exact material
+corrections and remaining scope differences. In particular, development placement
+search is allowed with separate fixed confirmation, and equal task priority can
+coexist with different input/compute costs. Peer agreement is not validation.
+
+## Ready-to-paste continuation
+
+> Continue from the updated visual-adapter design/handoff. Alex chose joint training
+> of one shared trainable base plus equally prioritized application residuals from
+> the first update. Feature versus weight residual placement remains an experiment.
+> Audit labels/data and fill the joint J0/JF/JH contract; do not impose the old
+> frozen/unfrozen Phase A as a prerequisite. Keep taps and information budgets
+> explicit, RGB equally weighted, private branches small and per-task outcomes
+> visible. Use actual Claude only for bounded public-methods review. Preserve the
+> existing codec, checkpoints and reports; no broader capability has been validated.

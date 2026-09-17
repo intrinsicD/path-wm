@@ -2,33 +2,37 @@ session:
   id: 2026-09-17_001
   date: '2026-09-17'
   started: 2026-09-17T10:43+02:00
-  last_turn: 2026-09-17T23:10+02:00
-  turn_count: 13
-  summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent termination
-    in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests pass; 9216 answers
-    and all weights preserved. No training or capability promotion. Current categorical architecture explorer
-    delivered with exact weight/loss/gradient audit and browser QA; no model training or capability promotion.
-    Performance follow-up: byte batching and frozen metadata both fail fixed5% whole-workload gate; original
-    runtime restored. 17 contracts retained,634 full tests pass;6 saved training/5 inference pairs byte-exact,15
-    structural reports. Request-form repair remains open; no speed/capability promotion. Explorer layout refined
-    after user feedback: boundary columns, routed arrows and directional highlighting; all41 overview connections
-    retained. Paired boundary study: matched CE76.56% beats extra loss74.48% on stronger source; weak source37.5%,
-    preservation/adoption fail. Extra loss removed, paired/fresh tools retained;640 snapshot tests,30 final
-    focused,18 reports. Original cap failed; separate fixed-weight recovery completed. Explorer scope clarified:
-    external World State knowledge graph omitted; system-level extension proposed, not implemented. User accepted
-    system expansion: knowledge graph records and separately configured World State neural/runtime views delivered;
-    agent/EMA teacher roles explicit.643 frozen full tests,27 final focused, exact two-model audits and loopback
+  last_turn: 2026-09-17T23:49+02:00
+  turn_count: 14
+  summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent
+    termination in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests
+    pass; 9216 answers and all weights preserved. No training or capability promotion. Current categorical
+    architecture explorer delivered with exact weight/loss/gradient audit and browser QA; no model training
+    or capability promotion. Performance follow-up: byte batching and frozen metadata both fail fixed5%
+    whole-workload gate; original runtime restored. 17 contracts retained,634 full tests pass;6 saved
+    training/5 inference pairs byte-exact,15 structural reports. Request-form repair remains open; no
+    speed/capability promotion. Explorer layout refined after user feedback: boundary columns, routed
+    arrows and directional highlighting; all41 overview connections retained. Paired boundary study: matched
+    CE76.56% beats extra loss74.48% on stronger source; weak source37.5%, preservation/adoption fail.
+    Extra loss removed, paired/fresh tools retained;640 snapshot tests,30 final focused,18 reports. Original
+    cap failed; separate fixed-weight recovery completed. Explorer scope clarified: external World State
+    knowledge graph omitted; system-level extension proposed, not implemented. User accepted system expansion:
+    knowledge graph records and separately configured World State neural/runtime views delivered; agent/EMA
+    teacher roles explicit.643 frozen full tests,27 final focused, exact two-model audits and loopback
     browser QA pass; no training/capability promotion. SRL-VAE figure identified; SD/LDM sources and83.65M-parameter
     base codec checked. Spatial/perceptual/pretraining interpretation staged, no model change or reconstruction
-    replication. Broad VAE literature review and exact Google searches completed; scalable size and both teacher
-    tracks recorded. Public-only Claude critique reconciled.11 untrained parameter counts/22 shape checks;
-    candidate architecture remains staged, with no training/default/capability change. Equal-architecture cross-task
-    features: Taskonomy/RSA/CKA literature reviewed; shared-stem and functional-transfer comparison remains
-    proposed, without model changes or training. User proposes per-application residual adapters with frozen/unfrozen
-    encoder comparisons; relevant adapter literature checked and controlled comparison documented, without
-    model changes or training. Requested residual-adapter design and standalone handoff completed; actual public-only
-    Claude review/reconciliation, control refinements and one anchor-sensitivity disagreement recorded. Documents/atlas
-    linked and checked; no implementation, training or scientific promotion.'
+    replication. Broad VAE literature review and exact Google searches completed; scalable size and both
+    teacher tracks recorded. Public-only Claude critique reconciled.11 untrained parameter counts/22 shape
+    checks; candidate architecture remains staged, with no training/default/capability change. Equal-architecture
+    cross-task features: Taskonomy/RSA/CKA literature reviewed; shared-stem and functional-transfer comparison
+    remains proposed, without model changes or training. User proposes per-application residual adapters
+    with frozen/unfrozen encoder comparisons; relevant adapter literature checked and controlled comparison
+    documented, without model changes or training. Requested residual-adapter design and standalone handoff
+    completed; actual public-only Claude review/reconciliation, control refinements and one anchor-sensitivity
+    disagreement recorded. Documents/atlas linked and checked; no implementation, training or scientific
+    promotion. User now prioritizes joint training from the first update with equal task status; feature/weight
+    residual placement remains open. Actual Claude critique/corrections inform a proposed multiscale feature-readout
+    comparison; no model or training changes.'
 events_logged:
 - turn: 1
   type: decision
@@ -316,6 +320,44 @@ events_logged:
   routing: direct
   provenance: user
   summary: Create visual-adapter design and next-session handoff
+- turn: 14
+  type: decision
+  id: N496
+  routing: direct
+  provenance: user
+  summary: Prioritize joint shared-base training with equal-status application residuals
+- turn: 14
+  type: question
+  id: N497
+  routing: direct
+  provenance: user
+  summary: Which feature or weight residuals should each application learn at each scale?
+- turn: 14
+  type: observation
+  id: O328
+  routing: staged
+  provenance: user
+  summary: 'Hypothesis: jointly training one shared visual base and equal-status application residuals
+    will put common features in the base and each application missing parts in its branch. This is the
+    user hope to test, not an identified decomposition or measured result.'
+- turn: 14
+  type: observation
+  id: O329
+  routing: staged
+  provenance: ai-suggested
+  summary: First test small nonlinear residuals on shared fine/middle/coarse readouts with identical-tap
+    no-adapter and matched expanded-head controls. Compare selected interleaved feature/weight residuals
+    later. Same-linear-operator low-rank weight and feature branches can be equivalent; placement, nonlinearity
+    and spatial context matter. Shared parameters need not imply shared activation computation.
+- turn: 14
+  type: observation
+  id: O330
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Operational equal status: equal per-task exposures, fixed positive loss calibration, valid-label
+    denominators, one shared optimizer update and all-task final evaluation. RGB has no extra anchor.
+    Limited private capacity encourages but does not prove common/private semantics. Measure shared-base
+    gradient influence; pyramid task success does not certify compact-state/world-model utility.'
 ai_actions:
 - turn: 1
   action: Implemented optional routing/state diagnostics with actual Claude public review, ran12 fixed evaluations
@@ -469,6 +511,21 @@ ai_actions:
   - docs/diagrams/architecture-atlas.json
   - docs/architecture-atlas.md
   - docs/architecture-atlas.html
+- turn: 14
+  action: Continued from2beb97f; checked feature/trace interfaces and primary residual/LoRA/multiscale/loss-balancing
+    sources. Ran actual Claude tools-disabled public-methods review and correction round, recorded withdrawals
+    and remaining scope differences. Revised design/handoffs/state; regenerated16 atlas graphs and checked256
+    local links, preserving topology/status/validation. No model edits or training.
+  provenance: ai-executed
+  files_changed:
+  - docs/visual-adapter-design.md
+  - docs/visual-adapter-handoff.md
+  - docs/project-state.md
+  - docs/session-handoff.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.md
+  - docs/architecture-atlas.html
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -507,6 +564,10 @@ key_context:
     to learn the corrections which each application/use case needs.
 - turn: 13
   excerpt: Please create a design document and a handoff for this to continue in another session.
+- turn: 14
+  excerpt: 'User: one shared base + residuals per use case and train them at once; hopefully base learns
+    common shared features and residuals the missing parts; treat all applications/use cases equal. Feature
+    versus weight residuals at each scale remains the main question.'
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -634,6 +695,9 @@ open_threads:
   time appears. Request-form/EOS repair remains separate.'
 - 'N484/O321: boundary-loss comparison complete and rejected; distinguish robust request completion from weak-source
   content access, preserve first-only/broader behavior and preregister new evaluation before further fits.'
+- 'N496/N497: select actual tasks/labels and random or checkpoint initialization; finalize a bounded joint
+  comparison. Residual type/scale placement and shared/private efficacy remain open; old Phase A is optional,
+  not prerequisite.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher
   response.'
@@ -829,3 +893,6 @@ ai_suggestions_pending:
   regime and efficacy remain open.'
 - N495 documents the proposal and continuation only; O325-O327 remain unvalidated. Next audit checkpoint/labels
   and finalize Phase A run contract; anchor sensitivity scope remains explicit.
+- 'O328-O330: common/private separation is untested; multiscale feature-readout recommendation and fixed-calibration
+  training details remain proposed. N496 supersedes the prior Phase A-first next step without rejecting
+  optional frozen/unfrozen controls O327.'
