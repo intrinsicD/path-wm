@@ -1,5 +1,10 @@
 # Current work
 
+**Active performance slice, 17 September:** [one-transfer byte batches](byte-batch-plan.md).
+Replace per-string device allocations with one padded transfer; compare exact
+training/inference behavior and complete-workload timing before adoption. The
+paired request-form repair remains the next learning study, not solved by this work.
+
 **Latest measurements, 17 September:** [request completion and decoder cost](request-completion-plan.md),
 [report](../runs/request_completion_v1/report.html). Actual Claude review reconciled.
 Masked-question whitespace edge repaired;5,010 existing fixture routes unchanged.
