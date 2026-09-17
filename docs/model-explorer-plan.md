@@ -72,3 +72,19 @@ The initial view contains 601 deployed modules and 515,553 parameters; the froze
 teacher is a separate branch. Weights are fresh initialization, seed 42. The short
 synthetic execution does not establish coverage of every branch or scientific
 capability. No optimizer, training, model-default or validation-color changes.
+
+## Layout refinement, 17 September
+
+User reports dense BeliefAgent layout and confusing connections. Arrange explicit
+input/output boundaries at the left/right extremes, spread internal modules into
+readable columns, and route arrows through free space around nodes. Repeated-call
+return edges must remain present and clearly distinguishable. Model-specific stage
+hints may position existing nodes but must not create, omit or relabel connections;
+unrecognized modules still receive positions. Preserve all drilling/weight views.
+
+Bounded checks: browser geometry of boundary placement, nonoverlapping blocks,
+routes avoiding unrelated blocks, preservation of all graph endpoints, and smoke
+navigation in forward/backward/nested views. Reuse the recorded payload for layout
+iteration; regenerate the final source-identified snapshot once. No model/training
+or Python recorder changes. Budget: frontend-only edits, focused renderer checks,
+and browser review; no new training or full numerical test rerun required.
