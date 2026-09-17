@@ -2463,3 +2463,12 @@ entries:
     promotion.
   - No affirmation or empirical closure of older scientific hypotheses, no abandoned live topics or new stale
     flags. C01-C04 and older pending studies remain unchanged.
+- turn: 2026-09-17_001#9
+  notes:
+  - N490 records an external-literature question; header scalar count is source inspection, not a reconstruction
+    experiment. No neural/training/UI changes.
+  - 'O323 remains staged: user requested explanation, not architecture adoption; no empirical reproduction
+    or downstream commitment. Distinguish SRL input-perturbation training from original GAN discriminator loss
+    and weak-KL reference config.'
+  - No older scientific closure, abandonment or new stale flags. Claims and architecture/color records remain
+    unchanged.

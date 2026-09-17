@@ -5635,3 +5635,18 @@ observations:
   promoted_to: logic/solution/architecture.md:A22
   crystallized_via: verbal-affirmation
   stale: false
+- id: O323
+  timestamp: 2026-09-17T20:21+02:00
+  provenance: ai-suggested
+  content: For evaluating detailed reconstruction, separate spatial latent capacity, pretrained encoder/decoder
+    capacity and perceptual objectives from encoder robustness fine-tuning. A diffusion-containing concept
+    figure cannot establish pixel-exact autoencoder reconstruction. This source-based interpretation has not
+    been experimentally tested in PATH-WM.
+  context: Literature and public base-checkpoint metadata lookup following the user-provided SRL-VAE figure.
+  potential_type: heuristic
+  bound_to:
+  - N490
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

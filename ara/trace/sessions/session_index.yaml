@@ -237,8 +237,10 @@ sessions:
     external World State knowledge graph omitted; system-level extension proposed, not implemented. User accepted
     system expansion: knowledge graph records and separately configured World State neural/runtime views delivered;
     agent/EMA teacher roles explicit.643 frozen full tests,27 final focused, exact two-model audits and loopback
-    browser QA pass; no training/capability promotion.'
-  turn_count: 8
-  events_count: 33
+    browser QA pass; no training/capability promotion. SRL-VAE figure identified; SD/LDM sources and83.65M-parameter
+    base codec checked. Spatial/perceptual/pretraining interpretation staged, no model change or reconstruction
+    replication.'
+  turn_count: 9
+  events_count: 35
   claims_touched: []
   open_threads: 51

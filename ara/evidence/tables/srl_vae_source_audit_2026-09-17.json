@@ -1,0 +1,35 @@
+{
+  "source": "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/vae/diffusion_pytorch_model.safetensors",
+  "metadata_bytes": 27816,
+  "parameters": 83653863,
+  "by_module": {
+    "encoder": 34163592,
+    "decoder": 49490179,
+    "quant_conv": 72,
+    "post_quant_conv": 20
+  },
+  "latent_example_256": [
+    4,
+    32,
+    32
+  ],
+  "latent_example_512": [
+    4,
+    64,
+    64
+  ],
+  "date": "2026-09-17",
+  "sources": {
+    "srl_paper": "https://arxiv.org/html/2504.17219v1",
+    "vae_config": "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/blob/main/vae/config.json",
+    "ldm_training_config": "https://github.com/CompVis/latent-diffusion/blob/main/configs/autoencoder/autoencoder_kl_32x32x4.yaml",
+    "ldm_paper": "https://arxiv.org/html/2112.10752v2",
+    "diffusion_pipeline": "https://huggingface.co/docs/diffusers/using-diffusers/img2img"
+  },
+  "limits": [
+    "Parameter count computed from public safetensors header only; weights not downloaded or executed.",
+    "No SRL author fine-tuning repository located in this search.",
+    "No reconstruction experiment, PATH-WM change or capability validation.",
+    "Original LDM reference KL weight is not an asserted SRL fine-tuning coefficient."
+  ]
+}

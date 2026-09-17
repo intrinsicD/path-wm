@@ -8178,3 +8178,16 @@ tree:
   - N476
   - N482
   status: resolved
+- id: N490
+  type: question
+  title: Explain detailed SRL-VAE reconstructions from paper and base implementation
+  provenance: user
+  timestamp: 2026-09-17T20:21+02:00
+  description: User supplies Figure1 and requests paper/implementation lookup. Identified arXiv2504.17219v1;
+    checked original LDM training/configuration and SD1.5 VAE checkpoint tensor header. Base codec has83,653,863
+    parameters; f8 spatial four-channel latent. Distinguish conceptual diffusion figure, direct autoencoder
+    reconstruction and encoder-only robustness fine-tuning. Public author SRL fine-tuning code not located;
+    no reconstruction reproduced.
+  evidence:
+  - ara/evidence/tables/srl_vae_source_audit_2026-09-17.json
+  status: resolved
