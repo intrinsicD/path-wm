@@ -5618,3 +5618,20 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O322
+  timestamp: 2026-09-17T13:29+02:00
+  provenance: ai-suggested
+  content: 'Extend the architecture explorer above the neural-module tree with an explicitly scoped WorldSession/WorldStore
+    view: entity/component/relation/evidence records, update/binding and retrieval/context paths, and
+    the neural BeliefAgent. Distinguish instantiated, optional and unexecuted components; graph records
+    do not become artificial trainable weights. The main categorical recipe and World State foundation
+    recipe have different configurations and must not be silently conflated.'
+  context: Proposed correction after user identifies missing knowledge graph. Existing source integration
+    verified read-only; extension not implemented or explicitly adopted.
+  potential_type: architecture
+  bound_to:
+  - N487
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

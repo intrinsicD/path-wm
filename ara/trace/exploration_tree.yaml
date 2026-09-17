@@ -8120,3 +8120,24 @@ tree:
   - docs/session-handoff.md
   - O320
   status: resolved
+- id: N487
+  type: question
+  title: Locate the knowledge graph omitted from the neural-model explorer
+  provenance: user
+  timestamp: 2026-09-17T13:29+02:00
+  description: User asks whether the explorer is complete because the knowledge graph is absent. Source
+    inspection confirms the selected multimodal recipe constructs BeliefAgent without WorldSession/WorldStore.
+    The separate optional World State implementation owns entity/component/relation/evidence records and
+    connects retrieval/context to the actual thinker. The exporter covers registered neural modules, not
+    this complete system boundary; no visualization expansion implemented in this turn.
+  evidence:
+  - experiments/multimodal.py#build_model
+  - experiments/multimodal.py#export_explorer
+  - experiments/world_state.py#FoundationModel
+  - pathwm/world_state/session.py#WorldSession.think
+  - pathwm/world_state/store.py#WorldStore
+  - docs/world-state.md
+  also_depends_on:
+  - N475
+  - N476
+  status: resolved

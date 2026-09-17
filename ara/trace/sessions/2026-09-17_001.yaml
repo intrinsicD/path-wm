@@ -2,19 +2,21 @@ session:
   id: 2026-09-17_001
   date: '2026-09-17'
   started: 2026-09-17T10:43+02:00
-  last_turn: 2026-09-17T13:28+02:00
-  turn_count: 6
-  summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent termination
-    in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests pass; 9216 answers
-    and all weights preserved. No training or capability promotion. Current categorical architecture explorer
-    delivered with exact weight/loss/gradient audit and browser QA; no model training or capability promotion.
-    Performance follow-up: byte batching and frozen metadata both fail fixed5% whole-workload gate; original
-    runtime restored. 17 contracts retained,634 full tests pass;6 saved training/5 inference pairs byte-exact,15
-    structural reports. Request-form repair remains open; no speed/capability promotion. Explorer layout refined
-    after user feedback: boundary columns, routed arrows and directional highlighting; all41 overview connections
-    retained. Paired boundary study: matched CE76.56% beats extra loss74.48% on stronger source; weak source37.5%,
-    preservation/adoption fail. Extra loss removed, paired/fresh tools retained;640 snapshot tests,30 final
-    focused,18 reports. Original cap failed; separate fixed-weight recovery completed.'
+  last_turn: 2026-09-17T13:29+02:00
+  turn_count: 7
+  summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent
+    termination in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests
+    pass; 9216 answers and all weights preserved. No training or capability promotion. Current categorical
+    architecture explorer delivered with exact weight/loss/gradient audit and browser QA; no model training
+    or capability promotion. Performance follow-up: byte batching and frozen metadata both fail fixed5%
+    whole-workload gate; original runtime restored. 17 contracts retained,634 full tests pass;6 saved
+    training/5 inference pairs byte-exact,15 structural reports. Request-form repair remains open; no
+    speed/capability promotion. Explorer layout refined after user feedback: boundary columns, routed
+    arrows and directional highlighting; all41 overview connections retained. Paired boundary study: matched
+    CE76.56% beats extra loss74.48% on stronger source; weak source37.5%, preservation/adoption fail.
+    Extra loss removed, paired/fresh tools retained;640 snapshot tests,30 final focused,18 reports. Original
+    cap failed; separate fixed-weight recovery completed. Explorer scope clarified: external World State
+    knowledge graph omitted; system-level extension proposed, not implemented.'
 events_logged:
 - turn: 1
   type: decision
@@ -200,6 +202,18 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Completion versus preservation interpretation remains tentative.
+- turn: 7
+  type: question
+  id: N487
+  routing: direct
+  provenance: user
+  summary: Locate the knowledge graph omitted from the neural-model explorer
+- turn: 7
+  type: observation
+  id: O322
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose explicit system-level World State view without conflating recipe configurations.
 ai_actions:
 - turn: 1
   action: Implemented optional routing/state diagnostics with actual Claude public review, ran12 fixed evaluations
@@ -282,6 +296,12 @@ ai_actions:
   - docs/project-state.md
   - docs/session-handoff.md
   - docs/diagrams/architecture-atlas.json
+- turn: 7
+  action: Read model/export construction, WorldStore records, WorldSession integration and foundation
+    recipe; identified external knowledge graph omission and clarified neural-versus-system scope. No
+    model, HTML or training changes.
+  provenance: ai-executed
+  files_changed: []
 claims_touched: []
 key_context:
 - turn: 1
@@ -303,6 +323,8 @@ key_context:
 - turn: 6
   excerpt: User requests continued suite-directed plan/implement/review/test/fix iteration together with Claude;
     no later endorsement of the new empirical findings.
+- turn: 7
+  excerpt: is this complete? i cant find the knowledge graph anywhere
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -617,3 +639,4 @@ ai_suggestions_pending:
   no user empirical endorsement, GPU/training speed, capability or default promotion.
 - O320→A21 records only the implemented paired/fresh method. O319 wider weak-source diagnosis and O318/O321
   interpretations remain open; no user empirical affirmation, general efficacy or speed promotion.
+- N487/O322: architecture explorer lacks external World State knowledge graph; system-level inspection extension proposed, not implemented.
