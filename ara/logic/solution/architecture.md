@@ -212,3 +212,14 @@
 - **Implementation**: 2d43133/63b7321; [recipe](../../../experiments/modality_readout.py), [corpus](../../../pathwm/data/request_meaning.py), [checks](../../../tests/test_request_boundary.py), [protocol](../../../docs/request-boundary-plan.md); N483/N486.
 - **Verification**: [Bound evidence](../../evidence/tables/request_boundary_2026-09-17.json);640 frozen-snapshot tests,30 final focused,11,520 independently reproduced rows and exact six-update current-CE versus frozen-control model/optimizer/RNG state.
 - **Limits**: Implements the controlled method, not a successful semantic repair. Extra boundary loss removed after benefit/preservation failure. First-only and broader preservation fail; weak-source content remains unresolved. Fresh known-lexicon compositions are now inspected development evidence. Original resource cap failed; fixed-weight recovery is separate. No default, general-language, speed or browser-QA claim.
+
+
+## A22: Explicit system inspection above the neural model hierarchy
+
+- **Design**: Expose the actual main learner and separate World State foundation configuration. Distinguish neural containment, tensor/autograd dependencies, observed runtime component calls and stored knowledge records. Inspect entities, components, relations, evidence, events and exact values without treating stored records as trainable weights. Optional/unexecuted interfaces remain identified.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O322
+- **Adoption/implementation**: N488; user accepts the proposed expansion. Implemented f50db67; [recorder](../../../pathwm/evaluation/explorer.py), [system UI](../../../pathwm/evaluation/explorer-system.js), [recipe](../../../experiments/world_state.py), [guide](../../../docs/model-explorer.md).
+- **Verification**: N489; [source-bound engineering evidence](../../evidence/tables/model_explorer_system_2026-09-17.json). Main inference agent and frozen training-only EMA teacher roles are explicit; the inspection performs no optimizer or EMA update.
+- **Limits**: Fresh seed42 diagnostic weights and synthetic store, not trained/personal knowledge. Runtime calls do not assert tensor or gradient edges. Existing optional interfaces and unexecuted input-dependent branches remain scoped. No new model integration, learning efficacy or scientific validation promotion.

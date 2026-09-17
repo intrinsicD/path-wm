@@ -5631,7 +5631,7 @@ observations:
   potential_type: architecture
   bound_to:
   - N487
-  promoted: false
-  promoted_to: null
-  crystallized_via: null
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A22
+  crystallized_via: verbal-affirmation
   stale: false

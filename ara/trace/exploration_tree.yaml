@@ -8141,3 +8141,40 @@ tree:
   - N475
   - N476
   status: resolved
+- id: N488
+  type: decision
+  title: Add an explicit World State system view and distinguish the EMA teacher
+  provenance: user
+  timestamp: 2026-09-17T14:03+02:00
+  choice: Accept O322 system-level expansion after identifying the missing knowledge graph; explain separately
+    listed agent and target. Keep the actual main and foundation recipe configurations distinct.
+  alternatives:
+  - Present neural containment alone as the complete system
+  - Silently attach a different World State configuration to the main learner
+  evidence:
+  - O322
+  - N487
+  - docs/model-explorer-plan.md
+  status: resolved
+- id: N489
+  type: experiment
+  title: Verify exact system explorer snapshots, persistent records and navigation
+  provenance: ai-executed
+  timestamp: 2026-09-17T14:03+02:00
+  result: 643 tests pass in718.73s on isolated source preceding final saved-session read/UI refinement;27 final
+    focused pass in12.12s. Independent uninstrumented audits reproduce all weights, losses and gradients in
+    main1203-module learner and separate452-module/111929-parameter foundation. Main teacher gradients absent.
+    Fresh synthetic store1 entity/4 components/0 relations/4 evidence/2 events; complete values roundtrip.
+    Browser record/evidence/event/schema and runtime-to-weight navigation pass. All17/41 main nodes/edges and13/12
+    runtime nodes/edges retained without overlap or unrelated-block crossings.20,723,908-byte self-contained
+    HTML; live rebuild works. File-URL browser navigation blocked; UI tested on same bytes via loopback. No
+    optimizer, model or capability change.
+  evidence:
+  - ara/evidence/tables/model_explorer_system_2026-09-17.json
+  - docs/model-explorer-plan.md
+  - f50db67
+  also_depends_on:
+  - N488
+  - N476
+  - N482
+  status: resolved

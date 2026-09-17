@@ -223,20 +223,22 @@ sessions:
   open_threads: 47
 - id: 2026-09-17_001
   date: '2026-09-17'
-  summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent
-    termination in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests
-    pass; 9216 answers and all weights preserved. No training or capability promotion. Current categorical
-    architecture explorer delivered with exact weight/loss/gradient audit and browser QA; no model training
-    or capability promotion. Performance follow-up: byte batching and frozen metadata both fail fixed5%
-    whole-workload gate; original runtime restored. 17 contracts retained,634 full tests pass;6 saved
-    training/5 inference pairs byte-exact,15 structural reports. Request-form repair remains open; no
-    speed/capability promotion. Explorer layout refined after user feedback: boundary columns, routed
-    arrows and directional highlighting; all41 overview connections retained. Paired boundary study: matched
-    CE76.56% beats extra loss74.48% on stronger source; weak source37.5%, preservation/adoption fail.
-    Extra loss removed, paired/fresh tools retained;640 snapshot tests,30 final focused,18 reports. Original
-    cap failed; separate fixed-weight recovery completed. Explorer scope clarified: external World State
-    knowledge graph omitted; system-level extension proposed, not implemented.'
-  turn_count: 7
-  events_count: 30
+  summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent termination
+    in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests pass; 9216 answers
+    and all weights preserved. No training or capability promotion. Current categorical architecture explorer
+    delivered with exact weight/loss/gradient audit and browser QA; no model training or capability promotion.
+    Performance follow-up: byte batching and frozen metadata both fail fixed5% whole-workload gate; original
+    runtime restored. 17 contracts retained,634 full tests pass;6 saved training/5 inference pairs byte-exact,15
+    structural reports. Request-form repair remains open; no speed/capability promotion. Explorer layout refined
+    after user feedback: boundary columns, routed arrows and directional highlighting; all41 overview connections
+    retained. Paired boundary study: matched CE76.56% beats extra loss74.48% on stronger source; weak source37.5%,
+    preservation/adoption fail. Extra loss removed, paired/fresh tools retained;640 snapshot tests,30 final
+    focused,18 reports. Original cap failed; separate fixed-weight recovery completed. Explorer scope clarified:
+    external World State knowledge graph omitted; system-level extension proposed, not implemented. User accepted
+    system expansion: knowledge graph records and separately configured World State neural/runtime views delivered;
+    agent/EMA teacher roles explicit.643 frozen full tests,27 final focused, exact two-model audits and loopback
+    browser QA pass; no training/capability promotion.'
+  turn_count: 8
+  events_count: 33
   claims_touched: []
-  open_threads: 52
+  open_threads: 51

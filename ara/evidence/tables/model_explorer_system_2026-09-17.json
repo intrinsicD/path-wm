@@ -1,0 +1,122 @@
+{
+  "status": "passed",
+  "date": "2026-09-17",
+  "main": {
+    "status": "passed",
+    "source_sha256": "df8e65562f317c89edf43265f13fc3b656ff85bf33c13a8710e9e08eb806958a",
+    "html_sha256": "4e319b1a192d15a4acecb41e3689be3e96b274d3f572d7ee5f19379eab8e53dc",
+    "html_bytes": 20723908,
+    "modules": 1203,
+    "deployed_modules": 601,
+    "deployed_parameters": 515553,
+    "parameter_tensors": 1502,
+    "exact_parameter_scalars": 1031106,
+    "gradient_tensors": 747,
+    "checks": [
+      "every registered module matches current instantiated model",
+      "every parameter scalar and shape exact",
+      "uninstrumented default-model loss exact",
+      "every gradient scalar and absent gradient exact",
+      "all forward provenance edges causal",
+      "all backward endpoints resolve"
+    ],
+    "forward_operations": 29665,
+    "backward_nodes": 10795,
+    "weight_source": "Fresh initialization \u00b7 seed 42"
+  },
+  "world": {
+    "status": "passed",
+    "source_sha256": "df8e65562f317c89edf43265f13fc3b656ff85bf33c13a8710e9e08eb806958a",
+    "html_sha256": "4e319b1a192d15a4acecb41e3689be3e96b274d3f572d7ee5f19379eab8e53dc",
+    "html_bytes": 20723908,
+    "world_modules": 452,
+    "world_parameter_tensors": 573,
+    "world_parameter_scalars": 111929,
+    "world_gradient_tensors": 43,
+    "store_counts": {
+      "entities": 1,
+      "components": 4,
+      "relations": 0,
+      "evidence": 4,
+      "events": 2
+    },
+    "runtime_nodes": 13,
+    "runtime_edges": 12,
+    "checks": [
+      "every World State module, weight scalar and shape matches the separate FoundationModel",
+      "uninstrumented foundation loss and every gradient match exactly",
+      "all persisted records and events roundtrip with full values",
+      "all runtime call endpoints resolve",
+      "retrieval/context/think executed without mutating the graph",
+      "World State has no teacher; main target has no gradients"
+    ]
+  },
+  "full_suite": {
+    "passed": 643,
+    "seconds": 718.73,
+    "isolated": true,
+    "source_manifest_sha256": "f66ce974aba317de8b59678700e8e03625346fc248f357f7e64e704ea529bcd9",
+    "changed_since_copy": [
+      "experiments/world_state.py",
+      "pathwm/evaluation/explorer-system.js",
+      "pathwm/evaluation/explorer.html",
+      "tests/test_model_explorer.py"
+    ],
+    "scope": "Frozen source precedes final saved-session read and UI refinements. Final focused tests, exact numerical audits and browser QA cover final source."
+  },
+  "focused_tests": {
+    "passed": 27,
+    "seconds": 12.12,
+    "files": [
+      "tests/test_model_explorer.py",
+      "tests/test_world_state.py"
+    ]
+  },
+  "browser": {
+    "surface": "in-app browser via loopback server",
+    "standalone_file_navigation": "Blocked by browser file-URL policy; same HTML bytes served via loopback.",
+    "checks": [
+      "system overview and visible knowledge graph navigation",
+      "module roles distinguish agent and training-only EMA teacher",
+      "teacher inspector: 0 / 751 parameter tensors receive gradients",
+      "full component JSON -> evidence -> originating event operations -> Back",
+      "current Relation schema and captured source",
+      "WorldSession -> context neural module -> context.projections.state.weight -> exact scalar and gradient",
+      "cross-context main/world navigation and Back",
+      "live rebuild after source edits",
+      "no external scripts or stylesheet resources"
+    ],
+    "geometry": [
+      {
+        "scope": "main agent forward",
+        "nodes": 17,
+        "edges": 41,
+        "node_overlaps": 0,
+        "route_node_collisions": 0,
+        "inputs_left": true,
+        "outputs_right": true
+      },
+      {
+        "scope": "WorldSession observed component calls",
+        "nodes": 13,
+        "edges": 12,
+        "node_overlaps": 0,
+        "route_node_collisions": 0
+      }
+    ]
+  },
+  "checks": [
+    "ruff passed",
+    "JavaScript syntax passed",
+    "git diff --check passed",
+    "complete HTML payload roundtrips"
+  ],
+  "limits": [
+    "Both models have fresh seed42 weights; no trained checkpoint chosen",
+    "World State is a separate actual foundation recipe, not attached to main learner",
+    "Store is synthetic diagnostic data: 1 entity, 0 relations",
+    "Runtime arrows are Python call edges; tensor and gradient edges belong to separate captured neural objectives",
+    "No training or optimizer updates; no scientific capability claim"
+  ],
+  "implementation_commit": "f50db67"
+}
