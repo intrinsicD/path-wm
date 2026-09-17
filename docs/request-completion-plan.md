@@ -98,3 +98,70 @@ full-prefix generation defaults. Retain `TextDecoder.generate(..., last_only=Tru
 as an explicit experimental path, not a promoted optimization. `combined-verification.json`
 and its exact candidate source preserve the failed comparison. No GPU or training
 speedup claim. The small CPU gain is descriptive and does not override the gate.
+
+## Frozen diagnostic results
+
+All six evaluations completed at implementation commit `c959c63`, with no core
+calls or neural updates. They reproduce all9,216 saved answer rows in22.56 process
+seconds (including process startup, source loading and reports). Each run owns its
+checkpoint, raw `continuations.json`, source snapshot and verified standalone
+report. [Summary report](../runs/request_completion_v1/report.html).
+
+For source7202/neutral, all384 full-condition sequence requests start with the
+correct color. At that exact first-word prefix, EOS is the greedy legal token for
+four of eight wording variants, in all16 clips and all3 draws per variant. Space
+is greedy for the other four. Failing wording cells have mean space-minus-EOS
+logit margins from-2.71 to-5.58; successful cells+1.51 to+6.05. Both color orders
+show the same split. Thus these are systematic wording-associated decisions, not
+observed near-ties. Masked routing has the same pattern. Every first-only request
+chooses EOS correctly; every teacher-forced complete two-word answer chooses EOS.
+The latter is a conditional intervention, not proof that the model can freely
+generate the answer. See the exact questions, ranges and cells in `result.json`.
+
+The weaker source retains content errors: first-word accuracy62.5% on the neutral
+full-condition requests, sequence exact42.71% averaged over the repeated draws.
+Its EOS rate after the correct teacher-forced first word is18.23% for sequence
+requests, so stronger-source premature EOS is not a sufficient explanation of
+both sources' failures. These means are descriptive, not the earlier worst-draw
+acceptance endpoints. No scientific model variant, broad capability or color is
+promoted; the historical quick suite remains the reference.
+
+Raw audit:296,076 checks, including all9,216 original answer rows and reached-prefix
+next-token consistency,5,010 exact prepared-fixture text/mask/time comparisons,
+and4,548 unchanged checkpoint tensors. Six local run reports plus the summary use
+the unchanged renderer; structural checks and figure inspection pass. Interactive
+browser QA was not performed. Actual Claude review and reconciliation are saved;
+peer agreement is distinct from empirical checks. Software suite status is recorded
+separately in `software-cost.json` / `full-software-tests.txt`.
+
+Final verification:605 full software tests pass in594.83s, including existing
+training/resume/report paths;53 final focused checks pass. Targeted Ruff checks and
+`git diff --check` pass. Architecture atlas regenerated with16 graphs and62 source
+references; colors/scopes unchanged. Full tests overlap formal diagnostics, so
+their process durations are not additive wall time. All compute/artifact budgets
+were met. No training/evaluation job remains running.
+
+## Use and next iteration
+
+To run this diagnosis on another compatible saved cache, choose a NEW output:
+
+```bash
+OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 .venv/bin/python -m experiments.modality_readout \
+  --stage request-completion \
+  --core runs/request_meaning_v1/seed7202/balanced \
+  --request-cache runs/request_routing_v1/seed7202/neutral \
+  --seed 9701 --device cuda --output runs/my_completion_diagnosis
+```
+
+Source/cache identity and weights must agree. This stage checks saved generation
+before interpreting probabilities; it cannot resume training or resample the core.
+Do not rerun the six completed caches without a new reason. Optional decoder
+slicing is available through `TextDecoder.generate(..., last_only=True)`; normal
+recipe/runtime calls keep the original full-prefix default.
+
+Next preregister a matched request-form/continuation repair with paired first-only
+and sequence objectives, content and broader-task preservation, and fresh wording
+controls. Existing inspected wording cells are development evidence, not a fresh
+test set; do not simply fit the four failed templates and call that generalization.
+Keep weaker-source video-content access as a distinct problem. No new fit is part
+of this iteration, and no training-time improvement has been established.

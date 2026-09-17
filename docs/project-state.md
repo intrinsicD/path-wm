@@ -1,18 +1,25 @@
 # Current work
 
-**Active iteration, 17 September:** [request completion and decoder cost](request-completion-plan.md).
-Fix the documented masked-question whitespace edge; diagnose EOS using preserved
-routing states; measure a small last-position decoder optimization with exact
-generation and full-suite regression checks. No new fit or capability promotion.
+**Latest measurements, 17 September:** [request completion and decoder cost](request-completion-plan.md),
+[report](../runs/request_completion_v1/report.html). Actual Claude review reconciled.
+Masked-question whitespace edge repaired;5,010 existing fixture routes unchanged.
+Six cached-state diagnostics reproduce9,216 answers in22.56s without core sampling
+or training. Stronger-source premature EOS follows four of eight sequence wordings
+on every clip/draw; weaker-source content errors remain. Two inference candidates
+miss the CUDA speed gate (-3.67%/-1.94% paired latency reduction); original defaults
+preserved, slicing remains opt-in. No GPU/training speed or capability promotion.
+605 full software tests pass in594.83s;53 final focused checks;296,076 raw audits
+and4,548 unchanged checkpoint tensors. Seven structural reports, figure inspected,
+no interactive browser QA. Next preregister paired request-form/continuation
+repair with fresh wording and preservation controls, keeping content errors distinct.
 
 **New-session entry point:** [handoff](session-handoff.md),17 September2026.
 Frozen request-routing comparison is complete: [protocol/results](request-routing-plan.md),
 [report](../runs/request_routing_v1/report.html).584 software checks pass; all source
 weights and historical baseline outputs reproduce exactly. Stronger-source first
 color reaches100%, joint answers only50%; weaker source remains35.94%. Broad
-suite remains0/25 and1/25 with agreement regressions. Defaults unchanged. Next
-review the recorded preprocessing edge and isolate sequence continuation/EOS on
-fixed content before another narrowly specified repair.
+suite remains0/25 and1/25 with agreement regressions. Defaults unchanged. The
+preprocessing repair and frozen continuation follow-up are completed above.
 
 **Balanced request-meaning comparison completed,16 September.**
 [Protocol/results](request-meaning-plan.md),[report](../runs/request_meaning_v1/report.html).
