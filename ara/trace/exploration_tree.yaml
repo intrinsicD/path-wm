@@ -7935,3 +7935,76 @@ tree:
   also_depends_on:
   - N475
   status: resolved
+- id: N477
+  type: decision
+  title: Preregister exact byte-batch and frozen metadata performance comparisons
+  provenance: ai-executed
+  choice: Use two fixed request-meaning sources, calibration-only batch8, paired16-update/call blocks,3
+    warmups and9 alternating repeats. Require5% complete-workload reduction on each source with no>5%
+    companion regression. Actual Claude public-only reviews and reconciliation; no private export.
+  alternatives:
+  - Infer speed from fewer allocations alone
+  - Tune gate or batch after timing
+  - Skip comparison of actual training/inference paths
+  evidence:
+  - docs/byte-batch-plan.md
+  - dccce56
+  - a343c56
+  status: resolved
+  timestamp: 2026-09-17T12:04+02:00
+- id: N478
+  type: experiment
+  title: Exact training/inference comparisons and cache-use audit completed
+  provenance: ai-executed
+  result: Two corrected comparisons each pass31266 runtime equality checks. Strict saved audit:5088 tensors,160
+    arrays,8850 primitives,6 training pairs and5 inference pairs exact including optimizer/RNG/sampler/losses.
+    Source hashes unchanged. First byte attempt stopped for copy-induced GRU compaction, completed blocks
+    retained. Corrected setup flattens outside timing. Recorded measurement upper bound487.21s plus1.66s
+    successful audits; one failed inspection unmetered. Peak95126016 allocated bytes;634 full tests,15
+    structural reports; no browser QA.
+  evidence:
+  - ara/evidence/tables/byte_metadata_performance_2026-09-17.json
+  - runs/metadata_cache_v1/report.html
+  also_depends_on:
+  - N477
+  status: resolved
+  timestamp: 2026-09-17T12:04+02:00
+- id: N479
+  type: dead_end
+  title: One-transfer bytes and guarded frozen metadata reuse both fail adoption
+  provenance: ai-executed
+  hypothesis: Each mechanism can improve complete fixed-source training or inference latency by at least5%
+    without damaging the other workload or exact behavior.
+  failure_mode: Byte7202 training/inference +3.27%/+1.95%,7201 +1.19%/+1.02%. Metadata7202 -0.61%/+0.93%,7201
+    +1.36%/+1.67%. All medians below5%. Real metadata audit confirms3 hits after1 miss. Candidate precision
+    guard separately fails cuDNN import-order regression. No candidate adopted.
+  lesson: Retain the negative timings and remove unsupported complexity. Runtime torch.equal checks do
+    not establish signed-zero identity for all intermediate blocks; stricter final-artifact audit has
+    explicitly limited coverage.
+  evidence:
+  - ara/evidence/tables/byte_metadata_performance_2026-09-17.json
+  - runs/metadata_cache_v1/import-order-red.txt
+  also_depends_on:
+  - N477
+  - N478
+  status: resolved
+  timestamp: 2026-09-17T12:04+02:00
+- id: N480
+  type: decision
+  title: Restore original runtime and retain byte/metadata behavior contracts
+  provenance: ai-executed
+  choice: Original modalities.py/tasks.py restored byte for byte; no metadata cache flag. Keep17 independent
+    behavior/regression tests. Commit124e507 and results8453b19. Preserve candidate code/tests in Git
+    and run archives; next request-form/EOS repair remains pending, no speed/capability/color promotion.
+  alternatives:
+  - Keep an unearned default cache
+  - Call one favorable pair a speedup
+  - Claim negative trials resolve content/termination learning
+  evidence:
+  - N478
+  - N479
+  - tests/test_byte_batch.py
+  - tests/test_metadata_execution.py
+  - docs/session-handoff.md
+  status: resolved
+  timestamp: 2026-09-17T12:04+02:00

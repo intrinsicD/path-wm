@@ -1,0 +1,2400 @@
+{
+  "claude_reviews": [
+    {
+      "brief_sha256": "ef33b9cd33522f11edce961c2f0341cf1f16ded5ef170c1032385d6c550f2001",
+      "elapsed_seconds": 15.028624773025513,
+      "path": "runs/reviews/byte_batch_v1/public-receipt.json",
+      "response_sha256": "93b55687edc9b5ee3ebe9619b0f720441eb49468d80287b409abf628d8ccce29",
+      "returncode": 0
+    },
+    {
+      "brief_sha256": "0e1bb48205a6f703079df30f14f747c9c0526d10adc53774ccd4b5a8085303c6",
+      "elapsed_seconds": 10.009865103987977,
+      "path": "runs/reviews/byte_batch_v1/reconcile-receipt.json",
+      "response_sha256": "3cece69fba41e0d5957a10d13ee588fcf0c7fdfbfbd2c8f051190108b754878a",
+      "returncode": 0
+    },
+    {
+      "brief_sha256": "0f9bca1cedcb9af35003ee8421a2b93186aefba2a1a945964901a3f1bc734557",
+      "elapsed_seconds": 11.093812045874074,
+      "path": "runs/reviews/metadata_cache_v1/public-receipt.json",
+      "response_sha256": "c4cdc234910e039774cd3c328da4538f60ce71ddd05eb4a3973e62b9d27e6618",
+      "returncode": 0
+    },
+    {
+      "brief_sha256": "18236100d07525a1d4a705bf5ad402932be4cdc881522cb8e2190bd69ae248f0",
+      "elapsed_seconds": 8.31956114503555,
+      "path": "runs/reviews/metadata_cache_v1/reconcile-receipt.json",
+      "response_sha256": "1bae14e048f458c01bb2d11e4a3d60c3f17adf8bf7881722d56abd4b6bf40106",
+      "returncode": 0
+    }
+  ],
+  "compatibility": {
+    "cache_use_audit": {
+      "calls": [
+        {
+          "eligible": true,
+          "hit": false,
+          "record_count": 8
+        },
+        {
+          "eligible": true,
+          "hit": true,
+          "record_count": 8
+        },
+        {
+          "eligible": true,
+          "hit": true,
+          "record_count": 8
+        },
+        {
+          "eligible": true,
+          "hit": true,
+          "record_count": 8
+        }
+      ],
+      "scope": "Untimed four-call training-path eligibility audit; no optimizer updates or quality claim.",
+      "seconds": 1.3622382790781558
+    },
+    "runtime_exact_checks": 62532,
+    "saved_bytewise_audit": {
+      "bytewise_comparison": true,
+      "counts": {
+        "arrays": 160,
+        "inference_pairs": 5,
+        "primitives": 8850,
+        "reports": 12,
+        "tensors": 5088,
+        "training_pairs": 6
+      },
+      "scope": "Saved representative final blocks, optimizer/RNG/sampler/losses and available generated/working arrays; not every intermediate repeated-block snapshot.",
+      "seconds": 0.301720212912187,
+      "sources": {
+        "runs/request_meaning_v1/seed7201/balanced/last.pt": "3e63a245b33c6bc21e13bb20a804e060b9f3df6ed18cb05f9a89030a062d4b68",
+        "runs/request_meaning_v1/seed7202/balanced/last.pt": "5eba1706e6c09c874bb03bd504fcbe6d4944e568edfdcb418a596b757539d825"
+      }
+    }
+  },
+  "cost": {
+    "artifact_bytes_before_summary": 39503470,
+    "peak_torch_allocated_bytes": 95126016,
+    "recorded_measurement_upper_bound_seconds": 487.21019010222517,
+    "software": {
+      "command": "OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 .venv/bin/python -m pytest -o addopts= -q --durations=10",
+      "returncode": 0,
+      "seconds": 543.6689648060128
+    },
+    "successful_audit_seconds": 1.6639584919903427
+  },
+  "decision": "Original byte builder and MetadataEncoder restored. Independent byte/metadata execution checks retained; abandoned cache code removed.",
+  "evaluation_scope": "Two rejected performance mechanisms on two fixed development checkpoints; no new model quality evaluation, default change, or supported speedup.",
+  "implementation_commit": "124e507",
+  "limitations": [
+    "Timing repetitions reuse the same two checkpoints and calibration batches; not independent learning studies or general hardware evidence.",
+    "Per-pair runtime checks use torch.equal. The stricter byte-pattern audit covers saved representative final blocks only; signed-zero identity for every intermediate block was not recorded. No adoption claim relies on that missing closure.",
+    "The first tokenizer attempt is stopped and excluded for deep-copy GRU compaction overhead; completed training blocks are preserved. RNN layout is prepared outside timing in both corrected trials.",
+    "A separate frozen-path import-order probe failed because the candidate precision guard assumed a cuDNN submodule attribute. Saved red check reproduces it; removing caching fixes it.",
+    "Recorded cumulative measurement upper bound excludes one lightweight failed import-order inspection whose elapsed time was not separately saved. Do not claim exact total-process budget closure.",
+    "Existing report renderer unchanged; structural verification and plot inspection only, no interactive browser QA."
+  ],
+  "metrics": {
+    "Frozen metadata reuse · 7201 · inference": {
+      "paired_median_latency_reduction_percent": 1.6655156690445372,
+      "pairs": 9,
+      "source_gate_passed": false
+    },
+    "Frozen metadata reuse · 7201 · training": {
+      "paired_median_latency_reduction_percent": 1.3571910609882276,
+      "pairs": 9,
+      "source_gate_passed": false
+    },
+    "Frozen metadata reuse · 7202 · inference": {
+      "paired_median_latency_reduction_percent": 0.9274247242637701,
+      "pairs": 9,
+      "source_gate_passed": false
+    },
+    "Frozen metadata reuse · 7202 · training": {
+      "paired_median_latency_reduction_percent": -0.614254916657897,
+      "pairs": 9,
+      "source_gate_passed": false
+    },
+    "One-transfer bytes · 7201 · inference": {
+      "paired_median_latency_reduction_percent": 1.019996282149782,
+      "pairs": 9,
+      "source_gate_passed": false
+    },
+    "One-transfer bytes · 7201 · training": {
+      "paired_median_latency_reduction_percent": 1.1903543012743323,
+      "pairs": 9,
+      "source_gate_passed": false
+    },
+    "One-transfer bytes · 7202 · inference": {
+      "paired_median_latency_reduction_percent": 1.9519228443285463,
+      "pairs": 9,
+      "source_gate_passed": false
+    },
+    "One-transfer bytes · 7202 · training": {
+      "paired_median_latency_reduction_percent": 3.270178068817242,
+      "pairs": 9,
+      "source_gate_passed": false
+    }
+  },
+  "protocol": "docs/byte-batch-plan.md",
+  "raw_results": [
+    "runs/byte_batch_v1/progress.json",
+    "runs/byte_batch_v2/comparison.json",
+    "runs/metadata_cache_v1/comparison.json"
+  ],
+  "sources": {
+    "runs/request_meaning_v1/seed7201/balanced/last.pt": "3e63a245b33c6bc21e13bb20a804e060b9f3df6ed18cb05f9a89030a062d4b68",
+    "runs/request_meaning_v1/seed7202/balanced/last.pt": "5eba1706e6c09c874bb03bd504fcbe6d4944e568edfdcb418a596b757539d825"
+  },
+  "stopped_attempt": {
+    "elapsed_upper_bound_seconds": 202.1134431362152,
+    "reason": "Deep-copy GRU compaction warning invalidates timing representativeness. Candidate not judged; repair trial setup before fresh measurements. Completed blocks retained. Source7202 partial metrics are non-adoption data.",
+    "replacement": "runs/byte_batch_v2",
+    "source_unchanged": true,
+    "status": "stopped"
+  },
+  "comparisons": {
+    "byte_batch_v2": {
+      "candidate_source_sha256": "cb8aafb92a3c50f3cd876e3b160349bf4c4dfef7608bc2cceb53feda5a1ab0e2",
+      "exact_checks": 31266,
+      "microbenchmarks": [
+        {
+          "batch": 1,
+          "calls_per_block": 100,
+          "device": "cpu",
+          "paired_median_reduction": 0.5178647506284833,
+          "pairs": [
+            {
+              "candidate": 0.000713014043867588,
+              "original": 0.0014557249378412962
+            },
+            {
+              "candidate": 0.0007075190078467131,
+              "original": 0.0014651988167315722
+            },
+            {
+              "candidate": 0.0007147400174289942,
+              "original": 0.0014334460720419884
+            },
+            {
+              "candidate": 0.0007637441158294678,
+              "original": 0.001793009927496314
+            },
+            {
+              "candidate": 0.0007676188834011555,
+              "original": 0.0015396520029753447
+            },
+            {
+              "candidate": 0.0007017538882791996,
+              "original": 0.0014935790095478296
+            },
+            {
+              "candidate": 0.0007248600013554096,
+              "original": 0.0015034370590001345
+            },
+            {
+              "candidate": 0.0007047639228403568,
+              "original": 0.0014694968704134226
+            },
+            {
+              "candidate": 0.0007019541226327419,
+              "original": 0.0014741539489477873
+            }
+          ]
+        },
+        {
+          "batch": 8,
+          "calls_per_block": 100,
+          "device": "cpu",
+          "paired_median_reduction": 0.7226825492044385,
+          "pairs": [
+            {
+              "candidate": 0.0023374001029878855,
+              "original": 0.008428608067333698
+            },
+            {
+              "candidate": 0.0022731770295649767,
+              "original": 0.008129297057166696
+            },
+            {
+              "candidate": 0.0022299380507320166,
+              "original": 0.008405827917158604
+            },
+            {
+              "candidate": 0.0021930888760834932,
+              "original": 0.008340656058862805
+            },
+            {
+              "candidate": 0.0022903901990503073,
+              "original": 0.00828260206617415
+            },
+            {
+              "candidate": 0.0022966579999774694,
+              "original": 0.008207987993955612
+            },
+            {
+              "candidate": 0.0023502379190176725,
+              "original": 0.007961435010656714
+            },
+            {
+              "candidate": 0.00236326502636075,
+              "original": 0.007969594094902277
+            },
+            {
+              "candidate": 0.0021987250074744225,
+              "original": 0.008093650918453932
+            }
+          ]
+        },
+        {
+          "batch": 64,
+          "calls_per_block": 100,
+          "device": "cpu",
+          "paired_median_reduction": 0.738357103010905,
+          "pairs": [
+            {
+              "candidate": 0.016826000064611435,
+              "original": 0.06454347097314894
+            },
+            {
+              "candidate": 0.01694747619330883,
+              "original": 0.06473683496005833
+            },
+            {
+              "candidate": 0.01694522495381534,
+              "original": 0.0647689439356327
+            },
+            {
+              "candidate": 0.017056870041415095,
+              "original": 0.06453502993099391
+            },
+            {
+              "candidate": 0.016953902086243033,
+              "original": 0.063876983942464
+            },
+            {
+              "candidate": 0.0170145221054554,
+              "original": 0.0648583599831909
+            },
+            {
+              "candidate": 0.01672702794894576,
+              "original": 0.06393075501546264
+            },
+            {
+              "candidate": 0.01683094003237784,
+              "original": 0.06448833411559463
+            },
+            {
+              "candidate": 0.016902701929211617,
+              "original": 0.06490347697399557
+            }
+          ]
+        },
+        {
+          "batch": 1,
+          "calls_per_block": 100,
+          "device": "cuda",
+          "paired_median_reduction": 0.49596331318826803,
+          "pairs": [
+            {
+              "candidate": 0.0036922539584338665,
+              "original": 0.006343282992020249
+            },
+            {
+              "candidate": 0.0029995888471603394,
+              "original": 0.005059046903625131
+            },
+            {
+              "candidate": 0.002801167080178857,
+              "original": 0.007171896984800696
+            },
+            {
+              "candidate": 0.0029219030402600765,
+              "original": 0.005014033056795597
+            },
+            {
+              "candidate": 0.00297141307964921,
+              "original": 0.007247535977512598
+            },
+            {
+              "candidate": 0.002927907044067979,
+              "original": 0.004903696943074465
+            },
+            {
+              "candidate": 0.0029248488135635853,
+              "original": 0.007362509146332741
+            },
+            {
+              "candidate": 0.0029070370364934206,
+              "original": 0.0063634871039539576
+            },
+            {
+              "candidate": 0.0029464629478752613,
+              "original": 0.005845731124281883
+            }
+          ]
+        },
+        {
+          "batch": 8,
+          "calls_per_block": 100,
+          "device": "cuda",
+          "paired_median_reduction": 0.8342345817084181,
+          "pairs": [
+            {
+              "candidate": 0.006608888041228056,
+              "original": 0.029225392965599895
+            },
+            {
+              "candidate": 0.004661086946725845,
+              "original": 0.03140248893760145
+            },
+            {
+              "candidate": 0.0045812909957021475,
+              "original": 0.03163797501474619
+            },
+            {
+              "candidate": 0.005796594079583883,
+              "original": 0.02989209583029151
+            },
+            {
+              "candidate": 0.005855659954249859,
+              "original": 0.031344013987109065
+            },
+            {
+              "candidate": 0.0052198669873178005,
+              "original": 0.031489480985328555
+            },
+            {
+              "candidate": 0.0054338660556823015,
+              "original": 0.030746274162083864
+            },
+            {
+              "candidate": 0.004580565961077809,
+              "original": 0.03155701817013323
+            },
+            {
+              "candidate": 0.004573873011395335,
+              "original": 0.03145568887703121
+            }
+          ]
+        },
+        {
+          "batch": 64,
+          "calls_per_block": 100,
+          "device": "cuda",
+          "paired_median_reduction": 0.906461861844038,
+          "pairs": [
+            {
+              "candidate": 0.026272539049386978,
+              "original": 0.2443106530699879
+            },
+            {
+              "candidate": 0.022466395050287247,
+              "original": 0.27540249889716506
+            },
+            {
+              "candidate": 0.02336309594102204,
+              "original": 0.24342243000864983
+            },
+            {
+              "candidate": 0.021635710960254073,
+              "original": 0.24639831692911685
+            },
+            {
+              "candidate": 0.023070930037647486,
+              "original": 0.23792310198768973
+            },
+            {
+              "candidate": 0.02225068095140159,
+              "original": 0.239899137057364
+            },
+            {
+              "candidate": 0.022316627204418182,
+              "original": 0.23858318803831935
+            },
+            {
+              "candidate": 0.021452878834679723,
+              "original": 0.24288708507083356
+            },
+            {
+              "candidate": 0.022958565037697554,
+              "original": 0.2426061388105154
+            }
+          ]
+        }
+      ],
+      "passed": false,
+      "peak_allocated_bytes": 95126016,
+      "reference_source_sha256": "68d6c4ae94aad327b2f714324c47b3e875fd079b0f233cd7d044703795320f21",
+      "script_sha256": "6c62e79842ae9cc8d82822efc040b112b8f2d773328bcf6d0b2d63d5b61e036c",
+      "seconds": 142.51697046589106,
+      "sources": [
+        {
+          "passed": false,
+          "seed": 7202,
+          "source_sha256": "5eba1706e6c09c874bb03bd504fcbe6d4944e568edfdcb418a596b757539d825",
+          "workloads": {
+            "inference": {
+              "paired_median_reduction": 0.019519228443285463,
+              "pairs": [
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.7486547089647502,
+                    "setup_seconds": 0.06750149303115904
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.7213774470146745,
+                    "setup_seconds": 0.06653745006769896
+                  },
+                  "repeat": 0
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.416795585071668,
+                    "setup_seconds": 0.14618283114396036
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.300812432076782,
+                    "setup_seconds": 0.054166743997484446
+                  },
+                  "repeat": 1
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.277410943992436,
+                    "setup_seconds": 0.05113156093284488
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.246394176967442,
+                    "setup_seconds": 0.049823492066934705
+                  },
+                  "repeat": 2
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2282608221285045,
+                    "setup_seconds": 0.05041163903661072
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2548095050733536,
+                    "setup_seconds": 0.05059436406008899
+                  },
+                  "repeat": 3
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.31331698410213,
+                    "setup_seconds": 0.052790401969105005
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.294815719127655,
+                    "setup_seconds": 0.049758183071389794
+                  },
+                  "repeat": 4
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2672649438027292,
+                    "setup_seconds": 0.10269884509034455
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.292493418091908,
+                    "setup_seconds": 0.04994725598953664
+                  },
+                  "repeat": 5
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2465793548617512,
+                    "setup_seconds": 0.05000185500830412
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2989659570157528,
+                    "setup_seconds": 0.0506452729459852
+                  },
+                  "repeat": 6
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2795351829845458,
+                    "setup_seconds": 0.05004820297472179
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3083705070894212,
+                    "setup_seconds": 0.05202827719040215
+                  },
+                  "repeat": 7
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.248865633038804,
+                    "setup_seconds": 0.050202646991238
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3120056479237974,
+                    "setup_seconds": 0.050284151919186115
+                  },
+                  "repeat": 8
+                }
+              ],
+              "updates_or_calls_per_block": 16,
+              "warmups_per_arm": 3
+            },
+            "training": {
+              "paired_median_reduction": 0.03270178068817242,
+              "pairs": [
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.23035973822698,
+                    "setup_seconds": 0.05373037699609995
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.2570612141862512,
+                    "setup_seconds": 0.048651374178007245
+                  },
+                  "repeat": 0
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.1746324219275266,
+                    "setup_seconds": 0.04819729086011648
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.2086924840696156,
+                    "setup_seconds": 0.05048073502257466
+                  },
+                  "repeat": 1
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.181836738018319,
+                    "setup_seconds": 0.049194617895409465
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.2497032540850341,
+                    "setup_seconds": 0.09605009388178587
+                  },
+                  "repeat": 2
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.2155260350555182,
+                    "setup_seconds": 0.053677297895774245
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.1958421079907566,
+                    "setup_seconds": 0.04888661811128259
+                  },
+                  "repeat": 3
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.1436220488976687,
+                    "setup_seconds": 0.04837259813211858
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.1965504849795252,
+                    "setup_seconds": 0.0478167817927897
+                  },
+                  "repeat": 4
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.1451685649808496,
+                    "setup_seconds": 0.09610099298879504
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.1838836690876633,
+                    "setup_seconds": 0.047278776997700334
+                  },
+                  "repeat": 5
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.141952807083726,
+                    "setup_seconds": 0.04871877492405474
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.1973238321952522,
+                    "setup_seconds": 0.048267791979014874
+                  },
+                  "repeat": 6
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.142064018175006,
+                    "setup_seconds": 0.04807637492194772
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.1782209451775998,
+                    "setup_seconds": 0.052201081067323685
+                  },
+                  "repeat": 7
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.1437056299764663,
+                    "setup_seconds": 0.09979464998468757
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding"
+                    ],
+                    "seconds": 1.1911747029516846,
+                    "setup_seconds": 0.04772995691746473
+                  },
+                  "repeat": 8
+                }
+              ],
+              "updates_or_calls_per_block": 16,
+              "warmups_per_arm": 3
+            }
+          }
+        },
+        {
+          "passed": false,
+          "seed": 7201,
+          "source_sha256": "3e63a245b33c6bc21e13bb20a804e060b9f3df6ed18cb05f9a89030a062d4b68",
+          "workloads": {
+            "inference": {
+              "paired_median_reduction": 0.010199962821497821,
+              "pairs": [
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3396182721480727,
+                    "setup_seconds": 0.05612482409924269
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3963024199474603,
+                    "setup_seconds": 0.05460907588712871
+                  },
+                  "repeat": 0
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3546657101251185,
+                    "setup_seconds": 0.054486596025526524
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3058225561399013,
+                    "setup_seconds": 0.1106745710130781
+                  },
+                  "repeat": 1
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3400858698878437,
+                    "setup_seconds": 0.05608058092184365
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3367570990230888,
+                    "setup_seconds": 0.051904178922995925
+                  },
+                  "repeat": 2
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3048492989037186,
+                    "setup_seconds": 0.05895349197089672
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3431747700087726,
+                    "setup_seconds": 0.05336374812759459
+                  },
+                  "repeat": 3
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3496412991080433,
+                    "setup_seconds": 0.05477757821790874
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3517819461412728,
+                    "setup_seconds": 0.05528096598573029
+                  },
+                  "repeat": 4
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2818538250867277,
+                    "setup_seconds": 0.10652133799158037
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3258997099474072,
+                    "setup_seconds": 0.05344604002311826
+                  },
+                  "repeat": 5
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3167786959093064,
+                    "setup_seconds": 0.052497779950499535
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3303481980692595,
+                    "setup_seconds": 0.0544083199929446
+                  },
+                  "repeat": 6
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2787557910196483,
+                    "setup_seconds": 0.05266685411334038
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2868242380209267,
+                    "setup_seconds": 0.053170174825936556
+                  },
+                  "repeat": 7
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2590496968477964,
+                    "setup_seconds": 0.11435867520049214
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3144134180620313,
+                    "setup_seconds": 0.05004969611763954
+                  },
+                  "repeat": 8
+                }
+              ],
+              "updates_or_calls_per_block": 16,
+              "warmups_per_arm": 3
+            },
+            "training": {
+              "paired_median_reduction": 0.011903543012743323,
+              "pairs": [
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2970078110229224,
+                    "setup_seconds": 0.05402609100565314
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2878455519676208,
+                    "setup_seconds": 0.05370031204074621
+                  },
+                  "repeat": 0
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.470214714994654,
+                    "setup_seconds": 0.05513561796396971
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.7053085018415004,
+                    "setup_seconds": 0.06471267202869058
+                  },
+                  "repeat": 1
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.6154680238105357,
+                    "setup_seconds": 0.06159704807214439
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.6260663028806448,
+                    "setup_seconds": 0.0630979158449918
+                  },
+                  "repeat": 2
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.5713364009279758,
+                    "setup_seconds": 0.055956113850697875
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2686452011112124,
+                    "setup_seconds": 0.05965078598819673
+                  },
+                  "repeat": 3
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.4138469779863954,
+                    "setup_seconds": 0.05181694310158491
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2351529700681567,
+                    "setup_seconds": 0.04956439486704767
+                  },
+                  "repeat": 4
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.228463637875393,
+                    "setup_seconds": 0.05253612482920289
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2432628709357232,
+                    "setup_seconds": 0.05265259719453752
+                  },
+                  "repeat": 5
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2116126890759915,
+                    "setup_seconds": 0.10541146714240313
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.256692502880469,
+                    "setup_seconds": 0.0524344970472157
+                  },
+                  "repeat": 6
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2690223678946495,
+                    "setup_seconds": 0.048972989898175
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.3162309632170945,
+                    "setup_seconds": 0.05627131601795554
+                  },
+                  "repeat": 7
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.1847057892009616,
+                    "setup_seconds": 0.04914552206173539
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.modalities",
+                      "pathwm.data.modality_readout",
+                      "pathwm.models.tasks",
+                      "pathwm.models.agent",
+                      "pathwm.data.understanding",
+                      "pathwm.evaluation.understanding"
+                    ],
+                    "seconds": 1.2913553931284696,
+                    "setup_seconds": 0.051476586144417524
+                  },
+                  "repeat": 8
+                }
+              ],
+              "updates_or_calls_per_block": 16,
+              "warmups_per_arm": 3
+            }
+          }
+        }
+      ],
+      "token_checks": 12
+    },
+    "metadata_cache_v1": {
+      "candidate_source_sha256": "8d45eb0dec1aa6c574d00b2b2a11ec64a90228a120825f439a77b0c5a50263ae",
+      "exact_checks": 31266,
+      "passed": false,
+      "peak_allocated_bytes": 93656576,
+      "reference_source_sha256": "69bc3f5a2847e6779c01c1c77a99f9a84514b0855ddea6b41d684b24168724e9",
+      "script_sha256": "c51109bf96b751e3d9941d0999665aa5edd9176e1715dedb5187e2a9087b4931",
+      "seconds": 142.5797765001189,
+      "sources": [
+        {
+          "passed": false,
+          "seed": 7202,
+          "source_sha256": "5eba1706e6c09c874bb03bd504fcbe6d4944e568edfdcb418a596b757539d825",
+          "workloads": {
+            "inference": {
+              "paired_median_reduction": 0.009274247242637701,
+              "pairs": [
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.468648215988651,
+                    "setup_seconds": 0.056204088032245636
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.4823963260278106,
+                    "setup_seconds": 0.12842230219393969
+                  },
+                  "repeat": 0
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.4594604070298374,
+                    "setup_seconds": 0.05943528586067259
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.430910712108016,
+                    "setup_seconds": 0.05840423400513828
+                  },
+                  "repeat": 1
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3431938539724797,
+                    "setup_seconds": 0.05269039096310735
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3850122799631208,
+                    "setup_seconds": 0.052985179936513305
+                  },
+                  "repeat": 2
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.4153450070880353,
+                    "setup_seconds": 0.05382933793589473
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.367237824946642,
+                    "setup_seconds": 0.11419026413932443
+                  },
+                  "repeat": 3
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3450145421084017,
+                    "setup_seconds": 0.052797970827668905
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.356710339896381,
+                    "setup_seconds": 0.05346006294712424
+                  },
+                  "repeat": 4
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.336279322160408,
+                    "setup_seconds": 0.054107635049149394
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3795453871134669,
+                    "setup_seconds": 0.053247485077008605
+                  },
+                  "repeat": 5
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3783439509570599,
+                    "setup_seconds": 0.052700474858284
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3741175059694797,
+                    "setup_seconds": 0.0546003479976207
+                  },
+                  "repeat": 6
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3772674379870296,
+                    "setup_seconds": 0.05262207891792059
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.417999163037166,
+                    "setup_seconds": 0.1216865109745413
+                  },
+                  "repeat": 7
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3352484439965338,
+                    "setup_seconds": 0.053308887872844934
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.369040367892012,
+                    "setup_seconds": 0.052744315937161446
+                  },
+                  "repeat": 8
+                }
+              ],
+              "updates_or_calls_per_block": 16,
+              "warmups_per_arm": 3
+            },
+            "training": {
+              "paired_median_reduction": -0.00614254916657897,
+              "pairs": [
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2668610729742795,
+                    "setup_seconds": 0.0490414269734174
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2045161870773882,
+                    "setup_seconds": 0.04839713801629841
+                  },
+                  "repeat": 0
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3175715659745038,
+                    "setup_seconds": 0.049082254990935326
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.258167004911229,
+                    "setup_seconds": 0.050121522042900324
+                  },
+                  "repeat": 1
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.268768324982375,
+                    "setup_seconds": 0.05025499896146357
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.25330418208614,
+                    "setup_seconds": 0.04882110306061804
+                  },
+                  "repeat": 2
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2598369219340384,
+                    "setup_seconds": 0.049973553977906704
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2742739708628505,
+                    "setup_seconds": 0.0505082500167191
+                  },
+                  "repeat": 3
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3118978070560843,
+                    "setup_seconds": 0.10250282194465399
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2647092009428889,
+                    "setup_seconds": 0.04982036887668073
+                  },
+                  "repeat": 4
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.261360569158569,
+                    "setup_seconds": 0.05149195995181799
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2772664888761938,
+                    "setup_seconds": 0.051992767956107855
+                  },
+                  "repeat": 5
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3275389450136572,
+                    "setup_seconds": 0.052409310825169086
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3684391821734607,
+                    "setup_seconds": 0.04964659200049937
+                  },
+                  "repeat": 6
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.313767395913601,
+                    "setup_seconds": 0.05339473416097462
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.305746782105416,
+                    "setup_seconds": 0.05198393505997956
+                  },
+                  "repeat": 7
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2992385309189558,
+                    "setup_seconds": 0.054643173003569245
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.4362326480913907,
+                    "setup_seconds": 0.10157772619277239
+                  },
+                  "repeat": 8
+                }
+              ],
+              "updates_or_calls_per_block": 16,
+              "warmups_per_arm": 3
+            }
+          }
+        },
+        {
+          "passed": false,
+          "seed": 7201,
+          "source_sha256": "3e63a245b33c6bc21e13bb20a804e060b9f3df6ed18cb05f9a89030a062d4b68",
+          "workloads": {
+            "inference": {
+              "paired_median_reduction": 0.016655156690445372,
+              "pairs": [
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.4411470629274845,
+                    "setup_seconds": 0.055440838914364576
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.4198790539521724,
+                    "setup_seconds": 0.05302746407687664
+                  },
+                  "repeat": 0
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.5363585259765387,
+                    "setup_seconds": 0.05708863795734942
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.6139452320057899,
+                    "setup_seconds": 0.06496551400050521
+                  },
+                  "repeat": 1
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.651407513068989,
+                    "setup_seconds": 0.06287967693060637
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.6530439499765635,
+                    "setup_seconds": 0.06287354696542025
+                  },
+                  "repeat": 2
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.6180647059809417,
+                    "setup_seconds": 0.06335390801541507
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.6495729351881891,
+                    "setup_seconds": 0.06403160188347101
+                  },
+                  "repeat": 3
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.5838512498885393,
+                    "setup_seconds": 0.13187543000094593
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.6546981309074908,
+                    "setup_seconds": 0.06516533787362278
+                  },
+                  "repeat": 4
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.5286285171750933,
+                    "setup_seconds": 0.0576982160564512
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.5033497298136353,
+                    "setup_seconds": 0.059328872011974454
+                  },
+                  "repeat": 5
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.473795655183494,
+                    "setup_seconds": 0.06196049181744456
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.5119902060832828,
+                    "setup_seconds": 0.057716468116268516
+                  },
+                  "repeat": 6
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.452074239961803,
+                    "setup_seconds": 0.055783163057640195
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.470568663207814,
+                    "setup_seconds": 0.055636563105508685
+                  },
+                  "repeat": 7
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.468979333061725,
+                    "setup_seconds": 0.05423006392084062
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.493859802139923,
+                    "setup_seconds": 0.057060976047068834
+                  },
+                  "repeat": 8
+                }
+              ],
+              "updates_or_calls_per_block": 16,
+              "warmups_per_arm": 3
+            },
+            "training": {
+              "paired_median_reduction": 0.013571910609882276,
+              "pairs": [
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2496883959975094,
+                    "setup_seconds": 0.05148168187588453
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2572333798743784,
+                    "setup_seconds": 0.05084117199294269
+                  },
+                  "repeat": 0
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.257429172983393,
+                    "setup_seconds": 0.05238522891886532
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3389952699653804,
+                    "setup_seconds": 0.05141189112327993
+                  },
+                  "repeat": 1
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.276012932183221,
+                    "setup_seconds": 0.053230052115395665
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.293569136876613,
+                    "setup_seconds": 0.051268197828903794
+                  },
+                  "repeat": 2
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.279659178107977,
+                    "setup_seconds": 0.05149513785727322
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2779636140912771,
+                    "setup_seconds": 0.05201163492165506
+                  },
+                  "repeat": 3
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2829463069792837,
+                    "setup_seconds": 0.05144831584766507
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3026080469135195,
+                    "setup_seconds": 0.051867200061678886
+                  },
+                  "repeat": 4
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2848491759505123,
+                    "setup_seconds": 0.051206085830926895
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2945898119360209,
+                    "setup_seconds": 0.05157203692942858
+                  },
+                  "repeat": 5
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2605308739002794,
+                    "setup_seconds": 0.05173681792803109
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2682920480147004,
+                    "setup_seconds": 0.11284656403586268
+                  },
+                  "repeat": 6
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.2904711680021137,
+                    "setup_seconds": 0.050912246108055115
+                  },
+                  "order": [
+                    "candidate",
+                    "original"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3137069628573954,
+                    "setup_seconds": 0.053728278959169984
+                  },
+                  "repeat": 7
+                },
+                {
+                  "candidate": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.278061626944691,
+                    "setup_seconds": 0.051208925899118185
+                  },
+                  "order": [
+                    "original",
+                    "candidate"
+                  ],
+                  "original": {
+                    "patched_aliases": [
+                      "pathwm.models.tasks.MetadataEncoder.forward"
+                    ],
+                    "seconds": 1.3027419729623944,
+                    "setup_seconds": 0.05240798578597605
+                  },
+                  "repeat": 8
+                }
+              ],
+              "updates_or_calls_per_block": 16,
+              "warmups_per_arm": 3
+            }
+          }
+        }
+      ],
+      "token_checks": 12
+    }
+  },
+  "artifacts": {
+    "runs/metadata_cache_v1/comparison.json": "8949d2c4555b62105f6803f206a2ca9c6ea910572e66ca3e34f1d33719f15e7c",
+    "runs/metadata_cache_v1/audit.json": "a2195d7af71461fe794e2d2b9f6b3b9774a47f8a1a8d5466cbbce8bac869d0b5",
+    "runs/metadata_cache_v1/cache_usage.json": "c63ee01e14b957d93c7c437152bcebf5c1cadace586895a67ff5ee879bf5719b",
+    "runs/metadata_cache_v1/import-order-red.txt": "7501e56b3ec8213d19a0ab7e0b4feda3fcb801f54da45f2a5425ea6c680bfef4",
+    "runs/metadata_cache_v1/full-software-tests.txt": "7471d20ae16d122002712ceb00722404f4616eca85248133e8e7c1d8df9fc6f8",
+    "runs/metadata_cache_v1/report.html": "c7a70b86b15bb1da8e3a97ef7c9b3f408453952958b9e95072ecce0d7aebdde3",
+    "runs/metadata_cache_v1/report-verification.json": "5acc78a6ec3be0ba5174b8a349289e941831c1bc232a926e9d8f3773f3b9a959",
+    "runs/byte_batch_v2/comparison.json": "21bb95d63c49129fecb3d04b0259552b7b643712a2cd8c5009b923bb251188cc",
+    "runs/byte_batch_v1/attempt-status.json": "6cb11b455d0ecf7ba4cf62f5724dd3ce6b175b12853873862baceaa1c7664a5c"
+  }
+}

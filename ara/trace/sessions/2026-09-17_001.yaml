@@ -2,13 +2,16 @@ session:
   id: 2026-09-17_001
   date: '2026-09-17'
   started: 2026-09-17T10:43+02:00
-  last_turn: 2026-09-17T12:03+02:00
-  turn_count: 3
+  last_turn: 2026-09-17T12:04+02:00
+  turn_count: 4
   summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent
     termination in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests
     pass; 9216 answers and all weights preserved. No training or capability promotion. Current categorical
     architecture explorer delivered with exact weight/loss/gradient audit and browser QA; no model training
-    or capability promotion.'
+    or capability promotion. Performance follow-up: byte batching and frozen metadata both fail fixed5%
+    whole-workload gate; original runtime restored. 17 contracts retained,634 full tests pass;6 saved
+    training/5 inference pairs byte-exact,15 structural reports. Request-form repair remains open; no
+    speed/capability promotion.'
 events_logged:
 - turn: 1
   type: decision
@@ -122,6 +125,30 @@ events_logged:
   routing: direct
   provenance: ai-executed
   summary: Executable explorer reproduces current weights, loss and gradients
+- turn: 4
+  type: decision
+  id: N477
+  routing: direct
+  provenance: ai-executed
+  summary: Preregister exact byte-batch and frozen metadata performance comparisons
+- turn: 4
+  type: experiment
+  id: N478
+  routing: direct
+  provenance: ai-executed
+  summary: Exact training/inference comparisons and cache-use audit completed
+- turn: 4
+  type: dead_end
+  id: N479
+  routing: direct
+  provenance: ai-executed
+  summary: One-transfer bytes and guarded frozen metadata reuse both fail adoption
+- turn: 4
+  type: decision
+  id: N480
+  routing: direct
+  provenance: ai-executed
+  summary: Restore original runtime and retain byte/metadata behavior contracts
 ai_actions:
 - turn: 1
   action: Implemented optional routing/state diagnostics with actual Claude public review, ran12 fixed evaluations
@@ -168,6 +195,19 @@ ai_actions:
   - docs/project-state.md
   - pyproject.toml
   - README.md
+- turn: 4
+  action: Implemented and rejected two performance mechanisms after actual Claude review and fixed comparisons;
+    reproduced import-order failure, restored runtime, retained17 checks, audited exact states, ran634
+    full tests and verified15 reports. Committed results and atlas without capability promotion. Unrelated
+    explorer changes preserved.
+  provenance: ai-executed
+  files_changed:
+  - tests/test_byte_batch.py
+  - tests/test_metadata_execution.py
+  - docs/byte-batch-plan.md
+  - docs/project-state.md
+  - docs/session-handoff.md
+  - docs/diagrams/architecture-atlas.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -180,6 +220,9 @@ key_context:
   excerpt: Render current model in HTML; click modules to zoom into internals, data/gradients and weights,
     zoom back out; keep exact current model. Selected /home/alex/Documents/path-wm and complete categorical
     agent. Marigold diagram visual reference.
+- turn: 4
+  excerpt: Continue together with Claude. Use the testsuite to pick what to work on/improve/reduce duplicated
+    code/improve training time/improve inference time. Plan, implement, review, test and fix. Iterate
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -302,8 +345,9 @@ open_threads:
 - 'N472/O318/O319: preregister paired request-form continuation repair with fresh wording and preservation
   controls. Cached EOS diagnosis and whitespace edge are complete; unique module attribution and weaker-source
   content remain open.'
-- 'N473: preserve rejected CUDA trials and unchanged defaults; new performance work needs a new fixed
-  profiling hypothesis, not repeated threshold hunting.'
+- 'N473/N477-N480: decoder slicing, one-transfer bytes and frozen metadata fail fixed speed gates. New
+  performance work needs a fresh complete-workload profile/hypothesis; do not rerun until a favorable
+  time appears. Request-form/EOS repair remains separate.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher
   response.'

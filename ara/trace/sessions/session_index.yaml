@@ -227,8 +227,11 @@ sessions:
     termination in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests
     pass; 9216 answers and all weights preserved. No training or capability promotion. Current categorical
     architecture explorer delivered with exact weight/loss/gradient audit and browser QA; no model training
-    or capability promotion.'
-  turn_count: 3
-  events_count: 16
+    or capability promotion. Performance follow-up: byte batching and frozen metadata both fail fixed5%
+    whole-workload gate; original runtime restored. 17 contracts retained,634 full tests pass;6 saved
+    training/5 inference pairs byte-exact,15 structural reports. Request-form repair remains open; no
+    speed/capability promotion.'
+  turn_count: 4
+  events_count: 20
   claims_touched: []
   open_threads: 50
