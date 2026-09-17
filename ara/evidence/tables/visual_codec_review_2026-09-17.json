@@ -1,0 +1,824 @@
+{
+  "date": "2026-09-17",
+  "user_scope": "Scalable small visual codec, large/variable geometry, useful world-model and debugging outputs; both with and without pretrained teachers.",
+  "google_queries": [
+    "vae",
+    "vae improvements",
+    "variational autoencoder"
+  ],
+  "google_note": "Exact vae returned German country-abbreviation results; disambiguated separately. Improvements query exposed VIVAT and LeanVAE. Overview/community results were discovery only.",
+  "sources": [
+    {
+      "title": "**Catch Missing Details: Image Reconstruction with Frequency Augmented Variational Autoencoder**",
+      "url": "https://arxiv.org/html/2305.02541v1"
+    },
+    {
+      "title": "official implementation",
+      "url": "https://github.com/oppo-us-research/FA-VAE"
+    },
+    {
+      "title": "VQGAN / Taming Transformers, 2021",
+      "url": "https://arxiv.org/abs/2012.09841"
+    },
+    {
+      "title": "Latent Diffusion, 2022",
+      "url": "https://arxiv.org/abs/2112.10752"
+    },
+    {
+      "title": "Focal Frequency Loss, 2021",
+      "url": "https://arxiv.org/abs/2012.12821"
+    },
+    {
+      "title": "FA-VAE, 2023",
+      "url": "https://arxiv.org/abs/2305.02541"
+    },
+    {
+      "title": "VIVAT, 2025",
+      "url": "https://arxiv.org/html/2506.07863v1"
+    },
+    {
+      "title": "DC-AE, 2024/ICLR 2025",
+      "url": "https://hanlab.mit.edu/projects/dc-ae"
+    },
+    {
+      "title": "DC-AE 1.5, 2025",
+      "url": "https://hanlab.mit.edu/projects/dc-ae-1-5"
+    },
+    {
+      "title": "TinyAutoEncoder / TAESD, official code",
+      "url": "https://github.com/madebyollin/taesd"
+    },
+    {
+      "title": "Qwen-Image-VAE-2.0, 2026 report",
+      "url": "https://arxiv.org/html/2605.13565v1"
+    },
+    {
+      "title": "Perception\u2013Distortion Tradeoff, 2018",
+      "url": "https://arxiv.org/abs/1711.06077"
+    },
+    {
+      "title": "VAE foundations / overview, 2019",
+      "url": "https://arxiv.org/abs/1906.02691"
+    },
+    {
+      "title": "\u03b2-VAE capacity scheduling, 2018",
+      "url": "https://arxiv.org/abs/1804.03599"
+    },
+    {
+      "title": "Cyclical KL annealing, 2019",
+      "url": "https://arxiv.org/abs/1903.10145"
+    },
+    {
+      "title": "Normalizing-flow posteriors, 2015",
+      "url": "https://arxiv.org/abs/1505.05770"
+    },
+    {
+      "title": "VampPrior, 2018",
+      "url": "https://arxiv.org/abs/1705.07120"
+    },
+    {
+      "title": "Wasserstein Auto-Encoders, 2018",
+      "url": "https://arxiv.org/abs/1711.01558"
+    },
+    {
+      "title": "VA-VAE / LightningDiT, 2025",
+      "url": "https://arxiv.org/html/2501.01423v1"
+    },
+    {
+      "title": "REPA-E, 2025",
+      "url": "https://github.com/End2End-Diffusion/REPA-E"
+    },
+    {
+      "title": "MAETok, 2025",
+      "url": "https://arxiv.org/html/2502.03444v2"
+    },
+    {
+      "title": "EQ-VAE, 2025",
+      "url": "https://eq-vae.github.io/"
+    },
+    {
+      "title": "RAE, 2025",
+      "url": "https://rae-dit.github.io/"
+    },
+    {
+      "title": "VFM-VAE, 2025/2026",
+      "url": "https://github.com/tianciB/VFM-VAE"
+    },
+    {
+      "title": "SRL-VAE, 2025",
+      "url": "https://arxiv.org/html/2504.17219v1"
+    },
+    {
+      "title": "Limits of unsupervised disentanglement, 2019",
+      "url": "https://arxiv.org/abs/1811.12359"
+    },
+    {
+      "title": "NVAE, 2020",
+      "url": "https://arxiv.org/abs/2007.03898"
+    },
+    {
+      "title": "VDVAE, 2021",
+      "url": "https://github.com/openai/vdvae"
+    },
+    {
+      "title": "VQ-VAE, 2017",
+      "url": "https://arxiv.org/abs/1711.00937"
+    },
+    {
+      "title": "VQ-VAE-2, 2019",
+      "url": "https://arxiv.org/abs/1906.00446"
+    },
+    {
+      "title": "Finite Scalar Quantization, 2024",
+      "url": "https://arxiv.org/abs/2309.15505"
+    },
+    {
+      "title": "SoftVQ-VAE, 2025",
+      "url": "https://openaccess.thecvf.com/content/CVPR2025/papers/Chen_SoftVQ-VAE_Efficient_1-Dimensional_Continuous_Tokenizer_CVPR_2025_paper.pdf"
+    },
+    {
+      "title": "FlexTok, 2025",
+      "url": "https://flextok.epfl.ch/"
+    },
+    {
+      "title": "Scale-hyperprior learned compression, 2018",
+      "url": "https://arxiv.org/abs/1802.01436"
+    },
+    {
+      "title": "LIIF, 2021",
+      "url": "https://yinboc.github.io/liif/"
+    },
+    {
+      "title": "\u03b5-VAE, 2025",
+      "url": "https://proceedings.mlr.press/v267/zhao25w.html"
+    },
+    {
+      "title": "WF-VAE, 2024/2025",
+      "url": "https://arxiv.org/abs/2411.17459"
+    },
+    {
+      "title": "LeanVAE, 2025",
+      "url": "https://arxiv.org/html/2503.14325v1"
+    },
+    {
+      "title": "DreamerV3",
+      "url": "https://arxiv.org/abs/2301.04104"
+    },
+    {
+      "title": "V-JEPA 2, 2025",
+      "url": "https://arxiv.org/abs/2506.09985"
+    }
+  ],
+  "parameter_counts": {
+    "status": "Untrained parameter counts and shape checks only; no quality, latency or large-image validation.",
+    "source_sha256": "6d7fdcb11e5d8e131c5f182bebf1eae155ee1845a86ac48643158b4ced536586",
+    "v2_source_sha256": "81a5cdbfcd856c9a660b63d8b347a68f259f0b3251e9dc3885efdb47d50db658",
+    "proposed_block": "x + [PW(C,2C) -> SiLU -> DW3x3(2C) -> SiLU -> PW(2C,C)], all convolutions bias-free; no normalization",
+    "proposed_block_params": "4*C*C + 18*C",
+    "excludes": "Teachers, task heads, dynamics, temporal adapters, optimizer states; no trained weights.",
+    "configurations": [
+      {
+        "kind": "existing-base",
+        "channels": [
+          8,
+          16,
+          32
+        ],
+        "latent_channels": 8,
+        "encoder": 97992,
+        "decoder": 97804,
+        "total": 195796,
+        "shape_checks": [
+          {
+            "input": [
+              32,
+              48
+            ],
+            "latent": [
+              1,
+              8,
+              4,
+              6
+            ],
+            "output": [
+              1,
+              3,
+              32,
+              48
+            ]
+          },
+          {
+            "input": [
+              31,
+              49
+            ],
+            "latent": [
+              1,
+              8,
+              4,
+              7
+            ],
+            "output": [
+              1,
+              3,
+              31,
+              49
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "existing-base",
+        "channels": [
+          16,
+          32,
+          64
+        ],
+        "latent_channels": 8,
+        "encoder": 382816,
+        "decoder": 382444,
+        "total": 765260,
+        "shape_checks": [
+          {
+            "input": [
+              32,
+              48
+            ],
+            "latent": [
+              1,
+              8,
+              4,
+              6
+            ],
+            "output": [
+              1,
+              3,
+              32,
+              48
+            ]
+          },
+          {
+            "input": [
+              31,
+              49
+            ],
+            "latent": [
+              1,
+              8,
+              4,
+              7
+            ],
+            "output": [
+              1,
+              3,
+              31,
+              49
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "existing-base",
+        "channels": [
+          32,
+          64,
+          128
+        ],
+        "latent_channels": 8,
+        "encoder": 1520784,
+        "decoder": 1520044,
+        "total": 3040828,
+        "shape_checks": [
+          {
+            "input": [
+              32,
+              48
+            ],
+            "latent": [
+              1,
+              8,
+              4,
+              6
+            ],
+            "output": [
+              1,
+              3,
+              32,
+              48
+            ]
+          },
+          {
+            "input": [
+              31,
+              49
+            ],
+            "latent": [
+              1,
+              8,
+              4,
+              7
+            ],
+            "output": [
+              1,
+              3,
+              31,
+              49
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "proposed-factorized-mixers",
+        "channels": [
+          16,
+          32,
+          64
+        ],
+        "latent_channels": 16,
+        "encoder": 98792,
+        "decoder": 97892,
+        "total": 196684,
+        "shape_checks": [
+          {
+            "input": [
+              32,
+              48
+            ],
+            "latent": [
+              1,
+              16,
+              4,
+              6
+            ],
+            "output": [
+              1,
+              3,
+              32,
+              48
+            ]
+          },
+          {
+            "input": [
+              31,
+              49
+            ],
+            "latent": [
+              1,
+              16,
+              4,
+              7
+            ],
+            "output": [
+              1,
+              3,
+              31,
+              49
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "proposed-factorized-mixers",
+        "channels": [
+          32,
+          64,
+          128
+        ],
+        "latent_channels": 16,
+        "encoder": 381080,
+        "decoder": 379300,
+        "total": 760380,
+        "shape_checks": [
+          {
+            "input": [
+              32,
+              48
+            ],
+            "latent": [
+              1,
+              16,
+              4,
+              6
+            ],
+            "output": [
+              1,
+              3,
+              32,
+              48
+            ]
+          },
+          {
+            "input": [
+              31,
+              49
+            ],
+            "latent": [
+              1,
+              16,
+              4,
+              7
+            ],
+            "output": [
+              1,
+              3,
+              31,
+              49
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "proposed-factorized-mixers",
+        "channels": [
+          64,
+          128,
+          256
+        ],
+        "latent_channels": 16,
+        "encoder": 1498616,
+        "decoder": 1495076,
+        "total": 2993692,
+        "shape_checks": [
+          {
+            "input": [
+              32,
+              48
+            ],
+            "latent": [
+              1,
+              16,
+              4,
+              6
+            ],
+            "output": [
+              1,
+              3,
+              32,
+              48
+            ]
+          },
+          {
+            "input": [
+              31,
+              49
+            ],
+            "latent": [
+              1,
+              16,
+              4,
+              7
+            ],
+            "output": [
+              1,
+              3,
+              31,
+              49
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "proposed-factorized-mixers",
+        "channels": [
+          128,
+          256,
+          512
+        ],
+        "latent_channels": 16,
+        "encoder": 5945528,
+        "decoder": 5938468,
+        "total": 11883996,
+        "shape_checks": [
+          {
+            "input": [
+              32,
+              48
+            ],
+            "latent": [
+              1,
+              16,
+              4,
+              6
+            ],
+            "output": [
+              1,
+              3,
+              32,
+              48
+            ]
+          },
+          {
+            "input": [
+              31,
+              49
+            ],
+            "latent": [
+              1,
+              16,
+              4,
+              7
+            ],
+            "output": [
+              1,
+              3,
+              31,
+              49
+            ]
+          }
+        ]
+      }
+    ],
+    "existing_v2_configurations": [
+      {
+        "kind": "existing-v2-default",
+        "ablation": "A_local",
+        "config": {
+          "stem_channels": 8,
+          "channels": [
+            16,
+            24
+          ],
+          "latent_channels": 4,
+          "ablation": "A_local",
+          "depth": 1,
+          "pre_depth": 0,
+          "decoder_depth": 1,
+          "downsample": [
+            true,
+            true
+          ],
+          "loop_iterations": 1,
+          "heads": 4,
+          "max_tokens": 1024,
+          "logvar_bounds": [
+            -12.0,
+            8.0
+          ]
+        },
+        "total": 68739,
+        "encoder": 5816,
+        "decoder": 62923,
+        "stride": 4,
+        "shape_checks": [
+          {
+            "input": [
+              32,
+              48
+            ],
+            "latent": [
+              1,
+              4,
+              8,
+              12
+            ],
+            "output": [
+              1,
+              3,
+              32,
+              48
+            ]
+          },
+          {
+            "input": [
+              31,
+              49
+            ],
+            "latent": [
+              1,
+              4,
+              8,
+              13
+            ],
+            "output": [
+              1,
+              3,
+              31,
+              49
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "existing-v2-default",
+        "ablation": "C",
+        "config": {
+          "stem_channels": 8,
+          "channels": [
+            16,
+            24
+          ],
+          "latent_channels": 4,
+          "ablation": "C",
+          "depth": 1,
+          "pre_depth": 0,
+          "decoder_depth": 1,
+          "downsample": [
+            true,
+            true
+          ],
+          "loop_iterations": 1,
+          "heads": 4,
+          "max_tokens": 1024,
+          "logvar_bounds": [
+            -12.0,
+            8.0
+          ]
+        },
+        "total": 122979,
+        "encoder": 60056,
+        "decoder": 62923,
+        "stride": 4,
+        "shape_checks": [
+          {
+            "input": [
+              32,
+              48
+            ],
+            "latent": [
+              1,
+              4,
+              8,
+              12
+            ],
+            "output": [
+              1,
+              3,
+              32,
+              48
+            ]
+          },
+          {
+            "input": [
+              31,
+              49
+            ],
+            "latent": [
+              1,
+              4,
+              8,
+              13
+            ],
+            "output": [
+              1,
+              3,
+              31,
+              49
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "existing-v2-default",
+        "ablation": "D",
+        "config": {
+          "stem_channels": 8,
+          "channels": [
+            16,
+            24
+          ],
+          "latent_channels": 4,
+          "ablation": "D",
+          "depth": 1,
+          "pre_depth": 0,
+          "decoder_depth": 1,
+          "downsample": [
+            true,
+            true
+          ],
+          "loop_iterations": 1,
+          "heads": 4,
+          "max_tokens": 1024,
+          "logvar_bounds": [
+            -12.0,
+            8.0
+          ]
+        },
+        "total": 156963,
+        "encoder": 94040,
+        "decoder": 62923,
+        "stride": 4,
+        "shape_checks": [
+          {
+            "input": [
+              32,
+              48
+            ],
+            "latent": [
+              1,
+              4,
+              8,
+              12
+            ],
+            "output": [
+              1,
+              3,
+              32,
+              48
+            ]
+          },
+          {
+            "input": [
+              31,
+              49
+            ],
+            "latent": [
+              1,
+              4,
+              8,
+              13
+            ],
+            "output": [
+              1,
+              3,
+              31,
+              49
+            ]
+          }
+        ]
+      },
+      {
+        "kind": "existing-v2-default",
+        "ablation": "E",
+        "config": {
+          "stem_channels": 8,
+          "channels": [
+            16,
+            24
+          ],
+          "latent_channels": 4,
+          "ablation": "E",
+          "depth": 1,
+          "pre_depth": 0,
+          "decoder_depth": 1,
+          "downsample": [
+            true,
+            true
+          ],
+          "loop_iterations": 2,
+          "heads": 4,
+          "max_tokens": 1024,
+          "logvar_bounds": [
+            -12.0,
+            8.0
+          ]
+        },
+        "total": 156963,
+        "encoder": 94040,
+        "decoder": 62923,
+        "stride": 4,
+        "shape_checks": [
+          {
+            "input": [
+              32,
+              48
+            ],
+            "latent": [
+              1,
+              4,
+              8,
+              12
+            ],
+            "output": [
+              1,
+              3,
+              32,
+              48
+            ]
+          },
+          {
+            "input": [
+              31,
+              49
+            ],
+            "latent": [
+              1,
+              4,
+              8,
+              13
+            ],
+            "output": [
+              1,
+              3,
+              31,
+              49
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "review": "runs/reviews/visual-codec-literature-20260917/",
+  "artifacts": [
+    "docs/visual-codec-review.md",
+    "docs/visual-codec-parameter-audit.json"
+  ],
+  "limitations": [
+    "Selective broad survey, not exhaustive systematic review.",
+    "Candidate parameter counts and 22 shape/finite-output checks are untrained sizing evidence.",
+    "No quality, large-image, speed, rollout or causal capability validated.",
+    "No model/training/checkpoint/default changes.",
+    "Teacher-free and teacher-assisted architecture candidates remain unadopted.",
+    "Public-only actual Claude review and reconciliation; agreement is not validation.",
+    "v1 cross-scale attention and v2 capped coarsest attention explicitly distinguished."
+  ]
+}

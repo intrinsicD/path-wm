@@ -8191,3 +8191,40 @@ tree:
   evidence:
   - ara/evidence/tables/srl_vae_source_audit_2026-09-17.json
   status: resolved
+- id: N491
+  type: question
+  title: Survey VAE improvements and propose a scalable world-model visual codec
+  provenance: user
+  timestamp: 2026-09-17T20:44+02:00
+  status: resolved
+  description: User supplies CVPR2023 poster22768 and asks for broad internet research, architecture synthesis,
+    large-image support, useful representations and an application/debugging-output list. Added exact Google
+    queries vae and vae improvements. Delivered primary-source survey, proposed design, sizing audit and evaluation
+    sequence; implementation/adoption is separate.
+  evidence:
+  - ara/evidence/tables/visual_codec_review_2026-09-17.json
+  - docs/visual-codec-review.md
+- id: N492
+  type: decision
+  title: Compare scalable codec sizes and both teacher-free and teacher-assisted training
+  provenance: user
+  timestamp: 2026-09-17T20:44+02:00
+  status: resolved
+  description: 'User rejects a fixed parameter ceiling: as low as possible but as high as necessary, scalable
+    later. Requests both training without and with pretrained teachers. These constrain the research comparison;
+    they do not adopt the assistant proposed combination or authorize a large training sweep.'
+  evidence:
+  - ara/evidence/tables/visual_codec_review_2026-09-17.json
+- id: N493
+  type: experiment
+  title: Count untrained codec specimens and verify shape contracts
+  provenance: ai-executed
+  timestamp: 2026-09-17T20:44+02:00
+  status: resolved
+  description: Instantiated retained v1, newer v2 and scratch factorized-mixer specimens; audited11 counts
+    and22 small rectangular/odd-shape finite forward outputs. v2 C has122979 parameters; proposed v1-scaffold
+    factorized family196684/760380/2993692/11883996. These are sizing/contract facts, not trained quality or
+    performance evidence. No production model code changed.
+  evidence:
+  - ara/evidence/tables/visual_codec_review_2026-09-17.json
+  - docs/visual-codec-parameter-audit.json

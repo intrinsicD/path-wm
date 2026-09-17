@@ -239,8 +239,10 @@ sessions:
     agent/EMA teacher roles explicit.643 frozen full tests,27 final focused, exact two-model audits and loopback
     browser QA pass; no training/capability promotion. SRL-VAE figure identified; SD/LDM sources and83.65M-parameter
     base codec checked. Spatial/perceptual/pretraining interpretation staged, no model change or reconstruction
-    replication.'
-  turn_count: 9
-  events_count: 35
+    replication. Broad VAE literature review and exact Google searches completed; scalable size and both teacher
+    tracks recorded. Public-only Claude critique reconciled.11 untrained parameter counts/22 shape checks;
+    candidate architecture remains staged, with no training/default/capability change.'
+  turn_count: 10
+  events_count: 39
   claims_touched: []
   open_threads: 51

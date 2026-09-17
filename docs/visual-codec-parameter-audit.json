@@ -1,0 +1,638 @@
+{
+  "status": "Untrained parameter counts and shape checks only; no quality, latency or large-image validation.",
+  "source_sha256": "6d7fdcb11e5d8e131c5f182bebf1eae155ee1845a86ac48643158b4ced536586",
+  "v2_source_sha256": "81a5cdbfcd856c9a660b63d8b347a68f259f0b3251e9dc3885efdb47d50db658",
+  "proposed_block": "x + [PW(C,2C) -> SiLU -> DW3x3(2C) -> SiLU -> PW(2C,C)], all convolutions bias-free; no normalization",
+  "proposed_block_params": "4*C*C + 18*C",
+  "excludes": "Teachers, task heads, dynamics, temporal adapters, optimizer states; no trained weights.",
+  "configurations": [
+    {
+      "kind": "existing-base",
+      "channels": [
+        8,
+        16,
+        32
+      ],
+      "latent_channels": 8,
+      "encoder": 97992,
+      "decoder": 97804,
+      "total": 195796,
+      "shape_checks": [
+        {
+          "input": [
+            32,
+            48
+          ],
+          "latent": [
+            1,
+            8,
+            4,
+            6
+          ],
+          "output": [
+            1,
+            3,
+            32,
+            48
+          ]
+        },
+        {
+          "input": [
+            31,
+            49
+          ],
+          "latent": [
+            1,
+            8,
+            4,
+            7
+          ],
+          "output": [
+            1,
+            3,
+            31,
+            49
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "existing-base",
+      "channels": [
+        16,
+        32,
+        64
+      ],
+      "latent_channels": 8,
+      "encoder": 382816,
+      "decoder": 382444,
+      "total": 765260,
+      "shape_checks": [
+        {
+          "input": [
+            32,
+            48
+          ],
+          "latent": [
+            1,
+            8,
+            4,
+            6
+          ],
+          "output": [
+            1,
+            3,
+            32,
+            48
+          ]
+        },
+        {
+          "input": [
+            31,
+            49
+          ],
+          "latent": [
+            1,
+            8,
+            4,
+            7
+          ],
+          "output": [
+            1,
+            3,
+            31,
+            49
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "existing-base",
+      "channels": [
+        32,
+        64,
+        128
+      ],
+      "latent_channels": 8,
+      "encoder": 1520784,
+      "decoder": 1520044,
+      "total": 3040828,
+      "shape_checks": [
+        {
+          "input": [
+            32,
+            48
+          ],
+          "latent": [
+            1,
+            8,
+            4,
+            6
+          ],
+          "output": [
+            1,
+            3,
+            32,
+            48
+          ]
+        },
+        {
+          "input": [
+            31,
+            49
+          ],
+          "latent": [
+            1,
+            8,
+            4,
+            7
+          ],
+          "output": [
+            1,
+            3,
+            31,
+            49
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "proposed-factorized-mixers",
+      "channels": [
+        16,
+        32,
+        64
+      ],
+      "latent_channels": 16,
+      "encoder": 98792,
+      "decoder": 97892,
+      "total": 196684,
+      "shape_checks": [
+        {
+          "input": [
+            32,
+            48
+          ],
+          "latent": [
+            1,
+            16,
+            4,
+            6
+          ],
+          "output": [
+            1,
+            3,
+            32,
+            48
+          ]
+        },
+        {
+          "input": [
+            31,
+            49
+          ],
+          "latent": [
+            1,
+            16,
+            4,
+            7
+          ],
+          "output": [
+            1,
+            3,
+            31,
+            49
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "proposed-factorized-mixers",
+      "channels": [
+        32,
+        64,
+        128
+      ],
+      "latent_channels": 16,
+      "encoder": 381080,
+      "decoder": 379300,
+      "total": 760380,
+      "shape_checks": [
+        {
+          "input": [
+            32,
+            48
+          ],
+          "latent": [
+            1,
+            16,
+            4,
+            6
+          ],
+          "output": [
+            1,
+            3,
+            32,
+            48
+          ]
+        },
+        {
+          "input": [
+            31,
+            49
+          ],
+          "latent": [
+            1,
+            16,
+            4,
+            7
+          ],
+          "output": [
+            1,
+            3,
+            31,
+            49
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "proposed-factorized-mixers",
+      "channels": [
+        64,
+        128,
+        256
+      ],
+      "latent_channels": 16,
+      "encoder": 1498616,
+      "decoder": 1495076,
+      "total": 2993692,
+      "shape_checks": [
+        {
+          "input": [
+            32,
+            48
+          ],
+          "latent": [
+            1,
+            16,
+            4,
+            6
+          ],
+          "output": [
+            1,
+            3,
+            32,
+            48
+          ]
+        },
+        {
+          "input": [
+            31,
+            49
+          ],
+          "latent": [
+            1,
+            16,
+            4,
+            7
+          ],
+          "output": [
+            1,
+            3,
+            31,
+            49
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "proposed-factorized-mixers",
+      "channels": [
+        128,
+        256,
+        512
+      ],
+      "latent_channels": 16,
+      "encoder": 5945528,
+      "decoder": 5938468,
+      "total": 11883996,
+      "shape_checks": [
+        {
+          "input": [
+            32,
+            48
+          ],
+          "latent": [
+            1,
+            16,
+            4,
+            6
+          ],
+          "output": [
+            1,
+            3,
+            32,
+            48
+          ]
+        },
+        {
+          "input": [
+            31,
+            49
+          ],
+          "latent": [
+            1,
+            16,
+            4,
+            7
+          ],
+          "output": [
+            1,
+            3,
+            31,
+            49
+          ]
+        }
+      ]
+    }
+  ],
+  "existing_v2_configurations": [
+    {
+      "kind": "existing-v2-default",
+      "ablation": "A_local",
+      "config": {
+        "stem_channels": 8,
+        "channels": [
+          16,
+          24
+        ],
+        "latent_channels": 4,
+        "ablation": "A_local",
+        "depth": 1,
+        "pre_depth": 0,
+        "decoder_depth": 1,
+        "downsample": [
+          true,
+          true
+        ],
+        "loop_iterations": 1,
+        "heads": 4,
+        "max_tokens": 1024,
+        "logvar_bounds": [
+          -12.0,
+          8.0
+        ]
+      },
+      "total": 68739,
+      "encoder": 5816,
+      "decoder": 62923,
+      "stride": 4,
+      "shape_checks": [
+        {
+          "input": [
+            32,
+            48
+          ],
+          "latent": [
+            1,
+            4,
+            8,
+            12
+          ],
+          "output": [
+            1,
+            3,
+            32,
+            48
+          ]
+        },
+        {
+          "input": [
+            31,
+            49
+          ],
+          "latent": [
+            1,
+            4,
+            8,
+            13
+          ],
+          "output": [
+            1,
+            3,
+            31,
+            49
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "existing-v2-default",
+      "ablation": "C",
+      "config": {
+        "stem_channels": 8,
+        "channels": [
+          16,
+          24
+        ],
+        "latent_channels": 4,
+        "ablation": "C",
+        "depth": 1,
+        "pre_depth": 0,
+        "decoder_depth": 1,
+        "downsample": [
+          true,
+          true
+        ],
+        "loop_iterations": 1,
+        "heads": 4,
+        "max_tokens": 1024,
+        "logvar_bounds": [
+          -12.0,
+          8.0
+        ]
+      },
+      "total": 122979,
+      "encoder": 60056,
+      "decoder": 62923,
+      "stride": 4,
+      "shape_checks": [
+        {
+          "input": [
+            32,
+            48
+          ],
+          "latent": [
+            1,
+            4,
+            8,
+            12
+          ],
+          "output": [
+            1,
+            3,
+            32,
+            48
+          ]
+        },
+        {
+          "input": [
+            31,
+            49
+          ],
+          "latent": [
+            1,
+            4,
+            8,
+            13
+          ],
+          "output": [
+            1,
+            3,
+            31,
+            49
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "existing-v2-default",
+      "ablation": "D",
+      "config": {
+        "stem_channels": 8,
+        "channels": [
+          16,
+          24
+        ],
+        "latent_channels": 4,
+        "ablation": "D",
+        "depth": 1,
+        "pre_depth": 0,
+        "decoder_depth": 1,
+        "downsample": [
+          true,
+          true
+        ],
+        "loop_iterations": 1,
+        "heads": 4,
+        "max_tokens": 1024,
+        "logvar_bounds": [
+          -12.0,
+          8.0
+        ]
+      },
+      "total": 156963,
+      "encoder": 94040,
+      "decoder": 62923,
+      "stride": 4,
+      "shape_checks": [
+        {
+          "input": [
+            32,
+            48
+          ],
+          "latent": [
+            1,
+            4,
+            8,
+            12
+          ],
+          "output": [
+            1,
+            3,
+            32,
+            48
+          ]
+        },
+        {
+          "input": [
+            31,
+            49
+          ],
+          "latent": [
+            1,
+            4,
+            8,
+            13
+          ],
+          "output": [
+            1,
+            3,
+            31,
+            49
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "existing-v2-default",
+      "ablation": "E",
+      "config": {
+        "stem_channels": 8,
+        "channels": [
+          16,
+          24
+        ],
+        "latent_channels": 4,
+        "ablation": "E",
+        "depth": 1,
+        "pre_depth": 0,
+        "decoder_depth": 1,
+        "downsample": [
+          true,
+          true
+        ],
+        "loop_iterations": 2,
+        "heads": 4,
+        "max_tokens": 1024,
+        "logvar_bounds": [
+          -12.0,
+          8.0
+        ]
+      },
+      "total": 156963,
+      "encoder": 94040,
+      "decoder": 62923,
+      "stride": 4,
+      "shape_checks": [
+        {
+          "input": [
+            32,
+            48
+          ],
+          "latent": [
+            1,
+            4,
+            8,
+            12
+          ],
+          "output": [
+            1,
+            3,
+            32,
+            48
+          ]
+        },
+        {
+          "input": [
+            31,
+            49
+          ],
+          "latent": [
+            1,
+            4,
+            8,
+            13
+          ],
+          "output": [
+            1,
+            3,
+            31,
+            49
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -5650,3 +5650,22 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O324
+  timestamp: 2026-09-17T20:44+02:00
+  provenance: ai-suggested
+  content: 'Candidate visual-codec family: local residual spatial pyramid, one continuous grid, AE/KL controls,
+    isolated detail supervision and separate teacher-free/pretrained-teacher tracks; task-grounded selection
+    before optional hierarchy, quantization or temporal adapters. Preserve v2 small baseline, explicit geometry
+    and latent-only decoder. Scalable parameter counts alone do not imply fidelity, useful state, large-image
+    efficiency or causal competence.'
+  context: Broad primary-source review plus public-only actual-Claude critique/reconciliation and untrained
+    parameter audit. User has requested exploration but has not adopted this proposed design.
+  potential_type: hypothesis
+  bound_to:
+  - N491
+  - N492
+  - N493
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

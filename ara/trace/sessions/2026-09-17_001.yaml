@@ -2,8 +2,8 @@ session:
   id: 2026-09-17_001
   date: '2026-09-17'
   started: 2026-09-17T10:43+02:00
-  last_turn: 2026-09-17T20:21+02:00
-  turn_count: 9
+  last_turn: 2026-09-17T20:44+02:00
+  turn_count: 10
   summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent termination
     in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests pass; 9216 answers
     and all weights preserved. No training or capability promotion. Current categorical architecture explorer
@@ -20,7 +20,9 @@ session:
     agent/EMA teacher roles explicit.643 frozen full tests,27 final focused, exact two-model audits and loopback
     browser QA pass; no training/capability promotion. SRL-VAE figure identified; SD/LDM sources and83.65M-parameter
     base codec checked. Spatial/perceptual/pretraining interpretation staged, no model change or reconstruction
-    replication.'
+    replication. Broad VAE literature review and exact Google searches completed; scalable size and both teacher
+    tracks recorded. Public-only Claude critique reconciled.11 untrained parameter counts/22 shape checks;
+    candidate architecture remains staged, with no training/default/capability change.'
 events_logged:
 - turn: 1
   type: decision
@@ -248,6 +250,30 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Separate codec information/capacity/objectives from robustness and diffusion-assisted visual detail.
+- turn: 10
+  type: question
+  id: N491
+  routing: direct
+  provenance: user
+  summary: Survey VAE improvements and propose a scalable world-model visual codec
+- turn: 10
+  type: decision
+  id: N492
+  routing: direct
+  provenance: user
+  summary: Compare scalable codec sizes and both teacher-free and teacher-assisted training
+- turn: 10
+  type: experiment
+  id: N493
+  routing: direct
+  provenance: ai-executed
+  summary: Count untrained codec specimens and verify shape contracts
+- turn: 10
+  type: observation
+  id: O324
+  routing: staged
+  provenance: ai-suggested
+  summary: Local single-grid scalable visual codec with separate teacher tracks remains a proposal.
 ai_actions:
 - turn: 1
   action: Implemented optional routing/state diagnostics with actual Claude public review, ran12 fixed evaluations
@@ -357,6 +383,17 @@ ai_actions:
     implementation change.
   provenance: ai-executed
   files_changed: []
+- turn: 10
+  action: Primary-source research, Google queries, public-only actual Claude review/reconciliation, parameter
+    sizing and shape checks; wrote review/application matrix and regenerated atlas notes without changing graph
+    nodes, edges, coverage or validation evidence.
+  provenance: ai-executed
+  files_changed:
+  - docs/visual-codec-review.md
+  - docs/visual-codec-parameter-audit.json
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - ara/evidence/tables/visual_codec_review_2026-09-17.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -384,6 +421,9 @@ key_context:
   excerpt: yes, and can you explain why there are agent and target listed separately?
 - turn: 9
   excerpt: how is it possible that they get such detailed reconstructions? lookup the paper or implementation
+- turn: 10
+  excerpt: as low as possible but as high as necessary; i prefer both... without and with teachers; also use
+    a google search for "vae" and "vae improvements".
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -699,3 +739,4 @@ ai_suggestions_pending:
 - O320→A21 records only the implemented paired/fresh method. O319 wider weak-source diagnosis and O318/O321
   interpretations remain open; no user empirical affirmation, general efficacy or speed promotion.
 - O323: source-based explanation of detailed SD/SRL reconstruction; no adoption or PATH-WM fidelity experiment.
+- O324: unadopted scalable visual-codec proposal; needs bounded experiment and task/quality validation.

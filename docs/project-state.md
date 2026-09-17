@@ -1,5 +1,19 @@
 # Current work
 
+**Visual-codec literature review, 17 September:** [survey and proposed architecture](visual-codec-review.md),
+[untrained parameter audit](visual-codec-parameter-audit.json). User requests a scalable,
+as-small-as-useful image/video codec with both teacher-free and teacher-assisted
+training, large/variable image geometry and task/debugging outputs. Exact Google
+queries plus primary-source research cover fidelity, semantic learning, hierarchy,
+quantization, resolution and video. Proposed single-grid local family and staged
+ablation/application matrix; no architecture adoption or training authorization inferred.
+Preserve the existing123k v2 C baseline; candidate counts0.20M/0.76M/2.99M/11.88M
+are untrained sizing specimens, not quality results. Actual public-only Claude review
+and reconciliation recorded in ignored runs/reviews/visual-codec-literature-20260917/.
+No model/checkpoint/default or capability/color changes. The request-boundary study
+below remains independently completed; this design needs a bounded preregistered
+experiment before implementation/training claims.
+
 **Learning iteration completed, 17 September:** [paired request-boundary study](request-boundary-plan.md),
 [report](../runs/request_boundary_v1/report.html). Actual Claude methodology review
 and reconciliation; four matched512-update interpreter-only fits. On fresh known-
