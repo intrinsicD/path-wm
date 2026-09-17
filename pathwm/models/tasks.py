@@ -395,25 +395,95 @@ class TaskStep:
 
 
 class MetadataEncoder(nn.Module):
-    """Order-sensitive byte encoding of exact metadata, without ID lookup tables."""
+    """Order-sensitive bytes with bounded reuse of unchanged frozen eval batches.
+
+    Set cache_frozen=False for parameter writes that bypass PyTorch version
+    tracking (including .data, shared storage or custom extension writes).
+    """
 
     def __init__(self, width):
         super().__init__()
         self.embedding = nn.Embedding(259, width, padding_idx=0)
         self.sequence = nn.GRU(width, width, batch_first=True)
+        self.cache_frozen = True
+        self._record_cache = None
+
+    def _cache_key(self, texts):
+        # Inputs are strings; when every weight is frozen there is no autograd
+        # path to preserve. Never retain a graph or cache training/autocast reads.
+        parameters = tuple(self.parameters())
+        if (
+            not self.cache_frozen
+            or type(self.embedding) is not nn.Embedding
+            or type(self.sequence) is not nn.GRU
+            or any(m.training for m in self.modules())
+            or any(
+                m._forward_hooks or m._forward_pre_hooks or m._backward_hooks
+                for m in self.modules()
+            )
+            or any("forward" in m.__dict__ for m in (self.embedding, self.sequence))
+            or nn.modules.module._global_forward_hooks
+            or nn.modules.module._global_forward_pre_hooks
+            or nn.modules.module._global_backward_hooks
+            or any(p.requires_grad for p in parameters)
+            or torch.is_autocast_enabled()
+            or torch.is_autocast_enabled("cpu")
+        ):
+            return None
+        precision = (
+            (
+                torch.backends.cuda.matmul.fp32_precision,
+                torch.backends.cudnn.rnn.fp32_precision,
+            )
+            if hasattr(torch.backends.cuda.matmul, "fp32_precision")
+            else (
+                torch.backends.cuda.matmul.allow_tf32,
+                torch.backends.cudnn.allow_tf32,
+            )
+        )
+        try:
+            versions = tuple(
+                (id(p), p.data_ptr(), p._version, p.device, p.dtype) for p in parameters
+            )
+        except RuntimeError:
+            # Parameters constructed inside inference_mode have no version counter.
+            return None
+        return (
+            texts,
+            versions,
+            precision,
+            torch.get_float32_matmul_precision(),
+            torch.backends.cudnn.enabled,
+            torch.backends.cudnn.benchmark,
+            torch.backends.cudnn.deterministic,
+            torch.are_deterministic_algorithms_enabled(),
+            torch.is_inference_mode_enabled(),
+        )
 
     def forward(self, records):
+        texts = tuple(
+            json.dumps(r, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+            for r in records
+        )
+        key = self._cache_key(texts)
+        if (
+            key is not None
+            and self._record_cache is not None
+            and self._record_cache[0] == key
+        ):
+            return self._record_cache[1].clone()
+        self._record_cache = None
         ids, valid = bytes_batch(
-            [
-                json.dumps(r, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
-                for r in records
-            ],
+            texts,
             self.embedding.weight.device,
         )
         values, _ = self.sequence(self.embedding(ids))
         # Pool every valid position so early actor/ancestry fields cannot disappear
         # merely because later fields occupy a long serialized suffix.
-        return ((values * valid[..., None]).sum(1) / valid.sum(1)[:, None])[:, None]
+        output = ((values * valid[..., None]).sum(1) / valid.sum(1)[:, None])[:, None]
+        if key is not None:
+            self._record_cache = (key, output.detach().clone())
+        return output
 
 
 class TaskInterpreter(nn.Module):
