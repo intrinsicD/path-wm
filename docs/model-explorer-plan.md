@@ -88,3 +88,18 @@ navigation in forward/backward/nested views. Reuse the recorded payload for layo
 iteration; regenerate the final source-identified snapshot once. No model/training
 or Python recorder changes. Budget: frontend-only edits, focused renderer checks,
 and browser review; no new training or full numerical test rerun required.
+
+Completed: fixed boundary columns, functional stage hints for BeliefAgent and a
+cycle-aware dependency layout elsewhere; rounded orthogonal routes avoid blocks.
+Return paths remain dashed and internal tensor-operation links use a quieter gold.
+Hover/keyboard focus separates blue incoming from teal outgoing connections.
+Stage hints change positions only; new/unrecognized modules remain included.
+
+Browser geometry verified all 17 BeliefAgent overview blocks and all 41 original
+connections are preserved. No node overlaps or routes through unrelated blocks
+in that overview, backward view (16 nodes / 31 arrows), nested encoders and Conv2d
+leaf (6 / 8), or the first ATen page (74 / 139). Weight drill-down and Back still
+work. The final overview received another geometry/visual check; exact source,
+weight, loss and gradient audit passed after regeneration. Twelve exporter checks
+pass in 7.47s; JavaScript syntax and diff checks pass. The live preview regenerated
+during layout iteration. Numerical model code and training were unchanged.

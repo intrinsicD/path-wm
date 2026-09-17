@@ -230,8 +230,9 @@ sessions:
     or capability promotion. Performance follow-up: byte batching and frozen metadata both fail fixed5%
     whole-workload gate; original runtime restored. 17 contracts retained,634 full tests pass;6 saved
     training/5 inference pairs byte-exact,15 structural reports. Request-form repair remains open; no
-    speed/capability promotion.'
-  turn_count: 4
-  events_count: 20
+    speed/capability promotion. Explorer layout refined after user feedback: boundary columns, routed
+    arrows and directional highlighting; all41 overview connections retained.'
+  turn_count: 5
+  events_count: 22
   claims_touched: []
   open_threads: 50

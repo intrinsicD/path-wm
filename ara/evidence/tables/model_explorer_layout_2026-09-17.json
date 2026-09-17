@@ -1,0 +1,85 @@
+{
+  "status": "passed",
+  "source_sha256": "70eb1cc88a1af29bd1c830b2eeab891034e56a5d60ae7004df9e489d2405ab5e",
+  "html_sha256": "a6a56cc1bbc603c3b24074878201763a8856ea3069376b2e4ebb3f2138509c41",
+  "html_bytes": 19164416,
+  "modules": 1203,
+  "deployed_modules": 601,
+  "deployed_parameters": 515553,
+  "parameter_tensors": 1502,
+  "exact_parameter_scalars": 1031106,
+  "gradient_tensors": 747,
+  "checks": [
+    "every registered module matches current instantiated model",
+    "every parameter scalar and shape exact",
+    "uninstrumented default-model loss exact",
+    "every gradient scalar and absent gradient exact",
+    "all forward provenance edges causal",
+    "all backward endpoints resolve"
+  ],
+  "forward_operations": 29665,
+  "backward_nodes": 10795,
+  "weight_source": "Fresh initialization \u00b7 seed 42",
+  "layout_checks": [
+    {
+      "view": "BeliefAgent forward",
+      "nodes": 17,
+      "arrows": 41,
+      "node_overlaps": 0,
+      "routes_crossing_unrelated_nodes": 0,
+      "inputs_left": true,
+      "outputs_right": true
+    },
+    {
+      "view": "BeliefAgent backward",
+      "nodes": 16,
+      "arrows": 31,
+      "node_overlaps": 0,
+      "routes_crossing_unrelated_nodes": 0,
+      "inputs_left": true,
+      "outputs_right": true
+    },
+    {
+      "view": "Encoders",
+      "nodes": 6,
+      "arrows": 8,
+      "node_overlaps": 0,
+      "routes_crossing_unrelated_nodes": 0,
+      "inputs_left": true,
+      "outputs_right": true
+    },
+    {
+      "view": "Conv2d leaf",
+      "nodes": 6,
+      "arrows": 8,
+      "node_overlaps": 0,
+      "routes_crossing_unrelated_nodes": 0,
+      "inputs_left": true,
+      "outputs_right": true
+    },
+    {
+      "view": "ATen page 1",
+      "nodes": 74,
+      "arrows": 139,
+      "node_overlaps": 0,
+      "routes_crossing_unrelated_nodes": 0,
+      "inputs_left": true,
+      "outputs_right": true
+    }
+  ],
+  "all_original_overview_nodes_and_edges_preserved": true,
+  "focused_tests": {
+    "passed": 12,
+    "seconds": 7.47
+  },
+  "browser_checks": [
+    "final overview visual inspection",
+    "incoming/outgoing highlighting by keyboard focus",
+    "nested module navigation",
+    "individual weights",
+    "Back",
+    "operation view",
+    "backward gradients"
+  ],
+  "scope": "Layout-only refinement. Stage hints position existing modules; recorded model nodes, connections and weights remain authoritative. Live updates can subsequently create a new snapshot with a different hash."
+}

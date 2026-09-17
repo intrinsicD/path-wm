@@ -2,8 +2,8 @@ session:
   id: 2026-09-17_001
   date: '2026-09-17'
   started: 2026-09-17T10:43+02:00
-  last_turn: 2026-09-17T12:04+02:00
-  turn_count: 4
+  last_turn: 2026-09-17T12:44+02:00
+  turn_count: 5
   summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent
     termination in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests
     pass; 9216 answers and all weights preserved. No training or capability promotion. Current categorical
@@ -11,7 +11,8 @@ session:
     or capability promotion. Performance follow-up: byte batching and frozen metadata both fail fixed5%
     whole-workload gate; original runtime restored. 17 contracts retained,634 full tests pass;6 saved
     training/5 inference pairs byte-exact,15 structural reports. Request-form repair remains open; no
-    speed/capability promotion.'
+    speed/capability promotion. Explorer layout refined after user feedback: boundary columns, routed
+    arrows and directional highlighting; all41 overview connections retained.'
 events_logged:
 - turn: 1
   type: decision
@@ -149,6 +150,18 @@ events_logged:
   routing: direct
   provenance: ai-executed
   summary: Restore original runtime and retain byte/metadata behavior contracts
+- turn: 5
+  type: decision
+  id: N481
+  routing: direct
+  provenance: user
+  summary: Replace the dense overview with an ordered left-to-right layout
+- turn: 5
+  type: experiment
+  id: N482
+  routing: direct
+  provenance: ai-executed
+  summary: Layout geometry preserves all overview connections and avoids unrelated blocks
 ai_actions:
 - turn: 1
   action: Implemented optional routing/state diagnostics with actual Claude public review, ran12 fixed evaluations
@@ -208,6 +221,16 @@ ai_actions:
   - docs/project-state.md
   - docs/session-handoff.md
   - docs/diagrams/architecture-atlas.json
+- turn: 5
+  action: Refined frontend layout/routing and focus highlighting, regenerated standalone HTML through
+    live preview, checked browser geometry/navigation, reran12 exporter checks and current-model exactness
+    audit.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/evaluation/explorer.html
+  - docs/model-explorer.md
+  - docs/model-explorer-plan.md
+  - docs/project-state.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -223,6 +246,9 @@ key_context:
 - turn: 4
   excerpt: Continue together with Claude. Use the testsuite to pick what to work on/improve/reduce duplicated
     code/improve training time/improve inference time. Plan, implement, review, test and fix. Iterate
+- turn: 5
+  excerpt: BeliefAgent is too dense and connections confusing; put input on left, outputs on right, then
+    properly lay out internal nodes.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,

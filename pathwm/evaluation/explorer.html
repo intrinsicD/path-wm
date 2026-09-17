@@ -187,7 +187,7 @@
         overflow: hidden;
       }
       .main-head {
-        padding: 20px 25px 12px;
+        padding: 12px 25px 10px;
         background: var(--panel);
         border-bottom: 1px solid var(--line);
       }
@@ -197,7 +197,7 @@
         gap: 5px;
         flex-wrap: wrap;
         min-height: 31px;
-        margin-bottom: 12px;
+        margin-bottom: 6px;
       }
       .crumbs button {
         font-size: 12px;
@@ -253,7 +253,7 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        margin-top: 15px;
+        margin-top: 10px;
         flex-wrap: wrap;
       }
       .tools select {
@@ -313,14 +313,53 @@
       .edge {
         fill: none;
         stroke: #53655b;
-        stroke-width: 2;
-        opacity: 0.4;
+        stroke-width: 1.2;
+        vector-effect: non-scaling-stroke;
+        opacity: 0.62;
+        pointer-events: none;
+      }
+      .edge-hit {
+        fill: none;
+        stroke: transparent;
+        stroke-width: 12;
+        vector-effect: non-scaling-stroke;
         cursor: pointer;
       }
-      .edge:hover {
-        stroke: #182f2b;
-        stroke-width: 3;
+      .connection.auxiliary .edge {
+        stroke: #9b916f;
+        opacity: 0.32;
+      }
+      .connection.return .edge {
+        stroke: #a27851;
+        stroke-dasharray: 5 4;
+      }
+      .connection:hover .edge,
+      .connection.incoming .edge,
+      .connection.outgoing .edge {
         opacity: 1;
+        stroke-width: 2.1;
+      }
+      .connection.incoming .edge {
+        stroke: #396abb;
+      }
+      .connection.outgoing .edge {
+        stroke: #168271;
+      }
+      .connection.dim {
+        opacity: 0.06;
+      }
+      .stage-label {
+        fill: #76827b;
+        font:
+          600 14px system-ui,
+          sans-serif;
+        letter-spacing: 1.5px;
+      }
+      .route-key {
+        fill: #807760;
+        font:
+          12px system-ui,
+          sans-serif;
       }
       .edge.gradient {
         stroke: #916799;
@@ -379,7 +418,7 @@
         font-size: 11px;
         line-height: 1.6;
         margin: 0;
-        padding: 10px 24px 13px;
+        padding: 4px 24px 8px;
         color: var(--muted);
         background: var(--panel);
       }
@@ -1258,83 +1297,312 @@
         return `${id}: [${t.shape.join(" × ")}] ${t.dtype}\n${t.parameter ? "parameter " + t.parameter : "producer " + (t.producer ?? "external")}\nrequires_grad: ${t.requires_grad}`;
       }
       function positionNodes(nodes, edges) {
-        const next = new Map(nodes.map((n) => [n.id, []])),
-          indegree = new Map(nodes.map((n) => [n.id, 0]));
-        for (const e of edges)
-          if (e.source !== e.target) {
-            indegree.set(e.target, indegree.get(e.target) + 1);
-            next.get(e.source)?.push(e.target);
-          }
-        const queue = nodes
-            .filter((n) => indegree.get(n.id) === 0)
-            .map((n) => n.id),
-          levels = new Map(queue.map((id) => [id, 0]));
-        let done = 0;
-        while (queue.length) {
-          const id = queue.shift();
-          done++;
-          for (const v of next.get(id) || []) {
-            levels.set(
-              v,
-              Math.max(levels.get(v) || 0, (levels.get(id) || 0) + 1),
-            );
-            indegree.set(v, indegree.get(v) - 1);
-            if (indegree.get(v) === 0) queue.push(v);
-          }
-        }
-        const compact =
-          done < nodes.length ||
-          Math.max(0, ...levels.values()) > 8 ||
-          nodes.length > 24;
-        if (compact) {
-          const rank = (n) =>
-            n.id === "@in"
-              ? 0
-              : n.id === "@out"
-                ? 9
-                : n.role === "encoder"
-                  ? 1
-                  : n.role === "decoder"
-                    ? 8
-                    : n.role === "memory"
-                      ? 5
-                      : n.id === "@ops"
-                        ? 6
-                        : 3;
-          const ordered = [...nodes].sort((a, b) => rank(a) - rank(b)),
-            columns = Math.max(1, Math.ceil(Math.sqrt(nodes.length * 1.9))),
-            rows = Math.ceil(nodes.length / columns);
-          ordered.forEach((n, i) => {
-            n.x = 35 + Math.floor(i / rows) * 220;
-            n.y = 45 + (i % rows) * 143;
-            n.w = 190;
-            n.h = 112;
-          });
-          return {
-            width: columns * 220 + 35,
-            height: Math.max(320, rows * 143 + 65),
-          };
-        }
-        const cols = new Map();
-        for (const n of nodes) {
-          const col = levels.get(n.id) || 0;
-          if (!cols.has(col)) cols.set(col, []);
-          cols.get(col).push(n);
-        }
-        const sorted = [...cols.keys()].sort((a, b) => a - b),
-          maxRows = Math.max(1, ...[...cols.values()].map((v) => v.length));
-        sorted.forEach((c, j) =>
-          cols.get(c).forEach((n, i) => {
-            n.x = 35 + j * 235;
-            n.y = 45 + i * 143 + (maxRows - cols.get(c).length) * 65;
-            n.w = 190;
-            n.h = 112;
-          }),
+        const internal = nodes.filter(
+          (n) => !["@in", "@out", "@ops"].includes(n.id),
         );
+        const ids = new Set(internal.map((n) => n.id));
+        const links = edges.filter(
+          (e) => ids.has(e.source) && ids.has(e.target),
+        );
+        // Layout hints only: the captured graph still supplies every node and edge.
+        const beliefStages = [
+          ["encoders", "metadata_encoder"],
+          ["dynamics", "updater", "task_interpreter"],
+          ["evidence_encoder", "thinker", "feature_controller"],
+          ["readout", "memory", "monitor"],
+          ["decoders", "action_head", "task_policy"],
+        ];
+        const staged =
+          M[scope].type === "BeliefAgent" &&
+          !["operations", "autograd"].includes(mode);
+        const reverse = mode === "backward";
+        const columns = new Map();
+        if (staged) {
+          for (const n of internal) {
+            let stage = beliefStages.findIndex((names) =>
+              names.includes(M[n.id]?.name),
+            );
+            if (stage < 0) stage = 2;
+            n.column = 1 + (reverse ? 4 - stage : stage);
+          }
+        } else {
+          // Break cycles for placement only. Prefer sources, then the largest net
+          // outgoing degree. Return edges are retained and routed separately.
+          const remaining = new Set(ids),
+            order = [];
+          while (remaining.size) {
+            let best = null,
+              bestScore = -Infinity;
+            for (const id of remaining) {
+              const incoming = links.filter(
+                (e) => e.target === id && remaining.has(e.source),
+              ).length;
+              const outgoing = links.filter(
+                (e) => e.source === id && remaining.has(e.target),
+              ).length;
+              const score =
+                incoming === 0 ? 100000 + outgoing : outgoing - incoming;
+              if (score > bestScore) {
+                best = id;
+                bestScore = score;
+              }
+            }
+            order.push(best);
+            remaining.delete(best);
+          }
+          const ranks = new Map(order.map((id) => [id, 0]));
+          const positions = new Map(order.map((id, i) => [id, i]));
+          for (const id of order)
+            for (const e of links) {
+              if (
+                e.source === id &&
+                positions.get(e.target) > positions.get(id)
+              )
+                ranks.set(
+                  e.target,
+                  Math.max(ranks.get(e.target), ranks.get(id) + 1),
+                );
+            }
+          const highest = Math.max(0, ...ranks.values());
+          for (const n of internal)
+            n.column =
+              1 +
+              Math.floor(
+                ((ranks.get(n.id) || 0) * Math.min(6, highest)) /
+                  Math.max(1, highest),
+              );
+        }
+        const last =
+          (staged ? 5 : Math.max(1, ...internal.map((n) => n.column))) + 1;
+        for (const n of internal) {
+          if (!columns.has(n.column)) columns.set(n.column, []);
+          columns.get(n.column).push(n);
+        }
+        if (staged) {
+          for (const [col, list] of columns) {
+            const names = beliefStages[reverse ? 5 - col : col - 1];
+            list.sort(
+              (a, b) =>
+                names.indexOf(M[a.id]?.name) - names.indexOf(M[b.id]?.name),
+            );
+          }
+        } else {
+          // Alternating barycentre sweeps reduce crossings between columns.
+          const order = [...columns.keys()].sort((a, b) => a - b);
+          const row = new Map(
+            internal.map((n) => [n.id, columns.get(n.column).indexOf(n)]),
+          );
+          for (let pass = 0; pass < 6; pass++)
+            for (const col of pass % 2 ? [...order].reverse() : order) {
+              const score = (n) => {
+                const adjacent = links
+                  .filter((e) =>
+                    pass % 2 ? e.source === n.id : e.target === n.id,
+                  )
+                  .map((e) => row.get(pass % 2 ? e.target : e.source));
+                return adjacent.length
+                  ? adjacent.reduce((a, b) => a + b, 0) / adjacent.length
+                  : row.get(n.id);
+              };
+              columns.get(col).sort((a, b) => score(a) - score(b));
+              columns.get(col).forEach((n, i) => row.set(n.id, i));
+            }
+        }
+        const rowCount = Math.max(
+          1,
+          ...[...columns.values()].map((c) => c.length),
+        );
+        const top = 96,
+          stepX = 260,
+          stepY = 156,
+          width = 180,
+          height = 94;
+        for (const [col, list] of columns)
+          list.forEach((n, i) => {
+            n.row = i;
+            n.x = 24 + col * stepX;
+            n.y = top + i * stepY;
+            n.w = width;
+            n.h = height;
+          });
+        for (const n of nodes.filter(
+          (n) => n.id === "@in" || n.id === "@out",
+        )) {
+          n.column = n.id === "@in" ? 0 : last;
+          n.row = Math.floor((rowCount - 1) / 2);
+          n.x = 24 + n.column * stepX;
+          n.y = top + n.row * stepY;
+          n.w = width;
+          n.h = height;
+        }
+        const own = nodes.find((n) => n.id === "@ops");
+        if (own) {
+          own.column = Math.ceil(last / 2);
+          own.row = rowCount;
+          own.x = 24 + own.column * stepX;
+          own.y = top + rowCount * stepY;
+          own.w = width;
+          own.h = height;
+        }
+        const rows = rowCount + (own ? 1 : 0);
+        const labels = staged
+          ? [
+              reverse ? "GRADIENTS IN" : "INPUTS",
+              ...(reverse
+                ? [
+                    "DECODE / ACT",
+                    "MEMORY / READOUT",
+                    "REASONING",
+                    "STATE / TASK",
+                    "ENCODING",
+                  ]
+                : [
+                    "ENCODING",
+                    "STATE / TASK",
+                    "REASONING",
+                    "MEMORY / READOUT",
+                    "DECODE / ACT",
+                  ]),
+              reverse ? "GRADIENTS OUT" : "OUTPUTS",
+            ]
+          : [];
+        const shift = Math.max(0, Math.min(...nodes.map((n) => n.x)) - 24);
+        for (const n of nodes) n.x -= shift;
         return {
-          width: Math.max(480, sorted.length * 235 + 35),
-          height: Math.max(320, maxRows * 143 + 65),
+          width: Math.max(480, ...nodes.map((n) => n.x + n.w + 48)),
+          height: top + (rows - 1) * stepY + height + 68,
+          top,
+          stepY,
+          rows,
+          headers: labels
+            .map((label, col) => ({
+              label,
+              column: col,
+              x: 24 + col * stepX - shift,
+              w: width,
+            }))
+            .filter((header) => nodes.some((n) => n.column === header.column)),
         };
+      }
+      function routeEdges(nodes, edges, size) {
+        const byId = new Map(nodes.map((n) => [n.id, n]));
+        const port = (edge, outgoing) => {
+          const n = byId.get(outgoing ? edge.source : edge.target);
+          const peers = edges
+            .filter((e) => (outgoing ? e.source : e.target) === n.id)
+            .sort((a, b) => {
+              const na = byId.get(outgoing ? a.target : a.source),
+                nb = byId.get(outgoing ? b.target : b.source);
+              return na.y - nb.y || na.x - nb.x;
+            });
+          const index = peers.indexOf(edge);
+          return {
+            x: n.x + (outgoing ? n.w : 0),
+            y: n.y + 16 + ((index + 1) * (n.h - 32)) / (peers.length + 1),
+            stub:
+              n.x +
+              (outgoing
+                ? n.w + 14 + (20 * (index + 1)) / (peers.length + 1)
+                : -14 - (20 * (index + 1)) / (peers.length + 1)),
+          };
+        };
+        const used = [];
+        const intervalsOverlap = (a, b, c, d) =>
+          Math.max(Math.min(a, b), Math.min(c, d)) <=
+          Math.min(Math.max(a, b), Math.max(c, d));
+        const lanes = [];
+        for (let row = 0; row <= size.rows; row++) {
+          const middle =
+            row === 0 ? size.top - 28 : size.top + (row - 1) * size.stepY + 124;
+          for (const offset of [0, -8, 8, -16, 16])
+            lanes.push({
+              y: middle + offset,
+              outer: row === 0 || row === size.rows,
+            });
+        }
+        const order = [...edges].sort((a, b) => {
+          const aux = (e) => e.source === "@ops" || e.target === "@ops";
+          return Number(aux(a)) - Number(aux(b));
+        });
+        for (const edge of order) {
+          const a = byId.get(edge.source),
+            b = byId.get(edge.target);
+          const start = port(edge, true),
+            end = port(edge, false);
+          edge.auxiliary = edge.source === "@ops" || edge.target === "@ops";
+          edge.returnRoute = b.column < a.column && !edge.auxiliary;
+          let points;
+          if (b.column === a.column + 1) {
+            const gapLeft = a.x + a.w,
+              gapRight = b.x;
+            const siblings = edges.filter(
+              (e) =>
+                e.source === edge.source &&
+                byId.get(e.target).column === b.column,
+            );
+            const x =
+              gapLeft +
+              24 +
+              ((gapRight - gapLeft - 48) * (siblings.indexOf(edge) + 1)) /
+                (siblings.length + 1);
+            points = [
+              [start.x, start.y],
+              [x, start.y],
+              [x, end.y],
+              [end.x, end.y],
+            ];
+          } else {
+            const candidates = edge.returnRoute
+              ? lanes.filter((l) => l.outer)
+              : lanes;
+            const cost = (lane) =>
+              Math.abs(start.y - lane.y) +
+              Math.abs(end.y - lane.y) +
+              used.filter(
+                (u) =>
+                  Math.abs(u.y - lane.y) < 6 &&
+                  intervalsOverlap(start.stub, end.stub, u.x1, u.x2),
+              ).length *
+                300;
+            const lane = [...candidates].sort((a, b) => cost(a) - cost(b))[0];
+            used.push({ y: lane.y, x1: start.stub, x2: end.stub });
+            points = [
+              [start.x, start.y],
+              [start.stub, start.y],
+              [start.stub, lane.y],
+              [end.stub, lane.y],
+              [end.stub, end.y],
+              [end.x, end.y],
+            ];
+          }
+          edge.points = points.filter(
+            (p, i) =>
+              !i || p[0] !== points[i - 1][0] || p[1] !== points[i - 1][1],
+          );
+        }
+      }
+      function connectionPath(points) {
+        // Rounded orthogonal corners keep arrow direction legible without curves
+        // passing through unrelated modules. Geometry retains the straight route.
+        let path = `M ${points[0][0]} ${points[0][1]}`;
+        for (let i = 1; i < points.length - 1; i++) {
+          const a = points[i - 1],
+            b = points[i],
+            c = points[i + 1];
+          const before = Math.abs(b[0] - a[0]) + Math.abs(b[1] - a[1]);
+          const after = Math.abs(c[0] - b[0]) + Math.abs(c[1] - b[1]);
+          const r = Math.min(7, before / 2, after / 2);
+          const enter = [
+            b[0] + Math.sign(a[0] - b[0]) * r,
+            b[1] + Math.sign(a[1] - b[1]) * r,
+          ];
+          const leave = [
+            b[0] + Math.sign(c[0] - b[0]) * r,
+            b[1] + Math.sign(c[1] - b[1]) * r,
+          ];
+          path += ` L ${enter[0]} ${enter[1]} Q ${b[0]} ${b[1]} ${leave[0]} ${leave[1]}`;
+        }
+        return path + ` L ${points.at(-1)[0]} ${points.at(-1)[1]}`;
       }
       function shapePath(n) {
         const { w, h } = n;
@@ -1377,19 +1645,41 @@
         const scene = E("g", { class: "scene" });
         const size = positionNodes(data.nodes, data.edges),
           lookup = new Map(data.nodes.map((n) => [n.id, n]));
+        routeEdges(data.nodes, data.edges, size);
+        for (const header of size.headers) {
+          const label = E("text", {
+            x: header.x + header.w / 2,
+            y: 32,
+            "text-anchor": "middle",
+            class: "stage-label",
+          });
+          label.textContent = header.label;
+          scene.append(label);
+          scene.append(
+            E("line", {
+              x1: header.x,
+              y1: 44,
+              x2: header.x + header.w,
+              y2: 44,
+              stroke: "#d7ddd4",
+            }),
+          );
+        }
         for (const edge of data.edges) {
           const a = lookup.get(edge.source),
             b = lookup.get(edge.target);
           if (!a || !b) continue;
-          const ax = a.x + a.w,
-            ay = a.y + a.h / 2,
-            bx = b.x,
-            by = b.y + b.h / 2;
-          const backwards = bx <= ax;
-          const bend = backwards ? 70 : Math.max(35, (bx - ax) * 0.48);
-          const d = backwards
-            ? `M ${ax} ${ay} C ${ax + bend} ${ay},${ax + bend} ${Math.min(a.y, b.y) - 25},${(ax + bx) / 2} ${Math.min(a.y, b.y) - 25} S ${bx - bend} ${by},${bx} ${by}`
-            : `M ${ax} ${ay} C ${ax + bend} ${ay},${bx - bend} ${by},${bx} ${by}`;
+          const d = connectionPath(edge.points);
+          const connection = E("g", {
+            class:
+              "connection" +
+              (edge.auxiliary ? " auxiliary" : "") +
+              (edge.returnRoute ? " return" : ""),
+            "data-from": edge.source,
+            "data-to": edge.target,
+            "data-route": JSON.stringify(edge.points),
+          });
+          connection.append(E("path", { d, class: "edge-hit" }));
           const p = E("path", {
             d,
             class:
@@ -1401,19 +1691,22 @@
           });
           const title = E("title");
           title.textContent = `${a.label} → ${b.label} · ${edge.count} recorded edges`;
-          p.append(title);
-          p.onclick = (e) => {
+          connection.append(title, p);
+          connection.onclick = (e) => {
             e.stopPropagation();
             $("layout").classList.add("show-inspector");
             $("inspector").innerHTML =
               `<div class="eyebrow">Recorded connection</div><h2>${esc(a.label)} → ${esc(b.label)}</h2><p>${fmt(edge.count)} tensor/autograd edges represented by this arrow.</p><h3>Evidence examples</h3><pre>${esc(edge.samples.join("\n\n"))}</pre><p>${edge.count > edge.samples.length ? "Examples shown; the complete graph remains in Tensor operations / Autograd operations." : "Every represented edge is listed above."}</p>`;
           };
-          scene.append(p);
+          scene.append(connection);
         }
         for (const n of data.nodes) {
           const g = E("g", {
             transform: `translate(${n.x},${n.y})`,
             class: "node",
+            "data-node": n.id,
+            "data-width": n.w,
+            "data-height": n.h,
             tabindex: 0,
             role: "button",
             "aria-label": `${n.label}, ${n.type}. ${n.hint}`,
@@ -1443,25 +1736,30 @@
             t.textContent = n.trainable ? "◉" : "▣";
             g.append(t);
           }
-          addText(n.label, 43, "", 15);
-          addText(n.type, 63, "small");
-          addText(n.detail, 84, "small");
-          addText(n.hint, 102, "hint");
+          addText(n.label, 36, "", 17);
+          addText(n.type, 55, "small");
+          addText(n.detail, 72, "small");
+          addText(n.hint, 87, "hint");
           const title = E("title");
           title.textContent = `${n.label}\n${n.type}\n${n.detail}${!n.active ? "\nNot directly executed in this capture" : ""}`;
           g.append(title);
-          g.onpointerenter = () => {
-            for (const edgeElement of scene.querySelectorAll(".edge")) {
-              const match =
-                edgeElement.getAttribute("data-from") === n.id ||
-                edgeElement.getAttribute("data-to") === n.id;
-              edgeElement.style.opacity = match ? "1" : ".08";
+          const highlight = () => {
+            for (const connection of scene.querySelectorAll(".connection")) {
+              const incoming = connection.getAttribute("data-to") === n.id;
+              const outgoing = connection.getAttribute("data-from") === n.id;
+              connection.classList.toggle("incoming", incoming);
+              connection.classList.toggle("outgoing", outgoing);
+              connection.classList.toggle("dim", !incoming && !outgoing);
             }
           };
-          g.onpointerleave = () => {
-            for (const edgeElement of scene.querySelectorAll(".edge"))
-              edgeElement.style.opacity = "";
+          const clearHighlight = () => {
+            for (const connection of scene.querySelectorAll(".connection"))
+              connection.classList.remove("incoming", "outgoing", "dim");
           };
+          g.onpointerenter = highlight;
+          g.onpointerleave = clearHighlight;
+          g.onfocus = highlight;
+          g.onblur = clearHighlight;
           g.onclick = n.onClick;
           g.onkeydown = (e) => {
             if (e.key === "Enter" || e.key === " ") {
@@ -1473,13 +1771,14 @@
         }
         svg.append(scene);
         canvas.append(svg);
-        fitBox = { x: -40, y: -20, w: size.width + 110, h: size.height + 30 };
+        fitBox = { x: -12, y: 0, w: size.width + 24, h: size.height + 14 };
         camera = { ...fitBox };
         setCamera();
         svg.classList.toggle("flowing", $("animate").checked);
         let drag = null;
         svg.onpointerdown = (e) => {
-          if (e.target.closest(".node") || e.target.closest(".edge")) return;
+          if (e.target.closest(".node") || e.target.closest(".connection"))
+            return;
           drag = { x: e.clientX, y: e.clientY, c: { ...camera } };
           svg.setPointerCapture(e.pointerId);
         };
@@ -1681,7 +1980,7 @@
         graph(data);
         $("caption").textContent = ["backward", "autograd"].includes(mode)
           ? "Backward arrows come from the actual autograd graph for the captured loss. Unattributed internal backward operations appear outside the module scope; explore Autograd internals from the training root. Frozen and detached branches receive no parameter gradient."
-          : "Click a module to zoom into its internals. Arrows aggregate observed tensor dependencies across this execution, including repeated calls. Dashed blocks have no direct observed call; all registered modules remain accessible.";
+          : "Inputs enter on the left; outputs leave on the right. Hover a module: blue inputs, teal outputs. Dashed arrows route back across columns; pale gold links connect internal tensor operations. Click a module to explore.";
         if (!data.nodes.length)
           $("canvas").innerHTML =
             '<p class="empty">No operations were recorded directly in this scope. Explore its child modules or weights. Unexecuted branches remain in the hierarchy.</p>';

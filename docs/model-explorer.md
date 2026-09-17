@@ -17,9 +17,16 @@ The existing architecture atlas keeps those separate records.
 - Click a module to descend. Use the breadcrumbs or Back to return. Scroll to
   zoom, drag the background to pan, and use Fit to see the complete current scope.
 - Forward data flow shows actual tensor dependencies aggregated across recorded
-  calls. Hover over a block to emphasize its incident connections; select an arrow
-  to see operator/tensor evidence. Details opens the module inspector and captured
-  local class source. Containers and shared modules remain explicit.
+  calls. Inputs occupy the left boundary and outputs the right. BeliefAgent uses
+  functional columns; other scopes use a cycle-aware dependency layout. Arrows
+  follow rounded right-angle routes through gaps between blocks. Dashed return
+  routes indicate a direction back across the layout, not proof of a recurrent
+  layer. Pale gold connections attach internal tensor operations. Hover or focus
+  a block for blue incoming and teal outgoing paths; select an arrow to see
+  operator/tensor evidence. Details opens the module inspector and captured
+  local class source. Containers and shared modules remain explicit. Layout hints
+  position existing modules only; every captured connection remains present, and
+  newly added modules are included automatically.
 - At a leaf layer, click a yellow parameter block to open its weights. The
   Weights & buffers view also lists every tensor beneath any enclosing module.
 - The tensor microscope shows exact values and gradients, not downsampled

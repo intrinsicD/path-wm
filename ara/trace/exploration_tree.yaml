@@ -8008,3 +8008,36 @@ tree:
   - docs/session-handoff.md
   status: resolved
   timestamp: 2026-09-17T12:04+02:00
+- id: N481
+  type: decision
+  title: Replace the dense overview with an ordered left-to-right layout
+  provenance: user
+  timestamp: 2026-09-17T12:44+02:00
+  choice: User reports BeliefAgent is too dense and connections confusing; requests inputs on the left,
+    outputs on the right and a proper internal-node layout.
+  alternatives:
+  - Keep the compact cyclic-grid fallback
+  evidence:
+  - N475
+  - N476
+  - docs/model-explorer-plan.md
+  status: resolved
+- id: N482
+  type: experiment
+  title: Layout geometry preserves all overview connections and avoids unrelated blocks
+  provenance: ai-executed
+  timestamp: 2026-09-17T12:44+02:00
+  result: BeliefAgent17 displayed nodes/41 connections exactly preserved. Fixed external boundary columns,
+    functional module placement, cycle-aware generic ordering and rounded orthogonal routing. Zero block
+    overlaps or routes crossing unrelated blocks in forward17/41, backward16/31, encoders6/8, Conv2d6/8
+    and ATen page74/139. Browser drill-down, exact weight view, Back and blue-in/teal-out focus verified.
+    Twelve exporter tests pass in7.47s; independent current-model scalar weights/loss/gradients exact
+    after regeneration. Return-route styling denotes layout direction, not an inferred recurrent architecture.
+    No model/training changes.
+  evidence:
+  - ara/evidence/tables/model_explorer_layout_2026-09-17.json
+  - docs/model-explorer-plan.md
+  - pathwm/evaluation/explorer.html
+  also_depends_on:
+  - N481
+  status: resolved

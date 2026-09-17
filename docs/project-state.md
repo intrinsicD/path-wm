@@ -11,7 +11,10 @@ weights, loss and gradients match a separate uninstrumented default-model run
 exactly. 632 checks passed in the isolated full-suite snapshot; 16 final focused
 checks and interactive browser QA passed. Weights are explicitly fresh seed42;
 flow coverage is the declared short synthetic batch. No model/training changes or
-scientific validation promotion. The learning study below remains independent.
+scientific validation promotion. Layout refined after user feedback: inputs left,
+outputs right, ordered columns and obstacle-free arrow routes; all 41 overview
+connections retained. Forward/backward/nested browser checks and 12 focused tests
+pass. The learning study below remains independent.
 
 **Performance iteration completed, 17 September:** [protocol/results](byte-batch-plan.md),
 [report](../runs/metadata_cache_v1/report.html). Actual Claude reviewed both mechanisms.
