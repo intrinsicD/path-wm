@@ -8041,3 +8041,82 @@ tree:
   also_depends_on:
   - N481
   status: resolved
+- id: N483
+  type: decision
+  title: Preregister paired interpreter continuation with matched CE and fresh prefixes
+  provenance: ai-executed
+  timestamp: 2026-09-17T13:28+02:00
+  choice: Four fixed512-update fits, two independent source checkpoints, matched seeds/paired calibration clips/neutral
+    observation route; compare coefficient1 first-word-boundary CE versus ordinary CE. Fresh known-lexicon
+    prefix compositions, first-word/first-only and broader preservation, exact frozen/legacy audits. Actual
+    Claude public-only design/reconciliation, red tests before implementation.
+  alternatives:
+  - Attribute shared routing or sampling changes to the extra loss
+  - Reuse diagnosed templates as new generalization evidence
+  - Choose checkpoints or gates after evaluation
+  evidence:
+  - docs/request-boundary-plan.md
+  - 72b85d4
+  - 2d43133
+  - O320
+  also_depends_on:
+  - N472
+  - N474
+  status: resolved
+- id: N484
+  type: experiment
+  title: Fixed request-boundary comparison and separately bounded recovery completed
+  provenance: ai-executed
+  timestamp: 2026-09-17T13:28+02:00
+  result: Source7201 joint exact37.5% in untouched/CE/boundary. Source7202 56.7708/76.5625/74.4792%; first-only98.4375/93.2292/95.8333%.
+    First-word joint62.5/100% unchanged per source. Broad0/25 and1/25; boundary7202 scene-image accuracy/source-gain
+    regress33.3333pp. All four512-update checkpoints saved; original1500.4597s cap stops final CE evaluation.
+    Separate213.8327s fixed-weight recovery completes evaluations without training; original cap fails. Audit11,520
+    rows,8,986 tensors,2,216 arrays including2,208 legacy arrays,94,940 primitives.640 snapshot tests,30 final
+    focused;18 structural reports, figure inspected, no browser QA. Initial artifact-key audit error unmetered;
+    recorded1726.2283s is a lower bound.
+  evidence:
+  - ara/evidence/tables/request_boundary_2026-09-17.json
+  - runs/request_boundary_v1/report.html
+  also_depends_on:
+  - N483
+  status: resolved
+- id: N485
+  type: dead_end
+  title: Additional first-word boundary CE fails incremental benefit and preservation
+  provenance: ai-executed
+  timestamp: 2026-09-17T13:28+02:00
+  hypothesis: Coefficient1 extra first-word-boundary supervision can yield80% worst-draw joint exact and10pp
+    advantage over matched CE on both sources without preservation regressions.
+  failure_mode: Boundary-minus-CE joint0/-2.0833pp; weak source unchanged. Strong source below80%, first-only
+    drops2.6042pp from untouched and broader image task regresses. Quality and original resource gates fail.
+  lesson: Remove the duplicate loss computation/flag; preserve negative outcomes and exact frozen candidate
+    source/tests. Shared paired sampling, neutral routing and continued training are not independently identified
+    causes. No inference or training speed gain established.
+  evidence:
+  - ara/evidence/tables/request_boundary_2026-09-17.json
+  - 63b7321
+  also_depends_on:
+  - N483
+  - N484
+  status: resolved
+- id: N486
+  type: decision
+  title: Keep paired ordinary CE and fresh evaluation while preserving all failed gates
+  provenance: ai-executed
+  timestamp: 2026-09-17T13:28+02:00
+  choice: Retain paired calibration sampling, neutral input routing and opt-in fresh-prefix evaluation; original
+    normalized byte CE uses one decoder call. Current six-update training matches frozen weight0 control848
+    tensors/1321 primitives; separate exact resume also passes. Keep stopped parent and recovered evaluation
+    distinct. No checkpoint/default/color promotion; update plan/handoff/atlas and commit60ad7e4.
+  alternatives:
+  - Keep unsupported extra loss as another option
+  - Promote common CE improvement despite preservation failure
+  - Relabel interrupted run or resource gate as passing
+  evidence:
+  - N484
+  - N485
+  - tests/test_request_boundary.py
+  - docs/session-handoff.md
+  - O320
+  status: resolved

@@ -5584,3 +5584,37 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O320
+  timestamp: 2026-09-17T13:28+02:00
+  provenance: ai-suggested
+  content: Use paired opposite requests on calibration clips with neutral observation questions, preserve real
+    task instructions, and evaluate explicit fresh known-lexicon prefix compositions. Compare one additional
+    learning factor against the same routing/sampling CE control; current recipe retains the paired ordinary-CE
+    path and original loss.
+  context: Implemented subset of O319 at2d43133/63b7321; N483/N486 and final code depend on it. Weaker-source
+    causal localization and successful generalization remain open.
+  potential_type: architecture
+  bound_to:
+  - N483
+  - N486
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A21
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O321
+  timestamp: 2026-09-17T13:28+02:00
+  provenance: ai-suggested
+  content: On the stronger fixed source, continued interpreter fitting changes answer completion while correct
+    first words stay stable, but increasing joint success trades against first-only preservation. The tested
+    extra boundary CE does not explain the common gain over untouched weights. Weak-source content access remains
+    a different unsolved limitation.
+  context: Scoped interpretation of N484 after matched CE outperforms boundary loss; no researcher response
+    to the new measurements. Shared sampling/routing/continuation factors are not independently separated.
+  potential_type: claim
+  bound_to:
+  - N484
+  - N485
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

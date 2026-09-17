@@ -1,0 +1,3986 @@
+{
+  "date": "2026-09-17",
+  "provenance": "ai-executed",
+  "formal_commit": "2d43133",
+  "final_code_commit": "63b7321",
+  "closure_commit": "60ad7e4",
+  "comparison": {
+    "audit": {
+      "arrays": 2216,
+      "legacy_arrays": 2208,
+      "primitives": 94940,
+      "rows": 11520,
+      "tensors": 8986
+    },
+    "audit_seconds": 10.777870360994712,
+    "execution_seconds": 1318.8373159000184,
+    "passed": false,
+    "quality_passed": false,
+    "recovery": {
+      "complete": true,
+      "mapping": {
+        "7201/boundary": {
+          "quick": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/boundary/quick",
+          "requests": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/boundary",
+          "weights": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/boundary"
+        },
+        "7201/ce": {
+          "quick": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/ce/quick",
+          "requests": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/ce",
+          "weights": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/ce"
+        },
+        "7201/source": {
+          "quick": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/source/quick",
+          "requests": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/source",
+          "weights": "/home/alex/Documents/path-wm/runs/request_meaning_v1/seed7201/balanced"
+        },
+        "7202/boundary": {
+          "quick": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/boundary/quick",
+          "requests": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/boundary",
+          "weights": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/boundary"
+        },
+        "7202/ce": {
+          "quick": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce/recovered_quick",
+          "requests": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce/recovered_requests",
+          "weights": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce"
+        },
+        "7202/source": {
+          "quick": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/source/quick",
+          "requests": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/source",
+          "weights": "/home/alex/Documents/path-wm/runs/request_meaning_v1/seed7202/balanced"
+        }
+      },
+      "neural_updates": 0,
+      "original_failure": {
+        "error": "Command '['.venv/bin/python', '-m', 'experiments.modality_readout', '--stage', 'grounded', '--core', 'runs/request_meaning_v1/seed7202/balanced', '--output', 'runs/request_boundary_v1/seed7202/ce', '--understanding-suite', 'data/understanding_v1/full', '--grounded-scope', 'interpreter', '--request-contrasts', '--request-profile', 'paired', '--observation-question', 'neutral', '--request-evaluation', 'fresh', '--boundary-weight', '0', '--steps', '512', '--seed', '9802', '--device', 'cuda']' timed out after 181.15822340128943 seconds",
+        "seconds": 1500.4597115679644,
+        "type": "TimeoutExpired"
+      },
+      "original_resource_gate_passed": false,
+      "receipts": [
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "request-evaluate",
+            "--core",
+            "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce",
+            "--output",
+            "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce/recovered_requests",
+            "--understanding-suite",
+            "data/understanding_v1/full",
+            "--observation-question",
+            "neutral",
+            "--request-evaluation",
+            "fresh",
+            "--seed",
+            "9802",
+            "--device",
+            "cuda"
+          ],
+          "name": "7202-ce-recover-requests",
+          "returncode": 0,
+          "seconds": 120.07822877704166
+        },
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "understanding",
+            "--core",
+            "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce",
+            "--output",
+            "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce/recovered_quick",
+            "--understanding-suite",
+            "data/understanding_v1/quick",
+            "--seed",
+            "9901",
+            "--device",
+            "cuda",
+            "--reference",
+            "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/source/quick"
+          ],
+          "name": "7202-ce-recover-quick",
+          "returncode": 0,
+          "seconds": 90.03051731106825
+        }
+      ],
+      "seconds": 213.83270001900382,
+      "stopped": [
+        "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce"
+      ]
+    },
+    "resource_gate_passed": false,
+    "scope": "Fixed two-source conditional comparison of boundary weighting; known-lexicon prefix compositions. No seed/continuation selection.",
+    "sources": [
+      {
+        "broad_coverage": {
+          "boundary": {
+            "executed": 25,
+            "failed": 25,
+            "passed": 0,
+            "unimplemented_domains": 7
+          },
+          "ce": {
+            "executed": 25,
+            "failed": 25,
+            "passed": 0,
+            "unimplemented_domains": 7
+          },
+          "source": {
+            "executed": 25,
+            "failed": 25,
+            "passed": 0,
+            "unimplemented_domains": 7
+          }
+        },
+        "broader_regressions": [],
+        "gates": {
+          "broader_preservation": true,
+          "constant_request_joint_chance": true,
+          "first_only_vs_ce": true,
+          "first_only_vs_source": true,
+          "first_word_both_vs_ce": true,
+          "first_word_both_vs_source": true,
+          "first_word_first_vs_ce": true,
+          "first_word_first_vs_source": true,
+          "first_word_sequence_vs_ce": true,
+          "first_word_sequence_vs_source": true,
+          "frozen_and_legacy_exact": true,
+          "joint_80": false,
+          "joint_gain_10pp": false,
+          "last_frame_joint_chance": true,
+          "omitted_joint_chance": true
+        },
+        "joint_delta": 0.0,
+        "metrics": {
+          "boundary": {
+            "conditional_boundary": {
+              "first": {
+                "eos_rate": 0.8333333333333334,
+                "space_rate": 0.16666666666666666
+              },
+              "sequence": {
+                "eos_rate": 0.08333333333333333,
+                "space_rate": 0.9166666666666666
+              }
+            },
+            "constant_request/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "constant_request/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "constant_request/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "full/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.375,
+                  0.375,
+                  0.375
+                ],
+                "worst": 0.375
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.65625,
+                  0.65625,
+                  0.65625
+                ],
+                "worst": 0.65625
+              }
+            },
+            "full/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5208333333333334,
+                  0.5208333333333334,
+                  0.5208333333333334
+                ],
+                "worst": 0.5208333333333334
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.8333333333333334,
+                  0.8333333333333334,
+                  0.8333333333333334
+                ],
+                "worst": 0.8333333333333334
+              }
+            },
+            "full/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.4583333333333333,
+                  0.4583333333333333,
+                  0.4583333333333333
+                ],
+                "worst": 0.4583333333333333
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.8020833333333334,
+                  0.8020833333333334,
+                  0.8020833333333334
+                ],
+                "worst": 0.8020833333333334
+              }
+            },
+            "last_frame/both": {
+              "ended": {
+                "by_draw": [
+                  0.4375,
+                  0.375,
+                  0.3125
+                ],
+                "worst": 0.3125
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "last_frame/first": {
+              "ended": {
+                "by_draw": [
+                  0.4375,
+                  0.375,
+                  0.3125
+                ],
+                "worst": 0.3125
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "last_frame/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "omitted/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "omitted/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "omitted/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "order_stress/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "order_stress/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "order_stress/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.875,
+                  0.875,
+                  0.875
+                ],
+                "worst": 0.875
+              }
+            }
+          },
+          "ce": {
+            "conditional_boundary": {
+              "first": {
+                "eos_rate": 0.8333333333333334,
+                "space_rate": 0.16666666666666666
+              },
+              "sequence": {
+                "eos_rate": 0.08333333333333333,
+                "space_rate": 0.9166666666666666
+              }
+            },
+            "constant_request/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "constant_request/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "constant_request/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "full/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.375,
+                  0.375,
+                  0.375
+                ],
+                "worst": 0.375
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.65625,
+                  0.65625,
+                  0.65625
+                ],
+                "worst": 0.65625
+              }
+            },
+            "full/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5208333333333334,
+                  0.5208333333333334,
+                  0.5208333333333334
+                ],
+                "worst": 0.5208333333333334
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.8333333333333334,
+                  0.8333333333333334,
+                  0.8333333333333334
+                ],
+                "worst": 0.8333333333333334
+              }
+            },
+            "full/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.4583333333333333,
+                  0.4583333333333333,
+                  0.4583333333333333
+                ],
+                "worst": 0.4583333333333333
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.8020833333333334,
+                  0.8020833333333334,
+                  0.8020833333333334
+                ],
+                "worst": 0.8020833333333334
+              }
+            },
+            "last_frame/both": {
+              "ended": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "last_frame/first": {
+              "ended": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "last_frame/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "omitted/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "omitted/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "omitted/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "order_stress/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "order_stress/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "order_stress/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.25,
+                  0.25,
+                  0.25
+                ],
+                "worst": 0.25
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.4375,
+                  0.4375,
+                  0.4375
+                ],
+                "worst": 0.4375
+              }
+            }
+          },
+          "source": {
+            "conditional_boundary": {
+              "first": {
+                "eos_rate": 0.8333333333333334,
+                "space_rate": 0.16666666666666666
+              },
+              "sequence": {
+                "eos_rate": 0.07291666666666667,
+                "space_rate": 0.9270833333333334
+              }
+            },
+            "constant_request/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "constant_request/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "constant_request/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "full/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.375,
+                  0.375,
+                  0.375
+                ],
+                "worst": 0.375
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.65625,
+                  0.65625,
+                  0.65625
+                ],
+                "worst": 0.65625
+              }
+            },
+            "full/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5208333333333334,
+                  0.5208333333333334,
+                  0.5208333333333334
+                ],
+                "worst": 0.5208333333333334
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.8333333333333334,
+                  0.8333333333333334,
+                  0.8333333333333334
+                ],
+                "worst": 0.8333333333333334
+              }
+            },
+            "full/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.4583333333333333,
+                  0.4583333333333333,
+                  0.4583333333333333
+                ],
+                "worst": 0.4583333333333333
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.8020833333333334,
+                  0.8020833333333334,
+                  0.8020833333333334
+                ],
+                "worst": 0.8020833333333334
+              }
+            },
+            "last_frame/both": {
+              "ended": {
+                "by_draw": [
+                  0.25,
+                  0.1875,
+                  0.1875
+                ],
+                "worst": 0.1875
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "last_frame/first": {
+              "ended": {
+                "by_draw": [
+                  0.25,
+                  0.1875,
+                  0.1875
+                ],
+                "worst": 0.1875
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "last_frame/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "omitted/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "omitted/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "omitted/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "order_stress/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "order_stress/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "order_stress/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "first_word": {
+                "by_draw": [
+                  0.625,
+                  0.625,
+                  0.625
+                ],
+                "worst": 0.625
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.875,
+                  0.875,
+                  0.875
+                ],
+                "worst": 0.875
+              }
+            }
+          }
+        },
+        "passed": false,
+        "seed": 7201
+      },
+      {
+        "broad_coverage": {
+          "boundary": {
+            "executed": 25,
+            "failed": 24,
+            "passed": 1,
+            "unimplemented_domains": 7
+          },
+          "ce": {
+            "executed": 25,
+            "failed": 24,
+            "passed": 1,
+            "unimplemented_domains": 7
+          },
+          "source": {
+            "executed": 25,
+            "failed": 24,
+            "passed": 1,
+            "unimplemented_domains": 7
+          }
+        },
+        "broader_regressions": [
+          {
+            "after": 0.0,
+            "before": 0.3333333333333333,
+            "case": "REAL.scene.image",
+            "delta": -0.3333333333333333,
+            "metric": "accuracy_min"
+          },
+          {
+            "after": -0.3333333333333333,
+            "before": 0.0,
+            "case": "REAL.scene.image",
+            "delta": -0.3333333333333333,
+            "metric": "source_gain_min"
+          }
+        ],
+        "gates": {
+          "broader_preservation": false,
+          "constant_request_joint_chance": true,
+          "first_only_vs_ce": true,
+          "first_only_vs_source": false,
+          "first_word_both_vs_ce": true,
+          "first_word_both_vs_source": true,
+          "first_word_first_vs_ce": true,
+          "first_word_first_vs_source": true,
+          "first_word_sequence_vs_ce": true,
+          "first_word_sequence_vs_source": true,
+          "frozen_and_legacy_exact": true,
+          "joint_80": false,
+          "joint_gain_10pp": false,
+          "last_frame_joint_chance": true,
+          "omitted_joint_chance": true
+        },
+        "joint_delta": -0.02083333333333337,
+        "metrics": {
+          "boundary": {
+            "conditional_boundary": {
+              "first": {
+                "eos_rate": 0.9583333333333334,
+                "space_rate": 0.041666666666666664
+              },
+              "sequence": {
+                "eos_rate": 0.21006944444444445,
+                "space_rate": 0.7899305555555556
+              }
+            },
+            "constant_request/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "constant_request/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "constant_request/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "full/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.7552083333333334,
+                  0.7447916666666666,
+                  0.7447916666666666
+                ],
+                "worst": 0.7447916666666666
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.7552083333333334,
+                  0.7447916666666666,
+                  0.7447916666666666
+                ],
+                "worst": 0.7447916666666666
+              }
+            },
+            "full/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.9583333333333334,
+                  0.9583333333333334,
+                  0.9583333333333334
+                ],
+                "worst": 0.9583333333333334
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.9583333333333334,
+                  0.9583333333333334,
+                  0.9583333333333334
+                ],
+                "worst": 0.9583333333333334
+              }
+            },
+            "full/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.796875,
+                  0.7864583333333334,
+                  0.7864583333333334
+                ],
+                "worst": 0.7864583333333334
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.796875,
+                  0.7864583333333334,
+                  0.7864583333333334
+                ],
+                "worst": 0.7864583333333334
+              }
+            },
+            "last_frame/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.25,
+                  0.25,
+                  0.25
+                ],
+                "worst": 0.25
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              }
+            },
+            "last_frame/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "last_frame/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.25,
+                  0.25,
+                  0.25
+                ],
+                "worst": 0.25
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              }
+            },
+            "omitted/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.25,
+                  0.25,
+                  0.25
+                ],
+                "worst": 0.25
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              }
+            },
+            "omitted/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "omitted/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.25,
+                  0.25,
+                  0.25
+                ],
+                "worst": 0.25
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              }
+            },
+            "order_stress/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "order_stress/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "order_stress/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            }
+          },
+          "ce": {
+            "conditional_boundary": {
+              "first": {
+                "eos_rate": 0.9444444444444444,
+                "space_rate": 0.05555555555555555
+              },
+              "sequence": {
+                "eos_rate": 0.16666666666666666,
+                "space_rate": 0.8333333333333334
+              }
+            },
+            "constant_request/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "constant_request/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "constant_request/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "full/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.765625,
+                  0.7864583333333334,
+                  0.78125
+                ],
+                "worst": 0.765625
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.765625,
+                  0.7864583333333334,
+                  0.78125
+                ],
+                "worst": 0.765625
+              }
+            },
+            "full/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.9322916666666666,
+                  0.953125,
+                  0.9479166666666666
+                ],
+                "worst": 0.9322916666666666
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.9322916666666666,
+                  0.953125,
+                  0.9479166666666666
+                ],
+                "worst": 0.9322916666666666
+              }
+            },
+            "full/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.8333333333333334,
+                  0.8333333333333334,
+                  0.8333333333333334
+                ],
+                "worst": 0.8333333333333334
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.8333333333333334,
+                  0.8333333333333334,
+                  0.8333333333333334
+                ],
+                "worst": 0.8333333333333334
+              }
+            },
+            "last_frame/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.25,
+                  0.25,
+                  0.25
+                ],
+                "worst": 0.25
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              }
+            },
+            "last_frame/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "last_frame/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.25,
+                  0.25,
+                  0.25
+                ],
+                "worst": 0.25
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              }
+            },
+            "omitted/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.25,
+                  0.25,
+                  0.25
+                ],
+                "worst": 0.25
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              }
+            },
+            "omitted/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "omitted/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.25,
+                  0.25,
+                  0.25
+                ],
+                "worst": 0.25
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              }
+            },
+            "order_stress/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "order_stress/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "order_stress/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            }
+          },
+          "source": {
+            "conditional_boundary": {
+              "first": {
+                "eos_rate": 0.9895833333333334,
+                "space_rate": 0.010416666666666666
+              },
+              "sequence": {
+                "eos_rate": 0.4166666666666667,
+                "space_rate": 0.5833333333333334
+              }
+            },
+            "constant_request/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "constant_request/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "constant_request/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "full/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5677083333333334,
+                  0.5729166666666666,
+                  0.578125
+                ],
+                "worst": 0.5677083333333334
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.5677083333333334,
+                  0.5729166666666666,
+                  0.578125
+                ],
+                "worst": 0.5677083333333334
+              }
+            },
+            "full/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.984375,
+                  0.9895833333333334,
+                  0.9947916666666666
+                ],
+                "worst": 0.984375
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.984375,
+                  0.9895833333333334,
+                  0.9947916666666666
+                ],
+                "worst": 0.984375
+              }
+            },
+            "full/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5833333333333334,
+                  0.5833333333333334,
+                  0.5833333333333334
+                ],
+                "worst": 0.5833333333333334
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.5833333333333334,
+                  0.5833333333333334,
+                  0.5833333333333334
+                ],
+                "worst": 0.5833333333333334
+              }
+            },
+            "last_frame/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "last_frame/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "last_frame/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "omitted/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "omitted/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "omitted/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  0.5,
+                  0.5,
+                  0.5
+                ],
+                "worst": 0.5
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "order_stress/both": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            },
+            "order_stress/first": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              }
+            },
+            "order_stress/sequence": {
+              "ended": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "exact": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              },
+              "first_word": {
+                "by_draw": [
+                  1.0,
+                  1.0,
+                  1.0
+                ],
+                "worst": 1.0
+              },
+              "format_correct": {
+                "by_draw": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "worst": 0.0
+              }
+            }
+          }
+        },
+        "passed": false,
+        "seed": 7202
+      }
+    ],
+    "total_process_seconds": 1725.070281947963
+  },
+  "resources": {
+    "audit": {
+      "returncode": 0,
+      "seconds": 11.935864120954648
+    },
+    "audit_initial_failure": {
+      "error": "Artifact lookup used checkpoint directory instead of last.pt key; no failed tensor or prediction assertion.",
+      "log_sha256": "c8a0e3367b874b8c1023ceb324d4e7a1a42feb7131d0db216e0bec3f5695e53d",
+      "seconds": null,
+      "source_mutation": false
+    },
+    "current_ce_compatibility": {
+      "counts": {
+        "primitives": 1321,
+        "tensors": 848
+      },
+      "exact_current_ce": true,
+      "receipts": [
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "grounded",
+            "--core",
+            "/home/alex/Documents/path-wm/runs/request_meaning_v1/seed7201/balanced",
+            "--understanding-suite",
+            "/home/alex/Documents/path-wm/data/understanding_v1/full",
+            "--grounded-scope",
+            "interpreter",
+            "--request-contrasts",
+            "--request-profile",
+            "paired",
+            "--observation-question",
+            "neutral",
+            "--request-evaluation",
+            "fresh",
+            "--seed",
+            "9893",
+            "--steps",
+            "8",
+            "--stop-after",
+            "6",
+            "--device",
+            "cuda",
+            "--output",
+            "/home/alex/Documents/path-wm/runs/request_boundary_dev/frozen_ce",
+            "--boundary-weight",
+            "0"
+          ],
+          "cwd": "/tmp/pathwm-boundary-20260917",
+          "returncode": 0,
+          "seconds": 9.280001233099028
+        },
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "grounded",
+            "--core",
+            "/home/alex/Documents/path-wm/runs/request_meaning_v1/seed7201/balanced",
+            "--understanding-suite",
+            "/home/alex/Documents/path-wm/data/understanding_v1/full",
+            "--grounded-scope",
+            "interpreter",
+            "--request-contrasts",
+            "--request-profile",
+            "paired",
+            "--observation-question",
+            "neutral",
+            "--request-evaluation",
+            "fresh",
+            "--seed",
+            "9893",
+            "--steps",
+            "8",
+            "--stop-after",
+            "6",
+            "--device",
+            "cuda",
+            "--output",
+            "/home/alex/Documents/path-wm/runs/request_boundary_dev/current_ce"
+          ],
+          "cwd": "/home/alex/Documents/path-wm",
+          "returncode": 0,
+          "seconds": 9.232420355081558
+        }
+      ],
+      "scope": "Six-update paused development runs, retired weight0 implementation versus current original CE; no quality evaluation.",
+      "seconds": 18.55389671307057
+    },
+    "development": {
+      "counts": {
+        "primitives": 1321,
+        "tensors": 848
+      },
+      "exact_resume": true,
+      "scope": "Six-update state in paused eight-step development runs; no task capability evaluation.",
+      "seconds": 24.026148463832214
+    },
+    "exact_all_process_cost_available": false,
+    "execution": {
+      "complete": false,
+      "receipts": [
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "request-evaluate",
+            "--core",
+            "runs/request_meaning_v1/seed7201/balanced",
+            "--output",
+            "runs/request_boundary_v1/seed7201/source",
+            "--understanding-suite",
+            "data/understanding_v1/full",
+            "--observation-question",
+            "neutral",
+            "--request-evaluation",
+            "fresh",
+            "--seed",
+            "9801",
+            "--device",
+            "cuda"
+          ],
+          "name": "7201-source-fresh",
+          "returncode": 0,
+          "seconds": 132.5893692090176
+        },
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "understanding",
+            "--core",
+            "runs/request_meaning_v1/seed7201/balanced",
+            "--output",
+            "runs/request_boundary_v1/seed7201/source/quick",
+            "--understanding-suite",
+            "data/understanding_v1/quick",
+            "--seed",
+            "9901",
+            "--device",
+            "cuda"
+          ],
+          "name": "7201-source-quick",
+          "returncode": 0,
+          "seconds": 109.05130686890334
+        },
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "grounded",
+            "--core",
+            "runs/request_meaning_v1/seed7201/balanced",
+            "--output",
+            "runs/request_boundary_v1/seed7201/ce",
+            "--understanding-suite",
+            "data/understanding_v1/full",
+            "--grounded-scope",
+            "interpreter",
+            "--request-contrasts",
+            "--request-profile",
+            "paired",
+            "--observation-question",
+            "neutral",
+            "--request-evaluation",
+            "fresh",
+            "--boundary-weight",
+            "0",
+            "--steps",
+            "512",
+            "--seed",
+            "9801",
+            "--device",
+            "cuda"
+          ],
+          "name": "7201-ce-fit",
+          "returncode": 0,
+          "seconds": 191.64470927999355
+        },
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "understanding",
+            "--core",
+            "runs/request_boundary_v1/seed7201/ce",
+            "--output",
+            "runs/request_boundary_v1/seed7201/ce/quick",
+            "--understanding-suite",
+            "data/understanding_v1/quick",
+            "--reference",
+            "runs/request_boundary_v1/seed7201/source/quick",
+            "--seed",
+            "9901",
+            "--device",
+            "cuda"
+          ],
+          "name": "7201-ce-quick",
+          "returncode": 0,
+          "seconds": 102.879883548012
+        },
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "grounded",
+            "--core",
+            "runs/request_meaning_v1/seed7201/balanced",
+            "--output",
+            "runs/request_boundary_v1/seed7201/boundary",
+            "--understanding-suite",
+            "data/understanding_v1/full",
+            "--grounded-scope",
+            "interpreter",
+            "--request-contrasts",
+            "--request-profile",
+            "paired",
+            "--observation-question",
+            "neutral",
+            "--request-evaluation",
+            "fresh",
+            "--boundary-weight",
+            "1",
+            "--steps",
+            "512",
+            "--seed",
+            "9801",
+            "--device",
+            "cuda"
+          ],
+          "name": "7201-boundary-fit",
+          "returncode": 0,
+          "seconds": 203.35598161886446
+        },
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "understanding",
+            "--core",
+            "runs/request_boundary_v1/seed7201/boundary",
+            "--output",
+            "runs/request_boundary_v1/seed7201/boundary/quick",
+            "--understanding-suite",
+            "data/understanding_v1/quick",
+            "--reference",
+            "runs/request_boundary_v1/seed7201/source/quick",
+            "--seed",
+            "9901",
+            "--device",
+            "cuda"
+          ],
+          "name": "7201-boundary-quick",
+          "returncode": 0,
+          "seconds": 103.48843888193369
+        },
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "request-evaluate",
+            "--core",
+            "runs/request_meaning_v1/seed7202/balanced",
+            "--output",
+            "runs/request_boundary_v1/seed7202/source",
+            "--understanding-suite",
+            "data/understanding_v1/full",
+            "--observation-question",
+            "neutral",
+            "--request-evaluation",
+            "fresh",
+            "--seed",
+            "9802",
+            "--device",
+            "cuda"
+          ],
+          "name": "7202-source-fresh",
+          "returncode": 0,
+          "seconds": 113.05316393799148
+        },
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "understanding",
+            "--core",
+            "runs/request_meaning_v1/seed7202/balanced",
+            "--output",
+            "runs/request_boundary_v1/seed7202/source/quick",
+            "--understanding-suite",
+            "data/understanding_v1/quick",
+            "--seed",
+            "9901",
+            "--device",
+            "cuda"
+          ],
+          "name": "7202-source-quick",
+          "returncode": 0,
+          "seconds": 90.5214203640353
+        },
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "grounded",
+            "--core",
+            "runs/request_meaning_v1/seed7202/balanced",
+            "--output",
+            "runs/request_boundary_v1/seed7202/boundary",
+            "--understanding-suite",
+            "data/understanding_v1/full",
+            "--grounded-scope",
+            "interpreter",
+            "--request-contrasts",
+            "--request-profile",
+            "paired",
+            "--observation-question",
+            "neutral",
+            "--request-evaluation",
+            "fresh",
+            "--boundary-weight",
+            "1",
+            "--steps",
+            "512",
+            "--seed",
+            "9802",
+            "--device",
+            "cuda"
+          ],
+          "name": "7202-boundary-fit",
+          "returncode": 0,
+          "seconds": 180.43416357482783
+        },
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "understanding",
+            "--core",
+            "runs/request_boundary_v1/seed7202/boundary",
+            "--output",
+            "runs/request_boundary_v1/seed7202/boundary/quick",
+            "--understanding-suite",
+            "data/understanding_v1/quick",
+            "--reference",
+            "runs/request_boundary_v1/seed7202/source/quick",
+            "--seed",
+            "9901",
+            "--device",
+            "cuda"
+          ],
+          "name": "7202-boundary-quick",
+          "returncode": 0,
+          "seconds": 91.768226708984
+        }
+      ],
+      "seconds": 1318.8373159000184
+    },
+    "execution_failure": {
+      "error": "Command '['.venv/bin/python', '-m', 'experiments.modality_readout', '--stage', 'grounded', '--core', 'runs/request_meaning_v1/seed7202/balanced', '--output', 'runs/request_boundary_v1/seed7202/ce', '--understanding-suite', 'data/understanding_v1/full', '--grounded-scope', 'interpreter', '--request-contrasts', '--request-profile', 'paired', '--observation-question', 'neutral', '--request-evaluation', 'fresh', '--boundary-weight', '0', '--steps', '512', '--seed', '9802', '--device', 'cuda']' timed out after 181.15822340128943 seconds",
+      "seconds": 1500.4597115679644,
+      "type": "TimeoutExpired"
+    },
+    "recorded_development_seconds": 42.580045176902786,
+    "recorded_execution_recovery_audit_seconds": 1726.2282757079229,
+    "recovery": {
+      "complete": true,
+      "mapping": {
+        "7201/boundary": {
+          "quick": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/boundary/quick",
+          "requests": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/boundary",
+          "weights": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/boundary"
+        },
+        "7201/ce": {
+          "quick": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/ce/quick",
+          "requests": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/ce",
+          "weights": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/ce"
+        },
+        "7201/source": {
+          "quick": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/source/quick",
+          "requests": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/source",
+          "weights": "/home/alex/Documents/path-wm/runs/request_meaning_v1/seed7201/balanced"
+        },
+        "7202/boundary": {
+          "quick": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/boundary/quick",
+          "requests": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/boundary",
+          "weights": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/boundary"
+        },
+        "7202/ce": {
+          "quick": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce/recovered_quick",
+          "requests": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce/recovered_requests",
+          "weights": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce"
+        },
+        "7202/source": {
+          "quick": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/source/quick",
+          "requests": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/source",
+          "weights": "/home/alex/Documents/path-wm/runs/request_meaning_v1/seed7202/balanced"
+        }
+      },
+      "neural_updates": 0,
+      "original_failure": {
+        "error": "Command '['.venv/bin/python', '-m', 'experiments.modality_readout', '--stage', 'grounded', '--core', 'runs/request_meaning_v1/seed7202/balanced', '--output', 'runs/request_boundary_v1/seed7202/ce', '--understanding-suite', 'data/understanding_v1/full', '--grounded-scope', 'interpreter', '--request-contrasts', '--request-profile', 'paired', '--observation-question', 'neutral', '--request-evaluation', 'fresh', '--boundary-weight', '0', '--steps', '512', '--seed', '9802', '--device', 'cuda']' timed out after 181.15822340128943 seconds",
+        "seconds": 1500.4597115679644,
+        "type": "TimeoutExpired"
+      },
+      "original_resource_gate_passed": false,
+      "receipts": [
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "request-evaluate",
+            "--core",
+            "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce",
+            "--output",
+            "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce/recovered_requests",
+            "--understanding-suite",
+            "data/understanding_v1/full",
+            "--observation-question",
+            "neutral",
+            "--request-evaluation",
+            "fresh",
+            "--seed",
+            "9802",
+            "--device",
+            "cuda"
+          ],
+          "name": "7202-ce-recover-requests",
+          "returncode": 0,
+          "seconds": 120.07822877704166
+        },
+        {
+          "command": [
+            ".venv/bin/python",
+            "-m",
+            "experiments.modality_readout",
+            "--stage",
+            "understanding",
+            "--core",
+            "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce",
+            "--output",
+            "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce/recovered_quick",
+            "--understanding-suite",
+            "data/understanding_v1/quick",
+            "--seed",
+            "9901",
+            "--device",
+            "cuda",
+            "--reference",
+            "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/source/quick"
+          ],
+          "name": "7202-ce-recover-quick",
+          "returncode": 0,
+          "seconds": 90.03051731106825
+        }
+      ],
+      "seconds": 213.83270001900382,
+      "stopped": [
+        "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce"
+      ]
+    },
+    "software": {
+      "commit": "2d43133",
+      "isolated_checkout": "/tmp/pathwm-boundary-20260917",
+      "returncode": 0,
+      "seconds": 855.4541428540833
+    },
+    "software_pause": {
+      "end": 1789642483.0972881,
+      "processes": [
+        {
+          "created": 1789641882.44,
+          "pid": 2095103
+        },
+        {
+          "created": 1789641882.47,
+          "pid": 2095105
+        }
+      ],
+      "reason": "Temporary CPU priority for formal GPU comparison; retain same tests and1200s total software wall-time bound.",
+      "seconds": 291.11297082901,
+      "start": 1789642191.9843173
+    },
+    "training": [
+      {
+        "frozen_preserved": true,
+        "parameters": 316765,
+        "path": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/boundary",
+        "peak_allocated_bytes": 91292672,
+        "teacher_preserved": false,
+        "trainable_parameters": 9936,
+        "training_seconds_this_invocation": 46.24706628313288
+      },
+      {
+        "frozen_preserved": true,
+        "parameters": 316765,
+        "path": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/ce",
+        "peak_allocated_bytes": 91292672,
+        "teacher_preserved": false,
+        "trainable_parameters": 9936,
+        "training_seconds_this_invocation": 48.479974237969145
+      },
+      {
+        "frozen_preserved": true,
+        "parameters": 316765,
+        "path": "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/boundary",
+        "peak_allocated_bytes": 91292672,
+        "teacher_preserved": false,
+        "trainable_parameters": 9936,
+        "training_seconds_this_invocation": 45.37498980714008
+      }
+    ]
+  },
+  "qa": {
+    "browser_checked": false,
+    "count": 18,
+    "renderer_sha256": "1691ecc2fca96151d1eb1582d07bbd2ebdbd688665806d70854a883c2719ad64",
+    "reports": [
+      "/home/alex/Documents/path-wm/runs/request_boundary_v1/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/boundary/quick/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/boundary/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/ce/quick/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/ce/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/source/quick/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7201/source/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/boundary/quick/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/boundary/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce/recovered_quick/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce/recovered_requests/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/ce/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/source/quick/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_v1/seed7202/source/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_dev/current_ce/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_dev/frozen_ce/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_dev/resumed/report.html",
+      "/home/alex/Documents/path-wm/runs/request_boundary_dev/straight/report.html"
+    ],
+    "figure_inspection": {
+      "status": "passed",
+      "path": "runs/request_boundary_v1/comparison.png",
+      "sha256": "09e72d41b5daf0552323d2549566765c1324c0a95ef9637615341dc57166e74b",
+      "checks": [
+        "full titles, scales and legend visible",
+        "raw metric labels match comparison.json",
+        "80% gate explicitly labelled"
+      ],
+      "browser_checked": false
+    },
+    "artifact_inventory": {
+      "runs/request_boundary_v1": {
+        "files": 1408,
+        "bytes": 358703332
+      },
+      "runs/request_boundary_dev": {
+        "files": 422,
+        "bytes": 14825516
+      },
+      "runs/reviews/request_boundary_v1": {
+        "files": 11,
+        "bytes": 25110
+      }
+    }
+  },
+  "bindings": {
+    "runs/request_boundary_v1/comparison.json": "234d0727f8753690378f962028abe5a7c04a9b68b4ba2c2f4c981021bad78064",
+    "runs/request_boundary_v1/result.json": "b5e726dadccc135fae1c37112aa40588b26ecdc20193f3231cf6114a296d5ff5",
+    "runs/request_boundary_v1/report.html": "b6c5b8cdd5847ad7a9f2eeca75d94b869087d76f0d72178506f0bfb92532f5d4",
+    "runs/request_boundary_v1/report-verification.json": "696d764f0187c4ba32f20c965eb839d2f1bc53fa92583a322d0b2298c069ab75",
+    "runs/request_boundary_v1/source-identity.json": "ace690d23846c5c9981d27785e0dff6959e7664db26a2e9664c67312dde2b33f",
+    "runs/request_boundary_v1/execution.json": "3130114d8e8e0b77ccfbb36df8583858bd6fd5dc8033c0330da61d4c5c140956",
+    "runs/request_boundary_v1/execution-failure.json": "c31aa310285a4d11f2b8ffd149560056fa7eb99490cf446a6e5c96fed8304a16",
+    "runs/request_boundary_v1/recovery.json": "d7b0303cbf6abaa096da2e36cf31c209f1e677ddf8bca8aee7994c275d16a90b",
+    "runs/request_boundary_v1/audit-execution.json": "2721e11401f3878e52deb2a1b35ebd50f252b7686fae1b7c03586a7502ac7233",
+    "runs/request_boundary_v1/audit-failure-01.json": "ef37a14506d08240cdd031b777762160cba3ea7fe5e38bfc7576f6157ac1837b",
+    "runs/request_boundary_v1/audit-output-02.txt": "4eab52eda57da9d72f6a1fd19b78b117d569e43bd9a43a4416285bffc20ff3bc",
+    "runs/request_boundary_v1/software-cost.json": "4ef8b29d9f0121e37a841e70d99d35cb73f64091f0a152b49e9e794bbceb0d5f",
+    "runs/request_boundary_v1/full-software-tests.txt": "8edb53a2e32de3abbd9f324a98c56686606f2f9a5391ae4825bbffaebd494344",
+    "runs/request_boundary_dev/verification.json": "b21807a8b3ef671c6acfd4ac0a1752a19eb5b9792ccf8848701309bfe2ce52a1",
+    "runs/request_boundary_dev/current-ce-verification.json": "70bcfb95329bb29a524e06b550ab7c2945c0b230ec67500f2aa346db6d6a4481",
+    "runs/reviews/request_boundary_v1/public-receipt.json": "cbc86fd0798b290a9136a40c2010e54f8ffc943e3940d5487fd91448d33094d5",
+    "runs/reviews/request_boundary_v1/reconcile-receipt.json": "27cfd6617d9d8f0604d5d7bc24a51bae564dc81d23f103655b0d46331bcfda0d",
+    "docs/request-boundary-plan.md": "3736bbc794787705b21b59272074d26e3ecef70a7f526aeb58bbd0ee9481b733",
+    "tests/test_request_boundary.py": "f66631444cf31293ef27ac7cbe3eb31cd8932349619ef2caca0fd554ff52ec9b",
+    "experiments/modality_readout.py": "7a5cf7d1a6729e578d9790e26a72ca53cc1014a0f28d9c9e02331594bdc42fa2",
+    "pathwm/data/request_meaning.py": "4a8a10014567a3c7295a7b96749d9ad9c38d29745d3db745e3bec33bce890887"
+  },
+  "limitations": [
+    "Two independently seeded sources with one continuation each; three draws reuse fixtures. Effects are descriptive for these fixed models, not statistical or broad-language generalization claims.",
+    "Fresh prefixes compose with known payload phrases. Historical phrase-order stress and earlier diagnosed wording are development evidence.",
+    "Neutral routing and paired sampling are shared by both arms. Attribute only the treatment-minus-matched-CE difference to boundary weighting.",
+    "Conditional boundary probabilities teacher-force the correct first word; they do not prove free generation or identify one failing neural module.",
+    "Inference decoder/EOS policy and every non-interpreter tensor remain unchanged. The rejected boundary loss and its flag were removed from the current recipe; paired ordinary-CE training and fresh-prefix evaluation remain opt-in.",
+    "Any interrupted formal invocation remains stopped; recovered fixed evaluation is separate and the original resource screen remains failed.",
+    "Runtime costs include an explicitly recorded pause of concurrent software tests; no matched training/inference speed comparison or performance gain is claimed.",
+    "640 full tests passed on immutable2d43133. Final implementation63b7321 removes the rejected loss and rejects unsupported CLI profiles;30 final focused checks pass. A six-update frozen-control/current-CE comparison exactly matches848 tensors and1321 primitive fields. Independent explorer edits remain outside this comparison.",
+    "The original1500s formal cap failed at1500.46s during the last fit evaluation after all four512-update checkpoints were saved. Separate fixed-weight recovery completed in213.83s without further scientific training.",
+    "An initial audit failed on an artifact-key lookup, before a corrected complete audit passed. The first failed audit was not separately timed: recorded execution sums are lower bounds on total process cost. The stopped CE fit did not export training-only timing or peak allocation, so those resource summaries cover three of four fits.",
+    "Existing standalone renderer: structural verification and figure inspection only; no interactive browser QA."
+  ]
+}

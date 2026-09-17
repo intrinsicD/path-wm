@@ -202,3 +202,13 @@
 - **Implementation**: c959c63; [helper](../../../pathwm/evaluation/request_meaning.py), [recipe](../../../experiments/modality_readout.py), [checks](../../../tests/test_request_completion.py), [protocol](../../../docs/request-completion-plan.md).
 - **Verification**: [Bound evidence](../../evidence/tables/request_completion_2026-09-17.json);605 full tests,53 focused,9216 saved rows,4548 unchanged checkpoint tensors. A19's trailing-whitespace edge is now repaired with5010 existing fixture route comparisons unchanged.
 - **Limits**: Implemented diagnostic method only; no neural efficacy, unique bottleneck, capability or training-speed claim. O316's broader causal attribution remains open. Two decoder-cost candidates fail the fixed CUDA gate; original generation defaults stay intact. No browser QA claim.
+
+## A21: Paired calibration requests and explicit fresh-prefix evaluation
+
+- **Design**: Sample calibration clips and present both first-only and sequence requests while retaining real task instructions under neutral observation routing. Keep evaluation prefix compositions explicit in run identity and preserve the default historical corpus. Compare learning changes against the same paired ordinary-CE control using the existing recipe and decoder.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O320
+- **Implementation**: 2d43133/63b7321; [recipe](../../../experiments/modality_readout.py), [corpus](../../../pathwm/data/request_meaning.py), [checks](../../../tests/test_request_boundary.py), [protocol](../../../docs/request-boundary-plan.md); N483/N486.
+- **Verification**: [Bound evidence](../../evidence/tables/request_boundary_2026-09-17.json);640 frozen-snapshot tests,30 final focused,11,520 independently reproduced rows and exact six-update current-CE versus frozen-control model/optimizer/RNG state.
+- **Limits**: Implements the controlled method, not a successful semantic repair. Extra boundary loss removed after benefit/preservation failure. First-only and broader preservation fail; weak-source content remains unresolved. Fresh known-lexicon compositions are now inspected development evidence. Original resource cap failed; fixed-weight recovery is separate. No default, general-language, speed or browser-QA claim.

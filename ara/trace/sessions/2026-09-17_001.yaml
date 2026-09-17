@@ -2,17 +2,19 @@ session:
   id: 2026-09-17_001
   date: '2026-09-17'
   started: 2026-09-17T10:43+02:00
-  last_turn: 2026-09-17T12:44+02:00
-  turn_count: 5
-  summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent
-    termination in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests
-    pass; 9216 answers and all weights preserved. No training or capability promotion. Current categorical
-    architecture explorer delivered with exact weight/loss/gradient audit and browser QA; no model training
-    or capability promotion. Performance follow-up: byte batching and frozen metadata both fail fixed5%
-    whole-workload gate; original runtime restored. 17 contracts retained,634 full tests pass;6 saved
-    training/5 inference pairs byte-exact,15 structural reports. Request-form repair remains open; no
-    speed/capability promotion. Explorer layout refined after user feedback: boundary columns, routed
-    arrows and directional highlighting; all41 overview connections retained.'
+  last_turn: 2026-09-17T13:28+02:00
+  turn_count: 6
+  summary: 'Routing follow-up: masked whitespace repaired; cached EOS diagnosis finds wording-dependent termination
+    in stronger source. Two inference trials fail CUDA gate, defaults retained. 605 tests pass; 9216 answers
+    and all weights preserved. No training or capability promotion. Current categorical architecture explorer
+    delivered with exact weight/loss/gradient audit and browser QA; no model training or capability promotion.
+    Performance follow-up: byte batching and frozen metadata both fail fixed5% whole-workload gate; original
+    runtime restored. 17 contracts retained,634 full tests pass;6 saved training/5 inference pairs byte-exact,15
+    structural reports. Request-form repair remains open; no speed/capability promotion. Explorer layout refined
+    after user feedback: boundary columns, routed arrows and directional highlighting; all41 overview connections
+    retained. Paired boundary study: matched CE76.56% beats extra loss74.48% on stronger source; weak source37.5%,
+    preservation/adoption fail. Extra loss removed, paired/fresh tools retained;640 snapshot tests,30 final
+    focused,18 reports. Original cap failed; separate fixed-weight recovery completed.'
 events_logged:
 - turn: 1
   type: decision
@@ -162,6 +164,42 @@ events_logged:
   routing: direct
   provenance: ai-executed
   summary: Layout geometry preserves all overview connections and avoids unrelated blocks
+- turn: 6
+  type: decision
+  id: N483
+  routing: direct
+  provenance: ai-executed
+  summary: Preregister paired interpreter continuation with matched CE and fresh prefixes
+- turn: 6
+  type: experiment
+  id: N484
+  routing: direct
+  provenance: ai-executed
+  summary: Fixed request-boundary comparison and separately bounded recovery completed
+- turn: 6
+  type: dead_end
+  id: N485
+  routing: direct
+  provenance: ai-executed
+  summary: Additional first-word boundary CE fails incremental benefit and preservation
+- turn: 6
+  type: decision
+  id: N486
+  routing: direct
+  provenance: ai-executed
+  summary: Keep paired ordinary CE and fresh evaluation while preserving all failed gates
+- turn: 6
+  type: observation
+  id: O320
+  routing: crystallized
+  provenance: ai-suggested
+  summary: Implemented paired-training/fresh-evaluation method staged then committed asA21; no efficacy claim.
+- turn: 6
+  type: observation
+  id: O321
+  routing: staged
+  provenance: ai-suggested
+  summary: Completion versus preservation interpretation remains tentative.
 ai_actions:
 - turn: 1
   action: Implemented optional routing/state diagnostics with actual Claude public review, ran12 fixed evaluations
@@ -231,6 +269,19 @@ ai_actions:
   - docs/model-explorer.md
   - docs/model-explorer-plan.md
   - docs/project-state.md
+- turn: 6
+  action: Public-only actual Claude reviews; informative red checks; four512-update fits in isolated source;
+    stopped-cap report and evaluation-only recovery; independent raw/weight/RNG audits; removed rejected loss;18
+    verified reports and committed handoff.
+  provenance: ai-executed
+  files_changed:
+  - experiments/modality_readout.py
+  - pathwm/data/request_meaning.py
+  - tests/test_request_boundary.py
+  - docs/request-boundary-plan.md
+  - docs/project-state.md
+  - docs/session-handoff.md
+  - docs/diagrams/architecture-atlas.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -249,6 +300,9 @@ key_context:
 - turn: 5
   excerpt: BeliefAgent is too dense and connections confusing; put input on left, outputs on right, then
     properly lay out internal nodes.
+- turn: 6
+  excerpt: User requests continued suite-directed plan/implement/review/test/fix iteration together with Claude;
+    no later endorsement of the new empirical findings.
 open_threads:
 - 'N328/N329/O219/O220: isolated joint factual learning fails warm/texture benefit under current rate; image/full
   retention remains 10/12. Next lower-rate comparison from preserved source with difficult-scene diagnostics,
@@ -374,6 +428,8 @@ open_threads:
 - 'N473/N477-N480: decoder slicing, one-transfer bytes and frozen metadata fail fixed speed gates. New
   performance work needs a fresh complete-workload profile/hypothesis; do not rerun until a favorable
   time appears. Request-form/EOS repair remains separate.'
+- 'N484/O321: boundary-loss comparison complete and rejected; distinguish robust request completion from weak-source
+  content access, preserve first-only/broader behavior and preregister new evaluation before further fits.'
 ai_suggestions_pending:
 - 'O180: staged interpretation of familiar memory success and held-out factor shortcuts; await researcher
   response.'
@@ -559,3 +615,5 @@ ai_suggestions_pending:
   promotion or new fit.
 - O317→A20 records committed diagnostic method only. O318 mechanism and O319 next repair remain staged;
   no user empirical endorsement, GPU/training speed, capability or default promotion.
+- O320→A21 records only the implemented paired/fresh method. O319 wider weak-source diagnosis and O318/O321
+  interpretations remain open; no user empirical affirmation, general efficacy or speed promotion.

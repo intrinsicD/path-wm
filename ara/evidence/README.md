@@ -200,3 +200,5 @@ Source diversity versus frame density: [source-bound evidence](tables/video_dive
 - [Request-conditioning comparison,16 September](tables/request_readout_2026-09-16.json): four fixed fits; stronger-source familiar joint0→93.75%, novel joint0 throughout, preservation regressions remain.566 software tests,1316 restart,15838 audits; optional route only, no default replacement.
 
 - [Dream-RSI paper assessment,16 September](tables/dream_rsi_review_2026-09-16.json): source hashes and public-only Claude receipts; proposed scheduling transfer, no local experiment or efficacy claim.
+
+- [Paired request-boundary comparison,17 September](tables/request_boundary_2026-09-17.json): four fixed fits; extra CE loses to matched ordinary CE and fails preservation.640 snapshot tests,30 final focused,11,520 reproduced rows and18 structural reports. Original cap failed; separate fixed-weight recovery and unmetered audit limits preserved; no adoption.
