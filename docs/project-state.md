@@ -1,9 +1,26 @@
 # Current work
 
-**Active performance slice, 17 September:** [one-transfer byte batches](byte-batch-plan.md).
-Replace per-string device allocations with one padded transfer; compare exact
-training/inference behavior and complete-workload timing before adoption. The
-paired request-form repair remains the next learning study, not solved by this work.
+**Interactive architecture explorer completed, 17 September:** [usage](model-explorer.md),
+[plan and checks](model-explorer-plan.md). Complete current categorical agent:
+601 modules and 515,553 parameters, plus its frozen teacher. Standalone HTML drills
+through modules, observed tensor/autograd operations and individual weights;
+optional loopback preview regenerates on source/checkpoint changes. All learner
+weights, loss and gradients match a separate uninstrumented default-model run
+exactly. 632 checks passed in the isolated full-suite snapshot; 16 final focused
+checks and interactive browser QA passed. Weights are explicitly fresh seed42;
+flow coverage is the declared short synthetic batch. No model/training changes or
+scientific validation promotion. The learning study below remains independent.
+
+**Performance iteration completed, 17 September:** [protocol/results](byte-batch-plan.md),
+[report](../runs/metadata_cache_v1/report.html). Actual Claude reviewed both mechanisms.
+One-transfer byte batching and frozen metadata reuse preserve measured outputs but
+both miss the fixed5% whole-workload gate on both sources. Original implementations
+restored; independent byte/metadata behavior checks retained. Cache import-order
+regression reproduced and removed with the rejected feature. Six saved training
+pairs and five inference pairs pass strict byte-pattern audits. No speedup or
+capability promotion. 634 full software tests pass in542.05s;31 focused checks pass. Fifteen standalone
+reports are structurally verified and the comparison figure inspected; no browser
+QA. The paired request-form/EOS repair below remains the next learning study.
 
 **Latest measurements, 17 September:** [request completion and decoder cost](request-completion-plan.md),
 [report](../runs/request_completion_v1/report.html). Actual Claude review reconciled.

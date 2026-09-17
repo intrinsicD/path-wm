@@ -125,3 +125,32 @@ into the ignored experiment archive. This removes an abandoned feature, not a
 passing claim for its failing speed or import-order checks. No cache flag remains
 in the production API. Preserve both candidate sources, tests, raw results and
 Claude receipts. No model weights, objective, default, or capability changes.
+
+
+## Verification and handoff
+
+Final implementation closure: `124e507`. All634 full software tests pass in542.05s
+(543.67s including process startup);31 focused checks pass. Seventeen new byte and
+metadata contracts are retained. Unrelated model-explorer work is concurrent;
+this full-suite result applies to the tests collected during the run. Both original
+library files match their pre-trial references byte for byte.
+
+The two corrected comparisons each pass31,266 runtime equality checks. Independent
+saved-artifact audit:5,088 tensors,160 arrays,8,850 primitives; six final training
+pairs and five available inference pairs match byte patterns, including optimizer,
+RNG, sampler, losses and saved working/generated arrays. Source checkpoint hashes
+are unchanged. Runtime repeated-block checks used `torch.equal`; stricter byte
+identity for every intermediate repeated block was not recorded. This is a closure
+limit, not evidence to promote either failed candidate.
+
+Recorded cumulative measurement upper bound487.21s; successful follow-up audits
+1.66s; peak95,126,016 allocated bytes. One failed import-order inspection was not
+separately timed, so exact all-process budget closure is unavailable. Artifacts
+were~42MiB before summary reports. All12 representative training reports and three
+comparison/attempt summaries are structurally verified. Combined result:
+`runs/metadata_cache_v1/report.html`; raw and cost receipts are beside it. Comparison
+figure inspected; unchanged renderer, no interactive browser QA. Actual Claude
+methodology/reconciliation receipts are saved for both mechanisms. No production
+cache, tokenizer replacement, speed claim, neural fit promotion or broad validation
+change remains. Next learning target is still the paired request-form/EOS repair,
+keeping weaker-source content errors separate.

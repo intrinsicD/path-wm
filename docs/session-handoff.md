@@ -19,6 +19,41 @@ installed CLI in an isolated temporary cwd, tools/MCP/browser/persistence disabl
 Public hypothetical methodology only; do not export private code, data or results.
 Save exact briefs/responses/receipts and reconcile substantive criticism.
 
+## Latest performance iteration
+
+[Byte batching and frozen metadata](byte-batch-plan.md),
+[combined report](../runs/metadata_cache_v1/report.html). Both candidates were
+implemented, reviewed with actual Claude, tested against unchanged expressions,
+and measured on the two fixed request-meaning sources. Both fail the preregistered
+5% whole-workload gate. Original byte batching and MetadataEncoder are restored
+exactly; there is no metadata cache flag in the current library. Implementation
+closure is commit `124e507`; candidate sources and tests remain in Git and ignored
+run archives. No speed, quality, architecture or validation-color promotion.
+
+- One-transfer bytes:7202 training/inference reduction3.27%/1.95%;7201 1.19%/1.02%.
+- Frozen metadata:7202 -0.61%/0.93%;7201 1.36%/1.67%. A real-path four-call audit
+  confirms three cache hits. Its precision guard additionally fails after a cuDNN
+  submodule import without precision reseeding; removing caching fixes that case.
+- The first byte trial was stopped for benchmark-created GRU compaction overhead.
+  All completed blocks are retained; corrected trials flatten outside timing.
+- Two complete comparisons each pass31,266 runtime equality checks. A stricter
+  saved-artifact byte audit checks5,088 tensors,160 arrays and8,850 primitives,
+  across six final training pairs and five available inference pairs. Runtime
+  equality used `torch.equal`; strict signed-zero identity was not checked for
+  every intermediate repeated block. No adoption relies on that missing closure.
+- Recorded measurement upper bound487.21s, successful audits1.66s, peak95,126,016
+  allocated bytes; ~42MiB before summary reports. One failed import-order inspection
+  lacks a separate elapsed-time receipt, so exact all-process budget closure is
+  unavailable. No source data or source checkpoints changed.
+
+634 full software tests pass in542.05s (543.67s process receipt);31 focused checks
+pass. Fifteen reports are structurally verified; the comparison plot was inspected.
+The renderer is unchanged and browser QA was not performed. Unrelated model-explorer
+changes remain in the checkout; the full test result includes the tests collected
+during that concurrent work, not a guarantee for later edits. Inspect status before
+editing those files.
+The next model-learning target remains the request-form/EOS repair described below.
+
 ## Latest completed measurements
 
 [Request completion and decoder cost](request-completion-plan.md) follows the
