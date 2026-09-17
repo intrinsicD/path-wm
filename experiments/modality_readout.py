@@ -847,31 +847,11 @@ def configure_grounded_training(model, scope):
     training_mode(model)
 
 
-def grounded_objective(model, tokens, targets, *, boundary_weight=0.0):
-    if not np.isfinite(boundary_weight) or boundary_weight < 0:
-        raise ValueError("Boundary weight must be finite and nonnegative")
+def grounded_objective(model, tokens, targets):
     out = model.outputs("text", tokens, targets[:, :-1])
-    loss = F.cross_entropy(
+    return F.cross_entropy(
         out.flatten(0, 1), targets[:, 1:].flatten(), ignore_index=0
     ) / np.log(259)
-    if boundary_weight:
-        labels = targets[:, 1:]
-        # Predictions at byte position len(first_word) choose EOS or space.
-        boundaries = (labels == 2) | (labels == 35)
-        positions = boundaries.long().argmax(1)
-        if (
-            not boundaries.any(1).all()
-            or (positions == 0).any()
-            or not ((labels == 2).sum(1) == 1).all()
-        ):
-            raise ValueError(
-                "Boundary targets require a nonempty first word and one EOS"
-            )
-        batch = torch.arange(len(targets), device=targets.device)
-        loss = loss + boundary_weight * F.cross_entropy(
-            out[batch, positions], labels[batch, positions]
-        ) / np.log(259)
-    return loss
 
 
 def retention_kl(student, teacher, labels):
@@ -1638,15 +1618,10 @@ def grounded(args):
     contrasts = getattr(args, "request_contrasts", False)
     profile = getattr(args, "request_profile", "narrow")
     interpreter_only = args.grounded_scope == "interpreter"
-    boundary_weight = getattr(args, "boundary_weight", 0.0)
     question_mode = getattr(args, "observation_question", "full")
     fresh = getattr(args, "request_evaluation", "legacy") == "fresh"
-    if not np.isfinite(boundary_weight) or boundary_weight < 0:
-        raise ValueError("Boundary weight must be finite and nonnegative")
-    if (boundary_weight or profile == "paired") and (
-        not interpreter_only or profile != "paired"
-    ):
-        raise ValueError("Boundary/paired fitting requires paired interpreter requests")
+    if profile == "paired" and not interpreter_only:
+        raise ValueError("Paired fitting requires interpreter requests")
     if interpreter_only and (not contrasts or getattr(args, "retention_weight", 0)):
         raise ValueError(
             "Interpreter-only fitting needs contrasts and no retention loss"
@@ -1697,14 +1672,13 @@ def grounded(args):
         request_profile=profile,
         observation_question=question_mode,
         request_evaluation="fresh" if fresh else "legacy",
-        boundary_weight=boundary_weight,
         scope=args.grounded_scope,
         calibration_training_ids=[r["id"] for r in rows],
         replay_seed=original_seed,
         replay="none; interpreter-only"
         if interpreter_only
         else "alternate original multimodal replay and QA updates",
-        objective="QA byte CE/log259 plus boundary_weight * first-word boundary CE/log259; replay sum normalized per-output losses",
+        objective="QA byte CE/log259; replay sum normalized per-output losses",
         initialization_checkpoint_sha256=source_hash,
         initialization_checkpoint=str(args.core.resolve()),
         belief_readout=model.core.belief_readout,
@@ -1786,7 +1760,6 @@ def grounded(args):
                     model,
                     model.core(inputs, requests=requests),
                     target,
-                    boundary_weight=boundary_weight,
                 )
                 objective = "qa"
             else:
@@ -2979,12 +2952,6 @@ def main():
         "--request-profile", choices=("narrow", "balanced", "paired"), default="narrow"
     )
     parser.add_argument(
-        "--boundary-weight",
-        type=float,
-        default=0.0,
-        help="Paired interpreter training: extra first-word boundary CE weight",
-    )
-    parser.add_argument(
         "--request-evaluation",
         choices=("legacy", "fresh"),
         default="legacy",
@@ -3099,8 +3066,6 @@ def main():
         parser.error(
             "Observation question routing requires grounded training or evaluation"
         )
-    if args.boundary_weight and args.stage != "grounded":
-        parser.error("Boundary supervision is only used by grounded training")
     if args.request_evaluation == "fresh" and not (
         args.stage == "request-evaluate"
         or (args.stage == "grounded" and args.grounded_scope == "interpreter")

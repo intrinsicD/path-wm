@@ -33,38 +33,20 @@ def test_fresh_prefixes_keep_training_fixed_and_exclude_old_scored_questions():
     ]
 
 
-def test_boundary_loss_uses_correct_utf8_positions_full_vocabulary_and_one_forward():
-    texts = ["grün", "rot blau", "blau rot"]
-    targets, _ = bytes_batch(texts)
+def test_grounded_ce_matches_independent_loss_gradients_and_one_forward():
+    targets, _ = bytes_batch(["grün", "rot blau", "blau rot"])
     logits = torch.randn(3, targets.shape[1] - 1, 259, requires_grad=True)
     calls = []
-    model = SimpleNamespace(outputs=lambda *a: calls.append(a) or logits)
-    actual = recipe.grounded_objective(model, None, targets, boundary_weight=1.0)
-    ordinary = F.cross_entropy(
+    model = SimpleNamespace(outputs=lambda *args: calls.append(args) or logits)
+    actual = recipe.grounded_objective(model, None, targets)
+    expected = F.cross_entropy(
         logits.flatten(0, 1), targets[:, 1:].flatten(), ignore_index=0
     ) / np.log(259)
-    boundary = F.cross_entropy(
-        logits[torch.arange(3), [5, 3, 4]], torch.tensor([2, 35, 35])
-    ) / np.log(259)
-    expected = ordinary + boundary
-    assert len(calls) == 1
-    assert torch.equal(actual, expected)
+    assert len(calls) == 1 and torch.equal(actual, expected)
     assert torch.equal(
         torch.autograd.grad(actual, logits, retain_graph=True)[0],
         torch.autograd.grad(expected, logits)[0],
     )
-    zero = recipe.grounded_objective(model, None, targets, boundary_weight=0.0)
-    assert torch.equal(zero, ordinary)
-
-
-@pytest.mark.parametrize("text", ["", " rot", "  "])
-def test_boundary_training_rejects_empty_first_word(text):
-    targets, _ = bytes_batch([text])
-    model = SimpleNamespace(
-        outputs=lambda *a: torch.zeros(1, targets.shape[1] - 1, 259)
-    )
-    with pytest.raises(ValueError, match="first word"):
-        recipe.grounded_objective(model, None, targets, boundary_weight=1.0)
 
 
 def test_paired_neutral_batch_preserves_evidence_and_frozen_parameters():
@@ -97,7 +79,6 @@ def test_paired_neutral_batch_preserves_evidence_and_frozen_parameters():
         model,
         model.core(inputs, requests=[r["question"] for r in rows[:2]]),
         targets,
-        boundary_weight=1.0,
     )
     loss.backward()
     optimizer.step()

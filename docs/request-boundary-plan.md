@@ -110,3 +110,21 @@ binding, checkpoint and report. Record total cost including recovery, and mark t
 original resource screen failed. This completes inspectable artifacts without
 turning a budget failure into a passing adoption result. If final weights are not
 available, report that comparison incomplete; do not train past the cap.
+
+## Rejected loss term; retained interfaces
+
+The matched control changes the interpretation. On source7202, ordinary CE reaches
+76.5625% joint exact versus74.4792% with the extra term (untouched56.7708%). Source7201
+is37.5% in every arm. The extra boundary loss fails its incremental-benefit gate;
+remove its duplicate CE computation, weight flag and feature-specific rejection
+checks from the current recipe. Preserve its exact source/tests in commit2d43133,
+the isolated checkout and `runs/request_boundary_v1/retired-boundary-tests.py`.
+No failing scientific gate is hidden by removing that abandoned feature.
+
+Keep paired calibration sampling, neutral training input routing, explicit fresh
+request evaluation and the independent ordinary-CE/gradient/frozen-state checks.
+The current loss is the original normalized full-byte CE, one decoder call. All30
+final focused checks pass after removal. The640-test full run belongs to the frozen
+implementation snapshot; later changes remove the rejected loss and reject unused
+CLI profiles. Neither learned checkpoint is promoted; first-only preservation,
+full task gates and the original resource cap remain binding.
