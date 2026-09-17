@@ -88,3 +88,50 @@ unchanged; neutral/masked physical pairs are bitwise equal on all three draws;
 model/source hashes stay exact. Same hardware/environment and scalar core-call
 batching as the reference, no tolerance relaxation. Claude acknowledged the
 remaining equality/draw clarifications; actual CUDA equality remains measured.
+
+## Results — completed16 September, reviewed17 September
+
+[Standalone report](../runs/request_routing_v1/report.html),
+[raw comparison](../runs/request_routing_v1/comparison.json),
+[verification](../runs/request_routing_v1/verification.json).
+All12 fixed evaluations completed at source0144cc9; no neural training.
+
+| Source / observed question | First-color exact | Sequence exact | Joint exact | Quick suite |
+| --- | ---: | ---: | ---: | ---: |
+|7201/full|46.875%|42.1875%|35.9375%|0/25|
+|7201/neutral|53.125%|42.1875%|35.9375%|0/25|
+|7201/masked|53.125%|40.625%|34.375%|0/25|
+|7202/full|84.375%|46.875%|46.875%|1/25|
+|7202/neutral|100%|50%|50%|1/25|
+|7202/masked|100%|50%|50%|1/25|
+
+Worst-of-three-draw values; same development clips, not independent repetitions.
+Both candidate routes fail primary and minimum-benefit gates. In7202, neutral
+routing loses16.67pp on MIX.agreement.text+image+video; masked loses16.67pp on
+MIX.agreement.text+video. Source7201 improves VID.order choice scores and recovers
+33.33pp on REAL.scene.image, but no new quick task passes. Defaults stay full.
+
+All768 opposite-request pairs per source/candidate have bit-identical physical
+tokens and posterior logits; working states remain request-dependent. Weights
+remain identical across9,096 tensor comparisons. Fresh references exactly reproduce
+3,072 old answer rows and600 broader-suite arrays.584 full software tests pass in
+609.90s;64 GPU smoke checks pass.98,905 raw checks,13 standalone reports and373
+embedded media checks pass. Plot visually inspected; interactive browser QA not
+performed. Formal processes total1,045.66s; peak torch allocation269.18MiB, excluding
+CUDA runtime/reservation. No formal budget exceeded.
+
+Exploratory aggregation of saved outputs (no additional model runs): for7202 both
+candidate routes give the correct first word in every full-condition answer.
+Exactly192 of384 sequence requests fail by ending after that first word; none of
+those failures supplies the wrong second color. This narrows the next question to
+request-dependent continuation/termination in that source, while7201 still has
+content/order errors. It does not prove where a representation loses information.
+See `error-analysis.json`. No further fits or changes to gates.
+
+The user requested a new-session handoff before another experimental slice.
+See [session handoff](session-handoff.md) for remaining review and proposed next
+experiments. One untested API edge identified during review: full observation text
+is stripped, whereas masked length currently counts raw question bytes. Questions
+with trailing whitespace need a focused check/fix; current normalized fixture
+questions are unaffected. Do not change model defaults or rerun completed runs to
+address this preprocessing-only edge.

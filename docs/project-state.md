@@ -1,5 +1,14 @@
 # Current work
 
+**New-session entry point:** [handoff](session-handoff.md),17 September2026.
+Frozen request-routing comparison is complete: [protocol/results](request-routing-plan.md),
+[report](../runs/request_routing_v1/report.html).584 software checks pass; all source
+weights and historical baseline outputs reproduce exactly. Stronger-source first
+color reaches100%, joint answers only50%; weaker source remains35.94%. Broad
+suite remains0/25 and1/25 with agreement regressions. Defaults unchanged. Next
+review the recorded preprocessing edge and isolate sequence continuation/EOS on
+fixed content before another narrowly specified repair.
+
 **Balanced request-meaning comparison completed,16 September.**
 [Protocol/results](request-meaning-plan.md),[report](../runs/request_meaning_v1/report.html).
 Actual Claude methodology review/reconciliation; suite-directed balanced prefix/
