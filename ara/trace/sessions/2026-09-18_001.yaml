@@ -1,0 +1,82 @@
+session:
+  id: 2026-09-18_001
+  date: '2026-09-18'
+  started: 2026-09-18T00:12+02:00
+  last_turn: 2026-09-18T00:12+02:00
+  turn_count: 1
+  summary: Residual correction and specialist/PCA alternative examined with actual Claude. Distinguished
+    expressivity/information, magnitude/capacity, aligned parameter PCA versus feature PCA, exact full
+    weight deltas and compact residual approximation. Joint equal-task direction remains primary; no model,
+    training, PCA fit or efficacy promotion.
+events_logged:
+- turn: 1
+  type: question
+  id: N498
+  routing: direct
+  provenance: user
+  summary: Can specialists be decomposed into a frozen shared VAE and reliable residuals?
+- turn: 1
+  type: observation
+  id: O331
+  routing: staged
+  provenance: user
+  summary: 'Alternative hypothesis: train equally architected application specialists, extract a common
+    VAE using PCA, freeze it, and set or fit per-application residuals. User asks whether this is viable;
+    no experiment or replacement of joint training has been chosen.'
+- turn: 1
+  type: observation
+  id: O332
+  routing: staged
+  provenance: ai-suggested
+  summary: Residual expressivity permits cancellation/replacement only within the branch function class
+    and available information; amplitude, rank, capacity and reliability differ. Centered checkpoint PCA
+    captures between-model variation after coordinate choices, not automatically common useful features.
+    Exact full weight deltas recover compatible specialists around any base but do not by themselves save
+    meaningful resources.
+- turn: 1
+  type: observation
+  id: O333
+  routing: staged
+  provenance: ai-suggested
+  summary: If testing the specialist alternative, align comparable blocks/interfaces, retain task heads,
+    verify full-weight recovery, constrain per-layer/global deltas, and evaluate every task plus actual
+    storage/multitask compute. Compare frozen versus joint recovery without changing residual class or
+    initialization simultaneously; equal-status teacher distillation is another candidate. Preserve direct
+    joint learning as a comparator.
+ai_actions:
+- turn: 1
+  action: Checked public Git Re-Basin, ZipIt and Model Soups sources; obtained tools-disabled actual-Claude
+    review and explicit withdrawals of norm bounds, norm-capacity inference, PCA semantics/CKA sizing,
+    blanket task-count and gradient-normalization requirements. Added design section10 and handoff/state/atlas
+    notes. Regenerated16 graphs, checked258 links/section anchors, preserved topology/colors/validation.
+    Documentation only.
+  provenance: ai-executed
+  files_changed:
+  - docs/visual-adapter-design.md
+  - docs/visual-adapter-handoff.md
+  - docs/project-state.md
+  - docs/session-handoff.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.md
+  - docs/architecture-atlas.html
+  - docs/architecture-discussion.md
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: 'User asks: can residual reliably correct wrong features; can they become arbitrarily large;
+    train separate equal-architecture VAEs, then PCA for most prominent shared VAE, freeze it and train
+    or set residuals?'
+open_threads:
+- 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
+  and feature/weight placements remain unselected.'
+- 'N498: specialist/PCA alternative is untested; define compatible shared blocks, task objectives, alignment,
+  low-rank capacity and quality/cost gates before any experiment.'
+- Unresolved prior visual, video, categorical-agent and World State work remains in 2026-09-17_001 and
+  referenced plans; this discussion does not abandon it.
+ai_suggestions_pending:
+- O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
+  of the detailed implementation.
+- O331 is a user question/hypothesis, not a chosen PCA experiment. O332/O333 are source/algebra-based
+  interpretation and proposed comparison; no empirical or adoption closure.
+- Earlier pending interpretations and proposals remain referenced by the prior session; no topic abandonment
+  inferred.

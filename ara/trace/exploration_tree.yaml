@@ -8286,3 +8286,20 @@ tree:
   - N496
   - N495
   status: open
+- id: N498
+  type: question
+  title: Can specialists be decomposed into a frozen shared VAE and reliable residuals?
+  provenance: user
+  timestamp: 2026-09-18T00:12+02:00
+  description: User asks about residual correction reliability/amplitude, separate equal-architecture
+    application VAEs, and PCA extraction of a shared frozen base with set or learned residuals. Explained
+    expressivity versus available information, centered PCA variation/alignment, exact full weight deltas
+    and approximate small/feature deltas. The empirical alternative remains open and does not replace
+    N496 joint-training preference.
+  evidence:
+  - docs/visual-adapter-design.md#10-residual-correction-and-specialistpca-decomposition
+  - runs/reviews/visual-residual-pca-20260918/summary.json
+  also_depends_on:
+  - N496
+  - N497
+  status: open

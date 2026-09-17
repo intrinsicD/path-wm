@@ -1,5 +1,14 @@
 # Current work
 
+**Residual correction and specialist/PCA alternative, 18 September:**
+[design §10](visual-adapter-design.md#10-residual-correction-and-specialistpca-decomposition).
+User asks about reliable correction, residual magnitude, independent application
+VAEs and a PCA-derived frozen base. Documented expressivity versus information
+limits, unbounded amplitude versus rank/capacity, coordinate alignment, centered
+PCA's between-model variation, and exact full weight deltas versus approximate
+small or learned feature residuals. The alternative is open; joint equal-status
+training remains the earlier preference. No specialist/merge fit or model change.
+
 **Residual visual adapters: joint-training direction, 17 September:**
 [design](visual-adapter-design.md) · [handoff](visual-adapter-handoff.md).
 Continued from2beb97f with actual public-only Claude critique/reconciliation. Alex

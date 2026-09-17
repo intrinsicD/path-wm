@@ -1,6 +1,6 @@
 # Handoff: jointly trained visual base and per-application residuals
 
-Updated 17 September 2026 from commit `2beb97f` in `/home/alex/Documents/path-wm`,
+Updated 18 September 2026, following `2beb97f` and `95a239a` in `/home/alex/Documents/path-wm`,
 branch `main`. The repeated user hash `2beb97f2beb97f` resolved to that existing
 commit, which was HEAD on resume. This is a design discussion, not a training run.
 Main document: [visual-adapter-design.md](visual-adapter-design.md).
@@ -16,6 +16,33 @@ branches learn missing task-specific parts is a research hypothesis.
 The previous handoff required frozen/unfrozen separate-task Phase A before joint
 Phase B. That order is superseded. Phase A remains an optional diagnostic and its
 frozen RGB anchor is not an extra loss in the equal-status joint study.
+
+## Latest open alternative: specialist decomposition, 18 September
+
+Alex asks whether residuals can correct wrong features and grow arbitrarily large,
+and whether separate equal-architecture application VAEs could be decomposed with
+PCA to obtain a frozen shared base plus set/learned residuals. See §10 of the design.
+This question does not replace the earlier joint-training preference or select a run.
+
+An additive branch can cancel/replace features if its function class and available
+information suffice; reliable fitting/generalization is not guaranteed. The current
+proposal has no hard magnitude bound. Rank, norm, capacity and information access
+are distinct. Separate specialists are expensive references, not a guaranteed
+quality upper bound; application-specific objectives/heads must be defined.
+
+Centered PCA across compatible, aligned checkpoint vectors describes their mean
+plus between-model variation. Largest components are not automatically common
+features or a working VAE. Alignment must preserve each encoder/decoder interface.
+With two checkpoints, one centered component fits both exactly regardless of useful
+sharing. Cross-task PCA rank differs from per-layer weight-matrix rank. Count the
+mean, basis, coefficients, private heads, buffers and materialized weights.
+
+Full weight deltas `theta_t-theta0` can recover each compatible specialist exactly
+around any frozen base, without PCA, but largely retain specialist storage/compute.
+Small deltas require approximation and task-quality checks. Feature differences
+are input-dependent functions that must be learned; a frozen information-poor base
+may make them impossible to recover. Aligned PCA/SVD initialization and equal-task
+specialist distillation remain possible comparison routes, not adopted winners.
 
 ## Current recommendation and its limits
 

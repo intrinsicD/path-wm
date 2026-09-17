@@ -1,6 +1,6 @@
 # Shared visual encoder with per-application residual adapters
 
-Design proposal · 17 September 2026 · continued from `2beb97f`.
+Design proposal · updated 18 September 2026 · continued from `2beb97f` / `95a239a`.
 
 Alex's latest preference is **one trainable shared base plus per-application
 residuals, trained jointly from the start, with equal status for every application**.
@@ -13,6 +13,10 @@ multiscale readouts; compare selected interleaved/weight residuals subsequently.
 This placement is an engineering proposal, not a user-approved or measured winner.
 No adapter, checkpoint selection or training result is reported here. Continue
 with the [session handoff](visual-adapter-handoff.md).
+
+The 18 September discussion adds [residual correction and specialist/PCA
+decomposition](#10-residual-correction-and-specialistpca-decomposition). This is
+an alternative to investigate, not a decision to replace the joint-training path.
 
 ## 1. Objective and requirements
 
@@ -599,3 +603,170 @@ selected for the first task set, so its corruption contract remains a run-contra
 decision rather than an assumed clean-image shortcut. Adapter-off is supplementary
 reliance evidence only. Three seeds support reporting paired effects; source-group
 intervals remain conditional on fitted models and are not seed-level significance.
+
+## 10. Residual correction and specialist/PCA decomposition
+
+### What a residual can correct
+
+For `g(z) = z + A(z)`, any desired same-shape mapping `g` can be represented **if**
+the branch can represent `A(z) = g(z) - z`. Additive residuals can subtract, cancel,
+invert or replace features; they are not restricted to small positive additions.
+Feature coordinates have no intrinsic right/wrong meaning independently of their
+consumer. Task performance and compatibility with the declared decoder/readout
+determine whether a correction is useful.
+
+This is a capacity statement, not a training/generalization guarantee. A narrow
+pointwise branch has limited channel directions and spatial context. A last
+projection `C x r` with `r < C` confines its correction at each position to a
+learned subspace (or affine subspace if biased), even if its values are large.
+The full available branch input matters: if `F(x1) = F(x2)` but the task requires
+different outputs, no deterministic function of `F` alone can distinguish them.
+A stochastic branch can model uncertainty, not identify which lost instance was
+observed. Earlier taps or upstream feature/weight adaptation can change what
+survives compression; later branches can only use surviving evidence and priors.
+
+The proposed adapters have no hard output-amplitude bound. Zero initialization
+specifies a starting point only. Low-rank weight deltas can have arbitrarily large
+singular values; low rank limits directions, not norm. Weight decay is a soft
+preference and gradient clipping is not a bound on accumulated parameter/output
+magnitude. Explicit function/norm caps could restrict amplitude, but can prevent
+necessary corrections. Capacity, amplitude, spatial reach and input information
+are separate controls. A sufficiently capable private branch can perform much of
+the task itself, reducing the intended sharing benefit. Large residual norm alone
+does not establish that this occurred because norms depend on representation scale.
+
+### Independent specialists as the expensive reference
+
+Separate equal-architecture task models remove the sharing constraint. They are
+a useful quality/resource reference, not a guaranteed held-out performance upper
+bound: finite data, finite model capacity and optimization still matter; joint
+training can benefit from positive transfer. Arbitrary compute does not supply
+missing labels or make an ambiguous input identifiable.
+
+Specify what makes a specialist task-specific. Identical VAEs trained on the same
+data with the same reconstruction/KL objective have no explicit application
+signal. Task losses, data distributions or supervision must differ appropriately.
+Segmentation/depth heads need not be VAE image decoders. Compare corresponding
+backbone/codec blocks while retaining incompatible task heads; do not average
+tensors merely because their flattened lengths happen to match.
+
+### Why raw PCA does not extract a shared VAE automatically
+
+Equal architecture aligns tensor shapes, not learned coordinates. Permuting hidden
+channels and adjusting adjoining layers can preserve the function while changing
+its parameter vector. Skip connections and normalization constrain which
+permutations are valid. A VAE encoder and decoder must agree on latent coordinates;
+compatible latent permutations/sign flips illustrate this ambiguity. An isotropic
+prior alone does not make an arbitrary rotation preserve a generic diagonal
+posterior family.
+
+An elementary mean-path example is `E1(x)=x, D1(z)=z` versus
+`E2(x)=-x, D2(z)=-z`. Both reconstruct `x`; averaging their linear encoder and
+decoder weights gives zero for both, destroying reconstruction. This is an
+algebraic illustration, not a trained VAE experiment. Coordinates must be aligned
+before interpreting parameter distances as differences in learned function.
+
+[Git Re-Basin](https://arxiv.org/abs/2209.04836) studies function-preserving unit
+permutations before weight merging. [ZipIt](https://arxiv.org/abs/2305.03053)
+addresses additional differences between tasks and allows partial merging with
+private later branches. [Model soups](https://proceedings.mlr.press/v162/wortsman22a.html)
+provides evidence for averaging compatible fine-tuned models, not arbitrary
+independently trained VAEs. These are relevant methods, not validation of a
+merged PATH-WM codec. Common initialization can improve correspondence but is not
+a guarantee; alignment cannot remove genuine task conflicts.
+
+After choosing compatible parameter coordinates, put each task's flattened
+`P`-parameter vector in a row of `Theta`, with tasks weighted equally. Centered PCA
+approximates
+
+`theta_t = mean_theta + sum_(j=1..r) a_(t,j) v_j + discarded_error_t`.
+
+The mean minimizes the sum of squared parameter distances to all task models in
+those coordinates. The components explain **variation across models**, which may
+reflect task specialization or training randomness. They are not automatically
+shared useful features; a principal direction is not a complete trained model.
+Even the mean need not be a good standalone VAE. Uncentered SVD can emphasize a
+common offset but still optimizes matrix approximation, not all-task quality.
+
+Centered cross-task PCA has rank at most `T-1`. With only two distinct models,
+one component captures 100% of their centered variation regardless of whether
+their functions share useful structure. That statistic alone cannot demonstrate
+sharing. With a dense mean and dense basis, storage is about `(r+1)*P + T*r`
+scalars versus `T*P` originally, before task heads, buffers and any materialized
+merged-weight cache. Full-rank recovery usually saves no storage. PCA rank across
+whole checkpoints differs from the rank of an individual layer's weight matrix.
+Neither factorization automatically reduces downstream per-task activation cost.
+
+PCA on **activations** asks a different question. Use corresponding inputs/spatial
+positions and explicit normalization/alignment. High variance is not necessarily
+shared, predictive or useful: an important small attribute may vary little.
+Cross-model correspondence/correlation can help diagnose common structure, but
+an activation basis does not directly supply encoder, posterior and decoder
+weights. Subtraction and feature-distillation targets must respect coordinate
+alignment and the actual task interface.
+
+### Can the residuals be set exactly after freezing a base?
+
+For compatible **weight** blocks, yes: choose any frozen `theta0` and set full
+`Delta_t = theta_t - theta0`. Then `theta0 + Delta_t` recovers each specialist's
+weights exactly, with its corresponding buffers, architecture and head. Alignment
+is not required for this arithmetic identity; it matters when interpreting or
+compressing the deltas. Full deltas largely preserve separate-model storage and
+task-specific computation. Exact recovery is possible even if the chosen base
+alone is poor, so it does not establish useful common features.
+
+Small residuals are the substantive question. For a matrix-shaped layer, truncated
+SVD can approximate `W_t-W0` by `U_t V_t`, optimally in unweighted Frobenius norm
+at fixed rank. This is neither a guarantee of small task loss nor proof that the
+chosen `W0` minimizes the required ranks. Convolution reshaping, layer weighting,
+biases, normalization, heads and activation costs must all be declared. PCA/SVD
+can initialize a candidate; task-aware recovery training may still be needed.
+
+For a **feature** branch, the target
+`A_t(F0(x)) = F_t(x) - F0(x)` is input-dependent. Subtracting checkpoint weights
+does not set that nonlinear branch. It must be fit on aligned examples and may
+be impossible if `F0` has discarded information required by `F_t`. A constant
+offset generally cannot reproduce the specialist, and storing per-image offsets
+does not give a reusable unseen-image encoder.
+
+### Bounded alternative to compare, not yet selected
+
+1. Train or identify equally evaluated task specialists with matched backbone
+   architecture, declared objectives and source-disjoint data. Count specialist
+   training cost. Retain task-specific heads and encoder/decoder pair identities.
+2. On development data, align permitted coordinates and compare simple candidate
+   bases: a specialist reference, aligned mean, and a jointly trained base. Test
+   standalone base utility separately from utility with private branches.
+3. Verify full-delta recovery as an arithmetic control, then test small **per-layer**
+   weight deltas or a genuinely compact cross-task factorization. Report actual
+   stored bytes and materialization/multi-task compute, plus every task's loss
+   relative to its original specialist. A parameter-space error cannot pass a
+   task-quality gate. Same-task/different-seed specialists help separate training
+   variability from task differences if a shared-structure claim is intended.
+4. Compare a frozen base with an equally weighted joint recovery stage at the same
+   residual capacity. Keep the direct joint J0/JF/JH path as a separate comparator;
+   frozen mean + full weight deltas and final readout adapters are different
+   capacity/compute regimes. Do not use one to certify the other.
+
+An alternative proposed route is equal-status multi-teacher distillation into
+the shared base plus private branches. Distill each teacher's corresponding task
+outputs (or explicitly aligned features) and retain supervised task evaluation.
+This avoids demanding literal equality of hidden coordinates when output matching
+is available. It adds teacher generation/training cost and approximation error;
+it is not established as superior here. Freezing a base is a controlled comparison,
+not evidence that PCA has found a universal common representation.
+
+No specialist fit, PCA merge, adapter fit or empirical sharing result was produced
+in this discussion. The user's earlier joint/equal-status preference remains the
+active direction; this follow-up opens a model-compression alternative.
+
+Actual Claude reviewed a generic public-only brief and a correction round;
+receipts are in `runs/reviews/visual-residual-pca-20260918/`. It acknowledged that
+finite learning rate/step count alone does not bound residuals, residual norm does
+not identify private capacity, PCA low-variance directions do not identify common
+semantics, and CKA/SVCCA do not directly size a useful shared network. It withdrew
+a blanket three-task prerequisite and an automatic gradient-normalization control.
+Specialist references are required for specialist-relative/compression claims;
+they remain optional for a direct joint-training comparison without those claims.
+Report every task and meaningful worst-task degradation, with residual norms as
+descriptive diagnostics only. No reviewer agreement constitutes local validation.

@@ -1,6 +1,6 @@
 # PATH-WM — new-session handoff
 
-Updated 17 September 2026. Repository `/home/alex/Documents/path-wm`, branch `main`.
+Updated 18 September 2026. Repository `/home/alex/Documents/path-wm`, branch `main`.
 Read `CLAUDE.md`, `docs/experiment-workflow.md`, this handoff and the current plan.
 Preserve completed experiments; do not restart the research from scratch.
 
@@ -17,6 +17,14 @@ if selected; no additional frozen RGB anchor enters the joint objective. Actual
 Claude reviewed public methodology and acknowledged corrections; no training or
 implementation occurred. Next select real labels/data and fill the joint contract.
 Preserve completed learning work and its unresolved findings below.
+
+Follow-up,18 September: Alex asks about residual correction limits/magnitude and
+separate equal-architecture specialists followed by PCA and frozen-base residuals.
+See design §10 and the focused handoff. This is an open compression alternative,
+not a replacement decision or a training run. Full weight deltas can recover any
+compatible specialist around any base; small residuals and useful shared features
+are the actual unresolved questions. Centered PCA explains between-model variation
+and needs coordinate/function checks before a merged base can be trusted.
 
 ## Objective and working agreement
 

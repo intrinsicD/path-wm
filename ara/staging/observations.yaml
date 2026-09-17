@@ -5769,3 +5769,58 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O331
+  timestamp: 2026-09-18T00:12+02:00
+  provenance: user
+  content: 'Alternative hypothesis: train equally architected application specialists, extract a common
+    VAE using PCA, freeze it, and set or fit per-application residuals. User asks whether this is viable;
+    no experiment or replacement of joint training has been chosen.'
+  context: Conceptual specialist/PCA follow-up with primary-source merging literature and actual-Claude
+    public-only critique/reconciliation. No specialist fit, PCA fit or model changes.
+  potential_type: architecture
+  bound_to:
+  - N498
+  - N496
+  - N497
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O332
+  timestamp: 2026-09-18T00:12+02:00
+  provenance: ai-suggested
+  content: Residual expressivity permits cancellation/replacement only within the branch function class
+    and available information; amplitude, rank, capacity and reliability differ. Centered checkpoint PCA
+    captures between-model variation after coordinate choices, not automatically common useful features.
+    Exact full weight deltas recover compatible specialists around any base but do not by themselves save
+    meaningful resources.
+  context: Conceptual specialist/PCA follow-up with primary-source merging literature and actual-Claude
+    public-only critique/reconciliation. No specialist fit, PCA fit or model changes.
+  potential_type: concept
+  bound_to:
+  - N498
+  - N496
+  - N497
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O333
+  timestamp: 2026-09-18T00:12+02:00
+  provenance: ai-suggested
+  content: If testing the specialist alternative, align comparable blocks/interfaces, retain task heads,
+    verify full-weight recovery, constrain per-layer/global deltas, and evaluate every task plus actual
+    storage/multitask compute. Compare frozen versus joint recovery without changing residual class or
+    initialization simultaneously; equal-status teacher distillation is another candidate. Preserve direct
+    joint learning as a comparator.
+  context: Conceptual specialist/PCA follow-up with primary-source merging literature and actual-Claude
+    public-only critique/reconciliation. No specialist fit, PCA fit or model changes.
+  potential_type: heuristic
+  bound_to:
+  - N498
+  - N496
+  - N497
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
