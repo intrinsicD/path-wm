@@ -1,6 +1,22 @@
 # Current work
 
-**Active learning slice, 17 September:** [paired request-boundary objective](request-boundary-plan.md). Test explicit EOS/space boundary supervision against matched ordinary CE on fixed sources; fresh prefix compositions, content/preservation controls, unchanged inference.
+**Learning iteration completed, 17 September:** [paired request-boundary study](request-boundary-plan.md),
+[report](../runs/request_boundary_v1/report.html). Actual Claude methodology review
+and reconciliation; four matched512-update interpreter-only fits. On fresh known-
+lexicon prefix compositions, stronger-source worst-draw joint accuracy is56.77%
+untouched,76.56% ordinary CE,74.48% extra boundary CE; weaker source stays37.5%.
+Extra boundary loss fails incremental benefit, first-only preservation and broader
+preservation; removed its redundant CE computation and flag. Retained paired
+calibration sampling, neutral training route and fresh evaluation. No checkpoint,
+default or capability/color promotion; next distinguish generalizable request-form
+learning from weak-source content access before fitting another loss.
+640 full software checks pass on frozen2d43133;30 final focused checks pass on the
+simplified implementation. Audits reproduce11,520 request rows and preserve frozen
+weights/request-free arrays; current ordinary CE exactly matches its frozen control
+through six updates. Original1500s cap interrupted the final evaluation after all
+four512-step checkpoints were saved; separate213.83s fixed-weight recovery closes
+missing evaluations, while the original resource gate remains failed. Eighteen
+standalone reports structurally verified; figure inspected, no browser QA.
 
 **Interactive architecture explorer completed, 17 September:** [usage](model-explorer.md),
 [plan and checks](model-explorer-plan.md). Complete current categorical agent:
@@ -25,7 +41,7 @@ regression reproduced and removed with the rejected feature. Six saved training
 pairs and five inference pairs pass strict byte-pattern audits. No speedup or
 capability promotion. 634 full software tests pass in542.05s;31 focused checks pass. Fifteen standalone
 reports are structurally verified and the comparison figure inspected; no browser
-QA. The paired request-form/EOS repair below remains the next learning study.
+QA. The paired request-form/EOS follow-up is completed above.
 
 **Latest measurements, 17 September:** [request completion and decoder cost](request-completion-plan.md),
 [report](../runs/request_completion_v1/report.html). Actual Claude review reconciled.
@@ -37,8 +53,8 @@ miss the CUDA speed gate (-3.67%/-1.94% paired latency reduction); original defa
 preserved, slicing remains opt-in. No GPU/training speed or capability promotion.
 605 full software tests pass in594.83s;53 final focused checks;296,076 raw audits
 and4,548 unchanged checkpoint tensors. Seven structural reports, figure inspected,
-no interactive browser QA. Next preregister paired request-form/continuation
-repair with fresh wording and preservation controls, keeping content errors distinct.
+no interactive browser QA. The paired request-form/continuation comparison above
+now tests this hypothesis; content errors remain a separate limitation.
 
 **New-session entry point:** [handoff](session-handoff.md),17 September2026.
 Frozen request-routing comparison is complete: [protocol/results](request-routing-plan.md),

@@ -128,3 +128,71 @@ final focused checks pass after removal. The640-test full run belongs to the fro
 implementation snapshot; later changes remove the rejected loss and reject unused
 CLI profiles. Neither learned checkpoint is promoted; first-only preservation,
 full task gates and the original resource cap remain binding.
+
+
+## Final outcomes and verification
+
+| Fixed source | Untouched joint | Matched CE joint | Boundary CE joint | Boundary minus CE |
+| --- | ---: | ---: | ---: | ---: |
+|7201|37.5000%|37.5000%|37.5000%|0.0000pp|
+|7202|56.7708%|76.5625%|74.4792%|-2.0833pp|
+
+These are worst-draw joint exact values on fresh full-evidence prefix compositions.
+Source7202 first-only accuracy is98.4375%,93.2292%,95.8333% respectively; both fitted
+arms fail source preservation. First-word joint accuracy stays62.5%/100% for the two
+sources in every arm. Boundary7202 also regresses broader REAL.scene.image accuracy
+and source-gain minima by33.3333pp. Broad task coverage remains0/25 and1/25 with seven
+unimplemented domains. No learned checkpoint is promoted. Shared paired sampling,
+neutral routing and continuation may explain common changes; this experiment only
+identifies the extra loss's difference versus matched CE.
+
+Original execution stops at1500.4597s after all four512-update weights were saved.
+The7202 CE parent retains stopped status and a truthful standalone report. Recovery
+uses its final weights in separate `recovered_requests`/`recovered_quick` directories,
+no optimizer updates,213.8327s total. All six fresh/quick comparisons now exist;
+`runs/request_boundary_v1/recovery.json` is the authoritative mapping. Original
+resource gate fails. Available three training receipts total140.10s and peak
+91,292,672 allocated bytes; the stopped fit's training-only/peak receipt is missing.
+Artifacts before the summary report total~342MiB; final inventory is saved with QA.
+
+Independent audit reproduces11,520 rows and verifies8,986 tensors,2,216 arrays,
+2,208 legacy arrays and94,940 primitives, including exact frozen weights, source
+hashes, row populations, RNG/sampler matching and physical-state equality. First
+attempt failed at an artifact-key lookup (directory instead of last.pt); preserved
+failure log, no tensor/prediction assertion failed. Corrected full audit process
+11.9359s. The first failed audit lacks separate timing: recorded execution/recovery/
+audit sum1726.2283s is a lower bound; exact all-process cost is unavailable.
+
+640 full tests pass on immutable2d43133 in853.82s (855.45s process, including recorded
+291.11s pause). Final30 focused tests and Ruff pass after implementation63b7321.
+The six-update pause/resume and frozen-control/current-CE development comparisons
+each exactly match848 tensors and1,321 primitives; combined42.5800s within90s.
+Removed feature tests remain archived with the passing formal implementation.
+Eighteen reports pass structural/hash verification and the comparison figure is
+inspected; existing renderer unchanged, no interactive browser QA.
+
+## Current commands
+
+These are opt-in experimental interfaces, not promoted model checkpoints. Choose
+a new output directory for each run; these examples are not executed by this note.
+
+```bash
+.venv/bin/python -m experiments.modality_readout --stage grounded \
+  --core runs/request_meaning_v1/seed7201/balanced \
+  --understanding-suite data/understanding_v1/full \
+  --grounded-scope interpreter --request-contrasts --request-profile paired \
+  --observation-question neutral --request-evaluation fresh \
+  --steps 8 --stop-after 6 --seed 9893 --device cuda \
+  --output runs/paired_ce_new_smoke
+
+.venv/bin/python -m experiments.modality_readout --stage request-evaluate \
+  --core runs/request_meaning_v1/seed7201/balanced \
+  --understanding-suite data/understanding_v1/full \
+  --observation-question neutral --request-evaluation fresh \
+  --seed 9801 --device cuda --output runs/fresh_request_new_evaluation
+```
+
+Future comparisons need a fresh predeclared evaluation population; this corpus is
+now inspected development evidence. Keep content access and stopping/continuation
+separate, and keep preservation controls before another fit. Do not rerun this
+rejected coefficient or the earlier failed performance mechanisms without new evidence.

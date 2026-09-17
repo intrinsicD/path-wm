@@ -19,7 +19,53 @@ installed CLI in an isolated temporary cwd, tools/MCP/browser/persistence disabl
 Public hypothetical methodology only; do not export private code, data or results.
 Save exact briefs/responses/receipts and reconcile substantive criticism.
 
-## Latest performance iteration
+## Latest learning iteration
+
+[Paired request-boundary protocol/results](request-boundary-plan.md),
+[report](../runs/request_boundary_v1/report.html). Four matched512-update fits use
+only the existing9,936-parameter interpreter. Actual Claude reviewed the public
+hypothetical design and reconciliation; receipts in
+`runs/reviews/request_boundary_v1/`. Source snapshot2d43133 is preserved in
+`/tmp/pathwm-boundary-20260917` and run snapshots. Final code63b7321 removes the
+rejected additional boundary CE term/flag; paired calibration sampling, neutral
+training questions and opt-in fresh-prefix evaluation remain. Defaults unchanged.
+
+- Stronger7202 source: worst-draw joint exact56.77% untouched,76.56% matched ordinary
+  CE,74.48% boundary CE. First-only accuracy98.44%,93.23%,95.83%; both continuations
+  regress preservation and miss80% joint. Boundary-minus-control is-2.08pp.
+- Weaker7201 source:37.5% joint in every arm. First-word joint accuracy62.5% in every
+  arm;7202 is100%. This slice does not repair weak-source content access.
+- Broad quick coverage remains0/25 and1/25, with seven unimplemented domains.
+  Boundary7202 regresses REAL.scene.image accuracy and source-gain minima by33.33pp.
+  No candidate, language/general capability or architecture-color promotion.
+- All11,520 fresh/control/historical-order rows independently reproduce from saved
+  working states;8,986 tensors,2,216 arrays,2,208 legacy arrays and94,940 primitives
+  checked. Physical/posterior state and every non-interpreter tensor stay exact.
+- Original formal cap stops at1500.46s during final7202 CE evaluation, after all four
+  final512-update checkpoints were saved. That run remains stopped with its report.
+  Separate213.83s evaluation-only recovery passes its360s cap; original resource gate
+  stays failed. `recovery.json` maps every arm to its authoritative weights, request
+  and quick artifacts. Recovered paths are `seed7202/ce/recovered_requests` and
+  `seed7202/ce/recovered_quick`; never relabel the interrupted parent as complete.
+- Successful audit process11.94s; earlier failed artifact-key lookup is preserved
+  but unclocked. Recorded execution/recovery/audit sum1726.23s is a lower bound,
+  not complete cost accounting. Three reported fits peak87.06MiB; stopped fit lacks
+  exported training-only/peak memory receipt. No speed claim.
+- 640 tests pass on immutable2d43133 (853.82s pytest;855.45s process includes291.11s
+  pause).30 final focused checks pass after removal/CLI guard. Six-update CUDA resume
+  and simplified-current-CE versus frozen-control checks each match848 tensors and
+  1,321 primitives;42.58s combined development. Eighteen standalone reports pass
+  structural/hash checks; comparison figure inspected, unchanged renderer, no browser QA.
+
+Current interfaces and safe fresh-directory examples are in the plan. Archived
+boundary-weight commands require their frozen source; the current recipe supports
+ordinary CE only. No new scientific runs are scheduled. Before another learning
+comparison, use the existing cache to distinguish wording/continuation mistakes
+from the weaker source's content failures; preregister a new factor and preservation
+controls, without tuning against this now-inspected fresh corpus. Independent
+explorer changes are committed separately; inspect Git status before editing.
+
+## Earlier performance iteration
 
 [Byte batching and frozen metadata](byte-batch-plan.md),
 [combined report](../runs/metadata_cache_v1/report.html). Both candidates were
@@ -52,7 +98,7 @@ The renderer is unchanged and browser QA was not performed. Unrelated model-expl
 changes remain in the checkout; the full test result includes the tests collected
 during that concurrent work, not a guarantee for later edits. Inspect status before
 editing those files.
-The next model-learning target remains the request-form/EOS repair described below.
+The request-form/EOS follow-up is completed above; the earlier diagnosis below remains historical evidence.
 
 ## Latest completed measurements
 
