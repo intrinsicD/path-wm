@@ -1,5 +1,10 @@
 # Current work
 
+**Active iteration, 17 September:** [request completion and decoder cost](request-completion-plan.md).
+Fix the documented masked-question whitespace edge; diagnose EOS using preserved
+routing states; measure a small last-position decoder optimization with exact
+generation and full-suite regression checks. No new fit or capability promotion.
+
 **New-session entry point:** [handoff](session-handoff.md),17 September2026.
 Frozen request-routing comparison is complete: [protocol/results](request-routing-plan.md),
 [report](../runs/request_routing_v1/report.html).584 software checks pass; all source

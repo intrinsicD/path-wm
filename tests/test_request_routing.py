@@ -86,6 +86,23 @@ def test_neutral_and_masked_routes_keep_physical_state_but_allow_task_difference
     assert recipe.state_hash(model) == original
 
 
+@pytest.mark.parametrize("question", ["Farbtöne? \t\n", "  grün?\u2003", "", " \t\u2003", "\n rot  blau?"])
+@pytest.mark.parametrize("evidence", ["", "  Zeuge: grün. \n"])
+def test_masked_length_matches_normalized_observation(question, evidence):
+    data = fixtures()
+    row = dict(question=question, evidence={"text": evidence})
+    full = data.inputs(row)["text"]
+    masked = data.inputs(row, question_mode="masked")["text"]
+    assert bytes_text(full.values[0]) == (evidence + "\nFrage: " + question).strip()
+    assert masked.values.shape == full.values.shape
+    assert torch.equal(masked.valid, full.valid)
+    assert torch.equal(masked.times, full.times)
+    assert bytes_text(masked.values[0]) == (
+        evidence + "\nFrage: " + "." * len(question.rstrip().encode("utf-8"))
+    ).strip()
+    assert row == dict(question=question, evidence={"text": evidence})
+
+
 def test_non_instruction_route_fails_before_any_evaluation_files(tmp_path, monkeypatch):
     from pathwm.evaluation.understanding import evaluate_understanding
 
