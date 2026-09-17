@@ -1,5 +1,7 @@
 # Current work
 
+**Active learning slice, 17 September:** [paired request-boundary objective](request-boundary-plan.md). Test explicit EOS/space boundary supervision against matched ordinary CE on fixed sources; fresh prefix compositions, content/preservation controls, unchanged inference.
+
 **Interactive architecture explorer completed, 17 September:** [usage](model-explorer.md),
 [plan and checks](model-explorer-plan.md). Complete current categorical agent:
 601 modules and 515,553 parameters, plus its frozen teacher. Standalone HTML drills
