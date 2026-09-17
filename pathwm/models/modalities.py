@@ -260,14 +260,11 @@ def bytes_batch(strings, device="cpu"):
     sequences = [[1, *(b + 3 for b in s.encode("utf-8")), 2] for s in strings]
     if not sequences:
         raise ValueError("Text batch must be nonempty")
-    length = max(map(len, sequences))
-    # Build padding on the host, then transfer the entire batch once. Per-row
-    # device allocations/copies are costly for task and metadata text batches.
-    result = torch.tensor(
-        [row + [0] * (length - len(row)) for row in sequences],
-        dtype=torch.long,
-        device=device,
+    result = torch.zeros(
+        len(sequences), max(map(len, sequences)), dtype=torch.long, device=device
     )
+    for i, row in enumerate(sequences):
+        result[i, : len(row)] = torch.tensor(row, device=device)
     return result, result != 0
 
 

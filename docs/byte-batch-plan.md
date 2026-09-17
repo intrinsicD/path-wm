@@ -59,5 +59,49 @@ figure inspection; disclose if interactive browser QA is unavailable.
 
 ## Progress
 
-Protocol recorded. Candidate and comparisons not yet run. The request-form/EOS
-learning repair remains a separate next step; do not infer it is solved here.
+Candidate is committed as5e7979a after independent reference checks;54 focused
+tests pass. Actual Claude review/reconciliation identifies alias coverage, exact
+RNG/gradient preservation and warmed allocator behavior as required checks.
+PAD0, BOS1, EOS2 and byte+3 remain unchanged; all input strings include BOS/EOS.
+`seed_everything` resets Python/NumPy/CPU/CUDA streams; sample generators have
+explicit fixed seeds. Raw repeated timings are retained; no inferential claim.
+
+First measurement attempt `runs/byte_batch_v1` stopped after a PyTorch warning
+revealed noncontiguous GRU parameters introduced by benchmark model deep copies.
+This is a benchmark setup defect, not tokenizer evidence. Partial7202 changes
+(training+2.23%, inference+1.47%) are preserved, not used for adoption. Completed
+representative training blocks retain their checkpoints/reports. Before a fresh
+attempt, explicitly flatten RNN parameters outside timed regions after each copy,
+as device loading does for ordinary models, and turn that warning into an error.
+Fresh attempt lives under `runs/byte_batch_v2`; same cohorts, seeds, repeats,
+workloads and acceptance gate. No tuning to previous times. Keep combined
+attempt cost visible and within the original600s measurement budget.
+
+The request-form/EOS learning repair remains a separate next step; do not infer
+it is solved by this performance work.
+
+Corrected tokenizer result: exact checks pass, but both sources fail adoption.
+7202 training/inference improve3.27%/1.95%;7201 improves1.19%/1.02%. Preserve v1
+and v2 artifacts, revert the byte builder. Combined elapsed upper bound344.63s.
+
+## Second hypothesis: bounded frozen metadata reuse
+
+Before measurement, register a separate mechanism under the remaining original
+budget (<=255s for its formal comparison). Repeated task metadata is identical
+while MetadataEncoder is frozen. Memoize only the most recent ordered serialized
+batch when the encoder and every child are in evaluation mode, every parameter is
+frozen, and autocast is disabled. Key includes records, parameter identities and
+versions, device and dtype; return a clone so caller mutation cannot poison reuse.
+Changed records/weights/load/device/training state invalidate reuse. No graph,
+checkpoint buffer, input/latent cache, new parameters or gradient-path change.
+No support for bypassing PyTorch version tracking via `.data` or external storage
+mutation; callers doing that must disable reuse. Provide an explicit opt-out.
+
+Keep the SAME source/indices/16-update or16-call blocks,3 warmups,9 paired repeats,
+5% end-to-end gate and exact comparisons. Reference is original metadata forward,
+candidate frozen reuse; byte batching remains original in both. GRU layout is
+prepared outside timing as repaired above. Reject unsupported precision modes;
+test cache invalidation, caller mutation, frozen gradients, parameter loading,
+changing batch/metadata, opt-out and bounded single-entry behavior. Trainable
+metadata paths keep their original expression. No source edit during comparison.
+This is a new hypothesis, not repeated timing of the failed tokenizer candidate.
