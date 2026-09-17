@@ -107,3 +107,20 @@ def test_paired_neutral_batch_preserves_evidence_and_frozen_parameters():
     assert changed and all(
         n.startswith("core.agent.task_interpreter.") for n in changed
     )
+
+
+@pytest.mark.parametrize('stage,scope', [('grounded', 'decoder'), ('request-diagnose', 'interpreter')])
+def test_cli_rejects_fresh_profile_when_stage_cannot_use_it(monkeypatch, tmp_path, capsys, stage, scope):
+    import sys
+
+    monkeypatch.setattr(sys, 'argv', [
+        'modality_readout', '--stage', stage, '--grounded-scope', scope,
+        '--request-evaluation', 'fresh', '--core', str(tmp_path / 'missing'),
+        '--output', str(tmp_path / 'output'), '--understanding-suite', str(tmp_path / 'missing'),
+        '--steps', '1',
+    ])
+    with pytest.raises(SystemExit) as error:
+        recipe.main()
+    assert error.value.code == 2
+    assert 'Fresh requests require' in capsys.readouterr().err
+    assert not (tmp_path / 'output').exists()
