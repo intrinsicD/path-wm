@@ -1,0 +1,1821 @@
+{
+  "kind": "frozen_request_routing_development_comparison",
+  "timestamp": "2026-09-17T10:43+02:00",
+  "measured_source_commit": "0144cc9",
+  "source_commit": "5751f794c718774581f4a57bcef67984949da426",
+  "claude_public_only": true,
+  "neural_updates": 0,
+  "default_changed": false,
+  "validation_promoted": false,
+  "comparison": {
+    "adopted": false,
+    "candidate_gate": {
+      "masked": false,
+      "neutral": false
+    },
+    "formal_seconds": 1045.6646357665304,
+    "rows": [
+      {
+        "delta": {
+          "constant_request/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "constant_request/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "constant_request/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "full/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "full/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "full/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "last_frame/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "last_frame/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "last_frame/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "omitted/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "omitted/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "omitted/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "details": {
+          "ended": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "first_word": [
+            0.546875,
+            0.546875,
+            0.546875
+          ],
+          "format_correct": [
+            0.84375,
+            0.8515625,
+            0.85546875
+          ]
+        },
+        "first_words_changed": 0,
+        "first_words_compared": 768,
+        "gates": {
+          "benefit": false,
+          "broad_preservation": true,
+          "constant": true,
+          "content": true,
+          "controls": true,
+          "primary": false
+        },
+        "metrics": {
+          "constant_request/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "constant_request/first": {
+            "by_draw": [
+              0.625,
+              0.625,
+              0.625
+            ],
+            "min": 0.625
+          },
+          "constant_request/sequence": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "full/both": {
+            "by_draw": [
+              0.359375,
+              0.3671875,
+              0.375
+            ],
+            "min": 0.359375
+          },
+          "full/first": {
+            "by_draw": [
+              0.46875,
+              0.46875,
+              0.46875
+            ],
+            "min": 0.46875
+          },
+          "full/sequence": {
+            "by_draw": [
+              0.421875,
+              0.4296875,
+              0.4375
+            ],
+            "min": 0.421875
+          },
+          "last_frame/both": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "last_frame/first": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "last_frame/sequence": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "omitted/both": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "omitted/first": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          },
+          "omitted/sequence": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "order_stress/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "order_stress/first": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "order_stress/sequence": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          }
+        },
+        "mode": "full",
+        "pairing": {
+          "physical": {
+            "exact_pairs": 763,
+            "mean_rms": 0.0006817324108679192,
+            "pairs": 768
+          },
+          "posterior": {
+            "exact_pairs": 96,
+            "mean_rms": 0.03636292275846247,
+            "pairs": 768
+          },
+          "working": {
+            "exact_pairs": 96,
+            "mean_rms": 0.10753646605653565,
+            "pairs": 768
+          }
+        },
+        "quick": {
+          "executed": 25,
+          "failed": 25,
+          "passed": 0,
+          "unimplemented_domains": 7
+        },
+        "regressions": [],
+        "request_resources": {
+          "neural_updates": 0,
+          "peak_allocated_bytes": 45117440,
+          "seconds": 80.24241651501507
+        },
+        "route_state_rms": {
+          "physical": 0.0,
+          "posterior": 0.0,
+          "working": 0.0
+        },
+        "seed": 7201,
+        "suite_resources": {
+          "neural_updates": 0,
+          "parameters": 316765,
+          "peak_allocated_bytes": 282256896,
+          "seconds": 79.45865431893617
+        }
+      },
+      {
+        "delta": {
+          "constant_request/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "constant_request/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "constant_request/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "full/both": [
+            0.0,
+            0.0,
+            -0.0078125
+          ],
+          "full/first": [
+            0.0625,
+            0.0625,
+            0.0625
+          ],
+          "full/sequence": [
+            0.0,
+            0.0,
+            -0.0078125
+          ],
+          "last_frame/both": [
+            -0.25,
+            -0.25,
+            -0.25
+          ],
+          "last_frame/first": [
+            -0.25,
+            -0.25,
+            -0.25
+          ],
+          "last_frame/sequence": [
+            -0.25,
+            -0.25,
+            -0.25
+          ],
+          "omitted/both": [
+            -0.25,
+            -0.25,
+            -0.25
+          ],
+          "omitted/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "omitted/sequence": [
+            -0.25,
+            -0.25,
+            -0.25
+          ],
+          "order_stress/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "details": {
+          "ended": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "first_word": [
+            0.625,
+            0.625,
+            0.625
+          ],
+          "format_correct": [
+            0.80078125,
+            0.8046875,
+            0.8046875
+          ]
+        },
+        "first_words_changed": 60,
+        "first_words_compared": 768,
+        "gates": {
+          "benefit": false,
+          "broad_preservation": true,
+          "constant": true,
+          "content": true,
+          "controls": true,
+          "primary": false
+        },
+        "metrics": {
+          "constant_request/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "constant_request/first": {
+            "by_draw": [
+              0.625,
+              0.625,
+              0.625
+            ],
+            "min": 0.625
+          },
+          "constant_request/sequence": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "full/both": {
+            "by_draw": [
+              0.359375,
+              0.3671875,
+              0.3671875
+            ],
+            "min": 0.359375
+          },
+          "full/first": {
+            "by_draw": [
+              0.53125,
+              0.53125,
+              0.53125
+            ],
+            "min": 0.53125
+          },
+          "full/sequence": {
+            "by_draw": [
+              0.421875,
+              0.4296875,
+              0.4296875
+            ],
+            "min": 0.421875
+          },
+          "last_frame/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "last_frame/first": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "last_frame/sequence": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "omitted/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "omitted/first": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          },
+          "omitted/sequence": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "order_stress/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "order_stress/first": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "order_stress/sequence": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          }
+        },
+        "mode": "neutral",
+        "pairing": {
+          "physical": {
+            "exact_pairs": 768,
+            "mean_rms": 0.0,
+            "pairs": 768
+          },
+          "posterior": {
+            "exact_pairs": 768,
+            "mean_rms": 0.0,
+            "pairs": 768
+          },
+          "working": {
+            "exact_pairs": 96,
+            "mean_rms": 0.10871317861631918,
+            "pairs": 768
+          }
+        },
+        "quick": {
+          "executed": 25,
+          "failed": 25,
+          "passed": 0,
+          "unimplemented_domains": 7
+        },
+        "regressions": [],
+        "request_resources": {
+          "neural_updates": 0,
+          "peak_allocated_bytes": 45116416,
+          "seconds": 139.89471299899742
+        },
+        "route_state_rms": {
+          "physical": 0.24773935147633208,
+          "posterior": 1.280704249966063,
+          "working": 0.24983292482504663
+        },
+        "seed": 7201,
+        "suite_resources": {
+          "neural_updates": 0,
+          "parameters": 316765,
+          "peak_allocated_bytes": 282253824,
+          "seconds": 103.19853045395575
+        }
+      },
+      {
+        "delta": {
+          "constant_request/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "constant_request/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "constant_request/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "full/both": [
+            -0.015625,
+            0.0,
+            -0.03125
+          ],
+          "full/first": [
+            0.0625,
+            0.0625,
+            0.0625
+          ],
+          "full/sequence": [
+            -0.015625,
+            0.0,
+            -0.03125
+          ],
+          "last_frame/both": [
+            -0.25,
+            -0.25,
+            -0.25
+          ],
+          "last_frame/first": [
+            -0.25,
+            -0.25,
+            -0.25
+          ],
+          "last_frame/sequence": [
+            -0.25,
+            -0.25,
+            -0.25
+          ],
+          "omitted/both": [
+            -0.25,
+            -0.25,
+            -0.25
+          ],
+          "omitted/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "omitted/sequence": [
+            -0.25,
+            -0.25,
+            -0.25
+          ],
+          "order_stress/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "details": {
+          "ended": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "first_word": [
+            0.625,
+            0.625,
+            0.625
+          ],
+          "format_correct": [
+            0.7890625,
+            0.8046875,
+            0.78125
+          ]
+        },
+        "first_words_changed": 60,
+        "first_words_compared": 768,
+        "gates": {
+          "benefit": false,
+          "broad_preservation": true,
+          "constant": true,
+          "content": true,
+          "controls": true,
+          "primary": false
+        },
+        "metrics": {
+          "constant_request/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "constant_request/first": {
+            "by_draw": [
+              0.625,
+              0.625,
+              0.625
+            ],
+            "min": 0.625
+          },
+          "constant_request/sequence": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "full/both": {
+            "by_draw": [
+              0.34375,
+              0.3671875,
+              0.34375
+            ],
+            "min": 0.34375
+          },
+          "full/first": {
+            "by_draw": [
+              0.53125,
+              0.53125,
+              0.53125
+            ],
+            "min": 0.53125
+          },
+          "full/sequence": {
+            "by_draw": [
+              0.40625,
+              0.4296875,
+              0.40625
+            ],
+            "min": 0.40625
+          },
+          "last_frame/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "last_frame/first": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "last_frame/sequence": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "omitted/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "omitted/first": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          },
+          "omitted/sequence": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "order_stress/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "order_stress/first": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "order_stress/sequence": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          }
+        },
+        "mode": "masked",
+        "pairing": {
+          "physical": {
+            "exact_pairs": 768,
+            "mean_rms": 0.0,
+            "pairs": 768
+          },
+          "posterior": {
+            "exact_pairs": 768,
+            "mean_rms": 0.0,
+            "pairs": 768
+          },
+          "working": {
+            "exact_pairs": 96,
+            "mean_rms": 0.10958333939979621,
+            "pairs": 768
+          }
+        },
+        "quick": {
+          "executed": 25,
+          "failed": 25,
+          "passed": 0,
+          "unimplemented_domains": 7
+        },
+        "regressions": [],
+        "request_resources": {
+          "neural_updates": 0,
+          "peak_allocated_bytes": 45117440,
+          "seconds": 83.84125466295518
+        },
+        "route_state_rms": {
+          "physical": 0.24006099905972042,
+          "posterior": 1.2844159353611793,
+          "working": 0.24220491802813124
+        },
+        "seed": 7201,
+        "suite_resources": {
+          "neural_updates": 0,
+          "parameters": 316765,
+          "peak_allocated_bytes": 282256896,
+          "seconds": 77.83023824403062
+        }
+      },
+      {
+        "delta": {
+          "constant_request/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "constant_request/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "constant_request/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "full/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "full/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "full/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "last_frame/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "last_frame/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "last_frame/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "omitted/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "omitted/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "omitted/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "details": {
+          "ended": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "first_word": [
+            0.84375,
+            0.859375,
+            0.859375
+          ],
+          "format_correct": [
+            0.75,
+            0.74609375,
+            0.75
+          ]
+        },
+        "first_words_changed": 0,
+        "first_words_compared": 768,
+        "gates": {
+          "benefit": false,
+          "broad_preservation": true,
+          "constant": true,
+          "content": true,
+          "controls": true,
+          "primary": false
+        },
+        "metrics": {
+          "constant_request/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "constant_request/first": {
+            "by_draw": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "min": 1.0
+          },
+          "constant_request/sequence": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "full/both": {
+            "by_draw": [
+              0.46875,
+              0.484375,
+              0.484375
+            ],
+            "min": 0.46875
+          },
+          "full/first": {
+            "by_draw": [
+              0.84375,
+              0.859375,
+              0.859375
+            ],
+            "min": 0.84375
+          },
+          "full/sequence": {
+            "by_draw": [
+              0.46875,
+              0.484375,
+              0.484375
+            ],
+            "min": 0.46875
+          },
+          "last_frame/both": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "last_frame/first": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          },
+          "last_frame/sequence": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "omitted/both": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "omitted/first": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          },
+          "omitted/sequence": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "order_stress/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "order_stress/first": {
+            "by_draw": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "min": 1.0
+          },
+          "order_stress/sequence": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          }
+        },
+        "mode": "full",
+        "pairing": {
+          "physical": {
+            "exact_pairs": 764,
+            "mean_rms": 0.0011864321148398818,
+            "pairs": 768
+          },
+          "posterior": {
+            "exact_pairs": 96,
+            "mean_rms": 0.10267479666839718,
+            "pairs": 768
+          },
+          "working": {
+            "exact_pairs": 96,
+            "mean_rms": 0.18322310067061728,
+            "pairs": 768
+          }
+        },
+        "quick": {
+          "executed": 25,
+          "failed": 24,
+          "passed": 1,
+          "unimplemented_domains": 7
+        },
+        "regressions": [],
+        "request_resources": {
+          "neural_updates": 0,
+          "peak_allocated_bytes": 45117440,
+          "seconds": 76.29014129296411
+        },
+        "route_state_rms": {
+          "physical": 0.0,
+          "posterior": 0.0,
+          "working": 0.0
+        },
+        "seed": 7202,
+        "suite_resources": {
+          "neural_updates": 0,
+          "parameters": 316765,
+          "peak_allocated_bytes": 282256896,
+          "seconds": 74.0587983049918
+        }
+      },
+      {
+        "delta": {
+          "constant_request/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "constant_request/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "constant_request/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "full/both": [
+            0.03125,
+            0.015625,
+            0.015625
+          ],
+          "full/first": [
+            0.15625,
+            0.140625,
+            0.140625
+          ],
+          "full/sequence": [
+            0.03125,
+            0.015625,
+            0.015625
+          ],
+          "last_frame/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "last_frame/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "last_frame/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "omitted/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "omitted/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "omitted/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "details": {
+          "ended": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "first_word": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "format_correct": [
+            0.75,
+            0.75,
+            0.75
+          ]
+        },
+        "first_words_changed": 112,
+        "first_words_compared": 768,
+        "gates": {
+          "benefit": false,
+          "broad_preservation": false,
+          "constant": true,
+          "content": true,
+          "controls": true,
+          "primary": false
+        },
+        "metrics": {
+          "constant_request/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "constant_request/first": {
+            "by_draw": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "min": 1.0
+          },
+          "constant_request/sequence": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "full/both": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          },
+          "full/first": {
+            "by_draw": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "min": 1.0
+          },
+          "full/sequence": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          },
+          "last_frame/both": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "last_frame/first": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          },
+          "last_frame/sequence": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "omitted/both": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "omitted/first": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          },
+          "omitted/sequence": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "order_stress/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "order_stress/first": {
+            "by_draw": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "min": 1.0
+          },
+          "order_stress/sequence": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          }
+        },
+        "mode": "neutral",
+        "pairing": {
+          "physical": {
+            "exact_pairs": 768,
+            "mean_rms": 0.0,
+            "pairs": 768
+          },
+          "posterior": {
+            "exact_pairs": 768,
+            "mean_rms": 0.0,
+            "pairs": 768
+          },
+          "working": {
+            "exact_pairs": 96,
+            "mean_rms": 0.1852359528351409,
+            "pairs": 768
+          }
+        },
+        "quick": {
+          "executed": 25,
+          "failed": 24,
+          "passed": 1,
+          "unimplemented_domains": 7
+        },
+        "regressions": [
+          {
+            "after_passed": false,
+            "before_passed": false,
+            "delta": {
+              "accuracy_min": -0.16666666666666669,
+              "paired_min": 0.0,
+              "source_gain_min": -0.16666666666666669
+            },
+            "gained_gates": [],
+            "id": "MIX.agreement.text+image+video",
+            "lost_gates": [],
+            "status": "regressed"
+          }
+        ],
+        "request_resources": {
+          "neural_updates": 0,
+          "peak_allocated_bytes": 45116416,
+          "seconds": 74.39460678596515
+        },
+        "route_state_rms": {
+          "physical": 0.1362321903621667,
+          "posterior": 0.7376566061913058,
+          "working": 0.14789282496156947
+        },
+        "seed": 7202,
+        "suite_resources": {
+          "neural_updates": 0,
+          "parameters": 316765,
+          "peak_allocated_bytes": 282253824,
+          "seconds": 74.2330782400677
+        }
+      },
+      {
+        "delta": {
+          "constant_request/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "constant_request/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "constant_request/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "full/both": [
+            0.03125,
+            0.015625,
+            0.015625
+          ],
+          "full/first": [
+            0.15625,
+            0.140625,
+            0.140625
+          ],
+          "full/sequence": [
+            0.03125,
+            0.015625,
+            0.015625
+          ],
+          "last_frame/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "last_frame/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "last_frame/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "omitted/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "omitted/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "omitted/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/both": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/first": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "order_stress/sequence": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "details": {
+          "ended": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "first_word": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "format_correct": [
+            0.75,
+            0.75,
+            0.75
+          ]
+        },
+        "first_words_changed": 112,
+        "first_words_compared": 768,
+        "gates": {
+          "benefit": false,
+          "broad_preservation": false,
+          "constant": true,
+          "content": true,
+          "controls": true,
+          "primary": false
+        },
+        "metrics": {
+          "constant_request/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "constant_request/first": {
+            "by_draw": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "min": 1.0
+          },
+          "constant_request/sequence": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "full/both": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          },
+          "full/first": {
+            "by_draw": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "min": 1.0
+          },
+          "full/sequence": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          },
+          "last_frame/both": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "last_frame/first": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          },
+          "last_frame/sequence": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "omitted/both": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "omitted/first": {
+            "by_draw": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "min": 0.5
+          },
+          "omitted/sequence": {
+            "by_draw": [
+              0.25,
+              0.25,
+              0.25
+            ],
+            "min": 0.25
+          },
+          "order_stress/both": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          },
+          "order_stress/first": {
+            "by_draw": [
+              1.0,
+              1.0,
+              1.0
+            ],
+            "min": 1.0
+          },
+          "order_stress/sequence": {
+            "by_draw": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "min": 0.0
+          }
+        },
+        "mode": "masked",
+        "pairing": {
+          "physical": {
+            "exact_pairs": 768,
+            "mean_rms": 0.0,
+            "pairs": 768
+          },
+          "posterior": {
+            "exact_pairs": 768,
+            "mean_rms": 0.0,
+            "pairs": 768
+          },
+          "working": {
+            "exact_pairs": 96,
+            "mean_rms": 0.183081855277524,
+            "pairs": 768
+          }
+        },
+        "quick": {
+          "executed": 25,
+          "failed": 24,
+          "passed": 1,
+          "unimplemented_domains": 7
+        },
+        "regressions": [
+          {
+            "after_passed": false,
+            "before_passed": false,
+            "delta": {
+              "accuracy_min": -0.16666666666666669,
+              "paired_min": 0.0,
+              "source_gain_min": -0.16666666666666669
+            },
+            "gained_gates": [],
+            "id": "MIX.agreement.text+video",
+            "lost_gates": [],
+            "status": "regressed"
+          }
+        ],
+        "request_resources": {
+          "neural_updates": 0,
+          "peak_allocated_bytes": 45117440,
+          "seconds": 74.4542131870985
+        },
+        "route_state_rms": {
+          "physical": 0.11466096887245088,
+          "posterior": 0.6359662475891705,
+          "working": 0.12378906257746451
+        },
+        "seed": 7202,
+        "suite_resources": {
+          "neural_updates": 0,
+          "parameters": 316765,
+          "peak_allocated_bytes": 282256896,
+          "seconds": 75.37680559209548
+        }
+      }
+    ],
+    "scope": "Frozen request routing on repeatedly used development fixtures, not training or independent confirmation"
+  },
+  "verification": {
+    "artifact_bytes": 70099608,
+    "browser_qa": false,
+    "historical_answer_rows_exact": 3072,
+    "historical_suite_arrays_exact": 600,
+    "media_checks": 373,
+    "raw_checks": 98905,
+    "source_tensor_checks": 9096,
+    "structural_reports": 13,
+    "full_software_tests": 584,
+    "software_exit_code": 0,
+    "measured_source_commit": "0144cc9",
+    "plot_visually_inspected": true
+  },
+  "files": {
+    "docs/request-routing-plan.md": {
+      "bytes": 8704,
+      "sha256": "70d464dbb2504d3b0d61a76acab7e40b33e12327ae1a280932631d40869cf555"
+    },
+    "docs/session-handoff.md": {
+      "bytes": 13316,
+      "sha256": "89ef9de1ee2fcb77c5b58b7b93895dee274f0b4d1107b5761d0e4abba4013ea8"
+    },
+    "pathwm/data/understanding.py": {
+      "bytes": 21797,
+      "sha256": "8c284c69db2f66861d73320e095cfa106d367ef3580d5cbb545944c752e4ddb9"
+    },
+    "pathwm/evaluation/request_meaning.py": {
+      "bytes": 5732,
+      "sha256": "66abdd231bd80da830cbc91479fbe1ac67b5cb88998ca685f9b652bf1d6832b2"
+    },
+    "pathwm/evaluation/understanding.py": {
+      "bytes": 26116,
+      "sha256": "a212c80ff679c819e7c0c148081032b9e775d8a240685b3972978753e5de9e78"
+    },
+    "experiments/modality_readout.py": {
+      "bytes": 119803,
+      "sha256": "99bc0f2bb85cdab900639e14a093be2a686419fd27af249b052b8b8ef868b0de"
+    },
+    "tests/test_request_routing.py": {
+      "bytes": 5799,
+      "sha256": "a2190e570bd7f3c5950b983068a25b642bb74bab20224a9e09e998ee99d78ded"
+    },
+    "runs/request_routing_v1/atlas-render.json": {
+      "bytes": 2012,
+      "sha256": "d63685f40cb8ab4e60c77bbf2c67e7bf90908e82eca0f1bf3b3a057e5a3fd354"
+    },
+    "runs/request_routing_v1/comparison.json": {
+      "bytes": 32546,
+      "sha256": "88ec4ace535977be6d467bb300cf63cd1fe497ccb9858262e46a1c466723ad45"
+    },
+    "runs/request_routing_v1/error-analysis.json": {
+      "bytes": 11120,
+      "sha256": "f629f458ed3c44ee870dac2aa2a0740337d5a8e7437de30309ab380ab2a2746c"
+    },
+    "runs/request_routing_v1/execution.json": {
+      "bytes": 7726,
+      "sha256": "1c3d7fbbb32a38d845305f1562d7e3326ffa6a7168d7de7a2c1a37ee5833f6d3"
+    },
+    "runs/request_routing_v1/report.qa.json": {
+      "bytes": 281,
+      "sha256": "16e54cd25bd141fb6e5713e2129576c01ef88755a13871b2912c7568904f13f8"
+    },
+    "runs/request_routing_v1/result.json": {
+      "bytes": 13061,
+      "sha256": "47a99c7bdcffd7c3f55930a7a2b98a4797a2803d267b14a81182ae6241551a66"
+    },
+    "runs/request_routing_v1/run.json": {
+      "bytes": 128,
+      "sha256": "772dfec7ef86c0a2a4187d3aaadfee3e53ced4a9cb3e6291686bac45b8782ce8"
+    },
+    "runs/request_routing_v1/smoke.json": {
+      "bytes": 124,
+      "sha256": "875b97abdb3cce3162b073f55f22035524ad6d57d2292fef878dfc8004621165"
+    },
+    "runs/request_routing_v1/software-cost.json": {
+      "bytes": 53,
+      "sha256": "38691b9696baee4a29ee754ecebf916963ae3ccd5bc11acb2bcd90d4072c35f3"
+    },
+    "runs/request_routing_v1/status.json": {
+      "bytes": 92,
+      "sha256": "8819fd3fcf5d34e5e8260d2ba8f39c67b5ec9dd91155a7ebfd07dc8919e1108a"
+    },
+    "runs/request_routing_v1/verification.json": {
+      "bytes": 373,
+      "sha256": "7b8d54950fcf72474117f1eec2e1d5fe51b3e7a75f7a4093bc2871e4e8468e0f"
+    },
+    "runs/request_routing_v1/full-software-tests.txt": {
+      "bytes": 720,
+      "sha256": "b1fdee4b285924c2888b561bc7cf9efebbaee480f53f90526aec5df91f07b4ab"
+    },
+    "runs/request_routing_v1/focused-tests.txt": {
+      "bytes": 80,
+      "sha256": "32faef56d0289369b1ac111e68ee0bb7b2ed1bcf92d3f33b75313bd0556c3e6f"
+    },
+    "runs/request_routing_v1/report.html": {
+      "bytes": 127371,
+      "sha256": "3abd0491a7bf2309a378c56c4cc3273b368baf99dd9607f947867299f0930008"
+    },
+    "runs/reviews/request_routing_v1/final-brief.txt": {
+      "bytes": 749,
+      "sha256": "61a70a190d9a08afd450abe76bf9fe398e88bb54bc19a7c75ab48e0ede5fc631"
+    },
+    "runs/reviews/request_routing_v1/final-receipt.json": {
+      "bytes": 236,
+      "sha256": "442a17ba3f8cd02dd0b0993df1529ffcf94bf79f0b58221da8909aa13890bdb0"
+    },
+    "runs/reviews/request_routing_v1/final-response.json": {
+      "bytes": 3491,
+      "sha256": "21b75cad6d0d3883eabd5c141fbc1b727907d0c5feee059bd1fc74912de62a10"
+    },
+    "runs/reviews/request_routing_v1/final-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runs/reviews/request_routing_v1/public-brief.txt": {
+      "bytes": 2273,
+      "sha256": "5213392d755230a46b59601c4d4ac4ac5238906e22851901250290cedf84a5ef"
+    },
+    "runs/reviews/request_routing_v1/public-receipt.json": {
+      "bytes": 237,
+      "sha256": "ddd7a3c2c426d9bd7def7e4955249e8c8dfd64e10d9ecfe4eadfe05278fff57e"
+    },
+    "runs/reviews/request_routing_v1/public-response.json": {
+      "bytes": 4764,
+      "sha256": "d6bd4e6138f68f151cd31f22cff6c5bdc64fcae313034f6365deecf74ca10e29"
+    },
+    "runs/reviews/request_routing_v1/public-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runs/reviews/request_routing_v1/reconcile-brief.txt": {
+      "bytes": 1624,
+      "sha256": "9e290f51038743df59cffcb73856a9c13f10fda1f5d9a6d5bca3bec68b5f864f"
+    },
+    "runs/reviews/request_routing_v1/reconcile-receipt.json": {
+      "bytes": 237,
+      "sha256": "74e3a8fc78072e93baf5b77e244263ca066ade762087b266bc8e5bcdd49fd800"
+    },
+    "runs/reviews/request_routing_v1/reconcile-response.json": {
+      "bytes": 3797,
+      "sha256": "25f747694bf1989010265ba804b95acea436501395998ad7cab7a7da7423bc80"
+    },
+    "runs/reviews/request_routing_v1/reconcile-stderr.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runs/reviews/request_routing_v1/run_review.py": {
+      "bytes": 1222,
+      "sha256": "7936cf7ef630236ae3b1161ab6aa5668f3d507ff1fd65dd448210fd2967d6e2d"
+    }
+  }
+}

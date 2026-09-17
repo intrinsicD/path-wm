@@ -2374,3 +2374,16 @@ entries:
     probes limit conclusions.
   - Measured0bdbbee579 full tests; final guardafa7659 and41 focused. Source diagnostics reject unsupported
     continuous-working paths; no broad validation/default promotion, no interactive browser QA claim.
+- turn: 2026-09-17_001#1
+  notes:
+  - Capture the sustained16→17 September iteration once at handoff completion; formal runs finished before
+    final documentation. No restart or duplicate experiment record.
+  - N468 protocol,N469 measurements,N470 preservation/handoff decision direct; O315 interpretation/O316 proposal
+    staged. User asked for handoff, not endorsement of empirical mechanism.
+  - O314→A19 via committed routing implementation0144cc9; retain ai-suggested provenance. O313 prior balanced-fit
+    interpretation and wider memory/replay/modality topics remain live, no inferred abandonment. Existing106
+    stale flags retained because older open topics are carried forward; no blanket date-based stale/promotion
+    sweep.
+  - 'All584 full checks cover measured source0144cc9. No later code repair claimed: trailing-whitespace input
+    edge documented, not fixed. Report and plot verified; browser QA not claimed. Handoff/results5751f79;
+    no push or default/color promotion.'

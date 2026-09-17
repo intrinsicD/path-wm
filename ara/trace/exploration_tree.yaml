@@ -7770,3 +7770,58 @@ tree:
   - docs/request-meaning-plan.md
   status: resolved
   timestamp: 2026-09-16T21:37+02:00
+- id: N468
+  type: decision
+  title: Compare frozen duplicate versus task-only question routing
+  provenance: ai-executed
+  choice: Implement O314 with full, neutral-period and equal-byte-period observation controls; keep actual
+    task request/evidence/model weights fixed. Existing paired request test and full25-task quick suite, two
+    fixed sources and three paired draws. Claude public-only critique reconciled tokenizer, exact-string/EOS,
+    bitwise state checks and repeated-development limitations.
+  alternatives:
+  - More interpreter fitting immediately
+  - Infer harmful interference solely from state differences
+  - Drop observed textual evidence with question
+  evidence:
+  - O314
+  - docs/request-routing-plan.md
+  - runs/reviews/request_routing_v1/final-response.json
+  status: resolved
+  timestamp: 2026-09-17T10:43+02:00
+- id: N469
+  type: experiment
+  title: Frozen routing improves stronger-source first color but fails joint and broader gates
+  provenance: ai-executed
+  result: 12 fixed evaluations; zero neural updates. Joint exact7201 full/neutral/masked35.9375/35.9375/34.375%;7202
+    46.875/50/50%, all below80%.7202 candidate first-color100%; exactly192/384 sequence requests stop after
+    correct first word in saved-output aggregation. Quick suite remains0/25 and1/25;7202 neutral and masked
+    each regress a distinct agreement case16.67pp. All768 paired candidate physical/posterior states per source/route
+    bitwise equal.584 software tests pass;9096 source tensors,3072 historical answers and600 historical arrays
+    unchanged.98905 raw checks,13 reports,373 media checks.1045.66s formal processes;609.90s overlapping software;282256896-byte
+    peak allocation. Chart inspected, browser QA not performed.
+  evidence:
+  - ara/evidence/tables/request_routing_2026-09-17.json
+  - runs/request_routing_v1/report.html
+  - runs/request_routing_v1/error-analysis.json
+  also_depends_on:
+  - N468
+  status: resolved
+  timestamp: 2026-09-17T10:43+02:00
+- id: N470
+  type: decision
+  title: Keep full default and preserve a new-session handoff
+  provenance: ai-executed
+  choice: Both variant gates fail; retain optional controls, no default or capability-color promotion. User
+    requests new-session handoff; commit self-contained docs/session-handoff.md and results. Proposed EOS/continuation
+    diagnostic and identified whitespace-length preprocessing edge are explicitly unfinished, not repaired
+    or validated. No further experiment launched.
+  alternatives:
+  - Adopt on first-color improvement alone
+  - Relax joint or regression gates
+  - Present a proposed EOS mechanism as established
+  evidence:
+  - N469
+  - docs/session-handoff.md
+  - docs/request-routing-plan.md
+  status: resolved
+  timestamp: 2026-09-17T10:43+02:00

@@ -182,3 +182,13 @@
 - **Implementation**: measured0bdbbee; final sampled-source diagnostic guard/results afa7659. [Corpus](../../../pathwm/data/request_meaning.py), [diagnostics](../../../pathwm/evaluation/request_meaning.py), [recipe](../../../experiments/modality_readout.py), [tests](../../../tests/test_request_meaning.py), [protocol/results](../../../docs/request-meaning-plan.md).
 - **Verification**: [Evidence](../../evidence/tables/request_meaning_2026-09-16.json);579 full checks before final guard,41 focused after;848 exact restart tensors,2208 preserved request-free output arrays.
 - **Limits**: Implemented diagnostic/adaptation method only. Both primary/adoption gates fail; no default, general-language, video-understanding or causal-localization claim. Final diagnostics explicitly require sampled working-state sources. Post-fit probes remain exploratory.
+
+## A19: Frozen observation-question routing controls
+
+- **Design**: Keep actual requests in the existing TaskInterpreter; independently preserve, neutralize or byte-length-mask only the observed question substring. Preserve textual/non-text evidence and use the existing paired request and broader understanding evaluations. Save aligned posterior, physical and working states alongside actual requests/observed text and generated answers. Controls require an instruction source; defaults and training routes are unchanged.
+- **Provenance**: ai-suggested
+- **Crystallized via**: artifact-commitment
+- **From staging**: O314
+- **Implementation**:0144cc9, protocolf171821, handoff/results5751f79. [Data](../../../pathwm/data/understanding.py), [guard](../../../pathwm/evaluation/request_meaning.py), [recipe](../../../experiments/modality_readout.py), [suite](../../../pathwm/evaluation/understanding.py), [tests](../../../tests/test_request_routing.py).
+- **Verification**: [Evidence](../../evidence/tables/request_routing_2026-09-17.json);584 full checks,64 GPU smoke comparisons; exact historical answer/array and source tensor reproduction.
+- **Limits**: Optional diagnostic methodology, no neural training or adopted repair. Both joint/adoption gates fail, stronger-source agreement regresses. Length matching verified on normalized prepared questions; trailing-whitespace API edge remains documented for next-session testing. No general semantic, video-understanding or unique interference mechanism claim.

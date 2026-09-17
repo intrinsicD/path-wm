@@ -221,3 +221,12 @@ sessions:
   events_count: 134
   claims_touched: []
   open_threads: 47
+- id: 2026-09-17_001
+  date: '2026-09-17'
+  summary: Frozen routing comparison completed; first-color7202 reaches100%, joint50% fails,7201 stays35.94%.
+    Broad0/25 and1/25 with agreement regressions;584 tests and exact preservation pass. No defaults changed.
+    User requests new-session handoff; EOS diagnosis and whitespace edge remain open.
+  turn_count: 1
+  events_count: 6
+  claims_touched: []
+  open_threads: 48

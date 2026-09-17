@@ -5495,6 +5495,40 @@ observations:
   bound_to:
   - N466
   - N467
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A19
+  crystallized_via: artifact-commitment
+  stale: false
+- id: O315
+  timestamp: 2026-09-17T10:43+02:00
+  provenance: ai-suggested
+  content: Frozen task-only routing makes stronger-source first words reliable on controlled clips, while
+    sequence failures terminate early. This suggests request-dependent continuation/form as a remaining bottleneck
+    in that source, not necessarily missing video content. Distribution shift, repeated fixtures and agreement
+    regressions prevent causal interference or general understanding claims; weaker-source content errors
+    remain.
+  context: Post-hoc aggregation of saved predictions after fixed gates failed. User requested continuation/handoff,
+    not empirical endorsement.
+  potential_type: claim
+  bound_to:
+  - N469
+  - N470
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O316
+  timestamp: 2026-09-17T10:43+02:00
+  provenance: ai-suggested
+  content: Next inspect EOS versus continuation probabilities at the first-color prefix across opposite requests
+    and wording families with fixed model/content. Separate interpreter/working-state/decoder attribution
+    before a matched repair; retain broad modality gates. This is a proposal; no new calls/training or protocol
+    yet.
+  context: Handoff after frozen routing comparison; no architectural replacement or successful repair adopted.
+  potential_type: architecture
+  bound_to:
+  - N469
+  - N470
   promoted: false
   promoted_to: null
   crystallized_via: null
