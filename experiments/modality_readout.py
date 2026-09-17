@@ -3096,9 +3096,18 @@ def main():
         "understanding",
         "grounded",
     ):
-        parser.error("Observation question routing requires grounded training or evaluation")
+        parser.error(
+            "Observation question routing requires grounded training or evaluation"
+        )
     if args.boundary_weight and args.stage != "grounded":
         parser.error("Boundary supervision is only used by grounded training")
+    if args.request_evaluation == "fresh" and not (
+        args.stage == "request-evaluate"
+        or (args.stage == "grounded" and args.grounded_scope == "interpreter")
+    ):
+        parser.error(
+            "Fresh requests require interpreter grounded training or request-evaluate"
+        )
     if args.stage == "request-completion":
         if (
             args.core is None
