@@ -1,16 +1,27 @@
 # Current work
 
-**Input architecture clarified, 18 September:**
+**Input architecture and invertibility decision, 18 September:**
 [multiscale modality design](multiscale-modality-design.md).
 Alex specifies per-scale information-preserving operations → **learnable filter
 bank** → post-processing → compression, repeated across scales. A shared multiscale
 representation feeds arbitrary consumers, each with its own transformer loop and
 module-specific layers. “Filter bank” and learnable filters are explicit user
-corrections. Pre-compression exports and strict B/P preservation mechanisms are
-proposals/open choices, not inferred commitments. Generic consumers are not
+corrections. Alex now accepts export immediately after post-processing, before
+compression, and prefers invertibility if it does not hinder learning. Additive
+coupling with ordinary trainable filter subnets is the working candidate; the
+per-consumer learning-quality condition is unresolved. Existing v1 coupling inverse
+and checkpoint tests pass (2 checks); no new architecture is validated. Generic consumers are not
 restricted to the previous application-head/VAE examples; residual/PCA options
 remain secondary. Existing hierarchy/readout components audited; no model or
 training change. Actual Claude public-methods critique/reconciliation recorded.
+
+**User-linked multimodal VAE toolkit:**
+[source assessment](multimodal-vae-reference.md), pinned upstream `5cfef9a`.
+Useful for controlled attribute/cross-modal tests and optional downstream posterior
+fusion. Modality-private latents do not answer application-residual allocation.
+Inspected Gaussian variance/scale mismatch reproduced in isolation; do not import
+the fusion implementation without reconciling its parameter contract. No upstream
+installation, full reproduction, dataset download or model adoption.
 
 **Residual correction and specialist/PCA alternative, 18 September:**
 [design §10](visual-adapter-design.md#10-residual-correction-and-specialistpca-decomposition).

@@ -11,9 +11,21 @@ specifies information-preserving operations → **learnable filter bank** →
 post-processing → compression at each scale, then a shared multiscale feature
 representation. Each arbitrary consumer runs a transformer loop and then its own
 layers. This is a general input/consumer interface, not just VAE/task heads.
-Filters must be learnable; pre-compression exports and exact preservation through
-learned processing are still design choices. Joint equal-status training remains
+Filters must be learnable. Alex now accepts export immediately after post-processing,
+before compression, and prefers an invertible construction if it does not hinder
+learning. Additive coupling is the working candidate, using ordinary learned
+filter subnets within a complete paired state. This has an analytic inverse;
+numerical conditioning and per-consumer quality remain unvalidated. Existing v1
+coupling and checkpoint tests pass (2 checks), not a new hierarchy implementation.
+Joint equal-status training remains
 the earlier preference. No implementation or training; preserve existing findings.
+
+Alex also asks about `gabinsane/multimodal-vae-comparison`. Read
+[the source assessment](multimodal-vae-reference.md): benchmark ideas and optional
+downstream fusion are useful; modality-private latents are distinct from application
+residuals. Upstream Gaussian scale/variance inconsistency independently reproduced;
+no toolkit installation or training. Public-only Claude critique/reconciliation
+receipts: `runs/reviews/invertible-filter-choice-20260918/`.
 
 ## Background: visual residual adapters
 

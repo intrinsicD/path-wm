@@ -8326,3 +8326,54 @@ tree:
   - N497
   - N498
   status: resolved
+- id: N500
+  type: decision
+  title: Export every processed scale before compression; conditional invertibility preference
+  provenance: user
+  timestamp: 2026-09-18T00:55+02:00
+  choice: User accepts export immediately after post-processing and before compression. User prefers an
+    invertible construction if it does not hinder learning. The export boundary is settled; no claim that
+    the learning condition is satisfied. Additive coupling is an assistant working candidate.
+  alternatives:
+  - Expose only compressed scale outputs
+  - Treat invertibility as already proven harmless for all consumers
+  evidence:
+  - docs/multiscale-modality-design.md
+  - N499
+  also_depends_on:
+  - N499
+  status: resolved
+- id: N501
+  type: question
+  title: Is multimodal-vae-comparison useful for the intended hierarchy?
+  provenance: user
+  timestamp: 2026-09-18T00:55+02:00
+  description: 'Inspected the intended public repository at pinned 5cfef9a20fae810e716573c7b07b8a504d98d6ad.
+    Answer: useful controlled attribute/cross-modal benchmarks and optional downstream fusion; modality-private
+    latents do not implement application residuals or the new invertible multiscale interface. This answers
+    relevance, not model adoption or a benchmark reproduction.'
+  evidence:
+  - docs/multimodal-vae-reference.md
+  - runs/reviews/invertible-filter-choice-20260918/upstream-source-record.json
+  also_depends_on:
+  - N499
+  - N500
+  status: resolved
+- id: N502
+  type: experiment
+  title: Existing reversible mechanics and isolated upstream Gaussian parameter sanity
+  provenance: ai-executed
+  timestamp: 2026-09-18T00:55+02:00
+  result: 'Two existing tests pass: randomized float64 coupling inverse and reversible checkpoint reload.
+    Isolated pinned upstream PoE helper on two unit-Gaussian log-variance-zero inputs returns second value
+    0.500000005; caller uses it as Normal standard deviation, producing variance 0.250000005 rather than
+    correct 0.5. Encoder input convention also needs reconciliation. No upstream package installation/full
+    reproduction or new training.'
+  evidence:
+  - ara/evidence/tables/invertible_filter_reference_2026-09-18.json
+  - runs/reviews/invertible-filter-choice-20260918/document-verification.json
+  - runs/reviews/invertible-filter-choice-20260918/upstream-gaussian-sanity.json
+  also_depends_on:
+  - N500
+  - N501
+  status: resolved

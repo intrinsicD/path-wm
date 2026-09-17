@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-09-18T00:55+02:00",
+  "source_baseline": "6e0842179073f03621374cb620776bf8f0d47a71",
+  "provenance": "ai-executed",
+  "existing_mechanics_tests": {
+    "command": "OMP_NUM_THREADS=2 MKL_NUM_THREADS=2 .venv/bin/python -m pytest tests/test_spatial_vae.py::test_shuffle_and_coupling_are_invertible_without_calling_projection_lossless tests/test_spatial_vae.py::test_checkpoint_has_strict_architecture_and_exact_outputs -q",
+    "passed": 2,
+    "exit_code": 0,
+    "scope": "Existing randomized float64 coupling roundtrip and reversible-checkpoint reload only; no learning noninferiority claim."
+  },
+  "upstream_gaussian_sanity": {
+    "source_sha": "5cfef9a20fae810e716573c7b07b8a504d98d6ad",
+    "source_file": "multimodal_compare/models/mmvae_base.py",
+    "source_sha256": "a90618f93a7a2095e6662089f3ce316d07f1631d67559f69941d706e9eea6750",
+    "scope": "Only inspected product_of_experts function executed via AST; upstream package not imported or installed. Two unit-Gaussian experts, no prior, documented log-variance inputs zero.",
+    "helper_mean": 0.0,
+    "helper_second": 0.500000005,
+    "caller_Normal_variance": 0.25000000499999997,
+    "correct_product_variance": 0.5,
+    "correct_product_standard_deviation": 0.7071067811865476,
+    "finding": "Helper returns variance as second result, caller uses it as standard deviation; separate encoder input convention also needs reconciliation."
+  },
+  "review_receipts": "runs/reviews/invertible-filter-choice-20260918/",
+  "limits": [
+    "No new hierarchy implemented or trained.",
+    "Existing mechanics and isolated upstream arithmetic do not establish learning noninferiority.",
+    "No historical benchmark reproduction or empirical ranking claim."
+  ]
+}

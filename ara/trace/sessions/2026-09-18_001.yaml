@@ -2,14 +2,13 @@ session:
   id: 2026-09-18_001
   date: '2026-09-18'
   started: 2026-09-18T00:12+02:00
-  last_turn: 2026-09-18T00:34+02:00
-  turn_count: 2
-  summary: Residual correction and specialist/PCA alternative examined with actual Claude. Distinguished
-    expressivity/information, magnitude/capacity, aligned parameter PCA versus feature PCA, exact full
-    weight deltas and compact residual approximation. Joint equal-task direction remains primary; no model,
-    training, PCA fit or efficacy promotion. User now specifies repeated modality scales with learnable
-    filter banks, post-processing then compression, and generic transformer-loop consumers. Design/interface
-    clarified; export points and exact preservation mechanisms remain open. No model or training change.
+  last_turn: 2026-09-18T00:55+02:00
+  turn_count: 3
+  summary: Residual/PCA alternatives remain open. User specifies learnable multiscale filter banks and
+    generic loop-transformer consumers, now explicitly accepting export after post-processing/before compression.
+    Invertibility is conditional on learning quality; additive coupling is a working candidate. Linked
+    multimodal VAE toolkit assessed for benchmarks/downstream fusion; isolated variance/scale mismatch
+    reproduced. No new model or training.
 events_logged:
 - turn: 1
   type: question
@@ -70,6 +69,57 @@ events_logged:
     read-only common source features. Full-token loops and bounded-query cross-attention remain alternatives;
     declare initial state, widths, missing-modality behavior, per-token availability, consumer training
     policy and resource caps. Generic modules need not all be differentiable or media decoders.
+- turn: 3
+  type: decision
+  id: N500
+  routing: direct
+  provenance: user
+  summary: Export every processed scale before compression; conditional invertibility preference
+- turn: 3
+  type: question
+  id: N501
+  routing: direct
+  provenance: user
+  summary: Is multimodal-vae-comparison useful for the intended hierarchy?
+- turn: 3
+  type: experiment
+  id: N502
+  routing: direct
+  provenance: ai-executed
+  summary: Existing reversible mechanics and isolated upstream Gaussian parameter sanity
+- turn: 3
+  type: observation
+  id: O336
+  routing: staged
+  provenance: user-revised
+  summary: Retain each scale immediately after post-processing, before compression, in the shared multiscale
+    interface. This affirms only the export-position part of O334; user conditional invertibility preference
+    does not affirm a particular coupling construction or learning efficacy.
+- turn: 3
+  type: observation
+  id: O337
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Use deterministic additive coupling as the first invertible learned B/P candidate: ordinary
+    filter subnets need not invert, but the whole paired state must be retained. Analytic inversion is
+    separate from numerical conditioning and per-consumer learning quality. Compare unconstrained and
+    separately costed protected-input alternatives under declared quality/resource gates.'
+- turn: 3
+  type: observation
+  id: O338
+  routing: staged
+  provenance: ai-suggested
+  summary: Use CdSprites+ controlled attribute/readout/cross-modal tests first; keep PoE/MoE/MoPoE and
+    modality-private latents as optional downstream fusion references. Do not require every consumer to
+    pass through a stochastic bottleneck. Audit the pinned implementation parameter contract before reuse;
+    benchmark usefulness does not validate broad semantics or the invertible stage.
+- turn: 3
+  type: architecture
+  id: A23
+  routing: crystallized
+  provenance: user-revised
+  summary: O336 export position crystallized via explicit user affirmation; no promotion of the complete
+    O334 bundle or coupling efficacy.
 ai_actions:
 - turn: 1
   action: Checked public Git Re-Basin, ZipIt and Model Soups sources; obtained tools-disabled actual-Claude
@@ -105,6 +155,22 @@ ai_actions:
   - docs/architecture-atlas.md
   - docs/architecture-atlas.html
   - docs/architecture-discussion.md
+- turn: 3
+  action: Read RevNet/i-RevNet primary sources and pinned public toolkit files. Reconciled actual-Claude
+    methodological overstatements. Confirmed existing v1 coupling/checkpoint mechanics (2 checks) and
+    isolated upstream Gaussian arithmetic. Updated design, source assessment, handoffs/state and16 atlas
+    graphs;257 local links pass; topology/status/validation unchanged.
+  provenance: ai-executed
+  files_changed:
+  - docs/multiscale-modality-design.md
+  - docs/multimodal-vae-reference.md
+  - docs/project-state.md
+  - docs/session-handoff.md
+  - docs/visual-adapter-handoff.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.md
+  - docs/architecture-atlas.html
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -116,6 +182,10 @@ key_context:
     repeated scales, then multiscale features to arbitrary modules using transformer loops and own layers.
     Follow-up corrections: I meant filter bank; I meant learnable feature extractors; so the filters should
     be learnable.'
+- turn: 3
+  excerpt: 'User: yes export immediately after post-processing, before compression; if the invertible
+    construction does not hinder learning abilities let us use this. Also asks if gabinsane/multimodal-vae-comparison
+    is useful.'
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -123,9 +193,11 @@ open_threads:
   low-rank capacity and quality/cost gates before any experiment.'
 - Unresolved prior visual, video, categorical-agent and World State work remains in 2026-09-17_001 and
   referenced plans; this discussion does not abandon it.
-- 'N499: select concrete learnable filters, B/P preservation requirement, scale export/compression budgets
-  and generic consumer loop/readout contract before implementation. Residual/PCA studies are optional
-  within this broader input architecture; equal-status joint training remains compatible.'
+- 'N499/N500: export after P/before C is accepted. Select modality, learned coupling shape/depth, precision/tolerance,
+  scale/compression budgets and consumer tasks. Learning noninferiority remains open; equal-status joint
+  training remains compatible.'
+- 'N501/N502: toolkit relevance answered; benchmark choice, any downstream fusion and parameter-contract
+  repair remain unselected future work.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -133,6 +205,6 @@ ai_suggestions_pending:
   interpretation and proposed comparison; no empirical or adoption closure.
 - Earlier pending interpretations and proposals remain referenced by the prior session; no topic abandonment
   inferred.
-- O334/O335 are assistant implementation proposals, not user-selected export/invertibility/attention choices.
-  N499 requires learnable filters; no fixed-filter substitution. Earlier residual/PCA proposals remain
-  unvalidated rather than silently rejected.
+- O334 export-position subpart is explicitly affirmed as O336/A23; its metadata/preservation details and
+  O335 consumer choices remain proposals. O337 coupling and O338 benchmark/fusion use are unvalidated
+  suggestions, not user-approved efficacy or selected runs.

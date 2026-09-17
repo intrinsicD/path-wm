@@ -258,13 +258,12 @@ sessions:
   open_threads: 52
 - id: 2026-09-18_001
   date: '2026-09-18'
-  summary: Residual correction and specialist/PCA alternative examined with actual Claude. Distinguished
-    expressivity/information, magnitude/capacity, aligned parameter PCA versus feature PCA, exact full
-    weight deltas and compact residual approximation. Joint equal-task direction remains primary; no model,
-    training, PCA fit or efficacy promotion. User now specifies repeated modality scales with learnable
-    filter banks, post-processing then compression, and generic transformer-loop consumers. Design/interface
-    clarified; export points and exact preservation mechanisms remain open. No model or training change.
-  turn_count: 2
-  events_count: 7
+  summary: Residual/PCA alternatives remain open. User specifies learnable multiscale filter banks and
+    generic loop-transformer consumers, now explicitly accepting export after post-processing/before compression.
+    Invertibility is conditional on learning quality; additive coupling is a working candidate. Linked
+    multimodal VAE toolkit assessed for benchmarks/downstream fusion; isolated variance/scale mismatch
+    reproduced. No new model or training.
+  turn_count: 3
+  events_count: 14
   claims_touched: []
-  open_threads: 4
+  open_threads: 5

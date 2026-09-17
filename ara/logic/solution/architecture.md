@@ -223,3 +223,12 @@
 - **Adoption/implementation**: N488; user accepts the proposed expansion. Implemented f50db67; [recorder](../../../pathwm/evaluation/explorer.py), [system UI](../../../pathwm/evaluation/explorer-system.js), [recipe](../../../experiments/world_state.py), [guide](../../../docs/model-explorer.md).
 - **Verification**: N489; [source-bound engineering evidence](../../evidence/tables/model_explorer_system_2026-09-17.json). Main inference agent and frozen training-only EMA teacher roles are explicit; the inspection performs no optimizer or EMA update.
 - **Limits**: Fresh seed42 diagnostic weights and synthetic store, not trained/personal knowledge. Runtime calls do not assert tensor or gradient edges. Existing optional interfaces and unexecuted input-dependent branches remain scoped. No new model integration, learning efficacy or scientific validation promotion.
+
+## A23: Export processed scale features before compression
+
+- **Design**: Each modality scale emits its processed features immediately after post-processing and before the compression that feeds the next scale. Retain these scale outputs for the shared multiscale consumer interface.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O336; isolates the explicitly affirmed export-position part of O334.
+- **Adoption**: N500; [design](../../../docs/multiscale-modality-design.md), user: “yes export immediately after post-processing, before compression.”
+- **Limits**: Interface decision only. No new implementation, compact total-output guarantee or learning result. Invertibility remains conditional on learning quality; O337's particular construction and O335's consumer details are not promoted by this affirmation.

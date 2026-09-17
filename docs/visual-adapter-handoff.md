@@ -14,12 +14,18 @@ representation shared with arbitrary downstream modules. Every module uses a
 transformer loop followed by its own layers. Filters are explicitly learnable;
 do not substitute a fixed filter bank or persistent feature-slot memory.
 
-The design recommends pre-compression scale exports and documents strict versus
-measured preservation, modality/time/geometry metadata and consumer loop choices.
-Those details remain proposals where the user has not selected them. Joint/equal
+Alex accepts exports immediately after post-processing, before compression, and
+prefers invertibility if it does not hinder learning. Additive coupling with
+learnable filter subnets is the working candidate, with the learning-quality
+condition still unresolved. The design documents the analytic inverse, numerical
+and capacity limits, modality/time/geometry metadata and consumer loop choices.
+Other details remain proposals where the user has not selected them. Joint/equal
 training remains compatible; a separate residual per application is no longer
 the starting requirement for describing the input path. Readout/PCA options below
-are background. No new model or training run was created.
+are background. No new model or training run was created. The user-linked
+[multimodal VAE toolkit assessment](multimodal-vae-reference.md) recommends controlled
+benchmark ideas and optional downstream fusion; it does not select a VAE bottleneck
+or substitute modality-private latents for application residuals.
 
 ## Latest user direction — takes precedence over the old phase order
 

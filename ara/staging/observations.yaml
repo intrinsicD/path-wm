@@ -5857,3 +5857,53 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O336
+  timestamp: 2026-09-18T00:55+02:00
+  provenance: user-revised
+  content: Retain each scale immediately after post-processing, before compression, in the shared multiscale
+    interface. This affirms only the export-position part of O334; user conditional invertibility preference
+    does not affirm a particular coupling construction or learning efficacy.
+  context: 'N500/N501 follow-up: explicit export acceptance, conditional invertibility and user-linked
+    multimodal VAE reference. Actual Claude public-only review/corrections; no new model or training.'
+  potential_type: architecture
+  bound_to:
+  - N499
+  - N500
+  promoted: true
+  promoted_to: logic/solution/architecture.md:A23
+  crystallized_via: verbal-affirmation
+  stale: false
+- id: O337
+  timestamp: 2026-09-18T00:55+02:00
+  provenance: ai-suggested
+  content: 'Use deterministic additive coupling as the first invertible learned B/P candidate: ordinary
+    filter subnets need not invert, but the whole paired state must be retained. Analytic inversion is
+    separate from numerical conditioning and per-consumer learning quality. Compare unconstrained and
+    separately costed protected-input alternatives under declared quality/resource gates.'
+  context: 'N500/N501 follow-up: explicit export acceptance, conditional invertibility and user-linked
+    multimodal VAE reference. Actual Claude public-only review/corrections; no new model or training.'
+  potential_type: architecture
+  bound_to:
+  - N500
+  - N502
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O338
+  timestamp: 2026-09-18T00:55+02:00
+  provenance: ai-suggested
+  content: Use CdSprites+ controlled attribute/readout/cross-modal tests first; keep PoE/MoE/MoPoE and
+    modality-private latents as optional downstream fusion references. Do not require every consumer to
+    pass through a stochastic bottleneck. Audit the pinned implementation parameter contract before reuse;
+    benchmark usefulness does not validate broad semantics or the invertible stage.
+  context: 'N500/N501 follow-up: explicit export acceptance, conditional invertibility and user-linked
+    multimodal VAE reference. Actual Claude public-only review/corrections; no new model or training.'
+  potential_type: heuristic
+  bound_to:
+  - N501
+  - N502
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

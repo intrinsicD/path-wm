@@ -1,6 +1,8 @@
 # Multiscale modality encoders and generic loop-transformer consumers
 
 Design direction clarified by Alex, 18 September 2026; source baseline `50bfc3d`.
+Follow-up to `6e08421`: Alex accepts export immediately after post-processing,
+before compression, and prefers invertibility if it does not hinder learning.
 This specifies a shared interface, not an implemented model or validated result.
 It takes priority over treating input design as a choice among visual residual
 adapters. The [adapter/PCA discussion](visual-adapter-design.md) remains relevant
@@ -26,9 +28,13 @@ compatible: all selected consumers train the shared upstream features, while the
 own loop/readout/output weights specialize. The exact tasks, widths, number of
 scales, loss definitions and training budget remain unselected.
 
+The export position is now a user decision: retain each scale immediately after
+post-processing and **before compression**. Invertibility is a conditional user
+preference. Additive coupling is the working construction proposed below; its
+learning-quality condition has not been established for the intended consumers.
+
 Engineering proposals, distinct from the user's explicit requirements:
 
-- Export each processed scale **before** its compression into the next scale.
 - Treat the output as a structured collection of grids/tokens with metadata;
   flattening is allowed, but a single pooled vector is not required.
 - Share each consumer's transformer weights across its loop iterations; keep
@@ -61,16 +67,18 @@ x[m,s+1] → repeat at the next scale
 ```
 
 `R` can be identity at the first scale or a reversible grouping that changes grid
-shape without dropping values. `B` applies trainable spatial, temporal or other
-modality-appropriate filters and retains the responses as channels/maps. A simple
-candidate is a learned convolution bank without an implicit reducing stride;
-kernel support, channel mixing and filter count remain explicit choices. These
-filters are trained parameters, not a fixed wavelet/DCT bank or stored templates.
+shape without dropping values. `B` uses trainable spatial, temporal or other
+modality-appropriate filters. The working invertible construction retains their
+effects in a complete paired state (section 3.1); it does not export only a
+potentially lossy bank response. Kernel support, channel mixing and filter count
+remain explicit choices. These filters are trained parameters, not a fixed
+wavelet/DCT bank or stored templates.
 They need not be dynamically generated separately for every input; dynamic filters
 would be another design choice. `P` then learns to mix/refine the responses before
 `C`. No hand-coded semantic channels or fixed frequency partition is prescribed.
 
-For a convolutional example, `B_s(u) = concat(K_(s,1)*u, ..., K_(s,q)*u)`;
+For the unconstrained convolutional bank inside a coupling subnet,
+`bank_s(u) = concat(K_(s,1)*u, ..., K_(s,q)*u)`;
 the `K` tensors are optimized during training and their responses depend on the
 input. The bank can be represented by one ordinary multi-output convolution where
 kernel shapes agree; separate branch objects are not required. Filters are shared
@@ -80,19 +88,19 @@ modalities may have distinct banks; sharing their weights is a separate choice.
 Learnability and invertibility are compatible, but an arbitrary learned convolution
 bank is not automatically injective. A constrained learned analysis/synthesis bank
 can be reconstructible; all bands, sampling, padding and boundaries belong to that
-contract. The requested learned filters do not by themselves select an invertible
-parameterization or assert that `P` preserves information.
+contract. Learnable filters alone do not make `P` invertible; the proposed coupling
+envelope must cover both named processing stages.
 
 `C` is the named information-budget choice for the next scale, such as a channel
 projection or token reduction. It is not necessary to run a final `C` with no
 consumer: the last processed scale may be emitted directly, or a separately
 declared compact terminal code can be produced if some module needs it.
 
-The proposed shared representation is
+The proposed structured form of the accepted pre-compression representation is
 `F = {(f[m,s], metadata[m,s]) for each available modality and scale}`.
 Fine evidence remains accessible even if the path feeding coarser scales drops
-it. Exporting only post-compression outputs is a smaller alternative interface;
-it should be evaluated as a different information budget, not called equivalent.
+it. Exporting only post-compression outputs would change the accepted interface
+and its information budget.
 
 Retaining all pre-compression tensors costs activation memory/bandwidth. In
 particular, if the finest exported tensor retains the complete rearranged input,
@@ -109,8 +117,8 @@ normalization is not automatically injective. Adding a residual can erase its
 input; `x + (-x)` is a simple counterexample. A filter bank that replaces the
 input can also lose information despite expanding its channel count.
 
-If strict preservation **through B and P up to C** is required, two explicit
-options are available:
+To support the user's conditional preference for preservation **through B and P
+up to C**, two explicit options are available:
 
 1. Use a complete reconstructible **learnable** filter bank and suitable invertible
    post-processing, and verify the inverse
@@ -120,9 +128,9 @@ options are available:
    recovers the stage input. Mixing or normalizing away that protected path would
    remove this guarantee; an ordinary summed residual is not the same contract.
 
-The second is a simple construction to discuss, not an adopted extra raw-input
-branch. It may be costly. Without either construction, B/P preservation is a
-measured learning goal, while only R has the structural guarantee. Preservation
+The first is the working candidate; the second is a separately costed comparison
+or fallback, not an adopted extra raw-input branch. Without either construction,
+B/P preservation is a measured learning goal, while only R has the structural guarantee. Preservation
 of the available stage input does not undo information lost by an earlier `C`.
 Constraints supporting invertibility must remain valid as the filters learn;
 small reconstruction error on examples alone does not establish that guarantee.
@@ -143,6 +151,71 @@ lossless coding are different cases. Tensor count is not encoded bitrate.
 These are structural candidates, not a claim that each modality should use the
 same filters or has been implemented. A spatial scale, a temporal scale and a
 sequence grouping are distinct and belong in metadata.
+
+### 3.1 Working candidate: learnable additive coupling
+
+Split the prepared state into two nonempty parts `(a, b)`. One coupling block is:
+
+```text
+forward:  u = a + f(b)       v = b + g(u)       output = concat(u, v)
+inverse:  b = v - g(u)       a = u - f(b)
+```
+
+`f` and `g` contain ordinary learnable filter banks and nonlinear processing;
+they do not themselves have to be invertible. Their output shapes must match the
+parts they update. Both parts are retained. Do not replace the complete state
+with `f(b)`/`g(u)` alone, or follow it with an unconstrained lossy post-processor
+before the export. Implement B and P as coupling blocks, or explicitly specify a
+jointly invertible B/P composite. Fixed permutations between blocks can vary the
+partitions; their order and inverse belong to the construction.
+
+This allows filters to change freely during gradient training without requiring
+each convolution/nonlinearity to have its own inverse. In exact arithmetic the
+inverse exists at every finite parameter setting; no contraction constraint on
+f/g is needed for this algebraic inverse. It preserves the available evidence for
+different consumers even when no consumer explicitly reconstructs the input.
+The consumer can learn to ignore nuisance information; C and downstream layers
+may discard it deliberately. No density objective or KL term follows from this.
+
+**It does constrain the overall function.** A same-dimensional invertible stage
+cannot merge distinct inputs. Additive couplings and permutations have absolute
+Jacobian determinant one where differentiable, so this particular family preserves
+volume. Their subnetworks remain expressive, but that is not a proof that the
+complete architecture learns every task as easily as unconstrained processing.
+Keeping nuisance information can require more useful-feature capacity or consumer
+work. Affine coupling or invertible channel scaling are possible later alternatives
+if the volume restriction matters; they are not selected additions.
+
+[RevNet](https://arxiv.org/abs/1707.04585) and
+[i-RevNet](https://arxiv.org/abs/1802.07088) demonstrate useful learned reversible
+representations on image-classification workloads. They support feasibility,
+not no-regression for this multimodal hierarchy or unspecified applications.
+
+Finite precision is a separate contract. Large updates and ill-conditioned stacks
+can amplify rounding/cancellation error even with determinant one. Use deterministic
+subnets and saved parameters/state; initially omit dropout and mutable batch-statistic
+dependencies. Define full-stack roundtrip tolerances at working precision, including
+depth, masks, padding, representative inputs and stress cases. Inspect activation
+and inverse-error growth; Jacobian conditioning probes can diagnose failures.
+Floating-point coupling is not a bit-exact codec. LayerNorm, arbitrary activations
+or projections on the complete exported state cannot be assumed invertible.
+
+The construction retains the state's scalar count, although R can trade spatial
+resolution for channels. Extra subnet hidden width costs compute/activations, and
+F retains every emitted scale. An explicit reversible-backward implementation may
+save internal activations; ordinary autograd does not do that automatically, and
+neither approach removes the retained-export cost.
+
+**Scoped acceptance remains open.** Compare coupling against unconstrained learned
+processing with identical export points and consumer information access; include
+the protected-input alternative when testing preservation at a different width.
+Declare per-task noninferiority margins, equal task exposure/loss normalization,
+parameters, retained bytes and compute budgets before running the comparison.
+Measure per-task quality and convergence, variability across seeds, resource use
+and full-stack inverse error. Passing an aggregate loss or a roundtrip test is
+insufficient. A failure reopens construction/width/consumer choices; it does not
+silently move the export or waive preservation. Concrete tasks and numerical
+margins are not selected by this design discussion.
 
 ## 4. Generic consumer: transformer loop, then its own layers
 
@@ -248,6 +321,7 @@ capture/preprocessing losses and any stem precede or alter that reference explic
 
 | Existing component | Relevant part | Gap to this proposal |
 | --- | --- | --- |
+| [Spatial VAE v1 ReversibleMixer](../pathwm/models/spatial_vae.py) | Already implements additive coupling with trainable convolution/SiLU subnets and an explicit inverse | Candidate building block only; surrounding attention/projections/posterior are not all invertible, and the requested differentiable multiscale interface is absent |
 | [Spatial VAE v2](../pathwm/models/spatial_vae_v2.py) | Separate rearrangement, local processing, optional mixing and compression | Image codec only; no explicit bank as specified here, no strict B/P invertibility; inspection snapshots are detached rather than trainable multiscale exports |
 | [FeatureHierarchy](../pathwm/models/multiscale.py) | Processed scales, grids, validity/time support, optional fusion and all-scale output | Merges use lossy masked averaging plus optional attention; input stems/processing do not implement the proposed preservation contract |
 | [Feature utilities](../pathwm/models/features.py) | Named grids, explicit projections and tensor/token conversion | Does not by itself carry every multimodal/time/provenance field or guarantee injective projections |
@@ -266,6 +340,18 @@ to define this input interface. PCA of specialist weights is likewise an optiona
 initialization/compression investigation. This input hierarchy is not inherently
 a VAE: posterior/sampling/KL and reconstruction become explicit optional choices.
 
+The existing randomized float64 coupling roundtrip and reversible-checkpoint
+reload tests were rerun on 18 September: **2 passed**. They validate those existing
+mechanics only. The earlier [v1 pilot](spatial-vae-plan.md) included learned
+reversible processing, but its single-seed codec comparison missed its declared
+incremental-gain screen and does not answer the new per-consumer learning question.
+No model code, new training run or default changes in this follow-up.
+
+Alex's linked multimodal VAE toolkit is assessed in
+[multimodal-vae-reference.md](multimodal-vae-reference.md): useful for controlled
+cross-modal tests and optional downstream probabilistic fusion. It does not select
+the invertible stage or require a shared stochastic bottleneck in this interface.
+
 ## 7. Review record and open decisions
 
 Actual Claude reviewed generic public methodology and a correction round, with
@@ -283,8 +369,23 @@ query states; this document keeps both full-token and bounded-query loops open
 because output information needs and resource budgets differ. A small private
 state is not imposed on every unspecified module.
 
-Still to select: modality-specific learned filter shapes/counts, whether B/P must
-be strictly reconstructible, pre- versus post-compression exports, scale widths,
+Follow-up review and reconciliation are saved in
+`runs/reviews/invertible-filter-choice-20260918/`. Export after P/before C is now
+accepted by Alex; additive coupling is a working candidate under the unresolved
+learning-quality condition. Claude withdrew overstatements about orientation,
+Jacobian triangularity, conditioning, reversible memory savings, initialization
+and automatically abandoning preservation after a failed comparison. Its preference
+for a protected-input default and stronger conditioning diagnostics remains a
+proposal; this document keeps coupling as the first candidate and a separately
+costed protected-input comparator. Peer agreement is not task-quality evidence.
+The final correction distinguishes mixture fusion from conditional independence
+and separate modalities from correlated scales of one observation. The remaining
+dimension/inverse concerns are addressed by the analytic coupling inverse and
+scoping preservation to each pre-C branch; a downstream dimension-reducing fused
+latent is explicitly lossy. The source assessment records the toolkit's limits.
+
+Still to select: modality-specific learned filter shapes/counts, B/P block counts
+and partitions, working precision/inverse tolerances, scale widths,
 consumer read mode/initial state/iterations, concrete tasks and quality/resource
 gates. No code, training, fixed-filter adoption or capability validation follows
 from this discussion or reviewer agreement.
