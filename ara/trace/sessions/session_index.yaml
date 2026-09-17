@@ -261,8 +261,10 @@ sessions:
   summary: Residual correction and specialist/PCA alternative examined with actual Claude. Distinguished
     expressivity/information, magnitude/capacity, aligned parameter PCA versus feature PCA, exact full
     weight deltas and compact residual approximation. Joint equal-task direction remains primary; no model,
-    training, PCA fit or efficacy promotion.
-  turn_count: 1
-  events_count: 4
+    training, PCA fit or efficacy promotion. User now specifies repeated modality scales with learnable
+    filter banks, post-processing then compression, and generic transformer-loop consumers. Design/interface
+    clarified; export points and exact preservation mechanisms remain open. No model or training change.
+  turn_count: 2
+  events_count: 7
   claims_touched: []
-  open_threads: 3
+  open_threads: 4

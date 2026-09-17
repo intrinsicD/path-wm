@@ -8303,3 +8303,26 @@ tree:
   - N496
   - N497
   status: open
+- id: N499
+  type: decision
+  title: Use repeated modality scales with learnable filter banks and generic loop-transformer consumers
+  provenance: user
+  timestamp: 2026-09-18T00:34+02:00
+  choice: User specifies per-scale information-preserving operations, filter bank, post-processing and
+    only then compression, repeated a few scales, with a shared multiscale representation. Each arbitrary
+    downstream module applies a transformer loop then its own layers. User corrects feature bank to filter
+    bank and explicitly requires learnable feature extractors/filters. This is an architecture direction,
+    not implemented or empirically validated.
+  alternatives:
+  - Reduce the input architecture to per-application residual heads or a single VAE latent
+  - Interpret bank as persistent learned read/write feature slots
+  - Use fixed handcrafted filters as the requested filter bank
+  evidence:
+  - docs/multiscale-modality-design.md
+  - docs/visual-adapter-handoff.md
+  - runs/reviews/multiscale-modality-contract-20260918/summary.json
+  also_depends_on:
+  - N496
+  - N497
+  - N498
+  status: resolved

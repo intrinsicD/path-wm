@@ -2533,3 +2533,14 @@ entries:
     probing their limits. Prior topics remain referenced, so no automatic stale or abandonment transition.
   - Claude initial overstatements were withdrawn and recorded; they were not adopted ARA claims, so no
     artificial contradiction node is needed. No code, default, checkpoint or validation changes.
+- turn: 2026-09-18_001#2
+  notes:
+  - 'N499 records the user architecture direction and corrections: filter bank, with learnable filters,
+    generic consumers. Do not reduce this back to VAE/task-head examples or retain fixed-filter ambiguity.'
+  - O334/O335 stage pre-compression export, strict preservation mechanisms and consumer read/loop details;
+    user did not select these or a run budget. No efficacy claim crystallized.
+  - Earlier joint equal-status preference remains compatible. Residual/PCA proposals are secondary options
+    within the broader interface; no empirical contradiction or topic abandonment is inferred.
+  - Reviewer initial fixed/learned alternatives preceded final user requirement. Receipt clarification
+    records this; mathematical preservation limits still apply. No model topology, defaults, checkpoints
+    or validation promotion.

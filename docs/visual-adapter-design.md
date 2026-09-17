@@ -2,7 +2,15 @@
 
 Design proposal · updated 18 September 2026 · continued from `2beb97f` / `95a239a`.
 
-Alex's latest preference is **one trainable shared base plus per-application
+**Current architecture direction:** [multiscale modality encoders and generic
+loop-transformer consumers](multiscale-modality-design.md). Alex now specifies
+repeated information-preserving preparation, **learnable filter banks**,
+post-processing and compression, followed by a multiscale interface. Each generic
+consumer applies its transformer loop and then its own layers. The residual/PCA
+choices below are optional investigations within that broader design, not a
+required input architecture or a fixed list of consumers.
+
+The preceding adapter discussion established **one trainable shared base plus per-application
 residuals, trained jointly from the start, with equal status for every application**.
 The open choice is feature residuals, weight residuals, or both at multiple scales.
 This supersedes the original requirement to complete per-task frozen/unfrozen

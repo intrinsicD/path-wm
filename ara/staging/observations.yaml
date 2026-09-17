@@ -5824,3 +5824,36 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O334
+  timestamp: 2026-09-18T00:34+02:00
+  provenance: ai-suggested
+  content: Propose exporting processed per-scale features before compression into the next scale, retaining
+    native geometry/time/modality metadata. This preserves access to earlier evidence but can retain the
+    full input bandwidth. Strict preservation through a learnable filter bank and post-processing requires
+    maintained invertible structure or an unchanged input route; no such mechanism or export point is
+    yet selected.
+  context: N499 modality-input clarification, including explicit learnable-filter correction; actual-Claude
+    public review and correction round. No model implementation/training.
+  potential_type: architecture
+  bound_to:
+  - N499
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O335
+  timestamp: 2026-09-18T00:34+02:00
+  provenance: ai-suggested
+  content: Propose per-consumer loop weights reused across finite iterations, private module state and
+    read-only common source features. Full-token loops and bounded-query cross-attention remain alternatives;
+    declare initial state, widths, missing-modality behavior, per-token availability, consumer training
+    policy and resource caps. Generic modules need not all be differentiable or media decoders.
+  context: N499 modality-input clarification, including explicit learnable-filter correction; actual-Claude
+    public review and correction round. No model implementation/training.
+  potential_type: heuristic
+  bound_to:
+  - N499
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

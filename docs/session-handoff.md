@@ -4,7 +4,18 @@ Updated 18 September 2026. Repository `/home/alex/Documents/path-wm`, branch `ma
 Read `CLAUDE.md`, `docs/experiment-workflow.md`, this handoff and the current plan.
 Preserve completed experiments; do not restart the research from scratch.
 
-## Latest requested continuation: visual residual adapters
+## Latest requested continuation: multiscale modality input architecture
+
+Start with [multiscale-modality-design.md](multiscale-modality-design.md). Alex
+specifies information-preserving operations → **learnable filter bank** →
+post-processing → compression at each scale, then a shared multiscale feature
+representation. Each arbitrary consumer runs a transformer loop and then its own
+layers. This is a general input/consumer interface, not just VAE/task heads.
+Filters must be learnable; pre-compression exports and exact preservation through
+learned processing are still design choices. Joint equal-status training remains
+the earlier preference. No implementation or training; preserve existing findings.
+
+## Background: visual residual adapters
 
 Start with the focused [visual-adapter handoff](visual-adapter-handoff.md) and
 [design](visual-adapter-design.md), continued from2beb97f. Alex now wants one shared

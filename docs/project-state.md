@@ -1,5 +1,17 @@
 # Current work
 
+**Input architecture clarified, 18 September:**
+[multiscale modality design](multiscale-modality-design.md).
+Alex specifies per-scale information-preserving operations → **learnable filter
+bank** → post-processing → compression, repeated across scales. A shared multiscale
+representation feeds arbitrary consumers, each with its own transformer loop and
+module-specific layers. “Filter bank” and learnable filters are explicit user
+corrections. Pre-compression exports and strict B/P preservation mechanisms are
+proposals/open choices, not inferred commitments. Generic consumers are not
+restricted to the previous application-head/VAE examples; residual/PCA options
+remain secondary. Existing hierarchy/readout components audited; no model or
+training change. Actual Claude public-methods critique/reconciliation recorded.
+
 **Residual correction and specialist/PCA alternative, 18 September:**
 [design §10](visual-adapter-design.md#10-residual-correction-and-specialistpca-decomposition).
 User asks about reliable correction, residual magnitude, independent application

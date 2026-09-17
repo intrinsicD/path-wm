@@ -2,12 +2,14 @@ session:
   id: 2026-09-18_001
   date: '2026-09-18'
   started: 2026-09-18T00:12+02:00
-  last_turn: 2026-09-18T00:12+02:00
-  turn_count: 1
+  last_turn: 2026-09-18T00:34+02:00
+  turn_count: 2
   summary: Residual correction and specialist/PCA alternative examined with actual Claude. Distinguished
     expressivity/information, magnitude/capacity, aligned parameter PCA versus feature PCA, exact full
     weight deltas and compact residual approximation. Joint equal-task direction remains primary; no model,
-    training, PCA fit or efficacy promotion.
+    training, PCA fit or efficacy promotion. User now specifies repeated modality scales with learnable
+    filter banks, post-processing then compression, and generic transformer-loop consumers. Design/interface
+    clarified; export points and exact preservation mechanisms remain open. No model or training change.
 events_logged:
 - turn: 1
   type: question
@@ -43,6 +45,31 @@ events_logged:
     storage/multitask compute. Compare frozen versus joint recovery without changing residual class or
     initialization simultaneously; equal-status teacher distillation is another candidate. Preserve direct
     joint learning as a comparator.
+- turn: 2
+  type: decision
+  id: N499
+  routing: direct
+  provenance: user
+  summary: Use repeated modality scales with learnable filter banks and generic loop-transformer consumers
+- turn: 2
+  type: observation
+  id: O334
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose exporting processed per-scale features before compression into the next scale, retaining
+    native geometry/time/modality metadata. This preserves access to earlier evidence but can retain the
+    full input bandwidth. Strict preservation through a learnable filter bank and post-processing requires
+    maintained invertible structure or an unchanged input route; no such mechanism or export point is
+    yet selected.
+- turn: 2
+  type: observation
+  id: O335
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose per-consumer loop weights reused across finite iterations, private module state and
+    read-only common source features. Full-token loops and bounded-query cross-attention remain alternatives;
+    declare initial state, widths, missing-modality behavior, per-token availability, consumer training
+    policy and resource caps. Generic modules need not all be differentiable or media decoders.
 ai_actions:
 - turn: 1
   action: Checked public Git Re-Basin, ZipIt and Model Soups sources; obtained tools-disabled actual-Claude
@@ -60,12 +87,35 @@ ai_actions:
   - docs/architecture-atlas.md
   - docs/architecture-atlas.html
   - docs/architecture-discussion.md
+- turn: 2
+  action: Audited existing spatial R/P/M/C encoder, FeatureHierarchy and recurrent output reader; distinguished
+    existing pieces from requested interface. Asked bank meaning, incorporated subsequent filter-bank
+    and learnable-filter corrections. Actual Claude reviewed generic public methodology and acknowledged
+    corrections; final source requires learned filters. Wrote multiscale modality design and linked prior
+    design/handoffs/state, regenerated16 atlas graphs, checked266 local links and preserved topology/colors/validation.
+    No model code or training.
+  provenance: ai-executed
+  files_changed:
+  - docs/multiscale-modality-design.md
+  - docs/visual-adapter-design.md
+  - docs/visual-adapter-handoff.md
+  - docs/project-state.md
+  - docs/session-handoff.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.md
+  - docs/architecture-atlas.html
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
   excerpt: 'User asks: can residual reliably correct wrong features; can they become arbitrarily large;
     train separate equal-architecture VAEs, then PCA for most prominent shared VAE, freeze it and train
     or set residuals?'
+- turn: 2
+  excerpt: 'User: information preserving operations + feature bank + post processing and only then compression,
+    repeated scales, then multiscale features to arbitrary modules using transformer loops and own layers.
+    Follow-up corrections: I meant filter bank; I meant learnable feature extractors; so the filters should
+    be learnable.'
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -73,6 +123,9 @@ open_threads:
   low-rank capacity and quality/cost gates before any experiment.'
 - Unresolved prior visual, video, categorical-agent and World State work remains in 2026-09-17_001 and
   referenced plans; this discussion does not abandon it.
+- 'N499: select concrete learnable filters, B/P preservation requirement, scale export/compression budgets
+  and generic consumer loop/readout contract before implementation. Residual/PCA studies are optional
+  within this broader input architecture; equal-status joint training remains compatible.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -80,3 +133,6 @@ ai_suggestions_pending:
   interpretation and proposed comparison; no empirical or adoption closure.
 - Earlier pending interpretations and proposals remain referenced by the prior session; no topic abandonment
   inferred.
+- O334/O335 are assistant implementation proposals, not user-selected export/invertibility/attention choices.
+  N499 requires learnable filters; no fixed-filter substitution. Earlier residual/PCA proposals remain
+  unvalidated rather than silently rejected.

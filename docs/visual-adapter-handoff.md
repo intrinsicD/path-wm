@@ -5,6 +5,22 @@ branch `main`. The repeated user hash `2beb97f2beb97f` resolved to that existing
 commit, which was HEAD on resume. This is a design discussion, not a training run.
 Main document: [visual-adapter-design.md](visual-adapter-design.md).
 
+## Current continuation: modality input hierarchy
+
+Read [multiscale-modality-design.md](multiscale-modality-design.md) first. Alex
+specifies information-preserving operations → **learnable filter bank** →
+post-processing → compression per scale, repeated a few times, then a multiscale
+representation shared with arbitrary downstream modules. Every module uses a
+transformer loop followed by its own layers. Filters are explicitly learnable;
+do not substitute a fixed filter bank or persistent feature-slot memory.
+
+The design recommends pre-compression scale exports and documents strict versus
+measured preservation, modality/time/geometry metadata and consumer loop choices.
+Those details remain proposals where the user has not selected them. Joint/equal
+training remains compatible; a separate residual per application is no longer
+the starting requirement for describing the input path. Readout/PCA options below
+are background. No new model or training run was created.
+
 ## Latest user direction — takes precedence over the old phase order
 
 Alex wants to try **one shared trainable base plus residuals per application,
