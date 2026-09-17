@@ -32,6 +32,15 @@ outputs right, ordered columns and obstacle-free arrow routes; all 41 overview
 connections retained. Forward/backward/nested browser checks and 12 focused tests
 pass. The learning study below remains independent.
 
+System scope expanded after user approval: the initial overview now includes the
+World State foundation as a separate actual recipe configuration (452 neural
+modules,111,929 parameters), observed runtime calls, the synthetic knowledge graph,
+complete records and current schemas/interfaces. Agent and training-only EMA
+teacher roles are explicit. Independent audits match every weight/loss/gradient in
+both recipes;27 focused checks and loopback browser QA pass. The fresh graph has
+one entity and zero relations; no trained store is implied. Model/training code and
+scientific status remain unchanged. See the explorer plan for full-suite scope.
+
 **Performance iteration completed, 17 September:** [protocol/results](byte-batch-plan.md),
 [report](../runs/metadata_cache_v1/report.html). Actual Claude reviewed both mechanisms.
 One-transfer byte batching and frozen metadata reuse preserve measured outputs but

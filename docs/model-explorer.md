@@ -14,6 +14,26 @@ The existing architecture atlas keeps those separate records.
 
 ## Explore
 
+- The initial **System overview** links the main learner, its training teacher,
+  and the separate World State foundation recipe. **Knowledge graph** opens the
+  actual synthetic `WorldStore`: entities, components, relations, evidence and
+  event operations. Click records to inspect full values, ownership, provenance,
+  parent links and current dataclass schemas. The complete store exports as JSON.
+- `agent` is the online inference network, optimized during training. `target`
+  is a frozen copy of the same architecture used as an EMA teacher. It produces
+  complete-observation reference beliefs for the online network's partial views.
+  After an optimizer step, `target = decay * target + (1-decay) * agent`; buffers
+  are copied. The main training CLI defaults to decay 0.99. Target parameters
+  receive no gradients and the teacher is not needed for deployed inference.
+- **WorldSession · runtime calls** shows observed Python component calls, with
+  source and call counts on arrows. These arrows are explicitly different from
+  tensor dependencies or gradient paths. Select a neural component to enter its
+  own actual layers and weights; select WorldStore to enter its stored records.
+- **World State · neural layers** captures `experiments/world_state.py`'s actual
+  `FoundationModel` and functional objective, independently of the main learner.
+  Its configuration, weights, freeze rules and gradients remain separate. The
+  record/interface inventory includes optional interfaces without claiming that
+  they ran in this diagnostic.
 - Click a module to descend. Use the breadcrumbs or Back to return. Scroll to
   zoom, drag the background to pan, and use Fit to see the complete current scope.
 - Forward data flow shows actual tensor dependencies aggregated across recorded
@@ -91,7 +111,16 @@ leaves. The generic callback must not mutate its input objects or perform IO.
 The main recipe uses two synthetic instruction episodes, history 2, horizon 1,
 and its existing belief/task losses. It records four modality paths, prediction,
 correction, thinking and task heads. It does **not** exercise every input-dependent
-branch, long-horizon memory eviction, or optional external World State. Unobserved
+branch or long-horizon memory eviction. World State is not attached to this main
+agent: its separate foundation capture uses four synthetic descriptor/property
+pairs and the existing objective. The runtime capture executes its existing
+foundation exercise, then reads its saved session through `WorldSession.think`.
+That read checks that retrieval/context/reasoning leave the store unchanged. All
+stored records are retained, including inactive relations. The fresh seed42 store
+contains one entity and no relations; the viewer reports this rather than creating
+illustrative relationships. The existing exercise's conditional paths may remain
+unexecuted. A main-model checkpoint does not load World State weights or data.
+Unobserved
 modules stay visible. An aggregate module graph can contain cycles because a
 module is reused across different times; inspect individual operations for the
 actual execution DAG. Parameter counts are unique within each module and include
@@ -104,7 +133,8 @@ recipes are not silently combined into this agent. Their own recipes can use
 `write_explorer(snapshot, path)` with explicit construction and objectives.
 
 The recorder targets ordinary CPU PyTorch models and retains intermediate tensors
-while recording, so large real batches can be expensive. The current small agent
-produces approximately 19 MB of standalone HTML in under 10 seconds on the tested
-machine. The live rebuild has a 120-second timeout. There is no silent graph or
+while recording, so large real batches can be expensive. The current small system
+export produces approximately 21 MB of standalone HTML. The live rebuild has a
+120-second timeout, including a 90-second limit on the separate foundation
+capture. Both recipes and the embedded UI are watched. There is no silent graph or
 weight truncation.

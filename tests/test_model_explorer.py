@@ -295,44 +295,86 @@ def test_live_server_rebuilds_source_and_surfaces_failures(tmp_path):
 def test_world_system_keeps_full_records_and_observed_call_direction():
     from pathwm.evaluation.explorer import inspect_world_runtime
     from pathwm.world_state import WorldStore
-    from pathwm.world_state.modules import AssociationBinder, ReplaceUpdater, ContextEncoder
     from pathwm.world_state.retrieval import ExactRetriever, Query
 
     store = WorldStore()
-    tx = store.begin('example', occurred_at=1, available_at=1)
-    left, right = tx.create_entity('left'), tx.create_entity('right')
-    proof = tx.add_evidence('fixture', 'features')
+    tx = store.begin("example", occurred_at=1, available_at=1)
+    left, right = tx.create_entity("left"), tx.create_entity("right")
+    proof = tx.add_evidence("fixture", "features")
     values = torch.arange(20, dtype=torch.float32)
-    tx.put_component(left, 'state', values, space='test', model_version='1', evidence=(proof,))
+    tx.put_component(
+        left, "state", values, space="test", model_version="1", evidence=(proof,)
+    )
+    relation = tx.relate(left, right, "near", evidence=(proof,))
     store.commit(tx)
     retriever = ExactRetriever()
+
     def execute():
         retriever(store, Query(entity_ids=(left,)))
-        return store.snapshot(), {'purpose': 'test'}
+        return store.snapshot(), {"purpose": "test"}
+
     result = inspect_world_runtime(nn.Linear(2, 2), execute)
-    assert result['store']['entities'][0]['id'] == left
-    assert result['store']['components'][0]['values'] == values.tolist()
-    assert result['store']['entities'][1]['id'] == right
-    assert result['store']['evidence'][0]['id'] == proof
-    assert any(e['source'] == 'retrieval' and e['target'] == 'store' for e in result['edges'])
-    assert all(e['kind'] == 'call' for e in result['edges'])
-    assert {'Entity', 'Component', 'Relation', 'Evidence', 'Event'} <= set(result['schemas'])
-    assert result['components']['store']['source']['code']
+    assert result["store"]["entities"][0]["id"] == left
+    assert result["store"]["components"][0]["values"] == values.tolist()
+    assert result["store"]["entities"][1]["id"] == right
+    assert result["store"]["evidence"][0]["id"] == proof
+    link = result["store"]["relations"][0]
+    assert link["id"] == relation and link["source"]["ref"] == left
+    assert link["target"]["ref"] == right and link["evidence"] == [proof]
+    assert any(
+        e["source"] == "retrieval" and e["target"] == "store" for e in result["edges"]
+    )
+    assert all(e["kind"] == "call" for e in result["edges"])
+    assert {"Entity", "Component", "Relation", "Evidence", "Event"} <= set(
+        result["schemas"]
+    )
+    assert result["components"]["store"]["source"]["code"]
 
 
 def test_world_recipe_snapshot_remains_a_separate_actual_model():
     from experiments.world_state import explorer_snapshot, FoundationModel
+
     result = explorer_snapshot(seed=42)
-    data = result['neural']
+    data = result["neural"]
     model = FoundationModel()
-    assert set(data['modules']) == set(dict(model.named_modules(remove_duplicate=False)))
-    assert 'target' not in data['modules']
-    assert data['modules']['agent']['config'] != ''
-    assert result['store']['entities']
-    assert result['runtime']['kind'] == 'synthetic diagnostic session'
-    assert data['metadata']['recipe'] == 'experiments/world_state.py:FoundationModel + objective'
+    assert set(data["modules"]) == set(
+        dict(model.named_modules(remove_duplicate=False))
+    )
+    assert "target" not in data["modules"]
+    assert data["modules"]["agent"]["config"] != ""
+    assert result["store"]["entities"]
+    assert result["runtime"]["kind"] == "synthetic diagnostic session"
+    assert result["runtime"]["diagnostics"]["inspection_read"]["store_unchanged"]
+    calls = {(e["source"], e["target"]) for e in result["edges"]}
+    assert {
+        ("session", "retrieval"),
+        ("session", "context"),
+        ("session", "agent"),
+    } <= calls
+    assert (
+        data["metadata"]["recipe"]
+        == "experiments/world_state.py:FoundationModel + objective"
+    )
 
 
 def test_live_sources_include_world_state_recipe(tmp_path):
     from pathwm.evaluation.explorer import watched_sources
-    assert tmp_path / 'experiments/world_state.py' in watched_sources(tmp_path)
+
+    assert tmp_path / "experiments/world_state.py" in watched_sources(tmp_path)
+    assert tmp_path / "pathwm/evaluation/explorer-system.js" in watched_sources(
+        tmp_path
+    )
+
+
+def test_world_runtime_failure_removes_profiler():
+    import sys
+
+    from pathwm.evaluation.explorer import inspect_world_runtime
+
+    def fail():
+        raise RuntimeError("session failed")
+
+    before = sys.getprofile()
+    with pytest.raises(RuntimeError, match="session failed"):
+        inspect_world_runtime(nn.Linear(2, 2), fail)
+    assert sys.getprofile() is before

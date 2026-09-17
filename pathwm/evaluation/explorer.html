@@ -279,6 +279,92 @@
         background: radial-gradient(#dfe3d9 0.7px, transparent 0.7px);
         background-size: 20px 20px;
       }
+      .system-page {
+        padding: 24px;
+      }
+      .system-page h2 {
+        margin: 0 0 8px;
+        font-size: 21px;
+      }
+      .system-page p {
+        line-height: 1.6;
+        color: var(--muted);
+      }
+      .system-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 18px;
+        margin: 18px 0 26px;
+      }
+      .system-card {
+        text-align: left;
+        padding: 20px;
+        background: #f8faf4;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        cursor: pointer;
+      }
+      .system-card b {
+        display: block;
+        font-size: 18px;
+        margin: 9px 0;
+      }
+      .system-card p {
+        font-size: 12px;
+        margin: 7px 0;
+      }
+      .system-card.graph-card {
+        background: #eaf0df;
+      }
+      .system-card.teacher-card {
+        background: #f0eaf4;
+      }
+      .system-nav {
+        padding-bottom: 14px;
+        margin-bottom: 12px;
+        border-bottom: 1px solid var(--line);
+        display: grid;
+        gap: 5px;
+      }
+      .system-nav button {
+        text-align: left;
+        font-size: 12px;
+      }
+      .system-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      .system-table td,
+      .system-table th {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+      .system-page pre {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        max-height: 480px;
+        overflow: auto;
+        background: #f4f5ee;
+        padding: 14px;
+        border-radius: 8px;
+      }
+      .system-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin: 12px 0;
+      }
+      .store-diagram {
+        height: 410px;
+        min-height: 300px;
+      }
+      .store-diagram svg {
+        width: 100%;
+        height: 100%;
+      }
       .canvas > svg {
         display: block;
         width: 100%;
@@ -829,6 +915,10 @@
         return e;
       };
       let D,
+        bundle,
+        context = "main",
+        systemPage = null,
+        systemSelection = null,
         M,
         P,
         O,
@@ -867,10 +957,24 @@
         inactive: "#e9e9e2",
       };
       function state() {
-        return { scope, mode, selectedTensor, page, opQuery };
+        return {
+          version: 2,
+          context,
+          systemPage,
+          systemSelection,
+          scope,
+          mode,
+          selectedTensor,
+          page,
+          opQuery,
+        };
       }
       function go(next, remember = true) {
         if (remember) history.push(state());
+        if (next.context && next.context !== context)
+          applyContext(next.context);
+        systemPage = next.systemPage ?? null;
+        systemSelection = next.systemSelection ?? null;
         scope = next.scope ?? scope;
         mode = next.mode ?? "forward";
         selectedTensor = next.selectedTensor ?? null;
@@ -892,6 +996,7 @@
       function back() {
         const previous = history.pop();
         if (previous) go(previous, false);
+        else if (systemPage) systemGo("overview");
         else if (
           selectedTensor ||
           ["operations", "autograd", "weights"].includes(mode)
@@ -903,9 +1008,10 @@
         const query = $("search").value.toLowerCase().trim();
         const root = $("tree");
         root.innerHTML = "";
+        systemNavigation(root);
         const button = (path) => {
           const b = document.createElement("button");
-          b.textContent = path === "" ? "Training model" : M[path].name;
+          b.textContent = moduleLabel(path);
           b.title = (path || "root") + " · " + M[path].type;
           b.className = path === scope ? "active" : "";
           b.onclick = () => moduleGo(path);
@@ -957,6 +1063,12 @@
         b.onclick = back;
         b.disabled = !history.length && scope === "" && !selectedTensor;
         c.append(b);
+        if (bundle.system) {
+          const home = document.createElement("button");
+          home.textContent = "System";
+          home.onclick = () => systemGo("overview");
+          c.append(home);
+        }
         const parts = scope ? scope.split(".") : [];
         ["", ...parts.map((_, i) => parts.slice(0, i + 1).join("."))].forEach(
           (p, i) => {
@@ -967,7 +1079,7 @@
               c.append(sep);
             }
             const x = document.createElement("button");
-            x.textContent = p === "" ? "Training model" : M[p].name;
+            x.textContent = moduleLabel(p);
             x.onclick = () => moduleGo(p);
             c.append(x);
           },
@@ -998,6 +1110,20 @@
               "No direct method calls in this execution. A container may still have active children.",
           )}</pre>${m.source ? `<h3>Implementation</h3><p>${esc(m.source.path)}:${m.source.line}</p>${m.source.code ? '<button class="source-button" id="source">Read captured source</button>' : ""}` : ""}<div class="notice">${m.calls ? "Edges summarize this recorded batch across repeated calls. Click a connection for evidence." : "Unobserved does not mean disconnected or unnecessary. This execution may not use this branch."}</div>`;
         if ($("source")) $("source").onclick = () => showSource(m);
+        const roleInfo = D.metadata.roles?.[path.split(".")[0]];
+        if (roleInfo) {
+          const note = document.createElement("div");
+          note.className = "notice";
+          note.innerHTML = `<b>${esc(roleInfo.label)}</b><p>${esc(roleInfo.description)}</p>${roleInfo.formula ? "<p>" + esc(roleInfo.formula) + "</p>" : ""}`;
+          if (roleInfo.source) {
+            const sourceButton = document.createElement("button");
+            sourceButton.textContent = "Read EMA update source";
+            sourceButton.onclick = () =>
+              showSource({ type: "EMA update", source: roleInfo.source });
+            note.append(sourceButton);
+          }
+          $("inspector").prepend(note);
+        }
       }
       function showSource(m) {
         const modal = document.createElement("div");
@@ -1023,14 +1149,16 @@
         const m = M[path];
         return {
           id: path,
-          label: m.name,
+          label: (D.metadata.roles?.[path]?.label ?? m.name).split(" · ")[0],
           type: m.type,
           detail: short(m.parameters) + " parameters",
           hint: m.alias_of
             ? "shared → " + m.alias_of
             : path.startsWith("@")
               ? "recorded runtime operations"
-              : "click to explore",
+              : path === "target" && context === "main"
+                ? "training only · no gradients"
+                : "click to explore",
           role: role(path, m.type),
           active:
             m.calls > 0 ||
@@ -1614,11 +1742,10 @@
           return `M 12 0 Q 0 0 0 12 V ${h - 12} Q 0 ${h} 12 ${h} L ${w / 2} ${h - 12} L ${w - 12} ${h} Q ${w} ${h} ${w} ${h - 12} V 12 Q ${w} 0 ${w - 12} 0 L ${w / 2} 12 Z`;
         return `M 12 0 H ${w - 12} Q ${w} 0 ${w} 12 V ${h - 12} Q ${w} ${h} ${w - 12} ${h} H 12 Q 0 ${h} 0 ${h - 12} V 12 Q 0 0 12 0 Z`;
       }
-      function graph(data) {
-        const canvas = $("canvas");
+      function graph(data, canvas = $("canvas")) {
         canvas.innerHTML = "";
         svg = E("svg", {
-          "aria-label": `${M[scope].type} ${mode} graph`,
+          "aria-label": data.label ?? `${M[scope].type} ${mode} graph`,
           role: "img",
         });
         const defs = E("defs");
@@ -1643,7 +1770,7 @@
         defs.append(marker);
         svg.append(defs);
         const scene = E("g", { class: "scene" });
-        const size = positionNodes(data.nodes, data.edges),
+        const size = data.layout ?? positionNodes(data.nodes, data.edges),
           lookup = new Map(data.nodes.map((n) => [n.id, n]));
         routeEdges(data.nodes, data.edges, size);
         for (const header of size.headers) {
@@ -1694,6 +1821,10 @@
           connection.append(title, p);
           connection.onclick = (e) => {
             e.stopPropagation();
+            if (edge.inspect) {
+              edge.inspect();
+              return;
+            }
             $("layout").classList.add("show-inspector");
             $("inspector").innerHTML =
               `<div class="eyebrow">Recorded connection</div><h2>${esc(a.label)} → ${esc(b.label)}</h2><p>${fmt(edge.count)} tensor/autograd edges represented by this arrow.</p><h3>Evidence examples</h3><pre>${esc(edge.samples.join("\n\n"))}</pre><p>${edge.count > edge.samples.length ? "Examples shown; the complete graph remains in Tensor operations / Autograd operations." : "Every represented edge is listed above."}</p>`;
@@ -1957,12 +2088,27 @@
         } catch {}
         svg = null;
         camera = null;
+        $("identity").textContent =
+          `${D.metadata.weight_source ?? "Weight source unspecified"} · ${bundle.metadata.source_sha256?.slice(0, 10) ?? ""} · ${new Date(D.metadata.created).toLocaleString()}`;
         tree();
+        $("view-mode").style.display = systemPage ? "none" : "";
+        $("param-edges").closest("label").style.display = systemPage
+          ? "none"
+          : "";
+        if (systemPage && bundle.system) {
+          renderSystem();
+          return;
+        }
         crumbs();
         $("view-mode").value = mode;
         const m = M[scope];
-        $("title").textContent = selectedTensor ? "Tensor microscope" : m.type;
+        $("title").textContent = selectedTensor
+          ? "Tensor microscope"
+          : (D.metadata.roles?.[scope]?.label ?? m.type);
         $("subtitle").textContent =
+          (context === "world"
+            ? "World State foundation recipe · "
+            : "Main categorical recipe · ") +
           (scope || "(training root)") +
           (m.config ? " · " + m.config.replace(/\n/g, " ") : "");
         $("stats").innerHTML =
@@ -1996,13 +2142,10 @@
         document.body.append(modal);
         modal.querySelector("button").focus();
       }
-      async function init() {
-        const encoded = $("snapshot").textContent.trim();
-        const bytes = Uint8Array.from(atob(encoded), (c) => c.charCodeAt(0));
-        const stream = new Blob([bytes])
-          .stream()
-          .pipeThrough(new DecompressionStream("deflate"));
-        D = JSON.parse(await new Response(stream).text());
+      /*__SYSTEM_SCRIPT__*/
+      function applyContext(name) {
+        context = name;
+        D = name === "main" ? bundle : bundle.contexts[name];
         M = structuredClone(D.modules);
         for (const [key, label] of [
           ["@objective", "Objective & caller"],
@@ -2031,12 +2174,32 @@
         T = D.tensors;
         O = new Map(D.operations.map((o) => [o.id, o]));
         B = new Map(D.backward.nodes.map((n) => [n.id, n]));
+      }
+      async function init() {
+        const encoded = $("snapshot").textContent.trim();
+        const bytes = Uint8Array.from(atob(encoded), (c) => c.charCodeAt(0));
+        const stream = new Blob([bytes])
+          .stream()
+          .pipeThrough(new DecompressionStream("deflate"));
+        bundle = JSON.parse(await new Response(stream).text());
+        applyContext("main");
+        systemPage = bundle.system ? "overview" : null;
         scope = D.metadata.initial_scope ?? "";
         try {
           const saved = JSON.parse(
             sessionStorage.getItem("pathwm-explorer-view"),
           );
-          if (saved && M[saved.scope]) {
+          if (
+            saved?.version === 2 &&
+            (!saved.context ||
+              saved.context === "main" ||
+              bundle.contexts?.[saved.context])
+          ) {
+            applyContext(saved.context ?? "main");
+            if (!M[saved.scope])
+              throw new Error("Saved scope no longer exists");
+            systemPage = saved.systemPage ?? null;
+            systemSelection = saved.systemSelection ?? null;
             scope = saved.scope;
             mode = saved.mode;
             selectedTensor = saved.selectedTensor;
@@ -2094,7 +2257,7 @@
             if (s.state === "current") {
               if (
                 s.source_sha256 &&
-                s.source_sha256 !== D.metadata.source_sha256
+                s.source_sha256 !== bundle.metadata.source_sha256
               ) {
                 location.reload();
                 return;

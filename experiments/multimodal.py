@@ -2711,6 +2711,7 @@ def export_explorer(
         fingerprint,
         watched_sources,
         load_explorer_weights,
+        source_info,
     )
 
     root = Path(__file__).resolve().parents[1]
@@ -2751,7 +2752,7 @@ def export_explorer(
         learner,
         execute,
         metadata=dict(
-            title="PATH-WM · Complete categorical agent",
+            title="PATH-WM · System and model explorer",
             initial_scope="agent",
             recipe="experiments/multimodal.py:build_model + objective",
             source_sha256=identity,
@@ -2772,13 +2773,59 @@ def export_explorer(
             ),
             limits=[
                 "Not all possible input-dependent branches are exercised.",
-                "Long-horizon memory eviction/compression and optional external World State are not exercised by this short batch.",
+                "Long-horizon memory eviction/compression is not exercised by this short batch.",
+                "World State is shown as its separate existing foundation recipe, not attached to this main learner.",
                 "Only the main categorical recipe is instantiated; separate experimental codecs/readouts are not part of this agent.",
                 "Initial weights are not trained unless an explicit compatible checkpoint is loaded.",
             ],
         ),
     )
     snapshot["metadata"]["loss_terms"] = loss_values
+    snapshot["metadata"]["roles"] = {
+        "agent": dict(
+            label="Inference agent",
+            description="Online network: used for inference and updated by the optimizer during training.",
+        ),
+        "target": dict(
+            label="EMA teacher · training only",
+            description="Frozen teacher copy. Produces reference beliefs from complete observations; receives no parameter gradients. After a training optimizer step, target weights move toward the agent using the configured EMA decay. It is not required for deployed inference. This inspection performs no optimizer or EMA update.",
+            formula="target ← decay × target + (1 − decay) × agent; buffers are copied",
+            source=source_info(LearningState.update_target),
+        ),
+    }
+    # Each recipe constructs its own actual configuration. A public CLI boundary
+    # keeps experiment imports out of the reusable recorder and out of this model.
+    import gzip
+    import subprocess
+    import tempfile
+    import sys
+
+    with tempfile.TemporaryDirectory(prefix="pathwm-system-inspection-") as tmp:
+        companion = Path(tmp) / "world.json.gz"
+        completed = subprocess.run(
+            [
+                sys.executable,
+                "-m",
+                "experiments.world_state",
+                "--explore-data",
+                str(companion),
+                "--seed",
+                str(seed),
+            ],
+            cwd=root,
+            capture_output=True,
+            text=True,
+            timeout=90,
+        )
+        if completed.returncode:
+            raise RuntimeError(
+                "World State inspection failed: " + completed.stderr[-3000:]
+            )
+        with gzip.open(companion, "rt") as stream:
+            system = json.load(stream)
+    system["neural"]["metadata"]["source_sha256"] = identity
+    snapshot["contexts"] = {"world": system.pop("neural")}
+    snapshot["system"] = system
     if identity != fingerprint(watched_sources(root, checkpoint)):
         raise RuntimeError(
             "Source or checkpoint changed during capture; no new snapshot written"

@@ -128,3 +128,34 @@ records and sources, separate neural context/roles and source tracking; focused
 export/World State tests, isolated full software suite, browser system/store/neural
 navigation and offline payload verification. CPU only, no optimizer, each export
 under120s and100MiB; full tests capped1200s. No model or scientific capability change.
+
+Implemented: the initial system overview links the main learner/EMA teacher,
+WorldSession calls, WorldStore records, current schemas and optional interfaces.
+The companion recipe exports its actual FoundationModel through a subprocess CLI:
+452 modules, 111,929 weight scalars, no teacher. Its existing functional objective
+supplies neural gradients; a separate diagnostic session supplies persistent data
+and observed Python call edges. An additional read through the saved session
+exercises retrieval/context/think even when fresh binding does not create two
+owners, and asserts the store is unchanged. The fresh seed42 store has one entity,
+four components, zero relations, four evidence records and two events. Full record
+values, endpoint/evidence/parent links, events and schema source remain inspectable.
+
+Final focused checks: 27 pass in12.12s. Independent uninstrumented audits match
+every module, weight scalar, loss and gradient for both actual recipes; main target
+has no gradients. Full store records/events roundtrip without truncation. Browser
+QA covers system navigation, teacher labels/source, records→evidence→event, Back,
+schemas/source and WorldSession→context→individual weight/gradient. Geometry
+retains all13 runtime nodes/12 observed edges and17 main-agent nodes/41 edges,
+without node overlaps or paths through unrelated nodes. Runtime layout hints only
+position recorded nodes; new components receive additional slots.
+
+The final standalone HTML is20,723,908 bytes; live source rebuild succeeds within
+its configured120s timeout and watches both recipes and embedded UI. Python lint,
+JavaScript syntax and whitespace checks pass. Browser automation blocked file-URL
+navigation; UI QA used the loopback server serving the same standalone bytes.
+Offline packaging and lossless payload extraction pass structural checks.
+
+The isolated full suite passes643 tests in718.73s. That frozen copy precedes the
+additional saved-session read and final UI refinements; the final27 focused tests
+cover the changed Python path, full relation/provenance records and profiler
+cleanup. The exact numerical audits and browser checks above use the final source.

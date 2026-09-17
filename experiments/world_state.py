@@ -429,6 +429,65 @@ def run(args):
         raise
 
 
+def explorer_snapshot(seed=42):
+    """The existing foundation recipe, as a separately identified inspection."""
+    import copy
+    import tempfile
+    from pathwm.evaluation.explorer import capture, inspect_world_runtime
+
+    with torch.random.fork_rng(devices=[]):
+        torch.manual_seed(seed)
+        model = FoundationModel()
+        ids, bits = torch.tensor([0, 0, 1, 1]), torch.tensor([0, 1, 0, 1])
+        neural = capture(
+            model,
+            lambda m: objective(m, ids, bits)[0],
+            metadata=dict(
+                title="PATH-WM · World State foundation",
+                initial_scope="",
+                recipe="experiments/world_state.py:FoundationModel + objective",
+                weight_source=f"Fresh foundation initialization · seed {seed}",
+                seed=seed,
+                execution="Existing foundation objective on four supplied descriptor/property pairs; no optimizer step.",
+                limits=[
+                    "Separate foundation recipe and configuration; not the main learner.",
+                    "Runtime store is a fresh synthetic diagnostic session, not a trained personal knowledge graph.",
+                    "Persistent records and runtime commits are detached; neural gradients come from the separate functional objective.",
+                ],
+            ),
+        )
+        runtime_model = copy.deepcopy(model).eval()
+        with tempfile.TemporaryDirectory(prefix="pathwm-world-inspection-") as tmp:
+            directory = Path(tmp)
+
+            def runtime():
+                diagnostics = exercise(
+                    runtime_model, directory, WorldTrace(max_records=2048)
+                )
+                snapshot = json.loads((directory / "world_snapshot.json").read_text())
+                # The exercise's paired reasoning check requires two distinct
+                # owners. Fresh random binding need not produce two, but the
+                # actual saved session can still retrieve and think.
+                session = runtime_model.session(
+                    torch.load(directory / "session.pt", weights_only=True)
+                )
+                before = session.store.snapshot()
+                _, retrieved, encoded = session.think(Query())
+                assert session.store.snapshot() == before
+                diagnostics["inspection_read"] = dict(
+                    revision=retrieved.revision,
+                    entities=[e.id for e in retrieved.entities],
+                    components=[c.id for c in retrieved.components],
+                    encoded_shape=list(encoded.values.shape),
+                    store_unchanged=True,
+                )
+                return snapshot, diagnostics
+
+            system = inspect_world_runtime(runtime_model, runtime)
+        system["neural"] = neural
+        return system
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -441,7 +500,17 @@ def main():
     parser.add_argument("--seed", type=int, default=61201)
     parser.add_argument("--stop-after", type=int)
     parser.add_argument("--check", action="store_true")
-    args = resume_arguments(parser, parser.parse_args())
+    parser.add_argument("--explore-data", type=Path, help=argparse.SUPPRESS)
+    parsed = parser.parse_args()
+    if parsed.explore_data:
+        if parsed.resume or parsed.check or parsed.stop_after:
+            parser.error("Inspection cannot be combined with training/check/resume")
+        import gzip
+
+        with gzip.open(parsed.explore_data, "wt") as stream:
+            json.dump(explorer_snapshot(parsed.seed), stream, allow_nan=False)
+        return
+    args = resume_arguments(parser, parsed)
     if args.check:
         args.stop_after = 4
     if args.steps < 1 or (args.stop_after is not None and args.stop_after < 1):

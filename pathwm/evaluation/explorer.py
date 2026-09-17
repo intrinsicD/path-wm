@@ -87,7 +87,9 @@ def watched_sources(root, checkpoint=None):
     paths = [
         *root.joinpath("pathwm").rglob("*.py"),
         root / "pathwm/evaluation/explorer.html",
+        root / "pathwm/evaluation/explorer-system.js",
         root / "experiments/multimodal.py",
+        root / "experiments/world_state.py",
     ]
     if checkpoint is not None:
         paths.append(Path(checkpoint).resolve())
@@ -576,8 +578,158 @@ def write_explorer(data, path):
     ).encode()
     payload = base64.b64encode(zlib.compress(raw, 6)).decode()
     template = Path(__file__).with_name("explorer.html").read_text()
+    template = template.replace(
+        "/*__SYSTEM_SCRIPT__*/",
+        Path(__file__).with_name("explorer-system.js").read_text(),
+    )
     html = template.replace("__SNAPSHOT__", payload)
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(html)
     temporary.replace(path)
     return path
+
+
+def inspect_world_runtime(model, execute):
+    """Inspect a fresh World State exercise, recording actual component calls.
+
+    ``execute`` returns (WorldStore snapshot, diagnostics). These are Python call
+    edges, not tensor-flow or gradient edges. The caller owns the diagnostic
+    session; this function never selects or mutates a user's saved world.
+    """
+    from collections import Counter
+    from dataclasses import asdict, fields, is_dataclass
+    from pathwm.world_state import records, modules, extensions
+    from pathwm.world_state.store import WorldStore, Transaction, primitive
+    from pathwm.world_state.session import WorldSession
+    from pathwm.world_state.retrieval import ExactRetriever
+
+    if sys.getprofile() is not None:
+        raise RuntimeError("Stop the current Python profiler before system inspection")
+    components = {}
+    objects = {}
+    for name, module in model.named_children():
+        components[name] = dict(
+            name=name,
+            type=type(module).__name__,
+            neural_path=name,
+            source=source_info(type(module)),
+            calls=0,
+            methods={},
+        )
+        for submodule in module.modules():
+            objects.setdefault(id(submodule), name)
+    runtime = {
+        WorldSession: ("session", "WorldSession"),
+        WorldStore: ("store", "Knowledge graph · WorldStore"),
+        Transaction: ("store", "Knowledge graph · WorldStore"),
+        ExactRetriever: ("retrieval", "ExactRetriever"),
+        modules.AssociationBinder: ("binding", "AssociationBinder"),
+    }
+    for cls, (key, label) in runtime.items():
+        components.setdefault(
+            key,
+            dict(
+                name=label,
+                type=cls.__name__,
+                source=source_info(cls),
+                calls=0,
+                methods={},
+            ),
+        )
+    components["caller"] = dict(
+        name="Diagnostic caller",
+        type="Runtime harness",
+        source=source_info(execute),
+        calls=0,
+        methods={},
+    )
+    stack, active, edges = [], set(), {}
+
+    def profile(frame, event, value):
+        if event == "call":
+            obj = frame.f_locals.get("self")
+            if obj is None:
+                return
+            key = objects.get(id(obj))
+            if (
+                key is not None
+                and frame.f_code.co_name != "forward"
+                and not frame.f_code.co_filename.startswith(
+                    str(Path(__file__).resolve().parents[1])
+                )
+            ):
+                return
+            if key is None:
+                spec = runtime.get(type(obj))
+                if spec is None:
+                    return
+                key = spec[0]
+            parent = stack[-1][1] if stack else "caller"
+            method = frame.f_code.co_name
+            record = components[key]
+            record["calls"] += 1
+            record["methods"][method] = record["methods"].get(method, 0) + 1
+            if parent != key:
+                entry = edges.setdefault((parent, key), Counter())
+                entry[method] += 1
+            stack.append((id(frame), key))
+            active.add(id(frame))
+        elif event == "return" and id(frame) in active:
+            active.remove(id(frame))
+            stack.pop()
+
+    try:
+        sys.setprofile(profile)
+        snapshot, diagnostics = execute()
+    finally:
+        sys.setprofile(None)
+    store = WorldStore.restore(snapshot)
+    content = dict(
+        revision=store.revision,
+        entities=[asdict(x) for x in store.entities()],
+        components=[asdict(x) for x in store.components()],
+        relations=[asdict(x) for x in store.relations()],
+        evidence=[asdict(x) for x in store.evidence()],
+        events=snapshot["events"],
+        canonical_ids={e.id: store.canonical(e.id) for e in store.entities()},
+        snapshot=snapshot,
+    )
+    schemas = {}
+    for name, cls in vars(records).items():
+        if (
+            inspect.isclass(cls)
+            and cls.__module__ == records.__name__
+            and is_dataclass(cls)
+        ):
+            schemas[name] = dict(
+                fields=[dict(name=f.name, type=str(f.type)) for f in fields(cls)],
+                source=source_info(cls),
+            )
+    interfaces = {}
+    for module in (modules, extensions):
+        for name, value in vars(module).items():
+            if (
+                inspect.isclass(value) or inspect.isfunction(value)
+            ) and value.__module__ == module.__name__:
+                interfaces[name] = dict(
+                    source=source_info(value), description=inspect.getdoc(value) or ""
+                )
+    return primitive(
+        dict(
+            components=components,
+            edges=[
+                dict(
+                    source=a,
+                    target=b,
+                    kind="call",
+                    count=sum(methods.values()),
+                    methods=dict(methods),
+                )
+                for (a, b), methods in edges.items()
+            ],
+            store=content,
+            schemas=schemas,
+            interfaces=interfaces,
+            runtime=dict(kind="synthetic diagnostic session", diagnostics=diagnostics),
+        )
+    )
