@@ -20,6 +20,13 @@ coupling and checkpoint tests pass (2 checks), not a new hierarchy implementatio
 Joint equal-status training remains
 the earlier preference. No implementation or training; preserve existing findings.
 
+Neighborhood follow-up: Alex asks about multiple filter sizes (3×3/5×5/7×7 for
+images). Design §8 proposes multiple local contexts inside coupling subnets, with
+a tapped three-layer 3×3 stack as a first engineering candidate and parallel kernels
+as an alternative. Resolution scales and within-scale receptive fields are separate;
+nominal support is not measured influence. Kernel schedules, branch widths, modality
+time spans and quality/resource comparisons remain open.
+
 Alex also asks about `gabinsane/multimodal-vae-comparison`. Read
 [the source assessment](multimodal-vae-reference.md): benchmark ideas and optional
 downstream fusion are useful; modality-private latents are distinct from application

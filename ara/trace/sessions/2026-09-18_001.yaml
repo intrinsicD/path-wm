@@ -2,13 +2,15 @@ session:
   id: 2026-09-18_001
   date: '2026-09-18'
   started: 2026-09-18T00:12+02:00
-  last_turn: 2026-09-18T00:55+02:00
-  turn_count: 3
+  last_turn: 2026-09-18T01:31+02:00
+  turn_count: 4
   summary: Residual/PCA alternatives remain open. User specifies learnable multiscale filter banks and
     generic loop-transformer consumers, now explicitly accepting export after post-processing/before compression.
     Invertibility is conditional on learning quality; additive coupling is a working candidate. Linked
     multimodal VAE toolkit assessed for benchmarks/downstream fusion; isolated variance/scale mismatch
-    reproduced. No new model or training.
+    reproduced. No new model or training. Neighborhood-size follow-up distinguishes within-scale context
+    from resolution hierarchy; tapped3x3 stack proposed inside coupling, parallel kernels remain an alternative.
+    No training or efficacy promotion.
 events_logged:
 - turn: 1
   type: question
@@ -120,6 +122,30 @@ events_logged:
   provenance: user-revised
   summary: O336 export position crystallized via explicit user affirmation; no promotion of the complete
     O334 bundle or coupling efficacy.
+- turn: 4
+  type: question
+  id: N503
+  routing: direct
+  provenance: user
+  summary: Should learned filter banks cover multiple neighborhood sizes within each scale?
+- turn: 4
+  type: observation
+  id: O339
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose three stride-one3x3 layers with retained h1/h2/h3 and learned pointwise mixing inside
+    deterministic coupling subnets, giving nominal3/5/7 supports while exporting the whole paired state.
+    Independent dense kernels remain a comparison arm. Stack-first ordering is an engineering preference,
+    not measured quality or latency superiority.
+- turn: 4
+  type: observation
+  id: O340
+  routing: staged
+  provenance: ai-suggested
+  summary: Compare within-scale context under explicit hidden/output widths, depth/nonlinearity, tap/projection
+    access and compute/memory budgets; full-width kernel counts are illustrative only. Separate nominal
+    support from learned influence. Audio requires physical durations, video separate spatial/temporal
+    spans, and text ordered windows; padding, causality and availability are modality-specific.
 ai_actions:
 - turn: 1
   action: Checked public Git Re-Basin, ZipIt and Model Soups sources; obtained tools-disabled actual-Claude
@@ -171,6 +197,21 @@ ai_actions:
   - docs/architecture-atlas.md
   - docs/architecture-atlas.html
   - docs/architecture-discussion.md
+- turn: 4
+  action: Checked public primary architecture/RF sources and existing v1 coupling. Actual-Claude review/reconciliation
+    corrected ambiguous composed support, cost-comparison framing and control confounds. Added design
+    section8, handoffs/state and atlas discussion notes; regenerated16 graphs and checked258 local links
+    with topology/status/validation unchanged. No model changes or new tests/training.
+  provenance: ai-executed
+  files_changed:
+  - docs/multiscale-modality-design.md
+  - docs/project-state.md
+  - docs/session-handoff.md
+  - docs/visual-adapter-handoff.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.md
+  - docs/architecture-atlas.html
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -186,6 +227,9 @@ key_context:
   excerpt: 'User: yes export immediately after post-processing, before compression; if the invertible
     construction does not hinder learning abilities let us use this. Also asks if gabinsane/multimodal-vae-comparison
     is useful.'
+- turn: 4
+  excerpt: 'User: Yes ok this sounds good. Do we also need larger receptive fields for filter banks, multiple
+    neighborhoods3x3,5x5,7x7 for images and respective adaptations for other modalities?'
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -198,6 +242,8 @@ open_threads:
   training remains compatible.'
 - 'N501/N502: toolkit relevance answered; benchmark choice, any downstream fusion and parameter-contract
   repair remain unselected future work.'
+- 'N503: select neighborhood/depth allocation and per-modality supports; compare learned utility and resources
+  independently from the invertibility factor.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -208,3 +254,5 @@ ai_suggestions_pending:
 - O334 export-position subpart is explicitly affirmed as O336/A23; its metadata/preservation details and
   O335 consumer choices remain proposals. O337 coupling and O338 benchmark/fusion use are unvalidated
   suggestions, not user-approved efficacy or selected runs.
+- O339/O340 are new neighborhood-bank/comparison proposals. User assent supports the preceding direction,
+  without establishing efficacy or selecting every detailed bundled O337/O338 mechanism/budget.

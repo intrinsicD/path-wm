@@ -15,6 +15,14 @@ restricted to the previous application-head/VAE examples; residual/PCA options
 remain secondary. Existing hierarchy/readout components audited; no model or
 training change. Actual Claude public-methods critique/reconciliation recorded.
 
+**Neighborhood-size follow-up:** Alex asks about 3×3/5×5/7×7 image neighborhoods
+and modality-specific equivalents. [Design §8](multiscale-modality-design.md#8-neighborhood-sizes-within-a-scale)
+distinguishes within-scale context from the resolution hierarchy. First engineering
+candidate: retain one/two/three-layer 3×3 subnet outputs and learn their mix inside
+coupling; independent multi-kernel branches remain a comparator. Nominal supports,
+composed coupling, width/depth confounds and temporal availability are explicit.
+No kernel schedule adopted as a measured winner; no implementation or training.
+
 **User-linked multimodal VAE toolkit:**
 [source assessment](multimodal-vae-reference.md), pinned upstream `5cfef9a`.
 Useful for controlled attribute/cross-modal tests and optional downstream posterior

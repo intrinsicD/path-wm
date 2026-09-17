@@ -8377,3 +8377,19 @@ tree:
   - N500
   - N501
   status: resolved
+- id: N503
+  type: question
+  title: Should learned filter banks cover multiple neighborhood sizes within each scale?
+  provenance: user
+  timestamp: 2026-09-18T01:31+02:00
+  description: User says the preceding direction sounds good and asks about image3x3/5x5/7x7 neighborhoods
+    and respective modality adaptations. Distinguished resolution hierarchy, stacked/composed nominal
+    receptive fields, actual learned influence, parallel kernels and tapped small-filter stacks. Candidate
+    and empirical value remain open; no kernel schedule or implementation requested as fixed.
+  evidence:
+  - docs/multiscale-modality-design.md#8-neighborhood-sizes-within-a-scale
+  - runs/reviews/filter-neighborhoods-20260918/summary.json
+  also_depends_on:
+  - N499
+  - N500
+  status: open

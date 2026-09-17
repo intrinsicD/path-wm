@@ -5907,3 +5907,37 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O339
+  timestamp: 2026-09-18T01:31+02:00
+  provenance: ai-suggested
+  content: Propose three stride-one3x3 layers with retained h1/h2/h3 and learned pointwise mixing inside
+    deterministic coupling subnets, giving nominal3/5/7 supports while exporting the whole paired state.
+    Independent dense kernels remain a comparison arm. Stack-first ordering is an engineering preference,
+    not measured quality or latency superiority.
+  context: N503 neighborhood question with primary Inception/VGG/dilation/effective-RF sources and actual-Claude
+    public-only review/reconciliation. Documentation only.
+  potential_type: architecture
+  bound_to:
+  - N503
+  - N500
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O340
+  timestamp: 2026-09-18T01:31+02:00
+  provenance: ai-suggested
+  content: Compare within-scale context under explicit hidden/output widths, depth/nonlinearity, tap/projection
+    access and compute/memory budgets; full-width kernel counts are illustrative only. Separate nominal
+    support from learned influence. Audio requires physical durations, video separate spatial/temporal
+    spans, and text ordered windows; padding, causality and availability are modality-specific.
+  context: N503 neighborhood question with primary Inception/VGG/dilation/effective-RF sources and actual-Claude
+    public-only review/reconciliation. Documentation only.
+  potential_type: heuristic
+  bound_to:
+  - N503
+  - N500
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

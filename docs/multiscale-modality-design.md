@@ -389,3 +389,128 @@ and partitions, working precision/inverse tolerances, scale widths,
 consumer read mode/initial state/iterations, concrete tasks and quality/resource
 gates. No code, training, fixed-filter adoption or capability validation follows
 from this discussion or reviewer agreement.
+
+## 8. Neighborhood sizes within a scale
+
+Alex asks whether image filter banks should include several neighborhood sizes,
+such as 3×3, 5×5 and 7×7, with appropriate adaptations for other modalities. The
+recommendation is to test several context sizes while keeping the bank small;
+the exact kernels and a quality advantage are not established by this discussion.
+
+There are two separate choices: **resolution across scales** and **neighborhood
+size within a scale**. Coarser grids already span more source pixels, and stacked
+processing also expands context. Multiple local supports let the bank learn from
+fine detail and broader nearby patterns before the next compression. They need
+not be hard-coded to semantic categories such as edges versus objects. A consumer
+with sufficiently broad attention can also combine distant evidence, but that does
+not establish that early local context is unnecessary or that it helps every task.
+
+### 8.1 First candidate: retain several depths of a small learned stack
+
+Inside each deterministic coupling subnet f/g, a modest candidate is:
+
+```text
+subnet input → 3×3 → h1 → 3×3 → h2 → 3×3 → h3
+                     │            │            │
+                     └────────────┴────────────┘
+                                  │
+                        concatenate and learned 1×1 mix
+                                  │
+                           coupling update
+```
+
+Pointwise nonlinearities may follow the 3×3 convolutions. All three operate at
+stride one, dilation one, with declared shape-preserving padding. Relative to this
+subnet's input grid, the nominal receptive-field side lengths are **3, 5 and 7**.
+Retaining h1/h2/h3 exposes the three processing depths to the learned mix. This
+shares earlier computation, but the deeper paths depend on the earlier features;
+it is not equivalent to three independent dense kernels or a guarantee of equal
+expressivity at finite width. The learned influence can occupy only part of the
+nominal support. [VGG](https://arxiv.org/abs/1409.1556) motivates stacked small
+convolutions; [effective receptive-field analysis](https://arxiv.org/abs/1701.04128)
+distinguishes available support from actual influence.
+
+The tap concatenation and reducing 1×1 mix occur **inside f/g**. They need not be
+invertible because the enclosing coupling retains both state parts. They are not
+an undeclared compression of the complete scale export. B/P must still preserve
+the complete state through to the accepted export before C. Subnet intermediate
+responses need not be separate consumer-visible outputs. If identity initialization
+is used, zero the final update projection rather than every filter. This initially
+blocks gradients to earlier subnet filters until the projection changes; it does
+not permanently freeze them.
+
+The existing [v1 coupling](../pathwm/models/spatial_vae.py) already has two 3×3
+convolutions in each f/g: each subnet has nominal 5×5 support, despite having no
+literal 5×5 kernel. For `u=a+f(b), v=b+g(u)`, u then depends on a pointwise and b
+over 5×5; v can depend on a over 5×5 and b over 9×9. With the proposed three-layer
+subnets, v's corresponding bounds are 7×7 on a and 13×13 on b. These are interior support bounds on the current grid,
+not empirical influence measurements or a claim that every output has equal access.
+
+### 8.2 Alternatives and cost accounting
+
+| Construction | Neighborhood access | Main tradeoff |
+| --- | --- | --- |
+| Parallel learned 3×3, 5×5, 7×7 kernels | Independent dense neighborhoods at one depth | Direct and flexible; branch widths and kernel area determine cost |
+| Tapped stack of three learned 3×3 layers | Nominal 3×3, 5×5, 7×7 supports | Shares earlier computation; adds sequential depth and couples larger-context features to earlier processing |
+| Dilated 3×3 at rates 1, 2, 3 | Bounding spans 3×3, 5×5, 7×7 | Each individual operation samples nine positions per input channel; wider spans are not dense 5×5/7×7 filters |
+| Depthwise spatial filters plus pointwise mixing | Wider spatial support with cheaper per-channel filtering | Changes channel/spatial factorization and can restrict finite-width capacity |
+
+[Inception](https://arxiv.org/abs/1409.4842) is a precedent for parallel neighborhood
+sizes. [Dilated context aggregation](https://arxiv.org/abs/1511.07122) is a precedent
+for expanding support without reducing the output grid. Both are comparison ideas,
+not evidence selecting a winner for this model. The tapped stack is the first
+engineering candidate, with explicit parallel kernels a reasonable alternative;
+do not combine every mechanism before a useful baseline exists.
+
+For an illustrative same-width dense comparison, three independent C→C branches
+with kernels 3/5/7 use `(9+25+49)C² = 83C²` kernel weights before fusion. Three C→C
+3×3 layers use `27C²`; mixing their concatenated 3C channels back to C adds `3C²`.
+The same final mix would also add `3C²` to the parallel alternative. Biases,
+input/output width changes and activation costs are omitted. This illustration is
+not a matched-budget baseline: narrow parallel branches and optional bottlenecks
+change the comparison substantially and should be declared in actual arms. These counts do not predict actual
+latency or establish a fixed-resource accuracy advantage; sequential dependencies
+and intermediate activations must be measured too.
+
+Track receptive fields in source coordinates. For stride-one kernel size k and
+dilation d on a grid whose neighboring centers are j source units apart, a prior
+support side length r grows to `r + (k−1)d*j`. Track each axis and the actual grouping,
+stride and branch composition. Thus a 3×3 at a coarser scale already covers a larger
+source neighborhood, and a 7×7 at every scale is not automatically useful. Padding
+does not create new observed information; tiny grids may mostly expose boundaries.
+
+### 8.3 Modality adaptations and comparison boundary
+
+| Modality | Adapt the neighborhood to |
+| --- | --- |
+| Images | Spatial neighborhoods at the scale's pixel spacing; retain local detail and record boundary padding |
+| Audio | Short/long temporal windows expressed in samples **and physical duration** at the declared sample rate/scale; 3/5/7 raw audio samples are not equivalent to semantic audio contexts |
+| Video | Separate spatial and temporal spans, potentially factorized; causal temporal filters or explicitly delayed availability when future frames are used |
+| Text / events | Ordered token/byte/event windows with positions, masks and the permitted causal direction; window sizes refer to that representation, not a universal physical duration |
+
+For temporal signals, a wider window changes support/availability and streaming
+latency. A symmetric filter is appropriate only when the allowed read includes its
+future support; do not bypass the time contract in section 5. Shared architectural
+patterns do not require identical kernels, weights or physical extents per modality.
+
+First compare a local-processing baseline with the proposed multiple-context bank
+at the same pre-C taps, external widths and consumer access. Declare parameter,
+memory, exposure and compute budgets. Depth/nonlinearity count, hidden widths and
+tap access can all change with the candidate; a wider local control alone does not
+remove those confounds. Tapped-depth versus last-depth-only comparison can
+isolate the availability of intermediate supports more narrowly, but mixing width
+and projection capacity must still be accounted for. Preserve the separate
+invertibility/learning comparison in section 3.1 rather than changing both factors
+and attributing gains to one. Concrete workloads, widths, kernels per scale and
+quality margins remain open; no implementation or new training in this discussion.
+
+Invertible processing reorganizes information already present. Evaluate whether
+that makes useful evidence easier for the consumer to use, while retaining numerical
+stability and acceptable cost. Rate/distortion tests apply separately when a real
+compressed-code consumer is selected; C need not be an entropy codec or VAE.
+
+Public-only Claude review receipts: `runs/reviews/filter-neighborhoods-20260918/`.
+Review corrections include explicit per-operand composed supports, illustrative
+versus matched-budget parameter counts, depth/tap controls and zero-initialization
+gradient behavior. The reviewer prefers equal priority for stack/parallel arms;
+the stack-first order remains an engineering preference, not measured superiority.

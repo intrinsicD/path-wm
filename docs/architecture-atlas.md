@@ -190,6 +190,8 @@ Image/video/audio/text encoders now share output-neutral attention diagnostics: 
 
 18 September reference assessment: multimodal-vae-comparison offers controlled attribute/cross-modal benchmarks and optional downstream posterior-fusion methods. Modality-private latents differ from application residuals. See docs/multimodal-vae-reference.md; no toolkit integration, model change or new capability validation.
 
+18 September neighborhood discussion: multiple local supports can complement the resolution hierarchy. Proposed first candidate retains outputs of one/two/three3x3 layers inside each learned coupling subnet, yielding nominal3/5/7 support; independent kernels remain an alternative. Whole coupling has larger composed support; modality durations/causality, branch widths and depth controls matter. See design section8; no implementation or validation change.
+
 Source: [pathwm/models/multiscale.py · FeatureHierarchy:233](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleImageEncoder:371](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleAudioEncoder:416](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleTextEncoder:477](../pathwm/models/multiscale.py), [pathwm/models/belief.py · _features:259](../pathwm/models/belief.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md), [pathwm/models/multiscale.py · LayerReadout:165](../pathwm/models/multiscale.py), [docs/layer-readout-plan.md](../docs/layer-readout-plan.md), [docs/visual-codec-review.md](../docs/visual-codec-review.md).
 
 <a id="03-attention"></a>

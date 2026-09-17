@@ -27,6 +27,12 @@ are background. No new model or training run was created. The user-linked
 benchmark ideas and optional downstream fusion; it does not select a VAE bottleneck
 or substitute modality-private latents for application residuals.
 
+The latest neighborhood-size question is covered in design §8: multiple supports
+within a scale can complement the resolution hierarchy. A tapped 3×3 stack gives
+nominal 3/5/7 supports inside each coupling subnet; parallel kernels remain a
+comparison option. This is a proposed allocation, not trained evidence or a fixed
+kernel schedule for every modality/scale.
+
 ## Latest user direction — takes precedence over the old phase order
 
 Alex wants to try **one shared trainable base plus residuals per application,
