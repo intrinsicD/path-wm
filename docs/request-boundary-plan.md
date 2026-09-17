@@ -92,3 +92,21 @@ fixed9901 for all six runs. The final frozen source snapshot will be used for
 formal execution and full tests while independent explorer work continues in the
 main checkout. Paired inputs share clips, not forcibly identical categorical draws
 within each training batch; draws are matched across treatment/control arms.
+
+## Resource correction and bounded artifact recovery
+
+The first source consumes843.04s for its fixed six phases, substantially more than
+the initial estimate. Preserve the original1500s formal execution cap; do not
+rewrite its receipt or claim that cap passed if interrupted. The CPU software
+suite was paused291.11s for resource priority, then completed640 tests successfully
+in853.82s elapsed; this pause is included in its855.45s process receipt.
+
+If the formal cap interrupts evaluation AFTER a final512-update checkpoint exists,
+allow a separate <=360s recovery to finish only its missing fixed fresh/broader
+evaluations in new run directories. No extra optimizer updates, changed cohorts,
+seeds, coefficient, thresholds or candidate selection. The original run stays
+stopped/failed and gets a truthful report; recovered evaluation has its own source
+binding, checkpoint and report. Record total cost including recovery, and mark the
+original resource screen failed. This completes inspectable artifacts without
+turning a budget failure into a passing adoption result. If final weights are not
+available, report that comparison incomplete; do not train past the cap.
