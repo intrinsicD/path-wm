@@ -2,8 +2,8 @@ session:
   id: 2026-09-18_001
   date: '2026-09-18'
   started: 2026-09-18T00:12+02:00
-  last_turn: 2026-09-18T20:40+02:00
-  turn_count: 10
+  last_turn: "2026-09-18T20:43+02:00"
+  turn_count: 11
   summary: Residual/PCA alternatives remain open. User specifies learnable multiscale filter banks and
     generic loop-transformer consumers, now explicitly accepting export after post-processing/before compression.
     Invertibility is conditional on learning quality; additive coupling is a working candidate. Linked
@@ -244,6 +244,13 @@ events_logged:
   provenance: user
   summary: Requested functional architecture walkthrough, especially the component
     learning physics.
+- turn: 11
+  type: question
+  id: N510
+  routing: direct
+  provenance: user
+  summary: Reopened memory intent/implementation walkthrough and connection to DeepSeek
+    guidance.
 ai_actions:
 - turn: 1
   action: Checked public Git Re-Basin, ZipIt and Model Soups sources; obtained tools-disabled actual-Claude
@@ -365,6 +372,18 @@ ai_actions:
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
   - docs/architecture-discussion.md
+- turn: 11
+  action: Compared saved requirements and current memory write/read code. Reopened
+    memory discussion coverage; preserved scoped validation evidence. Regenerated
+    16 atlas graphs using existing bundled Viz runtime after bare package resolution
+    failed; verified unchanged graph topology and validation. No model edits or training.
+  provenance: ai-executed
+  files_changed:
+  - docs/architecture-discussion.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/diagrams/atlas/01-overview.svg
 claims_touched: []
 key_context:
 - turn: 1
@@ -398,6 +417,9 @@ key_context:
 - turn: 10
   excerpt: Welche Komponenten / Module hat das ganze Modell, zum Beispiel der Teil,
     in dem Physik gelernt wird?
+- turn: 11
+  excerpt: Alex is unsure whether the implemented memory matches what he wanted; drawing
+    all modules exposed uncertainty. He recalls the DeepSeek 4.1 Flash discussion.
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -416,6 +438,8 @@ open_threads:
   sparse access, precision and budget policies remain proposals.'
 - 'N509: Walk through functional modules with Alex; dedicated dynamics/predict-correct
   discussion remains open.'
+- 'N510: Trace memory write, retained content, compression/protection, retrieval and
+  consumer use against prior wishes; DeepSeek mechanisms remain proposals.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.

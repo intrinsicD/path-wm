@@ -2612,3 +2612,10 @@ entries:
   - Initial assistant overview does not complete a dedicated discussion; no atlas
     color/coverage or validation promotion. Prior open topics remain referenced; no
     closure or contradiction, no knowledge crystallization.
+- turn: 2026-09-18_001#11
+  notes:
+  - N510 records user uncertainty and reopened memory discussion; this is not evidence
+    of a broken implementation or rejection of earlier choices.
+  - Preserved earlier discussion basis and scoped mechanics validation; marked pending
+    walkthrough separately and regenerated atlas. No new scientific claim, selected
+    DeepSeek mechanism, closure or contradiction. Prior unresolved topics remain open.

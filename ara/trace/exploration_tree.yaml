@@ -8490,3 +8490,25 @@ tree:
   - docs/belief-model.md
   - pathwm/models/belief.py
   status: open
+- id: N510
+  type: question
+  title: Reconcile intended memory behavior, implementation and DeepSeek discussion
+  provenance: user
+  timestamp: 2026-09-18T20:43+02:00
+  description: While drawing the complete architecture, Alex reports uncertainty about
+    whether implemented memory matches earlier wishes and recalls the DeepSeek V4.1
+    Flash discussion. Initial source/code comparison distinguishes bounded latent
+    session history, optional persistent World State and proposed reader/cache optimizations.
+    Detailed event walkthrough and desired-versus-implemented reconciliation remain
+    open.
+  evidence:
+  - docs/belief-model.md
+  - docs/world-state.md
+  - docs/entity-memory-design.md
+  - docs/deepseek-v41-transfer-proposal.md
+  - pathwm/models/hybrid_memory.py
+  also_depends_on:
+  - N509
+  - N504
+  - N506
+  status: open
