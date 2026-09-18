@@ -2589,3 +2589,10 @@ entries:
     this is process adoption.
   - Earlier architecture and experiment threads remain open and referenced; no contradiction, abandonment
     or new stale transition inferred.
+- turn: 2026-09-18_001#8
+  notes:
+  - N507 records the answered source-availability question; O345 stages a dated disclosure assessment
+    and method distinctions. Negative search evidence is bounded; public alternatives are not attributed to Jev.
+  - No user affirmation, empirical resolution or downstream implementation depends on O345; do not
+    crystallize. Existing architecture topics remain explicitly open; no abandonment or contradiction inferred.
+  - No model, training, project-state or atlas change warranted by an external-method availability question.

@@ -268,7 +268,8 @@ sessions:
     DeepSeek V4.1 read and mapped to current code; actual-Claude corrections reconciled. Fixed-context reuse, state ownership and verified tasks proposed first. No model changes, training or validation promotion.
     Abstract principles behind all transfer mechanisms explained; separate information, access, precision and computation budgets. No new adoption or validation.
     User adopts abstract principles as standing design practice; workflow and CLAUDE entry point updated. H79 crystallized from explicit instruction; concrete mechanisms and efficacy remain unselected.
-  turn_count: 7
-  events_count: 25
+    Jev/RLCD public-source search found objective/interface disclosures but no reproducible training recipe; related RLCR and Rewarding Doubt distinguished.
+  turn_count: 8
+  events_count: 27
   claims_touched: []
   open_threads: 7

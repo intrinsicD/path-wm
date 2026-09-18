@@ -6012,3 +6012,21 @@ observations:
   promoted_to: logic/solution/heuristics.md:H79
   crystallized_via: verbal-affirmation
   stale: false
+- id: O345
+  timestamp: 2026-09-18T09:40+02:00
+  provenance: ai-suggested
+  content: As of this search, TypeSafe discloses RLCD's calibrated-decision objective and parallel typed
+    outputs, but no reproducible reward/loss, update rule, architecture or data-generation recipe was
+    found. Founder explicitly says architecture is private for now; launch FAQ says data is made in-house.
+    These statements do not establish fully synthetic training or a particular pretrained backbone.
+    RLCR publishes correctness minus squared confidence error with modified GRPO; Rewarding Doubt uses
+    logarithmic scoring. Neither is evidence of Jev's implementation. Calibration and typed validity
+    are distinct from task correctness; Choice/Score confidence is derived from returned probabilities.
+  context: N507 primary-source literature search; bounded disclosure finding, not proof of universal
+    absence, empirical reproduction or an adopted PATH-WM training method.
+  potential_type: concept
+  bound_to: [N507]
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

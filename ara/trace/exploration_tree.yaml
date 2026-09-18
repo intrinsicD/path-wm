@@ -8440,3 +8440,22 @@ tree:
   - N504
   - N505
   status: resolved
+- id: N507
+  type: question
+  title: What concrete Jev and RLCD training details are public?
+  provenance: user
+  timestamp: 2026-09-18T09:40+02:00
+  description: Searched official launch/docs, public repositories and founder comments. Public sources
+    describe the decision/calibration objective but do not supply a reproducible Jev training recipe.
+    Distinguished related published RLCR and Rewarding Doubt methods from TypeSafe's proprietary RLCD.
+    No PATH-WM design choice, implementation or experiment requested or performed.
+  evidence:
+  - https://typesafe.ai/blog/introducing-system-one-models-and-jev
+  - https://docs.typesafe.ai/introduction/machine-learning-primer
+  - https://docs.typesafe.ai/confidence
+  - https://news.ycombinator.com/item?id=49718824
+  - https://github.com/typesafe-ai
+  - https://huggingface.co/papers/2507.16806.md
+  - https://rl-calibration.github.io/
+  - https://arxiv.org/abs/2503.02623
+  status: resolved

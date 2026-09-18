@@ -2,8 +2,8 @@ session:
   id: 2026-09-18_001
   date: '2026-09-18'
   started: 2026-09-18T00:12+02:00
-  last_turn: 2026-09-18T09:31+02:00
-  turn_count: 7
+  last_turn: 2026-09-18T09:40+02:00
+  turn_count: 8
   summary: Residual/PCA alternatives remain open. User specifies learnable multiscale filter banks and
     generic loop-transformer consumers, now explicitly accepting export after post-processing/before compression.
     Invertibility is conditional on learning quality; additive coupling is a working candidate. Linked
@@ -14,6 +14,7 @@ session:
     DeepSeek V4.1 read and mapped to current code; actual-Claude corrections reconciled. Fixed-context reuse, state ownership and verified tasks proposed first. No model changes, training or validation promotion.
     Abstract principles behind all transfer mechanisms explained; separate information, access, precision and computation budgets. No new adoption or validation.
     User adopts abstract principles as standing design practice; workflow and CLAUDE entry point updated. H79 crystallized from explicit instruction; concrete mechanisms and efficacy remain unselected.
+    Jev/RLCD public-source search found objective/interface disclosures but no reproducible training recipe; related RLCR and Rewarding Doubt distinguished.
 events_logged:
 - turn: 1
   type: question
@@ -210,6 +211,18 @@ events_logged:
   routing: crystallized
   provenance: user
   summary: Standing design practice promoted via explicit user affirmation; no mechanism or efficacy promotion.
+- turn: 8
+  type: question
+  id: N507
+  routing: direct
+  provenance: user
+  summary: Asked whether concrete Jev/RLCD training information is public; official docs and founder comments checked.
+- turn: 8
+  type: observation
+  id: O345
+  routing: staged
+  provenance: ai-suggested
+  summary: Training recipe remains undisclosed in searched primary sources; related published calibration RL is not Jev's recipe.
 ai_actions:
 - turn: 1
   action: Checked public Git Re-Basin, ZipIt and Model Soups sources; obtained tools-disabled actual-Claude
@@ -309,6 +322,17 @@ ai_actions:
   - CLAUDE.md
   - docs/project-state.md
   - docs/deepseek-v41-transfer-proposal.md
+- turn: 8
+  action: Searched web and read official TypeSafe launch, primer, confidence docs, public repository list,
+    founder HN comment and embedded launch FAQ. Read RLCR paper via HF markdown and checked Rewarding
+    Doubt publication/code links. Recorded source URLs and disclosure limits; no model/code changes or training.
+  provenance: ai-executed
+  files_changed:
+  - ara/trace/exploration_tree.yaml
+  - ara/staging/observations.yaml
+  - ara/trace/sessions/2026-09-18_001.yaml
+  - ara/trace/sessions/session_index.yaml
+  - ara/trace/pm_reasoning_log.yaml
 claims_touched: []
 key_context:
 - turn: 1
@@ -335,6 +359,8 @@ key_context:
 - turn: 7
   excerpt: Whenever we design anything for this model keep those in mind and try to integrate these ideas.
     Write that into the workflow.
+- turn: 8
+  excerpt: Is there any information online on how jev and rlcd training concretely works?
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -368,3 +394,4 @@ ai_suggestions_pending:
 - O343 explanatory abstraction remains assistant synthesis; O341/O342 proposals remain unselected.
 - N506/H79 adopts using the principles as workflow guidance. O341/O342 implementation proposals and O343
   explanatory taxonomy do not become efficacy claims or blanket mechanism adoption.
+- O345 is a dated literature/disclosure assessment; no adoption, efficacy or Jev replication claim.
