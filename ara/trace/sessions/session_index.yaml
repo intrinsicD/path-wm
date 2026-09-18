@@ -265,7 +265,8 @@ sessions:
     reproduced. No new model or training. Neighborhood-size follow-up distinguishes within-scale context
     from resolution hierarchy; tapped3x3 stack proposed inside coupling, parallel kernels remain an alternative.
     No training or efficacy promotion.
-  turn_count: 4
-  events_count: 17
+    DeepSeek V4.1 read and mapped to current code; actual-Claude corrections reconciled. Fixed-context reuse, state ownership and verified tasks proposed first. No model changes, training or validation promotion.
+  turn_count: 5
+  events_count: 20
   claims_touched: []
-  open_threads: 6
+  open_threads: 7

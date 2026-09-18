@@ -1,0 +1,35 @@
+{
+  "date": "2026-09-18",
+  "source_commit": "0700a68",
+  "source": {
+    "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/resolve/main/DeepSeek_V41_Tech_Report.pdf",
+    "sha256": "ba68e2e40408125ae6d2f63a9a241b61c73910691c74ec1a2a7023c851eac08d",
+    "xet_hash": "3611438dc4b7fa3f6be8abbfa4a793e7c3336313172d36339611adeadd4a5ac9",
+    "pages": 51,
+    "retrieved": "2026-09-18"
+  },
+  "review_status": "completed",
+  "reconciliation_status": "completed",
+  "private_content_exported": false,
+  "model_changes": false,
+  "training_or_benchmarks_run": false,
+  "proposal": "docs/deepseek-v41-transfer-proposal.md",
+  "accepted_corrections": [
+    "intra-forward reuse supports training without detach",
+    "no SWA contraction theorem",
+    "block-max does not inherently lose first-query top-k with sufficient blocks",
+    "bounded state does not bound source-read size",
+    "task verification transfers without RL infrastructure",
+    "main KV quantization affects keys and values",
+    "effort conditioning follows useful fixed budgets"
+  ],
+  "validation_scope": "Documentation links and unchanged atlas topology/source references/discussion/validation only",
+  "files": {
+    "public-brief.txt": "edf4addc4be7534d856551c628a7e9e0fb192f19e63fe127b7cbc533cba06850",
+    "public-reconciliation.txt": "84beaaa4f4427e6e5823cf4852eb1973e94722920a2cac3807a92c13aae44ce4",
+    "claude-review.md": "96148306b3050d5f6c25562602d98f81c24a2beb4ecf5145268b159d580643bc",
+    "claude-reconciliation.md": "a19e1512f1d3a30ae16ad76b5abb4ca24b778bd2d108cc73806d5c2f048f5949",
+    "review-execution-receipt.json": "1342838d1cae64f64d6e02eb2fb5fff0b10089d674f07979be456c0fda0fff9b",
+    "reconciliation-execution-receipt.json": "42e55be9232f7b02cf2566d23eb69df83710deca62d17632a653adc7c279b4bb"
+  }
+}

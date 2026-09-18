@@ -5941,3 +5941,41 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O341
+  timestamp: 2026-09-18T08:41+02:00
+  provenance: ai-suggested
+  content: Propose immutable pre-compression multiscale source exports and consumer-owned source K/V preparation,
+    private evolving queries/local processing and output layers. Current recurrent output adapter offers
+    an isolated intra-forward reuse location; Thinker context, age-conditioned memory and separately weighted
+    scale blocks cannot be cached wholesale. Local/global reads and sparse candidate refresh remain distinct
+    learned comparisons.
+  context: N504 report review and local code audit, actual public-only Claude review/reconciliation; documentation
+    proposal only.
+  potential_type: architecture
+  bound_to:
+  - N504
+  - N499
+  - N500
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O342
+  timestamp: 2026-09-18T08:41+02:00
+  provenance: ai-suggested
+  content: Prioritize profiling, exact intra-forward gradient-preserving reuse, authoritative/derived
+    state ownership and independent task verification. Introduce sparse reads or quantized derived caches
+    only with task-relevant evidence checks and matched train/deploy regimes; preserve exact restart and
+    provenance. mHC is not invertibility, Engram not episodic evidence, bounded replay not exact resume;
+    budget policies follow useful fixed loops. No speed or quality benefit established.
+  context: N504 report review and local code audit, actual public-only Claude review/reconciliation; documentation
+    proposal only.
+  potential_type: heuristic
+  bound_to:
+  - N504
+  - N499
+  - N500
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

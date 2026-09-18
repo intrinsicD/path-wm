@@ -8,6 +8,13 @@ It takes priority over treating input design as a choice among visual residual
 adapters. The [adapter/PCA discussion](visual-adapter-design.md) remains relevant
 to optional implementations and later comparisons.
 
+The [DeepSeek V4.1 transfer proposal](deepseek-v41-transfer-proposal.md) adds
+concrete reader-side engineering candidates: prepare unchanged source K/V once
+per consumer call, retain private evolving queries/local processing, and compare
+local/global or sparse reads separately. It preserves the export position and
+invertibility condition here. Sparse selection, projection sharing across different
+weights, quantization and adaptive budgets remain unvalidated proposals.
+
 ## 1. User direction and explicit interpretations
 
 For each input modality, repeat a few scales of:

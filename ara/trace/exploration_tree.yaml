@@ -8393,3 +8393,19 @@ tree:
   - N499
   - N500
   status: open
+- id: N504
+  type: question
+  title: Where should DeepSeek V4.1 engineering ideas transfer to PATH-WM?
+  provenance: user
+  timestamp: 2026-09-18T08:41+02:00
+  description: User requests reading the linked report, discussing with actual Claude, and proposing where
+    its core engineering and architecture ideas fit. Hash-matched official PDF read; local mapping and
+    reconciled public-methods critique delivered. Model adoption and experiments remain unselected.
+  evidence:
+  - docs/deepseek-v41-transfer-proposal.md
+  - ara/evidence/tables/deepseek_v41_review_2026-09-18.json
+  also_depends_on:
+  - N499
+  - N500
+  - N503
+  status: resolved

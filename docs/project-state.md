@@ -1,5 +1,20 @@
 # Current work
 
+**DeepSeek V4.1 transfer proposal, 18 September:**
+[engineering and architecture mapping](deepseek-v41-transfer-proposal.md).
+Read the exact user-linked report via its hash-matched official copy and audited
+the current code. Proposed priorities: fixed-context K/V reuse within a consumer
+call, explicit source/cache ownership, verified task construction, then measured
+local/global and sparse reading with training-aware approximation. The current
+recurrent output adapter is the clearest isolated reuse candidate; the Thinker's
+whole context changes and cannot be cached indiscriminately. Preserve accepted
+pre-compression exports, consumer-specific processing, source provenance and exact
+resume. mHC is not an invertibility mechanism; Engram is not episodic evidence;
+bounded SWA replay is approximate. Actual public-only Claude review and technical
+reconciliation retained in `runs/reviews/deepseek-v41-20260918/`. This is a proposal:
+no model/default/checkpoint changes, training, benchmark or validation promotion.
+The multiscale design below remains the active input-architecture specification.
+
 **Input architecture and invertibility decision, 18 September:**
 [multiscale modality design](multiscale-modality-design.md).
 Alex specifies per-scale information-preserving operations → **learnable filter
