@@ -2,8 +2,8 @@ session:
   id: 2026-09-18_001
   date: '2026-09-18'
   started: 2026-09-18T00:12+02:00
-  last_turn: "2026-09-18T20:43+02:00"
-  turn_count: 11
+  last_turn: "2026-09-18T20:48+02:00"
+  turn_count: 12
   summary: Residual/PCA alternatives remain open. User specifies learnable multiscale filter banks and
     generic loop-transformer consumers, now explicitly accepting export after post-processing/before compression.
     Invertibility is conditional on learning quality; additive coupling is a working candidate. Linked
@@ -251,6 +251,13 @@ events_logged:
   provenance: user
   summary: Reopened memory intent/implementation walkthrough and connection to DeepSeek
     guidance.
+- turn: 12
+  type: decision
+  id: N511
+  routing: direct
+  provenance: user
+  summary: Top-down module walkthrough first; Local/Global Context labels for internal
+    memory; concrete DeepSeek/Jev mapping later.
 ai_actions:
 - turn: 1
   action: Checked public Git Re-Basin, ZipIt and Model Soups sources; obtained tools-disabled actual-Claude
@@ -384,6 +391,21 @@ ai_actions:
   - docs/architecture-atlas.html
   - docs/architecture-atlas.md
   - docs/diagrams/atlas/01-overview.svg
+- turn: 12
+  action: Added top-down discussion guide, linked current state, updated overview
+    terminology and checklist without equating storage groups to DeepSeek attention.
+    Regenerated 16 atlas graphs; verified unchanged node identities, edges and all
+    validation records. No model/API/checkpoint edits, training or new literature
+    review.
+  provenance: ai-executed
+  files_changed:
+  - docs/architecture-walkthrough.md
+  - docs/project-state.md
+  - docs/architecture-discussion.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/diagrams/atlas/01-overview.svg
 claims_touched: []
 key_context:
 - turn: 1
@@ -420,6 +442,10 @@ key_context:
 - turn: 11
   excerpt: Alex is unsure whether the implemented memory matches what he wanted; drawing
     all modules exposed uncertainty. He recalls the DeepSeek 4.1 Flash discussion.
+- turn: 12
+  excerpt: First top down through the modules; later explain exactly where DeepSeek
+    and Jev techniques can apply. Earlier speech in this delegation requests renaming
+    internal memory to Global and Local Context.
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -440,6 +466,9 @@ open_threads:
   discussion remains open.'
 - 'N510: Trace memory write, retained content, compression/protection, retrieval and
   consumer use against prior wishes; DeepSeek mechanisms remain proposals.'
+- 'N511: Complete top-down walkthrough before mapping external techniques to code,
+  evidence, prerequisites and controlled comparisons. Define Local/Global Context
+  contents without presuming DeepSeek equivalence.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.

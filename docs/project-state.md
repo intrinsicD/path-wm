@@ -1,5 +1,13 @@
 # Current work
 
+**Architecture walkthrough reopened, 18 September:**
+[top-down discussion guide](architecture-walkthrough.md). Alex requests the functional
+module overview before locating DeepSeek/Jev techniques in concrete components.
+Use Local Context and Global Context for the internal-memory discussion; exact
+mapping to existing stores/access patterns remains open. External World State stays
+separate. Terminology and discussion order only; no model/API/checkpoint changes,
+new experiment or capability validation.
+
 **Calibration-training applicability, 18 September:**
 [assessment](decision-design.md#calibration-training-and-the-jevrlcd-comparison).
 Existing recall has cost-based abstention, held-out temperature fitting and reliability/Brier

@@ -8512,3 +8512,25 @@ tree:
   - N504
   - N506
   status: open
+- id: N511
+  type: decision
+  title: Discuss modules top down first; use Local and Global Context terminology
+  provenance: user
+  timestamp: 2026-09-18T20:48+02:00
+  choice: Alex requests a top-down functional walkthrough before concrete placement
+    of DeepSeek and Jev-related techniques. The supplied voice transcript explicitly
+    requests Local Context and Global Context for internal memory, separate from external
+    memory. Exact mapping, capacities and mechanisms remain unselected.
+  alternatives:
+  - Continuing the memory deep dive before the overall module walkthrough
+  evidence:
+  - User voice delegation and transcript, 18 September 2026
+  - docs/architecture-walkthrough.md
+  - docs/diagrams/architecture-atlas.json
+  also_depends_on:
+  - N509
+  - N510
+  - N504
+  - N506
+  - N508
+  status: resolved

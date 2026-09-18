@@ -45,7 +45,7 @@ flowchart TB
     class encode discussion_discussed;
     belief["Predict and correct → §4<br/>Recurrent world state + categorical belief"]
     class belief discussion_needs_discussion;
-    memory["Session memory + optional World State → §5/13<br/>History · entities · relations · evidence<br/>Validated: Storage / causal reads<br/>Discussion still pending"]
+    memory["Local / Global Context + optional World State → §5/13<br/>Internal split to discuss · external entities/evidence<br/>Validated: Storage / causal reads<br/>Discussion still pending"]
     class memory discussion_validated;
     workspace["Task workspace → §6<br/>Read state, memory and task; think"]
     class workspace discussion_discussed;
