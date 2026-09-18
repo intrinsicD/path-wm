@@ -5979,3 +5979,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O343
+  timestamp: 2026-09-18T08:50+02:00
+  provenance: ai-suggested
+  content: Interpret the report mechanisms through distinct budgets for representational capacity, retained
+    information, accessed information, numerical fidelity, arithmetic work, memory traffic and sequential
+    latency. Exact reuse, learned sharing, sparse selection and lossy approximation act on different budgets
+    and need separate reasoning. This taxonomy is explanatory synthesis, not a new empirical result or
+    adopted architecture.
+  context: N505 conceptual follow-up to the completed report review; no new external review, implementation
+    or training.
+  potential_type: concept
+  bound_to:
+  - N505
+  - N504
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

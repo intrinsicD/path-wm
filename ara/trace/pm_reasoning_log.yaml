@@ -2574,3 +2574,9 @@ entries:
   - Earlier filter-bank, coupling, residual/PCA and consumer questions remain active and explicitly referenced;
     no topic abandonment or new stale transition inferred. No model/default/checkpoint or discussion/validation
     promotion.
+- turn: 2026-09-18_001#6
+  notes:
+  - N505 records the answered conceptual question; O343 stages the assistant taxonomy. Explanation is
+    not endorsement of N504 mechanisms or evidence of efficacy.
+  - Existing mechanisms and earlier input/consumer topics are explicitly revisited, so no abandonment
+    or new stale transition inferred. No contradiction, claim crystallization, model or validation change.

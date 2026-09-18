@@ -14,6 +14,10 @@ bounded SWA replay is approximate. Actual public-only Claude review and technica
 reconciliation retained in `runs/reviews/deepseek-v41-20260918/`. This is a proposal:
 no model/default/checkpoint changes, training, benchmark or validation promotion.
 The multiscale design below remains the active input-architecture specification.
+Follow-up: [abstract principles](deepseek-v41-transfer-proposal.md#abstract-principles-behind-the-mechanisms)
+explain reuse, selective access, memory ownership, lookup versus computation,
+precision, verification and resource allocation. This explanatory synthesis adds
+no selected mechanism, experiment or validation claim.
 
 **Input architecture and invertibility decision, 18 September:**
 [multiscale modality design](multiscale-modality-design.md).

@@ -27,6 +27,42 @@ Reported speed/cache ratios are properties of its workload and implementation;
 they are not predictions for our small model. Its own limitations discuss sparse
 selection errors and approximate replay boundaries (§6, p37).
 
+## Abstract principles behind the mechanisms
+
+Follow-up explanation requested by Alex. These are our abstractions of the
+mechanisms, not additional claims that the report proves or new adopted changes.
+The common question is: **what should be represented, retained, recomputed,
+selected, approximated or checked for this particular computation?**
+
+| Mechanism | Abstract idea | Distinction that matters |
+| --- | --- | --- |
+| CED | Separate preparing information from using it. Pay for a reusable source representation once, then spend task-dependent computation on queries and outputs. | Consumers can share the source while keeping their own projections and local processing. |
+| CSA2 K/V and index reuse | Reuse the invariant part and refresh the changing part. Source representation, matching query and selected addresses are different objects. | Stable source K/V do not imply a stable set of relevant positions. Reusing existing identical computation differs from learning to share formerly different computation. |
+| Local/global attention and multiscale features | Represent context at several resolutions: broad coverage cheaply, detailed access where needed. | A coarse summary is not a substitute for all fine evidence; keeping fine evidence and reading it are separate costs. |
+| Hierarchical sparse indexing | Make selection in stages. An initial search creates a candidate set, and later computation concentrates on that set. | It amortizes later search, not the initial full scan. An excluded candidate cannot be recovered by reranking only the shortlist. |
+| Grouping, pixel-unshuffle, geometry-aware positions | Change the organization of information before deciding what to discard; make location and neighborhood relations explicit. | Fewer positions with wider vectors can preserve the same values. A subsequent reducing projection is a separate information loss. Geometry awareness alone does not guarantee arbitrary-resolution accuracy. |
+| Persistent/transient cache separation | Match retention to reuse, reconstruction cost and ownership. Different kinds of state deserve different lifetimes. | Committed evidence, exact restart state and expendable intermediate results have different obligations. |
+| Bounded replay | Trade storage for recomputation, and possibly exactness for less recomputation. Recover recent working intermediates from a retained basis. | A shorter replay can only approximate a state whose dependencies extend outside that replay. Deleting the only copy of evidence is a different operation. |
+| Multi-stream mHC | Keep several paths for information and learn how computation reads, mixes and updates them. | Multiple streams do not automatically acquire distinct semantics or guarantee an inverse. |
+| Single-pass mHC and kernel fusion | Organize dependencies so one visit to memory can serve several operations. Sometimes a small architectural relaxation enables a much cheaper execution schedule. | Moving fewer bytes can matter as much as doing fewer arithmetic operations. The coefficient shift is a model change that needs evaluation. |
+| Engram | Separate familiar-pattern lookup from contextual computation. Let stored learned associations handle recurring patterns while computation handles relationships and exceptions. | A learned pattern table is parametric knowledge; an episode store records particular occurrences with provenance. |
+| MoE and modality-specific balancing | Separate total capacity from work per input by selecting specialists; inspect resource use within meaningful populations. | Balanced aggregate traffic can hide modality-specific imbalance. Balanced traffic is not equal accuracy or equal training influence. |
+| FP4 and selective precision | Spend numerical precision according to sensitivity, treating bits and data movement as limited resources. | Rounding a key can alter a ranking; rounding a value can alter the returned content. Low tensor error need not mean unchanged decisions. |
+| DSpark | Separate proposing from checking. A cheap proposal can be useful even when it is imperfect if a stronger checker can accept or correct it efficiently. | Acceptance under a target decoder concerns that decoder's output behavior; it does not establish truth or environmental success. |
+| Effort conditioning | Learn how much computation to spend given a requested resource preference. Treat additional reasoning as an action with a cost and an uncertain benefit. | A preference signal is not a hard cap; more computation need not improve the result. |
+| DAG latency accounting | Distinguish total work from the sequential dependencies that determine completion time. | Parallel execution may shorten the critical path while increasing total resource consumption. |
+| Training-aware restrictions | Optimize the system under the conditions in which it will actually run. Restrictions and approximations are part of the learned problem. | Adaptation can reduce train/deploy mismatch, but cannot guarantee recovery of information excluded by the design. |
+| Verified task/environment construction | Improve learning by making tasks informative and success independently checkable. Separate the learner, task generator and evaluator's roles. | Producing more examples is not the same as producing more independent information; inspected failures and fresh generalization tests differ. |
+| Head-wise Muon and Sinkhorn-balanced updates | Let update geometry reflect the structure of the parameters: heads, rows and columns have different roles and scales. | This is a proposal about conditioning learning, not a claim that one optimizer dominates everywhere. |
+| Distributed encoding, shared-state ownership and asynchronous rollouts | Separate workloads with different execution/lifetime needs; overlap independent work and make ownership, dependencies and version changes explicit. | Concurrency can bias which samples finish first and can mix policy versions. Throughput and learning distribution must both be accounted for. |
+| Heterogeneous-teacher distillation | Transfer useful behavior through observable outputs instead of requiring compatible internal coordinates. | Agreement with teachers is a learning signal, not independent evidence of truth; it differs from averaging or decomposing weights. |
+
+These mechanisms act on different budgets: representational capacity, retained
+information, accessible information, numerical fidelity, arithmetic work, memory
+traffic and sequential latency. Improvement in one budget can worsen another.
+This is why the proposal keeps exact reuse, learned sharing, selective access and
+lossy approximation as separate decisions.
+
 ## Where each idea fits
 
 | Report idea and source | Proposed PATH-WM application | Priority and boundary |

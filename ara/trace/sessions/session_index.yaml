@@ -266,7 +266,8 @@ sessions:
     from resolution hierarchy; tapped3x3 stack proposed inside coupling, parallel kernels remain an alternative.
     No training or efficacy promotion.
     DeepSeek V4.1 read and mapped to current code; actual-Claude corrections reconciled. Fixed-context reuse, state ownership and verified tasks proposed first. No model changes, training or validation promotion.
-  turn_count: 5
-  events_count: 20
+    Abstract principles behind all transfer mechanisms explained; separate information, access, precision and computation budgets. No new adoption or validation.
+  turn_count: 6
+  events_count: 22
   claims_touched: []
   open_threads: 7

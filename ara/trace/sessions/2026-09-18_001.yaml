@@ -2,8 +2,8 @@ session:
   id: 2026-09-18_001
   date: '2026-09-18'
   started: 2026-09-18T00:12+02:00
-  last_turn: 2026-09-18T08:41+02:00
-  turn_count: 5
+  last_turn: 2026-09-18T08:50+02:00
+  turn_count: 6
   summary: Residual/PCA alternatives remain open. User specifies learnable multiscale filter banks and
     generic loop-transformer consumers, now explicitly accepting export after post-processing/before compression.
     Invertibility is conditional on learning quality; additive coupling is a working candidate. Linked
@@ -12,6 +12,7 @@ session:
     from resolution hierarchy; tapped3x3 stack proposed inside coupling, parallel kernels remain an alternative.
     No training or efficacy promotion.
     DeepSeek V4.1 read and mapped to current code; actual-Claude corrections reconciled. Fixed-context reuse, state ownership and verified tasks proposed first. No model changes, training or validation promotion.
+    Abstract principles behind all transfer mechanisms explained; separate information, access, precision and computation budgets. No new adoption or validation.
 events_logged:
 - turn: 1
   type: question
@@ -173,6 +174,22 @@ events_logged:
     only with task-relevant evidence checks and matched train/deploy regimes; preserve exact restart and
     provenance. mHC is not invertibility, Engram not episodic evidence, bounded replay not exact resume;
     budget policies follow useful fixed loops. No speed or quality benefit established.
+- turn: 6
+  type: question
+  id: N505
+  routing: direct
+  provenance: user
+  summary: What are the abstract ideas behind the proposed DeepSeek transfers?
+- turn: 6
+  type: observation
+  id: O343
+  routing: staged
+  provenance: ai-suggested
+  summary: Interpret the report mechanisms through distinct budgets for representational capacity, retained
+    information, accessed information, numerical fidelity, arithmetic work, memory traffic and sequential
+    latency. Exact reuse, learned sharing, sparse selection and lossy approximation act on different budgets
+    and need separate reasoning. This taxonomy is explanatory synthesis, not a new empirical result or
+    adopted architecture.
 ai_actions:
 - turn: 1
   action: Checked public Git Re-Basin, ZipIt and Model Soups sources; obtained tools-disabled actual-Claude
@@ -252,6 +269,16 @@ ai_actions:
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
   - docs/architecture-discussion.md
+- turn: 6
+  action: Added abstract-principles mapping for all mechanisms in the existing proposal, linked state
+    and atlas follow-ups, regenerated diagrams with no topology/status/validation changes. Explanation
+    only; no new review, model code, tests or training.
+  provenance: ai-executed
+  files_changed:
+  - docs/deepseek-v41-transfer-proposal.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -273,6 +300,8 @@ key_context:
 - turn: 5
   excerpt: User asks to extract core engineering and architecture ideas from the linked DeepSeek V4.1
     report, discuss with Claude and propose where each applies to our model.
+- turn: 6
+  excerpt: 'User: What are the abstract ideas behind all of those mentioned?'
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -303,3 +332,4 @@ ai_suggestions_pending:
   without establishing efficacy or selecting every detailed bundled O337/O338 mechanism/budget.
 - O341/O342 remain assistant proposals; peer agreement and documentation do not establish model benefit
   or user adoption.
+- O343 explanatory abstraction remains assistant synthesis; O341/O342 proposals remain unselected.

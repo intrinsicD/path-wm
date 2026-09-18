@@ -8409,3 +8409,16 @@ tree:
   - N500
   - N503
   status: resolved
+- id: N505
+  type: question
+  title: What are the abstract ideas behind the proposed DeepSeek transfers?
+  provenance: user
+  timestamp: 2026-09-18T08:50+02:00
+  description: User requests conceptual explanations of the mechanisms discussed in N504. Explained reusable
+    preparation, conditional access, information and precision budgets, storage/recompute, learned lookup,
+    verification and resource-aware learning. No additional mechanism or experiment selected.
+  evidence:
+  - docs/deepseek-v41-transfer-proposal.md#abstract-principles-behind-the-mechanisms
+  also_depends_on:
+  - N504
+  status: resolved
