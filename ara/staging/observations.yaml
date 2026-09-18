@@ -6108,3 +6108,83 @@ observations:
   bound_to:
   - N512
   - N513
+- timestamp: 2026-09-18T21:17+02:00
+  provenance: ai-suggested
+  context: N514 explanatory design proposal, source audit, primary Genie/SayCan reading
+    and actual public-only Claude critique/reconciliation. No new user adoption, model
+    implementation or experiment.
+  bound_to:
+  - N514
+  - N513
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+  id: O350
+  potential_type: architecture
+  content: Use explicit own-action command/execution records when available; infer
+    missing or other-actor actions as uncertain historical hypotheses. Keep observations,
+    goals/instructions, proposals, actual execution and outcomes distinct. Learned
+    latent action factors require actuator/tool grounding; a current latent observation
+    code is not automatically an action.
+- timestamp: 2026-09-18T21:17+02:00
+  provenance: ai-suggested
+  context: N514 explanatory design proposal, source audit, primary Genie/SayCan reading
+    and actual public-only Claude critique/reconciliation. No new user adoption, model
+    implementation or experiment.
+  bound_to:
+  - N514
+  - N513
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+  id: O351
+  potential_type: architecture
+  content: 'Propose exact typed operation/target/parameter/lifecycle records alongside
+    learned action encodings. Extend existing task-policy/consumer boundaries rather
+    than a second general reasoner or universal framework. Classify by execution boundary
+    and effects: internal computation/context, sensing/reads, communication/artifacts
+    and actuation can overlap. Internal working-state updates do not silently mutate
+    evidence or train weights.'
+- timestamp: 2026-09-18T21:17+02:00
+  provenance: ai-suggested
+  context: N514 explanatory design proposal, source audit, primary Genie/SayCan reading
+    and actual public-only Claude critique/reconciliation. No new user adoption, model
+    implementation or experiment.
+  bound_to:
+  - N514
+  - N513
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+  id: O352
+  potential_type: heuristic
+  content: Separate instruction understanding, provided executable capability, current
+    admissibility, uncertain prerequisites/competence and verified result. Exact checks
+    enforce only declared executor-supported contracts; learned success estimates
+    are not guarantees. Numeric action rollout planning does not automatically support
+    arbitrary tools or observation-contingent information gathering. Unknown/partial
+    execution results and backend-limited retry/atomicity must remain explicit.
+- timestamp: 2026-09-18T21:17+02:00
+  provenance: ai-suggested
+  context: N514 explanatory design proposal, source audit, primary Genie/SayCan reading
+    and actual public-only Claude critique/reconciliation. No new user adoption, model
+    implementation or experiment.
+  bound_to:
+  - N514
+  - N513
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+  id: O353
+  potential_type: heuristic
+  content: Evaluate completed-transition inverse recognition separately from causal
+    forward prediction. A next-frame-derived inverse posterior cannot condition a
+    scored forecast of that same frame. Explicit logs do not prove causal dynamics;
+    log timing, policy confounding, pseudo-label error and intervention shift need
+    checks. Inferred actions can help versus no action below a logged-action reference
+    when information/compute budgets are disclosed. Start with one executable request-to-result
+    capability; no experiment or numeric gate chosen.

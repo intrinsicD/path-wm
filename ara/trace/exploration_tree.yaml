@@ -8576,3 +8576,28 @@ tree:
   also_depends_on:
   - N512
   status: resolved
+- id: N514
+  type: question
+  title: Represent, infer, validate, plan and execute actions and instructions
+  provenance: user
+  timestamp: 2026-09-18T21:17+02:00
+  description: Alex asks how actions are represented, whether latent observations
+    can identify them, whether to input or infer actions/instructions, and how capability/feasibility
+    checks, planning and internal/external actions interact. Audited existing continuous
+    action vectors, TaskRequest/Interpreter/Policy, numeric rollout planner and optional
+    ControlBinding. Documented a proposed complete flow and implementation gaps; no
+    new action interface or training selected.
+  evidence:
+  - docs/action-semantics-design.md
+  - pathwm/models/belief.py
+  - pathwm/models/agent.py
+  - pathwm/models/tasks.py
+  - pathwm/evaluation/agent.py
+  - pathwm/world_state/extensions.py
+  - https://arxiv.org/html/2402.15391v1
+  - https://say-can.github.io/
+  - runs/reviews/action-semantics-20260918-210948/
+  also_depends_on:
+  - N513
+  - N509
+  status: resolved

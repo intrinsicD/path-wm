@@ -1,5 +1,16 @@
 # Current work
 
+**Actions and instruction walkthrough, 18 September:**
+[design and source audit](action-semantics-design.md). Alex asks how actions are
+represented/recognized, whether to supply or infer them, and how instructions,
+feasibility, planning and internal/external operations connect. Recommend explicit
+own-action records, uncertain inference for missing/other-actor actions, exact
+typed execution records alongside learned encodings, and effect-specific execution
+with scoped checks and outcome feedback. Current TaskPolicy and numeric rollout
+planner cover only parts; general tool execution, inverse action recognition and
+success validation are not thereby implemented. Public-only actual-Claude review;
+no new architecture adoption, model changes, training or validation promotion.
+
 **Architecture walkthrough reopened, 18 September:**
 [top-down discussion guide](architecture-walkthrough.md). Alex requests the functional
 module overview before locating DeepSeek/Jev techniques in concrete components.

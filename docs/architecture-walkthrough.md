@@ -174,6 +174,12 @@ empirische Validierung durch diese Diskussion.
 
 ## Spätere Zuordnung der Techniken
 
+Der [Aktionsdurchgang](action-semantics-design.md) behandelt inzwischen die
+Unterscheidung von Beobachtung, bekanntem Aktionslog, inferierter Aktion,
+Instruktion und internem Vorschlag sowie Ausführbarkeit, Planung und Rückmeldung.
+Die Kontext-TaskPolicy ist ein Teil dieser Operationssteuerung; neue Schnittstellen
+und Fähigkeitsprüfungen bleiben Vorschläge.
+
 Für jeden Kandidaten festhalten: konkreter Baustein und Aufrufpfad, beabsichtigter
 Nutzen, Voraussetzungen, veröffentlichte Evidenz, örtlich noch ungeprüfte
 Übertragung und kleinster sinnvoller Vergleich. Ausgangspunkte sind die

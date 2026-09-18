@@ -2,8 +2,8 @@ session:
   id: 2026-09-18_001
   date: '2026-09-18'
   started: 2026-09-18T00:12+02:00
-  last_turn: "2026-09-18T20:59+02:00"
-  turn_count: 13
+  last_turn: "2026-09-18T21:17+02:00"
+  turn_count: 14
   summary: Residual/PCA alternatives remain open. User specifies learnable multiscale filter banks and
     generic loop-transformer consumers, now explicitly accepting export after post-processing/before compression.
     Invertibility is conditional on learning quality; additive coupling is a working candidate. Linked
@@ -17,6 +17,8 @@ session:
     Jev/RLCD public-source search found objective/interface disclosures but no reproducible training recipe; related RLCR and Rewarding Doubt distinguished.
     PATH-WM calibration applicability assessed; reuse recall calibration and independent verification; supervised baseline first, sequential RL remains a later proposal.
     Top-down architecture walkthrough reopened; Local/Global Context terminology retained. Graph/thinker access and context policy reviewed against code and actual public-only Claude critique. Alex endorses extending existing TaskPolicy for context actions; A24 isolates this decision. Lifetimes, head/actions, selection training and efficacy remain open; no model changes.
+    Action/instruction interface explained and audited; explicit own-action logs, uncertain inverse inference, typed execution and separate capability/outcome checks proposed. Actual Claude corrections reconcile causal leakage and backend limits. Existing planner remains numeric; O350-O353 staged, no implementation or adoption.
+
 
 events_logged:
 - turn: 1
@@ -299,6 +301,57 @@ events_logged:
   provenance: user-revised
   summary: Crystallized O348 via explicit user affirmation; implementation remains
     open.
+- turn: 14
+  type: question
+  id: N514
+  routing: direct
+  provenance: user
+  summary: Requested complete explanation of action representation, inference, instructions,
+    feasibility and planning.
+- turn: 14
+  type: observation
+  id: O350
+  routing: staged
+  provenance: ai-suggested
+  summary: Use explicit own-action command/execution records when available; infer
+    missing or other-actor actions as uncertain historical hypotheses. Keep observations,
+    goals/instructions, proposals, actual execution and outcomes distinct. Learned
+    latent action factors require actuator/tool grounding; a current latent observation
+    code is not automatically an action.
+- turn: 14
+  type: observation
+  id: O351
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Propose exact typed operation/target/parameter/lifecycle records alongside
+    learned action encodings. Extend existing task-policy/consumer boundaries rather
+    than a second general reasoner or universal framework. Classify by execution boundary
+    and effects: internal computation/context, sensing/reads, communication/artifacts
+    and actuation can overlap. Internal working-state updates do not silently mutate
+    evidence or train weights.'
+- turn: 14
+  type: observation
+  id: O352
+  routing: staged
+  provenance: ai-suggested
+  summary: Separate instruction understanding, provided executable capability, current
+    admissibility, uncertain prerequisites/competence and verified result. Exact checks
+    enforce only declared executor-supported contracts; learned success estimates
+    are not guarantees. Numeric action rollout planning does not automatically support
+    arbitrary tools or observation-contingent information gathering. Unknown/partial
+    execution results and backend-limited retry/atomicity must remain explicit.
+- turn: 14
+  type: observation
+  id: O353
+  routing: staged
+  provenance: ai-suggested
+  summary: Evaluate completed-transition inverse recognition separately from causal
+    forward prediction. A next-frame-derived inverse posterior cannot condition a
+    scored forecast of that same frame. Explicit logs do not prove causal dynamics;
+    log timing, policy confounding, pseudo-label error and intervention shift need
+    checks. Inferred actions can help versus no action below a logged-action reference
+    when information/compute budgets are disclosed. Start with one executable request-to-result
+    capability; no experiment or numeric gate chosen.
 ai_actions:
 - turn: 1
   action: Checked public Git Re-Basin, ZipIt and Model Soups sources; obtained tools-disabled actual-Claude
@@ -463,6 +516,20 @@ ai_actions:
   - docs/architecture-atlas.html
   - docs/architecture-atlas.md
   - ara/logic/solution/architecture.md
+- turn: 14
+  action: Read current action, instruction, task-policy, execution and numeric planner
+    code. Read primary Genie/SayCan sources. Two actual-Claude generic public-methodology
+    reviews succeeded; corrected causal target leakage, usefulness and executor-atomicity
+    overstatements. Added German action-semantics design, linked state/walkthrough
+    and atlas checklist. Regenerated 16 graphs; checked unchanged topology/statuses/validation
+    and local document links. No model code edits, tests or training.
+  provenance: ai-executed
+  files_changed:
+  - docs/action-semantics-design.md
+  - docs/architecture-walkthrough.md
+  - docs/project-state.md
+  - docs/architecture-discussion.md
+  - docs/diagrams/architecture-atlas.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -507,6 +574,10 @@ key_context:
   excerpt: 'Alex asks who decides Graph→Global, Local→Global and Global→Local. Assistant
     proposes extending existing TaskPolicy; final voice tail: "Ja, gute Idee". Earlier
     confirmation identifies the existing Thinker only.'
+- turn: 14
+  excerpt: How are actions represented/recognized from latent observations? Supply
+    or infer? How are requests checked for feasibility, known capabilities and execution?
+    How do planning and internal/external operations relate?
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -533,6 +604,9 @@ open_threads:
 - 'N513/A24: Specify context-control head/actions, scope lifetimes, budgets and training
   after walkthrough. O347/O349 remain proposals; no implementation authorized by this
   design endorsement.'
+- 'N514: Select one concrete action/capability and contract before implementation;
+  exact schema, inverse-action objective, success labels and general planning integration
+  remain open.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -554,3 +628,5 @@ ai_suggestions_pending:
 - O346 remains an untested recommendation; calibration diagnostic checkpoint, populations, budgets and adoption remain unselected.
 - O347/O349 remain unvalidated scope/storage/training proposals. Only O348 TaskPolicy
   responsibility is endorsed and crystallized as A24.
+- O350-O353 are explanatory action-design and evaluation proposals. No new user affirmation;
+  A24 remains the narrow previously adopted context TaskPolicy responsibility.

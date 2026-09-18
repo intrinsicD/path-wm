@@ -271,8 +271,10 @@ sessions:
     Jev/RLCD public-source search found objective/interface disclosures but no reproducible training recipe; related RLCR and Rewarding Doubt distinguished.
     PATH-WM calibration applicability assessed; reuse recall calibration and independent verification; supervised baseline first, sequential RL remains a later proposal.
     Top-down architecture walkthrough reopened; Local/Global Context terminology retained. Graph/thinker access and context policy reviewed against code and actual public-only Claude critique. Alex endorses extending existing TaskPolicy for context actions; A24 isolates this decision. Lifetimes, head/actions, selection training and efficacy remain open; no model changes.
+    Action/instruction interface explained and audited; explicit own-action logs, uncertain inverse inference, typed execution and separate capability/outcome checks proposed. Actual Claude corrections reconcile causal leakage and backend limits. Existing planner remains numeric; O350-O353 staged, no implementation or adoption.
 
-  turn_count: 13
-  events_count: 38
+
+  turn_count: 14
+  events_count: 43
   claims_touched: []
-  open_threads: 11
+  open_threads: 12

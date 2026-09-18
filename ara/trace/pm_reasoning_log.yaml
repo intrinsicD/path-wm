@@ -2643,3 +2643,16 @@ entries:
     claim, new experiment or code implementation.'
   - Prior topics remain referenced/open; no blanket topic-abandonment promotion or
     contradictory rewrite.
+- turn: 2026-09-18_001#14
+  notes:
+  - N514 records a broad architecture question, not authorization for a new action
+    execution interface, model fit or external action. O350-O353 remain staged; source
+    evidence and peer agreement do not constitute user adoption.
+  - Current implementation facts are bound to source files; no generic competence
+    inferred from ActionHead, TaskPolicy, ControlBinding or planner existence. Genie/SayCan
+    are related precedents, not PATH-WM validation.
+  - Reconciled peer claims include explicit logs without causal guarantee, retrospective
+    inverse recognition versus future leakage, incomplete outcomes and capability-specific
+    atomicity. No tests were warranted for documentation edits.
+  - Preserved discussion coverage, scoped validation and prior open research threads;
+    no promotion, new contradiction or topic-abandonment inferred.
