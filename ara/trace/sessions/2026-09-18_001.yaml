@@ -2,8 +2,8 @@ session:
   id: 2026-09-18_001
   date: '2026-09-18'
   started: 2026-09-18T00:12+02:00
-  last_turn: 2026-09-18T09:53+02:00
-  turn_count: 9
+  last_turn: 2026-09-18T20:40+02:00
+  turn_count: 10
   summary: Residual/PCA alternatives remain open. User specifies learnable multiscale filter banks and
     generic loop-transformer consumers, now explicitly accepting export after post-processing/before compression.
     Invertibility is conditional on learning quality; additive coupling is a working candidate. Linked
@@ -237,6 +237,13 @@ events_logged:
   provenance: ai-suggested
   summary: Supervised calibration and existing recall diagnostics are the proposed starting point; sequential
     RL transfer untested.
+- turn: 10
+  type: question
+  id: N509
+  routing: direct
+  provenance: user
+  summary: Requested functional architecture walkthrough, especially the component
+    learning physics.
 ai_actions:
 - turn: 1
   action: Checked public Git Re-Basin, ZipIt and Model Soups sources; obtained tools-disabled actual-Claude
@@ -388,6 +395,9 @@ key_context:
   excerpt: Is there any information online on how jev and rlcd training concretely works?
 - turn: 9
   excerpt: Is this also useful for path-wm?
+- turn: 10
+  excerpt: Welche Komponenten / Module hat das ganze Modell, zum Beispiel der Teil,
+    in dem Physik gelernt wird?
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -404,6 +414,8 @@ open_threads:
   independently from the invertibility factor.'
 - 'N504: select the first measured fixed-context reuse workload and concrete multiscale tasks/budgets;
   sparse access, precision and budget policies remain proposals.'
+- 'N509: Walk through functional modules with Alex; dedicated dynamics/predict-correct
+  discussion remains open.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.

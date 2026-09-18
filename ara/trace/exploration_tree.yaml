@@ -8476,3 +8476,17 @@ tree:
   also_depends_on:
   - N507
   status: resolved
+- id: N509
+  type: question
+  title: Walk through functional model modules and where physical dynamics are learned
+  provenance: user
+  timestamp: 2026-09-18T20:40+02:00
+  description: Alex reopens the overall PATH-WM design discussion and asks for functional
+    components, using the part learning physics as an example. Initial overview grounds
+    dynamics in BeliefDynamics and separates perception, state correction, memory,
+    thinking, planning and outputs. Detailed user walkthrough remains open.
+  evidence:
+  - docs/latent-core.md
+  - docs/belief-model.md
+  - pathwm/models/belief.py
+  status: open

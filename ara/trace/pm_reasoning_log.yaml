@@ -2604,3 +2604,11 @@ entries:
     adopted decision or implementation. No closure for these proposals, no efficacy claim or contradiction.
   - Existing architecture topics remain explicitly open; atlas follow-up metadata changed with statuses,
     topology and validation retained.
+- turn: 2026-09-18_001#10
+  notes:
+  - N509 records an explicitly reopened architecture question. Existing roles are
+    summarized from current code/docs; no new architecture, physics capability or
+    adopted mechanism inferred.
+  - Initial assistant overview does not complete a dedicated discussion; no atlas
+    color/coverage or validation promotion. Prior open topics remain referenced; no
+    closure or contradiction, no knowledge crystallization.
