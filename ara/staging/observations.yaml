@@ -6048,3 +6048,63 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- timestamp: 2026-09-18T20:59+02:00
+  context: N512 context-role and control discussion with N513 narrow user endorsement;
+    code audit and public-only actual-Claude critique/reconciliation, no implementation
+    or training.
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+  id: O347
+  provenance: ai-suggested
+  content: Propose local context for the current subtask and global context for selected
+    task-wide information. One bounded set of versioned references with scope tags
+    can serve both without duplicated source storage. Graph records, observation features
+    and mutable inferred work retain distinct roles and explicit dependencies; activation,
+    retention and graph publication are different operations. Exact scopes and quality
+    benefit are not established.
+  potential_type: architecture
+  bound_to:
+  - N512
+  - N511
+- timestamp: 2026-09-18T20:59+02:00
+  context: N512 context-role and control discussion with N513 narrow user endorsement;
+    code audit and public-only actual-Claude critique/reconciliation, no implementation
+    or training.
+  promoted: true
+  promoted_to: "logic/solution/architecture.md:A24"
+  crystallized_via: "verbal-affirmation"
+  stale: false
+  id: O348
+  provenance: user-revised
+  content: Extend the existing TaskPolicy to select internal context actions rather
+    than relying only on caller-supplied graph queries. Choice is driven by the thinking/task
+    state; bounded execution preserves storage/provenance contracts. User endorses
+    this responsibility allocation, not every proposed head, data structure, operation
+    or training choice.
+  potential_type: architecture
+  bound_to:
+  - N513
+  - N512
+- timestamp: 2026-09-18T20:59+02:00
+  context: N512 context-role and control discussion with N513 narrow user endorsement;
+    code audit and public-only actual-Claude critique/reconciliation, no implementation
+    or training.
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+  id: O349
+  provenance: ai-suggested
+  content: Start context-policy experiments with supplied relevance/retention targets
+    and task losses, disclosing discrete gradient boundaries and target provenance.
+    Hindsight training labels may use training outcomes but cannot expose future decision-time
+    inputs or evaluation answers. Compare feasible fixed and learned policies under
+    matched context, retrieval, compute and tuning budgets; test revisions, distraction
+    and inference drift. Source labels and transitive invalidation do not prove semantic
+    faithfulness.
+  potential_type: heuristic
+  bound_to:
+  - N512
+  - N513

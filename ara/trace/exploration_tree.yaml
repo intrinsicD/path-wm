@@ -8534,3 +8534,45 @@ tree:
   - N506
   - N508
   status: resolved
+- id: N512
+  type: question
+  title: How should thinking and graph retrieval populate Local and Global Context?
+  provenance: user
+  timestamp: 2026-09-18T20:59+02:00
+  description: Alex proposes that the existing Thinker and retrieved graph concepts/instances/components
+    populate internal context, then asks who chooses retrieval, activation, promotion
+    and reverse access between scopes. Compared current caller-driven WorldSession
+    retrieval, existing coarse TaskPolicy/recall and a proposed targeted learned control
+    head. Three actual public-only Claude responses reconcile methodological boundaries.
+  evidence:
+  - docs/architecture-walkthrough.md
+  - pathwm/world_state/session.py
+  - pathwm/world_state/modules.py
+  - pathwm/models/tasks.py
+  - pathwm/models/agent.py
+  - runs/reviews/context-scopes-20260918-205320/
+  - https://arxiv.org/abs/2310.08560
+  also_depends_on:
+  - N510
+  - N511
+  status: resolved
+- id: N513
+  type: decision
+  title: Extend existing TaskPolicy to select context actions
+  provenance: user
+  timestamp: 2026-09-18T20:59+02:00
+  choice: Alex endorses the proposal to extend the existing TaskPolicy for detailed
+    context decisions. It should select context actions from the thinking/task state,
+    with bounded execution separated from semantic selection. Exact head, operation
+    schema, capacities, training and implementation remain unspecified.
+  alternatives:
+  - Leaving graph queries entirely caller-supplied without learned internal context
+    control
+  evidence:
+  - 'Voice transcript tail: assistant proposes targeted TaskPolicy extension; user
+    replies "Ja, gute Idee".'
+  - docs/architecture-walkthrough.md#wer-entscheidet
+  - O348
+  also_depends_on:
+  - N512
+  status: resolved

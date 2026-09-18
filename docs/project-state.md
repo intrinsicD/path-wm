@@ -8,6 +8,18 @@ mapping to existing stores/access patterns remains open. External World State st
 separate. Terminology and discussion order only; no model/API/checkpoint changes,
 new experiment or capability validation.
 
+**Context control discussion, 18 September:**
+[roles and proposed control](architecture-walkthrough.md#kontext-nutzen-und-steuern-aktueller-diskussionsvorschlag).
+Alex asks how thinking and retrieved graph concepts/instances/components populate
+Local/Global Context, and who chooses transfers. Propose a small learned context
+head associated with existing TaskPolicy, a bounded executor and one reference
+set with scope tags. Alex endorses extending TaskPolicy for context decisions;
+head/action details and training remain proposals. Current WorldSession still takes caller-supplied queries;
+complete autonomous context control is not implemented. Provenance, transitive
+revision invalidation and separate graph writes are explicit. Actual public-only
+Claude critique/reconciliation completed; selection/training efficacy remains open. No model or
+training change.
+
 **Calibration-training applicability, 18 September:**
 [assessment](decision-design.md#calibration-training-and-the-jevrlcd-comparison).
 Existing recall has cost-based abstention, held-out temperature fitting and reliability/Brier

@@ -232,3 +232,14 @@
 - **From staging**: O336; isolates the explicitly affirmed export-position part of O334.
 - **Adoption**: N500; [design](../../../docs/multiscale-modality-design.md), user: “yes export immediately after post-processing, before compression.”
 - **Limits**: Interface decision only. No new implementation, compact total-output guarantee or learning result. Invertibility remains conditional on learning quality; O337's particular construction and O335's consumer details are not promoted by this affirmation.
+
+
+## A24: Existing TaskPolicy owns context-action selection
+
+- **Design**: Extend the existing TaskPolicy to choose context actions from the thinking/task state. Keep content selection separate from execution that enforces capacity, time, representation and provenance contracts.
+- **Provenance**: user-revised
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O348; isolates the explicitly endorsed TaskPolicy responsibility from the larger O347/O349 proposal bundles.
+- **Adoption**: N513; user responds “Ja, gute Idee” to targeted TaskPolicy extension. [Discussion and current-code boundary](../../../docs/architecture-walkthrough.md#wer-entscheidet).
+- **Implementation references**: [Current TaskPolicy](../../../pathwm/models/tasks.py), [current WorldSession](../../../pathwm/world_state/session.py). These establish extension points, not completion of the new behavior.
+- **Limits**: Design direction only. No context-control implementation, selected head/action schema, training budget, independent usefulness or capability claim. Current graph query remains caller-supplied.

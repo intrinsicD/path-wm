@@ -2630,3 +2630,16 @@ entries:
     for the detailed implementation proposals.
   - Existing open topics are retained; no full walkthrough completion, staged-knowledge
     promotion or new empirical validation.
+- turn: 2026-09-18_001#13
+  notes:
+  - Grouped continuing voice directions and clarifications into the completed context-control
+    discussion; no mid-discussion epilogue. N512 records the questions; N513 records
+    the final explicit endorsement.
+  - O348 narrowly isolates TaskPolicy responsibility and promotes A24 via affirmation.
+    The identity clarification alone did not approve an architecture. O347/O349 are
+    broader assistant proposals and remain staged despite documentation and peer agreement.
+  - 'Verified critique corrections: proposal/execution distinction, metadata versus
+    semantic grounding, legitimate hindsight training labels. No unsupported efficacy
+    claim, new experiment or code implementation.'
+  - Prior topics remain referenced/open; no blanket topic-abandonment promotion or
+    contradictory rewrite.
