@@ -5,6 +5,12 @@ proposal requested by Alex, not an implemented architecture or a learning result
 It extends the [multiscale modality design](multiscale-modality-design.md), including
 the accepted pre-compression exports and conditional preference for invertibility.
 
+Alex subsequently adopted the abstract principles as standing guidance for all
+future model design. The [workflow](experiment-workflow.md#standing-design-principles)
+requires actively considering and integrating relevant ideas, with explicit
+trade-offs and checks. Particular mechanisms below remain proposals until selected
+and evaluated; the workflow commitment does not establish their empirical benefit.
+
 **Recommendation:** organize the next design around reusable evidence, private
 consumer computation, and explicit costs for reading and retaining information.
 Start engineering with repeated fixed-context projections. Start capability work

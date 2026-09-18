@@ -2,8 +2,8 @@ session:
   id: 2026-09-18_001
   date: '2026-09-18'
   started: 2026-09-18T00:12+02:00
-  last_turn: 2026-09-18T08:50+02:00
-  turn_count: 6
+  last_turn: 2026-09-18T09:31+02:00
+  turn_count: 7
   summary: Residual/PCA alternatives remain open. User specifies learnable multiscale filter banks and
     generic loop-transformer consumers, now explicitly accepting export after post-processing/before compression.
     Invertibility is conditional on learning quality; additive coupling is a working candidate. Linked
@@ -13,6 +13,7 @@ session:
     No training or efficacy promotion.
     DeepSeek V4.1 read and mapped to current code; actual-Claude corrections reconciled. Fixed-context reuse, state ownership and verified tasks proposed first. No model changes, training or validation promotion.
     Abstract principles behind all transfer mechanisms explained; separate information, access, precision and computation budgets. No new adoption or validation.
+    User adopts abstract principles as standing design practice; workflow and CLAUDE entry point updated. H79 crystallized from explicit instruction; concrete mechanisms and efficacy remain unselected.
 events_logged:
 - turn: 1
   type: question
@@ -190,6 +191,25 @@ events_logged:
     latency. Exact reuse, learned sharing, sparse selection and lossy approximation act on different budgets
     and need separate reasoning. This taxonomy is explanatory synthesis, not a new empirical result or
     adopted architecture.
+- turn: 7
+  type: decision
+  id: N506
+  routing: direct
+  provenance: user
+  summary: Apply the discussed abstract design principles throughout future model work
+- turn: 7
+  type: observation
+  id: O344
+  routing: staged
+  provenance: user
+  summary: Whenever we design anything for this model keep those in mind and try to integrate these ideas.
+    Write that into the workflow.
+- turn: 7
+  type: heuristic
+  id: H79
+  routing: crystallized
+  provenance: user
+  summary: Standing design practice promoted via explicit user affirmation; no mechanism or efficacy promotion.
 ai_actions:
 - turn: 1
   action: Checked public Git Re-Basin, ZipIt and Model Soups sources; obtained tools-disabled actual-Claude
@@ -279,6 +299,16 @@ ai_actions:
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
   - docs/architecture-discussion.md
+- turn: 7
+  action: Added standing principles and plan-recording requirements to the experiment workflow, a CLAUDE
+    entry-point reminder and adoption notes in project state/source proposal. Checked links and documentation
+    diff; no model changes or tests/training.
+  provenance: ai-executed
+  files_changed:
+  - docs/experiment-workflow.md
+  - CLAUDE.md
+  - docs/project-state.md
+  - docs/deepseek-v41-transfer-proposal.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -302,6 +332,9 @@ key_context:
     report, discuss with Claude and propose where each applies to our model.
 - turn: 6
   excerpt: 'User: What are the abstract ideas behind all of those mentioned?'
+- turn: 7
+  excerpt: Whenever we design anything for this model keep those in mind and try to integrate these ideas.
+    Write that into the workflow.
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -333,3 +366,5 @@ ai_suggestions_pending:
 - O341/O342 remain assistant proposals; peer agreement and documentation do not establish model benefit
   or user adoption.
 - O343 explanatory abstraction remains assistant synthesis; O341/O342 proposals remain unselected.
+- N506/H79 adopts using the principles as workflow guidance. O341/O342 implementation proposals and O343
+  explanatory taxonomy do not become efficacy claims or blanket mechanism adoption.

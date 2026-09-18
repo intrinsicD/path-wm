@@ -2,6 +2,8 @@
 
 Read [workflow](docs/experiment-workflow.md), then
 [current work](docs/project-state.md). Read the active plan linked there.
+Apply the workflow's [standing design principles](docs/experiment-workflow.md#standing-design-principles)
+whenever designing or revising any part of the model; actively integrate relevant ideas.
 
 When discussing architecture with Alex, maintain the overview's discussion colors:
 red = still to discuss, blue = discussed, green = validated within a labelled scope. Follow the

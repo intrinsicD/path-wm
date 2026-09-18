@@ -782,3 +782,15 @@
 - **Code ref**: [suite functions](../../../pathwm/evaluation/modality_suite.py), [recipe](../../../experiments/modality_readout.py), [checks](../../../tests/test_modality_suites.py).
 - **Evidence**: N440–N442; [fixed baseline audit](../../evidence/tables/modality_suites_2026-09-16.json).
 - **Scope**: First executable diagnostic slice, not a completed natural-modality suite or learned-capability repair.14 broad tasks remain unimplemented; output paths unscored in this slice.
+
+
+## H79: Apply the abstract design principles throughout model development
+
+- **Rationale**: Alex explicitly asks that every future model design consider and try to integrate the discussed principles. Plans identify relevant applications, trade-offs and meaningful checks across reusable computation, selective access, state ownership, precision, verification and resource-aware learning/execution.
+- **Provenance**: user
+- **Crystallized via**: verbal-affirmation
+- **From staging**: O344
+- **Sensitivity**: Workload-dependent. The commitment is to use the principles in design; particular mechanisms and empirical benefits still require scoped selection and evidence.
+- **Code ref**: [standing workflow](../../../docs/experiment-workflow.md#standing-design-principles), [required entry point](../../../CLAUDE.md). This is a development practice, not a neural implementation.
+- **Evidence**: N506; explicit user instruction and the committed workflow update.
+- **Scope**: All model-related architecture, interfaces, memory, training/data, inference, planning and supporting systems; preserve the small-library/recipe boundary.

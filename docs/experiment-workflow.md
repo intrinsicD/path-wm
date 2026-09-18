@@ -8,7 +8,8 @@ report wrapper while preserving scientific integrity and the four-step process.
 
 1. **Plan.** Update the active plan linked from project-state.md: concrete problem,
    affected interfaces, success criteria and compute budget. Prefer one real user
-   path. Do not create another framework or speculative module catalog.
+   path. Apply the standing design principles below and record the relevant choices.
+   Do not create another framework or speculative module catalog.
 2. **Essential checks.** Write the few tests that catch meaningful failure. For new
    behavior, demonstrate an informative failure before implementation. Tests cover
    data alignment, frozen gradients/buffers, temporal causality, numeric references
@@ -24,6 +25,64 @@ A scientific experiment separately declares hypotheses, seeds, populations,
 metrics, thresholds and budgets before execution. An unset threshold cannot pass.
 Record deviations and stopped/failed runs; never choose gates after seeing results.
 Do not add tests for prose or trivial glue, or conceal failures by deleting tests.
+
+## Standing design principles
+
+Alex adopts the [DeepSeek-derived abstract principles](deepseek-v41-transfer-proposal.md#abstract-principles-behind-the-mechanisms)
+as standing guidance for every model-related design: architecture, modules and
+interfaces, memory, training/data, inference, planning and supporting systems.
+Actively look for opportunities to integrate them whenever designing or revising
+any part of PATH-WM. Choose concrete applications according to the workload,
+learning needs and evidence, while preserving the small-library/recipe boundary.
+
+- **Prepare once, use many ways.** Separate reusable source preparation from
+  consumer-specific queries, computation and outputs. Share stable representations
+  while allowing specialized projections and processing.
+- **Reuse invariants; refresh changing work.** Distinguish source values, projected
+  K/V, queries and selected addresses. Scope reuse to valid input/weight/state
+  identities and preserve gradient paths during training. Evaluate learned sharing
+  and reused selections separately from identical-computation reuse.
+- **Keep multiple resolutions and select access deliberately.** Combine broad
+  context with fine evidence; consider staged retrieval and conditional experts.
+  Account for initial search, missed candidates and recovery/full-access controls.
+  Separate retained information from the subset read by a particular computation.
+- **Organize before discarding.** Use geometry and reversible rearrangement where
+  useful; make compression and information loss explicit. Consider multiple learned
+  information paths without assuming that mixing provides invertibility or that
+  streams acquire predetermined meanings.
+- **Give state explicit ownership and lifetimes.** Separate authoritative evidence,
+  exact restart state, learned pattern knowledge and disposable derived caches.
+  Balance storage against reconstruction cost and reuse. Label approximate replay
+  and preserve source provenance, temporal causality and declared exactness contracts.
+- **Spend capacity and precision where useful.** Consider lookup versus computation,
+  specialist routing and sensitivity-based precision. Check per-modality/task
+  behavior as well as aggregate balance; measure decision/ranking effects of
+  approximation, not only tensor error.
+- **Separate proposing from verification.** Consider cheaper candidate generation
+  followed by stronger checking. State what the checker establishes; preserve
+  independent evidence for factual or environmental success. Distillation transfers
+  behavior across architectures but teacher agreement remains a learning signal.
+- **Allocate computation to useful progress.** Consider effort-conditioned reads,
+  thinking and search after establishing useful fixed-budget behavior. Keep hard
+  resource limits; distinguish total work from critical-path latency and measure
+  quality across budgets rather than assuming more computation helps.
+- **Design for actual execution.** Account for memory traffic, redundant transfers,
+  dependency structure and opportunities to fuse or overlap work. Give shared
+  parameters/state clear owners. Match optimizer treatment to parameter structure
+  where justified; track sample bias and policy versions in asynchronous work.
+- **Train and evaluate the system that will run.** Include adopted access/precision
+  restrictions during training, compare restricted and unrestricted behavior, and
+  use informative tasks with independently checkable outcomes, fresh compositions
+  and preservation controls. Prioritize trustworthy learning signals.
+
+In each substantive design note, briefly state which principles apply, how they
+are integrated or why a relevant option is deferred, the expected benefit and
+trade-offs, and the smallest meaningful check or comparison. Account separately
+for retained/accessed information, numerical fidelity, parameters, compute, memory
+traffic and latency where relevant. Keep exact optimizations, learned architecture
+changes and lossy approximations distinguishable. The standing commitment is to
+consider and apply these ideas thoughtfully; individual mechanisms and performance
+claims still require their own scoped evidence.
 
 ## Keep it understandable
 

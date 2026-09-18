@@ -8422,3 +8422,21 @@ tree:
   also_depends_on:
   - N504
   status: resolved
+- id: N506
+  type: decision
+  title: Apply the discussed abstract design principles throughout future model work
+  provenance: user
+  timestamp: 2026-09-18T09:31+02:00
+  choice: Whenever designing any part of PATH-WM, keep the discussed principles in mind and actively integrate
+    them where appropriate. Record this as standing workflow guidance. This selects a design practice,
+    not every concrete mechanism or its efficacy.
+  alternatives:
+  - Keep the principles as a one-off report assessment
+  evidence:
+  - docs/experiment-workflow.md#standing-design-principles
+  - CLAUDE.md
+  - docs/deepseek-v41-transfer-proposal.md#abstract-principles-behind-the-mechanisms
+  also_depends_on:
+  - N504
+  - N505
+  status: resolved

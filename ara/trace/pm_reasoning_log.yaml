@@ -2580,3 +2580,12 @@ entries:
     not endorsement of N504 mechanisms or evidence of efficacy.
   - Existing mechanisms and earlier input/consumer topics are explicitly revisited, so no abandonment
     or new stale transition inferred. No contradiction, claim crystallization, model or validation change.
+- turn: 2026-09-18_001#7
+  notes:
+  - N506 records explicit adoption of the standing design practice. O344 isolates the user instruction
+    and crystallizes H79 via verbal affirmation; existing proposal bundles are not promoted wholesale.
+  - Workflow edits make the guidance operational across model work without selecting all mechanisms, authorizing
+    a compute budget or claiming a benefit. No architecture discussion colors/validation changed because
+    this is process adoption.
+  - Earlier architecture and experiment threads remain open and referenced; no contradiction, abandonment
+    or new stale transition inferred.

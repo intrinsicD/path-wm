@@ -267,7 +267,8 @@ sessions:
     No training or efficacy promotion.
     DeepSeek V4.1 read and mapped to current code; actual-Claude corrections reconciled. Fixed-context reuse, state ownership and verified tasks proposed first. No model changes, training or validation promotion.
     Abstract principles behind all transfer mechanisms explained; separate information, access, precision and computation budgets. No new adoption or validation.
-  turn_count: 6
-  events_count: 22
+    User adopts abstract principles as standing design practice; workflow and CLAUDE entry point updated. H79 crystallized from explicit instruction; concrete mechanisms and efficacy remain unselected.
+  turn_count: 7
+  events_count: 25
   claims_touched: []
   open_threads: 7

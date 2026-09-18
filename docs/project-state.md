@@ -1,5 +1,12 @@
 # Current work
 
+**Standing design guidance adopted, 18 September:** Alex asks that all future
+model design actively consider and integrate the discussed abstract ideas where
+they fit. This is now part of the [workflow](experiment-workflow.md#standing-design-principles)
+and the required `CLAUDE.md` entry point. Plans record relevant applications,
+trade-offs and checks. This adopts the design practice; concrete mechanisms and
+their empirical benefits remain subject to the existing scoped comparisons.
+
 **DeepSeek V4.1 transfer proposal, 18 September:**
 [engineering and architecture mapping](deepseek-v41-transfer-proposal.md).
 Read the exact user-linked report via its hash-matched official copy and audited

@@ -5997,3 +5997,18 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O344
+  timestamp: 2026-09-18T09:31+02:00
+  provenance: user
+  content: Whenever we design anything for this model keep those in mind and try to integrate these ideas.
+    Write that into the workflow.
+  context: User explicitly adopts consideration and appropriate integration of N505 abstract principles
+    as a standing practice; concrete implementation choices and efficacy remain open.
+  potential_type: heuristic
+  bound_to:
+  - N506
+  - N505
+  promoted: true
+  promoted_to: logic/solution/heuristics.md:H79
+  crystallized_via: verbal-affirmation
+  stale: false
