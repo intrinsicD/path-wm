@@ -366,3 +366,71 @@ supports their outcomes; do not invent counterfactual feedback from real executi
 Primary-source checks support the belief-policy and model-uncertainty distinctions
 cited above. The illustrative sensing arithmetic was checked with exact fractions.
 Peer agreement and arithmetic checks do not establish learned capability.
+
+## Calibration training and the Jev/RLCD comparison
+
+18 September 2026: Alex asks whether the calibration-training direction is useful
+for PATH-WM. The assessment is yes for observable task predictions and decisions;
+it is a proposal, not adoption of a new trainer or evidence of improved behavior.
+TypeSafe's RLCD recipe remains undisclosed in the sources checked. The reproducible
+reference is [RLCR](https://arxiv.org/abs/2507.16806), which trains generated answers
+and confidence with correctness minus squared confidence error. Its reasoning-LM
+GRPO procedure is not automatically appropriate for our direct probability heads.
+
+The existing implementation already supplies a narrow starting point:
+
+- `pathwm/models/recall.py::select_recall` compares predicted error cost with
+  abstention cost; `verify_recall` uses a separately supplied complete source log.
+- `pathwm/evaluation/recall.py` fits a held-out positive temperature and reports
+  factual accuracy, NLL, multiclass Brier, reliability bins, answer coverage and
+  error among answers. These are mechanisms, not proof of calibrated recall.
+- TaskPolicy operation probabilities represent proposed choices. Its completion
+  logit and TaskSession fulfillment are not probabilities of externally verified
+  success. Latent categorical entropy and attention weights are likewise not
+  observable-event confidence.
+
+Useful prospective targets include the factual answer distribution, success of a
+specified candidate action over a specified horizon, and satisfaction of a defined
+completion condition. Each target needs its own checkable semantics and available
+feedback. Predicting whether another recall/think step is worthwhile additionally
+requires expected task-loss reduction and compute cost; low confidence alone does
+not establish useful value of information. Confidence cannot replace source IDs,
+event times, provenance or the independent verifier.
+
+For categorical factual labels, start with existing cross-entropy training and
+held-out temperature calibration. A multiclass Brier objective is a later matched
+comparison; direct differentiation through probabilities needs no policy gradient.
+For a binary verified outcome, BCE or Brier can directly supervise its predictor.
+Train on all labelled cases, including cases where the deployed policy abstains.
+Unknown truth remains unknown, and feedback acquired only for selected actions
+cannot label unexecuted alternatives. Temperature scaling is a measured baseline,
+not a guarantee of reliability under distribution shift
+([Guo et al.](https://proceedings.mlr.press/v70/guo17a.html)).
+
+Smallest useful diagnostic: freeze one declared checkpoint and its full deployed
+recall/readout path, fit temperature on a disjoint calibration population, and
+compare raw versus calibrated predictions on untouched sessions. Report accuracy,
+NLL/Brier, reliability with counts, error versus answer coverage, and total task
+loss at predeclared costs. Stratify by delay, distractors and missing/conflicting
+evidence. Positive temperature scaling preserves argmax answers, so any benefit
+must appear in probability quality or decisions rather than recovered knowledge.
+Only then compare training objectives with matched seeds/data/budgets and existing
+preservation controls. No checkpoint, thresholds, population or compute budget is
+selected by this discussion; current representation/readout failures remain open.
+
+RL becomes relevant for learned sequences of discrete retrieval, thinking and
+external actions whose utility is known after execution. Keep realized task utility
+and resource costs explicit, supervise probability forecasts against verified
+outcomes, and test whether an RLCR-like reward adds value. Do not let a policy gain
+credit for confident imagined success, declaring itself finished, avoiding checks,
+or merely lowering confidence. RLCR's published results do not establish transfer
+to this setting or solve long-horizon credit assignment.
+
+Standing principles applied: reuse existing shared representations/readers and
+calibration tools; separate proposal from verification and evidence ownership;
+allocate computation using measured expected benefit; train/evaluate the actual
+bounded inference path. Calibration adds evaluation/data costs and may reduce
+answer coverage while lowering error; it cannot restore lost information. Shared
+encoder gradient changes require per-consumer preservation checks. No model,
+training or validation status changed, and no new independent peer review was run
+for this applicability assessment.

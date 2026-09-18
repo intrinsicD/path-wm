@@ -1,5 +1,13 @@
 # Current work
 
+**Calibration-training applicability, 18 September:**
+[assessment](decision-design.md#calibration-training-and-the-jevrlcd-comparison).
+Existing recall has cost-based abstention, held-out temperature fitting and reliability/Brier
+diagnostics. Propose validating those before a new training objective; later RL needs
+verified sequential outcomes and explicit resource costs. Jev implementation remains
+undisclosed. No experiment, model adoption or validation promotion; current active
+input design and learning priorities remain open.
+
 **Standing design guidance adopted, 18 September:** Alex asks that all future
 model design actively consider and integrate the discussed abstract ideas where
 they fit. This is now part of the [workflow](experiment-workflow.md#standing-design-principles)

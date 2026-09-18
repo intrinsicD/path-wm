@@ -2,8 +2,8 @@ session:
   id: 2026-09-18_001
   date: '2026-09-18'
   started: 2026-09-18T00:12+02:00
-  last_turn: 2026-09-18T09:40+02:00
-  turn_count: 8
+  last_turn: 2026-09-18T09:53+02:00
+  turn_count: 9
   summary: Residual/PCA alternatives remain open. User specifies learnable multiscale filter banks and
     generic loop-transformer consumers, now explicitly accepting export after post-processing/before compression.
     Invertibility is conditional on learning quality; additive coupling is a working candidate. Linked
@@ -15,6 +15,7 @@ session:
     Abstract principles behind all transfer mechanisms explained; separate information, access, precision and computation budgets. No new adoption or validation.
     User adopts abstract principles as standing design practice; workflow and CLAUDE entry point updated. H79 crystallized from explicit instruction; concrete mechanisms and efficacy remain unselected.
     Jev/RLCD public-source search found objective/interface disclosures but no reproducible training recipe; related RLCR and Rewarding Doubt distinguished.
+    PATH-WM calibration applicability assessed; reuse recall calibration and independent verification; supervised baseline first, sequential RL remains a later proposal.
 events_logged:
 - turn: 1
   type: question
@@ -223,6 +224,19 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Training recipe remains undisclosed in searched primary sources; related published calibration RL is not Jev's recipe.
+- turn: 9
+  type: question
+  id: N508
+  routing: direct
+  provenance: user
+  summary: Asked whether calibration training is useful for PATH-WM.
+- turn: 9
+  type: observation
+  id: O346
+  routing: staged
+  provenance: ai-suggested
+  summary: Supervised calibration and existing recall diagnostics are the proposed starting point; sequential
+    RL transfer untested.
 ai_actions:
 - turn: 1
   action: Checked public Git Re-Basin, ZipIt and Model Soups sources; obtained tools-disabled actual-Claude
@@ -333,6 +347,17 @@ ai_actions:
   - ara/trace/sessions/2026-09-18_001.yaml
   - ara/trace/sessions/session_index.yaml
   - ara/trace/pm_reasoning_log.yaml
+- turn: 9
+  action: Audited recall selection/calibration and task-policy semantics; checked primary calibration
+    papers. Added applicability note, linked state and atlas follow-ups, regenerated all 16 atlas graphs
+    with existing runtime and checked unchanged topology/colors/evidence. No model or training changes;
+    no new peer review.
+  provenance: ai-executed
+  files_changed:
+  - docs/decision-design.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -361,6 +386,8 @@ key_context:
     Write that into the workflow.
 - turn: 8
   excerpt: Is there any information online on how jev and rlcd training concretely works?
+- turn: 9
+  excerpt: Is this also useful for path-wm?
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -395,3 +422,4 @@ ai_suggestions_pending:
 - N506/H79 adopts using the principles as workflow guidance. O341/O342 implementation proposals and O343
   explanatory taxonomy do not become efficacy claims or blanket mechanism adoption.
 - O345 is a dated literature/disclosure assessment; no adoption, efficacy or Jev replication claim.
+- O346 remains an untested recommendation; calibration diagnostic checkpoint, populations, budgets and adoption remain unselected.

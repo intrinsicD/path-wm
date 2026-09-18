@@ -6030,3 +6030,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O346
+  timestamp: 2026-09-18T09:53+02:00
+  provenance: ai-suggested
+  content: Calibration is a useful candidate for observable answer/action-outcome predictions. Existing
+    recall supports cost-based abstention, temperature fitting and NLL/Brier/reliability metrics. First
+    evaluate fixed-checkpoint calibration on disjoint sessions; compare direct supervised losses only
+    if needed. Later sequential RL requires verified outcomes and explicit costs. Latent entropy, action-selection
+    probabilities and completion logits do not establish factual certainty; calibration cannot recover
+    missing information.
+  context: N508 applicability assessment and documentation only; no checkpoint, compute budget, loss change
+    or empirical benefit selected.
+  potential_type: heuristic
+  bound_to:
+  - N508
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

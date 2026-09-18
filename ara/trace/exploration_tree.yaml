@@ -8459,3 +8459,20 @@ tree:
   - https://rl-calibration.github.io/
   - https://arxiv.org/abs/2503.02623
   status: resolved
+- id: N508
+  type: question
+  title: Is calibration-oriented training useful for PATH-WM?
+  provenance: user
+  timestamp: 2026-09-18T09:53+02:00
+  description: Assessed current recall decision and calibration code, TaskPolicy completion semantics
+    and latent uncertainty boundaries. Proposed supervised calibration first and verified sequential RL
+    later; no experiment or architecture adoption.
+  evidence:
+  - docs/decision-design.md#calibration-training-and-the-jevrlcd-comparison
+  - pathwm/models/recall.py
+  - pathwm/evaluation/recall.py
+  - https://arxiv.org/abs/2507.16806
+  - https://proceedings.mlr.press/v70/guo17a.html
+  also_depends_on:
+  - N507
+  status: resolved

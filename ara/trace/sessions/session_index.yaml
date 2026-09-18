@@ -269,7 +269,8 @@ sessions:
     Abstract principles behind all transfer mechanisms explained; separate information, access, precision and computation budgets. No new adoption or validation.
     User adopts abstract principles as standing design practice; workflow and CLAUDE entry point updated. H79 crystallized from explicit instruction; concrete mechanisms and efficacy remain unselected.
     Jev/RLCD public-source search found objective/interface disclosures but no reproducible training recipe; related RLCR and Rewarding Doubt distinguished.
-  turn_count: 8
-  events_count: 27
+    PATH-WM calibration applicability assessed; reuse recall calibration and independent verification; supervised baseline first, sequential RL remains a later proposal.
+  turn_count: 9
+  events_count: 29
   claims_touched: []
   open_threads: 7

@@ -2596,3 +2596,11 @@ entries:
   - No user affirmation, empirical resolution or downstream implementation depends on O345; do not
     crystallize. Existing architecture topics remain explicitly open; no abandonment or contradiction inferred.
   - No model, training, project-state or atlas change warranted by an external-method availability question.
+- turn: 2026-09-18_001#9
+  notes:
+  - N508 records the answered applicability question; O346 stages the recommendation. Asking usefulness
+    is not adoption of a loss, experiment or new architecture.
+  - O345 was revisited but remains a bounded disclosure assessment; explanatory documentation is not an
+    adopted decision or implementation. No closure for these proposals, no efficacy claim or contradiction.
+  - Existing architecture topics remain explicitly open; atlas follow-up metadata changed with statuses,
+    topology and validation retained.
