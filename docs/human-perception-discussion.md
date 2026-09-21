@@ -225,3 +225,53 @@ Verzögerung an. Kleinster Vergleich: gemeinsamer Körperleser versus zusätzlic
 Detailpfad, identische Videos/Personen und Budgets; Finger-/Fußfehler, falsche
 Kontakt-/Greifentscheidungen und gesamte Latenz getrennt messen. Keine neue
 Implementierung, Adoption oder Validierung.
+
+## Gesicht: Form, Mund, Augen und Ausdruck
+
+22. September, Folgefrage nach Mund, Augen, Nase und Gesichtsausdruck. Vorschlag:
+einen Gesichtsleser an denselben Personenbezug anbinden; stabile Gesichtsform,
+Kopfpose, zeitabhängige Artikulation und interpretierte soziale Signale trennen.
+Geometrische Formparameter identifizieren dabei keine namentlich bekannte Person.
+
+| Ziel | Erfasste bzw. vorgeschlagene Repräsentation | Kandidat / Grenze |
+| --- | --- | --- |
+| Gesichtspunkte und sichtbare Mimik | Lippen-/Lidkonturen, Nase, Brauen, Iris-Landmarken, Ausdruckskoeffizienten | [MediaPipe Face Landmarker](https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker): 478 geschätzte 3D-Landmarken, 52 Blendshape-Scores, optional Transformationsmatrizen; keine exakte individuelle metrische Kopfmessung. |
+| Ausdrucksstarkes 3D-Gesicht | Kopf-/Kieferpose, Form, Ausdruck und Lidschluss | [SMIRK](https://github.com/georgeretsi/smirk), CVPR 2024, auf FLAME-Basis mit Ausrichtung auf asymmetrische/extreme Ausdrücke und Mund-/Augenschluss. [Paper](https://arxiv.org/abs/2404.04104) geprüft; kein aktueller universeller Genauigkeitssieger behauptet. |
+| Parametrischer Kopf | Gesichtsform, Kiefer, Hals, Augäpfel und Ausdrucksbasis | [FLAME](https://flame.is.tue.mpg.de/) ist das darstellende Modell; die Bildschätzung ist ein eigener Teil. Modellversion und Erweiterungen bestimmen verfügbare Lid-/Munddetails. |
+| Blickrichtung | Geschätzte Blickwinkel bzw. Richtung mit Koordinatenbezug | [L2CS-Net](https://github.com/Ahmednull/L2CS-Net) als eigenständiger Vergleichskandidat; Irisposition und Kopfrotation allein garantieren keinen präzisen Blickpunkt. Ein konkretes Zielobjekt braucht zusätzlich Szenengeometrie und gegebenenfalls Kalibrierung. |
+| Gemeinsamer Körper/Kopf | Ausdrucksstarke Körper-/Gesichtsparameter in einem Mesh | [SMFLIX](https://www.mdpi.com/2227-7390/14/18/3287), 10. September 2026: integriert SMPL-X und FLAME samt Lid-/Mundkomponenten. Neuere Autorenresultate, Code/Modell laut Artikel auf Anfrage; keine lokale Verfügbarkeit oder Überlegenheit bestätigt. |
+
+Primärquellen bestätigen MediaPipes Bild-/Video-/Live-Modi. Die
+[Blendshape-Liste](https://ai.google.dev/edge/api/mediapipe/python/mp/tasks/vision/drawing_styles/face_landmarker/Blendshapes)
+enthält unter anderem `eyeBlinkLeft`, `jawOpen`, `mouthSmileLeft` und
+`noseSneerLeft` in entsprechender API-Schreibweise. Das sind Koeffizienten für
+sichtbare Deformationen, keine kalibrierten Wahrscheinlichkeiten innerer Emotionen.
+Für mehrere Gesichter ist Zuordnung gesondert zu prüfen; laut Dokumentation gilt
+die eingebaute Glättung nur für `num_faces=1`.
+
+SMIRK-Papertext über Hugging Face (v2) und offizielle Repositories gelesen.
+SMFLIX-Verlagstext kam aus dem Suchindex; erneutes direktes Öffnen ergab HTTP 429,
+die offizielle Projektseite war lesbar. Berichtete 48 FPS auf RTX 5090 sind die
+Netzrate; 21 FPS bezeichnet die vollständige Webcam-Kette. Keine Übertragung auf
+RTX 3050, keine eigene Messung. Der Artikel benennt Blick-/Zungenmodellierung als
+offene Arbeit. Ein dichtes Gesichtsmesh bedeutet generell nicht, dass Zähne,
+Zunge, Mundinnenraum oder die Blickachse korrekt aus dem Bild rekonstruiert sind.
+
+Für PATH-WM zuerst MediaPipe als günstige externe Beobachtungsreferenz gegen
+einen detaillierteren Gesichtsleser wie SMIRK vergleichen. Spätere gemeinsame
+Multiskalenleser können entsprechende Köpfe lernen. Die langsamer veränderliche
+Form kann pro Track zusammengeführt werden; Kopfpose, Lider, Lippen und Brauen
+werden zeitlich aktualisiert. Mehrere Auflösungen und gezielter Detailzugriff
+entsprechen den stehenden Designprinzipien. Hochauflösende Quellmerkmale,
+Zeitstempel, Sichtbarkeit und Unsicherheit bleiben erhalten; Glättung darf kurze
+Blinzel-/Lippenereignisse nicht unbemerkt entfernen und ihre Verzögerung muss
+gemessen werden.
+
+Mimik bleibt zunächst ein beobachtbarer Bewegungsverlauf: Mundwinkel angehoben,
+Lider geschlossen, Kopf gedreht. Emotion, Aufmerksamkeit oder Absicht sind
+separate kontextabhängige Hypothesen. Sichtbare Lippenbewegung beweist noch kein
+Sprechen; zur Sprecherzuordnung passen synchronisierte Audiosignale. Kleinster
+Vergleich: identische gesichts-/videogetrennte Sequenzen mit unterschiedlicher
+Auflösung, Kopfrotation und Verdeckung; Lippen-/Lidfehler, zeitliches Zittern,
+verpasste Ereignisse und End-to-End-Latenz getrennt vom globalen Meshfehler.
+Keine Implementierung, Adoption oder Validierung in dieser Diskussion.

@@ -8678,3 +8678,23 @@ tree:
   - N515
   - N517
   status: open
+- id: N519
+  type: question
+  title: 'Face perception: mouth, eyes, nose and facial expression'
+  provenance: user
+  timestamp: 2026-09-22T01:45+02:00
+  description: User extends the human-perception discussion to detailed face geometry and expression.
+    Reviewed MediaPipe Face Landmarker, SMIRK/FLAME, L2CS-Net and current SMFLIX body/head research, separating
+    visible articulation from gaze target and inferred emotion.
+  evidence:
+  - docs/human-perception-discussion.md
+  - https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker
+  - https://github.com/georgeretsi/smirk
+  - https://flame.is.tue.mpg.de/
+  - https://github.com/Ahmednull/L2CS-Net
+  - https://www.mdpi.com/2227-7390/14/18/3287
+  - https://xrlabku.webflow.io/papers/smflix
+  also_depends_on:
+  - N515
+  - N518
+  status: open

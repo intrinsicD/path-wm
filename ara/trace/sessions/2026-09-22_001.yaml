@@ -2,8 +2,8 @@ session:
   id: 2026-09-22_001
   date: '2026-09-22'
   started: 2026-09-22T01:13+02:00
-  last_turn: 2026-09-22T01:26+02:00
-  turn_count: 4
+  last_turn: 2026-09-22T01:45+02:00
+  turn_count: 5
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
@@ -11,7 +11,8 @@ session:
     survey finds released direct SKEL estimators and task-dependent SAM3DB/Fast/Human3R/DETRAM candidates;
     source benchmark scope retained, no local performance claim. Hands/feet review distinguishes WiLoR
     hands, FootMR ankles, SUPR-Foot articulation and FOCUS surfaces; fine-resolution integration and reaction
-    benefit remain proposed.
+    benefit remain proposed. Face follow-up separates shape, mouth/eye articulation, head pose, gaze and
+    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals.
 events_logged:
 - turn: 1
   type: question
@@ -87,6 +88,24 @@ events_logged:
     foot surfaces. Preserve coordinate/time alignment, visibility uncertainty and independent object/ground
     contact evidence. Test detail and reaction quality plus total latency against a body-only reader;
     not adopted or locally validated.
+- turn: 5
+  type: question
+  id: N519
+  routing: direct
+  provenance: user
+  summary: 'Face perception: mouth, eyes, nose and facial expression'
+- turn: 5
+  type: observation
+  id: O359
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Propose a face-specific reader linked to the tracked person: relatively stable face shape
+    plus time-varying head/jaw pose, lip/lid/brow articulation, separate gaze estimate, visibility and
+    provenance. Start with MediaPipe landmarks/blendshapes as an external reference and compare SMIRK
+    for detailed 3D expression; any shared multiscale consumer remains unimplemented. Visible expressions
+    are evidence, while emotion, attention and speech are context-dependent hypotheses; gaze targets need
+    scene geometry and possibly calibration. Evaluate local mouth/eye errors, temporal events and total
+    latency.'
 ai_actions:
 - turn: 1
   action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
@@ -133,6 +152,18 @@ ai_actions:
   - docs/architecture-atlas.html
   - docs/architecture-atlas.md
   - docs/architecture-discussion.md
+- turn: 5
+  action: Read face-model official docs, source repositories and SMIRK paper; documented precise representation/estimator
+    boundaries, expression interpretation limits and newer SMFLIX availability. Updated state and regenerated
+    atlas; no model execution.
+  provenance: ai-executed
+  files_changed:
+  - docs/human-perception-discussion.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -144,6 +175,8 @@ key_context:
   excerpt: User asks whether newer state-of-the-art methods are better, faster or more accurate.
 - turn: 4
   excerpt: User asks whether any method gets hands and feet right.
+- turn: 5
+  excerpt: User asks about face, mouth, eyes, nose and facial expression.
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -178,6 +211,8 @@ open_threads:
   and target hardware before selecting a candidate.'
 - 'N518: select whether finger articulation, foot orientation, toe motion, surface shape or contact is
   the target; compare specialist benefit and latency before integration.'
+- 'N519: choose facial reaction targets and compare fine-resolution readers; gaze calibration, visibility
+  and temporal latency remain open.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -206,3 +241,4 @@ ai_suggestions_pending:
 - 'O356: SMPL-to-SKEL integration and temporally shared shape remain unconfirmed suggestions.'
 - 'O357: candidate prioritization, external teachers and conditional specialists remain proposals.'
 - 'O358: conditional detail readers remain unconfirmed; source-reported quality is not local agent evidence.'
+- 'O359: person-linked face reader and MediaPipe/SMIRK comparison remain unconfirmed suggestions.'

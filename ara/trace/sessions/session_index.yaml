@@ -287,8 +287,9 @@ sessions:
     survey finds released direct SKEL estimators and task-dependent SAM3DB/Fast/Human3R/DETRAM candidates;
     source benchmark scope retained, no local performance claim. Hands/feet review distinguishes WiLoR
     hands, FootMR ankles, SUPR-Foot articulation and FOCUS surfaces; fine-resolution integration and reaction
-    benefit remain proposed.
-  turn_count: 4
-  events_count: 9
+    benefit remain proposed. Face follow-up separates shape, mouth/eye articulation, head pose, gaze and
+    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals.
+  turn_count: 5
+  events_count: 11
   claims_touched: []
-  open_threads: 16
+  open_threads: 17

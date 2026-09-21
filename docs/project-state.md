@@ -17,7 +17,10 @@ quality/speed claims are scoped by task, hardware and evaluation protocol. The
 original SMPL-to-SKEL route is optional. No local benchmark or model adoption. Hands/feet follow-up:
 WiLoR, FootMR, SUPR-Foot and FOCUS separate finger reconstruction, ankle motion,
 articulated toe representation and multi-view foot shape. Conditional fine-detail
-readers and contact checks remain proposals; no universal precision claim.
+readers and contact checks remain proposals; no universal precision claim. Face follow-up:
+MediaPipe/SMIRK reference candidates separate stable facial shape from mouth/lid
+articulation and head pose; gaze and inferred emotion remain distinct. New SMFLIX
+body/head research noted with availability and hardware limits. No adoption.
 
 **Actions and instruction walkthrough, 18 September:**
 [design and source audit](action-semantics-design.md). Alex asks how actions are

@@ -6284,3 +6284,25 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O359
+  timestamp: 2026-09-22T01:45+02:00
+  provenance: ai-suggested
+  content: 'Propose a face-specific reader linked to the tracked person: relatively stable face shape
+    plus time-varying head/jaw pose, lip/lid/brow articulation, separate gaze estimate, visibility and
+    provenance. Start with MediaPipe landmarks/blendshapes as an external reference and compare SMIRK
+    for detailed 3D expression; any shared multiscale consumer remains unimplemented. Visible expressions
+    are evidence, while emotion, attention and speech are context-dependent hypotheses; gaze targets need
+    scene geometry and possibly calibration. Evaluate local mouth/eye errors, temporal events and total
+    latency.'
+  context: Official documentation and SMIRK paper v2 reviewed; SMFLIX publisher text available through
+    search index and project page, direct publisher open rate-limited. No universal SOTA, user adoption
+    or local performance claim.
+  potential_type: architecture
+  bound_to:
+  - N519
+  - N518
+  - N515
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
