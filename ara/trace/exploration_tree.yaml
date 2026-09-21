@@ -8601,3 +8601,39 @@ tree:
   - N513
   - N509
   status: resolved
+- id: N515
+  type: question
+  title: Should person detection expose skeletons and segmentation for agent reactions?
+  provenance: user
+  timestamp: 2026-09-22T01:13+02:00
+  description: Alex asks about automatic human pose fitting and segmentation in images/video to represent
+    pose and shape and drive reactions. Discussed complementary keypoints, visible masks, inferred 3D
+    body shape, causal tracking and downstream action hypotheses. No implementation or model selection
+    authorized by this question.
+  evidence:
+  - docs/human-perception-discussion.md
+  - https://github.com/CMU-Perceptual-Computing-Lab/openpose
+  - https://ai.google.dev/edge/mediapipe/solutions/vision/pose_landmarker
+  - https://smpl-x.is.tue.mpg.de/
+  also_depends_on:
+  - N500
+  - N514
+  status: open
+- id: N516
+  type: question
+  title: How can complete 3D body shape be estimated using SKEL?
+  provenance: user
+  timestamp: 2026-09-22T01:15+02:00
+  description: Alex follows up with the SKEL project URL and asks how to estimate a full 3D body. Checked
+    official model contract, released SMPL alignment code, SMPLify and HMR2/4DHumans. Explained forward
+    body generation versus inverse image inference, statistical completion of occluded surfaces and uncertain
+    scale.
+  evidence:
+  - docs/human-perception-discussion.md
+  - https://skel.is.tue.mpg.de/
+  - https://github.com/MarilynKeller/SKEL
+  - https://smplify.is.tue.mpg.de/
+  - https://shubham-goel.github.io/4dhumans/
+  also_depends_on:
+  - N515
+  status: open

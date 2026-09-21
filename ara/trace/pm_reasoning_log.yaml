@@ -2656,3 +2656,19 @@ entries:
     atomicity. No tests were warranted for documentation edits.
   - Preserved discussion coverage, scoped validation and prior open research threads;
     no promotion, new contradiction or topic-abandonment inferred.
+- turn: 2026-09-22_001#1
+  notes:
+  - Recorded an open user question, not a decision to implement or train. Two interpretations remain staged;
+    a discussion document alone is not downstream architecture commitment.
+  - Prior open topics and pending suggestions explicitly retained. No new closure, contradiction or topic
+    abandonment inferred; calendar gap alone does not supply three intervening session-days for newly
+    stale entries.
+  - Atlas coverage updated with the question and proposal; existing discussion statuses and empirical
+    evidence scopes preserved.
+- turn: 2026-09-22_001#2
+  notes:
+  - Follow-up extends the open human-perception question; SKEL source verification does not affirm the
+    proposed architecture. O356 remains staged.
+  - Forward parameter-to-mesh generation, image regression and optimization separated; no full image-to-SKEL
+    pipeline or person-specific internal bone measurement claimed. Existing open topics retained; no closure
+    or contradiction introduced.

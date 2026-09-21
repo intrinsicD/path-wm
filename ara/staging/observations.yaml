@@ -6188,3 +6188,57 @@ observations:
     checks. Inferred actions can help versus no action below a logged-action reference
     when information/compute budgets are disclosed. Start with one executable request-to-result
     capability; no experiment or numeric gate chosen.
+- id: O354
+  timestamp: 2026-09-22T01:13+02:00
+  provenance: ai-suggested
+  content: Propose person-specific pose and instance-mask consumers of shared multiscale image features,
+    preserving appearance/context and source provenance. External pretrained models can supply separate
+    observations or teacher targets; their outputs are uncertain pseudo-labels. A local causal track joins
+    observations across time without assuming globally known identity.
+  context: Open design discussion recorded in docs/human-perception-discussion.md; official OpenPose,
+    MediaPipe and SMPL-X sources checked. No user endorsement of exact design or experiment.
+  potential_type: architecture
+  bound_to:
+  - N515
+  - N500
+  - N514
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O355
+  timestamp: 2026-09-22T01:13+02:00
+  provenance: ai-suggested
+  content: Distinguish skeleton pose, visible clothed silhouette and inferred 3D body shape. Start with
+    pose/mask features and causal tracking; add parametric 3D fitting only for a concrete geometry-dependent
+    task. Compare image-only, pose, mask and both on held-out people/videos, measuring downstream reaction
+    errors and latency alongside perception quality. No efficacy or implementation established.
+  context: Open design discussion recorded in docs/human-perception-discussion.md; official OpenPose,
+    MediaPipe and SMPL-X sources checked. No user endorsement of exact design or experiment.
+  potential_type: heuristic
+  bound_to:
+  - N515
+  - N500
+  - N514
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O356
+  timestamp: 2026-09-22T01:15+02:00
+  provenance: ai-suggested
+  content: SKEL can serve as a structured body hypothesis downstream of image-to-SMPL inference and released
+    SMPL-to-SKEL fitting. Direct RGB/keypoint/mask-to-SKEL prediction or fitting is an alternative requiring
+    its own implementation. Share shape across a causal person track, update pose/camera per frame, retain
+    uncertainty and image evidence; full generated geometry does not establish true hidden shape or absolute
+    scale. Compare agent benefit and cost against simpler joint states before adoption.
+  context: SKEL follow-up in docs/human-perception-discussion.md, grounded in official sources; no installation,
+    body fit, adoption or efficacy evidence.
+  potential_type: architecture
+  bound_to:
+  - N516
+  - N515
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

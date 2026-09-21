@@ -1,0 +1,137 @@
+session:
+  id: 2026-09-22_001
+  date: '2026-09-22'
+  started: 2026-09-22T01:13+02:00
+  last_turn: 2026-09-22T01:15+02:00
+  turn_count: 2
+  summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
+    reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
+    follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
+    route and inferred hidden geometry remain an untested integration proposal.
+events_logged:
+- turn: 1
+  type: question
+  id: N515
+  routing: direct
+  provenance: user
+  summary: Automatic skeleton and segmentation for pose/shape and agent reaction.
+- turn: 1
+  type: observation
+  id: O354
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose person-specific pose and instance-mask consumers of shared multiscale image features,
+    preserving appearance/context and source provenance. External pretrained models can supply separate
+    observations or teacher targets; their outputs are uncertain pseudo-labels. A local causal track joins
+    observations across time without assuming globally known identity.
+- turn: 1
+  type: observation
+  id: O355
+  routing: staged
+  provenance: ai-suggested
+  summary: Distinguish skeleton pose, visible clothed silhouette and inferred 3D body shape. Start with
+    pose/mask features and causal tracking; add parametric 3D fitting only for a concrete geometry-dependent
+    task. Compare image-only, pose, mask and both on held-out people/videos, measuring downstream reaction
+    errors and latency alongside perception quality. No efficacy or implementation established.
+- turn: 2
+  type: question
+  id: N516
+  routing: direct
+  provenance: user
+  summary: Estimate complete 3D shape with SKEL.
+- turn: 2
+  type: observation
+  id: O356
+  routing: staged
+  provenance: ai-suggested
+  summary: SKEL can serve as a structured body hypothesis downstream of image-to-SMPL inference and released
+    SMPL-to-SKEL fitting. Direct RGB/keypoint/mask-to-SKEL prediction or fitting is an alternative requiring
+    its own implementation. Share shape across a causal person track, update pose/camera per frame, retain
+    uncertainty and image evidence; full generated geometry does not establish true hidden shape or absolute
+    scale. Compare agent benefit and cost against simpler joint states before adoption.
+ai_actions:
+- turn: 1
+  action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
+    coverage and regenerated the existing atlas. Documentation only.
+  provenance: ai-executed
+  files_changed:
+  - docs/human-perception-discussion.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/architecture-discussion.md
+- turn: 2
+  action: Read official SKEL page/repository and SMPL alignment example plus SMPLify/4DHumans primary
+    sources; extended design note and regenerated atlas. No model download or execution.
+  provenance: ai-executed
+  files_changed:
+  - docs/human-perception-discussion.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/architecture-discussion.md
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: User asks whether recognizing a person should trigger skeleton fitting such as OpenPose plus
+    segmentation for pose/shape-aware agent reactions.
+- turn: 2
+  excerpt: User supplies https://skel.is.tue.mpg.de/ and asks how complete 3D body shape can be estimated.
+open_threads:
+- 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
+  and feature/weight placements remain unselected.'
+- 'N498: specialist/PCA alternative is untested; define compatible shared blocks, task objectives, alignment,
+  low-rank capacity and quality/cost gates before any experiment.'
+- Unresolved prior visual, video, categorical-agent and World State work remains in 2026-09-17_001 and
+  referenced plans; this discussion does not abandon it.
+- 'N499/N500: export after P/before C is accepted. Select modality, learned coupling shape/depth, precision/tolerance,
+  scale/compression budgets and consumer tasks. Learning noninferiority remains open; equal-status joint
+  training remains compatible.'
+- 'N501/N502: toolkit relevance answered; benchmark choice, any downstream fusion and parameter-contract
+  repair remain unselected future work.'
+- 'N503: select neighborhood/depth allocation and per-modality supports; compare learned utility and resources
+  independently from the invertibility factor.'
+- 'N504: select the first measured fixed-context reuse workload and concrete multiscale tasks/budgets;
+  sparse access, precision and budget policies remain proposals.'
+- 'N509: Walk through functional modules with Alex; dedicated dynamics/predict-correct discussion remains
+  open.'
+- 'N510: Trace memory write, retained content, compression/protection, retrieval and consumer use against
+  prior wishes; DeepSeek mechanisms remain proposals.'
+- 'N511: Complete top-down walkthrough before mapping external techniques to code, evidence, prerequisites
+  and controlled comparisons. Define Local/Global Context contents without presuming DeepSeek equivalence.'
+- 'N513/A24: Specify context-control head/actions, scope lifetimes, budgets and training after walkthrough.
+  O347/O349 remain proposals; no implementation authorized by this design endorsement.'
+- 'N514: Select one concrete action/capability and contract before implementation; exact schema, inverse-action
+  objective, success labels and general planning integration remain open.'
+- 'N515: choose a concrete reaction task and evaluate pose/mask benefit before adopting a human perception
+  pipeline.'
+- 'N516: determine whether biomechanical SKEL state adds task value over simpler pose features; inference/fitting
+  path remains unselected.'
+ai_suggestions_pending:
+- O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
+  of the detailed implementation.
+- O331 is a user question/hypothesis, not a chosen PCA experiment. O332/O333 are source/algebra-based
+  interpretation and proposed comparison; no empirical or adoption closure.
+- Earlier pending interpretations and proposals remain referenced by the prior session; no topic abandonment
+  inferred.
+- O334 export-position subpart is explicitly affirmed as O336/A23; its metadata/preservation details and
+  O335 consumer choices remain proposals. O337 coupling and O338 benchmark/fusion use are unvalidated
+  suggestions, not user-approved efficacy or selected runs.
+- O339/O340 are new neighborhood-bank/comparison proposals. User assent supports the preceding direction,
+  without establishing efficacy or selecting every detailed bundled O337/O338 mechanism/budget.
+- O341/O342 remain assistant proposals; peer agreement and documentation do not establish model benefit
+  or user adoption.
+- O343 explanatory abstraction remains assistant synthesis; O341/O342 proposals remain unselected.
+- N506/H79 adopts using the principles as workflow guidance. O341/O342 implementation proposals and O343
+  explanatory taxonomy do not become efficacy claims or blanket mechanism adoption.
+- O345 is a dated literature/disclosure assessment; no adoption, efficacy or Jev replication claim.
+- O346 remains an untested recommendation; calibration diagnostic checkpoint, populations, budgets and
+  adoption remain unselected.
+- O347/O349 remain unvalidated scope/storage/training proposals. Only O348 TaskPolicy responsibility is
+  endorsed and crystallized as A24.
+- O350-O353 are explanatory action-design and evaluation proposals. No new user affirmation; A24 remains
+  the narrow previously adopted context TaskPolicy responsibility.
+- 'O354/O355: person consumers, tracking and comparison are unconfirmed recommendations.'
+- 'O356: SMPL-to-SKEL integration and temporally shared shape remain unconfirmed suggestions.'

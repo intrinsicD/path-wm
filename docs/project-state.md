@@ -1,5 +1,18 @@
 # Current work
 
+**Human pose/shape discussion, 22 September:**
+[proposal and source distinctions](human-perception-discussion.md). Alex asks about
+automatic skeleton estimation plus segmentation for agent reactions. Propose
+complementary person-specific keypoints, masks and retained image features with
+causal tracking; separate visible silhouette from inferred 3D body shape and
+observed motion from action/intent hypotheses. Fits the shared multiscale-consumer
+direction; an external teacher is a separate adapter. Downstream benefit, model
+selection and training remain open. No adoption, runtime change or validation
+promotion. The multiscale input specification remains active. Follow-up:
+SKEL supplies parametric skin/skeleton generation and SMPL fitting; image-to-body
+estimation, hidden geometry and absolute scale remain separate inference problems.
+No SKEL installation or model fit.
+
 **Actions and instruction walkthrough, 18 September:**
 [design and source audit](action-semantics-design.md). Alex asks how actions are
 represented/recognized, whether to supply or infer them, and how instructions,

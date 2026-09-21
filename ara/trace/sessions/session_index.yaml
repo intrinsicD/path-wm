@@ -278,3 +278,13 @@ sessions:
   events_count: 43
   claims_touched: []
   open_threads: 12
+- id: 2026-09-22_001
+  date: '2026-09-22'
+  summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
+    reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
+    follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
+    route and inferred hidden geometry remain an untested integration proposal.
+  turn_count: 2
+  events_count: 5
+  claims_touched: []
+  open_threads: 14
