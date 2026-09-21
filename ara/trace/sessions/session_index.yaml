@@ -285,8 +285,10 @@ sessions:
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
     route and inferred hidden geometry remain an untested integration proposal. Newer-method primary-source
     survey finds released direct SKEL estimators and task-dependent SAM3DB/Fast/Human3R/DETRAM candidates;
-    source benchmark scope retained, no local performance claim.
-  turn_count: 3
-  events_count: 7
+    source benchmark scope retained, no local performance claim. Hands/feet review distinguishes WiLoR
+    hands, FootMR ankles, SUPR-Foot articulation and FOCUS surfaces; fine-resolution integration and reaction
+    benefit remain proposed.
+  turn_count: 4
+  events_count: 9
   claims_touched: []
-  open_threads: 15
+  open_threads: 16

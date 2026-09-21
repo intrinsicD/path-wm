@@ -6263,3 +6263,24 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O358
+  timestamp: 2026-09-22T01:26+02:00
+  provenance: ai-suggested
+  content: Propose a shared person/body context with conditional high-resolution hand/foot readers. WiLoR
+    supplies detailed hand estimation; FootMR refines ankle motion, not independent toe articulation;
+    SUPR-Foot is a more expressive representation requiring a separate estimator; FOCUS targets multi-view
+    foot surfaces. Preserve coordinate/time alignment, visibility uncertainty and independent object/ground
+    contact evidence. Test detail and reaction quality plus total latency against a body-only reader;
+    not adopted or locally validated.
+  context: Hands/feet follow-up, official papers/repos checked. PA-aligned hand error is not absolute
+    scene precision; foot landmarks do not prove all-toe recovery; FootMR temporal window does not establish
+    causal latency.
+  potential_type: architecture
+  bound_to:
+  - N518
+  - N515
+  - N517
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

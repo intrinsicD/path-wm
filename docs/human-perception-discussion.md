@@ -170,3 +170,58 @@ Fehler und müssen unabhängig geprüft werden. Die Projekt-GPU RTX 3050 8 GiB
 erfordert eigene Messungen einschließlich Detektion, Kamera, Personenanzahl und
 Agentenanteil; nicht aus größeren GPUs oder nominell 8 GB Speicher extrapolieren.
 Keine Installation, Gewichtsdownloads, Training, lokale Benchmarks oder Adoption.
+
+## Hände, Füße und einzelne Zehen
+
+22. September, weiterer Nutzerfokus: Welche Verfahren bekommen Hände und Füße
+wirklich richtig hin? Eine vollständige Körperoberfläche allein belegt keine
+korrekte Finger-/Zehenartikulation oder Objekt-/Bodenkontakte.
+
+- **Hände/Finger:** [WiLoR](https://github.com/rolpotamias/WiLoR), CVPR 2025,
+  lokalisiert Hände und rekonstruiert artikulierte MANO-Handmeshes aus Ausschnitten.
+  Das [Paper](https://arxiv.org/abs/2409.12259) berichtet auf FreiHAND 5.5 mm
+  PA-MPJPE und auf HO3Dv2 7.5 mm. Die nachträgliche Procrustes-Ausrichtung entfernt
+  globale Ähnlichkeitstransformationen; diese Werte sind keine Garantie für
+  millimetergenaue Fingerpositionen im gemeinsamen Szenenraum. Detektor-FPS sind
+  nicht die Laufzeit des vollständigen 3D-Rekonstruktors. März-2026-Code bietet
+  einen optionalen Fast-Modus; hier nicht ausgeführt.
+- **Fußausrichtung in Videos:** [FootMR](https://twehrbein.github.io/footmr-website/),
+  3DV 2026, verbessert die Knöchelrotationen bestehender SMPL-X-Bewegungsschätzer
+  mit 2D-Fußsequenzen und Knie-/Knöchelkontext. Autoren berichten bis zu 30 Prozent
+  weniger Knöchelwinkelfehler auf MOYO gegenüber der besten verglichenen
+  Videomethode. [Abschnitt 5](https://arxiv.org/html/2603.09681v1#S5) benennt
+  ausdrücklich, dass die vereinfachten SMPL-X-Füße Zehenkrümmen nicht darstellen.
+  Das Modell nutzt ein 120-Frame-Aufmerksamkeitsfenster; daraus folgt weder
+  automatisch kausale Online-Verarbeitung noch vier Sekunden Ausgabelatenz.
+- **Einzelne Zehen und Fußdeformation:** [SUPR-Foot](https://supr.is.tue.mpg.de/)
+  besitzt eine differenziertere Fußartikulation und gelernte bodenkontaktabhängige
+  Verformungen. Es ist ein parametrisches Modell, kein allein ausreichender
+  RGB-zu-Zehen-Bewegungsschätzer. FootMR nennt es als künftige Erweiterung mit
+  zusätzlichen benötigten 2D-Landmarken; diese Kombination ist nicht veröffentlicht
+  validiert durch den FootMR-Nachweis.
+- **Detaillierte Fußoberfläche:** [FOCUS](https://github.com/OllieBoyne/FOCUS),
+  3DV 2025, rekonstruiert aus mehreren Ansichten mit dichten Korrespondenzen,
+  optional über FIND-Modellanpassung. Dieser Aufnahme-/Rekonstruktionsvertrag
+  unterscheidet sich vom kontinuierlichen Verfolgen aller Zehen in beliebigem
+  Ganzkörpervideo.
+
+SAM 3D Body bleibt ein sinnvoller gemeinsamer Vergleichskandidat. Die
+[offizielle Beschreibung](https://ai.meta.com/blog/sam-3d/) benennt ausdrücklich,
+dass die Handgenauigkeit spezialisierte Handmodelle nicht übertrifft. Der
+[MHR70-Ausgabevertrag](https://github.com/facebookresearch/sam-3d-body/blob/main/sam_3d_body/metadata/mhr70.py)
+enthält für jeden Fuß Ferse, großen und kleinen Zeh zusätzlich zum Körper-Knöchel;
+das ist keine Messung sämtlicher Zehengelenke. Daraus wird hier keine Aussage
+abgeleitet, dass die gesamte interne MHR-Repräsentation nur diese Punkte hätte.
+
+Vorschlag für PATH-WM: Körperkontext und Personenbezug gemeinsam verarbeiten,
+bei benötigtem Detail Originalbild-Ausschnitte bzw. feine gemeinsame Skalen für
+Hände/Füße lesen und die lokalen Ergebnisse in denselben Koordinatenraum und
+Zeitbezug zurückführen. Vergrößern eines bereits informationsarmen Ausschnitts
+erzeugt keine beobachteten Fingerdetails. Kontakt und Verdeckung brauchen
+Objekt-/Bodenevidenz; eine plausible Greifpose allein bestätigt keinen Kontakt.
+Der Kandidat nutzt gemeinsame Quellen, mehrere Auflösungen und bedingte
+Spezialisten. Dafür fallen Crop-/Lesekosten, zusätzliche Inferenz und zeitliche
+Verzögerung an. Kleinster Vergleich: gemeinsamer Körperleser versus zusätzlicher
+Detailpfad, identische Videos/Personen und Budgets; Finger-/Fußfehler, falsche
+Kontakt-/Greifentscheidungen und gesamte Latenz getrennt messen. Keine neue
+Implementierung, Adoption oder Validierung.

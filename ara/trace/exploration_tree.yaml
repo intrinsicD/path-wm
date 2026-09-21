@@ -8658,3 +8658,23 @@ tree:
   - N515
   - N516
   status: open
+- id: N518
+  type: question
+  title: Which human reconstruction methods accurately recover hands and feet?
+  provenance: user
+  timestamp: 2026-09-22T01:26+02:00
+  description: User asks specifically about correct hands and feet. Primary-source review separates articulated
+    hand reconstruction, ankle refinement, toe-capable foot models and multi-view foot surface recovery.
+    No end-to-end universal precision or online performance claim.
+  evidence:
+  - docs/human-perception-discussion.md
+  - https://github.com/rolpotamias/WiLoR
+  - https://arxiv.org/abs/2409.12259
+  - https://arxiv.org/html/2603.09681v1
+  - https://supr.is.tue.mpg.de/
+  - https://github.com/OllieBoyne/FOCUS
+  - https://github.com/facebookresearch/sam-3d-body/blob/main/sam_3d_body/metadata/mhr70.py
+  also_depends_on:
+  - N515
+  - N517
+  status: open

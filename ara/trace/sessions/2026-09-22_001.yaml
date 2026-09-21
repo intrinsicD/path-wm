@@ -2,14 +2,16 @@ session:
   id: 2026-09-22_001
   date: '2026-09-22'
   started: 2026-09-22T01:13+02:00
-  last_turn: 2026-09-22T01:20+02:00
-  turn_count: 3
+  last_turn: 2026-09-22T01:26+02:00
+  turn_count: 4
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
     route and inferred hidden geometry remain an untested integration proposal. Newer-method primary-source
     survey finds released direct SKEL estimators and task-dependent SAM3DB/Fast/Human3R/DETRAM candidates;
-    source benchmark scope retained, no local performance claim.
+    source benchmark scope retained, no local performance claim. Hands/feet review distinguishes WiLoR
+    hands, FootMR ankles, SUPR-Foot articulation and FOCUS surfaces; fine-resolution integration and reaction
+    benefit remain proposed.
 events_logged:
 - turn: 1
   type: question
@@ -68,6 +70,23 @@ events_logged:
     SMPL-to-SKEL route is optional. Published joint errors, shape fidelity, tracking and total latency
     are distinct; no universal winner or RTX3050 throughput inferred. Propose bounded task/resource comparisons
     before adoption.'
+- turn: 4
+  type: question
+  id: N518
+  routing: direct
+  provenance: user
+  summary: Which human reconstruction methods accurately recover hands and feet?
+- turn: 4
+  type: observation
+  id: O358
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose a shared person/body context with conditional high-resolution hand/foot readers. WiLoR
+    supplies detailed hand estimation; FootMR refines ankle motion, not independent toe articulation;
+    SUPR-Foot is a more expressive representation requiring a separate estimator; FOCUS targets multi-view
+    foot surfaces. Preserve coordinate/time alignment, visibility uncertainty and independent object/ground
+    contact evidence. Test detail and reaction quality plus total latency against a body-only reader;
+    not adopted or locally validated.
 ai_actions:
 - turn: 1
   action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
@@ -103,6 +122,17 @@ ai_actions:
   - docs/architecture-atlas.html
   - docs/architecture-atlas.md
   - docs/architecture-discussion.md
+- turn: 4
+  action: Checked hand/foot primary sources and model output contract, documented scoped errors and limitations,
+    regenerated unchanged-topology atlas. No model weights, fitting, training or local benchmark.
+  provenance: ai-executed
+  files_changed:
+  - docs/human-perception-discussion.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -112,6 +142,8 @@ key_context:
   excerpt: User supplies https://skel.is.tue.mpg.de/ and asks how complete 3D body shape can be estimated.
 - turn: 3
   excerpt: User asks whether newer state-of-the-art methods are better, faster or more accurate.
+- turn: 4
+  excerpt: User asks whether any method gets hands and feet right.
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -144,6 +176,8 @@ open_threads:
   path remains unselected.'
 - 'N517: compare local reaction quality, pose/shape/track errors and full latency under matching inputs
   and target hardware before selecting a candidate.'
+- 'N518: select whether finger articulation, foot orientation, toe motion, surface shape or contact is
+  the target; compare specialist benefit and latency before integration.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -171,3 +205,4 @@ ai_suggestions_pending:
 - 'O354/O355: person consumers, tracking and comparison are unconfirmed recommendations.'
 - 'O356: SMPL-to-SKEL integration and temporally shared shape remain unconfirmed suggestions.'
 - 'O357: candidate prioritization, external teachers and conditional specialists remain proposals.'
+- 'O358: conditional detail readers remain unconfirmed; source-reported quality is not local agent evidence.'

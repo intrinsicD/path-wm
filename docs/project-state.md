@@ -14,7 +14,10 @@ estimation, hidden geometry and absolute scale remain separate inference problem
 No SKEL installation or model fit. Latest-method follow-up finds direct RGB-to-SKEL
 HSMR/SKEL-CF plus SAM 3D Body, Fast SAM 3D Body, Human3R and DETRAM; official
 quality/speed claims are scoped by task, hardware and evaluation protocol. The
-original SMPL-to-SKEL route is optional. No local benchmark or model adoption.
+original SMPL-to-SKEL route is optional. No local benchmark or model adoption. Hands/feet follow-up:
+WiLoR, FootMR, SUPR-Foot and FOCUS separate finger reconstruction, ankle motion,
+articulated toe representation and multi-view foot shape. Conditional fine-detail
+readers and contact checks remain proposals; no universal precision claim.
 
 **Actions and instruction walkthrough, 18 September:**
 [design and source audit](action-semantics-design.md). Alex asks how actions are

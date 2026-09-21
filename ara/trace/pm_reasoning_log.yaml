@@ -2683,3 +2683,12 @@ entries:
     demo kept separate. Joint metrics do not establish individualized body shape.
   - Prior topics remain explicitly open, including current direct-SKEL discussion. No closure, capability
     color promotion or architecture adoption.
+- turn: 2026-09-22_001#4
+  notes:
+  - Recorded user detail-fidelity question and staged conditional-reader proposal. No acceptance of a
+    specific model or new architectural commitment.
+  - FootMR limitations explicitly exclude toe curling with SMPL-X; SUPR-Foot expressivity is separate
+    from RGB estimation. Sparse SAM3DB output landmarks do not define the whole internal rig. PA alignment
+    and detector-only FPS kept separate from global precision and full runtime.
+  - Prior open topics retained. No closure, contradiction or new empirical validation; source review does
+    not authorize color promotion.
