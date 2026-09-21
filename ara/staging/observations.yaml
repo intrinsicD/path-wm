@@ -6242,3 +6242,24 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O357
+  timestamp: 2026-09-22T01:20+02:00
+  provenance: ai-suggested
+  content: 'Updated candidate set: SKEL-CF for direct RGB-to-SKEL, SAM 3D Body for promptable MHR reconstruction,
+    Fast SAM 3D Body for approximate inference acceleration, Human3R for online human/scene/camera recovery,
+    DETRAM for joint multi-person detection/tracking/meshes. Direct SKEL predictors already exist; previous
+    SMPL-to-SKEL route is optional. Published joint errors, shape fidelity, tracking and total latency
+    are distinct; no universal winner or RTX3050 throughput inferred. Propose bounded task/resource comparisons
+    before adoption.'
+  context: Newer-method survey in docs/human-perception-discussion.md. O356 described original SKEL resources
+    and a possible custom direct integration; this source expansion establishes available upstream direct
+    estimators. No user model selection.
+  potential_type: architecture
+  bound_to:
+  - N517
+  - N516
+  - N515
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

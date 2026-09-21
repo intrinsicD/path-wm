@@ -11,7 +11,10 @@ selection and training remain open. No adoption, runtime change or validation
 promotion. The multiscale input specification remains active. Follow-up:
 SKEL supplies parametric skin/skeleton generation and SMPL fitting; image-to-body
 estimation, hidden geometry and absolute scale remain separate inference problems.
-No SKEL installation or model fit.
+No SKEL installation or model fit. Latest-method follow-up finds direct RGB-to-SKEL
+HSMR/SKEL-CF plus SAM 3D Body, Fast SAM 3D Body, Human3R and DETRAM; official
+quality/speed claims are scoped by task, hardware and evaluation protocol. The
+original SMPL-to-SKEL route is optional. No local benchmark or model adoption.
 
 **Actions and instruction walkthrough, 18 September:**
 [design and source audit](action-semantics-design.md). Alex asks how actions are

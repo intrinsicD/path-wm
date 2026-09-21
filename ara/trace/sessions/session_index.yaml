@@ -283,8 +283,10 @@ sessions:
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
-    route and inferred hidden geometry remain an untested integration proposal.
-  turn_count: 2
-  events_count: 5
+    route and inferred hidden geometry remain an untested integration proposal. Newer-method primary-source
+    survey finds released direct SKEL estimators and task-dependent SAM3DB/Fast/Human3R/DETRAM candidates;
+    source benchmark scope retained, no local performance claim.
+  turn_count: 3
+  events_count: 7
   claims_touched: []
-  open_threads: 14
+  open_threads: 15

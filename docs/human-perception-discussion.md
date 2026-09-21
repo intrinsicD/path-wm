@@ -127,3 +127,46 @@ zugänglich. Ein kinematisches Körpermodell allein liefert keine Handlungsabsic
 Kontaktkräfte oder gelernte zukünftige Dynamik. Vor einer Übernahme ist gegen
 einfachere 2D-/3D-Gelenkzustände zu prüfen, ob SKEL Agentenreaktionen verbessert
 und welchen Zusatzaufwand Regression, Anpassung und Mesh-Erzeugung verursachen.
+
+## Neuere Verfahren: Recherche am 22. September 2026
+
+Alex fragt nach neuerem Stand der Technik, besserer Genauigkeit und Geschwindigkeit.
+Die bisherige SKEL-Einordnung bezog sich auf die originale Modellveröffentlichung.
+Die erweiterte Suche findet bereits veröffentlichte direkte Bild-zu-SKEL-Schätzer:
+HSMR und SKEL-CF. Dafür muss also nicht erst ein eigener Bildschätzer entwickelt
+werden. Die SMPL-Zwischenstufe bleibt eine Option, ist aber keine Voraussetzung.
+
+| Kandidat | Rolle und datierter Stand | Aussage und Grenze der Primärquellen |
+| --- | --- | --- |
+| [SKEL-CF](https://pokerman8.github.io/SKEL-CF/) | Direkte RGB-zu-SKEL-Schätzung; Code/Gewichte seit November 2025, ECCV 2026 | MOYO: 85.0 mm MPJPE gegenüber HSMR 104.5 mm im Autorenvergleich. Passender Kandidat für explizite biomechanische Pose plus Körpermesh. Keine belastbare lokale Laufzeit; ViTPose-H ist kein kleiner Backbone. |
+| [SAM 3D Body](https://github.com/facebookresearch/sam-3d-body) | Einzelbild-Rekonstruktion mit MHR, Körper/Hände/Füße; Gewichte November 2025, Paper Februar 2026 | Unterstützt Masken-/Keypoint-Prompts. Offizieller DINOv3-H+-Backbone mit 840M Parametern; 3DPW 54.8 mm, EMDB 61.7 mm MPJPE in veröffentlichten Protokollen. Kein Vergleich dieser Werte mit MOYO und kein Beweis genauer individueller Körperumfänge. |
+| [Fast SAM 3D Body](https://arxiv.org/html/2603.15603v1) | Beschleunigte SAM-3D-Body-Verarbeitung, März 2026 | Tabelle 1, automatische Detektion, RTX 6000 Ada, Batch 1: auf 3DPW 0.8 → 6.6 Frames/s; MPJPE 57.6 → 58.9 mm. Separate Teleoperationsdemo: etwa 65 ms auf RTX 5090. Beschleunigung umfasst Approximationen; kein universeller Genauigkeitsgewinn. |
+| [Human3R: Everyone Everywhere All at Once](https://fanegg.github.io/Human3R/) | Online-Rekonstruktion mehrerer Menschen, Szene und Kamera; Oktober 2025 / ICLR 2026 | SMPL-X, kausaler fortlaufender Zustand. Autoren berichten 15 FPS mit kleinerem ViT-S-Prior bei 672 Pixeln sowie ca. 8 GB Speicher; diese Angaben begründen keine RTX-3050-Leistung. Schwerpunkt gemeinsamer Raum-/Bewegungskontext. |
+| [DETRAM](https://research.nvidia.com/labs/amri/publication/lee2026detram/) | Gemeinsame Detektion, Tracking und Mesh-Schätzung; Juli-Preprint / ECCV September 2026 | Persistente Identitätsqueries; Autoren berichten führende Trackingwerte und konkurrenzfähige Rekonstruktion. In dieser Sichtung keine verifizierte lokale Laufzeit oder einsatzbereite Installation. Aktueller Forschungsvergleich, kein pauschaler Genauigkeitssieger. |
+
+Für SKEL-CF wurden offizielle Projektseite, Code-README und Paper gelesen; die
+README verweist auf freigegebene Gewichte. SAM-3D-Body- und Human3R-Paper wurden
+über Hugging Face gelesen. Dessen Markdown zeigte bei SKEL-CF v3 und Human3R v1;
+aktuellere Projektseiten ergänzen Veröffentlichungsstatus, aber spätere Paperrevisionen
+wurden nicht vollständig abgeglichen. Fast-SAM-Paper v1 wurde nach einem
+Hugging-Face-404 direkt auf arXiv geprüft. Insbesondere die Hardware, Oracle- versus
+Automatic-Protokolle und Genauigkeitsverluste stammen aus der Primärquelle;
+sekundäre 4090-/4060-Laufzeiten wurden nicht übernommen.
+
+MPJPE misst Gelenkpositionsfehler; Oberflächenfehler, Körpermaße, Hände,
+Track-Stabilität und Reaktionsqualität sind eigene Ziele. Eine bessere Rangposition
+für Gelenke oder Tracking beweist keine genauere individuelle Körperform.
+Ein [unabhängiger SAM-3D-Body-Preprint](https://arxiv.org/abs/2601.06035)
+berichtet Grenzen bei individuellen Formabweichungen; seine Erklärung ist eine
+Autorenhypothese, kein hier isolierter Kausalnachweis. Verdeckte Geometrie bleibt
+auch bei neueren Verfahren modellabhängig geschätzt.
+
+Vorgeschlagene Priorisierung für PATH-WM: SKEL-CF als Referenz für die konkrete
+biomechanische Repräsentation, SAM 3D Body / Fast SAM 3D Body für den Vergleich
+von Robustheit und Laufzeit, Human3R für gemeinsam geschätzten Menschen-/Szenenraum.
+Große Modelle könnten zunächst Lehrer oder bedingt aufgerufene Spezialisten sein;
+kleine kausale Leser nutzen gemeinsam vorbereitete Merkmale. Lehrerlabels behalten
+Fehler und müssen unabhängig geprüft werden. Die Projekt-GPU RTX 3050 8 GiB
+erfordert eigene Messungen einschließlich Detektion, Kamera, Personenanzahl und
+Agentenanteil; nicht aus größeren GPUs oder nominell 8 GB Speicher extrapolieren.
+Keine Installation, Gewichtsdownloads, Training, lokale Benchmarks oder Adoption.

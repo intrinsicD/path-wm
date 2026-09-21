@@ -2,12 +2,14 @@ session:
   id: 2026-09-22_001
   date: '2026-09-22'
   started: 2026-09-22T01:13+02:00
-  last_turn: 2026-09-22T01:15+02:00
-  turn_count: 2
+  last_turn: 2026-09-22T01:20+02:00
+  turn_count: 3
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
-    route and inferred hidden geometry remain an untested integration proposal.
+    route and inferred hidden geometry remain an untested integration proposal. Newer-method primary-source
+    survey finds released direct SKEL estimators and task-dependent SAM3DB/Fast/Human3R/DETRAM candidates;
+    source benchmark scope retained, no local performance claim.
 events_logged:
 - turn: 1
   type: question
@@ -49,6 +51,23 @@ events_logged:
     its own implementation. Share shape across a causal person track, update pose/camera per frame, retain
     uncertainty and image evidence; full generated geometry does not establish true hidden shape or absolute
     scale. Compare agent benefit and cost against simpler joint states before adoption.
+- turn: 3
+  type: question
+  id: N517
+  routing: direct
+  provenance: user
+  summary: Request newer, faster and more accurate methods.
+- turn: 3
+  type: observation
+  id: O357
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Updated candidate set: SKEL-CF for direct RGB-to-SKEL, SAM 3D Body for promptable MHR reconstruction,
+    Fast SAM 3D Body for approximate inference acceleration, Human3R for online human/scene/camera recovery,
+    DETRAM for joint multi-person detection/tracking/meshes. Direct SKEL predictors already exist; previous
+    SMPL-to-SKEL route is optional. Published joint errors, shape fidelity, tracking and total latency
+    are distinct; no universal winner or RTX3050 throughput inferred. Propose bounded task/resource comparisons
+    before adoption.'
 ai_actions:
 - turn: 1
   action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
@@ -72,6 +91,18 @@ ai_actions:
   - docs/architecture-atlas.html
   - docs/architecture-atlas.md
   - docs/architecture-discussion.md
+- turn: 3
+  action: Searched latest primary sources; read HF paper text (SKEL-CF v3, SAM3DB, Human3R v1) and Fast
+    SAM3DB arXiv v1 fallback. Checked published throughput hardware and accuracy tradeoffs; extended dated
+    note and atlas, with no models installed or run.
+  provenance: ai-executed
+  files_changed:
+  - docs/human-perception-discussion.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -79,6 +110,8 @@ key_context:
     segmentation for pose/shape-aware agent reactions.
 - turn: 2
   excerpt: User supplies https://skel.is.tue.mpg.de/ and asks how complete 3D body shape can be estimated.
+- turn: 3
+  excerpt: User asks whether newer state-of-the-art methods are better, faster or more accurate.
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -109,6 +142,8 @@ open_threads:
   pipeline.'
 - 'N516: determine whether biomechanical SKEL state adds task value over simpler pose features; inference/fitting
   path remains unselected.'
+- 'N517: compare local reaction quality, pose/shape/track errors and full latency under matching inputs
+  and target hardware before selecting a candidate.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -135,3 +170,4 @@ ai_suggestions_pending:
   the narrow previously adopted context TaskPolicy responsibility.
 - 'O354/O355: person consumers, tracking and comparison are unconfirmed recommendations.'
 - 'O356: SMPL-to-SKEL integration and temporally shared shape remain unconfirmed suggestions.'
+- 'O357: candidate prioritization, external teachers and conditional specialists remain proposals.'

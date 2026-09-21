@@ -8637,3 +8637,24 @@ tree:
   also_depends_on:
   - N515
   status: open
+- id: N517
+  type: question
+  title: 'Newer human reconstruction methods: accuracy, speed and practical use'
+  provenance: user
+  timestamp: 2026-09-22T01:20+02:00
+  description: User requests newer state of the art beyond original SKEL/OpenPose. Extended primary-source
+    search finds released direct RGB-to-SKEL models and separates body reconstruction, biomechanical representation
+    and online human/scene tracking. Hardware/protocol-scoped published results checked; no local model
+    fit or benchmark.
+  evidence:
+  - docs/human-perception-discussion.md
+  - https://pokerman8.github.io/SKEL-CF/
+  - https://github.com/Intellindust-AI-Lab/SKEL-CF
+  - https://github.com/facebookresearch/sam-3d-body
+  - https://arxiv.org/html/2603.15603v1
+  - https://fanegg.github.io/Human3R/
+  - https://research.nvidia.com/labs/amri/publication/lee2026detram/
+  also_depends_on:
+  - N515
+  - N516
+  status: open

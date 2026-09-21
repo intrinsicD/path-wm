@@ -2672,3 +2672,14 @@ entries:
   - Forward parameter-to-mesh generation, image regression and optimization separated; no full image-to-SKEL
     pipeline or person-specific internal bone measurement claimed. Existing open topics retained; no closure
     or contradiction introduced.
+- turn: 2026-09-22_001#3
+  notes:
+  - N517 extends the same open topic. O357 records dated candidates; no published benchmark is treated
+    as a PATH-WM experiment or user-approved architecture.
+  - 'Clarified scope of O356: original SKEL loader lacks image estimation; newer HSMR/SKEL-CF already
+    supply that stage. Upstream existence corrects an overly narrow candidate list without negating the
+    optional SMPL fitting path or requiring the user to develop a predictor.'
+  - Fast SAM3DB speedups include approximations with metric regressions; RTX6000Ada benchmark and RTX5090
+    demo kept separate. Joint metrics do not establish individualized body shape.
+  - Prior topics remain explicitly open, including current direct-SKEL discussion. No closure, capability
+    color promotion or architecture adoption.
