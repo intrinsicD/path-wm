@@ -67,3 +67,10 @@ The initial NaN fixture exposed that the dense reference expects already-sanitiz
 encoder exports; compare its normal zero-invalid contract with packed NaN exclusion.
 Window restrictions remain opt-in; global coarsest attention and optional all-scale
 fusion still grow with source size, so this is not yet a resolution-independent encoder.
+
+The first GPU comparison `runs/encoder_token_budget_v1` passes the image256 resource
+screen but regresses small inputs: rebuilding geometry adds work. Before repeating,
+add one disposable last-layout cache per stage/merge (grid/factors/device identity;
+indices only, no source values/masks/times/weights). This is exact invariant reuse,
+not adaptive token selection. Repeat the same declared populations/settings and
+retain both runs. Quality fits use the final cached implementation in both arms.

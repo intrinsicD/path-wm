@@ -150,3 +150,22 @@ def test_full_window_is_global_identity_and_local_gradient_has_no_seam_leakage()
     grad = torch.autograd.grad(out.values[0, 2].square().sum(), values)[0]
     assert grad[0, :4].abs().sum() > 0
     assert grad[0, 4:].count_nonzero() == 0
+
+
+def test_warm_geometry_never_reuses_values_times_or_validity():
+    model = MultiScaleImageEncoder(16, window_size=4, packed_merges=True)
+    fresh = MultiScaleImageEncoder(16, window_size=4, packed_merges=True)
+    fresh.load_state_dict(model.state_dict())
+    model(Observation(torch.randn(1, 1, 3, 20, 28), torch.zeros(1, 1)))
+    # Same and changed grids, changed masks, times and values after warming.
+    for size in (20, 24):
+        observation = Observation(
+            torch.randn(2, 1, 3, size, 28),
+            torch.full((2, 1), 3.0),
+            torch.tensor([[True], [False]]),
+        )
+        actual, expected = model(observation), fresh(observation)
+        for a, b in zip(actual.scales, expected.scales):
+            assert torch.equal(a.values, b.values)
+            assert torch.equal(a.times, b.times) and torch.equal(a.valid, b.valid)
+    assert model.state_dict().keys() == fresh.state_dict().keys()

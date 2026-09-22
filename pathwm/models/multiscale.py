@@ -86,7 +86,7 @@ def pool_scale(fine, factors):
     return FeatureScale(values, times, valid, ends, grid, content), membership
 
 
-def pack_scale(fine, factors):
+def pack_scale(fine, factors, *, layout_cache=None):
     """Partition a grid into real small batches, with O(padded N) index storage.
 
     Positions/times/support stay global. Negative indices represent padding;
@@ -108,30 +108,39 @@ def pack_scale(fine, factors):
             -1,
         ).reshape(-1, len(shape))
 
-    origins, offsets = coordinates(grid), coordinates(factors)
-    xyz = origins[:, None] * torch.tensor(factors, device=device) + offsets[None]
-    inside = (xyz < torch.tensor(fine.grid, device=device)).all(-1)
-    strides = torch.tensor(
-        [math.prod(fine.grid[i + 1 :]) for i in range(len(grid))], device=device
-    )
-    index = (xyz * strides).sum(-1).masked_fill(~inside, -1)
-    source = coordinates(fine.grid)
-    group = sum(
-        (source[:, i] // f) * math.prod(grid[i + 1 :]) for i, f in enumerate(factors)
-    )
-    local = sum(
-        (source[:, i] % f) * math.prod(factors[i + 1 :]) for i, f in enumerate(factors)
-    )
-    restore = group * math.prod(factors) + local
+    key = (fine.grid, factors, device)
+    if layout_cache is not None and layout_cache.get("key") == key:
+        index, restore, inside, safe_index = layout_cache["indices"]
+    else:
+        origins, offsets = coordinates(grid), coordinates(factors)
+        xyz = origins[:, None] * torch.tensor(factors, device=device) + offsets[None]
+        inside = (xyz < torch.tensor(fine.grid, device=device)).all(-1)
+        strides = torch.tensor(
+            [math.prod(fine.grid[i + 1 :]) for i in range(len(grid))], device=device
+        )
+        index = (xyz * strides).sum(-1).masked_fill(~inside, -1)
+        source = coordinates(fine.grid)
+        group = sum(
+            (source[:, i] // f) * math.prod(grid[i + 1 :])
+            for i, f in enumerate(factors)
+        )
+        local = sum(
+            (source[:, i] % f) * math.prod(factors[i + 1 :])
+            for i, f in enumerate(factors)
+        )
+        restore = group * math.prod(factors) + local
+        safe_index = index.clamp_min(0)
+        if layout_cache is not None:
+            # One disposable geometry only entry, independent of source/weights.
+            layout_cache.clear()
+            layout_cache.update(key=key, indices=(index, restore, inside, safe_index))
     b, groups, count = len(fine.values), *index.shape
-    valid = fine.valid[:, index.clamp_min(0)] & inside[None]
-    values = fine.values[:, index.clamp_min(0)].masked_fill(~valid[..., None], 0)
+    valid = fine.valid[:, safe_index] & inside[None]
+    values = fine.values[:, safe_index].masked_fill(~valid[..., None], 0)
 
     def gather(values, fill):
         return (
-            values[:, index.clamp_min(0)]
-            .masked_fill(~valid, fill)
-            .reshape(b * groups, count)
+            values[:, safe_index].masked_fill(~valid, fill).reshape(b * groups, count)
         )
 
     packed = FeatureScale(
@@ -164,8 +173,8 @@ def expand_packed_weights(weights, index, batch, positions, *, cross=False):
     return result
 
 
-def pool_packed_scale(fine, factors):
-    packed, index, _, grid = pack_scale(fine, factors)
+def pool_packed_scale(fine, factors, *, layout_cache=None):
+    packed, index, _, grid = pack_scale(fine, factors, layout_cache=layout_cache)
     b, groups = len(fine.values), len(index)
     weights = packed.valid.to(packed.values.dtype)
     values = torch.bmm(weights[:, None], packed.values).squeeze(1) / weights.sum(
@@ -295,6 +304,7 @@ class ScaleProcessor(nn.Module):
             raise ValueError("Every scale needs at least one processing block")
         self.identity = nn.Parameter(torch.randn(width) * 0.02)
         self.window = window
+        self._layout_cache = {}
         self.blocks = nn.ModuleList(
             [ConditionedBlock(width, code_width) for _ in range(depth)]
         )
@@ -310,7 +320,9 @@ class ScaleProcessor(nn.Module):
             history.append(scale.values)
         original = scale
         if self.window is not None:
-            scale, index, restore, _ = pack_scale(scale, self.window)
+            scale, index, restore, _ = pack_scale(
+                scale, self.window, layout_cache=self._layout_cache
+            )
             condition = condition.repeat_interleave(len(index), 0)
 
         def unpack(values):
@@ -341,13 +353,16 @@ class ScaleMerge(nn.Module):
         super().__init__()
         self.factors = tuple(factors)
         self.packed = packed
+        self._layout_cache = {}
         self.cross_attention = (
             ConditionedBlock(width, code_width) if cross_scale else None
         )
 
     def forward(self, fine, condition, *, trace=None, name="merge"):
         if self.packed:
-            coarse, context, index = pool_packed_scale(fine, self.factors)
+            coarse, context, index = pool_packed_scale(
+                fine, self.factors, layout_cache=self._layout_cache
+            )
             if self.cross_attention is None:
                 return coarse
             batch, groups, width = coarse.values.shape
