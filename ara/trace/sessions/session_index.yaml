@@ -288,8 +288,8 @@ sessions:
     source benchmark scope retained, no local performance claim. Hands/feet review distinguishes WiLoR
     hands, FootMR ankles, SUPR-Foot articulation and FOCUS surfaces; fine-resolution integration and reaction
     benefit remain proposed. Face follow-up separates shape, mouth/eye articulation, head pose, gaze and
-    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand model buffering; execution/storage interpretation documented, training left open. Understanding capabilities and per-frame segmentation clarified; shared features, temporal binding and conditional detail remain proposed and unvalidated. Concrete new-frame dataflow traced against current event APIs; natural-image candidates/detail readers remain proposed.
-  turn_count: 10
-  events_count: 26
+    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand model buffering; execution/storage interpretation documented, training left open. Understanding capabilities and per-frame segmentation clarified; shared features, temporal binding and conditional detail remain proposed and unvalidated. Concrete new-frame dataflow traced against current event APIs; natural-image candidates/detail readers remain proposed. Voice-generation question separates reusable reference conditioning from speaker fine-tuning; pretrained German TTS bridge proposed, local quality and GPU fit unmeasured. Latent-speech follow-up proposes generated content/timing plus voice and delivery conditioning; text baseline optional, acoustic compatibility and disentanglement remain unvalidated.
+  turn_count: 12
+  events_count: 30
   claims_touched: []
-  open_threads: 22
+  open_threads: 24

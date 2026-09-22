@@ -6460,3 +6460,44 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O368
+  timestamp: 2026-09-22T14:20+02:00
+  provenance: ai-suggested
+  potential_type: architecture
+  content: Propose shared-state speech content readout to text, pretrained TTS with a cached reference
+    voice prompt, waveform chunks and playback. Stable voice profile and current delivery have distinct
+    ownership. Reference conditioning keeps model weights fixed; speaker fine-tuning is a later separate
+    experiment. Start with a German-capable small candidate and measure first-audio latency, real-time
+    factor, full-process VRAM, intelligibility and voice similarity before adoption.
+  context: Official Qwen3-TTS Base 0.6B supports German cloning and reusable reference prompts; current
+    fine-tuning recipe is single-speaker. Chatterbox Multilingual V3 is a comparison candidate. Existing
+    PATH-WM controlled-tone tests do not establish speech. No model installation, synthesis, training
+    or local performance measurement.
+  bound_to:
+  - N527
+  - N523
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O369
+  timestamp: 2026-09-22T14:26+02:00
+  provenance: ai-suggested
+  potential_type: architecture
+  content: Proposed direct path reads shared state into a generated, temporally aligned speech sequence
+    and combines compatible content, voice and delivery conditioning in acoustic synthesis. Representation
+    compatibility and disentanglement require learning; arbitrary core or reconstruction-codec latents
+    do not guarantee independent speaker control. Reuse a compatible pretrained acoustic stack, then train
+    state-conditioned generation on paired task contexts and spoken targets; transcripts can supervise
+    training without an inference text intermediate.
+  context: User proposes direct latent output, consistent with the standing multimodal core. CosyVoice
+    2 and FACodec illustrate component separation, not an implemented PATH-WM adapter. Optional text baseline
+    is not a prerequisite; no automatic latency/VRAM advantage, German capability transfer or full speech
+    learning from one reference clip is claimed.
+  bound_to:
+  - N528
+  - N527
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

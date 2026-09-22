@@ -8817,3 +8817,34 @@ tree:
   - N524
   - N523
   status: open
+- id: N527
+  type: question
+  title: Give the agent a speaking voice from recordings
+  provenance: user
+  timestamp: 2026-09-22T14:20+02:00
+  description: Alex asks how the agent gets and uses a voice, and whether voice recordings can teach it
+    that voice. Separate reusable reference conditioning, speech generation and weight fine-tuning; preserve
+    the shared multimodal core and explicit local GPU limits.
+  evidence:
+  - docs/agent-voice-design.md
+  - https://github.com/QwenLM/Qwen3-TTS
+  - https://github.com/QwenLM/Qwen3-TTS/blob/main/finetuning/README.md
+  - https://github.com/resemble-ai/chatterbox
+  also_depends_on:
+  - N523
+  status: open
+- id: N528
+  type: question
+  title: Direct latent speech with separate voice identity
+  provenance: user
+  timestamp: 2026-09-22T14:26+02:00
+  description: Alex questions whether direct latent coupling is better than a text/TTS bridge and proposes
+    a generated latent sequence decoded with a learned latent voice profile. Asks how technical content/voice
+    separation works.
+  evidence:
+  - docs/agent-voice-design.md
+  - https://arxiv.org/html/2412.10117v1
+  - https://speechresearch.github.io/naturalspeech3/
+  also_depends_on:
+  - N527
+  status: open

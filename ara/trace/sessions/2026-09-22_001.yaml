@@ -2,8 +2,8 @@ session:
   id: 2026-09-22_001
   date: '2026-09-22'
   started: 2026-09-22T01:13+02:00
-  last_turn: 2026-09-22T13:32+02:00
-  turn_count: 10
+  last_turn: 2026-09-22T14:26+02:00
+  turn_count: 12
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
@@ -12,7 +12,7 @@ session:
     source benchmark scope retained, no local performance claim. Hands/feet review distinguishes WiLoR
     hands, FootMR ankles, SUPR-Foot articulation and FOCUS surfaces; fine-resolution integration and reaction
     benefit remain proposed. Face follow-up separates shape, mouth/eye articulation, head pose, gaze and
-    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand model buffering; execution/storage interpretation documented, training left open. Understanding capabilities and per-frame segmentation clarified; shared features, temporal binding and conditional detail remain proposed and unvalidated. Concrete new-frame dataflow traced against current event APIs; natural-image candidates/detail readers remain proposed.
+    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand model buffering; execution/storage interpretation documented, training left open. Understanding capabilities and per-frame segmentation clarified; shared features, temporal binding and conditional detail remain proposed and unvalidated. Concrete new-frame dataflow traced against current event APIs; natural-image candidates/detail readers remain proposed. Voice-generation question separates reusable reference conditioning from speaker fine-tuning; pretrained German TTS bridge proposed, local quality and GPU fit unmeasured. Latent-speech follow-up proposes generated content/timing plus voice and delivery conditioning; text baseline optional, acoustic compatibility and disentanglement remain unvalidated.
 events_logged:
 - turn: 1
   type: question
@@ -224,6 +224,39 @@ events_logged:
     correct state and infer events; commit evidence/state once and answer/act only when requested. Retain
     source/time/version contracts and bounded workspaces; inference changes working/session state rather
     than trained filter weights. Late details require explicit availability/correction handling.'
+- turn: 11
+  type: question
+  id: N527
+  routing: direct
+  provenance: user
+  summary: Give the agent a speaking voice from recordings
+- turn: 11
+  type: observation
+  id: O368
+  routing: staged
+  provenance: ai-suggested
+  summary: Propose shared-state speech content readout to text, pretrained TTS with a cached reference
+    voice prompt, waveform chunks and playback. Stable voice profile and current delivery have distinct
+    ownership. Reference conditioning keeps model weights fixed; speaker fine-tuning is a later separate
+    experiment. Start with a German-capable small candidate and measure first-audio latency, real-time
+    factor, full-process VRAM, intelligibility and voice similarity before adoption.
+- turn: 12
+  type: question
+  id: N528
+  routing: direct
+  provenance: user
+  summary: Direct latent speech with separate voice identity
+- turn: 12
+  type: observation
+  id: O369
+  routing: staged
+  provenance: ai-suggested
+  summary: Proposed direct path reads shared state into a generated, temporally aligned speech sequence
+    and combines compatible content, voice and delivery conditioning in acoustic synthesis. Representation
+    compatibility and disentanglement require learning; arbitrary core or reconstruction-codec latents
+    do not guarantee independent speaker control. Reuse a compatible pretrained acoustic stack, then train
+    state-conditioned generation on paired task contexts and spoken targets; transcripts can supervise
+    training without an inference text intermediate.
 ai_actions:
 - turn: 1
   action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
@@ -341,6 +374,30 @@ ai_actions:
   - docs/architecture-atlas.html
   - docs/architecture-atlas.md
   - docs/architecture-discussion.md
+- turn: 11
+  action: Checked official Qwen3-TTS cloning/fine-tuning and Chatterbox sources; documented speech path,
+    prompt ownership, latent-core boundary and local budget checks. Updated project state and regenerated
+    atlas; no validation colors changed.
+  provenance: ai-executed
+  files_changed:
+  - docs/agent-voice-design.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/architecture-discussion.md
+- turn: 12
+  action: Checked primary CosyVoice 2 and NaturalSpeech 3/FACodec architecture references; expanded voice
+    design with direct latent generation, learning boundaries and controlled voice/content swaps; regenerated
+    atlas with statuses and topology unchanged.
+  provenance: ai-executed
+  files_changed:
+  - docs/agent-voice-design.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -367,6 +424,12 @@ key_context:
     in every frame?'
 - turn: 10
   excerpt: 'Sagen wir ein neuer Frame kommt: was genau muss dann alles im Modell passieren?'
+- turn: 11
+  excerpt: Und wie gebe ich dem Agenten eine Stimme? Wie kann er dann diese Stimme benutzen um zu sprechen?
+    Kann ich die Stimme aus Stimm Aufnahmen lernen?
+- turn: 12
+  excerpt: Ist es nicht besser die Anbindung latent zu machen? Wie trennt man die Stimme vom Gesprochenen;
+    latente Token-Sequenz plus gelerntes Stimmprofil?
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -413,6 +476,10 @@ open_threads:
   full versus conditional detail, including discovery, fast events, source controls and resource gates.'
 - 'N526: select concrete frame-reader/association contracts and bounded detail deadlines; validate state/evidence
   integration before claiming a working visual pipeline.'
+- 'N527: evaluate reference-conditioned German speech, cached prompts, quality and whole-process GPU/latency
+  costs before model adoption or fine-tuning.'
+- 'N528: specify a compatible speech representation, voice/delivery controls and paired latent-readout
+  training; evaluate content/voice swaps and full streaming resource costs.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -451,3 +518,7 @@ ai_suggestions_pending:
 - 'O365/O366: relational/temporal integration and conditional detail scheduling remain proposals; no efficacy
   or fixed cadence adopted.'
 - 'O367: per-frame execution interpretation remains proposed, without training or architecture adoption.'
+- 'O368: pretrained speech bridge and reusable voice-profile ownership remain proposed; no local speech
+  synthesis evidence or user adoption.'
+- 'O369: direct latent architecture explanation remains a proposal; no trained bridge, perfect disentanglement
+  or resource advantage established.'

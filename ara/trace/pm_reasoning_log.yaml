@@ -2741,3 +2741,20 @@ entries:
   - Code confirms prior/correction/commit mechanics; supplied candidates are not automatically detected
     natural-image objects. No new model capability or weight update claimed.
   - Prior topics remain open. No closure signal or validation promotion; O367 staged.
+- turn: 2026-09-22_001#11
+  notes:
+  - The user opens voice synthesis and learning from recordings; no chosen TTS backend or permission to
+    start training is inferred.
+  - Documented model capabilities are upstream claims, not local 8-GB or real-time results. Text is an
+    external speech-producer interface, preserving shared multimodal thinking.
+  - Earlier topics remain open. No verbal affirmation, empirical resolution or downstream commitment settles
+    O368 or earlier staged designs; no promotion.
+- turn: 2026-09-22_001#12
+  notes:
+  - Follow-up arrived after the voice-question epilogue but before delivery; preserve its distinct question
+    and the earlier optional bridge proposal.
+  - User requests latent coupling explanation; this reinforces the standing multimodal direction without
+    selecting a codec, adapter or training recipe. O368 was optional, so no contradiction or endorsement
+    of its text bridge inferred.
+  - 'No closure signal for the concrete designs: keep O369 and prior open proposals staged. Codec factorization
+    papers supply mechanism references, not local efficacy.'

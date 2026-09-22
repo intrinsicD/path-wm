@@ -1,5 +1,20 @@
 # Current work
 
+**Agent voice, 22 September:** [reference-conditioned speech proposal](agent-voice-design.md).
+Alex asks how the agent speaks and whether recordings can supply its voice.
+Propose a pretrained TTS bridge from speech text plus a reusable voice prompt,
+preserving shared multimodal thinking; distinguish fixed-weight conditioning from
+speaker fine-tuning. Qwen3-TTS 0.6B Base and Chatterbox Multilingual are German-capable
+candidates, not adopted dependencies. Existing controlled-tone tests do not prove
+speech synthesis. Whole-process 8-GB fit, latency and voice quality remain unmeasured;
+no model download, audio generation or training.
+Follow-up: Alex questions the text bridge and proposes a latent speech sequence
+plus learned voice profile. Explain direct state-conditioned speech generation,
+content/timbre/prosody separation and compatible acoustic decoding. CosyVoice 2
+illustrates the latter separation, not an existing PATH-WM adapter. The text route
+is an optional baseline, not a prerequisite. Disentanglement, paired training,
+streaming and local efficiency require their own checks; no implementation adopted.
+
 **What remains for image/video understanding, 22 September:**
 [capabilities and current limits](video-understanding-test-map.md#bild-videoverstehen-nach-der-personen--und-engine-diskussion).
 Alex asks beyond human geometry and inference buffering. Discuss object semantics,
