@@ -14,6 +14,12 @@ read the particular record when needed, not the whole history at startup.
   acquisition/use/correction demonstration with source controls is proposed;
   domain, data, gates and training budget remain open. Partial components do not
   establish the complete capability.
+- **Latent concept learning:** the [abstract research review](latent-concept-learning-review.md)
+  compares concept induction, latent memory and prerequisites with current primary
+  sources and actual Claude Opus 5.5 at max effort. Full modal reconstruction is
+  not a universal prerequisite; joint learning, staged learning and pretrained
+  features remain alternatives. Concept-code search is distinct from weight
+  retraining. No mechanism, experiment budget or new capability is adopted.
 - **Attention backend review:** [current kernels and GPU eligibility](encoder-token-budget-plan.md#current-attention-kernels-pre-integration-review-22-september-2026). Current fused efficient attention is the baseline; native Flash/cuDNN, Flex and the new FA4 Ampere source path require matched local comparisons. Half precision and exact mask support are explicit constraints. No integration or speed claim yet.
 - **Encoder/model efficiency:** use the [local encoder plan](encoder-token-budget-plan.md)
   and preceding [token-budget plan](token-budget-plan.md) for the current implemented

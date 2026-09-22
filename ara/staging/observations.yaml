@@ -6669,3 +6669,55 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O379
+  timestamp: 2026-09-23T00:26+02:00
+  provenance: ai-suggested
+  content: Functional feature sufficiency and a usable reader are needed for concept use, but a separately finished
+    full image/audio decoder is not a universal prerequisite. Joint encoder/predictor learning is supported in bounded
+    LeWM tasks; staged or pretrained-feature work remains a pragmatic comparison, not an adopted chronology.
+  context: 'Public primary-source review and two completed actual-Claude responses, including explicit withdrawal/narrowing
+    of six overclaims. Sources/receipts: ara/evidence/tables/latent_concept_review_2026-09-23.json; synthesis: docs/latent-concept-learning-review.md.
+    No model change, local experiment or user adoption of a concrete mechanism.'
+  potential_type: constraint
+  bound_to:
+  - N544
+  - N532
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O380
+  timestamp: 2026-09-23T00:26+02:00
+  provenance: ai-suggested
+  content: Compare mutable examples/prototypes, learned latent concept-code inference and optional latent-code search
+    with fixed model weights. Gradients on a temporary concept code are distinct from model-weight retraining; sampling
+    and recurrent inference can also update codes. Persistent general multimodal acquisition/correction is not established
+    by these component papers.
+  context: 'Public primary-source review and two completed actual-Claude responses, including explicit withdrawal/narrowing
+    of six overclaims. Sources/receipts: ara/evidence/tables/latent_concept_review_2026-09-23.json; synthesis: docs/latent-concept-learning-review.md.
+    No model change, local experiment or user adoption of a concrete mechanism.'
+  potential_type: architecture
+  bound_to:
+  - N544
+  - N532
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O381
+  timestamp: 2026-09-23T00:26+02:00
+  provenance: ai-suggested
+  content: Use family-specific generalization, causal use, retention and correction checks. Prototypes can themselves
+    learn new categories; beating them measures additional benefit, not the existence of concept learning. Distinguish
+    wrong earlier evidence from genuine temporal change; exposure counts are not calibrated independent evidence.
+  context: 'Public primary-source review and two completed actual-Claude responses, including explicit withdrawal/narrowing
+    of six overclaims. Sources/receipts: ara/evidence/tables/latent_concept_review_2026-09-23.json; synthesis: docs/latent-concept-learning-review.md.
+    No model change, local experiment or user adoption of a concrete mechanism.'
+  potential_type: heuristic
+  bound_to:
+  - N544
+  - N532
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

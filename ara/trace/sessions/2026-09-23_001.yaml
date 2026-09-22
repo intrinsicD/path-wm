@@ -1,0 +1,70 @@
+session:
+  id: 2026-09-23_001
+  date: '2026-09-23'
+  started: 2026-09-23T00:26+02:00
+  last_turn: 2026-09-23T00:26+02:00
+  turn_count: 1
+  summary: Abstract latent-concept review completed with primary-source checks and Claude Opus 5.5 max. Full modal
+    decoders need not precede learning; example/prototype, inferred-code and code-search routes remain alternatives.
+    Six overclaims reconciled; no architecture adoption or capability promotion.
+events_logged:
+- turn: 1
+  type: question
+  id: N544
+  routing: direct
+  provenance: user
+  summary: Open abstract latent-concept induction and bootstrapping question; research review delivered, method
+    selection remains open.
+- turn: 1
+  type: observation
+  id: O379
+  routing: staged
+  provenance: ai-suggested
+  summary: Functional feature sufficiency and a usable reader are needed for concept use, but a separately finished
+    full image/audio decoder is not a universal prerequisite. Joint encoder/predictor learning is supported in bounded
+    LeWM tasks; staged or pretrained-feature work remains a pragmatic comparison, not an adopted chronology.
+- turn: 1
+  type: observation
+  id: O380
+  routing: staged
+  provenance: ai-suggested
+  summary: Compare mutable examples/prototypes, learned latent concept-code inference and optional latent-code search
+    with fixed model weights. Gradients on a temporary concept code are distinct from model-weight retraining; sampling
+    and recurrent inference can also update codes. Persistent general multimodal acquisition/correction is not established
+    by these component papers.
+- turn: 1
+  type: observation
+  id: O381
+  routing: staged
+  provenance: ai-suggested
+  summary: Use family-specific generalization, causal use, retention and correction checks. Prototypes can themselves
+    learn new categories; beating them measures additional benefit, not the existence of concept learning. Distinguish
+    wrong earlier evidence from genuine temporal change; exposure counts are not calibrated independent evidence.
+ai_actions:
+- turn: 1
+  action: Verified selected public primary sources; completed actual Opus 5.5 max research and bounded reconciliation.
+    Preserved timeout/logout receipts; restarted only interrupted bounded call. Documented scope and corrections,
+    regenerated atlas without color/evidence promotion.
+  provenance: ai-executed
+  files_changed:
+  - docs/latent-concept-learning-review.md
+  - ara/evidence/tables/latent_concept_review_2026-09-23.json
+  - docs/integrated-latent-agent-goal.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-discussion.md
+claims_touched: []
+key_context:
+- turn: 1
+  excerpt: User prefers initially general and abstract latent-token methods, asks whether functioning encoder/decoder
+    prerequisites are needed, and authorizes continuation after memory pressure logged the system out.
+open_threads:
+- 'N544: choose concept family and relevant operations, then compare example/prototype use, learned code inference
+  and optional code search with family-specific generalization/revision and resource controls.'
+- 'N532: integrated frozen-weight acquisition/use/correction demonstration still needs domain, data, gates and budget.'
+- Earlier open topics remain in 2026-09-22_001; this review does not imply their closure or abandonment.
+ai_suggestions_pending:
+- Staged/prior-feature diagnostics are a pragmatic comparison; joint learning is also viable within appropriate
+  tasks. No concrete training route adopted.
+- Fast-parameter adaptation may help farther task shifts; compare empirically against fixed-weight state/code methods
+  rather than treating it as necessary.

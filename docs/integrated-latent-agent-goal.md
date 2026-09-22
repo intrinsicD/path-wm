@@ -22,6 +22,13 @@ Alex nennt latente Diffusion als mögliche Vereinfachung schwieriger latenter Pf
 Das ist eine Mechanismushypothese; der Gesamtnachweis hängt nicht von ihrer Bestätigung
 ab. Auch die konkrete Tokenrollen-Tabelle ist ein Entwurf, nicht das eigentliche Ziel.
 
+Die [abstrakte Forschungsdiskussion zum Konzeptlernen](latent-concept-learning-review.md)
+prüft auf Alex' Wunsch den aktuellen Stand mit Claude Opus 5.5 bei maximalem Aufwand.
+Sie trennt latente Beispiele, erschlossene Konzept-/Programmcodes und deren Suche;
+ein vollständiger modaler Decoder ist keine allgemeine Vorbedingung. Funktionale
+Voraussetzungen und zeitliche Trainingsreihenfolge werden getrennt. Die konkrete
+Methode und der erste Lernpfad bleiben ungewählt.
+
 ## Zu prüfende Aussage und ihr Umfang
 
 Nach einem initialen Training kann derselbe eingefrorene Agent aus neuen Erfahrungen

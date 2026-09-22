@@ -1,0 +1,208 @@
+{
+  "type": "primary_literature_and_external_review",
+  "completed_at": "2026-09-23T00:26+02:00",
+  "source_cutoff": "2026-09-22",
+  "requested_model": "Claude Opus 5.5",
+  "requested_effort": "max",
+  "completed_responses": 2,
+  "public_only_external_briefs": true,
+  "model_training_or_evaluation_run": false,
+  "local_capability_promotion": false,
+  "architecture_adopted": false,
+  "receipts": [
+    {
+      "path": "runs/reviews/latent_concepts_sota_20260922/receipt.json",
+      "sha256": "e911eeda2ee77762879db73a4dfc4a9a8774609277c2c1c8f531d0a16413d7aa",
+      "exit_code": 0,
+      "outcome": null,
+      "duration_seconds": 926.0636424429831,
+      "models": [
+        "claude-opus-5-5",
+        "claude-haiku-4-5-20251001"
+      ],
+      "is_error": false
+    },
+    {
+      "path": "runs/reviews/latent_concepts_sota_20260922/reconciliation-receipt.json",
+      "sha256": "b78008248fca6bdb41105a87b2d30640fd099a8482530c1b20336da98ded774f",
+      "exit_code": 124,
+      "outcome": null,
+      "duration_seconds": 700.0271589109907,
+      "models": [],
+      "is_error": null
+    },
+    {
+      "path": "runs/reviews/latent_concepts_sota_20260922/reconciliation-interruption-receipt.json",
+      "sha256": "6e4256d70b34b9498433b1f522f6740311d26f28f62bd7157a103f0014644c8f",
+      "exit_code": null,
+      "outcome": "interrupted_before_response",
+      "duration_seconds": null,
+      "models": [],
+      "is_error": null
+    },
+    {
+      "path": "runs/reviews/latent_concepts_sota_20260922/reconciliation-retry-receipt.json",
+      "sha256": "fea8b2efffed3bdbf9ddb8334857f74dbcea479cb0a521c690b700bbc101fa63",
+      "exit_code": 0,
+      "outcome": null,
+      "duration_seconds": 463.96777586103417,
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "is_error": false
+    }
+  ],
+  "responses": [
+    {
+      "path": "runs/reviews/latent_concepts_sota_20260922/response.md",
+      "sha256": "813ba3f2b3030e14082f49f989799ead3b1eb0334b7727f375d9a5e1b6c7aed4"
+    },
+    {
+      "path": "runs/reviews/latent_concepts_sota_20260922/reconciliation-retry.md",
+      "sha256": "170a40df59bac00dcf23b4fb2482f041209e55eec98c7df0e9e61936d5bbe62e"
+    }
+  ],
+  "source_audit": {
+    "as_of": "2026-09-22",
+    "scope": "Targeted primary-literature method review; no exhaustive global SOTA ranking; no local training or replication.",
+    "sources": [
+      {
+        "title": "V-JEPA 2.1",
+        "date": "2026-03-15",
+        "url": "https://arxiv.org/abs/2603.14482",
+        "supports": "Dense spatial/temporal latent predictive learning; intermediate supervision and image/video training.",
+        "limits": "Visual predictive features do not establish online new-concept acquisition or correction.",
+        "snapshot": "sources/2603.14482.md"
+      },
+      {
+        "title": "DINOv3",
+        "date": "2025-08-13",
+        "url": "https://arxiv.org/abs/2508.10104",
+        "supports": "Reusable self-supervised dense visual features, including frozen-backbone downstream evaluation.",
+        "limits": "Large upstream training; semantic features are not a complete concept-learning agent.",
+        "snapshot": "sources/2508.10104.md"
+      },
+      {
+        "title": "Object Concepts Emerge from Motion",
+        "date": "2026-09-03",
+        "url": "https://arxiv.org/abs/2609.04348",
+        "supports": "Motion-derived instance grouping as a training signal without human masks.",
+        "limits": "Recent preprint; uses optical-flow models, clustering and large training data; object grouping is narrower than general concept induction.",
+        "snapshot": "sources/2609.04348.html"
+      },
+      {
+        "title": "DINOSAUR",
+        "date": "2022-09-29",
+        "url": "https://arxiv.org/abs/2209.14860",
+        "supports": "Object grouping trained by reconstructing pretrained self-supervised features.",
+        "limits": "Feature decoder is not full pixel reconstruction; object slots do not establish abstract concepts.",
+        "snapshot": "sources/DINOSAUR.html"
+      },
+      {
+        "title": "Prototypical Networks",
+        "date": "2017-03-15",
+        "url": "https://arxiv.org/abs/1703.05175",
+        "supports": "Learn embedding metric during meta-training; new class prototypes computed from support at test time.",
+        "limits": "Category learning within learned feature/metric assumptions; not arbitrary relational reasoning.",
+        "snapshot": "sources/1703.05175.md"
+      },
+      {
+        "title": "Meta-learning for compositionality",
+        "date": "2023-10-25",
+        "url": "https://www.nature.com/articles/s41586-023-06668-3",
+        "supports": "Train across compositional episodes; frozen test weights interpret support examples and compose outputs.",
+        "limits": "Controlled pseudolanguage tasks, not natural multimodal lifelong concept acquisition.",
+        "snapshot": "sources/MLC.html"
+      },
+      {
+        "title": "Latent Concept Disentanglement",
+        "date": "2025-06-20 (v2 2025-09-26)",
+        "url": "https://arxiv.org/abs/2506.16975",
+        "supports": "Controlled analyses of latent intermediate concepts and inferred numerical task parameters; numerical models trained from scratch.",
+        "limits": "Factual bridge tasks often use already pretrained world knowledge; interpolation within studied families is not arbitrary new abstractions.",
+        "snapshot": "sources/2506.16975.html"
+      },
+      {
+        "title": "RDB-PFN",
+        "date": "2026-03-04 (v5 2026-05-28)",
+        "url": "https://arxiv.org/abs/2603.03805",
+        "supports": "Synthetic task pretraining supports relational in-context prediction on new databases.",
+        "limits": "Relational supervised prediction, not autonomous multimodal concept discovery; structured input prior matters.",
+        "snapshot": "sources/2603.03805.md"
+      },
+      {
+        "title": "LatentMem",
+        "date": "2026-02-03",
+        "url": "https://arxiv.org/abs/2602.03036",
+        "supports": "Raw trajectories stored externally; trained composer generates agent-conditioned continuous memory tokens; experiences appended at inference.",
+        "limits": "Latent read context is not an entirely latent evidence store; LLM multi-agent QA/code evidence, not general online concept formation.",
+        "snapshot": "sources/2602.03036.md"
+      },
+      {
+        "title": "MemGen",
+        "date": "2025-09-29",
+        "url": "https://arxiv.org/abs/2509.24704",
+        "supports": "Frozen reasoner plus separately trained trigger and weaver produce latent memory during reasoning.",
+        "limits": "Draws on implicit parametric memory, optionally retrieval; frozen reasoner alone does not prove all modules frozen or new-fact persistence.",
+        "snapshot": "sources/2509.24704.md"
+      },
+      {
+        "title": "Titans",
+        "date": "2024-12-31 / 2025 arXiv ID",
+        "url": "https://arxiv.org/abs/2501.00663",
+        "supports": "Online neural-memory learning with gradient-based fast memory updates.",
+        "limits": "Fast memory parameters change; not strict frozen-all-weights state-only acquisition.",
+        "snapshot": "sources/2501.00663.md"
+      },
+      {
+        "title": "Coconut",
+        "date": "2024-12-09",
+        "url": "https://arxiv.org/abs/2412.06769",
+        "supports": "Continuous hidden-state reasoning trained using a curriculum derived from language reasoning chains.",
+        "limits": "No mandatory textual intermediate inference, but trained language backbone and supervision; narrow tasks, not universal concept induction.",
+        "snapshot": "sources/2412.06769.md"
+      },
+      {
+        "title": "Do Latent Tokens Think?",
+        "date": "2025-12-25",
+        "url": "https://arxiv.org/abs/2512.21711",
+        "supports": "Perturbation/swap and biased/OOD experiments report shortcut reliance in studied Coconut-style variants.",
+        "limits": "Authors explicitly acknowledge no formal causal link and speculative mechanism explanations; not a refutation of all latent reasoning.",
+        "snapshot": "sources/2512.21711.md"
+      },
+      {
+        "title": "Trained Persistent Memory for Frozen Encoder-Decoder LLMs",
+        "date": "2026-03-17",
+        "url": "https://arxiv.org/abs/2603.16413",
+        "supports": "Pilot with frozen Flan-T5-XL, trained adapters and inference-time memory accumulation.",
+        "limits": "Single backbone/dataset; capacity-sensitive failures and weak stateless baseline. Feasibility pilot, not general SOTA proof.",
+        "snapshot": "sources/2603.16413.html"
+      },
+      {
+        "title": "DreamerV3",
+        "date": "2025-04-02",
+        "url": "https://www.nature.com/articles/s41586-025-08744-2",
+        "supports": "Concurrent learning of latent world model, actor and critic from interaction; encoder/decoder are learned components.",
+        "limits": "Separate trained agents across tasks under common recipe; not one frozen model learning arbitrary new concepts.",
+        "snapshot": "sources/DreamerV3.html"
+      },
+      {
+        "title": "LeWorldModel",
+        "date": "2026-03-13; v3 2026-06-03",
+        "url": "https://arxiv.org/abs/2603.19312",
+        "supports": "Joint latent encoder/predictor learning from pixels without reconstruction or pretrained encoder; anti-collapse regularization.",
+        "limits": "Narrow control environments; source snapshot supplied by HF references v1, latest arXiv v3 abstract checked separately. No all-domain concept learning or local feasibility claim.",
+        "snapshot": "sources/2603.19312.md"
+      },
+      {
+        "title": "Searching Latent Program Spaces",
+        "date": "2024-11-13; v3 2025-11-25",
+        "url": "https://arxiv.org/abs/2411.08706",
+        "supports": "Learned latent implicit programs; code inference and test-time search, including sampling and gradients on latent codes.",
+        "limits": "Programming-by-examples tasks; not demonstrated persistent multimodal concept acquisition/correction. Code optimization is different from backbone weight training.",
+        "snapshot": "sources/2411.08706.md"
+      }
+    ]
+  },
+  "note": "Initial broad reconciliation timed out; first narrow retry was interrupted during user-reported logout and restarted only after checking saved output and absent matching processes. The final response explicitly withdrew/narrowed six claims. Primary-source verification is independent of peer agreement. No global SOTA ranking or local effectiveness claim."
+}
