@@ -1,0 +1,152 @@
+{
+  "date": "2026-09-23",
+  "kind": "source_and_peer_review_not_model_experiment",
+  "question": "Clarify concept as shared structure above instances and critically assess whether transformations/actions are too narrow.",
+  "user_clarification": "Concept was initially a placeholder for something more general than instances; no particular representation implied.",
+  "review_receipts": [
+    {
+      "path": "runs/reviews/concept_abstraction_direction_20260923/receipt.json",
+      "sha256": "ec8b89afeb2cfd64b0d0784195be640a19d2e7c37f9787c694ec8cf4d9b06f24",
+      "model": "claude-opus-5-5",
+      "effort": "max",
+      "duration_seconds": 720.5283045849646,
+      "exit_code": 0,
+      "tools_enabled": false,
+      "auxiliary_models": []
+    },
+    {
+      "path": "runs/reviews/concept_abstraction_direction_20260923/reconciliation-receipt.json",
+      "sha256": "354d3b0cdb762d6b91e6517b4e90f45d92302a76da6a2101e13436b6f350fbc9",
+      "model": "claude-opus-5-5",
+      "effort": "max",
+      "duration_seconds": 466.3595863110386,
+      "exit_code": 0,
+      "tools_enabled": false,
+      "auxiliary_models": []
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "runs/reviews/concept_abstraction_direction_20260923/brief.md",
+      "sha256": "e3c6a916c5fae0c6a014b90d394bbc32fd33b0778a555e05ff4cd07aab0dedd0",
+      "bytes": 5854
+    },
+    {
+      "path": "runs/reviews/concept_abstraction_direction_20260923/response.json",
+      "sha256": "5c37745b6e9d86755ceb16e0ba80c9cf46ec2532c2e5c730511a87c5a12e6cad",
+      "bytes": 10968
+    },
+    {
+      "path": "runs/reviews/concept_abstraction_direction_20260923/response.md",
+      "sha256": "d18462713b4c15514de1ffd3a249a2f120f939ce3838cf87f5459c8b22b400a8",
+      "bytes": 9085
+    },
+    {
+      "path": "runs/reviews/concept_abstraction_direction_20260923/reconciliation-brief.md",
+      "sha256": "e7280ba3f8ce26c225c624245c098f5eceb3d5eec0b4233284054b896e3f763c",
+      "bytes": 13063
+    },
+    {
+      "path": "runs/reviews/concept_abstraction_direction_20260923/reconciliation.json",
+      "sha256": "a157995182000faa8af4495664e47c52bd5fc1be9d9e94b7f97485b334581bd2",
+      "bytes": 6540
+    },
+    {
+      "path": "runs/reviews/concept_abstraction_direction_20260923/reconciliation.md",
+      "sha256": "94ca3548167b675be73ad9220d854559b67414b78d404d5b4060252714fe29e7",
+      "bytes": 4703
+    },
+    {
+      "path": "runs/reviews/concept_abstraction_direction_20260923/independent-assessment.md",
+      "sha256": "8afa10ca750f8f9e2b1a87d5f033ae6680e8c712f19cb0f243b7a9126c438a18",
+      "bytes": 2039
+    },
+    {
+      "path": "runs/reviews/concept_abstraction_direction_20260923/source-audit.json",
+      "sha256": "bf444c05f1a55016bf94128ed3a84cc4fa9ff8b0c8962509afaa913e70a63620",
+      "bytes": 3656
+    },
+    {
+      "path": "runs/reviews/concept_abstraction_direction_20260923/sources/manifest.json",
+      "sha256": "f2dfe4f3165125a2e103f00115b706792fd42b91b2c805d9a7d567c531833ca0",
+      "bytes": 2034
+    }
+  ],
+  "sources": [
+    {
+      "source": "https://arxiv.org/abs/1703.05175",
+      "checked": "Full paper via Hugging Face markdown; arXiv abstract",
+      "supports": "Learned metric, labeled support-derived class means and new-class few-shot classification.",
+      "limits": "Class support groupings are supplied. Not autonomous discovery of all meaningful abstractions or universal reasoning."
+    },
+    {
+      "source": "https://arxiv.org/abs/1807.01622",
+      "checked": "arXiv abstract",
+      "supports": "Latent-variable models defining distributions over functions, adaptation to new observations and predictive uncertainty.",
+      "limits": "Reported regression/optimization scope; no persistent autonomous concept-memory claim."
+    },
+    {
+      "source": "https://www.nature.com/articles/s41586-023-06668-3",
+      "checked": "Primary article and previously audited full text",
+      "supports": "Meta-learning compositional support/query behavior in bounded tasks.",
+      "limits": "Does not show arbitrary task-family novelty, unlimited capacity or a complete multimodal agent."
+    },
+    {
+      "source": "https://arxiv.org/abs/2411.08706",
+      "checked": "Full paper via Hugging Face markdown; arXiv v3 abstract",
+      "supports": "Inference/search over implicit latent programs and conditional execution for new queries. Code search is distinct from changing decoder weights.",
+      "limits": "Examples specify input-output tasks; limited program/task family coverage and no generic memory correction system."
+    },
+    {
+      "source": "https://proceedings.mlr.press/v97/locatello19a.html",
+      "checked": "Primary proceedings abstract",
+      "supports": "Unsupervised disentanglement is not identifiable without inductive biases; assumptions/supervision need to be stated.",
+      "limits": "Do not generalize into a theorem forbidding useful abstraction, concept learning or all identifiable representations."
+    },
+    {
+      "source": "https://cbmm-new.mit.edu/publications/human-level-concept-learning-through-probabilistic-program-induction",
+      "checked": "Author-affiliated primary publication page via web tool; local snapshot failed certificate validation and was not bypassed",
+      "supports": "Bayesian program descriptions explain handwritten-character concepts and support one-shot classification/generation in that setting.",
+      "limits": "Explicit program priors and bounded character domain; not an argument that concepts must be symbolic programs."
+    },
+    {
+      "source": "https://www.sciencedirect.com/science/article/pii/S0010027711000709",
+      "checked": "Primary journal abstract via web tool",
+      "supports": "Joint inference of multiple category systems and the features they explain models cross-categorization in the reported experiments.",
+      "limits": "Supports multiple groupings as a legitimate alternative to one taxonomy; does not require a specific neural architecture."
+    },
+    {
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2492756/",
+      "checked": "Primary PNAS article abstract/introduction via PMC",
+      "supports": "Distinguishes inference of structural form from choosing a particular structure within that form.",
+      "limits": "Search uses model priors over forms; not unrestricted structure invention or a universal latent learner."
+    },
+    {
+      "source": "https://perfors.net/files/2007/KempPerforsTenenbaum2007.pdf",
+      "checked": "Author-hosted primary abstract",
+      "supports": "Hierarchical Bayesian models learn higher-order regularities about feature variability and category groupings.",
+      "limits": "Does not establish that every new task family needs weight retraining; term overhypothesis is optional vocabulary here."
+    }
+  ],
+  "reconciled_points": [
+    "Scope simple exemplar/prototype limitations; no universal compositionality ranking.",
+    "Fixed procedures can infer higher-order hypotheses in mutable state; far-family weight-adaptation benefits are an empirical prediction.",
+    "Multiple uses do not define every concept or alone prevent collapse/ignoring code.",
+    "Retrieval and inference can combine; baseline parity is not evidence of absent abstraction.",
+    "Observational abstractions need not require interventions; causal effects need suitable assumptions/data."
+  ],
+  "remaining_open": [
+    "Useful scope and budgets of frozen-weight inference for farther task-family shifts.",
+    "Whether one mutable state format usefully covers several abstraction types.",
+    "Optional explicit-structure comparison for inspectability, without capability preference or adoption."
+  ],
+  "not_established": [
+    "General autonomous concept acquisition, persistence and revision.",
+    "A unique concept ontology or latent geometry.",
+    "Empirical superiority, new architecture adoption, training budget, or research novelty."
+  ],
+  "verification": {
+    "path": "runs/reviews/concept_abstraction_direction_20260923/verification.json",
+    "sha256": "8e1a983963d1a9871f4eacfe0faf5d1142c38c64f7a8af891765660f1c19211b"
+  }
+}

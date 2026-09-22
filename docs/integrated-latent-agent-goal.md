@@ -18,6 +18,12 @@ Schlussfolgerungen korrigieren können. Gelernte Grundoperationen und interne Ab
 sollen in verschiedenen Domänen verwendbar sein. Neues Wissen und Korrekturen sollen
 zur Laufzeit ohne erneutes explizites Nachtrainieren der Modellgewichte möglich sein.
 
+23. September: Alex präzisiert „Konzept“ als vorläufigen Platzhalter für etwas
+Übergeordnetes zu einzelnen Instanzen. Gemeint ist zunächst geteilte, wiederverwendbare
+Struktur; damit sind weder eine feste Klassenhierarchie noch ein Differenzvektor,
+Operator oder Aktionscode gewählt. Die nähere Begrifflichkeit soll den Entwurf
+klären und keine bestimmte Repräsentation vorwegnehmen.
+
 Alex nennt latente Diffusion als mögliche Vereinfachung schwieriger latenter Pfade.
 Das ist eine Mechanismushypothese; der Gesamtnachweis hängt nicht von ihrer Bestätigung
 ab. Auch die konkrete Tokenrollen-Tabelle ist ein Entwurf, nicht das eigentliche Ziel.
@@ -45,6 +51,9 @@ Wahrnehmungsfähigkeit noch beliebige neue Algorithmen aus unzureichender Eviden
 Ein neuer Graph-Knoten allein zeigt noch kein
 gelerntes Konzept: der Agent muss dessen neue Instanzen erkennen, Gegenbeispiele
 unterscheiden und das Konzept in einer weiteren Aufgabe sinnvoll benutzen.
+Diese Mehrfachnutzung gehört zum angestrebten breiten Agentennachweis. Sie ist
+keine Definition jedes einzelnen Konzepts: Auch die Zuordnung neuer Instanzen zu
+einer neu erworbenen Kategorie kann bereits eine begrenzte Konzeptfähigkeit belegen.
 
 ## Gemeinsamer Ablauf
 

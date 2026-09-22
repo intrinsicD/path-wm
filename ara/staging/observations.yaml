@@ -6796,3 +6796,27 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O386
+  timestamp: 2026-09-23T01:56+02:00
+  provenance: ai-suggested
+  content: Broaden the abstract target to shared reusable structure across instances/states/episodes. Compare examples/prototypes,
+    inferred latent codes and structured/compositional alternatives before imposing one geometry, hierarchy or action-based
+    definition. Separate trained inference/use/update procedures from runtime evidence, bindings and hypotheses.
+    Actions and analogies supply specialized signals; useful transfer, persistence and revision need scoped tests
+    and budgets.
+  context: 'User clarification is recorded directly; the proposed method framing remains unadopted. Actual Claude
+    Opus 5.5 max review and reconciliation accept five corrections: simple-method limits are not universal, frozen
+    procedures can infer higher-order state, multi-use alone is not an anti-collapse guarantee or a definition of
+    every concept, retrieval can support abstraction, and observational concepts need not require interventions.
+    No empirical result or novelty claim. See docs/latent-concept-learning-review.md#richtungsprüfung-geteilte-struktur-über-instanzen
+    and ara/evidence/tables/concept_abstraction_review_2026-09-23.json.'
+  potential_type: architecture
+  bound_to:
+  - N548
+  - N547
+  - N544
+  - N532
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

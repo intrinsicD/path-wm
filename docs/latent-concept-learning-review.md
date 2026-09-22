@@ -9,18 +9,24 @@ noch keinen konkreten Mechanismus oder Trainingslauf fest.
 
 Die Notiz ordnet öffentlich belegte Methoden und ihre Grenzen. Sie ist keine
 vollständige Rangliste aller Benchmarks und kein lokaler Fähigkeitsnachweis.
-Zwei abgeschlossene Antworten von Claude und die unabhängige Quellenprüfung
-liegen vor; Ausführungsunterbrechungen sind am Ende dokumentiert.
+Zur ursprünglichen Frage liegen zwei abgeschlossene Antworten von Claude und eine
+unabhängige Quellenprüfung vor; Ausführungsunterbrechungen sind am Ende dokumentiert.
+Die ergänzende Richtungsdiskussion umfasst zwei weitere abgeschlossene Antworten.
+Die spätere [Richtungsprüfung](#richtungsprüfung-geteilte-struktur-über-instanzen)
+berücksichtigt Alex’ Präzisierung: „Konzept“ meint zunächst etwas Übergeordnetes
+zu Instanzen; Kategorien, Transformationen und Aktionen sind mögliche Unterfälle.
 
 ## Was ein Konzept leisten soll
 
 Ein latenter Vektor kann ein Beobachtungsmerkmal, eine einzelne Erinnerung, einen
 Auftrag oder eine verallgemeinerbare Regel darstellen. Seine numerische Form legt
 diese Bedeutung nicht fest. Für diese Diskussion gilt als **Arbeitskriterium**:
-Ein erworbenes Konzept muss neue Fälle unter relevanten Variationen richtig
-behandeln, Gegenbeispiele berücksichtigen und mindestens eine weitere passende
-Vorhersage oder Entscheidung ermöglichen. Der genaue Umfang dieser Forderung
-muss zur untersuchten Konzeptfamilie passen.
+Eine erworbene Abstraktion soll neue Fälle unter den für ihre Nutzung relevanten
+Variationen sinnvoll behandeln können. Eine neue Kategorie, mit der weitere
+Instanzen richtig zugeordnet werden, ist bereits ein begrenzter Konzeptnachweis.
+Mehrere Nutzungsarten, dauerhafte Speicherung und gezielte Revision gehören zum
+breiteren Agentenziel; sie sind keine Definitionspflicht jedes einzelnen Codes.
+Der genaue Nachweis muss zur untersuchten Abstraktionsfamilie passen.
 
 Vier Leistungen sollten getrennt geprüft werden:
 
@@ -453,6 +459,164 @@ geprüften Umfang erhalten bleiben. Der erwartete Nutzen sind übertragbare
 Verhaltenszusammenhänge; zusätzliche Datenabdeckung, verdeckter Zustand und
 Identifikation der Aktionsbedeutung sind offene Kosten beziehungsweise Grenzen.
 Keine Datenwahl, Modulaufteilung oder neue Modellfähigkeit ist damit beschlossen.
+
+## Richtungsprüfung: geteilte Struktur über Instanzen
+
+23. September 2026. Alex erläutert, dass „Konzept“ zunächst als Platzhalter für
+etwas Übergeordnetes zu einzelnen Instanzen gemeint war. Er bittet um eine
+kritische Richtungsdiskussion mit Claude Opus 5.5 bei Aufwand `max`. Diese
+Begriffsklärung ist eine Nutzerpräzisierung; die daraus abgeleitete Methodik bleibt
+ein Vorschlag. Bisherige Analogie- und Aktionsideen sind damit Unterfälle und
+werden weder verworfen noch als allgemeine Lösung übernommen.
+
+**Richtungsurteil:** Das allgemeine Ziel ist das Bilden und Nutzen geteilter,
+wiederverwendbarer Struktur. Die vorherige Diskussion wurde stellenweise zu eng,
+als sie diese Struktur hauptsächlich als Veränderungsregel oder Handlung behandelte.
+Der latente Ansatz bleibt sinnvoll als Forschungspräferenz; seine Nützlichkeit muss
+über erklärte Übertragung und Nutzung geprüft werden. Aus „übergeordnet“ folgt
+weder ein einzelner Prototyp noch eine feste Hierarchie oder ein universeller
+Code, der jede Art von Wissen allein trägt.
+
+| Funktionale Unterscheidung | Gemeinte Rolle, ohne neue Module festzulegen |
+| --- | --- |
+| Instanz | Ein einzelner Fall beziehungsweise eine gebundene Entität; kein bloßes Bild davon. |
+| Zustand und Beobachtung | Was momentan gilt beziehungsweise welche begrenzte Evidenz darüber vorliegt. |
+| Geteilte Struktur | Eine über mehrere Fälle nützliche Eigenschaft, Gruppierung, Beziehung, Regel oder ein Muster von Rollen und Wechselwirkungen. |
+| Gelerntes Verfahren | Die trainierte Fähigkeit, Evidenz zu lesen, Gemeinsamkeiten zu erschließen, anzuwenden und zu aktualisieren. |
+| Veränderlicher Wissenszustand | Die aktuellen Beispiele, Bindungen, Hypothesen, Codes und gegebenenfalls gespeicherten Zusammenfassungen. |
+
+Mehrere Abstraktionen können sich überlappen: dieselben Instanzen können nach
+unterschiedlichen Merkmalen oder Nutzungsfragen unterschiedlich zusammengehören.
+Die Forschung zur [Kreuzkategorisierung](https://www.sciencedirect.com/science/article/pii/S0010027711000709)
+modelliert solche Mehrfacheinteilungen. Das motiviert Offenheit für überlappende
+Struktur, nicht die Übernahme der dortigen konkreten Modellierung.
+
+### Methodische Alternativen
+
+- **Beispiele und Prototypen:** Neue Beispiele oder daraus erschlossene
+  Zusammenfassungen ermöglichen neue Zuordnungen. Prototypical Networks sind ein
+  konkreter Fall mit gelernter Metrik und vorgegeben gruppierten Supportbeispielen;
+  sie entdecken nicht selbst beliebige Gruppierungskriterien. Ein stärkerer,
+  kontextabhängiger Leser kann mit Beispielen auch andere Beziehungen erschließen.
+  Die Grenzen eines Mittelwertklassifikators gelten nicht automatisch für diese
+  gesamte Familie. [Primärquelle](https://arxiv.org/abs/1703.05175).
+- **Erschlossene latente Codes:** Aus relevanten Beispielen einen Zustand bilden,
+  der weitere Abfragen bedingt. Ein solcher Code kann eine Kategorie, eine
+  Funktion oder eine Hypothese tragen. Das G/F-Schema ist nicht auf A→B-Paare
+  beschränkt. Neural Processes und latente Programmsuche belegen begrenzte
+  Varianten, keine allgemeine typenübergreifende Entdeckung oder Persistenz.
+  [Neural Processes](https://arxiv.org/abs/1807.01622),
+  [LPN](https://arxiv.org/abs/2411.08706).
+- **Strukturierte beziehungsweise zusammengesetzte Modelle:** Geteilte Faktoren,
+  Rollen, Beziehungen oder Teilprogramme können neue Kombinationen erklären.
+  Diese Struktur kann latent oder explizit sein. Keine der beiden Formen hat
+  allein aufgrund ihrer Darstellung die beste Kompositionalität. Explizite
+  Formen können leichter prüfbar sein; Suche, Bindung und Lernbarkeit bleiben
+  jeweils zu vergleichen. [MLC](https://www.nature.com/articles/s41586-023-06668-3)
+  belegt erlernte kompositionelle Nutzung in seinen Aufgaben, nicht jede denkbare
+  Strukturform oder Aufgabenfamilie.
+
+Diese Alternativen überschneiden sich. Beispiele als Belege und Codes als
+Zusammenfassungen sind eine plausible Kombination, noch kein beschlossener Hybrid.
+Die Frage nach nützlicher geteilter Struktur kommt vor einer pauschalen Wahl
+zwischen Differenzvektor, Operator, Prototyp oder Graph.
+
+### Rolle der Aktionen und des Lernsignals
+
+Wahrnehmung liefert Evidenz über Instanzen und Zustände. Erschlossene Abstraktionen
+können diese Zuordnung und weitere Erwartungen beeinflussen; neue Evidenz kann die
+Abstraktion wiederum ändern. Diese Abhängigkeiten müssen nicht als starre
+Trainingsreihenfolge oder als getrennte Netze umgesetzt werden. Ein abgeschlossener
+vollständiger Modaldecoder bleibt keine allgemeine Vorbedingung.
+
+Aktionen nutzen manche Abstraktionen, erzeugen zusätzliche Beobachtungen und können
+bestimmte Hypothesen unterscheiden. Handlungsfolgen sind damit ein wichtiges,
+aber auf passende Fälle begrenztes Lernsignal. Kategorien und beobachtbare Muster
+können auch ohne eigene Intervention gelernt und geprüft werden. Aussagen über
+physikalische Eingriffswirkungen benötigen passende Daten oder explizite
+Identifikationsannahmen; eine brauchbare Gruppierung ist noch kein kausaler Beleg.
+
+Alex' Vorschlag, bekannte Konzepte für überprüfbaren Transfer zu verwenden, bleibt
+nützlich. Allgemeiner könnte ein Lernfall Beispiele einer geteilten Struktur
+liefern und anschließend ihre Nutzung an weiteren Fällen verlangen. Dabei ist
+zu erklären, ob die Gruppierung beziehungsweise Regel vorgegeben ist oder das
+Modell das relevante Kriterium selbst erschließen muss. Ähnliche Ergebnisse
+können sonst sehr verschiedene Fähigkeiten verdecken. Zusätzliche Abfragearten
+sind hilfreich für das breite Ziel, verhindern aber allein weder kollabierte
+latente Ziele noch das Ignorieren des erschlossenen Codes.
+
+### Was als neuer Wissensgewinn gelten kann
+
+Feste Gewichte können Verfahren bereitstellen, die aus neuen Beispielen neue
+Zwischenrepräsentationen und zusammengesetzte Hypothesen berechnen. Information,
+Kapazität, Rechenbudget und gelernte Vorannahmen begrenzen dies; eine neue
+Aufgabenfamilie erzwingt nicht logisch eine Gewichtsänderung. Wie weit ein
+trainiertes Verfahren tatsächlich trägt, bleibt eine empirische Frage.
+
+Zu trennen sind neue Instanzen bekannter Muster, neue Kombinationen bekannter
+Bestandteile, zurückgehaltene Muster innerhalb geübter Familien und weiter entfernte
+Aufgabenfamilien. Diese Grenzen müssen für einen Vergleich konkret beschrieben
+werden; es gibt keinen aus Vektorabständen automatisch folgenden Neuheitstest.
+Abruf von Beispielen und anschließende Verallgemeinerung können zusammen eine neue
+nützliche Abstraktion realisieren. Gleichstand mit einer einfachen Referenz begrenzt
+den Zusatznutzen, widerlegt aber nicht die begrenzte Lernfähigkeit selbst.
+
+Der vorgeschlagene gemeinsame Nachweis ist: Neue Evidenz verändert einen nutzbaren
+Wissenszustand; dieser verbessert passende zurückgehaltene Fälle, bleibt im
+vereinbarten Zeit-/Speicherumfang verfügbar und kann bei Gegenevidenz gezielt
+korrigiert werden. Variierte Beispiele bei gleicher Abfrage sowie Entfernen,
+Vertauschen und Wiederherstellen der betroffenen Zustände prüfen deren tatsächliche
+Nutzung. Dauerhafte, autonome und über mehrere Abstraktionsarten nutzbare
+Wissensbildung ist weiterhin Ziel und kein durch diese Literatur etablierter
+Gesamterfolg. Auch eine wissenschaftliche Neuheitsbehauptung wird nicht erhoben.
+
+Die nächste Entwurfsfrage lautet deshalb: **Welches Wissen soll von einzelnen
+Fällen auf andere Fälle übertragbar werden, und welche Unterschiede muss die
+jeweilige Verallgemeinerung dabei beachten?** Einige unterschiedliche Familien
+könnten eine gemeinsame funktionale Schnittstelle prüfen; eine bestimmte Anzahl,
+Repräsentation oder Datenwahl ist damit nicht vorgegeben.
+
+Stehende Prinzipien: Quellen/Evidenz wiederverwenden, begrenzten Kontext lesen,
+Instanzdetails bei Bedarf erhalten und abrufen, vorläufige Abstraktionen mit ihren
+Belegen und Lebensdauern führen und ihre Nutzung separat prüfen. Dies verspricht
+Wiederverwendung statt isolierter Einzelfalllösungen; Speicher-, Such- und
+Aktualisierungskosten sowie verlustbehaftete Zusammenfassungen sind zu begrenzen.
+Der kleinste Vergleich sollte eine erklärte Übertragungsfrage mit einfachen
+Referenzen und identischen Ressourcen prüfen, bevor weitere Mechanismen folgen.
+
+### Belege der erneuten Claude-Diskussion
+
+Review und gezielter Abgleich sind abgeschlossen. Beide Ausführungsbelege bestätigen
+`claude-opus-5-5`, explizit mit `--effort max`, ohne zusätzliche Modelle oder Tools.
+Verwendet wurden ausschließlich abstrahierte methodische Fragen und öffentliche
+Quellen; die Primärquellenprüfung erfolgte hier unabhängig. Rohtexte und
+Ausführungsbelege liegen unter `runs/reviews/concept_abstraction_direction_20260923/`.
+Der [dauerhafte Prüfbeleg](../ara/evidence/tables/concept_abstraction_review_2026-09-23.json)
+bindet Quellen, Text-Hashes, Ausführungen und verbleibende Unsicherheiten.
+
+Claude hat im Abgleich fünf Einwände angenommen beziehungsweise eingegrenzt:
+
+1. Grenzen einer festen Metrik oder eines Mittelwertprototyps gelten nicht für jeden
+   gelernten Beispielsleser. Explizite Komposition garantiert darstellbare Kombinationen
+   ihrer Grammatik, aber weder korrekte Inferenz noch bessere Generalisierung.
+2. Auch feste Gewichte können höherstufige Hypothesen im veränderlichen Zustand
+   erschließen. Vorteile von Test-Time-Training bei weiter entfernten Aufgaben
+   bleiben eine überprüfbare Prognose, keine allgemeine Notwendigkeit.
+3. Mehrfachnutzung ist ein sinnvoller breiter Nachweis, keine Definition jedes
+   Konzepts und für sich weder Kollaps- noch Memorierungsvermeidung.
+4. Abruf und Verallgemeinerung bilden keine Gegensätze; Gleichstand mit einer
+   einfachen Referenz widerlegt begrenztes Konzeptlernen nicht.
+5. Beobachtende Kategorien und Vorhersagen können unter erklärten Annahmen nützlich
+   gelernt werden. Besondere Identifikationsanforderungen betreffen insbesondere
+   kausale Eingriffseffekte; eigene Aktionen definieren nicht sämtliche Konzepte.
+
+Es bleibt kein prinzipieller Dissens über die hier vorgeschlagene Richtung. Offen
+sind insbesondere die Reichweite über Aufgabenfamilien hinweg und die Eignung eines
+Zustandsformats für mehrere Arten von Abstraktion. Claude bevorzugt zusätzlich einen
+explizit strukturierten Vergleichsarm wegen seiner leichteren Prüfbarkeit. Das ist
+hier ein optionaler methodischer Vergleich, kein Fähigkeitsvorrang und keine Abkehr
+von Alex’ Präferenz für latente Verarbeitung. Keine Architektur und kein Lauf ist
+beschlossen; Übereinstimmung ersetzt keinen empirischen Nachweis.
 
 ## Quellen- und Reviewbelege
 
