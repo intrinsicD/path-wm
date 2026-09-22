@@ -1,5 +1,12 @@
 # Current work
 
+**Active token budget implementation, 22 September:**
+[token budget plan](token-budget-plan.md). Instrument actual allocated attention
+shapes before changing capacity. Current categorical state is already bounded;
+measure dense encoder attention and repeated complete-event correction separately.
+Keep loops, add an optional 64-query resampler, and test exact event scheduling
+independently of learned compression. Implementation/checks in progress; no result yet.
+
 **Integrated latent agent: user goal, 22 September:**
 [objective and proposed demonstration](integrated-latent-agent-goal.md).
 Alex explicitly prioritizes showing the complete latent perception/thinking/action/
