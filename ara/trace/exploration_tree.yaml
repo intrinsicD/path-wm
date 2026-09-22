@@ -9148,3 +9148,18 @@ tree:
   also_depends_on:
   - N544
   status: open
+- id: N546
+  type: question
+  title: Known-concept supervision for correct latent transfer
+  provenance: user
+  timestamp: 2026-09-23T01:09+02:00
+  description: User proposes using known concepts to learn differences explicitly so that transferring them produces
+    the correct result. Candidate analogy-completion objective discussed; representation, data, training and unseen-rule
+    generalization remain open.
+  evidence:
+  - docs/latent-concept-learning-review.md#bekannte-konzepte-als-transfersignal
+  - https://papers.neurips.cc/paper_files/paper/2015/file/e07413354875be01a996dc560274708e-Paper.pdf
+  also_depends_on:
+  - N545
+  - N544
+  status: open

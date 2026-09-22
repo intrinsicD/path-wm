@@ -6758,3 +6758,22 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O384
+  timestamp: 2026-09-23T01:09+02:00
+  provenance: ai-suggested
+  content: Known relations can construct analogy tuples and supervise the result of transferring a code inferred
+    from support examples to independent query contents. Optional difference alignment trains additive geometry;
+    nonlinear application needs correct conditional outcomes instead. Distinguish new-content transfer from unseen-rule
+    inference, avoid target leakage and embedding collapse, and test actual use of the relation code.
+  context: Interpretation of the user-proposed learning signal, not an adopted architecture or an experiment. Deep
+    Visual Analogy-Making provides a scoped direct precedent. Frozen informative targets are one possible route;
+    full modality reconstruction is not universally required. See docs/latent-concept-learning-review.md#bekannte-konzepte-als-transfersignal.
+  potential_type: architecture
+  bound_to:
+  - N546
+  - N545
+  - N544
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -306,6 +306,75 @@ Aufgaben, Lernsignal, Repräsentation und Budget bleiben offen. Vorbereitete Evi
 wird wiederverwendet, Kontext bleibt begrenzt und erschlossene Codes bleiben von
 beobachteter Evidenz unterscheidbar.
 
+## Bekannte Konzepte als Transfersignal
+
+23. September 2026. Alex schlägt vor, bekannte Konzepte zu verwenden und
+Differenzen ausdrücklich so zu lernen, dass ihre Übertragung das richtige
+Resultat erzeugt. Das ist ein Vorschlag für ein Lernsignal, noch keine Auswahl
+von Daten, Architektur, Loss-Gewichten oder Trainingsbudget.
+
+Eine passende Aufgabe besteht aus gültigen Analogien (A, B, C, D): Die Beziehung
+von A nach B soll auch von C nach D gelten. Bekannte Regeln oder kontrollierte
+Veränderungen können diese Zuordnung für die Datenerstellung liefern; bloße
+Konzeptnamen liefern noch keine vollständigen und eindeutigen Zielpaare. Der
+Lernende kann ausschließlich die latenten Beispiele sehen, während die Regel-ID
+nur dem Datensatzbau und der Auswertung dient. D ist Ziel und darf nicht in den
+Eingabepfad gelangen.
+
+Mit z_X = E(X) kann r = G(z_A, z_B) aus dem Beispielpaar entstehen; ein
+Anwender sagt z_D_hat = F(z_C, r) vorher. Ein Transferverlust bewertet die
+Übereinstimmung mit einer geeigneten Zielrepräsentation von D. Werden mehrere
+Beispiele zur eindeutigen Bestimmung der Beziehung gebraucht, kann G diese als
+begrenzten Kontext lesen. Das Modell lernt über die Wirkung des Codes, ohne dass
+wir einen richtigen Codevektor oder sprachliche Konzeptbeschreibung vorgeben.
+
+Es gibt zwei unterschiedliche geometrische Festlegungen: Für echte
+Vektordifferenzen kann das Training z_B − z_A ≈ z_D − z_C fördern und damit
+gezielt eine additive Geometrie lernen. Bei einem nichtlinearen Anwender müssen
+die rohen Differenzen nicht gleich sein; derselbe Relationscode muss auf beiden
+Ausgangszuständen die richtige Wirkung haben. Die lineare Bedingung ist deshalb
+eine zu vergleichende Einschränkung, kein notwendiger Zusatz zu jedem Operator.
+
+Ein nackter Verlust zwischen frei gemeinsam trainierten Embeddings ist ungenügend:
+E(X) = konstant erfüllt sowohl die Differenzgleichheit als auch einen passend
+konstanten Vorhersageverlust. Eine eingefrorene informative Zielrepräsentation ist
+eine mögliche Startbedingung; gemeinsames Lernen benötigt geeignete zusätzliche
+Informations-/Aufgabenziele oder andere wirksame Kollapsvermeidung. Allein das
+Stoppen eines Zielgradienten ist keine allgemeine Garantie. Ein vollständiger
+Modaldecoder ist für eine geeignete latente Zielprüfung nicht zwingend nötig;
+ein Encoder muss aber genau die betroffenen Merkmale unterscheiden können.
+
+Der zentrale Transfervergleich trennt neue Inhalte bei bekannten Regeln von
+neuen Kombinationen und bisher ungesehenen Regeln. Auch gut passende Ergebnisse
+auf bekannten Regel-IDs belegen noch keine Aufnahme neuer Konzepte. Für das
+Runtime-Ziel müssten G und F nach dem Grundtraining fest bleiben, während r aus
+neuen Beispielen erschlossen und geprüft wird. Passende Kontrollen verwenden
+unabhängige Inhalte in Beispiel und Anfrage, mehrere Beziehungen pro Anfrage,
+vertauschte beziehungsweise fehlende Codes, zurückgehaltene Kombinationen und
+Erhalt der innerhalb der Aufgabe unveränderten Merkmale. Diese Bedingungen
+erschweren das Kopieren von B und das Ignorieren des Codes; sie garantieren keine
+universelle Generalisierung. Vergleichsverfahren bleiben einfache Übersetzung,
+Beispiel-/Prototypennutzung und eine Vorhersage ohne Relationsinformation.
+
+Das Grundprinzip wurde bereits direkt untersucht: *Deep Visual Analogy-Making*
+(Reed et al., NeurIPS 2015) trainiert gültige A:B::C:D-Analogien mit Ausgabe D,
+vergleicht Vektoraddition mit ausdrucksstärkeren Interaktionen und untersucht
+Formen, Sprites und Automodelle. Die dortige Bildrekonstruktion ist ein konkretes
+Verfahren, keine Voraussetzung jeder latenten Transferaufgabe.
+Quelle: [Originalarbeit](https://papers.neurips.cc/paper_files/paper/2015/file/e07413354875be01a996dc560274708e-Paper.pdf).
+Die bereits besprochene [latente Programmsuche](https://arxiv.org/abs/2411.08706)
+ist ein verwandtes Beispiel für aufgabenspezifische Codes; keine dieser Arbeiten
+validiert unser gesamtes integriertes Gedächtnis-/Korrekturziel.
+
+Stehende Prinzipien: vorbereitete Evidenz innerhalb gültiger Gewichtsstände
+wiederverwenden, Quellen und zurückgehaltene Ziele trennen und dieselbe begrenzte
+Kontextschnittstelle trainieren, die später verwendet wird. Der erwartete Nutzen
+ist direkt trainierte relationale Übertragung; Aufwand und Grenzen liegen unter
+anderem in der Qualität der Paarungen, Merkmalsabdeckung und zusätzlichen
+Trainingsbeispielen. Als kleinster Vergleich käme eine klar begrenzte Regelfamilie
+mit separaten Inhalts-/Regelsplits und gleichen Rechenbudgets infrage; dies ist
+noch keine Freigabe für Implementierung oder einen Lauf.
+
 ## Quellen- und Reviewbelege
 
 Der tatsächliche Hauptaufruf und der abschließende Abgleich bestätigen
