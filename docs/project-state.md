@@ -19,6 +19,11 @@ explicitly for inference; training remains open. Interpret as bounded GPU reside
 with a RAM/SSD model source, reusable features and explicit state lifetimes. Concrete
 loading/routing/prefetch policy remains proposed; ambiguous voice terminology does
 not establish graph storage. No implementation, benchmark or validation promotion.
+Per-frame follow-up traces packet/time, prior prediction, shared R/B/P/C exports,
+candidate association, conditional detail, state/event correction, evidence commit
+and optional task response. Checked actual BeliefAgent/WorldSession interfaces;
+supplied candidates and software mechanics remain distinct from the proposed
+natural-image pipeline. Inference updates state, not filter weights by default.
 
 **Human pose/shape discussion, 22 September:**
 [proposal and source distinctions](human-perception-discussion.md). Alex asks about

@@ -88,3 +88,53 @@ Training würde zusätzlich Gradienten, Optimizer, Aktivierungen und konsistente
 Gewichtsversionen benötigen. Die Inferenzidee legt weder getrenntes Spezialisten-
 training noch gemeinsames End-to-End-Training fest; die bisherige gemeinsame
 Lernrichtung wird durch diese Speicher-/Ausführungsdiskussion nicht ersetzt.
+
+## Ein eintreffender Frame: konkreter vorgeschlagener Datenfluss
+
+22. September, Folgefrage nach dem genauen Ablauf im Modell. Dies verbindet die
+akzeptierte Multiskalenrichtung mit der vorgeschlagenen Personen-/Objektwahrnehmung;
+keine bereits vollständig implementierte Echtzeitpipeline und kein festgelegter Takt.
+
+| Schritt | Rechenoperation / Zuständigkeit | Ergebnis |
+| --- | --- | --- |
+| 1. Eingang | Aufrufer erhält Bildtensor, Quellen-ID, Aufnahme-/Verfügbarkeitszeit; prüft Format, Gültigkeit und Koordinatenabbildung der Vorverarbeitung. | Eindeutiges Beobachtungspaket. |
+| 2. Vorhersage | Dynamik liest vorigen Zustand, Zeitabstand und gegebenenfalls bekannte eigene Aktion. | Erwarteter Zustand vor der Bildkorrektur, nur aus bisheriger Evidenz. |
+| 3. Gemeinsames Encoding | Pro Skala R → lernbare Filterbank B → Nachverarbeitung P; f nach P für Leser behalten, C für die nächste Skala. | Multiskalenmerkmale F samt Ort, Zeit und Gültigkeit; keine zwingende Pixel-Klassenmaske. |
+| 4. Objekt-/Zustandslesen | Aktive Verbraucher lesen F mit Abfragen/Transformer-Schleifen und eigenen Ausgabeschichten. Kandidaten mit aktuellen Merkmalen plus erwartetem Ort/Verlauf zuordnen. | Objektkandidaten, Eigenschaften, Lage/Bewegung, revidierbare Zuordnungen und neue/ungeklärte Fälle. |
+| 5. Bedingte Verfeinerung | Aufgabenbedarf, Sichtbarkeit oder Widersprüche lösen Detail-Leser aus; Engine sichert Gewichte/Arbeitsraum und liest passende Skalen bzw. Quellausschnitte. | Beispielsweise Handpose, Mundbewegung oder Objektmaske mit Quellenbezug; keine Pflicht für alle Objekte/Frames. |
+| 6. Korrektur und Ereignislesen | Evidenz gegen Prior abgleichen; Beziehungen/Zustände aktualisieren und aus Verlauf plus Beobachtung Ereignisse schätzen. | Welt-/Entitätszustand, etwa gemeinsame Bewegung von Tasse und Hand statt bloßer Nähe. |
+| 7. Commit und Reaktion | Aufrufer veröffentlicht Zustands-/Evidenzänderungen einmal mit Herkunft/Zeit; TaskPolicy/Thinker liest bei Bedarf aktuellen Zustand und ausgewählte Historie. | Gedächtnis, Antwort oder Aktionsvorschlag bei entsprechendem Bedarf; kein Sprachoutput pro Frame nötig. |
+| 8. Ressourcenpflege | Nicht mehr benötigte temporäre Tensoren freigeben; häufig benutzte Gewichte und deklarierte Zustände behalten. | Begrenzter GPU-Arbeitssatz; Historie bleibt erhalten. |
+
+Vorhersage und Encoding können bei passenden Abhängigkeiten parallel stattfinden;
+die Tabelle legt keine CUDA-Reihenfolge fest. Die Uhr/Aktion einmal je gültigem
+Beobachtungsereignis fortschreiben, nicht für jeden zusätzlichen Leser erneut.
+Langsame Detailergebnisse brauchen einen Vertrag für Aufnahme-/Verfügbarkeitszeit
+und Korrektur: keine rückwirkend verfügbare Evidenz, keine doppelt gezählte Quelle.
+Ein schneller Pfad darf nicht unbemerkt auf alle teuren Leser warten.
+
+Beispiel, nur gewünschtes Verhalten: Person P7 und Tasse C12 sind bekannte
+Kandidaten. Im neuen Frame nähert sich P7s Hand C12; ein gezielter Hand-/Objektleser
+prüft die Region. Erst ausreichender Verlauf stützt Aufnehmen oder Halten;
+ein einzelner Kontaktverdacht beweist das nicht. Evidenz und geschätzte Zustände
+erhalten Zeitbezüge, stabile Körperform wird nur bei ausreichender neuer Evidenz
+aktualisiert. Ohne Detailanalyse bleibt der entsprechende Zustand ungeklärt.
+
+Inferenz verändert Aktivierungen, private Leserzustände, Weltbelief und Speicher.
+Gewichte der trainierten Filter/Leser bleiben dabei unverändert. Online-Lernen
+wäre eine eigene Operation mit Budget und Versionierung, kein Schritt je Frame.
+
+Code-Abgleich: `BeliefAgent.begin_event` ruft die Dynamik einmal für den Zeitabstand
+auf; `add_packet`/`correct_packets` korrigieren Beobachtungen und `commit_event`
+schreibt in das Sitzungsgedächtnis. Die aktuelle Korrektur aktualisiert kategoriale
+Verteilungen, nicht nochmals `h`; siehe [latenter Kern](latent-core.md).
+`WorldSession.observe` nimmt heute gelieferte Kandidaten und Pakete entgegen und
+veröffentlicht gebündelten Zustand. Automatische natürliche Bildkandidaten, die
+neue R/B/P/C-Schnittstelle, alle Personenspezialisten und GPU-Residenzplanung sind
+damit nicht implementiert. Grundlagen und Entwurf getrennt halten.
+
+Prinzipien: gleiche Framequelle für kompatible Leser vorbereiten, private Abfragen
+und Zustandslebensdauern trennen, Details gezielt lesen, Evidenz/Inferenz/Cache
+unterscheiden. Kleinster künftiger Nachweis: begrenzte Interaktion mit tatsächlichem
+Zustand-/Gedächtnisreadout, einmaliger Zeitfortschreibung, Zuordnung, verfügbaren
+Quellen und Vollpfad-Latenz/Peak-VRAM. Keine neue Test-/Trainingsausführung hier.

@@ -2,8 +2,8 @@ session:
   id: 2026-09-22_001
   date: '2026-09-22'
   started: 2026-09-22T01:13+02:00
-  last_turn: 2026-09-22T13:27+02:00
-  turn_count: 9
+  last_turn: 2026-09-22T13:32+02:00
+  turn_count: 10
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
@@ -12,7 +12,7 @@ session:
     source benchmark scope retained, no local performance claim. Hands/feet review distinguishes WiLoR
     hands, FootMR ankles, SUPR-Foot articulation and FOCUS surfaces; fine-resolution integration and reaction
     benefit remain proposed. Face follow-up separates shape, mouth/eye articulation, head pose, gaze and
-    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand model buffering; execution/storage interpretation documented, training left open. Understanding capabilities and per-frame segmentation clarified; shared features, temporal binding and conditional detail remain proposed and unvalidated.
+    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand model buffering; execution/storage interpretation documented, training left open. Understanding capabilities and per-frame segmentation clarified; shared features, temporal binding and conditional detail remain proposed and unvalidated. Concrete new-frame dataflow traced against current event APIs; natural-image candidates/detail readers remain proposed.
 events_logged:
 - turn: 1
   type: question
@@ -208,6 +208,22 @@ events_logged:
     maintain periodic/triggered global recovery and adequate fast-event sampling. Preserve access to captured
     fine detail and compare missed objects/events, drift, endpoint quality and full latency against a
     fixed reference.
+- turn: 10
+  type: question
+  id: N526
+  routing: direct
+  provenance: user
+  summary: Exact model dataflow when a new video frame arrives
+- turn: 10
+  type: observation
+  id: O367
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Proposed per-frame execution: accept timestamped source; predict prior once per event; compute
+    R/B/P/C multiscale exports; read/match object candidates; invoke compatible detail readers conditionally;
+    correct state and infer events; commit evidence/state once and answer/act only when requested. Retain
+    source/time/version contracts and bounded workspaces; inference changes working/session state rather
+    than trained filter weights. Late details require explicit availability/correction handling.'
 ai_actions:
 - turn: 1
   action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
@@ -313,6 +329,18 @@ ai_actions:
   - docs/architecture-atlas.html
   - docs/architecture-atlas.md
   - docs/architecture-discussion.md
+- turn: 10
+  action: Read actual dynamics/correction and event/session code; documented proposed frame pipeline,
+    inference-state versus weight-learning boundary, updated state and regenerated atlas. Documentation
+    checks only.
+  provenance: ai-executed
+  files_changed:
+  - docs/neural-engine-inference.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -337,6 +365,8 @@ key_context:
 - turn: 9
   excerpt: 'What else is needed for actual image/video understanding? Follow-up: must every pixel be segmented
     in every frame?'
+- turn: 10
+  excerpt: 'Sagen wir ein neuer Frame kommt: was genau muss dann alles im Modell passieren?'
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -381,6 +411,8 @@ open_threads:
   state preservation and cold/warm latency before choosing scheduler or prefetch.'
 - 'N524/N525: choose one natural interaction/history task and compare actual relation/event readout with
   full versus conditional detail, including discovery, fast events, source controls and resource gates.'
+- 'N526: select concrete frame-reader/association contracts and bounded detail deadlines; validate state/evidence
+  integration before claiming a working visual pipeline.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -418,3 +450,4 @@ ai_suggestions_pending:
   implementation or measured performance adopted.'
 - 'O365/O366: relational/temporal integration and conditional detail scheduling remain proposals; no efficacy
   or fixed cadence adopted.'
+- 'O367: per-frame execution interpretation remains proposed, without training or architecture adoption.'

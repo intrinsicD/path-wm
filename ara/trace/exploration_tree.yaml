@@ -8798,3 +8798,22 @@ tree:
   - N523
   - N522
   status: open
+- id: N526
+  type: question
+  title: Exact model dataflow when a new video frame arrives
+  provenance: user
+  timestamp: 2026-09-22T13:32+02:00
+  description: Alex requests a concrete frame-by-frame explanation. Trace input identity/time, prior prediction,
+    shared multiscale features, candidate association, conditional detail, evidence correction, memory
+    commit and optional response. Distinguish implemented event mechanics from proposed natural-image
+    readers.
+  evidence:
+  - docs/neural-engine-inference.md
+  - pathwm/models/belief.py
+  - pathwm/world_state/session.py
+  - docs/multiscale-modality-design.md
+  also_depends_on:
+  - N525
+  - N524
+  - N523
+  status: open

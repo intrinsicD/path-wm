@@ -6439,3 +6439,24 @@ observations:
   - N525
   - N524
   - N523
+- id: O367
+  timestamp: 2026-09-22T13:32+02:00
+  provenance: ai-suggested
+  content: 'Proposed per-frame execution: accept timestamped source; predict prior once per event; compute
+    R/B/P/C multiscale exports; read/match object candidates; invoke compatible detail readers conditionally;
+    correct state and infer events; commit evidence/state once and answer/act only when requested. Retain
+    source/time/version contracts and bounded workspaces; inference changes working/session state rather
+    than trained filter weights. Late details require explicit availability/correction handling.'
+  context: Read actual BeliefAgent dynamics/correction/event APIs and WorldSession supplied-candidate
+    path. Current correction updates categorical distribution, not h again. Full R/B/P/C human/object
+    pipeline and GPU scheduler are still proposed; no test or model run.
+  potential_type: architecture
+  bound_to:
+  - N526
+  - N525
+  - N523
+  - N500
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

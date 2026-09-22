@@ -2734,3 +2734,10 @@ entries:
     feature computation from dense mask outputs, and mask propagation from exact reuse.
   - Retain all earlier open topics; no new measurements, source downloads, maturity closure or validation
     changes.
+- turn: 2026-09-22_001#10
+  notes:
+  - Concrete explanatory ordering does not imply every reader runs each frame, strict CUDA serialization
+    or a selected late-result protocol.
+  - Code confirms prior/correction/commit mechanics; supplied candidates are not automatically detected
+    natural-image objects. No new model capability or weight update claimed.
+  - Prior topics remain open. No closure signal or validation promotion; O367 staged.
