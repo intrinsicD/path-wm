@@ -309,6 +309,10 @@ class ScaleProcessor(nn.Module):
             [ConditionedBlock(width, code_width) for _ in range(depth)]
         )
 
+    def _apply(self, fn, recurse=True):
+        self._layout_cache.clear()
+        return super()._apply(fn, recurse=recurse)
+
     def forward(self, scale, condition, *, trace=None, name="scale", history=None):
         scale = replace(
             scale,
@@ -357,6 +361,10 @@ class ScaleMerge(nn.Module):
         self.cross_attention = (
             ConditionedBlock(width, code_width) if cross_scale else None
         )
+
+    def _apply(self, fn, recurse=True):
+        self._layout_cache.clear()
+        return super()._apply(fn, recurse=recurse)
 
     def forward(self, fine, condition, *, trace=None, name="merge"):
         if self.packed:

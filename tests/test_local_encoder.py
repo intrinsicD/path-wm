@@ -169,3 +169,10 @@ def test_warm_geometry_never_reuses_values_times_or_validity():
             assert torch.equal(a.values, b.values)
             assert torch.equal(a.times, b.times) and torch.equal(a.valid, b.valid)
     assert model.state_dict().keys() == fresh.state_dict().keys()
+    # Geometry must not keep allocations on an old device after model migration.
+    model.double()
+    assert all(
+        not module._layout_cache
+        for module in model.modules()
+        if isinstance(module, (ScaleProcessor, ScaleMerge))
+    )
