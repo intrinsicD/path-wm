@@ -314,8 +314,11 @@ sessions:
     retain overhead. All detail positions survive;114 checks pass, but short fits do not validate quality
     and defaults remain dense. Randomized attention follow-up compares kernel features, landmark factors
     and sparse corrections; ordinary SVD sketch cost and rank/frequency distinction are explicit. Approximate
-    global access remains proposed, without new implementation or measurements.
-  turn_count: 19
-  events_count: 52
+    global access remains proposed, without new implementation or measurements. Current-kernel review
+    checks FA4, Flex, Sage and sparse methods against RTX3050/SM86. Native Flash eligibility is limited
+    by current FP32/explicit-mask contracts; FA4 source includes Ampere. No integration, new timing or
+    quality result.
+  turn_count: 20
+  events_count: 54
   claims_touched: []
-  open_threads: 32
+  open_threads: 33

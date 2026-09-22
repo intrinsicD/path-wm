@@ -240,3 +240,66 @@ Standing principles: retain fine evidence, approximate access deliberately, reus
 source summaries only while source/projection identities remain valid, and compare
 actual execution and trained task behavior. This is a research option; no resource
 or quality advantage over the existing patch has been measured.
+
+## Current attention kernels: pre-integration review, 22 September 2026
+
+Alex requests checking newer/faster alternatives before integrating FlashAttention.
+This review changes no model code, dependencies or precision. Hardware inspection:
+RTX 3050 8 GiB, SM86; PyTorch 2.9.0+cu128, CUDA 12.8, cuDNN 9.10.2.
+The previous saved profiler contains `aten::_scaled_dot_product_efficient_attention`:
+the present baseline already uses fused memory-efficient attention, not a naive
+materialized score matrix. `ConditionedBlock` supplies an explicit validity/time/
+support mask and asks for no attention weights.
+
+| Candidate | Current evidence | Relevance here |
+| --- | --- | --- |
+| Native SDPA Flash / cuDNN / efficient | Installed PyTorch exposes all three; eligibility depends on dtype, shape and masks. | First comparison: no external package required. Current efficient path is the reference. |
+| FlashAttention-2 | Official CUDA support includes Ampere, FP16/BF16 and backward. | Established Ampere candidate; avoid assuming the external package beats native SDPA. |
+| FlashAttention-3 | Hopper-oriented implementation. | Its H100 results do not apply to this SM86 GPU. |
+| FlashAttention-4 | March 2026 paper reports up to 1.3× cuDNN 9.13 and 2.7× Triton on B200 BF16. Current source includes SM8x forward/backward dispatch despite the README emphasizing Hopper/Blackwell. | Keep the Ampere source path as a candidate; package/build, custom-mask backward and actual RTX 3050 speed remain unverified. |
+| FlexAttention | Compiled score/mask modifiers and block-sparse execution. March 2026 FA4 integration targets Hopper/Blackwell and required newer PyTorch. | Existing Triton-based Flex is a candidate for this model's custom support masks. Count mask construction, compilation, shape specialization and warm latency. |
+| SageAttention 2/2++ | Quantized attention; current SM86 dispatch selects an INT8-QK/FP16-PV Triton path. Small heads are padded to at least 64. | Potential inference comparison, with approximation and backward/API limits checked separately. Our width32/four-head probe has head dimension 8, making padding/quantization overhead relevant. |
+| SageAttention3 / new FP4 FA4 work | Blackwell FP4 hardware is central to the advertised gains. | Not a route to those gains on RTX 3050. Low-bit training has separate fidelity limits. |
+| SpargeAttention2 | February 2026 paper reports 95% sparsity and 16.2× attention speedup on video diffusion with trained masking/distillation. | Changes accessible interactions and learning; not an exact kernel replacement or evidence for this world model. |
+
+Primary sources: [FlashAttention repository](https://github.com/Dao-AILab/flash-attention),
+[FA4 paper](https://arxiv.org/abs/2603.05451),
+[FA4/Flex release](https://pytorch.org/blog/flexattention-flashattention-4-fast-and-flexible/),
+[FlexAttention](https://pytorch.org/blog/flexattention/),
+[SageAttention](https://github.com/thu-ml/SageAttention),
+[FP4 FA4, 3 September](https://arxiv.org/abs/2609.04105),
+[SpargeAttention2](https://arxiv.org/abs/2602.13515).
+Upstream source snapshots are pinned in
+`runs/attention_kernel_survey_v1/upstream-sources.json`: FlashAttention commit
+`d15f1531a460ba456f41b01a774f33ab2db8febf`, SageAttention commit
+`d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5`. In FA4 `interface.py`, architecture
+family 8 dispatches to `FlashAttentionForwardSm80`; the heuristic is still labelled
+for tuning. Do not equate available source with tested binary support or speed.
+
+Local eligibility inspection (B1/H4/N256/D8, contiguous inputs, dropout 0):
+
+| Input contract | Native Flash | Efficient | cuDNN |
+| --- | --- | --- | --- |
+| FP32, any of the tested masks | No | Yes | No |
+| FP16/BF16, no mask or causal flag | Yes | Yes | Yes |
+| FP16/BF16, explicit Boolean mask | No | Yes | Yes |
+
+These are `can_use_*` predicates only: no new kernel forward/backward, timing or
+quality run was performed. Raw inspection is
+`runs/attention_kernel_survey_v1/eligibility.json`. An all-allowed explicit mask
+still blocks native Flash here. Removing a mask is valid only when the actual
+support contract is equivalent. Plain triangular causality is not automatically
+equivalent to the current combined time/end/validity predicates. FP32-to-half is
+a numerical change, even when the chosen attention algorithm is mathematically exact.
+
+Proposed comparison order: native efficient versus eligible Flash/cuDNN under
+matched precision; compiled Flex for custom masks; pinned FA4 Ampere as an external
+challenger. Quantized/sparse approximations remain separate arms. Measure end-to-end
+forward, backward and inference plus peak allocation, output/gradient agreement,
+causality, ragged/empty inputs and learned detail quality. Include packed small
+windows and long coarse reads: a kernel winner for long heads need not help tiny
+ones. No fastest backend, performance gain or integration choice is established.
+
+Standing principles: preserve exact support and retained evidence, distinguish
+precision/access changes from implementation changes, reuse compatible preparation,
+and measure actual execution rather than transfer hardware-specific headline gains.

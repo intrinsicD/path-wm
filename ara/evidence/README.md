@@ -206,3 +206,5 @@ Source diversity versus frame density: [source-bound evidence](tables/video_dive
 - [Active token budget,22 September](tables/token_budget_2026-09-22.json): complete-event preparation once reduces local four-modality forward105.422→52.194 ms;87 scoped tests pass. Optional64-query resampling adds no runtime gain;16-update fits do not validate information retention.
 
 - [Physically local encoder attention,22 September](tables/encoder_token_budget_2026-09-22.json): image256 encoder pairs99.317% lower, forward+backward194.77→64.50 ms, inference50.21→30.90 ms;114 unique checks and8 final cache checks pass. All detail positions retained; window quality remains unvalidated and defaults unchanged.
+
+- [Current attention kernel survey, 22 September](tables/attention_kernel_survey_2026-09-22.json): pinned FA4/Sage sources, hardware and native SDPA eligibility predicates. No new backend execution, speed measurement or integration.

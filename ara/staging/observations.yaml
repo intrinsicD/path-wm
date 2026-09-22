@@ -6651,3 +6651,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O378
+  timestamp: 2026-09-22T23:25+02:00
+  provenance: ai-suggested
+  content: First compare existing efficient SDPA with eligible native Flash/cuDNN at matched precision,
+    compiled Flex for custom masks, and pinned FA4 Ampere as an external challenger. Separate quantized/sparse
+    approximation arms; no fastest backend is established.
+  context: FP32/explicit-mask baseline already fused. Local eligibility predicates admit native Flash
+    for tested FP16/BF16 no-mask/causal-flag inputs but reject explicit masks. Latest FA4 source includes
+    SM8x despite Hopper/Blackwell-focused documentation. No execution, quality or timing evidence for
+    a new backend.
+  potential_type: heuristic
+  bound_to:
+  - N543
+  - N539
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

@@ -2,8 +2,8 @@ session:
   id: 2026-09-22_001
   date: '2026-09-22'
   started: 2026-09-22T01:13+02:00
-  last_turn: 2026-09-22T23:10+02:00
-  turn_count: 19
+  last_turn: 2026-09-22T23:25+02:00
+  turn_count: 20
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
@@ -38,7 +38,10 @@ session:
     retain overhead. All detail positions survive;114 checks pass, but short fits do not validate quality
     and defaults remain dense. Randomized attention follow-up compares kernel features, landmark factors
     and sparse corrections; ordinary SVD sketch cost and rank/frequency distinction are explicit. Approximate
-    global access remains proposed, without new implementation or measurements.
+    global access remains proposed, without new implementation or measurements. Current-kernel review
+    checks FA4, Flex, Sage and sparse methods against RTX3050/SM86. Native Flash eligibility is limited
+    by current FP32/explicit-mask contracts; FA4 source includes Ampere. No integration, new timing or
+    quality result.
 events_logged:
 - turn: 1
   type: question
@@ -438,6 +441,19 @@ events_logged:
   provenance: ai-suggested
   summary: Exact local plus approximate global attention remains an untested option; rank does not identify
     expendable spatial detail.
+- turn: 20
+  type: question
+  id: N543
+  routing: direct
+  provenance: user
+  summary: Check current faster attention kernels before integration
+- turn: 20
+  type: observation
+  id: O378
+  routing: staged
+  provenance: ai-suggested
+  summary: Compare actual eligible exact kernels before quantized or sparse alternatives; no local speed
+    winner yet.
 ai_actions:
 - turn: 1
   action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
@@ -668,6 +684,15 @@ ai_actions:
   - docs/encoder-token-budget-plan.md
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
+- turn: 20
+  action: Reviewed current primary sources and pinned FA4/Sage source. Saved local SDPA eligibility predicates
+    and hardware/library versions; updated plan and atlas without adopting a backend or changing validation
+    colors.
+  provenance: ai-executed
+  files_changed:
+  - docs/encoder-token-budget-plan.md
+  - docs/diagrams/architecture-atlas.json
+  - ara/evidence/tables/attention_kernel_survey_2026-09-22.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -723,6 +748,9 @@ key_context:
   excerpt: User asks for randomized low-rank attention analogous to fast SVD and dropping high-frequency
     error. Great acknowledges the prior patch; it does not establish fine-detail quality or adopt a new
     attention approximation.
+- turn: 20
+  excerpt: User likes FlashAttention and requests a current-state-of-the-art check before integration.
+    This does not endorse the prior low-rank hybrid suggestion or lower precision.
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -790,6 +818,8 @@ open_threads:
   global access for larger resolutions and implement persistent detail retrieval separately.'
 - 'N542/O377: select and test direct factorized global attention versus exact fused access; preserve temporal/support
   masks and independently evaluate strong-match/detail quality.'
+- 'N543/O378: benchmark eligible exact attention implementations at matched precision/support before integration;
+  FA4 SM86 build and mask/backward support remain unverified.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -842,3 +872,4 @@ ai_suggestions_pending:
 - 'O374: user latent-diffusion simplification hypothesis remains untested.'
 - O377 remains an untested proposed comparison; no rank, kernel, integration or training configuration
   adopted.
+- O378 comparison ordering is proposed; no backend, precision or approximate access strategy selected.

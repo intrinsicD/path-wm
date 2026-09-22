@@ -1,0 +1,126 @@
+{
+  "timestamp": "2026-09-22T23:25+02:00",
+  "scope": "Literature/source and installed SDPA eligibility inspection. No kernel execution, benchmark, training, installation or integration.",
+  "eligibility": {
+    "scope": "Backend eligibility predicates only; no forward pass, timing, training or quality evaluation. Shape B1,H4,N256,D8, contiguous inputs, dropout0.",
+    "torch": "2.9.0+cu128",
+    "cuda": "12.8",
+    "cudnn": 91002,
+    "gpu": "NVIDIA GeForce RTX 3050",
+    "capability": [
+      8,
+      6
+    ],
+    "rows": [
+      {
+        "dtype": "torch.float32",
+        "mask": "none",
+        "flash": false,
+        "efficient": true,
+        "cudnn": false
+      },
+      {
+        "dtype": "torch.float32",
+        "mask": "causal_flag",
+        "flash": false,
+        "efficient": true,
+        "cudnn": false
+      },
+      {
+        "dtype": "torch.float32",
+        "mask": "explicit_mask",
+        "flash": false,
+        "efficient": true,
+        "cudnn": false
+      },
+      {
+        "dtype": "torch.float16",
+        "mask": "none",
+        "flash": true,
+        "efficient": true,
+        "cudnn": true
+      },
+      {
+        "dtype": "torch.float16",
+        "mask": "causal_flag",
+        "flash": true,
+        "efficient": true,
+        "cudnn": true
+      },
+      {
+        "dtype": "torch.float16",
+        "mask": "explicit_mask",
+        "flash": false,
+        "efficient": true,
+        "cudnn": true
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "mask": "none",
+        "flash": true,
+        "efficient": true,
+        "cudnn": true
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "mask": "causal_flag",
+        "flash": true,
+        "efficient": true,
+        "cudnn": true
+      },
+      {
+        "dtype": "torch.bfloat16",
+        "mask": "explicit_mask",
+        "flash": false,
+        "efficient": true,
+        "cudnn": true
+      }
+    ]
+  },
+  "upstream": [
+    {
+      "repo": "Dao-AILab/flash-attention",
+      "commit": "d15f1531a460ba456f41b01a774f33ab2db8febf",
+      "commit_date": "2026-09-22T20:40:28Z",
+      "file": "README.md",
+      "url": "https://github.com/Dao-AILab/flash-attention/blob/d15f1531a460ba456f41b01a774f33ab2db8febf/README.md",
+      "sha256": "0dbaba56da1c8372d460956e2609bfb89acf8f3aadd65d132b1697d221069619",
+      "snapshot": "runs/attention_kernel_survey_v1/Dao-AILab_flash-attention_README.md"
+    },
+    {
+      "repo": "Dao-AILab/flash-attention",
+      "commit": "d15f1531a460ba456f41b01a774f33ab2db8febf",
+      "commit_date": "2026-09-22T20:40:28Z",
+      "file": "flash_attn/cute/interface.py",
+      "url": "https://github.com/Dao-AILab/flash-attention/blob/d15f1531a460ba456f41b01a774f33ab2db8febf/flash_attn/cute/interface.py",
+      "sha256": "144a3dd6f72f955e43834500808c7d47b3b4a76fdcd0b7188f9b459d85007cab",
+      "snapshot": "runs/attention_kernel_survey_v1/Dao-AILab_flash-attention_flash_attn_cute_interface.py"
+    },
+    {
+      "repo": "thu-ml/SageAttention",
+      "commit": "d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5",
+      "commit_date": "2026-01-17T17:43:28Z",
+      "file": "README.md",
+      "url": "https://github.com/thu-ml/SageAttention/blob/d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5/README.md",
+      "sha256": "0cc6662bcf49645b10524f51de5178ab9d83946ae89bfa502a1f16c742bd74ac",
+      "snapshot": "runs/attention_kernel_survey_v1/thu-ml_SageAttention_README.md"
+    },
+    {
+      "repo": "thu-ml/SageAttention",
+      "commit": "d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5",
+      "commit_date": "2026-01-17T17:43:28Z",
+      "file": "sageattention/core.py",
+      "url": "https://github.com/thu-ml/SageAttention/blob/d1a57a546c3d395b1ffcbeecc66d81db76f3b4b5/sageattention/core.py",
+      "sha256": "e475182fc55d6a683499e1eb4d8886fc06e050ed938d8563b090773eede2a99e",
+      "snapshot": "runs/attention_kernel_survey_v1/thu-ml_SageAttention_sageattention_core.py"
+    }
+  ],
+  "review": "docs/encoder-token-budget-plan.md#current-attention-kernels-pre-integration-review-22-september-2026",
+  "sources": [
+    "https://arxiv.org/abs/2603.05451",
+    "https://pytorch.org/blog/flexattention-flashattention-4-fast-and-flexible/",
+    "https://arxiv.org/abs/2609.04105",
+    "https://arxiv.org/abs/2602.13515",
+    "https://pytorch.org/blog/flexattention/"
+  ]
+}

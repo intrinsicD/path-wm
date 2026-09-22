@@ -9102,3 +9102,17 @@ tree:
   - N539
   - N541
   status: open
+- id: N543
+  type: question
+  title: Check current faster attention kernels before integration
+  provenance: user
+  timestamp: 2026-09-22T23:25+02:00
+  description: Review current FlashAttention successors and alternatives against actual RTX3050 SM86,
+    installed PyTorch and source masks. No model integration requested before this check.
+  evidence:
+  - ara/evidence/tables/attention_kernel_survey_2026-09-22.json
+  - docs/encoder-token-budget-plan.md#current-attention-kernels-pre-integration-review-22-september-2026
+  also_depends_on:
+  - N542
+  - N539
+  status: resolved
