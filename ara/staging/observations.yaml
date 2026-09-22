@@ -6739,3 +6739,22 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O383
+  timestamp: 2026-09-23T00:57+02:00
+  provenance: ai-suggested
+  content: Treat embedding translation as one candidate operator, not automatic CLIP semantics. A trained shared
+    core could infer a relation code from examples and condition an application function on that code with fixed
+    runtime weights. Nonlinear application is optional; categories, relations and transformation rules need not
+    share one imposed operator representation. Test transfer and relevant preservation rather than raw pair fitting.
+  context: User poses a hypothesis/question, not an architecture decision. SIMAT and pairwise-difference finetuning
+    support scoped CLIP limitations; latent-program search supports a related code approach on bounded tasks. One
+    pair underdetermines the rule and downstream processing cannot recover discarded information uniquely. No experiment
+    or universal concept claim. See docs/latent-concept-learning-review.md#clip-differenzen-und-latente-transformationen.
+  potential_type: architecture
+  bound_to:
+  - N545
+  - N544
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

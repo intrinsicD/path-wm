@@ -2849,3 +2849,11 @@ entries:
     mechanisms or empirical effectiveness.'
   - This explains the already reviewed abstract operations; no new consequential architecture selection requires
     another Claude round. Existing statuses, evidence and maturity flags remain unchanged.
+- turn: 2026-09-23_001#3
+  notes:
+  - N545 records the user question; O383 stages the explanation and candidate relation-code formulation. Do not
+    infer adoption from exploratory wording.
+  - Primary sources establish scoped limitations and related methods, not a universal theorem about CLIP or all
+    concepts. Abstract-source checks support only the claims stated here.
+  - No new experiment, consequential method selection, claim promotion, maturity change or inferred abandonment.
+    Existing discussion status and validation evidence are preserved.

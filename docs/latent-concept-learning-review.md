@@ -253,6 +253,59 @@ Lernen über Zustand. Offen sind dafür nötige Merkmale, Lernsignale, Abrufqual
 und Gesamtkosten. Der kleinste sinnvolle Vergleich bleibt auf eine erklärte
 Konzeptfamilie mit neuen Fällen, Gegenbelegen und einfachen Referenzen begrenzt.
 
+## CLIP-Differenzen und latente Transformationen
+
+23. September 2026. Alex fragt, ob die Analogie A → B, C → ? als Differenz
+oder als gelernte nichtlineare Transformation im Embeddingraum verstanden werden
+kann und ob Konzepte grundsätzlich so gelernt werden müssen. Dies präzisiert die
+vorherige Diskussion; es wählt noch keine Architektur aus.
+
+Mit z_X = E(X) ist z_D ≈ z_C + (z_B − z_A) eine übertragene Verschiebung.
+Die Subtraktion ist eine lineare Rechenoperation; daraus folgt keine allgemein
+additive Semantik. Der Differenzvektor enthält zunächst alle im Encoder sichtbaren
+Unterschiede des Paars, auch aufgabenirrelevante. Die SIMAT-Arbeit berichtet
+begrenzte Eignung unveränderter CLIP-Embeddings für ihre textdefinierten
+Delta-Transformationen und Verbesserungen durch gezieltes Finetuning.
+*Finetuning CLIP to Reason about Pairwise Differences* lernt ausdrücklich eine
+Ausrichtung von Bilddifferenzen und beschreibenden Texten. Beide Quellen begründen,
+warum Analogiestruktur eine zu prüfende beziehungsweise zu lernende Eigenschaft
+ist; sie beweisen keine Unmöglichkeit einzelner Analogien in unverändertem CLIP.
+Quellen: [SIMAT](https://arxiv.org/abs/2112.03162),
+[paarweise Unterschiede](https://arxiv.org/abs/2409.09721).
+
+Allgemeiner kann ein trainierter Kern aus Beispielpaaren und Kontext einen
+Relations- beziehungsweise Operationscode r erschließen und ihn auf einen neuen
+Ausgangszustand anwenden: r = G(Beispiele, Kontext), z_D = F(z_C, r).
+Die Verschiebung F(z,r) = z+r ist ein Spezialfall. Schon lineare beziehungsweise
+affine Abbildungen erweitern diese Familie; nichtlineare Funktionen erlauben
+zustandsabhängige Änderungen. Die beiden Funktionsrollen erfordern weder separate
+Netze noch explizite sprachliche Relationsnamen. G und F können trainierte feste
+Gewichte behalten, während r bei neuen Beispielen wechselt. Ein neues r ist nicht
+automatisch ein neues separat trainiertes Netz. *Searching Latent Program Spaces*
+belegt eine verwandte Inferenz und Suche in latenten Programmcodes in begrenzten
+Programmsynthese-/ARC-Aufgaben, keine allgemeine multimodale Konzeptfähigkeit.
+Quelle: [LPS](https://arxiv.org/abs/2411.08706).
+
+Nicht jedes Konzept ist eine Transformation: Kategorien können durch Beispiele,
+Prototypen oder Zugehörigkeitsfunktionen repräsentiert sein; Beziehungen können
+Kompatibilität zwischen Beteiligten beschreiben, ohne einen eindeutigen Zielzustand
+zu bestimmen. Ein Operator passt besonders zu Veränderungsregeln. Nichtlinearität
+und semantische Qualität sind zudem verschiedene Eigenschaften; nach einer
+geeigneten Umkodierung kann eine zunächst komplizierte Transformation einfach sein.
+Keine nachgelagerte Funktion kann die vom Encoder verworfene Information aus dem
+Embedding allein eindeutig wiederherstellen.
+
+Ein einzelnes Paar bestimmt die gewünschte Regel im Allgemeinen nicht eindeutig.
+Mehr Beispiele, Gegenbeispiele, Aufgabenbezug und gelernte Vorannahmen begrenzen die
+möglichen Erklärungen. Der vorgeschlagene Lernanreiz ist die Anwendung auf neue
+Fälle bei Erhalt der innerhalb der Aufgabe irrelevanten Merkmale. Dafür können
+Beispielpaare und Vorhersage-/Kontrastsignale genügen; handbenannte Konzepte oder
+vorgegebene richtige Codevektoren sind keine allgemeine Voraussetzung. Bloß einen
+leistungsfähigen nichtlinearen Mapper einzusetzen garantiert diesen Transfer nicht.
+Aufgaben, Lernsignal, Repräsentation und Budget bleiben offen. Vorbereitete Evidenz
+wird wiederverwendet, Kontext bleibt begrenzt und erschlossene Codes bleiben von
+beobachteter Evidenz unterscheidbar.
+
 ## Quellen- und Reviewbelege
 
 Der tatsächliche Hauptaufruf und der abschließende Abgleich bestätigen

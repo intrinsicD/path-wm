@@ -9132,3 +9132,19 @@ tree:
   - N532
   - N531
   status: open
+- id: N545
+  type: question
+  title: Embedding offsets, nonlinear operators and concept learning
+  provenance: user
+  timestamp: 2026-09-23T00:57+02:00
+  description: User asks whether CLIP A-to-B offsets transfer to C, whether learned nonlinear latent transformations
+    relate to concept learning, and whether all concepts require such representation. Explanation distinguishes
+    these cases; concrete representation and learning signals remain open.
+  evidence:
+  - docs/latent-concept-learning-review.md#clip-differenzen-und-latente-transformationen
+  - https://arxiv.org/abs/2112.03162
+  - https://arxiv.org/abs/2409.09721
+  - https://arxiv.org/abs/2411.08706
+  also_depends_on:
+  - N544
+  status: open

@@ -328,8 +328,9 @@ sessions:
     decoders need not precede learning; example/prototype, inferred-code and code-search routes remain alternatives.
     Six overclaims reconciled; no architecture adoption or capability promotion. Continued abstract walkthrough
     of five latent functions; compare-to-generalize transition, provisional hypotheses and memory ownership remain
-    unselected implementation choices.
-  turn_count: 2
-  events_count: 5
+    unselected implementation choices. CLIP analogy follow-up distinguishes offsets, inferred relation codes and
+    nonlinear operators without requiring all concepts to be transformations.
+  turn_count: 3
+  events_count: 7
   claims_touched: []
-  open_threads: 3
+  open_threads: 4
