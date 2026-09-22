@@ -312,8 +312,10 @@ sessions:
     retrieval remains open. Follow-up locates dense fine-scale attention upstream. Optional packed windows/merges
     with geometry reuse reduce image256 encoder pairs99.317% and forward+backward66.88%; small inputs
     retain overhead. All detail positions survive;114 checks pass, but short fits do not validate quality
-    and defaults remain dense.
-  turn_count: 18
-  events_count: 50
+    and defaults remain dense. Randomized attention follow-up compares kernel features, landmark factors
+    and sparse corrections; ordinary SVD sketch cost and rank/frequency distinction are explicit. Approximate
+    global access remains proposed, without new implementation or measurements.
+  turn_count: 19
+  events_count: 52
   claims_touched: []
-  open_threads: 31
+  open_threads: 32

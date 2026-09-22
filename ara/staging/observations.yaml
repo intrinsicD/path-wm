@@ -6634,3 +6634,20 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O377
+  timestamp: 2026-09-22T23:10+02:00
+  provenance: ai-suggested
+  content: Compare retained exact local processing with approximate global random-feature or landmark
+    attention only at large source sizes; keep small bounded-state attention exact. Generic randomized
+    SVD is a diagnostic, not an automatic subquadratic attention implementation.
+  context: Literature-grounded explanation only. Performer, Nystromformer, Scatterbrain and FlashAttention
+    have distinct approximation/storage contracts. Exact masks, normalization, strong-match quality and
+    actual runtime require local evidence. No new model or experiment adopted.
+  potential_type: architecture
+  bound_to:
+  - N542
+  - N539
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

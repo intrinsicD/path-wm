@@ -1,5 +1,7 @@
 # Current work
 
+**Randomized attention discussion:** [factorization options](encoder-token-budget-plan.md#randomized-factorized-attention-discussion-not-implementation). Performer random features and Nyström landmarks avoid constructing full attention; ordinary randomized SVD still needs potentially quadratic matrix products. Sparse corrections can retain strong interactions. Low singular energy is not spatial frequency or semantic irrelevance. Local/exact plus approximate global access remains an untested option; no implementation or quality promotion.
+
 **Active encoder token-efficiency follow-up:** [local encoder plan](encoder-token-budget-plan.md).
 Target dense fine-scale attention and dense masked pooling footprints upstream of
 the resampler. Implemented selectable packed merges and fine windows, retaining

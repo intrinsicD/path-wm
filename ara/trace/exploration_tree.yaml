@@ -9085,3 +9085,20 @@ tree:
   also_depends_on:
   - N538
   status: resolved
+- id: N542
+  type: question
+  title: Can randomized factorization avoid quadratic attention?
+  provenance: user
+  timestamp: 2026-09-22T23:10+02:00
+  description: User proposes fast randomized low-rank attention/SVD and discarding a high-frequency residual.
+    Compare direct kernel/landmark factors with exact-attention matrix sketches; separate low singular
+    energy from spatial frequency and task relevance.
+  evidence:
+  - docs/encoder-token-budget-plan.md#randomized-factorized-attention-discussion-not-implementation
+  - https://arxiv.org/abs/2009.14794
+  - https://arxiv.org/abs/2102.03902
+  - https://arxiv.org/abs/0909.4061
+  also_depends_on:
+  - N539
+  - N541
+  status: open

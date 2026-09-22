@@ -2811,3 +2811,13 @@ entries:
     Preserve small-input regressions, coarsest quadratic limit and short-fit quality failure.
   - Actual Claude withdrew claims that dense Boolean masks are footprint-sparse or that savings require
     full score materialization. Reports remain structurally verified; no broader validation color promotion.
+- turn: 2026-09-22_001#19
+  notes:
+  - N542 records the user research question; O377 stages the proposed local/exact plus approximate/global
+    comparison. No implementation, run or consequential method selection occurred.
+  - 'Do not promote O376 from a generic Great: prior measured gains remain scoped and fine-detail quality
+    unvalidated. This question revisits attention efficiency without affirming universal rank/quality
+    claims.'
+  - Generic randomized SVD sketching does not remove quadratic exact softmax work; kernel features and
+    landmark factors avoid it through approximation. Low rank is not low spatial frequency. No inferred
+    topic abandonment or broader claim promotion.

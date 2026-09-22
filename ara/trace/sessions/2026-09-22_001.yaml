@@ -2,8 +2,8 @@ session:
   id: 2026-09-22_001
   date: '2026-09-22'
   started: 2026-09-22T01:13+02:00
-  last_turn: 2026-09-22T21:51+02:00
-  turn_count: 18
+  last_turn: 2026-09-22T23:10+02:00
+  turn_count: 19
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
@@ -36,7 +36,9 @@ session:
     retrieval remains open. Follow-up locates dense fine-scale attention upstream. Optional packed windows/merges
     with geometry reuse reduce image256 encoder pairs99.317% and forward+backward66.88%; small inputs
     retain overhead. All detail positions survive;114 checks pass, but short fits do not validate quality
-    and defaults remain dense.
+    and defaults remain dense. Randomized attention follow-up compares kernel features, landmark factors
+    and sparse corrections; ordinary SVD sketch cost and rank/frequency distinction are explicit. Approximate
+    global access remains proposed, without new implementation or measurements.
 events_logged:
 - turn: 1
   type: question
@@ -423,6 +425,19 @@ events_logged:
   routing: staged
   provenance: ai-suggested
   summary: Local-before-global processing as the higher-resolution resource direction; quality not established.
+- turn: 19
+  type: question
+  id: N542
+  routing: direct
+  provenance: user
+  summary: Can randomized factorization avoid quadratic attention?
+- turn: 19
+  type: observation
+  id: O377
+  routing: staged
+  provenance: ai-suggested
+  summary: Exact local plus approximate global attention remains an untested option; rank does not identify
+    expendable spatial detail.
 ai_actions:
 - turn: 1
   action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
@@ -644,6 +659,15 @@ ai_actions:
   - experiments/multimodal.py
   - docs/encoder-token-budget-plan.md
   - ara/evidence/tables/encoder_token_budget_2026-09-22.json
+- turn: 19
+  action: Checked primary papers and author explanations; documented matrix-free kernel/landmark factors,
+    generic SVD matvec cost, normalization/masking and sparse-correction limits; updated atlas discussion
+    without validation promotion.
+  provenance: ai-executed
+  files_changed:
+  - docs/encoder-token-budget-plan.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -695,6 +719,10 @@ key_context:
 - turn: 18
   excerpt: User asks for significant token efficiency and the most likely cause. Report global active
     set and batch-weighted interactions separately from unchanged total feature/query positions.
+- turn: 19
+  excerpt: User asks for randomized low-rank attention analogous to fast SVD and dropping high-frequency
+    error. Great acknowledges the prior patch; it does not establish fine-detail quality or adopt a new
+    attention approximation.
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -760,6 +788,8 @@ open_threads:
   fit.'
 - 'N538-N541/O376: longer matched quality/seam/detail evaluations before default local windows; cap coarsest
   global access for larger resolutions and implement persistent detail retrieval separately.'
+- 'N542/O377: select and test direct factorized global attention versus exact fused access; preserve temporal/support
+  masks and independently evaluate strong-match/detail quality.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -810,3 +840,5 @@ ai_suggestions_pending:
   calibrated success or general generation.'
 - 'O373: exact protocol, domains and controls remain proposed, not selected experimental configuration.'
 - 'O374: user latent-diffusion simplification hypothesis remains untested.'
+- O377 remains an untested proposed comparison; no rank, kernel, integration or training configuration
+  adopted.

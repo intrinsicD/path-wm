@@ -181,3 +181,62 @@ multi-seed task comparisons including seam-specific errors before default adopti
 Final cache-lifetime check also clears disposable geometry when a module migrates
 device/dtype, preventing indices from retaining allocations on its old device.
 Eight local tests pass after this repair; it does not change timed forward code.
+
+## Randomized factorized attention: discussion, not implementation
+
+Alex asks whether a randomized low-rank decomposition could avoid quadratic
+attention and discard an unimportant residual. The relevant distinction is between
+constructing factors directly from Q/K and factorizing an already expensive
+attention operator. No new attention implementation or experiment is adopted here.
+
+For unmasked attention, let `A = softmax(Q K^T / sqrt(d))`, row-normalized, and
+`Y = A V`. A low-rank representation `A ≈ U W^T` permits `Y ≈ U (W^T V)` without
+forming the n×n matrix. Generic randomized SVD first needs products such as
+`A Omega`: computing exact softmax-attention products generally still requires
+quadratic pair work, even if tiled to avoid quadratic storage. QK^T already has
+rank at most d, but nonlinear softmax can produce a full-rank matrix.
+
+- [Performer / FAVOR+](https://arxiv.org/abs/2009.14794) constructs positive random
+  feature factors `F_Q, F_K` of shape n×r for the exponential dot-product kernel.
+  Compute `S = F_K^T V`, `z = F_K^T 1`, then each output row is
+  `F_Q[i] S / (F_Q[i] z)`. With suitable feature scaling and normalization this
+  approximates softmax attention in O(n r (d + d_v)) work. Fixed r makes this linear
+  in n; sufficient approximation rank is data-dependent. It is not a truncated SVD.
+  [Author explanation](https://research.google/blog/rethinking-attention-with-performers/)
+  also describes causal prefix summaries. The global n×n factorization statement
+  applies to unmasked attention; causal masking uses a different running computation.
+- [Nyströmformer](https://arxiv.org/abs/2102.03902) uses representative query/key
+  landmarks and factors of size n×r, r×r and r×n, with a small pseudoinverse.
+  Its factors are built without evaluating every pair. The original landmark
+  construction is not necessarily randomized; this is closer to the proposed
+  low-rank matrix approximation than ordinary post-hoc SVD.
+- [Scatterbrain](https://arxiv.org/abs/2110.15343) combines random-feature low-rank
+  approximation with sparse corrections for strong interactions. This motivates,
+  but does not validate here, an exact local / approximate global comparison.
+- [Randomized SVD](https://arxiv.org/abs/0909.4061) remains useful for offline
+  spectrum diagnostics on small examples. [FlashAttention](https://arxiv.org/abs/2205.14135)
+  avoids full score storage with exact tiled attention; it retains quadratic pair
+  arithmetic. Our PyTorch path already requests no weights and used efficient SDPA
+  in the recorded probe; do not claim a saved n×n allocation that was absent.
+
+Small singular values are not the same as high spatial frequencies. SVD orders
+matrix energy, not semantic relevance; a high-frequency pattern can be low-rank,
+and independent sharp matches can require high rank. Compression error is therefore
+not automatically noise. Retaining original feature positions protects access to
+the sources, but does not guarantee unchanged reasoning or learned outputs.
+
+Tentative next comparison: preserve packed fine windows and exact small-state
+attention; test a factorized global path only where global source size justifies
+it. Compare against exact fused attention with feature/landmark budgets 16/32/64,
+including projection and feature-map costs. Keep numerical output/gradient error,
+task/detail/seam quality, actual latency and peak memory separate. Causal support,
+empty inputs, ragged geometry and normalization need explicit checks. Arbitrary
+footprint or two-coordinate time/support masks cannot simply be attached after
+factorization without potentially restoring quadratic work. Sparse corrections
+need consistent normalization and avoidance of double counting; learned fusion of
+separate local/global branches would instead be an architectural change.
+
+Standing principles: retain fine evidence, approximate access deliberately, reuse
+source summaries only while source/projection identities remain valid, and compare
+actual execution and trained task behavior. This is a research option; no resource
+or quality advantage over the existing patch has been measured.
