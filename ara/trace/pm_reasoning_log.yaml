@@ -2771,3 +2771,11 @@ entries:
   - Existing multimodal direction is reiterated, not a specific new speech architecture adopted. User
     assertion about serial audio is qualified by separating output order and compute dependencies.
   - No measured small-core efficacy or closure for detailed proposals. O371 remains staged.
+- turn: 2026-09-22_001#15
+  notes:
+  - User asks for architecture-wide suggestions, without adopting a fixed token taxonomy. Describe functional
+    roles and tests while retaining the small-library boundary.
+  - No new matrix width, slot count or semantic partition selected. Exact metadata and action contracts
+    remain explicit; illustrative roles are not implemented capability claims.
+  - Question revisits prior latent architecture and learning topics, so keep them open. No closure signal
+    for O372 or earlier concrete proposals; no crystallization.

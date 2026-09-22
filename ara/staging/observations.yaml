@@ -6541,3 +6541,23 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O372
+  timestamp: 2026-09-22T15:59+02:00
+  provenance: ai-suggested
+  potential_type: architecture
+  content: Map perception, belief, task, working state, memory access, actions, predicted futures, events,
+    outputs and control to explicit producers/readers, learning signals, ownership and tests. Reuse states/modules
+    where possible; semantic roles are not automatically separate networks, codebooks or interpretable
+    individual tokens. Train compatible interfaces and grounded tasks, retaining exact identity/time/source/action
+    metadata. Begin with the existing belief/task/workspace path plus bounded retrieval and action/output
+    consumers, then add specialized slots only with evidence.
+  context: Read current BeliefAgent world/working/reasoning groups, task/thinker/context and action contracts;
+    Perceiver IO and DreamerV3 are references for component principles. New role map is a proposal, not
+    adoption, implementation, token-count allocation or small-model capability evidence.
+  bound_to:
+  - N531
+  - N530
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

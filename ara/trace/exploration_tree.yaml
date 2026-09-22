@@ -8881,3 +8881,21 @@ tree:
   - N529
   - N528
   status: open
+- id: N531
+  type: question
+  title: Which latent roles and learning signals are needed throughout the agent?
+  provenance: user
+  timestamp: 2026-09-22T15:59+02:00
+  description: Alex asks how to think about choosing latent tokens, whether all uses need appropriate
+    training, and which representations to provide across the full multimodal agent. Distinguish roles,
+    runtime values, learned interfaces and fixed exact metadata.
+  evidence:
+  - docs/latent-core.md
+  - docs/multiscale-modality-design.md
+  - docs/architecture-walkthrough.md
+  - docs/action-semantics-design.md
+  - https://arxiv.org/abs/2107.14795
+  - https://danijar.com/project/dreamerv3/
+  also_depends_on:
+  - N530
+  status: open

@@ -245,6 +245,93 @@ Er testet zwei äußere Denkschritte mit nachgelagertem innerem Auslesen, keine
 adaptive Rückkopplung zwischen den Schleifen. Details und negative Ergebnisse
 stehen im [Bericht](../runs/modality_readout_v1/formal/report.html).
 
+## Welche latenten Rollen brauchen wir gezielt?
+
+Diskussionsvorschlag vom 22. September, keine Implementierungsfreigabe. Alex fragt,
+ob wir für alle Verwendungsbereiche latente Tokens architektonisch vorsehen und
+passend trainieren müssen, und welche wir konkret brauchen. Ein Token bezeichnet
+hier einen Vektor an einer Stelle einer Folge/eines Gitters oder einen diskreten
+Code mit zugehörigem Embedding. Dynamische Tokenwerte entstehen aus Eingaben und
+Zustandsupdates. Trainiert werden ihre Erzeuger, Verarbeiter und Leser sowie ggf.
+Codebücher/Startabfragen; wir trainieren nicht jede neu auftauchende Tasse separat.
+
+Die Architektur bestimmt Zugriffe, Kapazität, Zeit-/Raumbezug und Aufgaben der
+Schnittstellen. Lernziele und Daten bestimmen, welche Information darin nutzbar
+wird. Ein Name wie reasoning oder action garantiert keine entsprechende Bedeutung.
+Gleiche Vektorbreite macht unabhängig trainierte Räume nicht kompatibel. Auch
+handfest geprüfte Rollen bedeuten nicht, dass ein einzelnes Token exakt einem
+interpretierbaren Begriff entspricht. Vortrainierte Teile können mit passenden
+Adaptern wiederverwendet werden; nicht jede Rolle braucht ein eigenes Netzwerk,
+Codebuch oder ausschließlich manuell beschriftete Trainingsdaten.
+
+Die folgende Abdeckung beschreibt funktionale Rollen, keine neue Modulhierarchie.
+Mehrere Zeilen können dieselben Zustände mit unterschiedlichen Lesern verwenden.
+
+| Bereich | Repräsentation und Erzeuger → Leser | Lernsignal / kleinster relevanter Test | Besitz und Lebensdauer |
+|---|---|---|---|
+| Wahrnehmung | Bild-, Video-, Audio-, Text-/Sensormerkmale aus Encodern → Zustandskorrektur und Fachleser; gemeinsam zugängliche Skalen vor Kompression | Rekonstruktion fehlender/erhaltener Details, zeitliche und modalitätsübergreifende Aufgaben; verschiedene Ansichten und fehlende Eingaben | Quellpacket bleibt referenzierbar; Featurecache gilt für Quelle und Encoderversion |
+| Weltzustand | Aktueller Belief mit Objekten/Eigenschaften/Relationen, soweit gelernt → Denken, Dynamik und Aufgabenleser | Wiedererkennen und zeitliches Binden, Eigenschafts-/Relationsfragen, Zustand nach Beobachtungen korrigieren; Objekt-/Rollentausch prüfen | Sitzungszustand; genaue Entitätsreferenzen und Beobachtungen separat |
+| Auftrag und Ziel | Instruktion/Auftragsdaten → Task-Tokens → Kontextwahl, Denken, Handlung und Ausgabe | Gleiche Welt, andere Frage/Zielvorgabe, entsprechend andere korrekte Entscheidung; Ziel darf nicht zum beobachteten Fakt werden | Auftragsrevision; exakte Anforderungen bleiben außerhalb des Embeddings verfügbar |
+| Arbeitszustand | Kontext + Aufgabe + bisherige Arbeit → Thinker → Zwischenresultate, Hypothesen und Vorschläge | Aufgaben mit nötigen abhängigen Schritten; Schrittzahl/Ablation, neuer Kontext und neue Kombinationen gegen unabhängige Antworten prüfen | Pro Aufgabe/Denklauf; getrennt von bestätigtem Weltzustand |
+| Gedächtnis und Abruf | Denkzustand → Suchanfrage/Kandidatenbewertung; ausgewählte Quellen → ContextEncoder → gelesener Kontext | Relevante alte Evidenz trotz Ablenkungen auswählen, zeitliche Grenzen und Quellkorrekturen beachten; falsch/fehlend abgerufenen Kontext testen | Langlebige Belege/Datensätze plus begrenzter, versionierter Lesecache; keine Pflicht zu einem zweiten Wissenscodebuch |
+| Aktionen und Fähigkeiten | Policy/Vorschlag → latente Aktion mit notwendigen Argumenten → Dynamik bzw. konkreter Ausführungspfad | Aktion-Folge-Paare, Demonstrationen und echte Ergebnisprüfung; gleiche Situation mit unterschiedlichen Aktionen | Hypothetischer Plan oder ausgewählte Ausführung; genaue IDs, Argumente, Einheiten und Ergebnisprotokolle behalten |
+| Vorhersage und Plan | Zustand + Aktion + Zeit → Dynamik → mögliche Folgezustände; Bewertung liest diese | Ein- und mehrschrittige Vorhersagen, neue Aktionsfolgen, beobachtete Zielerreichung; Fehler über Rollouts messen | Separater hypothetischer Zweig; kann dasselbe Zustandsformat nutzen, keine eigene Tokenart erforderlich |
+| Ereignisse und Verlauf | Zeitlich geordnete Zustände/Evidenz → zeitlicher Leser → Änderungen und Ereigniszusammenfassungen | Vorher/nachher, Rollen, Auslassungen und vertauschte Reihenfolge unterscheiden; Evidenzbezug erhalten | Historische Ereignisse mit Quelle/Zeit; Zusammenfassung ersetzt nicht alle Belege |
+| Ausgabe | Zustand + Auftrag → modalspezifischer Leser/Generator → Text-, Bild-, Video- oder Audiocodec | Ausgabequalität und inhaltliche Treue getrennt; fehlender/vertauschter Zustand, neue Inhalte und konsistente Mehrfachausgabe | Pro Ausgabe; Codecversion und zeitliche/räumliche Anordnung explizit |
+| Steuerung und Bewertung | Denk-/Aufgabenzustand → kleine Köpfe für think/recall/emit/act/stop, Erfolg, Kosten, Unsicherheit | Gültige nächste Operation, realer Zielerfolg, Fehler-/Kostenkalibrierung; gleicher Aufgabenbereich bei verschiedenen Budgets | Kurzlebige Vorschläge/Scores; harte Budget- und Gültigkeitsregeln durch normalen Code |
+
+Fachdetails sind zunächst Inhalte/Leser vorhandener Rollen: Körper, Hände und
+Gesicht sind geometrische Zustände; Blick oder Mimik ändern sich über die Zeit;
+ein Stimmprofil ist wiederverwendbare Ausgabekonditionierung. Räumliche Koordinaten,
+Objekt-/Zeitbezug und Skalen müssen erhalten bleiben. Ein spezieller Tokenbereich
+ist erst begründet, wenn er eine konkrete Aufgabe besser löst oder Daten getrennte
+Lebensdauern benötigen. Neue Themen wie Kochen oder Mathematik verlangen nicht
+automatisch neue Tokenfamilien; sie verlangen geeignete Erfahrung und Prüfaufgaben.
+
+Exakte Referenzen, Zeitstempel, Quellen, Versionen und Aktionsargumente dürfen
+neben latenten Werten stehen. Unsicherheit oder Restbudget können direkte Zahlen
+oder Verteilungen sein. Sie ausschließlich als neu benannte Tokens zu verstecken
+würde weder Genauigkeit noch Interpretierbarkeit garantieren. Harte Abruf-/Aktions-
+auswahl und diskrete Quantisierung brauchen passende Lernverfahren; ein gemeinsames
+Diagramm schafft keinen automatischen Gradientenpfad.
+
+**Vorgeschlagener Einstieg:** Ein vorhandener Pfad verbindet Wahrnehmung/Belief,
+Task-Tokens, Arbeitszustand, begrenzten Gedächtniskontext, Aktion/Folgezustand und
+einen Ausgabeleser. Relationen/Ereignisse zunächst im vorhandenen Zustandsformat
+lesen; eigene Slots nur mit geprüftem Nutzen. Der aktuelle BeliefAgent besitzt
+world/working/reasoning-Gruppen, dazu Task- und abgerufene Kontexttokens. Das belegt
+die Schnittstellen, nicht die Bedeutung aller Zeilen oder allgemeine Kompetenz.
+
+Pro gelernter Verbindung festlegen: Quelle und zulässige Information, Tensorform
+mit Raum/Zeit/Masken, Leser und erforderliche Wirkung, Lernsignal/Gradientenroute,
+Besitzer/Lebensdauer sowie Qualitäts- und Ressourcenprüfung. Der einfachste Test
+prüft zunächst mit guten Zielrepräsentationen den Leser, dann den erlernten Erzeuger
+und schließlich die gesamte Aufgabe. Gemeinsames Training kann Aufgabenverluste
+an vorgelagerte Encoder weitergeben, sofern sie nicht eingefroren sind und die
+Verbindung differenzierbar ist. Rekonstruktion allein garantiert keine Semantik;
+Ziellabels für Training dürfen keine Zukunftsinformation in Inferenzeingaben leaken.
+
+Als kleines verknüpftes Beispiel eignet sich eine kontrollierte Szene mit zwei
+Objekten, einer anderslautenden Zielvorgabe, Ablenkung, einer Auswahl-/Bewegungsaktion
+und beobachtetem Ergebnis. Prüfen: richtige Referenz, erinnerter Zustand, passende
+Aktion, vorhergesagte Folge und richtige Antwort. Neue Objekt-/Zielkombinationen,
+fehlende/vertauschte Quellen und misslungene Aktionen verhindern bloßes Nachspielen.
+Datensatz, Schwellen und Laufbudget bleiben vor einer Durchführung festzulegen.
+
+Die Rollen nutzen prepare-once-Merkmale und pro Leser gültige Projektionen;
+alle Skalen bleiben zugänglich, gelesen wird eine begrenzte Auswahl. Cache-Reuse
+setzt gleiche Quelle/Gewichte voraus; Online-Zustandsupdate ist kein Gewichtslernen.
+Mehr Rollen bedeuten nicht automatisch mehr dauerhafte GPU-Tokens, können aber
+Aktivierungen und Attention-Kosten erhöhen. Retention, Zugriff, Parameter, Training-
+speicher, Gesamtrechenarbeit und erste nutzbare Ausgabe getrennt budgetieren.
+Keine Tokenzahl, Modellgröße oder 8-GB-Passung wird hier festgelegt.
+
+Quellen für verwandte Mechanismen: [Perceiver IO](https://arxiv.org/abs/2107.14795)
+zeigt Verarbeitung in einem latenten Bereich mit flexiblen Ein-/Ausgabelesern;
+[DreamerV3](https://danijar.com/project/dreamerv3/) lernt ein Weltmodell und Verhalten
+über vorgestellte Verläufe. Das sind Referenzen für Teilprinzipien, keine Belege
+für den gesamten vorgeschlagenen PATH-WM-Entwurf oder einen bestimmten kleinen Kern.
+
 ## Quellstellen
 
 - [Belief-Dynamik, Korrektur und Readout](../pathwm/models/belief.py)

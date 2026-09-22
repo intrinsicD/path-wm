@@ -2,8 +2,8 @@ session:
   id: 2026-09-22_001
   date: '2026-09-22'
   started: 2026-09-22T01:13+02:00
-  last_turn: 2026-09-22T15:22+02:00
-  turn_count: 14
+  last_turn: 2026-09-22T15:59+02:00
+  turn_count: 15
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
@@ -12,7 +12,7 @@ session:
     source benchmark scope retained, no local performance claim. Hands/feet review distinguishes WiLoR
     hands, FootMR ankles, SUPR-Foot articulation and FOCUS surfaces; fine-resolution integration and reaction
     benefit remain proposed. Face follow-up separates shape, mouth/eye articulation, head pose, gaze and
-    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand model buffering; execution/storage interpretation documented, training left open. Understanding capabilities and per-frame segmentation clarified; shared features, temporal binding and conditional detail remain proposed and unvalidated. Concrete new-frame dataflow traced against current event APIs; natural-image candidates/detail readers remain proposed. Voice-generation question separates reusable reference conditioning from speaker fine-tuning; pretrained German TTS bridge proposed, local quality and GPU fit unmeasured. Latent-speech follow-up proposes generated content/timing plus voice and delivery conditioning; text baseline optional, acoustic compatibility and disentanglement remain unvalidated. Efficiency challenge clarifies genuine text-bypass savings versus remaining speech-generation work; no measured speed/quality claim. General multimodal scope clarified; latent action tokens proposed for a small Thinker, with dependency-aware training and temporal-order versus serial-compute distinctions.
+    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand model buffering; execution/storage interpretation documented, training left open. Understanding capabilities and per-frame segmentation clarified; shared features, temporal binding and conditional detail remain proposed and unvalidated. Concrete new-frame dataflow traced against current event APIs; natural-image candidates/detail readers remain proposed. Voice-generation question separates reusable reference conditioning from speaker fine-tuning; pretrained German TTS bridge proposed, local quality and GPU fit unmeasured. Latent-speech follow-up proposes generated content/timing plus voice and delivery conditioning; text baseline optional, acoustic compatibility and disentanglement remain unvalidated. Efficiency challenge clarifies genuine text-bypass savings versus remaining speech-generation work; no measured speed/quality claim. General multimodal scope clarified; latent action tokens proposed for a small Thinker, with dependency-aware training and temporal-order versus serial-compute distinctions. Full-agent token-role question mapped to learned interfaces, signals, ownership and tests; reuse existing states, no new token taxonomy or module implementation adopted.
 events_logged:
 - turn: 1
   type: question
@@ -291,6 +291,23 @@ events_logged:
     teacher-forced training and playback overlap. Latent action candidates can condition predicted state
     changes and planning, but exact execution mapping and observed outcomes remain necessary. Compact
     codes alone do not establish small-model capability or total parameter savings.
+- turn: 15
+  type: question
+  id: N531
+  routing: direct
+  provenance: user
+  summary: Which latent roles and learning signals are needed throughout the agent?
+- turn: 15
+  type: observation
+  id: O372
+  routing: staged
+  provenance: ai-suggested
+  summary: Map perception, belief, task, working state, memory access, actions, predicted futures, events,
+    outputs and control to explicit producers/readers, learning signals, ownership and tests. Reuse states/modules
+    where possible; semantic roles are not automatically separate networks, codebooks or interpretable
+    individual tokens. Train compatible interfaces and grounded tasks, retaining exact identity/time/source/action
+    metadata. Begin with the existing belief/task/workspace path plus bounded retrieval and action/output
+    consumers, then add specialized slots only with evidence.
 ai_actions:
 - turn: 1
   action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
@@ -457,6 +474,18 @@ ai_actions:
   - docs/architecture-atlas.html
   - docs/architecture-atlas.md
   - docs/architecture-discussion.md
+- turn: 15
+  action: Reviewed current latent/task/memory/action interfaces and primary Perceiver IO/DreamerV3 references;
+    added complete functional role/learning map to latent-core, updated project state and regenerated
+    atlas. Topology, coverage statuses and validation evidence unchanged; documentation checks only.
+  provenance: ai-executed
+  files_changed:
+  - docs/latent-core.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -495,6 +524,9 @@ key_context:
 - turn: 14
   excerpt: 'Multimodales Modell generell: Denken im latenten Raum, passende Encoder/Decoder. Audiotokens
     seriell? Kleines Denkmodul mit latenten Aktionstokens.'
+- turn: 15
+  excerpt: Machen wir die Architektur für bestimmte latente Tokens, die entsprechend trainiert werden
+    müssen? Gilt das für alle Bereiche? Welche brauchen wir gezielt?
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -549,6 +581,8 @@ open_threads:
   full memory accounted separately.'
 - 'N530: compare latent action/outcome learning and serial/block access under matched budgets; retain
   exact execution contracts and independently checked success.'
+- 'N531: select one complete task and justify concrete latent interfaces with grounded learning signals,
+  ownership and whole-system budgets before adding slots or codebooks.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -595,3 +629,5 @@ ai_suggestions_pending:
   speedup from diagram simplification.'
 - 'O371: dependency/action explanation remains proposed; no small-core competence, universal serial-audio
   requirement or new implementation validated.'
+- 'O372: functional role map is proposed; existing token layouts do not validate entity semantics, reasoning,
+  calibrated success or general generation.'

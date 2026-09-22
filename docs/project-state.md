@@ -11,6 +11,13 @@ Alex also proposes latent action tokens as a way for a small Thinker to do usefu
 work. Discuss action-conditioned state prediction and planning with learned outcome
 supervision and exact executable-action mapping. Compact codes alone do not prove
 small-model competence; no new action representation or training recipe adopted.
+Token-role follow-up: Alex asks what representations to deliberately provide across
+all uses. [Role and learning map](latent-core.md#welche-latenten-rollen-brauchen-wir-gezielt)
+separates generated token values from learned producers/readers, functional roles
+from one-network-per-role, and learned features from exact metadata. Propose mapping
+perception, state, task, workspace, memory, action, prediction, events, output and
+control onto existing interfaces, with explicit learning signals and source controls.
+No new token layout, model-size claim, code implementation or training adopted.
 
 **Agent voice, 22 September:** [reference-conditioned speech proposal](agent-voice-design.md).
 Alex asks how the agent speaks and whether recordings can supply its voice.
