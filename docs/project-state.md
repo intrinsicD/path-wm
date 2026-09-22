@@ -1,5 +1,10 @@
 # Current work
 
+**Active encoder token-efficiency follow-up:** [local encoder plan](encoder-token-budget-plan.md).
+Target dense fine-scale attention and dense masked pooling footprints upstream of
+the resampler. Implement selectable exact-support packed merges and opt-in fine
+windows with all detail positions retained; test costs and receptive-field limits.
+
 **Active token budget implementation, 22 September:**
 [token budget plan](token-budget-plan.md). Instrument actual allocated attention
 shapes before changing capacity. Current categorical state is already bounded;
