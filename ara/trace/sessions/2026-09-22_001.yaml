@@ -2,8 +2,8 @@ session:
   id: 2026-09-22_001
   date: '2026-09-22'
   started: 2026-09-22T01:13+02:00
-  last_turn: 2026-09-22T08:09+02:00
-  turn_count: 6
+  last_turn: 2026-09-22T13:16+02:00
+  turn_count: 7
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
@@ -12,7 +12,7 @@ session:
     source benchmark scope retained, no local performance claim. Hands/feet review distinguishes WiLoR
     hands, FootMR ankles, SUPR-Foot articulation and FOCUS surfaces; fine-resolution integration and reaction
     benefit remain proposed. Face follow-up separates shape, mouth/eye articulation, head pose, gaze and
-    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated.
+    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured.
 events_logged:
 - turn: 1
   type: question
@@ -136,6 +136,22 @@ events_logged:
     separate. Unknown matches do not update profiles. Compare shape alone, appearance alone and combined
     features at matched false-match targets, measuring full latency and profile contamination. General
     filter learning and fast reference-memory learning operate at different timescales.'
+- turn: 7
+  type: question
+  id: N522
+  routing: direct
+  provenance: user
+  summary: Does full human perception and entity history fit the RTX3050 budget?
+- turn: 7
+  type: observation
+  id: O362
+  routing: staged
+  provenance: ai-suggested
+  summary: Retain a proposed 6-GiB whole-process GPU target, keep timestamped entity history on CPU-RAM/SSD,
+    share visual features and condition detail crops. Bound active persons/history and measure full latency.
+    Coefficients are compact, but estimator residency, multiscale activations and training may dominate.
+    Sequential execution alone does not release resident weights; offload has transfer costs. No complete-system
+    fit or realtime guarantee.
 ai_actions:
 - turn: 1
   action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
@@ -206,6 +222,18 @@ ai_actions:
   - docs/architecture-atlas.html
   - docs/architecture-atlas.md
   - docs/architecture-discussion.md
+- turn: 7
+  action: Read GPU/RAM occupancy and existing model/budget records, rechecked Human3R primary-source memory
+    claim, calculated illustrative raw storage/optimizer costs, documented scope and regenerated atlas.
+    No model download or execution.
+  provenance: ai-executed
+  files_changed:
+  - docs/human-perception-discussion.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -222,6 +250,8 @@ key_context:
 - turn: 6
   excerpt: Speed first, accuracy next, robustness later; remember individual people; user suggests FLAME/SKEL
     and separate eyes/mouth.
+- turn: 7
+  excerpt: Passt das alles ins Budget? Also auf die gpu?
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -260,6 +290,8 @@ open_threads:
   and temporal latency remain open.'
 - 'N520: test geometry and local appearance for persistent identity; calibration, source compatibility
   and bounded update rules remain open.'
+- 'N522: select concrete models, geometry/person limits and quality/latency gates, then profile complete
+  inference/training peaks under proposed process budget.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -291,3 +323,5 @@ ai_suggestions_pending:
 - 'O359: person-linked face reader and MediaPipe/SMIRK comparison remain unconfirmed suggestions.'
 - 'O360/O361: user geometry/detail hypothesis and assistant memory/learning design remain unvalidated;
   no concrete implementation adopted.'
+- 'O362: storage placement and bounded GPU pipeline remain proposals; hardware snapshot and arithmetic
+  are not empirical pipeline validation.'

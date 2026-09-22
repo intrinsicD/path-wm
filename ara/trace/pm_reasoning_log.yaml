@@ -2709,3 +2709,11 @@ entries:
     Separate model learning, adding references, and resolving names.
   - No empirical closure or adoption of MediaPipe/SMIRK follows from this discussion. Earlier topics remain
     open; no color promotion.
+- turn: 2026-09-22_001#7
+  notes:
+  - Hardware occupancy and arithmetic are factual checks, not a new human-perception experiment. Retain
+    source/runtime distinction and original target status.
+  - Earlier timestamped-history voice proposal is contextualized for current budget; no redundant new
+    request or implementation approval inferred.
+  - O362 remains staged; no closure of recognition-quality, architecture or memory efficacy questions,
+    and no validation color changes.

@@ -6341,3 +6341,25 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O362
+  timestamp: 2026-09-22T13:16+02:00
+  provenance: ai-suggested
+  content: Retain a proposed 6-GiB whole-process GPU target, keep timestamped entity history on CPU-RAM/SSD,
+    share visual features and condition detail crops. Bound active persons/history and measure full latency.
+    Coefficients are compact, but estimator residency, multiscale activations and training may dominate.
+    Sequential execution alone does not release resident weights; offload has transfer costs. No complete-system
+    fit or realtime guarantee.
+  context: 'Measured RTX3050 8192 MiB total, 373 MiB reserved, 993 MiB used and 6827 MiB free at 13:14
+    local; CPU RAM 64137 MiB total/53244 MiB available. Arithmetic: 1000 FP32 coefficients at 10 Hz =
+    144 MB/hour/person before overhead; 100M FP32 AdamW state = 1.49 GiB before activations. Human3R authors
+    report 8 GB alone. Earlier voice proposal of timestamped graph parameters supplies context, not a
+    new implementation approval.'
+  potential_type: architecture
+  bound_to:
+  - N522
+  - N520
+  - N521
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

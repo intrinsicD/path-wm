@@ -8732,3 +8732,20 @@ tree:
   also_depends_on:
   - N520
   status: resolved
+- id: N522
+  type: question
+  title: Does full human perception and entity history fit the RTX3050 budget?
+  provenance: user
+  timestamp: 2026-09-22T13:16+02:00
+  description: Alex asks whether the proposed perception, identity and temporal-entity-history system
+    fits the GPU. Hardware occupancy and existing budget examined; coefficient/history storage is separated
+    from estimator weights, activations and training. No complete selected pipeline exists to benchmark.
+  evidence:
+  - docs/human-perception-discussion.md
+  - docs/multimodal-reference-design.md#gpu-arbeitsbudget-statt-fit-versprechen
+  - https://fanegg.github.io/Human3R/
+  also_depends_on:
+  - N515
+  - N520
+  - N521
+  status: open

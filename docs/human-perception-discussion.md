@@ -363,3 +363,61 @@ zur Schätzung metrischer Kopfform; dies stützt die Verbindung zwischen Aussehe
 und Geometrie, validiert aber nicht den vorgeschlagenen kombinierten PATH-WM-Leser.
 Der Nutzer schlägt zusätzliche Details vor, keine konkrete Implementierung oder
 Modellwahl ist damit beschlossen.
+
+## GPU-Budget für Personenwahrnehmung und zeitlichen Verlauf
+
+22. September: Alex fragt, ob die besprochene Kombination auf seine GPU passt.
+Im vorherigen Sprachverlauf schlug er zeitgestempelte Parameter unter der Entität
+im Knowledge-Graph vor; hier wird deren Speicherort in die Budgetbetrachtung
+aufgenommen. Noch keine komplette Pipeline ausgewählt oder profiliert.
+
+Lokale Momentaufnahme mit `nvidia-smi`, 22. September 2026, 13:14 Ortszeit:
+RTX 3050, 8192 MiB gesamt, 373 MiB reserviert, 993 MiB belegt, 6827 MiB frei.
+`free -m`: 64137 MiB System-RAM, 53244 MiB verfügbar. Freier Speicher schwankt;
+dies ist Hardware-/Belegungsprüfung, kein Inferenz- oder Trainingsbenchmark.
+
+Die [bestehende Budgetskizze](multimodal-reference-design.md#gpu-arbeitsbudget-statt-fit-versprechen)
+setzt vorgeschlagen höchstens 6 GiB gesamten Prozess-VRAM an. Das bleibt eine
+Zielgrenze; kein neuer Komponentenfit, keine FPS-Zusage und kein festgelegtes
+Parameterbudget folgen aus der aktuellen Diskussion.
+
+| Anteil | Budgetinterpretation |
+| --- | --- |
+| Zeitgestempelte Pose/Form/Ausdrucksparameter, Identitätsreferenzen, Quellenbezug | Dauerhaft in CPU-RAM/SSD; nur aktuell benötigte Ausschnitte als begrenzter GPU-Arbeitssatz. Ein wachsender Graph muss nicht vollständig auf der GPU liegen. |
+| Gemeinsamer Bildleser und Agentenkern | Modellgewichte plus aktivierte Multiskalenmerkmale, Schleifen und aktuelle Zustände zählen gemeinsam. Ein kleines Parametermodell garantiert keinen kleinen Aktivierungsspeicher. |
+| Gesichts-/Hand-/Fußdetails | Hochauflösende kleine Ausschnitte und begrenzte Personenzahl/Arbeitsmenge; geteilter Leser als Designziel. Separate große Modelle nur nach eigenem Speicher-/Latenzprofil. |
+| Große Referenzmodelle | [Human3R](https://fanegg.github.io/Human3R/) nennt allein 8 GB Inferenzbedarf. Das passt in dieser berichteten Konfiguration nicht in unser 6-GiB-Prozessziel plus übrigen Agenten. Kein pauschaler Fit der anderen unvermessenen Modelle. |
+| Lernen | Referenzen aufnehmen benötigt keinen Backward-Pass. Filtertraining braucht zusätzlich Gradienten, Optimizer und gespeicherte Aktivierungen; eine eigene Budgetprüfung. |
+
+Illustrative Rechnung, keine ausgewählte Repräsentation: 1000 FP32-Koeffizienten
+benötigen 4000 Bytes je Person/Zeitpunkt. Bei 10 Hz entstehen 144 MB pro Stunde
+und Person, ohne Zeitstempel, Indizes, Quellenbilder und Datenbank-Overhead.
+512 FP32-Deskriptorwerte × 20 Referenzen × 1000 Personen ergeben 39,06 MiB
+reine Vektoren. Wachsende Historie braucht daher Aufbewahrungs-/Verdichtungsregeln,
+aber keinen ebenso wachsenden GPU-Arbeitssatz. Verdichtung ist verlustbehaftet;
+Ereignisse/Quellreferenzen und ihr jeweiliger Erhaltungsumfang bleiben explizit.
+
+Gewichtsspeicher und vollständiger Lauf sind verschieden: 100M FP16-Parameter
+sind 0,186 GiB reine Gewichte. Mit FP32-Parametern, FP32-Gradienten und zwei
+FP32-AdamW-Momenten sind 100M trainierbare Parameter bereits 1,49 GiB persistenter
+Zustand, noch ohne Aktivierungen/Workspaces. Andere Precision-/Optimizer-Verträge
+haben andere Kosten. Als Aktivierungsbeispiel belegt eine 1920×1080×64-FP16-
+Merkmalskarte allein 253,1 MiB; acht solche Frames knapp 2 GiB vor weiteren
+Skalen, Lesern und Backward. Das ist kein Vorschlag, diese Karte so anzulegen.
+
+Vorschlag für die Geschwindigkeitspriorität: Bildmerkmale teilen, aktuelle Tracks
+günstig fortschreiben, stabile Form selten aktualisieren, Detailausschnitte gezielt
+lesen und Graphhistorie außerhalb der GPU halten. Die kürzeren Aufrufintervalle
+müssen pro Signal gewählt werden; langsame Formaktualisierung darf schnelle
+Lippen-/Lidereignisse nicht entfernen. Nacheinander aufgerufene Modelle behalten
+bei GPU-Residenz ihre Gewichte; erst Entladen/CPU-Offload senkt deren gleichzeitigen
+Gewichtsbedarf und erzeugt Transfer-/Ladelatenz. Keine kostenlose Echtzeitlösung.
+
+Kleinste noch ausstehende Prüfung: eine konkret festgelegte vollständige Pipeline,
+Bildgröße und maximale Personenanzahl mit echten Crops unter dem 6-GiB-Ziel
+profilieren. Warm-up, lange Streamingphase, Detailauslösung und gegebenenfalls
+vollständige Optimizer-Schritte erfassen; Prozess-VRAM, allokierter/reservierter
+Speicher, CPU-RAM und p50/p95-End-to-End-Latenz getrennt berichten. Konkrete
+Latenz-/Qualitätsgates vor Laufbeginn setzen. Alte kleine Modelltests validieren
+diese neue Personenpipeline nicht. Keine Gewichtsdownloads oder Modelltests in
+dieser Budgetklärung; Design, Durchsatz und Erkennungsqualität bleiben offen.

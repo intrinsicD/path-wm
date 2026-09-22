@@ -30,6 +30,12 @@ as recognition cues; compare geometry, appearance and their combination. No
 implementation or exact-recognition guarantee. Separate eye/mouth details are
 also user-proposed; distinguish personal shape from current expression and
 account for shared evidence when combining cues.
+GPU follow-up: actual RTX3050 has 8192 MiB total and 6827 MiB free at inspection.
+Keep the earlier proposed 6-GiB whole-process target; no full-pipeline fit measured.
+User-proposed timestamped entity histories belong in CPU-RAM/SSD with bounded GPU
+reads. Coefficient storage, large estimator residency, activations and training
+states have separate costs; published Human3R alone reports about 8 GB. Shared
+features/conditional crops and a measured bounded pipeline remain proposals.
 
 **Actions and instruction walkthrough, 18 September:**
 [design and source audit](action-semantics-design.md). Alex asks how actions are
