@@ -57,3 +57,13 @@ and bounded coarse-state routing remain separate subsequent changes.
 - Save reports with the unchanged renderer and source/metric/checkpoint evidence.
   No default adoption of window restriction without trained task-quality evidence.
   Public-only actual-Claude review critiques these controls independently.
+
+Actual-Claude review reconciled the distinction between dense masks and sparse
+arithmetic: fused kernels need not materialize scores to benefit from physical
+packing. Incorporated global positional metadata, ragged/padded identity controls,
+seam limitations, backend reporting and layout overhead. Receipts are under
+`runs/reviews/encoder_local_budget_v1/`; no peer agreement substitutes for results.
+The initial NaN fixture exposed that the dense reference expects already-sanitized
+encoder exports; compare its normal zero-invalid contract with packed NaN exclusion.
+Window restrictions remain opt-in; global coarsest attention and optional all-scale
+fusion still grow with source size, so this is not yet a resolution-independent encoder.

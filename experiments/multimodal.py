@@ -112,6 +112,8 @@ def build_model(
     fusion_depth=0,
     state_model="gaussian",
     observation_tokens=0,
+    encoder_window=0,
+    packed_merges=False,
     memory_recent=32,
     memory_block=8,
     memory_blocks=16,
@@ -170,6 +172,8 @@ def build_model(
         encoders={
             "image": MultiScaleImageEncoder(
                 width,
+                window_size=encoder_window,
+                packed_merges=packed_merges,
                 code_width=code_width,
                 levels=levels,
                 cross_scale=cross_scale,
@@ -178,6 +182,8 @@ def build_model(
             ),
             "video": MultiScaleImageEncoder(
                 width,
+                window_size=encoder_window,
+                packed_merges=packed_merges,
                 video=True,
                 code_width=code_width,
                 levels=levels,
@@ -188,6 +194,7 @@ def build_model(
             "audio": MultiScaleAudioEncoder(
                 audio_samples,
                 width,
+                packed_merges=packed_merges,
                 code_width=code_width,
                 levels=levels,
                 cross_scale=cross_scale,
@@ -196,6 +203,7 @@ def build_model(
             ),
             "text": MultiScaleTextEncoder(
                 width,
+                packed_merges=packed_merges,
                 code_width=code_width,
                 levels=levels,
                 cross_scale=cross_scale,
@@ -2125,6 +2133,8 @@ def check(settings):
             settings["audio_samples"],
             state_model=settings.get("state_model", "gaussian"),
             observation_tokens=settings.get("observation_tokens", 0),
+            encoder_window=settings.get("encoder_window", 0),
+            packed_merges=settings.get("packed_merges", False),
             memory_recent=settings.get("memory_recent", 32),
             memory_block=settings.get("memory_block", 8),
             memory_blocks=settings.get("memory_blocks", 16),
@@ -2445,6 +2455,8 @@ def train(settings, output, *, resume=False, stop_after=None):
             settings["audio_samples"],
             state_model=settings.get("state_model", "gaussian"),
             observation_tokens=settings.get("observation_tokens", 0),
+            encoder_window=settings.get("encoder_window", 0),
+            packed_merges=settings.get("packed_merges", False),
             memory_recent=settings.get("memory_recent", 32),
             memory_block=settings.get("memory_block", 8),
             memory_blocks=settings.get("memory_blocks", 16),
@@ -5968,6 +5980,17 @@ def main():
         help="Opt-in learned observation budget; 0 preserves full access",
     )
     parser.add_argument(
+        "--encoder-window",
+        type=int,
+        default=0,
+        help="Optional fine image/video window side in feature positions",
+    )
+    parser.add_argument(
+        "--packed-merges",
+        action="store_true",
+        help="Physically pack local pyramid pooling/attention footprints",
+    )
+    parser.add_argument(
         "--entity-growth-weights",
         help="Frozen entity matcher checkpoint for growth evaluation",
     )
@@ -6047,6 +6070,18 @@ def main():
     parser.add_argument("--ema-decay", type=float, default=0.99)
     parser.add_argument("--device", default="cpu")
     args = parser.parse_args()
+    if args.encoder_window < 0 or (
+        (args.encoder_window or args.packed_merges)
+        and (
+            args.dataset != "synthetic"
+            or args.state_model != "belief"
+            or args.explore is not None
+            or args.diagram is not None
+        )
+    ):
+        parser.error(
+            "Local encoder comparison currently requires the synthetic categorical recipe"
+        )
     if args.observation_tokens < 0 or (
         args.observation_tokens
         and (

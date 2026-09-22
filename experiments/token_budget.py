@@ -50,7 +50,7 @@ def build_model():
     )
 
 
-def examples(device):
+def examples(device, *, large=False):
     def image(size, frames=1):
         return Observation(
             torch.rand(1, frames, 3, size, size, device=device),
@@ -59,6 +59,9 @@ def examples(device):
 
     cases = {f"image_{size}": {"image": image(size)} for size in (32, 64, 128)}
     cases["video_4x32"] = {"video": image(32, 4)}
+    if large:
+        cases["image_256"] = {"image": image(256)}
+        cases["video_4x64"] = {"video": image(64, 4)}
     cases["multimodal"] = dict(
         image=image(32),
         video=image(32, 4),
@@ -122,17 +125,29 @@ def measure(model, state, obs, reference, args):
         loss.backward()
         synchronize()
         after_backward = time.perf_counter()
+        peak_allocated = (
+            torch.cuda.max_memory_allocated()
+            if args.device.startswith("cuda")
+            else None
+        )
+        peak_reserved = (
+            torch.cuda.max_memory_reserved() if args.device.startswith("cuda") else None
+        )
+        del output, loss
+        synchronize()
+        begin_inference = time.perf_counter()
+        with torch.no_grad():
+            output, loss = forward(model, state, obs, reference, args.loops)
+        synchronize()
+        inference_ms = 1000 * (time.perf_counter() - begin_inference)
         if i >= args.warmups:
             rows.append(
                 dict(
                     forward_ms=1000 * (after_forward - begin),
                     backward_ms=1000 * (after_backward - after_forward),
-                    peak_allocated_bytes=torch.cuda.max_memory_allocated()
-                    if args.device.startswith("cuda")
-                    else None,
-                    peak_reserved_bytes=torch.cuda.max_memory_reserved()
-                    if args.device.startswith("cuda")
-                    else None,
+                    inference_ms=inference_ms,
+                    peak_allocated_bytes=peak_allocated,
+                    peak_reserved_bytes=peak_reserved,
                     loss=float(loss.detach()),
                 )
             )
@@ -153,6 +168,7 @@ def measure(model, state, obs, reference, args):
         forward_ms=median(r["forward_ms"] for r in rows),
         forward_range_ms=[min(forwards), max(forwards)],
         backward_ms=median(r["backward_ms"] for r in rows),
+        inference_ms=median(r["inference_ms"] for r in rows),
         peak_allocated_bytes=max(r["peak_allocated_bytes"] or 0 for r in rows),
         peak_reserved_bytes=max(r["peak_reserved_bytes"] or 0 for r in rows),
         workload=work.summary(),
@@ -206,6 +222,7 @@ def profile_operators(model, state, obs, reference, args):
     return [
         dict(
             name=e.key,
+            device_type=str(e.device_type),
             calls=e.count,
             cpu_total_us=e.cpu_time_total,
             device_total_us=e.device_time_total,
@@ -213,6 +230,21 @@ def profile_operators(model, state, obs, reference, args):
         for e in profile.key_averages()
         if e.key.startswith("region/") or "scaled_dot_product" in e.key
     ]
+
+
+def encoder_access(model, mode, window):
+    """Same weights, explicit layout/access arm; no persistent feature cache."""
+    for name, encoder in model.encoders.items():
+        for merge in encoder.pyramid.merges:
+            merge.packed = mode != "dense_encoder"
+        for i, stage in enumerate(encoder.pyramid.stages):
+            stage.window = (
+                (2 if name == "video" else 1, window, window)
+                if mode == "local_encoder"
+                and name in ("image", "video")
+                and i < len(encoder.pyramid.stages) - 1
+                else None
+            )
 
 
 def main():
@@ -224,14 +256,22 @@ def main():
     parser.add_argument("--repeats", type=int, default=7)
     parser.add_argument("--loops", type=int, default=4)
     parser.add_argument("--resampler", type=int, default=0)
+    parser.add_argument(
+        "--encoder-window",
+        type=int,
+        default=0,
+        help="Compare dense / packed merges / packed fine windows; 0 runs the event/resampler comparison",
+    )
     args = parser.parse_args()
+    if args.encoder_window < 0 or (args.encoder_window and args.resampler):
+        parser.error("Compare local encoders separately from learned resampling")
     if args.repeats < 1 or args.warmups < 0 or args.loops < 0 or args.resampler < 0:
         parser.error(
             "Positive repetitions, nonnegative warmups/loops/resampler required"
         )
     seed_everything(args.seed)
     model = build_model().to(args.device).eval()
-    cases = examples(args.device)
+    cases = examples(args.device, large=bool(args.encoder_window))
     with torch.no_grad():
         state = model.initial_state(1, session_id="token-budget")
     if args.resampler:
@@ -265,12 +305,20 @@ def main():
             results[name] = {}
             # Alternate arm order to reduce a systematic warm/clock bias.
             arms = [("packet_reference", True), ("complete_event", False)]
+            if args.encoder_window:
+                arms = [
+                    ("dense_encoder", False),
+                    ("packed_merges", False),
+                    ("local_encoder", False),
+                ]
             if index % 2:
                 arms.reverse()
             if sampler is not None:
                 arms.append(("resampled", False))
             for label, reference in arms:
                 model.observation_resampler = sampler if label == "resampled" else None
+                if args.encoder_window:
+                    encoder_access(model, label, args.encoder_window)
                 result = measure(model, state, obs, reference, args)
                 results[name][label] = result
                 run.log(
@@ -295,10 +343,14 @@ def main():
         for name, obs in cases.items():
             for label, result in results[name].items():
                 model.observation_resampler = sampler if label == "resampled" else None
+                if args.encoder_window:
+                    encoder_access(model, label, args.encoder_window)
                 result["operators"] = profile_operators(
                     model, state, obs, label == "packet_reference", args
                 )
         model.observation_resampler = sampler
+        if args.encoder_window:
+            encoder_access(model, "dense_encoder", args.encoder_window)
         atomic_json(run.path / "workload.json", results)
         metrics = {
             name + "/" + arm: {
@@ -309,17 +361,30 @@ def main():
             for name, arms in results.items()
             for arm, result in arms.items()
         }
-        improvement = (
-            1
-            - results["multimodal"]["complete_event"]["forward_ms"]
-            / results["multimodal"]["packet_reference"]["forward_ms"]
-        )
+        if args.encoder_window:
+            target = results["image_256"]
+
+            def total(r):
+                return r["forward_ms"] + r["backward_ms"]
+
+            improvement = 1 - total(target["local_encoder"]) / total(
+                target["dense_encoder"]
+            )
+        else:
+            improvement = (
+                1
+                - results["multimodal"]["complete_event"]["forward_ms"]
+                / results["multimodal"]["packet_reference"]["forward_ms"]
+            )
         atomic_json(
             run.path / "result.json",
             dict(
                 evaluation_scope="Untrained synthetic shape/resource probes; not reconstruction, prediction or information-retention evidence.",
                 metrics=metrics,
-                multimodal_forward_reduction=improvement,
+                timing_reduction=improvement,
+                timing_screen="image256 forward+backward local/dense"
+                if args.encoder_window
+                else "multimodal forward complete/packet",
                 timing_screen_passed=improvement >= 0.2,
                 resampler_parameters=0
                 if sampler is None

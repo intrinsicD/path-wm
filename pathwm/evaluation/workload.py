@@ -140,6 +140,9 @@ class Workload:
                 cross_pairs=0,
                 score_elements=0,
                 attention_flops=0,
+                batch_query_tokens=0,
+                batch_self_pairs=0,
+                batch_cross_pairs=0,
             )
         )
         for row in self.attention:
@@ -150,6 +153,10 @@ class Workload:
             layer["kinds"].append(row["kind"])
             scope = scopes[row["scope"]]
             scope["query_tokens"] += row["N_query"]
+            scope["batch_query_tokens"] += row["batch"] * row["N_query"]
+            scope["batch_" + row["kind"] + "_pairs"] += (
+                row["batch"] * row["N_query"] * row["N_key"]
+            )
             scope[row["kind"] + "_pairs"] += row["N_query"] * row["N_key"]
             scope["score_elements"] += row["score_elements"]
             scope["attention_flops"] += (
@@ -165,6 +172,15 @@ class Workload:
             query_token_evaluations=sum(r["query_tokens"] for r in scopes.values()),
             self_attention_pairs=sum(r["self_pairs"] for r in scopes.values()),
             cross_attention_pairs=sum(r["cross_pairs"] for r in scopes.values()),
+            batch_query_token_evaluations=sum(
+                r["batch_query_tokens"] for r in scopes.values()
+            ),
+            batch_self_attention_pairs=sum(
+                r["batch_self_pairs"] for r in scopes.values()
+            ),
+            batch_cross_attention_pairs=sum(
+                r["batch_cross_pairs"] for r in scopes.values()
+            ),
             limits="Allocated shapes, not sparse useful pairs or measured FLOPs. "
             "Layer calls include repeated corrections as well as loops. "
             "Attention FLOPs exclude MLP/conv/norm/masks/transfers.",

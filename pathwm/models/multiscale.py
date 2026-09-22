@@ -86,6 +86,112 @@ def pool_scale(fine, factors):
     return FeatureScale(values, times, valid, ends, grid, content), membership
 
 
+def pack_scale(fine, factors):
+    """Partition a grid into real small batches, with O(padded N) index storage.
+
+    Positions/times/support stay global. Negative indices represent padding;
+    restore maps every original position back exactly once, without scattering.
+    """
+    if len(factors) != len(fine.grid) or any(
+        not isinstance(f, int) or f < 1 for f in factors
+    ):
+        raise ValueError("Positive integer window factors must match the feature grid")
+    factors = tuple(min(f, n) for f, n in zip(factors, fine.grid))
+    grid = tuple((n + f - 1) // f for n, f in zip(fine.grid, factors))
+    device = fine.values.device
+
+    def coordinates(shape):
+        return torch.stack(
+            torch.meshgrid(
+                *(torch.arange(n, device=device) for n in shape), indexing="ij"
+            ),
+            -1,
+        ).reshape(-1, len(shape))
+
+    origins, offsets = coordinates(grid), coordinates(factors)
+    xyz = origins[:, None] * torch.tensor(factors, device=device) + offsets[None]
+    inside = (xyz < torch.tensor(fine.grid, device=device)).all(-1)
+    strides = torch.tensor(
+        [math.prod(fine.grid[i + 1 :]) for i in range(len(grid))], device=device
+    )
+    index = (xyz * strides).sum(-1).masked_fill(~inside, -1)
+    source = coordinates(fine.grid)
+    group = sum(
+        (source[:, i] // f) * math.prod(grid[i + 1 :]) for i, f in enumerate(factors)
+    )
+    local = sum(
+        (source[:, i] % f) * math.prod(factors[i + 1 :]) for i, f in enumerate(factors)
+    )
+    restore = group * math.prod(factors) + local
+    b, groups, count = len(fine.values), *index.shape
+    valid = fine.valid[:, index.clamp_min(0)] & inside[None]
+    values = fine.values[:, index.clamp_min(0)].masked_fill(~valid[..., None], 0)
+
+    def gather(values, fill):
+        return (
+            values[:, index.clamp_min(0)]
+            .masked_fill(~valid, fill)
+            .reshape(b * groups, count)
+        )
+
+    packed = FeatureScale(
+        values.reshape(b * groups, count, -1),
+        gather(fine.times, 0),
+        valid.reshape(b * groups, count),
+        gather(fine.ends, -1),
+        (count,),
+        gather(fine.times if fine.content_times is None else fine.content_times, 0),
+    )
+    return packed, index, restore, grid
+
+
+def expand_packed_weights(weights, index, batch, positions, *, cross=False):
+    """Legacy dense diagnostic on CPU only. Never used by ordinary execution."""
+    index = index.cpu()
+    groups, count = index.shape
+    heads = weights.shape[1]
+    weights = weights.reshape(batch, groups, heads, 1 if cross else count, count)
+    result = weights.new_zeros(batch, heads, groups if cross else positions, positions)
+    for group in range(groups):
+        keep = index[group] >= 0
+        ids = index[group, keep]
+        if cross:
+            result[:, :, group, ids] = weights[:, group, :, 0, :][:, :, keep]
+        else:
+            result[:, :, ids[:, None], ids[None, :]] = weights[:, group][:, :, keep][
+                :, :, :, keep
+            ]
+    return result
+
+
+def pool_packed_scale(fine, factors):
+    packed, index, _, grid = pack_scale(fine, factors)
+    b, groups = len(fine.values), len(index)
+    weights = packed.valid.to(packed.values.dtype)
+    values = torch.bmm(weights[:, None], packed.values).squeeze(1) / weights.sum(
+        -1, keepdim=True
+    ).clamp_min(1)
+    valid = packed.valid.any(-1)
+
+    def maximum(value, fill):
+        return (
+            value.masked_fill(~packed.valid, fill)
+            .amax(-1)
+            .masked_fill(~valid, 0 if fill == -torch.inf else -1)
+            .reshape(b, groups)
+        )
+
+    coarse = FeatureScale(
+        values.reshape(b, groups, -1),
+        maximum(packed.times, -torch.inf),
+        valid.reshape(b, groups),
+        maximum(packed.ends, -1),
+        grid,
+        maximum(packed.content_times, -torch.inf),
+    )
+    return coarse, packed, index
+
+
 class ConditionedBlock(nn.Module):
     """Pre-norm attention and MLP residuals; code zero is ALWAYS neutral.
 
@@ -183,11 +289,12 @@ class LayerReadout(nn.Module):
 
 
 class ScaleProcessor(nn.Module):
-    def __init__(self, width, code_width, depth=1):
+    def __init__(self, width, code_width, depth=1, *, window=None):
         super().__init__()
         if depth < 1:
             raise ValueError("Every scale needs at least one processing block")
         self.identity = nn.Parameter(torch.randn(width) * 0.02)
+        self.window = window
         self.blocks = nn.ModuleList(
             [ConditionedBlock(width, code_width) for _ in range(depth)]
         )
@@ -201,22 +308,69 @@ class ScaleProcessor(nn.Module):
         )
         if history is not None:
             history.append(scale.values)
+        original = scale
+        if self.window is not None:
+            scale, index, restore, _ = pack_scale(scale, self.window)
+            condition = condition.repeat_interleave(len(index), 0)
+
+        def unpack(values):
+            return (
+                values.reshape(len(original.values), -1, values.shape[-1])[:, restore]
+                if self.window is not None
+                else values
+            )
+
         for i, block in enumerate(self.blocks):
             scale = block(scale, condition, trace=trace, name=f"{name}.attention.{i}")
+            if self.window is not None and trace is not None:
+                key = f"{name}.attention.{i}"
+                trace[key] = expand_packed_weights(
+                    trace[key], index, len(original.values), original.values.shape[1]
+                )
             if history is not None:
-                history.append(scale.values)
-        return scale
+                history.append(unpack(scale.values))
+        return (
+            replace(original, values=unpack(scale.values))
+            if self.window is not None
+            else scale
+        )
 
 
 class ScaleMerge(nn.Module):
-    def __init__(self, width, code_width, factors, cross_scale=True):
+    def __init__(self, width, code_width, factors, cross_scale=True, *, packed=False):
         super().__init__()
         self.factors = tuple(factors)
+        self.packed = packed
         self.cross_attention = (
             ConditionedBlock(width, code_width) if cross_scale else None
         )
 
     def forward(self, fine, condition, *, trace=None, name="merge"):
+        if self.packed:
+            coarse, context, index = pool_packed_scale(fine, self.factors)
+            if self.cross_attention is None:
+                return coarse
+            batch, groups, width = coarse.values.shape
+            query = FeatureScale(
+                coarse.values.reshape(batch * groups, 1, width),
+                coarse.times.reshape(-1, 1),
+                coarse.valid.reshape(-1, 1),
+                coarse.ends.reshape(-1, 1),
+                (1,),
+            )
+            result = self.cross_attention(
+                query,
+                condition.repeat_interleave(groups, 0),
+                context=context,
+                trace=trace,
+                name=name + ".attention",
+            )
+            if trace is not None:
+                key = name + ".attention"
+                trace[key] = expand_packed_weights(
+                    trace[key], index, batch, fine.values.shape[1], cross=True
+                )
+            return replace(coarse, values=result.values.reshape(batch, groups, width))
         coarse, footprint = pool_scale(fine, self.factors)
         if self.cross_attention is not None:
             coarse = self.cross_attention(
@@ -241,6 +395,8 @@ class FeatureHierarchy(nn.Module):
         cross_scale=True,
         *,
         fusion_depth=0,
+        window=None,
+        packed_merges=False,
     ):
         super().__init__()
         if levels < 1:
@@ -248,11 +404,18 @@ class FeatureHierarchy(nn.Module):
         if fusion_depth < 0:
             raise ValueError("Final fusion depth must be nonnegative")
         self.stages = nn.ModuleList(
-            [ScaleProcessor(width, code_width, depth) for _ in range(levels)]
+            [
+                ScaleProcessor(
+                    width, code_width, depth, window=window if i < levels - 1 else None
+                )
+                for i in range(levels)
+            ]
         )
         self.merges = nn.ModuleList(
             [
-                ScaleMerge(width, code_width, factors, cross_scale)
+                ScaleMerge(
+                    width, code_width, factors, cross_scale, packed=packed_merges
+                )
                 for _ in range(levels - 1)
             ]
         )
@@ -382,8 +545,14 @@ class MultiScaleImageEncoder(nn.Module):
         depth=1,
         cross_scale=True,
         fusion_depth=0,
+        window_size=0,
+        packed_merges=False,
     ):
         super().__init__()
+        if not isinstance(window_size, int) or window_size < 0:
+            raise ValueError(
+                "Window size must be a nonnegative integer; zero is global"
+            )
         self.width, self.code_width, self.video = width, code_width, video
         self.stem = ImageEncoder(width, patch_size)
         self.pyramid = FeatureHierarchy(
@@ -394,6 +563,10 @@ class MultiScaleImageEncoder(nn.Module):
             depth,
             cross_scale,
             fusion_depth=fusion_depth,
+            window=(2 if video else 1, window_size, window_size)
+            if window_size
+            else None,
+            packed_merges=packed_merges,
         )
 
     def forward(self, observation, *, condition=None, condition_time=None, trace=None):
@@ -427,6 +600,7 @@ class MultiScaleAudioEncoder(nn.Module):
         depth=1,
         cross_scale=True,
         fusion_depth=0,
+        packed_merges=False,
     ):
         super().__init__()
         if min(samples, patch_size) < 1:
@@ -447,6 +621,7 @@ class MultiScaleAudioEncoder(nn.Module):
             depth,
             cross_scale,
             fusion_depth=fusion_depth,
+            packed_merges=packed_merges,
         )
 
     def forward(self, observation, *, condition=None, condition_time=None, trace=None):
@@ -487,6 +662,7 @@ class MultiScaleTextEncoder(nn.Module):
         depth=1,
         cross_scale=True,
         fusion_depth=0,
+        packed_merges=False,
     ):
         super().__init__()
         self.width, self.code_width = width, code_width
@@ -499,6 +675,7 @@ class MultiScaleTextEncoder(nn.Module):
             depth,
             cross_scale,
             fusion_depth=fusion_depth,
+            packed_merges=packed_merges,
         )
 
     def forward(self, observation, *, condition=None, condition_time=None, trace=None):
