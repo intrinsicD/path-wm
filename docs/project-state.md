@@ -14,6 +14,12 @@ content/timbre/prosody separation and compatible acoustic decoding. CosyVoice 2
 illustrates the latter separation, not an existing PATH-WM adapter. The text route
 is an optional baseline, not a prerequisite. Disentanglement, paired training,
 streaming and local efficiency require their own checks; no implementation adopted.
+Efficiency follow-up: Alex identifies avoidable state-to-text-to-speech work.
+Clarify that direct generation can fuse that work; the expected saving is a valid
+hypothesis. It replaces linguistic sequence generation rather than deleting that
+function. Some TTS models already omit a separate text encoder. Compare total
+compute and streaming first-audio latency separately with equivalent quality;
+no measured speedup or resource claim.
 
 **What remains for image/video understanding, 22 September:**
 [capabilities and current limits](video-understanding-test-map.md#bild-videoverstehen-nach-der-personen--und-engine-diskussion).

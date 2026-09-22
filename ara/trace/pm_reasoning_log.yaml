@@ -2758,3 +2758,9 @@ entries:
     of its text bridge inferred.
   - 'No closure signal for the concrete designs: keep O369 and prior open proposals staged. Codec factorization
     papers supply mechanism references, not local efficacy.'
+- turn: 2026-09-22_001#13
+  notes:
+  - Record user challenge as a question, not a new adopted architecture or measured result. Acknowledge
+    real potential savings while retaining the earlier unmeasured-efficiency qualification.
+  - 'No contradiction with O369: avoiding redundant computation and lacking a guaranteed net speedup can
+    both hold. No closure signal for specific codec, learning path or efficiency result.'

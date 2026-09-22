@@ -6501,3 +6501,22 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O370
+  timestamp: 2026-09-22T15:00+02:00
+  provenance: ai-suggested
+  potential_type: heuristic
+  content: Direct state-to-speech can fuse state-to-text and text-to-speech-unit work and preserve conditioning
+    omitted by plain text; this is a valid efficiency hypothesis. Compare the direct sequence generator
+    with both replaced operations at matched acoustic backend and quality. Linguistic realization remains
+    necessary, a separate text encoder is not universal, and streaming overlap separates total compute
+    from first-audio latency. Reuse stable state projections rather than rerunning the full Thinker per
+    audio unit.
+  context: Qualifies earlier unmeasured-speedup caveat rather than denying user-identified redundant work.
+    CosyVoice 2 explicitly removes a separate text encoder. No local comparison, new backend or implementation.
+  bound_to:
+  - N529
+  - N528
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

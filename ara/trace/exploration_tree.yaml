@@ -8848,3 +8848,17 @@ tree:
   also_depends_on:
   - N527
   status: open
+- id: N529
+  type: question
+  title: Why would bypassing written text not save speech-generation work?
+  provenance: user
+  timestamp: 2026-09-22T15:00+02:00
+  description: 'Alex challenges the efficiency qualification: direct latent speech should avoid decoding
+    written text and encoding/processing it again. Requests the technical reason a speed/quality gain
+    is not automatic.'
+  evidence:
+  - docs/agent-voice-design.md
+  - https://arxiv.org/html/2412.10117v1
+  also_depends_on:
+  - N528
+  status: open

@@ -10,6 +10,38 @@ multimodal output direction. The text bridge below is an optional baseline; it i
 not a prerequisite or a selected architecture. Lower cost, latency or better
 quality do not follow from removing text alone.
 
+## What bypassing text actually saves
+
+Alex challenges the cost qualification: direct speech avoids serializing the shared
+state into written language and processing that language again. This is a real
+optimization opportunity. For a matched acoustic backend, compare total compute as
+`C_text = C(state→text) + C(text→speech units) + C(waveform)` versus
+`C_direct = C(state→speech units) + C(waveform)`. The direct route wins when its
+sequence generator costs less than the two upstream operations combined. It may
+fuse duplicated linguistic work and preserve conditioning that plain text omits.
+The previous qualification means unmeasured gain, not absence of an advantage.
+
+Counting encoder/decoder boxes is insufficient. The text-output generator is
+replaced by a speech-output generator, while wording, ordering, pronunciation and
+timing still need computation. Consuming text means token embedding/context
+processing, not rendering and visually reading letters. Some systems have no
+separate text encoder: CosyVoice 2 explicitly removes it and uses its text-speech
+language model for alignment. Removing an output vocabulary projection or an
+embedding lookup is different from removing a full autoregressive model.
+
+Direct speech should not require rerunning the complete Thinker for every audio
+unit. Reuse the selected state and fixed-source projections in the speech consumer;
+refresh them only when the source/context changes. Autoregressive unit rate,
+generator size, decoder work and cache traffic can dominate the saved text work.
+Measure total GPU work separately from first-audio latency: streaming text and
+speech can overlap, so serial compute sums do not predict wall-clock delay.
+
+The design hypothesis is lower redundant processing and richer speech conditioning
+with a trained direct readout. Compare both routes at matched task accuracy,
+intelligibility, voice consistency, hardware and streaming conditions; report
+first-audio delay, sustained synthesis rate and peak memory. This follow-up supplies
+no measurements or new architecture adoption.
+
 ## Direct latent speech: proposed target
 
 ```mermaid
