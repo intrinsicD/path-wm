@@ -1,5 +1,17 @@
 # Current work
 
+**General latent-processing clarification, 22 September:**
+[multimodal core](latent-core.md#gemeinsamer-denkraum-modalitätsspezifisches-auslesen).
+Alex corrects the speech-only framing: the whole multimodal model should transform
+latent representations internally, with compatible trained encoders/decoders.
+This reiterates the existing direction. Audio's temporal order does not require
+tokenwise serial computation everywhere; distinguish autoregressive dependencies,
+blockwise acoustic decoding and playback. No new implementation or validation.
+Alex also proposes latent action tokens as a way for a small Thinker to do useful
+work. Discuss action-conditioned state prediction and planning with learned outcome
+supervision and exact executable-action mapping. Compact codes alone do not prove
+small-model competence; no new action representation or training recipe adopted.
+
 **Agent voice, 22 September:** [reference-conditioned speech proposal](agent-voice-design.md).
 Alex asks how the agent speaks and whether recordings can supply its voice.
 Propose a pretrained TTS bridge from speech text plus a reusable voice prompt,
@@ -20,6 +32,10 @@ hypothesis. It replaces linguistic sequence generation rather than deleting that
 function. Some TTS models already omit a separate text encoder. Compare total
 compute and streaming first-audio latency separately with equivalent quality;
 no measured speedup or resource claim.
+Architecture/training follow-up: Alex emphasizes learning under required serial
+dependencies. Explain causal/chunk access, reusable conditioning and overlapping
+playback; teacher-forced parallel training does not remove inference dependencies.
+Concrete masks, chunk sizes and execution policies remain unselected.
 
 **What remains for image/video understanding, 22 September:**
 [capabilities and current limits](video-understanding-test-map.md#bild-videoverstehen-nach-der-personen--und-engine-diskussion).

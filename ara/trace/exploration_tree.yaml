@@ -8862,3 +8862,22 @@ tree:
   also_depends_on:
   - N528
   status: open
+- id: N530
+  type: question
+  title: General latent multimodal processing, serial dependencies and small-core action tokens
+  provenance: user
+  timestamp: 2026-09-22T15:22+02:00
+  description: 'In continuing voice input Alex corrects speech-only framing: internal multimodal thinking
+    should transform latent representations with appropriately trained encoders/decoders. Emphasizes training
+    for serial dependencies, asserts audio needs serial generation/decoding, and hypothesizes a capable
+    small Thinker using latent action tokens. Clarify temporal order versus compute dependencies and action-to-outcome
+    learning.'
+  evidence:
+  - docs/latent-core.md
+  - docs/agent-voice-design.md
+  - docs/action-semantics-design.md
+  - https://arxiv.org/html/2412.10117v1
+  also_depends_on:
+  - N529
+  - N528
+  status: open

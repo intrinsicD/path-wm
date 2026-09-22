@@ -81,6 +81,45 @@ ein Aufrufer muss Simulationen auswählen und ihre Ergebnisse sinnvoll einspeise
 
 ## Gemeinsamer Denkraum, modalitätsspezifisches Auslesen
 
+Präzisierung vom 22. September: Alex korrigiert die auf Sprachausgabe verengte
+Diskussion. Gemeint ist das gesamte multimodale Modell: interne Verarbeitung und
+Denken transformieren latente Repräsentationen; Encoder und Decoder lernen dazu
+passende Ein- und Ausgänge. Unnötiges Ausgeben und erneutes Einlesen einer Modalität
+gehört nicht zum beabsichtigten internen Denkpfad. Dies bekräftigt die bestehende
+Richtung, ohne einen neuen Codec oder eine feste Trainingsrezeptur auszuwählen.
+Gemeinsame Tensorformen garantieren keine gemeinsame Bedeutung. Lernziele müssen
+Inhaltserhalt, aufgabenrelevante Transformation und korrekte Ausgaben prüfen;
+Rekonstruktion allein weist kein Schlussfolgern nach. Gemeinsames oder stufenweises
+Training bleibt mit expliziten Gradienten-/Freeze-Regeln zu vergleichen.
+
+Audio illustriert dabei zeitliche Abhängigkeiten, erzwingt aber keine vollständig
+serielle Berechnung. Autoregressive Tokenvorhersage benötigt vorher erzeugte
+Tokens; geeignete akustische Decoder können verfügbare Tokenblöcke gemeinsam
+verarbeiten. Andere Generatoren erzeugen Blöcke mit einer anderen Faktorisierung.
+Zeitliche Ausgabeordnung, zulässiger Zukunftszugriff und tatsächliche GPU-Ausführung
+sind getrennte Eigenschaften. Training und Auswertung müssen zu den gewählten
+Masken, Blockgrößen und Zustandsgrenzen passen. Siehe [Sprachentwurf](agent-voice-design.md).
+Multiskalenzugriff, Quellenprovenienz und begrenzte wiederverwendbare Kontexte bleiben
+erhalten; nötig sind Kontrollen mit fehlendem/vertauschtem Kontext sowie getrennte
+Inhalts-, Ausgabe- und Laufzeitmessungen. Kein neuer Fähigkeitsnachweis.
+
+Alex ergänzt als Hypothese, dass ein kleiner Denkern durch latente Aktionstokens
+viel leisten könnte. Vorgeschlagene Arbeitsteilung: Kontext lesen, eine latente
+Handlung samt erforderlichen Argumenten vorschlagen, ihre erwartete Zustandsänderung
+modellieren und mögliche Folgen vergleichen. Die vorhandene Dynamik ist dafür ein
+Baustein, kein Nachweis allgemeiner latenter Planung. Reale Ausführung braucht die
+Abbildung auf eine konkrete Aktion mit exakten Argumenten und beobachtetem Ergebnis;
+siehe [Aktionssemantik](action-semantics-design.md). Kompakte Aktionseinbettungen
+ersetzen diese Ausführungsverträge nicht.
+
+Ein kleiner Kern könnte so modulare Wahrnehmung/Ausgabe und gespeichertes Wissen
+nutzen, ohne jeden internen Schritt sprachlich auszuformulieren. Ob er genügend
+Information und Verarbeitungskapazität behält, bleibt eine Lernfrage. Nächster
+kleiner Vergleich wäre ein festes Aufgabenfeld mit gemessenen Aktion-Folge-Paaren,
+neuen Handlungskombinationen und unabhängig geprüftem Zielerfolg; gleiche Gesamt-
+budgets, externe Module und Speicherzugriffe mitzählen. Kleine latente Dimensionen
+allein belegen weder weniger Modellparameter noch gute Planung. Kein neuer Lauf.
+
 Alex präzisiert: Denken soll im gemeinsamen multimodalen latenten Raum bleiben.
 Jeder Decoder soll daraus lernen, was seine Ausgabe benötigt. Falls sein eigener
 Auslesepfad nicht reicht, ist ein vorgeschalteter, austauschbarer Adapter eine

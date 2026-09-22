@@ -44,6 +44,40 @@ no measurements or new architecture adoption.
 
 ## Direct latent speech: proposed target
 
+Alex further emphasizes architecture and training that reflect required serial
+dependencies. Proposed execution separates conditioning prepared once, temporal
+generation and acoustic blocks that can run together given their inputs. Serial
+dependency is specified by the computation graph, recurrent state and allowed
+attention, not merely a label telling the model to be serial. Causal masks prohibit
+unavailable future evidence; bounded lookahead must have an explicit delay budget.
+Train under those access restrictions and evaluate free-running output.
+
+A coarse-to-fine candidate generates successive speech blocks while synthesizing
+detail within an available block in parallel where the chosen decoder permits.
+Playback of a completed block can overlap later generation. Dependencies within
+the block, flow iterations, hardware contention and cache traffic still count;
+simultaneous scheduling alone does not guarantee overlap or speedup.
+
+Alex clarifies that latent processing is the general multimodal architecture,
+including thinking, and then asserts that audio tokens require serial generation
+and decoding. Qualify this: temporal ordering is necessary for playback; tokenwise
+serial computation is required by an autoregressive dependency, not by audio as
+a modality. Block/non-autoregressive generation and blockwise acoustic decoding
+are possible when designed/trained for their access pattern. This does not imply
+arbitrarily reordering tokens or running an existing autoregressor independently.
+The general direction is recorded in docs/latent-core.md.
+
+Teacher-forced training can compute many causally masked positions in parallel
+because preceding target units are supplied with the proper shift; inference may
+still be sequential because those units must first be generated. Preserve this
+distinction and check errors accumulating on self-generated history. CosyVoice 2's
+full-causal/chunk-aware flow masks illustrate training for bounded future access.
+For PATH-WM this is a design explanation, not a selected mask/chunk size or run.
+The smallest comparison holds data/quality targets fixed and varies declared chunk
+access; check future leakage, continuity, content/voice consistency, first-audio
+delay and whole-process memory. Retain shared multiscale source access, versioned
+voice conditioning and per-utterance caches with their existing ownership rules.
+
 ```mermaid
 flowchart LR
     S[Shared multimodal state] --> G[Speech sequence generator]

@@ -6520,3 +6520,24 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O371
+  timestamp: 2026-09-22T15:22+02:00
+  provenance: ai-suggested
+  potential_type: architecture
+  content: Retain the existing shared latent core with learned modality boundaries. Train content preservation,
+    task transformations and outputs under actual causal/chunk access restrictions. Audio temporal order
+    does not require tokenwise serial computation everywhere; distinguish autoregression, block decoding,
+    teacher-forced training and playback overlap. Latent action candidates can condition predicted state
+    changes and planning, but exact execution mapping and observed outcomes remain necessary. Compact
+    codes alone do not establish small-model capability or total parameter savings.
+  context: User reiterates the general multimodal direction and proposes latent action tokens; no new
+    codec, action interface or training recipe selected. CosyVoice 2 demonstrates causal/chunk masks,
+    not a local performance result. Existing dynamics and Thinker are components, not validated general
+    planning.
+  bound_to:
+  - N530
+  - N529
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
