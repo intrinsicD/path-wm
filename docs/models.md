@@ -1,5 +1,15 @@
 # Models and tensor flow
 
+[Active token budgets](token-budget-plan.md): current categorical state is already
+bounded (16 world +8 workspace slots; Thinker updates8 queries per loop). Complete
+dictionary events now encode/correct their source union once; incremental packet
+arrival retains intermediate corrections. `LatentResampler(width, tokens=64)` can
+be supplied as `BeliefAgent(observation_resampler=...)` to bound observation reads.
+It is an optional lossy read, not persistent detail storage, and remains off by
+default after the initial cost/quality comparison. `Workload(model)` records actual
+attention shapes without changing tensor computation; measure latency separately.
+
+
 [Persistent World State](world-state.md): the opt-in modular store, binding/update,
 bounded retrieval, context/relation tokens and BeliefAgent session adapter. Includes
 training/inference inspection and concrete optional concept/self/feedback clients;

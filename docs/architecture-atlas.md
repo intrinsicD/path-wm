@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-16, repository snapshot `34f0727`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-22, repository snapshot `d63c1cb`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
@@ -120,7 +120,9 @@ Token-role follow-up: Alex asks which latent representations are needed across a
 
 Integrated research goal clarified by Alex: demonstrate the complete compatible latent perception/thinking/action/memory path, native interfaces preferred with adapters allowed, shared-depth loops, concepts versus instances, autonomous knowledge acquisition and correction, and workflows across domains without runtime weight retraining. Latent diffusion remains a candidate hypothesis. docs/integrated-latent-agent-goal.md defines the goal and a proposed frozen-weight demonstration with causal memory/correction controls. This is a user objective, not a capability result or chosen experiment configuration.
 
-Source: [experiments/multimodal.py · build_model:103](../experiments/multimodal.py), [pathwm/models/belief.py · BeliefAgent:102](../pathwm/models/belief.py), [pathwm/models/agent.py · step_task:637](../pathwm/models/agent.py), [docs/multimodal-reference-design.md](../docs/multimodal-reference-design.md), [docs/multimodal-reference-extension.md](../docs/multimodal-reference-extension.md), [pathwm/data/understanding.py · UnderstandingData:488](../pathwm/data/understanding.py), [pathwm/evaluation/understanding.py · evaluate_understanding:233](../pathwm/evaluation/understanding.py), [docs/understanding-suite-plan.md](../docs/understanding-suite-plan.md), [docs/grounded-readout-plan.md](../docs/grounded-readout-plan.md), [experiments/modality_readout.py · grounded:1609](../experiments/modality_readout.py), [docs/human-perception-discussion.md](../docs/human-perception-discussion.md), [docs/neural-engine-inference.md](../docs/neural-engine-inference.md), [docs/video-understanding-test-map.md](../docs/video-understanding-test-map.md), [docs/agent-voice-design.md](../docs/agent-voice-design.md), [docs/latent-core.md](../docs/latent-core.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md).
+22 September user direction: separate retained detail, fixed observation updates and bounded persistent reasoning; instrument first, keep loops. Current categorical recipe already has16 world +8 workspace slots. Complete-event preparation once reduces the measured four-modality forward from105.422 to52.194 ms; backward is unchanged. Optional64-query resampling adds no measured runtime benefit and remains disabled. 16-update fits do not validate detail retention. See docs/token-budget-plan.md; scope is synthetic FP32 RTX3050 development, not general multimodal quality.
+
+Source: [experiments/multimodal.py · build_model:103](../experiments/multimodal.py), [pathwm/models/belief.py · BeliefAgent:102](../pathwm/models/belief.py), [pathwm/models/agent.py · step_task:637](../pathwm/models/agent.py), [docs/multimodal-reference-design.md](../docs/multimodal-reference-design.md), [docs/multimodal-reference-extension.md](../docs/multimodal-reference-extension.md), [pathwm/data/understanding.py · UnderstandingData:488](../pathwm/data/understanding.py), [pathwm/evaluation/understanding.py · evaluate_understanding:233](../pathwm/evaluation/understanding.py), [docs/understanding-suite-plan.md](../docs/understanding-suite-plan.md), [docs/grounded-readout-plan.md](../docs/grounded-readout-plan.md), [experiments/modality_readout.py · grounded:1609](../experiments/modality_readout.py), [docs/human-perception-discussion.md](../docs/human-perception-discussion.md), [docs/neural-engine-inference.md](../docs/neural-engine-inference.md), [docs/video-understanding-test-map.md](../docs/video-understanding-test-map.md), [docs/agent-voice-design.md](../docs/agent-voice-design.md), [docs/latent-core.md](../docs/latent-core.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md), [docs/token-budget-plan.md](../docs/token-budget-plan.md).
 
 <a id="02-encoders"></a>
 
@@ -214,7 +216,9 @@ Image/video/audio/text encoders now share output-neutral attention diagnostics: 
 
 18 September neighborhood discussion: multiple local supports can complement the resolution hierarchy. Proposed first candidate retains outputs of one/two/three3x3 layers inside each learned coupling subnet, yielding nominal3/5/7 support; independent kernels remain an alternative. Whole coupling has larger composed support; modality durations/causality, branch widths and depth controls matter. See design section8; no implementation or validation change.
 
-Source: [pathwm/models/multiscale.py · FeatureHierarchy:233](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleImageEncoder:371](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleAudioEncoder:416](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleTextEncoder:477](../pathwm/models/multiscale.py), [pathwm/models/belief.py · _features:259](../pathwm/models/belief.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md), [pathwm/models/multiscale.py · LayerReadout:165](../pathwm/models/multiscale.py), [docs/layer-readout-plan.md](../docs/layer-readout-plan.md), [docs/visual-codec-review.md](../docs/visual-codec-review.md).
+Active reasoning is distinct from dense retained features. Current pyramid attention remains dense/masked and scales with encoder positions; the optional observation resampler is downstream and cannot remove that cost. PixelUnshuffle/local processing remains a separate encoder design question. The default complete-event path now encodes each modality once.
+
+Source: [pathwm/models/multiscale.py · FeatureHierarchy:233](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleImageEncoder:371](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleAudioEncoder:416](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleTextEncoder:477](../pathwm/models/multiscale.py), [pathwm/models/belief.py · _features:262](../pathwm/models/belief.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md), [pathwm/models/multiscale.py · LayerReadout:165](../pathwm/models/multiscale.py), [docs/layer-readout-plan.md](../docs/layer-readout-plan.md), [docs/visual-codec-review.md](../docs/visual-codec-review.md), [docs/token-budget-plan.md](../docs/token-budget-plan.md).
 
 <a id="03-attention"></a>
 
@@ -274,7 +278,9 @@ ConditionedBlock adds bounded scale/shift on query and MLP normalization; code z
 
 Attend and ConditionedBlock use one detached attention_probabilities helper for pre-dropout inspection. Native attention keeps need_weights=False even when recording; diagnostic weights do not switch the output kernel. Invalid decoder context is zeroed before normalization/projection. Tests cover exact output, gradient and RNG neutrality for all four multiscale encoders.
 
-Source: [pathwm/models/modalities.py · Attend:111](../pathwm/models/modalities.py), [pathwm/models/multiscale.py · ConditionedBlock:89](../pathwm/models/multiscale.py), [pathwm/models/conditional_image.py · OutputBlock:47](../pathwm/models/conditional_image.py), [pathwm/models/modalities.py · attention_probabilities:77](../pathwm/models/modalities.py).
+Workload records actual allocated Q/K lengths and repeated calls, separately for self/cross attention, without building probability matrices. Pair counts are workload proxies, not allocated score memory. Hooks/backend profiling are kept outside all timing passes; loops remain unchanged.
+
+Source: [pathwm/models/modalities.py · Attend:111](../pathwm/models/modalities.py), [pathwm/models/multiscale.py · ConditionedBlock:89](../pathwm/models/multiscale.py), [pathwm/models/conditional_image.py · OutputBlock:47](../pathwm/models/conditional_image.py), [pathwm/models/modalities.py · attention_probabilities:77](../pathwm/models/modalities.py), [pathwm/evaluation/workload.py](../pathwm/evaluation/workload.py).
 
 <a id="04-belief"></a>
 
@@ -296,6 +302,8 @@ flowchart TB
     class prior store;
     features["Available source features<br/>All modalities / scales + valid masks"]
     class features store;
+    access["Observation access<br/>Full source access by default<br/>Optional learned K=64 resampler"]
+    class access optional;
     correct["BeliefCorrection<br/>Attend to features → add perception-memory read<br/>→ attend again → categorical logits"]
     class correct learned;
     posterior["Posterior distribution<br/>Sample code z; straight-through training gradient"]
@@ -315,14 +323,15 @@ flowchart TB
     memory -->|"prediction read"| dynamics
     dynamics -->|"h and prior logits"| prior
     prior -->|"prior h as queries"| correct
-    features -->|"observation context"| correct
+    features -->|"source values + validity"| access
+    access -->|"observation context"| correct
     memory -->|"perception read"| correct
     correct -->|"corrected logits"| posterior
     prior -->|"h; unchanged by correction"| readout
     posterior -->|"sampled code"| readout
     workspace -->|"workspace retained"| readout
     readout -->|"world + workspace tokens"| state
-    features -->|"no belief/task conditioning"| evidence
+    access -->|"no belief/task conditioning"| evidence
     evidence -->|"source view"| commit
     state -->|"inferred view + event metadata"| commit
     classDef learned fill:#e6eef8,stroke:#7696bc,color:#202a36;
@@ -343,7 +352,11 @@ Events are caller-owned transactions with ordered IDs. Partial packet arrivals a
 
 Categorical entropy is a diagnostic; it is not established calibrated confidence or model-parameter uncertainty. The Gaussian log_scale inherited for compatibility is zero here, not the belief uncertainty.
 
-Source: [pathwm/models/belief.py · BeliefDynamics:33](../pathwm/models/belief.py), [pathwm/models/belief.py · BeliefCorrection:74](../pathwm/models/belief.py), [pathwm/models/belief.py · correct_packets:358](../pathwm/models/belief.py), [pathwm/models/belief.py · _readout:196](../pathwm/models/belief.py), [pathwm/models/belief_state.py · BeliefState:91](../pathwm/models/belief_state.py).
+Complete dictionary events correct their canonical source union once. Streaming add_packet still exposes each intermediate posterior from the same prior. Equality assumes the current pure deterministic components; arbitrary dropout/stateful custom modules need separate checks.
+
+An optional LatentResampler bounds correction/evidence source keys, not the existing state cardinality. DefaultNone keeps source access and old checkpoints unchanged. K=64 is implemented and tested but not adopted: no runtime gain and no passing fine-detail quality evidence. This adds no persistent detail-memory store.
+
+Source: [pathwm/models/belief.py · BeliefDynamics:33](../pathwm/models/belief.py), [pathwm/models/belief.py · BeliefCorrection:74](../pathwm/models/belief.py), [pathwm/models/belief.py · correct_packets:361](../pathwm/models/belief.py), [pathwm/models/belief.py · _readout:199](../pathwm/models/belief.py), [pathwm/models/belief_state.py · BeliefState:91](../pathwm/models/belief_state.py), [pathwm/models/resampler.py](../pathwm/models/resampler.py), [docs/token-budget-plan.md](../docs/token-budget-plan.md).
 
 <a id="05-memory"></a>
 
@@ -853,7 +866,7 @@ Prediction quality, goal readout quality and search coverage all constrain plann
 
 Integrated research goal clarified by Alex: demonstrate the complete compatible latent perception/thinking/action/memory path, native interfaces preferred with adapters allowed, shared-depth loops, concepts versus instances, autonomous knowledge acquisition and correction, and workflows across domains without runtime weight retraining. Latent diffusion remains a candidate hypothesis. docs/integrated-latent-agent-goal.md defines the goal and a proposed frozen-weight demonstration with causal memory/correction controls. This is a user objective, not a capability result or chosen experiment configuration.
 
-Source: [pathwm/evaluation/agent.py · plan:23](../pathwm/evaluation/agent.py), [pathwm/models/belief.py · imagine:501](../pathwm/models/belief.py), [pathwm/models/agent.py · step_task:637](../pathwm/models/agent.py), [pathwm/models/key_box.py · plan_key:59](../pathwm/models/key_box.py), [docs/decision-design.md](../docs/decision-design.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md).
+Source: [pathwm/evaluation/agent.py · plan:23](../pathwm/evaluation/agent.py), [pathwm/models/belief.py · imagine:519](../pathwm/models/belief.py), [pathwm/models/agent.py · step_task:637](../pathwm/models/agent.py), [pathwm/models/key_box.py · plan_key:59](../pathwm/models/key_box.py), [docs/decision-design.md](../docs/decision-design.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md).
 
 <a id="12-learning"></a>
 
@@ -1089,7 +1102,7 @@ Token-role follow-up: Alex asks which latent representations are needed across a
 
 Integrated research goal clarified by Alex: demonstrate the complete compatible latent perception/thinking/action/memory path, native interfaces preferred with adapters allowed, shared-depth loops, concepts versus instances, autonomous knowledge acquisition and correction, and workflows across domains without runtime weight retraining. Latent diffusion remains a candidate hypothesis. docs/integrated-latent-agent-goal.md defines the goal and a proposed frozen-weight demonstration with causal memory/correction controls. This is a user objective, not a capability result or chosen experiment configuration.
 
-Source: [pathwm/models/belief.py · BeliefDynamics:33](../pathwm/models/belief.py), [pathwm/models/belief.py · BeliefCorrection:74](../pathwm/models/belief.py), [pathwm/models/belief.py · _readout:196](../pathwm/models/belief.py), [pathwm/models/agent.py · Thinker:105](../pathwm/models/agent.py), [pathwm/models/agent.py · think:709](../pathwm/models/agent.py), [pathwm/models/agent.py · decode:779](../pathwm/models/agent.py), [pathwm/world_state/session.py · think:425](../pathwm/world_state/session.py), [docs/latent-core.md](../docs/latent-core.md), [pathwm/evaluation/modality_suite.py](../pathwm/evaluation/modality_suite.py), [docs/modality-suites-plan.md](../docs/modality-suites-plan.md), [docs/multimodal-reference-design.md](../docs/multimodal-reference-design.md), [docs/multimodal-reference-extension.md](../docs/multimodal-reference-extension.md), [pathwm/data/understanding.py · UnderstandingData:488](../pathwm/data/understanding.py), [pathwm/evaluation/understanding.py · evaluate_understanding:233](../pathwm/evaluation/understanding.py), [docs/understanding-suite-plan.md](../docs/understanding-suite-plan.md), [docs/grounded-readout-plan.md](../docs/grounded-readout-plan.md), [experiments/modality_readout.py · grounded:1609](../experiments/modality_readout.py), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md).
+Source: [pathwm/models/belief.py · BeliefDynamics:33](../pathwm/models/belief.py), [pathwm/models/belief.py · BeliefCorrection:74](../pathwm/models/belief.py), [pathwm/models/belief.py · _readout:199](../pathwm/models/belief.py), [pathwm/models/agent.py · Thinker:105](../pathwm/models/agent.py), [pathwm/models/agent.py · think:709](../pathwm/models/agent.py), [pathwm/models/agent.py · decode:779](../pathwm/models/agent.py), [pathwm/world_state/session.py · think:425](../pathwm/world_state/session.py), [docs/latent-core.md](../docs/latent-core.md), [pathwm/evaluation/modality_suite.py](../pathwm/evaluation/modality_suite.py), [docs/modality-suites-plan.md](../docs/modality-suites-plan.md), [docs/multimodal-reference-design.md](../docs/multimodal-reference-design.md), [docs/multimodal-reference-extension.md](../docs/multimodal-reference-extension.md), [pathwm/data/understanding.py · UnderstandingData:488](../pathwm/data/understanding.py), [pathwm/evaluation/understanding.py · evaluate_understanding:233](../pathwm/evaluation/understanding.py), [docs/understanding-suite-plan.md](../docs/understanding-suite-plan.md), [docs/grounded-readout-plan.md](../docs/grounded-readout-plan.md), [experiments/modality_readout.py · grounded:1609](../experiments/modality_readout.py), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md).
 
 <a id="15-output-plan"></a>
 

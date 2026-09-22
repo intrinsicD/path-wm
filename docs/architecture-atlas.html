@@ -18,7 +18,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 @media(max-width:760px) { main { padding:22px 12px 40px; } h1 { font-size:27px; } nav { grid-template-columns:1fr; } summary { padding:14px; } summary>span { font-size:18px; } .section-body { padding:0 12px 16px; } }
 @media print { :root { background:white; } main { max-width:none; padding:0; } .controls,nav,.links { display:none; } main>details { break-before:page; border:0; } .diagram svg { min-width:0; } summary { list-style:none; } }
 </style></head><body><main id="top">
-<header><div class="eyebrow">Architecture review · 2026-09-16</div><h1>PATH-WM · Architecture atlas</h1>
+<header><div class="eyebrow">Architecture review · 2026-09-22</div><h1>PATH-WM · Architecture atlas</h1>
 <p>A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.</p><p>Open a level below to inspect its inputs, outputs and inner workings. Sources and limitations accompany every drawing.</p></header>
 <p><strong>Overview: Red: to discuss. Blue: discussed. Green: validated within the labelled scope.</strong> Colors change with discussion and validation evidence. <a href="architecture-discussion.md">See coverage and evidence</a>.</p>
 <div class="legend" aria-label="Role legend for detail diagrams 2 through 13">Detail diagrams (2–13): <span><i style="background:#e6eef8;border-color:#7696bc"></i>Learned module</span><span><i style="background:#f3f4f6;border-color:#9098a4"></i>Explicit state / mechanics</span><span><i style="background:#e7f1eb;border-color:#789887"></i>External input / output</span><span><i style="background:#efeafa;border-color:#9c87b5"></i>Optional experiment / path</span><span><i style="background:#fff0db;border-color:#bd934d"></i>Training / diagnostic only</span><span><i style="background:#fafafa;border-color:#9b9b9b"></i>Proposed extension (dashed)</span></div>
@@ -231,7 +231,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 </g>
 </svg>
 </div>
-<p><strong>Observation adapters — validated scope:</strong> Packet deduplication/order, one action/time advance per event, commit-once and masked-input handling. <strong>Still open:</strong> Live webcam capture, cross-device synchronization and real streaming are not validated. Discussion walkthrough still pending. <span class="links">Evidence: <a href="../runs/belief_v1/verification.json">Belief implementation verification (69 CPU tests)</a> · <a href="../tests/test_belief.py">Event, masking and timestamp checks</a>.</span></p>
+<p><strong>Observation adapters — validated scope:</strong> Packet deduplication/order, one action/time advance per event, commit-once and masked-input handling. Complete-event union scheduling now avoids repeated preparation with matched current-component posterior/gradient/RNG checks. <strong>Still open:</strong> Live webcam capture, cross-device synchronization and real streaming are not validated. Discussion walkthrough still pending. Custom stochastic/stateful encoders may change call/RNG histories under complete-event scheduling. <span class="links">Evidence: <a href="../runs/belief_v1/verification.json">Belief implementation verification (69 CPU tests)</a> · <a href="../tests/test_belief.py">Event, masking and timestamp checks</a> · <a href="../runs/token_budget_final_v1/verification.json">87 scoped token-budget, belief, modality and World State checks</a>.</span></p>
 <p><strong>Local / Global Context + optional World State → §5/13 — validated scope:</strong> Exact recent envelopes, bounded hierarchy, source/belief separation and causal reads. The optional World State adds tested transactional identity/provenance/correction mechanics, pinned historical retrieval and exact session/training restart on the supplied-descriptor development task. Audio/video/text and image packets now pass separate and mixed actual WorldSession/thinker paths after correcting a four-versus-eight categorical-code memory mismatch. <strong>Still open:</strong> This validates storage and replay mechanics, not general entity recognition, concept induction, calibrated uncertainty, useful learned retrieval or long-horizon recall. The photo recall path still loses accessible detail. Full-agent historical evaluation must restore the corresponding neural session, not just query an old store revision. Real media transport and tiny direct codec fitting do not establish state-conditioned output quality or cross-modal identity. <span class="links">Evidence: <a href="../runs/belief_v1/verification.json">Belief implementation verification (69 CPU tests)</a> · <a href="../tests/test_belief.py">Memory bounds, provenance and causal-read checks</a> · <a href="../docs/photo-detail-plan.md">Photo recall limitations</a> · <a href="../runs/world_state_foundation_v1/verification.json">World State: 3293 independent development checks</a> · <a href="../runs/world_state_foundation_v1/focused-tests.xml">81 scoped World State and regression tests</a> · <a href="../docs/world-state-foundation-plan.md">Foundation protocol, failures, repairs and limits</a> · <a href="../runs/modality_foundation_v1/verification.json">Non-image modality audit: 6075 artifact checks; repair gate failed</a> · <a href="../runs/modality_foundation_v1/final-tests.xml">112 scoped modality, World State and regression tests</a>.</span></p>
 <p><strong>Optional bounded planner → §11 — validated scope:</strong> Fixed-horizon candidate evaluation, common sampling, caller-state preservation and RNG restoration; supplied key-box search has independent replay. <strong>Still open:</strong> This does not validate learned dynamics, general goal achievement or the proposed action DAG. The linked initial key-box integrated capability screen failed. <span class="links">Evidence: <a href="../runs/belief_v1/verification.json">Belief implementation verification (69 CPU tests)</a> · <a href="../tests/test_data_and_planning.py">Candidate rejection and state preservation</a> · <a href="../runs/key_box_v1/verification.json">Independent search replay; integrated screen failed</a>.</span></p>
 <p><strong>Generated-content reflection — validated scope:</strong> Re-encoded generated outputs can change workspace while leaving physical belief/history unchanged; generated content cannot enter source evidence. <strong>Still open:</strong> Useful self-reflection and quality of generated content are not established by these routing tests. <span class="links">Evidence: <a href="../runs/belief_v1/verification.json">Belief implementation verification (69 CPU tests)</a> · <a href="../tests/test_belief.py">Reflection boundary check</a> · <a href="../tests/test_tasks.py">Loopback and provenance checks</a>.</span></p>
@@ -255,7 +255,8 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>Alex proposes latent action tokens as a route to a capable small Thinker. Explain action-conditioned state prediction, comparing consequences and mapping selected codes to executable actions with exact arguments. Compactness alone does not establish capability or parameter savings; compare new action combinations and grounded outcomes at a whole-system budget. See docs/latent-core.md; proposal only.</p>
 <p>Token-role follow-up: Alex asks which latent representations are needed across all uses. docs/latent-core.md maps perception, belief, task, workspace, memory, action, prediction, events, output and control to learned producers/readers and explicit learning signals. Roles can share states/modules; token names do not guarantee semantics, exact metadata remains explicit, and pretrained parts need aligned interfaces. No new token layout, model-size claim, implementation or validation.</p>
 <p>Integrated research goal clarified by Alex: demonstrate the complete compatible latent perception/thinking/action/memory path, native interfaces preferred with adapters allowed, shared-depth loops, concepts versus instances, autonomous knowledge acquisition and correction, and workflows across domains without runtime weight retraining. Latent diffusion remains a candidate hypothesis. docs/integrated-latent-agent-goal.md defines the goal and a proposed frozen-weight demonstration with causal memory/correction controls. This is a user objective, not a capability result or chosen experiment configuration.</p>
-<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../experiments/multimodal.py">experiments/multimodal.py · build_model:103</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefAgent:102</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · step_task:637</a></li><li><a href="../docs/multimodal-reference-design.md">docs/multimodal-reference-design.md</a></li><li><a href="../docs/multimodal-reference-extension.md">docs/multimodal-reference-extension.md</a></li><li><a href="../pathwm/data/understanding.py">pathwm/data/understanding.py · UnderstandingData:488</a></li><li><a href="../pathwm/evaluation/understanding.py">pathwm/evaluation/understanding.py · evaluate_understanding:233</a></li><li><a href="../docs/understanding-suite-plan.md">docs/understanding-suite-plan.md</a></li><li><a href="../docs/grounded-readout-plan.md">docs/grounded-readout-plan.md</a></li><li><a href="../experiments/modality_readout.py">experiments/modality_readout.py · grounded:1609</a></li><li><a href="../docs/human-perception-discussion.md">docs/human-perception-discussion.md</a></li><li><a href="../docs/neural-engine-inference.md">docs/neural-engine-inference.md</a></li><li><a href="../docs/video-understanding-test-map.md">docs/video-understanding-test-map.md</a></li><li><a href="../docs/agent-voice-design.md">docs/agent-voice-design.md</a></li><li><a href="../docs/latent-core.md">docs/latent-core.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li></ul></details>
+<p>22 September user direction: separate retained detail, fixed observation updates and bounded persistent reasoning; instrument first, keep loops. Current categorical recipe already has16 world +8 workspace slots. Complete-event preparation once reduces the measured four-modality forward from105.422 to52.194 ms; backward is unchanged. Optional64-query resampling adds no measured runtime benefit and remains disabled. 16-update fits do not validate detail retention. See docs/token-budget-plan.md; scope is synthetic FP32 RTX3050 development, not general multimodal quality.</p>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../experiments/multimodal.py">experiments/multimodal.py · build_model:103</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefAgent:102</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · step_task:637</a></li><li><a href="../docs/multimodal-reference-design.md">docs/multimodal-reference-design.md</a></li><li><a href="../docs/multimodal-reference-extension.md">docs/multimodal-reference-extension.md</a></li><li><a href="../pathwm/data/understanding.py">pathwm/data/understanding.py · UnderstandingData:488</a></li><li><a href="../pathwm/evaluation/understanding.py">pathwm/evaluation/understanding.py · evaluate_understanding:233</a></li><li><a href="../docs/understanding-suite-plan.md">docs/understanding-suite-plan.md</a></li><li><a href="../docs/grounded-readout-plan.md">docs/grounded-readout-plan.md</a></li><li><a href="../experiments/modality_readout.py">experiments/modality_readout.py · grounded:1609</a></li><li><a href="../docs/human-perception-discussion.md">docs/human-perception-discussion.md</a></li><li><a href="../docs/neural-engine-inference.md">docs/neural-engine-inference.md</a></li><li><a href="../docs/video-understanding-test-map.md">docs/video-understanding-test-map.md</a></li><li><a href="../docs/agent-voice-design.md">docs/agent-voice-design.md</a></li><li><a href="../docs/latent-core.md">docs/latent-core.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li><li><a href="../docs/token-budget-plan.md">docs/token-budget-plan.md</a></li></ul></details>
 </div></details>
 <details id="02-encoders">
 <summary><span>2 · Modality encoders and feature hierarchy</span><small>Same hierarchy pattern, separately instantiated parameters per modality</small></summary>
@@ -507,7 +508,8 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>18 September input-design clarification: repeated information-preserving preparation → learnable filter bank → post-processing → explicit compression, followed by a multiscale interface for generic consumer modules. Learnable filters are a user requirement. Alex accepts exports immediately after post-processing and before compression. Additive coupling with ordinary learned filter subnets is the working invertible construction; per-consumer learning noninferiority remains open. See docs/multiscale-modality-design.md. Proposed interface only; existing model topology and validation unchanged.</p>
 <p>18 September reference assessment: multimodal-vae-comparison offers controlled attribute/cross-modal benchmarks and optional downstream posterior-fusion methods. Modality-private latents differ from application residuals. See docs/multimodal-vae-reference.md; no toolkit integration, model change or new capability validation.</p>
 <p>18 September neighborhood discussion: multiple local supports can complement the resolution hierarchy. Proposed first candidate retains outputs of one/two/three3x3 layers inside each learned coupling subnet, yielding nominal3/5/7 support; independent kernels remain an alternative. Whole coupling has larger composed support; modality durations/causality, branch widths and depth controls matter. See design section8; no implementation or validation change.</p>
-<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · FeatureHierarchy:233</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · MultiScaleImageEncoder:371</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · MultiScaleAudioEncoder:416</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · MultiScaleTextEncoder:477</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · _features:259</a></li><li><a href="../docs/modality-foundation-plan.md">docs/modality-foundation-plan.md</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · LayerReadout:165</a></li><li><a href="../docs/layer-readout-plan.md">docs/layer-readout-plan.md</a></li><li><a href="../docs/visual-codec-review.md">docs/visual-codec-review.md</a></li></ul></details>
+<p>Active reasoning is distinct from dense retained features. Current pyramid attention remains dense/masked and scales with encoder positions; the optional observation resampler is downstream and cannot remove that cost. PixelUnshuffle/local processing remains a separate encoder design question. The default complete-event path now encodes each modality once.</p>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · FeatureHierarchy:233</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · MultiScaleImageEncoder:371</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · MultiScaleAudioEncoder:416</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · MultiScaleTextEncoder:477</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · _features:262</a></li><li><a href="../docs/modality-foundation-plan.md">docs/modality-foundation-plan.md</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · LayerReadout:165</a></li><li><a href="../docs/layer-readout-plan.md">docs/layer-readout-plan.md</a></li><li><a href="../docs/visual-codec-review.md">docs/visual-codec-review.md</a></li><li><a href="../docs/token-budget-plan.md">docs/token-budget-plan.md</a></li></ul></details>
 </div></details>
 <details id="03-attention">
 <summary><span>3 · Inside a residual attention block</span><small>Attention reads representations; a query head is not a persistent memory slot</small></summary>
@@ -680,7 +682,8 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>Q/K/V projection weights are learned parameters. Their per-input activations perform a read; memory records are stored separately. Neither attention weights nor readable slot names guarantee a semantic interpretation.</p>
 <p>ConditionedBlock adds bounded scale/shift on query and MLP normalization; code zero is neutral. Its time/support masks are richer than the simpler Attend block. OutputBlock (§9) adds separate self-attention and context-attention residuals.</p>
 <p>Attend and ConditionedBlock use one detached attention_probabilities helper for pre-dropout inspection. Native attention keeps need_weights=False even when recording; diagnostic weights do not switch the output kernel. Invalid decoder context is zeroed before normalization/projection. Tests cover exact output, gradient and RNG neutrality for all four multiscale encoders.</p>
-<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/modalities.py">pathwm/models/modalities.py · Attend:111</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · ConditionedBlock:89</a></li><li><a href="../pathwm/models/conditional_image.py">pathwm/models/conditional_image.py · OutputBlock:47</a></li><li><a href="../pathwm/models/modalities.py">pathwm/models/modalities.py · attention_probabilities:77</a></li></ul></details>
+<p>Workload records actual allocated Q/K lengths and repeated calls, separately for self/cross attention, without building probability matrices. Pair counts are workload proxies, not allocated score memory. Hooks/backend profiling are kept outside all timing passes; loops remain unchanged.</p>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/modalities.py">pathwm/models/modalities.py · Attend:111</a></li><li><a href="../pathwm/models/multiscale.py">pathwm/models/multiscale.py · ConditionedBlock:89</a></li><li><a href="../pathwm/models/conditional_image.py">pathwm/models/conditional_image.py · OutputBlock:47</a></li><li><a href="../pathwm/models/modalities.py">pathwm/models/modalities.py · attention_probabilities:77</a></li><li><a href="../pathwm/evaluation/workload.py">pathwm/evaluation/workload.py</a></li></ul></details>
 </div></details>
 <details id="04-belief">
 <summary><span>4 · Predict, correct and expose world state</span><small>Categorical BeliefAgent · nominal width32 configuration</small></summary>
@@ -711,7 +714,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <text xml:space="preserve" text-anchor="middle" x="683.37" y="-865.46" font-family="DejaVu Sans" font-size="11.00" fill="#374151">prediction read</text>
 </g>
 <!-- memory&#45;&gt;correct -->
-<g id="04-belief-edge7" class="edge">
+<g id="04-belief-edge8" class="edge">
 <title>memory&#45;&gt;correct</title>
 <path fill="none" stroke="#6b7280" stroke-width="1.1" d="M461.41,-903.44C457.35,-829.07 445.8,-617.52 445.8,-617.52 445.8,-617.52 443.58,-612.62 440.4,-605.57"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="442.74,-604.8 437.62,-599.43 438.27,-606.82 442.74,-604.8"/>
@@ -732,63 +735,70 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <text xml:space="preserve" text-anchor="middle" x="679.94" y="-620.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">prior h as queries</text>
 </g>
 <!-- prior&#45;&gt;readout -->
-<g id="04-belief-edge9" class="edge">
+<g id="04-belief-edge10" class="edge">
 <title>prior&#45;&gt;readout</title>
 <path fill="none" stroke="#6b7280" stroke-width="1.1" d="M798.48,-650.4C795.17,-565.46 786.8,-350.16 786.8,-350.16 786.8,-350.16 746.8,-316.96 746.8,-316.96 746.8,-316.96 728.64,-309.76 705.64,-300.63"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="706.64,-298.39 699.23,-298.09 704.83,-302.94 706.64,-298.39"/>
 <text xml:space="preserve" text-anchor="middle" x="868.14" y="-462.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">h; unchanged by correction</text>
 </g>
-<!-- features&#45;&gt;correct -->
+<!-- features&#45;&gt;access -->
 <g id="04-belief-edge6" class="edge">
-<title>features&#45;&gt;correct</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M268.83,-658.75C290.46,-644.96 312.8,-630.72 312.8,-630.72 312.8,-630.72 330.66,-617.94 351.64,-602.92"/>
+<title>features&#45;&gt;access</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M228.8,-781.08C228.8,-765.79 228.8,-745.96 228.8,-728.4"/>
+<polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="231.25,-728.65 228.8,-721.65 226.35,-728.65 231.25,-728.65"/>
+<text xml:space="preserve" text-anchor="middle" x="295.04" y="-743.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">source values + validity</text>
+</g>
+<!-- access&#45;&gt;correct -->
+<g id="04-belief-edge7" class="edge">
+<title>access&#45;&gt;correct</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M282,-650.36C298.67,-639.73 312.8,-630.72 312.8,-630.72 312.8,-630.72 330.66,-617.94 351.64,-602.92"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="352.93,-605.01 357.19,-598.94 350.08,-601.02 352.93,-605.01"/>
 <text xml:space="preserve" text-anchor="middle" x="385.5" y="-620.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">observation context</text>
 </g>
-<!-- features&#45;&gt;evidence -->
-<g id="04-belief-edge13" class="edge">
-<title>features&#45;&gt;evidence</title>
-<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M196.9,-658.75C179.66,-644.96 161.87,-630.72 161.87,-630.72 161.87,-630.72 161.87,-617.52 161.87,-617.52 161.87,-617.52 163.75,-545.14 164.91,-500.58"/>
+<!-- access&#45;&gt;evidence -->
+<g id="04-belief-edge14" class="edge">
+<title>access&#45;&gt;evidence</title>
+<path fill="none" stroke="#6b7280" stroke-width="1.1" d="M186.41,-650.36C173.13,-639.73 161.87,-630.72 161.87,-630.72 161.87,-630.72 161.87,-617.52 161.87,-617.52 161.87,-617.52 163.75,-545.14 164.91,-500.58"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="167.36,-500.79 165.09,-493.73 162.46,-500.67 167.36,-500.79"/>
 <text xml:space="preserve" text-anchor="middle" x="234.83" y="-620.82" font-family="DejaVu Sans" font-size="11.00" fill="#374151">no belief/task conditioning</text>
 </g>
 <!-- correct&#45;&gt;posterior -->
-<g id="04-belief-edge8" class="edge">
+<g id="04-belief-edge9" class="edge">
 <title>correct&#45;&gt;posterior</title>
 <path fill="none" stroke="#6b7280" stroke-width="1.1" d="M401.14,-511.21C391.08,-485.62 378.31,-453.13 368.28,-427.63"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="370.58,-426.78 365.73,-421.16 366.02,-428.57 370.58,-426.78"/>
 <text xml:space="preserve" text-anchor="middle" x="435.68" y="-462.14" font-family="DejaVu Sans" font-size="11.00" fill="#374151">corrected logits</text>
 </g>
 <!-- posterior&#45;&gt;readout -->
-<g id="04-belief-edge10" class="edge">
+<g id="04-belief-edge11" class="edge">
 <title>posterior&#45;&gt;readout</title>
 <path fill="none" stroke="#6b7280" stroke-width="1.1" d="M425.26,-349.72C458.21,-334.48 497.17,-316.44 530.95,-300.82"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="531.68,-303.18 537.01,-298.01 529.62,-298.73 531.68,-303.18"/>
 <text xml:space="preserve" text-anchor="middle" x="528.09" y="-320.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">sampled code</text>
 </g>
 <!-- workspace&#45;&gt;readout -->
-<g id="04-belief-edge11" class="edge">
+<g id="04-belief-edge12" class="edge">
 <title>workspace&#45;&gt;readout</title>
 <path fill="none" stroke="#6b7280" stroke-width="1.1" d="M643.31,-358.2C638.18,-342.77 631.52,-322.72 625.64,-305.04"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="628.06,-304.56 623.53,-298.69 623.41,-306.1 628.06,-304.56"/>
 <text xml:space="preserve" text-anchor="middle" x="687.25" y="-320.26" font-family="DejaVu Sans" font-size="11.00" fill="#374151">workspace retained</text>
 </g>
 <!-- readout&#45;&gt;state -->
-<g id="04-belief-edge12" class="edge">
+<g id="04-belief-edge13" class="edge">
 <title>readout&#45;&gt;state</title>
 <path fill="none" stroke="#6b7280" stroke-width="1.1" d="M578.05,-227.56C563.61,-213.08 546.64,-196.07 531.59,-180.98"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="533.56,-179.48 526.88,-176.26 530.09,-182.94 533.56,-179.48"/>
 <text xml:space="preserve" text-anchor="middle" x="628.28" y="-197.94" font-family="DejaVu Sans" font-size="11.00" fill="#374151">world + workspace tokens</text>
 </g>
 <!-- state&#45;&gt;commit -->
-<g id="04-belief-edge15" class="edge">
+<g id="04-belief-edge16" class="edge">
 <title>state&#45;&gt;commit</title>
 <path fill="none" stroke="#6b7280" stroke-width="1.1" d="M398.13,-105.04C354.83,-89.31 303.96,-70.82 262.65,-55.81"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="263.5,-53.52 256.09,-53.43 261.83,-58.12 263.5,-53.52"/>
 <text xml:space="preserve" text-anchor="middle" x="426.12" y="-75.62" font-family="DejaVu Sans" font-size="11.00" fill="#374151">inferred view + event metadata</text>
 </g>
 <!-- evidence&#45;&gt;commit -->
-<g id="04-belief-edge14" class="edge">
+<g id="04-belief-edge15" class="edge">
 <title>evidence&#45;&gt;commit</title>
 <path fill="none" stroke="#6b7280" stroke-width="1.1" d="M165.8,-438.78C165.8,-398.4 165.8,-324.56 165.8,-324.56 165.8,-324.56 165.8,-324.56 165.8,-139.08 165.8,-139.08 173.01,-94.25 178.3,-61.33"/>
 <polygon fill="#6b7280" stroke="#6b7280" stroke-width="1.1" points="180.71,-61.78 179.4,-54.48 175.87,-61 180.71,-61.78"/>
@@ -835,12 +845,20 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <!-- features -->
 <g id="04-belief-node6" class="node">
 <title>features</title>
-<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M357.28,-711.44C357.28,-711.44 100.31,-711.44 100.31,-711.44 94.31,-711.44 88.31,-705.44 88.31,-699.44 88.31,-699.44 88.31,-671.12 88.31,-671.12 88.31,-665.12 94.31,-659.12 100.31,-659.12 100.31,-659.12 357.28,-659.12 357.28,-659.12 363.28,-659.12 369.28,-665.12 369.28,-671.12 369.28,-671.12 369.28,-699.44 369.28,-699.44 369.28,-705.44 363.28,-711.44 357.28,-711.44"/>
-<text xml:space="preserve" text-anchor="middle" x="228.8" y="-689.48" font-family="DejaVu Sans" font-size="14.00">Available source features</text>
-<text xml:space="preserve" text-anchor="middle" x="228.8" y="-672.68" font-family="DejaVu Sans" font-size="14.00">All modalities / scales + valid masks</text>
+<path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M357.28,-833.76C357.28,-833.76 100.31,-833.76 100.31,-833.76 94.31,-833.76 88.31,-827.76 88.31,-821.76 88.31,-821.76 88.31,-793.44 88.31,-793.44 88.31,-787.44 94.31,-781.44 100.31,-781.44 100.31,-781.44 357.28,-781.44 357.28,-781.44 363.28,-781.44 369.28,-787.44 369.28,-793.44 369.28,-793.44 369.28,-821.76 369.28,-821.76 369.28,-827.76 363.28,-833.76 357.28,-833.76"/>
+<text xml:space="preserve" text-anchor="middle" x="228.8" y="-811.8" font-family="DejaVu Sans" font-size="14.00">Available source features</text>
+<text xml:space="preserve" text-anchor="middle" x="228.8" y="-795" font-family="DejaVu Sans" font-size="14.00">All modalities / scales + valid masks</text>
+</g>
+<!-- access -->
+<g id="04-belief-node7" class="node">
+<title>access</title>
+<path fill="#efeafa" stroke="#9c87b5" stroke-width="1.1" d="M347.51,-719.84C347.51,-719.84 110.09,-719.84 110.09,-719.84 104.09,-719.84 98.09,-713.84 98.09,-707.84 98.09,-707.84 98.09,-662.72 98.09,-662.72 98.09,-656.72 104.09,-650.72 110.09,-650.72 110.09,-650.72 347.51,-650.72 347.51,-650.72 353.51,-650.72 359.51,-656.72 359.51,-662.72 359.51,-662.72 359.51,-707.84 359.51,-707.84 359.51,-713.84 353.51,-719.84 347.51,-719.84"/>
+<text xml:space="preserve" text-anchor="middle" x="228.8" y="-697.88" font-family="DejaVu Sans" font-size="14.00">Observation access</text>
+<text xml:space="preserve" text-anchor="middle" x="228.8" y="-681.08" font-family="DejaVu Sans" font-size="14.00">Full source access by default</text>
+<text xml:space="preserve" text-anchor="middle" x="228.8" y="-664.28" font-family="DejaVu Sans" font-size="14.00">Optional learned K=64 resampler</text>
 </g>
 <!-- correct -->
-<g id="04-belief-node7" class="node">
+<g id="04-belief-node8" class="node">
 <title>correct</title>
 <path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M580.42,-597.52C580.42,-597.52 255.17,-597.52 255.17,-597.52 249.17,-597.52 243.17,-591.52 243.17,-585.52 243.17,-585.52 243.17,-523.6 243.17,-523.6 243.17,-517.6 249.17,-511.6 255.17,-511.6 255.17,-511.6 580.42,-511.6 580.42,-511.6 586.42,-511.6 592.42,-517.6 592.42,-523.6 592.42,-523.6 592.42,-585.52 592.42,-585.52 592.42,-591.52 586.42,-597.52 580.42,-597.52"/>
 <text xml:space="preserve" text-anchor="middle" x="417.8" y="-575.56" font-family="DejaVu Sans" font-size="14.00">BeliefCorrection</text>
@@ -849,7 +867,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <text xml:space="preserve" text-anchor="middle" x="417.8" y="-525.16" font-family="DejaVu Sans" font-size="14.00">&#45;&gt; attend again &#45;&gt; categorical logits</text>
 </g>
 <!-- posterior -->
-<g id="04-belief-node8" class="node">
+<g id="04-belief-node9" class="node">
 <title>posterior</title>
 <path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M495.25,-419.28C495.25,-419.28 208.35,-419.28 208.35,-419.28 202.35,-419.28 196.35,-413.28 196.35,-407.28 196.35,-407.28 196.35,-362.16 196.35,-362.16 196.35,-356.16 202.35,-350.16 208.35,-350.16 208.35,-350.16 495.25,-350.16 495.25,-350.16 501.25,-350.16 507.25,-356.16 507.25,-362.16 507.25,-362.16 507.25,-407.28 507.25,-407.28 507.25,-413.28 501.25,-419.28 495.25,-419.28"/>
 <text xml:space="preserve" text-anchor="middle" x="351.8" y="-397.32" font-family="DejaVu Sans" font-size="14.00">Posterior distribution</text>
@@ -857,14 +875,14 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <text xml:space="preserve" text-anchor="middle" x="351.8" y="-363.72" font-family="DejaVu Sans" font-size="14.00">gradient</text>
 </g>
 <!-- workspace -->
-<g id="04-belief-node9" class="node">
+<g id="04-belief-node10" class="node">
 <title>workspace</title>
 <path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M764.56,-410.88C764.56,-410.88 539.04,-410.88 539.04,-410.88 533.04,-410.88 527.04,-404.88 527.04,-398.88 527.04,-398.88 527.04,-370.56 527.04,-370.56 527.04,-364.56 533.04,-358.56 539.04,-358.56 539.04,-358.56 764.56,-358.56 764.56,-358.56 770.56,-358.56 776.56,-364.56 776.56,-370.56 776.56,-370.56 776.56,-398.88 776.56,-398.88 776.56,-404.88 770.56,-410.88 764.56,-410.88"/>
 <text xml:space="preserve" text-anchor="middle" x="651.8" y="-388.92" font-family="DejaVu Sans" font-size="14.00">Previous workspace</text>
 <text xml:space="preserve" text-anchor="middle" x="651.8" y="-372.12" font-family="DejaVu Sans" font-size="14.00">4 working + 4 reasoning tokens</text>
 </g>
 <!-- readout -->
-<g id="04-belief-node10" class="node">
+<g id="04-belief-node11" class="node">
 <title>readout</title>
 <path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M743.12,-296.96C743.12,-296.96 480.48,-296.96 480.48,-296.96 474.48,-296.96 468.48,-290.96 468.48,-284.96 468.48,-284.96 468.48,-239.84 468.48,-239.84 468.48,-233.84 474.48,-227.84 480.48,-227.84 480.48,-227.84 743.12,-227.84 743.12,-227.84 749.12,-227.84 755.12,-233.84 755.12,-239.84 755.12,-239.84 755.12,-284.96 755.12,-284.96 755.12,-290.96 749.12,-296.96 743.12,-296.96"/>
 <text xml:space="preserve" text-anchor="middle" x="611.8" y="-275" font-family="DejaVu Sans" font-size="14.00">World readout</text>
@@ -872,7 +890,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <text xml:space="preserve" text-anchor="middle" x="611.8" y="-241.4" font-family="DejaVu Sans" font-size="14.00">Concatenate the 8 workspace tokens</text>
 </g>
 <!-- state -->
-<g id="04-belief-node11" class="node">
+<g id="04-belief-node12" class="node">
 <title>state</title>
 <path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M616.27,-174.64C616.27,-174.64 367.33,-174.64 367.33,-174.64 361.33,-174.64 355.33,-168.64 355.33,-162.64 355.33,-162.64 355.33,-117.52 355.33,-117.52 355.33,-111.52 361.33,-105.52 367.33,-105.52 367.33,-105.52 616.27,-105.52 616.27,-105.52 622.27,-105.52 628.27,-111.52 628.27,-117.52 628.27,-117.52 628.27,-162.64 628.27,-162.64 628.27,-168.64 622.27,-174.64 616.27,-174.64"/>
 <text xml:space="preserve" text-anchor="middle" x="491.8" y="-152.68" font-family="DejaVu Sans" font-size="14.00">BeliefState</text>
@@ -880,14 +898,14 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <text xml:space="preserve" text-anchor="middle" x="491.8" y="-119.08" font-family="DejaVu Sans" font-size="14.00">clocks/provenance</text>
 </g>
 <!-- evidence -->
-<g id="04-belief-node12" class="node">
+<g id="04-belief-node13" class="node">
 <title>evidence</title>
 <path fill="#e6eef8" stroke="#7696bc" stroke-width="1.1" d="M319.6,-491.6C319.6,-491.6 12,-491.6 12,-491.6 6,-491.6 0,-485.6 0,-479.6 0,-479.6 0,-451.28 0,-451.28 0,-445.28 6,-439.28 12,-439.28 12,-439.28 319.6,-439.28 319.6,-439.28 325.6,-439.28 331.6,-445.28 331.6,-451.28 331.6,-451.28 331.6,-479.6 331.6,-479.6 331.6,-485.6 325.6,-491.6 319.6,-491.6"/>
 <text xml:space="preserve" text-anchor="middle" x="165.8" y="-469.64" font-family="DejaVu Sans" font-size="14.00">Source&#45;only evidence summary</text>
 <text xml:space="preserve" text-anchor="middle" x="165.8" y="-452.84" font-family="DejaVu Sans" font-size="14.00">8 learned queries attend to source features</text>
 </g>
 <!-- commit -->
-<g id="04-belief-node13" class="node">
+<g id="04-belief-node14" class="node">
 <title>commit</title>
 <path fill="#f3f4f6" stroke="#9098a4" stroke-width="1.1" d="M320.59,-52.32C320.59,-52.32 47,-52.32 47,-52.32 41,-52.32 35,-46.32 35,-40.32 35,-40.32 35,-12 35,-12 35,-6 41,0 47,0 47,0 320.59,0 320.59,0 326.59,0 332.59,-6 332.59,-12 332.59,-12 332.59,-40.32 332.59,-40.32 332.59,-46.32 326.59,-52.32 320.59,-52.32"/>
 <text xml:space="preserve" text-anchor="middle" x="183.8" y="-30.36" font-family="DejaVu Sans" font-size="14.00">Seal observed event</text>
@@ -902,7 +920,9 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>With no usable observation, the prior is retained and no source-memory record is written. Imagination runs the prior transition without correction, marks the result hypothetical and shares live memory read-only.</p>
 <p>Events are caller-owned transactions with ordered IDs. Partial packet arrivals are corrected against one prior and one memory snapshot. Source times and state time remain distinct.</p>
 <p>Categorical entropy is a diagnostic; it is not established calibrated confidence or model-parameter uncertainty. The Gaussian log_scale inherited for compatibility is zero here, not the belief uncertainty.</p>
-<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefDynamics:33</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefCorrection:74</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · correct_packets:358</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · _readout:196</a></li><li><a href="../pathwm/models/belief_state.py">pathwm/models/belief_state.py · BeliefState:91</a></li></ul></details>
+<p>Complete dictionary events correct their canonical source union once. Streaming add_packet still exposes each intermediate posterior from the same prior. Equality assumes the current pure deterministic components; arbitrary dropout/stateful custom modules need separate checks.</p>
+<p>An optional LatentResampler bounds correction/evidence source keys, not the existing state cardinality. DefaultNone keeps source access and old checkpoints unchanged. K=64 is implemented and tested but not adopted: no runtime gain and no passing fine-detail quality evidence. This adds no persistent detail-memory store.</p>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefDynamics:33</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefCorrection:74</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · correct_packets:361</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · _readout:199</a></li><li><a href="../pathwm/models/belief_state.py">pathwm/models/belief_state.py · BeliefState:91</a></li><li><a href="../pathwm/models/resampler.py">pathwm/models/resampler.py</a></li><li><a href="../docs/token-budget-plan.md">docs/token-budget-plan.md</a></li></ul></details>
 </div></details>
 <details id="05-memory">
 <summary><span>5 · Short and long session memory</span><small>HybridMemory · bounded storage mechanics plus learned compression and reading</small></summary>
@@ -2493,7 +2513,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>The task dispatcher already distinguishes internal think/recall/imagine from external act/ask/emit. General learned task decomposition, automatic state equivalence/graph merging, a universal success verifier and broad software-tool skills remain open.</p>
 <p>Prediction quality, goal readout quality and search coverage all constrain planning. A low imagined cost is not proof of realized success.</p>
 <p>Integrated research goal clarified by Alex: demonstrate the complete compatible latent perception/thinking/action/memory path, native interfaces preferred with adapters allowed, shared-depth loops, concepts versus instances, autonomous knowledge acquisition and correction, and workflows across domains without runtime weight retraining. Latent diffusion remains a candidate hypothesis. docs/integrated-latent-agent-goal.md defines the goal and a proposed frozen-weight demonstration with causal memory/correction controls. This is a user objective, not a capability result or chosen experiment configuration.</p>
-<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/evaluation/agent.py">pathwm/evaluation/agent.py · plan:23</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · imagine:501</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · step_task:637</a></li><li><a href="../pathwm/models/key_box.py">pathwm/models/key_box.py · plan_key:59</a></li><li><a href="../docs/decision-design.md">docs/decision-design.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li></ul></details>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/evaluation/agent.py">pathwm/evaluation/agent.py · plan:23</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · imagine:519</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · step_task:637</a></li><li><a href="../pathwm/models/key_box.py">pathwm/models/key_box.py · plan_key:59</a></li><li><a href="../docs/decision-design.md">docs/decision-design.md</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li></ul></details>
 </div></details>
 <details id="12-learning">
 <summary><span>12 · Training signals and gradient routes</span><small>Recipe-selected objectives; no single checkpoint currently proves all capabilities</small></summary>
@@ -3146,7 +3166,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>Alex proposes latent action tokens as a route to a capable small Thinker. Explain action-conditioned state prediction, comparing consequences and mapping selected codes to executable actions with exact arguments. Compactness alone does not establish capability or parameter savings; compare new action combinations and grounded outcomes at a whole-system budget. See docs/latent-core.md; proposal only.</p>
 <p>Token-role follow-up: Alex asks which latent representations are needed across all uses. docs/latent-core.md maps perception, belief, task, workspace, memory, action, prediction, events, output and control to learned producers/readers and explicit learning signals. Roles can share states/modules; token names do not guarantee semantics, exact metadata remains explicit, and pretrained parts need aligned interfaces. No new token layout, model-size claim, implementation or validation.</p>
 <p>Integrated research goal clarified by Alex: demonstrate the complete compatible latent perception/thinking/action/memory path, native interfaces preferred with adapters allowed, shared-depth loops, concepts versus instances, autonomous knowledge acquisition and correction, and workflows across domains without runtime weight retraining. Latent diffusion remains a candidate hypothesis. docs/integrated-latent-agent-goal.md defines the goal and a proposed frozen-weight demonstration with causal memory/correction controls. This is a user objective, not a capability result or chosen experiment configuration.</p>
-<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefDynamics:33</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefCorrection:74</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · _readout:196</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · Thinker:105</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · think:709</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · decode:779</a></li><li><a href="../pathwm/world_state/session.py">pathwm/world_state/session.py · think:425</a></li><li><a href="../docs/latent-core.md">docs/latent-core.md</a></li><li><a href="../pathwm/evaluation/modality_suite.py">pathwm/evaluation/modality_suite.py</a></li><li><a href="../docs/modality-suites-plan.md">docs/modality-suites-plan.md</a></li><li><a href="../docs/multimodal-reference-design.md">docs/multimodal-reference-design.md</a></li><li><a href="../docs/multimodal-reference-extension.md">docs/multimodal-reference-extension.md</a></li><li><a href="../pathwm/data/understanding.py">pathwm/data/understanding.py · UnderstandingData:488</a></li><li><a href="../pathwm/evaluation/understanding.py">pathwm/evaluation/understanding.py · evaluate_understanding:233</a></li><li><a href="../docs/understanding-suite-plan.md">docs/understanding-suite-plan.md</a></li><li><a href="../docs/grounded-readout-plan.md">docs/grounded-readout-plan.md</a></li><li><a href="../experiments/modality_readout.py">experiments/modality_readout.py · grounded:1609</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li></ul></details>
+<details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefDynamics:33</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · BeliefCorrection:74</a></li><li><a href="../pathwm/models/belief.py">pathwm/models/belief.py · _readout:199</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · Thinker:105</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · think:709</a></li><li><a href="../pathwm/models/agent.py">pathwm/models/agent.py · decode:779</a></li><li><a href="../pathwm/world_state/session.py">pathwm/world_state/session.py · think:425</a></li><li><a href="../docs/latent-core.md">docs/latent-core.md</a></li><li><a href="../pathwm/evaluation/modality_suite.py">pathwm/evaluation/modality_suite.py</a></li><li><a href="../docs/modality-suites-plan.md">docs/modality-suites-plan.md</a></li><li><a href="../docs/multimodal-reference-design.md">docs/multimodal-reference-design.md</a></li><li><a href="../docs/multimodal-reference-extension.md">docs/multimodal-reference-extension.md</a></li><li><a href="../pathwm/data/understanding.py">pathwm/data/understanding.py · UnderstandingData:488</a></li><li><a href="../pathwm/evaluation/understanding.py">pathwm/evaluation/understanding.py · evaluate_understanding:233</a></li><li><a href="../docs/understanding-suite-plan.md">docs/understanding-suite-plan.md</a></li><li><a href="../docs/grounded-readout-plan.md">docs/grounded-readout-plan.md</a></li><li><a href="../experiments/modality_readout.py">experiments/modality_readout.py · grounded:1609</a></li><li><a href="../docs/integrated-latent-agent-goal.md">docs/integrated-latent-agent-goal.md</a></li></ul></details>
 </div></details>
 <details id="15-output-plan">
 <summary><span>15 · Shared latent thought, modality-specific readout</span><small>Optional readout loops tested; bounded repairs improve known fitting but direction and new combinations remain open</small></summary>
@@ -3547,7 +3567,7 @@ footer { color:#596979; font-size:13px; margin-top:28px; }
 <p>17 September literature review: user requests scalable small visual codecs and both teacher-free and teacher-assisted training. docs/visual-codec-review.md proposes a local single-grid family, task/debugging requirements and staged comparisons, retaining the small v2 baseline. Proposal only; untrained counts and shape checks do not establish quality or user adoption. Existing discussion/validation status is unchanged.</p>
 <details class="sources"><summary>Implementation sources</summary><ul><li><a href="../pathwm/models/video_vae.py">pathwm/models/video_vae.py · VideoVAE:149</a></li><li><a href="../pathwm/models/video_vae.py">pathwm/models/video_vae.py · CausalLatentMixer:19</a></li><li><a href="../experiments/video_vae.py">experiments/video_vae.py</a></li><li><a href="../tests/test_video_vae.py">tests/test_video_vae.py</a></li><li><a href="../docs/shared-video-vae-plan.md">docs/shared-video-vae-plan.md</a></li><li><a href="../docs/video-context-plan.md">docs/video-context-plan.md</a></li><li><a href="../pathwm/models/video_vae.py">pathwm/models/video_vae.py · local_correlation:71</a></li><li><a href="../pathwm/data/video_order.py">pathwm/data/video_order.py · cyclic_pan_pairs:59</a></li><li><a href="../experiments/video_order.py">experiments/video_order.py · OrderReadout:55</a></li><li><a href="../docs/video-order-plan.md">docs/video-order-plan.md</a></li><li><a href="../docs/video-stability-plan.md">docs/video-stability-plan.md</a></li><li><a href="../docs/video-diversity-plan.md">docs/video-diversity-plan.md</a></li><li><a href="../docs/video-displacement-plan.md">docs/video-displacement-plan.md</a></li><li><a href="../docs/video-pair-center-plan.md">docs/video-pair-center-plan.md</a></li><li><a href="../docs/video-matching-plan.md">docs/video-matching-plan.md</a></li><li><a href="../pathwm/models/video_vae.py">pathwm/models/video_vae.py · CorrespondenceDirectionHead:96</a></li><li><a href="../tests/test_video_evidence.py">tests/test_video_evidence.py</a></li><li><a href="../docs/video-evidence-plan.md">docs/video-evidence-plan.md</a></li><li><a href="../docs/multimodal-reference-design.md">docs/multimodal-reference-design.md</a></li><li><a href="../docs/multimodal-reference-extension.md">docs/multimodal-reference-extension.md</a></li><li><a href="../docs/visual-codec-review.md">docs/visual-codec-review.md</a></li></ul></details>
 </div></details>
-<footer>Grounded in repository snapshot 34f0727. Static diagrams are manually audited descriptions, not execution traces. Rendering this atlas does not execute or modify the model. <a href="architecture-atlas.md">Mermaid source and notes</a>.</footer>
+<footer>Grounded in repository snapshot d63c1cb. Static diagrams are manually audited descriptions, not execution traces. Rendering this atlas does not execute or modify the model. <a href="architecture-atlas.md">Mermaid source and notes</a>.</footer>
 </main><script>
 const panels = [...document.querySelectorAll('main > details')];
 document.getElementById('expand').addEventListener('click', () => panels.forEach(p => p.open = true));

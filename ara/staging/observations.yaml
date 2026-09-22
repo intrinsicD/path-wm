@@ -6597,3 +6597,21 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O375
+  timestamp: 2026-09-22T21:06+02:00
+  provenance: user
+  content: Most unnecessary compute likely comes from repeatedly carrying sensory/detail tokens through
+    reasoning rather than bounded persistent state or the Looped Transformer; fixed observation resampling
+    and bounded state should provide the largest saving if instrumentation confirms this.
+  context: Explicit conditional hypothesis. Actual categorical path is already bounded; N535 finds repeated
+    complete-event encoder work and substantial small-shape overhead, while64-query resampling adds no
+    runtime gain. No user comment on these results yet; no blanket confirmation/refutation or promotion.
+  potential_type: claim
+  bound_to:
+  - N534
+  - N535
+  - N536
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

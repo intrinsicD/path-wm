@@ -1,5 +1,14 @@
 # Running and editing experiments
 
+For **active-token and compute profiling**, run
+`python -m experiments.token_budget --device cuda --resampler 64 --output runs/my_token_budget`.
+It compares sequential packet arrival, complete-event preparation once, and an
+optional fixed observation bottleneck. Shapes, repeated attention calls, raw timing,
+memory and backend diagnostics accompany the local report. The existing synthetic
+multimodal recipe accepts `--observation-tokens 64`; default0 preserves full access.
+See the [fixed protocol, commands and measured limits](token-budget-plan.md).
+
+
 For **request-meaning diagnostics**, inspect a saved sampled-belief instruction-route checkpoint:
 
 ```bash

@@ -4,8 +4,19 @@
 [token budget plan](token-budget-plan.md). Instrument actual allocated attention
 shapes before changing capacity. Current categorical state is already bounded;
 measure dense encoder attention and repeated complete-event correction separately.
-Keep loops, add an optional 64-query resampler, and test exact event scheduling
-independently of learned compression. Implementation/checks in progress; no result yet.
+Implemented shape/cost profiling, exact complete-event preparation once and an
+optional 64-query resampler. Final RTX3050 synthetic four-modality forward time:
+105.422→52.194 ms (50.49% reduction); backward time unchanged. Encoder calls10→4;
+current-component outputs/gradients/RNG agree and87 scoped tests pass. Loops and
+default state/detail access unchanged. Resampler costs52.359 ms and adds10,656
+parameters; the16-update paired fit establishes training mechanics, not detail
+retention (both future-image fits still fail the copy-frame comparison). Keep it
+disabled by default. Large token sets occur upstream; these timings do not establish
+token count as the dominant latency cost. The recipe already bounds persistent
+state to24 slots and Thinker queries to8 per loop. Profile
+report `runs/token_budget_final_v1/report.html`; quality reports under
+`runs/token_budget_quality_v1/`. All structurally verified with the existing
+renderer. Persistent detail retrieval, local encoder scaling and deltas remain next.
 
 **Integrated latent agent: user goal, 22 September:**
 [objective and proposed demonstration](integrated-latent-agent-goal.md).

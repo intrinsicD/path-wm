@@ -202,3 +202,5 @@ Source diversity versus frame density: [source-bound evidence](tables/video_dive
 - [Dream-RSI paper assessment,16 September](tables/dream_rsi_review_2026-09-16.json): source hashes and public-only Claude receipts; proposed scheduling transfer, no local experiment or efficacy claim.
 
 - [Paired request-boundary comparison,17 September](tables/request_boundary_2026-09-17.json): four fixed fits; extra CE loses to matched ordinary CE and fails preservation.640 snapshot tests,30 final focused,11,520 reproduced rows and18 structural reports. Original cap failed; separate fixed-weight recovery and unmetered audit limits preserved; no adoption.
+
+- [Active token budget,22 September](tables/token_budget_2026-09-22.json): complete-event preparation once reduces local four-modality forward105.422→52.194 ms;87 scoped tests pass. Optional64-query resampling adds no runtime gain;16-update fits do not validate information retention.

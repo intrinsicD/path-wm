@@ -2789,3 +2789,14 @@ entries:
     and parameter reuse versus measured efficiency. No capability or experimental closure.
   - Problem statement updated with a user-goal decision binding, preserving the earlier baseline objective
     as context.
+- turn: 2026-09-22_001#17
+  notes:
+  - Direct N534 records the phased user choice; O375 retains the conditional bottleneck hypothesis. N535/N536
+    bind saved raw results to that hypothesis without general performance/quality promotion.
+  - N537 adopts only exact scheduling and leaves learned compression optional. Current default outputs/gradients/RNG
+    are checked; arbitrary stochastic/stateful modules and high-resolution retention are outside scope.
+  - 'No blanket crystallization of O335/O342/O371-O374: this turn revisits latent loops, preparation reuse
+    and bounded access but does not endorse their complete earlier protocols. No abandonment signal; no
+    promotion inferred from silence.'
+  - Actual Claude withdrew blanket semantic-change and deterministic-timing objections under the stated
+    contract; incorporated valid measurement confounds. All result/report statuses remain distinct.

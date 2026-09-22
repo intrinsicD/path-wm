@@ -8934,3 +8934,81 @@ tree:
   also_depends_on:
   - N532
   status: open
+- id: N534
+  type: decision
+  title: Separate retained detail from bounded observation and world-state tokens; instrument before changing
+    loops
+  provenance: user
+  timestamp: 2026-09-22T21:06+02:00
+  choice: Adopt phased measurement, fixed learned observation bottleneck initially64, bounded persistent
+    state, separate detail retrieval, then temporal deltas/adaptive compute. Keep current width and loops;
+    proposed world128 is an initial experimental capacity, subject to actual existing state and cost.
+    Preserve useful information rather than minimizing tokens alone.
+  alternatives:
+  - Reducing thinker loops first
+  - Converting every retained spatial/temporal/modal feature into a continuously active reasoning token
+  evidence:
+  - docs/token-budget-plan.md
+  also_depends_on:
+  - N532
+  - N499
+  - N504
+  status: resolved
+- id: N535
+  type: experiment
+  title: Measured current categorical token costs and exact complete-event scheduling
+  provenance: ai-executed
+  timestamp: 2026-09-22T21:06+02:00
+  result: Test O375 in fixed synthetic FP32 RTX3050 probes. Existing state16 world+8 workspace; thinker4x8
+    queries independent of source resolution. Complete union preparation once reduces four-modality forward105.422→52.194
+    ms (50.49%), encoder calls10→4 and query evaluations1296→868; backward43.230→43.296 ms. OptionalK64
+    forward52.359 ms, no gain. Dense encoder remains upstream.87 scoped tests pass. Cold-allocation and
+    profiler-startup diagnostic runs retained separately; final timings all precede profiling. No inference/no-grad
+    or general sensor-resolution extrapolation.
+  evidence:
+  - ara/evidence/tables/token_budget_2026-09-22.json
+  - runs/token_budget_final_v1/report.html
+  - runs/token_budget_final_v1/verification.json
+  also_depends_on:
+  - N534
+  status: resolved
+- id: N536
+  type: experiment
+  title: Paired16-update full-access and64-query development fits
+  provenance: ai-executed
+  timestamp: 2026-09-22T21:06+02:00
+  result: Matched shared initialization/RNG, seed71, width32, image32, history2/horizon1,32 train8 validation
+    windows,16 updates. Validation future image MSE0.201750/0.202793; audio0.005748/0.007156; textCE4.789291/4.788357;
+    objectives12.114027/12.225771. Both image predictions worse than copy0.002920. Resampler supports
+    gradient/mask/checkpoint/exact resume mechanics, not demonstrated fine-detail retention or noninferiority.
+    Reports/checkpoints structurally verified; no quality promotion.
+  evidence:
+  - ara/evidence/tables/token_budget_2026-09-22.json
+  - runs/token_budget_quality_v1/comparison.json
+  - runs/token_budget_quality_v1/full_access/report.html
+  - runs/token_budget_quality_v1/resampled_64/report.html
+  also_depends_on:
+  - N534
+  - N535
+  status: resolved
+- id: N537
+  type: decision
+  title: Keep full-access default and adopt only exact complete-event scheduling
+  provenance: ai-executed
+  timestamp: 2026-09-22T21:06+02:00
+  choice: Retain current bounded state, loops and encoder detail access. Expose64-query resampler only
+    as an opt-in comparison. Current costs and short fit do not justify activating compression or enlarging
+    world state to128. Persistent detail retention/retrieval and local encoder scaling remain unfinished
+    phases.
+  alternatives:
+  - Activate resampler64 and world128 regardless of current budget
+  - Claim short-fit similarity proves high-resolution information retention
+  evidence:
+  - N535
+  - N536
+  - docs/token-budget-plan.md
+  - pathwm/models/belief.py
+  - pathwm/models/resampler.py
+  also_depends_on:
+  - N534
+  status: resolved

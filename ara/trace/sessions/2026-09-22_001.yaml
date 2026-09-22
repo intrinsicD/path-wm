@@ -2,8 +2,8 @@ session:
   id: 2026-09-22_001
   date: '2026-09-22'
   started: 2026-09-22T01:13+02:00
-  last_turn: 2026-09-22T18:57+02:00
-  turn_count: 16
+  last_turn: 2026-09-22T21:06+02:00
+  turn_count: 17
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
@@ -12,7 +12,28 @@ session:
     source benchmark scope retained, no local performance claim. Hands/feet review distinguishes WiLoR
     hands, FootMR ankles, SUPR-Foot articulation and FOCUS surfaces; fine-resolution integration and reaction
     benefit remain proposed. Face follow-up separates shape, mouth/eye articulation, head pose, gaze and
-    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand model buffering; execution/storage interpretation documented, training left open. Understanding capabilities and per-frame segmentation clarified; shared features, temporal binding and conditional detail remain proposed and unvalidated. Concrete new-frame dataflow traced against current event APIs; natural-image candidates/detail readers remain proposed. Voice-generation question separates reusable reference conditioning from speaker fine-tuning; pretrained German TTS bridge proposed, local quality and GPU fit unmeasured. Latent-speech follow-up proposes generated content/timing plus voice and delivery conditioning; text baseline optional, acoustic compatibility and disentanglement remain unvalidated. Efficiency challenge clarifies genuine text-bypass savings versus remaining speech-generation work; no measured speed/quality claim. General multimodal scope clarified; latent action tokens proposed for a small Thinker, with dependency-aware training and temporal-order versus serial-compute distinctions. Full-agent token-role question mapped to learned interfaces, signals, ownership and tests; reuse existing states, no new token taxonomy or module implementation adopted. User establishes the integrated latent-agent demonstration objective with native-preferred compatibility, shared-depth loops, autonomous concept/instance memory and correction without runtime retraining. Diffusion remains tentative; frozen-weight protocol independently reviewed, not executed.
+    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person
+    memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition
+    benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB
+    process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand
+    model buffering; execution/storage interpretation documented, training left open. Understanding capabilities
+    and per-frame segmentation clarified; shared features, temporal binding and conditional detail remain
+    proposed and unvalidated. Concrete new-frame dataflow traced against current event APIs; natural-image
+    candidates/detail readers remain proposed. Voice-generation question separates reusable reference
+    conditioning from speaker fine-tuning; pretrained German TTS bridge proposed, local quality and GPU
+    fit unmeasured. Latent-speech follow-up proposes generated content/timing plus voice and delivery
+    conditioning; text baseline optional, acoustic compatibility and disentanglement remain unvalidated.
+    Efficiency challenge clarifies genuine text-bypass savings versus remaining speech-generation work;
+    no measured speed/quality claim. General multimodal scope clarified; latent action tokens proposed
+    for a small Thinker, with dependency-aware training and temporal-order versus serial-compute distinctions.
+    Full-agent token-role question mapped to learned interfaces, signals, ownership and tests; reuse existing
+    states, no new token taxonomy or module implementation adopted. User establishes the integrated latent-agent
+    demonstration objective with native-preferred compatibility, shared-depth loops, autonomous concept/instance
+    memory and correction without runtime retraining. Diffusion remains tentative; frozen-weight protocol
+    independently reviewed, not executed. Active-token measurements show an already bounded thinker and
+    redundant event preparation. Exact complete-event scheduling halves local forward latency; optional64-query
+    resampling remains off after no speed gain and inconclusive16-update fits.87 scoped tests pass; retained-detail
+    retrieval remains open.
 events_logged:
 - turn: 1
   type: question
@@ -337,6 +358,38 @@ events_logged:
   routing: staged
   provenance: user
   summary: A complicated path in latent space might be simplified through latent diffusion.
+- turn: 17
+  type: decision
+  id: N534
+  routing: direct
+  provenance: user
+  summary: Separate retained detail from bounded observation and world-state tokens; instrument before
+    changing loops
+- turn: 17
+  type: experiment
+  id: N535
+  routing: direct
+  provenance: ai-executed
+  summary: Measured current categorical token costs and exact complete-event scheduling
+- turn: 17
+  type: experiment
+  id: N536
+  routing: direct
+  provenance: ai-executed
+  summary: Paired16-update full-access and64-query development fits
+- turn: 17
+  type: decision
+  id: N537
+  routing: direct
+  provenance: ai-executed
+  summary: Keep full-access default and adopt only exact complete-event scheduling
+- turn: 17
+  type: observation
+  id: O375
+  routing: staged
+  provenance: user
+  summary: Conditional token-proliferation bottleneck hypothesis; scoped measurements do not establish
+    it generally.
 ai_actions:
 - turn: 1
   action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
@@ -533,6 +586,19 @@ ai_actions:
   evidence:
   - runs/reviews/latent_agent_demonstration_v1/receipt.json
   - runs/reviews/latent_agent_demonstration_v1/reconciliation-receipt.json
+- turn: 17
+  action: Implemented/measured shape instrumentation, complete-event reuse and optional resampler; ran
+    paired development fits and actual public-only Claude reconciliation; preserved reports/raw evidence
+    and updated atlas.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/evaluation/workload.py
+  - pathwm/models/belief.py
+  - pathwm/models/resampler.py
+  - experiments/token_budget.py
+  - experiments/multimodal.py
+  - docs/token-budget-plan.md
+  - ara/evidence/tables/token_budget_2026-09-22.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -578,6 +644,9 @@ key_context:
   excerpt: Alles soll zusammen latent funktionieren; nativ bevorzugt, Tiefe durch Loops, Konzepte/Instanzen
     im Graph, Wissen selbst erweitern und Fehler korrigieren ohne explizit nachzutrainieren. Latente Diffusion
     könnte schwierige Pfade vereinfachen.
+- turn: 17
+  excerpt: User requires measuring token proliferation before changing loops, distinguishes retained detail
+    from active tokens and prefers incremental fixed budgets before adaptive compute.
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -638,6 +707,9 @@ open_threads:
   before executing the frozen-weight knowledge demonstration.'
 - 'N533: compare latent denoising with a recurrent candidate path on verified outcomes and full cost;
   mechanism optional.'
+- 'N534-N537/O375: define persistent detail ownership/retrieval and local encoder scaling tasks; quality-gated
+  fixed observation/state budgets before deltas/adaptation. Current latency results do not establish whole-pipeline/high-resolution
+  fit.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
