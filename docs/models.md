@@ -1,5 +1,13 @@
 # Models and tensor flow
 
+[Local encoder access](encoder-token-budget-plan.md): opt-in
+`MultiScaleImageEncoder(..., window_size=4, packed_merges=True)` physically packs
+fine image/video windows and pooling footprints. Every detail position remains
+exported; coarsest attention remains global. One geometry-only layout per module
+is reused; masks/times/values are refreshed. Parameter shapes remain compatible,
+but restricting the receptive field changes learned behavior. GPU resource gains
+at 256² do not establish general quality or a 4K fit; defaults remain unchanged.
+
 [Active token budgets](token-budget-plan.md): current categorical state is already
 bounded (16 world +8 workspace slots; Thinker updates8 queries per loop). Complete
 dictionary events now encode/correct their source union once; incremental packet

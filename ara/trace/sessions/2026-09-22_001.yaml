@@ -2,8 +2,8 @@ session:
   id: 2026-09-22_001
   date: '2026-09-22'
   started: 2026-09-22T01:13+02:00
-  last_turn: 2026-09-22T21:06+02:00
-  turn_count: 17
+  last_turn: 2026-09-22T21:51+02:00
+  turn_count: 18
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
@@ -33,7 +33,10 @@ session:
     independently reviewed, not executed. Active-token measurements show an already bounded thinker and
     redundant event preparation. Exact complete-event scheduling halves local forward latency; optional64-query
     resampling remains off after no speed gain and inconclusive16-update fits.87 scoped tests pass; retained-detail
-    retrieval remains open.
+    retrieval remains open. Follow-up locates dense fine-scale attention upstream. Optional packed windows/merges
+    with geometry reuse reduce image256 encoder pairs99.317% and forward+backward66.88%; small inputs
+    retain overhead. All detail positions survive;114 checks pass, but short fits do not validate quality
+    and defaults remain dense.
 events_logged:
 - turn: 1
   type: question
@@ -390,6 +393,36 @@ events_logged:
   provenance: user
   summary: Conditional token-proliferation bottleneck hypothesis; scoped measurements do not establish
     it generally.
+- turn: 18
+  type: question
+  id: N538
+  routing: direct
+  provenance: user
+  summary: Pinpoint the remaining token-cost cause and patch for overall efficiency
+- turn: 18
+  type: experiment
+  id: N539
+  routing: direct
+  provenance: ai-executed
+  summary: Packed local encoder comparison with bounded geometry reuse
+- turn: 18
+  type: experiment
+  id: N540
+  routing: direct
+  provenance: ai-executed
+  summary: Dense versus local encoder16-update learning comparison
+- turn: 18
+  type: decision
+  id: N541
+  routing: direct
+  provenance: ai-executed
+  summary: Expose packed local encoder as a measured optional path; retain dense reference
+- turn: 18
+  type: observation
+  id: O376
+  routing: staged
+  provenance: ai-suggested
+  summary: Local-before-global processing as the higher-resolution resource direction; quality not established.
 ai_actions:
 - turn: 1
   action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
@@ -599,6 +632,18 @@ ai_actions:
   - experiments/multimodal.py
   - docs/token-budget-plan.md
   - ara/evidence/tables/token_budget_2026-09-22.json
+- turn: 18
+  action: Implemented physical footprint/window packing and bounded geometry reuse, preserved dense reference,
+    measured two resource comparisons and paired short fits, reconciled actual-Claude dense-mask/sparsity
+    claims and updated atlas.
+  provenance: ai-executed
+  files_changed:
+  - pathwm/models/multiscale.py
+  - pathwm/evaluation/workload.py
+  - experiments/token_budget.py
+  - experiments/multimodal.py
+  - docs/encoder-token-budget-plan.md
+  - ara/evidence/tables/encoder_token_budget_2026-09-22.json
 claims_touched: []
 key_context:
 - turn: 1
@@ -647,6 +692,9 @@ key_context:
 - turn: 17
   excerpt: User requires measuring token proliferation before changing loops, distinguishes retained detail
     from active tokens and prefers incremental fixed budgets before adaptive compute.
+- turn: 18
+  excerpt: User asks for significant token efficiency and the most likely cause. Report global active
+    set and batch-weighted interactions separately from unchanged total feature/query positions.
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -710,6 +758,8 @@ open_threads:
 - 'N534-N537/O375: define persistent detail ownership/retrieval and local encoder scaling tasks; quality-gated
   fixed observation/state budgets before deltas/adaptation. Current latency results do not establish whole-pipeline/high-resolution
   fit.'
+- 'N538-N541/O376: longer matched quality/seam/detail evaluations before default local windows; cap coarsest
+  global access for larger resolutions and implement persistent detail retrieval separately.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.

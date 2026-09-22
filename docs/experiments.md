@@ -1,5 +1,12 @@
 # Running and editing experiments
 
+For the **remaining encoder scaling bottleneck**, run
+`python -m experiments.token_budget --device cuda --encoder-window 4 --output runs/my_encoder_budget`.
+It compares dense attention, physically packed merges, and packed fine windows
+under the same weights, preserving full detail exports. The synthetic multimodal
+recipe supports `--encoder-window 4 --packed-merges` for the learning comparison.
+[Protocol, resource gains and quality limits](encoder-token-budget-plan.md).
+
 For **active-token and compute profiling**, run
 `python -m experiments.token_budget --device cuda --resampler 64 --output runs/my_token_budget`.
 It compares sequential packet arrival, complete-event preparation once, and an

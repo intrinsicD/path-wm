@@ -309,8 +309,11 @@ sessions:
     independently reviewed, not executed. Active-token measurements show an already bounded thinker and
     redundant event preparation. Exact complete-event scheduling halves local forward latency; optional64-query
     resampling remains off after no speed gain and inconclusive16-update fits.87 scoped tests pass; retained-detail
-    retrieval remains open.
-  turn_count: 17
-  events_count: 45
+    retrieval remains open. Follow-up locates dense fine-scale attention upstream. Optional packed windows/merges
+    with geometry reuse reduce image256 encoder pairs99.317% and forward+backward66.88%; small inputs
+    retain overhead. All detail positions survive;114 checks pass, but short fits do not validate quality
+    and defaults remain dense.
+  turn_count: 18
+  events_count: 50
   claims_touched: []
-  open_threads: 30
+  open_threads: 31

@@ -204,3 +204,5 @@ Source diversity versus frame density: [source-bound evidence](tables/video_dive
 - [Paired request-boundary comparison,17 September](tables/request_boundary_2026-09-17.json): four fixed fits; extra CE loses to matched ordinary CE and fails preservation.640 snapshot tests,30 final focused,11,520 reproduced rows and18 structural reports. Original cap failed; separate fixed-weight recovery and unmetered audit limits preserved; no adoption.
 
 - [Active token budget,22 September](tables/token_budget_2026-09-22.json): complete-event preparation once reduces local four-modality forward105.422→52.194 ms;87 scoped tests pass. Optional64-query resampling adds no runtime gain;16-update fits do not validate information retention.
+
+- [Physically local encoder attention,22 September](tables/encoder_token_budget_2026-09-22.json): image256 encoder pairs99.317% lower, forward+backward194.77→64.50 ms, inference50.21→30.90 ms;114 unique checks and8 final cache checks pass. All detail positions retained; window quality remains unvalidated and defaults unchanged.

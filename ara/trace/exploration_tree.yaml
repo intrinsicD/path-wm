@@ -9012,3 +9012,76 @@ tree:
   also_depends_on:
   - N534
   status: resolved
+- id: N538
+  type: question
+  title: Pinpoint the remaining token-cost cause and patch for overall efficiency
+  provenance: user
+  timestamp: 2026-09-22T21:51+02:00
+  description: User requests significant token efficiency after the complete-event scheduling and late-resampler
+    comparison. Audit the first expensive global computation rather than assume central state proliferation.
+  evidence:
+  - docs/encoder-token-budget-plan.md
+  also_depends_on:
+  - N535
+  - N537
+  status: resolved
+- id: N539
+  type: experiment
+  title: Packed local encoder comparison with bounded geometry reuse
+  provenance: ai-executed
+  timestamp: 2026-09-22T21:51+02:00
+  result: Test O375/O376 upstream scaling in matched synthetic FP32 RTX3050 cases. At image256, global
+    encoder self-attention positions5376→256 while retained positions5376 and batch query evaluations6656
+    remain unchanged. Encoder pairs22,347,776→152,576; forward+backward194.774→64.501 ms; inference50.207→30.901
+    ms; peak allocated452.530→149.456 MiB. Packed merges alone retain support to tolerance and reduce
+    costs less. Small multimodal inference49.066→50.182 ms, so no universal default speedup. Uncached
+    run retained; cache stores geometry only and clears on migration.114 scoped checks plus8 final local
+    checks pass.
+  evidence:
+  - ara/evidence/tables/encoder_token_budget_2026-09-22.json
+  - runs/encoder_token_budget_cached_v1/report.html
+  - runs/encoder_token_budget_cached_v1/verification.json
+  - runs/encoder_token_budget_v1/report.html
+  also_depends_on:
+  - N538
+  - N535
+  status: resolved
+- id: N540
+  type: experiment
+  title: Dense versus local encoder16-update learning comparison
+  provenance: ai-executed
+  timestamp: 2026-09-22T21:51+02:00
+  result: Matched seed71 synthetic fits with width32/image32/history2/horizon1/train32/validation8/batch2
+    and16 updates. Future image MSE0.201750 dense/0.201664 local; audio0.005748/0.005724; textCE4.789291/4.789396;
+    combined objective12.114027/12.105453. Both far worse than copy imageMSE0.002920. Native parameter
+    shapes and exact local training resume work; this does not validate fine-detail preservation, seam
+    robustness or high-resolution task quality.
+  evidence:
+  - ara/evidence/tables/encoder_token_budget_2026-09-22.json
+  - runs/encoder_token_quality_v1/comparison.json
+  - runs/encoder_token_quality_v1/dense/report.html
+  - runs/encoder_token_quality_v1/local/report.html
+  also_depends_on:
+  - N539
+  status: resolved
+- id: N541
+  type: decision
+  title: Expose packed local encoder as a measured optional path; retain dense reference
+  provenance: ai-executed
+  timestamp: 2026-09-22T21:51+02:00
+  choice: Provide window_size4 and packed_merges with full exports, unchanged state/loops and one disposable
+    geometry cache per module. Keep default dense behavior until trained quality screens pass. Coarsest
+    global attention still requires bounded access for much larger resolutions; do not claim4K fit or
+    solve it with a late source resampler.
+  alternatives:
+  - Enable local restrictions universally from timing alone
+  - Drop fine exports or reduce thinker loops
+  - Treat masked dense kernels as computationally sparse
+  evidence:
+  - N539
+  - N540
+  - docs/encoder-token-budget-plan.md
+  - pathwm/models/multiscale.py
+  also_depends_on:
+  - N538
+  status: resolved

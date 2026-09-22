@@ -6615,3 +6615,22 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O376
+  timestamp: 2026-09-22T21:51+02:00
+  provenance: ai-suggested
+  potential_type: claim
+  content: For higher-resolution input, dense fine-scale encoder attention before the latent state boundary
+    is the main remaining scaling target. Physically local processing and footprint-packed merges can
+    greatly reduce global interactions while retaining detail positions; a bounded global reader belongs
+    before the remaining global stage.
+  context: Supported as a resource direction in N539 at synthetic256-square FP32, not a universal latency/quality
+    claim. Fine-window restriction changes the receptive field; tiny inputs retain overhead and coarsest
+    attention still grows. N540 is only a16-update development fit. User has not commented on these results.
+  bound_to:
+  - N538
+  - N539
+  - N540
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

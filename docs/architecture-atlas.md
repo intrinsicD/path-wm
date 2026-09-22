@@ -2,7 +2,7 @@
 
 A map of the implemented components and their interfaces, from the agent loop to attention blocks. The general categorical agent, the Gaussian photo experiment, and the entity experiments are distinct configurations. A drawn module indicates implementation, not proven general capability.
 
-Source review: 2026-09-22, repository snapshot `d63c1cb`. [Open the rendered atlas](architecture-atlas.html).
+Source review: 2026-09-22, repository snapshot `60d0eaa`. [Open the rendered atlas](architecture-atlas.html).
 
 Overview (1): Red: to discuss. Blue: discussed. Green: validated within the labelled scope. [Discussion and validation checklist](architecture-discussion.md).
 
@@ -122,7 +122,9 @@ Integrated research goal clarified by Alex: demonstrate the complete compatible 
 
 22 September user direction: separate retained detail, fixed observation updates and bounded persistent reasoning; instrument first, keep loops. Current categorical recipe already has16 world +8 workspace slots. Complete-event preparation once reduces the measured four-modality forward from105.422 to52.194 ms; backward is unchanged. Optional64-query resampling adds no measured runtime benefit and remains disabled. 16-update fits do not validate detail retention. See docs/token-budget-plan.md; scope is synthetic FP32 RTX3050 development, not general multimodal quality.
 
-Source: [experiments/multimodal.py · build_model:103](../experiments/multimodal.py), [pathwm/models/belief.py · BeliefAgent:102](../pathwm/models/belief.py), [pathwm/models/agent.py · step_task:637](../pathwm/models/agent.py), [docs/multimodal-reference-design.md](../docs/multimodal-reference-design.md), [docs/multimodal-reference-extension.md](../docs/multimodal-reference-extension.md), [pathwm/data/understanding.py · UnderstandingData:488](../pathwm/data/understanding.py), [pathwm/evaluation/understanding.py · evaluate_understanding:233](../pathwm/evaluation/understanding.py), [docs/understanding-suite-plan.md](../docs/understanding-suite-plan.md), [docs/grounded-readout-plan.md](../docs/grounded-readout-plan.md), [experiments/modality_readout.py · grounded:1609](../experiments/modality_readout.py), [docs/human-perception-discussion.md](../docs/human-perception-discussion.md), [docs/neural-engine-inference.md](../docs/neural-engine-inference.md), [docs/video-understanding-test-map.md](../docs/video-understanding-test-map.md), [docs/agent-voice-design.md](../docs/agent-voice-design.md), [docs/latent-core.md](../docs/latent-core.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md), [docs/token-budget-plan.md](../docs/token-budget-plan.md).
+22 September encoder efficiency: optional physical fine windows and packed pooling footprints preserve every exported position. Image256 global encoder self-attention positions5376→256; encoder pairs22.35M→0.153M; measured FP32 RTX3050 forward+backward194.77→64.50 ms, inference50.21→30.90 ms, peak allocated452.53→149.46 MiB.114 scoped tests pass. Fine-window restriction changes receptive fields;16-update fits do not validate detail retention. Small inputs still have overhead, coarsest global attention still scales, and defaults stay unchanged. See docs/encoder-token-budget-plan.md.
+
+Source: [experiments/multimodal.py · build_model:103](../experiments/multimodal.py), [pathwm/models/belief.py · BeliefAgent:102](../pathwm/models/belief.py), [pathwm/models/agent.py · step_task:637](../pathwm/models/agent.py), [docs/multimodal-reference-design.md](../docs/multimodal-reference-design.md), [docs/multimodal-reference-extension.md](../docs/multimodal-reference-extension.md), [pathwm/data/understanding.py · UnderstandingData:488](../pathwm/data/understanding.py), [pathwm/evaluation/understanding.py · evaluate_understanding:233](../pathwm/evaluation/understanding.py), [docs/understanding-suite-plan.md](../docs/understanding-suite-plan.md), [docs/grounded-readout-plan.md](../docs/grounded-readout-plan.md), [experiments/modality_readout.py · grounded:1609](../experiments/modality_readout.py), [docs/human-perception-discussion.md](../docs/human-perception-discussion.md), [docs/neural-engine-inference.md](../docs/neural-engine-inference.md), [docs/video-understanding-test-map.md](../docs/video-understanding-test-map.md), [docs/agent-voice-design.md](../docs/agent-voice-design.md), [docs/latent-core.md](../docs/latent-core.md), [docs/integrated-latent-agent-goal.md](../docs/integrated-latent-agent-goal.md), [docs/token-budget-plan.md](../docs/token-budget-plan.md), [docs/encoder-token-budget-plan.md](../docs/encoder-token-budget-plan.md).
 
 <a id="02-encoders"></a>
 
@@ -144,15 +146,15 @@ flowchart TB
     class wave learned;
     embed["Text stem<br/>Byte embedding + position + modality"]
     class embed learned;
-    fine["Scale 0<br/>Scale embedding → k residual transformer blocks"]
+    fine["Scale 0<br/>Scale embedding → k residual blocks<br/>Optional physically packed image/video windows"]
     class fine learned;
-    merge1["Merge / pool local groups<br/>Optional coarse-query attention to fine footprint"]
+    merge1["Merge / pool local groups<br/>Dense mask or packed exact footprint attention"]
     class merge1 learned;
-    mid["Scale 1<br/>Scale embedding → k residual transformer blocks"]
+    mid["Scale 1<br/>Scale embedding → k residual blocks<br/>Optional physically packed image/video windows"]
     class mid learned;
-    merge2["Repeat merge and processing<br/>Until the configured number of scales"]
+    merge2["Repeat local merge and processing<br/>Optional packed footprints; same retained positions"]
     class merge2 learned;
-    coarse["Final scale<br/>Fully processed coarse features"]
+    coarse["Final scale<br/>Global attention over coarse features"]
     class coarse learned;
     depth_readout["Optional per-scale depth readout<br/>Entry / intermediate + final; zero gate = native"]
     class depth_readout optional;
@@ -218,7 +220,9 @@ Image/video/audio/text encoders now share output-neutral attention diagnostics: 
 
 Active reasoning is distinct from dense retained features. Current pyramid attention remains dense/masked and scales with encoder positions; the optional observation resampler is downstream and cannot remove that cost. PixelUnshuffle/local processing remains a separate encoder design question. The default complete-event path now encodes each modality once.
 
-Source: [pathwm/models/multiscale.py · FeatureHierarchy:233](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleImageEncoder:371](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleAudioEncoder:416](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleTextEncoder:477](../pathwm/models/multiscale.py), [pathwm/models/belief.py · _features:262](../pathwm/models/belief.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md), [pathwm/models/multiscale.py · LayerReadout:165](../pathwm/models/multiscale.py), [docs/layer-readout-plan.md](../docs/layer-readout-plan.md), [docs/visual-codec-review.md](../docs/visual-codec-review.md), [docs/token-budget-plan.md](../docs/token-budget-plan.md).
+22 September encoder efficiency: optional physical fine windows and packed pooling footprints preserve every exported position. Image256 global encoder self-attention positions5376→256; encoder pairs22.35M→0.153M; measured FP32 RTX3050 forward+backward194.77→64.50 ms, inference50.21→30.90 ms, peak allocated452.53→149.46 MiB.114 scoped tests pass. Fine-window restriction changes receptive fields;16-update fits do not validate detail retention. Small inputs still have overhead, coarsest global attention still scales, and defaults stay unchanged. See docs/encoder-token-budget-plan.md.
+
+Source: [pathwm/models/multiscale.py · FeatureHierarchy:402](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleImageEncoder:549](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleAudioEncoder:604](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · MultiScaleTextEncoder:667](../pathwm/models/multiscale.py), [pathwm/models/belief.py · _features:262](../pathwm/models/belief.py), [docs/modality-foundation-plan.md](../docs/modality-foundation-plan.md), [pathwm/models/multiscale.py · LayerReadout:280](../pathwm/models/multiscale.py), [docs/layer-readout-plan.md](../docs/layer-readout-plan.md), [docs/visual-codec-review.md](../docs/visual-codec-review.md), [docs/token-budget-plan.md](../docs/token-budget-plan.md), [docs/encoder-token-budget-plan.md](../docs/encoder-token-budget-plan.md), [pathwm/models/multiscale.py · pack_scale:89](../pathwm/models/multiscale.py), [pathwm/models/multiscale.py · pool_packed_scale:176](../pathwm/models/multiscale.py).
 
 <a id="03-attention"></a>
 
@@ -280,7 +284,9 @@ Attend and ConditionedBlock use one detached attention_probabilities helper for 
 
 Workload records actual allocated Q/K lengths and repeated calls, separately for self/cross attention, without building probability matrices. Pair counts are workload proxies, not allocated score memory. Hooks/backend profiling are kept outside all timing passes; loops remain unchanged.
 
-Source: [pathwm/models/modalities.py · Attend:111](../pathwm/models/modalities.py), [pathwm/models/multiscale.py · ConditionedBlock:89](../pathwm/models/multiscale.py), [pathwm/models/conditional_image.py · OutputBlock:47](../pathwm/models/conditional_image.py), [pathwm/models/modalities.py · attention_probabilities:77](../pathwm/models/modalities.py), [pathwm/evaluation/workload.py](../pathwm/evaluation/workload.py).
+Physical packing makes windows separate batches; compare batch-weighted query-key pairs, not only per-call sequence lengths. Fused dense attention need not materialize scores to retain dense arithmetic; Boolean masks do not establish sparse execution. Ordinary local execution avoids full fine masks; diagnostic traces may expand on CPU.
+
+Source: [pathwm/models/modalities.py · Attend:111](../pathwm/models/modalities.py), [pathwm/models/multiscale.py · ConditionedBlock:204](../pathwm/models/multiscale.py), [pathwm/models/conditional_image.py · OutputBlock:47](../pathwm/models/conditional_image.py), [pathwm/models/modalities.py · attention_probabilities:77](../pathwm/models/modalities.py), [pathwm/evaluation/workload.py](../pathwm/evaluation/workload.py).
 
 <a id="04-belief"></a>
 

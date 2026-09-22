@@ -2,8 +2,16 @@
 
 **Active encoder token-efficiency follow-up:** [local encoder plan](encoder-token-budget-plan.md).
 Target dense fine-scale attention and dense masked pooling footprints upstream of
-the resampler. Implement selectable exact-support packed merges and opt-in fine
-windows with all detail positions retained; test costs and receptive-field limits.
+the resampler. Implemented selectable packed merges and fine windows, retaining
+every detail position and caching only one geometry map per module. At image256,
+encoder pairs 22.35M→0.153M (99.317% fewer); forward+backward 194.77→64.50 ms,
+no-grad inference 50.21→30.90 ms; peak allocated 452.53→149.46 MiB. Global encoder
+self-attention participation 5376→256 positions; total retained/query positions
+are unchanged. Small inputs still have modest overhead. 114 scoped tests pass;
+paired 16-update fits show similar image loss but do not establish detail retention.
+Keep window restrictions optional; coarse global attention still grows with input.
+Evidence `runs/encoder_token_budget_cached_v1/report.html`, quality reports under
+`runs/encoder_token_quality_v1/`; unchanged renderer, structural verification.
 
 **Active token budget implementation, 22 September:**
 [token budget plan](token-budget-plan.md). Instrument actual allocated attention
