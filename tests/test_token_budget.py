@@ -14,7 +14,9 @@ from pathwm.models.blocks import Attention
 
 def packet_reference(model, state, observations):
     ordinal = state.ordinal + 1
-    pending = model.begin_event(state, event_id=f"event-{ordinal}", ordinal=ordinal, time=1.)
+    pending = model.begin_event(
+        state, event_id=f"event-{ordinal}", ordinal=ordinal, time=1.0
+    )
     for name, obs in sorted(observations.items()):
         pending = model.add_packet(pending, Packet(f"{ordinal}/{name}", name, obs))
     return model.commit_event(pending)
@@ -60,46 +62,81 @@ def test_instrumentation_preserves_outputs_gradients_rng_and_removes_hooks():
     with pytest.raises(RuntimeError, match="stop"):
         with Workload(model):
             raise RuntimeError("stop")
-    assert all(not m._forward_pre_hooks and not m._forward_hooks for m in model.modules())
+    assert all(
+        not m._forward_pre_hooks and not m._forward_hooks for m in model.modules()
+    )
 
 
-def test_complete_event_encodes_once_with_same_posterior_and_gradients():
+@pytest.mark.parametrize("training", [False, True])
+def test_complete_event_encodes_once_with_same_posterior_and_gradients(training):
     torch.manual_seed(71)
-    model = build_model(width=16, state_model="belief").eval()
+    model = build_model(width=16, state_model="belief").train(training)
+    buffers = {n: b.clone() for n, b in model.named_buffers()}
     start = model.initial_state(2)
     observations = {
         "image": Observation(torch.randn(2, 1, 3, 16, 16), torch.ones(2, 1)),
         "audio": Observation(torch.randn(2, 1, 32), torch.ones(2, 1)),
     }
     # Include an entirely absent member and masked NaNs.
-    observations = {name: replace(obs, valid=torch.tensor([[True], [False]]),
-                    values=obs.values.masked_fill(torch.arange(2).reshape(2, *([1] * (obs.values.ndim - 1))) == 1, float("nan")))
-                    for name, obs in observations.items()}
+    observations = {
+        name: replace(
+            obs,
+            valid=torch.tensor([[True], [False]]),
+            values=obs.values.masked_fill(
+                torch.arange(2).reshape(2, *([1] * (obs.values.ndim - 1))) == 1,
+                float("nan"),
+            ),
+        )
+        for name, obs in observations.items()
+    }
     counts = {name: 0 for name in observations}
+
     def count(name):
         def hook(*args):
             counts[name] += 1
+
         return hook
+
     hooks = [model.encoders[name].register_forward_hook(count(name)) for name in counts]
     rng = torch.get_rng_state()
     expected = packet_reference(model, start, observations)
+    expected_rng = torch.get_rng_state()
     expected.logits.square().sum().backward(retain_graph=True)
-    grads = {n: p.grad.clone() for n, p in model.named_parameters() if p.grad is not None}
+    grads = {
+        n: p.grad.clone() for n, p in model.named_parameters() if p.grad is not None
+    }
     model.zero_grad(set_to_none=True)
     torch.set_rng_state(rng)
     counts.update({name: 0 for name in counts})
-    actual = model.observe(start, observations, time=1.)
+    actual = model.observe(start, observations, time=1.0)
+    assert torch.equal(expected_rng, torch.get_rng_state())
     actual.logits.square().sum().backward()
     for hook in hooks:
         hook.remove()
     assert counts == {"image": 1, "audio": 1}
-    for field in ("tokens", "h", "logits", "z", "evidence", "source_valid", "source_start", "source_end"):
-        torch.testing.assert_close(getattr(actual, field), getattr(expected, field), atol=1e-6, rtol=1e-5)
-    assert actual.sources == expected.sources and actual.memory.sources == expected.memory.sources
+    for field in (
+        "tokens",
+        "h",
+        "logits",
+        "z",
+        "evidence",
+        "source_valid",
+        "source_start",
+        "source_end",
+    ):
+        torch.testing.assert_close(
+            getattr(actual, field), getattr(expected, field), atol=1e-6, rtol=1e-5
+        )
+    assert (
+        actual.sources == expected.sources
+        and actual.memory.sources == expected.memory.sources
+    )
     assert actual.observation_count == expected.observation_count == 1
     for name, p in model.named_parameters():
         if name in grads:
             torch.testing.assert_close(p.grad, grads[name], atol=2e-6, rtol=2e-5)
+    for name, value in model.named_buffers():
+        assert torch.equal(value, buffers[name]), name
 
 
 def test_resampler_has_fixed_budget_and_does_not_read_invalid_detail():
@@ -118,6 +155,58 @@ def test_resampler_has_fixed_budget_and_does_not_read_invalid_detail():
     assert values.grad[valid].abs().sum() > 0
     assert torch.count_nonzero(values.grad[~valid]) == 0
     assert layer.queries.grad.abs().sum() > 0
-    assert not torch.equal(layer(values.detach(), valid), layer(torch.zeros_like(values), valid))
+    assert not torch.equal(
+        layer(values.detach(), valid), layer(torch.zeros_like(values), valid)
+    )
     with pytest.raises(ValueError):
         LatentResampler(16, tokens=0)
+    assert layer(values[:, :0], valid[:, :0]).shape == (2, 64, 16)
+    assert torch.count_nonzero(layer(values[:, :0], valid[:, :0])) == 0
+
+
+def test_resampled_updates_keep_state_bounded_and_existing_snapshot_compatible():
+    from pathwm.evaluation.workload import Workload
+    from pathwm.models.resampler import LatentResampler
+
+    model = build_model(width=16, state_model="belief")
+    checkpoint = model.state_dict()
+    model.load_state_dict(checkpoint, strict=True)
+    model.observation_resampler = LatentResampler(16, tokens=64)
+    state = model.initial_state(1)
+    trace = {}
+    with Workload(model) as work:
+        for i in range(2):
+            state = model.observe(
+                state,
+                {
+                    "image": Observation(
+                        torch.randn(1, 1, 3, 32, 32), torch.full((1, 1), float(i))
+                    )
+                },
+                time=float(i),
+                trace=trace,
+            )
+        state = model.think(state, steps=4)
+        work.record_state(state)
+    result = work.summary()
+    assert [row["N_encoded"] for row in result["encoded"]] == [84, 84]
+    assert result["observation"] == [{"N_observation": 64}] * 2
+    assert result["states"][0]["N_world_state"] == 16
+    assert result["states"][0]["N_persistent_total"] == 24
+    assert result["per_layer"]["thinker.read"]["calls"] == 4
+    assert result["per_layer"]["thinker.read"]["N_query"] == [8] * 4
+    assert len(trace["observe.input_modalities"]) == 64
+    assert len(trace["observe.detail_input_modalities"]) == 85
+    state.logits.square().mean().backward()
+    assert model.observation_resampler.queries.grad.abs().sum() > 0
+
+
+def test_comparison_starts_with_identical_shared_weights_and_training_rng():
+    torch.manual_seed(71)
+    baseline = build_model(width=16, state_model="belief")
+    expected_rng = torch.get_rng_state()
+    torch.manual_seed(71)
+    variant = build_model(width=16, state_model="belief", observation_tokens=64)
+    assert torch.equal(expected_rng, torch.get_rng_state())
+    for name, value in baseline.state_dict().items():
+        assert torch.equal(value, variant.state_dict()[name]), name

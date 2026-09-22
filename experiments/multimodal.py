@@ -111,6 +111,7 @@ def build_model(
     feature_depth=1,
     fusion_depth=0,
     state_model="gaussian",
+    observation_tokens=0,
     memory_recent=32,
     memory_block=8,
     memory_blocks=16,
@@ -123,6 +124,13 @@ def build_model(
     fact_reader="direct",
     fact_encoder_weights=None,
 ):
+    if observation_tokens < 0 or (
+        observation_tokens
+        and (state_model != "belief" or facts or entities or entity_matching or recall)
+    ):
+        raise ValueError(
+            "Observation resampling requires the standard categorical agent"
+        )
     if entity_matching:
         return EntityMatchReader(width)
     if entities:
@@ -219,6 +227,12 @@ def build_model(
         task_interpreter=TaskInterpreter(width),
         task_policy=TaskPolicy(width),
     )
+    if observation_tokens:
+        from pathwm.models.resampler import LatentResampler
+
+        # Keep shared initialization and subsequent training RNG matched to baseline.
+        with torch.random.fork_rng(devices=[]):
+            model.observation_resampler = LatentResampler(width, observation_tokens)
     if recall:
         if state_model != "belief":
             raise ValueError("Recall requires the categorical belief model")
@@ -2110,6 +2124,7 @@ def check(settings):
             settings["image_size"],
             settings["audio_samples"],
             state_model=settings.get("state_model", "gaussian"),
+            observation_tokens=settings.get("observation_tokens", 0),
             memory_recent=settings.get("memory_recent", 32),
             memory_block=settings.get("memory_block", 8),
             memory_blocks=settings.get("memory_blocks", 16),
@@ -2429,6 +2444,7 @@ def train(settings, output, *, resume=False, stop_after=None):
             settings["image_size"],
             settings["audio_samples"],
             state_model=settings.get("state_model", "gaussian"),
+            observation_tokens=settings.get("observation_tokens", 0),
             memory_recent=settings.get("memory_recent", 32),
             memory_block=settings.get("memory_block", 8),
             memory_blocks=settings.get("memory_blocks", 16),
@@ -5946,6 +5962,12 @@ def main():
         "--state-model", choices=["belief", "gaussian"], default="belief"
     )
     parser.add_argument(
+        "--observation-tokens",
+        type=int,
+        default=0,
+        help="Opt-in learned observation budget; 0 preserves full access",
+    )
+    parser.add_argument(
         "--entity-growth-weights",
         help="Frozen entity matcher checkpoint for growth evaluation",
     )
@@ -6025,6 +6047,18 @@ def main():
     parser.add_argument("--ema-decay", type=float, default=0.99)
     parser.add_argument("--device", default="cpu")
     args = parser.parse_args()
+    if args.observation_tokens < 0 or (
+        args.observation_tokens
+        and (
+            args.dataset != "synthetic"
+            or args.state_model != "belief"
+            or args.explore is not None
+            or args.diagram is not None
+        )
+    ):
+        parser.error(
+            "Observation resampling is currently a synthetic categorical comparison"
+        )
     if args.explore is not None:
         if (
             args.check

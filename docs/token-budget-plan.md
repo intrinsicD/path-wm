@@ -65,6 +65,37 @@ does not. Measure encoder, correction, memory and thinker separately.
 - Existing reusable report renderer; save raw call records, metrics, source identity,
   initialization checkpoint and report. Mark result and report status separately.
 
+Instrumentation-only baseline `runs/token_budget_before_v1` completed with identical
+old complete/packet schedules. Its timing cleared the allocator each repeat; keep
+that artifact as a cold-allocation development diagnostic, not the final comparison.
+Before the comparison, move cache clearing before warmups, capture actual SDPA
+operator names and inclusive region diagnostics in a separate profiler pass, and
+retain latency ranges. Deterministic FP32 is the declared measured execution mode.
+Peak memory is whole-pass; do not attribute a global peak or theoretical score
+elements to materialized attention storage. Report resampler parameters separately.
+
+Before the final comparison, move *all* operator profiling after *all* timing arms:
+the first profiler-bearing run showed a timing discontinuity after profiler startup.
+Keep `runs/token_budget_after_v1` as a development diagnostic, not the final estimate.
+
+## Small trained comparison (declared before its execution)
+
+Use the existing synthetic categorical recipe, final weights, seed 71, width 32,
+image 32 square, audio 32, history 2, horizon 1, train 32 windows / validation 8,
+batch 2, 16 updates, AdamW 3e-4, EMA .99, evaluation every 8, no extra-update gate.
+Compare observation_tokens=0 versus 64, matching shared initial parameters, sampling
+and RNG. GPU budget 5 minutes per arm, at most 6 GiB allocated. This is a development
+fit/gradient check, not a high-resolution information-retention validation. Report
+reconstruction and future NLL, image/audio errors and text CE, including initial
+values. No quality pass or adoption threshold: 16 steps cannot establish task quality.
+Full preservation still requires fine-detail source/retrieval tasks and longer fits.
+
+Public-only actual-Claude review accepted the fixed-prior/canonical-order complete
+event equivalence and scoped deterministic timing after withdrawing broader contrary
+claims. Incorporated allocator warmup, backend diagnostics, raw dispersion, module
+purity/RNG limits and separation of overhead from attention arithmetic. Receipts:
+`runs/reviews/token_budget_v1/`. Peer agreement is not experimental validation.
+
 ## Following phases and scope
 
 The current world state is already bounded. Expose/configure larger budgets only

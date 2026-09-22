@@ -1,4 +1,5 @@
 import json
+import pytest
 import torch
 
 from experiments.multimodal import (
@@ -44,10 +45,12 @@ def test_new_objective_trains_grounding_memory_and_marking_without_teacher_gradi
     assert "latent_nll" not in losses and raw["memory_tensor_bytes"] > 0
 
 
-def test_belief_recipe_exact_resume_and_report(tmp_path):
+@pytest.mark.parametrize("observation_tokens", [0, 64])
+def test_belief_recipe_exact_resume_and_report(tmp_path, observation_tokens):
     config = dict(
         settings(),
         state_model="belief",
+        observation_tokens=observation_tokens,
         history=4,
         horizon=1,
         memory_recent=1,

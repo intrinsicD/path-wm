@@ -109,6 +109,7 @@ class BeliefAgent(MultimodalAgent):
         latent_codes=8,
         evidence_tokens=8,
         time_unit="steps",
+        observation_resampler=None,
         **components,
     ):
         if min(context_tokens, latent_groups, evidence_tokens) < 1 or latent_codes < 2:
@@ -132,6 +133,8 @@ class BeliefAgent(MultimodalAgent):
         self.evidence_tokens, self.time_unit = evidence_tokens, time_unit
         self.evidence_queries = nn.Parameter(torch.randn(evidence_tokens, width) * 0.02)
         self.evidence_encoder = Attend(width)
+        # Opt-in learned bottleneck. None preserves old checkpoints and full access.
+        self.observation_resampler = observation_resampler
         self.readout = nn.Linear(latent_groups * latent_codes, width, bias=False)
 
     def initial_state(self, batch_size, time=0.0, *, session_id=None):
@@ -385,6 +388,17 @@ class BeliefAgent(MultimodalAgent):
         prior = pending.prior
         if not present.any():
             return replace(pending, state=prior)
+        if self.observation_resampler is not None:
+            values = self.observation_resampler(values, valid)
+            valid = torch.ones(values.shape[:2], dtype=torch.bool, device=values.device)
+            if trace is not None:
+                for field in ("input_modalities", "input_scales", "valid"):
+                    trace["observe.detail_" + field] = trace["observe." + field]
+                trace["observe.input_modalities"] = [
+                    "observation_latent"
+                ] * values.shape[1]
+                trace["observe.input_scales"] = ["observation_latent"] * values.shape[1]
+                trace["observe.valid"] = valid.detach().cpu()
         logits = self.updater(prior, values, valid, self.memory, trace)
         logits = torch.where(present[:, None, None], logits, prior.logits)
         z, stochastic = draw(logits, pending.noise)
@@ -484,8 +498,12 @@ class BeliefAgent(MultimodalAgent):
             Packet(f"{ordinal}/{name}", name, observation)
             for name, observation in sorted(observations.items())
         )
-        for packet in packets:
-            pending = self.add_packet(pending, packet, trace=trace)
+        # The whole source union is already available. Incremental add_packet()
+        # still corrects each arrival from the same prior, but there is no consumer
+        # for intermediate posteriors here. Prepare/correct the union only once.
+        # Equivalence to repeated arrivals assumes pure deterministic components;
+        # stochastic/stateful custom encoders have different call/RNG histories.
+        pending = self.correct_packets(replace(pending, packets=packets), trace=trace)
         return self.commit_event(pending)
 
     def remember(self, state, *, source):
