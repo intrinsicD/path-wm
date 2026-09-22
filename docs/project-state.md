@@ -1,5 +1,16 @@
 # Current work
 
+**Integrated latent agent: user goal, 22 September:**
+[objective and proposed demonstration](integrated-latent-agent-goal.md).
+Alex explicitly prioritizes showing the complete latent perception/thinking/action/
+memory path, native compatibility preferred with adapters allowed, shared-depth
+loops, meaningful concept/instance acquisition and retrieval, autonomous graph
+extension and correction, and useful workflows across domains. Runtime knowledge
+growth should not require explicit weight retraining. Latent diffusion is a possible
+mechanism, not an adopted shortcut. Propose a frozen-weight acquisition/use/correction
+demonstration with source controls; existing partial mechanics do not establish it.
+Domain choices, datasets, gates and training budgets remain open; no run started.
+
 **General latent-processing clarification, 22 September:**
 [multimodal core](latent-core.md#gemeinsamer-denkraum-modalitätsspezifisches-auslesen).
 Alex corrects the speech-only framing: the whole multimodal model should transform

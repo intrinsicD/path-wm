@@ -2,6 +2,10 @@
 
 Read [workflow](docs/experiment-workflow.md), then
 [current work](docs/project-state.md). Read the active plan linked there.
+Keep the [integrated latent-agent research goal](docs/integrated-latent-agent-goal.md)
+in view: compatible latent computation, shared-depth reasoning, and useful concept/
+instance memory that acquires and corrects knowledge at runtime without weight
+retraining. Partial component checks do not establish this complete capability.
 Apply the workflow's [standing design principles](docs/experiment-workflow.md#standing-design-principles)
 whenever designing or revising any part of the model; actively integrate relevant ideas.
 

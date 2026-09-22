@@ -6561,3 +6561,39 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O373
+  timestamp: 2026-09-22T18:57+02:00
+  provenance: ai-suggested
+  potential_type: architecture
+  content: Propose initial training followed by an all-weights-frozen acquisition/use/correction demonstration.
+    New concepts need held-out instances, counterexamples and uses beyond nearest-example lookup. Agent
+    proposes graph writes/reads; test after nonpersistent-state reset, causal memory interventions, false
+    corrections, dependency invalidation and preservation controls. Distinguish multi-domain capability
+    from held-out-domain transfer. Compare flat memory/long context and fixed loop budgets, with full
+    compute and independent outcome checks.
+  context: User adopts the integrated objective, not this exact protocol or domain choices. Actual Claude
+    abstract review and reconciliation adopted core controls and withdrew categorical restrictions on
+    fixed-weight abstractions/skills and mandatory baseline superiority. No run, dataset/gates selected
+    or model changed.
+  bound_to:
+  - N532
+  - N531
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O374
+  timestamp: 2026-09-22T18:57+02:00
+  provenance: user
+  potential_type: claim
+  content: A complicated path in latent space might be simplified through latent diffusion.
+  context: Explicit tentative mechanism hypothesis, not a proven speedup or selected architecture. Shared-weight
+    loops and knowledge-memory integration remain distinct mechanisms; denoising cost and independently
+    valid outcomes would need comparison.
+  bound_to:
+  - N533
+  - N532
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

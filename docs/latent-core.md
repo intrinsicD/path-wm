@@ -1,5 +1,11 @@
 # Der latente Kern und die multimodale Ausgabe
 
+Das [integrierte Forschungsziel vom 22. September](integrated-latent-agent-goal.md)
+verbindet die folgenden Bausteine: native latente Zusammenarbeit, geteilte Loops,
+Konzept-/Instanzgedächtnis, autonome Wissensaufnahme und Korrektur ohne erneutes
+Gewichtstraining während der Demonstration. Mechanismen und Einzelergebnisse bleiben
+von diesem noch offenen Gesamtnachweis getrennt.
+
 Stand: 15. September 2026, Modellcode `8937b15`. Diese Darstellung beschreibt den
 kategorischen `BeliefAgent`, ergänzt um die optionale persistente WorldSession.
 Der frühere Gaussian-Agent und die separaten Bild-VAEs sind andere Konfigurationen.

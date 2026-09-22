@@ -8899,3 +8899,38 @@ tree:
   also_depends_on:
   - N530
   status: open
+- id: N532
+  type: decision
+  title: Make integrated latent learning and revisable knowledge the research demonstration goal
+  provenance: user
+  timestamp: 2026-09-22T18:57+02:00
+  choice: Demonstrate compatible latent perception/thinking/action/memory, preferably native with translators
+    allowed; effective depth through architecture/shared loops; meaningful concepts and instances; autonomous
+    graph growth, retrieval and correction; useful learned workflows across domains; runtime knowledge
+    acquisition without explicit weight retraining. This resolves the objective, not the empirical achievement.
+  alternatives:
+  - Partial component success alone does not fulfill the integrated goal.
+  - Per-fact explicit weight retraining is not the requested runtime learning path.
+  evidence:
+  - docs/integrated-latent-agent-goal.md
+  - CLAUDE.md
+  - docs/project-state.md
+  also_depends_on:
+  - N531
+  - N530
+  status: resolved
+- id: N533
+  type: question
+  title: Can latent diffusion simplify a difficult latent reasoning or planning path?
+  provenance: user
+  timestamp: 2026-09-22T18:57+02:00
+  description: Alex proposes latent diffusion as a possible simplification mechanism within the integrated
+    objective. The hypothesis does not select a denoising model or establish lower cost, causal validity
+    or better reasoning.
+  evidence:
+  - docs/integrated-latent-agent-goal.md
+  - https://diffusion-planning.github.io/
+  - https://arxiv.org/abs/2112.10752
+  also_depends_on:
+  - N532
+  status: open
