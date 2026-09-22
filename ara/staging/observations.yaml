@@ -6399,3 +6399,43 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O365
+  timestamp: 2026-09-22T13:27+02:00
+  provenance: ai-suggested
+  potential_type: architecture
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+  content: Propose image/video understanding as evidence-dependent object/relation judgments, actor/event
+    binding, persistent queryable history, novel compositions and scoped prediction. Reuse shared multiscale
+    sources, core/Thinker and entity state; train and evaluate their actual use together on one small
+    natural interaction/history task with held-out source groups and omission/single-frame controls.
+  context: Existing dated baselines pass 0/25 quick screens; one controlled temporal continuation passes
+    1/25 with seed/preservation limits. TempCompass/Vinoground support evaluation methodology, not new
+    PATH-WM capability. No run or model selected.
+  bound_to:
+  - N524
+  - N525
+  - N515
+- id: O366
+  timestamp: 2026-09-22T13:27+02:00
+  provenance: ai-suggested
+  potential_type: architecture
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+  content: Dense pixel segmentation is task-dependent, not a universal prerequisite. Proposed execution
+    uses shared current-image features, object association/discovery, conditional masks/detail crops and
+    temporal relation/event readout before evidence storage. Old-frame propagation remains estimated;
+    maintain periodic/triggered global recovery and adequate fast-event sampling. Preserve access to captured
+    fine detail and compare missed objects/events, drift, endpoint quality and full latency against a
+    fixed reference.
+  context: SAM2 primary docs describe streaming-memory video segmentation; no automatic compute-free reuse
+    or target-GPU performance follows. Pre-compression source design remains intact, no fixed segmentation
+    cadence or installed specialist.
+  bound_to:
+  - N525
+  - N524
+  - N523

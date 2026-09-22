@@ -2726,3 +2726,11 @@ entries:
     ownership distinct.
   - No closure of full prior O362, no new training decision or validation promotion. Transcript tail is
     archival and does not add an event.
+- turn: 2026-09-22_001#9
+  notes:
+  - Voice capability question and typed segmentation follow-up belong to one ongoing task. Record both
+    as open questions; no new user architecture endorsement inferred.
+  - Distinguish old scoped tests from current capability, trained state use from storage mechanics, image
+    feature computation from dense mask outputs, and mask propagation from exact reuse.
+  - Retain all earlier open topics; no new measurements, source downloads, maturity closure or validation
+    changes.

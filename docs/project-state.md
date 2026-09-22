@@ -1,5 +1,17 @@
 # Current work
 
+**What remains for image/video understanding, 22 September:**
+[capabilities and current limits](video-understanding-test-map.md#bild-videoverstehen-nach-der-personen--und-engine-diskussion).
+Alex asks beyond human geometry and inference buffering. Discuss object semantics,
+relations/roles, temporal events, evidence-bound state/history, grounded queries and
+scoped prediction. Existing core/memory interfaces are building blocks; learned
+integration and natural-data generalization remain unvalidated. Propose one small
+interaction/history task with source controls; no new run or architecture adoption.
+Follow-up distinguishes shared per-frame features from dense segmentation: propose
+tracking plus conditional detail masks/crops, with new-object discovery and recovery
+checks. Old-frame propagation remains uncertain inference; source retention and
+fast-event sampling need explicit budgets. No fixed cadence or SAM2 adoption.
+
 **Demand-driven inference engine, 22 September:**
 [buffer analogy and execution boundaries](neural-engine-inference.md). Alex proposes
 a central Neural Engine that uses trained models on demand, like a rendering buffer,

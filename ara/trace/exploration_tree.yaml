@@ -8766,3 +8766,35 @@ tree:
   - N521
   - N500
   status: open
+- id: N524
+  type: question
+  title: What remains for actual image and video understanding?
+  provenance: user
+  timestamp: 2026-09-22T13:27+02:00
+  description: Alex asks beyond human geometry and inference buffering. Discuss general objects, relations/roles,
+    temporal events, queryable state/history, uncertainty and scoped prediction; existing core/memory
+    mechanisms do not establish learned natural-data integration.
+  evidence:
+  - docs/video-understanding-test-map.md
+  - docs/understanding-suite-plan.md
+  - docs/grounded-readout-plan.md
+  also_depends_on:
+  - N523
+  - N515
+  status: open
+- id: N525
+  type: question
+  title: Does understanding require segmenting every pixel of every frame?
+  provenance: user
+  timestamp: 2026-09-22T13:27+02:00
+  description: 'Typed follow-up steers the ongoing explanation toward actual execution: distinguish shared
+    image features, optional dense masks, temporal tracking and conditional detail, preserving discovery
+    of new objects and fast events.'
+  evidence:
+  - docs/video-understanding-test-map.md
+  - https://github.com/facebookresearch/sam2
+  also_depends_on:
+  - N524
+  - N523
+  - N522
+  status: open

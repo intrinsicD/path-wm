@@ -94,3 +94,118 @@ These are methodology references, not downloaded data, adopted architectures or
 capabilities already measured in PATH-WM. Existing Charades clips can support a
 small initial natural-video study, but their available annotations must first be
 checked against the desired trajectory/state targets.
+
+## Bild-/Videoverstehen nach der Personen- und Engine-Diskussion
+
+22. September: Alex fragt, welche weiteren Fähigkeiten das Modell für echtes
+Bild-/Videoverstehen benötigt. Die Personenrekonstruktion liefert spezialisierte
+Beobachtungen; die [Neural Engine](neural-engine-inference.md) organisiert deren
+Ausführung. Beides allein belegt noch kein Verstehen. Operationaler Vorschlag:
+Das System kann aus der jeweils verfügbaren Evidenz richtige Objekt-/Relations-
+und Ereignisurteile bilden, relevante Verläufe behalten, neue Kombinationen
+verarbeiten und bei fehlender Evidenz Unsicherheit ausdrücken. Ein anschauliches
+Mesh, niedriger Rekonstruktionsfehler oder flüssige Bildbeschreibung reichen als
+Prüfung nicht aus; Sprachproduktion ist keine Voraussetzung jeder visuellen Aufgabe.
+
+Zusätzlich zur Personenerfassung sind vor allem diese Fähigkeiten nötig:
+
+| Fähigkeit | Konkreter Inhalt |
+| --- | --- |
+| Allgemeine visuelle Semantik | Gegenstände, Szene, sichtbare Eigenschaften und bei entsprechenden Aufgaben Schrift/Symbole; relevante feine Bilddetails zugänglich halten. |
+| Räumliche Beziehungen und Bindung | Welche Hand gehört zu welcher Person; welche Tasse steht auf welchem Tisch; Nähe, Kontakt und Halten unterscheiden. Vollständiges metrisches 3D ist kein Muss für jede Bildfrage. |
+| Zeitlicher Zusammenhang | Identität, Bewegung, Kameraänderung, Verdeckung und Zustandswechsel verknüpfen. Dieselbe Endansicht kann aus unterschiedlichen Vorgeschichten entstehen. |
+| Ereignisse und Rollen | Wer bewegt welches Objekt, in welcher Reihenfolge und mit welchem beobachteten Ergebnis? Bewegung oder Pose allein legt Absicht und Verursachung nicht eindeutig fest. |
+| Evidenzgebundenes Gedächtnis und Abruf | Der aktuelle Weltzustand liest passende zeitgestempelte Beobachtungen/Relationen; zuletzt gesehen, jetzt sichtbar und nur vermutet bleiben unterscheidbar. |
+| Vorhersage und Aufgabenbezug | Aus einem bisherigen Verlauf mögliche nächste Zustände ableiten, Fragen auf sichtbare/historische Entitäten beziehen und bei Bedarf gezielt neue Details lesen. Vorhersagen separat gegen einfache Referenzen testen. |
+
+Diese Punkte beschreiben Lernaufgaben und Repräsentationsanforderungen, keine
+Verpflichtung zu sechs getrennten großen Netzen. Gemeinsame Multiskalenmerkmale,
+der vorhandene Kern/Thinker und Entitätszustände sind passende Anschlusspunkte.
+Kleine trainierte Leser können auf dieselbe Quelle zugreifen. Quellauflösung,
+Zeitverfügbarkeit, Modell-/Evidenzversion und begrenzter Arbeitssatz bleiben
+explizit. Die Engine kann Aufrufe puffern; die Auswahl relevanter Beobachtungen,
+Relationen, Aktualisierungen und Antworten muss selbst gelernt/geprüft werden.
+Bei Lernmethoden sind vortrainierte Merkmale oder separat erzeugte Teacherziele
+optionale Startpunkte; keine Ablösung der akzeptierten gemeinsamen Lernrichtung.
+
+Prüfbares Beispiel: Person A hebt eine Tasse vom Tisch und stellt sie später
+hinter eine Box. Aufgaben: Akteur/Objekt binden, Anheben von bloßem Berühren
+unterscheiden, letzte beobachtete Position abrufen, bei Verdeckung den aktuellen
+Zustand nicht als neu beobachtet ausgeben. Andere Personen, Tassen, Hintergründe
+und Kamerabewegungen dienen als getrennte Quellen. Antwort muss auf relevante
+Änderungen reagieren, nicht auf bloße Oberflächenwechsel. Physikalische/kausale
+Behauptungen benötigen eigene Eingriffs-/Aktionsdaten; reine Reihenfolge ist
+kein kausaler Beweis. Audio kann zusätzliche Evidenz liefern, ist aber keine
+Pflichtvoraussetzung für visuelle Aufgaben.
+
+Wichtigstes noch fehlendes Element ist die gelernte, nachweislich verwendete
+Verbindung der Bausteine. Die [reguläre Suite](understanding-suite-plan.md)
+zeigte für die zwei untersuchten Baselines 0/25 bestandene Schnellprüfungen;
+eine [gezielte Fortsetzung](grounded-readout-plan.md) bestand 1/25, eng begrenzt
+auf kontrollierte Videoreihenfolge, mit Seed-/Erhaltungsgrenzen. Das sind datierte
+Versuchsstände, keine neue Evaluation des aktuellen Gesamtsystems und kein
+Beweis, dass seine Encoder keinerlei nützliche Information enthalten. Vorhandene
+Speicher-/Restart-Tests belegen Mechanik, kein natürliches Personen-/Objektverstehen.
+
+Kleinster vorgeschlagener nächster Fähigkeitsumfang: wenige reale Objektarten,
+eine Person-Objekt-Interaktion, zeitlicher Zustand und tatsächlich genutzter
+Gedächtnisabruf. Quellen getrennt halten; Paare mit gleichen Objekten, aber
+verschiedenen Rollen/Verläufen, sowie erforderliche-Quelle-entfernt- und
+Einzelbildkontrollen verwenden. [TempCompass](https://github.com/llyx97/TempCompass)
+verwendet widersprechende Videos gegen Einzelbild-/Sprachprior-Abkürzungen;
+[Vinoground](https://vinoground.github.io/) ist ein Referenzbenchmark für zeitliche
+Komposition. Beides methodische Referenz, kein Download oder ausgewählter Testlauf.
+Endaufgaben, strukturierte Zustände und diagnostische Probes getrennt messen;
+vor Ausführung Qualitäts-/Erhaltungsgates, Daten- und 6-GiB-Zielbudget samt
+End-to-End-Latenz festlegen. Keine neue Implementierung, Trainingsfreigabe,
+Modellwahl oder Validierung durch diese Erklärung.
+
+### Ablauf und Segmentierung pro Frame
+
+Direkte Folgefrage: Muss dafür jeder Pixel in jedem Frame segmentiert werden?
+Nein: visuelle Merkmalsberechnung und explizite pixelweise Objekt-/Klassenmasken
+sind unterschiedliche Rechenschritte. Eine geteilte Bildrepräsentation kann
+Detektion, Lage/Attribute, Beziehungen und zeitliche Leser speisen, ohne für alle
+Pixel eine semantische Maske auszugeben. Genauere Masken sind ein optionaler
+beziehungsweise aufgabenabhängiger Leser, etwa für Objektgrenzen, Flächen oder
+Verdeckung; sie allein beweisen keine Interaktion oder physikalischen Kontakt.
+
+Vorgeschlagener kausaler Ablauf innerhalb der Engine:
+
+1. Aktuelles Bild als neue Quelle mit Zeit/Geometrie erfassen; gemeinsame
+   Multiskalenmerkmale für die aktiven Leser bereitstellen. Eine günstige Übersicht
+   hält auch bisher unbemerkte Bereiche zugänglich.
+2. Bestehende Objekte mit aktuellen Merkmalen/Bewegung zuordnen und Zustände
+   aktualisieren. Regelmäßige bzw. ausgelöste vollständige Suche nach neuen
+   Objekten bleibt nötig; bloß alte Tracks fortzuschreiben kann Neues übersehen.
+3. Für die aktuelle Aufgabe, neue Objekte oder schwache Zuordnung zusätzliche
+   Detailausschnitte, Masken, Hände/Gesichter oder Geometrie anfordern. Szenenwechsel,
+   Verdeckung und widersprechende Evidenz lösen erneute Prüfung aus.
+4. Objekt-/Personenbezüge mit dem Verlauf kombinieren: Lageänderung, Rollen,
+   Relationswechsel und Ereignis schätzen. Beispiel Tasse: Annäherung der Hand,
+   mögliche Aufnahme, gemeinsame Bewegung und neue Ablageposition unterscheiden.
+5. Beobachtete Resultate mit Zeit und Quelle speichern; fortgeschriebene/verdeckte
+   Zustände als Schätzung führen. Spätere Fragen lesen die relevante Evidenz.
+
+Bereits berechnete Merkmale desselben Bilds sind zwischen kompatiblen Lesern
+teilbar. Merkmale eines alten Frames sind bei Bildänderung nicht unverändert als
+frische Evidenz verwendbar; Tracking/Maskenpropagation ist eine eigene Inferenz.
+[SAM 2](https://github.com/facebookresearch/sam2) ist eine Primärreferenz für
+promptbare Videosegmentierung mit Streaming-Gedächtnis und fortgeführten Masken.
+Das ist weiter Rechenarbeit, kein kostenloses Wiederverwenden und keine Auswahl
+für PATH-WM oder Echtzeitzusage auf RTX3050.
+
+Quellinformation und teure Auswertung bleiben getrennt: Eine kleinere Übersicht
+spart Arbeit, kann aber kleine Objekte übersehen. Feinere verfügbare Quellmerkmale
+bzw. Quellen müssen für gezielte Detailfragen erhalten/erneut zugänglich sein;
+nie erfasste oder verworfene Details kann späteres Zoomen nicht zurückholen.
+Die akzeptierten Pre-C-Exporte werden nicht durch eine pauschale verkleinerte
+Quelle ersetzt. Sampling, explizite Verluste und ausgelagerte Quelle haben eigene
+Budgets. Schnelle Lippen-/Handereignisse verlangen höhere zeitliche Auflösung
+als langsam wechselnde Körperform. Kein fixes Segmentierungsintervall festgelegt.
+
+Kleinster Zusatzvergleich: dieselben Aufnahmen und trainierten Leser, Vollauswertung
+als Referenz versus bedingte Detailauswertung; neue/kleine Objekte, kurze Ereignisse,
+Drift und tatsächliche Relationsantworten sowie Peak-Speicher/p95-Latenz messen.
+Eine niedrigere Aufruffrequenz ist nur bei gemessenem Qualitäts-/Latenzkompromiss
+sinnvoll. Kein neuer Algorithmus oder Profilinglauf in dieser Diskussion.

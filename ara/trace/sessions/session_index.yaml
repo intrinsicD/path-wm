@@ -288,8 +288,8 @@ sessions:
     source benchmark scope retained, no local performance claim. Hands/feet review distinguishes WiLoR
     hands, FootMR ankles, SUPR-Foot articulation and FOCUS surfaces; fine-resolution integration and reaction
     benefit remain proposed. Face follow-up separates shape, mouth/eye articulation, head pose, gaze and
-    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand model buffering; execution/storage interpretation documented, training left open.
-  turn_count: 8
-  events_count: 20
+    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated. GPU budget checked against local 8-GiB RTX3050 occupancy; retain proposed 6-GiB process target, no full-pipeline fit measured. User proposes inference Neural Engine with on-demand model buffering; execution/storage interpretation documented, training left open. Understanding capabilities and per-frame segmentation clarified; shared features, temporal binding and conditional detail remain proposed and unvalidated.
+  turn_count: 9
+  events_count: 24
   claims_touched: []
-  open_threads: 20
+  open_threads: 21
