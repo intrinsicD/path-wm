@@ -1,0 +1,3 @@
+# Bound routine tool history; retain full noisy command logs before excerpting.
+# Explicit per-call budgets can override this default when evidence needs it.
+tool_output_token_limit = 3000

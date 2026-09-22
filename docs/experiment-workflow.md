@@ -130,7 +130,81 @@ Peer agreement cannot authorize scope changes or replace empirical checks.
 
 ## Finish a slice
 
-Run the relevant CPU tests and the documented check/train/resume path. Update the
-active plan and the short project-state page with what works, evidence and limits.
+For shared code, run the relevant CPU tests and the documented check/train/resume
+path; `python -m pytest` remains required before committing shared-code changes.
+For documentation/configuration-only work, check the fixed diff, affected local
+links/anchors and effective configuration, and run `git diff --check`; do not add
+prose-only tests or start training solely to validate documentation.
+Update the task's plan and the short project-state page with what works, evidence and limits.
 Report the usable commands and report location. Commit completed work. Do not let
 new experiment history grow into the normal user interface again.
+Keep project state at most 8 KiB, with short current statuses and links. Detailed
+results belong in their existing plans/run evidence; the frozen project-history
+snapshot is retrieved only for the older decisions relevant to the task.
+
+## Tool output and waits
+
+Present bounded results while retaining complete evidence. Prefer file names,
+headings and focused `rg`/line excerpts over entire large files. Save noisy command
+stdout/stderr before presenting a summary or tail; report each command's actual
+exit status and log path. A later successful command must not mask an earlier
+failure. Read omitted diagnostics from the retained log when the excerpt is
+insufficient. Do not truncate raw metrics, checkpoints or standalone reports.
+
+For a noisy shell command, use a fresh log and preserve the producer's status:
+
+```bash
+run_log=$(mktemp /tmp/pathwm-command.XXXXXX.log)
+run_status=0
+python -m pytest >"$run_log" 2>&1 || run_status=$?
+tail -n 60 "$run_log"
+printf 'exit=%s full_log=%s\n' "$run_status" "$run_log"
+exit "$run_status"
+```
+
+Batch independent reads/checks and retain every result. Keep dependent steps,
+writes and shared-source training sequential or isolated. Wait on an existing
+process/job handle until completion or a meaningful change; do not repeatedly
+read unchanged logs or launch another job to check status. Keep user progress
+updates and apply bounded waits so new input can steer the work.
+
+Codex's project `tool_output_token_limit = 3000` bounds routine tool history;
+explicit per-call limits may override it. Full logs remain authoritative. Other
+clients use their available output controls and the same evidence procedure.
+Check effective configuration for this cwd; cached thread settings may require
+a fresh session. This setting changes presentation, not the tests or run budget.
+
+## Research applicability
+
+Before automatic bookkeeping, decide from the current request and conversation.
+Do not load ARA ledgers, the research-manager recording references, or old
+observations just to decide whether they are relevant. An existing `ara/` or an
+edit to a research-named file is not sufficient by itself.
+
+Ordinary tooling, docs/task/config maintenance and routine correctness checks
+without a research event exit silently. Research hypotheses, architecture
+decisions, method work, experiments, findings, evidence corrections and explicit
+research affirmations/refutations qualify. A short confirmation with a clear
+research referent qualifies; mixed turns record their research portion only.
+Explicit ARA inspection, initialization, maintenance or research resumption uses
+its requested scope. Read-only inspection does not itself require new records.
+
+Reuse the installed research-manager gate and recording procedure where available;
+do not create a repository copy. Eligible work retains provenance, evidence
+bindings, staged observations and closure signals. Missing records from skipped
+engineering turns cannot establish topic abandonment. Required evidence must
+exist before publication; end-of-turn bookkeeping never postpones that duty or
+suppresses an explicit ARA request. This workflow calibration creates no real
+scientific records. Research-heavy sessions should expect fewer skipped turns.
+
+## Reasoning effort
+
+Choose effort using verified completed-task evidence for the actual task family.
+Keep model, requested service tier, prompts and acceptance checks fixed when
+comparing effort; record input/cache/output tokens, all repairs, detected defects
+and time through completion. Report unavailable delivered-tier/credit information
+and unequal context/cache conditions rather than treating them as zero.
+Predeclare the trial budget. A small fixture or smoke run cannot set a default for
+research design, numerical diagnosis, architecture or long-running experiments.
+Existing base effort stays in force until a scoped comparison supports a change;
+verification and scientific review requirements apply at every effort level.

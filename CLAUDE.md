@@ -1,7 +1,24 @@
 # Working on PATH-WM
 
-Read [workflow](docs/experiment-workflow.md), then
-[current work](docs/project-state.md). Read the active plan linked there.
+Read [current work](docs/project-state.md), then the plan for the user's requested
+task. Complete instructions already supplied in context count as read; fetch only
+missing or changed sections. Historical state is not a startup prerequisite.
+The [workflow](docs/experiment-workflow.md) remains mandatory for its matching
+scope; read the named sections rather than the whole document:
+
+| Scope | Workflow sections |
+| --- | --- |
+| Planning or implementing an authorized slice | Work in small complete slices |
+| Model-related design | Standing design principles; Keep it understandable |
+| Shared code or recipe changes | Keep it understandable; Work in small complete slices |
+| Scientific experiments, training, evaluation or result reporting | Work in small complete slices; Trustworthy runs and reports |
+| Tools, command output and running jobs | Tool output and waits |
+| Research hypotheses/decisions/results, bookkeeping or explicit ARA work | Research applicability |
+| Reasoning-effort selection | Reasoning effort |
+| Verification and completion | Finish a slice |
+
+Ordinary workflow maintenance does not require unrelated model plans, architecture
+history or research ledgers. Re-evaluate these routes when the task's scope changes.
 Keep the [integrated latent-agent research goal](docs/integrated-latent-agent-goal.md)
 in view: compatible latent computation, shared-depth reasoning, and useful concept/
 instance memory that acquires and corrects knowledge at runtime without weight

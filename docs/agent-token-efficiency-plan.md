@@ -1,6 +1,6 @@
 # Reduce coding-agent context and token overhead
 
-Status: planned; implementation has not started. Created 22 September 2026 at
+Status: in progress; all slices authorized on 22 September 2026. Created at
 Alex's request after reviewing IntrinsicEngine PROC-034 (through `e156d3a15`).
 This task concerns Codex/Claude workflow costs. The model's
 [token-budget plan](token-budget-plan.md) and
@@ -67,9 +67,9 @@ them merely because this is another repository.
    with named workflow sections selected by scope. Complete instructions already
    supplied in context count as read. Do not replace the large state page with
    another mandatory history read.
-   - [ ] Current state meets the size target; each displaced decision/result has
+   - [x] Current state meets the size target; each displaced decision/result has
      an accessible owner, and required contracts remain reachable and mandatory.
-   - [ ] Ordinary docs work, a code repair, research planning and experiment
+   - [x] Ordinary docs work, a code repair, research planning and experiment
      continuation load only their relevant sources; compare startup bytes.
 
 2. **Bound presented output and redundant calls.** Add a short workflow procedure
@@ -77,9 +77,9 @@ them merely because this is another repository.
    read batching and completion/change-aware waits. Evaluate a project
    `.codex/config.toml` output limit, with 3,000 as a candidate rather than an
    assumed optimum. Preserve progress updates and full training/report evidence.
-   - [ ] A diagnostic omitted from an excerpt is recoverable from its full log;
+   - [x] A diagnostic omitted from an excerpt is recoverable from its full log;
      failures remain visible and exact verification commands still execute.
-   - [ ] Any setting is confirmed through effective configuration; record output
+   - [x] Any setting is confirmed through effective configuration; record output
      sizes and calls for a representative run without claiming credit savings.
 
 3. **Reuse the research applicability gate.** Check the installed skill and any
@@ -88,7 +88,7 @@ them merely because this is another repository.
    hypotheses, architecture decisions, experiments, findings, contextual research
    confirmations and explicit ARA work still qualify. PATH-WM is research-heavy;
    do not assume the skip rate seen in ordinary engine maintenance applies here.
-   - [ ] Isolated engineering, real research-event, brief-confirmation and explicit
+   - [x] Isolated engineering, real research-event, brief-confirmation and explicit
      ARA-inspection cases preserve appropriate reads, writes and evidence rules.
      No real scientific records are created by the workflow test itself.
 
@@ -122,3 +122,65 @@ Register this planned workflow follow-up in the compact current-state index when
 coordinating its implementation with the current writer. Complete all four slices,
 update status/date/commit references here, and remove it from active-work entries
 when done. Preserve this record and the measured limitations.
+
+## Implementation record — 22 September 2026
+
+Fresh baseline: `919320d2d90b1214fa38bf8877e67bfb3eabda65`.
+The four startup documents total 161,964 bytes; project state is 150,596 bytes.
+The original state is retained verbatim after a short preface in
+[project history](project-history.md), in the same directory to preserve relative
+evidence links. The compact state links the current owners. Concurrent architecture
+work remains outside this workflow change.
+
+Pilot declared before execution: at most eight model calls, no repairs or repeats,
+`gpt-6-astra`, requested tier `default`, 240 seconds per call. Four isolated gate
+cases at medium cover ordinary tooling, a synthetic research event with real
+recording behavior, contextual confirmation and explicit read-only inspection.
+The remaining four calls compare medium/xhigh once each on regression-test
+authoring for the existing `pathwm.io.atomic_json` and `resume_arguments` helpers.
+Each suite must pass the extracted current helper and detect four predeclared
+faulty variants; syntax/import failures or timeouts are not successful detection.
+Prompts, variants, sources, order and checks are fixed in the local manifest before
+the first call. Count all attempts; report defects and incomplete calls. This is
+workflow calibration, with no training, model download or real research records.
+One sample per condition cannot establish a research-design default.
+
+Full local evidence: `/tmp/pathwm-agent-efficiency-frrez0nn/` (manifest, runner,
+unabridged CLI traces, generated suites, fixtures, checks and snapshots). Durable
+measurements and the final disposition will be recorded below.
+
+### Slices 1–3 verified
+
+- State is 5,903 bytes at this checkpoint (target 8,192), including the concurrent
+  attention-review pointer. Archive payload SHA-256 matches the fresh baseline:
+  `263f9404805e26629d665ee1c2e617f5276aaaf865facb6538b77ebaf2189f11`.
+  All 245 historical Markdown links retain their original destination and resolve;
+  current links/anchors pass. The standing CLAUDE contracts and all pre-existing
+  workflow sections before completion are unchanged. The completion route now
+  distinguishes docs/config checks from shared-code and training verification.
+- Static startup-route bytes (same baseline task-plan content in each comparison):
+  ordinary docs 169,576 → 20,941; model code repair 177,936 → 34,425;
+  research planning 176,644 → 34,556; experiment continuation 177,936 → 32,521.
+  These are source-byte budgets, not observed model compliance, tokens or credits.
+  Each route retains the named applicable contracts and reads no history by default.
+- Effective `config/read` for this cwd reports project output limit 3,000,
+  `gpt-6-astra`, user effort `xhigh` and requested tier `default`.
+  Retain 3,000 as a practical bounded starting value, not a measured optimum.
+  A deliberate failure retained 72,082 bytes while presenting 2,190 bytes/61 lines;
+  exit 23 remained visible under `set -e`, and one focused read recovered the early
+  diagnostic omitted from the excerpt. Four real structural/config/gate checks
+  executed in one independent batch, all exit 0: 5,973 bytes retained, 425 presented,
+  with no repeat status polls. The pilot uses one existing process handle.
+- Codex exposes the existing user-scope research-manager `2.1.0-local.1`; its entry
+  hash remains `bee9ac45a3ee2ad8d5aa16c5d0937f3572ec241517a3e6effd6414fb4e47872b`.
+  No Claude-user or repository-local copy was found, and none was installed.
+  Other clients follow the repository applicability procedure; client integration
+  beyond Codex was not exercised.
+- All four fresh gate cases pass trace, digest and record-semantic checks. Ordinary
+  engineering: zero ledger/reference reads and only the requested typo changed.
+  Research: one experiment, staged observation and affirmed evidence-bound claim.
+  Brief confirmation: existing experiment unchanged, observation promoted with
+  user-revised provenance. Inspection: staging only, no writes. Evidence fixtures
+  are unchanged; these tests write only their isolated synthetic ARA directories.
+  One unnecessary `git diff` in the non-Git engineering fixture returned 129;
+  the retained trace exposes it and the requested edit still verifies. No retries.

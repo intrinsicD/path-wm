@@ -1,0 +1,2070 @@
+# Project history
+
+Frozen copy of the full current-work record at `919320d`, 22 September 2026.
+The original document follows verbatim; relative evidence links keep their original
+base directory. Its labels, priorities and counts describe their recorded time.
+Use [current work](project-state.md) for current priorities and read only the
+historical entries needed for a particular question. New work belongs in its
+plan or evidence owner, with a short current-state link.
+
+---
+
+# Current work
+
+**Randomized attention discussion:** [factorization options](encoder-token-budget-plan.md#randomized-factorized-attention-discussion-not-implementation). Performer random features and Nyström landmarks avoid constructing full attention; ordinary randomized SVD still needs potentially quadratic matrix products. Sparse corrections can retain strong interactions. Low singular energy is not spatial frequency or semantic irrelevance. Local/exact plus approximate global access remains an untested option; no implementation or quality promotion.
+
+**Active encoder token-efficiency follow-up:** [local encoder plan](encoder-token-budget-plan.md).
+Target dense fine-scale attention and dense masked pooling footprints upstream of
+the resampler. Implemented selectable packed merges and fine windows, retaining
+every detail position and caching only one geometry map per module. At image256,
+encoder pairs 22.35M→0.153M (99.317% fewer); forward+backward 194.77→64.50 ms,
+no-grad inference 50.21→30.90 ms; peak allocated 452.53→149.46 MiB. Global encoder
+self-attention participation 5376→256 positions; total retained/query positions
+are unchanged. Small inputs still have modest overhead. 114 scoped tests pass;
+paired 16-update fits show similar image loss but do not establish detail retention.
+Keep window restrictions optional; coarse global attention still grows with input.
+Evidence `runs/encoder_token_budget_cached_v1/report.html`, quality reports under
+`runs/encoder_token_quality_v1/`; unchanged renderer, structural verification.
+
+**Active token budget implementation, 22 September:**
+[token budget plan](token-budget-plan.md). Instrument actual allocated attention
+shapes before changing capacity. Current categorical state is already bounded;
+measure dense encoder attention and repeated complete-event correction separately.
+Implemented shape/cost profiling, exact complete-event preparation once and an
+optional 64-query resampler. Final RTX3050 synthetic four-modality forward time:
+105.422→52.194 ms (50.49% reduction); backward time unchanged. Encoder calls10→4;
+current-component outputs/gradients/RNG agree and87 scoped tests pass. Loops and
+default state/detail access unchanged. Resampler costs52.359 ms and adds10,656
+parameters; the16-update paired fit establishes training mechanics, not detail
+retention (both future-image fits still fail the copy-frame comparison). Keep it
+disabled by default. Large token sets occur upstream; these timings do not establish
+token count as the dominant latency cost. The recipe already bounds persistent
+state to24 slots and Thinker queries to8 per loop. Profile
+report `runs/token_budget_final_v1/report.html`; quality reports under
+`runs/token_budget_quality_v1/`. All structurally verified with the existing
+renderer. Persistent detail retrieval, local encoder scaling and deltas remain next.
+
+**Integrated latent agent: user goal, 22 September:**
+[objective and proposed demonstration](integrated-latent-agent-goal.md).
+Alex explicitly prioritizes showing the complete latent perception/thinking/action/
+memory path, native compatibility preferred with adapters allowed, shared-depth
+loops, meaningful concept/instance acquisition and retrieval, autonomous graph
+extension and correction, and useful workflows across domains. Runtime knowledge
+growth should not require explicit weight retraining. Latent diffusion is a possible
+mechanism, not an adopted shortcut. Propose a frozen-weight acquisition/use/correction
+demonstration with source controls; existing partial mechanics do not establish it.
+Domain choices, datasets, gates and training budgets remain open; no run started.
+
+**General latent-processing clarification, 22 September:**
+[multimodal core](latent-core.md#gemeinsamer-denkraum-modalitätsspezifisches-auslesen).
+Alex corrects the speech-only framing: the whole multimodal model should transform
+latent representations internally, with compatible trained encoders/decoders.
+This reiterates the existing direction. Audio's temporal order does not require
+tokenwise serial computation everywhere; distinguish autoregressive dependencies,
+blockwise acoustic decoding and playback. No new implementation or validation.
+Alex also proposes latent action tokens as a way for a small Thinker to do useful
+work. Discuss action-conditioned state prediction and planning with learned outcome
+supervision and exact executable-action mapping. Compact codes alone do not prove
+small-model competence; no new action representation or training recipe adopted.
+Token-role follow-up: Alex asks what representations to deliberately provide across
+all uses. [Role and learning map](latent-core.md#welche-latenten-rollen-brauchen-wir-gezielt)
+separates generated token values from learned producers/readers, functional roles
+from one-network-per-role, and learned features from exact metadata. Propose mapping
+perception, state, task, workspace, memory, action, prediction, events, output and
+control onto existing interfaces, with explicit learning signals and source controls.
+No new token layout, model-size claim, code implementation or training adopted.
+
+**Agent voice, 22 September:** [reference-conditioned speech proposal](agent-voice-design.md).
+Alex asks how the agent speaks and whether recordings can supply its voice.
+Propose a pretrained TTS bridge from speech text plus a reusable voice prompt,
+preserving shared multimodal thinking; distinguish fixed-weight conditioning from
+speaker fine-tuning. Qwen3-TTS 0.6B Base and Chatterbox Multilingual are German-capable
+candidates, not adopted dependencies. Existing controlled-tone tests do not prove
+speech synthesis. Whole-process 8-GB fit, latency and voice quality remain unmeasured;
+no model download, audio generation or training.
+Follow-up: Alex questions the text bridge and proposes a latent speech sequence
+plus learned voice profile. Explain direct state-conditioned speech generation,
+content/timbre/prosody separation and compatible acoustic decoding. CosyVoice 2
+illustrates the latter separation, not an existing PATH-WM adapter. The text route
+is an optional baseline, not a prerequisite. Disentanglement, paired training,
+streaming and local efficiency require their own checks; no implementation adopted.
+Efficiency follow-up: Alex identifies avoidable state-to-text-to-speech work.
+Clarify that direct generation can fuse that work; the expected saving is a valid
+hypothesis. It replaces linguistic sequence generation rather than deleting that
+function. Some TTS models already omit a separate text encoder. Compare total
+compute and streaming first-audio latency separately with equivalent quality;
+no measured speedup or resource claim.
+Architecture/training follow-up: Alex emphasizes learning under required serial
+dependencies. Explain causal/chunk access, reusable conditioning and overlapping
+playback; teacher-forced parallel training does not remove inference dependencies.
+Concrete masks, chunk sizes and execution policies remain unselected.
+
+**What remains for image/video understanding, 22 September:**
+[capabilities and current limits](video-understanding-test-map.md#bild-videoverstehen-nach-der-personen--und-engine-diskussion).
+Alex asks beyond human geometry and inference buffering. Discuss object semantics,
+relations/roles, temporal events, evidence-bound state/history, grounded queries and
+scoped prediction. Existing core/memory interfaces are building blocks; learned
+integration and natural-data generalization remain unvalidated. Propose one small
+interaction/history task with source controls; no new run or architecture adoption.
+Follow-up distinguishes shared per-frame features from dense segmentation: propose
+tracking plus conditional detail masks/crops, with new-object discovery and recovery
+checks. Old-frame propagation remains uncertain inference; source retention and
+fast-event sampling need explicit budgets. No fixed cadence or SAM2 adoption.
+
+**Demand-driven inference engine, 22 September:**
+[buffer analogy and execution boundaries](neural-engine-inference.md). Alex proposes
+a central Neural Engine that uses trained models on demand, like a rendering buffer,
+explicitly for inference; training remains open. Interpret as bounded GPU residency
+with a RAM/SSD model source, reusable features and explicit state lifetimes. Concrete
+loading/routing/prefetch policy remains proposed; ambiguous voice terminology does
+not establish graph storage. No implementation, benchmark or validation promotion.
+Per-frame follow-up traces packet/time, prior prediction, shared R/B/P/C exports,
+candidate association, conditional detail, state/event correction, evidence commit
+and optional task response. Checked actual BeliefAgent/WorldSession interfaces;
+supplied candidates and software mechanics remain distinct from the proposed
+natural-image pipeline. Inference updates state, not filter weights by default.
+
+**Human pose/shape discussion, 22 September:**
+[proposal and source distinctions](human-perception-discussion.md). Alex asks about
+automatic skeleton estimation plus segmentation for agent reactions. Propose
+complementary person-specific keypoints, masks and retained image features with
+causal tracking; separate visible silhouette from inferred 3D body shape and
+observed motion from action/intent hypotheses. Fits the shared multiscale-consumer
+direction; an external teacher is a separate adapter. Downstream benefit, model
+selection and training remain open. No adoption, runtime change or validation
+promotion. The multiscale input specification remains active. Follow-up:
+SKEL supplies parametric skin/skeleton generation and SMPL fitting; image-to-body
+estimation, hidden geometry and absolute scale remain separate inference problems.
+No SKEL installation or model fit. Latest-method follow-up finds direct RGB-to-SKEL
+HSMR/SKEL-CF plus SAM 3D Body, Fast SAM 3D Body, Human3R and DETRAM; official
+quality/speed claims are scoped by task, hardware and evaluation protocol. The
+original SMPL-to-SKEL route is optional. No local benchmark or model adoption. Hands/feet follow-up:
+WiLoR, FootMR, SUPR-Foot and FOCUS separate finger reconstruction, ankle motion,
+articulated toe representation and multi-view foot shape. Conditional fine-detail
+readers and contact checks remain proposals; no universal precision claim. Face follow-up:
+MediaPipe/SMIRK reference candidates separate stable facial shape from mouth/lid
+articulation and head pose; gaze and inferred emotion remain distinct. New SMFLIX
+body/head research noted with availability and hardware limits. No adoption.
+Person-memory follow-up: Alex prioritizes speed, then accuracy, later robustness.
+Propose shared identity descriptors plus a bounded per-person reference memory,
+separate from short-lived tracks and names; conditional recognition and cautious,
+revisable profile updates. General filter learning and remembering new people are
+distinct learning timescales. Alex additionally proposes FLAME/SKEL shape parameters
+as recognition cues; compare geometry, appearance and their combination. No
+implementation or exact-recognition guarantee. Separate eye/mouth details are
+also user-proposed; distinguish personal shape from current expression and
+account for shared evidence when combining cues.
+GPU follow-up: actual RTX3050 has 8192 MiB total and 6827 MiB free at inspection.
+Keep the earlier proposed 6-GiB whole-process target; no full-pipeline fit measured.
+User-proposed timestamped entity histories belong in CPU-RAM/SSD with bounded GPU
+reads. Coefficient storage, large estimator residency, activations and training
+states have separate costs; published Human3R alone reports about 8 GB. Shared
+features/conditional crops and a measured bounded pipeline remain proposals.
+
+**Actions and instruction walkthrough, 18 September:**
+[design and source audit](action-semantics-design.md). Alex asks how actions are
+represented/recognized, whether to supply or infer them, and how instructions,
+feasibility, planning and internal/external operations connect. Recommend explicit
+own-action records, uncertain inference for missing/other-actor actions, exact
+typed execution records alongside learned encodings, and effect-specific execution
+with scoped checks and outcome feedback. Current TaskPolicy and numeric rollout
+planner cover only parts; general tool execution, inverse action recognition and
+success validation are not thereby implemented. Public-only actual-Claude review;
+no new architecture adoption, model changes, training or validation promotion.
+
+**Architecture walkthrough reopened, 18 September:**
+[top-down discussion guide](architecture-walkthrough.md). Alex requests the functional
+module overview before locating DeepSeek/Jev techniques in concrete components.
+Use Local Context and Global Context for the internal-memory discussion; exact
+mapping to existing stores/access patterns remains open. External World State stays
+separate. Terminology and discussion order only; no model/API/checkpoint changes,
+new experiment or capability validation.
+
+**Context control discussion, 18 September:**
+[roles and proposed control](architecture-walkthrough.md#kontext-nutzen-und-steuern-aktueller-diskussionsvorschlag).
+Alex asks how thinking and retrieved graph concepts/instances/components populate
+Local/Global Context, and who chooses transfers. Propose a small learned context
+head associated with existing TaskPolicy, a bounded executor and one reference
+set with scope tags. Alex endorses extending TaskPolicy for context decisions;
+head/action details and training remain proposals. Current WorldSession still takes caller-supplied queries;
+complete autonomous context control is not implemented. Provenance, transitive
+revision invalidation and separate graph writes are explicit. Actual public-only
+Claude critique/reconciliation completed; selection/training efficacy remains open. No model or
+training change.
+
+**Calibration-training applicability, 18 September:**
+[assessment](decision-design.md#calibration-training-and-the-jevrlcd-comparison).
+Existing recall has cost-based abstention, held-out temperature fitting and reliability/Brier
+diagnostics. Propose validating those before a new training objective; later RL needs
+verified sequential outcomes and explicit resource costs. Jev implementation remains
+undisclosed. No experiment, model adoption or validation promotion; current active
+input design and learning priorities remain open.
+
+**Standing design guidance adopted, 18 September:** Alex asks that all future
+model design actively consider and integrate the discussed abstract ideas where
+they fit. This is now part of the [workflow](experiment-workflow.md#standing-design-principles)
+and the required `CLAUDE.md` entry point. Plans record relevant applications,
+trade-offs and checks. This adopts the design practice; concrete mechanisms and
+their empirical benefits remain subject to the existing scoped comparisons.
+
+**DeepSeek V4.1 transfer proposal, 18 September:**
+[engineering and architecture mapping](deepseek-v41-transfer-proposal.md).
+Read the exact user-linked report via its hash-matched official copy and audited
+the current code. Proposed priorities: fixed-context K/V reuse within a consumer
+call, explicit source/cache ownership, verified task construction, then measured
+local/global and sparse reading with training-aware approximation. The current
+recurrent output adapter is the clearest isolated reuse candidate; the Thinker's
+whole context changes and cannot be cached indiscriminately. Preserve accepted
+pre-compression exports, consumer-specific processing, source provenance and exact
+resume. mHC is not an invertibility mechanism; Engram is not episodic evidence;
+bounded SWA replay is approximate. Actual public-only Claude review and technical
+reconciliation retained in `runs/reviews/deepseek-v41-20260918/`. This is a proposal:
+no model/default/checkpoint changes, training, benchmark or validation promotion.
+The multiscale design below remains the active input-architecture specification.
+Follow-up: [abstract principles](deepseek-v41-transfer-proposal.md#abstract-principles-behind-the-mechanisms)
+explain reuse, selective access, memory ownership, lookup versus computation,
+precision, verification and resource allocation. This explanatory synthesis adds
+no selected mechanism, experiment or validation claim.
+
+**Input architecture and invertibility decision, 18 September:**
+[multiscale modality design](multiscale-modality-design.md).
+Alex specifies per-scale information-preserving operations → **learnable filter
+bank** → post-processing → compression, repeated across scales. A shared multiscale
+representation feeds arbitrary consumers, each with its own transformer loop and
+module-specific layers. “Filter bank” and learnable filters are explicit user
+corrections. Alex now accepts export immediately after post-processing, before
+compression, and prefers invertibility if it does not hinder learning. Additive
+coupling with ordinary trainable filter subnets is the working candidate; the
+per-consumer learning-quality condition is unresolved. Existing v1 coupling inverse
+and checkpoint tests pass (2 checks); no new architecture is validated. Generic consumers are not
+restricted to the previous application-head/VAE examples; residual/PCA options
+remain secondary. Existing hierarchy/readout components audited; no model or
+training change. Actual Claude public-methods critique/reconciliation recorded.
+
+**Neighborhood-size follow-up:** Alex asks about 3×3/5×5/7×7 image neighborhoods
+and modality-specific equivalents. [Design §8](multiscale-modality-design.md#8-neighborhood-sizes-within-a-scale)
+distinguishes within-scale context from the resolution hierarchy. First engineering
+candidate: retain one/two/three-layer 3×3 subnet outputs and learn their mix inside
+coupling; independent multi-kernel branches remain a comparator. Nominal supports,
+composed coupling, width/depth confounds and temporal availability are explicit.
+No kernel schedule adopted as a measured winner; no implementation or training.
+
+**User-linked multimodal VAE toolkit:**
+[source assessment](multimodal-vae-reference.md), pinned upstream `5cfef9a`.
+Useful for controlled attribute/cross-modal tests and optional downstream posterior
+fusion. Modality-private latents do not answer application-residual allocation.
+Inspected Gaussian variance/scale mismatch reproduced in isolation; do not import
+the fusion implementation without reconciling its parameter contract. No upstream
+installation, full reproduction, dataset download or model adoption.
+
+**Residual correction and specialist/PCA alternative, 18 September:**
+[design §10](visual-adapter-design.md#10-residual-correction-and-specialistpca-decomposition).
+User asks about reliable correction, residual magnitude, independent application
+VAEs and a PCA-derived frozen base. Documented expressivity versus information
+limits, unbounded amplitude versus rank/capacity, coordinate alignment, centered
+PCA's between-model variation, and exact full weight deltas versus approximate
+small or learned feature residuals. The alternative is open; joint equal-status
+training remains the earlier preference. No specialist/merge fit or model change.
+
+**Residual visual adapters: joint-training direction, 17 September:**
+[design](visual-adapter-design.md) · [handoff](visual-adapter-handoff.md).
+Continued from2beb97f with actual public-only Claude critique/reconciliation. Alex
+now prioritizes one shared trainable base and per-application residuals trained
+jointly from the first update, with equal task status. This supersedes the old
+Phase A prerequisite. Proposed first comparison: shared multiscale heads alone,
+feature residuals, and matched expanded heads with identical scale access; selected
+interleaved/weight residuals remain later hypotheses. Fixed loss normalization,
+equal task exposure and per-task outcomes do not guarantee equal gradient influence
+or a semantic common/private split. No extra RGB anchor in the joint objective.
+Task/data/initialization/budget selection remains open. Documentation only: no model,
+training, checkpoint/default or validation change. Review receipts are in
+`runs/reviews/visual-residual-joint-20260917/`.
+
+**Visual-codec literature review, 17 September:** [survey and proposed architecture](visual-codec-review.md),
+[untrained parameter audit](visual-codec-parameter-audit.json). User requests a scalable,
+as-small-as-useful image/video codec with both teacher-free and teacher-assisted
+training, large/variable image geometry and task/debugging outputs. Exact Google
+queries plus primary-source research cover fidelity, semantic learning, hierarchy,
+quantization, resolution and video. Proposed single-grid local family and staged
+ablation/application matrix; no architecture adoption or training authorization inferred.
+Preserve the existing123k v2 C baseline; candidate counts0.20M/0.76M/2.99M/11.88M
+are untrained sizing specimens, not quality results. Actual public-only Claude review
+and reconciliation recorded in ignored runs/reviews/visual-codec-literature-20260917/.
+No model/checkpoint/default or capability/color changes. The request-boundary study
+below remains independently completed; this design needs a bounded preregistered
+experiment before implementation/training claims.
+
+Follow-up proposal: per-application residual adapters with frozen versus trainable
+encoder controls, recorded in the same review. Shared joint training and separate
+fine-tuned reference copies are distinct; placement and dense-task efficacy remain
+open. No implementation, fit or capability promotion.
+
+**Learning iteration completed, 17 September:** [paired request-boundary study](request-boundary-plan.md),
+[report](../runs/request_boundary_v1/report.html). Actual Claude methodology review
+and reconciliation; four matched512-update interpreter-only fits. On fresh known-
+lexicon prefix compositions, stronger-source worst-draw joint accuracy is56.77%
+untouched,76.56% ordinary CE,74.48% extra boundary CE; weaker source stays37.5%.
+Extra boundary loss fails incremental benefit, first-only preservation and broader
+preservation; removed its redundant CE computation and flag. Retained paired
+calibration sampling, neutral training route and fresh evaluation. No checkpoint,
+default or capability/color promotion; next distinguish generalizable request-form
+learning from weak-source content access before fitting another loss.
+640 full software checks pass on frozen2d43133;30 final focused checks pass on the
+simplified implementation. Audits reproduce11,520 request rows and preserve frozen
+weights/request-free arrays; current ordinary CE exactly matches its frozen control
+through six updates. Original1500s cap interrupted the final evaluation after all
+four512-step checkpoints were saved; separate213.83s fixed-weight recovery closes
+missing evaluations, while the original resource gate remains failed. Eighteen
+standalone reports structurally verified; figure inspected, no browser QA.
+
+**Interactive architecture explorer completed, 17 September:** [usage](model-explorer.md),
+[plan and checks](model-explorer-plan.md). Complete current categorical agent:
+601 modules and 515,553 parameters, plus its frozen teacher. Standalone HTML drills
+through modules, observed tensor/autograd operations and individual weights;
+optional loopback preview regenerates on source/checkpoint changes. All learner
+weights, loss and gradients match a separate uninstrumented default-model run
+exactly. 632 checks passed in the isolated full-suite snapshot; 16 final focused
+checks and interactive browser QA passed. Weights are explicitly fresh seed42;
+flow coverage is the declared short synthetic batch. No model/training changes or
+scientific validation promotion. Layout refined after user feedback: inputs left,
+outputs right, ordered columns and obstacle-free arrow routes; all 41 overview
+connections retained. Forward/backward/nested browser checks and 12 focused tests
+pass. The learning study below remains independent.
+
+System scope expanded after user approval: the initial overview now includes the
+World State foundation as a separate actual recipe configuration (452 neural
+modules,111,929 parameters), observed runtime calls, the synthetic knowledge graph,
+complete records and current schemas/interfaces. Agent and training-only EMA
+teacher roles are explicit. Independent audits match every weight/loss/gradient in
+both recipes;27 focused checks and loopback browser QA pass. The fresh graph has
+one entity and zero relations; no trained store is implied. Model/training code and
+scientific status remain unchanged. See the explorer plan for full-suite scope.
+
+**Performance iteration completed, 17 September:** [protocol/results](byte-batch-plan.md),
+[report](../runs/metadata_cache_v1/report.html). Actual Claude reviewed both mechanisms.
+One-transfer byte batching and frozen metadata reuse preserve measured outputs but
+both miss the fixed5% whole-workload gate on both sources. Original implementations
+restored; independent byte/metadata behavior checks retained. Cache import-order
+regression reproduced and removed with the rejected feature. Six saved training
+pairs and five inference pairs pass strict byte-pattern audits. No speedup or
+capability promotion. 634 full software tests pass in542.05s;31 focused checks pass. Fifteen standalone
+reports are structurally verified and the comparison figure inspected; no browser
+QA. The paired request-form/EOS follow-up is completed above.
+
+**Latest measurements, 17 September:** [request completion and decoder cost](request-completion-plan.md),
+[report](../runs/request_completion_v1/report.html). Actual Claude review reconciled.
+Masked-question whitespace edge repaired;5,010 existing fixture routes unchanged.
+Six cached-state diagnostics reproduce9,216 answers in22.56s without core sampling
+or training. Stronger-source premature EOS follows four of eight sequence wordings
+on every clip/draw; weaker-source content errors remain. Two inference candidates
+miss the CUDA speed gate (-3.67%/-1.94% paired latency reduction); original defaults
+preserved, slicing remains opt-in. No GPU/training speed or capability promotion.
+605 full software tests pass in594.83s;53 final focused checks;296,076 raw audits
+and4,548 unchanged checkpoint tensors. Seven structural reports, figure inspected,
+no interactive browser QA. The paired request-form/continuation comparison above
+now tests this hypothesis; content errors remain a separate limitation.
+
+**New-session entry point:** [handoff](session-handoff.md),17 September2026.
+Frozen request-routing comparison is complete: [protocol/results](request-routing-plan.md),
+[report](../runs/request_routing_v1/report.html).584 software checks pass; all source
+weights and historical baseline outputs reproduce exactly. Stronger-source first
+color reaches100%, joint answers only50%; weaker source remains35.94%. Broad
+suite remains0/25 and1/25 with agreement regressions. Defaults unchanged. The
+preprocessing repair and frozen continuation follow-up are completed above.
+
+**Balanced request-meaning comparison completed,16 September.**
+[Protocol/results](request-meaning-plan.md),[report](../runs/request_meaning_v1/report.html).
+Actual Claude methodology review/reconciliation; suite-directed balanced prefix/
+length controls. Frozen encoder intent probes pass93.75%/100%; later access weaker.
+Four512-update interpreter-only fits,9,936 existing trainable parameters. Balanced
+wording improves novel joint exact0→35.94%/46.88%; both miss80%. First words unchanged
+in3,072 comparisons: response form improves, video-content accuracy does not.
+Broad suite stays0/25 and1/25;7201 image-question regression persists. All2,208 legacy
+output arrays and non-interpreter tensors exact;600 fresh reference arrays match.
+579 full tests before final sampled-source guard,41 focused after;848 exact restart
+checks,43,635 raw audits,19 structural reports.174.22s fitting,87.4MiB peak allocation;
+no default or color promotion. Next isolate request/evidence routing on fixed
+weights before further fits; content, compositional semantics and preservation stay
+open. Post-fit stage probes are exploratory and do not change acceptance.
+
+**Replay-guided exploration demonstration completed,16 September:**
+[Protocol/results](replay-exploration-plan.md),[report](../runs/replay_exploration_v1/report.html).
+User clarified experimental branch selection, not faster suite rejection. Actual
+Claude critique/reconciliation; existing frozen-core decoder fitting supplies
+recorded continuations. Two complete histories, five fixed replay policies, six
+fresh executions on two new sampling seeds. Replay selects the simple8-block
+budget over12:33.3% fewer updates,20.75–21.45% less search-process time, identical
+selected checkpoints. No adaptive-policy advantage. All broad quick task gates
+still fail (0/25); no model/default/color promotion.571 software tests pass before
+the final unsupported-source guard;33 focused checks pass after that guard;
+39,414 exact tensor and80,544 primitive comparisons plus4,158 frozen-state checks.
+52 structural reports; two unique full suite evaluations cover six identical
+selections via hashed mappings. Plot inspected; interactive browser QA unavailable.
+History collection35.37s costs more than this pilot saves; larger task/seed
+confirmation required. Optional research scheduler is separate from agent runtime.
+The request-meaning diagnosis remains the next neural-model task.
+
+**Dream-RSI paper assessment completed,16 September:**
+[Assessment and bounded transfer proposal](dream-rsi-review.md). Actual public-only
+Claude critique/reconciliation. Useful candidate for experiment scheduling,
+episodic replay and later bounded planning; no evidence for replacing neural
+encoders/decoders or latent dynamics. Recorded continuations cannot answer unseen
+architecture/action outcomes. Require compatible histories, simple controls,
+complete cost accounting and fresh online validation before adoption. No model
+change, fit or validation/color promotion. Request interpretation below remains
+the active model diagnosis; replay assessment is a separate proposal.
+
+**Suite-directed request-path comparison completed,16 September:**
+[Protocol/results](request-readout-plan.md),[report](../runs/request_readout_v1/report.html).
+Actual Claude critique/reconciliation; reuse TaskInterpreter/MetadataEncoder in the
+shared thinker. Four fixed768-update fits, same added capacity/starting weights;
+constant vs actual request, paired answer formats, novel/equal-length phrasing and
+routing/omission controls. Source7202 known-format joint exact improves0→93.75%,
+but novel joint exact stays0 in both sources/arms. Source7202 choice/pair scores
+remain93.75%/87.5% (1/25 quick tasks),7201 stays50% (0/25). Old-output failing cells
+16/22 and7/5; instruction7202 also regresses five broader quick tasks. No adoption.
+Novel answers follow wording-family/length patterns despite mostly correct first
+words. Next isolate request interpretation on balanced unseen paraphrases before
+more core fitting; weak-source content access and preservation stay open.566 full
+software tests and76 focused checks pass; exact1316-tensor restart and624 unchanged
+historical reference arrays.
+433.02 s training,90.71 MiB peak PyTorch training allocation. Structural/media QA;
+interactive browser QA unavailable. Existing defaults and broad colors preserved.
+
+**Suite-directed retention comparison completed,16 September:**
+[Protocol/results](grounded-retention-plan.md),
+[report](../runs/grounded_retention_v1/report.html). Actual Claude critique and
+reconciliation; four fresh768-update fits, fixed source-output distillation weight10.
+Old-output failing cells fall32→20 and23→6, but preservation still fails.
+Source7202 keeps the scoped VID.order pass (93.75% answers/87.5% pairs, worst draw);
+source7201 stays50%. Free exact generation falls14/16→6/16 in7202 although14/16
+first words remain correct: old sentence continuations expose a task/format issue.
+Four real agreement cases also regress. No default or broad green promotion.
+Next audit the existing task/request path with same-scene/different-request
+contrasts; this small recipe does not instantiate TaskInterpreter. Stable temporal
+access in the weaker core remains open.64 focused checks, exact1180-tensor restart,
+identical historical controls,329.27s training,89.79MiB peak allocation. Reports
+structurally/media verified; browser QA remains unavailable.
+
+**Suite-directed grounded readout comparison completed,16 September:**
+[Protocol/results](grounded-readout-plan.md),
+[comparison](../runs/grounded_readout_v1/report.html).
+Actual Claude method critique/reconciliation; reuse the existing core/text decoder
+with frozen encoders. Four768-update fits (decoder-only vs core+decoder, two sources),
+16 calibration examples of video color order and alternating original-task replay.
+Source7202 reaches81.25% worst-draw answers with decoder-only and100% answers/pairs
+with core+decoder; the latter passes1/25 quick tasks and the larger target cohort.
+Omission/last-frame controls stay50%; free generation14/16. Source7201 remains50%.
+All variants regress previous outputs; retain them as experiments, no default or
+broad green promotion. Decoder normalization probes show no systematic signal loss.
+Next: stabilize useful temporal information in the core while preserving task/output
+behavior, not enlarge encoders.561 tests, exact restart1180 tensors,224.34s training,
+88.06MiB peak training allocation. Reports structurally/media verified; interactive
+browser QA blocked by local-file URL policy. No new general video/dialogue claim.
+
+**Recurring understanding suite completed,16 September:**
+[Protocol/results and usage](understanding-suite-plan.md),
+[comparison report](../runs/understanding_suite_v1/final_comparison/report.html).
+Actual Claude method review reconciled. Added10 controlled tasks and15 real-scene
+subsets covering text/image/audio/video separately and all combinations, paired
+and source-omission controls, separate encoder/posterior/working probes and strict
+saved-reference deltas. Opt-in evaluation follows completed core/joint training.
+Quick334 records/27 locations; full1336/36. Both existing joint-native checkpoints
+fail25/25 quick acceptance screens; first also fails25/25 full. These text decoders
+were trained for short symbolic outputs, not German QA. Full encoder probes access
+8/10 controlled targets>=0.80; actual answers fail. No unique loss diagnosis,
+new weights/defaults or green capability promotion. Quick about63s, full254.79s,
+269.10MiB peak PyTorch allocation.555 whole-repository tests,70 focused after
+comparison repair;6448 raw/media checks and exact repeats. Missing speech,
+natural tracking/actions, persistent memory/tools and generation remain explicit.
+Structural/media report QA passes; browser URL policy blocks interactive checking.
+
+**Optional layer-readout comparison completed,16 September:**
+[Protocol/results and commands](layer-readout-plan.md),
+[comparison](../runs/layer_readout_v1/report.html).
+User-approved reversible variant reads earlier processing depth within each scale;
+all-scale access already existed.12 zero-initialized gates; native propagation and
+defaults preserved. Six paired512-update GPU fits,236.53s training,318MiB sampled
+process peak. Held-out joint accuracy0/0/0.139% native versus0/0/0% layers; both arms
+pass1/15 screens in every seed. Median gain0 pp and worst factor regression-25 pp
+fail adoption.14 broader capabilities unimplemented,4 decoder tests unrun.
+Audio encoder probes retain100% factor access; core access remains weak. No general
+capability/color promotion.542 original tests,69 variant regressions,2749 exact
+restart and55080 artifact checks;15 structural reports, plot inspected, browser
+interaction unavailable. Actual Claude method review reconciled. Next address the
+existing feature→core learning diagnosis; do not enlarge encoders on this evidence.
+
+**Additional primary-source review,16 September:**
+[German extension and replacement criteria](multimodal-reference-extension.md).
+Two further actual Claude reviews reconciled. Prioritize the existing feature→core
+diagnosis, then a budgeted multi-layer readout comparison and action-labelled latent
+prediction. LeWM's L40S experiment is not an8GiB fit; its independent TwoRoom
+reproduction is single-seed and exposes protocol sensitivity. SemantiCodec's long,
+bidirectional path is not adopted for streaming. Retain core/graph/codec defaults;
+public benchmark wins do not qualify as local replacements. No training, weight
+download, source-code change or validation/color promotion. Concrete task thresholds
+and budgets remain to be preregistered before a new fit.
+
+**Public-reference architecture plan, 16 September:**
+[German design and module-by-module changes](multimodal-reference-design.md),
+[30 inspected AI Search descriptions](multimodal-channel-selection.md).
+420 channel entries screened; selected descriptions traced to primary sources,
+plus explicitly labelled complementary papers. Two isolated Claude reviews reconciled.
+Keep shared latent reasoning and versioned entity/evidence memory; propose explicit
+detail/semantic/core interfaces, measured adapters and separate output generation.
+RTX3050 8GiB confirmed; proposed 6GiB process budget is NOT a measured training fit.
+First close the direct-feature-to-core diagnosis, then audit a real temporal task
+and profile a complete update. No model/default change, fit, download of weights,
+or new capability/color promotion. This is a proposal, not an adopted fit protocol.
+
+**Executable modality capability suites completed,16 September:**
+[Protocol/results](modality-suites-plan.md),
+[baseline7201 report](../runs/modality_suites_v1/seed7201/report.html),
+[baseline7202 report](../runs/modality_suites_v1/seed7202/report.html).
+The existing readout recipe now offers `--stage capabilities`: each symbolic input,
+all/complementary inputs, Cartesian source-omission controls, five-stage probes and
+failure examples. Both ORIGINAL native baseline checkpoints pass only1/15 screens
+(image-source color dependence);14 fail,14 broader tests remain unimplemented and4
+output tests unrun. This is not an evaluation of every later repaired checkpoint.
+Audio factor access is100% at the encoder but location0% and direction46–52% at the
+working-state probe on withheld combinations. No unique causal layer inferred.
+Missing required metrics no longer count as a pass.80 tests,27583 audit checks
+(15005 exact-repeat checks),124 unchanged-old-data checks; source weights unchanged.
+Structural reports and saved plots verified; browser URL policy blocks interactive
+QA. No neural training, new default or broad green capability promotion.
+
+**Cross-modal capability/diagnostic specification,16 September:**
+[Suite scope and diagnostic contract](modality-understanding-test-map.md) extends
+the requested video map to text, image, audio, structured inputs/actions and the
+shared core. Reuses existing recipes, stage probes and reports; no new runner,
+training, thresholds or capability passes. Execution order remains to be scoped.
+
+**Proposed overall video evaluation map,16 September:**
+[Capability tests and milestone sequence](video-understanding-test-map.md) connect
+motion, tracking, entity/state memory and prediction to the shared core. This is a
+requested scope overview, not an adopted experiment protocol or new validation.
+Further fits require preregistered endpoints, budgets and stopping criteria.
+
+**Structured direction-reader comparison completed,16 September:**
+[Protocol/results](video-evidence-plan.md),[report](../runs/video_evidence_v1/report.html).
+Four512-update fits: pooled1630 vs shared evidence81 parameters. Fresh groups achieve
+99.69–100% for evidence; both head seeds and fixed cosine pass the fresh full screen,
+pooled fails (large-shift92.53%). But learned-vs-fixed fresh gain only0.0366pp and
+worst inspected-source regression14.71pp fail adoption.113/111 formerly correct large
+shifts on6RQHT become wrong, almost all after selecting offset1 instead of wider matches.
+No default promotion.89 tests,10239 exact restart,42682 raw audits,36 exact old pooled
+checks,6120 marginals;8 structural reports, panel inspected. Next separate preservation
+of reliable matching decisions from rank-changing learned corrections; natural motion,
+tracking/static/unknown cases and core integration remain open.
+
+**Explicit correspondence-range comparison completed,16 September:**
+[Protocol/results](video-matching-plan.md),[report](../runs/video_matching_v1/report.html).
+Twelve512-update fits expose no/local2/wide3 matching at the SAME crop/head and1630
+nominal parameters. Fresh large-shift accuracy78.75/86.77/90.07%; fixed untrained cosine
+on the SAME frozen features99.93% (raw pixel100%). Direction evidence is accessible;
+the generic learned reader uses it unreliably. All trained full gates and both benefit
+screens fail preservation; no default promotion.85 tests,8661 exact restart,92229 raw
+checks,5256 marginal comparisons,17 structural reports; plot inspected. One helper
+setup failure before fits and repeated objective-corrected smoke retained/disclosed.
+Next propose structured opposite-offset evidence readout with fixed-cosine baseline;
+natural motion, streaming, forecasting and core integration remain open.
+
+**Pair-centered objective comparison completed,16 September:**
+[Protocol/results](video-pair-center-plan.md),[report](../runs/video_pair_center_v1/report.html).
+Eight fixed512-update fits compare CE versus CE+0.1 per-pair common-offset SmoothL1,
+with unchanged single-sequence inference/model and identical samples. Four fresh sources:
+known95.90→98.59%,wide89.62→92.92%,intermediate93.67→96.84%,extrapolation69.54→72.42%.
+Both full gates fail; transfer mean+3.025pp but worst fresh-4.33pp/historical-7.90pp
+fails preservation. Absolute AND relative class preference decrease; large-shift pair
+ordering remains weak73.52→74.33%.81 tests,7061 exact restart,52913 raw audits;72 exact
+prior-baseline model/logit checks.11 structural reports, plot inspected; no default
+promotion. Next propose explicit two-frame correspondence/readout at controlled support
+and capacity; natural motion, streaming and core integration remain open.
+
+**Displacement-coverage comparison completed,16 September:**
+[Protocol/results](video-displacement-plan.md),[report](../runs/video_displacement_v1/report.html).
+Eight512-update fits keep16x4 source frames, model and image/phase draws fixed; train2/4
+versus2/4/6/8px. Four fresh subject-disjoint sources: known99.64→97.05%, newly covered
+80.49→96.90%, unseen intermediate92.73→97.65%, extrapolated10/11px58.89→85.03%.
+Both full capability gates fail. Transfer gain15.53pp is positive, but known worst
+regression9.64pp fails preservation; no default adoption. One cell is50% on the old
+evaluation source despite99.74% training; not training collapse. Post-hoc partner
+comparison reveals a common class offset masking useful relative direction scores;
+this is not a validated single-clip repair.77 tests,3397 exact restart,19873 raw checks,
+4560 marginal comparisons,11 structural reports; plot inspected. Next propose a matched
+paired-objective/readout repair with explicit inference contract, before larger kernels.
+Natural video, streaming and agent integration remain open.
+
+**Source-diversity comparison completed,16 September:**
+[Protocol/results](video-diversity-plan.md),[report](../runs/video_diversity_v1/report.html).
+Twelve512-update fits compare4x4,4x16 and16x4 clip/frame populations at identical model
+and update budget. Four fresh subject-disjoint confirmation clips: mean accuracy at
+trained2/4px shifts98.23/99.28/99.93%; untrained6/8px83.61/83.16/77.51%. All full gates
+fail; broad-minus-dense mean-2.50pp, worst-16.44pp fails diversity benefit. Nearly perfect
+train fit; larger displacements are a distinct transfer weakness. No default change.
+74 tests,3571 exact restart,14771 raw audits and15 structural reports; panel inspected.
+Manifest reader, per-source metrics, exposure counts and stricter leakage guards added.
+Historical validation subject overlap disclosed; COCO-only codec lineage verified.
+Next propose fixed-content displacement-coverage comparison and new confirmation;
+constructed pans do not yet establish natural video or agent integration.
+
+**Temporal initialization/transfer comparison completed,16 September:**
+[Protocol/results](video-stability-plan.md),[report](../runs/video_stability_v1/report.html).
+Eight512-update fits cross two temporal and two head initializations with identical
+batch sampling, plus matched true-RGB reflection augmentation. All train accuracies
+100%; held-out original82–96%, augmented80–99%. Only one cell passes per arm; both
+four-cell capability gates fail. Reflection mean+1.37pp, worst-5.60pp fails repair
+screen. Both initializations affect measured transfer; sampler alone is insufficient.
+No default or decoder changes.72 scoped tests,2211 exact restart and7828 raw checks,
+11 static reports, panel inspected. Next propose independent source-content diversity
+at fixed task/architecture with fresh confirmation; not simply longer fit. General
+motion, streaming and core integration remain open.
+
+**Paired temporal-order diagnosis and two repairs completed,16 September:**
+[Protocol/results](video-order-plan.md),[latest comparison](../runs/video_order_v1/balanced_training/report.html).
+Temporal residual features can now be read separately without modifying image means;
+optional local feature correlation is an explicit matching primitive.12 crop-pan fits
+reach100% when direction-trained, but a60.94% previous-only control fails the gate.
+A separate frozen-model challenge enumerates all48 circular phases, proving equal
+single-frame class marginals on RGB AND encoded grids: controls50%, trained temporal
+features84–86%, correlation-augmented88–94%, full gates fail. Four additional fits on
+balanced training data give79–97% plain and86–99% augmented; one seed per variant
+passes, neither passes BOTH seeds.16 fits total,21.89s CPU training, no default change.
+69 scoped tests,1894 exact-restart and6035 independent artifact checks pass;21 reports
+structurally checked, plot inspected, browser interaction not validated. Next isolate
+optimization/seed variability with a fixed balanced task before broadening to natural
+video, object motion or agent integration. Original failed gates remain visible.
+
+**Frozen-codec temporal-context comparison completed,16 September:**
+[Protocol/results](video-context-plan.md),[report](../runs/video_context_v1/report.html).
+Twelve256-update fits,84.14s CPU training:3x3,5x5 and shared spatial-loop refinement,
+each with its own trained current-only control, two seeds. Frozen image encoder AND
+decoder;16x16 current RGB patch hidden before encoding.3x3 history reduces masked
+MSE47–57% versus current-only, but correct history beats different-clip history by
+only0.86–1.32%.5x5 is6–20% worse than3x3; loops3.5–11.7% worse. Both expansion gates
+fail; no default or general motion capability promotion.68 scoped tests,1447 exact
+resume checks and405 artifact audits pass.15 reports structurally checked; panel
+inspected, browser interaction not validated. Next: paired histories with matched
+scene appearance and different required motion outcomes, before increasing capacity.
+Current mixer remains optional; real streaming/agent integration remain open.
+
+**Shared image/video codec implemented and measured, 16 September:**
+[Protocol/results](shared-video-vae-plan.md#result-16-september),
+[real-video comparison](../runs/shared_video_vae_v1/report.html).
+`VideoVAE` reuses the actual trained spatial image encoder AND decoder, with a
+single checkpoint owner; video and direct-frame reconstruction train the same
+weights. Optional causal posterior-mean refinement adds1340 parameters. Four
+128-update fits on six previously inspected local real-video sources,24.80s CPU.
+Frame-difference benefit0.22%/0.14% fails the5% screen; no temporal default adoption.
+Both continued arms worsen reserved-source RGB versus frozen source weights, which
+are preserved.61 tests,1724 exact-resume and777 artifact checks; static reports,
+browser interaction unavailable. Atlas16 separates this codec from the unchanged
+categorical agent patch/token encoder. Next: a masked/occluded-frame task that
+requires history, then separately test the spatial-grid-to-core adapter. General
+video generation, streaming state and earlier direction retention remain open.
+[Follow-up literature/source audit](video-codec-literature.md): published codec
+weights exist; no download. Frozen-source regression also changes beta/color loss
+and data domain, so no isolated temporal-cause conclusion.
+
+
+**Video diagnosis and two bounded repairs completed, 16 September:**
+[Protocol/results](video-readout-plan.md#result-16-september),
+[full sequences](../runs/video_readout_v1/report.html).
+Twelve1024-update fits,65.75s CPU training. Query-side timing keeps7104 decoder
+parameters; oracle motion improves but paired foreground-quality benefit fails.
+An optional7804-parameter palette/mixture decoder collapses to nearly constant
+frames, so neither candidate is adopted. Correct-factor controls can render motion,
+but withheld color/shape quality fails; real sampled video states additionally fail
+motion. Frozen symmetric reverse-pair probes avoid single-frame direction cues:
+encoder69–78%, final state28–39% on new positions; raw linear83–89%, geometric
+reference100%, middle/mean-frame controls50%. No unique loss mechanism or natural
+video/forecasting claim.58 scoped tests, exact query/palette resume and raw audits.
+Video uses its own framewise image patch encoder plus causal temporal hierarchy;
+it does not share image-branch weights or automatically use the separate image VAE.
+Next return to state direction/temporal retention; preserve the source-rotation
+proposal and keep output composition separate. Three Claude public-method reviews.
+Static/structural report verification; browser interaction unavailable.
+
+**Direction input isolation and curriculum completed, 16 September:**
+[Protocol/results](modality-readout-plan.md#input-isolation-and-curriculum-result-16-september),
+[comparison](../runs/direction_inputs_v1/report.html),
+[source-removal control](../runs/direction_inputs_v1/robustness_curriculum/report.html).
+Six fresh fits plus four checkpoint continuations; shared latent architecture and
+source encoders unchanged. Text-only known direction reaches100% in both seeds,
+stable over10 sampled draws; audio46%/100%, simultaneous-all48%/60% in the original
+evaluation draw. Text384→all768 beats matched all384→all768 by52/17 percentage
+points, but complete-input capability still fails in one seed. Across10 draws,
+text-warm-start complete inputs score100%/74%; without text50%/51%. This is a narrow
+learning improvement relying on text, not reliable cross-modal transfer. Frozen
+audio grids and their means retain100% known-direction linear access in both seeds;
+learned first queries give40%/98%. No unique causal loss layer established.
+Optional input selection, explicit task scopes and exact checkpoint-file starts
+reuse the existing recipe; no additional model parameters or default change.
+61 scoped tests, exact fresh/continuation resume, raw artifact and repeated-draw
+audits pass. Five brief actual-Claude methodology exchanges; no private data exported.
+Next bounded comparison: gradual source rotation/dropout after a fixed warm-up,
+requiring direction from each informative modality, with matched restart/exposure
+controls. Not yet run. Video remains deferred at the user's request; no new output,
+memory or general modality claim. Static/HTML structural QA; browser QA unavailable.
+
+**Fresh direction learning completed, 16 September:**
+[Protocol/results](modality-readout-plan.md#result-16-september),
+[comparison](../runs/direction_learning_v1/report.html),
+[localization](../runs/direction_learning_v1/localization/report.html).
+Eight matched fits: frozen verified encoders, fresh updater/readout, direction-only
+versus all-factor training, sampled versus continuous posterior working access.
+All eight task screens fail; direction-only averages52–62% and continuous access
+50–63% across six known input modes. No default replacement. Frozen linear readers
+recover all factors at100% from the encoder, but direction only60–75% from updater
+queries. This narrows the learning/access problem without proving a unique loss layer.
+Next: isolate a single informative modality before mixing modes and altering query
+pooling.59 scoped tests, exact hard/continuous resume and independent artifact audits
+pass. Four actual-Claude public-methodology exchanges reconciled;450s CPU training.
+No new decoder, persistent-memory or general modality capability claim. Static/HTML
+structural QA completed; browser interaction unavailable.
+
+**Direction literature review, 15 September:**
+[Primary-source review and proposed comparisons](direction-literature-review.md).
+Categorical estimators, multi-task interference, paired-factor supervision and
+attention pooling provide relevant candidates. A May2026 VQ warm-up preprint is an
+analogy, not a theorem for our sampler. Current core classification has no KL loss;
+standard KL-collapse fixes do not directly apply. Proposed: isolate direction learning,
+then compare continuous/hard training and targeted gradient/query changes with matched
+controls. Two public-only Claude methodology exchanges reconciled. No new model runs,
+architecture adoption or green capability promotion.
+
+**Multimodal diagnosis and bounded repairs completed, 15 September:**
+[Protocol/results](modality-readout-plan.md#follow-up-result-15-september),
+[repair report](../runs/modality_repair_v1/report.html). Frozen stage probes show
+that combined-input encoder features support held-out factors much better than the
+posterior/sampled state. All8 longer native oracle fits pass known-output screens;
+held-out text/image and video quality still fail. Raw-logit training supervision
+improves known position from71–73% to97–100%, but direction stays near50% and held-out
+color worsens. All8 complete core screens fail; no default replacement. Probability
+auxiliary and temperature curriculum fail paired benefit.77 scoped tests, independent
+raw audits and exact auxiliary/curriculum resume pass. A read-only
+[direction follow-up](../runs/modality_repair_v1/direction_localization/report.html)
+finds69–90% known-direction access in posterior probabilities but50–54% in sampled
+codes, with measured code collisions. Trained pre-sampling auxiliary heads also
+fail direction; this is not exclusively a sampling explanation. Next: paired
+direction-only updater learning from initialization with a frozen verified encoder,
+then joint retention/composition and decoder recombination; not yet run.
+
+
+**Multimodal readout comparison completed, 15 September:**
+[protocol/results](modality-readout-plan.md),
+[combined report](../runs/modality_readout_v1/formal/report.html). Two seeds,
+native versus adapter1/2/4, separate frozen-state outputs then joint core/output
+training:42 runs, plus8 explicit-factor output controls and2 linear probes.
+All192 simultaneous-output screens fail; held-out all-four-correct is0% throughout.
+Core color is more readable than location/direction. With oracle facts, audio
+passes symbolic-tone recombination; text fits known strings but fails recombination,
+and native image/video remain weak. Recurrent adapters are optional, not adopted as
+a repair. Source/mask/gradient checks and exact GPU resume pass; raw reports preserve
+negative results. Next: upstream location/direction diagnostics and output-side
+recombination/spatial-conditioning controls. No general language or media capability.
+
+**Latent-core visualization, 15 September:** [source-grounded walkthrough](latent-core.md)
+and atlas §14–15 distinguish world belief, recurrent workspace, session memory and
+optional graph context. Thinker already repeats shared attention/MLP; only workspace
+changes. Native decoders read all state tokens through modality-specific attention.
+Alex clarifies that shared thinking must remain multimodal; output branches should
+learn to extract what they need, optionally with their own adapter. No mandatory
+shared text/answer-plan bottleneck. Compare existing decoder reads against a small
+adapter before adding one; preserve evidence and evaluate output/grounding plus
+total resources. No model change, training or new capability validation;
+discussion/green scopes are preserved. Nested shared-weight Transformer loops are
+an allowed adapter variant: existing outer Thinker, optional inner modality readout
+refinement with fixed budgets first. No nested loop or adaptive stopping added.
+
+**Non-image modality interfaces repaired and measured, 15 September:**
+[protocol/results](modality-foundation-plan.md),
+[four-modality report](../runs/modality_foundation_v1/direct/report.html),
+[video comparison](../runs/modality_foundation_v1/video_weighted/report.html).
+Foundation now connects image/video/audio/text with masked candidate pooling,
+source attribution and the actual memory/thinker. Fixed a four-code/eight-code
+memory mismatch, decoder masked-NaN handling, invalid video-state acceptance and
+multiscale tracing that changed the numerical attention path. Shared diagnostics
+now preserve outputs, gradients and RNG exactly in all four encoders.
+112 scoped tests and 6075 independent artifact checks pass; full checkpoint matches
+64+64 resume exactly. Four-example direct fitting learns four words and four tones.
+Video ordinary continuation gets 3/4 motion directions; object weighting gets 4/4
+but worsens total RGB/background and fails the registered repair screen. Weight1
+remains default. Real local audiovisual/UTF-8 inputs pass the storage/retrieval
+path after documented resizing/resampling; no real-media capability training.
+State-to-output adapters remain untrained in this audit; language understanding,
+speech, video forecasting, cross-modal identity and live hardware remain open.
+Static figures and embedded report media checked; browser QA unavailable under the
+existing policy. Next: train/test state-conditioned outputs separately, then held-out
+real-modality tasks. Earlier VAE quality/rate and entity-calibration work stays open.
+
+**World State foundation implemented, 15 September:** [guide/API](world-state.md),
+[protocol/results](world-state-foundation-plan.md),
+[debug report](../runs/world_state_foundation_v1/final/report.html).
+Versioned entity/component/relation/evidence store; atomic commits, revocable aliases,
+dependent-state invalidation/replay, bounded retrieval, interchangeable neural modules
+and actual BeliefAgent connection. Optional concept/self/feedback/prediction/selection
+clients and bounded training/inference diagnostics are usable; general learned behavior
+remains experimental. 81 focused tests and 3293 independent checks pass. A CPU 96-update
+exercise learns paired histories; full checkpoint matches 48+48 resume exactly.
+Attention tracing no longer changes native outputs/gradients; internal commits keep
+the store and core clock aligned. Structural report QA only under existing browser
+policy. Next: real candidate/identity/state tests and calibration; VAE work stays open.
+
+**Persistent multimodal World State review, 15 September:**
+[assessment and proposed milestones](world-state-proposal-review.md). Two actual
+Claude review rounds support the hybrid entity/component/relation/evidence design.
+Source review finds existing bounded entity/state/relation paths, but no unified
+persistent multimodal store. Recommended first milestone: confusable instances,
+state/history queries, bounded retrieval and restart/correction with provenance
+from the start. Concept induction is a separate second milestone. Learning signals,
+candidate granularity and quantitative gates still need an experiment contract.
+No universal existence decay from non-observation; merges must retain attribution
+for correction. Discussion only: no model changes, new training or capability
+validation. Existing VAE quality/efficiency work below remains open.
+
+**Efficient sampled-color repair, 15 September:** [protocol/results](spatial-vae-repair-plan.md),
+[report](../runs/spatial_vae_repair_v1/report.html). Training-only color supervision
+on the same model reduces sampled global color error81–83% and raw RGB error26–27%
+in two seeds. No added inference work or parameters; training8–10% slower. KL rate
+rises37–41% and grids remain, so full repair/rate screens fail. Phase residual loss
+adds no consistent benefit. Color-only weights are a diagnostic candidate; original
+weights retained. KL evaluated once instead of four times; shared report/color code
+and cached extra draws reduce duplication. CPU loss26% faster; AOT capture/compile
+microbenchmark10% shorter, not a whole-model speedup.50 tests and independent audit
+pass. Next: decoder phase repair and matched achieved-rate tests; high-level codec
+quality and agent integration remain open.
+
+**VAE color/grid diagnosis, 15 September:** [results and controls](spatial-vae-color-plan.md),
+[report](../runs/spatial_vae_color_v1/report.html). Constant latent fields generate
+a 2/4-pixel grid at decoder shuffles, even without noise; learned phase channels
+are unequal. Color accessibility drops strongly at24->4 posterior projection and
+again at sampling. Extra512-update encoder-only/decoder-only/joint sampled training
+changes global color error by only0.5–3.5%. Mean-only decoder training improves it
+37.6% with encoder fixed, but sampled RGB error worsens to0.09944; diagnostic only,
+not adopted. Grid remains.45 tests and independent data/weight/metric/replay audit
+pass. Default-vs-IEEE evaluation mismatch repaired without changing four trained
+weights; use reference_fp32/follow-up evaluation_fp32. Next: phase-consistent decoder
+initialization and color/rate/noise interventions with real sampled-output checks.
+
+**R/P/M/C VAE v2 implemented and tested, 15 September:**
+[Protocol, commands and results](spatial-vae-v2-plan.md),
+[comparison report](../runs/spatial_vae_v2/formal/report.html). Overlapping stem,
+separate shuffle/processing/compression, coarsest self-attention with shared loops,
+spatial posterior, latent-only decoder, detached stage probes and strict old/new
+exports work. Actual Claude reviews were reconciled; private code/data/results
+stayed local.42 focused tests and exact GPU resume pass;2203 artifact checks pass.
+
+Ten512-update fits on512 new real training photos,64 validation and96 test photos
+pass the learning sanity gates but all fail the photo-quality screen. C/beta0.1:
+mean MSE0.017132, sampled0.018344. Lower KL pressure helps this short run more than
+attention/loop changes; processing before and after compression is essentially tied
+at beta1. Unequal rate/compute/parameters and one seed prevent a superiority claim.
+Common RGB probes show reduced access after each channel compression, even when
+feature-variance reconstruction looks good; this is not proof of irreversible loss.
+58 reports verified structurally, example/error/rate figures inspected; browser QA
+unavailable due to local-file policy. Formal training totals70.75s, GPU reserved
+peak162MiB (allocator cache included), artifacts~388MiB. Codec stays separate from
+the agent. Next: controlled duration/latent-capacity and matched-resource comparisons;
+fine detail, semantic utility and state-to-latent generation remain open.
+
+**Spatial image VAE implemented and compared, 15 September:** the
+[explicit-scale codec](spatial-vae-design.md) now has base, cross-scale attention,
+and attention-plus-reversible-local-mixing variants. It separates PixelUnshuffle,
+processing and channel projection, keeps a spatial Gaussian posterior, and decodes
+without encoder skips. Current agent components remain unchanged.
+[Report](../runs/spatial_vae_v1/report.html), [protocol/results](spatial-vae-plan.md).
+
+Matched 512-update fits on1024 real COCO photos,128 validation and192 test photos:
+RGB64 mean MSE base0.019200, attention0.019419, reversible0.018487. Attention alone
+worsens error1.14%; reversible improves4.79% versus attention, below the predeclared
+5% minimum despite a positive paired interval. All three fail the combined photo
+quality screen. Native128/odd reconstruction and mild instance-retrieval screens
+pass; raw pixels also retrieve100%, so this does not validate semantic recognition.
+Patterns and first-eight photo examples show severe fine-detail loss. Larger native
+crops up to192×256 retain more structure but stay blurred; input area, latent size
+and crop content change together. Prior samples are color blobs, not validated
+general images. The validation-only collapse trigger was false; no tuning on test.
+
+25 focused CPU tests, exact GPU pause/resume and880 independent source/weight/output/
+numeric checks pass. Three fits total17.93s training-loop time; evaluation21.36s;
+maximum formal GPU reserve164MiB. Small deterministic overfit control passes.
+Two actual Claude method-review rounds reconciled technical errors; private
+code/data/results stayed local. Report inspection found custom image outputs were
+hidden by the standard gallery; explicit labelled panels now repair all38 reports
+without changing weights or metrics. Structural checks and scientific-figure QA
+pass; browser interaction QA is blocked by local-file URL policy.
+
+Next proposed comparison: training duration and KL pressure separately at fixed
+geometry, then latent capacity. Keep the base as a simple reference; reversible
+mixing remains a candidate, not an adopted default. One short seed cannot establish
+sample efficiency or architecture limits. State-to-latent generation, photo state/
+recall repair and other modalities remain open.
+
+**Architecture atlas, 14 September:** [thirteen source-grounded drawings](architecture-atlas.html)
+now cover the overall loop, encoders, attention, belief state, memory, tasks,
+decoders, photo generation, entities, planning and learning signals. General,
+photo-specific and proposed graph/DAG paths are explicitly distinguished.
+[Editable diagrams and notes](architecture-atlas.md). Documentation only; no model
+or weights changed. Graph structure and local links checked; SVGs inspected;
+browser interaction QA blocked by local-file URL policy.
+The overview now tracks discussion coverage: red = a dedicated walkthrough remains,
+blue = discussed; green = validated within a labelled test scope.
+Green now marks event mechanics, bounded memory storage/causal reads, bounded search
+mechanics and reflection routing, with saved evidence and limits. This does not
+validate learned world prediction, general recall or output quality. Event handling
+retains its pending discussion label. [Checklist and evidence](architecture-discussion.md)
+keep the status revisable; update it as each topic is discussed. Initial red areas:
+observation adapters, categorical belief updating, task contracts and action execution.
+
+**Photo-detail path localized, 14 September:** the largest measured drop in spatial
+accessibility is the first observation-to-state update. Matched linear and RBF
+readers use 1,024 training/128 validation photos and a fresh 256-photo test suffix.
+They reconstruct a 16×16 RGB layout, separating spatial structure from finer texture.
+[Report](../runs/photo_detail_v1/report.html), [protocol/results](photo-detail-plan.md).
+
+Linear grid MSE: encoder 0.00000706 → first observed state 0.033545 → second
+state 0.034603 → recalled workspace 0.043975. Nonlinear readers corroborate the
+main drop. Stored snapshots are bitwise copies. Both readers also flag a further
+drop between the complete stored state and the reset/recalled state. The image
+encoder supplies 336×32 features; observation updates compress to 30×32 state,
+and recall updates only the 8×32 working/reasoning tokens after reset.
+
+Fine detail has a separate constraint: the actual 4×4 RGB patch projection maps
+48 values to 32 outputs, has 16 null directions, and its top three singular
+directions hold 99.99999926% of squared weight magnitude. Tiny nonzero directions
+are poorly conditioned, not declared absent. The good direct codec additionally
+gets raw residual detail that never enters the agent. On fresh photos, full-image
+PSNR is 31.18 dB with that channel, 19.74 dB without it, and 12.84 dB for native recall.
+
+No agent weights changed. Closed-form readers remove probe SGD duration as a
+confound, but family/sample/dimension limits prevent proving all lost information
+or ruling out larger/longer-trained decoders. Six focused tests, 17 exact reader
+reloads, 52 exact GPU activation/control tensors over 32 photos, 157 independent
+numeric checks and 63 source snapshots verified. Extraction18.81s/86MiB, fitting
+10.61s CPU. Three reports structurally checked; figure inspected, browser QA unavailable.
+Actual generic Claude method review completed; private code/results stayed local.
+
+Next proposal: train the observation/state update and recall pathways on real-photo
+spatial targets with intermediate readouts. The previous generator-only training
+left these modules frozen. Test finer input-detail transport separately; size and
+duration comparisons remain open. No repair is claimed by this diagnostic.
+
+**Real-photo training completed, 14 September:** continued the existing own image
+generator on 1,024 local COCO photographs, with 128 validation and 256 test photos
+held out from this continuation. Encoder, state/memory and codec stayed frozen.
+[Report](../runs/real_photo_v1/report.html), [protocol and results](real-photo-plan.md),
+[weights](../runs/real_photo_v1/training/weights.pt). Original runs are preserved.
+
+After 2,048 updates, test reset MSE falls 0.09674→0.05867 (39.4%), PSNR
+10.34→12.73 dB. Ordinary image error falls 41.4%. Reset error is 15.8% below the
+training-mean baseline and 26.8–49.8% below wrong-memory, blind-history and erased
+controls; swapped outputs track the swapped target. The predeclared learning and
+context screens pass. However, the first eight fixed examples show mostly broad
+color fields, not recognizable photographs. Direct codec reconstruction reaches
+30.92 dB: it receives the image and carries residual detail directly, so this is
+an adequacy control, not a compact-memory result. General generation remains open.
+
+Same architecture, 314,576 trainable generator parameters, 370.03 training seconds,
+700 MiB peak GPU reserve. Fifteen focused tests, exact GPU pause/resume and four
+GPU reload comparisons, 160 independent metric values, all 520 frozen tensors and
+60 source/snapshot files verified. Seven reports structurally checked; scientific
+figures inspected; browser QA unavailable. Actual Claude method review used the
+user-approved brief; local code/results review and remaining disagreements recorded.
+
+Next proposed diagnostic: compare recoverable real-photo detail at encoder features,
+stored state and final workspace using matched readers, then train the implicated
+path. The current result does not identify a unique loss location or prove that a
+larger generator is needed. The earlier synthetic placement and factual-readout
+proposals remain separate, unadopted next steps.
+
+**Decoded-image supervision implemented and iterated, 14 September:** an optional
+image loss now differentiates through the frozen decoder, either from a one-step
+endpoint estimate or through the actual eight-step sampler. Your agent and codec
+stay unchanged. [Report](../runs/decoded_image_v1/report.html),
+[protocol/results](image-output-plan.md#decoded-image-supervision-results).
+
+At1024 updates each, adding endpoint image loss lowers fresh weighted pixel MSE58.0%
+and increases familiar reset accuracy13.28%→55.47%. One withheld cell regresses;
+primary repair, nonregression benefit and full capability fail. A validation diagnostic
+finds familiar first-endpoint accuracy87.5%, versus62.5% after eight sampling steps.
+
+A separate matched512-update comparison trains through all eight steps: pixel error
+falls44.4% versus endpoint supervision, with no joint-category regression in any
+ordinary/reset seen/withheld cell. That benefit passes, but familiar accuracy45.31%
+and withheld reset14.84% remain below capability requirements. The original renderer
+remains default. Post-hoc attribute checks reveal a tradeoff: reset color73.44%→90.23%
+and shape46.09%→64.84%, while side64.45%→54.69%; about half the generated contrast is
+on the wrong side. Lower image error does not mean reliable placement.
+
+Four fits3072 updates215.95s, maximum GPU reserve566MiB.12 focused tests,16 exact
+64-history GPU confirmation replays plus4 validation reloads,912 independently
+reproduced metrics; all513 frozen source tensors and all source snapshots verified.
+24 reports structurally checked and scientific figures inspected; browser QA unavailable.
+Four actual public-method Claude reviews, concrete misreadings corrected in receipts;
+private code/results reviewed locally. Sourcea37b994/46a392c; original runs preserved.
+
+Next proposed repair: add a training signal for spatial placement/occupancy to the
+state-conditioned generator, without target-derived input at inference. Keep the
+same data and hard tests for a matched comparison. Perfect color/shape coupling in
+this generator's training set is a separate generalization risk; don't silently
+relax the withheld test to obtain a pass. General imagery, arbitrary prompts and
+other modalities remain open; no population-optimum or unique-cause claim.
+
+**Conditional image generator implemented and compared, 14 September:** optional
+residual transformers per scale and cross-scale attention produce all image-decoder
+features from the existing workspace. Agent and own codec stay frozen; no pretrained
+download or default replacement. [Report](../runs/conditional_image_v1/report.html),
+[implementation/results](image-output-plan.md#conditional-generator-results).
+
+Both new methods fail the declared capability gates. Direct regression reaches100%
+on combinations seen by the new generator and0% on withheld combinations. Uniform
+flow sampling is poor even on seen cases. A separate pure-noise-weighting fit lowers
+fresh weighted pixel error25.7% but still fails faithful generation. Original native
+outputs remain100% in these neutral reference cells; its upstream/renderer already
+saw all categories, so it is descriptive rather than the matched training control.
+All factual answers and the frozen state/memory/codec remain unchanged.
+
+Three1024-update fits,314,576 new trainable parameters each,84.73s formal training,
+peak1116MiB.60 distinct scoped tests,1026 independently reproduced metrics,18 exact
+GPU confirmation replays and3 validation reloads.26 reports structurally checked;
+figures inspected, browser QA unavailable. Four actual public-method Claude reviews;
+one terminology disagreement retained. No private code/data/results exported.
+
+Next proposed comparison: decoded-image supervision through the frozen codec,
+holding the generator and progress policy fixed; retain pure-noise and withheld
+binding checks. Latent loss alone was insufficient at this budget; this is not an
+intrinsic architecture or capacity limit. General photographic generation, arbitrary
+text requests, compact memory and other modalities remain open. The separate factual
+readout optimization proposal below is still pending.
+
+**Factual readout comparison completed, 13 September:** the proposed joint continuation
+fails its declared benefit. Warm/texture factual errors increase10→14/512 correlated
+responses. Both fits and unchanged source pass12/12 task gates on fresh64-history cells,
+but full repair remains false. Retain the prior source; no jointly trained checkpoint
+adoption. [Report](../runs/factual_readout_v1/report.html),
+[protocol/results](recall-repair-plan.md#factual-readout-repair-results).
+
+Joint factual retention10/12 versus12/12 image-only. Warm recall facts92.1875–93.75%
+versus95.3125–96.875% control; joint cool facts100%. Images are bitwise identical across
+fitted arms: warm recall90.625–93.75%, image retention10/12. Saved training warm/texture
+cross-entropy worsens too, while cool improves. A more conservative optimization test
+is warranted; neither a unique cause nor a successful lower rate is established.
+
+Added opt-in separate gradient clipping and enabled box-weighted joint cached training.
+The branches are parameter-disjoint; factual learning does not directly change image
+semantics. Image weights/AdamW states and all1536-step image loss/norm records match
+exactly. Image clipping0 steps; joint factual clipping307 steps. No new architecture
+or parameters;67,032 trainable joint versus58,128 image-only.
+
+61 tests,10,188 independent metrics,40 exact64-history GPU reloads. Paired16-step GPU
+development additionally verifies gradients and optimizer updates at every step. The
+initial raw-logit preflight mismatch was corrected to use the existing evaluator's
+trainability convention before any training; receipts preserved. Training119.15s,
+peak646MiB. Three actual Claude reviews reconciled;45 reports structurally checked,
+figures inspected. Prior browser local-file restriction remains a QA limitation.
+
+Next: compare a lower readout learning rate with the current rate from the preserved
+source, with equal data/updates and separate clips; add difficult-scene loss diagnostics,
+fresh confirmation and unchanged retention/causal gates. Prior [refinement](../runs/producer_refinement_v1/report.html)
+and [loss correction](../runs/recall_shape_v1/report.html) remain preserved. General scene
+robustness, real imagery, learned reliability, upstream replication, CPU portability,
+streaming and general generative backends remain open.
+
+**Scene/lighting challenge and reporting repair completed, 13 September:** centered
+input passes12/40 attempted cells (neutral, temporal additive and RGB-channel
+additive); raw passes8/40 (neutral and textured background). All those successes
+reach100% ordinary/reset factual/image categories. Centering hurts texture:
+raw100% becomes76.562–86.719%. Clutter, larger objects, gain, tint and shadows remain
+unreliable. Bright backgrounds fail centering coverage; accepted histories only
+15.625–21.875% on screen seeds, with no accepted-subset accuracy reported.
+[Report](../runs/centering_challenge_v1/report.html),
+[protocol/results](recall-repair-plan.md#centering-challenge-results).
+
+The ordinary evaluation recipe now writes input_coverage.json and completes an
+explicit coverage-failed report before any model query when centering rejects a
+history. No fabricated predictions, clipping, fallback or learned confidence.
+Two valid full GPU exports remain bitwise exact after this repair; two fresh
+rejection exports correctly report12.5% history coverage. Centering stays opt-in.
+
+92 distinct relevant tests pass;45 focused reruns after repair.76 scored GPU replays
+exact;18,012 metrics independently verified;12 legacy data cases byte-exact.80-cell
+screen571.93s/298MiB, four repair checks16.37s; zero optimizer updates. Two actual
+Claude public conceptual reviews with corrections reconciled; private code/results
+reviewed locally.86 reports structurally checked, figures inspected, browser QA
+unavailable. Separate screen311c3ca and repair716d661 source identities retained.
+
+Next: controlled state/readout learning with scene variation and clean retention;
+centered tint has100% direct-reader accuracy yet weak native answers, so no unique
+encoder-loss conclusion follows. Independent upstream replication, confidence,
+real recordings, CPU portability and deployed runtime tests remain open.
+
+
+**Brightness repair comparison completed, 13 September:** opt-in frame centering
+passes all 12 confirmation conditions with 100% factual/image-category accuracy,
+including full causal task gates, neutral retention and stress benefit. It uses
+unchanged source weights and a fixed RGB reference from verified neutral training
+observations. Available as `--evaluate-only --center-input`; it is a task-specific
+preprocessing diagnostic, not learned invariance or a default deployment policy.
+[Report](../runs/brightness_repair_v1/report.html),
+[protocol/results](recall-repair-plan.md#brightness-repair-results).
+
+Matched output-head augmentation gives partial improvement but fails repair:
+4/4 neutral task cells pass, 0/8 stress task cells pass; neutral retention passes
+only 1/4 cells and stress benefit 6/8. Neutral-only continuation retains 100%
+neutral answers but fails every stress gate. Augmented heads also underfit seen
+training extremes, so failure does not uniquely diagnose an encoder problem.
+Both explored source checkpoints share one upstream initialization/codec; fresh
+seeds23073/23074 and RGB offsets−12/0/+12 test familiar synthetic scenes and
+perturbation interpolation. Earlier negative screens remain preserved.
+
+Four matched 1,536-update fits train only 67,032 factual/image-feature parameters;
+all state/encoder/backend tensors stay fixed. Training139.52s, peak712 MiB; 48-cell
+evaluation/report loop365.40s. All78 relevant tests pass;13 focused checks rerun
+after fixing CUDA median incompatibility with deterministic sorting. All48 GPU
+replays and original default exports are exact;12,536 metrics independently
+verified plus80 descriptive training-offset accuracies. CPU numeric1e-4 fails
+all48 cells; native categories differ in11, none centered. Two public-only Claude
+reviews, private implementation/results reviewed locally. All53 individual reports
+and overview structurally checked, figures inspected; browser QA unavailable.
+
+Next proposed: challenge the centering reference with varied backgrounds, object
+coverage and nonuniform illumination before making it a default. For learned
+robustness, diagnose the head/state optimization shortfall with a fresh protocol;
+no encoder replacement follows from this fixed-budget result. No further fit or
+deployment launched.
+
+**Fixed-checkpoint nuisance screen completed, 13 September:** both continuation
+policies pass all six neutral cells, but none of their twelve brightness-stress
+cells or five-point retention checks. Joint continuation retains 100% facts/images
+on fresh background seeds 20073–20075. Image-only neutral ordinary facts/images are
+96.094–100% / 98.438–100%; reset 95.313–100% / 96.875–100%. With observed RGB offsets
+−16/+16, ordinary facts fall to 31.250–65.625% and images to 31.250–57.031% across
+trained checkpoints. Targets/labels stay unchanged, no pixels clip, foreground
+color identity and history ambiguity are preserved. These are familiar synthetic
+objects from one upstream initialization/codec, not independent model replication.
+[Report](../runs/output_robustness_v1/report.html),
+[protocol/results](recall-repair-plan.md#fixed-checkpoint-nuisance-robustness-results).
+
+Added evaluation-only `--input-offset` with clipping/type guards and recorded
+transform provenance; default data identities and inference/training code remain
+unchanged. All 67 relevant tests pass; 12,798 metric values and all 54 task gates
+independently verified. All 36 trained-model GPU replays are exact; source/factual
+freeze and sampled memory/workspace invariants pass. CPU numerical tolerance fails
+in all 36 cells and native categories differ in 15 stressed cells; portability is
+still open. All checkpoints stayed fixed: zero training, 449.78s evaluation/report
+loop, 296 MiB peak GPU reservation. Two public-only Claude reviews; implementation
+reviewed locally. Fifty-five individual reports and overview structurally verified,
+representative figures inspected; browser QA unavailable.
+
+Next proposed: separately declare a brightness augmentation comparison and input
+normalization diagnostic, with neutral retention and fresh confirmation data. Facts
+and the frozen direct reader also fail under shifts, so a decoder-only explanation
+is insufficient; a failed direct reader does not prove encoder information is gone.
+Do not reuse these diagnostic populations as untouched confirmation. No repair
+training or normalization change has been launched.
+
+**Image-output continuation completed, 13 September:** image-only training on both
+frozen final joint states reaches100% ordinary/reset image answers on fresh test19073.
+Joint continuation reaches100% facts and images for both. Image-only preserves
+source8502 facts at97.656/99.219%; source8501 facts remain100%. All full task and
+separate sufficiency/retention gates pass. Unchanged sources already pass the minimum
+gate here, with images91.406/97.656% and92.188/90.625% ordinary/reset. This demonstrates
+conditional output recoverability and reduced residual error; both trajectories
+share one explored upstream initialization/codec. Earlier7793 failures remain valid.
+[Report](../runs/image_continuation_v1/report.html),
+[protocol/results](recall-repair-plan.md#image-output-continuation-results).
+
+Added opt-in `--image-only` and found/fixed a GPU inference consistency issue:
+parameter trainability flags affected numeric outputs under no_grad. Evaluation
+now freezes flags temporarily and restores them even on failure. Original invariant
+failure preserved; six unchanged exports rescored with zero extra optimization.
+All categorical answers/gates unchanged. GPU exports, frozen states, factual logits
+and memory provenance now exact under the corrected inference contract. CPU1e-4
+numeric tolerance still fails (logits0.185367/pixels0.002075), but native categories
+agree on this sample. Direct model calls require matched inference flags.
+
+All58 relevant tests and3,056 independently recomputed metric values verified.
+Four fits507.67s training,404MiB peak GPU reservation. Two bounded public-only Claude
+reviews; implementation and repair reviewed locally. Fourteen individual reports
+plus overview structurally verified, figures inspected; browser QA unavailable.
+Next proposed: hold both policies fixed for a fresh declared robustness evaluation,
+then expand history/observations. No further training or benchmark launched.
+
+**Existing-source robustness comparison completed, 13 September:** the overall
+joint-task robustness gate fails on fresh test 7793. All four new source7801 fits
+(writer-only/joint × two optimizer seeds) reach 100% facts/images in ordinary and
+reset modes and pass every task gate. Both unchanged source7802 joint checkpoints
+fail this fresh screen: ordinary facts/images 99.219/86.719% and 92.188/88.281%;
+reset 100/93.750% and 92.969/89.063%. Source-retention passes all joint cells.
+Earlier test7783 passes remain scoped to that sample. Both sources were already
+explored and share one codec; this is not blinded replication or new codec training.
+
+Shape rendering is the main remaining error. In ordinary mode, the weaker joint
+checkpoints have 16 and 8 cases with fully correct factual answers but incorrect
+images. Color and side are 100% correct in both; shape is 86.719/88.281%. This
+supports testing the image-output path, without uniquely locating a decoder fault.
+[Comparison and error examples](../runs/cross_source_v1/report.html),
+[protocol/results](recall-repair-plan.md#existing-source-robustness-results).
+
+Added `--evaluate-only` to the existing recipe with immutable checkpoint provenance,
+separate evaluation identity and report-failure preservation. Fixed nested JSON
+settings comparison and misleading empty training charts. All 54 relevant tests
+pass; focused regressions rerun after fixes. 2,794 metrics independently checked;
+all eight GPU exports, frozen tensors, paired initialization/sampling and memory
+provenance pass. CPU numerical gate fails (native logits0.258659/pixels0.009212);
+one ordinary factual-shape answer changes, all image/reset categories agree here.
+Four new fits: 515.28s training, 404MiB reserved. Four checkpoints reused; two unchanged
+sources freshly scored. Three public-only Claude reviews; 12 individual reports
+plus overview verified structurally, figures inspected, browser QA unavailable.
+Next proposed: compare targeted image-output training on frozen final joint states
+against matched continued joint training. No additional fit launched.
+
+**Joint writer and workspace-reader learning completed, 13 September:** both new
+fits pass the full controlled-task gate. Ordinary facts/images are 99.219/90.625%
+and 93.750/92.188%; reset 100/95.313% and 94.531/91.406%. The matched writer-only
+checkpoints fail the task gate on the same fresh test. The separate five-point
+benefit gate passes only seed 8502: seed 8501 ordinary image accuracy is unchanged.
+Thus replicated task success passes; the stricter combined repair-and-benefit claim
+fails. These are two optimization seeds from one upstream model, familiar synthetic
+objects and supplied snapshots; independent source replication remains open.
+
+Opt-in `--train-thinker` adds workspace-reader learning to `--writer-learning trainable`
+and live mixed ordinary/reset output training. Encoders, reconstruction backend and
+other frozen components stay fixed; inference banks stay detached. All 52 relevant
+tests pass, including joint exact resume. Default-off old exports reproduce exactly.
+New GPU outputs and bank/replay checks are exact; 1,826 metrics independently checked.
+CPU numerical equivalence fails: one joint factual-shape answer and one reused-baseline
+image-side answer change in ordinary mode. Images still have residual artifacts;
+template correctness is not general image quality. Browser QA unavailable; structural
+reports and inspected figures retained. [Report](../runs/writer_reader_v1/report.html),
+[protocol/results](recall-repair-plan.md#joint-observer-and-workspace-reader-results).
+
+The preceding writer-only iteration produced partial gains but failed all full gates:
+ordinary facts/images 83.59/89.84% and 86.72/82.81%; both reset 81.25/75% on its own
+test population. Four fits took 481.75s; two joint fits took 369.15s. Total new formal
+training this turn: six fits, 850.90s, 404MiB peak reserved. Two unchanged baselines
+were freshly rescored for the joint comparison with original provenance preserved.
+Four bounded public-only Claude design reviews; implementation reviewed locally.
+[Earlier comparison](../runs/writer_learning_v1/report.html). Next proposed validation:
+replicate the joint recipe across independently initialized upstream models before
+expanding history length or distractors. No further training launched.
+
+**Mixed ordinary/reset training completed, 13 September:** training only native
+output heads on both workspaces repairs the stronger source on the controlled task.
+Writer7801 ordinary facts/images96.875/96.875% versus82.8125/58.59375% with matched
+reset-only training; reset97.65625/94.53125% versus97.65625/96.09375%. Full task and
+policy-benefit gates pass for this source. Writer7802 remains75% in both modes,
+even on training histories; replicated repair fails. No full-agent reliability claim.
+Encoder, writer, thinker, reconstruction head, probes and raw banks remain frozen.
+Four1536-update fits,140.83s training plus9.21s cache preparation including resume,
+458MiB reserved.46 relevant tests and1,826 independently verified metrics pass;
+GPU ordinary/reset exports and both live caches replay exactly,776-row restart
+prefix retained. CPU numeric tolerance still fails (max logits1.104984/pixels0.026627),
+but all native factual/image labels agree in this slice. Two public-only Claude
+reviews, structural reports and inspected figures. [Protocol/results](recall-repair-plan.md#mixed-ordinaryreset-results),
+[report](../runs/mixed_context_v1/report.html). Next proposed: test the weaker writer
+and workspace formation while retaining mixed output training; no further run launched.
+
+
+**Direct output-readout diagnostic completed, 13 September:** with writer AND thinker
+frozen, head-only training on native reset tokens reaches96.88/98.44% facts/images
+for writer7801 (raw),98.44/96.88% standardized. Both pass the predeclared reset-only
+accuracy/pair/causal screen. Ordinary outputs regress to81.25/59.38% and68.75/50.78%;
+all eight full gates fail. Direct stored-token routing scores78.91/95.31% raw and
+75/94.53% standardized for7801;7802 stays near75–77%. No replicated route advantage,
+normalization benefit or reset sufficiency. This identifies conditional native
+readout success in one source, not absent state information or a complete repair.
+Eight1536-update cached fits,296.76s training plus14.33s first cache preparation,
+460MiB reserved.59 distinct tests and2,930 independent metrics pass. Frozen writer/thinker/
+codecs/probes/banks unchanged; live shuffled-batch caches and all GPU exports exact;
+774-row resume prefix retained. CPU numeric tolerance fails with five factual-side
+differences across three7801 runs; image labels agree. Two public-only Claude reviews,
+structural reports and all figures inspected. [Protocol/results](recall-repair-plan.md#direct-native-output-readout-results),
+[report](../runs/direct_readout_v1/report.html). Next proposed: freeze upstream and
+train native heads on both ordinary and reset workspaces; retain the weaker writer
+as a separate accessibility problem. A stale-scaling reconfiguration bug was fixed;
+all eight exports replay exactly afterward. No next training run launched.
+
+**Frozen-reader supervision completed, 13 September:** adding a frozen stored-state
+reader loss does not improve native recall over equal training. Writer7801 falls
+from86.72/89.06% facts/images to84.38/86.72%; writer7802 remains74.22% for both.
+All four full reliability gates and the replicated10-point benefit gate fail.
+The optimized reader improves strongly on recalled tokens, and the second reader
+also improves joint accuracy, but neither establishes better native output.
+Stored-state accessibility remains stronger in writer7801 and reader-dependent.
+Four1536-update fits,708.51s total training,424MiB reserved;49 relevant tests and
+1,572 independently checked metrics pass. Frozen writer/codecs/reader and raw banks
+unchanged; identical within-pair initialization/data/sampler, exact GPU exports and
+bank-order workspace checks. CPU numeric tolerance still fails: writer7801 supervised
+changes two factual-side labels and one image-side label. Two public-only Claude
+reviews; standalone reports structurally verified and exported figures inspected.
+[Protocol/results](recall-repair-plan.md#frozen-reader-supervision-results),
+[report](../runs/reader_supervision_v1/report.html). The extra loss stays optional.
+Next proposed: a controlled direct stored-working-token route into native output
+heads, to separate workspace formation from output learning. No further run launched.
+
+**Snapshot timing comparison completed, 13 September:** explicit snapshot ages
+raise writer7801 reset facts72.66→77.34% and images75→75.78% versus equal untimed
+continuation; writer7802 stays74.22% for both outputs. All reliability, replicated
+10-point benefit and replicated time-sensitivity screens fail. Timestamp erasure
+reduces the first temporal model to57.81/55.47%, but leaves the second unchanged;
+misalignment affects both, weakly in the second. Keep the cue opt-in: response to
+metadata is not general temporal understanding or a reliable repair.
+Four1536-update fits,642.65s training,424MiB reserved.76 relevant tests and1,328
+independent metric checks pass. GPU reload and bank-order workspace checks exact;
+774-row resume prefix preserved. Source weights, writer and codecs unchanged.
+CPU numeric tolerance still fails; factual labels agree, two image-side labels differ
+for writer7801 temporal. Two public-only Claude reviews; structural reports and
+inspected figures. [Protocol/results](recall-repair-plan.md#snapshot-timing-results),
+[report](../runs/memory_time_v1/report.html). Next proposed: use the successful
+direct stored-state readout as a reference for the native workspace path, and check
+the weaker writer separately, before adding more memory cues. No next repair run.
+
+**Frozen-writer recall repair completed, 13 September:** focused retraining improves
+reset factual accuracy from48.44/50% to66.41/75%, and generated-image accuracy from
+47.66/51.56% to63.28/75%. Fixed memory calibration scores58.59/73.44% facts and
+57.03/73.44% images, worse in both matched pairs. All four runs fail the full90%
+reliability/pair/intervention screen; neither condition is promoted as a complete
+repair. Original checkpoints, writer, raw bank and codecs remain unchanged.
+Four1536-update fits,761.23s total,424MiB reserved;41 targeted tests and1,076 independent
+metric checks pass. GPU reloads exact with matched precision;768+768 resume preserves
+774 ledger rows. CPU answers agree, but numeric tolerance still fails (max logits
+0.224921, pixels0.019403). Fixed stored-value probes on these histories score98.44/
+85.94% for writer7801 and76.56/75% for7802: incomplete access/learning remains.
+Two public-only Claude reviews; reports structural-only, all comparison PNGs
+inspected. [Protocol/results](recall-repair-plan.md#results),
+[report](../runs/recall_repair_v1/report.html). Next proposed diagnostic: test temporal
+and snapshot distinctions at the memory reader, while retaining frozen-state access
+controls. Timestamps are stored but not consumed by its attention context; this is
+a concrete missing cue, not yet a demonstrated cause or guaranteed repair.
+
+**Frozen-state probes completed, 13 September:** four1536-update fits, two frozen
+agents × two reader seeds. Every direct encoder probe scores100%; before-storage
+location70.31–96.09%, after-recall49.22–51.56%. Initial future-side50% as expected;
+all four diagnostic control screens pass. One individual pre-storage working-token
+probe passes, but no state stage passes in both probe seeds. This demonstrates
+partial recoverability before storage and poor recovery after recall for this
+probe family; it does not prove erased information or a unique causal mechanism.
+The source bank stores the pre-storage tensor exactly. Both agent checkpoints
+remain unchanged.38 targeted tests,672 independently verified train/test metrics,
+exact768+768 GPU resume ledger and exact GPU probe reloads pass. CPU probe replay
+on the SAME GPU cache stays within1.55e-5, all categorical predictions agree; this
+does not fix the older raw-encoder cross-device discrepancy.217.14s total probe
+training,90MiB reserved; caches take9.28s. Two public-only Claude exchanges,
+structural reports and inspected stage plot. [Protocol/results](memory-probes-plan.md#results),
+[report](../runs/memory_probes_v1/report.html). Next proposed repair: train memory
+reading/working-state formation against frozen stored states; keep pre-storage
+probes and consider a probe sensitivity control before interpreting failures.
+No native agent repair or larger encoder/decoder training performed.
+
+**Balanced relocation comparison completed, 13 September:** both new seeds fail
+the declared screen. On128 fresh-background histories with all tuples/motions
+represented in training, independently trained direct encoder readers score100%.
+Reset recall facts48.44%/50%, images47.66%/50%; color100%, shape96.875%/100%,
+location50% in both factual outputs. Complete relocation-pair accuracy0% for both
+outputs/seeds. Removing the later view leaves factual accuracy unchanged; removing
+the cue or memory reduces it to6.25%. The old normalized checkpoint scores50% on
+this same population. Thus balancing removes the data shortcut but does not repair
+learning of location updates through the agent state/memory path. It does not prove
+location information is absent from those states. No unseen-combination claim.
+Frozen visual weights and both calibrations match the reference; seed7801 initial
+model hash is identical.34 targeted tests pass;522 metrics and rendered-history
+answers independently verify. All three GPU reloads exact. CPU/GPU pixel tolerance
+still fails (max0.004826); factual labels agree, one seed7801 image label changes.
+Two1536-update runs,534.83s total,402MiB peak reserved; two public-only Claude
+exchanges. Reports structural-only; all quartet PNGs inspected. Old benchmark and
+weights unchanged. [Protocol/results](memory-output-plan.md#relocation-results),
+[report](../runs/memory_relocation_v1/report.html).
+Next: frozen-state probes before changing the updater or adding training; separate
+recoverable-but-unused location from inadequate state learning. No probe run yet.
+
+**Memory-output experiment and normalization repair completed, 13 September:**
+two raw-feature seeds fail (held-out recall facts25%/12.5%, images0%). Fixed input
+channel calibration enables100% factual/image validation accuracy on familiar
+combinations in one matched seed, but held-out joint accuracy remains0%. Crucially,
+reset-recall color and shape are each128/128 correct; location is0/128. Every factual
+prediction belongs to the training combinations. The parity split lets location
+be inferred from appearance; results strongly suggest this correlation shortcut,
+not a demonstrated loss of all entity information. Teacher decoding remains100%.
+30 targeted tests, exact CPU replay/no-op gradients and unchanged frozen encoder/
+decoder checks pass.180 saved metrics independently verify. GPU standalone reload
+is exact on128 episodes; normalized CPU/GPU max pixel difference0.003259 fails the
+tight1e-4 check, although factual and rendered-image labels agree on all128.
+Three1536-update runs total810.81s; peak402MiB reserved. Four brief public-only
+Claude exchanges reconciled. HTML structural-only; comparison panels inspected.
+[Protocol/results](memory-output-plan.md#completed-results),
+[report](../runs/memory_output_v1/report.html). Next: break appearance/location
+correlations with counterfactual relocation training and a separately specified
+generalization test. No further training launched; broad baseline remains intact.
+
+**Shared modality-output boundary adopted, 12 September:** state/request/memory
+conditioning feeds replaceable modality-specific generators and matching codecs.
+Separate training is allowed; state alignment and cross-modal timing/content need
+explicit tests. [Design](multimodal.md#adopted-output-design). Documentation only;
+no backend selected, model changed or new capability result.
+
+**Image detail and request-only output interface pass scoped screens, 12 September:**
+the opt-in detail channel reduces real COCO reconstruction MSE0.012395→0.000879
+(92.9%,128 reused images, zero updates). This transports source pixels; it is not
+learned compression or evidence of state-mediated photo reconstruction. A learned
+state-to-spatial adapter supplies every feature to the same frozen RGB head with
+no image encoder in the agent. Four training stripe requests fit to MSE0.000110
+after512 updates; erased/shuffled requests0.138158/0.266283. This is memorization,
+not novel-prompt generation. All212 donor tensors are unchanged.35 targeted checks,
+exact CPU resume, actual GPU256+256 resume, standalone reload and8-metric audit pass.
+Training12.12s; peak106MiB reserved. Public-concepts-only Claude review completed;
+HTML QA structural-only, comparison PNGs visually inspected.
+[Protocol/results/load instructions](image-output-plan.md#completed-screens),
+[report](../runs/image_output_v1/report.html). Next: compact learned visual codec and
+held-out paired image/request training; audio/video generation training still open.
+
+**Handwritten initialization trained and diagnosed, 12 September:** the exact source
+binary now supports strict initialization, component freezing and resumable RGB
+training. The original decoder rate collapsed both seeds; validation-only selection
+of0.000003 (encoder0.0003) stabilizes training. Joint RGB MSE0.012395/0.012447 improves
+10.52%/10.15% from the handwritten baseline. Decoder-only improves9–10%, encoder-only
+5%; joint fails the5% advantage screen against decoder-only. Initial patch features
+retain only three color averages and collapse an equal-mean checkerboard pair.
+Both information loss and decoder optimization matter; this is not an additive error
+attribution. Ordinary initialization at its original rate remains better0.007319/0.007859.
+[Protocol/results/load instructions](hierarchy-training-plan.md#completed-diagnosis),
+[report and trained binaries](../runs/hierarchy_training_v1/decoder_rate_repair/report.html).
+203 full-suite tests plus15 focused rate/freeze/resume checks pass; original90 and
+repaired81 raw scores independently verify. Source/frozen/export hashes and paired
+sampling pass. Seven repair runs complete; the last ordinary control stops at103/384
+updates under the600-second cap, so its same-rate paired comparison is incomplete.
+190MiB peak reserved for completed repair runs; original521s plus repair600s.
+Mask head frozen, image-only scope, reused test population, HTML QA structural-only.
+Claude retry was rejected by automatic approval review; no external review occurred.
+
+**Direct hierarchy weights completed, 12 September:** wrote the same1.80M-parameter
+image hierarchy as explicit numbers, plus a separately labeled132-coefficient fitted
+readout. [Plan/results/load commands](hierarchy-weights-plan.md#completed-comparison),
+[report](../runs/hierarchy_weights_v1/report.html). Four GPU evaluations,25.91s,
+zero optimizer updates; handwritten RGB MSE0.013853/IoU0.204784, fitted0.013693/0.072054.
+Both fail perception gates and trail trained references; color transport works,
+foreground perception remains weak.197 tests,36-metric audit, strict binary reload
+and cached GPU resume pass;120–136MiB reserved. Previous checkpoints unchanged.
+HTML QA structural-only. Claude send rejected by automatic approval review; no
+external peer review was performed for this comparison.
+
+**Hierarchy/fusion comparison completed, 12 September:** implemented the requested
+per-scale transformer depth plus optional final all-scale stack.194 CPU tests pass,
+including causal video/audio/text, invalid gradients and exact resume; disabled
+fusion matches pre-change outputs exactly. Eight real COCO RGB/foreground runs,
+two seeds,589s: fusion improves IoU0.184→0.258 at7401 but worsens0.304→0.238 at7402
+with18.6% worse RGB. Extra depth helps neither seed. Both proposed improvements fail
+the prespecified screen; longer shallow training improves RGB, mask effects mixed.
+All mask IoUs remain below the full-foreground reference.170–184MiB reserved GPU;
+independent raw metrics/hash audit and completed GPU resume pass. [Results/plan](hierarchy-fusion-plan.md#completed-comparison),
+[report](../runs/hierarchy_fusion_v1/report.html) (structural-only). Keep fusion
+default0 and the option available. Encoder recurrence remains a separately specified
+cross-window test; no new speech, video-memory or integrated-agent claim.
+
+**Encoder–decoder review completed, 12 September:**
+[Pair-by-pair review and proposed comparisons](encoder-decoder-review.md) distinguish
+short-pilot undertraining, decoder mismatch, state-path failures and missing speech
+context. Every multimodal feature scale already has attention/MLP processing.
+Historical extra CNN depth helped geometry but missed its gate; frozen-encoder
+decoder repair recovered COCO reconstruction with a PushT retention tradeoff.
+Proposed next: reuse useful vision donors, compare direct versus state-mediated
+readouts, and freeze/probe the successful text donor before adding capacity.
+Audio needs a meaningful temporal contract before speech training. Claude reviewed
+public concepts and accepted corrections; no model changes or new training/tests.
+The capability baseline remains the frozen comparison point. Numerical gates and
+budgets for the next formal experiment still require a predeclared specification.
+
+**Capability baseline completed, 12 September:**34 behavioral/mechanism checks across
+13 separately identified checkpoint roles,183 passing software tests,10 explicit
+coverage gaps. [Report](../runs/capabilities_v1/reference/report.html) and
+[protocol, results and comparison commands](capability-baseline-plan.md#completed-baseline).
+Direct visual weights retain100% accuracy on original/mirrored/dim/noisy scenes but
+fall to48.44% with red/blue swapped and50% grayscale. Their other outputs are gray,
+silence and empty text, with zero response to the tested audio/text/video input contrasts or opposing actions.
+Structured entity/state/relation and supplied-mechanics planning screens pass;
+through-agent fact identity0%, historical recall answers0/15, instructions12.5%,
+and learned prediction loses to copy-last. Known planner reward/utility mismatch
+persists. No weight changes. CPU evaluation211s/804MiB peak process RSS. Independent
+raw checks across all34 cases, checkpoint hashes, cached resume and comparison guards
+pass. Browser QA remains structural-only. This is a baseline of separate components,
+not a complete jointly trained agent or evidence of general webcam capability.
+
+**Direct weight test completed, 12 September:** at the user's explicit request,
+constructed binary model weights and adjusted them without backpropagation. First
+candidate family fails (39/64 final answers). A bounded numeric timing/routing revision
+with34 label-fitted readout parameters passes on a fresh set:64/64 answers,32/32 complete
+pairs and32/32 reversals; ordinary/erased controls50%. Zero optimizer updates,40MiB
+inference allocator peak;180 CPU tests and independent artifact/metric checks pass.
+[Weights and scope](direct-weights-plan.md#completed-revision),
+[report](../runs/direct_weights_v1/timing/report.html) (structural-only).
+This is a hand-built fixed-task circuit in the small existing model configuration,
+not general pretrained-weight generation. Real webcam transfer remains open. The
+previous optimizer-based visual curriculum is deferred by this user-requested test.
+
+**Assistant-authored curriculum discussed, 12 September:** the user proposes having
+the assistant generate teaching modalities and train the learner. [Curriculum proposal](webcam-memory-data-plan.md#assistant-authored-teaching-data-12-september-discussion)
+combines controlled histories and checked questions/images with separate real-footage
+evaluation. One brief Claude review emphasized pixel/label checks; the local
+reconciliation avoids assuming a perfect automated verifier. Text/image generation
+is available; realistic video/speech generation is not yet connected. No new corpus
+or training run. Visual-memory interfaces, objective, gates and GPU budget still need
+a concrete experiment specification; prior real-footage preference remains intact.
+
+**Real-footage development pack prepared, 12 September:** the user prefers real
+webcam footage for observation memory. Selected 12 COCO train photographs and 6
+Charades official-train indoor clips, preserving source hashes, annotations and
+split/subject groups. Contact sheets inspected; six imported video episodes have
+timestamps and pending annotation templates. [Data and recording guide](webcam-memory-data-plan.md)
+defines the first 28-take pilot and independent answer-key checks following Claude's
+review. Three capture/import tests pass. No camera activation or training. Own
+recordings, reviewed entity/event/query labels and the experiment gates remain open;
+this selection is development material, not a trained or validated memory capability.
+
+**S01 sequence adopted, 12 September:** first remember observations, then predict
+action consequences, then plan toward a goal using those predictions. Observation
+memory is the next capability target. First environment/input and numerical gates
+remain open. [Recorded answers](agent-specification-questions.md#recorded-answers).
+Both training and inference must fit the current local GPU; scale later.
+
+**S03/R06 preference recorded, 12 September:** comfortable fit on the user's GPU
+is required; prefer own components, with pretrained model plus adapter if quality
+is inadequate. Local hardware query reports RTX3050/8192MiB. User confirmed both
+training and inference must fit now; scaling comes later. Numerical headroom and
+quality gates remain open. [Recorded answers](agent-specification-questions.md#recorded-answers).
+
+**S02 long-term scope recorded, 12 September:** eventual webcam vision, speech and
+writing, image/video creation and software-tool use. [Questionnaire answer](agent-specification-questions.md#recorded-answers)
+is partial: first experiment and learned-versus-supplied boundaries remain open.
+
+**Specification questionnaire prepared, 11 September:**
+[85 numbered questions](agent-specification-questions.md) cover scope, goals,
+evidence, perception, identity, graph learning, memory, focus, dynamics, planning,
+training, execution, inspection and experiment gates. Begin with S01–S05 and then
+the task/evidence/dynamics contracts. Explicit deferrals define what the first
+experiment does not claim. Answers remain pending; no architecture change or
+training was launched. Claude reviewed integration-level coverage.
+
+**Whole-model audit updated, 11 September:** controlled integration is working,
+but learned dynamics, uncertainty semantics and general task execution remain
+separate or supplied. Concrete planner/metric objective mismatch confirmed: under
+85% absence belief, current one-step planner retrieves although reported expected
+utility favors stopping0.85 over retrieval0.10. Prior measurements remain valid;
+they do not establish optimization of that utility. [Current readiness review](model-readiness-review.md)
+replaces the stale pre-integration assessment. Next: resolve the task/cost/evidence
+contract, then connect action-conditioned prediction to the integrated path.
+Review only; no model changes or new training/full-suite result.
+
+**Independent key-box replication and correction screen pass, 11 September:**
+new training seed2302, fresh evaluation2431: ordinary and longer-history relocation
+cases both96/96 reachable and32/32 absent; correction readout192/192. Frozen prior
+model also passes (correction191/192). Ordinary memory utility advantage remains
+0.015625; under relocation memory costs more than no-history, so no universal
+utility benefit.31 tests, lint, cached resume and independent time-varying execution
+and correction audit pass. [Report](../runs/key_box_v1/replica/report.html)
+structural-only; [active plan](key-box-integration-plan.md). Next: varied change
+and observation timing. Still supplied descriptors, corrections and action mechanics.
+
+**Interleaved key-box training passes controlled screen, 11 September:**
+four read pairs separated by observation events preserve working state during
+training. Fresh seed2421: known content100%, reachable96/96, absent32/32;
+utility0.9203125 beats no-history0.9046875 by0.015625 (required0.01).
+Frozen previous model fails the same screen.30 tests, lint, cached resume and
+independent execution replay pass. [Report](../runs/key_box_v1/history/report.html)
+structural-only; [active plan](key-box-integration-plan.md). Next: replication and
+stronger state-change/history checks. Supplied descriptors and action mechanics;
+this does not validate learned dynamics or general action planning.
+
+**Integrated key-box loop implemented, 11 September:** entity state now reaches the
+actual belief-agent workspace; supplied expectimax action mechanics execute and
+replan from real feedback. First training screen failed. Query-switch repair raises
+known content82.81%→100% and reachable success76.04%→95.83% on matched fresh cases,
+but utility0.891016<no-history0.904688, so full screen still fails. Four false stops
+follow later readout confidence loss.29 distinct relevant tests, resumes and independent
+execution replay pass. [Report](../runs/key_box_v1/switched/report.html) structural-only.
+[Active plan](key-box-integration-plan.md). Next: full action-history readout stability.
+Source-selection tuning is paused. This is controlled descriptor/explicit-dynamics
+integration, not visual discovery or learned world-model planning.
+
+**Matched-budget coverage fails utility gain, 11 September:** eligible drift
+source checks29/32 versus21/32, but late utility gain0.000977<0.01. Static cost
+and reset guards pass.11 source tests, cached resume and independent allocation/
+feedback replay pass; costs exactly matched. [Report](../runs/entity_source_coverage_v1/reference/report.html)
+structural-only. No promotion; result conditional on forced acquisition/epsilon0.5.
+Next proposal: source-selection headroom diagnostic before further tuning.
+
+**Source-local diagnosis complete, 11 September:** of32 drift source records,14
+never reached an eligible all-new-feedback block,10 reached checks but stayed below
+threshold,8 reset. This separates check availability from threshold outcomes; it
+does not establish a repair.9 source tests, resume and independent full-feedback
+reconstruction pass; original artifacts unchanged. [Report](../runs/entity_source_diagnosis_v1/reference/report.html)
+structural-only. Next proposal: matched-budget feedback coverage with detector fixed.
+
+**Variance-aware forgetting fails adaptation margin, 11 September:** development
+selects z2; held-out static resets4/16 meet25% (matched fixed-trigger8/16). Late
+drift utility0.731096 beats cumulative0.722993 by0.008103, below required0.01.
+Other utility guards pass.29 distinct relevant tests, cached resume and independent
+development/held-out replay pass. [Report](../runs/entity_source_uncertainty_v1/reference/report.html)
+structural-only. No promotion or tuning; next diagnose missed/late changes from
+existing traces before choosing another detector. Original gate unchanged.
+
+**Triggered forgetting fails false-reset guard, 11 September:** late drift utility
+0.742107 versus frozen0.713721 and cumulative0.723066; static utility loss0.011832
+is within0.02. But10/16 unchanged worlds reset (62.5%>25%), so full screen fails.
+26 relevant tests, cached resume and independent action/feedback/reset replay pass.
+[Report](../runs/entity_source_change_v1/reference/report.html) structural-only.
+Original gate unchanged. Next candidate: uncertainty-aware change checks with
+separate stationary calibration and held-out false-alarm controls; no tuning here.
+
+**Online recency adapts but fails stable-source guardrail, 11 September:** drift late
+utility window0.760835 versus frozen0.723169 and cumulative0.733477. Static
+utility falls0.780920→0.754734 (loss0.026187>0.02), so full screen fails.25 relevant
+tests, resume and independent action/feedback replay pass.
+[Report](../runs/entity_source_drift_v1/reference/report.html) structural-only.
+Reference unchanged; fixed window is not learned drift detection. Next candidate:
+evidence-triggered forgetting rather than unconditional recency, with stable-source
+controls and feedback costs preserved.
+
+**Outcome-trained source choice passes, 11 September:** a per-world action-value
+table selects the useful opaque source in16/16 worlds from calibration feedback.
+Evaluation accuracy79.91% versus best fixed77.00%; utility0.777112 versus0.748059.
+Combined calibration/evaluation utility0.752104 exceeds stop0.728353.23 relevant
+tests, resume and independent selected-feedback audit pass.
+[Report](../runs/entity_source_choice_v1/reference/report.html) structural-only.
+This is static-source adaptation with supplied outcome feedback, not a neural
+selector or general reliability estimator. Next candidate: source-quality changes
+and online updating, with explicit feedback availability and stale-value controls.
+
+**Alternate evidence is worth its declared cost, 11 September:** selective high-noise
+accuracy80.86% alternate versus73.44% same-source, both reread42.58%. Utility
+0.787305 versus0.725859 despite alternate cost0.05 versus0.02. Paired descriptive
+95% interval for utility gain[0.024129,0.101331].21 relevant tests, resume and
+independent audit pass. [Report](../runs/entity_evidence_sources_v1/reference/report.html)
+structural-only. Fixed sensor properties/policies; no learned source selection.
+Next candidate: learn acquisition choice from outcome feedback without giving the
+policy hidden noise/correlation labels. Reliability-estimation proposal remains separate.
+
+**Correlated rereads expose the independence limit, 11 September:** selective
+high-noise gains9.77/5.08/1.17 points at rho0/0.5/0.9; rho0.9 fails the2-point
+gate. Rho1 adds no information and loses sensing cost.19 relevant tests, four
+resumes and independent shared-observation/decision/cost audits pass.
+[Report](../runs/entity_gate_correlation_v1/rho0.9/report.html) structural-only.
+Reference unchanged; no memory integration. Next candidate: compare acquiring a
+different evidence source with repeating the same source, without assuming the
+agent already knows error correlation.
+
+**Reobservation diagnostic passes, 11 September:** high-noise accuracy72.27%→82.81%
+with selective rereads42.58%; ignore recall93.75%→98.44%. Duplicate replay gives
+no gain. Always-two reaches87.11% and higher utility at the declared cost0.02.
+18 relevant tests, cached resume and independent decision/cost audit pass.
+[Report](../runs/entity_gate_reobserve_v1/reference/report.html) structural-only.
+This is a supplied static-context sensing policy, not learned deferral or a new
+memory operation. Next candidate: test correlated second-observation noise before
+integrating sensing; independent reread benefit may not survive shared errors.
+
+**Clean retention does not repair the tradeoff, 11 September:** weight-one teacher
+KL leaves clean-runtime NLL unchanged0.0237295 and low-noise ignore90.625% at
+sigma0.15; high-noise accuracy81.25%→80.08%. Full criteria fail in both arms.
+16 relevant tests, two resumes and independent objective/metric audits pass.
+[Report](../runs/entity_gate_retain_v1/retained/report.html) is structurally verified;
+visual QA remains unavailable. Reference unchanged. Next candidate: diagnose
+whether the binary write decision needs an explicit defer/reobserve option under
+ambiguous cues, before another loss-weight experiment. This remains a proposal.
+
+**Two conditional replications retain the augmentation tradeoff, 11 September:**
+high-noise gains+8.98/+11.72 points over controls, but both full acceptance gates
+fail. Rep1 clean-runtime NLL0.152775 exceeds0.15; rep2 NLL0.269396, development
+and low-noise ignore checks fail.15 relevant tests, four cached resumes and paired
+audits pass. Reference unchanged. Reports: [rep1](../runs/entity_gate_replicate_v1/rep1_augmented/report.html),
+[rep2](../runs/entity_gate_replicate_v1/rep2_augmented/report.html), structural QA only.
+Next candidate: explicit clean-behavior retention during noisy continuation, tested
+against these preserved results on fresh contexts. No broad robustness claim.
+
+**Noise augmentation improves recall but fails acceptance, 11 September:** on fresh
+contexts high-noise accuracy80.08% versus matched control71.48% (frozen75.78%).
+Low-noise0.15 ignore recall94.53% misses95% criterion; reference stays unchanged.
+Both arms preserve100% clean runtime state accuracy.14 relevant tests, both cached
+resumes and independent paired audit pass. [Treatment report](../runs/entity_gate_augment_v1/augmented/report.html)
+and [control](../runs/entity_gate_augment_v1/control/report.html) are structurally
+verified; visual QA remains unavailable. Next proposed: independent-seed replication
+of the recall/false-write tradeoff before another repair or threshold choice.
+
+**Frozen gate noise shift finds a limit, 11 September:** the primary per-class
+robustness gate fails at sigma0.30 and0.60. Accept recall drops92.97% then55.47%;
+ignore recall remains≥95%. Sigma0.03/0.15 pass at100%. No retraining or threshold
+selection.12 relevant tests, cached resume and independent metric audit pass.
+[Report](../runs/entity_gate_shift_v1/reference/report.html) is structurally verified;
+visual QA remains unavailable under the prior browser policy denial. Next proposed:
+noise-augmented training with fresh evaluation contexts; high-noise ambiguity
+means this failure does not identify a unique architectural defect.
+
+**Context write gate passes the bounded screen, 11 September:** the gate learns
+from source-selection loss with matcher, key and interaction weights frozen.
+All96 held-out cases pass source/state prediction, including allocation permutation
+and repeated irrelevant cues; always/never-write controls score50%. Soft/hard
+source choices agree100%. Full145-test suite and cached resume pass.
+[Report](../runs/entity_gate_v1/reference/report.html),
+[verification](../runs/entity_gate_v1/verification.json). Report structural checks
+pass; browser policy blocked visual QA. This tests separated context regimes,
+not ambiguous semantic relevance. Next proposed: predeclare a context-noise shift
+comparison before extending the claim or adding graph operations.
+
+**Remembered relation keys pass, 11 September:**140 tests pass. A learned key supports
+destination-only recall after the source cue disappears:100% source/state accuracy
+through replacement, gaps and allocation changes. Erasing keys yields0% source
+accuracy. Only key addressing trained; persistence and write policy remain explicit.
+[Report](../runs/entity_relations_v1/reference/report.html) is browser verified. Next
+proposed: learn whether a new cue should overwrite or preserve a relation.
+
+**Frozen source retrieval passes, 11 September:**136 tests pass. Descriptor queries
+select the source among three records at100% accuracy, matching oracle outcomes.
+Allocation permutation passes; all unknown queries roll back. No model fitting.
+[Report](../runs/entity_source_v1/reference/report.html) is browser verified. The
+source query is still supplied. Next proposed: remember a relation from an earlier
+cue and retrieve it for a later destination-only action.
+
+**Directed state interaction passes, 11 September:**132 tests pass. A learned
+interaction uses another entity’s latent state:100% across all tested conditions,
+including a second copy. The matched source-zero control scores50% reference and
+29.3% composition. Frozen dynamics, transactions and browser QA pass.
+[Report](../runs/entity_interaction_v1/full/report.html). Endpoints and copy type are
+still supplied. Next proposed: selecting a source among distractors before claiming
+learned relational retrieval or graph structure.
+
+**Explicit idle preservation passes the bounded screen, 11 September:**128 tests
+pass. With31 extra idle events, accuracy improves25%→100%; all seven frozen
+conditions pass. Latents remain exactly stable across idle stretches; resets and
+actions still work. This is an explicit deterministic rule, not learned belief
+persistence. [Report](../runs/entity_noinfo_v1/adapted/report.html) is browser verified.
+Next proposed: an update depending on another entity’s remembered state, before
+claiming learned interaction edges or graph structure.
+
+**Mixed-history adaptation improves ordering but still fails idle stability,
+11 September:**123 tests pass. Reset-order accuracy rises62.5%→100% and unseen
+composition38.7%→100%; long no-information remains75%, with worse NLL. Recognition
+is frozen; adapted runtime/transaction checks pass. [Report](../runs/entity_state_varied_v1/adapted/report.html)
+is browser verified. Next: a task-specific state-preserving no-information update,
+keeping this failed baseline and fresh idle-length tests.
+
+**Frozen temporal screen exposes state-update limits, 11 September:**121 tests pass.
+Reference and repeated-toggle histories score100%; reset-order histories62.5% and
+extra no-information events75%. All routing, retry/restore and latent-agreement checks
+pass; model weights are unchanged. [Report](../runs/entity_temporal_v1/reference/report.html)
+is browser verified. Next: broaden state-update training with fresh held-out histories;
+retain this failed frozen baseline. No general temporal or graph-learning claim.
+
+**Learned persistent state succeeds on the bounded task, 11 September:**119 tests
+pass. A frozen recognizer routes observations into learned per-entity16-float states;
+256/256 development pairs and persistent-runtime outputs are correct. Retry/restore,
+rollback and reversed allocation-order checks pass. [Report](../runs/entity_state_v1/reference/report.html)
+is browser verified. Splits share16 temporal templates and differ in descriptors;
+this does not establish temporal generalization. Next: frozen held-out composition
+and length tests before broader attributes or graph learning.
+
+**Variable-count adaptation succeeds, 11 September:**115 tests pass. One256-update
+run gives100% development matching/coverage and passes every fresh lifecycle gate
+at capacities1/2/4/8. The matched original model still fails capacity8. Claude reviewed
+the design twice. [Adapted report](../runs/entity_variable_v1/adapted_pinned/report.html)
+is browser verified; weights, descriptor isolation and resume are checked. Geometry
+and candidate counts changed together. Next: learned changing state bound to stable
+IDs; visual discovery and learned graph structure remain open.
+
+**Frozen growth screen completed, 11 September:** capacities1/2 pass; capacities4/8
+fail the declared lifecycle gate. Capacity8 allocation/revisit accuracy is98.44%,
+with no wrong-ID matches; uncertain novelty leaves some stores underfilled. All
+retry/restore checks pass. Fixed checkpoint loading and evaluator ID-offset errors;
+113 distinct tests pass. [Corrected report](../runs/entity_growth_v1/corrected/report.html)
+is browser verified. Next: predeclare variable-cardinality training; preserve this
+failed frozen reference. No new model training or graph learning yet.
+
+**Entity lifecycle implemented, 11 September:** a bounded Python `EntityMemory`
+allocates stable IDs, reuses them on confident matches, defers at capacity or low
+confidence, and supports idempotent retries and JSON snapshot restoration. Claude
+reviewed the transaction contract twice. Recognition prototypes remain frozen;
+variable-cardinality accuracy and learned belief/graph updates remain unvalidated.
+See [usage and scope](entity-learning-task.md).
+
+**Known-versus-new matching succeeds, 11 September:** `--dataset entity-matching`
+is implemented and reviewed with Claude. All 105 CPU tests pass; the 256-update run
+gets 128/128 known identities and 128/128 novel rejections correct, with zero false
+merges/splits on development. Novel selection coverage is 96.1%; memory swaps preserve
+probabilities and metrics. [Report](../runs/entity_novelty_v1/reference/report.html)
+passed browser QA. The distance-separated task is a sanity check, not general novelty
+or calibration. No memory records are allocated yet; the next proposed slice is
+transactional allocation/revisit behavior. See [task record](entity-learning-task.md).
+
+**Bounded descriptor variation succeeds, 11 September:** the learned/shared reader
+trained at `--entity-noise 0.2` passes every declared development gate after 256 updates;
+matching and identifiable task accuracy are 100%. All 102 CPU tests pass. Oracle,
+geometry, zero-noise compatibility, raw scores, resume and reorderings are verified.
+[Report](../runs/entity_variation_v1/reference/report.html). Claude completed both
+review and reconciliation after explicit approval of the follow-up; no conceptual
+objection remains.
+See [task record](entity-learning-task.md). New-entity allocation remains next,
+not implemented. This is bounded synthetic drift, not general visual robustness.
+
+**Learned association succeeds on stable descriptors, 11 September:** the
+Claude-reviewed `--entity-reader shared --entity-association learned` mode passes
+all fixed development gates after 256 updates. Matching improves from 37.5% to 100%
+on eight held-out descriptor groups; task accuracy is 100% on 128 identifiable cases.
+Task-loss gradients reach the matcher; no exact lookup is used by its forward path.
+All per-frame reorderings preserve probabilities. [Report](../runs/entity_learned_v1/reference/report.html)
+and [task record](entity-learning-task.md) retain the scope: stable synthetic features,
+fixed two-object slots and enumerated hypotheses; graph structure is not learned.
+Next proposed: feature variation and unmatched/new entities.
+
+**Shared entity reader succeeds, 11 September:** the Claude-reviewed
+`--entity-reader shared --entity-association observed` path passes all declared
+development gates after 256 updates: 100% identity/state/effect accuracy on 128
+identifiable cases and correct bounded ambiguity handling. All 96 CPU tests pass.
+Predicted probabilities are unchanged under all eight per-frame reorderings after
+undoing output order. It uses 30,021 parameters and 128 persistent state floats.
+[Report](../runs/entity_shared_v1/reference/report.html) and
+[task evidence](entity-learning-task.md) retain limitations: association, two object
+slots and the finite hypothesis set are supplied; graph learning remains unimplemented.
+Next proposed: learn association while preserving this working reference.
+
+**Supplied association complete, 11 September:** the Claude-reviewed
+`--entity-association observed` diagnostic is implemented; 94 CPU tests pass.
+Matched 256-update development identity accuracy improves to 88.3%, but state/effect
+remain 64.8%/57.8% and combined gates fail. The trained recurrent reader changes its
+probabilities under candidate reordering. This is a useful diagnostic gain, not
+reliable binding or learned graph structure. See the
+[updated task record](entity-learning-task.md) and
+[report](../runs/entity_alignment_v1/observed/report.html). Next proposed diagnostic:
+shared per-entity updates and permutation-consistent readout.
+
+**Entity baseline built and evaluated, 11 September:** `--dataset entities` now runs
+the [controlled two-object task](entity-learning-task.md) through the existing recipe.
+All 92 CPU tests pass. The fixed 256-update baseline reaches development identity/state/
+effect accuracy of 60.2%/62.5%/54.7%; every combined development gate fails. Training
+state accuracy reaches 100%, but identity is only 66.8%. The graph comparison is
+deferred under the declared stop rule. Source, cached resume, oracle, raw scores and
+browser report checks are recorded in `runs/entity_learning_v1/verification.json`.
+[Open the report](../runs/entity_learning_v1/reference/report.html). Next diagnostic:
+separate descriptor association from state updating; no extra run is authorized by
+this result, and the earlier entity-reader bottleneck remains unresolved.
+
+**Task definition complete, 11 September:** [the first entity-learning task](entity-learning-task.md)
+defines two-object identity persistence, state updates and action-effect prediction.
+Both graph structure and latent values are intended to be learned; readable labels
+are inspection aids, not imposed semantics. Two actual Claude reviews are reconciled.
+A finite 512-case specification check confirms an exact history oracle and final-view-only
+bounds of 50% identity and 25% state-pair accuracy. These are contract checks, not model
+results. Next implementation step is the task generator/reference path and existing-reader
+diagnosis, followed by a bounded recurrent baseline before any graph comparison.
+No new neural training or graph implementation was started in this definition slice.
+
+**Entity-design discussion, 11 September:** the user accepted diagnosing accessible
+identity first, then testing controlled two-object binding. Subsequent discussion
+proposes per-entity learned beliefs and external retrieval. Two actual Claude
+exchanges are reconciled in [the design note](entity-memory-design.md): candidate
+extraction, uncertain association and persistent keys are separate mechanisms.
+Explicit entity storage remains a proposal; no new architecture or run was started.
+The follow-up runtime/payload review adds four reconciled Claude exchanges: small
+read/propose/commit interfaces, explicit gradient boundaries, and optional raw,
+latent or readable payloads. Recalled media may reuse modality encoders but cannot
+silently enter as new observations. Source IDs, historical time and typed revisions
+remain distinct; a memory-origin label alone is insufficient.
+
+**Current slice complete, 11 September:** the
+[trainable encoder initialization comparison](warm-encoder-plan.md) is implemented
+as `--fact-encoder-weights` for the event fact reader. Two brief actual Claude
+reviews are reconciled; all 88 CPU tests pass. Exact transfer, unchanged remaining
+initialization/RNG, encoder updates and donor-bound resume checks pass. Both new
+512-update recipients finished in 103.5041 active CPU seconds total. At lr0.0003,
+held-out location accuracy improves from the saved cold run's 8/32 to 31/32; at
+lr0.001 it improves from 24/32 to 32/32. Held-out entity and joint accuracy remain
+0/32 in both warm runs. Training entity accuracy is only 3/96 in each. Both
+extraction gates fail; binding is skipped and the declared two-run slice is complete.
+
+The [reference report](../runs/warm_encoder_v1/reference/report.html) and
+[learning-rate comparison](../runs/warm_encoder_v1/lr_control/report.html) passed
+structural and 1280x720 browser QA. `runs/warm_encoder_v1/verification.json` binds
+raw-score, source, donor, matching cold settings/sampler, cached-resume, test and
+browser checks. Development combinations are reused; the donor adds 512 upstream
+updates / 8192 presentations. The shared encoder also reads the fixed instruction.
+These results leave entity learning unresolved without isolating its cause.
+Next proposed: freeze the donor encoder in one otherwise matched diagnostic to
+test whether preserving its features changes entity learning.
+
+**Prior single-event slice, 11 September:** the
+[single-event agent-reader control](event-fact-plan.md) is implemented as
+`--dataset facts --fact-reader event`. Two brief actual Claude reviews are
+reconciled; all 86 CPU tests pass. A strengthened gradient check confirms the loss
+reaches the observed fact, and exact resume preserves cached outputs. Two matched
+512-update runs took 109.4034 active CPU seconds total. At lr0.0003, held-out entity/
+location accuracy was 3.125% / 25%; at lr0.001 it was 0% / 75%. Joint accuracy was
+0/32 in both runs. Both extraction gates fail and binding evaluation is skipped.
+No third training run, new objective or memory change was started.
+
+The [reference report](../runs/event_fact_v1/reference/report.html) and
+[learning-rate comparison](../runs/event_fact_v1/lr_control/report.html) passed
+structural and 1280x720 browser QA. `runs/event_fact_v1/verification.json` binds
+source snapshots, settings/data/init/sampler matching, raw-score checks, exact
+resume, tests and screenshots. The existing whole path does not learn the task
+under this budget; the failing component is not isolated. Recent records are
+detached on storage by the existing memory policy, while the live categorical
+path still carries gradients. The trainable encoder initialization follow-up is
+now complete above.
+
+**Prior direct-control slice, 11 September:** the
+[direct fact extraction and binding controls](fact-learning-plan.md) run in the
+same recipe (`--dataset facts`). Two short actual Claude reviews are reconciled.
+All 83 CPU tests passed; 12 focused fact/run checks passed after the report revision.
+The first 512-update reference passed every declared gate in 10.3502 active CPU
+seconds: entity, location and joint accuracy are 100% on 96 training and 32 held-out
+combinations. Mean held-out NLL is 0.211649. The fixed selector answers every
+enumerated two-record query correctly, including 768 queries / 384 pairs whose
+constituent facts are both held out. Coherent location swaps also pass. These
+reused fact combinations are not independent samples or natural-language evidence.
+No second learning-rate run was needed.
+
+The [standalone fact report](../runs/fact_grounding_v1/reference/report.html) has
+verified tables, curves and expandable examples at 1280x720, with no broken images
+or horizontal overflow. `runs/fact_grounding_v1/verification.json` binds the intact
+training snapshot, separate final renderer, checkpoint/results, tests and browser
+receipts. CLI resume reused cached predictions and unchanged result/metric files;
+an independent probability-space calculation matches every saved binding score.
+Next proposed: test the same factual task through the existing agent event/reader
+path. Success of this freshly trained encoder and explicit selector does not prove
+the world model's learned binding, recurrent retention or memory compression.
+
+**Prior diagnostic slice, 11 September:** the
+[current/recent factual recall diagnostic](recall-learning-plan.md) is implemented
+in the same recipe (`--dataset recall --recall-mode current-recent`). Actual Claude
+completed one review and one reconciliation after Alex approved the export. All 79
+CPU tests pass; the actual diagnostic forward/backward check has finite losses and
+the expected gradients. The 256-update CPU pilot finished in 144.58 active seconds.
+The final checkpoint gets 71.875% seen-location accuracy on its 40 training episodes,
+but only 17.5% on the 80 seen cases among 100 fresh development episodes: current
+12.5%, recent 22.5%. Both declared gates fail. Overall development task loss is 0.31
+at 12% coverage, worse than always abstaining (0.25). No calibration/test data was
+loaded and no new memory loss or budget extension was started.
+
+The [standalone report](../runs/recall_diagnostic_v1/pilot/report.html) passed
+structural and 1280x720 browser checks. `runs/recall_diagnostic_v1/verification.json`
+binds source/results/checkpoint/report hashes, tests and screenshots. Next focus is
+basic entity/location binding and generalization; this pilot does not isolate the
+input encoder, query binding, readout or insufficient optimization budget.
+
+**Prior recall slice:** historical recall is implemented in the same recipe. Read the
+[usable guide](recall-task.md) and [implementation record](recall-implementation-plan.md).
+All 76 CPU tests pass, including exact pause/resume, held-out split isolation and
+report-failure recovery. A 256-event default-memory forward/backward check completed.
+The eight-update CPU development run selected update 7. On its 15 test episodes,
+factual accuracy is 20%, every decision abstains, and task loss is 0.25. The model
+does not yet demonstrate useful recall. Calibration selected its upper bound T=20;
+this small sample establishes no calibration guarantee.
+
+**Overnight work complete:** all seven topic reviews and their combined reconciliation
+with actual Claude are complete. The [decision agenda](remaining-decisions-2026-09-10.md)
+starts with five choices and the full design, followed by the detailed alternatives,
+interfaces, evidence and remaining empirical questions. Recommended next: grounded
+local memory learning with current/recent recall controls, then learned marking if
+its marginal signal is useful. Preserve fixed capacity, exact historical records and
+separate live, hypothetical and offline replay state. Freeze the whole selected
+procedure before final calibration; each later task configuration needs its own evaluation.
+
+The final consistency check completed on 10 September at 08:31 Berlin, before the
+09:00 deadline. All 21 overnight Claude responses succeeded; saved evidence and source
+identity are unchanged. The heartbeat `overnight-agent-design-proposals` is paused
+with its persisted status verified. These proposals remain unadopted. Receipts are
+`overnight-integration-local-checks.json` and `morning-handoff-check.json` under
+`runs/reviews/state_memory_design_2026-09-09/`. No model run or test suite was repeated
+for the morning handoff.
+
+**Implemented:** the categorical belief and bounded session-memory design authorized
+by Alex on 9 September 2026. Read [the model guide](belief-model.md) and the
+[implementation plan/record](belief-implementation-plan.md). One editable
+[recipe](../experiments/multimodal.py) still owns construction, targets, training,
+evaluation, checkpoint/resume and reporting. No second trainer or runtime LLM was added.
+
+The CLI defaults to `--state-model belief`: recurrent context, grouped categorical
+prior/posterior, source-only evidence and a separate task workspace. Ordered event
+transactions advance executed action/time once, merge partial packets against a
+fixed prior and memory snapshot, and commit once. Shared dynamics power imagination.
+Thinking/reflection leave the physical belief and observational history unchanged.
+Both evidence age and inferred-state age/ordinal constrain causal memory reads.
+
+Memory contains exact recent latent envelopes, chronological compression staging,
+compressed history, protected user/agent marks and gated consolidation. Separate
+perception/prediction/thinking readers have learned scale gates and a null choice.
+Full categorical probabilities reach readers and compression. Source-only features
+remain independently encoded and compressed. The default tensor payload is bounded
+at 318,040 bytes per FP32 stream, plus bounded metadata and temporary computation.
+Fresh `initial_state()` starts empty memory and workspace with the same model weights;
+callers discard prior task progress and plans. Individual memory resets remain withdrawn.
+
+Learning now includes observable reconstruction/prediction likelihoods, split
+categorical KL, isolated full/partial teacher targets, delayed recall, frozen-reader
+compression distillation and delayed marginal mark utility. These mechanisms are
+implemented; effective long-horizon memory and calibrated uncertainty are unproven.
+The ordinary two-step default history is too short to train delayed recall across
+the default 32-record recent store. The guide gives explicit small-memory settings
+that exercise all memory scales within an eight-step development history.
+
+**Earlier belief-slice verification:** 69 CPU tests passed at that stage. Exact
+pause/resume reproduces model, optimizer, sampler, RNG and training rows, including the optional extra-update gate. New tests
+cover event retry/order, masked inputs, source/belief separation, mixed batches,
+full-distribution reads, memory bounds/consolidation, provenance, snapshot loading,
+common planning samples/RNG restoration and future memory at equal timestamps.
+Final real PushT forward/backward check is saved with the run receipts.
+
+Three short CPU development runs completed: eight synthetic updates, eight
+instruction updates and two real PushT updates; no extra proposals or GPU runs.
+Every run has raw metrics, checkpoint, source snapshot, media and an offline report.
+The current report renderer has now passed browser visual checks at a 1280×720
+viewport, with no broken images or horizontal overflow on the three reports.
+See [verification](../runs/belief_v1/verification.json),
+[synthetic report](../runs/belief_v1/synthetic/report.html),
+[instruction report](../runs/belief_v1/instructions/report.html), and
+[real report](../runs/belief_v1/pusht/report.html).
+
+**Learning remains weak:** synthetic held-out image MSE is 0.237670 versus 0.007451
+for copying the last image. The tiny real check gives 0.236499 versus 0.000050895.
+The four-example instruction evaluation has 75% operation error. These development
+populations are too small and training too short for capability conclusions. They
+confirm execution and expose poor current predictions, not successful world learning.
+The earlier negative instruction result is unchanged and preserved in the historical
+[task implementation record](multimodal-plan.md); its old run paths are unavailable
+in this local checkout and were not reverified or reconstructed.
+
+**Claude collaboration:** two actual isolated CLI exchanges reviewed abstract
+implementation invariants. No private source, dimensions or results were exported.
+Claude withdrew overbroad demands for parameter-disjoint encoders, hard gates,
+mask tokens and a particular RNG mechanism. The adopted properties are forward
+information separation, frozen event inputs, bounded replay graphs and side-effect
+free planning. Remaining fixed/variable-rollout and sealing concerns were resolved
+by the concrete fixed-horizon interface, open-event type checks and local tests.
+Receipts: `runs/reviews/state_memory_design_2026-09-09/implementation*`.
+
+The Gaussian reference, existing task controls/output attribution and multiscale
+adapters remain usable. Python `build_model()` retains its Gaussian default; use
+`state_model="belief"` explicitly in code. Its SVG diagram exporter still describes
+the Gaussian reference; the new guide has the categorical flow. Checkpoint schemas
+are distinct, with no implicit Gaussian conversion. Completed runs retain their
+own source snapshots and must be resumed with compatible source/settings.
+
+**Active design proposal:** [decisions from belief and memory](decision-design.md)
+connects the task workspace and planner through an exact objective/cost contract,
+a learned observable-outcome head, and verification of actual results. This is the
+Claude-reviewed discussion requested on 9 September, completed on 10 September;
+it is not implemented or a new capability claim. Historical last-observed recall
+with a separate factual not-observed answer and operational abstention is the
+recommended first slice. Active current-location inspection is a subsequent task
+requiring observation-conditioned continuations and isolated hypothetical updates.
+Existing memory bounds, reset decisions and negative results are unchanged.
+
+**Implemented first-task contract:** [selective historical recall](recall-task-design.md)
+specifies four locations plus factual not-observed, separate abstention, loss 0/1/0.25,
+two retrieval rounds, complete text-observation episodes and independent calibration.
+Two further abstract Claude reviews reconcile cost/calibration and data-split claims.
+Report seen/old-history performance separately: recognizing only unseen entities can
+beat all-abstain without remembering any locations. The subsequent implementation
+and development evidence are recorded in the guide linked above.
+
+**Next step:** declare one bounded input/binding/readout diagnostic before any new
+memory-learning objective; preserve the failed current/recent pilot. Numerical
+costs are explicit research defaults, not inferred application preferences. Deployment-length replay,
+general mark selection, calibrated probabilities and closed-loop behavior remain open.
