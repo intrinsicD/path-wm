@@ -7,10 +7,6 @@ read the particular record when needed, not the whole history at startup.
 
 ## Current priorities
 
-- **Coding-agent workflow:** implement all four slices of the
-  [agent token-efficiency plan](agent-token-efficiency-plan.md), as requested on
-  22 September. This changes instruction loading and tool use, not model tokens,
-  scientific priorities or retained experiment evidence.
 - **Integrated latent agent:** the [research goal](integrated-latent-agent-goal.md)
   remains the priority: compatible latent perception/thinking/action, shared-depth
   computation and useful concept/instance memory that acquires, retrieves and
@@ -70,6 +66,8 @@ for discussion coverage separately from evidence-backed validation. Green applie
 only to its named scope; these summaries do not change colors or promote results.
 The [experiment workflow](experiment-workflow.md) retains the standing design
 principles, public-only external-review boundary and run/report obligations.
+The [coding-agent efficiency plan](agent-token-efficiency-plan.md) is complete;
+its measurements and limitations remain in that record.
 
 Keep this page at most 8 KiB. Put new detailed results and discussion in their
 existing owners; update a short status/link here when the current priority changes.

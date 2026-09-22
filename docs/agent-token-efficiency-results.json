@@ -1,0 +1,678 @@
+{
+  "schema": 1,
+  "scope": "PATH-WM coding-agent workflow calibration; synthetic research fixtures and extracted helper regression-test authoring, no scientific PATH-WM result",
+  "date": "2026-09-22",
+  "implementation_commit": "c4552de",
+  "source_revision": "4d1d8361778ebf294ca92f6370a0f269a0c14440",
+  "model": "gpt-6-astra",
+  "requested_service_tier": "default",
+  "observed_service_tier": null,
+  "credits_consumed": null,
+  "attempt_budget": 8,
+  "model_calls": 8,
+  "repairs": 0,
+  "repeats": 0,
+  "manifest_sha256": "c01308026a14bb59eed7a056717012574e9e212c454747fb70cfed267a926956",
+  "full_evidence": "../runs/agent_efficiency_v1/evidence/",
+  "report": "../runs/agent_efficiency_v1/report.html",
+  "baseline": {
+    "revision": "919320d2d90b1214fa38bf8877e67bfb3eabda65",
+    "files": {
+      "AGENTS.md": {
+        "bytes": 14,
+        "sha256": "962d97ddd47e308a7886f7c110493208e0fe9daac9e87b4de4058fec6d025825"
+      },
+      "CLAUDE.md": {
+        "bytes": 2366,
+        "sha256": "3ccacbed3af39cf3f354256fd2a447dc1af79e9ec2e1da96b9fec586a7e51730"
+      },
+      "docs/experiment-workflow.md": {
+        "bytes": 8988,
+        "sha256": "52ccd935b8ed4687a0a3e35add2e0e4af7c4391a0a3dff3109a696be757164e2"
+      },
+      "docs/project-state.md": {
+        "bytes": 150596,
+        "sha256": "263f9404805e26629d665ee1c2e617f5276aaaf865facb6538b77ebaf2189f11"
+      },
+      "docs/agent-token-efficiency-plan.md": {
+        "bytes": 7612,
+        "sha256": "2194482b0e6919aae76292d1f727ad35008f1a509b419db11786e18d2efe06f2"
+      }
+    },
+    "source_root": "/home/alex/Documents/path-wm",
+    "history_prefix_bytes": 478
+  },
+  "final_document_checks": {
+    "archive_payload_equal": true,
+    "archive_payload_sha256": "263f9404805e26629d665ee1c2e617f5276aaaf865facb6538b77ebaf2189f11",
+    "archive_link_count": 245,
+    "historical_broken_links_unchanged": [],
+    "new_link_counts": {
+      "CLAUDE.md": 7,
+      "docs/project-state.md": 22,
+      "docs/experiment-workflow.md": 3,
+      "docs/agent-token-efficiency-plan.md": 9
+    },
+    "new_broken_links": [],
+    "standing_contracts_preserved": true,
+    "sizes": {
+      "AGENTS.md": 14,
+      "CLAUDE.md": 3486,
+      "docs/experiment-workflow.md": 13925,
+      "docs/project-state.md": 5758
+    },
+    "routes": {
+      "ordinary_docs": {
+        "task_plan": "docs/agent-token-efficiency-plan.md",
+        "workflow_sections": [
+          "Work in small complete slices",
+          "Tool output and waits",
+          "Finish a slice"
+        ],
+        "task_plan_bytes_held_constant": 7612,
+        "before_bytes": 169576,
+        "after_bytes": 20796,
+        "history_bytes_loaded": 0
+      },
+      "model_code_repair": {
+        "task_plan": "docs/encoder-token-budget-plan.md",
+        "workflow_sections": [
+          "Work in small complete slices",
+          "Standing design principles",
+          "Keep it understandable",
+          "Tool output and waits",
+          "Finish a slice"
+        ],
+        "task_plan_bytes_held_constant": 15972,
+        "before_bytes": 177936,
+        "after_bytes": 34280,
+        "history_bytes_loaded": 0
+      },
+      "research_planning": {
+        "task_plan": "docs/integrated-latent-agent-goal.md",
+        "workflow_sections": [
+          "Work in small complete slices",
+          "Standing design principles",
+          "Keep it understandable",
+          "Research applicability",
+          "Tool output and waits",
+          "Finish a slice"
+        ],
+        "task_plan_bytes_held_constant": 14680,
+        "before_bytes": 176644,
+        "after_bytes": 34411,
+        "history_bytes_loaded": 0
+      },
+      "experiment_continuation": {
+        "task_plan": "docs/encoder-token-budget-plan.md",
+        "workflow_sections": [
+          "Work in small complete slices",
+          "Trustworthy runs and reports",
+          "Research applicability",
+          "Tool output and waits",
+          "Finish a slice"
+        ],
+        "task_plan_bytes_held_constant": 15972,
+        "before_bytes": 177936,
+        "after_bytes": 32376,
+        "history_bytes_loaded": 0
+      }
+    },
+    "note": "Static source-byte accounting, not observed tokens/credits or model compliance. Same task-plan bytes in each before/after comparison; shared skill metadata/tool schemas excluded."
+  },
+  "effective_configuration": {
+    "effective": {
+      "model": "gpt-6-astra",
+      "model_reasoning_effort": "xhigh",
+      "service_tier": "default",
+      "tool_output_token_limit": 3000
+    },
+    "origins": {
+      "model": {
+        "name": {
+          "type": "user",
+          "file": "/home/alex/.codex/config.toml",
+          "profile": null
+        },
+        "version": "sha256:22513fd906cb2f6dd415fa9f87d504b33c163de3e80d9702ff46de85998ee57b"
+      },
+      "service_tier": {
+        "name": {
+          "type": "user",
+          "file": "/home/alex/.codex/config.toml",
+          "profile": null
+        },
+        "version": "sha256:22513fd906cb2f6dd415fa9f87d504b33c163de3e80d9702ff46de85998ee57b"
+      },
+      "model_reasoning_effort": {
+        "name": {
+          "type": "user",
+          "file": "/home/alex/.codex/config.toml",
+          "profile": null
+        },
+        "version": "sha256:22513fd906cb2f6dd415fa9f87d504b33c163de3e80d9702ff46de85998ee57b"
+      },
+      "tool_output_token_limit": {
+        "name": {
+          "type": "project",
+          "dotCodexFolder": "/home/alex/Documents/path-wm/.codex"
+        },
+        "version": "sha256:342bae621ab68aef49de6d5f70c4c064a833beff945b0811ae5977899e200605"
+      }
+    },
+    "research_manager": [
+      {
+        "name": "research-manager",
+        "path": "/home/alex/.codex/skills/research-manager/SKILL.md",
+        "description": "Record research decisions, experiments, findings, and claims in ARA, or maintain/resume ARA research when requested. Automatic recording runs only at the end of a research-significant turn. Skip ordinary engineering, tests, CI, docs, and workflow maintenance without a research result; decide from conversation before reading ledgers.",
+        "enabled": true,
+        "scope": "user"
+      }
+    ]
+  },
+  "output_probe": {
+    "producer_exit": 23,
+    "full_log": "/tmp/pathwm-command.NOIivu.log",
+    "full_bytes": 72082,
+    "presented_bytes": 2190,
+    "presented_lines": 61,
+    "failure_visible": true,
+    "omitted_diagnostic_recovered": true,
+    "calls": {
+      "producer_with_excerpt": 1,
+      "focused_recovery": 1
+    },
+    "set_e_enabled": true,
+    "scope": "Deliberate 2000-line failure fixture, not a PATH-WM training failure.",
+    "retained_copy": "output-probe-full.log"
+  },
+  "verification_bundle": {
+    "commands": [
+      {
+        "name": "docs",
+        "command": [
+          "/home/alex/miniconda3/bin/python",
+          "/tmp/pathwm-agent-efficiency-frrez0nn/check_docs.py"
+        ],
+        "cwd": "/home/alex/Documents/path-wm",
+        "exit_code": 0,
+        "log": "/tmp/pathwm-agent-efficiency-frrez0nn/docs-verification.log",
+        "full_bytes": 2360,
+        "elapsed_seconds": 0.946
+      },
+      {
+        "name": "effective_config",
+        "command": [
+          "/home/alex/miniconda3/bin/python",
+          "/tmp/pathwm-agent-efficiency-frrez0nn/config_check.py"
+        ],
+        "cwd": "/home/alex/Documents/path-wm",
+        "exit_code": 0,
+        "log": "/tmp/pathwm-agent-efficiency-frrez0nn/effective_config-verification.log",
+        "full_bytes": 1701,
+        "elapsed_seconds": 1.484
+      },
+      {
+        "name": "gate_semantics",
+        "command": [
+          "/home/alex/miniconda3/bin/python",
+          "/tmp/pathwm-agent-efficiency-frrez0nn/check_gates.py"
+        ],
+        "cwd": "/home/alex/Documents/path-wm",
+        "exit_code": 0,
+        "log": "/tmp/pathwm-agent-efficiency-frrez0nn/gate_semantics-verification.log",
+        "full_bytes": 1912,
+        "elapsed_seconds": 0.37
+      },
+      {
+        "name": "whitespace",
+        "command": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "cwd": "/home/alex/Documents/path-wm",
+        "exit_code": 0,
+        "log": "/tmp/pathwm-agent-efficiency-frrez0nn/whitespace-verification.log",
+        "full_bytes": 0,
+        "elapsed_seconds": 0.017
+      }
+    ],
+    "all_passed": true,
+    "full_output_bytes": 5973,
+    "presented_output_bytes": 425,
+    "commands_executed": 4,
+    "execution_batches": 1,
+    "repeat_status_polls": 0,
+    "elapsed_seconds": 1.496
+  },
+  "calls": [
+    {
+      "number": 1,
+      "kind": "gate",
+      "name": "engineering",
+      "effort": "medium",
+      "exit_code": 0,
+      "timeout": false,
+      "elapsed_seconds": 23.878,
+      "usage": {
+        "input_tokens": 91769,
+        "cached_input_tokens": 75520,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 288,
+        "reasoning_output_tokens": 0
+      },
+      "tool_calls": 5,
+      "prompt_sha256": "1b4d02908a3cc4a46685df4d1917cf91bad32fed237236af374f63dded49d831",
+      "trace": "call-1-engineering-medium.jsonl",
+      "output": "call-1-engineering-medium.txt",
+      "score": {
+        "case": "engineering",
+        "passed": true,
+        "changed_files": [
+          "docs/tooling.md"
+        ],
+        "ledger_read_commands": 0,
+        "recording_reference_read_commands": 0,
+        "tool_calls": 5,
+        "nonzero_tool_commands": [
+          {
+            "command": "/bin/bash -lc 'git diff -- docs/tooling.md'",
+            "exit_code": 129
+          }
+        ],
+        "evidence_unchanged": true,
+        "scope": "Synthetic fixture only; full trace and YAML/claim semantics reviewed."
+      }
+    },
+    {
+      "number": 2,
+      "kind": "gate",
+      "name": "research_event",
+      "effort": "medium",
+      "exit_code": 0,
+      "timeout": false,
+      "elapsed_seconds": 96.676,
+      "usage": {
+        "input_tokens": 139958,
+        "cached_input_tokens": 126336,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2607,
+        "reasoning_output_tokens": 71
+      },
+      "tool_calls": 7,
+      "prompt_sha256": "92674f7a47c02b45f6708e00114ef97bce308b2aeeca5920d3bb4537084a24bb",
+      "trace": "call-2-research_event-medium.jsonl",
+      "output": "call-2-research_event-medium.txt",
+      "score": {
+        "case": "research_event",
+        "passed": true,
+        "changed_files": [
+          "ara/logic/claims.md",
+          "ara/staging/observations.yaml",
+          "ara/trace/exploration_tree.yaml",
+          "ara/trace/pm_reasoning_log.yaml",
+          "ara/trace/sessions/2026-09-22_001.yaml",
+          "ara/trace/sessions/session_index.yaml"
+        ],
+        "ledger_read_commands": 4,
+        "recording_reference_read_commands": 2,
+        "tool_calls": 7,
+        "nonzero_tool_commands": [],
+        "evidence_unchanged": true,
+        "scope": "Synthetic fixture only; full trace and YAML/claim semantics reviewed."
+      }
+    },
+    {
+      "number": 3,
+      "kind": "gate",
+      "name": "confirmation",
+      "effort": "medium",
+      "exit_code": 0,
+      "timeout": false,
+      "elapsed_seconds": 71.949,
+      "usage": {
+        "input_tokens": 117174,
+        "cached_input_tokens": 101504,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1794,
+        "reasoning_output_tokens": 9
+      },
+      "tool_calls": 6,
+      "prompt_sha256": "6ed4554cb8b0b6f6cb6c763ebdfd61bfb08f6ed970f40a396f234ef5c90486fe",
+      "trace": "call-3-confirmation-medium.jsonl",
+      "output": "call-3-confirmation-medium.txt",
+      "score": {
+        "case": "confirmation",
+        "passed": true,
+        "changed_files": [
+          "ara/logic/claims.md",
+          "ara/staging/observations.yaml",
+          "ara/trace/pm_reasoning_log.yaml",
+          "ara/trace/sessions/2026-09-22_001.yaml",
+          "ara/trace/sessions/session_index.yaml"
+        ],
+        "ledger_read_commands": 3,
+        "recording_reference_read_commands": 2,
+        "tool_calls": 6,
+        "nonzero_tool_commands": [],
+        "evidence_unchanged": true,
+        "scope": "Synthetic fixture only; full trace and YAML/claim semantics reviewed."
+      }
+    },
+    {
+      "number": 4,
+      "kind": "gate",
+      "name": "inspection",
+      "effort": "medium",
+      "exit_code": 0,
+      "timeout": false,
+      "elapsed_seconds": 20.628,
+      "usage": {
+        "input_tokens": 53507,
+        "cached_input_tokens": 46208,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 310,
+        "reasoning_output_tokens": 11
+      },
+      "tool_calls": 3,
+      "prompt_sha256": "09be04c33b9a6771ff082cee2375c49cdfd6e1be1986b4946cf61fdeff0769ef",
+      "trace": "call-4-inspection-medium.jsonl",
+      "output": "call-4-inspection-medium.txt",
+      "score": {
+        "case": "inspection",
+        "passed": true,
+        "changed_files": [],
+        "ledger_read_commands": 1,
+        "recording_reference_read_commands": 0,
+        "tool_calls": 3,
+        "nonzero_tool_commands": [],
+        "evidence_unchanged": true,
+        "scope": "Synthetic fixture only; full trace and YAML/claim semantics reviewed."
+      }
+    },
+    {
+      "number": 5,
+      "kind": "helper",
+      "name": "atomic_json",
+      "effort": "medium",
+      "exit_code": 0,
+      "timeout": false,
+      "elapsed_seconds": 42.187,
+      "usage": {
+        "input_tokens": 14200,
+        "cached_input_tokens": 11520,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1268,
+        "reasoning_output_tokens": 213
+      },
+      "tool_calls": 0,
+      "prompt_sha256": "49badb58439a24d1300abe20bccc0b34ab4457198fabc832f2a46685e1fdee7b",
+      "trace": "call-5-atomic_json-medium.jsonl",
+      "output": "call-5-atomic_json-medium.txt",
+      "score": {
+        "passed": true,
+        "variants": [
+          {
+            "variant": "baseline",
+            "exit_code": 0,
+            "passed": true,
+            "log": "scores/atomic_json-medium/baseline/verification.log"
+          },
+          {
+            "variant": "accept_nan",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/atomic_json-medium/accept_nan/verification.log"
+          },
+          {
+            "variant": "no_parent_creation",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/atomic_json-medium/no_parent_creation/verification.log"
+          },
+          {
+            "variant": "leaked_serialization_temporary",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/atomic_json-medium/leaked_serialization_temporary/verification.log"
+          },
+          {
+            "variant": "no_fsync",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/atomic_json-medium/no_fsync/verification.log"
+          }
+        ]
+      },
+      "verification_seconds_estimate": 3.059,
+      "through_verification_seconds_estimate": 45.246
+    },
+    {
+      "number": 6,
+      "kind": "helper",
+      "name": "resume_arguments",
+      "effort": "xhigh",
+      "exit_code": 0,
+      "timeout": false,
+      "elapsed_seconds": 140.531,
+      "usage": {
+        "input_tokens": 14353,
+        "cached_input_tokens": 11520,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 4521,
+        "reasoning_output_tokens": 2667
+      },
+      "tool_calls": 0,
+      "prompt_sha256": "bc93d331e7cada4bc0d11b3a63dcaae1e610e93fdba11488448d9f8ab166abde",
+      "trace": "call-6-resume_arguments-xhigh.jsonl",
+      "output": "call-6-resume_arguments-xhigh.txt",
+      "score": {
+        "passed": true,
+        "variants": [
+          {
+            "variant": "baseline",
+            "exit_code": 0,
+            "passed": true,
+            "log": "scores/resume_arguments-xhigh/baseline/verification.log"
+          },
+          {
+            "variant": "allow_check",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/resume_arguments-xhigh/allow_check/verification.log"
+          },
+          {
+            "variant": "miss_equals_overrides",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/resume_arguments-xhigh/miss_equals_overrides/verification.log"
+          },
+          {
+            "variant": "lose_path_type",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/resume_arguments-xhigh/lose_path_type/verification.log"
+          },
+          {
+            "variant": "ignore_conflict",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/resume_arguments-xhigh/ignore_conflict/verification.log"
+          }
+        ]
+      },
+      "verification_seconds_estimate": 4.525,
+      "through_verification_seconds_estimate": 145.056
+    },
+    {
+      "number": 7,
+      "kind": "helper",
+      "name": "atomic_json",
+      "effort": "xhigh",
+      "exit_code": 0,
+      "timeout": false,
+      "elapsed_seconds": 128.479,
+      "usage": {
+        "input_tokens": 14200,
+        "cached_input_tokens": 11520,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 4043,
+        "reasoning_output_tokens": 2588
+      },
+      "tool_calls": 0,
+      "prompt_sha256": "49badb58439a24d1300abe20bccc0b34ab4457198fabc832f2a46685e1fdee7b",
+      "trace": "call-7-atomic_json-xhigh.jsonl",
+      "output": "call-7-atomic_json-xhigh.txt",
+      "score": {
+        "passed": true,
+        "variants": [
+          {
+            "variant": "baseline",
+            "exit_code": 0,
+            "passed": true,
+            "log": "scores/atomic_json-xhigh/baseline/verification.log"
+          },
+          {
+            "variant": "accept_nan",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/atomic_json-xhigh/accept_nan/verification.log"
+          },
+          {
+            "variant": "no_parent_creation",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/atomic_json-xhigh/no_parent_creation/verification.log"
+          },
+          {
+            "variant": "leaked_serialization_temporary",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/atomic_json-xhigh/leaked_serialization_temporary/verification.log"
+          },
+          {
+            "variant": "no_fsync",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/atomic_json-xhigh/no_fsync/verification.log"
+          }
+        ]
+      },
+      "verification_seconds_estimate": 3.001,
+      "through_verification_seconds_estimate": 131.48
+    },
+    {
+      "number": 8,
+      "kind": "helper",
+      "name": "resume_arguments",
+      "effort": "medium",
+      "exit_code": 0,
+      "timeout": false,
+      "elapsed_seconds": 49.367,
+      "usage": {
+        "input_tokens": 14353,
+        "cached_input_tokens": 11520,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 1448,
+        "reasoning_output_tokens": 133
+      },
+      "tool_calls": 0,
+      "prompt_sha256": "bc93d331e7cada4bc0d11b3a63dcaae1e610e93fdba11488448d9f8ab166abde",
+      "trace": "call-8-resume_arguments-medium.jsonl",
+      "output": "call-8-resume_arguments-medium.txt",
+      "score": {
+        "passed": true,
+        "variants": [
+          {
+            "variant": "baseline",
+            "exit_code": 0,
+            "passed": true,
+            "log": "scores/resume_arguments-medium/baseline/verification.log"
+          },
+          {
+            "variant": "allow_check",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/resume_arguments-medium/allow_check/verification.log"
+          },
+          {
+            "variant": "miss_equals_overrides",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/resume_arguments-medium/miss_equals_overrides/verification.log"
+          },
+          {
+            "variant": "lose_path_type",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/resume_arguments-medium/lose_path_type/verification.log"
+          },
+          {
+            "variant": "ignore_conflict",
+            "exit_code": 1,
+            "passed": true,
+            "log": "scores/resume_arguments-medium/ignore_conflict/verification.log"
+          }
+        ]
+      },
+      "verification_seconds_estimate": 2.723,
+      "through_verification_seconds_estimate": 52.09
+    }
+  ],
+  "helper_effort_totals": {
+    "medium": {
+      "attempts": 2,
+      "verified_passes": 2,
+      "model_cli_seconds": 91.554,
+      "through_verification_seconds_estimate": 97.336,
+      "usage": {
+        "input_tokens": 28553,
+        "cached_input_tokens": 23040,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 2716,
+        "reasoning_output_tokens": 346
+      }
+    },
+    "xhigh": {
+      "attempts": 2,
+      "verified_passes": 2,
+      "model_cli_seconds": 269.01,
+      "through_verification_seconds_estimate": 276.536,
+      "usage": {
+        "input_tokens": 28553,
+        "cached_input_tokens": 23040,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 8564,
+        "reasoning_output_tokens": 5255
+      }
+    }
+  },
+  "decision": "Retain xhigh base effort. Medium is an opt-in candidate for bounded helper test authoring with predefined independent checks; no automatic downgrade or research-design inference. One observation per helper/effort and narrow task coverage are insufficient for a new default.",
+  "limitations": [
+    "No token or credit estimate from source bytes.",
+    "No measured delivered service tier or credit charge.",
+    "Four helper calls, one sample per effort/task; no retries, stochastic quality variance unmeasured.",
+    "Generated suites assessed against current extracted helper plus four predeclared faults each; not full integration/training/research coverage.",
+    "Reasoning output is a subset of output tokens, not additional usage.",
+    "CLI cumulative input includes cached input. Paired helper input/cache counts matched; gate-call contexts differed. Repeatability and latency variation remain unmeasured.",
+    "elapsed_seconds measures model/CLI directly. Helper completion estimates add verification time recovered from trace/final check-log mtimes; gate semantic-review time was not recorded.",
+    "Gate results use isolated synthetic ARA and do not measure PATH-WM research-turn skip frequency.",
+    "Existing report renderer; structural QA only, no new renderer or browser visual inspection."
+  ],
+  "report_qa": {
+    "browser_checked": false,
+    "renderer_sha256": "1691ecc2fca96151d1eb1582d07bbd2ebdbd688665806d70854a883c2719ad64",
+    "report_sha256": "345221d37382b98681b49e2c0d17303423f62e6ac68132b7c824945e10d7eec5",
+    "rows": 8,
+    "self_contained": true,
+    "status": "structural_verified"
+  },
+  "final_integrity_checks": {
+    "eight_manifest_calls_match_traces_and_usage": true,
+    "paired_prompts_identical": true,
+    "all_checks_passed": true,
+    "report_status_and_hashes_verified": true,
+    "archive_and_local_links_verified": true
+  }
+}

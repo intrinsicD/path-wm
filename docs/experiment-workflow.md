@@ -208,3 +208,12 @@ Predeclare the trial budget. A small fixture or smoke run cannot set a default f
 research design, numerical diagnosis, architecture or long-running experiments.
 Existing base effort stays in force until a scoped comparison supports a change;
 verification and scientific review requirements apply at every effort level.
+
+The [22 September PATH-WM pilot](agent-token-efficiency-plan.md#slice-4-and-completion)
+passed both extracted-helper test tasks at medium and xhigh. Medium used less
+output and time in those four calls; the sample does not justify a new default.
+Retain xhigh for the base configuration. For similarly bounded helper/test work
+with predeclared independent checks, medium is an opt-in candidate: from this
+repository use `codex --cd . -c 'model_reasoning_effort="medium"'`, or select the
+existing `intrinsic-routine` user profile. Return to the base setting when scope
+requires research design, architecture or difficult numerical diagnosis.

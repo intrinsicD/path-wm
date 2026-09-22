@@ -1,6 +1,6 @@
 # Reduce coding-agent context and token overhead
 
-Status: in progress; all slices authorized on 22 September 2026. Created at
+Status: complete, 22 September 2026; all four slices implemented and verified. Created at
 Alex's request after reviewing IntrinsicEngine PROC-034 (through `e156d3a15`).
 This task concerns Codex/Claude workflow costs. The model's
 [token-budget plan](token-budget-plan.md) and
@@ -99,7 +99,7 @@ them merely because this is another repository.
    defects, completion time, model and requested/observed service tier. Reuse the
    existing opt-in profile or explicit overrides; do not infer a research-design
    default from PROC-034's two synthetic Python tasks.
-   - [ ] Record a scoped effort decision with all attempts and uncertainty. A
+   - [x] Record a scoped effort decision with all attempts and uncertainty. A
      decision to retain defaults is valid when evidence is insufficient. Validate
      any changed setting in the actual client; no blanket downgrade without data.
 
@@ -184,3 +184,65 @@ measurements and the final disposition will be recorded below.
   are unchanged; these tests write only their isolated synthetic ARA directories.
   One unnecessary `git diff` in the non-Git engineering fixture returned 129;
   the retained trace exposes it and the requested edit still verifies. No retries.
+
+### Slice 4 and completion
+
+Implementation: `c4552de`; this completion record and the compact machine-readable
+results are committed with the final verification. The concurrent attention-review
+commit `4d1d836` preceded the pilot; `pathwm/io.py` supplied both extracted helpers.
+The active workflow entry has been removed from current priorities.
+
+All eight declared calls completed, with no retries, repairs or unreported attempts.
+All four generated suites pass their original helper and reject all four predefined
+mutants (16/16 fault detections across four suites; four distinct faults per helper).
+There were no generated-suite defects detected by these checks. The tests stayed
+in isolated fixtures; no shared Python implementation, training run or real research
+record was changed by this calibration.
+
+| Extracted helper | Effort | Input / cached input | Output (reasoning subset) | Model + CLI seconds | Through checks, approx. seconds |
+| --- | --- | ---: | ---: | ---: | ---: |
+| Atomic JSON | medium | 14,200 / 11,520 | 1,268 (213) | 42.187 | 45.246 |
+| Atomic JSON | xhigh | 14,200 / 11,520 | 4,043 (2,588) | 128.479 | 131.480 |
+| Resume arguments | medium | 14,353 / 11,520 | 1,448 (133) | 49.367 | 52.090 |
+| Resume arguments | xhigh | 14,353 / 11,520 | 4,521 (2,667) | 140.531 | 145.056 |
+
+Helper totals: medium 2,716 output tokens and approximately 97.336 seconds through
+checks; xhigh 8,564 output tokens and approximately 276.536 seconds. Input and
+cached input match for each pair. Cache-write tokens were zero. Reasoning tokens
+are included in output, not added again. Generation/CLI duration was timed directly;
+subsequent verification time is estimated from the original trace and final check-log
+file timestamps. Gate semantic-review time was not recorded.
+
+**Decision:** retain the user's xhigh base setting. Medium is an opt-in candidate
+for similarly bounded helper/test authoring with independent acceptance checks.
+Reuse the existing user profile or the explicit command in the workflow; no new
+profile or automatic effort switch is added. One sample per task/effort, extracted
+fixtures, narrow fault coverage and uncontrolled latency variation cannot establish
+an optimum or support a blanket downgrade for research, architecture or numerical
+work. Requested tier was `default`; delivered tier and credit charges are unavailable.
+
+Full traces, exact prompts, sources, mutants, generated suites, fixture before/after
+records and verification logs are retained in `runs/agent_efficiency_v1/evidence/`.
+The existing report renderer supplies the [local report](../runs/agent_efficiency_v1/report.html) from
+raw JSON/JSONL, with result completion distinct from report status. Report checks
+are structural only; no renderer change or visual-browser claim is made. The
+versioned [measurement record](agent-token-efficiency-results.json) records every call and check.
+Source-byte accounting is not a token/credit saving claim. No repository Python
+source changed, so the docs/config verification route applies.
+
+Final current-state size: **5,758 bytes**, down from 150,596 (96.2% fewer bytes).
+All four startup sources, even counting the entire workflow, total 23,183 bytes
+versus 161,964 before. Scoped routes at closure are 20,796 bytes for ordinary docs,
+34,280 for model code repair, 34,411 for research planning and 32,376 for experiment
+continuation, holding the task-plan content constant. Actual reads can vary with
+the request; scientific requirements and the historical evidence remain available.
+
+Final checks pass: byte-identical historical payload and preserved links, new
+links/anchors, unchanged standing scientific contracts, effective project config,
+four gate fixtures, four mutation-checked helper suites, and whitespace. All eight
+raw metric rows appear in the self-contained report; `report.qa.json` records the
+renderer/report hashes and `structural_verified`, with `browser_checked: false`.
+Rebuild only the report with
+`.venv/bin/python -m pathwm.evaluation.report runs/agent_efficiency_v1`.
+Calibration runners are retained as local evidence, not a new repository framework
+or a required model-call check for future changes.
