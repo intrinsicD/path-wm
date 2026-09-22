@@ -375,6 +375,85 @@ Trainingsbeispielen. Als kleinster Vergleich käme eine klar begrenzte Regelfami
 mit separaten Inhalts-/Regelsplits und gleichen Rechenbudgets infrage; dies ist
 noch keine Freigabe für Implementierung oder einen Lauf.
 
+## Konzept, Objektverständnis und latente Aktionen
+
+23. September 2026. Alex fragt nach dem Begriff eines Konzepts, der Darstellung
+von Objektverständnis und danach, ob Differenzen zwischen latenten Aktionen ein
+geeigneterer Ansatz wären als Bilddifferenzen. Die folgende Arbeitsdefinition ist
+ein Vorschlag für unseren Entwurf, keine allgemein abschließende Begriffstheorie.
+
+Ein Konzept ist hier eine wiederverwendbare Abstraktion, die relevante
+Gemeinsamkeiten und Unterschiede über einzelne Fälle hinweg erfasst und dadurch
+Zuordnung, Erwartungen oder Handlungen auf neue Fälle übertragbar macht. Ein
+Konzept kann Kategorie, Eigenschaft, Beziehung oder Regel betreffen. Ein
+konkretes Objekt ist zunächst eine Instanz mit Identität und veränderlichem,
+teilweise unbekanntem Zustand; ein Objektkonzept liefert verallgemeinerbare
+Erwartungen über solche Instanzen. Dafür muss kein einzelner Vektor das gesamte
+Wissen enthalten: Seine Bedeutung entsteht auch durch den trainierten Leser,
+das Dynamikmodell und abrufbare Evidenz. Diese Funktionsunterscheidung legt weder
+separate Module noch manuell benannte symbolische Kategorien fest.
+
+Objektverständnis würden wir an mehreren zusammenhängenden Fähigkeiten prüfen:
+Identität über Ansichts-/Zustandsänderungen und Verdeckung hinweg verfolgen,
+Eigenschaften und Beziehungen unterscheiden, natürliche Veränderungen und
+Handlungsfolgen unter erklärten Bedingungen vorhersagen sowie Unsicherheit und
+Gegenbelege berücksichtigen. Keine einzelne Ähnlichkeitsmessung oder Probe
+validiert allgemeines Verständnis. Objektbezogene Dynamik ist ein etablierter
+Forschungsansatz: C-SWM strukturiert Zustände in Objekte und Beziehungen und lernt
+Vorhersagen kontrastiv in begrenzten Umgebungen. PLATO prüft einzelne physikalische
+Konzepte mittels Erwartungsverletzungen; seine Segmentierung und Zuordnung über
+die Zeit werden durch Ground-Truth-Masken bereitgestellt. Daraus folgt keine
+allgemeine Notwendigkeit einer bestimmten Slotarchitektur.
+Quellen: [C-SWM](https://arxiv.org/abs/1911.12247),
+[PLATO](https://www.nature.com/articles/s41562-022-01394-8).
+
+Latente Aktionen können einen wichtigen Teil dieser Zusammenhänge tragen. Ihre
+Differenz allein legt die Bedeutung jedoch ebenso wenig fest wie eine beliebige
+Bilddifferenz. Zu unterscheiden sind motorischer Befehl beziehungsweise Bewegung,
+beabsichtigter Effekt, beobachteter Effekt und ein aus Übergängen erschlossener
+Code. Gleiche Befehle können je nach Zustand andere oder keine Wirkungen haben;
+verschiedene Befehle können ein ähnliches Ziel erreichen. Welche Fälle derselbe
+Aktionscode zusammenfasst, hängt deshalb von der gewählten Abstraktion ab.
+
+Die allgemeinere Kandidatenbeziehung ist p(z_next | z, u, context): ein Modell
+der möglichen Folgezustände bei gegebenem Objekt-/Weltzustand und latenter Aktion.
+Beim partiell beobachteten Fall trägt z auch Unsicherheit beziehungsweise Historie.
+Kontext enthält relevante andere Beteiligte und Ausführungsbedingungen. Sinnvolle
+Vergleiche untersuchen Wirkungen derselben Aktion in verschiedenen Zuständen oder
+verschiedener Aktionen im gleichen Zustand. Eine passende Aktionsgeometrie kann
+solche Vergleiche vereinfachen, muss aber gelernt beziehungsweise geprüft werden.
+Eine nichtlineare Umkodierung verändert Vektordifferenzen, ohne das dargestellte
+Verhalten ändern zu müssen; Codebuchnummern lassen sich sogar beliebig umbenennen.
+Subtraktion ist daher keine von selbst bedeutungstragende Operation.
+
+Genie zeigt, dass ein aus Videos gelerntes diskretes Aktionscodebuch ein
+Dynamikmodell für interaktive Generierung steuern kann. Der dortige latente
+Aktionsencoder nutzt auch das Folgeframe im Training; zur Laufzeit wählt der
+Nutzer einen Code. Das Verfahren beweist weder semantische Additivität noch die
+eindeutige Identifikation tatsächlicher physikalischer Ursachen. Bei Anwendung
+auf reale Steuerung wird zusätzlich eine Abbildung zu tatsächlichen Aktionen
+benötigt. Quelle: [Genie](https://arxiv.org/html/2402.15391v1).
+
+Eine sinnvolle Fortsetzung des vorgeschlagenen Transfersignals wäre, über
+verschiedene Objekte und Kontexte hinweg zutreffende Handlungsfolgen zu lernen und
+zu prüfen, welche gemeinsamen latenten Eigenschaften diese Vorhersagen tragen.
+Für kausale Aussagen sind entsprechend kontrollierte Eingriffe oder explizite
+Identifikationsannahmen nötig: Ein aus beobachteter Veränderung erschlossener Code
+kann auch unbeeinflussbare Ereignisse bündeln. Rein visuelle Vorhersage macht ihn
+nicht automatisch zu einer ausführbaren Aktion. Beobachtungsdaten bleiben wertvoll;
+Verständnis wird hier nicht auf eigene motorische Erfahrung reduziert.
+
+Stehende Prinzipien: Wahrnehmung, Objektzustand und Handlung gemeinsam nutzen,
+vorbereitete Evidenz bei gültigem Zustand wiederverwenden, beobachtete und nur
+vorgestellte Folgen samt Quellen getrennt halten und Kontext-/Rechenbudgets
+begrenzen. Als kleinster Vergleich böten sich zurückgehaltene Objekte/Zustände,
+kontrollierte Handlungsvariationen und Vorhersagen ohne beziehungsweise mit
+vertauschter Aktionsinformation an; unberührte Beteiligte und Identität müssen im
+geprüften Umfang erhalten bleiben. Der erwartete Nutzen sind übertragbare
+Verhaltenszusammenhänge; zusätzliche Datenabdeckung, verdeckter Zustand und
+Identifikation der Aktionsbedeutung sind offene Kosten beziehungsweise Grenzen.
+Keine Datenwahl, Modulaufteilung oder neue Modellfähigkeit ist damit beschlossen.
+
 ## Quellen- und Reviewbelege
 
 Der tatsächliche Hauptaufruf und der abschließende Abgleich bestätigen

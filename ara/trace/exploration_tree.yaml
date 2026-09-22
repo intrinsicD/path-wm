@@ -9163,3 +9163,21 @@ tree:
   - N545
   - N544
   status: open
+- id: N547
+  type: question
+  title: Meaning of concepts, object understanding and latent actions
+  provenance: user
+  timestamp: 2026-09-23T01:13+02:00
+  description: User asks what a concept is, how genuine object understanding is represented, and whether differences
+    in latent action space are a useful direction. Operational definition and state-action-effect interpretation
+    proposed; no representation adopted.
+  evidence:
+  - docs/latent-concept-learning-review.md#konzept-objektverständnis-und-latente-aktionen
+  - https://arxiv.org/abs/1911.12247
+  - https://www.nature.com/articles/s41562-022-01394-8
+  - https://arxiv.org/html/2402.15391v1
+  also_depends_on:
+  - N546
+  - N545
+  - N544
+  status: open

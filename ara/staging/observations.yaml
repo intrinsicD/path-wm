@@ -6777,3 +6777,22 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O385
+  timestamp: 2026-09-23T01:13+02:00
+  provenance: ai-suggested
+  content: Use a functional concept definition based on reusable abstraction and transferable inference. Assess
+    object understanding through identity, uncertain state/relations and conditional predictions. Latent actions
+    can support object-state-action-effect learning, but raw code differences have no inherent semantics and observation-derived
+    transition codes do not uniquely identify executable or causal actions.
+  context: Response to user conceptual question; candidate criteria rather than a settled theory or adopted architecture.
+    C-SWM, mask-assisted PLATO and discrete-action Genie are scoped precedents. Distinguish motor command, intended
+    effect, observed effect and inferred code; preserve observations separately from imagined outcomes. See docs/latent-concept-learning-review.md#konzept-objektverständnis-und-latente-aktionen.
+  potential_type: concept
+  bound_to:
+  - N547
+  - N546
+  - N544
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

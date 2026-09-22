@@ -2,15 +2,17 @@ session:
   id: 2026-09-23_001
   date: '2026-09-23'
   started: 2026-09-23T00:26+02:00
-  last_turn: 2026-09-23T01:09+02:00
-  turn_count: 4
+  last_turn: 2026-09-23T01:13+02:00
+  turn_count: 5
   summary: Abstract latent-concept review completed with primary-source checks and Claude Opus 5.5 max. Full modal
     decoders need not precede learning; example/prototype, inferred-code and code-search routes remain alternatives.
     Six overclaims reconciled; no architecture adoption or capability promotion. Continued abstract walkthrough
     of five latent functions; compare-to-generalize transition, provisional hypotheses and memory ownership remain
     unselected implementation choices. CLIP analogy follow-up distinguishes offsets, inferred relation codes and
     nonlinear operators without requiring all concepts to be transformations. User proposes known-concept transfer
-    supervision; analogy losses, collapse controls and unseen-rule splits discussed without method selection.
+    supervision; analogy losses, collapse controls and unseen-rule splits discussed without method selection. Concept/object-understanding
+    question connects identity and uncertain state to action-conditioned effects; action-code arithmetic and causal
+    interpretation remain unvalidated.
 events_logged:
 - turn: 1
   type: question
@@ -85,6 +87,23 @@ events_logged:
     from support examples to independent query contents. Optional difference alignment trains additive geometry;
     nonlinear application needs correct conditional outcomes instead. Distinguish new-content transfer from unseen-rule
     inference, avoid target leakage and embedding collapse, and test actual use of the relation code.
+- turn: 5
+  type: question
+  id: N547
+  routing: direct
+  provenance: user
+  summary: User asks what a concept is, how genuine object understanding is represented, and whether differences
+    in latent action space are a useful direction. Operational definition and state-action-effect interpretation
+    proposed; no representation adopted.
+- turn: 5
+  type: observation
+  id: O385
+  routing: staged
+  provenance: ai-suggested
+  summary: Use a functional concept definition based on reusable abstraction and transferable inference. Assess
+    object understanding through identity, uncertain state/relations and conditional predictions. Latent actions
+    can support object-state-action-effect learning, but raw code differences have no inherent semantics and observation-derived
+    transition codes do not uniquely identify executable or causal actions.
 ai_actions:
 - turn: 1
   action: Verified selected public primary sources; completed actual Opus 5.5 max research and bounded reconciliation.
@@ -126,6 +145,16 @@ ai_actions:
   - docs/project-state.md
   - docs/diagrams/architecture-atlas.json
   - docs/architecture-discussion.md
+- turn: 5
+  action: Checked C-SWM, PLATO assumptions and Genie latent action mechanism; documented operational concept criteria
+    and state/action/effect distinctions. Updated owning note/state and matching atlas annotations without status/evidence
+    changes.
+  provenance: ai-executed
+  files_changed:
+  - docs/latent-concept-learning-review.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -140,6 +169,9 @@ key_context:
 - turn: 4
   excerpt: 'User: use known concepts and explicitly learn differences so transfer yields the correct result. Interpreted
     as a proposed training signal, not permission to implement or run.'
+- turn: 5
+  excerpt: User asks what a concept and genuine object understanding mean; considers differences between latent
+    actions instead of image embeddings.
 open_threads:
 - 'N544: choose concept family and relevant operations, then compare example/prototype use, learned code inference
   and optional code search with family-specific generalization/revision and resource controls.'
@@ -147,6 +179,8 @@ open_threads:
   and training signals remain unselected.'
 - 'N546: specify valid analogy data, informative target space and separate new-content/new-rule transfer checks
   before selecting a training method.'
+- 'N547: operational understanding criteria, action abstraction level and evidence for transferable state-action-effect
+  relations remain to be selected.'
 - 'N532: integrated frozen-weight acquisition/use/correction demonstration still needs domain, data, gates and budget.'
 - Earlier open topics remain in 2026-09-22_001; this review does not imply their closure or abandonment.
 ai_suggestions_pending:
