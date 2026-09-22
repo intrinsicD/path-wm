@@ -21,6 +21,15 @@ readers and contact checks remain proposals; no universal precision claim. Face 
 MediaPipe/SMIRK reference candidates separate stable facial shape from mouth/lid
 articulation and head pose; gaze and inferred emotion remain distinct. New SMFLIX
 body/head research noted with availability and hardware limits. No adoption.
+Person-memory follow-up: Alex prioritizes speed, then accuracy, later robustness.
+Propose shared identity descriptors plus a bounded per-person reference memory,
+separate from short-lived tracks and names; conditional recognition and cautious,
+revisable profile updates. General filter learning and remembering new people are
+distinct learning timescales. Alex additionally proposes FLAME/SKEL shape parameters
+as recognition cues; compare geometry, appearance and their combination. No
+implementation or exact-recognition guarantee. Separate eye/mouth details are
+also user-proposed; distinguish personal shape from current expression and
+account for shared evidence when combining cues.
 
 **Actions and instruction walkthrough, 18 September:**
 [design and source audit](action-semantics-design.md). Alex asks how actions are

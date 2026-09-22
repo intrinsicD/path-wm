@@ -2,8 +2,8 @@ session:
   id: 2026-09-22_001
   date: '2026-09-22'
   started: 2026-09-22T01:13+02:00
-  last_turn: 2026-09-22T01:45+02:00
-  turn_count: 5
+  last_turn: 2026-09-22T08:09+02:00
+  turn_count: 6
   summary: Human pose and segmentation discussed as complementary observations; causal tracks and downstream
     reaction comparison proposed. No adoption, implementation, training or validation promotion. SKEL
     follow-up distinguishes body-model generation from inverse image estimation; documented SMPL fitting
@@ -12,7 +12,7 @@ session:
     source benchmark scope retained, no local performance claim. Hands/feet review distinguishes WiLoR
     hands, FootMR ankles, SUPR-Foot articulation and FOCUS surfaces; fine-resolution integration and reaction
     benefit remain proposed. Face follow-up separates shape, mouth/eye articulation, head pose, gaze and
-    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals.
+    expression interpretation; MediaPipe/SMIRK references and new SMFLIX research remain proposals. Person memory discussed with user-proposed shape and eye/mouth cues; speed-first priority recorded, recognition benefit unvalidated.
 events_logged:
 - turn: 1
   type: question
@@ -106,6 +106,36 @@ events_logged:
     are evidence, while emotion, attention and speech are context-dependent hypotheses; gaze targets need
     scene geometry and possibly calibration. Evaluate local mouth/eye errors, temporal events and total
     latency.'
+- turn: 6
+  type: question
+  id: N520
+  routing: direct
+  provenance: user
+  summary: Remember people using shape and separate eye/mouth details
+- turn: 6
+  type: decision
+  id: N521
+  routing: direct
+  provenance: user
+  summary: 'Human perception priority: speed, accuracy, then robustness'
+- turn: 6
+  type: observation
+  id: O360
+  routing: staged
+  provenance: user
+  summary: 'Hypothesis: FLAME/SKEL parameters, especially with separate eye and mouth detail, could support
+    recognizing individual people.'
+- turn: 6
+  type: observation
+  id: O361
+  routing: staged
+  provenance: ai-suggested
+  summary: 'Propose a shared identity reader plus bounded per-person references: reuse geometric shape,
+    add local eye/mouth appearance, separate stable form from pose/expression, and retain uncertainty.
+    Refresh expensive descriptors conditionally; short-lived tracks, persistent records and names remain
+    separate. Unknown matches do not update profiles. Compare shape alone, appearance alone and combined
+    features at matched false-match targets, measuring full latency and profile contamination. General
+    filter learning and fast reference-memory learning operate at different timescales.'
 ai_actions:
 - turn: 1
   action: Checked official model documentation; wrote bounded discussion note, updated project state/atlas
@@ -164,6 +194,18 @@ ai_actions:
   - docs/architecture-atlas.html
   - docs/architecture-atlas.md
   - docs/architecture-discussion.md
+- turn: 6
+  action: Checked recognition and shape primary sources, documented user speed priority and two voice
+    follow-ups on FLAME/SKEL plus eye/mouth details; updated state and regenerated atlas without validation
+    changes. No model execution.
+  provenance: ai-executed
+  files_changed:
+  - docs/human-perception-discussion.md
+  - docs/project-state.md
+  - docs/diagrams/architecture-atlas.json
+  - docs/architecture-atlas.html
+  - docs/architecture-atlas.md
+  - docs/architecture-discussion.md
 claims_touched: []
 key_context:
 - turn: 1
@@ -177,6 +219,9 @@ key_context:
   excerpt: User asks whether any method gets hands and feet right.
 - turn: 5
   excerpt: User asks about face, mouth, eyes, nose and facial expression.
+- turn: 6
+  excerpt: Speed first, accuracy next, robustness later; remember individual people; user suggests FLAME/SKEL
+    and separate eyes/mouth.
 open_threads:
 - 'N496/N497: joint equal-status shared base remains the user preference; tasks/data/initialization/budgets
   and feature/weight placements remain unselected.'
@@ -213,6 +258,8 @@ open_threads:
   the target; compare specialist benefit and latency before integration.'
 - 'N519: choose facial reaction targets and compare fine-resolution readers; gaze calibration, visibility
   and temporal latency remain open.'
+- 'N520: test geometry and local appearance for persistent identity; calibration, source compatibility
+  and bounded update rules remain open.'
 ai_suggestions_pending:
 - O328-O330 remain untested shared/private hypotheses and joint-training proposals; no user affirmation
   of the detailed implementation.
@@ -242,3 +289,5 @@ ai_suggestions_pending:
 - 'O357: candidate prioritization, external teachers and conditional specialists remain proposals.'
 - 'O358: conditional detail readers remain unconfirmed; source-reported quality is not local agent evidence.'
 - 'O359: person-linked face reader and MediaPipe/SMIRK comparison remain unconfirmed suggestions.'
+- 'O360/O361: user geometry/detail hypothesis and assistant memory/learning design remain unvalidated;
+  no concrete implementation adopted.'

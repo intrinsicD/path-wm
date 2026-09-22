@@ -6306,3 +6306,38 @@ observations:
   promoted_to: null
   crystallized_via: null
   stale: false
+- id: O360
+  timestamp: 2026-09-22T08:09+02:00
+  provenance: user
+  content: 'Hypothesis: FLAME/SKEL parameters, especially with separate eye and mouth detail, could support
+    recognizing individual people.'
+  context: Two voice follow-ups steer the ongoing person-memory discussion; no performance result or specific
+    estimator adopted.
+  potential_type: architecture
+  bound_to:
+  - N520
+  - N519
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false
+- id: O361
+  timestamp: 2026-09-22T08:09+02:00
+  provenance: ai-suggested
+  content: 'Propose a shared identity reader plus bounded per-person references: reuse geometric shape,
+    add local eye/mouth appearance, separate stable form from pose/expression, and retain uncertainty.
+    Refresh expensive descriptors conditionally; short-lived tracks, persistent records and names remain
+    separate. Unknown matches do not update profiles. Compare shape alone, appearance alone and combined
+    features at matched false-match targets, measuring full latency and profile contamination. General
+    filter learning and fast reference-memory learning operate at different timescales.'
+  context: ArcFace/InsightFace, Deep SORT, FLAME/SKEL and MICA primary sources checked. MICA connects
+    identity features to face geometry but does not validate proposed PATH-WM recognition. No implementation
+    or exact-identity guarantee.
+  potential_type: architecture
+  bound_to:
+  - N520
+  - N521
+  promoted: false
+  promoted_to: null
+  crystallized_via: null
+  stale: false

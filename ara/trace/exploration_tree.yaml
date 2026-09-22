@@ -8698,3 +8698,37 @@ tree:
   - N515
   - N518
   status: open
+- id: N520
+  type: question
+  title: Remember people using shape and separate eye/mouth details
+  provenance: user
+  timestamp: 2026-09-22T08:09+02:00
+  description: During one ongoing voice response Alex asks about learning to recognize individual people,
+    then proposes FLAME/SKEL parameters and additional eye/mouth details. The model-name transcription
+    is interpreted from the prior context. Shared descriptors, geometric shape, local appearance and revisable
+    reference memory discussed; no implementation requested.
+  evidence:
+  - docs/human-perception-discussion.md
+  - https://flame.is.tue.mpg.de/
+  - https://skel.is.tue.mpg.de/
+  - https://wojciechzielonka.com/mica/
+  also_depends_on:
+  - N515
+  - N519
+  status: open
+- id: N521
+  type: decision
+  title: 'Human perception priority: speed, accuracy, then robustness'
+  provenance: user
+  timestamp: 2026-09-22T08:09+02:00
+  choice: Alex explicitly orders development priorities as speed first, accuracy second, robustness later
+    in the supplied voice transcript. This selects priorities, not a concrete model or budget.
+  alternatives:
+  - Accuracy-first development
+  - Robustness-first development
+  evidence:
+  - Voice transcript supplied with person-memory question
+  - docs/human-perception-discussion.md
+  also_depends_on:
+  - N520
+  status: resolved

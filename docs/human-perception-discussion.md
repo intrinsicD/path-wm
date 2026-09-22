@@ -275,3 +275,91 @@ Vergleich: identische gesichts-/videogetrennte Sequenzen mit unterschiedlicher
 Auflösung, Kopfrotation und Verdeckung; Lippen-/Lidfehler, zeitliches Zittern,
 verpasste Ereignisse und End-to-End-Latenz getrennt vom globalen Meshfehler.
 Keine Implementierung, Adoption oder Validierung in dieser Diskussion.
+
+## Personen wiedererkennen und das Gedächtnis erweitern
+
+22. September, Sprachfolgefrage: Alex priorisiert zunächst Geschwindigkeit, dann
+Genauigkeit, später Robustheit und fragt nach selbst gelerntem Wiedererkennen
+einzelner Personen. Diese Reihenfolge ist Nutzerpräferenz; die folgende konkrete
+Lösung bleibt ein Vorschlag. Keine Garantie einer exakten Identifikation.
+
+Kurzfristige Track-ID, dauerhafter Personendatensatz und ein eventuell bekannter
+Name sind getrennte Bezüge. Ein Track verfolgt eine Beobachtung über Frames;
+Wiedererkennung verknüpft eine neue Beobachtung mit früherer Evidenz. Ein Name
+braucht zusätzlich eine belegte Zuordnung. Pose, Kleidung, Mimik und geschätzte
+3D-Körperform allein bilden keine verlässliche dauerhafte Identität.
+
+Vorgeschlagener schneller Einstieg: ein gemeinsamer vortrainierter Merkmalsleser
+erzeugt Gesichtsdeskriptoren; pro Person werden wenige hochwertige, verschieden
+ausgerichtete Beispiele samt Quellenzeit, Qualität und Modellversion gespeichert.
+[ArcFace](https://arxiv.org/abs/1801.07698) liefert das Prinzip unterscheidbarer
+Gesichts-Embeddings; [InsightFace](https://github.com/deepinsight/insightface) ist
+ein konkreter externer Vergleichskandidat. Das Modell wird nicht für jede neue
+Person neu trainiert. [Deep SORT](https://github.com/nwojke/deep_sort) veranschaulicht
+die Kombination von Bewegung und Erscheinungsdeskriptoren beim Tracking; dies
+ist kein Nachweis lebenslanger Identität bei Kleidungs-/Ansichtswechseln.
+
+Der gemeinsame Leser lernt allgemeine Unterscheidungsmerkmale; das schnelle
+Lernen neuer Personen erfolgt zunächst durch gespeicherte Referenzen und deren
+Vergleich. Für PATH-WMs gewünschte lernbare Filterbank kann später ein eigener
+Identitätsleser über den gemeinsamen Multiskalenmerkmalen trainiert werden:
+belegte gleiche Personen näher, verschiedene Personen weiter auseinander.
+Ein vortrainierter externer Leser ist eine Baseline, keine Ablösung der akzeptierten
+gemeinsamen Lernrichtung. Modellwechsel erfordern kompatible oder neu berechnete
+Deskriptoren; alte und neue Merkmalsräume nicht unbemerkt mischen.
+
+Neue Tracks oder gute neue Gesichtsansichten lösen den teureren Vergleich aus;
+dazwischen läuft das günstigere Tracking. Ein Schwellenwert und Abstand zum
+nächstbesten Kandidaten müssen an reservierten Daten kalibriert werden. Schlechte
+Sicht bedeutet zunächst ungeklärt, nicht automatisch neue Person. Unsichere
+Treffer dürfen keine alten Profile überschreiben; zusätzliche Referenzen erst
+nach hinreichend belegter Zuordnung aufnehmen und Zuordnungen revidierbar halten.
+Mehrere benachbarte Frames sind korrelierte Evidenz, keine unabhängigen Bestätigungen.
+
+Angewandte Prinzipien: gemeinsame Merkmale wiederverwenden, langsam veränderliche
+Identität von beweglichem Zustand trennen, kurze Track-Lebensdauer und dauerhafte
+Evidenz explizit besitzen, Kandidaten günstig suchen und stärkere Prüfung gezielt
+auslösen. Begrenzte Referenzzahl spart Speicher und Vergleichsarbeit, kann aber
+seltene Ansichten verlieren. Kleinster Vergleich: gleiche zeitlich getrennte
+Episoden bekannter und unbekannter Personen, feste Referenz-/Rechenbudgets,
+Vergleich in jedem Frame versus ereignisabhängig; falsche Zuordnungen, verpasste
+Wiedererkennung, ungeklärte Fälle, Track-Wechsel, Profilverunreinigung und gesamte
+Latenz messen. Keine Implementierung, trainierten Personenprofile oder neue
+Validierung. Die vorhandenen Experimente mit gelieferten Entity-Deskriptoren
+validieren weiterhin keine Wiedererkennung aus natürlichen Personenbildern.
+
+Direkte Nachfrage: Alex vermutet, dass bereits FLAME- bzw. SKEL-Parameter gut
+für Wiedererkennung geeignet sind (Sprachtranskript „Lame / Scale“, aus dem
+Gespräch als FLAME / SKEL interpretiert). Die Formparameter sind ein sinnvoller
+zusätzlicher Personenhinweis: FLAME trennt Kopfform, Ausdruck und Artikulation;
+SKEL trennt Körperform β und biomechanische Pose q. Quellen:
+[FLAME](https://flame.is.tue.mpg.de/), [SKEL](https://skel.is.tue.mpg.de/).
+Vorschlag: personenbezogene Form über mehrere gute Ansichten zusammenführen,
+Pose/Mimik dagegen pro Zeitpunkt aktualisieren. Unterschiedliche Menschen können
+ähnliche Formkoeffizienten haben; Bildschätzungen derselben Person können schwanken.
+Eine Repräsentation mit separaten Parametern garantiert keine fehlerfreie Trennung
+bei der inversen Bildschätzung. Daher formbasierte Kandidatensuche und Kombination
+mit Erscheinungsmerkmalen prüfen, keine eindeutige Identität aus β voraussetzen.
+Gleiche Modellbasis/Version, kamerabezogene Skalierung und Unsicherheit müssen
+beim Vergleich kontrolliert werden. Das Wiederverwenden ohnehin berechneter Form
+ist günstig; eine zusätzliche 3D-Schätzung allein für Identität ist gesondert zu
+kosten. Kleinster Zusatzvergleich: Form allein, Gesichtsdeskriptor allein und
+Kombination auf denselben zeitlich getrennten Episoden bei gleicher Zielrate
+falscher Zuordnung. Nutzerhypothese aufgenommen, ohne Erfolgsbehauptung.
+
+Alex ergänzt explizit separate Augen-/Munddetails. Vorschlag: aus denselben
+hochauflösenden Quellen lokale Merkmale für Augenregion und Mund lernen und
+zusammen mit Gesichts-/Körperform vergleichen. Personenabhängige Grundform und
+zeitabhängige Lid-/Mundöffnung bzw. Mimik getrennt repräsentieren; diese Trennung
+muss durch Daten/Training geprüft werden. Die geometrische Basis kann einen
+kanonischen Bezug für lokale Merkmale liefern, ohne sichtbare Bilddetails in
+den Formkoeffizienten vollständig abzubilden. Verdeckte oder unscharfe Bereiche
+werden als fehlende bzw. schwache Evidenz behandelt. Die Signale stammen teilweise
+aus denselben Pixeln: nicht als unabhängige Bestätigungen zählen. Zusätzliche
+Augen-/Mundleser ereignisabhängig ausführen und Identitätsfehler bei Lachen,
+Blinzeln, Sprechen, Profilansicht und ähnlichen Personen separat messen.
+[MICA](https://wojciechzielonka.com/mica/) nutzt bereits Gesichtsidentitätsmerkmale
+zur Schätzung metrischer Kopfform; dies stützt die Verbindung zwischen Aussehen
+und Geometrie, validiert aber nicht den vorgeschlagenen kombinierten PATH-WM-Leser.
+Der Nutzer schlägt zusätzliche Details vor, keine konkrete Implementierung oder
+Modellwahl ist damit beschlossen.
